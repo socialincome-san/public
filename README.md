@@ -1,17 +1,9 @@
-<h1 align="center">
-  <br>
-  <a href="https://socialincome.org"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/Social_Income_Logo.svg" alt="Social Income" width="400"></a><br><br>
-</h1>
-<br />
-
 # Social Income Public Repository
 
 Our repository contains following projects: 
 1. Website (code to be added)
 2. Admin Tool (code to be added)
 3. Mobile App for recipients (code to be added)
-
-<br />
 
 # Take Action
 
@@ -30,8 +22,6 @@ to be added
 ### Reporting Bugs
 to be added
 
-<br />
-
 ## Donate 1%
 Become a contributor of Social Income a [Become a contributor](https://socialincome.org/get-involved).
 
@@ -40,8 +30,6 @@ Become a sponsor and help ensure the development of open source software for mor
 [:heart: Become a
 sponsor](https://github.com/sponsors/san-socialincome)
 
-<br />
-
 # Legal
 
 ## Association
@@ -49,5 +37,3 @@ Social Income is a non-profit association in Zurich, Switzerland. We believe tha
 
 ## License
 [MIT](LICENSE)
-
-
