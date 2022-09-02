@@ -1,0 +1,44 @@
+name: Admin - Firebase Deployment
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "admin/**"
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: admin
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Build
+        run: yarn build
+        env:
+          REACT_APP_ADMIN_FB_API_KEY: ${{ secrets.REACT_APP_ADMIN_FB_API_KEY }}
+          REACT_APP_ADMIN_FB_AUTH_DOMAIN: ${{ secrets.REACT_APP_ADMIN_FB_AUTH_DOMAIN }}
+          REACT_APP_ADMIN_FB_DATABASE_URL: ${{ secrets.REACT_APP_ADMIN_FB_DATABASE_URL }}
+          REACT_APP_ADMIN_FB_MEASUREMENT_ID: ${{ secrets.REACT_APP_ADMIN_FB_MEASUREMENT_ID }}
+          REACT_APP_ADMIN_FB_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_ADMIN_FB_MESSAGING_SENDER_ID }}
+          REACT_APP_ADMIN_FB_PROJECT_ID: ${{ secrets.REACT_APP_ADMIN_FB_PROJECT_ID }}
+          REACT_APP_ADMIN_FB_STORAGE_BUCKET: ${{ secrets.REACT_APP_ADMIN_FB_STORAGE_BUCKET }}
+          REACT_APP_ADMIN_FB_AUTH_EMULATOR_URL: ""
+          REACT_APP_ADMIN_FB_FIRESTORE_EMULATOR_HOST: ""
+          REACT_APP_ADMIN_FB_FIRESTORE_EMULATOR_PORT: ""
+          REACT_APP_ADMIN_FB_STORAGE_EMULATOR_HOST: ""
+          REACT_APP_ADMIN_FB_STORAGE_EMULATOR_PORT: ""
+
+      - name: Deploy
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          entryPoint: admin
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}"
+          channelId: live
+          projectId: social-income-prod
