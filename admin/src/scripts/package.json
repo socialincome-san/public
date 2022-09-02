@@ -1,0 +1,10 @@
+{
+  "name": "admin-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "fast-csv": "^4.3.6",
+    "firebase-admin": "^11.0.0"
+  }
+}
