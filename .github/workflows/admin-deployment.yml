@@ -8,7 +8,6 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    environment: admin_production
     defaults:
       run:
         working-directory: admin
