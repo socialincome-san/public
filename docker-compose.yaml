@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-        - ./:/home/node
+      - ./:/home/node
     ports:
       - "3000:3000"
       - "9099:9099" # authentication emulator
