@@ -1,7 +1,7 @@
 ---
-name: "Bug report: Admin Tool"
+name: 'Bug Report: Admin Tool'
 about: Create a report to help us improve the admin tool
-title: "[BUG] "
+title: "[Admin] "
 labels: bug
 assignees: ""
 ---
