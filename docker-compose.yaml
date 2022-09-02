@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  admin:
+    image: socialincome/local-helper
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/home/node
+    ports:
+      - "3000:3000"
+      - "9099:9099" # authentication emulator
+      - "8080:8080" # firestore emulator
+      - "9199:9199" # storage emulator
+      - "4000:4000" # emulator UI
+    working_dir: /home/node/admin
+    command: /bin/bash -c "yarn install && yarn emulators:start"
