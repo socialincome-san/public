@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./:/home/node
+        - ./:/home/node
     ports:
       - "3000:3000"
       - "9099:9099" # authentication emulator
@@ -14,4 +14,4 @@ services:
       - "9199:9199" # storage emulator
       - "4000:4000" # emulator UI
     working_dir: /home/node/admin
-    command: /bin/bash -c "yarn install && yarn emulators:start"
+    command: /bin/bash -c "npm install && npm run emulators:start"
