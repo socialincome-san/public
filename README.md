@@ -2,18 +2,16 @@
 
 Our repository contains following projects:
 
-1. Admin Tool
-2. Website (code to be added)
-3. Mobile App for recipients (code to be added)
+1. Admin Tool ([admin.socialincome.org](https://admin.socialincome.org)) for managing contributors and recipients
+2. Mobile App (for recipients) – code to be added
+3. Website ([socialincome.org](https://admin.socialincome.org)) – code to be added
 
-# Take Action
-
-## Code Contribution
+# Code Contribution
 
 Use your skills to take on the [SDG 1](https://sdgs.un.org/goals/goal1) (No Poverty) and
 the [SDG 10](https://sdgs.un.org/goals/goal10) (Reduced Inequality).
 
-### Admin Tool (https://admin.socialincome.org)
+## Admin Tool ([admin.socialincome.org](https://admin.socialincome.org))
 
 We are using [Firestore](https://firebase.google.com/docs/firestore) as database and
 [FireCMS](https://firecms.co/) as UI tool.
@@ -71,29 +69,29 @@ Deployment is handled automatically through Github actions. The production Fireb
 When creating a PR, an action tests the code and deploys it with the production credentials to a preview hosting.
 There, one can see the proposed change with the production Firestore database as backend.
 
-After merging the PR into main, a deployment action automatically deploys the code to https://admin.socialincome.org.
+After merging the PR into main, a deployment action automatically deploys the code to [admin.socialincome.org](https://admin.socialincome.org).
 
-### Your First Code Contribution
+## Mobile App
 
-to be added
+Instructions to be added
 
-### Pull Requests
+## Website
 
-to be added
+Instructions to be added
 
-### Reporting Bugs
+## Reporting Bugs
 
-to be added
+Please use one of the templates on our [issue page](https://socialincome.org/get-involved).
+
+# Financial Contribution
 
 ## Donate 1%
 
-Become a contributor of Social Income a [Become a contributor](https://socialincome.org/get-involved).
+[Become a contributor](https://socialincome.org/get-involved) of Social Income.
 
 ## Sponsor Dev Community
 
-Become a sponsor and help ensure the development of open source software for more equality and less poverty. Donations through the GitHub Sponsor program are used for building a strong developer community and organizing Social Coding Nights.
-[:heart: Become a
-sponsor](https://github.com/sponsors/san-socialincome)
+[Become a sponsor](https://github.com/sponsors/san-socialincome) and help ensure the development of open source software for more equality and less poverty. Donations through the GitHub Sponsor program are used for building a strong developer community and organizing Social Coding Nights.
 
 # Legal
 
