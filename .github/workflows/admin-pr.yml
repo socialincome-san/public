@@ -1,0 +1,63 @@
+name: Admin - PR Run
+on:
+  pull_request:
+    paths:
+      - "admin/**"
+jobs:
+  build_and_preview:
+    if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: admin
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        with:
+          # Make sure the actual branch is checked out when running on pull requests, required for prettify
+          ref: ${{ github.head_ref }}
+          # Make sure the value of GITHUB_TOKEN will not be persisted in repo's config
+          persist-credentials: false
+
+      - name: Prettify Code
+        uses: creyD/prettier_action@v4.2
+        with:
+          prettier_options: "--write ./"
+          github_token: ${{ secrets.WORKFLOW_TOKEN }}
+
+      - name: Install & Setup Firebase Emulator Suite
+        run: |
+          yarn global add firebase-tools && \
+          firebase setup:emulators:firestore && \
+          firebase setup:emulators:storage && \
+          firebase setup:emulators:ui
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Run Tests
+        run: yarn emulators:test
+
+      - name: Build
+        run: yarn build
+        env:
+          REACT_APP_ADMIN_FB_API_KEY: ${{ secrets.REACT_APP_ADMIN_FB_API_KEY }}
+          REACT_APP_ADMIN_FB_AUTH_DOMAIN: ${{ secrets.REACT_APP_ADMIN_FB_AUTH_DOMAIN }}
+          REACT_APP_ADMIN_FB_DATABASE_URL: ${{ secrets.REACT_APP_ADMIN_FB_DATABASE_URL }}
+          REACT_APP_ADMIN_FB_MEASUREMENT_ID: ${{ secrets.REACT_APP_ADMIN_FB_MEASUREMENT_ID }}
+          REACT_APP_ADMIN_FB_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_ADMIN_FB_MESSAGING_SENDER_ID }}
+          REACT_APP_ADMIN_FB_PROJECT_ID: ${{ secrets.REACT_APP_ADMIN_FB_PROJECT_ID }}
+          REACT_APP_ADMIN_FB_STORAGE_BUCKET: ${{ secrets.REACT_APP_ADMIN_FB_STORAGE_BUCKET }}
+          REACT_APP_ADMIN_FB_AUTH_EMULATOR_URL: ""
+          REACT_APP_ADMIN_FB_FIRESTORE_EMULATOR_HOST: ""
+          REACT_APP_ADMIN_FB_FIRESTORE_EMULATOR_PORT: ""
+          REACT_APP_ADMIN_FB_STORAGE_EMULATOR_HOST: ""
+          REACT_APP_ADMIN_FB_STORAGE_EMULATOR_PORT: ""
+
+      - name: Deploy Preview
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          entryPoint: admin
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}"
+          projectId: social-income-prod
