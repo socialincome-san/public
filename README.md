@@ -2,9 +2,9 @@
 
 Our repository contains following projects:
 
-1. Website (code to be added)
-2. Admin Tool (code to be added)
-3. Mobile App for recipients (code to be added)
+1. Admin Tool
+2. Website (code to be added)
+4. Mobile App for recipients (code to be added)
 
 # Take Action
 
