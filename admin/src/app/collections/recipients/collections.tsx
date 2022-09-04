@@ -319,6 +319,7 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations = [] }:
     group: "Recipients",
     icon: "RememberMeTwoTone",
     description: "Lists of people, who receive a Social Income",
+    textSearchEnabled: true,
   };
   if (isGlobalAdmin) {
     return buildCollection<Partial<Recipient>>({
@@ -393,6 +394,7 @@ export const buildRecentPaymentsCollection = ({ isGlobalAdmin }: BuildCollection
     group: "Recipients",
     icon: "PriceCheck",
     description: "Payment confirmations of last three month",
+    textSearchEnabled: true,
   };
   // if (isGlobalAdmin) {
   return buildCollection<Partial<Recipient>>({
