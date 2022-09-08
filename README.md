@@ -81,7 +81,7 @@ Instructions to be added
 
 ## Reporting Bugs
 
-Please use one of the templates on our [issue page](https://socialincome.org/get-involved).
+Please use one of the templates on our [issue page](https://github.com/socialincome-san/public/issues/new/choose).
 
 # Financial Contribution
 
