@@ -1,8 +1,8 @@
 ---
-name: 'New Feature: Admin Tool'
-about: Suggest a feature for the admin tool
-title: "[Admin] "
-labels: enhancement
+name: 'Feature: Mobile App'
+about: Suggest a feature for the mobile app
+title: "[Mobile] "
+labels: enhancement, flutter
 assignees: ''
 
 ---
