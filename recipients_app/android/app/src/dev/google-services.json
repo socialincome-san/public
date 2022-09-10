@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "0",
+    "firebase_url": "https://demo-social-income.firebaseio.com",
+    "project_id": "demo-social-income",
+    "storage_bucket": "demo-social-income.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "0",
+        "android_client_info": {
+          "package_name": "org.socialincome.app.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "0",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "demo-key"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "0",
+              "client_type": 3
+            },
+            {
+              "client_id": "0",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.socialincome.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

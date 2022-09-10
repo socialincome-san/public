@@ -1,0 +1,61 @@
+import 'package:app/models/currentUser.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+class ChangableUserInformation extends StatelessWidget {
+  final String section;
+
+  ChangableUserInformation(this.section);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<CurrentUser>(builder: (context, currentUser, child) {
+      final bool birthDate = section == "Date of Birth";
+      TextEditingController controller = TextEditingController(
+          text: currentUser.changableInformation(section));
+      return Padding(
+        padding: const EdgeInsets.only(top: 12.0),
+        child: birthDate
+            ? TextField(
+                controller: controller,
+                readOnly: birthDate,
+                decoration: InputDecoration(
+                    labelText: section,
+                    enabledBorder:
+                        OutlineInputBorder(borderSide: BorderSide(width: 1.0))),
+                onTap: () async {
+                  if (birthDate) {
+                    {
+                      showDatePicker(
+                        firstDate: DateTime(1950, 1, 1),
+                        lastDate: DateTime(DateTime.now().year - 10),
+                        initialDate: DateTime(2000, 1, 1),
+                        context: context,
+                      ).then((value) {
+                        String birthDateString =
+                            DateFormat('dd.MM.yyyy').format(value);
+                        currentUser.updateBirthday(value);
+                        controller.text = birthDateString;
+                        print(controller.text);
+                        return;
+                      });
+                    }
+                  }
+                })
+            : TextFormField(
+                initialValue: currentUser.changableInformation(section),
+                readOnly: birthDate,
+                decoration: InputDecoration(
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    labelText: section,
+                    enabledBorder:
+                        OutlineInputBorder(borderSide: BorderSide(width: 1.0))),
+                onChanged: (value) {
+                  currentUser.updateBasicInfo(section, value);
+                },
+              ),
+      );
+    });
+  }
+}

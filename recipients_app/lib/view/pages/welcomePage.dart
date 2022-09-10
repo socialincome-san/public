@@ -1,0 +1,87 @@
+import 'package:app/models/alertVisibility.dart';
+import 'package:app/models/registration.dart';
+import 'package:app/theme/theme.dart';
+import 'package:app/view/components/socialIncomeAlert.dart';
+import 'package:app/view/components/socialIncomeContact.dart';
+import 'package:app/view/components/welcomePage/otpInput.dart';
+import 'package:app/view/components/welcomePage/phoneInput.dart';
+import 'package:app/view/pages/mainAppPage.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class WelcomePage extends StatelessWidget {
+  final TextStyle textbuttonStyle = TextStyle(color: Colors.white);
+  // prevents rebuilding new widget which would lose focus
+  final SocialIncomeAlert ineligible = SocialIncomeAlert(
+      "Number not eligible.", Icons.close, "ineligible",
+      textButton: "Contact us for support");
+
+  final SocialIncomeAlert formatError = SocialIncomeAlert(
+      "This is not a valid phone number", Icons.close, "formatError");
+
+  final SocialIncomeAlert verificationCodeError = SocialIncomeAlert(
+      "False verification code. Try again", Icons.close, "CodeWrong");
+  bool keyboardVisible() {
+    return WidgetsBinding.instance.window.viewInsets.bottom == 0.0;
+  }
+
+  Widget build(BuildContext context) {
+    return Consumer2<Registration, AlertVisibility>(
+        builder: (context, registration, alertVisibility, child) {
+      void logInUI() {
+        registration.clear();
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => MainAppPage()),
+          (Route<dynamic> route) => false,
+        );
+      }
+
+      Widget input = registration.codeSent ? OtpInput(logInUI) : PhoneInput();
+
+      return Scaffold(
+        body: Stack(children: [
+          Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            Flexible(flex: 2, child: Container(color: siDarkBlue)),
+            Flexible(flex: 3, child: Container(color: siLightBlue))
+          ]),
+          Center(
+            child: Container(
+              padding:
+                  EdgeInsets.only(top: MediaQuery.of(context).size.height / 15),
+              width: MediaQuery.of(context).size.width * 0.95,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (alertVisibility.displayIneligibleUser)
+                      ineligible
+                    else if (alertVisibility.displayFormatError)
+                      formatError
+                    else if (alertVisibility.displayVerificationCodeError)
+                      verificationCodeError,
+                    Text("Social Income",
+                        style: TextStyle(color: Colors.white, fontSize: 36)),
+                    if (keyboardVisible())
+                      Image(
+                        image: AssetImage('assets/phone.png'),
+                        height: MediaQuery.of(context).size.height * 0.4,
+                      ),
+                    if (keyboardVisible())
+                      Text("Universal Basic Income\nfrom Human to Human",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          )),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 8), child: input)
+                  ]),
+            ),
+          ),
+          if (alertVisibility.displayContact) SocialIncomeContact(),
+        ]),
+      );
+    });
+  }
+}
