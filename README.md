@@ -71,6 +71,29 @@ There, one can see the proposed change with the production Firestore database as
 
 After merging the PR into main, a deployment action automatically deploys the code to [admin.socialincome.org](https://admin.socialincome.org).
 
+## Backend Functions
+We are using firebase functions to run backend jobs.
+Those can e.g. be periodically triggered 
+by pubsub cron definitions, by datastore triggers or through web callbacks.
+
+### Setup
+
+We develop these functions mainly test-driven.
+
+1. Build helper image locally: `docker compose build`
+2. Run the tests including Firebase emulators: ` docker compose run backend yarn emulators:test `.
+   The first time this can take multiple minutes till the packages are downloaded.
+3. With `docker compose run backend yarn serve` one can also serve the webhooks on localhost.
+
+#### Format Code
+
+We are using prettier to format the code
+
+```shell
+docker compose run backend yarn format-code
+```
+
+
 ## Mobile App
 
 Instructions to be added
