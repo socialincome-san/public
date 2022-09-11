@@ -88,6 +88,9 @@ For development use `dev` flavor.
 Open `recipients_app` project folder in your development environment of choice. 
 Building flavor should work seamlessly for Android Studio and VS Code with predefined build configs.
 
+As Firebase emulators work on your local host machine the easiest way to run app is on the Android emulator. 
+Real devices need some additional setup.
+
 ## Website
 
 Instructions to be added
