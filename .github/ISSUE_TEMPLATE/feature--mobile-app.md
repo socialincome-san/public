@@ -1,10 +1,9 @@
 ---
-name: 'Feature: Mobile App'
+name: "Feature: Mobile App"
 about: Suggest a feature for the mobile app
 title: "[Mobile] "
 labels: flutter
-assignees: ''
-
+assignees: ""
 ---
 
 **Is your feature request related to a problem? Please describe.**
