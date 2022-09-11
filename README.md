@@ -74,21 +74,23 @@ After merging the PR into main, a deployment action automatically deploys the co
 ## Mobile App
 
 #### Setup
+
 Similar to `Admin Tool` the development doesn't require any production Firebase credentials.
 We rely on local emulators which are populated with dummy seed data.
 
-Follow  `Admin Tool` setup to start emulators.
+Follow `Admin Tool` setup to start emulators.
 
 We have two build flavors:
+
 - `dev` -> Connecting with Firebase Emulators (Firestore and Auth)
 - `prod` -> Connecting with production online firebase project and need real Firebase configuration json / plist file
 
 For development use `dev` flavor.
 
-Open `recipients_app` project folder in your development environment of choice. 
+Open `recipients_app` project folder in your development environment of choice.
 Building flavor should work seamlessly for Android Studio and VS Code with predefined build configs.
 
-As Firebase emulators work on your local host machine the easiest way to run app is on the Android emulator. 
+As Firebase emulators work on your local host machine the easiest way to run app is on the Android emulator.
 Real devices need some additional setup.
 
 ## Website
