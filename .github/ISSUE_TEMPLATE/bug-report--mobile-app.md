@@ -1,9 +1,10 @@
 ---
-name: "Bug Report: Mobile App"
+name: 'Bug Report: Mobile App'
 about: Create a report to help us improve
 title: "[Mobile] "
 labels: bug, flutter
-assignees: ""
+assignees: ''
+
 ---
 
 **Describe the bug**

@@ -1,8 +1,8 @@
 ---
-name: 'New Feature: Admin Tool'
-about: Suggest a feature for the admin tool
-title: "[Admin] "
-labels: enhancement
+name: 'Feature: Website'
+about: 'Suggest a feature for the website '
+title: "[Website] "
+labels: feature, website
 assignees: ''
 
 ---
