@@ -3,7 +3,7 @@
 Our repository contains following projects:
 
 1. Admin Tool ([admin.socialincome.org](https://admin.socialincome.org)) for managing contributors and recipients
-2. Mobile App (for recipients) – code to be added
+2. Mobile App (for recipients)
 3. Website ([socialincome.org](https://admin.socialincome.org)) – code to be added
 
 # Code Contribution
@@ -73,7 +73,20 @@ After merging the PR into main, a deployment action automatically deploys the co
 
 ## Mobile App
 
-Instructions to be added
+#### Setup
+Similar to `Admin Tool` the development doesn't require any production Firebase credentials.
+We rely on local emulators which are populated with dummy seed data.
+
+Follow  `Admin Tool` setup to start emulators.
+
+We have two build flavors:
+- `dev` -> Connecting with Firebase Emulators (Firestore and Auth)
+- `prod` -> Connecting with production online firebase project and need real Firebase configuration json / plist file
+
+For development use `dev` flavor.
+
+Open `recipients_app` project folder in your development environment of choice. 
+Building flavor should work seamlessly for Android Studio and VS Code with predefined build configs.
 
 ## Website
 
