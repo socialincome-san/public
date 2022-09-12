@@ -29,4 +29,4 @@ jobs:
 
       - name: Deploy to Firebase
         working-directory: backend
-        run: firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
+        run: firebase deploy --token ${{ secrets.FIREBASE_TOKEN }} --project social-income-prod
