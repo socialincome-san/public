@@ -16,6 +16,7 @@ exports.simpleHttp = functions.https.onRequest((request, response) => {
  */
 exports.firestoreUppercase = functions.firestore.document("/lowercase/{doc}").onCreate(async (doc, ctx) => {
   const docId = doc.id;
+  functions.logger.info(TEST);
 
   const docData = doc.data();
   const lowercase = docData.text;
