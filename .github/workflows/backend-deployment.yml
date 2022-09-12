@@ -29,6 +29,6 @@ jobs:
         run: |
           echo TEST=${{ secrets.BACKEND_TEST }} >> .env
 
-      - name:  Deploy to Firebase
+      - name: Deploy to Firebase
         working-directory: backend
         run: firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
