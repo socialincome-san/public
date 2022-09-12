@@ -4,7 +4,7 @@ on:
     paths:
       - "admin/**"
 jobs:
-  build_and_preview:
+  test_and_preview:
     if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     runs-on: ubuntu-latest
     defaults:

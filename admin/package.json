@@ -40,13 +40,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "emulators:start": "firebase emulators:exec --project demo-social-income --import seed --ui  'yarn start'",
+    "emulators:start": "firebase emulators:exec --project demo-social-income --import ../seed --ui  'yarn start'",
     "build": "react-scripts build",
     "format-code": "prettier --write ./",
     "serve": "firebase emulators:start",
     "test": "react-scripts test --watchAll false --forceExit",
-    "emulators:test": "firebase emulators:exec --project demo-social-income --import seed --ui  'yarn test'",
-    "emulators:export": "firebase emulators:export --project demo-social-income --force seed",
+    "emulators:test": "firebase emulators:exec --project demo-social-income --import ../seed --ui  'yarn test'",
+    "emulators:export": "firebase emulators:export --project demo-social-income --force ../seed",
     "script": "GOOGLE_APPLICATION_CREDENTIALS=social-income-prod-firebase-adminsdk.json node --es-module-specifier-resolution=node --loader ts-node/esm"
   },
   "eslintConfig": {
