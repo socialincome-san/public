@@ -4,17 +4,15 @@ on:
     paths:
       - "backend/**"
 jobs:
-  build_and_preview:
+  test:
     if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
       - name: Install & Setup Firebase Emulator Suite
+        working-directory: backend
         run: |
           yarn global add firebase-tools && \
           firebase setup:emulators:firestore && \

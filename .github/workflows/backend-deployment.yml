@@ -1,20 +1,20 @@
 name: Backend Functions - PR Run
 on:
-  pull_request:
+  push:
+    branches:
+      - main
     paths:
       - "backend/**"
 jobs:
-  build_and_preview:
+  deploy:
     if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
       - name: Install & Setup Firebase Emulator Suite
+        working-directory: backend
         run: |
           yarn global add firebase-tools && \
           firebase setup:emulators:firestore && \
@@ -30,4 +30,5 @@ jobs:
           echo TEST=${{ secrets.BACKEND_TEST }} >> .env
 
       - name:  Deploy to Firebase
+        working-directory: backend
         run: firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
