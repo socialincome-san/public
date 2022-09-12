@@ -1,4 +1,5 @@
 import * as functions from "firebase-functions";
+import { TEST } from "./config";
 const admin = require("firebase-admin");
 admin.initializeApp();
 
@@ -6,6 +7,7 @@ admin.initializeApp();
  * Simple HTTP function that returns the "?text" query parameter in the response text.
  */
 exports.simpleHttp = functions.https.onRequest((request, response) => {
+  functions.logger.info(TEST);
   response.send(`text: ${request.query.text}`);
 });
 
