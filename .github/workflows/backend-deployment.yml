@@ -1,4 +1,4 @@
-name: Backend Functions - PR Run
+name: Backend Functions - Firebase Deployment
 on:
   push:
     branches:
