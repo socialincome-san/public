@@ -1,8 +1,6 @@
 name: Backend Functions - Firebase Deployment
 on:
-  push:
-    branches:
-      - main
+  pull_request:
     paths:
       - "backend/**"
 jobs:
