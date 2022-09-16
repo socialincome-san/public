@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:app/models/currentUser.dart';
 import 'package:app/models/transaction.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

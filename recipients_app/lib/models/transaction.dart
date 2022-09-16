@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import "package:cloud_firestore/cloud_firestore.dart";
 
 class SocialIncomeTransaction {

@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:app/models/transaction.dart';
 import 'package:app/view/components/income/ReviewTransactionModal.dart';
 import 'package:flutter/material.dart';

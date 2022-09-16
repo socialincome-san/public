@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:app/models/currentUser.dart';
 import 'package:app/theme/theme.dart';
 import 'package:app/view/components/income/BalanceCard.dart';
