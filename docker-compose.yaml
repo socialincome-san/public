@@ -28,4 +28,4 @@ services:
       - "8085:8085" # pubsub emulator
       - "4000:4000" # emulator UI
     working_dir: /home/node/backend/functions
-    command: /bin/bash -c "npm install && npm run serve"
+    command: /bin/bash -c "yarn install && yarn run serve"
