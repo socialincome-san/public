@@ -1,12 +1,14 @@
+// @dart=2.9
+
 import 'package:app/models/currentUser.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class ChangableUserInformation extends StatelessWidget {
+class ChangeableUserInformation extends StatelessWidget {
   final String section;
 
-  ChangableUserInformation(this.section);
+  ChangeableUserInformation(this.section);
 
   @override
   Widget build(BuildContext context) {

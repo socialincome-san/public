@@ -1,27 +1,29 @@
+// @dart=2.9
+
 import 'package:app/models/alertVisibility.dart';
 import 'package:app/models/currentUser.dart';
 import 'package:app/services/authService.dart';
 import 'package:app/theme/theme.dart';
-import 'package:app/view/components/account/changableUserInformation.dart';
+import 'package:app/view/components/account/changeableUserInformation.dart';
+import 'package:app/view/components/account/unchangeableUserInformation.dart';
 import 'package:app/view/pages/welcomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../socialIncomeContact.dart';
-import 'UnchangableUserInformation.dart';
 
 class AccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer2<CurrentUser, AlertVisibility>(
         builder: (context, currentUser, alertVisibility, child) {
-      var firstNameCard = ChangableUserInformation("First Name");
-      var lastNameCard = ChangableUserInformation("Last Name");
-      var preferredNameCard = ChangableUserInformation("Preferred Name");
-      var dateOfBirthCard = ChangableUserInformation("Date of Birth");
-      var emailCard = ChangableUserInformation("Email");
-      var phoneCard = ChangableUserInformation("Phone Number");
+      var firstNameCard = ChangeableUserInformation("First Name");
+      var lastNameCard = ChangeableUserInformation("Last Name");
+      var preferredNameCard = ChangeableUserInformation("Preferred Name");
+      var dateOfBirthCard = ChangeableUserInformation("Date of Birth");
+      var emailCard = ChangeableUserInformation("Email");
+      var phoneCard = ChangeableUserInformation("Phone Number");
       return Stack(
         children: [
           Container(
@@ -53,19 +55,19 @@ class AccountPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                UnchangableUserInformation(
+                UnchangeableUserInformation(
                   "Recipient Since",
                   AuthService.instance().createdAt(),
                 ),
-                UnchangableUserInformation(
+                UnchangeableUserInformation(
                   "Amount Received",
                   "SLE " + currentUser.totalIncome().toString(),
                 ),
-                UnchangableUserInformation(
+                UnchangeableUserInformation(
                   "Country",
                   currentUser.country,
                 ),
-                UnchangableUserInformation(
+                UnchangeableUserInformation(
                   "Orange Money Number",
                   currentUser.orangePhoneNumber,
                 ),
