@@ -1,12 +1,19 @@
-import { Authenticator, EntityCollection, FirebaseCMSApp, User } from "@camberi/firecms";
+import algoliasearch from "algoliasearch";
+
+import {
+  Authenticator,
+  EntityCollection,
+  FirebaseCMSApp,
+  User,
+  performAlgoliaTextSearch,
+  FirestoreTextSearchController,
+} from "@camberi/firecms";
 import React, { useState } from "react";
 import { adminsCollection } from "./collections/admins/collections";
-// import { contributionsCollection } from "./collections/contributions/collections";
 import { operationalExpensesCollection } from "./collections/operational_expenses/collections";
 import { AdminUser } from "./collections/admins/interface";
 import { buildRecipientsCollection, buildRecentPaymentsCollection } from "./collections/recipients/collections";
 import { buildOrganisationsCollection } from "./collections/organisations/collections";
-// import { paymentsCollection } from "./collections/payments/collections";
 import { usersCollection } from "./collections/users/collections";
 import { newsletterSubscribersCollection } from "./collections/newsletter_subscribers/collections";
 import { organisationsContributorsCollection } from "./collections/organisations_contributors/collections";
@@ -28,6 +35,8 @@ import {
   FB_STORAGE_EMULATOR_PORT,
   FB_FIRESTORE_EMULATOR_HOST,
   FB_FIRESTORE_EMULATOR_PORT,
+  ALGOLIA_APPLICATION_ID,
+  ALGOLIA_SEARCH_KEY,
 } from "./config";
 
 const firebaseConfig = {
@@ -60,6 +69,20 @@ const onFirebaseInit = () => {
     console.log("Using storage emulator");
   } else {
     console.log("Using production stroage");
+  }
+};
+
+const recipientsIndex =
+  ALGOLIA_APPLICATION_ID && ALGOLIA_SEARCH_KEY
+    ? algoliasearch(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY).initIndex("recipients")
+    : undefined;
+
+const textSearchController: FirestoreTextSearchController = ({ path, searchString }) => {
+  if (recipientsIndex && (path === "recipients" || path === "recentPayments")) {
+    console.log("Using algolia search endpoint");
+    return performAlgoliaTextSearch(recipientsIndex, searchString);
+  } else {
+    return undefined;
   }
 };
 
@@ -115,6 +138,7 @@ export default function App() {
       collections={collections}
       authentication={myAuthenticator}
       locale={"enUS"}
+      textSearchController={textSearchController}
       firebaseConfig={firebaseConfig}
       onFirebaseInit={onFirebaseInit}
       dateTimeFormat={"yyyy-MM-dd"}

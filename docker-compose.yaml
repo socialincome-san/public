@@ -14,4 +14,18 @@ services:
       - "9199:9199" # storage emulator
       - "4000:4000" # emulator UI
     working_dir: /home/node/admin
-    command: /bin/bash -c "npm install && npm run emulators:start"
+    command: /bin/bash -c "yarn install && yarn emulators:start"
+  backend:
+    image: socialincome/local-helper
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/home/node
+    ports:
+      - "5001:5001" # functions
+      - "8080:8080" # firestore emulator
+      - "8085:8085" # pubsub emulator
+      - "4000:4000" # emulator UI
+    working_dir: /home/node/backend/functions
+    command: /bin/bash -c "npm install && npm run serve"

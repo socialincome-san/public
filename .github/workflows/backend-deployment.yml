@@ -1,0 +1,34 @@
+name: Backend Functions - Firebase Deployment
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+jobs:
+  deploy:
+    if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Install & Setup Firebase Emulator Suite
+        working-directory: backend
+        run: |
+          yarn global add firebase-tools && \
+          firebase setup:emulators:firestore && \
+          firebase setup:emulators:ui
+
+      - name: Install Dependencies
+        working-directory: backend/functions
+        run: yarn install
+
+      - name: Add secrets to env file
+        working-directory: backend/functions
+        run: |
+          echo TEST=${{ secrets.BACKEND_TEST }} >> .env
+
+      - name: Deploy to Firebase
+        working-directory: backend
+        run: firebase deploy --token ${{ secrets.FIREBASE_TOKEN }} --project social-income-prod

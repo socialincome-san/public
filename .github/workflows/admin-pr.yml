@@ -4,7 +4,7 @@ on:
     paths:
       - "admin/**"
 jobs:
-  build_and_preview:
+  test_and_preview:
     if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     runs-on: ubuntu-latest
     defaults:
@@ -37,6 +37,8 @@ jobs:
           REACT_APP_ADMIN_FB_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_ADMIN_FB_MESSAGING_SENDER_ID }}
           REACT_APP_ADMIN_FB_PROJECT_ID: ${{ secrets.REACT_APP_ADMIN_FB_PROJECT_ID }}
           REACT_APP_ADMIN_FB_STORAGE_BUCKET: ${{ secrets.REACT_APP_ADMIN_FB_STORAGE_BUCKET }}
+          REACT_APP_ADMIN_ALGOLIA_APPLICATION_ID: ${{ secrets.REACT_APP_ADMIN_ALGOLIA_APPLICATION_ID }}
+          REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY: ${{ secrets.REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY }}
           REACT_APP_ADMIN_FB_AUTH_EMULATOR_URL: ""
           REACT_APP_ADMIN_FB_FIRESTORE_EMULATOR_HOST: ""
           REACT_APP_ADMIN_FB_FIRESTORE_EMULATOR_PORT: ""
