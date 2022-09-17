@@ -14,7 +14,8 @@ services:
       - "9199:9199" # storage emulator
       - "4000:4000" # emulator UI
     working_dir: /home/node/admin
-    command: /bin/bash -c "yarn install && yarn emulators:start"
+    command: /bin/bash -c "npm install && yarn emulators:start"
+
   backend:
     image: socialincome/local-helper
     build:

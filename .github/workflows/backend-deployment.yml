@@ -22,7 +22,7 @@ jobs:
 
       - name: Install Dependencies
         working-directory: backend/functions
-        run: yarn install
+        run: npm install
 
       - name: Add secrets to env file
         working-directory: backend/functions

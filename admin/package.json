@@ -19,7 +19,7 @@
     "ts-node": "^10.9.1"
   },
   "dependencies": {
-    "@camberi/firecms": "2.0.0-alpha.28",
+    "@camberi/firecms": "2.0.0-alpha.30",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@mui/icons-material": "^5.8.4",
@@ -34,12 +34,12 @@
     "react-router": "^6.2.0",
     "react-router-dom": "^6.2.0",
     "react-scripts": "^5.0.1",
-    "typescript": "^4.4.2",
+    "typescript": "^4.8.3",
     "nth-check": "^2.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
-    "emulators:start": "firebase emulators:exec --project demo-social-income --import ../seed --ui  'yarn start'",
+    "emulators:start": "firebase emulators:exec --project demo-social-income --import ../seed --ui  'npm run start'",
     "build": "react-scripts build",
     "format-code": "prettier --write ./",
     "serve": "firebase emulators:start",

@@ -20,7 +20,7 @@ jobs:
 
       - name: Install Dependencies
         working-directory: backend/functions
-        run: yarn install
+        run: npm install
 
       - name: Run Tests
         working-directory: backend/functions

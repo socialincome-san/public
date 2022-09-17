@@ -22,7 +22,7 @@ jobs:
           firebase setup:emulators:ui
 
       - name: Install Dependencies
-        run: yarn install
+        run: npm install
 
       - name: Run Tests
         run: yarn emulators:test
