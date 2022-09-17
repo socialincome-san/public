@@ -64,8 +64,8 @@ export const parseEmail = async (source: Source): Promise<bankBalance.BankBalanc
     return [
       {
         timestamp: mail.date!.getTime() / 1000,
-        account: mail.html.match(accountRegex)!.groups!["account"].toLowerCase(),
-        balance: Number.parseFloat(mail.html.match(balanceRegex)!.groups!["balance"].replace("’", "")),
+        account: extractAccount(mail.html),
+        balance: extractBalance(mail.html),
         currency: "CHF",
       } as bankBalance.BankBalance,
     ];
@@ -73,6 +73,16 @@ export const parseEmail = async (source: Source): Promise<bankBalance.BankBalanc
     functions.logger.info(`Could not parse email with subject ${mail.subject}`);
     return [];
   }
+};
+
+const accountRegex = /(?<=account\W)(?<account>.*?)(?=\W)/; // regex to retrieve the account name from the email
+export const extractAccount = (html: String) => {
+  return html.match(accountRegex)!.groups!["account"].toLowerCase();
+};
+
+const balanceRegex = /balance: CHF (?<balance>[0-9’.]*)/; // regex to retrieve the balance from the email
+export const extractBalance = (html: String) => {
+  return Number.parseFloat(html.match(balanceRegex)!.groups!["balance"].replace("’", ""));
 };
 
 export const storeBalances = async (balances: bankBalance.BankBalance[]): Promise<void> => {
@@ -87,6 +97,3 @@ const fetchOptions = {
   bodies: ["HEADER", "TEXT", ""],
   markSeen: true,
 };
-
-const balanceRegex = /balance: CHF (?<balance>[0-9’.]*)/; // regex to retrieve the balance from the email
-const accountRegex = /(?<=account\W)(?<account>.*?)(?=\W)/; // regex to retrieve the account name from the email
