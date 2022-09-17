@@ -142,4 +142,5 @@ Social Income is a non-profit association in Zurich, Switzerland. We believe tha
 
 ## License
 
-[MIT](LICENSE)
+Code: [MIT](LICENSE)
+Font: The font is licensed exclusively for the use on the website socialincome.org and in the mobile apps of Social Income.
