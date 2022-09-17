@@ -7,7 +7,7 @@ import _ from "lodash";
 import { simpleParser, Source } from "mailparser";
 import { POSTFINANCE_EMAIL_PASSWORD, POSTFINANCE_EMAIL_USER } from "../config";
 
-import * as bankBalance from "../interfaces/collections/bankBalances";
+import * as bankBalance from "../../../../shared/src/interfaces/collections/bankBalances";
 import { createDoc } from "../useFirestoreAdmin";
 
 /**
