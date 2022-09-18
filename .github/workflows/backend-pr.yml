@@ -14,14 +14,14 @@ jobs:
       - name: Install & Setup Firebase Emulator Suite
         working-directory: backend
         run: |
-          yarn global add firebase-tools && \
+          npm -g install firebase-tools && \
           firebase setup:emulators:firestore && \
           firebase setup:emulators:ui
 
       - name: Install Dependencies
         working-directory: backend/functions
-        run: yarn install
+        run: npm install
 
       - name: Run Tests
         working-directory: backend/functions
-        run: yarn emulators:test
+        run: npm run emulators:test
