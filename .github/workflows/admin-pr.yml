@@ -16,7 +16,7 @@ jobs:
 
       - name: Install & Setup Firebase Emulator Suite
         run: |
-          yarn global add firebase-tools && \
+          npm -g install firebase-tools && \
           firebase setup:emulators:firestore && \
           firebase setup:emulators:storage && \
           firebase setup:emulators:ui
@@ -25,10 +25,10 @@ jobs:
         run: npm install
 
       - name: Run Tests
-        run: yarn emulators:test
+        run: npm run emulators:test
 
       - name: Build
-        run: yarn build
+        run: npm run build
         env:
           REACT_APP_ADMIN_FB_API_KEY: ${{ secrets.REACT_APP_ADMIN_FB_API_KEY }}
           REACT_APP_ADMIN_FB_AUTH_DOMAIN: ${{ secrets.REACT_APP_ADMIN_FB_AUTH_DOMAIN }}

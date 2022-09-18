@@ -44,7 +44,7 @@
     "format-code": "prettier --write ./",
     "serve": "firebase emulators:start",
     "test": "react-scripts test --watchAll false --forceExit",
-    "emulators:test": "firebase emulators:exec --project demo-social-income --import ../seed --ui  'yarn test'",
+    "emulators:test": "firebase emulators:exec --project demo-social-income --import ../seed --ui  'npm run test'",
     "emulators:export": "firebase emulators:export --project demo-social-income --force ../seed",
     "script": "GOOGLE_APPLICATION_CREDENTIALS=social-income-prod-firebase-adminsdk.json node --es-module-specifier-resolution=node --loader ts-node/esm"
   },

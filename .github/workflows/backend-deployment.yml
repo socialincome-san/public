@@ -16,7 +16,7 @@ jobs:
       - name: Install & Setup Firebase Emulator Suite
         working-directory: backend
         run: |
-          yarn global add firebase-tools && \
+          npm -g install firebase-tools && \
           firebase setup:emulators:firestore && \
           firebase setup:emulators:ui
 
