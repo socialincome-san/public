@@ -11,14 +11,18 @@
   "engines": {
     "node": "16"
   },
-  "main": "lib/src/index.js",
+  "main": "lib/backend/functions/src/index.js",
   "dependencies": {
     "firebase-admin": "^10.0.2",
-    "firebase-functions": "^3.21.0"
+    "firebase-functions": "^3.21.0",
+    "imap-simple": "^5.1.0",
+    "mailparser": "^3.5.0"
   },
   "devDependencies": {
     "@jest/globals": "^28.1.0",
+    "@types/imap-simple": "^4.2.5",
     "@types/jest": "^27.5.0",
+    "@types/mailparser": "^3.4.0",
     "firebase-functions": "^3.21.0",
     "firebase-functions-test": "^2.0.1",
     "jest": "^28.1.0",

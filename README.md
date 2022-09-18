@@ -82,9 +82,10 @@ by pubsub cron definitions, by datastore triggers or through web callbacks.
 We develop these functions mainly test-driven.
 
 1. Build helper image locally: `docker compose build`
-2. Run the tests including Firebase emulators: `docker compose run backend npm run emulators:test`.
+2. Install dependencies: `docker compose run backend npm install`.
+3. Run the tests including Firebase emulators: `docker compose run backend npm run emulators:test`.
    The first time this can take multiple minutes till the packages are downloaded.
-3. With `docker compose run backend npm run serve` one can also serve the webhooks on localhost.
+4. With `docker compose run backend npm run serve` one can also serve the webhooks on localhost.
 
 #### Format Code
 

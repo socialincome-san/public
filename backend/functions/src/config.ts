@@ -1,2 +1,2 @@
-export const TEST = process.env.TEST!;
-export const LOCAL = process.env.LOCAL!;
+export const POSTFINANCE_EMAIL_USER = process.env.POSTFINANCE_EMAIL_USER!;
+export const POSTFINANCE_EMAIL_PASSWORD = process.env.POSTFINANCE_EMAIL_PASSWORD!;
