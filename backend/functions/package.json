@@ -3,9 +3,9 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "serve": "yarn run build:watch | firebase emulators:start --project demo-social-income --config ../firebase.json --import ../../seed",
+    "serve": "npm run build:watch | firebase emulators:start --project demo-social-income --config ../firebase.json --import ../../seed",
     "test": "jest",
-    "emulators:test": "yarn run build && firebase emulators:exec --project demo-social-income --config ../firebase.json 'yarn test'",
+    "emulators:test": "npm run build && firebase emulators:exec --project demo-social-income --config ../firebase.json 'npm run test'",
     "format-code": "prettier --write ./"
   },
   "engines": {
