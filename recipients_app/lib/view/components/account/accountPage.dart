@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:app/models/alertVisibility.dart';
 import 'package:app/models/currentUser.dart';
 import 'package:app/services/authService.dart';
@@ -57,7 +55,7 @@ class AccountPage extends StatelessWidget {
                 ),
                 UnchangeableUserInformation(
                   "Recipient Since",
-                  AuthService.instance().createdAt(),
+                  AuthService.instance()?.createdAt() ?? "",
                 ),
                 UnchangeableUserInformation(
                   "Amount Received",

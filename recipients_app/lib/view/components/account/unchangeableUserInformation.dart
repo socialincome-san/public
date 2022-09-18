@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:app/models/currentUser.dart';
 import 'package:app/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +34,7 @@ class UnchangeableUserInformation extends StatelessWidget {
                 ),
                 child: Text(
                   section,
-                  style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
                         color: siGreyText,
                       ),
                 ),

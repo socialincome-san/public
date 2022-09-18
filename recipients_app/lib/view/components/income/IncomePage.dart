@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:app/models/currentUser.dart';
 import 'package:app/theme/theme.dart';
 import 'package:app/view/components/income/BalanceCard.dart';
@@ -10,7 +8,7 @@ import 'package:provider/provider.dart';
 class IncomePage extends StatelessWidget {
   List<Widget> transactionCards(CurrentUser currentUser) {
     return {
-      for (var transaction in currentUser.transactions)
+      for (var transaction in currentUser.transactions ?? List.empty())
         Padding(
           padding: EdgeInsets.only(top: 8),
           child: TransactionCard(transaction),
