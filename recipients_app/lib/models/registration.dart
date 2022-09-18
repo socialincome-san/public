@@ -1,16 +1,14 @@
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 
 class Registration extends ChangeNotifier {
-  String phoneNumber;
-  String otp;
-  String phoneVerificationId;
+  String? phoneNumber;
+  String? otp;
+  String? phoneVerificationId;
   bool codeSent = false;
   bool displayVerificationCodeError = false;
   bool displayVerificationCodeCorrect = false;
 
-  void setPhoneNumber(String number) {
+  void setPhoneNumber(String? number) {
     phoneNumber = number;
     notifyListeners();
   }
@@ -25,7 +23,7 @@ class Registration extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setCodeSent() {
+  void toggleCodeSent() {
     codeSent = !codeSent;
     notifyListeners();
   }

@@ -98,7 +98,7 @@ class PhoneInput extends StatelessWidget {
                         return;
                       }
                       auth.verifyPhoneNumber(registration.phoneNumber);
-                      registration.setCodeSent();
+                      registration.toggleCodeSent();
                     },
                     child: Text('Continue')),
               )
