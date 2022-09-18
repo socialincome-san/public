@@ -63,11 +63,11 @@ class AccountPage extends StatelessWidget {
                 ),
                 UnchangeableUserInformation(
                   "Country",
-                  currentUser.country,
+                  currentUser.country ?? "",
                 ),
                 UnchangeableUserInformation(
                   "Orange Money Number",
-                  currentUser.orangePhoneNumber,
+                  currentUser.orangePhoneNumber ?? "",
                 ),
                 ListTile(
                   contentPadding: EdgeInsets.zero,

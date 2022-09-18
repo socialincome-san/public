@@ -1,12 +1,10 @@
-// @dart=2.9
-
 import 'package:app/models/transaction.dart';
-import 'package:app/services/authService.dart';
 import 'package:app/services/databaseService.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 
 const communicationPhoneKey = 'communication_mobile_phone';
 const moneyPhoneKey = 'mobile_money_phone';
@@ -26,52 +24,51 @@ const imLinkInitialKey = 'im_link_initial';
 const imLinkRegularKey = 'im_link_regular';
 
 class CurrentUser extends ChangeNotifier {
-  String userId;
-  String phoneNumber;
-  String orangePhoneNumber;
-  String firstName;
-  String lastName;
-  DateTime birthDate;
-  String email;
-  String country;
-  String preferredName;
-  bool termsAccepted;
-  List<SocialIncomeTransaction> transactions; // List<Map<String, dynamic>>
-  // List inviteCodes; // List<Map<String, dynamic>>
-  bool stateToggle; // for convenient usage to update deep nested object
-  Timestamp recipientSince;
-  DateTime nextSurvey;
-  String imLinkInitial;
-  String imLinkRegular;
+  String? userId;
+  String? phoneNumber;
+  String? orangePhoneNumber;
+  String? firstName;
+  String? lastName;
+  DateTime? birthDate;
+  String? email;
+  String? country;
+  String? preferredName;
+  bool? termsAccepted;
+  List<SocialIncomeTransaction>? transactions; // List<Map<String, dynamic>>
+  bool? stateToggle; // for convenient usage to update deep nested object
+  Timestamp? recipientSince;
+  DateTime? nextSurvey;
+  String? imLinkInitial;
+  String? imLinkRegular;
 
-
-  CurrentUser({
-    this.phoneNumber,
-    this.orangePhoneNumber,
-    this.userId,
-    this.firstName,
-    this.lastName,
-    this.preferredName,
-    this.termsAccepted,
-    this.birthDate,
-    this.email,
-    this.country,
-    this.transactions,
-    this.recipientSince,
-    this.nextSurvey,
-    this.imLinkInitial,
-    this.imLinkRegular
-  }) {
+  CurrentUser(
+      {this.phoneNumber,
+      this.orangePhoneNumber,
+      this.userId,
+      this.firstName,
+      this.lastName,
+      this.preferredName,
+      this.termsAccepted,
+      this.birthDate,
+      this.email,
+      this.country,
+      this.transactions,
+      this.recipientSince,
+      this.nextSurvey,
+      this.imLinkInitial,
+      this.imLinkRegular}) {
     if (transactions == null) transactions = [];
   }
 
   DatabaseService databaseService =
-      DatabaseService(FirebaseAuth.instance.currentUser.phoneNumber);
+      DatabaseService(FirebaseAuth.instance.currentUser?.phoneNumber ?? "");
 
   Map<String, dynamic> data() => {
         userIdKey: userId,
-        '$communicationPhoneKey.$phoneKey': int.parse(phoneNumber.substring(1)),
-        '$moneyPhoneKey.$phoneKey': int.parse(orangePhoneNumber.substring(1)),
+        '$communicationPhoneKey.$phoneKey':
+            int.tryParse(phoneNumber?.substring(1) ?? ""),
+        '$moneyPhoneKey.$phoneKey':
+            int.tryParse(orangePhoneNumber?.substring(1) ?? ""),
         emailKey: email,
         birthDateKey: birthDate,
         firstNameKey: firstName,
@@ -81,13 +78,13 @@ class CurrentUser extends ChangeNotifier {
         recipientSinceKey: recipientSince,
         termsAcceptedKey: termsAccepted,
         transactionsKey:
-            transactions.map((transaction) => transaction.data()).toList(),
+            transactions?.map((transaction) => transaction.data()).toList(),
         nextSurveyKey: nextSurvey,
         imLinkInitialKey: imLinkInitial,
         imLinkRegularKey: imLinkRegular
       };
 
-  String changableInformation(section) {
+  String? changeableInformation(section) {
     switch (section) {
       case "First Name":
         return firstName;
@@ -100,7 +97,10 @@ class CurrentUser extends ChangeNotifier {
       case "Phone Number":
         return phoneNumber;
       case "Date of Birth":
-        return DateFormat('dd.MM.yyyy').format(birthDate);
+        var birthDate = this.birthDate;
+        return birthDate != null
+            ? DateFormat('dd.MM.yyyy').format(birthDate)
+            : "";
       default:
         return "";
     }
@@ -119,16 +119,20 @@ class CurrentUser extends ChangeNotifier {
         : replacementValue;
   }
 
-  DateTime safeAssignDate(DocumentSnapshot snapshot, String key,
-      {DateTime replacementValue}) {
+  DateTime? safeAssignDate(DocumentSnapshot snapshot, String key,
+      {DateTime? replacementValue}) {
     return containsKey(snapshot, key)
         ? snapshot[key].toDate()
         : replacementValue;
   }
 
-  Timestamp safeAssignTime(DocumentSnapshot snapshot, String key,
-      {DateTime replacementValue}) {
-    return containsKey(snapshot, key) ? snapshot[key] : replacementValue;
+  Timestamp? safeAssignTime(DocumentSnapshot snapshot, String key,
+      {DateTime? replacementValue}) {
+    return containsKey(snapshot, key)
+        ? snapshot[key]
+        : (replacementValue != null
+            ? Timestamp.fromDate(replacementValue)
+            : null);
   }
 
   bool safeAssignBool(DocumentSnapshot snapshot, String key) {
@@ -153,7 +157,7 @@ class CurrentUser extends ChangeNotifier {
 
     nextSurvey = safeAssignDate(doc, nextSurveyKey,
         replacementValue:
-            FirebaseAuth.instance.currentUser.metadata.creationTime);
+            FirebaseAuth.instance.currentUser?.metadata.creationTime);
     transactions = await databaseService
         .fetchTransactionDetails(); // need this so that History Card is updated after sign out
     imLinkInitial = safeAssignString(doc, imLinkInitialKey);
@@ -161,7 +165,7 @@ class CurrentUser extends ChangeNotifier {
     notifyListeners();
   }
 
-  Map sectionMap() {
+  Map<String, String> sectionMap() {
     return {
       "First Name": firstNameKey,
       "Last Name": lastNameKey,
@@ -190,8 +194,12 @@ class CurrentUser extends ChangeNotifier {
         phoneNumber = value;
         break;
     }
+    var sectionKey = sectionMap()[section];
+    if (sectionKey == null) {
+      return;
+    }
 
-    Map<String, String> map = {sectionMap()[section]: value};
+    Map<String, String> map = {sectionKey: value};
     databaseService.updateUser(map);
     notifyListeners();
   }
@@ -212,8 +220,13 @@ class CurrentUser extends ChangeNotifier {
   }
 
   void confirmTransaction(String transactionId) async {
-    var currentTransaction =
-        transactions.firstWhere((element) => element.id == transactionId);
+    var currentTransaction = transactions
+        ?.firstWhereOrNull((element) => element.id == transactionId);
+
+    if (currentTransaction == null) {
+      return;
+    }
+
     currentTransaction.status = "confirmed";
     currentTransaction.confirmedAt = Timestamp.fromDate(DateTime.now());
     Map<String, Object> info = {
@@ -224,8 +237,13 @@ class CurrentUser extends ChangeNotifier {
   }
 
   void contestTransaction(String transactionId, String contestReason) {
-    var currentTransaction =
-        transactions.firstWhere((element) => element.id == transactionId);
+    var currentTransaction = transactions
+        ?.firstWhereOrNull((element) => element.id == transactionId);
+
+    if (currentTransaction == null) {
+      return;
+    }
+
     currentTransaction.status = "contested";
     currentTransaction.contestedAt = Timestamp.fromDate(DateTime.now());
     Map<String, Object> info = {
@@ -238,39 +256,42 @@ class CurrentUser extends ChangeNotifier {
 
   int totalIncome() {
     int sum = 0;
-    for (SocialIncomeTransaction element in transactions) {
-      if (element.status != 'confirmed') continue;
+    for (SocialIncomeTransaction element in transactions ?? List.empty()) {
+      var amount = element.amount;
+      if (element.status != 'confirmed' || amount == null) continue;
 
       int factor = (element.currency == 'SLL') ? 1000 : 1;
-      sum += (element.amount / factor).floor();
+      sum += (amount / factor).floor();
     }
 
     return sum;
   }
 
-  String surveyUrl() {
-    if (this.nextSurvey.month ==
-        FirebaseAuth.instance.currentUser.metadata.creationTime.month) {
-      return imLinkInitial;
-    }
-    if (DateTime.now()
-        .isBefore(DateTime(this.nextSurvey.year, this.nextSurvey.month, 1))) {
+  String? surveyUrl() {
+    DateTime? nextSurveyDate = this.nextSurvey;
+    DateTime? creationDate =
+        FirebaseAuth.instance.currentUser?.metadata.creationTime;
+
+    if (nextSurveyDate == null || DateTime.now().isBefore(nextSurveyDate)) {
       return null;
     }
+
+    if (nextSurveyDate.month == creationDate?.month) {
+      return imLinkInitial;
+    }
+
     return imLinkRegular;
   }
 
   void setNextSurvey() {
+    DateTime? nextSurveyDate = this.nextSurvey;
     DateTime previousDate;
 
-    if (this.nextSurvey == null) {
-      var createdAt = AuthService.instance().createdAt();
-      previousDate = new DateTime(
-          int.parse(createdAt.substring(6)), // year
-          int.parse(createdAt.substring(3, 5)), // month
-          int.parse(createdAt.substring(0, 2))); // day
+    if (nextSurveyDate == null) {
+      previousDate = FirebaseAuth.instance.currentUser?.metadata.creationTime ??
+          DateTime.now();
     } else {
-      previousDate = this.nextSurvey;
+      previousDate = nextSurveyDate;
     }
 
     if (previousDate.month > 6) {

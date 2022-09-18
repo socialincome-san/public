@@ -13,7 +13,7 @@ class ChangeableUserInformation extends StatelessWidget {
     return Consumer<CurrentUser>(builder: (context, currentUser, child) {
       final bool birthDate = section == "Date of Birth";
       TextEditingController controller = TextEditingController(
-          text: currentUser.changableInformation(section));
+          text: currentUser.changeableInformation(section));
       return Padding(
         padding: const EdgeInsets.only(top: 12.0),
         child: birthDate
@@ -46,7 +46,7 @@ class ChangeableUserInformation extends StatelessWidget {
                   }
                 })
             : TextFormField(
-                initialValue: currentUser.changableInformation(section),
+                initialValue: currentUser.changeableInformation(section),
                 readOnly: birthDate,
                 decoration: InputDecoration(
                     floatingLabelBehavior: FloatingLabelBehavior.auto,
