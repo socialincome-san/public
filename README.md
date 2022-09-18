@@ -43,7 +43,7 @@ up (with `docker compose up admin`).
 Please ensure that you don't include any sensitive data in the seed.
 
 ```shell
- docker exec -it socialincome-admin_admin_1 yarn emulators:export
+ docker exec -it socialincome-admin_admin_1 npm run emulators:export
 ```
 
 #### Run Tests
@@ -51,7 +51,7 @@ Please ensure that you don't include any sensitive data in the seed.
 Run the following command to start the emulators and run the tests
 
 ```shell
- docker compose run admin yarn emulators:test
+ docker compose run admin npm run emulators:test
 ```
 
 #### Format Code
@@ -59,7 +59,7 @@ Run the following command to start the emulators and run the tests
 We are using prettier to format the code
 
 ```shell
-docker compose run admin yarn format-code
+docker compose run admin npm run format-code
 ```
 
 #### Deployment
@@ -82,16 +82,16 @@ by pubsub cron definitions, by datastore triggers or through web callbacks.
 We develop these functions mainly test-driven.
 
 1. Build helper image locally: `docker compose build`
-2. Run the tests including Firebase emulators: `docker compose run backend yarn emulators:test`.
+2. Run the tests including Firebase emulators: `docker compose run backend npm run emulators:test`.
    The first time this can take multiple minutes till the packages are downloaded.
-3. With `docker compose run backend yarn serve` one can also serve the webhooks on localhost.
+3. With `docker compose run backend npm run serve` one can also serve the webhooks on localhost.
 
 #### Format Code
 
 We are using prettier to format the code
 
 ```shell
-docker compose run backend yarn format-code
+docker compose run backend npm run format-code
 ```
 
 ## Mobile App

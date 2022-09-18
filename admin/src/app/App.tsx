@@ -68,7 +68,7 @@ const onFirebaseInit = () => {
     connectStorageEmulator(getStorage(), FB_STORAGE_EMULATOR_HOST, +FB_STORAGE_EMULATOR_PORT);
     console.log("Using storage emulator");
   } else {
-    console.log("Using production stroage");
+    console.log("Using production storage");
   }
 };
 
@@ -120,7 +120,10 @@ export default function App() {
           } else {
             setCollections([
               buildOrganisationsCollection({ isGlobalAdmin: false }),
-              buildRecipientsCollection({ isGlobalAdmin: false, organisations: result?.values?.organisations }),
+              buildRecipientsCollection({
+                isGlobalAdmin: false,
+                organisations: result?.values?.organisations,
+              }),
               buildRecentPaymentsCollection({ isGlobalAdmin: false }),
             ]);
           }
