@@ -1,16 +1,14 @@
-// @dart=2.9
-
 import "package:cloud_firestore/cloud_firestore.dart";
 
 class SocialIncomeTransaction {
-  String id;
-  int amount;
-  Timestamp confirmedAt;
-  Timestamp contestedAt;
-  String status;
-  String contestReason;
-  String contestExplanation;
-  String currency;
+  String? id;
+  int? amount;
+  Timestamp? confirmedAt;
+  Timestamp? contestedAt;
+  String? status;
+  String? contestReason;
+  String? contestExplanation;
+  String? currency;
 
   void initialize(Map<String, dynamic> data, String transactionId) {
     id = transactionId;
