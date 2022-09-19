@@ -284,24 +284,26 @@ class CurrentUser extends ChangeNotifier {
   }
 
   void setNextSurvey() {
-    DateTime? nextSurveyDate = this.nextSurvey;
     DateTime previousDate;
 
-    if (nextSurveyDate == null) {
+    DateTime? currentNextSurvey = this.nextSurvey;
+    if (currentNextSurvey == null) {
       previousDate = FirebaseAuth.instance.currentUser?.metadata.creationTime ??
           DateTime.now();
     } else {
-      previousDate = nextSurveyDate;
+      previousDate = currentNextSurvey;
     }
 
+    DateTime resultNextSurvey;
     if (previousDate.month > 6) {
-      this.nextSurvey =
+      resultNextSurvey =
           new DateTime(previousDate.year + 1, previousDate.month - 6, 1);
     } else {
-      this.nextSurvey =
+      resultNextSurvey =
           new DateTime(previousDate.year, previousDate.month + 6, 1);
     }
-    databaseService.updateNextSurvey(nextSurvey);
+    this.nextSurvey = resultNextSurvey;
+    databaseService.updateNextSurvey(resultNextSurvey);
     notifyListeners();
   }
 }
