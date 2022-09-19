@@ -1,20 +1,39 @@
-# Social Income Public Repository
+# Public Repo
 
-Our repository contains following projects:
+![Social Income Logo](https://raw.githubusercontent.com/socialincome-san/public/main/shared/assets/logos/logo_color%402x.png)
 
-1. Admin Tool ([admin.socialincome.org](https://admin.socialincome.org)) for managing contributors and recipients
-2. Mobile App (for recipients)
-3. Website ([socialincome.org](https://admin.socialincome.org)) – code to be added
+**Our monorepo contains following projects:**
 
-# Code Contribution
+1. [Admin Tool](#admin-tool) for managing contributors and recipients (`↗` [admin.socialincome.org](https://admin.socialincome.org))
+2. [Mobile App](#mobile-app) for recipients (`↗` Google Play Store link added soon)
+3. [Website](#website) for contributors (`↗` [socialincome.org](https://socialincome.org))
 
-Use your skills to take on the [SDG 1](https://sdgs.un.org/goals/goal1) (No Poverty) and
-the [SDG 10](https://sdgs.un.org/goals/goal10) (Reduced Inequality).
+## Table of Contents
+- **[Code Contributions](#code-contributions)**
+  * [Admin Tool](#admin-tool)
+  * [Mobile App](#mobile-app)
+  * [Website](#website)
+- **[Financial Contributions](#financial-contributions)**
+  * [1 Percent of Your Income](#1-percent-of-your-income)
+  * [Sponsor Dev Community](#sponsor-dev-community)
+- **[Organisation](#organisation)**
+  * [Non-Profit Association](#non-profit-association)
+  * [Radical Transparency](#radical-transparency)
+  * [License](#license)
 
-## Admin Tool ([admin.socialincome.org](https://admin.socialincome.org))
+# Code Contributions
+
+Use your skills to take on the SDG 1 ([No Poverty](https://sdgs.un.org/goals/goal1)) and
+the SDG 10 ([Reduced Inequality](https://sdgs.un.org/goals/goal10)). Don't forget: open source isn’t an exclusive club. It’s made by people just like you. You don’t need to overthink what exactly your first contribution will be, or how it will look. Just follow the principle: 
+
+1. Do something
+2. Determine how to do it better
+3. Rally others to help
+
+## Admin Tool
 
 We are using [Firestore](https://firebase.google.com/docs/firestore) as database and
-[FireCMS](https://firecms.co/) as UI tool.
+[FireCMS](https://firecms.co/) as UI tool. The staff can access the admin tool with ([admin.socialincome.org](https://admin.socialincome.org)).
 
 #### Setup
 
@@ -119,29 +138,34 @@ Real devices need some additional setup.
 
 ## Website
 
-Instructions to be added
+Code and instructions to be added
 
 ## Reporting Bugs
 
 Please use one of the templates on our [issue page](https://github.com/socialincome-san/public/issues/new/choose).
 
-# Financial Contribution
+# Financial Contributions
 
-## Donate 1%
+## 1 Percent of Your Income
 
-[Become a contributor](https://socialincome.org/get-involved) of Social Income.
+[Become a contributor](https://socialincome.org/get-involved) of Social Income (tax-deductible in Switzerland).
 
 ## Sponsor Dev Community
 
 [Become a sponsor](https://github.com/sponsors/san-socialincome) and help ensure the development of open source software for more equality and less poverty. Donations through the GitHub Sponsor program are used for building a strong developer community and organizing Social Coding Nights.
 
-# Legal
+# Organisation
 
-## Association
+## Non-Profit Association
 
-Social Income is a non-profit association in Zurich, Switzerland. We believe that transparency builds trust and trust builds solidarity. This is why we disclose our [finances in realtime](https://socialincome.org/finances) and publish our [annual statements](https://socialincome.org/reporting) and overall [carbon footprint](https://socialincome.org/sustainability).
+Social Income is a non-profit association ([CHE-289.611.695](https://www.uid.admin.ch/Detail.aspx?uid_id=CHE-289.611.695)) in Zurich, Switzerland.  
+
+## Radical Transparency
+
+We believe that transparency builds trust and trust builds solidarity. This is why we disclose our [finances in realtime](https://socialincome.org/finances) and publish our [annual statements](https://socialincome.org/reporting) and overall [carbon footprint](https://socialincome.org/sustainability).
 
 ## License
 
 Code: [MIT](LICENSE)
+
 Font: The font is licensed exclusively for the use on the website socialincome.org and in the mobile apps of Social Income.
