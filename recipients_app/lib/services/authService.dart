@@ -39,7 +39,11 @@ class AuthService {
 
   void signOut() => FirebaseAuth.instance.signOut();
 
-  Future<String?> checkOTP(String verificationId, String smsCode) async {
+  Future<String?> checkOTP(String? verificationId, String smsCode) async {
+    if (verificationId == null) {
+      return null;
+    }
+
     PhoneAuthCredential phoneCredential = PhoneAuthProvider.credential(
         verificationId: verificationId, smsCode: smsCode);
     try {

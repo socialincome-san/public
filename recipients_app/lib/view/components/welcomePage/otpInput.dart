@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:app/models/alertVisibility.dart';
 import 'package:app/models/registration.dart';
 import 'package:app/services/authService.dart';
