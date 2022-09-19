@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:app/models/alertVisibility.dart';
 import 'package:app/models/registration.dart';
 import 'package:app/services/authService.dart';
@@ -20,17 +18,18 @@ class PhoneInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer2<Registration, AlertVisibility>(
         builder: (context, registration, alertVisibility, child) {
-      bool validatePhoneNumber(String numberToValidate) {
+      bool validatePhoneNumber(String? numberToValidate) {
         if (numberToValidate == null) {
           return false;
         }
+
         registration.setPhoneNumber(numberToValidate.replaceAll("+410", "+41"));
         registration
             .setPhoneNumber(numberToValidate.replaceAll("+2320", "+232"));
         return true;
       }
 
-      auth.codeSent = (String verificationId, int resendToken) {
+      auth.codeSent = (String verificationId, int? resendToken) {
         registration.setOtp(verificationId);
         btnController.stop();
       };
