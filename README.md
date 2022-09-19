@@ -9,22 +9,23 @@
 3. [Website](#website) for contributors (`↗` [socialincome.org](https://socialincome.org))
 
 ## Table of Contents
+
 - **[Code Contributions](#code-contributions)**
-  * [Admin Tool](#admin-tool)
-  * [Mobile App](#mobile-app)
-  * [Website](#website)
+  - [Admin Tool](#admin-tool)
+  - [Mobile App](#mobile-app)
+  - [Website](#website)
 - **[Financial Contributions](#financial-contributions)**
-  * [1 Percent of Your Income](#1-percent-of-your-income)
-  * [Sponsor Dev Community](#sponsor-dev-community)
+  - [1 Percent of Your Income](#1-percent-of-your-income)
+  - [Sponsor Dev Community](#sponsor-dev-community)
 - **[Organisation](#organisation)**
-  * [Non-Profit Association](#non-profit-association)
-  * [Radical Transparency](#radical-transparency)
-  * [License](#license)
+  - [Non-Profit Association](#non-profit-association)
+  - [Radical Transparency](#radical-transparency)
+  - [License](#license)
 
 # Code Contributions
 
 Use your skills to take on the SDG 1 ([No Poverty](https://sdgs.un.org/goals/goal1)) and
-the SDG 10 ([Reduced Inequality](https://sdgs.un.org/goals/goal10)). Don't forget: open source isn’t an exclusive club. It’s made by people just like you. You don’t need to overthink what exactly your first contribution will be, or how it will look. Just follow the principle: 
+the SDG 10 ([Reduced Inequality](https://sdgs.un.org/goals/goal10)). Don't forget: open source isn’t an exclusive club. It’s made by people just like you. You don’t need to overthink what exactly your first contribution will be, or how it will look. Just follow the principle:
 
 1. Do something
 2. Determine how to do it better
@@ -158,7 +159,7 @@ Please use one of the templates on our [issue page](https://github.com/socialinc
 
 ## Non-Profit Association
 
-Social Income is a non-profit association ([CHE-289.611.695](https://www.uid.admin.ch/Detail.aspx?uid_id=CHE-289.611.695)) in Zurich, Switzerland.  
+Social Income is a non-profit association ([CHE-289.611.695](https://www.uid.admin.ch/Detail.aspx?uid_id=CHE-289.611.695)) in Zurich, Switzerland.
 
 ## Radical Transparency
 
