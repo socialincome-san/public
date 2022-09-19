@@ -1,9 +1,10 @@
 ---
-name: "New Feature: Admin Tool"
+name: 'New Feature: Admin Tool'
 about: Suggest a feature for the admin tool
 title: "[Admin] "
-labels: enhancement
-assignees: ""
+labels: ''
+assignees: ''
+
 ---
 
 **Is your feature request related to a problem? Please describe.**
