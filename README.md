@@ -34,17 +34,16 @@ the SDG 10 ([Reduced Inequality](https://sdgs.un.org/goals/goal10)). Don't forge
 
 ## Admin Tool
 
-Quick Links: `↗` [Good first issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+label%3Aadmintool)  `↗` [All issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3Aadmintool)
-
+Quick Links: `↗` [Good first issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+label%3Aadmintool) `↗` [All issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3Aadmintool)
 
 #### Setup
 
 We are using [Firestore](https://firebase.google.com/docs/firestore) as database and [FireCMS](https://firecms.co/) as UI tool. The staff can access the admin tool with on [admin.socialincome.org](https://admin.socialincome.org).
 
-For the development we use [Docker](https://www.docker.com) and rely on local emulators, which are populated with dummy seed data. This makes sure, no one requires production Firebase credentials to contribute. 
+For the development we use [Docker](https://www.docker.com) and rely on local emulators, which are populated with dummy seed data. This makes sure, no one requires production Firebase credentials to contribute.
 
 1. Build helper image locally: `docker compose build`
-2. Start development server including Firebase emulators: `docker compose up admin` 
+2. Start development server including Firebase emulators: `docker compose up admin`
 
 🕐 For the first time, it takes a few minutes to download the packages
 
@@ -60,12 +59,12 @@ An initial set of data is imported into the Firebase emulators during startup. Y
 ```shell
  docker exec -it public-admin-1 npm run emulators:export
 ```
+
 ⚠️ Don't include any sensitive data in the seed
 
 #### Backend Functions
 
 `↓` see [Shared](#shared) > [Shared Functions](#shared-functions)
-
 
 #### Run Tests
 
@@ -85,12 +84,11 @@ docker compose run admin npm run format-code
 
 #### Deployment
 
-Deployment is handled automatically through [GitHub actions](https://github.com/socialincome-san/public/actions). The production Firebase keys are ingested through [GitHub secrets]([url](https://docs.github.com/en/actions/security-guides/encrypted-secrets)).
+Deployment is handled automatically through [GitHub actions](https://github.com/socialincome-san/public/actions). The production Firebase keys are ingested through [GitHub secrets](<[url](https://docs.github.com/en/actions/security-guides/encrypted-secrets)>).
 
 When creating a PR, an action tests the code and deploys it with the production credentials to a preview hosting. There, one can see the proposed change with the production Firestore database as backend.
 
 After merging the PR into main, a deployment action automatically deploys the code to [admin.socialincome.org](https://admin.socialincome.org).
-
 
 ## Mobile App
 
@@ -120,7 +118,7 @@ Real devices need some additional setup.
 
 ## Shared
 
-Shared explanations, assets, code or functions for all three projects. 
+Shared explanations, assets, code or functions for all three projects.
 
 ### Shared Functions
 
@@ -135,7 +133,6 @@ We develop these functions mainly test-driven.
 3. Run the tests including Firebase emulators: `docker compose run backend npm run emulators:test`.
    The first time this can take multiple minutes till the packages are downloaded.
 4. With `docker compose run backend npm run serve` one can also serve the webhooks on localhost.
-
 
 ### Bug reporting / Feature Request
 
