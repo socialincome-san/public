@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'package:app/models/transaction.dart';
 import 'package:app/view/components/income/ReviewTransactionModal.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +10,9 @@ class TransactionCard extends StatelessWidget {
   final SocialIncomeTransaction transaction;
   TransactionCard(this.transaction);
 
-  String cleanStatus(String currentStatus) {
-    return ['contested', 'confirmed'].contains(currentStatus)
+  String cleanStatus(String? currentStatus) {
+    return currentStatus != null &&
+            ['contested', 'confirmed'].contains(currentStatus)
         ? currentStatus
         : 'please review this transaction';
   }
@@ -39,12 +38,7 @@ class TransactionCard extends StatelessWidget {
                 ),
                 Padding(
                     padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                    child: Text(cleanStatus(transaction.status) +
-                        (transaction.status == "confirmed"
-                            ? " at " +
-                                DateFormat("dd.MM.yyyy")
-                                    .format(transaction.confirmedAt.toDate())
-                            : ""))),
+                    child: Text(getTransactionStatusText())),
                 if (transaction.status == "contested")
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
@@ -73,5 +67,15 @@ class TransactionCard extends StatelessWidget {
           )
       ]),
     );
+  }
+
+  String getTransactionStatusText() {
+    var confirmedAt = transaction.confirmedAt;
+    return cleanStatus(transaction.status) +
+                      (transaction.status == "confirmed" && confirmedAt != null
+                          ? " at " +
+                              DateFormat("dd.MM.yyyy")
+                                  .format(confirmedAt.toDate())
+                          : "");
   }
 }
