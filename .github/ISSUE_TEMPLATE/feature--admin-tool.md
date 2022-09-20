@@ -2,7 +2,7 @@
 name: "Feature: Admin Tool"
 about: Suggest a feature for the admin tool
 title: "[Admin] "
-labels: ""
+labels: admintool, feature
 assignees: ""
 ---
 
