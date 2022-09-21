@@ -1,8 +1,20 @@
-# Public Repo
+#### &nbsp;&nbsp;#Tech4Good  &nbsp;&nbsp;#OpenSource  &nbsp;&nbsp;#Solidarity
 
 ![Social Income Logo](https://raw.githubusercontent.com/socialincome-san/public/main/shared/assets/logos/logo_color%402x.png)
 
-**Our monorepo contains following projects:**
+```diff
+
+Everybody cheers for equality, but forgets without economic justice, there can be no true equality. 
+
+```
+
+#### Social Income explained
+https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-ade9-2cc0e153d947.mp4
+
+
+### Social Income is a radically simple solution in the fight against poverty. We turn 1% of anyones salary into an unconditional basic income for people living in poverty – sent directly to their mobile phones. The tools that make this possible are build and continuously improved by a open source community, who use technical skills to take on the SDG 1 ([No Poverty](https://sdgs.un.org/goals/goal1)) and the SDG 10 ([Reduced Inequality](https://sdgs.un.org/goals/goal10)).
+
+### Our monorepo contains following projects:
 
 1. [Admin Tool](#admin-tool) for managing contributors and recipients (`↗` [admin.socialincome.org](https://admin.socialincome.org))
 2. [Mobile App](#mobile-app) for recipients (`↗` Google Play Store link added soon)
@@ -25,8 +37,7 @@
 
 # Code Contributions
 
-Use your skills to take on the SDG 1 ([No Poverty](https://sdgs.un.org/goals/goal1)) and
-the SDG 10 ([Reduced Inequality](https://sdgs.un.org/goals/goal10)). Don't forget: open source isn’t an exclusive club. It’s made by people just like you. You don’t need to overthink what exactly your first contribution will be, or how it will look. Just follow the principle:
+Don't forget: open source isn’t an exclusive club. It’s made by people just like you. You don’t need to overthink what exactly your first contribution will be, or how it will look. Just follow the principle:
 
 1. Do something
 2. Determine how to do it better
