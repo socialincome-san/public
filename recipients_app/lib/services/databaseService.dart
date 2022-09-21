@@ -49,17 +49,22 @@ class DatabaseService {
       transactions.add(transaction);
     });
 
-    transactions.sort((a, b) => b.id.compareTo(a.id));
+    transactions.sort((a, b) {
+      var aId = a.id;
+      var bId = b.id;
+
+      return aId != null && bId != null ? bId.compareTo(aId) : 0;
+    });
 
     return transactions;
   }
 
-  Future<void> updateUser(Map info) async {
+  Future<void> updateUser(Map<String, Object?> info) async {
     var userSnapshot = await getUserSnapshot();
     return userSnapshot.reference.update(info);
   }
 
-  void updateTransaction(Map info, String transactionId) async {
+  void updateTransaction(Map<String, Object?> info, String transactionId) async {
     var snapshot = await getUserSnapshot();
 
     await firestore
