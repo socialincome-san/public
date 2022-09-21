@@ -1,5 +1,8 @@
 run-website:
-	docker compose --profile website up
+	docker compose up ui
 
 run-ui:
-	docker compose --profile ui up
+	docker compose up ui
+
+build-ui:
+	docker compose run --rm ui bash -c "npm run build:ui"
