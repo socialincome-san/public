@@ -1,0 +1,11 @@
+{
+  "name": "@socialincome/monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "ui"
+  ],
+  "scripts": {
+    "serve:ui": "$npm_execpath --workspace=@socialincome/ui run serve"
+  }
+}
