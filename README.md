@@ -1,16 +1,16 @@
-#### &nbsp;&nbsp;#Tech4Good  &nbsp;&nbsp;#OpenSource  &nbsp;&nbsp;#Solidarity
+#### &nbsp;&nbsp;#Tech4Good &nbsp;&nbsp;#OpenSource &nbsp;&nbsp;#Solidarity
 
 ![Social Income Logo](https://raw.githubusercontent.com/socialincome-san/public/main/shared/assets/logos/logo_color%402x.png)
 
 ```diff
 
-Everybody cheers for equality, but forgets without economic justice, there can be no true equality. 
+Everybody cheers for equality, but forgets without economic justice, there can be no true equality.
 
 ```
 
 #### Social Income explained
-https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-ade9-2cc0e153d947.mp4
 
+https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-ade9-2cc0e153d947.mp4
 
 ### Social Income is a radically simple solution in the fight against poverty. We turn 1% of anyones salary into an unconditional basic income for people living in poverty – sent directly to their mobile phones. The tools that make this possible are build and continuously improved by a open source community, who use technical skills to take on the SDG 1 ([No Poverty](https://sdgs.un.org/goals/goal1)) and the SDG 10 ([Reduced Inequality](https://sdgs.un.org/goals/goal10)).
 
