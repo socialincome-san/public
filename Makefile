@@ -1,7 +1,7 @@
-run-website:
+serve-website:
 	docker compose up ui
 
-run-ui:
+serve-ui:
 	docker compose up ui
 
 build-ui:
