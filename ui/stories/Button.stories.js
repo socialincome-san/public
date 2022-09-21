@@ -1,11 +1,10 @@
-import { createButton } from "./Button";
+import { createButton } from "../src/Button";
 
 // More on default export: https://storybook.js.org/docs/html/writing-stories/introduction#default-export
 export default {
   title: "Example/Button",
   // More on argTypes: https://storybook.js.org/docs/html/api/argtypes
   argTypes: {
-    backgroundColor: { control: "color" },
     label: { control: "text" },
     onClick: { action: "onClick" },
     primary: { control: "boolean" },
