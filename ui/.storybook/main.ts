@@ -1,13 +1,12 @@
-import type { StorybookViteConfig } from "@storybook/builder-vite";
+import type { StorybookConfig } from "@storybook/core-common";
 
-const config: StorybookViteConfig = {
-  stories: [
-    "../stories/**/*.stories.mdx",
-    "../stories/**/*.stories.@(js|jsx|ts|tsx)",
-  ],
+const config: StorybookConfig = {
+  stories: ["../src/**/*.stories.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
+  staticDirs: ["../public"],
   addons: [
     "@storybook/addon-links",
     "@storybook/addon-essentials",
+    // '@storybook/preset-create-react-app',
     "@storybook/addon-interactions",
     {
       name: "@storybook/addon-postcss",
@@ -24,17 +23,23 @@ const config: StorybookViteConfig = {
       },
     },
   ],
-  framework: "@storybook/html",
+  typescript: {
+    check: false,
+    checkOptions: {},
+    reactDocgen: "react-docgen-typescript",
+    reactDocgenTypescriptOptions: {
+      shouldExtractLiteralValuesFromEnum: true,
+      propFilter: (prop) =>
+        prop.parent ? !/node_modules/.test(prop.parent.fileName) : true,
+    },
+  },
+  framework: "@storybook/react",
   core: {
     builder: "@storybook/builder-vite",
   },
   features: {
     storyStoreV7: true,
   },
-  async viteFinal(config, options) {
-    // Add your configuration here
-    return config;
-  },
 };
 
-export default config;
+module.exports = config;
