@@ -13,6 +13,7 @@
 - **[Code Contributions](#code-contributions)**
   - [Admin Tool](#admin-tool)
   - [Mobile App](#mobile-app)
+  - [User Interface (UI)](#ui)
   - [Website](#website)
   - [Shared](#shared)
 - **[Financial Contributions](#financial-contributions)**
@@ -111,6 +112,10 @@ Building flavor should work seamlessly for Android Studio and VS Code with prede
 
 As Firebase emulators work on your local host machine the easiest way to run app is on the Android emulator.
 Real devices need some additional setup.
+
+## UI
+
+[See `README.md` in `ui` subfolder](ui/README.md).
 
 ## Website
 
