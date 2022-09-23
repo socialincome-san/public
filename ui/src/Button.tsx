@@ -24,7 +24,7 @@ export const SoButton = ({
 	href,
 	...props
 }: SoButtonProps) => {
-	let defaultClassNames = ['so-c-button', `so-c-button--${variant}`, `so-c-button--${size}`];
+	const defaultClassNames = ['so-c-button', `so-c-button--${variant}`, `so-c-button--${size}`];
 
 	className = classNames(defaultClassNames, className);
 
