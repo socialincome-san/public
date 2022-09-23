@@ -1,0 +1,22 @@
+{
+	"singleQuote": true,
+	"printWidth": 120,
+	"useTabs": true,
+	"overrides": [
+		{
+			"files": ["*.md"],
+			"options": {
+				"tabWidth": 2,
+				"printWidth": 72,
+				"proseWrap": "always"
+			}
+		},
+		{
+			"files": ["*.yml"],
+			"options": {
+				"singleQuote": false
+			}
+		}
+	]
+}
+
