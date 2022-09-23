@@ -14,7 +14,7 @@ on:
       - closed
 
 env:
-  DIST_PATH: "ui/storybook-static/"
+  DIST_PATH: "ui/storybook-static"
 
 jobs:
   build:
@@ -43,7 +43,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: storybook-static
-          path: ${{ env.DIST_PATH }}
+          path: "${{ env.DIST_PATH }}/"
           if-no-files-found: error
           retention-days: 1
 
@@ -63,6 +63,9 @@ jobs:
         uses: rossjrw/pr-preview-action@v1
         with:
           source-dir: ${{ env.DIST_PATH }}
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: auto
 
   deploy-main:
     runs-on: ubuntu-latest
@@ -89,5 +92,6 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: ${{ env.DIST_PATH }}
-          clean-exclude: pr-preview/
+          clean-exclude: pr-preview
           force: false
+          branch: gh-pages
