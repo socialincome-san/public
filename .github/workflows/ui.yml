@@ -26,7 +26,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: 'npm'
+          cache: "npm"
       - name: Install Dependencies
         run: npm ci
       - name: Build UI Documentation
@@ -50,12 +50,12 @@ jobs:
           retention-days: ${{ inputs.retention-days }}
 
   deploy_gh_pages:
-    if: "${{ github.ref == 'refs/heads/main' && github.repository_owner == 'socialincome-san' }}" 
+    if: "${{ github.ref == 'refs/heads/main' && github.repository_owner == 'socialincome-san' }}"
     needs: build
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
     # Deploy to the github-pages environment
     environment:
       name: github-pages
