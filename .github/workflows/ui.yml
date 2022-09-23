@@ -40,10 +40,10 @@ jobs:
             --exclude=.github \
             .
       - name: Upload artifact
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@v3
         with:
           name: storybook-static
-          path: ${{ DIST_PATH }}
+          path: ${{ env.DIST_PATH }}
           if-no-files-found: error
           retention-days: 1
 
@@ -54,11 +54,11 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: storybook-static
-          path: ${{ DIST_PATH }}
+          path: ${{ env.DIST_PATH }}
       - name: Deploy preview to GitHub Pages
         uses: rossjrw/pr-preview-action@v1
         with:
-          source-dir: ${{ DIST_PATH }}
+          source-dir: ${{ env.DIST_PATH }}
 
   deploy-main:
     runs-on: ubuntu-latest
@@ -78,10 +78,10 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: storybook-static
-          path: ${{ DIST_PATH }}
+          path: ${{ env.DIST_PATH }}
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: ${{ DIST_PATH }}
+          folder: ${{ env.DIST_PATH }}
           clean-exclude: pr-preview/
           force: false
