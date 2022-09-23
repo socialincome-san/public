@@ -7,15 +7,9 @@ on:
       - "package-lock.json"
       - ".github/workflows/ui.yml"
 
-inputs:
-  path:
-    description: "Path of the directory containing the static assets."
-    required: true
-    default: "ui/storybook-static"
-  retention-days:
-    description: "Duration after which artifact will expire in days."
-    required: false
-    default: "1"
+env:
+  DIST_PATH: "ui/storybook-static"
+  RETENTION_DAYS: 1
 
 jobs:
   build:
@@ -34,12 +28,10 @@ jobs:
       - name: Build UI Documentation
         run: npm run build:ui
       - name: Archive artifact
-        env:
-          INPUT_PATH: ${{ inputs.path }}
         run: |
           tar \
             --dereference --hard-dereference \
-            --directory "$INPUT_PATH" \
+            --directory "$DIST_PATH" \
             -cvf "$RUNNER_TEMP/artifact.tar" \
             --exclude=.git \
             --exclude=.github \
@@ -49,7 +41,7 @@ jobs:
         with:
           name: github-pages
           path: ${{ runner.temp }}/artifact.tar
-          retention-days: ${{ inputs.retention-days }}
+          retention-days: ${{ RETENTION_DAYS }}
 
   deploy_gh_pages:
     if: "${{ github.ref == 'refs/heads/main' && github.repository_owner == 'socialincome-san' }}"
