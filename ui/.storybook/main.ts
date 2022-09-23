@@ -1,6 +1,7 @@
-import type { StorybookConfig } from '@storybook/core-common';
+import type { StorybookViteConfig } from '@storybook/builder-vite';
+import { mergeConfig } from 'vite';
 
-const config: StorybookConfig = {
+const config: StorybookViteConfig = {
 	stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
 	staticDirs: ['../public'],
 	addons: [
@@ -38,6 +39,22 @@ const config: StorybookConfig = {
 	},
 	features: {
 		storyStoreV7: true,
+	},
+	async viteFinal(config) {
+		const storybookPathPrefix = process.env.STORYBOOK_PATH_PREFIX;
+		let configOverwrite: typeof config = {};
+
+		// Required for subfolder deployments on GitHub pages.
+		if (storybookPathPrefix) {
+			console.log(`STORYBOOK_PATH_PREFIX set to ${storybookPathPrefix}`);
+
+			configOverwrite = {
+				...configOverwrite,
+				base: storybookPathPrefix,
+			};
+		}
+
+		return mergeConfig(config, configOverwrite);
 	},
 };
 
