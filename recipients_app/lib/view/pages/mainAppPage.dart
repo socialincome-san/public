@@ -42,8 +42,9 @@ class MainAppPage extends StatelessWidget {
           }
 
           Future<CurrentUser> fetchUserDetails() async {
-            var firebaseUser = FirebaseAuth.instance.currentUser;
-            if (firebaseUser == null) return currentUser;
+            var firebaseUserPhone =
+                FirebaseAuth.instance.currentUser?.phoneNumber;
+            if (firebaseUserPhone == null) return currentUser;
 
             // For now, breaking constant fetching loop when currentUser
             // has already number set as it means that we already
@@ -53,7 +54,7 @@ class MainAppPage extends StatelessWidget {
               return currentUser;
             }
 
-            return await DatabaseService(firebaseUser.phoneNumber)
+            return await DatabaseService(firebaseUserPhone)
                 .fetchUserDetails(currentUser);
           }
 

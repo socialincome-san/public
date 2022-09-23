@@ -78,7 +78,7 @@ class OtpInput extends StatelessWidget {
                   if (userId != null) {
                     alertVisibility.changeAlertVisibility(true, "CodeCorrect");
                     otpSuccess(userId);
-                    registration.setCodeSent();
+                    registration.toggleCodeSent();
                   } else {
                     btnController.stop();
                     alertVisibility.changeAlertVisibility(true, "CodeWrong");

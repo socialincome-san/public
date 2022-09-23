@@ -1,8 +1,8 @@
 ---
-name: "Bug Report: Mobile App"
-about: Create a report to help us improve the mobile app
-title: "[Mobile] "
-labels: bug, flutter, mobileapp
+name: "Bug Report: Website"
+about: Create a report to help us improve the website
+title: "[Website] "
+labels: bug, website
 assignees: ""
 ---
 

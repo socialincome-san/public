@@ -2,7 +2,7 @@
 name: "Feature: Mobile App"
 about: Suggest a feature for the mobile app
 title: "[Mobile] "
-labels: flutter
+labels: feature, flutter, mobileapp
 assignees: ""
 ---
 
