@@ -5,7 +5,7 @@ on:
     paths:
       - "ui/**"
       - "package-lock.json"
-      - "workflows/ui.yml"
+      - ".github/workflows/ui.yml"
 
 inputs:
   path:
