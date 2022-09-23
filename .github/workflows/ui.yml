@@ -15,6 +15,7 @@ on:
 
 env:
   DIST_PATH: "ui/storybook-static"
+  PR_NUMBER: ${{ github.event.number }}
 
 jobs:
   build:
@@ -30,8 +31,9 @@ jobs:
         run: npm ci
       - name: Set Storybook ENV variables
         run: |
-          if [[ -z $GITHUB_HEAD_REF ]]; then
-            echo 'STORYBOOK_PATH_PREFIX=/public/pr-preview/pr-${{ github.event.number }}/' >>"$GITHUB_ENV"
+          echo "$PR_NUMBER"
+          if [[ -z $PR_NUMBER ]]; then
+            echo 'STORYBOOK_PATH_PREFIX=/public/pr-preview/pr-$PR_NUMBER/' >>"$GITHUB_ENV"
           else
             echo "STORYBOOK_PATH_PREFIX=/public/" >>"$GITHUB_ENV"
           fi
