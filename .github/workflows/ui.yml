@@ -49,7 +49,9 @@ jobs:
 
   deploy-preview:
     runs-on: ubuntu-latest
+    if: "${{ github.repository_owner == 'socialincome-san' }}"
     concurrency: ui-preview-deployment-${{ github.ref }}
+    needs: build
     steps:
       - uses: actions/download-artifact@v3
         with:
