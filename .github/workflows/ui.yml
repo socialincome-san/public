@@ -9,7 +9,6 @@ on:
 
 env:
   DIST_PATH: "ui/storybook-static"
-  RETENTION_DAYS: 1
 
 jobs:
   build:
@@ -41,7 +40,8 @@ jobs:
         with:
           name: github-pages
           path: ${{ runner.temp }}/artifact.tar
-          retention-days: ${{ RETENTION_DAYS }}
+          if-no-files-found: error
+          retention-days: 1
 
   deploy_gh_pages:
     if: "${{ github.ref == 'refs/heads/main' && github.repository_owner == 'socialincome-san' }}"
