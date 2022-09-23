@@ -6,14 +6,18 @@ on:
       - "ui/**"
       - "package-lock.json"
       - ".github/workflows/ui.yml"
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
 
 env:
-  DIST_PATH: "ui/storybook-static"
+  DIST_PATH: "ui/storybook-static/"
 
 jobs:
   build:
-    # <Not provided for brevity>
-    # At a minimum this job should upload artifacts using actions/upload-pages-artifact
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -38,24 +42,46 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@main
         with:
-          name: github-pages
-          path: ${{ runner.temp }}/artifact.tar
+          name: storybook-static
+          path: ${{ DIST_PATH }}
           if-no-files-found: error
           retention-days: 1
 
-  deploy_gh_pages:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    concurrency: ui-preview-deployment-${{ github.ref }}
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: storybook-static
+          path: ${{ DIST_PATH }}
+      - name: Deploy preview to GitHub Pages
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ${{ DIST_PATH }}
+
+  deploy-main:
+    runs-on: ubuntu-latest
+    concurrency: ui-deployment-main
     if: "${{ github.ref == 'refs/heads/main' && github.repository_owner == 'socialincome-san' }}"
     needs: build
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
+      contents: write
       pages: write # to deploy to Pages
       id-token: write # to verify the deployment originates from an appropriate source
     # Deploy to the github-pages environment
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: storybook-static
+          path: ${{ DIST_PATH }}
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: ${{ DIST_PATH }}
+          clean-exclude: pr-preview/
+          force: false
