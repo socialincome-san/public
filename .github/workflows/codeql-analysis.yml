@@ -1,12 +1,6 @@
 name: CodeQL - Security Checks
 
-on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
-  schedule:
-    - cron: "39 8 * * 1"
+on: pull_request
 
 jobs:
   analyze:
