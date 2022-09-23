@@ -30,10 +30,10 @@ jobs:
         run: npm ci
       - name: Set Storybook ENV variables
         run: |
-          if [[ -z $GITHUB_HEAD_REF && -z ${{ github.event.number }}]]; then
-              echo "STORYBOOK_PATH_PREFIX=/public/pr-preview/pr-${{ github.event.number }}/" >> "$GITHUB_ENV"
+          if [[ -z $GITHUB_HEAD_REF && -z '${{ github.event.number }}' ]]; then
+            echo 'STORYBOOK_PATH_PREFIX=/public/pr-preview/pr-${{ github.event.number }}/' >>"$GITHUB_ENV"
           else
-              echo "STORYBOOK_PATH_PREFIX=/public/" >> "$GITHUB_ENV"
+            echo "STORYBOOK_PATH_PREFIX=/public/" >>"$GITHUB_ENV"
           fi
       - name: Build UI Documentation
         run: npm run build:ui
