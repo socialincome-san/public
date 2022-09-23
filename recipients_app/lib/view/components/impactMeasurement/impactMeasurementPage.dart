@@ -41,8 +41,14 @@ class _ImpactMeasurementPageState extends State<ImpactMeasurementPage>
                     ),
                     Padding(
                       padding: const EdgeInsets.all(12.0),
-                      child: Text(
-                          "To keep track of how Social Income impacts you, we will ask you to fill in the survey again next ${(DateFormat.MMMM().format(currentUser.nextSurvey))}.",
+                      child: Text(() {
+                        var nextSurveyDate = currentUser.nextSurvey;
+                        if (nextSurveyDate != null) {
+                          return "To keep track of how Social Income impacts you, we will ask you to fill in the survey again next ${(DateFormat.MMMM().format(nextSurveyDate))}.";
+                        } else {
+                          return "To keep track of how Social Income impacts you, we will ask you to fill in the survey again in the future";
+                        }
+                      }(),
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w500,

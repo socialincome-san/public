@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - "backend/**"
+      - "shared/**"
 jobs:
   deploy:
     runs-on: ubuntu-latest

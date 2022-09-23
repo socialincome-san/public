@@ -54,8 +54,11 @@ class _ReviewTransactionModalState extends State<ReviewTransactionModal> {
                             padding: const EdgeInsets.only(top: 8),
                             child: ElevatedButton(
                                 onPressed: () {
-                                  currentUser.contestTransaction(
-                                      widget._transaction.id, reason);
+                                  var transactionId = widget._transaction.id;
+                                  if (transactionId != null) {
+                                    currentUser.contestTransaction(
+                                        transactionId, reason);
+                                  }
                                   Navigator.pop(context);
                                 },
                                 child: Text(reason)),
@@ -67,8 +70,10 @@ class _ReviewTransactionModalState extends State<ReviewTransactionModal> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              currentUser
-                                  .confirmTransaction(widget._transaction.id);
+                              var transactionId = widget._transaction.id;
+                              if (transactionId != null) {
+                                currentUser.confirmTransaction(transactionId);
+                              }
                               Navigator.pop(context);
                             },
                             child: Text("YES"),

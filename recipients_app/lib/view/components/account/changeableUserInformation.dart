@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class ChangableUserInformation extends StatelessWidget {
+class ChangeableUserInformation extends StatelessWidget {
   final String section;
 
-  ChangableUserInformation(this.section);
+  ChangeableUserInformation(this.section);
 
   @override
   Widget build(BuildContext context) {
     return Consumer<CurrentUser>(builder: (context, currentUser, child) {
       final bool birthDate = section == "Date of Birth";
       TextEditingController controller = TextEditingController(
-          text: currentUser.changableInformation(section));
+          text: currentUser.changeableInformation(section));
       return Padding(
         padding: const EdgeInsets.only(top: 12.0),
         child: birthDate
@@ -33,18 +33,20 @@ class ChangableUserInformation extends StatelessWidget {
                         initialDate: DateTime(2000, 1, 1),
                         context: context,
                       ).then((value) {
-                        String birthDateString =
-                            DateFormat('dd.MM.yyyy').format(value);
-                        currentUser.updateBirthday(value);
-                        controller.text = birthDateString;
-                        print(controller.text);
+                        if (value != null) {
+                          String birthDateString =
+                              DateFormat('dd.MM.yyyy').format(value);
+                          currentUser.updateBirthday(value);
+                          controller.text = birthDateString;
+                          print(controller.text);
+                        }
                         return;
                       });
                     }
                   }
                 })
             : TextFormField(
-                initialValue: currentUser.changableInformation(section),
+                initialValue: currentUser.changeableInformation(section),
                 readOnly: birthDate,
                 decoration: InputDecoration(
                     floatingLabelBehavior: FloatingLabelBehavior.auto,

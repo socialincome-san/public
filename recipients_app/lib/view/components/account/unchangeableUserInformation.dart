@@ -3,12 +3,12 @@ import 'package:app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class UnchangableUserInformation extends StatelessWidget {
+class UnchangeableUserInformation extends StatelessWidget {
   final String section;
   final String placeHolder;
   final TextEditingController controller = TextEditingController();
 
-  UnchangableUserInformation(this.section, this.placeHolder);
+  UnchangeableUserInformation(this.section, this.placeHolder);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class UnchangableUserInformation extends StatelessWidget {
                 ),
                 child: Text(
                   section,
-                  style: Theme.of(context).textTheme.bodyText2.copyWith(
+                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
                         color: siGreyText,
                       ),
                 ),
