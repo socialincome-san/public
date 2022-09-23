@@ -1,5 +1,5 @@
-import { getFirestore, DocumentData, CollectionReference, DocumentReference } from "firebase-admin/firestore";
-import * as firebase from "firebase-admin";
+import { getFirestore, DocumentData, CollectionReference, DocumentReference } from 'firebase-admin/firestore';
+import * as firebase from 'firebase-admin';
 
 export const firebaseApp = firebase.initializeApp();
 
@@ -12,12 +12,12 @@ export const firestore = getFirestore();
  * Access the typed collection
  */
 export const createCollection = <T = DocumentData>(collectionName: string): CollectionReference<T> => {
-  return firestore.collection(collectionName) as CollectionReference<T>;
+	return firestore.collection(collectionName) as CollectionReference<T>;
 };
 
 /**
  * Access the typed document of a collection
  */
 export const createDoc = <T = DocumentData>(collectionName: string, docId: string): DocumentReference<T> => {
-  return createCollection<T>(collectionName).doc(docId);
+	return createCollection<T>(collectionName).doc(docId);
 };

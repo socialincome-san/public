@@ -1,18 +1,18 @@
 {
-  "compilerOptions": {
-    "esModuleInterop": true,
-    "jsx": "react-jsx",
-    "lib": ["dom", "es2020"],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "outDir": "dist",
-    "preserveConstEnums": true,
-    "resolveJsonModule": true,
-    "strict": true,
-    "sourceMap": true,
-    "target": "es2021",
-    "types": ["jest", "node"]
-  },
-  "include": ["src", "src/scripts", "src/tests"],
-  "exclude": ["node_modules"]
+	"compilerOptions": {
+		"esModuleInterop": true,
+		"jsx": "react-jsx",
+		"lib": ["dom", "es2020"],
+		"module": "esnext",
+		"moduleResolution": "node",
+		"outDir": "dist",
+		"preserveConstEnums": true,
+		"resolveJsonModule": true,
+		"strict": true,
+		"sourceMap": true,
+		"target": "es2021",
+		"types": ["jest", "node"]
+	},
+	"include": ["src", "src/scripts", "src/tests"],
+	"exclude": ["node_modules"]
 }

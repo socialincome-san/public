@@ -1,3 +1,3 @@
 export interface Organisation {
-  name: string;
+	name: string;
 }

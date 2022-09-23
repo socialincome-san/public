@@ -1,3 +1,3 @@
-import { importBalanceMailFunc } from "./etl/importPostfinanceBalance";
+import { importBalanceMailFunc } from './etl/importPostfinanceBalance';
 
 export const importBalanceMail = importBalanceMailFunc;
