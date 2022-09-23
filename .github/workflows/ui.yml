@@ -32,7 +32,7 @@ jobs:
       - name: Set Storybook ENV variables
         run: |
           echo "$PR_NUMBER"
-          if [[ -z $PR_NUMBER ]]; then
+          if [[ $PR_NUMBER ]]; then
             echo 'STORYBOOK_PATH_PREFIX=/public/pr-preview/pr-$PR_NUMBER/' >>"$GITHUB_ENV"
           else
             echo "STORYBOOK_PATH_PREFIX=/public/" >>"$GITHUB_ENV"
