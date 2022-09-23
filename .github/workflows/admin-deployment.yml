@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - "admin/**"
+      - "shared/**"
 jobs:
   deploy:
     runs-on: ubuntu-latest
