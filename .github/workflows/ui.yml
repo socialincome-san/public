@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - "ui/**"
+      - "package-lock.json"
+      - "workflows/ui.yml"
 
 inputs:
   path:
