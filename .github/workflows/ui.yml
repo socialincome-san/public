@@ -30,15 +30,6 @@ jobs:
         run: npm ci
       - name: Build UI Documentation
         run: npm run build:ui
-      - name: Archive artifact
-        run: |
-          tar \
-            --dereference --hard-dereference \
-            --directory "$DIST_PATH" \
-            -cvf "$RUNNER_TEMP/artifact.tar" \
-            --exclude=.git \
-            --exclude=.github \
-            .
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
