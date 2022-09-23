@@ -53,6 +53,8 @@ jobs:
     concurrency: ui-preview-deployment-${{ github.ref }}
     needs: build
     steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
       - uses: actions/download-artifact@v3
         with:
           name: storybook-static
@@ -77,6 +79,8 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
       - uses: actions/download-artifact@v3
         with:
           name: storybook-static
