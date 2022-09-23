@@ -49,7 +49,7 @@ jobs:
 
   deploy-preview:
     runs-on: ubuntu-latest
-    if: "${{ github.repository_owner == 'socialincome-san' }}"
+    if: "${{ github.repository_owner == 'socialincome-san' && github.event.number }}"
     concurrency: ui-preview-deployment-${{ github.ref }}
     needs: build
     steps:
