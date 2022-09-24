@@ -1,6 +1,6 @@
 #### &nbsp;&nbsp;#Tech4Good &nbsp;&nbsp;#OpenSource &nbsp;&nbsp;#Solidarity
 
-![Social Income Logo](https://raw.githubusercontent.com/socialincome-san/public/main/shared/assets/logos/logo_color%402x.png)
+![Social Income Logo](https://github.com/socialincome-san/public/blob/main/shared/assets/logos/logo_color@500px.png?raw=true)
 
 ```diff
 
