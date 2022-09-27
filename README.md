@@ -28,6 +28,7 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
 - **[Code Contributions](#code-contributions)**
   - [Admin Tool](#admin-tool)
   - [Mobile App](#mobile-app)
+  - [User Interface (UI)](#ui)
   - [Website](#website)
   - [Shared](#shared)
 - **[Financial Contributions](#financial-contributions)**
@@ -153,6 +154,10 @@ Code with predefined build configs.
 As Firebase emulators work on your local host machine the easiest way to
 run app is on the Android emulator. Real devices need some additional
 setup.
+
+## UI
+
+[See `README.md` in `ui` subfolder](ui/README.md).
 
 ## Website
 

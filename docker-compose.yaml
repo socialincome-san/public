@@ -30,3 +30,14 @@ services:
       - "4000:4000" # emulator UI
     working_dir: /home/node/backend/functions
     command: /bin/bash -c "npm install && npm run serve"
+
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/home/node
+    ports:
+      - "6006:6006"
+    working_dir: /home/node
+    command: /bin/bash -c "npm ci && npm run serve:ui"

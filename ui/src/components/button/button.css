@@ -1,0 +1,37 @@
+.so-c-button {
+	@apply p-3 rounded appearance-none font-bold transition;
+}
+
+.so-c-button--primary {
+	background: var(--so-color-accent-2-primary-500);
+	color: var(--so-color-accent-2-secondary-500);
+}
+
+.so-c-button--secondary {
+	background: var(--so-color-accent-2-primary-100);
+	color: var(--so-color-accent-2-secondary-100);
+}
+
+.so-c-button--primary:hover,
+.so-c-button--secondary:hover {
+	@apply hover:shadow-lg hover:shadow-so-color-accent-2-primary-alpha;
+	background: var(--so-color-accent-2-primary-500);
+	color: var(--so-color-accent-2-secondary-500);
+}
+
+.so-c-button--tertiary {
+	color: var(--so-color-accent-2-secondary-100);
+}
+
+.so-c-button--tertiary:hover {
+	background: var(--so-color-accent-2-primary-100);
+}
+
+.so-c-button--outlined {
+	color: var(--so-color-accent-2-primary-500);
+	border: 2px solid currentColor;
+}
+
+.so-c-button--xl {
+	@apply text-xl px-6 py-4;
+}

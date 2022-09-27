@@ -1,0 +1,97 @@
+name: ui - build and deploy
+
+on:
+  push:
+    paths:
+      - "ui/**"
+      - "package-lock.json"
+      - ".github/workflows/ui.yml"
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+
+env:
+  DIST_PATH: "ui/storybook-static"
+  PR_NUMBER: ${{ github.event.number }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "npm"
+      - name: Install Dependencies
+        run: npm ci
+      - name: Set Storybook ENV variables
+        run: |
+          echo "$PR_NUMBER"
+          if [[ $PR_NUMBER ]]; then
+            echo 'STORYBOOK_PATH_PREFIX=/public/pr-preview/pr-${{ github.event.number }}/' >>"$GITHUB_ENV"
+          else
+            echo "STORYBOOK_PATH_PREFIX=/public/" >>"$GITHUB_ENV"
+          fi
+      - name: Build UI Documentation
+        run: npm run build:ui
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: storybook-static
+          path: "${{ env.DIST_PATH }}/"
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy-preview:
+    runs-on: ubuntu-latest
+    if: "${{ github.repository_owner == 'socialincome-san' && github.event.number }}"
+    concurrency: ui-preview-deployment-${{ github.ref }}
+    needs: build
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - uses: actions/download-artifact@v3
+        with:
+          name: storybook-static
+          path: ${{ env.DIST_PATH }}
+      - name: Deploy preview to GitHub Pages
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ${{ env.DIST_PATH }}
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: auto
+
+  deploy-main:
+    runs-on: ubuntu-latest
+    concurrency: ui-deployment-main
+    if: "${{ github.ref == 'refs/heads/main' && github.repository_owner == 'socialincome-san' }}"
+    needs: build
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      contents: write
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - uses: actions/download-artifact@v3
+        with:
+          name: storybook-static
+          path: ${{ env.DIST_PATH }}
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: ${{ env.DIST_PATH }}
+          clean-exclude: pr-preview
+          force: false
+          branch: gh-pages
