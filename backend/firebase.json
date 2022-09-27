@@ -1,32 +1,27 @@
 {
-  "functions": {
-    "ignore": [
-      "node_modules",
-      ".git",
-      "firebase-debug.log",
-      "firebase-debug.*.log"
-    ],
-    "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run build"],
-    "source": "functions",
-    "codebase": "backend"
-  },
-  "emulators": {
-    "functions": {
-      "port": 5001,
-      "host": "0.0.0.0"
-    },
-    "firestore": {
-      "port": 8080,
-      "host": "0.0.0.0"
-    },
-    "pubsub": {
-      "port": "8085",
-      "host": "0.0.0.0"
-    },
-    "ui": {
-      "enabled": true,
-      "port": 4000,
-      "host": "0.0.0.0"
-    }
-  }
+	"functions": {
+		"ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log"],
+		"predeploy": ["npm --prefix \"$RESOURCE_DIR\" run build"],
+		"source": "functions",
+		"codebase": "backend"
+	},
+	"emulators": {
+		"functions": {
+			"port": 5001,
+			"host": "0.0.0.0"
+		},
+		"firestore": {
+			"port": 8080,
+			"host": "0.0.0.0"
+		},
+		"pubsub": {
+			"port": "8085",
+			"host": "0.0.0.0"
+		},
+		"ui": {
+			"enabled": true,
+			"port": 4000,
+			"host": "0.0.0.0"
+		}
+	}
 }

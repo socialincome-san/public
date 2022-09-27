@@ -1,6 +1,6 @@
-import { EntityReference } from "@camberi/firecms";
+import { EntityReference } from '@camberi/firecms';
 
 export interface BuildCollectionProps {
-  isGlobalAdmin: boolean;
-  organisations?: EntityReference[];
+	isGlobalAdmin: boolean;
+	organisations?: EntityReference[];
 }
