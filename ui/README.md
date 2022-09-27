@@ -36,3 +36,8 @@ commands\_
 If for whatever reason you can't use make, you can the Docker Compose
 commands directly. See the `Makefile` in the root for how that might
 work.
+
+## Contribute
+
+There are several ways to contribute to the Social Income UI project.
+See the [`CONTRIBUTION.md`](/CONTRIBUTION.md) file.
