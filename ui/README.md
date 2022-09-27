@@ -21,10 +21,10 @@ in the root of the project. Those commands run the project inside
 Docker.
 
 ```sh
-# Build the UI
+# Build the UI. For one time builds e.g. production builds.
 $ make build-ui
 
-# Run the development server on http://localhost:6006
+# Run the development server on http://localhost:6006. Just use this while developing for the UI.
 $ make serve-ui
 ```
 
