@@ -40,4 +40,4 @@ services:
     ports:
       - "6006:6006"
     working_dir: /home/node
-    command: /bin/bash -c "npm install && npm run serve:ui"
+    command: /bin/bash -c "npm ci && npm run serve:ui"
