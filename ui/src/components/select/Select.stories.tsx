@@ -24,7 +24,6 @@ export default {
 	},
 } as ComponentMeta<typeof SoSelect>;
 
-// const Template: ComponentStory<typeof SoSelect> = (args) => <SoSelect {...args} />;
 const Template: ComponentStory<typeof SoSelect> = (args: SoSelectProps) => {
 	const options: SoSelectProps['options'] = args?.options || [
 		{
