@@ -1,0 +1,8 @@
+# See https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+ui/ rene@socialincome.org
+.github/workflows/ui.yml rene@socialincome.org
+.vscode/ rene@socialincome.org
+
+functions/ andras@socialincome.org
+backend/ andras@socialincome.org
