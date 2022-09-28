@@ -19,13 +19,13 @@
 	@font-face {
 		font-family: 'SoSans';
 		font-weight: normal;
-		src: url('../../shared/assets/fonts/Unica77LLSub-Regular.woff2') format('woff2');
+		src: url('../../shared/assets/fonts/Unica77LLWeb-Regular.woff2') format('woff2');
 	}
 
 	@font-face {
 		font-family: 'SoSans';
 		font-weight: 500;
-		src: url('../../shared/assets/fonts/Unica77LLSub-Medium.woff2') format('woff2');
+		src: url('../../shared/assets/fonts/Unica77LLWeb-Medium.woff2') format('woff2');
 	}
 
 	@font-face {
