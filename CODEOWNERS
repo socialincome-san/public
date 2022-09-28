@@ -4,5 +4,5 @@ ui/ rene@socialincome.org
 .github/workflows/ui.yml rene@socialincome.org
 .vscode/ rene@socialincome.org
 
-functions/ andras@socialincome.org
+admin/ andras@socialincome.org
 backend/ andras@socialincome.org
