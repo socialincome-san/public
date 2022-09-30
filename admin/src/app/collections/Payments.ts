@@ -1,5 +1,5 @@
 import { buildCollection, buildEnumValueConfig, buildProperties } from '@camberi/firecms';
-import { Payment } from './interface';
+import { Payment } from '@socialincome/shared/types';
 
 export const paymentStatusMap = {
 	to_pay: buildEnumValueConfig({

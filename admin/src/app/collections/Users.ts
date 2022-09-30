@@ -1,7 +1,6 @@
-import { buildCollection, buildProperties } from '@camberi/firecms';
-import { contributionsCollection } from '../contributions/collections';
-import { AdditionalColumnDelegate } from '@camberi/firecms';
-import { User } from './interface';
+import { AdditionalColumnDelegate, buildCollection, buildProperties } from '@camberi/firecms';
+import { User } from '@socialincome/shared/types';
+import { contributionsCollection } from './Contributions';
 
 const FirstNameCol: AdditionalColumnDelegate<User> = {
 	id: 'first_name_col',

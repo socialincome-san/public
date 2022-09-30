@@ -1,12 +1,12 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { OrganisationsContributors } from './interface';
+import { ContributorOrganisation } from '@socialincome/shared/types';
 
 // this collection is publicly accessible. no personal data of user should be added here.
-export const organisationsContributorsCollection = buildCollection<OrganisationsContributors>({
+export const contributorOrganisationsCollection = buildCollection<ContributorOrganisation>({
 	path: 'organisations-contributors',
 	group: 'Contributors',
 	textSearchEnabled: false,
-	name: 'Organisations',
+	name: 'Contributor Organisations',
 	icon: 'CorporateFare',
 	description: 'Lists all organisations who contribute or have employees who do.',
 	permissions: ({ authController }) => ({
@@ -14,7 +14,7 @@ export const organisationsContributorsCollection = buildCollection<Organisations
 		create: true,
 		delete: true,
 	}),
-	properties: buildProperties<OrganisationsContributors>({
+	properties: buildProperties<ContributorOrganisation>({
 		org_name: {
 			dataType: 'string',
 			name: 'Org. Name',

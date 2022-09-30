@@ -13,8 +13,8 @@ services:
       - "8080:8080" # firestore emulator
       - "9199:9199" # storage emulator
       - "4000:4000" # emulator UI
-    working_dir: /home/node/admin
-    command: /bin/bash -c "npm install && npm run emulators:start"
+    working_dir: /home/node
+    command: /bin/bash -c "npm --workspace=@socialincome/admin install && npm run serve:admin"
 
   backend:
     image: socialincome/local-helper
@@ -40,4 +40,4 @@ services:
     ports:
       - "6006:6006"
     working_dir: /home/node
-    command: /bin/bash -c "npm ci && npm run serve:ui"
+    command: /bin/bash -c "npm --workspace=@socialincome/ui install && npm run serve:ui"

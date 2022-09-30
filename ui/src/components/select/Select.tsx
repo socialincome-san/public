@@ -1,7 +1,7 @@
-import { Fragment, useState } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
-import { ChevronDownIcon, ChevronUpDownIcon, CheckIcon } from '@heroicons/react/24/solid';
+import { CheckIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
 import classNames from 'classnames';
+import { Fragment } from 'react';
 
 type ListboxProps = Parameters<typeof Listbox>[0];
 

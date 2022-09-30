@@ -3,10 +3,20 @@
 	"version": "0.1.0",
 	"private": true,
 	"workspaces": [
+		"admin",
+		"shared",
 		"ui"
 	],
 	"scripts": {
-		"serve:ui": "$npm_execpath --workspace=@socialincome/ui run serve",
-		"build:ui": "$npm_execpath --workspace=@socialincome/ui run build"
+		"format-code": "prettier --write .",
+		"build:admin": "$npm_execpath --workspace=@socialincome/admin run build",
+		"serve:admin": "$npm_execpath --workspace=@socialincome/admin run serve",
+		"test:admin": "$npm_execpath --workspace=@socialincome/admin run test",
+		"build:ui": "$npm_execpath --workspace=@socialincome/ui run build",
+		"serve:ui": "$npm_execpath --workspace=@socialincome/ui run serve"
+	},
+	"devDependencies": {
+		"prettier": "^2.6.2",
+		"prettier-plugin-organize-imports": "^3.1.1"
 	}
 }

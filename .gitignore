@@ -27,6 +27,3 @@ build
 # JetBrains
 .idea/
 .ignore/
-
-admin/social-income-prod-firebase-adminsdk.json
-admin/dist/

@@ -1,4 +1,4 @@
-export type NewsletterSubscribers = {
+export type NewsletterSubscriber = {
 	email: string;
 	fname: string;
 	lname: string;

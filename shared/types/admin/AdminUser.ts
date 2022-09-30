@@ -1,9 +1,10 @@
 import { EntityReference } from '@camberi/firecms';
-import { Organisation } from '../organisations/interface';
 
-export interface AdminUser {
+export const ADMIN_USER_FIRESTORE_PATH = 'admins';
+
+export type AdminUser = {
 	name: string;
 	is_global_admin?: boolean;
 	is_global_analyst?: boolean;
 	organisations?: EntityReference[];
-}
+};

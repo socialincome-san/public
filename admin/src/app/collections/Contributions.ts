@@ -1,11 +1,11 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { Contribution } from './interface';
+import { Contribution } from '@socialincome/shared/types';
 
 export const contributionsCollection = buildCollection<Contribution>({
-	path: 'contributions',
-	group: 'Finances',
-	textSearchEnabled: false,
 	name: 'Contributions',
+	group: 'Finances',
+	path: 'contributions',
+	textSearchEnabled: false,
 	permissions: ({ authController }) => ({
 		edit: true,
 		create: true,

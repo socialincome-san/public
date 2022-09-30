@@ -1,8 +1,8 @@
-import { buildProperties, buildCollection } from '@camberi/firecms';
-import { OrangeMoneyList } from './interface';
+import { buildCollection, buildProperties } from '@camberi/firecms';
+import { OrangeMoneyRecipient } from '@socialincome/shared/types';
 
-export const orangeMoneyCollection = buildCollection<OrangeMoneyList>({
-	name: 'Orange Money',
+export const orangeMoneyRecipientsCollection = buildCollection<OrangeMoneyRecipient>({
+	name: 'Orange Money Recipients',
 	path: 'om-list',
 	alias: 'om-list',
 	group: 'Finances',
@@ -14,7 +14,7 @@ export const orangeMoneyCollection = buildCollection<OrangeMoneyList>({
 		create: false,
 		delete: false,
 	}),
-	properties: buildProperties<OrangeMoneyList>({
+	properties: buildProperties<OrangeMoneyRecipient>({
 		om_phone_number: {
 			name: 'OM Phone Number',
 			dataType: 'number',

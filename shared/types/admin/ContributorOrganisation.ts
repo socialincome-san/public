@@ -1,5 +1,5 @@
 // this collection is publicly accessible. no personal data of user should be added here.
-export type OrganisationsContributors = {
+export type ContributorOrganisation = {
 	org_name: string;
 	org_name_en: string;
 	org_name_de: string;

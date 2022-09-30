@@ -1,5 +1,5 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { OperationalExpense } from './interface';
+import { OperationalExpense } from '@socialincome/shared/types';
 
 export const operationalExpensesCollection = buildCollection<OperationalExpense>({
 	path: 'operational-expenses',

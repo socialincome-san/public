@@ -1,5 +1,5 @@
-import { getFirestore, DocumentData, CollectionReference, DocumentReference } from 'firebase-admin/firestore';
 import * as firebase from 'firebase-admin';
+import { CollectionReference, DocumentData, DocumentReference, getFirestore } from 'firebase-admin/firestore';
 
 export const firebaseApp = firebase.initializeApp();
 

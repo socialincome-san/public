@@ -1,3 +1,12 @@
+format-code:
+	docker compose run --rm admin npm run format-code
+
+build-admin:
+	docker compose build admin
+
+serve-admin:
+	docker compose up admin
+
 serve-website:
 	docker compose up ui
 

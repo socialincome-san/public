@@ -1,7 +1,7 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { NewsletterSubscribers } from './interface';
+import { NewsletterSubscriber } from '@socialincome/shared/types';
 
-export const newsletterSubscribersCollection = buildCollection<NewsletterSubscribers>({
+export const newsletterSubscribersCollection = buildCollection<NewsletterSubscriber>({
 	path: 'newsletter-subscribers',
 	group: 'Contributors',
 	textSearchEnabled: false,
@@ -13,7 +13,7 @@ export const newsletterSubscribersCollection = buildCollection<NewsletterSubscri
 		create: true,
 		delete: true,
 	}),
-	properties: buildProperties<NewsletterSubscribers>({
+	properties: buildProperties<NewsletterSubscriber>({
 		mc_status: {
 			dataType: 'string',
 			name: 'Mailchimp Status',

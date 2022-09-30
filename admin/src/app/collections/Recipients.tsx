@@ -1,16 +1,16 @@
 import {
-	buildCollection,
-	buildProperties,
 	AdditionalColumnDelegate,
 	AsyncPreviewComponent,
-	StringPropertyPreview,
+	buildCollection,
+	buildProperties,
 	buildProperty,
+	StringPropertyPreview,
 } from '@camberi/firecms';
+import { Recipient } from '@socialincome/shared/types';
 import { isUndefined } from 'lodash';
-import { Recipient } from './interface';
-import { paymentsCollection, paymentStatusMap } from '../payments/collections';
-import { BuildCollectionProps } from '../index';
-import { getMonthIDs } from '../../../scripts/utils';
+import { getMonthIDs } from '../../scripts/utils';
+import { BuildCollectionProps } from './index';
+import { paymentsCollection, paymentStatusMap } from './Payments';
 
 const organisationAdminProperties = buildProperties<Partial<Recipient>>({
 	progr_status: {

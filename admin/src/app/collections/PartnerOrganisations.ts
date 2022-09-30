@@ -1,10 +1,10 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { Organisation } from './interface';
-import { BuildCollectionProps } from '../index';
+import { Organisation } from '@socialincome/shared/types';
+import { BuildCollectionProps } from './index';
 
-export const buildOrganisationsCollection = ({ isGlobalAdmin = false }: BuildCollectionProps) => {
+export const buildPartnerOrganisationsCollection = ({ isGlobalAdmin = false }: BuildCollectionProps) => {
 	return buildCollection<Organisation>({
-		name: 'Local NGOs',
+		name: 'Partner Organisations',
 		group: 'Admin',
 		icon: 'CorporateFare',
 		description: 'Lists all our partner organisations',

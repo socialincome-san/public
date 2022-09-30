@@ -1,10 +1,10 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { AdminUser } from './interface';
+import { AdminUser, ADMIN_USER_FIRESTORE_PATH } from '@socialincome/shared/types';
 
 export const adminsCollection = buildCollection<AdminUser>({
-	name: 'Administrators',
+	name: 'Admins',
 	group: 'Admin',
-	path: 'admins',
+	path: ADMIN_USER_FIRESTORE_PATH,
 	icon: 'SupervisorAccountTwoTone',
 	description: 'Lists all admins for this admin panel',
 	customId: true,

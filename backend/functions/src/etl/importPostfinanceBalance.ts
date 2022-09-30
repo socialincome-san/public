@@ -2,12 +2,11 @@ import * as functions from 'firebase-functions';
 
 import imaps from 'imap-simple';
 
+import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '@socialincome/shared/types';
 import _ from 'lodash';
-
 import { simpleParser, Source } from 'mailparser';
 import { POSTFINANCE_EMAIL_PASSWORD, POSTFINANCE_EMAIL_USER } from '../config';
 
-import * as bankBalance from '../../../../shared/src/interfaces/collections/bankBalances';
 import { createDoc } from '../useFirestoreAdmin';
 
 /**
@@ -19,7 +18,7 @@ export const importBalanceMailFunc = functions.pubsub.schedule('0 * * * *').onRu
 	await storeBalances(balances);
 });
 
-export const retrieveBalanceMails = async (): Promise<bankBalance.BankBalance[]> => {
+export const retrieveBalanceMails = async (): Promise<BankBalance[]> => {
 	try {
 		functions.logger.info('Start checking balance inbox');
 		const config = {
@@ -40,7 +39,7 @@ export const retrieveBalanceMails = async (): Promise<bankBalance.BankBalance[]>
 		functions.logger.info('Connected to inbox');
 		const messages = await connection.search(searchCriteria, fetchOptions);
 		const balances = await Promise.all(
-			messages.map(async (item) => {
+			messages.map(async (item: any) => {
 				const all = _.find(item.parts, { which: '' });
 				const id = item.attributes.uid;
 				const idHeader = 'Imap-Id: ' + id + '\r\n';
@@ -57,7 +56,7 @@ export const retrieveBalanceMails = async (): Promise<bankBalance.BankBalance[]>
 	}
 };
 
-export const parseEmail = async (source: Source): Promise<bankBalance.BankBalance[]> => {
+export const parseEmail = async (source: Source): Promise<BankBalance[]> => {
 	const mail = await simpleParser(source);
 	if (!mail || !mail.html) return [];
 	try {
@@ -67,7 +66,7 @@ export const parseEmail = async (source: Source): Promise<bankBalance.BankBalanc
 				account: extractAccount(mail.html),
 				balance: extractBalance(mail.html),
 				currency: 'CHF',
-			} as bankBalance.BankBalance,
+			} as BankBalance,
 		];
 	} catch {
 		functions.logger.info(`Could not parse email with subject ${mail.subject}`);
@@ -85,9 +84,9 @@ export const extractBalance = (html: String) => {
 	return Number.parseFloat(html.match(balanceRegex)!.groups!['balance'].replace('’', ''));
 };
 
-export const storeBalances = async (balances: bankBalance.BankBalance[]): Promise<void> => {
+export const storeBalances = async (balances: BankBalance[]): Promise<void> => {
 	for await (const balance of balances) {
-		await createDoc<bankBalance.BankBalance>(bankBalance.path, bankBalance.id(balance)).set(balance);
+		await createDoc<BankBalance>(BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance(balance)).set(balance);
 	}
 };
 

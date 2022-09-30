@@ -4,39 +4,42 @@ import {
 	Authenticator,
 	EntityCollection,
 	FirebaseCMSApp,
-	User,
-	performAlgoliaTextSearch,
 	FirestoreTextSearchController,
+	performAlgoliaTextSearch,
+	User,
 } from '@camberi/firecms';
-import React, { useState } from 'react';
-import { adminsCollection } from './collections/admins/collections';
-import { operationalExpensesCollection } from './collections/operational_expenses/collections';
-import { AdminUser } from './collections/admins/interface';
-import { buildRecipientsCollection, buildRecentPaymentsCollection } from './collections/recipients/collections';
-import { buildOrganisationsCollection } from './collections/organisations/collections';
-import { usersCollection } from './collections/users/collections';
-import { newsletterSubscribersCollection } from './collections/newsletter_subscribers/collections';
-import { organisationsContributorsCollection } from './collections/organisations_contributors/collections';
-import { orangeMoneyCollection } from './collections/om-list/collection';
-import { getAuth, connectAuthEmulator } from 'firebase/auth';
-import { getStorage, connectStorageEmulator } from 'firebase/storage';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import { AdminUser } from '@socialincome/shared/types';
+import { connectAuthEmulator, getAuth } from 'firebase/auth';
+import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
+import { connectStorageEmulator, getStorage } from 'firebase/storage';
+import { useState } from 'react';
+import {
+	adminsCollection,
+	buildPartnerOrganisationsCollection,
+	buildRecentPaymentsCollection,
+	buildRecipientsCollection,
+	contributorOrganisationsCollection,
+	newsletterSubscribersCollection,
+	operationalExpensesCollection,
+	orangeMoneyRecipientsCollection,
+	usersCollection,
+} from './collections';
 
 import {
+	ALGOLIA_APPLICATION_ID,
+	ALGOLIA_SEARCH_KEY,
 	FB_API_KEY,
 	FB_AUTH_DOMAIN,
+	FB_AUTH_EMULATOR_URL,
 	FB_DATABASE_URL,
+	FB_FIRESTORE_EMULATOR_HOST,
+	FB_FIRESTORE_EMULATOR_PORT,
+	FB_MEASUREMENT_ID,
 	FB_MESSAGING_SENDER_ID,
 	FB_PROJECT_ID,
 	FB_STORAGE_BUCKET,
-	FB_MEASUREMENT_ID,
-	FB_AUTH_EMULATOR_URL,
 	FB_STORAGE_EMULATOR_HOST,
 	FB_STORAGE_EMULATOR_PORT,
-	FB_FIRESTORE_EMULATOR_HOST,
-	FB_FIRESTORE_EMULATOR_PORT,
-	ALGOLIA_APPLICATION_ID,
-	ALGOLIA_SEARCH_KEY,
 } from './config';
 
 const firebaseConfig = {
@@ -63,7 +66,6 @@ const onFirebaseInit = () => {
 	} else {
 		console.log('Using production firestore');
 	}
-
 	if (FB_STORAGE_EMULATOR_HOST && FB_STORAGE_EMULATOR_PORT) {
 		connectStorageEmulator(getStorage(), FB_STORAGE_EMULATOR_HOST, +FB_STORAGE_EMULATOR_PORT);
 		console.log('Using storage emulator');
@@ -92,11 +94,11 @@ export default function App() {
 		// contributionsCollection,
 		operationalExpensesCollection,
 		newsletterSubscribersCollection,
-		organisationsContributorsCollection,
+		contributorOrganisationsCollection,
 		// paymentsCollection,
-		orangeMoneyCollection,
+		orangeMoneyRecipientsCollection,
 		usersCollection,
-		buildOrganisationsCollection({ isGlobalAdmin: true }),
+		buildPartnerOrganisationsCollection({ isGlobalAdmin: true }),
 		buildRecipientsCollection({ isGlobalAdmin: true }),
 		buildRecentPaymentsCollection({ isGlobalAdmin: true }),
 	];
@@ -119,7 +121,7 @@ export default function App() {
 						setCollections(globalAdminCollections);
 					} else {
 						setCollections([
-							buildOrganisationsCollection({ isGlobalAdmin: false }),
+							buildPartnerOrganisationsCollection({ isGlobalAdmin: false }),
 							buildRecipientsCollection({
 								isGlobalAdmin: false,
 								organisations: result?.values?.organisations,
@@ -137,7 +139,6 @@ export default function App() {
 			name={'Social Income Admin'}
 			logo={'logo.svg'}
 			signInOptions={['google.com', 'password']}
-			// LoginView={(props: FirebaseLoginViewProps) => <FirebaseLoginView {...props} allowSkipLogin={true} />}
 			collections={collections}
 			authentication={myAuthenticator}
 			locale={'enUS'}

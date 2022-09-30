@@ -1,4 +1,4 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { useState } from 'react';
 
 import { SoSelect, SoSelectProps, SO_SELECT_SIZES } from './Select';

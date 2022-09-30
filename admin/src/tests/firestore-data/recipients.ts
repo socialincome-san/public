@@ -1,5 +1,5 @@
 import firebase from 'firebase/compat/app';
-import { collection, setDoc, doc, getDocs, query, where, Firestore, getDoc } from 'firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 
 export const populateRecipientsCollection = async (firestore: firebase.firestore.Firestore) => {
 	const recipients = {

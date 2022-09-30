@@ -8,14 +8,14 @@ import {
 	initializeTestEnvironment,
 	RulesTestEnvironment,
 } from '@firebase/rules-unit-testing';
+import { AdminUser } from '@socialincome/shared/types';
 import firebase from 'firebase/compat/app';
+import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import fs from 'fs';
 import path from 'path';
-import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
-import { AdminUser } from '../app/collections/admins/interface';
-import { populateRecipientsCollection } from './firestore-data/recipients';
-import { populateOrganisationsCollection } from './firestore-data/organisations';
 import { populateAdminsCollection } from './firestore-data/admins';
+import { populateOrganisationsCollection } from './firestore-data/organisations';
+import { populateRecipientsCollection } from './firestore-data/recipients';
 
 let testEnvironment: RulesTestEnvironment;
 let globalAdminStore: firebase.firestore.Firestore;

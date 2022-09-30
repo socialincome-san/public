@@ -1,4 +1,4 @@
-import { EntityReference } from '../entityReference';
+import { EntityReference } from '@camberi/firecms';
 
 export type User = {
 	personal: {
