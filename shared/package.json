@@ -2,7 +2,7 @@
 	"name": "@socialincome/shared",
 	"version": "0.1.0",
 	"private": true,
-	"peerDependencies": {
+	"devDependencies": {
 		"@camberi/firecms": "2.0.0-alpha.30"
 	}
 }
