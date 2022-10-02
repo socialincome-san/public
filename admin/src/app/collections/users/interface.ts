@@ -8,6 +8,7 @@ export type User = {
 		gender: string;
 		company: string;
 		phone: string;
+		referral: string;
 	};
 	address: {
 		city: string;
