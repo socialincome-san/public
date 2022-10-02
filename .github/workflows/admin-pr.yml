@@ -8,9 +8,6 @@ jobs:
   test_and_preview:
     if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: admin
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
@@ -23,10 +20,10 @@ jobs:
           firebase setup:emulators:ui
 
       - name: Install Dependencies
-        run: npm install
+        run: npm --workspace=@socialincome/admin install
 
       - name: Run Tests
-        run: npm run emulators:test
+        run: npm run admin:test
 
       - name: Build
         run: npm run build
