@@ -23,5 +23,4 @@ jobs:
         run: npm --workspace=@socialincome/backend install
 
       - name: Run Tests
-        working-directory: backend/functions
         run: npm run backend:test
