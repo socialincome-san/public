@@ -10,6 +10,9 @@ admin-serve:
 backend-serve:
 	docker compose up backend
 
+backend-test:
+	docker compose run --rm backend bash -c "npm --workspace @socialincome/backend install && npm run backend:test"
+
 website-serve:
 	docker compose up ui
 
@@ -17,4 +20,4 @@ ui-serve:
 	docker compose up ui
 
 ui-build:
-	docker compose run --rm ui bash -c "npm ci && npm run build:ui"
+	docker compose run --rm ui bash -c "npm ci && npm run ui:build"

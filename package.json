@@ -13,8 +13,9 @@
 		"admin:build": "$npm_execpath --workspace=@socialincome/admin run build",
 		"admin:serve": "$npm_execpath --workspace=@socialincome/admin run serve",
 		"admin:test": "$npm_execpath --workspace=@socialincome/admin run test",
+		"backend:build": "$npm_execpath --workspace=@socialincome/backend run build",
 		"backend:serve": "$npm_execpath --workspace=@socialincome/backend run serve",
-		"backend:test": "$npm_execpath --workspace=@socialincome/backend run test:emulators",
+		"backend:test": "$npm_execpath --workspace=@socialincome/backend run test",
 		"ui:build": "$npm_execpath --workspace=@socialincome/ui run build",
 		"ui:serve": "$npm_execpath --workspace=@socialincome/ui run serve"
 	},

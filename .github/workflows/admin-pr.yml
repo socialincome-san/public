@@ -26,7 +26,7 @@ jobs:
         run: npm run admin:test
 
       - name: Build
-        run: npm run build
+        run: npm run admin:build
         env:
           REACT_APP_ADMIN_FB_API_KEY: ${{ secrets.REACT_APP_ADMIN_FB_API_KEY }}
           REACT_APP_ADMIN_FB_AUTH_DOMAIN: ${{ secrets.REACT_APP_ADMIN_FB_AUTH_DOMAIN }}

@@ -12,6 +12,7 @@
 		"resolveJsonModule": true,
 		"strict": true,
 		"sourceMap": true,
+		"skipLibCheck": true,
 		"target": "es2021",
 		"types": ["jest", "node"]
 	},
