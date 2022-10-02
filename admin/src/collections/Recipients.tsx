@@ -6,9 +6,9 @@ import {
 	buildProperty,
 	StringPropertyPreview,
 } from '@camberi/firecms';
+import { getMonthIDs } from '@socialincome/backend/scripts/utils';
 import { Recipient } from '@socialincome/shared/types';
 import { isUndefined } from 'lodash';
-import { getMonthIDs } from '../../../../backend/scripts/utils';
 import { BuildCollectionProps } from './index';
 import { paymentsCollection, paymentStatusMap } from './Payments';
 

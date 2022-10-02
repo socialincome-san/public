@@ -1,13 +1,10 @@
-/**
- * @jest-environment node
- */
-
 import {
 	assertFails,
 	assertSucceeds,
 	initializeTestEnvironment,
 	RulesTestEnvironment,
 } from '@firebase/rules-unit-testing';
+import { describe, expect } from '@jest/globals';
 import { AdminUser } from '@socialincome/shared/types';
 import firebase from 'firebase/compat/app';
 import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
@@ -83,10 +80,16 @@ describe('Test admins collection', () => {
 
 	it('Write admins collection', async () => {
 		await assertSucceeds(
-			setDoc(doc(globalAdminStore, 'admins', 'test_admin2@socialincome.org'), { name: 'Test', is_global_admin: true })
+			setDoc(doc(globalAdminStore, 'admins', 'test_admin2@socialincome.org'), {
+				name: 'Test',
+				is_global_admin: true,
+			})
 		);
 		await assertFails(
-			setDoc(doc(globalAnalystStore, 'admins', 'test_admin2@socialincome.org'), { name: 'Test', is_global_admin: true })
+			setDoc(doc(globalAnalystStore, 'admins', 'test_admin2@socialincome.org'), {
+				name: 'Test',
+				is_global_admin: true,
+			})
 		);
 	});
 });
