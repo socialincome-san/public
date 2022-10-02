@@ -20,9 +20,8 @@ jobs:
           firebase setup:emulators:ui
 
       - name: Install Dependencies
-        working-directory: backend/functions
-        run: npm install
+        run: npm --workspace=@socialincome/backend install
 
       - name: Run Tests
         working-directory: backend/functions
-        run: npm run emulators:test
+        run: npm run backend:test
