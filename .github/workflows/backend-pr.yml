@@ -20,7 +20,9 @@ jobs:
           firebase setup:emulators:ui
 
       - name: Install Dependencies
-        run: npm --workspace=@socialincome/backend install
+        run: |
+          npm --workspace=@socialincome/backend install \
+          npm --workspace=@socialincome/shared install
 
       - name: Run Tests
         run: npm run backend:test
