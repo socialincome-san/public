@@ -9,5 +9,4 @@ let db = admin.firestore();
 let recCol = await db.collection('recipients').where('test_recipient', '==', true).get();
 // let recCol = await db.collection("recipients").where("organisation", "==", "/organisations/test").get();
 let recipients = await recCol.docs;
-let testRecipient = recipients[0].data();
-console.log(recipients);
+console.log(recipients[0].data());

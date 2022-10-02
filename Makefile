@@ -1,17 +1,20 @@
 format-code:
 	docker compose run --rm admin npm run format-code
 
-build-admin:
+admin-build:
 	docker compose build admin
 
-serve-admin:
+admin-serve:
 	docker compose up admin
 
-serve-website:
+backend-serve:
+	docker compose up backend
+
+website-serve:
 	docker compose up ui
 
-serve-ui:
+ui-serve:
 	docker compose up ui
 
-build-ui:
+ui-build:
 	docker compose run --rm ui bash -c "npm ci && npm run build:ui"

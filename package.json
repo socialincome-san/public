@@ -4,16 +4,19 @@
 	"private": true,
 	"workspaces": [
 		"admin",
+		"backend",
 		"shared",
 		"ui"
 	],
 	"scripts": {
 		"format-code": "prettier --write .",
-		"build:admin": "$npm_execpath --workspace=@socialincome/admin run build",
-		"serve:admin": "$npm_execpath --workspace=@socialincome/admin run serve",
-		"test:admin": "$npm_execpath --workspace=@socialincome/admin run test",
-		"build:ui": "$npm_execpath --workspace=@socialincome/ui run build",
-		"serve:ui": "$npm_execpath --workspace=@socialincome/ui run serve"
+		"admin:build": "$npm_execpath --workspace=@socialincome/admin run build",
+		"admin:serve": "$npm_execpath --workspace=@socialincome/admin run serve:emulators",
+		"admin:test": "$npm_execpath --workspace=@socialincome/admin run test",
+		"backend:serve": "$npm_execpath --workspace=@socialincome/backend run serve",
+		"backend:test": "$npm_execpath --workspace=@socialincome/backend run test:emulators",
+		"ui:build": "$npm_execpath --workspace=@socialincome/ui run build",
+		"ui:serve": "$npm_execpath --workspace=@socialincome/ui run serve"
 	},
 	"devDependencies": {
 		"prettier": "^2.6.2",

@@ -21,7 +21,7 @@ console.log(askedDate.toISOString());
 async function addPayments(db: Firestore, recipients: QueryDocumentSnapshot[]) {
 	recipients.map(async (doc) => {
 		let p = await db.collection('recipients/' + doc.id + '/payments').get();
-		let pp = await p.docs;
+		await p.docs;
 		let pd = doc.data();
 
 		console.log(doc.id + ' ' + pd.first_name + ' ' + pd.last_name);

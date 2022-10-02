@@ -8,7 +8,7 @@ import {
 } from '@camberi/firecms';
 import { Recipient } from '@socialincome/shared/types';
 import { isUndefined } from 'lodash';
-import { getMonthIDs } from '../../scripts/utils';
+import { getMonthIDs } from '../../../../backend/scripts/utils';
 import { BuildCollectionProps } from './index';
 import { paymentsCollection, paymentStatusMap } from './Payments';
 
