@@ -22,7 +22,6 @@ jobs:
       - name: Install Dependencies
         run: |
           npm --workspace=@socialincome/backend ci
-#          npm --workspace=@socialincome/shared ci
-
+      #          npm --workspace=@socialincome/shared ci
       - name: Run Tests
         run: npm run backend:test
