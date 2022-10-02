@@ -48,7 +48,7 @@
 		"serve": "firebase emulators:exec --project demo-social-income --import ../seed --ui  'npm run serve:app'",
 		"serve:app": "webpack serve",
 		"serve:emulators": "firebase emulators:start --project demo-social-income --import ../seed",
-		"test:app": "jest --detectOpenHandles --roots tests",
+		"test:app": "jest --forceExit --roots tests",
 		"test": "firebase emulators:exec --project demo-social-income --import ../seed --ui  'npm run test:app'",
 		"script": "GOOGLE_APPLICATION_CREDENTIALS=social-income-prod-firebase-adminsdk.json node --es-module-specifier-resolution=node --loader ts-node/esm"
 	},
