@@ -2,7 +2,7 @@ format-code:
 	docker compose run --rm admin npm run format-code
 
 admin-build:
-	docker compose build admin
+	docker compose run --rm admin bash -c "npm --workspace @socialincome/admin install && npm run admin:build"
 
 admin-serve:
 	docker compose up admin
