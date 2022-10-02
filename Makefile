@@ -8,7 +8,7 @@ admin-serve:
 	docker compose up admin
 
 admin-test:
-	docker compose run --rm admin bash -c "npm --workspace @socialincome/backend install && npm run admin:test"
+	docker compose run --rm admin bash -c "npm --workspace @socialincome/admin install && npm run admin:test"
 
 backend-serve:
 	docker compose up backend
