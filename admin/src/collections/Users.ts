@@ -1,5 +1,5 @@
 import { AdditionalColumnDelegate, buildCollection, buildProperties } from '@camberi/firecms';
-import { User } from '@socialincome/shared/types';
+import { CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH, User, USER_FIRESTORE_PATH } from '@socialincome/shared/types';
 import { contributionsCollection } from './Contributions';
 
 const FirstNameCol: AdditionalColumnDelegate<User> = {
@@ -63,7 +63,7 @@ const CityCol: AdditionalColumnDelegate<User> = {
 };
 
 export const usersCollection = buildCollection<User>({
-	path: 'users',
+	path: USER_FIRESTORE_PATH,
 	group: 'Contributors',
 	icon: 'VolunteerActivism',
 	name: 'Contributors',
@@ -154,7 +154,7 @@ export const usersCollection = buildCollection<User>({
 			name: 'Employed by',
 			of: {
 				dataType: 'reference',
-				path: 'organisations-contributors',
+				path: CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH,
 			},
 		},
 		language: {

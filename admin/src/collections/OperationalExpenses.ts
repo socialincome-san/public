@@ -1,11 +1,11 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { OperationalExpense } from '@socialincome/shared/types';
+import { OperationalExpense, OPERATIONAL_EXPENSE_FIRESTORE_PATH } from '@socialincome/shared/types';
 
 export const operationalExpensesCollection = buildCollection<OperationalExpense>({
-	path: 'operational-expenses',
-	group: 'Finances',
-	textSearchEnabled: false,
 	name: 'Operational Expenses',
+	group: 'Finances',
+	path: OPERATIONAL_EXPENSE_FIRESTORE_PATH,
+	textSearchEnabled: false,
 	icon: 'LocalAtm',
 	description: 'Add operational costs for transparency page',
 	permissions: ({ authController }) => ({

@@ -1,3 +1,5 @@
+export const ORANGE_MONEY_RECIPIENT_FIRESTORE_PATH = 'om-list';
+
 export type OrangeMoneyRecipient = {
 	first_name: string;
 	last_name: string;

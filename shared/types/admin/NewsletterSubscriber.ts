@@ -1,3 +1,5 @@
+export const NEWSLETTER_SUBSCRIBER_FIRESTORE_PATH = 'newsletter-subscribers';
+
 export type NewsletterSubscriber = {
 	email: string;
 	fname: string;

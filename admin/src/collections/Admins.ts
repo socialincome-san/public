@@ -1,5 +1,5 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { AdminUser, ADMIN_USER_FIRESTORE_PATH } from '@socialincome/shared/types';
+import { AdminUser, ADMIN_USER_FIRESTORE_PATH, PARTNER_ORGANISATION_FIRESTORE_PATH } from '@socialincome/shared/types';
 
 export const adminsCollection = buildCollection<AdminUser>({
 	name: 'Admins',
@@ -21,7 +21,7 @@ export const adminsCollection = buildCollection<AdminUser>({
 			dataType: 'array',
 			of: {
 				dataType: 'reference',
-				path: 'organisations',
+				path: PARTNER_ORGANISATION_FIRESTORE_PATH,
 			},
 		},
 	}),

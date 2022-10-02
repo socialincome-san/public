@@ -1,11 +1,11 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { OrangeMoneyRecipient } from '@socialincome/shared/types';
+import { OrangeMoneyRecipient, ORANGE_MONEY_RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/types';
 
 export const orangeMoneyRecipientsCollection = buildCollection<OrangeMoneyRecipient>({
 	name: 'Orange Money Recipients',
-	path: 'om-list',
-	alias: 'om-list',
 	group: 'Finances',
+	path: ORANGE_MONEY_RECIPIENT_FIRESTORE_PATH,
+	alias: 'om-list',
 	icon: 'RequestQuote',
 	description: 'List of recipients for monthly payout list via Orange Money',
 	textSearchEnabled: false,

@@ -6,7 +6,7 @@ import {
 	buildProperty,
 	StringPropertyPreview,
 } from '@camberi/firecms';
-import { Recipient } from '@socialincome/shared/types';
+import { PARTNER_ORGANISATION_FIRESTORE_PATH, Recipient, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/types';
 import { getMonthIDs } from '@socialincome/shared/utils';
 import { isUndefined } from 'lodash';
 import { BuildCollectionProps } from './index';
@@ -121,7 +121,7 @@ const organisationAdminProperties = buildProperties<Partial<Recipient>>({
 		hideFromCollection: true,
 		// @ts-ignore
 		dataType: 'reference',
-		path: 'organisations',
+		path: PARTNER_ORGANISATION_FIRESTORE_PATH,
 	},
 });
 
@@ -193,7 +193,7 @@ const globalAdminProperties = buildProperties<Recipient>({
 		name: 'Organisation',
 		// @ts-ignore
 		dataType: 'reference',
-		path: 'organisations',
+		path: PARTNER_ORGANISATION_FIRESTORE_PATH,
 	},
 	gender: {
 		name: 'Gender',
@@ -314,7 +314,7 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations = [] }:
 	const defaultParams = {
 		name: 'Recipients',
 		singularName: 'Recipient',
-		path: 'recipients',
+		path: RECIPIENT_FIRESTORE_PATH,
 		alias: 'recipients',
 		group: 'Recipients',
 		icon: 'RememberMeTwoTone',
@@ -389,7 +389,7 @@ export const buildRecentPaymentsCollection = ({ isGlobalAdmin }: BuildCollection
 	const defaultParams = {
 		name: 'Payment Confirmations',
 		singularName: 'Recipient',
-		path: 'recipients',
+		path: RECIPIENT_FIRESTORE_PATH,
 		alias: 'recentPayments',
 		group: 'Recipients',
 		icon: 'PriceCheck',

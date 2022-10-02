@@ -1,5 +1,7 @@
 import { EntityReference } from '@camberi/firecms';
 
+export const RECIPIENT_FIRESTORE_PATH = 'recipients';
+
 export type Recipient = {
 	birth_date: Date;
 	calling_name: string;

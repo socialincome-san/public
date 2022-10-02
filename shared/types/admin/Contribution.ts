@@ -1,3 +1,5 @@
+export const CONTRIBUTION_FIRESTORE_PATH = 'contributions';
+
 export type Contribution = {
 	source: string;
 	created: Date;

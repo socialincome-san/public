@@ -5,7 +5,7 @@ export * from './admin/ContributorOrganisation';
 export * from './admin/NewsletterSubscriber';
 export * from './admin/OperationalExpense';
 export * from './admin/OrangeMoneyRecipient';
-export * from './admin/Organisation';
+export * from './admin/PartnerOrganisation';
 export * from './admin/Payment';
 export * from './admin/Recipient';
 export * from './admin/User';

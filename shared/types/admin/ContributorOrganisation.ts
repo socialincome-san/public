@@ -1,4 +1,5 @@
-// this collection is publicly accessible. no personal data of user should be added here.
+export const CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH = 'organisations-contributors';
+
 export type ContributorOrganisation = {
 	org_name: string;
 	org_name_en: string;

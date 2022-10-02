@@ -1,3 +1,5 @@
+export const PAYMENT_FIRESTORE_PATH = 'payments';
+
 export type Payment = {
 	amount: number;
 	currency: string;

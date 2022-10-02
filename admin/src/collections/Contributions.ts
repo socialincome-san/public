@@ -1,10 +1,10 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { Contribution } from '@socialincome/shared/types';
+import { Contribution, CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/types';
 
 export const contributionsCollection = buildCollection<Contribution>({
 	name: 'Contributions',
 	group: 'Finances',
-	path: 'contributions',
+	path: CONTRIBUTION_FIRESTORE_PATH,
 	textSearchEnabled: false,
 	permissions: ({ authController }) => ({
 		edit: true,

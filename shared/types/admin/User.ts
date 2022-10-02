@@ -1,5 +1,7 @@
 import { EntityReference } from '@camberi/firecms';
 
+export const USER_FIRESTORE_PATH = 'users';
+
 export type User = {
 	personal: {
 		name: string;
