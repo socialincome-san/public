@@ -197,7 +197,7 @@ to format the code.
 
 #### Getting Started
 
-These functions are mainly mainly implemented using test-driven development.
+These functions are mainly implemented using test-driven development.
 
 1. Build helper image locally: `docker compose build`
 2. Install dependencies: `docker compose run backend npm install`.
