@@ -1,6 +1,9 @@
 {
 	"name": "@socialincome/backend",
 	"private": true,
+	"engines": {
+		"node": "16"
+	},
 	"scripts": {
 		"build": "tsc",
 		"build:watch": "tsc --watch",
