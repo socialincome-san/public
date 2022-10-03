@@ -4,7 +4,7 @@
 
 ```diff
 
-Everybody cheers for equality, but forgets without economic justice, there can be no true equality.
+Everybody cheers for equality but forgets that without economic justice, there can be no true equality.
 
 ```
 
@@ -12,9 +12,9 @@ Everybody cheers for equality, but forgets without economic justice, there can b
 
 https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-ade9-2cc0e153d947.mp4
 
-### Social Income is a radically simple solution in the fight against poverty. We turn 1% of anyones salary into an unconditional basic income for people living in poverty – sent directly to their mobile phones. The tools that make this possible are build and continuously improved by a open source community, who use technical skills to take on the SDG 1 ([No Poverty](https://sdgs.un.org/goals/goal1)) and the SDG 10 ([Reduced Inequality](https://sdgs.un.org/goals/goal10)).
+### Social Income is a radically simple solution in the fight against poverty. We turn 1% of anyone's salary into an unconditional basic income for people living in poverty – sent directly to their mobile phones. The tools that make this possible are built and continuously improved upon by an open source community, who use technical skills to take on the SDG 1 ([No Poverty](https://sdgs.un.org/goals/goal1)) and the SDG 10 ([Reduced Inequality](https://sdgs.un.org/goals/goal10)).
 
-### Our monorepo contains following tools used to run Social Income:
+### Our monorepo contains the following tools used to run Social Income:
 
 1. [Admin Tool](#admin-tool) for managing contributors and recipients
    (`↗` [admin.socialincome.org](https://admin.socialincome.org))
@@ -61,16 +61,16 @@ Quick Links: `↗`
 #### Basic Setup
 
 We are using [Firestore](https://firebase.google.com/docs/firestore) as
-database and [FireCMS](https://firecms.co/) as UI tool. The staff can
-access the admin tool with on
-[admin.socialincome.org](https://admin.socialincome.org). For the
+database and [FireCMS](https://firecms.co/) as UI tool. Staff can
+access the admin tool via
+[admin.socialincome.org](https://admin.socialincome.org). For
 development we use [Docker](https://www.docker.com) and rely on local
-emulators, which are populated with dummy seed data. This makes sure, no
-one requires production Firebase credentials to contribute.
+emulators, which are populated with dummy seed data. This makes sure that no
+one will require production Firebase credentials to contribute.
 
 #### Getting Started
 
-🕐 For the first time, it takes a few minutes to download the packages
+🕐 It takes a few minutes to download packages the first time 
 
 1. Build helper image locally: `docker compose build`
 2. Start development server including Firebase emulators:
@@ -176,7 +176,7 @@ $ make build-ui
 $ make serve-ui
 ```
 
-More instruction in the [`README.md` in `ui` subfolder](ui/README.md).
+More instructions in the [`README.md` in `ui` subfolder](ui/README.md).
 
 ## Website
 
@@ -197,7 +197,7 @@ to format the code.
 
 #### Getting Started
 
-We develop these functions mainly test-driven.
+These functions are mainly implemented using test-driven development.
 
 1. Build helper image locally: `docker compose build`
 2. Install dependencies: `docker compose run backend npm install`.
@@ -232,7 +232,7 @@ Nights.
 ## Non-Profit Association
 
 Social Income is a non-profit association
-([CHE-289.611.695](https://www.uid.admin.ch/Detail.aspx?uid_id=CHE-289.611.695))
+([CHE-289.611.695](https://www.uid.admin.ch/Detail.aspx?uid_id=CHE-289.611.695)) based
 in Zurich, Switzerland.
 
 ## Radical Transparency
@@ -248,4 +248,4 @@ our [annual statements](https://socialincome.org/reporting) and overall
 Code: [MIT](LICENSE)
 
 Font: The font is licensed exclusively for the use on the website
-socialincome.org and in the mobile apps of Social Income.
+socialincome.org and on the mobile apps of Social Income.
