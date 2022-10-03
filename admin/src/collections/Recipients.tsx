@@ -396,7 +396,6 @@ export const buildRecentPaymentsCollection = ({ isGlobalAdmin }: BuildCollection
 		description: 'Payment confirmations of last three month',
 		textSearchEnabled: true,
 	};
-	// if (isGlobalAdmin) {
 	return buildCollection<Partial<Recipient>>({
 		...defaultParams,
 		properties: basicRecipientProperties,
@@ -404,5 +403,4 @@ export const buildRecentPaymentsCollection = ({ isGlobalAdmin }: BuildCollection
 		inlineEditing: true,
 		additionalColumns: [CurrMonthCol, PrevMonthCol, PrevPrevMonthCol],
 	});
-	// }
 };

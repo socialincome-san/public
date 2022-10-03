@@ -7,7 +7,6 @@ console.log(container);
 const root = createRoot(container!);
 root.render(
 	<React.StrictMode>
-		{/*<div>Hello</div>*/}
 		<App />
 	</React.StrictMode>
 );

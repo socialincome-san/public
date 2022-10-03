@@ -91,11 +91,9 @@ const textSearchController: FirestoreTextSearchController = ({ path, searchStrin
 export default function App() {
 	const globalAdminCollections = [
 		adminsCollection,
-		// contributionsCollection,
 		operationalExpensesCollection,
 		newsletterSubscribersCollection,
 		contributorOrganisationsCollection,
-		// paymentsCollection,
 		orangeMoneyRecipientsCollection,
 		usersCollection,
 		buildPartnerOrganisationsCollection({ isGlobalAdmin: true }),
