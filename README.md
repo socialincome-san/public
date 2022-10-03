@@ -62,10 +62,11 @@ Quick Links: `↗`
 
 We are using [Firestore](https://firebase.google.com/docs/firestore) as
 database and [FireCMS](https://firecms.co/) as UI tool. The staff can
-access the admin tool with on [admin.socialincome.org](https://admin.socialincome.org).
-For the development we use [Docker](https://www.docker.com) and rely on
-local emulators, which are populated with dummy seed data. This makes
-sure, no one requires production Firebase credentials to contribute.
+access the admin tool with on
+[admin.socialincome.org](https://admin.socialincome.org). For the
+development we use [Docker](https://www.docker.com) and rely on local
+emulators, which are populated with dummy seed data. This makes sure, no
+one requires production Firebase credentials to contribute.
 
 #### Getting Started
 
@@ -75,7 +76,9 @@ sure, no one requires production Firebase credentials to contribute.
 2. Start development server including Firebase emulators:
    `docker compose up admin`
 
-This will expose the Admin Interface on [`localhost:3000`](http://localhost:3000) and the Firebase Emulators on [`localhost:4000`](http://localhost:4000).
+This will expose the Admin Interface on
+[`localhost:3000`](http://localhost:3000) and the Firebase Emulators on
+[`localhost:4000`](http://localhost:4000).
 
 #### Data Seed
 
@@ -157,11 +160,13 @@ setup.
 
 #### Basic Setup
 
-We build on reusable components for React and a test environment with Storybook.
+We build on reusable components for React and a test environment with
+Storybook.
 
 #### Getting Started
-We recommend to use `make` with the `Makefile` in the root of the project. 
-Those commands run the project inside Docker.
+
+We recommend to use `make` with the `Makefile` in the root of the
+project. Those commands run the project inside Docker.
 
 ```sh
 # Build the UI. For one time builds e.g. production builds.
@@ -170,6 +175,7 @@ $ make build-ui
 # Run the development server on http://localhost:6006. Just use this while developing for the UI.
 $ make serve-ui
 ```
+
 More instruction in the [`README.md` in `ui` subfolder](ui/README.md).
 
 ## Website
