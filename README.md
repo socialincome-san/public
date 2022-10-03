@@ -14,7 +14,7 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
 
 ### Social Income is a radically simple solution in the fight against poverty. We turn 1% of anyones salary into an unconditional basic income for people living in poverty – sent directly to their mobile phones. The tools that make this possible are build and continuously improved by a open source community, who use technical skills to take on the SDG 1 ([No Poverty](https://sdgs.un.org/goals/goal1)) and the SDG 10 ([Reduced Inequality](https://sdgs.un.org/goals/goal10)).
 
-### Our monorepo contains following projects:
+### Our monorepo contains following tools used to run Social Income:
 
 1. [Admin Tool](#admin-tool) for managing contributors and recipients
    (`↗` [admin.socialincome.org](https://admin.socialincome.org))
@@ -28,7 +28,7 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
 - **[Code Contributions](#code-contributions)**
   - [Admin Tool](#admin-tool)
   - [Mobile App](#mobile-app)
-  - [User Interface (UI)](#ui)
+  - [User Interface (UI)](#user-interface)
   - [Website](#website)
   - [Shared](#shared)
 - **[Financial Contributions](#financial-contributions)**
@@ -55,31 +55,31 @@ Quick Links: `↗`
 [Good first issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+label%3Aadmintool)
 `↗`
 [All issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3Aadmintool)
+`↗`
+[Hacktoberfest 2022](https://github.com/socialincome-san/public/issues?q=is%3Aissue+is%3Aopen+label%3Ahacktoberfest)
 
-#### Setup
+#### Basic Setup
 
 We are using [Firestore](https://firebase.google.com/docs/firestore) as
 database and [FireCMS](https://firecms.co/) as UI tool. The staff can
-access the admin tool with on
-[admin.socialincome.org](https://admin.socialincome.org).
-
+access the admin tool with on [admin.socialincome.org](https://admin.socialincome.org).
 For the development we use [Docker](https://www.docker.com) and rely on
 local emulators, which are populated with dummy seed data. This makes
 sure, no one requires production Firebase credentials to contribute.
+
+#### Getting Started
+
+🕐 For the first time, it takes a few minutes to download the packages
 
 1. Build helper image locally: `docker compose build`
 2. Start development server including Firebase emulators:
    `docker compose up admin`
 
-🕐 For the first time, it takes a few minutes to download the packages
-
-**This will expose the:**
-
-- Admin Interface on [`localhost:3000`](http://localhost:3000)
-- Firebase Emulators on [`localhost:4000`](http://localhost:4000)
-  (follow links there to different emulators)
+This will expose the Admin Interface on [`localhost:3000`](http://localhost:3000) and the Firebase Emulators on [`localhost:4000`](http://localhost:4000).
 
 #### Data Seed
+
+⚠️ Don't include any sensitive data in the seed
 
 An initial set of data is imported into the Firebase emulators during
 startup. You can add, delete or amend data directly in the
@@ -91,8 +91,6 @@ a local copy of your altered data set, you can execute in a second shell
 ```shell
  docker exec -it public-admin-1 npm run emulators:export
 ```
-
-⚠️ Don't include any sensitive data in the seed
 
 #### Backend Functions
 
@@ -131,13 +129,17 @@ deploys the code to
 
 ## Mobile App
 
-#### Setup
+#### Basic Setup
 
 Similar to `Admin Tool` the development doesn't require any production
 Firebase credentials. We rely on local emulators which are populated
-with dummy seed data.
+with dummy seed data. Follow `Admin Tool` setup to start emulators.
 
-Follow `Admin Tool` setup to start emulators.
+#### Getting Started
+
+Open `recipients_app` project folder in your development environment of
+choice. Building flavor should work seamlessly for Android Studio and VS
+Code with predefined build configs.
 
 We have two build flavors:
 
@@ -147,17 +149,28 @@ We have two build flavors:
 
 For development use `dev` flavor.
 
-Open `recipients_app` project folder in your development environment of
-choice. Building flavor should work seamlessly for Android Studio and VS
-Code with predefined build configs.
-
 As Firebase emulators work on your local host machine the easiest way to
 run app is on the Android emulator. Real devices need some additional
 setup.
 
-## UI
+## User Interface
 
-[See `README.md` in `ui` subfolder](ui/README.md).
+#### Basic Setup
+
+We build on reusable components for React and a test environment with Storybook.
+
+#### Getting Started
+We recommend to use `make` with the `Makefile` in the root of the project. 
+Those commands run the project inside Docker.
+
+```sh
+# Build the UI. For one time builds e.g. production builds.
+$ make build-ui
+
+# Run the development server on http://localhost:6006. Just use this while developing for the UI.
+$ make serve-ui
+```
+More instruction in the [`README.md` in `ui` subfolder](ui/README.md).
 
 ## Website
 
@@ -169,12 +182,14 @@ Shared explanations, assets, code or functions for all three projects.
 
 ### Shared Functions
 
+#### Basic Setup
+
 We are using firebase functions to run backend jobs. Those can e.g. be
 periodically triggered by pubsub cron definitions, by datastore triggers
 or through web callbacks. We are using [Prettier](https://prettier.io)
 to format the code.
 
-#### Setup
+#### Getting Started
 
 We develop these functions mainly test-driven.
 
