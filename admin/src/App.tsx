@@ -136,6 +136,7 @@ export default function App() {
 		<FirebaseCMSApp
 			name={'Social Income Admin'}
 			logo={'logo.svg'}
+			logoDark={'logo.svg'}
 			signInOptions={['google.com', 'password']}
 			collections={collections}
 			authentication={myAuthenticator}
