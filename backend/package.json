@@ -1,0 +1,32 @@
+{
+	"name": "@socialincome/backend",
+	"private": true,
+	"engines": {
+		"node": "16"
+	},
+	"scripts": {
+		"build": "tsc",
+		"build:watch": "tsc --watch",
+		"serve": "npm run build:watch | firebase emulators:start --project demo-social-income --config firebase.json --import ../seed",
+		"test": "firebase emulators:exec --project demo-social-income --config firebase.json 'npm run test:app'",
+		"test:app": "jest --roots functions scripts"
+	},
+	"devDependencies": {
+		"@jest/globals": "^29.1.2",
+		"@types/imap-simple": "^4.2.5",
+		"@types/jest": "^29.1.1",
+		"@types/mailparser": "^3.4.0",
+		"firebase-functions-test": "^2.4.0",
+		"jest": "^29.1.2",
+		"ts-jest": "^29.0.3",
+		"typescript": "^4.8.4"
+	},
+	"dependencies": {
+		"@socialincome/shared": "^0.1.0",
+		"fast-csv": "^4.3.6",
+		"firebase-admin": "^11.0.0",
+		"firebase-functions": "^3.21.0",
+		"imap-simple": "^5.1.0",
+		"mailparser": "^3.5.0"
+	}
+}

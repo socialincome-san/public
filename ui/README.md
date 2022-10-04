@@ -22,10 +22,10 @@ Docker.
 
 ```sh
 # Build the UI. For one time builds e.g. production builds.
-$ make build-ui
+$ make ui-build
 
 # Run the development server on http://localhost:6006. Just use this while developing for the UI.
-$ make serve-ui
+$ make ui-serve
 ```
 
 \_Installation of the dependencies is happening on running any of these

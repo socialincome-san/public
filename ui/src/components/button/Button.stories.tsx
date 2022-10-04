@@ -1,10 +1,8 @@
 // Button.stories.ts|tsx
 
-import React from 'react';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 
-import { ComponentStory, ComponentMeta } from '@storybook/react';
-
-import { SoButton, SoButtonProps, SO_BUTTON_SIZES, SO_BUTTON_VARIANTS } from './Button';
+import { SoButton, SO_BUTTON_SIZES, SO_BUTTON_VARIANTS } from './Button';
 
 export default {
 	component: SoButton,

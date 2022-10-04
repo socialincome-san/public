@@ -1,5 +1,5 @@
-import { DocTypographyItem, DocTypographyItemProps } from './TypographyItem';
 import './typography-list.css';
+import { DocTypographyItem, DocTypographyItemProps } from './TypographyItem';
 
 export interface DocTypographyListProps {
 	items: DocTypographyItemProps[];
