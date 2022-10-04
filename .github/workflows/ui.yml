@@ -1,17 +1,18 @@
 name: ui - build and deploy
 
 on:
-  push:
+  pull_request:
     paths:
       - "ui/**"
       - "package-lock.json"
       - ".github/workflows/ui.yml"
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - closed
+  push:
+    branches:
+      - main
+    paths:
+      - "ui/**"
+      - "package-lock.json"
+      - ".github/workflows/ui.yml"
 
 env:
   DIST_PATH: "ui/storybook-static"
