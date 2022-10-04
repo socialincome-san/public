@@ -4,12 +4,15 @@ on:
     paths:
       - "admin/**"
       - "shared/src/**"
+      - ".github/workflows/admin.yml"
   push:
     branches:
       - main
     paths:
       - "admin/**"
       - "shared/src/**"
+      - ".github/workflows/admin.yml"
+
 jobs:
   test_deploy:
     runs-on: ubuntu-latest
