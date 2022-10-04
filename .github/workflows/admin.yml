@@ -1,0 +1,67 @@
+name: Admin - build and deploy
+on:
+  pull_request:
+    paths:
+      - "admin/**"
+      - "shared/src/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "admin/**"
+      - "shared/src/**"
+jobs:
+  test_deploy:
+    if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Install & Setup Firebase Emulator Suite
+        run: |
+          npm -g install firebase-tools && \
+          firebase setup:emulators:firestore && \
+          firebase setup:emulators:storage && \
+          firebase setup:emulators:ui
+
+      - name: Install Dependencies
+        run: npm --workspace=@socialincome/admin install
+
+      - name: Run Tests
+        run: npm run admin:test
+
+      - name: Add secrets to env file
+        working-directory: admin
+        run: |
+          echo REACT_APP_ADMIN_FB_API_KEY=${{ secrets.REACT_APP_ADMIN_FB_API_KEY }} > .env
+          echo REACT_APP_ADMIN_FB_AUTH_DOMAIN=${{ secrets.REACT_APP_ADMIN_FB_AUTH_DOMAIN }} >> .env
+          echo REACT_APP_ADMIN_FB_DATABASE_URL=${{ secrets.REACT_APP_ADMIN_FB_DATABASE_URL }} >> .env
+          echo REACT_APP_ADMIN_FB_MEASUREMENT_ID=${{ secrets.REACT_APP_ADMIN_FB_MEASUREMENT_ID }} >> .env
+          echo REACT_APP_ADMIN_FB_MESSAGING_SENDER_ID=${{ secrets.REACT_APP_ADMIN_FB_MESSAGING_SENDER_ID }} >> .env
+          echo REACT_APP_ADMIN_FB_PROJECT_ID=${{ secrets.REACT_APP_ADMIN_FB_PROJECT_ID }} >> .env
+          echo REACT_APP_ADMIN_FB_STORAGE_BUCKET=${{ secrets.REACT_APP_ADMIN_FB_STORAGE_BUCKET }} >> .env
+          echo REACT_APP_ADMIN_ALGOLIA_APPLICATION_ID=${{ secrets.REACT_APP_ADMIN_ALGOLIA_APPLICATION_ID }} >> .env
+          echo REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY=${{ secrets.REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY }} >> .env
+
+      - name: Build
+        run: npm run admin:build
+
+      - name: Deploy Preview
+        if: github.ref != 'refs/heads/main'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          entryPoint: admin
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}"
+          projectId: social-income-prod
+
+      - name: Deploy Production
+        if: github.ref == 'refs/heads/main'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          entryPoint: admin
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}"
+          projectId: social-income-prod
+          channelId: live

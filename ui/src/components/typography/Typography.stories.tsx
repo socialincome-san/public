@@ -1,4 +1,4 @@
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { SoTypography, SO_TYPOGRAPHY_SIZES } from './Typography';
 
 export default {

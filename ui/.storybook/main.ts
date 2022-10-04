@@ -35,7 +35,7 @@ const config: StorybookViteConfig = {
 	},
 	framework: '@storybook/react',
 	core: {
-		builder: '@storybook/builder-vite',
+		builder: 'webpack5',
 	},
 	features: {
 		storyStoreV7: true,

@@ -1,5 +1,3 @@
-import classNames from 'classnames';
-
 export interface DocTypographyItemProps extends React.PropsWithChildren {
 	title: string;
 	description: string;

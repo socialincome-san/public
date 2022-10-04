@@ -1,4 +1,4 @@
-name: ui - build and deploy
+name: UI - build and deploy
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
           node-version: 16
           cache: "npm"
       - name: Install Dependencies
-        run: npm ci
+        run: npm --workspace=@socialincome/ui ci
       - name: Set Storybook ENV variables
         run: |
           echo "$PR_NUMBER"
@@ -38,7 +38,7 @@ jobs:
             echo "STORYBOOK_PATH_PREFIX=/public/" >>"$GITHUB_ENV"
           fi
       - name: Build UI Documentation
-        run: npm run build:ui
+        run: npm run ui:build
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:

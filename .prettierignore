@@ -1,5 +1,5 @@
-build
-node_modules
-.user
-.cache
-seed
+node_modules/
+.user/
+seed/
+
+ui/storybook-static/
