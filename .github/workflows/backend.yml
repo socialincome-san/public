@@ -1,13 +1,18 @@
-name: Backend Functions - Firebase Deployment
+name: Backend Functions - Test & Deplpoyment
 on:
+  pull_request:
+    paths:
+      - "backend/**"
+      - "shared/src/**"
   push:
     branches:
       - main
     paths:
       - "backend/**"
-      - "shared/**"
+      - "shared/src/**"
 jobs:
-  deploy:
+  test_deploy:
+    if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -24,12 +29,17 @@ jobs:
         working-directory: backend/functions
         run: npm install
 
+      - name: Run Tests
+        run: npm run backend:test
+
       - name: Add secrets to env file
+        if: github.ref == 'refs/heads/main'
         working-directory: backend/functions
         run: |
-          echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} >> .env
+          echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} > .env
           echo POSTFINANCE_EMAIL_PASSWORD=${{ secrets.POSTFINANCE_EMAIL_PASSWORD }} >> .env
 
       - name: Deploy to Firebase
+        if: github.ref == 'refs/heads/main'
         working-directory: backend
         run: firebase deploy --token ${{ secrets.FIREBASE_TOKEN }} --project social-income-prod
