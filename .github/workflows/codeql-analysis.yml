@@ -1,4 +1,4 @@
-name: CodeQL - Security Checks
+name: CodeQL - security checks
 
 on: pull_request
 

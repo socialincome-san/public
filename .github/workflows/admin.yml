@@ -1,4 +1,4 @@
-name: Admin - Test & Deplpoyment
+name: Admin - build and deploy
 on:
   pull_request:
     paths:

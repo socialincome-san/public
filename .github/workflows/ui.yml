@@ -1,4 +1,4 @@
-name: ui - build and deploy
+name: UI - build and deploy
 
 on:
   push:

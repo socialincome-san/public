@@ -1,4 +1,4 @@
-name: Backend Functions - Test & Deplpoyment
+name: Backend - build and deploy
 on:
   pull_request:
     paths:
