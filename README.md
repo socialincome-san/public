@@ -61,16 +61,16 @@ Quick Links: `↗`
 #### Basic Setup
 
 We are using [Firestore](https://firebase.google.com/docs/firestore) as
-database and [FireCMS](https://firecms.co/) as UI tool. Staff can
-access the admin tool via
+database and [FireCMS](https://firecms.co/) as UI tool. Staff can access
+the admin tool via
 [admin.socialincome.org](https://admin.socialincome.org). For
 development we use [Docker](https://www.docker.com) and rely on local
-emulators, which are populated with dummy seed data. This makes sure that no
-one will require production Firebase credentials to contribute.
+emulators, which are populated with dummy seed data. This makes sure
+that no one will require production Firebase credentials to contribute.
 
 #### Getting Started
 
-🕐 It takes a few minutes to download packages the first time 
+🕐 It takes a few minutes to download packages the first time
 
 1. Build helper image locally: `docker compose build`
 2. Start development server including Firebase emulators:
@@ -232,8 +232,8 @@ Nights.
 ## Non-Profit Association
 
 Social Income is a non-profit association
-([CHE-289.611.695](https://www.uid.admin.ch/Detail.aspx?uid_id=CHE-289.611.695)) based
-in Zurich, Switzerland.
+([CHE-289.611.695](https://www.uid.admin.ch/Detail.aspx?uid_id=CHE-289.611.695))
+based in Zurich, Switzerland.
 
 ## Radical Transparency
 
