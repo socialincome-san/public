@@ -5,10 +5,13 @@ admin-build:
 	docker compose run --rm admin bash -c "npm --workspace @socialincome/admin install && npm run admin:build"
 
 admin-serve:
-	docker compose up admin
+	docker compose run --rm admin bash -c "npm --workspace=@socialincome/admin install && npm run admin:serve"
 
 admin-test:
 	docker compose run --rm admin bash -c "npm --workspace @socialincome/admin install && npm run admin:test"
+
+admin-export-seed:
+    docker exec -it public-admin-1 npm run emulators:export
 
 backend-serve:
 	docker compose up backend
