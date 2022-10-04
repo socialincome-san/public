@@ -21,22 +21,19 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install & Setup Firebase Emulator Suite
-        working-directory: backend
         run: |
           npm -g install firebase-tools && \
           firebase setup:emulators:firestore && \
           firebase setup:emulators:ui
 
       - name: Install Dependencies
-        working-directory: backend/functions
-        run: npm install
+        run: npm --workspace @socialincome/backend install
 
       - name: Run Tests
         run: npm run backend:test
 
       - name: Add secrets to env file
         if: github.ref == 'refs/heads/main'
-        working-directory: backend/functions
         run: |
           echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} > .env
           echo POSTFINANCE_EMAIL_PASSWORD=${{ secrets.POSTFINANCE_EMAIL_PASSWORD }} >> .env
