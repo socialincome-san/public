@@ -1,18 +1,18 @@
-#### &nbsp;&nbsp;#Tech4Good &nbsp;&nbsp;#OpenSource &nbsp;&nbsp;#Solidarity
+#### &nbsp;&nbsp;#Tech4Good &nbsp;&nbsp;#OpenSource &nbsp;&nbsp;#Solidarity 
 
 ![Social Income Logo](https://github.com/socialincome-san/public/blob/main/shared/assets/logos/logo_color@500px.png?raw=true)
 
-```diff
-
-Everybody cheers for equality but forgets that without economic justice, there can be no true equality.
-
-```
-
-#### Social Income explained
+### Social Income is a radically simple solution in the fight against poverty. We turn 1% of anyone's salary into an unconditional basic income for people living in poverty – sent directly to their mobile phones. The tools that make this possible are built and continuously improved upon by an open source community, who use technical skills to take on the SDG 1 ([No Poverty](https://sdgs.un.org/goals/goal1)) and the SDG 10 ([Reduced Inequality](https://sdgs.un.org/goals/goal10)).
 
 https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-ade9-2cc0e153d947.mp4
 
-### Social Income is a radically simple solution in the fight against poverty. We turn 1% of anyone's salary into an unconditional basic income for people living in poverty – sent directly to their mobile phones. The tools that make this possible are built and continuously improved upon by an open source community, who use technical skills to take on the SDG 1 ([No Poverty](https://sdgs.un.org/goals/goal1)) and the SDG 10 ([Reduced Inequality](https://sdgs.un.org/goals/goal10)).
+```diff
+
+Everybody cheers for equality 
+but forgets that without economic justice, 
+there can be no true equality.
+
+```
 
 ### Our monorepo contains the following tools used to run Social Income:
 
@@ -234,6 +234,8 @@ Nights.
 Social Income is a non-profit association
 ([CHE-289.611.695](https://www.uid.admin.ch/Detail.aspx?uid_id=CHE-289.611.695))
 based in Zurich, Switzerland.
+
+![Twitter URL](https://img.shields.io/twitter/url?label=Follow%20%40so_income&style=social&url=https%3A%2F%2Ftwitter.com%2Fso_income)
 
 ## Radical Transparency
 
