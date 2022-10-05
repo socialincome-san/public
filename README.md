@@ -1,4 +1,4 @@
-#### &nbsp;&nbsp;#Tech4Good &nbsp;&nbsp;#OpenSource &nbsp;&nbsp;#Solidarity 
+#### &nbsp;&nbsp;#Tech4Good &nbsp;&nbsp;#OpenSource &nbsp;&nbsp;#Solidarity
 
 ![Social Income Logo](https://github.com/socialincome-san/public/blob/main/shared/assets/logos/logo_color@500px.png?raw=true)
 
@@ -8,8 +8,8 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
 
 ```diff
 
-Everybody cheers for equality 
-but forgets that without economic justice, 
+Everybody cheers for equality
+but forgets that without economic justice,
 there can be no true equality.
 
 ```
