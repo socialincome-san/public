@@ -140,6 +140,7 @@ export default function App() {
 			signInOptions={['google.com', 'password']}
 			collections={collections}
 			authentication={myAuthenticator}
+			fontFamily={'SoSans'}
 			locale={'enUS'}
 			textSearchController={textSearchController}
 			firebaseConfig={firebaseConfig}
