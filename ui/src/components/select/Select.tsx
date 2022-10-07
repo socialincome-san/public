@@ -5,7 +5,7 @@ import { Fragment } from 'react';
 
 type ListboxProps = Parameters<typeof Listbox>[0];
 
-export const SO_SELECT_SIZES = ['base', 'xl'];
+export const SO_SELECT_SIZES = ['base', 'xl'] as const;
 
 export type SoSelectItem = {
 	/**
