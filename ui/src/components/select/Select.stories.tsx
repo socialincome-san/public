@@ -60,19 +60,19 @@ WithImages.args = {
 		{
 			label: 'Option 1',
 			image: {
-				src: '/public/ch.svg',
+				src: 'ch.svg',
 			},
 		},
 		{
 			label: 'Option 2',
 			image: {
-				src: '/public/ch.svg',
+				src: 'ch.svg',
 			},
 		},
 		{
 			label: 'Option 3',
 			image: {
-				src: '/public/ch.svg',
+				src: 'ch.svg',
 			},
 		},
 	],
