@@ -4,7 +4,7 @@
 	"private": true,
 	"workspaces": [
 		"admin",
-		"backend",
+		"functions",
 		"shared",
 		"ui"
 	],
@@ -13,9 +13,12 @@
 		"admin:build": "$npm_execpath --workspace=@socialincome/admin run build",
 		"admin:serve": "$npm_execpath --workspace=@socialincome/admin run serve",
 		"admin:test": "$npm_execpath --workspace=@socialincome/admin run test",
-		"backend:build": "$npm_execpath --workspace=@socialincome/backend run build",
-		"backend:serve": "$npm_execpath --workspace=@socialincome/backend run serve",
-		"backend:test": "$npm_execpath --workspace=@socialincome/backend run test",
+		"functions:build": "$npm_execpath --workspace=@socialincome/functions run build",
+		"functions:deploy": "$npm_execpath --workspace=@socialincome/functions run deploy",
+		"functions:serve": "$npm_execpath --workspace=@socialincome/functions run serve",
+		"functions:test": "$npm_execpath --workspace=@socialincome/functions run test",
+		"firebase:serve": "firebase emulators:start --project demo-social-income-prod --config firebase.json --import ./seed",
+		"firebase:export": "firebase emulators:export --project demo-social-income-prod --force ./seed",
 		"ui:build": "$npm_execpath --workspace=@socialincome/ui run build",
 		"ui:serve": "$npm_execpath --workspace=@socialincome/ui run serve"
 	},

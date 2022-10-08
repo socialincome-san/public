@@ -1,17 +1,17 @@
-name: Backend - build and deploy
+name: Functions - build and deploy
 on:
   pull_request:
     paths:
-      - "backend/**"
+      - "functions/**"
       - "shared/src/**"
-      - ".github/workflows/backend.yml"
+      - ".github/workflows/functions.yml"
   push:
     branches:
       - main
     paths:
-      - "backend/**"
+      - "functions/**"
       - "shared/src/**"
-      - ".github/workflows/backend.yml"
+      - ".github/workflows/functions.yml"
 
 jobs:
   test_deploy:
@@ -21,27 +21,26 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install & Setup Firebase Emulator Suite
-        working-directory: backend
         run: |
           npm -g install firebase-tools && \
           firebase setup:emulators:firestore && \
           firebase setup:emulators:ui
 
       - name: Install Dependencies
-        working-directory: backend/functions
-        run: npm install
+        run: |
+          npm --workspace @socialincome/functions install \
+          npm --workspace @socialincome/shared install
 
       - name: Run Tests
-        run: npm run backend:test
+        run: npm run functions:test
 
       - name: Add secrets to env file
         if: github.ref == 'refs/heads/main'
-        working-directory: backend/functions
+        working-directory: functions
         run: |
           echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} > .env
           echo POSTFINANCE_EMAIL_PASSWORD=${{ secrets.POSTFINANCE_EMAIL_PASSWORD }} >> .env
 
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main'
-        working-directory: backend
-        run: firebase deploy --token ${{ secrets.FIREBASE_TOKEN }} --project social-income-prod
+        run: firebase deploy --only functions --token ${{ secrets.FIREBASE_TOKEN }} --project social-income-prod

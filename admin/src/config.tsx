@@ -1,21 +1,23 @@
-export const NODE_ENV = process.env.NODE_ENV!;
-
-// production envs
-export const FB_API_KEY = process.env.REACT_APP_ADMIN_FB_API_KEY;
-export const FB_AUTH_DOMAIN = process.env.REACT_APP_ADMIN_FB_AUTH_DOMAIN;
-export const FB_DATABASE_URL = process.env.REACT_APP_ADMIN_FB_DATABASE_URL;
-export const FB_PROJECT_ID = process.env.REACT_APP_ADMIN_FB_PROJECT_ID;
-export const FB_STORAGE_BUCKET = process.env.REACT_APP_ADMIN_FB_STORAGE_BUCKET;
-export const FB_MESSAGING_SENDER_ID = process.env.REACT_APP_ADMIN_FB_MESSAGING_SENDER_ID;
-export const FB_MEASUREMENT_ID = process.env.REACT_APP_ADMIN_FB_MEASUREMENT_ID;
-
 // emulator envs
 export const FB_AUTH_EMULATOR_URL = process.env.REACT_APP_ADMIN_FB_AUTH_EMULATOR_URL;
 export const FB_FIRESTORE_EMULATOR_HOST = process.env.REACT_APP_ADMIN_FB_FIRESTORE_EMULATOR_HOST;
 export const FB_FIRESTORE_EMULATOR_PORT = process.env.REACT_APP_ADMIN_FB_FIRESTORE_EMULATOR_PORT;
 export const FB_STORAGE_EMULATOR_HOST = process.env.REACT_APP_ADMIN_FB_STORAGE_EMULATOR_HOST;
 export const FB_STORAGE_EMULATOR_PORT = process.env.REACT_APP_ADMIN_FB_STORAGE_EMULATOR_PORT;
+export const FB_FUNCTIONS_EMULATOR_HOST = process.env.REACT_APP_FB_FUNCTIONS_EMULATOR_HOST;
+export const FB_FUNCTIONS_EMULATOR_PORT = process.env.REACT_APP_FB_FUNCTIONS_EMULATOR_PORT;
 
 // algolia search
 export const ALGOLIA_APPLICATION_ID = process.env.REACT_APP_ADMIN_ALGOLIA_APPLICATION_ID;
 export const ALGOLIA_SEARCH_KEY = process.env.REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY;
+
+// production envs
+export const FIREBASE_CONFIG = {
+	apiKey: process.env.REACT_APP_ADMIN_FB_API_KEY,
+	authDomain: process.env.REACT_APP_ADMIN_FB_AUTH_DOMAIN,
+	databaseURL: process.env.REACT_APP_ADMIN_FB_DATABASE_URL,
+	projectId: process.env.REACT_APP_ADMIN_FB_PROJECT_ID,
+	storageBucket: process.env.REACT_APP_ADMIN_FB_STORAGE_BUCKET,
+	messagingSenderId: process.env.REACT_APP_ADMIN_FB_MESSAGING_SENDER_ID,
+	measurementId: process.env.REACT_APP_ADMIN_FB_MEASUREMENT_ID,
+};

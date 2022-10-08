@@ -95,7 +95,7 @@ a local copy of your altered data set, you can execute in a second shell
  docker exec -it public-admin-1 npm run emulators:export
 ```
 
-#### Backend Functions
+#### Functions
 
 `↓` see [Shared](#shared) > [Shared Functions](#shared-functions)
 
@@ -190,7 +190,7 @@ Shared explanations, assets, code or functions for all three projects.
 
 #### Basic Setup
 
-We are using firebase functions to run backend jobs. Those can e.g. be
+We are using firebase functions to run back end jobs. Those can e.g. be
 periodically triggered by pubsub cron definitions, by datastore triggers
 or through web callbacks. We are using [Prettier](https://prettier.io)
 to format the code.
@@ -200,11 +200,11 @@ to format the code.
 These functions are mainly implemented using test-driven development.
 
 1. Build helper image locally: `docker compose build`
-2. Install dependencies: `docker compose run backend npm install`.
+2. Install dependencies: `docker compose run functions npm install`.
 3. Run the tests including Firebase emulators:
-   `docker compose run backend npm run emulators:test`. The first time
+   `docker compose run functions npm run emulators:test`. The first time
    this can take multiple minutes till the packages are downloaded.
-4. With `docker compose run backend npm run serve` one can also serve
+4. With `docker compose run functions npm run serve` one can also serve
    the webhooks on localhost.
 
 ### Bug reporting / Feature Request

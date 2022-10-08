@@ -1,5 +1,5 @@
 import { Combobox, Transition } from '@headlessui/react';
-import { CheckIcon, ChevronDownIcon, ChevronUpDownIcon } from '@heroicons/react/24/solid';
+import { CheckIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
 import classNames from 'classnames';
 import { Fragment, useState } from 'react';
 

@@ -1,7 +1,7 @@
-import * as firebase from 'firebase-admin';
+import { initializeApp } from 'firebase-admin/app';
 import { CollectionReference, DocumentData, DocumentReference, getFirestore } from 'firebase-admin/firestore';
 
-export const firebaseApp = firebase.initializeApp();
+initializeApp();
 
 /**
  * direct access to the admin firestore instance. Deployed, this has full admin access to the data.

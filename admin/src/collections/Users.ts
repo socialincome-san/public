@@ -1,8 +1,8 @@
-import { AdditionalColumnDelegate, buildCollection, buildProperties } from '@camberi/firecms';
+import { AdditionalFieldDelegate, buildCollection, buildProperties } from '@camberi/firecms';
 import { CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH, User, USER_FIRESTORE_PATH } from '@socialincome/shared/types';
 import { contributionsCollection } from './Contributions';
 
-const FirstNameCol: AdditionalColumnDelegate<User> = {
+const FirstNameCol: AdditionalFieldDelegate<User> = {
 	id: 'first_name_col',
 	name: 'First Name',
 	builder: ({ entity }) => {
@@ -12,7 +12,7 @@ const FirstNameCol: AdditionalColumnDelegate<User> = {
 	dependencies: ['personal'],
 };
 
-const LastNameCol: AdditionalColumnDelegate<User> = {
+const LastNameCol: AdditionalFieldDelegate<User> = {
 	id: 'last_name_col',
 	name: 'Last Name',
 	builder: ({ entity }) => {
@@ -22,7 +22,7 @@ const LastNameCol: AdditionalColumnDelegate<User> = {
 	dependencies: ['personal'],
 };
 
-const GenderCol: AdditionalColumnDelegate<User> = {
+const GenderCol: AdditionalFieldDelegate<User> = {
 	id: 'gender_col',
 	name: 'Gender',
 	builder: ({ entity }) => {
@@ -32,7 +32,7 @@ const GenderCol: AdditionalColumnDelegate<User> = {
 	dependencies: ['personal'],
 };
 
-const PhoneCol: AdditionalColumnDelegate<User> = {
+const PhoneCol: AdditionalFieldDelegate<User> = {
 	id: 'phone_col',
 	name: 'Phone',
 	builder: ({ entity }) => {
@@ -42,7 +42,7 @@ const PhoneCol: AdditionalColumnDelegate<User> = {
 	dependencies: ['personal'],
 };
 
-const CountryCol: AdditionalColumnDelegate<User> = {
+const CountryCol: AdditionalFieldDelegate<User> = {
 	id: 'country_col',
 	name: 'Country',
 	builder: ({ entity }) => {
@@ -52,7 +52,7 @@ const CountryCol: AdditionalColumnDelegate<User> = {
 	dependencies: ['address'],
 };
 
-const CityCol: AdditionalColumnDelegate<User> = {
+const CityCol: AdditionalFieldDelegate<User> = {
 	id: 'city_col',
 	name: 'City',
 	builder: ({ entity }) => {
