@@ -5,7 +5,7 @@ import { Fragment } from 'react';
 
 type ListboxProps = Parameters<typeof Listbox>[0];
 
-export const SO_SELECT_SIZES = ['base', 'xl'];
+export const SO_SELECT_SIZES = ['base', 'xl'] as const;
 
 export type SoSelectItem = {
 	/**
@@ -75,10 +75,12 @@ export const SoSelect = ({
 		<Listbox {...props}>
 			{({ open }) => (
 				<>
-					<Listbox.Label className={classNames('block', 'font-medium', 'text-gray-700', { 'sr-only': labelHidden })}>
+					<Listbox.Label
+						className={classNames('block', 'font-medium', 'text-gray-700', 'mb-1', { 'sr-only': labelHidden })}
+					>
 						{label}
 					</Listbox.Label>
-					<div className="relative mt-1">
+					<div className="relative">
 						<Listbox.Button
 							className={classNames(
 								'relative',

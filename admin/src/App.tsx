@@ -122,9 +122,11 @@ export default function App() {
 		<FirebaseCMSApp
 			name={'Social Income Admin'}
 			logo={'logo.svg'}
+			logoDark={'logo.svg'}
 			signInOptions={['google.com', 'password']}
 			collections={collections}
 			authentication={myAuthenticator}
+			fontFamily={'SoSans'}
 			locale={'enUS'}
 			textSearchController={textSearchController}
 			firebaseConfig={config.FIREBASE_CONFIG}
