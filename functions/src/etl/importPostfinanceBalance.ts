@@ -20,7 +20,6 @@ export const importBalanceMailFunc = functions.pubsub.schedule('0 * * * *').onRu
 
 export const retrieveBalanceMails = async (): Promise<BankBalance[]> => {
 	try {
-		functions.logger.info('Updated function');
 		functions.logger.info('Start checking balance inbox');
 		const config = {
 			imap: {
