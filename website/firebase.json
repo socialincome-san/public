@@ -1,17 +1,13 @@
 {
-  "hosting": {
-    "site": "social-income-prod",
-    "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  }
+	"hosting": {
+		"site": "social-income-prod",
+		"public": "public",
+		"ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+		"rewrites": [
+			{
+				"source": "**",
+				"destination": "/index.html"
+			}
+		]
+	}
 }

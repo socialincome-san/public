@@ -57,7 +57,6 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}"
           target: admin
 
-
       - name: Deploy Production
         if: github.ref == 'refs/heads/main'
         uses: FirebaseExtended/action-hosting-deploy@v0
