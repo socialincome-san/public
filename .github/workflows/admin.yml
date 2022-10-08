@@ -50,7 +50,9 @@ jobs:
         run: npm run admin:build
 
       - name: Configure deploy target
-        run: firebase target:apply hosting admin admin-social-income-prod
+        run: |
+          firebase use --add social-income-prod \
+          firebase target:apply hosting admin admin-social-income-prod
 
       - name: Deploy Preview
         if: github.ref != 'refs/heads/main'
