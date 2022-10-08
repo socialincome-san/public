@@ -6,8 +6,8 @@ export default function CallDummyFunctionButton() {
 	const onClick = () => {
 		const functions = getFunctions();
 		console.log(functions);
-		const mkDummyFunction = httpsCallable(functions, 'dummyfunction');
-		mkDummyFunction(55)
+		const dummyFunction = httpsCallable(functions, 'dummyFunction');
+		dummyFunction(55)
 			.then((res) => {
 				console.log(res);
 			})

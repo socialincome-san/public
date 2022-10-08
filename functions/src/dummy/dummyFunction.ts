@@ -1,6 +1,6 @@
-import * as functions from 'firebase-functions/v2';
+import * as functions from 'firebase-functions';
 
-export const dummyFunction = functions.https.onCall<number>({ cors: ['socialincome.org', 'web.app'] }, (request) => {
-	console.log(request.data);
+export const dummyFunction = functions.https.onCall((data, context) => {
+	console.log(data);
 	return 'Hakuna Matata';
 });
