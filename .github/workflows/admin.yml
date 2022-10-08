@@ -14,19 +14,6 @@ on:
       - ".github/workflows/admin.yml"
 
 jobs:
-  check_applicability:
-    runs-on: ubuntu-latest
-    outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
-    steps:
-      - id: skip_check
-        uses: fkirc/skip-duplicate-actions@v5
-        with:
-          paths:
-            - "admin/**"
-            - "shared/src/**"
-            - ".github/workflows/admin.yml"
-
   test_deploy:
     runs-on: ubuntu-latest
     steps:
