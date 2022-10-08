@@ -1,11 +1,17 @@
 name: Admin - build and deploy
 on:
   pull_request:
-    branches:
-      - main
+    paths:
+      - "backend/**"
+      - "shared/src/**"
+      - ".github/workflows/backend.yml"
   push:
     branches:
       - main
+    paths:
+      - "backend/**"
+      - "shared/src/**"
+      - ".github/workflows/backend.yml"
 
 jobs:
   check_applicability:
