@@ -4,14 +4,14 @@ on:
     paths:
       - "backend/**"
       - "shared/src/**"
-      - ".github/workflows/backend.yml"
+      - ".github/workflows/admin.yml"
   push:
     branches:
       - main
     paths:
       - "backend/**"
       - "shared/src/**"
-      - ".github/workflows/backend.yml"
+      - ".github/workflows/admin.yml"
 
 jobs:
   check_applicability:
