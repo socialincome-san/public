@@ -1,10 +1,10 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { useState } from 'react';
 
-import { SoSelect, SoSelectProps, SO_SELECT_SIZES } from './Select';
+import { SoCombobox, SoComboboxProps, SO_COMBOBOX_SIZES } from './Combobox';
 
 export default {
-	component: SoSelect,
+	component: SoCombobox,
 	argTypes: {
 		block: {
 			defaultValue: false,
@@ -18,14 +18,14 @@ export default {
 		},
 		size: {
 			defaultValue: 'base',
-			options: SO_SELECT_SIZES,
+			options: SO_COMBOBOX_SIZES,
 			control: { type: 'select' },
 		},
 	},
-} as ComponentMeta<typeof SoSelect>;
+} as ComponentMeta<typeof SoCombobox>;
 
-const Template: ComponentStory<typeof SoSelect> = (args: SoSelectProps) => {
-	const options: SoSelectProps['options'] = args?.options || [
+const Template: ComponentStory<typeof SoCombobox> = (args: SoComboboxProps) => {
+	const options: SoComboboxProps['options'] = args?.options || [
 		{
 			label: 'Option 1',
 		},
@@ -49,7 +49,7 @@ const Template: ComponentStory<typeof SoSelect> = (args: SoSelectProps) => {
 		},
 	};
 
-	return <SoSelect {...args} />;
+	return <SoCombobox {...args} />;
 };
 
 export const Standard: typeof Template = Template.bind({});
