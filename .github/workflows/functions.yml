@@ -34,6 +34,9 @@ jobs:
       - name: Run Tests
         run: npm run functions:test
 
+      - name: Build
+        run: npm run functions:build
+
       - name: Add secrets to env file
         if: github.ref == 'refs/heads/main'
         working-directory: functions
