@@ -1,6 +1,6 @@
 name: Admin - build and deploy
 on:
-  pull_request
+  pull_request:
   push:
     branches:
       - main
