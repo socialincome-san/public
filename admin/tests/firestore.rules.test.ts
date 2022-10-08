@@ -23,7 +23,7 @@ beforeAll(async () => {
 	testEnvironment = await initializeTestEnvironment({
 		projectId: 'test-project',
 		firestore: {
-			host: 'firebase',
+			host: 'localhost',
 			port: 8080,
 			rules: fs.readFileSync(path.resolve(__dirname, 'firestore.rules'), 'utf8'),
 		},
