@@ -9,7 +9,7 @@ on:
     branches:
       - main
     paths:
-      - "backend/**"
+      - "functions/**"
       - "shared/src/**"
       - ".github/workflows/admin.yml"
 
