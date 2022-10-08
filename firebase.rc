@@ -1,0 +1,15 @@
+"projects": {
+    "default": "social-income-prod"
+},
+"targets": {
+    "social-income-prod": {
+        "hosting": {
+            "admin": [
+                "admin-social-income-prod"
+            ],
+            "website": [
+                "foobar-website"
+            ]
+        }
+    }
+}

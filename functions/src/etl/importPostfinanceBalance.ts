@@ -2,9 +2,9 @@ import * as functions from 'firebase-functions';
 
 import imaps from 'imap-simple';
 
-import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '@socialincome/shared/types';
 import _ from 'lodash';
 import { simpleParser, Source } from 'mailparser';
+import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../shared/types';
 import { POSTFINANCE_EMAIL_PASSWORD, POSTFINANCE_EMAIL_USER } from '../config';
 
 import { createDoc } from '../useFirestoreAdmin';
@@ -20,6 +20,7 @@ export const importBalanceMailFunc = functions.pubsub.schedule('0 * * * *').onRu
 
 export const retrieveBalanceMails = async (): Promise<BankBalance[]> => {
 	try {
+		functions.logger.info('Updated function');
 		functions.logger.info('Start checking balance inbox');
 		const config = {
 			imap: {

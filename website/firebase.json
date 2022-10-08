@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "admin-social-income-prod",
+    "site": "social-income-prod",
     "public": "public",
     "ignore": [
       "firebase.json",

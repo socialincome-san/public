@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 import { Firestore, QueryDocumentSnapshot } from 'firebase-admin/lib/firestore/index';
-import { getMonthId, getValidMonths } from './utils';
+import { getMonthId, getValidMonths } from 'shared/utils';
 
 admin.initializeApp({
 	credential: admin.credential.applicationDefault(),
@@ -21,10 +21,21 @@ console.log(askedDate.toISOString());
 async function addPayments(db: Firestore, recipients: QueryDocumentSnapshot[]) {
 	recipients.map(async (doc) => {
 		let p = await db.collection('recipients/' + doc.id + '/payments').get();
-		await p.docs;
-		let pd = doc.data();
+		console.log(p);
 
-		console.log(doc.id + ' ' + pd.first_name + ' ' + pd.last_name);
+		let pd = doc.data();
+		console.log(doc.id + ' ' + pd.first_name + ' ' + pd.last_name + ' ' + pd.om_uid);
+
+		if (pd.test_recipient) {
+			console.log('Skipping test recipient');
+			return;
+		}
+
+		if (pd.progr_status !== 'active' && pd.progr_status !== 'designated') {
+			console.log('Skipping recipient who is not supposed to recieve payments.');
+			return;
+		}
+
 		let startDate = pd.si_start_date.toDate();
 		console.log(startDate);
 
@@ -39,11 +50,9 @@ async function addPayments(db: Firestore, recipients: QueryDocumentSnapshot[]) {
 			// console.log(monthData);
 			if (monthData === undefined) {
 				let data = {
-					amount: 300000,
-					currency: 'SLL',
-					status: 'confirmed',
-					payment_at: admin.firestore.Timestamp.fromDate(new Date(month[0], month[1] - 1, 15)),
-					confirm_at: admin.firestore.Timestamp.fromDate(new Date(month[0], month[1] - 1, 16)),
+					amount: 400,
+					currency: 'SLE',
+					status: 'to_pay',
 				};
 				console.log(data);
 				await monthRef.set(data);

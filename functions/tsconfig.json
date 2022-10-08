@@ -3,18 +3,19 @@
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"lib": ["dom", "es2020"],
-		"module": "esnext",
+		"module": "commonjs",
 		"moduleResolution": "node",
 		"noImplicitReturns": true,
 		"noUnusedLocals": true,
-		"outDir": "lib",
+		"outDir": "dist",
 		"preserveConstEnums": true,
 		"resolveJsonModule": true,
 		"strict": true,
-		"sourceMap": true,
 		"skipLibCheck": true,
-		"target": "es2021",
+		"target": "es2017",
 		"types": ["jest", "node"]
 	},
-	"include": ["functions", "scripts"]
+	"include": [
+      "src/index.ts"
+    ]
 }

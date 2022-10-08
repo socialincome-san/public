@@ -10,11 +10,17 @@ admin-serve:
 admin-test:
 	docker compose run --rm admin bash -c "npm --workspace @socialincome/admin install && npm run admin:test"
 
-backend-serve:
-	docker compose up backend
+functions-build:
+	docker compose run --rm functions bash -c "npm --workspace @socialincome/functions install && npm run functions:build"
 
-backend-test:
-	docker compose run --rm backend bash -c "npm --workspace @socialincome/backend install && npm run backend:test"
+functions-serve:
+	docker compose up functions
+
+functions-test:
+	docker compose run --rm functions bash -c "npm --workspace @socialincome/functions install && npm run functions:test"
+
+firebase-serve:
+	docker compose up firebase
 
 website-serve:
 	docker compose up ui
