@@ -15,7 +15,5 @@
 		"target": "es2017",
 		"types": ["jest", "node"]
 	},
-	"include": [
-      "src/index.ts"
-    ]
+	"include": ["src/index.ts"]
 }
