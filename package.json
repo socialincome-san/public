@@ -12,7 +12,7 @@
 		"format-code": "prettier --write .",
 		"admin:build": "$npm_execpath --workspace=@socialincome/admin run build",
 		"admin:serve": "$npm_execpath --workspace=@socialincome/admin run serve",
-		"admin:test": "$npm_execpath run functions::build && $npm_execpath --workspace=@socialincome/admin run test",
+		"admin:test": "$npm_execpath run functions:build && $npm_execpath --workspace=@socialincome/admin run test",
 		"functions:build": "$npm_execpath --workspace=@socialincome/functions run build",
 		"functions:deploy": "$npm_execpath --workspace=@socialincome/functions run deploy",
 		"functions:serve": "$npm_execpath --workspace=@socialincome/functions run serve",
