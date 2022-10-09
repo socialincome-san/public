@@ -2,25 +2,29 @@ name: UI - build and deploy
 
 on:
   pull_request:
-    paths:
-      - "ui/**"
-      - "package-lock.json"
-      - ".github/workflows/ui.yml"
   push:
     branches:
       - main
-    paths:
-      - "ui/**"
-      - "package-lock.json"
-      - ".github/workflows/ui.yml"
 
 env:
   DIST_PATH: "ui/storybook-static"
   PR_NUMBER: ${{ github.event.number }}
 
 jobs:
+  check_applicability:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          paths: '["ui/**", "package-lock.json", ".github/workflows/ui.yml"]'
+
   build:
     runs-on: ubuntu-latest
+    needs: check_applicability
+    if: needs.check_applicability.outputs.should_skip != 'true'
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
