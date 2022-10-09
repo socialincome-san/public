@@ -25,58 +25,44 @@ import {
 	usersCollection,
 } from './collections';
 
-import {
-	ALGOLIA_APPLICATION_ID,
-	ALGOLIA_SEARCH_KEY,
-	FB_API_KEY,
-	FB_AUTH_DOMAIN,
-	FB_AUTH_EMULATOR_URL,
-	FB_DATABASE_URL,
-	FB_FIRESTORE_EMULATOR_HOST,
-	FB_FIRESTORE_EMULATOR_PORT,
-	FB_MEASUREMENT_ID,
-	FB_MESSAGING_SENDER_ID,
-	FB_PROJECT_ID,
-	FB_STORAGE_BUCKET,
-	FB_STORAGE_EMULATOR_HOST,
-	FB_STORAGE_EMULATOR_PORT,
-} from './config';
-
-const firebaseConfig = {
-	apiKey: FB_API_KEY,
-	authDomain: FB_AUTH_DOMAIN,
-	databaseURL: FB_DATABASE_URL,
-	projectId: FB_PROJECT_ID,
-	storageBucket: FB_STORAGE_BUCKET,
-	messagingSenderId: FB_MESSAGING_SENDER_ID,
-	measurementId: FB_MEASUREMENT_ID,
-};
+// import { getApp } from 'firebase/app';
+import { getApp } from 'firebase/app';
+import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
+import CallDummyFunctionButton from './CallDummyFunctionButton';
+import * as config from './config';
 
 const onFirebaseInit = () => {
-	if (FB_AUTH_EMULATOR_URL) {
-		connectAuthEmulator(getAuth(), FB_AUTH_EMULATOR_URL);
+	if (config.FB_AUTH_EMULATOR_URL) {
+		connectAuthEmulator(getAuth(), config.FB_AUTH_EMULATOR_URL);
 		console.log('Using auth emulator');
 	} else {
 		console.log('Using production auth');
 	}
-	if (FB_FIRESTORE_EMULATOR_HOST && FB_FIRESTORE_EMULATOR_PORT) {
-		connectFirestoreEmulator(getFirestore(), FB_FIRESTORE_EMULATOR_HOST, +FB_FIRESTORE_EMULATOR_PORT);
-		console.log(FB_FIRESTORE_EMULATOR_PORT);
+	if (config.FB_FIRESTORE_EMULATOR_HOST && config.FB_FIRESTORE_EMULATOR_PORT) {
+		connectFirestoreEmulator(getFirestore(), config.FB_FIRESTORE_EMULATOR_HOST, +config.FB_FIRESTORE_EMULATOR_PORT);
+		console.log(config.FB_FIRESTORE_EMULATOR_PORT);
 		console.log('Using firestore emulator');
 	} else {
 		console.log('Using production firestore');
 	}
-	if (FB_STORAGE_EMULATOR_HOST && FB_STORAGE_EMULATOR_PORT) {
-		connectStorageEmulator(getStorage(), FB_STORAGE_EMULATOR_HOST, +FB_STORAGE_EMULATOR_PORT);
+	if (config.FB_STORAGE_EMULATOR_HOST && config.FB_STORAGE_EMULATOR_PORT) {
+		connectStorageEmulator(getStorage(), config.FB_STORAGE_EMULATOR_HOST, +config.FB_STORAGE_EMULATOR_PORT);
 		console.log('Using storage emulator');
 	} else {
 		console.log('Using production storage');
 	}
+	if (config.FB_FUNCTIONS_EMULATOR_HOST && config.FB_FUNCTIONS_EMULATOR_PORT) {
+		const app = getApp();
+		console.log(app);
+		const functions = getFunctions(app);
+		connectFunctionsEmulator(functions, config.FB_FUNCTIONS_EMULATOR_HOST, +config.FB_FUNCTIONS_EMULATOR_PORT);
+		console.log('Using functions emulator');
+	}
 };
 
 const recipientsIndex =
-	ALGOLIA_APPLICATION_ID && ALGOLIA_SEARCH_KEY
-		? algoliasearch(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY).initIndex('recipients')
+	config.ALGOLIA_APPLICATION_ID && config.ALGOLIA_SEARCH_KEY
+		? algoliasearch(config.ALGOLIA_APPLICATION_ID, config.ALGOLIA_SEARCH_KEY).initIndex('recipients')
 		: undefined;
 
 const textSearchController: FirestoreTextSearchController = ({ path, searchString }) => {
@@ -143,9 +129,10 @@ export default function App() {
 			fontFamily={'SoSans'}
 			locale={'enUS'}
 			textSearchController={textSearchController}
-			firebaseConfig={firebaseConfig}
+			firebaseConfig={config.FIREBASE_CONFIG}
 			onFirebaseInit={onFirebaseInit}
 			dateTimeFormat={'yyyy-MM-dd'}
+			toolbarExtraWidget={<CallDummyFunctionButton />}
 		/>
 	);
 }
