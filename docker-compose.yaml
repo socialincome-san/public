@@ -11,7 +11,7 @@ services:
       - "3000:3000"
     depends_on:
       - firebase
-    command: /bin/bash -c "npm --workspace=@socialincome/admin install && npm run admin:serve"
+    command: /bin/bash -c "npm --workspace=@socialincome/functions install && npm --workspace=@socialincome/admin install && npm run admin:serve"
 
   functions:
     image: socialincome/local-helper
