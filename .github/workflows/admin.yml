@@ -1,26 +1,20 @@
 name: Admin - build and deploy
 on:
   pull_request:
-    branches:
-      - main
+    paths:
+      - "admin/**"
+      - "shared/src/**"
+      - ".github/workflows/admin.yml"
   push:
     branches:
       - main
+    paths:
+      - "admin/**"
+      - "shared/src/**"
+      - ".github/workflows/admin.yml"
 
 jobs:
-  check_applicability:
-    runs-on: ubuntu-latest
-    outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
-    steps:
-      - id: skip_check
-        uses: fkirc/skip-duplicate-actions@v5
-        with:
-          paths: '[ "admin/**", "shared/src/**", ".github/workflows/admin.yml"]'
-
   test_deploy:
-    needs: check_applicability
-    if: needs.pre_job.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -59,17 +53,17 @@ jobs:
         if: github.ref != 'refs/heads/main'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
+          entryPoint: admin
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}"
           projectId: social-income-prod
-          target: admin
 
       - name: Deploy Production
         if: github.ref == 'refs/heads/main'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
+          entryPoint: admin
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}"
           projectId: social-income-prod
-          target: admin
           channelId: live
