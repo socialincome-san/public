@@ -1,9 +1,10 @@
 ---
 name: 'Feature: Website'
 about: 'Suggest a feature for the website '
-title: '[Website] '
+title: ''
 labels: feature, website
 assignees: ''
+
 ---
 
 **Is your feature request related to a problem? Please describe.** A
