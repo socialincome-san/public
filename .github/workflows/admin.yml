@@ -32,7 +32,7 @@ jobs:
           firebase setup:emulators:ui
 
       - name: Install Dependencies
-        run: npm --workspace=@socialincome/admin install
+        run: npm --workspace=@socialincome/functions install && npm --workspace=@socialincome/admin install
 
       - name: Run Tests
         run: npm run admin:test
