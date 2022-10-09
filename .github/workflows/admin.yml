@@ -18,14 +18,13 @@ jobs:
 
   test_deploy:
     needs: check_applicability
+    if: needs.check_applicability.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        if: needs.check_applicability.outputs.should_skip != 'true'
         uses: actions/checkout@v2
 
       - name: Install & Setup Firebase Emulator Suite
-        if: needs.check_applicability.outputs.should_skip != 'true'
         run: |
           npm -g install firebase-tools && \
           firebase setup:emulators:firestore && \
@@ -33,15 +32,12 @@ jobs:
           firebase setup:emulators:ui
 
       - name: Install Dependencies
-        if: needs.check_applicability.outputs.should_skip != 'true'
         run: npm --workspace=@socialincome/admin install
 
       - name: Run Tests
-        if: needs.check_applicability.outputs.should_skip != 'true'
         run: npm run admin:test
 
       - name: Add secrets to env file
-        if: needs.check_applicability.outputs.should_skip != 'true'
         working-directory: admin
         run: |
           echo REACT_APP_ADMIN_FB_API_KEY=${{ secrets.REACT_APP_ADMIN_FB_API_KEY }} > .env
@@ -55,11 +51,10 @@ jobs:
           echo REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY=${{ secrets.REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY }} >> .env
 
       - name: Build
-        if: needs.check_applicability.outputs.should_skip != 'true'
         run: npm run admin:build
 
       - name: Deploy Preview
-        if: needs.check_applicability.outputs.should_skip != 'true' && github.ref != 'refs/heads/main'
+        if: github.ref != 'refs/heads/main'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           entryPoint: admin
@@ -69,7 +64,7 @@ jobs:
           target: admin
 
       - name: Deploy Production
-        if: needs.check_applicability.outputs.should_skip != 'true' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           entryPoint: admin
