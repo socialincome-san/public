@@ -4,7 +4,6 @@ about: Suggest a feature for the mobile app
 title: ''
 labels: feature, flutter, mobileapp
 assignees: ''
-
 ---
 
 **Is your feature request related to a problem? Please describe.** A

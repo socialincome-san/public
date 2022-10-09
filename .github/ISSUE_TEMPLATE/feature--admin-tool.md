@@ -4,7 +4,6 @@ about: Suggest a feature for the admin tool
 title: ''
 labels: admintool, feature
 assignees: ''
-
 ---
 
 **Is your feature request related to a problem? Please describe.** A

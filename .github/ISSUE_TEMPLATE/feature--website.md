@@ -4,7 +4,6 @@ about: 'Suggest a feature for the website '
 title: ''
 labels: feature, website
 assignees: ''
-
 ---
 
 **Is your feature request related to a problem? Please describe.** A
