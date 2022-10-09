@@ -1,3 +1,5 @@
+# Workaround to always trigger the workflow to be able to mark the run as required
+# https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/troubleshooting-required-status-checks#handling-skipped-but-required-checks
 name: Admin - build and deploy
 on:
   pull_request:
