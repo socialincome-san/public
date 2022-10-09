@@ -10,12 +10,12 @@ There are several ways to contribute to the Social Income UI project:
 
 ## Developing new UI components
 
-At this moment the design/component system of Social Income
-is very much a work-in-progress as we move away from a proprietary
-licensed third-party UI library. Therefore, when creating new
-components bring up your suggestions as a GitHub issue first so we can
-validate your idea against our design principles, which might not be
-fully documented at this point.
+At this moment the design/component system of Social Income is very much
+a work-in-progress as we move away from a proprietary licensed
+third-party UI library. Therefore, when creating new components bring up
+your suggestions as a GitHub issue first so we can validate your idea
+against our design principles, which might not be fully documented at
+this point.
 
 **We strive to make the Social Income platforms and services as
 inclusive as possible**. The following guidelines should be applied to
@@ -42,7 +42,8 @@ UI elements:
 - Use Tailwind classes or `@apply` in CSS, whichever seems easier to
   read/maintain.
 - Use Typescript types (in `.tsx`) to define properties of a component.
-- Document components in such a way that others understand its meaning and usage.
+- Document components in such a way that others understand its meaning
+  and usage.
 
 **How to get started**:
 

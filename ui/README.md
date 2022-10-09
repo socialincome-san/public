@@ -15,10 +15,9 @@ monorepo.
 
 ### Setup
 
-This package should be run within the public monorepo of
-Social Income. The recommended way is to use `make` with `Makefile`
-in the root of the project. These commands run the project inside
-Docker.
+This package should be run within the public monorepo of Social Income.
+The recommended way is to use `make` with `Makefile` in the root of the
+project. These commands run the project inside Docker.
 
 ```sh
 # Build the UI. For one time builds e.g. production builds.

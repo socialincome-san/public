@@ -1,7 +1,7 @@
 ---
 name: 'Bug Report: Website'
 about: Create a report to help us improve the website
-title: '[Website] '
+title: ''
 labels: bug, website
 assignees: ''
 ---
