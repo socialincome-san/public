@@ -7,6 +7,8 @@ on:
       - "admin/**"
       - "shared/src/**"
       - ".github/workflows/admin.yml"
+      - ".github/workflows/admin-skip.yml"
+      -
   push:
     branches:
       - main
@@ -14,6 +16,7 @@ on:
       - "admin/**"
       - "shared/src/**"
       - ".github/workflows/admin.yml"
+      - ".github/workflows/admin-skip.yml"
 
 jobs:
   test_deploy:

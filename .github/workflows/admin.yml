@@ -12,6 +12,7 @@ on:
       - "admin/**"
       - "shared/src/**"
       - ".github/workflows/admin.yml"
+      - ".github/workflows/admin-skip.yml"
 
 jobs:
   test_deploy:
