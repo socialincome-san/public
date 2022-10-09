@@ -16,10 +16,7 @@ jobs:
       - id: skip_check
         uses: fkirc/skip-duplicate-actions@v5
         with:
-          paths:
-            - "admin/**"
-            - "shared/src/**"
-            - ".github/workflows/admin.yml"
+          paths: '[ "admin/**", "shared/src/**", ".github/workflows/admin.yml"]'
 
   test_deploy:
     needs: check_applicability
