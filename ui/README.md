@@ -15,25 +15,25 @@ monorepo.
 
 ### Setup
 
-This package should be run in the context of the public monorepo of
-Social Income. The recommended way is to use `make` with the `Makefile`
-in the root of the project. Those commands run the project inside
+This package should be run within the public monorepo of
+Social Income. The recommended way is to use `make` with `Makefile`
+in the root of the project. These commands run the project inside
 Docker.
 
 ```sh
 # Build the UI. For one time builds e.g. production builds.
 $ make ui-build
 
-# Run the development server on http://localhost:6006. Just use this while developing for the UI.
+# Run the development server on http://localhost:6006. Use only this while developing for the UI.
 $ make ui-serve
 ```
 
-\_Installation of the dependencies is happening on running any of these
+\_Installation of dependencies happens upon running any of these
 commands\_
 
-#### Without Make
+#### Without `make`
 
-If for whatever reason you can't use make, you can the Docker Compose
+If for whatever reason you can't use `make`, you can the Docker Compose
 commands directly. See the `Makefile` in the root for how that might
 work.
 

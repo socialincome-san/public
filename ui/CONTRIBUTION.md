@@ -2,7 +2,7 @@
 
 There are several ways to contribute to the Social Income UI project:
 
-1. Submit GitHub issues with the current components e.g. if you are
+1. Submit GitHub issues related to current components e.g. if you are
    facing a problem while using the socialincome.org website.
 2. Fix bugs you find by submitting merge requests.
 3. Help develop new UI elements or improve the current one by creating a
@@ -10,10 +10,10 @@ There are several ways to contribute to the Social Income UI project:
 
 ## Developing new UI components
 
-Be aware, at this moment, the design/component system of Social Income
-is heavily work in progress as we transform away from a proprietary
+At this moment the design/component system of Social Income
+is very much a work-in-progress as we move away from a proprietary
 licensed third-party UI library. Therefore, when creating new
-components, bring up you suggestions as a GitHub issue first so we can
+components bring up your suggestions as a GitHub issue first so we can
 validate your idea against our design principles, which might not be
 fully documented at this point.
 
@@ -39,11 +39,10 @@ UI elements:
 - Prefix CSS classes with `so-<component-name>`.
 - Use [BEM Style](https://en.bem.info/methodology/css/) if you write
   custom CSS.
-- Use Tailwind classes or `@apply` in CSS, whatever seems easier to
+- Use Tailwind classes or `@apply` in CSS, whichever seems easier to
   read/maintain.
 - Use Typescript types (in `.tsx`) to define properties of a component.
-- Document components in a way others understand the meaning and usage
-  of it.
+- Document components in such a way that others understand its meaning and usage.
 
 **How to get started**:
 
@@ -73,4 +72,4 @@ UI elements:
    [additional documentation](https://storybook.js.org/docs/react/writing-docs/introduction)
    if necessary.
 
-Checkout other components for more ideas how to create your component.
+Check out other components for more ideas on how to create yours.
