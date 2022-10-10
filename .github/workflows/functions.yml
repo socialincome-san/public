@@ -1,20 +1,24 @@
 name: Functions - build and deploy
 on:
   pull_request:
-    paths:
-      - "functions/**"
-      - "shared/src/**"
-      - ".github/workflows/functions.yml"
   push:
     branches:
       - main
-    paths:
-      - "functions/**"
-      - "shared/src/**"
-      - ".github/workflows/functions.yml"
 
 jobs:
+  check_applicability:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          paths: '["functions/**", "shared/**", ".github/workflows/functions.yml"]'
+
   test_deploy:
+    needs: check_applicability
+    if: needs.check_applicability.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
