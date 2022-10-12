@@ -6,7 +6,7 @@ export interface DocTypographyItemProps extends React.PropsWithChildren {
 /**
  * An util element for visual representation of Typography elements inside Storybook
  */
-export const DocTypographyItem = ({ title, children, description }) => {
+export const DocTypographyItem = ({ title, children, description }: DocTypographyItemProps) => {
 	return (
 		<>
 			<figure className="so-docs-typography-item__example text-right" aria-hidden>

@@ -24,7 +24,7 @@ export default {
 	},
 } as ComponentMeta<typeof SoSelect>;
 
-const Template: ComponentStory<typeof SoSelect> = (args: SoSelectProps) => {
+const Template: ComponentStory<typeof SoSelect> = (args: Partial<SoSelectProps>) => {
 	const options: SoSelectProps['options'] = args?.options || [
 		{
 			label: 'Option 1',
@@ -39,7 +39,7 @@ const Template: ComponentStory<typeof SoSelect> = (args: SoSelectProps) => {
 
 	const [value, setValue] = useState(options[0]);
 
-	args = {
+	const props: SoSelectProps = {
 		label: 'Select Label',
 		value,
 		options,
@@ -49,7 +49,7 @@ const Template: ComponentStory<typeof SoSelect> = (args: SoSelectProps) => {
 		},
 	};
 
-	return <SoSelect {...args} />;
+	return <SoSelect {...props} />;
 };
 
 export const Standard: typeof Template = Template.bind({});

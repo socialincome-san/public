@@ -24,7 +24,7 @@ export default {
 	},
 } as ComponentMeta<typeof SoCombobox>;
 
-const Template: ComponentStory<typeof SoCombobox> = (args: SoComboboxProps) => {
+const Template: ComponentStory<typeof SoCombobox> = (args: Partial<SoComboboxProps>) => {
 	const options: SoComboboxProps['options'] = args?.options || [
 		{
 			label: 'Option 1',
@@ -39,7 +39,7 @@ const Template: ComponentStory<typeof SoCombobox> = (args: SoComboboxProps) => {
 
 	const [value, setValue] = useState(options[0]);
 
-	args = {
+	const props: SoComboboxProps = {
 		label: 'Select Label',
 		value,
 		options,
@@ -49,7 +49,7 @@ const Template: ComponentStory<typeof SoCombobox> = (args: SoComboboxProps) => {
 		},
 	};
 
-	return <SoCombobox {...args} />;
+	return <SoCombobox {...props} />;
 };
 
 export const Standard: typeof Template = Template.bind({});
