@@ -43,6 +43,16 @@ services:
       - "9150:9150"
     command: npm run firebase:serve
 
+  survey:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/home/node
+    ports:
+      - "6007:6007"
+    command: /bin/bash -c "npm install && npm run survey:serve"
+
   ui:
     build:
       context: .
