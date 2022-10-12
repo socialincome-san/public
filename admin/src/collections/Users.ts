@@ -62,6 +62,16 @@ const CityCol: AdditionalFieldDelegate<User> = {
 	dependencies: ['address'],
 };
 
+const ReferralCol: AdditionalFieldDelegate<User> = {
+	id: 'referral_col',
+	name: 'Referral',
+	builder: ({ entity }) => {
+		let values = entity.values;
+		return ('personal' in values && 'referral' in values.personal && values.personal.referral) || '';
+	},
+	dependencies: ['personal'],
+};
+
 export const usersCollection = buildCollection<User>({
 	path: USER_FIRESTORE_PATH,
 	group: 'Contributors',
@@ -75,7 +85,7 @@ export const usersCollection = buildCollection<User>({
 		create: true,
 		delete: false,
 	}),
-	additionalColumns: [FirstNameCol, LastNameCol, GenderCol, PhoneCol, CountryCol, CityCol],
+	additionalColumns: [FirstNameCol, LastNameCol, GenderCol, PhoneCol, CountryCol, CityCol, ReferralCol],
 	subcollections: [contributionsCollection],
 	properties: buildProperties<User>({
 		test_user: {
@@ -117,6 +127,10 @@ export const usersCollection = buildCollection<User>({
 					name: 'Company',
 					dataType: 'string',
 				},
+				referral: {
+					name: 'Referral',
+					dataType: 'string',
+				},
 			},
 		},
 		address: {
@@ -149,7 +163,7 @@ export const usersCollection = buildCollection<User>({
 			name: 'Institutional',
 			dataType: 'boolean',
 		},
-		organisations_contributors: {
+		contributor_organisations: {
 			dataType: 'array',
 			name: 'Employed by',
 			of: {
