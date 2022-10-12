@@ -7,7 +7,7 @@ import typescript from 'rollup-plugin-typescript2';
 const packageJson = require('./package.json');
 
 export default {
-	input: 'src/index.ts',
+	input: 'src/so-ui.ts',
 	output: [
 		{
 			file: packageJson.main,
@@ -18,6 +18,8 @@ export default {
 			file: packageJson.module,
 			format: 'esm',
 			sourcemap: true,
+			minimize: true,
+			modules: true,
 		},
 	],
 	plugins: [
@@ -27,6 +29,11 @@ export default {
 		typescript({ tsconfig: './tsconfig.json' }),
 		postcss({
 			sourceMap: true,
+			extract: true,
+			config: {
+				path: './postcss.config.js',
+				ctx: null,
+			},
 		}),
 		// terser(),
 	],
