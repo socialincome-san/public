@@ -8,8 +8,6 @@
 	"scripts": {
 		"build": "tsc",
 		"build:watch": "tsc --watch",
-		"build:webpack": "webpack --config webpack.config.js",
-		"build:webpack:watch": "webpack --watch --config webpack.config.js",
 		"serve": "npm run build:watch",
 		"test": "firebase emulators:exec --project demo-social-income-prod --config ../firebase.json 'npm run test:app'",
 		"test:app": "jest --roots  src/"
@@ -25,10 +23,7 @@
 		"ts-jest": "^29.0.3",
 		"ts-loader": "^9.4.1",
 		"typescript": "^4.8.4",
-		"uuid": "^3.3.2",
-		"webpack": "^5.74.0",
-		"webpack-cli": "^4.10.0",
-		"webpack-node-externals": "^3.0.0"
+		"uuid": "^3.3.2"
 	},
 	"dependencies": {
 		"fast-csv": "^4.3.6",
