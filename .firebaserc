@@ -8,6 +8,9 @@
         "admin": [
           "admin-social-income-prod"
         ],
+        "survey": [
+          "social-income-survey"
+        ],
         "website": [
           "social-income-prod"
         ]
