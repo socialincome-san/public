@@ -22,6 +22,12 @@ functions-test:
 firebase-serve:
 	docker compose up firebase
 
+survey-serve:
+	docker compose up ui survey
+
+survey-build:
+	docker compose run --rm survey bash -c "npm ci && npm run survey:build"	
+
 website-serve:
 	docker compose up ui
 
