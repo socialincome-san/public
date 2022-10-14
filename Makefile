@@ -22,6 +22,9 @@ functions-test:
 firebase-serve:
 	docker compose up firebase
 
+firebase-export:
+	docker compose exec firebase bash -c "npm run firebase:export"
+
 survey-serve:
 	docker compose up ui survey
 

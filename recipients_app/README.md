@@ -1,12 +1,10 @@
 # Mobile App
 
-Mobile App for Recipients of a Social Income
+Mobile App for Recipients of a Social Income.
 
 ## Basic Setup
 
-The development doesn't require any production Firebase credentials. We
-rely on local emulators which are populated with dummy seed data. Follow
-`Admin Tool` setup to start emulators.
+For the basic setup, please refer to the main [README](../README.md)
 
 ## Getting Started
 
