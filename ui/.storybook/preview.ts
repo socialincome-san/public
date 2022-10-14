@@ -1,4 +1,4 @@
-import '../src/main.css';
+import '../src/so-ui.css';
 
 export const parameters = {
 	actions: { argTypesRegex: '^on[A-Z].*' },

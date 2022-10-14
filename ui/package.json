@@ -37,6 +37,7 @@
 		"autoprefixer": "^10.4.12",
 		"babel-loader": "^8.2.5",
 		"barrelsby": "^2.4.0",
+		"cssnano": "^5.1.13",
 		"postcss": "^8.4.16",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
