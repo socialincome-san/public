@@ -49,7 +49,7 @@ contribution will be, or how it will look. Just follow the principle:
 2. Determine how to do it better
 3. Rally others to help
 <a href="https://github.com/socialincome-san/public/graphs/contributors">
-  <img src="https://raw.githubusercontent.com/Yatharth-Jain/Social-Income-contributors-list/e7c34d012fc21312bfd1194b6637bcc9e5fafad9/contributors.svg" />
+  <img src="https://raw.githubusercontent.com/Yatharth-Jain/Social-Income-contributors-list/master/contributors.svg" />
 </a>
 
 ## Admin Tool
