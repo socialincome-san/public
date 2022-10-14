@@ -9,6 +9,7 @@ export type User = {
 		gender: string;
 		company: string;
 		phone: string;
+		referral: string;
 	};
 	address: {
 		city: string;
@@ -25,5 +26,5 @@ export type User = {
 	language: string;
 	location: string;
 	currency: string;
-	organisations_contributors?: EntityReference[];
+	contributor_organisations?: EntityReference[];
 };
