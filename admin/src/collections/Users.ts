@@ -6,7 +6,7 @@ const FirstNameCol: AdditionalFieldDelegate<User> = {
 	id: 'first_name_col',
 	name: 'First Name',
 	builder: ({ entity }) => {
-		let values = entity.values;
+		const values = entity.values;
 		return ('personal' in values && 'name' in values.personal && values.personal.name) || '';
 	},
 	dependencies: ['personal'],
@@ -16,7 +16,7 @@ const LastNameCol: AdditionalFieldDelegate<User> = {
 	id: 'last_name_col',
 	name: 'Last Name',
 	builder: ({ entity }) => {
-		let values = entity.values;
+		const values = entity.values;
 		return ('personal' in values && 'lastname' in values.personal && values.personal.lastname) || '';
 	},
 	dependencies: ['personal'],
@@ -26,7 +26,7 @@ const GenderCol: AdditionalFieldDelegate<User> = {
 	id: 'gender_col',
 	name: 'Gender',
 	builder: ({ entity }) => {
-		let values = entity.values;
+		const values = entity.values;
 		return ('personal' in values && 'gender' in values.personal && values.personal.gender) || '';
 	},
 	dependencies: ['personal'],
@@ -36,7 +36,7 @@ const PhoneCol: AdditionalFieldDelegate<User> = {
 	id: 'phone_col',
 	name: 'Phone',
 	builder: ({ entity }) => {
-		let values = entity.values;
+		const values = entity.values;
 		return ('personal' in values && 'phone' in values.personal && values.personal.phone) || '';
 	},
 	dependencies: ['personal'],
@@ -46,7 +46,7 @@ const CountryCol: AdditionalFieldDelegate<User> = {
 	id: 'country_col',
 	name: 'Country',
 	builder: ({ entity }) => {
-		let values = entity.values;
+		const values = entity.values;
 		return ('address' in values && 'country' in values.address && values.address.country) || '';
 	},
 	dependencies: ['address'],
@@ -56,7 +56,7 @@ const CityCol: AdditionalFieldDelegate<User> = {
 	id: 'city_col',
 	name: 'City',
 	builder: ({ entity }) => {
-		let values = entity.values;
+		const values = entity.values;
 		return ('address' in values && 'city' in values.address && values.address.city) || '';
 	},
 	dependencies: ['address'],
@@ -66,7 +66,7 @@ const ReferralCol: AdditionalFieldDelegate<User> = {
 	id: 'referral_col',
 	name: 'Referral',
 	builder: ({ entity }) => {
-		let values = entity.values;
+		const values = entity.values;
 		return ('personal' in values && 'referral' in values.personal && values.personal.referral) || '';
 	},
 	dependencies: ['personal'],
@@ -80,7 +80,7 @@ export const usersCollection = buildCollection<User>({
 	singularName: 'Contributor',
 	description: 'Lists all contributors',
 	textSearchEnabled: false,
-	permissions: ({ authController }) => ({
+	permissions: () => ({
 		edit: true,
 		create: true,
 		delete: false,
