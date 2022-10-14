@@ -1,4 +1,4 @@
-name: Functions - build and deploy
+name: Functions
 on:
   pull_request:
   push:
@@ -7,6 +7,7 @@ on:
 
 jobs:
   check_applicability:
+    name: Check Applicability
     runs-on: ubuntu-latest
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
@@ -17,6 +18,7 @@ jobs:
           paths: '["functions/**", "shared/**", ".github/workflows/functions.yml"]'
 
   test_deploy:
+    name: Test & Deploy Functions
     needs: check_applicability
     if: needs.check_applicability.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
@@ -31,9 +33,7 @@ jobs:
           firebase setup:emulators:ui
 
       - name: Install Dependencies
-        run: |
-          npm --workspace @socialincome/functions install \
-          npm --workspace @socialincome/shared install
+        run: npm ci
 
       - name: Run Tests
         run: npm run functions:test

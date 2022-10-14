@@ -11,7 +11,7 @@ services:
       - "3000:3000"
     depends_on:
       - firebase
-    command: /bin/bash -c "npm --workspace=@socialincome/functions install && npm --workspace=@socialincome/admin install && npm run admin:serve"
+    command: /bin/bash -c "npm install && npm run admin:serve"
 
   functions:
     image: socialincome/local-helper
@@ -22,7 +22,7 @@ services:
       - ./:/home/node
     depends_on:
       - firebase
-    command: /bin/bash -c "npm --workspace=@socialincome/functions install && npm run functions:serve"
+    command: /bin/bash -c "npm install && npm run functions:serve"
 
   firebase:
     image: socialincome/local-helper
@@ -61,4 +61,4 @@ services:
       - ./:/home/node
     ports:
       - "6006:6006"
-    command: /bin/bash -c "npm --workspace=@socialincome/ui install && npm run ui:serve"
+    command: /bin/bash -c "npm install && npm run ui:serve"
