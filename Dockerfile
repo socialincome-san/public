@@ -12,4 +12,5 @@ RUN apk --no-cache add openjdk11-jre bash && \
 
 USER node
 ENV HOME=/home/node/.user
+WORKDIR /home/node
 CMD /bin/bash

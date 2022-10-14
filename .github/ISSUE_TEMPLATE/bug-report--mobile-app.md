@@ -1,7 +1,7 @@
 ---
 name: 'Bug Report: Mobile App'
 about: Create a report to help us improve the mobile app
-title: '[Mobile] '
+title: ''
 labels: bug, flutter, mobileapp
 assignees: ''
 ---

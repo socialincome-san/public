@@ -6,7 +6,7 @@ const globalRootPath = path.resolve(__dirname, '..');
 
 module.exports = {
 	mode: 'development',
-	devtool: 'eval-source-map',
+	devtool: 'eval-cheap-source-map',
 	entry: path.resolve(__dirname, 'src', 'index.tsx'),
 	output: {
 		path: path.resolve(__dirname, 'public', 'dist'),

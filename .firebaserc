@@ -1,0 +1,21 @@
+{
+  "projects": {
+    "social-income-prod": "social-income-prod"
+  },
+  "targets": {
+    "social-income-prod": {
+      "hosting": {
+        "admin": [
+          "admin-social-income-prod"
+        ],
+        "survey": [
+          "social-income-survey"
+        ],
+        "website": [
+          "social-income-prod"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

@@ -1,25 +1,32 @@
-name: UI - build and deploy
+name: UI
 
 on:
-  push:
-    paths:
-      - "ui/**"
-      - "package-lock.json"
-      - ".github/workflows/ui.yml"
   pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - closed
+  push:
+    branches:
+      - main
 
 env:
   DIST_PATH: "ui/storybook-static"
   PR_NUMBER: ${{ github.event.number }}
 
 jobs:
-  build:
+  check_applicability:
+    name: Check Applicability
     runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          paths: '["ui/**", "package-lock.json", ".github/workflows/ui.yml"]'
+
+  build:
+    name: Build UI
+    runs-on: ubuntu-latest
+    needs: check_applicability
+    if: needs.check_applicability.outputs.should_skip != 'true'
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
@@ -48,6 +55,7 @@ jobs:
           retention-days: 1
 
   deploy-preview:
+    name: Deploy UI Preview
     runs-on: ubuntu-latest
     if: "${{ github.repository_owner == 'socialincome-san' && github.event.number }}"
     concurrency: ui-preview-deployment-${{ github.ref }}
@@ -68,6 +76,7 @@ jobs:
           action: auto
 
   deploy-main:
+    name: Deploy UI
     runs-on: ubuntu-latest
     concurrency: ui-deployment-main
     if: "${{ github.ref == 'refs/heads/main' && github.repository_owner == 'socialincome-san' }}"

@@ -1,0 +1,53 @@
+name: Functions
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  check_applicability:
+    name: Check Applicability
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          paths: '["functions/**", "shared/**", ".github/workflows/functions.yml"]'
+
+  test_deploy:
+    name: Test & Deploy Functions
+    needs: check_applicability
+    if: needs.check_applicability.outputs.should_skip != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Install & Setup Firebase Emulator Suite
+        run: |
+          npm -g install firebase-tools && \
+          firebase setup:emulators:firestore && \
+          firebase setup:emulators:ui
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Tests
+        run: npm run functions:test
+
+      - name: Build
+        run: npm run functions:build
+
+      - name: Add secrets to env file
+        if: github.ref == 'refs/heads/main'
+        working-directory: functions
+        run: |
+          echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} > .env
+          echo POSTFINANCE_EMAIL_PASSWORD=${{ secrets.POSTFINANCE_EMAIL_PASSWORD }} >> .env
+
+      - name: Deploy to Firebase
+        if: github.ref == 'refs/heads/main'
+        run: firebase deploy --only functions --token ${{ secrets.FIREBASE_TOKEN }} --project social-income-prod

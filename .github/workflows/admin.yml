@@ -1,20 +1,26 @@
-name: Admin - build and deploy
+name: Admin
 on:
   pull_request:
-    paths:
-      - "admin/**"
-      - "shared/src/**"
-      - ".github/workflows/admin.yml"
   push:
     branches:
       - main
-    paths:
-      - "admin/**"
-      - "shared/src/**"
-      - ".github/workflows/admin.yml"
 
 jobs:
+  check_applicability:
+    name: Check Applicability
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          paths: '["admin/**", "shared/**", ".github/workflows/admin.yml"]'
+
   test_deploy:
+    name: Test & Deploy Admin
+    needs: check_applicability
+    if: needs.check_applicability.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -28,7 +34,7 @@ jobs:
           firebase setup:emulators:ui
 
       - name: Install Dependencies
-        run: npm --workspace=@socialincome/admin install
+        run: npm ci
 
       - name: Run Tests
         run: npm run admin:test
@@ -53,17 +59,17 @@ jobs:
         if: github.ref != 'refs/heads/main'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          entryPoint: admin
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}"
           projectId: social-income-prod
+          target: admin
 
       - name: Deploy Production
         if: github.ref == 'refs/heads/main'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          entryPoint: admin
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}"
           projectId: social-income-prod
+          target: admin
           channelId: live
