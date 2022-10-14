@@ -2,42 +2,34 @@
 
 ![Social Income Logo](https://github.com/socialincome-san/public/blob/main/shared/assets/logos/logo_color@500px.png?raw=true)
 
-### Social Income is a radically simple solution in the fight against poverty. We turn 1% of anyone's salary into an unconditional basic income for people living in poverty – sent directly to their mobile phones. The tools that make this possible are built and continuously improved upon by an open source community, who use technical skills to take on the SDG 1 ([No Poverty](https://sdgs.un.org/goals/goal1)) and the SDG 10 ([Reduced Inequality](https://sdgs.un.org/goals/goal10)).
+> Social Income is a radically simple solution in the fight against
+> poverty. We turn 1% of anyone's salary into an unconditional basic
+> income for people living in poverty – sent directly to their mobile
+> phones. The tools that make this possible are built and continuously
+> improved upon by an open source community, who use technical skills to
+> take on the SDG 1 ([No Poverty](https://sdgs.un.org/goals/goal1)) and
+> the SDG 10 ([Reduced Inequality](https://sdgs.un.org/goals/goal10)).
 
 https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-ade9-2cc0e153d947.mp4
 
-```diff
-
-Everybody cheers for equality
-but forgets that without economic justice,
-there can be no true equality.
-
-```
+> Everybody cheers for equality but forgets that without economic
+> justice, there can be no true equality.
 
 ### Our monorepo contains the following tools used to run Social Income:
 
-1. [Admin Tool](#admin-tool) for managing contributors and recipients
-   (`↗` [admin.socialincome.org](https://admin.socialincome.org))
-2. [Mobile App](#mobile-app) for recipients (`↗` Google Play Store link
-   added soon)
-3. [Website](#website) for contributors (`↗`
-   [socialincome.org](https://socialincome.org))
-
-## Table of Contents
-
-- **[Code Contributions](#code-contributions)**
-  - [Admin Tool](#admin-tool)
-  - [Mobile App](#mobile-app)
-  - [User Interface (UI)](#user-interface)
-  - [Website](#website)
-  - [Shared](#shared)
-- **[Financial Contributions](#financial-contributions)**
-  - [1 Percent of Your Income](#1-percent-of-your-income)
-  - [Sponsor Dev Community](#sponsor-dev-community)
-- **[Organisation](#organisation)**
-  - [Non-Profit Association](#non-profit-association)
-  - [Radical Transparency](#radical-transparency)
-  - [License](#license)
+- Admin Tool for managing contributors and recipients
+  ([README](admin/README.md), `↗`
+  [admin.socialincome.org](https://admin.socialincome.org))
+- Mobile App for recipients (([README](recipients_app/README.md), `↗`
+  Google Play Store link added soon)
+- Firebase Functions for scheduled functions, firestore triggers and
+  webhooks ([README](functions/README.md))
+- User Interface for reusable user interface react components manged
+  with storybook ([README](ui/README.md))
+- Website for contributors (`↗`
+  [socialincome.org](https://socialincome.org)) (to be migrated to the
+  public repository)
+- Survey tool for impact measurement([README](survey/README.md)))
 
 # Code Contributions
 
@@ -47,163 +39,98 @@ contribution will be, or how it will look. Thank you:
 
 [![Contributors](https://contrib.rocks/image?repo=socialincome-san/public&columns=10)](https://github.com/socialincome-san/public/graphs/contributors)
 
-## Admin Tool
+## Quick Links
 
-Quick Links: `↗`
-[Good first issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+label%3Aadmintool)
-`↗`
-[All issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3Aadmintool)
-`↗`
-[Hacktoberfest 2022](https://github.com/socialincome-san/public/issues?q=is%3Aissue+is%3Aopen+label%3Ahacktoberfest)
+- [Good first issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
+- [All issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue)
+- [Hacktoberfest 2022](https://github.com/socialincome-san/public/issues?q=is%3Aissue+is%3Aopen+label%3Ahacktoberfest)
 
-#### Basic Setup
+## Stack
 
-We are using [Firestore](https://firebase.google.com/docs/firestore) as
-database and [FireCMS](https://firecms.co/) as UI tool. Staff can access
-the admin tool via
-[admin.socialincome.org](https://admin.socialincome.org). For
-development we use [Docker](https://www.docker.com) and rely on local
-emulators, which are populated with dummy seed data. This makes sure
-that no one will require production Firebase credentials to contribute.
+We are using [Firebase](https://firebase.google.com) as development
+platform. We are mainly leveraging the following tools:
 
-#### Getting Started
+- [Firestore](https://firebase.google.com/docs/firestore) for data
+  management
+- [Firebase Authentication](https://firebase.google.com/docs/auth) for
+  user management
+- [Firebase Hosting](https://firebase.google.com/docs/hosting) to serve
+  static content like the admin app
+- [Firebase Functions](https://firebase.google.com/docs/functions) to
+  run backend code in a serverless framework
 
-🕐 It takes a few minutes to download packages the first time
+### Development Setup
 
-1. Build helper image locally: `docker compose build`
-2. Start development server including Firebase emulators:
-   `docker compose up admin`
+For development we use [Docker](https://www.docker.com) and rely on
+local
+[Firebase Emulators](https://firebase.google.com/docs/emulator-suite),
+which are populated with dummy seed data. Ensures that no one will
+require production Firebase credentials to contribute.
 
-This will expose the Admin Interface on
-[`localhost:3000`](http://localhost:3000) and the Firebase Emulators on
-[`localhost:4000`](http://localhost:4000).
+To avoid any operating system specific installation, we use a
+[helper docker image](Dockerfile) and
+[docker-compose](docker-compose.yaml) file to run the npm commands and
+to start the emulators.
 
-#### Data Seed
+1. Build helper image locally run: `docker compose build`
+2. The [Makefile](Makefile) gives you a good overview of the available
+   commands. E.g. `make firebase-serve` starts the firebase emulators on
+   [localhost:4000](localhost:4000)
+3. Visit the READMEs in the submodules for detailed instructions
+
+### Data Seed
 
 ⚠️ Don't include any sensitive data in the seed
 
 An initial set of data is imported into the Firebase emulators during
-startup. You can add, delete or amend data directly in the
-[admin tool](https://admin.socialincome.org) or
-[`localhost:4000`](http://localhost:4000). If you want to commit or keep
-a local copy of your altered data set, you can execute in a second shell
-(while emulator is still running) the command
+startup.
 
-```shell
- docker exec -it public-admin-1 npm run emulators:export
+Start the firestore emulator and our admin with:
+
+```
+make admin-serve
 ```
 
-#### Functions
+You can add, delete or amend data directly in the
+[Social Income Admin](http://localhost:3000) or in the
+[Firestore Admin Interface](http://localhost:4000/firestore/data).
 
-`↓` see [Shared](#shared) > [Shared Functions](#shared-functions)
+If you want to commit or keep a local copy of your altered data set, you
+can execute in a second shell (while the command above still is running)
+the command
 
-#### Run Tests
-
-Run the following command to start the emulators and run the tests
-
-```shell
- docker compose run admin npm run emulators:test
+```
+ make firebase-export
 ```
 
-#### Format Code
+### Format Code
 
 We are using [Prettier](https://prettier.io) to format the code
 
 ```shell
-docker compose run admin npm run format-code
+make format-code
 ```
 
-#### Deployment
+### Deployment
 
-Deployment is handled automatically through
-[GitHub actions](https://github.com/socialincome-san/public/actions).
-The production Firebase keys are ingested through
-[GitHub secrets](<[url](https://docs.github.com/en/actions/security-guides/encrypted-secrets)>).
+Testing and deployment of the services is handled automatically through
+the [GitHub actions](.github/workflows).
 
-When creating a PR, an action tests the code and deploys it with the
-production credentials to a preview hosting. There, one can see the
-proposed change with the production Firestore database as backend.
+### Backup
 
-After merging the PR into main, a deployment action automatically
-deploys the code to
-[admin.socialincome.org](https://admin.socialincome.org).
+We have a
+[function](https://console.cloud.google.com/logs/query;query=resource.type%3D%22cloud_function%22%20resource.labels.function_name%3D%22siWebFirestoreExport%22%20resource.labels.region%3D%22us-central1%22?project=social-income-prod&authuser=1&hl=en)
+which triggers hourly backups of our production firestore database.
 
-## Mobile App
+The exports are saved to the
+[social-income-prod](https://console.cloud.google.com/storage/browser/social-income-prod;tab=objects?forceOnBucketsSortingFiltering=false&authuser=1&project=social-income-prod&prefix=&forceOnObjectsSortingFiltering=true)
+bucket with a retention period of 30 days.
 
-#### Basic Setup
-
-Similar to `Admin Tool` the development doesn't require any production
-Firebase credentials. We rely on local emulators which are populated
-with dummy seed data. Follow `Admin Tool` setup to start emulators.
-
-#### Getting Started
-
-Open `recipients_app` project folder in your development environment of
-choice. Building flavor should work seamlessly for Android Studio and VS
-Code with predefined build configs.
-
-We have two build flavors:
-
-- `dev` -> Connecting with Firebase Emulators (Firestore and Auth)
-- `prod` -> Connecting with production online firebase project and need
-  real Firebase configuration json / plist file
-
-For development use `dev` flavor.
-
-As Firebase emulators work on your local host machine the easiest way to
-run app is on the Android emulator. Real devices need some additional
-setup.
-
-## User Interface
-
-#### Basic Setup
-
-We build on reusable components for React and a test environment with
-Storybook.
-
-#### Getting Started
-
-We recommend to use `make` with the `Makefile` in the root of the
-project. Those commands run the project inside Docker.
-
-```sh
-# Build the UI. For one time builds e.g. production builds.
-$ make build-ui
-
-# Run the development server on http://localhost:6006. Just use this while developing for the UI.
-$ make serve-ui
-```
-
-More instructions in the [`README.md` in `ui` subfolder](ui/README.md).
-
-## Website
-
-(Code and instructions to be added)
-
-## Shared
-
-Shared explanations, assets, code or functions for all three projects.
-
-### Shared Functions
-
-#### Basic Setup
-
-We are using firebase functions to run back end jobs. Those can e.g. be
-periodically triggered by pubsub cron definitions, by datastore triggers
-or through web callbacks. We are using [Prettier](https://prettier.io)
-to format the code.
-
-#### Getting Started
-
-These functions are mainly implemented using test-driven development.
-
-1. Build helper image locally: `docker compose build`
-2. Install dependencies: `docker compose run functions npm install`.
-3. Run the tests including Firebase emulators:
-   `docker compose run functions npm run emulators:test`. The first time
-   this can take multiple minutes till the packages are downloaded.
-4. With `docker compose run functions npm run serve` one can also serve
-   the webhooks on localhost.
+To restore the database you can
+[import](https://console.cloud.google.com/firestore/import-export?authuser=1&project=social-income-prod)
+the most recent folder directly from the
+[social-income-prod](https://console.cloud.google.com/storage/browser/social-income-prod;tab=objects?forceOnBucketsSortingFiltering=false&authuser=1&project=social-income-prod&prefix=&forceOnObjectsSortingFiltering=true)
+bucket.
 
 ### Bug reporting / Feature Request
 
