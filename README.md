@@ -43,15 +43,10 @@ there can be no true equality.
 
 Don't forget: open source isn’t an exclusive club. It’s made by people
 just like you. You don’t need to overthink what exactly your first
-contribution will be, or how it will look. Just follow the principle:
-
-1. Do something
-2. Determine how to do it better
-3. Rally others to help
+contribution will be, or how it will look. Thank you: 
 
 [![Contributors](https://contrib.rocks/image?repo=socialincome-san/public&columns=10)](https://github.com/socialincome-san/public/graphs/contributors)
 
-Made with [contrib.rocks](https://contrib.rocks).
 
 ## Admin Tool
 
@@ -253,5 +248,5 @@ our [annual statements](https://socialincome.org/reporting) and overall
 
 Code: [MIT](LICENSE)
 
-Font: The font is licensed exclusively for the use on the website
-socialincome.org and on the mobile apps of Social Income.
+Specifications: The font Unica77 is licensed exclusively for the use on the website
+socialincome.org and on the mobile apps of Social Income. The contributors profile gallery has been made with [contrib.rocks](https://contrib.rocks).
