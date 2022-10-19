@@ -1,29 +1,29 @@
 {
-  "name": "demo",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "extract-translations": "i18next --config i18next-parser.config.js",
-    "sync-translations": "cd public/locales && locize sync --api-key 01290bce-2d08-44c3-bdd9-200e51ef0a9d --project-id f505a1b9-0e4e-4e77-8633-4e16a660b3b4"
-  },
-  "dependencies": {
-    "next": "12.3.1",
-    "next-i18next": "^12.1.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
-  },
-  "devDependencies": {
-    "@types/node": "18.8.5",
-    "@types/react": "18.0.21",
-    "@types/react-dom": "18.0.6",
-    "eslint": "8.25.0",
-    "eslint-config-next": "12.3.1",
-    "i18next-parser": "^6.6.0",
-    "locize-cli": "^7.12.7",
-    "typescript": "4.8.4"
-  }
+	"name": "demo",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"extract-translations": "i18next --config i18next-parser.config.js",
+		"sync-translations": "cd public/locales && locize sync --api-key 01290bce-2d08-44c3-bdd9-200e51ef0a9d --project-id f505a1b9-0e4e-4e77-8633-4e16a660b3b4"
+	},
+	"dependencies": {
+		"next": "12.3.1",
+		"next-i18next": "^12.1.0",
+		"react": "18.2.0",
+		"react-dom": "18.2.0"
+	},
+	"devDependencies": {
+		"@types/node": "18.8.5",
+		"@types/react": "18.0.21",
+		"@types/react-dom": "18.0.6",
+		"eslint": "8.25.0",
+		"eslint-config-next": "12.3.1",
+		"i18next-parser": "^6.6.0",
+		"locize-cli": "^7.12.7",
+		"typescript": "4.8.4"
+	}
 }
