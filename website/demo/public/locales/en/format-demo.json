@@ -1,0 +1,10 @@
+{
+  "currency": "Currency: {{val, currency}}",
+  "dateTime": "Date/Time: {{val, datetime}}",
+  "list": "List: {{val, list}}",
+  "number": "Number: {{val, number}}",
+  "recipient_one": "{{count}} recipient",
+  "recipient_other": "{{count}} recipients",
+  "recipient_zero": "no recipient",
+  "relativeTime": "Relative Time: {{val, relativetime}}"
+}
