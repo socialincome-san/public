@@ -1,10 +1,9 @@
 import { useRouter } from 'next/router';
 
-import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { SwissContent } from '../components/SwissContent';
 import { BuiltInFormatsDemo } from '../components/BuiltInFormatsDemo';
 import { Header } from '../components/Header';
+import { SwissContent } from '../components/SwissContent';
 
 const Homepage = () => {
 	const router = useRouter();

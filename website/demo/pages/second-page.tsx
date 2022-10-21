@@ -13,6 +13,8 @@ const SecondPage = () => {
 			<Link href="/">
 				<button type="button">{t('back-to-home')}</button>
 			</Link>
+
+			<p>{t('a key without any translations')}</p>
 		</>
 	);
 };

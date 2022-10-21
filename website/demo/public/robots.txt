@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://socialincome.org
+
+# Sitemaps
+Sitemap: https://socialincome.org/sitemap.xml
