@@ -1,5 +1,5 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { Contribution, CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/types';
+import { Contribution, ContributionSourceKey, CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/types';
 
 export const contributionsCollection = buildCollection<Contribution>({
 	name: 'Contributions',
@@ -15,13 +15,13 @@ export const contributionsCollection = buildCollection<Contribution>({
 		source: {
 			dataType: 'string',
 			name: 'Source',
-			enumValues: {
-				benevity: 'Benevity',
-				cash: 'Cash',
-				stripe: 'Stripe',
-				twint: 'Twint',
-				'wire-transfer': 'Wire Transfer',
-			},
+			enumValues: [
+				{ id: ContributionSourceKey.BENEVITY, label: 'Benevity' },
+				{ id: ContributionSourceKey.CASH, label: 'Cash' },
+				{ id: ContributionSourceKey.STRIPE, label: 'Stripe' },
+				{ id: ContributionSourceKey.TWINT, label: 'Twint' },
+				{ id: ContributionSourceKey.WIRE_TRANSFER, label: 'Wire Transfer' },
+			],
 			validation: { required: true },
 		},
 		created: {

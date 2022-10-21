@@ -1,5 +1,12 @@
 import { initializeApp } from 'firebase-admin/app';
-import { CollectionReference, DocumentData, DocumentReference, getFirestore } from 'firebase-admin/firestore';
+import {
+	CollectionReference,
+	DocumentData,
+	DocumentReference,
+	getFirestore,
+	Query,
+	QueryDocumentSnapshot,
+} from 'firebase-admin/firestore';
 
 initializeApp();
 
@@ -11,13 +18,24 @@ export const firestore = getFirestore();
 /**
  * Access the typed collection
  */
-export const createCollection = <T = DocumentData>(collectionName: string): CollectionReference<T> => {
+export const collection = <T = DocumentData>(collectionName: string): CollectionReference<T> => {
 	return firestore.collection(collectionName) as CollectionReference<T>;
 };
 
 /**
  * Access the typed document of a collection
  */
-export const createDoc = <T = DocumentData>(collectionName: string, docId: string): DocumentReference<T> => {
-	return createCollection<T>(collectionName).doc(docId);
+export const doc = <T = DocumentData>(collectionName: string, docId: string): DocumentReference<T> => {
+	return collection<T>(collectionName).doc(docId);
+};
+
+/**
+ * Find the first document meeting the provided query
+ */
+export const findFirst = async <T = DocumentData>(
+	collectionName: string,
+	query: (col: CollectionReference<T>) => Query<T>
+): Promise<QueryDocumentSnapshot<T> | undefined> => {
+	const snapshot = await query(collection<T>(collectionName)).get();
+	return snapshot.docs.at(0);
 };
