@@ -29,7 +29,7 @@
 		"runtime": "nodejs16"
 	},
 	"storage": {
-		"rules": "storage.rules"
+		"rules": "firestore.rules"
 	},
 	"emulators": {
 		"auth": {
