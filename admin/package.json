@@ -30,7 +30,7 @@
 		"webpack-dev-server": "^4.11.1"
 	},
 	"dependencies": {
-		"@camberi/firecms": "2.0.0-alpha.37",
+		"@camberi/firecms": "2.0.0-alpha.33",
 		"@emotion/react": "^11.4.1",
 		"@emotion/styled": "^11.3.0",
 		"@mui/icons-material": "^5.8.4",
