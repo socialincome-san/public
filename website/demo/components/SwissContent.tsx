@@ -6,7 +6,6 @@ export const SwissContent = () => {
 	return (
 		<div>
 			<h2>{t('only-for-swiss')}</h2>
-			<img alt="swiss" src={'https://i.gifer.com/5CKl.gif'} />
 		</div>
 	);
 };
