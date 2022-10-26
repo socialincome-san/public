@@ -16,6 +16,7 @@ jobs:
         uses: fkirc/skip-duplicate-actions@v5
         with:
           paths: '["functions/**", "shared/**", ".github/workflows/functions.yml"]'
+          skip_after_successful_duplicate: 'false'
 
   test_deploy:
     name: Test & Deploy Functions
