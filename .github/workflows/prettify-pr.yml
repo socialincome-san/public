@@ -2,7 +2,8 @@ name: Prettify Code
 on: pull_request
 
 jobs:
-  build_and_preview:
+  prettify:
+    name: Prettify
     if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     runs-on: ubuntu-latest
     defaults:

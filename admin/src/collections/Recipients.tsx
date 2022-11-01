@@ -1,5 +1,5 @@
 import {
-	AdditionalColumnDelegate,
+	AdditionalFieldDelegate,
 	AsyncPreviewComponent,
 	buildCollection,
 	buildProperties,
@@ -363,7 +363,7 @@ function statusPreview(value: string): React.ReactElement {
 	return <StringPropertyPreview property={paymentStatusProperty} value={value} size={'regular'} />;
 }
 
-function createMonthColumn(monthID: string, monthLabel: string): AdditionalColumnDelegate<Partial<Recipient>> {
+function createMonthColumn(monthID: string, monthLabel: string): AdditionalFieldDelegate<Partial<Recipient>> {
 	return {
 		id: monthID,
 		name: monthLabel,

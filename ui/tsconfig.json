@@ -1,6 +1,13 @@
 {
 	"compilerOptions": {
+		"outDir": "dist",
+		"allowJs": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
 		"jsx": "react-jsx",
-		"esModuleInterop": true
-	}
+		"declaration": true,
+		"declarationDir": "dist"
+	},
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "src/**/*.stories.tsx"]
 }

@@ -9,14 +9,22 @@ services:
       - ./:/home/node
     ports:
       - "3000:3000"
-      - "9099:9099" # authentication emulator
-      - "8080:8080" # firestore emulator
-      - "9199:9199" # storage emulator
-      - "4000:4000" # emulator UI
-    working_dir: /home/node/
-    command: /bin/bash -c "npm --workspace=@socialincome/admin install && npm run admin:serve"
+    depends_on:
+      - firebase
+    command: /bin/bash -c "npm install && npm run admin:serve"
 
-  backend:
+  functions:
+    image: socialincome/local-helper
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/home/node
+    depends_on:
+      - firebase
+    command: /bin/bash -c "npm install && npm run functions:serve"
+
+  firebase:
     image: socialincome/local-helper
     build:
       context: .
@@ -24,12 +32,26 @@ services:
     volumes:
       - ./:/home/node
     ports:
-      - "5001:5001" # functions
+      - "9099:9099" # authentication emulator
       - "8080:8080" # firestore emulator
+      - "5000:5000" # hosting
+      - "5001:5001" # functions
       - "8085:8085" # pubsub emulator
+      - "9199:9199" # storage emulator
       - "4000:4000" # emulator UI
-    working_dir: /home/node/
-    command: /bin/bash -c "npm --workspace=@socialincome/backend install && npm run backend:test"
+      - "4500:4500"
+      - "9150:9150"
+    command: npm run firebase:serve
+
+  survey:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/home/node
+    ports:
+      - "6007:6007"
+    command: /bin/bash -c "npm install && npm run survey:serve"
 
   ui:
     build:
@@ -39,5 +61,4 @@ services:
       - ./:/home/node
     ports:
       - "6006:6006"
-    working_dir: /home/node/
-    command: /bin/bash -c "npm --workspace=@socialincome/ui install && npm run ui:serve"
+    command: /bin/bash -c "npm install && npm run ui:serve"

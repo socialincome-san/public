@@ -3,6 +3,6 @@
 	"version": "0.1.0",
 	"private": true,
 	"devDependencies": {
-		"@camberi/firecms": "2.0.0-alpha.30"
+		"@camberi/firecms": "2.0.0-alpha.37"
 	}
 }

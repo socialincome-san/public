@@ -1,10 +1,10 @@
-name: CodeQL - security checks
+name: CodeQL
 
 on: pull_request
 
 jobs:
   analyze:
-    name: Analyze
+    name: Security Checks
     runs-on: ubuntu-latest
     permissions:
       actions: read

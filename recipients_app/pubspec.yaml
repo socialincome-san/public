@@ -77,3 +77,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: Unica77LL
+      fonts:
+        - asset: assets/Unica77LL-Regular.otf
+        - asset: assets/Unica77LL-Medium.otf
+          weight: 500
+        - asset: assets/Unica77LL-Bold.otf
+          weight: 700
