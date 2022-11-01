@@ -9,6 +9,7 @@ export { adminsCollection } from './Admins';
 export { contributionsCollection } from './Contributions';
 export { contributorOrganisationsCollection } from './ContributorOrganisations';
 export { newsletterSubscribersCollection } from './NewsletterSubscribers';
+export { messageTemplatesCollection } from './MessageTemplates';
 export { operationalExpensesCollection } from './OperationalExpenses';
 export { orangeMoneyRecipientsCollection } from './OrangeMoneyRecipients';
 export { buildPartnerOrganisationsCollection } from './PartnerOrganisations';

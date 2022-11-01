@@ -3,6 +3,7 @@ export * from './admin/BankBalance';
 export * from './admin/Contribution';
 export * from './admin/ContributorOrganisation';
 export * from './admin/NewsletterSubscriber';
+export * from './admin/MessageTemplates';
 export * from './admin/OperationalExpense';
 export * from './admin/OrangeMoneyRecipient';
 export * from './admin/PartnerOrganisation';
