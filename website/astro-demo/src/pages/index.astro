@@ -1,0 +1,30 @@
+---
+import Counter from '../components/Counter.jsx';
+const someProps = {
+	count: 0,
+};
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<style>
+			html,
+			body {
+				font-family: system-ui;
+				margin: 0;
+			}
+			body {
+				padding: 2rem;
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<Counter {...someProps} client:load>
+				<h1>Hello, React!</h1>
+			</Counter>
+		</main>
+	</body>
+</html>
