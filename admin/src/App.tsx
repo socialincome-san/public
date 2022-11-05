@@ -29,7 +29,7 @@ import {
 import { getApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import * as config from './config';
-import {ScriptsView} from "./views/Scripts";
+import { ScriptsView } from './views/Scripts';
 
 const onFirebaseInit = () => {
 	if (config.FB_AUTH_EMULATOR_URL) {
@@ -93,14 +93,16 @@ export default function App() {
 	const [collections, setCollections] = useState<EntityCollection[]>([]);
 
 	// Adding custom pages depending on the user role
-	const publicCustomViews: CMSView[] = []
-	const globalAdminCustomViews: CMSView[] = [{
-		path: "scripts",
-		name: "Scripts",
-		group: "Admin",
-		description: "Collection of Admin Scripts",
-		view: <ScriptsView />
-	}];
+	const publicCustomViews: CMSView[] = [];
+	const globalAdminCustomViews: CMSView[] = [
+		{
+			path: 'scripts',
+			name: 'Scripts',
+			group: 'Admin',
+			description: 'Collection of Admin Scripts',
+			view: <ScriptsView />,
+		},
+	];
 	const [customViews, setCustomViews] = useState<CMSView[]>(publicCustomViews);
 
 	const myAuthenticator: Authenticator<User> = async ({ user, dataSource }) => {
@@ -115,7 +117,7 @@ export default function App() {
 					// We only want this to update once on initial page load
 					if (result?.values?.is_global_admin) {
 						setCollections(globalAdminCollections);
-						setCustomViews(publicCustomViews.concat(globalAdminCustomViews))
+						setCustomViews(publicCustomViews.concat(globalAdminCustomViews));
 					} else {
 						setCollections([
 							buildPartnerOrganisationsCollection({ isGlobalAdmin: false }),
