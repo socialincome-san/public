@@ -15,7 +15,7 @@ export enum StatusKey {
 	FAILED = 'failed',
 	PENDING = 'pending',
 	SUCCEEDED = 'succeeded',
-	UNKNOWN = 'unknown'
+	UNKNOWN = 'unknown',
 }
 
 export type Contribution = {

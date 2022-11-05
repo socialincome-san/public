@@ -60,7 +60,9 @@ export const storeCharge = async (charge: Stripe.Charge): Promise<DocumentRefere
 			return Promise.resolve(undefined);
 		}
 		const contribution = constructContribution(charge);
-		const contributionRef = (userRef.ref.collection('contributions') as CollectionReference<Contribution>).doc(charge.id);
+		const contributionRef = (userRef.ref.collection('contributions') as CollectionReference<Contribution>).doc(
+			charge.id
+		);
 		await contributionRef.set(contribution);
 		functions.logger.info(`Ingested ${charge.id} into firestore for user ${userRef.id}`);
 		return contributionRef;
@@ -72,8 +74,7 @@ export const storeCharge = async (charge: Stripe.Charge): Promise<DocumentRefere
 
 export const constructContribution = (charge: Stripe.Charge): Contribution => {
 	const plan = (charge.invoice as Stripe.Invoice)?.lines?.data[0]?.plan;
-	const monthlyInterval =
-		plan?.interval === 'month' ? plan?.interval_count : plan?.interval === 'year' ? 12 : 0;
+	const monthlyInterval = plan?.interval === 'month' ? plan?.interval_count : plan?.interval === 'year' ? 12 : 0;
 
 	const balanceTransaction = charge.balance_transaction as Stripe.BalanceTransaction;
 	return {
