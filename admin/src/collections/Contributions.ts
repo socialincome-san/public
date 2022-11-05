@@ -73,6 +73,7 @@ export const contributionsCollection = buildCollection<Contribution>({
 				{ id: StatusKey.SUCCEEDED, label: 'Succeeded' },
 				{ id: StatusKey.PENDING, label: 'Pending' },
 				{ id: StatusKey.FAILED, label: 'Failed' },
+				{ id: StatusKey.UNKNOWN, label: 'Unknown' },
 			],
 			defaultValue: StatusKey.SUCCEEDED,
 		},

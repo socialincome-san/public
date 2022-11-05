@@ -24,8 +24,8 @@ export type Contribution = {
 	amount: number;
 	currency: string;
 	amount_chf: number;
-	fees_chf: number | undefined;
+	fees_chf: number;
 	reference_id: string; // e.g stripe charge id
-	monthly_interval: number | undefined;
-	status: StatusKey | undefined;
+	monthly_interval: number;
+	status: StatusKey;
 };
