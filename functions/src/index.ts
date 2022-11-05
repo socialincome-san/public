@@ -1,5 +1,6 @@
-import { dummyFunction as dummyFunc } from './dummy/dummyFunction';
 import { importBalanceMailFunc } from './etl/importPostfinanceBalance';
+import { batchImportStripeChargesFunc, stripeChargeHookFunc } from './etl/stripeWebhook';
 
 export const importBalanceMail = importBalanceMailFunc;
-export const dummyFunction = dummyFunc;
+export const stripeChargeHook = stripeChargeHookFunc;
+export const batchImportStripeCharges = batchImportStripeChargesFunc;

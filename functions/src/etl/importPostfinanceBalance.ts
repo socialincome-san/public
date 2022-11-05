@@ -7,7 +7,7 @@ import { simpleParser, Source } from 'mailparser';
 import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../shared/types';
 import { POSTFINANCE_EMAIL_PASSWORD, POSTFINANCE_EMAIL_USER } from '../config';
 
-import { createDoc } from '../useFirestoreAdmin';
+import { doc } from '../useFirestoreAdmin';
 
 /**
  * Function periodically connects to the gmail account where we send the postfinance balance statements,
@@ -86,7 +86,7 @@ export const extractBalance = (html: String) => {
 
 export const storeBalances = async (balances: BankBalance[]): Promise<void> => {
 	for await (const balance of balances) {
-		await createDoc<BankBalance>(BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance(balance)).set(balance);
+		await doc<BankBalance>(BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance(balance)).set(balance);
 	}
 };
 
