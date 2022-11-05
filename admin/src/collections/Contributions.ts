@@ -2,8 +2,8 @@ import { buildCollection, buildProperties } from '@camberi/firecms';
 import {
 	Contribution,
 	ContributionSourceKey,
-	StatusKey,
 	CONTRIBUTION_FIRESTORE_PATH,
+	StatusKey,
 } from '@socialincome/shared/types';
 
 export const contributionsCollection = buildCollection<Contribution>({
