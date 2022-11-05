@@ -7,10 +7,10 @@ import { STRIPE_API_READ_KEY, STRIPE_WEBHOOK_SECRET } from '../config';
 import { findFirst } from '../useFirestoreAdmin';
 
 /**
- * Stripe webhook to ingest successfully paid charges into firestore.
+ * Stripe webhook to ingest charge events into firestore.
  * Adds the relevant information to the contributions subcollection of users.
  */
-export const stripeChargeSucceededHookFunc = functions.https.onRequest(async (request, response) => {
+export const stripeChargeHookFunc = functions.https.onRequest(async (request, response) => {
 	const stripe = new Stripe(STRIPE_API_READ_KEY, { apiVersion: '2022-08-01' });
 	try {
 		const sig = request.headers['stripe-signature']!;
@@ -31,7 +31,7 @@ export const stripeChargeSucceededHookFunc = functions.https.onRequest(async (re
 		response.send();
 	} catch (error) {
 		functions.logger.error(error);
-		response.status(500).send(`Webhook Error: ${(error as Error).message}`);
+		response.status(500).send(`Webhook Error. Check the logs.`);
 	}
 });
 
@@ -100,6 +100,7 @@ const constructStatus = (status: Stripe.Charge.Status) => {
 /**
  * One off script to import existing stripe payments into firestore.
  * Continuous update is done through the [stripeWebhook].
+ * TODO @andrashee: add auth check. Only global admins should be able to trigger this.
  */
 export const batchImportStripeChargesFunc = functions
 	.runWith({
