@@ -31,7 +31,7 @@ export const stripeChargeSucceededHookFunc = functions.https.onRequest(async (re
         response.send();
     } catch (error) {
         functions.logger.error(error);
-        response.status(500).send(`Webhook Error: ${(error as Error).message}`);
+        response.status(500).send(`Webhook Error. Check the logs.`);
     }
 });
 
@@ -97,6 +97,7 @@ const constructStatus = (status: Stripe.Charge.Status) => {
 /**
  * One off script to import existing stripe payments into firestore.
  * Continuous update is done through the [stripeWebhook].
+ * TODO @andrashee: add auth check. Only global admins should be able to trigger this.
  */
 export const batchImportStripeChargesFunc = functions
     .runWith({
