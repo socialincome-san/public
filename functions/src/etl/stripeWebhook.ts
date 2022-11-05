@@ -50,25 +50,30 @@ const handleChargeEvent = async (event: Stripe.Event, stripe: Stripe) => {
  * Converts the stripe charge to a contribution and stores it in the contributions subcollection of the corresponding user.
  */
 export const storeCharge = async (charge: Stripe.Charge): Promise<DocumentReference<Contribution> | undefined> => {
-	const userRef =
-		(await findFirst('users', (col) => col.where('stripe_customer_id', '==', charge.customer))) ??
-		(await findFirst('users', (col) => col.where('email', '==', charge.billing_details.email)));
+	try {
+		const userRef =
+			(await findFirst('users', (col) => col.where('stripe_customer_id', '==', charge.customer))) ??
+			(await findFirst('users', (col) => col.where('email', '==', charge.billing_details.email)));
 
-	if (!userRef) {
-		functions.logger.error(`User not found for charge: ${charge.id}, stripe user: ${charge.customer}`);
+		if (!userRef) {
+			functions.logger.error(`User not found for charge: ${charge.id}, stripe user: ${charge.customer}`);
+			return Promise.resolve(undefined);
+		}
+		const contribution = constructContribution(charge);
+		const contributionRef = (userRef.ref.collection('contributions') as CollectionReference<Contribution>).doc(charge.id);
+		await contributionRef.set(contribution);
+		functions.logger.info(`Ingested ${charge.id} into firestore for user ${userRef.id}`);
+		return contributionRef;
+	} catch (error) {
+		functions.logger.error(`Error ingesting: ${charge.id}`, error);
 		return Promise.resolve(undefined);
 	}
-	const contribution = constructContribution(charge);
-	const contributionRef = (userRef.ref.collection('contributions') as CollectionReference<Contribution>).doc(charge.id);
-	await contributionRef.set(contribution);
-	functions.logger.info(`Ingested ${charge.id} into firestore for user ${userRef.id}`);
-	return contributionRef;
 };
 
 export const constructContribution = (charge: Stripe.Charge): Contribution => {
 	const plan = (charge.invoice as Stripe.Invoice)?.lines?.data[0]?.plan;
 	const monthlyInterval =
-		plan?.interval === 'month' ? plan?.interval_count : plan?.interval === 'year' ? 12 : undefined;
+		plan?.interval === 'month' ? plan?.interval_count : plan?.interval === 'year' ? 12 : 0;
 
 	const balanceTransaction = charge.balance_transaction as Stripe.BalanceTransaction;
 	return {
@@ -93,7 +98,7 @@ const constructStatus = (status: Stripe.Charge.Status) => {
 		case 'failed':
 			return StatusKey.FAILED;
 		default:
-			return undefined;
+			return StatusKey.UNKNOWN;
 	}
 };
 
