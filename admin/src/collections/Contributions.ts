@@ -1,5 +1,10 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { Contribution, ContributionSourceKey, StatusKey, CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/types';
+import {
+	Contribution,
+	ContributionSourceKey,
+	StatusKey,
+	CONTRIBUTION_FIRESTORE_PATH,
+} from '@socialincome/shared/types';
 
 export const contributionsCollection = buildCollection<Contribution>({
 	name: 'Contributions',
@@ -69,7 +74,7 @@ export const contributionsCollection = buildCollection<Contribution>({
 				{ id: StatusKey.PENDING, label: 'Pending' },
 				{ id: StatusKey.FAILED, label: 'Failed' },
 			],
-			defaultValue: StatusKey.SUCCEEDED
+			defaultValue: StatusKey.SUCCEEDED,
 		},
 	}),
 });

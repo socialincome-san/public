@@ -2,7 +2,7 @@ import { describe, test } from '@jest/globals';
 import { firestore } from 'firebase-admin';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import Stripe from 'stripe';
-import {Contribution, ContributionSourceKey, StatusKey} from '../../../shared/types/admin/Contribution';
+import { Contribution, ContributionSourceKey, StatusKey } from '../../../shared/types/admin/Contribution';
 import { doc } from '../useFirestoreAdmin';
 import { storeCharge } from './stripeWebhook';
 import Timestamp = firestore.Timestamp;
@@ -332,6 +332,6 @@ describe('stripeWebhook', () => {
 		fees_chf: 24.04,
 		monthly_interval: 3,
 		reference_id: 'ch_123',
-		status: StatusKey.SUCCEEDED
+		status: StatusKey.SUCCEEDED,
 	};
 });
