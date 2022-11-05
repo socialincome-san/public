@@ -13,8 +13,8 @@ export enum ContributionSourceKey {
 
 export enum StatusKey {
 	FAILED = 'failed',
-	PENDING	= 'pending',
-    SUCCEEDED = 'succeeded'
+	PENDING = 'pending',
+	SUCCEEDED = 'succeeded',
 }
 
 export type Contribution = {
