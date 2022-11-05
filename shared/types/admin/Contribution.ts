@@ -11,6 +11,12 @@ export enum ContributionSourceKey {
 	WIRE_TRANSFER = 'wire-transfer',
 }
 
+export enum StatusKey {
+	FAILED = 'failed',
+	PENDING	= 'pending',
+    SUCCEEDED = 'succeeded'
+}
+
 export type Contribution = {
 	source: ContributionSourceKey;
 	created: Date | Timestamp; // This is a hack. Firestore returns a Timestamp, but Firecms seems to expect a Date for a date picker. Will look into this.
@@ -20,4 +26,5 @@ export type Contribution = {
 	fees_chf: number | undefined;
 	reference_id: string; // e.g stripe charge id
 	monthly_interval: number | undefined;
+	status: StatusKey | undefined;
 };

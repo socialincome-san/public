@@ -1,5 +1,5 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { Contribution, ContributionSourceKey, CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/types';
+import { Contribution, ContributionSourceKey, StatusKey, CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/types';
 
 export const contributionsCollection = buildCollection<Contribution>({
 	name: 'Contributions',
@@ -45,13 +45,31 @@ export const contributionsCollection = buildCollection<Contribution>({
 			},
 			validation: { required: true },
 		},
-		amount_net_chf: {
+		amount_chf: {
 			dataType: 'number',
-			name: 'Amount Net Chf',
+			name: 'Amount Chf (without fees applied)',
+		},
+		fees_chf: {
+			dataType: 'number',
+			name: 'Fees Chf',
 		},
 		reference_id: {
 			dataType: 'string',
 			name: 'External Reference',
+		},
+		monthly_interval: {
+			dataType: 'number',
+			name: 'Monthly recurrence interval',
+		},
+		status: {
+			dataType: 'string',
+			name: 'Status',
+			enumValues: [
+				{ id: StatusKey.SUCCEEDED, label: 'Succeeded' },
+				{ id: StatusKey.PENDING, label: 'Pending' },
+				{ id: StatusKey.FAILED, label: 'Failed' },
+			],
+			defaultValue: StatusKey.SUCCEEDED
 		},
 	}),
 });
