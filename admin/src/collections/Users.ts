@@ -1,6 +1,8 @@
-import { AdditionalFieldDelegate, buildCollection, buildProperties } from '@camberi/firecms';
+import { AdditionalFieldDelegate, buildCollection, buildProperties, buildProperty } from '@camberi/firecms';
 import { CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH, User, USER_FIRESTORE_PATH } from '@socialincome/shared/types';
 import { contributionsCollection } from './Contributions';
+import { donationCertificateCollection } from './DonationCertificate';
+import { BulkDonationCertificateAction } from '../collection-actions/bulkDonationCertificiateCreation';
 
 const FirstNameCol: AdditionalFieldDelegate<User> = {
 	id: 'first_name_col',
@@ -72,6 +74,7 @@ const ReferralCol: AdditionalFieldDelegate<User> = {
 	dependencies: ['personal'],
 };
 
+
 export const usersCollection = buildCollection<User>({
 	path: USER_FIRESTORE_PATH,
 	group: 'Contributors',
@@ -86,7 +89,8 @@ export const usersCollection = buildCollection<User>({
 		delete: false,
 	}),
 	additionalColumns: [FirstNameCol, LastNameCol, GenderCol, PhoneCol, CountryCol, CityCol, ReferralCol],
-	subcollections: [contributionsCollection],
+	subcollections: [contributionsCollection, donationCertificateCollection],
+	extraActions: BulkDonationCertificateAction,
 	properties: buildProperties<User>({
 		test_user: {
 			name: 'Test User',
@@ -177,7 +181,14 @@ export const usersCollection = buildCollection<User>({
 		},
 		location: {
 			name: 'Location',
+			description: "Living location defined by List of ISO 3166 country codes",
 			dataType: 'string',
+			defaultValue: 'CH',
+			validation: {
+				required: true,
+				length: 2,
+				uppercase: true
+			}
 		},
 		currency: {
 			name: 'Currency',
@@ -198,6 +209,6 @@ export const usersCollection = buildCollection<User>({
 			name: 'stripe customer id',
 			dataType: 'string',
 			disabled: true,
-		},
+		}
 	}),
 });

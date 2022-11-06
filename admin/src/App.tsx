@@ -29,6 +29,7 @@ import {
 import { getApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import CallDummyFunctionButton from './CallDummyFunctionButton';
+import CallPDFBuilderFunction from './CallPDFBuilderFunction';
 import * as config from './config';
 
 const onFirebaseInit = () => {
@@ -132,7 +133,12 @@ export default function App() {
 			firebaseConfig={config.FIREBASE_CONFIG}
 			onFirebaseInit={onFirebaseInit}
 			dateTimeFormat={'yyyy-MM-dd'}
-			toolbarExtraWidget={<CallDummyFunctionButton />}
+			toolbarExtraWidget={
+				<div>
+					<CallDummyFunctionButton />
+					<CallPDFBuilderFunction />
+				</div>
+			}
 		/>
 	);
 }
