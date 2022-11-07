@@ -16,6 +16,7 @@ jobs:
         uses: fkirc/skip-duplicate-actions@v5
         with:
           paths: '["functions/**", "shared/**", ".github/workflows/functions.yml"]'
+          skip_after_successful_duplicate: "false"
 
   test_deploy:
     name: Test & Deploy Functions
@@ -47,6 +48,8 @@ jobs:
         run: |
           echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} > .env
           echo POSTFINANCE_EMAIL_PASSWORD=${{ secrets.POSTFINANCE_EMAIL_PASSWORD }} >> .env
+          echo STRIPE_API_READ_KEY=${{ secrets.STRIPE_API_READ_KEY }} >> .env
+          echo STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }} >> .env
 
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main'
