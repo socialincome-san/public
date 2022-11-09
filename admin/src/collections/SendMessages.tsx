@@ -1,4 +1,5 @@
 import { EntityCollection, FireCMSContext, SelectionController, User } from "@camberi/firecms";
+import { getFunctions, httpsCallable } from 'firebase/functions';
 import { Button } from "@mui/material";
 import React, { useState, useEffect, useCallback } from "react";
 import { MessageTemplate } from '@socialincome/shared/types';
@@ -14,9 +15,20 @@ const SendMessages = ({ path, collection, selectionController, context }: IProps
   const [areAnyUsersSelected, setAreAnyUsersSelected] = useState(false);
   const [isWritingSendMessagesRequest, setIsWritingSendMessagesRequest] = useState(false);
 
-  const buttonClick = useCallback(() => {
-    const messages = selectionController.selectedEntities.map((val) => val.values.text_krio).join(", ");
-    alert(messages);
+  const sendMessagesButtonClick = useCallback(() => {
+    const selectedMessageTemplates = selectionController.selectedEntities.map((val) => val.values);
+
+    setIsWritingSendMessagesRequest(true);
+		const sendMessagesFunction = httpsCallable(getFunctions(), 'sendMessagesFunction');
+		sendMessagesFunction(selectedMessageTemplates)
+			.then((res) => {
+				console.log(res);
+				setIsWritingSendMessagesRequest(false);
+			})
+			.catch((err) => {
+				console.log(err);
+				setIsWritingSendMessagesRequest(false);
+			});
   }, [selectionController.selectedEntities]);
 
   useEffect(() => {
@@ -29,9 +41,9 @@ const SendMessages = ({ path, collection, selectionController, context }: IProps
       variant="outlined"
       color="warning"
       disabled={!areAnyUsersSelected && !isWritingSendMessagesRequest}
-      onClick={buttonClick}
+      onClick={sendMessagesButtonClick}
     >
-      Send receipt confirmation request
+      Send selected messages
     </Button>
   );
 }

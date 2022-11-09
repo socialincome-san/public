@@ -19,8 +19,8 @@ export const messageTemplatesCollection = buildCollection<MessageTemplate>({
     />
   ),
 	permissions: ({ authController }) => ({
-		edit: false,
-		create: false,
+		edit: true,
+		create: true,
 		delete: false,
 	}),
   properties: buildProperties<MessageTemplate>({
