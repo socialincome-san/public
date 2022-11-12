@@ -18,9 +18,11 @@ let testOrganisationAdminStore: firebase.firestore.Firestore;
 
 beforeAll(async () => {
 	testEnvironment = await initializeTestEnvironment({
-		projectId: 'demo-social-income-prod',
+		projectId: 'social-income-prod',
 		firestore: {
 			rules: fs.readFileSync(path.resolve(__dirname, '../../firestore.rules'), 'utf8'),
+			host: 'localhost',
+			port: 8080,
 		},
 	});
 	globalAdminStore = testEnvironment
@@ -30,7 +32,7 @@ beforeAll(async () => {
 		.authenticatedContext('test_analyst', { email: 'analyst@socialincome.org' })
 		.firestore();
 	testOrganisationAdminStore = testEnvironment
-		.authenticatedContext('test_organisation_admin', { email: 'admin@ashoka.org' })
+		.authenticatedContext('ashoka_admin', { email: 'admin@ashoka.org' })
 		.firestore();
 });
 
@@ -57,13 +59,13 @@ describe('Test admins collection', () => {
 
 	it('Write admins collection', async () => {
 		await assertSucceeds(
-			setDoc(doc(globalAdminStore, 'admins', 'test_admin2@socialincome.org'), {
+			setDoc(doc(globalAdminStore, 'admins', 'admin2@socialincome.org'), {
 				name: 'Test',
 				is_global_admin: true,
 			})
 		);
 		await assertFails(
-			setDoc(doc(globalAnalystStore, 'admins', 'test_admin2@socialincome.org'), {
+			setDoc(doc(globalAnalystStore, 'admins', 'admin3@socialincome.org'), {
 				name: 'Test',
 				is_global_admin: true,
 			})
@@ -92,7 +94,6 @@ describe('Test recipients collection', () => {
 			)
 		);
 		expect(querySnapshot.size).toBe(1);
-
 		await assertFails(
 			getDocs(
 				query(
@@ -106,4 +107,8 @@ describe('Test recipients collection', () => {
 	it('Delete recipients doc', async () => {
 		await assertFails(deleteDoc(doc(testOrganisationAdminStore, 'recipients', 'P0OHM3bzrT9Kn3je6G55')));
 	});
+});
+
+afterAll(async () => {
+	await testEnvironment.cleanup();
 });
