@@ -3,7 +3,7 @@ import {
 	CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH,
 	UserStatusKey,
 	User,
-	USER_FIRESTORE_PATH
+	USER_FIRESTORE_PATH,
 } from '@socialincome/shared/types';
 import { contributionsCollection } from './Contributions';
 

@@ -176,6 +176,7 @@ export const batchImportStripeChargesFunc = functions
 	})
 	.https.onCall(async () => {
 		const stripeBatchSize = 100; // max batch size supported by stripe
+		const charges = [];
 		try {
 			const stripe = new Stripe(STRIPE_API_READ_KEY, { apiVersion: '2022-08-01' });
 			functions.logger.info('Querying Stripe API...');
@@ -183,8 +184,11 @@ export const batchImportStripeChargesFunc = functions
 				expand: ['data.balance_transaction', 'data.invoice'],
 				limit: stripeBatchSize,
 			})) {
-				await storeCharge(charge);
+				charges.push(charge);
 			}
+			functions.logger.info(`Querying stripe finished.`);
+
+			await Promise.all(charges.map((charge) => storeCharge(charge)));
 			functions.logger.info(`Ingestion finished.`);
 		} catch (error) {
 			functions.logger.error(error);
