@@ -1,5 +1,5 @@
 import { describe, expect, test } from '@jest/globals';
-import * as firebaseFunctionsTest from 'firebase-functions-test';
+import firebaseFunctionsTest from 'firebase-functions-test';
 import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../shared/types';
 import { doc } from '../useFirestoreAdmin';
 import * as importPostfinanceBalance from './importPostfinanceBalance';
