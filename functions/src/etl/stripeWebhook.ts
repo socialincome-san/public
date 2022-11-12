@@ -2,9 +2,15 @@ import { DocumentReference } from 'firebase-admin/firestore';
 import { CollectionReference } from 'firebase-admin/lib/firestore';
 import * as functions from 'firebase-functions';
 import Stripe from 'stripe';
-import { Contribution, ContributionSourceKey, StatusKey } from '../../../shared/types/admin/Contribution';
+import {
+	Contribution,
+	ContributionSourceKey,
+	CONTRIBUTION_FIRESTORE_PATH,
+	StatusKey,
+} from '../../../shared/types/admin/Contribution';
+import { splitName, User, UserStatusKey, USER_FIRESTORE_PATH } from '../../../shared/types/admin/User';
 import { STRIPE_API_READ_KEY, STRIPE_WEBHOOK_SECRET } from '../config';
-import { findFirst } from '../useFirestoreAdmin';
+import { collection, findFirst } from '../useFirestoreAdmin';
 
 /**
  * Stripe webhook to ingest charge events into firestore.
@@ -51,16 +57,10 @@ const handleChargeEvent = async (event: Stripe.Event, stripe: Stripe) => {
  */
 export const storeCharge = async (charge: Stripe.Charge): Promise<DocumentReference<Contribution> | undefined> => {
 	try {
-		const userRef =
-			(await findFirst('users', (col) => col.where('stripe_customer_id', '==', charge.customer))) ??
-			(await findFirst('users', (col) => col.where('email', '==', charge.billing_details.email)));
-
-		if (!userRef) {
-			functions.logger.error(`User not found for charge: ${charge.id}, stripe user: ${charge.customer}`);
-			return Promise.resolve(undefined);
-		}
+		const userRef = await getOrCreateUser(charge);
+		if (!userRef) return Promise.resolve(undefined);
 		const contribution = constructContribution(charge);
-		const contributionRef = (userRef.ref.collection('contributions') as CollectionReference<Contribution>).doc(
+		const contributionRef = (userRef.collection(CONTRIBUTION_FIRESTORE_PATH) as CollectionReference<Contribution>).doc(
 			charge.id
 		);
 		await contributionRef.set(contribution);
@@ -72,6 +72,68 @@ export const storeCharge = async (charge: Stripe.Charge): Promise<DocumentRefere
 	}
 };
 
+/**
+ * Try to find an existing user using create a new on.
+ */
+export const getOrCreateUser = async (charge: Stripe.Charge): Promise<DocumentReference<User> | undefined> => {
+	const userRef = await findUser(charge);
+	if (!userRef) {
+		functions.logger.info(`User not found for charge: ${charge.id}, stripe user: ${charge.customer}`);
+		const userToCreate = constructUser(charge);
+		if (userToCreate) {
+			const newUserRef = await collection<User>(USER_FIRESTORE_PATH).add(userToCreate);
+			functions.logger.info(
+				`New user created for charge: ${charge.id}, stripe user: ${charge.customer}, user id: ${newUserRef.id}`
+			);
+			return newUserRef;
+		} else {
+			return Promise.resolve(undefined);
+		}
+	} else {
+		return Promise.resolve(userRef.ref);
+	}
+};
+
+/**
+ * First tries to match using the stripe_customer_id otherwise falls back to email.
+ */
+export const findUser = async (charge: Stripe.Charge) => {
+	return (
+		(await findFirst('users', (col) => col.where('stripe_customer_id', '==', charge.customer))) ??
+		(await findFirst('users', (col) => col.where('email', '==', charge.billing_details.email)))
+	);
+};
+
+/**
+ * Extracts information out of the stripe charge to build a User.
+ * This is mainly for failed payments where we didn't create a user through the website directly
+ */
+export const constructUser = (charge: Stripe.Charge): User | undefined => {
+	if (charge.billing_details.email && charge.billing_details?.name && charge.customer) {
+		const { firstname, lastname } = splitName(charge.billing_details?.name);
+		return {
+			personal: {
+				name: firstname,
+				lastname: lastname,
+			},
+			email: charge.billing_details.email!,
+			status: UserStatusKey.INITIALIZED,
+			stripe_customer_id: charge.customer as string,
+			test_user: false,
+			location: charge.billing_details?.address?.country?.toUpperCase(),
+			currency: charge.currency.toUpperCase(),
+		};
+	} else {
+		functions.logger.warn(
+			`User not created for charge: ${charge.id}, stripe user: ${charge.customer}. Missing attributes.`
+		);
+		return undefined;
+	}
+};
+
+/**
+ * Transforms the stripe charge into our own Contribution representation
+ */
 export const constructContribution = (charge: Stripe.Charge): Contribution => {
 	const plan = (charge.invoice as Stripe.Invoice)?.lines?.data[0]?.plan;
 	const monthlyInterval = plan?.interval === 'month' ? plan?.interval_count : plan?.interval === 'year' ? 12 : 0;

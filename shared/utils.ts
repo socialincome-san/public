@@ -1,3 +1,15 @@
+const capitalizeString = (value: string) => {
+	return value.charAt(0).toUpperCase() + value.slice(1);
+};
+
+export const capitalizeStringIfUppercase = (value: string) => {
+	if (value.toUpperCase() === value) {
+		return capitalizeString(value.toLowerCase());
+	} else {
+		return value;
+	}
+};
+
 export function getValidMonths(askedDate: Date, start: Date, n: number) {
 	let year = askedDate.getFullYear();
 	let month = askedDate.getMonth();

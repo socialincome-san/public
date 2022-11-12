@@ -1,20 +1,28 @@
-import { describe, test } from '@jest/globals';
+import { afterEach, describe, test } from '@jest/globals';
 import { firestore } from 'firebase-admin';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import Stripe from 'stripe';
 import { Contribution, ContributionSourceKey, StatusKey } from '../../../shared/types/admin/Contribution';
+import { User, UserStatusKey } from '../../../shared/types/admin/User';
 import { doc } from '../useFirestoreAdmin';
-import { storeCharge } from './stripeWebhook';
+import { findUser, storeCharge } from './stripeWebhook';
 import Timestamp = firestore.Timestamp;
 
 const { cleanup } = firebaseFunctionsTest();
 
 describe('stripeWebhook', () => {
-	afterAll(() => cleanup());
+	afterEach(() => cleanup());
 
 	test('storeCharge for inexisting user', async () => {
+		const initialUser = await findUser(testCharge);
+		expect(initialUser).toBeUndefined();
+
 		const ref = await storeCharge(testCharge);
-		expect(ref).toBeUndefined();
+		const contribution = await ref!.get();
+		expect(contribution.data()).toEqual(expectedContribution);
+
+		const createdUser = await findUser(testCharge);
+		expect(createdUser!.data()).toEqual(expectedUser);
 	});
 
 	test('storeCharge for existing user through stripe id', async () => {
@@ -333,5 +341,18 @@ describe('stripeWebhook', () => {
 		monthly_interval: 3,
 		reference_id: 'ch_123',
 		status: StatusKey.SUCCEEDED,
+	};
+
+	const expectedUser: User = {
+		personal: {
+			name: 'test',
+			lastname: 'user',
+		},
+		email: 'test@socialincome.org',
+		stripe_customer_id: 'cus_123',
+		test_user: false,
+		status: UserStatusKey.INITIALIZED,
+		location: 'US',
+		currency: 'USD',
 	};
 });
