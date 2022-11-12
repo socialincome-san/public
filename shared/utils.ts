@@ -1,10 +1,8 @@
-const capitalizeString = (value: string) => {
-	return value.charAt(0).toUpperCase() + value.slice(1);
-};
+import _ from "lodash";
 
 export const capitalizeStringIfUppercase = (value: string) => {
 	if (value.toUpperCase() === value) {
-		return capitalizeString(value.toLowerCase());
+		return _.upperFirst();
 	} else {
 		return value;
 	}
