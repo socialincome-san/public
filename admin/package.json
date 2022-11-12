@@ -7,7 +7,7 @@
 		"build": "webpack --mode production --config webpack.config.js",
 		"serve": "webpack serve",
 		"test": "firebase emulators:exec --project social-income-prod --only firestore --config ../firebase.json --import ../seed  'npm run test:app'",
-		"test:app": "jest --forceExit --roots tests"
+		"test:app": "jest --forceExit --passWithNoTests --roots src"
 	},
 	"devDependencies": {
 		"@firebase/rules-unit-testing": "^2.0.4",
