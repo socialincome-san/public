@@ -1,7 +1,5 @@
-import {
-    getStorage,
-} from 'firebase-admin/storage';
-import {getOrInitializeApp} from "./useApp";
+import { getStorage } from 'firebase-admin/storage';
+import { getOrInitializeApp } from './useApp';
 
 getOrInitializeApp();
 

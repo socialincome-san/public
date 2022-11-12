@@ -6,7 +6,7 @@ import {
 	Query,
 	QueryDocumentSnapshot,
 } from 'firebase-admin/firestore';
-import {getOrInitializeApp} from "./useApp";
+import { getOrInitializeApp } from './useApp';
 
 getOrInitializeApp();
 
