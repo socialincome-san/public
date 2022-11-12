@@ -17,21 +17,17 @@ describe('useStorageAdmin', () => {
 	});
 
 
-	test('upload', async () => {
+	test('upload private file', async () => {
 		await fs.writeFile(tmpFile, 'test');
 		const bucket = storage.bucket(testBucket)
 		const uploadResponse = await bucket.upload(tmpFile)
-		const [file, _] = uploadResponse
-
-		const [metadata] = await file.getMetadata();
-
-		const token = metadata.firebaseStorageDownloadTokens;
-		console.log(token)
+		const [_, metadata] = uploadResponse
 
 		// I would expect a 403 or similar here instead of a 200!
 		const directLink = metadata.mediaLink
 		const responseDirectLink = await axios.get(directLink);
-		console.log(`Requesting ${directLink} results in status code ${responseDirectLink.status}`) // returns 200
+		// returns Requesting http://127.0.0.1:9199/download/storage/v1/b/test/o/tmp.txt?generation=1668273207768&alt=media results in status code 200
+		console.log(`Requesting ${directLink} results in status code ${responseDirectLink.status}`)
 	});
 
 });
