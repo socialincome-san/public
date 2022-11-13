@@ -1,33 +1,37 @@
-import {describe, test} from '@jest/globals';
-import {storage} from "./useStorageAdmin";
+import { describe, expect, test } from '@jest/globals';
+import axios from 'axios';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import { promises as fs, unlinkSync } from 'fs';
-import axios from "axios";
-
+import { storage, uploadAndGetDownloadURL } from './useStorageAdmin';
 
 const { cleanup } = firebaseFunctionsTest();
 
 describe('useStorageAdmin', () => {
-	const tmpFile = 'tmp.txt'
-	const testBucket = 'test'
+	const tmpFile = 'tmp.txt';
 
-	afterEach(() =>  {
+	afterEach(() => {
 		unlinkSync(tmpFile);
-		cleanup()
+		cleanup();
 	});
-
 
 	test('upload private file', async () => {
 		await fs.writeFile(tmpFile, 'test');
-		const bucket = storage.bucket(testBucket)
-		const uploadResponse = await bucket.upload(tmpFile)
-		const [_, metadata] = uploadResponse
 
-		// I would expect a 403 or similar here instead of a 200!
-		const directLink = metadata.mediaLink
-		const responseDirectLink = await axios.get(directLink);
-		// returns Requesting http://127.0.0.1:9199/download/storage/v1/b/test/o/tmp.txt?generation=1668273207768&alt=media results in status code 200
-		console.log(`Requesting ${directLink} results in status code ${responseDirectLink.status}`)
+		const { downloadUrl } = await uploadAndGetDownloadURL(storage.bucket(), tmpFile);
+
+		const response = await axios.get(downloadUrl);
+		expect(response.status).toEqual(200);
+
+		const downloadUrlWithoutToken = downloadUrl.slice(0, -71);
+		// expect(await axios.get(linkWithoutToken)).toThrow(); fails with an "TypeError: Converting circular structure to JSON"
+		// that's the reason for try catch syntax
+		let error: boolean;
+		try {
+			await axios.get(downloadUrlWithoutToken);
+			error = false;
+		} catch {
+			error = true;
+		}
+		expect(error).toEqual(true);
 	});
-
 });

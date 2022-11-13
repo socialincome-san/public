@@ -1,7 +1,7 @@
-import {
-    getStorage,
-} from 'firebase-admin/storage';
-import {getOrInitializeApp} from "./useApp";
+import { Bucket } from '@google-cloud/storage';
+import { randomBytes } from 'crypto';
+import { getStorage } from 'firebase-admin/storage';
+import { getOrInitializeApp } from './useApp';
 
 getOrInitializeApp();
 
@@ -16,13 +16,26 @@ export const storage = getStorage();
  * See https://github.com/firebase/firebase-admin-node/issues/1352 and
  * https://github.com/googleapis/nodejs-storage/issues/697
  *
- * This implementation mimics the sdk implementation.
+ * This implementation sets an explicit token for the file which can be used to authorize the downlaod.
  */
-// export const getDowloadURL = (ref: File) => {
-//     const [metadata] = await ref.getMetadata();
-//
-//     const token = metadata.metadata.firebaseStorageDownloadTokens;
-//     const link = `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodeURIComponent(
-//         pathToFile
-//     )}?alt=media&token=${token}
-// }
+export const uploadAndGetDownloadURL = async (bucket: Bucket, pathString: string) => {
+	const token = randomBytes(32).toString('hex');
+	const [file, metadata] = await bucket.upload(pathString, {
+		destination: 'file.txt',
+		metadata: {
+			metadata: {
+				firebaseStorageDownloadTokens: token,
+			},
+		},
+	});
+
+	const host = process.env.FIREBASE_STORAGE_EMULATOR_HOST
+		? `http://${process.env.FIREBASE_STORAGE_EMULATOR_HOST}`
+		: 'https://firebasestorage.googleapis.com';
+	const downloadUrl = `${host}/v0/b/${metadata.bucket}/o/${encodeURIComponent(metadata.name)}?alt=media&token=${token}`;
+	return {
+		file,
+		metadata,
+		downloadUrl,
+	};
+};
