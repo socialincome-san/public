@@ -4,5 +4,12 @@
 .github/workflows/ui.yml rene@socialincome.org
 .vscode/ rene@socialincome.org
 
+firebase.json andras@socialincome.org michael@socialincome.org
+firestore.rules andras@socialincome.org michael@socialincome.org
+package.json andras@socialincome.org michael@socialincome.org rene@socialincome.org
+storage.rules andras@socialincome.org michael@socialincome.org
+
 admin/ andras@socialincome.org michael@socialincome.org
 functions/ andras@socialincome.org michael@socialincome.org
+shared/ andras@socialincome.org michael@socialincome.org
+

@@ -10,8 +10,8 @@
 		"build:watch": "tsc --watch",
 		"serve": "npm run build:watch",
 		"serve:watch": "npm run build -- --watch & firebase emulators:start --project social-income-prod --config ../firebase.json --import ../seed",
-		"test": "firebase emulators:exec --only functions --only firestore --project social-income-prod --config ../firebase.json 'npm run test:app'",
-		"test:app": "jest --roots  src/"
+		"test": "firebase emulators:exec --only functions --only firestore --project social-income-prod --config ../firebase.json --import ../seed 'npm run test:app'",
+		"test:app": "jest --forceExit --roots tests/ src/"
 	},
 	"devDependencies": {
 		"@jest/globals": "^29.1.2",

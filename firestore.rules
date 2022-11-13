@@ -15,9 +15,9 @@ service cloud.firestore {
       return adminUser.is_global_analyst;
     }
 
-    function canAccessRecipient(email) {
-      let adminUser = get(/databases/$(database)/documents/admins/$(email)).data;
-      return resource.data.organisation in adminUser.organisations;
+    function canAccessRecipient(token) {
+      let adminUser = get(/databases/$(database)/documents/admins/$(token.email)).data;
+      return resource.data.organisation in adminUser.organisations || token.phone_number == ("+" + string(resource.data.mobile_money_phone.phone));
     }
 
     match /admins/{data} {
@@ -68,7 +68,7 @@ service cloud.firestore {
     }
 
     match /recipients/{data=**} {
-      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email) || canAccessRecipient(request.auth.token.email);
+      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email) || canAccessRecipient(request.auth.token);
       allow create: if isAdminUser(request.auth.token.email);
       allow update: if isGlobalAdmin(request.auth.token.email) || canAccessRecipient(request.auth.token.email);
       allow delete: if isGlobalAdmin(request.auth.token.email);
