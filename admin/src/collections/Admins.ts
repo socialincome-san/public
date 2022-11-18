@@ -13,6 +13,10 @@ export const adminsCollection = buildCollection<AdminUser>({
 			dataType: 'boolean',
 			name: 'Global Admin',
 		},
+		is_global_analyst: {
+			dataType: 'boolean',
+			name: 'Global Analyst',
+		},
 		name: {
 			dataType: 'string',
 			name: 'Full Name',

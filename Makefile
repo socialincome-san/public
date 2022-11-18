@@ -17,7 +17,7 @@ functions-serve:
 	docker compose up functions
 
 functions-test:
-	docker compose run --rm functions bash -c "npm install && npm run functions:test"
+	docker compose run --no-deps --rm functions bash -c "npm install && npm run functions:test"
 
 firebase-serve:
 	docker compose up firebase

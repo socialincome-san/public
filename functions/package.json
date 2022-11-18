@@ -10,8 +10,8 @@
 		"build:watch": "tsc --watch",
 		"serve": "npm run build:watch",
 		"serve:watch": "npm run build -- --watch & firebase emulators:start --project social-income-prod --config ../firebase.json --import ../seed",
-		"test": "firebase emulators:exec --only firestore,storage --project social-income-prod --config ../firebase.json 'npm run test:app'",
-		"test:app": "jest --roots  src/"
+		"test": "firebase emulators:exec --only firestore,functions,storage --project social-income-prod --config ../firebase.json --import ../seed 'npm run test:app'",
+		"test:app": "jest --forceExit --roots tests/ src/"
 	},
 	"devDependencies": {
 		"@jest/globals": "^29.1.2",
@@ -32,6 +32,7 @@
 		"firebase-admin": "^11.1.0",
 		"firebase-functions": "^3.24.1",
 		"imap-simple": "^5.1.0",
+		"lodash": "^4.17.21",
 		"mailparser": "^3.5.0",
 		"stripe": "^10.11.0"
 	}

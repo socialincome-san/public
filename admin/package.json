@@ -7,7 +7,7 @@
 		"build": "webpack --mode production --config webpack.config.js",
 		"serve": "webpack serve",
 		"test": "firebase emulators:exec --project social-income-prod --only firestore --config ../firebase.json --import ../seed  'npm run test:app'",
-		"test:app": "jest --forceExit --roots tests"
+		"test:app": "jest --forceExit --passWithNoTests --roots src"
 	},
 	"devDependencies": {
 		"@firebase/rules-unit-testing": "^2.0.4",
@@ -40,12 +40,12 @@
 		"@socialincome/shared": "*",
 		"algoliasearch": "^4.13.0",
 		"firebase": "^9.12.0",
-		"firebase-functions": "^3.24.1",
 		"lodash": "^4.17.21",
 		"react": "^18.2.0",
 		"react-dom": "^18.1.0",
 		"react-router": "^6.2.0",
-		"react-router-dom": "^6.2.0"
+		"react-router-dom": "^6.2.0",
+		"react-scripts": "^5.0.1"
 	},
 	"browserslist": {
 		"production": [

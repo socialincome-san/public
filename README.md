@@ -146,7 +146,7 @@ Income (tax-deductible in Switzerland).
 
 ## Sponsor Dev Community
 
-[Become a sponsor](https://github.com/sponsors/san-socialincome) and
+[Become a sponsor](https://github.com/sponsors/socialincome-san) and
 help ensure the development of open source software for more equality
 and less poverty. Donations through the GitHub Sponsor program are used
 for building a strong developer community and organizing Social Coding
