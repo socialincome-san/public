@@ -1,4 +1,4 @@
-name: Admin
+name: Rules (firestore & storage)
 on:
   push:
     branches:
