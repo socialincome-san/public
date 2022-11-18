@@ -1,4 +1,3 @@
-import { initializeApp } from 'firebase-admin/app';
 import {
 	CollectionReference,
 	DocumentData,
@@ -7,8 +6,9 @@ import {
 	Query,
 	QueryDocumentSnapshot,
 } from 'firebase-admin/firestore';
+import { getOrInitializeApp } from './useApp';
 
-initializeApp();
+getOrInitializeApp();
 
 /**
  * direct access to the admin firestore instance. Deployed, this has full admin access to the data.
