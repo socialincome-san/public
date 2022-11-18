@@ -16,12 +16,12 @@ export const storage = getStorage();
  * See https://github.com/firebase/firebase-admin-node/issues/1352 and
  * https://github.com/googleapis/nodejs-storage/issues/697
  *
- * This implementation sets an explicit token for the file which can be used to authorize the downlaod.
+ * This implementation sets an explicit token for the file which can be used to authorize the download.
  */
-export const uploadAndGetDownloadURL = async (bucket: Bucket, pathString: string) => {
+export const uploadAndGetDownloadURL = async (bucket: Bucket, filePath: string, destination?: string) => {
 	const token = randomBytes(32).toString('hex');
-	const [file, metadata] = await bucket.upload(pathString, {
-		destination: 'file.txt',
+	const [file, metadata] = await bucket.upload(filePath, {
+		destination: destination || filePath,
 		metadata: {
 			metadata: {
 				firebaseStorageDownloadTokens: token,
