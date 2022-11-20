@@ -1,6 +1,6 @@
 import { describe, test } from '@jest/globals';
 import firebaseFunctionsTest from 'firebase-functions-test';
-import { doc, findFirst } from './useFirestoreAdmin';
+import { doc, findFirst } from '../src/firebase/firestoreAdmin';
 
 const { cleanup } = firebaseFunctionsTest();
 

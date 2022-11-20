@@ -4,7 +4,7 @@ import {
 	ContributionSourceKey,
 	CONTRIBUTION_FIRESTORE_PATH,
 	StatusKey,
-} from '@socialincome/shared/types';
+} from '../../../shared/src/types';
 
 export const contributionsCollection = buildCollection<Contribution>({
 	name: 'Contributions',

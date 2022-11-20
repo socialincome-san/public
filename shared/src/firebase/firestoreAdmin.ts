@@ -6,20 +6,18 @@ import {
 	Query,
 	QueryDocumentSnapshot,
 } from 'firebase-admin/firestore';
-import { getOrInitializeApp } from './useApp';
-
-getOrInitializeApp();
+import { getOrInitializeApp } from './app';
 
 /**
  * direct access to the admin firestore instance. Deployed, this has full admin access to the data.
  */
-export const firestore = getFirestore();
+export const useFirestore = () => getFirestore(getOrInitializeApp());
 
 /**
  * Access the typed collection
  */
 export const collection = <T = DocumentData>(collectionName: string): CollectionReference<T> => {
-	return firestore.collection(collectionName) as CollectionReference<T>;
+	return useFirestore().collection(collectionName) as CollectionReference<T>;
 };
 
 /**

@@ -2,7 +2,7 @@ import { describe, expect, test } from '@jest/globals';
 import axios from 'axios';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import { promises as fs, unlinkSync } from 'fs';
-import { storage, uploadAndGetDownloadURL } from './useStorageAdmin';
+import { useStorage, uploadAndGetDownloadURL } from '../src/firebase/storageAdmin';
 
 const { cleanup } = firebaseFunctionsTest();
 
@@ -17,7 +17,7 @@ describe('useStorageAdmin', () => {
 	test('upload private file', async () => {
 		await fs.writeFile(tmpFile, 'test');
 
-		const { downloadUrl } = await uploadAndGetDownloadURL(storage.bucket(), tmpFile);
+		const { downloadUrl } = await uploadAndGetDownloadURL(useStorage().bucket(), tmpFile);
 
 		const response = await axios.get(downloadUrl);
 		expect(response.status).toEqual(200);

@@ -7,10 +7,10 @@ import {
 	ContributionSourceKey,
 	CONTRIBUTION_FIRESTORE_PATH,
 	StatusKey,
-} from '../../../shared/types/admin/Contribution';
-import { splitName, User, UserStatusKey, USER_FIRESTORE_PATH } from '../../../shared/types/admin/User';
+} from '../../../shared/src/types/admin/Contribution';
+import { splitName, User, UserStatusKey, USER_FIRESTORE_PATH } from '../../../shared/src/types/admin/User';
 import { STRIPE_API_READ_KEY, STRIPE_WEBHOOK_SECRET } from '../config';
-import { collection, findFirst } from '../useFirestoreAdmin';
+import { collection, findFirst } from '../../../shared/src/firebase/firestoreAdmin';
 
 /**
  * Stripe webhook to ingest charge events into firestore.
