@@ -1,9 +1,17 @@
 rules_version = '2';
 service firebase.storage {
-  match /b/{bucket}/o {
+  match /b/demo-social-income.appspot.com {
     match /{allPaths=**} {
+      allow read, write: if false
+    }
+  }
+  match /b/{bucket}/o {
+    match /donation-certificates/{allPaths=**} {
       // Allow access by all users
-      allow read, write;
+      allow read, write: if false
+    }
+    match /{allPaths=**} {
+      allow read, write: if false
     }
   }
 }

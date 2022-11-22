@@ -1,15 +1,38 @@
-import { connectStorageEmulator} from 'firebase/storage';
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { doc, setDoc } from "firebase/firestore";
+import { connectStorageEmulator, getStorage, ref, uploadBytes } from "firebase/storage";
+import { GetSignedUrlConfig } from '@google-cloud/storage';
+import { initializeApp } from "firebase/app";
+import { firestore, storage } from '../useFirestoreAdmin';
+import { createWriteStream } from 'fs';
+import { v4 } from 'uuid';
 import * as config from '../config';
+import * as admin from 'firebase-admin';
+
 
 let STORAGE_EMULATOR_REQUIRED = true;
 
-export const createAndUploadDonationCertificate = async (data: any, app:any, firestore: any) => {
+export const createAndUploadDonationCertificate = async (data: any) => {
 
-	const storage = getStorage(app); 
+	const url = 'donation-certificates/' + data.entityId + '/' + data.year + "_" + data.address.country + "_" + data.currentDate + "_" +  v4() +".pdf";
+	
+	const translations = await translationStub();
+	console.log('data.location: ' + data.location)
+	if (data.location === 'CH') {
+		createDonationCertificateCH(url, data, translations);
+	} else {
+		
+	}
 
-	if (config.FB_STORAGE_EMULATOR_HOST && config.FB_STORAGE_EMULATOR_PORT && STORAGE_EMULATOR_REQUIRED) {
+}
+
+export const initializeStorage = async() => {
+	var firebaseConfig = {
+		storageBucket: 'demo-social-income.appspot.com',
+	};
+	
+	const app =  initializeApp(firebaseConfig);
+	const storage = getStorage(app);
+
+	if (config.FB_STORAGE_EMULATOR_HOST && config.FB_STORAGE_EMULATOR_PORT) {
 		if (STORAGE_EMULATOR_REQUIRED) {
 			connectStorageEmulator(storage, config.FB_STORAGE_EMULATOR_HOST, +config.FB_STORAGE_EMULATOR_PORT);
 			STORAGE_EMULATOR_REQUIRED = false;
@@ -19,24 +42,10 @@ export const createAndUploadDonationCertificate = async (data: any, app:any, fir
 		console.log('Using production storage');
 	}
 
-	const url = 'donation-certificates/' + data.entityId + '/' + data.year + "_" + data.address.country + "_" + data.currentDate + ".pdf";
-	const fileRef = ref(storage, url);
-	
-	const translations = await translationStub();
-
-	if (data.location === 'CH') {
-		createDonationCertificateCH(fileRef, data, translations, firestore, storage);
-	} else {
-		//return await createDefaultDonationCertificate(fileRef, data, translations);
-	}
-
+	return storage;
 }
 
-export const createDonationCertificateCH = async (fileRef: any, data: any, translations: Map<string, string>, firestore: any, storage: any) => {
-
-	let pdfData: ArrayBuffer = new ArrayBuffer(8);
-	let buffers: any = [];
-
+export const createDonationCertificateCH = async (url: string, data: any, translations: Map<string, string>) => {
 	const PDFDocument = require('pdfkit');
 	let docPdf = new PDFDocument();
 
@@ -101,39 +110,66 @@ export const createDonationCertificateCH = async (fileRef: any, data: any, trans
 		docPdf.fontSize(12).text(elements[0] + ': ' + elements[1] + " " + elements[2].toUpperCase());
 	}
 
-	docPdf.on('data', buffers.push.bind(buffers));
-	docPdf.on('end', () => {
-		pdfData = Buffer.concat(buffers);
-		uploadFileAndCreateDocumentEntry(fileRef, pdfData, data, firestore, storage);
-	});
-
+	const tempFileName = 'tempPdfFile.pdf';
+	await docPdf.pipe(createWriteStream(tempFileName));
 	docPdf.end();	
+ 
+	const options = {
+		destination: url
+	}; 
+	await storage.bucket().upload(tempFileName, options);
+
+	console.log('Credentials: ' + admin.credential);
+
+	const uploadedFile = storage.bucket().file(url);
+	//const downloadUrl = uploadedFile.publicUrl();
+	const signedUrlOptions: GetSignedUrlConfig = {
+		version: 'v2',                            // default value
+		action: 'read',                           // read | write | delete | resumable
+		expires: Date.now() + 1000 * 60 * 60,     // expire date, one minute from now
+	  };
+	const downloadUrl = await uploadedFile.getSignedUrl(signedUrlOptions);
+	console.log("SIGNED URL: " + downloadUrl);
+	addDocumentToUser(data, downloadUrl);
+
+}
+
+export const uploadFileAndCreateDocumentEntry = async(url: string, pdfData: ArrayBuffer, data: any) => {
+
+	const storage = await initializeStorage();
+	const fileRef = ref(storage, url);
+
+	uploadBytes(fileRef, pdfData).then((snapshot) => {
+		addDocumentToUser(data, fileRef);
+	});
 }
 
 
-export const addDocumentToUser = async(data: any, fileRef: any, firestore: any, storage: any) => {
+export const addDocumentToUser = async(data: any, downloadUrl: any) => {
 
-	const downloadUrl = '[File Download](' +  await getDownloadURL(fileRef) + ')';
+	const downloadUrlMarkDown = '[File Download](' +  downloadUrl + ')';
 	const documentKey = data.year + "-" + data.address.country;
 	console.log('URL: ' + downloadUrl);
-	const donationCertificatesRef = doc(firestore, "users", data.entityId, 'donation-certificate', documentKey ); 
 
 	const now = new Date();
 	const dateString = now.toLocaleDateString('de-DE');
 
-	await setDoc(donationCertificatesRef, {
+	firestore.collection( "users/" + data.entityId + '/donation-certificate').doc(documentKey).set({
 		created: dateString,
-		url: downloadUrl,
+		url: downloadUrlMarkDown,
 		country: data.address.country,
 		year: data.year.toString()
-	}, { merge: true });
+	}, {merge: true})
+	.then(() => {
+		console.log("Document successfully written!");
+	})
+	.catch((error) => {
+		console.error("Error writing document: ", error);
+	});
+
 }
 
-export const uploadFileAndCreateDocumentEntry = async(fileRef: any, pdfData: ArrayBuffer, data: any, firestore: any, storage: any) => {
-	uploadBytes(fileRef, pdfData).then((snapshot) => {
-		addDocumentToUser(data, fileRef, firestore, storage);
-	});
-}
+
 
 export const translationStub = async () => {
 	const translations = new Map();
@@ -147,10 +183,5 @@ export const translationStub = async () => {
 	translations.set('donation-certificate.sender',`Sandino Scheidegger\nCEO / Founder\nss@socialincome.org`);
 	translations.set('donation-certificate.single-donations', 'Liste Einzelspenden')
 	return translations;
-
-}
-
-
-export const createDefaultDonationCertificate = async () => {
 
 }
