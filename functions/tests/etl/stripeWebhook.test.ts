@@ -2,10 +2,10 @@ import { afterEach, describe, test } from '@jest/globals';
 import { firestore } from 'firebase-admin';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import Stripe from 'stripe';
-import { Contribution, ContributionSourceKey, StatusKey } from '../../../shared/types/admin/Contribution';
-import { User, UserStatusKey } from '../../../shared/types/admin/User';
-import { doc } from '../useFirestoreAdmin';
-import { findUser, storeCharge } from './stripeWebhook';
+import { Contribution, ContributionSourceKey, StatusKey } from '../../../shared/src/types/admin/Contribution';
+import { User, UserStatusKey } from '../../../shared/src/types/admin/User';
+import { doc } from '../../../shared/src/firebase/firestoreAdmin';
+import { findUser, storeCharge } from '../../src/etl/stripeWebhook';
 import Timestamp = firestore.Timestamp;
 
 const { cleanup } = firebaseFunctionsTest();

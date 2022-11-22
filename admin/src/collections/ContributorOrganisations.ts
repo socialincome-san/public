@@ -1,5 +1,5 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { ContributorOrganisation, CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH } from '@socialincome/shared/types';
+import { ContributorOrganisation, CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH } from '../../../shared/src/types';
 
 // this collection is publicly accessible. no personal data of user should be added here.
 export const contributorOrganisationsCollection = buildCollection<ContributorOrganisation>({

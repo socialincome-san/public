@@ -9,7 +9,7 @@ import firebase from 'firebase/compat/app';
 import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore';
 import * as fs from 'fs';
 import * as path from 'path';
-import { AdminUser } from '../../shared/types';
+import { AdminUser } from '../src/types';
 
 let testEnvironment: RulesTestEnvironment;
 let globalAdminStore: firebase.firestore.Firestore;

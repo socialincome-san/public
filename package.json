@@ -19,6 +19,7 @@
 		"functions:serve": "$npm_execpath --workspace=@socialincome/functions run serve",
 		"functions:serve:watch": "$npm_execpath --workspace=@socialincome/functions run serve:watch",
 		"functions:test": "$npm_execpath --workspace=@socialincome/functions run test",
+		"shared:test": "$npm_execpath --workspace=@socialincome/shared run test",
 		"firebase:serve": "firebase emulators:start --project social-income-prod --config firebase.json --import ./seed",
 		"firebase:export": "firebase emulators:export --project social-income-prod --force ./seed",
 		"survey:build": "$npm_execpath --workspace=@socialincome/ui --workspace=@socialincome/survey run build",
