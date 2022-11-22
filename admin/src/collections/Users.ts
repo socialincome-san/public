@@ -79,7 +79,6 @@ const ReferralCol: AdditionalFieldDelegate<User> = {
 	dependencies: ['personal'],
 };
 
-
 export const usersCollection = buildCollection<User>({
 	path: USER_FIRESTORE_PATH,
 	group: 'Contributors',
@@ -186,14 +185,14 @@ export const usersCollection = buildCollection<User>({
 		},
 		location: {
 			name: 'Location',
-			description: "Living location defined by List of ISO 3166 country codes",
+			description: 'Living location defined by List of ISO 3166 country codes',
 			dataType: 'string',
 			defaultValue: 'CH',
 			validation: {
 				required: true,
 				length: 2,
-				uppercase: true
-			}
+				uppercase: true,
+			},
 		},
 		currency: {
 			name: 'Currency',
@@ -214,6 +213,6 @@ export const usersCollection = buildCollection<User>({
 			name: 'stripe customer id',
 			dataType: 'string',
 			disabled: true,
-		}
+		},
 	}),
 });

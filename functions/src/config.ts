@@ -4,8 +4,6 @@ export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET!;
 export const POSTFINANCE_EMAIL_USER = process.env.POSTFINANCE_EMAIL_USER!;
 export const POSTFINANCE_EMAIL_PASSWORD = process.env.POSTFINANCE_EMAIL_PASSWORD!;
 
-
-
 // emulator envs
 export const FB_AUTH_EMULATOR_URL = '0.0.0.0';
 export const FB_FIRESTORE_EMULATOR_HOST = '0.0.0.0';
