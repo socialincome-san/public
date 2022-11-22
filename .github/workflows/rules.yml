@@ -1,0 +1,33 @@
+name: Rules (firestore & storage)
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check_applicability:
+    name: Check Applicability
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          paths: '["firestore.rules", "storage.rules", ".github/workflows/rules.yml"]'
+
+  deploy:
+    name: Deploy Firestore Rules
+    needs: check_applicability
+    if: needs.check_applicability.outputs.should_skip != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Install firebase-tools
+        run: npm -g install firebase-tools
+
+      - name: Deploy to Firebase
+        if: github.ref == 'refs/heads/main'
+        run: firebase deploy --only storage,firestore:rules --token ${{ secrets.FIREBASE_TOKEN }} --project social-income-prod

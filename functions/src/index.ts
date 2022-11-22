@@ -1,7 +1,8 @@
-import { dummyFunction as dummyFunc } from './dummy/dummyFunction';
-import { bulkDonationCertificateBuilderFunction as bulkDonationCertificateFunc } from './pdfBuilder/donationCertificateBuilderFunction';
 import { importBalanceMailFunc } from './etl/importPostfinanceBalance';
+import { batchImportStripeChargesFunc, stripeChargeHookFunc } from './etl/stripeWebhook';
+import { bulkDonationCertificateBuilderFunction as bulkDonationCertificateFunc } from './pdfBuilder/donationCertificateBuilderFunction';
 
-export const importBalanceMail = importBalanceMailFunc;
+export const batchImportStripeCharges = batchImportStripeChargesFunc;
 export const bulkDonationCertificateBuilderFunction = bulkDonationCertificateFunc;
-export const dummyFunction = dummyFunc;
+export const importBalanceMail = importBalanceMailFunc;
+export const stripeChargeHook = stripeChargeHookFunc;

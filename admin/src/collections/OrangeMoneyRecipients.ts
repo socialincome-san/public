@@ -1,5 +1,5 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { OrangeMoneyRecipient, ORANGE_MONEY_RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/types';
+import { OrangeMoneyRecipient, ORANGE_MONEY_RECIPIENT_FIRESTORE_PATH } from '../../../shared/src/types';
 
 export const orangeMoneyRecipientsCollection = buildCollection<OrangeMoneyRecipient>({
 	name: 'Orange Money Recipients',

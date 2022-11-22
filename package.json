@@ -1,6 +1,6 @@
 {
 	"name": "@socialincome/monorepo",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"private": true,
 	"workspaces": [
 		"admin",
@@ -17,15 +17,18 @@
 		"functions:build": "$npm_execpath --workspace=@socialincome/functions run build",
 		"functions:deploy": "$npm_execpath --workspace=@socialincome/functions run deploy",
 		"functions:serve": "$npm_execpath --workspace=@socialincome/functions run serve",
+		"functions:serve:watch": "$npm_execpath --workspace=@socialincome/functions run serve:watch",
 		"functions:test": "$npm_execpath --workspace=@socialincome/functions run test",
-		"firebase:serve": "firebase emulators:start --project demo-social-income-prod --config firebase.json --import ./seed",
-		"firebase:export": "firebase emulators:export --project demo-social-income-prod --force ./seed",
+		"shared:test": "$npm_execpath --workspace=@socialincome/shared run test",
+		"firebase:serve": "firebase emulators:start --project social-income-prod --config firebase.json --import ./seed",
+		"firebase:export": "firebase emulators:export --project social-income-prod --force ./seed",
 		"survey:build": "$npm_execpath --workspace=@socialincome/ui --workspace=@socialincome/survey run build",
 		"survey:serve": "$npm_execpath run ui:build && $npm_execpath --workspace=@socialincome/survey run serve",
 		"ui:build": "$npm_execpath --workspace=@socialincome/ui run build",
 		"ui:serve": "$npm_execpath --workspace=@socialincome/ui run serve"
 	},
 	"devDependencies": {
+		"firebase-tools": "^11.16.0",
 		"prettier": "^2.6.2",
 		"prettier-plugin-organize-imports": "^3.1.1"
 	}

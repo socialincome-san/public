@@ -21,6 +21,7 @@ jobs:
         uses: fkirc/skip-duplicate-actions@v5
         with:
           paths: '["ui/**", "package-lock.json", ".github/workflows/ui.yml"]'
+          skip_after_successful_duplicate: "false"
 
   build:
     name: Build UI

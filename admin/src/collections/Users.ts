@@ -1,5 +1,10 @@
-import { AdditionalFieldDelegate, buildCollection, buildProperties, buildProperty } from '@camberi/firecms';
-import { CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH, User, USER_FIRESTORE_PATH } from '@socialincome/shared/types';
+import { AdditionalFieldDelegate, buildCollection, buildProperties } from '@camberi/firecms';
+import {
+	CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH,
+	UserStatusKey,
+	User,
+	USER_FIRESTORE_PATH,
+} from '../../../shared/src/types';
 import { contributionsCollection } from './Contributions';
 import { donationCertificateCollection } from './DonationCertificate';
 import { BulkDonationCertificateAction } from '../collection-actions/bulkDonationCertificiateCreation';
@@ -9,7 +14,7 @@ const FirstNameCol: AdditionalFieldDelegate<User> = {
 	name: 'First Name',
 	builder: ({ entity }) => {
 		const values = entity.values;
-		return ('personal' in values && 'name' in values.personal && values.personal.name) || '';
+		return values?.personal?.name || '';
 	},
 	dependencies: ['personal'],
 };
@@ -19,7 +24,7 @@ const LastNameCol: AdditionalFieldDelegate<User> = {
 	name: 'Last Name',
 	builder: ({ entity }) => {
 		const values = entity.values;
-		return ('personal' in values && 'lastname' in values.personal && values.personal.lastname) || '';
+		return values?.personal?.lastname || '';
 	},
 	dependencies: ['personal'],
 };
@@ -29,7 +34,7 @@ const GenderCol: AdditionalFieldDelegate<User> = {
 	name: 'Gender',
 	builder: ({ entity }) => {
 		const values = entity.values;
-		return ('personal' in values && 'gender' in values.personal && values.personal.gender) || '';
+		return values?.personal?.gender || '';
 	},
 	dependencies: ['personal'],
 };
@@ -39,7 +44,7 @@ const PhoneCol: AdditionalFieldDelegate<User> = {
 	name: 'Phone',
 	builder: ({ entity }) => {
 		const values = entity.values;
-		return ('personal' in values && 'phone' in values.personal && values.personal.phone) || '';
+		return values?.personal?.phone || '';
 	},
 	dependencies: ['personal'],
 };
@@ -49,7 +54,7 @@ const CountryCol: AdditionalFieldDelegate<User> = {
 	name: 'Country',
 	builder: ({ entity }) => {
 		const values = entity.values;
-		return ('address' in values && 'country' in values.address && values.address.country) || '';
+		return values?.address?.country || '';
 	},
 	dependencies: ['address'],
 };
@@ -59,7 +64,7 @@ const CityCol: AdditionalFieldDelegate<User> = {
 	name: 'City',
 	builder: ({ entity }) => {
 		const values = entity.values;
-		return ('address' in values && 'city' in values.address && values.address.city) || '';
+		return values.address?.city || '';
 	},
 	dependencies: ['address'],
 };
@@ -69,7 +74,7 @@ const ReferralCol: AdditionalFieldDelegate<User> = {
 	name: 'Referral',
 	builder: ({ entity }) => {
 		const values = entity.values;
-		return ('personal' in values && 'referral' in values.personal && values.personal.referral) || '';
+		return values.personal?.referral || '';
 	},
 	dependencies: ['personal'],
 };
