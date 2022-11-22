@@ -4,10 +4,10 @@ import imaps from 'imap-simple';
 
 import _ from 'lodash';
 import { simpleParser, Source } from 'mailparser';
-import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../shared/types';
+import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../shared/src/types';
 import { POSTFINANCE_EMAIL_PASSWORD, POSTFINANCE_EMAIL_USER } from '../config';
 
-import { doc } from '../useFirestoreAdmin';
+import { doc } from '../../../shared/src/firebase/firestoreAdmin';
 
 /**
  * Function periodically connects to the gmail account where we send the postfinance balance statements,

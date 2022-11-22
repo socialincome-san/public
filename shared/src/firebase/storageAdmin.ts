@@ -1,14 +1,12 @@
 import { Bucket } from '@google-cloud/storage';
 import { randomBytes } from 'crypto';
 import { getStorage } from 'firebase-admin/storage';
-import { getOrInitializeApp } from './useApp';
-
-getOrInitializeApp();
+import { getOrInitializeApp } from './app';
 
 /**
  * direct access to the admin storage instance. Deployed, this has full admin access to the data.
  */
-export const storage = getStorage();
+export const useStorage = () => getStorage(getOrInitializeApp());
 
 /**
  * Unfortunately, in contrast to the client sdk, the admin storage sdk doesn't support to directly retrieve the download url of a file
