@@ -62,3 +62,17 @@ services:
     ports:
       - "6006:6006"
     command: /bin/bash -c "npm install && npm run ui:serve"
+
+  website:
+    image: socialincome/local-helper
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/home/node
+    ports:
+      - "3001:3001" # website
+      - "9099:9099" # authentication emulator
+      - "8080:8080" # firestore emulator
+      - "4000:4000" # emulator UI
+    command:  /bin/bash -c "npm install && npm run website:serve:emulator"
