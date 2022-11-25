@@ -1,3 +1,3 @@
 export const appConfig = {
-    supportedCurrencies: ['CHF', 'USD', 'EUR']
-}
+	supportedCurrencies: ['CHF', 'USD', 'EUR'],
+};
