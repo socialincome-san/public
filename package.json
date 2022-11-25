@@ -32,7 +32,9 @@
 		"website:serve": "$npm_execpath --workspace=@socialincome/website run serve",
 		"website:serve:emulator": "$npm_execpath --workspace=@socialincome/website run serve:emulator",
 		"website:start": "$npm_execpath --workspace=@socialincome/website run start",
-		"website:start:emulator": "$npm_execpath --workspace=@socialincome/website run start:emulator"
+		"website:start:emulator": "$npm_execpath --workspace=@socialincome/website run start:emulator",
+		"website:test": "$npm_execpath --workspace=@socialincome/website run test",
+		"website:test:emulator": "$npm_execpath --workspace=@socialincome/website run test:emulator"
 	},
 	"devDependencies": {
 		"firebase-tools": "^11.16.0",

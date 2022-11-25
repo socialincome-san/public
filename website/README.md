@@ -37,6 +37,19 @@ or without docker use
 npm run website:build:emulator
 ```
 
+## Run Tests
+
+With docker
+```
+make website-test
+```
+
+or without docker use
+
+```
+npm run website:test:emulator
+```
+
 ## Deployment
 
 The website is hosted on vercel.com. The deployment is done
