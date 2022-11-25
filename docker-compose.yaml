@@ -72,4 +72,4 @@ services:
       - ./:/home/node
     ports:
       - "3001:3001" # website
-    command:  /bin/bash -c "npm install && npm run website:serve:emulator"
+    command: /bin/bash -c "npm install && npm run website:serve:emulator"

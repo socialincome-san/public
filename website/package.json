@@ -9,7 +9,8 @@
 		"build:emulator": "firebase emulators:exec --project social-income-prod --only firestore --config ../firebase.json --import ../seed  'npm run build'",
 		"start": "next start -p 3001",
 		"start:emulator": "firebase emulators:exec --project social-income-prod --only firestore --config ../firebase.json --import ../seed  'npm run start'",
-		"lint": "next lint"
+		"lint": "next lint",
+		"format-code": "prettier --write --config ../.prettierrc ."
 	},
 	"dependencies": {
 		"@types/node": "18.11.9",
