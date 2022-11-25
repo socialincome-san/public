@@ -6,7 +6,7 @@ import { mockRequest } from '../../../__utils__/mocks';
 
 describe('Finance page should', () => {
 	it('render page unchanged', async () => {
-		const { container } = render(<Finances currency={'chf'} />);
+		const { container } = render(<Finances currency={'CHF'} />);
 		expect(container).toMatchSnapshot();
 	});
 });

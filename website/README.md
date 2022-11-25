@@ -51,6 +51,20 @@ or without docker use
 npm run website:test:emulator
 ```
 
+To update the snapshots used for regression tests run:
+
+With docker
+
+```
+make website-test-update
+```
+
+or without docker use
+
+```
+npm run website:test:update:emulator
+```
+
 ## Deployment
 
 The website is hosted on vercel.com. The deployment is done

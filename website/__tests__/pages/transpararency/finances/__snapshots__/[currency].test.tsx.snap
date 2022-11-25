@@ -14,7 +14,7 @@ exports[`Finance page should render page unchanged 1`] = `
       <section>
         <p>
           You are seeing the transparency page for 
-          chf
+          CHF
         </p>
       </section>
     </main>

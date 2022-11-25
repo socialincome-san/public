@@ -11,6 +11,8 @@
 		"start:emulator": "firebase emulators:exec --project social-income-prod --only firestore --config ../firebase.json --import ../seed  'npm run start'",
 		"test": "jest",
 		"test:emulator": "firebase emulators:exec --project social-income-prod --only firestore --config ../firebase.json --import ../seed  'npm run test'",
+		"test:update": "jest --updateSnapshot",
+		"test:update:emulator": "firebase emulators:exec --project social-income-prod --only firestore --config ../firebase.json --import ../seed  'npm run test:update'",
 		"lint": "next lint",
 		"format-code": "prettier --write --config ../.prettierrc --ignore-path ../.prettierignore ."
 	},
