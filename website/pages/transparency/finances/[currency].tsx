@@ -53,7 +53,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const financesMiddleware = (request: NextRequest) => {
 	if (request.nextUrl.pathname.endsWith('/transparency/finances')) {
 		// TODO add logic leveraging the request.geo.country information
-		return NextResponse.redirect(new URL(request.nextUrl.pathname + '/chf', request.url));
+		const redirectUrl = request.nextUrl.clone();
+		redirectUrl.pathname = redirectUrl.pathname + '/chf';
+		return NextResponse.redirect(redirectUrl);
 	}
 	return undefined;
 };
