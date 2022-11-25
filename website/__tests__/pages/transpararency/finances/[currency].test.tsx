@@ -1,7 +1,15 @@
+import { render } from '@testing-library/react';
 import { NextURL } from 'next/dist/server/web/next-url';
 import { instance, when } from 'ts-mockito';
-import { financesMiddleware } from '../../../../pages/transparency/finances/[currency]';
+import Finances, { financesMiddleware } from '../../../../pages/transparency/finances/[currency]';
 import { mockRequest } from '../../../__utils__/mocks';
+
+describe('Finance page should', () => {
+	it('render page unchanged', async () => {
+		const { container } = render(<Finances currency={'chf'} />);
+		expect(container).toMatchSnapshot();
+	});
+});
 
 describe('financesMiddleware should', () => {
 	it('return noop for unrelated path', async () => {

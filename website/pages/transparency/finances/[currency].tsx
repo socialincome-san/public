@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Layout from '../../../components/layout';
 import { appConfig } from '../../../config';
 
-interface Props extends GetStaticProps {
+interface Props {
 	currency: string;
 }
 
