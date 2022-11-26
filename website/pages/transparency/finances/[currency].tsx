@@ -21,7 +21,9 @@ export default function Finances({ currency, balance }: Props) {
 }
 
 /**
- * Incrementally retrieve the stats from firestore
+ * Incrementally retrieve the stats from firestore.
+ * getStaticProps are only executed at build time or incrementally on the server. It's therefore safe to
+ * use the admin firestore directly.
  */
 export const getStaticProps: GetStaticProps = async (context) => {
 	const currency = context.params?.currency as string;
