@@ -8,4 +8,7 @@ const nextConfig = {
 	},
 };
 
-module.exports = nextConfig;
+// required to trigger compilation of shared code
+const withTranspilation = require('next-transpile-modules')(['@socialincome/shared']);
+
+module.exports = withTranspilation(nextConfig);

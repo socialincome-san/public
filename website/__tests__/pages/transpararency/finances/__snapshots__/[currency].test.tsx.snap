@@ -16,6 +16,10 @@ exports[`Finance page should render page unchanged 1`] = `
           You are seeing the transparency page for 
           CHF
         </p>
+        <p>
+          Balance retrieved from firestore: 
+          200
+        </p>
       </section>
     </main>
   </div>
