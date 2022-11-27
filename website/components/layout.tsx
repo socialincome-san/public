@@ -13,7 +13,7 @@ export default function Layout({ children, title }: Props) {
 	return (
 		<div className={styles.container}>
 			<Head>
-				<title>title</title>
+				<title>{title}</title>
 				<header className={styles.header}>
 					<h1>
 						<Link href="/">{siteName}</Link>

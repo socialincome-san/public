@@ -35,6 +35,10 @@ website-test:
 website-test-update:
 	docker compose run --rm website bash -c "npm install && npm run website:test:update:emulator"
 
+# updating translation files using the keys used in the code
+website-extract-translations:
+	docker compose run --rm website bash -c "npm run website:extract-translations"
+
 firebase-serve:
 	docker compose up firebase
 
