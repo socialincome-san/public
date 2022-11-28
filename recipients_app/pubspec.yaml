@@ -32,6 +32,7 @@ dependencies:
   rounded_loading_button: ^2.0.8
   url_launcher: ^6.0.20
   firebase_messaging: ^14.0.3
+  flutter_local_notifications: ^12.0.3
 
 dev_dependencies:
   flutter_test:
