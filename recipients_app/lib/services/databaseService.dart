@@ -83,4 +83,13 @@ class DatabaseService {
         .doc(snapshot.id)
         .update({'next_survey': date});
   }
+
+  Future<void> updatePushToken(String pushToken) async {
+    var snapshot = await getUserSnapshot();
+
+    await firestore
+        .collection('/recipients')
+        .doc(snapshot.id)
+        .update({'push_token': FieldValue.arrayUnion([pushToken]) });
+  }
 }
