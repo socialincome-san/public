@@ -6,7 +6,6 @@ import { createAndUploadDonationCertificate } from './generateDonationCertificat
 import { Timestamp } from 'firebase-admin/firestore';
 
 export const bulkDonationCertificateBuilderFunction = functions.https.onCall(async (data, context) => {
-
 	const now = new Date();
 	const currentDate = now.toLocaleDateString('de-DE');
 	const calculationYear: string = data.year;
@@ -22,10 +21,10 @@ export const bulkDonationCertificateBuilderFunction = functions.https.onCall(asy
 	
 	return responseString;
 
+	return responseString;
 });
 
 export const prepareData = async (data: any, calculationYear: string, currentDate: string) => {
-
 	let contributions: any[] = [];
 	const firestore = useFirestore();
 
@@ -47,12 +46,12 @@ export const prepareData = async (data: any, calculationYear: string, currentDat
 		currentDate: currentDate,
 		address: data.values.address,
 		personal: data.values.personal,
-		financials: await calculateFinancials(contributions, calculationYear)
-	}
+		financials: await calculateFinancials(contributions, calculationYear),
+	};
 	return pdfData;
-}
+};
 
-export const calculateFinancials = async(contributions: Contribution[], year: string) => {
+export const calculateFinancials = async (contributions: Contribution[], year: string) => {
 	let total_chf = 0;
 	let total_usd = 0;
 	let total_eur = 0;
@@ -88,8 +87,8 @@ export const calculateFinancials = async(contributions: Contribution[], year: st
 		total_chf: total_chf,
 		total_eur: total_eur,
 		total_usd: total_usd,
-		lineItems: lineItems
+		lineItems: lineItems,
 	};
 	console.log(financialData);
 	return financialData;
-}
+};

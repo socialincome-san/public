@@ -11,6 +11,7 @@ export const createAndUploadDonationCertificate = async (data: any) => {
 	} else {
 		return false;
 	}
+};
 
 }
 
@@ -171,5 +172,4 @@ export const translationStubFrench = async () => {
 	translations.set('donation-certificate.footer-2',`Association à but non lucratif\n\nIDE: CHE-289.611.695\n\nDUNS: 48-045-6376`);
 	translations.set('donation-certificate.footer-3',`Contact\n\n\nwww.socialincome.org`);
 	return translations;
-
-}
+};
