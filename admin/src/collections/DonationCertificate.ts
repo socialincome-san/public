@@ -1,5 +1,5 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { DONATION_CERTIFICATE_FIRESTORE_PATH, DonationCertificate } from '@socialincome/shared/types';
+import { DONATION_CERTIFICATE_FIRESTORE_PATH, DonationCertificate } from '@socialincome/shared/src/types';
 
 
 export const donationCertificateCollection = buildCollection<DonationCertificate>({
@@ -14,11 +14,6 @@ export const donationCertificateCollection = buildCollection<DonationCertificate
 		delete: true,
 	}),
 	properties: buildProperties<DonationCertificate>({
-		created: {
-			dataType: 'date',
-			name: 'Created at',
-			disabled: true
-		},
         url: {
             dataType: 'string',
             name: 'Document Link',

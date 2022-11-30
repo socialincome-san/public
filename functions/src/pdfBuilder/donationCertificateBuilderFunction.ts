@@ -1,19 +1,24 @@
 import * as functions from 'firebase-functions';
-import { Contribution } from '../../../shared/types';
-import { firestore } from '../useFirestoreAdmin';
+import { Contribution } from '../../../shared/src/types';
+import { useFirestore } from '../../../shared/src/firebase/firestoreAdmin';
+
 import { createAndUploadDonationCertificate } from './generateDonationCertificatePDF';
+import { Timestamp } from 'firebase-admin/firestore';
 
 export const bulkDonationCertificateBuilderFunction = functions.https.onCall(async (data, context) => {
 
 	const now = new Date();
 	const currentDate = now.toLocaleDateString('de-DE');
 	const calculationYear: string = data.year;
+	let numberOfPdfCreationSuccessful = 0;
  
 	for await (const user of data.users ) {
-		await createAndUploadDonationCertificate(await prepareData(user, calculationYear, currentDate));
+		if( await createAndUploadDonationCertificate(await prepareData(user, calculationYear, currentDate))) {
+			numberOfPdfCreationSuccessful += 1;
+		}
 	}
 
-	const responseString: string = `Donation Certificates for ${data.users.length} users created for the year ${calculationYear}`;
+	const responseString: string = `Donation Certificates for ${numberOfPdfCreationSuccessful} of ${data.users.length} users executed for the year ${calculationYear}`;
 	
 	return responseString;
 
@@ -22,7 +27,9 @@ export const bulkDonationCertificateBuilderFunction = functions.https.onCall(asy
 export const prepareData = async (data: any, calculationYear: string, currentDate: string) => {
 
 	let contributions: any[] = [];
-	firestore.collection("users/" + data.id + "/contributions")
+	const firestore = useFirestore();
+
+	await firestore.collection("users/" + data.id + "/contributions")
     .get()
     .then((querySnapshot) => {
         querySnapshot.forEach((element) => {
@@ -50,35 +57,39 @@ export const calculateFinancials = async(contributions: Contribution[], year: st
 	let total_usd = 0;
 	let total_eur = 0;
 	let lineItems:any[] = [];
-	for (let j = 0; j < contributions.length; ++j) {
-		const date = contributions[j].created;
+
+	for await (const contribution of contributions ) {
+		
+		const timestamp = contribution.created as Timestamp;
+		const date = new Date(timestamp.seconds * 1000);
 		
 		const contributionYear = date.getFullYear().toString();
 
 		if (year === contributionYear.toString()) {
-			switch (contributions[j].currency) {
+			switch (contribution.currency) {
 				case 'chf':
-					total_chf += contributions[j].amount;                              
+					total_chf += contribution.amount;                              
 					break;
 				case 'usd':
-					total_usd += contributions[j].amount;
+					total_usd += contribution.amount;
 					break;
 				case 'eur':
-					total_eur += contributions[j].amount;
+					total_eur += contribution.amount;
 					break;
 			}
 			const dateString = date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear();
-			const lineItem = dateString + ";" + contributions[j].amount + ";" + contributions[j].currency;
+			const lineItem = dateString + ";" + contribution.amount + ";" + contribution.currency;
 			lineItems.push(lineItem.toString());
 		}
+
 	}
+
 	const financialData = {
 		total_chf: total_chf,
 		total_eur: total_eur,
 		total_usd: total_usd,
 		lineItems: lineItems
 	};
-	console.log('financials: ');
 	console.log(financialData);
 	return financialData;
 }
