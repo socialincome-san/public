@@ -10,5 +10,5 @@ Future<void> main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await Firebase.initializeApp();
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }

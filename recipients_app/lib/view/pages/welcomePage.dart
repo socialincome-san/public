@@ -10,21 +10,24 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class WelcomePage extends StatelessWidget {
-  final TextStyle textbuttonStyle = TextStyle(color: Colors.white);
+  final TextStyle textbuttonStyle = const TextStyle(color: Colors.white);
   // prevents rebuilding new widget which would lose focus
-  final SocialIncomeAlert ineligible = SocialIncomeAlert(
+  final SocialIncomeAlert ineligible = const SocialIncomeAlert(
       "Number not eligible.", Icons.close, "ineligible",
       textButton: "Contact us for support");
 
-  final SocialIncomeAlert formatError = SocialIncomeAlert(
+  final SocialIncomeAlert formatError = const SocialIncomeAlert(
       "This is not a valid phone number", Icons.close, "formatError");
 
-  final SocialIncomeAlert verificationCodeError = SocialIncomeAlert(
+  final SocialIncomeAlert verificationCodeError = const SocialIncomeAlert(
       "False verification code. Try again", Icons.close, "CodeWrong");
+
+  const WelcomePage({super.key});
   bool keyboardVisible() {
     return WidgetsBinding.instance.window.viewInsets.bottom == 0.0;
   }
 
+  @override
   Widget build(BuildContext context) {
     return Consumer2<Registration, AlertVisibility>(
         builder: (context, registration, alertVisibility, child) {
@@ -60,15 +63,15 @@ class WelcomePage extends StatelessWidget {
                       formatError
                     else if (alertVisibility.displayVerificationCodeError)
                       verificationCodeError,
-                    Text("Social Income",
+                    const Text("Social Income",
                         style: TextStyle(color: Colors.white, fontSize: 36)),
                     if (keyboardVisible())
                       Image(
-                        image: AssetImage('assets/phone.png'),
+                        image: const AssetImage('assets/phone.png'),
                         height: MediaQuery.of(context).size.height * 0.4,
                       ),
                     if (keyboardVisible())
-                      Text("Universal Basic Income\nfrom Human to Human",
+                      const Text("Universal Basic Income\nfrom Human to Human",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
@@ -79,7 +82,7 @@ class WelcomePage extends StatelessWidget {
                   ]),
             ),
           ),
-          if (alertVisibility.displayContact) SocialIncomeContact(),
+          if (alertVisibility.displayContact) const SocialIncomeContact(),
         ]),
       );
     });

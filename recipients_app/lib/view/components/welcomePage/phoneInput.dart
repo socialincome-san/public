@@ -14,6 +14,8 @@ final PhoneNumber number = PhoneNumber(isoCode: "SL");
 class PhoneInput extends StatelessWidget {
   final AuthService auth = AuthService.instance();
 
+  PhoneInput({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<Registration, AlertVisibility>(
@@ -51,25 +53,25 @@ class PhoneInput extends StatelessWidget {
                   onInputChanged: (PhoneNumber phoneNumber) {
                     registration.setPhoneNumber(phoneNumber.phoneNumber);
                   },
-                  selectorConfig: SelectorConfig(
+                  selectorConfig: const SelectorConfig(
                       selectorType: PhoneInputSelectorType.DIALOG),
-                  selectorTextStyle: TextStyle(
+                  selectorTextStyle: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
                   ),
                   inputDecoration: InputDecoration(
                     labelText: "Orange Money Number",
-                    hintStyle: TextStyle(color: Colors.grey),
+                    hintStyle: const TextStyle(color: Colors.grey),
                     labelStyle:
                         TextStyle(color: Colors.grey[300], fontSize: 16),
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(width: 1.0, color: siDarkBlue)),
                   ),
-                  textStyle: TextStyle(
+                  textStyle: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
                   ),
-                  inputBorder: OutlineInputBorder(
+                  inputBorder: const OutlineInputBorder(
                     borderSide: BorderSide(
                         style: BorderStyle.solid,
                         width: 200.0,
@@ -99,7 +101,7 @@ class PhoneInput extends StatelessWidget {
                       auth.verifyPhoneNumber(registration.phoneNumber);
                       registration.toggleCodeSent();
                     },
-                    child: Text('Continue')),
+                    child: const Text('Continue')),
               )
             ]),
       ]);

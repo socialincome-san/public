@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 class ChangeableUserInformation extends StatelessWidget {
   final String section;
 
-  ChangeableUserInformation(this.section);
+  const ChangeableUserInformation(this.section, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +22,8 @@ class ChangeableUserInformation extends StatelessWidget {
                 readOnly: birthDate,
                 decoration: InputDecoration(
                     labelText: section,
-                    enabledBorder:
-                        OutlineInputBorder(borderSide: BorderSide(width: 1.0))),
+                    enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(width: 1.0))),
                 onTap: () async {
                   if (birthDate) {
                     {
@@ -51,8 +51,8 @@ class ChangeableUserInformation extends StatelessWidget {
                 decoration: InputDecoration(
                     floatingLabelBehavior: FloatingLabelBehavior.auto,
                     labelText: section,
-                    enabledBorder:
-                        OutlineInputBorder(borderSide: BorderSide(width: 1.0))),
+                    enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(width: 1.0))),
                 onChanged: (value) {
                   currentUser.updateBasicInfo(section, value);
                 },

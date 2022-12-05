@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class IncomePage extends StatelessWidget {
+  const IncomePage({super.key});
+
   List<Widget> transactionCards(CurrentUser currentUser) {
     return {
       for (var transaction in currentUser.transactions ?? List.empty())
         Padding(
-          padding: EdgeInsets.only(top: 8),
+          padding: const EdgeInsets.only(top: 8),
           child: TransactionCard(transaction),
         )
     }.toList();
@@ -22,12 +24,12 @@ class IncomePage extends StatelessWidget {
       return Padding(
           padding: edgeInsetsAll12,
           child: Column(children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(bottom: 8),
               child: BalanceCard(),
             ),
-            transactionCards(currentUser).length == 0
-                ? Expanded(
+            transactionCards(currentUser).isEmpty
+                ? const Expanded(
                     child: Center(
                       child: Text(
                           'All future Social Income payments will be shown on this screen.'),

@@ -12,24 +12,26 @@ import 'package:provider/provider.dart';
 import '../socialIncomeContact.dart';
 
 class AccountPage extends StatelessWidget {
+  const AccountPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<CurrentUser, AlertVisibility>(
         builder: (context, currentUser, alertVisibility, child) {
-      var firstNameCard = ChangeableUserInformation("First Name");
-      var lastNameCard = ChangeableUserInformation("Last Name");
-      var preferredNameCard = ChangeableUserInformation("Preferred Name");
-      var dateOfBirthCard = ChangeableUserInformation("Date of Birth");
-      var emailCard = ChangeableUserInformation("Email");
-      var phoneCard = ChangeableUserInformation("Phone Number");
+      var firstNameCard = const ChangeableUserInformation("First Name");
+      var lastNameCard = const ChangeableUserInformation("Last Name");
+      var preferredNameCard = const ChangeableUserInformation("Preferred Name");
+      var dateOfBirthCard = const ChangeableUserInformation("Date of Birth");
+      var emailCard = const ChangeableUserInformation("Email");
+      var phoneCard = const ChangeableUserInformation("Phone Number");
       return Stack(
         children: [
           Container(
-            margin: EdgeInsets.only(left: 16, right: 16),
+            margin: const EdgeInsets.only(left: 16, right: 16),
             child: ListView(
               children: [
                 // Suitable for small number of widgets?
-                ListTile(
+                const ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Center(
                     child: Text(
@@ -44,7 +46,7 @@ class AccountPage extends StatelessWidget {
                 dateOfBirthCard,
                 emailCard,
                 phoneCard,
-                ListTile(
+                const ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Center(
                     child: Text(
@@ -59,7 +61,7 @@ class AccountPage extends StatelessWidget {
                 ),
                 UnchangeableUserInformation(
                   "Amount Received",
-                  "SLE " + currentUser.totalIncome().toString(),
+                  "SLE ${currentUser.totalIncome()}",
                 ),
                 UnchangeableUserInformation(
                   "Country",
@@ -69,7 +71,7 @@ class AccountPage extends StatelessWidget {
                   "Orange Money Number",
                   currentUser.orangePhoneNumber ?? "",
                 ),
-                ListTile(
+                const ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Center(
                     child: Text("Support",
@@ -86,10 +88,10 @@ class AccountPage extends StatelessWidget {
                   onPressed: () {
                     alertVisibility.setContactVisibility(true);
                   },
-                  child: Text("Get in touch",
+                  child: const Text("Get in touch",
                       style: TextStyle(color: Colors.black)),
                 ),
-                ListTile(
+                const ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Center(
                     child: Text(
@@ -104,18 +106,18 @@ class AccountPage extends StatelessWidget {
                     Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => WelcomePage()))
+                                builder: (context) => const WelcomePage()))
                         .then((value) => FirebaseAuth.instance.signOut());
                   },
-                  child: Text("Sign Out"),
+                  child: const Text("Sign Out"),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 1,
                 )
               ],
             ),
           ),
-          if (alertVisibility.displayContact) SocialIncomeContact(),
+          if (alertVisibility.displayContact) const SocialIncomeContact(),
         ],
       );
     });
