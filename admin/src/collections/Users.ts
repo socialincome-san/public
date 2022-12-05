@@ -1,13 +1,8 @@
 import { AdditionalFieldDelegate, buildCollection, buildProperties } from '@camberi/firecms';
-import {
-	CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH,
-	UserStatusKey,
-	User,
-	USER_FIRESTORE_PATH,
-} from '../../../shared/src/types';
+import { CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH, User, USER_FIRESTORE_PATH } from '../../../shared/src/types';
+import { CreateDonationCertificatesAction } from '../extra_actions/CreateDonationCertificatesAction';
 import { contributionsCollection } from './Contributions';
 import { donationCertificateCollection } from './DonationCertificate';
-import { BulkDonationCertificateAction } from '../collection-actions/bulkDonationCertificiateCreation';
 
 const FirstNameCol: AdditionalFieldDelegate<User> = {
 	id: 'first_name_col',
@@ -94,7 +89,7 @@ export const usersCollection = buildCollection<User>({
 	}),
 	additionalColumns: [FirstNameCol, LastNameCol, GenderCol, PhoneCol, CountryCol, CityCol, ReferralCol],
 	subcollections: [contributionsCollection, donationCertificateCollection],
-	extraActions: BulkDonationCertificateAction,
+	extraActions: CreateDonationCertificatesAction,
 	properties: buildProperties<User>({
 		test_user: {
 			name: 'Test User',

@@ -2,6 +2,7 @@ import { DocumentReference } from 'firebase-admin/firestore';
 import { CollectionReference } from 'firebase-admin/lib/firestore';
 import * as functions from 'firebase-functions';
 import Stripe from 'stripe';
+import { collection, findFirst } from '../../../shared/src/firebase/firestoreAdmin';
 import {
 	Contribution,
 	ContributionSourceKey,
@@ -10,13 +11,12 @@ import {
 } from '../../../shared/src/types/admin/Contribution';
 import { splitName, User, UserStatusKey, USER_FIRESTORE_PATH } from '../../../shared/src/types/admin/User';
 import { STRIPE_API_READ_KEY, STRIPE_WEBHOOK_SECRET } from '../config';
-import { collection, findFirst } from '../../../shared/src/firebase/firestoreAdmin';
 
 /**
  * Stripe webhook to ingest charge events into firestore.
  * Adds the relevant information to the contributions subcollection of users.
  */
-export const stripeChargeHookFunc = functions.https.onRequest(async (request, response) => {
+export const stripeChargeHookFunction = functions.https.onRequest(async (request, response) => {
 	const stripe = new Stripe(STRIPE_API_READ_KEY, { apiVersion: '2022-08-01' });
 	try {
 		const sig = request.headers['stripe-signature']!;
@@ -170,7 +170,7 @@ const constructStatus = (status: Stripe.Charge.Status) => {
  * Continuous update is done through the [stripeWebhook].
  * TODO @andrashee: add auth check. Only global admins should be able to trigger this.
  */
-export const batchImportStripeChargesFunc = functions
+export const batchImportStripeChargesFunction = functions
 	.runWith({
 		timeoutSeconds: 540, // max timeout supported by firebase
 	})
