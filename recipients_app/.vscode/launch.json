@@ -8,24 +8,14 @@
 			"name": "dev",
 			"request": "launch",
 			"type": "dart",
-			"args": [
-				"--flavor",
-				"dev",
-				"-t",
-				"lib/main_dev.dart"
-			],
+			"args": ["--flavor", "dev", "-t", "lib/main_dev.dart"],
 			"program": "lib/main_dev.dart"
 		},
 		{
 			"name": "prod",
 			"request": "launch",
 			"type": "dart",
-			"args": [
-				"--flavor",
-				"prod",
-				"-t",
-				"lib/main.dart"
-			],
+			"args": ["--flavor", "prod", "-t", "lib/main.dart"],
 			"program": "lib/main.dart"
 		}
 	]
