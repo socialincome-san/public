@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:app/models/currentUser.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -38,7 +40,7 @@ class ChangeableUserInformation extends StatelessWidget {
                               DateFormat('dd.MM.yyyy').format(value);
                           currentUser.updateBirthday(value);
                           controller.text = birthDateString;
-                          print(controller.text);
+                          log(controller.text);
                         }
                         return;
                       });

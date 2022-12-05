@@ -2,7 +2,7 @@ import 'package:app/models/alertVisibility.dart';
 import 'package:app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class SocialIncomeContact extends StatelessWidget {
   const SocialIncomeContact({super.key});
@@ -14,8 +14,8 @@ class SocialIncomeContact extends StatelessWidget {
   Widget build(BuildContext context) {
     openWhatsapp(number) async {
       var whatsappURL = "whatsapp://send?phone=$number&text=hello";
-      if (await canLaunch(whatsappURL)) {
-        await launch(whatsappURL);
+      if (await canLaunchUrlString(whatsappURL)) {
+        await launchUrlString(whatsappURL);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("whatsapp no installed")));
@@ -27,7 +27,7 @@ class SocialIncomeContact extends StatelessWidget {
         scheme: 'tel',
         path: phoneNumber,
       );
-      await launch(launchUri.toString());
+      await launchUrlString(launchUri.toString());
     }
 
     writeEmail(String emailAdress) async {
@@ -35,7 +35,7 @@ class SocialIncomeContact extends StatelessWidget {
         scheme: 'mailto',
         path: emailAdress,
       );
-      await launch(launchUri.toString());
+      await launchUrlString(launchUri.toString());
     }
 
     return Consumer<AlertVisibility>(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class TempWidgetHolder extends StatelessWidget {
   final Widget content;
-  const TempWidgetHolder(this.content);
+  const TempWidgetHolder(this.content, {super.key});
 
   @override
   Widget build(BuildContext context) {

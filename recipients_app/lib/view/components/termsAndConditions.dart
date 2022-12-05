@@ -2,7 +2,7 @@ import 'package:app/models/currentUser.dart';
 import 'package:app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class TermsAndConditions extends StatelessWidget {
   const TermsAndConditions({super.key});
@@ -68,8 +68,8 @@ class _IconAndText extends StatelessWidget {
                   style: TextButton.styleFrom(padding: const EdgeInsets.all(0)),
                   onPressed: () async {
                     const url = 'https://socialincome.org/privacy';
-                    if (await canLaunch(url)) {
-                      await launch(url);
+                    if (await canLaunchUrlString(url)) {
+                      await launchUrlString(url);
                     } else {
                       throw 'Could not launch $url';
                     }
