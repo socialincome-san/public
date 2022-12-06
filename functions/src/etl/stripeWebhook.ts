@@ -99,8 +99,8 @@ export const getOrCreateUser = async (charge: Stripe.Charge): Promise<DocumentRe
  */
 export const findUser = async (charge: Stripe.Charge) => {
 	return (
-		(await findFirst('users', (col) => col.where('stripe_customer_id', '==', charge.customer))) ??
-		(await findFirst('users', (col) => col.where('email', '==', charge.billing_details.email)))
+		(await findFirst<User>('users', (col) => col.where('stripe_customer_id', '==', charge.customer))) ??
+		(await findFirst<User>('users', (col) => col.where('email', '==', charge.billing_details.email)))
 	);
 };
 
@@ -120,7 +120,7 @@ export const constructUser = (charge: Stripe.Charge): User | undefined => {
 			status: UserStatusKey.INITIALIZED,
 			stripe_customer_id: charge.customer as string,
 			test_user: false,
-			location: charge.billing_details?.address?.country?.toUpperCase(),
+			location: charge.billing_details.address?.country?.toUpperCase(),
 			currency: charge.currency.toUpperCase(),
 		};
 	} else {
