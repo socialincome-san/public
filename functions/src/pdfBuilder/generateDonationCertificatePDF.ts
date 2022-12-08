@@ -1,19 +1,21 @@
 import { useFirestore } from '../../../shared/src/firebase/firestoreAdmin';
 import { uploadAndGetDownloadURL, useStorage } from '../../../shared/src/firebase/storageAdmin';
 import { createWriteStream } from 'fs';
+import { sendDonationCertificateMail } from './sendDonationCertificateMail';
 
-export const createAndUploadDonationCertificate = async (data: any) => {
+export const createAndUploadDonationCertificate = async (data: any, mail: boolean) => {
 	
 	const translations = await translationStubGerman();
 	if (data.location === 'CH') {
-		createDonationCertificateCH(data, translations);
+		await createDonationCertificateCH(data, translations);
+		if (true) {
+			sendDonationCertificateMail(data, translations);
+		}
 		return true
 	} else {
 		return false;
 	}
 };
-
-}
 
 export const createDonationCertificateCH = async (data: any, translations: Map<string, string>) => {
 	const PDFDocument = require('pdfkit');
@@ -87,7 +89,6 @@ export const createDonationCertificateCH = async (data: any, translations: Map<s
 	outputFile.on('finish', async () => {
 		const path = 'donation-certificates/' + data.entityId + '/' + data.year + "_" + data.address.country + "_" + data.currentDate +".pdf";
 		const downloadObject = await uploadAndGetDownloadURL(useStorage().bucket(), tempFileName, path);
-		console.log(downloadObject.downloadUrl);
 		addDocumentToUser(data, downloadObject.downloadUrl);
 	});
 	docPdf.end();
@@ -141,6 +142,17 @@ export const translationStubGerman = async () => {
 	translations.set('donation-certificate.footer-1',`Social Income\nZwierstrasse 103\n8003 Zurich\ncontributors@socialincome.org\nSwitzerland`);
 	translations.set('donation-certificate.footer-2',`Steuerbefreiter Verein\n\nIDE: CHE-289.611.695\n\nDUNS: 48-045-6376`);
 	translations.set('donation-certificate.footer-3',`Kontakt\n\n\n\nwww.socialincome.org`);
+
+	translations.set('donation-certificate-mail.subject', 'Social Income Spendenbescheingiung');
+	translations.set('donation-certificate-mail.salutation', 'Liebe/r');
+	translations.set('donation-certificate-mail.content-1', 'vielen herzlichen Dank noch einmal für Ihr außerordentliches Engagement im vergangenen Jahr! Im Anhang erhalten Sie die Bescheinigung für Ihre Spenden von '); 
+	translations.set('donation-certificate-mail.content-2', '. Sie können dieses Dokument für Ihre Steuererklärung verwenden. Die Stiftung für Social Income ist in der Schweiz als gemeinnützige Organisation anerkannt.');
+	translations.set('donation-certificate-mail.content-3', 'Ihre Unterstützung ermöglicht es uns einen Beitrag zur gemeinsamen Be­kämpfung der globalen Armut leisten.');
+	translations.set('donation-certificate-mail.signature-1', 'Freundliche Grüsse');
+	translations.set('donation-certificate-mail.signature-2', 'Sandino Scheidegger');
+	translations.set('donation-certificate-mail.signature-3', 'Geschäftsleitung und Vorstandsmitglied');
+	translations.set('donation-certificate-mail.filename-prefix', 'Social Income Spendenbescheinigung ');
+
 	return translations;
 
 }
@@ -151,7 +163,7 @@ export const translationStubFrench = async () => {
 	translations.set('donation-certificate.header', 'Association à but non lucratif\nexonérée d’impôt par le\nCanton de Zurich');
 	translations.set('donation-certificate.title','Attestation de dons');
 	translations.set('donation-certificate.fiscal-year', 'Année fiscale ');
-	translations.set('donation-certificate.salutation','Liebe/r ');
+	translations.set('donation-certificate.salutation','Ch/r ');
 	translations.set('donation-certificate.confirmation-1',`Nous attestons auprès des autorités fiscales que l’association Social Income a reçu des dons de la part de`);
 	translations.set('donation-certificate.confirmation-2',', domicilié à ');
 	translations.set('donation-certificate.confirmation-3',', au cours de l’année ');
@@ -171,5 +183,16 @@ export const translationStubFrench = async () => {
 	translations.set('donation-certificate.footer-1',`Social Income\nZwierstrasse 103\n8003 Zurich\ncontributors@socialincome.org\nSwitzerland`);
 	translations.set('donation-certificate.footer-2',`Association à but non lucratif\n\nIDE: CHE-289.611.695\n\nDUNS: 48-045-6376`);
 	translations.set('donation-certificate.footer-3',`Contact\n\n\nwww.socialincome.org`);
+
+	translations.set('donation-certificate-mail.subject', 'Social Income Attestation de don');
+	translations.set('donation-certificate-mail.salutation', 'Chère/Cher');
+	translations.set('donation-certificate-mail.content-1', 'Nous vous remercions encore une fois pour votre engagement exceptionnel au cours de l`année écoulée ! Vous trouverez en annexe l`attestation pour vos dons de '); 
+	translations.set('donation-certificate-mail.content-2', '. Vous pouvez utiliser ce document pour votre déclaration d`impôts. La Fondation pour le revenu social est reconnue comme organisation d`utilité publique en Suisse.');
+	translations.set('donation-certificate-mail.content-3', 'Votre soutien nous permet de contribuer à la lutte commune contre la pauvreté dans le monde.');
+	translations.set('donation-certificate-mail.signature-1', 'Salutations');
+	translations.set('donation-certificate-mail.signature-2', 'Sandino Scheidegger');
+	translations.set('donation-certificate-mail.signature-3', 'Geschäftsleitung und Vorstandsmitglied');
+	translations.set('donation-certificate-mail.filename-prefix', 'Social Income Attestation de don ');
+	
 	return translations;
 };

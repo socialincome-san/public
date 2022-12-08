@@ -12,7 +12,7 @@ export const bulkDonationCertificateBuilderFunction = functions.https.onCall(asy
 	let numberOfPdfCreationSuccessful = 0;
  
 	for await (const user of data.users ) {
-		if( await createAndUploadDonationCertificate(await prepareData(user, calculationYear, currentDate))) {
+		if( await createAndUploadDonationCertificate(await prepareData(user, calculationYear, currentDate), data.mail)) {
 			numberOfPdfCreationSuccessful += 1;
 		}
 	}
@@ -21,12 +21,12 @@ export const bulkDonationCertificateBuilderFunction = functions.https.onCall(asy
 	
 	return responseString;
 
-	return responseString;
 });
 
 export const prepareData = async (data: any, calculationYear: string, currentDate: string) => {
 	let contributions: any[] = [];
 	const firestore = useFirestore();
+
 
 	await firestore.collection("users/" + data.id + "/contributions")
     .get()
@@ -46,6 +46,9 @@ export const prepareData = async (data: any, calculationYear: string, currentDat
 		currentDate: currentDate,
 		address: data.values.address,
 		personal: data.values.personal,
+		emailFlag: data.mailFlag,
+		email: data.values.email,
+		language: data.values.language,
 		financials: await calculateFinancials(contributions, calculationYear),
 	};
 	return pdfData;
@@ -89,6 +92,5 @@ export const calculateFinancials = async (contributions: Contribution[], year: s
 		total_usd: total_usd,
 		lineItems: lineItems,
 	};
-	console.log(financialData);
 	return financialData;
 };
