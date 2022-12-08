@@ -28,6 +28,8 @@ dependencies:
   firebase_core: ^2.3.0
   flutter:
     sdk: flutter
+  # Enable for generating new app icons
+  flutter_launcher_icons: ^0.11.0
   intl: ^0.17.0
   intl_phone_number_input: ^0.7.1
   provider: ^6.0.4
@@ -86,3 +88,9 @@ flutter:
           weight: 500
         - asset: assets/Unica77LL-Bold.otf
           weight: 700
+# Enable for generating new app icons
+flutter_icons:
+  image_path: "assets/icons/app_icon.png"
+  adaptive_icon_background: "#EAF1FF"
+  android: true
+  ios: true

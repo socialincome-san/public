@@ -54,5 +54,7 @@
 		<false/>
 		<key>MinimumOSVersion</key>
 		<string>12.0</string>
-	</dict>
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+</dict>
 </plist>
