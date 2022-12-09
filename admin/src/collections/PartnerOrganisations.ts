@@ -1,5 +1,5 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { PartnerOrganisation, PARTNER_ORGANISATION_FIRESTORE_PATH } from '@socialincome/shared/types';
+import { PartnerOrganisation, PARTNER_ORGANISATION_FIRESTORE_PATH } from '../../../shared/src/types';
 import { BuildCollectionProps } from './index';
 
 export const buildPartnerOrganisationsCollection = ({ isGlobalAdmin = false }: BuildCollectionProps) => {

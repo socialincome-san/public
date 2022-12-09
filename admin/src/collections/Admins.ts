@@ -1,5 +1,5 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { AdminUser, ADMIN_USER_FIRESTORE_PATH, PARTNER_ORGANISATION_FIRESTORE_PATH } from '@socialincome/shared/types';
+import { AdminUser, ADMIN_USER_FIRESTORE_PATH, PARTNER_ORGANISATION_FIRESTORE_PATH } from '../../../shared/src/types';
 
 export const adminsCollection = buildCollection<AdminUser>({
 	name: 'Admins',

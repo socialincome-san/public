@@ -1,5 +1,6 @@
-name: Rules (firestore & storage)
+name: Shared
 on:
+  pull_request:
   push:
     branches:
       - main
@@ -14,10 +15,11 @@ jobs:
       - id: skip_check
         uses: fkirc/skip-duplicate-actions@v5
         with:
-          paths: '["firestore.rules", "storage.rules", ".github/workflows/rules.yml"]'
+          paths: '["shared/**", ".github/workflows/shared.yml"]'
+          skip_after_successful_duplicate: "false"
 
-  deploy:
-    name: Deploy Firestore Rules
+  test_deploy:
+    name: Test Shared Module
     needs: check_applicability
     if: needs.check_applicability.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
@@ -25,9 +27,13 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Install firebase-tools
-        run: npm -g install firebase-tools
+      - name: Install & Setup Firebase Emulator Suite
+        run: |
+          npm -g install firebase-tools && \
+          firebase setup:emulators:firestore
 
-      - name: Deploy to Firebase
-        if: github.ref == 'refs/heads/main'
-        run: firebase deploy --only storage,firestore:rules --token ${{ secrets.FIREBASE_TOKEN }} --project social-income-prod
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Tests
+        run: npm run shared:test

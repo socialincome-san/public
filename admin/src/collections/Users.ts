@@ -4,7 +4,7 @@ import {
 	UserStatusKey,
 	User,
 	USER_FIRESTORE_PATH,
-} from '@socialincome/shared/types';
+} from '../../../shared/src/types';
 import { contributionsCollection } from './Contributions';
 
 const FirstNameCol: AdditionalFieldDelegate<User> = {
