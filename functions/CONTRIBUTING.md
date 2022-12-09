@@ -1,7 +1,8 @@
 # Functions
 
-Cloud functions are used by the admin tool and the website. They consist of scheduled jobs, firestore triggers and webhooks deployed to
-firebase functions.
+Cloud functions are used by the admin tool and the website. They consist
+of scheduled jobs, firestore triggers and webhooks deployed to firebase
+functions.
 
 ## Basic Setup
 
