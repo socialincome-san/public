@@ -1,11 +1,13 @@
 # Mobile App
 
-The mobile app for recipients of a Social Income has currently three goals. It lets recipients;
-1. keep their personal data up-to-date 
-2. confirm monthly payments 
+The mobile app for recipients of a Social Income has currently three
+goals. It lets recipients;
+
+1. keep their personal data up-to-date
+2. confirm monthly payments
 3. fill out surveys for the impact measurement
 
-The apps are build with Flutter and run on Android and iPhones. 
+The apps are build with Flutter and run on Android and iPhones.
 
 ## Basic Setup
 
