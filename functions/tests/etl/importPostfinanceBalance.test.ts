@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
 import firebaseFunctionsTest from 'firebase-functions-test';
-import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../shared/src/types';
 import { doc } from '../../../shared/src/firebase/firestoreAdmin';
+import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../shared/src/types';
 import * as importPostfinanceBalance from '../../src/etl/importPostfinanceBalance';
 const { cleanup } = firebaseFunctionsTest();
 

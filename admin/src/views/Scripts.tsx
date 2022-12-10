@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Button, Card, CardActions, CardContent, Container, Grid, Typography } from '@mui/material';
 
 import { useSnackbarController } from '@camberi/firecms';
@@ -16,7 +15,7 @@ export function ScriptsView() {
 			message: 'Starting import',
 		});
 		httpsCallable(functions, 'batchImportStripeCharges')()
-			.then((res) => {
+			.then(() => {
 				snackbarController.open({
 					type: 'success',
 					message: 'Import succeeded.',
