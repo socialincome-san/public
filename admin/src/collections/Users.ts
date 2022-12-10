@@ -182,7 +182,6 @@ export const usersCollection = buildCollection<User>({
 			name: 'Location',
 			description: 'Living location defined by List of ISO 3166 country codes',
 			dataType: 'string',
-			defaultValue: 'CH',
 			validation: {
 				required: true,
 				length: 2,
