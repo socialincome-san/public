@@ -22,7 +22,7 @@ $ npm i @socialincome/ui
 Use the components:
 
 ```tsx
-import { SoButton } from '@socialincome/ui';
+
 ```
 
 ## Development
