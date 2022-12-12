@@ -8,18 +8,22 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
 
 # Code Contributions
 
-For detailed guidelines please refer to the specific *readme* and *contributing*
-files:
+For detailed guidelines please refer to the specific _readme_ and
+_contributing_ files:
 
-| | Admin Tool  | Website | Mobile App | Functions | UI |
-| :-------------: | :-------------: | :-------------: | :-------------: | :-------------: | :-------------: | 
-| 👥 | for staff  | for contributors  | for recipients with 📱  | for developers  | for developers  |
-| 📝| [Readme](admin/README.md)  | [Readme](website/README.md)  | [Readme](recipients_app/README.md)  | [Readme](functions/README.md)  | [Readme](ui/README.md)  |
-| 👩🏻‍💻 | [Contributing](admin/CONTRIBUTING.md)  | [Contributing](website/CONTRIBUTING.md)  | [Contributing](recipients_app/CONTRIBUTING.md)  | [Contributing](functions/CONTRIBUTING.md)  | [Contributing](ui/CONTRIBUTING.md)  |
-| 🌐 | [admin.socialincome.org](https://admin.socialincome.org)  | [socialincome.org](https://socialincome.org)  | App store links tba  | –  | [SI Storybook](https://socialincome-san.github.io/public/)  |
+|     |                        Admin Tool                        |                   Website                    |                   Mobile App                   |                 Functions                 |                             UI                             |
+| :-: | :------------------------------------------------------: | :------------------------------------------: | :--------------------------------------------: | :---------------------------------------: | :--------------------------------------------------------: |
+| 👥  |                        for staff                         |               for contributors               |             for recipients with 📱             |              for developers               |                       for developers                       |
+| 📝  |                [Readme](admin/README.md)                 |         [Readme](website/README.md)          |       [Readme](recipients_app/README.md)       |       [Readme](functions/README.md)       |                   [Readme](ui/README.md)                   |
+| 👩🏻‍💻  |          [Contributing](admin/CONTRIBUTING.md)           |   [Contributing](website/CONTRIBUTING.md)    | [Contributing](recipients_app/CONTRIBUTING.md) | [Contributing](functions/CONTRIBUTING.md) |             [Contributing](ui/CONTRIBUTING.md)             |
+| 🌐  | [admin.socialincome.org](https://admin.socialincome.org) | [socialincome.org](https://socialincome.org) |              App store links tba               |                     –                     | [SI Storybook](https://socialincome-san.github.io/public/) |
 
-Finding a good issue: 
-`↗` [Help wanted](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22), `↗` [Good first issues](https://github.com/socialincome-san/public/contribute), `↗` [All issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue)
+Finding a good issue: `↗`
+[Help wanted](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22),
+`↗`
+[Good first issues](https://github.com/socialincome-san/public/contribute),
+`↗`
+[All issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue)
 
 ### Development Setup
 
@@ -28,18 +32,26 @@ Visit the `Readme` and `Contributing` files in the submodules for detailed instr
 ```
 
 We are using [Firebase](https://firebase.google.com) as development
-platform. We are mainly leveraging the following tools: [Firestore](https://firebase.google.com/docs/firestore) for data
-  management, [Firebase Authentication](https://firebase.google.com/docs/auth) for
-  user management, [Firebase Hosting](https://firebase.google.com/docs/hosting) to serve
-  static content like the admin app, [Firebase Functions](https://firebase.google.com/docs/functions) to
-  run backend code in a serverless framework and [Firebase Storage](https://firebase.google.com/docs/storage) to store
-  documents and other files.
+platform. We are mainly leveraging the following tools:
+[Firestore](https://firebase.google.com/docs/firestore) for data
+management,
+[Firebase Authentication](https://firebase.google.com/docs/auth) for
+user management,
+[Firebase Hosting](https://firebase.google.com/docs/hosting) to serve
+static content like the admin app,
+[Firebase Functions](https://firebase.google.com/docs/functions) to run
+backend code in a serverless framework and
+[Firebase Storage](https://firebase.google.com/docs/storage) to store
+documents and other files.
 
 For development we use [Docker](https://www.docker.com) and rely on
-local [Firebase Emulators](https://firebase.google.com/docs/emulator-suite),
+local
+[Firebase Emulators](https://firebase.google.com/docs/emulator-suite),
 which are populated with dummy seed data. Ensures that no one will
-require production Firebase credentials to contribute. To avoid any operating system specific installation, we use a
-[helper docker image](Dockerfile) and [docker-compose](docker-compose.yaml) file to run the npm commands and
+require production Firebase credentials to contribute. To avoid any
+operating system specific installation, we use a
+[helper docker image](Dockerfile) and
+[docker-compose](docker-compose.yaml) file to run the npm commands and
 to start the emulators.
 
 Build helper image locally run:
@@ -48,27 +60,29 @@ Build helper image locally run:
 docker compose build
 ```
 
-The [Makefile](Makefile) gives you a good overview of the available commands. E.g. you can start the firebase emulators on [localhost:3000](http://localhost:3000) with
-   
+The [Makefile](Makefile) gives you a good overview of the available
+commands. E.g. you can start the firebase emulators on
+[localhost:3000](http://localhost:3000) with
+
 ```
 make firebase-serve
 ```
-
 
 ### Data Seed
 
 An initial set of data is imported into the Firebase emulators during
 startup. You can add, delete or amend data directly in your local
 [Social Income Admin](http://localhost:3000) or in your local
-[Firestore Admin Interface](http://localhost:4000/firestore/data). Start the firestore emulator and our admin with:
+[Firestore Admin Interface](http://localhost:4000/firestore/data). Start
+the firestore emulator and our admin with:
 
 ```
 make admin-serve
 ```
 
-If you want to commit (no sensitive data) or keep a local copy of your altered data set, you
-can execute in a second shell (while the command above still is running)
-the command
+If you want to commit (no sensitive data) or keep a local copy of your
+altered data set, you can execute in a second shell (while the command
+above still is running) the command
 
 ```
  make firebase-export
@@ -89,10 +103,13 @@ the [GitHub actions](.github/workflows).
 
 ### Backup
 
-We have a [function](https://console.cloud.google.com/logs/query;query=resource.type%3D%22cloud_function%22%20resource.labels.function_name%3D%22siWebFirestoreExport%22%20resource.labels.region%3D%22us-central1%22?project=social-income-prod&authuser=1&hl=en)
-which triggers hourly backups of our production firestore database. The exports are saved to the
+We have a
+[function](https://console.cloud.google.com/logs/query;query=resource.type%3D%22cloud_function%22%20resource.labels.function_name%3D%22siWebFirestoreExport%22%20resource.labels.region%3D%22us-central1%22?project=social-income-prod&authuser=1&hl=en)
+which triggers hourly backups of our production firestore database. The
+exports are saved to the
 [social-income-prod](https://console.cloud.google.com/storage/browser/social-income-prod;tab=objects?forceOnBucketsSortingFiltering=false&authuser=1&project=social-income-prod&prefix=&forceOnObjectsSortingFiltering=true)
-bucket with a retention period of 30 days. To restore the database you can
+bucket with a retention period of 30 days. To restore the database you
+can
 [import](https://console.cloud.google.com/firestore/import-export?authuser=1&project=social-income-prod)
 the most recent folder directly from the
 [social-income-prod](https://console.cloud.google.com/storage/browser/social-income-prod;tab=objects?forceOnBucketsSortingFiltering=false&authuser=1&project=social-income-prod&prefix=&forceOnObjectsSortingFiltering=true)
@@ -100,7 +117,10 @@ bucket.
 
 ### Bugs & Feature Requests
 
-You can report an issue or request a feature on our [issue page](https://github.com/socialincome-san/public/issues/new/choose). If you want to report a vulnareablity please refer to our [security policy](https://github.com/socialincome-san/public/blob/main/SECURITY.md)
+You can report an issue or request a feature on our
+[issue page](https://github.com/socialincome-san/public/issues/new/choose).
+If you want to report a vulnareablity please refer to our
+[security policy](https://github.com/socialincome-san/public/blob/main/SECURITY.md)
 
 # Financial Contributions
 
@@ -145,9 +165,14 @@ be, or how it will look. Thank you:
 
 ### Software & Design Donations
 
-Thanks [Google Nonprofit](https://www.google.com/nonprofits/), [GitHub](https://socialimpact.github.com), [Codemagic](https://codemagic.io/start/), [Linktree](https://linktr.ee), [Twilio](https://twilio.org), and [JetBrain](https://www.jetbrains.com). Font Unica77 by [Lineto](https://www.lineto.com).
+Thanks [Google Nonprofit](https://www.google.com/nonprofits/),
+[GitHub](https://socialimpact.github.com),
+[Codemagic](https://codemagic.io/start/), [Linktree](https://linktr.ee),
+[Twilio](https://twilio.org), and [JetBrain](https://www.jetbrains.com).
+Font Unica77 by [Lineto](https://www.lineto.com).
 
 ### License
 
-Code: [MIT](LICENSE). The font Unica77 is licensed exclusively for the use on
-the website socialincome.org and on the mobile apps of Social Income.
+Code: [MIT](LICENSE). The font Unica77 is licensed exclusively for the
+use on the website socialincome.org and on the mobile apps of Social
+Income.
