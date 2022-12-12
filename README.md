@@ -29,21 +29,23 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
 - Website for contributors (`↗`
   [socialincome.org](https://socialincome.org)) (to be migrated to the
   public repository)
-- Survey tool for impact measurement([README](survey/README.md)))
+- Survey tool for impact measurement ([README](survey/README.md))
 
 # Code Contributions
 
-Don't forget: open source isn’t an exclusive club. It’s made by people
-just like you. You don’t need to overthink what exactly your first
-contribution will be, or how it will look. Thank you:
-
-[![Contributors](https://contrib.rocks/image?repo=socialincome-san/public&columns=10)](https://github.com/socialincome-san/public/graphs/contributors)
+For detailed guidelines please refer to our specific contributing.md
+files for each part of our tech stack:
+[Admin Tool](../main/admin/CONTRIBUTING.md),
+[Website](../main/website/CONTRIBUTING.md),
+[Mobile App](../main/recipient_app/CONTRIBUTING.md),
+[Functions](../main/functions/CONTRIBUTING.md),
+[User Interface](../main/ui/CONTRIBUTING.md).
 
 ## Quick Links
 
-- [Good first issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
+- [Good first issues](https://github.com/socialincome-san/public/contribute)
+- [Help wanted](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
 - [All issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue)
-- [Hacktoberfest 2022](https://github.com/socialincome-san/public/issues?q=is%3Aissue+is%3Aopen+label%3Ahacktoberfest)
 
 ## Stack
 
@@ -58,6 +60,8 @@ platform. We are mainly leveraging the following tools:
   static content like the admin app
 - [Firebase Functions](https://firebase.google.com/docs/functions) to
   run backend code in a serverless framework
+- [Firebase Storage](https://firebase.google.com/docs/storage) to store
+  documents and other files
 
 ### Development Setup
 
@@ -134,8 +138,10 @@ bucket.
 
 ### Bug reporting / Feature Request
 
-Please use one of the templates on our
-[issue page](https://github.com/socialincome-san/public/issues/new/choose).
+- To report an issue use one of the templates on our
+  [issue page](https://github.com/socialincome-san/public/issues/new/choose).
+- To report a vulnareablity please refer to our
+  [Security Policy](https://github.com/socialincome-san/public/blob/main/SECURITY.md)
 
 # Financial Contributions
 
@@ -170,11 +176,17 @@ This is why we disclose our
 our [annual statements](https://socialincome.org/reporting) and overall
 [carbon footprint](https://socialincome.org/sustainability).
 
+## Open Source Community
+
+Open Source isn’t an exclusive club. It’s made by people just like you.
+You don’t need to overthink what exactly your first contribution will
+be, or how it will look. Thank you:
+
+[![Contributors](https://contrib.rocks/image?repo=socialincome-san/public&columns=10)](https://github.com/socialincome-san/public/graphs/contributors)
+
 ## License
 
 Code: [MIT](LICENSE)
 
 Specifications: The font Unica77 is licensed exclusively for the use on
 the website socialincome.org and on the mobile apps of Social Income.
-The contributors profile gallery has been made with
-[contrib.rocks](https://contrib.rocks).
