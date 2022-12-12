@@ -9,11 +9,11 @@ import {
 	performAlgoliaTextSearch,
 	User,
 } from '@camberi/firecms';
-import { AdminUser } from '../../shared/src/types';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import { useState } from 'react';
+import { AdminUser } from '../../shared/src/types';
 import {
 	adminsCollection,
 	buildPartnerOrganisationsCollection,

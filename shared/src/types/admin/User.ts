@@ -8,6 +8,14 @@ export enum UserStatusKey {
 	PROFILE_CREATED = 1, // user submitted registration form
 }
 
+export type UserAddress = {
+	city?: string;
+	country?: string;
+	number?: string;
+	street?: string;
+	zip?: string;
+};
+
 export type User = {
 	personal?: {
 		name?: string;
@@ -17,13 +25,7 @@ export type User = {
 		phone?: string;
 		referral?: string;
 	};
-	address?: {
-		city?: string;
-		country?: string;
-		number?: string;
-		street?: string;
-		zip?: string;
-	};
+	address?: UserAddress;
 	email?: string;
 	status?: UserStatusKey;
 	stripe_customer_id?: string;
