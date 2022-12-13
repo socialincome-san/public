@@ -52,7 +52,7 @@ We integrated [i18next-parser](https://github.com/i18next/i18next-parser) to aut
 the keys used in the code with the ones available in the translations jsons.
 
 For the website, we will split the translation files into chunks (e.g. one per page or component). 
-This allows to avoid pushing too unused data to the client.
+This allows to avoid pushing unused data to the client.
 The [next-i18next Readme](https://github.com/i18next/next-i18next#3-project-setup) explains all the details. 
 
 In a nutshell, adding translations to a page involves 3 steps:
@@ -61,6 +61,9 @@ In a nutshell, adding translations to a page involves 3 steps:
 - Run `make website-extract-translations` for docker or `npm run website:extract-translations` for npm to update the json files.
 
 ## Run Tests
+
+### Unit Tests
+To test individual components with jest. They are located in the `tests` directory.
 
 With docker
 
@@ -74,18 +77,28 @@ or without docker use
 npm run website:test:emulator
 ```
 
-To update the snapshots used for regression tests run:
+### End-to-End Tests
 
-With docker
+We use playwright to test against unwanted regressions on several browsers. The e2e tests are located in `tests-e2e`.
+
+To add a visual snapshot regression test for a new page, create a new spec ts file with the following content:
+```
+import { multiLanguageSnapshotTest } from './__utils__/snapshots';
+multiLanguageSnapshotTest('/your-new-path');
+```
+
+When you first run the tests the screenshots for the supported languages and browsers are automatically generated. 
+Add those to your commit.
+
+Our docker base image doesn't support the installation of browsers at the moment. With npm run
 
 ```
-make website-test-update
+npm run website:test:e2e:emulator
 ```
 
-or without docker use
-
+To update the baseline snapshots run
 ```
-npm run website:test:update:emulator
+npm run website:test:e2e:update:emulator
 ```
 
 ## Deployment
