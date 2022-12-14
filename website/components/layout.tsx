@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import LanguageSwitcher from './LanguageSwitcher';
 import styles from './layout.module.css';
 
 const siteName = 'SocialIncome';
@@ -14,13 +15,14 @@ export default function Layout({ children, title }: Props) {
 		<div className={styles.container}>
 			<Head>
 				<title>{title}</title>
-				<header className={styles.header}>
-					<h1>
-						<Link href="/">{siteName}</Link>
-					</h1>
-				</header>
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
+			<header className={styles.header}>
+				<h1>
+					<Link href="/">{siteName}</Link>
+				</h1>
+				<LanguageSwitcher />
+			</header>
 			<main>
 				<section>
 					<h2>{title}</h2>
