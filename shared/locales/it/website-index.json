@@ -1,7 +1,7 @@
 {
-  "index": {
-    "title": "Social Income",
-    "welcome": "Benvenuto!",
-    "linkToFinances": "Finanze Attuali"
-  }
+	"index": {
+		"title": "Social Income",
+		"welcome": "Benvenuto!",
+		"linkToFinances": "Finanze Attuali"
+	}
 }
