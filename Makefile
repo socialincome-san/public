@@ -27,6 +27,14 @@ website-build:
 website-serve:
 	docker compose up website
 
+# run tests using firebase emulator
+website-test:
+	docker compose run --rm website bash -c "npm install && npm run website:test:emulator"
+
+# updating translation files using the keys used in the code
+website-extract-translations:
+	docker compose run --rm website bash -c "npm run website:extract-translations"
+
 firebase-serve:
 	docker compose up firebase
 
