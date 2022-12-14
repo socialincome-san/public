@@ -1,0 +1,59 @@
+name: Website
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  check_applicability:
+    name: Check Applicability
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          paths: '["website/**", "shared/**", ".github/workflows/website.yml"]'
+          skip_after_successful_duplicate: "false"
+
+  test_deploy:
+    name: Test Website
+    needs: check_applicability
+    if: needs.check_applicability.outputs.should_skip != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Install & Setup Firebase Emulator Suite
+        run: |
+          npm -g install firebase-tools && \
+          firebase setup:emulators:firestore && \
+          firebase setup:emulators:ui
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Check Translation Files
+        run: npm run website:check-translations
+
+      - name: Run Unit Tests
+        run: npm run website:test:emulator
+
+      # TODO We need to run the snapshot generation with the OS as here,
+      # Will look into changing our docker images to support playwright in another step
+      #      - name: Run e2e Tests
+      #        run: npm run website:test:e2e:emulator
+      #      - name: Upload Playwright Repo
+      #        uses: actions/upload-artifact@v2
+      #        if: always()
+      #        with:
+      #          name: playwright-report
+      #          path: website/playwright-report/
+      #          retention-days: 1
+      # TODO: deploy report to GitHub Pages analog to how we do it with storybook
+
+      - name: Test build
+        run: npm run website:build:emulator
