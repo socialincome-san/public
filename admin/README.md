@@ -9,6 +9,8 @@ The admin is a react frontend app. All the access patterns for the
 firestore collections are configured through the firestore security
 rules.
 
+Random change
+
 ## Basic Setup
 
 For the basic setup, please refer to the main [README](../README.md)
