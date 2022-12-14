@@ -16,7 +16,9 @@ _contributing_ files:
 | 👥  |                        for staff                         |               for contributors               |             for recipients with 📱             |              for developers               |                       for developers                       |
 | 📝  |                [Readme](admin/README.md)                 |         [Readme](website/README.md)          |       [Readme](recipients_app/README.md)       |       [Readme](functions/README.md)       |                   [Readme](ui/README.md)                   |
 | 👩🏻‍💻  |          [Contributing](admin/CONTRIBUTING.md)           |   [Contributing](website/CONTRIBUTING.md)    | [Contributing](recipients_app/CONTRIBUTING.md) | [Contributing](functions/CONTRIBUTING.md) |             [Contributing](ui/CONTRIBUTING.md)             |
-| 🌐  | [admin.socialincome.org](https://admin.socialincome.org) | [socialincome.org](https://socialincome.org) |              App store links tba               |                     –                     | [SI Storybook](https://socialincome-san.github.io/public/) |
+| 🌐  | [admin.socialincome.org](https://admin.socialincome.org) | [socialincome.org](https://socialincome.org) * |              App store links tba               |                     –                     | [SI Storybook](https://socialincome-san.github.io/public/) |
+
+\* The website socialincome.org is currently rebuild with NextJS (instead of VueJS) and the code base moved to this public repo. The preview page (work in progress) for the new website you find [here](https://public-dusky-eight.vercel.app).
 
 Finding a good issue: `↗`
 [Help wanted](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22),
