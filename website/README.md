@@ -75,6 +75,9 @@ In a nutshell, adding translations to a page involves 3 steps:
   `npm run website:extract-translations` for npm to update the json
   files.
 
+Within the GitHub PR checks, we will run `check-translations` which
+returns an error if the jsons files are not in sync with the code.
+
 ## Run Tests
 
 ### Unit Tests
