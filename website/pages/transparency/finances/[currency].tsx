@@ -30,7 +30,7 @@ export default function Finances({ currency, balance }: Props) {
 export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
 	const currency = params?.currency as string;
 	// TODO import proper transparency stats from firestore
-	const exampleFirestoreDoc = await findFirst<BankBalance>(BANK_BALANCE_FIRESTORE_PATH, (col) => col);
+	const exampleFirestoreDoc = await findFirst<BankBalance>(BANK_BALANCE_FIRESTORE_PATH, (query) => query);
 	return {
 		props: {
 			...(await serverSideTranslations(locale!, ['website-finances'])),
