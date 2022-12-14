@@ -1,6 +1,8 @@
 import { doc } from '@socialincome/shared/src/firebase/firestoreAdmin';
 import { BankBalance, BANK_BALANCE_FIRESTORE_PATH } from '@socialincome/shared/src/types';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Layout from '../../../components/layout';
 import { appConfig } from '../../../config';
 
@@ -10,11 +12,11 @@ interface Props {
 }
 
 export default function Finances({ currency, balance }: Props) {
+	const { t } = useTranslation('website-finances');
 	return (
-		<Layout title={'Transparency Page'}>
+		<Layout title={t('finances.title')}>
 			<section>
-				<p>You are seeing the transparency page for {currency}</p>
-				<p>Balance retrieved from firestore: {balance}</p>
+				<p>{t('finances.mainText', { currency, balance })}</p>
 			</section>
 		</Layout>
 	);
@@ -25,12 +27,13 @@ export default function Finances({ currency, balance }: Props) {
  * getStaticProps are only executed at build time or incrementally on the server. It's therefore safe to
  * use the admin firestore directly.
  */
-export const getStaticProps: GetStaticProps = async (context) => {
-	const currency = context.params?.currency as string;
+export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
+	const currency = params?.currency as string;
 	// TODO import proper transparency stats from firestore
 	const exampleFirestoreDoc = await doc<BankBalance>(BANK_BALANCE_FIRESTORE_PATH, 'main_1669470424').get();
 	return {
 		props: {
+			...(await serverSideTranslations(locale!, ['website-finances'])),
 			currency,
 			balance: exampleFirestoreDoc.data()?.balance,
 		},
@@ -41,13 +44,18 @@ export const getStaticProps: GetStaticProps = async (context) => {
 /**
  * Routes for all supported currencies
  */
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async ({ locales }) => {
 	return {
-		paths: appConfig.supportedCurrencies.map((currency) => ({
-			params: {
-				currency: currency.toLowerCase(),
-			},
-		})),
+		paths: appConfig.supportedCurrencies.flatMap((currency) => {
+			return locales!.map((locale) => {
+				return {
+					params: {
+						currency: currency.toLowerCase(),
+					},
+					locale: locale,
+				};
+			});
+		}),
 		fallback: false,
 	};
 };

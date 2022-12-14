@@ -35,8 +35,12 @@
 		"website:start:emulator": "$npm_execpath --workspace=@socialincome/website run start:emulator",
 		"website:test": "$npm_execpath --workspace=@socialincome/website run test",
 		"website:test:emulator": "$npm_execpath --workspace=@socialincome/website run test:emulator",
-		"website:test:update": "$npm_execpath --workspace=@socialincome/website run test:update",
-		"website:test:update:emulator": "$npm_execpath --workspace=@socialincome/website run test:update:emulator"
+		"website:test:e2e": "$npm_execpath --workspace=@socialincome/website run test:e2e",
+		"website:test:e2e:emulator": "$npm_execpath --workspace=@socialincome/website run test:e2e:emulator",
+		"website:test:e2e:update": "$npm_execpath --workspace=@socialincome/website run test:e2e:update",
+		"website:test:e2e:update:emulator": "$npm_execpath --workspace=@socialincome/website run test:update:e2e:emulator",
+		"website:extract-translations": "$npm_execpath --workspace=@socialincome/website run extract-translations",
+		"website:check-translations": "$npm_execpath --workspace=@socialincome/website run check-translations"
 	},
 	"devDependencies": {
 		"firebase-tools": "^11.16.0",
