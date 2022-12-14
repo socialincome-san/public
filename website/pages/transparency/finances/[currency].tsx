@@ -1,31 +1,41 @@
+import { doc } from '@socialincome/shared/src/firebase/firestoreAdmin';
+import { BankBalance, BANK_BALANCE_FIRESTORE_PATH } from '@socialincome/shared/src/types';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { NextRequest, NextResponse } from 'next/server';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Layout from '../../../components/layout';
 import { appConfig } from '../../../config';
 
 interface Props {
 	currency: string;
+	balance: number;
 }
 
-export default function Finances({ currency }: Props) {
+export default function Finances({ currency, balance }: Props) {
+	const { t } = useTranslation('website-finances');
 	return (
-		<Layout title={'Transparency Page'}>
+		<Layout title={t('finances.title')}>
 			<section>
-				<p>You are seeing the transparency page for {currency}</p>
+				<p>{t('finances.mainText', { currency, balance })}</p>
 			</section>
 		</Layout>
 	);
 }
 
 /**
- * Incrementally retrieve the stats from firestore
+ * Incrementally retrieve the stats from firestore.
+ * getStaticProps are only executed at build time or incrementally on the server. It's therefore safe to
+ * use the admin firestore directly.
  */
-export const getStaticProps: GetStaticProps = async (context) => {
-	const currency = context.params?.currency as string;
-	// TODO import transparency stats from firestore
+export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
+	const currency = params?.currency as string;
+	// TODO import proper transparency stats from firestore
+	const exampleFirestoreDoc = await doc<BankBalance>(BANK_BALANCE_FIRESTORE_PATH, 'main_1669470424').get();
 	return {
 		props: {
+			...(await serverSideTranslations(locale!, ['website-finances'])),
 			currency,
+			balance: exampleFirestoreDoc.data()?.balance,
 		},
 		revalidate: 60 * 2, // rebuild these pages every 2 minute on the server
 	};
@@ -34,28 +44,18 @@ export const getStaticProps: GetStaticProps = async (context) => {
 /**
  * Routes for all supported currencies
  */
-export const getStaticPaths: GetStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async ({ locales }) => {
 	return {
-		paths: appConfig.supportedCurrencies.map((currency) => ({
-			params: {
-				currency: currency.toLowerCase(),
-			},
-		})),
+		paths: appConfig.supportedCurrencies.flatMap((currency) => {
+			return locales!.map((locale) => {
+				return {
+					params: {
+						currency: currency.toLowerCase(),
+					},
+					locale: locale,
+				};
+			});
+		}),
 		fallback: false,
 	};
-};
-
-/**
- * Forwards from /transparency/finances to /transparency/finances/[currency] according to the user's location.
- * This allows us to combine incremental static prebuilt pages and personalization based on user's location.
- * @param request
- */
-export const financesMiddleware = (request: NextRequest) => {
-	if (request.nextUrl.pathname.endsWith('/transparency/finances')) {
-		// TODO add logic leveraging the request.geo.country information
-		const redirectUrl = request.nextUrl.clone();
-		redirectUrl.pathname = redirectUrl.pathname + '/chf';
-		return NextResponse.redirect(redirectUrl);
-	}
-	return undefined;
 };
