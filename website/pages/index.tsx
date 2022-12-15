@@ -13,6 +13,9 @@ export default function Home() {
 			</section>
 			<section>
 				<Link href="/transparency/finances">{t('index.linkToFinances')}</Link>
+				<br />
+				<Link href="/social-responsibility">{t('index.linkToSocialResponsibility')}</Link>
+				<br />
 			</section>
 		</Layout>
 	);
