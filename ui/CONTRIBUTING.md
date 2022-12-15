@@ -77,5 +77,5 @@ Check out other components for more ideas on how to create yours.
 
 ---
 
-**For more information: [Main Readme](/README.md) / [UI Readme](/ui/README.md)**
-
+**For more information: [Main Readme](/README.md) /
+[UI Readme](/ui/README.md)**
