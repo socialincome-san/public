@@ -75,5 +75,6 @@ There are several ways to contribute to the Social Income UI project.
 See the [`CONTRIBUTING.md`](/CONTRIBUTING.md) file.
 
 ---
-**For more information: [Main Readme](/README.md) / [UI Contributing](/ui/README.md)**
 
+**For more information: [Main Readme](/README.md) /
+[UI Contributing](/ui/README.md)**
