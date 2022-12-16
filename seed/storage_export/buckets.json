@@ -2,6 +2,9 @@
   "buckets": [
     {
       "id": "demo-social-income.appspot.com"
+    },
+    {
+      "id": "social-income-prod.appspot.com"
     }
   ]
 }

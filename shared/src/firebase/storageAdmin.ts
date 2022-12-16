@@ -16,10 +16,20 @@ export const useStorage = () => getStorage(getOrInitializeApp());
  *
  * This implementation sets an explicit token for the file which can be used to authorize the download.
  */
-export const uploadAndGetDownloadURL = async (bucket: Bucket, filePath: string, destination?: string) => {
+interface UploadAndGetDownloadURLProps {
+	bucket?: Bucket;
+	sourceFilePath: string;
+	destinationFilePath?: string;
+}
+export const uploadAndGetDownloadURL = async ({
+	bucket,
+	sourceFilePath,
+	destinationFilePath,
+}: UploadAndGetDownloadURLProps) => {
+	let destinationBucket = bucket || useStorage().bucket();
 	const token = randomBytes(32).toString('hex');
-	const [file, metadata] = await bucket.upload(filePath, {
-		destination: destination || filePath,
+	const [file, metadata] = await destinationBucket.upload(sourceFilePath, {
+		destination: destinationFilePath || sourceFilePath,
 		metadata: {
 			metadata: {
 				firebaseStorageDownloadTokens: token,

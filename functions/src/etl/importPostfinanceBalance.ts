@@ -13,7 +13,7 @@ import { doc } from '../../../shared/src/firebase/firestoreAdmin';
  * Function periodically connects to the gmail account where we send the postfinance balance statements,
  * parses the emails and stores the current balances into firestore.
  */
-export const importBalanceMailFunc = functions.pubsub.schedule('0 * * * *').onRun(async () => {
+export const importBalanceMailFunction = functions.pubsub.schedule('0 * * * *').onRun(async () => {
 	const balances = await retrieveBalanceMails();
 	await storeBalances(balances);
 });
