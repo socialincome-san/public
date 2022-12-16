@@ -1,4 +1,4 @@
-# Contributions to the Social Income UI package
+# Contributing to Social Income's User Interface (UI)
 
 There are several ways to contribute to the Social Income UI project:
 
@@ -74,3 +74,8 @@ UI elements:
    if necessary.
 
 Check out other components for more ideas on how to create yours.
+
+---
+
+**For more information: [Main Readme](/README.md) /
+[UI Readme](/ui/README.md)**
