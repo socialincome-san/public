@@ -34,7 +34,7 @@ services:
     ports:
       - "9099:9099" # authentication emulator
       - "8080:8080" # firestore emulator
-      - "5000:5000" # hosting
+      - "5000:5002" # hosting // 5000 can be occupied by apple airplay
       - "5001:5001" # functions
       - "8085:8085" # pubsub emulator
       - "9199:9199" # storage emulator
@@ -62,3 +62,14 @@ services:
     ports:
       - "6006:6006"
     command: /bin/bash -c "npm install && npm run ui:serve"
+
+  website:
+    image: socialincome/local-helper
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/home/node
+    ports:
+      - "3001:3001" # website
+    command: /bin/bash -c "npm install && npm run website:serve:emulator"
