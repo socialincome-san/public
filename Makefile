@@ -17,7 +17,23 @@ functions-serve:
 	docker compose up functions
 
 functions-test:
-	docker compose run --rm functions bash -c "npm install && npm run functions:test"
+	docker compose run --no-deps --rm functions bash -c "npm install && npm run functions:test"
+
+# build test "production" nextjs project using data from firebase emulator
+website-build:
+	docker compose run --rm website bash -c "npm install && npm run website:build:emulator"
+
+# local dev server using firebase emulator
+website-serve:
+	docker compose up website
+
+# run tests using firebase emulator
+website-test:
+	docker compose run --rm website bash -c "npm install && npm run website:test:emulator"
+
+# updating translation files using the keys used in the code
+website-extract-translations:
+	docker compose run --rm website bash -c "npm run website:extract-translations"
 
 firebase-serve:
 	docker compose up firebase
@@ -29,10 +45,7 @@ survey-serve:
 	docker compose up ui survey
 
 survey-build:
-	docker compose run --rm survey bash -c "npm ci && npm run survey:build"	
-
-website-serve:
-	docker compose up ui
+	docker compose run --rm survey bash -c "npm ci && npm run survey:build"
 
 ui-serve:
 	docker compose up ui

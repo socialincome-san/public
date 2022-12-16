@@ -1,0 +1,120 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdminUser(email) {
+      return exists(/databases/$(database)/documents/admins/$(email));
+    }
+
+    function isGlobalAdmin(email) {
+      let adminUser = get(/databases/$(database)/documents/admins/$(email)).data;
+      return adminUser.is_global_admin;
+    }
+
+    function isGlobalAnalyst(email) {
+      let adminUser = get(/databases/$(database)/documents/admins/$(email)).data;
+      return adminUser.is_global_analyst;
+    }
+
+    function canAccessRecipient(email, recipient) {
+      let adminUser = get(/databases/$(database)/documents/admins/$(email)).data;
+      return recipient.organisation in adminUser.organisations;
+    }
+
+    function canAccessPayment(token, recipientId) {
+      let recipient = get(/databases/$(database)/documents/recipients/$(recipientId)).data;
+      let hasRecipientAccess = 'email' in token && canAccessRecipient(token.email, recipient);
+      let hasPhoneNumberAccess = 'phone_number' in token && token.phone_number == string(recipient.mobile_money_phone.phone);
+      return hasRecipientAccess || hasPhoneNumberAccess
+    }
+
+    match /admins/{data} {
+      allow read: if isAdminUser(request.auth.token.email);
+      allow write: if isGlobalAdmin(request.auth.token.email);
+    }
+
+    match /events/{data} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /events-users/{data} {
+      allow read, write: if request.auth != null;
+    }
+
+    match /exchange-rates/{data} {
+      allow read: if true;
+    }
+
+    match /mailchimp-data/{data} {
+      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
+      allow write: if isGlobalAdmin(request.auth.token.email);
+    }
+
+    match /message-templates/{data} {
+      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
+      allow write: if isGlobalAdmin(request.auth.token.email);
+    }
+
+    match /newsletter-subscribers/{data} {
+      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
+      allow write: if isGlobalAdmin(request.auth.token.email);
+    }
+
+    match /organisations-contributors/{data} {
+      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
+      allow write: if isGlobalAdmin(request.auth.token.email);
+    }
+
+    match /operational-expenses/{data} {
+      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
+      allow write: if isGlobalAdmin(request.auth.token.email);
+    }
+
+    match /organisations/{data} {
+      allow read: if isAdminUser(request.auth.token.email);
+      allow write: if isGlobalAdmin(request.auth.token.email);
+    }
+
+    match /recipients/{recipientId} {
+      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email) || canAccessRecipient(request.auth.token.email, resource.data);
+      allow create: if isAdminUser(request.auth.token.email);
+      allow update: if isGlobalAdmin(request.auth.token.email) || canAccessRecipient(request.auth.token.email, resource.data);
+      allow delete: if isGlobalAdmin(request.auth.token.email);
+
+      match /payments/{paymentId} {
+          allow read: if canAccessPayment(request.auth.token, recipientId);
+          allow create: if isAdminUser(request.auth.token.email);
+          allow update: if isGlobalAdmin(request.auth.token.email) || canAccessPayment(request.auth.token, recipientId);
+          allow delete: if isGlobalAdmin(request.auth.token.email);
+      }
+    }
+
+    match /om-list/{data} {
+      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
+      allow write: if false;
+    }
+
+    match /transparency-stats/{data} {
+      allow read: if true;
+    }
+
+    match /organisations-contributors/{data} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    match /users/{data=**} {
+      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
+      allow write: if isGlobalAdmin(request.auth.token.email);
+    }
+
+    match /world-development-indicators/{data} {
+      allow read: if true;
+    }
+  }
+
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

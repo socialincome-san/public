@@ -1,5 +1,8 @@
-import { dummyFunction as dummyFunc } from './dummy/dummyFunction';
-import { importBalanceMailFunc } from './etl/importPostfinanceBalance';
+import { createDonationCertificatesFunction } from './donation_certificates/createDonationCertificatesFunction';
+import { importBalanceMailFunction } from './etl/importPostfinanceBalance';
+import { batchImportStripeChargesFunction, stripeChargeHookFunction } from './etl/stripeWebhook';
 
-export const importBalanceMail = importBalanceMailFunc;
-export const dummyFunction = dummyFunc;
+export const batchImportStripeCharges = batchImportStripeChargesFunction;
+export const createDonationCertificates = createDonationCertificatesFunction;
+export const importBalanceMail = importBalanceMailFunction;
+export const stripeChargeHook = stripeChargeHookFunction;

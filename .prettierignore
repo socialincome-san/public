@@ -1,5 +1,7 @@
 node_modules/
 .user/
 seed/
+dist/
+.next/
 
 ui/storybook-static/

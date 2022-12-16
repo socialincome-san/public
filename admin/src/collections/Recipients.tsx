@@ -6,9 +6,9 @@ import {
 	buildProperty,
 	StringPropertyPreview,
 } from '@camberi/firecms';
-import { PARTNER_ORGANISATION_FIRESTORE_PATH, Recipient, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/types';
-import { getMonthIDs } from '@socialincome/shared/utils';
 import { isUndefined } from 'lodash';
+import { PARTNER_ORGANISATION_FIRESTORE_PATH, Recipient, RECIPIENT_FIRESTORE_PATH } from '../../../shared/src/types';
+import { getMonthIDs } from '../../../shared/utils';
 import { BuildCollectionProps } from './index';
 import { paymentsCollection, paymentStatusMap } from './Payments';
 

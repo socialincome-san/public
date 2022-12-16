@@ -1,13 +1,15 @@
 import { AdditionalFieldDelegate, buildCollection, buildProperties } from '@camberi/firecms';
-import { CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH, User, USER_FIRESTORE_PATH } from '@socialincome/shared/types';
+import { CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH, User, USER_FIRESTORE_PATH } from '../../../shared/src/types';
+import { CreateDonationCertificatesAction } from '../extra_actions/CreateDonationCertificatesAction';
 import { contributionsCollection } from './Contributions';
+import { donationCertificateCollection } from './DonationCertificate';
 
 const FirstNameCol: AdditionalFieldDelegate<User> = {
 	id: 'first_name_col',
 	name: 'First Name',
 	builder: ({ entity }) => {
 		const values = entity.values;
-		return ('personal' in values && 'name' in values.personal && values.personal.name) || '';
+		return values?.personal?.name || '';
 	},
 	dependencies: ['personal'],
 };
@@ -17,7 +19,7 @@ const LastNameCol: AdditionalFieldDelegate<User> = {
 	name: 'Last Name',
 	builder: ({ entity }) => {
 		const values = entity.values;
-		return ('personal' in values && 'lastname' in values.personal && values.personal.lastname) || '';
+		return values?.personal?.lastname || '';
 	},
 	dependencies: ['personal'],
 };
@@ -27,7 +29,7 @@ const GenderCol: AdditionalFieldDelegate<User> = {
 	name: 'Gender',
 	builder: ({ entity }) => {
 		const values = entity.values;
-		return ('personal' in values && 'gender' in values.personal && values.personal.gender) || '';
+		return values?.personal?.gender || '';
 	},
 	dependencies: ['personal'],
 };
@@ -37,7 +39,7 @@ const PhoneCol: AdditionalFieldDelegate<User> = {
 	name: 'Phone',
 	builder: ({ entity }) => {
 		const values = entity.values;
-		return ('personal' in values && 'phone' in values.personal && values.personal.phone) || '';
+		return values?.personal?.phone || '';
 	},
 	dependencies: ['personal'],
 };
@@ -47,7 +49,7 @@ const CountryCol: AdditionalFieldDelegate<User> = {
 	name: 'Country',
 	builder: ({ entity }) => {
 		const values = entity.values;
-		return ('address' in values && 'country' in values.address && values.address.country) || '';
+		return values?.address?.country || '';
 	},
 	dependencies: ['address'],
 };
@@ -57,7 +59,7 @@ const CityCol: AdditionalFieldDelegate<User> = {
 	name: 'City',
 	builder: ({ entity }) => {
 		const values = entity.values;
-		return ('address' in values && 'city' in values.address && values.address.city) || '';
+		return values.address?.city || '';
 	},
 	dependencies: ['address'],
 };
@@ -67,7 +69,7 @@ const ReferralCol: AdditionalFieldDelegate<User> = {
 	name: 'Referral',
 	builder: ({ entity }) => {
 		const values = entity.values;
-		return ('personal' in values && 'referral' in values.personal && values.personal.referral) || '';
+		return values.personal?.referral || '';
 	},
 	dependencies: ['personal'],
 };
@@ -86,7 +88,8 @@ export const usersCollection = buildCollection<User>({
 		delete: false,
 	}),
 	additionalColumns: [FirstNameCol, LastNameCol, GenderCol, PhoneCol, CountryCol, CityCol, ReferralCol],
-	subcollections: [contributionsCollection],
+	subcollections: [contributionsCollection, donationCertificateCollection],
+	extraActions: CreateDonationCertificatesAction,
 	properties: buildProperties<User>({
 		test_user: {
 			name: 'Test User',
@@ -177,7 +180,13 @@ export const usersCollection = buildCollection<User>({
 		},
 		location: {
 			name: 'Location',
+			description: 'Living location defined by List of ISO 3166 country codes',
 			dataType: 'string',
+			validation: {
+				required: true,
+				length: 2,
+				uppercase: true,
+			},
 		},
 		currency: {
 			name: 'Currency',

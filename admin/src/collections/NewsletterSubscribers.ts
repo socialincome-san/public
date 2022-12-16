@@ -1,5 +1,5 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { NewsletterSubscriber, NEWSLETTER_SUBSCRIBER_FIRESTORE_PATH } from '@socialincome/shared/types';
+import { NewsletterSubscriber, NEWSLETTER_SUBSCRIBER_FIRESTORE_PATH } from '../../../shared/src/types';
 
 export const newsletterSubscribersCollection = buildCollection<NewsletterSubscriber>({
 	path: NEWSLETTER_SUBSCRIBER_FIRESTORE_PATH,

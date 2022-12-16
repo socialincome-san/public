@@ -1,5 +1,5 @@
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { Contribution, CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/types';
+import { Contribution, ContributionSourceKey, CONTRIBUTION_FIRESTORE_PATH, StatusKey } from '../../../shared/src/types';
 
 export const contributionsCollection = buildCollection<Contribution>({
 	name: 'Contributions',
@@ -15,13 +15,13 @@ export const contributionsCollection = buildCollection<Contribution>({
 		source: {
 			dataType: 'string',
 			name: 'Source',
-			enumValues: {
-				benevity: 'Benevity',
-				cash: 'Cash',
-				stripe: 'Stripe',
-				twint: 'Twint',
-				'wire-transfer': 'Wire Transfer',
-			},
+			enumValues: [
+				{ id: ContributionSourceKey.BENEVITY, label: 'Benevity' },
+				{ id: ContributionSourceKey.CASH, label: 'Cash' },
+				{ id: ContributionSourceKey.STRIPE, label: 'Stripe' },
+				{ id: ContributionSourceKey.TWINT, label: 'Twint' },
+				{ id: ContributionSourceKey.WIRE_TRANSFER, label: 'Wire Transfer' },
+			],
 			validation: { required: true },
 		},
 		created: {
@@ -45,13 +45,32 @@ export const contributionsCollection = buildCollection<Contribution>({
 			},
 			validation: { required: true },
 		},
-		amount_net_chf: {
+		amount_chf: {
 			dataType: 'number',
-			name: 'Amount Net Chf',
+			name: 'Amount Chf (without fees applied)',
+		},
+		fees_chf: {
+			dataType: 'number',
+			name: 'Fees Chf',
 		},
 		reference_id: {
 			dataType: 'string',
 			name: 'External Reference',
+		},
+		monthly_interval: {
+			dataType: 'number',
+			name: 'Monthly recurrence interval',
+		},
+		status: {
+			dataType: 'string',
+			name: 'Status',
+			enumValues: [
+				{ id: StatusKey.SUCCEEDED, label: 'Succeeded' },
+				{ id: StatusKey.PENDING, label: 'Pending' },
+				{ id: StatusKey.FAILED, label: 'Failed' },
+				{ id: StatusKey.UNKNOWN, label: 'Unknown' },
+			],
+			defaultValue: StatusKey.SUCCEEDED,
 		},
 	}),
 });

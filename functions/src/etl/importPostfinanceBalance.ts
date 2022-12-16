@@ -4,16 +4,16 @@ import imaps from 'imap-simple';
 
 import _ from 'lodash';
 import { simpleParser, Source } from 'mailparser';
-import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../shared/types';
+import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../shared/src/types';
 import { POSTFINANCE_EMAIL_PASSWORD, POSTFINANCE_EMAIL_USER } from '../config';
 
-import { createDoc } from '../useFirestoreAdmin';
+import { doc } from '../../../shared/src/firebase/firestoreAdmin';
 
 /**
  * Function periodically connects to the gmail account where we send the postfinance balance statements,
  * parses the emails and stores the current balances into firestore.
  */
-export const importBalanceMailFunc = functions.pubsub.schedule('0 * * * *').onRun(async () => {
+export const importBalanceMailFunction = functions.pubsub.schedule('0 * * * *').onRun(async () => {
 	const balances = await retrieveBalanceMails();
 	await storeBalances(balances);
 });
@@ -86,7 +86,7 @@ export const extractBalance = (html: String) => {
 
 export const storeBalances = async (balances: BankBalance[]): Promise<void> => {
 	for await (const balance of balances) {
-		await createDoc<BankBalance>(BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance(balance)).set(balance);
+		await doc<BankBalance>(BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance(balance)).set(balance);
 	}
 };
 

@@ -1,31 +1,49 @@
 {
 	"name": "@socialincome/monorepo",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"private": true,
 	"workspaces": [
 		"admin",
 		"functions",
 		"shared",
 		"survey",
-		"ui"
+		"ui",
+		"website"
 	],
 	"scripts": {
-		"format-code": "prettier --write .",
 		"admin:build": "$npm_execpath --workspace=@socialincome/admin run build",
 		"admin:serve": "$npm_execpath run functions:build && $npm_execpath --workspace=@socialincome/admin run serve",
 		"admin:test": "$npm_execpath --workspace=@socialincome/admin run test",
+		"firebase:export": "firebase emulators:export --project social-income-prod --force ./seed",
+		"firebase:serve": "firebase emulators:start --project social-income-prod --config firebase.json --import ./seed",
+		"format-code": "prettier --write .",
 		"functions:build": "$npm_execpath --workspace=@socialincome/functions run build",
 		"functions:deploy": "$npm_execpath --workspace=@socialincome/functions run deploy",
 		"functions:serve": "$npm_execpath --workspace=@socialincome/functions run serve",
+		"functions:serve:watch": "$npm_execpath --workspace=@socialincome/functions run serve:watch",
 		"functions:test": "$npm_execpath --workspace=@socialincome/functions run test",
-		"firebase:serve": "firebase emulators:start --project demo-social-income-prod --config firebase.json --import ./seed",
-		"firebase:export": "firebase emulators:export --project demo-social-income-prod --force ./seed",
+		"shared:test": "$npm_execpath --workspace=@socialincome/shared run test",
 		"survey:build": "$npm_execpath --workspace=@socialincome/ui --workspace=@socialincome/survey run build",
 		"survey:serve": "$npm_execpath run ui:build && $npm_execpath --workspace=@socialincome/survey run serve",
 		"ui:build": "$npm_execpath --workspace=@socialincome/ui run build",
-		"ui:serve": "$npm_execpath --workspace=@socialincome/ui run serve"
+		"ui:serve": "$npm_execpath --workspace=@socialincome/ui run serve",
+		"website:build": "$npm_execpath --workspace=@socialincome/website run build",
+		"website:build:emulator": "$npm_execpath --workspace=@socialincome/website run build:emulator",
+		"website:serve": "$npm_execpath --workspace=@socialincome/website run serve",
+		"website:serve:emulator": "$npm_execpath --workspace=@socialincome/website run serve:emulator",
+		"website:start": "$npm_execpath --workspace=@socialincome/website run start",
+		"website:start:emulator": "$npm_execpath --workspace=@socialincome/website run start:emulator",
+		"website:test": "$npm_execpath --workspace=@socialincome/website run test",
+		"website:test:emulator": "$npm_execpath --workspace=@socialincome/website run test:emulator",
+		"website:test:e2e": "$npm_execpath --workspace=@socialincome/website run test:e2e",
+		"website:test:e2e:emulator": "$npm_execpath --workspace=@socialincome/website run test:e2e:emulator",
+		"website:test:e2e:update": "$npm_execpath --workspace=@socialincome/website run test:e2e:update",
+		"website:test:e2e:update:emulator": "$npm_execpath --workspace=@socialincome/website run test:update:e2e:emulator",
+		"website:extract-translations": "$npm_execpath --workspace=@socialincome/website run extract-translations",
+		"website:check-translations": "$npm_execpath --workspace=@socialincome/website run check-translations"
 	},
 	"devDependencies": {
+		"firebase-tools": "^11.16.0",
 		"prettier": "^2.6.2",
 		"prettier-plugin-organize-imports": "^3.1.1"
 	}
