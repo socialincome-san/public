@@ -15,6 +15,7 @@ let testEnvironment: RulesTestEnvironment;
 let globalAdminStore: firebase.firestore.Firestore;
 let globalAnalystStore: firebase.firestore.Firestore;
 let testOrganisationAdminStore: firebase.firestore.Firestore;
+let recipientAppAccess: firebase.firestore.Firestore;
 
 beforeAll(async () => {
 	testEnvironment = await initializeTestEnvironment({
@@ -33,6 +34,9 @@ beforeAll(async () => {
 		.firestore();
 	testOrganisationAdminStore = testEnvironment
 		.authenticatedContext('ashoka_admin', { email: 'admin@ashoka.org' })
+		.firestore();
+	recipientAppAccess = testEnvironment
+		.authenticatedContext('recipient_app', { phone_number: '41766666662' })
 		.firestore();
 });
 
@@ -84,6 +88,23 @@ describe('Test recipients collection', () => {
 	it('Read single recipients doc', async () => {
 		const recipientDoc = await getDoc(doc(testOrganisationAdminStore, 'recipients', '3RqjohcNgUXaejFC7av8'));
 		expect(recipientDoc.exists()).toBe(true);
+	});
+
+	it('Read payments subcollection', async () => {
+		// Access as organisation admin
+		const ashokaAdminDocs = await getDocs(
+			query(collection(testOrganisationAdminStore, 'recipients', '3RqjohcNgUXaejFC7av8', 'payments'))
+		);
+		expect(ashokaAdminDocs.size).toBe(1);
+
+		// Access through phone number
+		const phoneNumberAccessDocs = await getDocs(
+			query(collection(recipientAppAccess, 'recipients', 'iF8bLEoUjqOIlq84XQmi', 'payments'))
+		);
+		expect(phoneNumberAccessDocs.size).toBe(1);
+
+		// Phone number mismatch
+		await assertFails(getDocs(query(collection(recipientAppAccess, 'recipients', '3RqjohcNgUXaejFC7av8', 'payments'))));
 	});
 
 	it('Read multiple recipients docs', async () => {

@@ -1,4 +1,4 @@
-# Social Income - User Interface (UI)
+# Readme for Social Income's User Interface (UI)
 
 The UI guidelines, specifications, assets and components to be used for
 Social Income services and platforms.
@@ -72,4 +72,9 @@ are performed:
 ## Contribute
 
 There are several ways to contribute to the Social Income UI project.
-See the [`CONTRIBUTION.md`](/CONTRIBUTION.md) file.
+See the [`CONTRIBUTING.md`](/CONTRIBUTING.md) file.
+
+---
+
+**For more information: [Main Readme](/README.md) /
+[UI Contributing](/ui/README.md)**
