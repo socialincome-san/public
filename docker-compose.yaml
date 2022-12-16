@@ -34,7 +34,8 @@ services:
     ports:
       - "9099:9099" # authentication emulator
       - "8080:8080" # firestore emulator
-      - "5000:5002" # hosting // 5000 can be occupied by apple airplay
+      - "5005:5005" # hosting
+      - "5010:5010" # hosting
       - "5001:5001" # functions
       - "8085:8085" # pubsub emulator
       - "9199:9199" # storage emulator
