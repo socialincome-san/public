@@ -28,7 +28,7 @@
 		"vite": "^4.0.0"
 	},
 	"dependencies": {
-		"@camberi/firecms": "2.0.0-alpha.42",
+		"@camberi/firecms": "2.0.0-alpha.44",
 		"@emotion/react": "^11.10.5",
 		"@emotion/styled": "^11.10.5",
 		"@mui/icons-material": "^5.10.16",
