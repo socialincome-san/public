@@ -89,7 +89,7 @@ export const usersCollection = buildCollection<User>({
 	}),
 	additionalColumns: [FirstNameCol, LastNameCol, GenderCol, PhoneCol, CountryCol, CityCol, ReferralCol],
 	subcollections: [contributionsCollection, donationCertificateCollection],
-	extraActions: CreateDonationCertificatesAction,
+	Actions: CreateDonationCertificatesAction,
 	properties: buildProperties<User>({
 		test_user: {
 			name: 'Test User',
