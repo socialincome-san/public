@@ -4,7 +4,7 @@
 
 https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-ade9-2cc0e153d947.mp4
 
-## Social Income is a radically simple solution in the fight against poverty. We turn 1% of anyone's salary into an unconditional basic income for people living in poverty – sent directly to their mobile phones. The tools that make this possible are built and continuously improved upon by an open source community, who use their technical skills to take on the [SDG 1](https://sdgs.un.org/goals/goal1) (No Poverty) and the [SDG 10](https://sdgs.un.org/goals/goal10) (Reduced Inequality).
+## Social Income is a radically simple solution in the fight against poverty. We turn 1% of anyone's salary into an unconditional basic income for people living in poverty – sent directly to their mobile phones. The tools that make this possible are built and continuously improved upon by an open source community, who use their technical skills to take on the [SDG 1](https://sdgs.un.org/goals/goal1) and the [SDG 10](https://sdgs.un.org/goals/goal10).
 
 # Code Contributions
 
@@ -16,7 +16,8 @@ _contributing_ files:
 | 👥  |                        for staff                         |                for contributors                 |             for recipients with 📱             |              for developers               |                       for developers                       |
 | 📝  |                [Readme](admin/README.md)                 |           [Readme](website/README.md)           |       [Readme](recipients_app/README.md)       |       [Readme](functions/README.md)       |                   [Readme](ui/README.md)                   |
 | 👩🏻‍💻  |          [Contributing](admin/CONTRIBUTING.md)           |     [Contributing](website/CONTRIBUTING.md)     | [Contributing](recipients_app/CONTRIBUTING.md) | [Contributing](functions/CONTRIBUTING.md) |             [Contributing](ui/CONTRIBUTING.md)             |
-| 🌐  | [admin.socialincome.org](https://admin.socialincome.org) | [socialincome.org](https://socialincome.org) \* |              App store links tba               |                     –                     | [SI Storybook](https://socialincome-san.github.io/public/) |
+| 🌐  | [admin.socialincome.org](https://admin.socialincome.org) | [socialincome.org](https://socialincome.org)\* |              App store links tba               |                     –                     | [SI Storybook](https://socialincome-san.github.io/public/) |
+| 🔮  | [localhost:3000](http://localhost:3000) | [localhost:3001](http://localhost:3001) |               –                |                      –                      |  –  |
 
 \* The website socialincome.org is currently rebuild with NextJS
 (instead of VueJS) and the code base moved to this public repo. The
