@@ -34,6 +34,7 @@
 		"lodash": "^4.17.21",
 		"mailparser": "^3.5.0",
 		"pdfkit": "^0.13.0",
-		"stripe": "^10.11.0"
+		"stripe": "^10.11.0",
+		"tmp-promise": "^3.0.3"
 	}
 }
