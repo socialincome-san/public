@@ -69,27 +69,32 @@ To build the helper image locally, run:
 docker compose build
 ```
 
-* To start the Firebase emulators, run `make firebase-serve` and open [localhost:4000](http://localhost:4000).
-* To start the Admin Tool, run `make admin-serve` and open [localhost:3000](http://localhost:3000).
-* To start the Website, run `make website-serve` and open [localhost:3001](http://localhost:3001).
+- To start the Firebase emulators, run `make firebase-serve` and open
+  [localhost:4000](http://localhost:4000).
+- To start the Admin Tool, run `make admin-serve` and open
+  [localhost:3000](http://localhost:3000).
+- To start the Website, run `make website-serve` and open
+  [localhost:3001](http://localhost:3001).
 
 The [Makefile](Makefile) gives you a good overview of the available
-commands. For more information on the development environment see links in table above to tool specific Readme and Contributor files.  
-
+commands. For more information on the development environment see links
+in table above to tool specific Readme and Contributor files.
 
 ### Data Seed
 
 An initial set of data is imported into the Firebase emulators during
-startup of the Admin Tool. You can add, delete or amend data directly in your local
-Admin Tool ([localhost:3000](http://localhost:3000)) or in your local 
-Firestore Admin Interface ([localhost:4000](http://localhost:4000/firestore/data)). 
+startup of the Admin Tool. You can add, delete or amend data directly in
+your local Admin Tool ([localhost:3000](http://localhost:3000)) or in
+your local Firestore Admin Interface
+([localhost:4000](http://localhost:4000/firestore/data)).
 
-For more information about adding data, exporting and committing, see [Readme](seed/README.md) in *seed* subfolder. 
-
+For more information about adding data, exporting and committing, see
+[Readme](seed/README.md) in _seed_ subfolder.
 
 ### Format Code
 
-We are using [Prettier](https://prettier.io) to format the code: `make format-code`.
+We are using [Prettier](https://prettier.io) to format the code:
+`make format-code`.
 
 ### Deployment
 
