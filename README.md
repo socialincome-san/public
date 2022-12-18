@@ -38,7 +38,7 @@ are rebuilding the site with NextJS, Tailwind CSS and React on this
 public repo. You can visit the preview page for the new website
 [here](https://public-dusky-eight.vercel.app).
 
-### Development Setup
+### Basic Development Setup
 
 We are using [Firebase](https://firebase.google.com) as development
 platform. We are mainly leveraging the following tools:
@@ -63,47 +63,38 @@ operating system specific installation, we use a
 [docker-compose](docker-compose.yaml) file to run the npm commands and
 to start the emulators.
 
-Build helper image locally run:
+To build the helper image locally, run:
 
 ```
 docker compose build
 ```
 
-The [Makefile](Makefile) gives you a good overview of the available
-commands. E.g. you can start the firebase emulators on
-[localhost:3000](http://localhost:3000) with
+- To start the Firebase emulators, run `make firebase-serve` and open
+  [localhost:4000](http://localhost:4000).
+- To start the Admin Tool, run `make admin-serve` and open
+  [localhost:3000](http://localhost:3000).
+- To start the Website, run `make website-serve` and open
+  [localhost:3001](http://localhost:3001).
 
-```
-make firebase-serve
-```
+The [Makefile](Makefile) gives you a good overview of the available
+commands. For more information on the development environment see links
+in table above to tool specific Readme and Contributor files.
 
 ### Data Seed
 
 An initial set of data is imported into the Firebase emulators during
-startup. You can add, delete or amend data directly in your local
-[Social Income Admin](http://localhost:3000) or in your local
-[Firestore Admin Interface](http://localhost:4000/firestore/data). Start
-the firestore emulator and our admin with:
+startup of the Admin Tool. You can add, delete or amend data directly in
+your local Admin Tool ([localhost:3000](http://localhost:3000)) or in
+your local Firestore Admin Interface
+([localhost:4000](http://localhost:4000/firestore/data)).
 
-```
-make admin-serve
-```
-
-If you want to commit (no sensitive data) or keep a local copy of your
-altered data set, you can execute in a second shell (while the command
-above still is running) the command
-
-```
- make firebase-export
-```
+For more information about adding data, exporting and committing, see
+[Readme](seed/README.md) in _seed_ subfolder.
 
 ### Format Code
 
-We are using [Prettier](https://prettier.io) to format the code
-
-```shell
-make format-code
-```
+We are using [Prettier](https://prettier.io) to format the code:
+`make format-code`.
 
 ### Deployment
 
