@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 import { DocumentData, Firestore, QueryDocumentSnapshot, QuerySnapshot } from 'firebase-admin/lib/firestore/index';
-import { getMonthId } from 'shared/utils';
+import { getMonthId } from '../../shared/src/utils/date';
 
 admin.initializeApp({
 	credential: admin.credential.applicationDefault(),

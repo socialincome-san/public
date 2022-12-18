@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { bestGuessCurrency } from '../shared/src/utils/currency';
 
 /**
  * Unfortunately, nextjs only allows the definition of 1 global middleware on a root level.
@@ -15,9 +16,9 @@ export const middleware = (request: NextRequest) => {
  */
 export const financesMiddleware = (request: NextRequest) => {
 	if (request.nextUrl.pathname.endsWith('/transparency/finances')) {
-		// TODO add logic leveraging the request.geo.country information
+		const currency = bestGuessCurrency(request.geo?.country);
 		const redirectUrl = request.nextUrl.clone();
-		redirectUrl.pathname = redirectUrl.pathname + '/chf';
+		redirectUrl.pathname = redirectUrl.pathname + '/' + currency.toLowerCase();
 		return NextResponse.redirect(redirectUrl);
 	}
 	return undefined;
