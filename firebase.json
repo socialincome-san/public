@@ -63,6 +63,18 @@
 			"enabled": true,
 			"port": 4000,
 			"host": "0.0.0.0"
+		},
+		"hub": {
+			"host": "0.0.0.0",
+			"port": 4400
+		},
+		"logging": {
+			"host": "0.0.0.0",
+			"port": 4500
+		},
+		"eventarc": {
+			"host": "0.0.0.0",
+			"port": 9299
 		}
 	}
 }
