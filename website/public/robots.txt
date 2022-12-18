@@ -1,0 +1,11 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: public-dusky-eight.vercel.app
+
+
+# Sitemaps
+Sitemap: public-dusky-eight.vercel.app
+/sitemap.xml
