@@ -1,36 +1,31 @@
 import * as functions from 'firebase-functions';
-import { createWriteStream, unlinkSync } from 'fs';
+import { withFile } from 'tmp-promise';
 import { useFirestore } from '../../../shared/src/firebase/firestoreAdmin';
 import { uploadAndGetDownloadURL } from '../../../shared/src/firebase/storageAdmin';
 import { DonationCertificate, Entity, User } from '../../../shared/src/types';
 import { createDonationCertificateCH } from './pdfGeneration';
 
-export interface DonationCertificatesFunctionProps {
+export interface CreateDonationCertificatesFunctionProps {
 	users: Entity<User>[];
 	year: number;
 }
 
 export const createDonationCertificatesFunction = functions.https.onCall(
-	async ({ users, year }: DonationCertificatesFunctionProps) => {
-		const currentDateString = new Date().toLocaleDateString('de-DE');
+	async ({ users, year }: CreateDonationCertificatesFunctionProps) => {
 		let successCount = 0;
 		let skippedCount = 0;
 		for (const user of users) {
 			try {
-				if (user.values.location !== 'CH') {
-					skippedCount += 1;
-					continue;
-				}
-				const tempPDFFileName = 'temp.pdf';
-				const outputFile = createWriteStream(tempPDFFileName);
-				await createDonationCertificateCH(user, year, currentDateString, outputFile);
-				const { downloadUrl } = await uploadAndGetDownloadURL({
-					sourceFilePath: tempPDFFileName,
-					destinationFilePath: `donation-certificates/${user.id}/${year}_${user.values.location}_${currentDateString}.pdf`,
+				await withFile(async ({ path }) => {
+					if (!user.values.location) throw new Error('User location missing');
+					await createDonationCertificateCH(user, year, path);
+					const { downloadUrl } = await uploadAndGetDownloadURL({
+						sourceFilePath: path,
+						destinationFilePath: `donation-certificates/${user.id}/${year}_${user.values.location}.pdf`,
+					});
+					storeDonationCertificate(user.id, { url: downloadUrl, country: user.values.location, year: year });
 				});
-				storeDonationCertificate(user.id, { url: downloadUrl, country: user.values.location, year: year });
 				successCount += 1;
-				unlinkSync(tempPDFFileName);
 			} catch (e) {
 				skippedCount += 1;
 				console.error(e);
@@ -46,10 +41,5 @@ export const storeDonationCertificate = (userId: string, donationCertificate: Do
 		.collection(`users/${userId}/donation-certificate`)
 		.doc(`${donationCertificate.year}-${donationCertificate.country}`)
 		.set(donationCertificate, { merge: true })
-		.then(() => {
-			console.log('Document successfully written!');
-		})
-		.catch((error) => {
-			console.error('Error writing document: ', error);
-		});
+		.then(() => console.log(`Donation certificate document written for user ${userId}`));
 };

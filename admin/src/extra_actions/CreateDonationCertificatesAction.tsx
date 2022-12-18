@@ -6,14 +6,14 @@ import { CollectionActionsProps } from '@camberi/firecms/dist/types/collections'
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import _ from 'lodash';
 import React from 'react';
-import { DonationCertificatesFunctionProps } from '../../../functions/src/donation_certificates/createDonationCertificatesFunction';
+import { CreateDonationCertificatesFunctionProps } from '../../../functions/src/donation_certificates/createDonationCertificatesFunction';
 
 export function CreateDonationCertificatesAction({ selectionController }: CollectionActionsProps<User>) {
 	const snackbarController = useSnackbarController();
 	const [year, setYear] = React.useState<number>(new Date().getFullYear());
 
 	const functions = getFunctions();
-	const createDonationCertificatesFunction = httpsCallable<DonationCertificatesFunctionProps, string>(
+	const createDonationCertificatesFunction = httpsCallable<CreateDonationCertificatesFunctionProps, string>(
 		functions,
 		'createDonationCertificates'
 	);
