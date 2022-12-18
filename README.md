@@ -8,22 +8,6 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
 
 # Code Contributions
 
-For detailed guidelines please refer to the specific _readme_ and
-_contributing_ files:
-
-|     |                        Admin Tool                        |                    Website                     |                   Mobile App                   |                 Functions                 |                             UI                             |
-| :-: | :------------------------------------------------------: | :--------------------------------------------: | :--------------------------------------------: | :---------------------------------------: | :--------------------------------------------------------: |
-| 👥  |                        for staff                         |                for contributors                |             for recipients with 📱             |              for developers               |                       for developers                       |
-| 📝  |                [Readme](admin/README.md)                 |          [Readme](website/README.md)           |       [Readme](recipients_app/README.md)       |       [Readme](functions/README.md)       |                   [Readme](ui/README.md)                   |
-| 👩🏻‍💻  |          [Contributing](admin/CONTRIBUTING.md)           |    [Contributing](website/CONTRIBUTING.md)     | [Contributing](recipients_app/CONTRIBUTING.md) | [Contributing](functions/CONTRIBUTING.md) |             [Contributing](ui/CONTRIBUTING.md)             |
-| 🌐  | [admin.socialincome.org](https://admin.socialincome.org) | [socialincome.org](https://socialincome.org)\* |              App store links tba               |                     –                     | [SI Storybook](https://socialincome-san.github.io/public/) |
-| 🔮  |         [localhost:3000](http://localhost:3000)          |    [localhost:3001](http://localhost:3001)     |                       –                        |                     –                     |                             –                              |
-
-\* The website socialincome.org is currently rebuild with NextJS
-(instead of VueJS) and the code base moved to this public repo. The
-preview page (work in progress) for the new website you find
-[here](https://public-dusky-eight.vercel.app).
-
 Finding a good issue: `↗`
 [Help wanted](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22),
 `↗`
@@ -31,11 +15,30 @@ Finding a good issue: `↗`
 `↗`
 [All issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue)
 
-### Development Setup
+### You can contribute to all three tools that run Social Income:
 
-```
-Visit the `Readme` and `Contributing` files in the submodules for detailed instructions
-```
+|                  |                                   Admin Tool                                    |                                Website                                |                                     Mobile App                                      |
+| ---------------- | :-----------------------------------------------------------------------------: | :-------------------------------------------------------------------: | :---------------------------------------------------------------------------------: |
+| **Purpose**      |              Staff manages contributors, recipients and payments.               |               Raising donations and inform the public.                |                         User manages payments and surveys.                          |
+| **Instructions** |        [Readme](admin/README.md) / [Contributing](admin/CONTRIBUTING.md)        | [Readme](website/README.md) / [Contributing](website/CONTRIBUTING.md) | [Readme](recipients_app/README.md) / [Contributing](recipients_app/CONTRIBUTING.md) |
+| **Live**         |            [admin.socialincome.org](https://admin.socialincome.org)             |            [socialincome.org](https://socialincome.org)\*             |                                 App store links tba                                 |
+| **Localhost**    | [localhost:3000](http://localhost:3000) [localhost:4000](http://localhost:4000) |                [localhost:3001](http://localhost:3001)                |                                          –                                          |
+| **Commands**     |                               `make admin-serve`                                |                         `make website-serve`                          |                                  building flavors                                   |
+
+The website and admin tool use cloud functions
+([Readme](functions/README.md) /
+[Contributing](functions/CONTRIBUTING.md)). You can also develop UI
+components with Tailwind CSS independent of the website
+([Readme](ui/README.md) / [Contributing](ui/CONTRIBUTING.md)). The
+components are all collected in our
+[Storybook](https://socialincome-san.github.io/public/).
+
+\* The current website socialincome.org is still on a private repo. We
+are rebuilding the site with NextJS, Tailwind CSS and React on this
+public repo. You can visit the preview page for the new website
+[here](https://public-dusky-eight.vercel.app).
+
+### Development Setup
 
 We are using [Firebase](https://firebase.google.com) as development
 platform. We are mainly leveraging the following tools:
