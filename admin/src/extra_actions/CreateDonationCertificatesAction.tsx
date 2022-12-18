@@ -1,13 +1,14 @@
-import { ExtraActionsParams, useSnackbarController } from '@camberi/firecms';
+import { useSnackbarController } from '@camberi/firecms';
 import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { User } from '../../../shared/src/types';
 
+import { CollectionActionsProps } from '@camberi/firecms/dist/types/collections';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import _ from 'lodash';
 import React from 'react';
 import { DonationCertificatesFunctionProps } from '../../../functions/src/donation_certificates/createDonationCertificatesFunction';
 
-export function CreateDonationCertificatesAction({ selectionController }: ExtraActionsParams<User>) {
+export function CreateDonationCertificatesAction({ selectionController }: CollectionActionsProps<User>) {
 	const snackbarController = useSnackbarController();
 	const [year, setYear] = React.useState<number>(new Date().getFullYear());
 
