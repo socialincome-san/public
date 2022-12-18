@@ -1,5 +1,5 @@
-import 'package:app/models/currentUser.dart';
-import 'package:app/models/transaction.dart';
+import 'package:app/models/current_user.dart';
+import 'package:app/models/social_income_transaction.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseService {

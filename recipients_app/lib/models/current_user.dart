@@ -1,5 +1,5 @@
-import 'package:app/models/transaction.dart';
-import 'package:app/services/databaseService.dart';
+import 'package:app/models/social_income_transaction.dart';
+import 'package:app/services/database_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
