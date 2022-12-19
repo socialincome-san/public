@@ -9,7 +9,8 @@ firestore.rules andras@socialincome.org michael@socialincome.org
 package.json andras@socialincome.org michael@socialincome.org rene@socialincome.org
 storage.rules andras@socialincome.org michael@socialincome.org
 
-admin/ andras@socialincome.org michael@socialincome.org dev@socialincome.org
-functions/ andras@socialincome.org michael@socialincome.org dev@socialincome.org
-shared/ andras@socialincome.org michael@socialincome.org dev@socialincome.org
+admin/ andras@socialincome.org michael@socialincome.org sandino@socialincome.org
+functions/ andras@socialincome.org michael@socialincome.org sandino@socialincome.org
+shared/ andras@socialincome.org michael@socialincome.org sandino@socialincome.org
 
+.md/ sandino@socialincome.org andras@socialincome.org michael@socialincome.org
