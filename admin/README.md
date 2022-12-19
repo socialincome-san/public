@@ -1,6 +1,6 @@
 # Admin Tool
 
-<img width="1377" alt="Screenshot 2022-12-19 at 00 26 28" src="https://user-images.githubusercontent.com/6095849/208325012-9588fc20-7243-4fb9-9c77-111dd17e2739.png">
+<img width="1377" alt="firecms" src="https://user-images.githubusercontent.com/62838956/208391518-efd59a1d-6733-4ded-aff8-29ae8ac9bfbb.png">
 
 The Admin Tool is a react frontend app. We are using
 [Firestore](https://firebase.google.com/docs/firestore) as database and
