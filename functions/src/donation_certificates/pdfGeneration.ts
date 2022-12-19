@@ -1,5 +1,5 @@
 import { Timestamp } from 'firebase-admin/lib/firestore';
-import { WriteStream } from 'fs';
+import { createWriteStream } from 'fs';
 import { useFirestore } from '../../../shared/src/firebase/firestoreAdmin';
 import { Contribution, Entity, User } from '../../../shared/src/types';
 
@@ -53,16 +53,13 @@ export const calculateFinancials = async (userId: string, year: number) => {
 	};
 };
 
-export const createDonationCertificateCH = (
-	userEntity: Entity<User>,
-	year: number,
-	currentDateString: string,
-	outputFile: WriteStream
-) => {
+export const createDonationCertificateCH = (userEntity: Entity<User>, year: number, filePath: string) => {
 	return new Promise<void>(async (resolve) => {
+		let writeStream = createWriteStream(filePath);
 		let user = userEntity.values;
 		let translations = user.location === 'CH' ? GERMAN_TRANSLATIONS : FRENSH_TRANSLATIONS;
 		const financials = await calculateFinancials(userEntity.id, year);
+		const currentDateString = new Date().toLocaleDateString('de-DE');
 		const PDFDocument = require('pdfkit');
 		let docPdf = new PDFDocument();
 		docPdf.image('../shared/assets/logos/logo_color@2x.png', 45, 20, { width: 180 });
@@ -142,8 +139,8 @@ export const createDonationCertificateCH = (
 		docPdf.text(translations['donation-certificate.footer-1'], 45, docPdf.page.height - 150);
 		docPdf.text(translations['donation-certificate.footer-2'], 245, docPdf.page.height - 150);
 		docPdf.text(translations['donation-certificate.footer-3'], 445, docPdf.page.height - 150);
-		docPdf.pipe(outputFile);
-		outputFile.on('finish', () => resolve());
+		docPdf.pipe(writeStream);
+		writeStream.on('finish', () => resolve());
 		docPdf.end();
 	});
 };
