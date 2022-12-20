@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions';
 import { useFirestore } from '../../../shared/src/firebase/firestoreAdmin';
 import { Recipient, RECIPIENT_FIRESTORE_PATH } from '../../../shared/src/types';
 
+// TODO: make sure only admins or certain users are allowed to call this function!
 export const createOrangeMoneyCSVFunction = functions.https.onCall(async () => {
 	const firestore = useFirestore();
 	const recipientDocs = (await firestore.collection(RECIPIENT_FIRESTORE_PATH).get()).docs;

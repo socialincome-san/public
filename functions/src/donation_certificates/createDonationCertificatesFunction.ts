@@ -10,6 +10,7 @@ export interface CreateDonationCertificatesFunctionProps {
 	year: number;
 }
 
+// TODO: make sure only admins or certain users are allowed to call this function!
 export const createDonationCertificatesFunction = functions.https.onCall(
 	async ({ users, year }: CreateDonationCertificatesFunctionProps) => {
 		let successCount = 0;
