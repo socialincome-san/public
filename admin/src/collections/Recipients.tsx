@@ -9,6 +9,7 @@ import {
 import { isUndefined } from 'lodash';
 import { PARTNER_ORGANISATION_FIRESTORE_PATH, Recipient, RECIPIENT_FIRESTORE_PATH } from '../../../shared/src/types';
 import { getMonthIDs } from '../../../shared/utils';
+import { CreateOrangeMoneyCSVAction } from '../actions/CreateOrangeMoneyCSVAction';
 import { BuildCollectionProps } from './index';
 import { paymentsCollection, paymentStatusMap } from './Payments';
 
@@ -67,6 +68,7 @@ const organisationAdminProperties = buildProperties<Partial<Recipient>>({
 			phone: {
 				name: 'Orange Money Number',
 				dataType: 'number',
+				validation: { required: true, min: 23200000000, max: 23299999999 },
 			},
 			has_whatsapp: {
 				name: '# used on Whatsapp',
@@ -126,6 +128,7 @@ const organisationAdminProperties = buildProperties<Partial<Recipient>>({
 });
 
 const globalAdminProperties = buildProperties<Recipient>({
+	// TODO: reuse properties from organisationAdminProperties
 	test_recipient: {
 		name: 'Test Recipient',
 		dataType: 'boolean',
@@ -182,6 +185,7 @@ const globalAdminProperties = buildProperties<Recipient>({
 			phone: {
 				name: 'Phone Number',
 				dataType: 'number',
+				validation: { required: true, min: 23200000000, max: 23299999999 },
 			},
 			has_whatsapp: {
 				name: 'Has Whatsapp',
@@ -385,22 +389,19 @@ const CurrMonthCol = createMonthColumn(monthIDs[0], monthIDs[0] + ' (Current)');
 const PrevMonthCol = createMonthColumn(monthIDs[1], monthIDs[1]);
 const PrevPrevMonthCol = createMonthColumn(monthIDs[2], monthIDs[2]);
 
-export const buildRecentPaymentsCollection = ({ isGlobalAdmin }: BuildCollectionProps) => {
-	const defaultParams = {
-		name: 'Payment Confirmations',
-		singularName: 'Recipient',
-		path: RECIPIENT_FIRESTORE_PATH,
-		alias: 'recentPayments',
-		group: 'Recipients',
-		icon: 'PriceCheck',
-		description: 'Payment confirmations of last three month',
-		textSearchEnabled: true,
-	};
-	return buildCollection<Partial<Recipient>>({
-		...defaultParams,
-		properties: basicRecipientProperties,
-		subcollections: [paymentsCollection],
-		inlineEditing: true,
-		additionalColumns: [CurrMonthCol, PrevMonthCol, PrevPrevMonthCol],
-	});
-};
+export const recentPaymentsCollection = buildCollection<Partial<Recipient>>({
+	name: 'Payment Confirmations',
+	singularName: 'Recipient',
+	path: RECIPIENT_FIRESTORE_PATH,
+	alias: 'recentPayments',
+	group: 'Recipients',
+	icon: 'PriceCheck',
+	description: 'Payment confirmations of last three month',
+	textSearchEnabled: true,
+	properties: basicRecipientProperties,
+	subcollections: [paymentsCollection],
+	exportable: false,
+	Actions: CreateOrangeMoneyCSVAction,
+	inlineEditing: true,
+	additionalColumns: [CurrMonthCol, PrevMonthCol, PrevPrevMonthCol],
+});

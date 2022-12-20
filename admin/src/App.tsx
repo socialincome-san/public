@@ -22,12 +22,12 @@ import {
 	contributorOrganisationsCollection,
 	newsletterSubscribersCollection,
 	operationalExpensesCollection,
-	orangeMoneyRecipientsCollection,
 	usersCollection,
 } from './collections';
 
 import { getApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
+import { recentPaymentsCollection } from './collections/Recipients';
 import { ScriptsView } from './views/Scripts';
 
 const onFirebaseInit = () => {
@@ -104,11 +104,10 @@ export default function App() {
 		operationalExpensesCollection,
 		newsletterSubscribersCollection,
 		contributorOrganisationsCollection,
-		orangeMoneyRecipientsCollection,
 		usersCollection,
+		recentPaymentsCollection,
 		buildPartnerOrganisationsCollection({ isGlobalAdmin: true }),
 		buildRecipientsCollection({ isGlobalAdmin: true }),
-		buildRecentPaymentsCollection({ isGlobalAdmin: true }),
 	];
 
 	// The initialFilter property on collections is static, i.e. we can't dynamically access user information when we create

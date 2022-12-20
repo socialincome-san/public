@@ -23,7 +23,6 @@ export * from './admin/ContributorOrganisation';
 export * from './admin/DonationCertificate';
 export * from './admin/NewsletterSubscriber';
 export * from './admin/OperationalExpense';
-export * from './admin/OrangeMoneyRecipient';
 export * from './admin/PartnerOrganisation';
 export * from './admin/Payment';
 export * from './admin/Recipient';
