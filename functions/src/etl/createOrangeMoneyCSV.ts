@@ -9,13 +9,7 @@ export const createOrangeMoneyCSVFunction = functions.https.onCall(async () => {
 	return createRecipientsCSV(recipients, new Date());
 });
 
-export const createRecipientsCSV = (
-	recipients: Pick<
-		Recipient,
-		'mobile_money_phone' | 'om_uid' | 'first_name' | 'last_name' | 'test_recipient' | 'progr_status'
-	>[],
-	date: Date
-) => {
+export const createRecipientsCSV = (recipients: Recipient[], date: Date) => {
 	const csvRows = [['Mobile Number*', 'Amount*', 'First Name', 'Last Name', 'Id Number', 'Remarks*', 'User Type*']];
 	for (const recipient of recipients) {
 		if (['active', 'designated'].includes(recipient.progr_status) && !recipient.test_recipient) {
