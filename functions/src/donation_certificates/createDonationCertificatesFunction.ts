@@ -4,14 +4,16 @@ import { useFirestore } from '../../../shared/src/firebase/firestoreAdmin';
 import { uploadAndGetDownloadURL } from '../../../shared/src/firebase/storageAdmin';
 import { DonationCertificate, Entity, User } from '../../../shared/src/types';
 import { createDonationCertificateCH } from './pdfGeneration';
+import { sendDonationCertificateMail } from './sendDonationCertificateMail';
 
-export interface CreateDonationCertificatesFunctionProps {
+export interface DonationCertificatesFunctionProps {
 	users: Entity<User>[];
 	year: number;
+	mailFlag: boolean;
 }
 
 export const createDonationCertificatesFunction = functions.https.onCall(
-	async ({ users, year }: CreateDonationCertificatesFunctionProps) => {
+	async ({ users, year, mailFlag }: DonationCertificatesFunctionProps) => {
 		let successCount = 0;
 		let skippedCount = 0;
 		for (const user of users) {
@@ -24,6 +26,9 @@ export const createDonationCertificatesFunction = functions.https.onCall(
 						destinationFilePath: `donation-certificates/${user.id}/${year}_${user.values.location}.pdf`,
 					});
 					storeDonationCertificate(user.id, { url: downloadUrl, country: user.values.location, year: year });
+					if (mailFlag) {
+						await sendDonationCertificateMail(user, year, path);
+					}
 				});
 				successCount += 1;
 			} catch (e) {

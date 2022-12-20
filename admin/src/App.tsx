@@ -29,6 +29,7 @@ import {
 import { getApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { ScriptsView } from './views/Scripts';
+import { sample } from 'lodash';
 
 const onFirebaseInit = () => {
 	if (import.meta.env.VITE_ADMIN_FB_AUTH_EMULATOR_URL) {
@@ -129,7 +130,7 @@ export default function App() {
 	];
 	const [customViews, setCustomViews] = useState<CMSView[]>(publicCustomViews);
 
-	const myAuthenticator: Authenticator<User> = async ({ user, dataSource }) => {
+	const myAuthenticator: Authenticator<User> = async ({ user, dataSource, authController }) => {
 		dataSource
 			.fetchEntity<AdminUser>({
 				path: adminsCollection.path,
@@ -142,6 +143,9 @@ export default function App() {
 					if (result?.values?.is_global_admin) {
 						setCollections(globalAdminCollections);
 						setCustomViews(publicCustomViews.concat(globalAdminCustomViews));
+						const isGlobalAdmin = true;
+						authController.setExtra({ isGlobalAdmin });
+
 					} else {
 						setCollections([
 							buildPartnerOrganisationsCollection({ isGlobalAdmin: false }),
