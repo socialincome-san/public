@@ -12,5 +12,5 @@ export { newsletterSubscribersCollection } from './NewsletterSubscribers';
 export { operationalExpensesCollection } from './OperationalExpenses';
 export { buildPartnerOrganisationsCollection } from './PartnerOrganisations';
 export { paymentsCollection } from './Payments';
-export { buildRecentPaymentsCollection, buildRecipientsCollection } from './Recipients';
+export { buildRecipientsCollection, recentPaymentsCollection } from './Recipients';
 export { usersCollection } from './Users';

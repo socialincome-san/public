@@ -17,17 +17,16 @@ import { AdminUser } from '../../shared/src/types';
 import {
 	adminsCollection,
 	buildPartnerOrganisationsCollection,
-	buildRecentPaymentsCollection,
 	buildRecipientsCollection,
 	contributorOrganisationsCollection,
 	newsletterSubscribersCollection,
 	operationalExpensesCollection,
+	recentPaymentsCollection,
 	usersCollection,
 } from './collections';
 
 import { getApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
-import { recentPaymentsCollection } from './collections/Recipients';
 import { ScriptsView } from './views/Scripts';
 
 const onFirebaseInit = () => {
@@ -148,7 +147,7 @@ export default function App() {
 								isGlobalAdmin: false,
 								organisations: result?.values?.organisations,
 							}),
-							buildRecentPaymentsCollection({ isGlobalAdmin: false }),
+							recentPaymentsCollection,
 						]);
 					}
 				}
