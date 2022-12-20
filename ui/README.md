@@ -51,9 +51,9 @@ commands\_
 
 #### Without `make`
 
-If for whatever reason you can't use `make`, you can the Docker Compose
-commands directly. See the `Makefile` in the root for how that might
-work.
+If for whatever reason you can't use `make`, you can use the Docker Compose
+commands directly. See the [Makefile](../Makefile) in the root for how that might
+work. 
 
 ## Build for publishing
 
