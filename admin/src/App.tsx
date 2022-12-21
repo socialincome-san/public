@@ -9,11 +9,11 @@ import {
 	performAlgoliaTextSearch,
 	User,
 } from '@camberi/firecms';
-import { AdminUser } from '../../shared/src/types';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import { useState } from 'react';
+import { AdminUser } from '../../shared/src/types';
 import {
 	adminsCollection,
 	buildPartnerOrganisationsCollection,
@@ -28,41 +28,65 @@ import {
 
 import { getApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
-import * as config from './config';
 import { ScriptsView } from './views/Scripts';
 
 const onFirebaseInit = () => {
-	if (config.FB_AUTH_EMULATOR_URL) {
-		connectAuthEmulator(getAuth(), config.FB_AUTH_EMULATOR_URL);
+	if (import.meta.env.VITE_ADMIN_FB_AUTH_EMULATOR_URL) {
+		connectAuthEmulator(getAuth(), import.meta.env.VITE_ADMIN_FB_AUTH_EMULATOR_URL);
 		console.log('Using auth emulator');
 	} else {
 		console.log('Using production auth');
 	}
-	if (config.FB_FIRESTORE_EMULATOR_HOST && config.FB_FIRESTORE_EMULATOR_PORT) {
-		connectFirestoreEmulator(getFirestore(), config.FB_FIRESTORE_EMULATOR_HOST, +config.FB_FIRESTORE_EMULATOR_PORT);
-		console.log(config.FB_FIRESTORE_EMULATOR_PORT);
+	if (import.meta.env.VITE_ADMIN_FB_FIRESTORE_EMULATOR_HOST && import.meta.env.VITE_ADMIN_FB_FIRESTORE_EMULATOR_PORT) {
+		connectFirestoreEmulator(
+			getFirestore(),
+			import.meta.env.VITE_ADMIN_FB_FIRESTORE_EMULATOR_HOST,
+			+import.meta.env.VITE_ADMIN_FB_FIRESTORE_EMULATOR_PORT
+		);
+		console.log(import.meta.env.VITE_ADMIN_FB_FIRESTORE_EMULATOR_PORT);
 		console.log('Using firestore emulator');
 	} else {
 		console.log('Using production firestore');
 	}
-	if (config.FB_STORAGE_EMULATOR_HOST && config.FB_STORAGE_EMULATOR_PORT) {
-		connectStorageEmulator(getStorage(), config.FB_STORAGE_EMULATOR_HOST, +config.FB_STORAGE_EMULATOR_PORT);
+	if (import.meta.env.VITE_ADMIN_FB_STORAGE_EMULATOR_HOST && import.meta.env.VITE_ADMIN_FB_STORAGE_EMULATOR_PORT) {
+		connectStorageEmulator(
+			getStorage(),
+			import.meta.env.VITE_ADMIN_FB_STORAGE_EMULATOR_HOST,
+			+import.meta.env.VITE_ADMIN_FB_STORAGE_EMULATOR_PORT
+		);
 		console.log('Using storage emulator');
 	} else {
 		console.log('Using production storage');
 	}
-	if (config.FB_FUNCTIONS_EMULATOR_HOST && config.FB_FUNCTIONS_EMULATOR_PORT) {
+	if (import.meta.env.VITE_FB_FUNCTIONS_EMULATOR_HOST && import.meta.env.VITE_FB_FUNCTIONS_EMULATOR_PORT) {
 		const app = getApp();
 		console.log(app);
 		const functions = getFunctions(app);
-		connectFunctionsEmulator(functions, config.FB_FUNCTIONS_EMULATOR_HOST, +config.FB_FUNCTIONS_EMULATOR_PORT);
+		connectFunctionsEmulator(
+			functions,
+			import.meta.env.VITE_FB_FUNCTIONS_EMULATOR_HOST,
+			+import.meta.env.VITE_FB_FUNCTIONS_EMULATOR_PORT
+		);
 		console.log('Using functions emulator');
 	}
 };
 
+const firebaseConfig = {
+	apiKey: import.meta.env.VITE_ADMIN_FB_API_KEY,
+	authDomain: import.meta.env.VITE_ADMIN_FB_AUTH_DOMAIN,
+	databaseURL: import.meta.env.VITE_ADMIN_FB_DATABASE_URL,
+	projectId: import.meta.env.VITE_ADMIN_FB_PROJECT_ID,
+	storageBucket: import.meta.env.VITE_ADMIN_FB_STORAGE_BUCKET,
+	messagingSenderId: import.meta.env.VITE_ADMIN_FB_MESSAGING_SENDER_ID,
+	measurementId: import.meta.env.VITE_ADMIN_FB_MEASUREMENT_ID,
+};
+
 const recipientsIndex =
-	config.ALGOLIA_APPLICATION_ID && config.ALGOLIA_SEARCH_KEY
-		? algoliasearch(config.ALGOLIA_APPLICATION_ID, config.ALGOLIA_SEARCH_KEY).initIndex('recipients')
+	import.meta.env.VITE_ADMIN_ALGOLIA_APPLICATION_ID && import.meta.env.VITE_ADMIN_ALGOLIA_SEARCH_KEY
+		? algoliasearch(
+				import.meta.env.VITE_ADMIN_ALGOLIA_APPLICATION_ID,
+				import.meta.env.VITE_ADMIN_ALGOLIA_SEARCH_KEY
+		  ).initIndex('recipients')
 		: undefined;
 
 const textSearchController: FirestoreTextSearchController = ({ path, searchString }) => {
@@ -141,10 +165,9 @@ export default function App() {
 			signInOptions={['google.com', 'password']}
 			collections={collections}
 			authentication={myAuthenticator}
-			fontFamily={'SoSans'}
 			locale={'enUS'}
 			textSearchController={textSearchController}
-			firebaseConfig={config.FIREBASE_CONFIG}
+			firebaseConfig={firebaseConfig}
 			onFirebaseInit={onFirebaseInit}
 			dateTimeFormat={'yyyy-MM-dd'}
 			views={customViews}

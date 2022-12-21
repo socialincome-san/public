@@ -1,0 +1,6 @@
+{
+	"finances": {
+		"title": "Current Finances",
+		"mainText": "We show you this page in: {{currency}}. The current bank balance is: {{balance, currency}}."
+	}
+}

@@ -3,7 +3,6 @@
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"lib": ["dom", "es2020"],
-		"module": "commonjs",
 		"moduleResolution": "node",
 		"noImplicitReturns": true,
 		"noUnusedLocals": true,
