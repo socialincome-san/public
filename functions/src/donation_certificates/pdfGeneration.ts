@@ -187,7 +187,8 @@ const GERMAN_TRANSLATIONS: TranslationStub = {
 	'donation-certificate.contributions-eur': 'Spenden in EUR: ',
 	'donation-certificate.contributions-usd': 'Spenden in USD: ',
 	'donation-certificate.no-contributions': 'Keine Spenden',
-	'donation-certificate.information-1': 'Bitte beachten Sie für einen möglichen Spendenabzug Ihrer Spende die kantonalen Regelungen in Ihrem Steuerkanton.',
+	'donation-certificate.information-1':
+		'Bitte beachten Sie für einen möglichen Spendenabzug Ihrer Spende die kantonalen Regelungen in Ihrem Steuerkanton.',
 	'donation-certificate.information-2': 'Vielen Dank für Ihre Unterstützung.',
 	'donation-certificate.information-3': 'Freundliche Grüsse',
 	'donation-certificate.signature-1': 'Geschäftsführer',
@@ -213,7 +214,8 @@ const FRENSH_TRANSLATIONS: TranslationStub = {
 	'donation-certificate.contributions-eur': 'Dons en EUR: ',
 	'donation-certificate.contributions-usd': 'Dons en USD: ',
 	'donation-certificate.no-contributions': 'Pas de dons',
-	'donation-certificate.information-1': 'Pour bénéficier d’une éventuelle déduction fiscale, nous vous invitons à vous renseigner sur la réglementation fiscale de votre canton concernant les donations à une organisation d’utilité publique.',
+	'donation-certificate.information-1':
+		'Pour bénéficier d’une éventuelle déduction fiscale, nous vous invitons à vous renseigner sur la réglementation fiscale de votre canton concernant les donations à une organisation d’utilité publique.',
 	'donation-certificate.information-2': 'Nous vous remercions chaleureusement de votre soutien.',
 	'donation-certificate.information-3': 'Bien cordialement',
 	'donation-certificate.signature-1': 'Directeur général',
@@ -239,7 +241,8 @@ const ENGLISH_TRANSLATIONS: TranslationStub = {
 	'donation-certificate.contributions-eur': 'Donations in EUR: ',
 	'donation-certificate.contributions-usd': 'Donations in USD: ',
 	'donation-certificate.no-contributions': 'No donations',
-	'donation-certificate.information-1':'Please refer to the cantonal tax regulations for more information on how to deduct your donations.',
+	'donation-certificate.information-1':
+		'Please refer to the cantonal tax regulations for more information on how to deduct your donations.',
 	'donation-certificate.information-2': 'Thank you for your support.',
 	'donation-certificate.information-3': 'All the best,',
 	'donation-certificate.signature-1': 'Director',
