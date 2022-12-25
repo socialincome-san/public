@@ -1,5 +1,16 @@
-import { useAuthController, useSnackbarController, CollectionActionsProps } from '@camberi/firecms';
-import { Box, Button, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Modal, Select, SelectChangeEvent, Typography } from '@mui/material';
+import { CollectionActionsProps, useAuthController, useSnackbarController } from '@camberi/firecms';
+import {
+	Box,
+	Button,
+	Checkbox,
+	FormControl,
+	FormControlLabel,
+	InputLabel,
+	MenuItem,
+	Modal,
+	Select,
+	Typography,
+} from '@mui/material';
 import { User } from '../../../shared/src/types';
 
 import { getFunctions, httpsCallable } from 'firebase/functions';
@@ -17,8 +28,7 @@ const style = {
 	bgcolor: 'background.paper',
 	boxShadow: 24,
 	p: 4,
-  };
-
+};
 
 export function CreateDonationCertificatesAction({ selectionController }: CollectionActionsProps<User>) {
 	const snackbarController = useSnackbarController();
@@ -39,7 +49,7 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 
 	const setMailCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setChecked(event.target.checked);
-	  };
+	};
 
 	const onClick = () => {
 		const selectedEntities = selectionController?.selectedEntities;
@@ -47,7 +57,7 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 			createDonationCertificatesFunction({
 				year: year,
 				users: selectedEntities,
-				mailFlag: checked
+				sendEmails: checked,
 			})
 				.then((result) => {
 					snackbarController.open({
@@ -71,35 +81,46 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 
 	return (
 		<div>
-			{isGlobalAdmin ? 
-			<Button onClick={handleOpen} color="primary">
-			Create Donation Certificates
-			</Button> : null }
+			{isGlobalAdmin ? (
+				<Button onClick={handleOpen} color="primary">
+					Create Donation Certificates
+				</Button>
+			) : null}
 			<Modal
-			open={open}
-			onClose={handleClose}
-			aria-labelledby="modal-modal-title"
-			aria-describedby="modal-modal-description"
+				open={open}
+				onClose={handleClose}
+				aria-labelledby="modal-modal-title"
+				aria-describedby="modal-modal-description"
 			>
 				<Box sx={style}>
-					<Typography sx={{m: 1}} variant="h5"> Donation Certificate Management</Typography>
-					<Typography sx={{m: 1}} variant="subtitle1"> Please specify for which year the certifacte(s) should be generated:</Typography>
+					<Typography sx={{ m: 1 }} variant="h5">
+						{' '}
+						Donation Certificate Management
+					</Typography>
+					<Typography sx={{ m: 1 }} variant="subtitle1">
+						{' '}
+						Please specify for which year the certifacte(s) should be generated:
+					</Typography>
 					<FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-							<InputLabel id="demo-select-small">Year</InputLabel>
-							<Select value={year} label="Year" onChange={(e) => setYear(parseInt(e.target.value as string))}>
-						{_.range(2020, 2030).map((year) => (
-							<MenuItem key={year} value={year}>
-								{year}
-							</MenuItem>
-						))}
-					</Select>
+						<InputLabel id="demo-select-small">Year</InputLabel>
+						<Select value={year} label="Year" onChange={(e) => setYear(parseInt(e.target.value as string))}>
+							{_.range(2020, 2030).map((year) => (
+								<MenuItem key={year} value={year}>
+									{year}
+								</MenuItem>
+							))}
+						</Select>
 					</FormControl>
-					<FormControlLabel sx={{m: 1}}control={
-						<Checkbox sx={{paddingLeft: 0}}
+					<FormControlLabel
+						sx={{ m: 1 }}
+						control={
+							<Checkbox
+								sx={{ paddingLeft: 0 }}
 								checked={checked}
 								onChange={setMailCheckbox}
-								inputProps={{ 'aria-label': 'controlled' }}/>
-							}
+								inputProps={{ 'aria-label': 'controlled' }}
+							/>
+						}
 						label={<Typography variant="body2">Send via Mail to Contributors</Typography>}
 					/>
 					<Button onClick={onClick} color="primary">
@@ -108,6 +129,5 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 				</Box>
 			</Modal>
 		</div>
-
 	);
 }

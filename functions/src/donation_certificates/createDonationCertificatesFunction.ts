@@ -9,11 +9,11 @@ import { sendDonationCertificateMail } from './sendDonationCertificateMail';
 export interface DonationCertificatesFunctionProps {
 	users: Entity<User>[];
 	year: number;
-	mailFlag: boolean;
+	sendEmails: boolean;
 }
 
 export const createDonationCertificatesFunction = functions.https.onCall(
-	async ({ users, year, mailFlag }: DonationCertificatesFunctionProps) => {
+	async ({ users, year, sendEmails }: DonationCertificatesFunctionProps) => {
 		let successCount = 0;
 		let skippedCount = 0;
 		for (const user of users) {
@@ -26,7 +26,7 @@ export const createDonationCertificatesFunction = functions.https.onCall(
 						destinationFilePath: `donation-certificates/${user.id}/${year}_${user.values.location}.pdf`,
 					});
 					storeDonationCertificate(user.id, { url: downloadUrl, country: user.values.location, year: year });
-					if (mailFlag) {
+					if (sendEmails) {
 						await sendDonationCertificateMail(user, year, path);
 					}
 				});
