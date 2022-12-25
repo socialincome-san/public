@@ -4,7 +4,7 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { displayedCurrencies } from '../../../../shared/src/utils/currency';
-import Layout from '../../../components/layout';
+import Layout from '../../../components/Layout';
 
 interface Props {
 	currency: string;
