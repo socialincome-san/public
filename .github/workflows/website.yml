@@ -42,17 +42,15 @@ jobs:
       - name: Run Unit Tests
         run: npm run website:test:emulator
 
-      # TODO We need to run the snapshot generation with the OS as here,
-      # Will look into changing our docker images to support playwright in another step
-      #      - name: Run e2e Tests
-      #        run: npm run website:test:e2e:emulator
-      #      - name: Upload Playwright Repo
-      #        uses: actions/upload-artifact@v2
-      #        if: always()
-      #        with:
-      #          name: playwright-report
-      #          path: website/playwright-report/
-      #          retention-days: 1
+      - name: Run e2e Tests
+        run: npm run website:test:e2e:emulator
+      - name: Upload Playwright Repo
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: playwright-report
+          path: website/playwright-report/
+          retention-days: 30
       # TODO: deploy report to GitHub Pages analog to how we do it with storybook
 
       - name: Test build

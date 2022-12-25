@@ -1,5 +1,5 @@
 import { EntityReference } from '@camberi/firecms';
-import { capitalizeStringIfUppercase } from '../../../utils';
+import { capitalizeStringIfUppercase } from '../../utils/strings';
 
 export const USER_FIRESTORE_PATH = 'users';
 
