@@ -1,13 +1,3 @@
-import _ from 'lodash';
-
-export const capitalizeStringIfUppercase = (value: string) => {
-	if (value.toUpperCase() === value) {
-		return _.upperFirst(value);
-	} else {
-		return value;
-	}
-};
-
 export function getValidMonths(askedDate: Date, start: Date, n: number) {
 	let year = askedDate.getFullYear();
 	let month = askedDate.getMonth();
