@@ -57,7 +57,7 @@ export const createDonationCertificateCH = (userEntity: Entity<User>, year: numb
 	return new Promise<void>(async (resolve) => {
 		let writeStream = createWriteStream(filePath);
 		let user = userEntity.values;
-		let translations = user.location === 'CH' ? GERMAN_TRANSLATIONS : FRENSH_TRANSLATIONS;
+		let translations = user.location === 'CH' ? GERMAN_TRANSLATIONS : FRENCH_TRANSLATIONS;
 		const financials = await calculateFinancials(userEntity.id, year);
 		const currentDateString = new Date().toLocaleDateString('de-DE');
 		const PDFDocument = require('pdfkit');
@@ -198,7 +198,7 @@ const GERMAN_TRANSLATIONS: TranslationStub = {
 	'donation-certificate.footer-3': `Kontakt\n\n\n\nsocialincome.org`,
 };
 
-const FRENSH_TRANSLATIONS: TranslationStub = {
+const FRENCH_TRANSLATIONS: TranslationStub = {
 	'donation-certificate.header': 'Association à but non lucratif\nexonérée d’impôt par le\nCanton de Zurich',
 	'donation-certificate.title': 'Attestation de dons pour',
 	'donation-certificate.fiscal-year': 'année fiscale ',
@@ -225,6 +225,7 @@ const FRENSH_TRANSLATIONS: TranslationStub = {
 	'donation-certificate.footer-3': `Contact\n\n\nsocialincome.org`,
 };
 
+// @ts-ignore
 const ENGLISH_TRANSLATIONS: TranslationStub = {
 	'donation-certificate.header': 'Association with tax exemption in the canton of Zurich',
 	'donation-certificate.title': 'Donation receipt',
