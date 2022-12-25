@@ -29,7 +29,6 @@ import {
 import { getApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { ScriptsView } from './views/Scripts';
-import { sample } from 'lodash';
 
 const onFirebaseInit = () => {
 	if (import.meta.env.VITE_ADMIN_FB_AUTH_EMULATOR_URL) {
@@ -143,9 +142,7 @@ export default function App() {
 					if (result?.values?.is_global_admin) {
 						setCollections(globalAdminCollections);
 						setCustomViews(publicCustomViews.concat(globalAdminCustomViews));
-						const isGlobalAdmin = true;
-						authController.setExtra({ isGlobalAdmin });
-
+						authController.setExtra({ isGlobalAdmin: true });
 					} else {
 						setCollections([
 							buildPartnerOrganisationsCollection({ isGlobalAdmin: false }),
