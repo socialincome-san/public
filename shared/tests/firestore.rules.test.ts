@@ -97,6 +97,12 @@ describe('Test recipients collection', () => {
 		);
 		expect(ashokaAdminDocs.size).toBe(1);
 
+		// Access as organisation admin
+		const globalAdminDocs = await getDocs(
+			query(collection(globalAdminStore, 'recipients', '3RqjohcNgUXaejFC7av8', 'payments'))
+		);
+		expect(globalAdminDocs.size).toBe(1);
+
 		// Access through phone number
 		const phoneNumberAccessDocs = await getDocs(
 			query(collection(recipientAppAccess, 'recipients', 'iF8bLEoUjqOIlq84XQmi', 'payments'))
