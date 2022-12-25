@@ -3,8 +3,8 @@ import { BankBalance, BANK_BALANCE_FIRESTORE_PATH } from '@socialincome/shared/s
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { displayedCurrencies } from '../../../../shared/src/utils/currency';
 import Layout from '../../../components/layout';
-import { appConfig } from '../../../config';
 
 interface Props {
 	currency: string;
@@ -46,7 +46,7 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
  */
 export const getStaticPaths: GetStaticPaths = async ({ locales }) => {
 	return {
-		paths: appConfig.supportedCurrencies.flatMap((currency) => {
+		paths: displayedCurrencies.flatMap((currency) => {
 			return locales!.map((locale) => {
 				return {
 					params: {
