@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { appConfig } from '../config';
 import LanguageSwitcher from './LanguageSwitcher';
-import styles from './layout.module.css';
+import styles from './Layout.module.css';
 
 const siteName = 'SocialIncome';
 
