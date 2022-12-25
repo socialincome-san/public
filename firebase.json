@@ -2,7 +2,7 @@
 	"hosting": [
 		{
 			"target": "admin",
-			"public": "admin/public",
+			"public": "admin/dist",
 			"ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
 			"rewrites": [
 				{
@@ -13,7 +13,7 @@
 		},
 		{
 			"target": "website",
-			"public": "website/public",
+			"public": "website/build",
 			"ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
 			"rewrites": [
 				{
@@ -63,6 +63,18 @@
 			"enabled": true,
 			"port": 4000,
 			"host": "0.0.0.0"
+		},
+		"hub": {
+			"host": "0.0.0.0",
+			"port": 4400
+		},
+		"logging": {
+			"host": "0.0.0.0",
+			"port": 4500
+		},
+		"eventarc": {
+			"host": "0.0.0.0",
+			"port": 9299
 		}
 	}
 }

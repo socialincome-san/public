@@ -1,5 +1,5 @@
 import { Timestamp } from 'firebase-admin/lib/firestore';
-import { WriteStream } from 'fs';
+import { createWriteStream } from 'fs';
 import { useFirestore } from '../../../shared/src/firebase/firestoreAdmin';
 import { Contribution, Entity, User } from '../../../shared/src/types';
 
@@ -53,16 +53,13 @@ export const calculateFinancials = async (userId: string, year: number) => {
 	};
 };
 
-export const createDonationCertificateCH = (
-	userEntity: Entity<User>,
-	year: number,
-	currentDateString: string,
-	outputFile: WriteStream
-) => {
+export const createDonationCertificateCH = (userEntity: Entity<User>, year: number, filePath: string) => {
 	return new Promise<void>(async (resolve) => {
+		let writeStream = createWriteStream(filePath);
 		let user = userEntity.values;
-		let translations = user.location === 'CH' ? GERMAN_TRANSLATIONS : FRENSH_TRANSLATIONS;
+		let translations = user.location === 'CH' ? GERMAN_TRANSLATIONS : FRENCH_TRANSLATIONS;
 		const financials = await calculateFinancials(userEntity.id, year);
+		const currentDateString = new Date().toLocaleDateString('de-DE');
 		const PDFDocument = require('pdfkit');
 		let docPdf = new PDFDocument();
 		docPdf.image('../shared/assets/logos/logo_color@2x.png', 45, 20, { width: 180 });
@@ -142,8 +139,8 @@ export const createDonationCertificateCH = (
 		docPdf.text(translations['donation-certificate.footer-1'], 45, docPdf.page.height - 150);
 		docPdf.text(translations['donation-certificate.footer-2'], 245, docPdf.page.height - 150);
 		docPdf.text(translations['donation-certificate.footer-3'], 445, docPdf.page.height - 150);
-		docPdf.pipe(outputFile);
-		outputFile.on('finish', () => resolve());
+		docPdf.pipe(writeStream);
+		writeStream.on('finish', () => resolve());
 		docPdf.end();
 	});
 };
@@ -178,52 +175,80 @@ const GERMAN_TRANSLATIONS: TranslationStub = {
 	'donation-certificate.header': 'Verein mit Steuerbefreiung\nKanton Zürich',
 	'donation-certificate.title': 'Spendenbescheinigung',
 	'donation-certificate.fiscal-year': 'Jahr ',
-	'donation-certificate.salutation': 'Liebe/r ',
-	'donation-certificate.confirmation-1': `Hiermit bestätigen wir gegenüber der kantonalen Steuerbehörde, dass Social Income von `,
+	'donation-certificate.salutation': 'Guten Tag ',
+	'donation-certificate.confirmation-1': `Hiermit bestätigen wir gegenüber der Steuerbehörde, dass Social Income von `,
 	'donation-certificate.confirmation-2': ': wohnhaft in ',
 	'donation-certificate.confirmation-3': ': im Jahre ',
 	'donation-certificate.confirmation-4': ' gesamthaft folgende Spendenzuwendung erhalten zu haben:',
 	'donation-certificate.time-period-1': 'Berücksichtigt wurden sämtliche eingegangenen Spenden zwischen dem 01.01.',
 	'donation-certificate.time-period-2': ' und dem 31.12.',
 	'donation-certificate.time-period-3': '.',
-	'donation-certificate.contributions-chf': 'Spenden CHF: ',
-	'donation-certificate.contributions-eur': 'Spenden EUR: ',
-	'donation-certificate.contributions-usd': 'Spenden USD: ',
-	'donation-certificate.no-contributions': 'Keine Spenden gefunden',
+	'donation-certificate.contributions-chf': 'Spenden in CHF: ',
+	'donation-certificate.contributions-eur': 'Spenden in EUR: ',
+	'donation-certificate.contributions-usd': 'Spenden in USD: ',
+	'donation-certificate.no-contributions': 'Keine Spenden',
 	'donation-certificate.information-1':
-		'Bitte beachten Sie für einen möglichen Spendenabzug Ihrer Spende an gemeinnützige Organisationen die kantonalen Regelungen in Ihrem Steuerkanton.',
-	'donation-certificate.information-2': 'Vielen Dank für Ihre Unterstützung',
+		'Bitte beachten Sie für einen möglichen Spendenabzug Ihrer Spende die kantonalen Regelungen in Ihrem Steuerkanton.',
+	'donation-certificate.information-2': 'Vielen Dank für Ihre Unterstützung.',
 	'donation-certificate.information-3': 'Freundliche Grüsse',
-	'donation-certificate.signature-1': 'Geschäftsleitung und Vorstandsmitglied',
-	'donation-certificate.signature-2': 'Finanzen',
-	'donation-certificate.footer-1': `Social Income\nZwierstrasse 103\n8003 Zurich\ncontributors@socialincome.org\nSwitzerland`,
-	'donation-certificate.footer-2': `Steuerbefreiter Verein\n\nIDE: CHE-289.611.695\n\nDUNS: 48-045-6376`,
-	'donation-certificate.footer-3': `Kontakt\n\n\n\nwww.socialincome.org`,
+	'donation-certificate.signature-1': 'Geschäftsführer',
+	'donation-certificate.signature-2': 'Leiterin Finanzen',
+	'donation-certificate.footer-1': `Social Income\nZweierstrasse 103\n8003 Zürich\nhello@socialincome.org\nSchweiz`,
+	'donation-certificate.footer-2': `Steuerbefreiter Verein\n\nIDE: UID-289.611.695\n\nDUNS: 48-045-6376`,
+	'donation-certificate.footer-3': `Kontakt\n\n\n\nsocialincome.org`,
 };
 
-const FRENSH_TRANSLATIONS: TranslationStub = {
+const FRENCH_TRANSLATIONS: TranslationStub = {
 	'donation-certificate.header': 'Association à but non lucratif\nexonérée d’impôt par le\nCanton de Zurich',
-	'donation-certificate.title': 'Attestation de dons',
-	'donation-certificate.fiscal-year': 'Année fiscale ',
-	'donation-certificate.salutation': 'Liebe/r ',
-	'donation-certificate.confirmation-1': `Nous attestons auprès des autorités fiscales que l’association Social Income a reçu des dons de la part de`,
+	'donation-certificate.title': 'Attestation de dons pour',
+	'donation-certificate.fiscal-year': 'année fiscale ',
+	'donation-certificate.salutation': 'Bonjour,',
+	'donation-certificate.confirmation-1': `Par la présente, nous attestons auprès des autorités fiscales que`,
 	'donation-certificate.confirmation-2': ', domicilié à ',
-	'donation-certificate.confirmation-3': ', au cours de l’année ',
-	'donation-certificate.confirmation-4': ` des dons d'un montant total de :`,
+	'donation-certificate.confirmation-3': ', a effectué en ',
+	'donation-certificate.confirmation-4': ` des dons à l’association Social Income pour un montant total de :`,
 	'donation-certificate.time-period-1': 'Tous les dons reçus entre le 01.01.',
 	'donation-certificate.time-period-2': ' et le 31.12.',
 	'donation-certificate.time-period-3': ' ont été pris en compte.',
-	'donation-certificate.contributions-chf': 'Dons CHF: ',
-	'donation-certificate.contributions-eur': 'Dons EUR: ',
-	'donation-certificate.contributions-usd': 'Dons USD: ',
-	'donation-certificate.no-contributions': 'Pas de dons reçus',
+	'donation-certificate.contributions-chf': 'Dons en CHF: ',
+	'donation-certificate.contributions-eur': 'Dons en EUR: ',
+	'donation-certificate.contributions-usd': 'Dons en USD: ',
+	'donation-certificate.no-contributions': 'Pas de dons',
 	'donation-certificate.information-1':
-		'Pour une déduction d’impôt, veuillez-vous renseigner sur la réglementation fiscale pour donation à une organisation caritative mise en place au sein de votre canton.',
+		'Pour bénéficier d’une éventuelle déduction fiscale, nous vous invitons à vous renseigner sur la réglementation fiscale de votre canton concernant les donations à une organisation d’utilité publique.',
 	'donation-certificate.information-2': 'Nous vous remercions chaleureusement de votre soutien.',
 	'donation-certificate.information-3': 'Bien cordialement',
-	'donation-certificate.signature-1': 'Geschäftsleitung und Vorstandsmitglied',
-	'donation-certificate.signature-2': 'Finanzen',
-	'donation-certificate.footer-1': `Social Income\nZwierstrasse 103\n8003 Zurich\ncontributors@socialincome.org\nSwitzerland`,
+	'donation-certificate.signature-1': 'Directeur général',
+	'donation-certificate.signature-2': 'Trésorière',
+	'donation-certificate.footer-1': `Social Income\nZweierstrasse 103\n8003 Zurich\nhello@socialincome.org\nSuisse`,
 	'donation-certificate.footer-2': `Association à but non lucratif\n\nIDE: CHE-289.611.695\n\nDUNS: 48-045-6376`,
-	'donation-certificate.footer-3': `Contact\n\n\nwww.socialincome.org`,
+	'donation-certificate.footer-3': `Contact\n\n\nsocialincome.org`,
+};
+
+// @ts-ignore
+const ENGLISH_TRANSLATIONS: TranslationStub = {
+	'donation-certificate.header': 'Association with tax exemption in the canton of Zurich',
+	'donation-certificate.title': 'Donation receipt',
+	'donation-certificate.fiscal-year': 'Fiscal year ',
+	'donation-certificate.salutation': 'Dear ',
+	'donation-certificate.confirmation-1': `We hereby confirm to the tax authorities that Social Income received from `,
+	'donation-certificate.confirmation-2': ', residing in ',
+	'donation-certificate.confirmation-3': ',  in the year  ',
+	'donation-certificate.confirmation-4': ` the following donations:`,
+	'donation-certificate.time-period-1': 'All donations received between 01.01.',
+	'donation-certificate.time-period-2': ' and 31.12.',
+	'donation-certificate.time-period-3': ' were taken into account.',
+	'donation-certificate.contributions-chf': 'Donations in CHF: ',
+	'donation-certificate.contributions-eur': 'Donations in EUR: ',
+	'donation-certificate.contributions-usd': 'Donations in USD: ',
+	'donation-certificate.no-contributions': 'No donations',
+	'donation-certificate.information-1':
+		'Please refer to the cantonal tax regulations for more information on how to deduct your donations.',
+	'donation-certificate.information-2': 'Thank you for your support.',
+	'donation-certificate.information-3': 'All the best,',
+	'donation-certificate.signature-1': 'Director',
+	'donation-certificate.signature-2': 'Head of Finance',
+	'donation-certificate.footer-1': `Social Income\nZweierstrasse 103\n8003 Zurich\nhello@socialincome.org\nSwitzerland`,
+	'donation-certificate.footer-2': `Association with tax exemption\n\nIDE: UID-289.611.695\n\nDUNS: 48-045-6376`,
+	'donation-certificate.footer-3': `Contact\n\n\nsocialincome.org`,
 };
