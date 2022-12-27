@@ -4,7 +4,7 @@ export function getValidMonths(askedDate: Date, start: Date, n: number) {
 	let months = [];
 	let startYear = start.getFullYear();
 	let startMonth = start.getMonth();
-	// Keep going till we run out of months or we cross the month we want
+	// Keep going till we run out of months, or we cross the month we want
 	while (n > 0 && (startYear < year || (startYear === year && startMonth <= month))) {
 		startMonth += 1;
 		if (startMonth === 12) {

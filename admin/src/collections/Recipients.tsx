@@ -310,7 +310,7 @@ const basicRecipientProperties = buildProperties<Partial<Recipient>>({
 	},
 });
 
-export const buildRecipientsCollection = ({ isGlobalAdmin, organisations = [] }: BuildCollectionProps) => {
+export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: BuildCollectionProps) => {
 	const defaultParams = {
 		name: 'Recipients',
 		singularName: 'Recipient',
@@ -343,7 +343,7 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations = [] }:
 				},
 			},
 			properties: organisationAdminProperties,
-			forceFilter: {
+			forceFilter: organisations && {
 				organisation: ['in', organisations],
 			},
 			inlineEditing: false,

@@ -24,7 +24,7 @@
 		}
 	],
 	"functions": {
-		"ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log"],
+		"ignore": ["**/*.log", "scripts/", "src/", "tests/"],
 		"source": "functions",
 		"runtime": "nodejs16"
 	},
