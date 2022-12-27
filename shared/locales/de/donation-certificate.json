@@ -4,12 +4,12 @@
 	"fiscal-year": "Jahr ",
 	"salutation": "Guten Tag ",
 	"confirmation-1": "Hiermit bestätigen wir gegenüber der Steuerbehörde, dass Social Income von ",
-	"confirmation-2": ",: wohnhaft in \"",
-	"confirmation-3": "\",: im Jahre \"",
-	"confirmation-4": "\", gesamthaft folgende Spendenzuwendung erhalten zu haben:\"",
+	"confirmation-2": ", wohnhaft in ",
+	"confirmation-3": ", im Jahre ",
+	"confirmation-4": " gesamthaft folgende Spendenzuwendung erhalten zu haben:",
 	"time-period-1": "Berücksichtigt wurden sämtliche eingegangenen Spenden zwischen dem 01.01.",
-	"time-period-2": "\", und dem 31.12.\"",
-	"time-period-3": "\",.\"",
+	"time-period-2": " und dem 31.12.",
+	"time-period-3": ".",
 	"contributions-chf": "Spenden in CHF: ",
 	"contributions-eur": "Spenden in EUR: ",
 	"contributions-usd": "Spenden in USD: ",
@@ -22,6 +22,6 @@
 	"footer-1": "Social Income\nZweierstrasse 103\n8003 Zürich\nhello@socialincome.org\nSchweiz",
 	"footer-2": "Steuerbefreiter Verein\n\nIDE: UID-289.611.695\n\nDUNS: 48-045-6376",
 	"footer-3": "Kontakt\n\n\n\nsocialincome.org",
-	"email-subject": "Social Income Spendenbescheingiung",
-	"filename-prefix": "Social Income Donation Certificate "
+	"email-subject": "Social Income Spendenbescheinigung",
+	"filename-prefix": "Social Income Spendenbescheinigung "
 }

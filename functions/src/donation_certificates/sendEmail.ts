@@ -2,30 +2,16 @@ import * as fs from 'fs';
 import handlebars from 'handlebars';
 import * as nodemailer from 'nodemailer';
 import { Transporter } from 'nodemailer';
-import * as LOCALES_DE from '../../../shared/locales/de/donation-certificate.json';
-import * as LOCALES_EN from '../../../shared/locales/en/donation-certificate.json';
-import * as LOCALES_FR from '../../../shared/locales/fr/donation-certificate.json';
-import { Entity, User } from '../../../shared/src/types';
+import { User } from '../../../shared/src/types';
 import { NOTIFICATION_EMAIL_PASSWORD, NOTIFICATION_EMAIL_USER } from '../config';
+import { DonationCertificateLocales, getEmailTemplate } from './locales';
 
-export const sendEmail = async (userEntity: Entity<User>, year: number, path: string) => {
-	const user = userEntity.values;
-	let locales;
-	let templateDir;
-	switch (user.language) {
-		case 'DE':
-			locales = LOCALES_DE;
-			templateDir = 'dist/assets/emails/transactional/donation-certificate-email-de.handlebars';
-			break;
-		case 'FR':
-			locales = LOCALES_FR;
-			templateDir = 'dist/assets/emails/transactional/donation-certificate-email-fr.handlebars';
-			break;
-		default:
-			locales = LOCALES_EN;
-			templateDir = 'dist/assets/emails/transactional/donation-certificate-email-en.handlebars';
-	}
-
+export const sendDonationCertificateEmail = async (
+	user: User,
+	year: number,
+	path: string,
+	locales: DonationCertificateLocales
+) => {
 	let transporter: Transporter;
 	if (NOTIFICATION_EMAIL_USER && NOTIFICATION_EMAIL_PASSWORD) {
 		transporter = nodemailer.createTransport({
@@ -46,13 +32,13 @@ export const sendEmail = async (userEntity: Entity<User>, year: number, path: st
 		console.log('EMAIL TEST PASSWORD: ' + testAccount.pass);
 		console.log('------------------------------------------------------');
 	}
-
+	const emailTemplate = getEmailTemplate(user.language);
 	const info = await transporter.sendMail({
 		from: 'noreply@socialincome.org',
 		to: user.email,
 		bcc: 'earchive@socialincome.org',
 		subject: locales['email-subject'],
-		html: handlebars.compile(fs.readFileSync(templateDir, 'utf-8'))({ firstname: user.personal?.name, year }),
+		html: handlebars.compile(fs.readFileSync(emailTemplate, 'utf-8'))({ firstname: user.personal?.name, year }),
 		attachments: [
 			{
 				filename: locales['filename-prefix'] + year + '.pdf',

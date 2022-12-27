@@ -1,10 +1,12 @@
+import assert from 'assert';
 import * as functions from 'firebase-functions';
 import { withFile } from 'tmp-promise';
 import { doc, useFirestore } from '../../../shared/src/firebase/firestoreAdmin';
 import { uploadAndGetDownloadURL } from '../../../shared/src/firebase/storageAdmin';
 import { AdminUser, DonationCertificate, Entity, User } from '../../../shared/src/types';
 import { generateDonationCertificatePDF } from './generatePDF';
-import { sendEmail } from './sendEmail';
+import { loadLocales } from './locales';
+import { sendDonationCertificateEmail } from './sendEmail';
 
 export interface CreateDonationCertificatesFunctionProps {
 	users: Entity<User>[];
@@ -15,22 +17,28 @@ export interface CreateDonationCertificatesFunctionProps {
 export const createDonationCertificatesFunction = functions.https.onCall(
 	async ({ users, year, sendEmails }: CreateDonationCertificatesFunctionProps, { auth }) => {
 		const admin = (await doc<AdminUser>('admins', auth?.token?.email || '').get()).data();
-		if (!admin?.is_global_admin) return { error: 'Not authorized' };
+		assert(admin?.is_global_admin);
 
-		let successCount = 0;
-		let skippedCount = 0;
-		for (const user of users) {
+		let [successCount, skippedCount] = [0, 0];
+		for (const userEntity of users) {
+			const user = userEntity.values;
 			try {
 				await withFile(async ({ path }) => {
-					if (!user.values.location) throw new Error('User location missing');
-					await generateDonationCertificatePDF(user, year, path);
+					if (!user.location) throw new Error('User location missing');
+
+					let locales = loadLocales(user.language);
+					await generateDonationCertificatePDF(userEntity, year, path, locales);
 					const { downloadUrl } = await uploadAndGetDownloadURL({
 						sourceFilePath: path,
-						destinationFilePath: `donation-certificates/${user.id}/${year}_${user.values.location}.pdf`,
+						destinationFilePath: `donation-certificates/${userEntity.id}/${year}_${userEntity.values.location}.pdf`,
 					});
-					storeDonationCertificate(user.id, { url: downloadUrl, country: user.values.location, year: year });
+					storeDonationCertificate(userEntity.id, {
+						url: downloadUrl,
+						country: user.location,
+						year: year,
+					});
 					if (sendEmails) {
-						await sendEmail(user, year, path);
+						await sendDonationCertificateEmail(user, year, path, locales);
 					}
 				});
 				successCount += 1;
