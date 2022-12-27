@@ -1,6 +1,6 @@
-import * as LOCALES_DE from '@socialincome/shared/locales/de/donation-certificate.json';
-import * as LOCALES_EN from '@socialincome/shared/locales/en/donation-certificate.json';
-import * as LOCALES_FR from '@socialincome/shared/locales/fr/donation-certificate.json';
+import * as LOCALES_DE from '../../../shared/locales/de/donation-certificate.json';
+import * as LOCALES_EN from '../../../shared/locales/en/donation-certificate.json';
+import * as LOCALES_FR from '../../../shared/locales/fr/donation-certificate.json';
 
 export type DonationCertificateLocales = { [key in keyof typeof LOCALES_EN]: string };
 
