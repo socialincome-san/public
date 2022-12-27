@@ -1,33 +1,36 @@
 import * as functions from 'firebase-functions';
 import { withFile } from 'tmp-promise';
-import { useFirestore } from '../../../shared/src/firebase/firestoreAdmin';
+import { doc, useFirestore } from '../../../shared/src/firebase/firestoreAdmin';
 import { uploadAndGetDownloadURL } from '../../../shared/src/firebase/storageAdmin';
-import { DonationCertificate, Entity, User } from '../../../shared/src/types';
-import { createDonationCertificateCH } from './pdfGeneration';
-import { sendDonationCertificateMail } from './sendDonationCertificateMail';
+import { AdminUser, DonationCertificate, Entity, User } from '../../../shared/src/types';
+import { generateDonationCertificatePDF } from './generatePDF';
+import { sendEmail } from './sendEmail';
 
-export interface DonationCertificatesFunctionProps {
+export interface CreateDonationCertificatesFunctionProps {
 	users: Entity<User>[];
 	year: number;
 	sendEmails: boolean;
 }
 
 export const createDonationCertificatesFunction = functions.https.onCall(
-	async ({ users, year, sendEmails }: DonationCertificatesFunctionProps) => {
+	async ({ users, year, sendEmails }: CreateDonationCertificatesFunctionProps, { auth }) => {
+		const admin = (await doc<AdminUser>('admins', auth?.token?.email || '').get()).data();
+		if (!admin?.is_global_admin) return { error: 'Not authorized' };
+
 		let successCount = 0;
 		let skippedCount = 0;
 		for (const user of users) {
 			try {
 				await withFile(async ({ path }) => {
 					if (!user.values.location) throw new Error('User location missing');
-					await createDonationCertificateCH(user, year, path);
+					await generateDonationCertificatePDF(user, year, path);
 					const { downloadUrl } = await uploadAndGetDownloadURL({
 						sourceFilePath: path,
 						destinationFilePath: `donation-certificates/${user.id}/${year}_${user.values.location}.pdf`,
 					});
 					storeDonationCertificate(user.id, { url: downloadUrl, country: user.values.location, year: year });
 					if (sendEmails) {
-						await sendDonationCertificateMail(user, year, path);
+						await sendEmail(user, year, path);
 					}
 				});
 				successCount += 1;

@@ -16,7 +16,7 @@ import { User } from '../../../shared/src/types';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import _ from 'lodash';
 import React from 'react';
-import { DonationCertificatesFunctionProps } from '../../../functions/src/donation_certificates/createDonationCertificatesFunction';
+import { CreateDonationCertificatesFunctionProps } from '../../../functions/src/donation_certificates/createDonationCertificatesFunction';
 
 const style = {
 	position: 'absolute' as 'absolute',
@@ -42,7 +42,7 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 	const handleClose = () => setOpen(false);
 
 	const functions = getFunctions();
-	const createDonationCertificatesFunction = httpsCallable<DonationCertificatesFunctionProps, string>(
+	const createDonationCertificatesFunction = httpsCallable<CreateDonationCertificatesFunctionProps, string>(
 		functions,
 		'createDonationCertificates'
 	);

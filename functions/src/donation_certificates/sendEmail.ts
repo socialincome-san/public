@@ -8,7 +8,7 @@ import * as LOCALES_FR from '../../../shared/locales/fr/donation-certificate.jso
 import { Entity, User } from '../../../shared/src/types';
 import { NOTIFICATION_EMAIL_PASSWORD, NOTIFICATION_EMAIL_USER } from '../config';
 
-export const sendDonationCertificateMail = async (userEntity: Entity<User>, year: number, path: string) => {
+export const sendEmail = async (userEntity: Entity<User>, year: number, path: string) => {
 	const user = userEntity.values;
 	let locales;
 	let templateDir;

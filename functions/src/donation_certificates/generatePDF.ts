@@ -56,7 +56,7 @@ export const calculateFinancials = async (userId: string, year: number) => {
 	};
 };
 
-export const createDonationCertificateCH = (userEntity: Entity<User>, year: number, filePath: string) => {
+export const generateDonationCertificatePDF = (userEntity: Entity<User>, year: number, filePath: string) => {
 	return new Promise<void>(async (resolve) => {
 		const writeStream = createWriteStream(filePath);
 		const user = userEntity.values;
