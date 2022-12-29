@@ -129,7 +129,7 @@ export default function App() {
 	];
 	const [customViews, setCustomViews] = useState<CMSView[]>(publicCustomViews);
 
-	const myAuthenticator: Authenticator<User> = async ({ user, dataSource }) => {
+	const myAuthenticator: Authenticator<User> = async ({ user, dataSource, authController }) => {
 		dataSource
 			.fetchEntity<AdminUser>({
 				path: adminsCollection.path,
@@ -142,6 +142,7 @@ export default function App() {
 					if (result?.values?.is_global_admin) {
 						setCollections(globalAdminCollections);
 						setCustomViews(publicCustomViews.concat(globalAdminCustomViews));
+						authController.setExtra({ isGlobalAdmin: true });
 					} else {
 						setCollections([
 							buildPartnerOrganisationsCollection({ isGlobalAdmin: false }),
