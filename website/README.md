@@ -110,11 +110,12 @@ import { multiLanguageSnapshotTest } from './__utils__/snapshots';
 multiLanguageSnapshotTest('/your-new-path');
 ```
 
-The test is executed as part of `website` GitHub Action when creating a PR.
-A link to the hosted report is automatically posted in a comment.
+The test is executed as part of `website` GitHub Action when creating a
+PR. A link to the hosted report is automatically posted in a comment.
 
-To update the baseline snapshots post a comment with `/update-website-snapshots` to the PR.
-This will trigger the `website-update-snapshots` action which will commit the new pngs.
+To update the baseline snapshots post a comment with
+`/update-website-snapshots` to the PR. This will trigger the
+`website-update-snapshots` action which will commit the new pngs.
 
 ## Deployment
 
