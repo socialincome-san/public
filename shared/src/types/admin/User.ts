@@ -1,5 +1,5 @@
 import { EntityReference } from '@camberi/firecms';
-import { capitalizeStringIfUppercase } from '../../../utils';
+import { capitalizeStringIfUppercase } from '../../utils/strings';
 
 export const USER_FIRESTORE_PATH = 'users';
 
@@ -7,6 +7,14 @@ export enum UserStatusKey {
 	INITIALIZED = 0, // automatically created through the system
 	PROFILE_CREATED = 1, // user submitted registration form
 }
+
+export type UserAddress = {
+	city?: string;
+	country?: string;
+	number?: string;
+	street?: string;
+	zip?: string;
+};
 
 export type User = {
 	personal?: {
@@ -17,13 +25,7 @@ export type User = {
 		phone?: string;
 		referral?: string;
 	};
-	address?: {
-		city?: string;
-		country?: string;
-		number?: string;
-		street?: string;
-		zip?: string;
-	};
+	address?: UserAddress;
 	email?: string;
 	status?: UserStatusKey;
 	stripe_customer_id?: string;

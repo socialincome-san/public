@@ -6,12 +6,12 @@
 		"lib": ["dom", "es2020"],
 		"module": "esnext",
 		"moduleResolution": "node",
-		"outDir": "dist",
 		"preserveConstEnums": true,
 		"resolveJsonModule": true,
 		"strict": true,
 		"sourceMap": true,
 		"target": "es2021",
 		"types": ["jest", "node"]
-	}
+	},
+	"include": ["vite.config.ts", "src/**/*"]
 }

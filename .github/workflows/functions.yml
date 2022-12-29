@@ -29,7 +29,7 @@ jobs:
 
       - name: Install & Setup Firebase Emulator Suite
         run: |
-          npm -g install firebase-tools && \
+          npm -g install firebase-tools@11.18.0 && \
           firebase setup:emulators:firestore && \
           firebase setup:emulators:ui
 
@@ -50,6 +50,8 @@ jobs:
           echo POSTFINANCE_EMAIL_PASSWORD=${{ secrets.POSTFINANCE_EMAIL_PASSWORD }} >> .env
           echo STRIPE_API_READ_KEY=${{ secrets.STRIPE_API_READ_KEY }} >> .env
           echo STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }} >> .env
+          echo NOTIFICATION_EMAIL_USER=${{ secrets.NOTIFICATION_EMAIL_USER }} >> .env
+          echo NOTIFICATION_EMAIL_PASSWORD=${{ secrets.NOTIFICATION_EMAIL_PASSWORD }} >> .env
 
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main'

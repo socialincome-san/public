@@ -1,0 +1,6 @@
+{
+	"finances": {
+		"title": "Finanze Attuali",
+		"mainText": "Vi mostriamo questa pagina in: {{currency}}. Il saldo bancario attuale è: {{balance, currency}}."
+	}
+}
