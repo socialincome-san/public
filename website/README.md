@@ -110,21 +110,11 @@ import { multiLanguageSnapshotTest } from './__utils__/snapshots';
 multiLanguageSnapshotTest('/your-new-path');
 ```
 
-When you first run the tests the screenshots for the supported languages
-and browsers are automatically generated. Add those to your commit.
+The test is executed as part of `website` GitHub Action when creating a PR.
+A link to the hosted report is automatically posted in a comment.
 
-Our docker base image doesn't support the installation of browsers at
-the moment. With npm run
-
-```
-npm run website:test:e2e:emulator
-```
-
-To update the baseline snapshots run
-
-```
-npm run website:test:e2e:update:emulator
-```
+To update the baseline snapshots post a comment with `/update-website-snapshots` to the PR.
+This will trigger the `website-update-snapshots` action which will commit the new pngs.
 
 ## Deployment
 
