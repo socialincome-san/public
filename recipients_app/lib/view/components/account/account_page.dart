@@ -1,15 +1,15 @@
-import 'package:app/models/alertVisibility.dart';
-import 'package:app/models/currentUser.dart';
-import 'package:app/services/authService.dart';
+import 'package:app/models/alert_visibility.dart';
+import 'package:app/models/current_user.dart';
+import 'package:app/services/auth_service.dart';
 import 'package:app/theme/theme.dart';
-import 'package:app/view/components/account/changeableUserInformation.dart';
-import 'package:app/view/components/account/unchangeableUserInformation.dart';
-import 'package:app/view/pages/welcomePage.dart';
+import 'package:app/view/components/account/changeable_user_information.dart';
+import 'package:app/view/components/account/unchangeable_user_information.dart';
+import 'package:app/view/pages/welcome_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../socialIncomeContact.dart';
+import '../social_income_contact.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});

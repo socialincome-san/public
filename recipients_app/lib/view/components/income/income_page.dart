@@ -1,7 +1,7 @@
-import 'package:app/models/currentUser.dart';
+import 'package:app/models/current_user.dart';
 import 'package:app/theme/theme.dart';
-import 'package:app/view/components/income/BalanceCard.dart';
-import 'package:app/view/components/income/TransactionCard.dart';
+import 'package:app/view/components/income/balance_card.dart';
+import 'package:app/view/components/income/transaction_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

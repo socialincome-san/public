@@ -1,13 +1,13 @@
-import 'package:app/models/alertVisibility.dart';
+import 'package:app/models/alert_visibility.dart';
 import 'package:app/models/registration.dart';
 import 'package:app/theme/theme.dart';
-import 'package:app/view/pages/mainAppPage.dart';
+import 'package:app/view/pages/main_app_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'models/currentUser.dart';
-import 'view/pages/welcomePage.dart';
+import 'models/current_user.dart';
+import 'view/pages/welcome_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -1,6 +1,6 @@
-import 'package:app/models/alertVisibility.dart';
+import 'package:app/models/alert_visibility.dart';
 import 'package:app/models/registration.dart';
-import 'package:app/services/authService.dart';
+import 'package:app/services/auth_service.dart';
 import 'package:app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';

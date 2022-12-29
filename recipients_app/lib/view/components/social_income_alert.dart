@@ -1,4 +1,4 @@
-import 'package:app/models/alertVisibility.dart';
+import 'package:app/models/alert_visibility.dart';
 import 'package:app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
