@@ -1,13 +1,12 @@
-import 'package:app/models/alert_visibility.dart';
-import 'package:app/models/registration.dart';
-import 'package:app/theme/theme.dart';
-import 'package:app/view/pages/main_app_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import 'models/current_user.dart';
-import 'view/pages/welcome_page.dart';
+import "package:app/models/alert_visibility.dart";
+import "package:app/models/current_user.dart";
+import "package:app/models/registration.dart";
+import "package:app/theme/theme.dart";
+import "package:app/view/pages/main_app_page.dart";
+import "package:app/view/pages/welcome_page.dart";
+import "package:firebase_auth/firebase_auth.dart";
+import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AlertVisibility())
       ],
       child: MaterialApp(
-        title: 'Profile Page',
+        title: "Profile Page",
         theme: socialIncomeTheme,
         home: start,
         debugShowCheckedModeBanner: false,

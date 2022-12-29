@@ -1,7 +1,7 @@
-import 'dart:developer';
+import "dart:developer";
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
+import "package:firebase_auth/firebase_auth.dart";
+import "package:intl/intl.dart";
 
 // Authentication service provides methods to register, verify phone number and sign in
 class AuthService {
@@ -23,17 +23,17 @@ class AuthService {
       return false;
     }
     FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        timeout: const Duration(seconds: 60),
-        verificationCompleted:
-            verificationCompleted ?? (phoneAuthCredential) {},
-        verificationFailed: (e) {
-          log("------- ${e.message}");
-        },
-        codeSent: codeSent ?? (verificationId, forceResendCode) {},
-        codeAutoRetrievalTimeout: (e) {
-          log("autoretrievel timeout");
-        });
+      phoneNumber: phoneNumber,
+      timeout: const Duration(seconds: 60),
+      verificationCompleted: verificationCompleted ?? (phoneAuthCredential) {},
+      verificationFailed: (e) {
+        log("------- ${e.message}");
+      },
+      codeSent: codeSent ?? (verificationId, forceResendCode) {},
+      codeAutoRetrievalTimeout: (e) {
+        log("autoretrievel timeout");
+      },
+    );
     return true;
   }
 
@@ -44,8 +44,10 @@ class AuthService {
       return null;
     }
 
-    PhoneAuthCredential phoneCredential = PhoneAuthProvider.credential(
-        verificationId: verificationId, smsCode: smsCode);
+    final PhoneAuthCredential phoneCredential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: smsCode,
+    );
     try {
       await FirebaseAuth.instance.signInWithCredential(phoneCredential);
     } on FirebaseAuthException catch (e) {
@@ -60,7 +62,7 @@ class AuthService {
   String createdAt() {
     // catching NoSuchMethodError due to logout process on page where this method is called
     try {
-      var creationTime =
+      final creationTime =
           FirebaseAuth.instance.currentUser?.metadata.creationTime;
       if (creationTime == null) {
         return "";
