@@ -9,15 +9,16 @@ class SocialIncomeAlert extends StatelessWidget {
   final String type;
   final String textButton;
 
-  SocialIncomeAlert(this.message, this.icon, this.type, {this.textButton = ""});
+  const SocialIncomeAlert(this.message, this.icon, this.type,
+      {super.key, this.textButton = ""});
 
-  final TextStyle style = TextStyle(
+  final TextStyle style = const TextStyle(
     color: Colors.white,
     overflow: TextOverflow.clip,
     fontSize: 16,
   );
 
-  final TextStyle buttonStyle = TextStyle(
+  final TextStyle buttonStyle = const TextStyle(
     color: Colors.white,
     overflow: TextOverflow.clip,
     fontSize: 16,
@@ -29,7 +30,7 @@ class SocialIncomeAlert extends StatelessWidget {
     return Consumer<AlertVisibility>(
         builder: (context, alertVisibility, child) {
       return Container(
-        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
         height: MediaQuery.of(context).size.height / 10,
         width: MediaQuery.of(context).size.width,
         color: siLightBlue,

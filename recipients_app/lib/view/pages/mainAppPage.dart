@@ -14,10 +14,12 @@ class MainAppPage extends StatelessWidget {
   final PageController controller = PageController(initialPage: 1);
 
   final List<Widget> content = [
-    AccountPage(),
-    IncomePage(),
-    ImpactMeasurementPage()
+    const AccountPage(),
+    const IncomePage(),
+    const ImpactMeasurementPage()
   ];
+
+  MainAppPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +32,16 @@ class MainAppPage extends StatelessWidget {
         child: Consumer2<Navigation, CurrentUser>(
             builder: (context, navigation, currentUser, child) {
           Widget checkTermsAccepted() {
-            if (currentUser.termsAccepted == true)
+            if (currentUser.termsAccepted == true) {
               return PageView(
-                onPageChanged: (int) {
-                  navigation.setIndex(int);
+                onPageChanged: (int index) {
+                  navigation.setIndex(index);
                 },
                 controller: controller,
                 children: content,
               );
-            return TermsAndConditions();
+            }
+            return const TermsAndConditions();
           }
 
           Future<CurrentUser> fetchUserDetails() async {
@@ -67,7 +70,7 @@ class MainAppPage extends StatelessWidget {
               future: fetchUserDetails(),
               builder: (context, snapshot) => snapshot.hasData
                   ? checkTermsAccepted()
-                  : Center(child: CircularProgressIndicator()),
+                  : const Center(child: CircularProgressIndicator()),
             ),
             backgroundColor: backgroundColor,
             bottomNavigationBar: currentUser.termsAccepted == true
@@ -75,7 +78,7 @@ class MainAppPage extends StatelessWidget {
                     currentIndex: navigation.selectedIndex,
                     onTap: (value) {
                       controller.animateToPage(value,
-                          duration: Duration(milliseconds: 100),
+                          duration: const Duration(milliseconds: 100),
                           curve: Curves.easeIn);
                       navigation.setIndex(value);
                     },

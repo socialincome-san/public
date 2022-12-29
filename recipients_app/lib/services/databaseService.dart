@@ -43,11 +43,11 @@ class DatabaseService {
         .collection('payments')
         .get();
 
-    transactionDocs.docs.forEach((element) {
+    for (var element in transactionDocs.docs) {
       var transaction = SocialIncomeTransaction();
       transaction.initialize(element.data(), element.id);
       transactions.add(transaction);
-    });
+    }
 
     transactions.sort((a, b) {
       var aId = a.id;
@@ -64,7 +64,8 @@ class DatabaseService {
     return userSnapshot.reference.update(info);
   }
 
-  void updateTransaction(Map<String, Object?> info, String transactionId) async {
+  void updateTransaction(
+      Map<String, Object?> info, String transactionId) async {
     var snapshot = await getUserSnapshot();
 
     await firestore

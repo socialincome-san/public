@@ -1,10 +1,10 @@
 import 'package:app/models/transaction.dart';
 import 'package:app/services/databaseService.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:collection/collection.dart';
 
 const communicationPhoneKey = 'communication_mobile_phone';
 const moneyPhoneKey = 'mobile_money_phone';
@@ -57,7 +57,7 @@ class CurrentUser extends ChangeNotifier {
       this.nextSurvey,
       this.imLinkInitial,
       this.imLinkRegular}) {
-    if (transactions == null) transactions = [];
+    transactions ??= [];
   }
 
   DatabaseService databaseService =
@@ -107,9 +107,7 @@ class CurrentUser extends ChangeNotifier {
   }
 
   String safeAssignPhone(DocumentSnapshot snapshot, String key) {
-    return containsKey(snapshot, key)
-        ? "+" + snapshot[key + ".$phoneKey"].toString()
-        : '';
+    return containsKey(snapshot, key) ? "+${snapshot["$key.$phoneKey"]}" : '';
   }
 
   String safeAssignString(DocumentSnapshot snapshot, String key,
@@ -268,7 +266,7 @@ class CurrentUser extends ChangeNotifier {
   }
 
   String? surveyUrl() {
-    DateTime? nextSurveyDate = this.nextSurvey;
+    DateTime? nextSurveyDate = nextSurvey;
     DateTime? creationDate =
         FirebaseAuth.instance.currentUser?.metadata.creationTime;
 
@@ -286,7 +284,7 @@ class CurrentUser extends ChangeNotifier {
   void setNextSurvey() {
     DateTime previousDate;
 
-    DateTime? currentNextSurvey = this.nextSurvey;
+    DateTime? currentNextSurvey = nextSurvey;
     if (currentNextSurvey == null) {
       previousDate = FirebaseAuth.instance.currentUser?.metadata.creationTime ??
           DateTime.now();
@@ -297,12 +295,11 @@ class CurrentUser extends ChangeNotifier {
     DateTime resultNextSurvey;
     if (previousDate.month > 6) {
       resultNextSurvey =
-          new DateTime(previousDate.year + 1, previousDate.month - 6, 1);
+          DateTime(previousDate.year + 1, previousDate.month - 6, 1);
     } else {
-      resultNextSurvey =
-          new DateTime(previousDate.year, previousDate.month + 6, 1);
+      resultNextSurvey = DateTime(previousDate.year, previousDate.month + 6, 1);
     }
-    this.nextSurvey = resultNextSurvey;
+    nextSurvey = resultNextSurvey;
     databaseService.updateNextSurvey(resultNextSurvey);
     notifyListeners();
   }

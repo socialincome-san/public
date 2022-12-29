@@ -15,5 +15,5 @@ Future<void> main() async {
   FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   FirebaseAuth.instance.useEmulator('http://localhost:9099');
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }

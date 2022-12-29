@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
@@ -10,9 +12,7 @@ class AuthService {
 
   // Implementation of Singleton pattern, so all Registration components use the same instance
   static AuthService instance() {
-    if (_instance == null) {
-      _instance = new AuthService();
-    }
+    _instance ??= AuthService();
     return _instance!;
   }
 
@@ -24,15 +24,15 @@ class AuthService {
     }
     FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        timeout: Duration(seconds: 60),
+        timeout: const Duration(seconds: 60),
         verificationCompleted:
             verificationCompleted ?? (phoneAuthCredential) {},
         verificationFailed: (e) {
-          print("------- ${e.message}");
+          log("------- ${e.message}");
         },
         codeSent: codeSent ?? (verificationId, forceResendCode) {},
         codeAutoRetrievalTimeout: (e) {
-          print("autoretrievel timeout");
+          log("autoretrievel timeout");
         });
     return true;
   }
@@ -49,7 +49,7 @@ class AuthService {
     try {
       await FirebaseAuth.instance.signInWithCredential(phoneCredential);
     } on FirebaseAuthException catch (e) {
-      print("+" + e.code);
+      log("+${e.code}");
       return null;
     } catch (e) {
       return null;

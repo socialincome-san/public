@@ -8,13 +8,13 @@ class UnchangeableUserInformation extends StatelessWidget {
   final String placeHolder;
   final TextEditingController controller = TextEditingController();
 
-  UnchangeableUserInformation(this.section, this.placeHolder);
+  UnchangeableUserInformation(this.section, this.placeHolder, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<CurrentUser>(builder: (context, currentUser, child) {
       return Container(
-        constraints: BoxConstraints(
+        constraints: const BoxConstraints(
           maxHeight: 39,
           minHeight: 39,
         ),
@@ -25,7 +25,7 @@ class UnchangeableUserInformation extends StatelessWidget {
               flex: 3,
               child: Container(
                 padding: edgeInsetsAll12,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(6),
                     bottomLeft: Radius.circular(6),
@@ -43,8 +43,8 @@ class UnchangeableUserInformation extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(6),
                     bottomRight: Radius.circular(6),

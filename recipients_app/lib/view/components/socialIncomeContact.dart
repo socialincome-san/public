@@ -2,39 +2,41 @@ import 'package:app/models/alertVisibility.dart';
 import 'package:app/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class SocialIncomeContact extends StatelessWidget {
+  const SocialIncomeContact({super.key});
+
   void openPhone(number) async {}
   void openEmail(address) async {}
 
   @override
   Widget build(BuildContext context) {
-    Function _openWhatsapp = (number) async {
+    openWhatsapp(number) async {
       var whatsappURL = "whatsapp://send?phone=$number&text=hello";
-      if (await canLaunch(whatsappURL)) {
-        await launch(whatsappURL);
+      if (await canLaunchUrlString(whatsappURL)) {
+        await launchUrlString(whatsappURL);
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: new Text("whatsapp no installed")));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("whatsapp no installed")));
       }
-    };
+    }
 
-    Function _makePhoneCall = (String phoneNumber) async {
+    makePhoneCall(String phoneNumber) async {
       final Uri launchUri = Uri(
         scheme: 'tel',
         path: phoneNumber,
       );
-      await launch(launchUri.toString());
-    };
+      await launchUrlString(launchUri.toString());
+    }
 
-    Function _writeEmail = (String emailAdress) async {
+    writeEmail(String emailAdress) async {
       final Uri launchUri = Uri(
         scheme: 'mailto',
         path: emailAdress,
       );
-      await launch(launchUri.toString());
-    };
+      await launchUrlString(launchUri.toString());
+    }
 
     return Consumer<AlertVisibility>(
         builder: (context, alertVisibility, child) {
@@ -57,26 +59,25 @@ class SocialIncomeContact extends StatelessWidget {
                 children: [
                   Column(children: [
                     Image(
-                      image: AssetImage('assets/team.png'),
+                      image: const AssetImage('assets/team.png'),
                       width: MediaQuery.of(context).size.width * 0.6,
                     ),
-                    Text("Support Team", style: TextStyle(fontSize: 24)),
-                    Text("Get in touch with us",
+                    const Text("Support Team", style: TextStyle(fontSize: 24)),
+                    const Text("Get in touch with us",
                         style: TextStyle(fontSize: 15, color: Colors.grey))
                   ]),
+                  _IconAndContact("Whatsapp", "+41 76 251 55 69", openWhatsapp),
+                  _IconAndContact("Phone", "+232 75 588647", makePhoneCall),
                   _IconAndContact(
-                      "Whatsapp", "+41 76 251 55 69", _openWhatsapp),
-                  _IconAndContact("Phone", "+232 75 588647", _makePhoneCall),
-                  _IconAndContact(
-                      "Email", "support@socialincome.org", _writeEmail),
+                      "Email", "support@socialincome.org", writeEmail),
                   ElevatedButton(
                     onPressed: () {
                       alertVisibility.setContactVisibility(false);
                     },
-                    child: Text("Close"),
                     style: ElevatedButton.styleFrom(
-                        primary: Theme.of(context).primaryColor,
-                        minimumSize: Size(200, 60)),
+                        backgroundColor: Theme.of(context).primaryColor,
+                        minimumSize: const Size(200, 60)),
+                    child: const Text("Close"),
                   )
                 ],
               )),
@@ -91,7 +92,7 @@ class _IconAndContact extends StatelessWidget {
   final String contactDetails;
   final Function open;
 
-  _IconAndContact(this.contactMethod, this.contactDetails, this.open);
+  const _IconAndContact(this.contactMethod, this.contactDetails, this.open);
 
   final edgeinsets = const EdgeInsets.fromLTRB(8, 0, 8, 0);
   @override
@@ -109,18 +110,18 @@ class _IconAndContact extends StatelessWidget {
             children: [
               TextButton(
                 onPressed: () {
-                  this.open(contactDetails.trim());
+                  open(contactDetails.trim());
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       contactMethod,
-                      style: TextStyle(fontSize: 18, color: Colors.black),
+                      style: const TextStyle(fontSize: 18, color: Colors.black),
                     ),
                     Text(
                       contactDetails,
-                      style: TextStyle(fontSize: 15, color: Colors.grey),
+                      style: const TextStyle(fontSize: 15, color: Colors.grey),
                     ),
                   ],
                 ),
