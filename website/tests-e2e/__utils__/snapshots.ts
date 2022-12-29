@@ -10,7 +10,7 @@ export const multiLanguageSnapshotTest = (relativeUrl: string) => {
 		i18n.locales.map((locale) => {
 			test(`for ${locale}`, async ({ page }, testinfo) => {
 				testinfo.snapshotSuffix = '';
-				await page.goto(`http://localhost:3001/${relativeUrl}`);
+				await page.goto(`http://localhost:3001/${locale}/${relativeUrl}`);
 				await page.waitForSelector('main');
 				await expect(page).toHaveScreenshot();
 			});
