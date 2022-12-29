@@ -32,7 +32,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0 # Load all commits
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.WORKFLOW_TOKEN }}
+
       # Get the SHA and branch name of the comment's pull request
       # We must use the GitHub API to retrieve these information because they're
       # not accessible within workflows triggered by "issue_comment"
