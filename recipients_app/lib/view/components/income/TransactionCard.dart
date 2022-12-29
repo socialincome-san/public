@@ -8,7 +8,7 @@ var f = NumberFormat(format, 'en_US');
 
 class TransactionCard extends StatelessWidget {
   final SocialIncomeTransaction transaction;
-  TransactionCard(this.transaction);
+  const TransactionCard(this.transaction, {super.key});
 
   String cleanStatus(String? currentStatus) {
     return currentStatus != null &&
@@ -40,8 +40,8 @@ class TransactionCard extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 8.0, left: 8.0),
                     child: Text(getTransactionStatusText())),
                 if (transaction.status == "contested")
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 8.0),
                     child: Text(
                       "We will reach out to you soon",
                       style: TextStyle(fontStyle: FontStyle.italic),
@@ -54,7 +54,8 @@ class TransactionCard extends StatelessWidget {
             padding: const EdgeInsets.all(12.0),
             child: ElevatedButton(
                 style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all<Size>(Size(60, 50))),
+                    minimumSize:
+                        MaterialStateProperty.all<Size>(const Size(60, 50))),
                 onPressed: () {
                   showModalBottomSheet(
                       isScrollControlled: true,
@@ -63,7 +64,7 @@ class TransactionCard extends StatelessWidget {
                         return ReviewTransactionModal(transaction);
                       });
                 },
-                child: Text("Review")),
+                child: const Text("Review")),
           )
       ]),
     );
@@ -72,10 +73,8 @@ class TransactionCard extends StatelessWidget {
   String getTransactionStatusText() {
     var confirmedAt = transaction.confirmedAt;
     return cleanStatus(transaction.status) +
-                      (transaction.status == "confirmed" && confirmedAt != null
-                          ? " at " +
-                              DateFormat("dd.MM.yyyy")
-                                  .format(confirmedAt.toDate())
-                          : "");
+        (transaction.status == "confirmed" && confirmedAt != null
+            ? " at ${DateFormat("dd.MM.yyyy").format(confirmedAt.toDate())}"
+            : "");
   }
 }

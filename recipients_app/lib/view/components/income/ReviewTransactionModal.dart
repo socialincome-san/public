@@ -7,14 +7,14 @@ import 'package:provider/provider.dart';
 class ReviewTransactionModal extends StatefulWidget {
   final SocialIncomeTransaction _transaction;
 
-  ReviewTransactionModal(this._transaction);
+  const ReviewTransactionModal(this._transaction, {super.key});
 
   @override
   State<ReviewTransactionModal> createState() => _ReviewTransactionModalState();
 }
 
 class _ReviewTransactionModalState extends State<ReviewTransactionModal> {
-  List<String> _contestReasons = [
+  final List<String> _contestReasons = [
     "Phone stolen",
     "Incorrect amount",
     "Changed phone number",
@@ -76,13 +76,13 @@ class _ReviewTransactionModalState extends State<ReviewTransactionModal> {
                               }
                               Navigator.pop(context);
                             },
-                            child: Text("YES"),
                             style: ButtonStyle(
                                 minimumSize: MaterialStateProperty.all<Size>(
-                                    Size(50, 50)),
+                                    const Size(50, 50)),
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
                                         siDarkBlue)),
+                            child: const Text("YES"),
                           ),
                           ElevatedButton(
                             onPressed: () {
@@ -90,13 +90,13 @@ class _ReviewTransactionModalState extends State<ReviewTransactionModal> {
                                 _contested = true;
                               });
                             },
-                            child: Text("NO"),
                             style: ButtonStyle(
                                 minimumSize: MaterialStateProperty.all<Size>(
-                                    Size(50, 50)),
+                                    const Size(50, 50)),
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
                                         Colors.red)),
+                            child: const Text("NO"),
                           ),
                         ],
                       ),

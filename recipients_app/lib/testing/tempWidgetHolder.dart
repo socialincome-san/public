@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 class TempWidgetHolder extends StatelessWidget {
   final Widget content;
-  TempWidgetHolder(this.content);
+  const TempWidgetHolder(this.content, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text("testing"),
+        title: const Text("testing"),
         backgroundColor: Colors.red,
       ),
-      backgroundColor: Color(0xFFEDF3FF),
+      backgroundColor: const Color(0xFFEDF3FF),
       body: content,
     );
   }

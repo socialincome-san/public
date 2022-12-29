@@ -12,7 +12,7 @@ class OtpInput extends StatelessWidget {
   final AuthService auth = AuthService.instance();
 
   final Function login;
-  OtpInput(this.login);
+  OtpInput(this.login, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,13 +34,13 @@ class OtpInput extends StatelessWidget {
           children: <Widget>[
             TextFormField(
                 controller: inputController,
-                style: TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.white),
                 keyboardType: TextInputType.number,
                 onEditingComplete: () {
                   registration.setPhoneVerificationId(inputController.text);
-                  FocusScope.of(context).requestFocus(new FocusNode());
+                  FocusScope.of(context).requestFocus(FocusNode());
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     labelText: "Verification code",
                     labelStyle: TextStyle(color: Colors.white),
                     enabledBorder: OutlineInputBorder(
@@ -57,7 +57,7 @@ class OtpInput extends StatelessWidget {
                       btnController.stop();
                     }
                   },
-                  child: Text(
+                  child: const Text(
                     "Resend code",
                     style: TextStyle(
                         color: Colors.white,
@@ -69,7 +69,7 @@ class OtpInput extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 1,
                 borderRadius: 5,
                 resetAfterDuration: true,
-                resetDuration: Duration(seconds: 10),
+                resetDuration: const Duration(seconds: 10),
                 controller: btnController,
                 color: Theme.of(context).primaryColor,
                 onPressed: () async {
@@ -84,7 +84,7 @@ class OtpInput extends StatelessWidget {
                     alertVisibility.changeAlertVisibility(true, "CodeWrong");
                   }
                 },
-                child: Text("Login"))
+                child: const Text("Login"))
           ]);
     });
   }
