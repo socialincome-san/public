@@ -47,6 +47,7 @@ jobs:
 
       - name: Deploy Playwright Report to GitHub Pages
         uses: rossjrw/pr-preview-action@v1
+        if: always()
         with:
           source-dir: website/playwright-report/
           preview-branch: gh-pages
