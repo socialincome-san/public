@@ -1,5 +1,5 @@
-import 'package:app/models/transaction.dart';
-import 'package:app/view/components/income/ReviewTransactionModal.dart';
+import 'package:app/models/social_income_transaction.dart';
+import 'package:app/view/components/income/review_transaction_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

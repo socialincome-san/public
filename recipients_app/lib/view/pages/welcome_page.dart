@@ -1,11 +1,11 @@
-import 'package:app/models/alertVisibility.dart';
+import 'package:app/models/alert_visibility.dart';
 import 'package:app/models/registration.dart';
 import 'package:app/theme/theme.dart';
-import 'package:app/view/components/socialIncomeAlert.dart';
-import 'package:app/view/components/socialIncomeContact.dart';
-import 'package:app/view/components/welcomePage/otpInput.dart';
-import 'package:app/view/components/welcomePage/phoneInput.dart';
-import 'package:app/view/pages/mainAppPage.dart';
+import 'package:app/view/components/social_income_alert.dart';
+import 'package:app/view/components/social_income_contact.dart';
+import 'package:app/view/components/welcomePage/otp_input.dart';
+import 'package:app/view/components/welcomePage/phone_input.dart';
+import 'package:app/view/pages/main_app_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

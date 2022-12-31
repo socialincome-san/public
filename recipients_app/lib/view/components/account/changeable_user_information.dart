@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:app/models/currentUser.dart';
+import 'package:app/models/current_user.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
