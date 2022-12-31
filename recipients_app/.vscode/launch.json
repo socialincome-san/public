@@ -15,8 +15,8 @@
 			"name": "prod",
 			"request": "launch",
 			"type": "dart",
-			"args": ["--flavor", "prod", "-t", "lib/main_prod.dart"],
-			"program": "lib/main_prod.dart"
+			"args": ["--flavor", "prod", "-t", "lib/main.dart"],
+			"program": "lib/main.dart"
 		}
 	]
 }

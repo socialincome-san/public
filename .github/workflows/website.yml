@@ -18,7 +18,7 @@ jobs:
           paths: '["website/**", "shared/**", ".github/workflows/website.yml"]'
           skip_after_successful_duplicate: "false"
 
-  test_deploy:
+  test:
     name: Test Website
     needs: check_applicability
     if: needs.check_applicability.outputs.should_skip != 'true'
@@ -44,14 +44,15 @@ jobs:
 
       - name: Run e2e Tests
         run: npm run website:test:e2e:emulator
-      - name: Upload Playwright Repo
-        uses: actions/upload-artifact@v2
-        if: failure()
+
+      - name: Deploy Playwright Report to GitHub Pages
+        uses: rossjrw/pr-preview-action@v1
+        if: always()
         with:
-          name: playwright-report
-          path: website/playwright-report/
-          retention-days: 30
-      # TODO: deploy report to GitHub Pages analog to how we do it with storybook
+          source-dir: website/playwright-report/
+          preview-branch: gh-pages
+          umbrella-dir: playwright-report
+          action: auto
 
       - name: Test build
         run: npm run website:build:emulator

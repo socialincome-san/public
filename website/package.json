@@ -13,7 +13,7 @@
 		"test:emulator": "firebase emulators:exec --project social-income-prod --only firestore --config ../firebase.json --import ../seed  'npm run test'",
 		"test:e2e": "npx playwright install --with-deps && playwright test",
 		"test:e2e:emulator": "firebase emulators:exec --project social-income-prod --only firestore --config ../firebase.json --import ../seed  'npm run test:e2e'",
-		"test:e2e:update": "playwright test --update-snapshots",
+		"test:e2e:update": "npx playwright install --with-deps && playwright test --update-snapshots",
 		"test:e2e:update:emulator": "firebase emulators:exec --project social-income-prod --only firestore --config ../firebase.json --import ../seed  'npm run test:e2e:update'",
 		"extract-translations": "i18next --config i18next-parser.config.js",
 		"check-translations": "i18next --config i18next-parser.config.js --fail-on-update",

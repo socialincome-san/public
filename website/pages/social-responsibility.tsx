@@ -1,7 +1,7 @@
 import { GetStaticProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import Layout from '../components/layout';
+import Layout from '../components/Layout';
 
 export default function SocialResponsibility() {
 	const { t } = useTranslation('website-social-responsibility');
