@@ -9,9 +9,9 @@ import {
 } from '../../../shared/src/types';
 
 /**
- * Function periodically gets the exchange rates and saves it to firebase
+ * Function periodically scrapes currency exchange rates and saves them to firebase
  */
-module.exports.exchangeRates = functions.pubsub.schedule('0 1 * * *').onRun(async () => {
+export const importExchangeRatesFunction = functions.pubsub.schedule('0 1 * * *').onRun(async () => {
 	try {
 		const { data, status, statusText } = await axios.get<ExchangeRateResponse>(
 			'https://api.exchangerate.host/latest?base=chf'
