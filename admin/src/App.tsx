@@ -7,7 +7,6 @@ import {
 	FirebaseCMSApp,
 	FirestoreTextSearchController,
 	performAlgoliaTextSearch,
-	User,
 } from '@camberi/firecms';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
@@ -127,7 +126,7 @@ export default function App() {
 	];
 	const [customViews, setCustomViews] = useState<CMSView[]>(publicCustomViews);
 
-	const myAuthenticator: Authenticator<User> = async ({ user, dataSource, authController }) => {
+	const myAuthenticator: Authenticator = async ({ user, dataSource, authController }) => {
 		dataSource
 			.fetchEntity<AdminUser>({
 				path: adminsCollection.path,
@@ -137,17 +136,15 @@ export default function App() {
 			.then((result) => {
 				if (collections.length === 0) {
 					// We only want this to update once on initial page load
-					if (result?.values?.is_global_admin) {
+					// Global analysts have no write access through the firestore rules, so it's ok to show all collections
+					if (result?.values?.is_global_admin || result?.values?.is_global_analyst) {
 						setCollections(globalAdminCollections);
 						setCustomViews(publicCustomViews.concat(globalAdminCustomViews));
 						authController.setExtra({ isGlobalAdmin: true });
 					} else {
 						setCollections([
 							buildPartnerOrganisationsCollection({ isGlobalAdmin: false }),
-							buildRecipientsCollection({
-								isGlobalAdmin: false,
-								organisations: result?.values?.organisations,
-							}),
+							buildRecipientsCollection({ isGlobalAdmin: false, organisations: result?.values?.organisations }),
 							recentPaymentsCollection,
 						]);
 					}

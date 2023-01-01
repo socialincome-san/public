@@ -1,11 +1,16 @@
 import * as functions from 'firebase-functions';
-import { useFirestore } from '../../../shared/src/firebase/firestoreAdmin';
-import { Recipient, RECIPIENT_FIRESTORE_PATH } from '../../../shared/src/types';
+import { assertGlobalAdmin, collection } from '../../../shared/src/firebase/firestoreAdmin';
+import { Recipient, RecipientProgramStatus, RECIPIENT_FIRESTORE_PATH } from '../../../shared/src/types';
 
-// TODO: make sure only admins or certain users are allowed to call this function!
-export const createOrangeMoneyCSVFunction = functions.https.onCall(async () => {
-	const firestore = useFirestore();
-	const recipientDocs = (await firestore.collection(RECIPIENT_FIRESTORE_PATH).get()).docs;
+export const createOrangeMoneyCSVFunction = functions.https.onCall(async (_, { auth }) => {
+	await assertGlobalAdmin(auth?.token?.email);
+
+	const recipientDocs = (
+		await collection<Recipient>(RECIPIENT_FIRESTORE_PATH)
+			.where('progr_status', 'in', [RecipientProgramStatus.Active, RecipientProgramStatus.Designated])
+			.get()
+	).docs;
+
 	const recipients = recipientDocs.map((doc) => doc.data() as Recipient);
 	return createRecipientsCSV(recipients, new Date());
 });
@@ -13,7 +18,8 @@ export const createOrangeMoneyCSVFunction = functions.https.onCall(async () => {
 export const createRecipientsCSV = (recipients: Recipient[], date: Date) => {
 	const csvRows = [['Mobile Number*', 'Amount*', 'First Name', 'Last Name', 'Id Number', 'Remarks*', 'User Type*']];
 	for (const recipient of recipients) {
-		if (['active', 'designated'].includes(recipient.progr_status) && !recipient.test_recipient) {
+		// Can't be filtered out in query because firestore can't filter on non-existent fields
+		if (!recipient.test_recipient) {
 			csvRows.push([
 				recipient.mobile_money_phone.phone.toString().slice(-8),
 				'400',

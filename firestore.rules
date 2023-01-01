@@ -93,11 +93,6 @@ service cloud.firestore {
       allow read: if true;
     }
 
-    match /organisations-contributors/{data} {
-      allow read: if true;
-      allow write: if true;
-    }
-
     match /users/{data=**} {
       allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
       allow write: if isGlobalAdmin(request.auth.token.email);

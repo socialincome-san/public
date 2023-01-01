@@ -1,232 +1,169 @@
-import {
-	AdditionalFieldDelegate,
-	AsyncPreviewComponent,
-	buildCollection,
-	buildProperties,
-	buildProperty,
-	StringPropertyPreview,
-} from '@camberi/firecms';
+import { buildCollection, buildProperties } from '@camberi/firecms';
+import { PropertiesOrBuilders } from '@camberi/firecms/dist/types';
+import { Property } from '@camberi/firecms/dist/types/properties';
 import { isUndefined } from 'lodash';
-import { PARTNER_ORGANISATION_FIRESTORE_PATH, Recipient, RECIPIENT_FIRESTORE_PATH } from '../../../shared/src/types';
-import { getMonthIDs } from '../../../shared/utils';
-import { CreateOrangeMoneyCSVAction } from '../actions/CreateOrangeMoneyCSVAction';
-import { BuildCollectionProps } from './index';
-import { paymentsCollection, paymentStatusMap } from './Payments';
+import {
+	PARTNER_ORGANISATION_FIRESTORE_PATH,
+	Recipient,
+	RecipientProgramStatus,
+	RECIPIENT_FIRESTORE_PATH,
+} from '../../../shared/src/types';
+import { BuildCollectionProps, paymentsCollection } from './index';
 
-const organisationAdminProperties = buildProperties<Partial<Recipient>>({
-	progr_status: {
-		name: 'Status',
-		dataType: 'string',
-		disabled: true,
-		enumValues: {
-			active: 'Active Recipient',
-			waitlisted: 'Waiting List',
-			designated: 'Starting Next Payday',
-			former: 'Former Recipient',
-		},
-	},
-	om_uid: {
-		name: 'OM UID',
-		disabled: true,
-		dataType: 'number',
-	},
-	first_name: {
-		name: 'First Name',
-		validation: { required: true },
-		dataType: 'string',
-	},
-	last_name: {
-		name: 'Last Name',
-		validation: { required: true },
-		dataType: 'string',
-	},
-	communication_mobile_phone: {
-		name: 'Contact Phone',
-		validation: { required: true },
-		dataType: 'map',
-		spreadChildren: true,
-		properties: {
-			phone: {
-				name: 'Phone Number',
-				dataType: 'number',
-			},
-			equals_mobile_money: {
-				name: '# used for Orange Money',
-				dataType: 'boolean',
-			},
-			has_whatsapp: {
-				name: '# used on WhatsApp',
-				dataType: 'boolean',
-			},
-		},
-	},
-	mobile_money_phone: {
-		name: 'Separate Orange Money Phone',
-		dataType: 'map',
-		spreadChildren: true,
-		properties: {
-			phone: {
-				name: 'Orange Money Number',
-				dataType: 'number',
-				validation: { required: true, min: 23200000000, max: 23299999999 },
-			},
-			has_whatsapp: {
-				name: '# used on Whatsapp',
-				dataType: 'boolean',
-			},
-		},
-	},
-	gender: {
-		name: 'Gender',
-		dataType: 'string',
-		longDescription: 'Gender of recipient',
-		validation: { required: true },
-		enumValues: {
-			male: 'Male',
-			female: 'Female',
-			other: 'Other',
-			private: 'Private',
-		},
-	},
-	main_language: {
-		name: 'First Language',
-		dataType: 'string',
-		validation: { required: true },
-		enumValues: {
-			krio: 'Krio',
-			mende: 'Mende',
-			temne: 'Temne',
-			limba: 'Limba',
-			english: 'English',
-			other: 'Other',
-		},
-	},
-	speaks_english: {
-		name: 'Speaks English',
-		dataType: 'boolean',
-	},
-	birth_date: {
-		name: 'Birthday',
-		dataType: 'date',
-		mode: 'date',
-	},
-	calling_name: {
-		name: 'Nickname',
-		dataType: 'string',
-	},
-	profession: {
-		name: 'Profession',
-		dataType: 'string',
-	},
-	organisation: {
-		name: 'Recommending Organisation',
-		hideFromCollection: true,
-		// @ts-ignore
-		dataType: 'reference',
-		path: PARTNER_ORGANISATION_FIRESTORE_PATH,
-	},
-});
+export const programStatusProperty: Property = {
+	name: 'Status',
+	dataType: 'string',
+	disabled: true,
+	enumValues: [
+		{ id: RecipientProgramStatus.Active, label: 'Active Recipient' },
+		{ id: RecipientProgramStatus.Waitlisted, label: 'Waiting List' },
+		{ id: RecipientProgramStatus.Designated, label: 'Starting Next Payday' },
+		{ id: RecipientProgramStatus.Former, label: 'Former Recipient' },
+	],
+};
 
-const globalAdminProperties = buildProperties<Recipient>({
-	// TODO: reuse properties from organisationAdminProperties
-	test_recipient: {
-		name: 'Test Recipient',
-		dataType: 'boolean',
-	},
-	progr_status: {
-		name: 'Status',
-		dataType: 'string',
-		enumValues: {
-			active: 'Active Recipient',
-			waitlisted: 'Waiting List',
-			designated: 'Starting Next Payday',
-			former: 'Former Recipient',
+export const orangeMoneyUIDProperty: Property = {
+	name: 'Orange Money UID',
+	dataType: 'number',
+};
+
+export const firstNameProperty: Property = {
+	name: 'First Name',
+	validation: { required: true },
+	dataType: 'string',
+};
+
+export const lastNameProperty: Property = {
+	name: 'Last Name',
+	validation: { required: true },
+	dataType: 'string',
+};
+
+const communicationMobilePhoneProperty: Property = {
+	name: 'Contact Phone',
+	validation: { required: true },
+	dataType: 'map',
+	spreadChildren: true,
+	properties: {
+		phone: {
+			name: 'Phone Number',
+			dataType: 'number',
+		},
+		equals_mobile_money: {
+			name: '# used for Orange Money',
+			dataType: 'boolean',
+		},
+		has_whatsapp: {
+			name: '# used on WhatsApp',
+			dataType: 'boolean',
 		},
 	},
-	om_uid: {
-		name: 'OM UID',
-		dataType: 'number',
-	},
-	first_name: {
-		name: 'First Name',
-		validation: { required: true },
-		dataType: 'string',
-	},
-	last_name: {
-		name: 'Last Name',
-		validation: { required: true },
-		dataType: 'string',
-	},
-	communication_mobile_phone: {
-		name: 'Contact Details',
-		dataType: 'map',
-		spreadChildren: true,
-		properties: {
-			phone: {
-				name: 'Phone Number',
-				dataType: 'number',
-			},
-			equals_mobile_money: {
-				name: 'Equals Payment Phone',
-				dataType: 'boolean',
-			},
-			has_whatsapp: {
-				name: 'Has Whatsapp',
-				dataType: 'boolean',
-			},
+};
+
+const mobileMoneyPhoneProperty: Property = {
+	name: 'Separate Orange Money Phone',
+	dataType: 'map',
+	spreadChildren: true,
+	properties: {
+		phone: {
+			name: 'Orange Money Number',
+			dataType: 'number',
+			validation: { required: true, min: 23200000000, max: 23299999999 },
+		},
+		has_whatsapp: {
+			name: '# used on Whatsapp',
+			dataType: 'boolean',
 		},
 	},
-	mobile_money_phone: {
-		name: 'Payment Details',
-		validation: { required: true },
-		dataType: 'map',
-		spreadChildren: true,
-		properties: {
-			phone: {
-				name: 'Phone Number',
-				dataType: 'number',
-				validation: { required: true, min: 23200000000, max: 23299999999 },
-			},
-			has_whatsapp: {
-				name: 'Has Whatsapp',
-				dataType: 'boolean',
-			},
-		},
+};
+
+const genderProperty: Property = {
+	name: 'Gender',
+	dataType: 'string',
+	longDescription: 'Gender of recipient',
+	validation: { required: true },
+	enumValues: {
+		male: 'Male',
+		female: 'Female',
+		other: 'Other',
+		private: 'Private',
 	},
-	organisation: {
-		name: 'Organisation',
-		// @ts-ignore
-		dataType: 'reference',
-		path: PARTNER_ORGANISATION_FIRESTORE_PATH,
+};
+
+const mainLanguageProperty: Property = {
+	name: 'First Language',
+	dataType: 'string',
+	validation: { required: true },
+	enumValues: {
+		krio: 'Krio',
+		mende: 'Mende',
+		temne: 'Temne',
+		limba: 'Limba',
+		english: 'English',
+		other: 'Other',
 	},
-	gender: {
-		name: 'Gender',
-		dataType: 'string',
-		enumValues: {
-			male: 'Male',
-			female: 'Female',
-			other: 'Other',
-			private: 'Private',
-		},
-	},
-	si_start_date: {
-		name: 'Start',
-		dataType: 'date',
-		mode: 'date',
-	},
-	birth_date: {
-		name: 'Birthday',
-		dataType: 'date',
-		mode: 'date',
-	},
-	profession: {
-		name: 'Profession',
-		dataType: 'string',
-	},
-	calling_name: {
-		name: 'Nickname',
-		dataType: 'string',
-	},
+};
+
+const speaksEnglishProperty: Property = {
+	name: 'Speaks English',
+	dataType: 'boolean',
+};
+
+const birthDateProperty: Property = {
+	name: 'Birthday',
+	dataType: 'date',
+	mode: 'date',
+};
+
+const callingNameProperty: Property = {
+	name: 'Nickname',
+	dataType: 'string',
+};
+
+const professionProperty: Property = {
+	name: 'Profession',
+	dataType: 'string',
+};
+
+const organisationProperty: Property = {
+	name: 'Recommending Organisation',
+	dataType: 'reference',
+	path: PARTNER_ORGANISATION_FIRESTORE_PATH,
+};
+
+const baseProperties: PropertiesOrBuilders<Partial<Recipient>> = {
+	progr_status: { ...programStatusProperty, disabled: true },
+	om_uid: { ...orangeMoneyUIDProperty, disabled: true },
+	first_name: firstNameProperty,
+	last_name: lastNameProperty,
+	communication_mobile_phone: communicationMobilePhoneProperty,
+	mobile_money_phone: mobileMoneyPhoneProperty,
+	gender: genderProperty,
+	main_language: mainLanguageProperty,
+	speaks_english: speaksEnglishProperty,
+	birth_date: birthDateProperty,
+	calling_name: callingNameProperty,
+	profession: professionProperty,
+	organisation: { ...organisationProperty, hideFromCollection: true },
+};
+const organisationAdminProperties = buildProperties<Partial<Recipient>>(baseProperties);
+
+const allProps: PropertiesOrBuilders<Recipient> = {
+	progr_status: programStatusProperty,
+	om_uid: orangeMoneyUIDProperty,
+	first_name: firstNameProperty,
+	last_name: lastNameProperty,
+	// @ts-ignore
+	communication_mobile_phone: communicationMobilePhoneProperty,
+	// @ts-ignore
+	mobile_money_phone: mobileMoneyPhoneProperty,
+	gender: genderProperty,
+	main_language: mainLanguageProperty,
+	speaks_english: speaksEnglishProperty,
+	birth_date: birthDateProperty,
+	calling_name: callingNameProperty,
+	profession: professionProperty,
+	organisation: organisationProperty,
 	email: {
 		name: 'Email',
 		dataType: 'string',
@@ -258,63 +195,28 @@ const globalAdminProperties = buildProperties<Recipient>({
 		dataType: 'string',
 		url: true,
 	},
-	main_language: {
-		name: 'Main Language',
-		dataType: 'string',
-		enumValues: {
-			krio: 'Krio',
-			mende: 'Mende',
-			temne: 'Temne',
-			limba: 'Limba',
-			english: 'English',
-			other: 'Other',
-		},
-	},
-
-	speaks_english: {
-		name: 'Speaks English',
-		dataType: 'boolean',
-	},
-	updated_on: buildProperty({
-		dataType: 'date',
-		name: 'Updated at',
-		autoValue: 'on_update',
-	}),
 	is_suspended: {
 		name: 'Suspended',
 		dataType: 'boolean',
 	},
-});
+	si_start_date: {
+		name: 'Start',
+		dataType: 'date',
+		mode: 'date',
+	},
+	test_recipient: {
+		name: 'Test Recipient',
+		dataType: 'boolean',
+	},
+	updated_on: {
+		dataType: 'date',
+		name: 'Updated at',
+		autoValue: 'on_update',
+	},
+};
+const globalAdminProperties = buildProperties<Recipient>(allProps);
 
-const basicRecipientProperties = buildProperties<Partial<Recipient>>({
-	progr_status: {
-		name: 'Status',
-		dataType: 'string',
-		disabled: true,
-		enumValues: {
-			active: 'Active Recipient',
-			waitlisted: 'Waiting List',
-			designated: 'Starting Next Payday',
-			former: 'Former Recipient',
-		},
-	},
-	first_name: {
-		name: 'First Name',
-		validation: { required: true },
-		dataType: 'string',
-	},
-	last_name: {
-		name: 'Last Name',
-		validation: { required: true },
-		dataType: 'string',
-	},
-	om_uid: {
-		name: 'OM UID',
-		dataType: 'number',
-	},
-});
-
-export const buildRecipientsCollection = ({ isGlobalAdmin, organisations = [] }: BuildCollectionProps) => {
+export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: BuildCollectionProps) => {
 	const defaultParams = {
 		name: 'Recipients',
 		singularName: 'Recipient',
@@ -341,67 +243,16 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations = [] }:
 						throw Error('Please select a valid organisation.');
 					}
 					if (isUndefined(previousValues)) {
-						values.progr_status = 'waitlisted';
+						values.progr_status = RecipientProgramStatus.Waitlisted;
 					}
 					return values;
 				},
 			},
 			properties: organisationAdminProperties,
 			forceFilter: {
-				organisation: ['in', organisations],
+				organisation: ['in', organisations || []],
 			},
 			inlineEditing: false,
 		});
 	}
 };
-
-let currentDate = new Date();
-let monthIDs = getMonthIDs(currentDate, 3);
-
-let paymentStatusProperty = buildProperty({
-	dataType: 'string',
-	enumValues: paymentStatusMap,
-});
-
-function statusPreview(value: string): React.ReactElement {
-	return <StringPropertyPreview property={paymentStatusProperty} value={value} size={'regular'} />;
-}
-
-function createMonthColumn(monthID: string, monthLabel: string): AdditionalFieldDelegate<Partial<Recipient>> {
-	return {
-		id: monthID,
-		name: monthLabel,
-		builder: ({ entity, context }) => (
-			<AsyncPreviewComponent
-				builder={context.dataSource
-					.fetchEntity({
-						path: entity.path + '/' + entity.id + '/payments',
-						entityId: monthID,
-						collection: paymentsCollection,
-					})
-					.then((entity) => statusPreview(entity?.values.status || ''))}
-			/>
-		),
-	};
-}
-
-const CurrMonthCol = createMonthColumn(monthIDs[0], monthIDs[0] + ' (Current)');
-const PrevMonthCol = createMonthColumn(monthIDs[1], monthIDs[1]);
-const PrevPrevMonthCol = createMonthColumn(monthIDs[2], monthIDs[2]);
-
-export const recentPaymentsCollection = buildCollection<Partial<Recipient>>({
-	name: 'Payment Confirmations',
-	singularName: 'Recipient',
-	path: RECIPIENT_FIRESTORE_PATH,
-	alias: 'recentPayments',
-	group: 'Recipients',
-	icon: 'PriceCheck',
-	description: 'Payment confirmations of last three month',
-	textSearchEnabled: true,
-	properties: basicRecipientProperties,
-	subcollections: [paymentsCollection],
-	exportable: false,
-	Actions: CreateOrangeMoneyCSVAction,
-	inlineEditing: true,
-	additionalColumns: [CurrMonthCol, PrevMonthCol, PrevPrevMonthCol],
-});
