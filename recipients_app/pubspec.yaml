@@ -82,10 +82,10 @@ flutter:
   fonts:
     - family: Unica77LL
       fonts:
-        - asset: assets/Unica77LL-Regular.otf
-        - asset: assets/Unica77LL-Medium.otf
+        - asset: assets/fonts/Unica77LL-Regular.otf
+        - asset: assets/fonts/Unica77LL-Medium.otf
           weight: 500
-        - asset: assets/Unica77LL-Bold.otf
+        - asset: assets/fonts/Unica77LL-Bold.otf
           weight: 700
 # Enable for generating new app icons
 # flutter_icons:
