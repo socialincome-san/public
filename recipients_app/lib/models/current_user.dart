@@ -121,14 +121,13 @@ class CurrentUser extends ChangeNotifier {
         : replacementValue;
   }
 
-  // TODO: fix lint
   DateTime? safeAssignDate(
     DocumentSnapshot snapshot,
     String key, {
     DateTime? replacementValue,
   }) {
     return containsKey(snapshot, key)
-        ? snapshot[key].toDate() as DateTime?
+        ? (snapshot[key] as Timestamp?)?.toDate()
         : replacementValue;
   }
 
