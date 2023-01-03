@@ -22,7 +22,7 @@ describe('createOrangeMoneyCSV', () => {
 
 	const expectedCSV = `
 Mobile Number*,Amount*,First Name,Last Name,Id Number,Remarks*,User Type*
-80000003,400,Daniel,Naba,2,Social Income December 2022,subscriber
+00000300,400,Daniel,Naba,2,Social Income December 2022,subscriber
 00000056,400,Leandro,Pasul,88,Social Income December 2022,subscriber
 `.trim();
 });
