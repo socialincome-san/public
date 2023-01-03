@@ -36,7 +36,7 @@ beforeAll(async () => {
 		.authenticatedContext('ashoka_admin', { email: 'admin@ashoka.org' })
 		.firestore();
 	recipientAppAccess = testEnvironment
-		.authenticatedContext('recipient_app', { phone_number: '41766666662' })
+		.authenticatedContext('recipient_app', { phone_number: '+23200000501' })
 		.firestore();
 });
 
@@ -85,9 +85,18 @@ describe('Test organisations collection', () => {
 });
 
 describe('Test recipients collection', () => {
-	it('Read single recipients doc', async () => {
+	it('Read recipients doc', async () => {
+		const recipients = await getDocs(query(collection(globalAdminStore, 'recipients')));
+		expect(recipients.size).toBe(5);
+
 		const recipientDoc = await getDoc(doc(testOrganisationAdminStore, 'recipients', '3RqjohcNgUXaejFC7av8'));
 		expect(recipientDoc.exists()).toBe(true);
+
+		const phoneNumberAccessDoc = await getDoc(doc(recipientAppAccess, 'recipients', 'iF8bLEoUjqOIlq84XQmi'));
+		expect(phoneNumberAccessDoc.exists()).toBe(true);
+
+		await assertFails(getDoc(doc(recipientAppAccess, 'recipients', '3RqjohcNgUXaejFC7av8')));
+		await assertFails(getDoc(doc(testOrganisationAdminStore, 'recipients', 'iF8bLEoUjqOIlq84XQmi')));
 	});
 
 	it('Read payments subcollection', async () => {
