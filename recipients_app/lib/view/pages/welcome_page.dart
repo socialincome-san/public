@@ -10,22 +10,22 @@ import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
 class WelcomePage extends StatelessWidget {
-  final TextStyle textbuttonStyle = const TextStyle(color: Colors.white);
+  TextStyle get textbuttonStyle => const TextStyle(color: Colors.white);
   // prevents rebuilding new widget which would lose focus
-  final SocialIncomeAlert ineligible = const SocialIncomeAlert(
+  SocialIncomeAlert get ineligible => const SocialIncomeAlert(
     "Number not eligible.",
     Icons.close,
     "ineligible",
     textButton: "Contact us for support",
   );
 
-  final SocialIncomeAlert formatError = const SocialIncomeAlert(
+  SocialIncomeAlert get formatError => const SocialIncomeAlert(
     "This is not a valid phone number",
     Icons.close,
     "formatError",
   );
 
-  final SocialIncomeAlert verificationCodeError = const SocialIncomeAlert(
+  SocialIncomeAlert get verificationCodeError => const SocialIncomeAlert(
     "False verification code. Try again",
     Icons.close,
     "CodeWrong",

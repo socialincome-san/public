@@ -17,13 +17,13 @@ class SocialIncomeAlert extends StatelessWidget {
     this.textButton = "",
   });
 
-  final TextStyle style = const TextStyle(
+  TextStyle get style => const TextStyle(
     color: Colors.white,
     overflow: TextOverflow.clip,
     fontSize: 16,
   );
 
-  final TextStyle buttonStyle = const TextStyle(
+  TextStyle get buttonStyle => const TextStyle(
     color: Colors.white,
     overflow: TextOverflow.clip,
     fontSize: 16,
