@@ -5,16 +5,19 @@ import "package:intl/intl.dart";
 
 // Authentication service provides methods to register, verify phone number and sign in
 class AuthService {
-  static AuthService? _instance;
+
+  static final AuthService _instance = AuthService._();
+
+  // Implementation of Singleton pattern, so all Registration components use the same instance
+  factory AuthService() {
+    return _instance;
+  }
+
+  AuthService._();
+
   void Function(PhoneAuthCredential)? verificationCompleted;
   void Function(String, int?)? codeSent;
   String? _verificationId;
-
-  // Implementation of Singleton pattern, so all Registration components use the same instance
-  static AuthService instance() {
-    _instance ??= AuthService();
-    return _instance!;
-  }
 
   String? get verificationId => _verificationId;
 
@@ -31,7 +34,7 @@ class AuthService {
       },
       codeSent: codeSent ?? (verificationId, forceResendCode) {},
       codeAutoRetrievalTimeout: (e) {
-        log("autoretrievel timeout");
+        log("auto-retrieval timeout");
       },
     );
     return true;

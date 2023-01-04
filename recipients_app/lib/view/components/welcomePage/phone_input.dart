@@ -12,7 +12,7 @@ TextEditingController inputController = TextEditingController();
 final PhoneNumber number = PhoneNumber(isoCode: "SL");
 
 class PhoneInput extends StatelessWidget {
-  final AuthService auth = AuthService.instance();
+  final AuthService auth = AuthService();
 
   PhoneInput({super.key});
 

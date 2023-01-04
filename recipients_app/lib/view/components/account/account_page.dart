@@ -56,7 +56,7 @@ class AccountPage extends StatelessWidget {
                   ),
                   UnchangeableUserInformation(
                     "Recipient Since",
-                    AuthService.instance().createdAt(),
+                    AuthService().createdAt(),
                   ),
                   UnchangeableUserInformation(
                     "Amount Received",

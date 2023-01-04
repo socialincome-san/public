@@ -9,7 +9,7 @@ RoundedLoadingButtonController btnController = RoundedLoadingButtonController();
 TextEditingController inputController = TextEditingController();
 
 class OtpInput extends StatelessWidget {
-  final AuthService auth = AuthService.instance();
+  final AuthService auth = AuthService();
 
   final Function() login;
 
