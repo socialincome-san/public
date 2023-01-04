@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../shared/types';
-import { createDoc } from '../useFirestoreAdmin';
+import { doc } from '../useFirestoreAdmin';
 import * as importPostfinanceBalance from './importPostfinanceBalance';
 const { cleanup } = firebaseFunctionsTest();
 
@@ -100,7 +100,7 @@ describe('importPostfinanceBalance', () => {
 		await importPostfinanceBalance.storeBalances(balances);
 
 		const balance = balances[0];
-		const snap = await createDoc<BankBalance>(BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance(balance)).get();
+		const snap = await doc<BankBalance>(BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance(balance)).get();
 		expect(balance).toEqual(snap.data());
 	});
 	jest.setTimeout(30000);
