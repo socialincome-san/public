@@ -1,9 +1,8 @@
-import assert from 'assert';
 import * as functions from 'firebase-functions';
 import { withFile } from 'tmp-promise';
-import { doc, useFirestore } from '../../../shared/src/firebase/firestoreAdmin';
+import { assertGlobalAdmin, useFirestore } from '../../../shared/src/firebase/firestoreAdmin';
 import { uploadAndGetDownloadURL } from '../../../shared/src/firebase/storageAdmin';
-import { AdminUser, DonationCertificate, Entity, User } from '../../../shared/src/types';
+import { DonationCertificate, Entity, User } from '../../../shared/src/types';
 import { generateDonationCertificatePDF } from './generatePDF';
 import { loadLocales } from './locales';
 import { sendDonationCertificateEmail } from './sendEmail';
@@ -16,8 +15,7 @@ export interface CreateDonationCertificatesFunctionProps {
 
 export const createDonationCertificatesFunction = functions.https.onCall(
 	async ({ users, year, sendEmails }: CreateDonationCertificatesFunctionProps, { auth }) => {
-		const admin = (await doc<AdminUser>('admins', auth?.token?.email || '').get()).data();
-		assert(admin?.is_global_admin);
+		await assertGlobalAdmin(auth?.token?.email);
 
 		let [successCount, skippedCount] = [0, 0];
 		for (const userEntity of users) {

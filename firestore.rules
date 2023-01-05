@@ -22,9 +22,9 @@ service cloud.firestore {
 
     function canAccessPayment(token, recipientId) {
       let recipient = get(/databases/$(database)/documents/recipients/$(recipientId)).data;
-      let hasRecipientAccess = 'email' in token && canAccessRecipient(token.email, recipient);
-      let hasPhoneNumberAccess = 'phone_number' in token && token.phone_number == string(recipient.mobile_money_phone.phone);
-      return hasRecipientAccess || hasPhoneNumberAccess
+      let hasAccessByEmail = 'email' in token && canAccessRecipient(token.email, recipient);
+      let hasAccessByPhone = 'phone_number' in token && token.phone_number == ("+" + string(recipient.mobile_money_phone.phone));
+      return hasAccessByEmail || hasAccessByPhone
     }
 
     match /admins/{data} {
@@ -59,11 +59,6 @@ service cloud.firestore {
       allow write: if isGlobalAdmin(request.auth.token.email);
     }
 
-    match /organisations-contributors/{data} {
-      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
-      allow write: if isGlobalAdmin(request.auth.token.email);
-    }
-
     match /operational-expenses/{data} {
       allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
       allow write: if isGlobalAdmin(request.auth.token.email);
@@ -74,33 +69,32 @@ service cloud.firestore {
       allow write: if isGlobalAdmin(request.auth.token.email);
     }
 
-    match /recipients/{recipientId} {
-      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email) || canAccessRecipient(request.auth.token.email, resource.data);
-      allow create: if isAdminUser(request.auth.token.email);
-      allow update: if isGlobalAdmin(request.auth.token.email) || canAccessRecipient(request.auth.token.email, resource.data);
-      allow delete: if isGlobalAdmin(request.auth.token.email);
-
-      match /payments/{paymentId} {
-          allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email) || canAccessPayment(request.auth.token, recipientId);
-          allow create: if isAdminUser(request.auth.token.email);
-          // TODO: Only allow recipient to update the "status" field, see https://firebase.google.com/docs/firestore/security/rules-fields#restricting_fields_on_update
-          allow update: if isGlobalAdmin(request.auth.token.email) || canAccessPayment(request.auth.token, recipientId);
-          allow delete: if isGlobalAdmin(request.auth.token.email);
-      }
+    match /organisations-contributors/{data} {
+      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
+      allow write: if isGlobalAdmin(request.auth.token.email);
     }
 
-    match /om-list/{data} {
-      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
-      allow write: if false;
+    match /recipients/{recipientId} {
+      allow read, write: if isGlobalAdmin(request.auth.token.email);
+      allow read: if isGlobalAnalyst(request.auth.token.email);
+
+      // Recipients mobile app access
+      allow read, update: if request.auth.token.phone_number == ("+" + string(resource.data.mobile_money_phone.phone))
+
+      // Organisation admins access
+      allow create: if isAdminUser(request.auth.token.email);
+      allow read, update: if canAccessRecipient(request.auth.token.email, resource.data);
+
+      match /payments/{paymentId} {
+          allow read, write: if isGlobalAdmin(request.auth.token.email);
+          allow read: if isGlobalAnalyst(request.auth.token.email);
+          allow create: if isAdminUser(request.auth.token.email);
+          allow read, update: if canAccessPayment(request.auth.token, recipientId);
+      }
     }
 
     match /transparency-stats/{data} {
       allow read: if true;
-    }
-
-    match /organisations-contributors/{data} {
-      allow read: if true;
-      allow write: if true;
     }
 
     match /users/{data=**} {
