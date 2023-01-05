@@ -26,5 +26,3 @@ build
 # JetBrains
 .idea/
 .ignore/
-
-recipients_app/ios/Runner/GoogleService-Info.plist
