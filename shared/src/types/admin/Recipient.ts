@@ -2,6 +2,13 @@ import { EntityReference } from '@camberi/firecms';
 
 export const RECIPIENT_FIRESTORE_PATH = 'recipients';
 
+export enum RecipientProgramStatus {
+	Active = 'active',
+	Waitlisted = 'waitlisted',
+	Designated = 'designated',
+	Former = 'former',
+}
+
 export type Recipient = {
 	birth_date: Date;
 	calling_name: string;
@@ -27,7 +34,7 @@ export type Recipient = {
 	organisation: EntityReference;
 	om_uid: number;
 	profession: string;
-	progr_status: 'active' | 'waitlisted' | 'designated' | 'former';
+	progr_status: RecipientProgramStatus;
 	si_start_date: Date; //for NGO disabled
 	speaks_english: boolean;
 	test_recipient: boolean;

@@ -89,18 +89,8 @@ service cloud.firestore {
       }
     }
 
-    match /om-list/{data} {
-      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
-      allow write: if false;
-    }
-
     match /transparency-stats/{data} {
       allow read: if true;
-    }
-
-    match /organisations-contributors/{data} {
-      allow read: if true;
-      allow write: if true;
     }
 
     match /users/{data=**} {

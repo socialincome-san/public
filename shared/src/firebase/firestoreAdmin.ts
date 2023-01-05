@@ -1,3 +1,4 @@
+import assert from 'assert';
 import {
 	CollectionReference,
 	DocumentData,
@@ -6,6 +7,7 @@ import {
 	Query,
 	QueryDocumentSnapshot,
 } from 'firebase-admin/firestore';
+import { AdminUser } from '../types';
 import { getOrInitializeApp } from './app';
 
 /**
@@ -36,4 +38,10 @@ export const findFirst = async <T = DocumentData>(
 ): Promise<QueryDocumentSnapshot<T> | undefined> => {
 	const snapshot = await query(collection<T>(collectionName)).get();
 	return snapshot.docs.at(0);
+};
+
+export const assertGlobalAdmin = async (email?: string) => {
+	assert(email);
+	const admin = (await doc<AdminUser>('admins', email).get()).data();
+	assert(admin?.is_global_admin, 'Expected is_global_admin set to true');
 };

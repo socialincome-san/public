@@ -2,7 +2,7 @@ import { DocumentReference } from 'firebase-admin/firestore';
 import { CollectionReference } from 'firebase-admin/lib/firestore';
 import * as functions from 'firebase-functions';
 import Stripe from 'stripe';
-import { collection, findFirst } from '../../../shared/src/firebase/firestoreAdmin';
+import { assertGlobalAdmin, collection, findFirst } from '../../../shared/src/firebase/firestoreAdmin';
 import {
 	Contribution,
 	ContributionSourceKey,
@@ -168,13 +168,13 @@ const constructStatus = (status: Stripe.Charge.Status) => {
 /**
  * One off script to import existing stripe payments into firestore.
  * Continuous update is done through the [stripeWebhook].
- * TODO @andrashee: add auth check. Only global admins should be able to trigger this.
  */
 export const batchImportStripeChargesFunction = functions
 	.runWith({
 		timeoutSeconds: 540, // max timeout supported by firebase
 	})
-	.https.onCall(async () => {
+	.https.onCall(async (_, { auth }) => {
+		await assertGlobalAdmin(auth?.token?.email);
 		const stripeBatchSize = 100; // max batch size supported by stripe
 		const charges = [];
 		try {
