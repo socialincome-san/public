@@ -34,6 +34,7 @@ export type User = {
 	language?: string;
 	location?: string;
 	currency?: string;
+	type?: string;
 	contributor_organisations?: EntityReference[];
 };
 

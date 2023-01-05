@@ -208,5 +208,12 @@ export const usersCollection = buildCollection<User>({
 			dataType: 'string',
 			disabled: true,
 		},
+		type: {
+			name: 'Type',
+			dataType: 'string',
+			validation: {
+				required: true,
+			},
+		},
 	}),
 });
