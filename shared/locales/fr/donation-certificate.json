@@ -1,7 +1,8 @@
 {
 	"header": "Association à but non lucratif\nexonérée d’impôt par le\nCanton de Zurich",
+	"country": "Suisse",
 	"title": "Attestation de dons pour",
-	"fiscal-year": "année fiscale ",
+	"fiscal-year": "Année fiscale ",
 	"salutation": "Bonjour,",
 	"confirmation-1": "Par la présente, nous attestons auprès des autorités fiscales que ",
 	"confirmation-2": " domicilié à ",
@@ -19,9 +20,9 @@
 	"information-3": "Bien cordialement",
 	"signature-1": "Directeur général",
 	"signature-2": "Trésorière",
-	"footer-1": "Social Income\nZweierstrasse 103\n8003 Zurich\nhello@socialincome.org\nSuisse",
-	"footer-2": "Association à but non lucratif\n\nIDE: CHE-289.611.695\n\nDUNS: 48-045-6376",
-	"footer-3": "Contact\n\n\nsocialincome.org",
+	"footer-1": "Social Income\nZweierstrasse 103\nCH-8003 Zurich",
+	"footer-2": "Association à but non lucratif\nIDE: CHE-289.611.695\nDUNS: 48-045-6376",
+	"footer-3": "Contact\nhello@socialincome.org\nsocialincome.org",
 	"email-subject": "Social Income Attestation de don",
 	"filename-prefix": "Social Income Attestation de don "
 }
