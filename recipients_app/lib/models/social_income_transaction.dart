@@ -10,22 +10,27 @@ class SocialIncomeTransaction {
   String? contestExplanation;
   String? currency;
 
+// TODO: check if expected data types are coming back
   void initialize(Map<String, dynamic> data, String transactionId) {
     id = transactionId;
-    amount = data["amount"];
-    confirmedAt = data["confirm_at"];
-    contestedAt = data["contest_at"];
-    status = data["status"];
-    contestReason = data["contest_reason"];
-    currency = data['currency'];
+    amount = data["amount"] != null ? data["amount"] as int : null;
+    confirmedAt =
+        data["confirm_at"] != null ? data["confirm_at"] as Timestamp : null;
+    contestedAt =
+        data["contest_at"] != null ? data["contest_at"] as Timestamp : null;
+    status = data["status"] != null ? data["status"] as String : null;
+    contestReason = data["contest_reason"] != null
+        ? data["contest_reason"] as String
+        : null;
+    currency = data["currency"] != null ? data["currency"] as String : null;
   }
 
   Map<String, dynamic> data() => {
-        'amount': amount,
-        'confirm_at': confirmedAt,
-        'contest_at': contestedAt,
-        'status': status,
-        'contest_reason': contestReason,
-        'currency': currency
+        "amount": amount,
+        "confirm_at": confirmedAt,
+        "contest_at": contestedAt,
+        "status": status,
+        "contest_reason": contestReason,
+        "currency": currency
       };
 }
