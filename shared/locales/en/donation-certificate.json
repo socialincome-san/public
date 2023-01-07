@@ -1,5 +1,5 @@
 {
-	"header": "Association with tax exemption in the canton of Zurich",
+	"header": "Association with tax exemption\nin the canton of Zurich",
 	"country": "Switzerland",
 	"title": "Donation receipt",
 	"fiscal-year": "Fiscal year ",
@@ -20,9 +20,15 @@
 	"information-3": "All the best,",
 	"signature-1": "Director",
 	"signature-2": "Head of Finance",
-	"footer-1": "Social Income\nZweierstrasse 103\nCH-8003 Zurich",
-	"footer-2": "Association with tax exemption\nIDE: UID-289.611.695\nDUNS: 48-045-6376",
-	"footer-3": "Contact\nhello@socialincome.org\nsocialincome.org\"",
+	"footer-left-line-1": "Social Income",
+	"footer-left-line-2": "Zweierstrasse 103",
+	"footer-left-line-3": "CH-8003 Zurich",
+	"footer-middle-line-1": "Association with tax exemption",
+	"footer-middle-line-2": "UID: CHE-289.611.695",
+	"footer-middle-line-3": "DUNS: 48-045-6376",
+	"footer-right-line-1": "Contact",
+	"footer-right-line-2": "hello@socialincome.org",
+	"footer-right-line-3": "socialincome.org",
 	"email-subject": "Social Income Donation Certificate",
 	"filename-prefix": "Social Income Donation Certificate "
 }
