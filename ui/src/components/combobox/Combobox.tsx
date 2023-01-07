@@ -60,7 +60,7 @@ export interface SoComboboxProps extends Pick<ComboboxProps, 'name' | 'disabled'
 	/**
 	 * Visual size of the button
 	 */
-	size?: typeof SO_COMBOBOX_SIZES[number];
+	size?: (typeof SO_COMBOBOX_SIZES)[number];
 }
 
 /**

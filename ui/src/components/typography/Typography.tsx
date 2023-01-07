@@ -16,7 +16,7 @@ export const SO_TYPOGRAPHY_SIZES = [
 	'9xl',
 ] as const;
 
-export type SoTypographySize = typeof SO_TYPOGRAPHY_SIZES[number];
+export type SoTypographySize = (typeof SO_TYPOGRAPHY_SIZES)[number];
 
 export interface SoTypographyProps extends React.PropsWithChildren, React.HTMLAttributes<any> {
 	/**
