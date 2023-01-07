@@ -7,8 +7,8 @@ export const SO_BUTTON_SIZES = ['base', 'xl'];
 export interface SoButtonProps
 	extends React.PropsWithChildren,
 		React.ButtonHTMLAttributes<HTMLButtonElement | HTMLAnchorElement> {
-	variant?: typeof SO_BUTTON_VARIANTS[number];
-	size?: typeof SO_BUTTON_SIZES[number];
+	variant?: (typeof SO_BUTTON_VARIANTS)[number];
+	size?: (typeof SO_BUTTON_SIZES)[number];
 	href?: string;
 }
 
