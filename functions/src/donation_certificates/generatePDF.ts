@@ -64,8 +64,8 @@ export const generateDonationCertificatePDF = (
 		const writeStream = createWriteStream(filePath);
 		const user = userEntity.values;
 		const financials = await calculateFinancials(userEntity.id, year);
-		const currentDateString = new Date().toLocaleDateString('de-DE',{dateStyle:"medium"});
-		let pdfDocument = new PDFDocument({size: 'A4'});
+		const currentDateString = new Date().toLocaleDateString('de-DE', { dateStyle: 'medium' });
+		let pdfDocument = new PDFDocument({ size: 'A4' });
 
 		pdfDocument.image('dist/assets/logos/logo_color@2x.png', 45, 20, { width: 180 });
 		pdfDocument.fontSize(10).text(locales['header'], 45, 20, {
@@ -75,7 +75,7 @@ export const generateDonationCertificatePDF = (
 		pdfDocument
 			.fontSize(12)
 			.text(
-				`${user.personal?.name} ${user.personal?.lastname}\n${user.address?.street}\n${user.address?.zip} ${user.address?.city}\n${locales["country"]}`
+				`${user.personal?.name} ${user.personal?.lastname}\n${user.address?.street}\n${user.address?.zip} ${user.address?.city}\n${locales['country']}`
 			);
 		pdfDocument.moveDown(6);
 		pdfDocument.fontSize(12).text(`Zürich, ${currentDateString}`);
@@ -135,15 +135,33 @@ export const generateDonationCertificatePDF = (
 		yPosition = pdfDocument.y;
 		pdfDocument.fontSize(12).text(locales['signature-2'], 45, yPosition);
 		pdfDocument.fontSize(12).text(locales['signature-1'], 215, yPosition);
-		pdfDocument.fontSize(10).text(locales['footer-left-line-1'], 45, pdfDocument.page.height -70, {lineBreak: false });
-		pdfDocument.fontSize(10).text(locales['footer-left-line-2'], 45, pdfDocument.page.height -55, {lineBreak: false });
-		pdfDocument.fontSize(10).text(locales['footer-left-line-3'], 45, pdfDocument.page.height -40, {lineBreak: false });
-		pdfDocument.fontSize(10).text(locales['footer-middle-line-1'], 215, pdfDocument.page.height -70, {lineBreak: false });
-		pdfDocument.fontSize(10).text(locales['footer-middle-line-2'], 215, pdfDocument.page.height -55, {lineBreak: false });
-		pdfDocument.fontSize(10).text(locales['footer-middle-line-3'], 215, pdfDocument.page.height -40, {lineBreak: false });
-		pdfDocument.fontSize(10).text(locales['footer-right-line-1'], 405, pdfDocument.page.height -70, {lineBreak: false });
-		pdfDocument.fontSize(10).text(locales['footer-right-line-2'], 405, pdfDocument.page.height -55, {lineBreak: false });
-		pdfDocument.fontSize(10).text(locales['footer-right-line-3'],  405, pdfDocument.page.height -40, {lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-left-line-1'], 45, pdfDocument.page.height - 70, { lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-left-line-2'], 45, pdfDocument.page.height - 55, { lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-left-line-3'], 45, pdfDocument.page.height - 40, { lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-middle-line-1'], 215, pdfDocument.page.height - 70, { lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-middle-line-2'], 215, pdfDocument.page.height - 55, { lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-middle-line-3'], 215, pdfDocument.page.height - 40, { lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-right-line-1'], 405, pdfDocument.page.height - 70, { lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-right-line-2'], 405, pdfDocument.page.height - 55, { lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-right-line-3'], 405, pdfDocument.page.height - 40, { lineBreak: false });
 		pdfDocument.pipe(writeStream);
 		writeStream.on('finish', () => resolve());
 		pdfDocument.end();
