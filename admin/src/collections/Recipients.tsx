@@ -320,6 +320,7 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 		icon: 'RememberMeTwoTone',
 		description: 'Lists of people, who receive a Social Income',
 		textSearchEnabled: true,
+		
 	};
 	if (isGlobalAdmin) {
 		return buildCollection<Partial<Recipient>>({
