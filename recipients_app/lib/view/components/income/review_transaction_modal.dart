@@ -1,8 +1,8 @@
-import 'package:app/models/current_user.dart';
-import 'package:app/models/social_income_transaction.dart';
-import 'package:app/theme/theme.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import "package:app/models/current_user.dart";
+import "package:app/models/social_income_transaction.dart";
+import "package:app/theme/theme.dart";
+import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 
 class ReviewTransactionModal extends StatefulWidget {
   final SocialIncomeTransaction _transaction;
@@ -25,12 +25,12 @@ class _ReviewTransactionModalState extends State<ReviewTransactionModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CurrentUser>(builder: (context, currentUser, child) {
-      return Padding(
-        padding: MediaQuery.of(context).viewInsets,
-        child: Column(
+    return Consumer<CurrentUser>(
+      builder: (context, currentUser, child) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Column(
             mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
@@ -53,15 +53,18 @@ class _ReviewTransactionModalState extends State<ReviewTransactionModal> {
                           return Padding(
                             padding: const EdgeInsets.only(top: 8),
                             child: ElevatedButton(
-                                onPressed: () {
-                                  var transactionId = widget._transaction.id;
-                                  if (transactionId != null) {
-                                    currentUser.contestTransaction(
-                                        transactionId, reason);
-                                  }
-                                  Navigator.pop(context);
-                                },
-                                child: Text(reason)),
+                              onPressed: () {
+                                final transactionId = widget._transaction.id;
+                                if (transactionId != null) {
+                                  currentUser.contestTransaction(
+                                    transactionId,
+                                    reason,
+                                  );
+                                }
+                                Navigator.pop(context);
+                              },
+                              child: Text(reason),
+                            ),
                           );
                         }).toList(),
                       )
@@ -70,18 +73,20 @@ class _ReviewTransactionModalState extends State<ReviewTransactionModal> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              var transactionId = widget._transaction.id;
+                              final transactionId = widget._transaction.id;
                               if (transactionId != null) {
                                 currentUser.confirmTransaction(transactionId);
                               }
                               Navigator.pop(context);
                             },
                             style: ButtonStyle(
-                                minimumSize: MaterialStateProperty.all<Size>(
-                                    const Size(50, 50)),
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        siDarkBlue)),
+                              minimumSize: MaterialStateProperty.all<Size>(
+                                const Size(50, 50),
+                              ),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                siDarkBlue,
+                              ),
+                            ),
                             child: const Text("YES"),
                           ),
                           ElevatedButton(
@@ -91,18 +96,22 @@ class _ReviewTransactionModalState extends State<ReviewTransactionModal> {
                               });
                             },
                             style: ButtonStyle(
-                                minimumSize: MaterialStateProperty.all<Size>(
-                                    const Size(50, 50)),
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.red)),
+                              minimumSize: MaterialStateProperty.all<Size>(
+                                const Size(50, 50),
+                              ),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                Colors.red,
+                              ),
+                            ),
                             child: const Text("NO"),
                           ),
                         ],
                       ),
               ),
-            ]),
-      );
-    });
+            ],
+          ),
+        );
+      },
+    );
   }
 }

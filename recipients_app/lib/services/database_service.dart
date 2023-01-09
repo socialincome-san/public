@@ -1,6 +1,6 @@
-import 'package:app/models/current_user.dart';
-import 'package:app/models/social_income_transaction.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import "package:app/models/current_user.dart";
+import "package:app/models/social_income_transaction.dart";
+import "package:cloud_firestore/cloud_firestore.dart";
 
 class DatabaseService {
   final String phoneNumber;
@@ -9,10 +9,12 @@ class DatabaseService {
   DatabaseService(this.phoneNumber);
 
   Future<DocumentSnapshot> getUserSnapshot() async {
-    var test = await firestore
-        .collection('/recipients')
-        .where('mobile_money_phone.phone',
-            isEqualTo: int.parse(phoneNumber.substring(1)))
+    final test = await firestore
+        .collection("/recipients")
+        .where(
+          "mobile_money_phone.phone",
+          isEqualTo: int.parse(phoneNumber.substring(1)),
+        )
         .get();
 
     return test.docs.first;
@@ -24,34 +26,35 @@ class DatabaseService {
   }
 
   Future<bool> userExists() async {
-    var snapshot = await getUserSnapshot();
+    final snapshot = await getUserSnapshot();
     return snapshot.exists;
   }
 
   Future<void> updateOrCreateUser(CurrentUser user) async {
-    var snapshot = await getUserSnapshot();
+    final snapshot = await getUserSnapshot();
     snapshot.reference.set(user.data());
   }
 
   Future<List<SocialIncomeTransaction>> fetchTransactionDetails() async {
-    List<SocialIncomeTransaction> transactions = <SocialIncomeTransaction>[];
-    var snapshot = await getUserSnapshot();
+    final List<SocialIncomeTransaction> transactions =
+        <SocialIncomeTransaction>[];
+    final snapshot = await getUserSnapshot();
 
-    var transactionDocs = await firestore
-        .collection('/recipients')
+    final transactionDocs = await firestore
+        .collection("/recipients")
         .doc(snapshot.id)
-        .collection('payments')
+        .collection("payments")
         .get();
 
-    for (var element in transactionDocs.docs) {
-      var transaction = SocialIncomeTransaction();
+    for (final element in transactionDocs.docs) {
+      final transaction = SocialIncomeTransaction();
       transaction.initialize(element.data(), element.id);
       transactions.add(transaction);
     }
 
     transactions.sort((a, b) {
-      var aId = a.id;
-      var bId = b.id;
+      final aId = a.id;
+      final bId = b.id;
 
       return aId != null && bId != null ? bId.compareTo(aId) : 0;
     });
@@ -60,28 +63,30 @@ class DatabaseService {
   }
 
   Future<void> updateUser(Map<String, Object?> info) async {
-    var userSnapshot = await getUserSnapshot();
+    final userSnapshot = await getUserSnapshot();
     return userSnapshot.reference.update(info);
   }
 
-  void updateTransaction(
-      Map<String, Object?> info, String transactionId) async {
-    var snapshot = await getUserSnapshot();
+  Future<void> updateTransaction(
+    Map<String, Object?> info,
+    String transactionId,
+  ) async {
+    final snapshot = await getUserSnapshot();
 
     await firestore
-        .collection('/recipients')
+        .collection("/recipients")
         .doc(snapshot.id)
-        .collection('payments')
+        .collection("payments")
         .doc(transactionId)
         .update(info);
   }
 
-  void updateNextSurvey(DateTime date) async {
-    var snapshot = await getUserSnapshot();
+  Future<void> updateNextSurvey(DateTime date) async {
+    final snapshot = await getUserSnapshot();
 
     await firestore
-        .collection('/recipients')
+        .collection("/recipients")
         .doc(snapshot.id)
-        .update({'next_survey': date});
+        .update({"next_survey": date});
   }
 }
