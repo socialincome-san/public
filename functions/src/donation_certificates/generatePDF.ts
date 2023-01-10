@@ -67,8 +67,12 @@ export const generateDonationCertificatePDF = (
 		const currentDateString = new Date().toLocaleDateString('de-DE', { dateStyle: 'medium' });
 		let pdfDocument = new PDFDocument({ size: 'A4' });
 
+		// doc.font('dist/assets/fonts/Unica77LLTT-Regular.ttf', size=12, style='normal')
 		pdfDocument.image('dist/assets/logos/logo_color@2x.png', 45, 20, { width: 180 });
-		pdfDocument.fontSize(10).text(locales['header'], 45, 20, {
+		pdfDocument
+			.font('Helvetica')
+			.fontSize(10)
+			.text(locales['header'], 45, 20, {
 			align: 'right',
 		});
 		pdfDocument.moveDown(6);
@@ -78,17 +82,16 @@ export const generateDonationCertificatePDF = (
 				`${user.personal?.name} ${user.personal?.lastname}\n${user.address?.street}\n${user.address?.zip} ${user.address?.city}\n${locales['country']}`
 			);
 		pdfDocument.moveDown(6);
-		pdfDocument.fontSize(12).text(`Zürich, ${currentDateString}`);
+		pdfDocument
+			.text(`Zürich, ${currentDateString}`);
 		pdfDocument.moveDown(1.5);
-		pdfDocument.fontSize(12).font('Helvetica-Bold').text(locales['title']);
-		pdfDocument.moveDown(0.25);
+		pdfDocument
+			.font('Helvetica-Bold')
+			.text(locales['title'] + year);
+		pdfDocument.moveDown(1.25);
 		pdfDocument
 			.fontSize(12)
 			.font('Helvetica')
-			.text(locales['fiscal-year'] + year);
-		pdfDocument.moveDown();
-		pdfDocument
-			.fontSize(12)
 			.text(
 				locales['confirmation-1'] +
 					user.personal?.name +
@@ -100,18 +103,32 @@ export const generateDonationCertificatePDF = (
 					year +
 					locales['confirmation-4']
 			);
+		pdfDocument.moveDown();
+
+		// Bullet points for donation amount(s). One contributor can have donated in multiple currencies
+		pdfDocument
+			.list(
+				['Placeholder CHF', 'Placeholder EUR', 'Placeholder USD', 'Placeholder No Donations'], {
+				listType: 'bullet', }
+			);
+
 		pdfDocument.moveDown(0.5);
 		if (financials.total_chf !== 0) {
-			pdfDocument.fontSize(12).text(locales['contributions-chf'] + financials.total_chf);
+			pdfDocument
+				.text(locales['contributions-chf'] + financials.total_chf);
 		}
 		if (financials.total_eur !== 0) {
-			pdfDocument.fontSize(12).text(locales['contributions-eur'] + financials.total_eur);
+			pdfDocument
+				.text(locales['contributions-eur'] + financials.total_eur);
 		}
 		if (financials.total_usd !== 0) {
-			pdfDocument.fontSize(12).text(locales['contributions-usd'] + financials.total_usd);
+			pdfDocument
+				.text(locales['contributions-usd'] + financials.total_usd);
 		}
 		if (financials.total_chf === 0 && financials.total_eur === 0 && financials.total_usd === 0) {
-			pdfDocument.fontSize(12).font('Helvetica-Oblique').text(locales['no-contributions']);
+			pdfDocument
+				.font('Helvetica-Oblique')
+				.text(locales['no-contributions']);
 		}
 		pdfDocument.moveDown();
 		pdfDocument
@@ -119,48 +136,53 @@ export const generateDonationCertificatePDF = (
 			.font('Helvetica')
 			.text(locales['time-period-1'] + year + locales['time-period-2'] + year + locales['time-period-3']);
 		pdfDocument.moveDown();
-		pdfDocument.fontSize(12).text(locales['information-1']);
-		pdfDocument.moveDown();
-		pdfDocument.fontSize(12).text(locales['information-2']);
-		pdfDocument.moveDown(2);
-		pdfDocument.fontSize(12).text(locales['information-3']);
-		pdfDocument.moveDown(2);
+		pdfDocument
+			.text(locales['information-1']);
+		pdfDocument
+			.moveDown();
+		pdfDocument
+			.text(locales['information-2']);
+		pdfDocument
+			.moveDown(2);
+		pdfDocument
+			.text(locales['information-3']);
+		pdfDocument
+			.moveDown(2);
 		let yPosition = pdfDocument.y;
-		pdfDocument.image('dist/assets/signatures/signature_kerrin.png', 45, yPosition, { width: 200 });
-		pdfDocument.image('dist/assets/signatures/signature_sandino.png', 210, yPosition, { width: 200 });
-		pdfDocument.moveDown();
+		pdfDocument
+			.image('dist/assets/signatures/signature_kerrin.png', 45, yPosition, { width: 200 });
+		pdfDocument
+			.image('dist/assets/signatures/signature_sandino.png', 210, yPosition, { width: 200 });
+		pdfDocument
+			.moveDown();
 		yPosition = pdfDocument.y;
-		pdfDocument.fontSize(12).text('Kerrin Dieckmann', 45, yPosition);
-		pdfDocument.fontSize(12).text('Sandino Scheidegger', 215, yPosition);
+		pdfDocument
+			.text('Kerrin Dieckmann', 45, yPosition);
+		pdfDocument
+			.text('Sandino Scheidegger', 215, yPosition);
 		yPosition = pdfDocument.y;
-		pdfDocument.fontSize(12).text(locales['signature-2'], 45, yPosition);
-		pdfDocument.fontSize(12).text(locales['signature-1'], 215, yPosition);
+		pdfDocument
+			.text(locales['signature-2'], 45, yPosition);
+		pdfDocument
+			.text(locales['signature-1'], 215, yPosition);
 		pdfDocument
 			.fontSize(10)
 			.text(locales['footer-left-line-1'], 45, pdfDocument.page.height - 70, { lineBreak: false });
 		pdfDocument
-			.fontSize(10)
 			.text(locales['footer-left-line-2'], 45, pdfDocument.page.height - 55, { lineBreak: false });
 		pdfDocument
-			.fontSize(10)
 			.text(locales['footer-left-line-3'], 45, pdfDocument.page.height - 40, { lineBreak: false });
 		pdfDocument
-			.fontSize(10)
 			.text(locales['footer-middle-line-1'], 215, pdfDocument.page.height - 70, { lineBreak: false });
 		pdfDocument
-			.fontSize(10)
 			.text(locales['footer-middle-line-2'], 215, pdfDocument.page.height - 55, { lineBreak: false });
 		pdfDocument
-			.fontSize(10)
 			.text(locales['footer-middle-line-3'], 215, pdfDocument.page.height - 40, { lineBreak: false });
 		pdfDocument
-			.fontSize(10)
 			.text(locales['footer-right-line-1'], 405, pdfDocument.page.height - 70, { lineBreak: false });
 		pdfDocument
-			.fontSize(10)
 			.text(locales['footer-right-line-2'], 405, pdfDocument.page.height - 55, { lineBreak: false });
 		pdfDocument
-			.fontSize(10)
 			.text(locales['footer-right-line-3'], 405, pdfDocument.page.height - 40, { lineBreak: false });
 		pdfDocument.pipe(writeStream);
 		writeStream.on('finish', () => resolve());
