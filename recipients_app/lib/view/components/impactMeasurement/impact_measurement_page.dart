@@ -1,8 +1,8 @@
-import 'package:app/models/current_user.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import "package:app/models/current_user.dart";
+import "package:flutter/material.dart";
+import "package:intl/intl.dart";
+import "package:provider/provider.dart";
+import "package:webview_flutter/webview_flutter.dart";
 
 class ImpactMeasurementPage extends StatefulWidget {
   const ImpactMeasurementPage({super.key});
@@ -16,17 +16,18 @@ class _ImpactMeasurementPageState extends State<ImpactMeasurementPage>
   @override
   bool get wantKeepAlive => true;
   bool showWebView = true;
-  final DateFormat formatter = DateFormat('dd.MM.yyyy');
+  final DateFormat formatter = DateFormat("dd.MM.yyyy");
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Consumer<CurrentUser>(builder: (context, currentUser, child) {
-      if (currentUser.surveyUrl() == null) {
-        showWebView = false;
-      }
+    return Consumer<CurrentUser>(
+      builder: (context, currentUser, child) {
+        if (currentUser.surveyUrl() == null) {
+          showWebView = false;
+        }
 
-      return Container(
+        return Container(
           child: showWebView
               ? WebView(
                   initialUrl: currentUser.surveyUrl(),
@@ -37,27 +38,36 @@ class _ImpactMeasurementPageState extends State<ImpactMeasurementPage>
                   children: [
                     const Padding(
                       padding: EdgeInsets.all(12.0),
-                      child: Text("Thank you for answering the survey.",
-                          style: TextStyle(
-                              fontSize: 28, fontWeight: FontWeight.w400)),
+                      child: Text(
+                        "Thank you for answering the survey.",
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(12.0),
-                      child: Text(() {
-                        var nextSurveyDate = currentUser.nextSurvey;
-                        if (nextSurveyDate != null) {
-                          return "To keep track of how Social Income impacts you, we will ask you to fill in the survey again next ${(DateFormat.MMMM().format(nextSurveyDate))}.";
-                        } else {
-                          return "To keep track of how Social Income impacts you, we will ask you to fill in the survey again in the future";
-                        }
-                      }(),
-                          style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                              height: 1.4)),
+                      child: Text(
+                        () {
+                          final nextSurveyDate = currentUser.nextSurvey;
+                          if (nextSurveyDate != null) {
+                            return "To keep track of how Social Income impacts you, we will ask you to fill in the survey again next ${DateFormat.MMMM().format(nextSurveyDate)}.";
+                          } else {
+                            return "To keep track of how Social Income impacts you, we will ask you to fill in the survey again in the future";
+                          }
+                        }(),
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          height: 1.4,
+                        ),
+                      ),
                     ),
                   ],
-                ));
-    });
+                ),
+        );
+      },
+    );
   }
 }

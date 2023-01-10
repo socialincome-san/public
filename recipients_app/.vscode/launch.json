@@ -17,6 +17,20 @@
 			"type": "dart",
 			"args": ["--flavor", "prod", "-t", "lib/main.dart"],
 			"program": "lib/main.dart"
+		},
+		{
+			"name": "dev iOS",
+			"request": "launch",
+			"type": "dart",
+			"args": ["-t", "lib/main_dev.dart"],
+			"program": "lib/main_dev.dart"
+		},
+		{
+			"name": "prod iOS",
+			"request": "launch",
+			"type": "dart",
+			"args": ["-t", "lib/main.dart"],
+			"program": "lib/main.dart"
 		}
 	]
 }

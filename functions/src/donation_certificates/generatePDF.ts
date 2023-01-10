@@ -64,26 +64,26 @@ export const generateDonationCertificatePDF = (
 		const writeStream = createWriteStream(filePath);
 		const user = userEntity.values;
 		const financials = await calculateFinancials(userEntity.id, year);
-		const currentDateString = new Date().toLocaleDateString('de-DE');
-		let pdfDocument = new PDFDocument();
+		const currentDateString = new Date().toLocaleDateString('de-DE', { dateStyle: 'medium' });
+		let pdfDocument = new PDFDocument({ size: 'A4' });
 
 		pdfDocument.image('dist/assets/logos/logo_color@2x.png', 45, 20, { width: 180 });
-		pdfDocument.fontSize(12).text(locales['header'], 45, 20, {
+		pdfDocument.fontSize(10).text(locales['header'], 45, 20, {
 			align: 'right',
 		});
-		pdfDocument.moveDown(3);
+		pdfDocument.moveDown(6);
 		pdfDocument
 			.fontSize(12)
 			.text(
-				`${user.personal?.name} ${user.personal?.lastname}\n${user.address?.street}\n${user.address?.zip} ${user.address?.city}\n${user.address?.country}`
+				`${user.personal?.name} ${user.personal?.lastname}\n${user.address?.street}\n${user.address?.zip} ${user.address?.city}\n${locales['country']}`
 			);
-		pdfDocument.moveDown();
+		pdfDocument.moveDown(6);
 		pdfDocument.fontSize(12).text(`Zürich, ${currentDateString}`);
 		pdfDocument.moveDown(1.5);
-		pdfDocument.fontSize(14).font('Helvetica-Bold').text(locales['title']);
+		pdfDocument.fontSize(12).font('Helvetica-Bold').text(locales['title']);
 		pdfDocument.moveDown(0.25);
 		pdfDocument
-			.fontSize(13)
+			.fontSize(12)
 			.font('Helvetica')
 			.text(locales['fiscal-year'] + year);
 		pdfDocument.moveDown();
@@ -111,7 +111,7 @@ export const generateDonationCertificatePDF = (
 			pdfDocument.fontSize(12).text(locales['contributions-usd'] + financials.total_usd);
 		}
 		if (financials.total_chf === 0 && financials.total_eur === 0 && financials.total_usd === 0) {
-			pdfDocument.fontSize(10).font('Helvetica-Oblique').text(locales['no-contributions']);
+			pdfDocument.fontSize(12).font('Helvetica-Oblique').text(locales['no-contributions']);
 		}
 		pdfDocument.moveDown();
 		pdfDocument
@@ -126,18 +126,42 @@ export const generateDonationCertificatePDF = (
 		pdfDocument.fontSize(12).text(locales['information-3']);
 		pdfDocument.moveDown(2);
 		let yPosition = pdfDocument.y;
-		pdfDocument.image('dist/assets/signatures/signature_sandino.png', 45, yPosition, { width: 200 });
-		pdfDocument.image('dist/assets/signatures/signature_kerrin.png', 280, yPosition, { width: 200 });
+		pdfDocument.image('dist/assets/signatures/signature_kerrin.png', 45, yPosition, { width: 200 });
+		pdfDocument.image('dist/assets/signatures/signature_sandino.png', 210, yPosition, { width: 200 });
 		pdfDocument.moveDown();
 		yPosition = pdfDocument.y;
-		pdfDocument.fontSize(10).text('Sandino Scheidegger', 45, yPosition);
-		pdfDocument.fontSize(10).text('Kerrin Dieckmann', 280, yPosition);
+		pdfDocument.fontSize(12).text('Kerrin Dieckmann', 45, yPosition);
+		pdfDocument.fontSize(12).text('Sandino Scheidegger', 215, yPosition);
 		yPosition = pdfDocument.y;
-		pdfDocument.fontSize(9).text(locales['signature-1'], 45, yPosition);
-		pdfDocument.fontSize(9).text(locales['signature-2'], 280, yPosition);
-		pdfDocument.text(locales['footer-1'], 45, pdfDocument.page.height - 150);
-		pdfDocument.text(locales['footer-2'], 245, pdfDocument.page.height - 150);
-		pdfDocument.text(locales['footer-3'], 445, pdfDocument.page.height - 150);
+		pdfDocument.fontSize(12).text(locales['signature-2'], 45, yPosition);
+		pdfDocument.fontSize(12).text(locales['signature-1'], 215, yPosition);
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-left-line-1'], 45, pdfDocument.page.height - 70, { lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-left-line-2'], 45, pdfDocument.page.height - 55, { lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-left-line-3'], 45, pdfDocument.page.height - 40, { lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-middle-line-1'], 215, pdfDocument.page.height - 70, { lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-middle-line-2'], 215, pdfDocument.page.height - 55, { lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-middle-line-3'], 215, pdfDocument.page.height - 40, { lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-right-line-1'], 405, pdfDocument.page.height - 70, { lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-right-line-2'], 405, pdfDocument.page.height - 55, { lineBreak: false });
+		pdfDocument
+			.fontSize(10)
+			.text(locales['footer-right-line-3'], 405, pdfDocument.page.height - 40, { lineBreak: false });
 		pdfDocument.pipe(writeStream);
 		writeStream.on('finish', () => resolve());
 		pdfDocument.end();

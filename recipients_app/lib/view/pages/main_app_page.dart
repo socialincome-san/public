@@ -1,14 +1,14 @@
-import 'package:app/models/current_user.dart';
-import 'package:app/models/navigation.dart';
-import 'package:app/services/database_service.dart';
-import 'package:app/theme/theme.dart';
-import 'package:app/view/components/account/account_page.dart';
-import 'package:app/view/components/impactMeasurement/impact_measurement_page.dart';
-import 'package:app/view/components/income/income_page.dart';
-import 'package:app/view/components/terms_and_conditions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import "package:app/models/current_user.dart";
+import "package:app/models/navigation.dart";
+import "package:app/services/database_service.dart";
+import "package:app/theme/theme.dart";
+import "package:app/view/components/account/account_page.dart";
+import "package:app/view/components/impactMeasurement/impact_measurement_page.dart";
+import "package:app/view/components/income/income_page.dart";
+import "package:app/view/components/terms_and_conditions.dart";
+import "package:firebase_auth/firebase_auth.dart";
+import "package:flutter/material.dart";
+import "package:provider/provider.dart";
 
 class MainAppPage extends StatelessWidget {
   final PageController controller = PageController(initialPage: 1);
@@ -24,13 +24,13 @@ class MainAppPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider<Navigation>(
-            create: (context) => Navigation(),
-          )
-        ],
-        child: Consumer2<Navigation, CurrentUser>(
-            builder: (context, navigation, currentUser, child) {
+      providers: [
+        ChangeNotifierProvider<Navigation>(
+          create: (context) => Navigation(),
+        )
+      ],
+      child: Consumer2<Navigation, CurrentUser>(
+        builder: (context, navigation, currentUser, child) {
           Widget checkTermsAccepted() {
             if (currentUser.termsAccepted == true) {
               return PageView(
@@ -45,7 +45,7 @@ class MainAppPage extends StatelessWidget {
           }
 
           Future<CurrentUser> fetchUserDetails() async {
-            var firebaseUserPhone =
+            final firebaseUserPhone =
                 FirebaseAuth.instance.currentUser?.phoneNumber;
             if (firebaseUserPhone == null) return currentUser;
 
@@ -57,7 +57,7 @@ class MainAppPage extends StatelessWidget {
               return currentUser;
             }
 
-            return await DatabaseService(firebaseUserPhone)
+            return DatabaseService(firebaseUserPhone)
                 .fetchUserDetails(currentUser);
           }
 
@@ -77,27 +77,32 @@ class MainAppPage extends StatelessWidget {
                 ? BottomNavigationBar(
                     currentIndex: navigation.selectedIndex,
                     onTap: (value) {
-                      controller.animateToPage(value,
-                          duration: const Duration(milliseconds: 100),
-                          curve: Curves.easeIn);
+                      controller.animateToPage(
+                        value,
+                        duration: const Duration(milliseconds: 100),
+                        curve: Curves.easeIn,
+                      );
                       navigation.setIndex(value);
                     },
                     items: const <BottomNavigationBarItem>[
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.people),
-                          label: 'Account',
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.attach_money),
-                          label: 'Income',
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.assignment),
-                          label: 'Survey',
-                        ),
-                      ])
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.people),
+                        label: "Account",
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.attach_money),
+                        label: "Income",
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.assignment),
+                        label: "Survey",
+                      ),
+                    ],
+                  )
                 : null,
           );
-        }));
+        },
+      ),
+    );
   }
 }

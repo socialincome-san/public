@@ -1,5 +1,5 @@
-import 'package:animations/animations.dart';
-import 'package:flutter/material.dart';
+import "package:animations/animations.dart";
+import "package:flutter/material.dart";
 
 const String textFontFamily = "Unica77LL";
 
@@ -12,7 +12,7 @@ const Color siGreyText = Color(0xFF8E8E8E);
 
 EdgeInsets edgeInsetsAll12 = const EdgeInsets.all(12);
 
-var socialIncomeTheme = ThemeData(
+ThemeData socialIncomeTheme = ThemeData(
   fontFamily: textFontFamily,
   pageTransitionsTheme: const PageTransitionsTheme(
     builders: {

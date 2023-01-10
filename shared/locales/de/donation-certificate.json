@@ -1,5 +1,6 @@
 {
-	"header": "Verein mit Steuerbefreiung\nKanton Zürich",
+	"header": "Verein mit Steuerbefreiung\nim Kanton Zürich",
+	"country": "Schweiz",
 	"title": "Spendenbescheinigung",
 	"fiscal-year": "Jahr ",
 	"salutation": "Guten Tag ",
@@ -19,9 +20,15 @@
 	"information-3": "Freundliche Grüsse",
 	"signature-1": "Geschäftsführer",
 	"signature-2": "Leiterin Finanzen",
-	"footer-1": "Social Income\nZweierstrasse 103\n8003 Zürich\nhello@socialincome.org\nSchweiz",
-	"footer-2": "Steuerbefreiter Verein\n\nIDE: UID-289.611.695\n\nDUNS: 48-045-6376",
-	"footer-3": "Kontakt\n\n\n\nsocialincome.org",
+	"footer-left-line-1": "Social Income",
+	"footer-left-line-2": "Zweierstrasse 103",
+	"footer-left-line-3": "CH-8003 Zürich",
+	"footer-middle-line-1": "Steuerbefreiter Verein",
+	"footer-middle-line-2": "UID: CHE-289.611.695",
+	"footer-middle-line-3": "DUNS: 48-045-6376",
+	"footer-right-line-1": "Kontakt",
+	"footer-right-line-2": "hello@socialincome.org",
+	"footer-right-line-3": "socialincome.org",
 	"email-subject": "Social Income Spendenbescheinigung",
 	"filename-prefix": "Social Income Spendenbescheinigung "
 }

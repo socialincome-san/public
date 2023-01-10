@@ -1,20 +1,22 @@
-import 'dart:developer';
+import "dart:developer";
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
+import "package:firebase_auth/firebase_auth.dart";
+import "package:intl/intl.dart";
 
 // Authentication service provides methods to register, verify phone number and sign in
 class AuthService {
-  static AuthService? _instance;
+  static final AuthService _instance = AuthService._();
+
+  // Implementation of Singleton pattern, so all Registration components use the same instance
+  factory AuthService() {
+    return _instance;
+  }
+
+  AuthService._();
+
   void Function(PhoneAuthCredential)? verificationCompleted;
   void Function(String, int?)? codeSent;
   String? _verificationId;
-
-  // Implementation of Singleton pattern, so all Registration components use the same instance
-  static AuthService instance() {
-    _instance ??= AuthService();
-    return _instance!;
-  }
 
   String? get verificationId => _verificationId;
 
@@ -23,17 +25,17 @@ class AuthService {
       return false;
     }
     FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        timeout: const Duration(seconds: 60),
-        verificationCompleted:
-            verificationCompleted ?? (phoneAuthCredential) {},
-        verificationFailed: (e) {
-          log("------- ${e.message}");
-        },
-        codeSent: codeSent ?? (verificationId, forceResendCode) {},
-        codeAutoRetrievalTimeout: (e) {
-          log("autoretrievel timeout");
-        });
+      phoneNumber: phoneNumber,
+      timeout: const Duration(seconds: 60),
+      verificationCompleted: verificationCompleted ?? (phoneAuthCredential) {},
+      verificationFailed: (e) {
+        log("------- ${e.message}");
+      },
+      codeSent: codeSent ?? (verificationId, forceResendCode) {},
+      codeAutoRetrievalTimeout: (e) {
+        log("auto-retrieval timeout");
+      },
+    );
     return true;
   }
 
@@ -44,8 +46,10 @@ class AuthService {
       return null;
     }
 
-    PhoneAuthCredential phoneCredential = PhoneAuthProvider.credential(
-        verificationId: verificationId, smsCode: smsCode);
+    final PhoneAuthCredential phoneCredential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: smsCode,
+    );
     try {
       await FirebaseAuth.instance.signInWithCredential(phoneCredential);
     } on FirebaseAuthException catch (e) {
@@ -60,13 +64,14 @@ class AuthService {
   String createdAt() {
     // catching NoSuchMethodError due to logout process on page where this method is called
     try {
-      var creationTime =
+      final creationTime =
           FirebaseAuth.instance.currentUser?.metadata.creationTime;
       if (creationTime == null) {
         return "";
       }
 
       return DateFormat("dd.MM.yyyy").format(creationTime);
+      // ignore: avoid_catching_errors
     } on NoSuchMethodError {
       return "";
     }

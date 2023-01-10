@@ -55,7 +55,7 @@ export interface SoSelectProps extends Pick<ListboxProps, 'onChange' | 'name' | 
 	/**
 	 * Visual size of the button
 	 */
-	size?: typeof SO_SELECT_SIZES[number];
+	size?: (typeof SO_SELECT_SIZES)[number];
 }
 
 /**

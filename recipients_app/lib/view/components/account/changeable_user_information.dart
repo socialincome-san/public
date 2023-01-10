@@ -1,9 +1,9 @@
-import 'dart:developer';
+import "dart:developer";
 
-import 'package:app/models/current_user.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import "package:app/models/current_user.dart";
+import "package:flutter/material.dart";
+import "package:intl/intl.dart";
+import "package:provider/provider.dart";
 
 class ChangeableUserInformation extends StatelessWidget {
   final String section;
@@ -12,54 +12,58 @@ class ChangeableUserInformation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CurrentUser>(builder: (context, currentUser, child) {
-      final bool birthDate = section == "Date of Birth";
-      TextEditingController controller = TextEditingController(
-          text: currentUser.changeableInformation(section));
-      return Padding(
-        padding: const EdgeInsets.only(top: 12.0),
-        child: birthDate
-            ? TextField(
-                controller: controller,
-                readOnly: birthDate,
-                decoration: InputDecoration(
+    return Consumer<CurrentUser>(
+      builder: (context, currentUser, child) {
+        final bool birthDate = section == "Date of Birth";
+        final TextEditingController controller = TextEditingController(
+          text: currentUser.changeableInformation(section),
+        );
+        return Padding(
+          padding: const EdgeInsets.only(top: 12.0),
+          child: birthDate
+              ? TextField(
+                  controller: controller,
+                  readOnly: birthDate,
+                  decoration: InputDecoration(
                     labelText: section,
-                    enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(width: 1.0))),
-                onTap: () async {
-                  if (birthDate) {
-                    {
-                      showDatePicker(
-                        firstDate: DateTime(1950, 1, 1),
-                        lastDate: DateTime(DateTime.now().year - 10),
-                        initialDate: DateTime(2000, 1, 1),
-                        context: context,
-                      ).then((value) {
-                        if (value != null) {
-                          String birthDateString =
-                              DateFormat('dd.MM.yyyy').format(value);
-                          currentUser.updateBirthday(value);
-                          controller.text = birthDateString;
-                          log(controller.text);
-                        }
-                        return;
-                      });
+                    enabledBorder: const OutlineInputBorder(),
+                  ),
+                  onTap: () async {
+                    if (birthDate) {
+                      {
+                        showDatePicker(
+                          firstDate: DateTime(1950),
+                          lastDate: DateTime(DateTime.now().year - 10),
+                          initialDate: DateTime(2000),
+                          context: context,
+                        ).then((value) {
+                          if (value != null) {
+                            final String birthDateString =
+                                DateFormat("dd.MM.yyyy").format(value);
+                            currentUser.updateBirthday(value);
+                            controller.text = birthDateString;
+                            log(controller.text);
+                          }
+                          return;
+                        });
+                      }
                     }
-                  }
-                })
-            : TextFormField(
-                initialValue: currentUser.changeableInformation(section),
-                readOnly: birthDate,
-                decoration: InputDecoration(
+                  },
+                )
+              : TextFormField(
+                  initialValue: currentUser.changeableInformation(section),
+                  readOnly: birthDate,
+                  decoration: InputDecoration(
                     floatingLabelBehavior: FloatingLabelBehavior.auto,
                     labelText: section,
-                    enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(width: 1.0))),
-                onChanged: (value) {
-                  currentUser.updateBasicInfo(section, value);
-                },
-              ),
-      );
-    });
+                    enabledBorder: const OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    currentUser.updateBasicInfo(section, value);
+                  },
+                ),
+        );
+      },
+    );
   }
 }

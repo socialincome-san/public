@@ -2,7 +2,7 @@
 	"project_info": {
 		"project_number": "0",
 		"firebase_url": "https://demo-social-income.firebaseio.com",
-		"project_id": "demo-social-income",
+		"project_id": "social-income-prod",
 		"storage_bucket": "demo-social-income.appspot.com"
 	},
 	"client": [
