@@ -30,4 +30,3 @@ export * from './admin/PartnerOrganisation';
 export * from './admin/Payment';
 export * from './admin/Recipient';
 export * from './admin/User';
-
