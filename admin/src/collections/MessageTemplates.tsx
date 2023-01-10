@@ -26,8 +26,8 @@ export const messageTemplatesCollection = buildCollection<MessageTemplate>({
       dataType: "string",
       name: "Target Audience",
       enumValues: {
-        contributor: "Contributors",
-        recipient: "Recipients"
+        users: "Contributors",
+        recipients: "Recipients"
       },
       validation: { required: true }
       
@@ -50,7 +50,7 @@ export const messageTemplatesCollection = buildCollection<MessageTemplate>({
      });
 
       if (values.target_audience) {
-        if ((values.target_audience as any) === "contributor") {
+        if ((values.target_audience as any) === "users") {
             properties["de"] = buildProperty({
                 dataType: "string",
                 name: "Translation German",
@@ -69,7 +69,7 @@ export const messageTemplatesCollection = buildCollection<MessageTemplate>({
             multiline: true
 
         });
-        } else if ((values.target_audience as any) === "recipient") {
+        } else if ((values.target_audience as any) === "recipients") {
             properties["krio"] = buildProperty({
                 dataType: "string",
                 name: "Translation Krio",

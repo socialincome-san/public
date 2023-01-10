@@ -1,6 +1,6 @@
-import { CollectionActionsProps, useAuthController, useSnackbarController } from '@camberi/firecms';
-import { collection, doc, getDoc, getDocs, getFirestore } from 'firebase/firestore';
-import { MessageTemplate } from '@socialincome/shared/src/types';
+import { SelectionController, useAuthController, useSnackbarController } from '@camberi/firecms';
+import { MessageTemplate, Recipient } from '@socialincome/shared/src/types';
+import { collection, query, getDocs, getFirestore, where } from 'firebase/firestore';
 import {
 	Box,
 	Button,
@@ -15,12 +15,12 @@ import {
 	Typography,
 	TextField
 } from '@mui/material';
-import { Recipient } from '@socialincome/shared/src/types';
+import { User } from '@socialincome/shared/src/types';
 
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import _ from 'lodash';
 import React from 'react';
-import { SendMessagesFunctionProps } from '../../../functions/src/messages/sendMessagesFunction';
+import { SendUserMessagesFunctionProps } from '../../../functions/src/messages/sendMessagesFunction';
 
 const style = {
 	position: 'absolute' as 'absolute',
@@ -34,38 +34,42 @@ const style = {
 	p: 4,
 };
 
-
-export function SendUserMessageAction({ selectionController }: CollectionActionsProps<Recipient>) {
+export function SendMessageAction({ selectionController, path }: {
+    selectionController: SelectionController<User | Recipient>,
+	path: string
+}) {
 	const snackbarController = useSnackbarController();
 	const [contentType, setContentType] = React.useState<string>("template");
+	const [targetAudience, setTargetAudience] = React.useState<string>("");
 	const [freeTextContent, setFreeTextContent] = React.useState<string>("");
 	const [messageTemplates, setMessageTemplates] = React.useState<{[key: string]: MessageTemplate}>({});
 	const [selectedMessageTemplateId, setSelectedMessageTemplateId] = React.useState<string>();
 	const [open, setOpen] = React.useState(false);
 
-	const initializeMessageTemplates = async () => {
-		const firestore = getFirestore();
+	const isGlobalAdmin = useAuthController().extra?.isGlobalAdmin;
 
-		const querySnapshot = await getDocs(collection(firestore, "message-templates"));
+	const initializeMessageTemplates = async (targetAudience: string) => {
+		const firestore = getFirestore();
+		const searchQuery = query(collection(firestore, "message-templates"), where("target_audience", "==", targetAudience));
+		const querySnapshot = await getDocs(searchQuery);
+
 		let tempMessageTemplates:{[key: string]: MessageTemplate} = {};
 		querySnapshot.forEach((doc) => {
 			tempMessageTemplates[doc.id as string] = doc.data() as MessageTemplate;
 		});
 		setMessageTemplates(tempMessageTemplates);
-	}
-
-	const isGlobalAdmin = useAuthController().extra?.isGlobalAdmin;
+		setTargetAudience(targetAudience);
+	  }
 
 	const handleOpen = async () => {
-		await initializeMessageTemplates();
+		await initializeMessageTemplates(path);
 		setOpen(true);
-
 	}
 	const handleClose = () => setOpen(false);
 
 	const functions = getFunctions();
 	
-	const sendMessagesFunction = httpsCallable<SendMessagesFunctionProps, string>(
+	const sendMessagesFunction = httpsCallable<SendUserMessagesFunctionProps, string>(
 		functions,
 		'sendMessages'
 	);
@@ -76,13 +80,15 @@ export function SendUserMessageAction({ selectionController }: CollectionActions
 
 		if ( contentType === "template" && selectedMessageTemplateId && selectedEntities?.length > 0) {
 			activateMessageFunction({
-				users: selectedEntities,
+				targetAudience: targetAudience,
+				messageRecipients: selectedEntities,
 				contentType: contentType,
 				messageTemplate: messageTemplates[selectedMessageTemplateId]
 			})
 		} else if ( contentType === "freeText" && freeTextContent.length > 0 && selectedEntities?.length > 0) {
 			activateMessageFunction({
-				users: selectedEntities,
+				targetAudience: targetAudience,
+				messageRecipients: selectedEntities,
 				contentType: contentType,
 				freeTextContent: freeTextContent
 			});
@@ -94,7 +100,7 @@ export function SendUserMessageAction({ selectionController }: CollectionActions
 		}		
 	};
 
-	const activateMessageFunction = (payload: SendMessagesFunctionProps) => {
+	const activateMessageFunction = (payload: SendUserMessagesFunctionProps) => {
 		sendMessagesFunction(payload)
 			.then((result) => {
 				snackbarController.open({
@@ -123,7 +129,9 @@ export function SendUserMessageAction({ selectionController }: CollectionActions
 				aria-labelledby="modal-modal-title"
 				aria-describedby="modal-modal-description"
 			>
+			
 				<Box sx={style}>
+
 					<Typography sx={{ m: 1 }} variant="h6">
 						{' '}
 						Send messages to contributors
@@ -182,8 +190,6 @@ export function SendUserMessageAction({ selectionController }: CollectionActions
 									onChange={(e) => {setFreeTextContent(e.target.value as string)}}
 								/>
 							</div>
-							
-
 						)
 					}
 					

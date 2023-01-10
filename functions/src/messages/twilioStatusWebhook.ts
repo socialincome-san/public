@@ -20,7 +20,8 @@ export const twilioStatusWebhookFunction = functions.https.onRequest(async (requ
                 throw new Error('No corresponding inbox message item found.')
             } else {
                 querySnapshot.forEach((doc) => {
-                    updateMessageInboxItem(firestore, doc.ref.parent.parent?.id, SmsSid, request.body.SmsStatus)
+                    doc.ref.update({ status: request.body.SmsStatus})
+                        .then(() => console.log(`Status updated for ${SmsSid} of user ${doc.ref.parent.parent?.id}`))
                 })
             }
             response.send();
@@ -29,13 +30,3 @@ export const twilioStatusWebhookFunction = functions.https.onRequest(async (requ
         }
     })
 });
-
-export const updateMessageInboxItem = async (firestore: FirebaseFirestore.Firestore, userId: string | undefined, SmsSid: string, SmsStatus: string) => {  
-    firestore
-		.collection(`users/${userId}/message-inbox`)
-		.doc(SmsSid)
-		.update({
-            status: SmsStatus
-        })
-		.then(() => console.log(`Status updated for ${SmsSid} of user ${userId}`))
-}

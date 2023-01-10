@@ -80,6 +80,13 @@ service cloud.firestore {
       allow update: if isGlobalAdmin(request.auth.token.email) || canAccessRecipient(request.auth.token.email, resource.data);
       allow delete: if isGlobalAdmin(request.auth.token.email);
 
+      match /message-inbox/{messageInboxId} {
+          allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email) || canAccessRecipient(request.auth.token.email, resource.data);
+          allow create: if isAdminUser(request.auth.token.email);
+          allow update: if isGlobalAdmin(request.auth.token.email) || canAccessPayment(request.auth.token, recipientId);
+          allow delete: if isGlobalAdmin(request.auth.token.email);
+      }
+
       match /payments/{paymentId} {
           allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email) || canAccessPayment(request.auth.token, recipientId);
           allow create: if isAdminUser(request.auth.token.email);
@@ -87,6 +94,7 @@ service cloud.firestore {
           allow update: if isGlobalAdmin(request.auth.token.email) || canAccessPayment(request.auth.token, recipientId);
           allow delete: if isGlobalAdmin(request.auth.token.email);
       }
+
     }
 
     match /om-list/{data} {

@@ -6,10 +6,9 @@ import { MessageInbox, MESSAGE_INBOX_FIRESTORE_PATH } from '@socialincome/shared
 export const messageInboxCollection = buildCollection<MessageInbox>({
 	name: 'Messages',
 	path: MESSAGE_INBOX_FIRESTORE_PATH,
-	icon: 'Textsms',
 	description: 'List of messages sent to recipients',
 	textSearchEnabled: false,
-	permissions: ({ authController }) => ({
+	permissions: () => ({
 		edit: false,
 		create: false,
 		delete: false,

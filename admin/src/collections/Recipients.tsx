@@ -9,7 +9,9 @@ import {
 import { isUndefined } from 'lodash';
 import { PARTNER_ORGANISATION_FIRESTORE_PATH, Recipient, RECIPIENT_FIRESTORE_PATH } from '../../../shared/src/types';
 import { getMonthIDs } from '../../../shared/src/utils/date';
+import { SendMessageAction } from '../extra_actions/SendMessageAction';
 import { BuildCollectionProps } from './index';
+import { messageInboxCollection } from './MessageInbox';
 import { paymentsCollection, paymentStatusMap } from './Payments';
 
 const organisationAdminProperties = buildProperties<Partial<Recipient>>({
@@ -319,14 +321,14 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 		group: 'Recipients',
 		icon: 'RememberMeTwoTone',
 		description: 'Lists of people, who receive a Social Income',
-		textSearchEnabled: true,
-		
+		Actions: [SendMessageAction],
+		textSearchEnabled: true,	
 	};
 	if (isGlobalAdmin) {
 		return buildCollection<Partial<Recipient>>({
 			...defaultParams,
 			properties: globalAdminProperties,
-			subcollections: [paymentsCollection],
+			subcollections: [paymentsCollection, messageInboxCollection],
 			inlineEditing: false,
 		});
 	} else {
@@ -344,6 +346,7 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 				},
 			},
 			properties: organisationAdminProperties,
+			subcollections: [messageInboxCollection],
 			forceFilter: organisations && {
 				organisation: ['in', organisations],
 			},
