@@ -8,7 +8,9 @@ import {
 	RecipientProgramStatus,
 	RECIPIENT_FIRESTORE_PATH,
 } from '../../../shared/src/types';
+import { SendMessageAction } from '../actions/SendMessageAction';
 import { BuildCollectionProps, paymentsCollection } from './index';
+import { messageInboxCollection } from './MessageInbox';
 
 export const programStatusProperty: Property = {
 	name: 'Status',
@@ -225,13 +227,14 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 		group: 'Recipients',
 		icon: 'RememberMeTwoTone',
 		description: 'Lists of people, who receive a Social Income',
+		Actions: [SendMessageAction],
 		textSearchEnabled: true,
 	};
 	if (isGlobalAdmin) {
 		return buildCollection<Partial<Recipient>>({
 			...defaultParams,
 			properties: globalAdminProperties,
-			subcollections: [paymentsCollection],
+			subcollections: [paymentsCollection, messageInboxCollection],
 			inlineEditing: false,
 		});
 	} else {
@@ -249,7 +252,8 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 				},
 			},
 			properties: organisationAdminProperties,
-			forceFilter: {
+			subcollections: [messageInboxCollection],
+			forceFilter: organisations && {
 				organisation: ['in', organisations || []],
 			},
 			inlineEditing: false,

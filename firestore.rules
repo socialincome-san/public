@@ -85,6 +85,13 @@ service cloud.firestore {
       allow create: if isAdminUser(request.auth.token.email);
       allow read, update: if canAccessRecipient(request.auth.token.email, resource.data);
 
+      match /message-inbox/{messageInboxId} {
+          allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email) || canAccessRecipient(request.auth.token.email, resource.data);
+          allow create: if isAdminUser(request.auth.token.email);
+          allow update: if isGlobalAdmin(request.auth.token.email) || canAccessPayment(request.auth.token, recipientId);
+          allow delete: if isGlobalAdmin(request.auth.token.email);
+      }
+
       match /payments/{paymentId} {
           allow read, write: if isGlobalAdmin(request.auth.token.email);
           allow read: if isGlobalAnalyst(request.auth.token.email);
