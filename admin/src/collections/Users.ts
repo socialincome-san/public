@@ -1,7 +1,7 @@
 import { AdditionalFieldDelegate, buildCollection, buildProperties } from '@camberi/firecms';
 import { CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH, User, USER_FIRESTORE_PATH } from '../../../shared/src/types';
-import { CreateDonationCertificatesAction } from '../extra_actions/CreateDonationCertificatesAction';
-import { SendMessageAction } from '../extra_actions/SendMessageAction';
+import { CreateDonationCertificatesAction } from '../actions/CreateDonationCertificatesAction';
+import { SendMessageAction } from '../actions/SendMessageAction';
 import { contributionsCollection } from './Contributions';
 import { donationCertificateCollection } from './DonationCertificate';
 import { messageInboxCollection } from './MessageInbox';
