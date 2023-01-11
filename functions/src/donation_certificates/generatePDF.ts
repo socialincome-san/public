@@ -68,27 +68,29 @@ export const generateDonationCertificatePDF = (
 		let pdfDocument = new PDFDocument({ size: 'A4' });
 
 		pdfDocument.registerFont('unica77', 'dist/assets/fonts/Unica77LLTT-Regular.ttf')
-		pdfDocument.font("unica77").fontSize(12)
+		pdfDocument.registerFont('unica77-bold', 'dist/assets/fonts/Unica77LLTT-Bold.ttf')
+		pdfDocument
+			.font('unica77')
+			.fontSize(12)
 		pdfDocument.image('dist/assets/logos/logo_color@2x.png', 45, 20, { width: 180 });
 		pdfDocument
 			.fontSize(10)
-			.text(locales['header'], 45, 20, {
-			align: 'right',
-		});
+			.text(locales['header'], 45, 20, {align: 'right'});
 		pdfDocument.moveDown(6);
 		pdfDocument
-			.text(
-				`${user.personal?.name} ${user.personal?.lastname}\n${user.address?.street}\n${user.address?.zip} ${user.address?.city}\n${locales['country']}`
+			.fontSize(12)
+			.text(`${user.personal?.name} ${user.personal?.lastname}\n${user.address?.street}\n${user.address?.zip} ${user.address?.city}\n${locales['country']}`
 			);
 		pdfDocument.moveDown(6);
 		pdfDocument
-			.text(`Zürich, ${currentDateString}`);
+			.text(`${locales['place']} ${currentDateString}`);
 		pdfDocument.moveDown(1.5);
 		pdfDocument
-			.font('dist/assets/fonts/Unica77LLTT-Regular.ttf')
+			.font('unica77-bold')
 			.text(locales['title'] + year);
 		pdfDocument.moveDown(1.25);
 		pdfDocument
+			.font('unica77')
 			.text(
 				locales['confirmation-1'] +
 					user.personal?.name +
@@ -117,7 +119,7 @@ export const generateDonationCertificatePDF = (
 			pdfDocument
 				.text("– " + locales['no-contributions']);
 		}
-		pdfDocument.moveDown(2);
+		pdfDocument.moveDown(1);
 		pdfDocument
 			.text(locales['time-period-1'] + year + locales['time-period-2'] + year + locales['time-period-3']);
 		pdfDocument.moveDown();
