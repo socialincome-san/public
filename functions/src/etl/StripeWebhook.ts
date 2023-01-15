@@ -2,7 +2,7 @@ import { DocumentReference } from 'firebase-admin/firestore';
 import { CollectionReference } from 'firebase-admin/lib/firestore';
 import * as functions from 'firebase-functions';
 import Stripe from 'stripe';
-import { FirestoreAdmin } from '../../../shared/src/firebase/firestoreAdmin';
+import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import {
 	Contribution,
 	ContributionSourceKey,
