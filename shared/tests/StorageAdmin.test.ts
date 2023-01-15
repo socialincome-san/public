@@ -3,7 +3,7 @@ import axios from 'axios';
 import * as admin from 'firebase-admin';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import { promises as fs, unlinkSync } from 'fs';
-import { StorageAdmin } from '../src/firebase/storageAdmin';
+import { StorageAdmin } from '../src/firebase/StorageAdmin';
 
 const { cleanup } = firebaseFunctionsTest();
 
