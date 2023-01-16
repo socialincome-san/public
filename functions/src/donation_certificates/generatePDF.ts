@@ -76,15 +76,13 @@ export const generateDonationCertificatePDF = (
 		pdfDocument.moveDown(6);
 		pdfDocument
 			.fontSize(12)
-			.text(`${user.personal?.name} ${user.personal?.lastname}\n${user.address?.street}\n${user.address?.zip} ${user.address?.city}\n${locales['country']}`
+			.text(
+				`${user.personal?.name} ${user.personal?.lastname}\n${user.address?.street}\n${user.address?.zip} ${user.address?.city}\n${locales['country']}`
 			);
 		pdfDocument.moveDown(6);
-		pdfDocument
-			.text(`${locales['place']} ${currentDateString}`);
+		pdfDocument.text(`${locales['place']} ${currentDateString}`);
 		pdfDocument.moveDown(1.5);
-		pdfDocument
-			.font('unica77-bold')
-			.text(locales['title'] + year);
+		pdfDocument.font('unica77-bold').text(locales['title'] + year);
 		pdfDocument.moveDown(1.25);
 		pdfDocument
 			.font('unica77')
@@ -101,7 +99,6 @@ export const generateDonationCertificatePDF = (
 			);
 		pdfDocument.moveDown();
 		if (financials.total_chf !== 0) {
-
 			pdfDocument.text('– ' + locales['contributions-chf'] + financials.total_chf);
 		}
 		if (financials.total_eur !== 0) {
@@ -123,12 +120,9 @@ export const generateDonationCertificatePDF = (
 		pdfDocument.text(locales['information-3']);
 		pdfDocument.moveDown(2);
 		let yPosition = pdfDocument.y;
-		pdfDocument
-			.image('dist/assets/signatures/signature_kerrin.png', 45, yPosition, { width: 200 });
-		pdfDocument
-			.image('dist/assets/signatures/signature_sandino.png', 210, yPosition, { width: 200 });
-		pdfDocument
-			.moveDown();
+		pdfDocument.image('dist/assets/signatures/signature_kerrin.png', 45, yPosition, { width: 200 });
+		pdfDocument.image('dist/assets/signatures/signature_sandino.png', 210, yPosition, { width: 200 });
+		pdfDocument.moveDown();
 		yPosition = pdfDocument.y;
 
 		pdfDocument.text('Kerrin Dieckmann', 45, yPosition);
