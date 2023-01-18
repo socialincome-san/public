@@ -74,6 +74,7 @@ export const generateDonationCertificatePDF = (
 		pdfDocument.font('unica77').fontSize(12);
 		pdfDocument.image('dist/assets/logos/logo_color@2x.png', 45, 20, { width: 180 });
 		pdfDocument.fontSize(10).text(locales['header'], 45, 20, { align: 'right' });
+
 		pdfDocument.moveDown(6);
 		pdfDocument
 			.fontSize(12)
@@ -125,6 +126,7 @@ export const generateDonationCertificatePDF = (
 		pdfDocument.image('dist/assets/signatures/signature_sandino.png', 210, yPosition, { width: 200 });
 		pdfDocument.moveDown();
 		yPosition = pdfDocument.y;
+
 		pdfDocument.text('Kerrin Dieckmann', 45, yPosition);
 		pdfDocument.text('Sandino Scheidegger', 215, yPosition);
 		yPosition = pdfDocument.y;
