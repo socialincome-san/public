@@ -1,10 +1,6 @@
-import React, { FC } from 'react';
+import React from 'react';
 
-interface DataListProps {
-    data: { value: string, label: string }[]
-}
-//explicit parameter
-const DataList: FC<DataListProps> = ({data}: DataListProps) => {
+export const SoDataList = ({data}) => {
     return (
         <datalist id="data-from-firestore">
             {data.map((item, i) => (
@@ -14,4 +10,4 @@ const DataList: FC<DataListProps> = ({data}: DataListProps) => {
     )
 }
 
-export default DataList;
+
