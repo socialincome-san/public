@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions';
-import { FirestoreAdmin } from '../../../shared/src/firebase/firestoreAdmin';
+import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { Recipient, RecipientProgramStatus, RECIPIENT_FIRESTORE_PATH } from '../../../shared/src/types';
 
 export class OrangeMoneyCSVCreator {

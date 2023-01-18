@@ -5,7 +5,7 @@ import { DonationCertificateHandler } from './donation_certificates/DonationCert
 import { ExchangeRateImporter } from './etl/ExchangeRateImporter';
 import { OrangeMoneyCSVCreator } from './etl/OrangeMoneyCSVCreator';
 import { PostfinanceImporter } from './etl/PostfinanceImporter';
-import { StripeWebhook } from './etl/stripeWebhook';
+import { StripeWebhook } from './etl/StripeWebhook';
 
 export const app = getOrInitializeApp();
 export const firestoreAdmin = new FirestoreAdmin(app);

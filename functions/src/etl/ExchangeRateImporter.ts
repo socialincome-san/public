@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as functions from 'firebase-functions';
-import { FirestoreAdmin } from '../../../shared/src/firebase/firestoreAdmin';
+import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import {
 	ExchangeRates,
 	ExchangeRatesEntry,

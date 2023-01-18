@@ -1,7 +1,7 @@
 import { Timestamp } from 'firebase-admin/lib/firestore';
 import { createWriteStream } from 'fs';
 import PDFDocument from 'pdfkit';
-import { FirestoreAdmin } from '../../../shared/src/firebase/firestoreAdmin';
+import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { Contribution, Entity, User } from '../../../shared/src/types';
 import { DonationCertificateLocales } from './locales';
 

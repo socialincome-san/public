@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin';
 import firebaseFunctionsTest from 'firebase-functions-test';
-import { FirestoreAdmin } from '../../../shared/src/firebase/firestoreAdmin';
+import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { Recipient, RecipientProgramStatus, RECIPIENT_FIRESTORE_PATH } from '../../../shared/src/types';
 import { OrangeMoneyCSVCreator } from '../../src/etl/OrangeMoneyCSVCreator';
 const { cleanup } = firebaseFunctionsTest();
