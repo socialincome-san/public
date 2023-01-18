@@ -2,7 +2,7 @@ import { GetStaticProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Layout from '../components/Layout';
-import DataList from '../../ui/datalist';
+import DataList from '@socialincome/ui/datalist';
 import firebase from '../../firebase';
 
 export default function SocialResponsibility() {
