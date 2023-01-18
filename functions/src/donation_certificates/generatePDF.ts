@@ -1,13 +1,14 @@
 import { Timestamp } from 'firebase-admin/lib/firestore';
 import { createWriteStream } from 'fs';
 import PDFDocument from 'pdfkit';
-import { collection } from '../../../shared/src/firebase/firestoreAdmin';
+import { FirestoreAdmin } from '../../../shared/src/firebase/firestoreAdmin';
 import { Contribution, Entity, User } from '../../../shared/src/types';
 import { DonationCertificateLocales } from './locales';
 
-export const calculateFinancials = async (userId: string, year: number) => {
+export const calculateFinancials = async (firestoreAdmin: FirestoreAdmin, userId: string, year: number) => {
 	let contributions: Contribution[] = [];
-	await collection<Contribution>(`users/${userId}/contributions`)
+	await firestoreAdmin
+		.collection<Contribution>(`users/${userId}/contributions`)
 		.get()
 		.then((querySnapshot) => {
 			querySnapshot.forEach((element) => {
@@ -55,6 +56,7 @@ export const calculateFinancials = async (userId: string, year: number) => {
 };
 
 export const generateDonationCertificatePDF = (
+	firestoreAdmin: FirestoreAdmin,
 	userEntity: Entity<User>,
 	year: number,
 	filePath: string,
@@ -63,7 +65,7 @@ export const generateDonationCertificatePDF = (
 	return new Promise<void>(async (resolve) => {
 		const writeStream = createWriteStream(filePath);
 		const user = userEntity.values;
-		const financials = await calculateFinancials(userEntity.id, year);
+		const financials = await calculateFinancials(firestoreAdmin, userEntity.id, year);
 		const currentDateString = new Date().toLocaleDateString('de-DE', { dateStyle: 'medium' });
 		let pdfDocument = new PDFDocument({ size: 'A4' });
 

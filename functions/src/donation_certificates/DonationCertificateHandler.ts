@@ -1,7 +1,7 @@
 import { StorageAdmin } from '@socialincome/shared/src/firebase/StorageAdmin';
 import * as functions from 'firebase-functions';
 import { withFile } from 'tmp-promise';
-import { FirestoreAdmin } from '../../../shared/src/firebase/firestoreAdmin';
+import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { DonationCertificate, Entity, User } from '../../../shared/src/types';
 import { generateDonationCertificatePDF } from './generatePDF';
 import { loadLocales } from './locales';
@@ -34,7 +34,7 @@ export class DonationCertificateHandler {
 						if (!user.location) throw new Error('User location missing');
 
 						let locales = loadLocales(user.language);
-						await generateDonationCertificatePDF(userEntity, year, path, locales);
+						await generateDonationCertificatePDF(this.firestoreAdmin, userEntity, year, path, locales);
 						const { downloadUrl } = await this.storageAdmin.uploadAndGetDownloadURL({
 							sourceFilePath: path,
 							destinationFilePath: `donation-certificates/${userEntity.id}/${year}_${userEntity.values.location}.pdf`,
