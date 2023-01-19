@@ -1,13 +1,15 @@
 import { describe, expect, test } from '@jest/globals';
 import axios from 'axios';
+import * as admin from 'firebase-admin';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import { promises as fs, unlinkSync } from 'fs';
-import { uploadAndGetDownloadURL } from '../src/firebase/storageAdmin';
+import { StorageAdmin } from '../src/firebase/StorageAdmin';
 
 const { cleanup } = firebaseFunctionsTest();
 
 describe('useStorageAdmin', () => {
 	const tmpFile = 'tmp.txt';
+	const storageAdmin = new StorageAdmin(admin.initializeApp());
 
 	afterEach(() => {
 		unlinkSync(tmpFile);
@@ -17,7 +19,7 @@ describe('useStorageAdmin', () => {
 	test('upload private file', async () => {
 		await fs.writeFile(tmpFile, 'test');
 
-		const { downloadUrl } = await uploadAndGetDownloadURL({ sourceFilePath: tmpFile });
+		const { downloadUrl } = await storageAdmin.uploadAndGetDownloadURL({ sourceFilePath: tmpFile });
 
 		const response = await axios.get(downloadUrl);
 		expect(response.status).toEqual(200);

@@ -1,12 +1,28 @@
-import { createDonationCertificatesFunction } from './donation_certificates/createDonationCertificatesFunction';
-import { createOrangeMoneyCSVFunction } from './etl/createOrangeMoneyCSV';
-import { importExchangeRatesFunction } from './etl/importExchangeRates';
-import { importBalanceMailFunction } from './etl/importPostfinanceBalance';
-import { batchImportStripeChargesFunction, stripeChargeHookFunction } from './etl/stripeWebhook';
+import { getOrInitializeApp } from '@socialincome/shared/src/firebase/app';
+import { FirestoreAdmin } from '@socialincome/shared/src/firebase/FirestoreAdmin';
+import { StorageAdmin } from '@socialincome/shared/src/firebase/StorageAdmin';
+import { DonationCertificateHandler } from './donation_certificates/DonationCertificateHandler';
+import { ExchangeRateImporter } from './etl/ExchangeRateImporter';
+import { OrangeMoneyCSVCreator } from './etl/OrangeMoneyCSVCreator';
+import { PostfinanceImporter } from './etl/PostfinanceImporter';
+import { StripeWebhook } from './etl/StripeWebhook';
 
-export const batchImportStripeCharges = batchImportStripeChargesFunction;
-export const createDonationCertificates = createDonationCertificatesFunction;
-export const createOrangeMoneyCSV = createOrangeMoneyCSVFunction;
-export const importExchangeRates = importExchangeRatesFunction;
-export const importBalanceMail = importBalanceMailFunction;
-export const stripeChargeHook = stripeChargeHookFunction;
+export const app = getOrInitializeApp();
+export const firestoreAdmin = new FirestoreAdmin(app);
+export const storageAdmin = new StorageAdmin(app);
+
+const stripeWebhook = new StripeWebhook(firestoreAdmin);
+export const batchImportStripeCharges = stripeWebhook.batchImportStripeCharges;
+export const stripeChargeHook = stripeWebhook.stripeChargeHookFunction;
+
+const postfinanceImporter = new PostfinanceImporter(firestoreAdmin);
+export const importBalanceMail = postfinanceImporter.importBalanceMail;
+
+const exchangeRateImporter = new ExchangeRateImporter(firestoreAdmin);
+export const importExchangeRates = exchangeRateImporter.importExchangeRates;
+
+const donationCertificateHandler = new DonationCertificateHandler(firestoreAdmin, storageAdmin);
+export const createDonationCertificates = donationCertificateHandler.createDonationCertificates;
+
+const orangeMoneyCSVCreator = new OrangeMoneyCSVCreator(firestoreAdmin);
+export const createOrangeMoneyCSV = orangeMoneyCSVCreator.createOrangeMoneyCSV;

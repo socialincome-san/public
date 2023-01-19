@@ -1,4 +1,5 @@
-import { findFirst } from '@socialincome/shared/src/firebase/firestoreAdmin';
+import { getOrInitializeApp } from '@socialincome/shared/src/firebase/app';
+import { FirestoreAdmin } from '@socialincome/shared/src/firebase/FirestoreAdmin';
 import { BankBalance, BANK_BALANCE_FIRESTORE_PATH } from '@socialincome/shared/src/types';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useTranslation } from 'next-i18next';
@@ -30,7 +31,11 @@ export default function Finances({ currency, balance }: Props) {
 export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
 	const currency = params?.currency as string;
 	// TODO import proper transparency stats from firestore
-	const exampleFirestoreDoc = await findFirst<BankBalance>(BANK_BALANCE_FIRESTORE_PATH, (query) => query);
+	const firestoreAdmin = new FirestoreAdmin(getOrInitializeApp());
+	const exampleFirestoreDoc = await firestoreAdmin.findFirst<BankBalance>(
+		BANK_BALANCE_FIRESTORE_PATH,
+		(query) => query
+	);
 	return {
 		props: {
 			...(await serverSideTranslations(locale!, ['website-finances'])),

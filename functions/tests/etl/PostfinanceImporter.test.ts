@@ -1,12 +1,18 @@
 import { describe, expect, test } from '@jest/globals';
-import firebaseFunctionsTest from 'firebase-functions-test';
-import { doc } from '../../../shared/src/firebase/firestoreAdmin';
+import * as admin from 'firebase-admin';
+import functions from 'firebase-functions-test';
+import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../shared/src/types';
-import * as importPostfinanceBalance from '../../src/etl/importPostfinanceBalance';
-const { cleanup } = firebaseFunctionsTest();
+import { PostfinanceImporter } from '../../src/etl/PostfinanceImporter';
 
 describe('importPostfinanceBalance', () => {
-	afterAll(() => cleanup());
+	const projectId = 'test' + new Date().getTime();
+	const testEnv = functions({ projectId: projectId });
+	const firestoreAdmin = new FirestoreAdmin(admin.initializeApp({ projectId: projectId }));
+	const postfinanceImporter = new PostfinanceImporter(firestoreAdmin);
+	beforeEach(async () => {
+		await testEnv.firestore.clearFirestoreData({ projectId: projectId });
+	});
 
 	test('extract data correctly', () => {
 		const testMail =
@@ -83,8 +89,8 @@ describe('importPostfinanceBalance', () => {
 			'src=3D"https://www.post.ch/static/Notifica//postfinance/youtube.png" /></a>=\n' +
 			'</div></td></tr></tbody></table></center></td></tr></tbody></table>';
 
-		expect('contributions').toEqual(importPostfinanceBalance.extractAccount(testMail));
-		expect(50).toEqual(importPostfinanceBalance.extractBalance(testMail));
+		expect('contributions').toEqual(postfinanceImporter.extractAccount(testMail));
+		expect(50).toEqual(postfinanceImporter.extractBalance(testMail));
 	});
 
 	test('inserts balances into firestore', async () => {
@@ -97,10 +103,12 @@ describe('importPostfinanceBalance', () => {
 			} as BankBalance,
 		];
 
-		await importPostfinanceBalance.storeBalances(balances);
+		await postfinanceImporter.storeBalances(balances);
 
 		const balance = balances[0];
-		const snap = await doc<BankBalance>(BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance(balance)).get();
+		const snap = await firestoreAdmin
+			.doc<BankBalance>(BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance(balance))
+			.get();
 		expect(balance).toEqual(snap.data());
 	});
 	jest.setTimeout(30000);
