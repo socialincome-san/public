@@ -1,8 +1,8 @@
 import { useSnackbarController } from '@camberi/firecms';
 import { CollectionActionsProps } from '@camberi/firecms/dist/types/collections';
 import { Button } from '@mui/material';
-import { downloadStringAsFile } from '@socialincome/shared/src/htmlHelpers';
 import { Recipient } from '@socialincome/shared/src/types';
+import { downloadStringAsFile } from '@socialincome/shared/src/utils/html';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 
 export function CreateOrangeMoneyCSVAction({}: CollectionActionsProps<Recipient>) {
