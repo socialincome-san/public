@@ -12,6 +12,13 @@
 			"program": "lib/main_dev.dart"
 		},
 		{
+			"name": "stage",
+			"request": "launch",
+			"type": "dart",
+			"args": ["--flavor", "stage", "-t", "lib/main.dart"],
+			"program": "lib/main.dart"
+		},
+		{
 			"name": "prod",
 			"request": "launch",
 			"type": "dart",
