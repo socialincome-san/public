@@ -7,9 +7,9 @@ import { OrangeMoneyCSVCreator } from './etl/OrangeMoneyCSVCreator';
 import { PostfinanceImporter } from './etl/PostfinanceImporter';
 import { StripeWebhook } from './etl/StripeWebhook';
 
-export const app = getOrInitializeApp();
-export const firestoreAdmin = new FirestoreAdmin(app);
-export const storageAdmin = new StorageAdmin(app);
+const app = getOrInitializeApp();
+const firestoreAdmin = new FirestoreAdmin(app);
+const storageAdmin = new StorageAdmin(app);
 
 const stripeWebhook = new StripeWebhook(firestoreAdmin);
 export const batchImportStripeCharges = stripeWebhook.batchImportStripeCharges;
