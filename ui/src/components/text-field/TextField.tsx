@@ -54,7 +54,7 @@ interface SoBaseTextFieldProps {
 	/**
 	 * Visual size of the text field
 	 */
-	size?: typeof SO_TEXT_FIELD_SIZES[number];
+	size?: (typeof SO_TEXT_FIELD_SIZES)[number];
 
 	/**
 	 * Render full width
