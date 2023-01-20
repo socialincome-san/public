@@ -1,26 +1,32 @@
 import * as nodemailer from 'nodemailer';
 import { Transporter } from 'nodemailer';
-import { NOTIFICATION_EMAIL_PASSWORD, NOTIFICATION_EMAIL_USER } from '../../config';
 
-export interface Attachment {
+interface Attachment {
 	filename: string;
 	path: string;
 }
 
-export const sendEmail = async (
-	from: string,
-	to: string,
-	subject: string,
-	content: string,
-	attachments: Attachment[]
-) => {
+interface SendEmailProps {
+	from?: string;
+	to?: string;
+	subject: string;
+	content: string;
+	attachments?: Attachment[];
+	user: string;
+	password: string;
+}
+
+export const sendEmail = async ({
+	from = 'no-reply@socialincome.org',
+	to,
+	subject,
+	content,
+	attachments = [],
+	user,
+	password,
+}: SendEmailProps) => {
 	let transporter: Transporter;
-	if (NOTIFICATION_EMAIL_USER && NOTIFICATION_EMAIL_PASSWORD) {
-		transporter = nodemailer.createTransport({
-			service: 'gmail',
-			auth: { user: NOTIFICATION_EMAIL_USER, pass: NOTIFICATION_EMAIL_PASSWORD },
-		});
-	} else {
+	if (!user) {
 		const testAccount = await nodemailer.createTestAccount();
 		transporter = nodemailer.createTransport({
 			host: 'smtp.ethereal.email',
@@ -33,6 +39,11 @@ export const sendEmail = async (
 		console.log('EMAIL TEST USER: ' + testAccount.user);
 		console.log('EMAIL TEST PASSWORD: ' + testAccount.pass);
 		console.log('------------------------------------------------------');
+	} else {
+		transporter = nodemailer.createTransport({
+			service: 'gmail',
+			auth: { user: user, pass: password },
+		});
 	}
 	const info = await transporter.sendMail({
 		from: from,

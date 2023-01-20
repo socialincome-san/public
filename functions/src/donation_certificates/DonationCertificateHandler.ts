@@ -1,13 +1,14 @@
 import { StorageAdmin } from '@socialincome/shared/src/firebase/StorageAdmin';
 import * as functions from 'firebase-functions';
+import * as fs from 'fs';
+import handlebars from 'handlebars';
 import { withFile } from 'tmp-promise';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { DonationCertificate, Entity, User } from '../../../shared/src/types';
+import { sendEmail } from '../../../shared/src/utils/sendMail';
+import { NOTIFICATION_EMAIL_PASSWORD, NOTIFICATION_EMAIL_USER } from '../config';
 import { generateDonationCertificatePDF } from './generatePDF';
-import { loadLocales, getEmailTemplate } from './locales';
-import { sendEmail } from '../shared_functions/messaging/sendMail';
-import * as fs from 'fs';
-import handlebars from 'handlebars';
+import { getEmailTemplate, loadLocales } from './locales';
 
 export interface CreateDonationCertificatesFunctionProps {
 	users: Entity<User>[];
@@ -47,23 +48,23 @@ export class DonationCertificateHandler {
 							year: year,
 						});
 						if (sendEmails) {
-							if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(user.email as string)) {
-								const emailTemplate = getEmailTemplate(user.language);
-								await sendEmail(
-									'no-reply@socialincome.org',
-									user.email as string,
-									locales['email-subject'],
-									handlebars.compile(fs.readFileSync(emailTemplate, 'utf-8'))({ firstname: user.personal?.name, year }),
-									[
-										{
-											filename: locales['filename-prefix'] + year + '.pdf',
-											path: path,
-										},
-									]
-								);
-							} else {
-								throw new Error('Invalid user e-mail');
-							}
+							const emailTemplate = getEmailTemplate(user.language);
+							await sendEmail({
+								to: user.email,
+								subject: locales['email-subject'],
+								content: handlebars.compile(fs.readFileSync(emailTemplate, 'utf-8'))({
+									firstname: user.personal?.name,
+									year,
+								}),
+								attachments: [
+									{
+										filename: locales['filename-prefix'] + year + '.pdf',
+										path: path,
+									},
+								],
+								user: NOTIFICATION_EMAIL_USER,
+								password: NOTIFICATION_EMAIL_PASSWORD,
+							});
 						}
 					});
 					successCount += 1;
