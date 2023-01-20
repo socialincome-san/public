@@ -1,4 +1,5 @@
 import "package:animations/animations.dart";
+import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 
 const String textFontFamily = "Unica77LL";
@@ -24,13 +25,19 @@ ThemeData socialIncomeTheme = ThemeData(
       ),
     },
   ),
-  primaryColor: siDarkBlue,
+  primaryColor: AppColors.primaryColor,
   appBarTheme: AppBarTheme(backgroundColor: siDarkBlue),
   iconTheme: const IconThemeData(color: Colors.white),
   elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.all<Color>(siDarkBlue),
-      minimumSize: MaterialStateProperty.all<Size>(const Size(200, 60)),
+    style: ElevatedButton.styleFrom(
+      foregroundColor: AppColors.fontColor,
+      backgroundColor: AppColors.primaryColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
+      ),
+      textStyle: AppStyles.buttonLabelBig,
+      enableFeedback: true,
+      elevation: 0,
     ),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
@@ -38,7 +45,7 @@ ThemeData socialIncomeTheme = ThemeData(
       minimumSize: MaterialStateProperty.all<Size>(const Size(200, 60)),
     ),
   ),
-  scaffoldBackgroundColor: siGrey,
+  scaffoldBackgroundColor: AppColors.backgroundColor,
   textTheme: const TextTheme(
     headline6: TextStyle(
       // This is title
