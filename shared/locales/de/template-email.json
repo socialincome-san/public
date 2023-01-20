@@ -1,4 +1,4 @@
 {
-  "greeting": "Hallo {{ name }}",
-  "message": "Du solltest {{ amount, currency }} erhalten haben."
+	"greeting": "Hallo {{ name }}",
+	"message": "Du solltest {{ amount, currency }} erhalten haben."
 }
