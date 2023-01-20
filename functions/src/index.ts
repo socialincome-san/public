@@ -1,6 +1,6 @@
-import { getOrInitializeApp } from '@socialincome/shared/src/firebase/app';
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/FirestoreAdmin';
-import { StorageAdmin } from '@socialincome/shared/src/firebase/StorageAdmin';
+import { getOrInitializeApp } from '../../shared/src/firebase/app';
+import { FirestoreAdmin } from '../../shared/src/firebase/FirestoreAdmin';
+import { StorageAdmin } from '../../shared/src/firebase/StorageAdmin';
 import { DonationCertificateHandler } from './donation_certificates/DonationCertificateHandler';
 import { ExchangeRateImporter } from './etl/ExchangeRateImporter';
 import { OrangeMoneyCSVCreator } from './etl/OrangeMoneyCSVCreator';
