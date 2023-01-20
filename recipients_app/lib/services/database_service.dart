@@ -1,14 +1,19 @@
+import "package:app/dtos/user_dto.dart";
 import "package:app/models/current_user.dart";
 import "package:app/models/social_income_transaction.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:firebase_auth/firebase_auth.dart";
 
 class DatabaseService {
-  final String phoneNumber;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  DatabaseService(this.phoneNumber);
+  // TODO pass it as constructor param interface over FirebaseAuth? auth_service?
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   Future<DocumentSnapshot> getUserSnapshot() async {
+    // TODO make proper handling of not logged-in state?
+    final phoneNumber = auth.currentUser?.phoneNumber ?? "";
+
     final test = await firestore
         .collection("/recipients")
         .where(
@@ -18,6 +23,11 @@ class DatabaseService {
         .get();
 
     return test.docs.first;
+  }
+
+  Future<UserDto> fetchUserData() async {
+    final userSnapshot = await getUserSnapshot();
+    return userSnapshot.mapUserDto();
   }
 
   Future<CurrentUser> fetchUserDetails(CurrentUser user) async {

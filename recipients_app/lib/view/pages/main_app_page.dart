@@ -14,7 +14,7 @@ class MainAppPage extends StatelessWidget {
   final PageController controller = PageController(initialPage: 1);
 
   final List<Widget> content = [
-    const AccountPage(),
+    const AccountScreen(),
     const IncomePage(),
     const ImpactMeasurementPage()
   ];
@@ -57,8 +57,7 @@ class MainAppPage extends StatelessWidget {
               return currentUser;
             }
 
-            return DatabaseService(firebaseUserPhone)
-                .fetchUserDetails(currentUser);
+            return DatabaseService().fetchUserDetails(currentUser);
           }
 
           return Scaffold(

@@ -61,8 +61,7 @@ class CurrentUser extends ChangeNotifier {
     transactions ??= [];
   }
 
-  DatabaseService databaseService =
-      DatabaseService(FirebaseAuth.instance.currentUser?.phoneNumber ?? "");
+  DatabaseService databaseService = DatabaseService();
 
   Map<String, dynamic> data() => {
         userIdKey: userId,
