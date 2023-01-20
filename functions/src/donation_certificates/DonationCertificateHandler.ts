@@ -4,8 +4,10 @@ import { withFile } from 'tmp-promise';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { DonationCertificate, Entity, User } from '../../../shared/src/types';
 import { generateDonationCertificatePDF } from './generatePDF';
-import { loadLocales } from './locales';
-import { sendDonationCertificateEmail } from './sendEmail';
+import { loadLocales, getEmailTemplate } from './locales';
+import { sendEmail } from '../shared_functions/messaging/sendMail';
+import * as fs from 'fs';
+import handlebars from 'handlebars';
 
 export interface CreateDonationCertificatesFunctionProps {
 	users: Entity<User>[];
@@ -45,7 +47,21 @@ export class DonationCertificateHandler {
 							year: year,
 						});
 						if (sendEmails) {
-							await sendDonationCertificateEmail(user, year, path, locales);
+							if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(user.email as string)) {
+								const emailTemplate = getEmailTemplate(user.language);
+								await sendEmail(
+									"no-reply@socialincome.org",
+									user.email as string,
+									locales['email-subject'],
+									handlebars.compile(fs.readFileSync(emailTemplate, 'utf-8'))({ firstname: user.personal?.name, year }),
+									[{
+										filename: locales['filename-prefix'] + year + '.pdf',
+										path: path
+									}]
+								)
+							} else {
+								throw new Error("Invalid user e-mail");
+							}
 						}
 					});
 					successCount += 1;

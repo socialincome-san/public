@@ -1,16 +1,18 @@
-import * as fs from 'fs';
-import handlebars from 'handlebars';
 import * as nodemailer from 'nodemailer';
 import { Transporter } from 'nodemailer';
-import { User } from '../../../shared/src/types';
-import { NOTIFICATION_EMAIL_PASSWORD, NOTIFICATION_EMAIL_USER } from '../config';
-import { DonationCertificateLocales, getEmailTemplate } from './locales';
+import { NOTIFICATION_EMAIL_PASSWORD, NOTIFICATION_EMAIL_USER } from '../../config';
 
-export const sendDonationCertificateEmail = async (
-	user: User,
-	year: number,
-	path: string,
-	locales: DonationCertificateLocales
+export interface Attachment {
+	filename: string
+    path: string,
+}
+
+export const sendEmail = async (
+    from: string,
+    to: string,
+    subject: string,
+    content: string,
+    attachments: Attachment[]
 ) => {
 	let transporter: Transporter;
 	if (NOTIFICATION_EMAIL_USER && NOTIFICATION_EMAIL_PASSWORD) {
@@ -32,19 +34,13 @@ export const sendDonationCertificateEmail = async (
 		console.log('EMAIL TEST PASSWORD: ' + testAccount.pass);
 		console.log('------------------------------------------------------');
 	}
-	const emailTemplate = getEmailTemplate(user.language);
 	const info = await transporter.sendMail({
-		from: 'noreply@socialincome.org',
-		to: user.email,
+		from: from,
+		to: to,
 		bcc: 'earchive@socialincome.org',
-		subject: locales['email-subject'],
-		html: handlebars.compile(fs.readFileSync(emailTemplate, 'utf-8'))({ firstname: user.personal?.name, year }),
-		attachments: [
-			{
-				filename: locales['filename-prefix'] + year + '.pdf',
-				path: path,
-			},
-		],
+		subject: subject,
+		html: content,
+		attachments: attachments
 	});
 	console.log('Message sent: %s', info.messageId);
 };
