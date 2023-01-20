@@ -5,7 +5,7 @@ import handlebars from 'handlebars';
 import { withFile } from 'tmp-promise';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { DonationCertificate, Entity, User } from '../../../shared/src/types';
-import { sendEmail } from '../../../shared/src/utils/sendMail';
+import { sendEmail } from '../../../shared/src/utils/messaging/email';
 import { NOTIFICATION_EMAIL_PASSWORD, NOTIFICATION_EMAIL_USER } from '../config';
 import { generateDonationCertificatePDF } from './generatePDF';
 import { getEmailTemplate, loadLocales } from './locales';
