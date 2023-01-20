@@ -49,6 +49,12 @@ abstract class AppStyles {
   static const buttonLabelSmall = TextStyle(
     fontSize: 13,
     fontFamily: "Unica77LL",
-    color: AppColors.fontColor,
+    color: AppColors.fontColorDark,
+  );
+
+  static const inputHint = TextStyle(
+    fontSize: 15,
+    fontFamily: "Unica77LL",
+    color: AppColors.primaryLightColor,
   );
 }

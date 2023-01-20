@@ -1,5 +1,5 @@
 import "package:app/models/alert_visibility.dart";
-import "package:app/theme/theme.dart";
+import "package:app/ui/configs/app_colors.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "package:url_launcher/url_launcher_string.dart";
@@ -44,7 +44,7 @@ class SocialIncomeContact extends StatelessWidget {
         return Center(
           child: Container(
             decoration: BoxDecoration(
-              color: backgroundColor,
+              color: AppColors.backgroundColor,
               border: Border.all(
                 color: Theme.of(context).primaryColor,
               ),
@@ -52,7 +52,7 @@ class SocialIncomeContact extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.75,
             width: MediaQuery.of(context).size.width * 0.9,
             child: Padding(
-              padding: edgeInsetsAll12,
+              padding: const EdgeInsets.all(12),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.stretch,

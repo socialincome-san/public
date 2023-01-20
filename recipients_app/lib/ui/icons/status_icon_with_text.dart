@@ -31,12 +31,12 @@ class StatusIconWithText extends StatelessWidget {
       case Status.warning:
         color = AppColors.yellowColor;
         icon = Icons.warning;
-        textColor = AppColors.fontColor;
+        textColor = AppColors.fontColorDark;
         break;
       case Status.error:
         color = AppColors.redColor;
         icon = Icons.close;
-        textColor = AppColors.fontColor;
+        textColor = AppColors.fontColorDark;
         break;
     }
 

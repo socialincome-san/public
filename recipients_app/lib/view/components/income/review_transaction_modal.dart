@@ -1,6 +1,6 @@
 import "package:app/models/current_user.dart";
 import "package:app/models/social_income_transaction.dart";
-import "package:app/theme/theme.dart";
+import "package:app/ui/configs/app_colors.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
@@ -84,7 +84,7 @@ class _ReviewTransactionModalState extends State<ReviewTransactionModal> {
                                 const Size(50, 50),
                               ),
                               backgroundColor: MaterialStateProperty.all<Color>(
-                                siDarkBlue,
+                                AppColors.primaryColor,
                               ),
                             ),
                             child: const Text("YES"),

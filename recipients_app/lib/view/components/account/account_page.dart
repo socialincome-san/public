@@ -1,7 +1,7 @@
 import "package:app/models/alert_visibility.dart";
 import "package:app/models/current_user.dart";
 import "package:app/services/auth_service.dart";
-import "package:app/theme/theme.dart";
+import "package:app/ui/buttons/button_big.dart";
 import "package:app/view/components/account/changeable_user_information.dart";
 import "package:app/view/components/account/unchangeable_user_information.dart";
 import "package:app/view/components/social_income_contact.dart";
@@ -79,19 +79,12 @@ class AccountPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  OutlinedButton(
-                    style: ElevatedButton.styleFrom(
-                      side: BorderSide(
-                        color: siDarkBlue,
-                      ),
-                    ),
+                  ButtonBig(
                     onPressed: () {
                       alertVisibility.setContactVisibility(true);
                     },
-                    child: const Text(
-                      "Get in touch",
-                      style: TextStyle(color: Colors.black),
-                    ),
+                    label: "Get in touch",
+                    buttonType: ButtonBigType.outlined,
                   ),
                   const ListTile(
                     contentPadding: EdgeInsets.zero,

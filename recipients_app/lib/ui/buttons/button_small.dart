@@ -19,7 +19,7 @@ class ButtonSmall extends StatelessWidget {
     required this.label,
     required this.buttonType,
     this.color = AppColors.primaryColor,
-    this.fontColor = AppColors.fontColor,
+    this.fontColor = AppColors.fontColorDark,
   });
 
   @override

@@ -2,6 +2,8 @@ import "package:app/ui/buttons/button_big.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/ui/icons/icons.dart";
+import "package:app/ui/inputs/input_text.dart";
+import "package:app/ui/inputs/input_text_area.dart";
 import "package:flutter/material.dart";
 
 class DesignComponentsScreen extends StatelessWidget {
@@ -13,7 +15,7 @@ class DesignComponentsScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Design Components"),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
@@ -139,6 +141,24 @@ class DesignComponentsScreen extends StatelessWidget {
                   buttonType: ButtonSmallType.filled,
                 ),
               ],
+            ),
+            const SizedBox(height: 32),
+            const Text(
+              "Text Input",
+              style: AppStyles.headlineLarge,
+            ),
+            const SizedBox(height: 16),
+            const InputText(
+              hintText: "Help",
+            ),
+            const SizedBox(height: 32),
+            const Text(
+              "Text Input Area",
+              style: AppStyles.headlineLarge,
+            ),
+            const SizedBox(height: 16),
+            const InputTextArea(
+              hintText: "Help",
             ),
           ],
         ),

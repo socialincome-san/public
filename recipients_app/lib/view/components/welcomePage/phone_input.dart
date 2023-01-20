@@ -1,7 +1,7 @@
 import "package:app/models/alert_visibility.dart";
 import "package:app/models/registration.dart";
 import "package:app/services/auth_service.dart";
-import "package:app/theme/theme.dart";
+import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 import "package:intl_phone_number_input/intl_phone_number_input.dart";
 import "package:provider/provider.dart";
@@ -67,8 +67,8 @@ class PhoneInput extends StatelessWidget {
                       hintStyle: const TextStyle(color: Colors.grey),
                       labelStyle:
                           TextStyle(color: Colors.grey[300], fontSize: 16),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: siDarkBlue),
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.primaryColor),
                       ),
                     ),
                     textStyle: const TextStyle(
