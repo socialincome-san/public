@@ -4,6 +4,7 @@ import Handlebars from 'handlebars';
 import registerI18nHelper from 'handlebars-i18next';
 import i18next from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
+import mjml2html from 'mjml';
 import path from 'path';
 
 interface RenderTemplateProps {
@@ -26,4 +27,8 @@ export const renderTemplate = async ({ language, namespace, context }: RenderTem
 	return Handlebars.compile(
 		fs.readFileSync(path.join(__dirname, '..', '..', `/templates/email/${namespace}.handlebars`), 'utf-8')
 	)(context);
+};
+
+export const renderEmailTemplate = async (props: RenderTemplateProps) => {
+	return mjml2html(await renderTemplate(props)).html;
 };

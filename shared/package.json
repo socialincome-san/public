@@ -14,10 +14,12 @@
 		"handlebars-i18next": "^1.0.3",
 		"i18next-resources-to-backend": "^1.1.1",
 		"jest": "^29.1.2",
+		"mjml": "^4.13.0",
 		"ts-jest": "^29.0.3"
 	},
 	"devDependencies": {
 		"@camberi/firecms": "2.0.0-alpha.37",
+		"@types/mjml": "^4.7.0",
 		"firebase-functions-test": "^2.4.0"
 	}
 }
