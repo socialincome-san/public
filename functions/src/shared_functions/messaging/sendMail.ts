@@ -3,16 +3,16 @@ import { Transporter } from 'nodemailer';
 import { NOTIFICATION_EMAIL_PASSWORD, NOTIFICATION_EMAIL_USER } from '../../config';
 
 export interface Attachment {
-	filename: string
-    path: string,
+	filename: string;
+	path: string;
 }
 
 export const sendEmail = async (
-    from: string,
-    to: string,
-    subject: string,
-    content: string,
-    attachments: Attachment[]
+	from: string,
+	to: string,
+	subject: string,
+	content: string,
+	attachments: Attachment[]
 ) => {
 	let transporter: Transporter;
 	if (NOTIFICATION_EMAIL_USER && NOTIFICATION_EMAIL_PASSWORD) {
@@ -40,7 +40,7 @@ export const sendEmail = async (
 		bcc: 'earchive@socialincome.org',
 		subject: subject,
 		html: content,
-		attachments: attachments
+		attachments: attachments,
 	});
 	console.log('Message sent: %s', info.messageId);
 };

@@ -50,17 +50,19 @@ export class DonationCertificateHandler {
 							if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(user.email as string)) {
 								const emailTemplate = getEmailTemplate(user.language);
 								await sendEmail(
-									"no-reply@socialincome.org",
+									'no-reply@socialincome.org',
 									user.email as string,
 									locales['email-subject'],
 									handlebars.compile(fs.readFileSync(emailTemplate, 'utf-8'))({ firstname: user.personal?.name, year }),
-									[{
-										filename: locales['filename-prefix'] + year + '.pdf',
-										path: path
-									}]
-								)
+									[
+										{
+											filename: locales['filename-prefix'] + year + '.pdf',
+											path: path,
+										},
+									]
+								);
 							} else {
-								throw new Error("Invalid user e-mail");
+								throw new Error('Invalid user e-mail');
 							}
 						}
 					});
