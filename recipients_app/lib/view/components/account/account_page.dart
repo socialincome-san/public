@@ -1,54 +1,40 @@
 import "package:app/account/cubit/account_cubit.dart";
-import "package:app/account/repository/account_repository.dart";
-import "package:app/models/alert_visibility.dart";
-import "package:app/models/current_user.dart";
+import "package:app/core/cubits/auth/auth_cubit.dart";
+import "package:app/data/repositories/repositories.dart";
 import "package:app/services/auth_service.dart";
-import "package:app/services/database_service.dart";
 import "package:app/theme/theme.dart";
-import "package:app/view/components/account/changeable_user_information.dart";
 import "package:app/view/components/account/unchangeable_user_information.dart";
-import "package:app/view/components/social_income_contact.dart";
-import "package:app/view/pages/welcome_page.dart";
-import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:provider/provider.dart";
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (_) => AccountRepository(DatabaseService()),
-      child: BlocProvider(
-        create: (context) => AccountCubit(
-          accountRepository: RepositoryProvider.of<AccountRepository>(context),
-        )..fetchUser(),
-        child: const AccountPage(),
+    return BlocProvider(
+      create: (context) => AccountCubit(
+        userRepository: context.read<UserRepository>(),
       ),
+      child: const _AccountView(),
     );
   }
 }
 
-class AccountPage extends StatelessWidget {
-  const AccountPage({super.key});
+class _AccountView extends StatelessWidget {
+  const _AccountView();
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = context.watch<AuthCubit>().state.socialIncomeUser;
+
+    // TODO: check what needs to be changed here and how and apply cubit logic
     return BlocConsumer<AccountCubit, AccountState>(
       listener: (context, state) {},
       builder: (context, state) {
-        // const firstNameCard = ChangeableUserInformation("First Name");
-        // const lastNameCard = ChangeableUserInformation("Last Name");
-        // const preferredNameCard = ChangeableUserInformation("Preferred Name");
-        // const dateOfBirthCard = ChangeableUserInformation("Date of Birth");
-        // const emailCard = ChangeableUserInformation("Email");
-        // const phoneCard = ChangeableUserInformation("Phone Number");
-        final userAccount = state.userAccount;
         return Stack(
           children: [
-            if (userAccount != null) ...[
+            if (currentUser != null) ...[
               Container(
                 margin: const EdgeInsets.only(left: 16, right: 16),
                 child: ListView(
@@ -65,27 +51,27 @@ class AccountPage extends StatelessWidget {
                     ),
                     UnchangeableUserInformation(
                       "First name",
-                      userAccount.firstName,
+                      currentUser.firstName ?? "",
                     ),
                     UnchangeableUserInformation(
                       "Last name",
-                      userAccount.lastName,
+                      currentUser.lastName ?? "",
                     ),
                     UnchangeableUserInformation(
                       "Preferred name",
-                      userAccount.preferredName,
+                      currentUser.preferredName ?? "",
                     ),
                     UnchangeableUserInformation(
                       "Date of birth",
-                      "${userAccount.birthDate}",
+                      "${currentUser.birthDate}",
                     ),
                     UnchangeableUserInformation(
                       "Email",
-                      userAccount.email,
+                      currentUser.email ?? "",
                     ),
                     UnchangeableUserInformation(
                       "Phone number",
-                      userAccount.phone,
+                      currentUser.phoneNumber,
                     ),
                     const ListTile(
                       contentPadding: EdgeInsets.zero,
@@ -103,11 +89,11 @@ class AccountPage extends StatelessWidget {
                     ),
                     UnchangeableUserInformation(
                       "Country",
-                      userAccount.country,
+                      currentUser.country ?? "",
                     ),
                     UnchangeableUserInformation(
                       "Orange Money Number",
-                      userAccount.orangePhone,
+                      currentUser.orangePhoneNumber ?? "",
                     ),
                     const ListTile(
                       contentPadding: EdgeInsets.zero,
@@ -143,14 +129,7 @@ class AccountPage extends StatelessWidget {
                     ),
 
                     ElevatedButton(
-                      onPressed: () async {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const WelcomePage(),
-                          ),
-                        ).then((value) => FirebaseAuth.instance.signOut());
-                      },
+                      onPressed: () => context.read<AuthCubit>().logout(),
                       child: const Text("Sign Out"),
                     ),
                     const SizedBox(
