@@ -6,3 +6,9 @@ export const POSTFINANCE_EMAIL_PASSWORD = process.env.POSTFINANCE_EMAIL_PASSWORD
 
 export const NOTIFICATION_EMAIL_USER = process.env.NOTIFICATION_EMAIL_USER!;
 export const NOTIFICATION_EMAIL_PASSWORD = process.env.NOTIFICATION_EMAIL_PASSWORD!;
+
+export const TWILIO_SENDER_PHONE = process.env.TWILIO_SENDER_PHONE!;
+export const CLOUD_FUNCTIONS_URL = process.env.CLOUD_FUNCTIONS_URL!;
+
+export const TWILIO_SID = process.env.TWILIO_SID!;
+export const TWILIO_TOKEN = process.env.TWILIO_TOKEN!;

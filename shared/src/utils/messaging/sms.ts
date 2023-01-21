@@ -1,49 +1,29 @@
-import { renderTemplate } from "../templates";
-
 export interface SendSmsProps {
 	messageRecipientPhone: string,
-	messageContext: object,
     smsServiceId: string,
     smsServiceSecret: string,
     statusCallbackUrl: URL,
-    messageSenderPhone: string
-	templateParameter: {
-        language: string,
-        templatePath?: string,
-        translationNamespace?: string
-    },
+    messageSenderPhone: string,
+	content: string
 }
 
 export const sendSms = async ({
 	messageRecipientPhone,
-	messageContext,
     smsServiceId,
     smsServiceSecret,
     statusCallbackUrl,
     messageSenderPhone,
-    templateParameter: {
-        language,
-        templatePath,
-        translationNamespace
-    }
+    content: content
 }: SendSmsProps) => {
 
 	let messageStatus = 'failed';
 	let messageSid = 'unknown';
 
-
-    const body = await renderTemplate({
-		language: language,
-        translationNamespace: translationNamespace as string,
-		hbsTemplatePath: templatePath as string,
-		context: messageContext,
-	});
-
 	const client = require('twilio')(smsServiceId, smsServiceSecret);
  
 	await client.messages
 		.create({
-			body: body,
+			body: content,
 			from: messageSenderPhone,
 			statusCallback: statusCallbackUrl,
 			to: messageRecipientPhone,
