@@ -7,6 +7,7 @@
 		"test:app": "jest --forceExit --roots tests/ src/"
 	},
 	"dependencies": {
+<<<<<<< Updated upstream
 		"@jest/globals": "^29.1.2",
 		"@types/jest": "^29.1.1",
 		"firebase-admin": "^11.1.0",
@@ -19,6 +20,24 @@
 	},
 	"devDependencies": {
 		"@camberi/firecms": "2.0.0-alpha.37",
+=======
+		"axios": "^1.1.3",
+		"dotenv": "^16.0.3",
+		"firebase-admin": "^11.1.0",
+		"fs": "^0.0.1-security",
+		"handlebars": "^4.7.7",
+		"handlebars-i18next": "^1.0.3",
+		"i18next-resources-to-backend": "^1.1.1",
+		"mjml": "^4.13.0",
+		"nodemailer": "^6.9.0",
+		"twilio": "^3.84.1"
+	},
+	"devDependencies": {
+		"@camberi/firecms": "2.0.0-alpha.37",
+		"@jest/globals": "^29.1.2",
+		"@types/jest": "^29.2.6",
+		"@types/mjml": "^4.7.0",
+>>>>>>> Stashed changes
 		"@types/nodemailer": "^6.4.7",
 		"firebase-functions-test": "^2.4.0"
 	}
