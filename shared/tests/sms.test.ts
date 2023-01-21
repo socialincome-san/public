@@ -4,8 +4,7 @@ import { renderTemplate } from "../src/utils/templates";
 
 describe('send simple Sms', () => {
 	test('send simple free text sms', async () => {
-
-		let [messageSid, messageStatus] = ['',''];
+		let [messageSid, messageStatus] = ['', ''];
 
 		const statusCallbackUrl = new URL('https://test.test');
 

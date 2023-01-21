@@ -15,12 +15,11 @@ export const sendSms = async ({
     messageSenderPhone,
     content: content
 }: SendSmsProps) => {
-
 	let messageStatus = 'failed';
 	let messageSid = 'unknown';
 
 	const client = require('twilio')(smsServiceId, smsServiceSecret);
- 
+
 	await client.messages
 		.create({
 			body: content,
@@ -29,11 +28,10 @@ export const sendSms = async ({
 			to: messageRecipientPhone,
 		})
 		.then((message: any) => {
-            console.log(message);
-            messageSid = message.sid;
+			console.log(message);
+			messageSid = message.sid;
 			messageStatus = message.status;
 		});
-        
-    return [messageSid, messageStatus];
-    
+
+	return [messageSid, messageStatus];
 };
