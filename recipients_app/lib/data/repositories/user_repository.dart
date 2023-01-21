@@ -1,8 +1,10 @@
 import "dart:developer";
 
-import "package:app/models/social_income_user.dart";
+import "package:app/models/recipient.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
+
+const String recipientCollection = "/recipients";
 
 class UserRepository {
   final FirebaseFirestore firestore;
@@ -16,13 +18,13 @@ class UserRepository {
   Stream<User?> authStateChanges() => firebaseAuth.authStateChanges();
   User? get currentUser => firebaseAuth.currentUser;
 
-  /// Fetches the user data by userId from firestore and maps it to a SocialIncomeUser object
+  /// Fetches the user data by userId from firestore and maps it to a recipient object
   /// Returns null if the user does not exist.
-  Future<SocialIncomeUser?> fetchSocialIncomeUser(User firebaseUser) async {
+  Future<Recipient?> fetchRecipient(User firebaseUser) async {
     final phoneNumber = firebaseUser.phoneNumber ?? "";
 
     final matchingUsers = await firestore
-        .collection("/recipients")
+        .collection(recipientCollection)
         .where(
           "mobile_money_phone.phone",
           isEqualTo: int.parse(phoneNumber.substring(1)),
@@ -41,7 +43,7 @@ class UserRepository {
     //     await firestore.collection("/recipients").doc(firebaseUser.uid).get();
 
     if (userSnapshot.exists) {
-      return SocialIncomeUser.fromMap(userSnapshot.data());
+      return Recipient.fromMap(userSnapshot.data());
     } else {
       return null;
     }

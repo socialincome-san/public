@@ -3,7 +3,7 @@ import "dart:convert";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:equatable/equatable.dart";
 
-class SocialIncomeUser extends Equatable {
+class Recipient extends Equatable {
   final String userId;
   final Phone? communicationMobilePhone;
   final Phone? mobileMoneyPhone;
@@ -18,7 +18,7 @@ class SocialIncomeUser extends Equatable {
   final DateTime? recipientSince;
   final String? imLinkInitial;
 
-  const SocialIncomeUser({
+  const Recipient({
     required this.userId,
     required this.communicationMobilePhone,
     this.mobileMoneyPhone,
@@ -51,8 +51,8 @@ class SocialIncomeUser extends Equatable {
     ];
   }
 
-  factory SocialIncomeUser.fromMap(Map<String, dynamic> map) {
-    return SocialIncomeUser(
+  factory Recipient.fromMap(Map<String, dynamic> map) {
+    return Recipient(
       userId: map["user_id"] as String,
       communicationMobilePhone: map["communication_mobile_phone"] != null
           ? Phone.fromMap(
@@ -79,7 +79,7 @@ class SocialIncomeUser extends Equatable {
     );
   }
 
-  SocialIncomeUser copyWith({
+  Recipient copyWith({
     String? userId,
     Phone? communicationMobilePhone,
     Phone? mobileMoneyPhone,
@@ -93,7 +93,7 @@ class SocialIncomeUser extends Equatable {
     DateTime? recipientSince,
     String? imLinkInitial,
   }) {
-    return SocialIncomeUser(
+    return Recipient(
       userId: userId ?? this.userId,
       communicationMobilePhone:
           communicationMobilePhone ?? this.communicationMobilePhone,

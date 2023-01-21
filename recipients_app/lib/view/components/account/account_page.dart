@@ -26,7 +26,7 @@ class _AccountView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = context.watch<AuthCubit>().state.socialIncomeUser;
+    final currentUser = context.watch<AuthCubit>().state.recipient;
 
     // TODO: check what needs to be changed here and how and apply cubit logic
     return BlocConsumer<AccountCubit, AccountState>(

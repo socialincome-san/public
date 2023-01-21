@@ -1,5 +1,5 @@
 import "package:app/data/repositories/repositories.dart";
-import "package:app/models/social_income_user.dart";
+import "package:app/models/recipient.dart";
 import "package:equatable/equatable.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -16,14 +16,13 @@ class AuthCubit extends Cubit<AuthState> {
     /// changes for whatever reason.
     userRepository.authStateChanges().listen((user) async {
       if (user != null) {
-        final socialIncomeUser =
-            await userRepository.fetchSocialIncomeUser(user);
+        final recipient = await userRepository.fetchRecipient(user);
 
         emit(
           AuthState(
             status: AuthStatus.authenticated,
             firebaseUser: user,
-            socialIncomeUser: socialIncomeUser,
+            recipient: recipient,
           ),
         );
       } else {
@@ -39,13 +38,13 @@ class AuthCubit extends Cubit<AuthState> {
     final user = userRepository.currentUser;
 
     if (user != null) {
-      final socialIncomeUser = await userRepository.fetchSocialIncomeUser(user);
+      final recipient = await userRepository.fetchRecipient(user);
 
       emit(
         AuthState(
           status: AuthStatus.authenticated,
           firebaseUser: user,
-          socialIncomeUser: socialIncomeUser,
+          recipient: recipient,
         ),
       );
     } else {
