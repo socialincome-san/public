@@ -26,7 +26,7 @@ export type User = {
 		referral?: string;
 	};
 	address?: UserAddress;
-	email?: string;
+	email: string;
 	status?: UserStatusKey;
 	stripe_customer_id?: string;
 	test_user?: boolean;
