@@ -95,6 +95,19 @@ class OtpInput extends StatelessWidget {
                 }
               },
               child: const Text("Login"),
+            ),
+            TextButton(
+              onPressed: () async {
+                registration.clear();
+                btnController.stop();
+              },
+              child: const Text(
+                "Back to phone input",
+                style: TextStyle(
+                  color: Colors.white,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
             )
           ],
         );
