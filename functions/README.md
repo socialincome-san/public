@@ -22,7 +22,7 @@ We use playwright to test against unwanted regressions on several
 browsers. The playwright tests are located in `tests/playwright`.
 
 The test is executed as part of `functions` GitHub Action when creating
-a PR. A link to the hosted report is automatically posted in a comment.
+a PR. A link to the hosted report is automatically posted.
 
 To update the baseline snapshots post a comment with
 `/update-functions-snapshots` to the PR. This will trigger the
