@@ -1,4 +1,4 @@
-import "package:app/ui/configs/app_styles.dart";
+import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 
 class InputTextArea extends StatelessWidget {
@@ -27,8 +27,14 @@ class InputTextArea extends StatelessWidget {
       minLines: minLines,
       maxLines: maxLines,
       decoration: InputDecoration(
-        hintText: hintText,
         hintStyle: AppStyles.inputHint,
+        hintText: hintText,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+          borderSide: const BorderSide(
+            color: AppColors.primaryLightColor,
+          ),
+        ),
       ),
       keyboardType: TextInputType.multiline,
       controller: controller,

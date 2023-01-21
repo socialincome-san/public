@@ -21,10 +21,13 @@ class InputText extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
-        hintText: hintText,
         hintStyle: AppStyles.inputHint,
+        hintText: hintText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+          borderSide: const BorderSide(
+            color: AppColors.primaryLightColor,
+          ),
         ),
       ),
       controller: controller,
