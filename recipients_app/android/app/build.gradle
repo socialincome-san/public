@@ -72,6 +72,12 @@ android {
             applicationIdSuffix ".dev"
         }
 
+        stage {
+            dimension "environment"
+            versionNameSuffix "-stage"
+            applicationIdSuffix ".stage"
+        }
+
         prod {
             dimension "environment"
         }
