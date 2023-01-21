@@ -1,22 +1,26 @@
-import { collection } from '@socialincome/shared/src/firebase/firestoreAdmin';
-import { Recipient, RecipientProgramStatus, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import * as admin from 'firebase-admin';
 import firebaseFunctionsTest from 'firebase-functions-test';
-import { createRecipientsCSV } from '../../src/etl/createOrangeMoneyCSV';
-
+import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
+import { Recipient, RecipientProgramStatus, RECIPIENT_FIRESTORE_PATH } from '../../../shared/src/types';
+import { OrangeMoneyCSVCreator } from '../../src/etl/OrangeMoneyCSVCreator';
 const { cleanup } = firebaseFunctionsTest();
 
 describe('createOrangeMoneyCSV', () => {
+	const projectId = 'test' + new Date().getTime();
+	const firestoreAdmin = new FirestoreAdmin(admin.initializeApp({ projectId: projectId }));
+	const organgeMoneyCsvCreator = new OrangeMoneyCSVCreator(firestoreAdmin);
 	afterEach(() => cleanup());
 
 	test('createOrangeMoneyCSV test', async () => {
 		const recipientDocs = (
-			await collection<Recipient>(RECIPIENT_FIRESTORE_PATH)
+			await firestoreAdmin
+				.collection<Recipient>(RECIPIENT_FIRESTORE_PATH)
 				.where('progr_status', 'in', [RecipientProgramStatus.Active, RecipientProgramStatus.Designated])
 				.get()
 		).docs;
 
 		const recipients = recipientDocs.map((doc) => doc.data() as Recipient);
-		const csv = createRecipientsCSV(recipients, new Date(2022, 11, 1, 0));
+		const csv = organgeMoneyCsvCreator.createRecipientsCSV(recipients, new Date(2022, 11, 1, 0));
 		expect(csv).toEqual(expectedCSV);
 	});
 

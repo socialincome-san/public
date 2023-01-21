@@ -1,46 +1,51 @@
-import { afterEach, describe, test } from '@jest/globals';
-import { firestore } from 'firebase-admin';
-import firebaseFunctionsTest from 'firebase-functions-test';
+import { describe, test } from '@jest/globals';
+import * as admin from 'firebase-admin';
+import functions from 'firebase-functions-test';
 import Stripe from 'stripe';
-import { doc } from '../../../shared/src/firebase/firestoreAdmin';
+import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { Contribution, ContributionSourceKey, StatusKey } from '../../../shared/src/types/admin/Contribution';
 import { User, UserStatusKey } from '../../../shared/src/types/admin/User';
-import { findUser, storeCharge } from '../../src/etl/stripeWebhook';
-import Timestamp = firestore.Timestamp;
-
-const { cleanup } = firebaseFunctionsTest();
+import { StripeWebhook } from '../../src/etl/StripeWebhook';
+import Timestamp = admin.firestore.Timestamp;
 
 describe('stripeWebhook', () => {
-	afterEach(() => cleanup());
+	const projectId = 'test-' + new Date().getTime();
+	const testEnv = functions({ projectId });
+	const firestoreAdmin = new FirestoreAdmin(admin.initializeApp({ projectId: projectId }));
+	const stripeWebhook = new StripeWebhook(firestoreAdmin);
+
+	beforeEach(async () => {
+		await testEnv.firestore.clearFirestoreData({ projectId });
+	});
 
 	test('storeCharge for inexisting user', async () => {
-		const initialUser = await findUser(testCharge);
+		const initialUser = await stripeWebhook.findUser(testCharge);
 		expect(initialUser).toBeUndefined();
 
-		const ref = await storeCharge(testCharge);
+		const ref = await stripeWebhook.storeCharge(testCharge);
 		const contribution = await ref!.get();
 		expect(contribution.data()).toEqual(expectedContribution);
 
-		const createdUser = await findUser(testCharge);
+		const createdUser = await stripeWebhook.findUser(testCharge);
 		expect(createdUser!.data()).toEqual(expectedUser);
 	});
 
 	test('storeCharge for existing user through stripe id', async () => {
-		await doc<{}>('users', 'test-user').set({
+		await firestoreAdmin.doc<{}>('users', 'test-user').set({
 			stripe_customer_id: 'cus_123',
 		});
 
-		const ref = await storeCharge(testCharge);
+		const ref = await stripeWebhook.storeCharge(testCharge);
 		const contribution = await ref!.get();
 		expect(contribution.data()).toEqual(expectedContribution);
 	});
 
 	test('storeCharge for existing user through email', async () => {
-		await doc<{}>('users', 'test-user').set({
+		await firestoreAdmin.doc<{}>('users', 'test-user').set({
 			email: 'test@socialincome.org',
 		});
 
-		const ref = await storeCharge(testCharge);
+		const ref = await stripeWebhook.storeCharge(testCharge);
 		const contribution = await ref!.get();
 		expect(contribution.data()).toEqual(expectedContribution);
 	});

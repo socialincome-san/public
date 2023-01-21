@@ -1,0 +1,4 @@
+{
+	"greeting": "Hello {{ name }}",
+	"message": "You should have received {{ amount, currency }}."
+}

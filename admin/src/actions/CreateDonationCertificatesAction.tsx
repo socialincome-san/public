@@ -83,7 +83,7 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 		<div>
 			{isGlobalAdmin ? (
 				<Button onClick={handleOpen} color="primary">
-					Create Donation Certificates
+					Create Certificates
 				</Button>
 			) : null}
 			<Modal
@@ -95,11 +95,11 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 				<Box sx={style}>
 					<Typography sx={{ m: 1 }} variant="h5">
 						{' '}
-						Donation Certificate Management
+						Donation Certificates
 					</Typography>
 					<Typography sx={{ m: 1 }} variant="subtitle1">
 						{' '}
-						Please specify for which year the certifacte(s) should be generated:
+						Specify for which year the certificate(s) should be generated:
 					</Typography>
 					<FormControl sx={{ m: 1, minWidth: 120 }} size="small">
 						<InputLabel id="demo-select-small">Year</InputLabel>
@@ -121,10 +121,10 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 								inputProps={{ 'aria-label': 'controlled' }}
 							/>
 						}
-						label={<Typography variant="body2">Send via Mail to Contributors</Typography>}
+						label={<Typography variant="body2">Email certificates to selected contributors</Typography>}
 					/>
 					<Button onClick={onClick} color="primary">
-						Generate Donation Certificates
+						Generate Certificates
 					</Button>
 				</Box>
 			</Modal>
