@@ -1,37 +1,82 @@
-import "package:app/models/alert_visibility.dart";
-import "package:app/models/registration.dart";
-import "package:app/theme/theme.dart";
-import "package:app/view/components/social_income_alert.dart";
-import "package:app/view/components/social_income_contact.dart";
+import "package:app/core/cubits/signup/signup_cubit.dart";
+import "package:app/data/repositories/repositories.dart";
 import "package:app/view/components/welcomePage/otp_input.dart";
 import "package:app/view/components/welcomePage/phone_input.dart";
-import "package:app/view/pages/main_app_page.dart";
 import "package:flutter/material.dart";
-import "package:provider/provider.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
 class WelcomePage extends StatelessWidget {
+  const WelcomePage();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) =>
+          SignupCubit(userRepository: context.read<UserRepository>()),
+      child: const _WelcomeView(),
+    );
+  }
+}
+
+class _WelcomeView extends StatelessWidget {
+  const _WelcomeView();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Welcome"),
+      ),
+      body: BlocConsumer<SignupCubit, SignupState>(
+        listener: (context, state) {
+          if (state.status == SignupStatus.failure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.exception.toString()),
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          switch (state.status) {
+            case SignupStatus.enterPhoneNumber:
+              return const PhoneInput();
+            case SignupStatus.enterVerificationCode:
+              return const OtpInput();
+            case SignupStatus.verificationSuccess:
+              return const Text("Success");
+            case SignupStatus.failure:
+              return const Text("Failure");
+          }
+        },
+      ),
+    );
+  }
+}
+  /* 
+class _WelcomeView extends StatelessWidget {
   TextStyle get textbuttonStyle => const TextStyle(color: Colors.white);
   // prevents rebuilding new widget which would lose focus
   SocialIncomeAlert get ineligible => const SocialIncomeAlert(
-    "Number not eligible.",
-    Icons.close,
-    "ineligible",
-    textButton: "Contact us for support",
-  );
+        "Number not eligible.",
+        Icons.close,
+        "ineligible",
+        textButton: "Contact us for support",
+      );
 
   SocialIncomeAlert get formatError => const SocialIncomeAlert(
-    "This is not a valid phone number",
-    Icons.close,
-    "formatError",
-  );
+        "This is not a valid phone number",
+        Icons.close,
+        "formatError",
+      );
 
   SocialIncomeAlert get verificationCodeError => const SocialIncomeAlert(
-    "False verification code. Try again",
-    Icons.close,
-    "CodeWrong",
-  );
+        "False verification code. Try again",
+        Icons.close,
+        "CodeWrong",
+      );
 
-  const WelcomePage({super.key});
+  const _WelcomeView();
   bool keyboardVisible() {
     return WidgetsBinding.instance.window.viewInsets.bottom == 0.0;
   }
@@ -111,3 +156,4 @@ class WelcomePage extends StatelessWidget {
     );
   }
 }
+ */

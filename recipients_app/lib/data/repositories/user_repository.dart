@@ -1,3 +1,5 @@
+import "dart:developer";
+
 import "package:app/models/social_income_user.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
@@ -34,6 +36,7 @@ class UserRepository {
     final userSnapshot = matchingUsers.docs.first;
 
     // This doesnt work because user id from firebaseAuth is not related to user id from firestore
+    // Needs to be discussed if changes should be made or not
     // final userSnapshot =
     //     await firestore.collection("/recipients").doc(firebaseUser.uid).get();
 
@@ -44,5 +47,28 @@ class UserRepository {
     }
   }
 
+  Future<void> verifyPhoneNumber({
+    required String phoneNumber,
+    required Function(String) onCodeSend,
+    required Function(FirebaseAuthException) onVerificationFailed,
+    required Function(PhoneAuthCredential) onVerificationCompleted,
+  }) async {
+    await firebaseAuth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      timeout: const Duration(seconds: 60),
+      verificationCompleted: (credential) async =>
+          onVerificationCompleted(credential),
+      verificationFailed: (ex) => onVerificationFailed(ex),
+      codeSent: (verificationId, [forceResendingToken]) =>
+          onCodeSend(verificationId),
+      codeAutoRetrievalTimeout: (e) {
+        log("auto-retrieval timeout");
+      },
+    );
+  }
+
   Future<void> signOut() async => firebaseAuth.signOut();
+
+  Future<void> signInWithCredential(PhoneAuthCredential credentials) =>
+      firebaseAuth.signInWithCredential(credentials);
 }

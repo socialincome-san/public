@@ -1,104 +1,82 @@
-import "package:app/models/alert_visibility.dart";
-import "package:app/models/registration.dart";
-import "package:app/services/auth_service.dart";
+import "package:app/core/cubits/signup/signup_cubit.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "package:rounded_loading_button/rounded_loading_button.dart";
 
-RoundedLoadingButtonController btnController = RoundedLoadingButtonController();
-TextEditingController inputController = TextEditingController();
+class OtpInput extends StatefulWidget {
+  const OtpInput({super.key});
 
-class OtpInput extends StatelessWidget {
-  final AuthService auth = AuthService();
+  @override
+  State<OtpInput> createState() => _OtpInputState();
+}
 
-  final Function() login;
+class _OtpInputState extends State<OtpInput> {
+  late final RoundedLoadingButtonController btnController;
+  late final TextEditingController inputController;
 
-  OtpInput(this.login, {super.key});
+  @override
+  void initState() {
+    super.initState();
+    inputController = TextEditingController();
+    btnController = RoundedLoadingButtonController();
+  }
+
+  @override
+  void dispose() {
+    inputController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<Registration, AlertVisibility>(
-      builder: (context, registration, alertVisibility, child) {
-        Future<void> otpSuccess(String uid) async {
-          // check if user already exists in /users
-          //DatabaseService databaseService = DatabaseService(uid);
-          //if (!await databaseService.userExists()) {
-          //  var newUser =
-          //      await databaseService.eligibleUser(registration.phoneNumber);
-          //  databaseService.updateOrCreateUser(newUser);
-          //}
-          login();
-        }
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          // Children will expand to fill crossAxis
-          children: <Widget>[
-            TextFormField(
-              controller: inputController,
-              style: const TextStyle(color: Colors.white),
-              keyboardType: TextInputType.number,
-              onEditingComplete: () {
-                registration.setPhoneVerificationId(inputController.text);
-                FocusScope.of(context).requestFocus(FocusNode());
-              },
-              decoration: const InputDecoration(
-                labelText: "Verification code",
-                labelStyle: TextStyle(color: Colors.white),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        TextFormField(
+          controller: inputController,
+          style: const TextStyle(color: Colors.white),
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+            labelText: "Verification code",
+            labelStyle: TextStyle(color: Colors.white),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+          ),
+        ),
+        Row(
+          children: [
+            TextButton(
+              onPressed: () async =>
+                  context.read<SignupCubit>().resendVerificationCode(),
+              child: const Text(
+                "Resend code",
+                style: TextStyle(
+                  color: Colors.white,
+                  decoration: TextDecoration.underline,
                 ),
               ),
-            ),
-            Row(
-              children: [
-                TextButton(
-                  onPressed: () async {
-                    if (registration.phoneNumber == null) return;
-                    final bool verified =
-                        await auth.verifyPhoneNumber(registration.phoneNumber);
-                    if (!verified) {
-                      alertVisibility.changeAlertVisibility(true, "ineligible");
-                      btnController.stop();
-                    }
-                  },
-                  child: const Text(
-                    "Resend code",
-                    style: TextStyle(
-                      color: Colors.white,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                )
-              ],
-            ),
-            RoundedLoadingButton(
-              height: MediaQuery.of(context).size.height * 0.09,
-              width: MediaQuery.of(context).size.width * 1,
-              borderRadius: 5,
-              resetAfterDuration: true,
-              resetDuration: const Duration(seconds: 10),
-              controller: btnController,
-              color: Theme.of(context).primaryColor,
-              onPressed: () async {
-                final userId = await auth.checkOTP(
-                  registration.otp,
-                  inputController.text,
-                );
-                if (userId != null) {
-                  alertVisibility.changeAlertVisibility(true, "CodeCorrect");
-                  otpSuccess(userId);
-                  registration.toggleCodeSent();
-                } else {
-                  btnController.stop();
-                  alertVisibility.changeAlertVisibility(true, "CodeWrong");
-                }
-              },
-              child: const Text("Login"),
             )
           ],
-        );
-      },
+        ),
+        RoundedLoadingButton(
+          height: MediaQuery.of(context).size.height * 0.09,
+          width: MediaQuery.of(context).size.width * 1,
+          borderRadius: 5,
+          resetAfterDuration: true,
+          resetDuration: const Duration(seconds: 10),
+          controller: btnController,
+          color: Theme.of(context).primaryColor,
+          onPressed: () {
+            // TODO: catch errors if:
+            // - no code was entered
+            context
+                .read<SignupCubit>()
+                .submitVerificationCode(inputController.text);
+          },
+          child: const Text("Login"),
+        )
+      ],
     );
   }
 }
