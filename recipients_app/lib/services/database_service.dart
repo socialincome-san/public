@@ -40,11 +40,6 @@ class DatabaseService {
     return snapshot.exists;
   }
 
-  Future<void> updateOrCreateUser(CurrentUser user) async {
-    final snapshot = await getUserSnapshot();
-    snapshot.reference.set(user.data());
-  }
-
   Future<List<SocialIncomeTransaction>> fetchTransactionDetails() async {
     final List<SocialIncomeTransaction> transactions =
         <SocialIncomeTransaction>[];
