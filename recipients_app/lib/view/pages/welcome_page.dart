@@ -1,5 +1,6 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
+import "package:app/theme/theme.dart";
 import "package:app/view/components/welcomePage/otp_input.dart";
 import "package:app/view/components/welcomePage/phone_input.dart";
 import "package:flutter/material.dart";
@@ -24,31 +25,70 @@ class _WelcomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Welcome"),
-      ),
-      body: BlocConsumer<SignupCubit, SignupState>(
-        listener: (context, state) {
-          if (state.status == SignupStatus.failure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.exception.toString()),
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              Flexible(flex: 2, child: Container(color: siDarkBlue)),
+              Flexible(flex: 3, child: Container(color: siLightBlue))
+            ],
+          ),
+          Column(
+            children: [
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.fromLTRB(16, 64, 16, 16),
+                  children: [
+                    const Center(
+                      child: Text(
+                        "Social Income",
+                        style: TextStyle(color: Colors.white, fontSize: 36),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    Image(
+                      image: const AssetImage("assets/phone.png"),
+                      height: MediaQuery.of(context).size.height * 0.4,
+                    ),
+                    const SizedBox(height: 32),
+                    const Text(
+                      "Universal Basic Income\nfrom Human to Human",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    BlocConsumer<SignupCubit, SignupState>(
+                      listener: (context, state) {
+                        if (state.status == SignupStatus.failure) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(state.exception.toString()),
+                            ),
+                          );
+                        }
+                      },
+                      builder: (context, state) {
+                        switch (state.status) {
+                          case SignupStatus.enterPhoneNumber:
+                            return const PhoneInput();
+                          case SignupStatus.enterVerificationCode:
+                            return const OtpInput();
+                          case SignupStatus.verificationSuccess:
+                            return const Text("Success");
+                          case SignupStatus.failure:
+                            return const Text("Failure");
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
-            );
-          }
-        },
-        builder: (context, state) {
-          switch (state.status) {
-            case SignupStatus.enterPhoneNumber:
-              return const PhoneInput();
-            case SignupStatus.enterVerificationCode:
-              return const OtpInput();
-            case SignupStatus.verificationSuccess:
-              return const Text("Success");
-            case SignupStatus.failure:
-              return const Text("Failure");
-          }
-        },
+            ],
+          ),
+        ],
       ),
     );
   }
