@@ -77,15 +77,15 @@ class AccountPage extends StatelessWidget {
                     ),
                     UnchangeableUserInformation(
                       "Date of birth",
-                      "${state.userAccount?.birthDate}",
+                      "${userAccount.birthDate}",
                     ),
                     UnchangeableUserInformation(
                       "Email",
-                      "${state.userAccount?.birthDate}",
+                      userAccount.email,
                     ),
                     UnchangeableUserInformation(
                       "Phone number",
-                      "${state.userAccount?.birthDate}",
+                      userAccount.phone,
                     ),
                     const ListTile(
                       contentPadding: EdgeInsets.zero,
