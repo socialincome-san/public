@@ -8,6 +8,6 @@ class AccountRepository {
 
   Future<UserAccount> fetchUser() async {
     final userDto = await databaseService.fetchUserData();
-    return userDto.toUser();
+    return userDto.toUserAccount();
   }
 }

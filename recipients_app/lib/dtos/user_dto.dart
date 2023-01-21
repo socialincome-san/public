@@ -31,23 +31,25 @@ class UserDto {
   final DateTime? nextSurvey;
   final String? imLinkInitial;
   final String? imLinkRegular;
+  bool? termsAccepted;
 
   UserDto({
     this.userId,
-    this.phone,
-    this.orangePhone,
     this.firstName,
     this.lastName,
-    this.birthDate,
-    this.email,
-    this.country,
     this.preferredName,
+    this.phone,
+    this.orangePhone,
+    this.email,
+    this.birthDate,
+    this.country,
     this.nextSurvey,
     this.imLinkInitial,
     this.imLinkRegular,
+    this.termsAccepted,
   });
 
-  UserAccount toUser() {
+  UserAccount toUserAccount() {
     return UserAccount(
       firstName: firstName ?? "",
       lastName: lastName ?? "",
@@ -55,10 +57,9 @@ class UserDto {
       birthDate: birthDate,
       email: email ?? "",
       phone: phone ?? "",
-      recipientSince: null,
-      totalIncome: 0,
-      country: country ?? "",
       orangePhone: orangePhone ?? "",
+      recipientSince: null,
+      country: country ?? "",
     );
   }
 }
@@ -68,9 +69,14 @@ extension UserDtoMapping on DocumentSnapshot<Object?> {
     return UserDto(
       firstName: _safeAssignString(this, firstNameKey),
       lastName: _safeAssignString(this, lastNameKey),
+      preferredName: _safeAssignString(this, preferredNameKey),
+      phone: _safeAssignPhone(this, communicationPhoneKey),
+      orangePhone: _safeAssignPhone(this, moneyPhoneKey),
       email: _safeAssignString(this, emailKey),
       country: "Sierra Leone",
-      preferredName: _safeAssignString(this, preferredNameKey),
+      birthDate: _safeAssignDate(this, birthDateKey),
+      nextSurvey: _safeAssignDate(this, nextSurveyKey),
+      termsAccepted: _safeAssignBool(this, termsAcceptedKey),
       imLinkInitial: _safeAssignString(this, imLinkInitialKey),
       imLinkRegular: _safeAssignString(this, imLinkRegularKey),
     );
@@ -85,6 +91,24 @@ extension UserDtoMapping on DocumentSnapshot<Object?> {
         ? snapshot[key].toString()
         : replacementValue;
   }
+
+  String _safeAssignPhone(DocumentSnapshot snapshot, String key) {
+    return _containsKey(snapshot, key) ? "+${snapshot["$key.$phoneKey"]}" : "";
+  }
+
+  DateTime? _safeAssignDate(
+    DocumentSnapshot snapshot,
+    String key, {
+    DateTime? replacementValue,
+  }) {
+    return _containsKey(snapshot, key)
+        ? (snapshot[key] as Timestamp?)?.toDate()
+        : replacementValue;
+  }
+
+  bool _safeAssignBool(DocumentSnapshot snapshot, String key) =>
+      // ignore: avoid_bool_literals_in_conditional_expressions
+      _containsKey(snapshot, key) ? snapshot[key] as bool : false;
 
   bool _containsKey(DocumentSnapshot snapshot, String key) {
     if (snapshot.data() == null) return false;

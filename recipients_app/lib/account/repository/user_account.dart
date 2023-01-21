@@ -8,7 +8,6 @@ class UserAccount extends Equatable {
   final String email;
   final String phone;
   final DateTime? recipientSince;
-  final int totalIncome;
   final String country;
   final String orangePhone;
 
@@ -20,7 +19,6 @@ class UserAccount extends Equatable {
     required this.email,
     required this.phone,
     required this.recipientSince,
-    required this.totalIncome,
     required this.country,
     required this.orangePhone,
   });
@@ -34,7 +32,6 @@ class UserAccount extends Equatable {
         email,
         phone,
         recipientSince,
-        totalIncome,
         country,
         orangePhone
       ];
