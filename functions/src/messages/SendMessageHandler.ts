@@ -6,8 +6,8 @@ import { sendSms } from '../../../shared/src/utils/messaging/sms';
 import { renderTemplate } from '../../../shared/src/utils/templates';
 
 export interface SendMessagesFunctionProps {
-	communicationChannel: "sms" | "email";
-    targetAudience: "users" | "recipients";
+	communicationChannel: 'sms' | 'email';
+	targetAudience: 'users' | 'recipients';
 	messageRecipients: Entity<User | Recipient>[];
 	templateParameter: {
 		templatePath?: string;
