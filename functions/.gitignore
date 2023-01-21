@@ -1,2 +1,3 @@
 # Compiled JavaScript files
 dist/
+.env
