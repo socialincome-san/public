@@ -22,6 +22,8 @@
 		"functions:serve": "$npm_execpath --workspace=@socialincome/functions run serve",
 		"functions:serve:watch": "$npm_execpath --workspace=@socialincome/functions run serve:watch",
 		"functions:test": "$npm_execpath --workspace=@socialincome/functions run test",
+		"functions:test:playwright": "$npm_execpath --workspace=@socialincome/functions run test:playwright",
+		"functions:test:playwright:update": "$npm_execpath --workspace=@socialincome/functions run test:playwright:update",
 		"shared:test": "$npm_execpath --workspace=@socialincome/shared run test",
 		"survey:build": "$npm_execpath --workspace=@socialincome/ui --workspace=@socialincome/survey run build",
 		"survey:serve": "$npm_execpath run ui:build && $npm_execpath --workspace=@socialincome/survey run serve",
@@ -43,7 +45,7 @@
 		"website:check-translations": "$npm_execpath --workspace=@socialincome/website run check-translations"
 	},
 	"devDependencies": {
-		"firebase-tools": "11.18.0",
+		"firebase-tools": "11.21.0",
 		"prettier": "^2.6.2",
 		"prettier-plugin-organize-imports": "^3.1.1"
 	}

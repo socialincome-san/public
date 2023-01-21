@@ -1,9 +1,9 @@
 import { describe, expect, test } from '@jest/globals';
 import * as admin from 'firebase-admin';
 import functions from 'firebase-functions-test';
-import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
-import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../shared/src/types';
-import { PostfinanceImporter } from '../../src/etl/PostfinanceImporter';
+import { FirestoreAdmin } from '../../../../shared/src/firebase/FirestoreAdmin';
+import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../../shared/src/types';
+import { PostfinanceImporter } from '../../../src/etl/PostfinanceImporter';
 
 describe('importPostfinanceBalance', () => {
 	const projectId = 'test' + new Date().getTime();

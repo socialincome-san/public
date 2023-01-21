@@ -1,15 +1,15 @@
-import { getOrInitializeApp } from '@socialincome/shared/src/firebase/app';
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/FirestoreAdmin';
-import { StorageAdmin } from '@socialincome/shared/src/firebase/StorageAdmin';
+import { getOrInitializeApp } from '../../shared/src/firebase/app';
+import { FirestoreAdmin } from '../../shared/src/firebase/FirestoreAdmin';
+import { StorageAdmin } from '../../shared/src/firebase/StorageAdmin';
 import { DonationCertificateHandler } from './donation_certificates/DonationCertificateHandler';
 import { ExchangeRateImporter } from './etl/ExchangeRateImporter';
 import { OrangeMoneyCSVCreator } from './etl/OrangeMoneyCSVCreator';
 import { PostfinanceImporter } from './etl/PostfinanceImporter';
 import { StripeWebhook } from './etl/StripeWebhook';
 
-export const app = getOrInitializeApp();
-export const firestoreAdmin = new FirestoreAdmin(app);
-export const storageAdmin = new StorageAdmin(app);
+const app = getOrInitializeApp();
+const firestoreAdmin = new FirestoreAdmin(app);
+const storageAdmin = new StorageAdmin(app);
 
 const stripeWebhook = new StripeWebhook(firestoreAdmin);
 export const batchImportStripeCharges = stripeWebhook.batchImportStripeCharges;

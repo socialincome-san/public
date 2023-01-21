@@ -2,6 +2,7 @@ import { GetStaticProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Link from 'next/link';
+import ApplePay from '../components/ApplePay';
 import Layout from '../components/Layout';
 
 export default function Home() {
@@ -16,6 +17,10 @@ export default function Home() {
 				<br />
 				<Link href="/social-responsibility">{t('index.linkToSocialResponsibility')}</Link>
 				<br />
+				<br />
+			</section>
+			<section>
+				<ApplePay />
 			</section>
 		</Layout>
 	);

@@ -2,10 +2,10 @@ import { describe, test } from '@jest/globals';
 import * as admin from 'firebase-admin';
 import functions from 'firebase-functions-test';
 import Stripe from 'stripe';
-import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
-import { Contribution, ContributionSourceKey, StatusKey } from '../../../shared/src/types/admin/Contribution';
-import { User, UserStatusKey } from '../../../shared/src/types/admin/User';
-import { StripeWebhook } from '../../src/etl/StripeWebhook';
+import { FirestoreAdmin } from '../../../../shared/src/firebase/FirestoreAdmin';
+import { Contribution, ContributionSourceKey, StatusKey } from '../../../../shared/src/types/admin/Contribution';
+import { User, UserStatusKey } from '../../../../shared/src/types/admin/User';
+import { StripeWebhook } from '../../../src/etl/StripeWebhook';
 import Timestamp = admin.firestore.Timestamp;
 
 describe('stripeWebhook', () => {
