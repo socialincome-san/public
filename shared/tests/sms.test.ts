@@ -1,6 +1,6 @@
-import { TWILIO_SID, TWILIO_TOKEN } from "../src/config";
-import { sendSms } from "../src/utils/messaging/sms";
-import { renderTemplate } from "../src/utils/templates";
+import { TWILIO_SID, TWILIO_TOKEN } from '../src/config';
+import { sendSms } from '../src/utils/messaging/sms';
+import { renderTemplate } from '../src/utils/templates';
 
 describe('send simple Sms', () => {
 	test('send simple free text sms', async () => {
@@ -10,20 +10,20 @@ describe('send simple Sms', () => {
 
 		const content = await renderTemplate({
 			language: 'de',
-			translationNamespace: "freetext.json",
+			translationNamespace: 'freetext.json',
 			hbsTemplatePath: 'sms/freetext.hbs',
 			context: {
-				content: "This a test SMS."
+				content: 'This a test SMS.',
 			},
 		});
 
 		[messageSid, messageStatus] = await sendSms({
-			messageRecipientPhone:'+41767777777',
+			messageRecipientPhone: '+41767777777',
 			smsServiceId: TWILIO_SID,
 			smsServiceSecret: TWILIO_TOKEN,
 			statusCallbackUrl: statusCallbackUrl,
-			messageSenderPhone: "+15005550006",
-			content: content
+			messageSenderPhone: '+15005550006',
+			content: content,
 		});
 
 		expect(messageStatus).toBe('queued');

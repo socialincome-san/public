@@ -2,18 +2,18 @@ import * as functions from 'firebase-functions';
 import { TWILIO_SENDER_PHONE, TWILIO_SID, TWILIO_TOKEN } from '../config';
 import { Entity, User, Recipient } from '../../../shared/src/types';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
-import { sendSms } from '../../../shared/src/utils/messaging/sms'
+import { sendSms } from '../../../shared/src/utils/messaging/sms';
 import { renderTemplate } from '../../../shared/src/utils/templates';
 
 export interface SendMessagesFunctionProps {
 	communicationChannel: string;
-    targetAudience: string;
+	targetAudience: string;
 	messageRecipients: Entity<User | Recipient>[];
-    templateParameter: {
-        templatePath?: string,
-        translationNamespace?: string,
-		context: object
-    },
+	templateParameter: {
+		templatePath?: string;
+		translationNamespace?: string;
+		context: object;
+	};
 }
 
 export class SendMessageHandler {
@@ -23,46 +23,50 @@ export class SendMessageHandler {
 		this.firestoreAdmin = firestoreAdmin;
 	}
 	sendMessagesFunction = functions.https.onCall(
-		async ({ communicationChannel, targetAudience, messageRecipients, templateParameter: { templatePath, translationNamespace, context}}: SendMessagesFunctionProps,
-			{ auth }) => {
+		async (
+			{
+				communicationChannel,
+				targetAudience,
+				messageRecipients,
+				templateParameter: { templatePath, translationNamespace, context },
+			}: SendMessagesFunctionProps,
+			{ auth }
+		) => {
 			await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
-	
+
 			let [successCount, skippedCount] = [0, 0];
-	
-			if (communicationChannel === "email") {
+
+			if (communicationChannel === 'email') {
 				//TODO: Implement email util from Shared
-				console.log("Implementation not yet done")
-			} else if (communicationChannel === "sms") {
-				[successCount, skippedCount] = await this.sendSmsMessage(
-					targetAudience,
-					messageRecipients,
-					{
-						templatePath,
-						translationNamespace,
-						context
-					})
+				console.log('Implementation not yet done');
+			} else if (communicationChannel === 'sms') {
+				[successCount, skippedCount] = await this.sendSmsMessage(targetAudience, messageRecipients, {
+					templatePath,
+					translationNamespace,
+					context,
+				});
 			}
 			return `Successfully sent out ${successCount} messages (${skippedCount} skipped)`;
-	
-		});
-	
+		}
+	);
+
 	sendSmsMessage = async (
 		targetAudience: string,
 		messageRecipients: Entity<User | Recipient>[],
 		templateParameter: {
-			templatePath?: string,
-			translationNamespace?: string,
-			context: object
+			templatePath?: string;
+			translationNamespace?: string;
+			context: object;
 		}
 	) => {
 		let [successCount, skippedCount] = [0, 0];
-	
+
 		let messageRecipientPhone = '';
-		let messageRecipientLanguage ='';
-	
+		let messageRecipientLanguage = '';
+
 		for (const messageRecipientEntity of messageRecipients) {
 			try {
-				if (targetAudience === 'users') { 
+				if (targetAudience === 'users') {
 					const user = messageRecipientEntity.values as User;
 					if (user.personal?.phone && user.language) {
 						messageRecipientLanguage = user.language;
@@ -74,12 +78,12 @@ export class SendMessageHandler {
 					const recipient = messageRecipientEntity.values as Recipient;
 					if (recipient.mobile_money_phone && recipient.main_language) {
 						messageRecipientLanguage = recipient.main_language;
-						messageRecipientPhone = "+" + recipient.mobile_money_phone;	
-					}		
+						messageRecipientPhone = '+' + recipient.mobile_money_phone;
+					}
 				} else {
-					throw new Error('User type not supported')
+					throw new Error('User type not supported');
 				}
-				
+
 				const content = await renderTemplate({
 					language: messageRecipientLanguage,
 					translationNamespace: templateParameter.translationNamespace as string,
@@ -87,7 +91,7 @@ export class SendMessageHandler {
 					context: templateParameter.context as object,
 				});
 				const statusCallbackUrl = new URL('https://test.test');
-				
+
 				// messageSid and messageStatus is required to add for Message Inbox
 				//const [messageSid, messageStatus] = await sendSms({
 				await sendSms({
@@ -116,10 +120,10 @@ export class SendMessageHandler {
 				console.error(e);
 			}
 		}
-		return [successCount, skippedCount]
-	}
-	
-	//TODO: Function to add Message Inbox 
+		return [successCount, skippedCount];
+	};
+
+	//TODO: Function to add Message Inbox
 	/*
 	export const addMessageInboxItem = async (
 		targetAudience: string,
