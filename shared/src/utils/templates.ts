@@ -9,11 +9,29 @@ import path from 'path';
 
 interface RenderTemplateProps {
 	language: string;
-	namespace: string;
+	translationNamespace: string;
+	hbsTemplatePath: string; // path starting from /shared/templates/{hbsTemplatePath}
 	context: object;
 }
 
-export const renderTemplate = async ({ language, namespace, context }: RenderTemplateProps) => {
+const readHbs = (filePath: string) => {
+	return fs.readFileSync(path.join(__dirname, '..', '..', 'templates', filePath), 'utf-8');
+};
+
+const partials = [
+	{
+		name: 'layout',
+		path: 'email/partials/layout.hbs',
+	},
+];
+partials.forEach((partial) => Handlebars.registerPartial(partial.name, readHbs(partial.path)));
+
+export const renderTemplate = async ({
+	language,
+	translationNamespace,
+	hbsTemplatePath,
+	context,
+}: RenderTemplateProps) => {
 	const i18n = i18next.createInstance();
 	await i18n
 		.use(
@@ -21,12 +39,11 @@ export const renderTemplate = async ({ language, namespace, context }: RenderTem
 		)
 		.init({
 			lng: language,
-			ns: namespace,
+			ns: translationNamespace,
 		});
 	registerI18nHelper(Handlebars, i18n);
-	return Handlebars.compile(
-		fs.readFileSync(path.join(__dirname, '..', '..', `/templates/email/${namespace}.handlebars`), 'utf-8')
-	)(context);
+
+	return Handlebars.compile(readHbs(hbsTemplatePath))(context);
 };
 
 export const renderEmailTemplate = async (props: RenderTemplateProps) => {

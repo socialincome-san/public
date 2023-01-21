@@ -2,9 +2,9 @@ import * as functions from 'firebase-functions';
 
 import imaps from 'imap-simple';
 
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/FirestoreAdmin';
 import _ from 'lodash';
 import { simpleParser, Source } from 'mailparser';
+import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../shared/src/types';
 import { POSTFINANCE_EMAIL_PASSWORD, POSTFINANCE_EMAIL_USER } from '../config';
 
