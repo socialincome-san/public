@@ -38,13 +38,22 @@ class DesignComponentsScreen extends StatelessWidget {
               style: AppStyles.headlineLarge,
             ),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [
-                StatusIcon(status: Status.success, isInverted: true),
-                StatusIcon(status: Status.warning, isInverted: true),
-                StatusIcon(status: Status.error, isInverted: true),
-              ],
+            ColoredBox(
+              color: AppColors.primaryColor,
+              child: Column(
+                children: [
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: const [
+                      StatusIcon(status: Status.success, isInverted: true),
+                      StatusIcon(status: Status.warning, isInverted: true),
+                      StatusIcon(status: Status.error, isInverted: true),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
             ),
             const SizedBox(height: 32),
             const Text(
@@ -66,25 +75,34 @@ class DesignComponentsScreen extends StatelessWidget {
               style: AppStyles.headlineLarge,
             ),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [
-                StatusIconWithText(
-                  status: Status.success,
-                  text: "Success",
-                  isInverted: true,
-                ),
-                StatusIconWithText(
-                  status: Status.warning,
-                  text: "Warning",
-                  isInverted: true,
-                ),
-                StatusIconWithText(
-                  status: Status.error,
-                  text: "Error",
-                  isInverted: true,
-                ),
-              ],
+            ColoredBox(
+              color: AppColors.darkGrey,
+              child: Column(
+                children: [
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: const [
+                      StatusIconWithText(
+                        status: Status.success,
+                        text: "Success",
+                        isInverted: true,
+                      ),
+                      StatusIconWithText(
+                        status: Status.warning,
+                        text: "Warning",
+                        isInverted: true,
+                      ),
+                      StatusIconWithText(
+                        status: Status.error,
+                        text: "Error",
+                        isInverted: true,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
             ),
             const SizedBox(height: 32),
             const Text(
