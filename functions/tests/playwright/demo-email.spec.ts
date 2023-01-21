@@ -5,7 +5,7 @@ test('test rendering demo email', async ({ page }) => {
 	const html = await renderEmailTemplate({
 		language: 'de',
 		translationNamespace: 'email-demo',
-		hbsTemplatePath: 'demo',
+		hbsTemplatePath: 'email/demo.hbs',
 		context: { name: 'John', amount: 100, currency: 'EUR' },
 	});
 	await page.setContent(html);
