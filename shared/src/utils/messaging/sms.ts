@@ -1,19 +1,19 @@
 export interface SendSmsProps {
-	messageRecipientPhone: string,
-    smsServiceId: string,
-    smsServiceSecret: string,
-    statusCallbackUrl: URL,
-    messageSenderPhone: string,
-	content: string
+	messageRecipientPhone: string;
+	smsServiceId: string;
+	smsServiceSecret: string;
+	statusCallbackUrl: URL;
+	messageSenderPhone: string;
+	content: string;
 }
 
 export const sendSms = async ({
 	messageRecipientPhone,
-    smsServiceId,
-    smsServiceSecret,
-    statusCallbackUrl,
-    messageSenderPhone,
-    content: content
+	smsServiceId,
+	smsServiceSecret,
+	statusCallbackUrl,
+	messageSenderPhone,
+	content: content,
 }: SendSmsProps) => {
 	let messageStatus = 'failed';
 	let messageSid = 'unknown';
