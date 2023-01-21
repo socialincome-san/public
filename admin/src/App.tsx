@@ -79,18 +79,23 @@ const firebaseConfig = {
 	measurementId: import.meta.env.VITE_ADMIN_FB_MEASUREMENT_ID,
 };
 
-const recipientsIndex =
-	import.meta.env.VITE_ADMIN_ALGOLIA_APPLICATION_ID && import.meta.env.VITE_ADMIN_ALGOLIA_SEARCH_KEY
+const algoliaIndex = (indexName: string) => {
+	return import.meta.env.VITE_ADMIN_ALGOLIA_APPLICATION_ID && import.meta.env.VITE_ADMIN_ALGOLIA_SEARCH_KEY
 		? algoliasearch(
 				import.meta.env.VITE_ADMIN_ALGOLIA_APPLICATION_ID,
 				import.meta.env.VITE_ADMIN_ALGOLIA_SEARCH_KEY
-		  ).initIndex('recipients')
+		  ).initIndex(indexName)
 		: undefined;
+};
+
+const usersIndex = algoliaIndex('users');
+const recipientsIndex = algoliaIndex('recipients');
 
 const textSearchController: FirestoreTextSearchController = ({ path, searchString }) => {
 	if (recipientsIndex && (path === 'recipients' || path === 'recentPayments')) {
-		console.log('Using algolia search endpoint');
 		return performAlgoliaTextSearch(recipientsIndex, searchString);
+	} else if (usersIndex && path === 'users') {
+		return performAlgoliaTextSearch(usersIndex, searchString);
 	} else {
 		return undefined;
 	}
