@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, test } from '@jest/globals';
 import * as admin from 'firebase-admin';
 import functions from 'firebase-functions-test';
-import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
-import { ExchangeRates, ExchangeRatesEntry, EXCHANGE_RATES_PATH } from '../../../shared/src/types';
-import { ExchangeRateImporter, ExchangeRateResponse } from '../../src/etl/ExchangeRateImporter';
+import { FirestoreAdmin } from '../../../../shared/src/firebase/FirestoreAdmin';
+import { ExchangeRates, ExchangeRatesEntry, EXCHANGE_RATES_PATH } from '../../../../shared/src/types';
+import { ExchangeRateImporter, ExchangeRateResponse } from '../../../src/etl/ExchangeRateImporter';
 
 describe('importExchangeRates', () => {
 	const projectId = 'test' + new Date().getTime();

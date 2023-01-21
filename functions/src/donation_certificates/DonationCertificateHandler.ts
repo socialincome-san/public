@@ -1,8 +1,8 @@
-import { StorageAdmin } from '@socialincome/shared/src/firebase/StorageAdmin';
 import * as functions from 'firebase-functions';
 import * as fs from 'fs';
 import handlebars from 'handlebars';
 import { withFile } from 'tmp-promise';
+import { StorageAdmin } from '../../..//shared/src/firebase/StorageAdmin';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { DonationCertificate, Entity, User } from '../../../shared/src/types';
 import { sendEmail } from '../../../shared/src/utils/messaging/email';

@@ -1,28 +1,12 @@
-import { renderTemplate } from '../src/utils/templates';
-import { translate } from '../src/utils/translate';
+import { renderEmailTemplate } from '../src/utils/templates';
 
 describe('', () => {
-	it('should render', async () => {
-		const deContent = await renderTemplate({
+	it('Render basic template', async () => {
+		await renderEmailTemplate({
 			language: 'de',
-			namespace: 'template-email',
+			translationNamespace: 'email-demo',
+			hbsTemplatePath: 'email/demo.hbs',
 			context: { language: 'de', name: 'John', amount: 100, currency: 'EUR' },
 		});
-
-		console.log(deContent);
-		const enContent = await renderTemplate({
-			language: 'en',
-			namespace: 'template-email',
-			context: { language: 'de', name: 'Anna', amount: 200, currency: 'EUR' },
-		});
-		console.log(enContent);
-
-		const greeting = await translate({
-			language: 'de',
-			namespace: 'template-email',
-			key: 'greeting',
-			context: { name: 'John' },
-		});
-		console.log(greeting);
 	});
 });
