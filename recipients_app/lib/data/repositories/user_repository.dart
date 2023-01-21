@@ -17,11 +17,28 @@ class UserRepository {
   /// Fetches the user data by userId from firestore and maps it to a SocialIncomeUser object
   /// Returns null if the user does not exist.
   Future<SocialIncomeUser?> fetchSocialIncomeUser(User firebaseUser) async {
-    final userSnapshot =
-        await firestore.collection("/recipients").doc(firebaseUser.uid).get();
+    final phoneNumber = firebaseUser.phoneNumber ?? "";
 
-    if (userSnapshot.exists && userSnapshot.data() != null) {
-      return SocialIncomeUser.fromMap(userSnapshot.data()!);
+    final matchingUsers = await firestore
+        .collection("/recipients")
+        .where(
+          "mobile_money_phone.phone",
+          isEqualTo: int.parse(phoneNumber.substring(1)),
+        )
+        .get();
+
+    if (matchingUsers.docs.isEmpty) {
+      return null;
+    }
+
+    final userSnapshot = matchingUsers.docs.first;
+
+    // This doesnt work because user id from firebaseAuth is not related to user id from firestore
+    // final userSnapshot =
+    //     await firestore.collection("/recipients").doc(firebaseUser.uid).get();
+
+    if (userSnapshot.exists) {
+      return SocialIncomeUser.fromMap(userSnapshot.data());
     } else {
       return null;
     }

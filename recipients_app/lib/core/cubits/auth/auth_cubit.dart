@@ -39,11 +39,13 @@ class AuthCubit extends Cubit<AuthState> {
     final user = userRepository.currentUser;
 
     if (user != null) {
+      final socialIncomeUser = await userRepository.fetchSocialIncomeUser(user);
+
       emit(
         AuthState(
           status: AuthStatus.authenticated,
           firebaseUser: user,
-          socialIncomeUser: SocialIncomeUser.fromFirebaseUser(user),
+          socialIncomeUser: socialIncomeUser,
         ),
       );
     } else {

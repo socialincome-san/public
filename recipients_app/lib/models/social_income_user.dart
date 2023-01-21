@@ -1,24 +1,27 @@
+import "dart:convert";
+
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:equatable/equatable.dart";
-import "package:firebase_auth/firebase_auth.dart";
 
 class SocialIncomeUser extends Equatable {
   final String userId;
-  final String phoneNumber;
-  final String? orangePhoneNumber;
+  final Phone? communicationMobilePhone;
+  final Phone? mobileMoneyPhone;
   final String? firstName;
   final String? lastName;
-  final DateTime? birthDate;
+  final Timestamp? birthDate;
   final String? email;
   final String? country;
   final String? preferredName;
 
   final bool? termsAccepted;
   final DateTime? recipientSince;
+  final String? imLinkInitial;
 
   const SocialIncomeUser({
     required this.userId,
-    required this.phoneNumber,
-    this.orangePhoneNumber,
+    required this.communicationMobilePhone,
+    this.mobileMoneyPhone,
     this.firstName,
     this.lastName,
     this.birthDate,
@@ -27,14 +30,15 @@ class SocialIncomeUser extends Equatable {
     this.preferredName,
     this.termsAccepted,
     this.recipientSince,
+    this.imLinkInitial,
   });
 
   @override
   List<Object?> get props {
     return [
       userId,
-      phoneNumber,
-      orangePhoneNumber,
+      communicationMobilePhone,
+      mobileMoneyPhone,
       firstName,
       lastName,
       birthDate,
@@ -43,26 +47,57 @@ class SocialIncomeUser extends Equatable {
       preferredName,
       termsAccepted,
       recipientSince,
+      imLinkInitial,
     ];
+  }
+
+  factory SocialIncomeUser.fromMap(Map<String, dynamic> map) {
+    return SocialIncomeUser(
+      userId: map["user_id"] as String,
+      communicationMobilePhone: map["communication_mobile_phone"] != null
+          ? Phone.fromMap(
+              map["communication_mobile_phone"] as Map<String, dynamic>,
+            )
+          : null,
+      mobileMoneyPhone: map["mobile_money_phone"] != null
+          ? Phone.fromMap(map["mobile_money_phone"] as Map<String, dynamic>)
+          : null,
+      firstName: map["first_name"] as String?,
+      lastName: map["last_name"] as String?,
+      birthDate:
+          map["birth_date"] != null ? map["birth_date"] as Timestamp : null,
+      email: map["email"] as String?,
+      country: map["country"] as String?,
+      preferredName: map["preferred_name"] as String?,
+      termsAccepted:
+          // ignore: avoid_bool_literals_in_conditional_expressions
+          map["terms_accepted"] != null ? map["terms_accepted"] as bool : false,
+      recipientSince: map["recipient_since"] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map["recipient_since"] as int)
+          : null,
+      imLinkInitial: map["im_link_initial"] as String?,
+    );
   }
 
   SocialIncomeUser copyWith({
     String? userId,
-    String? phoneNumber,
-    String? orangePhoneNumber,
+    Phone? communicationMobilePhone,
+    Phone? mobileMoneyPhone,
     String? firstName,
     String? lastName,
-    DateTime? birthDate,
+    Timestamp? birthDate,
     String? email,
     String? country,
     String? preferredName,
     bool? termsAccepted,
     DateTime? recipientSince,
+    String? imLinkInitial,
   }) {
     return SocialIncomeUser(
       userId: userId ?? this.userId,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      orangePhoneNumber: orangePhoneNumber ?? this.orangePhoneNumber,
+      communicationMobilePhone:
+          communicationMobilePhone ?? this.communicationMobilePhone,
+      mobileMoneyPhone: mobileMoneyPhone ?? this.mobileMoneyPhone,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       birthDate: birthDate ?? this.birthDate,
@@ -71,35 +106,22 @@ class SocialIncomeUser extends Equatable {
       preferredName: preferredName ?? this.preferredName,
       termsAccepted: termsAccepted ?? this.termsAccepted,
       recipientSince: recipientSince ?? this.recipientSince,
+      imLinkInitial: imLinkInitial ?? this.imLinkInitial,
+    );
+  }
+}
+
+class Phone {
+  final int phone;
+
+  Phone(this.phone);
+
+  factory Phone.fromMap(Map<String, dynamic> map) {
+    return Phone(
+      map["phone"] as int,
     );
   }
 
-  factory SocialIncomeUser.fromFirebaseUser(User user) {
-    return SocialIncomeUser(
-      userId: user.uid,
-      phoneNumber: user.phoneNumber ?? "",
-    );
-  }
-
-  factory SocialIncomeUser.fromMap(Map<String, dynamic> map) {
-    return SocialIncomeUser(
-      userId: map["userId"] as String,
-      phoneNumber: map["phoneNumber"] as String,
-      orangePhoneNumber: map["orangePhoneNumber"] as String?,
-      firstName: map["firstName"] as String?,
-      lastName: map["lastName"] as String?,
-      birthDate: map["birthDate"] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map["birthDate"] as int)
-          : null,
-      email: map["email"] as String?,
-      country: map["country"] as String?,
-      preferredName: map["preferredName"] as String?,
-      termsAccepted:
-          // ignore: avoid_bool_literals_in_conditional_expressions
-          map["termsAccepted"] != null ? map["termsAccepted"] as bool : false,
-      recipientSince: map["recipientSince"] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map["recipientSince"] as int)
-          : null,
-    );
-  }
+  factory Phone.fromJson(String source) =>
+      Phone.fromMap(json.decode(source) as Map<String, dynamic>);
 }

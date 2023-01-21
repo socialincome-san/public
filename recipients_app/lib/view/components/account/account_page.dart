@@ -71,7 +71,8 @@ class _AccountView extends StatelessWidget {
                     ),
                     UnchangeableUserInformation(
                       "Phone number",
-                      currentUser.phoneNumber,
+                      currentUser.communicationMobilePhone?.phone.toString() ??
+                          "",
                     ),
                     const ListTile(
                       contentPadding: EdgeInsets.zero,
@@ -93,7 +94,7 @@ class _AccountView extends StatelessWidget {
                     ),
                     UnchangeableUserInformation(
                       "Orange Money Number",
-                      currentUser.orangePhoneNumber ?? "",
+                      currentUser.mobileMoneyPhone?.phone.toString() ?? "",
                     ),
                     const ListTile(
                       contentPadding: EdgeInsets.zero,
