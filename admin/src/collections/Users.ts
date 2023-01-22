@@ -81,7 +81,7 @@ export const usersCollection = buildCollection<User>({
 	name: 'Contributors',
 	singularName: 'Contributor',
 	description: 'Lists all contributors',
-	textSearchEnabled: false,
+	textSearchEnabled: true,
 	permissions: () => ({
 		edit: true,
 		create: true,
