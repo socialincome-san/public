@@ -43,6 +43,8 @@ export class DonationCertificateHandler {
 							language: user.language || 'de',
 							namespaces: ['donation-certificate', 'countries'],
 						});
+
+						// TODO: Use ContributionStatsCalculator to get contributions by user
 						const contributionsByCurrency = await this.getContributionsByCurrency(userEntity.id, year);
 
 						// TODO: Use @react-pdf/renderer instead of pdfkit, see DonationCertificatePDFTemplate.tsx
