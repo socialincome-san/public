@@ -39,6 +39,7 @@ export const paymentsCollection = buildCollection<Payment>({
 	group: 'Finances',
 	path: PAYMENT_FIRESTORE_PATH,
 	textSearchEnabled: false,
+	initialSort: ['payment_at', 'desc'],
 	customId: true,
 	permissions: ({ authController }) => ({
 		edit: true,
