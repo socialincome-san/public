@@ -39,6 +39,18 @@ jobs:
       - name: Run Tests
         run: npm run functions:test
 
+      - name: Run Playwright Tests
+        run: npm run functions:test:playwright
+
+      - name: Deploy Playwright Report to GitHub Pages
+        uses: rossjrw/pr-preview-action@v1
+        if: always()
+        with:
+          source-dir: functions/playwright-report/
+          preview-branch: gh-pages
+          umbrella-dir: playwright-report
+          action: auto
+
       - name: Build
         run: npm run functions:build
 

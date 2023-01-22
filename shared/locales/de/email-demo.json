@@ -1,0 +1,5 @@
+{
+	"title": "Payout Titel",
+	"preview": "Vorschau",
+	"payoutMessage": "Du solltest {{ amount, currency }} erhalten haben."
+}

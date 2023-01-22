@@ -1,11 +1,14 @@
-import { StorageAdmin } from '@socialincome/shared/src/firebase/StorageAdmin';
 import * as functions from 'firebase-functions';
+import * as fs from 'fs';
+import handlebars from 'handlebars';
 import { withFile } from 'tmp-promise';
+import { StorageAdmin } from '../../..//shared/src/firebase/StorageAdmin';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { DonationCertificate, Entity, User } from '../../../shared/src/types';
+import { sendEmail } from '../../../shared/src/utils/messaging/email';
+import { NOTIFICATION_EMAIL_PASSWORD, NOTIFICATION_EMAIL_USER } from '../config';
 import { generateDonationCertificatePDF } from './generatePDF';
-import { loadLocales } from './locales';
-import { sendDonationCertificateEmail } from './sendEmail';
+import { getEmailTemplate, loadLocales } from './locales';
 
 export interface CreateDonationCertificatesFunctionProps {
 	users: Entity<User>[];
@@ -45,7 +48,23 @@ export class DonationCertificateHandler {
 							year: year,
 						});
 						if (sendEmails) {
-							await sendDonationCertificateEmail(user, year, path, locales);
+							const emailTemplate = getEmailTemplate(user.language);
+							await sendEmail({
+								to: user.email,
+								subject: locales['email-subject'],
+								content: handlebars.compile(fs.readFileSync(emailTemplate, 'utf-8'))({
+									firstname: user.personal?.name,
+									year,
+								}),
+								attachments: [
+									{
+										filename: locales['filename-prefix'] + year + '.pdf',
+										path: path,
+									},
+								],
+								user: NOTIFICATION_EMAIL_USER,
+								password: NOTIFICATION_EMAIL_PASSWORD,
+							});
 						}
 					});
 					successCount += 1;

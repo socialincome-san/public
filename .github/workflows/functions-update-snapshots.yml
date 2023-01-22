@@ -1,16 +1,16 @@
 # This workflow's goal is forcing an update of the reference snapshots used
 # by Playwright tests. It runs whenever you post a new pull request comment
-# that strictly matches the "/update-website-snapshots".
+# that strictly matches the "/update-functions-snapshots".
 # It works like this:
 # 1. Because of a GitHub Action limitation, this workflow is triggered on every
 #    comment posted on an issue or pull request. We manually interrupt it unless
-#    the comment content strictly matches "/update-website-snapshots" and we're in a
+#    the comment content strictly matches "/update-functions-snapshots" and we're in a
 #    pull request.
 # 2. Use the GitHub API to grab the information about the branch name and SHA of
 #    the latest commit of the current pull request.
 # 3. Update the Playwright reference snapshots based on the UI of this branch.
 # 4. Commit the newly generated Playwright reference snapshots into this branch.
-name: Update Website Snapshots
+name: Update Functions Snapshots
 
 on:
   # It looks like you can't target PRs-only comments:
@@ -21,10 +21,10 @@ on:
     types: [created]
 
 jobs:
-  update_website_snapshots:
+  update_functions_snapshots:
     # Run this job only on comments of pull requests that strictly match
-    # the "/update-website-snapshots" string
-    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/update-website-snapshots'}}
+    # the "/update-functions-snapshots" string
+    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/update-functions-snapshots'}}
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -59,8 +59,8 @@ jobs:
       - name: Install Dependencies
         run: npm ci
       - name: Run e2e Tests
-        run: npm run website:test:e2e:update:emulator
+        run: npm run functions:test:playwright:update
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "[CI] Update Website Snapshots"
+          commit_message: "[CI] Update Functions Snapshots"
