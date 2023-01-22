@@ -52,6 +52,9 @@ jobs:
           echo STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }} >> .env
           echo NOTIFICATION_EMAIL_USER=${{ secrets.NOTIFICATION_EMAIL_USER }} >> .env
           echo NOTIFICATION_EMAIL_PASSWORD=${{ secrets.NOTIFICATION_EMAIL_PASSWORD }} >> .env
+          echo MAILCHIMP_API_KEY=${{ secrets.MAILCHIMP_API_KEY }} >> .env
+          echo MAILCHIMP_SERVER=${{ secrets.MAILCHIMP_SERVER }} >> .env
+          echo MAILCHIMP_LIST_ID=${{ secrets.MAILCHIMP_LIST_ID }} >> .env
 
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main'

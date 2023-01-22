@@ -6,6 +6,7 @@ import { ExchangeRateImporter } from './etl/ExchangeRateImporter';
 import { OrangeMoneyCSVCreator } from './etl/OrangeMoneyCSVCreator';
 import { PostfinanceImporter } from './etl/PostfinanceImporter';
 import { StripeWebhook } from './etl/StripeWebhook';
+import { FirestoreNewsletter } from './etl/FirestoreNewsletter';
 
 const app = getOrInitializeApp();
 const firestoreAdmin = new FirestoreAdmin(app);
@@ -26,3 +27,6 @@ export const createDonationCertificates = donationCertificateHandler.createDonat
 
 const orangeMoneyCSVCreator = new OrangeMoneyCSVCreator(firestoreAdmin);
 export const createOrangeMoneyCSV = orangeMoneyCSVCreator.createOrangeMoneyCSV;
+
+const firestoreNewsletter = new FirestoreNewsletter(firestoreAdmin);
+export const registerTrigger = firestoreNewsletter.registerTrigger;
