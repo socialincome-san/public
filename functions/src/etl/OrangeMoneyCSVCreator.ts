@@ -1,4 +1,5 @@
 import * as functions from 'firebase-functions';
+import sortBy from 'lodash/sortBy';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { Recipient, RecipientProgramStatus, RECIPIENT_FIRESTORE_PATH } from '../../../shared/src/types';
 
@@ -20,7 +21,8 @@ export class OrangeMoneyCSVCreator {
 		).docs;
 
 		const recipients = recipientDocs.map((doc) => doc.data() as Recipient);
-		return this.createRecipientsCSV(recipients, new Date());
+		const recipientsSorted = sortBy(recipients, (r) => r.om_uid);
+		return this.createRecipientsCSV(recipientsSorted, new Date());
 	});
 
 	createRecipientsCSV = (recipients: Recipient[], date: Date) => {

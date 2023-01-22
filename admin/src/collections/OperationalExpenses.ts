@@ -8,6 +8,7 @@ export const operationalExpensesCollection = buildCollection<OperationalExpense>
 	textSearchEnabled: false,
 	icon: 'LocalAtm',
 	description: 'Add operational costs for transparency page',
+	initialSort: ['created', 'desc'],
 	permissions: ({ authController }) => ({
 		edit: true,
 		create: true,

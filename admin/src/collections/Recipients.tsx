@@ -233,6 +233,7 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 			properties: globalAdminProperties,
 			subcollections: [paymentsCollection],
 			inlineEditing: false,
+			initialSort: ['om_uid', 'desc'],
 		});
 	} else {
 		return buildCollection<Partial<Recipient>>({
@@ -253,6 +254,7 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 				organisation: ['in', organisations || []],
 			},
 			inlineEditing: false,
+			initialSort: ['om_uid', 'desc'],
 		});
 	}
 };
