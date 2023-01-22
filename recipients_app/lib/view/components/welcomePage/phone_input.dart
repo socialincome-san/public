@@ -39,6 +39,10 @@ class PhoneInput extends StatelessWidget {
 
         auth.verificationCompleted = null;
 
+        if (registration.phoneNumber == null) {
+          inputController.clear();
+        }
+
         return Stack(
           children: [
             Column(
