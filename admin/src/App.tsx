@@ -91,6 +91,7 @@ const algoliaIndex = (indexName: string) => {
 const usersIndex = algoliaIndex('users');
 const recipientsIndex = algoliaIndex('recipients');
 
+// Relies on the algolia firebase extensions configured at: https://console.firebase.google.com/u/1/project/social-income-prod/extensions
 const textSearchController: FirestoreTextSearchController = ({ path, searchString }) => {
 	if (recipientsIndex && (path === 'recipients' || path === 'recentPayments')) {
 		return performAlgoliaTextSearch(recipientsIndex, searchString);
