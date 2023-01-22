@@ -21,7 +21,6 @@ describe('calcFinancialStats', () => {
 
 	beforeAll(async () => {
 		await testEnv.firestore.clearFirestoreData({ projectId: projectId });
-		await deleteSeedUsers(); // to keep this unit test independent of the seed data for easier maintenance
 		await insertTestData();
 		calculator = await ContributionStatsCalculator.build(firestoreAdmin);
 	});
@@ -174,14 +173,5 @@ describe('calcFinancialStats', () => {
 
 		const testUserRef = await firestoreAdmin.collection<User>(USER_FIRESTORE_PATH).add(testUser);
 		await Promise.all(contributionsTestUser.map((c) => testUserRef.collection(CONTRIBUTION_FIRESTORE_PATH).add(c)));
-	};
-
-	const deleteSeedUsers = async () => {
-		const docs = await firestoreAdmin.collection(USER_FIRESTORE_PATH).listDocuments();
-		await Promise.all(
-			docs.map(async (doc) => {
-				return await doc.delete();
-			})
-		);
 	};
 });
