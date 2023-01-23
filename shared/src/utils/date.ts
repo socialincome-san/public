@@ -38,3 +38,9 @@ export function getMonthIDs(date: Date, last_n: number) {
 	}
 	return months;
 }
+
+export const toYYYYMMDD = (date: Date) => {
+	const offset = date.getTimezoneOffset();
+	const dateWithoutOffset = new Date(date.getTime() - offset * 60 * 1000);
+	return dateWithoutOffset.toISOString().split('T')[0];
+};
