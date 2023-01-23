@@ -6,8 +6,9 @@
 	},
 	"main": "dist/functions/src/index.js",
 	"scripts": {
-		"build": "tsc && rsync -av --delete ../shared/assets dist/assets",
-		"build:watch": "rsync -av --delete ../shared/assets dist/assets && tsc --watch",
+		"build": "tsc && npm run build:sync-files",
+		"build:sync-files": "rsync -av --delete ../shared/assets dist/shared && rsync -av --delete ../shared/locales dist/shared && rsync -av --delete ../shared/templates dist/shared",
+		"build:watch": "npm run build:sync-files  && tsc --watch",
 		"serve": "npm run build:watch",
 		"serve:watch": "npm run build -- --watch & firebase emulators:start --project social-income-prod --config ../firebase.json --import ../seed",
 		"test": "firebase emulators:exec --only firestore,functions,storage --project social-income-prod --config ../firebase.json --import ../seed 'npm run test:app'",

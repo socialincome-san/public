@@ -1,6 +1,7 @@
 export const CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH = 'organisations-contributors';
 
 export type ContributorOrganisation = {
+	// TODO: better translations?
 	org_name: string;
 	org_name_en: string;
 	org_name_de: string;
