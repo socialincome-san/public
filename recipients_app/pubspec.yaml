@@ -26,6 +26,7 @@ dependencies:
   collection: ^1.16.0
   firebase_auth: ^4.2.4
   firebase_core: ^2.4.1
+  firebase_crashlytics: ^3.0.11
   flutter:
     sdk: flutter
   intl: ^0.17.0
