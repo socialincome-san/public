@@ -4,26 +4,22 @@ enum AccountStatus { initial, loading, success, failure }
 
 class AccountState extends Equatable {
   final AccountStatus status;
-  final UserAccount? userAccount;
   final Exception? exception;
 
   const AccountState({
     this.status = AccountStatus.initial,
-    this.userAccount,
     this.exception,
   });
 
   @override
-  List<Object?> get props => [status, userAccount, exception];
+  List<Object?> get props => [status, exception];
 
   AccountState copyWith({
     AccountStatus? status,
-    UserAccount? userAccount,
     Exception? exception,
   }) {
     return AccountState(
       status: status ?? this.status,
-      userAccount: userAccount ?? this.userAccount,
       exception: exception ?? this.exception,
     );
   }

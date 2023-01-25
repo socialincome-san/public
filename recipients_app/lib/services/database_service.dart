@@ -1,4 +1,3 @@
-import "package:app/dtos/user_dto.dart";
 import "package:app/models/current_user.dart";
 import "package:app/models/social_income_transaction.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -23,11 +22,6 @@ class DatabaseService {
         .get();
 
     return test.docs.first;
-  }
-
-  Future<UserDto> fetchUserData() async {
-    final userSnapshot = await getUserSnapshot();
-    return userSnapshot.mapUserDto();
   }
 
   Future<CurrentUser> fetchUserDetails(CurrentUser user) async {

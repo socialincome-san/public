@@ -1,4 +1,3 @@
-import "package:app/account/repository/user_account.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:equatable/equatable.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
