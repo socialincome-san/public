@@ -6,6 +6,7 @@ export const contributionsCollection = buildCollection<Contribution>({
 	group: 'Finances',
 	path: CONTRIBUTION_FIRESTORE_PATH,
 	textSearchEnabled: false,
+	initialSort: ['created', 'desc'],
 	permissions: ({ authController }) => ({
 		edit: true,
 		create: true,
@@ -25,6 +26,7 @@ export const contributionsCollection = buildCollection<Contribution>({
 			validation: { required: true },
 		},
 		created: {
+			// @ts-ignore
 			dataType: 'date',
 			name: 'Created',
 			mode: 'date',
