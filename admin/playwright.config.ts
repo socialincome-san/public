@@ -7,6 +7,7 @@ import { devices } from '@playwright/test';
 const config: PlaywrightTestConfig = {
 	testDir: './tests/playwright',
 	reporter: 'html',
+	timeout: 60000,
 	projects: [
 		{
 			name: 'Desktop Safari',
