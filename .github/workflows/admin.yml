@@ -40,6 +40,18 @@ jobs:
       - name: Run Tests
         run: npm run admin:test
 
+      - name: Run Playwright Tests
+        run: npm run admin:test:playwright
+
+      - name: Deploy Playwright Report to GitHub Pages
+        uses: rossjrw/pr-preview-action@v1
+        if: always()
+        with:
+          source-dir: admin/playwright-report/
+          preview-branch: gh-pages
+          umbrella-dir: admin-playwright-report
+          action: auto
+
       - name: Add secrets to env file
         working-directory: admin
         run: |
@@ -55,18 +67,6 @@ jobs:
 
       - name: Build
         run: npm run admin:build
-
-      - name: Run Playwright Tests
-        run: npm run admin:test:playwright
-
-      - name: Deploy Playwright Report to GitHub Pages
-        uses: rossjrw/pr-preview-action@v1
-        if: always()
-        with:
-          source-dir: admin/playwright-report/
-          preview-branch: gh-pages
-          umbrella-dir: admin-playwright-report
-          action: auto
 
       - name: Deploy Preview
         if: github.ref != 'refs/heads/main'
