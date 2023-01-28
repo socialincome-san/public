@@ -48,7 +48,7 @@ jobs:
         with:
           source-dir: functions/playwright-report/
           preview-branch: gh-pages
-          umbrella-dir: playwright-report
+          umbrella-dir: functions-playwright-report
           action: auto
 
       - name: Build
