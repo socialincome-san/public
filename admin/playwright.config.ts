@@ -11,9 +11,9 @@ const config: PlaywrightTestConfig = {
 	expect: { timeout: 10000 },
 	projects: [
 		{
-			name: 'Desktop Safari',
+			name: 'Desktop Chrome',
 			use: {
-				...devices['Desktop Safari'],
+				...devices['Desktop Chrome'],
 			},
 		},
 	],

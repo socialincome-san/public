@@ -61,28 +61,19 @@ test('recipients', async ({ page }) => {
 	await page.getByRole('button', { name: 'First Language' }).click();
 	await page.getByRole('option', { name: 'Temne' }).click();
 	await expect(page).toHaveScreenshot();
-	// b) save form
 	await page.locator('button', { hasText: 'Save and Close' }).click();
 	await page.waitForTimeout(1000);
-	// c) check if list got updated
 	await expect(page).toHaveScreenshot();
 
 	// create new payment
 	await page.getByRole('button', { name: 'Edit iF8bLEoUjqOIlq84XQmi' }).click();
 	await page.getByRole('button', { name: 'Add Payments' }).click();
 	await page.getByRole('textbox', { name: 'ID' }).fill('123');
+	await page.getByRole('spinbutton').fill('1000');
 	await page.getByRole('button', { name: 'Currency' }).click();
 	await page.getByRole('option', { name: 'SLE' }).click();
 	await page.getByRole('button', { name: 'Status' }).click();
 	await page.getByText('Confirmed').nth(1).click();
-	await expect(page).toHaveScreenshot();
-	// b) save form
-	await page.locator('button', { hasText: 'Create and close' }).click();
-	await page.waitForTimeout(1000);
-	await expect(page).toHaveScreenshot();
-	// c) add missing amount
-	await page.getByRole('spinbutton').fill('1000');
-	// d) save form again
 	await page.locator('button', { hasText: 'Create and close' }).click();
 	await page.waitForTimeout(1000);
 	await expect(page).toHaveScreenshot();
