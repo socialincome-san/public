@@ -41,7 +41,7 @@ jobs:
         run: npm run admin:test
 
       - name: Run Playwright Tests
-        run: npm run functions:test:playwright
+        run: npm run admin:test:playwright
 
       - name: Deploy Playwright Report to GitHub Pages
         uses: rossjrw/pr-preview-action@v1
