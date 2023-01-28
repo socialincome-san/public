@@ -11,6 +11,7 @@ export default function Home() {
 		<Layout title={t('index.title')}>
 			<section>
 				<p>{t('index.welcome')}</p>
+				test
 			</section>
 			<section>
 				<Link href="/transparency/finances">{t('index.linkToFinances')}</Link>
