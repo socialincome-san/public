@@ -51,8 +51,8 @@ Run `make admin-test` to run the tests locally.
 We use playwright to test against unwanted regressions on several
 browsers. The playwright tests are located in `tests/playwright`.
 
-The test is executed as part of `admin` GitHub Action when creating
-a PR. A link to the hosted report is automatically posted.
+The test is executed as part of `admin` GitHub Action when creating a
+PR. A link to the hosted report is automatically posted.
 
 To update the baseline snapshots post a comment with
 `/update-admin-snapshots` to the PR. This will trigger the
