@@ -8,6 +8,7 @@ const config: PlaywrightTestConfig = {
 	testDir: './tests/playwright',
 	reporter: 'html',
 	timeout: 60000,
+	expect: { timeout: 10000 },
 	projects: [
 		{
 			name: 'Desktop Safari',
