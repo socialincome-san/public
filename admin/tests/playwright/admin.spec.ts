@@ -4,11 +4,11 @@ test.beforeEach(async ({ page }) => {
 	await page.goto('http://localhost:3000/');
 	const popupPromise = page.waitForEvent('popup');
 	await page.getByRole('button', { name: 'Sign in with Google' }).click();
-	await page.waitForTimeout(2000); // todo replace this with better callbacks
+	await page.waitForTimeout(4000); // todo replace this with better callbacks
 	const popup = await popupPromise;
-	await page.waitForTimeout(2000); // todo replace this with better callbacks
+	await page.waitForTimeout(4000); // todo replace this with better callbacks
 	await popup.getByText('person Admin admin@socialincome.org').click();
-	await page.waitForTimeout(2000); // todo replace this with better callbacks
+	await page.waitForTimeout(4000); // todo replace this with better callbacks
 });
 
 test('root', async ({ page }) => {
