@@ -43,7 +43,7 @@ class UserRepository {
     //     await firestore.collection("/recipients").doc(firebaseUser.uid).get();
 
     if (userSnapshot.exists) {
-      return Recipient.fromMap(userSnapshot.data());
+      return Recipient.fromMap(userSnapshot.id, userSnapshot.data());
     } else {
       return null;
     }

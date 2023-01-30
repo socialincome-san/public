@@ -3,6 +3,7 @@ import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/services/auth_service.dart";
 import "package:app/theme/theme.dart";
+import "package:app/view/components/account/changeable_user_information.dart";
 import "package:app/view/components/account/unchangeable_user_information.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -15,7 +16,7 @@ class AccountScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => AccountCubit(
         userRepository: context.read<UserRepository>(),
-      ),
+      )..loadRecipientData(),
       child: const _AccountView(),
     );
   }
@@ -26,12 +27,12 @@ class _AccountView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = context.watch<AuthCubit>().state.recipient;
-
     // TODO: check what needs to be changed here and how and apply cubit logic
     return BlocConsumer<AccountCubit, AccountState>(
       listener: (context, state) {},
       builder: (context, state) {
+        final currentUser = state.recipient;
+
         return Stack(
           children: [
             if (currentUser != null) ...[
@@ -57,22 +58,17 @@ class _AccountView extends StatelessWidget {
                       "Last name",
                       currentUser.lastName ?? "",
                     ),
-                    UnchangeableUserInformation(
+                    const ChangeableUserInformation(
                       "Preferred name",
-                      currentUser.preferredName ?? "",
                     ),
-                    UnchangeableUserInformation(
+                    const ChangeableUserInformation(
                       "Date of birth",
-                      "${currentUser.birthDate}",
                     ),
-                    UnchangeableUserInformation(
+                    const ChangeableUserInformation(
                       "Email",
-                      currentUser.email ?? "",
                     ),
-                    UnchangeableUserInformation(
+                    const ChangeableUserInformation(
                       "Phone number",
-                      currentUser.communicationMobilePhone?.phone.toString() ??
-                          "",
                     ),
                     const ListTile(
                       contentPadding: EdgeInsets.zero,

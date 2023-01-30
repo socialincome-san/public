@@ -51,9 +51,9 @@ class Recipient extends Equatable {
     ];
   }
 
-  factory Recipient.fromMap(Map<String, dynamic> map) {
+  factory Recipient.fromMap(String userId, Map<String, dynamic> map) {
     return Recipient(
-      userId: map["user_id"] as String,
+      userId: userId,
       communicationMobilePhone: map["communication_mobile_phone"] != null
           ? Phone.fromMap(
               map["communication_mobile_phone"] as Map<String, dynamic>,
