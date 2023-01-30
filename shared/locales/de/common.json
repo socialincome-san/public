@@ -1,1 +1,24 @@
-{}
+{
+  "Transparency": "Transparenz",
+  "Finances": "Finanzen",
+  "Evidence": "Evidenz",
+  "Downloads": "Downloads",
+  "Sustainability": "Nachhaltigkeit",
+  "OurWork": "Was wir tun",
+  "AboutUs": "Wer wir sind",
+  "Faq": "FAQ",
+  "TakeAction": "Jetzt Handeln",
+  "Login": "Login",
+  "Account": "Account",
+  "PrivacyPolicy": "Datenschutzrichtlinie",
+  "TermsOfUse": "Nutzungsbedingungen",
+  "TermsForContributions": "Beitragsbedingungen",
+  "TheArts": "Die Künste",
+  "BankDetails": "Bankangaben",
+  "Books": "Bücher",
+  "SocialResponsibility": "Soziale Verantwortung",
+  "English": "Englisch",
+  "German": "Deutsch",
+  "French": "Französisch",
+  "Italian": "Italienisch"
+}
