@@ -6,7 +6,7 @@ import ApplePay from '../components/ApplePay';
 import Layout from '../components/Layout';
 
 export default function Home() {
-	const { t } = useTranslation('website-index');
+	const { t } = useTranslation(['website-index','common']);
 
 	return (
 		<Layout title={t('index.title')}>
@@ -52,7 +52,7 @@ export default function Home() {
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
 	return {
 		props: {
-			...(await serverSideTranslations(locale!, ['website-index'])),
+			...(await serverSideTranslations(locale!, ['website-index','common'])),
 		},
 	};
 };
