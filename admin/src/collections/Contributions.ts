@@ -26,7 +26,6 @@ export const contributionsCollection = buildCollection<Contribution>({
 			validation: { required: true },
 		},
 		created: {
-			// @ts-ignore
 			dataType: 'date',
 			name: 'Created',
 			mode: 'date',
