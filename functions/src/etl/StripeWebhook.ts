@@ -1,4 +1,3 @@
-import { Timestamp } from '@google-cloud/firestore';
 import { DocumentReference } from 'firebase-admin/firestore';
 import { CollectionReference } from 'firebase-admin/lib/firestore';
 import * as functions from 'firebase-functions';
@@ -154,7 +153,7 @@ export class StripeWebhook {
 		const balanceTransaction = charge.balance_transaction as Stripe.BalanceTransaction;
 		return {
 			source: ContributionSourceKey.STRIPE,
-			created: new Timestamp(charge.created, 0),
+			created: new Date(charge.created * 1000),
 			amount: charge.amount / 100,
 			currency: charge.currency,
 			amount_chf: balanceTransaction?.amount ? balanceTransaction.amount / 100 : 0,

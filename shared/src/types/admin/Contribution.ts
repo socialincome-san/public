@@ -20,7 +20,7 @@ export enum StatusKey {
 
 export type Contribution = {
 	source: ContributionSourceKey;
-	created: Timestamp;
+	created: Timestamp | Date;
 	amount: number;
 	currency: string;
 	amount_chf: number;
