@@ -58,7 +58,7 @@ class StatusIconWithText extends StatelessWidget {
       );
     } else {
       return Container(
-        padding: AppSpacings.h8v4,
+        padding: AppSpacings.h8,
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(AppSizes.radiusMedium),

@@ -14,6 +14,15 @@ class ButtonOutlinedBig extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
+      style: Theme.of(context).outlinedButtonTheme.style?.copyWith(
+            backgroundColor: MaterialStateProperty.all(Colors.white),
+            side: MaterialStateProperty.all(
+              const BorderSide(
+                color: AppColors.primaryColor,
+                width: 2,
+              ),
+            ),
+          ),
       onPressed: onPressed,
       child: Text(
         label,
