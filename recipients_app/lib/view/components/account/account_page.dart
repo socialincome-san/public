@@ -73,11 +73,31 @@ class _AccountView extends StatelessWidget {
                           );
                     },
                   ),
-                  const ChangeableUserInformation(
-                    "Preferred name",
-                  ),
-                  const ChangeableUserInformation(
-                    "Date of birth",
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    initialValue: getFormattedDate(currentUser.birthDate) ?? "",
+                    decoration: const InputDecoration(
+                      labelText: "Date of birth",
+                    ),
+                    readOnly: true,
+                    onTap: () async {
+                      showDatePicker(
+                        firstDate: DateTime(1950),
+                        lastDate: DateTime(DateTime.now().year - 10),
+                        initialDate:
+                            currentUser.birthDate?.toDate() ?? DateTime(2000),
+                        context: context,
+                      ).then((value) {
+                        if (value != null) {
+                          context.read<AccountCubit>().updateRecipient(
+                                currentUser.copyWith(
+                                  birthDate: Timestamp.fromDate(value),
+                                ),
+                              );
+                        }
+                        return;
+                      });
+                    },
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
@@ -176,5 +196,10 @@ class _AccountView extends StatelessWidget {
         );
       },
     );
+  }
+
+  String? getFormattedDate(Timestamp? timestamp) {
+    if (timestamp == null) return null;
+    return DateFormat("dd.MM.yyyy").format(timestamp.toDate());
   }
 }
