@@ -1,4 +1,4 @@
-import { renderEmailTemplate } from '../src/utils/templates';
+import { renderEmailTemplate } from '../../src/utils/templates';
 
 describe('', () => {
 	it('Render basic template', async () => {

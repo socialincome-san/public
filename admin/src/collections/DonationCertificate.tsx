@@ -19,8 +19,10 @@ export const donationCertificateCollection = buildCollection<DonationCertificate
 	group: 'Finances',
 	path: DONATION_CERTIFICATE_FIRESTORE_PATH,
 	textSearchEnabled: false,
+	initialSort: ['year', 'desc'],
 	customId: true,
 	additionalColumns: [DownloadLinkColumn],
+
 	permissions: {
 		edit: true,
 		create: true,

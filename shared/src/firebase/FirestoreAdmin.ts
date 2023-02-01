@@ -37,14 +37,25 @@ export class FirestoreAdmin {
 	};
 
 	/**
-	 * Find the first document meeting the provided query
+	 * Find the first document matching the optional query
 	 */
 	findFirst = async <T = DocumentData>(
 		collectionName: string,
-		query: (col: CollectionReference<T>) => Query<T>
+		query: (col: CollectionReference<T>) => Query<T> = (query) => query
 	): Promise<QueryDocumentSnapshot<T> | undefined> => {
 		const snapshot = await query(this.collection<T>(collectionName)).get();
 		return snapshot.docs.at(0);
+	};
+
+	/**
+	 * Retrieve all documents matching the optional query
+	 */
+	getAll = async <T = DocumentData>(
+		collectionName: string,
+		query: (col: CollectionReference<T>) => Query<T> = (query) => query
+	): Promise<T[]> => {
+		const snapshot = await query(this.collection<T>(collectionName)).get();
+		return snapshot.docs.map((q) => q.data());
 	};
 
 	assertGlobalAdmin = async (email?: string) => {

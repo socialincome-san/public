@@ -132,7 +132,7 @@ const organisationProperty: Property = {
 };
 
 const baseProperties: PropertiesOrBuilders<Partial<Recipient>> = {
-	progr_status: { ...programStatusProperty, disabled: true },
+	progr_status: programStatusProperty,
 	om_uid: { ...orangeMoneyUIDProperty, disabled: true },
 	first_name: firstNameProperty,
 	last_name: lastNameProperty,
@@ -149,7 +149,7 @@ const baseProperties: PropertiesOrBuilders<Partial<Recipient>> = {
 const organisationAdminProperties = buildProperties<Partial<Recipient>>(baseProperties);
 
 const allProps: PropertiesOrBuilders<Recipient> = {
-	progr_status: programStatusProperty,
+	progr_status: { ...programStatusProperty, disabled: false },
 	om_uid: orangeMoneyUIDProperty,
 	first_name: firstNameProperty,
 	last_name: lastNameProperty,
@@ -233,6 +233,7 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 			properties: globalAdminProperties,
 			subcollections: [paymentsCollection],
 			inlineEditing: false,
+			initialSort: ['om_uid', 'desc'],
 		});
 	} else {
 		return buildCollection<Partial<Recipient>>({
@@ -253,6 +254,7 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 				organisation: ['in', organisations || []],
 			},
 			inlineEditing: false,
+			initialSort: ['om_uid', 'desc'],
 		});
 	}
 };

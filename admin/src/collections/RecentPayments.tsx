@@ -13,7 +13,7 @@ import { paymentsCollection, paymentStatusMap } from './Payments';
 import { firstNameProperty, lastNameProperty, orangeMoneyUIDProperty, programStatusProperty } from './Recipients';
 
 const basicRecipientProperties = buildProperties<Partial<Recipient>>({
-	progr_status: { ...programStatusProperty, disabled: true },
+	progr_status: programStatusProperty,
 	first_name: firstNameProperty,
 	last_name: lastNameProperty,
 	om_uid: { ...orangeMoneyUIDProperty, disabled: true },

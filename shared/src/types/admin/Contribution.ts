@@ -20,7 +20,7 @@ export enum StatusKey {
 
 export type Contribution = {
 	source: ContributionSourceKey;
-	created: Date | Timestamp; // This is a hack. Firestore returns a Timestamp, but Firecms seems to expect a Date for a date picker. Will look into this.
+	created: Timestamp | Date;
 	amount: number;
 	currency: string;
 	amount_chf: number;
