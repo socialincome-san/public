@@ -53,11 +53,11 @@ class _AccountView extends StatelessWidget {
                   ),
                   UnchangeableUserInformation(
                     "First name",
-                    currentUser!.firstName ?? "",
+                    currentUser?.firstName ?? "",
                   ),
                   UnchangeableUserInformation(
                     "Last name",
-                    currentUser.lastName ?? "",
+                    currentUser?.lastName ?? "",
                   ),
                   const ChangeableUserInformation(
                     "Preferred name",
@@ -87,11 +87,11 @@ class _AccountView extends StatelessWidget {
                   ),
                   UnchangeableUserInformation(
                     "Country",
-                    currentUser.country ?? "",
+                    currentUser?.country ?? "",
                   ),
                   UnchangeableUserInformation(
                     "Orange Money Number",
-                    currentUser.mobileMoneyPhone?.phone.toString() ?? "",
+                    currentUser?.mobileMoneyPhone?.phone.toString() ?? "",
                   ),
                   const ListTile(
                     contentPadding: EdgeInsets.zero,
