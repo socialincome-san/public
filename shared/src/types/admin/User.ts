@@ -10,30 +10,30 @@ export enum UserStatusKey {
 
 export type UserAddress = {
 	city?: string;
-	country?: string;
+	country?: string; // TODO: proper typing
 	number?: string;
 	street?: string;
-	zip?: string;
+	zip?: string; // TODO: proper typing (number?)
 };
 
 export type User = {
 	personal?: {
-		name?: string;
+		name?: string; // TODO: discuss if should be renamed to firstname
 		lastname?: string;
-		gender?: string;
+		gender?: string; // TODO: proper typing
 		company?: string;
 		phone?: string;
-		referral?: string;
+		referral?: string; // TODO: proper typing (enum?)
 	};
 	address?: UserAddress;
 	email: string;
 	status?: UserStatusKey;
 	stripe_customer_id?: string;
-	test_user?: boolean;
+	test_user?: boolean; // TODO: discuss if still needed
 	institution?: boolean;
-	language?: string;
-	location?: string;
-	currency?: string;
+	language?: string; // TODO: proper typing
+	location?: string; // TODO: discuss if still needed
+	currency?: string; // TODO: proper typing
 	contributor_organisations?: EntityReference[];
 };
 

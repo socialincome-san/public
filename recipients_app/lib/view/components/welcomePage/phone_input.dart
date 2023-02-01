@@ -1,5 +1,5 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
-import "package:app/theme/theme.dart";
+import "package:app/ui/configs/app_colors.dart";
 import "package:flutter/material.dart";
 import "package:intl_phone_number_input/intl_phone_number_input.dart";
 import "package:provider/provider.dart";
@@ -57,8 +57,8 @@ class _PhoneInputState extends State<PhoneInput> {
                   labelText: "Orange Money Number",
                   hintStyle: const TextStyle(color: Colors.grey),
                   labelStyle: TextStyle(color: Colors.grey[300], fontSize: 16),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: siDarkBlue),
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.primaryColor),
                   ),
                 ),
                 textStyle: const TextStyle(

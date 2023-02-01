@@ -1,7 +1,7 @@
 import "package:app/models/current_user.dart";
 import "package:app/models/navigation.dart";
 import "package:app/services/database_service.dart";
-import "package:app/theme/theme.dart";
+import "package:app/ui/configs/app_colors.dart";
 import "package:app/view/components/account/account_page.dart";
 import "package:app/view/components/impactMeasurement/impact_measurement_page.dart";
 import "package:app/view/components/income/income_page.dart";
@@ -71,7 +71,7 @@ class MainAppPage extends StatelessWidget {
                   ? checkTermsAccepted()
                   : const Center(child: CircularProgressIndicator()),
             ),
-            backgroundColor: backgroundColor,
+            backgroundColor: AppColors.backgroundColor,
             bottomNavigationBar: currentUser.termsAccepted == true
                 ? BottomNavigationBar(
                     currentIndex: navigation.selectedIndex,

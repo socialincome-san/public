@@ -1,5 +1,5 @@
 import "package:app/models/alert_visibility.dart";
-import "package:app/theme/theme.dart";
+import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
@@ -18,27 +18,27 @@ class SocialIncomeAlert extends StatelessWidget {
   });
 
   TextStyle get style => const TextStyle(
-    color: Colors.white,
-    overflow: TextOverflow.clip,
-    fontSize: 16,
-  );
+        color: Colors.white,
+        overflow: TextOverflow.clip,
+        fontSize: 16,
+      );
 
   TextStyle get buttonStyle => const TextStyle(
-    color: Colors.white,
-    overflow: TextOverflow.clip,
-    fontSize: 16,
-    decoration: TextDecoration.underline,
-  );
+        color: Colors.white,
+        overflow: TextOverflow.clip,
+        fontSize: 16,
+        decoration: TextDecoration.underline,
+      );
 
   @override
   Widget build(BuildContext context) {
     return Consumer<AlertVisibility>(
       builder: (context, alertVisibility, child) {
         return Container(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+          padding: AppSpacings.h16,
           height: MediaQuery.of(context).size.height / 10,
           width: MediaQuery.of(context).size.width,
-          color: siLightBlue,
+          color: AppColors.primaryColor,
           child: Row(
             children: [
               CircleAvatar(

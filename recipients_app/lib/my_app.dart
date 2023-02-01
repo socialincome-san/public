@@ -3,7 +3,7 @@ import "package:app/data/repositories/user_repository.dart";
 import "package:app/models/alert_visibility.dart";
 import "package:app/models/current_user.dart";
 import "package:app/models/registration.dart";
-import "package:app/theme/theme.dart";
+import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/main_app_page.dart";
 import "package:app/view/pages/welcome_page.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
           )..init(),
           child: MaterialApp(
             title: "Profile Page",
-            theme: socialIncomeTheme,
+            theme: AppTheme.lightTheme,
             home: BlocBuilder<AuthCubit, AuthState>(
               builder: (context, state) {
                 switch (state.status) {

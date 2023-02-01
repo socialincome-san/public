@@ -6,6 +6,7 @@ import i18next from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import mjml2html from 'mjml';
 import path from 'path';
+import { FALLBACK_LANGUAGE } from './translate';
 
 interface RenderTemplateProps {
 	language: string;
@@ -40,6 +41,7 @@ export const renderTemplate = async ({
 		.init({
 			lng: language,
 			ns: translationNamespace,
+			fallbackLng: FALLBACK_LANGUAGE,
 		});
 	registerI18nHelper(Handlebars, i18n);
 

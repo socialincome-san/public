@@ -1,6 +1,6 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
-import "package:app/theme/theme.dart";
+import "package:app/ui/configs/app_colors.dart";
 import "package:app/view/components/welcomePage/otp_input.dart";
 import "package:app/view/components/welcomePage/phone_input.dart";
 import "package:flutter/material.dart";
@@ -29,8 +29,10 @@ class _WelcomeView extends StatelessWidget {
         children: [
           Column(
             children: [
-              Flexible(flex: 2, child: Container(color: siDarkBlue)),
-              Flexible(flex: 3, child: Container(color: siLightBlue))
+              Flexible(
+                  flex: 2, child: Container(color: AppColors.primaryColor)),
+              Flexible(
+                  flex: 3, child: Container(color: AppColors.primaryLightColor))
             ],
           ),
           Column(
@@ -143,8 +145,14 @@ class _WelcomeView extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Flexible(flex: 2, child: Container(color: siDarkBlue)),
-                  Flexible(flex: 3, child: Container(color: siLightBlue))
+                  Flexible(
+                    flex: 2,
+                    child: Container(color: AppColors.primaryColor),
+                  ),
+                  Flexible(
+                    flex: 3,
+                    child: Container(color: AppColors.primaryLightColor),
+                  )
                 ],
               ),
               Center(
@@ -180,10 +188,8 @@ class _WelcomeView extends StatelessWidget {
                             fontSize: 20,
                           ),
                         ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: input,
-                      )
+                      const SizedBox(height: 8),
+                      input,
                     ],
                   ),
                 ),

@@ -14,6 +14,7 @@ dependencies:
   equatable: ^2.0.5
   firebase_auth: ^4.2.4
   firebase_core: ^2.4.1
+  firebase_crashlytics: ^3.0.11
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.1
@@ -45,10 +46,3 @@ flutter:
           weight: 500
         - asset: assets/fonts/Unica77LL-Bold.otf
           weight: 700
-# Enable for generating new app icons
-# flutter_icons:
-#   image_path: "assets/icons/app_icon_foreground.png"
-#   adaptive_icon_background: "assets/icons/app_icon_background.png"
-#   adaptive_icon_foreground: "assets/icons/app_icon_foreground.png"
-#   android: true
-#   ios: false

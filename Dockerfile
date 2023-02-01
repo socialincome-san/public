@@ -4,7 +4,7 @@
 FROM node:16
 
 RUN apt update && apt install -y openjdk-11-jre bash && \
-    npm install -g firebase-tools@11.18.0 && \
+    npm install -g firebase-tools@11.21.0 && \
     firebase setup:emulators:firestore && \
     firebase setup:emulators:storage && \
     firebase setup:emulators:ui && \
