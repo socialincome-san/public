@@ -1,4 +1,5 @@
 import "package:app/models/social_income_transaction.dart";
+import "package:app/ui/configs/configs.dart";
 import "package:app/view/components/income/review_transaction_modal.dart";
 import "package:flutter/material.dart";
 import "package:intl/intl.dart";
@@ -31,7 +32,7 @@ class TransactionCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 8.0, left: 8.0),
+                  padding: AppSpacings.h8,
                   child: Text(
                     "${transaction.currency} ${f.format(transaction.amount)}",
                     textScaleFactor: 1.5,
@@ -54,7 +55,7 @@ class TransactionCard extends StatelessWidget {
           ),
           if (transaction.status != "confirmed")
             Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: AppSpacings.a16,
               child: ElevatedButton(
                 style: ButtonStyle(
                   minimumSize:

@@ -1,5 +1,5 @@
 import "package:app/models/current_user.dart";
-import "package:app/theme/theme.dart";
+import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
@@ -25,7 +25,7 @@ class UnchangeableUserInformation extends StatelessWidget {
               Expanded(
                 flex: 3,
                 child: Container(
-                  padding: edgeInsetsAll12,
+                  padding: AppSpacings.a8,
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(6),
@@ -34,8 +34,8 @@ class UnchangeableUserInformation extends StatelessWidget {
                   ),
                   child: Text(
                     section,
-                    style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                          color: siGreyText,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppColors.darkGrey,
                         ),
                   ),
                 ),
@@ -43,7 +43,7 @@ class UnchangeableUserInformation extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: AppSpacings.a8,
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topRight: Radius.circular(6),
