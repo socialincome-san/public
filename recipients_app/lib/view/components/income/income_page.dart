@@ -1,6 +1,6 @@
 import "package:app/models/current_user.dart";
 import "package:app/models/social_income_transaction.dart";
-import "package:app/theme/theme.dart";
+import "package:app/ui/configs/configs.dart";
 import "package:app/view/components/income/balance_card.dart";
 import "package:app/view/components/income/transaction_card.dart";
 import "package:flutter/material.dart";
@@ -25,13 +25,11 @@ class IncomePage extends StatelessWidget {
     return Consumer<CurrentUser>(
       builder: (context, currentUser, child) {
         return Padding(
-          padding: edgeInsetsAll12,
+          padding: AppSpacings.a16,
           child: Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.only(bottom: 8),
-                child: BalanceCard(),
-              ),
+              const BalanceCard(),
+              const SizedBox(height: 8),
               if (transactionCards(currentUser).isEmpty)
                 const Expanded(
                   child: Center(
