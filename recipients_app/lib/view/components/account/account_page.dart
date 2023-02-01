@@ -1,13 +1,15 @@
 import "package:app/account/cubit/account_cubit.dart";
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
+import "package:app/models/recipient.dart";
 import "package:app/services/auth_service.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
-import "package:app/view/components/account/changeable_user_information.dart";
 import "package:app/view/components/account/unchangeable_user_information.dart";
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:intl/intl.dart";
 
 /// TODO: add dialog for contact
 class AccountScreen extends StatelessWidget {
@@ -77,11 +79,37 @@ class _AccountView extends StatelessWidget {
                   const ChangeableUserInformation(
                     "Date of birth",
                   ),
-                  const ChangeableUserInformation(
-                    "Email",
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    initialValue: currentUser.email ?? "",
+                    decoration: const InputDecoration(
+                      labelText: "Email",
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    onChanged: (value) {
+                      context.read<AccountCubit>().updateRecipient(
+                            currentUser.copyWith(email: value),
+                          );
+                    },
                   ),
-                  const ChangeableUserInformation(
-                    "Phone number",
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    initialValue: currentUser.communicationMobilePhone?.phone
+                            .toString() ??
+                        "",
+                    decoration: const InputDecoration(
+                      labelText: "Phone number",
+                    ),
+                    keyboardType: TextInputType.phone,
+                    onChanged: (value) {
+                      final newPhoneNumber = int.tryParse(value);
+                      if (newPhoneNumber == null) return;
+                      context.read<AccountCubit>().updateRecipient(
+                            currentUser.copyWith(
+                                communicationMobilePhone:
+                                    Phone(newPhoneNumber)),
+                          );
+                    },
                   ),
                   const ListTile(
                     contentPadding: EdgeInsets.zero,
