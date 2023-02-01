@@ -1,20 +1,20 @@
 part of "account_cubit.dart";
 
-enum AccountStatus { initial, loading, success, failure }
+enum AccountStatus { initial, loading, updated, failure }
 
 class AccountState extends Equatable {
   final AccountStatus status;
-  final Recipient? recipient;
+  final Recipient recipient;
   final Exception? exception;
 
   const AccountState({
     this.status = AccountStatus.initial,
-    this.recipient,
+    required this.recipient,
     this.exception,
   });
 
   @override
-  List<Object?> get props => [status, exception];
+  List<Object?> get props => [status, recipient, exception];
 
   AccountState copyWith({
     AccountStatus? status,

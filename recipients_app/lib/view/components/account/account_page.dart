@@ -17,8 +17,9 @@ class AccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AccountCubit(
+        recipient: context.read<AuthCubit>().state.recipient!,
         userRepository: context.read<UserRepository>(),
-      )..loadRecipientData(),
+      ),
       child: const _AccountView(),
     );
   }
@@ -53,11 +54,22 @@ class _AccountView extends StatelessWidget {
                   ),
                   UnchangeableUserInformation(
                     "First name",
-                    currentUser?.firstName ?? "",
+                    currentUser.firstName ?? "",
                   ),
                   UnchangeableUserInformation(
                     "Last name",
-                    currentUser?.lastName ?? "",
+                    currentUser.lastName ?? "",
+                  ),
+                  TextFormField(
+                    initialValue: currentUser.preferredName ?? "",
+                    decoration: const InputDecoration(
+                      labelText: "Preferred name",
+                    ),
+                    onChanged: (value) {
+                      context.read<AccountCubit>().updateRecipient(
+                            currentUser.copyWith(preferredName: value),
+                          );
+                    },
                   ),
                   const ChangeableUserInformation(
                     "Preferred name",
@@ -87,11 +99,11 @@ class _AccountView extends StatelessWidget {
                   ),
                   UnchangeableUserInformation(
                     "Country",
-                    currentUser?.country ?? "",
+                    currentUser.country ?? "",
                   ),
                   UnchangeableUserInformation(
                     "Orange Money Number",
-                    currentUser?.mobileMoneyPhone?.phone.toString() ?? "",
+                    currentUser.mobileMoneyPhone?.phone.toString() ?? "",
                   ),
                   const ListTile(
                     contentPadding: EdgeInsets.zero,

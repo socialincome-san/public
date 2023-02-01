@@ -6,12 +6,38 @@ import "package:flutter_bloc/flutter_bloc.dart";
 part "account_state.dart";
 
 class AccountCubit extends Cubit<AccountState> {
+  final Recipient recipient;
   final UserRepository userRepository;
 
-  AccountCubit({required this.userRepository}) : super(const AccountState());
+  AccountCubit({
+    required this.recipient,
+    required this.userRepository,
+  }) : super(AccountState(recipient: recipient));
 
-  Future<void> loadRecipientData() async {
-    emit(const AccountState(status: AccountStatus.loading));
+  Future<void> updateRecipient(Recipient recipient) async {
+    emit(state.copyWith(status: AccountStatus.loading));
+
+    try {
+      await userRepository.updateRecipient(recipient);
+
+      emit(
+        state.copyWith(
+          status: AccountStatus.updated,
+          recipient: recipient,
+        ),
+      );
+    } on Exception catch (ex) {
+      emit(
+        state.copyWith(
+          status: AccountStatus.failure,
+          exception: ex,
+        ),
+      );
+    }
+  }
+  // We are getting the recipient from the AuthCubit already, no need to retrieve it again.
+  /* Future<void> loadRecipientData() async {
+    emit(state.copyWith(status: AccountStatus.loading));
 
     final user = userRepository.currentUser;
 
@@ -42,5 +68,5 @@ class AccountCubit extends Cubit<AccountState> {
         ),
       );
     }
-  }
+  } */
 }

@@ -73,4 +73,9 @@ class UserRepository {
 
   Future<void> signInWithCredential(PhoneAuthCredential credentials) =>
       firebaseAuth.signInWithCredential(credentials);
+
+  Future<void> updateRecipient(Recipient recipient) async => firestore
+      .collection(recipientCollection)
+      .doc(recipient.userId)
+      .update(recipient.toMap());
 }
