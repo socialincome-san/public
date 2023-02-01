@@ -101,10 +101,8 @@ class WelcomePage extends StatelessWidget {
                             fontSize: 20,
                           ),
                         ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: input,
-                      )
+                      const SizedBox(height: 8),
+                      input,
                     ],
                   ),
                 ),

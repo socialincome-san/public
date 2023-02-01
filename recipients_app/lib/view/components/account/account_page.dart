@@ -1,7 +1,8 @@
 import "package:app/models/alert_visibility.dart";
 import "package:app/models/current_user.dart";
 import "package:app/services/auth_service.dart";
-import "package:app/ui/buttons/button_big.dart";
+import "package:app/ui/buttons/buttons.dart";
+import "package:app/ui/configs/configs.dart";
 import "package:app/view/components/account/changeable_user_information.dart";
 import "package:app/view/components/account/unchangeable_user_information.dart";
 import "package:app/view/components/social_income_contact.dart";
@@ -26,7 +27,7 @@ class AccountPage extends StatelessWidget {
         return Stack(
           children: [
             Container(
-              margin: const EdgeInsets.only(left: 16, right: 16),
+              margin: AppSpacings.h16,
               child: ListView(
                 children: [
                   // Suitable for small number of widgets?
@@ -79,12 +80,11 @@ class AccountPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  ButtonBig(
+                  ButtonOutlinedBig(
                     onPressed: () {
                       alertVisibility.setContactVisibility(true);
                     },
                     label: "Get in touch",
-                    buttonType: ButtonBigType.outlined,
                   ),
                   const ListTile(
                     contentPadding: EdgeInsets.zero,

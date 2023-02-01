@@ -1,5 +1,4 @@
-import "package:app/ui/buttons/button_big.dart";
-import "package:app/ui/buttons/button_small.dart";
+import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/ui/icons/icons.dart";
 import "package:app/ui/inputs/input_text.dart";
@@ -16,7 +15,7 @@ class DesignComponentsScreen extends StatelessWidget {
         title: const Text("Design Components"),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: AppSpacings.a16,
         child: Column(
           children: [
             const Text(
@@ -113,15 +112,13 @@ class DesignComponentsScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ButtonBig(
+                ButtonOutlinedBig(
                   onPressed: () {},
                   label: "Text",
-                  buttonType: ButtonBigType.outlined,
                 ),
                 ButtonBig(
                   onPressed: () {},
                   label: "Text",
-                  buttonType: ButtonBigType.filled,
                 ),
               ],
             ),

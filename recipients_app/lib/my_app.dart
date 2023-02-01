@@ -1,6 +1,7 @@
 import "package:app/models/alert_visibility.dart";
 import "package:app/models/current_user.dart";
 import "package:app/models/registration.dart";
+import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/main_app_page.dart";
 import "package:app/view/pages/welcome_page.dart";
 import "package:firebase_auth/firebase_auth.dart";
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: "Profile Page",
+        theme: AppTheme.lightTheme,
         home: start,
         debugShowCheckedModeBanner: false,
       ),

@@ -1,4 +1,5 @@
 import "package:app/models/current_user.dart";
+import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "package:url_launcher/url_launcher_string.dart";
@@ -16,7 +17,7 @@ class TermsAndConditions extends StatelessWidget {
           children: <Widget>[
             // Phone Number Text Field
             const Padding(
-              padding: EdgeInsets.all(12),
+              padding: AppSpacings.a16,
               child: Text(
                 "Welcome to Social Income",
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.w400),
@@ -24,7 +25,7 @@ class TermsAndConditions extends StatelessWidget {
             ),
 
             const Padding(
-              padding: EdgeInsets.all(12),
+              padding: AppSpacings.a16,
               child: Text(
                 "To give you the best experience, we use data from your device to",
                 style: TextStyle(
@@ -35,7 +36,7 @@ class TermsAndConditions extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(25),
+              padding: AppSpacings.a16,
               child: Column(
                 children: const [
                   _IconAndText(
@@ -52,7 +53,7 @@ class TermsAndConditions extends StatelessWidget {
             ),
             const Spacer(),
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: AppSpacings.a16,
               child: ElevatedButton(
                 onPressed: () {
                   currentUser.acceptTerms();
@@ -79,7 +80,7 @@ class _IconAndText extends StatelessWidget {
         Icon(icon, size: 36, color: Colors.grey[700]),
         Flexible(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: AppSpacings.a16,
             child: text == "Read our privacy policy"
                 ? TextButton(
                     style: TextButton.styleFrom(padding: EdgeInsets.zero),

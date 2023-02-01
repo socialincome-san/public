@@ -35,7 +35,7 @@ class SocialIncomeAlert extends StatelessWidget {
     return Consumer<AlertVisibility>(
       builder: (context, alertVisibility, child) {
         return Container(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+          padding: AppSpacings.h16,
           height: MediaQuery.of(context).size.height / 10,
           width: MediaQuery.of(context).size.width,
           color: AppColors.primaryColor,

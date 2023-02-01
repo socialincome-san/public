@@ -1,11 +1,11 @@
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 
-class ButtonBig extends StatelessWidget {
+class ButtonOutlinedBig extends StatelessWidget {
   final VoidCallback? onPressed;
   final String label;
 
-  const ButtonBig({
+  const ButtonOutlinedBig({
     super.key,
     required this.onPressed,
     required this.label,
@@ -13,11 +13,13 @@ class ButtonBig extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return OutlinedButton(
       onPressed: onPressed,
       child: Text(
         label,
-        style: AppStyles.buttonLabelBig,
+        style: AppStyles.buttonLabelBig.copyWith(
+          color: AppColors.primaryColor,
+        ),
       ),
     );
   }

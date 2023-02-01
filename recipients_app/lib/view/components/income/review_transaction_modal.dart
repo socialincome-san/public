@@ -1,6 +1,6 @@
 import "package:app/models/current_user.dart";
 import "package:app/models/social_income_transaction.dart";
-import "package:app/ui/configs/app_colors.dart";
+import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
@@ -45,7 +45,7 @@ class _ReviewTransactionModalState extends State<ReviewTransactionModal> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 12, bottom: 12),
+                padding: AppSpacings.v16,
                 child: _contested
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
