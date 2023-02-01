@@ -50,6 +50,7 @@ class MyApp extends StatelessWidget {
             home: BlocBuilder<AuthCubit, AuthState>(
               builder: (context, state) {
                 switch (state.status) {
+                  case AuthStatus.loading:
                   case AuthStatus.unauthenticated:
                   case AuthStatus.failure:
                     return const WelcomePage();

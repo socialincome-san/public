@@ -1,7 +1,8 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
+import "package:app/ui/buttons/buttons.dart";
+import "package:app/ui/configs/app_colors.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
-import "package:rounded_loading_button/rounded_loading_button.dart";
 
 class OtpInput extends StatefulWidget {
   const OtpInput({super.key});
@@ -11,14 +12,12 @@ class OtpInput extends StatefulWidget {
 }
 
 class _OtpInputState extends State<OtpInput> {
-  late final RoundedLoadingButtonController btnController;
   late final TextEditingController inputController;
 
   @override
   void initState() {
     super.initState();
     inputController = TextEditingController();
-    btnController = RoundedLoadingButtonController();
   }
 
   @override
@@ -29,44 +28,29 @@ class _OtpInputState extends State<OtpInput> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = context.watch<SignupCubit>().state.status ==
+        SignupStatus.loadingVerificationCode;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         TextFormField(
           controller: inputController,
-          style: const TextStyle(color: Colors.white),
           keyboardType: TextInputType.number,
           decoration: const InputDecoration(
             labelText: "Verification code",
-            labelStyle: TextStyle(color: Colors.white),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white),
+            labelStyle: TextStyle(
+              color: AppColors.primaryColor,
+              fontSize: 16,
             ),
           ),
+          style: const TextStyle(
+            color: AppColors.primaryColor,
+          ),
         ),
-        Row(
-          children: [
-            TextButton(
-              onPressed: () async =>
-                  context.read<SignupCubit>().resendVerificationCode(),
-              child: const Text(
-                "Resend code",
-                style: TextStyle(
-                  color: Colors.white,
-                  decoration: TextDecoration.underline,
-                ),
-              ),
-            )
-          ],
-        ),
-        RoundedLoadingButton(
-          height: MediaQuery.of(context).size.height * 0.09,
-          width: MediaQuery.of(context).size.width * 1,
-          borderRadius: 5,
-          resetAfterDuration: true,
-          resetDuration: const Duration(seconds: 10),
-          controller: btnController,
-          color: Theme.of(context).primaryColor,
+        const SizedBox(height: 16),
+        ButtonBig(
+          isLoading: isLoading,
           onPressed: () {
             // TODO: catch errors if:
             // - no code was entered
@@ -74,7 +58,29 @@ class _OtpInputState extends State<OtpInput> {
                 .read<SignupCubit>()
                 .submitVerificationCode(inputController.text);
           },
-          child: const Text("Login"),
+          label: "Login",
+        ),
+        TextButton(
+          onPressed: () async =>
+              context.read<SignupCubit>().resendVerificationCode(),
+          child: const Text(
+            "Resend code",
+            style: TextStyle(
+              color: AppColors.primaryColor,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () async =>
+              context.read<SignupCubit>().changeToPhoneInput(),
+          child: const Text(
+            "Back to phone number",
+            style: TextStyle(
+              color: AppColors.primaryColor,
+              decoration: TextDecoration.underline,
+            ),
+          ),
         )
       ],
     );

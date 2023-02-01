@@ -1,4 +1,5 @@
 import "package:app/models/alert_visibility.dart";
+import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
@@ -81,16 +82,12 @@ class SocialIncomeContact extends StatelessWidget {
                     "support@socialincome.org",
                     writeEmail,
                   ),
-                  ElevatedButton(
+                  ButtonBig(
                     onPressed: () {
                       alertVisibility.setContactVisibility(false);
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
-                      minimumSize: const Size(200, 60),
-                    ),
-                    child: const Text("Close"),
-                  )
+                    label: "Close",
+                  ),
                 ],
               ),
             ),

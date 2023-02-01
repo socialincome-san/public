@@ -1,4 +1,5 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
+import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:flutter/material.dart";
 import "package:intl_phone_number_input/intl_phone_number_input.dart";
@@ -33,70 +34,64 @@ class _PhoneInputState extends State<PhoneInput> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = context.watch<SignupCubit>().state.status ==
+        SignupStatus.loadingPhoneNumber;
+
     return Stack(
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          // Children will expand to fill crossAxis
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: InternationalPhoneNumberInput(
-                ignoreBlank: true,
-                textFieldController: phoneNumberController,
-                initialValue: number,
-                selectorConfig: const SelectorConfig(
-                  selectorType: PhoneInputSelectorType.DIALOG,
-                ),
-                selectorTextStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                ),
-                inputDecoration: InputDecoration(
-                  labelText: "Orange Money Number",
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  labelStyle: TextStyle(color: Colors.grey[300], fontSize: 16),
-                  enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.primaryColor),
-                  ),
-                ),
-                textStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                ),
-                inputBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(
-                    width: 200.0,
-                    color: Colors.white,
-                  ),
-                ),
-                onInputChanged: (PhoneNumber value) {
-                  number = value;
-                },
+            const SizedBox(height: 16),
+            InternationalPhoneNumberInput(
+              ignoreBlank: true,
+              textFieldController: phoneNumberController,
+              initialValue: number,
+              selectorConfig: const SelectorConfig(
+                selectorType: PhoneInputSelectorType.DIALOG,
               ),
+              selectorTextStyle: const TextStyle(
+                color: AppColors.primaryColor,
+                fontSize: 20,
+              ),
+              inputDecoration: const InputDecoration(
+                labelText: "Orange Money Number",
+                labelStyle: TextStyle(
+                  color: AppColors.primaryColor,
+                  fontSize: 16,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.primaryColor),
+                ),
+              ),
+              textStyle: const TextStyle(
+                color: AppColors.primaryColor,
+                fontSize: 20,
+              ),
+              inputBorder: const OutlineInputBorder(
+                borderSide: BorderSide(
+                  width: 200.0,
+                  color: Colors.white,
+                ),
+              ),
+              onInputChanged: (PhoneNumber value) {
+                number = value;
+              },
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: RoundedLoadingButton(
-                height: MediaQuery.of(context).size.height * 0.09,
-                width: MediaQuery.of(context).size.width * 0.95,
-                borderRadius: 5,
-                controller: btnController,
-                resetAfterDuration: true,
-                resetDuration: const Duration(seconds: 10),
-                color: Theme.of(context).primaryColor,
-                onPressed: () async {
-                  if (number.phoneNumber != null &&
-                      number.phoneNumber!.isNotEmpty) {
-                    context.read<SignupCubit>().signupWithPhoneNumber(
-                          phoneNumber: number.phoneNumber!,
-                        );
-                  }
-                },
-                child: const Text("Continue"),
-              ),
-            )
+            const SizedBox(height: 16),
+            ButtonBig(
+              isLoading: isLoading,
+              onPressed: () {
+                if (number.phoneNumber != null &&
+                    number.phoneNumber!.isNotEmpty) {
+                  context.read<SignupCubit>().signupWithPhoneNumber(
+                        phoneNumber: number.phoneNumber!,
+                      );
+                }
+              },
+              label: "Continue",
+            ),
           ],
         ),
       ],

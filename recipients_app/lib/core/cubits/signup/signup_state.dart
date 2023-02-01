@@ -1,6 +1,8 @@
 part of "signup_cubit.dart";
 
 enum SignupStatus {
+  loadingPhoneNumber,
+  loadingVerificationCode,
   enterPhoneNumber,
   enterVerificationCode,
   verificationSuccess,

@@ -30,9 +30,13 @@ class _WelcomeView extends StatelessWidget {
           Column(
             children: [
               Flexible(
-                  flex: 2, child: Container(color: AppColors.primaryColor)),
+                flex: 2,
+                child: Container(color: AppColors.primaryColor),
+              ),
               Flexible(
-                  flex: 3, child: Container(color: AppColors.primaryLightColor))
+                flex: 3,
+                child: Container(color: AppColors.primaryLightColor),
+              )
             ],
           ),
           Column(
@@ -57,8 +61,9 @@ class _WelcomeView extends StatelessWidget {
                       "Universal Basic Income\nfrom Human to Human",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
+                        fontSize: 24,
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -74,8 +79,10 @@ class _WelcomeView extends StatelessWidget {
                       },
                       builder: (context, state) {
                         switch (state.status) {
+                          case SignupStatus.loadingPhoneNumber:
                           case SignupStatus.enterPhoneNumber:
                             return const PhoneInput();
+                          case SignupStatus.loadingVerificationCode:
                           case SignupStatus.enterVerificationCode:
                             return const OtpInput();
                           case SignupStatus.verificationSuccess:

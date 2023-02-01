@@ -117,13 +117,10 @@ class _AccountView extends StatelessWidget {
                       ),
                     ),
                   ),
-
-                  ElevatedButton(
+                  ButtonBig(
+                    isLoading: state.status == AccountStatus.loading,
                     onPressed: () => context.read<AuthCubit>().logout(),
-                    child: const Text("Sign Out"),
-                  ),
-                  const SizedBox(
-                    height: 1,
+                    label: "Sign Out",
                   ),
                 ],
               ),

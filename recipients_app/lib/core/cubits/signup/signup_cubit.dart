@@ -15,6 +15,8 @@ class SignupCubit extends Cubit<SignupState> {
   Future<void> signupWithPhoneNumber({
     required String phoneNumber,
   }) async {
+    emit(state.copyWith(status: SignupStatus.loadingPhoneNumber));
+
     try {
       await userRepository.verifyPhoneNumber(
         phoneNumber: phoneNumber,
@@ -56,6 +58,8 @@ class SignupCubit extends Cubit<SignupState> {
   }
 
   Future<void> submitVerificationCode(String verificationCode) async {
+    emit(state.copyWith(status: SignupStatus.loadingVerificationCode));
+
     try {
       final credential = PhoneAuthProvider.credential(
         verificationId: state.verificationId!,
@@ -82,5 +86,14 @@ class SignupCubit extends Cubit<SignupState> {
 
   Future<void> resendVerificationCode() async {
     signupWithPhoneNumber(phoneNumber: state.phoneNumber!);
+  }
+
+  void changeToPhoneInput() {
+    emit(
+      state.copyWith(
+        status: SignupStatus.enterPhoneNumber,
+        phoneNumber: state.phoneNumber,
+      ),
+    );
   }
 }

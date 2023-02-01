@@ -35,6 +35,8 @@ class AuthCubit extends Cubit<AuthState> {
   /// If so, emit [AuthState] with [AuthStatus.authenticated].
   /// Otherwise, emit [AuthState] with [AuthStatus.unauthenticated].
   Future<void> init() async {
+    emit(const AuthState(status: AuthStatus.loading));
+
     final user = userRepository.currentUser;
 
     if (user != null) {
@@ -53,6 +55,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> logout() async {
+    emit(const AuthState(status: AuthStatus.loading));
     await userRepository.signOut();
     emit(const AuthState());
   }

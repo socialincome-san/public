@@ -1,4 +1,5 @@
 import "package:app/models/current_user.dart";
+import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
@@ -11,22 +12,19 @@ class TermsAndConditions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<CurrentUser>(
       builder: (context, currentUser, child) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          // Children will expand to fill crossAxis
-          children: <Widget>[
-            // Phone Number Text Field
-            const Padding(
-              padding: AppSpacings.a16,
-              child: Text(
+        return Padding(
+          padding: AppSpacings.a16,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              const SizedBox(height: 16),
+              // Phone Number Text Field
+              const Text(
                 "Welcome to Social Income",
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.w400),
               ),
-            ),
-
-            const Padding(
-              padding: AppSpacings.a16,
-              child: Text(
+              const SizedBox(height: 16),
+              const Text(
                 "To give you the best experience, we use data from your device to",
                 style: TextStyle(
                   fontSize: 20,
@@ -34,10 +32,8 @@ class TermsAndConditions extends StatelessWidget {
                   height: 1.4,
                 ),
               ),
-            ),
-            Padding(
-              padding: AppSpacings.a16,
-              child: Column(
+              const SizedBox(height: 16),
+              Column(
                 children: const [
                   _IconAndText(
                     "Make the app work and provide our services",
@@ -50,18 +46,13 @@ class TermsAndConditions extends StatelessWidget {
                   _IconAndText("Read our privacy policy", Icons.policy)
                 ],
               ),
-            ),
-            const Spacer(),
-            Padding(
-              padding: AppSpacings.a16,
-              child: ElevatedButton(
-                onPressed: () {
-                  currentUser.acceptTerms();
-                },
-                child: const Text("Accept"),
-              ),
-            )
-          ],
+              const Spacer(),
+              ButtonBig(
+                onPressed: () => currentUser.acceptTerms(),
+                label: "Accept",
+              )
+            ],
+          ),
         );
       },
     );
