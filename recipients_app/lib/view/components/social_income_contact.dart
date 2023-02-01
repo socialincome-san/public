@@ -17,6 +17,7 @@ class SocialIncomeContact extends StatelessWidget {
       if (await canLaunchUrlString(whatsappURL)) {
         await launchUrlString(whatsappURL);
       } else {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("whatsapp no installed")),
         );
