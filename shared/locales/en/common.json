@@ -1,26 +1,15 @@
 {
 	"common": {
-		"transparency": "Transparency",
-		"finances": "Finances",
-		"evidence": "Evidence",
-		"downloads": "Downloads",
-		"sustainability": "Sustainability",
+		"takeAction": "Take Action",
 		"ourWork": "Our Work",
 		"aboutUs": "About Us",
-		"faq": "FAQ",
-		"takeAction": "Take Action",
-		"login": "Login",
-		"account": "Account",
+		"newsletter": "Newsletter",
 		"privacyPolicy": "Privacy Policy",
-		"termsOfUse": "Terms of Use",
 		"termsForContributions": "Terms for Contributions",
+		"termsOfUse": "Terms of Use",
 		"thearts": "The Arts",
-		"bankDetails": "Bank Details",
-		"books": "Books",
-		"socialResponsibility": "Social Responsibility",
-		"english": "English",
-		"german": "German",
-		"french": "French",
-		"italian": "Italian"
+		"faq": "FAQ",
+		"downloads": "Downloads",
+		"bankDetails": "Bank Details"
 	}
 }

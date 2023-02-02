@@ -1,26 +1,15 @@
 {
 	"common": {
-		"transparency": "Transparenz",
-		"finances": "Finanzen",
-		"evidence": "Evidenz",
-		"downloads": "Downloads",
-		"sustainability": "Nachhaltigkeit",
+		"takeAction": "Jetzt Handeln",
 		"ourWork": "Was wir tun",
 		"aboutUs": "Wer wir sind",
-		"faq": "FAQ",
-		"takeAction": "Jetzt Handeln",
-		"login": "Login",
-		"account": "Account",
+		"newsletter": "Newsletter",
 		"privacyPolicy": "Datenschutzrichtlinie",
-		"termsOfUse": "Nutzungsbedingungen",
 		"termsForContributions": "Beitragsbedingungen",
+		"termsOfUse": "Nutzungsbedingungen",
 		"theArts": "Die Künste",
-		"bankDetails": "Bankangaben",
-		"books": "Bücher",
-		"socialResponsibility": "Soziale Verantwortung",
-		"english": "Englisch",
-		"german": "Deutsch",
-		"french": "Französisch",
-		"italian": "Italienisch"
+		"faq": "FAQ",
+		"downloads": "Downloads",
+		"bankDetails": "Bankangaben"
 	}
 }
