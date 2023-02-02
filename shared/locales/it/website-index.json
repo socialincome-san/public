@@ -1,8 +1,8 @@
 {
-	"index": {
-		"title": "Social Income",
-		"welcome": "Benvenuto!",
-		"linkToFinances": "Finanze Attuali",
-		"linkToSocialResponsibility": "Responsabilità sociale"
-	}
+  "website-index": {
+    "title": "Social Income",
+    "welcome": "Benvenuto",
+    "linkToFinances": "Finanze Attuali",
+    "linkToSocialResponsibility": "Responsabilità sociale"
+  }
 }
