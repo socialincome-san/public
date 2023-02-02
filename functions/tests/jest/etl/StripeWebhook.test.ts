@@ -357,7 +357,7 @@ describe('stripeWebhook', () => {
 		stripe_customer_id: 'cus_123',
 		test_user: false,
 		status: UserStatusKey.INITIALIZED,
-		location: 'US',
+		location: 'us',
 		currency: 'USD',
 	};
 });

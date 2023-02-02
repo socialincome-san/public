@@ -8,7 +8,7 @@ import { sendEmail } from '../../../shared/src/utils/messaging/email';
 import { renderTemplate } from '../../../shared/src/utils/templates';
 import { Translator } from '../../../shared/src/utils/translate';
 import { NOTIFICATION_EMAIL_PASSWORD, NOTIFICATION_EMAIL_USER } from '../config';
-
+import { Timestamp } from '@google-cloud/firestore';
 import { createWriteStream } from 'fs';
 import * as path from 'path';
 import PDFDocument from 'pdfkit';
@@ -111,7 +111,7 @@ export class DonationCertificateHandler {
 			});
 
 		return _(contributions)
-			.filter((contribution) => contribution.created?.toDate().getFullYear() === year)
+			.filter((contribution) => (contribution.created as Timestamp)?.toDate().getFullYear() === year)
 			.groupBy((contribution) => contribution.currency)
 			.mapValues((contributions) => _.sumBy(contributions, (contribution) => contribution.amount));
 	};
