@@ -1,4 +1,5 @@
 import "package:app/models/current_user.dart";
+import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
@@ -13,7 +14,7 @@ class BalanceCard extends StatelessWidget {
           color: Colors.white,
           height: MediaQuery.of(context).size.height / 5,
           width: MediaQuery.of(context).size.height * .9,
-          padding: const EdgeInsets.all(6),
+          padding: AppSpacings.a8,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
