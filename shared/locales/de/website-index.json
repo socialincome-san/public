@@ -1,8 +1,8 @@
 {
-  "website-index": {
-    "title": "Social Income",
-    "welcome": "Willkommen",
-    "linkToFinances": "Aktuelle Finanzen",
-    "linkToSocialResponsibility": "Social Responsibility"
-  }
+	"website-index": {
+		"title": "Social Income",
+		"welcome": "Willkommen",
+		"linkToFinances": "Aktuelle Finanzen",
+		"linkToSocialResponsibility": "Social Responsibility"
+	}
 }

@@ -1,6 +1,6 @@
 {
-  "finances": {
-    "title": "Aktuelle Finanzen",
-    "mainText": "Wir zeigen Ihnen diese Seite in folgender Währung: {{currency}}. Der aktuelle Kontostand ist: {{balance, currency}}."
-  }
+	"finances": {
+		"title": "Aktuelle Finanzen",
+		"mainText": "Wir zeigen Ihnen diese Seite in folgender Währung: {{currency}}. Der aktuelle Kontostand ist: {{balance, currency}}."
+	}
 }
