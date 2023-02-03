@@ -16,16 +16,15 @@ import { AdminUser } from '../../shared/src/types';
 import {
 	adminsCollection,
 	buildPartnerOrganisationsCollection,
-	buildRecipientsCollection,
 	contributorOrganisationsCollection,
 	newsletterSubscribersCollection,
 	operationalExpensesCollection,
-	recentPaymentsCollection,
 	usersCollection,
 } from './collections';
 
 import { getApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
+import { RecipientsView } from './views/RecipientsView';
 import { ScriptsView } from './views/Scripts';
 
 const onFirebaseInit = () => {
@@ -109,9 +108,7 @@ export default function App() {
 		newsletterSubscribersCollection,
 		contributorOrganisationsCollection,
 		usersCollection,
-		recentPaymentsCollection,
 		buildPartnerOrganisationsCollection({ isGlobalAdmin: true }),
-		buildRecipientsCollection({ isGlobalAdmin: true }),
 	];
 
 	// The initialFilter property on collections is static, i.e. we can't dynamically access user information when we create
@@ -120,7 +117,16 @@ export default function App() {
 	const [collections, setCollections] = useState<EntityCollection[]>([]);
 
 	// Adding custom pages depending on the user role
-	const publicCustomViews: CMSView[] = [];
+	const publicCustomViews: CMSView[] = [
+		{
+			path: 'recipients',
+			name: 'Recipients',
+			group: 'Recipients',
+			icon: 'RememberMeTwoTone',
+			description: 'Collection of Recipients',
+			view: <RecipientsView />,
+		},
+	];
 	const globalAdminCustomViews: CMSView[] = [
 		{
 			path: 'scripts',
@@ -148,11 +154,8 @@ export default function App() {
 						setCustomViews(publicCustomViews.concat(globalAdminCustomViews));
 						authController.setExtra({ isGlobalAdmin: true });
 					} else {
-						setCollections([
-							buildPartnerOrganisationsCollection({ isGlobalAdmin: false }),
-							buildRecipientsCollection({ isGlobalAdmin: false, organisations: result?.values?.organisations }),
-							recentPaymentsCollection,
-						]);
+						authController.setExtra({ organisations: result?.values?.organisations || [] });
+						setCollections([buildPartnerOrganisationsCollection({ isGlobalAdmin: false })]);
 					}
 				}
 			});

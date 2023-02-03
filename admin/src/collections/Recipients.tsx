@@ -8,6 +8,7 @@ import {
 	RecipientProgramStatus,
 	RECIPIENT_FIRESTORE_PATH,
 } from '../../../shared/src/types';
+import { CreateOrangeMoneyCSVAction } from '../actions/CreateOrangeMoneyCSVAction';
 import { BuildCollectionProps, paymentsCollection } from './index';
 
 export const programStatusProperty: Property = {
@@ -227,11 +228,13 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 		description: 'Lists of people, who receive a Social Income',
 		textSearchEnabled: true,
 	};
+
 	if (isGlobalAdmin) {
 		return buildCollection<Partial<Recipient>>({
 			...defaultParams,
 			properties: globalAdminProperties,
 			subcollections: [paymentsCollection],
+			Actions: [CreateOrangeMoneyCSVAction],
 			inlineEditing: false,
 			initialSort: ['om_uid', 'desc'],
 		});
@@ -254,7 +257,6 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 				organisation: ['in', organisations || []],
 			},
 			inlineEditing: false,
-			initialSort: ['om_uid', 'desc'],
 		});
 	}
 };

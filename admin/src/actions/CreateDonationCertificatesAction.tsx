@@ -11,12 +11,12 @@ import {
 	Select,
 	Typography,
 } from '@mui/material';
+import { CreateDonationCertificatesFunctionProps } from '../../../functions/src/donation_certificates/DonationCertificateHandler';
 import { User } from '../../../shared/src/types';
 
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import _ from 'lodash';
 import React from 'react';
-import { CreateDonationCertificatesFunctionProps } from '../../../functions/src/donation_certificates/createDonationCertificatesFunction';
 
 const style = {
 	position: 'absolute' as 'absolute',
