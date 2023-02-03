@@ -6,12 +6,16 @@
 	"scripts": {
 		"build": "vite build",
 		"serve": "vite serve",
-		"test": "firebase emulators:exec --project social-income-prod --only firestore --config ../firebase.json --import ../seed  'npm run test:app'",
-		"test:app": "jest --forceExit --passWithNoTests --roots src"
+		"serve:emulator": "firebase emulators:exec --project social-income-prod --only firestore,auth --config ../firebase.json --import ../seed  'npm run serve'",
+		"test": "firebase emulators:exec --project social-income-prod --only firestore,auth --config ../firebase.json --import ../seed  'npm run test:app'",
+		"test:app": "jest --forceExit --passWithNoTests --roots src",
+		"test:playwright": "firebase emulators:exec --project social-income-prod --only firestore,auth --config ../firebase.json --import ../seed  'npx playwright install --with-deps && playwright test --trace on'",
+		"test:playwright:update": "firebase emulators:exec --project social-income-prod --only firestore,auth --config ../firebase.json --import ../seed  'npx playwright install --with-deps && playwright test --update-snapshots'"
 	},
 	"devDependencies": {
 		"@firebase/rules-unit-testing": "^2.0.6",
 		"@jest/globals": "^29.4.1",
+    "@playwright/test": "^1.28.1",
 		"@types/jest": "^29.4.0",
 		"@types/node": "^16.18.11",
 		"@types/react": "^18.0.27",
