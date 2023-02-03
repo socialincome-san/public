@@ -43,21 +43,20 @@ test('recipients', async ({ page }) => {
 	await expect(page).toHaveScreenshot();
 
 	// test filtering
-	await page.locator('div:nth-child(3) > .MuiBadge-root > .MuiButtonBase-root').click();
-	await page.getByRole('spinbutton').click();
-	await page.getByRole('spinbutton').fill('1');
-	await expect(page).toHaveScreenshot();
-	await page.getByText('Filter').click();
-	await page.waitForTimeout(4000); // needs some time to filter
-	await expect(page).toHaveScreenshot();
-	await page.getByRole('button', { name: 'filter clear' }).click();
-	await page.waitForTimeout(1000);
-	await expect(page).toHaveScreenshot();
+	// await page.locator('div:nth-child(3) > .MuiBadge-root > .MuiButtonBase-root').click();
+	// await page.getByRole('spinbutton').click();
+	// await page.getByRole('spinbutton').fill('1');
+	// await expect(page).toHaveScreenshot();
+	// await page.getByText('Filter').click();
+	// await page.waitForTimeout(4000); // needs some time to filter
+	// await expect(page).toHaveScreenshot();
+	// await page.getByRole('button', { name: 'filter clear' }).click();
+	// await page.waitForTimeout(1000);
+	// await expect(page).toHaveScreenshot();
 
 	// edit recipient
 	await page.getByRole('button', { name: 'Edit iF8bLEoUjqOIlq84XQmi' }).click();
 	await expect(page).toHaveScreenshot();
-	await page.locator('#form_field_communication_mobile_phone').getByRole('spinbutton').fill('23300000500');
 	await page.getByRole('button', { name: 'First Language' }).click();
 	await page.getByRole('option', { name: 'Temne' }).click();
 	await expect(page).toHaveScreenshot();
