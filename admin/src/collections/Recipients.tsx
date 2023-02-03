@@ -1,8 +1,13 @@
-import { buildCollection, buildProperties } from '@camberi/firecms';
+import { AdditionalFieldDelegate, buildCollection, buildProperties } from '@camberi/firecms';
 import { PropertiesOrBuilders } from '@camberi/firecms/dist/types';
 import { Property } from '@camberi/firecms/dist/types/properties';
+import { toYYYYMMDD } from '../../../shared/src/utils/date';
+
+import { Chip, Tooltip } from '@mui/material';
 import { isUndefined } from 'lodash';
 import {
+	calcLastPaymentDate,
+	calcPaymentsLeft,
 	PARTNER_ORGANISATION_FIRESTORE_PATH,
 	Recipient,
 	RecipientProgramStatus,
@@ -132,6 +137,27 @@ const organisationProperty: Property = {
 	path: PARTNER_ORGANISATION_FIRESTORE_PATH,
 };
 
+const PaymentsLeft: AdditionalFieldDelegate<Partial<Recipient>> = {
+	id: 'payments_left',
+	name: 'Payments Left',
+	builder: ({ entity }) => {
+		const lastPaymentDate = entity.values.si_start_date ? calcLastPaymentDate(entity.values.si_start_date) : undefined;
+		const paymentsLeft = lastPaymentDate ? calcPaymentsLeft(lastPaymentDate) : undefined;
+		return (
+			paymentsLeft &&
+			lastPaymentDate && (
+				<Tooltip title={'Last Payment Date ' + toYYYYMMDD(lastPaymentDate)}>
+					<Chip
+						color={paymentsLeft <= 1 ? 'error' : paymentsLeft <= 3 ? 'warning' : 'success'}
+						label={paymentsLeft + ' payment(s) left'}
+					/>
+				</Tooltip>
+			)
+		);
+	},
+	dependencies: ['si_start_date'],
+};
+
 const baseProperties: PropertiesOrBuilders<Partial<Recipient>> = {
 	progr_status: programStatusProperty,
 	om_uid: { ...orangeMoneyUIDProperty, disabled: true },
@@ -227,10 +253,11 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 		icon: 'RememberMeTwoTone',
 		description: 'Lists of people, who receive a Social Income',
 		textSearchEnabled: true,
+		additionalColumns: [PaymentsLeft],
 	};
 
 	if (isGlobalAdmin) {
-		return buildCollection<Partial<Recipient>>({
+		return buildCollection<Recipient>({
 			...defaultParams,
 			properties: globalAdminProperties,
 			subcollections: [paymentsCollection],
