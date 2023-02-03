@@ -30,8 +30,6 @@ export class DonationCertificateHandler {
 
 	createDonationCertificates = functions.https.onCall(
 		async ({ users, year, sendEmails }: CreateDonationCertificatesFunctionProps, { auth }) => {
-			console.log('email');
-			console.log(auth?.token?.email);
 			await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
 			let [successCount, skippedCount] = [0, 0];
 			for await (const userEntity of users) {
