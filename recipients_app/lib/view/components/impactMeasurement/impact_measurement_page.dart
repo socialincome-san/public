@@ -1,4 +1,5 @@
 import "package:app/models/current_user.dart";
+import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 import "package:intl/intl.dart";
 import "package:provider/provider.dart";
@@ -37,7 +38,7 @@ class _ImpactMeasurementPageState extends State<ImpactMeasurementPage>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Padding(
-                      padding: EdgeInsets.all(12.0),
+                      padding: AppSpacings.a16,
                       child: Text(
                         "Thank you for answering the survey.",
                         style: TextStyle(
@@ -47,7 +48,7 @@ class _ImpactMeasurementPageState extends State<ImpactMeasurementPage>
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding: AppSpacings.a16,
                       child: Text(
                         () {
                           final nextSurveyDate = currentUser.nextSurvey;

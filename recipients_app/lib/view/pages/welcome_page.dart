@@ -1,6 +1,6 @@
 import "package:app/models/alert_visibility.dart";
 import "package:app/models/registration.dart";
-import "package:app/theme/theme.dart";
+import "package:app/ui/configs/app_colors.dart";
 import "package:app/view/components/social_income_alert.dart";
 import "package:app/view/components/social_income_contact.dart";
 import "package:app/view/components/welcomePage/otp_input.dart";
@@ -13,23 +13,23 @@ class WelcomePage extends StatelessWidget {
   TextStyle get textbuttonStyle => const TextStyle(color: Colors.white);
   // prevents rebuilding new widget which would lose focus
   SocialIncomeAlert get ineligible => const SocialIncomeAlert(
-    "Number not eligible.",
-    Icons.close,
-    "ineligible",
-    textButton: "Contact us for support",
-  );
+        "Number not eligible.",
+        Icons.close,
+        "ineligible",
+        textButton: "Contact us for support",
+      );
 
   SocialIncomeAlert get formatError => const SocialIncomeAlert(
-    "This is not a valid phone number",
-    Icons.close,
-    "formatError",
-  );
+        "This is not a valid phone number",
+        Icons.close,
+        "formatError",
+      );
 
   SocialIncomeAlert get verificationCodeError => const SocialIncomeAlert(
-    "False verification code. Try again",
-    Icons.close,
-    "CodeWrong",
-  );
+        "False verification code. Try again",
+        Icons.close,
+        "CodeWrong",
+      );
 
   const WelcomePage({super.key});
   bool keyboardVisible() {
@@ -58,8 +58,14 @@ class WelcomePage extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Flexible(flex: 2, child: Container(color: siDarkBlue)),
-                  Flexible(flex: 3, child: Container(color: siLightBlue))
+                  Flexible(
+                    flex: 2,
+                    child: Container(color: AppColors.primaryColor),
+                  ),
+                  Flexible(
+                    flex: 3,
+                    child: Container(color: AppColors.primaryLightColor),
+                  )
                 ],
               ),
               Center(
@@ -95,10 +101,8 @@ class WelcomePage extends StatelessWidget {
                             fontSize: 20,
                           ),
                         ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: input,
-                      )
+                      const SizedBox(height: 8),
+                      input,
                     ],
                   ),
                 ),
