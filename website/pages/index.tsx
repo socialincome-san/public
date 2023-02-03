@@ -7,7 +7,7 @@ import Layout from '../components/Layout';
 
 export default function Home() {
 	const { t } = useTranslation('website-index');
-
+	// noinspection HtmlUnknownTarget
 	return (
 		<Layout title={t('website-index.title')}>
 			<section>
