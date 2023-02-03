@@ -30,7 +30,7 @@ import { ScriptsView } from './views/Scripts';
 
 const onFirebaseInit = () => {
 	if (import.meta.env.VITE_ADMIN_FB_AUTH_EMULATOR_URL) {
-		connectAuthEmulator(getAuth(), import.meta.env.VITE_ADMIN_FB_AUTH_EMULATOR_URL);
+		connectAuthEmulator(getAuth(), import.meta.env.VITE_ADMIN_FB_AUTH_EMULATOR_URL, { disableWarnings: true });
 		console.log('Using auth emulator');
 	} else {
 		console.log('Using production auth');
