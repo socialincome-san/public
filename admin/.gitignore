@@ -1,3 +1,8 @@
 # Compiled JavaScript files
 dist/
 social-income-prod-firebase-adminsdk.json
+
+# playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
