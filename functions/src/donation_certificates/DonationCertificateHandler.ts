@@ -1,5 +1,9 @@
+import { Timestamp } from '@google-cloud/firestore';
 import * as functions from 'firebase-functions';
+import { createWriteStream } from 'fs';
 import _ from 'lodash';
+import * as path from 'path';
+import PDFDocument from 'pdfkit';
 import { withFile } from 'tmp-promise';
 import { StorageAdmin } from '../../..//shared/src/firebase/StorageAdmin';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
@@ -7,12 +11,7 @@ import { Contribution, DonationCertificate, Entity, User } from '../../../shared
 import { sendEmail } from '../../../shared/src/utils/messaging/email';
 import { renderTemplate } from '../../../shared/src/utils/templates';
 import { Translator } from '../../../shared/src/utils/translate';
-import { NOTIFICATION_EMAIL_PASSWORD, NOTIFICATION_EMAIL_USER } from '../config';
-import { Timestamp } from '@google-cloud/firestore';
-import { createWriteStream } from 'fs';
-import * as path from 'path';
-import PDFDocument from 'pdfkit';
-import { ASSET_DIR } from '../config';
+import { ASSET_DIR, NOTIFICATION_EMAIL_PASSWORD, NOTIFICATION_EMAIL_USER } from '../config';
 
 export interface CreateDonationCertificatesFunctionProps {
 	users: Entity<User>[];
@@ -31,8 +30,9 @@ export class DonationCertificateHandler {
 
 	createDonationCertificates = functions.https.onCall(
 		async ({ users, year, sendEmails }: CreateDonationCertificatesFunctionProps, { auth }) => {
-			// TODO: Re-enable this check
-			// await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
+			console.log('email');
+			console.log(auth?.token?.email);
+			await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
 			let [successCount, skippedCount] = [0, 0];
 			for await (const userEntity of users) {
 				const user = userEntity.values;
