@@ -17,6 +17,7 @@ class Recipient extends Equatable {
   final bool? termsAccepted;
   final DateTime? recipientSince;
   final String? imLinkInitial;
+  final String? imLinkRegular;
 
   const Recipient({
     required this.userId,
@@ -31,6 +32,7 @@ class Recipient extends Equatable {
     this.termsAccepted,
     this.recipientSince,
     this.imLinkInitial,
+    this.imLinkRegular,
   });
 
   @override
@@ -48,6 +50,7 @@ class Recipient extends Equatable {
       termsAccepted,
       recipientSince,
       imLinkInitial,
+      imLinkRegular,
     ];
   }
 
@@ -64,6 +67,7 @@ class Recipient extends Equatable {
     bool? termsAccepted,
     DateTime? recipientSince,
     String? imLinkInitial,
+    String? imLinkRegular,
   }) {
     return Recipient(
       userId: userId ?? this.userId,
@@ -79,6 +83,7 @@ class Recipient extends Equatable {
       termsAccepted: termsAccepted ?? this.termsAccepted,
       recipientSince: recipientSince ?? this.recipientSince,
       imLinkInitial: imLinkInitial ?? this.imLinkInitial,
+      imLinkRegular: imLinkRegular ?? this.imLinkRegular,
     );
   }
 
@@ -86,23 +91,23 @@ class Recipient extends Equatable {
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
 
-    result.addAll({"userId": userId});
-    /* if (communicationMobilePhone != null) {
+    result.addAll({"user_id": userId});
+    if (communicationMobilePhone != null) {
       result.addAll(
-        {"communicationMobilePhone": communicationMobilePhone!.toMap()},
+        {"communication_mobile_phone": communicationMobilePhone!.toMap()},
       );
     }
     if (mobileMoneyPhone != null) {
-      result.addAll({"mobileMoneyPhone": mobileMoneyPhone!.toMap()});
-    } */
+      result.addAll({"mobile_money_phone": mobileMoneyPhone!.toMap()});
+    }
     if (firstName != null) {
-      result.addAll({"firstName": firstName});
+      result.addAll({"first_name": firstName});
     }
     if (lastName != null) {
-      result.addAll({"lastName": lastName});
+      result.addAll({"last_name": lastName});
     }
     if (birthDate != null) {
-      result.addAll({"birthDate": birthDate});
+      result.addAll({"birth_date": birthDate});
     }
     if (email != null) {
       result.addAll({"email": email});
@@ -111,16 +116,20 @@ class Recipient extends Equatable {
       result.addAll({"country": country});
     }
     if (preferredName != null) {
-      result.addAll({"preferredName": preferredName});
+      result.addAll({"preferred_name": preferredName});
     }
     if (termsAccepted != null) {
-      result.addAll({"termsAccepted": termsAccepted});
+      result.addAll({"terms_accepted": termsAccepted});
     }
     if (recipientSince != null) {
-      result.addAll({"recipientSince": recipientSince!.millisecondsSinceEpoch});
+      result
+          .addAll({"recipient_since": recipientSince!.millisecondsSinceEpoch});
     }
     if (imLinkInitial != null) {
-      result.addAll({"imLinkInitial": imLinkInitial});
+      result.addAll({"im_link_initial": imLinkInitial});
+    }
+    if (imLinkInitial != null) {
+      result.addAll({"im_link_regular": imLinkRegular});
     }
 
     return result;
@@ -151,6 +160,7 @@ class Recipient extends Equatable {
           ? DateTime.fromMillisecondsSinceEpoch(map["recipient_since"] as int)
           : null,
       imLinkInitial: map["im_link_initial"] as String?,
+      imLinkRegular: map["im_link_regular"] as String?,
     );
   }
 
@@ -174,4 +184,12 @@ class Phone {
 
   factory Phone.fromJson(String source) =>
       Phone.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  Map<String, dynamic> toMap() {
+    final result = <String, dynamic>{};
+
+    result.addAll({"phone": phone});
+
+    return result;
+  }
 }
