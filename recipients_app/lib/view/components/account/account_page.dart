@@ -22,13 +22,15 @@ class AccountScreen extends StatelessWidget {
         recipient: context.read<AuthCubit>().state.recipient!,
         userRepository: context.read<UserRepository>(),
       ),
-      child: const _AccountView(),
+      child: _AccountView(),
     );
   }
 }
 
 class _AccountView extends StatelessWidget {
-  const _AccountView();
+  _AccountView();
+
+  final _birthDateController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,9 @@ class _AccountView extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         final currentUser = state.recipient;
+
+        _birthDateController.text =
+            getFormattedDate(currentUser.birthDate) ?? "";
 
         return Stack(
           children: [
@@ -75,7 +80,7 @@ class _AccountView extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
-                    initialValue: getFormattedDate(currentUser.birthDate) ?? "",
+                    controller: _birthDateController,
                     decoration: const InputDecoration(
                       labelText: "Date of birth",
                     ),
