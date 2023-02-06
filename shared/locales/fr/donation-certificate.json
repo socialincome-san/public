@@ -1,6 +1,6 @@
 {
 	"contribution": "{{ amount, currency }}",
-	"email-subject": "Social Income Attestation de don",
+	"email-subject": "Attestation de don – Social Income",
 	"email-body-greeting": "Bonjour {{ firstname }}",
 	"email-body-text-1": "Je te envoie le reçu de don pour l'année {{ year }}. Merci pour ta confiance et ton engagement pour moins de pauvreté et plus de justice.",
 	"email-body-text-2": "Social Income est reconnu comme une organisation à but non lucratif en Suisse et est exonéré d'impôts.",
