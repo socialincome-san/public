@@ -58,9 +58,9 @@ We integrated
 automatically sync the keys used in the code with the ones available in
 the translations jsons.
 
-For the website, we will split the translation files into chunks (e.g.
-one per page or component). This allows to avoid pushing unused data to
-the client. The
+For the website, we will split the translation files into namespaces
+(e.g. one per page or component). This allows to avoid pushing unused
+data to the client. The
 [next-i18next Readme](https://github.com/i18next/next-i18next#3-project-setup)
 explains all the details.
 
@@ -74,6 +74,17 @@ In a nutshell, adding translations to a page involves 3 steps:
 - Run `make website-extract-translations` for docker or
   `npm run website:extract-translations` for npm to update the json
   files.
+
+If you want to use multiple translation files (namespaces) in 1 page you
+can do it like this:
+
+- Add
+  `...(await serverSideTranslations(locale, ['website-myNewPage', 'common'])),`
+  to the `getStaticProps` of your page
+- Add `const { t } = useTranslation('website-myNewPage');` By default we
+  use the `website-myNewPage` file. E.g. `{t('yourKeyInmyNewPage')}`
+- If you want to use a key from the common file you can write
+  `{t('yourKeyInCommon', { ns: 'common' })}`.
 
 Within the GitHub PR checks, we will run `check-translations` which
 returns an error if the jsons files are not in sync with the code.

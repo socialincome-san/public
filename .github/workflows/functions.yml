@@ -29,7 +29,7 @@ jobs:
 
       - name: Install & Setup Firebase Emulator Suite
         run: |
-          npm -g install firebase-tools@11.18.0 && \
+          npm -g install firebase-tools@11.21.0 && \
           firebase setup:emulators:firestore && \
           firebase setup:emulators:ui
 
@@ -48,7 +48,7 @@ jobs:
         with:
           source-dir: functions/playwright-report/
           preview-branch: gh-pages
-          umbrella-dir: playwright-report
+          umbrella-dir: functions-playwright-report
           action: auto
 
       - name: Build

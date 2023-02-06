@@ -132,7 +132,7 @@ export class StripeWebhook {
 				status: UserStatusKey.INITIALIZED,
 				stripe_customer_id: charge.customer as string,
 				test_user: false,
-				location: charge.billing_details.address?.country?.toUpperCase(),
+				location: charge.billing_details.address?.country?.toLowerCase(),
 				currency: charge.currency.toUpperCase(),
 			};
 		} else {

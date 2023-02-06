@@ -1,22 +1,56 @@
-import i18next from 'i18next';
+import i18next, { i18n } from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
+import path from 'path';
+
+export const FALLBACK_LANGUAGE = 'en';
 
 interface TranslateProps {
-	language: string;
-	namespace: string;
-	key: string;
+	namespace?: string;
+	language?: string;
 	context?: object;
 }
 
-export const translate = async ({ language, namespace, key, context }: TranslateProps) => {
-	const i18n = i18next.createInstance();
-	await i18n
-		.use(
-			resourcesToBackend((language: string, namespace: string) => import(`../../locales/${language}/${namespace}.json`))
-		)
-		.init({
-			lng: language,
-			ns: namespace,
+interface TranslatorProps {
+	language: string;
+	namespaces: string[];
+}
+
+export class Translator {
+	language: string;
+	namespaces: string[];
+	instance: i18n;
+
+	constructor(language: string, namespaces: string[]) {
+		this.language = language;
+		this.namespaces = namespaces;
+		this.instance = i18next.createInstance();
+	}
+
+	public static async getInstance({ language, namespaces }: TranslatorProps): Promise<Translator> {
+		const translator = new Translator(language, namespaces);
+		await translator.instance
+			.use(
+				resourcesToBackend(
+					(language: string, namespace: string) =>
+						import(path.join(__dirname, '..', '..', 'locales', language, `${namespace}.json`))
+				)
+			)
+			.init({
+				lng: language,
+				ns: namespaces,
+				interpolation: {
+					escapeValue: false,
+				},
+				fallbackLng: FALLBACK_LANGUAGE,
+			});
+		return translator;
+	}
+
+	public t = (key: string, translateProps?: TranslateProps) => {
+		return this.instance.t(key, {
+			ns: translateProps?.namespace || this.namespaces,
+			lng: translateProps?.language || this.language,
+			...translateProps?.context,
 		});
-	return i18n.t(key, { ...context });
-};
+	};
+}

@@ -1,5 +1,5 @@
 import "package:app/models/alert_visibility.dart";
-import "package:app/theme/theme.dart";
+import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "package:url_launcher/url_launcher_string.dart";
@@ -17,6 +17,7 @@ class SocialIncomeContact extends StatelessWidget {
       if (await canLaunchUrlString(whatsappURL)) {
         await launchUrlString(whatsappURL);
       } else {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("whatsapp no installed")),
         );
@@ -44,7 +45,7 @@ class SocialIncomeContact extends StatelessWidget {
         return Center(
           child: Container(
             decoration: BoxDecoration(
-              color: backgroundColor,
+              color: AppColors.backgroundColor,
               border: Border.all(
                 color: Theme.of(context).primaryColor,
               ),
@@ -52,7 +53,7 @@ class SocialIncomeContact extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.75,
             width: MediaQuery.of(context).size.width * 0.9,
             child: Padding(
-              padding: edgeInsetsAll12,
+              padding: AppSpacings.a16,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -112,7 +113,7 @@ class _IconAndContact extends StatelessWidget {
     return Row(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+          padding: AppSpacings.h8,
           child: Icon(
             Icons.check_circle_rounded,
             color: Theme.of(context).primaryColor,
@@ -120,7 +121,7 @@ class _IconAndContact extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+          padding: AppSpacings.h8,
           child: Column(
             children: [
               TextButton(
