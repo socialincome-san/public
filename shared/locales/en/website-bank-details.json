@@ -1,5 +1,17 @@
 {
-	"bankDetails": {
-		"title": "This is a placeholder for the Bank Details page"
-	}
+  "website-bank-details": {
+    "title": "",
+    "linkToFinances": "",
+    "bankIntroText": "",
+    "bankInfoTextRecurring": "",
+    "bankOneTime": "",
+    "bankPostFinance": "",
+    "bankAccountHolder": "",
+    "bankTxtIBAN1": "",
+    "bankTxtIBAN2": "",
+    "bankTxtBIC": ""
+  },
+  "bankDetails": {
+    "title": "This is a placeholder for the Bank Details page"
+  }
 }

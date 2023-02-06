@@ -1,5 +1,17 @@
 {
-	"bankDetails": {
-		"title": "Platzhalter für Bank Details page"
-	}
+  "website-bank-details": {
+    "title": "",
+    "linkToFinances": "",
+    "bankIntroText": "",
+    "bankInfoTextRecurring": "",
+    "bankOneTime": "",
+    "bankPostFinance": "",
+    "bankAccountHolder": "",
+    "bankTxtIBAN1": "",
+    "bankTxtIBAN2": "",
+    "bankTxtBIC": ""
+  },
+  "bankDetails": {
+    "title": "Platzhalter für Bank Details page"
+  }
 }
