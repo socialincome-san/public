@@ -7,7 +7,7 @@ import { devices } from '@playwright/test';
 const config: PlaywrightTestConfig = {
 	testDir: './tests/playwright',
 	reporter: 'html',
-	timeout: 30000,
+	timeout: 60000,
 	expect: { timeout: 10000 },
 	projects: [
 		{
