@@ -146,7 +146,7 @@ export default function App() {
 					if (result?.values?.is_global_admin || result?.values?.is_global_analyst) {
 						setCollections(globalAdminCollections);
 						setCustomViews(publicCustomViews.concat(globalAdminCustomViews));
-						authController.setExtra({ isGlobalAdmin: true });
+						authController.setExtra({ isGlobalAdmin: Boolean(result?.values?.is_global_admin) });
 					} else {
 						setCollections([
 							buildPartnerOrganisationsCollection({ isGlobalAdmin: false }),

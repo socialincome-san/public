@@ -7,11 +7,11 @@ import PDFDocument from 'pdfkit';
 import { withFile } from 'tmp-promise';
 import { StorageAdmin } from '../../..//shared/src/firebase/StorageAdmin';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
-import { Contribution, DonationCertificate, Entity, User } from '../../../shared/src/types';
+import { Contribution, DonationCertificate, Entity, StatusKey, User } from '../../../shared/src/types';
 import { sendEmail } from '../../../shared/src/utils/messaging/email';
 import { renderTemplate } from '../../../shared/src/utils/templates';
 import { Translator } from '../../../shared/src/utils/translate';
-import { ASSET_DIR, NOTIFICATION_EMAIL_PASSWORD, NOTIFICATION_EMAIL_USER } from '../config';
+import { ASSET_DIR, NOTIFICATION_EMAIL_PASSWORD_KERRIN, NOTIFICATION_EMAIL_USER_KERRIN } from '../config';
 
 export interface CreateDonationCertificatesFunctionProps {
 	users: Entity<User>[];
@@ -79,8 +79,9 @@ export class DonationCertificateHandler {
 										path: path,
 									},
 								],
-								user: NOTIFICATION_EMAIL_USER,
-								password: NOTIFICATION_EMAIL_PASSWORD,
+								from: NOTIFICATION_EMAIL_USER_KERRIN,
+								user: NOTIFICATION_EMAIL_USER_KERRIN,
+								password: NOTIFICATION_EMAIL_PASSWORD_KERRIN,
 							});
 						}
 					});
@@ -98,6 +99,7 @@ export class DonationCertificateHandler {
 		let contributions: Contribution[] = [];
 		await this.firestoreAdmin
 			.collection<Contribution>(`users/${userId}/contributions`)
+			.where('status', '==', StatusKey.SUCCEEDED)
 			.get()
 			.then((querySnapshot) => {
 				querySnapshot.forEach((element) => {
@@ -180,7 +182,7 @@ export class DonationCertificateHandler {
 			pdfDocument.moveDown(6);
 			pdfDocument.fontSize(12);
 			pdfDocument.text(`${user.personal?.name} ${user.personal?.lastname}`);
-			pdfDocument.text(`${user.address?.street}`);
+			pdfDocument.text(`${user.address?.street} ${user.address?.number}`);
 			pdfDocument.text(`${user.address?.zip} ${user.address?.city}`);
 			pdfDocument.text(country);
 
@@ -198,7 +200,11 @@ export class DonationCertificateHandler {
 
 			contributionsByCurrency.keys().forEach((currency) => {
 				pdfDocument.text(
-					'– ' + translator.t('contribution', { context: { currency, amount: contributionsByCurrency.get(currency) } })
+					'– ' +
+						translator.t('contribution', {
+							// TODO: use correct locale
+							context: { currency, amount: contributionsByCurrency.get(currency), locale: 'de-CH' },
+						})
 				);
 			});
 			pdfDocument.moveDown();
