@@ -8,7 +8,7 @@ import {
 	FirestoreTextSearchController,
 	performAlgoliaTextSearch,
 } from '@camberi/firecms';
-import { connectAuthEmulator, getAuth } from 'firebase/auth';
+import { browserSessionPersistence, connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import { useState } from 'react';
@@ -28,8 +28,13 @@ import { RecipientsView } from './views/RecipientsView';
 import { ScriptsView } from './views/Scripts';
 
 const onFirebaseInit = () => {
+	const auth = getAuth();
+	if (import.meta.env.VITE_PLAYWRIGHT_TESTS === 'true') {
+		console.log('Running Playwright tests, using session storage for persistence');
+		auth.setPersistence(browserSessionPersistence);
+	}
 	if (import.meta.env.VITE_ADMIN_FB_AUTH_EMULATOR_URL) {
-		connectAuthEmulator(getAuth(), import.meta.env.VITE_ADMIN_FB_AUTH_EMULATOR_URL, { disableWarnings: true });
+		connectAuthEmulator(auth, import.meta.env.VITE_ADMIN_FB_AUTH_EMULATOR_URL, { disableWarnings: true });
 		console.log('Using auth emulator');
 	} else {
 		console.log('Using production auth');

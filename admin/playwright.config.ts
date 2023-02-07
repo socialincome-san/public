@@ -7,7 +7,7 @@ import { devices } from '@playwright/test';
 const config: PlaywrightTestConfig = {
 	testDir: './tests/playwright',
 	reporter: 'html',
-	timeout: 60000,
+	timeout: 30000,
 	expect: { timeout: 10000 },
 	projects: [
 		{
@@ -23,6 +23,9 @@ const config: PlaywrightTestConfig = {
 	webServer: {
 		command: 'vite serve',
 		port: 3000,
+		env: {
+			VITE_PLAYWRIGHT_TESTS: 'true',
+		},
 	},
 };
 
