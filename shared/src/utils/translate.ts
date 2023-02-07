@@ -38,10 +38,10 @@ export class Translator {
 			.init({
 				lng: language,
 				ns: namespaces,
+				fallbackLng: FALLBACK_LANGUAGE,
 				interpolation: {
 					escapeValue: false,
 				},
-				fallbackLng: FALLBACK_LANGUAGE,
 			});
 		return translator;
 	}
