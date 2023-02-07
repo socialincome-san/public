@@ -11,12 +11,12 @@ import {
 	Select,
 	Typography,
 } from '@mui/material';
-import { CreateDonationCertificatesFunctionProps } from '../../../functions/src/donation_certificates/DonationCertificateHandler';
 import { User } from '../../../shared/src/types';
 
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import _ from 'lodash';
 import React from 'react';
+import { CreateDonationCertificatesFunctionProps } from '../../../functions/src/donation_certificates/DonationCertificateHandler';
 
 const style = {
 	position: 'absolute' as 'absolute',
@@ -32,11 +32,13 @@ const style = {
 
 export function CreateDonationCertificatesAction({ selectionController }: CollectionActionsProps<User>) {
 	const snackbarController = useSnackbarController();
+	const isGlobalAdmin = useAuthController().extra?.isGlobalAdmin;
+
 	const [year, setYear] = React.useState<number>(new Date().getFullYear());
 	const [open, setOpen] = React.useState(false);
 	const [checked, setChecked] = React.useState(false);
 
-	const isGlobalAdmin = useAuthController().extra?.isGlobalAdmin;
+	if (!isGlobalAdmin) return null;
 
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
@@ -81,11 +83,9 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 
 	return (
 		<div>
-			{isGlobalAdmin ? (
-				<Button onClick={handleOpen} color="primary">
-					Create Certificates
-				</Button>
-			) : null}
+			<Button onClick={handleOpen} color="primary">
+				Create Certificates
+			</Button>
 			<Modal
 				open={open}
 				onClose={handleClose}

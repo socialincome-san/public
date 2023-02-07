@@ -64,6 +64,8 @@ jobs:
           echo STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }} >> .env
           echo NOTIFICATION_EMAIL_USER=${{ secrets.NOTIFICATION_EMAIL_USER }} >> .env
           echo NOTIFICATION_EMAIL_PASSWORD=${{ secrets.NOTIFICATION_EMAIL_PASSWORD }} >> .env
+          echo NOTIFICATION_EMAIL_USER_KERRIN=${{ secrets.NOTIFICATION_EMAIL_USER_KERRIN }} >> .env
+          echo NOTIFICATION_EMAIL_PASSWORD_KERRIN=${{ secrets.NOTIFICATION_EMAIL_PASSWORD_KERRIN }} >> .env
 
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main'
