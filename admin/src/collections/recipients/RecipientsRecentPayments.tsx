@@ -15,8 +15,8 @@ import {
 	firstNameProperty,
 	lastNameProperty,
 	orangeMoneyUIDProperty,
-	programStatusProperty
-} from "./RecipientsProperties";
+	programStatusProperty,
+} from './RecipientsProperties';
 
 const currentDate = new Date();
 const monthIDs = getMonthIDs(currentDate, 3);
