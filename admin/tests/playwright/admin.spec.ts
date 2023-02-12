@@ -69,7 +69,7 @@ test('recipients', async ({ page }) => {
 	await page.locator('ul').getByRole('link', { name: 'Recipients' }).click();
 	await expect(page).toHaveScreenshot();
 
-	await page.getByRole('button', { name: 'All Columns' }).click();
+	await page.getByRole('button', { name: 'All Recipients' }).click();
 
 	// edit recipient
 	await page.getByRole('button', { name: 'Edit iF8bLEoUjqOIlq84XQmi' }).click();

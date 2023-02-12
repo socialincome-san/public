@@ -17,7 +17,7 @@
 		"nodemailer": "^6.9.1"
 	},
 	"devDependencies": {
-		"@camberi/firecms": "2.0.0-alpha.37",
+		"@camberi/firecms": "2.0.0-alpha.57",
 		"@jest/globals": "^29.4.1",
 		"@types/jest": "^29.4.0",
 		"@types/mjml": "^4.7.0",
