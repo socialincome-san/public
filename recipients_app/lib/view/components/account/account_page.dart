@@ -6,6 +6,7 @@ import "package:app/services/auth_service.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/components/account/unchangeable_user_information.dart";
+import "package:app/view/components/social_income_contact_dialog.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -22,21 +23,36 @@ class AccountScreen extends StatelessWidget {
         recipient: context.read<AuthCubit>().state.recipient!,
         userRepository: context.read<UserRepository>(),
       ),
-      child: _AccountView(),
+      child: const _AccountView(),
     );
   }
 }
 
-class _AccountView extends StatelessWidget {
-  _AccountView();
+class _AccountView extends StatefulWidget {
+  const _AccountView();
 
-  final _birthDateController = TextEditingController();
+  @override
+  State<_AccountView> createState() => _AccountViewState();
+}
+
+class _AccountViewState extends State<_AccountView> {
+  late final TextEditingController _birthDateController;
+
+  @override
+  void initState() {
+    super.initState();
+    _birthDateController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _birthDateController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: check what needs to be changed here and how and apply cubit logic
-    return BlocConsumer<AccountCubit, AccountState>(
-      listener: (context, state) {},
+    return BlocBuilder<AccountCubit, AccountState>(
       builder: (context, state) {
         final currentUser = state.recipient;
 
@@ -49,7 +65,6 @@ class _AccountView extends StatelessWidget {
               margin: AppSpacings.h16,
               child: ListView(
                 children: [
-                  // Suitable for small number of widgets?
                   const ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Center(
@@ -67,16 +82,16 @@ class _AccountView extends StatelessWidget {
                     "Last name",
                     currentUser.lastName ?? "",
                   ),
+                  const SizedBox(height: 16),
                   TextFormField(
                     initialValue: currentUser.preferredName ?? "",
                     decoration: const InputDecoration(
                       labelText: "Preferred name",
                     ),
-                    onChanged: (value) {
-                      context.read<AccountCubit>().updateRecipient(
-                            currentUser.copyWith(preferredName: value),
-                          );
-                    },
+                    onChanged: (value) =>
+                        context.read<AccountCubit>().updateRecipient(
+                              currentUser.copyWith(preferredName: value),
+                            ),
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
@@ -85,24 +100,22 @@ class _AccountView extends StatelessWidget {
                       labelText: "Date of birth",
                     ),
                     readOnly: true,
-                    onTap: () async {
-                      showDatePicker(
-                        firstDate: DateTime(1950),
-                        lastDate: DateTime(DateTime.now().year - 10),
-                        initialDate:
-                            currentUser.birthDate?.toDate() ?? DateTime(2000),
-                        context: context,
-                      ).then((value) {
-                        if (value != null) {
-                          context.read<AccountCubit>().updateRecipient(
-                                currentUser.copyWith(
-                                  birthDate: Timestamp.fromDate(value),
-                                ),
-                              );
-                        }
-                        return;
-                      });
-                    },
+                    onTap: () async => showDatePicker(
+                      firstDate: DateTime(1950),
+                      lastDate: DateTime(DateTime.now().year - 10),
+                      initialDate:
+                          currentUser.birthDate?.toDate() ?? DateTime(2000),
+                      context: context,
+                    ).then((value) {
+                      if (value != null) {
+                        context.read<AccountCubit>().updateRecipient(
+                              currentUser.copyWith(
+                                birthDate: Timestamp.fromDate(value),
+                              ),
+                            );
+                      }
+                      return;
+                    }),
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
@@ -111,11 +124,10 @@ class _AccountView extends StatelessWidget {
                       labelText: "Email",
                     ),
                     keyboardType: TextInputType.emailAddress,
-                    onChanged: (value) {
-                      context.read<AccountCubit>().updateRecipient(
-                            currentUser.copyWith(email: value),
-                          );
-                    },
+                    onChanged: (value) =>
+                        context.read<AccountCubit>().updateRecipient(
+                              currentUser.copyWith(email: value),
+                            ),
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
@@ -128,11 +140,13 @@ class _AccountView extends StatelessWidget {
                     keyboardType: TextInputType.phone,
                     onChanged: (value) {
                       final newPhoneNumber = int.tryParse(value);
+
                       if (newPhoneNumber == null) return;
+
                       context.read<AccountCubit>().updateRecipient(
                             currentUser.copyWith(
-                                communicationMobilePhone:
-                                    Phone(newPhoneNumber)),
+                              communicationMobilePhone: Phone(newPhoneNumber),
+                            ),
                           );
                     },
                   ),
@@ -168,9 +182,11 @@ class _AccountView extends StatelessWidget {
                     ),
                   ),
                   ButtonOutlinedBig(
-                    onPressed: () {
-                      // alertVisibility.setContactVisibility(true);
-                    },
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          const SocialIncomeContactDialog(),
+                    ),
                     label: "Get in touch",
                   ),
                   const ListTile(
@@ -196,7 +212,6 @@ class _AccountView extends StatelessWidget {
                 child: const CircularProgressIndicator(),
               ),
             ]
-            // if (alertVisibility.displayContact) const SocialIncomeContact(),
           ],
         );
       },
