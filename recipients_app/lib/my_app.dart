@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
                   case AuthStatus.failure:
                     return const WelcomePage();
                   case AuthStatus.authenticated:
-                    return MainAppPage();
+                    return const MainAppPage();
                 }
               },
             ),
