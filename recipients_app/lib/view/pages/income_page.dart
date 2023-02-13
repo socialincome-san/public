@@ -1,24 +1,14 @@
-import "package:app/models/current_user.dart";
-import "package:app/models/social_income_transaction.dart";
+
+import "package:app/core/change_notifiers/current_user.dart";
+import "package:app/data/models/social_income_transaction.dart";
 import "package:app/ui/configs/configs.dart";
-import "package:app/view/components/income/balance_card.dart";
-import "package:app/view/components/income/transaction_card.dart";
+import "package:app/view/widgets/income/balance_card.dart";
+import "package:app/view/widgets/income/transaction_card.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
 class IncomePage extends StatelessWidget {
   const IncomePage({super.key});
-
-  List<Widget> transactionCards(CurrentUser currentUser) {
-    return {
-      for (var transaction
-          in currentUser.transactions ?? <SocialIncomeTransaction>[])
-        Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: TransactionCard(transaction),
-        )
-    }.toList();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,5 +39,16 @@ class IncomePage extends StatelessWidget {
         );
       },
     );
+  }
+
+  List<Widget> transactionCards(CurrentUser currentUser) {
+    return {
+      for (var transaction
+          in currentUser.transactions ?? <SocialIncomeTransaction>[])
+        Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: TransactionCard(transaction: transaction),
+        )
+    }.toList();
   }
 }

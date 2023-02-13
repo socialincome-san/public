@@ -1,6 +1,6 @@
 import "dart:developer";
 
-import "package:app/models/recipient.dart";
+import "package:app/data/models/recipient.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 

@@ -1,4 +1,4 @@
-import "package:app/models/current_user.dart";
+import "package:app/core/change_notifiers/current_user.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
@@ -18,7 +18,6 @@ class TermsAndConditions extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               const SizedBox(height: 16),
-              // Phone Number Text Field
               const Text(
                 "Welcome to Social Income",
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.w400),

@@ -1,5 +1,5 @@
-import "package:app/models/current_user.dart";
-import "package:app/models/social_income_transaction.dart";
+import "package:app/core/change_notifiers/current_user.dart";
+import "package:app/data/models/social_income_transaction.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 

@@ -1,20 +1,19 @@
-import "package:app/account/cubit/account_cubit.dart";
+import "package:app/core/cubits/account/cubit/account_cubit.dart";
 import "package:app/core/cubits/auth/auth_cubit.dart";
+import "package:app/data/models/models.dart";
 import "package:app/data/repositories/repositories.dart";
-import "package:app/models/recipient.dart";
-import "package:app/services/auth_service.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
-import "package:app/view/components/account/unchangeable_user_information.dart";
-import "package:app/view/components/social_income_contact_dialog.dart";
+import "package:app/view/widgets/account/unchangeable_user_information.dart";
+import "package:app/view/widgets/dialogs/social_income_contact_dialog.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl/intl.dart";
 
 /// TODO: add dialog for contact
-class AccountScreen extends StatelessWidget {
-  const AccountScreen({super.key});
+class AccountPage extends StatelessWidget {
+  const AccountPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -75,12 +74,12 @@ class _AccountViewState extends State<_AccountView> {
                     ),
                   ),
                   UnchangeableUserInformation(
-                    "First name",
-                    currentUser.firstName ?? "",
+                    section: "First name",
+                    placeHolder: currentUser.firstName ?? "",
                   ),
                   UnchangeableUserInformation(
-                    "Last name",
-                    currentUser.lastName ?? "",
+                    section: "Last name",
+                    placeHolder: currentUser.lastName ?? "",
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
@@ -160,17 +159,20 @@ class _AccountViewState extends State<_AccountView> {
                     ),
                   ),
                   UnchangeableUserInformation(
-                    "Recipient Since",
-                    AuthService()
-                        .createdAt(), // TODO - check it, we probably should use different field?
+                    section: "Recipient Since",
+                    placeHolder: state.recipient.recipientSince != null
+                        ? DateFormat("dd.MM.yyyy")
+                            .format(state.recipient.recipientSince!)
+                        : "",
                   ),
                   UnchangeableUserInformation(
-                    "Country",
-                    currentUser.country ?? "",
+                    section: "Country",
+                    placeHolder: currentUser.country ?? "",
                   ),
                   UnchangeableUserInformation(
-                    "Orange Money Number",
-                    currentUser.mobileMoneyPhone?.phone.toString() ?? "",
+                    section: "Orange Money Number",
+                    placeHolder:
+                        currentUser.mobileMoneyPhone?.phone.toString() ?? "",
                   ),
                   const ListTile(
                     contentPadding: EdgeInsets.zero,

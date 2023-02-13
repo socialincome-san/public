@@ -1,8 +1,8 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/configs/app_colors.dart";
-import "package:app/view/components/welcomePage/otp_input.dart";
-import "package:app/view/components/welcomePage/phone_input.dart";
+import "package:app/view/widgets/welcomePage/otp_input.dart";
+import "package:app/view/widgets/welcomePage/phone_input.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -12,8 +12,9 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          SignupCubit(userRepository: context.read<UserRepository>()),
+      create: (context) => SignupCubit(
+        userRepository: context.read<UserRepository>(),
+      ),
       child: const _WelcomeView(),
     );
   }

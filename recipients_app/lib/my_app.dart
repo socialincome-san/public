@@ -1,8 +1,6 @@
+import "package:app/core/change_notifiers/current_user.dart";
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/data/repositories/user_repository.dart";
-import "package:app/models/alert_visibility.dart";
-import "package:app/models/current_user.dart";
-import "package:app/models/registration.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/main_app_page.dart";
 import "package:app/view/pages/welcome_page.dart";
@@ -36,9 +34,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => Registration()),
           ChangeNotifierProvider(create: (context) => CurrentUser()),
-          ChangeNotifierProvider(create: (context) => AlertVisibility())
+          // ChangeNotifierProvider(create: (context) => AlertVisibility())
         ],
         child: BlocProvider(
           create: (context) => AuthCubit(

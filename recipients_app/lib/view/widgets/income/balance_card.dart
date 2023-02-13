@@ -1,4 +1,4 @@
-import "package:app/models/current_user.dart";
+import "package:app/core/change_notifiers/current_user.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";

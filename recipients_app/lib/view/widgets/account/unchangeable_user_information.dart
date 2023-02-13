@@ -1,14 +1,38 @@
-import "package:app/models/current_user.dart";
+import "package:app/core/change_notifiers/current_user.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 
-class UnchangeableUserInformation extends StatelessWidget {
+class UnchangeableUserInformation extends StatefulWidget {
   final String section;
   final String placeHolder;
-  final TextEditingController controller = TextEditingController();
 
-  UnchangeableUserInformation(this.section, this.placeHolder, {super.key});
+  const UnchangeableUserInformation({
+    required this.section,
+    required this.placeHolder,
+    super.key,
+  });
+
+  @override
+  State<UnchangeableUserInformation> createState() =>
+      _UnchangeableUserInformationState();
+}
+
+class _UnchangeableUserInformationState
+    extends State<UnchangeableUserInformation> {
+  late final TextEditingController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +57,7 @@ class UnchangeableUserInformation extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    section,
+                    widget.section,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppColors.darkGrey,
                         ),
@@ -50,7 +74,7 @@ class UnchangeableUserInformation extends StatelessWidget {
                       bottomRight: Radius.circular(6),
                     ),
                   ),
-                  child: Text(placeHolder),
+                  child: Text(widget.placeHolder),
                 ),
               ),
             ],

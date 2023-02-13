@@ -20,8 +20,6 @@ class SocialIncomeContactDialog extends StatelessWidget {
               color: Theme.of(context).primaryColor,
             ),
           ),
-          // height: MediaQuery.of(context).size.height * 0.75,
-          // width: MediaQuery.of(context).size.width * 0.9,
           child: Padding(
             padding: AppSpacings.a16,
             child: Column(
@@ -140,11 +138,17 @@ class _IconAndContact extends StatelessWidget {
                   children: [
                     Text(
                       contactMethod,
-                      style: const TextStyle(fontSize: 18, color: Colors.black),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                      ),
                     ),
                     Text(
                       contactDetails,
-                      style: const TextStyle(fontSize: 15, color: Colors.grey),
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey,
+                      ),
                     ),
                   ],
                 ),

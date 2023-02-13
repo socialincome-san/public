@@ -1,11 +1,11 @@
-import "package:app/models/current_user.dart";
-import "package:app/models/navigation.dart";
+import "package:app/core/change_notifiers/current_user.dart";
+import "package:app/core/change_notifiers/navigation.dart";
 import "package:app/services/database_service.dart";
 import "package:app/ui/configs/app_colors.dart";
-import "package:app/view/components/account/account_page.dart";
-import "package:app/view/components/impactMeasurement/impact_measurement_page.dart";
-import "package:app/view/components/income/income_page.dart";
-import "package:app/view/components/terms_and_conditions.dart";
+import "package:app/view/pages/account_page.dart";
+import "package:app/view/pages/impact_measurement_page.dart";
+import "package:app/view/pages/income_page.dart";
+import "package:app/view/widgets/terms_and_conditions.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
@@ -14,7 +14,7 @@ class MainAppPage extends StatelessWidget {
   final PageController controller = PageController(initialPage: 1);
 
   final List<Widget> content = [
-    const AccountScreen(),
+    const AccountPage(),
     const IncomePage(),
     const ImpactMeasurementPage()
   ];

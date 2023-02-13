@@ -1,5 +1,5 @@
-import "package:app/models/current_user.dart";
-import "package:app/models/social_income_transaction.dart";
+import "package:app/core/change_notifiers/current_user.dart";
+import "package:app/data/models/social_income_transaction.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";

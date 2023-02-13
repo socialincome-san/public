@@ -1,6 +1,6 @@
-import "package:app/models/social_income_transaction.dart";
+import "package:app/data/models/social_income_transaction.dart";
 import "package:app/ui/configs/configs.dart";
-import "package:app/view/components/income/review_transaction_modal.dart";
+import "package:app/view/widgets/income/review_transaction_modal.dart";
 import "package:flutter/material.dart";
 import "package:intl/intl.dart";
 
@@ -9,7 +9,11 @@ NumberFormat f = NumberFormat(format, "en_US");
 
 class TransactionCard extends StatelessWidget {
   final SocialIncomeTransaction transaction;
-  const TransactionCard(this.transaction, {super.key});
+
+  const TransactionCard({
+    required this.transaction,
+    super.key,
+  });
 
   String cleanStatus(String? currentStatus) {
     return currentStatus != null &&
