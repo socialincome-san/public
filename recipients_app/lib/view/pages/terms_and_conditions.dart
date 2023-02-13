@@ -1,59 +1,64 @@
-import "package:app/core/change_notifiers/current_user.dart";
+import "package:app/core/cubits/account/account_cubit.dart";
+import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
-import "package:provider/provider.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:url_launcher/url_launcher_string.dart";
 
+// TODO reenable terms and condition page on signin
 class TermsAndConditions extends StatelessWidget {
   const TermsAndConditions({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CurrentUser>(
-      builder: (context, currentUser, child) {
-        return Padding(
-          padding: AppSpacings.a16,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              const SizedBox(height: 16),
-              const Text(
-                "Welcome to Social Income",
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.w400),
+    return Padding(
+      padding: AppSpacings.a16,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          const SizedBox(height: 16),
+          const Text(
+            "Welcome to Social Income",
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.w400),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            "To give you the best experience, we use data from your device to",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Column(
+            children: const [
+              _IconAndText(
+                "Make the app work and provide our services",
+                Icons.remember_me,
               ),
-              const SizedBox(height: 16),
-              const Text(
-                "To give you the best experience, we use data from your device to",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  height: 1.4,
-                ),
+              _IconAndText(
+                "Improve service performance by use of analytics",
+                Icons.poll,
               ),
-              const SizedBox(height: 16),
-              Column(
-                children: const [
-                  _IconAndText(
-                    "Make the app work and provide our services",
-                    Icons.remember_me,
-                  ),
-                  _IconAndText(
-                    "Improve service performance by use of analytics",
-                    Icons.poll,
-                  ),
-                  _IconAndText("Read our privacy policy", Icons.policy)
-                ],
-              ),
-              const Spacer(),
-              ButtonBig(
-                onPressed: () => currentUser.acceptTerms(),
-                label: "Accept",
-              )
+              _IconAndText("Read our privacy policy", Icons.policy)
             ],
           ),
-        );
-      },
+          const Spacer(),
+          ButtonBig(
+            onPressed: () {
+              final updated =
+                  context.read<AuthCubit>().state.recipient!.copyWith(
+                        termsAccepted: true,
+                      );
+
+              context.read<AccountCubit>().updateRecipient(updated);
+            },
+            label: "Accept",
+          )
+        ],
+      ),
     );
   }
 }

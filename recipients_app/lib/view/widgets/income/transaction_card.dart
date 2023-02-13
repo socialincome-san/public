@@ -69,9 +69,7 @@ class TransactionCard extends StatelessWidget {
                   showModalBottomSheet(
                     isScrollControlled: true,
                     context: context,
-                    builder: (context) {
-                      return ReviewTransactionModal(transaction);
-                    },
+                    builder: (context) => ReviewTransactionModal(transaction),
                   );
                 },
                 child: const Text("Review"),

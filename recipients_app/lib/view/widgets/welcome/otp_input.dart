@@ -2,7 +2,7 @@ import "package:app/core/cubits/signup/signup_cubit.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:flutter/material.dart";
-import "package:provider/provider.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
 class OtpInput extends StatefulWidget {
   const OtpInput({super.key});

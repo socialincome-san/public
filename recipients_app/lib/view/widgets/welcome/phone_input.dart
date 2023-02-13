@@ -2,8 +2,8 @@ import "package:app/core/cubits/signup/signup_cubit.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl_phone_number_input/intl_phone_number_input.dart";
-import "package:provider/provider.dart";
 import "package:rounded_loading_button/rounded_loading_button.dart";
 
 class PhoneInput extends StatefulWidget {

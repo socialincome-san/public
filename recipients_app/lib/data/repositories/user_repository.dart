@@ -1,10 +1,11 @@
 import "dart:developer";
 
-import "package:app/data/models/recipient.dart";
+import "package:app/data/models/models.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 
 const String recipientCollection = "/recipients";
+const String paymentCollection = "payments";
 
 class UserRepository {
   final FirebaseFirestore firestore;
@@ -78,4 +79,40 @@ class UserRepository {
       .collection(recipientCollection)
       .doc(recipient.userId)
       .update(recipient.toMap());
+
+  Future<void> confirmTransaction({
+    required String recipientId,
+    required SocialIncomeTransaction transaction,
+  }) async {
+    final updatedTransaction = transaction.copyWith(
+      status: "confirmed",
+      confirmAt: Timestamp.fromDate(DateTime.now()),
+    );
+
+    firestore
+        .collection(recipientCollection)
+        .doc(recipientId)
+        .collection(paymentCollection)
+        .doc(transaction.id)
+        .set(updatedTransaction.toMap());
+  }
+
+  Future<void> contestTransaction({
+    required String recipientId,
+    required SocialIncomeTransaction transaction,
+    required String contestReason,
+  }) async {
+    final updatedTransaction = transaction.copyWith(
+      status: "contested",
+      confirmAt: Timestamp.fromDate(DateTime.now()),
+      contestReason: contestReason,
+    );
+
+    firestore
+        .collection(recipientCollection)
+        .doc(recipientId)
+        .collection(paymentCollection)
+        .doc(transaction.id)
+        .set(updatedTransaction.toMap());
+  }
 }

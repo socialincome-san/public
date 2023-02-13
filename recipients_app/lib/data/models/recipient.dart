@@ -19,6 +19,7 @@ class Recipient extends Equatable {
   final DateTime? recipientSince;
   final String? imLinkInitial;
   final String? imLinkRegular;
+  final Timestamp? nextSurvey;
 
   final List<SocialIncomeTransaction>? transactions;
 
@@ -36,6 +37,7 @@ class Recipient extends Equatable {
     this.recipientSince,
     this.imLinkInitial,
     this.imLinkRegular,
+    this.nextSurvey,
     this.transactions = const [],
   });
 
@@ -55,6 +57,7 @@ class Recipient extends Equatable {
       recipientSince,
       imLinkInitial,
       imLinkRegular,
+      nextSurvey,
       transactions,
     ];
   }
@@ -73,6 +76,7 @@ class Recipient extends Equatable {
     DateTime? recipientSince,
     String? imLinkInitial,
     String? imLinkRegular,
+    Timestamp? nextSurvey,
     List<SocialIncomeTransaction>? transactions,
   }) {
     return Recipient(
@@ -90,6 +94,7 @@ class Recipient extends Equatable {
       recipientSince: recipientSince ?? this.recipientSince,
       imLinkInitial: imLinkInitial ?? this.imLinkInitial,
       imLinkRegular: imLinkRegular ?? this.imLinkRegular,
+      nextSurvey: nextSurvey ?? this.nextSurvey,
       transactions: transactions ?? this.transactions,
     );
   }
@@ -104,40 +109,56 @@ class Recipient extends Equatable {
         {"communication_mobile_phone": communicationMobilePhone!.toMap()},
       );
     }
+
     if (mobileMoneyPhone != null) {
       result.addAll({"mobile_money_phone": mobileMoneyPhone!.toMap()});
     }
+
     if (firstName != null) {
       result.addAll({"first_name": firstName});
     }
+
     if (lastName != null) {
       result.addAll({"last_name": lastName});
     }
+
     if (birthDate != null) {
       result.addAll({"birth_date": birthDate});
     }
+
     if (email != null) {
       result.addAll({"email": email});
     }
+
     if (country != null) {
       result.addAll({"country": country});
     }
+
     if (preferredName != null) {
       result.addAll({"preferred_name": preferredName});
     }
+
     if (termsAccepted != null) {
       result.addAll({"terms_accepted": termsAccepted});
     }
+
     if (recipientSince != null) {
       result
           .addAll({"recipient_since": recipientSince!.millisecondsSinceEpoch});
     }
+
     if (imLinkInitial != null) {
       result.addAll({"im_link_initial": imLinkInitial});
     }
+
     if (imLinkInitial != null) {
       result.addAll({"im_link_regular": imLinkRegular});
     }
+
+    if (nextSurvey != null) {
+      result.addAll({"next_survey": nextSurvey});
+    }
+
     if (transactions != null) {
       result.addAll(
         {
@@ -179,6 +200,8 @@ class Recipient extends Equatable {
           : null,
       imLinkInitial: map["im_link_initial"] as String?,
       imLinkRegular: map["im_link_regular"] as String?,
+      nextSurvey:
+          map["next_survey"] != null ? map["next_survey"] as Timestamp : null,
       transactions: map["transactions"] != null
           ? (map["transactions"] as List)
               .map(
@@ -192,30 +215,19 @@ class Recipient extends Equatable {
 
   String toJson() => json.encode(toMap());
 
-  // TODO FIX THIS
-/*   factory Recipient.fromJson(String source) =>
-      Recipient.fromMap(jsonDecode(source) as Map<String, dynamic>); */
-}
+  /// TODO this should not be in the model
+  int totalIncome() {
+    int sum = 0;
 
-class Phone {
-  final int phone;
+    for (final SocialIncomeTransaction element
+        in transactions ?? List.empty()) {
+      final amount = element.amount;
+      if (element.status != "confirmed" || amount == null) continue;
 
-  Phone(this.phone);
+      final int factor = (element.currency == "SLL") ? 1000 : 1;
+      sum += (amount / factor).floor();
+    }
 
-  factory Phone.fromMap(Map<String, dynamic> map) {
-    return Phone(
-      map["phone"] as int,
-    );
-  }
-
-  factory Phone.fromJson(String source) =>
-      Phone.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  Map<String, dynamic> toMap() {
-    final result = <String, dynamic>{};
-
-    result.addAll({"phone": phone});
-
-    return result;
+    return sum;
   }
 }

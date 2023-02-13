@@ -1,8 +1,8 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/configs/app_colors.dart";
-import "package:app/view/widgets/welcomePage/otp_input.dart";
-import "package:app/view/widgets/welcomePage/phone_input.dart";
+import "package:app/view/widgets/welcome/otp_input.dart";
+import "package:app/view/widgets/welcome/phone_input.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 

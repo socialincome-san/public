@@ -1,7 +1,5 @@
-import "package:app/core/change_notifiers/current_user.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
-import "package:provider/provider.dart";
 
 class UnchangeableUserInformation extends StatefulWidget {
   final String section;
@@ -36,51 +34,47 @@ class _UnchangeableUserInformationState
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CurrentUser>(
-      builder: (context, currentUser, child) {
-        return Container(
-          constraints: const BoxConstraints(
-            maxHeight: 39,
-            minHeight: 39,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                flex: 3,
-                child: Container(
-                  padding: AppSpacings.a8,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(6),
-                      bottomLeft: Radius.circular(6),
-                    ),
-                  ),
-                  child: Text(
-                    widget.section,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.darkGrey,
-                        ),
-                  ),
+    return Container(
+      constraints: const BoxConstraints(
+        maxHeight: 39,
+        minHeight: 39,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            flex: 3,
+            child: Container(
+              padding: AppSpacings.a8,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(6),
+                  bottomLeft: Radius.circular(6),
                 ),
               ),
-              Expanded(
-                flex: 2,
-                child: Container(
-                  padding: AppSpacings.a8,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(6),
-                      bottomRight: Radius.circular(6),
+              child: Text(
+                widget.section,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.darkGrey,
                     ),
-                  ),
-                  child: Text(widget.placeHolder),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: AppSpacings.a8,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(6),
+                  bottomRight: Radius.circular(6),
                 ),
               ),
-            ],
+              child: Text(widget.placeHolder),
+            ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }

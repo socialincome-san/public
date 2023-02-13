@@ -5,6 +5,18 @@ import "package:flutter_bloc/flutter_bloc.dart";
 
 part "signup_state.dart";
 
+// TODO add errors while signing up
+/* void changeAlertVisibility(bool display, String key) {
+    switch (key) {
+      case "CodeCorrect":
+      case "CodeWrong":
+      case "LoginFail":
+      case "PasswordReset":
+      case "CreateUser":
+      case "ineligible":
+      case "formatError":
+    } */
+
 class SignupCubit extends Cubit<SignupState> {
   final UserRepository userRepository;
 

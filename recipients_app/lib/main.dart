@@ -19,10 +19,11 @@ Future<void> main() async {
 
   final firestore = FirebaseFirestore.instance;
   final firebaseAuth = FirebaseAuth.instance;
+  final crashlytics = FirebaseCrashlytics.instance;
 
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  FlutterError.onError = crashlytics.recordFlutterFatalError;
   PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    crashlytics.recordError(error, stack, fatal: true);
     return true;
   };
 
@@ -30,6 +31,7 @@ Future<void> main() async {
     MyApp(
       firebaseAuth: firebaseAuth,
       firestore: firestore,
+      crashlytics: crashlytics,
     ),
   );
 }

@@ -1,37 +1,49 @@
-import "package:app/core/change_notifiers/current_user.dart";
+import "package:app/core/cubits/auth/auth_cubit.dart";
+import "package:app/core/cubits/survey/survey_cubit.dart";
+import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl/intl.dart";
-import "package:provider/provider.dart";
 import "package:webview_flutter/webview_flutter.dart";
 
-class ImpactMeasurementPage extends StatefulWidget {
-  const ImpactMeasurementPage({super.key});
-
-  @override
-  State<ImpactMeasurementPage> createState() => _ImpactMeasurementPageState();
-}
-
-class _ImpactMeasurementPageState extends State<ImpactMeasurementPage>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-  bool showWebView = true;
-  final DateFormat formatter = DateFormat("dd.MM.yyyy");
+class ImpactMeasurementPage extends StatelessWidget {
+  const ImpactMeasurementPage();
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    return Consumer<CurrentUser>(
-      builder: (context, currentUser, child) {
-        if (currentUser.surveyUrl() == null) {
-          showWebView = false;
-        }
+    final authCubit = context.read<AuthCubit>();
 
+    return BlocProvider(
+      create: (context) => SurveyCubit(
+        recipient: authCubit.state.recipient!,
+        currentFirebaseUser: authCubit.state.firebaseUser!,
+        crashReportingRepository: context.read<CrashReportingRepository>(),
+      ),
+      child: const _ImpactMeasurementView(),
+    );
+  }
+}
+
+class _ImpactMeasurementView extends StatefulWidget {
+  const _ImpactMeasurementView();
+
+  @override
+  State<_ImpactMeasurementView> createState() => _ImpactMeasurementViewState();
+}
+
+class _ImpactMeasurementViewState extends State<_ImpactMeasurementView> {
+  // TODO check whats this dependend on?
+  bool showWebView = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SurveyCubit, SurveyState>(
+      builder: (context, state) {
         return Container(
           child: showWebView
               ? WebView(
-                  initialUrl: currentUser.surveyUrl(),
+                  initialUrl: state.surveyUrl,
                   javascriptMode: JavascriptMode.unrestricted,
                 )
               : Column(
@@ -50,14 +62,9 @@ class _ImpactMeasurementPageState extends State<ImpactMeasurementPage>
                     Padding(
                       padding: AppSpacings.a16,
                       child: Text(
-                        () {
-                          final nextSurveyDate = currentUser.nextSurvey;
-                          if (nextSurveyDate != null) {
-                            return "To keep track of how Social Income impacts you, we will ask you to fill in the survey again next ${DateFormat.MMMM().format(nextSurveyDate)}.";
-                          } else {
-                            return "To keep track of how Social Income impacts you, we will ask you to fill in the survey again in the future";
-                          }
-                        }(),
+                        state.nextSurveyDate != null
+                            ? "To keep track of how Social Income impacts you, we will ask you to fill in the survey again next ${DateFormat.MMMM().format(state.nextSurveyDate!)}."
+                            : "To keep track of how Social Income impacts you, we will ask you to fill in the survey again in the future",
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,

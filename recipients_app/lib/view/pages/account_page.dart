@@ -1,6 +1,6 @@
-import "package:app/core/cubits/account/cubit/account_cubit.dart";
+import "package:app/core/cubits/account/account_cubit.dart";
 import "package:app/core/cubits/auth/auth_cubit.dart";
-import "package:app/data/models/models.dart";
+import "package:app/data/models/phone.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
@@ -130,7 +130,8 @@ class _AccountViewState extends State<_AccountView> {
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
-                    initialValue: currentUser.communicationMobilePhone?.phone
+                    initialValue: currentUser
+                            .communicationMobilePhone?.phoneNumber
                             .toString() ??
                         "",
                     decoration: const InputDecoration(
@@ -172,7 +173,8 @@ class _AccountViewState extends State<_AccountView> {
                   UnchangeableUserInformation(
                     section: "Orange Money Number",
                     placeHolder:
-                        currentUser.mobileMoneyPhone?.phone.toString() ?? "",
+                        currentUser.mobileMoneyPhone?.phoneNumber.toString() ??
+                            "",
                   ),
                   const ListTile(
                     contentPadding: EdgeInsets.zero,

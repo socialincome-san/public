@@ -15,23 +15,25 @@ Future<void> main() async {
   );
   await Firebase.initializeApp();
 
-  FirebaseFirestore.instance.useFirestoreEmulator("localhost", 8080);
-  FirebaseAuth.instance.useAuthEmulator("localhost", 9099);
-  FirebaseAuth.instance.setSettings(appVerificationDisabledForTesting: true);
-
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
-
   final firestore = FirebaseFirestore.instance;
   final firebaseAuth = FirebaseAuth.instance;
+  final crashlytics = FirebaseCrashlytics.instance;
+
+  firestore.useFirestoreEmulator("localhost", 8080);
+  firebaseAuth.useAuthEmulator("localhost", 9099);
+  firebaseAuth.setSettings(appVerificationDisabledForTesting: true);
+
+  FlutterError.onError = crashlytics.recordFlutterFatalError;
+  PlatformDispatcher.instance.onError = (error, stack) {
+    crashlytics.recordError(error, stack, fatal: true);
+    return true;
+  };
 
   runApp(
     MyApp(
       firebaseAuth: firebaseAuth,
       firestore: firestore,
+      crashlytics: crashlytics,
     ),
   );
 }

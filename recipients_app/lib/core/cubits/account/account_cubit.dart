@@ -35,38 +35,4 @@ class AccountCubit extends Cubit<AccountState> {
       );
     }
   }
-  // We are getting the recipient from the AuthCubit already, no need to retrieve it again.
-  /* Future<void> loadRecipientData() async {
-    emit(state.copyWith(status: AccountStatus.loading));
-
-    final user = userRepository.currentUser;
-
-    if (user == null) {
-      emit(
-        AccountState(
-          status: AccountStatus.failure,
-          exception: Exception(""),
-        ),
-      );
-      return;
-    }
-
-    try {
-      final recipient = await userRepository.fetchRecipient(user);
-
-      emit(
-        AccountState(
-          status: AccountStatus.success,
-          recipient: recipient,
-        ),
-      );
-    } on Exception catch (ex) {
-      emit(
-        AccountState(
-          status: AccountStatus.failure,
-          exception: ex,
-        ),
-      );
-    }
-  } */
 }
