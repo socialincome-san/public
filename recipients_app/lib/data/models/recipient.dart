@@ -1,5 +1,6 @@
 import "dart:convert";
 
+import "package:app/data/models/models.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:equatable/equatable.dart";
 
@@ -19,6 +20,8 @@ class Recipient extends Equatable {
   final String? imLinkInitial;
   final String? imLinkRegular;
 
+  final List<SocialIncomeTransaction>? transactions;
+
   const Recipient({
     required this.userId,
     required this.communicationMobilePhone,
@@ -33,6 +36,7 @@ class Recipient extends Equatable {
     this.recipientSince,
     this.imLinkInitial,
     this.imLinkRegular,
+    this.transactions = const [],
   });
 
   @override
@@ -51,6 +55,7 @@ class Recipient extends Equatable {
       recipientSince,
       imLinkInitial,
       imLinkRegular,
+      transactions,
     ];
   }
 
@@ -68,6 +73,7 @@ class Recipient extends Equatable {
     DateTime? recipientSince,
     String? imLinkInitial,
     String? imLinkRegular,
+    List<SocialIncomeTransaction>? transactions,
   }) {
     return Recipient(
       userId: userId ?? this.userId,
@@ -84,6 +90,7 @@ class Recipient extends Equatable {
       recipientSince: recipientSince ?? this.recipientSince,
       imLinkInitial: imLinkInitial ?? this.imLinkInitial,
       imLinkRegular: imLinkRegular ?? this.imLinkRegular,
+      transactions: transactions ?? this.transactions,
     );
   }
 
@@ -131,6 +138,17 @@ class Recipient extends Equatable {
     if (imLinkInitial != null) {
       result.addAll({"im_link_regular": imLinkRegular});
     }
+    if (transactions != null) {
+      result.addAll(
+        {
+          "transactions": transactions!
+              .map(
+                (element) => element.toMap(),
+              )
+              .toList()
+        },
+      );
+    }
 
     return result;
   }
@@ -161,6 +179,14 @@ class Recipient extends Equatable {
           : null,
       imLinkInitial: map["im_link_initial"] as String?,
       imLinkRegular: map["im_link_regular"] as String?,
+      transactions: map["transactions"] != null
+          ? (map["transactions"] as List)
+              .map(
+                (e) =>
+                    SocialIncomeTransaction.fromMap(e as Map<String, dynamic>),
+              )
+              .toList()
+          : null,
     );
   }
 

@@ -83,7 +83,8 @@ class TransactionCard extends StatelessWidget {
   }
 
   String getTransactionStatusText() {
-    final confirmedAt = transaction.confirmedAt;
+    final confirmedAt = transaction.confirmAt;
+
     return cleanStatus(transaction.status) +
         (transaction.status == "confirmed" && confirmedAt != null
             ? " at ${DateFormat("dd.MM.yyyy").format(confirmedAt.toDate())}"

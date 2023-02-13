@@ -78,7 +78,7 @@ class CurrentUser extends ChangeNotifier {
         recipientSinceKey: recipientSince,
         termsAcceptedKey: termsAccepted,
         transactionsKey:
-            transactions?.map((transaction) => transaction.data()).toList(),
+            transactions?.map((transaction) => transaction.toMap()).toList(),
         nextSurveyKey: nextSurvey,
         imLinkInitialKey: imLinkInitial,
         imLinkRegularKey: imLinkRegular
@@ -233,20 +233,25 @@ class CurrentUser extends ChangeNotifier {
   }
 
   Future<void> confirmTransaction(String transactionId) async {
-    final currentTransaction = transactions
-        ?.firstWhereOrNull((element) => element.id == transactionId);
+    final currentTransaction = transactions?.firstWhereOrNull(
+      (element) => element.id == transactionId,
+    );
 
     if (currentTransaction == null) {
       return;
     }
 
-    currentTransaction.status = "confirmed";
-    currentTransaction.confirmedAt = Timestamp.fromDate(DateTime.now());
-    final Map<String, Object> info = {
+    final updatedTransaction = currentTransaction.copyWith(
+      status: "confirmed",
+      confirmAt: Timestamp.fromDate(DateTime.now()),
+    );
+
+    /*  final Map<String, Object> info = {
       "status": "confirmed",
       "confirm_at": DateTime.now()
-    };
-    databaseService.updateTransaction(info, transactionId);
+    }; */
+
+    databaseService.updateTransaction(updatedTransaction);
   }
 
   void contestTransaction(String transactionId, String contestReason) {
@@ -257,14 +262,13 @@ class CurrentUser extends ChangeNotifier {
       return;
     }
 
-    currentTransaction.status = "contested";
-    currentTransaction.contestedAt = Timestamp.fromDate(DateTime.now());
-    final Map<String, Object> info = {
-      "status": "contested",
-      "contested_at": DateTime.now(),
-      "contest_reason": contestReason,
-    };
-    databaseService.updateTransaction(info, transactionId);
+    final updatedTransaction = currentTransaction.copyWith(
+      status: "contested",
+      contestAt: Timestamp.fromDate(DateTime.now()),
+      contestReason: contestReason,
+    );
+
+    databaseService.updateTransaction(updatedTransaction);
   }
 
   int totalIncome() {

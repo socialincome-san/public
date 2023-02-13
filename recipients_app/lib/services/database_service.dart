@@ -46,8 +46,8 @@ class DatabaseService {
         .get();
 
     for (final element in transactionDocs.docs) {
-      final transaction = SocialIncomeTransaction();
-      transaction.initialize(element.data(), element.id);
+      const transaction = SocialIncomeTransaction();
+      // transaction.initialize(element.data(), element.id);
       transactions.add(transaction);
     }
 
@@ -67,8 +67,7 @@ class DatabaseService {
   }
 
   Future<void> updateTransaction(
-    Map<String, Object?> info,
-    String transactionId,
+    SocialIncomeTransaction transaction,
   ) async {
     final snapshot = await getUserSnapshot();
 
@@ -76,8 +75,8 @@ class DatabaseService {
         .collection("/recipients")
         .doc(snapshot.id)
         .collection("payments")
-        .doc(transactionId)
-        .update(info);
+        .doc(transaction.id)
+        .set(transaction.toMap());
   }
 
   Future<void> updateNextSurvey(DateTime date) async {

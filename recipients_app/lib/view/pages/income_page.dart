@@ -1,26 +1,28 @@
-
-import "package:app/core/change_notifiers/current_user.dart";
+import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/data/models/social_income_transaction.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/income/balance_card.dart";
 import "package:app/view/widgets/income/transaction_card.dart";
 import "package:flutter/material.dart";
-import "package:provider/provider.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
 class IncomePage extends StatelessWidget {
   const IncomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CurrentUser>(
-      builder: (context, currentUser, child) {
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        final transactions =
+            state.recipient?.transactions ?? <SocialIncomeTransaction>[];
+
         return Padding(
           padding: AppSpacings.a16,
           child: Column(
             children: [
               const BalanceCard(),
               const SizedBox(height: 8),
-              if (transactionCards(currentUser).isEmpty)
+              if (transactions.isEmpty)
                 const Expanded(
                   child: Center(
                     child: Text(
@@ -30,25 +32,18 @@ class IncomePage extends StatelessWidget {
                 )
               else
                 Expanded(
-                  child: ListView(
-                    children: transactionCards(currentUser),
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 8),
+                    itemCount: transactions.length,
+                    itemBuilder: (context, index) =>
+                        TransactionCard(transaction: transactions[index]),
                   ),
-                )
+                ),
             ],
           ),
         );
       },
     );
-  }
-
-  List<Widget> transactionCards(CurrentUser currentUser) {
-    return {
-      for (var transaction
-          in currentUser.transactions ?? <SocialIncomeTransaction>[])
-        Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: TransactionCard(transaction: transaction),
-        )
-    }.toList();
   }
 }
