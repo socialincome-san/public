@@ -7,12 +7,12 @@ service cloud.firestore {
 
     function isGlobalAdmin(email) {
       let adminUser = get(/databases/$(database)/documents/admins/$(email)).data;
-      return adminUser.is_global_admin;
+      return 'is_global_admin' in adminUser && adminUser.is_global_admin;
     }
 
     function isGlobalAnalyst(email) {
       let adminUser = get(/databases/$(database)/documents/admins/$(email)).data;
-      return adminUser.is_global_analyst;
+      return 'is_global_analyst' in adminUser && adminUser.is_global_analyst;
     }
 
     function canAccessRecipient(email, recipient) {
@@ -79,7 +79,7 @@ service cloud.firestore {
       allow read: if isGlobalAnalyst(request.auth.token.email);
 
       // Recipients mobile app access
-      allow read, update: if request.auth.token.phone_number == ("+" + string(resource.data.mobile_money_phone.phone))
+      allow read, update: if 'phone_number' in request.auth.token && request.auth.token.phone_number == ("+" + string(resource.data.mobile_money_phone.phone))
 
       // Organisation admins access
       allow create: if isAdminUser(request.auth.token.email);
