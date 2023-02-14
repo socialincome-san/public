@@ -25,7 +25,7 @@ export const buildRecipientsCashTransfersCollection = ({ isGlobalAdmin, organisa
 			progr_status: ['in', [RecipientProgramStatus.Active, RecipientProgramStatus.Designated]],
 		},
 		group: 'Recipients',
-		initialSort: ['om_uid', 'asc'],
+		// initialSort: ['om_uid', 'asc'], TODO: figure out how to sort and filter
 		icon: 'RememberMeTwoTone',
 		inlineEditing: false,
 		name: 'Recipients',
