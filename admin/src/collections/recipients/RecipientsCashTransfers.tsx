@@ -1,10 +1,10 @@
-import { BuildCollectionProps, paymentsCollection } from '../index';
-import { Recipient, RECIPIENT_FIRESTORE_PATH, RecipientProgramStatus } from '@socialincome/shared/src/types';
 import { buildCollection, buildProperties } from '@camberi/firecms';
-import { CreateOrangeMoneyCSVAction } from '../../actions/CreateOrangeMoneyCSVAction';
-import { isUndefined } from 'lodash';
-import { PaymentsLeft } from './Recipients';
 import { EntityCollection } from '@camberi/firecms/dist/types';
+import { Recipient, RecipientProgramStatus, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { isUndefined } from 'lodash';
+import { CreateOrangeMoneyCSVAction } from '../../actions/CreateOrangeMoneyCSVAction';
+import { BuildCollectionProps, paymentsCollection } from '../index';
+import { PaymentsLeft } from './Recipients';
 import {
 	firstNameProperty,
 	genderProperty,
@@ -25,7 +25,7 @@ export const buildRecipientsCashTransfersCollection = ({ isGlobalAdmin, organisa
 			progr_status: ['in', [RecipientProgramStatus.Active, RecipientProgramStatus.Designated]],
 		},
 		group: 'Recipients',
-		// initialSort: ["om_uid", "desc"], TODO: support filtering and sorting
+		initialSort: ['om_uid', 'asc'],
 		icon: 'RememberMeTwoTone',
 		inlineEditing: false,
 		name: 'Recipients',

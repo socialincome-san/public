@@ -6,7 +6,7 @@ import {
 	buildProperty,
 	StringPropertyPreview,
 } from '@camberi/firecms';
-import { Recipient, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { Recipient, RecipientProgramStatus, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
 import { getMonthIDs } from '@socialincome/shared/src/utils/date';
 import { CreateOrangeMoneyCSVAction } from '../../actions/CreateOrangeMoneyCSVAction';
 import { BuildCollectionProps } from '../index';
@@ -76,6 +76,9 @@ export const buildRecipientsRecentPaymentsCollection = ({ isGlobalAdmin, organis
 	if (isGlobalAdmin) {
 		return buildCollection<Partial<Recipient>>({
 			...defaultProps,
+			initialFilter: {
+				progr_status: ['==', RecipientProgramStatus.Active],
+			},
 			Actions: [CreateOrangeMoneyCSVAction],
 		});
 	} else {

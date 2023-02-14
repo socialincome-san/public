@@ -3,14 +3,14 @@ import { EntityCollection, PropertiesOrBuilders } from '@camberi/firecms/dist/ty
 import { toYYYYMMDD } from '@socialincome/shared/src/utils/date';
 
 import { Chip, Tooltip } from '@mui/material';
-import { isUndefined } from 'lodash';
 import {
 	calcLastPaymentDate,
 	calcPaymentsLeft,
 	Recipient,
-	RECIPIENT_FIRESTORE_PATH,
 	RecipientProgramStatus,
+	RECIPIENT_FIRESTORE_PATH,
 } from '@socialincome/shared/src/types';
+import { isUndefined } from 'lodash';
 import { CreateOrangeMoneyCSVAction } from '../../actions/CreateOrangeMoneyCSVAction';
 import { BuildCollectionProps, paymentsCollection } from '../index';
 import {
