@@ -8,7 +8,7 @@ import {
 	FirestoreTextSearchController,
 	performAlgoliaTextSearch,
 } from '@camberi/firecms';
-import { connectAuthEmulator, getAuth } from 'firebase/auth';
+import { browserSessionPersistence, connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import { useState } from 'react';
@@ -16,21 +16,25 @@ import { AdminUser } from '../../shared/src/types';
 import {
 	adminsCollection,
 	buildPartnerOrganisationsCollection,
-	buildRecipientsCollection,
 	contributorOrganisationsCollection,
 	newsletterSubscribersCollection,
 	operationalExpensesCollection,
-	recentPaymentsCollection,
 	usersCollection,
 } from './collections';
 
 import { getApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
+import { RecipientsView } from './views/RecipientsView';
 import { ScriptsView } from './views/Scripts';
 
 const onFirebaseInit = () => {
+	const auth = getAuth();
+	if (import.meta.env.VITE_PLAYWRIGHT_TESTS === 'true') {
+		console.log('Running Playwright tests, using session storage for persistence');
+		auth.setPersistence(browserSessionPersistence);
+	}
 	if (import.meta.env.VITE_ADMIN_FB_AUTH_EMULATOR_URL) {
-		connectAuthEmulator(getAuth(), import.meta.env.VITE_ADMIN_FB_AUTH_EMULATOR_URL);
+		connectAuthEmulator(auth, import.meta.env.VITE_ADMIN_FB_AUTH_EMULATOR_URL, { disableWarnings: true });
 		console.log('Using auth emulator');
 	} else {
 		console.log('Using production auth');
@@ -109,9 +113,7 @@ export default function App() {
 		newsletterSubscribersCollection,
 		contributorOrganisationsCollection,
 		usersCollection,
-		recentPaymentsCollection,
 		buildPartnerOrganisationsCollection({ isGlobalAdmin: true }),
-		buildRecipientsCollection({ isGlobalAdmin: true }),
 	];
 
 	// The initialFilter property on collections is static, i.e. we can't dynamically access user information when we create
@@ -120,7 +122,16 @@ export default function App() {
 	const [collections, setCollections] = useState<EntityCollection[]>([]);
 
 	// Adding custom pages depending on the user role
-	const publicCustomViews: CMSView[] = [];
+	const publicCustomViews: CMSView[] = [
+		{
+			path: 'recipients',
+			name: 'Recipients',
+			group: 'Recipients',
+			icon: 'RememberMeTwoTone',
+			description: 'Collection of Recipients',
+			view: <RecipientsView />,
+		},
+	];
 	const globalAdminCustomViews: CMSView[] = [
 		{
 			path: 'scripts',
@@ -146,13 +157,10 @@ export default function App() {
 					if (result?.values?.is_global_admin || result?.values?.is_global_analyst) {
 						setCollections(globalAdminCollections);
 						setCustomViews(publicCustomViews.concat(globalAdminCustomViews));
-						authController.setExtra({ isGlobalAdmin: true });
+						authController.setExtra({ isGlobalAdmin: Boolean(result?.values?.is_global_admin) });
 					} else {
-						setCollections([
-							buildPartnerOrganisationsCollection({ isGlobalAdmin: false }),
-							buildRecipientsCollection({ isGlobalAdmin: false, organisations: result?.values?.organisations }),
-							recentPaymentsCollection,
-						]);
+						authController.setExtra({ organisations: result?.values?.organisations || [] });
+						setCollections([buildPartnerOrganisationsCollection({ isGlobalAdmin: false })]);
 					}
 				}
 			});

@@ -1,10 +1,11 @@
 {
 	"contribution": "{{ amount, currency }}",
 	"email-subject": "Social Income Spendenbescheinigung",
+	"email-preview-text": "Ich sende dir anbei die Spendenbescheinigung für das Jahr {{year}}.",
 	"email-body-greeting": "Hallo {{ firstname }}",
 	"email-body-text-1": "Ich sende dir anbei die Spendenbescheinigung für das Jahr {{year}}. Herzlichen Dank für dein Vertrauen und Engagement für weniger Armut und mehr Gerechtigkeit.",
 	"email-body-text-2": "Social Income ist in der Schweiz als gemeinnützige Organisation anerkannt und steuerbefreit.",
-	"email-body-text-3": "Wenn du Fragen hast, dann melde dich einfach bei mir.",
+	"email-body-text-3": "Bei Fragen stehe ich dir jederzeit gerne zur Verfügung.",
 	"filename": "Social Income Spendenbescheinigung {{ year }}.pdf",
 	"footer-left-line-1": "Social Income",
 	"footer-left-line-2": "Zweierstrasse 103",

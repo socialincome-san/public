@@ -42,6 +42,9 @@ export const renderTemplate = async ({
 			lng: language,
 			ns: translationNamespace,
 			fallbackLng: FALLBACK_LANGUAGE,
+			interpolation: {
+				escapeValue: false,
+			},
 		});
 	registerI18nHelper(Handlebars, i18n);
 

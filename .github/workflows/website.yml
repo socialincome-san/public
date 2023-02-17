@@ -51,7 +51,7 @@ jobs:
         with:
           source-dir: website/playwright-report/
           preview-branch: gh-pages
-          umbrella-dir: playwright-report
+          umbrella-dir: website-playwright-report
           action: auto
 
       - name: Test build
