@@ -12,7 +12,7 @@ class MainAppPage extends StatefulWidget {
 }
 
 class _MainAppPageState extends State<MainAppPage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   final List<Map<String, Widget>> _pages = [
     {"Account": const AccountPage()},
