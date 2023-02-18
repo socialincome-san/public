@@ -7,70 +7,49 @@ import { donationCertificateCollection } from './DonationCertificate';
 const FirstNameCol: AdditionalFieldDelegate<User> = {
 	id: 'first_name_col',
 	name: 'First Name',
-	builder: ({ entity }) => {
-		const values = entity.values;
-		return values?.personal?.name || '';
-	},
+	Builder: ({ entity }) => <>{entity.values?.personal?.name}</>,
 	dependencies: ['personal'],
 };
 
 const LastNameCol: AdditionalFieldDelegate<User> = {
 	id: 'last_name_col',
 	name: 'Last Name',
-	builder: ({ entity }) => {
-		const values = entity.values;
-		return values?.personal?.lastname || '';
-	},
+	Builder: ({ entity }) => <>{entity.values?.personal?.lastname}</>,
 	dependencies: ['personal'],
 };
 
 const GenderCol: AdditionalFieldDelegate<User> = {
 	id: 'gender_col',
 	name: 'Gender',
-	builder: ({ entity }) => {
-		const values = entity.values;
-		return values?.personal?.gender || '';
-	},
+	Builder: ({ entity }) => <>{entity.values?.personal?.gender}</>,
 	dependencies: ['personal'],
 };
 
 const PhoneCol: AdditionalFieldDelegate<User> = {
 	id: 'phone_col',
 	name: 'Phone',
-	builder: ({ entity }) => {
-		const values = entity.values;
-		return values?.personal?.phone || '';
-	},
+	Builder: ({ entity }) => <>{entity.values?.personal?.phone}</>,
 	dependencies: ['personal'],
 };
 
 const CountryCol: AdditionalFieldDelegate<User> = {
 	id: 'country_col',
 	name: 'Country',
-	builder: ({ entity }) => {
-		const values = entity.values;
-		return values?.address?.country || '';
-	},
+	Builder: ({ entity }) => <>{entity.values?.address?.country}</>,
 	dependencies: ['address'],
 };
 
 const CityCol: AdditionalFieldDelegate<User> = {
 	id: 'city_col',
 	name: 'City',
-	builder: ({ entity }) => {
-		const values = entity.values;
-		return values.address?.city || '';
-	},
+	Builder: ({ entity }) => <>{entity.values?.address?.city}</>,
 	dependencies: ['address'],
 };
 
 const ReferralCol: AdditionalFieldDelegate<User> = {
 	id: 'referral_col',
 	name: 'Referral',
-	builder: ({ entity }) => {
-		const values = entity.values;
-		return values.personal?.referral || '';
-	},
+	Builder: ({ entity }) => <>{entity.values?.personal?.referral}</>,
 	dependencies: ['personal'],
 };
 
@@ -87,7 +66,7 @@ export const usersCollection = buildCollection<User>({
 		create: true,
 		delete: false,
 	}),
-	additionalColumns: [FirstNameCol, LastNameCol, GenderCol, PhoneCol, CountryCol, CityCol, ReferralCol],
+	additionalFields: [FirstNameCol, LastNameCol, GenderCol, PhoneCol, CountryCol, CityCol, ReferralCol],
 	subcollections: [contributionsCollection, donationCertificateCollection],
 	Actions: CreateDonationCertificatesAction,
 	properties: buildProperties<User>({

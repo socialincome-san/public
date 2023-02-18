@@ -1,6 +1,7 @@
 {
 	"contribution": "{{ amount, currency }}",
 	"email-subject": "Social Income Donation Certificate",
+	"email-preview-text": "I am sending you the donation receipt for the year {{ year }}.",
 	"email-body-greeting": "Dear {{firstname}},",
 	"email-body-text-1": "I am sending you the donation receipt for the year {{ year }}. Thank you for your trust and commitment to less poverty and more economic justice.",
 	"email-body-text-2": "Social Income is recognized as a non-profit organization in Switzerland and is tax-exempt.",

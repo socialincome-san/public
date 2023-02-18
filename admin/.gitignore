@@ -6,3 +6,5 @@ social-income-prod-firebase-adminsdk.json
 /test-results/
 /playwright-report/
 /playwright/.cache/
+tests/playwright/sessionStorage.json
+tests/playwright/**/*darwin.png

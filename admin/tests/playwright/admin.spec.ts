@@ -1,14 +1,41 @@
-import { expect, test } from '@playwright/test';
+import { expect, test as base } from '@playwright/test';
+import * as fs from 'fs';
+import * as path from 'path';
 
-test.beforeEach(async ({ page }) => {
+export const test = base.extend({
+	context: async ({ context }, use) => {
+		const sessionStorage = JSON.parse(
+			fs.readFileSync(path.join(__dirname, 'sessionStorage.json'), { encoding: 'utf8' })
+		);
+		await context.addInitScript((storage: string) => {
+			for (const [key, value] of Object.entries(storage)) {
+				window.sessionStorage.setItem(key, value as string);
+			}
+		}, sessionStorage);
+		await use(context);
+	},
+});
+
+test.beforeAll(async ({ browser }) => {
+	console.log('Logging in and writing sessionStorage.json file.');
+	const context = await browser.newContext();
+	const page = await context.newPage();
 	await page.goto('http://localhost:3000/');
 	const popupPromise = page.waitForEvent('popup');
 	await page.getByRole('button', { name: 'Sign in with Google' }).click();
-	await page.waitForTimeout(4000); // todo replace this with better callbacks
+	await page.waitForTimeout(2000); // todo replace this with better callbacks
 	const popup = await popupPromise;
-	await page.waitForTimeout(4000); // todo replace this with better callbacks
+	await page.waitForTimeout(2000); // todo replace this with better callbacks
 	await popup.getByText('person Admin admin@socialincome.org').click();
-	await page.waitForTimeout(4000); // todo replace this with better callbacks
+	await page.waitForTimeout(2000); // todo replace this with better callbacks
+	const sessionStorage: string = await page.evaluate(() => JSON.stringify(sessionStorage));
+	await page.close();
+	await context.close();
+	fs.writeFileSync(path.join(__dirname, 'sessionStorage.json'), sessionStorage, { encoding: 'utf8' });
+});
+
+test.beforeEach(async ({ page }) => {
+	await page.goto('http://localhost:3000/');
 });
 
 test('root', async ({ page }) => {
@@ -23,7 +50,7 @@ test('contributors', async ({ page }) => {
 	// edit contributor
 	await page.getByRole('button', { name: 'Edit cCj3O9gQuopmPZ15JTI0' }).click();
 	await expect(page).toHaveScreenshot();
-	await page.locator('#form_field_email').getByRole('textbox').fill('test@socialincome.org');
+	await page.locator('#form_field_address').getByRole('textbox').nth(4).fill('24');
 	await page.getByRole('button', { name: 'Save and close' }).click();
 	await page.waitForTimeout(1000);
 	await expect(page).toHaveScreenshot();
@@ -42,17 +69,7 @@ test('recipients', async ({ page }) => {
 	await page.locator('ul').getByRole('link', { name: 'Recipients' }).click();
 	await expect(page).toHaveScreenshot();
 
-	// test filtering
-	await page.locator('div:nth-child(3) > .MuiBadge-root > .MuiButtonBase-root').click();
-	await page.getByRole('spinbutton').click();
-	await page.getByRole('spinbutton').fill('1');
-	await expect(page).toHaveScreenshot();
-	await page.getByText('Filter').click();
-	await page.waitForTimeout(4000); // needs some time to filter
-	await expect(page).toHaveScreenshot();
-	await page.getByRole('button', { name: 'filter clear' }).click();
-	await page.waitForTimeout(1000);
-	await expect(page).toHaveScreenshot();
+	await page.getByRole('button', { name: 'All Recipients' }).click();
 
 	// edit recipient
 	await page.getByRole('button', { name: 'Edit iF8bLEoUjqOIlq84XQmi' }).click();

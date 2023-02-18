@@ -23,6 +23,9 @@ const config: PlaywrightTestConfig = {
 	webServer: {
 		command: 'vite serve',
 		port: 3000,
+		env: {
+			VITE_PLAYWRIGHT_TESTS: 'true',
+		},
 	},
 };
 

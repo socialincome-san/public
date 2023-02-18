@@ -16,5 +16,6 @@ interface ImportMeta {
 		VITE_ADMIN_FB_STORAGE_BUCKET: string;
 		VITE_ADMIN_FB_MESSAGING_SENDER_ID: string;
 		VITE_ADMIN_FB_MEASUREMENT_ID: string;
+		VITE_PLAYWRIGHT_TESTS: string;
 	};
 }
