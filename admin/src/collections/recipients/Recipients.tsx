@@ -50,8 +50,8 @@ export const PaymentsLeft: AdditionalFieldDelegate<Partial<Recipient>> = {
 			return (
 				<Tooltip title={'Last Payment Date ' + toYYYYMMDD(lastPaymentDate)}>
 					<Chip
-						color={paymentsLeft <= 1 ? 'error' : paymentsLeft <= 3 ? 'warning' : 'success'}
-						label={paymentsLeft + ' payment(s) left'}
+						color={paymentsLeft < 0 ? 'info' : paymentsLeft <= 1 ? 'error' : paymentsLeft <= 3 ? 'warning' : 'success'}
+						label={paymentsLeft < 0 ? 'none' : paymentsLeft + ' payment(s) left'}
 					/>
 				</Tooltip>
 			);
