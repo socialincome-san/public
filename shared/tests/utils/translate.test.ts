@@ -17,7 +17,7 @@ describe('Test translations', () => {
 			language: 'fr',
 			namespaces: ['donation-certificate', 'countries'],
 		});
-		expect(translator.t('email-subject')).toBe('Social Income Attestation de don');
+		expect(translator.t('email-subject')).toBe('Attestation de don – Social Income');
 		expect(translator.t('CH', { namespace: 'countries' })).toBe('Suisse');
 		expect(translator.t('DE', { namespace: 'countries' })).toBe('Allemagne');
 	});

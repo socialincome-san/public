@@ -5,3 +5,4 @@ dist/
 .next/
 *.hbs
 ui/storybook-static/
+ui/README.md

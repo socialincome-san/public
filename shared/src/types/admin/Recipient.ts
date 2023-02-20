@@ -1,4 +1,5 @@
 import { EntityReference } from '@camberi/firecms';
+import moment from 'moment';
 
 export const RECIPIENT_FIRESTORE_PATH = 'recipients';
 
@@ -41,4 +42,18 @@ export type Recipient = {
 	twitter_handle: string;
 	im_link_initial: string;
 	im_link_regular: string;
+};
+
+/**
+ * The start date defines the first payment. Afterwards we expect 35 more contributions
+ */
+export const calcLastPaymentDate = (startDate: Date) => {
+	return moment(startDate).add(35, 'months').toDate();
+};
+/**
+ * How many payments (months) are still left
+ */
+export const calcPaymentsLeft = (lastPayment: Date, now: Date = new Date()) => {
+	const diff = moment(lastPayment).diff(moment(now), 'months', true);
+	return diff >= 0 ? Math.ceil(diff) : Math.floor(diff);
 };

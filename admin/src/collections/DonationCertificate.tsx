@@ -4,7 +4,7 @@ import { DonationCertificate, DONATION_CERTIFICATE_FIRESTORE_PATH } from '@socia
 const DownloadLinkColumn: AdditionalFieldDelegate<DonationCertificate> = {
 	id: 'download_link',
 	name: 'Download Link',
-	builder: ({ entity }) => {
+	Builder: ({ entity }) => {
 		return (
 			<a href={entity.values.url} target="_blank" rel="noreferrer">
 				Download
@@ -21,7 +21,7 @@ export const donationCertificateCollection = buildCollection<DonationCertificate
 	textSearchEnabled: false,
 	initialSort: ['year', 'desc'],
 	customId: true,
-	additionalColumns: [DownloadLinkColumn],
+	additionalFields: [DownloadLinkColumn],
 
 	permissions: {
 		edit: true,
