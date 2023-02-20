@@ -21,7 +21,6 @@ export type Recipient = {
 	email: string;
 	first_name: string;
 	gender: string;
-	updated_on: Date;
 	im_link: string;
 	im_uid: string;
 	is_suspended: boolean;

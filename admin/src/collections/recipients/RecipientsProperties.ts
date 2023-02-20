@@ -116,11 +116,6 @@ export const organisationProperty: Property = {
 	dataType: 'reference',
 	path: PARTNER_ORGANISATION_FIRESTORE_PATH,
 };
-export const updatedOnProperty: Property = {
-	dataType: 'date',
-	name: 'Updated',
-	autoValue: 'on_update',
-};
 
 export const emailProperty: Property = {
 	name: 'Email',

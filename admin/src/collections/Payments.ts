@@ -1,5 +1,6 @@
-import { buildCollection, buildEnumValueConfig, buildProperties } from '@camberi/firecms';
+import { buildEnumValueConfig, buildProperties } from '@camberi/firecms';
 import { Payment, PAYMENT_FIRESTORE_PATH } from '../../../shared/src/types';
+import { buildAuditedCollection } from './shared';
 
 export const paymentStatusMap = {
 	to_pay: buildEnumValueConfig({
@@ -34,7 +35,7 @@ export const paymentStatusMap = {
 	}),
 };
 
-export const paymentsCollection = buildCollection<Payment>({
+export const paymentsCollection = buildAuditedCollection<Payment>({
 	name: 'Payments',
 	group: 'Finances',
 	path: PAYMENT_FIRESTORE_PATH,
