@@ -19,7 +19,7 @@ jobs:
           persist-credentials: false
 
       - name: Prettify Code
-        uses: creyD/prettier_action@v4.2
+        uses: creyD/prettier_action@v4.3
         with:
           prettier_options: "--write ./"
           github_token: ${{ secrets.WORKFLOW_TOKEN }}
