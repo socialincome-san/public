@@ -32,6 +32,7 @@ export class DonationCertificateHandler {
 		async ({ users, year, sendEmails }: CreateDonationCertificatesFunctionProps, { auth }) => {
 			await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
 			let [successCount, skippedCount] = [0, 0];
+			const usersWithFailures = [];
 			for await (const userEntity of users) {
 				const user = userEntity.values;
 				try {
@@ -88,10 +89,13 @@ export class DonationCertificateHandler {
 					successCount += 1;
 				} catch (e) {
 					skippedCount += 1;
+					usersWithFailures.push(user.email);
 					console.error(e);
 				}
 			}
-			return `Successfully created ${successCount} donation certificates for ${year} (${skippedCount} skipped)`;
+			return `Successfully created ${successCount} donation certificates for ${year} (${skippedCount} skipped. Users with errors ${usersWithFailures.join(
+				','
+			)})`;
 		}
 	);
 
@@ -107,7 +111,7 @@ export class DonationCertificateHandler {
 				});
 			})
 			.catch((error) => {
-				console.log('Error getting documents: ', error);
+				throw new Error(`Error getting documents: ${error}`);
 			});
 
 		return _(contributions)
@@ -141,7 +145,7 @@ export class DonationCertificateHandler {
 				firstname: user.personal?.name,
 				lastname: user.personal?.lastname,
 				city: user.address?.city,
-				year: 2022,
+				year: year,
 			},
 		});
 		const text2 = translator.t('text-2', {
