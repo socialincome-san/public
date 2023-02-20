@@ -24,7 +24,6 @@ export const buildAuditedCollection = <
 			hideFromCollection: true,
 		},
 		// Is populated by the client onPreSave callback.
-		// The hasCorrectLastUpdatedBy security rule checks if the auth user equals to this value to avoid any malicious values
 		// This is unfortunately required because the firestore triggers don't contain the triggering auth context.
 		// https://github.com/firebase/firebase-functions/issues/300#issuecomment-611814916
 		last_updated_by: {
