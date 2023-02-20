@@ -1,8 +1,9 @@
-import { AdditionalFieldDelegate, buildCollection, buildProperties } from '@camberi/firecms';
+import { AdditionalFieldDelegate, buildProperties } from '@camberi/firecms';
 import { CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH, User, USER_FIRESTORE_PATH } from '../../../shared/src/types';
 import { CreateDonationCertificatesAction } from '../actions/CreateDonationCertificatesAction';
 import { contributionsCollection } from './Contributions';
 import { donationCertificateCollection } from './DonationCertificate';
+import { buildAuditedCollection } from './shared';
 
 const FirstNameCol: AdditionalFieldDelegate<User> = {
 	id: 'first_name_col',
@@ -53,7 +54,7 @@ const ReferralCol: AdditionalFieldDelegate<User> = {
 	dependencies: ['personal'],
 };
 
-export const usersCollection = buildCollection<User>({
+export const usersCollection = buildAuditedCollection<User>({
 	path: USER_FIRESTORE_PATH,
 	group: 'Contributors',
 	icon: 'VolunteerActivism',

@@ -1,9 +1,10 @@
-import { buildCollection, buildProperties } from '@camberi/firecms';
+import { buildProperties } from '@camberi/firecms';
 import { PartnerOrganisation, PARTNER_ORGANISATION_FIRESTORE_PATH } from '../../../shared/src/types';
 import { BuildCollectionProps } from './index';
+import { buildAuditedCollection } from './shared';
 
 export const buildPartnerOrganisationsCollection = ({ isGlobalAdmin = false }: BuildCollectionProps) => {
-	return buildCollection<PartnerOrganisation>({
+	return buildAuditedCollection<PartnerOrganisation>({
 		name: 'Partner Organisations',
 		group: 'Admin',
 		path: PARTNER_ORGANISATION_FIRESTORE_PATH,

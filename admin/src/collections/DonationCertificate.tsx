@@ -1,5 +1,6 @@
-import { AdditionalFieldDelegate, buildCollection, buildProperties } from '@camberi/firecms';
+import { AdditionalFieldDelegate, buildProperties } from '@camberi/firecms';
 import { DonationCertificate, DONATION_CERTIFICATE_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { buildAuditedCollection } from './shared';
 
 const DownloadLinkColumn: AdditionalFieldDelegate<DonationCertificate> = {
 	id: 'download_link',
@@ -14,7 +15,7 @@ const DownloadLinkColumn: AdditionalFieldDelegate<DonationCertificate> = {
 	dependencies: ['url'],
 };
 
-export const donationCertificateCollection = buildCollection<DonationCertificate>({
+export const donationCertificateCollection = buildAuditedCollection<DonationCertificate>({
 	name: 'Donation Certificates',
 	group: 'Finances',
 	path: DONATION_CERTIFICATE_FIRESTORE_PATH,
