@@ -30,4 +30,3 @@ export const createOrangeMoneyCSV = orangeMoneyCSVCreator.createOrangeMoneyCSV;
 
 const firestoreAuditor = new FirestoreAuditor(firestoreAdmin);
 export const auditCollectionTrigger = firestoreAuditor.auditCollectionTrigger;
-export const auditSubcollectionTrigger = firestoreAuditor.auditSubcollectionTrigger;

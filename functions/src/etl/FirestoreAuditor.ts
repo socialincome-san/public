@@ -1,7 +1,7 @@
-import equal from 'deep-equal';
 import { firestore } from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { Change, EventContext } from 'firebase-functions';
+import { isEqual } from 'lodash';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import DocumentSnapshot = firestore.DocumentSnapshot;
 
@@ -21,16 +21,7 @@ export class FirestoreAuditor {
 	 * Triggers changes to documents of root collections
 	 */
 	auditCollectionTrigger = functions.firestore
-		.document('{collectionId}/{docId}')
-		.onWrite(async (change: Change<DocumentSnapshot>, context: EventContext) => {
-			return this.auditFirestore(change, context);
-		});
-
-	/**
-	 * Triggers changes to documents of sub collections
-	 */
-	auditSubcollectionTrigger = functions.firestore
-		.document('{collectionId}/{docId}/{subCollectionId}/{subDocId}')
+		.document('{collectionId}/{document=**}')
 		.onWrite(async (change: Change<DocumentSnapshot>, context: EventContext) => {
 			return this.auditFirestore(change, context);
 		});
@@ -46,7 +37,7 @@ export class FirestoreAuditor {
 			return Promise.resolve();
 		// Since updating the updatedAt timestamp also triggers again a "write" event, we need to check
 		// that there was a change besides the updatedAt field, otherwise we end up in an infinite loop
-		const onlyUpdatedAtChanged = equal(
+		const onlyUpdatedAtChanged = isEqual(
 			{ ...change.after?.data(), last_updated_at: 0 },
 			{ ...change.before?.data(), last_updated_at: 0 }
 		);
