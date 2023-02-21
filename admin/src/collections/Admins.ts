@@ -1,7 +1,8 @@
-import { buildCollection, buildProperties } from '@camberi/firecms';
+import { buildProperties } from '@camberi/firecms';
 import { AdminUser, ADMIN_USER_FIRESTORE_PATH, PARTNER_ORGANISATION_FIRESTORE_PATH } from '../../../shared/src/types';
+import { buildAuditedCollection } from './shared';
 
-export const adminsCollection = buildCollection<AdminUser>({
+export const adminsCollection = buildAuditedCollection<AdminUser>({
 	name: 'Admins',
 	group: 'Admin',
 	path: ADMIN_USER_FIRESTORE_PATH,

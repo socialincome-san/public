@@ -1,4 +1,4 @@
-import { AdditionalFieldDelegate, buildCollection, buildProperties } from '@camberi/firecms';
+import { AdditionalFieldDelegate, buildProperties } from '@camberi/firecms';
 import { EntityCollection, PropertiesOrBuilders } from '@camberi/firecms/dist/types';
 import { toYYYYMMDD } from '@socialincome/shared/src/utils/date';
 
@@ -13,6 +13,7 @@ import {
 import { isUndefined } from 'lodash';
 import { CreateOrangeMoneyCSVAction } from '../../actions/CreateOrangeMoneyCSVAction';
 import { BuildCollectionProps, paymentsCollection } from '../index';
+import { buildAuditedCollection } from '../shared';
 import {
 	birthDateProperty,
 	callingNameProperty,
@@ -37,7 +38,6 @@ import {
 	speaksEnglishProperty,
 	TestRecipientProperty,
 	TwitterProperty,
-	updatedOnProperty,
 } from './RecipientsProperties';
 
 export const PaymentsLeft: AdditionalFieldDelegate<Partial<Recipient>> = {
@@ -76,7 +76,6 @@ const baseProperties: PropertiesOrBuilders<Partial<Recipient>> = {
 	main_language: mainLanguageProperty,
 	profession: professionProperty,
 	speaks_english: speaksEnglishProperty,
-	updated_on: updatedOnProperty,
 };
 
 export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: BuildCollectionProps) => {
@@ -133,5 +132,5 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 			properties: buildProperties(baseProperties),
 		};
 	}
-	return buildCollection<Partial<Recipient>>(collection);
+	return buildAuditedCollection<Partial<Recipient>>(collection);
 };

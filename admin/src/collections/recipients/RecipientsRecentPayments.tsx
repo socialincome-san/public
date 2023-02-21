@@ -1,7 +1,6 @@
 import {
 	AdditionalFieldDelegate,
 	AsyncPreviewComponent,
-	buildCollection,
 	buildProperties,
 	buildProperty,
 	StringPropertyPreview,
@@ -11,6 +10,7 @@ import { getMonthIDs } from '@socialincome/shared/src/utils/date';
 import { CreateOrangeMoneyCSVAction } from '../../actions/CreateOrangeMoneyCSVAction';
 import { BuildCollectionProps } from '../index';
 import { paymentsCollection, paymentStatusMap } from '../Payments';
+import { buildAuditedCollection } from '../shared';
 import {
 	firstNameProperty,
 	lastNameProperty,
@@ -74,7 +74,7 @@ export const buildRecipientsRecentPaymentsCollection = ({ isGlobalAdmin, organis
 		additionalFields: [CurrMonthCol, PrevMonthCol, PrevPrevMonthCol],
 	};
 	if (isGlobalAdmin) {
-		return buildCollection<Partial<Recipient>>({
+		return buildAuditedCollection<Partial<Recipient>>({
 			...defaultProps,
 			initialFilter: {
 				progr_status: ['==', RecipientProgramStatus.Active],
@@ -82,7 +82,7 @@ export const buildRecipientsRecentPaymentsCollection = ({ isGlobalAdmin, organis
 			Actions: [CreateOrangeMoneyCSVAction],
 		});
 	} else {
-		return buildCollection<Partial<Recipient>>({
+		return buildAuditedCollection<Partial<Recipient>>({
 			...defaultProps,
 			forceFilter: {
 				organisation: ['in', organisations || []],
