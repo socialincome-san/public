@@ -35,6 +35,7 @@ export class DonationCertificateHandler {
 			const usersWithFailures = [];
 			for await (const userEntity of users) {
 				const user = userEntity.values;
+				const genderContext = this.createGenderContext(user);
 				try {
 					await withFile(async ({ path }) => {
 						if (!user.address?.country) throw new Error('Country of user unknown.');
@@ -72,6 +73,7 @@ export class DonationCertificateHandler {
 										signature: translator.t('title', { context: { year } }),
 										firstname: user.personal?.name,
 										year,
+										context: genderContext,
 									},
 								}),
 								attachments: [
@@ -136,27 +138,31 @@ export class DonationCertificateHandler {
 		filePath: string
 	) => {
 		const user = userEntity.values;
+		const genderContext = this.createGenderContext(user);
+
 		const header = translator.t('header');
 		const location = translator.t('location', { context: { date: new Date() } });
 		const country = translator.t(user.address?.country as string, { namespace: 'countries' });
-		const title = translator.t('title', { context: { year } });
+		const title = translator.t('title', { context: { year, context: genderContext } });
 		const text1 = translator.t('text-1', {
 			context: {
 				firstname: user.personal?.name,
 				lastname: user.personal?.lastname,
 				city: user.address?.city,
 				year: year,
+				context: genderContext,
 			},
 		});
 		const text2 = translator.t('text-2', {
 			context: {
 				start: new Date(year, 0, 1),
 				end: new Date(year, 11, 31),
+				context: genderContext,
 			},
 		});
-		const text3 = translator.t('text-3');
-		const text4 = translator.t('text-4');
-		const text5 = translator.t('text-5');
+		const text3 = translator.t('text-3', { context: { context: genderContext } });
+		const text4 = translator.t('text-4', { context: { context: genderContext } });
+		const text5 = translator.t('text-5', { context: { context: genderContext } });
 
 		const titleKerrin = translator.t('title-kerrin');
 		const titleSandino = translator.t('title-sandino');
@@ -251,5 +257,9 @@ export class DonationCertificateHandler {
 			writeStream.on('finish', () => resolve());
 			pdfDocument.end();
 		});
+	};
+
+	createGenderContext = (user: User) => {
+		return user.personal?.gender === 'male' || user.personal?.gender === 'female' ? user.personal?.gender : undefined;
 	};
 }
