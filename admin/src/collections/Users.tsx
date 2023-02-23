@@ -113,6 +113,14 @@ export const usersCollection = buildAuditedCollection<User>({
 				referral: {
 					name: 'Referral',
 					dataType: 'string',
+					enumValues: {
+						familyfriends: 'Family or friends',
+						work: 'Work colleagues',
+						socialmedia: 'Social Media',
+						media: 'Media',
+						presentation: 'Presentation',
+						other: 'Other',
+					},
 				},
 			},
 		},
