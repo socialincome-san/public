@@ -4,7 +4,7 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:equatable/equatable.dart";
 
 class SocialIncomeTransaction extends Equatable {
-  final String? id;
+  final String id;
   final int? amount;
   final Timestamp? confirmAt;
   final Timestamp? contestAt;
@@ -14,7 +14,7 @@ class SocialIncomeTransaction extends Equatable {
   final String? status;
 
   const SocialIncomeTransaction({
-    this.id,
+    required this.id,
     this.amount,
     this.confirmAt,
     this.contestAt,
@@ -65,9 +65,8 @@ class SocialIncomeTransaction extends Equatable {
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
 
-    if (id != null) {
-      result.addAll({"id": id});
-    }
+    result.addAll({"id": id});
+    
     if (amount != null) {
       result.addAll({"amount": amount});
     }
@@ -94,9 +93,10 @@ class SocialIncomeTransaction extends Equatable {
   }
 
   String toJson() => json.encode(toMap());
-  factory SocialIncomeTransaction.fromMap(Map<String, dynamic> map) {
+
+  factory SocialIncomeTransaction.fromMap(String id, Map<String, dynamic> map) {
     return SocialIncomeTransaction(
-      id: map["id"] as String?,
+      id: id,
       amount: map["amount"] != null ? map["amount"] as int? : null,
       confirmAt:
           map["confirm_at"] != null ? map["confirm_at"] as Timestamp : null,
@@ -109,10 +109,11 @@ class SocialIncomeTransaction extends Equatable {
     );
   }
 
-  factory SocialIncomeTransaction.fromJson(String source) =>
-      SocialIncomeTransaction.fromMap(
-        jsonDecode(source) as Map<String, dynamic>,
-      );
+  // TODO: do we need this? 
+  // factory SocialIncomeTransaction.fromJson(String source) =>
+  //     SocialIncomeTransaction.fromMap(
+  //       jsonDecode(source) as Map<String, dynamic>,
+  //     );
 
   SocialIncomeTransaction copyWith({
     String? id,

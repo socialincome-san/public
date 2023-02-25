@@ -44,7 +44,10 @@ class UserRepository {
     //     await firestore.collection("/recipients").doc(firebaseUser.uid).get();
 
     if (userSnapshot.exists) {
-      return Recipient.fromMap(userSnapshot.id, userSnapshot.data());
+      final transactions =
+          await fetchTransactions(recipientId: userSnapshot.id);
+      return Recipient.fromMap(userSnapshot.id, userSnapshot.data())
+          .copyWith(transactions: transactions);
     } else {
       return null;
     }
@@ -114,5 +117,31 @@ class UserRepository {
         .collection(paymentCollection)
         .doc(transaction.id)
         .set(updatedTransaction.toMap());
+  }
+
+  Future<List<SocialIncomeTransaction>> fetchTransactions({
+    required String recipientId,
+  }) async {
+    final List<SocialIncomeTransaction> transactions =
+        <SocialIncomeTransaction>[];
+
+    final transactionDocs = await firestore
+        .collection(recipientCollection)
+        .doc(recipientId)
+        .collection(paymentCollection)
+        .get();
+
+    for (final transactionDoc in transactionDocs.docs) {
+      transactions.add(
+        SocialIncomeTransaction.fromMap(
+          transactionDoc.id,
+          transactionDoc.data(),
+        ),
+      );
+    }
+
+    transactions.sort((a, b) => b.id.compareTo(a.id));
+
+    return transactions;
   }
 }

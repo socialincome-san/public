@@ -21,6 +21,8 @@ class Recipient extends Equatable {
   final String? imLinkRegular;
   final Timestamp? nextSurvey;
 
+  // this should be got from `/recipients/<recipient.id>/payments` collection
+  // we should drop "transactions" field in recipient object collection
   final List<SocialIncomeTransaction>? transactions;
 
   const Recipient({
@@ -95,7 +97,6 @@ class Recipient extends Equatable {
       imLinkInitial: imLinkInitial ?? this.imLinkInitial,
       imLinkRegular: imLinkRegular ?? this.imLinkRegular,
       nextSurvey: nextSurvey ?? this.nextSurvey,
-      transactions: transactions ?? this.transactions,
     );
   }
 
@@ -159,17 +160,18 @@ class Recipient extends Equatable {
       result.addAll({"next_survey": nextSurvey});
     }
 
-    if (transactions != null) {
-      result.addAll(
-        {
-          "transactions": transactions!
-              .map(
-                (element) => element.toMap(),
-              )
-              .toList()
-        },
-      );
-    }
+    // transactions / payments should be written back to payments collection, not to the user object
+    // if (transactions != null) {
+    //   result.addAll(
+    //     {
+    //       "transactions": transactions!
+    //           .map(
+    //             (element) => element.toMap(),
+    //           )
+    //           .toList()
+    //     },
+    //   );
+    // }
 
     return result;
   }
@@ -202,14 +204,6 @@ class Recipient extends Equatable {
       imLinkRegular: map["im_link_regular"] as String?,
       nextSurvey:
           map["next_survey"] != null ? map["next_survey"] as Timestamp : null,
-      transactions: map["transactions"] != null
-          ? (map["transactions"] as List)
-              .map(
-                (e) =>
-                    SocialIncomeTransaction.fromMap(e as Map<String, dynamic>),
-              )
-              .toList()
-          : null,
     );
   }
 
