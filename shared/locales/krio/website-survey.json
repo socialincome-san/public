@@ -1,0 +1,69 @@
+{
+  "survey": {
+    "common": {
+      "start": "Stat",
+      "previous": "Bifo",
+      "next": "Nɛks",
+      "complete": "Dɔn",
+      "preview": "Fɔ si di tɛm bifo dis tɛm",
+      "edit": "Kɔrɛkt",
+      "loading": "We yu de lod...",
+      "completed": "Wi tɛl una tɛnki fɔ we una dɔn di sɔv.",
+      "alreadyCompleted": "Dis sɔv dɔn ɔlrɛdi dɔn. ",
+      "hello": "Adu",
+      "welcome": "Di gol fɔ dis sɔv na fɔ no di impak we Sɔshial Inkam gɛt fɔ yu.",
+      "error": ""
+    },
+    "questions": {
+      "yesNoChoices": {
+        "yes": "Yɛs",
+        "no": "Nɔ"
+      },
+      "ratingChoices": {
+        "extremelyUnlikely": "I nɔ go izi fɔ du am",
+        "unlikely": "I nɔ go bi se i go bi",
+        "neutral": "Nɔ put an pan",
+        "likely": "Go mɔs bi",
+        "extremelyLikely": "I rili pɔsibul"
+      },
+      "maritalStatusTitle": "Wetin na yu mared-os?",
+      "maritalStatusChoices": {
+        "married": "Mared",
+        "widowed": "We in man dɔn day",
+        "divorced": "Dɛn dɔn dayvɔs",
+        "separated": "Dɛn dɔn separet",
+        "neverMarried": "Nɔ ɛva mared"
+      },
+      "employmentStatusTitle": "Wetin na di wok we yu de du naw?",
+      "employmentStatusChoices": {
+        "selfEmployed": "Di wan dɛn we de wok fɔ dɛnsɛf",
+        "employedPartTime": "Di wok: i de wok 1-39 awa insay di wik",
+        "employedFullTime": "Di wok: i de wok fɔ 40 awa ɔ mɔ insay di wik",
+        "notEmployedLookingForWork": "Nɔ wok: de luk fɔ wok",
+        "notEmployedNotLookingForWork": "Nɔ de wok: NƆ de luk fɔ wok",
+        "retired": "Lɛf fɔ wok",
+        "disabled": "Disabled: nɔ ebul fɔ wok"
+      },
+      "livingLocationTitle": "Usay yu de?",
+      "livingLocationChoices": {
+        "westernAreaUrbanFreetown": "Wɛstɛn Eria Ɔban (Fri Taun) .",
+        "westernAreaRural": "Wɛstɛn Eria Rural",
+        "easternProvince": "Istan Prɔvins",
+        "northernProvince": "Nɔtan Prɔvins",
+        "northWestProvince": "Nɔt Wɛst Prɔvins",
+        "southernProvince": "Sawt Prɔvins"
+      },
+      "dependentsTitle": "Yu gɛt ɛnibɔdi we de dipen pan yu?",
+      "dependentsDesc": "Nɔmba fɔ pipul dɛn we de dipen pan yu. ",
+      "basicNeedsCovergeTitle": "Aw yu go ebul fɔ pe fɔ di tin dɛn we yu nid lɛk it, klos, ɛn say fɔ slip?",
+      "expensesCoveredTitle": "Aw yu go ebul fɔ pe ɔl yu spɛns dɛn di rayt tɛm?",
+      "unexpectedExpensesCoveredTitle": "Aw yu go ebul fɔ du sɔntin we yu nɔ bin de tink bɔt lɛk fɔ go to dɔktɔ?",
+      "educationAccessTitle": "Aw yu go ebul fɔ lan buk?",
+      "savingsTitle": "Aw yu go ebul fɔ kip mɔni?",
+      "deptTitle": "Yu ɔ ɛnibɔdi na yu os gɛt dɛt?",
+      "deptDesc": "SLE 500 ɔ pas dat",
+      "plannedAchievementTitle": "Wetin yu op fɔ ajɔst insay di nɛks 3 ia wit\n",
+      "noHelpTitle": "Yu ansa dis sɔv we ɔda pɔsin nɔ ɛp yu?"
+    }
+  }
+}

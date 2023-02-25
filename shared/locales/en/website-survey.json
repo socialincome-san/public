@@ -1,0 +1,69 @@
+{
+	"survey": {
+		"common": {
+			"start": "Start",
+			"previous": "Previous",
+			"next": "Next",
+			"complete": "Complete",
+			"preview": "Preview",
+			"edit": "Edit",
+			"loading": "Loading...",
+			"completed": "Thank you very much for completing the survey.",
+			"alreadyCompleted": "This survey is already completed. Thank you very much.",
+			"hello": "Hello",
+			"welcome": "The goal of this survey is to find out the impact of a Social Income for you. Takes around 5 minutes to complete.",
+			"error": "Nɔ ebul fɔ gɛt di sɔv."
+		},
+		"questions": {
+			"yesNoChoices":{
+				"yes": "Yes",
+				"no": "No"
+			},
+			"ratingChoices": {
+				"extremelyUnlikely": "Extremely unlikely",
+				"unlikely": "Unlikely",
+				"neutral": "Neutral",
+				"likely": "Likely",
+				"extremelyLikely": "Extremely likely"
+			},
+			"maritalStatusTitle": "What is your marital status?",
+			"maritalStatusChoices": {
+				"married": "Married",
+				"widowed": "Widowed",
+				"divorced": "Divorced",
+				"separated": "Separated",
+				"neverMarried": "Never married"
+			},
+			"employmentStatusTitle": "What is your current employment status?",
+			"employmentStatusChoices": {
+				"selfEmployed": "Self-employed",
+				"employedPartTime": "Employed: working 1-39 hours per week",
+				"employedFullTime": "Employed: working 40 or more hours per week",
+				"notEmployedLookingForWork": "Not working: looking for work",
+				"notEmployedNotLookingForWork": "Not working: NOT looking for work",
+				"retired": "Retired",
+				"disabled": "Disabled: not able to work"
+			},
+			"livingLocationTitle": "Where do you live?",
+			"livingLocationChoices": {
+				"westernAreaUrbanFreetown": "Western Area Urban (Freetown)",
+				"westernAreaRural": "Western Area Rural",
+				"easternProvince": "Eastern Province",
+				"northernProvince": "Northern Province",
+				"northWestProvince": "North West Province",
+				"southernProvince": "Southern Province"
+			},
+			"dependentsTitle": "Do you have any dependents?",
+			"dependentsDesc": "Number of people who depend on you. 0 is none.",
+			"basicNeedsCovergeTitle": "How likely are you able to cover basic needs such as food, clothing, and shelter?",
+			"expensesCoveredTitle": "How likely are you to pay all your expenses on time?",
+			"unexpectedExpensesCoveredTitle": "How likely are you able to handle an unexpected expense like seeing a doctor?",
+			"educationAccessTitle": "How likely are you to have access to education?",
+			"savingsTitle": "How likely are you able to save money?",
+			"deptTitle": "Are you or anyone in your household in debt?",
+			"deptDesc": "SLE 500 or above",
+			"plannedAchievementTitle": "What do you hope to achieve within the next 3 years with\nSocial Income?",
+			"noHelpTitle": "Did you answer this survey without the help from another person?"
+		}
+	}
+}
