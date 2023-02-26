@@ -3,8 +3,8 @@ import {
 	CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH,
 	User,
 	USER_FIRESTORE_PATH,
-	UserReferralSource
-} from "../../../shared/src/types";
+	UserReferralSource,
+} from '../../../shared/src/types';
 import { CreateDonationCertificatesAction } from '../actions/CreateDonationCertificatesAction';
 import { contributionsCollection } from './Contributions';
 import { donationCertificateCollection } from './DonationCertificate';
