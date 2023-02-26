@@ -24,6 +24,12 @@ export const paymentsCollection = buildAuditedCollection<Payment>({
 		delete: true,
 	},
 	properties: buildProperties<Payment>({
+		status: {
+			dataType: 'string',
+			name: 'Status',
+			enumValues: paymentStatusEnumValues,
+			validation: { required: true },
+		},
 		amount: {
 			dataType: 'number',
 			name: 'Amount',
@@ -43,12 +49,6 @@ export const paymentsCollection = buildAuditedCollection<Payment>({
 			dataType: 'date',
 			name: 'Payment Date',
 			mode: 'date',
-		},
-		status: {
-			dataType: 'string',
-			name: 'Status',
-			enumValues: paymentStatusEnumValues,
-			validation: { required: true },
 		},
 		comment: {
 			dataType: 'string',
