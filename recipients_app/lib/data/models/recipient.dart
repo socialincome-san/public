@@ -97,6 +97,7 @@ class Recipient extends Equatable {
       imLinkInitial: imLinkInitial ?? this.imLinkInitial,
       imLinkRegular: imLinkRegular ?? this.imLinkRegular,
       nextSurvey: nextSurvey ?? this.nextSurvey,
+      transactions: transactions ?? this.transactions
     );
   }
 
