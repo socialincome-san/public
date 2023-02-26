@@ -39,7 +39,7 @@ export function ScriptsView() {
 			.then(() => {
 				snackbarController.open({
 					type: 'success',
-					message: 'Ducceeded.',
+					message: 'Succeeded.',
 				});
 			})
 			.catch((err) => {
