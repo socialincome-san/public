@@ -1,39 +1,15 @@
-import { buildEnumValueConfig, buildProperties } from '@camberi/firecms';
-import { Payment, PAYMENT_FIRESTORE_PATH } from '../../../shared/src/types';
+import { buildProperties, EnumValues } from '@camberi/firecms';
+import { Payment, PaymentStatus, PAYMENT_FIRESTORE_PATH } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 
-export const paymentStatusMap = {
-	to_pay: buildEnumValueConfig({
-		id: 'to_pay',
-		label: 'To Be Paid',
-		color: 'yellowLight',
-	}),
-	to_be_confirmed: buildEnumValueConfig({
-		id: 'to_be_confirmed',
-		label: 'To Be Confirmed',
-		color: 'redLight',
-	}),
-	confirmed: buildEnumValueConfig({
-		id: 'confirmed',
-		label: 'Confirmed',
-		color: 'greenDark',
-	}),
-	contested: buildEnumValueConfig({
-		id: 'contested',
-		label: 'Contested',
-		color: 'orangeDark',
-	}),
-	failed: buildEnumValueConfig({
-		id: 'failed',
-		label: 'Failed Confirmation',
-		color: 'redDarker',
-	}),
-	no_payment: buildEnumValueConfig({
-		id: 'no_payment',
-		label: 'No Payment',
-		color: 'grayDark',
-	}),
-};
+export const paymentStatusEnumValues: EnumValues = [
+	{ id: PaymentStatus.Created, label: 'Created', color: 'yellowLight' },
+	{ id: PaymentStatus.Paid, label: 'Paid', color: 'redLight' },
+	{ id: PaymentStatus.Confirmed, label: 'Confirmed', color: 'greenDark' },
+	{ id: PaymentStatus.Contested, label: 'Contested', color: 'orangeDark' },
+	{ id: PaymentStatus.Failed, label: 'Failed', color: 'redDarker' },
+	{ id: PaymentStatus.Other, label: 'Other', color: 'grayDark' },
+];
 
 export const paymentsCollection = buildAuditedCollection<Payment>({
 	name: 'Payments',
@@ -42,11 +18,11 @@ export const paymentsCollection = buildAuditedCollection<Payment>({
 	textSearchEnabled: false,
 	initialSort: ['payment_at', 'desc'],
 	customId: true,
-	permissions: ({ authController }) => ({
+	permissions: {
 		edit: true,
 		create: true,
 		delete: true,
-	}),
+	},
 	properties: buildProperties<Payment>({
 		amount: {
 			dataType: 'number',
@@ -63,6 +39,7 @@ export const paymentsCollection = buildAuditedCollection<Payment>({
 			validation: { required: true },
 		},
 		payment_at: {
+			// @ts-ignore TODO: fix typing
 			dataType: 'date',
 			name: 'Payment Date',
 			mode: 'date',
@@ -70,22 +47,12 @@ export const paymentsCollection = buildAuditedCollection<Payment>({
 		status: {
 			dataType: 'string',
 			name: 'Status',
-			enumValues: paymentStatusMap,
+			enumValues: paymentStatusEnumValues,
 			validation: { required: true },
 		},
-		confirm_at: {
-			dataType: 'date',
-			name: 'Confirm Date',
-			mode: 'date',
-		},
-		contest_at: {
-			dataType: 'date',
-			name: 'Contest Date',
-			mode: 'date',
-		},
-		contest_reason: {
+		comment: {
 			dataType: 'string',
-			name: 'Contest Reason',
+			name: 'Comment',
 		},
 	}),
 });

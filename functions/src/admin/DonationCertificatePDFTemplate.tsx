@@ -1,8 +1,8 @@
 // @ts-nocheck
 // TODO: Use this basic working example to render PDF instead of pdfkit.
 import ReactPDF, { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
-import { User } from '../../../shared/src/types';
-import { Translator } from '../../../shared/src/utils/translate';
+import { User } from '@socialincome/shared/src/types';
+import { Translator } from '@socialincome/shared/src/utils/translate';
 
 const styles = StyleSheet.create({
 	page: {
@@ -24,7 +24,7 @@ interface DonationCertificatePDFTemplateProps {
 	translator: Translator;
 	year: number;
 }
-function DonationCertificatePDFTemplate({ user, translator, year }: DonationCertificatePDFTemplateProps) {
+function DonationCertificatePDFTemplate({ user, translator }: DonationCertificatePDFTemplateProps) {
 	const country = translator.t(user.address?.country as string, { namespace: 'countries' });
 	const header = translator.t('header');
 	const location = translator.t('location', { context: { date: new Date() } });

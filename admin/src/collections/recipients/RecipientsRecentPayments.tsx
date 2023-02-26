@@ -7,9 +7,8 @@ import {
 } from '@camberi/firecms';
 import { Recipient, RecipientProgramStatus, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
 import { getMonthIDs } from '@socialincome/shared/src/utils/date';
-import { CreateOrangeMoneyCSVAction } from '../../actions/CreateOrangeMoneyCSVAction';
 import { BuildCollectionProps } from '../index';
-import { paymentsCollection, paymentStatusMap } from '../Payments';
+import { paymentsCollection, paymentStatusEnumValues } from '../Payments';
 import { buildAuditedCollection } from '../shared';
 import {
 	firstNameProperty,
@@ -37,9 +36,9 @@ function createMonthColumn(monthID: string, monthLabel: string): AdditionalField
 						<StringPropertyPreview
 							property={buildProperty({
 								dataType: 'string',
-								enumValues: paymentStatusMap,
+								enumValues: paymentStatusEnumValues,
 							})}
-							value={entity?.values.status || ''}
+							value={entity?.values.status || 'none'}
 							size={'regular'}
 						/>
 					))}
@@ -79,7 +78,6 @@ export const buildRecipientsRecentPaymentsCollection = ({ isGlobalAdmin, organis
 			initialFilter: {
 				progr_status: ['==', RecipientProgramStatus.Active],
 			},
-			Actions: [CreateOrangeMoneyCSVAction],
 		});
 	} else {
 		return buildAuditedCollection<Partial<Recipient>>({
