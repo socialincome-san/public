@@ -1,8 +1,11 @@
 import { TWILIO_SID, TWILIO_TOKEN } from '../../src/config';
 import { sendSms } from '../../src/utils/messaging/sms';
 
+const itif = (condition: boolean) => (condition ? test : test.skip);
+
 describe('send simple Sms', () => {
-	test('send simple free text sms', async () => {
+	console.log(TWILIO_SID);
+	itif(TWILIO_SID != undefined && TWILIO_SID != 'ACXXXXXXXXXXXXXXXXXXXX')('send simple free text sms', async () => {
 		let [messageSid, messageStatus] = ['', ''];
 
 		const statusCallbackUrl = new URL('https://test.test');
