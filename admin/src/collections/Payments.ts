@@ -50,7 +50,7 @@ export const paymentsCollection = buildAuditedCollection<Payment>({
 			name: 'Payment Date',
 			mode: 'date',
 		},
-		comment: {
+		comments: {
 			dataType: 'string',
 			name: 'Comment',
 		},

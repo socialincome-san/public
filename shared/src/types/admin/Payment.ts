@@ -16,7 +16,7 @@ export type Payment = {
 	currency: 'SLL' | 'SLE';
 	payment_at: Timestamp;
 	status: PaymentStatus;
-	comment?: string;
+	comments?: string;
 };
 
 export enum AdminPaymentProcessTask {
