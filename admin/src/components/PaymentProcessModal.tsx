@@ -15,13 +15,18 @@ const STYLE = {
 	p: 4,
 };
 
-interface DownloadCSVModalProps {
+interface PaymentProcessModalProps {
 	isOpen: boolean;
 	handleClose: () => void;
 }
-export function PaymentProcessModal({ isOpen, handleClose }: DownloadCSVModalProps) {
+export function PaymentProcessModal({ isOpen, handleClose }: PaymentProcessModalProps) {
 	const snackbarController = useSnackbarController();
 	const [confirmCreateNewPayments, setConfirmCreateNewPayments] = useState(false);
+
+	const onClose = () => {
+		setConfirmCreateNewPayments(false);
+		handleClose();
+	};
 
 	const triggerFirebaseFunction = (task: AdminPaymentProcessTask) => {
 		const runAdminPaymentProcessTask = httpsCallable<AdminPaymentProcessTask, string>(
@@ -40,11 +45,6 @@ export function PaymentProcessModal({ isOpen, handleClose }: DownloadCSVModalPro
 			.catch(() => {
 				snackbarController.open({ type: 'error', message: 'Oops, something went wrong.' });
 			});
-	};
-
-	const onClose = () => {
-		setConfirmCreateNewPayments(false);
-		handleClose();
 	};
 
 	return (

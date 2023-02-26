@@ -1,8 +1,8 @@
 // @ts-nocheck
 // TODO: Use this basic working example to render PDF instead of pdfkit.
 import ReactPDF, { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
-import { User } from '@socialincome/shared/src/types';
-import { Translator } from '@socialincome/shared/src/utils/translate';
+import { User } from '../../../shared/src/types';
+import { Translator } from '../../../shared/src/utils/translate';
 
 const styles = StyleSheet.create({
 	page: {

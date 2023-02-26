@@ -38,8 +38,8 @@ function createMonthColumn(monthID: string, monthLabel: string): AdditionalField
 								dataType: 'string',
 								enumValues: paymentStatusEnumValues,
 							})}
-							value={entity?.values.status || 'none'}
-							size={'regular'}
+							value={entity?.values.status || ''}
+							size="regular"
 						/>
 					))}
 			/>
