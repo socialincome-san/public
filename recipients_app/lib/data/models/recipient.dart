@@ -97,7 +97,7 @@ class Recipient extends Equatable {
       imLinkInitial: imLinkInitial ?? this.imLinkInitial,
       imLinkRegular: imLinkRegular ?? this.imLinkRegular,
       nextSurvey: nextSurvey ?? this.nextSurvey,
-      transactions: transactions ?? this.transactions
+      transactions: transactions ?? this.transactions,
     );
   }
 
@@ -160,19 +160,6 @@ class Recipient extends Equatable {
     if (nextSurvey != null) {
       result.addAll({"next_survey": nextSurvey});
     }
-
-    // transactions / payments should be written back to payments collection, not to the user object
-    // if (transactions != null) {
-    //   result.addAll(
-    //     {
-    //       "transactions": transactions!
-    //           .map(
-    //             (element) => element.toMap(),
-    //           )
-    //           .toList()
-    //     },
-    //   );
-    // }
 
     return result;
   }
