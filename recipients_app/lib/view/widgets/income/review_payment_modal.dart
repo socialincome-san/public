@@ -1,17 +1,17 @@
-import "package:app/data/models/social_income_transaction.dart";
+import "package:app/data/models/social_income_payment.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 
-class ReviewTransactionModal extends StatefulWidget {
-  final SocialIncomeTransaction _transaction;
+class ReviewPaymentModal extends StatefulWidget {
+  final SocialIncomePayment _payment;
 
-  const ReviewTransactionModal(this._transaction, {super.key});
+  const ReviewPaymentModal(this._payment, {super.key});
 
   @override
-  State<ReviewTransactionModal> createState() => _ReviewTransactionModalState();
+  State<ReviewPaymentModal> createState() => _ReviewPaymentModalState();
 }
 
-class _ReviewTransactionModalState extends State<ReviewTransactionModal> {
+class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
   final List<String> _contestReasons = [
     "Phone stolen",
     "Incorrect amount",
@@ -50,11 +50,11 @@ class _ReviewTransactionModalState extends State<ReviewTransactionModal> {
                         padding: const EdgeInsets.only(top: 8),
                         child: ElevatedButton(
                           onPressed: () {
-                            final transactionId = widget._transaction.id;
-                            if (transactionId != null) {
+                            final paymentId = widget._payment.id;
+                            if (paymentId != null) {
                               // TODO move to cubit
-                              /* currentUser.contestTransaction(
-                                transactionId,
+                              /* paymentRepo.contestPayment(
+                                paymentId,
                                 reason,
                               ); */
                             }
@@ -70,10 +70,10 @@ class _ReviewTransactionModalState extends State<ReviewTransactionModal> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          final transactionId = widget._transaction.id;
-                          if (transactionId != null) {
+                          final paymentId = widget._payment.id;
+                          if (paymentId != null) {
                             // TODO move to cubit
-                            // currentUser.confirmTransaction(transactionId);
+                            // paymentRepo.confirmPayment(paymentId);
                           }
                           Navigator.pop(context);
                         },

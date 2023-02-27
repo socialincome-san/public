@@ -1,8 +1,8 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
-import "package:app/data/models/social_income_transaction.dart";
+import "package:app/data/models/social_income_payment.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/income/balance_card.dart";
-import "package:app/view/widgets/income/transaction_card.dart";
+import "package:app/view/widgets/income/payment_card.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -13,8 +13,7 @@ class IncomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
-        final transactions =
-            state.recipient?.transactions ?? <SocialIncomeTransaction>[];
+        final payments = state.recipient?.payments ?? <SocialIncomePayment>[];
 
         return Padding(
           padding: AppSpacings.a16,
@@ -22,7 +21,7 @@ class IncomePage extends StatelessWidget {
             children: [
               const BalanceCard(),
               const SizedBox(height: 8),
-              if (transactions.isEmpty)
+              if (payments.isEmpty)
                 const Expanded(
                   child: Center(
                     child: Text(
@@ -35,9 +34,9 @@ class IncomePage extends StatelessWidget {
                   child: ListView.separated(
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 8),
-                    itemCount: transactions.length,
+                    itemCount: payments.length,
                     itemBuilder: (context, index) =>
-                        TransactionCard(transaction: transactions[index]),
+                        PaymentCard(payment: payments[index]),
                   ),
                 ),
             ],

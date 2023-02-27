@@ -22,8 +22,7 @@ class Recipient extends Equatable {
   final Timestamp? nextSurvey;
 
   // this should be got from `/recipients/<recipient.id>/payments` collection
-  // we should drop "transactions" field in recipient object collection
-  final List<SocialIncomeTransaction>? transactions;
+  final List<SocialIncomePayment>? payments;
 
   const Recipient({
     required this.userId,
@@ -40,7 +39,7 @@ class Recipient extends Equatable {
     this.imLinkInitial,
     this.imLinkRegular,
     this.nextSurvey,
-    this.transactions = const [],
+    this.payments = const [],
   });
 
   @override
@@ -60,7 +59,7 @@ class Recipient extends Equatable {
       imLinkInitial,
       imLinkRegular,
       nextSurvey,
-      transactions,
+      payments,
     ];
   }
 
@@ -79,7 +78,7 @@ class Recipient extends Equatable {
     String? imLinkInitial,
     String? imLinkRegular,
     Timestamp? nextSurvey,
-    List<SocialIncomeTransaction>? transactions,
+    List<SocialIncomePayment>? payments,
   }) {
     return Recipient(
       userId: userId ?? this.userId,
@@ -97,7 +96,7 @@ class Recipient extends Equatable {
       imLinkInitial: imLinkInitial ?? this.imLinkInitial,
       imLinkRegular: imLinkRegular ?? this.imLinkRegular,
       nextSurvey: nextSurvey ?? this.nextSurvey,
-      transactions: transactions ?? this.transactions,
+      payments: payments ?? this.payments,
     );
   }
 
@@ -201,8 +200,7 @@ class Recipient extends Equatable {
   int totalIncome() {
     int sum = 0;
 
-    for (final SocialIncomeTransaction element
-        in transactions ?? List.empty()) {
+    for (final SocialIncomePayment element in payments ?? List.empty()) {
       final amount = element.amount;
       if (element.status != "confirmed" || amount == null) continue;
 

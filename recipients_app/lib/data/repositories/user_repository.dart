@@ -43,10 +43,10 @@ class UserRepository {
 
     if (userSnapshot.exists) {
       // TODO: decide if we should keep it in user object in the app at all
-      final transactions = await TransactionRepository(firestore: firestore)
-          .fetchTransactions(recipientId: userSnapshot.id);
+      final payments = await PaymentRepository(firestore: firestore)
+          .fetchPayments(recipientId: userSnapshot.id);
       return Recipient.fromMap(userSnapshot.id, userSnapshot.data())
-          .copyWith(transactions: transactions);
+          .copyWith(payments: payments);
     } else {
       return null;
     }

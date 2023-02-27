@@ -2,44 +2,43 @@ import "package:app/data/models/models.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 
-class TransactionRepository {
+class PaymentRepository {
   final FirebaseFirestore firestore;
 
-  const TransactionRepository({
+  const PaymentRepository({
     required this.firestore,
   });
 
-  Future<List<SocialIncomeTransaction>> fetchTransactions({
+  Future<List<SocialIncomePayment>> fetchPayments({
     required String recipientId,
   }) async {
-    final List<SocialIncomeTransaction> transactions =
-        <SocialIncomeTransaction>[];
+    final List<SocialIncomePayment> payments = <SocialIncomePayment>[];
 
-    final transactionDocs = await firestore
+    final paymentsDocs = await firestore
         .collection(recipientCollection)
         .doc(recipientId)
         .collection(paymentCollection)
         .get();
 
-    for (final transactionDoc in transactionDocs.docs) {
-      transactions.add(
-        SocialIncomeTransaction.fromMap(
-          transactionDoc.id,
-          transactionDoc.data(),
+    for (final paymentDoc in paymentsDocs.docs) {
+      payments.add(
+        SocialIncomePayment.fromMap(
+          paymentDoc.id,
+          paymentDoc.data(),
         ),
       );
     }
 
-    transactions.sort((a, b) => b.id.compareTo(a.id));
+    payments.sort((a, b) => b.id.compareTo(a.id));
 
-    return transactions;
+    return payments;
   }
 
-  Future<void> confirmTransaction({
+  Future<void> confirmPayment({
     required String recipientId,
-    required SocialIncomeTransaction transaction,
+    required SocialIncomePayment payment,
   }) async {
-    final updatedTransaction = transaction.copyWith(
+    final updatedPayment = payment.copyWith(
       status: "confirmed",
       confirmAt: Timestamp.fromDate(DateTime.now()),
     );
@@ -48,16 +47,16 @@ class TransactionRepository {
         .collection(recipientCollection)
         .doc(recipientId)
         .collection(paymentCollection)
-        .doc(transaction.id)
-        .set(updatedTransaction.toMap());
+        .doc(payment.id)
+        .set(updatedPayment.toMap());
   }
 
-  Future<void> contestTransaction({
+  Future<void> contestPayment({
     required String recipientId,
-    required SocialIncomeTransaction transaction,
+    required SocialIncomePayment payment,
     required String contestReason,
   }) async {
-    final updatedTransaction = transaction.copyWith(
+    final updatedPayment = payment.copyWith(
       status: "contested",
       contestAt: Timestamp.fromDate(DateTime.now()),
       contestReason: contestReason,
@@ -67,7 +66,7 @@ class TransactionRepository {
         .collection(recipientCollection)
         .doc(recipientId)
         .collection(paymentCollection)
-        .doc(transaction.id)
-        .set(updatedTransaction.toMap());
+        .doc(payment.id)
+        .set(updatedPayment.toMap());
   }
 }
