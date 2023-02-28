@@ -59,20 +59,6 @@ const ReferralCol: AdditionalFieldDelegate<User> = {
 	dependencies: ['personal'],
 };
 
-export const referralSourceProperty: Property = {
-	name: 'Status',
-	dataType: 'string',
-	disabled: true,
-	enumValues: [
-		{ id: UserReferralSource.FamilyFriends, label: 'Family or friends' },
-		{ id: UserReferralSource.Work, label: 'Work colleagues' },
-		{ id: UserReferralSource.SocialMedia, label: 'Social Media' },
-		{ id: UserReferralSource.Media, Media: 'Media' },
-		{ id: UserReferralSource.Presentation, Presentation: 'Presentation' },
-		{ id: UserReferralSource.Other, Other: 'Other' },
-	],
-};
-
 export const usersCollection = buildAuditedCollection<User>({
 	path: USER_FIRESTORE_PATH,
 	group: 'Contributors',
@@ -132,14 +118,14 @@ export const usersCollection = buildAuditedCollection<User>({
 				referral: {
 					name: 'Referral',
 					dataType: 'string',
-					enumValues: {
-						familyfriends: 'Family or friends',
-						work: 'Work colleagues',
-						socialmedia: 'Social Media',
-						media: 'Media',
-						presentation: 'Presentation',
-						other: 'Other',
-					},
+					enumValues: [
+						{ id: UserReferralSource.FamilyFriends, label: 'Family or friends' },
+						{ id: UserReferralSource.Work, label: 'Work colleagues' },
+						{ id: UserReferralSource.SocialMedia, label: 'Social Media' },
+						{ id: UserReferralSource.Media, label: 'Media' },
+						{ id: UserReferralSource.Presentation, label: 'Presentation' },
+						{ id: UserReferralSource.Other, label: 'Other' },
+					],
 				},
 			},
 		},
