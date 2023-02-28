@@ -11,7 +11,6 @@ import {
 	RECIPIENT_FIRESTORE_PATH,
 } from '@socialincome/shared/src/types';
 import { isUndefined } from 'lodash';
-import { CreateOrangeMoneyCSVAction } from '../../actions/CreateOrangeMoneyCSVAction';
 import { BuildCollectionProps, paymentsCollection } from '../index';
 import { buildAuditedCollection } from '../shared';
 import {
@@ -96,7 +95,6 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 	if (isGlobalAdmin) {
 		collection = {
 			...collection,
-			Actions: [CreateOrangeMoneyCSVAction],
 			properties: buildProperties<Partial<Recipient>>({
 				...baseProperties,
 				email: emailProperty,

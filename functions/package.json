@@ -21,7 +21,6 @@
 		"@playwright/test": "^1.30.0",
 		"@types/imap-simple": "^4.2.5",
 		"@types/jest": "^29.4.0",
-		"@types/deep-equal": "^1.0.1",
 		"@types/mailparser": "^3.4.0",
 		"@types/pdfkit": "^0.12.8",
 		"firebase-functions-test": "^2.4.0",
