@@ -9,12 +9,12 @@ export enum UserStatusKey {
 }
 
 export enum UserReferralSource {
-	FamilyFriends = 'Family or friends',
-	Work = 'Work colleagues',
-	SocialMedia = 'Social Media',
-	Media = 'Media',
-	Presentation = 'Presentation',
-	Other = 'Other',
+	FamilyFriends = 'familyfriends',
+	Work = 'work',
+	SocialMedia = 'socialmedia',
+	Media = 'media',
+	Presentation = 'presentation',
+	Other = 'other',
 }
 
 export type UserAddress = {
