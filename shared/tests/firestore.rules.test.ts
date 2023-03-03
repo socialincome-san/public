@@ -89,26 +89,26 @@ describe('Test recipients collection', () => {
 		const recipients = await getDocs(query(collection(globalAdminStore, 'recipients')));
 		expect(recipients.size).toBe(5);
 
-		const recipientDoc = await getDoc(doc(testOrganisationAdminStore, 'recipients', '3RqjohcNgUXaejFC7av8'));
+		const recipientDoc = await getDoc(doc(testOrganisationAdminStore, 'recipients', 'z9zBQaDI8GB8tZ36HwDE'));
 		expect(recipientDoc.exists()).toBe(true);
 
 		const phoneNumberAccessDoc = await getDoc(doc(recipientAppAccess, 'recipients', 'iF8bLEoUjqOIlq84XQmi'));
 		expect(phoneNumberAccessDoc.exists()).toBe(true);
 
-		await assertFails(getDoc(doc(recipientAppAccess, 'recipients', '3RqjohcNgUXaejFC7av8')));
+		await assertFails(getDoc(doc(recipientAppAccess, 'recipients', 'z9zBQaDI8GB8tZ36HwDE')));
 		await assertFails(getDoc(doc(testOrganisationAdminStore, 'recipients', 'iF8bLEoUjqOIlq84XQmi')));
 	});
 
 	it('Read payments subcollection', async () => {
 		// Access as organisation admin
 		const ashokaAdminDocs = await getDocs(
-			query(collection(testOrganisationAdminStore, 'recipients', '3RqjohcNgUXaejFC7av8', 'payments'))
+			query(collection(testOrganisationAdminStore, 'recipients', 'z9zBQaDI8GB8tZ36HwDE', 'payments'))
 		);
 		expect(ashokaAdminDocs.size).toBe(1);
 
 		// Access as organisation admin
 		const globalAdminDocs = await getDocs(
-			query(collection(globalAdminStore, 'recipients', '3RqjohcNgUXaejFC7av8', 'payments'))
+			query(collection(globalAdminStore, 'recipients', 'z9zBQaDI8GB8tZ36HwDE', 'payments'))
 		);
 		expect(globalAdminDocs.size).toBe(1);
 
@@ -119,7 +119,7 @@ describe('Test recipients collection', () => {
 		expect(phoneNumberAccessDocs.size).toBe(1);
 
 		// Phone number mismatch
-		await assertFails(getDocs(query(collection(recipientAppAccess, 'recipients', '3RqjohcNgUXaejFC7av8', 'payments'))));
+		await assertFails(getDocs(query(collection(recipientAppAccess, 'recipients', 'z9zBQaDI8GB8tZ36HwDE', 'payments'))));
 	});
 
 	it('Read multiple recipients docs', async () => {
@@ -129,7 +129,7 @@ describe('Test recipients collection', () => {
 				where('organisation', '==', doc(testOrganisationAdminStore, 'organisations', 'ashoka'))
 			)
 		);
-		expect(querySnapshot.size).toBe(1);
+		expect(querySnapshot.size).toBe(2);
 		await assertFails(
 			getDocs(
 				query(

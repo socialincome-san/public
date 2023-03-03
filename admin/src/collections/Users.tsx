@@ -1,5 +1,10 @@
 import { AdditionalFieldDelegate, buildProperties } from '@camberi/firecms';
-import { CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH, User, USER_FIRESTORE_PATH } from '../../../shared/src/types';
+import {
+	CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH,
+	User,
+	USER_FIRESTORE_PATH,
+	UserReferralSource,
+} from '../../../shared/src/types';
 import { CreateDonationCertificatesAction } from '../actions/CreateDonationCertificatesAction';
 import { contributionsCollection } from './Contributions';
 import { donationCertificateCollection } from './DonationCertificate';
@@ -113,6 +118,14 @@ export const usersCollection = buildAuditedCollection<User>({
 				referral: {
 					name: 'Referral',
 					dataType: 'string',
+					enumValues: [
+						{ id: UserReferralSource.FamilyFriends, label: 'Family or friends' },
+						{ id: UserReferralSource.Work, label: 'Work colleagues' },
+						{ id: UserReferralSource.SocialMedia, label: 'Social Media' },
+						{ id: UserReferralSource.Media, label: 'Media' },
+						{ id: UserReferralSource.Presentation, label: 'Presentation' },
+						{ id: UserReferralSource.Other, label: 'Other' },
+					],
 				},
 			},
 		},
