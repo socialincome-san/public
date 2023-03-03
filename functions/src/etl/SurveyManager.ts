@@ -8,7 +8,13 @@ import {
 	RecipientProgramStatus,
 	RECIPIENT_FIRESTORE_PATH,
 } from '../../../shared/src/types/admin/Recipient';
-import { Survey, SurveyStatus, SURVEY_FIRETORE_PATH } from '../../../shared/src/types/admin/Survey';
+import {
+	recipientSurveys,
+	Survey,
+	SurveyQuestionnaire,
+	SurveyStatus,
+	SURVEY_FIRETORE_PATH,
+} from '../../../shared/src/types/admin/Survey';
 import { rndBase64 } from '../../../shared/src/utils/crypto';
 
 /**
@@ -17,19 +23,6 @@ import { rndBase64 } from '../../../shared/src/utils/crypto';
 export class SurveyManager {
 	readonly firestoreAdmin: FirestoreAdmin;
 	readonly authAdmin: AuthAdmin;
-	readonly surveysToCreate = [
-		{ name: '01-onboarding', startDateOffsetMonths: 0 },
-		{ name: '02-checkin-1', startDateOffsetMonths: 6 },
-		{ name: '03-checkin-2', startDateOffsetMonths: 12 },
-		{ name: '04-checkin-3', startDateOffsetMonths: 18 },
-		{ name: '05-checkin-4', startDateOffsetMonths: 24 },
-		{ name: '06-checkin-5', startDateOffsetMonths: 30 },
-		{ name: '07-offboarding', startDateOffsetMonths: 36 },
-		{ name: '08-offboarded-checkin-1', startDateOffsetMonths: 42 },
-		{ name: '09-offboarded-checkin-2', startDateOffsetMonths: 48 },
-		{ name: '10-offboarded-checkin-3', startDateOffsetMonths: 60 },
-		{ name: '11-offboarded-checkin-4', startDateOffsetMonths: 72 },
-	];
 
 	constructor(firestoreAdmin: FirestoreAdmin, authAdmin: AuthAdmin) {
 		this.firestoreAdmin = firestoreAdmin;
@@ -59,11 +52,12 @@ export class SurveyManager {
 	createAllSurveysForRecipient = async (recipient: FirebaseFirestore.QueryDocumentSnapshot<Recipient>) => {
 		if (recipient.data().si_start_date) {
 			return Promise.all(
-				this.surveysToCreate.map(async (survey) => {
+				recipientSurveys.map(async (survey) => {
 					const dueDate = moment(recipient.data().si_start_date).add(survey.startDateOffsetMonths, 'M');
 					const surveyStatus = dueDate.isBefore(moment()) ? SurveyStatus.Missed : SurveyStatus.New;
 					await this.createSurvey(
 						recipient.id,
+						survey.questionaire,
 						survey.name,
 						recipient.data().first_name,
 						recipient.data().main_language,
@@ -84,6 +78,7 @@ export class SurveyManager {
 	 */
 	createSurvey = async (
 		recipientId: string,
+		questionnaire: SurveyQuestionnaire,
 		surveyName: string,
 		recipientName: string,
 		language: RecipientMainLanguage,
@@ -104,6 +99,7 @@ export class SurveyManager {
 				emailVerified: true,
 			});
 			await surveysCollection.doc(surveyName).create({
+				questionnaire: questionnaire,
 				recipient_name: recipientName,
 				language: language,
 				status: status,
