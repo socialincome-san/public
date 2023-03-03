@@ -5,7 +5,7 @@ export const SURVEY_FIRETORE_PATH = 'surveys';
 export enum SurveyStatus {
 	New = 'new',
 	Sent = 'sent',
-	Started = 'started',
+	InProgress = 'in-progress',
 	Completed = 'completed',
 	Missed = 'missed',
 }
