@@ -14,7 +14,8 @@
 		"i18next-resources-to-backend": "^1.1.1",
 		"mjml": "^4.13.0",
 		"moment": "^2.29.4",
-		"nodemailer": "^6.9.1"
+		"nodemailer": "^6.9.1",
+		"twilio": "^4.8.0"
 	},
 	"devDependencies": {
 		"@camberi/firecms": "2.0.0-alpha.57",

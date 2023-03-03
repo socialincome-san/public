@@ -14,4 +14,5 @@ export { buildPartnerOrganisationsCollection } from './PartnerOrganisations';
 export { paymentsCollection } from './Payments';
 export { buildRecipientsCollection } from './recipients/Recipients';
 export { buildRecipientsRecentPaymentsCollection } from './recipients/RecipientsRecentPayments';
+export { surveysCollection } from './surveys/Surveys';
 export { usersCollection } from './Users';
