@@ -24,7 +24,7 @@ interface DonationCertificatePDFTemplateProps {
 	translator: Translator;
 	year: number;
 }
-function DonationCertificatePDFTemplate({ user, translator, year }: DonationCertificatePDFTemplateProps) {
+function DonationCertificatePDFTemplate({ user, translator }: DonationCertificatePDFTemplateProps) {
 	const country = translator.t(user.address?.country as string, { namespace: 'countries' });
 	const header = translator.t('header');
 	const location = translator.t('location', { context: { date: new Date() } });

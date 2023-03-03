@@ -1,11 +1,29 @@
+import { Timestamp } from '@google-cloud/firestore';
+
 export const PAYMENT_FIRESTORE_PATH = 'payments';
+
+export enum PaymentStatus {
+	Created = 'created',
+	Paid = 'paid',
+	Confirmed = 'confirmed',
+	Contested = 'contested',
+	Failed = 'failed',
+	Other = 'other',
+}
 
 export type Payment = {
 	amount: number;
-	currency: string;
-	payment_at: Date;
-	status: string; // TODO: proper typing
-	confirm_at: Date;
-	contest_at: Date;
-	contest_reason: string;
+	currency: 'SLL' | 'SLE';
+	payment_at: Timestamp;
+	status: PaymentStatus;
+	comments?: string;
 };
+
+export enum AdminPaymentProcessTask {
+	GetRegistrationCSV = 'PaymentProcessTask.GetRegistrationCSV',
+	GetPaymentCSV = 'PaymentProcessTask.GetPaymentCSV',
+	CreateNewPayments = 'PaymentProcessTask.CreateNewPayments',
+}
+
+export const PAYMENT_AMOUNT = 500;
+export const PAYMENT_CURRENCY = 'SLE';
