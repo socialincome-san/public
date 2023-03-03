@@ -10,6 +10,16 @@ export enum RecipientProgramStatus {
 	Former = 'former',
 }
 
+// TODO change to using a standard like ISO 639-3.
+export enum RecipientMainLanguage {
+	Krio = 'kri',
+	Mende = 'men',
+	Temne = 'tem',
+	Limba = 'lia',
+	English = 'en',
+	Other = 'other',
+}
+
 export type Recipient = {
 	birth_date: Date;
 	calling_name: string;
@@ -26,7 +36,7 @@ export type Recipient = {
 	is_suspended: boolean;
 	insta_handle: string;
 	last_name: string;
-	main_language: string;
+	main_language: RecipientMainLanguage;
 	mobile_money_phone: {
 		phone: number;
 		has_whatsapp: boolean;
