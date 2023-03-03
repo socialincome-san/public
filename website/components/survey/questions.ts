@@ -1,3 +1,4 @@
+// Generic set of question pages and choices
 import { TFunction } from 'i18next';
 
 // Final question pages

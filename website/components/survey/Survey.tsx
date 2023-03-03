@@ -4,13 +4,14 @@ import { Survey as SurveyLibrary } from 'survey-react-ui';
 import { useQuery } from '@tanstack/react-query';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc, updateDoc } from 'firebase/firestore/lite';
-import { TFunction, useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import 'survey-core/defaultV2.min.css';
 import { RECIPIENT_FIRESTORE_PATH } from '../../../shared/src/types/admin/Recipient';
 import { Survey, SurveyStatus, SURVEY_FIRETORE_PATH } from '../../../shared/src/types/admin/Survey';
 import { getFirebaseClients } from '../../utils/firestoreClient';
 import { getSurveyParams, settings } from './common';
+import { getQuestionnaire } from './questionnaires';
 
 const fallbackLanguage = 'krio';
 
@@ -23,10 +24,10 @@ const fallbackLanguage = 'krio';
  * - pw: firebase auth user which is linked to this survey
  *
  * The component logins in with the provided firbease user and then retrieves the survey data.
- * Name and language is retrieved from the survey collection.
+ * Questionnaire, name and language are retrieved from the survey collection.
  * A firestore security rule takes care that a survey user can ony read, update its own survey
  */
-export default function SurveyComponent(props: SurveyComponentProps) {
+export default function SurveyComponent() {
 	const router = useRouter();
 	const getParams = getSurveyParams(router);
 
@@ -66,7 +67,10 @@ export default function SurveyComponent(props: SurveyComponentProps) {
 	if (authResult.isError || surveyResult.isError || !surveyResult.data) return t('survey.common.error');
 	if (authResult.isLoading || surveyResult.isLoading) return t('survey.common.loading');
 
-	const survey = new Model({ ...settings(t), pages: props.pages(t, surveyResult.data.recipient_name) });
+	const survey = new Model({
+		...settings(t),
+		pages: getQuestionnaire(surveyResult.data.questionnaire, t, surveyResult.data.recipient_name),
+	});
 
 	const storageName = 'social-income-survey-' + getParams.surveyId;
 	const saveSurveyData = (survey: any, status: SurveyStatus) => {
@@ -81,7 +85,7 @@ export default function SurveyComponent(props: SurveyComponentProps) {
 			completed_at: status == SurveyStatus.Completed ? new Date(Date.now()) : null,
 		});
 	};
-	survey.onPartialSend.add((data) => saveSurveyData(data, SurveyStatus.Started));
+	survey.onPartialSend.add((data) => saveSurveyData(data, SurveyStatus.InProgress));
 	survey.onComplete.add((data) => saveSurveyData(data, SurveyStatus.Completed));
 
 	// loads existing answers from local cache
@@ -95,8 +99,4 @@ export default function SurveyComponent(props: SurveyComponentProps) {
 	}
 
 	return <SurveyLibrary model={survey} />;
-}
-
-interface SurveyComponentProps {
-	pages: (t: TFunction, name: string) => any;
 }

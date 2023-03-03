@@ -59,7 +59,7 @@ export const createSurveyColumn = (surveyName: string): AdditionalFieldDelegate<
 							entityId: surveyName,
 							collection: surveysCollection,
 						})
-						.then((entity) => entity && surveyPreview(entity, sideEntityController))}
+						.then((surveyEntity) => surveyEntity && surveyPreview(surveyEntity, entity.id, sideEntityController))}
 				/>
 			);
 		},
@@ -68,7 +68,6 @@ export const createSurveyColumn = (surveyName: string): AdditionalFieldDelegate<
 
 export const createPendingSurveyColumn = (i: number): AdditionalFieldDelegate<Partial<Recipient>> => {
 	const sideEntityController = useSideEntityController();
-
 	return {
 		id: 'nextSurvey',
 		name: 'nextSurvey',
@@ -88,7 +87,7 @@ export const createPendingSurveyColumn = (i: number): AdditionalFieldDelegate<Pa
 								.filter(
 									(survey) =>
 										survey.values?.status != undefined &&
-										[SurveyStatus.Sent, SurveyStatus.New, SurveyStatus.Started, SurveyStatus.Completed].includes(
+										[SurveyStatus.New, SurveyStatus.Sent, SurveyStatus.Scheduled, SurveyStatus.InProgress].includes(
 											survey.values?.status
 										)
 								)
@@ -100,7 +99,7 @@ export const createPendingSurveyColumn = (i: number): AdditionalFieldDelegate<Pa
 									<Fragment>
 										<Chip size={'small'} color={'info'} label={nextSurvey.id} />
 										&nbsp;
-										{surveyPreview(nextSurvey, sideEntityController)}
+										{surveyPreview(nextSurvey, entity.id, sideEntityController)}
 									</Fragment>
 								)
 							);
@@ -111,7 +110,11 @@ export const createPendingSurveyColumn = (i: number): AdditionalFieldDelegate<Pa
 	};
 };
 
-const surveyPreview = (entity: Entity<Partial<Survey>>, sideEntityController: SideEntityController) => {
+const surveyPreview = (
+	entity: Entity<Partial<Survey>>,
+	recipientId: string,
+	sideEntityController: SideEntityController
+) => {
 	return (
 		<Fragment>
 			<StringPropertyPreview property={surveyStatusProperty} value={entity?.values?.status || ''} size={'small'} />
@@ -121,7 +124,7 @@ const surveyPreview = (entity: Entity<Partial<Survey>>, sideEntityController: Si
 			<OpenDetailView entity={entity} collection={surveysCollection} sideEntityController={sideEntityController} />
 			&nbsp;
 			{/*// todo add proper survey link*/}
-			<CopyToClipboard title={'Copy survey url to clipboard'} data={''} />
+			<CopyToClipboard title={'Copy survey url to clipboard'} data={getSurveyUrl(entity, recipientId)} />
 		</Fragment>
 	);
 };
@@ -140,4 +143,17 @@ const surveyDueDateClip = (entity: Entity<Partial<Survey>>) => {
 			</Tooltip>
 		)
 	);
+};
+
+const getSurveyUrl = (entity: Entity<Partial<Survey>>, recipientId: string) => {
+	const getParams = {
+		recipient: recipientId,
+		survey: entity.id,
+		email: entity.values.access_email!,
+		pw: entity.values.access_pw!,
+	};
+	// TODO change me
+	const url = new URL('http://localhost:3001/survey');
+	url.search = new URLSearchParams(getParams).toString();
+	return url.toString();
 };

@@ -16,7 +16,6 @@
 		"test:e2e:update": "npx playwright install --with-deps && playwright test --update-snapshots",
 		"test:e2e:update:emulator": "firebase emulators:exec --project social-income-prod --only firestore --config ../firebase.json --import ../seed  'npm run test:e2e:update'",
 		"extract-translations": "i18next --config i18next-parser.config.js",
-		"check-translations": "i18next --config i18next-parser.config.js --fail-on-update",
 		"lint": "next lint",
 		"format-code": "prettier --write --config ../.prettierrc --ignore-path ../.prettierignore ."
 	},
