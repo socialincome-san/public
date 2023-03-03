@@ -2,13 +2,13 @@ import { getOrInitializeApp } from '../../shared/src/firebase/app';
 import { AuthAdmin } from '../../shared/src/firebase/AuthAdmin';
 import { FirestoreAdmin } from '../../shared/src/firebase/FirestoreAdmin';
 import { StorageAdmin } from '../../shared/src/firebase/StorageAdmin';
-import { DonationCertificateHandler } from './donation_certificates/DonationCertificateHandler';
+import { AdminPaymentTaskProcessor } from './admin/AdminPaymentTaskProcessor';
+import { DonationCertificateHandler } from './admin/DonationCertificateHandler';
 import { ExchangeRateImporter } from './etl/ExchangeRateImporter';
 import { FirestoreAuditor } from './etl/FirestoreAuditor';
-import { OrangeMoneyCSVCreator } from './etl/OrangeMoneyCSVCreator';
 import { PostfinanceImporter } from './etl/PostfinanceImporter';
 import { StripeWebhook } from './etl/StripeWebhook';
-import { SurveyManager } from './etl/SurveyManager';
+import { SurveyManager } from './admin/SurveyManager';
 
 const app = getOrInitializeApp();
 const firestoreAdmin = new FirestoreAdmin(app);
@@ -28,8 +28,8 @@ export const importExchangeRates = exchangeRateImporter.importExchangeRates;
 const donationCertificateHandler = new DonationCertificateHandler(firestoreAdmin, storageAdmin);
 export const createDonationCertificates = donationCertificateHandler.createDonationCertificates;
 
-const orangeMoneyCSVCreator = new OrangeMoneyCSVCreator(firestoreAdmin);
-export const createOrangeMoneyCSV = orangeMoneyCSVCreator.createOrangeMoneyCSV;
+const adminPaymentTaskProcessor = new AdminPaymentTaskProcessor(firestoreAdmin);
+export const runAdminPaymentProcessTask = adminPaymentTaskProcessor.runTask;
 
 const firestoreAuditor = new FirestoreAuditor(firestoreAdmin);
 export const auditCollectionTrigger = firestoreAuditor.auditCollectionTrigger;

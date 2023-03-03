@@ -88,9 +88,8 @@ export class SurveyManager {
 		const surveysCollection = this.firestoreAdmin.collection<Survey>(
 			[RECIPIENT_FIRESTORE_PATH, recipientId, SURVEY_FIRETORE_PATH].join('/')
 		);
-		const existingSurveys = await surveysCollection.listDocuments();
-		const surveyExists = existingSurveys.filter((s) => s.id === surveyName).length > 0;
-		if (!surveyExists) {
+		const surveyDocRef = surveysCollection.doc(surveyName);
+		if (!(await surveyDocRef.get()).exists) {
 			const email = rndBase64(64).toLowerCase() + '@socialincome.org';
 			const password = rndBase64(64);
 			await this.authAdmin.auth.createUser({
@@ -98,7 +97,7 @@ export class SurveyManager {
 				password,
 				emailVerified: true,
 			});
-			await surveysCollection.doc(surveyName).create({
+			await surveyDocRef.create({
 				questionnaire: questionnaire,
 				recipient_name: recipientName,
 				language: language,

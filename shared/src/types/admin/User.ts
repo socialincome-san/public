@@ -8,6 +8,15 @@ export enum UserStatusKey {
 	PROFILE_CREATED = 1, // user submitted registration form
 }
 
+export enum UserReferralSource {
+	FamilyFriends = 'familyfriends',
+	Work = 'work',
+	SocialMedia = 'socialmedia',
+	Media = 'media',
+	Presentation = 'presentation',
+	Other = 'other',
+}
+
 export type UserAddress = {
 	city?: string;
 	country?: string; // TODO: proper typing
@@ -23,7 +32,7 @@ export type User = {
 		gender?: string; // TODO: proper typing
 		company?: string;
 		phone?: string;
-		referral?: string; // TODO: proper typing (enum?)
+		referral?: UserReferralSource;
 	};
 	address?: UserAddress;
 	email: string;

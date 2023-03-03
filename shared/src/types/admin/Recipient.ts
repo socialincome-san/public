@@ -10,12 +10,11 @@ export enum RecipientProgramStatus {
 	Former = 'former',
 }
 
-// TODO change to using a standard like ISO 639-3.
 export enum RecipientMainLanguage {
-	Krio = 'krio',
-	Mende = 'mende',
-	Temne = 'temne',
-	Limba = 'limba',
+	Krio = 'kri',
+	Mende = 'men',
+	Temne = 'tem',
+	Limba = 'lia',
 	English = 'en',
 	Other = 'other',
 }
