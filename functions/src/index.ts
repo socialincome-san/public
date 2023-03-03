@@ -8,7 +8,7 @@ import { ExchangeRateImporter } from './etl/ExchangeRateImporter';
 import { FirestoreAuditor } from './etl/FirestoreAuditor';
 import { PostfinanceImporter } from './etl/PostfinanceImporter';
 import { StripeWebhook } from './etl/StripeWebhook';
-import { SurveyManager } from './etl/SurveyManager';
+import { SurveyManager } from './admin/SurveyManager';
 
 const app = getOrInitializeApp();
 const firestoreAdmin = new FirestoreAdmin(app);
