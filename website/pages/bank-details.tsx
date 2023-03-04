@@ -9,12 +9,8 @@ export default function BankDetails() {
 	return (
 		<Layout title={t('bankDetails.title')}>
 			<section>
-				<h4>
-					{t('bankDetails.bankIntroText')}
-				</h4>
-				<h2>
-					{t('bankDetails.bankInfoTextRecurring')}
-				</h2>
+				<h4>{t('bankDetails.bankIntroText')}</h4>
+				<h2>{t('bankDetails.bankInfoTextRecurring')}</h2>
 				<p>
 					{t('bankDetails.bankInfoTextRecurringComment')}
 					<br />
@@ -27,11 +23,9 @@ export default function BankDetails() {
 					{t('bankDetails.bankTxtBIC')}
 					<br />
 					<br />
-					</p>
-					<h2>
-					{t('bankDetails.bankOneTime')}
-					</h2>
-					<p>
+				</p>
+				<h2>{t('bankDetails.bankOneTime')}</h2>
+				<p>
 					{t('bankDetails.bankPostFinance')}
 					<br />
 					{t('bankDetails.bankAccountHolder')}
