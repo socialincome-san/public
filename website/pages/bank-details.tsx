@@ -7,26 +7,38 @@ import Link from 'next/link';
 export default function BankDetails() {
 	const { t } = useTranslation('website-bank-details');
 	return (
-		<Layout title={t('website-bank-details.title')}>
+		<Layout title={t('bankDetails.title')}>
 			<section>
+				<h4>
+					{t('bankDetails.bankIntroText')}
+				</h4>
+				<h2>
+					{t('bankDetails.bankInfoTextRecurring')}
+				</h2>
 				<p>
-					{t('website-bank-details.linkToFinances')}
+					{t('bankDetails.bankInfoTextRecurringComment')}
 					<br />
-					{t('website-bank-details.bankIntroText')}
+					{t('bankDetails.bankPostFinance')}
 					<br />
-					{t('website-bank-details.bankInfoTextRecurring')}
+					{t('bankDetails.bankAccountHolder')}
 					<br />
-					{t('website-bank-details.bankOneTime')}
+					{t('bankDetails.bankTxtIBAN')}&nbsp;{t('bankDetails.bankTxtIBAN1')}
 					<br />
-					{t('website-bank-details.bankPostFinance')}
+					{t('bankDetails.bankTxtBIC')}
 					<br />
-					{t('website-bank-details.bankAccountHolder')}
 					<br />
-					{t('website-bank-details.bankTxtIBAN1')}
+					</p>
+					<h2>
+					{t('bankDetails.bankOneTime')}
+					</h2>
+					<p>
+					{t('bankDetails.bankPostFinance')}
 					<br />
-					{t('website-bank-details.bankTxtIBAN2')}
+					{t('bankDetails.bankAccountHolder')}
 					<br />
-					{t('website-bank-details.bankTxtBIC')}
+					{t('bankDetails.bankTxtIBAN')}&nbsp;{t('bankDetails.bankTxtIBAN2')}
+					<br />
+					{t('bankDetails.bankTxtBIC')}
 				</p>
 			</section>
 		</Layout>
