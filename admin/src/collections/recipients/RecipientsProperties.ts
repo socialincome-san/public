@@ -1,5 +1,9 @@
 import { Property } from '@camberi/firecms/dist/types/properties';
-import { PARTNER_ORGANISATION_FIRESTORE_PATH, RecipientProgramStatus } from '@socialincome/shared/src/types';
+import {
+	PARTNER_ORGANISATION_FIRESTORE_PATH,
+	RecipientMainLanguage,
+	RecipientProgramStatus,
+} from '@socialincome/shared/src/types';
 
 export const programStatusProperty: Property = {
 	name: 'Status',
@@ -82,14 +86,14 @@ export const mainLanguageProperty: Property = {
 	name: 'First Language',
 	dataType: 'string',
 	validation: { required: true },
-	enumValues: {
-		krio: 'Krio',
-		mende: 'Mende',
-		temne: 'Temne',
-		limba: 'Limba',
-		english: 'English',
-		other: 'Other',
-	},
+	enumValues: [
+		{ id: RecipientMainLanguage.Krio, label: 'Krio' },
+		{ id: RecipientMainLanguage.Mende, label: 'Mende' },
+		{ id: RecipientMainLanguage.Temne, label: 'Temne' },
+		{ id: RecipientMainLanguage.Limba, label: 'Limba' },
+		{ id: RecipientMainLanguage.English, label: 'English' },
+		{ id: RecipientMainLanguage.Other, label: 'Other' },
+	],
 };
 export const speaksEnglishProperty: Property = {
 	name: 'Speaks English',
@@ -115,11 +119,6 @@ export const organisationProperty: Property = {
 	name: 'Recommending Organisation',
 	dataType: 'reference',
 	path: PARTNER_ORGANISATION_FIRESTORE_PATH,
-};
-export const updatedOnProperty: Property = {
-	dataType: 'date',
-	name: 'Updated',
-	autoValue: 'on_update',
 };
 
 export const emailProperty: Property = {

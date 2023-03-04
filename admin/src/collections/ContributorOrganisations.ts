@@ -1,8 +1,9 @@
-import { buildCollection, buildProperties } from '@camberi/firecms';
+import { buildProperties } from '@camberi/firecms';
 import { ContributorOrganisation, CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH } from '../../../shared/src/types';
+import { buildAuditedCollection } from './shared';
 
 // this collection is publicly accessible. no personal data of user should be added here.
-export const contributorOrganisationsCollection = buildCollection<ContributorOrganisation>({
+export const contributorOrganisationsCollection = buildAuditedCollection<ContributorOrganisation>({
 	name: 'Contributor Organisations',
 	group: 'Contributors',
 	path: CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH,

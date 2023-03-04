@@ -1,16 +1,15 @@
 import {
 	AdditionalFieldDelegate,
 	AsyncPreviewComponent,
-	buildCollection,
 	buildProperties,
 	buildProperty,
 	StringPropertyPreview,
 } from '@camberi/firecms';
 import { Recipient, RecipientProgramStatus, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
 import { getMonthIDs } from '@socialincome/shared/src/utils/date';
-import { CreateOrangeMoneyCSVAction } from '../../actions/CreateOrangeMoneyCSVAction';
 import { BuildCollectionProps } from '../index';
-import { paymentsCollection, paymentStatusMap } from '../Payments';
+import { paymentsCollection, paymentStatusEnumValues } from '../Payments';
+import { buildAuditedCollection } from '../shared';
 import {
 	firstNameProperty,
 	lastNameProperty,
@@ -37,10 +36,10 @@ function createMonthColumn(monthID: string, monthLabel: string): AdditionalField
 						<StringPropertyPreview
 							property={buildProperty({
 								dataType: 'string',
-								enumValues: paymentStatusMap,
+								enumValues: paymentStatusEnumValues,
 							})}
 							value={entity?.values.status || ''}
-							size={'regular'}
+							size="regular"
 						/>
 					))}
 			/>
@@ -74,15 +73,14 @@ export const buildRecipientsRecentPaymentsCollection = ({ isGlobalAdmin, organis
 		additionalFields: [CurrMonthCol, PrevMonthCol, PrevPrevMonthCol],
 	};
 	if (isGlobalAdmin) {
-		return buildCollection<Partial<Recipient>>({
+		return buildAuditedCollection<Partial<Recipient>>({
 			...defaultProps,
 			initialFilter: {
 				progr_status: ['==', RecipientProgramStatus.Active],
 			},
-			Actions: [CreateOrangeMoneyCSVAction],
 		});
 	} else {
-		return buildCollection<Partial<Recipient>>({
+		return buildAuditedCollection<Partial<Recipient>>({
 			...defaultProps,
 			forceFilter: {
 				organisation: ['in', organisations || []],

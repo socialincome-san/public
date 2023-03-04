@@ -10,6 +10,15 @@ export enum RecipientProgramStatus {
 	Former = 'former',
 }
 
+export enum RecipientMainLanguage {
+	Krio = 'kri',
+	Mende = 'men',
+	Temne = 'tem',
+	Limba = 'lia',
+	English = 'en',
+	Other = 'other',
+}
+
 export type Recipient = {
 	birth_date: Date;
 	calling_name: string;
@@ -21,13 +30,12 @@ export type Recipient = {
 	email: string;
 	first_name: string;
 	gender: string;
-	updated_on: Date;
 	im_link: string;
 	im_uid: string;
 	is_suspended: boolean;
 	insta_handle: string;
 	last_name: string;
-	main_language: string;
+	main_language: RecipientMainLanguage;
 	mobile_money_phone: {
 		phone: number;
 		has_whatsapp: boolean;

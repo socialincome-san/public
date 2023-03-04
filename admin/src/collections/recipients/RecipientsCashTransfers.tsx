@@ -1,9 +1,9 @@
-import { buildCollection, buildProperties } from '@camberi/firecms';
+import { buildProperties } from '@camberi/firecms';
 import { EntityCollection } from '@camberi/firecms/dist/types';
 import { Recipient, RecipientProgramStatus, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
 import { isUndefined } from 'lodash';
-import { CreateOrangeMoneyCSVAction } from '../../actions/CreateOrangeMoneyCSVAction';
 import { BuildCollectionProps, paymentsCollection } from '../index';
+import { buildAuditedCollection } from '../shared';
 import { PaymentsLeft } from './Recipients';
 import {
 	firstNameProperty,
@@ -12,7 +12,6 @@ import {
 	mobileMoneyPhoneProperty,
 	orangeMoneyUIDProperty,
 	programStatusProperty,
-	updatedOnProperty,
 } from './RecipientsProperties';
 
 export const buildRecipientsCashTransfersCollection = ({ isGlobalAdmin, organisations }: BuildCollectionProps) => {
@@ -37,19 +36,13 @@ export const buildRecipientsCashTransfersCollection = ({ isGlobalAdmin, organisa
 			last_name: lastNameProperty,
 			mobile_money_phone: { ...mobileMoneyPhoneProperty, hideFromCollection: true },
 			gender: genderProperty,
-			updated_on: updatedOnProperty,
 		}),
 		singularName: 'Recipient',
 		subcollections: [paymentsCollection],
 		textSearchEnabled: true,
 	};
 
-	if (isGlobalAdmin) {
-		collection = {
-			...collection,
-			Actions: [CreateOrangeMoneyCSVAction],
-		};
-	} else {
+	if (!isGlobalAdmin) {
 		collection = {
 			...collection,
 			callbacks: {
@@ -69,5 +62,5 @@ export const buildRecipientsCashTransfersCollection = ({ isGlobalAdmin, organisa
 			},
 		};
 	}
-	return buildCollection(collection);
+	return buildAuditedCollection(collection);
 };

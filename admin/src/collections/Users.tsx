@@ -1,8 +1,14 @@
-import { AdditionalFieldDelegate, buildCollection, buildProperties } from '@camberi/firecms';
-import { CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH, User, USER_FIRESTORE_PATH } from '../../../shared/src/types';
+import { AdditionalFieldDelegate, buildProperties } from '@camberi/firecms';
+import {
+	CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH,
+	User,
+	USER_FIRESTORE_PATH,
+	UserReferralSource,
+} from '../../../shared/src/types';
 import { CreateDonationCertificatesAction } from '../actions/CreateDonationCertificatesAction';
 import { contributionsCollection } from './Contributions';
 import { donationCertificateCollection } from './DonationCertificate';
+import { buildAuditedCollection } from './shared';
 
 const FirstNameCol: AdditionalFieldDelegate<User> = {
 	id: 'first_name_col',
@@ -53,7 +59,7 @@ const ReferralCol: AdditionalFieldDelegate<User> = {
 	dependencies: ['personal'],
 };
 
-export const usersCollection = buildCollection<User>({
+export const usersCollection = buildAuditedCollection<User>({
 	path: USER_FIRESTORE_PATH,
 	group: 'Contributors',
 	icon: 'VolunteerActivism',
@@ -112,6 +118,14 @@ export const usersCollection = buildCollection<User>({
 				referral: {
 					name: 'Referral',
 					dataType: 'string',
+					enumValues: [
+						{ id: UserReferralSource.FamilyFriends, label: 'Family or friends' },
+						{ id: UserReferralSource.Work, label: 'Work colleagues' },
+						{ id: UserReferralSource.SocialMedia, label: 'Social Media' },
+						{ id: UserReferralSource.Media, label: 'Media' },
+						{ id: UserReferralSource.Presentation, label: 'Presentation' },
+						{ id: UserReferralSource.Other, label: 'Other' },
+					],
 				},
 			},
 		},
