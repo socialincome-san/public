@@ -30,6 +30,27 @@ export function ScriptsView() {
 			});
 	};
 
+	const createAllSurveys = () => {
+		snackbarController.open({
+			type: 'success',
+			message: 'Starting creating surveys',
+		});
+		httpsCallable(functions, 'createAllSurveys')()
+			.then(() => {
+				snackbarController.open({
+					type: 'success',
+					message: 'Succeeded.',
+				});
+			})
+			.catch((err) => {
+				snackbarController.open({
+					type: 'error',
+					message: 'Creation failed. Check console for details.',
+				});
+				console.log(err);
+			});
+	};
+
 	return (
 		<Box m="auto" display="flex" flexDirection={'column'}>
 			<Container maxWidth={'md'} sx={{ my: 4 }}>
@@ -53,11 +74,31 @@ export function ScriptsView() {
 								</Button>
 							</CardActions>
 
-							<CardContent sx={{ flexGrow: 1 }}>
+							<CardContent>
 								<Typography>
 									New stripe payments are automatically added to firestore through a webhook. To sync existing ones one
 									can use this batch import.
 								</Typography>
+							</CardContent>
+						</Card>
+					</Grid>
+					<Grid item xs={12} sm={4}>
+						<Card
+							variant="outlined"
+							sx={{
+								height: '100%',
+								display: 'flex',
+								flexDirection: 'column',
+							}}
+						>
+							<CardActions>
+								<Button onClick={createAllSurveys} color="primary">
+									Create survey entries for all recipients
+								</Button>
+							</CardActions>
+
+							<CardContent>
+								<Typography>Newly onboarded recipients should then automatically get the surveys.</Typography>
 							</CardContent>
 						</Card>
 					</Grid>
