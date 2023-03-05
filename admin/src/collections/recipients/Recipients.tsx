@@ -11,7 +11,7 @@ import {
 	RECIPIENT_FIRESTORE_PATH,
 } from '@socialincome/shared/src/types';
 import { isUndefined } from 'lodash';
-import { BuildCollectionProps, paymentsCollection } from '../index';
+import { BuildCollectionProps, paymentsCollection, messagesCollection } from '../index';
 import { buildAuditedCollection } from '../shared';
 import {
 	birthDateProperty,
@@ -108,7 +108,7 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 				si_start_date: SIStartDateProperty,
 				test_recipient: TestRecipientProperty,
 			}),
-			subcollections: [paymentsCollection],
+			subcollections: [paymentsCollection, messagesCollection],
 		};
 	} else {
 		collection = {

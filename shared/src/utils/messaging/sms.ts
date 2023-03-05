@@ -5,7 +5,6 @@ export interface SendSmsProps {
 	messageContext: object;
 	smsServiceId: string;
 	smsServiceSecret: string;
-	statusCallbackUrl: URL;
 	messageSenderPhone: string;
 	templateParameter: {
 		language: string;
@@ -19,7 +18,6 @@ export const sendSms = async ({
 	messageContext,
 	smsServiceId,
 	smsServiceSecret,
-	statusCallbackUrl,
 	messageSenderPhone,
 	templateParameter: { language, templatePath, translationNamespace },
 }: SendSmsProps) => {
@@ -39,7 +37,6 @@ export const sendSms = async ({
 		.create({
 			body: body,
 			from: messageSenderPhone,
-			statusCallback: statusCallbackUrl,
 			to: messageRecipientPhone,
 		})
 		.then((message: any) => {
@@ -48,5 +45,5 @@ export const sendSms = async ({
 			messageStatus = message.status;
 		});
 
-	return [messageSid, messageStatus];
+	return [messageSid, messageStatus, body];
 };

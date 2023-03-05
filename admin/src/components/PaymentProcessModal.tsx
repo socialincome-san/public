@@ -40,6 +40,9 @@ export function PaymentProcessModal({ isOpen, handleClose }: PaymentProcessModal
 					downloadStringAsFile(result.data, fileName);
 				} else {
 					snackbarController.open({ type: 'success', message: result.data });
+					if (task === AdminPaymentProcessTask.CreateNewPayments) {
+						setConfirmCreateNewPayments(false);
+					}
 				}
 			})
 			.catch(() => {
@@ -85,7 +88,7 @@ export function PaymentProcessModal({ isOpen, handleClose }: PaymentProcessModal
 							Confirm
 						</Button>
 					)}
-					<Button disabled>Notify recipients</Button>
+					<Button variant="outlined" onClick={() => triggerFirebaseFunction(AdminPaymentProcessTask.SendNotifications)}>Notify recipients</Button>
 					<Button variant="outlined" color="error" onClick={onClose}>
 						Close
 					</Button>

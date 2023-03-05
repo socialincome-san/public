@@ -3,6 +3,7 @@ import { CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH, User, USER_FIRESTORE_PATH } fr
 import { CreateDonationCertificatesAction } from '../actions/CreateDonationCertificatesAction';
 import { contributionsCollection } from './Contributions';
 import { donationCertificateCollection } from './DonationCertificate';
+import { messagesCollection } from './Messages';
 import { buildAuditedCollection } from './shared';
 
 const FirstNameCol: AdditionalFieldDelegate<User> = {
@@ -68,7 +69,7 @@ export const usersCollection = buildAuditedCollection<User>({
 		delete: false,
 	}),
 	additionalFields: [FirstNameCol, LastNameCol, GenderCol, PhoneCol, CountryCol, CityCol, ReferralCol],
-	subcollections: [contributionsCollection, donationCertificateCollection],
+	subcollections: [contributionsCollection, donationCertificateCollection, messagesCollection],
 	Actions: CreateDonationCertificatesAction,
 	properties: buildProperties<User>({
 		test_user: {

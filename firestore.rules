@@ -91,6 +91,13 @@ service cloud.firestore {
           allow create: if isAdminUser(request.auth.token.email);
           allow read, update: if canAccessPayment(request.auth.token, recipientId);
       }
+
+      match /messages/{messageId} {
+          allow read, write: if isGlobalAdmin(request.auth.token.email);
+          allow read: if isGlobalAnalyst(request.auth.token.email);
+          allow create: if isAdminUser(request.auth.token.email);
+          allow read, update: if canAccessPayment(request.auth.token, recipientId);
+      }
     }
 
     match /transparency-stats/{data} {
