@@ -28,4 +28,5 @@ export * from './admin/OperationalExpense';
 export * from './admin/PartnerOrganisation';
 export * from './admin/Payment';
 export * from './admin/Recipient';
+export * from './admin/Survey';
 export * from './admin/User';
