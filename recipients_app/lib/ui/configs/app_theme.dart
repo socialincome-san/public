@@ -80,5 +80,11 @@ abstract class AppTheme {
       headlineMedium: AppStyles.headlineMedium,
       headlineLarge: AppStyles.headlineLarge,
     ),
+    cardTheme: CardTheme(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      ),
+    ),
   );
 }
