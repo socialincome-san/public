@@ -56,8 +56,8 @@ export const paymentsCollection = buildAuditedCollection<Payment>({
 		},
 		message: {
 			dataType: 'reference',
-			name: "Payment Notification Reference",
+			name: 'Payment Notification Reference',
 			path: MESSAGE_FIRESTORE_PATH,
-		}
+		},
 	}),
 });

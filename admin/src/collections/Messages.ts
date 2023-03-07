@@ -10,30 +10,30 @@ export const messagesCollection = buildAuditedCollection<Message>({
 	description: 'Lists all messages for one recipient or user',
 	customId: true,
 	properties: buildProperties<Message>({
-        type: {
-            dataType: 'string',
-            name: 'Type',
-            enumValues: {
+		type: {
+			dataType: 'string',
+			name: 'Type',
+			enumValues: {
 				sms: 'SMS',
 				email: 'EMAIL',
 			},
-        },
-        sent_at: {
-            dataType: 'date',
+		},
+		sent_at: {
+			dataType: 'date',
 			name: 'Message Date',
-            mode: 'date',
-        },
-        content: {
-            dataType: 'string',
-            name: 'Content'
-        },
-        to: {
-            dataType: 'string',
-            name: 'To'
-        },
-        status: {
-            dataType: 'string',
-            name: 'Status'
-        }
+			mode: 'date',
+		},
+		content: {
+			dataType: 'string',
+			name: 'Content',
+		},
+		to: {
+			dataType: 'string',
+			name: 'To',
+		},
+		status: {
+			dataType: 'string',
+			name: 'Status',
+		},
 	}),
 });

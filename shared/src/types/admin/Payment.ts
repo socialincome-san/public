@@ -25,7 +25,7 @@ export enum AdminPaymentProcessTask {
 	GetRegistrationCSV = 'PaymentProcessTask.GetRegistrationCSV',
 	GetPaymentCSV = 'PaymentProcessTask.GetPaymentCSV',
 	CreateNewPayments = 'PaymentProcessTask.CreateNewPayments',
-	SendNotifications = 'PaymentProcessTask.SendNotifications'
+	SendNotifications = 'PaymentProcessTask.SendNotifications',
 }
 
 export const PAYMENT_AMOUNT = 500;

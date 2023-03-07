@@ -1,4 +1,4 @@
-import { TWILIO_SID, TWILIO_TOKEN } from '../../../functions/src/config'
+import { TWILIO_SID, TWILIO_TOKEN } from '../../../functions/src/config';
 import { sendSms } from '../../src/utils/messaging/sms';
 
 const itif = (condition: boolean) => (condition ? test : test.skip);

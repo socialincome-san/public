@@ -18,7 +18,7 @@ import {
 	RecipientProgramStatus,
 	RECIPIENT_FIRESTORE_PATH,
 	MESSAGE_FIRESTORE_PATH,
-	SMS
+	SMS,
 } from '../../../shared/src/types';
 
 export class AdminPaymentTaskProcessor {
@@ -82,30 +82,28 @@ export class AdminPaymentTaskProcessor {
 	};
 
 	private sendNotifications = async (recipientDocs: QueryDocumentSnapshot<Recipient>[]) => {
-		
 		let newNotificationsSent = 0;
 		let existingNotifications = 0;
 		const now = moment();
 
 		for (const recipientDoc of recipientDocs) {
-			
 			if (recipientDoc.data().test_recipient) continue;
 
 			const paymentDocRef = this.firestoreAdmin.doc<Payment>(
 				`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${PAYMENT_FIRESTORE_PATH}`,
 				now.format('YYYY-MM')
 			);
-			
+
 			if ((await paymentDocRef.get()).exists) {
 				const paymentDocSnap = await paymentDocRef.get();
 				const payment: Payment = paymentDocSnap.data() as Payment;
-				if(!payment.message) {
+				if (!payment.message) {
 					const recipient: Recipient = recipientDoc.data();
 					let [messageSid, messageStatus, messageContent] = ['', '', ''];
-					 [messageSid, messageStatus, messageContent] = await sendSms({
+					[messageSid, messageStatus, messageContent] = await sendSms({
 						messageRecipientPhone: '+' + recipient.mobile_money_phone.phone,
 						messageContext: {
-							content: 'This is a Test SMS'
+							content: 'This is a Test SMS',
 						},
 						smsServiceId: TWILIO_SID,
 						smsServiceSecret: TWILIO_TOKEN,
@@ -119,30 +117,28 @@ export class AdminPaymentTaskProcessor {
 
 					const messageCollection = this.firestoreAdmin.collection<SMS>(
 						`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${MESSAGE_FIRESTORE_PATH}`
-					)
+					);
 
 					const messageDocRef = await messageCollection.add({
-						type: "sms",
+						type: 'sms',
 						sent_at: Timestamp.fromDate(now.toDate()),
 						content: messageContent,
 						to: '+' + recipient.mobile_money_phone.phone,
-						status: "SENT",
-						external_id: messageSid
-					})
+						status: 'SENT',
+						external_id: messageSid,
+					});
 
 					await paymentDocRef.update({
-						message: messageDocRef
+						message: messageDocRef,
 					});
 					newNotificationsSent++;
-				
 				} else {
 					existingNotifications++;
-				}	
-				
-			} 	
+				}
+			}
 		}
 		return `Sent ${newNotificationsSent} new payment notifications. (${existingNotifications} existing notifications)`;
-	}
+	};
 
 	runTask = functions.https.onCall(async (task: AdminPaymentProcessTask, { auth }) => {
 		await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
