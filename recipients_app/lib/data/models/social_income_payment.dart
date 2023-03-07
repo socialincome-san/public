@@ -3,8 +3,8 @@ import "dart:convert";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:equatable/equatable.dart";
 
-class SocialIncomeTransaction extends Equatable {
-  final String? id;
+class SocialIncomePayment extends Equatable {
+  final String id;
   final int? amount;
   final Timestamp? confirmAt;
   final Timestamp? contestAt;
@@ -13,8 +13,8 @@ class SocialIncomeTransaction extends Equatable {
   final String? currency;
   final String? status;
 
-  const SocialIncomeTransaction({
-    this.id,
+  const SocialIncomePayment({
+    required this.id,
     this.amount,
     this.confirmAt,
     this.contestAt,
@@ -25,8 +25,8 @@ class SocialIncomeTransaction extends Equatable {
   });
 
 // TODO: check if expected data types are coming back
-/*   void initialize(Map<String, dynamic> data, String transactionId) {
-    id = transactionId;
+/*   void initialize(Map<String, dynamic> data, String paymentId) {
+    id = paymentId;
     amount = data["amount"] != null ? data["amount"] as int : null;
     confirmedAt =
         data["confirm_at"] != null ? data["confirm_at"] as Timestamp : null;
@@ -65,9 +65,8 @@ class SocialIncomeTransaction extends Equatable {
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
 
-    if (id != null) {
-      result.addAll({"id": id});
-    }
+    result.addAll({"id": id});
+
     if (amount != null) {
       result.addAll({"amount": amount});
     }
@@ -94,9 +93,10 @@ class SocialIncomeTransaction extends Equatable {
   }
 
   String toJson() => json.encode(toMap());
-  factory SocialIncomeTransaction.fromMap(Map<String, dynamic> map) {
-    return SocialIncomeTransaction(
-      id: map["id"] as String?,
+
+  factory SocialIncomePayment.fromMap(String id, Map<String, dynamic> map) {
+    return SocialIncomePayment(
+      id: id,
       amount: map["amount"] != null ? map["amount"] as int? : null,
       confirmAt:
           map["confirm_at"] != null ? map["confirm_at"] as Timestamp : null,
@@ -109,12 +109,13 @@ class SocialIncomeTransaction extends Equatable {
     );
   }
 
-  factory SocialIncomeTransaction.fromJson(String source) =>
-      SocialIncomeTransaction.fromMap(
-        jsonDecode(source) as Map<String, dynamic>,
-      );
+  // TODO: do we need this?
+  // factory SocialIncomePayment.fromJson(String source) =>
+  //     SocialIncomePayment.fromMap(
+  //       jsonDecode(source) as Map<String, dynamic>,
+  //     );
 
-  SocialIncomeTransaction copyWith({
+  SocialIncomePayment copyWith({
     String? id,
     int? amount,
     Timestamp? confirmAt,
@@ -124,7 +125,7 @@ class SocialIncomeTransaction extends Equatable {
     String? currency,
     String? status,
   }) {
-    return SocialIncomeTransaction(
+    return SocialIncomePayment(
       id: id ?? this.id,
       amount: amount ?? this.amount,
       confirmAt: confirmAt ?? this.confirmAt,
