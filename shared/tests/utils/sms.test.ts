@@ -1,4 +1,4 @@
-import { TWILIO_SID, TWILIO_TOKEN } from '../../../functions/src/config'
+import { TWILIO_SID, TWILIO_TOKEN } from '../../../functions/src/config';
 import { sendSms } from '../../src/utils/messaging/sms';
 
 const itif = (condition: boolean) => (condition ? test : test.skip);
@@ -6,9 +6,7 @@ const itif = (condition: boolean) => (condition ? test : test.skip);
 describe('send simple Sms', () => {
 	console.log(TWILIO_SID);
 	itif(TWILIO_SID != undefined && TWILIO_SID != 'ACXXXXXXXXXXXXXXXXXXXX')('send simple free text sms', async () => {
-		let [messageSid, messageStatus, messageContent] = ['', '', ''];
-
-		[messageSid, messageStatus, messageContent] = await sendSms({
+		const [messageSid, messageStatus] = await sendSms({
 			messageRecipientPhone: '+41767777777',
 			messageContext: {
 				content: 'This is a Test SMS',

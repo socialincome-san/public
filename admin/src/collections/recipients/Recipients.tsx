@@ -11,7 +11,7 @@ import {
 	RECIPIENT_FIRESTORE_PATH,
 } from '@socialincome/shared/src/types';
 import { isUndefined } from 'lodash';
-import { BuildCollectionProps, paymentsCollection, messagesCollection } from '../index';
+import { BuildCollectionProps, messagesCollection, paymentsCollection } from '../index';
 import { buildAuditedCollection } from '../shared';
 import {
 	birthDateProperty,

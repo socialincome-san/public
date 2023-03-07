@@ -1,5 +1,5 @@
-import { Timestamp } from '@google-cloud/firestore';
 import { EntityReference } from '@camberi/firecms';
+import { Timestamp } from '@google-cloud/firestore';
 
 export const PAYMENT_FIRESTORE_PATH = 'payments';
 
@@ -25,7 +25,7 @@ export enum AdminPaymentProcessTask {
 	GetRegistrationCSV = 'PaymentProcessTask.GetRegistrationCSV',
 	GetPaymentCSV = 'PaymentProcessTask.GetPaymentCSV',
 	CreateNewPayments = 'PaymentProcessTask.CreateNewPayments',
-	SendNotifications = 'PaymentProcessTask.SendNotifications'
+	SendNotifications = 'PaymentProcessTask.SendNotifications',
 }
 
 export const PAYMENT_AMOUNT = 500;

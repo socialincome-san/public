@@ -17,7 +17,6 @@ import {
 	adminsCollection,
 	buildPartnerOrganisationsCollection,
 	contributorOrganisationsCollection,
-	messagesCollection,
 	newsletterSubscribersCollection,
 	operationalExpensesCollection,
 	usersCollection,

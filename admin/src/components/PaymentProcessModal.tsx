@@ -88,7 +88,9 @@ export function PaymentProcessModal({ isOpen, handleClose }: PaymentProcessModal
 							Confirm
 						</Button>
 					)}
-					<Button variant="outlined" onClick={() => triggerFirebaseFunction(AdminPaymentProcessTask.SendNotifications)}>Notify recipients</Button>
+					<Button variant="outlined" onClick={() => triggerFirebaseFunction(AdminPaymentProcessTask.SendNotifications)}>
+						Notify recipients
+					</Button>
 					<Button variant="outlined" color="error" onClick={onClose}>
 						Close
 					</Button>
