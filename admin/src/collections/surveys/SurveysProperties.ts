@@ -8,7 +8,7 @@ export const surveyStatusProperty: StringProperty = {
 		{ id: SurveyStatus.New, label: 'New', color: 'grayDark' },
 		{ id: SurveyStatus.Sent, label: 'Sent', color: 'blueDark' },
 		{ id: SurveyStatus.Scheduled, label: 'Scheduled', color: 'blueLight' },
-		{ id: SurveyStatus.Started, label: 'Started', color: 'orangeLight' },
+		{ id: SurveyStatus.InProgress, label: 'In Progress', color: 'orangeLight' },
 		{ id: SurveyStatus.Completed, label: 'Completed', color: 'greenDark' },
 		{ id: SurveyStatus.Missed, label: 'Missed', color: 'redDark' },
 	],

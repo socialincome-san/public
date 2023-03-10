@@ -21,7 +21,8 @@ class Recipient extends Equatable {
   final String? imLinkRegular;
   final Timestamp? nextSurvey;
 
-  final List<SocialIncomeTransaction>? transactions;
+  // this should be got from `/recipients/<recipient.id>/payments` collection
+  final List<SocialIncomePayment>? payments;
 
   const Recipient({
     required this.userId,
@@ -38,7 +39,7 @@ class Recipient extends Equatable {
     this.imLinkInitial,
     this.imLinkRegular,
     this.nextSurvey,
-    this.transactions = const [],
+    this.payments = const [],
   });
 
   @override
@@ -58,7 +59,7 @@ class Recipient extends Equatable {
       imLinkInitial,
       imLinkRegular,
       nextSurvey,
-      transactions,
+      payments,
     ];
   }
 
@@ -77,7 +78,7 @@ class Recipient extends Equatable {
     String? imLinkInitial,
     String? imLinkRegular,
     Timestamp? nextSurvey,
-    List<SocialIncomeTransaction>? transactions,
+    List<SocialIncomePayment>? payments,
   }) {
     return Recipient(
       userId: userId ?? this.userId,
@@ -95,7 +96,7 @@ class Recipient extends Equatable {
       imLinkInitial: imLinkInitial ?? this.imLinkInitial,
       imLinkRegular: imLinkRegular ?? this.imLinkRegular,
       nextSurvey: nextSurvey ?? this.nextSurvey,
-      transactions: transactions ?? this.transactions,
+      payments: payments ?? this.payments,
     );
   }
 
@@ -159,18 +160,6 @@ class Recipient extends Equatable {
       result.addAll({"next_survey": nextSurvey});
     }
 
-    if (transactions != null) {
-      result.addAll(
-        {
-          "transactions": transactions!
-              .map(
-                (element) => element.toMap(),
-              )
-              .toList()
-        },
-      );
-    }
-
     return result;
   }
 
@@ -202,14 +191,6 @@ class Recipient extends Equatable {
       imLinkRegular: map["im_link_regular"] as String?,
       nextSurvey:
           map["next_survey"] != null ? map["next_survey"] as Timestamp : null,
-      transactions: map["transactions"] != null
-          ? (map["transactions"] as List)
-              .map(
-                (e) =>
-                    SocialIncomeTransaction.fromMap(e as Map<String, dynamic>),
-              )
-              .toList()
-          : null,
     );
   }
 
@@ -219,8 +200,7 @@ class Recipient extends Equatable {
   int totalIncome() {
     int sum = 0;
 
-    for (final SocialIncomeTransaction element
-        in transactions ?? List.empty()) {
+    for (final SocialIncomePayment element in payments ?? List.empty()) {
       final amount = element.amount;
       if (element.status != "confirmed" || amount == null) continue;
 

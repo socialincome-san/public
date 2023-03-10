@@ -1,3 +1,4 @@
+import { Timestamp } from '@google-cloud/firestore';
 import * as functions from 'firebase-functions';
 import moment from 'moment';
 import { AuthAdmin } from '../../../shared/src/firebase/AuthAdmin';
@@ -53,7 +54,10 @@ export class SurveyManager {
 		if (recipient.data().si_start_date) {
 			return Promise.all(
 				recipientSurveys.map(async (survey) => {
-					const dueDate = moment(recipient.data().si_start_date).add(survey.startDateOffsetMonths, 'M');
+					const dueDate = moment((recipient.data().si_start_date as Timestamp).toDate()).add(
+						survey.startDateOffsetMonths,
+						'M'
+					);
 					const surveyStatus = dueDate.isBefore(moment()) ? SurveyStatus.Missed : SurveyStatus.New;
 					await this.createSurvey(
 						recipient.id,

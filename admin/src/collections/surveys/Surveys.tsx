@@ -68,6 +68,10 @@ export const createSurveyColumn = (surveyName: string): AdditionalFieldDelegate<
 
 export const createPendingSurveyColumn = (i: number): AdditionalFieldDelegate<Partial<Recipient>> => {
 	const sideEntityController = useSideEntityController();
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
 	return {
 		id: 'nextSurvey',
 		name: 'nextSurvey',
