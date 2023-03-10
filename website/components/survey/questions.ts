@@ -68,11 +68,19 @@ export const dependentsPage = (t: TFunction) => {
 	return {
 		elements: [
 			{
-				type: 'text',
-				name: 'dependents',
+				type: 'radiogroup',
+				name: 'hasDependents',
 				isRequired: true,
-				title: t('survey.questions.dependentsTitle'),
-				description: t('survey.questions.dependentsDesc'),
+				title: t('survey.questions.hasDependentsTitle'),
+				description: t('survey.questions.hasDependentsDesc'),
+				choices: yesNoChoices(t),
+			},
+			{
+				type: 'text',
+				name: 'nrDependents',
+				visibleIf: '{hasDependents}=true',
+				title: t('survey.questions.nrDependentsTitle'),
+				isRequired: true,
 				inputType: 'number',
 				min: 0,
 				max: 50,
@@ -104,6 +112,20 @@ export const expensesCoveredPage = (t: TFunction) => {
 				name: 'expensesCovered',
 				isRequired: true,
 				title: t('survey.questions.expensesCoveredTitle'),
+				choices: ratingChoices(t),
+			},
+		],
+	};
+};
+
+export const ownIncomePage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'radiogroup',
+				name: 'ownIncome',
+				isRequired: true,
+				title: t('survey.questions.ownIncomeTitle'),
 				choices: ratingChoices(t),
 			},
 		],
@@ -167,6 +189,22 @@ export const deptPage = (t: TFunction) => {
 	};
 };
 
+// todo why do they need to be 3 in the current questionnaire?
+// currently is "Can you point out the three things you spend your Social Income money on?This question is required.*
+export const spendingPage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'checkbox',
+				name: 'spending',
+				isRequired: true,
+				title: t('survey.questions.spendingTitle'),
+				choices: spendingChoices(t),
+			},
+		],
+	};
+};
+
 export const plannedAchievementsPage = (t: TFunction) => {
 	return {
 		elements: [
@@ -175,20 +213,6 @@ export const plannedAchievementsPage = (t: TFunction) => {
 				name: 'plannedAchievement',
 				isRequired: true,
 				title: t('survey.questions.plannedAchievementTitle'),
-			},
-		],
-	};
-};
-
-export const noHelpPage = (t: TFunction) => {
-	return {
-		elements: [
-			{
-				type: 'radiogroup',
-				name: 'noHelp',
-				isRequired: true,
-				title: t('survey.questions.noHelpTitle'),
-				choices: yesNoChoices(t),
 			},
 		],
 	};
@@ -257,5 +281,14 @@ export const livingLocationChoices = (t: TFunction) =>
 		return {
 			value: key,
 			text: t('survey.questions.livingLocationChoices.' + key),
+		};
+	});
+
+// todo check choices. What about e.g investments into agriculture?
+export const spendingChoices = (t: TFunction) =>
+	['healthCare', 'saving', 'food', 'housing', 'education', 'mobility'].map((key) => {
+		return {
+			value: key,
+			text: t('survey.questions.spendingChoices.' + key),
 		};
 	});

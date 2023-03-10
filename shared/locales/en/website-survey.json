@@ -53,17 +53,27 @@
 				"northWestProvince": "North West Province",
 				"southernProvince": "Southern Province"
 			},
-			"dependentsTitle": "Do you have any dependents?",
-			"dependentsDesc": "Number of people who depend on you. 0 is none.",
+			"hasDependentsTitle": "Do you have any dependents?",
+			"hasDependentsDesc": "People who depend on you.",
+			"nrDependentsTitle": "Number of people who depend on you.",
 			"basicNeedsCovergeTitle": "How likely are you able to cover basic needs such as food, clothing, and shelter?",
 			"expensesCoveredTitle": "How likely are you to pay all your expenses on time?",
 			"unexpectedExpensesCoveredTitle": "How likely are you able to handle an unexpected expense like seeing a doctor?",
+			"ownIncomeTitle": "In addition to Social Income, how likely are you able to generate income on your own?",
 			"educationAccessTitle": "How likely are you to have access to education?",
 			"savingsTitle": "How likely are you able to save money?",
 			"deptTitle": "Are you or anyone in your household in debt?",
 			"deptDesc": "SLE 500 or above",
-			"plannedAchievementTitle": "What do you hope to achieve within the next 3 years with\nSocial Income?",
-			"noHelpTitle": "Did you answer this survey without the help from another person?"
+			"spendingTitle": "How do you spend your Social Income?",
+			"spendingChoices": {
+				"education": "Education",
+				"mobility": "Mobility",
+				"healthCare": "Health Care",
+				"housing": "Housing",
+				"saving": "Saving for the future",
+				"food": "Food"
+			},
+			"plannedAchievementTitle": "What do you hope to achieve within the next 3 years with Social Income?"
 		}
 	}
 }

@@ -11,8 +11,8 @@
 			"completed": "Wi tɛl una tɛnki fɔ we una dɔn di sɔv.",
 			"alreadyCompleted": "Dis sɔv dɔn ɔlrɛdi dɔn. ",
 			"hello": "Adu",
-			"welcome": "Di gol fɔ dis sɔv na fɔ no di impak we Sɔshial Inkam gɛt fɔ yu.",
-			"error": ""
+			"welcome": "Di gol fɔ dis sɔv na fɔ no di impak we Sɔshial Inkam gɛt fɔ yu. ",
+			"error": "Nɔbɔdi fɔ mek yu nɔ ebul fɔ du am."
 		},
 		"questions": {
 			"yesNoChoices": {
@@ -53,17 +53,27 @@
 				"northWestProvince": "Nɔt Wɛst Prɔvins",
 				"southernProvince": "Sawt Prɔvins"
 			},
-			"dependentsTitle": "Yu gɛt ɛnibɔdi we de dipen pan yu?",
-			"dependentsDesc": "Nɔmba fɔ pipul dɛn we de dipen pan yu. ",
+			"hasDependentsTitle": "Yu gɛt ɛnibɔdi we de dipen pan yu?",
+			"hasDependentsDesc": "Pipul dɛn we de dipen pan yu.",
+			"nrDependentsTitle": "Nɔmba fɔ pipul dɛn we de dipen pan yu.",
 			"basicNeedsCovergeTitle": "Aw yu go ebul fɔ pe fɔ di tin dɛn we yu nid lɛk it, klos, ɛn say fɔ slip?",
 			"expensesCoveredTitle": "Aw yu go ebul fɔ pe ɔl yu spɛns dɛn di rayt tɛm?",
 			"unexpectedExpensesCoveredTitle": "Aw yu go ebul fɔ du sɔntin we yu nɔ bin de tink bɔt lɛk fɔ go to dɔktɔ?",
+			"ownIncomeTitle": "Apat frɔm Sɔshial Inkam, aw yu go ebul fɔ gɛt mɔni fɔ yusɛf?",
 			"educationAccessTitle": "Aw yu go ebul fɔ lan buk?",
 			"savingsTitle": "Aw yu go ebul fɔ kip mɔni?",
 			"deptTitle": "Yu ɔ ɛnibɔdi na yu os gɛt dɛt?",
 			"deptDesc": "SLE 500 ɔ pas dat",
-			"plannedAchievementTitle": "Wetin yu op fɔ ajɔst insay di nɛks 3 ia wit\n",
-			"noHelpTitle": "Yu ansa dis sɔv we ɔda pɔsin nɔ ɛp yu?"
+			"spendingTitle": "Aw yu de spɛn yu Sɔshial Inkam?",
+			"spendingChoices": {
+				"education": "Skul biznɛs",
+				"mobility": "Di we aw pɔsin kin ebul fɔ muv",
+				"healthCare": "Ɛlth Keya",
+				"housing": "Haus fɔ di os",
+				"saving": "Fɔ kip mɔni fɔ di tumara bambay",
+				"food": "It"
+			},
+			"plannedAchievementTitle": "Wetin yu op fɔ ajɔst insay di nɛks 3 ia wit Sɔshial Inkam?"
 		}
 	}
 }

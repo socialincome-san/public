@@ -9,9 +9,10 @@ import {
 	expensesCoveredPage,
 	livingLocationPage,
 	maritalStatusPage,
-	noHelpPage,
+	ownIncomePage,
 	plannedAchievementsPage,
 	savingsPage,
+	spendingPage,
 	unexpectedExpensesCoveredPage,
 	welcomePage,
 } from './questions';
@@ -20,6 +21,12 @@ export const getQuestionnaire = (questionnaire: SurveyQuestionnaire, t: TFunctio
 	switch (questionnaire) {
 		case SurveyQuestionnaire.Onboarding:
 			return onboardingQuestionnaire(t, name);
+		case SurveyQuestionnaire.Checkin:
+			return checkinQuestionnaire(t, name);
+		case SurveyQuestionnaire.Offboarding:
+			return []; // TODO create me
+		case SurveyQuestionnaire.OffboardedCheckin:
+			return []; // TODO create me
 	}
 	return [];
 };
@@ -37,5 +44,21 @@ export const onboardingQuestionnaire = (t: TFunction, name: string) => [
 	savingsPage(t),
 	deptPage(t),
 	plannedAchievementsPage(t),
-	noHelpPage(t),
+];
+
+export const checkinQuestionnaire = (t: TFunction, name: string) => [
+	welcomePage(t, name),
+	maritalStatusPage(t),
+	employmentStatusPage(t),
+	livingLocationPage(t),
+	dependentsPage(t),
+	ownIncomePage(t),
+	basicNeedsCoveragePage(t),
+	expensesCoveredPage(t),
+	unexpectedExpensesCoveredPage(t),
+	educationAccessPage(t),
+	savingsPage(t),
+	deptPage(t),
+	spendingPage(t),
+	plannedAchievementsPage(t),
 ];
