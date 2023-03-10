@@ -1,11 +1,9 @@
 import "dart:developer";
 
 import "package:app/data/models/models.dart";
+import "package:app/data/repositories/repositories.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
-
-const String recipientCollection = "/recipients";
-const String paymentCollection = "payments";
 
 class UserRepository {
   final FirebaseFirestore firestore;
@@ -44,7 +42,11 @@ class UserRepository {
     //     await firestore.collection("/recipients").doc(firebaseUser.uid).get();
 
     if (userSnapshot.exists) {
-      return Recipient.fromMap(userSnapshot.id, userSnapshot.data());
+      // TODO: decide if we should keep it in user object in the app at all
+      final payments = await PaymentRepository(firestore: firestore)
+          .fetchPayments(recipientId: userSnapshot.id);
+      return Recipient.fromMap(userSnapshot.id, userSnapshot.data())
+          .copyWith(payments: payments);
     } else {
       return null;
     }
@@ -79,40 +81,4 @@ class UserRepository {
       .collection(recipientCollection)
       .doc(recipient.userId)
       .update(recipient.toMap());
-
-  Future<void> confirmTransaction({
-    required String recipientId,
-    required SocialIncomeTransaction transaction,
-  }) async {
-    final updatedTransaction = transaction.copyWith(
-      status: "confirmed",
-      confirmAt: Timestamp.fromDate(DateTime.now()),
-    );
-
-    firestore
-        .collection(recipientCollection)
-        .doc(recipientId)
-        .collection(paymentCollection)
-        .doc(transaction.id)
-        .set(updatedTransaction.toMap());
-  }
-
-  Future<void> contestTransaction({
-    required String recipientId,
-    required SocialIncomeTransaction transaction,
-    required String contestReason,
-  }) async {
-    final updatedTransaction = transaction.copyWith(
-      status: "contested",
-      confirmAt: Timestamp.fromDate(DateTime.now()),
-      contestReason: contestReason,
-    );
-
-    firestore
-        .collection(recipientCollection)
-        .doc(recipientId)
-        .collection(paymentCollection)
-        .doc(transaction.id)
-        .set(updatedTransaction.toMap());
-  }
 }
