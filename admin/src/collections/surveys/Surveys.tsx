@@ -88,7 +88,7 @@ export const createPendingSurveyColumn = (i: number): AdditionalFieldDelegate<Pa
 								.filter(
 									(survey) =>
 										survey.values?.status != undefined &&
-										[SurveyStatus.Sent, SurveyStatus.New, SurveyStatus.Started, SurveyStatus.Completed].includes(
+										[SurveyStatus.Sent, SurveyStatus.New, SurveyStatus.InProgress, SurveyStatus.Completed].includes(
 											survey.values?.status
 										)
 								)

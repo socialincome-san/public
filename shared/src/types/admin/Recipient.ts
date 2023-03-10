@@ -1,4 +1,5 @@
 import { EntityReference } from '@camberi/firecms';
+import { Timestamp } from '@google-cloud/firestore';
 import moment from 'moment';
 
 export const RECIPIENT_FIRESTORE_PATH = 'recipients';
@@ -44,7 +45,7 @@ export type Recipient = {
 	om_uid: number;
 	profession: string;
 	progr_status: RecipientProgramStatus;
-	si_start_date: Date; //for NGO disabled
+	si_start_date: Date | Timestamp; //for NGO disabled
 	speaks_english: boolean;
 	test_recipient: boolean;
 	twitter_handle: string;
