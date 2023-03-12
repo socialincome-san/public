@@ -42,6 +42,8 @@ export default function Home() {
 				<p>{t('index.approach-box1-argument4')}</p>
 				<p>{t('index.approach-box1-modal-p1')}</p>
 				<p>{t('index.approach-box1-modal-p2')}</p>
+				<p>{t('index.approach-box1-quote')}</p>
+				<p>{t('index.approach-box1-quote-source')}</p>
 				<p>{t('index.approach-box2-title')}</p>
 				<p>{t('index.approach-box2-argument1')}</p>
 				<p>{t('index.approach-box2-argument2')}</p>
@@ -49,6 +51,8 @@ export default function Home() {
 				<p>{t('index.approach-box2-argument4')}</p>
 				<p>{t('index.approach-box2-modal-p1')}</p>
 				<p>{t('index.approach-box2-modal-p2')}</p>
+				<p>{t('index.approach-box2-quote')}</p>
+				<p>{t('index.approach-box2-quote-source')}</p>
 				<p>{t('index.approach-box3-title')}</p>
 				<p>{t('index.approach-box3-argument1')}</p>
 				<p>{t('index.approach-box3-argument2')}</p>
@@ -56,11 +60,30 @@ export default function Home() {
 				<p>{t('index.approach-box3-argument4')}</p>
 				<p>{t('index.approach-box3-modal-p1')}</p>
 				<p>{t('index.approach-box3-modal-p2')}</p>
+				<p>{t('index.approach-box3-quote')}</p>
+				<p>{t('index.approach-box3-quote-source')}</p>
 				<p>{t('index.approach-box-articles')}</p>
 				<p>{t('index.approach-box-faq')}</p>
 				<p>{t('index.approach-box-close')}</p>
 				<p>{t('index.approach-box-evidence')}</p>
 				<p>{t('index.approach-box-takeaction')}</p>
+			</section>
+			<section>
+				<p>{t('index.sdg-title')}</p>
+				<p>{t('index.sdg1')}</p>
+				<p>{t('index.sdg1-title')}</p>
+				<p>{t('index.sdg1-box-title')}</p>
+				<p>{t('index.sdg1-box-p1')}</p>
+				<p>{t('index.sdg1-box-link')}</p>
+				<p>{t('index.sdg1-box-close')}</p>
+				<p>{t('index.sdg1-takeaction')}</p>
+				<p>{t('index.sdg10')}</p>
+				<p>{t('index.sdg10-title')}</p>
+				<p>{t('index.sdg10-box-title')}</p>
+				<p>{t('index.sdg10-box-p1')}</p>
+				<p>{t('index.sdg10-box-link')}</p>
+				<p>{t('index.sdg10-box-close')}</p>
+				<p>{t('index.sdg10-takeaction')}</p>
 			</section>
 			<section>
 				<p>{t('index.recognition-title')}</p>
