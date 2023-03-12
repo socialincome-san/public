@@ -10,12 +10,12 @@ export default function Home() {
 	// noinspection HtmlUnknownTarget
 	return (
 		<Layout title={t('index.title')}>
-			<br />Index Page Content:<br />
+		<h2>Index Page Content:</h2>
 			<section>
 				<p>{t('index.slogan-1')}</p>
 				<p>{t('index.calculator-title')}</p>
 				<p>{t('index.calculator-title-help')}</p>
-				<p>{t('index.calculator-cta')}</p>
+				<p>{t('website-common.showImpact', { ns: 'website-common' })}</p>
 				<p>{t('index.calculator-privacy')}</p>
 				<p>{t('index.calculator-taxes')}</p>
 			</section>
@@ -64,9 +64,9 @@ export default function Home() {
 				<p>{t('index.approach-box3-quote-source')}</p>
 				<p>{t('index.approach-box-articles')}</p>
 				<p>{t('index.approach-box-faq')}</p>
-				<p>{t('index.approach-box-close')}</p>
+				<p>{t('website-common.close', { ns: 'website-common' })}</p>
 				<p>{t('index.approach-box-evidence')}</p>
-				<p>{t('index.approach-box-takeaction')}</p>
+				<p>{t('website-common.takeAction', { ns: 'website-common' })}</p>
 			</section>
 			<section>
 				<p>{t('index.sdg-title')}</p>
@@ -75,24 +75,22 @@ export default function Home() {
 				<p>{t('index.sdg1-box-title')}</p>
 				<p>{t('index.sdg1-box-p1')}</p>
 				<p>{t('index.sdg1-box-link')}</p>
-				<p>{t('index.sdg1-box-close')}</p>
-				<p>{t('index.sdg1-takeaction')}</p>
+				<p>{t('website-common.close', { ns: 'website-common' })}</p>
+				<p>{t('website-common.takeAction', { ns: 'website-common' })}</p>
 				<p>{t('index.sdg10')}</p>
 				<p>{t('index.sdg10-title')}</p>
 				<p>{t('index.sdg10-box-title')}</p>
 				<p>{t('index.sdg10-box-p1')}</p>
 				<p>{t('index.sdg10-box-link')}</p>
-				<p>{t('index.sdg10-box-close')}</p>
-				<p>{t('index.sdg10-takeaction')}</p>
+				<p>{t('website-common.close', { ns: 'website-common' })}</p>
+				<p>{t('website-common.takeAction', { ns: 'website-common' })}</p>
 			</section>
 			<section>
 				<p>{t('index.recognition-title')}</p>
 				<p>{t('index.recognition-lead')}</p>
 			</section>
 			<section>
-				<br />
-				Example translations from website-common
-				<br />
+				<h2>This part is only for development purposes (easy navigation to other pages). The translations come from the website-common file.</h2>
 				<Link href="/take-action">{t('website-common.takeAction', { ns: 'website-common' })}</Link>
 				<br />
 				<Link href="/our-work">{t('website-common.ourWork', { ns: 'website-common' })}</Link>
