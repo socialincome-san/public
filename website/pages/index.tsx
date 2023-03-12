@@ -10,7 +10,7 @@ export default function Home() {
 	// noinspection HtmlUnknownTarget
 	return (
 		<Layout title={t('index.title')}>
-		<h2>Index Page Content:</h2>
+			<h2>Index Page Content:</h2>
 			<section>
 				<p>{t('index.slogan-1')}</p>
 				<p>{t('index.calculator-title')}</p>
@@ -90,7 +90,10 @@ export default function Home() {
 				<p>{t('index.recognition-lead')}</p>
 			</section>
 			<section>
-				<h2>This part is only for development purposes (easy navigation to other pages). The translations come from the website-common file.</h2>
+				<h2>
+					This part is only for development purposes (easy navigation to other pages). The translations come from the
+					website-common file.
+				</h2>
 				<Link href="/take-action">{t('website-common.takeAction', { ns: 'website-common' })}</Link>
 				<br />
 				<Link href="/our-work">{t('website-common.ourWork', { ns: 'website-common' })}</Link>
