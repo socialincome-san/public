@@ -15,10 +15,11 @@ class PaymentCard extends StatelessWidget {
     super.key,
   });
 
-  String cleanStatus(String? currentStatus) {
+  String cleanStatus(PaymentStatus? currentStatus) {
     return currentStatus != null &&
-            ["contested", "confirmed"].contains(currentStatus)
-        ? currentStatus
+            [PaymentStatus.confirmed, PaymentStatus.contested]
+                .contains(currentStatus)
+        ? currentStatus.name
         : "please review this payment";
   }
 
@@ -46,7 +47,7 @@ class PaymentCard extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 8.0, left: 8.0),
                   child: Text(getPaymentStatusText()),
                 ),
-                if (payment.status == "contested")
+                if (payment.status == PaymentStatus.contested)
                   const Padding(
                     padding: EdgeInsets.only(left: 8.0),
                     child: Text(
@@ -57,7 +58,7 @@ class PaymentCard extends StatelessWidget {
               ],
             ),
           ),
-          if (payment.status != "confirmed")
+          if (payment.status != PaymentStatus.confirmed)
             Padding(
               padding: AppSpacings.a16,
               child: ElevatedButton(
@@ -81,11 +82,6 @@ class PaymentCard extends StatelessWidget {
   }
 
   String getPaymentStatusText() {
-    final confirmedAt = payment.confirmAt;
-
-    return cleanStatus(payment.status) +
-        (payment.status == "confirmed" && confirmedAt != null
-            ? " at ${DateFormat("dd.MM.yyyy").format(confirmedAt.toDate())}"
-            : "");
+    return cleanStatus(payment.status);
   }
 }
