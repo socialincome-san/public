@@ -4,26 +4,27 @@ enum PaymentsStatus { initial, loading, success, failure }
 
 class PaymentsState extends Equatable {
   final PaymentsStatus status;
-  final List<SocialIncomePayment> payments;
+  final CalculatedPaymentsUiState? calculatedPaymentsUiState;
   final Exception? exception;
 
   const PaymentsState({
     this.status = PaymentsStatus.initial,
-    this.payments = const [],
+    this.calculatedPaymentsUiState,
     this.exception,
   });
 
   @override
-  List<Object?> get props => [status, payments, exception];
+  List<Object?> get props => [status, calculatedPaymentsUiState, exception];
 
   PaymentsState copyWith({
     PaymentsStatus? status,
-    List<SocialIncomePayment>? payments,
+    CalculatedPaymentsUiState? calculatedPaymentsUiState,
     Exception? exception,
   }) {
     return PaymentsState(
       status: status ?? this.status,
-      payments: payments ?? this.payments,
+      calculatedPaymentsUiState:
+          calculatedPaymentsUiState ?? this.calculatedPaymentsUiState,
       exception: exception ?? this.exception,
     );
   }

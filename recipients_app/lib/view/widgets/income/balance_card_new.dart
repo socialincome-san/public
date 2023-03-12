@@ -1,10 +1,11 @@
-import "package:app/core/cubits/auth/auth_cubit.dart";
-import "package:app/data/models/recipient.dart";
+import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/models/social_income_payment.dart";
-import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/configs.dart";
+import "package:app/view/widgets/income/balance_card_status.dart";
+import "package:app/view/widgets/income/calculated_payment.dart";
 import "package:app/view/widgets/income/calculated_payment_status.dart";
+import "package:app/view/widgets/income/calculated_payments_ui_state.dart";
 import "package:app/view/widgets/income/payment_status_icon.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -14,7 +15,8 @@ class NewBalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentRecipient = context.watch<AuthCubit>().state.recipient;
+    final calculatedPaymentsUiState =
+        context.watch<PaymentsCubit>().state.calculatedPaymentsUiState;
 
     return Card(
       elevation: 0,
@@ -34,9 +36,10 @@ class NewBalanceCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const BalanceCardHeader(
-                  daysTo: 20,
-                  amount: 400,
+                BalanceCardHeader(
+                  daysTo:
+                      calculatedPaymentsUiState?.nextPayment.daysToPayment ?? 0,
+                  amount: calculatedPaymentsUiState?.nextPayment.amount ?? 0,
                 ),
                 const SizedBox(
                   height: 16,
@@ -50,36 +53,19 @@ class NewBalanceCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                BalanceCardGrid(currentRecipient: currentRecipient),
+                BalanceCardGrid(
+                  payments:
+                      calculatedPaymentsUiState?.payments.reversed.toList() ??
+                          [],
+                ),
               ],
             ),
           ),
-          BalanceCardBottomAction(
-            uiState: BalanceCardUiState(
-              status: BalanceCardStatus.allConfirmed,
-              paymentsCount: paymentCollection.length,
+          if (calculatedPaymentsUiState != null) ...[
+            BalanceCardBottomAction(
+              calculatedPaymentsUiState: calculatedPaymentsUiState,
             ),
-          ),
-          BalanceCardBottomAction(
-            uiState: BalanceCardUiState(
-              status: BalanceCardStatus.recentToConfirm,
-              paymentsCount: paymentCollection.length,
-              unconfirmedPaymentsCount: 1,
-            ),
-          ),
-          BalanceCardBottomAction(
-            uiState: BalanceCardUiState(
-              status: BalanceCardStatus.needsAttention,
-              paymentsCount: paymentCollection.length,
-              unconfirmedPaymentsCount: 1,
-            ),
-          ),
-          BalanceCardBottomAction(
-            uiState: BalanceCardUiState(
-              status: BalanceCardStatus.onHold,
-              paymentsCount: paymentCollection.length,
-            ),
-          ),
+          ],
         ],
       ),
     );
@@ -89,10 +75,10 @@ class NewBalanceCard extends StatelessWidget {
 class BalanceCardGrid extends StatelessWidget {
   const BalanceCardGrid({
     super.key,
-    required this.currentRecipient,
+    required this.payments,
   });
 
-  final Recipient? currentRecipient;
+  final List<CalculatedPayment> payments;
 
   @override
   Widget build(BuildContext context) {
@@ -104,32 +90,20 @@ class BalanceCardGrid extends StatelessWidget {
       children: List.generate(
         36,
         (index) {
-          if (index < (currentRecipient?.payments?.length ?? 0)) {
-            final transaction = currentRecipient?.payments?[index];
-            if (transaction?.status == PaymentStatus.confirmed) {
-              return const PaymentStatusIcon(
-                status: CalculatedPaymentStatus.confirmed,
-              );
-            }
-            if (transaction?.status == PaymentStatus.contested) {
-              return const PaymentStatusIcon(
-                status: CalculatedPaymentStatus.contested,
-              );
-            }
-            if (transaction?.status == PaymentStatus.paid) {
-              return const PaymentStatusIcon(
-                status: CalculatedPaymentStatus.toReview,
-              );
-            }
+          if (index < payments.length) {
+            final payment = payments[index];
+            return PaymentStatusIcon(
+              status: payment.status,
+            );
           }
-          if (index == (currentRecipient?.payments?.length ?? 0)) {
+
+          if (!payments.any(
+                (element) => element.status == CalculatedPaymentStatus.toBePaid,
+              ) &&
+              index == (payments.length)) {
             return const PaymentStatusIcon(
               status: CalculatedPaymentStatus.toBePaid,
             );
-          }
-          if (index == (currentRecipient?.payments?.length ?? 0) + 1) {
-            return const PaymentStatusIcon(
-                status: CalculatedPaymentStatus.onHold,);
           }
 
           return const PaymentStatusIcon(status: CalculatedPaymentStatus.empty);
@@ -200,16 +174,20 @@ class BalanceCardHeader extends StatelessWidget {
 }
 
 class BalanceCardBottomAction extends StatelessWidget {
-  final BalanceCardUiState uiState;
+  final CalculatedPaymentsUiState calculatedPaymentsUiState;
 
-  const BalanceCardBottomAction({super.key, required this.uiState});
+  const BalanceCardBottomAction({
+    super.key,
+    required this.calculatedPaymentsUiState,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final foregroundColor = getForegroundColor(uiState.status);
+    final foregroundColor =
+        getForegroundColor(calculatedPaymentsUiState.status);
 
     return Container(
-      color: getBackgroundColor(uiState.status),
+      color: getBackgroundColor(calculatedPaymentsUiState.status),
       child: Padding(
         padding: AppSpacings.a16,
         child: Row(
@@ -217,7 +195,7 @@ class BalanceCardBottomAction extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                getStatusLabel(uiState),
+                getStatusLabel(calculatedPaymentsUiState),
                 style: TextStyle(color: foregroundColor),
               ),
             ),
@@ -225,12 +203,14 @@ class BalanceCardBottomAction extends StatelessWidget {
               children: [
                 ButtonSmall(
                   onPressed: () {},
-                  label: getPrimaryActionLabel(uiState),
+                  label: getPrimaryActionLabel(calculatedPaymentsUiState),
                   buttonType: ButtonSmallType.outlined,
                   color: foregroundColor,
                   fontColor: foregroundColor,
                 ),
-                if (shouldShowSecondaryActionButton(uiState)) ...[
+                if (shouldShowSecondaryActionButton(
+                  calculatedPaymentsUiState,
+                )) ...[
                   const SizedBox(
                     width: 8,
                   ),
@@ -250,10 +230,14 @@ class BalanceCardBottomAction extends StatelessWidget {
     );
   }
 
-  bool shouldShowSecondaryActionButton(BalanceCardUiState uiState) {
-    return (uiState.status == BalanceCardStatus.recentToConfirm ||
-            uiState.status == BalanceCardStatus.needsAttention) &&
-        uiState.unconfirmedPaymentsCount == 1;
+  bool shouldShowSecondaryActionButton(
+    CalculatedPaymentsUiState calculatedPaymentsUiState,
+  ) {
+    return (calculatedPaymentsUiState.status ==
+                BalanceCardStatus.recentToConfirm ||
+            calculatedPaymentsUiState.status ==
+                BalanceCardStatus.needsAttention) &&
+        calculatedPaymentsUiState.unconfirmedPaymentsCount == 1;
   }
 
   Color getBackgroundColor(BalanceCardStatus status) {
@@ -282,26 +266,28 @@ class BalanceCardBottomAction extends StatelessWidget {
     }
   }
 
-  String getStatusLabel(BalanceCardUiState uiState) {
-    switch (uiState.status) {
+  String getStatusLabel(CalculatedPaymentsUiState calculatedPaymentsUiState) {
+    switch (calculatedPaymentsUiState.status) {
       case BalanceCardStatus.allConfirmed:
-        return "${uiState.paymentsCount} payments received";
+        return "${calculatedPaymentsUiState.paymentsCount} payments received";
       case BalanceCardStatus.recentToConfirm:
         return "1 payment to review";
       case BalanceCardStatus.needsAttention:
-        return "You have ${uiState.unconfirmedPaymentsCount} payments to review";
+        return "You have ${calculatedPaymentsUiState.unconfirmedPaymentsCount} payments to review";
       case BalanceCardStatus.onHold:
         return "You have 2 payments to review in a row";
     }
   }
 
-  String getPrimaryActionLabel(BalanceCardUiState uiState) {
-    switch (uiState.status) {
+  String getPrimaryActionLabel(
+    CalculatedPaymentsUiState calculatedPaymentsUiState,
+  ) {
+    switch (calculatedPaymentsUiState.status) {
       case BalanceCardStatus.allConfirmed:
         return "Payments overview";
       case BalanceCardStatus.recentToConfirm:
       case BalanceCardStatus.needsAttention:
-        if (uiState.unconfirmedPaymentsCount == 1) {
+        if (calculatedPaymentsUiState.unconfirmedPaymentsCount == 1) {
           return "Yes";
         } else {
           return "Review";
@@ -314,6 +300,7 @@ class BalanceCardBottomAction extends StatelessWidget {
 
 class BalanceCardUiState {
   final BalanceCardStatus status;
+  final List<SocialIncomePayment> payments;
   final int paymentsCount;
   final int unconfirmedPaymentsCount;
 
@@ -321,12 +308,6 @@ class BalanceCardUiState {
     required this.paymentsCount,
     this.unconfirmedPaymentsCount = 0,
     required this.status,
+    required this.payments,
   });
-}
-
-enum BalanceCardStatus {
-  allConfirmed,
-  recentToConfirm,
-  needsAttention,
-  onHold,
 }

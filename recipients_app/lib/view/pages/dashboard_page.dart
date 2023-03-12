@@ -2,7 +2,7 @@ import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/configs/configs.dart";
-import "package:app/view/widgets/income/balance_card.dart";
+import "package:app/view/widgets/income/balance_card_new.dart";
 import "package:app/view/widgets/income/payment_card.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -36,15 +36,15 @@ class _DashboardViewState extends State<_DashboardView> {
   Widget build(BuildContext context) {
     return BlocBuilder<PaymentsCubit, PaymentsState>(
       builder: (context, state) {
-        final payments = state.payments;
+        final payments = state.calculatedPaymentsUiState?.payments ?? [];
 
         return Padding(
           padding: AppSpacings.a16,
           child: Column(
             children: [
-              const BalanceCard(),
+              const NewBalanceCard(),
               const SizedBox(height: 8),
-              if (payments.isEmpty)
+              if (payments.isEmpty == true)
                 const Expanded(
                   child: Center(
                     child: Text(
@@ -59,7 +59,7 @@ class _DashboardViewState extends State<_DashboardView> {
                         const SizedBox(height: 8),
                     itemCount: payments.length,
                     itemBuilder: (context, index) =>
-                        PaymentCard(payment: payments[index]),
+                        PaymentCard(payment: payments[index].payment),
                   ),
                 ),
             ],

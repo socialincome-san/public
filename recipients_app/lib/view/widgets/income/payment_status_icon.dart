@@ -50,13 +50,17 @@ class PaymentStatusIcon extends StatelessWidget {
         );
         break;
       case CalculatedPaymentStatus.contested:
-        return const StatusIcon(
-          status: Status.warning,
+        backgroundColor = AppColors.yellowColor;
+        child = const Icon(
+          size: 14,
+          Icons.priority_high_rounded,
+          color: AppColors.fontColorDark,
         );
+        break;
       case CalculatedPaymentStatus.onHold:
-        return const StatusIcon(
-          status: Status.error,
-        );
+        backgroundColor = AppColors.redColor;
+        child = null;
+        break;
     }
 
     return CircleAvatar(
