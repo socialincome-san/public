@@ -1,19 +1,42 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
-import "package:app/data/models/social_income_payment.dart";
+import "package:app/core/cubits/payment/payments_cubit.dart";
+import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/income/balance_card.dart";
 import "package:app/view/widgets/income/payment_card.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
-class IncomePage extends StatelessWidget {
-  const IncomePage({super.key});
+class DashboardPage extends StatelessWidget {
+  const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthCubit, AuthState>(
+    final authCubit = context.read<AuthCubit>();
+
+    return BlocProvider(
+      create: (context) => PaymentsCubit(
+        recipient: authCubit.state.recipient!,
+        paymentRepository: context.read<PaymentRepository>(),
+      )..loadPayments(),
+      child: const _DashboardView(),
+    );
+  }
+}
+
+class _DashboardView extends StatefulWidget {
+  const _DashboardView();
+
+  @override
+  State<_DashboardView> createState() => _DashboardViewState();
+}
+
+class _DashboardViewState extends State<_DashboardView> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PaymentsCubit, PaymentsState>(
       builder: (context, state) {
-        final payments = state.recipient?.payments ?? <SocialIncomePayment>[];
+        final payments = state.payments;
 
         return Padding(
           padding: AppSpacings.a16,

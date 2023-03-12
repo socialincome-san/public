@@ -1,7 +1,9 @@
+import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/models/social_income_payment.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/income/review_payment_modal.dart";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl/intl.dart";
 
 String format = ",###,###";
@@ -67,10 +69,14 @@ class PaymentCard extends StatelessWidget {
                       MaterialStateProperty.all<Size>(const Size(60, 50)),
                 ),
                 onPressed: () {
+                  final paymentsCubit = context.read<PaymentsCubit>();
                   showModalBottomSheet(
                     isScrollControlled: true,
                     context: context,
-                    builder: (context) => ReviewPaymentModal(payment),
+                    builder: (context) => BlocProvider.value(
+                      value: paymentsCubit,
+                      child: ReviewPaymentModal(payment),
+                    ),
                   );
                 },
                 child: const Text("Review"),

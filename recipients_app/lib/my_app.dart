@@ -1,6 +1,5 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
-import "package:app/data/repositories/crash_reporting_repository.dart";
-import "package:app/data/repositories/user_repository.dart";
+import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/main_app_page.dart";
 import "package:app/view/pages/welcome_page.dart";
@@ -36,6 +35,11 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(
           create: (context) => CrashReportingRepository(
             crashlytics: crashlytics,
+          ),
+        ),
+        RepositoryProvider(
+          create: (context) => PaymentRepository(
+            firestore: firestore,
           ),
         ),
       ],

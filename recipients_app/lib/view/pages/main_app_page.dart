@@ -1,7 +1,7 @@
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/view/pages/account_page.dart";
+import "package:app/view/pages/dashboard_page.dart";
 import "package:app/view/pages/impact_measurement_page.dart";
-import "package:app/view/pages/income_page.dart";
 import "package:flutter/material.dart";
 
 class MainAppPage extends StatefulWidget {
@@ -16,7 +16,7 @@ class _MainAppPageState extends State<MainAppPage> {
 
   final List<Map<String, Widget>> _pages = [
     {"Account": const AccountPage()},
-    {"Income": const IncomePage()},
+    {"Income": const DashboardPage()},
     {"Survey": const ImpactMeasurementPage()},
   ];
 

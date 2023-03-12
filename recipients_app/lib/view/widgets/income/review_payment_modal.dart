@@ -1,6 +1,8 @@
+import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/models/social_income_payment.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
 class ReviewPaymentModal extends StatefulWidget {
   final SocialIncomePayment _payment;
@@ -50,14 +52,10 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
                         padding: const EdgeInsets.only(top: 8),
                         child: ElevatedButton(
                           onPressed: () {
-                            final paymentId = widget._payment.id;
-                            if (paymentId != null) {
-                              // TODO move to cubit
-                              /* paymentRepo.contestPayment(
-                                paymentId,
-                                reason,
-                              ); */
-                            }
+                            context.read<PaymentsCubit>().contestPayment(
+                                  widget._payment,
+                                  reason,
+                                );
                             Navigator.pop(context);
                           },
                           child: Text(reason),
@@ -70,11 +68,9 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                          final paymentId = widget._payment.id;
-                          if (paymentId != null) {
-                            // TODO move to cubit
-                            // paymentRepo.confirmPayment(paymentId);
-                          }
+                          context.read<PaymentsCubit>().confirmPayment(
+                                widget._payment,
+                              );
                           Navigator.pop(context);
                         },
                         style: ButtonStyle(
