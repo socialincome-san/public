@@ -1,8 +1,8 @@
 import { firestore } from 'firebase-admin';
 import _ from 'lodash';
+import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../firebase/FirestoreAdmin';
 import { Contribution, CONTRIBUTION_FIRESTORE_PATH, StatusKey, User, USER_FIRESTORE_PATH } from '../../types';
-import { toYYYYMMDD } from '../date';
 import Timestamp = firestore.Timestamp;
 
 /**
@@ -62,7 +62,11 @@ export class ContributionStatsCalculator {
 								feesChf: contribution.fees_chf,
 								source: contribution.source,
 								currency: contribution.currency.toUpperCase() ?? 'CHF',
-								firstDayInMonth: toYYYYMMDD(new Date(created.getFullYear(), created.getMonth(), 1)),
+								firstDayInMonth: DateTime.fromObject({
+									year: created.getFullYear(),
+									month: created.getMonth() + 1, // month is indexed from 0 in JS
+									day: 1,
+								}).toFormat('yyyy-MM-dd'),
 							} as ContributionStatsEntry;
 						});
 				})

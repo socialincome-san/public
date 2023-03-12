@@ -4,11 +4,11 @@ import { FirestoreAdmin } from '../../shared/src/firebase/FirestoreAdmin';
 import { StorageAdmin } from '../../shared/src/firebase/StorageAdmin';
 import { AdminPaymentTaskProcessor } from './admin/AdminPaymentTaskProcessor';
 import { DonationCertificateHandler } from './admin/DonationCertificateHandler';
+import { SurveyManager } from './admin/SurveyManager';
 import { ExchangeRateImporter } from './etl/ExchangeRateImporter';
 import { FirestoreAuditor } from './etl/FirestoreAuditor';
 import { PostfinanceImporter } from './etl/PostfinanceImporter';
 import { StripeWebhook } from './etl/StripeWebhook';
-import { SurveyManager } from './admin/SurveyManager';
 
 const app = getOrInitializeApp();
 const firestoreAdmin = new FirestoreAdmin(app);
