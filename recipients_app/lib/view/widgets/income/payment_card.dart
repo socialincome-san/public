@@ -1,17 +1,17 @@
-import "package:app/data/models/social_income_transaction.dart";
+import "package:app/data/models/social_income_payment.dart";
 import "package:app/ui/configs/configs.dart";
-import "package:app/view/widgets/income/review_transaction_modal.dart";
+import "package:app/view/widgets/income/review_payment_modal.dart";
 import "package:flutter/material.dart";
 import "package:intl/intl.dart";
 
 String format = ",###,###";
 NumberFormat f = NumberFormat(format, "en_US");
 
-class TransactionCard extends StatelessWidget {
-  final SocialIncomeTransaction transaction;
+class PaymentCard extends StatelessWidget {
+  final SocialIncomePayment payment;
 
-  const TransactionCard({
-    required this.transaction,
+  const PaymentCard({
+    required this.payment,
     super.key,
   });
 
@@ -19,7 +19,7 @@ class TransactionCard extends StatelessWidget {
     return currentStatus != null &&
             ["contested", "confirmed"].contains(currentStatus)
         ? currentStatus
-        : "please review this transaction";
+        : "please review this payment";
   }
 
   @override
@@ -38,15 +38,15 @@ class TransactionCard extends StatelessWidget {
                 Padding(
                   padding: AppSpacings.h8,
                   child: Text(
-                    "${transaction.currency} ${f.format(transaction.amount)}",
+                    "${payment.currency} ${f.format(payment.amount)}",
                     textScaleFactor: 1.5,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                  child: Text(getTransactionStatusText()),
+                  child: Text(getPaymentStatusText()),
                 ),
-                if (transaction.status == "contested")
+                if (payment.status == "contested")
                   const Padding(
                     padding: EdgeInsets.only(left: 8.0),
                     child: Text(
@@ -57,7 +57,7 @@ class TransactionCard extends StatelessWidget {
               ],
             ),
           ),
-          if (transaction.status != "confirmed")
+          if (payment.status != "confirmed")
             Padding(
               padding: AppSpacings.a16,
               child: ElevatedButton(
@@ -69,7 +69,7 @@ class TransactionCard extends StatelessWidget {
                   showModalBottomSheet(
                     isScrollControlled: true,
                     context: context,
-                    builder: (context) => ReviewTransactionModal(transaction),
+                    builder: (context) => ReviewPaymentModal(payment),
                   );
                 },
                 child: const Text("Review"),
@@ -80,11 +80,11 @@ class TransactionCard extends StatelessWidget {
     );
   }
 
-  String getTransactionStatusText() {
-    final confirmedAt = transaction.confirmAt;
+  String getPaymentStatusText() {
+    final confirmedAt = payment.confirmAt;
 
-    return cleanStatus(transaction.status) +
-        (transaction.status == "confirmed" && confirmedAt != null
+    return cleanStatus(payment.status) +
+        (payment.status == "confirmed" && confirmedAt != null
             ? " at ${DateFormat("dd.MM.yyyy").format(confirmedAt.toDate())}"
             : "");
   }
