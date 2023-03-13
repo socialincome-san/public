@@ -1,4 +1,4 @@
-import "package:app/data/models/payment/mapped_payment_status.dart";
+import "package:app/data/models/payment/payment_ui_status.dart";
 import "package:app/data/models/payment/social_income_payment.dart";
 import "package:equatable/equatable.dart";
 

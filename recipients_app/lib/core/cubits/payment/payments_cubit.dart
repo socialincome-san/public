@@ -1,6 +1,6 @@
 import "package:app/data/models/payment/balance_card_status.dart";
 import "package:app/data/models/payment/mapped_payment.dart";
-import "package:app/data/models/payment/mapped_payment_status.dart";
+import "package:app/data/models/payment/payment_ui_status.dart";
 import "package:app/data/models/payment/payments_ui_state.dart";
 import "package:app/data/models/payment/social_income_payment.dart";
 import "package:app/data/models/recipient.dart";

@@ -1,4 +1,4 @@
-import "package:app/data/models/payment/mapped_payment_status.dart";
+import "package:app/data/models/payment/payment_ui_status.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/ui/icons/icons.dart";
 import "package:flutter/material.dart";
