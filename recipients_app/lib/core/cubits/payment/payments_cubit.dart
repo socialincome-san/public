@@ -132,7 +132,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       if (previousState == PaymentStatus.paid &&
           currentPayment.status == PaymentStatus.paid) {
         mappedPayments[i - 1] =
-            mappedPayments[i - 1].copyWith(status: PaymentUiStatus.onHold);
+            mappedPayments[i - 1].copyWith(uiStatus: PaymentUiStatus.onHold);
         paymentUiStatus = PaymentUiStatus.onHold;
       }
 
@@ -140,7 +140,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       mappedPayments.add(
         MappedPayment(
           payment: currentPayment,
-          status: paymentUiStatus,
+          uiStatus: paymentUiStatus,
         ),
       );
     }
@@ -160,7 +160,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
   ) {
     BalanceCardStatus balanceCardStatus = BalanceCardStatus.allConfirmed;
     if (mappedPayments
-        .any((element) => element.status == PaymentUiStatus.onHold)) {
+        .any((element) => element.uiStatus == PaymentUiStatus.onHold)) {
       balanceCardStatus = BalanceCardStatus.onHold;
     } else if (unconfirmedPaymentsCount == 1 &&
         _isRecentToConfirm(mappedPayments)) {
@@ -187,12 +187,12 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     List<MappedPayment> mappedPayments,
   ) {
     final nextPayment = mappedPayments.firstWhereOrNull(
-      (element) => element.status == PaymentUiStatus.toBePaid,
+      (element) => element.uiStatus == PaymentUiStatus.toBePaid,
     );
 
     final previousPaymentDate = mappedPayments
         .firstWhereOrNull(
-          (element) => element.status != PaymentUiStatus.toBePaid,
+          (element) => element.uiStatus != PaymentUiStatus.toBePaid,
         )
         ?.payment
         .paymentAt

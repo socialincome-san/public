@@ -90,12 +90,12 @@ class BalanceCardGrid extends StatelessWidget {
           if (index < payments.length) {
             final payment = payments[index];
             return PaymentStatusIcon(
-              status: payment.status,
+              status: payment.uiStatus,
             );
           }
 
           if (!payments.any(
-                (element) => element.status == PaymentUiStatus.toBePaid,
+                (element) => element.uiStatus == PaymentUiStatus.toBePaid,
               ) &&
               index == (payments.length)) {
             return const PaymentStatusIcon(

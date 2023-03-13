@@ -4,27 +4,27 @@ import "package:equatable/equatable.dart";
 
 class MappedPayment extends Equatable {
   final SocialIncomePayment payment;
-  final PaymentUiStatus status;
+  final PaymentUiStatus uiStatus;
 
   const MappedPayment({
     required this.payment,
-    required this.status,
+    required this.uiStatus,
   });
 
   @override
   List<Object?> get props {
     return [
       payment,
-      status,
+      uiStatus,
     ];
   }
 
   MappedPayment copyWith({
     SocialIncomePayment? payment,
-    PaymentUiStatus? status,
+    PaymentUiStatus? uiStatus,
   }) {
     return MappedPayment(
-      status: status ?? this.status,
+      uiStatus: uiStatus ?? this.uiStatus,
       payment: payment ?? this.payment,
     );
   }
