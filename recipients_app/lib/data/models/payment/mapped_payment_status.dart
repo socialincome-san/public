@@ -1,4 +1,4 @@
-enum CalculatedPaymentStatus {
+enum PaymentUiStatus {
   confirmed,
   contested,
   toReview,

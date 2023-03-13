@@ -1,15 +1,15 @@
+import "package:app/data/models/payment/mapped_payment.dart";
 import "package:app/view/widgets/income/balance_card_status.dart";
-import "package:app/view/widgets/income/calculated_payment.dart";
 import "package:equatable/equatable.dart";
 
-class CalculatedPaymentsUiState extends Equatable {
+class PaymentsUiState extends Equatable {
   final BalanceCardStatus status;
-  final List<CalculatedPayment> payments;
+  final List<MappedPayment> payments;
   final int paymentsCount;
   final int unconfirmedPaymentsCount;
   final NextPaymentData nextPayment;
 
-  const CalculatedPaymentsUiState({
+  const PaymentsUiState({
     required this.status,
     this.payments = const [],
     required this.paymentsCount,
@@ -27,14 +27,14 @@ class CalculatedPaymentsUiState extends Equatable {
     ];
   }
 
-  CalculatedPaymentsUiState copyWith({
+  PaymentsUiState copyWith({
     BalanceCardStatus? status,
-    List<CalculatedPayment>? payments,
+    List<MappedPayment>? payments,
     int? paymentsCount,
     int? unconfirmedPaymentsCount,
     NextPaymentData? nextPayment,
   }) {
-    return CalculatedPaymentsUiState(
+    return PaymentsUiState(
       status: status ?? this.status,
       payments: payments ?? this.payments,
       paymentsCount: paymentsCount ?? this.paymentsCount,

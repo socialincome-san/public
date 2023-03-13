@@ -1,5 +1,5 @@
 import "package:app/core/cubits/payment/payments_cubit.dart";
-import "package:app/data/models/social_income_payment.dart";
+import "package:app/data/models/payment/social_income_payment.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";

@@ -1,12 +1,12 @@
-import "package:app/data/models/social_income_payment.dart";
-import "package:app/view/widgets/income/calculated_payment_status.dart";
+import "package:app/data/models/payment/mapped_payment_status.dart";
+import "package:app/data/models/payment/social_income_payment.dart";
 import "package:equatable/equatable.dart";
 
-class CalculatedPayment extends Equatable {
+class MappedPayment extends Equatable {
   final SocialIncomePayment payment;
-  final CalculatedPaymentStatus status;
+  final PaymentUiStatus status;
 
-  const CalculatedPayment({
+  const MappedPayment({
     required this.payment,
     required this.status,
   });
@@ -19,11 +19,11 @@ class CalculatedPayment extends Equatable {
     ];
   }
 
-  CalculatedPayment copyWith({
+  MappedPayment copyWith({
     SocialIncomePayment? payment,
-    CalculatedPaymentStatus? status,
+    PaymentUiStatus? status,
   }) {
-    return CalculatedPayment(
+    return MappedPayment(
       status: status ?? this.status,
       payment: payment ?? this.payment,
     );

@@ -1,10 +1,10 @@
+import "package:app/data/models/payment/mapped_payment.dart";
+import "package:app/data/models/payment/mapped_payment_status.dart";
+import "package:app/data/models/payment/payments_ui_state.dart";
+import "package:app/data/models/payment/social_income_payment.dart";
 import "package:app/data/models/recipient.dart";
-import "package:app/data/models/social_income_payment.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/view/widgets/income/balance_card_status.dart";
-import "package:app/view/widgets/income/calculated_payment.dart";
-import "package:app/view/widgets/income/calculated_payment_status.dart";
-import "package:app/view/widgets/income/calculated_payments_ui_state.dart";
 import "package:collection/collection.dart";
 import "package:equatable/equatable.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -94,70 +94,60 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     }
   }
 
-  Future<CalculatedPaymentsUiState> _calculatePayments() async {
+  Future<PaymentsUiState> _calculatePayments() async {
     final payments = await paymentRepository.fetchPayments(
       recipientId: recipient.userId,
     );
 
     var unconfirmedPaymentsCount = 0;
-    final List<CalculatedPayment> calculatedPayments = [];
+    final List<MappedPayment> calculatedPayments = [];
 
     PaymentStatus? previousState;
 
     for (int i = 0; i < payments.length; i++) {
       final currentPayment = payments[i];
-      CalculatedPaymentStatus calculatedStatus = CalculatedPaymentStatus.empty;
+      PaymentUiStatus calculatedStatus = PaymentUiStatus.empty;
       switch (currentPayment.status) {
         case PaymentStatus.created:
-          calculatedStatus = CalculatedPaymentStatus.toBePaid;
+          calculatedStatus = PaymentUiStatus.toBePaid;
           break;
         case PaymentStatus.paid:
-          calculatedStatus = CalculatedPaymentStatus.toReview;
+          calculatedStatus = PaymentUiStatus.toReview;
           unconfirmedPaymentsCount++;
           break;
         case PaymentStatus.confirmed:
-          calculatedStatus = CalculatedPaymentStatus.confirmed;
+          calculatedStatus = PaymentUiStatus.confirmed;
           break;
         case PaymentStatus.contested:
-          calculatedStatus = CalculatedPaymentStatus.contested;
+          calculatedStatus = PaymentUiStatus.contested;
           break;
         // TODO: check what to show in case of those statuses
         case null:
         case PaymentStatus.failed:
         case PaymentStatus.other:
-          calculatedStatus = CalculatedPaymentStatus.empty;
+          calculatedStatus = PaymentUiStatus.empty;
           break;
       }
 
       if (previousState == PaymentStatus.paid &&
           currentPayment.status == PaymentStatus.paid) {
-        calculatedPayments[i - 1] = calculatedPayments[i - 1]
-            .copyWith(status: CalculatedPaymentStatus.onHold);
-        calculatedStatus = CalculatedPaymentStatus.onHold;
+        calculatedPayments[i - 1] =
+            calculatedPayments[i - 1].copyWith(status: PaymentUiStatus.onHold);
+        calculatedStatus = PaymentUiStatus.onHold;
       }
 
       previousState = currentPayment.status;
       calculatedPayments.add(
-        CalculatedPayment(
+        MappedPayment(
           payment: currentPayment,
           status: calculatedStatus,
         ),
       );
     }
 
-    BalanceCardStatus balanceCardStatus = BalanceCardStatus.allConfirmed;
-    if (calculatedPayments
-        .any((element) => element.status == CalculatedPaymentStatus.onHold)) {
-      balanceCardStatus = BalanceCardStatus.onHold;
-    } else if (unconfirmedPaymentsCount == 1 &&
-        _isRecentToConfirm(calculatedPayments)) {
-      balanceCardStatus = BalanceCardStatus.recentToConfirm;
-    } else if (unconfirmedPaymentsCount > 0) {
-      balanceCardStatus = BalanceCardStatus.needsAttention;
-    }
-
-    return CalculatedPaymentsUiState(
-      status: balanceCardStatus,
+    return PaymentsUiState(
+      status:
+          getBalanceCardStatus(calculatedPayments, unconfirmedPaymentsCount),
       payments: calculatedPayments,
       paymentsCount: payments.length,
       unconfirmedPaymentsCount: unconfirmedPaymentsCount,
@@ -165,7 +155,24 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     );
   }
 
-  bool _isRecentToConfirm(List<CalculatedPayment> calculatedPayments) {
+  BalanceCardStatus getBalanceCardStatus(
+    List<MappedPayment> calculatedPayments,
+    int unconfirmedPaymentsCount,
+  ) {
+    BalanceCardStatus balanceCardStatus = BalanceCardStatus.allConfirmed;
+    if (calculatedPayments
+        .any((element) => element.status == PaymentUiStatus.onHold)) {
+      balanceCardStatus = BalanceCardStatus.onHold;
+    } else if (unconfirmedPaymentsCount == 1 &&
+        _isRecentToConfirm(calculatedPayments)) {
+      balanceCardStatus = BalanceCardStatus.recentToConfirm;
+    } else if (unconfirmedPaymentsCount > 0) {
+      balanceCardStatus = BalanceCardStatus.needsAttention;
+    }
+    return balanceCardStatus;
+  }
+
+  bool _isRecentToConfirm(List<MappedPayment> calculatedPayments) {
     final calculatedPayment = calculatedPayments.firstWhereOrNull(
       (element) => element.payment.status == PaymentStatus.paid,
     );
@@ -178,27 +185,27 @@ class PaymentsCubit extends Cubit<PaymentsState> {
   }
 
   NextPaymentData _getNextPaymentData(
-    List<CalculatedPayment> calculatedPayments,
+    List<MappedPayment> calculatedPayments,
   ) {
     final nextPayment = calculatedPayments.firstWhereOrNull(
-      (element) => element.status == CalculatedPaymentStatus.toBePaid,
+      (element) => element.status == PaymentUiStatus.toBePaid,
     );
 
-    final previousDate = calculatedPayments
+    final previousPaymentDate = calculatedPayments
         .firstWhereOrNull(
-          (element) => element.status != CalculatedPaymentStatus.toBePaid,
+          (element) => element.status != PaymentUiStatus.toBePaid,
         )
         ?.payment
         .paymentAt
         ?.toDate();
 
-    final nextDate = nextPayment?.payment.paymentAt?.toDate() ??
+    final nextPaymentDate = nextPayment?.payment.paymentAt?.toDate() ??
         DateTime(
-          previousDate?.year ?? 2023,
-          (previousDate?.month ?? 1) + 1,
-          previousDate?.day ?? 15,
+          previousPaymentDate?.year ?? 2023,
+          (previousPaymentDate?.month ?? 1) + 1,
+          previousPaymentDate?.day ?? 15,
         );
-    final daysToPayment = nextDate.difference(DateTime.now()).inDays;
+    final daysToPayment = nextPaymentDate.difference(DateTime.now()).inDays;
 
     return NextPaymentData(
       amount: nextPayment?.payment.amount ?? 500,

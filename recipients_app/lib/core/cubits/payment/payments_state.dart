@@ -4,7 +4,7 @@ enum PaymentsStatus { initial, loading, success, failure }
 
 class PaymentsState extends Equatable {
   final PaymentsStatus status;
-  final CalculatedPaymentsUiState? calculatedPaymentsUiState;
+  final PaymentsUiState? calculatedPaymentsUiState;
   final Exception? exception;
 
   const PaymentsState({
@@ -18,7 +18,7 @@ class PaymentsState extends Equatable {
 
   PaymentsState copyWith({
     PaymentsStatus? status,
-    CalculatedPaymentsUiState? calculatedPaymentsUiState,
+    PaymentsUiState? calculatedPaymentsUiState,
     Exception? exception,
   }) {
     return PaymentsState(

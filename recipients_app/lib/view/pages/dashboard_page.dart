@@ -2,7 +2,7 @@ import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/configs/configs.dart";
-import "package:app/view/widgets/income/balance_card_new.dart";
+import "package:app/view/widgets/income/balance_card.dart";
 import "package:app/view/widgets/income/payment_card.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -42,7 +42,7 @@ class _DashboardViewState extends State<_DashboardView> {
           padding: AppSpacings.a16,
           child: Column(
             children: [
-              const NewBalanceCard(),
+              const BalanceCard(),
               const SizedBox(height: 8),
               if (payments.isEmpty == true)
                 const Expanded(

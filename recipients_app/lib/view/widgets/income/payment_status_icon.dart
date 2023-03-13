@@ -1,12 +1,12 @@
+import "package:app/data/models/payment/mapped_payment_status.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/ui/icons/icons.dart";
-import "package:app/view/widgets/income/calculated_payment_status.dart";
 import "package:flutter/material.dart";
 
 const statusIconRadius = 10.0;
 
 class PaymentStatusIcon extends StatelessWidget {
-  final CalculatedPaymentStatus status;
+  final PaymentUiStatus status;
 
   const PaymentStatusIcon({
     super.key,
@@ -19,19 +19,19 @@ class PaymentStatusIcon extends StatelessWidget {
     late Widget? child;
 
     switch (status) {
-      case CalculatedPaymentStatus.confirmed:
+      case PaymentUiStatus.confirmed:
         return const StatusIcon(
           status: Status.success,
         );
-      case CalculatedPaymentStatus.empty:
+      case PaymentUiStatus.empty:
         backgroundColor = AppColors.backgroundColor;
         child = null;
         break;
-      case CalculatedPaymentStatus.toReview:
+      case PaymentUiStatus.toReview:
         backgroundColor = AppColors.yellowColor;
         child = null;
         break;
-      case CalculatedPaymentStatus.toBePaid:
+      case PaymentUiStatus.toBePaid:
         backgroundColor = AppColors.backgroundColor;
         child = Stack(
           alignment: AlignmentDirectional.center,
@@ -49,7 +49,7 @@ class PaymentStatusIcon extends StatelessWidget {
           ],
         );
         break;
-      case CalculatedPaymentStatus.contested:
+      case PaymentUiStatus.contested:
         backgroundColor = AppColors.yellowColor;
         child = const Icon(
           size: 14,
@@ -57,7 +57,7 @@ class PaymentStatusIcon extends StatelessWidget {
           color: AppColors.fontColorDark,
         );
         break;
-      case CalculatedPaymentStatus.onHold:
+      case PaymentUiStatus.onHold:
         backgroundColor = AppColors.redColor;
         child = null;
         break;
