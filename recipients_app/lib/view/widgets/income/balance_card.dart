@@ -16,7 +16,7 @@ class BalanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final paymentsUiState =
-        context.watch<PaymentsCubit>().state.calculatedPaymentsUiState;
+        context.watch<PaymentsCubit>().state.paymentsUiState;
 
     return Card(
       elevation: 0,
@@ -60,7 +60,7 @@ class BalanceCard extends StatelessWidget {
           ),
           if (paymentsUiState != null) ...[
             BalanceCardBottomAction(
-              calculatedPaymentsUiState: paymentsUiState,
+              paymentsUiState: paymentsUiState,
             ),
           ],
         ],
@@ -171,20 +171,19 @@ class BalanceCardHeader extends StatelessWidget {
 }
 
 class BalanceCardBottomAction extends StatelessWidget {
-  final PaymentsUiState calculatedPaymentsUiState;
+  final PaymentsUiState paymentsUiState;
 
   const BalanceCardBottomAction({
     super.key,
-    required this.calculatedPaymentsUiState,
+    required this.paymentsUiState,
   });
 
   @override
   Widget build(BuildContext context) {
-    final foregroundColor =
-        getForegroundColor(calculatedPaymentsUiState.status);
+    final foregroundColor = getForegroundColor(paymentsUiState.status);
 
     return Container(
-      color: getBackgroundColor(calculatedPaymentsUiState.status),
+      color: getBackgroundColor(paymentsUiState.status),
       child: Padding(
         padding: AppSpacings.a16,
         child: Row(
@@ -192,7 +191,7 @@ class BalanceCardBottomAction extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                getStatusLabel(calculatedPaymentsUiState),
+                getStatusLabel(paymentsUiState),
                 style: TextStyle(color: foregroundColor),
               ),
             ),
@@ -200,13 +199,13 @@ class BalanceCardBottomAction extends StatelessWidget {
               children: [
                 ButtonSmall(
                   onPressed: () {},
-                  label: getPrimaryActionLabel(calculatedPaymentsUiState),
+                  label: getPrimaryActionLabel(paymentsUiState),
                   buttonType: ButtonSmallType.outlined,
                   color: foregroundColor,
                   fontColor: foregroundColor,
                 ),
                 if (shouldShowSecondaryActionButton(
-                  calculatedPaymentsUiState,
+                  paymentsUiState,
                 )) ...[
                   const SizedBox(
                     width: 8,
@@ -228,13 +227,11 @@ class BalanceCardBottomAction extends StatelessWidget {
   }
 
   bool shouldShowSecondaryActionButton(
-    PaymentsUiState calculatedPaymentsUiState,
+    PaymentsUiState paymentsUiState,
   ) {
-    return (calculatedPaymentsUiState.status ==
-                BalanceCardStatus.recentToConfirm ||
-            calculatedPaymentsUiState.status ==
-                BalanceCardStatus.needsAttention) &&
-        calculatedPaymentsUiState.unconfirmedPaymentsCount == 1;
+    return (paymentsUiState.status == BalanceCardStatus.recentToConfirm ||
+            paymentsUiState.status == BalanceCardStatus.needsAttention) &&
+        paymentsUiState.unconfirmedPaymentsCount == 1;
   }
 
   Color getBackgroundColor(BalanceCardStatus status) {
@@ -263,28 +260,26 @@ class BalanceCardBottomAction extends StatelessWidget {
     }
   }
 
-  String getStatusLabel(PaymentsUiState calculatedPaymentsUiState) {
-    switch (calculatedPaymentsUiState.status) {
+  String getStatusLabel(PaymentsUiState paymentsUiState) {
+    switch (paymentsUiState.status) {
       case BalanceCardStatus.allConfirmed:
-        return "${calculatedPaymentsUiState.paymentsCount} payments received";
+        return "${paymentsUiState.paymentsCount} payments received";
       case BalanceCardStatus.recentToConfirm:
         return "1 payment to review";
       case BalanceCardStatus.needsAttention:
-        return "You have ${calculatedPaymentsUiState.unconfirmedPaymentsCount} payments to review";
+        return "You have ${paymentsUiState.unconfirmedPaymentsCount} payments to review";
       case BalanceCardStatus.onHold:
         return "You have 2 payments to review in a row";
     }
   }
 
-  String getPrimaryActionLabel(
-    PaymentsUiState calculatedPaymentsUiState,
-  ) {
-    switch (calculatedPaymentsUiState.status) {
+  String getPrimaryActionLabel(PaymentsUiState paymentsUiState) {
+    switch (paymentsUiState.status) {
       case BalanceCardStatus.allConfirmed:
         return "Payments overview";
       case BalanceCardStatus.recentToConfirm:
       case BalanceCardStatus.needsAttention:
-        if (calculatedPaymentsUiState.unconfirmedPaymentsCount == 1) {
+        if (paymentsUiState.unconfirmedPaymentsCount == 1) {
           return "Yes";
         } else {
           return "Review";

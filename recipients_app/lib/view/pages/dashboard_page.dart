@@ -36,7 +36,7 @@ class _DashboardViewState extends State<_DashboardView> {
   Widget build(BuildContext context) {
     return BlocBuilder<PaymentsCubit, PaymentsState>(
       builder: (context, state) {
-        final payments = state.calculatedPaymentsUiState?.payments ?? [];
+        final payments = state.paymentsUiState?.payments ?? [];
 
         return Padding(
           padding: AppSpacings.a16,

@@ -27,7 +27,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       emit(
         state.copyWith(
           status: PaymentsStatus.success,
-          calculatedPaymentsUiState: await _calculatePayments(),
+          paymentsUiState: await _calculatePaymentsUiState(),
         ),
       );
     } on Exception catch (ex) {
@@ -52,7 +52,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       emit(
         state.copyWith(
           status: PaymentsStatus.success,
-          calculatedPaymentsUiState: await _calculatePayments(),
+          paymentsUiState: await _calculatePaymentsUiState(),
         ),
       );
     } on Exception catch (ex) {
@@ -81,7 +81,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       emit(
         state.copyWith(
           status: PaymentsStatus.success,
-          calculatedPaymentsUiState: await _calculatePayments(),
+          paymentsUiState: await _calculatePaymentsUiState(),
         ),
       );
     } on Exception catch (ex) {
@@ -94,13 +94,13 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     }
   }
 
-  Future<PaymentsUiState> _calculatePayments() async {
+  Future<PaymentsUiState> _calculatePaymentsUiState() async {
     final payments = await paymentRepository.fetchPayments(
       recipientId: recipient.userId,
     );
 
     var unconfirmedPaymentsCount = 0;
-    final List<MappedPayment> calculatedPayments = [];
+    final List<MappedPayment> mappedPayments = [];
 
     PaymentStatus? previousState;
 
@@ -131,13 +131,13 @@ class PaymentsCubit extends Cubit<PaymentsState> {
 
       if (previousState == PaymentStatus.paid &&
           currentPayment.status == PaymentStatus.paid) {
-        calculatedPayments[i - 1] =
-            calculatedPayments[i - 1].copyWith(status: PaymentUiStatus.onHold);
+        mappedPayments[i - 1] =
+            mappedPayments[i - 1].copyWith(status: PaymentUiStatus.onHold);
         calculatedStatus = PaymentUiStatus.onHold;
       }
 
       previousState = currentPayment.status;
-      calculatedPayments.add(
+      mappedPayments.add(
         MappedPayment(
           payment: currentPayment,
           status: calculatedStatus,
@@ -146,25 +146,24 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     }
 
     return PaymentsUiState(
-      status:
-          getBalanceCardStatus(calculatedPayments, unconfirmedPaymentsCount),
-      payments: calculatedPayments,
+      status: getBalanceCardStatus(mappedPayments, unconfirmedPaymentsCount),
+      payments: mappedPayments,
       paymentsCount: payments.length,
       unconfirmedPaymentsCount: unconfirmedPaymentsCount,
-      nextPayment: _getNextPaymentData(calculatedPayments),
+      nextPayment: _getNextPaymentData(mappedPayments),
     );
   }
 
   BalanceCardStatus getBalanceCardStatus(
-    List<MappedPayment> calculatedPayments,
+    List<MappedPayment> mappedPayments,
     int unconfirmedPaymentsCount,
   ) {
     BalanceCardStatus balanceCardStatus = BalanceCardStatus.allConfirmed;
-    if (calculatedPayments
+    if (mappedPayments
         .any((element) => element.status == PaymentUiStatus.onHold)) {
       balanceCardStatus = BalanceCardStatus.onHold;
     } else if (unconfirmedPaymentsCount == 1 &&
-        _isRecentToConfirm(calculatedPayments)) {
+        _isRecentToConfirm(mappedPayments)) {
       balanceCardStatus = BalanceCardStatus.recentToConfirm;
     } else if (unconfirmedPaymentsCount > 0) {
       balanceCardStatus = BalanceCardStatus.needsAttention;
@@ -172,12 +171,12 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     return balanceCardStatus;
   }
 
-  bool _isRecentToConfirm(List<MappedPayment> calculatedPayments) {
-    final calculatedPayment = calculatedPayments.firstWhereOrNull(
+  bool _isRecentToConfirm(List<MappedPayment> mappedPayments) {
+    final mappedPayment = mappedPayments.firstWhereOrNull(
       (element) => element.payment.status == PaymentStatus.paid,
     );
 
-    final paymentDate = calculatedPayment?.payment.paymentAt?.toDate();
+    final paymentDate = mappedPayment?.payment.paymentAt?.toDate();
     final isRecent =
         ((paymentDate?.difference(DateTime.now()).inDays ?? 0) * -1) < 5;
 
@@ -185,13 +184,13 @@ class PaymentsCubit extends Cubit<PaymentsState> {
   }
 
   NextPaymentData _getNextPaymentData(
-    List<MappedPayment> calculatedPayments,
+    List<MappedPayment> mappedPayments,
   ) {
-    final nextPayment = calculatedPayments.firstWhereOrNull(
+    final nextPayment = mappedPayments.firstWhereOrNull(
       (element) => element.status == PaymentUiStatus.toBePaid,
     );
 
-    final previousPaymentDate = calculatedPayments
+    final previousPaymentDate = mappedPayments
         .firstWhereOrNull(
           (element) => element.status != PaymentUiStatus.toBePaid,
         )
