@@ -1,10 +1,10 @@
+import "package:app/data/models/payment/balance_card_status.dart";
 import "package:app/data/models/payment/mapped_payment.dart";
 import "package:app/data/models/payment/mapped_payment_status.dart";
 import "package:app/data/models/payment/payments_ui_state.dart";
 import "package:app/data/models/payment/social_income_payment.dart";
 import "package:app/data/models/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
-import "package:app/view/widgets/income/balance_card_status.dart";
 import "package:collection/collection.dart";
 import "package:equatable/equatable.dart";
 import "package:flutter_bloc/flutter_bloc.dart";

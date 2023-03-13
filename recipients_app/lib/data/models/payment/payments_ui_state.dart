@@ -1,5 +1,5 @@
+import "package:app/data/models/payment/balance_card_status.dart";
 import "package:app/data/models/payment/mapped_payment.dart";
-import "package:app/view/widgets/income/balance_card_status.dart";
 import "package:equatable/equatable.dart";
 
 class PaymentsUiState extends Equatable {

@@ -1,11 +1,11 @@
 import "package:app/core/cubits/payment/payments_cubit.dart";
+import "package:app/data/models/payment/balance_card_status.dart";
 import "package:app/data/models/payment/mapped_payment.dart";
 import "package:app/data/models/payment/mapped_payment_status.dart";
 import "package:app/data/models/payment/payments_ui_state.dart";
 import "package:app/data/models/payment/social_income_payment.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/configs.dart";
-import "package:app/view/widgets/income/balance_card_status.dart";
 import "package:app/view/widgets/income/payment_status_icon.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
