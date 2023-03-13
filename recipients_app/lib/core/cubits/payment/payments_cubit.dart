@@ -27,7 +27,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       emit(
         state.copyWith(
           status: PaymentsStatus.success,
-          paymentsUiState: await _calculatePaymentsUiState(),
+          paymentsUiState: await _mapPaymentsUiState(),
         ),
       );
     } on Exception catch (ex) {
@@ -52,7 +52,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       emit(
         state.copyWith(
           status: PaymentsStatus.success,
-          paymentsUiState: await _calculatePaymentsUiState(),
+          paymentsUiState: await _mapPaymentsUiState(),
         ),
       );
     } on Exception catch (ex) {
@@ -81,7 +81,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       emit(
         state.copyWith(
           status: PaymentsStatus.success,
-          paymentsUiState: await _calculatePaymentsUiState(),
+          paymentsUiState: await _mapPaymentsUiState(),
         ),
       );
     } on Exception catch (ex) {
@@ -94,7 +94,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     }
   }
 
-  Future<PaymentsUiState> _calculatePaymentsUiState() async {
+  Future<PaymentsUiState> _mapPaymentsUiState() async {
     final payments = await paymentRepository.fetchPayments(
       recipientId: recipient.userId,
     );
@@ -106,26 +106,26 @@ class PaymentsCubit extends Cubit<PaymentsState> {
 
     for (int i = 0; i < payments.length; i++) {
       final currentPayment = payments[i];
-      PaymentUiStatus calculatedStatus = PaymentUiStatus.empty;
+      PaymentUiStatus paymentUiStatus = PaymentUiStatus.empty;
       switch (currentPayment.status) {
         case PaymentStatus.created:
-          calculatedStatus = PaymentUiStatus.toBePaid;
+          paymentUiStatus = PaymentUiStatus.toBePaid;
           break;
         case PaymentStatus.paid:
-          calculatedStatus = PaymentUiStatus.toReview;
+          paymentUiStatus = PaymentUiStatus.toReview;
           unconfirmedPaymentsCount++;
           break;
         case PaymentStatus.confirmed:
-          calculatedStatus = PaymentUiStatus.confirmed;
+          paymentUiStatus = PaymentUiStatus.confirmed;
           break;
         case PaymentStatus.contested:
-          calculatedStatus = PaymentUiStatus.contested;
+          paymentUiStatus = PaymentUiStatus.contested;
           break;
         // TODO: check what to show in case of those statuses
         case null:
         case PaymentStatus.failed:
         case PaymentStatus.other:
-          calculatedStatus = PaymentUiStatus.empty;
+          paymentUiStatus = PaymentUiStatus.empty;
           break;
       }
 
@@ -133,14 +133,14 @@ class PaymentsCubit extends Cubit<PaymentsState> {
           currentPayment.status == PaymentStatus.paid) {
         mappedPayments[i - 1] =
             mappedPayments[i - 1].copyWith(status: PaymentUiStatus.onHold);
-        calculatedStatus = PaymentUiStatus.onHold;
+        paymentUiStatus = PaymentUiStatus.onHold;
       }
 
       previousState = currentPayment.status;
       mappedPayments.add(
         MappedPayment(
           payment: currentPayment,
-          status: calculatedStatus,
+          status: paymentUiStatus,
         ),
       );
     }
