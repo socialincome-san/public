@@ -1,11 +1,7 @@
-import "package:app/data/models/social_income_payment.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/view/pages/account_page.dart";
 import "package:app/view/pages/dashboard_page.dart";
 import "package:app/view/pages/impact_measurement_page.dart";
-import "package:app/view/pages/income_page.dart";
-import "package:app/view/pages/payment_page.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 
 class MainAppPage extends StatefulWidget {
@@ -21,47 +17,6 @@ class _MainAppPageState extends State<MainAppPage> {
   final List<Map<String, Widget>> _pages = [
     {"Account": const AccountPage()},
     {"Income": const DashboardPage()},
-    {
-      "Payments": PaymentPage(
-        payments: [
-          SocialIncomePayment(
-            id: "1",
-            amount: 400,
-            status: "confirmed",
-            currency: "SLE",
-            confirmAt: Timestamp(10, 1000),
-          ),
-          SocialIncomePayment(
-            id: "2",
-            amount: 400,
-            status: "confirmed",
-            currency: "SLE",
-            confirmAt: Timestamp(10, 1000),
-          ),
-          SocialIncomePayment(
-            id: "3",
-            amount: 400,
-            status: "confirmed",
-            currency: "SLE",
-            confirmAt: Timestamp(10, 1000),
-          ),
-          SocialIncomePayment(
-            id: "4",
-            amount: 400,
-            status: "confirmed",
-            currency: "SLE",
-            confirmAt: Timestamp(10, 1000),
-          ),
-          SocialIncomePayment(
-            id: "5",
-            amount: 400,
-            status: "confirmed",
-            currency: "SLE",
-            confirmAt: Timestamp(10, 1000),
-          ),
-        ],
-      )
-    },
     {"Income": const IncomePage()},
     {"Survey": const ImpactMeasurementPage()},
   ];
