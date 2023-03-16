@@ -8,12 +8,14 @@ class StatusIconWithText extends StatelessWidget {
   final Status status;
   final String text;
   final bool isInverted;
+  final Color iconColor;
 
   const StatusIconWithText({
     super.key,
     required this.status,
     required this.text,
     this.isInverted = false,
+    this.iconColor = Colors.white,
   });
 
   @override
@@ -21,6 +23,8 @@ class StatusIconWithText extends StatelessWidget {
     late Color color;
     late IconData icon;
     late Color textColor;
+
+    Color iconColor = this.iconColor;
 
     switch (status) {
       case Status.success:
@@ -37,6 +41,12 @@ class StatusIconWithText extends StatelessWidget {
         color = AppColors.redColor;
         icon = Icons.close;
         textColor = AppColors.fontColorDark;
+        break;
+      case Status.info:
+        color = AppColors.lightGrey;
+        icon = Icons.timer_outlined;
+        textColor = AppColors.fontColorDark;
+        iconColor = AppColors.fontColorDark;
         break;
     }
 
@@ -76,7 +86,7 @@ class StatusIconWithText extends StatelessWidget {
             Icon(
               size: 14,
               icon,
-              color: Colors.white,
+              color: iconColor,
             ),
           ],
         ),

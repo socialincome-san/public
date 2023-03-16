@@ -36,6 +36,11 @@ class StatusIcon extends StatelessWidget {
         icon = Icons.close;
         iconColor = isInverted ? AppColors.redColor : Colors.white;
         break;
+      case Status.info:
+        backgroundColor = isInverted ? Colors.white : AppColors.lightGrey;
+        icon = Icons.info;
+        iconColor = isInverted ? AppColors.lightGrey : Colors.white;
+        break;
     }
 
     return CircleAvatar(

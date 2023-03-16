@@ -20,58 +20,56 @@ class PaymentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.15,
-      color: Colors.white,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 4,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: AppSpacings.h8,
-                  child: Text(
+    return Card(
+      margin: EdgeInsets.zero,
+      elevation: 0,
+      child: Padding(
+        padding: AppSpacings.a12,
+        child: Row(
+          children: [
+            Expanded(
+              flex: 4,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 8),
+                  Text(
                     "${payment.currency} ${f.format(payment.amount)}",
-                    textScaleFactor: 1.5,
+                    style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                          color: AppColors.fontColorDark,
+                        ),
+                    // textScaleFactor: 1.5,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                  child: Text(_getPaymentStatusText()),
-                ),
-                if (payment.status == PaymentStatus.contested)
-                  const Padding(
-                    padding: EdgeInsets.only(left: 8.0),
-                    child: Text(
+                  const SizedBox(height: 8),
+                  Text(_cleanStatus(payment.status)),
+                  if (payment.status == PaymentStatus.contested)
+                    const Text(
                       "We will reach out to you soon",
                       style: TextStyle(fontStyle: FontStyle.italic),
-                    ),
-                  )
-              ],
-            ),
-          ),
-          if (payment.status != PaymentStatus.confirmed)
-            Padding(
-              padding: AppSpacings.a16,
-              child: ButtonBig(
-                label: "Review",
-                onPressed: () {
-                  final paymentsCubit = context.read<PaymentsCubit>();
-                  showModalBottomSheet(
-                    isScrollControlled: true,
-                    context: context,
-                    builder: (context) => BlocProvider.value(
-                      value: paymentsCubit,
-                      child: ReviewPaymentModal(payment),
-                    ),
-                  );
-                },
+                    )
+                ],
               ),
-            )
-        ],
+            ),
+            if (payment.status != PaymentStatus.confirmed)
+              ButtonBig(
+                label: "Review",
+                onPressed: () => _onPressReview(context),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _onPressReview(BuildContext context) {
+    final paymentsCubit = context.read<PaymentsCubit>();
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => BlocProvider.value(
+        value: paymentsCubit,
+        child: ReviewPaymentModal(payment),
       ),
     );
   }
@@ -81,10 +79,6 @@ class PaymentCard extends StatelessWidget {
             [PaymentStatus.confirmed, PaymentStatus.contested]
                 .contains(currentStatus)
         ? currentStatus.name
-        : "please review this payment";
-  }
-
-  String _getPaymentStatusText() {
-    return _cleanStatus(payment.status);
+        : "Please review this payment";
   }
 }

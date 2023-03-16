@@ -24,6 +24,7 @@ class BalanceCardHeader extends StatelessWidget {
                 "Next payment",
                 style: TextStyle(fontSize: 13),
               ),
+              const SizedBox(height: 4),
               Text(
                 "$daysTo days",
                 style: const TextStyle(
@@ -42,6 +43,7 @@ class BalanceCardHeader extends StatelessWidget {
                 "Amount",
                 style: TextStyle(fontSize: 13),
               ),
+              const SizedBox(height: 4),
               Text(
                 "SLE $amount",
                 style: const TextStyle(

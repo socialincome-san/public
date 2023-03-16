@@ -1,7 +1,10 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/data/models/models.dart";
 import "package:app/ui/configs/app_colors.dart";
-import "package:app/ui/icons/icons.dart";
+import "package:app/ui/configs/app_spacings.dart";
+import "package:app/ui/icons/status.dart";
+import "package:app/ui/icons/status_icon_with_text.dart";
+import "package:app/view/pages/payment_tile.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl/intl.dart";
@@ -16,6 +19,7 @@ class PaymentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final lastPayment = payments.isNotEmpty ? payments.first : null;
     final recipient = context.watch<AuthCubit>().state.recipient;
 
     return Scaffold(
@@ -91,52 +95,57 @@ class PaymentPage extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 0, left: 8, right: 8),
+            child: Card(
+              child: Padding(
+                padding: AppSpacings.h16v8,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Next payment:",
+                          style:
+                              Theme.of(context).textTheme.bodySmall!.copyWith(
+                                    color: Colors.black,
+                                  ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _getNextMonth(lastPayment?.paymentAt?.toDate()),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall!
+                              .copyWith(
+                                color: Colors.black,
+                              ),
+                        ),
+                      ],
+                    ),
+                    const StatusIconWithText(
+                      status: Status.info,
+                      text: "SLE 400",
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: payments.length,
-              itemBuilder: (context, index) {
-                final payment = payments[index];
-
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            // _formatDate(payment.confirmAt?.toDate()),
-                            _formatDate(payment.paymentAt?.toDate()),
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineSmall!
-                                .copyWith(
-                                  color: Colors.black,
-                                ),
-                          ),
-                          const SizedBox(height: 8),
-                          StatusIconWithText(
-                            status: Status.success,
-                            text: "${payment.currency} ${payment.amount}",
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
+              itemBuilder: (context, index) =>
+                  PaymentTile(payment: payments[index]),
             ),
           ),
         ],
       ),
     );
-  }
-
-  String _formatDate(DateTime? dateTime) {
-    if (dateTime == null) return "";
-    return DateFormat("MMMM yyyy").format(dateTime);
   }
 
   String _calculatePastPayments(List<SocialIncomePayment> payments) {
@@ -160,5 +169,29 @@ class PaymentPage extends StatelessWidget {
     }
 
     return "${payments.first.currency} ${allPayments - currentPayments}";
+  }
+
+  // TODO how should it behave if there's no payment yet?
+  // Currently uses current month
+  String _getNextMonth(DateTime? lastPayment) {
+    if (lastPayment == null) {
+      final now = DateTime.now();
+
+      if (now.day > 15) {
+        return "15. ${DateFormat('MMMM yyyy').format(now.add(const Duration(days: 30)))}";
+      }
+
+      return "15. ${DateFormat('MMMM yyyy').format(now)}";
+    }
+    // get month of last payment
+    final month = lastPayment.month;
+    final nextMonth = month + 1;
+
+    if (nextMonth >= 12) {
+      return "15. January ${lastPayment.year + 1}";
+    } else {
+      final date = DateTime(lastPayment.year, nextMonth, 15);
+      return "${DateFormat('dd. MMMM yyyy').format(date)}";
+    }
   }
 }
