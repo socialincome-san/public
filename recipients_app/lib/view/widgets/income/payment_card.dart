@@ -1,5 +1,5 @@
 import "package:app/core/cubits/payment/payments_cubit.dart";
-import "package:app/data/models/social_income_payment.dart";
+import "package:app/data/models/payment/social_income_payment.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/income/review_payment_modal.dart";
 import "package:flutter/material.dart";
@@ -16,14 +16,6 @@ class PaymentCard extends StatelessWidget {
     required this.payment,
     super.key,
   });
-
-  String cleanStatus(PaymentStatus? currentStatus) {
-    return currentStatus != null &&
-            [PaymentStatus.confirmed, PaymentStatus.contested]
-                .contains(currentStatus)
-        ? currentStatus.name
-        : "please review this payment";
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +39,7 @@ class PaymentCard extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                  child: Text(getPaymentStatusText()),
+                  child: Text(_getPaymentStatusText()),
                 ),
                 if (payment.status == PaymentStatus.contested)
                   const Padding(
@@ -87,7 +79,15 @@ class PaymentCard extends StatelessWidget {
     );
   }
 
-  String getPaymentStatusText() {
-    return cleanStatus(payment.status);
+  String _cleanStatus(PaymentStatus? currentStatus) {
+    return currentStatus != null &&
+            [PaymentStatus.confirmed, PaymentStatus.contested]
+                .contains(currentStatus)
+        ? currentStatus.name
+        : "please review this payment";
+  }
+
+  String _getPaymentStatusText() {
+    return _cleanStatus(payment.status);
   }
 }
