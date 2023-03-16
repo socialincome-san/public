@@ -1,6 +1,7 @@
 import "package:app/data/models/social_income_payment.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/view/pages/account_page.dart";
+import "package:app/view/pages/dashboard_page.dart";
 import "package:app/view/pages/impact_measurement_page.dart";
 import "package:app/view/pages/income_page.dart";
 import "package:app/view/pages/payment_page.dart";
@@ -18,6 +19,8 @@ class _MainAppPageState extends State<MainAppPage> {
   int _selectedIndex = 0;
 
   final List<Map<String, Widget>> _pages = [
+    {"Account": const AccountPage()},
+    {"Income": const DashboardPage()},
     {
       "Payments": PaymentPage(
         payments: [
