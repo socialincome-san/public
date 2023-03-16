@@ -8,7 +8,31 @@ export default function BankDetails() {
 	return (
 		<Layout title={t('bankDetails.title')}>
 			<section>
-				<p></p>
+				<h4>{t('bankDetails.bankIntroText')}</h4>
+				<h2>{t('bankDetails.bankInfoTextRecurring')}</h2>
+				<p>
+					{t('bankDetails.bankInfoTextRecurringComment')}
+					<br />
+					{t('bankDetails.bankPostFinance')}
+					<br />
+					{t('bankDetails.bankAccountHolder')}
+					<br />
+					{t('bankDetails.bankTxtIBAN')}&nbsp;{t('bankDetails.bankTxtIBAN1')}
+					<br />
+					{t('bankDetails.bankTxtBIC')}
+					<br />
+					<br />
+				</p>
+				<h2>{t('bankDetails.bankOneTime')}</h2>
+				<p>
+					{t('bankDetails.bankPostFinance')}
+					<br />
+					{t('bankDetails.bankAccountHolder')}
+					<br />
+					{t('bankDetails.bankTxtIBAN')}&nbsp;{t('bankDetails.bankTxtIBAN2')}
+					<br />
+					{t('bankDetails.bankTxtBIC')}
+				</p>
 			</section>
 		</Layout>
 	);
