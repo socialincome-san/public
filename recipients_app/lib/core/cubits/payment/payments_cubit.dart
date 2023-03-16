@@ -53,12 +53,17 @@ class PaymentsCubit extends Cubit<PaymentsState> {
         payment: payment,
       );
 
-      final paymentUiState = await _mapPaymentsUiState();
+      final payments = await paymentRepository.fetchPayments(
+        recipientId: recipient.userId,
+      );
+
+      final paymentUiState = await _mapPaymentsUiState(payments);
 
       emit(
         state.copyWith(
           status: PaymentsStatus.success,
           paymentsUiState: paymentUiState,
+          payments: payments,
         ),
       );
     } on Exception catch (ex, stackTrace) {
@@ -85,12 +90,17 @@ class PaymentsCubit extends Cubit<PaymentsState> {
         contestReason: contestReason,
       );
 
-      final paymentUiState = await _mapPaymentsUiState();
+      final payments = await paymentRepository.fetchPayments(
+        recipientId: recipient.userId,
+      );
+
+      final paymentUiState = await _mapPaymentsUiState(payments);
 
       emit(
         state.copyWith(
           status: PaymentsStatus.success,
           paymentsUiState: paymentUiState,
+          payments: payments,
         ),
       );
     } on Exception catch (ex, stackTrace) {

@@ -9,122 +9,128 @@ import "package:intl/intl.dart";
 class PaymentPage extends StatelessWidget {
   final List<SocialIncomePayment> payments;
 
-  const PaymentPage({super.key, required this.payments});
+  const PaymentPage({
+    super.key,
+    required this.payments,
+  });
 
   @override
   Widget build(BuildContext context) {
     final recipient = context.watch<AuthCubit>().state.recipient;
 
-    return Column(
-      children: [
-        Container(
-          color: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Orange Money Number",
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  "${recipient?.mobileMoneyPhone?.phoneNumber ?? ""}",
-                  style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.bold,
+    return Scaffold(
+      appBar: AppBar(title: const Text("Payments")),
+      body: Column(
+        children: [
+          Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Orange Money Number",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "${recipient?.mobileMoneyPhone?.phoneNumber ?? ""}",
+                    style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                          color: AppColors.primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Past Payments",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _calculatePastPayments(payments),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineLarge!
+                                .copyWith(
+                                  color: AppColors.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
                       ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Past Payments",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          _calculatePastPayments(payments),
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineLarge!
-                              .copyWith(
-                                color: AppColors.primaryColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Future Payments",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          _calculateFuturePayments(payments),
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineLarge!
-                              .copyWith(
-                                color: AppColors.primaryColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Future Payments",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _calculateFuturePayments(payments),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineLarge!
+                                .copyWith(
+                                  color: AppColors.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 24),
-        Expanded(
-          child: ListView.builder(
-            itemCount: payments.length,
-            itemBuilder: (context, index) {
-              final payment = payments[index];
+          const SizedBox(height: 24),
+          Expanded(
+            child: ListView.builder(
+              itemCount: payments.length,
+              itemBuilder: (context, index) {
+                final payment = payments[index];
 
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          // _formatDate(payment.confirmAt?.toDate()),
-                          _formatDate(payment.paymentAt?.toDate()),
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall!
-                              .copyWith(
-                                color: Colors.black,
-                              ),
-                        ),
-                        const SizedBox(height: 8),
-                        StatusIconWithText(
-                          status: Status.success,
-                          text: "${payment.currency} ${payment.amount}",
-                        )
-                      ],
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            // _formatDate(payment.confirmAt?.toDate()),
+                            _formatDate(payment.paymentAt?.toDate()),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .copyWith(
+                                  color: Colors.black,
+                                ),
+                          ),
+                          const SizedBox(height: 8),
+                          StatusIconWithText(
+                            status: Status.success,
+                            text: "${payment.currency} ${payment.amount}",
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
