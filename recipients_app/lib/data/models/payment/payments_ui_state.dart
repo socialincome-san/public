@@ -1,5 +1,4 @@
-import "package:app/data/models/payment/balance_card_status.dart";
-import "package:app/data/models/payment/mapped_payment.dart";
+import "package:app/data/models/payment/payment.dart";
 import "package:equatable/equatable.dart";
 
 class PaymentsUiState extends Equatable {
@@ -24,6 +23,7 @@ class PaymentsUiState extends Equatable {
       payments,
       paymentsCount,
       unconfirmedPaymentsCount,
+      nextPayment,
     ];
   }
 
@@ -43,23 +43,4 @@ class PaymentsUiState extends Equatable {
       nextPayment: nextPayment ?? this.nextPayment,
     );
   }
-}
-
-class NextPaymentData extends Equatable {
-  final int amount;
-  final String currency;
-  final int daysToPayment;
-
-  const NextPaymentData({
-    required this.amount,
-    required this.currency,
-    required this.daysToPayment,
-  });
-
-  @override
-  List<Object?> get props => [
-        amount,
-        currency,
-        daysToPayment,
-      ];
 }

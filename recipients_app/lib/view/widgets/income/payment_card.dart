@@ -17,14 +17,6 @@ class PaymentCard extends StatelessWidget {
     super.key,
   });
 
-  String cleanStatus(PaymentStatus? currentStatus) {
-    return currentStatus != null &&
-            [PaymentStatus.confirmed, PaymentStatus.contested]
-                .contains(currentStatus)
-        ? currentStatus.name
-        : "please review this payment";
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -47,7 +39,7 @@ class PaymentCard extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, left: 8.0),
-                  child: Text(getPaymentStatusText()),
+                  child: Text(_getPaymentStatusText()),
                 ),
                 if (payment.status == PaymentStatus.contested)
                   const Padding(
@@ -87,7 +79,15 @@ class PaymentCard extends StatelessWidget {
     );
   }
 
-  String getPaymentStatusText() {
-    return cleanStatus(payment.status);
+  String _cleanStatus(PaymentStatus? currentStatus) {
+    return currentStatus != null &&
+            [PaymentStatus.confirmed, PaymentStatus.contested]
+                .contains(currentStatus)
+        ? currentStatus.name
+        : "please review this payment";
+  }
+
+  String _getPaymentStatusText() {
+    return _cleanStatus(payment.status);
   }
 }

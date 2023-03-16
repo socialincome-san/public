@@ -1,8 +1,4 @@
-import "package:app/data/models/payment/balance_card_status.dart";
-import "package:app/data/models/payment/mapped_payment.dart";
-import "package:app/data/models/payment/payment_ui_status.dart";
-import "package:app/data/models/payment/payments_ui_state.dart";
-import "package:app/data/models/payment/social_income_payment.dart";
+import "package:app/data/models/payment/payment.dart";
 import "package:app/data/models/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:collection/collection.dart";
@@ -14,10 +10,12 @@ part "payments_state.dart";
 class PaymentsCubit extends Cubit<PaymentsState> {
   final Recipient recipient;
   final PaymentRepository paymentRepository;
+  final CrashReportingRepository crashReportingRepository;
 
   PaymentsCubit({
     required this.recipient,
     required this.paymentRepository,
+    required this.crashReportingRepository,
   }) : super(const PaymentsState());
 
   Future<void> loadPayments() async {
@@ -30,7 +28,8 @@ class PaymentsCubit extends Cubit<PaymentsState> {
           paymentsUiState: await _mapPaymentsUiState(),
         ),
       );
-    } on Exception catch (ex) {
+    } on Exception catch (ex, stackTrace) {
+      crashReportingRepository.logError(ex, stackTrace);
       emit(
         state.copyWith(
           status: PaymentsStatus.failure,
@@ -49,13 +48,16 @@ class PaymentsCubit extends Cubit<PaymentsState> {
         payment: payment,
       );
 
+      final paymentUiState = await _mapPaymentsUiState();
+
       emit(
         state.copyWith(
           status: PaymentsStatus.success,
-          paymentsUiState: await _mapPaymentsUiState(),
+          paymentsUiState: paymentUiState,
         ),
       );
-    } on Exception catch (ex) {
+    } on Exception catch (ex, stackTrace) {
+      crashReportingRepository.logError(ex, stackTrace);
       emit(
         state.copyWith(
           status: PaymentsStatus.failure,
@@ -78,13 +80,16 @@ class PaymentsCubit extends Cubit<PaymentsState> {
         contestReason: contestReason,
       );
 
+      final paymentUiState = await _mapPaymentsUiState();
+
       emit(
         state.copyWith(
           status: PaymentsStatus.success,
-          paymentsUiState: await _mapPaymentsUiState(),
+          paymentsUiState: paymentUiState,
         ),
       );
-    } on Exception catch (ex) {
+    } on Exception catch (ex, stackTrace) {
+      crashReportingRepository.logError(ex, stackTrace);
       emit(
         state.copyWith(
           status: PaymentsStatus.failure,
@@ -146,7 +151,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     }
 
     return PaymentsUiState(
-      status: getBalanceCardStatus(mappedPayments, unconfirmedPaymentsCount),
+      status: _getBalanceCardStatus(mappedPayments, unconfirmedPaymentsCount),
       payments: mappedPayments,
       paymentsCount: payments.length,
       unconfirmedPaymentsCount: unconfirmedPaymentsCount,
@@ -154,7 +159,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     );
   }
 
-  BalanceCardStatus getBalanceCardStatus(
+  BalanceCardStatus _getBalanceCardStatus(
     List<MappedPayment> mappedPayments,
     int unconfirmedPaymentsCount,
   ) {
