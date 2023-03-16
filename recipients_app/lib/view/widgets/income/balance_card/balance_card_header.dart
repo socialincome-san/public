@@ -27,10 +27,10 @@ class BalanceCardHeader extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 "$daysTo days",
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: AppColors.primaryColor,
-                ),
+                style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                      color: AppColors.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
             ],
           ),
@@ -46,10 +46,10 @@ class BalanceCardHeader extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 "SLE $amount",
-                style: const TextStyle(
-                  fontSize: 24.0,
-                  color: AppColors.primaryColor,
-                ),
+                style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                      color: AppColors.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
             ],
           ),

@@ -29,26 +29,29 @@ class PaymentCard extends StatelessWidget {
           children: [
             Expanded(
               flex: 4,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 8),
-                  Text(
-                    "${payment.currency} ${f.format(payment.amount)}",
-                    style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                          color: AppColors.fontColorDark,
-                        ),
-                    // textScaleFactor: 1.5,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(_cleanStatus(payment.status)),
-                  if (payment.status == PaymentStatus.contested)
-                    const Text(
-                      "We will reach out to you soon",
-                      style: TextStyle(fontStyle: FontStyle.italic),
-                    )
-                ],
+              child: Padding(
+                padding: AppSpacings.v8,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "${payment.currency} ${f.format(payment.amount)}",
+                      style:
+                          Theme.of(context).textTheme.headlineLarge!.copyWith(
+                                color: AppColors.fontColorDark,
+                              ),
+                      // textScaleFactor: 1.5,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(_cleanStatus(payment.status)),
+                    if (payment.status == PaymentStatus.contested)
+                      const Text(
+                        "We will reach out to you soon",
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      ),
+                  ],
+                ),
               ),
             ),
             if (payment.status != PaymentStatus.confirmed)

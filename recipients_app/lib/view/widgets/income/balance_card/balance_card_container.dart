@@ -18,7 +18,6 @@ class BalanceCardContainer extends StatelessWidget {
       elevation: 0,
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +37,7 @@ class BalanceCardContainer extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  "Progress",
+                  "My Payments",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 13.0,

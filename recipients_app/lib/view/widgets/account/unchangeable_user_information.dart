@@ -34,47 +34,19 @@ class _UnchangeableUserInformationState
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(
-        maxHeight: 39,
-        minHeight: 39,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Expanded(
-            flex: 3,
-            child: Container(
-              padding: AppSpacings.a8,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(6),
-                  bottomLeft: Radius.circular(6),
+    return Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: Text(
+            widget.section,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.darkGrey,
                 ),
-              ),
-              child: Text(
-                widget.section,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.darkGrey,
-                    ),
-              ),
-            ),
           ),
-          Expanded(
-            flex: 2,
-            child: Container(
-              padding: AppSpacings.a8,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(6),
-                  bottomRight: Radius.circular(6),
-                ),
-              ),
-              child: Text(widget.placeHolder),
-            ),
-          ),
-        ],
-      ),
+        ),
+        Expanded(child: Text(widget.placeHolder)),
+      ],
     );
   }
 }
