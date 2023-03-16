@@ -102,7 +102,8 @@ class PaymentPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          _formatDate(payment.confirmAt?.toDate()),
+                          // _formatDate(payment.confirmAt?.toDate()),
+                          _formatDate(payment.paymentAt?.toDate()),
                           style: Theme.of(context)
                               .textTheme
                               .headlineSmall!

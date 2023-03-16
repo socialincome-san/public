@@ -1,5 +1,6 @@
 import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/models/payment/social_income_payment.dart";
+import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/income/review_payment_modal.dart";
 import "package:flutter/material.dart";
@@ -55,11 +56,8 @@ class PaymentCard extends StatelessWidget {
           if (payment.status != PaymentStatus.confirmed)
             Padding(
               padding: AppSpacings.a16,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  minimumSize:
-                      MaterialStateProperty.all<Size>(const Size(60, 50)),
-                ),
+              child: ButtonBig(
+                label: "Review",
                 onPressed: () {
                   final paymentsCubit = context.read<PaymentsCubit>();
                   showModalBottomSheet(
@@ -71,7 +69,6 @@ class PaymentCard extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Text("Review"),
               ),
             )
         ],

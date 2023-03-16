@@ -17,7 +17,6 @@ class _MainAppPageState extends State<MainAppPage> {
   final List<Map<String, Widget>> _pages = [
     {"Account": const AccountPage()},
     {"Income": const DashboardPage()},
-    {"Income": const IncomePage()},
     {"Survey": const ImpactMeasurementPage()},
   ];
 

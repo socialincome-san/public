@@ -1,8 +1,11 @@
+import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/models/payment/balance_card_status.dart";
 import "package:app/data/models/payment/payments_ui_state.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/configs.dart";
+import "package:app/view/pages/payment_page.dart";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
 class BalanceCardBottomAction extends StatelessWidget {
   final PaymentsUiState paymentsUiState;
@@ -15,6 +18,7 @@ class BalanceCardBottomAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final foregroundColor = _getForegroundColor(paymentsUiState.status);
+    final payments = context.watch<PaymentsCubit>().state.payments;
 
     return Container(
       color: _getBackgroundColor(paymentsUiState.status),
@@ -32,7 +36,14 @@ class BalanceCardBottomAction extends StatelessWidget {
             Row(
               children: [
                 ButtonSmall(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PaymentPage(payments: payments),
+                      ),
+                    );
+                  },
                   label: _getPrimaryActionLabel(paymentsUiState),
                   buttonType: ButtonSmallType.outlined,
                   color: foregroundColor,

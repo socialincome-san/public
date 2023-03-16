@@ -25,14 +25,9 @@ class DashboardPage extends StatelessWidget {
   }
 }
 
-class _DashboardView extends StatefulWidget {
+class _DashboardView extends StatelessWidget {
   const _DashboardView();
 
-  @override
-  State<_DashboardView> createState() => _DashboardViewState();
-}
-
-class _DashboardViewState extends State<_DashboardView> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PaymentsCubit, PaymentsState>(

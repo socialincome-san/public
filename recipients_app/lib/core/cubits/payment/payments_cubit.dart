@@ -22,10 +22,15 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     emit(state.copyWith(status: PaymentsStatus.loading));
 
     try {
+      final payments = await paymentRepository.fetchPayments(
+        recipientId: recipient.userId,
+      );
+
       emit(
         state.copyWith(
           status: PaymentsStatus.success,
-          paymentsUiState: await _mapPaymentsUiState(),
+          paymentsUiState: await _mapPaymentsUiState(payments),
+          payments: payments,
         ),
       );
     } on Exception catch (ex, stackTrace) {
@@ -99,11 +104,8 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     }
   }
 
-  Future<PaymentsUiState> _mapPaymentsUiState() async {
-    final payments = await paymentRepository.fetchPayments(
-      recipientId: recipient.userId,
-    );
-
+  Future<PaymentsUiState> _mapPaymentsUiState(
+      List<SocialIncomePayment> payments) async {
     var unconfirmedPaymentsCount = 0;
     final List<MappedPayment> mappedPayments = [];
 
