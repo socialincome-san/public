@@ -115,7 +115,8 @@ class PaymentsCubit extends Cubit<PaymentsState> {
   }
 
   Future<PaymentsUiState> _mapPaymentsUiState(
-      List<SocialIncomePayment> payments) async {
+    List<SocialIncomePayment> payments,
+  ) async {
     var unconfirmedPaymentsCount = 0;
     final List<MappedPayment> mappedPayments = [];
 

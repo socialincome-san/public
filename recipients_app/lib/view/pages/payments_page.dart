@@ -1,20 +1,19 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/data/models/models.dart";
 import "package:app/ui/configs/app_colors.dart";
-import "package:app/ui/configs/app_spacings.dart";
-import "package:app/ui/icons/status.dart";
-import "package:app/ui/icons/status_icon_with_text.dart";
 import "package:app/view/pages/payment_tile.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl/intl.dart";
 
-class PaymentPage extends StatelessWidget {
+class PaymentsPage extends StatelessWidget {
   final List<SocialIncomePayment> payments;
+  final PaymentsUiState paymentsUiState;
 
-  const PaymentPage({
+  const PaymentsPage({
     super.key,
     required this.payments,
+    required this.paymentsUiState,
   });
 
   @override
@@ -23,7 +22,10 @@ class PaymentPage extends StatelessWidget {
     final recipient = context.watch<AuthCubit>().state.recipient;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Payments")),
+      appBar: AppBar(
+        elevation: 0,
+        title: const Text("Payments"),
+      ),
       body: Column(
         children: [
           Container(
@@ -96,51 +98,14 @@ class PaymentPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 0, left: 8, right: 8),
-            child: Card(
-              child: Padding(
-                padding: AppSpacings.h16v8,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Next payment:",
-                          style:
-                              Theme.of(context).textTheme.bodySmall!.copyWith(
-                                    color: Colors.black,
-                                  ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          _getNextMonth(lastPayment?.paymentAt?.toDate()),
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall!
-                              .copyWith(
-                                color: Colors.black,
-                              ),
-                        ),
-                      ],
-                    ),
-                    const StatusIconWithText(
-                      status: Status.info,
-                      text: "SLE 400",
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
           Expanded(
             child: ListView.builder(
-              itemCount: payments.length,
-              itemBuilder: (context, index) =>
-                  PaymentTile(payment: payments[index]),
+              itemCount: paymentsUiState.payments.length,
+              itemBuilder: (context, index) {
+                return PaymentTile(
+                  mappedPayment: paymentsUiState.payments[index],
+                );
+              },
             ),
           ),
         ],

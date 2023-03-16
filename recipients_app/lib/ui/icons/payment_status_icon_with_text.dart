@@ -1,16 +1,17 @@
+import "package:app/data/models/payment/payment.dart";
 import "package:app/ui/configs/configs.dart";
-import "package:app/ui/icons/icons.dart";
+import "package:app/ui/icons/payment_status_icon.dart";
 import "package:flutter/material.dart";
 
 const statusIconHeight = 20.0;
 
-class StatusIconWithText extends StatelessWidget {
-  final Status status;
+class PaymentStatusIconWithText extends StatelessWidget {
+  final PaymentUiStatus status;
   final String text;
   final bool isInverted;
   final Color iconColor;
 
-  const StatusIconWithText({
+  const PaymentStatusIconWithText({
     super.key,
     required this.status,
     required this.text,
@@ -27,32 +28,35 @@ class StatusIconWithText extends StatelessWidget {
     Color iconColor = this.iconColor;
 
     switch (status) {
-      case Status.success:
+      case PaymentUiStatus.confirmed:
         color = AppColors.primaryColor;
         icon = Icons.check;
         textColor = Colors.white;
         break;
-      case Status.underReview:
-        color = AppColors.primaryColor;
-        icon = Icons.question_mark;
-        textColor = Colors.white;
-        break;
-      case Status.warning:
-        color = AppColors.yellowColor;
-        icon = Icons.warning;
-        textColor = AppColors.fontColorDark;
-        break;
-      case Status.error:
+      case PaymentUiStatus.contested:
         color = AppColors.redColor;
         icon = Icons.close;
         textColor = AppColors.fontColorDark;
         break;
-      case Status.info:
+      case PaymentUiStatus.toReview:
+        color = AppColors.primaryColor;
+        icon = Icons.question_mark;
+        textColor = Colors.white;
+        break;
+      case PaymentUiStatus.onHold:
+        color = AppColors.yellowColor;
+        icon = Icons.warning;
+        textColor = AppColors.fontColorDark;
+        break;
+      case PaymentUiStatus.toBePaid:
         color = AppColors.lightGrey;
         icon = Icons.timer_outlined;
         textColor = AppColors.fontColorDark;
         iconColor = AppColors.fontColorDark;
         break;
+      case PaymentUiStatus.empty:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
 
     if (isInverted) {
@@ -65,7 +69,7 @@ class StatusIconWithText extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 4),
-          StatusIcon(
+          PaymentStatusIcon(
             status: status,
             isInverted: true,
           ),

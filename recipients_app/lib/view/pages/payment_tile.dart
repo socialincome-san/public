@@ -1,12 +1,13 @@
 import "package:app/data/models/models.dart";
-import "package:app/ui/icons/icons.dart";
+import "package:app/ui/icons/payment_status_icon_with_text.dart";
 import "package:flutter/material.dart";
 import "package:intl/intl.dart";
 
 class PaymentTile extends StatelessWidget {
-  final SocialIncomePayment payment;
+  // final SocialIncomePayment payment;
+  final MappedPayment mappedPayment;
 
-  const PaymentTile({super.key, required this.payment});
+  const PaymentTile({super.key, required this.mappedPayment});
 
   @override
   Widget build(BuildContext context) {
@@ -19,17 +20,17 @@ class PaymentTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                // _formatDate(payment.confirmAt?.toDate()),
-                _formatDate(payment.paymentAt?.toDate()),
+                _formatDate(mappedPayment.payment.paymentAt?.toDate()),
                 style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                       color: Colors.black,
                     ),
               ),
               const SizedBox(height: 8),
-              StatusIconWithText(
-                status: Status.success,
-                text: "${payment.currency} ${payment.amount}",
-              )
+              _buildStatusIcon(mappedPayment),
+              /* StatusIconWithText(
+                status: mappedPayment.uiStatus. Status.success,
+                text: "${mappedPayment.payment.currency} ${mappedPayment.payment.amount}",
+              ) */
             ],
           ),
         ),
@@ -40,5 +41,15 @@ class PaymentTile extends StatelessWidget {
   String _formatDate(DateTime? dateTime) {
     if (dateTime == null) return "";
     return DateFormat("MMMM yyyy").format(dateTime);
+  }
+
+  Widget _buildStatusIcon(MappedPayment mappedPayment) {
+    final text =
+        "${mappedPayment.payment.currency} ${mappedPayment.payment.amount}";
+
+    return PaymentStatusIconWithText(
+      status: mappedPayment.uiStatus,
+      text: text,
+    );
   }
 }

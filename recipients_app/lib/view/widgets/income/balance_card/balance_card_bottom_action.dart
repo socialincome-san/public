@@ -3,7 +3,7 @@ import "package:app/data/models/payment/balance_card_status.dart";
 import "package:app/data/models/payment/payments_ui_state.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/configs.dart";
-import "package:app/view/pages/payment_page.dart";
+import "package:app/view/pages/payments_page.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -40,7 +40,10 @@ class BalanceCardBottomAction extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PaymentPage(payments: payments),
+                        builder: (context) => PaymentsPage(
+                          payments: payments,
+                          paymentsUiState: paymentsUiState,
+                        ),
                       ),
                     );
                   },
