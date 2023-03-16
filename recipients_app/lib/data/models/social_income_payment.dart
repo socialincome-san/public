@@ -6,87 +6,49 @@ import "package:equatable/equatable.dart";
 class SocialIncomePayment extends Equatable {
   final String id;
   final int? amount;
-  final Timestamp? confirmAt;
-  final Timestamp? contestAt;
-  final String? contestReason;
-  final String? contestExplanation;
+  final Timestamp? paymentAt;
   final String? currency;
-  final String? status;
+  final PaymentStatus? status;
+  final String? comments;
 
   const SocialIncomePayment({
     required this.id,
     this.amount,
-    this.confirmAt,
-    this.contestAt,
-    this.contestReason,
-    this.contestExplanation,
+    this.paymentAt,
     this.currency,
     this.status,
+    this.comments,
   });
-
-// TODO: check if expected data types are coming back
-/*   void initialize(Map<String, dynamic> data, String paymentId) {
-    id = paymentId;
-    amount = data["amount"] != null ? data["amount"] as int : null;
-    confirmedAt =
-        data["confirm_at"] != null ? data["confirm_at"] as Timestamp : null;
-    contestedAt =
-        data["contest_at"] != null ? data["contest_at"] as Timestamp : null;
-    status = data["status"] != null ? data["status"] as String : null;
-    contestReason = data["contest_reason"] != null
-        ? data["contest_reason"] as String
-        : null;
-    currency = data["currency"] != null ? data["currency"] as String : null;
-  } */
-
-/*   Map<String, dynamic> data() => {
-        "amount": amount,
-        "confirm_at": confirmedAt,
-        "contest_at": contestedAt,
-        "status": status,
-        "contest_reason": contestReason,
-        "currency": currency
-      }; */
 
   @override
   List<Object?> get props {
     return [
       id,
       amount,
-      confirmAt,
-      contestAt,
-      contestReason,
-      contestExplanation,
+      paymentAt,
       currency,
       status,
+      comments,
     ];
   }
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
 
-    result.addAll({"id": id});
-
     if (amount != null) {
       result.addAll({"amount": amount});
     }
-    if (confirmAt != null) {
-      result.addAll({"confirm_at": confirmAt});
+    if (paymentAt != null) {
+      result.addAll({"payment_at": paymentAt});
     }
-    if (contestAt != null) {
-      result.addAll({"contest_at": contestAt});
-    }
-    if (contestReason != null) {
-      result.addAll({"contest_reason": contestReason});
-    }
-    if (contestExplanation != null) {
-      result.addAll({"contest_explanation": contestExplanation});
+    if (comments != null) {
+      result.addAll({"comments": comments});
     }
     if (currency != null) {
       result.addAll({"currency": currency});
     }
     if (status != null) {
-      result.addAll({"status": status});
+      result.addAll({"status": status?.name});
     }
 
     return result;
@@ -98,14 +60,14 @@ class SocialIncomePayment extends Equatable {
     return SocialIncomePayment(
       id: id,
       amount: map["amount"] != null ? map["amount"] as int? : null,
-      confirmAt:
-          map["confirm_at"] != null ? map["confirm_at"] as Timestamp : null,
-      contestAt:
-          map["contest_at"] != null ? map["contest_at"] as Timestamp : null,
-      contestReason: map["contest_reason"] as String?,
-      contestExplanation: map["contest_explanation"] as String?,
+      paymentAt:
+          map["payment_at"] != null ? map["payment_at"] as Timestamp : null,
+      comments: map["comments"] as String?,
       currency: map["currency"] as String?,
-      status: map["status"] as String?,
+      status: map["status"] != null
+          ? PaymentStatus.values
+              .singleWhere((element) => element.name == map["status"])
+          : null,
     );
   }
 
@@ -118,22 +80,27 @@ class SocialIncomePayment extends Equatable {
   SocialIncomePayment copyWith({
     String? id,
     int? amount,
-    Timestamp? confirmAt,
-    Timestamp? contestAt,
-    String? contestReason,
-    String? contestExplanation,
+    Timestamp? paymentAt,
+    String? comments,
     String? currency,
-    String? status,
+    PaymentStatus? status,
   }) {
     return SocialIncomePayment(
       id: id ?? this.id,
       amount: amount ?? this.amount,
-      confirmAt: confirmAt ?? this.confirmAt,
-      contestAt: contestAt ?? this.contestAt,
-      contestReason: contestReason ?? this.contestReason,
-      contestExplanation: contestExplanation ?? this.contestExplanation,
+      paymentAt: paymentAt ?? this.paymentAt,
+      comments: comments ?? this.comments,
       currency: currency ?? this.currency,
       status: status ?? this.status,
     );
   }
+}
+
+enum PaymentStatus {
+  created,
+  paid,
+  confirmed,
+  contested,
+  failed,
+  other,
 }

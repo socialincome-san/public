@@ -1,7 +1,9 @@
+import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/models/social_income_payment.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/income/review_payment_modal.dart";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl/intl.dart";
 
 String format = ",###,###";
@@ -15,10 +17,11 @@ class PaymentCard extends StatelessWidget {
     super.key,
   });
 
-  String cleanStatus(String? currentStatus) {
+  String cleanStatus(PaymentStatus? currentStatus) {
     return currentStatus != null &&
-            ["contested", "confirmed"].contains(currentStatus)
-        ? currentStatus
+            [PaymentStatus.confirmed, PaymentStatus.contested]
+                .contains(currentStatus)
+        ? currentStatus.name
         : "please review this payment";
   }
 
@@ -46,7 +49,7 @@ class PaymentCard extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 8.0, left: 8.0),
                   child: Text(getPaymentStatusText()),
                 ),
-                if (payment.status == "contested")
+                if (payment.status == PaymentStatus.contested)
                   const Padding(
                     padding: EdgeInsets.only(left: 8.0),
                     child: Text(
@@ -57,7 +60,7 @@ class PaymentCard extends StatelessWidget {
               ],
             ),
           ),
-          if (payment.status != "confirmed")
+          if (payment.status != PaymentStatus.confirmed)
             Padding(
               padding: AppSpacings.a16,
               child: ElevatedButton(
@@ -66,10 +69,14 @@ class PaymentCard extends StatelessWidget {
                       MaterialStateProperty.all<Size>(const Size(60, 50)),
                 ),
                 onPressed: () {
+                  final paymentsCubit = context.read<PaymentsCubit>();
                   showModalBottomSheet(
                     isScrollControlled: true,
                     context: context,
-                    builder: (context) => ReviewPaymentModal(payment),
+                    builder: (context) => BlocProvider.value(
+                      value: paymentsCubit,
+                      child: ReviewPaymentModal(payment),
+                    ),
                   );
                 },
                 child: const Text("Review"),
@@ -81,11 +88,6 @@ class PaymentCard extends StatelessWidget {
   }
 
   String getPaymentStatusText() {
-    final confirmedAt = payment.confirmAt;
-
-    return cleanStatus(payment.status) +
-        (payment.status == "confirmed" && confirmedAt != null
-            ? " at ${DateFormat("dd.MM.yyyy").format(confirmedAt.toDate())}"
-            : "");
+    return cleanStatus(payment.status);
   }
 }
