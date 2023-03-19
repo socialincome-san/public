@@ -3,7 +3,6 @@ import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_container.dart";
-import "package:app/view/widgets/income/payment_card.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -33,6 +32,7 @@ class _DashboardView extends StatelessWidget {
     return BlocBuilder<PaymentsCubit, PaymentsState>(
       builder: (context, state) {
         final payments = state.paymentsUiState?.payments ?? [];
+        final dashboardItems = [];
 
         return Padding(
           padding: AppSpacings.a16,
@@ -40,11 +40,12 @@ class _DashboardView extends StatelessWidget {
             children: [
               const BalanceCardContainer(),
               const SizedBox(height: 8),
-              if (payments.isEmpty == true)
+              if (dashboardItems.isEmpty == true)
                 const Expanded(
                   child: Center(
                     child: Text(
-                      "All future Social Income payments will be shown on this screen.",
+                      "You are up to date.\nNo news today.",
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 )
@@ -55,7 +56,7 @@ class _DashboardView extends StatelessWidget {
                         const SizedBox(height: 8),
                     itemCount: payments.length,
                     itemBuilder: (context, index) =>
-                        PaymentCard(payment: payments[index].payment),
+                        const SizedBox(height: 8),
                   ),
                 ),
             ],
