@@ -1,4 +1,5 @@
 import "package:app/core/cubits/payment/payments_cubit.dart";
+import "package:app/data/models/payment/payment.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_bottom_action.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_grid.dart";
@@ -34,6 +35,8 @@ class BalanceCardContainer extends StatelessWidget {
                 BalanceCardHeader(
                   daysTo: paymentsUiState?.nextPayment.daysToPayment ?? 0,
                   amount: paymentsUiState?.nextPayment.amount ?? 0,
+                  balanceCardStatus:
+                      paymentsUiState?.status ?? BalanceCardStatus.allConfirmed,
                 ),
                 const SizedBox(height: 16),
                 const Text(
@@ -46,7 +49,7 @@ class BalanceCardContainer extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 BalanceCardGrid(
-                  payments: paymentsUiState?.payments.reversed.toList() ?? [],
+                  payments: paymentsUiState?.payments ?? [],
                 ),
               ],
             ),
