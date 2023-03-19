@@ -1,4 +1,6 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
+import "package:app/data/models/recipient.dart";
+import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/view/pages/account_page.dart";
 import "package:app/view/pages/dashboard_page.dart";
@@ -17,41 +19,77 @@ class _MainAppPageState extends State<MainAppPage> {
   Widget build(BuildContext context) {
     final recipient = context.watch<AuthCubit>().state.recipient;
 
+    final editButtonRow = Row(
+      children: [
+        ButtonSmall(
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const AccountPage(),
+            ),
+          ),
+          label: "Edit",
+          buttonType: ButtonSmallType.outlined,
+          color: AppColors.fontColorDark,
+          fontColor: AppColors.fontColorDark,
+        ),
+        const SizedBox(width: 8),
+      ],
+    );
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Column(
+        title: Row(
           children: [
-            Text(
-              recipient?.firstName ?? "",
-              style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                    color: AppColors.primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
+            Visibility(
+              child: editButtonRow,
+              visible: false,
+              maintainSize: true,
+              maintainAnimation: true,
+              maintainState: true,
             ),
-            const SizedBox(height: 4),
-            Text(
-              "+${recipient?.mobileMoneyPhone?.phoneNumber}",
-              style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                    color: AppColors.primaryColor,
-                  ),
-              //_pags.elementAt(_selectedIndex).keys.first,
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person, color: AppColors.primaryColor),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const AccountPage(),
+            Expanded(
+              child: Center(
+                child: Column(
+                  children: [
+                    Text(
+                      _getName(recipient),
+                      style:
+                          Theme.of(context).textTheme.headlineLarge!.copyWith(
+                                color: AppColors.primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "+${recipient?.mobileMoneyPhone?.phoneNumber}",
+                      style:
+                          Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                color: AppColors.primaryColor,
+                              ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+            Visibility(child: editButtonRow),
+          ],
+        ),
       ),
       body: const DashboardPage(),
       backgroundColor: AppColors.backgroundColor,
     );
+  }
+
+  String _getName(Recipient? recipient) {
+    final preferredName = recipient?.preferredName;
+    var name = "";
+    if (preferredName != null && preferredName.isNotEmpty) {
+      name = preferredName;
+    } else {
+      name = recipient?.firstName ?? "";
+    }
+
+    return name;
   }
 }
