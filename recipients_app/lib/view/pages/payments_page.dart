@@ -7,18 +7,18 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl/intl.dart";
 
 class PaymentsPage extends StatelessWidget {
-  final List<SocialIncomePayment> payments;
   final PaymentsUiState paymentsUiState;
 
   const PaymentsPage({
     super.key,
-    required this.payments,
     required this.paymentsUiState,
   });
 
   @override
   Widget build(BuildContext context) {
-    final lastPayment = payments.isNotEmpty ? payments.first : null;
+    final lastPayment = paymentsUiState.payments.isNotEmpty
+        ? paymentsUiState.payments.first
+        : null;
     final recipient = context.watch<AuthCubit>().state.recipient;
 
     return Scaffold(
@@ -60,7 +60,7 @@ class PaymentsPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            _calculatePastPayments(payments),
+                            _calculatePastPayments(paymentsUiState.payments),
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineLarge!
@@ -80,7 +80,7 @@ class PaymentsPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            _calculateFuturePayments(payments),
+                            _calculateFuturePayments(paymentsUiState.payments),
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineLarge!
@@ -113,27 +113,28 @@ class PaymentsPage extends StatelessWidget {
     );
   }
 
-  String _calculatePastPayments(List<SocialIncomePayment> payments) {
+  String _calculatePastPayments(List<MappedPayment> mappedPayments) {
     var total = 0;
 
-    for (final payment in payments) {
-      total += payment.amount ?? 0;
+    for (final mappedPayment in mappedPayments) {
+      total += mappedPayment.payment.amount ?? 0;
     }
 
-    return "${payments.first.currency} $total";
+    return "${mappedPayments.first.payment.currency} $total";
   }
 
-  String _calculateFuturePayments(List<SocialIncomePayment> payments) {
+  String _calculateFuturePayments(List<MappedPayment> mappedPayments) {
+    // TODO monthly amount can be changed (e.g. now it is 500)
     // total of all payments = 3 years, every month, 400 = 3 * 12 * 400 = 14400
     const allPayments = 14400;
 
     var currentPayments = 0;
 
-    for (final payment in payments) {
-      currentPayments += payment.amount ?? 0;
+    for (final mappedPayment in mappedPayments) {
+      currentPayments += mappedPayment.payment.amount ?? 0;
     }
 
-    return "${payments.first.currency} ${allPayments - currentPayments}";
+    return "${mappedPayments.first.payment.currency} ${allPayments - currentPayments}";
   }
 
   // TODO how should it behave if there's no payment yet?

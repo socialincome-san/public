@@ -30,7 +30,6 @@ class PaymentsCubit extends Cubit<PaymentsState> {
         state.copyWith(
           status: PaymentsStatus.success,
           paymentsUiState: await _mapPaymentsUiState(payments),
-          payments: payments,
         ),
       );
     } on Exception catch (ex, stackTrace) {
@@ -63,7 +62,6 @@ class PaymentsCubit extends Cubit<PaymentsState> {
         state.copyWith(
           status: PaymentsStatus.success,
           paymentsUiState: paymentUiState,
-          payments: payments,
         ),
       );
     } on Exception catch (ex, stackTrace) {
@@ -100,7 +98,6 @@ class PaymentsCubit extends Cubit<PaymentsState> {
         state.copyWith(
           status: PaymentsStatus.success,
           paymentsUiState: paymentUiState,
-          payments: payments,
         ),
       );
     } on Exception catch (ex, stackTrace) {
@@ -148,7 +145,8 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       }
 
       if (previousState == PaymentStatus.paid &&
-          currentPayment.status == PaymentStatus.paid) {
+          currentPayment.status == PaymentStatus.paid &&
+          !_isRecent(currentPayment)) {
         mappedPayments[i - 1] =
             mappedPayments[i - 1].copyWith(uiStatus: PaymentUiStatus.onHold);
         paymentUiStatus = PaymentUiStatus.onHold;
@@ -163,12 +161,17 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       );
     }
 
+    final reversedMappedPayments = mappedPayments.reversed.toList();
+
     return PaymentsUiState(
-      status: _getBalanceCardStatus(mappedPayments, unconfirmedPaymentsCount),
-      payments: mappedPayments,
-      paymentsCount: payments.length,
+      status: _getBalanceCardStatus(
+        reversedMappedPayments,
+        unconfirmedPaymentsCount,
+      ),
+      payments: reversedMappedPayments,
+      paymentsCount: reversedMappedPayments.length,
       unconfirmedPaymentsCount: unconfirmedPaymentsCount,
-      nextPayment: _getNextPaymentData(mappedPayments),
+      nextPayment: _getNextPaymentData(reversedMappedPayments),
     );
   }
 
@@ -194,7 +197,13 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       (element) => element.payment.status == PaymentStatus.paid,
     );
 
-    final paymentDate = mappedPayment?.payment.paymentAt?.toDate();
+    final isRecent = _isRecent(mappedPayment?.payment);
+
+    return isRecent;
+  }
+
+  bool _isRecent(SocialIncomePayment? payment) {
+    final paymentDate = payment?.paymentAt?.toDate();
     final isRecent =
         ((paymentDate?.difference(DateTime.now()).inDays ?? 0) * -1) < 5;
 
