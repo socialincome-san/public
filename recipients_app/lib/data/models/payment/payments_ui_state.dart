@@ -4,14 +4,14 @@ import "package:equatable/equatable.dart";
 class PaymentsUiState extends Equatable {
   final BalanceCardStatus status;
   final List<MappedPayment> payments;
-  final int paymentsCount;
+  final int confirmedPaymentsCount;
   final int unconfirmedPaymentsCount;
   final NextPaymentData nextPayment;
 
   const PaymentsUiState({
     required this.status,
     this.payments = const [],
-    required this.paymentsCount,
+    required this.confirmedPaymentsCount,
     required this.unconfirmedPaymentsCount,
     required this.nextPayment,
   });
@@ -21,7 +21,7 @@ class PaymentsUiState extends Equatable {
     return [
       status,
       payments,
-      paymentsCount,
+      confirmedPaymentsCount,
       unconfirmedPaymentsCount,
       nextPayment,
     ];
@@ -37,7 +37,7 @@ class PaymentsUiState extends Equatable {
     return PaymentsUiState(
       status: status ?? this.status,
       payments: payments ?? this.payments,
-      paymentsCount: paymentsCount ?? this.paymentsCount,
+      confirmedPaymentsCount: paymentsCount ?? this.confirmedPaymentsCount,
       unconfirmedPaymentsCount:
           unconfirmedPaymentsCount ?? this.unconfirmedPaymentsCount,
       nextPayment: nextPayment ?? this.nextPayment,

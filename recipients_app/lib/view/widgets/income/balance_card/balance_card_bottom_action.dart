@@ -1,9 +1,12 @@
-import "package:app/data/models/payment/balance_card_status.dart";
-import "package:app/data/models/payment/payments_ui_state.dart";
+import "package:app/core/cubits/payment/payments_cubit.dart";
+import "package:app/data/models/payment/payment.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/payments_page.dart";
+import "package:app/view/widgets/income/review_payment_modal.dart";
+import "package:collection/collection.dart";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
 class BalanceCardBottomAction extends StatelessWidget {
   final PaymentsUiState paymentsUiState;
@@ -16,6 +19,10 @@ class BalanceCardBottomAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final foregroundColor = _getForegroundColor(paymentsUiState.status);
+
+    var shouldShowSecondaryActionButton = _shouldShowSecondaryActionButton(
+      paymentsUiState,
+    );
 
     return Container(
       color: _getBackgroundColor(paymentsUiState.status),
@@ -34,26 +41,43 @@ class BalanceCardBottomAction extends StatelessWidget {
               children: [
                 ButtonSmall(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PaymentsPage(
-                          paymentsUiState: paymentsUiState,
-                        ),
-                      ),
-                    );
+                    if (shouldShowSecondaryActionButton) {
+                      final MappedPayment? mappedPayment =
+                          paymentsUiState.payments.firstWhereOrNull((element) =>
+                              element.uiStatus == PaymentUiStatus.toReview);
+                      if (mappedPayment != null) {
+                        context
+                            .read<PaymentsCubit>()
+                            .confirmPayment(mappedPayment.payment);
+                      }
+                    } else {
+                      _navigateToPaymentsList(context);
+                    }
                   },
                   label: _getPrimaryActionLabel(paymentsUiState),
                   buttonType: ButtonSmallType.outlined,
                   color: foregroundColor,
                   fontColor: foregroundColor,
                 ),
-                if (shouldShowSecondaryActionButton(
-                  paymentsUiState,
-                )) ...[
+                if (shouldShowSecondaryActionButton) ...[
                   const SizedBox(width: 8),
                   ButtonSmall(
-                    onPressed: () {},
+                    onPressed: () {
+                      final MappedPayment? mappedPayment =
+                          paymentsUiState.payments.firstWhereOrNull((element) =>
+                              element.uiStatus == PaymentUiStatus.toReview);
+                      if (mappedPayment != null) {
+                        final paymentsCubit = context.read<PaymentsCubit>();
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (context) => BlocProvider.value(
+                            value: paymentsCubit,
+                            child: ReviewPaymentModal(mappedPayment.payment),
+                          ),
+                        );
+                      }
+                    },
                     label: "No",
                     buttonType: ButtonSmallType.outlined,
                     color: foregroundColor,
@@ -68,7 +92,18 @@ class BalanceCardBottomAction extends StatelessWidget {
     );
   }
 
-  bool shouldShowSecondaryActionButton(
+  void _navigateToPaymentsList(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PaymentsPage(
+          paymentsUiState: paymentsUiState,
+        ),
+      ),
+    );
+  }
+
+  bool _shouldShowSecondaryActionButton(
     PaymentsUiState paymentsUiState,
   ) {
     return (paymentsUiState.status == BalanceCardStatus.recentToConfirm ||
@@ -105,7 +140,7 @@ class BalanceCardBottomAction extends StatelessWidget {
   String _getStatusLabel(PaymentsUiState paymentsUiState) {
     switch (paymentsUiState.status) {
       case BalanceCardStatus.allConfirmed:
-        return "${paymentsUiState.paymentsCount} payments received";
+        return "${paymentsUiState.confirmedPaymentsCount} payments received";
       case BalanceCardStatus.recentToConfirm:
         return "1 payment to review";
       case BalanceCardStatus.needsAttention:

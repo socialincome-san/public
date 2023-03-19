@@ -4,7 +4,6 @@ import "package:flutter/material.dart";
 import "package:intl/intl.dart";
 
 class PaymentTile extends StatelessWidget {
-  // final SocialIncomePayment payment;
   final MappedPayment mappedPayment;
 
   const PaymentTile({super.key, required this.mappedPayment});
@@ -27,10 +26,6 @@ class PaymentTile extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               _buildStatusIcon(mappedPayment),
-              /* StatusIconWithText(
-                status: mappedPayment.uiStatus. Status.success,
-                text: "${mappedPayment.payment.currency} ${mappedPayment.payment.amount}",
-              ) */
             ],
           ),
         ),

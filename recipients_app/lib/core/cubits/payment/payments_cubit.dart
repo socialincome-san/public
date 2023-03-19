@@ -115,6 +115,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     List<SocialIncomePayment> payments,
   ) async {
     var unconfirmedPaymentsCount = 0;
+    var confirmedPaymentsCount = 0;
     final List<MappedPayment> mappedPayments = [];
 
     PaymentStatus? previousState;
@@ -132,6 +133,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
           break;
         case PaymentStatus.confirmed:
           paymentUiStatus = PaymentUiStatus.confirmed;
+          confirmedPaymentsCount++;
           break;
         case PaymentStatus.contested:
           paymentUiStatus = PaymentUiStatus.contested;
@@ -169,7 +171,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
         unconfirmedPaymentsCount,
       ),
       payments: reversedMappedPayments,
-      paymentsCount: reversedMappedPayments.length,
+      confirmedPaymentsCount: confirmedPaymentsCount,
       unconfirmedPaymentsCount: unconfirmedPaymentsCount,
       nextPayment: _getNextPaymentData(reversedMappedPayments),
     );
