@@ -1,12 +1,14 @@
 import { EntityCollectionView, useAuthController } from '@camberi/firecms';
 import { Box, Button, ToggleButton, ToggleButtonGroup } from '@mui/material';
-import { RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { recipientSurveys, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
 import { useState } from 'react';
 import { buildRecipientsCollection, buildRecipientsRecentPaymentsCollection } from '../collections';
 import { buildRecipientsCashTransfersCollection } from '../collections/recipients/RecipientsCashTransfers';
 import { PaymentProcessModal } from '../components/PaymentProcessModal';
+import { buildRecipientsSurveysCollection } from '../collections/recipients/RecipientsSurveys';
+import { createPendingSurveyColumn, createSurveyColumn } from '../collections/surveys/Surveys';
 
-type RecipientViewOptions = 'all' | 'cashTransfers' | 'recentPayments';
+type RecipientViewOptions = 'all' | 'cashTransfers' | 'recentPayments' | 'currentSurveys' | 'allSurveys';
 
 export function RecipientsView() {
 	const authController = useAuthController();
@@ -32,6 +34,8 @@ export function RecipientsView() {
 						<ToggleButton value="cashTransfers">Cash Transfers</ToggleButton>
 						<ToggleButton value="recentPayments">Recent Payments</ToggleButton>
 						<ToggleButton value="all">All Recipients</ToggleButton>
+						<ToggleButton value="currentSurveys">Current Surveys</ToggleButton>
+						<ToggleButton value="allSurveys">All Surveys</ToggleButton>
 					</ToggleButtonGroup>
 					<Button variant="text" size="small" onClick={() => setShowDownloadCSVModal(true)}>
 						Payment Process
@@ -61,6 +65,19 @@ export function RecipientsView() {
 							isGlobalAdmin,
 							organisations: authController.extra?.organisations,
 						})}
+						fullPath={RECIPIENT_FIRESTORE_PATH}
+					/>
+				)}
+				{/*// TODO how should have access?*/}
+				{isGlobalAdmin && activeView === 'currentSurveys' && (
+					<EntityCollectionView
+						{...buildRecipientsSurveysCollection([createPendingSurveyColumn(0)])}
+						fullPath={RECIPIENT_FIRESTORE_PATH}
+					/>
+				)}
+				{isGlobalAdmin && activeView === 'allSurveys' && (
+					<EntityCollectionView
+						{...buildRecipientsSurveysCollection(recipientSurveys.map((s) => createSurveyColumn(s.name)))}
 						fullPath={RECIPIENT_FIRESTORE_PATH}
 					/>
 				)}

@@ -1,4 +1,5 @@
 import { EntityReference } from '@camberi/firecms';
+import { Timestamp } from '@google-cloud/firestore';
 import moment from 'moment';
 
 export const RECIPIENT_FIRESTORE_PATH = 'recipients';
@@ -8,6 +9,15 @@ export enum RecipientProgramStatus {
 	Waitlisted = 'waitlisted',
 	Designated = 'designated',
 	Former = 'former',
+}
+
+export enum RecipientMainLanguage {
+	Krio = 'kri',
+	Mende = 'men',
+	Temne = 'tem',
+	Limba = 'lia',
+	English = 'en',
+	Other = 'other',
 }
 
 export type Recipient = {
@@ -26,7 +36,7 @@ export type Recipient = {
 	is_suspended: boolean;
 	insta_handle: string;
 	last_name: string;
-	main_language: string;
+	main_language: RecipientMainLanguage;
 	mobile_money_phone: {
 		phone: number;
 		has_whatsapp: boolean;
@@ -35,7 +45,7 @@ export type Recipient = {
 	om_uid: number;
 	profession: string;
 	progr_status: RecipientProgramStatus;
-	si_start_date: Date; //for NGO disabled
+	si_start_date: Date | Timestamp; //for NGO disabled
 	speaks_english: boolean;
 	test_recipient: boolean;
 	twitter_handle: string;
