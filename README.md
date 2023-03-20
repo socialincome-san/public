@@ -9,9 +9,9 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
 # Code Contributions
 
 Finding a good issue: `↗`
-[Help wanted](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22),
+[Help wanted](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22),
 `↗`
-[Good first issues](https://github.com/socialincome-san/public/contribute),
+[Good first issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22),
 `↗`
 [All issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue)
 
