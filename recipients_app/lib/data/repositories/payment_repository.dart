@@ -39,8 +39,7 @@ class PaymentRepository {
     required SocialIncomePayment payment,
   }) async {
     final updatedPayment = payment.copyWith(
-      status: "confirmed",
-      confirmAt: Timestamp.fromDate(DateTime.now()),
+      status: PaymentStatus.confirmed,
     );
 
     firestore
@@ -57,9 +56,8 @@ class PaymentRepository {
     required String contestReason,
   }) async {
     final updatedPayment = payment.copyWith(
-      status: "contested",
-      contestAt: Timestamp.fromDate(DateTime.now()),
-      contestReason: contestReason,
+      status: PaymentStatus.contested,
+      comments: contestReason,
     );
 
     firestore
