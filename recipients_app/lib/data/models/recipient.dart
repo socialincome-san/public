@@ -202,7 +202,7 @@ class Recipient extends Equatable {
 
     for (final SocialIncomePayment element in payments ?? List.empty()) {
       final amount = element.amount;
-      if (element.status != "confirmed" || amount == null) continue;
+      if (element.status != PaymentStatus.confirmed || amount == null) continue;
 
       final int factor = (element.currency == "SLL") ? 1000 : 1;
       sum += (amount / factor).floor();
