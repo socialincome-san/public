@@ -54,9 +54,8 @@ export const sendSms = async ({
 	const sendSmsResponse: SendSmsResponse = {
 		messageSid: messageSid,
 		messageStatus: messageStatus,
-		messageContent: body
-	}
+		messageContent: body,
+	};
 
 	return sendSmsResponse;
-
 };

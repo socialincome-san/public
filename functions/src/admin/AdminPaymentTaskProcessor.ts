@@ -131,10 +131,10 @@ export class AdminPaymentTaskProcessor {
 						await paymentDocRef.update({
 							message: messageDocRef,
 						});
-					  } catch (error) {
+					} catch (error) {
 						failedMessages += 1;
-					  }
-					
+					}
+
 					newNotificationsSent++;
 				} else {
 					existingNotifications++;
@@ -142,9 +142,9 @@ export class AdminPaymentTaskProcessor {
 			}
 		}
 
-		let failedMessageText = "";
+		let failedMessageText = '';
 		if (failedMessages > 0) {
-			failedMessageText = `(${failedMessages} failed to be stored.)`
+			failedMessageText = `(${failedMessages} failed to be stored.)`;
 		}
 
 		return `Sent ${newNotificationsSent} new payment notifications ${failedMessageText}. (${existingNotifications} existing notifications)`;
