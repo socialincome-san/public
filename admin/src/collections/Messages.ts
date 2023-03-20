@@ -17,23 +17,28 @@ export const messagesCollection = buildAuditedCollection<Message>({
 				sms: 'SMS',
 				email: 'EMAIL',
 			},
+			readOnly: true,
 		},
 		sent_at: {
 			dataType: 'date',
 			name: 'Message Date',
 			mode: 'date',
+			readOnly: true,
 		},
 		content: {
 			dataType: 'string',
 			name: 'Content',
+			readOnly: true,
 		},
 		to: {
 			dataType: 'string',
 			name: 'To',
+			readOnly: true,
 		},
 		status: {
 			dataType: 'string',
 			name: 'Status',
+			readOnly: true,
 		},
 	}),
 });

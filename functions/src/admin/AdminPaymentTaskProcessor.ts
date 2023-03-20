@@ -18,7 +18,7 @@ import {
 	RECIPIENT_FIRESTORE_PATH,
 	SMS,
 } from '../../../shared/src/types';
-import { sendSms } from '../../../shared/src/utils/messaging/sms';
+import { sendSms, SendSmsResponse } from '../../../shared/src/utils/messaging/sms';
 import { TWILIO_SENDER_PHONE, TWILIO_SID, TWILIO_TOKEN } from '../config';
 
 export class AdminPaymentTaskProcessor {
@@ -84,6 +84,7 @@ export class AdminPaymentTaskProcessor {
 	private sendNotifications = async (recipientDocs: QueryDocumentSnapshot<Recipient>[]) => {
 		let newNotificationsSent = 0;
 		let existingNotifications = 0;
+		let failedMessages = 0;
 		const now = moment();
 
 		for (const recipientDoc of recipientDocs) {
@@ -99,7 +100,7 @@ export class AdminPaymentTaskProcessor {
 				const payment: Payment = paymentDocSnap.data() as Payment;
 				if (!payment.message) {
 					const recipient: Recipient = recipientDoc.data();
-					const [messageSid, _messageStatus, messageContent] = await sendSms({
+					const sendSmsResponse: SendSmsResponse = await sendSms({
 						messageRecipientPhone: '+' + recipient.mobile_money_phone.phone,
 						messageContext: {
 							content: 'This is a Test SMS',
@@ -121,22 +122,32 @@ export class AdminPaymentTaskProcessor {
 					const messageDocRef = await messageCollection.add({
 						type: 'sms',
 						sent_at: Timestamp.fromDate(now.toDate()),
-						content: messageContent,
+						content: sendSmsResponse.messageContent,
 						to: '+' + recipient.mobile_money_phone.phone,
 						status: 'SENT',
-						external_id: messageSid,
+						external_id: sendSmsResponse.messageSid,
 					});
-
-					await paymentDocRef.update({
-						message: messageDocRef,
-					});
+					try {
+						await paymentDocRef.update({
+							message: messageDocRef,
+						});
+					  } catch (error) {
+						failedMessages += 1;
+					  }
+					
 					newNotificationsSent++;
 				} else {
 					existingNotifications++;
 				}
 			}
 		}
-		return `Sent ${newNotificationsSent} new payment notifications. (${existingNotifications} existing notifications)`;
+
+		let failedMessageText = "";
+		if (failedMessages > 0) {
+			failedMessageText = `(${failedMessages} failed to be stored.)`
+		}
+
+		return `Sent ${newNotificationsSent} new payment notifications ${failedMessageText}. (${existingNotifications} existing notifications)`;
 	};
 
 	runTask = functions.https.onCall(async (task: AdminPaymentProcessTask, { auth }) => {

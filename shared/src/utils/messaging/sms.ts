@@ -13,6 +13,12 @@ export interface SendSmsProps {
 	};
 }
 
+export interface SendSmsResponse {
+	messageSid: string;
+	messageStatus: string;
+	messageContent: string;
+}
+
 export const sendSms = async ({
 	messageRecipientPhone,
 	messageContext,
@@ -20,7 +26,7 @@ export const sendSms = async ({
 	smsServiceSecret,
 	messageSenderPhone,
 	templateParameter: { language, templatePath, translationNamespace },
-}: SendSmsProps) => {
+}: SendSmsProps): Promise<SendSmsResponse> => {
 	let messageStatus = 'failed';
 	let messageSid = 'unknown';
 
@@ -45,5 +51,12 @@ export const sendSms = async ({
 			messageStatus = message.status;
 		});
 
-	return [messageSid, messageStatus, body];
+	const sendSmsResponse: SendSmsResponse = {
+		messageSid: messageSid,
+		messageStatus: messageStatus,
+		messageContent: body
+	}
+
+	return sendSmsResponse;
+
 };
