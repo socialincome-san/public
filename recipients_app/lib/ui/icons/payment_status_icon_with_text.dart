@@ -33,6 +33,11 @@ class PaymentStatusIconWithText extends StatelessWidget {
         icon = Icons.check;
         textColor = Colors.white;
         break;
+      case PaymentUiStatus.recentToReview:
+        color = AppColors.primaryColor;
+        icon = Icons.question_mark;
+        textColor = Colors.white;
+        break;
       case PaymentUiStatus.contested:
         color = AppColors.redColor;
         icon = Icons.close;

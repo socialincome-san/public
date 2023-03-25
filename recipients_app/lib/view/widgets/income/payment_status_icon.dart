@@ -28,6 +28,7 @@ class PaymentStatusIcon extends StatelessWidget {
         child = null;
         break;
       case PaymentUiStatus.toReview:
+      case PaymentUiStatus.recentToReview:
         backgroundColor = AppColors.yellowColor;
         child = null;
         break;

@@ -36,6 +36,11 @@ class PaymentStatusIcon extends StatelessWidget {
         icon = Icons.question_mark;
         iconColor = isInverted ? AppColors.primaryColor : Colors.white;
         break;
+      case PaymentUiStatus.recentToReview:
+        backgroundColor = isInverted ? Colors.white : AppColors.primaryColor;
+        icon = Icons.question_mark;
+        iconColor = isInverted ? AppColors.primaryColor : Colors.white;
+        break;
       case PaymentUiStatus.onHold:
         backgroundColor = isInverted ? Colors.white : AppColors.yellowColor;
         icon = Icons.warning;

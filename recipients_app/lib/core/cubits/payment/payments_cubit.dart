@@ -128,7 +128,12 @@ class PaymentsCubit extends Cubit<PaymentsState> {
           paymentUiStatus = PaymentUiStatus.toBePaid;
           break;
         case PaymentStatus.paid:
-          paymentUiStatus = PaymentUiStatus.toReview;
+          final isRecent = _isRecent(currentPayment);
+          if (isRecent) {
+            paymentUiStatus = PaymentUiStatus.recentToReview;
+          } else {
+            paymentUiStatus = PaymentUiStatus.toReview;
+          }
           unconfirmedPaymentsCount++;
           break;
         case PaymentStatus.confirmed:
@@ -186,22 +191,13 @@ class PaymentsCubit extends Cubit<PaymentsState> {
         .any((element) => element.uiStatus == PaymentUiStatus.onHold)) {
       balanceCardStatus = BalanceCardStatus.onHold;
     } else if (unconfirmedPaymentsCount == 1 &&
-        _isRecentToConfirm(mappedPayments)) {
-      balanceCardStatus = BalanceCardStatus.recentToConfirm;
+        mappedPayments.any(
+            (element) => element.uiStatus == PaymentUiStatus.recentToReview)) {
+      balanceCardStatus = BalanceCardStatus.recentToReview;
     } else if (unconfirmedPaymentsCount > 0) {
       balanceCardStatus = BalanceCardStatus.needsAttention;
     }
     return balanceCardStatus;
-  }
-
-  bool _isRecentToConfirm(List<MappedPayment> mappedPayments) {
-    final mappedPayment = mappedPayments.firstWhereOrNull(
-      (element) => element.payment.status == PaymentStatus.paid,
-    );
-
-    final isRecent = _isRecent(mappedPayment?.payment);
-
-    return isRecent;
   }
 
   bool _isRecent(SocialIncomePayment? payment) {
