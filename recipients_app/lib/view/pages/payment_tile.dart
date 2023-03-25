@@ -1,5 +1,6 @@
 import "package:app/data/models/models.dart";
 import "package:app/ui/icons/payment_status_icon_with_text.dart";
+import "package:app/view/pages/payment_tile_bottom_action.dart";
 import "package:flutter/material.dart";
 import "package:intl/intl.dart";
 
@@ -13,21 +14,36 @@ class PaymentTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                _formatDate(mappedPayment.payment.paymentAt?.toDate()),
-                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                      color: Colors.black,
-                    ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    _formatDate(mappedPayment.payment.paymentAt?.toDate()),
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                          color: Colors.black,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildStatusIcon(mappedPayment),
+                ],
               ),
-              const SizedBox(height: 8),
-              _buildStatusIcon(mappedPayment),
-            ],
-          ),
+            ),
+            if (mappedPayment.uiStatus == PaymentUiStatus.onHold ||
+                mappedPayment.uiStatus == PaymentUiStatus.toReview ||
+                mappedPayment.uiStatus == PaymentUiStatus.recentToReview) ...[
+              PaymentTileBottomAction(
+                mappedPayment: mappedPayment,
+              )
+            ]
+          ],
         ),
       ),
     );
