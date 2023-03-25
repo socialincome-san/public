@@ -1,6 +1,7 @@
 import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/models/payment/payment.dart";
 import "package:app/ui/configs/configs.dart";
+import "package:app/view/pages/payments_page.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_bottom_action.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_grid.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_header.dart";
@@ -15,49 +16,71 @@ class BalanceCardContainer extends StatelessWidget {
     final paymentsUiState =
         context.watch<PaymentsCubit>().state.paymentsUiState;
 
-    return Card(
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      clipBehavior: Clip.antiAlias,
-      color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Padding(
-            padding: AppSpacings.a16,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                BalanceCardHeader(
-                  daysTo: paymentsUiState?.nextPayment.daysToPayment ?? 0,
-                  amount: paymentsUiState?.nextPayment.amount ?? 0,
-                  balanceCardStatus:
-                      paymentsUiState?.status ?? BalanceCardStatus.allConfirmed,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  "My Payments",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 13.0,
-                    fontWeight: FontWeight.w400,
+    return GestureDetector(
+      onTap: () {
+        if (paymentsUiState != null) {
+          _navigateToPaymentsList(context, paymentsUiState);
+        }
+      },
+      child: Card(
+        margin: EdgeInsets.zero,
+        clipBehavior: Clip.antiAlias,
+        color: Colors.white,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: AppSpacings.a16,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  BalanceCardHeader(
+                    daysTo: paymentsUiState?.nextPayment.daysToPayment ?? 0,
+                    amount: paymentsUiState?.nextPayment.amount ?? 0,
+                    balanceCardStatus: paymentsUiState?.status ??
+                        BalanceCardStatus.allConfirmed,
                   ),
-                ),
-                const SizedBox(height: 8),
-                BalanceCardGrid(
-                  payments: paymentsUiState?.payments ?? [],
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  const Text(
+                    "My Payments",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 13.0,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  BalanceCardGrid(
+                    payments: paymentsUiState?.payments ?? [],
+                  ),
+                ],
+              ),
             ),
-          ),
-          if (paymentsUiState != null) ...[
-            BalanceCardBottomAction(paymentsUiState: paymentsUiState),
+            if (paymentsUiState != null) ...[
+              BalanceCardBottomAction(paymentsUiState: paymentsUiState),
+            ],
           ],
-        ],
+        ),
+      ),
+    );
+  }
+
+  void _navigateToPaymentsList(
+      BuildContext context, PaymentsUiState paymentsUiState) {
+    final paymentsCubit = context.read<PaymentsCubit>();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider.value(
+          value: paymentsCubit,
+          child: PaymentsPage(
+            paymentsUiState: paymentsUiState,
+          ),
+        ),
       ),
     );
   }
