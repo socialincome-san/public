@@ -60,7 +60,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
 
       emit(
         state.copyWith(
-          status: PaymentsStatus.success,
+          status: PaymentsStatus.updated,
           paymentsUiState: paymentUiState,
         ),
       );
@@ -96,7 +96,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
 
       emit(
         state.copyWith(
-          status: PaymentsStatus.success,
+          status: PaymentsStatus.updated,
           paymentsUiState: paymentUiState,
         ),
       );
