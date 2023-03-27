@@ -1,6 +1,5 @@
 import "package:app/data/models/payment/payment_ui_status.dart";
 import "package:app/ui/configs/configs.dart";
-import "package:app/ui/icons/icons.dart";
 import "package:flutter/material.dart";
 
 const statusIconRadius = 10.0;
@@ -20,9 +19,13 @@ class PaymentStatusIcon extends StatelessWidget {
 
     switch (status) {
       case PaymentUiStatus.confirmed:
-        return const StatusIcon(
-          status: Status.success,
+        backgroundColor = AppColors.primaryColor;
+        child = const Icon(
+          size: 14,
+          Icons.check,
+          color: Colors.white,
         );
+        break;
       case PaymentUiStatus.empty:
         backgroundColor = AppColors.backgroundColor;
         child = null;
