@@ -28,7 +28,7 @@ class StatusIcon extends StatelessWidget {
         break;
       case Status.warning:
         backgroundColor = isInverted ? Colors.white : AppColors.yellowColor;
-        icon = Icons.warning;
+        icon = Icons.priority_high_rounded;
         iconColor = isInverted ? AppColors.yellowColor : Colors.white;
         break;
       case Status.error:

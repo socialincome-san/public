@@ -41,7 +41,7 @@ class PaymentStatusIcon extends StatelessWidget {
         break;
       case PaymentUiStatus.onHold:
         backgroundColor = AppColors.yellowColor;
-        icon = Icons.warning;
+        icon = Icons.priority_high_rounded;
         iconColor = Colors.white;
         break;
       case PaymentUiStatus.toBePaid:
