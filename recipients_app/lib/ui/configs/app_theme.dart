@@ -31,7 +31,9 @@ abstract class AppTheme {
       backgroundColor: AppColors.backgroundColor,
       foregroundColor: AppColors.fontColorDark,
       titleTextStyle: AppStyles.headlineLarge.copyWith(
-          color: AppColors.fontColorDark, fontWeight: FontWeight.bold),
+        color: AppColors.fontColorDark,
+        fontWeight: FontWeight.bold,
+      ),
     ),
     iconTheme: const IconThemeData(color: Colors.white),
     outlinedButtonTheme: OutlinedButtonThemeData(

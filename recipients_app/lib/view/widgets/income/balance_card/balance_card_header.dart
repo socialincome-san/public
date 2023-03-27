@@ -16,10 +16,11 @@ class BalanceCardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle dynamicTextStyle = Theme.of(context).textTheme.headlineLarge!.copyWith(
-      fontWeight: FontWeight.bold,
-      color: _getTextColor(),
-    );
+    TextStyle dynamicTextStyle =
+        Theme.of(context).textTheme.headlineLarge!.copyWith(
+              fontWeight: FontWeight.bold,
+              color: _getTextColor(),
+            );
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -55,7 +56,7 @@ class BalanceCardHeader extends StatelessWidget {
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }

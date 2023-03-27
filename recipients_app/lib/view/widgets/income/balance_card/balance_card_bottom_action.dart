@@ -20,7 +20,7 @@ class BalanceCardBottomAction extends StatelessWidget {
   Widget build(BuildContext context) {
     final foregroundColor = _getForegroundColor(paymentsUiState.status);
 
-    var shouldShowSecondaryActionButton = _shouldShowSecondaryActionButton(
+    final shouldShowSecondaryActionButton = _shouldShowSecondaryActionButton(
       paymentsUiState,
     );
 
@@ -40,20 +40,10 @@ class BalanceCardBottomAction extends StatelessWidget {
             Row(
               children: [
                 ButtonSmall(
-                  onPressed: () {
-                    if (shouldShowSecondaryActionButton) {
-                      final MappedPayment? mappedPayment =
-                          paymentsUiState.payments.firstWhereOrNull((element) =>
-                              element.uiStatus == PaymentUiStatus.toReview);
-                      if (mappedPayment != null) {
-                        context
-                            .read<PaymentsCubit>()
-                            .confirmPayment(mappedPayment.payment);
-                      }
-                    } else {
-                      _navigateToPaymentsList(context);
-                    }
-                  },
+                  onPressed: () => _onPressedConfirm(
+                    shouldShowSecondaryActionButton,
+                    context,
+                  ),
                   label: _getPrimaryActionLabel(paymentsUiState),
                   buttonType: ButtonSmallType.outlined,
                   color: foregroundColor,
@@ -62,22 +52,7 @@ class BalanceCardBottomAction extends StatelessWidget {
                 if (shouldShowSecondaryActionButton) ...[
                   const SizedBox(width: 8),
                   ButtonSmall(
-                    onPressed: () {
-                      final MappedPayment? mappedPayment =
-                          paymentsUiState.payments.firstWhereOrNull((element) =>
-                              element.uiStatus == PaymentUiStatus.toReview);
-                      if (mappedPayment != null) {
-                        final paymentsCubit = context.read<PaymentsCubit>();
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          context: context,
-                          builder: (context) => BlocProvider.value(
-                            value: paymentsCubit,
-                            child: ReviewPaymentModal(mappedPayment.payment),
-                          ),
-                        );
-                      }
-                    },
+                    onPressed: () => _onPressedNo(context),
                     label: "No",
                     buttonType: ButtonSmallType.outlined,
                     color: foregroundColor,
@@ -85,11 +60,49 @@ class BalanceCardBottomAction extends StatelessWidget {
                   ),
                 ],
               ],
-            )
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void _onPressedConfirm(
+    bool shouldShowSecondaryActionButton,
+    BuildContext context,
+  ) {
+    if (shouldShowSecondaryActionButton) {
+      final MappedPayment? mappedPayment =
+          paymentsUiState.payments.firstWhereOrNull(
+        (element) =>
+            element.uiStatus == PaymentUiStatus.toReview ||
+            element.uiStatus == PaymentUiStatus.recentToReview,
+      );
+      if (mappedPayment != null) {
+        context.read<PaymentsCubit>().confirmPayment(mappedPayment.payment);
+      }
+    } else {
+      _navigateToPaymentsList(context);
+    }
+  }
+
+  void _onPressedNo(BuildContext context) {
+    final MappedPayment? mappedPayment =
+        paymentsUiState.payments.firstWhereOrNull(
+      (element) => element.uiStatus == PaymentUiStatus.toReview,
+    );
+
+    if (mappedPayment != null) {
+      final paymentsCubit = context.read<PaymentsCubit>();
+      showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) => BlocProvider.value(
+          value: paymentsCubit,
+          child: ReviewPaymentModal(mappedPayment.payment),
+        ),
+      );
+    }
   }
 
   void _navigateToPaymentsList(BuildContext context) {
@@ -147,6 +160,9 @@ class BalanceCardBottomAction extends StatelessWidget {
       case BalanceCardStatus.recentToReview:
         return "Did you receive the last payment?";
       case BalanceCardStatus.needsAttention:
+        if (paymentsUiState.unconfirmedPaymentsCount == 1) {
+          return "You have 1 payment to review. Did you receive it?";
+        }
         return "You have ${paymentsUiState.unconfirmedPaymentsCount} payments to review";
       case BalanceCardStatus.onHold:
         return "You have 2 payments to review in a row";

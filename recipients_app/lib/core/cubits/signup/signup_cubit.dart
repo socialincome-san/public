@@ -96,9 +96,8 @@ class SignupCubit extends Cubit<SignupState> {
     }
   }
 
-  Future<void> resendVerificationCode() async {
-    signupWithPhoneNumber(phoneNumber: state.phoneNumber!);
-  }
+  Future<void> resendVerificationCode() =>
+      signupWithPhoneNumber(phoneNumber: state.phoneNumber!);
 
   void changeToPhoneInput() {
     emit(

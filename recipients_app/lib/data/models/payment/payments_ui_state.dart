@@ -30,14 +30,15 @@ class PaymentsUiState extends Equatable {
   PaymentsUiState copyWith({
     BalanceCardStatus? status,
     List<MappedPayment>? payments,
-    int? paymentsCount,
+    int? confirmedPaymentsCount,
     int? unconfirmedPaymentsCount,
     NextPaymentData? nextPayment,
   }) {
     return PaymentsUiState(
       status: status ?? this.status,
       payments: payments ?? this.payments,
-      confirmedPaymentsCount: paymentsCount ?? this.confirmedPaymentsCount,
+      confirmedPaymentsCount:
+          confirmedPaymentsCount ?? this.confirmedPaymentsCount,
       unconfirmedPaymentsCount:
           unconfirmedPaymentsCount ?? this.unconfirmedPaymentsCount,
       nextPayment: nextPayment ?? this.nextPayment,

@@ -5,7 +5,6 @@ import "package:app/ui/configs/app_colors.dart";
 import "package:app/view/pages/payment_tile.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:intl/intl.dart";
 
 class PaymentsPage extends StatelessWidget {
   const PaymentsPage({super.key});
@@ -37,7 +36,7 @@ class PaymentsPage extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     "${recipient?.mobileMoneyPhone?.phoneNumber ?? ""}",
-                    style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                           color: AppColors.primaryColor,
                           fontWeight: FontWeight.bold,
                         ),
@@ -58,8 +57,8 @@ class PaymentsPage extends StatelessWidget {
                             _calculatePastPayments(paymentsUiState.payments),
                             style: Theme.of(context)
                                 .textTheme
-                                .headlineLarge!
-                                .copyWith(
+                                .headlineLarge
+                                ?.copyWith(
                                   color: AppColors.primaryColor,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -78,8 +77,8 @@ class PaymentsPage extends StatelessWidget {
                             _calculateFuturePayments(paymentsUiState.payments),
                             style: Theme.of(context)
                                 .textTheme
-                                .headlineLarge!
-                                .copyWith(
+                                .headlineLarge
+                                ?.copyWith(
                                   color: AppColors.primaryColor,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -130,29 +129,5 @@ class PaymentsPage extends StatelessWidget {
     }
 
     return "${mappedPayments.first.payment.currency} ${allPayments - currentPayments}";
-  }
-
-  // TODO how should it behave if there's no payment yet?
-  // Currently uses current month
-  String _getNextMonth(DateTime? lastPayment) {
-    if (lastPayment == null) {
-      final now = DateTime.now();
-
-      if (now.day > 15) {
-        return "15. ${DateFormat('MMMM yyyy').format(now.add(const Duration(days: 30)))}";
-      }
-
-      return "15. ${DateFormat('MMMM yyyy').format(now)}";
-    }
-    // get month of last payment
-    final month = lastPayment.month;
-    final nextMonth = month + 1;
-
-    if (nextMonth >= 12) {
-      return "15. January ${lastPayment.year + 1}";
-    } else {
-      final date = DateTime(lastPayment.year, nextMonth, 15);
-      return "${DateFormat('dd. MMMM yyyy').format(date)}";
-    }
   }
 }

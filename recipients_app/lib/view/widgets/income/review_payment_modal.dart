@@ -18,7 +18,7 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
     "Phone stolen",
     "Incorrect amount",
     "Changed phone number",
-    "Other reason"
+    "Other reason",
   ];
 
   @override
@@ -46,13 +46,7 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
                 return Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: ElevatedButton(
-                    onPressed: () {
-                      context.read<PaymentsCubit>().contestPayment(
-                            widget._payment,
-                            reason,
-                          );
-                      Navigator.pop(context);
-                    },
+                    onPressed: () => _onPressedContest(context, reason),
                     child: Text(reason),
                   ),
                 );
@@ -62,5 +56,13 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
         ],
       ),
     );
+  }
+
+  void _onPressedContest(BuildContext context, String reason) {
+    context.read<PaymentsCubit>().contestPayment(
+          widget._payment,
+          reason,
+        );
+    Navigator.pop(context);
   }
 }

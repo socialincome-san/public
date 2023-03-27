@@ -40,7 +40,7 @@ class _DashboardView extends StatelessWidget {
             children: [
               const BalanceCardContainer(),
               const SizedBox(height: 8),
-              if (dashboardItems.isEmpty == true)
+              if (dashboardItems.isEmpty)
                 const Expanded(
                   child: Center(
                     child: Text(
@@ -55,8 +55,7 @@ class _DashboardView extends StatelessWidget {
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 8),
                     itemCount: payments.length,
-                    itemBuilder: (context, index) =>
-                        const SizedBox(height: 8),
+                    itemBuilder: (context, index) => const SizedBox(height: 8),
                   ),
                 ),
             ],

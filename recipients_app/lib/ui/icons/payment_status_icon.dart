@@ -6,12 +6,10 @@ const statusIconRadius = 10.0;
 
 class PaymentStatusIcon extends StatelessWidget {
   final PaymentUiStatus status;
-  final bool isInverted;
 
   const PaymentStatusIcon({
     super.key,
     required this.status,
-    this.isInverted = false,
   });
 
   @override
@@ -22,34 +20,34 @@ class PaymentStatusIcon extends StatelessWidget {
 
     switch (status) {
       case PaymentUiStatus.confirmed:
-        backgroundColor = isInverted ? Colors.white : AppColors.primaryColor;
+        backgroundColor = AppColors.primaryColor;
         icon = Icons.check;
-        iconColor = isInverted ? AppColors.primaryColor : Colors.white;
+        iconColor = Colors.white;
         break;
       case PaymentUiStatus.contested:
-        backgroundColor = isInverted ? Colors.white : AppColors.redColor;
+        backgroundColor = AppColors.redColor;
         icon = Icons.close;
-        iconColor = isInverted ? AppColors.redColor : Colors.white;
+        iconColor = Colors.white;
         break;
       case PaymentUiStatus.toReview:
-        backgroundColor = isInverted ? Colors.white : AppColors.primaryColor;
+        backgroundColor = AppColors.primaryColor;
         icon = Icons.question_mark;
-        iconColor = isInverted ? AppColors.primaryColor : Colors.white;
+        iconColor = Colors.white;
         break;
       case PaymentUiStatus.recentToReview:
-        backgroundColor = isInverted ? Colors.white : AppColors.primaryColor;
+        backgroundColor = AppColors.primaryColor;
         icon = Icons.question_mark;
-        iconColor = isInverted ? AppColors.primaryColor : Colors.white;
+        iconColor = Colors.white;
         break;
       case PaymentUiStatus.onHold:
-        backgroundColor = isInverted ? Colors.white : AppColors.yellowColor;
+        backgroundColor = AppColors.yellowColor;
         icon = Icons.warning;
-        iconColor = isInverted ? AppColors.yellowColor : Colors.white;
+        iconColor = Colors.white;
         break;
       case PaymentUiStatus.toBePaid:
-        backgroundColor = isInverted ? Colors.white : AppColors.lightGrey;
+        backgroundColor = AppColors.lightGrey;
         icon = Icons.info;
-        iconColor = isInverted ? AppColors.lightGrey : Colors.white;
+        iconColor = Colors.white;
         break;
       case PaymentUiStatus.empty:
         throw UnimplementedError();

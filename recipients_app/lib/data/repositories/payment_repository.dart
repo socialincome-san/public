@@ -42,7 +42,7 @@ class PaymentRepository {
       status: PaymentStatus.confirmed,
     );
 
-    firestore
+    await firestore
         .collection(recipientCollection)
         .doc(recipientId)
         .collection(paymentCollection)
@@ -60,7 +60,7 @@ class PaymentRepository {
       comments: contestReason,
     );
 
-    firestore
+    await firestore
         .collection(recipientCollection)
         .doc(recipientId)
         .collection(paymentCollection)

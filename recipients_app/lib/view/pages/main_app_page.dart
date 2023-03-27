@@ -30,7 +30,6 @@ class _MainAppPageState extends State<MainAppPage> {
           label: "Edit",
           buttonType: ButtonSmallType.outlined,
           color: AppColors.fontColorDark,
-          fontColor: AppColors.fontColorDark,
         ),
         const SizedBox(width: 8),
       ],
@@ -42,11 +41,11 @@ class _MainAppPageState extends State<MainAppPage> {
         title: Row(
           children: [
             Visibility(
-              child: editButtonRow,
               visible: false,
               maintainSize: true,
               maintainAnimation: true,
               maintainState: true,
+              child: editButtonRow,
             ),
             Expanded(
               child: Center(
@@ -55,7 +54,7 @@ class _MainAppPageState extends State<MainAppPage> {
                     Text(
                       _getName(recipient),
                       style:
-                          Theme.of(context).textTheme.headlineLarge!.copyWith(
+                          Theme.of(context).textTheme.headlineLarge?.copyWith(
                                 color: AppColors.primaryColor,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -64,7 +63,7 @@ class _MainAppPageState extends State<MainAppPage> {
                     Text(
                       "+${recipient?.mobileMoneyPhone?.phoneNumber}",
                       style:
-                          Theme.of(context).textTheme.headlineSmall!.copyWith(
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
                                 color: AppColors.primaryColor,
                               ),
                     ),

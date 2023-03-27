@@ -17,11 +17,7 @@ class BalanceCardContainer extends StatelessWidget {
         context.watch<PaymentsCubit>().state.paymentsUiState;
 
     return GestureDetector(
-      onTap: () {
-        if (paymentsUiState != null) {
-          _navigateToPaymentsList(context);
-        }
-      },
+      onTap: () => _navigateToPaymentsList(context),
       child: Card(
         margin: EdgeInsets.zero,
         clipBehavior: Clip.antiAlias,
@@ -39,9 +35,9 @@ class BalanceCardContainer extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   BalanceCardHeader(
-                    daysTo: paymentsUiState?.nextPayment.daysToPayment ?? 0,
-                    amount: paymentsUiState?.nextPayment.amount ?? 0,
-                    balanceCardStatus: paymentsUiState?.status ??
+                    daysTo: paymentsUiState.nextPayment.daysToPayment ?? 0,
+                    amount: paymentsUiState.nextPayment.amount ?? 0,
+                    balanceCardStatus: paymentsUiState.status ??
                         BalanceCardStatus.allConfirmed,
                   ),
                   const SizedBox(height: 16),
@@ -55,7 +51,7 @@ class BalanceCardContainer extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   BalanceCardGrid(
-                    payments: paymentsUiState?.payments ?? [],
+                    payments: paymentsUiState.payments ?? [],
                   ),
                 ],
               ),

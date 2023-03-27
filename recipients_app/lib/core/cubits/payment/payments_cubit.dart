@@ -7,6 +7,8 @@ import "package:flutter_bloc/flutter_bloc.dart";
 
 part "payments_state.dart";
 
+const int kMaxReviewDays = 5;
+
 class PaymentsCubit extends Cubit<PaymentsState> {
   final Recipient recipient;
   final PaymentRepository paymentRepository;
@@ -129,11 +131,9 @@ class PaymentsCubit extends Cubit<PaymentsState> {
           break;
         case PaymentStatus.paid:
           final isRecent = _isRecent(currentPayment);
-          if (isRecent) {
-            paymentUiStatus = PaymentUiStatus.recentToReview;
-          } else {
-            paymentUiStatus = PaymentUiStatus.toReview;
-          }
+          paymentUiStatus = isRecent
+              ? PaymentUiStatus.recentToReview
+              : PaymentUiStatus.toReview;
           unconfirmedPaymentsCount++;
           break;
         case PaymentStatus.confirmed:
@@ -192,20 +192,22 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       balanceCardStatus = BalanceCardStatus.onHold;
     } else if (unconfirmedPaymentsCount == 1 &&
         mappedPayments.any(
-            (element) => element.uiStatus == PaymentUiStatus.recentToReview)) {
+          (element) => element.uiStatus == PaymentUiStatus.recentToReview,
+        )) {
       balanceCardStatus = BalanceCardStatus.recentToReview;
     } else if (unconfirmedPaymentsCount > 0) {
       balanceCardStatus = BalanceCardStatus.needsAttention;
     }
+
     return balanceCardStatus;
   }
 
   bool _isRecent(SocialIncomePayment? payment) {
     final paymentDate = payment?.paymentAt?.toDate();
-    final isRecent =
-        ((paymentDate?.difference(DateTime.now()).inDays ?? 0) * -1) < 5;
 
-    return isRecent;
+    // checks if days between payment date and now are less than 5
+    return ((paymentDate?.difference(DateTime.now()).inDays ?? 0) * -1) <
+        kMaxReviewDays;
   }
 
   NextPaymentData _getNextPaymentData(

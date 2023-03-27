@@ -27,7 +27,7 @@ class PaymentTile extends StatelessWidget {
                 children: [
                   Text(
                     _formatDate(mappedPayment.payment.paymentAt?.toDate()),
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                           color: Colors.black,
                         ),
                   ),
@@ -39,8 +39,8 @@ class PaymentTile extends StatelessWidget {
             if (mappedPayment.uiStatus == PaymentUiStatus.onHold ||
                 mappedPayment.uiStatus == PaymentUiStatus.toReview ||
                 mappedPayment.uiStatus == PaymentUiStatus.recentToReview) ...[
-              PaymentTileBottomAction(mappedPayment: mappedPayment)
-            ]
+              PaymentTileBottomAction(mappedPayment: mappedPayment),
+            ],
           ],
         ),
       ),

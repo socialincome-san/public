@@ -81,7 +81,7 @@ class _OtpInputState extends State<OtpInput> {
               decoration: TextDecoration.underline,
             ),
           ),
-        )
+        ),
       ],
     );
   }

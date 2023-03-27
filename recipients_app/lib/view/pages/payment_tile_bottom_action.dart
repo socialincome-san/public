@@ -44,26 +44,28 @@ class PaymentTileBottomAction extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 ButtonSmall(
-                  onPressed: () {
-                    final paymentsCubit = context.read<PaymentsCubit>();
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      context: context,
-                      builder: (context) => BlocProvider.value(
-                        value: paymentsCubit,
-                        child: ReviewPaymentModal(mappedPayment.payment),
-                      ),
-                    );
-                  },
+                  onPressed: () => _onPressedNo(context),
                   label: "No",
                   buttonType: ButtonSmallType.outlined,
                   color: foregroundColor,
                   fontColor: foregroundColor,
                 ),
               ],
-            )
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _onPressedNo(BuildContext context) {
+    final paymentsCubit = context.read<PaymentsCubit>();
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => BlocProvider.value(
+        value: paymentsCubit,
+        child: ReviewPaymentModal(mappedPayment.payment),
       ),
     );
   }

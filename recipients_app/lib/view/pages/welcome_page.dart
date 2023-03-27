@@ -37,7 +37,7 @@ class _WelcomeView extends StatelessWidget {
               Flexible(
                 flex: 3,
                 child: Container(color: AppColors.primaryLightColor),
-              )
+              ),
             ],
           ),
           Column(
