@@ -94,14 +94,13 @@ class BalanceCardBottomAction extends StatelessWidget {
 
   void _navigateToPaymentsList(BuildContext context) {
     final paymentsCubit = context.read<PaymentsCubit>();
+
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => BlocProvider.value(
           value: paymentsCubit,
-          child: PaymentsPage(
-            paymentsUiState: paymentsUiState,
-          ),
+          child: const PaymentsPage(),
         ),
       ),
     );
@@ -146,7 +145,7 @@ class BalanceCardBottomAction extends StatelessWidget {
       case BalanceCardStatus.allConfirmed:
         return "${paymentsUiState.confirmedPaymentsCount} payments received";
       case BalanceCardStatus.recentToReview:
-        return "1 payment to review";
+        return "Did you receive the last payment?";
       case BalanceCardStatus.needsAttention:
         return "You have ${paymentsUiState.unconfirmedPaymentsCount} payments to review";
       case BalanceCardStatus.onHold:

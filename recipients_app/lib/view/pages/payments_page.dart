@@ -1,4 +1,5 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
+import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/models/models.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/view/pages/payment_tile.dart";
@@ -7,19 +8,13 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl/intl.dart";
 
 class PaymentsPage extends StatelessWidget {
-  final PaymentsUiState paymentsUiState;
-
-  const PaymentsPage({
-    super.key,
-    required this.paymentsUiState,
-  });
+  const PaymentsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final lastPayment = paymentsUiState.payments.isNotEmpty
-        ? paymentsUiState.payments.first
-        : null;
     final recipient = context.watch<AuthCubit>().state.recipient;
+    final paymentsUiState =
+        context.watch<PaymentsCubit>().state.paymentsUiState!;
 
     return Scaffold(
       appBar: AppBar(

@@ -19,7 +19,7 @@ class BalanceCardContainer extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (paymentsUiState != null) {
-          _navigateToPaymentsList(context, paymentsUiState);
+          _navigateToPaymentsList(context);
         }
       },
       child: Card(
@@ -69,17 +69,14 @@ class BalanceCardContainer extends StatelessWidget {
     );
   }
 
-  void _navigateToPaymentsList(
-      BuildContext context, PaymentsUiState paymentsUiState) {
+  void _navigateToPaymentsList(BuildContext context) {
     final paymentsCubit = context.read<PaymentsCubit>();
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => BlocProvider.value(
           value: paymentsCubit,
-          child: PaymentsPage(
-            paymentsUiState: paymentsUiState,
-          ),
+          child: const PaymentsPage(),
         ),
       ),
     );

@@ -34,11 +34,9 @@ class PaymentTileBottomAction extends StatelessWidget {
             Row(
               children: [
                 ButtonSmall(
-                  onPressed: () {
-                    context
-                        .read<PaymentsCubit>()
-                        .confirmPayment(mappedPayment.payment);
-                  },
+                  onPressed: () => context
+                      .read<PaymentsCubit>()
+                      .confirmPayment(mappedPayment.payment),
                   label: "Yes",
                   buttonType: ButtonSmallType.outlined,
                   color: foregroundColor,
