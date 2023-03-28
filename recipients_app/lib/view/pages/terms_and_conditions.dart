@@ -42,7 +42,7 @@ class TermsAndConditions extends StatelessWidget {
                 "Improve service performance by use of analytics",
                 Icons.poll,
               ),
-              _IconAndText("Read our privacy policy", Icons.policy)
+              _IconAndText("Read our privacy policy", Icons.policy),
             ],
           ),
           const Spacer(),
@@ -56,7 +56,7 @@ class TermsAndConditions extends StatelessWidget {
               context.read<AccountCubit>().updateRecipient(updated);
             },
             label: "Accept",
-          )
+          ),
         ],
       ),
     );

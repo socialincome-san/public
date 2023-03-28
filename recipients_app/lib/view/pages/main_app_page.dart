@@ -1,8 +1,11 @@
+import "package:app/core/cubits/auth/auth_cubit.dart";
+import "package:app/data/models/recipient.dart";
+import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/view/pages/account_page.dart";
 import "package:app/view/pages/dashboard_page.dart";
-import "package:app/view/pages/impact_measurement_page.dart";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
 class MainAppPage extends StatefulWidget {
   const MainAppPage({super.key});
@@ -12,50 +15,80 @@ class MainAppPage extends StatefulWidget {
 }
 
 class _MainAppPageState extends State<MainAppPage> {
-  int _selectedIndex = 1;
-
-  final List<Map<String, Widget>> _pages = [
-    {"Account": const AccountPage()},
-    {"Income": const DashboardPage()},
-    {"Survey": const ImpactMeasurementPage()},
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: _pages.length,
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          title: Text(
-            _pages.elementAt(_selectedIndex).keys.first,
+    final recipient = context.watch<AuthCubit>().state.recipient;
+
+    final editButtonRow = Row(
+      children: [
+        ButtonSmall(
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const AccountPage(),
+            ),
           ),
+          label: "Edit",
+          buttonType: ButtonSmallType.outlined,
+          color: AppColors.fontColorDark,
         ),
-        body: _pages.elementAt(_selectedIndex).values.first,
-        backgroundColor: AppColors.backgroundColor,
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: (value) {
-            setState(() {
-              _selectedIndex = value;
-            });
-          },
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              label: "Account",
+        const SizedBox(width: 8),
+      ],
+    );
+
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        title: Row(
+          children: [
+            Visibility(
+              visible: false,
+              maintainSize: true,
+              maintainAnimation: true,
+              maintainState: true,
+              child: editButtonRow,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.attach_money),
-              label: "Income",
+            Expanded(
+              child: Center(
+                child: Column(
+                  children: [
+                    Text(
+                      _getName(recipient),
+                      style:
+                          Theme.of(context).textTheme.headlineLarge?.copyWith(
+                                color: AppColors.primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "+${recipient?.mobileMoneyPhone?.phoneNumber}",
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                color: AppColors.primaryColor,
+                              ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.assignment),
-              label: "Survey",
-            ),
+            Visibility(child: editButtonRow),
           ],
         ),
       ),
+      body: const DashboardPage(),
+      backgroundColor: AppColors.backgroundColor,
     );
+  }
+
+  String _getName(Recipient? recipient) {
+    final preferredName = recipient?.preferredName;
+    var name = "";
+    if (preferredName != null && preferredName.isNotEmpty) {
+      name = preferredName;
+    } else {
+      name = recipient?.firstName ?? "";
+    }
+
+    return name;
   }
 }

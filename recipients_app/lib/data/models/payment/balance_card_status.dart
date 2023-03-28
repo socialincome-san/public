@@ -1,6 +1,6 @@
 enum BalanceCardStatus {
   allConfirmed,
-  recentToConfirm,
+  recentToReview,
   needsAttention,
   onHold,
 }

@@ -29,7 +29,7 @@ class PaymentRepository {
       );
     }
 
-    payments.sort((a, b) => b.id.compareTo(a.id));
+    payments.sort((a, b) => a.id.compareTo(b.id));
 
     return payments;
   }
@@ -42,7 +42,7 @@ class PaymentRepository {
       status: PaymentStatus.confirmed,
     );
 
-    firestore
+    await firestore
         .collection(recipientCollection)
         .doc(recipientId)
         .collection(paymentCollection)
@@ -60,7 +60,7 @@ class PaymentRepository {
       comments: contestReason,
     );
 
-    firestore
+    await firestore
         .collection(recipientCollection)
         .doc(recipientId)
         .collection(paymentCollection)

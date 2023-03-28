@@ -7,6 +7,8 @@ import "package:flutter_bloc/flutter_bloc.dart";
 
 part "payments_state.dart";
 
+const int kMaxReviewDays = 5;
+
 class PaymentsCubit extends Cubit<PaymentsState> {
   final Recipient recipient;
   final PaymentRepository paymentRepository;
@@ -22,10 +24,14 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     emit(state.copyWith(status: PaymentsStatus.loading));
 
     try {
+      final payments = await paymentRepository.fetchPayments(
+        recipientId: recipient.userId,
+      );
+
       emit(
         state.copyWith(
           status: PaymentsStatus.success,
-          paymentsUiState: await _mapPaymentsUiState(),
+          paymentsUiState: await _mapPaymentsUiState(payments),
         ),
       );
     } on Exception catch (ex, stackTrace) {
@@ -48,11 +54,15 @@ class PaymentsCubit extends Cubit<PaymentsState> {
         payment: payment,
       );
 
-      final paymentUiState = await _mapPaymentsUiState();
+      final payments = await paymentRepository.fetchPayments(
+        recipientId: recipient.userId,
+      );
+
+      final paymentUiState = await _mapPaymentsUiState(payments);
 
       emit(
         state.copyWith(
-          status: PaymentsStatus.success,
+          status: PaymentsStatus.updated,
           paymentsUiState: paymentUiState,
         ),
       );
@@ -80,11 +90,15 @@ class PaymentsCubit extends Cubit<PaymentsState> {
         contestReason: contestReason,
       );
 
-      final paymentUiState = await _mapPaymentsUiState();
+      final payments = await paymentRepository.fetchPayments(
+        recipientId: recipient.userId,
+      );
+
+      final paymentUiState = await _mapPaymentsUiState(payments);
 
       emit(
         state.copyWith(
-          status: PaymentsStatus.success,
+          status: PaymentsStatus.updated,
           paymentsUiState: paymentUiState,
         ),
       );
@@ -99,12 +113,11 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     }
   }
 
-  Future<PaymentsUiState> _mapPaymentsUiState() async {
-    final payments = await paymentRepository.fetchPayments(
-      recipientId: recipient.userId,
-    );
-
+  Future<PaymentsUiState> _mapPaymentsUiState(
+    List<SocialIncomePayment> payments,
+  ) async {
     var unconfirmedPaymentsCount = 0;
+    var confirmedPaymentsCount = 0;
     final List<MappedPayment> mappedPayments = [];
 
     PaymentStatus? previousState;
@@ -117,11 +130,15 @@ class PaymentsCubit extends Cubit<PaymentsState> {
           paymentUiStatus = PaymentUiStatus.toBePaid;
           break;
         case PaymentStatus.paid:
-          paymentUiStatus = PaymentUiStatus.toReview;
+          final isRecent = _isRecent(currentPayment);
+          paymentUiStatus = isRecent
+              ? PaymentUiStatus.recentToReview
+              : PaymentUiStatus.toReview;
           unconfirmedPaymentsCount++;
           break;
         case PaymentStatus.confirmed:
           paymentUiStatus = PaymentUiStatus.confirmed;
+          confirmedPaymentsCount++;
           break;
         case PaymentStatus.contested:
           paymentUiStatus = PaymentUiStatus.contested;
@@ -135,7 +152,8 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       }
 
       if (previousState == PaymentStatus.paid &&
-          currentPayment.status == PaymentStatus.paid) {
+          currentPayment.status == PaymentStatus.paid &&
+          !_isRecent(currentPayment)) {
         mappedPayments[i - 1] =
             mappedPayments[i - 1].copyWith(uiStatus: PaymentUiStatus.onHold);
         paymentUiStatus = PaymentUiStatus.onHold;
@@ -150,12 +168,17 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       );
     }
 
+    final reversedMappedPayments = mappedPayments.reversed.toList();
+
     return PaymentsUiState(
-      status: _getBalanceCardStatus(mappedPayments, unconfirmedPaymentsCount),
-      payments: mappedPayments,
-      paymentsCount: payments.length,
+      status: _getBalanceCardStatus(
+        reversedMappedPayments,
+        unconfirmedPaymentsCount,
+      ),
+      payments: reversedMappedPayments,
+      confirmedPaymentsCount: confirmedPaymentsCount,
       unconfirmedPaymentsCount: unconfirmedPaymentsCount,
-      nextPayment: _getNextPaymentData(mappedPayments),
+      nextPayment: _getNextPaymentData(reversedMappedPayments),
     );
   }
 
@@ -168,24 +191,23 @@ class PaymentsCubit extends Cubit<PaymentsState> {
         .any((element) => element.uiStatus == PaymentUiStatus.onHold)) {
       balanceCardStatus = BalanceCardStatus.onHold;
     } else if (unconfirmedPaymentsCount == 1 &&
-        _isRecentToConfirm(mappedPayments)) {
-      balanceCardStatus = BalanceCardStatus.recentToConfirm;
+        mappedPayments.any(
+          (element) => element.uiStatus == PaymentUiStatus.recentToReview,
+        )) {
+      balanceCardStatus = BalanceCardStatus.recentToReview;
     } else if (unconfirmedPaymentsCount > 0) {
       balanceCardStatus = BalanceCardStatus.needsAttention;
     }
+
     return balanceCardStatus;
   }
 
-  bool _isRecentToConfirm(List<MappedPayment> mappedPayments) {
-    final mappedPayment = mappedPayments.firstWhereOrNull(
-      (element) => element.payment.status == PaymentStatus.paid,
-    );
+  bool _isRecent(SocialIncomePayment? payment) {
+    final paymentDate = payment?.paymentAt?.toDate();
 
-    final paymentDate = mappedPayment?.payment.paymentAt?.toDate();
-    final isRecent =
-        ((paymentDate?.difference(DateTime.now()).inDays ?? 0) * -1) < 5;
-
-    return isRecent;
+    // checks if days between payment date and now are less than 5
+    return ((paymentDate?.difference(DateTime.now()).inDays ?? 0) * -1) <
+        kMaxReviewDays;
   }
 
   NextPaymentData _getNextPaymentData(
