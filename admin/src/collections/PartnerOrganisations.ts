@@ -10,6 +10,7 @@ export const buildPartnerOrganisationsCollection = ({ isGlobalAdmin = false }: B
 		path: PARTNER_ORGANISATION_FIRESTORE_PATH,
 		icon: 'CorporateFare',
 		description: 'Lists all our partner organisations',
+		hideFromNavigation: !isGlobalAdmin,
 		customId: true,
 		properties: buildProperties<PartnerOrganisation>({
 			name: {

@@ -1,5 +1,5 @@
 import { useSnackbarController } from '@camberi/firecms';
-import { Box, Button, Modal, Tooltip, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Modal, Tooltip, Typography } from '@mui/material';
 import { AdminPaymentProcessTask } from '@socialincome/shared/src/types';
 import { downloadStringAsFile } from '@socialincome/shared/src/utils/html';
 import { getFunctions, httpsCallable } from 'firebase/functions';
@@ -22,6 +22,7 @@ interface PaymentProcessModalProps {
 export function PaymentProcessModal({ isOpen, handleClose }: PaymentProcessModalProps) {
 	const snackbarController = useSnackbarController();
 	const [confirmCreateNewPayments, setConfirmCreateNewPayments] = useState(false);
+	const [isFunctionRunning, setIsFunctionRunning] = useState(false);
 
 	const onClose = () => {
 		setConfirmCreateNewPayments(false);
@@ -33,6 +34,7 @@ export function PaymentProcessModal({ isOpen, handleClose }: PaymentProcessModal
 			getFunctions(),
 			'runAdminPaymentProcessTask'
 		);
+		setIsFunctionRunning(true);
 		runAdminPaymentProcessTask(task)
 			.then((result) => {
 				if (task === AdminPaymentProcessTask.GetRegistrationCSV || task === AdminPaymentProcessTask.GetPaymentCSV) {
@@ -41,55 +43,63 @@ export function PaymentProcessModal({ isOpen, handleClose }: PaymentProcessModal
 				} else {
 					snackbarController.open({ type: 'success', message: result.data });
 				}
+				onClose();
 			})
 			.catch(() => {
 				snackbarController.open({ type: 'error', message: 'Oops, something went wrong.' });
-			});
+			})
+			.finally(() => setIsFunctionRunning(false));
 	};
 
 	return (
 		<Modal open={isOpen} onClose={onClose}>
 			<Box sx={STYLE}>
-				<Box
-					sx={{
-						display: 'flex',
-						flexDirection: 'column',
-						justifyContent: 'space-around',
-						gap: 2,
-					}}
-				>
-					<Typography variant="h5" textAlign="center">
-						Payment Process
-					</Typography>
-					<Button
-						variant="outlined"
-						onClick={() => triggerFirebaseFunction(AdminPaymentProcessTask.GetRegistrationCSV)}
+				{isFunctionRunning ? (
+					<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+						<CircularProgress />
+					</Box>
+				) : (
+					<Box
+						sx={{
+							display: 'flex',
+							flexDirection: 'column',
+							justifyContent: 'space-around',
+							gap: 2,
+						}}
 					>
-						Registration CSV
-					</Button>
-					<Button variant="outlined" onClick={() => triggerFirebaseFunction(AdminPaymentProcessTask.GetPaymentCSV)}>
-						Payments CSV
-					</Button>
-					{!confirmCreateNewPayments && (
-						<Tooltip title="This will create new payments for all active recipients for this month if the payments don't exist yet.">
-							<Button variant="outlined" onClick={() => setConfirmCreateNewPayments(true)}>
-								Create new payments
-							</Button>
-						</Tooltip>
-					)}
-					{confirmCreateNewPayments && (
+						<Typography variant="h5" textAlign="center">
+							Payment Process
+						</Typography>
 						<Button
-							variant="contained"
-							onClick={() => triggerFirebaseFunction(AdminPaymentProcessTask.CreateNewPayments)}
+							variant="outlined"
+							onClick={() => triggerFirebaseFunction(AdminPaymentProcessTask.GetRegistrationCSV)}
 						>
-							Confirm
+							Registration CSV
 						</Button>
-					)}
-					<Button disabled>Notify recipients</Button>
-					<Button variant="outlined" color="error" onClick={onClose}>
-						Close
-					</Button>
-				</Box>
+						<Button variant="outlined" onClick={() => triggerFirebaseFunction(AdminPaymentProcessTask.GetPaymentCSV)}>
+							Payments CSV
+						</Button>
+						{!confirmCreateNewPayments && (
+							<Tooltip title="This will create new payments for all active recipients for this month if the payments don't exist yet.">
+								<Button variant="outlined" onClick={() => setConfirmCreateNewPayments(true)}>
+									Create new payments
+								</Button>
+							</Tooltip>
+						)}
+						{confirmCreateNewPayments && (
+							<Button
+								variant="contained"
+								onClick={() => triggerFirebaseFunction(AdminPaymentProcessTask.CreateNewPayments)}
+							>
+								Confirm
+							</Button>
+						)}
+						<Button disabled>Notify recipients</Button>
+						<Button variant="outlined" color="error" onClick={onClose}>
+							Close
+						</Button>
+					</Box>
+				)}
 			</Box>
 		</Modal>
 	);
