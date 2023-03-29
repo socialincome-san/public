@@ -89,7 +89,8 @@ class BalanceCardBottomAction extends StatelessWidget {
   void _onPressedNo(BuildContext context) {
     final MappedPayment? mappedPayment =
         paymentsUiState.payments.firstWhereOrNull(
-      (element) => element.uiStatus == PaymentUiStatus.toReview,
+      (element) => (element.uiStatus == PaymentUiStatus.toReview ||
+          element.uiStatus == PaymentUiStatus.recentToReview),
     );
 
     if (mappedPayment != null) {
