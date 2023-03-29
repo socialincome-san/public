@@ -24,16 +24,13 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
-      widthFactor: 0.9,
+      widthFactor: 0.95,
       heightFactor: 0.8,
       child: Center(
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-            color: AppColors.backgroundColor,
-            border: Border.all(
-              color: Theme.of(context).primaryColor,
-            ),
+            color: Colors.white,
           ),
           child: Padding(
             padding: AppSpacings.a16,
