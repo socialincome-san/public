@@ -7,9 +7,8 @@ import {
 	useSideEntityController,
 } from '@camberi/firecms';
 import { Chip, Tooltip } from '@mui/material';
-import { toYYYYMMDD } from '@socialincome/shared/src/utils/date';
 import _ from 'lodash';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { Fragment } from 'react';
 import { Recipient, Survey, SurveyStatus, SURVEY_FIRETORE_PATH } from '../../../../shared/src/types';
 import CopyToClipboard from '../../components/CopyToClipboard';
@@ -127,16 +126,17 @@ const surveyPreview = (entity: Entity<Partial<Survey>>, sideEntityController: Si
 };
 
 const surveyDueDateClip = (entity: Entity<Partial<Survey>>) => {
-	// todo discuss logic
-	const color =
-		moment(entity.values.due_date_at).isBefore(moment()) && entity.values.status != SurveyStatus.Completed
-			? 'warning'
-			: 'info';
+	// TODO: discuss logic
+	const dueDate = DateTime.fromJSDate(entity.values.due_date_at as Date);
 
 	return (
 		entity.values.due_date_at && (
-			<Tooltip title={'Due date ' + toYYYYMMDD(entity.values.due_date_at)}>
-				<Chip size={'small'} color={color} label={moment(entity.values.due_date_at).fromNow()} />
+			<Tooltip title={'Due date ' + dueDate.toFormat('yyyy-MM-dd')}>
+				<Chip
+					size={'small'}
+					color={dueDate < DateTime.now() && entity.values.status != SurveyStatus.Completed ? 'warning' : 'info'}
+					label={dueDate.diffNow(['months', 'days']).toHuman({ unitDisplay: 'short' })}
+				/>
 			</Tooltip>
 		)
 	);

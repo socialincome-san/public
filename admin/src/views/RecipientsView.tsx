@@ -4,9 +4,9 @@ import { recipientSurveys, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared
 import { useState } from 'react';
 import { buildRecipientsCollection, buildRecipientsRecentPaymentsCollection } from '../collections';
 import { buildRecipientsCashTransfersCollection } from '../collections/recipients/RecipientsCashTransfers';
-import { PaymentProcessModal } from '../components/PaymentProcessModal';
 import { buildRecipientsSurveysCollection } from '../collections/recipients/RecipientsSurveys';
 import { createPendingSurveyColumn, createSurveyColumn } from '../collections/surveys/Surveys';
+import { PaymentProcessModal } from '../components/PaymentProcessModal';
 
 type RecipientViewOptions = 'all' | 'cashTransfers' | 'recentPayments' | 'currentSurveys' | 'allSurveys';
 
