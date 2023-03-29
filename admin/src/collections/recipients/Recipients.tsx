@@ -82,11 +82,11 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 	let collection: EntityCollection<Partial<Recipient>> = {
 		additionalFields: [PaymentsLeft],
 		inlineEditing: false,
+		defaultSize: 'xs',
 		description: 'Lists of people, who receive a Social Income',
 		group: 'Recipients',
 		icon: 'RememberMeTwoTone',
-		initialSort: ['om_uid', 'asc'],
-		name: 'All Recipients',
+		name: 'Recipients',
 		path: RECIPIENT_FIRESTORE_PATH,
 		singularName: 'Recipient',
 		textSearchEnabled: true,
