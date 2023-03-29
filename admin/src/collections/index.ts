@@ -13,6 +13,6 @@ export { operationalExpensesCollection } from './OperationalExpenses';
 export { buildPartnerOrganisationsCollection } from './PartnerOrganisations';
 export { paymentsCollection } from './Payments';
 export { buildRecipientsCollection } from './recipients/Recipients';
-export { buildRecipientsRecentPaymentsCollection } from './recipients/RecipientsRecentPayments';
+export { buildRecipientsPaymentsCollection } from './recipients/RecipientsPayments';
 export { surveysCollection } from './surveys/Surveys';
 export { usersCollection } from './Users';

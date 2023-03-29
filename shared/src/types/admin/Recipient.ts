@@ -24,7 +24,6 @@ export type Recipient = {
 	birth_date: Date;
 	calling_name: string;
 	communication_mobile_phone: {
-		equals_mobile_money: boolean;
 		phone: number;
 		has_whatsapp: boolean;
 	};
