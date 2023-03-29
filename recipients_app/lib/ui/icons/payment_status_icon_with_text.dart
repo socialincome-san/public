@@ -21,7 +21,7 @@ class PaymentStatusIconWithText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     late Color color;
-    late IconData icon;
+    late IconData? icon;
     late Color textColor;
 
     Color iconColor = this.iconColor;
@@ -33,28 +33,28 @@ class PaymentStatusIconWithText extends StatelessWidget {
         icon = Icons.check;
         textColor = Colors.white;
         break;
-      // blue label, white font, question mark icon
+      // blue label, white font, no icon
       case PaymentUiStatus.recentToReview:
         color = AppColors.primaryColor;
-        icon = Icons.question_mark;
+        icon = null;
         textColor = Colors.white;
         break;
-      // yellow label, dark font, warning icon
+      // yellow label, dark font, no icon
       case PaymentUiStatus.toReview:
         color = AppColors.yellowColor;
-        icon = Icons.priority_high_rounded;
+        icon = null;
         textColor = AppColors.fontColorDark;
         iconColor = AppColors.fontColorDark;
         break;
-      // red label, dark font, close icon
-      case PaymentUiStatus.contested:
+      // red label, dark font, no icon
+      case PaymentUiStatus.onHold:
         color = AppColors.redColor;
-        icon = Icons.close;
+        icon = null;
         textColor = AppColors.fontColorDark;
         iconColor = AppColors.fontColorDark;
         break;
       // red label, dark font, warning icon
-      case PaymentUiStatus.onHold:
+      case PaymentUiStatus.contested:
         color = AppColors.yellowColor;
         icon = Icons.priority_high_rounded;
         textColor = AppColors.fontColorDark;
@@ -86,12 +86,14 @@ class PaymentStatusIconWithText extends StatelessWidget {
               color: textColor,
             ),
           ),
-          const SizedBox(width: 4),
-          Icon(
-            size: 14,
-            icon,
-            color: iconColor,
-          ),
+          if (icon != null) ...[
+            const SizedBox(width: 4),
+            Icon(
+              size: 14,
+              icon,
+              color: iconColor,
+            ),
+          ],
         ],
       ),
     );
