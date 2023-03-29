@@ -38,11 +38,12 @@ class SurveyCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Image(
-                      image: AssetImage("assets/phone.png"),
-                      height: 100,
+                      image: AssetImage("assets/survey-widget.gif"),
+                      height: 134,
                     ),
                   ],
                 ),
+                const SizedBox(height: 4),
                 const Text(
                   "Please take 5 minutes to answer 15 questions and help to improve Social Income",
                   textAlign: TextAlign.center,
@@ -52,6 +53,7 @@ class SurveyCard extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
+                const SizedBox(height: 16),
               ],
             ),
           ),

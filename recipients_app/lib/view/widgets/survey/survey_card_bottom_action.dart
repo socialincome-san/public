@@ -1,10 +1,10 @@
 import "package:app/core/cubits/payment/payments_cubit.dart";
+import "package:app/data/models/payment/payment_ui_status.dart";
 import "package:app/data/models/survey/survey_card_status.dart";
 import "package:app/data/models/survey/survey_ui_state.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/configs.dart";
-import "package:app/ui/icons/status.dart";
-import "package:app/ui/icons/status_icon_with_text.dart";
+import "package:app/ui/icons/payment_status_icon_with_text.dart";
 import "package:app/view/pages/impact_measurement_page.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -46,14 +46,14 @@ class SurveyCardBottomAction extends StatelessWidget {
                 fontColor: foregroundColor,
               ),
             ] else if (surveyUiState.status == SurveyCardStatus.answered) ...[
-              const StatusIconWithText(
-                status: Status.success,
+              const PaymentStatusIconWithText(
+                status: PaymentUiStatus.confirmed,
                 text: "Answered",
                 isInverted: true,
               ),
             ] else if (surveyUiState.status == SurveyCardStatus.missed) ...[
-              const StatusIconWithText(
-                status: Status.error,
+              const PaymentStatusIconWithText(
+                status: PaymentUiStatus.onHold,
                 text: "Missed",
                 isInverted: true,
               ),
