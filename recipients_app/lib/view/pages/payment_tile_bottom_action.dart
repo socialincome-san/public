@@ -60,8 +60,7 @@ class PaymentTileBottomAction extends StatelessWidget {
 
   void _onPressedNo(BuildContext context) {
     final paymentsCubit = context.read<PaymentsCubit>();
-    showModalBottomSheet(
-      isScrollControlled: true,
+    showDialog(
       context: context,
       builder: (context) => BlocProvider.value(
         value: paymentsCubit,

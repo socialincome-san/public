@@ -95,8 +95,7 @@ class BalanceCardBottomAction extends StatelessWidget {
 
     if (mappedPayment != null) {
       final paymentsCubit = context.read<PaymentsCubit>();
-      showModalBottomSheet(
-        isScrollControlled: true,
+      showDialog(
         context: context,
         builder: (context) => BlocProvider.value(
           value: paymentsCubit,
