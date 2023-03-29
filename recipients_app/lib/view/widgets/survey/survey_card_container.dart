@@ -9,6 +9,12 @@ class SurveyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SurveyUiState surveyUiState = const SurveyUiState(
+      status: SurveyCardStatus.firstReminder,
+      daysToDeadline: 10,
+      answeredDate: null,
+    );
+
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
@@ -57,37 +63,7 @@ class SurveyCard extends StatelessWidget {
               ],
             ),
           ),
-          const SurveyCardBottomAction(
-            surveyUiState: SurveyUiState(
-              status: SurveyCardStatus.newSurvey,
-              daysToDeadline: 10,
-            ),
-          ),
-          const SurveyCardBottomAction(
-            surveyUiState: SurveyUiState(
-              status: SurveyCardStatus.stillSomeTime,
-              daysToDeadline: 4,
-            ),
-          ),
-          const SurveyCardBottomAction(
-            surveyUiState: SurveyUiState(
-              status: SurveyCardStatus.closeToDeadline,
-              daysToDeadline: 2,
-            ),
-          ),
-          const SurveyCardBottomAction(
-            surveyUiState: SurveyUiState(
-              status: SurveyCardStatus.missed,
-              daysToDeadline: 0,
-            ),
-          ),
-          SurveyCardBottomAction(
-            surveyUiState: SurveyUiState(
-              status: SurveyCardStatus.answered,
-              daysToDeadline: 0,
-              answeredDate: DateTime.now().add(const Duration(days: -10)),
-            ),
-          ),
+          SurveyCardBottomAction(surveyUiState: surveyUiState),
         ],
       ),
     );
