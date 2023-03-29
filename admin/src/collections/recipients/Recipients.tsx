@@ -1,6 +1,5 @@
 import { AdditionalFieldDelegate, buildProperties } from '@camberi/firecms';
 import { EntityCollection, PropertiesOrBuilders } from '@camberi/firecms/dist/types';
-import { toYYYYMMDD } from '@socialincome/shared/src/utils/date';
 
 import { Chip, Tooltip } from '@mui/material';
 import {
@@ -43,11 +42,13 @@ export const PaymentsLeft: AdditionalFieldDelegate<Partial<Recipient>> = {
 	id: 'payments_left',
 	name: 'Payments Left',
 	Builder: ({ entity }) => {
-		const lastPaymentDate = entity.values.si_start_date ? calcLastPaymentDate(entity.values.si_start_date) : undefined;
+		const lastPaymentDate = entity.values.si_start_date
+			? calcLastPaymentDate(entity.values.si_start_date as Date)
+			: undefined;
 		const paymentsLeft = lastPaymentDate ? calcPaymentsLeft(lastPaymentDate) : undefined;
 		if (paymentsLeft && lastPaymentDate) {
 			return (
-				<Tooltip title={'Last Payment Date ' + toYYYYMMDD(lastPaymentDate)}>
+				<Tooltip title={'Last Payment Date ' + lastPaymentDate.toFormat('yyyy-MM-dd')}>
 					<Chip
 						color={paymentsLeft < 0 ? 'info' : paymentsLeft <= 1 ? 'error' : paymentsLeft <= 3 ? 'warning' : 'success'}
 						label={paymentsLeft < 0 ? 'none' : paymentsLeft + ' payment(s) left'}
@@ -81,11 +82,11 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 	let collection: EntityCollection<Partial<Recipient>> = {
 		additionalFields: [PaymentsLeft],
 		inlineEditing: false,
+		defaultSize: 'xs',
 		description: 'Lists of people, who receive a Social Income',
 		group: 'Recipients',
 		icon: 'RememberMeTwoTone',
-		initialSort: ['om_uid', 'asc'],
-		name: 'All Recipients',
+		name: 'Recipients',
 		path: RECIPIENT_FIRESTORE_PATH,
 		singularName: 'Recipient',
 		textSearchEnabled: true,

@@ -1,6 +1,6 @@
 import { Timestamp } from '@google-cloud/firestore';
 import * as functions from 'firebase-functions';
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { AuthAdmin } from '../../../shared/src/firebase/AuthAdmin';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import {
@@ -31,6 +31,35 @@ export class SurveyManager {
 	}
 
 	/**
+	 * Create all surveys for 1 recipient. TODO trigger this method when a recipient gets selected.
+	 * Checks for existing surveys and ignores them. So, it can be called multiple times without creating duplicates.
+	 */
+	createAllSurveysForRecipient = async (recipient: FirebaseFirestore.QueryDocumentSnapshot<Recipient>) => {
+		if (recipient.data().si_start_date) {
+			return Promise.all(
+				recipientSurveys.map(async (survey) => {
+					const dueDate = DateTime.fromJSDate((recipient.data().si_start_date as Timestamp).toDate()).plus({
+						months: survey.startDateOffsetMonths,
+					});
+					const surveyStatus = dueDate < DateTime.now() ? SurveyStatus.Missed : SurveyStatus.New;
+					await this.createSurvey(
+						recipient.id,
+						survey.questionaire,
+						survey.name,
+						recipient.data().first_name,
+						recipient.data().main_language,
+						surveyStatus,
+						dueDate.toJSDate()
+					);
+				})
+			);
+		} else {
+			console.log('No start date for recipient ${}');
+			return Promise.resolve();
+		}
+	};
+
+	/**
 	 * Batch implementation to create all surveys for all recipients.
 	 * Checks for existing surveys and ignores them. So, it can be called multiple times without creating duplicates.
 	 */
@@ -46,35 +75,6 @@ export class SurveyManager {
 		);
 	});
 
-	/**
-	 * Create all surveys for 1 recipient. TODO trigger this method when a recipient gets selected.
-	 * Checks for existing surveys and ignores them. So, it can be called multiple times without creating duplicates.
-	 */
-	createAllSurveysForRecipient = async (recipient: FirebaseFirestore.QueryDocumentSnapshot<Recipient>) => {
-		if (recipient.data().si_start_date) {
-			return Promise.all(
-				recipientSurveys.map(async (survey) => {
-					const dueDate = moment((recipient.data().si_start_date as Timestamp).toDate()).add(
-						survey.startDateOffsetMonths,
-						'M'
-					);
-					const surveyStatus = dueDate.isBefore(moment()) ? SurveyStatus.Missed : SurveyStatus.New;
-					await this.createSurvey(
-						recipient.id,
-						survey.questionaire,
-						survey.name,
-						recipient.data().first_name,
-						recipient.data().main_language,
-						surveyStatus,
-						dueDate.toDate()
-					);
-				})
-			);
-		} else {
-			console.log('No start date for recipient ${}');
-			return Promise.resolve();
-		}
-	};
 	/**
 	 * First checks if the survey already exists and return without any action if so.
 	 * Otherwise, create a new auth user specifically for this survey.

@@ -2,8 +2,8 @@ import { AdditionalFieldDelegate, buildProperties } from '@camberi/firecms';
 import {
 	CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH,
 	User,
-	USER_FIRESTORE_PATH,
 	UserReferralSource,
+	USER_FIRESTORE_PATH,
 } from '../../../shared/src/types';
 import { CreateDonationCertificatesAction } from '../actions/CreateDonationCertificatesAction';
 import { contributionsCollection } from './Contributions';
