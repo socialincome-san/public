@@ -27,6 +27,7 @@ class PaymentStatusIcon extends StatelessWidget {
         );
         break;
       case PaymentUiStatus.empty:
+      case PaymentUiStatus.toBePaid:
         backgroundColor = AppColors.backgroundColor;
         child = null;
         break;
@@ -37,24 +38,6 @@ class PaymentStatusIcon extends StatelessWidget {
           size: 14,
           Icons.priority_high_rounded,
           color: Colors.black,
-        );
-        break;
-      case PaymentUiStatus.toBePaid:
-        backgroundColor = AppColors.backgroundColor;
-        child = Stack(
-          alignment: AlignmentDirectional.center,
-          children: [
-            Icon(
-              size: 14,
-              Icons.circle,
-              color: AppColors.primaryColor.withAlpha(150),
-            ),
-            const Icon(
-              size: 8,
-              Icons.circle,
-              color: AppColors.primaryColor,
-            ),
-          ],
         );
         break;
       case PaymentUiStatus.recentToReview:

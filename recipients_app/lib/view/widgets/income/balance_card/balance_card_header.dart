@@ -72,7 +72,7 @@ class BalanceCardHeader extends StatelessWidget {
   String _getNextDateText() {
     String daysText;
     if (balanceCardStatus == BalanceCardStatus.onHold) {
-      daysText = "On hold";
+      daysText = "Suspended";
     } else if (daysTo < 0) {
       daysText = "Next month";
     } else if (daysTo == 0) {
