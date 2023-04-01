@@ -31,28 +31,36 @@ class RadioRow<T> extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                  height: 28,
-                  width: 28,
+                  height: 40,
+                  width: 40,
+                  padding: AppSpacings.a8,
                   decoration: BoxDecoration(
-                    border: Border.all(width: 1),
+                    border: Border.all(
+                      width: 1,
+                      color: AppColors.primaryColor,
+                    ),
                     borderRadius: const BorderRadius.all(
                       Radius.circular(100),
                     ),
                   ),
                   child: groupValue == value
-                      ? const Icon(
-                          Icons.circle,
-                          size: 16,
-                          color: AppColors.primaryColor,
-                        )
+                      ? const CircleAvatar(
+                        backgroundColor: AppColors.primaryColor,
+                        radius: 10,
+                        child: Icon(
+                          Icons.check_rounded,
+                          size: 14,
+                          color: Colors.white,
+                        ),
+                      )
                       : null,
                 ),
                 const SizedBox(width: 14),
                 Text(
                   title,
-                  style: AppStyles.bodyMedium.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppStyles.headlineMedium.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryColor),
                 ),
               ],
             ),

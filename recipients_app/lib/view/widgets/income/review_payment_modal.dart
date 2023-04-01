@@ -105,6 +105,7 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
                     Padding(
                       padding: AppSpacings.a16,
                       child: Material(
+                        color: Colors.white,
                         child: Column(
                           children: [
                             ReviewPaymentModalHeader(),
