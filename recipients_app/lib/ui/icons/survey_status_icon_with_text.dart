@@ -2,7 +2,7 @@ import "package:app/data/models/survey/survey_card_status.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 
-const statusIconHeight = 24.0;
+const statusIconHeight = 20.0;
 
 class SurveyStatusIconWithText extends StatelessWidget {
   final SurveyCardStatus status;
@@ -26,7 +26,7 @@ class SurveyStatusIconWithText extends StatelessWidget {
       // white font, check blue icon
       case SurveyCardStatus.answered:
         color = Colors.transparent;
-        icon = Icons.check;
+        icon = Icons.check_rounded;
         textColor = Colors.white;
         iconColor = AppColors.primaryColor;
         iconBackgroundColor = Colors.white;
@@ -34,9 +34,9 @@ class SurveyStatusIconWithText extends StatelessWidget {
       // dark font, close red icon
       case SurveyCardStatus.missed:
         color = Colors.transparent;
-        icon = Icons.close;
+        icon = Icons.close_rounded;
         textColor = AppColors.fontColorDark;
-        iconColor = AppColors.redColor;
+        iconColor = AppColors.fontColorDark;
         iconBackgroundColor = Colors.white;
         break;
       case SurveyCardStatus.closeToDeadline:
@@ -61,14 +61,11 @@ class SurveyStatusIconWithText extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Container(
-            padding: AppSpacings.a4,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              color: iconBackgroundColor,
-            ),
+          CircleAvatar(
+            radius: statusIconHeight / 2,
+            backgroundColor: iconBackgroundColor,
             child: Icon(
-              size: 16,
+              size: 14,
               icon,
               color: iconColor,
             ),

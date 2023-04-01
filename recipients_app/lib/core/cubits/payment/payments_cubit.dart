@@ -8,7 +8,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 part "payments_state.dart";
 
 const int kMaxReviewDays = 10;
-const kOnHoldCandidatesStates = [PaymentStatus.paid, PaymentStatus.contested];
+const kOnHoldCandidateStates = [PaymentStatus.paid, PaymentStatus.contested];
 
 class PaymentsCubit extends Cubit<PaymentsState> {
   final Recipient recipient;
@@ -152,8 +152,8 @@ class PaymentsCubit extends Cubit<PaymentsState> {
           break;
       }
 
-      if (kOnHoldCandidatesStates.contains(previousState) &&
-          kOnHoldCandidatesStates.contains(currentPayment.status) &&
+      if (kOnHoldCandidateStates.contains(previousState) &&
+          kOnHoldCandidateStates.contains(currentPayment.status) &&
           !_isRecent(currentPayment)) {
         mappedPayments[i - 1] =
             mappedPayments[i - 1].copyWith(uiStatus: PaymentUiStatus.onHold);
