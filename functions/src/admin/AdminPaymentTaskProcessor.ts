@@ -1,9 +1,9 @@
 import { QueryDocumentSnapshot } from '@google-cloud/firestore';
 import * as functions from 'firebase-functions';
 import sortBy from 'lodash/sortBy';
-import moment from 'moment';
 
 import { Timestamp } from '@google-cloud/firestore';
+import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import {
 	AdminPaymentProcessTask,
@@ -58,27 +58,47 @@ export class AdminPaymentTaskProcessor {
 	};
 
 	private createNewPayments = async (recipientDocs: QueryDocumentSnapshot<Recipient>[]) => {
-		let paymentsCreated = 0;
-		const now = moment();
+		let [paymentsPaid, paymentsCreated] = [0, 0];
+		const thisMonthPaymentDate = DateTime.fromObject({ day: 15, hour: 0, minute: 0, second: 0, millisecond: 0 });
+		const nextMonthPaymentDate = thisMonthPaymentDate.plus({ months: 1 });
 
 		for (const recipientDoc of recipientDocs) {
 			if (recipientDoc.data().test_recipient) continue;
 
-			const paymentDocRef = this.firestoreAdmin.doc<Payment>(
+			const currentMonthPaymentRef = this.firestoreAdmin.doc<Payment>(
 				`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${PAYMENT_FIRESTORE_PATH}`,
-				now.format('YYYY-MM')
+				thisMonthPaymentDate.toFormat('yyyy-MM')
 			);
-			if (!(await paymentDocRef.get()).exists) {
-				await paymentDocRef.set({
+			const currentMonthPaymentDoc = await currentMonthPaymentRef.get();
+			// Payments are set to paid if they have status set to created or if the document doesn't exist yet
+			if (!currentMonthPaymentDoc.exists || currentMonthPaymentDoc.get('status') === PaymentStatus.Created) {
+				await currentMonthPaymentRef.set({
 					amount: PAYMENT_AMOUNT,
 					currency: PAYMENT_CURRENCY,
-					payment_at: Timestamp.fromDate(now.toDate()),
+					payment_at: Timestamp.fromDate(thisMonthPaymentDate.toJSDate()),
 					status: PaymentStatus.Paid,
+					phone_number: recipientDoc.get('mobile_money_phone.phone'),
+				});
+				paymentsPaid++;
+			}
+
+			const nextMonthPaymentRef = this.firestoreAdmin.doc<Payment>(
+				`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${PAYMENT_FIRESTORE_PATH}`,
+				nextMonthPaymentDate.toFormat('yyyy-MM')
+			);
+			const nextMonthPaymentDoc = await nextMonthPaymentRef.get();
+			const lastPaymentDate = calcLastPaymentDate(recipientDoc.get('si_start_date').toDate());
+			if (!nextMonthPaymentDoc.exists && nextMonthPaymentDate <= lastPaymentDate) {
+				await nextMonthPaymentRef.set({
+					amount: PAYMENT_AMOUNT,
+					currency: PAYMENT_CURRENCY,
+					payment_at: Timestamp.fromDate(nextMonthPaymentDate.toJSDate()),
+					status: PaymentStatus.Created,
 				});
 				paymentsCreated++;
 			}
 		}
-		return `Created ${paymentsCreated} payments`;
+		return `Set ${paymentsPaid} payments to paid and created ${paymentsCreated} payments for next month`;
 	};
 
 	private sendNotifications = async (recipientDocs: QueryDocumentSnapshot<Recipient>[]) => {

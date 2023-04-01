@@ -45,6 +45,7 @@ class UserRepository {
       // TODO: decide if we should keep it in user object in the app at all
       final payments = await PaymentRepository(firestore: firestore)
           .fetchPayments(recipientId: userSnapshot.id);
+
       return Recipient.fromMap(userSnapshot.id, userSnapshot.data())
           .copyWith(payments: payments);
     } else {
@@ -61,7 +62,7 @@ class UserRepository {
     await firebaseAuth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       timeout: const Duration(seconds: 60),
-      verificationCompleted: (credential) async =>
+      verificationCompleted: (credential) =>
           onVerificationCompleted(credential),
       verificationFailed: (ex) => onVerificationFailed(ex),
       codeSent: (verificationId, [forceResendingToken]) =>
@@ -72,12 +73,12 @@ class UserRepository {
     );
   }
 
-  Future<void> signOut() async => firebaseAuth.signOut();
+  Future<void> signOut() => firebaseAuth.signOut();
 
   Future<void> signInWithCredential(PhoneAuthCredential credentials) =>
       firebaseAuth.signInWithCredential(credentials);
 
-  Future<void> updateRecipient(Recipient recipient) async => firestore
+  Future<void> updateRecipient(Recipient recipient) => firestore
       .collection(recipientCollection)
       .doc(recipient.userId)
       .update(recipient.toMap());

@@ -27,10 +27,13 @@ abstract class AppTheme {
       onError: AppColors.fontColorDark,
     ),
     primaryColor: AppColors.primaryColor,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.primaryColor,
-      foregroundColor: AppColors.fontColorLight,
-      titleTextStyle: AppStyles.headlineMedium,
+    appBarTheme: AppBarTheme(
+      backgroundColor: AppColors.backgroundColor,
+      foregroundColor: AppColors.fontColorDark,
+      titleTextStyle: AppStyles.headlineLarge.copyWith(
+        color: AppColors.fontColorDark,
+        fontWeight: FontWeight.bold,
+      ),
     ),
     iconTheme: const IconThemeData(color: Colors.white),
     outlinedButtonTheme: OutlinedButtonThemeData(
@@ -79,6 +82,12 @@ abstract class AppTheme {
       headlineSmall: AppStyles.headlineSmall,
       headlineMedium: AppStyles.headlineMedium,
       headlineLarge: AppStyles.headlineLarge,
+    ),
+    cardTheme: CardTheme(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      ),
     ),
   );
 }

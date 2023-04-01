@@ -24,6 +24,7 @@ class SurveyCubit extends Cubit<SurveyState> {
 
     if (DateTime.now().isBefore(nextSurveyDate)) {
       emit(const SurveyState());
+
       return;
     }
 

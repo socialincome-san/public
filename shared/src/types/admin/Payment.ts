@@ -17,6 +17,7 @@ export type Payment = {
 	currency: 'SLL' | 'SLE';
 	payment_at: Timestamp;
 	status: PaymentStatus;
+	phone_number?: number;
 	comments?: string;
 	message?: EntityReference[];
 };

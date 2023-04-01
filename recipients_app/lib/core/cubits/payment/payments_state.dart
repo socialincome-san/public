@@ -1,6 +1,12 @@
 part of "payments_cubit.dart";
 
-enum PaymentsStatus { initial, loading, success, failure }
+enum PaymentsStatus {
+  initial,
+  loading,
+  success,
+  updated,
+  failure,
+}
 
 class PaymentsState extends Equatable {
   final PaymentsStatus status;
