@@ -74,12 +74,18 @@ class PaymentsPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            _calculateFuturePayments(paymentsUiState.payments),
+                            paymentsUiState.status != BalanceCardStatus.onHold
+                                ? _calculateFuturePayments(
+                                    paymentsUiState.payments)
+                                : "Suspended",
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineLarge
                                 ?.copyWith(
-                                  color: AppColors.primaryColor,
+                                  color: paymentsUiState.status !=
+                                          BalanceCardStatus.onHold
+                                      ? AppColors.primaryColor
+                                      : AppColors.redColor,
                                   fontWeight: FontWeight.bold,
                                 ),
                           ),
