@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import {
 	AdminPaymentProcessTask,
+	calcLastPaymentDate,
 	MESSAGE_FIRESTORE_PATH,
 	Payment,
 	PaymentStatus,
@@ -102,72 +103,61 @@ export class AdminPaymentTaskProcessor {
 	};
 
 	private sendNotifications = async (recipientDocs: QueryDocumentSnapshot<Recipient>[]) => {
-		let newNotificationsSent = 0;
-		let existingNotifications = 0;
-		let failedMessages = 0;
-		const now = moment();
+		let [notificationsSent, existingNotifications, failedMessages] = [0, 0, 0];
+		const now = DateTime.now();
 
 		for (const recipientDoc of recipientDocs) {
 			if (recipientDoc.data().test_recipient) continue;
 
 			const paymentDocRef = this.firestoreAdmin.doc<Payment>(
 				`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${PAYMENT_FIRESTORE_PATH}`,
-				now.format('YYYY-MM')
+				now.toFormat('YYYY-MM')
 			);
 
 			if ((await paymentDocRef.get()).exists) {
 				const paymentDocSnap = await paymentDocRef.get();
-				const payment: Payment = paymentDocSnap.data() as Payment;
+				const payment = paymentDocSnap.data() as Payment;
 				if (!payment.message) {
-					const recipient: Recipient = recipientDoc.data();
-					const sendSmsResponse: SendSmsResponse = await sendSms({
-						messageRecipientPhone: '+' + recipient.mobile_money_phone.phone,
-						messageContext: {
-							content: 'This is a Test SMS',
-						},
-						smsServiceId: TWILIO_SID,
-						smsServiceSecret: TWILIO_TOKEN,
-						messageSenderPhone: TWILIO_SENDER_PHONE,
-						templateParameter: {
-							language: 'de',
-							templatePath: 'sms/freetext.hbs',
-							translationNamespace: 'freetext.json',
-						},
-					});
-
-					const messageCollection = this.firestoreAdmin.collection<SMS>(
-						`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${MESSAGE_FIRESTORE_PATH}`
-					);
-
-					const messageDocRef = await messageCollection.add({
-						type: 'sms',
-						sent_at: Timestamp.fromDate(now.toDate()),
-						content: sendSmsResponse.messageContent,
-						to: '+' + recipient.mobile_money_phone.phone,
-						status: 'SENT',
-						external_id: sendSmsResponse.messageSid,
-					});
 					try {
+						const recipient: Recipient = recipientDoc.data();
+						const sendSmsResponse: SendSmsResponse = await sendSms({
+							messageRecipientPhone: '+' + recipient.mobile_money_phone.phone,
+							messageContext: {
+								content: 'This is a Test SMS',
+							},
+							smsServiceId: TWILIO_SID,
+							smsServiceSecret: TWILIO_TOKEN,
+							messageSenderPhone: TWILIO_SENDER_PHONE,
+							templateParameter: {
+								language: 'de',
+								templatePath: 'sms/freetext.hbs',
+								translationNamespace: 'freetext.json',
+							},
+						});
+						const messageCollection = this.firestoreAdmin.collection<SMS>(
+							`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${MESSAGE_FIRESTORE_PATH}`
+						);
+						const messageDocRef = await messageCollection.add({
+							type: 'sms',
+							sent_at: Timestamp.fromDate(now.toJSDate()),
+							content: sendSmsResponse.messageContent,
+							to: '+' + recipient.mobile_money_phone.phone,
+							status: 'SENT',
+							external_id: sendSmsResponse.messageSid,
+						});
 						await paymentDocRef.update({
 							message: messageDocRef,
 						});
 					} catch (error) {
 						failedMessages += 1;
 					}
-
-					newNotificationsSent++;
+					notificationsSent++;
 				} else {
 					existingNotifications++;
 				}
 			}
 		}
-
-		let failedMessageText = '';
-		if (failedMessages > 0) {
-			failedMessageText = `(${failedMessages} failed to be stored.)`;
-		}
-
-		return `Sent ${newNotificationsSent} new payment notifications ${failedMessageText}. (${existingNotifications} existing notifications)`;
+		return `Sent ${notificationsSent} new payment notifications — ${existingNotifications} already sent, ${failedMessages} failed to send`;
 	};
 
 	runTask = functions.https.onCall(async (task: AdminPaymentProcessTask, { auth }) => {
