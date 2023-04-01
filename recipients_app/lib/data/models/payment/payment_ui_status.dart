@@ -3,7 +3,8 @@ enum PaymentUiStatus {
   contested,
   toReview,
   recentToReview,
-  onHold,
+  onHoldContested,
+  onHoldToReview,
   toBePaid,
   empty,
 }

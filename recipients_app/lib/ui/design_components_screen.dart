@@ -73,8 +73,12 @@ class DesignComponentsScreen extends StatelessWidget {
                   text: "Contested",
                 ),
                 PaymentStatusIconWithText(
-                  status: PaymentUiStatus.onHold,
-                  text: "On Hold",
+                  status: PaymentUiStatus.onHoldContested,
+                  text: "On Hold contested",
+                ),
+                PaymentStatusIconWithText(
+                  status: PaymentUiStatus.onHoldToReview,
+                  text: "On Hold to review",
                 ),
                 PaymentStatusIconWithText(
                   status: PaymentUiStatus.recentToReview,

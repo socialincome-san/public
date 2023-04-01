@@ -65,7 +65,8 @@ class PaymentStatusIcon extends StatelessWidget {
           color: Colors.white,
         );
         break;
-      case PaymentUiStatus.onHold:
+      case PaymentUiStatus.onHoldToReview:
+      case PaymentUiStatus.onHoldContested:
         backgroundColor = AppColors.redColor;
         child = const Icon(
           size: 14,

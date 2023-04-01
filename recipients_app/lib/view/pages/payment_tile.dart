@@ -36,9 +36,9 @@ class PaymentTile extends StatelessWidget {
                 ],
               ),
             ),
-            if (mappedPayment.uiStatus == PaymentUiStatus.onHold ||
-                mappedPayment.uiStatus == PaymentUiStatus.toReview ||
-                mappedPayment.uiStatus == PaymentUiStatus.recentToReview) ...[
+            if (mappedPayment.uiStatus != PaymentUiStatus.confirmed &&
+                mappedPayment.uiStatus != PaymentUiStatus.toBePaid &&
+                mappedPayment.uiStatus != PaymentUiStatus.empty) ...[
               PaymentTileBottomAction(mappedPayment: mappedPayment),
             ],
           ],

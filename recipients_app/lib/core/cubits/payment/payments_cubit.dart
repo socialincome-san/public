@@ -155,9 +155,9 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       if (kOnHoldCandidateStates.contains(previousState) &&
           kOnHoldCandidateStates.contains(currentPayment.status) &&
           !_isRecent(currentPayment)) {
-        mappedPayments[i - 1] =
-            mappedPayments[i - 1].copyWith(uiStatus: PaymentUiStatus.onHold);
-        paymentUiStatus = PaymentUiStatus.onHold;
+        mappedPayments[i - 1] = mappedPayments[i - 1].copyWith(
+            uiStatus: _getOnHoldStatus(mappedPayments[i - 1].payment));
+        paymentUiStatus = _getOnHoldStatus(currentPayment);
       }
 
       previousState = currentPayment.status;
@@ -188,8 +188,9 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     int unconfirmedPaymentsCount,
   ) {
     BalanceCardStatus balanceCardStatus = BalanceCardStatus.allConfirmed;
-    if (mappedPayments
-        .any((element) => element.uiStatus == PaymentUiStatus.onHold)) {
+    if (mappedPayments.any((element) =>
+        element.uiStatus == PaymentUiStatus.onHoldContested ||
+        element.uiStatus == PaymentUiStatus.onHoldToReview)) {
       balanceCardStatus = BalanceCardStatus.onHold;
     } else if (unconfirmedPaymentsCount == 1 &&
         mappedPayments.any(
@@ -239,5 +240,15 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       currency: nextPayment?.payment.currency ?? "SLE",
       daysToPayment: daysToPayment,
     );
+  }
+
+  PaymentUiStatus _getOnHoldStatus(SocialIncomePayment payment) {
+    PaymentUiStatus paymentUiStatus;
+    if (payment.status == PaymentStatus.contested) {
+      paymentUiStatus = PaymentUiStatus.onHoldContested;
+    } else {
+      paymentUiStatus = PaymentUiStatus.onHoldToReview;
+    }
+    return paymentUiStatus;
   }
 }
