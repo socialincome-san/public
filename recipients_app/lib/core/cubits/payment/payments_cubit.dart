@@ -7,7 +7,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 
 part "payments_state.dart";
 
-const int kMaxReviewDays = 5;
+const int kMaxReviewDays = 10;
 
 class PaymentsCubit extends Cubit<PaymentsState> {
   final Recipient recipient;

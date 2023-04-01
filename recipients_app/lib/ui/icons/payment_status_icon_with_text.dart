@@ -21,7 +21,7 @@ class PaymentStatusIconWithText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     late Color color;
-    late IconData? icon;
+    late IconData icon;
     late Color textColor;
 
     Color iconColor = this.iconColor;
@@ -30,30 +30,24 @@ class PaymentStatusIconWithText extends StatelessWidget {
       // blue label, white font, confirm icon
       case PaymentUiStatus.confirmed:
         color = AppColors.primaryColor;
-        icon = Icons.check;
+        icon = Icons.check_rounded;
         textColor = Colors.white;
         break;
-      // blue label, white font, no icon
+      // blue label, white font, question mark icon
       case PaymentUiStatus.recentToReview:
         color = AppColors.primaryColor;
-        icon = null;
+        icon = Icons.question_mark_rounded;
         textColor = Colors.white;
-        break;
-      // yellow label, dark font, no icon
-      case PaymentUiStatus.toReview:
-        color = AppColors.yellowColor;
-        icon = null;
-        textColor = AppColors.fontColorDark;
-        iconColor = AppColors.fontColorDark;
         break;
       // red label, dark font, no icon
       case PaymentUiStatus.onHold:
         color = AppColors.redColor;
-        icon = null;
+        icon = Icons.close_rounded;
         textColor = AppColors.fontColorDark;
         iconColor = AppColors.fontColorDark;
         break;
       // red label, dark font, warning icon
+      case PaymentUiStatus.toReview:
       case PaymentUiStatus.contested:
         color = AppColors.yellowColor;
         icon = Icons.priority_high_rounded;
@@ -86,14 +80,12 @@ class PaymentStatusIconWithText extends StatelessWidget {
               color: textColor,
             ),
           ),
-          if (icon != null) ...[
-            const SizedBox(width: 4),
-            Icon(
-              size: 14,
-              icon,
-              color: iconColor,
-            ),
-          ],
+          const SizedBox(width: 4),
+          Icon(
+            size: 14,
+            icon,
+            color: iconColor,
+          ),
         ],
       ),
     );
