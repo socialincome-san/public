@@ -6,4 +6,4 @@ dist/
 /playwright-report/
 /playwright/.cache/
 
-/.env
+.env
