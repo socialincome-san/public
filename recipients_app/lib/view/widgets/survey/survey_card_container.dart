@@ -16,7 +16,6 @@ class SurveyCard extends StatelessWidget {
     );
 
     return Card(
-      margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       color: Colors.white,
       child: Column(
