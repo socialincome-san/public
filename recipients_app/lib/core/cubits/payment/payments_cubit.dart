@@ -7,7 +7,8 @@ import "package:flutter_bloc/flutter_bloc.dart";
 
 part "payments_state.dart";
 
-const int kMaxReviewDays = 5;
+const int kMaxReviewDays = 10;
+const _kOnHoldCandidateStates = [PaymentStatus.paid, PaymentStatus.contested];
 
 class PaymentsCubit extends Cubit<PaymentsState> {
   final Recipient recipient;
@@ -151,12 +152,12 @@ class PaymentsCubit extends Cubit<PaymentsState> {
           break;
       }
 
-      if (previousState == PaymentStatus.paid &&
-          currentPayment.status == PaymentStatus.paid &&
+      if (_kOnHoldCandidateStates.contains(previousState) &&
+          _kOnHoldCandidateStates.contains(currentPayment.status) &&
           !_isRecent(currentPayment)) {
-        mappedPayments[i - 1] =
-            mappedPayments[i - 1].copyWith(uiStatus: PaymentUiStatus.onHold);
-        paymentUiStatus = PaymentUiStatus.onHold;
+        mappedPayments[i - 1] = mappedPayments[i - 1].copyWith(
+            uiStatus: _getOnHoldStatus(mappedPayments[i - 1].payment));
+        paymentUiStatus = _getOnHoldStatus(currentPayment);
       }
 
       previousState = currentPayment.status;
@@ -179,6 +180,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       confirmedPaymentsCount: confirmedPaymentsCount,
       unconfirmedPaymentsCount: unconfirmedPaymentsCount,
       nextPayment: _getNextPaymentData(reversedMappedPayments),
+      lastPaidPayment: _getLastPaidPayment(reversedMappedPayments),
     );
   }
 
@@ -187,8 +189,9 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     int unconfirmedPaymentsCount,
   ) {
     BalanceCardStatus balanceCardStatus = BalanceCardStatus.allConfirmed;
-    if (mappedPayments
-        .any((element) => element.uiStatus == PaymentUiStatus.onHold)) {
+    if (mappedPayments.any((element) =>
+        element.uiStatus == PaymentUiStatus.onHoldContested ||
+        element.uiStatus == PaymentUiStatus.onHoldToReview)) {
       balanceCardStatus = BalanceCardStatus.onHold;
     } else if (unconfirmedPaymentsCount == 1 &&
         mappedPayments.any(
@@ -238,5 +241,33 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       currency: nextPayment?.payment.currency ?? "SLE",
       daysToPayment: daysToPayment,
     );
+  }
+
+  PaymentUiStatus _getOnHoldStatus(SocialIncomePayment payment) {
+    PaymentUiStatus paymentUiStatus;
+    if (payment.status == PaymentStatus.contested) {
+      paymentUiStatus = PaymentUiStatus.onHoldContested;
+    } else {
+      paymentUiStatus = PaymentUiStatus.onHoldToReview;
+    }
+    return paymentUiStatus;
+  }
+
+  MappedPayment? _getLastPaidPayment(List<MappedPayment> payments) {
+    final MappedPayment? lastPaidPayment;
+    var lastPayment = payments.firstOrNull;
+    if (lastPayment == null) {
+      lastPaidPayment = null;
+    } else if (lastPayment.uiStatus != PaymentUiStatus.toBePaid) {
+      // last payment is different then scheduled next payment (to be paid) so we get it
+      lastPaidPayment = lastPayment;
+    } else if (payments.length > 1) {
+      // last payment is scheduled to be paid, so we are trying to get previous paid
+      lastPaidPayment = payments.elementAt(1);
+    } else {
+      lastPaidPayment = null;
+    }
+
+    return lastPaidPayment;
   }
 }

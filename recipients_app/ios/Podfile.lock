@@ -602,7 +602,7 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.24):
     - BoringSSL-GRPC/Interface (= 0.0.24)
   - BoringSSL-GRPC/Interface (0.0.24)
-  - cloud_firestore (4.3.1):
+  - cloud_firestore (4.4.2):
     - Firebase/Firestore (= 10.3.0)
     - firebase_core
     - Flutter
@@ -618,14 +618,14 @@ PODS:
   - Firebase/Firestore (10.3.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 10.3.0)
-  - firebase_auth (4.2.5):
+  - firebase_auth (4.2.8):
     - Firebase/Auth (= 10.3.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.4.1):
+  - firebase_core (2.6.1):
     - Firebase/CoreOnly (= 10.3.0)
     - Flutter
-  - firebase_crashlytics (3.0.11):
+  - firebase_crashlytics (3.0.14):
     - Firebase/Crashlytics (= 10.3.0)
     - firebase_core
     - Flutter
@@ -819,11 +819,11 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
-  cloud_firestore: 5e5bb98722f66e820bf1aa7b3c98ffc9b2450ffb
+  cloud_firestore: 2d8c9f23063a6f735004f9b52cc743f7d8c8a5ae
   Firebase: f92fc551ead69c94168d36c2b26188263860acd9
-  firebase_auth: 3bab991fe1df91c2f948156e9dee976e01a19ab9
-  firebase_core: bf59c32d2e53814f558efa20840c1902fa2fe461
-  firebase_crashlytics: b19405931669c882e0d08542e69ae9e86633c636
+  firebase_auth: d9f3339f118479cf41bd9b20daacc2bb590f285c
+  firebase_core: 6242f038aefa4582e028536e71312f7e3a41e6bb
+  firebase_crashlytics: 0c975a4052e8a0dc4238b98fff3ac7208a45b20d
   FirebaseAuth: 0e415d29d846c1dce2fb641e46f35e9888d9bec6
   FirebaseCore: 988754646ab3bd4bdcb740f1bfe26b9f6c0d5f2a
   FirebaseCoreInternal: 29b76f784d607df8b2a1259d73c3f04f1210137b
@@ -842,7 +842,7 @@ SPEC CHECKSUMS:
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   PhoneNumberKit: 441e8b26ec88d598e3591de9061eff18f5dd12e8
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
-  url_launcher_ios: ae1517e5e344f5544fb090b079e11f399dfbe4d2
+  url_launcher_ios: fb12c43172927bb5cf75aeebd073f883801f1993
   webview_flutter_wkwebview: b7e70ef1ddded7e69c796c7390ee74180182971f
 
 PODFILE CHECKSUM: 4e8f8b2be68aeea4c0d5beb6ff1e79fface1d048

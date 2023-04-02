@@ -1,6 +1,6 @@
 import "package:app/data/models/payment/mapped_payment.dart";
 import "package:app/data/models/payment/payment_ui_status.dart";
-import "package:app/view/widgets/income/payment_status_icon.dart";
+import "package:app/ui/icons/payment_status_icon.dart";
 import "package:flutter/material.dart";
 
 const kMaxMonths = 36;
@@ -22,6 +22,7 @@ class BalanceCardGrid extends StatelessWidget {
       crossAxisCount: kMonthsPerYear,
       crossAxisSpacing: 6,
       mainAxisSpacing: 6,
+      physics: const NeverScrollableScrollPhysics(),
       children: List.generate(
         kMaxMonths,
         (index) {

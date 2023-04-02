@@ -30,31 +30,26 @@ class PaymentStatusIconWithText extends StatelessWidget {
       // blue label, white font, confirm icon
       case PaymentUiStatus.confirmed:
         color = AppColors.primaryColor;
-        icon = Icons.check;
+        icon = Icons.check_rounded;
         textColor = Colors.white;
         break;
       // blue label, white font, question mark icon
       case PaymentUiStatus.recentToReview:
         color = AppColors.primaryColor;
-        icon = Icons.question_mark;
+        icon = Icons.question_mark_rounded;
         textColor = Colors.white;
+        break;
+      // red label, dark font, close icon
+      case PaymentUiStatus.onHoldContested:
+      case PaymentUiStatus.onHoldToReview:
+        color = AppColors.redColor;
+        icon = Icons.close_rounded;
+        textColor = AppColors.fontColorDark;
+        iconColor = AppColors.fontColorDark;
         break;
       // yellow label, dark font, warning icon
       case PaymentUiStatus.toReview:
-        color = AppColors.yellowColor;
-        icon = Icons.priority_high_rounded;
-        textColor = AppColors.fontColorDark;
-        iconColor = AppColors.fontColorDark;
-        break;
-      // red label, dark font, close icon
       case PaymentUiStatus.contested:
-        color = AppColors.redColor;
-        icon = Icons.close;
-        textColor = AppColors.fontColorDark;
-        iconColor = AppColors.fontColorDark;
-        break;
-      // red label, dark font, warning icon
-      case PaymentUiStatus.onHold:
         color = AppColors.yellowColor;
         icon = Icons.priority_high_rounded;
         textColor = AppColors.fontColorDark;
