@@ -17,6 +17,8 @@ class PaymentTileBottomAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final foregroundColor = _getForegroundColor(mappedPayment.uiStatus);
+    final isContested = mappedPayment.uiStatus == PaymentUiStatus.contested ||
+        mappedPayment.uiStatus == PaymentUiStatus.onHoldContested;
 
     return Container(
       color: _getBackgroundColor(mappedPayment.uiStatus),
@@ -27,7 +29,9 @@ class PaymentTileBottomAction extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                "Did you get your Social Income?",
+                isContested
+                    ? "Currently under investigation"
+                    : "Did you get your Social Income?",
                 style: TextStyle(color: foregroundColor),
               ),
             ),
@@ -37,19 +41,21 @@ class PaymentTileBottomAction extends StatelessWidget {
                   onPressed: () => context
                       .read<PaymentsCubit>()
                       .confirmPayment(mappedPayment.payment),
-                  label: "Yes",
+                  label: isContested ? "Resolved" : "Yes",
                   buttonType: ButtonSmallType.outlined,
                   color: foregroundColor,
                   fontColor: foregroundColor,
                 ),
-                const SizedBox(width: 8),
-                ButtonSmall(
-                  onPressed: () => _onPressedNo(context),
-                  label: "No",
-                  buttonType: ButtonSmallType.outlined,
-                  color: foregroundColor,
-                  fontColor: foregroundColor,
-                ),
+                if (!isContested) ...[
+                  const SizedBox(width: 8),
+                  ButtonSmall(
+                    onPressed: () => _onPressedNo(context),
+                    label: "No",
+                    buttonType: ButtonSmallType.outlined,
+                    color: foregroundColor,
+                    fontColor: foregroundColor,
+                  ),
+                ],
               ],
             ),
           ],
@@ -71,9 +77,11 @@ class PaymentTileBottomAction extends StatelessWidget {
 
   Color _getBackgroundColor(PaymentUiStatus status) {
     switch (status) {
-      case PaymentUiStatus.onHold:
+      case PaymentUiStatus.onHoldContested:
+      case PaymentUiStatus.onHoldToReview:
         return AppColors.redColor;
       case PaymentUiStatus.toReview:
+      case PaymentUiStatus.contested:
         return AppColors.yellowColor;
       default:
         return AppColors.primaryColor;
@@ -82,9 +90,11 @@ class PaymentTileBottomAction extends StatelessWidget {
 
   Color _getForegroundColor(PaymentUiStatus status) {
     switch (status) {
-      case PaymentUiStatus.onHold:
+      case PaymentUiStatus.onHoldContested:
+      case PaymentUiStatus.onHoldToReview:
         return AppColors.fontColorDark;
       case PaymentUiStatus.toReview:
+      case PaymentUiStatus.contested:
         return AppColors.fontColorDark;
       default:
         return Colors.white;

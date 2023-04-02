@@ -11,38 +11,35 @@ class PaymentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    _formatDate(mappedPayment.payment.paymentAt?.toDate()),
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: Colors.black,
-                        ),
-                  ),
-                  const SizedBox(height: 8),
-                  _buildStatusIcon(mappedPayment),
-                ],
-              ),
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  _formatDate(mappedPayment.payment.paymentAt?.toDate()),
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        color: Colors.black,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                _buildStatusIcon(mappedPayment),
+              ],
             ),
-            if (mappedPayment.uiStatus == PaymentUiStatus.onHold ||
-                mappedPayment.uiStatus == PaymentUiStatus.toReview ||
-                mappedPayment.uiStatus == PaymentUiStatus.recentToReview) ...[
-              PaymentTileBottomAction(mappedPayment: mappedPayment),
-            ],
+          ),
+          if (mappedPayment.uiStatus != PaymentUiStatus.confirmed &&
+              mappedPayment.uiStatus != PaymentUiStatus.toBePaid &&
+              mappedPayment.uiStatus != PaymentUiStatus.empty) ...[
+            PaymentTileBottomAction(mappedPayment: mappedPayment),
           ],
-        ),
+        ],
       ),
     );
   }

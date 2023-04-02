@@ -22,6 +22,7 @@ class BalanceCardGrid extends StatelessWidget {
       crossAxisCount: kMonthsPerYear,
       crossAxisSpacing: 6,
       mainAxisSpacing: 6,
+      physics: const NeverScrollableScrollPhysics(),
       children: List.generate(
         kMaxMonths,
         (index) {

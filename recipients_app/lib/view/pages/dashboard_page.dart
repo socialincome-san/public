@@ -35,17 +35,20 @@ class _DashboardView extends StatelessWidget {
         final dashboardItems = [const SurveyCard()];
 
         return Padding(
-          padding: AppSpacings.a16,
+          padding: AppSpacings.h8,
           child: Column(
             children: [
               const BalanceCardContainer(),
               const SizedBox(height: 8),
               if (dashboardItems.isEmpty)
-                const Expanded(
-                  child: Center(
-                    child: Text(
-                      "You are up to date.\nNo news today.",
-                      textAlign: TextAlign.center,
+                const Padding(
+                  padding: AppSpacings.a8,
+                  child: Expanded(
+                    child: Center(
+                      child: Text(
+                        "You are up to date.\nNo news today.",
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 )

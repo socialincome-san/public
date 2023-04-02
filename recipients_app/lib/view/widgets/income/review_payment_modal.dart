@@ -4,7 +4,7 @@ import "package:app/ui/configs/configs.dart";
 import "package:app/ui/inputs/input_text_area.dart";
 import "package:app/view/widgets/income/review_payment_bottom_action.dart";
 import "package:app/view/widgets/income/review_payment_header.dart";
-import 'package:app/ui/inputs/radio_row.dart';
+import "package:app/ui/inputs/radio_row.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
