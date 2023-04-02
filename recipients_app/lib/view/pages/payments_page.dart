@@ -1,7 +1,7 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/models/models.dart";
-import "package:app/ui/configs/app_colors.dart";
+import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/payment_tile.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -99,13 +99,16 @@ class PaymentsPage extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Expanded(
-            child: ListView.builder(
-              itemCount: paymentsUiState.payments.length,
-              itemBuilder: (context, index) {
-                return PaymentTile(
-                  mappedPayment: paymentsUiState.payments[index],
-                );
-              },
+            child: Padding(
+              padding: AppSpacings.h8,
+              child: ListView.builder(
+                itemCount: paymentsUiState.payments.length,
+                itemBuilder: (context, index) {
+                  return PaymentTile(
+                    mappedPayment: paymentsUiState.payments[index],
+                  );
+                },
+              ),
             ),
           ),
         ],
