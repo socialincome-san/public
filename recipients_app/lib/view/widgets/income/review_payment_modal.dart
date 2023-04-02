@@ -23,37 +23,71 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: MediaQuery.of(context).viewInsets,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: 24, left: 8, right: 8),
-              child: Text(
-                "A payment has not reached you. What happened?",
-                textScaleFactor: 1.3,
-              ),
-            ),
+    return FractionallySizedBox(
+      widthFactor: 0.95,
+      heightFactor: 0.8,
+      child: Center(
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+            color: Colors.white,
           ),
-          Padding(
-            padding: AppSpacings.v16,
+          child: Padding(
+            padding: AppSpacings.a16,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: _contestReasons.map((String reason) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: ElevatedButton(
-                    onPressed: () => _onPressedContest(context, reason),
-                    child: Text(reason),
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Contest payment"),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const CircleAvatar(
+                        radius: 14,
+                        backgroundColor: AppColors.lightGrey,
+                        child: Icon(
+                          size: 18,
+                          Icons.close,
+                          color: AppColors.fontColorDark,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 24),
+                    child: Text(
+                      "A payment has not reached you. What happened?",
+                      textAlign: TextAlign.center,
+                      style: AppStyles.headlineLarge
+                          .copyWith(color: AppColors.primaryColor),
+                    ),
                   ),
-                );
-              }).toList(),
+                ),
+                Padding(
+                  padding: AppSpacings.v16,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: _contestReasons.map((String reason) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: ElevatedButton(
+                          onPressed: () => _onPressedContest(context, reason),
+                          child: Text(reason),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
