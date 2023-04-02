@@ -8,7 +8,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 part "payments_state.dart";
 
 const int kMaxReviewDays = 10;
-const kOnHoldCandidateStates = [PaymentStatus.paid, PaymentStatus.contested];
+const _kOnHoldCandidateStates = [PaymentStatus.paid, PaymentStatus.contested];
 
 class PaymentsCubit extends Cubit<PaymentsState> {
   final Recipient recipient;
@@ -152,8 +152,8 @@ class PaymentsCubit extends Cubit<PaymentsState> {
           break;
       }
 
-      if (kOnHoldCandidateStates.contains(previousState) &&
-          kOnHoldCandidateStates.contains(currentPayment.status) &&
+      if (_kOnHoldCandidateStates.contains(previousState) &&
+          _kOnHoldCandidateStates.contains(currentPayment.status) &&
           !_isRecent(currentPayment)) {
         mappedPayments[i - 1] = mappedPayments[i - 1].copyWith(
             uiStatus: _getOnHoldStatus(mappedPayments[i - 1].payment));
@@ -180,6 +180,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       confirmedPaymentsCount: confirmedPaymentsCount,
       unconfirmedPaymentsCount: unconfirmedPaymentsCount,
       nextPayment: _getNextPaymentData(reversedMappedPayments),
+      lastPaidPayment: _getLastPaidPayment(reversedMappedPayments),
     );
   }
 
@@ -250,5 +251,23 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       paymentUiStatus = PaymentUiStatus.onHoldToReview;
     }
     return paymentUiStatus;
+  }
+
+  MappedPayment? _getLastPaidPayment(List<MappedPayment> payments) {
+    final MappedPayment? lastPaidPayment;
+    var lastPayment = payments.firstOrNull;
+    if (lastPayment == null) {
+      lastPaidPayment = null;
+    } else if (lastPayment.uiStatus != PaymentUiStatus.toBePaid) {
+      // last payment is different then scheduled next payment (to be paid) so we get it
+      lastPaidPayment = lastPayment;
+    } else if (payments.length > 1) {
+      // last payment is scheduled to be paid, so we are trying to get previous paid
+      lastPaidPayment = payments.elementAt(1);
+    } else {
+      lastPaidPayment = null;
+    }
+
+    return lastPaidPayment;
   }
 }

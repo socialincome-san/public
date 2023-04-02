@@ -7,6 +7,7 @@ class PaymentsUiState extends Equatable {
   final int confirmedPaymentsCount;
   final int unconfirmedPaymentsCount;
   final NextPaymentData nextPayment;
+  final MappedPayment? lastPaidPayment;
 
   const PaymentsUiState({
     required this.status,
@@ -14,6 +15,7 @@ class PaymentsUiState extends Equatable {
     required this.confirmedPaymentsCount,
     required this.unconfirmedPaymentsCount,
     required this.nextPayment,
+    this.lastPaidPayment = null,
   });
 
   @override
@@ -24,6 +26,7 @@ class PaymentsUiState extends Equatable {
       confirmedPaymentsCount,
       unconfirmedPaymentsCount,
       nextPayment,
+      lastPaidPayment,
     ];
   }
 
@@ -33,6 +36,7 @@ class PaymentsUiState extends Equatable {
     int? confirmedPaymentsCount,
     int? unconfirmedPaymentsCount,
     NextPaymentData? nextPayment,
+    MappedPayment? lastPaidPayment,
   }) {
     return PaymentsUiState(
       status: status ?? this.status,
@@ -42,6 +46,7 @@ class PaymentsUiState extends Equatable {
       unconfirmedPaymentsCount:
           unconfirmedPaymentsCount ?? this.unconfirmedPaymentsCount,
       nextPayment: nextPayment ?? this.nextPayment,
+      lastPaidPayment: lastPaidPayment ?? this.lastPaidPayment,
     );
   }
 }
