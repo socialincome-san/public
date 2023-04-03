@@ -4,6 +4,14 @@ import "package:app/view/pages/payment_tile_bottom_action.dart";
 import "package:flutter/material.dart";
 import "package:intl/intl.dart";
 
+const _reviewUiStatuses = [
+  PaymentUiStatus.contested,
+  PaymentUiStatus.onHoldContested,
+  PaymentUiStatus.onHoldToReview,
+  PaymentUiStatus.toReview,
+  PaymentUiStatus.recentToReview,
+];
+
 class PaymentTile extends StatelessWidget {
   final MappedPayment mappedPayment;
 
@@ -25,7 +33,7 @@ class PaymentTile extends StatelessWidget {
               children: [
                 Text(
                   _formatDate(mappedPayment.payment.paymentAt?.toDate()),
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.black,
                       ),
                 ),
@@ -34,9 +42,7 @@ class PaymentTile extends StatelessWidget {
               ],
             ),
           ),
-          if (mappedPayment.uiStatus != PaymentUiStatus.confirmed &&
-              mappedPayment.uiStatus != PaymentUiStatus.toBePaid &&
-              mappedPayment.uiStatus != PaymentUiStatus.empty) ...[
+          if (_reviewUiStatuses.contains(mappedPayment.uiStatus)) ...[
             PaymentTileBottomAction(mappedPayment: mappedPayment),
           ],
         ],
@@ -46,7 +52,20 @@ class PaymentTile extends StatelessWidget {
 
   String _formatDate(DateTime? dateTime) {
     if (dateTime == null) return "";
-    return DateFormat("MMMM yyyy").format(dateTime);
+
+    String dateFormat;
+    String formattedDate = "";
+    if (mappedPayment.uiStatus == PaymentUiStatus.toBePaid) {
+      dateFormat = "dd MMMM yyyy";
+      formattedDate = "Next payment ";
+    } else {
+      dateFormat = "MMMM yyyy";
+    }
+    if (_reviewUiStatuses.contains(mappedPayment.uiStatus)) {
+      formattedDate = "Review ";
+    }
+    formattedDate += "${DateFormat(dateFormat).format(dateTime)}";
+    return formattedDate;
   }
 
   Widget _buildStatusIcon(MappedPayment mappedPayment) {
