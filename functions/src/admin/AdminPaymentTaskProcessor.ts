@@ -4,6 +4,7 @@ import sortBy from 'lodash/sortBy';
 
 import { Timestamp } from '@google-cloud/firestore';
 import { DateTime } from 'luxon';
+import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import {
 	AdminPaymentProcessTask,
@@ -19,7 +20,7 @@ import {
 	RECIPIENT_FIRESTORE_PATH,
 	SMS,
 } from '../../../shared/src/types';
-import { sendSms, SendSmsResponse } from '../../../shared/src/utils/messaging/sms';
+import { sendSms } from '../../../shared/src/utils/messaging/sms';
 import { TWILIO_SENDER_PHONE, TWILIO_SID, TWILIO_TOKEN } from '../config';
 
 export class AdminPaymentTaskProcessor {
@@ -111,7 +112,7 @@ export class AdminPaymentTaskProcessor {
 
 			const paymentDocRef = this.firestoreAdmin.doc<Payment>(
 				`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${PAYMENT_FIRESTORE_PATH}`,
-				now.toFormat('YYYY-MM')
+				now.toFormat('yyyy-MM')
 			);
 
 			if ((await paymentDocRef.get()).exists) {
@@ -120,41 +121,32 @@ export class AdminPaymentTaskProcessor {
 				if (!payment.message) {
 					try {
 						const recipient: Recipient = recipientDoc.data();
-						const sendSmsResponse: SendSmsResponse = await sendSms({
-							messageRecipientPhone: '+' + recipient.mobile_money_phone.phone,
-							messageContext: {
-								content: 'This is a Test SMS',
-							},
-							smsServiceId: TWILIO_SID,
-							smsServiceSecret: TWILIO_TOKEN,
-							messageSenderPhone: TWILIO_SENDER_PHONE,
-							templateParameter: {
-								language: 'de',
-								templatePath: 'sms/freetext.hbs',
-								translationNamespace: 'freetext.json',
+						const message: MessageInstance = await sendSms({
+							from: TWILIO_SENDER_PHONE,
+							to: `+${recipient.mobile_money_phone.phone}`,
+							twilioConfig: { sid: TWILIO_SID, token: TWILIO_TOKEN },
+							templateProps: {
+								hbsTemplatePath: 'sms/freetext.hbs',
+								context: {
+									content: 'You should have received a payment by Social Income. If you have not, please contact us.',
+								},
 							},
 						});
 						const messageCollection = this.firestoreAdmin.collection<SMS>(
 							`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${MESSAGE_FIRESTORE_PATH}`
 						);
-						const messageDocRef = await messageCollection.add({
-							type: 'sms',
-							sent_at: Timestamp.fromDate(now.toJSDate()),
-							content: sendSmsResponse.messageContent,
-							to: '+' + recipient.mobile_money_phone.phone,
-							status: 'SENT',
-							external_id: sendSmsResponse.messageSid,
-						});
-						await paymentDocRef.update({
-							message: messageDocRef,
-						});
+						const messageDocRef = await messageCollection.add({ type: 'sms', ...message.toJSON() });
+						await paymentDocRef.update({ message: messageDocRef });
 					} catch (error) {
+						console.error(error);
 						failedMessages += 1;
 					}
 					notificationsSent++;
 				} else {
 					existingNotifications++;
 				}
+			} else {
+				console.log("Payment doesn't exist", paymentDocRef.path);
 			}
 		}
 		return `Sent ${notificationsSent} new payment notifications — ${existingNotifications} already sent, ${failedMessages} failed to send`;

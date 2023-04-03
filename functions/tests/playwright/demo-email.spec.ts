@@ -1,9 +1,10 @@
 import { expect, test } from '@playwright/test';
+import { LocaleLanguage } from '../../../shared/src/types/admin/Language';
 import { renderEmailTemplate } from '../../../shared/src/utils/templates';
 
 test('test rendering demo email', async ({ page }) => {
 	const html = await renderEmailTemplate({
-		language: 'de',
+		language: LocaleLanguage.German,
 		translationNamespace: 'email-demo',
 		hbsTemplatePath: 'email/demo.hbs',
 		context: { name: 'John', amount: 100, currency: 'EUR' },
