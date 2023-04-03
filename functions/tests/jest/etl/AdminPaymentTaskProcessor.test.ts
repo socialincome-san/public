@@ -107,20 +107,21 @@ describe('AdminPaymentTaskProcessor', () => {
 			expect(paymentDoc.exists).toBeTruthy();
 			const payment = paymentDoc.data() as Payment;
 			expect(payment.amount).toEqual(500);
-			expect(DateTime.fromJSDate(payment.payment_at.toDate()).diff(DateTime.now(), 'seconds').seconds).toBeLessThan(5);
+			expect(DateTime.fromJSDate(payment.payment_at.toDate())).toEqual(thisMonthPaymentDate);
 			expect(payment.status).toEqual(PaymentStatus.Paid);
 			expect(payment.currency).toEqual('SLE');
 
+			const nextMonthPaymentDate = thisMonthPaymentDate.plus({ month: 1 });
 			const nextPaymentDoc = await firestoreAdmin
 				.doc<Payment>(
 					`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${PAYMENT_FIRESTORE_PATH}`,
-					thisMonthPaymentDate.plus({ month: 1 }).toFormat('yyyy-MM')
+					nextMonthPaymentDate.toFormat('yyyy-MM')
 				)
 				.get();
 			expect(nextPaymentDoc.exists).toBeTruthy();
 			const nextPayment = nextPaymentDoc.data() as Payment;
 			expect(nextPayment.amount).toEqual(500);
-			expect(DateTime.fromJSDate(payment.payment_at.toDate()).diff(DateTime.now(), 'seconds').seconds).toBeLessThan(5);
+			expect(DateTime.fromJSDate(nextPayment.payment_at.toDate())).toEqual(nextMonthPaymentDate);
 			expect(nextPayment.status).toEqual(PaymentStatus.Created);
 			expect(nextPayment.currency).toEqual('SLE');
 		}
