@@ -22,6 +22,7 @@ export * from './admin/Contribution';
 export * from './admin/ContributorOrganisation';
 export * from './admin/DonationCertificate';
 export * from './admin/ExchangeRates';
+export * from './admin/Message';
 export * from './admin/NewsletterSubscriber';
 export * from './admin/OperationalExpense';
 export * from './admin/PartnerOrganisation';

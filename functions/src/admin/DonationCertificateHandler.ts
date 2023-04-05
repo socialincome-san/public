@@ -8,6 +8,7 @@ import { withFile } from 'tmp-promise';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { StorageAdmin } from '../../../shared/src/firebase/StorageAdmin';
 import { Contribution, DonationCertificate, Entity, StatusKey, User } from '../../../shared/src/types';
+import { LocaleLanguage } from '../../../shared/src/types/admin/Language';
 import { sendEmail } from '../../../shared/src/utils/messaging/email';
 import { renderTemplate } from '../../../shared/src/utils/templates';
 import { Translator } from '../../../shared/src/utils/translate';
@@ -227,7 +228,7 @@ export class DonationCertificateHandler {
 								subject: translator.t('email-subject'),
 								// TODO: Use renderEmailTemplate() instead of renderTemplate()
 								content: await renderTemplate({
-									language: user.language || 'de',
+									language: user.language || LocaleLanguage.German,
 									translationNamespace: 'donation-certificate',
 									hbsTemplatePath: 'email/donation-certificate.hbs',
 									context: {

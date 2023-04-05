@@ -6,11 +6,12 @@ import i18next from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import mjml2html from 'mjml';
 import path from 'path';
+import { LocaleLanguage } from '../types/admin/Language';
 import { FALLBACK_LANGUAGE } from './translate';
 
-interface RenderTemplateProps {
-	language: string;
-	translationNamespace: string;
+export interface RenderTemplateProps {
+	language?: LocaleLanguage;
+	translationNamespace?: string | string[];
 	hbsTemplatePath: string; // path starting from /shared/templates/{hbsTemplatePath}
 	context: object;
 }
@@ -29,7 +30,7 @@ partials.forEach((partial) => Handlebars.registerPartial(partial.name, readHbs(p
 
 export const renderTemplate = async ({
 	language,
-	translationNamespace,
+	translationNamespace = [],
 	hbsTemplatePath,
 	context,
 }: RenderTemplateProps) => {
