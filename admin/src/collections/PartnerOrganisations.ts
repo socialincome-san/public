@@ -17,6 +17,14 @@ export const buildPartnerOrganisationsCollection = ({ isGlobalAdmin = false }: B
 				dataType: 'string',
 				disabled: !isGlobalAdmin,
 			},
+			contactName: {
+				dataType: 'string',
+				disabled: !isGlobalAdmin,
+			},
+			contactNumber: {
+				dataType: 'string',
+				disabled: !isGlobalAdmin,
+			},
 		}),
 	});
 };
