@@ -46,6 +46,7 @@
 		"nodemailer": "^6.9.1",
 		"pdfkit": "^0.13.0",
 		"stripe": "^10.17.0",
-		"tmp-promise": "^3.0.3"
+		"tmp-promise": "^3.0.3",
+		"twilio": "^4.8.0"
 	}
 }
