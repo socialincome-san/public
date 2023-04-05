@@ -1,14 +1,13 @@
-import { QueryDocumentSnapshot } from '@google-cloud/firestore';
+import { QueryDocumentSnapshot, Timestamp } from '@google-cloud/firestore';
 import * as functions from 'firebase-functions';
 import sortBy from 'lodash/sortBy';
-
-import { Timestamp } from '@google-cloud/firestore';
 import { DateTime } from 'luxon';
 import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import {
 	AdminPaymentProcessTask,
 	calcLastPaymentDate,
+	MessageType,
 	MESSAGE_FIRESTORE_PATH,
 	Payment,
 	PaymentStatus,
@@ -135,7 +134,7 @@ export class AdminPaymentTaskProcessor {
 						const messageCollection = this.firestoreAdmin.collection<SMS>(
 							`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${MESSAGE_FIRESTORE_PATH}`
 						);
-						const messageDocRef = await messageCollection.add({ type: 'sms', ...message.toJSON() });
+						const messageDocRef = await messageCollection.add({ type: MessageType.SMS, ...message.toJSON() });
 						await paymentDocRef.update({ message: messageDocRef });
 					} catch (error) {
 						console.error(error);

@@ -8,7 +8,6 @@ import {
 import { CreateDonationCertificatesAction } from '../actions/CreateDonationCertificatesAction';
 import { contributionsCollection } from './Contributions';
 import { donationCertificateCollection } from './DonationCertificate';
-import { messagesCollection } from './Messages';
 import { buildAuditedCollection } from './shared';
 
 const FirstNameCol: AdditionalFieldDelegate<User> = {
@@ -74,7 +73,7 @@ export const usersCollection = buildAuditedCollection<User>({
 		delete: false,
 	}),
 	additionalFields: [FirstNameCol, LastNameCol, GenderCol, PhoneCol, CountryCol, CityCol, ReferralCol],
-	subcollections: [contributionsCollection, donationCertificateCollection, messagesCollection],
+	subcollections: [contributionsCollection, donationCertificateCollection],
 	Actions: CreateDonationCertificatesAction,
 	properties: buildProperties<User>({
 		test_user: {

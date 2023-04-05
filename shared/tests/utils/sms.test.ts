@@ -7,7 +7,7 @@ describe('send simple SMS', () => {
 	itif(TWILIO_SID != undefined && TWILIO_SID != 'ACXXXXXXXXXXXXXXXXXXXX')('send simple free text sms', async () => {
 		const message = await sendSms({
 			from: '+15005550006',
-			to: '+41797657956',
+			to: '+41791234567',
 			twilioConfig: {
 				sid: TWILIO_SID,
 				token: TWILIO_TOKEN,

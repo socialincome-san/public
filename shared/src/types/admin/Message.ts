@@ -2,12 +2,17 @@ import { MessageDirection, MessageStatus } from 'twilio/lib/rest/api/v2010/accou
 
 export const MESSAGE_FIRESTORE_PATH = 'messages';
 
+export enum MessageType {
+	SMS = 'sms',
+	EMAIL = 'email',
+}
+
 export interface Message {
-	type: 'sms' | 'email';
+	type: MessageType;
 }
 
 export interface SMS extends Message {
-	type: 'sms';
+	type: MessageType.SMS;
 
 	// Twilio MessageInstance.toJSON() fields
 	body: string;
@@ -33,7 +38,7 @@ export interface SMS extends Message {
 }
 
 export interface Email extends Message {
-	type: 'email';
+	type: MessageType.EMAIL;
 	subject: string;
 	cc: string;
 }
