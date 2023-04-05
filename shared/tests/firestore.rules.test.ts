@@ -36,7 +36,7 @@ beforeAll(async () => {
 		.authenticatedContext('ashoka_admin', { email: 'admin@ashoka.org' })
 		.firestore();
 	recipientAppAccess = testEnvironment
-		.authenticatedContext('recipient_app', { phone_number: '+23200000501' })
+		.authenticatedContext('recipient_app', { phone_number: '+23225000501' })
 		.firestore();
 });
 

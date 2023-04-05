@@ -40,7 +40,7 @@ describe('AdminPaymentTaskProcessor', () => {
 			'User Type*',
 		]);
 		expect(rows[1]).toEqual([
-			'00000300',
+			'25000300',
 			'500',
 			'Daniel',
 			'Naba',
@@ -49,7 +49,7 @@ describe('AdminPaymentTaskProcessor', () => {
 			'subscriber',
 		]);
 		expect(rows[2]).toEqual([
-			'00000056',
+			'25000056',
 			'500',
 			'Leandro',
 			'Pasul',
@@ -58,7 +58,7 @@ describe('AdminPaymentTaskProcessor', () => {
 			'subscriber',
 		]);
 		expect(rows[3]).toEqual([
-			'00000501',
+			'25000501',
 			'500',
 			'Bin',
 			'Bun',
@@ -77,9 +77,9 @@ describe('AdminPaymentTaskProcessor', () => {
 
 		expect(rows).toHaveLength(4);
 		expect(rows[0]).toEqual(['Mobile Number*', 'Unique Code*', 'User Type*']);
-		expect(rows[1]).toEqual(['00000300', '2', 'subscriber']);
-		expect(rows[2]).toEqual(['00000056', '88', 'subscriber']);
-		expect(rows[3]).toEqual(['00000501', '99', 'subscriber']);
+		expect(rows[1]).toEqual(['25000300', '2', 'subscriber']);
+		expect(rows[2]).toEqual(['25000056', '88', 'subscriber']);
+		expect(rows[3]).toEqual(['25000501', '99', 'subscriber']);
 	});
 
 	test('create new payments', async () => {
@@ -107,20 +107,21 @@ describe('AdminPaymentTaskProcessor', () => {
 			expect(paymentDoc.exists).toBeTruthy();
 			const payment = paymentDoc.data() as Payment;
 			expect(payment.amount).toEqual(500);
-			expect(DateTime.fromJSDate(payment.payment_at.toDate()).diff(DateTime.now(), 'seconds').seconds).toBeLessThan(5);
+			expect(DateTime.fromJSDate(payment.payment_at.toDate())).toEqual(thisMonthPaymentDate);
 			expect(payment.status).toEqual(PaymentStatus.Paid);
 			expect(payment.currency).toEqual('SLE');
 
+			const nextMonthPaymentDate = thisMonthPaymentDate.plus({ month: 1 });
 			const nextPaymentDoc = await firestoreAdmin
 				.doc<Payment>(
 					`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${PAYMENT_FIRESTORE_PATH}`,
-					thisMonthPaymentDate.plus({ month: 1 }).toFormat('yyyy-MM')
+					nextMonthPaymentDate.toFormat('yyyy-MM')
 				)
 				.get();
 			expect(nextPaymentDoc.exists).toBeTruthy();
 			const nextPayment = nextPaymentDoc.data() as Payment;
 			expect(nextPayment.amount).toEqual(500);
-			expect(DateTime.fromJSDate(payment.payment_at.toDate()).diff(DateTime.now(), 'seconds').seconds).toBeLessThan(5);
+			expect(DateTime.fromJSDate(nextPayment.payment_at.toDate())).toEqual(nextMonthPaymentDate);
 			expect(nextPayment.status).toEqual(PaymentStatus.Created);
 			expect(nextPayment.currency).toEqual('SLE');
 		}

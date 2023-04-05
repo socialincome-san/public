@@ -8,6 +8,7 @@ export interface BuildCollectionProps {
 export { adminsCollection } from './Admins';
 export { contributionsCollection } from './Contributions';
 export { contributorOrganisationsCollection } from './ContributorOrganisations';
+export { messagesCollection } from './Messages';
 export { newsletterSubscribersCollection } from './NewsletterSubscribers';
 export { operationalExpensesCollection } from './OperationalExpenses';
 export { buildPartnerOrganisationsCollection } from './PartnerOrganisations';
