@@ -35,7 +35,7 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Add secrets fro tests to env file
+      - name: Add secrets from tests to env file
         working-directory: shared
         run: |
           echo TWILIO_SID=${{ secrets.TWILIO_TEST_SID }} > .env
