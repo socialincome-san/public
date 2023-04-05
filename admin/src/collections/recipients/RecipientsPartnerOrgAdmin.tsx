@@ -18,7 +18,6 @@ import {
 	orangeMoneyUIDProperty,
 	professionProperty,
 	programStatusProperty,
-	speaksEnglishProperty,
 } from './RecipientsProperties';
 
 export const buildRecipientsPartnerOrgAdminCollection = (organisations: EntityReference[]) => {
@@ -45,7 +44,6 @@ export const buildRecipientsPartnerOrgAdminCollection = (organisations: EntityRe
 				gender: genderProperty,
 				communication_mobile_phone: communicationMobilePhoneProperty,
 				main_language: mainLanguageProperty,
-				speaks_english: speaksEnglishProperty,
 			},
 			callbacks: { onPreSave: onPreSave },
 		});
@@ -95,7 +93,6 @@ export const buildRecipientsPartnerOrgAdminCollection = (organisations: EntityRe
 			birth_date: birthDateProperty,
 			main_language: mainLanguageProperty,
 			profession: professionProperty,
-			speaks_english: speaksEnglishProperty,
 		},
 		callbacks: { onPreSave: onPreSave },
 		forceFilter: {

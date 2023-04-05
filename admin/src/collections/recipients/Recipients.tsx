@@ -33,7 +33,6 @@ import {
 	professionProperty,
 	programStatusProperty,
 	SIStartDateProperty,
-	speaksEnglishProperty,
 	TestRecipientProperty,
 	TwitterProperty,
 } from './RecipientsProperties';
@@ -75,7 +74,6 @@ const baseProperties: PropertiesOrBuilders<Partial<Recipient>> = {
 	birth_date: birthDateProperty,
 	main_language: mainLanguageProperty,
 	profession: professionProperty,
-	speaks_english: speaksEnglishProperty,
 };
 
 export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: BuildCollectionProps) => {
