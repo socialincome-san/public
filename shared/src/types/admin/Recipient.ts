@@ -13,11 +13,7 @@ export enum RecipientProgramStatus {
 
 export enum RecipientMainLanguage {
 	Krio = 'kri',
-	Mende = 'men',
-	Temne = 'tem',
-	Limba = 'lia',
 	English = 'en',
-	Other = 'other',
 }
 
 export type Recipient = {
@@ -45,7 +41,6 @@ export type Recipient = {
 	profession: string;
 	progr_status: RecipientProgramStatus;
 	si_start_date: Date | Timestamp; //for NGO disabled
-	speaks_english: boolean;
 	test_recipient: boolean;
 	twitter_handle: string;
 	im_link_initial: string;

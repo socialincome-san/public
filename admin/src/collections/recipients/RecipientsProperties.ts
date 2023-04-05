@@ -74,22 +74,13 @@ export const genderProperty: Property = {
 	},
 };
 export const mainLanguageProperty: Property = {
-	name: 'First Language',
+	name: 'Preferred Language',
 	dataType: 'string',
 	validation: { required: true },
 	enumValues: [
 		{ id: RecipientMainLanguage.Krio, label: 'Krio' },
-		{ id: RecipientMainLanguage.Mende, label: 'Mende' },
-		{ id: RecipientMainLanguage.Temne, label: 'Temne' },
-		{ id: RecipientMainLanguage.Limba, label: 'Limba' },
 		{ id: RecipientMainLanguage.English, label: 'English' },
-		{ id: RecipientMainLanguage.Other, label: 'Other' },
 	],
-};
-export const speaksEnglishProperty: Property = {
-	name: 'Speaks English',
-	dataType: 'boolean',
-	hideFromCollection: true,
 };
 export const birthDateProperty: Property = {
 	name: 'Birthday',
