@@ -16,13 +16,16 @@ export enum RecipientMainLanguage {
 	English = 'en',
 }
 
+export type Phone = {
+	number: string;
+	preferred_messenger: 'sms' | 'whatsapp' | 'telegram';
+	status: 'none' | 'unverified' | 'verified';
+	whatsapp_authorization_status?: 'none' | 'unverified' | 'verified';
+};
+
 export type Recipient = {
 	birth_date: Date;
 	calling_name: string;
-	communication_mobile_phone: {
-		phone: number;
-		has_whatsapp: boolean;
-	};
 	email: string;
 	first_name: string;
 	gender: string;
@@ -32,10 +35,6 @@ export type Recipient = {
 	insta_handle: string;
 	last_name: string;
 	main_language: RecipientMainLanguage;
-	mobile_money_phone: {
-		phone: number;
-		has_whatsapp: boolean;
-	};
 	organisation: EntityReference;
 	om_uid: number;
 	profession: string;
@@ -45,6 +44,10 @@ export type Recipient = {
 	twitter_handle: string;
 	im_link_initial: string;
 	im_link_regular: string;
+
+	payment_provider: 'orange' | 'africell';
+	payment_phone: Phone;
+	contact_phone: Phone;
 };
 
 /**
