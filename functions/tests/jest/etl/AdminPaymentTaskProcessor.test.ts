@@ -40,7 +40,7 @@ describe('AdminPaymentTaskProcessor', () => {
 			'User Type*',
 		]);
 		expect(rows[1]).toEqual([
-			'00000300',
+			'25000300',
 			'500',
 			'Daniel',
 			'Naba',
@@ -49,7 +49,7 @@ describe('AdminPaymentTaskProcessor', () => {
 			'subscriber',
 		]);
 		expect(rows[2]).toEqual([
-			'00000056',
+			'25000056',
 			'500',
 			'Leandro',
 			'Pasul',
@@ -58,7 +58,7 @@ describe('AdminPaymentTaskProcessor', () => {
 			'subscriber',
 		]);
 		expect(rows[3]).toEqual([
-			'00000501',
+			'25000501',
 			'500',
 			'Bin',
 			'Bun',
@@ -77,9 +77,9 @@ describe('AdminPaymentTaskProcessor', () => {
 
 		expect(rows).toHaveLength(4);
 		expect(rows[0]).toEqual(['Mobile Number*', 'Unique Code*', 'User Type*']);
-		expect(rows[1]).toEqual(['00000300', '2', 'subscriber']);
-		expect(rows[2]).toEqual(['00000056', '88', 'subscriber']);
-		expect(rows[3]).toEqual(['00000501', '99', 'subscriber']);
+		expect(rows[1]).toEqual(['25000300', '2', 'subscriber']);
+		expect(rows[2]).toEqual(['25000056', '88', 'subscriber']);
+		expect(rows[3]).toEqual(['25000501', '99', 'subscriber']);
 	});
 
 	test('create new payments', async () => {
