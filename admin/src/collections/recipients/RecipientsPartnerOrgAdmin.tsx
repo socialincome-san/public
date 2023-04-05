@@ -36,7 +36,7 @@ export const buildRecipientsPartnerOrgAdminCollection = (organisations: EntityRe
 	};
 
 	function CustomAction() {
-		const customProductCollection = buildCollection<Partial<Recipient>>({
+		const customRecipientsCollection = buildCollection<Partial<Recipient>>({
 			path: RECIPIENT_FIRESTORE_PATH,
 			name: 'New Recipient',
 			properties: {
@@ -56,9 +56,8 @@ export const buildRecipientsPartnerOrgAdminCollection = (organisations: EntityRe
 				variant="contained"
 				onClick={() =>
 					sideEntityController.open({
-						// entityId: 'B003WT1622',
 						path: RECIPIENT_FIRESTORE_PATH,
-						collection: customProductCollection,
+						collection: customRecipientsCollection,
 						width: 800,
 					})
 				}

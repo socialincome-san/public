@@ -1,52 +1,19 @@
-import { renderTemplate } from '../templates';
+import { Twilio } from 'twilio';
+import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
+import { renderTemplate, RenderTemplateProps } from '../templates';
 
 export interface SendSmsProps {
-	messageRecipientPhone: string;
-	messageContext: object;
-	smsServiceId: string;
-	smsServiceSecret: string;
-	statusCallbackUrl: URL;
-	messageSenderPhone: string;
-	templateParameter: {
-		language: string;
-		templatePath?: string;
-		translationNamespace?: string;
+	from: string;
+	to: string;
+	twilioConfig: {
+		sid: string;
+		token: string;
 	};
+	templateProps: RenderTemplateProps;
 }
 
-export const sendSms = async ({
-	messageRecipientPhone,
-	messageContext,
-	smsServiceId,
-	smsServiceSecret,
-	statusCallbackUrl,
-	messageSenderPhone,
-	templateParameter: { language, templatePath, translationNamespace },
-}: SendSmsProps) => {
-	let messageStatus = 'failed';
-	let messageSid = 'unknown';
-
-	const body = await renderTemplate({
-		language: language,
-		translationNamespace: translationNamespace as string,
-		hbsTemplatePath: templatePath as string,
-		context: messageContext,
-	});
-
-	const client = require('twilio')(smsServiceId, smsServiceSecret);
-
-	await client.messages
-		.create({
-			body: body,
-			from: messageSenderPhone,
-			statusCallback: statusCallbackUrl,
-			to: messageRecipientPhone,
-		})
-		.then((message: any) => {
-			console.log(message);
-			messageSid = message.sid;
-			messageStatus = message.status;
-		});
-
-	return [messageSid, messageStatus];
+export const sendSms = async ({ to, from, twilioConfig, templateProps }: SendSmsProps): Promise<MessageInstance> => {
+	const body = await renderTemplate(templateProps);
+	const client = new Twilio(twilioConfig.sid, twilioConfig.token);
+	return client.messages.create({ body: body, from: from, to: to });
 };
