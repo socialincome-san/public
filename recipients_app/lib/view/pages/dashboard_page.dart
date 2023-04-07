@@ -3,7 +3,6 @@ import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_container.dart";
-import "package:app/view/widgets/survey/survey_card_container.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -32,7 +31,7 @@ class _DashboardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PaymentsCubit, PaymentsState>(
       builder: (context, state) {
-        final dashboardItems = [const SurveyCard()];
+        final List<Widget> dashboardItems = [];
 
         return Padding(
           padding: AppSpacings.h8,
@@ -41,9 +40,9 @@ class _DashboardView extends StatelessWidget {
               const BalanceCardContainer(),
               const SizedBox(height: 8),
               if (dashboardItems.isEmpty)
-                const Padding(
-                  padding: AppSpacings.a8,
-                  child: Expanded(
+                const Expanded(
+                  child: Padding(
+                    padding: AppSpacings.a8,
                     child: Center(
                       child: Text(
                         "You are up to date.\nNo news today.",
