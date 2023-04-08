@@ -22,11 +22,18 @@ class _MainAppPageState extends State<MainAppPage> {
     final editButtonRow = Row(
       children: [
         ButtonSmall(
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const AccountPage(),
-            ),
-          ),
+          onPressed: () {
+            // TODO display error message
+            if (recipient == null) return;
+
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => AccountPage(
+                  recipient: recipient,
+                ),
+              ),
+            );
+          },
           label: "Edit",
           buttonType: ButtonSmallType.outlined,
           color: AppColors.fontColorDark,

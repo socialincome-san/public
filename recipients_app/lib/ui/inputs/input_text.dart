@@ -11,6 +11,7 @@ class InputText extends StatelessWidget {
   final VoidCallback? onTap;
   final bool isReadOnly;
   final Widget? suffixIcon;
+  final TextInputType? keyboardType;
 
   const InputText({
     super.key,
@@ -23,6 +24,7 @@ class InputText extends StatelessWidget {
     this.onTap,
     this.isReadOnly = false,
     this.suffixIcon,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
@@ -45,6 +47,7 @@ class InputText extends StatelessWidget {
           onTap: onTap,
           focusNode: focusNode,
           validator: validator,
+          keyboardType: keyboardType,
         ),
         if (hintText != null)
           Positioned(

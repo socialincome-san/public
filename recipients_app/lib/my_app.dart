@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
       ],
       child: BlocProvider(
         create: (context) => AuthCubit(
+          crashReportingRepository: context.read<CrashReportingRepository>(),
           userRepository: context.read<UserRepository>(),
         )..init(),
         child: MaterialApp(
@@ -58,6 +59,9 @@ class MyApp extends StatelessWidget {
                 case AuthStatus.failure:
                   return const WelcomePage();
                 case AuthStatus.authenticated:
+                case AuthStatus.updateRecipientFailure:
+                case AuthStatus.updateRecipientSuccess:
+                case AuthStatus.updatingRecipient:
                   return const MainAppPage();
               }
             },

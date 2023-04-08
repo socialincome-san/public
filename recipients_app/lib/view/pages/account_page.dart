@@ -1,10 +1,9 @@
-import "package:app/core/cubits/account/account_cubit.dart";
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/data/models/models.dart";
-import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/ui/configs/app_spacings.dart";
+import "package:app/ui/inputs/input_dropdown.dart";
 import "package:app/ui/inputs/input_text.dart";
 import "package:app/view/widgets/dialogs/social_income_contact_dialog.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -12,29 +11,18 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl/intl.dart";
 
-class AccountPage extends StatelessWidget {
-  const AccountPage({super.key});
+class AccountPage extends StatefulWidget {
+  final Recipient recipient;
+
+  const AccountPage({
+    required this.recipient,
+  });
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AccountCubit(
-        recipient: context.read<AuthCubit>().state.recipient!,
-        userRepository: context.read<UserRepository>(),
-      ),
-      child: const _AccountView(),
-    );
-  }
+  State<AccountPage> createState() => AccountPageState();
 }
 
-class _AccountView extends StatefulWidget {
-  const _AccountView();
-
-  @override
-  State<_AccountView> createState() => _AccountViewState();
-}
-
-class _AccountViewState extends State<_AccountView> {
+class AccountPageState extends State<AccountPage> {
   late final TextEditingController _birthDateController;
   late final TextEditingController _nameController;
   late final TextEditingController _surnameController;
@@ -43,35 +31,32 @@ class _AccountViewState extends State<_AccountView> {
   late final TextEditingController _contactNumberController;
   late final TextEditingController _emailController;
 
-  Recipient? _recipient;
-
   @override
   void initState() {
     super.initState();
 
-    _recipient = context.read<AccountCubit>().state.recipient;
-
     _nameController = TextEditingController(
-      text: _recipient?.firstName ?? "",
+      text: widget.recipient.firstName ?? "",
     );
     _surnameController = TextEditingController(
-      text: _recipient?.lastName ?? "",
+      text: widget.recipient.lastName ?? "",
     );
     _callingNameController = TextEditingController(
-      text: _recipient?.preferredName ?? "",
+      text: widget.recipient.preferredName ?? "",
     );
     _birthDateController = TextEditingController(
-      text: getFormattedDate(_recipient?.birthDate) ?? "",
+      text: getFormattedDate(widget.recipient.birthDate) ?? "",
     );
     _emailController = TextEditingController(
-      text: _recipient?.email ?? "",
+      text: widget.recipient.email ?? "",
     );
 
     _paymentNumberController = TextEditingController(
-      text: _recipient?.mobileMoneyPhone?.phoneNumber.toString() ?? "",
+      text: widget.recipient.mobileMoneyPhone?.phoneNumber.toString() ?? "",
     );
     _contactNumberController = TextEditingController(
-      text: _recipient?.communicationMobilePhone?.phoneNumber.toString() ?? "",
+      text: widget.recipient.communicationMobilePhone?.phoneNumber.toString() ??
+          "",
     );
   }
 
@@ -90,13 +75,22 @@ class _AccountViewState extends State<_AccountView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AccountCubit, AccountState>(
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state.status == AuthStatus.updateRecipientSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Profile updated successfully")),
+          );
+        } else if (state.status == AuthStatus.updateRecipientFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  "Failed to update profile. Please try again or contact our support"),
+            ),
+          );
+        }
+      },
       builder: (context, state) {
-        final currentUser = state.recipient;
-
-        _birthDateController.text =
-            getFormattedDate(currentUser.birthDate) ?? "";
-
         return Scaffold(
           appBar: AppBar(
             title: const Text("Profile"),
@@ -116,11 +110,9 @@ class _AccountViewState extends State<_AccountView> {
                 controller: _nameController,
                 validator: (value) =>
                     value!.isEmpty ? "Please enter your name" : null,
-                onChanged: (value) =>
-                    context.read<AccountCubit>().updateRecipient(
-                          currentUser.copyWith(
-                            firstName: value,
-                          ),
+                onSubmitted: (value) =>
+                    context.read<AuthCubit>().updateRecipient(
+                          widget.recipient.copyWith(firstName: value),
                         ),
               ),
               const SizedBox(height: 16),
@@ -129,9 +121,9 @@ class _AccountViewState extends State<_AccountView> {
                 hintText: "Surname*",
                 validator: (value) =>
                     value!.isEmpty ? "Please enter your surname" : null,
-                onChanged: (value) =>
-                    context.read<AccountCubit>().updateRecipient(
-                          currentUser.copyWith(
+                onSubmitted: (value) =>
+                    context.read<AuthCubit>().updateRecipient(
+                          widget.recipient.copyWith(
                             lastName: value,
                           ),
                         ),
@@ -140,38 +132,25 @@ class _AccountViewState extends State<_AccountView> {
               InputText(
                 controller: _callingNameController,
                 hintText: "Calling Name",
-                onChanged: (value) =>
-                    context.read<AccountCubit>().updateRecipient(
-                          currentUser.copyWith(
+                onSubmitted: (value) =>
+                    context.read<AuthCubit>().updateRecipient(
+                          widget.recipient.copyWith(
                             preferredName: value,
                           ),
                         ),
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                hint: const Text("Gender*"),
-                items: [
-                  const DropdownMenuItem(
-                    child: Text("Male"),
-                    value: "male",
-                  ),
-                  const DropdownMenuItem(
-                    child: Text("Female"),
-                    value: "female",
-                  ),
-                  const DropdownMenuItem(
-                    child: Text("Other"),
-                    value: "other",
-                  ),
-                ],
-                onChanged: (value) =>
-                    context.read<AccountCubit>().updateRecipient(
-                          currentUser.copyWith(
-                            gender: value,
-                          ),
-                        ),
+              InputDropdown<String>(
+                label: "Gender*",
+                items: ["Male", "Female", "Other"],
+                value: widget.recipient.gender,
                 validator: (value) =>
                     value!.isEmpty ? "Please select a gender" : null,
+                onChanged: (value) => context.read<AuthCubit>().updateRecipient(
+                      widget.recipient.copyWith(
+                        gender: value,
+                      ),
+                    ),
               ),
               const SizedBox(height: 16),
               InputText(
@@ -182,15 +161,19 @@ class _AccountViewState extends State<_AccountView> {
                   firstDate: DateTime(1950),
                   lastDate: DateTime(DateTime.now().year - 10),
                   initialDate:
-                      currentUser.birthDate?.toDate() ?? DateTime(2000),
+                      widget.recipient.birthDate?.toDate() ?? DateTime(2000),
                   context: context,
                 ).then((value) {
                   if (value != null) {
-                    context.read<AccountCubit>().updateRecipient(
-                          currentUser.copyWith(
-                            birthDate: Timestamp.fromDate(value),
+                    final timestamp = Timestamp.fromDate(value);
+
+                    context.read<AuthCubit>().updateRecipient(
+                          widget.recipient.copyWith(
+                            birthDate: timestamp,
                           ),
                         );
+                    _birthDateController.text =
+                        getFormattedDate(timestamp) ?? "";
                   }
                   return;
                 }),
@@ -202,33 +185,26 @@ class _AccountViewState extends State<_AccountView> {
                     value!.isEmpty ? "Please enter your date of birth" : null,
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                hint: const Text("Language*"),
-                items: [
-                  const DropdownMenuItem(
-                    child: Text("English"),
-                    value: "english",
-                  ),
-                  const DropdownMenuItem(
-                    child: Text("Krio"),
-                    value: "krio",
-                  ),
-                ],
-                onChanged: (value) =>
-                    context.read<AccountCubit>().updateRecipient(
-                          currentUser.copyWith(selectedLanguage: value),
-                        ),
+              InputDropdown<String>(
+                label: "Language*",
+                items: ["English", "Krio"],
                 validator: (value) =>
                     value!.isEmpty ? "Please select a language" : null,
+                onChanged: (value) => context.read<AuthCubit>().updateRecipient(
+                      widget.recipient.copyWith(selectedLanguage: value),
+                    ),
+                value: widget.recipient.selectedLanguage,
               ),
+
               const SizedBox(height: 16),
               InputText(
                 hintText: "Email",
                 controller: _emailController,
-                onChanged: (value) =>
-                    context.read<AccountCubit>().updateRecipient(
-                          currentUser.copyWith(email: value),
+                onSubmitted: (value) =>
+                    context.read<AuthCubit>().updateRecipient(
+                          widget.recipient.copyWith(email: value),
                         ),
+                keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 24),
               Text(
@@ -238,11 +214,13 @@ class _AccountViewState extends State<_AccountView> {
               const SizedBox(height: 16),
               InputText(
                 hintText: "Payment Number*",
+                isReadOnly: true,
                 controller: _paymentNumberController,
-                onChanged: (value) {
+                keyboardType: TextInputType.number,
+                onSubmitted: (value) {
                   if (value != null && value.isNotEmpty) {
-                    context.read<AccountCubit>().updateRecipient(
-                          currentUser.copyWith(
+                    context.read<AuthCubit>().updateRecipient(
+                          widget.recipient.copyWith(
                             mobileMoneyPhone: Phone(int.parse(value)),
                           ),
                         );
@@ -261,20 +239,13 @@ class _AccountViewState extends State<_AccountView> {
                 },
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                hint: const Text("Mobile Payment Provider*"),
-                items: [
-                  const DropdownMenuItem(
-                    child: Text("Orange Money SL"),
-                    value: "orange_money_sl",
-                  ),
-                ],
-                onChanged: (value) => context
-                    .read<AccountCubit>()
-                    .updateRecipient(
-                        currentUser.copyWith(paymentProvider: value)),
+              InputDropdown<String>(
+                label: "Mobile Payment Provider*",
+                items: ["Orange Money SL"],
                 validator: (value) =>
                     value!.isEmpty ? "Please select a payment provider" : null,
+                onChanged: (value) => context.read<AuthCubit>().updateRecipient(
+                    widget.recipient.copyWith(paymentProvider: value)),
               ),
               const SizedBox(height: 24),
 
@@ -287,6 +258,7 @@ class _AccountViewState extends State<_AccountView> {
               InputText(
                 hintText: "Contact Number*",
                 controller: _contactNumberController,
+                keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter your contact phone number";
@@ -298,10 +270,10 @@ class _AccountViewState extends State<_AccountView> {
 
                   return null;
                 },
-                onChanged: (value) {
+                onSubmitted: (value) {
                   if (value != null && value.isNotEmpty)
-                    context.read<AccountCubit>().updateRecipient(
-                          currentUser.copyWith(
+                    context.read<AuthCubit>().updateRecipient(
+                          widget.recipient.copyWith(
                             communicationMobilePhone: Phone(
                               int.parse(value),
                             ),
@@ -311,22 +283,22 @@ class _AccountViewState extends State<_AccountView> {
               ),
               // TODO add later
               /*const SizedBox(height: 8),
-               DropdownButtonFormField<String>(
-                hint: const Text("Contact Preference*"),
-                onChanged: (value) => context
-                    .read<AccountCubit>()
-                    .updateRecipient(
-                        currentUser.copyWith(contactPreference: value)),
-                items: [
-                  const DropdownMenuItem(
-                    child: Text("WhatsApp"),
-                    value: "whatsapp",
-                  ),
-                ],
-                validator: (value) => value!.isEmpty
-                    ? "Please select a contact preference"
-                    : null,
-              ), */
+                   DropdownButtonFormField<String>(
+                    hint: const Text("Contact Preference*"),
+                    onChanged: (value) => context
+                        .read<AccountCubit>()
+                        .updateRecipient(
+                            currentUser.copyWith(contactPreference: value)),
+                    items: [
+                      const DropdownMenuItem(
+                        child: Text("WhatsApp"),
+                        value: "whatsapp",
+                      ),
+                    ],
+                    validator: (value) => value!.isEmpty
+                        ? "Please select a contact preference"
+                        : null,
+                  ), */
 
               /// RECOMMENDING ORGA
               const SizedBox(height: 24),
@@ -383,34 +355,23 @@ class _AccountViewState extends State<_AccountView> {
                 ),
               ),
 
-              const ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Center(
-                  child: Text(
-                    "Support",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              ButtonOutlinedBig(
-                onPressed: () => showDialog(
-                  context: context,
-                  builder: (BuildContext context) =>
-                      const SocialIncomeContactDialog(),
-                ),
+              const SizedBox(height: 24),
+              Text("Support", style: Theme.of(context).textTheme.bodyLarge),
+              const SizedBox(height: 16),
+              const Text(
+                  "In case you have any questions or problems, please contact us."),
+              const SizedBox(height: 16),
+              ButtonBig(
+                onPressed: () => const SocialIncomeContactDialog(),
                 label: "Get in touch",
               ),
-              const ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Center(
-                  child: Text(
-                    "Account",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
+              const SizedBox(height: 24),
+              Text("Account", style: Theme.of(context).textTheme.bodyLarge),
+              const SizedBox(height: 16),
+              const Text(
+                  "In case you want to delete your account, please contact us."),
+              const SizedBox(height: 16),
               ButtonBig(
-                isLoading: state.status == AccountStatus.loading,
                 onPressed: () => context.read<AuthCubit>().logout(),
                 label: "Sign Out",
               ),
