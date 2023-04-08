@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 
 class InputDropdown<T> extends StatefulWidget {
   final String label;
-  final List<T> items;
+  final List<DropdownMenuItem<T>> items;
   final String? Function(T?)? validator;
   final Function(T?) onChanged;
   final T? value;
@@ -52,13 +52,7 @@ class _InputDropdownState<T> extends State<InputDropdown<T>> {
               borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
             ),
           ),
-          items: List.generate(
-            widget.items.length,
-            (index) => DropdownMenuItem(
-              child: Text(widget.items[index].toString()),
-              value: widget.items[index],
-            ),
-          ),
+          items: widget.items,
           value: value,
           style: AppStyles.inputHint.copyWith(
             color: AppColors.primaryColor,

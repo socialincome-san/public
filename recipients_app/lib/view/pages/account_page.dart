@@ -23,6 +23,8 @@ class AccountPage extends StatefulWidget {
 }
 
 class AccountPageState extends State<AccountPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   late final TextEditingController _birthDateController;
   late final TextEditingController _nameController;
   late final TextEditingController _surnameController;
@@ -97,285 +99,352 @@ class AccountPageState extends State<AccountPage> {
             centerTitle: true,
             elevation: 0,
           ),
-          body: ListView(
-            padding: AppSpacings.a16,
-            children: [
-              Text(
-                "Personal",
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              const SizedBox(height: 16),
-              InputText(
-                hintText: "Name*",
-                controller: _nameController,
-                validator: (value) =>
-                    value!.isEmpty ? "Please enter your name" : null,
-                onSubmitted: (value) =>
-                    context.read<AuthCubit>().updateRecipient(
-                          widget.recipient.copyWith(firstName: value),
-                        ),
-              ),
-              const SizedBox(height: 16),
-              InputText(
-                controller: _surnameController,
-                hintText: "Surname*",
-                validator: (value) =>
-                    value!.isEmpty ? "Please enter your surname" : null,
-                onSubmitted: (value) =>
-                    context.read<AuthCubit>().updateRecipient(
-                          widget.recipient.copyWith(
-                            lastName: value,
-                          ),
-                        ),
-              ),
-              const SizedBox(height: 16),
-              InputText(
-                controller: _callingNameController,
-                hintText: "Calling Name",
-                onSubmitted: (value) =>
+          body: Form(
+            key: _formKey,
+            autovalidateMode: AutovalidateMode.always,
+            child: ListView(
+              padding: AppSpacings.a16,
+              children: [
+                Text(
+                  "Personal",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const SizedBox(height: 16),
+                InputText(
+                  hintText: "Name*",
+                  controller: _nameController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your name";
+                    }
+                    return null;
+                  },
+                  onSubmitted: (value) {
+                    if (value != null && value.isNotEmpty)
+                      context.read<AuthCubit>().updateRecipient(
+                            widget.recipient.copyWith(firstName: value),
+                          );
+                  },
+                ),
+                const SizedBox(height: 16),
+                InputText(
+                  controller: _surnameController,
+                  hintText: "Surname*",
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your surname";
+                    }
+                    return null;
+                  },
+                  onSubmitted: (value) {
+                    if (value != null && value.isNotEmpty)
+                      context.read<AuthCubit>().updateRecipient(
+                            widget.recipient.copyWith(
+                              lastName: value,
+                            ),
+                          );
+                  },
+                ),
+                const SizedBox(height: 16),
+                InputText(
+                  controller: _callingNameController,
+                  hintText: "Calling Name",
+                  onSubmitted: (value) {
                     context.read<AuthCubit>().updateRecipient(
                           widget.recipient.copyWith(
                             preferredName: value,
                           ),
-                        ),
-              ),
-              const SizedBox(height: 16),
-              InputDropdown<String>(
-                label: "Gender*",
-                items: ["Male", "Female", "Other"],
-                value: widget.recipient.gender,
-                validator: (value) =>
-                    value!.isEmpty ? "Please select a gender" : null,
-                onChanged: (value) => context.read<AuthCubit>().updateRecipient(
-                      widget.recipient.copyWith(
-                        gender: value,
-                      ),
-                    ),
-              ),
-              const SizedBox(height: 16),
-              InputText(
-                hintText: "Date of birth*",
-                controller: _birthDateController,
-                isReadOnly: true,
-                onTap: () async => showDatePicker(
-                  firstDate: DateTime(1950),
-                  lastDate: DateTime(DateTime.now().year - 10),
-                  initialDate:
-                      widget.recipient.birthDate?.toDate() ?? DateTime(2000),
-                  context: context,
-                ).then((value) {
-                  if (value != null) {
-                    final timestamp = Timestamp.fromDate(value);
-
-                    context.read<AuthCubit>().updateRecipient(
-                          widget.recipient.copyWith(
-                            birthDate: timestamp,
-                          ),
                         );
-                    _birthDateController.text =
-                        getFormattedDate(timestamp) ?? "";
-                  }
-                  return;
-                }),
-                suffixIcon: const Icon(
-                  Icons.calendar_today,
-                  color: AppColors.primaryColor,
+                  },
                 ),
-                validator: (value) =>
-                    value!.isEmpty ? "Please enter your date of birth" : null,
-              ),
-              const SizedBox(height: 16),
-              InputDropdown<String>(
-                label: "Language*",
-                items: ["English", "Krio"],
-                validator: (value) =>
-                    value!.isEmpty ? "Please select a language" : null,
-                onChanged: (value) => context.read<AuthCubit>().updateRecipient(
-                      widget.recipient.copyWith(selectedLanguage: value),
+                const SizedBox(height: 16),
+                InputDropdown<String>(
+                  label: "Gender*",
+                  items: [
+                    const DropdownMenuItem(
+                      child: Text("Male"),
+                      value: "male",
                     ),
-                value: widget.recipient.selectedLanguage,
-              ),
-
-              const SizedBox(height: 16),
-              InputText(
-                hintText: "Email",
-                controller: _emailController,
-                onSubmitted: (value) =>
-                    context.read<AuthCubit>().updateRecipient(
-                          widget.recipient.copyWith(email: value),
-                        ),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                "Payment Phone",
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              const SizedBox(height: 16),
-              InputText(
-                hintText: "Payment Number*",
-                isReadOnly: true,
-                controller: _paymentNumberController,
-                keyboardType: TextInputType.number,
-                onSubmitted: (value) {
-                  if (value != null && value.isNotEmpty) {
-                    context.read<AuthCubit>().updateRecipient(
-                          widget.recipient.copyWith(
-                            mobileMoneyPhone: Phone(int.parse(value)),
-                          ),
-                        );
-                  }
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter your phone number";
-                  }
-
-                  if (int.tryParse(value) == null) {
-                    return "Please enter a valid phone number. Only numbers are allowed";
-                  }
-
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              InputDropdown<String>(
-                label: "Mobile Payment Provider*",
-                items: ["Orange Money SL"],
-                validator: (value) =>
-                    value!.isEmpty ? "Please select a payment provider" : null,
-                onChanged: (value) => context.read<AuthCubit>().updateRecipient(
-                    widget.recipient.copyWith(paymentProvider: value)),
-              ),
-              const SizedBox(height: 24),
-
-              /// CONTACT PHONE
-              Text(
-                "Contact Phone",
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              const SizedBox(height: 16),
-              InputText(
-                hintText: "Contact Number*",
-                controller: _contactNumberController,
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter your contact phone number";
-                  }
-
-                  if (int.tryParse(value) == null) {
-                    return "Please enter a valid phone number. Only numbers are allowed";
-                  }
-
-                  return null;
-                },
-                onSubmitted: (value) {
-                  if (value != null && value.isNotEmpty)
-                    context.read<AuthCubit>().updateRecipient(
-                          widget.recipient.copyWith(
-                            communicationMobilePhone: Phone(
-                              int.parse(value),
+                    const DropdownMenuItem(
+                      child: Text("Female"),
+                      value: "female",
+                    ),
+                    const DropdownMenuItem(
+                      child: Text("Other"),
+                      value: "other",
+                    ),
+                  ],
+                  value: widget.recipient.gender,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please select a gender";
+                    }
+                    return null;
+                  },
+                  onChanged: (value) =>
+                      context.read<AuthCubit>().updateRecipient(
+                            widget.recipient.copyWith(
+                              gender: value,
                             ),
                           ),
-                        );
-                },
-              ),
-              // TODO add later
-              /*const SizedBox(height: 8),
-                   DropdownButtonFormField<String>(
-                    hint: const Text("Contact Preference*"),
-                    onChanged: (value) => context
-                        .read<AccountCubit>()
-                        .updateRecipient(
-                            currentUser.copyWith(contactPreference: value)),
-                    items: [
-                      const DropdownMenuItem(
-                        child: Text("WhatsApp"),
-                        value: "whatsapp",
-                      ),
-                    ],
-                    validator: (value) => value!.isEmpty
-                        ? "Please select a contact preference"
-                        : null,
-                  ), */
+                ),
+                const SizedBox(height: 16),
+                InputText(
+                  hintText: "Date of birth*",
+                  controller: _birthDateController,
+                  isReadOnly: true,
+                  onTap: () async => showDatePicker(
+                    firstDate: DateTime(1950),
+                    lastDate: DateTime(DateTime.now().year - 10),
+                    initialDate:
+                        widget.recipient.birthDate?.toDate() ?? DateTime(2000),
+                    context: context,
+                  ).then((value) {
+                    if (value != null) {
+                      final timestamp = Timestamp.fromDate(value);
 
-              /// RECOMMENDING ORGA
-              const SizedBox(height: 24),
-              Text(
-                "Recommending Organization",
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              const SizedBox(height: 16),
-              Card(
-                child: Padding(
-                  padding: AppSpacings.a12,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.lock,
-                            color: Colors.black,
+                      context.read<AuthCubit>().updateRecipient(
+                            widget.recipient.copyWith(
+                              birthDate: timestamp,
+                            ),
+                          );
+                      _birthDateController.text =
+                          getFormattedDate(timestamp) ?? "";
+                    }
+                    return;
+                  }),
+                  suffixIcon: const Icon(
+                    Icons.calendar_today,
+                    color: AppColors.primaryColor,
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your date of birth";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                InputDropdown<String>(
+                  label: "Language*",
+                  items: [
+                    const DropdownMenuItem(
+                      child: Text("English"),
+                      value: "english",
+                    ),
+                    const DropdownMenuItem(
+                      child: Text("Krio"),
+                      value: "krio",
+                    ),
+                  ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please select a language";
+                    }
+                    return null;
+                  },
+                  onChanged: (value) =>
+                      context.read<AuthCubit>().updateRecipient(
+                            widget.recipient.copyWith(selectedLanguage: value),
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            "Organization Name",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge!
-                                .copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          const Spacer(),
-                          ButtonSmall(
-                            label: "Call",
-                            buttonType: ButtonSmallType.outlined,
-                            color: Colors.black,
-                            onPressed: () {
-                              // TODO implement
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "Petra Mustermann",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      Text(
-                        "0827183978321",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
+                  value: widget.recipient.selectedLanguage,
+                ),
+
+                const SizedBox(height: 16),
+                InputText(
+                  hintText: "Email",
+                  controller: _emailController,
+                  onSubmitted: (value) {
+                    if (value != null && value.isNotEmpty)
+                      context.read<AuthCubit>().updateRecipient(
+                            widget.recipient.copyWith(email: value),
+                          );
+                  },
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  "Payment Phone",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const SizedBox(height: 16),
+                InputText(
+                  hintText: "Payment Number*",
+                  isReadOnly: true,
+                  controller: _paymentNumberController,
+                  keyboardType: TextInputType.number,
+                  onSubmitted: (value) {
+                    if (value != null && value.isNotEmpty) {
+                      context.read<AuthCubit>().updateRecipient(
+                            widget.recipient.copyWith(
+                              mobileMoneyPhone: Phone(int.parse(value)),
+                            ),
+                          );
+                    }
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your phone number";
+                    }
+
+                    if (int.tryParse(value) == null) {
+                      return "Please enter a valid phone number. Only numbers are allowed";
+                    }
+
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                InputDropdown<String>(
+                  label: "Mobile Payment Provider*",
+                  items: [
+                    const DropdownMenuItem(
+                      child: Text("Orange Money SL"),
+                      value: "orange_money_sl",
+                    ),
+                  ],
+                  value: widget.recipient.paymentProvider,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please select a payment provider";
+                    }
+                    return null;
+                  },
+                  onChanged: (value) => context
+                      .read<AuthCubit>()
+                      .updateRecipient(
+                          widget.recipient.copyWith(paymentProvider: value)),
+                ),
+                const SizedBox(height: 24),
+
+                /// CONTACT PHONE
+                Text(
+                  "Contact Phone",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const SizedBox(height: 16),
+                InputText(
+                  hintText: "Contact Number*",
+                  controller: _contactNumberController,
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your contact phone number";
+                    }
+
+                    if (int.tryParse(value) == null) {
+                      return "Please enter a valid phone number. Only numbers are allowed";
+                    }
+
+                    return null;
+                  },
+                  onSubmitted: (value) {
+                    if (value != null && value.isNotEmpty)
+                      context.read<AuthCubit>().updateRecipient(
+                            widget.recipient.copyWith(
+                              communicationMobilePhone: Phone(
+                                int.parse(value),
+                              ),
+                            ),
+                          );
+                  },
+                ),
+                // TODO add later
+                /*const SizedBox(height: 8),
+                     DropdownButtonFormField<String>(
+                      hint: const Text("Contact Preference*"),
+                      onChanged: (value) => context
+                          .read<AccountCubit>()
+                          .updateRecipient(
+                              currentUser.copyWith(contactPreference: value)),
+                      items: [
+                        const DropdownMenuItem(
+                          child: Text("WhatsApp"),
+                          value: "whatsapp",
+                        ),
+                      ],
+                      validator: (value) => value!.isEmpty
+                          ? "Please select a contact preference"
+                          : null,
+                    ), */
+
+                /// RECOMMENDING ORGA
+                const SizedBox(height: 24),
+                Text(
+                  "Recommending Organization",
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const SizedBox(height: 16),
+                Card(
+                  child: Padding(
+                    padding: AppSpacings.a12,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.lock,
+                              color: Colors.black,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              "Organization Name",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            const Spacer(),
+                            ButtonSmall(
+                              label: "Call",
+                              buttonType: ButtonSmallType.outlined,
+                              color: Colors.black,
+                              onPressed: () {
+                                // TODO implement
+                              },
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          "Petra Mustermann",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        Text(
+                          "0827183978321",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 24),
-              Text("Support", style: Theme.of(context).textTheme.bodyLarge),
-              const SizedBox(height: 16),
-              const Text(
-                  "In case you have any questions or problems, please contact us."),
-              const SizedBox(height: 16),
-              ButtonBig(
-                onPressed: () => const SocialIncomeContactDialog(),
-                label: "Get in touch",
-              ),
-              const SizedBox(height: 24),
-              Text("Account", style: Theme.of(context).textTheme.bodyLarge),
-              const SizedBox(height: 16),
-              const Text(
-                  "In case you want to delete your account, please contact us."),
-              const SizedBox(height: 16),
-              ButtonBig(
-                onPressed: () => context.read<AuthCubit>().logout(),
-                label: "Sign Out",
-              ),
-            ],
+                const SizedBox(height: 24),
+                Text("Support", style: Theme.of(context).textTheme.bodyLarge),
+                const SizedBox(height: 16),
+                const Text(
+                    "In case you have any questions or problems, please contact us."),
+                const SizedBox(height: 16),
+                ButtonBig(
+                  onPressed: () => const SocialIncomeContactDialog(),
+                  label: "Get in touch",
+                ),
+                const SizedBox(height: 24),
+                Text("Account", style: Theme.of(context).textTheme.bodyLarge),
+                const SizedBox(height: 16),
+                const Text(
+                    "In case you want to delete your account, please contact us."),
+                const SizedBox(height: 16),
+                ButtonBig(
+                  onPressed: () => context.read<AuthCubit>().logout(),
+                  label: "Sign Out",
+                ),
+              ],
+            ),
           ),
         );
       },

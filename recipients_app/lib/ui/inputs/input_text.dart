@@ -34,8 +34,7 @@ class InputText extends StatelessWidget {
         TextFormField(
           decoration: InputDecoration(
             hintStyle: AppStyles.inputHint,
-            // hintText: hintText,
-            labelText: hintText,
+            // labelText: hintText,
             suffixIcon: suffixIcon,
             floatingLabelBehavior: FloatingLabelBehavior.never,
           ),
