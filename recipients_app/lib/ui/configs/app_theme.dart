@@ -67,11 +67,22 @@ abstract class AppTheme {
     ),
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: AppStyles.inputHint,
+      fillColor: Colors.white,
+      filled: true,
+      alignLabelWithHint: true,
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      ),
       border: OutlineInputBorder(
         borderSide: const BorderSide(
-          color: AppColors.primaryLightColor,
+          color: Colors.white,
         ),
-        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
       ),
     ),
     scaffoldBackgroundColor: AppColors.backgroundColor,

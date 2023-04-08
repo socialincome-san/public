@@ -7,6 +7,10 @@ class InputText extends StatelessWidget {
   final Function(String?)? onChanged;
   final FocusNode? focusNode;
   final String? hintText;
+  final String? Function(String?)? validator;
+  final VoidCallback? onTap;
+  final bool isReadOnly;
+  final Widget? suffixIcon;
 
   const InputText({
     super.key,
@@ -15,25 +19,47 @@ class InputText extends StatelessWidget {
     this.onChanged,
     this.focusNode,
     this.hintText,
+    this.validator,
+    this.onTap,
+    this.isReadOnly = false,
+    this.suffixIcon,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      decoration: InputDecoration(
-        hintStyle: AppStyles.inputHint,
-        hintText: hintText,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-          borderSide: const BorderSide(
-            color: AppColors.primaryLightColor,
+    return Stack(
+      children: [
+        TextFormField(
+          decoration: InputDecoration(
+            hintStyle: AppStyles.inputHint,
+            // hintText: hintText,
+            labelText: hintText,
+            suffixIcon: suffixIcon,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
           ),
+          style: AppStyles.inputText,
+          readOnly: isReadOnly,
+          controller: controller,
+          onFieldSubmitted: onSubmitted,
+          onChanged: onChanged,
+          onTap: onTap,
+          focusNode: focusNode,
+          validator: validator,
         ),
-      ),
-      controller: controller,
-      onFieldSubmitted: onSubmitted,
-      onChanged: onChanged,
-      focusNode: focusNode,
+        if (hintText != null)
+          Positioned(
+            top: 4,
+            left: 12,
+            child: Text(
+              hintText!,
+              style: AppStyles.inputHint.copyWith(
+                color: AppColors.darkGrey.withOpacity(0.6),
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

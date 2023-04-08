@@ -1,17 +1,17 @@
 import "package:app/core/cubits/account/account_cubit.dart";
 import "package:app/core/cubits/auth/auth_cubit.dart";
-import "package:app/data/models/phone.dart";
+import "package:app/data/models/models.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/buttons/buttons.dart";
+import "package:app/ui/configs/app_colors.dart";
 import "package:app/ui/configs/app_spacings.dart";
-import "package:app/view/widgets/account/unchangeable_user_information.dart";
+import "package:app/ui/inputs/input_text.dart";
 import "package:app/view/widgets/dialogs/social_income_contact_dialog.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:intl/intl.dart";
 
-/// TODO: add dialog for contact
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
 
@@ -36,16 +36,55 @@ class _AccountView extends StatefulWidget {
 
 class _AccountViewState extends State<_AccountView> {
   late final TextEditingController _birthDateController;
+  late final TextEditingController _nameController;
+  late final TextEditingController _surnameController;
+  late final TextEditingController _callingNameController;
+  late final TextEditingController _paymentNumberController;
+  late final TextEditingController _contactNumberController;
+  late final TextEditingController _emailController;
+
+  Recipient? _recipient;
 
   @override
   void initState() {
     super.initState();
-    _birthDateController = TextEditingController();
+
+    _recipient = context.read<AccountCubit>().state.recipient;
+
+    _nameController = TextEditingController(
+      text: _recipient?.firstName ?? "",
+    );
+    _surnameController = TextEditingController(
+      text: _recipient?.lastName ?? "",
+    );
+    _callingNameController = TextEditingController(
+      text: _recipient?.preferredName ?? "",
+    );
+    _birthDateController = TextEditingController(
+      text: getFormattedDate(_recipient?.birthDate) ?? "",
+    );
+    _emailController = TextEditingController(
+      text: _recipient?.email ?? "",
+    );
+
+    _paymentNumberController = TextEditingController(
+      text: _recipient?.mobileMoneyPhone?.phoneNumber.toString() ?? "",
+    );
+    _contactNumberController = TextEditingController(
+      text: _recipient?.communicationMobilePhone?.phoneNumber.toString() ?? "",
+    );
   }
 
   @override
   void dispose() {
     _birthDateController.dispose();
+    _nameController.dispose();
+    _surnameController.dispose();
+    _callingNameController.dispose();
+    _paymentNumberController.dispose();
+    _contactNumberController.dispose();
+    _emailController.dispose();
+
     super.dispose();
   }
 
@@ -61,41 +100,84 @@ class _AccountViewState extends State<_AccountView> {
         return Scaffold(
           appBar: AppBar(
             title: const Text("Profile"),
+            centerTitle: true,
             elevation: 0,
           ),
           body: ListView(
             padding: AppSpacings.a16,
             children: [
-              const Text(
-                "Basic Information",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              UnchangeableUserInformation(
-                section: "First name",
-                placeHolder: currentUser.firstName ?? "",
-              ),
-              UnchangeableUserInformation(
-                section: "Last name",
-                placeHolder: currentUser.lastName ?? "",
+              Text(
+                "Personal",
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: 16),
-              TextFormField(
-                initialValue: currentUser.preferredName ?? "",
-                decoration: const InputDecoration(
-                  labelText: "Preferred name",
-                ),
+              InputText(
+                hintText: "Name*",
+                controller: _nameController,
+                validator: (value) =>
+                    value!.isEmpty ? "Please enter your name" : null,
                 onChanged: (value) =>
                     context.read<AccountCubit>().updateRecipient(
-                          currentUser.copyWith(preferredName: value),
+                          currentUser.copyWith(
+                            firstName: value,
+                          ),
                         ),
               ),
               const SizedBox(height: 16),
-              TextFormField(
+              InputText(
+                controller: _surnameController,
+                hintText: "Surname*",
+                validator: (value) =>
+                    value!.isEmpty ? "Please enter your surname" : null,
+                onChanged: (value) =>
+                    context.read<AccountCubit>().updateRecipient(
+                          currentUser.copyWith(
+                            lastName: value,
+                          ),
+                        ),
+              ),
+              const SizedBox(height: 16),
+              InputText(
+                controller: _callingNameController,
+                hintText: "Calling Name",
+                onChanged: (value) =>
+                    context.read<AccountCubit>().updateRecipient(
+                          currentUser.copyWith(
+                            preferredName: value,
+                          ),
+                        ),
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                hint: const Text("Gender*"),
+                items: [
+                  const DropdownMenuItem(
+                    child: Text("Male"),
+                    value: "male",
+                  ),
+                  const DropdownMenuItem(
+                    child: Text("Female"),
+                    value: "female",
+                  ),
+                  const DropdownMenuItem(
+                    child: Text("Other"),
+                    value: "other",
+                  ),
+                ],
+                onChanged: (value) =>
+                    context.read<AccountCubit>().updateRecipient(
+                          currentUser.copyWith(
+                            gender: value,
+                          ),
+                        ),
+                validator: (value) =>
+                    value!.isEmpty ? "Please select a gender" : null,
+              ),
+              const SizedBox(height: 16),
+              InputText(
+                hintText: "Date of birth*",
                 controller: _birthDateController,
-                decoration: const InputDecoration(
-                  labelText: "Date of birth",
-                ),
-                readOnly: true,
+                isReadOnly: true,
                 onTap: () async => showDatePicker(
                   firstDate: DateTime(1950),
                   lastDate: DateTime(DateTime.now().year - 10),
@@ -112,65 +194,195 @@ class _AccountViewState extends State<_AccountView> {
                   }
                   return;
                 }),
+                suffixIcon: const Icon(
+                  Icons.calendar_today,
+                  color: AppColors.primaryColor,
+                ),
+                validator: (value) =>
+                    value!.isEmpty ? "Please enter your date of birth" : null,
               ),
               const SizedBox(height: 16),
-              TextFormField(
-                initialValue: currentUser.email ?? "",
-                decoration: const InputDecoration(
-                  labelText: "Email",
-                ),
-                keyboardType: TextInputType.emailAddress,
+              DropdownButtonFormField<String>(
+                hint: const Text("Language*"),
+                items: [
+                  const DropdownMenuItem(
+                    child: Text("English"),
+                    value: "english",
+                  ),
+                  const DropdownMenuItem(
+                    child: Text("Krio"),
+                    value: "krio",
+                  ),
+                ],
+                onChanged: (value) =>
+                    context.read<AccountCubit>().updateRecipient(
+                          currentUser.copyWith(selectedLanguage: value),
+                        ),
+                validator: (value) =>
+                    value!.isEmpty ? "Please select a language" : null,
+              ),
+              const SizedBox(height: 16),
+              InputText(
+                hintText: "Email",
+                controller: _emailController,
                 onChanged: (value) =>
                     context.read<AccountCubit>().updateRecipient(
                           currentUser.copyWith(email: value),
                         ),
               ),
+              const SizedBox(height: 24),
+              Text(
+                "Payment Phone",
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
               const SizedBox(height: 16),
-              TextFormField(
-                initialValue: currentUser.communicationMobilePhone?.phoneNumber
-                        .toString() ??
-                    "",
-                decoration: const InputDecoration(
-                  labelText: "Phone number",
-                ),
-                keyboardType: TextInputType.phone,
+              InputText(
+                hintText: "Payment Number*",
+                controller: _paymentNumberController,
                 onChanged: (value) {
-                  final newPhoneNumber = int.tryParse(value);
+                  if (value != null && value.isNotEmpty) {
+                    context.read<AccountCubit>().updateRecipient(
+                          currentUser.copyWith(
+                            mobileMoneyPhone: Phone(int.parse(value)),
+                          ),
+                        );
+                  }
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter your phone number";
+                  }
 
-                  if (newPhoneNumber == null) return;
+                  if (int.tryParse(value) == null) {
+                    return "Please enter a valid phone number. Only numbers are allowed";
+                  }
 
-                  context.read<AccountCubit>().updateRecipient(
-                        currentUser.copyWith(
-                          communicationMobilePhone: Phone(newPhoneNumber),
-                        ),
-                      );
+                  return null;
                 },
               ),
-              const ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Center(
-                  child: Text(
-                    "Further Information",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                hint: const Text("Mobile Payment Provider*"),
+                items: [
+                  const DropdownMenuItem(
+                    child: Text("Orange Money SL"),
+                    value: "orange_money_sl",
+                  ),
+                ],
+                onChanged: (value) => context
+                    .read<AccountCubit>()
+                    .updateRecipient(
+                        currentUser.copyWith(paymentProvider: value)),
+                validator: (value) =>
+                    value!.isEmpty ? "Please select a payment provider" : null,
+              ),
+              const SizedBox(height: 24),
+
+              /// CONTACT PHONE
+              Text(
+                "Contact Phone",
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(height: 16),
+              InputText(
+                hintText: "Contact Number*",
+                controller: _contactNumberController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter your contact phone number";
+                  }
+
+                  if (int.tryParse(value) == null) {
+                    return "Please enter a valid phone number. Only numbers are allowed";
+                  }
+
+                  return null;
+                },
+                onChanged: (value) {
+                  if (value != null && value.isNotEmpty)
+                    context.read<AccountCubit>().updateRecipient(
+                          currentUser.copyWith(
+                            communicationMobilePhone: Phone(
+                              int.parse(value),
+                            ),
+                          ),
+                        );
+                },
+              ),
+              // TODO add later
+              /*const SizedBox(height: 8),
+               DropdownButtonFormField<String>(
+                hint: const Text("Contact Preference*"),
+                onChanged: (value) => context
+                    .read<AccountCubit>()
+                    .updateRecipient(
+                        currentUser.copyWith(contactPreference: value)),
+                items: [
+                  const DropdownMenuItem(
+                    child: Text("WhatsApp"),
+                    value: "whatsapp",
+                  ),
+                ],
+                validator: (value) => value!.isEmpty
+                    ? "Please select a contact preference"
+                    : null,
+              ), */
+
+              /// RECOMMENDING ORGA
+              const SizedBox(height: 24),
+              Text(
+                "Recommending Organization",
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(height: 16),
+              Card(
+                child: Padding(
+                  padding: AppSpacings.a12,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.lock,
+                            color: Colors.black,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            "Organization Name",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          const Spacer(),
+                          ButtonSmall(
+                            label: "Call",
+                            buttonType: ButtonSmallType.outlined,
+                            color: Colors.black,
+                            onPressed: () {
+                              // TODO implement
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Petra Mustermann",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      Text(
+                        "0827183978321",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
                   ),
                 ),
               ),
-              UnchangeableUserInformation(
-                section: "Recipient Since",
-                placeHolder: state.recipient.recipientSince != null
-                    ? DateFormat("dd.MM.yyyy")
-                        .format(state.recipient.recipientSince!)
-                    : "",
-              ),
-              UnchangeableUserInformation(
-                section: "Country",
-                placeHolder: currentUser.country ?? "",
-              ),
-              UnchangeableUserInformation(
-                section: "Orange Money Number",
-                placeHolder:
-                    currentUser.mobileMoneyPhone?.phoneNumber.toString() ?? "",
-              ),
+
               const ListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Center(
@@ -204,14 +416,6 @@ class _AccountViewState extends State<_AccountView> {
               ),
             ],
           ),
-          // if (state.status == AccountStatus.loading) ...[
-          //   Container(
-          //     alignment: Alignment.center,
-          //     child: const CircularProgressIndicator(),
-          //   ),
-          // ]
-          // ],
-          // ),
         );
       },
     );

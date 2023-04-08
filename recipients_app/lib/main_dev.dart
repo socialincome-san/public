@@ -12,9 +12,11 @@ import "package:flutter_bloc/flutter_bloc.dart";
 //Async for Firebase
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
   );
+
   await Firebase.initializeApp();
 
   final firestore = FirebaseFirestore.instance;
