@@ -73,25 +73,21 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
     }
   }
 
-  Future<void> updatePaymentNumber(bool shouldUpdate) async {
-    if (shouldUpdate) {
-      final recipient = authCubit.state.recipient!;
-      await authCubit.updateRecipient(
-        recipient.copyWith(
-          mobileMoneyPhone: recipient.communicationMobilePhone,
-        ),
-      );
-    }
+  Future<void> updatePaymentNumber() async {
+    final recipient = authCubit.state.recipient!;
+    await authCubit.updateRecipient(
+      recipient.copyWith(
+        mobileMoneyPhone: recipient.communicationMobilePhone,
+      ),
+    );
   }
 
-  Future<void> updateContactNumber(bool shouldUpdate) async {
-    if (shouldUpdate) {
-      final recipient = authCubit.state.recipient!;
-      await authCubit.updateRecipient(
-        recipient.copyWith(
-          communicationMobilePhone: recipient.mobileMoneyPhone,
-        ),
-      );
-    }
+  Future<void> updateContactNumber() async {
+    final recipient = authCubit.state.recipient!;
+    await authCubit.updateRecipient(
+      recipient.copyWith(
+        communicationMobilePhone: recipient.mobileMoneyPhone,
+      ),
+    );
   }
 }

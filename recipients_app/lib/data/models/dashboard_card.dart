@@ -1,6 +1,8 @@
+import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/dashboard_card_manager/dashboard_card_manager_cubit.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
+import "package:app/view/pages/account_page.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -80,11 +82,17 @@ class DashboardCard extends StatelessWidget {
 
   void _onPressSecondary(BuildContext context) {
     switch (type) {
+      /// On pressing no, user should be forwarded to account page
+      /// to fill missing information
       case DashboardCardType.paymentNumberEqualsContactNumber:
-        context.read<DashboardCardManagerCubit>().updatePaymentNumber(false);
-        break;
       case DashboardCardType.contactNumberEqualsPaymentNumber:
-        context.read<DashboardCardManagerCubit>().updateContactNumber(false);
+        final recipient = context.read<AuthCubit>().state.recipient!;
+
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => AccountPage(recipient: recipient),
+          ),
+        );
         break;
     }
   }
