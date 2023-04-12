@@ -14,6 +14,7 @@ class Recipient extends Equatable {
   final String? email;
   final String? country;
   final String? preferredName;
+  final String? callingName;
   final String? gender;
   final String? selectedLanguage;
   final String? paymentProvider;
@@ -37,6 +38,7 @@ class Recipient extends Equatable {
     this.email,
     this.country,
     this.preferredName,
+    this.callingName,
     this.paymentProvider,
     this.gender,
     this.selectedLanguage,
@@ -60,6 +62,7 @@ class Recipient extends Equatable {
       email,
       country,
       preferredName,
+      callingName,
       selectedLanguage,
       gender,
       paymentProvider,
@@ -82,6 +85,7 @@ class Recipient extends Equatable {
     String? email,
     String? country,
     String? preferredName,
+    String? callingName,
     String? gender,
     String? paymentProvider,
     String? selectedLanguage,
@@ -103,6 +107,7 @@ class Recipient extends Equatable {
       email: email ?? this.email,
       country: country ?? this.country,
       preferredName: preferredName ?? this.preferredName,
+      callingName: callingName ?? this.callingName,
       gender: gender ?? this.gender,
       paymentProvider: paymentProvider ?? this.paymentProvider,
       selectedLanguage: selectedLanguage ?? this.selectedLanguage,
@@ -158,6 +163,10 @@ class Recipient extends Equatable {
       result.addAll({"preferred_name": preferredName});
     }
 
+    if (callingName != null) {
+      result.addAll({"calling_name": callingName});
+    }
+
     if (gender != null) {
       result.addAll({"gender": gender});
     }
@@ -208,6 +217,7 @@ class Recipient extends Equatable {
       email: map["email"] as String?,
       country: map["country"] as String?,
       preferredName: map["preferred_name"] as String?,
+      callingName: map["calling_name"] as String?,
       gender: map["gender"] as String?,
       paymentProvider: map["paymentProvider"] as String?,
       selectedLanguage: map["selected_language"] as String?,

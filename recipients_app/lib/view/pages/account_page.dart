@@ -44,7 +44,7 @@ class AccountPageState extends State<AccountPage> {
       text: widget.recipient.lastName ?? "",
     );
     _callingNameController = TextEditingController(
-      text: widget.recipient.preferredName ?? "",
+      text: widget.recipient.callingName ?? "",
     );
     _birthDateController = TextEditingController(
       text: getFormattedDate(widget.recipient.birthDate) ?? "",
@@ -149,13 +149,10 @@ class AccountPageState extends State<AccountPage> {
                 InputText(
                   controller: _callingNameController,
                   hintText: "Calling Name",
-                  onSubmitted: (value) {
-                    context.read<AuthCubit>().updateRecipient(
-                          widget.recipient.copyWith(
-                            preferredName: value,
+                  onSubmitted: (value) =>
+                      context.read<AuthCubit>().updateRecipient(
+                            widget.recipient.copyWith(callingName: value),
                           ),
-                        );
-                  },
                 ),
                 const SizedBox(height: 16),
                 InputDropdown<String>(
@@ -301,6 +298,10 @@ class AccountPageState extends State<AccountPage> {
                     const DropdownMenuItem(
                       child: Text("Orange Money SL"),
                       value: "orange_money_sl",
+                    ),
+                    const DropdownMenuItem(
+                      child: Text("Africell Money"),
+                      value: "africell_money",
                     ),
                   ],
                   value: widget.recipient.paymentProvider,
