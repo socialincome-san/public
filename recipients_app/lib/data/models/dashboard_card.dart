@@ -100,10 +100,10 @@ class DashboardCard extends StatelessWidget {
   void _onPressPrimary(BuildContext context) {
     switch (type) {
       case DashboardCardType.paymentNumberEqualsContactNumber:
-        context.read<DashboardCardManagerCubit>().updatePaymentNumber(true);
+        context.read<DashboardCardManagerCubit>().updatePaymentNumber();
         break;
       case DashboardCardType.contactNumberEqualsPaymentNumber:
-        context.read<DashboardCardManagerCubit>().updateContactNumber(true);
+        context.read<DashboardCardManagerCubit>().updateContactNumber();
         break;
     }
   }
