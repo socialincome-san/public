@@ -14,6 +14,10 @@ class Recipient extends Equatable {
   final String? email;
   final String? country;
   final String? preferredName;
+  final String? callingName;
+  final String? gender;
+  final String? selectedLanguage;
+  final String? paymentProvider;
 
   final bool? termsAccepted;
   final DateTime? recipientSince;
@@ -34,6 +38,10 @@ class Recipient extends Equatable {
     this.email,
     this.country,
     this.preferredName,
+    this.callingName,
+    this.paymentProvider,
+    this.gender,
+    this.selectedLanguage,
     this.termsAccepted,
     this.recipientSince,
     this.imLinkInitial,
@@ -54,6 +62,10 @@ class Recipient extends Equatable {
       email,
       country,
       preferredName,
+      callingName,
+      selectedLanguage,
+      gender,
+      paymentProvider,
       termsAccepted,
       recipientSince,
       imLinkInitial,
@@ -73,6 +85,10 @@ class Recipient extends Equatable {
     String? email,
     String? country,
     String? preferredName,
+    String? callingName,
+    String? gender,
+    String? paymentProvider,
+    String? selectedLanguage,
     bool? termsAccepted,
     DateTime? recipientSince,
     String? imLinkInitial,
@@ -91,6 +107,10 @@ class Recipient extends Equatable {
       email: email ?? this.email,
       country: country ?? this.country,
       preferredName: preferredName ?? this.preferredName,
+      callingName: callingName ?? this.callingName,
+      gender: gender ?? this.gender,
+      paymentProvider: paymentProvider ?? this.paymentProvider,
+      selectedLanguage: selectedLanguage ?? this.selectedLanguage,
       termsAccepted: termsAccepted ?? this.termsAccepted,
       recipientSince: recipientSince ?? this.recipientSince,
       imLinkInitial: imLinkInitial ?? this.imLinkInitial,
@@ -115,6 +135,10 @@ class Recipient extends Equatable {
       result.addAll({"mobile_money_phone": mobileMoneyPhone!.toMap()});
     }
 
+    if (paymentProvider != null) {
+      result.addAll({"paymentProvider": paymentProvider});
+    }
+
     if (firstName != null) {
       result.addAll({"first_name": firstName});
     }
@@ -137,6 +161,18 @@ class Recipient extends Equatable {
 
     if (preferredName != null) {
       result.addAll({"preferred_name": preferredName});
+    }
+
+    if (callingName != null) {
+      result.addAll({"calling_name": callingName});
+    }
+
+    if (gender != null) {
+      result.addAll({"gender": gender});
+    }
+
+    if (selectedLanguage != null) {
+      result.addAll({"selected_language": selectedLanguage});
     }
 
     if (termsAccepted != null) {
@@ -181,6 +217,10 @@ class Recipient extends Equatable {
       email: map["email"] as String?,
       country: map["country"] as String?,
       preferredName: map["preferred_name"] as String?,
+      callingName: map["calling_name"] as String?,
+      gender: map["gender"] as String?,
+      paymentProvider: map["paymentProvider"] as String?,
+      selectedLanguage: map["selected_language"] as String?,
       termsAccepted:
           // ignore: avoid_bool_literals_in_conditional_expressions
           map["terms_accepted"] != null ? map["terms_accepted"] as bool : false,

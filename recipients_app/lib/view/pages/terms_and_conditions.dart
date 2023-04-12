@@ -1,4 +1,3 @@
-import "package:app/core/cubits/account/account_cubit.dart";
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
@@ -53,7 +52,7 @@ class TermsAndConditions extends StatelessWidget {
                         termsAccepted: true,
                       );
 
-              context.read<AccountCubit>().updateRecipient(updated);
+              context.read<AuthCubit>().updateRecipient(updated);
             },
             label: "Accept",
           ),

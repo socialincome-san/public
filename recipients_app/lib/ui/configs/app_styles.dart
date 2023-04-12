@@ -17,6 +17,7 @@ abstract class AppStyles {
   static const bodyLarge = TextStyle(
     fontSize: 15,
     fontFamily: "Unica77LL",
+    color: Colors.black,
   );
 
   static const headlineSmall = TextStyle(
@@ -55,6 +56,13 @@ abstract class AppStyles {
   static const inputHint = TextStyle(
     fontSize: 15,
     fontFamily: "Unica77LL",
-    color: AppColors.primaryLightColor,
+    color: Colors.black,
+  );
+
+  static const inputText = TextStyle(
+    fontSize: 16,
+    fontFamily: "Unica77LL",
+    color: AppColors.primaryColor,
+    fontWeight: FontWeight.bold,
   );
 }

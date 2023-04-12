@@ -8,23 +8,35 @@ part "auth_state.dart";
 
 class AuthCubit extends Cubit<AuthState> {
   final UserRepository userRepository;
+  final CrashReportingRepository crashReportingRepository;
 
   AuthCubit({
     required this.userRepository,
+    required this.crashReportingRepository,
   }) : super(const AuthState()) {
     /// Register a listener which will be triggered if the auth state of the user
     /// changes for whatever reason.
     userRepository.authStateChanges().listen((user) async {
       if (user != null) {
-        final recipient = await userRepository.fetchRecipient(user);
+        try {
+          final recipient = await userRepository.fetchRecipient(user);
 
-        emit(
-          AuthState(
-            status: AuthStatus.authenticated,
-            firebaseUser: user,
-            recipient: recipient,
-          ),
-        );
+          emit(
+            AuthState(
+              status: AuthStatus.authenticated,
+              firebaseUser: user,
+              recipient: recipient,
+            ),
+          );
+        } on Exception catch (ex, stackTrace) {
+          crashReportingRepository.logError(ex, stackTrace);
+          emit(
+            AuthState(
+              status: AuthStatus.failure,
+              exception: ex,
+            ),
+          );
+        }
       } else {
         const AuthState();
       }
@@ -51,6 +63,29 @@ class AuthCubit extends Cubit<AuthState> {
       );
     } else {
       emit(const AuthState());
+    }
+  }
+
+  Future<void> updateRecipient(Recipient recipient) async {
+    emit(state.copyWith(status: AuthStatus.updatingRecipient));
+
+    try {
+      await userRepository.updateRecipient(recipient);
+
+      emit(
+        state.copyWith(
+          status: AuthStatus.updateRecipientSuccess,
+          recipient: recipient,
+        ),
+      );
+    } on Exception catch (ex, stackTrace) {
+      crashReportingRepository.logError(ex, stackTrace);
+      emit(
+        state.copyWith(
+          status: AuthStatus.updateRecipientFailure,
+          exception: ex,
+        ),
+      );
     }
   }
 

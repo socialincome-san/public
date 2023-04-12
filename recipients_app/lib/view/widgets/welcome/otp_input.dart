@@ -1,6 +1,7 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
+import "package:app/ui/inputs/input_text.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -34,19 +35,10 @@ class _OtpInputState extends State<OtpInput> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        TextFormField(
+        InputText(
           controller: inputController,
           keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: "Verification code",
-            labelStyle: TextStyle(
-              color: AppColors.primaryColor,
-              fontSize: 16,
-            ),
-          ),
-          style: const TextStyle(
-            color: AppColors.primaryColor,
-          ),
+          hintText: "Verification code",
         ),
         const SizedBox(height: 16),
         ButtonBig(

@@ -1,6 +1,14 @@
 part of "auth_cubit.dart";
 
-enum AuthStatus { loading, unauthenticated, authenticated, failure }
+enum AuthStatus {
+  loading,
+  unauthenticated,
+  authenticated,
+  updatingRecipient,
+  updateRecipientSuccess,
+  updateRecipientFailure,
+  failure
+}
 
 class AuthState extends Equatable {
   final AuthStatus status;
@@ -17,4 +25,18 @@ class AuthState extends Equatable {
 
   @override
   List<Object?> get props => [status, firebaseUser, recipient, exception];
+
+  AuthState copyWith({
+    AuthStatus? status,
+    User? firebaseUser,
+    Recipient? recipient,
+    Exception? exception,
+  }) {
+    return AuthState(
+      status: status ?? this.status,
+      firebaseUser: firebaseUser ?? this.firebaseUser,
+      recipient: recipient ?? this.recipient,
+      exception: exception ?? this.exception,
+    );
+  }
 }

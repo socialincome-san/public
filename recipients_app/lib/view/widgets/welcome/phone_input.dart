@@ -51,6 +51,7 @@ class _PhoneInputState extends State<PhoneInput> {
               selectorConfig: const SelectorConfig(
                 selectorType: PhoneInputSelectorType.DIALOG,
               ),
+              keyboardType: TextInputType.phone,
               selectorTextStyle: const TextStyle(
                 color: AppColors.primaryColor,
                 fontSize: 20,
@@ -75,9 +76,7 @@ class _PhoneInputState extends State<PhoneInput> {
                   color: Colors.white,
                 ),
               ),
-              onInputChanged: (PhoneNumber value) {
-                number = value;
-              },
+              onInputChanged: (PhoneNumber value) => number = value,
             ),
             const SizedBox(height: 16),
             ButtonBig(
