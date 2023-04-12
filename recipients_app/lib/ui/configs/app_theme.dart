@@ -96,6 +96,7 @@ abstract class AppTheme {
     ),
     cardTheme: CardTheme(
       color: Colors.white,
+      elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
       ),

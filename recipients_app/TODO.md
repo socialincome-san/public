@@ -5,10 +5,11 @@
     - firebase error messages not readable
     - add snackbar helper
     - add dialog helper
-    - move textstyles to theme
     - cards on dashboard
+
 - V2
     - add JSON serializer
+    - move textstyles to theme
 
     - DONE: fix dropdown button
     - DONE: success screen is quickly shown
