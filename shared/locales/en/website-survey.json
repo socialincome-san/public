@@ -1,6 +1,6 @@
 {
 	"survey": {
-		"login":{
+		"login": {
 			"message": "Please enter your phone number and the access token which we sent you.",
 			"phoneNumber": "Orange Money Phone Number",
 			"accessCode": "Survey Access Code",
@@ -50,7 +50,7 @@
 			"financialSituationChoices": {
 				"livingComfortably": "Living comfortably",
 				"doingOk": "Doing ok",
-				"difficultyMakingEndsMeet": "Difficulty making ends meet" ,
+				"difficultyMakingEndsMeet": "Difficulty making ends meet",
 				"barelyGettingBy": "Barely getting by"
 			},
 			"employmentStatusTitle": "What is your current employment status?",
@@ -80,11 +80,11 @@
 			"hasDependentsDesc": "People who depend on you.",
 			"nrDependentsTitle": "Number of people who depend on you.",
 			"nrDependentsChoices": {
-				"1-2": "1-2" ,
-				"3-4": "3-4" ,
-				"5-7": "5-7" ,
-				"8-10":  "8-10",
-				"10-":  "more than 10"
+				"1-2": "1-2",
+				"3-4": "3-4",
+				"5-7": "5-7",
+				"8-10": "8-10",
+				"10-": "more than 10"
 			},
 			"basicNeedsCoverageTitle": "How likely are you able to cover basic needs such as food, clothing, and shelter?",
 			"expensesCoveredTitle": "How likely are you able to pay all your bills on time (e.g., utilities, loans, etc.)?",
@@ -115,7 +115,7 @@
 			"happierCommentTitle": "How so?",
 			"notHappierCommentTitle": "Can you tell us why?",
 			"longEnoughTitle": "Was three years of Social Income payments long enough to become financially stable?",
-			"selfSustainableTitle" : "Will you be able to sustain yourself financially after your Social Income period has expired (e.g., pay your bills on time, handle an unexpected expense, etc.)?",
+			"selfSustainableTitle": "Will you be able to sustain yourself financially after your Social Income period has expired (e.g., pay your bills on time, handle an unexpected expense, etc.)?",
 			"notSelfSustainableCommentTitle": "Is there anything in the program that could be changed to make your transition easier?"
 		}
 	}
