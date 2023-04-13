@@ -1,5 +1,5 @@
 import { buildProperties, EnumValues } from '@camberi/firecms';
-import { Payment, PaymentStatus, PAYMENT_FIRESTORE_PATH } from '../../../shared/src/types';
+import { MESSAGE_FIRESTORE_PATH, Payment, PaymentStatus, PAYMENT_FIRESTORE_PATH } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 
 export const paymentStatusEnumValues: EnumValues = [
@@ -50,9 +50,18 @@ export const paymentsCollection = buildAuditedCollection<Payment>({
 			name: 'Payment Date',
 			mode: 'date',
 		},
+		phone_number: {
+			dataType: 'number',
+			name: 'Phone Number',
+		},
 		comments: {
 			dataType: 'string',
 			name: 'Comment',
+		},
+		message: {
+			dataType: 'reference',
+			name: 'Payment Notification Reference',
+			path: MESSAGE_FIRESTORE_PATH,
 		},
 	}),
 });

@@ -1,6 +1,5 @@
 import { AdditionalFieldDelegate, buildProperties } from '@camberi/firecms';
 import { EntityCollection, PropertiesOrBuilders } from '@camberi/firecms/dist/types';
-import { toYYYYMMDD } from '@socialincome/shared/src/utils/date';
 
 import { Chip, Tooltip } from '@mui/material';
 import {
@@ -11,7 +10,7 @@ import {
 	RECIPIENT_FIRESTORE_PATH,
 } from '@socialincome/shared/src/types';
 import { isUndefined } from 'lodash';
-import { BuildCollectionProps, paymentsCollection } from '../index';
+import { BuildCollectionProps, messagesCollection, paymentsCollection } from '../index';
 import { buildAuditedCollection } from '../shared';
 import {
 	birthDateProperty,
@@ -34,7 +33,6 @@ import {
 	professionProperty,
 	programStatusProperty,
 	SIStartDateProperty,
-	speaksEnglishProperty,
 	TestRecipientProperty,
 	TwitterProperty,
 } from './RecipientsProperties';
@@ -43,11 +41,13 @@ export const PaymentsLeft: AdditionalFieldDelegate<Partial<Recipient>> = {
 	id: 'payments_left',
 	name: 'Payments Left',
 	Builder: ({ entity }) => {
-		const lastPaymentDate = entity.values.si_start_date ? calcLastPaymentDate(entity.values.si_start_date) : undefined;
+		const lastPaymentDate = entity.values.si_start_date
+			? calcLastPaymentDate(entity.values.si_start_date as Date)
+			: undefined;
 		const paymentsLeft = lastPaymentDate ? calcPaymentsLeft(lastPaymentDate) : undefined;
 		if (paymentsLeft && lastPaymentDate) {
 			return (
-				<Tooltip title={'Last Payment Date ' + toYYYYMMDD(lastPaymentDate)}>
+				<Tooltip title={'Last Payment Date ' + lastPaymentDate.toFormat('yyyy-MM-dd')}>
 					<Chip
 						size={'small'}
 						color={paymentsLeft < 0 ? 'info' : paymentsLeft <= 1 ? 'error' : paymentsLeft <= 3 ? 'warning' : 'success'}
@@ -75,18 +75,17 @@ const baseProperties: PropertiesOrBuilders<Partial<Recipient>> = {
 	birth_date: birthDateProperty,
 	main_language: mainLanguageProperty,
 	profession: professionProperty,
-	speaks_english: speaksEnglishProperty,
 };
 
 export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: BuildCollectionProps) => {
 	let collection: EntityCollection<Partial<Recipient>> = {
 		additionalFields: [PaymentsLeft],
 		inlineEditing: false,
+		defaultSize: 'xs',
 		description: 'Lists of people, who receive a Social Income',
 		group: 'Recipients',
 		icon: 'RememberMeTwoTone',
-		initialSort: ['om_uid', 'asc'],
-		name: 'All Recipients',
+		name: 'Recipients',
 		path: RECIPIENT_FIRESTORE_PATH,
 		singularName: 'Recipient',
 		textSearchEnabled: true,
@@ -109,7 +108,7 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 				si_start_date: SIStartDateProperty,
 				test_recipient: TestRecipientProperty,
 			}),
-			subcollections: [paymentsCollection],
+			subcollections: [paymentsCollection, messagesCollection],
 		};
 	} else {
 		collection = {

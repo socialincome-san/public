@@ -1,6 +1,12 @@
-import "package:app/data/models/social_income_payment.dart";
+import "package:app/core/cubits/payment/payments_cubit.dart";
+import "package:app/data/models/payment/payment.dart";
 import "package:app/ui/configs/configs.dart";
+import "package:app/ui/inputs/input_text_area.dart";
+import "package:app/view/widgets/income/review_payment_bottom_action.dart";
+import "package:app/view/widgets/income/review_payment_header.dart";
+import "package:app/ui/inputs/radio_row.dart";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
 class ReviewPaymentModal extends StatefulWidget {
   final SocialIncomePayment _payment;
@@ -12,102 +18,135 @@ class ReviewPaymentModal extends StatefulWidget {
 }
 
 class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
-  final List<String> _contestReasons = [
-    "Phone stolen",
-    "Incorrect amount",
-    "Changed phone number",
-    "Other reason"
-  ];
+  ContestReason? _selectedReason = null;
+  bool _firstContestStep = true;
+  late final TextEditingController inputController;
 
-  bool _contested = false;
+  @override
+  void initState() {
+    super.initState();
+    inputController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    inputController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: MediaQuery.of(context).viewInsets,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 24, left: 8, right: 8),
-              child: Text(
-                _contested
-                    ? "What happened?"
-                    : "Have you received your Social Income?",
-                textScaleFactor: 1.3,
-              ),
-            ),
+    return FractionallySizedBox(
+      widthFactor: 0.95,
+      heightFactor: 0.8,
+      child: Center(
+        child: Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+            color: Colors.white,
           ),
-          Padding(
-            padding: AppSpacings.v16,
-            child: _contested
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: _contestReasons.map((String reason) {
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            final paymentId = widget._payment.id;
-                            if (paymentId != null) {
-                              // TODO move to cubit
-                              /* paymentRepo.contestPayment(
-                                paymentId,
-                                reason,
-                              ); */
-                            }
-                            Navigator.pop(context);
-                          },
-                          child: Text(reason),
-                        ),
-                      );
-                    }).toList(),
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          final paymentId = widget._payment.id;
-                          if (paymentId != null) {
-                            // TODO move to cubit
-                            // paymentRepo.confirmPayment(paymentId);
-                          }
-                          Navigator.pop(context);
-                        },
-                        style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all<Size>(
-                            const Size(50, 50),
+          child: _firstContestStep
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: AppSpacings.a16,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ReviewPaymentModalHeader(),
+                          Padding(
+                            padding: AppSpacings.v16,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: ContestReason.values
+                                  .map((ContestReason reason) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: RadioRow(
+                                    title: reason.title,
+                                    groupValue: _selectedReason,
+                                    value: reason,
+                                    onChanged: (value) => setState(() {
+                                      _selectedReason = value;
+                                    }),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
                           ),
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            AppColors.primaryColor,
-                          ),
-                        ),
-                        child: const Text("YES"),
+                        ],
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _contested = true;
-                          });
-                        },
-                        style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all<Size>(
-                            const Size(50, 50),
-                          ),
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            Colors.red,
-                          ),
-                        ),
-                        child: const Text("NO"),
+                    ),
+                    if (_selectedReason != null &&
+                        _selectedReason != ContestReason.other) ...[
+                      ReviewPaymentBottomAction(
+                        actionLabel: "Submit",
+                        onAction: () =>
+                            _onPressedContest(context, _selectedReason!),
                       ),
                     ],
-                  ),
-          ),
-        ],
+                    if (_selectedReason != null &&
+                        _selectedReason == ContestReason.other) ...[
+                      ReviewPaymentBottomAction(
+                        actionLabel: "Next",
+                        onAction: () => setState(() {
+                          _firstContestStep = false;
+                        }),
+                      ),
+                    ],
+                  ],
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: AppSpacings.a16,
+                      child: Material(
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            ReviewPaymentModalHeader(),
+                            const SizedBox(height: 16),
+                            InputTextArea(
+                              controller: inputController,
+                              hintText: "Describe what happend",
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    ReviewPaymentBottomAction(
+                        actionLabel: "Submit",
+                        onAction: () {
+                          _onPressedContest(
+                            context,
+                            ContestReason.other,
+                            otherReasonComment: inputController.text,
+                          );
+                        }),
+                  ],
+                ),
+        ),
       ),
     );
+  }
+
+  void _onPressedContest(
+    BuildContext context,
+    ContestReason reason, {
+    String? otherReasonComment = null,
+  }) {
+    String otherReasonCommentFormatted = "";
+    if (otherReasonComment != null) {
+      otherReasonCommentFormatted = ": " + otherReasonComment;
+    }
+    context.read<PaymentsCubit>().contestPayment(
+          widget._payment,
+          reason.title + otherReasonCommentFormatted,
+        );
+    Navigator.pop(context);
   }
 }

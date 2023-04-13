@@ -16,6 +16,7 @@ import { AdminUser } from '../../shared/src/types';
 import {
 	adminsCollection,
 	buildPartnerOrganisationsCollection,
+	buildRecipientsPaymentsCollection,
 	contributorOrganisationsCollection,
 	newsletterSubscribersCollection,
 	operationalExpensesCollection,
@@ -24,6 +25,7 @@ import {
 
 import { getApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
+import { buildRecipientsPartnerOrgAdminCollection } from './collections/recipients/RecipientsPartnerOrgAdmin';
 import { RecipientsView } from './views/RecipientsView';
 import { ScriptsView } from './views/Scripts';
 
@@ -107,6 +109,12 @@ const textSearchController: FirestoreTextSearchController = ({ path, searchStrin
 };
 
 export default function App() {
+	// The initialFilter property on collections is static, i.e. we can't dynamically access user information when we create
+	// the filter, which is why we need to first fetch user information before we create the entire collection. This way,
+	// we can set the filter based on the user's permission.
+	const [collections, setCollections] = useState<EntityCollection[]>([]);
+	const [customViews, setCustomViews] = useState<CMSView[]>([]);
+
 	const globalAdminCollections = [
 		adminsCollection,
 		operationalExpensesCollection,
@@ -116,13 +124,7 @@ export default function App() {
 		buildPartnerOrganisationsCollection({ isGlobalAdmin: true }),
 	];
 
-	// The initialFilter property on collections is static, i.e. we can't dynamically access user information when we create
-	// the filter, which is why we need to first fetch user information before we create the entire collection. This way,
-	// we can set the filter based on the user's permission.
-	const [collections, setCollections] = useState<EntityCollection[]>([]);
-
-	// Adding custom pages depending on the user role
-	const publicCustomViews: CMSView[] = [
+	const globalAdminCustomViews: CMSView[] = [
 		{
 			path: 'recipients',
 			name: 'Recipients',
@@ -131,8 +133,6 @@ export default function App() {
 			description: 'Collection of Recipients',
 			view: <RecipientsView />,
 		},
-	];
-	const globalAdminCustomViews: CMSView[] = [
 		{
 			path: 'scripts',
 			name: 'Scripts',
@@ -141,7 +141,6 @@ export default function App() {
 			view: <ScriptsView />,
 		},
 	];
-	const [customViews, setCustomViews] = useState<CMSView[]>(publicCustomViews);
 
 	const myAuthenticator: Authenticator = async ({ user, dataSource, authController }) => {
 		dataSource
@@ -156,11 +155,18 @@ export default function App() {
 					// Global analysts have no write access through the firestore rules, so it's ok to show all collections
 					if (result?.values?.is_global_admin || result?.values?.is_global_analyst) {
 						setCollections(globalAdminCollections);
-						setCustomViews(publicCustomViews.concat(globalAdminCustomViews));
+						setCustomViews(globalAdminCustomViews);
 						authController.setExtra({ isGlobalAdmin: Boolean(result?.values?.is_global_admin) });
-					} else {
-						authController.setExtra({ organisations: result?.values?.organisations || [] });
-						setCollections([buildPartnerOrganisationsCollection({ isGlobalAdmin: false })]);
+					} else if (result?.values?.organisations) {
+						authController.setExtra({ organisations: result.values.organisations });
+						setCollections([
+							buildPartnerOrganisationsCollection({ isGlobalAdmin: false }),
+							buildRecipientsPartnerOrgAdminCollection(result.values.organisations),
+							buildRecipientsPaymentsCollection({
+								isGlobalAdmin: false,
+								organisations: result.values.organisations,
+							}),
+						]);
 					}
 				}
 			});

@@ -3,10 +3,11 @@ part of "signup_cubit.dart";
 enum SignupStatus {
   loadingPhoneNumber,
   loadingVerificationCode,
+  phoneNumberFailure,
   enterPhoneNumber,
   enterVerificationCode,
   verificationSuccess,
-  failure
+  verificationFailure,
 }
 
 class SignupState extends Equatable {

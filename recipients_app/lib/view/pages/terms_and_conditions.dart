@@ -1,4 +1,3 @@
-import "package:app/core/cubits/account/account_cubit.dart";
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
@@ -42,7 +41,7 @@ class TermsAndConditions extends StatelessWidget {
                 "Improve service performance by use of analytics",
                 Icons.poll,
               ),
-              _IconAndText("Read our privacy policy", Icons.policy)
+              _IconAndText("Read our privacy policy", Icons.policy),
             ],
           ),
           const Spacer(),
@@ -53,10 +52,10 @@ class TermsAndConditions extends StatelessWidget {
                         termsAccepted: true,
                       );
 
-              context.read<AccountCubit>().updateRecipient(updated);
+              context.read<AuthCubit>().updateRecipient(updated);
             },
             label: "Accept",
-          )
+          ),
         ],
       ),
     );

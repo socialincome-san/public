@@ -29,7 +29,7 @@ class PaymentRepository {
       );
     }
 
-    payments.sort((a, b) => b.id.compareTo(a.id));
+    payments.sort((a, b) => a.id.compareTo(b.id));
 
     return payments;
   }
@@ -39,11 +39,10 @@ class PaymentRepository {
     required SocialIncomePayment payment,
   }) async {
     final updatedPayment = payment.copyWith(
-      status: "confirmed",
-      confirmAt: Timestamp.fromDate(DateTime.now()),
+      status: PaymentStatus.confirmed,
     );
 
-    firestore
+    await firestore
         .collection(recipientCollection)
         .doc(recipientId)
         .collection(paymentCollection)
@@ -57,12 +56,11 @@ class PaymentRepository {
     required String contestReason,
   }) async {
     final updatedPayment = payment.copyWith(
-      status: "contested",
-      contestAt: Timestamp.fromDate(DateTime.now()),
-      contestReason: contestReason,
+      status: PaymentStatus.contested,
+      comments: contestReason,
     );
 
-    firestore
+    await firestore
         .collection(recipientCollection)
         .doc(recipientId)
         .collection(paymentCollection)

@@ -1,6 +1,5 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
-import "package:app/data/repositories/crash_reporting_repository.dart";
-import "package:app/data/repositories/user_repository.dart";
+import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/main_app_page.dart";
 import "package:app/view/pages/welcome_page.dart";
@@ -38,9 +37,15 @@ class MyApp extends StatelessWidget {
             crashlytics: crashlytics,
           ),
         ),
+        RepositoryProvider(
+          create: (context) => PaymentRepository(
+            firestore: firestore,
+          ),
+        ),
       ],
       child: BlocProvider(
         create: (context) => AuthCubit(
+          crashReportingRepository: context.read<CrashReportingRepository>(),
           userRepository: context.read<UserRepository>(),
         )..init(),
         child: MaterialApp(
@@ -54,6 +59,9 @@ class MyApp extends StatelessWidget {
                 case AuthStatus.failure:
                   return const WelcomePage();
                 case AuthStatus.authenticated:
+                case AuthStatus.updateRecipientFailure:
+                case AuthStatus.updateRecipientSuccess:
+                case AuthStatus.updatingRecipient:
                   return const MainAppPage();
               }
             },

@@ -1,3 +1,4 @@
+import "package:app/data/models/payment/payment_ui_status.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/ui/icons/icons.dart";
@@ -26,9 +27,9 @@ class DesignComponentsScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: const [
-                StatusIcon(status: Status.success),
-                StatusIcon(status: Status.warning),
-                StatusIcon(status: Status.error),
+                // StatusIcon(status: Status.success),
+                // StatusIcon(status: Status.warning),
+                // StatusIcon(status: Status.error),
               ],
             ),
             const SizedBox(height: 32),
@@ -45,9 +46,9 @@ class DesignComponentsScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: const [
-                      StatusIcon(status: Status.success, isInverted: true),
-                      StatusIcon(status: Status.warning, isInverted: true),
-                      StatusIcon(status: Status.error, isInverted: true),
+                      // StatusIcon(status: Status.success, isInverted: true),
+                      // StatusIcon(status: Status.warning, isInverted: true),
+                      // StatusIcon(status: Status.error, isInverted: true),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -63,45 +64,35 @@ class DesignComponentsScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: const [
-                StatusIconWithText(status: Status.success, text: "Success"),
-                StatusIconWithText(status: Status.warning, text: "Warning"),
-                StatusIconWithText(status: Status.error, text: "Error"),
+                PaymentStatusIconWithText(
+                  status: PaymentUiStatus.confirmed,
+                  text: "Confirmed",
+                ),
+                PaymentStatusIconWithText(
+                  status: PaymentUiStatus.contested,
+                  text: "Contested",
+                ),
+                PaymentStatusIconWithText(
+                  status: PaymentUiStatus.onHoldContested,
+                  text: "On Hold contested",
+                ),
+                PaymentStatusIconWithText(
+                  status: PaymentUiStatus.onHoldToReview,
+                  text: "On Hold to review",
+                ),
+                PaymentStatusIconWithText(
+                  status: PaymentUiStatus.recentToReview,
+                  text: "Recent To Review",
+                ),
+                PaymentStatusIconWithText(
+                  status: PaymentUiStatus.toBePaid,
+                  text: "To Be Paid",
+                ),
+                PaymentStatusIconWithText(
+                  status: PaymentUiStatus.toReview,
+                  text: "To Review",
+                ),
               ],
-            ),
-            const SizedBox(height: 32),
-            const Text(
-              "Status Icons with Text Inverted",
-              style: AppStyles.headlineLarge,
-            ),
-            const SizedBox(height: 16),
-            ColoredBox(
-              color: AppColors.darkGrey,
-              child: Column(
-                children: [
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: const [
-                      StatusIconWithText(
-                        status: Status.success,
-                        text: "Success",
-                        isInverted: true,
-                      ),
-                      StatusIconWithText(
-                        status: Status.warning,
-                        text: "Warning",
-                        isInverted: true,
-                      ),
-                      StatusIconWithText(
-                        status: Status.error,
-                        text: "Error",
-                        isInverted: true,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                ],
-              ),
             ),
             const SizedBox(height: 32),
             const Text(

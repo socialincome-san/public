@@ -8,7 +8,6 @@ import {
 export const programStatusProperty: Property = {
 	name: 'Status',
 	dataType: 'string',
-	disabled: true,
 	enumValues: [
 		{ id: RecipientProgramStatus.Active, label: 'Active Recipient' },
 		{ id: RecipientProgramStatus.Waitlisted, label: 'Waiting List' },
@@ -32,41 +31,33 @@ export const lastNameProperty: Property = {
 };
 export const communicationMobilePhoneProperty: Property = {
 	name: 'Contact Phone',
-	validation: { required: true },
 	dataType: 'map',
-	spreadChildren: true,
+	hideFromCollection: true,
 	properties: {
 		phone: {
 			name: 'Phone Number',
 			dataType: 'number',
-			hideFromCollection: true,
-		},
-		equals_mobile_money: {
-			name: '# used for Orange Money',
-			dataType: 'boolean',
-			hideFromCollection: true,
-		},
-		has_whatsapp: {
-			name: '# used on WhatsApp',
-			dataType: 'boolean',
-			hideFromCollection: true,
-		},
-	},
-};
-export const mobileMoneyPhoneProperty: Property = {
-	name: 'Separate Orange Money Phone',
-	dataType: 'map',
-	spreadChildren: true,
-	properties: {
-		phone: {
-			name: 'Orange Money Number',
-			dataType: 'number',
-			validation: { required: true, min: 23200000000, max: 23299999999 },
+			validation: { min: 23200000000, max: 23299999999 },
 		},
 		has_whatsapp: {
 			name: 'WhatsApp',
 			dataType: 'boolean',
-			hideFromCollection: true,
+		},
+	},
+};
+export const mobileMoneyPhoneProperty: Property = {
+	name: 'Orange Money Phone Number',
+	dataType: 'map',
+	hideFromCollection: true,
+	properties: {
+		phone: {
+			name: 'Orange Money Number',
+			dataType: 'number',
+			validation: { min: 23200000000, max: 23299999999 },
+		},
+		has_whatsapp: {
+			name: 'WhatsApp',
+			dataType: 'boolean',
 		},
 	},
 };
@@ -83,22 +74,13 @@ export const genderProperty: Property = {
 	},
 };
 export const mainLanguageProperty: Property = {
-	name: 'First Language',
+	name: 'Preferred Language',
 	dataType: 'string',
 	validation: { required: true },
 	enumValues: [
 		{ id: RecipientMainLanguage.Krio, label: 'Krio' },
-		{ id: RecipientMainLanguage.Mende, label: 'Mende' },
-		{ id: RecipientMainLanguage.Temne, label: 'Temne' },
-		{ id: RecipientMainLanguage.Limba, label: 'Limba' },
 		{ id: RecipientMainLanguage.English, label: 'English' },
-		{ id: RecipientMainLanguage.Other, label: 'Other' },
 	],
-};
-export const speaksEnglishProperty: Property = {
-	name: 'Speaks English',
-	dataType: 'boolean',
-	hideFromCollection: true,
 };
 export const birthDateProperty: Property = {
 	name: 'Birthday',
@@ -120,7 +102,6 @@ export const organisationProperty: Property = {
 	dataType: 'reference',
 	path: PARTNER_ORGANISATION_FIRESTORE_PATH,
 };
-
 export const emailProperty: Property = {
 	name: 'Email',
 	dataType: 'string',
@@ -131,13 +112,11 @@ export const InstagramProperty: Property = {
 	dataType: 'string',
 	hideFromCollection: true,
 };
-
 export const TwitterProperty: Property = {
 	name: 'Twitter',
 	dataType: 'string',
 	hideFromCollection: true,
 };
-
 export const IMUIDProperty: Property = {
 	name: 'IM UID',
 	dataType: 'string',

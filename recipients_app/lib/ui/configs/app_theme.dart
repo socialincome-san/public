@@ -27,10 +27,13 @@ abstract class AppTheme {
       onError: AppColors.fontColorDark,
     ),
     primaryColor: AppColors.primaryColor,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.primaryColor,
-      foregroundColor: AppColors.fontColorLight,
-      titleTextStyle: AppStyles.headlineMedium,
+    appBarTheme: AppBarTheme(
+      backgroundColor: AppColors.backgroundColor,
+      foregroundColor: AppColors.fontColorDark,
+      titleTextStyle: AppStyles.headlineLarge.copyWith(
+        color: AppColors.fontColorDark,
+        fontWeight: FontWeight.bold,
+      ),
     ),
     iconTheme: const IconThemeData(color: Colors.white),
     outlinedButtonTheme: OutlinedButtonThemeData(
@@ -64,11 +67,22 @@ abstract class AppTheme {
     ),
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: AppStyles.inputHint,
+      fillColor: Colors.white,
+      filled: true,
+      alignLabelWithHint: true,
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      ),
       border: OutlineInputBorder(
         borderSide: const BorderSide(
-          color: AppColors.primaryLightColor,
+          color: Colors.white,
         ),
-        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
+        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
       ),
     ),
     scaffoldBackgroundColor: AppColors.backgroundColor,
@@ -79,6 +93,13 @@ abstract class AppTheme {
       headlineSmall: AppStyles.headlineSmall,
       headlineMedium: AppStyles.headlineMedium,
       headlineLarge: AppStyles.headlineLarge,
+    ),
+    cardTheme: CardTheme(
+      color: Colors.white,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
+      ),
     ),
   );
 }

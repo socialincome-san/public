@@ -1,6 +1,7 @@
 import admin from 'firebase-admin';
 import functions from 'firebase-functions-test';
-import moment from 'moment';
+
+import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/FirestoreAdmin';
 import {
 	AdminPaymentProcessTask,
@@ -39,7 +40,7 @@ describe('AdminPaymentTaskProcessor', () => {
 			'User Type*',
 		]);
 		expect(rows[1]).toEqual([
-			'00000300',
+			'25000300',
 			'500',
 			'Daniel',
 			'Naba',
@@ -48,7 +49,7 @@ describe('AdminPaymentTaskProcessor', () => {
 			'subscriber',
 		]);
 		expect(rows[2]).toEqual([
-			'00000056',
+			'25000056',
 			'500',
 			'Leandro',
 			'Pasul',
@@ -57,7 +58,7 @@ describe('AdminPaymentTaskProcessor', () => {
 			'subscriber',
 		]);
 		expect(rows[3]).toEqual([
-			'00000501',
+			'25000501',
 			'500',
 			'Bin',
 			'Bun',
@@ -76,16 +77,17 @@ describe('AdminPaymentTaskProcessor', () => {
 
 		expect(rows).toHaveLength(4);
 		expect(rows[0]).toEqual(['Mobile Number*', 'Unique Code*', 'User Type*']);
-		expect(rows[1]).toEqual(['00000300', '2', 'subscriber']);
-		expect(rows[2]).toEqual(['00000056', '88', 'subscriber']);
-		expect(rows[3]).toEqual(['00000501', '99', 'subscriber']);
+		expect(rows[1]).toEqual(['25000300', '2', 'subscriber']);
+		expect(rows[2]).toEqual(['25000056', '88', 'subscriber']);
+		expect(rows[3]).toEqual(['25000501', '99', 'subscriber']);
 	});
 
 	test('create new payments', async () => {
-		const now = moment();
+		const thisMonthPaymentDate = DateTime.fromObject({ day: 15, hour: 0, minute: 0, second: 0, millisecond: 0 });
 		const result = await triggerFunction(AdminPaymentProcessTask.CreateNewPayments, {
 			auth: { token: { email: 'admin@socialincome.org' } },
 		});
+		expect(result).toEqual('Set 3 payments to paid and created 3 payments for next month');
 
 		const recipientDocs = (
 			await firestoreAdmin
@@ -93,27 +95,40 @@ describe('AdminPaymentTaskProcessor', () => {
 				.where('progr_status', 'in', [RecipientProgramStatus.Active, RecipientProgramStatus.Designated])
 				.get()
 		).docs;
-
-		expect(result).toEqual('Created 3 payments');
 		expect(recipientDocs).toHaveLength(3);
 
 		for (const recipientDoc of recipientDocs) {
-			const paymentDocRef = firestoreAdmin.doc<Payment>(
-				`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${PAYMENT_FIRESTORE_PATH}`,
-				now.format('YYYY-MM')
-			);
-			const paymentDoc = await paymentDocRef.get();
+			const paymentDoc = await firestoreAdmin
+				.doc<Payment>(
+					`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${PAYMENT_FIRESTORE_PATH}`,
+					thisMonthPaymentDate.toFormat('yyyy-MM')
+				)
+				.get();
 			expect(paymentDoc.exists).toBeTruthy();
 			const payment = paymentDoc.data() as Payment;
 			expect(payment.amount).toEqual(500);
-			expect(moment(payment.payment_at.toDate()).isSameOrAfter(now)).toBeTruthy();
+			expect(DateTime.fromJSDate(payment.payment_at.toDate())).toEqual(thisMonthPaymentDate);
 			expect(payment.status).toEqual(PaymentStatus.Paid);
 			expect(payment.currency).toEqual('SLE');
+
+			const nextMonthPaymentDate = thisMonthPaymentDate.plus({ month: 1 });
+			const nextPaymentDoc = await firestoreAdmin
+				.doc<Payment>(
+					`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${PAYMENT_FIRESTORE_PATH}`,
+					nextMonthPaymentDate.toFormat('yyyy-MM')
+				)
+				.get();
+			expect(nextPaymentDoc.exists).toBeTruthy();
+			const nextPayment = nextPaymentDoc.data() as Payment;
+			expect(nextPayment.amount).toEqual(500);
+			expect(DateTime.fromJSDate(nextPayment.payment_at.toDate())).toEqual(nextMonthPaymentDate);
+			expect(nextPayment.status).toEqual(PaymentStatus.Created);
+			expect(nextPayment.currency).toEqual('SLE');
 		}
 
 		const secondExecutionResult = await triggerFunction(AdminPaymentProcessTask.CreateNewPayments, {
 			auth: { token: { email: 'admin@socialincome.org' } },
 		});
-		expect(secondExecutionResult).toEqual('Created 0 payments');
+		expect(secondExecutionResult).toEqual('Set 0 payments to paid and created 0 payments for next month');
 	});
 });

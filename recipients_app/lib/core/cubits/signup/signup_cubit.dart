@@ -19,9 +19,11 @@ part "signup_state.dart";
 
 class SignupCubit extends Cubit<SignupState> {
   final UserRepository userRepository;
+  final CrashReportingRepository crashReportingRepository;
 
   SignupCubit({
     required this.userRepository,
+    required this.crashReportingRepository,
   }) : super(const SignupState());
 
   Future<void> signupWithPhoneNumber({
@@ -42,9 +44,10 @@ class SignupCubit extends Cubit<SignupState> {
           );
         },
         onVerificationFailed: (ex) {
+          crashReportingRepository.logError(ex, StackTrace.current);
           emit(
             state.copyWith(
-              status: SignupStatus.failure,
+              status: SignupStatus.phoneNumberFailure,
               exception: ex,
             ),
           );
@@ -59,10 +62,11 @@ class SignupCubit extends Cubit<SignupState> {
           );
         },
       );
-    } on Exception catch (ex) {
+    } on Exception catch (ex, stackTrace) {
+      crashReportingRepository.logError(ex, stackTrace);
       emit(
         state.copyWith(
-          status: SignupStatus.failure,
+          status: SignupStatus.verificationFailure,
           exception: ex,
         ),
       );
@@ -86,19 +90,19 @@ class SignupCubit extends Cubit<SignupState> {
           phoneNumber: state.phoneNumber,
         ),
       );
-    } on Exception catch (ex) {
+    } on Exception catch (ex, stackTrace) {
+      crashReportingRepository.logError(ex, stackTrace);
       emit(
         state.copyWith(
-          status: SignupStatus.failure,
+          status: SignupStatus.verificationFailure,
           exception: ex,
         ),
       );
     }
   }
 
-  Future<void> resendVerificationCode() async {
-    signupWithPhoneNumber(phoneNumber: state.phoneNumber!);
-  }
+  Future<void> resendVerificationCode() =>
+      signupWithPhoneNumber(phoneNumber: state.phoneNumber!);
 
   void changeToPhoneInput() {
     emit(
