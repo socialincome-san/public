@@ -1,9 +1,10 @@
 const path = require('path');
+const config = require('./config');
 
 module.exports = {
 	i18n: {
-		locales: ['en', 'de', 'it'],
-		defaultLocale: 'en',
+		locales: [...new Set(Object.keys(config.websiteLanguages).concat(Object.keys(config.surveyLanguages)))],
+		defaultLocale: config.defaultIsoCode,
 		localePath: path.resolve('../shared/locales'),
 	},
 };

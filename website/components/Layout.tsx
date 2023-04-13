@@ -1,9 +1,10 @@
+import { Container } from '@mui/material';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { appConfig } from '../config';
+// @ts-ignore
+import config from '../config';
 import LanguageSwitcher from './LanguageSwitcher';
-import styles from './Layout.module.css';
+import Link from './Link';
 
 const siteName = 'SocialIncome';
 
@@ -16,32 +17,29 @@ export default function Layout({ children, title }: Props) {
 	const router = useRouter();
 
 	return (
-		<div className={styles.container}>
+		<div>
 			<Head>
 				<title>{title}</title>
 				<link rel="icon" href="/favicon.ico" />
 				{router.locales!.map((locale) => {
 					return (
-						<link
-							key={locale}
-							rel="alternate"
-							hrefLang={locale}
-							href={`${appConfig.domain}/${locale}${router.asPath}`}
-						/>
+						<link key={locale} rel="alternate" hrefLang={locale} href={`${config.domain}/${locale}${router.asPath}`} />
 					);
 				})}
 			</Head>
-			<header className={styles.header}>
-				<h1>
-					<Link href="/">{siteName}</Link>
-				</h1>
-				<LanguageSwitcher />
+			<header>
+				<Container maxWidth="sm">
+					<h1>
+						<Link href="/">{siteName}</Link>
+					</h1>
+					<LanguageSwitcher languages={config.websiteLanguages} fallbackIsoCode={config.defaultIsoCode} />
+				</Container>
 			</header>
 			<main>
-				<section>
+				<Container maxWidth="sm">
 					<h2>{title}</h2>
-				</section>
-				{children}
+					{children}
+				</Container>
 			</main>
 		</div>
 	);

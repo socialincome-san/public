@@ -55,3 +55,9 @@ export const commentsProperty: Property = {
 	name: 'Comments',
 	markdown: true,
 };
+
+export const accessTokenProperty: StringProperty = {
+	dataType: 'string',
+	name: 'Access Token',
+	readOnly: true,
+};

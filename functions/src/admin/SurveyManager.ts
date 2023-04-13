@@ -16,7 +16,7 @@ import {
 	SurveyStatus,
 	SURVEY_FIRETORE_PATH,
 } from '../../../shared/src/types/admin/Survey';
-import { rndBase64 } from '../../../shared/src/utils/crypto';
+import { rndString } from '../../../shared/src/utils/crypto';
 
 /**
  * Takes care of creating surveys for recipients
@@ -94,8 +94,9 @@ export class SurveyManager {
 		);
 		const surveyDocRef = surveysCollection.doc(surveyName);
 		if (!(await surveyDocRef.get()).exists) {
-			const email = rndBase64(64).toLowerCase() + '@socialincome.org';
-			const password = rndBase64(64);
+			const email = rndString(16).toLowerCase() + '@si.org';
+			const password = rndString(16);
+			const token = rndString(3, 'hex');
 			await this.authAdmin.auth.createUser({
 				email,
 				password,
@@ -110,6 +111,7 @@ export class SurveyManager {
 				due_date_at: due_date_at,
 				access_email: email,
 				access_pw: password,
+				access_token: token,
 			});
 			console.log(`Created survey ${surveyName} for recipient ${recipientId}.`);
 			return Promise.resolve();

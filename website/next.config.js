@@ -1,13 +1,15 @@
-const { i18n } = require('./next-i18next.config');
+const config = require('./config');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	reactStrictMode: true,
+	reactStrictMode: false,
 	swcMinify: true,
-	i18n,
+
+	i18n: {
+		locales: [...new Set(Object.keys(config.websiteLanguages).concat(Object.keys(config.surveyLanguages)))],
+		defaultLocale: config.defaultIsoCode,
+	},
+	transpilePackages: ['@socialincome/shared'],
 };
 
-// required to trigger compilation of shared code
-const withTranspilation = require('next-transpile-modules')(['@socialincome/shared']);
-
-module.exports = withTranspilation(nextConfig);
+module.exports = nextConfig;

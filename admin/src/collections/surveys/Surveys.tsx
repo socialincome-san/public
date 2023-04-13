@@ -16,6 +16,7 @@ import OpenDetailView from '../../components/OpenDetailView';
 import { mainLanguageProperty } from '../recipients/RecipientsProperties';
 import { buildAuditedCollection } from '../shared';
 import {
+	accessTokenProperty,
 	commentsProperty,
 	completedAtProperty,
 	dueDateAtProperty,
@@ -40,6 +41,7 @@ export const surveysCollection = buildAuditedCollection<Partial<Survey>>({
 		completed_at: completedAtProperty,
 		status: surveyStatusProperty,
 		comments: commentsProperty,
+		access_token: accessTokenProperty,
 	},
 });
 
@@ -48,7 +50,7 @@ export const createSurveyColumn = (surveyName: string): AdditionalFieldDelegate<
 	return {
 		id: surveyName,
 		name: surveyName,
-		width: 250,
+		width: 400,
 		Builder: ({ entity, context }) => {
 			return (
 				<AsyncPreviewComponent
@@ -58,7 +60,7 @@ export const createSurveyColumn = (surveyName: string): AdditionalFieldDelegate<
 							entityId: surveyName,
 							collection: surveysCollection,
 						})
-						.then((entity) => entity && surveyPreview(entity, sideEntityController))}
+						.then((surveyEntity) => surveyEntity && surveyPreview(surveyEntity, entity.id, sideEntityController))}
 				/>
 			);
 		},
@@ -67,7 +69,6 @@ export const createSurveyColumn = (surveyName: string): AdditionalFieldDelegate<
 
 export const createPendingSurveyColumn = (i: number): AdditionalFieldDelegate<Partial<Recipient>> => {
 	const sideEntityController = useSideEntityController();
-
 	return {
 		id: 'nextSurvey',
 		name: 'nextSurvey',
@@ -87,7 +88,7 @@ export const createPendingSurveyColumn = (i: number): AdditionalFieldDelegate<Pa
 								.filter(
 									(survey) =>
 										survey.values?.status != undefined &&
-										[SurveyStatus.Sent, SurveyStatus.New, SurveyStatus.InProgress, SurveyStatus.Completed].includes(
+										[SurveyStatus.New, SurveyStatus.Sent, SurveyStatus.Scheduled, SurveyStatus.InProgress].includes(
 											survey.values?.status
 										)
 								)
@@ -99,7 +100,7 @@ export const createPendingSurveyColumn = (i: number): AdditionalFieldDelegate<Pa
 									<Fragment>
 										<Chip size={'small'} color={'info'} label={nextSurvey.id} />
 										&nbsp;
-										{surveyPreview(nextSurvey, sideEntityController)}
+										{surveyPreview(nextSurvey, entity.id, sideEntityController)}
 									</Fragment>
 								)
 							);
@@ -110,7 +111,11 @@ export const createPendingSurveyColumn = (i: number): AdditionalFieldDelegate<Pa
 	};
 };
 
-const surveyPreview = (entity: Entity<Partial<Survey>>, sideEntityController: SideEntityController) => {
+const surveyPreview = (
+	entity: Entity<Partial<Survey>>,
+	recipientId: string,
+	sideEntityController: SideEntityController
+) => {
 	return (
 		<Fragment>
 			<StringPropertyPreview property={surveyStatusProperty} value={entity?.values?.status || ''} size={'small'} />
@@ -120,7 +125,11 @@ const surveyPreview = (entity: Entity<Partial<Survey>>, sideEntityController: Si
 			<OpenDetailView entity={entity} collection={surveysCollection} sideEntityController={sideEntityController} />
 			&nbsp;
 			{/*// todo add proper survey link*/}
-			<CopyToClipboard title={'Copy survey url to clipboard'} data={''} />
+			<CopyToClipboard title={'Copy survey url to clipboard'} data={getSurveyUrl(entity, recipientId)} />
+			&nbsp;
+			<Tooltip title={'This token can be used to login using the orange money phone number'}>
+				<Chip color="info" label={entity?.values?.access_token} size={'small'} />
+			</Tooltip>
 		</Fragment>
 	);
 };
@@ -135,9 +144,20 @@ const surveyDueDateClip = (entity: Entity<Partial<Survey>>) => {
 				<Chip
 					size={'small'}
 					color={dueDate < DateTime.now() && entity.values.status != SurveyStatus.Completed ? 'warning' : 'info'}
-					label={dueDate.diffNow(['months', 'days']).toHuman({ unitDisplay: 'short' })}
+					label={dueDate.diffNow(['months', 'days']).toHuman({ unitDisplay: 'narrow', maximumFractionDigits: 0 })}
 				/>
 			</Tooltip>
 		)
 	);
+};
+
+const getSurveyUrl = (entity: Entity<Partial<Survey>>, recipientId: string) => {
+	const getParams = {
+		email: entity.values.access_email!,
+		pw: entity.values.access_pw!,
+	};
+	// TODO change me
+	const url = new URL(['https://public-dusky-eight.vercel.app/survey', recipientId, entity.id].join('/'));
+	url.search = new URLSearchParams(getParams).toString();
+	return url.toString();
 };

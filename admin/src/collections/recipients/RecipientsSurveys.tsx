@@ -6,6 +6,7 @@ import { buildAuditedCollection } from '../shared';
 import {
 	firstNameProperty,
 	lastNameProperty,
+	mobileMoneyPhoneProperty,
 	orangeMoneyUIDProperty,
 	programStatusProperty,
 } from './RecipientsProperties';
@@ -28,6 +29,7 @@ export const buildRecipientsSurveysCollection = (
 			progr_status: programStatusProperty,
 			first_name: firstNameProperty,
 			last_name: lastNameProperty,
+			mobile_money_phone: mobileMoneyPhoneProperty,
 		}),
 		singularName: 'Recipient',
 		subcollections: [surveysCollection],
