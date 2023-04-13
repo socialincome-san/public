@@ -144,7 +144,7 @@ const surveyDueDateClip = (entity: Entity<Partial<Survey>>) => {
 				<Chip
 					size={'small'}
 					color={dueDate < DateTime.now() && entity.values.status != SurveyStatus.Completed ? 'warning' : 'info'}
-					label={dueDate.diffNow(['months', 'days']).toHuman({ unitDisplay: 'short' })}
+					label={dueDate.diffNow(['months', 'days']).toHuman({ unitDisplay: 'narrow', maximumFractionDigits: 0 })}
 				/>
 			</Tooltip>
 		)
