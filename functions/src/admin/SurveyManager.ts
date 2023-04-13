@@ -63,17 +63,22 @@ export class SurveyManager {
 	 * Batch implementation to create all surveys for all recipients.
 	 * Checks for existing surveys and ignores them. So, it can be called multiple times without creating duplicates.
 	 */
-	createAllSurveys = functions.https.onCall(async (_, { auth }) => {
-		await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
+	createAllSurveys = functions
+		.runWith({
+			timeoutSeconds: 540,
+			memory: '2GB',
+		})
+		.https.onCall(async (_, { auth }) => {
+			await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
 
-		const recipients = await this.firestoreAdmin.collection<Recipient>(RECIPIENT_FIRESTORE_PATH).get();
+			const recipients = await this.firestoreAdmin.collection<Recipient>(RECIPIENT_FIRESTORE_PATH).get();
 
-		await Promise.all(
-			recipients.docs
-				.filter((recipient) => recipient.data().progr_status != RecipientProgramStatus.Waitlisted)
-				.map(async (recipient) => this.createAllSurveysForRecipient(recipient))
-		);
-	});
+			await Promise.all(
+				recipients.docs
+					.filter((recipient) => recipient.data().progr_status != RecipientProgramStatus.Waitlisted)
+					.map(async (recipient) => this.createAllSurveysForRecipient(recipient))
+			);
+		});
 
 	/**
 	 * First checks if the survey already exists and return without any action if so.
