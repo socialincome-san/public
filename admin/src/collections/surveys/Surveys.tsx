@@ -17,6 +17,7 @@ import OpenDetailView from '../../components/OpenDetailView';
 import { mainLanguageProperty } from '../recipients/RecipientsProperties';
 import { buildAuditedCollection } from '../shared';
 import {
+	accessTokenProperty,
 	commentsProperty,
 	completedAtProperty,
 	dueDateAtProperty,
@@ -41,6 +42,7 @@ export const surveysCollection = buildAuditedCollection<Partial<Survey>>({
 		completed_at: completedAtProperty,
 		status: surveyStatusProperty,
 		comments: commentsProperty,
+		access_token: accessTokenProperty,
 	},
 });
 
@@ -49,7 +51,7 @@ export const createSurveyColumn = (surveyName: string): AdditionalFieldDelegate<
 	return {
 		id: surveyName,
 		name: surveyName,
-		width: 250,
+		width: 400,
 		Builder: ({ entity, context }) => {
 			return (
 				<AsyncPreviewComponent
@@ -125,6 +127,10 @@ const surveyPreview = (
 			&nbsp;
 			{/*// todo add proper survey link*/}
 			<CopyToClipboard title={'Copy survey url to clipboard'} data={getSurveyUrl(entity, recipientId)} />
+			&nbsp;
+			<Tooltip title={'This token can be used to login using the orange money phone number'}>
+				<Chip color="info" label={entity?.values?.access_token} size={'small'} />
+			</Tooltip>
 		</Fragment>
 	);
 };
@@ -147,13 +153,11 @@ const surveyDueDateClip = (entity: Entity<Partial<Survey>>) => {
 
 const getSurveyUrl = (entity: Entity<Partial<Survey>>, recipientId: string) => {
 	const getParams = {
-		recipient: recipientId,
-		survey: entity.id,
 		email: entity.values.access_email!,
 		pw: entity.values.access_pw!,
 	};
 	// TODO change me
-	const url = new URL('http://localhost:3001/survey');
+	const url = new URL(['https://public-dusky-eight.vercel.app/survey', recipientId, entity.id].join('/'));
 	url.search = new URLSearchParams(getParams).toString();
 	return url.toString();
 };

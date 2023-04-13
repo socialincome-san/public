@@ -36,6 +36,20 @@ export const maritalStatusPage = (t: TFunction) => {
 	};
 };
 
+export const financialSituationPage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'radiogroup',
+				name: 'financialSituation',
+				isRequired: true,
+				title: t('survey.questions.financialSituationTitle'),
+				choices: financialSituationChoices(t),
+			},
+		],
+	};
+};
+
 export const employmentStatusPage = (t: TFunction) => {
 	return {
 		elements: [
@@ -45,6 +59,36 @@ export const employmentStatusPage = (t: TFunction) => {
 				isRequired: true,
 				title: t('survey.questions.employmentStatusTitle'),
 				choices: employmentStatusChoices(t),
+			},
+			{
+				type: 'radiogroup',
+				name: 'notEmployed',
+				visibleIf: '{employmentStatus}=notEmployed',
+				title: t('survey.questions.notEmployedTitle'),
+				isRequired: true,
+				choices: yesNoChoices(t),
+			},
+			{
+				type: 'radiogroup',
+				name: 'employed',
+				visibleIf: '{employmentStatus}=employed or {employmentStatus}=selfEmployed',
+				title: t('survey.questions.employedTitle'),
+				isRequired: true,
+				choices: employedChoices(t),
+			},
+		],
+	};
+};
+
+export const disabilityPage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'radiogroup',
+				name: 'disability',
+				isRequired: true,
+				title: t('survey.questions.disabilityTitle'),
+				choices: yesNoChoices(t),
 			},
 		],
 	};
@@ -76,15 +120,12 @@ export const dependentsPage = (t: TFunction) => {
 				choices: yesNoChoices(t),
 			},
 			{
-				type: 'text',
+				type: 'radiogroup',
 				name: 'nrDependents',
-				visibleIf: '{hasDependents}=true',
-				title: t('survey.questions.nrDependentsTitle'),
 				isRequired: true,
-				inputType: 'number',
-				min: 0,
-				max: 50,
-				step: 1,
+				title: t('survey.questions.nrDependentsTitle'),
+				visibleIf: '{hasDependents}=true',
+				choices: nrDependentsChoices(t),
 			},
 		],
 	};
@@ -95,9 +136,9 @@ export const basicNeedsCoveragePage = (t: TFunction) => {
 		elements: [
 			{
 				type: 'radiogroup',
-				name: 'basicNeedsCoverge',
+				name: 'basicNeedsCoverage',
 				isRequired: true,
-				title: t('survey.questions.basicNeedsCovergeTitle'),
+				title: t('survey.questions.basicNeedsCoverageTitle'),
 				choices: ratingChoices(t),
 			},
 		],
@@ -182,15 +223,20 @@ export const deptPage = (t: TFunction) => {
 				name: 'dept',
 				isRequired: true,
 				title: t('survey.questions.deptTitle'),
-				description: t('survey.questions.deptDesc'),
+				choices: yesNoChoices(t),
+			},
+			{
+				type: 'radiogroup',
+				name: 'mainDeptPayer',
+				visibleIf: '{dept}=true',
+				title: t('survey.questions.mainDeptPayerTitle'),
+				isRequired: true,
 				choices: yesNoChoices(t),
 			},
 		],
 	};
 };
 
-// todo why do they need to be 3 in the current questionnaire?
-// currently is "Can you point out the three things you spend your Social Income money on?This question is required.*
 export const spendingPage = (t: TFunction) => {
 	return {
 		elements: [
@@ -201,18 +247,128 @@ export const spendingPage = (t: TFunction) => {
 				title: t('survey.questions.spendingTitle'),
 				choices: spendingChoices(t),
 			},
+			{
+				type: 'ranking',
+				name: 'spendingRanked',
+				title: t('survey.questions.spendingRankingTitle'),
+				description: t('survey.questions.spendingRankingDesc'),
+				visibleIf: '{spending.length} > 1',
+				isRequired: true,
+				choicesFromQuestion: 'spending',
+				choicesFromQuestionMode: 'selected',
+			},
 		],
 	};
 };
 
-export const plannedAchievementsPage = (t: TFunction) => {
+export const plannedAchievementsPage = (t: TFunction, isOnboarding: boolean) => {
 	return {
 		elements: [
 			{
 				type: 'comment',
 				name: 'plannedAchievement',
 				isRequired: true,
-				title: t('survey.questions.plannedAchievementTitle'),
+				title: isOnboarding
+					? t('survey.questions.plannedAchievementOnboardingTitle')
+					: t('survey.questions.plannedAchievementCheckingTitle'),
+			},
+		],
+	};
+};
+
+export const achievementsAchievedPage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'radiogroup',
+				name: 'achievementsAchieved',
+				isRequired: true,
+				title: t('survey.questions.achievementsAchievedTitle'),
+				choices: yesNoChoices(t),
+			},
+			{
+				type: 'comment',
+				name: 'achievementsNotAchievedComment',
+				visibleIf: '{achievementsAchieved}=false',
+				title: t('survey.questions.achievementsNotAchievedCommentTitle'),
+				isRequired: true,
+			},
+		],
+	};
+};
+
+export const moreFinanciallySecurePage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'radiogroup',
+				name: 'moreFinanciallySecure',
+				isRequired: true,
+				title: t('survey.questions.moreFinanciallySecureTitle'),
+				choices: yesNoChoices(t),
+			},
+		],
+	};
+};
+
+export const happierPage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'radiogroup',
+				name: 'happier',
+				isRequired: true,
+				title: t('survey.questions.happierTitle'),
+				choices: yesNoChoices(t),
+			},
+			{
+				type: 'comment',
+				name: 'happierComment',
+				visibleIf: '{happier}=true',
+				title: t('survey.questions.happierCommentTitle'),
+				isRequired: true,
+			},
+			{
+				type: 'comment',
+				name: 'notHappierComment',
+				visibleIf: '{happier}=false',
+				title: t('survey.questions.notHappierCommentTitle'),
+				isRequired: true,
+			},
+		],
+	};
+};
+
+export const longEnoughPage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'radiogroup',
+				name: 'longEnough',
+				isRequired: true,
+				title: t('survey.questions.longEnoughTitle'),
+				choices: yesNoChoices(t),
+			},
+		],
+	};
+};
+
+export const selfSustainablePage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'radiogroup',
+				name: 'selfSustainable',
+				isRequired: true,
+				title: t('survey.questions.selfSustainableTitle'),
+				choices: yesNoChoices(t),
+			},
+			{
+				type: 'comment',
+				name: 'notSelfSustainableComment',
+				visibleIf: '{selfSustainable}=false',
+				title: t('survey.questions.notSelfSustainableCommentTitle'),
+				isRequired: true,
 			},
 		],
 	};
@@ -253,19 +409,39 @@ export const maritalStatusChoices = (t: TFunction) =>
 		};
 	});
 
-export const employmentStatusChoices = (t: TFunction) =>
+export const financialSituationChoices = (t: TFunction) =>
 	[
-		'selfEmployed',
-		'employedPartTime',
-		'employedFullTime',
-		'notEmployedLookingForWork',
-		'notEmployedNotLookingForWork',
-		'retired',
-		'disabled',
-	].map((key) => {
+		[1, 'livingComfortably'],
+		[2, 'doingOk'],
+		[3, 'difficultyMakingEndsMeet'],
+		[4, 'barelyGettingBy'],
+	].map(([value, translationKey]) => {
+		return {
+			value: value,
+			text: t('survey.questions.financialSituationChoices.' + translationKey),
+		};
+	});
+
+export const nrDependentsChoices = (t: TFunction) =>
+	['1-2', '3-4', '5-7', '8-10', '10-'].map((key) => {
+		return {
+			value: key,
+			text: t('survey.questions.nrDependentsChoices.' + key),
+		};
+	});
+export const employmentStatusChoices = (t: TFunction) =>
+	['employed', 'selfEmployed', 'notEmployed', 'retired'].map((key) => {
 		return {
 			value: key,
 			text: t('survey.questions.employmentStatusChoices.' + key),
+		};
+	});
+
+export const employedChoices = (t: TFunction) =>
+	['less', 'more'].map((key) => {
+		return {
+			value: key,
+			text: t('survey.questions.employedChoices.' + key),
 		};
 	});
 
@@ -275,8 +451,8 @@ export const livingLocationChoices = (t: TFunction) =>
 		'westernAreaRural',
 		'easternProvince',
 		'northernProvince',
-		'northWestProvince',
 		'southernProvince',
+		'northWestProvince',
 	].map((key) => {
 		return {
 			value: key,
@@ -284,9 +460,8 @@ export const livingLocationChoices = (t: TFunction) =>
 		};
 	});
 
-// todo check choices. What about e.g investments into agriculture?
 export const spendingChoices = (t: TFunction) =>
-	['healthCare', 'saving', 'food', 'housing', 'education', 'mobility'].map((key) => {
+	['education', 'food', 'housing', 'healthCare', 'mobility', 'saving', 'investment'].map((key) => {
 		return {
 			value: key,
 			text: t('survey.questions.spendingChoices.' + key),

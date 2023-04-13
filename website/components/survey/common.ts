@@ -1,19 +1,4 @@
 import { TFunction } from 'i18next';
-import { NextRouter } from 'next/router';
-
-/**
- * GET parameters required for the survey pages
- */
-export const getSurveyParams = (router: NextRouter) => {
-	return {
-		// used to retrieve the nested survey document
-		recipientId: router.query['recipient'] as string,
-		surveyId: router.query['survey'] as string,
-		// firebase auth credentials
-		accessEmail: router.query['email'] as string,
-		accessPW: router.query['pw'] as string,
-	};
-};
 
 /**
  * Shared settings among all surveys

@@ -1,11 +1,11 @@
 import { GetStaticProps } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import Link from 'next/link';
 import ApplePay from '../components/ApplePay';
 import Layout from '../components/Layout';
+import Link from '../components/Link';
 
-export default function Home() {
+const Home = () => {
 	const { t } = useTranslation('website-index');
 	// noinspection HtmlUnknownTarget
 	return (
@@ -59,7 +59,9 @@ export default function Home() {
 			</section>
 		</Layout>
 	);
-}
+};
+
+export default Home;
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
 	return {
