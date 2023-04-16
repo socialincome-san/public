@@ -29,7 +29,11 @@ import {
 const currentDate = new Date();
 const monthIDs = getMonthIDs(currentDate, 3);
 
-function createMonthColumn(monthID: string, monthLabel: string): AdditionalFieldDelegate<Partial<Recipient>> {
+function createMonthColumn(
+	monthID: string,
+	monthLabel: string,
+	showButton: boolean
+): AdditionalFieldDelegate<Partial<Recipient>> {
 	return {
 		id: monthID,
 		name: monthLabel,
@@ -63,7 +67,9 @@ function createMonthColumn(monthID: string, monthLabel: string): AdditionalField
 									value={entity?.values.status || ''}
 									size="small"
 								/>
-								{entity?.values.status === PaymentStatus.Paid && <Button onClick={onConfirmation}>Confirm</Button>}
+								{showButton && entity?.values.status === PaymentStatus.Paid && (
+									<Button onClick={onConfirmation}>Confirm</Button>
+								)}
 							</div>
 						);
 					})}
@@ -72,9 +78,10 @@ function createMonthColumn(monthID: string, monthLabel: string): AdditionalField
 	};
 }
 
-export const CurrMonthCol = createMonthColumn(monthIDs[0], monthIDs[0] + ' (Current)');
-export const PrevMonthCol = createMonthColumn(monthIDs[1], monthIDs[1]);
-export const PrevPrevMonthCol = createMonthColumn(monthIDs[2], monthIDs[2]);
+export const CurrMonthCol = (showButton: boolean) =>
+	createMonthColumn(monthIDs[0], monthIDs[0] + ' (Current)', showButton);
+export const PrevMonthCol = createMonthColumn(monthIDs[1], monthIDs[1], false);
+export const PrevPrevMonthCol = createMonthColumn(monthIDs[2], monthIDs[2], false);
 
 export const buildRecipientsPaymentsCollection = ({ isGlobalAdmin, organisations }: BuildCollectionProps) => {
 	const defaultProps: EntityCollection<Partial<Recipient>> = {
@@ -101,7 +108,7 @@ export const buildRecipientsPaymentsCollection = ({ isGlobalAdmin, organisations
 		subcollections: isGlobalAdmin ? [paymentsCollection] : [],
 		exportable: false,
 		inlineEditing: false,
-		additionalFields: [PaymentsLeft, CurrMonthCol, PrevMonthCol, PrevPrevMonthCol],
+		additionalFields: [PaymentsLeft, CurrMonthCol(false), PrevMonthCol, PrevPrevMonthCol],
 	};
 	if (isGlobalAdmin) {
 		return buildAuditedCollection<Partial<Recipient>>({
@@ -145,7 +152,7 @@ export const buildRecipientsPaymentsConfirmationCollection = () => {
 		defaultSize: 'xs',
 		exportable: false,
 		inlineEditing: false,
-		additionalFields: [CurrMonthCol, PaymentsLeft],
+		additionalFields: [CurrMonthCol(true), PaymentsLeft],
 		initialFilter: {
 			progr_status: ['in', [RecipientProgramStatus.Active, RecipientProgramStatus.Designated]],
 		},
