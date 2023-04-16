@@ -188,7 +188,7 @@ export default function App() {
 			textSearchController={textSearchController}
 			firebaseConfig={firebaseConfig}
 			onFirebaseInit={onFirebaseInit}
-			dateTimeFormat={'yyyy-MM-dd'}
+			dateTimeFormat={'dd/MM/yyyy'}
 			views={customViews}
 		/>
 	);

@@ -18,6 +18,7 @@ export const programStatusProperty: Property = {
 export const orangeMoneyUIDProperty: Property = {
 	name: 'OM ID',
 	dataType: 'number',
+	columnWidth: 70,
 };
 export const firstNameProperty: Property = {
 	name: 'First Name',
@@ -66,6 +67,7 @@ export const genderProperty: Property = {
 	dataType: 'string',
 	longDescription: 'Gender of recipient',
 	validation: { required: true },
+	columnWidth: 75,
 	enumValues: {
 		male: 'Male',
 		female: 'Female',

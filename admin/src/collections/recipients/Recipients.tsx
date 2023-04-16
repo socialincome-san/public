@@ -8,7 +8,6 @@ import {
 	Recipient,
 	RECIPIENT_FIRESTORE_PATH,
 } from '@socialincome/shared/src/types';
-import { PaymentProcessAction } from '../../actions/PaymentProcessAction';
 import { messagesCollection, paymentsCollection } from '../index';
 import { buildAuditedCollection } from '../shared';
 import {
@@ -18,10 +17,6 @@ import {
 	emailProperty,
 	firstNameProperty,
 	genderProperty,
-	IMInitialProperty,
-	IMLinkProperty,
-	IMLinkRegularProperty,
-	IMUIDProperty,
 	InstagramProperty,
 	IsSuspendedProperty,
 	lastNameProperty,
@@ -79,7 +74,7 @@ const baseProperties: PropertiesOrBuilders<Partial<Recipient>> = {
 export const buildRecipientsCollection = () => {
 	const collection: EntityCollection<Partial<Recipient>> = {
 		additionalFields: [PaymentsLeft],
-		// inlineEditing: false,
+		inlineEditing: false,
 		defaultSize: 'xs',
 		description: 'Lists of people, who receive a Social Income',
 		group: 'Recipients',
@@ -88,7 +83,6 @@ export const buildRecipientsCollection = () => {
 		path: RECIPIENT_FIRESTORE_PATH,
 		singularName: 'Recipient',
 		textSearchEnabled: true,
-		Actions: PaymentProcessAction,
 		properties: buildProperties<Partial<Recipient>>({
 			...baseProperties,
 			email: emailProperty,
