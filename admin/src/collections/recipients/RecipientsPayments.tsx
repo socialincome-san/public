@@ -12,9 +12,13 @@ import {
 	AsyncPreviewComponent,
 	buildProperties,
 	buildProperty,
+	Entity,
 	StringPropertyPreview,
+	useDataSource,
 } from 'firecms';
 import { EntityCollection } from 'firecms/dist/types';
+import { useState } from 'react';
+import { PaymentProcessAction } from '../../actions/PaymentProcessAction';
 import { BuildCollectionProps } from '../index';
 import { paymentsCollection, paymentStatusEnumValues } from '../Payments';
 import { buildAuditedCollection } from '../shared';
@@ -28,6 +32,47 @@ import {
 
 const currentDate = new Date();
 const monthIDs = getMonthIDs(currentDate, 3);
+
+interface CreateMonthColumnProps {
+	showButton: boolean;
+	entity?: Entity<Payment>;
+}
+function CreateMonthColumn({ entity, showButton }: CreateMonthColumnProps) {
+	const dataSource = useDataSource();
+	const [entityState, setEntityState] = useState(entity);
+	const onConfirmation = (event: React.MouseEvent<HTMLAnchorElement> | React.MouseEvent<HTMLButtonElement>) => {
+		event.stopPropagation();
+		if (entityState?.values.status === PaymentStatus.Paid) {
+			dataSource
+				.saveEntity<Payment>({
+					path: entityState.path,
+					entityId: entityState.id,
+					values: { status: PaymentStatus.Confirmed },
+					previousValues: entityState.values,
+					collection: paymentsCollection,
+					status: 'existing',
+				})
+				.then((savedEntity) => {
+					setEntityState(savedEntity);
+				});
+		}
+	};
+	return (
+		<div>
+			<StringPropertyPreview
+				property={buildProperty({
+					dataType: 'string',
+					enumValues: paymentStatusEnumValues,
+				})}
+				value={entityState?.values.status || ''}
+				size="small"
+			/>
+			{showButton && entityState?.values.status === PaymentStatus.Paid && (
+				<Button onClick={onConfirmation}>Confirm</Button>
+			)}
+		</div>
+	);
+}
 
 function createMonthColumn(
 	monthID: string,
@@ -45,34 +90,9 @@ function createMonthColumn(
 						entityId: monthID,
 						collection: paymentsCollection,
 					})
-					.then((entity) => {
-						const onConfirmation = (e: React.MouseEvent<HTMLAnchorElement> | React.MouseEvent<HTMLButtonElement>) => {
-							if (entity?.values.status === PaymentStatus.Paid) {
-								context.dataSource.saveEntity<Payment>({
-									path: entity.path,
-									entityId: entity.id,
-									values: { ...entity.values, status: PaymentStatus.Confirmed },
-									collection: paymentsCollection,
-									status: 'existing',
-								});
-							}
-						};
-						return (
-							<div>
-								<StringPropertyPreview
-									property={buildProperty({
-										dataType: 'string',
-										enumValues: paymentStatusEnumValues,
-									})}
-									value={entity?.values.status || ''}
-									size="small"
-								/>
-								{showButton && entity?.values.status === PaymentStatus.Paid && (
-									<Button onClick={onConfirmation}>Confirm</Button>
-								)}
-							</div>
-						);
-					})}
+					.then((entity) => (
+						<CreateMonthColumn showButton={showButton} entity={entity} />
+					))}
 			/>
 		),
 	};
@@ -91,8 +111,10 @@ export const buildRecipientsPaymentsCollection = ({ isGlobalAdmin, organisations
 		alias: 'recent-payments',
 		group: 'Recipients',
 		icon: 'AttachMoneyTwoTone',
-		description: 'Payment confirmations of last three month',
+		description: 'Payment overview over the last three months.',
+		defaultSize: 'xs',
 		textSearchEnabled: true,
+		Actions: PaymentProcessAction,
 		permissions: {
 			create: isGlobalAdmin,
 			edit: isGlobalAdmin,
@@ -104,7 +126,6 @@ export const buildRecipientsPaymentsCollection = ({ isGlobalAdmin, organisations
 			first_name: firstNameProperty,
 			last_name: lastNameProperty,
 		}),
-		defaultSize: 'xs',
 		subcollections: isGlobalAdmin ? [paymentsCollection] : [],
 		exportable: false,
 		inlineEditing: false,
@@ -135,11 +156,10 @@ export const buildRecipientsPaymentsConfirmationCollection = () => {
 		alias: 'payments-confirmation',
 		group: 'Recipients',
 		icon: 'PriceCheck',
-		description: 'To confirm payments of the current month',
+		description: 'Confirm payments of the current month',
 		textSearchEnabled: true,
 		selectionEnabled: false,
 		permissions: {
-			read: false,
 			create: false,
 			edit: false,
 			delete: false,
@@ -151,7 +171,7 @@ export const buildRecipientsPaymentsConfirmationCollection = () => {
 		}),
 		defaultSize: 'xs',
 		exportable: false,
-		inlineEditing: false,
+		inlineEditing: true,
 		additionalFields: [CurrMonthCol(true), PaymentsLeft],
 		initialFilter: {
 			progr_status: ['in', [RecipientProgramStatus.Active, RecipientProgramStatus.Designated]],
