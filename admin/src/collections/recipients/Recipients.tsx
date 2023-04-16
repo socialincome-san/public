@@ -1,5 +1,5 @@
-import { AdditionalFieldDelegate, buildProperties } from '@camberi/firecms';
-import { EntityCollection, PropertiesOrBuilders } from '@camberi/firecms/dist/types';
+import { AdditionalFieldDelegate, buildProperties } from 'firecms';
+import { EntityCollection, PropertiesOrBuilders } from 'firecms/dist/types';
 
 import { Chip, Tooltip } from '@mui/material';
 import {

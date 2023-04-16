@@ -1,5 +1,5 @@
-import { AdditionalFieldDelegate, buildProperties } from '@camberi/firecms';
 import { DonationCertificate, DONATION_CERTIFICATE_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { AdditionalFieldDelegate, buildProperties } from 'firecms';
 import { buildAuditedCollection } from './shared';
 
 const DownloadLinkColumn: AdditionalFieldDelegate<DonationCertificate> = {

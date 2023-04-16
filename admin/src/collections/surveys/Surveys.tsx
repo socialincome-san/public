@@ -1,3 +1,4 @@
+import { Chip, Tooltip } from '@mui/material';
 import {
 	AdditionalFieldDelegate,
 	AsyncPreviewComponent,
@@ -5,8 +6,7 @@ import {
 	SideEntityController,
 	StringPropertyPreview,
 	useSideEntityController,
-} from '@camberi/firecms';
-import { Chip, Tooltip } from '@mui/material';
+} from 'firecms';
 import _ from 'lodash';
 import { DateTime } from 'luxon';
 import { Fragment } from 'react';

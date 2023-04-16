@@ -1,5 +1,5 @@
-import { buildCollection, EntityOnSaveProps } from '@camberi/firecms';
-import { EntityCollection, User } from '@camberi/firecms/dist/types';
+import { buildCollection, EntityOnSaveProps } from 'firecms';
+import { EntityCollection, User } from 'firecms/dist/types';
 
 /**
  * Use this instead of buildAuditedCollection to append a "last updated at" & "last updated by" column.

@@ -1,4 +1,4 @@
-import { buildProperties } from '@camberi/firecms';
+import { buildProperties } from 'firecms';
 import { Email, MESSAGE_FIRESTORE_PATH, SMS } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 

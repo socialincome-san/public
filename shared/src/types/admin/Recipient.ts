@@ -1,5 +1,5 @@
-import { EntityReference } from '@camberi/firecms';
 import { Timestamp } from '@google-cloud/firestore';
+import { EntityReference } from 'firecms';
 import { DateTime } from 'luxon';
 
 export const RECIPIENT_FIRESTORE_PATH = 'recipients';

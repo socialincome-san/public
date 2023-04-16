@@ -1,9 +1,9 @@
-import { Property } from '@camberi/firecms/dist/types/properties';
 import {
 	PARTNER_ORGANISATION_FIRESTORE_PATH,
 	RecipientMainLanguage,
 	RecipientProgramStatus,
 } from '@socialincome/shared/src/types';
+import { Property } from 'firecms/dist/types/properties';
 
 export const programStatusProperty: Property = {
 	name: 'Status',

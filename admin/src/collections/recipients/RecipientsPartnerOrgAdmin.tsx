@@ -1,10 +1,10 @@
-import { buildCollection, EntityReference, useSideEntityController } from '@camberi/firecms';
-import { EntityCollection } from '@camberi/firecms/dist/types';
+import { buildCollection, EntityReference, useSideEntityController } from 'firecms';
+import { EntityCollection } from 'firecms/dist/types';
 
 import { Button } from '@mui/material';
 
-import { EntityOnSaveProps } from '@camberi/firecms/dist/types/entity_callbacks';
 import { Recipient, RecipientProgramStatus, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { EntityOnSaveProps } from 'firecms/dist/types/entity_callbacks';
 import { isUndefined } from 'lodash';
 import { buildAuditedCollection } from '../shared';
 import {

@@ -1,4 +1,4 @@
-import { buildProperties } from '@camberi/firecms';
+import { buildProperties } from 'firecms';
 import { OperationalExpense, OPERATIONAL_EXPENSE_FIRESTORE_PATH } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 

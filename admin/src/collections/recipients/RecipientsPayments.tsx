@@ -1,13 +1,13 @@
+import { Recipient, RecipientProgramStatus, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { getMonthIDs } from '@socialincome/shared/src/utils/date';
 import {
 	AdditionalFieldDelegate,
 	AsyncPreviewComponent,
 	buildProperties,
 	buildProperty,
 	StringPropertyPreview,
-} from '@camberi/firecms';
-import { EntityCollection } from '@camberi/firecms/dist/types';
-import { Recipient, RecipientProgramStatus, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
-import { getMonthIDs } from '@socialincome/shared/src/utils/date';
+} from 'firecms';
+import { EntityCollection } from 'firecms/dist/types';
 import { BuildCollectionProps } from '../index';
 import { paymentsCollection, paymentStatusEnumValues } from '../Payments';
 import { buildAuditedCollection } from '../shared';

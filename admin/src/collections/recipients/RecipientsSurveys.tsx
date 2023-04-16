@@ -1,6 +1,6 @@
-import { AdditionalFieldDelegate, buildProperties } from '@camberi/firecms';
-import { EntityCollection } from '@camberi/firecms/dist/types';
 import { Recipient, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { AdditionalFieldDelegate, buildProperties } from 'firecms';
+import { EntityCollection } from 'firecms/dist/types';
 import { surveysCollection } from '../index';
 import { buildAuditedCollection } from '../shared';
 import {

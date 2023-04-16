@@ -1,4 +1,4 @@
-import { AdditionalFieldDelegate, buildProperties } from '@camberi/firecms';
+import { AdditionalFieldDelegate, buildProperties } from 'firecms';
 import {
 	CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH,
 	User,

@@ -1,6 +1,6 @@
-import { EntityCollectionView, useAuthController } from '@camberi/firecms';
 import { Box, Button, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { recipientSurveys, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { EntityCollectionView, useAuthController } from 'firecms';
 import { useState } from 'react';
 import { buildRecipientsCollection, buildRecipientsPaymentsCollection } from '../collections';
 import { buildRecipientsSurveysCollection } from '../collections/recipients/RecipientsSurveys';
