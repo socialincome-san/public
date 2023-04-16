@@ -7,7 +7,7 @@
 		"test:app": "jest --forceExit --roots tests/ src/"
 	},
 	"devDependencies": {
-		"@camberi/firecms": "2.0.0-alpha.57",
+		"firecms": "2.0.0-beta.4",
 		"@jest/globals": "^29.4.1",
 		"@types/jest": "^29.4.0",
 		"@types/luxon": "^3.2.0",
