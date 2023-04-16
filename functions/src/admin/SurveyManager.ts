@@ -38,19 +38,23 @@ export class SurveyManager {
 		if (recipient.data().si_start_date) {
 			return Promise.all(
 				recipientSurveys.map(async (survey) => {
-					const dueDate = DateTime.fromJSDate((recipient.data().si_start_date as Timestamp).toDate()).plus({
-						months: survey.startDateOffsetMonths,
-					});
-					const surveyStatus = dueDate < DateTime.now() ? SurveyStatus.Missed : SurveyStatus.New;
-					await this.createSurvey(
-						recipient.id,
-						survey.questionaire,
-						survey.name,
-						recipient.data().first_name,
-						recipient.data().main_language,
-						surveyStatus,
-						dueDate.toJSDate()
-					);
+					try {
+						const dueDate = DateTime.fromJSDate((recipient.data().si_start_date as Timestamp).toDate()).plus({
+							months: survey.startDateOffsetMonths,
+						});
+						const surveyStatus = dueDate < DateTime.now() ? SurveyStatus.Missed : SurveyStatus.New;
+						await this.createSurvey(
+							recipient.id,
+							survey.questionaire,
+							survey.name,
+							recipient.data().first_name,
+							recipient.data().main_language || RecipientMainLanguage.Krio,
+							surveyStatus,
+							dueDate.toJSDate()
+						);
+					} catch {
+						console.error(`Could not create ${survey.questionaire} survey for recipient ${recipient.id}`);
+					}
 				})
 			);
 		} else {
