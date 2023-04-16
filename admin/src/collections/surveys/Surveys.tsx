@@ -12,7 +12,6 @@ import { DateTime } from 'luxon';
 import { Fragment } from 'react';
 import { Recipient, Survey, SurveyStatus, SURVEY_FIRETORE_PATH } from '../../../../shared/src/types';
 import CopyToClipboard from '../../components/CopyToClipboard';
-import OpenDetailView from '../../components/OpenDetailView';
 import { mainLanguageProperty } from '../recipients/RecipientsProperties';
 import { buildAuditedCollection } from '../shared';
 import {
@@ -99,7 +98,6 @@ export const createPendingSurveyColumn = (i: number): AdditionalFieldDelegate<Pa
 								nextSurvey && (
 									<Fragment>
 										<Chip size={'small'} color={'info'} label={nextSurvey.id} />
-										&nbsp;
 										{surveyPreview(nextSurvey, entity.id, sideEntityController)}
 									</Fragment>
 								)
@@ -121,8 +119,9 @@ const surveyPreview = (
 			<StringPropertyPreview property={surveyStatusProperty} value={entity?.values?.status || ''} size={'small'} />
 			&nbsp;
 			{surveyDueDateClip(entity)}
-			&nbsp;
-			<OpenDetailView entity={entity} collection={surveysCollection} sideEntityController={sideEntityController} />
+			{/*TODO ahee fix me*/}
+			{/*&nbsp;*/}
+			{/*<OpenDetailView entity={entity} collection={surveysCollection} sideEntityController={sideEntityController} />*/}
 			&nbsp;
 			{/*// todo add proper survey link*/}
 			<CopyToClipboard title={'Copy survey url to clipboard'} data={getSurveyUrl(entity, recipientId)} />

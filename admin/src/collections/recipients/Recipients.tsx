@@ -6,11 +6,10 @@ import {
 	calcLastPaymentDate,
 	calcPaymentsLeft,
 	Recipient,
-	RecipientProgramStatus,
 	RECIPIENT_FIRESTORE_PATH,
 } from '@socialincome/shared/src/types';
-import { isUndefined } from 'lodash';
-import { BuildCollectionProps, messagesCollection, paymentsCollection } from '../index';
+import { PaymentProcessAction } from '../../actions/PaymentProcessAction';
+import { messagesCollection, paymentsCollection } from '../index';
 import { buildAuditedCollection } from '../shared';
 import {
 	birthDateProperty,
@@ -77,10 +76,10 @@ const baseProperties: PropertiesOrBuilders<Partial<Recipient>> = {
 	profession: professionProperty,
 };
 
-export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: BuildCollectionProps) => {
-	let collection: EntityCollection<Partial<Recipient>> = {
+export const buildRecipientsCollection = () => {
+	const collection: EntityCollection<Partial<Recipient>> = {
 		additionalFields: [PaymentsLeft],
-		inlineEditing: false,
+		// inlineEditing: false,
 		defaultSize: 'xs',
 		description: 'Lists of people, who receive a Social Income',
 		group: 'Recipients',
@@ -89,46 +88,21 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 		path: RECIPIENT_FIRESTORE_PATH,
 		singularName: 'Recipient',
 		textSearchEnabled: true,
-		properties: buildProperties({}),
+		Actions: PaymentProcessAction,
+		properties: buildProperties<Partial<Recipient>>({
+			...baseProperties,
+			email: emailProperty,
+			insta_handle: InstagramProperty,
+			twitter_handle: TwitterProperty,
+			im_uid: IMUIDProperty,
+			im_link: IMLinkProperty,
+			im_link_initial: IMInitialProperty,
+			im_link_regular: IMLinkRegularProperty,
+			is_suspended: IsSuspendedProperty,
+			si_start_date: SIStartDateProperty,
+			test_recipient: TestRecipientProperty,
+		}),
+		subcollections: [paymentsCollection, messagesCollection],
 	};
-
-	if (isGlobalAdmin) {
-		collection = {
-			...collection,
-			properties: buildProperties<Partial<Recipient>>({
-				...baseProperties,
-				email: emailProperty,
-				insta_handle: InstagramProperty,
-				twitter_handle: TwitterProperty,
-				im_uid: IMUIDProperty,
-				im_link: IMLinkProperty,
-				im_link_initial: IMInitialProperty,
-				im_link_regular: IMLinkRegularProperty,
-				is_suspended: IsSuspendedProperty,
-				si_start_date: SIStartDateProperty,
-				test_recipient: TestRecipientProperty,
-			}),
-			subcollections: [paymentsCollection, messagesCollection],
-		};
-	} else {
-		collection = {
-			...collection,
-			callbacks: {
-				onPreSave: ({ previousValues, values }) => {
-					if (!values?.organisation?.id || organisations?.map((o) => o.id).indexOf(values.organisation.id) === -1) {
-						throw Error('Please select a valid organisation.');
-					}
-					if (isUndefined(previousValues)) {
-						values.progr_status = RecipientProgramStatus.Waitlisted;
-					}
-					return values;
-				},
-			},
-			forceFilter: {
-				organisation: ['in', organisations || []],
-			},
-			properties: buildProperties(baseProperties),
-		};
-	}
 	return buildAuditedCollection<Partial<Recipient>>(collection);
 };

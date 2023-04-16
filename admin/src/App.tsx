@@ -12,10 +12,11 @@ import {
 	performAlgoliaTextSearch,
 } from 'firecms';
 import { useState } from 'react';
-import { AdminUser } from '../../shared/src/types';
+import { AdminUser, recipientSurveys } from '../../shared/src/types';
 import {
 	adminsCollection,
 	buildPartnerOrganisationsCollection,
+	buildRecipientsCollection,
 	buildRecipientsPaymentsCollection,
 	contributorOrganisationsCollection,
 	newsletterSubscribersCollection,
@@ -26,7 +27,9 @@ import {
 import { getApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { buildRecipientsPartnerOrgAdminCollection } from './collections/recipients/RecipientsPartnerOrgAdmin';
-import { RecipientsView } from './views/RecipientsView';
+import { buildRecipientsPaymentsConfirmationCollection } from './collections/recipients/RecipientsPayments';
+import { buildRecipientsSurveysCollection } from './collections/recipients/RecipientsSurveys';
+import { createPendingSurveyColumn, createSurveyColumn } from './collections/surveys/Surveys';
 import { ScriptsView } from './views/Scripts';
 
 const onFirebaseInit = () => {
@@ -116,23 +119,23 @@ export default function App() {
 	const [customViews, setCustomViews] = useState<CMSView[]>([]);
 
 	const globalAdminCollections = [
+		buildRecipientsPaymentsConfirmationCollection(),
+		buildRecipientsPaymentsCollection({ isGlobalAdmin: true }),
+		buildRecipientsCollection(),
+		buildPartnerOrganisationsCollection({ isGlobalAdmin: true }),
+		contributorOrganisationsCollection,
 		adminsCollection,
 		operationalExpensesCollection,
 		newsletterSubscribersCollection,
-		contributorOrganisationsCollection,
 		usersCollection,
-		buildPartnerOrganisationsCollection({ isGlobalAdmin: true }),
+		buildRecipientsSurveysCollection('Next Surveys', 'next-surveys')([createPendingSurveyColumn(0)]),
+		buildRecipientsSurveysCollection(
+			'All Surveys',
+			'all-surveys'
+		)(recipientSurveys.map((s) => createSurveyColumn(s.name))),
 	];
 
 	const globalAdminCustomViews: CMSView[] = [
-		{
-			path: 'recipients',
-			name: 'Recipients',
-			group: 'Recipients',
-			icon: 'RememberMeTwoTone',
-			description: 'Collection of Recipients',
-			view: <RecipientsView />,
-		},
 		{
 			path: 'scripts',
 			name: 'Scripts',

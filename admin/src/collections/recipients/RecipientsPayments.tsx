@@ -1,4 +1,11 @@
-import { Recipient, RecipientProgramStatus, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { Button } from '@mui/material';
+import {
+	Payment,
+	PaymentStatus,
+	Recipient,
+	RecipientProgramStatus,
+	RECIPIENT_FIRESTORE_PATH,
+} from '@socialincome/shared/src/types';
 import { getMonthIDs } from '@socialincome/shared/src/utils/date';
 import {
 	AdditionalFieldDelegate,
@@ -34,16 +41,32 @@ function createMonthColumn(monthID: string, monthLabel: string): AdditionalField
 						entityId: monthID,
 						collection: paymentsCollection,
 					})
-					.then((entity) => (
-						<StringPropertyPreview
-							property={buildProperty({
-								dataType: 'string',
-								enumValues: paymentStatusEnumValues,
-							})}
-							value={entity?.values.status || ''}
-							size="small"
-						/>
-					))}
+					.then((entity) => {
+						const onConfirmation = (e: React.MouseEvent<HTMLAnchorElement> | React.MouseEvent<HTMLButtonElement>) => {
+							if (entity?.values.status === PaymentStatus.Paid) {
+								context.dataSource.saveEntity<Payment>({
+									path: entity.path,
+									entityId: entity.id,
+									values: { ...entity.values, status: PaymentStatus.Confirmed },
+									collection: paymentsCollection,
+									status: 'existing',
+								});
+							}
+						};
+						return (
+							<div>
+								<StringPropertyPreview
+									property={buildProperty({
+										dataType: 'string',
+										enumValues: paymentStatusEnumValues,
+									})}
+									value={entity?.values.status || ''}
+									size="small"
+								/>
+								{entity?.values.status === PaymentStatus.Paid && <Button onClick={onConfirmation}>Confirm</Button>}
+							</div>
+						);
+					})}
 			/>
 		),
 	};
@@ -58,9 +81,9 @@ export const buildRecipientsPaymentsCollection = ({ isGlobalAdmin, organisations
 		name: 'Payments',
 		singularName: 'Recipient',
 		path: RECIPIENT_FIRESTORE_PATH,
-		alias: 'recentPayments',
+		alias: 'recent-payments',
 		group: 'Recipients',
-		icon: 'PriceCheck',
+		icon: 'AttachMoneyTwoTone',
 		description: 'Payment confirmations of last three month',
 		textSearchEnabled: true,
 		permissions: {
@@ -96,4 +119,35 @@ export const buildRecipientsPaymentsCollection = ({ isGlobalAdmin, organisations
 			},
 		});
 	}
+};
+
+export const buildRecipientsPaymentsConfirmationCollection = () => {
+	return buildAuditedCollection({
+		name: 'Payments Confirmation',
+		path: RECIPIENT_FIRESTORE_PATH,
+		alias: 'payments-confirmation',
+		group: 'Recipients',
+		icon: 'PriceCheck',
+		description: 'To confirm payments of the current month',
+		textSearchEnabled: true,
+		selectionEnabled: false,
+		permissions: {
+			read: false,
+			create: false,
+			edit: false,
+			delete: false,
+		},
+		properties: buildProperties<Partial<Recipient>>({
+			om_uid: orangeMoneyUIDProperty,
+			first_name: firstNameProperty,
+			last_name: lastNameProperty,
+		}),
+		defaultSize: 'xs',
+		exportable: false,
+		inlineEditing: false,
+		additionalFields: [CurrMonthCol, PaymentsLeft],
+		initialFilter: {
+			progr_status: ['in', [RecipientProgramStatus.Active, RecipientProgramStatus.Designated]],
+		},
+	});
 };
