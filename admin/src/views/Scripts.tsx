@@ -1,7 +1,7 @@
 import { Box, Button, Card, CardActions, CardContent, Container, Grid, Typography } from '@mui/material';
 
-import { useSnackbarController } from '@camberi/firecms';
 import { getFunctions, httpsCallable } from 'firebase/functions';
+import { useSnackbarController } from 'firecms';
 
 /**
  * Collection of admin scripts

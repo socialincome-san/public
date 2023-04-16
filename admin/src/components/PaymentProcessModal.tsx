@@ -1,8 +1,8 @@
-import { useSnackbarController } from '@camberi/firecms';
 import { Box, Button, CircularProgress, Modal, Tooltip, Typography } from '@mui/material';
 import { AdminPaymentProcessTask } from '@socialincome/shared/src/types';
 import { downloadStringAsFile } from '@socialincome/shared/src/utils/html';
 import { getFunctions, httpsCallable } from 'firebase/functions';
+import { useSnackbarController } from 'firecms';
 import { useState } from 'react';
 
 const STYLE = {

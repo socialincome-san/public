@@ -1,5 +1,8 @@
 import algoliasearch from 'algoliasearch';
 
+import { browserSessionPersistence, connectAuthEmulator, getAuth } from 'firebase/auth';
+import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
+import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import {
 	Authenticator,
 	CMSView,
@@ -7,10 +10,7 @@ import {
 	FirebaseCMSApp,
 	FirestoreTextSearchController,
 	performAlgoliaTextSearch,
-} from '@camberi/firecms';
-import { browserSessionPersistence, connectAuthEmulator, getAuth } from 'firebase/auth';
-import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
-import { connectStorageEmulator, getStorage } from 'firebase/storage';
+} from 'firecms';
 import { useState } from 'react';
 import { AdminUser } from '../../shared/src/types';
 import {

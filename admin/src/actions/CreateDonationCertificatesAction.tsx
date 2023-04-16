@@ -1,4 +1,3 @@
-import { CollectionActionsProps, useAuthController, useSnackbarController } from '@camberi/firecms';
 import {
 	Box,
 	Button,
@@ -11,6 +10,7 @@ import {
 	Select,
 	Typography,
 } from '@mui/material';
+import { CollectionActionsProps, useAuthController, useSnackbarController } from 'firecms';
 import { User } from '../../../shared/src/types';
 
 import { getFunctions, httpsCallable } from 'firebase/functions';

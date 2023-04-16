@@ -1,5 +1,5 @@
-import { EntityReference } from '@camberi/firecms';
 import { Timestamp } from '@google-cloud/firestore';
+import { EntityReference } from 'firecms';
 
 export const PAYMENT_FIRESTORE_PATH = 'payments';
 

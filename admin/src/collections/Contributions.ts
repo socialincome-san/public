@@ -1,4 +1,4 @@
-import { buildProperties } from '@camberi/firecms';
+import { buildProperties } from 'firecms';
 import { Contribution, ContributionSourceKey, CONTRIBUTION_FIRESTORE_PATH, StatusKey } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 

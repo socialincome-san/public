@@ -1,5 +1,5 @@
-import { Property, StringProperty } from '@camberi/firecms/dist/types/properties';
 import { SurveyQuestionnaire, SurveyStatus } from '@socialincome/shared/src/types';
+import { Property, StringProperty } from 'firecms/dist/types/properties';
 
 export const surveyStatusProperty: StringProperty = {
 	name: 'Status',
