@@ -1,17 +1,15 @@
-import { AdditionalFieldDelegate, buildProperties } from '@camberi/firecms';
-import { EntityCollection, PropertiesOrBuilders } from '@camberi/firecms/dist/types';
+import { AdditionalFieldDelegate, buildProperties } from 'firecms';
+import { EntityCollection, PropertiesOrBuilders } from 'firecms/dist/types';
 
 import { Chip, Tooltip } from '@mui/material';
 import {
 	calcLastPaymentDate,
 	calcPaymentsLeft,
 	Recipient,
-	RecipientProgramStatus,
 	RECIPIENT_FIRESTORE_PATH,
 } from '@socialincome/shared/src/types';
-import { isUndefined } from 'lodash';
 import { InviteWhatsappAction } from '../../actions/InviteWhatsappAction';
-import { BuildCollectionProps, messagesCollection, paymentsCollection } from '../index';
+import { messagesCollection, paymentsCollection } from '../index';
 import { buildAuditedCollection } from '../shared';
 import {
 	birthDateProperty,
@@ -20,10 +18,6 @@ import {
 	emailProperty,
 	firstNameProperty,
 	genderProperty,
-	IMInitialProperty,
-	IMLinkProperty,
-	IMLinkRegularProperty,
-	IMUIDProperty,
 	InstagramProperty,
 	IsSuspendedProperty,
 	lastNameProperty,
@@ -37,6 +31,7 @@ import {
 	TestRecipientProperty,
 	TwitterProperty,
 } from './RecipientsProperties';
+import { CreateDonationCertificatesAction } from '../../actions/CreateDonationCertificatesAction';
 
 export const PaymentsLeft: AdditionalFieldDelegate<Partial<Recipient>> = {
 	id: 'payments_left',
@@ -50,6 +45,7 @@ export const PaymentsLeft: AdditionalFieldDelegate<Partial<Recipient>> = {
 			return (
 				<Tooltip title={'Last Payment Date ' + lastPaymentDate.toFormat('yyyy-MM-dd')}>
 					<Chip
+						size={'small'}
 						color={paymentsLeft < 0 ? 'info' : paymentsLeft <= 1 ? 'error' : paymentsLeft <= 3 ? 'warning' : 'success'}
 						label={paymentsLeft < 0 ? 'none' : paymentsLeft + ' payment(s) left'}
 					/>
@@ -77,8 +73,8 @@ const baseProperties: PropertiesOrBuilders<Partial<Recipient>> = {
 	profession: professionProperty,
 };
 
-export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: BuildCollectionProps) => {
-	let collection: EntityCollection<Partial<Recipient>> = {
+export const buildRecipientsCollection = () => {
+	const collection: EntityCollection<Partial<Recipient>> = {
 		additionalFields: [PaymentsLeft],
 		inlineEditing: false,
 		defaultSize: 'xs',
@@ -89,47 +85,17 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 		path: RECIPIENT_FIRESTORE_PATH,
 		singularName: 'Recipient',
 		textSearchEnabled: true,
-		properties: buildProperties({}),
+		properties: buildProperties<Partial<Recipient>>({
+			...baseProperties,
+			email: emailProperty,
+			insta_handle: InstagramProperty,
+			twitter_handle: TwitterProperty,
+			is_suspended: IsSuspendedProperty,
+			si_start_date: SIStartDateProperty,
+			test_recipient: TestRecipientProperty,
+		}),
+		subcollections: [paymentsCollection, messagesCollection],
+		Actions: [InviteWhatsappAction]
 	};
-
-	if (isGlobalAdmin) {
-		collection = {
-			...collection,
-			properties: buildProperties<Partial<Recipient>>({
-				...baseProperties,
-				email: emailProperty,
-				insta_handle: InstagramProperty,
-				twitter_handle: TwitterProperty,
-				im_uid: IMUIDProperty,
-				im_link: IMLinkProperty,
-				im_link_initial: IMInitialProperty,
-				im_link_regular: IMLinkRegularProperty,
-				is_suspended: IsSuspendedProperty,
-				si_start_date: SIStartDateProperty,
-				test_recipient: TestRecipientProperty,
-			}),
-			subcollections: [paymentsCollection, messagesCollection],
-			Actions: [InviteWhatsappAction]
-		};
-	} else {
-		collection = {
-			...collection,
-			callbacks: {
-				onPreSave: ({ previousValues, values }) => {
-					if (!values?.organisation?.id || organisations?.map((o) => o.id).indexOf(values.organisation.id) === -1) {
-						throw Error('Please select a valid organisation.');
-					}
-					if (isUndefined(previousValues)) {
-						values.progr_status = RecipientProgramStatus.Waitlisted;
-					}
-					return values;
-				},
-			},
-			forceFilter: {
-				organisation: ['in', organisations || []],
-			},
-			properties: buildProperties(baseProperties),
-		};
-	}
 	return buildAuditedCollection<Partial<Recipient>>(collection);
 };

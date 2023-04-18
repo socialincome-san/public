@@ -1,17 +1,11 @@
-import { CollectionActionsProps, useAuthController, useSnackbarController } from '@camberi/firecms';
+import { CollectionActionsProps, useAuthController, useSnackbarController } from 'firecms';
 import {
 	Box,
 	Button,
-	Checkbox,
-	FormControl,
-	FormControlLabel,
-	InputLabel,
-	MenuItem,
 	Modal,
-	Select,
 	Typography,
 } from '@mui/material';
-import { Recipient, User } from '@socialincome/shared/src/types';
+import { Recipient } from '../../../shared/src/types';
 
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import _ from 'lodash';
