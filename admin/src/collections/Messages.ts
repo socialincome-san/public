@@ -1,8 +1,8 @@
 import { buildProperties } from '@camberi/firecms';
-import { Email, MESSAGE_FIRESTORE_PATH, SMS } from '../../../shared/src/types';
+import { Email, MESSAGE_FIRESTORE_PATH, TwilioMessage } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 
-export const messagesCollection = buildAuditedCollection<Partial<SMS | Email>>({
+export const messagesCollection = buildAuditedCollection<Partial<TwilioMessage | Email>>({
 	name: 'Messages',
 	group: 'Messages',
 	permissions: {
@@ -14,13 +14,14 @@ export const messagesCollection = buildAuditedCollection<Partial<SMS | Email>>({
 	icon: 'SupervisorAccountTwoTone',
 	description: 'Lists all messages for one recipient or user',
 	customId: true,
-	properties: buildProperties<Partial<SMS | Email>>({
+	properties: buildProperties<Partial<TwilioMessage | Email>>({
 		type: {
 			dataType: 'string',
 			readOnly: true,
 			enumValues: [
 				{ id: 'sms', label: 'SMS' },
 				{ id: 'email', label: 'Email' },
+				{ id: 'whatsapp', label: 'Whatsapp' },
 			],
 		},
 		body: {

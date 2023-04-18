@@ -43,6 +43,13 @@ export const communicationMobilePhoneProperty: Property = {
 			name: 'WhatsApp',
 			dataType: 'boolean',
 		},
+		whatsapp_activated: {
+			name: 'WhatsApp activated',
+			dataType: 'boolean',
+			hideFromCollection: true,
+			readOnly: true,
+			defaultValue: false,
+		}
 	},
 };
 export const mobileMoneyPhoneProperty: Property = {

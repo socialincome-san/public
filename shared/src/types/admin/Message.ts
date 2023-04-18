@@ -5,14 +5,15 @@ export const MESSAGE_FIRESTORE_PATH = 'messages';
 export enum MessageType {
 	SMS = 'sms',
 	EMAIL = 'email',
+	WHATSAPP = 'whatsapp',
 }
 
 export interface Message {
 	type: MessageType;
 }
 
-export interface SMS extends Message {
-	type: MessageType.SMS;
+export interface TwilioMessage extends Message {
+	type: MessageType.SMS | MessageType.WHATSAPP;
 
 	// Twilio MessageInstance.toJSON() fields
 	body: string;

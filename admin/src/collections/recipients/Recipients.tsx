@@ -10,6 +10,7 @@ import {
 	RECIPIENT_FIRESTORE_PATH,
 } from '@socialincome/shared/src/types';
 import { isUndefined } from 'lodash';
+import { InviteWhatsappAction } from '../../actions/InviteWhatsappAction';
 import { BuildCollectionProps, messagesCollection, paymentsCollection } from '../index';
 import { buildAuditedCollection } from '../shared';
 import {
@@ -108,6 +109,7 @@ export const buildRecipientsCollection = ({ isGlobalAdmin, organisations }: Buil
 				test_recipient: TestRecipientProperty,
 			}),
 			subcollections: [paymentsCollection, messagesCollection],
+			Actions: [InviteWhatsappAction]
 		};
 	} else {
 		collection = {

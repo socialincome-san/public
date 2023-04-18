@@ -22,6 +22,7 @@ export type Recipient = {
 	communication_mobile_phone: {
 		phone: number;
 		has_whatsapp: boolean;
+		whatsapp_activated: boolean;
 	};
 	email: string;
 	first_name: string;

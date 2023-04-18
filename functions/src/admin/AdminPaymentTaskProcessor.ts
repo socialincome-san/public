@@ -17,7 +17,7 @@ import {
 	Recipient,
 	RecipientProgramStatus,
 	RECIPIENT_FIRESTORE_PATH,
-	SMS,
+	TwilioMessage,
 } from '../../../shared/src/types';
 import { sendSms } from '../../../shared/src/utils/messaging/sms';
 import { TWILIO_SENDER_PHONE, TWILIO_SID, TWILIO_TOKEN } from '../config';
@@ -131,7 +131,7 @@ export class AdminPaymentTaskProcessor {
 								},
 							},
 						});
-						const messageCollection = this.firestoreAdmin.collection<SMS>(
+						const messageCollection = this.firestoreAdmin.collection<TwilioMessage>(
 							`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${MESSAGE_FIRESTORE_PATH}`
 						);
 						const messageDocRef = await messageCollection.add({ type: MessageType.SMS, ...message.toJSON() });
