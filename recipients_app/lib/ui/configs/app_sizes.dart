@@ -6,7 +6,7 @@ abstract class AppSizes {
   static const double large = 24;
   static const double xLarge = 32;
 
-  static const double radiusSmall = 8;
+  static const double radiusSmall = 10;
   static const double radiusMedium = 16;
   static const double radiusLarge = 32;
 }

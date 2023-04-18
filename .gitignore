@@ -28,3 +28,7 @@ dist
 # JetBrains
 .idea/
 .ignore/
+
+recipients_app/android/app/src/main/google-services.json
+
+recipients_app/android/app/google-services.json

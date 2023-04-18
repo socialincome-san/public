@@ -16,7 +16,7 @@ import {
 	SurveyStatus,
 	SURVEY_FIRETORE_PATH,
 } from '../../../shared/src/types/admin/Survey';
-import { rndBase64 } from '../../../shared/src/utils/crypto';
+import { rndString } from '../../../shared/src/utils/crypto';
 
 /**
  * Takes care of creating surveys for recipients
@@ -38,19 +38,23 @@ export class SurveyManager {
 		if (recipient.data().si_start_date) {
 			return Promise.all(
 				recipientSurveys.map(async (survey) => {
-					const dueDate = DateTime.fromJSDate((recipient.data().si_start_date as Timestamp).toDate()).plus({
-						months: survey.startDateOffsetMonths,
-					});
-					const surveyStatus = dueDate < DateTime.now() ? SurveyStatus.Missed : SurveyStatus.New;
-					await this.createSurvey(
-						recipient.id,
-						survey.questionaire,
-						survey.name,
-						recipient.data().first_name,
-						recipient.data().main_language,
-						surveyStatus,
-						dueDate.toJSDate()
-					);
+					try {
+						const dueDate = DateTime.fromJSDate((recipient.data().si_start_date as Timestamp).toDate()).plus({
+							months: survey.startDateOffsetMonths,
+						});
+						const surveyStatus = dueDate < DateTime.now() ? SurveyStatus.Missed : SurveyStatus.New;
+						await this.createSurvey(
+							recipient.id,
+							survey.questionaire,
+							survey.name,
+							recipient.data().first_name,
+							recipient.data().main_language || RecipientMainLanguage.Krio,
+							surveyStatus,
+							dueDate.toJSDate()
+						);
+					} catch {
+						console.error(`Could not create ${survey.questionaire} survey for recipient ${recipient.id}`);
+					}
 				})
 			);
 		} else {
@@ -63,17 +67,22 @@ export class SurveyManager {
 	 * Batch implementation to create all surveys for all recipients.
 	 * Checks for existing surveys and ignores them. So, it can be called multiple times without creating duplicates.
 	 */
-	createAllSurveys = functions.https.onCall(async (_, { auth }) => {
-		await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
+	createAllSurveys = functions
+		.runWith({
+			timeoutSeconds: 540,
+			memory: '2GB',
+		})
+		.https.onCall(async (_, { auth }) => {
+			await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
 
-		const recipients = await this.firestoreAdmin.collection<Recipient>(RECIPIENT_FIRESTORE_PATH).get();
+			const recipients = await this.firestoreAdmin.collection<Recipient>(RECIPIENT_FIRESTORE_PATH).get();
 
-		await Promise.all(
-			recipients.docs
-				.filter((recipient) => recipient.data().progr_status != RecipientProgramStatus.Waitlisted)
-				.map(async (recipient) => this.createAllSurveysForRecipient(recipient))
-		);
-	});
+			await Promise.all(
+				recipients.docs
+					.filter((recipient) => recipient.data().progr_status != RecipientProgramStatus.Waitlisted)
+					.map(async (recipient) => this.createAllSurveysForRecipient(recipient))
+			);
+		});
 
 	/**
 	 * First checks if the survey already exists and return without any action if so.
@@ -94,8 +103,9 @@ export class SurveyManager {
 		);
 		const surveyDocRef = surveysCollection.doc(surveyName);
 		if (!(await surveyDocRef.get()).exists) {
-			const email = rndBase64(64).toLowerCase() + '@socialincome.org';
-			const password = rndBase64(64);
+			const email = rndString(16).toLowerCase() + '@si.org';
+			const password = rndString(16);
+			const token = rndString(3, 'hex');
 			await this.authAdmin.auth.createUser({
 				email,
 				password,
@@ -110,6 +120,7 @@ export class SurveyManager {
 				due_date_at: due_date_at,
 				access_email: email,
 				access_pw: password,
+				access_token: token,
 			});
 			console.log(`Created survey ${surveyName} for recipient ${recipientId}.`);
 			return Promise.resolve();

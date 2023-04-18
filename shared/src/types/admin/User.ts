@@ -1,4 +1,4 @@
-import { EntityReference } from '@camberi/firecms';
+import { EntityReference } from 'firecms';
 import { capitalizeStringIfUppercase } from '../../utils/strings';
 import { LocaleLanguage } from './Language';
 

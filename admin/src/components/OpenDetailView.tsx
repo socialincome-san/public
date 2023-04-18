@@ -1,6 +1,6 @@
-import { Entity, EntityCollection, SideEntityController } from '@camberi/firecms';
 import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
 import { IconButton, Tooltip } from '@mui/material';
+import { Entity, EntityCollection, SideEntityController } from 'firecms';
 
 /**
  * Allows to open an entity in a side view

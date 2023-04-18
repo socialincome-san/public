@@ -1,4 +1,5 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
+import "package:app/core/helpers/snackbar_helper.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/view/widgets/welcome/otp_input.dart";
@@ -14,6 +15,7 @@ class WelcomePage extends StatelessWidget {
     return BlocProvider(
       create: (context) => SignupCubit(
         userRepository: context.read<UserRepository>(),
+        crashReportingRepository: context.read<CrashReportingRepository>(),
       ),
       child: const _WelcomeView(),
     );
@@ -70,11 +72,18 @@ class _WelcomeView extends StatelessWidget {
                     const SizedBox(height: 16),
                     BlocConsumer<SignupCubit, SignupState>(
                       listener: (context, state) {
-                        if (state.status == SignupStatus.failure) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(state.exception.toString()),
-                            ),
+                        if (state.status == SignupStatus.verificationFailure) {
+                          SnackbarHelper.showSnackbar(
+                            context,
+                            message: state.exception.toString(),
+                            type: SnackbarType.error,
+                          );
+                        } else if (state.status ==
+                            SignupStatus.phoneNumberFailure) {
+                          SnackbarHelper.showSnackbar(
+                            context,
+                            message: state.exception.toString(),
+                            type: SnackbarType.error,
                           );
                         }
                       },
@@ -82,14 +91,13 @@ class _WelcomeView extends StatelessWidget {
                         switch (state.status) {
                           case SignupStatus.loadingPhoneNumber:
                           case SignupStatus.enterPhoneNumber:
+                          case SignupStatus.phoneNumberFailure:
                             return const PhoneInput();
                           case SignupStatus.loadingVerificationCode:
                           case SignupStatus.enterVerificationCode:
-                            return const OtpInput();
                           case SignupStatus.verificationSuccess:
-                            return const Text("Success");
-                          case SignupStatus.failure:
-                            return const Text("Failure");
+                          case SignupStatus.verificationFailure:
+                            return const OtpInput();
                         }
                       },
                     ),

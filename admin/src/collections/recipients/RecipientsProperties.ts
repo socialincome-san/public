@@ -1,9 +1,9 @@
-import { Property } from '@camberi/firecms/dist/types/properties';
 import {
 	PARTNER_ORGANISATION_FIRESTORE_PATH,
 	RecipientMainLanguage,
 	RecipientProgramStatus,
 } from '@socialincome/shared/src/types';
+import { Property } from 'firecms/dist/types/properties';
 
 export const programStatusProperty: Property = {
 	name: 'Status',
@@ -18,6 +18,7 @@ export const programStatusProperty: Property = {
 export const orangeMoneyUIDProperty: Property = {
 	name: 'OM ID',
 	dataType: 'number',
+	columnWidth: 70,
 };
 export const firstNameProperty: Property = {
 	name: 'First Name',
@@ -73,6 +74,7 @@ export const genderProperty: Property = {
 	dataType: 'string',
 	longDescription: 'Gender of recipient',
 	validation: { required: true },
+	columnWidth: 75,
 	enumValues: {
 		male: 'Male',
 		female: 'Female',

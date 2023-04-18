@@ -1,4 +1,4 @@
-import { buildProperties } from '@camberi/firecms';
+import { buildProperties } from 'firecms';
 import { ContributorOrganisation, CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 

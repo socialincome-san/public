@@ -1,5 +1,5 @@
-import { Property, StringProperty } from '@camberi/firecms/dist/types/properties';
 import { SurveyQuestionnaire, SurveyStatus } from '@socialincome/shared/src/types';
+import { Property, StringProperty } from 'firecms/dist/types/properties';
 
 export const surveyStatusProperty: StringProperty = {
 	name: 'Status',
@@ -54,4 +54,10 @@ export const commentsProperty: Property = {
 	dataType: 'string',
 	name: 'Comments',
 	markdown: true,
+};
+
+export const accessTokenProperty: StringProperty = {
+	dataType: 'string',
+	name: 'Access Token',
+	readOnly: true,
 };

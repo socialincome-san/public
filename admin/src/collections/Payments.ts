@@ -1,4 +1,4 @@
-import { buildProperties, EnumValues } from '@camberi/firecms';
+import { buildProperties, EnumValues } from 'firecms';
 import { MESSAGE_FIRESTORE_PATH, Payment, PaymentStatus, PAYMENT_FIRESTORE_PATH } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 

@@ -1,5 +1,5 @@
-import { EntityReference } from '@camberi/firecms';
 import { Timestamp } from '@google-cloud/firestore';
+import { EntityReference } from 'firecms';
 import { DateTime } from 'luxon';
 
 export const RECIPIENT_FIRESTORE_PATH = 'recipients';
@@ -27,8 +27,6 @@ export type Recipient = {
 	email: string;
 	first_name: string;
 	gender: string;
-	im_link: string;
-	im_uid: string;
 	is_suspended: boolean;
 	insta_handle: string;
 	last_name: string;
@@ -44,8 +42,6 @@ export type Recipient = {
 	si_start_date: Date | Timestamp; //for NGO disabled
 	test_recipient: boolean;
 	twitter_handle: string;
-	im_link_initial: string;
-	im_link_regular: string;
 };
 
 /**

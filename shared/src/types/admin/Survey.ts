@@ -30,6 +30,7 @@ export type Survey = {
 	data: any; // the survey data
 	access_email: string; // firebase auth user who can update this survey
 	access_pw: string; // firebase auth user who can update this survey
+	access_token: string; // smaller token which can be used together with recipients phone to login
 };
 
 export const recipientSurveys = [
@@ -45,3 +46,15 @@ export const recipientSurveys = [
 	{ name: 'offboarded-checkin-3', startDateOffsetMonths: 60, questionaire: SurveyQuestionnaire.OffboardedCheckin },
 	{ name: 'offboarded-checkin-4', startDateOffsetMonths: 72, questionaire: SurveyQuestionnaire.OffboardedCheckin },
 ];
+
+export interface SurveyCredentialRequest {
+	phoneNumber: string;
+	accessToken: string;
+}
+
+export interface SurveyCredentialResponse {
+	recipientId: string;
+	surveyId: string;
+	email: string;
+	pw: string;
+}

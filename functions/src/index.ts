@@ -11,6 +11,7 @@ import { ExchangeRateImporter } from './etl/ExchangeRateImporter';
 import { FirestoreAuditor } from './etl/FirestoreAuditor';
 import { PostfinanceImporter } from './etl/PostfinanceImporter';
 import { StripeWebhook } from './etl/StripeWebhook';
+import { SurveyLogin } from './website/SurveyLogin';
 
 const app = getOrInitializeApp();
 const firestoreAdmin = new FirestoreAdmin(app);
@@ -44,3 +45,6 @@ export const twilioIncomingMessage = twilioIncomingMessageHandler.twilioIncoming
 
 const twilioOutgoingMessageHandler = new TwilioOutgoingMessageHandler(firestoreAdmin);
 export const twilioOutgoingMessage = twilioOutgoingMessageHandler.twilioOutgoingMessageFunction;
+
+const surveyLogin = new SurveyLogin(firestoreAdmin);
+export const getSurveyCredentials = surveyLogin.getSurveyCredentials;

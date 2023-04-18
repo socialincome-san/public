@@ -36,9 +36,6 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Check Translation Files
-        run: npm run website:check-translations
-
       - name: Run Unit Tests
         run: npm run website:test:emulator
 

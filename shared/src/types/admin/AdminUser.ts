@@ -1,4 +1,4 @@
-import { EntityReference } from '@camberi/firecms';
+import { EntityReference } from 'firecms';
 
 export const ADMIN_USER_FIRESTORE_PATH = 'admins';
 

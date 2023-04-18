@@ -1,31 +1,80 @@
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { Button, Card, CardContent, Menu, MenuItem } from '@mui/material';
 import { useRouter } from 'next/router';
-import { ChangeEvent } from 'react';
+import React from 'react';
 import { useCookies } from 'react-cookie';
-import { i18n } from '../next-i18next.config';
 
-export default function LanguageSwitcher() {
+export default function LanguageSwitcher(props: LanguageSwitcherProps) {
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+
 	const [cookie, setCookie] = useCookies(['NEXT_LOCALE']);
 	const router = useRouter();
 	const { pathname, asPath, query, locale } = router;
 
-	const switchLanguage = async (e: ChangeEvent<HTMLSelectElement>) => {
-		e.preventDefault();
-		const nextLocale = e.target.value;
+	const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	const handleLanguageSwitch = (isoCode: string) => {
+		setAnchorEl(null);
 		// this overrides the automatic language selection based on the browser settings
 		// when someone explicitly sets the language
-		if (cookie.NEXT_LOCALE !== locale) {
-			setCookie('NEXT_LOCALE', locale, { path: '/' });
+		if (cookie.NEXT_LOCALE !== isoCode) {
+			setCookie('NEXT_LOCALE', isoCode, { path: '/' });
 		}
-		await router.push({ pathname, query }, asPath, { locale: nextLocale });
+		if (locale !== isoCode) {
+			router.push({ pathname, query }, asPath, { locale: isoCode });
+		}
 	};
 
 	return (
-		<select onChange={switchLanguage} defaultValue={locale}>
-			{i18n.locales.map((locale) => (
-				<option key={locale} value={locale}>
-					{locale}
-				</option>
-			))}
-		</select>
+		<Card variant="outlined">
+			<CardContent>
+				<Button
+					id="current-language"
+					aria-controls={open ? 'language-chooser' : undefined}
+					aria-haspopup="true"
+					aria-expanded={open ? 'true' : undefined}
+					onClick={handleMenuOpen}
+					variant="outlined"
+					endIcon={<KeyboardArrowDownIcon />}
+				>
+					{locale
+						? props.languages[locale]
+							? props.languages[locale]
+							: props.languages[props.fallbackIsoCode]
+						: props.languages[props.fallbackIsoCode]}
+				</Button>
+				<Menu
+					id="language-chooser"
+					anchorEl={anchorEl}
+					onClose={handleClose}
+					MenuListProps={{
+						'aria-labelledby': 'current-language',
+					}}
+					open={open}
+				>
+					{Object.entries(props.languages).map(([isoCode, name]) => (
+						<MenuItem
+							key={isoCode}
+							value={isoCode}
+							selected={isoCode === locale}
+							onClick={() => handleLanguageSwitch(isoCode)}
+						>
+							{name as string}
+						</MenuItem>
+					))}
+				</Menu>
+			</CardContent>
+		</Card>
 	);
+}
+
+interface LanguageSwitcherProps {
+	languages: any;
+	fallbackIsoCode: string;
 }

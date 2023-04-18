@@ -1,0 +1,122 @@
+{
+	"survey": {
+		"login": {
+			"message": "Please enter your phone number and the access token which we sent you.",
+			"phoneNumber": "Orange Money Phone Number",
+			"accessCode": "Survey Access Code",
+			"loadSurvey": "Load Survey",
+			"loading": "Loading...",
+			"error": "We couldn't find the survey. Please check again the phone number and access token. Please contact the Social Income team if the error persists."
+		},
+		"common": {
+			"start": "Start",
+			"previous": "Previous",
+			"next": "Next",
+			"complete": "Complete",
+			"preview": "Preview",
+			"edit": "Edit",
+			"loading": "Loading...",
+			"missingCredentials": "Missing credentials for the survey. Please contact the Social Income team.",
+			"authError": "Error during login. Please contact the Social Income team.",
+			"loadingError": "Error loading the survey. Please contact the Social Income team.",
+			"progressSavingSuccess": "Your answer was successfully saved.",
+			"progressSavingError": "Your answer couldn't be saved. Retrying... Please contact the Social Income team if the error persists.",
+			"completed": "Thank you very much for completing the survey.",
+			"alreadyCompleted": "This survey is already completed. Thank you very much.",
+			"hello": "Hello",
+			"welcome": "The goal of this survey is to find out the impact of a Social Income for you. Takes around 5 minutes to complete."
+		},
+		"questions": {
+			"yesNoChoices": {
+				"yes": "Yes",
+				"no": "No"
+			},
+			"ratingChoices": {
+				"extremelyUnlikely": "Extremely unlikely",
+				"unlikely": "Unlikely",
+				"neutral": "Neutral",
+				"likely": "Likely",
+				"extremelyLikely": "Extremely likely"
+			},
+			"maritalStatusTitle": "What is your marital status?",
+			"maritalStatusChoices": {
+				"married": "Married",
+				"widowed": "Widowed",
+				"divorced": "Divorced",
+				"separated": "Separated",
+				"neverMarried": "Never married"
+			},
+			"financialSituationTitle": "How do you assess your current financial situation?",
+			"financialSituationChoices": {
+				"livingComfortably": "Living comfortably",
+				"doingOk": "Doing ok",
+				"difficultyMakingEndsMeet": "Difficulty making ends meet",
+				"barelyGettingBy": "Barely getting by"
+			},
+			"employmentStatusTitle": "What is your current employment status?",
+			"employmentStatusChoices": {
+				"employed": "Employed",
+				"selfEmployed": "Self-employed",
+				"notEmployed": "Not employed",
+				"retired": "Retired"
+			},
+			"employedTitle": "Are you working more or less than 40 hours per week?",
+			"employedChoices": {
+				"less": "Less",
+				"more": "More"
+			},
+			"notEmployedTitle": "Are you currently looking for work?",
+			"disabilityTitle": "Do you suffer from a disability or illness that affects your possibilities of getting work or keeping your job?",
+			"livingLocationTitle": "Where do you live?",
+			"livingLocationChoices": {
+				"westernAreaUrbanFreetown": "Western Area Urban (i.e., Freetown)",
+				"westernAreaRural": "Western Area Rural",
+				"easternProvince": "Eastern Province",
+				"northernProvince": "Northern Province",
+				"southernProvince": "Southern Province",
+				"northWestProvince": "North West Province"
+			},
+			"hasDependentsTitle": "Do you have any dependents?",
+			"hasDependentsDesc": "People who depend on you.",
+			"nrDependentsTitle": "Number of people who depend on you.",
+			"nrDependentsChoices": {
+				"1-2": "1-2",
+				"3-4": "3-4",
+				"5-7": "5-7",
+				"8-10": "8-10",
+				"10-": "more than 10"
+			},
+			"basicNeedsCoverageTitle": "How likely are you able to cover basic needs such as food, clothing, and shelter?",
+			"expensesCoveredTitle": "How likely are you able to pay all your bills on time (e.g., utilities, loans, etc.)?",
+			"unexpectedExpensesCoveredTitle": "How likely are you able to handle an unexpected expense like seeing a doctor?",
+			"ownIncomeTitle": "In addition to Social Income, how likely are you able to generate income on your own?",
+			"educationAccessTitle": "How likely are you to have access to education?",
+			"savingsTitle": "How likely are you able to save money?",
+			"deptTitle": "Are you or anyone in your household in debt? (SLE 500 or above)",
+			"mainDeptPayerTitle": "Are you the main person repaying the debt?",
+			"spendingTitle": "Tell us what are the key categories that you spend your Social Income payments on.",
+			"spendingChoices": {
+				"education": "Education (school fees, supplies, ...)",
+				"food": "Food (food for you or your household)",
+				"housing": "Housing (rent, house maintenance, ...)",
+				"healthCare": "Health Care (doctor, hospital visit, medicine, ...)",
+				"mobility": "Mobility (bus, shared taxi, poda poda, keke, ...)",
+				"saving": "Saving for the future (saving it in a bank account or on my mobile money account, ...)",
+				"investment": "Investment (fertilizers, tools, diesel for machinery, ...)"
+			},
+			"spendingRankingTitle": "Please rank the selected spending categories from the most important to the least.",
+			"spendingRankingDesc": "You can drag and drop the categories.",
+			"plannedAchievementOnboardingTitle": "What do you hope to achieve within the next 3 years with Social Income?",
+			"plannedAchievementCheckingTitle": "What do you hope to achieve with the remaining Social Incomes payments?",
+			"achievementsAchievedTitle": "Have you achieved what you hoped to over the course of the last three years?",
+			"achievementsNotAchievedCommentTitle": "What has kept you from achieving this goal? Is there something we could have done to further support you? (e.g. mentoring, connections)",
+			"moreFinanciallySecureTitle": "Has Social Income made you feel more financially secure?",
+			"happierTitle": "Has Social Income made you feel happier?",
+			"happierCommentTitle": "How so?",
+			"notHappierCommentTitle": "Can you tell us why?",
+			"longEnoughTitle": "Was three years of Social Income payments long enough to become financially stable?",
+			"selfSustainableTitle": "Will you be able to sustain yourself financially after your Social Income period has expired (e.g., pay your bills on time, handle an unexpected expense, etc.)?",
+			"notSelfSustainableCommentTitle": "Is there anything in the program that could be changed to make your transition easier?"
+		}
+	}
+}

@@ -1,8 +1,8 @@
 import crypto from 'crypto';
 
 /**
- * random base64url string generator. E.g for passwords
+ * random string generator. E.g for passwords
  */
-export const rndBase64 = (bytes: number) => {
-	return crypto.randomBytes(bytes).toString('base64url');
+export const rndString = (bytes: number, encoding: BufferEncoding = 'base64url') => {
+	return crypto.randomBytes(bytes).toString(encoding);
 };

@@ -19,6 +19,7 @@ class PaymentsPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         title: const Text("Payments"),
+        centerTitle: true,
       ),
       body: Padding(
         padding: AppSpacings.h8,
