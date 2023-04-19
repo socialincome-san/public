@@ -1,24 +1,11 @@
-import admin from 'firebase-admin';
 import functions from 'firebase-functions-test';
-
-import { DateTime } from 'luxon';
-import { FirestoreAdmin } from '../../../../shared/src/firebase/FirestoreAdmin';
-import {
-	AdminPaymentProcessTask,
-	Payment,
-	PaymentStatus,
-	PAYMENT_FIRESTORE_PATH,
-	Recipient,
-	RecipientProgramStatus,
-	RECIPIENT_FIRESTORE_PATH,
-} from '../../../../shared/src/types';
+import { AdminPaymentProcessTask } from '../../../../shared/src/types';
 import { runAdminPaymentProcessTask } from '../../../src';
 
 describe('AdminPaymentTaskProcessor', () => {
 	const projectId = 'test' + new Date().getTime();
 	const testEnv = functions({ projectId: projectId });
 	const triggerFunction = testEnv.wrap(runAdminPaymentProcessTask);
-	const firestoreAdmin = new FirestoreAdmin(admin.app());
 
 	afterEach(() => testEnv.cleanup());
 
