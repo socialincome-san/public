@@ -1,10 +1,5 @@
 import { CollectionActionsProps, useAuthController, useSnackbarController } from 'firecms';
-import {
-	Box,
-	Button,
-	Modal,
-	Typography,
-} from '@mui/material';
+import { Box, Button, Modal, Typography } from '@mui/material';
 import { Recipient } from '../../../shared/src/types';
 
 import { getFunctions, httpsCallable } from 'firebase/functions';
@@ -34,7 +29,7 @@ export function InviteWhatsappAction({ selectionController }: CollectionActionsP
 	const handleOpen = () => {
 		setOpen(true);
 		setCountSelectedEntities(selectionController?.selectedEntities.length);
-	}
+	};
 	const handleClose = () => setOpen(false);
 
 	const functions = getFunctions();
@@ -75,28 +70,25 @@ export function InviteWhatsappAction({ selectionController }: CollectionActionsP
 			<Button onClick={handleOpen} color="primary">
 				Activate WhatsApp
 			</Button>
-			<Modal 	open={open}  onClose={handleClose}>
-			<Box sx={STYLE}>
-				<Box
-					sx={{
-						display: 'flex',
-						flexDirection: 'column',
-						justifyContent: 'space-around',
-						gap: 2,
-					}}
-				>
-					<Typography variant="h5" textAlign="center">
-						Send Whatsapp Invites
-					</Typography>
-					<Button
-						variant="outlined"
-						onClick={() => onClick()}
+			<Modal open={open} onClose={handleClose}>
+				<Box sx={STYLE}>
+					<Box
+						sx={{
+							display: 'flex',
+							flexDirection: 'column',
+							justifyContent: 'space-around',
+							gap: 2,
+						}}
 					>
-						Invite {countSelectedEntities} recipients to Whatsapp
-					</Button>
+						<Typography variant="h5" textAlign="center">
+							Send Whatsapp Invites
+						</Typography>
+						<Button variant="outlined" onClick={() => onClick()}>
+							Invite {countSelectedEntities} recipients to Whatsapp
+						</Button>
+					</Box>
 				</Box>
-			</Box>
-		</Modal>
+			</Modal>
 		</div>
 	);
 }

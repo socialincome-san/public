@@ -95,7 +95,7 @@ export const buildRecipientsCollection = () => {
 			test_recipient: TestRecipientProperty,
 		}),
 		subcollections: [paymentsCollection, messagesCollection],
-		Actions: [InviteWhatsappAction]
+		Actions: [InviteWhatsappAction],
 	};
 	return buildAuditedCollection<Partial<Recipient>>(collection);
 };

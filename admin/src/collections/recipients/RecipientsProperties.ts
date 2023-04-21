@@ -50,7 +50,7 @@ export const communicationMobilePhoneProperty: Property = {
 			hideFromCollection: true,
 			readOnly: true,
 			defaultValue: false,
-		}
+		},
 	},
 };
 export const mobileMoneyPhoneProperty: Property = {
