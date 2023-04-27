@@ -29,7 +29,7 @@ jobs:
 
       - name: Install & Setup Firebase Emulator Suite
         run: |
-          npm -g install firebase-tools@11.21.0 && \
+          npm -g install firebase-tools@11.29.1 && \
           firebase setup:emulators:firestore
 
       - name: Install Dependencies
