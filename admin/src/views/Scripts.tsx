@@ -51,27 +51,6 @@ export function ScriptsView() {
 			});
 	};
 
-	const importMissingExchangeRates = () => {
-		snackbarController.open({
-			type: 'success',
-			message: 'Starting importing missing exchange rates',
-		});
-		httpsCallable(functions, 'importMissingExchangeRates')()
-			.then(() => {
-				snackbarController.open({
-					type: 'success',
-					message: 'Succeeded.',
-				});
-			})
-			.catch((err) => {
-				snackbarController.open({
-					type: 'error',
-					message: 'Creation failed. Check console for details.',
-				});
-				console.log(err);
-			});
-	};
-
 	return (
 		<Box m="auto" display="flex" flexDirection={'column'}>
 			<Container maxWidth={'md'} sx={{ my: 4 }}>
@@ -117,28 +96,6 @@ export function ScriptsView() {
 							</CardActions>
 							<CardContent>
 								<Typography>Newly onboarded recipients should then automatically get the surveys.</Typography>
-							</CardContent>
-						</Card>
-					</Grid>
-					<Grid item xs={12} sm={4}>
-						<Card
-							variant="outlined"
-							sx={{
-								height: '100%',
-								display: 'flex',
-								flexDirection: 'column',
-							}}
-						>
-							<CardActions>
-								<Button onClick={importMissingExchangeRates} color="primary">
-									Import missing exchange rates
-								</Button>
-							</CardActions>
-
-							<CardContent>
-								<Typography>
-									To have all exchange rates since the beginning of the project. Is now populated with a daily cron.
-								</Typography>
 							</CardContent>
 						</Card>
 					</Grid>
