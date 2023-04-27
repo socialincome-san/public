@@ -25,7 +25,6 @@ export const importBalanceMail = postfinanceImporter.importBalanceMail;
 
 const exchangeRateImporter = new ExchangeRateImporter(firestoreAdmin);
 export const importExchangeRates = exchangeRateImporter.importExchangeRates;
-export const importMissingExchangeRates = exchangeRateImporter.importMissingExchangeRates;
 
 const donationCertificateHandler = new DonationCertificateHandler(firestoreAdmin, storageAdmin);
 export const createDonationCertificates = donationCertificateHandler.createDonationCertificates;
