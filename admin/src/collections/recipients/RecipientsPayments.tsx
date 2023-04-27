@@ -16,10 +16,8 @@ import {
 	StringPropertyPreview,
 	useDataSource,
 } from 'firecms';
-import { EntityCollection } from 'firecms/dist/types';
 import { useState } from 'react';
 import { PaymentProcessAction } from '../../actions/PaymentProcessAction';
-import { BuildCollectionProps } from '../index';
 import { paymentsCollection, paymentStatusEnumValues } from '../Payments';
 import { buildAuditedCollection } from '../shared';
 import { PaymentsLeft } from './Recipients';
@@ -37,6 +35,7 @@ interface CreateMonthColumnProps {
 	showButton: boolean;
 	entity?: Entity<Payment>;
 }
+
 function CreateMonthColumn({ entity, showButton }: CreateMonthColumnProps) {
 	const dataSource = useDataSource();
 	const [entityState, setEntityState] = useState(entity);
@@ -103,8 +102,8 @@ export const CurrMonthCol = (showButton: boolean) =>
 export const PrevMonthCol = createMonthColumn(monthIDs[1], monthIDs[1], false);
 export const PrevPrevMonthCol = createMonthColumn(monthIDs[2], monthIDs[2], false);
 
-export const buildRecipientsPaymentsCollection = ({ isGlobalAdmin, organisations }: BuildCollectionProps) => {
-	const defaultProps: EntityCollection<Partial<Recipient>> = {
+export const buildRecipientsPaymentsCollection = () => {
+	return buildAuditedCollection<Partial<Recipient>>({
 		name: 'Payments',
 		singularName: 'Recipient',
 		path: RECIPIENT_FIRESTORE_PATH,
@@ -115,38 +114,20 @@ export const buildRecipientsPaymentsCollection = ({ isGlobalAdmin, organisations
 		defaultSize: 'xs',
 		textSearchEnabled: true,
 		Actions: PaymentProcessAction,
-		permissions: {
-			create: isGlobalAdmin,
-			edit: isGlobalAdmin,
-			delete: isGlobalAdmin,
-		},
 		properties: buildProperties<Partial<Recipient>>({
 			om_uid: orangeMoneyUIDProperty,
 			progr_status: programStatusProperty,
 			first_name: firstNameProperty,
 			last_name: lastNameProperty,
 		}),
-		subcollections: isGlobalAdmin ? [paymentsCollection] : [],
+		subcollections: [paymentsCollection],
 		exportable: false,
 		inlineEditing: false,
 		additionalFields: [PaymentsLeft, CurrMonthCol(false), PrevMonthCol, PrevPrevMonthCol],
-	};
-	if (isGlobalAdmin) {
-		return buildAuditedCollection<Partial<Recipient>>({
-			...defaultProps,
-			initialFilter: {
-				progr_status: ['in', [RecipientProgramStatus.Active, RecipientProgramStatus.Designated]],
-			},
-		});
-	} else {
-		return buildAuditedCollection<Partial<Recipient>>({
-			...defaultProps,
-			forceFilter: {
-				organisation: ['in', organisations],
-				progr_status: ['in', [RecipientProgramStatus.Active, RecipientProgramStatus.Designated]],
-			},
-		});
-	}
+		initialFilter: {
+			progr_status: ['in', [RecipientProgramStatus.Active, RecipientProgramStatus.Designated]],
+		},
+	});
 };
 
 export const buildRecipientsPaymentsConfirmationCollection = () => {
