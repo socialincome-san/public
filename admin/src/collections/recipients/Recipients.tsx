@@ -8,7 +8,8 @@ import {
 	Recipient,
 	RECIPIENT_FIRESTORE_PATH,
 } from '@socialincome/shared/src/types';
-import { messagesCollection, paymentsCollection } from '../index';
+import { messagesCollection } from '../Messages';
+import { paymentsCollection } from '../Payments';
 import { buildAuditedCollection } from '../shared';
 import {
 	birthDateProperty,

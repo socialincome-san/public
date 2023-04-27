@@ -11,22 +11,22 @@ import {
 	performAlgoliaTextSearch,
 } from 'firecms';
 import { AdminUser, recipientSurveys } from '../../shared/src/types';
-import {
-	adminsCollection,
-	buildPartnerOrganisationsCollection,
-	buildRecipientsCollection,
-	buildRecipientsPaymentsCollection,
-	contributorOrganisationsCollection,
-	newsletterSubscribersCollection,
-	operationalExpensesCollection,
-	usersCollection,
-} from './collections';
 
 import { getApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
-import { buildRecipientsPaymentsConfirmationCollection } from './collections/recipients/RecipientsPayments';
+import { adminsCollection } from './collections/Admins';
+import { contributorOrganisationsCollection } from './collections/ContributorOrganisations';
+import { newsletterSubscribersCollection } from './collections/NewsletterSubscribers';
+import { operationalExpensesCollection } from './collections/OperationalExpenses';
+import { buildPartnerOrganisationsCollection } from './collections/PartnerOrganisations';
+import { buildRecipientsCollection } from './collections/recipients/Recipients';
+import {
+	buildRecipientsPaymentsCollection,
+	buildRecipientsPaymentsConfirmationCollection,
+} from './collections/recipients/RecipientsPayments';
 import { buildRecipientsSurveysCollection } from './collections/recipients/RecipientsSurveys';
 import { createPendingSurveyColumn, createSurveyColumn } from './collections/surveys/Surveys';
+import { usersCollection } from './collections/Users';
 import { ScriptsView } from './views/Scripts';
 
 const onFirebaseInit = () => {
@@ -111,9 +111,9 @@ const textSearchController: FirestoreTextSearchController = ({ path, searchStrin
 export default function App() {
 	const collections = [
 		buildRecipientsPaymentsConfirmationCollection(),
-		buildRecipientsPaymentsCollection({ isGlobalAdmin: true }),
+		buildRecipientsPaymentsCollection(),
 		buildRecipientsCollection(),
-		buildPartnerOrganisationsCollection({ isGlobalAdmin: true }),
+		buildPartnerOrganisationsCollection(),
 		contributorOrganisationsCollection,
 		adminsCollection,
 		operationalExpensesCollection,
