@@ -31,20 +31,21 @@ export class ExchangeRateImporter {
 		.runWith({
 			timeoutSeconds: 540,
 		})
-		.pubsub.schedule('0 1 * * *').onRun(async () => {
-		const exchangeRates = await this.firestoreAdmin.getAll<ExchangeRatesEntry>(EXCHANGE_RATES_PATH);
-		const existingDays = new Set(
-			exchangeRates.map((exchangeRate) => {
-				return Math.floor(exchangeRate.timestamp / this.secondsInDay) * this.secondsInDay; // rounded to day
-			})
-		);
+		.pubsub.schedule('0 1 * * *')
+		.onRun(async () => {
+			const exchangeRates = await this.firestoreAdmin.getAll<ExchangeRatesEntry>(EXCHANGE_RATES_PATH);
+			const existingDays = new Set(
+				exchangeRates.map((exchangeRate) => {
+					return Math.floor(exchangeRate.timestamp / this.secondsInDay) * this.secondsInDay; // rounded to day
+				})
+			);
 
-		for (let timestamp = this.startTimestamp; timestamp <= Date.now() / 1000; timestamp += this.secondsInDay) {
-			if (!existingDays.has(timestamp)) {
-				await this.getAndStoreExchangeRate(DateTime.fromSeconds(timestamp));
+			for (let timestamp = this.startTimestamp; timestamp <= Date.now() / 1000; timestamp += this.secondsInDay) {
+				if (!existingDays.has(timestamp)) {
+					await this.getAndStoreExchangeRate(DateTime.fromSeconds(timestamp));
+				}
 			}
-		}
-	});
+		});
 
 	storeExchangeRates = async (response: ExchangeRateResponse): Promise<void> => {
 		const exchangeRates: ExchangeRatesEntry = {
