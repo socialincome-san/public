@@ -79,7 +79,6 @@ export function ScriptsView() {
 					<Grid item xs={12}>
 						<Typography variant={'h4'}>Collection of Admin Scripts</Typography>
 					</Grid>
-
 					<Grid item xs={12} sm={4}>
 						<Card
 							variant="outlined"
@@ -94,7 +93,6 @@ export function ScriptsView() {
 									Start batch import of stripe payments
 								</Button>
 							</CardActions>
-
 							<CardContent>
 								<Typography>
 									New stripe payments are automatically added to firestore through a webhook. To sync existing ones one
@@ -117,7 +115,6 @@ export function ScriptsView() {
 									Create survey entries for all recipients
 								</Button>
 							</CardActions>
-
 							<CardContent>
 								<Typography>Newly onboarded recipients should then automatically get the surveys.</Typography>
 							</CardContent>
