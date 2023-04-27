@@ -1,10 +1,6 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function isAdminUser(email) {
-      return exists(/databases/$(database)/documents/admins/$(email));
-    }
-
     function isGlobalAdmin(email) {
       let adminUser = get(/databases/$(database)/documents/admins/$(email)).data;
       return 'is_global_admin' in adminUser && adminUser.is_global_admin;
@@ -15,21 +11,17 @@ service cloud.firestore {
       return 'is_global_analyst' in adminUser && adminUser.is_global_analyst;
     }
 
-    function canAccessRecipient(email, recipient) {
-      let adminUser = get(/databases/$(database)/documents/admins/$(email)).data;
-      return recipient.organisation in adminUser.organisations;
-    }
-
     function canAccessPayment(token, recipientId) {
       let recipient = get(/databases/$(database)/documents/recipients/$(recipientId)).data;
-      let hasAccessByEmail = 'email' in token && canAccessRecipient(token.email, recipient);
-      let hasAccessByPhone = 'phone_number' in token && token.phone_number == ("+" + string(recipient.mobile_money_phone.phone));
-      return hasAccessByEmail || hasAccessByPhone
+      return 'phone_number' in token && token.phone_number == ("+" + string(recipient.mobile_money_phone.phone));
     }
 
-    match /admins/{data} {
-      allow read: if isAdminUser(request.auth.token.email);
-      allow write: if isGlobalAdmin(request.auth.token.email);
+    match /{document=**} {
+      allow read, write: if isGlobalAdmin(request.auth.token.email);
+    }
+
+    match /{document=**} {
+      allow read: if isGlobalAnalyst(request.auth.token.email);
     }
 
     match /events/{data} {
@@ -44,63 +36,19 @@ service cloud.firestore {
       allow read: if true;
     }
 
-    match /mailchimp-data/{data} {
-      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
-      allow write: if isGlobalAdmin(request.auth.token.email);
-    }
-
-    match /message-templates/{data} {
-      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
-      allow write: if isGlobalAdmin(request.auth.token.email);
-    }
-
-    match /newsletter-subscribers/{data} {
-      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
-      allow write: if isGlobalAdmin(request.auth.token.email);
-    }
-
-    match /operational-expenses/{data} {
-      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
-      allow write: if isGlobalAdmin(request.auth.token.email);
-    }
-
-    match /organisations/{data} {
-      allow read: if isAdminUser(request.auth.token.email);
-      allow write: if isGlobalAdmin(request.auth.token.email);
-    }
-
-    match /organisations-contributors/{data} {
-      allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
-      allow write: if isGlobalAdmin(request.auth.token.email);
-    }
-
     match /recipients/{recipientId} {
-      allow read, write: if isGlobalAdmin(request.auth.token.email);
-      allow read: if isGlobalAnalyst(request.auth.token.email);
-
       // Recipients mobile app access
       allow read, update: if 'phone_number' in request.auth.token && request.auth.token.phone_number == ("+" + string(resource.data.mobile_money_phone.phone))
 
-      // Organisation admins access
-      allow create: if isAdminUser(request.auth.token.email);
-      allow read, update: if canAccessRecipient(request.auth.token.email, resource.data);
-
       match /payments/{paymentId} {
-          allow read, write: if isGlobalAdmin(request.auth.token.email);
-          allow read: if isGlobalAnalyst(request.auth.token.email);
-          allow create: if isAdminUser(request.auth.token.email);
           allow read, update: if canAccessPayment(request.auth.token, recipientId);
       }
 
       match /messages/{messageId} {
-          allow read, write: if isGlobalAdmin(request.auth.token.email);
-          allow read: if isGlobalAnalyst(request.auth.token.email);
-          allow create: if isAdminUser(request.auth.token.email);
           allow read, update: if canAccessPayment(request.auth.token, recipientId);
       }
 
       match /surveys/{surveyId} {
-        allow read, write: if isGlobalAdmin(request.auth.token.email);
         allow read, update: if request.auth.token.email == resource.data.access_email;
       }
     }
