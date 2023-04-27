@@ -171,7 +171,7 @@ export const buildRecipientsPaymentsConfirmationCollection = () => {
 		}),
 		defaultSize: 'xs',
 		exportable: false,
-		inlineEditing: false,
+		inlineEditing: true,
 		additionalFields: [CurrMonthCol(true), PaymentsLeft],
 		initialFilter: {
 			progr_status: ['in', [RecipientProgramStatus.Active, RecipientProgramStatus.Designated]],
