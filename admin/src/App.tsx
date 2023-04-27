@@ -6,30 +6,27 @@ import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import {
 	Authenticator,
 	CMSView,
-	EntityCollection,
 	FirebaseCMSApp,
 	FirestoreTextSearchController,
 	performAlgoliaTextSearch,
 } from 'firecms';
-import { useState } from 'react';
 import { AdminUser, recipientSurveys } from '../../shared/src/types';
-import {
-	adminsCollection,
-	buildPartnerOrganisationsCollection,
-	buildRecipientsCollection,
-	buildRecipientsPaymentsCollection,
-	contributorOrganisationsCollection,
-	newsletterSubscribersCollection,
-	operationalExpensesCollection,
-	usersCollection,
-} from './collections';
 
 import { getApp } from 'firebase/app';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
-import { buildRecipientsPartnerOrgAdminCollection } from './collections/recipients/RecipientsPartnerOrgAdmin';
-import { buildRecipientsPaymentsConfirmationCollection } from './collections/recipients/RecipientsPayments';
+import { adminsCollection } from './collections/Admins';
+import { contributorOrganisationsCollection } from './collections/ContributorOrganisations';
+import { newsletterSubscribersCollection } from './collections/NewsletterSubscribers';
+import { operationalExpensesCollection } from './collections/OperationalExpenses';
+import { buildPartnerOrganisationsCollection } from './collections/PartnerOrganisations';
+import { buildRecipientsCollection } from './collections/recipients/Recipients';
+import {
+	buildRecipientsPaymentsCollection,
+	buildRecipientsPaymentsConfirmationCollection,
+} from './collections/recipients/RecipientsPayments';
 import { buildRecipientsSurveysCollection } from './collections/recipients/RecipientsSurveys';
 import { createPendingSurveyColumn, createSurveyColumn } from './collections/surveys/Surveys';
+import { usersCollection } from './collections/Users';
 import { ScriptsView } from './views/Scripts';
 
 const onFirebaseInit = () => {
@@ -112,17 +109,11 @@ const textSearchController: FirestoreTextSearchController = ({ path, searchStrin
 };
 
 export default function App() {
-	// The initialFilter property on collections is static, i.e. we can't dynamically access user information when we create
-	// the filter, which is why we need to first fetch user information before we create the entire collection. This way,
-	// we can set the filter based on the user's permission.
-	const [collections, setCollections] = useState<EntityCollection[]>([]);
-	const [customViews, setCustomViews] = useState<CMSView[]>([]);
-
-	const globalAdminCollections = [
+	const collections = [
 		buildRecipientsPaymentsConfirmationCollection(),
-		buildRecipientsPaymentsCollection({ isGlobalAdmin: true }),
+		buildRecipientsPaymentsCollection(),
 		buildRecipientsCollection(),
-		buildPartnerOrganisationsCollection({ isGlobalAdmin: true }),
+		buildPartnerOrganisationsCollection(),
 		contributorOrganisationsCollection,
 		adminsCollection,
 		operationalExpensesCollection,
@@ -135,7 +126,7 @@ export default function App() {
 		)(recipientSurveys.map((s) => createSurveyColumn(s.name))),
 	];
 
-	const globalAdminCustomViews: CMSView[] = [
+	const views: CMSView[] = [
 		{
 			path: 'scripts',
 			name: 'Scripts',
@@ -146,50 +137,29 @@ export default function App() {
 	];
 
 	const myAuthenticator: Authenticator = async ({ user, dataSource, authController }) => {
-		dataSource
-			.fetchEntity<AdminUser>({
-				path: adminsCollection.path,
-				collection: adminsCollection,
-				entityId: user?.email ? user.email : '',
-			})
-			.then((result) => {
-				if (collections.length === 0) {
-					// We only want this to update once on initial page load
-					// Global analysts have no write access through the firestore rules, so it's ok to show all collections
-					if (result?.values?.is_global_admin || result?.values?.is_global_analyst) {
-						setCollections(globalAdminCollections);
-						setCustomViews(globalAdminCustomViews);
-						authController.setExtra({ isGlobalAdmin: Boolean(result?.values?.is_global_admin) });
-					} else if (result?.values?.organisations) {
-						authController.setExtra({ organisations: result.values.organisations });
-						setCollections([
-							buildPartnerOrganisationsCollection({ isGlobalAdmin: false }),
-							buildRecipientsPartnerOrgAdminCollection(result.values.organisations),
-							buildRecipientsPaymentsCollection({
-								isGlobalAdmin: false,
-								organisations: result.values.organisations,
-							}),
-						]);
-					}
-				}
-			});
+		const result = await dataSource.fetchEntity<AdminUser>({
+			path: adminsCollection.path,
+			collection: adminsCollection,
+			entityId: user?.email ? user.email : '',
+		});
+		authController.setExtra({ isGlobalAdmin: Boolean(result?.values?.is_global_admin) });
 		return true;
 	};
 
 	return (
 		<FirebaseCMSApp
-			name={'Social Income Admin'}
+			authentication={myAuthenticator}
+			collections={collections}
+			dateTimeFormat={'dd/MM/yyyy'}
+			firebaseConfig={firebaseConfig}
+			locale={'enUS'}
 			logo={'logo.svg'}
 			logoDark={'logo.svg'}
-			signInOptions={['google.com', 'password']}
-			collections={collections}
-			authentication={myAuthenticator}
-			locale={'enUS'}
-			textSearchController={textSearchController}
-			firebaseConfig={firebaseConfig}
+			name={'Social Income Admin'}
 			onFirebaseInit={onFirebaseInit}
-			dateTimeFormat={'dd/MM/yyyy'}
-			views={customViews}
+			signInOptions={['google.com', 'password']}
+			textSearchController={textSearchController}
+			views={views}
 		/>
 	);
 }
