@@ -24,6 +24,27 @@ export class ExchangeRateImporter {
 	constructor(firestoreAdmin: FirestoreAdmin) {
 		this.firestoreAdmin = firestoreAdmin;
 	}
+	/**
+	 * Function periodically scrapes currency exchange rates and saves them to firebase
+	 */
+	importExchangeRates = functions
+		.runWith({
+			timeoutSeconds: 540,
+		})
+		.pubsub.schedule('0 1 * * *').onRun(async () => {
+		const exchangeRates = await this.firestoreAdmin.getAll<ExchangeRatesEntry>(EXCHANGE_RATES_PATH);
+		const existingDays = new Set(
+			exchangeRates.map((exchangeRate) => {
+				return Math.floor(exchangeRate.timestamp / this.secondsInDay) * this.secondsInDay; // rounded to day
+			})
+		);
+
+		for (let timestamp = this.startTimestamp; timestamp <= Date.now() / 1000; timestamp += this.secondsInDay) {
+			if (!existingDays.has(timestamp)) {
+				await this.getAndStoreExchangeRate(DateTime.fromSeconds(timestamp));
+			}
+		}
+	});
 
 	storeExchangeRates = async (response: ExchangeRateResponse): Promise<void> => {
 		const exchangeRates: ExchangeRatesEntry = {
@@ -57,35 +78,4 @@ export class ExchangeRateImporter {
 			functions.logger.error(`Could not ingest exchange rate`, error);
 		}
 	};
-
-	/**
-	 * Function periodically scrapes currency exchange rates and saves them to firebase
-	 */
-	importExchangeRates = functions.pubsub.schedule('0 1 * * *').onRun(async () => {
-		await this.getAndStoreExchangeRate(DateTime.now());
-	});
-	/**
-	 * One-off function to import all exchange rates on a daily granularity since the project start.
-	 * The cronjob is taking care of periodically ingesting the data.
-	 */
-	importMissingExchangeRates = functions
-		.runWith({
-			timeoutSeconds: 540,
-		})
-		.https.onCall(async (_, { auth }) => {
-			await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
-
-			const exchangeRates = await this.firestoreAdmin.getAll<ExchangeRatesEntry>(EXCHANGE_RATES_PATH);
-			const existingDays = new Set(
-				exchangeRates.map((exchangeRate) => {
-					return Math.floor(exchangeRate.timestamp / this.secondsInDay) * this.secondsInDay; // rounded to day
-				})
-			);
-
-			for (let timestamp = this.startTimestamp; timestamp <= Date.now() / 1000; timestamp += this.secondsInDay) {
-				if (!existingDays.has(timestamp)) {
-					await this.getAndStoreExchangeRate(DateTime.fromSeconds(timestamp));
-				}
-			}
-		});
 }
