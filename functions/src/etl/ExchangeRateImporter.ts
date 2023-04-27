@@ -8,6 +8,7 @@ import {
 	EXCHANGE_RATES_PATH,
 	getIdFromExchangeRates,
 } from '../../../shared/src/types';
+import { EXCHANGE_RATES_API } from '../config';
 
 export type ExchangeRateResponse = {
 	base: string;
@@ -27,19 +28,7 @@ export class ExchangeRateImporter {
 	 * Function periodically scrapes currency exchange rates and saves them to firebase
 	 */
 	importExchangeRates = functions.pubsub.schedule('0 1 * * *').onRun(async () => {
-		try {
-			const { data, status, statusText } = await axios.get<ExchangeRateResponse>(
-				'https://api.exchangerate.host/latest?base=chf'
-			);
-			if (status === 200) {
-				await this.storeExchangeRates(data);
-				functions.logger.info('Ingested exchange rates');
-			} else {
-				functions.logger.error('Could not ingest exchange rate', statusText);
-			}
-		} catch (error) {
-			functions.logger.error('Could not ingest exchange rate', error);
-		}
+		await this.getAndStoreExchangeRate(DateTime.now());
 	});
 
 	/**
@@ -63,21 +52,7 @@ export class ExchangeRateImporter {
 
 			for (let timestamp = this.startTimestamp; timestamp <= Date.now() / 1000; timestamp += this.secondsInDay) {
 				if (!existingDays.has(timestamp)) {
-					const day = DateTime.fromSeconds(timestamp).toFormat('yyyy-MM-dd');
-					try {
-						const { data, status, statusText } = await axios.get<ExchangeRateResponse>(
-							`https://api.apilayer.com/exchangerates_data/${day}?base=chf`,
-							{ headers: { apiKey: 'zdVXSn1iYAmME5xTmmIXHJm9NhCaaSck' } }
-						);
-						if (status === 200) {
-							await this.storeExchangeRates(data);
-							functions.logger.info(`Ingested exchange rates for ${day}`);
-						} else {
-							functions.logger.error(`Could not ingest exchange rate for ${day}`, statusText);
-						}
-					} catch (error) {
-						functions.logger.error(`Could not ingest exchange rate for ${day}`, error);
-					}
+					await this.getAndStoreExchangeRate(DateTime.fromSeconds(timestamp));
 				}
 			}
 		});
@@ -91,5 +66,27 @@ export class ExchangeRateImporter {
 		await this.firestoreAdmin
 			.doc<ExchangeRatesEntry>(EXCHANGE_RATES_PATH, getIdFromExchangeRates(exchangeRates))
 			.set(exchangeRates);
+	};
+
+	getExchangeRate = async (dt: DateTime): Promise<ExchangeRateResponse> => {
+		const day = dt.toFormat('yyyy-MM-dd');
+		const { data, status, statusText } = await axios.get<ExchangeRateResponse>(
+			`https://api.apilayer.com/exchangerates_data/${day}?base=chf`,
+			{ headers: { apiKey: EXCHANGE_RATES_API } }
+		);
+		if (status !== 200) {
+			throw new Error(`Exchange Rate Request Failure for ${day}: ${statusText}`);
+		}
+		return data;
+	};
+
+	getAndStoreExchangeRate = async (dt: DateTime): Promise<void> => {
+		try {
+			const rates = await this.getExchangeRate(dt);
+			await this.storeExchangeRates(rates);
+			functions.logger.info('Ingested exchange rates');
+		} catch (error) {
+			functions.logger.error(`Could not ingest exchange rate`, error);
+		}
 	};
 }
