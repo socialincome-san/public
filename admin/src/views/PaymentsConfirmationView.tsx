@@ -36,14 +36,14 @@ function UpdatePaymentButton({ paymentDoc }: { paymentDoc: QueryDocumentSnapshot
 	);
 }
 
-type PaymentConfirmationRowProps = {
+type PaymentConfirmationDocs = {
 	paymentDoc: QueryDocumentSnapshot<Payment>;
 	recipientDoc: QueryDocumentSnapshot<Recipient>;
 };
 
 export function PaymentsConfirmationView() {
 	const db = getFirestore();
-	const [documents, setDocuments] = useState<PaymentConfirmationRowProps[]>([]);
+	const [documents, setDocuments] = useState<Map<string, PaymentConfirmationDocs>>(new Map());
 	const [searchTerm, setSearchTerm] = useState<string>('');
 
 	useEffect(() => {
@@ -54,21 +54,34 @@ export function PaymentsConfirmationView() {
 				orderBy('payment_at', 'desc')
 			),
 			async (result) => {
-				const entries: PaymentConfirmationRowProps[] = [];
-				for (const paymentDoc of result.docs) {
-					if (paymentDoc.ref.parent.parent) {
-						entries.push({
-							paymentDoc: paymentDoc as QueryDocumentSnapshot<Payment>,
-							recipientDoc: (await getDoc(paymentDoc.ref.parent.parent)) as QueryDocumentSnapshot<Recipient>,
+				result.docChanges().forEach((change) => {
+					if (change.type === 'removed') {
+						setDocuments((prev) => {
+							prev.delete(change.doc.ref.path);
+							return new Map(prev);
 						});
 					}
-				}
-				setDocuments(entries);
+				});
+				result.forEach((paymentDoc) => {
+					if (paymentDoc.ref.parent.parent) {
+						getDoc(paymentDoc.ref.parent.parent).then((recipientDoc) => {
+							setDocuments(
+								(prev) =>
+									new Map(
+										prev.set(paymentDoc.ref.path, {
+											paymentDoc: paymentDoc as QueryDocumentSnapshot<Payment>,
+											recipientDoc: recipientDoc as QueryDocumentSnapshot<Recipient>,
+										})
+									)
+							);
+						});
+					}
+				});
 			}
 		);
 	}, []);
 
-	const nameFilter = (row: PaymentConfirmationRowProps) => {
+	const nameFilter = (row: PaymentConfirmationDocs) => {
 		return `${row.recipientDoc.get('first_name')} ${row.recipientDoc.get('last_name')}`
 			.toLowerCase()
 			.includes(searchTerm.toLowerCase());
@@ -89,30 +102,29 @@ export function PaymentsConfirmationView() {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{documents.filter(nameFilter).map((row) => (
-							<TableRow
-								key={`${row.recipientDoc.id}-${row.paymentDoc.id}`}
-								sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-							>
-								<TableCell component="th" scope="row">
-									{row.recipientDoc.get('first_name')} {row.recipientDoc.get('last_name')}
-								</TableCell>
-								<TableCell>{row.recipientDoc.get('om_uid')}</TableCell>
-								<TableCell>
-									{DateTime.fromMillis(row.paymentDoc.get('payment_at').seconds * 1000).toFormat('MM/yyyy')}
-								</TableCell>
-								<TableCell>
-									<StringPropertyPreview
-										property={{ dataType: 'string', enumValues: paymentStatusEnumValues }}
-										value={row.paymentDoc.get('status')}
-										size="small"
-									/>
-								</TableCell>
-								<TableCell align="right">
-									<UpdatePaymentButton paymentDoc={row.paymentDoc} />
-								</TableCell>
-							</TableRow>
-						))}
+						{Array.from(documents.values())
+							.filter(nameFilter)
+							.map((row) => (
+								<TableRow key={row.paymentDoc.ref.path} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+									<TableCell component="th" scope="row">
+										{row.recipientDoc.get('first_name')} {row.recipientDoc.get('last_name')}
+									</TableCell>
+									<TableCell>{row.recipientDoc.get('om_uid')}</TableCell>
+									<TableCell>
+										{DateTime.fromMillis(row.paymentDoc.get('payment_at').seconds * 1000).toFormat('MM/yyyy')}
+									</TableCell>
+									<TableCell>
+										<StringPropertyPreview
+											property={{ dataType: 'string', enumValues: paymentStatusEnumValues }}
+											value={row.paymentDoc.get('status')}
+											size="small"
+										/>
+									</TableCell>
+									<TableCell align="right">
+										<UpdatePaymentButton paymentDoc={row.paymentDoc} />
+									</TableCell>
+								</TableRow>
+							))}
 					</TableBody>
 				</Table>
 			</TableContainer>
