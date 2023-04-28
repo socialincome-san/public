@@ -25,7 +25,7 @@ import { buildRecipientsSurveysCollection } from './collections/recipients/Recip
 import { createPendingSurveyColumn, createSurveyColumn } from './collections/surveys/Surveys';
 import { usersCollection } from './collections/Users';
 import { PaymentsConfirmationView } from './views/PaymentsConfirmationView';
-import { ScriptsView } from './views/Scripts';
+import { ScriptsView } from './views/ScriptsView';
 
 const onFirebaseInit = () => {
 	const auth = getAuth();
@@ -108,8 +108,8 @@ const textSearchController: FirestoreTextSearchController = ({ path, searchStrin
 
 export default function App() {
 	const collections = [
-		buildRecipientsPaymentsCollection(),
 		buildRecipientsCollection(),
+		buildRecipientsPaymentsCollection(),
 		buildPartnerOrganisationsCollection(),
 		contributorOrganisationsCollection,
 		adminsCollection,
@@ -134,8 +134,7 @@ export default function App() {
 		{
 			path: 'payments-confirmation',
 			name: 'Payments Confirmation',
-			description: 'Confirm payments of the current month',
-
+			description: 'All payments that need to be confirmed',
 			group: 'Recipients',
 			icon: 'PriceCheck',
 			view: <PaymentsConfirmationView />,

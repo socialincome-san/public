@@ -77,7 +77,7 @@ export const buildRecipientsCollection = () => {
 		additionalFields: [PaymentsLeft],
 		inlineEditing: false,
 		defaultSize: 'xs',
-		description: 'Lists of people, who receive a Social Income',
+		description: 'List of people who receive a Social Income',
 		group: 'Recipients',
 		icon: 'RememberMeTwoTone',
 		name: 'Recipients',

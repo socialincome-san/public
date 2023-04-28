@@ -11,7 +11,7 @@ import {
 	QueryDocumentSnapshot,
 	where,
 } from 'firebase/firestore';
-import { buildProperty, StringPropertyPreview } from 'firecms';
+import { StringPropertyPreview } from 'firecms';
 import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import { paymentStatusEnumValues } from '../collections/Payments';
@@ -85,7 +85,7 @@ export function PaymentsConfirmationView() {
 							<TableCell>OM ID</TableCell>
 							<TableCell>Date</TableCell>
 							<TableCell>Status</TableCell>
-							<TableCell align="right">Confirm Payment</TableCell>
+							<TableCell />
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -103,10 +103,7 @@ export function PaymentsConfirmationView() {
 								</TableCell>
 								<TableCell>
 									<StringPropertyPreview
-										property={buildProperty({
-											dataType: 'string',
-											enumValues: paymentStatusEnumValues,
-										})}
+										property={{ dataType: 'string', enumValues: paymentStatusEnumValues }}
 										value={row.paymentDoc.get('status')}
 										size="small"
 									/>

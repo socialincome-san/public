@@ -12,7 +12,6 @@ export default function SearchBar({ onTextSearch }: { onTextSearch: (text: strin
 
 	return (
 		<TextField
-			id="search"
 			type="search"
 			label="Search"
 			value={searchTerm}
