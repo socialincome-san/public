@@ -51,6 +51,27 @@ export function ScriptsView() {
 			});
 	};
 
+	const addMissingAmountChf = () => {
+		snackbarController.open({
+			type: 'success',
+			message: 'Starting adding amount_chf',
+		});
+		httpsCallable(functions, 'addMissingAmountChf')()
+			.then(() => {
+				snackbarController.open({
+					type: 'success',
+					message: 'Succeeded.',
+				});
+			})
+			.catch((err) => {
+				snackbarController.open({
+					type: 'error',
+					message: 'Creation failed. Check console for details.',
+				});
+				console.log(err);
+			});
+	};
+
 	return (
 		<Box m="auto" display="flex" flexDirection={'column'}>
 			<Container maxWidth={'md'} sx={{ my: 4 }}>
@@ -96,6 +117,25 @@ export function ScriptsView() {
 							</CardActions>
 							<CardContent>
 								<Typography>Newly onboarded recipients should then automatically get the surveys.</Typography>
+							</CardContent>
+						</Card>
+					</Grid>
+					<Grid item xs={12} sm={4}>
+						<Card
+							variant="outlined"
+							sx={{
+								height: '100%',
+								display: 'flex',
+								flexDirection: 'column',
+							}}
+						>
+							<CardActions>
+								<Button onClick={addMissingAmountChf} color="primary">
+									Add amount_chf for past payments
+								</Button>
+							</CardActions>
+							<CardContent>
+								<Typography>Newly created payments should then automatically get the conversion.</Typography>
 							</CardContent>
 						</Card>
 					</Grid>

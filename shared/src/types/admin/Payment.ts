@@ -14,6 +14,7 @@ export enum PaymentStatus {
 
 export type Payment = {
 	amount: number;
+	amount_chf?: number;
 	currency: 'SLL' | 'SLE';
 	payment_at: Timestamp;
 	status: PaymentStatus;

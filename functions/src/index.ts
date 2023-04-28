@@ -29,8 +29,9 @@ export const importExchangeRates = exchangeRateImporter.importExchangeRates;
 const donationCertificateHandler = new DonationCertificateHandler(firestoreAdmin, storageAdmin);
 export const createDonationCertificates = donationCertificateHandler.createDonationCertificates;
 
-const adminPaymentTaskProcessor = new AdminPaymentTaskProcessor(firestoreAdmin);
+const adminPaymentTaskProcessor = new AdminPaymentTaskProcessor(firestoreAdmin, exchangeRateImporter);
 export const runAdminPaymentProcessTask = adminPaymentTaskProcessor.runTask;
+export const addMissingAmountChf = adminPaymentTaskProcessor.addMissingAmountChf;
 
 const firestoreAuditor = new FirestoreAuditor(firestoreAdmin);
 export const auditCollectionTrigger = firestoreAuditor.auditCollectionTrigger;

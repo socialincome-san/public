@@ -17,8 +17,8 @@ export type ExchangeRateResponse = {
 };
 
 export class ExchangeRateImporter {
-	readonly secondsInDay = 60 * 60 * 24;
-	readonly startTimestamp = 1583020800; // 2020-03-01 00:00:00
+	static readonly secondsInDay = 60 * 60 * 24;
+	static readonly startTimestamp = 1583020800; // 2020-03-01 00:00:00
 	readonly firestoreAdmin: FirestoreAdmin;
 
 	constructor(firestoreAdmin: FirestoreAdmin) {
@@ -33,15 +33,13 @@ export class ExchangeRateImporter {
 		})
 		.pubsub.schedule('0 1 * * *')
 		.onRun(async () => {
-			const exchangeRates = await this.firestoreAdmin.getAll<ExchangeRatesEntry>(EXCHANGE_RATES_PATH);
-			const existingDays = new Set(
-				exchangeRates.map((exchangeRate) => {
-					return Math.floor(exchangeRate.timestamp / this.secondsInDay) * this.secondsInDay; // rounded to day
-				})
-			);
-
-			for (let timestamp = this.startTimestamp; timestamp <= Date.now() / 1000; timestamp += this.secondsInDay) {
-				if (!existingDays.has(timestamp)) {
+			const existingExchangeRates = await this.getDailyExchangeRates();
+			for (
+				let timestamp = ExchangeRateImporter.startTimestamp;
+				timestamp <= Date.now() / 1000;
+				timestamp += ExchangeRateImporter.secondsInDay
+			) {
+				if (!existingExchangeRates.has(timestamp)) {
 					await this.getAndStoreExchangeRate(DateTime.fromSeconds(timestamp));
 				}
 			}
@@ -78,5 +76,18 @@ export class ExchangeRateImporter {
 		} catch (error) {
 			functions.logger.error(`Could not ingest exchange rate`, error);
 		}
+	};
+
+	getDailyExchangeRates = async (): Promise<Map<number, ExchangeRates>> => {
+		const exchangeRates = await this.firestoreAdmin.getAll<ExchangeRatesEntry>(EXCHANGE_RATES_PATH);
+		return new Map(
+			exchangeRates.map((exchangeRate) => {
+				return [ExchangeRateImporter.toDailyBuckets(exchangeRate.timestamp), exchangeRate.rates]; // rounded to day
+			})
+		);
+	};
+
+	static toDailyBuckets = (ts: number): number => {
+		return Math.floor(ts / this.secondsInDay) * this.secondsInDay;
 	};
 }
