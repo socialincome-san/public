@@ -1,4 +1,5 @@
-import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 import { Payment, PaymentStatus, Recipient } from '@socialincome/shared/src/types';
 import {
 	collectionGroup,
@@ -93,44 +94,53 @@ export function PaymentsConfirmationView() {
 	return (
 		<Box sx={{ m: 2, display: 'grid', rowGap: 2 }}>
 			<SearchBar onTextSearch={(text) => setSearchTerm(text)} />
-			<TableContainer component={Paper}>
-				<Table>
-					<TableHead>
-						<TableRow>
-							<TableCell>Name</TableCell>
-							<TableCell>OM ID</TableCell>
-							<TableCell>Date</TableCell>
-							<TableCell>Status</TableCell>
-							<TableCell />
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{Array.from(documents.values())
-							.filter(nameFilter)
-							.map((row) => (
-								<TableRow key={row.paymentDoc.ref.path} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-									<TableCell component="th" scope="row">
-										{row.recipientDoc.get('first_name')} {row.recipientDoc.get('last_name')}
-									</TableCell>
-									<TableCell>{row.recipientDoc.get('om_uid')}</TableCell>
-									<TableCell>
-										{DateTime.fromMillis(row.paymentDoc.get('payment_at').seconds * 1000).toFormat('MM/yyyy')}
-									</TableCell>
-									<TableCell>
-										<StringPropertyPreview
-											property={{ dataType: 'string', enumValues: paymentStatusEnumValues }}
-											value={row.paymentDoc.get('status')}
-											size="small"
-										/>
-									</TableCell>
-									<TableCell align="right">
-										<UpdatePaymentButton paymentDoc={row.paymentDoc} />
-									</TableCell>
-								</TableRow>
-							))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+			<DataGrid
+				rows={Array.from(documents.values())
+					.filter(nameFilter)
+					.map((row) => ({
+						id: row.paymentDoc.ref.path,
+						name: `${row.recipientDoc.get('first_name')} ${row.recipientDoc.get('last_name')}`,
+						omId: row.recipientDoc.get('om_uid'),
+						date: DateTime.fromMillis(row.paymentDoc.get('payment_at').seconds * 1000).toFormat('MM/yyyy'),
+						status: row.paymentDoc.get('status'),
+						confirm: row.paymentDoc,
+					}))}
+				columns={[
+					{ field: 'name', headerName: 'Name', flex: 1 },
+					{ field: 'omId', headerName: 'OM ID', flex: 1 },
+					{ field: 'date', headerName: 'Date', flex: 1 },
+					{
+						field: 'status',
+						headerName: 'Status',
+						flex: 1,
+						renderCell: (params) => (
+							<StringPropertyPreview
+								property={{ dataType: 'string', enumValues: paymentStatusEnumValues }}
+								value={params.value}
+								size="small"
+							/>
+						),
+					},
+					{
+						field: 'confirm',
+						headerName: 'Confirm',
+						flex: 1,
+						align: 'right',
+						headerAlign: 'right',
+						sortable: false,
+						renderCell: (params) => <UpdatePaymentButton paymentDoc={params.value} />,
+					},
+				]}
+				initialState={{
+					pagination: {
+						paginationModel: {
+							pageSize: 100,
+						},
+					},
+				}}
+				pageSizeOptions={[10, 50, 100]}
+				disableRowSelectionOnClick
+			/>
 		</Box>
 	);
 }
