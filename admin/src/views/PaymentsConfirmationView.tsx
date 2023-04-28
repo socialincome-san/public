@@ -47,7 +47,7 @@ export function PaymentsConfirmationView() {
 	const [searchTerm, setSearchTerm] = useState<string>('');
 
 	useEffect(() => {
-		onSnapshot(
+		const unsubscribe = onSnapshot(
 			query(
 				collectionGroup(db, 'payments'),
 				or(where('status', '==', PaymentStatus.Paid), where('status', '==', PaymentStatus.Contested)),
@@ -60,25 +60,28 @@ export function PaymentsConfirmationView() {
 							prev.delete(change.doc.ref.path);
 							return new Map(prev);
 						});
-					}
-				});
-				result.forEach((paymentDoc) => {
-					if (paymentDoc.ref.parent.parent) {
-						getDoc(paymentDoc.ref.parent.parent).then((recipientDoc) => {
-							setDocuments(
-								(prev) =>
-									new Map(
-										prev.set(paymentDoc.ref.path, {
-											paymentDoc: paymentDoc as QueryDocumentSnapshot<Payment>,
-											recipientDoc: recipientDoc as QueryDocumentSnapshot<Recipient>,
-										})
-									)
-							);
-						});
+					} else {
+						const paymentDoc = change.doc;
+						if (paymentDoc.ref.parent.parent) {
+							getDoc(paymentDoc.ref.parent.parent).then((recipientDoc) => {
+								setDocuments(
+									(prev) =>
+										new Map(
+											prev.set(paymentDoc.ref.path, {
+												paymentDoc: paymentDoc as QueryDocumentSnapshot<Payment>,
+												recipientDoc: recipientDoc as QueryDocumentSnapshot<Recipient>,
+											})
+										)
+								);
+							});
+						}
 					}
 				});
 			}
 		);
+		return () => {
+			unsubscribe();
+		};
 	}, []);
 
 	const nameFilter = (row: PaymentConfirmationDocs) => {
