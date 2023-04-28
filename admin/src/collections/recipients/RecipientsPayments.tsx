@@ -129,33 +129,3 @@ export const buildRecipientsPaymentsCollection = () => {
 		},
 	});
 };
-
-export const buildRecipientsPaymentsConfirmationCollection = () => {
-	return buildAuditedCollection({
-		name: 'Payments Confirmation',
-		path: RECIPIENT_FIRESTORE_PATH,
-		alias: 'payments-confirmation',
-		group: 'Recipients',
-		icon: 'PriceCheck',
-		description: 'Confirm payments of the current month',
-		textSearchEnabled: true,
-		selectionEnabled: false,
-		permissions: {
-			create: false,
-			edit: false,
-			delete: false,
-		},
-		properties: buildProperties<Partial<Recipient>>({
-			om_uid: orangeMoneyUIDProperty,
-			first_name: firstNameProperty,
-			last_name: lastNameProperty,
-		}),
-		defaultSize: 'xs',
-		exportable: false,
-		inlineEditing: true,
-		additionalFields: [CurrMonthCol(true), PaymentsLeft],
-		initialFilter: {
-			progr_status: ['in', [RecipientProgramStatus.Active, RecipientProgramStatus.Designated]],
-		},
-	});
-};

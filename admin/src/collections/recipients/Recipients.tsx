@@ -42,7 +42,7 @@ export const PaymentsLeft: AdditionalFieldDelegate<Partial<Recipient>> = {
 		const paymentsLeft = lastPaymentDate ? calcPaymentsLeft(lastPaymentDate) : undefined;
 		if (paymentsLeft && lastPaymentDate) {
 			return (
-				<Tooltip title={'Last Payment Date ' + lastPaymentDate.toFormat('yyyy-MM-dd')}>
+				<Tooltip title={'Last Payment Date ' + lastPaymentDate.toFormat('dd/MM/yyyy')}>
 					<Chip
 						size={'small'}
 						color={paymentsLeft < 0 ? 'info' : paymentsLeft <= 1 ? 'error' : paymentsLeft <= 3 ? 'warning' : 'success'}
