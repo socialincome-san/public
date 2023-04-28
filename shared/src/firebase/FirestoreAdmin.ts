@@ -1,6 +1,7 @@
 import assert from 'assert';
 import { firestore } from 'firebase-admin';
 import {
+	CollectionGroup,
 	CollectionReference,
 	DocumentData,
 	DocumentReference,
@@ -27,6 +28,13 @@ export class FirestoreAdmin {
 	 */
 	collection = <T = DocumentData>(collectionName: string): CollectionReference<T> => {
 		return this.firestore.collection(collectionName) as CollectionReference<T>;
+	};
+
+	/**
+	 * Access the typed collection group
+	 */
+	collectionGroup = <T = DocumentData>(collectionName: string): CollectionGroup<T> => {
+		return this.firestore.collectionGroup(collectionName) as CollectionGroup<T>;
 	};
 
 	/**
