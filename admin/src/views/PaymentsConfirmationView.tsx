@@ -22,16 +22,34 @@ import SearchBar from '../components/SearchBar';
 function UpdatePaymentButton({ paymentDoc }: { paymentDoc: QueryDocumentSnapshot<Payment> }) {
 	const [confirmed, setConfirmed] = useState<boolean>(false);
 
-	const onConfirmation = () => {
-		auditedUpdateDoc(paymentDoc.ref, { status: PaymentStatus.Confirmed });
-	};
+	const updatePayment = (status: PaymentStatus) => auditedUpdateDoc(paymentDoc.ref, { status });
 
 	return (
 		<>
 			{confirmed ? (
-				<Button onClick={onConfirmation}>OK</Button>
+				<Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 0.5 }}>
+					<Button color="error" onClick={() => updatePayment(PaymentStatus.Contested)} size="small" variant="outlined">
+						Contested
+					</Button>
+					<Button
+						color="success"
+						onClick={() => updatePayment(PaymentStatus.Confirmed)}
+						size="small"
+						variant="outlined"
+					>
+						Confirmed
+					</Button>
+				</Box>
 			) : (
-				<Button onClick={() => setConfirmed(true)}>Confirm</Button>
+				<Button
+					variant="outlined"
+					onClick={() => {
+						setConfirmed(true);
+						setTimeout(() => setConfirmed(false), 3000);
+					}}
+				>
+					Update Status
+				</Button>
 			)}
 		</>
 	);
@@ -98,12 +116,12 @@ export function PaymentsConfirmationView() {
 				rows={Array.from(documents.values())
 					.filter(nameFilter)
 					.map((row) => ({
+						confirm: row.paymentDoc,
+						date: DateTime.fromMillis(row.paymentDoc.get('payment_at').seconds * 1000).toFormat('MM/yyyy'),
 						id: row.paymentDoc.ref.path,
 						name: `${row.recipientDoc.get('first_name')} ${row.recipientDoc.get('last_name')}`,
 						omId: row.recipientDoc.get('om_uid'),
-						date: DateTime.fromMillis(row.paymentDoc.get('payment_at').seconds * 1000).toFormat('MM/yyyy'),
 						status: row.paymentDoc.get('status'),
-						confirm: row.paymentDoc,
 					}))}
 				columns={[
 					{ field: 'name', headerName: 'Name', flex: 1 },
@@ -111,24 +129,25 @@ export function PaymentsConfirmationView() {
 					{ field: 'date', headerName: 'Date', flex: 1 },
 					{
 						field: 'status',
-						headerName: 'Status',
 						flex: 1,
+						headerName: 'Status',
 						renderCell: (params) => (
 							<StringPropertyPreview
 								property={{ dataType: 'string', enumValues: paymentStatusEnumValues }}
-								value={params.value}
 								size="small"
+								value={params.value}
 							/>
 						),
 					},
 					{
-						field: 'confirm',
-						headerName: 'Confirm',
-						flex: 1,
 						align: 'right',
+						field: 'confirm',
+						flex: 1,
 						headerAlign: 'right',
-						sortable: false,
+						headerName: 'Confirm',
+						minWidth: 250,
 						renderCell: (params) => <UpdatePaymentButton paymentDoc={params.value} />,
+						sortable: false,
 					},
 				]}
 				initialState={{

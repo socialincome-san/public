@@ -10,6 +10,7 @@ export const programStatusProperty: Property = {
 	dataType: 'string',
 	enumValues: [
 		{ id: RecipientProgramStatus.Active, label: 'Active Recipient' },
+		{ id: RecipientProgramStatus.Suspended, label: 'Suspended' },
 		{ id: RecipientProgramStatus.Waitlisted, label: 'Waiting List' },
 		{ id: RecipientProgramStatus.Designated, label: 'Starting Next Payday' },
 		{ id: RecipientProgramStatus.Former, label: 'Former Recipient' },
