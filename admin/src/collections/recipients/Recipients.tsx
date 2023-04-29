@@ -19,7 +19,6 @@ import {
 	firstNameProperty,
 	genderProperty,
 	InstagramProperty,
-	IsSuspendedProperty,
 	lastNameProperty,
 	mainLanguageProperty,
 	mobileMoneyPhoneProperty,
@@ -42,7 +41,7 @@ export const PaymentsLeft: AdditionalFieldDelegate<Partial<Recipient>> = {
 		const paymentsLeft = lastPaymentDate ? calcPaymentsLeft(lastPaymentDate) : undefined;
 		if (paymentsLeft && lastPaymentDate) {
 			return (
-				<Tooltip title={'Last Payment Date ' + lastPaymentDate.toFormat('yyyy-MM-dd')}>
+				<Tooltip title={'Last Payment Date ' + lastPaymentDate.toFormat('dd/MM/yyyy')}>
 					<Chip
 						size={'small'}
 						color={paymentsLeft < 0 ? 'info' : paymentsLeft <= 1 ? 'error' : paymentsLeft <= 3 ? 'warning' : 'success'}
@@ -77,7 +76,7 @@ export const buildRecipientsCollection = () => {
 		additionalFields: [PaymentsLeft],
 		inlineEditing: false,
 		defaultSize: 'xs',
-		description: 'Lists of people, who receive a Social Income',
+		description: 'List of people who receive a Social Income',
 		group: 'Recipients',
 		icon: 'RememberMeTwoTone',
 		name: 'Recipients',
@@ -89,7 +88,6 @@ export const buildRecipientsCollection = () => {
 			email: emailProperty,
 			insta_handle: InstagramProperty,
 			twitter_handle: TwitterProperty,
-			is_suspended: IsSuspendedProperty,
 			si_start_date: SIStartDateProperty,
 			test_recipient: TestRecipientProperty,
 		}),

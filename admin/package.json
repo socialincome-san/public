@@ -34,13 +34,14 @@
 		"vite": "^4.2.0"
 	},
 	"dependencies": {
-		"firecms": "2.0.0-beta.4",
+		"firecms": "2.0.0-beta.5",
 		"@emotion/react": "^11.10.6",
 		"@emotion/styled": "^11.10.6",
 		"@mui/icons-material": "^5.11.11",
 		"@mui/lab": "^5.0.0-alpha.111",
 		"@mui/material": "^5.11.13",
 		"@mui/x-date-pickers": "^5.0.20",
+		"@mui/x-data-grid": "^6.3.0",
 		"@socialincome/shared": "^0.1.0",
 		"algoliasearch": "^4.15.0",
 		"firebase": "^9.18.0",

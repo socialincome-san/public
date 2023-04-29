@@ -6,6 +6,7 @@ export const RECIPIENT_FIRESTORE_PATH = 'recipients';
 
 export enum RecipientProgramStatus {
 	Active = 'active',
+	Suspended = 'suspended',
 	Waitlisted = 'waitlisted',
 	Designated = 'designated',
 	Former = 'former',
@@ -26,7 +27,6 @@ export type Recipient = {
 	email: string;
 	first_name: string;
 	gender: string;
-	is_suspended: boolean;
 	insta_handle: string;
 	last_name: string;
 	main_language: RecipientMainLanguage;

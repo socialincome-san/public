@@ -20,14 +20,12 @@ import { newsletterSubscribersCollection } from './collections/NewsletterSubscri
 import { operationalExpensesCollection } from './collections/OperationalExpenses';
 import { buildPartnerOrganisationsCollection } from './collections/PartnerOrganisations';
 import { buildRecipientsCollection } from './collections/recipients/Recipients';
-import {
-	buildRecipientsPaymentsCollection,
-	buildRecipientsPaymentsConfirmationCollection,
-} from './collections/recipients/RecipientsPayments';
+import { buildRecipientsPaymentsCollection } from './collections/recipients/RecipientsPayments';
 import { buildRecipientsSurveysCollection } from './collections/recipients/RecipientsSurveys';
 import { createPendingSurveyColumn, createSurveyColumn } from './collections/surveys/Surveys';
 import { usersCollection } from './collections/Users';
-import { ScriptsView } from './views/Scripts';
+import { PaymentsConfirmationView } from './views/PaymentsConfirmationView';
+import { ScriptsView } from './views/ScriptsView';
 
 const onFirebaseInit = () => {
 	const auth = getAuth();
@@ -110,9 +108,8 @@ const textSearchController: FirestoreTextSearchController = ({ path, searchStrin
 
 export default function App() {
 	const collections = [
-		buildRecipientsPaymentsConfirmationCollection(),
-		buildRecipientsPaymentsCollection(),
 		buildRecipientsCollection(),
+		buildRecipientsPaymentsCollection(),
 		buildPartnerOrganisationsCollection(),
 		contributorOrganisationsCollection,
 		adminsCollection,
@@ -133,6 +130,14 @@ export default function App() {
 			group: 'Admin',
 			description: 'Collection of Admin Scripts',
 			view: <ScriptsView />,
+		},
+		{
+			path: 'payments-confirmation',
+			name: 'Payments Confirmation',
+			description: 'All payments that need to be confirmed',
+			group: 'Recipients',
+			icon: 'PriceCheck',
+			view: <PaymentsConfirmationView />,
 		},
 	];
 

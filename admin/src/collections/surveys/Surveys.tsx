@@ -139,7 +139,7 @@ const surveyDueDateClip = (entity: Entity<Partial<Survey>>) => {
 
 	return (
 		entity.values.due_date_at && (
-			<Tooltip title={'Due date ' + dueDate.toFormat('yyyy-MM-dd')}>
+			<Tooltip title={'Due date ' + dueDate.toFormat('dd/MM/yyyy')}>
 				<Chip
 					size={'small'}
 					color={dueDate < DateTime.now() && entity.values.status != SurveyStatus.Completed ? 'warning' : 'info'}

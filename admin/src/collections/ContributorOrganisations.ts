@@ -9,12 +9,8 @@ export const contributorOrganisationsCollection = buildAuditedCollection<Contrib
 	path: CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH,
 	textSearchEnabled: false,
 	icon: 'CorporateFare',
-	description: 'Lists all organisations who contribute or have employees who do.',
-	permissions: ({ authController }) => ({
-		edit: true,
-		create: true,
-		delete: true,
-	}),
+	description: 'Lists all organisations who contribute or have employees who do',
+	permissions: { edit: true, create: true, delete: true },
 	properties: buildProperties<ContributorOrganisation>({
 		org_name: {
 			dataType: 'string',
