@@ -1,4 +1,4 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, Link, Popover, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { Payment, PaymentStatus, Recipient } from '@socialincome/shared/src/types';
 import {
@@ -119,17 +119,44 @@ export function PaymentsConfirmationView() {
 						confirm: row.paymentDoc,
 						date: DateTime.fromMillis(row.paymentDoc.get('payment_at').seconds * 1000).toFormat('MM/yyyy'),
 						id: row.paymentDoc.ref.path,
-						name: `${row.recipientDoc.get('first_name')} ${row.recipientDoc.get('last_name')}`,
+						name: {
+							name: `${row.recipientDoc.get('first_name')} ${row.recipientDoc.get('last_name')}`,
+							tel: `+${row.recipientDoc.get('communication_mobile_phone.phone')}`,
+						},
 						omId: row.recipientDoc.get('om_uid'),
 						status: row.paymentDoc.get('status'),
 					}))}
 				columns={[
-					{ field: 'name', headerName: 'Name', flex: 1 },
-					{ field: 'omId', headerName: 'OM ID', flex: 1 },
-					{ field: 'date', headerName: 'Date', flex: 1 },
+					{
+						field: 'name',
+						flex: 1,
+						headerName: 'Name',
+						minWidth: 200,
+						renderCell: (params) => {
+							const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
+							return (
+								<div>
+									<Popover
+										anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+										open={Boolean(anchorEl)}
+										anchorEl={anchorEl}
+										onClose={() => setAnchorEl(null)}
+									>
+										<Link href={`tel:${params.value.tel}`}>
+											<Typography sx={{ p: 2 }}>{params.value.tel}</Typography>
+										</Link>
+									</Popover>
+									<div onClick={(event) => setAnchorEl(event.currentTarget)}>{params.value.name}</div>
+								</div>
+							);
+						},
+					},
+					{ field: 'omId', flex: 1, headerName: 'OM ID', minWidth: 75 },
+					{ field: 'date', flex: 1, headerName: 'Date', minWidth: 100 },
 					{
 						field: 'status',
 						flex: 1,
+						minWidth: 100,
 						headerName: 'Status',
 						renderCell: (params) => (
 							<StringPropertyPreview
@@ -142,10 +169,9 @@ export function PaymentsConfirmationView() {
 					{
 						align: 'right',
 						field: 'confirm',
-						flex: 1,
 						headerAlign: 'right',
 						headerName: 'Confirm',
-						minWidth: 250,
+						minWidth: 220,
 						renderCell: (params) => <UpdatePaymentButton paymentDoc={params.value} />,
 						sortable: false,
 					},

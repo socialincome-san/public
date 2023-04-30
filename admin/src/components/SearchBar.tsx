@@ -16,7 +16,6 @@ export default function SearchBar({ onTextSearch }: { onTextSearch: (text: strin
 			label="Search"
 			value={searchTerm}
 			onChange={handleChange}
-			sx={{ minWidth: 600 }}
 			InputProps={{
 				endAdornment: (
 					<InputAdornment position="end">
