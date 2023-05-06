@@ -4,3 +4,4 @@ export "user_repository.dart";
 
 const String recipientCollection = "/recipients";
 const String paymentCollection = "payments";
+const String surveyCollection = "surveys";

@@ -1,5 +1,6 @@
 import "package:app/data/models/models.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
+import "package:app/data/repositories/survey_repository.dart";
 import "package:equatable/equatable.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -8,31 +9,39 @@ part "survey_state.dart";
 
 class SurveyCubit extends Cubit<SurveyState> {
   final Recipient recipient;
-  final User currentFirebaseUser;
+  final SurveyRepository surveyRepository;
   final CrashReportingRepository crashReportingRepository;
 
   SurveyCubit({
     required this.recipient,
-    required this.currentFirebaseUser,
+    required this.surveyRepository,
     required this.crashReportingRepository,
   }) : super(const SurveyState());
 
   /// TODO: add logic for getting the survey
-  void getSurveyUrl() {
-    final creationDate = currentFirebaseUser.metadata.creationTime;
+  void getSurveys() async {
+    final surveys =
+        await surveyRepository.fetchSurveys(recipientId: recipient.userId);
+    final mappedSurveys = surveys
+        .map(
+          (survey) => MappedSurvey(
+            survey: survey,
+            surveyUrl: getSurveyUrl(
+              survey,
+              recipient.userId,
+            ),
+          ),
+        )
+        .toList();
     final nextSurveyDate = recipient.nextSurvey!.toDate();
 
     if (DateTime.now().isBefore(nextSurveyDate)) {
-      emit(const SurveyState());
+      emit(SurveyState(mappedSurveys: mappedSurveys));
 
       return;
     }
 
-    if (nextSurveyDate.month == creationDate?.month) {
-      emit(SurveyState(surveyUrl: recipient.imLinkInitial));
-    } else {
-      emit(SurveyState(surveyUrl: recipient.imLinkRegular));
-    }
+    emit(SurveyState(mappedSurveys: mappedSurveys));
   }
 
   void setNextSurvey() {
@@ -71,4 +80,26 @@ class SurveyCubit extends Cubit<SurveyState> {
       emit(const SurveyState(status: SurveyStatus.updatedFailure));
     }
   }
+
+  String getSurveyUrl(Survey survey, String recipientId) {
+    final params = {
+      "email": survey.accessEmail,
+      "pw": survey.accessPassword!,
+    };
+
+    // TODO: confirm url, what about stage / local?
+    final uri = Uri.https(
+      "public-dusky-eight.vercel.app",
+      "survey/$recipientId/${survey.id}",
+      params,
+    );
+    return uri.toString();
+  }
+}
+
+class MappedSurvey {
+  final Survey survey;
+  final String surveyUrl;
+
+  MappedSurvey({required this.survey, required this.surveyUrl});
 }
