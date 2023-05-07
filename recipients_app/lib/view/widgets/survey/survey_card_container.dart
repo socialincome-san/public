@@ -1,11 +1,12 @@
 import "package:app/data/models/survey/survey_card_status.dart";
 import "package:app/data/models/survey/survey_ui_state.dart";
 import "package:app/ui/configs/configs.dart";
+import "package:app/view/widgets/dashboard_item.dart";
 import "package:app/view/widgets/survey/survey_card_bottom_action.dart";
 import "package:flutter/material.dart";
 
-class SurveyCard extends StatelessWidget {
-  const SurveyCard({super.key});
+class SurveyCardContainer extends DashboardItem {
+  const SurveyCardContainer({super.key});
 
   @override
   Widget build(BuildContext context) {

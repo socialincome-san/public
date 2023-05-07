@@ -1,6 +1,7 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/survey/survey_cubit.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
+import "package:app/data/repositories/survey_repository.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -17,7 +18,7 @@ class ImpactMeasurementPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => SurveyCubit(
         recipient: authCubit.state.recipient!,
-        currentFirebaseUser: authCubit.state.firebaseUser!,
+        surveyRepository: context.read<SurveyRepository>(),
         crashReportingRepository: context.read<CrashReportingRepository>(),
       ),
       child: const _ImpactMeasurementView(),

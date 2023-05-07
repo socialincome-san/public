@@ -3,6 +3,7 @@ import "package:app/core/cubits/dashboard_card_manager/dashboard_card_manager_cu
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/account_page.dart";
+import "package:app/view/widgets/dashboard_item.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -11,7 +12,7 @@ enum DashboardCardType {
   contactNumberEqualsPaymentNumber,
 }
 
-class DashboardCard extends StatelessWidget {
+class DashboardCard extends DashboardItem {
   final String title;
   final String message;
   final String primaryButtonText;
