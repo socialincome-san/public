@@ -36,8 +36,8 @@ describe('calcFinancialStats', () => {
 	test('calculate contributions by currency', async () => {
 		expect(calculator.totalContributionsByCurrency()).toEqual(
 			expect.arrayContaining([
-				{ amountChf: 400, currency: 'USD' },
-				{ amountChf: 2000, currency: 'CHF' },
+				{ amount: 400, currency: 'USD' },
+				{ amount: 2000, currency: 'CHF' },
 			])
 		);
 	});
@@ -45,8 +45,8 @@ describe('calcFinancialStats', () => {
 	test('calculate contributions by isInstitutuion', async () => {
 		expect(calculator.totalContributionsByIsInstitution()).toEqual(
 			expect.arrayContaining([
-				{ amountChf: 400, isInstitution: 'false' },
-				{ amountChf: 2000, isInstitution: 'true' },
+				{ amount: 400, isInstitution: 'false' },
+				{ amount: 2000, isInstitution: 'true' },
 			])
 		);
 	});
@@ -54,8 +54,8 @@ describe('calcFinancialStats', () => {
 	test('calculate contributions by country', async () => {
 		expect(calculator.totalContributionsByCountry()).toEqual(
 			expect.arrayContaining([
-				{ amountChf: 400, country: 'US' },
-				{ amountChf: 2000, country: 'CH' },
+				{ amount: 400, country: 'US' },
+				{ amount: 2000, country: 'CH' },
 			])
 		);
 	});
@@ -63,8 +63,8 @@ describe('calcFinancialStats', () => {
 	test('calculate contributions by source', async () => {
 		expect(calculator.totalContributionsBySource()).toEqual(
 			expect.arrayContaining([
-				{ amountChf: 2000, source: 'benevity' },
-				{ amountChf: 400, source: 'stripe' },
+				{ amount: 2000, source: 'benevity' },
+				{ amount: 400, source: 'stripe' },
 			])
 		);
 	});
@@ -72,10 +72,10 @@ describe('calcFinancialStats', () => {
 	test('calculate contributions by first day in month', async () => {
 		expect(calculator.totalContributionsByMonth()).toEqual(
 			expect.arrayContaining([
-				{ amountChf: 1100, firstDayInMonth: '2023-01-01' },
-				{ amountChf: 100, firstDayInMonth: '2023-02-01' },
-				{ amountChf: 100, firstDayInMonth: '2023-03-01' },
-				{ amountChf: 1100, firstDayInMonth: '2023-04-01' },
+				{ amount: 1100, month: '2023-01-01' },
+				{ amount: 100, month: '2023-02-01' },
+				{ amount: 100, month: '2023-03-01' },
+				{ amount: 1100, month: '2023-04-01' },
 			])
 		);
 	});

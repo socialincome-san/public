@@ -154,7 +154,7 @@ export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
 			contributionStats: contributionStats,
 			paymentStats: paymentStats,
 		},
-		revalidate: 60 * 2, // rebuild these pages every 2 minute on the server
+		revalidate: 60 * 60, // rebuild these pages every hour on the server
 	};
 };
 
