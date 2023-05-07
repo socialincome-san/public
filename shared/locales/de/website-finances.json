@@ -1,6 +1,14 @@
 {
 	"finances": {
 		"title": "Aktuelle Finanzen",
-		"mainText": "Wir zeigen Ihnen diese Seite in folgender Währung: {{currency}}. Der aktuelle Kontostand ist: {{balance, currency}}."
+		"totalContributionsByMonthAndType": "Total Spenden",
+		"totalInstitutionalContributionsByMonthTooltip": "Institutionelle Spenden : {{value, currency}}",
+		"totalIndividualContributionsByMonthTooltip": "Individuellen Spenden: {{value, currency}}",
+		"totalPayout": "Total Auszahlungen an Empfänger",
+		"totalPayoutTooltip": "Auszahlungen an Empfänger: {{value, currency}}",
+		"totalRecipients": "Empfänger insgesamt",
+		"totalRecipientsTooltip": "Anzahl Empfänger bis zum ausgewählten Monat: {{value}}",
+		"monthlyPayoutPerSocialIncome": "Monatliche Auszahlung pro Social Income",
+		"monthlyPayoutPerSocialIncomeTooltip": "Wert eines Social Incomes: {{value, currency}}"
 	}
 }

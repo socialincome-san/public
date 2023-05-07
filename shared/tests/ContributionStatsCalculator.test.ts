@@ -22,7 +22,7 @@ describe('calcFinancialStats', () => {
 	beforeAll(async () => {
 		await testEnv.firestore.clearFirestoreData({ projectId: projectId });
 		await insertTestData();
-		calculator = await ContributionStatsCalculator.build(firestoreAdmin);
+		calculator = await ContributionStatsCalculator.build(firestoreAdmin, 'CHF');
 	});
 
 	test('building ContributionStatsCalculator', async () => {
@@ -30,15 +30,11 @@ describe('calcFinancialStats', () => {
 	});
 
 	test('calculate overall contributions', async () => {
-		expect(calculator.totalContributionsChf()).toEqual(2400);
-	});
-
-	test('calculate overall fees', async () => {
-		expect(calculator.totalFeesChf()).toEqual(48);
+		expect(calculator.totalContributions()).toEqual(2400);
 	});
 
 	test('calculate contributions by currency', async () => {
-		expect(calculator.totalContributionsChfByCurrency()).toEqual(
+		expect(calculator.totalContributionsByCurrency()).toEqual(
 			expect.arrayContaining([
 				{ amountChf: 400, currency: 'USD' },
 				{ amountChf: 2000, currency: 'CHF' },
@@ -47,7 +43,7 @@ describe('calcFinancialStats', () => {
 	});
 
 	test('calculate contributions by isInstitutuion', async () => {
-		expect(calculator.totalContributionsChfByIsInstitution()).toEqual(
+		expect(calculator.totalContributionsByIsInstitution()).toEqual(
 			expect.arrayContaining([
 				{ amountChf: 400, isInstitution: 'false' },
 				{ amountChf: 2000, isInstitution: 'true' },
@@ -56,7 +52,7 @@ describe('calcFinancialStats', () => {
 	});
 
 	test('calculate contributions by country', async () => {
-		expect(calculator.totalContributionsChfByCountry()).toEqual(
+		expect(calculator.totalContributionsByCountry()).toEqual(
 			expect.arrayContaining([
 				{ amountChf: 400, country: 'US' },
 				{ amountChf: 2000, country: 'CH' },
@@ -65,7 +61,7 @@ describe('calcFinancialStats', () => {
 	});
 
 	test('calculate contributions by source', async () => {
-		expect(calculator.totalContributionsChfBySource()).toEqual(
+		expect(calculator.totalContributionsBySource()).toEqual(
 			expect.arrayContaining([
 				{ amountChf: 2000, source: 'benevity' },
 				{ amountChf: 400, source: 'stripe' },
@@ -74,7 +70,7 @@ describe('calcFinancialStats', () => {
 	});
 
 	test('calculate contributions by first day in month', async () => {
-		expect(calculator.totalContributionsChfByFirstDayInMonth()).toEqual(
+		expect(calculator.totalContributionsByMonth()).toEqual(
 			expect.arrayContaining([
 				{ amountChf: 1100, firstDayInMonth: '2023-01-01' },
 				{ amountChf: 100, firstDayInMonth: '2023-02-01' },

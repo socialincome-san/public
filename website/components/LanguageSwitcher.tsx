@@ -1,7 +1,7 @@
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Button, Card, CardContent, Menu, MenuItem } from '@mui/material';
+import { Button, Menu, MenuItem } from '@mui/material';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useCookies } from 'react-cookie';
 
 export default function LanguageSwitcher(props: LanguageSwitcherProps) {
@@ -32,45 +32,43 @@ export default function LanguageSwitcher(props: LanguageSwitcherProps) {
 	};
 
 	return (
-		<Card variant="outlined">
-			<CardContent>
-				<Button
-					id="current-language"
-					aria-controls={open ? 'language-chooser' : undefined}
-					aria-haspopup="true"
-					aria-expanded={open ? 'true' : undefined}
-					onClick={handleMenuOpen}
-					variant="outlined"
-					endIcon={<KeyboardArrowDownIcon />}
-				>
-					{locale
+		<Fragment>
+			<Button
+				id="current-language"
+				aria-controls={open ? 'language-chooser' : undefined}
+				aria-haspopup="true"
+				aria-expanded={open ? 'true' : undefined}
+				onClick={handleMenuOpen}
+				variant="outlined"
+				endIcon={<KeyboardArrowDownIcon />}
+			>
+				{locale
+					? props.languages[locale]
 						? props.languages[locale]
-							? props.languages[locale]
-							: props.languages[props.fallbackIsoCode]
-						: props.languages[props.fallbackIsoCode]}
-				</Button>
-				<Menu
-					id="language-chooser"
-					anchorEl={anchorEl}
-					onClose={handleClose}
-					MenuListProps={{
-						'aria-labelledby': 'current-language',
-					}}
-					open={open}
-				>
-					{Object.entries(props.languages).map(([isoCode, name]) => (
-						<MenuItem
-							key={isoCode}
-							value={isoCode}
-							selected={isoCode === locale}
-							onClick={() => handleLanguageSwitch(isoCode)}
-						>
-							{name as string}
-						</MenuItem>
-					))}
-				</Menu>
-			</CardContent>
-		</Card>
+						: props.languages[props.fallbackIsoCode]
+					: props.languages[props.fallbackIsoCode]}
+			</Button>
+			<Menu
+				id="language-chooser"
+				anchorEl={anchorEl}
+				onClose={handleClose}
+				MenuListProps={{
+					'aria-labelledby': 'current-language',
+				}}
+				open={open}
+			>
+				{Object.entries(props.languages).map(([isoCode, name]) => (
+					<MenuItem
+						key={isoCode}
+						value={isoCode}
+						selected={isoCode === locale}
+						onClick={() => handleLanguageSwitch(isoCode)}
+					>
+						{name as string}
+					</MenuItem>
+				))}
+			</Menu>
+		</Fragment>
 	);
 }
 

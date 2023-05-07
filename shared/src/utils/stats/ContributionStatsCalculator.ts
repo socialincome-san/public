@@ -3,6 +3,8 @@ import _ from 'lodash';
 import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../firebase/FirestoreAdmin';
 import { Contribution, CONTRIBUTION_FIRESTORE_PATH, StatusKey, User, USER_FIRESTORE_PATH } from '../../types';
+import { getLatestExchangeRate } from '../currency';
+import { cumulativeSum, StatsEntry } from './utils';
 import Timestamp = firestore.Timestamp;
 
 /**
@@ -12,11 +14,11 @@ type ContributionStatsEntry = {
 	userId: string;
 	isInstitution: boolean;
 	country: string;
-	amountChf: number;
-	feesChf: number;
+	amount: number;
+	paymentFees: number;
 	source: string;
 	currency: string;
-	firstDayInMonth: string;
+	month: string;
 };
 
 /**
@@ -35,8 +37,11 @@ export class ContributionStatsCalculator {
 	 * Calls the firestore database to retrieve the contributions per user and constructs the
 	 * ContributionStatsCalculator with the flattened intermediate data structure.
 	 * @param firestoreAdmin
+	 * @param currency
 	 */
-	static async build(firestoreAdmin: FirestoreAdmin): Promise<ContributionStatsCalculator> {
+	static async build(firestoreAdmin: FirestoreAdmin, currency: string): Promise<ContributionStatsCalculator> {
+		const exchangeRate = await getLatestExchangeRate(firestoreAdmin, currency);
+
 		const getContributionsForUser = async (userId: string): Promise<Contribution[]> => {
 			return await firestoreAdmin.getAll<Contribution>(
 				`${USER_FIRESTORE_PATH}/${userId}/${CONTRIBUTION_FIRESTORE_PATH}`
@@ -51,18 +56,23 @@ export class ContributionStatsCalculator {
 					const user = userDoc.data();
 					const contributions = await getContributionsForUser(userDoc.id);
 					return contributions
-						.filter((contribution) => contribution.status == StatusKey.SUCCEEDED)
+						.filter(
+							(contribution) =>
+								contribution.status == StatusKey.SUCCEEDED ||
+								contribution.status == StatusKey.UNKNOWN ||
+								contribution.status == undefined
+						)
 						.map((contribution) => {
 							const created = (contribution.created as Timestamp).toDate();
 							return {
 								userId: userDoc.id,
 								isInstitution: user.institution ?? false,
 								country: user.location?.toUpperCase() ?? 'CH',
-								amountChf: contribution.amount_chf,
-								feesChf: contribution.fees_chf,
+								amount: contribution.amount_chf * exchangeRate,
+								paymentFees: contribution.fees_chf * exchangeRate,
 								source: contribution.source,
-								currency: contribution.currency.toUpperCase() ?? 'CHF',
-								firstDayInMonth: DateTime.fromObject({
+								currency: contribution.currency.toUpperCase() ?? '',
+								month: DateTime.fromObject({
 									year: created.getFullYear(),
 									month: created.getMonth() + 1, // month is indexed from 0 in JS
 									day: 1,
@@ -74,53 +84,97 @@ export class ContributionStatsCalculator {
 		return new ContributionStatsCalculator(_(contributions.flat()));
 	}
 
-	totalContributionsChf = () => {
-		return this.contributions.sumBy((c) => c.amountChf);
+	totalContributions = () => {
+		return this.contributions.sumBy((c) => c.amount);
 	};
 
-	totalContributionsChfByCurrency = () => {
-		return this.totalContributionsChfBy('currency');
+	totalContributionsByCurrency = () => {
+		return this.totalContributionsBy('currency');
 	};
 
-	totalContributionsChfByIsInstitution = () => {
-		return this.totalContributionsChfBy('isInstitution');
+	totalContributionsByIsInstitution = () => {
+		return this.totalContributionsBy('isInstitution');
 	};
 
-	totalContributionsChfByCountry = () => {
-		return this.totalContributionsChfBy('country');
+	totalContributionsByCountry = () => {
+		return this.totalContributionsBy('country');
 	};
 
-	totalContributionsChfBySource = () => {
-		return this.totalContributionsChfBy('source');
+	totalContributionsBySource = () => {
+		return this.totalContributionsBy('source');
 	};
 
-	totalContributionsChfByFirstDayInMonth = () => {
-		return this.totalContributionsChfBy('firstDayInMonth');
+	totalContributionsByMonth = () => {
+		return this.totalContributionsBy('month');
 	};
 
-	totalContributionsChfBy = (attribute: string) => {
+	totalPaymentFeesByInstitution = () => {
+		return this.totalPaymentFeesBy('isInstitution');
+	};
+
+	totalContributionsBy = (attribute: string) => {
 		return this.contributions
 			.groupBy(attribute)
 			.map((contributions, group) => ({
 				[attribute]: group,
-				amountChf: _.sumBy(contributions, (c) => c.amountChf),
+				amount: _.sumBy(contributions, (c) => c.amount),
 			}))
+			.sortBy((x) => x[attribute])
 			.value();
 	};
 
-	totalFeesChf = () => {
-		return this.contributions.sumBy((c) => c.feesChf);
+	totalContributionsByMonthAndType = () => {
+		const contributions = this.contributions
+			.groupBy('month')
+			.map((contributions, group) => ({
+				month: group,
+				institutional: _.sumBy(
+					contributions.filter((x) => x.isInstitution),
+					(c) => c.amount
+				),
+				individual: _.sumBy(
+					contributions.filter((x) => !x.isInstitution),
+					(c) => c.amount
+				),
+			}))
+			.sortBy((x) => x['month'])
+			.value();
+
+		return cumulativeSum(cumulativeSum(contributions, 'institutional'), 'individual');
+	};
+
+	totalPaymentFeesBy = (attribute: string) => {
+		return this.contributions
+			.groupBy(attribute)
+			.map((contributions, group) => ({
+				[attribute]: group,
+				amount: _.sumBy(contributions, (c) => c.paymentFees),
+			}))
+			.sortBy((x) => x[attribute])
+			.value();
 	};
 
 	allStats = () => {
 		return {
-			totalContributionsChf: this.totalContributionsChf(),
-			totalContributionsChfByCurrency: this.totalContributionsChfByCurrency(),
-			totalContributionsChfByIsInstitution: this.totalContributionsChfByIsInstitution(),
-			totalContributionsChfByCountry: this.totalContributionsChfByCountry(),
-			totalContributionsChfBySource: this.totalContributionsChfBySource(),
-			totalContributionsChfByFirstDayInMonth: this.totalContributionsChfByFirstDayInMonth(),
-			totalFeesChf: this.totalFeesChf(),
+			totalContributions: this.totalContributions(),
+			totalContributionsByCurrency: this.totalContributionsByCurrency(),
+			totalContributionsByIsInstitution: this.totalContributionsByIsInstitution(),
+			totalContributionsByCountry: this.totalContributionsByCountry(),
+			totalContributionsBySource: this.totalContributionsBySource(),
+			totalContributionsBymonth: this.totalContributionsByMonth(),
+			totalContributionsByMonthAndType: this.totalContributionsByMonthAndType(),
+			totalPaymentFeesByIsInstitution: this.totalPaymentFeesByInstitution(),
 		};
 	};
+}
+
+export interface ContributionStats {
+	totalContributions: number;
+	totalContributionsByCurrency: StatsEntry[];
+	totalContributionsByIsInstitution: StatsEntry[];
+	totalContributionsByCountry: StatsEntry[];
+	totalContributionsBySource: StatsEntry[];
+	totalContributionsBymonth: StatsEntry[];
+	totalContributionsByMonthAndType: StatsEntry[];
+	totalPaymentFeesByIsInstitution: StatsEntry[];
 }
