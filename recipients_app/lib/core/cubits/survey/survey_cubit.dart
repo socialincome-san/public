@@ -1,4 +1,5 @@
 import "package:app/data/models/models.dart";
+import "package:app/data/models/survey/survey_card_status.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/data/repositories/survey_repository.dart";
 import "package:equatable/equatable.dart";
@@ -18,11 +19,11 @@ class SurveyCubit extends Cubit<SurveyState> {
     required this.crashReportingRepository,
   }) : super(const SurveyState());
 
-  /// TODO: add logic for getting the survey
   void getSurveys() async {
     final surveys =
         await surveyRepository.fetchSurveys(recipientId: recipient.userId);
     final mappedSurveys = surveys
+        .where((element) => _shouldShowSurveyCard(element))
         .map(
           (survey) => MappedSurvey(
             survey: survey,
@@ -30,16 +31,10 @@ class SurveyCubit extends Cubit<SurveyState> {
               survey,
               recipient.userId,
             ),
+            cardStatus: _getSurveyCardStatus(survey),
           ),
         )
         .toList();
-    final nextSurveyDate = recipient.nextSurvey!.toDate();
-
-    if (DateTime.now().isBefore(nextSurveyDate)) {
-      emit(SurveyState(mappedSurveys: mappedSurveys));
-
-      return;
-    }
 
     emit(SurveyState(mappedSurveys: mappedSurveys));
   }
@@ -95,11 +90,65 @@ class SurveyCubit extends Cubit<SurveyState> {
     );
     return uri.toString();
   }
+
+  bool _shouldShowSurveyCard(Survey survey) {
+    var dateDifferenceInDays = _getSurveyDueDateAndNowDifferenceInDays(survey);
+    if (dateDifferenceInDays == null) {
+      return false;
+    }
+
+    var shouldShowSurveyCard =
+        dateDifferenceInDays > -10 && dateDifferenceInDays < 25;
+    return shouldShowSurveyCard;
+  }
+
+  SurveyCardStatus _getSurveyCardStatus(Survey survey) {
+    if (survey.status != SurveyServerStatus.completed &&
+        survey.status != SurveyServerStatus.missed) {
+      var dateDifferenceInDays =
+          _getSurveyDueDateAndNowDifferenceInDays(survey);
+      if (dateDifferenceInDays == null) {
+        return SurveyCardStatus.newSurvey;
+      }
+
+      if (dateDifferenceInDays > -10 && dateDifferenceInDays < 0) {
+        return SurveyCardStatus.newSurvey;
+      } else if (dateDifferenceInDays >= 0 && dateDifferenceInDays < 10) {
+        return SurveyCardStatus.firstReminder;
+      } else if (dateDifferenceInDays >= 10 && dateDifferenceInDays < 15) {
+        return SurveyCardStatus.closeToDeadline;
+      } else {
+        SurveyCardStatus.missed;
+      }
+    } else if (survey.status == SurveyServerStatus.completed) {
+      return SurveyCardStatus.answered;
+    } else {
+      return SurveyCardStatus.missed;
+    }
+    return SurveyCardStatus.answered;
+  }
+}
+
+int? _getSurveyDueDateAndNowDifferenceInDays(Survey survey) {
+  var dueDateAt = survey.dueDateAt?.toDate();
+  if (dueDateAt == null) {
+    return null;
+  }
+
+  var currentDate = DateTime.now();
+  var dateDifference = currentDate.difference(dueDateAt);
+
+  return dateDifference.inDays;
 }
 
 class MappedSurvey {
   final Survey survey;
   final String surveyUrl;
+  final SurveyCardStatus cardStatus;
 
-  MappedSurvey({required this.survey, required this.surveyUrl});
+  MappedSurvey({
+    required this.survey,
+    required this.surveyUrl,
+    required this.cardStatus,
+  });
 }

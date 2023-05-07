@@ -6,7 +6,7 @@ import "package:equatable/equatable.dart";
 
 class Survey extends Equatable {
   final String id;
-  final SurveyStatus? status;
+  final SurveyServerStatus? status;
   final Timestamp? dueDateAt;
   final String? accessEmail;
   final String? accessPassword;
@@ -57,7 +57,7 @@ class Survey extends Equatable {
     return Survey(
       id: id,
       status: map["status"] != null
-          ? SurveyStatus.values.singleWhereOrNull(
+          ? SurveyServerStatus.values.singleWhereOrNull(
               (element) => element.firebaseName == map["status"],
             )
           : null,
@@ -70,7 +70,7 @@ class Survey extends Equatable {
 
   Survey copyWith({
     String? id,
-    SurveyStatus? status,
+    SurveyServerStatus? status,
     Timestamp? dueDateAt,
     String? accessEmail,
     String? accessPassword,
@@ -85,7 +85,7 @@ class Survey extends Equatable {
   }
 }
 
-enum SurveyStatus {
+enum SurveyServerStatus {
   created(firebaseName: "new"),
   sent(firebaseName: "sent"),
   scheduled(firebaseName: "scheduled"),
@@ -93,7 +93,7 @@ enum SurveyStatus {
   completed(firebaseName: "completed"),
   missed(firebaseName: "missed");
 
-  const SurveyStatus({
+  const SurveyServerStatus({
     required this.firebaseName,
   });
 
