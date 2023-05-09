@@ -1,6 +1,6 @@
 name: "✨ Feature Request: UI Library/Design System"
 description: Suggest a feature for the UI library or design system in general
-title: "[UI Library/Design System Feature]: <title>"
+title: "[UI / Design Feature]: <title>"
 labels: feature, ui
 body:
   - type: markdown
