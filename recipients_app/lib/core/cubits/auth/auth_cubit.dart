@@ -1,3 +1,4 @@
+import "package:app/data/models/organization.dart";
 import "package:app/data/models/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:equatable/equatable.dart";
@@ -53,12 +54,21 @@ class AuthCubit extends Cubit<AuthState> {
 
     if (user != null) {
       final recipient = await userRepository.fetchRecipient(user);
+      final organization = await recipient!.organizationRef!.withConverter(
+        fromFirestore: (snapshot, _) {
+          final data = snapshot.data()!;
+          return Organization.fromMap(data);
+        },
+        toFirestore: (organization, _) => organization.toMap(),
+      );
+      final org = (await organization.get()).data();
 
       emit(
         AuthState(
           status: AuthStatus.authenticated,
           firebaseUser: user,
           recipient: recipient,
+          organization: org,
         ),
       );
     } else {
