@@ -1,6 +1,6 @@
 name: "✨ Feature Request: Admin Tool"
 description: Suggest a feature for the admin tool
-title: "[Mobile App Feature]: <title>"
+title: "[Admin Tool Feature]: <title>"
 labels: admintool, feature
 body:
   - type: markdown
