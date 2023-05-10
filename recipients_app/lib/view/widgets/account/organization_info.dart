@@ -15,6 +15,7 @@ class OrganizationInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 24),
         Text(
@@ -51,10 +52,8 @@ class OrganizationInfo extends StatelessWidget {
                         label: "Call",
                         buttonType: ButtonSmallType.outlined,
                         color: Colors.black,
-                        onPressed: () {
-                          launchUrlString(
-                              "tel:${organization.contactNumber}"); // TODO implement
-                        },
+                        onPressed: () => launchUrlString(
+                            "tel:${organization.contactNumber}"),
                       ),
                   ],
                 ),
@@ -73,6 +72,7 @@ class OrganizationInfo extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(height: 24),
       ],
     );
   }

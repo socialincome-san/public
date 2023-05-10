@@ -9,10 +9,12 @@ part "auth_state.dart";
 
 class AuthCubit extends Cubit<AuthState> {
   final UserRepository userRepository;
+  final OrganizationRepository organizationRepository;
   final CrashReportingRepository crashReportingRepository;
 
   AuthCubit({
     required this.userRepository,
+    required this.organizationRepository,
     required this.crashReportingRepository,
   }) : super(const AuthState()) {
     /// Register a listener which will be triggered if the auth state of the user
@@ -54,21 +56,19 @@ class AuthCubit extends Cubit<AuthState> {
 
     if (user != null) {
       final recipient = await userRepository.fetchRecipient(user);
-      final organization = await recipient!.organizationRef!.withConverter(
-        fromFirestore: (snapshot, _) {
-          final data = snapshot.data()!;
-          return Organization.fromMap(data);
-        },
-        toFirestore: (organization, _) => organization.toMap(),
-      );
-      final org = (await organization.get()).data();
+      Organization? organization;
+
+      if (recipient?.organizationRef != null) {
+        organization = await organizationRepository
+            .fetchOrganization(recipient!.organizationRef!);
+      }
 
       emit(
         AuthState(
           status: AuthStatus.authenticated,
           firebaseUser: user,
           recipient: recipient,
-          organization: org,
+          organization: organization,
         ),
       );
     } else {

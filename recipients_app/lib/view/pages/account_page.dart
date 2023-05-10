@@ -376,8 +376,6 @@ class AccountPageState extends State<AccountPage> {
                 /// RECOMMENDING ORGA
                 if (widget.organization != null)
                   OrganizationInfo(organization: widget.organization!),
-
-                const SizedBox(height: 24),
                 Text("Support", style: Theme.of(context).textTheme.bodyLarge),
                 const SizedBox(height: 16),
                 const Text(

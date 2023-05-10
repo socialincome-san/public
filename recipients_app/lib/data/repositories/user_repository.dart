@@ -5,6 +5,8 @@ import "package:app/data/repositories/repositories.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 
+const String recipientCollection = "/recipients";
+
 class UserRepository {
   final FirebaseFirestore firestore;
   final FirebaseAuth firebaseAuth;
