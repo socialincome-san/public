@@ -1,32 +1,79 @@
 import "dart:convert";
 
+import "package:app/core/helpers/date_time_converter.dart";
+import "package:app/core/helpers/document_reference_converter.dart";
+import "package:app/core/helpers/timestamp_converter.dart";
 import "package:app/data/models/models.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:equatable/equatable.dart";
+import "package:json_annotation/json_annotation.dart";
 
+part "recipient.g.dart";
+
+@JsonSerializable()
+@TimestampConverter()
+@DocumentReferenceConverter()
+@DateTimeConverter()
 class Recipient extends Equatable {
+  @JsonKey(name: "user_id")
   final String userId;
+
+  @JsonKey(name: "communication_mobile_phone")
   final Phone? communicationMobilePhone;
+
+  @JsonKey(name: "mobile_money_phone")
   final Phone? mobileMoneyPhone;
-  final String? firstName;
-  final String? lastName;
-  final Timestamp? birthDate;
-  final String? email;
-  final String? country;
-  final String? preferredName;
-  final String? callingName;
-  final String? gender;
-  final String? selectedLanguage;
+
+  @JsonKey(name: "paymentProvider")
   final String? paymentProvider;
+
+  @JsonKey(name: "first_name")
+  final String? firstName;
+
+  @JsonKey(name: "last_name")
+  final String? lastName;
+
+  @JsonKey(name: "birth_date")
+  final Timestamp? birthDate;
+
+  @JsonKey(name: "email")
+  final String? email;
+
+  @JsonKey(name: "country")
+  final String? country;
+
+  @JsonKey(name: "preferred_name")
+  final String? preferredName;
+
+  @JsonKey(name: "calling_name")
+  final String? callingName;
+
+  @JsonKey(name: "gender")
+  final String? gender;
+
+  @JsonKey(name: "selected_language")
+  final String? selectedLanguage;
+
+  @JsonKey(name: "organisation")
   final DocumentReference? organizationRef;
 
+  @JsonKey(name: "terms_accepted")
   final bool? termsAccepted;
+
+  @JsonKey(name: "recipient_since")
   final DateTime? recipientSince;
+
+  @JsonKey(name: "im_link_initial")
   final String? imLinkInitial;
+
+  @JsonKey(name: "im_link_regular")
   final String? imLinkRegular;
+
+  @JsonKey(name: "next_survey")
   final Timestamp? nextSurvey;
 
   // this should be got from `/recipients/<recipient.id>/payments` collection
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final List<SocialIncomePayment>? payments;
 
   const Recipient({
@@ -125,6 +172,15 @@ class Recipient extends Equatable {
     );
   }
 
+  factory Recipient.fromJson(String source) =>
+      Recipient.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  factory Recipient.fromMap(Map<String, dynamic> map) =>
+      _$RecipientFromJson(map);
+
+  Map<String, dynamic> toJson() => _$RecipientToJson(this);
+
+/* 
   // TODO FIX THIS!
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
@@ -244,7 +300,7 @@ class Recipient extends Equatable {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap()); */
 
   /// TODO this should not be in the model
   int totalIncome() {
