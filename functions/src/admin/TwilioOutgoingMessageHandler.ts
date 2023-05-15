@@ -9,9 +9,9 @@ import {
 	RECIPIENT_FIRESTORE_PATH,
 	TwilioMessage,
 } from '../../../shared/src/types';
+import { LocaleLanguage } from '../../../shared/src/types/admin/Language';
 import { sendWhatsapp } from '../../../shared/src/utils/messaging/whatsapp';
-import { Translator } from '../../../shared/src/utils/translate';
-import { TWILIO_SENDER_PHONE_WHATSAPP, TWILIO_SID_WHATSAPP, TWILIO_TOKEN_WHATSAPP } from '../config';
+import { TWILIO_SENDER_PHONE, TWILIO_SID, TWILIO_TOKEN } from '../config';
 
 export interface TwilioOutgoingMessageFunctionProps {
 	recipients: Entity<Recipient>[];
@@ -20,53 +20,45 @@ export interface TwilioOutgoingMessageFunctionProps {
 
 export class TwilioOutgoingMessageHandler {
 	readonly firestoreAdmin: FirestoreAdmin;
-
-	constructor(firestoreAdmin: FirestoreAdmin) {
-		this.firestoreAdmin = firestoreAdmin;
-	}
-
 	twilioOutgoingMessageFunction = functions.https.onCall(
 		async ({ recipients, template }: TwilioOutgoingMessageFunctionProps, { auth }) => {
 			await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
 			let [successCount, skippedCount] = [0, 0];
-			const usersWithFailures = [];
-			const translator = await Translator.getInstance({
-				language: 'en',
-				namespaces: ['template-messages'],
-			});
-			for await (const recipientEntity of recipients) {
-				const recipient = recipientEntity.values;
-				let content = '';
+			for await (const { values: recipient, id } of recipients) {
+				let message: MessageInstance | undefined;
 				switch (template) {
 					case 'opt-in':
-						if (recipient.calling_name) {
-							content = translator.t('opt-in', { context: { name: recipient.calling_name } });
-						} else {
-							content = translator.t('opt-in', { context: { name: recipient.first_name } });
-						}
+						message = await sendWhatsapp({
+							from: TWILIO_SENDER_PHONE,
+							to: `+${recipient.communication_mobile_phone.phone}`,
+							twilioConfig: { sid: TWILIO_SID, token: TWILIO_TOKEN },
+							templateProps: {
+								language: LocaleLanguage.English,
+								translationNamespace: 'message-whatsapp-opt-in',
+								hbsTemplatePath: 'message/freetext.hbs',
+								context: { name: recipient.calling_name ? recipient.calling_name : recipient.first_name },
+							},
+						});
 						break;
 					//Here we could add more templates to start a Whatsapp conversation.
 					default:
 						console.log('Error: Template could not be found');
 						skippedCount += 1;
-						usersWithFailures.push(recipientEntity.id);
 				}
 
-				if (content.length > 0) {
-					const message: MessageInstance = await sendWhatsapp({
-						from: TWILIO_SENDER_PHONE_WHATSAPP,
-						to: `+${recipient.communication_mobile_phone.phone}`,
-						twilioConfig: { sid: TWILIO_SID_WHATSAPP, token: TWILIO_TOKEN_WHATSAPP },
-						body: content,
-					});
+				if (message) {
 					const messageCollection = this.firestoreAdmin.collection<TwilioMessage>(
-						`${RECIPIENT_FIRESTORE_PATH}/${recipientEntity.id}/${MESSAGE_FIRESTORE_PATH}`
+						`${RECIPIENT_FIRESTORE_PATH}/${id}/${MESSAGE_FIRESTORE_PATH}`
 					);
-					await messageCollection.add({ type: MessageType.SMS, ...message.toJSON() });
+					await messageCollection.add({ type: MessageType.WHATSAPP, ...message.toJSON() });
 					successCount += 1;
 				}
 			}
 			return `Sent ${successCount} new whatsapp notifications (${skippedCount} failed).`;
 		}
 	);
+
+	constructor(firestoreAdmin: FirestoreAdmin) {
+		this.firestoreAdmin = firestoreAdmin;
+	}
 }

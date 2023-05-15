@@ -1,5 +1,6 @@
 import { Twilio } from 'twilio';
 import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
+import { renderTemplate, RenderTemplateProps } from '../templates';
 
 export interface SendWhatsappProps {
 	from: string;
@@ -8,13 +9,16 @@ export interface SendWhatsappProps {
 		sid: string;
 		token: string;
 	};
-	body: string;
+	templateProps: RenderTemplateProps;
 }
 
-export const sendWhatsapp = async ({ to, from, twilioConfig, body }: SendWhatsappProps): Promise<MessageInstance> => {
-	from = 'whatsapp:' + from;
-	to = 'whatsapp:' + to;
-	console.log(to);
+export const sendWhatsapp = async ({
+	to,
+	from,
+	twilioConfig,
+	templateProps,
+}: SendWhatsappProps): Promise<MessageInstance> => {
 	const client = new Twilio(twilioConfig.sid, twilioConfig.token);
-	return client.messages.create({ body: body, from: from, to: to });
+	const body = await renderTemplate(templateProps);
+	return client.messages.create({ body: body, from: `whatsapp:${from}`, to: `whatsapp:${to}` });
 };

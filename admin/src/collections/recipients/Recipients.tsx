@@ -8,7 +8,6 @@ import {
 	Recipient,
 	RECIPIENT_FIRESTORE_PATH,
 } from '@socialincome/shared/src/types';
-import { InviteWhatsappAction } from '../../actions/InviteWhatsappAction';
 import { messagesCollection } from '../Messages';
 import { paymentsCollection } from '../Payments';
 import { buildAuditedCollection } from '../shared';
@@ -93,7 +92,6 @@ export const buildRecipientsCollection = () => {
 			test_recipient: TestRecipientProperty,
 		}),
 		subcollections: [paymentsCollection, messagesCollection],
-		Actions: [InviteWhatsappAction],
 	};
 	return buildAuditedCollection<Partial<Recipient>>(collection);
 };
