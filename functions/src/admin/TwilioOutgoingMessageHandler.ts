@@ -1,10 +1,6 @@
 import * as functions from 'firebase-functions';
-import _ from 'lodash';
-import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
-import { Translator } from '../../../shared/src/utils/translate';
-import { sendWhatsapp } from '../../../shared/src/utils/messaging/whatsapp';
 import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
-import { TWILIO_SENDER_PHONE_WHATSAPP, TWILIO_SID_WHATSAPP, TWILIO_TOKEN_WHATSAPP } from '../config';
+import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import {
 	Entity,
 	MessageType,
@@ -13,6 +9,9 @@ import {
 	RECIPIENT_FIRESTORE_PATH,
 	TwilioMessage,
 } from '../../../shared/src/types';
+import { sendWhatsapp } from '../../../shared/src/utils/messaging/whatsapp';
+import { Translator } from '../../../shared/src/utils/translate';
+import { TWILIO_SENDER_PHONE_WHATSAPP, TWILIO_SID_WHATSAPP, TWILIO_TOKEN_WHATSAPP } from '../config';
 
 export interface TwilioOutgoingMessageFunctionProps {
 	recipients: Entity<Recipient>[];

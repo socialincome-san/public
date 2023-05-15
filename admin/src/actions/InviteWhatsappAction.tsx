@@ -1,9 +1,8 @@
-import { CollectionActionsProps, useAuthController, useSnackbarController } from 'firecms';
 import { Box, Button, Modal, Typography } from '@mui/material';
+import { CollectionActionsProps, useAuthController, useSnackbarController } from 'firecms';
 import { Recipient } from '../../../shared/src/types';
 
 import { getFunctions, httpsCallable } from 'firebase/functions';
-import _ from 'lodash';
 import React from 'react';
 import { TwilioOutgoingMessageFunctionProps } from '../../../functions/src/admin/TwilioOutgoingMessageHandler';
 

@@ -8,9 +8,9 @@ import {
 	Recipient,
 	RECIPIENT_FIRESTORE_PATH,
 } from '@socialincome/shared/src/types';
+import { InviteWhatsappAction } from '../../actions/InviteWhatsappAction';
 import { messagesCollection } from '../Messages';
 import { paymentsCollection } from '../Payments';
-import { InviteWhatsappAction } from '../../actions/InviteWhatsappAction';
 import { buildAuditedCollection } from '../shared';
 import {
 	birthDateProperty,
