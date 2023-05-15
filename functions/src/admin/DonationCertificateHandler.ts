@@ -203,7 +203,7 @@ export class DonationCertificateHandler {
 					await withFile(async ({ path }) => {
 						if (!user.address?.country) throw new Error('Country of user unknown.');
 						const translator = await Translator.getInstance({
-							language: user.language || 'de',
+							language: user.language || LocaleLanguage.German,
 							namespaces: ['email-donation-certificate', 'countries'],
 						});
 
