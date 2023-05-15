@@ -26,6 +26,7 @@ export class TwilioOutgoingMessageHandler {
 			let [successCount, skippedCount] = [0, 0];
 			for await (const { values: recipient, id } of recipients) {
 				let message: MessageInstance | undefined;
+				console.log(TWILIO_SID, TWILIO_TOKEN, TWILIO_SENDER_PHONE);
 				switch (template) {
 					case 'opt-in':
 						message = await sendWhatsapp({

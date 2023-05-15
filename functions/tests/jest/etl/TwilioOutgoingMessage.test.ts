@@ -1,4 +1,3 @@
-+require('dotenv').config();
 import admin from 'firebase-admin';
 import functions from 'firebase-functions-test';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/FirestoreAdmin';
