@@ -36,6 +36,13 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Add test secrets to env file
+        working-directory: functions
+        run: |
+          echo TWILIO_SID=${{ secrets.TWILIO_TEST_SID }} > .env
+          echo TWILIO_TOKEN=${{ secrets.TWILIO_TEST_TOKEN }} >> .env
+          echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_TEST_SENDER_PHONE }} >> .env
+
       - name: Run Tests
         run: npm run functions:test
 
@@ -66,9 +73,9 @@ jobs:
           echo NOTIFICATION_EMAIL_PASSWORD=${{ secrets.NOTIFICATION_EMAIL_PASSWORD }} >> .env
           echo NOTIFICATION_EMAIL_USER_KERRIN=${{ secrets.NOTIFICATION_EMAIL_USER_KERRIN }} >> .env
           echo NOTIFICATION_EMAIL_PASSWORD_KERRIN=${{ secrets.NOTIFICATION_EMAIL_PASSWORD_KERRIN }} >> .env
-          echo TWILIO_SID=${{ secrets.TWILIO_TEST_SID }} >> .env
-          echo TWILIO_TOKEN=${{ secrets.TWILIO_TEST_TOKEN }} >> .env
-          echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_TEST_SENDER_PHONE }} >> .env
+          echo TWILIO_SID=${{ secrets.TWILIO_SID }} >> .env
+          echo TWILIO_TOKEN=${{ secrets.TWILIO_TOKEN }} >> .env
+          echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_SENDER_PHONE }} >> .env
           echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
 
       - name: Deploy to Firebase
