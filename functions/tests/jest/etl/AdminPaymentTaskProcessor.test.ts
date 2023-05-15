@@ -1,6 +1,8 @@
+import { Timestamp } from '@google-cloud/firestore';
 import functions from 'firebase-functions-test';
-import { AdminPaymentProcessTask } from '../../../../shared/src/types';
+import { AdminPaymentProcessTask, ExchangeRates, Payment, PaymentStatus } from '../../../../shared/src/types';
 import { runAdminPaymentProcessTask } from '../../../src';
+import { AdminPaymentTaskProcessor } from '../../../src/admin/AdminPaymentTaskProcessor';
 
 describe('AdminPaymentTaskProcessor', () => {
 	const projectId = 'test' + new Date().getTime();
@@ -119,4 +121,58 @@ describe('AdminPaymentTaskProcessor', () => {
 	// 	});
 	// 	expect(secondExecutionResult).toEqual('Set 0 payments to paid and created 0 payments for next month');
 	// });
+
+	test('calcAmountChf', async () => {
+		const exchangeRates: Map<number, ExchangeRates> = new Map([
+			[
+				1682640000, // 2023-04-28 00:00:00
+				{ SLE: 25.0, SLL: 25000 },
+			],
+		]);
+		const paymentSLL: Payment = {
+			amount: 500000,
+			currency: 'SLL',
+			payment_at: Timestamp.fromMillis(1682672487 * 1000), // 2023-04-28 09:01:00
+			status: PaymentStatus.Confirmed,
+		};
+
+		const paymentSLE: Payment = {
+			amount: 500,
+			currency: 'SLE',
+			payment_at: Timestamp.fromMillis(1682672487 * 1000), // 2023-04-28 09:01:00
+			status: PaymentStatus.Confirmed,
+		};
+
+		// exact currency match case
+		expect(AdminPaymentTaskProcessor.calcAmountChf(exchangeRates, paymentSLL)).toBe(20);
+		expect(AdminPaymentTaskProcessor.calcAmountChf(exchangeRates, paymentSLE)).toBe(20);
+
+		// fallback from SLE to SLL exchange rate
+		const exchangeRatesWithoutSLE: Map<number, ExchangeRates> = new Map([
+			[
+				1682640000, // 2023-04-28 00:00:00
+				{ SLL: 25000 },
+			],
+		]);
+		expect(AdminPaymentTaskProcessor.calcAmountChf(exchangeRatesWithoutSLE, paymentSLE)).toBe(20);
+
+		// currencies not available
+		const exchangeRatesWithoutSLEAndSLL: Map<number, ExchangeRates> = new Map([
+			[
+				1682640000, // 2023-04-28 00:00:00
+				{ XYZ: 25000 },
+			],
+		]);
+		expect(AdminPaymentTaskProcessor.calcAmountChf(exchangeRatesWithoutSLEAndSLL, paymentSLE)).toBe(null);
+
+		// day not available
+		const exchangeRatesOtherDate: Map<number, ExchangeRates> = new Map([
+			[
+				1682553600, // 2023-04-27 00:00:00
+				{ SLE: 25.0, SLL: 25000 },
+			],
+		]);
+		expect(AdminPaymentTaskProcessor.calcAmountChf(exchangeRatesOtherDate, paymentSLE)).toBe(null);
+		expect(AdminPaymentTaskProcessor.calcAmountChf(exchangeRatesOtherDate, paymentSLL)).toBe(null);
+	});
 });

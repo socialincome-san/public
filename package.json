@@ -44,9 +44,7 @@
 		"website:check-translations": "$npm_execpath --workspace=@socialincome/website run check-translations"
 	},
 	"devDependencies": {
-		"@types/jest": "^29.5.0",
-		"@types/node": "^18.15.11",
-		"firebase-tools": "11.21.0",
+		"firebase-tools": "11.29.1",
 		"prettier": "^2.8.4",
 		"prettier-plugin-organize-imports": "^3.2.2"
 	}

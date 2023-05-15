@@ -29,7 +29,7 @@ jobs:
 
       - name: Install & Setup Firebase Emulator Suite
         run: |
-          npm -g install firebase-tools@11.21.0 && \
+          npm -g install firebase-tools@11.29.1 && \
           firebase setup:emulators:firestore && \
           firebase setup:emulators:ui
 
@@ -69,6 +69,7 @@ jobs:
           echo TWILIO_SID=${{ secrets.TWILIO_SID }} >> .env
           echo TWILIO_TOKEN=${{ secrets.TWILIO_TOKEN }} >> .env
           echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_SENDER_PHONE }} >> .env
+          echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
 
       - name: Deploy to Firebase
         if: github.ref == 'refs/heads/main'

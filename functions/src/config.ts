@@ -19,6 +19,8 @@ export const TWILIO_SID = process.env.TWILIO_SID!;
 export const TWILIO_TOKEN = process.env.TWILIO_TOKEN!;
 export const TWILIO_SENDER_PHONE = process.env.TWILIO_SENDER_PHONE!;
 
+export const EXCHANGE_RATES_API = process.env.EXCHANGE_RATES_API!;
+
 export const TWILIO_SID_WHATSAPP = process.env.TWILIO_SID_WHATSAPP!;
 export const TWILIO_TOKEN_WHATSAPP = process.env.TWILIO_TOKEN_WHATSAPP!;
 export const TWILIO_SENDER_PHONE_WHATSAPP = process.env.TWILIO_SENDER_PHONE_WHATSAPP!;

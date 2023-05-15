@@ -35,6 +35,11 @@ export const paymentsCollection = buildAuditedCollection<Payment>({
 			name: 'Amount',
 			validation: { required: true },
 		},
+		amount_chf: {
+			dataType: 'number',
+			name: 'Amount CHF (exchange rate at payout date)',
+			readOnly: true,
+		},
 		currency: {
 			dataType: 'string',
 			name: 'Currency',
