@@ -8,6 +8,12 @@ import "package:flutter_bloc/flutter_bloc.dart";
 
 part "survey_state.dart";
 
+const _kNewSurveyDay = -10;
+const _kNormalSurveyStartDay = 0;
+const _kNormalSurveyEndDay = 10;
+const _kCloseToDeadlineSurveyEndDay = 15;
+const _kEndOfDisplaySurveyDay = 20;
+
 class SurveyCubit extends Cubit<SurveyState> {
   final Recipient recipient;
   final SurveyRepository surveyRepository;
@@ -27,11 +33,12 @@ class SurveyCubit extends Cubit<SurveyState> {
         .map(
           (survey) => MappedSurvey(
             survey: survey,
-            surveyUrl: getSurveyUrl(
+            surveyUrl: _getSurveyUrl(
               survey,
               recipient.userId,
             ),
             cardStatus: _getSurveyCardStatus(survey),
+            daysToDeadline: _getDaysToDeadline(survey),
           ),
         )
         .toList();
@@ -76,7 +83,7 @@ class SurveyCubit extends Cubit<SurveyState> {
     }
   }
 
-  String getSurveyUrl(Survey survey, String recipientId) {
+  String _getSurveyUrl(Survey survey, String recipientId) {
     final params = {
       "email": survey.accessEmail,
       "pw": survey.accessPassword!,
@@ -97,8 +104,8 @@ class SurveyCubit extends Cubit<SurveyState> {
       return false;
     }
 
-    var shouldShowSurveyCard =
-        dateDifferenceInDays > -10 && dateDifferenceInDays < 25;
+    var shouldShowSurveyCard = dateDifferenceInDays > _kNewSurveyDay &&
+        dateDifferenceInDays < _kEndOfDisplaySurveyDay;
     return shouldShowSurveyCard;
   }
 
@@ -111,44 +118,60 @@ class SurveyCubit extends Cubit<SurveyState> {
         return SurveyCardStatus.newSurvey;
       }
 
-      if (dateDifferenceInDays > -10 && dateDifferenceInDays < 0) {
+      if (dateDifferenceInDays > _kNewSurveyDay &&
+          dateDifferenceInDays < _kNormalSurveyStartDay) {
         return SurveyCardStatus.newSurvey;
-      } else if (dateDifferenceInDays >= 0 && dateDifferenceInDays < 10) {
+      } else if (dateDifferenceInDays >= _kNormalSurveyStartDay &&
+          dateDifferenceInDays < _kNormalSurveyEndDay) {
         return SurveyCardStatus.firstReminder;
-      } else if (dateDifferenceInDays >= 10 && dateDifferenceInDays < 15) {
+      } else if (dateDifferenceInDays >= _kNormalSurveyEndDay &&
+          dateDifferenceInDays < _kCloseToDeadlineSurveyEndDay) {
         return SurveyCardStatus.closeToDeadline;
       } else {
-        SurveyCardStatus.missed;
+        return SurveyCardStatus.missed;
       }
     } else if (survey.status == SurveyServerStatus.completed) {
       return SurveyCardStatus.answered;
     } else {
       return SurveyCardStatus.missed;
     }
-    return SurveyCardStatus.answered;
   }
 }
 
+int? _getDaysToDeadline(Survey survey) {
+  final dueDateDaysDifference = _getSurveyDueDateAndNowDifferenceInDays(survey);
+  if (dueDateDaysDifference == null) {
+    return null;
+  }
+
+  return -dueDateDaysDifference + _kCloseToDeadlineSurveyEndDay;
+}
+
 int? _getSurveyDueDateAndNowDifferenceInDays(Survey survey) {
-  var dueDateAt = survey.dueDateAt?.toDate();
+  final dueDateAt = survey.dueDateAt?.toDate();
   if (dueDateAt == null) {
     return null;
   }
 
-  var currentDate = DateTime.now();
-  var dateDifference = currentDate.difference(dueDateAt);
+  final currentDate = DateTime.now();
+  final dateDifference = currentDate.difference(dueDateAt);
 
   return dateDifference.inDays;
 }
 
-class MappedSurvey {
+class MappedSurvey extends Equatable {
   final Survey survey;
   final String surveyUrl;
   final SurveyCardStatus cardStatus;
+  final int? daysToDeadline;
 
   MappedSurvey({
     required this.survey,
     required this.surveyUrl,
     required this.cardStatus,
+    required this.daysToDeadline,
   });
+
+  @override
+  List<Object?> get props => [survey, surveyUrl, cardStatus, daysToDeadline];
 }

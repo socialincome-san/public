@@ -8,6 +8,7 @@ class Survey extends Equatable {
   final String id;
   final SurveyServerStatus? status;
   final Timestamp? dueDateAt;
+  final Timestamp? completedAt;
   final String? accessEmail;
   final String? accessPassword;
 
@@ -15,6 +16,7 @@ class Survey extends Equatable {
     required this.id,
     this.status,
     this.dueDateAt,
+    this.completedAt,
     this.accessEmail,
     this.accessPassword,
   });
@@ -25,6 +27,7 @@ class Survey extends Equatable {
       id,
       status,
       dueDateAt,
+      completedAt,
       accessEmail,
       accessPassword,
     ];
@@ -39,6 +42,9 @@ class Survey extends Equatable {
     if (dueDateAt != null) {
       result.addAll({"due_date_at": dueDateAt});
     }
+    if (completedAt != null) {
+      result.addAll({"completed_at": dueDateAt});
+    }
     if (accessEmail != null) {
       result.addAll({"access_email": accessEmail});
     }
@@ -52,8 +58,6 @@ class Survey extends Equatable {
   String toJson() => json.encode(toMap());
 
   factory Survey.fromMap(String id, Map<String, dynamic> map) {
-
-
     return Survey(
       id: id,
       status: map["status"] != null
@@ -63,6 +67,8 @@ class Survey extends Equatable {
           : null,
       dueDateAt:
           map["due_date_at"] != null ? map["due_date_at"] as Timestamp : null,
+      completedAt:
+          map["completed_at"] != null ? map["completed_at"] as Timestamp : null,
       accessEmail: map["access_email"] as String?,
       accessPassword: map["access_pw"] as String?,
     );
@@ -72,6 +78,7 @@ class Survey extends Equatable {
     String? id,
     SurveyServerStatus? status,
     Timestamp? dueDateAt,
+    Timestamp? completedAt,
     String? accessEmail,
     String? accessPassword,
   }) {
@@ -79,6 +86,7 @@ class Survey extends Equatable {
       id: id ?? this.id,
       status: status ?? this.status,
       dueDateAt: dueDateAt ?? this.dueDateAt,
+      completedAt: completedAt ?? this.completedAt,
       accessEmail: accessEmail ?? this.accessEmail,
       accessPassword: accessPassword ?? this.accessPassword,
     );
