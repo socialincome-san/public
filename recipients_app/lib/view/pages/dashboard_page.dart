@@ -7,6 +7,7 @@ import "package:app/data/repositories/survey_repository.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/dashboard_item.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_container.dart";
+import "package:app/view/widgets/survey/survey_card_container.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -50,8 +51,22 @@ class _DashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<DashboardItem> dashboardItems =
-        context.watch<DashboardCardManagerCubit>().state.cards;
+    final List<DashboardItem> dashboardItems = context
+        .watch<DashboardCardManagerCubit>()
+        .state
+        .cards
+        .map<DashboardItem>((card) => card)
+        .toList();
+
+    final List<DashboardItem> surveysItems = context
+        .watch<SurveyCubit>()
+        .state
+        .mappedSurveys
+        .map<DashboardItem>(  
+          (survey) => SurveyCardContainer(mappedSurvey: survey))
+        .toList();
+
+    final items = dashboardItems + surveysItems;
 
     return BlocBuilder<PaymentsCubit, PaymentsState>(
       builder: (context, state) {
@@ -61,7 +76,7 @@ class _DashboardView extends StatelessWidget {
             children: [
               const BalanceCardContainer(),
               const SizedBox(height: 8),
-              if (dashboardItems.isEmpty)
+              if (items.isEmpty)
                 const Expanded(
                   child: Padding(
                     padding: AppSpacings.a8,
@@ -78,8 +93,8 @@ class _DashboardView extends StatelessWidget {
                   child: ListView.separated(
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 8),
-                    itemCount: dashboardItems.length,
-                    itemBuilder: (context, index) => dashboardItems[index],
+                    itemCount: items.length,
+                    itemBuilder: (context, index) => items[index],
                   ),
                 ),
             ],
