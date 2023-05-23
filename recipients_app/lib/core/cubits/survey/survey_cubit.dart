@@ -1,4 +1,5 @@
 import "package:app/data/models/models.dart";
+import "package:app/data/models/survey/mapped_survey.dart";
 import "package:app/data/models/survey/survey_card_status.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/data/repositories/survey_repository.dart";
@@ -11,7 +12,8 @@ part "survey_state.dart";
 const _kNewSurveyDay = -10;
 const _kNormalSurveyStartDay = 0;
 const _kNormalSurveyEndDay = 10;
-const _kCloseToDeadlineSurveyEndDay = 15;
+const _kOverdueEndDay = 15;
+const _kOverduePeriodDays = 6;
 const _kEndOfDisplaySurveyDay = 20;
 
 class SurveyCubit extends Cubit<SurveyState> {
@@ -38,7 +40,8 @@ class SurveyCubit extends Cubit<SurveyState> {
               recipient.userId,
             ),
             cardStatus: _getSurveyCardStatus(survey),
-            daysToDeadline: _getDaysToDeadline(survey),
+            daysToOverdue: _getDaysToOverdue(survey),
+            daysAfterOverdue: _getDaysAfterOverdue(survey),
           ),
         )
         .toList();
@@ -118,15 +121,15 @@ class SurveyCubit extends Cubit<SurveyState> {
         return SurveyCardStatus.newSurvey;
       }
 
-      if (dateDifferenceInDays > _kNewSurveyDay &&
+      if (dateDifferenceInDays >= _kNewSurveyDay &&
           dateDifferenceInDays < _kNormalSurveyStartDay) {
         return SurveyCardStatus.newSurvey;
       } else if (dateDifferenceInDays >= _kNormalSurveyStartDay &&
           dateDifferenceInDays < _kNormalSurveyEndDay) {
         return SurveyCardStatus.firstReminder;
       } else if (dateDifferenceInDays >= _kNormalSurveyEndDay &&
-          dateDifferenceInDays < _kCloseToDeadlineSurveyEndDay) {
-        return SurveyCardStatus.closeToDeadline;
+          dateDifferenceInDays < _kOverdueEndDay) {
+        return SurveyCardStatus.overdue;
       } else {
         return SurveyCardStatus.missed;
       }
@@ -138,13 +141,22 @@ class SurveyCubit extends Cubit<SurveyState> {
   }
 }
 
-int? _getDaysToDeadline(Survey survey) {
+int? _getDaysToOverdue(Survey survey) {
   final dueDateDaysDifference = _getSurveyDueDateAndNowDifferenceInDays(survey);
   if (dueDateDaysDifference == null) {
     return null;
   }
 
-  return -dueDateDaysDifference + _kCloseToDeadlineSurveyEndDay;
+  return -dueDateDaysDifference + _kNormalSurveyEndDay;
+}
+
+int? _getDaysAfterOverdue(Survey survey) {
+  final dueDateDaysDifference = _getSurveyDueDateAndNowDifferenceInDays(survey);
+  if (dueDateDaysDifference == null) {
+    return null;
+  }
+
+  return _kOverduePeriodDays - (-dueDateDaysDifference + _kOverdueEndDay);
 }
 
 int? _getSurveyDueDateAndNowDifferenceInDays(Survey survey) {
@@ -157,21 +169,4 @@ int? _getSurveyDueDateAndNowDifferenceInDays(Survey survey) {
   final dateDifference = currentDate.difference(dueDateAt);
 
   return dateDifference.inDays;
-}
-
-class MappedSurvey extends Equatable {
-  final Survey survey;
-  final String surveyUrl;
-  final SurveyCardStatus cardStatus;
-  final int? daysToDeadline;
-
-  MappedSurvey({
-    required this.survey,
-    required this.surveyUrl,
-    required this.cardStatus,
-    required this.daysToDeadline,
-  });
-
-  @override
-  List<Object?> get props => [survey, surveyUrl, cardStatus, daysToDeadline];
 }
