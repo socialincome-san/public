@@ -3,7 +3,6 @@ import "package:app/core/cubits/dashboard_card_manager/dashboard_card_manager_cu
 import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/core/cubits/survey/survey_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
-import "package:app/data/repositories/survey_repository.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/dashboard_item.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_container.dart";

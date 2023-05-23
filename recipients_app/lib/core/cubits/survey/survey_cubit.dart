@@ -4,7 +4,6 @@ import "package:app/data/models/survey/survey_card_status.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/data/repositories/survey_repository.dart";
 import "package:equatable/equatable.dart";
-import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 part "survey_state.dart";
