@@ -9,10 +9,12 @@ import "package:intl/intl.dart";
 
 class SurveyCardBottomAction extends StatelessWidget {
   final MappedSurvey mappedSurvey;
+  final SurveyCubit surveyCubit;
 
   const SurveyCardBottomAction({
     super.key,
     required this.mappedSurvey,
+    required this.surveyCubit,
   });
 
   @override
@@ -35,7 +37,7 @@ class SurveyCardBottomAction extends StatelessWidget {
             if (_shouldShowActionButton(mappedSurvey.cardStatus)) ...[
               ButtonSmall(
                 onPressed: () {
-                  _navigateToSurvey(context);
+                  _navigateToSurvey(context, surveyCubit);
                 },
                 label: "Start Survey",
                 buttonType: ButtonSmallType.outlined,
@@ -59,11 +61,14 @@ class SurveyCardBottomAction extends StatelessWidget {
     );
   }
 
-  void _navigateToSurvey(BuildContext context) {
+  void _navigateToSurvey(BuildContext context, SurveyCubit surveyCubit) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const ImpactMeasurementPage(),
+        builder: (context) => BlocProvider.value(
+          value: surveyCubit,
+          child: SurveyPage(mappedSurvey: mappedSurvey),
+        ),
       ),
     );
   }

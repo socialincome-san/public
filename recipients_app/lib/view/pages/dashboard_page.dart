@@ -62,8 +62,12 @@ class _DashboardView extends StatelessWidget {
         .watch<SurveyCubit>()
         .state
         .mappedSurveys
-        .map<DashboardItem>(  
-          (survey) => SurveyCardContainer(mappedSurvey: survey))
+        .map<DashboardItem>(
+          (survey) => SurveyCardContainer(
+            mappedSurvey: survey,
+            surveyCubit: context.read(),
+          ),
+        )
         .toList();
 
     final items = dashboardItems + surveysItems;

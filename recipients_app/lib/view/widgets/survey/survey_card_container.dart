@@ -1,4 +1,5 @@
 import "package:app/core/cubits/survey/survey_cubit.dart";
+import "package:app/data/models/survey/mapped_survey.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/dashboard_item.dart";
 import "package:app/view/widgets/survey/survey_card_bottom_action.dart";
@@ -6,8 +7,13 @@ import "package:flutter/material.dart";
 
 class SurveyCardContainer extends DashboardItem {
   final MappedSurvey mappedSurvey;
+  final SurveyCubit surveyCubit;
 
-  const SurveyCardContainer({super.key, required this.mappedSurvey});
+  const SurveyCardContainer({
+    super.key,
+    required this.mappedSurvey,
+    required this.surveyCubit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +64,10 @@ class SurveyCardContainer extends DashboardItem {
               ],
             ),
           ),
-          SurveyCardBottomAction(mappedSurvey: mappedSurvey),
+          SurveyCardBottomAction(
+            mappedSurvey: mappedSurvey,
+            surveyCubit: surveyCubit,
+          ),
         ],
       ),
     );
