@@ -8,8 +8,6 @@ class OrganizationRepository {
     required this.firestore,
   });
 
-  /// Fetches the user data by userId from firestore and maps it to a recipient object
-  /// Returns null if the user does not exist.
   Future<Organization?> fetchOrganization(
     DocumentReference organizationRef,
   ) async {

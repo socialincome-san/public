@@ -5,6 +5,8 @@ import { StorageAdmin } from '../../shared/src/firebase/StorageAdmin';
 import { AdminPaymentTaskProcessor } from './admin/AdminPaymentTaskProcessor';
 import { DonationCertificateHandler } from './admin/DonationCertificateHandler';
 import { SurveyManager } from './admin/SurveyManager';
+import { TwilioIncomingMessageHandler } from './admin/TwilioIncomingMessageHandler';
+import { TwilioOutgoingMessageHandler } from './admin/TwilioOutgoingMessageHandler';
 import { ExchangeRateImporter } from './etl/ExchangeRateImporter';
 import { FirestoreAuditor } from './etl/FirestoreAuditor';
 import { PostfinanceImporter } from './etl/PostfinanceImporter';
@@ -38,6 +40,12 @@ export const auditCollectionTrigger = firestoreAuditor.auditCollectionTrigger;
 
 const surveyManager = new SurveyManager(firestoreAdmin, authAdmin);
 export const createAllSurveys = surveyManager.createAllSurveys;
+
+const twilioIncomingMessageHandler = new TwilioIncomingMessageHandler(firestoreAdmin);
+export const twilioIncomingMessage = twilioIncomingMessageHandler.twilioIncomingMessageFunction;
+
+const twilioOutgoingMessageHandler = new TwilioOutgoingMessageHandler(firestoreAdmin);
+export const twilioOutgoingMessage = twilioOutgoingMessageHandler.twilioOutgoingMessageFunction;
 
 const surveyLogin = new SurveyLogin(firestoreAdmin);
 export const getSurveyCredentials = surveyLogin.getSurveyCredentials;

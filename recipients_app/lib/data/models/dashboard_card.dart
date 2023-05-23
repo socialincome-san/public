@@ -88,7 +88,7 @@ class DashboardCard extends StatelessWidget {
       case DashboardCardType.contactNumberEqualsPaymentNumber:
         final recipient = context.read<AuthCubit>().state.recipient!;
 
-        final organization = context.read<AuthCubit>().state.organization!;
+        final organization = context.read<AuthCubit>().state.organization;
 
         Navigator.of(context).push(
           MaterialPageRoute(

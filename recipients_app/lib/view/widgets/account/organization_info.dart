@@ -72,7 +72,6 @@ class OrganizationInfo extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 24),
       ],
     );
   }
