@@ -18,6 +18,7 @@ class Recipient extends Equatable {
   final String? gender;
   final String? selectedLanguage;
   final String? paymentProvider;
+  final DocumentReference? organizationRef;
 
   final bool? termsAccepted;
   final DateTime? recipientSince;
@@ -47,6 +48,7 @@ class Recipient extends Equatable {
     this.imLinkInitial,
     this.imLinkRegular,
     this.nextSurvey,
+    this.organizationRef,
     this.payments = const [],
   });
 
@@ -71,6 +73,7 @@ class Recipient extends Equatable {
       imLinkInitial,
       imLinkRegular,
       nextSurvey,
+      organizationRef,
       payments,
     ];
   }
@@ -94,6 +97,7 @@ class Recipient extends Equatable {
     String? imLinkInitial,
     String? imLinkRegular,
     Timestamp? nextSurvey,
+    DocumentReference? organizationRef,
     List<SocialIncomePayment>? payments,
   }) {
     return Recipient(
@@ -116,6 +120,7 @@ class Recipient extends Equatable {
       imLinkInitial: imLinkInitial ?? this.imLinkInitial,
       imLinkRegular: imLinkRegular ?? this.imLinkRegular,
       nextSurvey: nextSurvey ?? this.nextSurvey,
+      organizationRef: organizationRef ?? this.organizationRef,
       payments: payments ?? this.payments,
     );
   }
@@ -196,6 +201,10 @@ class Recipient extends Equatable {
       result.addAll({"next_survey": nextSurvey});
     }
 
+    if (organizationRef != null) {
+      result.addAll({"organisation": organizationRef});
+    }
+
     return result;
   }
 
@@ -231,6 +240,7 @@ class Recipient extends Equatable {
       imLinkRegular: map["im_link_regular"] as String?,
       nextSurvey:
           map["next_survey"] != null ? map["next_survey"] as Timestamp : null,
+      organizationRef: map["organisation"] as DocumentReference?,
     );
   }
 

@@ -89,9 +89,14 @@ class DashboardCard extends DashboardItem {
       case DashboardCardType.contactNumberEqualsPaymentNumber:
         final recipient = context.read<AuthCubit>().state.recipient!;
 
+        final organization = context.read<AuthCubit>().state.organization;
+
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => AccountPage(recipient: recipient),
+            builder: (context) => AccountPage(
+              recipient: recipient,
+              organization: organization,
+            ),
           ),
         );
         break;
