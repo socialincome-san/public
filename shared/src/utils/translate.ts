@@ -1,8 +1,9 @@
 import i18next, { i18n } from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import path from 'path';
+import { LocaleLanguage } from '../types/admin/Language';
 
-export const FALLBACK_LANGUAGE = 'en';
+export const FALLBACK_LANGUAGE = LocaleLanguage.English;
 
 interface TranslateProps {
 	namespace?: string;
@@ -11,16 +12,16 @@ interface TranslateProps {
 }
 
 interface TranslatorProps {
-	language: string;
+	language: LocaleLanguage;
 	namespaces: string[];
 }
 
 export class Translator {
-	language: string;
+	language: LocaleLanguage;
 	namespaces: string[];
 	instance: i18n;
 
-	constructor(language: string, namespaces: string[]) {
+	constructor(language: LocaleLanguage, namespaces: string[]) {
 		this.language = language;
 		this.namespaces = namespaces;
 		this.instance = i18next.createInstance();
