@@ -50,6 +50,7 @@ service cloud.firestore {
 
       match /surveys/{surveyId} {
         allow read, update: if request.auth.token.email == resource.data.access_email;
+        allow read: if canAccessPayment(request.auth.token, recipientId);
       }
     }
 
