@@ -1,10 +1,12 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/data/models/models.dart";
+import "package:app/data/models/organization.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/ui/configs/app_spacings.dart";
 import "package:app/ui/inputs/input_dropdown.dart";
 import "package:app/ui/inputs/input_text.dart";
+import "package:app/view/widgets/account/organization_info.dart";
 import "package:app/view/widgets/dialogs/social_income_contact_dialog.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
@@ -13,9 +15,11 @@ import "package:intl/intl.dart";
 
 class AccountPage extends StatefulWidget {
   final Recipient recipient;
+  final Organization? organization;
 
   const AccountPage({
     required this.recipient,
+    this.organization,
   });
 
   @override
@@ -370,60 +374,8 @@ class AccountPageState extends State<AccountPage> {
                     ), */
 
                 /// RECOMMENDING ORGA
-                const SizedBox(height: 24),
-                Text(
-                  "Recommending Organization",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                const SizedBox(height: 16),
-                Card(
-                  child: Padding(
-                    padding: AppSpacings.a12,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.lock,
-                              color: Colors.black,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              "Organization Name",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge!
-                                  .copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            const Spacer(),
-                            ButtonSmall(
-                              label: "Call",
-                              buttonType: ButtonSmallType.outlined,
-                              color: Colors.black,
-                              onPressed: () {
-                                // TODO implement
-                              },
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          "Petra Mustermann",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                        Text(
-                          "0827183978321",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
+                if (widget.organization != null)
+                  OrganizationInfo(organization: widget.organization!),
                 const SizedBox(height: 24),
                 Text("Support", style: Theme.of(context).textTheme.bodyLarge),
                 const SizedBox(height: 16),

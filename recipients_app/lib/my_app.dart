@@ -42,10 +42,16 @@ class MyApp extends StatelessWidget {
             firestore: firestore,
           ),
         ),
+        RepositoryProvider(
+          create: (context) => OrganizationRepository(
+            firestore: firestore,
+          ),
+        ),
       ],
       child: BlocProvider(
         create: (context) => AuthCubit(
           crashReportingRepository: context.read<CrashReportingRepository>(),
+          organizationRepository: context.read<OrganizationRepository>(),
           userRepository: context.read<UserRepository>(),
         )..init(),
         child: MaterialApp(
