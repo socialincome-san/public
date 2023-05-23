@@ -1,7 +1,7 @@
 name: "🐞 Bug Report: Admin Tool"
 description: Create a report to help us improve the admin tool
 title: "[BUG]: <title>"
-labels: ["🐞 Bug", "admintool"]
+labels: bug, admintool
 body:
   - type: markdown
     attributes:

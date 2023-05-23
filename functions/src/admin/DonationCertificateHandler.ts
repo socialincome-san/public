@@ -203,8 +203,8 @@ export class DonationCertificateHandler {
 					await withFile(async ({ path }) => {
 						if (!user.address?.country) throw new Error('Country of user unknown.');
 						const translator = await Translator.getInstance({
-							language: user.language || 'de',
-							namespaces: ['donation-certificate', 'countries'],
+							language: user.language || LocaleLanguage.German,
+							namespaces: ['email-donation-certificate', 'countries'],
 						});
 
 						// TODO: Use ContributionStatsCalculator to get contributions by user
@@ -229,7 +229,7 @@ export class DonationCertificateHandler {
 								// TODO: Use renderEmailTemplate() instead of renderTemplate()
 								content: await renderTemplate({
 									language: user.language || LocaleLanguage.German,
-									translationNamespace: 'donation-certificate',
+									translationNamespace: 'email-donation-certificate',
 									hbsTemplatePath: 'email/donation-certificate.hbs',
 									context: {
 										title: translator.t('title', { context: { year } }),
