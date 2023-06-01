@@ -54,6 +54,11 @@ service cloud.firestore {
       }
     }
 
+    // recipients app access to organisations, for now check only if authenticated
+    match /organisations/{data} {
+      allow read: if request.auth != null
+    }
+
     match /transparency-stats/{data} {
       allow read: if true;
     }
