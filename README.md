@@ -59,8 +59,8 @@ which are populated with dummy seed data. This ensures that no
 production credentials are needed for local development.
 
 Before you can start developing, you need to install the dependencies by
-running. Make sure you are using Node.js 16. If you are using Homebrew,
-you can install it with `brew install node@16` and follow
+running. Make sure you are using Node.js 18. If you are using Homebrew,
+you can install it with `brew install node@18` and follow
 [this](https://ralphjsmit.com/switch-between-nodejs-versions-homebrew)
 guide to switch between different versions of Node.js if need be.
 
