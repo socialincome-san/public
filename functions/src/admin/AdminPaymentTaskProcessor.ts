@@ -18,7 +18,7 @@ import {
 	Recipient,
 	RecipientProgramStatus,
 	RECIPIENT_FIRESTORE_PATH,
-	SMS,
+	TwilioMessage,
 } from '../../../shared/src/types';
 import { sendSms } from '../../../shared/src/utils/messaging/sms';
 import { TWILIO_SENDER_PHONE, TWILIO_SID, TWILIO_TOKEN } from '../config';
@@ -27,11 +27,58 @@ import { ExchangeRateImporter } from '../etl/ExchangeRateImporter';
 export class AdminPaymentTaskProcessor {
 	readonly firestoreAdmin: FirestoreAdmin;
 	readonly exchangeRateImporter: ExchangeRateImporter;
+	/**
+	 * Batch implementation to add amount_chf for past payments
+	 */
+	addMissingAmountChf = functions
+		.runWith({
+			timeoutSeconds: 540,
+			memory: '1GB',
+		})
+		.https.onCall(async (_, { auth }) => {
+			await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
+
+			const dailyExchangeRates = await this.exchangeRateImporter.getDailyExchangeRates();
+			const payments = await this.firestoreAdmin.collectionGroup<Payment>(PAYMENT_FIRESTORE_PATH).get();
+			for (const payment of payments.docs.filter((d) => !d.data().amount_chf)) {
+				const amountChf = AdminPaymentTaskProcessor.calcAmountChf(dailyExchangeRates, payment.data());
+				if (amountChf) {
+					await payment.ref.update({
+						amount_chf: amountChf,
+					});
+					console.log(`Updated amount_chf for payment: ${payment.ref.path}`);
+				} else {
+					console.warn(`Could not update amount_chf for payment: ${payment.ref.path}`);
+				}
+			}
+		});
 
 	constructor(firestoreAdmin: FirestoreAdmin, exchangeRateImporter: ExchangeRateImporter) {
 		this.firestoreAdmin = firestoreAdmin;
 		this.exchangeRateImporter = exchangeRateImporter;
 	}
+
+	static calcAmountChf = (exchangeRates: Map<number, ExchangeRates>, payment: Payment): number | null => {
+		const exchangeRatesAtPaymentDate = exchangeRates.get(
+			ExchangeRateImporter.toDailyBuckets(payment.payment_at.seconds)
+		);
+		// no exchange rate available
+		if (!exchangeRatesAtPaymentDate) {
+			return null;
+		}
+		const exactExchangeRate = exchangeRatesAtPaymentDate[payment.currency];
+		// currency mapping is available
+		if (exactExchangeRate) {
+			return Math.round((payment.amount / exactExchangeRate) * 100) / 100;
+		}
+		// switching from SLL to SLE we only got the SLE exchange rate with a delay. We use SLE * 1000 in this case.
+		const sllExchangeRate = exchangeRatesAtPaymentDate['SLL'];
+		if (payment.currency === 'SLE' && sllExchangeRate) {
+			return Math.round((payment.amount / sllExchangeRate) * 1000 * 100) / 100;
+		}
+		// currency not found
+		return null;
+	};
 
 	private getRowsForRegistrationCSV = (recipients: Recipient[]) => {
 		const csvRows = [['Mobile Number*', 'Unique Code*', 'User Type*']];
@@ -133,13 +180,13 @@ export class AdminPaymentTaskProcessor {
 							to: `+${recipient.mobile_money_phone.phone}`,
 							twilioConfig: { sid: TWILIO_SID, token: TWILIO_TOKEN },
 							templateProps: {
-								hbsTemplatePath: 'sms/freetext.hbs',
+								hbsTemplatePath: 'message/freetext.hbs',
 								context: {
 									content: 'You should have received a payment by Social Income. If you have not, please contact us.',
 								},
 							},
 						});
-						const messageCollection = this.firestoreAdmin.collection<SMS>(
+						const messageCollection = this.firestoreAdmin.collection<TwilioMessage>(
 							`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${MESSAGE_FIRESTORE_PATH}`
 						);
 						const messageDocRef = await messageCollection.add({ type: MessageType.SMS, ...message.toJSON() });
@@ -188,52 +235,4 @@ export class AdminPaymentTaskProcessor {
 
 		throw new functions.https.HttpsError('invalid-argument', 'Invalid AdminPaymentProcessTask');
 	});
-
-	/**
-	 * Batch implementation to add amount_chf for past payments
-	 */
-	addMissingAmountChf = functions
-		.runWith({
-			timeoutSeconds: 540,
-			memory: '1GB',
-		})
-		.https.onCall(async (_, { auth }) => {
-			await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
-
-			const dailyExchangeRates = await this.exchangeRateImporter.getDailyExchangeRates();
-			const payments = await this.firestoreAdmin.collectionGroup<Payment>(PAYMENT_FIRESTORE_PATH).get();
-			for (const payment of payments.docs.filter((d) => !d.data().amount_chf)) {
-				const amountChf = AdminPaymentTaskProcessor.calcAmountChf(dailyExchangeRates, payment.data());
-				if (amountChf) {
-					await payment.ref.update({
-						amount_chf: amountChf,
-					});
-					console.log(`Updated amount_chf for payment: ${payment.ref.path}`);
-				} else {
-					console.warn(`Could not update amount_chf for payment: ${payment.ref.path}`);
-				}
-			}
-		});
-
-	static calcAmountChf = (exchangeRates: Map<number, ExchangeRates>, payment: Payment): number | null => {
-		const exchangeRatesAtPaymentDate = exchangeRates.get(
-			ExchangeRateImporter.toDailyBuckets(payment.payment_at.seconds)
-		);
-		// no exchange rate available
-		if (!exchangeRatesAtPaymentDate) {
-			return null;
-		}
-		const exactExchangeRate = exchangeRatesAtPaymentDate[payment.currency];
-		// currency mapping is available
-		if (exactExchangeRate) {
-			return Math.round((payment.amount / exactExchangeRate) * 100) / 100;
-		}
-		// switching from SLL to SLE we only got the SLE exchange rate with a delay. We use SLE * 1000 in this case.
-		const sllExchangeRate = exchangeRatesAtPaymentDate['SLL'];
-		if (payment.currency === 'SLE' && sllExchangeRate) {
-			return Math.round((payment.amount / sllExchangeRate) * 1000 * 100) / 100;
-		}
-		// currency not found
-		return null;
-	};
 }

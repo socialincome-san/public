@@ -2,6 +2,8 @@ import "package:app/data/models/models.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 
+const String paymentCollection = "payments";
+
 class PaymentRepository {
   final FirebaseFirestore firestore;
 

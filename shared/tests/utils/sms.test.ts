@@ -13,7 +13,7 @@ describe('send simple SMS', () => {
 				token: TWILIO_TOKEN,
 			},
 			templateProps: {
-				hbsTemplatePath: 'sms/freetext.hbs',
+				hbsTemplatePath: 'message/freetext.hbs',
 				context: {
 					content: 'This is a Test SMS',
 				},

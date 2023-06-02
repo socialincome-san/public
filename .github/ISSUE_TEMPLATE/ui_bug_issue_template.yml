@@ -1,7 +1,7 @@
 name: "🐞 Bug Report: UI library/Design System"
 description: Create a report to help us improve our design system or UI library
-title: "[BUG]: <title>"
-labels: ["🐞 Bug", "ui"]
+title: "[UI / Design Bug]: <title>"
+labels: bug, ui
 body:
   - type: markdown
     attributes:
