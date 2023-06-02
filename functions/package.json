@@ -2,7 +2,7 @@
 	"name": "@socialincome/functions",
 	"private": true,
 	"engines": {
-		"node": "16"
+		"node": "18"
 	},
 	"main": "dist/functions/src/index.js",
 	"scripts": {
