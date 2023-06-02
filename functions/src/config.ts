@@ -1,7 +1,6 @@
 // Root paths. These paths are relative to the functions/dist/functions/src directory, which is the destination of the compilation of this file.
-import * as dotenv from 'dotenv';
+import 'dotenv/config';
 import * as path from 'path';
-dotenv.config();
 
 export const ASSET_DIR = path.join(__dirname, '..', '..', 'shared', 'assets');
 
