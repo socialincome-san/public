@@ -8,15 +8,17 @@ For the basic setup, please refer to the main [README](../README.md)
 
 ## Start Website Locally
 
-To serve the development server locally using docker run
+To serve the development server locally, run the following commands as
+separate processes:
 
-```
-make website-serve
+```shell
+npm run firebase:serve
+npm run website:serve
 ```
 
-or without docker use
+Or if you directly want to run the firebase emulator and the website
 
-```
+```shell
 npm run website:serve:emulator
 ```
 
@@ -25,15 +27,9 @@ The website will be accessible at http://localhost:3001
 ## Build Website Locally
 
 To test the "production" bundling using the test data from the firebase
-emulator, for docker run
+emulator, run:
 
-```
-make website-build
-```
-
-or without docker use
-
-```
+```shell
 npm run website:build:emulator
 ```
 
@@ -71,8 +67,7 @@ In a nutshell, adding translations to a page involves 3 steps:
   the `getStaticProps` of your page
 - Add `const { t } = useTranslation('website-myNewPage');` in your
   component and use it in your code `<p>{t('description')}</p>`
-- Run `make website-extract-translations` for docker or
-  `npm run website:extract-translations` for npm to update the json
+- Run `npm run website:extract-translations` for npm to update the json
   files.
 
 If you want to use multiple translation files (namespaces) in 1 page you
@@ -96,15 +91,7 @@ returns an error if the jsons files are not in sync with the code.
 To test individual components with jest. They are located in the `tests`
 directory.
 
-With docker
-
-```
-make website-test
-```
-
-or without docker use
-
-```
+```shell
 npm run website:test:emulator
 ```
 

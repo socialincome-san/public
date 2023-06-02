@@ -53,32 +53,37 @@ backend code in a serverless framework and
 [Firebase Storage](https://firebase.google.com/docs/storage) to store
 documents and other files.
 
-For development we use [Docker](https://www.docker.com) and rely on
-local
+The local development environment is based on Node.js and uses the
 [Firebase Emulators](https://firebase.google.com/docs/emulator-suite),
-which are populated with dummy seed data. Ensures that no one will
-require production Firebase credentials to contribute. To avoid any
-operating system specific installation, we use a
-[helper docker image](Dockerfile) and
-[docker-compose](docker-compose.yaml) file to run the npm commands and
-to start the emulators.
+which are populated with dummy seed data. This ensures that no
+production credentials are needed for local development.
 
-To build the helper image locally, run:
+Before you can start developing, you need to install the dependencies by
+running. Make sure you are using Node.js 16. If you are using Homebrew,
+you can install it with `brew install node@16` and follow
+[this](https://ralphjsmit.com/switch-between-nodejs-versions-homebrew)
+guide to switch between different versions of Node.js if need be.
 
+```shell
+npm install
 ```
-docker compose build
-```
 
-- To start the Firebase emulators, run `make firebase-serve` and open
+Once the dependencies are installed, you can start the different
+environments:
+
+- First, start the Firebase emulator with `npm run firebase:serve` —
+  console dashboard is available at
   [localhost:4000](http://localhost:4000).
-- To start the Admin Tool, run `make admin-serve` and open
+- To start the Admin Tool, run `npm run admin:serve` and open
   [localhost:3000](http://localhost:3000).
-- To start the Website, run `make website-serve` and open
+- To start the Website, run `npm run website:serve` and open
   [localhost:3001](http://localhost:3001).
+- To start the Storybook, run `npm run ui:serve` and open
+  [localhost:6006](http://localhost:6006).
 
-The [Makefile](Makefile) gives you a good overview of the available
-commands. For more information on the development environment see links
-in table above to tool specific Readme and Contributor files.
+The [package.json](package.json) file gives you a good overview of the
+available commands. For more information on the development environment
+see links in table above to tool specific Readme and Contributor files.
 
 ### Data Seed
 
@@ -86,10 +91,8 @@ An initial set of data is imported into the Firebase emulators during
 startup of the Admin Tool. You can add, delete or amend data directly in
 your local Admin Tool ([localhost:3000](http://localhost:3000)) or in
 your local Firestore Admin Interface
-([localhost:4000](http://localhost:4000/firestore/data)).
-
-For more information about adding data, exporting and committing, see
-[Readme](seed/README.md) in _seed_ subfolder.
+([localhost:4000](http://localhost:4000/firestore/data)). After you have
+made changes, you
 
 ### Format Code
 
@@ -165,11 +168,12 @@ be, or how it will look. Thank you:
 
 ### Software & Design Donations
 
-Thanks [Google Nonprofit](https://www.google.com/nonprofits/),
+Thanks to [Google Nonprofit](https://www.google.com/nonprofits/),
 [GitHub](https://socialimpact.github.com),
 [Codemagic](https://codemagic.io/start/), [Linktree](https://linktr.ee),
-[Twilio](https://twilio.org), and [JetBrain](https://www.jetbrains.com).
-Font Unica77 by [Lineto](https://www.lineto.com).
+[Twilio](https://twilio.org), and [JetBrain](https://www.jetbrains.com),
+[1Password](https://1password.com/). Font Unica77 by
+[Lineto](https://www.lineto.com).
 
 ### License
 
