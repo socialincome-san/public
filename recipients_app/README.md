@@ -28,3 +28,7 @@ setup.
 
 1. Github for issue related discussion
 2. Everything else on [Slack](https://social-income.slack.com/home)
+
+## Rebuilding JSON Serialization
+
+flutter pub run build_runner watch --delete-conflicting-outputs

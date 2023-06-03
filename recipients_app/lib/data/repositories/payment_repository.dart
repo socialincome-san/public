@@ -23,15 +23,14 @@ class PaymentRepository {
         .get();
 
     for (final paymentDoc in paymentsDocs.docs) {
-      payments.add(
-        SocialIncomePayment.fromMap(
-          paymentDoc.id,
-          paymentDoc.data(),
-        ),
+      final payment = SocialIncomePayment.fromJson(
+        paymentDoc.data(),
       );
+
+      payments.add(payment.copyWith(id: paymentDoc.id));
     }
 
-    payments.sort((a, b) => a.id.compareTo(b.id));
+    payments.sort((a, b) => a.id!.compareTo(b.id!));
 
     return payments;
   }
@@ -49,7 +48,7 @@ class PaymentRepository {
         .doc(recipientId)
         .collection(paymentCollection)
         .doc(payment.id)
-        .set(updatedPayment.toMap());
+        .set(updatedPayment.toJson());
   }
 
   Future<void> contestPayment({
@@ -67,6 +66,6 @@ class PaymentRepository {
         .doc(recipientId)
         .collection(paymentCollection)
         .doc(payment.id)
-        .set(updatedPayment.toMap());
+        .set(updatedPayment.toJson());
   }
 }

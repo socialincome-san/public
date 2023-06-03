@@ -48,8 +48,10 @@ class UserRepository {
       final payments = await PaymentRepository(firestore: firestore)
           .fetchPayments(recipientId: userSnapshot.id);
 
-      return Recipient.fromMap(userSnapshot.id, userSnapshot.data())
-          .copyWith(payments: payments);
+      return Recipient.fromMap(userSnapshot.data()).copyWith(
+        payments: payments,
+        userId: userSnapshot.id,
+      );
     } else {
       return null;
     }
@@ -83,5 +85,5 @@ class UserRepository {
   Future<void> updateRecipient(Recipient recipient) => firestore
       .collection(recipientCollection)
       .doc(recipient.userId)
-      .update(recipient.toMap());
+      .update(recipient.toJson());
 }
