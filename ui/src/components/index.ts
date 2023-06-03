@@ -5,4 +5,5 @@
 export * from './button/index';
 export * from './combobox/index';
 export * from './select/index';
+export * from './text-field/index';
 export * from './typography/index';
