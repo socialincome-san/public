@@ -18,8 +18,6 @@ export default {
 			file: packageJson.module,
 			format: 'esm',
 			sourcemap: true,
-			minimize: true,
-			modules: true,
 		},
 	],
 	plugins: [
