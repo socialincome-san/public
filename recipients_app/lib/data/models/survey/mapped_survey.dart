@@ -9,7 +9,7 @@ class MappedSurvey extends Equatable {
   final int? daysToOverdue;
   final int? daysAfterOverdue;
 
-  MappedSurvey({
+  const MappedSurvey({
     required this.survey,
     required this.surveyUrl,
     required this.cardStatus,
@@ -18,5 +18,11 @@ class MappedSurvey extends Equatable {
   });
 
   @override
-  List<Object?> get props => [survey, surveyUrl, cardStatus, daysToOverdue];
+  List<Object?> get props => [
+        survey,
+        surveyUrl,
+        cardStatus,
+        daysToOverdue,
+        daysAfterOverdue,
+      ];
 }

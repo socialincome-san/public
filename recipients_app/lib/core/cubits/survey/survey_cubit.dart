@@ -27,25 +27,35 @@ class SurveyCubit extends Cubit<SurveyState> {
   }) : super(const SurveyState());
 
   void getSurveys() async {
-    final surveys =
-        await surveyRepository.fetchSurveys(recipientId: recipient.userId);
-    final mappedSurveys = surveys
-        .where((element) => _shouldShowSurveyCard(element))
-        .map(
-          (survey) => MappedSurvey(
-            survey: survey,
-            surveyUrl: _getSurveyUrl(
-              survey,
-              recipient.userId,
+    try {
+      final surveys =
+          await surveyRepository.fetchSurveys(recipientId: recipient.userId);
+      final mappedSurveys = surveys
+          .where((element) => _shouldShowSurveyCard(element))
+          .map(
+            (survey) => MappedSurvey(
+              survey: survey,
+              surveyUrl: _getSurveyUrl(
+                survey,
+                recipient.userId,
+              ),
+              cardStatus: _getSurveyCardStatus(survey),
+              daysToOverdue: _getDaysToOverdue(survey),
+              daysAfterOverdue: _getDaysAfterOverdue(survey),
             ),
-            cardStatus: _getSurveyCardStatus(survey),
-            daysToOverdue: _getDaysToOverdue(survey),
-            daysAfterOverdue: _getDaysAfterOverdue(survey),
-          ),
-        )
-        .toList();
+          )
+          .toList();
 
-    emit(SurveyState(mappedSurveys: mappedSurveys));
+      emit(
+        SurveyState(
+          status: SurveyStatus.updatedSuccess,
+          mappedSurveys: mappedSurveys,
+        ),
+      );
+    } on Exception catch (ex, stackTrace) {
+      crashReportingRepository.logError(ex, stackTrace);
+      emit(const SurveyState(status: SurveyStatus.updatedFailure));
+    }
   }
 
   String _getSurveyUrl(Survey survey, String recipientId) {
