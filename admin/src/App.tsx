@@ -62,7 +62,6 @@ const onFirebaseInit = () => {
 	}
 	if (import.meta.env.VITE_FB_FUNCTIONS_EMULATOR_HOST && import.meta.env.VITE_FB_FUNCTIONS_EMULATOR_PORT) {
 		const app = getApp();
-		console.log(app);
 		const functions = getFunctions(app);
 		connectFunctionsEmulator(
 			functions,
@@ -70,6 +69,8 @@ const onFirebaseInit = () => {
 			+import.meta.env.VITE_FB_FUNCTIONS_EMULATOR_PORT
 		);
 		console.log('Using functions emulator');
+	} else {
+		console.log('Using production functions');
 	}
 };
 
