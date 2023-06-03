@@ -1,28 +1,17 @@
-import "dart:convert";
-
 import "package:equatable/equatable.dart";
+import "package:json_annotation/json_annotation.dart";
 
+part "phone.g.dart";
+
+@JsonSerializable()
 class Phone extends Equatable {
+  @JsonKey(name: "phone")
   final int phoneNumber;
 
   const Phone(this.phoneNumber);
 
-  factory Phone.fromMap(Map<String, dynamic> map) {
-    return Phone(
-      map["phone"] as int,
-    );
-  }
-
-  factory Phone.fromJson(String source) =>
-      Phone.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  Map<String, dynamic> toMap() {
-    final result = <String, dynamic>{};
-
-    result.addAll({"phone": phoneNumber});
-
-    return result;
-  }
+  factory Phone.fromJson(Map<String, dynamic> json) => _$PhoneFromJson(json);
+  Map<String, dynamic> toJson() => _$PhoneToJson(this);
 
   @override
   List<Object?> get props => [phoneNumber];

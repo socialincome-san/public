@@ -1,11 +1,17 @@
-import "dart:convert";
-
+import "package:app/core/helpers/timestamp_converter.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:equatable/equatable.dart";
+import "package:json_annotation/json_annotation.dart";
 
+part "social_income_payment.g.dart";
+
+@JsonSerializable()
+@TimestampConverter()
 class SocialIncomePayment extends Equatable {
-  final String id;
+  final String? id;
   final int? amount;
+
+  @JsonKey(name: "payment_at")
   final Timestamp? paymentAt;
   final String? currency;
   final PaymentStatus? status;
@@ -20,6 +26,11 @@ class SocialIncomePayment extends Equatable {
     this.comments,
   });
 
+  factory SocialIncomePayment.fromJson(Map<String, dynamic> json) =>
+      _$SocialIncomePaymentFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SocialIncomePaymentToJson(this);
+
   @override
   List<Object?> get props {
     return [
@@ -31,51 +42,6 @@ class SocialIncomePayment extends Equatable {
       comments,
     ];
   }
-
-  Map<String, dynamic> toMap() {
-    final result = <String, dynamic>{};
-
-    if (amount != null) {
-      result.addAll({"amount": amount});
-    }
-    if (paymentAt != null) {
-      result.addAll({"payment_at": paymentAt});
-    }
-    if (comments != null) {
-      result.addAll({"comments": comments});
-    }
-    if (currency != null) {
-      result.addAll({"currency": currency});
-    }
-    if (status != null) {
-      result.addAll({"status": status?.name});
-    }
-
-    return result;
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory SocialIncomePayment.fromMap(String id, Map<String, dynamic> map) {
-    return SocialIncomePayment(
-      id: id,
-      amount: map["amount"] != null ? map["amount"] as int? : null,
-      paymentAt:
-          map["payment_at"] != null ? map["payment_at"] as Timestamp : null,
-      comments: map["comments"] as String?,
-      currency: map["currency"] as String?,
-      status: map["status"] != null
-          ? PaymentStatus.values
-              .singleWhere((element) => element.name == map["status"])
-          : null,
-    );
-  }
-
-  // TODO: do we need this?
-  // factory SocialIncomePayment.fromJson(String source) =>
-  //     SocialIncomePayment.fromMap(
-  //       jsonDecode(source) as Map<String, dynamic>,
-  //     );
 
   SocialIncomePayment copyWith({
     String? id,
@@ -97,10 +63,16 @@ class SocialIncomePayment extends Equatable {
 }
 
 enum PaymentStatus {
+  @JsonValue("created")
   created,
+  @JsonValue("paid")
   paid,
+  @JsonValue("confirmed")
   confirmed,
+  @JsonValue("contested")
   contested,
+  @JsonValue("failed")
   failed,
+  @JsonValue("other")
   other,
 }

@@ -14,9 +14,9 @@ class OrganizationRepository {
     final organization = await organizationRef.withConverter(
       fromFirestore: (snapshot, _) {
         final data = snapshot.data()!;
-        return Organization.fromMap(data);
+        return Organization.fromJson(data);
       },
-      toFirestore: (organization, _) => organization.toMap(),
+      toFirestore: (organization, _) => organization.toJson(),
     );
 
     return (await organization.get()).data();
