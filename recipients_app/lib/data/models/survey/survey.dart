@@ -1,15 +1,22 @@
-import "dart:convert";
-
+import "package:app/core/helpers/timestamp_converter.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
-import "package:collection/collection.dart";
 import "package:equatable/equatable.dart";
+import "package:json_annotation/json_annotation.dart";
 
+part "survey.g.dart";
+
+@JsonSerializable()
+@TimestampConverter()
 class Survey extends Equatable {
-  final String id;
+  final String? id;
   final SurveyServerStatus? status;
+  @JsonKey(name: "due_date_at")
   final Timestamp? dueDateAt;
+  @JsonKey(name: "completed_at")
   final Timestamp? completedAt;
+  @JsonKey(name: "access_email")
   final String? accessEmail;
+  @JsonKey(name: "access_pw")
   final String? accessPassword;
 
   const Survey({
@@ -33,46 +40,9 @@ class Survey extends Equatable {
     ];
   }
 
-  Map<String, dynamic> toMap() {
-    final result = <String, dynamic>{};
+  factory Survey.fromJson(Map<String, dynamic> json) => _$SurveyFromJson(json);
 
-    if (status != null) {
-      result.addAll({"status": status?.firebaseName});
-    }
-    if (dueDateAt != null) {
-      result.addAll({"due_date_at": dueDateAt});
-    }
-    if (completedAt != null) {
-      result.addAll({"completed_at": dueDateAt});
-    }
-    if (accessEmail != null) {
-      result.addAll({"access_email": accessEmail});
-    }
-    if (accessPassword != null) {
-      result.addAll({"access_pw": accessPassword});
-    }
-
-    return result;
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Survey.fromMap(String id, Map<String, dynamic> map) {
-    return Survey(
-      id: id,
-      status: map["status"] != null
-          ? SurveyServerStatus.values.singleWhereOrNull(
-              (element) => element.firebaseName == map["status"],
-            )
-          : null,
-      dueDateAt:
-          map["due_date_at"] != null ? map["due_date_at"] as Timestamp : null,
-      completedAt:
-          map["completed_at"] != null ? map["completed_at"] as Timestamp : null,
-      accessEmail: map["access_email"] as String?,
-      accessPassword: map["access_pw"] as String?,
-    );
-  }
+  Map<String, dynamic> toJson() => _$SurveyToJson(this);
 
   Survey copyWith({
     String? id,
@@ -94,16 +64,16 @@ class Survey extends Equatable {
 }
 
 enum SurveyServerStatus {
-  created(firebaseName: "new"),
-  sent(firebaseName: "sent"),
-  scheduled(firebaseName: "scheduled"),
-  inProgress(firebaseName: "in-progress"),
-  completed(firebaseName: "completed"),
-  missed(firebaseName: "missed");
-
-  const SurveyServerStatus({
-    required this.firebaseName,
-  });
-
-  final String firebaseName;
+  @JsonValue("new")
+  created,
+  @JsonValue("sent")
+  sent,
+  @JsonValue("scheduled")
+  scheduled,
+  @JsonValue("in-progress")
+  inProgress,
+  @JsonValue("completed")
+  completed,
+  @JsonValue("missed")
+  missed;
 }

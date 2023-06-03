@@ -1,6 +1,4 @@
 import "package:app/data/models/models.dart";
-import "package:app/data/models/survey/mapped_survey.dart";
-import "package:app/data/models/survey/survey_card_status.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/data/repositories/survey_repository.dart";
 import "package:equatable/equatable.dart";

@@ -21,8 +21,7 @@ Map<String, dynamic> _$SocialIncomePaymentToJson(
     <String, dynamic>{
       'id': instance.id,
       'amount': instance.amount,
-      'payment_at': _$JsonConverterToJson<dynamic, Timestamp>(
-          instance.paymentAt, const TimestampConverter().toJson),
+      'payment_at': const TimestampConverter().toJson(instance.paymentAt),
       'currency': instance.currency,
       'status': _$PaymentStatusEnumMap[instance.status],
       'comments': instance.comments,
@@ -36,9 +35,3 @@ const _$PaymentStatusEnumMap = {
   PaymentStatus.failed: 'failed',
   PaymentStatus.other: 'other',
 };
-
-Json? _$JsonConverterToJson<Json, Value>(
-  Value? value,
-  Json? Function(Value value) toJson,
-) =>
-    value == null ? null : toJson(value);

@@ -24,15 +24,14 @@ class SurveyRepository {
         .get();
 
     for (final surveyDoc in surveysDocs.docs) {
+      final survey = Survey.fromJson(surveyDoc.data());
+
       surveys.add(
-        Survey.fromMap(
-          surveyDoc.id,
-          surveyDoc.data(),
-        ),
+        survey.copyWith(id: surveyDoc.id)
       );
     }
 
-    surveys.sort((a, b) => a.id.compareTo(b.id));
+    surveys.sort((a, b) => a.id!.compareTo(b.id!));
 
     return surveys;
   }
