@@ -22,9 +22,6 @@ dist
 .env.production.local
 /shared/.env
 
-# Docker
-.user/
-
 # JetBrains
 .idea/
 .ignore/

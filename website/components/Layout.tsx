@@ -28,7 +28,7 @@ export default function Layout({ children, title }: Props) {
 				})}
 			</Head>
 			<header>
-				<Container maxWidth="sm">
+				<Container maxWidth="md">
 					<h1>
 						<Link href="/">{siteName}</Link>
 					</h1>
@@ -36,7 +36,7 @@ export default function Layout({ children, title }: Props) {
 				</Container>
 			</header>
 			<main>
-				<Container maxWidth="sm">
+				<Container maxWidth="md">
 					<h2>{title}</h2>
 					{children}
 				</Container>
