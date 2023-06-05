@@ -19,10 +19,6 @@ export class TwilioIncomingMessageHandler {
 		//We can think whether we want to implement a re-try logic, but there is a risk that we pay a lot of money
 	};
 
-	confirmPaymentWhatsapp = async (WaID: string) => {
-		//To do
-	};
-
 	optInWhatsapp = async (recipientId: string) => {
 		if (recipientId.length > 0) {
 			const recipientDocRef = this.firestoreAdmin.doc<Recipient>(`${RECIPIENT_FIRESTORE_PATH}`, recipientId);
