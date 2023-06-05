@@ -53,7 +53,7 @@ jobs:
       #          umbrella-dir: admin-playwright-report
       #          action: auto
 
-      - name: Add secrets to env file
+      - name: Add secrets to .env file
         working-directory: admin
         run: |
           echo VITE_ADMIN_ALGOLIA_APPLICATION_ID=${{ secrets.REACT_APP_ADMIN_ALGOLIA_APPLICATION_ID }} >> .env
@@ -62,7 +62,7 @@ jobs:
       - name: Build
         run: npm run admin:build
 
-      - name: Deploy Preview
+      - name: Deploy Preview in social-income-staging Firebase Project
         if: github.ref != 'refs/heads/main'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -71,7 +71,7 @@ jobs:
           projectId: social-income-staging
           target: admin
 
-      - name: Deploy Staging
+      - name: Deploy social-income-staging Firebase Project
         if: github.ref == 'refs/heads/main'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
