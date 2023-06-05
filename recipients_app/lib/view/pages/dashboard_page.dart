@@ -64,7 +64,6 @@ class _DashboardView extends StatelessWidget {
         .map<DashboardItem>(
           (survey) => SurveyCardContainer(
             mappedSurvey: survey,
-            surveyCubit: context.read(),
           ),
         )
         .toList();

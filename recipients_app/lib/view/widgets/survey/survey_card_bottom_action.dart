@@ -11,12 +11,10 @@ import "package:intl/intl.dart";
 
 class SurveyCardBottomAction extends StatelessWidget {
   final MappedSurvey mappedSurvey;
-  final SurveyCubit surveyCubit;
 
   const SurveyCardBottomAction({
     super.key,
     required this.mappedSurvey,
-    required this.surveyCubit,
   });
 
   @override
@@ -38,9 +36,7 @@ class SurveyCardBottomAction extends StatelessWidget {
             ),
             if (_shouldShowActionButton(mappedSurvey.cardStatus)) ...[
               ButtonSmall(
-                onPressed: () {
-                  _navigateToSurvey(context, surveyCubit);
-                },
+                onPressed: () => _navigateToSurvey(context),
                 label: "Start Survey",
                 buttonType: ButtonSmallType.outlined,
                 color: foregroundColor,
@@ -64,7 +60,9 @@ class SurveyCardBottomAction extends StatelessWidget {
     );
   }
 
-  void _navigateToSurvey(BuildContext context, SurveyCubit surveyCubit) {
+  void _navigateToSurvey(BuildContext context) {
+    final surveyCubit = context.read<SurveyCubit>();
+
     Navigator.push(
       context,
       MaterialPageRoute(

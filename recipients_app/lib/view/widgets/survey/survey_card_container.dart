@@ -1,4 +1,3 @@
-import "package:app/core/cubits/survey/survey_cubit.dart";
 import "package:app/data/models/survey/mapped_survey.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/dashboard_item.dart";
@@ -7,12 +6,10 @@ import "package:flutter/material.dart";
 
 class SurveyCardContainer extends DashboardItem {
   final MappedSurvey mappedSurvey;
-  final SurveyCubit surveyCubit;
 
   const SurveyCardContainer({
     super.key,
     required this.mappedSurvey,
-    required this.surveyCubit,
   });
 
   @override
@@ -25,14 +22,14 @@ class SurveyCardContainer extends DashboardItem {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Padding(
+          const Padding(
             padding: AppSpacings.a16,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
+                Text(
                   "12 months survey",
                   style: TextStyle(
                     color: Colors.black,
@@ -40,18 +37,18 @@ class SurveyCardContainer extends DashboardItem {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Image(
+                    Image(
                       image: AssetImage("assets/survey-widget.gif"),
                       height: 134,
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
-                const Text(
+                SizedBox(height: 4),
+                Text(
                   "Please take 5 minutes to answer questions and help to improve Social Income",
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -60,13 +57,12 @@ class SurveyCardContainer extends DashboardItem {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
               ],
             ),
           ),
           SurveyCardBottomAction(
             mappedSurvey: mappedSurvey,
-            surveyCubit: surveyCubit,
           ),
         ],
       ),

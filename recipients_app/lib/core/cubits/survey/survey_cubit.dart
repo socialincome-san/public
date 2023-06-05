@@ -24,10 +24,11 @@ class SurveyCubit extends Cubit<SurveyState> {
     required this.crashReportingRepository,
   }) : super(const SurveyState());
 
-  void getSurveys() async {
+  Future<void> getSurveys() async {
     try {
       final surveys =
           await surveyRepository.fetchSurveys(recipientId: recipient.userId);
+
       final mappedSurveys = surveys
           .where((element) => _shouldShowSurveyCard(element))
           .map(
