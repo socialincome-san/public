@@ -1,7 +1,8 @@
 {
   "projects": {
-    "social-income-prod": "social-income-prod",
-    "social-income-staging": "social-income-staging"
+    "default": "social-income-staging",
+    "social-income-staging": "social-income-staging",
+    "social-income-prod": "social-income-prod"
   },
   "targets": {
     "social-income-prod": {
