@@ -62,7 +62,7 @@ jobs:
         run: npm run functions:build
 
       - name: Add secrets to env file
-#        if: github.ref == 'refs/heads/main'
+        #        if: github.ref == 'refs/heads/main'
         working-directory: functions
         run: |
           echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} > .env
@@ -79,9 +79,9 @@ jobs:
           echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
 
       - name: Create service account key
-#        if: github.ref == 'refs/heads/main'
+        #        if: github.ref == 'refs/heads/main'
         run: echo ${{ secrets.FIREBASE_SERVICE_ACCOUNT_STAGING_ADMINSDK_WEJY2 }} | base64 --decode > secret.json
 
       - name: Deploy social-income-staging Firebase Project
-#        if: github.ref == 'refs/heads/main'
+        #        if: github.ref == 'refs/heads/main'
         run: GOOGLE_APPLICATION_CREDENTIALS=secret.json firebase deploy --only functions --project social-income-staging --json
