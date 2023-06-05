@@ -18,7 +18,7 @@ let recipientAppAccess: firebase.firestore.Firestore;
 
 beforeAll(async () => {
 	testEnvironment = await initializeTestEnvironment({
-		projectId: 'social-income-prod',
+		projectId: 'social-income-staging',
 		firestore: {
 			rules: fs.readFileSync(path.resolve(__dirname, '../../firestore.rules'), 'utf8'),
 			host: 'localhost',

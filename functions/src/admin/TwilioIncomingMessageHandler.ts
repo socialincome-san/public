@@ -15,13 +15,49 @@ export class TwilioIncomingMessageHandler {
 		this.firestoreAdmin = firestoreAdmin;
 	}
 
+	defaultWhatsapp = async (WaID: string) => {
+		//We can think whether we want to implement a re-try logic, but there is a risk that we pay a lot of money
+	};
+
+	optInWhatsapp = async (recipientId: string) => {
+		if (recipientId.length > 0) {
+			const recipientDocRef = this.firestoreAdmin.doc<Recipient>(`${RECIPIENT_FIRESTORE_PATH}`, recipientId);
+			try {
+				await recipientDocRef.update({
+					'communication_mobile_phone.whatsapp_activated': true,
+				});
+				console.log('Update successful');
+			} catch (error) {
+				console.log('Something went wrong with updating ');
+			}
+		}
+	};
+
+	findRecipient = async (WaID: string): Promise<string> => {
+		const phoneNumber = parseInt(WaID);
+		let recipientId = '';
+		await this.firestoreAdmin
+			.collection(`${RECIPIENT_FIRESTORE_PATH}`)
+			.where('communication_mobile_phone.phone', '==', phoneNumber)
+			.get()
+			.then((querySnapshot) => {
+				querySnapshot.forEach((doc) => {
+					recipientId = doc.id;
+				});
+			})
+			.catch((error) => {
+				console.log(`No recipient found with ${error}`);
+			});
+		return recipientId;
+	};
+
 	/**
 	 * For local testing purposes we use ngrok to forward webhooks:
 	 * 1. Setup Whatsapp Sandbox in Twilio and activate your personal phone number on https://console.twilio.com/us1/develop/sms/try-it-out/whatsapp-learn
 	 * 2. Install ngrok on your local machine and make an account on ngrok
 	 * 3. Start ngrok locally with ngrok http 5001
 	 * 4. Update on https://console.twilio.com/us1/develop/sms/try-it-out/whatsapp-learn
-	 *    the incoming message field with https://xxxx-yyy-vvv-www-zzz.eu.ngrok.io/social-income-prod/us-central1/twilioIncomingMessage
+	 *    the incoming message field with https://xxxx-yyy-vvv-www-zzz.eu.ngrok.io/social-income-staging/us-central1/twilioIncomingMessage
 	 * 5. Send test whatsapp to your personal phone number, by answering the function below is triggered
 	 */
 	twilioIncomingMessageFunction = functions.https.onRequest(async (request, response) => {
@@ -57,44 +93,4 @@ export class TwilioIncomingMessageHandler {
 		}
 		response.send();
 	});
-
-	defaultWhatsapp = async (WaID: string) => {
-		//We can think whether we want to implement a re-try logic, but there is a risk that we pay a lot of money
-	};
-
-	confirmPaymentWhatsapp = async (WaID: string) => {
-		//To do
-	};
-
-	optInWhatsapp = async (recipientId: string) => {
-		if (recipientId.length > 0) {
-			const recipientDocRef = this.firestoreAdmin.doc<Recipient>(`${RECIPIENT_FIRESTORE_PATH}`, recipientId);
-			try {
-				await recipientDocRef.update({
-					'communication_mobile_phone.whatsapp_activated': true,
-				});
-				console.log('Update successful');
-			} catch (error) {
-				console.log('Something went wrong with updating ');
-			}
-		}
-	};
-
-	findRecipient = async (WaID: string): Promise<string> => {
-		const phoneNumber = parseInt(WaID);
-		let recipientId = '';
-		await this.firestoreAdmin
-			.collection(`${RECIPIENT_FIRESTORE_PATH}`)
-			.where('communication_mobile_phone.phone', '==', phoneNumber)
-			.get()
-			.then((querySnapshot) => {
-				querySnapshot.forEach((doc) => {
-					recipientId = doc.id;
-				});
-			})
-			.catch((error) => {
-				console.log(`No recipient found with ${error}`);
-			});
-		return recipientId;
-	};
 }

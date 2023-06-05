@@ -53,37 +53,30 @@ jobs:
       #          umbrella-dir: admin-playwright-report
       #          action: auto
 
-      - name: Add secrets to env file
+      - name: Add secrets to .env file
         working-directory: admin
         run: |
-          echo VITE_ADMIN_FB_API_KEY=${{ secrets.REACT_APP_ADMIN_FB_API_KEY }} > .env
-          echo VITE_ADMIN_FB_AUTH_DOMAIN=${{ secrets.REACT_APP_ADMIN_FB_AUTH_DOMAIN }} >> .env
-          echo VITE_ADMIN_FB_DATABASE_URL=${{ secrets.REACT_APP_ADMIN_FB_DATABASE_URL }} >> .env
-          echo VITE_ADMIN_FB_MEASUREMENT_ID=${{ secrets.REACT_APP_ADMIN_FB_MEASUREMENT_ID }} >> .env
-          echo VITE_ADMIN_FB_MESSAGING_SENDER_ID=${{ secrets.REACT_APP_ADMIN_FB_MESSAGING_SENDER_ID }} >> .env
-          echo VITE_ADMIN_FB_PROJECT_ID=${{ secrets.REACT_APP_ADMIN_FB_PROJECT_ID }} >> .env
-          echo VITE_ADMIN_FB_STORAGE_BUCKET=${{ secrets.REACT_APP_ADMIN_FB_STORAGE_BUCKET }} >> .env
           echo VITE_ADMIN_ALGOLIA_APPLICATION_ID=${{ secrets.REACT_APP_ADMIN_ALGOLIA_APPLICATION_ID }} >> .env
           echo VITE_ADMIN_ALGOLIA_SEARCH_KEY=${{ secrets.REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY }} >> .env
 
       - name: Build
         run: npm run admin:build
 
-      - name: Deploy Preview
+      - name: Deploy Preview in social-income-staging Firebase Project
         if: github.ref != 'refs/heads/main'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}"
-          projectId: social-income-prod
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}"
+          projectId: social-income-staging
           target: admin
 
-      - name: Deploy Production
+      - name: Deploy social-income-staging Firebase Project
         if: github.ref == 'refs/heads/main'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}"
-          projectId: social-income-prod
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}"
+          projectId: social-income-staging
           target: admin
           channelId: live

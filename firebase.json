@@ -10,23 +10,12 @@
 					"destination": "/index.html"
 				}
 			]
-		},
-		{
-			"target": "website",
-			"public": "website/build",
-			"ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-			"rewrites": [
-				{
-					"source": "**",
-					"destination": "/index.html"
-				}
-			]
 		}
 	],
 	"functions": {
 		"ignore": ["**/*.log", "scripts/", "src/", "tests/"],
 		"source": "functions",
-		"runtime": "nodejs16"
+		"runtime": "nodejs18"
 	},
 	"storage": {
 		"rules": "storage.rules"

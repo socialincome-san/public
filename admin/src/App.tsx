@@ -1,8 +1,5 @@
 import algoliasearch from 'algoliasearch';
 
-import { browserSessionPersistence, connectAuthEmulator, getAuth } from 'firebase/auth';
-import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
-import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import {
 	Authenticator,
 	CMSView,
@@ -12,8 +9,6 @@ import {
 } from 'firecms';
 import { AdminUser, recipientSurveys } from '../../shared/src/types';
 
-import { getApp } from 'firebase/app';
-import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { adminsCollection } from './collections/Admins';
 import { contributorOrganisationsCollection } from './collections/ContributorOrganisations';
 import { newsletterSubscribersCollection } from './collections/NewsletterSubscribers';
@@ -24,65 +19,9 @@ import { buildRecipientsPaymentsCollection } from './collections/recipients/Reci
 import { buildRecipientsSurveysCollection } from './collections/recipients/RecipientsSurveys';
 import { createPendingSurveyColumn, createSurveyColumn } from './collections/surveys/Surveys';
 import { usersCollection } from './collections/Users';
+import { getFirebaseConfig, onFirebaseInit } from './init';
 import { PaymentsConfirmationView } from './views/PaymentsConfirmationView';
 import { ScriptsView } from './views/ScriptsView';
-
-const onFirebaseInit = () => {
-	const auth = getAuth();
-	if (import.meta.env.VITE_PLAYWRIGHT_TESTS === 'true') {
-		console.log('Running Playwright tests, using session storage for persistence');
-		auth.setPersistence(browserSessionPersistence);
-	}
-	if (import.meta.env.VITE_ADMIN_FB_AUTH_EMULATOR_URL) {
-		connectAuthEmulator(auth, import.meta.env.VITE_ADMIN_FB_AUTH_EMULATOR_URL, { disableWarnings: true });
-		console.log('Using auth emulator');
-	} else {
-		console.log('Using production auth');
-	}
-	if (import.meta.env.VITE_ADMIN_FB_FIRESTORE_EMULATOR_HOST && import.meta.env.VITE_ADMIN_FB_FIRESTORE_EMULATOR_PORT) {
-		connectFirestoreEmulator(
-			getFirestore(),
-			import.meta.env.VITE_ADMIN_FB_FIRESTORE_EMULATOR_HOST,
-			+import.meta.env.VITE_ADMIN_FB_FIRESTORE_EMULATOR_PORT
-		);
-		console.log(import.meta.env.VITE_ADMIN_FB_FIRESTORE_EMULATOR_PORT);
-		console.log('Using firestore emulator');
-	} else {
-		console.log('Using production firestore');
-	}
-	if (import.meta.env.VITE_ADMIN_FB_STORAGE_EMULATOR_HOST && import.meta.env.VITE_ADMIN_FB_STORAGE_EMULATOR_PORT) {
-		connectStorageEmulator(
-			getStorage(),
-			import.meta.env.VITE_ADMIN_FB_STORAGE_EMULATOR_HOST,
-			+import.meta.env.VITE_ADMIN_FB_STORAGE_EMULATOR_PORT
-		);
-		console.log('Using storage emulator');
-	} else {
-		console.log('Using production storage');
-	}
-	if (import.meta.env.VITE_FB_FUNCTIONS_EMULATOR_HOST && import.meta.env.VITE_FB_FUNCTIONS_EMULATOR_PORT) {
-		const app = getApp();
-		const functions = getFunctions(app);
-		connectFunctionsEmulator(
-			functions,
-			import.meta.env.VITE_FB_FUNCTIONS_EMULATOR_HOST,
-			+import.meta.env.VITE_FB_FUNCTIONS_EMULATOR_PORT
-		);
-		console.log('Using functions emulator');
-	} else {
-		console.log('Using production functions');
-	}
-};
-
-const firebaseConfig = {
-	apiKey: import.meta.env.VITE_ADMIN_FB_API_KEY,
-	authDomain: import.meta.env.VITE_ADMIN_FB_AUTH_DOMAIN,
-	databaseURL: import.meta.env.VITE_ADMIN_FB_DATABASE_URL,
-	projectId: import.meta.env.VITE_ADMIN_FB_PROJECT_ID,
-	storageBucket: import.meta.env.VITE_ADMIN_FB_STORAGE_BUCKET,
-	messagingSenderId: import.meta.env.VITE_ADMIN_FB_MESSAGING_SENDER_ID,
-	measurementId: import.meta.env.VITE_ADMIN_FB_MEASUREMENT_ID,
-};
 
 const algoliaIndex = (indexName: string) => {
 	return import.meta.env.VITE_ADMIN_ALGOLIA_APPLICATION_ID && import.meta.env.VITE_ADMIN_ALGOLIA_SEARCH_KEY
@@ -143,12 +82,12 @@ export default function App() {
 	];
 
 	const myAuthenticator: Authenticator = async ({ user, dataSource, authController }) => {
-		const result = await dataSource.fetchEntity<AdminUser>({
+		const adminUserEntity = await dataSource.fetchEntity<AdminUser>({
 			path: adminsCollection.path,
 			collection: adminsCollection,
 			entityId: user?.email ? user.email : '',
 		});
-		authController.setExtra({ isGlobalAdmin: Boolean(result?.values?.is_global_admin) });
+		authController.setExtra({ isGlobalAdmin: Boolean(adminUserEntity?.values?.is_global_admin) });
 		return true;
 	};
 
@@ -157,7 +96,7 @@ export default function App() {
 			authentication={myAuthenticator}
 			collections={collections}
 			dateTimeFormat={'dd/MM/yyyy'}
-			firebaseConfig={firebaseConfig}
+			firebaseConfig={getFirebaseConfig()}
 			locale={'enUS'}
 			logo={'logo.svg'}
 			logoDark={'logo.svg'}

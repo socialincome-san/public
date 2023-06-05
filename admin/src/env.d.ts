@@ -1,5 +1,6 @@
 interface ImportMeta {
 	readonly env: {
+		MODE: 'development' | 'production';
 		VITE_ADMIN_FB_AUTH_EMULATOR_URL: string;
 		VITE_ADMIN_FB_FIRESTORE_EMULATOR_HOST: string;
 		VITE_ADMIN_FB_FIRESTORE_EMULATOR_PORT: string;
