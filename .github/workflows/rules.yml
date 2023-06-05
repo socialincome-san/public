@@ -34,4 +34,4 @@ jobs:
 
       - name: Deploy social-income-staging Firebase Project
         if: github.ref == 'refs/heads/main'
-        run: GOOGLE_APPLICATION_CREDENTIALS=secret.json firebase deploy --only firestore:rules --project social-income-staging --json
+        run: GOOGLE_APPLICATION_CREDENTIALS=secret.json firebase deploy --only firestore:rules --project social-income-staging
