@@ -1,18 +1,20 @@
 {
   "projects": {
-    "social-income-prod": "social-income-prod"
+    "social-income-prod": "social-income-prod",
+    "social-income-staging": "social-income-staging"
   },
   "targets": {
     "social-income-prod": {
       "hosting": {
         "admin": [
-          "admin-social-income-prod"
-        ],
-        "survey": [
-          "social-income-survey"
-        ],
-        "website": [
-          "social-income-prod"
+          "si-admin-production"
+        ]
+      }
+    },
+    "social-income-staging": {
+      "hosting": {
+        "admin": [
+          "si-admin-staging"
         ]
       }
     }
