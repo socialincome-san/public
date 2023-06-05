@@ -62,7 +62,7 @@ jobs:
         run: npm run functions:build
 
       - name: Add secrets to env file
-        if: github.ref == 'refs/heads/main'
+#        if: github.ref == 'refs/heads/main'
         working-directory: functions
         run: |
           echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} > .env
