@@ -80,10 +80,8 @@ jobs:
 
       - name: Create service account key
 #        if: github.ref == 'refs/heads/main'
-        run: echo ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON_SOCIAL_INCOME_STAGING }} | base64 --decode > secret.json
+        run: echo ${{ secrets.FIREBASE_SERVICE_ACCOUNT_STAGING_ADMINSDK_WEJY2 }} | base64 --decode > secret.json
 
       - name: Deploy social-income-staging Firebase Project
-        env:
-          FIREBASE_AUTH_EMULATOR_HOST: localhost:9099
 #        if: github.ref == 'refs/heads/main'
         run: GOOGLE_APPLICATION_CREDENTIALS=secret.json firebase deploy --only functions --project social-income-staging --json
