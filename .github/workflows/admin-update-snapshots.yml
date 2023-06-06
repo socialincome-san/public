@@ -28,11 +28,10 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-      # Checkout and do a deep fetch to load all commit IDs
-      - uses: actions/checkout@v3
+      - name: Initialize Repository
+        uses: ./.github/workflows/actions/init
         with:
-          fetch-depth: 0 # Load all commits
-          token: ${{ secrets.WORKFLOW_TOKEN }}
+          installDependencies: "false"
 
       # Get the SHA and branch name of the comment's pull request
       # We must use the GitHub API to retrieve these information because they're
@@ -47,19 +46,20 @@ jobs:
             | jq -r '.head.sha," ",.head.ref');
           echo "::set-output name=sha::$(echo $sha_and_branch | cut -d " " -f 1)";
           echo "::set-output name=branch::$(echo $sha_and_branch | cut -d " " -f 2)"
+
       # Checkout the comment's branch
       - name: Fetch Branch
         run: git fetch
+
       - name: Checkout Branch
         run: git checkout ${{ steps.get-branch-and-sha.outputs.branch }}
-      - name: Install & Setup Firebase Emulator Suite
-        run: |
-          npm -g install firebase-tools@11.29.1 && \
-          firebase setup:emulators:firestore
+
       - name: Install Dependencies
         run: npm ci
+
       - name: Run e2e Tests
         run: npm run admin:test:playwright:update
+
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:

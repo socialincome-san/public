@@ -24,17 +24,8 @@ jobs:
     if: needs.check_applicability.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
-
-      - name: Install & Setup Firebase Emulator Suite
-        run: |
-          npm -g install firebase-tools@11.29.1 && \
-          firebase setup:emulators:firestore && \
-          firebase setup:emulators:ui
-
-      - name: Install Dependencies
-        run: npm ci
+      - name: Initialize Repository
+        uses: ./.github/workflows/actions/init
 
       - name: Add test secrets to env file
         working-directory: functions
@@ -62,7 +53,7 @@ jobs:
         run: npm run functions:build
 
       - name: Add secrets to env file
-        if: github.ref == 'refs/heads/main'
+        #        if: github.ref == 'refs/heads/main'
         working-directory: functions
         run: |
           echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} > .env
@@ -79,9 +70,12 @@ jobs:
           echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
 
       - name: Create service account key
-        if: github.ref == 'refs/heads/main'
-        run: echo ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }} > secret.json
+        #        if: github.ref == 'refs/heads/main'
+        # "%s" is used to prevent expanding new line characters (\n) in the secret
+        run: |
+          printf "%s" "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}" | base64
+          printf "%s" "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}" > secret.json
 
       - name: Deploy social-income-staging Firebase Project
-        if: github.ref == 'refs/heads/main'
-        run: GOOGLE_APPLICATION_CREDENTIALS=secret.json firebase deploy --only functions --project social-income-staging --json
+        #        if: github.ref == 'refs/heads/main'
+        run: GOOGLE_APPLICATION_CREDENTIALS=secret.json firebase deploy --only functions --project social-income-staging

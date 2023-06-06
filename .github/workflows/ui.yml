@@ -31,12 +31,15 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: "npm"
+
       - name: Install Dependencies
         run: npm --workspace=@socialincome/ui ci
+
       - name: Set Storybook ENV variables
         run: |
           echo "$PR_NUMBER"
@@ -45,8 +48,10 @@ jobs:
           else
             echo "STORYBOOK_PATH_PREFIX=/public/" >>"$GITHUB_ENV"
           fi
+
       - name: Build UI Documentation
         run: npm run ui:build
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
@@ -64,10 +69,12 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+
       - uses: actions/download-artifact@v3
         with:
           name: storybook-static
           path: ${{ env.DIST_PATH }}
+
       - name: Deploy preview to GitHub Pages
         uses: rossjrw/pr-preview-action@v1
         with:
@@ -94,10 +101,12 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+
       - uses: actions/download-artifact@v3
         with:
           name: storybook-static
           path: ${{ env.DIST_PATH }}
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:

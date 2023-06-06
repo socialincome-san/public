@@ -22,16 +22,15 @@ jobs:
     if: needs.check_applicability.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
-
-      - name: Install firebase-tools
-        run: npm -g install firebase-tools@11.29.1
+      - name: Initialize Repository
+        uses: ./.github/workflows/actions/init
+        with:
+          installDependencies: "false"
 
       - name: Create service account key
         if: github.ref == 'refs/heads/main'
-        run: echo ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }} > secret.json
+        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}" > secret.json
 
-      - name: Deploy to Firebase
+      - name: Deploy social-income-staging Firebase Project
         if: github.ref == 'refs/heads/main'
-        run: GOOGLE_APPLICATION_CREDENTIALS=secret.json firebase deploy --only firestore:rules --project social-income-staging --json
+        run: GOOGLE_APPLICATION_CREDENTIALS=secret.json firebase deploy --only firestore:rules --project social-income-staging
