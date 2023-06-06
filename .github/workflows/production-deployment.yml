@@ -31,7 +31,6 @@ jobs:
           echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
 
       - name: Create credentials JSON file
-        if: github.ref == 'refs/heads/main'
         uses: jsdaniell/create-json@v1.2.2
         with:
           name: credentials.json
