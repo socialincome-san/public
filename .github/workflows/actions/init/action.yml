@@ -1,0 +1,36 @@
+name: "Initialize Repository"
+description: "Checks out repository, sets up Node.js, plus installs firebase-tools and dependencies"
+
+inputs:
+  installDependencies:
+    description: "If dependencies will be installed or not"
+    required: false
+    default: "true"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # Load all commits
+        token: ${{ secrets.WORKFLOW_TOKEN }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: "npm"
+
+    - name: Install and set up firebase-tools
+      shell: bash
+      run: |
+        npm -g install firebase-tools@11.29.1 && \
+        firebase setup:emulators:firestore && \
+        firebase setup:emulators:storage && \
+        firebase setup:emulators:ui
+
+    - name: Install dependencies
+      if: ${{ inputs.installDependencies }} == "true"
+      shell: bash
+      run: npm ci
