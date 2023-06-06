@@ -2,7 +2,7 @@ name: Deploy production environment
 on:
   push:
     tags:
-      - 'release-*'
+      - "release-*"
 jobs:
   deploy:
     name: Deploy production environment
