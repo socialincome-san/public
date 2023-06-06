@@ -19,7 +19,7 @@ jobs:
           skip_after_successful_duplicate: "false"
 
   test_deploy:
-    name: Test Shared Module
+    name: Test shared code
     needs: check_applicability
     if: needs.check_applicability.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
