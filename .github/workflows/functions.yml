@@ -72,13 +72,13 @@ jobs:
           echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_SENDER_PHONE }} >> .env
           echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
 
-      - name: Create service account key
+      - name: Create credentials JSON file
         #        if: github.ref == 'refs/heads/main'
-        # "%s" is used to prevent expanding new line characters (\n) in the secret
-        run: |
-          printf "%s" "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}" | base64
-          printf "%s" "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}" > secret.json
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: credentials.json
+          json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
       - name: Deploy social-income-staging Firebase Project
         #        if: github.ref == 'refs/heads/main'
-        run: GOOGLE_APPLICATION_CREDENTIALS=secret.json firebase deploy --only functions --project social-income-staging
+        run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only functions --project social-income-staging

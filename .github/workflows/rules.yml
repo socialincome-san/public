@@ -30,10 +30,13 @@ jobs:
         with:
           installDependencies: "false"
 
-      - name: Create service account key
+      - name: Create credentials JSON file
         if: github.ref == 'refs/heads/main'
-        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}" > secret.json
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: credentials.json
+          json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
       - name: Deploy social-income-staging Firebase Project
         if: github.ref == 'refs/heads/main'
-        run: GOOGLE_APPLICATION_CREDENTIALS=secret.json firebase deploy --only firestore:rules --project social-income-staging
+        run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only firestore:rules --project social-income-staging
