@@ -27,6 +27,11 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "npm"
+
       - name: Install & Setup Firebase Emulator Suite
         run: |
           npm -g install firebase-tools@11.29.1 && \
@@ -65,6 +70,8 @@ jobs:
         #        if: github.ref == 'refs/heads/main'
         working-directory: functions
         run: |
+          node --version
+          npm --version
           echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} > .env
           echo POSTFINANCE_EMAIL_PASSWORD=${{ secrets.POSTFINANCE_EMAIL_PASSWORD }} >> .env
           echo STRIPE_API_READ_KEY=${{ secrets.STRIPE_API_READ_KEY }} >> .env
