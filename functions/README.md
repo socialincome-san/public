@@ -39,5 +39,6 @@ npm run functions:serve
 
 ## Deployment
 
-When a PR is merged into the `main` branch, the code is automatically deployed to the staging environment. See
-the [Github Actions](../.github/workflows) for more details.
+When a PR is merged into the `main` branch, the code is automatically
+deployed to the staging environment. See the
+[Github Actions](../.github/workflows) for more details.

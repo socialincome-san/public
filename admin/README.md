@@ -23,6 +23,8 @@ against it.
 
 ## Deployment
 
-Commits to open PRs are automatically deployed as previews on to Firebase (runs on staging Firestore).
-When a PR is merged into the `main` branch, the code is automatically deployed to the staging environment. See
-the [Github Actions](../.github/workflows) for more details.
+Commits to open PRs are automatically deployed as previews on to
+Firebase (runs on staging Firestore). When a PR is merged into the
+`main` branch, the code is automatically deployed to the staging
+environment. See the [Github Actions](../.github/workflows) for more
+details.

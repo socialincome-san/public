@@ -18,7 +18,7 @@ Finding a good issue: `↗`
 ### You can contribute to all three tools that run Social Income:
 
 |                  |                                   Admin Tool                                    |                                     Website                                      |                                     Mobile App                                      |
-|------------------|:-------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------:|
+| ---------------- | :-----------------------------------------------------------------------------: | :------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------: |
 | **Purpose**      |              Staff manages contributors, recipients and payments.               |                     Raising donations and inform the public.                     |                         User manages payments and surveys.                          |
 | **Instructions** |                            [Readme](admin/README.md)                            |                           [Readme](website/README.md)                            | [Readme](recipients_app/README.md) / [Contributing](recipients_app/CONTRIBUTING.md) |
 | **Live**         |            [admin.socialincome.org](https://admin.socialincome.org)             |                  [socialincome.org](https://socialincome.org)\*                  |                                 App store links tba                                 |
@@ -26,11 +26,10 @@ Finding a good issue: `↗`
 | **Localhost**    | [localhost:3000](http://localhost:3000) [localhost:4000](http://localhost:4000) |                     [localhost:3001](http://localhost:3001)                      |                                          –                                          |
 
 The website and admin tool use cloud functions
-([Readme](functions/README.md). You can also develop UI
-components with Tailwind CSS independent of the website
-([Readme](ui/README.md) / [Contributing](ui/CONTRIBUTING.md)). The
-components are all collected in our
-[Storybook](https://socialincome-san.github.io/public/).
+([Readme](functions/README.md). You can also develop UI components with
+Tailwind CSS independent of the website ([Readme](ui/README.md) /
+[Contributing](ui/CONTRIBUTING.md)). The components are all collected in
+our [Storybook](https://socialincome-san.github.io/public/).
 
 \* The current website socialincome.org is still on a private repo. We
 are rebuilding the site with NextJS, Tailwind CSS and React on this
