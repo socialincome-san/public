@@ -84,7 +84,7 @@ can do it like this:
 Within the GitHub PR checks, we will run `check-translations` which
 returns an error if the jsons files are not in sync with the code.
 
-## Run Tests
+## Run tests
 
 ### Unit Tests
 

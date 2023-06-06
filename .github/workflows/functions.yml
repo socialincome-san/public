@@ -7,7 +7,7 @@ on:
 
 jobs:
   check_applicability:
-    name: Check Applicability
+    name: Check applicability
     runs-on: ubuntu-latest
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
@@ -19,22 +19,16 @@ jobs:
           skip_after_successful_duplicate: "false"
 
   test_deploy:
-    name: Test & Deploy Functions
+    name: Test and deploy functions
     needs: check_applicability
     if: needs.check_applicability.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install & Setup Firebase Emulator Suite
-        run: |
-          npm -g install firebase-tools@11.29.1 && \
-          firebase setup:emulators:firestore && \
-          firebase setup:emulators:ui
-
-      - name: Install Dependencies
-        run: npm ci
+      - name: Initialize repository
+        uses: ./.github/workflows/actions/init
 
       - name: Add test secrets to env file
         working-directory: functions
@@ -43,10 +37,10 @@ jobs:
           echo TWILIO_TOKEN=${{ secrets.TWILIO_TEST_TOKEN }} >> .env
           echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_TEST_SENDER_PHONE }} >> .env
 
-      - name: Run Tests
+      - name: Run tests
         run: npm run functions:test
 
-      - name: Run Playwright Tests
+      - name: Run Playwright tests
         run: npm run functions:test:playwright
 
       - name: Deploy Playwright Report to GitHub Pages
@@ -61,7 +55,7 @@ jobs:
       - name: Build
         run: npm run functions:build
 
-      - name: Add secrets to env file
+      - name: Add secrets to functions/.env file
         if: github.ref == 'refs/heads/main'
         working-directory: functions
         run: |
@@ -78,10 +72,13 @@ jobs:
           echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_SENDER_PHONE }} >> .env
           echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
 
-      - name: Create service account key
+      - name: Create credentials JSON file
         if: github.ref == 'refs/heads/main'
-        run: echo ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }} > secret.json
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: credentials.json
+          json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
       - name: Deploy social-income-staging Firebase Project
         if: github.ref == 'refs/heads/main'
-        run: GOOGLE_APPLICATION_CREDENTIALS=secret.json firebase deploy --only functions --project social-income-staging --json
+        run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only functions --project social-income-staging

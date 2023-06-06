@@ -21,7 +21,6 @@
 		"functions:build": "$npm_execpath --workspace=@socialincome/functions run build",
 		"functions:deploy": "$npm_execpath --workspace=@socialincome/functions run deploy",
 		"functions:serve": "$npm_execpath --workspace=@socialincome/functions run serve",
-		"functions:serve:watch": "$npm_execpath --workspace=@socialincome/functions run serve:watch",
 		"functions:test": "$npm_execpath --workspace=@socialincome/functions run test",
 		"functions:test:playwright": "$npm_execpath --workspace=@socialincome/functions run test:playwright",
 		"functions:test:playwright:update": "$npm_execpath --workspace=@socialincome/functions run test:playwright:update",

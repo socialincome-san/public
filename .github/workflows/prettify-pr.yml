@@ -10,7 +10,7 @@ jobs:
       run:
         working-directory: admin
     steps:
-      - name: Checkout Repo
+      - name: Checkout repository
         uses: actions/checkout@v3
         with:
           # Make sure the actual branch is checked out when running on pull requests, required for prettify
@@ -18,7 +18,7 @@ jobs:
           # Make sure the value of GITHUB_TOKEN will not be persisted in repo's config
           persist-credentials: false
 
-      - name: Prettify Code
+      - name: Prettify code
         uses: creyD/prettier_action@v4.3
         with:
           prettier_options: "--write ./"
