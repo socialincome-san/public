@@ -107,6 +107,11 @@ When a PR is merged into the `main` branch, the code is automatically
 deployed to the staging environment. See the
 [Github Actions](./.github/workflows) for more details.
 
+Production deployments are done manually through GitHub releases. A release that begins with `release-` will trigger
+a production deployment. The release should include the date of the release in the format `YYYY-MM-DD`. For example, a
+release for a production deployment on Feb 27th, 2021 would be `release-2021-02-27`. A second release on the same day
+would be `release-2021-02-27.2`.
+
 ### Backup
 
 We have a
