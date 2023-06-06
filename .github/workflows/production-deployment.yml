@@ -1,0 +1,50 @@
+name: Deploy production environment
+on:
+  push:
+    tags:
+      - 'release-*'
+jobs:
+  deploy:
+    name: Deploy production environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Initialize Repository
+        uses: ./.github/workflows/actions/init
+
+      - name: Add secrets to functions/.env file
+        working-directory: functions
+        run: |
+          echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} > .env
+          echo POSTFINANCE_EMAIL_PASSWORD=${{ secrets.POSTFINANCE_EMAIL_PASSWORD }} >> .env
+          echo STRIPE_API_READ_KEY=${{ secrets.STRIPE_API_READ_KEY }} >> .env
+          echo STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }} >> .env
+          echo NOTIFICATION_EMAIL_USER=${{ secrets.NOTIFICATION_EMAIL_USER }} >> .env
+          echo NOTIFICATION_EMAIL_PASSWORD=${{ secrets.NOTIFICATION_EMAIL_PASSWORD }} >> .env
+          echo NOTIFICATION_EMAIL_USER_KERRIN=${{ secrets.NOTIFICATION_EMAIL_USER_KERRIN }} >> .env
+          echo NOTIFICATION_EMAIL_PASSWORD_KERRIN=${{ secrets.NOTIFICATION_EMAIL_PASSWORD_KERRIN }} >> .env
+          echo TWILIO_SID=${{ secrets.TWILIO_SID }} >> .env
+          echo TWILIO_TOKEN=${{ secrets.TWILIO_TOKEN }} >> .env
+          echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_SENDER_PHONE }} >> .env
+          echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
+
+      - name: Create credentials JSON file
+        if: github.ref == 'refs/heads/main'
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: credentials.json
+          json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}
+
+      - name: Deploy admin
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}"
+          projectId: social-income-prod
+          target: admin
+          channelId: live
+
+      - name: Deploy functions
+        run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only functions --project social-income-prod

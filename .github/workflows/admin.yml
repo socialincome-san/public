@@ -7,7 +7,7 @@ on:
 
 jobs:
   check_applicability:
-    name: Check Applicability
+    name: Check applicability
     runs-on: ubuntu-latest
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
@@ -19,7 +19,7 @@ jobs:
           skip_after_successful_duplicate: "false"
 
   test_deploy:
-    name: Test & Deploy Admin
+    name: Test and deploy admin
     needs: check_applicability
     if: needs.check_applicability.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
@@ -55,7 +55,7 @@ jobs:
       - name: Build
         run: npm run admin:build
 
-      - name: Deploy Preview in social-income-staging Firebase Project
+      - name: Deploy preview in social-income-staging Firebase project
         if: github.ref != 'refs/heads/main'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -64,7 +64,7 @@ jobs:
           projectId: social-income-staging
           target: admin
 
-      - name: Deploy social-income-staging Firebase Project
+      - name: Deploy social-income-staging Firebase project
         if: github.ref == 'refs/heads/main'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:

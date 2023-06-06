@@ -34,10 +34,10 @@ jobs:
           fetch-depth: 0 # Load all commits
           token: ${{ secrets.WORKFLOW_TOKEN }}
 
-      - uses: actions/setup-node@v3
+      - name: Initialize repository
+        uses: ./.github/workflows/actions/init
         with:
-          node-version: 18
-          cache: "npm"
+          installDependencies: "false"
 
       # Get the SHA and branch name of the comment's pull request
       # We must use the GitHub API to retrieve these information because they're

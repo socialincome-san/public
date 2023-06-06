@@ -34,7 +34,7 @@ jobs:
           fetch-depth: 0 # Load all commits
           token: ${{ secrets.WORKFLOW_TOKEN }}
 
-      - name: Initialize Repository
+      - name: Initialize repository
         uses: ./.github/workflows/actions/init
         with:
           installDependencies: "false"
@@ -42,7 +42,7 @@ jobs:
       # Get the SHA and branch name of the comment's pull request
       # We must use the GitHub API to retrieve these information because they're
       # not accessible within workflows triggered by "issue_comment"
-      - name: Get SHA & Branch Name
+      - name: Get SHA & branch name
         id: get-branch-and-sha
         run: |
           sha_and_branch=$(\
@@ -54,16 +54,16 @@ jobs:
           echo "::set-output name=branch::$(echo $sha_and_branch | cut -d " " -f 2)"
 
       # Checkout the comment's branch
-      - name: Fetch Branch
+      - name: Fetch branch
         run: git fetch
 
-      - name: Checkout Branch
+      - name: Checkout branch
         run: git checkout ${{ steps.get-branch-and-sha.outputs.branch }}
 
       - name: Install Dependencies
         run: npm ci
 
-      - name: Run e2e Tests
+      - name: Run e2e tests
         run: npm run functions:test:playwright:update
 
       - name: Commit changes

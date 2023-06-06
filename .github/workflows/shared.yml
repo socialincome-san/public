@@ -7,7 +7,7 @@ on:
 
 jobs:
   check_applicability:
-    name: Check Applicability
+    name: Check applicability
     runs-on: ubuntu-latest
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}

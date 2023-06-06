@@ -7,7 +7,7 @@ on:
 
 jobs:
   check_applicability:
-    name: Check Applicability
+    name: Check applicability
     runs-on: ubuntu-latest
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
@@ -55,8 +55,8 @@ jobs:
       - name: Build
         run: npm run functions:build
 
-      - name: Add secrets to env file
-        #        if: github.ref == 'refs/heads/main'
+      - name: Add secrets to functions/.env file
+        if: github.ref == 'refs/heads/main'
         working-directory: functions
         run: |
           echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} > .env
@@ -73,12 +73,12 @@ jobs:
           echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
 
       - name: Create credentials JSON file
-        #        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         uses: jsdaniell/create-json@v1.2.2
         with:
           name: credentials.json
           json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
       - name: Deploy social-income-staging Firebase Project
-        #        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only functions --project social-income-staging
