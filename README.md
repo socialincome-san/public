@@ -17,17 +17,16 @@ Finding a good issue: `↗`
 
 ### You can contribute to all three tools that run Social Income:
 
-|                  |                                   Admin Tool                                    |                                Website                                |                                     Mobile App                                      |
-| ---------------- | :-----------------------------------------------------------------------------: | :-------------------------------------------------------------------: | :---------------------------------------------------------------------------------: |
-| **Purpose**      |              Staff manages contributors, recipients and payments.               |               Raising donations and inform the public.                |                         User manages payments and surveys.                          |
-| **Instructions** |        [Readme](admin/README.md) / [Contributing](admin/CONTRIBUTING.md)        | [Readme](website/README.md) / [Contributing](website/CONTRIBUTING.md) | [Readme](recipients_app/README.md) / [Contributing](recipients_app/CONTRIBUTING.md) |
-| **Live**         |            [admin.socialincome.org](https://admin.socialincome.org)             |            [socialincome.org](https://socialincome.org)\*             |                                 App store links tba                                 |
-| **Localhost**    | [localhost:3000](http://localhost:3000) [localhost:4000](http://localhost:4000) |                [localhost:3001](http://localhost:3001)                |                                          –                                          |
-| **Commands**     |                               `make admin-serve`                                |                         `make website-serve`                          |                                  building flavors                                   |
+|                  |                                   Admin Tool                                    |                                     Website                                      |                                     Mobile App                                      |
+|------------------|:-------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------:|
+| **Purpose**      |              Staff manages contributors, recipients and payments.               |                     Raising donations and inform the public.                     |                         User manages payments and surveys.                          |
+| **Instructions** |                            [Readme](admin/README.md)                            |                           [Readme](website/README.md)                            | [Readme](recipients_app/README.md) / [Contributing](recipients_app/CONTRIBUTING.md) |
+| **Live**         |            [admin.socialincome.org](https://admin.socialincome.org)             |                  [socialincome.org](https://socialincome.org)\*                  |                                 App store links tba                                 |
+| **Staging**      |    [staging-admin.socialincome.org](https://staging-admin.socialincome.org)     | [https://public-dusky-eight.vercel.app/](https://public-dusky-eight.vercel.app/) |                                          –                                          |
+| **Localhost**    | [localhost:3000](http://localhost:3000) [localhost:4000](http://localhost:4000) |                     [localhost:3001](http://localhost:3001)                      |                                          –                                          |
 
 The website and admin tool use cloud functions
-([Readme](functions/README.md) /
-[Contributing](functions/CONTRIBUTING.md)). You can also develop UI
+([Readme](functions/README.md). You can also develop UI
 components with Tailwind CSS independent of the website
 ([Readme](ui/README.md) / [Contributing](ui/CONTRIBUTING.md)). The
 components are all collected in our
@@ -92,17 +91,22 @@ startup of the Admin Tool. You can add, delete or amend data directly in
 your local Admin Tool ([localhost:3000](http://localhost:3000)) or in
 your local Firestore Admin Interface
 ([localhost:4000](http://localhost:4000/firestore/data)). After you have
-made changes, you
+made changes, you can export the data to the seed folder with
+`npm run firebase:export`.
 
 ### Format Code
 
 We are using [Prettier](https://prettier.io) to format the code:
-`make format-code`.
+
+```shell
+npm run format-code
+```
 
 ### Deployment
 
-Testing and deployment of the services is handled automatically through
-the [GitHub actions](.github/workflows).
+When a PR is merged into the `main` branch, the code is automatically
+deployed to the staging environment. See the
+[Github Actions](./.github/workflows) for more details.
 
 ### Backup
 

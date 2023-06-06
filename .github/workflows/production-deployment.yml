@@ -8,10 +8,10 @@ jobs:
     name: Deploy production environment
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Initialize Repository
+      - name: Initialize repository
         uses: ./.github/workflows/actions/init
 
       - name: Add secrets to functions/.env file

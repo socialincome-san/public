@@ -8,9 +8,7 @@
 	"scripts": {
 		"build": "tsc && npm run build:sync-files",
 		"build:sync-files": "rsync -av --delete ../shared/assets dist/shared && rsync -av --delete ../shared/locales dist/shared && rsync -av --delete ../shared/templates dist/shared",
-		"build:watch": "npm run build:sync-files  && tsc --watch",
-		"serve": "npm run build:watch",
-		"serve:watch": "npm run build -- --watch & firebase emulators:start --project social-income-staging --config ../firebase.json --import ../seed",
+		"serve": "npm run build:sync-files  && tsc --watch",
 		"test": "firebase emulators:exec --only firestore,functions,storage --project social-income-staging --config ../firebase.json --import ../seed 'npm run test:app'",
 		"test:app": "jest --forceExit --roots tests/jest/ src/",
 		"test:playwright": "firebase emulators:exec --project social-income-staging --only firestore --config ../firebase.json --import ../seed  'npx playwright install --with-deps && playwright test'",

@@ -8,12 +8,12 @@ firebase functions.
 
 For the basic setup, please refer to the main [README](../README.md)
 
-## Run Tests
+## Run tests
 
 Run the following command to start the emulators and run the unit tests
 
-```
-make functions-test
+```shell
+npm run functions:test
 ```
 
 ### End-to-End Tests
@@ -33,13 +33,11 @@ To update the baseline snapshots post a comment with
 To serve https endpoints (e.g. webhooks) locally run
 
 ```shell
-make functions-serve
+npm run firebase:serve
+npm run functions:serve
 ```
 
 ## Deployment
 
-Deployment is handled automatically through the
-[Functions Github Worklow](../.github/workflows/functions.yml).
-
-It takes care to test the PRs and deploy to production after them
-merging into main.
+When a PR is merged into the `main` branch, the code is automatically deployed to the staging environment. See
+the [Github Actions](../.github/workflows) for more details.

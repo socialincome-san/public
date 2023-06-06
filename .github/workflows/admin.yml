@@ -27,14 +27,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Initialize Repository
+      - name: Initialize repository
         uses: ./.github/workflows/actions/init
 
-      - name: Run Tests
+      - name: Run tests
         run: npm run admin:test
 
       # TODO make playwright tests stable
-      #      - name: Run Playwright Tests
+      #      - name: Run Playwright tests
       #        run: npm run admin:test:playwright
       #
       #      - name: Deploy Playwright Report to GitHub Pages
@@ -46,7 +46,7 @@ jobs:
       #          umbrella-dir: admin-playwright-report
       #          action: auto
 
-      - name: Add secrets to .env file
+      - name: Add secrets to admin/.env file
         working-directory: admin
         run: |
           echo VITE_ADMIN_ALGOLIA_APPLICATION_ID=${{ secrets.REACT_APP_ADMIN_ALGOLIA_APPLICATION_ID }} >> .env

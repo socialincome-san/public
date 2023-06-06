@@ -32,7 +32,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Initialize Repository
+      - name: Initialize repository
         uses: ./.github/workflows/actions/init
 
       - name: Set Storybook env variables
