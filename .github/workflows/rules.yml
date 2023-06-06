@@ -22,16 +22,10 @@ jobs:
     if: needs.check_applicability.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
+      - name: Initialize Repository
+        uses: ./.github/workflows/actions/init
         with:
-          node-version: 18
-          cache: "npm"
-
-      - name: Install firebase-tools
-        run: npm -g install firebase-tools@11.29.1
+          installDependencies: "false"
 
       - name: Create service account key
         if: github.ref == 'refs/heads/main'
