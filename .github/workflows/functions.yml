@@ -70,8 +70,6 @@ jobs:
         #        if: github.ref == 'refs/heads/main'
         working-directory: functions
         run: |
-          node --version
-          npm --version
           echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} > .env
           echo POSTFINANCE_EMAIL_PASSWORD=${{ secrets.POSTFINANCE_EMAIL_PASSWORD }} >> .env
           echo STRIPE_API_READ_KEY=${{ secrets.STRIPE_API_READ_KEY }} >> .env
