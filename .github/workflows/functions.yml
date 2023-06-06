@@ -86,7 +86,7 @@ jobs:
       - name: Create service account key
         #        if: github.ref == 'refs/heads/main'
         # "%s" is used to prevent expanding new line characters (\n) in the secret
-        run:  printf "%s" "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}" > secret.json
+        run: printf "%s" "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}" > secret.json
 
       - name: Deploy social-income-staging Firebase Project
         #        if: github.ref == 'refs/heads/main'
