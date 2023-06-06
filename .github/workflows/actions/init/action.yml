@@ -1,5 +1,5 @@
 name: "Initialize Repository"
-description: "Checks out repository, sets up Node.js, plus installs firebase-tools and dependencies"
+description: "Set up Node.js, plus installs firebase-tools and dependencies"
 
 inputs:
   installDependencies:
@@ -10,12 +10,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0 # Load all commits
-        token: ${{ secrets.WORKFLOW_TOKEN }}
-
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:

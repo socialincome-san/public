@@ -4,7 +4,7 @@ on: pull_request
 
 jobs:
   analyze:
-    name: Security Checks
+    name: Security checks
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -28,5 +28,5 @@ jobs:
       - name: Autobuild
         uses: github/codeql-action/autobuild@v2
 
-      - name: Perform CodeQL Analysis
+      - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v2
