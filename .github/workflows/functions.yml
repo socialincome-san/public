@@ -19,7 +19,7 @@ jobs:
           skip_after_successful_duplicate: "false"
 
   test_deploy:
-    name: Test & Deploy Functions
+    name: Test and deploy functions
     needs: check_applicability
     if: needs.check_applicability.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
