@@ -85,7 +85,7 @@ jobs:
 
       - name: Create service account key
         #        if: github.ref == 'refs/heads/main'
-        run: echo ${{ secrets.FIREBASE_SERVICE_ACCOUNT_STAGING_ADMINSDK_WEJY2 }} | base64 --decode > secret.json
+        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}" > secret.json
 
       - name: Deploy social-income-staging Firebase Project
         #        if: github.ref == 'refs/heads/main'
