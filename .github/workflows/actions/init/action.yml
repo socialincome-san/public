@@ -10,6 +10,9 @@ inputs:
     description: The Firebase project to deploy to (social-income-staging|social-income-prod)
     required: true
     default: social-income-staging
+  firebaseServiceAccountJSON:
+    description: The credentials JSON value of the Firebase service account
+    required: false
 
 runs:
   using: composite
@@ -34,16 +37,10 @@ runs:
       shell: bash
       run: npm ci
 
-    - name: Create staging credentials JSON file
-      if: inputs.project == 'social-income-staging'
+    - name: Create credentials JSON file
+      if: inputs.firebaseServiceAccountJSON
       uses: jsdaniell/create-json@v1.2.2
       with:
         name: credentials.json
-        json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
+        json: ${{ inputs.firebaseServiceAccountJSON }}
 
-    - name: Create production credentials JSON file
-      if: inputs.project == 'social-income-prod'
-      uses: jsdaniell/create-json@v1.2.2
-      with:
-        name: credentials.json
-        json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}
