@@ -18,6 +18,7 @@ jobs:
         with:
           paths: '["admin/**", "shared/**", ".github/workflows/admin.yml"]'
           skip_after_successful_duplicate: "false"
+          do_not_skip: '["push"]'
 
   test:
     name: Test admin
@@ -34,7 +35,7 @@ jobs:
       - name: Run tests
         run: npm run admin:test
 
-      # TODO: Make playwright tests stable
+      # TODO: Make Playwright tests stable
       #      - name: Run Playwright tests
       #        run: npm run admin:test:playwright
       #

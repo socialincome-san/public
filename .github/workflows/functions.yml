@@ -17,6 +17,7 @@ jobs:
         with:
           paths: '["functions/**", "shared/**", ".github/workflows/functions.yml"]'
           skip_after_successful_duplicate: "false"
+          do_not_skip: '["push"]'
 
   test:
     name: Test functions
