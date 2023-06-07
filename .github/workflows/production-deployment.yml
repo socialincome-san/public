@@ -19,3 +19,11 @@ jobs:
     with:
       component: functions
       project: social-income-prod
+
+  deploy-rules:
+    name: Deploy rules to social-income-prod Firebase Project
+    uses: ./.github/workflows/deployment.yml
+    secrets: inherit
+    with:
+      component: rules
+      project: social-income-prod
