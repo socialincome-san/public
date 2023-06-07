@@ -54,4 +54,3 @@ jobs:
     with:
       component: admin
       project: social-income-staging
-
