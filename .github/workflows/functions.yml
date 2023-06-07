@@ -53,7 +53,7 @@ jobs:
           action: auto
 
   deploy:
-    name: Deploy functions to social-income-staging Firebase Project
+    name: Deploy functions on Firebase (social-income-staging)
     needs: test
     if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/deployment.yml

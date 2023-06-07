@@ -48,7 +48,7 @@ jobs:
       #          action: auto
 
   deploy:
-    name: Deploy admin to social-income-staging Firebase Project
+    name: Deploy admin on Firebase (social-income-staging)
     needs: test
     uses: ./.github/workflows/deployment.yml
     secrets: inherit

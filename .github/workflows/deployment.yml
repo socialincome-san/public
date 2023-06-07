@@ -35,7 +35,7 @@ jobs:
         shell: bash
         run: npm run admin:build
 
-      - name: Deploy preview to social-income-staging Firebase project
+      - name: Deploy preview on Firebase (social-income-staging)
         if: ${{ inputs.project == 'social-income-staging' && github.ref != 'refs/heads/main' }}
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -44,7 +44,7 @@ jobs:
           projectId: social-income-staging
           target: admin
 
-      - name: Deploy to social-income-staging Firebase project
+      - name: Deploy on Firebase (social-income-staging)
         if: ${{ inputs.project == 'social-income-staging' && github.ref == 'refs/heads/main' }}
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -54,7 +54,7 @@ jobs:
           target: admin
           channelId: live
 
-      - name: Deploy to social-income-prod Firebase project
+      - name: Deploy on Firebase (social-income-prod)
         if: inputs.project == 'social-income-prod'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -110,6 +110,6 @@ jobs:
         shell: bash
         run: npm run functions:build
 
-      - name: Deploy to ${{ inputs.project }} Firebase project
+      - name: Deploy on Firebase (${{ inputs.project }})
         shell: bash
         run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only functions --project ${{ inputs.project }}

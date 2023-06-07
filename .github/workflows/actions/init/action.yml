@@ -28,4 +28,4 @@ runs:
     - name: Install dependencies
       if: ${{ inputs.installDependencies }} == "true"
       shell: bash
-      run: npm install
+      run: npm ci
