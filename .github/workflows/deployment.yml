@@ -14,7 +14,7 @@ jobs:
   deploy-admin:
     name: Deploy admin to ${{ inputs.project }} Firebase project
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.component }} == "admin"
+    if: ${{ inputs.component == "admin" }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -34,7 +34,7 @@ jobs:
         run: npm run admin:build
 
       - name: Deploy preview to social-income-staging Firebase project
-        if: ${{ inputs.project }} == "social-income-staging" && github.ref != 'refs/heads/main'
+        if: ${{ inputs.project == "social-income-staging" }} && github.ref != 'refs/heads/main'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
@@ -43,7 +43,7 @@ jobs:
           target: admin
 
       - name: Deploy to social-income-staging Firebase project
-        if: ${{ inputs.project }} == "social-income-staging" && github.ref == 'refs/heads/main'
+        if: inputs.project == "social-income-staging" && github.ref == 'refs/heads/main'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
@@ -65,7 +65,7 @@ jobs:
   deploy-functions:
     name: Deploy functions to ${{ inputs.project }} Firebase project
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.component }} == "functions"
+    if: inputs.component == "functions"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
