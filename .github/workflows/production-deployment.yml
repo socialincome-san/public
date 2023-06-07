@@ -2,7 +2,7 @@ name: Deploy production environment
 on:
   push:
     tags:
-      - "release-*"
+      - release-*
 jobs:
   deploy-admin:
     name: Deploy admin to social-income-prod Firebase Project
