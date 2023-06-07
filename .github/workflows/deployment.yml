@@ -5,12 +5,12 @@ on:
     inputs:
       component:
         description: The component to deploy (admin|functions|rules)
-        required: true
         type: string
+        required: true
       project:
         description: The Firebase project to deploy to (social-income-staging|social-income-prod)
-        required: true
         type: string
+        required: true
 
 jobs:
   deploy-admin:
@@ -25,6 +25,7 @@ jobs:
         uses: ./.github/workflows/actions/init
         with:
           project: ${{ inputs.project }}
+          firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
       - name: Add secrets to admin/.env file
         working-directory: admin
@@ -76,6 +77,7 @@ jobs:
         uses: ./.github/workflows/actions/init
         with:
           project: ${{ inputs.project }}
+          firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
       - name: Add secrets to functions/.env file
         working-directory: functions
@@ -112,6 +114,7 @@ jobs:
         with:
           installDependencies: "false"
           project: ${{ inputs.project }}
+          firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
       - name: Deploy on Firebase (${{ inputs.project }})
         run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only firestore:rules --project ${{ inputs.project }}
