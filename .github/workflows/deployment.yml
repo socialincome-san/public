@@ -12,8 +12,9 @@ on:
         type: string
 jobs:
   deploy-admin:
+    name: Deploy admin to ${{ inputs.project }} Firebase project
     runs-on: ubuntu-latest
-    if: ${{ inputs.component }} == "admin"
+    if: ${{ github.event.inputs.component }} == "admin"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -62,8 +63,9 @@ jobs:
           channelId: live
 
   deploy-functions:
+    name: Deploy functions to ${{ inputs.project }} Firebase project
     runs-on: ubuntu-latest
-    if: ${{ inputs.component }} == "functions"
+    if: ${{ github.event.inputs.component }} == "functions"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
