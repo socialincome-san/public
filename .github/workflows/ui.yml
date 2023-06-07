@@ -12,7 +12,7 @@ env:
 
 jobs:
   check_applicability:
-    name: Check Applicability
+    name: Check applicability
     runs-on: ubuntu-latest
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
@@ -29,15 +29,13 @@ jobs:
     needs: check_applicability
     if: needs.check_applicability.outputs.should_skip != 'true'
     steps:
-      - name: Checkout Repo
+      - name: Checkout repository
         uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: "npm"
-      - name: Install Dependencies
-        run: npm --workspace=@socialincome/ui ci
-      - name: Set Storybook ENV variables
+
+      - name: Initialize repository
+        uses: ./.github/workflows/actions/init
+
+      - name: Set Storybook env variables
         run: |
           echo "$PR_NUMBER"
           if [[ $PR_NUMBER ]]; then
@@ -45,8 +43,10 @@ jobs:
           else
             echo "STORYBOOK_PATH_PREFIX=/public/" >>"$GITHUB_ENV"
           fi
-      - name: Build UI Documentation
+
+      - name: Build UI documentation
         run: npm run ui:build
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
@@ -56,18 +56,20 @@ jobs:
           retention-days: 1
 
   deploy-preview:
-    name: Deploy UI Preview
+    name: Deploy UI preview
     runs-on: ubuntu-latest
-    if: "${{ github.repository_owner == 'socialincome-san' && github.event.number }}"
+    if: github.event.number # only run on PRs
     concurrency: ui-preview-deployment-${{ github.ref }}
     needs: build
     steps:
-      - name: Checkout Repo
+      - name: Checkout repository
         uses: actions/checkout@v3
+
       - uses: actions/download-artifact@v3
         with:
           name: storybook-static
           path: ${{ env.DIST_PATH }}
+
       - name: Deploy preview to GitHub Pages
         uses: rossjrw/pr-preview-action@v1
         with:
@@ -80,7 +82,7 @@ jobs:
     name: Deploy UI
     runs-on: ubuntu-latest
     concurrency: ui-deployment-main
-    if: "${{ github.ref == 'refs/heads/main' && github.repository_owner == 'socialincome-san' }}"
+    if: github.ref == 'refs/heads/main'
     needs: build
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
@@ -92,12 +94,14 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout Repo
+      - name: Checkout repository
         uses: actions/checkout@v3
+
       - uses: actions/download-artifact@v3
         with:
           name: storybook-static
           path: ${{ env.DIST_PATH }}
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:

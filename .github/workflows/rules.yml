@@ -6,7 +6,7 @@ on:
 
 jobs:
   check_applicability:
-    name: Check Applicability
+    name: Check applicability
     runs-on: ubuntu-latest
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
@@ -22,12 +22,21 @@ jobs:
     if: needs.check_applicability.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install firebase-tools
-        run: npm -g install firebase-tools@11.29.1
+      - name: Initialize repository
+        uses: ./.github/workflows/actions/init
+        with:
+          installDependencies: "false"
 
-      - name: Deploy to Firebase
+      - name: Create credentials JSON file
         if: github.ref == 'refs/heads/main'
-        run: firebase deploy --only storage,firestore:rules --token ${{ secrets.FIREBASE_TOKEN }} --project social-income-prod
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: credentials.json
+          json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
+
+      - name: Deploy social-income-staging Firebase Project
+        if: github.ref == 'refs/heads/main'
+        run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only firestore:rules --project social-income-staging
