@@ -18,6 +18,7 @@ jobs:
         with:
           paths: '["admin/**", "shared/**", ".github/workflows/admin.yml"]'
           skip_after_successful_duplicate: "false"
+          do_not_skip: '["push"]'
 
   test:
     name: Test admin

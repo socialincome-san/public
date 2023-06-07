@@ -5,20 +5,8 @@ on:
       - main
 
 jobs:
-  check_applicability:
-    name: Check applicability
-    runs-on: ubuntu-latest
-    outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
-    steps:
-      - id: skip_check
-        uses: fkirc/skip-duplicate-actions@v5
-        with:
-          paths: '["firestore.rules", "storage.rules", ".github/workflows/rules.yml"]'
-
   deploy:
     name: Deploy admin on Firebase (social-income-staging)
-    if: github.ref == 'refs/heads/main'
     uses: ./.github/workflows/deployment.yml
     secrets: inherit
     with:
