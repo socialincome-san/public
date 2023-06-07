@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       component:
-        description: The component to deploy (admin|functions)
+        description: The component to deploy (admin|functions|rules)
         required: true
         type: string
       project:
@@ -23,16 +23,16 @@ jobs:
 
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
+        with:
+          project: ${{ inputs.project }}
 
       - name: Add secrets to admin/.env file
-        shell: bash
         working-directory: admin
         run: |
           echo VITE_ADMIN_ALGOLIA_APPLICATION_ID=${{ secrets.REACT_APP_ADMIN_ALGOLIA_APPLICATION_ID }} >> .env
           echo VITE_ADMIN_ALGOLIA_SEARCH_KEY=${{ secrets.REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY }} >> .env
 
       - name: Build admin
-        shell: bash
         run: npm run admin:build
 
       - name: Deploy preview on Firebase (social-income-staging)
@@ -74,10 +74,11 @@ jobs:
 
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
+        with:
+          project: ${{ inputs.project }}
 
       - name: Add secrets to functions/.env file
         working-directory: functions
-        shell: bash
         run: |
           echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} > .env
           echo POSTFINANCE_EMAIL_PASSWORD=${{ secrets.POSTFINANCE_EMAIL_PASSWORD }} >> .env
@@ -92,24 +93,25 @@ jobs:
           echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_SENDER_PHONE }} >> .env
           echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
 
-      - name: Create staging credentials JSON file
-        if: inputs.project == 'social-income-staging'
-        uses: jsdaniell/create-json@v1.2.2
-        with:
-          name: credentials.json
-          json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
-
-      - name: Create production credentials JSON file
-        if: inputs.project == 'social-income-prod'
-        uses: jsdaniell/create-json@v1.2.2
-        with:
-          name: credentials.json
-          json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}
-
       - name: Build functions
-        shell: bash
         run: npm run functions:build
 
       - name: Deploy on Firebase (${{ inputs.project }})
-        shell: bash
         run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only functions --project ${{ inputs.project }}
+
+  deploy-rules:
+    name: Deploy rules on Firebase
+    runs-on: ubuntu-latest
+    if: inputs.component == 'rules'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Initialize repository
+        uses: ./.github/workflows/actions/init
+        with:
+          installDependencies: "false"
+          project: ${{ inputs.project }}
+
+      - name: Deploy on Firebase (${{ inputs.project }})
+        run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only firestore:rules --project ${{ inputs.project }}

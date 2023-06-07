@@ -6,6 +6,10 @@ inputs:
     description: If dependencies will be installed or not
     required: false
     default: "true"
+  project:
+    description: The Firebase project to deploy to (social-income-staging|social-income-prod)
+    required: true
+    default: social-income-staging
 
 runs:
   using: composite
@@ -26,6 +30,20 @@ runs:
         firebase setup:emulators:ui
 
     - name: Install dependencies
-      if: ${{ inputs.installDependencies }} == "true"
+      if: inputs.installDependencies == 'true'
       shell: bash
       run: npm ci
+
+    - name: Create staging credentials JSON file
+      if: inputs.project == 'social-income-staging'
+      uses: jsdaniell/create-json@v1.2.2
+      with:
+        name: credentials.json
+        json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
+
+    - name: Create production credentials JSON file
+      if: inputs.project == 'social-income-prod'
+      uses: jsdaniell/create-json@v1.2.2
+      with:
+        name: credentials.json
+        json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}
