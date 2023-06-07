@@ -16,7 +16,7 @@ jobs:
       - id: skip_check
         uses: fkirc/skip-duplicate-actions@v5
         with:
-          paths: '["admin/**", "shared/**", ".github/workflows/admin.yml"]'
+          paths: '["admin/**", "shared/**", "seed/**", ".github/workflows/admin.yml"]'
           skip_after_successful_duplicate: "false"
           do_not_skip: '["push"]'
 
