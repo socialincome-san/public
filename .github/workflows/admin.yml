@@ -35,7 +35,7 @@ jobs:
       - name: Run tests
         run: npm run admin:test
 
-      # TODO: Make playwright tests stable
+      # TODO: Make Playwright tests stable
       #      - name: Run Playwright tests
       #        run: npm run admin:test:playwright
       #
