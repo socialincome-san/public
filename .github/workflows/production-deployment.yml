@@ -36,6 +36,11 @@ jobs:
           name: credentials.json
           json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}
 
+      - name: Build
+        run: |
+          npm run admin:build
+          npm run functions:build
+
       - name: Deploy admin
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
