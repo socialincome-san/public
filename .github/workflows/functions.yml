@@ -55,6 +55,7 @@ jobs:
       - name: Deploy functions to social-income-staging Firebase Project
         if: github.ref == 'refs/heads/main'
         uses: ./.github/workflows/actions/deploy
+        secrets: inherit
         with:
           component: functions
           project: social-income-staging

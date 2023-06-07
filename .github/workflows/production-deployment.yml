@@ -16,12 +16,14 @@ jobs:
 
       - name: Deploy admin to social-income-prod Firebase project
         uses: ./.github/workflows/actions/deploy
+        secrets: inherit
         with:
           component: admin
           project: social-income-prod
 
       - name: Deploy functions to social-income-prod Firebase project
         uses: ./.github/workflows/actions/deploy
+        secrets: inherit
         with:
           component: functions
           project: social-income-prod

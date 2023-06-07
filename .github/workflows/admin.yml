@@ -48,6 +48,7 @@ jobs:
 
       - name: Deploy admin to social-income-staging Firebase Project
         uses: ./.github/workflows/actions/deploy
+        secrets: inherit
         with:
           component: admin
           project: social-income-staging
