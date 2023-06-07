@@ -1,0 +1,117 @@
+name: Deployment
+
+on:
+  workflow_call:
+    inputs:
+      component:
+        description: The component to deploy (admin|functions|rules)
+        required: true
+        type: string
+      project:
+        description: The Firebase project to deploy to (social-income-staging|social-income-prod)
+        required: true
+        type: string
+
+jobs:
+  deploy-admin:
+    name: Deploy admin on Firebase
+    runs-on: ubuntu-latest
+    if: inputs.component == 'admin'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Initialize repository
+        uses: ./.github/workflows/actions/init
+        with:
+          project: ${{ inputs.project }}
+
+      - name: Add secrets to admin/.env file
+        working-directory: admin
+        run: |
+          echo VITE_ADMIN_ALGOLIA_APPLICATION_ID=${{ secrets.REACT_APP_ADMIN_ALGOLIA_APPLICATION_ID }} >> .env
+          echo VITE_ADMIN_ALGOLIA_SEARCH_KEY=${{ secrets.REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY }} >> .env
+
+      - name: Build admin
+        run: npm run admin:build
+
+      - name: Deploy preview on Firebase (social-income-staging)
+        if: ${{ inputs.project == 'social-income-staging' && github.ref != 'refs/heads/main' }}
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}"
+          projectId: social-income-staging
+          target: admin
+
+      - name: Deploy on Firebase (social-income-staging)
+        if: ${{ inputs.project == 'social-income-staging' && github.ref == 'refs/heads/main' }}
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}"
+          projectId: social-income-staging
+          target: admin
+          channelId: live
+
+      - name: Deploy on Firebase (social-income-prod)
+        if: inputs.project == 'social-income-prod'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD }}"
+          projectId: social-income-prod
+          target: admin
+          channelId: live
+
+  deploy-functions:
+    name: Deploy functions on Firebase
+    runs-on: ubuntu-latest
+    if: inputs.component == 'functions'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Initialize repository
+        uses: ./.github/workflows/actions/init
+        with:
+          project: ${{ inputs.project }}
+
+      - name: Add secrets to functions/.env file
+        working-directory: functions
+        run: |
+          echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} > .env
+          echo POSTFINANCE_EMAIL_PASSWORD=${{ secrets.POSTFINANCE_EMAIL_PASSWORD }} >> .env
+          echo STRIPE_API_READ_KEY=${{ secrets.STRIPE_API_READ_KEY }} >> .env
+          echo STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }} >> .env
+          echo NOTIFICATION_EMAIL_USER=${{ secrets.NOTIFICATION_EMAIL_USER }} >> .env
+          echo NOTIFICATION_EMAIL_PASSWORD=${{ secrets.NOTIFICATION_EMAIL_PASSWORD }} >> .env
+          echo NOTIFICATION_EMAIL_USER_KERRIN=${{ secrets.NOTIFICATION_EMAIL_USER_KERRIN }} >> .env
+          echo NOTIFICATION_EMAIL_PASSWORD_KERRIN=${{ secrets.NOTIFICATION_EMAIL_PASSWORD_KERRIN }} >> .env
+          echo TWILIO_SID=${{ secrets.TWILIO_SID }} >> .env
+          echo TWILIO_TOKEN=${{ secrets.TWILIO_TOKEN }} >> .env
+          echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_SENDER_PHONE }} >> .env
+          echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
+
+      - name: Build functions
+        run: npm run functions:build
+
+      - name: Deploy on Firebase (${{ inputs.project }})
+        run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only functions --project ${{ inputs.project }}
+
+  deploy-rules:
+    name: Deploy rules on Firebase
+    runs-on: ubuntu-latest
+    if: inputs.component == 'rules'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Initialize repository
+        uses: ./.github/workflows/actions/init
+        with:
+          installDependencies: "false"
+          project: ${{ inputs.project }}
+
+      - name: Deploy on Firebase (${{ inputs.project }})
+        run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only firestore:rules --project ${{ inputs.project }}
