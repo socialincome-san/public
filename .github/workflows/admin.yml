@@ -33,7 +33,7 @@ jobs:
       - name: Run tests
         run: npm run admin:test
 
-      # TODO make playwright tests stable
+      # TODO: Make playwright tests stable
       #      - name: Run Playwright tests
       #        run: npm run admin:test:playwright
       #
@@ -46,30 +46,8 @@ jobs:
       #          umbrella-dir: admin-playwright-report
       #          action: auto
 
-      - name: Add secrets to admin/.env file
-        working-directory: admin
-        run: |
-          echo VITE_ADMIN_ALGOLIA_APPLICATION_ID=${{ secrets.REACT_APP_ADMIN_ALGOLIA_APPLICATION_ID }} >> .env
-          echo VITE_ADMIN_ALGOLIA_SEARCH_KEY=${{ secrets.REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY }} >> .env
-
-      - name: Build
-        run: npm run admin:build
-
-      - name: Deploy preview in social-income-staging Firebase project
-        if: github.ref != 'refs/heads/main'
-        uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Deploy admin to social-income-staging Firebase Project
+        uses: ./.github/workflows/actions/deploy
         with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}"
-          projectId: social-income-staging
-          target: admin
-
-      - name: Deploy social-income-staging Firebase project
-        if: github.ref == 'refs/heads/main'
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}"
-          projectId: social-income-staging
-          target: admin
-          channelId: live
+          component: admin
+          project: social-income-staging
