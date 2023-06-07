@@ -43,7 +43,7 @@ jobs:
           target: admin
 
       - name: Deploy to social-income-staging Firebase project
-        if: inputs.project == "social-income-staging" && github.ref == 'refs/heads/main'
+        if: ${{ inputs.project == "social-income-staging" }} && github.ref == 'refs/heads/main'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
@@ -53,7 +53,7 @@ jobs:
           channelId: live
 
       - name: Deploy to social-income-prod Firebase project
-        if: ${{ inputs.project }} == "social-income-prod"
+        if: ${{ inputs.project == "social-income-prod" }}
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
@@ -65,7 +65,7 @@ jobs:
   deploy-functions:
     name: Deploy functions to ${{ inputs.project }} Firebase project
     runs-on: ubuntu-latest
-    if: inputs.component == "functions"
+    if: ${{ inputs.component == "functions" }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -91,14 +91,14 @@ jobs:
           echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
 
       - name: Create staging credentials JSON file
-        if: ${{ inputs.project }} == "social-income-staging"
+        if: ${{ inputs.project == "social-income-staging" }}
         uses: jsdaniell/create-json@v1.2.2
         with:
           name: credentials.json
           json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
       - name: Create production credentials JSON file
-        if: ${{ inputs.project }} == "social-income-prod"
+        if: ${{ inputs.project == "social-income-prod" }}
         uses: jsdaniell/create-json@v1.2.2
         with:
           name: credentials.json
