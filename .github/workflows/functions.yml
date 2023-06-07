@@ -18,8 +18,8 @@ jobs:
           paths: '["functions/**", "shared/**", ".github/workflows/functions.yml"]'
           skip_after_successful_duplicate: "false"
 
-  test_deploy:
-    name: Test and deploy functions
+  test:
+    name: Test functions
     needs: check_applicability
     if: needs.check_applicability.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
@@ -52,10 +52,12 @@ jobs:
           umbrella-dir: functions-playwright-report
           action: auto
 
-      - name: Deploy functions to social-income-staging Firebase Project
-        if: github.ref == 'refs/heads/main'
-        uses: ./.github/workflows/actions/deploy
-        secrets: inherit
-        with:
-          component: functions
-          project: social-income-staging
+  deploy:
+    name: Deploy functions to social-income-staging Firebase Project
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/deployment.yml
+    secrets: inherit
+    with:
+      component: functions
+      project: social-income-staging

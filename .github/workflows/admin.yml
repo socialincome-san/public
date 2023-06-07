@@ -18,8 +18,8 @@ jobs:
           paths: '["admin/**", "shared/**", ".github/workflows/admin.yml"]'
           skip_after_successful_duplicate: "false"
 
-  test_deploy:
-    name: Test and deploy admin
+  test:
+    name: Test admin
     needs: check_applicability
     if: needs.check_applicability.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
@@ -46,9 +46,12 @@ jobs:
       #          umbrella-dir: admin-playwright-report
       #          action: auto
 
-      - name: Deploy admin to social-income-staging Firebase Project
-        uses: ./.github/workflows/actions/deploy
-        secrets: inherit
-        with:
-          component: admin
-          project: social-income-staging
+  deploy:
+    name: Deploy admin to social-income-staging Firebase Project
+    needs: test
+    uses: ./.github/workflows/deployment.yml
+    secrets: inherit
+    with:
+      component: admin
+      project: social-income-staging
+
