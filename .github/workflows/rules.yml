@@ -5,38 +5,10 @@ on:
       - main
 
 jobs:
-  check_applicability:
-    name: Check applicability
-    runs-on: ubuntu-latest
-    outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip }}
-    steps:
-      - id: skip_check
-        uses: fkirc/skip-duplicate-actions@v5
-        with:
-          paths: '["firestore.rules", "storage.rules", ".github/workflows/rules.yml"]'
-
   deploy:
-    name: Deploy Firestore Rules
-    needs: check_applicability
-    if: needs.check_applicability.outputs.should_skip != 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Initialize repository
-        uses: ./.github/workflows/actions/init
-        with:
-          installDependencies: "false"
-
-      - name: Create credentials JSON file
-        if: github.ref == 'refs/heads/main'
-        uses: jsdaniell/create-json@v1.2.2
-        with:
-          name: credentials.json
-          json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
-
-      - name: Deploy social-income-staging Firebase Project
-        if: github.ref == 'refs/heads/main'
-        run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only firestore:rules --project social-income-staging
+    name: Deploy admin on Firebase (social-income-staging)
+    uses: ./.github/workflows/deployment.yml
+    secrets: inherit
+    with:
+      component: rules
+      project: social-income-staging

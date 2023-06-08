@@ -1,4 +1,5 @@
 name: Admin
+
 on:
   pull_request:
   push:
@@ -17,9 +18,10 @@ jobs:
         with:
           paths: '["admin/**", "shared/**", ".github/workflows/admin.yml"]'
           skip_after_successful_duplicate: "false"
+          do_not_skip: '["push"]'
 
-  test_deploy:
-    name: Test and deploy admin
+  test:
+    name: Test admin
     needs: check_applicability
     if: needs.check_applicability.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
@@ -33,7 +35,7 @@ jobs:
       - name: Run tests
         run: npm run admin:test
 
-      # TODO make playwright tests stable
+      # TODO: Make Playwright tests stable
       #      - name: Run Playwright tests
       #        run: npm run admin:test:playwright
       #
@@ -46,30 +48,11 @@ jobs:
       #          umbrella-dir: admin-playwright-report
       #          action: auto
 
-      - name: Add secrets to admin/.env file
-        working-directory: admin
-        run: |
-          echo VITE_ADMIN_ALGOLIA_APPLICATION_ID=${{ secrets.REACT_APP_ADMIN_ALGOLIA_APPLICATION_ID }} >> .env
-          echo VITE_ADMIN_ALGOLIA_SEARCH_KEY=${{ secrets.REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY }} >> .env
-
-      - name: Build
-        run: npm run admin:build
-
-      - name: Deploy preview in social-income-staging Firebase project
-        if: github.ref != 'refs/heads/main'
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}"
-          projectId: social-income-staging
-          target: admin
-
-      - name: Deploy social-income-staging Firebase project
-        if: github.ref == 'refs/heads/main'
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}"
-          projectId: social-income-staging
-          target: admin
-          channelId: live
+  deploy:
+    name: Deploy admin on Firebase (social-income-staging)
+    needs: test
+    uses: ./.github/workflows/deployment.yml
+    secrets: inherit
+    with:
+      component: admin
+      project: social-income-staging

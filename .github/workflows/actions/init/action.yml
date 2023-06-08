@@ -1,20 +1,28 @@
-name: "Initialize Repository"
-description: "Set up Node.js, plus installs firebase-tools and dependencies"
+name: Initialize Repository
+description: Set up Node.js, plus installs firebase-tools and dependencies
 
 inputs:
   installDependencies:
-    description: "If dependencies will be installed or not"
+    description: If dependencies will be installed or not
     required: false
     default: "true"
+  project:
+    description: The Firebase project to deploy to (social-income-staging|social-income-prod)
+    required: true
+    default: social-income-staging
+  firebaseServiceAccountJSON:
+    description: The credentials JSON value of the Firebase service account
+    required: false
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: 18
-        cache: "npm"
+        cache: npm
+        cache-dependency-path: package-lock.json
 
     - name: Install and set up firebase-tools
       shell: bash
@@ -25,6 +33,13 @@ runs:
         firebase setup:emulators:ui
 
     - name: Install dependencies
-      if: ${{ inputs.installDependencies }} == "true"
+      if: inputs.installDependencies == 'true'
       shell: bash
       run: npm ci
+
+    - name: Create credentials JSON file
+      if: inputs.firebaseServiceAccountJSON
+      uses: jsdaniell/create-json@v1.2.2
+      with:
+        name: credentials.json
+        json: ${{ inputs.firebaseServiceAccountJSON }}

@@ -17,8 +17,9 @@ jobs:
         with:
           paths: '["shared/**", ".github/workflows/shared.yml"]'
           skip_after_successful_duplicate: "false"
+          do_not_skip: '["push"]'
 
-  test_deploy:
+  test:
     name: Test shared code
     needs: check_applicability
     if: needs.check_applicability.outputs.should_skip != 'true'
