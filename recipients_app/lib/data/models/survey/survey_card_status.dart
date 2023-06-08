@@ -1,7 +1,7 @@
 enum SurveyCardStatus {
   newSurvey,
   firstReminder,
-  closeToDeadline,
+  overdue,
   answered,
   missed,
 }

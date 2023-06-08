@@ -43,6 +43,11 @@ class MyApp extends StatelessWidget {
           ),
         ),
         RepositoryProvider(
+          create: (context) => SurveyRepository(
+            firestore: firestore,
+          ),
+        ),
+        RepositoryProvider(
           create: (context) => OrganizationRepository(
             firestore: firestore,
           ),
