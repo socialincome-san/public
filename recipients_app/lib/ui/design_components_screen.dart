@@ -24,9 +24,9 @@ class DesignComponentsScreen extends StatelessWidget {
               style: AppStyles.headlineLarge,
             ),
             const SizedBox(height: 16),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [
+              children: [
                 // StatusIcon(status: Status.success),
                 // StatusIcon(status: Status.warning),
                 // StatusIcon(status: Status.error),
@@ -38,20 +38,20 @@ class DesignComponentsScreen extends StatelessWidget {
               style: AppStyles.headlineLarge,
             ),
             const SizedBox(height: 16),
-            ColoredBox(
+            const ColoredBox(
               color: AppColors.primaryColor,
               child: Column(
                 children: [
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: const [
+                    children: [
                       // StatusIcon(status: Status.success, isInverted: true),
                       // StatusIcon(status: Status.warning, isInverted: true),
                       // StatusIcon(status: Status.error, isInverted: true),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                 ],
               ),
             ),
@@ -61,9 +61,9 @@ class DesignComponentsScreen extends StatelessWidget {
               style: AppStyles.headlineLarge,
             ),
             const SizedBox(height: 16),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [
+              children: [
                 PaymentStatusIconWithText(
                   status: PaymentUiStatus.confirmed,
                   text: "Confirmed",

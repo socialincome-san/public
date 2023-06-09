@@ -42,8 +42,7 @@ Map<String, dynamic> _$RecipientToJson(Recipient instance) => <String, dynamic>{
       'paymentProvider': instance.paymentProvider,
       'first_name': instance.firstName,
       'last_name': instance.lastName,
-      'birth_date': _$JsonConverterToJson<dynamic, Timestamp>(
-          instance.birthDate, const TimestampConverter().toJson),
+      'birth_date': const TimestampConverter().toJson(instance.birthDate),
       'email': instance.email,
       'country': instance.country,
       'preferred_name': instance.preferredName,
@@ -59,8 +58,7 @@ Map<String, dynamic> _$RecipientToJson(Recipient instance) => <String, dynamic>{
           instance.recipientSince, const DateTimeConverter().toJson),
       'im_link_initial': instance.imLinkInitial,
       'im_link_regular': instance.imLinkRegular,
-      'next_survey': _$JsonConverterToJson<dynamic, Timestamp>(
-          instance.nextSurvey, const TimestampConverter().toJson),
+      'next_survey': const TimestampConverter().toJson(instance.nextSurvey),
     };
 
 Value? _$JsonConverterFromJson<Json, Value>(

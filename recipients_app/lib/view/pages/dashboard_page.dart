@@ -1,10 +1,12 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/dashboard_card_manager/dashboard_card_manager_cubit.dart";
 import "package:app/core/cubits/payment/payments_cubit.dart";
-import "package:app/data/models/dashboard_card.dart";
+import "package:app/core/cubits/survey/survey_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/configs/configs.dart";
+import "package:app/view/widgets/dashboard_item.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_container.dart";
+import "package:app/view/widgets/survey/survey_card_container.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -30,6 +32,13 @@ class DashboardPage extends StatelessWidget {
             authCubit: context.read<AuthCubit>(),
           )..fetchCards(),
         ),
+        BlocProvider(
+          create: (context) => SurveyCubit(
+            recipient: authCubit.state.recipient!,
+            surveyRepository: context.read<SurveyRepository>(),
+            crashReportingRepository: context.read<CrashReportingRepository>(),
+          )..getSurveys(),
+        ),
       ],
       child: const _DashboardView(),
     );
@@ -41,8 +50,25 @@ class _DashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<DashboardCard> dashboardItems =
-        context.watch<DashboardCardManagerCubit>().state.cards;
+    final List<DashboardItem> dashboardItems = context
+        .watch<DashboardCardManagerCubit>()
+        .state
+        .cards
+        .map<DashboardItem>((card) => card)
+        .toList();
+
+    final List<DashboardItem> surveysItems = context
+        .watch<SurveyCubit>()
+        .state
+        .mappedSurveys
+        .map<DashboardItem>(
+          (survey) => SurveyCardContainer(
+            mappedSurvey: survey,
+          ),
+        )
+        .toList();
+
+    final items = dashboardItems + surveysItems;
 
     return BlocBuilder<PaymentsCubit, PaymentsState>(
       builder: (context, state) {
@@ -52,7 +78,7 @@ class _DashboardView extends StatelessWidget {
             children: [
               const BalanceCardContainer(),
               const SizedBox(height: 8),
-              if (dashboardItems.isEmpty)
+              if (items.isEmpty)
                 const Expanded(
                   child: Padding(
                     padding: AppSpacings.a8,
@@ -69,8 +95,8 @@ class _DashboardView extends StatelessWidget {
                   child: ListView.separated(
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 8),
-                    itemCount: dashboardItems.length,
-                    itemBuilder: (context, index) => dashboardItems[index],
+                    itemCount: items.length,
+                    itemBuilder: (context, index) => items[index],
                   ),
                 ),
             ],

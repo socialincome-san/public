@@ -39,7 +39,7 @@ class SurveyStatusIconWithText extends StatelessWidget {
         iconColor = AppColors.fontColorDark;
         iconBackgroundColor = Colors.white;
         break;
-      case SurveyCardStatus.closeToDeadline:
+      case SurveyCardStatus.overdue:
       case SurveyCardStatus.firstReminder:
       case SurveyCardStatus.newSurvey:
         // no impl for now.

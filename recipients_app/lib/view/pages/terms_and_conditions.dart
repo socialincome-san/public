@@ -31,8 +31,8 @@ class TermsAndConditions extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          Column(
-            children: const [
+          const Column(
+            children: [
               _IconAndText(
                 "Make the app work and provide our services",
                 Icons.remember_me,

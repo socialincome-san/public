@@ -1,5 +1,5 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
-import "package:app/data/models/dashboard_card.dart";
+import "package:app/view/widgets/account/dashboard_card.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:bloc/bloc.dart";
 import "package:equatable/equatable.dart";
