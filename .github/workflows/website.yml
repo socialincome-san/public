@@ -62,9 +62,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Initialize repository
-        uses: ./.github/workflows/actions/init
-
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
