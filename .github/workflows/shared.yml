@@ -31,12 +31,9 @@ jobs:
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
 
-      - name: Add secrets from tests to env file
-        working-directory: shared
-        run: |
-          echo TWILIO_SID=${{ secrets.TWILIO_TEST_SID }} > .env
-          echo TWILIO_TOKEN=${{ secrets.TWILIO_TEST_TOKEN }} >> .env
-          echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_TEST_SENDER_PHONE }} >> .env
-
       - name: Run tests
+        env:
+          TWILIO_SID: ${{ secrets.TWILIO_TEST_SID }}
+          TWILIO_TOKEN: ${{ secrets.TWILIO_TEST_TOKEN }}
+          TWILIO_SENDER_PHONE: ${{ secrets.TWILIO_TEST_SENDER_PHONE }}
         run: npm run shared:test
