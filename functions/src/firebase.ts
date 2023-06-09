@@ -1,8 +1,8 @@
+import { getOrInitializeApp } from '@socialincome/shared/src/firebase/app';
+import { AuthAdmin } from '@socialincome/shared/src/firebase/AuthAdmin';
+import { FirestoreAdmin } from '@socialincome/shared/src/firebase/FirestoreAdmin';
+import { StorageAdmin } from '@socialincome/shared/src/firebase/StorageAdmin';
 import { HttpsFunction } from 'firebase-functions/lib/v1/cloud-functions';
-import { getOrInitializeApp } from '../../shared/src/firebase/app';
-import { AuthAdmin } from '../../shared/src/firebase/AuthAdmin';
-import { FirestoreAdmin } from '../../shared/src/firebase/FirestoreAdmin';
-import { StorageAdmin } from '../../shared/src/firebase/StorageAdmin';
 
 export interface FunctionProvider {
 	getFunction: () => HttpsFunction;
