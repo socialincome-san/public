@@ -1,5 +1,5 @@
-import { ExchangeRates, Payment, PAYMENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
 import * as functions from 'firebase-functions';
+import { ExchangeRates, Payment, PAYMENT_FIRESTORE_PATH } from '../../../../../shared/src/types';
 import { ExchangeRateImporter } from '../../../cron/ExchangeRateImporter';
 import { AbstractFirebaseAdmin, FunctionProvider } from '../../../firebase';
 

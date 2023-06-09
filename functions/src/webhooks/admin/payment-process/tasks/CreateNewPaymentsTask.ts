@@ -1,5 +1,6 @@
 import { QueryDocumentSnapshot, Timestamp } from '@google-cloud/firestore';
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/FirestoreAdmin';
+import { DateTime } from 'luxon';
+import { FirestoreAdmin } from '../../../../../../shared/src/firebase/FirestoreAdmin';
 import {
 	calcLastPaymentDate,
 	ExchangeRates,
@@ -10,8 +11,7 @@ import {
 	PAYMENT_FIRESTORE_PATH,
 	Recipient,
 	RECIPIENT_FIRESTORE_PATH,
-} from '@socialincome/shared/src/types';
-import { DateTime } from 'luxon';
+} from '../../../../../../shared/src/types';
 import { PaymentTask } from '../PaymentTaskProcessor';
 
 export class CreateNewPaymentsTask implements PaymentTask {

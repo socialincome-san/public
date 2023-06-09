@@ -1,5 +1,5 @@
 import { QueryDocumentSnapshot } from '@google-cloud/firestore';
-import { Recipient } from '@socialincome/shared/src/types';
+import { Recipient } from '../../../../../../shared/src/types';
 
 export class RegistrationCSVTask {
 	private readonly recipients: QueryDocumentSnapshot<Recipient>[];

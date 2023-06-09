@@ -1,5 +1,7 @@
 import { QueryDocumentSnapshot } from '@google-cloud/firestore';
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/FirestoreAdmin';
+import { DateTime } from 'luxon';
+import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
+import { FirestoreAdmin } from '../../../../../../shared/src/firebase/FirestoreAdmin';
 import {
 	MessageType,
 	MESSAGE_FIRESTORE_PATH,
@@ -8,10 +10,8 @@ import {
 	Recipient,
 	RECIPIENT_FIRESTORE_PATH,
 	TwilioMessage,
-} from '@socialincome/shared/src/types';
-import { sendSms } from '@socialincome/shared/src/utils/messaging/sms';
-import { DateTime } from 'luxon';
-import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
+} from '../../../../../../shared/src/types';
+import { sendSms } from '../../../../../../shared/src/utils/messaging/sms';
 import { TWILIO_SENDER_PHONE, TWILIO_SID, TWILIO_TOKEN } from '../../../../config';
 
 export class SendNotificationsTask {

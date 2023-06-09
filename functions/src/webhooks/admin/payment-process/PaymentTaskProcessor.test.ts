@@ -1,8 +1,8 @@
 import functions from 'firebase-functions-test';
 import { DateTime } from 'luxon';
 
-import { getOrInitializeApp } from '@socialincome/shared/src/firebase/app';
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/FirestoreAdmin';
+import { getOrInitializeApp } from '../../../../../shared/src/firebase/app';
+import { FirestoreAdmin } from '../../../../../shared/src/firebase/FirestoreAdmin';
 import {
 	Payment,
 	PaymentProcessTaskType,
@@ -11,7 +11,7 @@ import {
 	Recipient,
 	RecipientProgramStatus,
 	RECIPIENT_FIRESTORE_PATH,
-} from '@socialincome/shared/src/types';
+} from '../../../../../shared/src/types';
 import { runAdminPaymentProcessTask } from '../../index';
 
 const paymentDate = DateTime.fromSeconds(1681516800); // Exchange rate for this date is stored in seed

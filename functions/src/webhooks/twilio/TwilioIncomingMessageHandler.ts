@@ -1,11 +1,11 @@
+import * as functions from 'firebase-functions';
 import {
 	MessageType,
 	MESSAGE_FIRESTORE_PATH,
 	Recipient,
 	RECIPIENT_FIRESTORE_PATH,
 	TwilioMessage,
-} from '@socialincome/shared/src/types';
-import * as functions from 'firebase-functions';
+} from '../../../../shared/src/types';
 import { AbstractFirebaseAdmin, FunctionProvider } from '../../firebase';
 
 export class TwilioIncomingMessageHandler extends AbstractFirebaseAdmin implements FunctionProvider {

@@ -1,14 +1,17 @@
-import {
-	Contribution,
-	ContributionSourceKey,
-	CONTRIBUTION_FIRESTORE_PATH,
-	StatusKey,
-} from '@socialincome/shared/src/types/admin/Contribution';
-import { splitName, User, UserStatusKey, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/admin/User';
 import { DocumentReference } from 'firebase-admin/firestore';
 import { CollectionReference } from 'firebase-admin/lib/firestore';
 import * as functions from 'firebase-functions';
 import Stripe from 'stripe';
+import {
+	Contribution,
+	ContributionSourceKey,
+	CONTRIBUTION_FIRESTORE_PATH,
+	splitName,
+	StatusKey,
+	User,
+	UserStatusKey,
+	USER_FIRESTORE_PATH,
+} from '../../../../shared/src/types';
 import { STRIPE_API_READ_KEY, STRIPE_WEBHOOK_SECRET } from '../../config';
 import { AbstractFirebaseAdmin, FunctionProvider } from '../../firebase';
 

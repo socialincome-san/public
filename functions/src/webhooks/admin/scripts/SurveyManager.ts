@@ -1,20 +1,18 @@
 import { Timestamp } from '@google-cloud/firestore';
+import * as functions from 'firebase-functions';
+import { DateTime } from 'luxon';
 import {
 	Recipient,
 	RecipientMainLanguage,
 	RecipientProgramStatus,
-	RECIPIENT_FIRESTORE_PATH,
-} from '@socialincome/shared/src/types/admin/Recipient';
-import {
 	recipientSurveys,
+	RECIPIENT_FIRESTORE_PATH,
 	Survey,
 	SurveyQuestionnaire,
 	SurveyStatus,
 	SURVEY_FIRETORE_PATH,
-} from '@socialincome/shared/src/types/admin/Survey';
-import { rndString } from '@socialincome/shared/src/utils/crypto';
-import * as functions from 'firebase-functions';
-import { DateTime } from 'luxon';
+} from '../../../../../shared/src/types';
+import { rndString } from '../../../../../shared/src/utils/crypto';
 import { AbstractFirebaseAdmin, FunctionProvider } from '../../../firebase';
 
 /**

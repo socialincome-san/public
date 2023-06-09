@@ -1,3 +1,5 @@
+import assert from 'assert';
+import * as functions from 'firebase-functions';
 import {
 	Recipient,
 	RECIPIENT_FIRESTORE_PATH,
@@ -5,9 +7,7 @@ import {
 	SurveyCredentialRequest,
 	SurveyCredentialResponse,
 	SURVEY_FIRETORE_PATH,
-} from '@socialincome/shared/src/types';
-import assert from 'assert';
-import * as functions from 'firebase-functions';
+} from '../../../../shared/src/types';
 import { AbstractFirebaseAdmin, FunctionProvider } from '../../firebase';
 
 export class SurveyLogin extends AbstractFirebaseAdmin implements FunctionProvider {
