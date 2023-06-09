@@ -4,7 +4,7 @@ import { Recipient } from '../../../shared/src/types';
 
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import React from 'react';
-import { TwilioOutgoingMessageFunctionProps } from '../../../functions/src/admin/TwilioOutgoingMessageHandler';
+import { TwilioOutgoingMessageFunctionProps } from '../../../functions/src/webhooks/twilio/TwilioOutgoingMessageHandler';
 
 const STYLE = {
 	position: 'absolute' as 'absolute',

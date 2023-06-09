@@ -23,12 +23,12 @@ export type Payment = {
 	message?: EntityReference[];
 };
 
-export enum AdminPaymentProcessTask {
-	GetRegistrationCSV = 'PaymentProcessTask.GetRegistrationCSV',
-	GetPaymentCSV = 'PaymentProcessTask.GetPaymentCSV',
-	CreateNewPayments = 'PaymentProcessTask.CreateNewPayments',
-	SendNotifications = 'PaymentProcessTask.SendNotifications',
+export enum PaymentProcessTaskType {
+	GetRegistrationCSV = 'GetRegistrationCSV',
+	GetPaymentCSV = 'GetPaymentCSV',
+	CreateNewPayments = 'CreateNewPayments',
+	SendNotifications = 'SendNotifications',
 }
 
-export const PAYMENT_AMOUNT = 500;
+export const PAYMENT_AMOUNT = 700;
 export const PAYMENT_CURRENCY = 'SLE';

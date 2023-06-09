@@ -17,6 +17,9 @@ jobs:
     name: Deploy admin on Firebase
     runs-on: ubuntu-latest
     if: inputs.component == 'admin'
+    env:
+      VITE_ADMIN_ALGOLIA_APPLICATION_ID: ${{ secrets.REACT_APP_ADMIN_ALGOLIA_APPLICATION_ID }}
+      VITE_ADMIN_ALGOLIA_SEARCH_KEY: ${{ secrets.REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -26,12 +29,6 @@ jobs:
         with:
           project: ${{ inputs.project }}
           firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
-
-      - name: Add secrets to admin/.env file
-        working-directory: admin
-        run: |
-          echo VITE_ADMIN_ALGOLIA_APPLICATION_ID=${{ secrets.REACT_APP_ADMIN_ALGOLIA_APPLICATION_ID }} >> .env
-          echo VITE_ADMIN_ALGOLIA_SEARCH_KEY=${{ secrets.REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY }} >> .env
 
       - name: Build admin
         run: npm run admin:build
@@ -69,6 +66,19 @@ jobs:
     name: Deploy functions on Firebase
     runs-on: ubuntu-latest
     if: inputs.component == 'functions'
+    env:
+      POSTFINANCE_EMAIL_USER: ${{ secrets.POSTFINANCE_EMAIL_USER }}
+      POSTFINANCE_EMAIL_PASSWORD: ${{ secrets.POSTFINANCE_EMAIL_PASSWORD }}
+      STRIPE_API_READ_KEY: ${{ secrets.STRIPE_API_READ_KEY }}
+      STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+      NOTIFICATION_EMAIL_USER: ${{ secrets.NOTIFICATION_EMAIL_USER }}
+      NOTIFICATION_EMAIL_PASSWORD: ${{ secrets.NOTIFICATION_EMAIL_PASSWORD }}
+      NOTIFICATION_EMAIL_USER_KERRIN: ${{ secrets.NOTIFICATION_EMAIL_USER_KERRIN }}
+      NOTIFICATION_EMAIL_PASSWORD_KERRIN: ${{ secrets.NOTIFICATION_EMAIL_PASSWORD_KERRIN }}
+      TWILIO_SID: ${{ secrets.TWILIO_SID }}
+      TWILIO_TOKEN: ${{ secrets.TWILIO_TOKEN }}
+      TWILIO_SENDER_PHONE: ${{ secrets.TWILIO_SENDER_PHONE }}
+      EXCHANGE_RATES_API: ${{ secrets.EXCHANGE_RATES_API }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -78,22 +88,6 @@ jobs:
         with:
           project: ${{ inputs.project }}
           firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
-
-      - name: Add secrets to functions/.env file
-        working-directory: functions
-        run: |
-          echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} > .env
-          echo POSTFINANCE_EMAIL_PASSWORD=${{ secrets.POSTFINANCE_EMAIL_PASSWORD }} >> .env
-          echo STRIPE_API_READ_KEY=${{ secrets.STRIPE_API_READ_KEY }} >> .env
-          echo STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }} >> .env
-          echo NOTIFICATION_EMAIL_USER=${{ secrets.NOTIFICATION_EMAIL_USER }} >> .env
-          echo NOTIFICATION_EMAIL_PASSWORD=${{ secrets.NOTIFICATION_EMAIL_PASSWORD }} >> .env
-          echo NOTIFICATION_EMAIL_USER_KERRIN=${{ secrets.NOTIFICATION_EMAIL_USER_KERRIN }} >> .env
-          echo NOTIFICATION_EMAIL_PASSWORD_KERRIN=${{ secrets.NOTIFICATION_EMAIL_PASSWORD_KERRIN }} >> .env
-          echo TWILIO_SID=${{ secrets.TWILIO_SID }} >> .env
-          echo TWILIO_TOKEN=${{ secrets.TWILIO_TOKEN }} >> .env
-          echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_SENDER_PHONE }} >> .env
-          echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
 
       - name: Build functions
         run: npm run functions:build
