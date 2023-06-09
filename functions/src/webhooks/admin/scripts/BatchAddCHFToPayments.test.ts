@@ -1,5 +1,5 @@
 import { Timestamp } from '@google-cloud/firestore';
-import { ExchangeRates, Payment, PaymentStatus } from '@socialincome/shared/src/types';
+import { ExchangeRates, Payment, PaymentStatus } from '../../../../../shared/src/types';
 import { BatchAddCHFToPayments } from './BatchAddCHFToPayments';
 
 describe('BatchAddCHFToPayments', () => {

@@ -1,15 +1,15 @@
+import * as functions from 'firebase-functions';
+import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
 import {
 	Entity,
+	LocaleLanguage,
 	MessageType,
 	MESSAGE_FIRESTORE_PATH,
 	Recipient,
 	RECIPIENT_FIRESTORE_PATH,
 	TwilioMessage,
-} from '@socialincome/shared/src/types';
-import { LocaleLanguage } from '@socialincome/shared/src/types/admin/Language';
-import { sendWhatsapp } from '@socialincome/shared/src/utils/messaging/whatsapp';
-import * as functions from 'firebase-functions';
-import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
+} from '../../../../shared/src/types';
+import { sendWhatsapp } from '../../../../shared/src/utils/messaging/whatsapp';
 import { TWILIO_SENDER_PHONE, TWILIO_SID, TWILIO_TOKEN } from '../../config';
 import { AbstractFirebaseAdmin, FunctionProvider } from '../../firebase';
 

@@ -1,12 +1,12 @@
+import { firestore } from 'firebase-admin';
+import * as functions from 'firebase-functions';
+import { DateTime } from 'luxon';
 import {
 	PaymentProcessTaskType,
 	Recipient,
 	RecipientProgramStatus,
 	RECIPIENT_FIRESTORE_PATH,
-} from '@socialincome/shared/src/types';
-import { firestore } from 'firebase-admin';
-import * as functions from 'firebase-functions';
-import { DateTime } from 'luxon';
+} from '../../../../../shared/src/types';
 import { ExchangeRateImporter } from '../../../cron/ExchangeRateImporter';
 import { AbstractFirebaseAdmin, FunctionProvider } from '../../../firebase';
 import { CreateNewPaymentsTask } from './tasks/CreateNewPaymentsTask';

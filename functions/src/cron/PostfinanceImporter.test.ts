@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@jest/globals';
-import { getOrInitializeApp } from '@socialincome/shared/src/firebase/app';
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/FirestoreAdmin';
-import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '@socialincome/shared/src/types';
 import functions from 'firebase-functions-test';
+import { getOrInitializeApp } from '../../../shared/src/firebase/app';
+import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
+import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../shared/src/types';
 import { PostFinanceImporter } from './PostFinanceImporter';
 
 describe('importPostfinanceBalance', () => {

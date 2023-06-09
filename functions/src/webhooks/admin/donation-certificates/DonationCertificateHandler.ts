@@ -1,15 +1,21 @@
 import { Timestamp } from '@google-cloud/firestore';
-import { Contribution, DonationCertificate, Entity, StatusKey, User } from '@socialincome/shared/src/types';
-import { LocaleLanguage } from '@socialincome/shared/src/types/admin/Language';
-import { sendEmail } from '@socialincome/shared/src/utils/messaging/email';
-import { renderTemplate } from '@socialincome/shared/src/utils/templates';
-import { Translator } from '@socialincome/shared/src/utils/translate';
 import * as functions from 'firebase-functions';
 import { createWriteStream } from 'fs';
 import _ from 'lodash';
 import * as path from 'path';
 import PDFDocument from 'pdfkit';
 import { withFile } from 'tmp-promise';
+import {
+	Contribution,
+	DonationCertificate,
+	Entity,
+	LocaleLanguage,
+	StatusKey,
+	User,
+} from '../../../../../shared/src/types';
+import { sendEmail } from '../../../../../shared/src/utils/messaging/email';
+import { renderTemplate } from '../../../../../shared/src/utils/templates';
+import { Translator } from '../../../../../shared/src/utils/translate';
 import { ASSET_DIR, NOTIFICATION_EMAIL_PASSWORD_KERRIN, NOTIFICATION_EMAIL_USER_KERRIN } from '../../../config';
 import { AbstractFirebaseAdmin, FunctionProvider } from '../../../firebase';
 

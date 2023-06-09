@@ -1,11 +1,10 @@
 import { describe, test } from '@jest/globals';
-import { getOrInitializeApp } from '@socialincome/shared/src/firebase/app';
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/FirestoreAdmin';
-import { Contribution, ContributionSourceKey, StatusKey } from '@socialincome/shared/src/types/admin/Contribution';
-import { User, UserStatusKey } from '@socialincome/shared/src/types/admin/User';
 import * as admin from 'firebase-admin';
 import functions from 'firebase-functions-test';
 import Stripe from 'stripe';
+import { getOrInitializeApp } from '../../../../shared/src/firebase/app';
+import { FirestoreAdmin } from '../../../../shared/src/firebase/FirestoreAdmin';
+import { Contribution, ContributionSourceKey, StatusKey, User, UserStatusKey } from '../../../../shared/src/types';
 import { StripeWebhook } from './StripeWebhook';
 import Timestamp = admin.firestore.Timestamp;
 

@@ -1,7 +1,7 @@
 import { beforeEach, describe, test } from '@jest/globals';
-import { getOrInitializeApp } from '@socialincome/shared/src/firebase/app';
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/FirestoreAdmin';
 import functionsTest from 'firebase-functions-test';
+import { getOrInitializeApp } from '../../../shared/src/firebase/app';
+import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { FirestoreAuditor } from './FirestoreAuditor';
 
 describe('FirestoreAuditor', () => {

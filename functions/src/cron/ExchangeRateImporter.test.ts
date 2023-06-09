@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, test } from '@jest/globals';
-import { getOrInitializeApp } from '@socialincome/shared/src/firebase/app';
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/FirestoreAdmin';
-import { ExchangeRates, ExchangeRatesEntry, EXCHANGE_RATES_PATH } from '@socialincome/shared/src/types';
 import functions from 'firebase-functions-test';
+import { getOrInitializeApp } from '../../../shared/src/firebase/app';
+import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
+import { ExchangeRates, ExchangeRatesEntry, EXCHANGE_RATES_PATH } from '../../../shared/src/types';
 import { ExchangeRateImporter, ExchangeRateResponse } from './ExchangeRateImporter';
 
 describe('importExchangeRates', () => {

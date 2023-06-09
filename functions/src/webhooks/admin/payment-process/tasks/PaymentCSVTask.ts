@@ -1,6 +1,6 @@
 import { QueryDocumentSnapshot } from '@google-cloud/firestore';
 
-import { PAYMENT_AMOUNT, Recipient } from '@socialincome/shared/src/types';
+import { PAYMENT_AMOUNT, Recipient } from '../../../../../../shared/src/types';
 
 export class PaymentCSVTask {
 	private readonly recipients: QueryDocumentSnapshot<Recipient>[];

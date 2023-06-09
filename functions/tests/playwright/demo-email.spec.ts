@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-import { LocaleLanguage } from '@socialincome/shared/src/types';
-import { renderEmailTemplate } from '@socialincome/shared/src/utils/templates';
+import { LocaleLanguage } from '../../../shared/src/types';
+import { renderEmailTemplate } from '../../../shared/src/utils/templates';
 
 test('test rendering demo email', async ({ page }) => {
 	const html = await renderEmailTemplate({
