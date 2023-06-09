@@ -31,7 +31,7 @@ class SurveyRepository {
       );
     }
 
-    surveys.sort((a, b) => a.id!.compareTo(b.id!));
+    surveys.sort((a, b) => a.id.compareTo(b.id));
 
     return surveys;
   }
