@@ -19,7 +19,7 @@ export interface PaymentTask {
 	run(): Promise<string>;
 }
 
-interface PaymentProcessTakProps {
+export interface PaymentProcessTaskProps {
 	type: PaymentProcessTaskType;
 	timestamp: number; // seconds
 }
@@ -36,7 +36,7 @@ export class PaymentTaskProcessor extends AbstractFirebaseAdmin implements Funct
 	};
 
 	getFunction = () =>
-		functions.https.onCall(async ({ type, timestamp }: PaymentProcessTakProps, { auth }) => {
+		functions.https.onCall(async ({ type, timestamp }: PaymentProcessTaskProps, { auth }) => {
 			await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
 			const recipients = await this.getRecipients();
 			const dt = DateTime.fromSeconds(timestamp);
