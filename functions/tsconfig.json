@@ -15,5 +15,10 @@
 		"target": "es2017",
 		"types": ["jest", "node"]
 	},
+	"paths": {
+		"@socialincome/shared": [
+			"../shared/*"
+		]
+	},
 	"include": ["src/**/*", "tests/**/*"]
 }

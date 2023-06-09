@@ -35,7 +35,7 @@
 		"vite": "^4.3.9"
 	},
 	"dependencies": {
-		"firecms": "2.0.0-rc.2",
+		"firecms": "2.0.0",
 		"@emotion/react": "^11.10.6",
 		"@emotion/styled": "^11.10.6",
 		"@mui/icons-material": "^5.11.11",
