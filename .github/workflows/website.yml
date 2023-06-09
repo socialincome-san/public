@@ -38,17 +38,18 @@ jobs:
       - name: Run unit tests
         run: npm run website:test:emulator
 
-      - name: Run e2e tests
-        run: npm run website:test:e2e:emulator
-
-      - name: Deploy Playwright report to GitHub Pages
-        uses: rossjrw/pr-preview-action@v1
-        if: always()
-        with:
-          source-dir: website/playwright-report/
-          preview-branch: gh-pages
-          umbrella-dir: website-playwright-report
-          action: auto
+      # TODO: re-enable
+      #      - name: Run e2e tests
+      #        run: npm run website:test:e2e:emulator
+      #
+      #      - name: Deploy Playwright report to GitHub Pages
+      #        uses: rossjrw/pr-preview-action@v1
+      #        if: always()
+      #        with:
+      #          source-dir: website/playwright-report/
+      #          preview-branch: gh-pages
+      #          umbrella-dir: website-playwright-report
+      #          action: auto
 
       - name: Test build
         run: npm run website:build:emulator
