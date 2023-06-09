@@ -10,7 +10,7 @@ const Home = () => {
 	// noinspection HtmlUnknownTarget
 	return (
 		<Layout title={t('index.title')}>
-			<h2>Index Page Content: (Woohoo)</h2>
+			<h2>Index</h2>
 			<section>
 				<p>{t('index.slogan-1')}</p>
 				<p>{t('index.calculator-title')}</p>
