@@ -16,9 +16,7 @@
 		"types": ["jest", "node"]
 	},
 	"paths": {
-		"@socialincome/shared": [
-			"../shared/*"
-		]
+		"@socialincome/shared": ["../shared/*"]
 	},
 	"include": ["src/**/*", "tests/**/*"]
 }
