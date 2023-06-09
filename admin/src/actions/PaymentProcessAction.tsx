@@ -3,7 +3,9 @@ import { PaymentProcessTaskType } from '@socialincome/shared/src/types';
 import { downloadStringAsFile } from '@socialincome/shared/src/utils/html';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { useSnackbarController } from 'firecms';
+import { DateTime } from 'luxon';
 import { useState } from 'react';
+import { PaymentProcessTaskProps } from '../../../functions/src/webhooks/admin/payment-process/PaymentTaskProcessor';
 
 const STYLE = {
 	position: 'absolute' as 'absolute',
@@ -27,12 +29,15 @@ export function PaymentProcessAction() {
 	};
 
 	const triggerFirebaseFunction = (task: PaymentProcessTaskType) => {
-		const runAdminPaymentProcessTask = httpsCallable<PaymentProcessTaskType, string>(
+		const runAdminPaymentProcessTask = httpsCallable<PaymentProcessTaskProps, string>(
 			getFunctions(),
 			'runAdminPaymentProcessTask'
 		);
 		setIsFunctionRunning(true);
-		runAdminPaymentProcessTask(task)
+		runAdminPaymentProcessTask({
+			type: task,
+			timestamp: DateTime.now().toSeconds(),
+		})
 			.then((result) => {
 				if (task === PaymentProcessTaskType.GetRegistrationCSV || task === PaymentProcessTaskType.GetPaymentCSV) {
 					const fileName = `11866_${new Date().toLocaleDateString('sv')}.csv`; // 11866_YYYY-MM-DD.csv
