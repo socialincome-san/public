@@ -114,6 +114,7 @@ jobs:
         run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only firestore:rules --project ${{ inputs.project }}
 
   deploy-website:
+    name: Deploy website on Vercel
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -121,9 +122,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
 
       - name: Initialize Repository
         uses: ./.github/workflows/actions/init
