@@ -16,7 +16,7 @@ import { User } from '../../../shared/src/types';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import _ from 'lodash';
 import React from 'react';
-import { CreateDonationCertificatesFunctionProps } from '../../../functions/src/admin/DonationCertificateHandler';
+import { CreateDonationCertificatesFunctionProps } from '../../../functions/src/webhooks/admin/donation-certificates/DonationCertificateHandler';
 
 const style = {
 	position: 'absolute' as 'absolute',

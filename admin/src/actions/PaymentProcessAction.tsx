@@ -1,5 +1,5 @@
 import { Box, Button, CircularProgress, Modal, Tooltip, Typography } from '@mui/material';
-import { AdminPaymentProcessTask } from '@socialincome/shared/src/types';
+import { PaymentProcessTaskType } from '@socialincome/shared/src/types';
 import { downloadStringAsFile } from '@socialincome/shared/src/utils/html';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { useSnackbarController } from 'firecms';
@@ -26,15 +26,15 @@ export function PaymentProcessAction() {
 		setIsOpen(false);
 	};
 
-	const triggerFirebaseFunction = (task: AdminPaymentProcessTask) => {
-		const runAdminPaymentProcessTask = httpsCallable<AdminPaymentProcessTask, string>(
+	const triggerFirebaseFunction = (task: PaymentProcessTaskType) => {
+		const runAdminPaymentProcessTask = httpsCallable<PaymentProcessTaskType, string>(
 			getFunctions(),
 			'runAdminPaymentProcessTask'
 		);
 		setIsFunctionRunning(true);
 		runAdminPaymentProcessTask(task)
 			.then((result) => {
-				if (task === AdminPaymentProcessTask.GetRegistrationCSV || task === AdminPaymentProcessTask.GetPaymentCSV) {
+				if (task === PaymentProcessTaskType.GetRegistrationCSV || task === PaymentProcessTaskType.GetPaymentCSV) {
 					const fileName = `11866_${new Date().toLocaleDateString('sv')}.csv`; // 11866_YYYY-MM-DD.csv
 					downloadStringAsFile(result.data, fileName);
 				} else {
@@ -73,11 +73,11 @@ export function PaymentProcessAction() {
 							</Typography>
 							<Button
 								variant="outlined"
-								onClick={() => triggerFirebaseFunction(AdminPaymentProcessTask.GetRegistrationCSV)}
+								onClick={() => triggerFirebaseFunction(PaymentProcessTaskType.GetRegistrationCSV)}
 							>
 								Registration CSV
 							</Button>
-							<Button variant="outlined" onClick={() => triggerFirebaseFunction(AdminPaymentProcessTask.GetPaymentCSV)}>
+							<Button variant="outlined" onClick={() => triggerFirebaseFunction(PaymentProcessTaskType.GetPaymentCSV)}>
 								Payments CSV
 							</Button>
 							{!confirmCreateNewPayments && (
@@ -90,7 +90,7 @@ export function PaymentProcessAction() {
 							{confirmCreateNewPayments && (
 								<Button
 									variant="contained"
-									onClick={() => triggerFirebaseFunction(AdminPaymentProcessTask.CreateNewPayments)}
+									onClick={() => triggerFirebaseFunction(PaymentProcessTaskType.CreateNewPayments)}
 								>
 									Confirm
 								</Button>
@@ -98,7 +98,7 @@ export function PaymentProcessAction() {
 							<Button
 								disabled={true}
 								variant="outlined"
-								onClick={() => triggerFirebaseFunction(AdminPaymentProcessTask.SendNotifications)}
+								onClick={() => triggerFirebaseFunction(PaymentProcessTaskType.SendNotifications)}
 							>
 								Notify recipients (in development)
 							</Button>{' '}
