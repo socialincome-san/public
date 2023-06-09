@@ -54,7 +54,7 @@ jobs:
         run: npm run website:build:emulator
 
   deploy:
-#    needs: test
+    #    needs: test
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
