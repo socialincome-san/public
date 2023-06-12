@@ -7,7 +7,7 @@ part of 'recipient.dart';
 // **************************************************************************
 
 Recipient _$RecipientFromJson(Map<String, dynamic> json) => Recipient(
-      userId: json['user_id'] as String,
+      userId: json['user_id'] as String? ?? '',
       communicationMobilePhone: json['communication_mobile_phone'] == null
           ? null
           : Phone.fromJson(
@@ -37,8 +37,8 @@ Recipient _$RecipientFromJson(Map<String, dynamic> json) => Recipient(
 
 Map<String, dynamic> _$RecipientToJson(Recipient instance) => <String, dynamic>{
       'user_id': instance.userId,
-      'communication_mobile_phone': instance.communicationMobilePhone,
-      'mobile_money_phone': instance.mobileMoneyPhone,
+      'communication_mobile_phone': instance.communicationMobilePhone?.toJson(),
+      'mobile_money_phone': instance.mobileMoneyPhone?.toJson(),
       'paymentProvider': instance.paymentProvider,
       'first_name': instance.firstName,
       'last_name': instance.lastName,

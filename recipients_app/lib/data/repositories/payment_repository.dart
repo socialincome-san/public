@@ -30,7 +30,7 @@ class PaymentRepository {
       payments.add(payment.copyWith(id: paymentDoc.id));
     }
 
-    payments.sort((a, b) => a.id!.compareTo(b.id!));
+    payments.sort((a, b) => a.id.compareTo(b.id));
 
     return payments;
   }

@@ -7,7 +7,7 @@ part of 'survey.dart';
 // **************************************************************************
 
 Survey _$SurveyFromJson(Map<String, dynamic> json) => Survey(
-      id: json['id'] as String?,
+      id: json['id'] as String? ?? '',
       status: $enumDecodeNullable(_$SurveyServerStatusEnumMap, json['status']),
       dueDateAt: const TimestampConverter().fromJson(json['due_date_at']),
       completedAt: const TimestampConverter().fromJson(json['completed_at']),

@@ -9,6 +9,5 @@ class DocumentReferenceConverter
   DocumentReference fromJson(dynamic json) => json as DocumentReference;
 
   @override
-  dynamic toJson(DocumentReference documentReference) =>
-      documentReference.toString();
+  dynamic toJson(DocumentReference documentReference) => documentReference;
 }

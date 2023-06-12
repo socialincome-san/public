@@ -8,7 +8,8 @@ part "survey.g.dart";
 @JsonSerializable()
 @TimestampConverter()
 class Survey extends Equatable {
-  final String? id;
+  @JsonKey(defaultValue: "")
+  final String id;
   final SurveyServerStatus? status;
   @JsonKey(name: "due_date_at")
   final Timestamp? dueDateAt;

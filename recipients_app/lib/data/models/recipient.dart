@@ -10,12 +10,12 @@ import "package:json_annotation/json_annotation.dart";
 
 part "recipient.g.dart";
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 @TimestampConverter()
 @DocumentReferenceConverter()
 @DateTimeConverter()
 class Recipient extends Equatable {
-  @JsonKey(name: "user_id")
+  @JsonKey(name: "user_id", defaultValue: "")
   final String userId;
 
   @JsonKey(name: "communication_mobile_phone")
