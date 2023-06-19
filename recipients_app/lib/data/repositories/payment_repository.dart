@@ -3,7 +3,7 @@ import "package:app/data/repositories/repositories.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 
 const String paymentCollection = "payments";
-const String paymentUpdatedByAppUser = "app user";
+const String kUpdatedByAppUser = "app user";
 
 class PaymentRepository {
   final FirebaseFirestore firestore;
@@ -42,7 +42,7 @@ class PaymentRepository {
   }) async {
     final updatedPayment = payment.copyWith(
       status: PaymentStatus.confirmed,
-      updatedBy: paymentUpdatedByAppUser,
+      updatedBy: kUpdatedByAppUser,
     );
 
     await firestore
@@ -61,7 +61,7 @@ class PaymentRepository {
     final updatedPayment = payment.copyWith(
       status: PaymentStatus.contested,
       comments: contestReason,
-      updatedBy: paymentUpdatedByAppUser,
+      updatedBy: kUpdatedByAppUser,
     );
 
     await firestore

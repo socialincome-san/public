@@ -33,6 +33,7 @@ Recipient _$RecipientFromJson(Map<String, dynamic> json) => Recipient(
       nextSurvey: const TimestampConverter().fromJson(json['next_survey']),
       organizationRef:
           const DocumentReferenceConverter().fromJson(json['organisation']),
+      updatedBy: json['last_updated_by'] as String?,
     );
 
 Map<String, dynamic> _$RecipientToJson(Recipient instance) => <String, dynamic>{
@@ -59,6 +60,7 @@ Map<String, dynamic> _$RecipientToJson(Recipient instance) => <String, dynamic>{
       'im_link_initial': instance.imLinkInitial,
       'im_link_regular': instance.imLinkRegular,
       'next_survey': const TimestampConverter().toJson(instance.nextSurvey),
+      'last_updated_by': instance.updatedBy,
     };
 
 Value? _$JsonConverterFromJson<Json, Value>(
