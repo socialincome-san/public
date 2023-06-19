@@ -132,23 +132,21 @@ class PaymentsPage extends StatelessWidget {
     var total = 0;
 
     for (final mappedPayment in mappedPayments) {
-      total += mappedPayment.payment.amount ?? 0;
+      // some of the users still have SLL from begining of the program,
+      // we will change it to SLE
+      final factor = (mappedPayment.payment.currency == "SLL") ? 1000 : 1;
+      total += (mappedPayment.payment.amount ?? 0) ~/ factor;
     }
 
     return "${mappedPayments.first.payment.currency} $total";
   }
 
   String _calculateFuturePayments(List<MappedPayment> mappedPayments) {
-    // TODO monthly amount can be changed (e.g. now it is 500)
-    // total of all payments = 3 years, every month, 400 = 3 * 12 * 400 = 14400
-    const allPayments = 14400;
+    // due to problem that payment amount can change we need to calculate
+    // the future payments without calculation of previous payments
+    final futurePayments = (kProgramDurationMonths - mappedPayments.length) *
+        kCurrentPaymentAmount;
 
-    var currentPayments = 0;
-
-    for (final mappedPayment in mappedPayments) {
-      currentPayments += mappedPayment.payment.amount ?? 0;
-    }
-
-    return "${mappedPayments.first.payment.currency} ${allPayments - currentPayments}";
+    return "${mappedPayments.first.payment.currency} ${futurePayments}";
   }
 }

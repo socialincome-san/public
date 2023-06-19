@@ -8,6 +8,8 @@ import "package:flutter_bloc/flutter_bloc.dart";
 part "payments_state.dart";
 
 const int kMaxReviewDays = 10;
+const int kCurrentPaymentAmount = 700;
+const int kProgramDurationMonths = 36;
 const _kOnHoldCandidateStates = [PaymentStatus.paid, PaymentStatus.contested];
 
 class PaymentsCubit extends Cubit<PaymentsState> {
@@ -237,7 +239,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     final daysToPayment = nextPaymentDate.difference(DateTime.now()).inDays;
 
     return NextPaymentData(
-      amount: nextPayment?.payment.amount ?? 500,
+      amount: nextPayment?.payment.amount ?? kCurrentPaymentAmount,
       currency: nextPayment?.payment.currency ?? "SLE",
       daysToPayment: daysToPayment,
     );

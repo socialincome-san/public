@@ -1,9 +1,9 @@
+import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/models/payment/mapped_payment.dart";
 import "package:app/data/models/payment/payment_ui_status.dart";
 import "package:app/ui/icons/payment_status_icon.dart";
 import "package:flutter/material.dart";
 
-const kMaxMonths = 36;
 const kMonthsPerYear = 12;
 
 class BalanceCardGrid extends StatelessWidget {
@@ -24,7 +24,7 @@ class BalanceCardGrid extends StatelessWidget {
       mainAxisSpacing: 6,
       physics: const NeverScrollableScrollPhysics(),
       children: List.generate(
-        kMaxMonths,
+        kProgramDurationMonths,
         (index) {
           if (index < paymentsFromOldest.length) {
             final payment = paymentsFromOldest[index];
