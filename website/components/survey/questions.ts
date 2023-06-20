@@ -75,7 +75,7 @@ export const dependentsPage = (t: TFunction) => {
 	};
 };
 
-export const schoolPageXXX = (t: TFunction) => {
+export const schoolAttendancePage = (t: TFunction) => {
 	return {
 		elements: [
 			{
@@ -248,11 +248,10 @@ export const plannedAchievementsPage = (t: TFunction, isOnboarding: boolean) => 
 				type: 'comment',
 				name: 'plannedAchievement',
 				isRequired: true,
-				// xxx: why title isOnboarding?
 				title: isOnboarding
 					? t('survey.questions.plannedAchievementOnboardingTitleV1')
 					: t('survey.questions.plannedAchievementCheckingTitleV1'),
-				// xxx: why twice for onoboarding and checking?
+				// xxx: why title isOnboarding and why t: twice for onboarding and checking?
 			},
 		],
 	};
@@ -315,11 +314,9 @@ export const impactLifePage = (t: TFunction) => {
 };
 
 
-
-
 // Additional questions for check-in survey for former recipients
 
-export const moreFinancialIndependencePage = (t: TFunction) => {
+export const impactFinancialIndependenceOverTimePage = (t: TFunction) => {
 	return {
 		elements: [
 			{
@@ -434,18 +431,6 @@ export const maritalStatusChoices = (t: TFunction) =>
 		};
 	});
 
-export const financialSituationChoices = (t: TFunction) =>
-	[
-		[1, 'livingComfortably'],
-		[2, 'doingOk'],
-		[3, 'difficultyMakingEndsMeet'],
-		[4, 'barelyGettingBy'],
-	].map(([value, translationKey]) => {
-		return {
-			value: value,
-			text: t('survey.questions.financialSituationChoices.' + translationKey),
-		};
-	});
 
 export const nrDependentsChoices = (t: TFunction) =>
 	['1-2', '3-4', '5-7', '8-10', '10-'].map((key) => {
@@ -462,13 +447,6 @@ export const employmentStatusChoices = (t: TFunction) =>
 		};
 	});
 
-export const employedChoices = (t: TFunction) =>
-	['less', 'more'].map((key) => {
-		return {
-			value: key,
-			text: t('survey.questions.employedChoices.' + key),
-		};
-	});
 
 export const livingLocationChoices = (t: TFunction) =>
 	[

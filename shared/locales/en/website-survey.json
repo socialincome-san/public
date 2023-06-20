@@ -32,7 +32,7 @@
 				"no": "No"
 			},
 			"livingLocationTitleV1": "Where do you live?",
-			"livingLocationChoicesV1": {
+			"livingLocationChoices": {
 				"westernAreaUrbanFreetown": "Western Area Urban (Freetown)",
 				"westernAreaRural": "Western Area Rural",
 				"easternProvince": "Eastern Province",
@@ -41,7 +41,7 @@
 				"northWestProvince": "North West Province"
 			},
 			"maritalStatusTitleV1": "What is your marital status?",
-			"maritalStatusChoicesV1": {
+			"maritalStatusChoices": {
 				"married": "Married",
 				"widowed": "Widowed",
 				"divorced": "Divorced",
@@ -51,7 +51,7 @@
 			"hasDependentsTitleV1": "Do you have any dependents?",
 			"hasDependentsDescV1": "People who depend financially on you.",
 			"nrDependentsTitleV1": "How many people depend on you financially?",
-			"nrDependentsChoicesV1": {
+			"nrDependentsChoices": {
 				"1-2": "1-2",
 				"3-4": "3-4",
 				"5-7": "5-7",
@@ -60,7 +60,7 @@
 			},
 			"attendingSchoolV1": "Are you currently attending school?",
 			"employmentStatusTitleV1": "What is your current employment status?",
-			"employmentStatusChoicesV1": {
+			"employmentStatusChoices": {
 				"employed": "Employed",
 				"selfEmployed": "Self-employed",
 				"notEmployed": "Not employed",
@@ -70,18 +70,18 @@
 			"disabilityTitleV1": "Do you have a disability or illness that affects your possibilities of getting work or keeping your job?",
 			"skippingMealsTitleV1": "Do you or other family members in your household ever skip meals because there wasn't enough money for food?",
 			"skippingMealsLastWeekTitleV1": "Did this happen last week?",
-			"skippingMealsLastWeekThreeMealsTitleV1": "Did you skip more than 3 meals in the past week?",
+			"skippingMealsLastWeek3MealsTitleV1": "Did you skip more than 3 meals in the past week?",
 			"unexpectedExpensesCoveredTitleV1": "Do you have enough money to cover unexpected expenses like seeing a doctor costing 100 SLE?",
 			"savingsTitleV1": "Are you currently able to save money?",
-			"deptPersonalTitleV1": "Are you in debt? (SLE 500 or above)",
-			"mainDeptRepayTitleV1": "Are you able to repay the debt?",
+			"debtPersonalTitleV1": "Are you in debt? (SLE 500 or above)",
+			"debtPersonalRepayTitleV1": "Are you able to repay the debt?",
 			"debtHouseholdTitleV1": "Is anyone in your household in debt? (SLE 500 or above)",
 			"debtHouseholdWhoRepaysTitleV1": "Are you the main person repaying the debt?",
 			"otherSupportTitleV1": "Are you currently receiving any other form of financial support from anywhere else?",
-			"plannedAchievementCheckingTitleV1": "What do you hope to achieve within the next 3 years with Social Income? ",
+			"plannedAchievementOnboardingTitleV1": "What do you hope to achieve within the next 3 years with Social Income? ",
 
 			"spendingTitleV1": "Tell us what are the key categories that you spend your Social Income payments on:",
-			"spendingChoicesV1": {
+			"spendingChoices": {
 				"education": "Education (school fees, stationary, textbooks ...)",
 				"food": "Food for you or your household",
 				"housing": "Housing (rent, house maintenance ...)",
