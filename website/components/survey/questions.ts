@@ -257,7 +257,6 @@ export const plannedAchievementsPage = (t: TFunction, isOnboarding: boolean) => 
 	};
 };
 
-
 // Additional questions for check-in survey for active recipients
 
 export const spendingPage = (t: TFunction) => {
@@ -378,13 +377,6 @@ export const longEnoughPage = (t: TFunction) => {
 
 // Additional questions for check-in survey for former recipients
 
-
-
-
-
-
-
-
 // Reusable choices
 
 export const yesNoChoices = (t: TFunction) =>
@@ -421,7 +413,6 @@ export const maritalStatusChoices = (t: TFunction) =>
 		};
 	});
 
-
 export const nrDependentsChoices = (t: TFunction) =>
 	['1-2', '3-4', '5-7', '8-10', '10-'].map((key) => {
 		return {
@@ -436,7 +427,6 @@ export const employmentStatusChoices = (t: TFunction) =>
 			text: t('survey.questions.employmentStatusChoices.' + key),
 		};
 	});
-
 
 export const livingLocationChoices = (t: TFunction) =>
 	[
