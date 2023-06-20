@@ -22,87 +22,31 @@ export const welcomePage = (t: TFunction, name: string) => {
 	};
 };
 
-export const maritalStatusPage = (t: TFunction) => {
-	return {
-		elements: [
-			{
-				type: 'radiogroup',
-				name: 'maritalStatus',
-				isRequired: true,
-				title: t('survey.questions.maritalStatusTitle'),
-				choices: maritalStatusChoices(t),
-			},
-		],
-	};
-};
-
-export const financialSituationPage = (t: TFunction) => {
-	return {
-		elements: [
-			{
-				type: 'radiogroup',
-				name: 'financialSituation',
-				isRequired: true,
-				title: t('survey.questions.financialSituationTitle'),
-				choices: financialSituationChoices(t),
-			},
-		],
-	};
-};
-
-export const employmentStatusPage = (t: TFunction) => {
-	return {
-		elements: [
-			{
-				type: 'radiogroup',
-				name: 'employmentStatus',
-				isRequired: true,
-				title: t('survey.questions.employmentStatusTitle'),
-				choices: employmentStatusChoices(t),
-			},
-			{
-				type: 'radiogroup',
-				name: 'notEmployed',
-				visibleIf: '{employmentStatus}=notEmployed',
-				title: t('survey.questions.notEmployedTitle'),
-				isRequired: true,
-				choices: yesNoChoices(t),
-			},
-			{
-				type: 'radiogroup',
-				name: 'employed',
-				visibleIf: '{employmentStatus}=employed or {employmentStatus}=selfEmployed',
-				title: t('survey.questions.employedTitle'),
-				isRequired: true,
-				choices: employedChoices(t),
-			},
-		],
-	};
-};
-
-export const disabilityPage = (t: TFunction) => {
-	return {
-		elements: [
-			{
-				type: 'radiogroup',
-				name: 'disability',
-				isRequired: true,
-				title: t('survey.questions.disabilityTitle'),
-				choices: yesNoChoices(t),
-			},
-		],
-	};
-};
+// Questions for onboarding survey (reused in other surveys)
 
 export const livingLocationPage = (t: TFunction) => {
 	return {
 		elements: [
 			{
 				type: 'radiogroup',
-				name: 'livingLocation',
+				name: 'livingLocationV1',
 				isRequired: true,
-				title: t('survey.questions.livingLocationTitle'),
+				title: t('survey.questions.livingLocationTitleV1'),
 				choices: livingLocationChoices(t),
+			},
+		],
+	};
+};
+
+export const maritalStatusPage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'radiogroup',
+				name: 'maritalStatusV1',
+				isRequired: true,
+				title: t('survey.questions.maritalStatusTitleV1'),
+				choices: maritalStatusChoices(t),
 			},
 		],
 	};
@@ -113,61 +57,99 @@ export const dependentsPage = (t: TFunction) => {
 		elements: [
 			{
 				type: 'radiogroup',
-				name: 'hasDependents',
+				name: 'hasDependentsV1',
 				isRequired: true,
-				title: t('survey.questions.hasDependentsTitle'),
-				description: t('survey.questions.hasDependentsDesc'),
+				title: t('survey.questions.hasDependentsTitleV1'),
+				description: t('survey.questions.hasDependentsDescV1'),
 				choices: yesNoChoices(t),
 			},
 			{
 				type: 'radiogroup',
-				name: 'nrDependents',
+				name: 'nrDependentsV1',
 				isRequired: true,
-				title: t('survey.questions.nrDependentsTitle'),
-				visibleIf: '{hasDependents}=true',
+				title: t('survey.questions.nrDependentsTitleV1'),
+				visibleIf: '{hasDependentsV1}=true',
 				choices: nrDependentsChoices(t),
 			},
 		],
 	};
 };
 
-export const basicNeedsCoveragePage = (t: TFunction) => {
+export const schoolPageXXX = (t: TFunction) => {
 	return {
 		elements: [
 			{
 				type: 'radiogroup',
-				name: 'basicNeedsCoverage',
+				name: 'schoolAttendanceV1',
 				isRequired: true,
-				title: t('survey.questions.basicNeedsCoverageTitle'),
-				choices: ratingChoices(t),
+				title: t('survey.questions.attendingSchoolV1'),
+				choices: yesNoChoices(t),
 			},
 		],
 	};
 };
 
-export const expensesCoveredPage = (t: TFunction) => {
+export const employmentStatusPage = (t: TFunction) => {
 	return {
 		elements: [
 			{
 				type: 'radiogroup',
-				name: 'expensesCovered',
+				name: 'employmentStatusV1',
 				isRequired: true,
-				title: t('survey.questions.expensesCoveredTitle'),
-				choices: ratingChoices(t),
+				title: t('survey.questions.employmentStatusTitleV1'),
+				choices: employmentStatusChoices(t),
+			},
+			{
+				type: 'radiogroup',
+				name: 'notEmployedV1',
+				visibleIf: '{employmentStatusV1}=notEmployed',
+				title: t('survey.questions.notEmployedTitleV1'),
+				isRequired: true,
+				choices: yesNoChoices(t),
 			},
 		],
 	};
 };
 
-export const ownIncomePage = (t: TFunction) => {
+export const disabilityPage = (t: TFunction) => {
 	return {
 		elements: [
 			{
 				type: 'radiogroup',
-				name: 'ownIncome',
+				name: 'disabilityV1',
 				isRequired: true,
-				title: t('survey.questions.ownIncomeTitle'),
-				choices: ratingChoices(t),
+				title: t('survey.questions.disabilityTitleV1'),
+				choices: yesNoChoices(t),
+			},
+		],
+	};
+};
+
+export const skippingMealsPage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'radiogroup',
+				name: 'skippingMealsV1',
+				isRequired: true,
+				title: t('survey.questions.skippingMealsTitleV1'),
+				choices: yesNoChoices(t),
+			},
+			{
+				type: 'radiogroup',
+				name: 'skippingMealsLastWeekV1',
+				visibleIf: '{skippingMealsV1}=true',
+				title: t('survey.questions.skippingMealsLastWeekTitleV1'),
+				isRequired: true,
+				choices: yesNoChoices(t),
+			},
+			{
+				type: 'radiogroup',
+				name: 'skippingMealsLastWeek3MealsV1',
+				visibleIf: '{skippingMealsLastWeekV1}=true',
+				title: t('survey.questions.skippingMealsLastWeek3MealsTitleV1'),
+				isRequired: true,
+				choices: yesNoChoices(t),
 			},
 		],
 	};
@@ -178,24 +160,10 @@ export const unexpectedExpensesCoveredPage = (t: TFunction) => {
 		elements: [
 			{
 				type: 'radiogroup',
-				name: 'unexpectedExpensesCovered',
+				name: 'unexpectedExpensesCoveredV1',
 				isRequired: true,
-				title: t('survey.questions.unexpectedExpensesCoveredTitle'),
-				choices: ratingChoices(t),
-			},
-		],
-	};
-};
-
-export const educationAccessPage = (t: TFunction) => {
-	return {
-		elements: [
-			{
-				type: 'radiogroup',
-				name: 'educationAccess',
-				isRequired: true,
-				title: t('survey.questions.educationAccessTitle'),
-				choices: ratingChoices(t),
+				title: t('survey.questions.unexpectedExpensesCoveredTitleV1'),
+				choices: yesNoChoices(t),
 			},
 		],
 	};
@@ -206,56 +174,68 @@ export const savingsPage = (t: TFunction) => {
 		elements: [
 			{
 				type: 'radiogroup',
-				name: 'savings',
+				name: 'savingsV1',
 				isRequired: true,
-				title: t('survey.questions.savingsTitle'),
-				choices: ratingChoices(t),
-			},
-		],
-	};
-};
-
-export const deptPage = (t: TFunction) => {
-	return {
-		elements: [
-			{
-				type: 'radiogroup',
-				name: 'dept',
-				isRequired: true,
-				title: t('survey.questions.deptTitle'),
-				choices: yesNoChoices(t),
-			},
-			{
-				type: 'radiogroup',
-				name: 'mainDeptPayer',
-				visibleIf: '{dept}=true',
-				title: t('survey.questions.mainDeptPayerTitle'),
-				isRequired: true,
+				title: t('survey.questions.savingsTitleV1'),
 				choices: yesNoChoices(t),
 			},
 		],
 	};
 };
 
-export const spendingPage = (t: TFunction) => {
+export const debtPersonalPage = (t: TFunction) => {
 	return {
 		elements: [
 			{
-				type: 'checkbox',
-				name: 'spending',
+				type: 'radiogroup',
+				name: 'debtPersonalV1',
 				isRequired: true,
-				title: t('survey.questions.spendingTitle'),
-				choices: spendingChoices(t),
+				title: t('survey.questions.debtPersonalTitleV1'),
+				choices: yesNoChoices(t),
 			},
 			{
-				type: 'ranking',
-				name: 'spendingRanked',
-				title: t('survey.questions.spendingRankingTitle'),
-				description: t('survey.questions.spendingRankingDesc'),
-				visibleIf: '{spending.length} > 1',
+				type: 'radiogroup',
+				name: 'debtPersonalRepayV1',
+				visibleIf: '{debtPersonalV1}=true',
+				title: t('survey.questions.debtPersonalRepayTitleV1'),
 				isRequired: true,
-				choicesFromQuestion: 'spending',
-				choicesFromQuestionMode: 'selected',
+				choices: yesNoChoices(t),
+			},
+		],
+	};
+};
+
+export const debtHouseholdPage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'radiogroup',
+				name: 'debtHouseholdV1',
+				isRequired: true,
+				title: t('survey.questions.debtHouseholdTitleV1'),
+				choices: yesNoChoices(t),
+			},
+			{
+				type: 'radiogroup',
+				name: 'debtHouseholdWhoRepaysV1',
+				visibleIf: '{debtHouseholdV1}=true',
+				title: t('survey.questions.debtHouseholdWhoRepaysTitleV1'),
+				isRequired: true,
+				choices: yesNoChoices(t),
+			},
+		],
+	};
+};
+
+export const otherSupportPage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'radiogroup',
+				name: 'otherSupportV1',
+				isRequired: true,
+				title: t('survey.questions.otherSupportTitleV1'),
+				choices: yesNoChoices(t),
 			},
 		],
 	};
@@ -268,72 +248,86 @@ export const plannedAchievementsPage = (t: TFunction, isOnboarding: boolean) => 
 				type: 'comment',
 				name: 'plannedAchievement',
 				isRequired: true,
+				// xxx: why title isOnboarding?
 				title: isOnboarding
-					? t('survey.questions.plannedAchievementOnboardingTitle')
-					: t('survey.questions.plannedAchievementCheckingTitle'),
+					? t('survey.questions.plannedAchievementOnboardingTitleV1')
+					: t('survey.questions.plannedAchievementCheckingTitleV1'),
+				// xxx: why twice for onoboarding and checking?
 			},
 		],
 	};
 };
 
-export const achievementsAchievedPage = (t: TFunction) => {
+
+// Additional questions for check-in survey for active recipients
+
+export const spendingPage = (t: TFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'achievementsAchieved',
+				type: 'checkbox',
+				name: 'spendingV1',
 				isRequired: true,
-				title: t('survey.questions.achievementsAchievedTitle'),
-				choices: yesNoChoices(t),
+				title: t('survey.questions.spendingTitleV1'),
+				choices: spendingChoices(t),
 			},
 			{
-				type: 'comment',
-				name: 'achievementsNotAchievedComment',
-				visibleIf: '{achievementsAchieved}=false',
-				title: t('survey.questions.achievementsNotAchievedCommentTitle'),
+				type: 'ranking',
+				name: 'spendingRankedV1',
+				title: t('survey.questions.spendingRankingTitleV1'),
+				description: t('survey.questions.spendingRankingDescV1'),
+				visibleIf: '{spendingV1.length} > 1',
 				isRequired: true,
+				choicesFromQuestion: 'spendingV1',
+				choicesFromQuestionMode: 'selected',
 			},
 		],
 	};
 };
 
-export const moreFinanciallySecurePage = (t: TFunction) => {
+// Additional questions for offboarding survey
+
+export const impactFinancialPage = (t: TFunction) => {
 	return {
 		elements: [
 			{
 				type: 'radiogroup',
-				name: 'moreFinanciallySecure',
+				name: 'impactFinancialIndependenceV1',
 				isRequired: true,
-				title: t('survey.questions.moreFinanciallySecureTitle'),
+				title: t('survey.questions.impactFinancialIndependenceTitleV1'),
 				choices: yesNoChoices(t),
 			},
 		],
 	};
 };
 
-export const happierPage = (t: TFunction) => {
+export const impactLifePage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'comment',
+				name: 'impactLifeGeneralV1',
+				isRequired: true,
+				title: t('survey.questions.impactLifeGeneralTitleV1'),
+			},
+		],
+	};
+};
+
+
+
+
+// Additional questions for check-in survey for former recipients
+
+export const moreFinancialIndependencePage = (t: TFunction) => {
 	return {
 		elements: [
 			{
 				type: 'radiogroup',
-				name: 'happier',
+				name: 'impactFinancialIndependenceOverTimeV1',
 				isRequired: true,
-				title: t('survey.questions.happierTitle'),
+				title: t('survey.questions.impactFinancialIndependenceOverTimeTitleV1'),
 				choices: yesNoChoices(t),
-			},
-			{
-				type: 'comment',
-				name: 'happierComment',
-				visibleIf: '{happier}=true',
-				title: t('survey.questions.happierCommentTitle'),
-				isRequired: true,
-			},
-			{
-				type: 'comment',
-				name: 'notHappierComment',
-				visibleIf: '{happier}=false',
-				title: t('survey.questions.notHappierCommentTitle'),
-				isRequired: true,
 			},
 		],
 	};
@@ -353,26 +347,56 @@ export const longEnoughPage = (t: TFunction) => {
 	};
 };
 
-export const selfSustainablePage = (t: TFunction) => {
+export const achievementsAchievedPage = (t: TFunction) => {
 	return {
 		elements: [
 			{
 				type: 'radiogroup',
-				name: 'selfSustainable',
+				name: 'achievementsAchievedV1',
 				isRequired: true,
-				title: t('survey.questions.selfSustainableTitle'),
+				title: t('survey.questions.achievementsAchievedTitleV1'),
 				choices: yesNoChoices(t),
 			},
 			{
 				type: 'comment',
-				name: 'notSelfSustainableComment',
-				visibleIf: '{selfSustainable}=false',
-				title: t('survey.questions.notSelfSustainableCommentTitle'),
+				name: 'achievementsNotAchievedCommentV1',
+				visibleIf: '{achievementsAchievedV1}=false',
+				title: t('survey.questions.achievementsNotAchievedCommentTitleV1'),
 				isRequired: true,
 			},
 		],
 	};
 };
+
+export const happierPage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'radiogroup',
+				name: 'happierV1',
+				isRequired: true,
+				title: t('survey.questions.happierTitleV1'),
+				choices: yesNoChoices(t),
+			},
+			{
+				type: 'comment',
+				name: 'happierCommentV1',
+				visibleIf: '{happier}=true',
+				title: t('survey.questions.happierCommentTitleV1'),
+				isRequired: true,
+			},
+			{
+				type: 'comment',
+				name: 'notHappierCommentV1',
+				visibleIf: '{happierCommentV1}=false',
+				title: t('survey.questions.notHappierCommentTitleV1'),
+				isRequired: true,
+			},
+		],
+	};
+};
+
+
 
 // Reusable choices
 
@@ -387,19 +411,20 @@ export const yesNoChoices = (t: TFunction) =>
 		};
 	});
 
-export const ratingChoices = (t: TFunction) =>
-	[
-		[1, 'extremelyUnlikely'],
-		[2, 'unlikely'],
-		[3, 'neutral'],
-		[4, 'likely'],
-		[5, 'extremelyLikely'],
-	].map(([value, translationKey]) => {
-		return {
-			value: value,
-			text: t('survey.questions.ratingChoices.' + translationKey),
-		};
-	});
+// xxx Should we leave this one or delete it (might be used in future surveys)
+// export const ratingChoices = (t: TFunction) =>
+// 	[
+// 		[1, 'extremelyUnlikely'],
+// 		[2, 'unlikely'],
+// 		[3, 'neutral'],
+// 		[4, 'likely'],
+// 		[5, 'extremelyLikely'],
+// 	].map(([value, translationKey]) => {
+// 		return {
+// 			value: value,
+// 			text: t('survey.questions.ratingChoices.' + translationKey),
+// 		};
+// 	});
 
 export const maritalStatusChoices = (t: TFunction) =>
 	['married', 'widowed', 'divorced', 'separated', 'neverMarried'].map((key) => {
