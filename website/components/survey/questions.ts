@@ -293,7 +293,7 @@ export const impactFinancialPage = (t: TFunction) => {
 				type: 'radiogroup',
 				name: 'impactFinancialIndependenceV1',
 				isRequired: true,
-				title: t('survey.questions.impactFinancialIndependenceTitleV1'),
+				title: t('survey.questions.financialIndependenceTitleV1'),
 				choices: yesNoChoices(t),
 			},
 		],
@@ -308,37 +308,6 @@ export const impactLifePage = (t: TFunction) => {
 				name: 'impactLifeGeneralV1',
 				isRequired: true,
 				title: t('survey.questions.impactLifeGeneralTitleV1'),
-			},
-		],
-	};
-};
-
-
-// Additional questions for check-in survey for former recipients
-
-export const impactFinancialIndependenceOverTimePage = (t: TFunction) => {
-	return {
-		elements: [
-			{
-				type: 'radiogroup',
-				name: 'impactFinancialIndependenceOverTimeV1',
-				isRequired: true,
-				title: t('survey.questions.impactFinancialIndependenceOverTimeTitleV1'),
-				choices: yesNoChoices(t),
-			},
-		],
-	};
-};
-
-export const longEnoughPage = (t: TFunction) => {
-	return {
-		elements: [
-			{
-				type: 'radiogroup',
-				name: 'longEnough',
-				isRequired: true,
-				title: t('survey.questions.longEnoughTitle'),
-				choices: yesNoChoices(t),
 			},
 		],
 	};
@@ -392,6 +361,27 @@ export const happierPage = (t: TFunction) => {
 		],
 	};
 };
+
+export const longEnoughPage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'radiogroup',
+				name: 'longEnough',
+				isRequired: true,
+				title: t('survey.questions.longEnoughTitle'),
+				choices: yesNoChoices(t),
+			},
+		],
+	};
+};
+
+// Additional questions for check-in survey for former recipients
+
+
+
+
+
 
 
 
