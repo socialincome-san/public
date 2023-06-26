@@ -241,17 +241,14 @@ export const otherSupportPage = (t: TFunction) => {
 	};
 };
 
-export const plannedAchievementsPage = (t: TFunction, isOnboarding: boolean) => {
+export const plannedAchievementsPage = (t: TFunction) => {
 	return {
 		elements: [
 			{
 				type: 'comment',
-				name: 'plannedAchievement',
+				name: 'plannedAchievementV1',
 				isRequired: true,
-				title: isOnboarding
-					? t('survey.questions.plannedAchievementOnboardingTitleV1')
-					: t('survey.questions.plannedAchievementCheckingTitleV1'),
-				// xxx: why title isOnboarding and why t: twice for onboarding and checking?
+				title: t('survey.questions.plannedAchievementTitleV1'),
 			},
 		],
 	};
@@ -278,6 +275,19 @@ export const spendingPage = (t: TFunction) => {
 				isRequired: true,
 				choicesFromQuestion: 'spendingV1',
 				choicesFromQuestionMode: 'selected',
+			},
+		],
+	};
+};
+
+export const plannedAchievementsRemainingPage = (t: TFunction) => {
+	return {
+		elements: [
+			{
+				type: 'comment',
+				name: 'plannedAchievementRemainingV1',
+				isRequired: true,
+				title: t('survey.questions.plannedAchievementRemainingTitleV1'),
 			},
 		],
 	};
@@ -389,21 +399,6 @@ export const yesNoChoices = (t: TFunction) =>
 			text: t('survey.questions.yesNoChoices.' + translationKey),
 		};
 	});
-
-// xxx Should we leave this one or delete it (might be used in future surveys)
-// export const ratingChoices = (t: TFunction) =>
-// 	[
-// 		[1, 'extremelyUnlikely'],
-// 		[2, 'unlikely'],
-// 		[3, 'neutral'],
-// 		[4, 'likely'],
-// 		[5, 'extremelyLikely'],
-// 	].map(([value, translationKey]) => {
-// 		return {
-// 			value: value,
-// 			text: t('survey.questions.ratingChoices.' + translationKey),
-// 		};
-// 	});
 
 export const maritalStatusChoices = (t: TFunction) =>
 	['married', 'widowed', 'divorced', 'separated', 'neverMarried'].map((key) => {

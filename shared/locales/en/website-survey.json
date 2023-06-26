@@ -78,7 +78,7 @@
 			"debtHouseholdTitleV1": "Is anyone in your household in debt? (SLE 500 or above)",
 			"debtHouseholdWhoRepaysTitleV1": "Are you the main person repaying the debt?",
 			"otherSupportTitleV1": "Are you currently receiving any other form of financial support from anywhere else?",
-			"plannedAchievementOnboardingTitleV1": "What do you hope to achieve within the next 3 years with Social Income? ",
+			"plannedAchievementTitleV1": "What do you hope to achieve within the next 3 years with Social Income? ",
 
 			"spendingTitleV1": "Tell us what are the key categories that you spend your Social Income payments on:",
 			"spendingChoices": {
@@ -92,6 +92,7 @@
 			},
 			"spendingRankingTitleV1": "Please rank the selected spending categories from the most important to the least.",
 			"spendingRankingDescV1": "You can drag and drop the categories.",
+			"plannedAchievementRemainingTitleV1": "What do you hope to achieve within the remaining time in the Social Income program? ",
 
 			"financialIndependenceTitleV1": "Did Social Income make you feel financially more secure and independent?",
 			"impactLifeGeneralTitleV1": "What impact did Social Income have on your life?",

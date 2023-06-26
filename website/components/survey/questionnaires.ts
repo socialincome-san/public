@@ -15,6 +15,7 @@ import {
 	debtHouseholdPage,
 	otherSupportPage,
 	plannedAchievementsPage,
+	plannedAchievementsRemainingPage,
 	spendingPage,
 	impactFinancialPage,
 	impactLifePage,
@@ -39,8 +40,7 @@ export const getQuestionnaire = (questionnaire: SurveyQuestionnaire, t: TFunctio
 
 export const onboardingQuestionnaire = (t: TFunction, name: string) => [
 	welcomePage(t, name),
-	plannedAchievementsPage(t, true),
-	// xxx dont get this isOnboarding true
+	plannedAchievementsPage(t),
 	livingLocationPage(t),
 	maritalStatusPage(t),
 	dependentsPage(t),
@@ -58,8 +58,7 @@ export const onboardingQuestionnaire = (t: TFunction, name: string) => [
 export const checkinQuestionnaire = (t: TFunction, name: string) => [
 	welcomePage(t, name),
 	spendingPage(t),
-	plannedAchievementsPage(t, false),
-	// xxx don't get this isOnboarding false. Shouldn't show up in this survey
+	plannedAchievementsRemainingPage(t),
 	livingLocationPage(t),
 	maritalStatusPage(t),
 	dependentsPage(t),
