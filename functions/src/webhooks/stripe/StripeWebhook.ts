@@ -3,14 +3,14 @@ import { CollectionReference } from 'firebase-admin/lib/firestore';
 import * as functions from 'firebase-functions';
 import Stripe from 'stripe';
 import {
+	CONTRIBUTION_FIRESTORE_PATH,
 	Contribution,
 	ContributionSourceKey,
-	CONTRIBUTION_FIRESTORE_PATH,
-	splitName,
 	StatusKey,
+	USER_FIRESTORE_PATH,
 	User,
 	UserStatusKey,
-	USER_FIRESTORE_PATH,
+	splitName,
 } from '../../../../shared/src/types';
 import { STRIPE_API_READ_KEY, STRIPE_WEBHOOK_SECRET } from '../../config';
 import { AbstractFirebaseAdmin, FunctionProvider } from '../../firebase';

@@ -1,5 +1,5 @@
 import { buildProperties } from 'firecms';
-import { NewsletterSubscriber, NEWSLETTER_SUBSCRIBER_FIRESTORE_PATH } from '../../../shared/src/types';
+import { NEWSLETTER_SUBSCRIBER_FIRESTORE_PATH, NewsletterSubscriber } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 
 export const newsletterSubscribersCollection = buildAuditedCollection<NewsletterSubscriber>({

@@ -44,23 +44,6 @@ ui:build
 ui:serve
 ```
 
-\_Installation of dependencies happens upon running any of these
-commands\_
-
-## Build for publishing
-
-To create the bundle that can be consumed by other projects, we need to
-build the project with RollupJs. When you run `build`, following steps
-are performed:
-
-- **Create barrels**: Barrels are `index` files that allow users to
-  import files via the package name without expanding the path
-  explicitly. We use
-  [BarrelsBy](https://github.com/bencoveney/barrelsby) to automatically
-  create the barrel files when `build` is run.
-- **Create a build with Rollup**: RollupJS creates different bundle for
-  different use cases e.g. CommonJS or ES.
-
 ## Contribute
 
 There are several ways to contribute to the Social Income UI project.

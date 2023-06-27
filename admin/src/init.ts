@@ -1,19 +1,16 @@
+import { FirebaseOptions } from '@firebase/app';
 import { getApp } from 'firebase/app';
 import { browserSessionPersistence, connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
 
-export function getFirebaseConfig() {
+export function getFirebaseConfig(): FirebaseOptions | undefined {
 	return import.meta.env.MODE === 'development'
 		? {
 				apiKey: import.meta.env.VITE_ADMIN_FB_API_KEY,
 				authDomain: import.meta.env.VITE_ADMIN_FB_AUTH_DOMAIN,
-				databaseURL: import.meta.env.VITE_ADMIN_FB_DATABASE_URL,
 				projectId: import.meta.env.VITE_ADMIN_FB_PROJECT_ID,
-				storageBucket: import.meta.env.VITE_ADMIN_FB_STORAGE_BUCKET,
-				messagingSenderId: import.meta.env.VITE_ADMIN_FB_MESSAGING_SENDER_ID,
-				measurementId: import.meta.env.VITE_ADMIN_FB_MEASUREMENT_ID,
 		  }
 		: undefined; // In staging/production, config is loaded from the environment variables set by Firebase Hosting
 }

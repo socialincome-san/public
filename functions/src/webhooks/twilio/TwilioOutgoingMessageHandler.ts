@@ -3,10 +3,10 @@ import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
 import {
 	Entity,
 	LocaleLanguage,
-	MessageType,
 	MESSAGE_FIRESTORE_PATH,
-	Recipient,
+	MessageType,
 	RECIPIENT_FIRESTORE_PATH,
+	Recipient,
 	TwilioMessage,
 } from '../../../../shared/src/types';
 import { sendWhatsapp } from '../../../../shared/src/utils/messaging/whatsapp';

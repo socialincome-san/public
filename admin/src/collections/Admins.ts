@@ -1,5 +1,5 @@
 import { buildProperties } from 'firecms';
-import { AdminUser, ADMIN_USER_FIRESTORE_PATH, PARTNER_ORGANISATION_FIRESTORE_PATH } from '../../../shared/src/types';
+import { ADMIN_USER_FIRESTORE_PATH, AdminUser, PARTNER_ORGANISATION_FIRESTORE_PATH } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 
 export const adminsCollection = buildAuditedCollection<AdminUser>({

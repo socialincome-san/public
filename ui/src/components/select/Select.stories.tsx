@@ -1,7 +1,7 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import { useState } from 'react';
 
-import { SoSelect, SoSelectProps, SO_SELECT_SIZES } from './Select';
+import { SO_SELECT_SIZES, SoSelect, SoSelectProps } from './Select';
 
 export default {
 	component: SoSelect,
@@ -22,26 +22,29 @@ export default {
 			control: { type: 'select' },
 		},
 	},
-} as ComponentMeta<typeof SoSelect>;
+} as Meta<typeof SoSelect>;
 
-const Template: ComponentStory<typeof SoSelect> = (args: Partial<SoSelectProps>) => {
-	const options: SoSelectProps['options'] = args?.options || [
-		{
+const Template: StoryFn<typeof SoSelect> = (args: Partial<SoSelectProps>) => {
+	const options: SoSelectProps['options'] = args?.options || {
+		'option-1': {
 			label: 'Option 1',
+			value: 'option-1',
 		},
-		{
+		'option-2': {
 			label: 'Option 2',
+			value: 'option-2',
 		},
-		{
+		'option-3': {
 			label: 'Option 3',
+			value: 'option-3',
 		},
-	];
+	};
 
-	const [value, setValue] = useState(options[0]);
+	const [value, setValue] = useState('option-1');
 
 	const props: SoSelectProps = {
 		label: 'Select Label',
-		value,
+		selected: value,
 		options,
 		...args,
 		onChange: (selectedItem) => {
@@ -56,24 +59,27 @@ export const Standard: typeof Template = Template.bind({});
 export const WithImages: typeof Template = Template.bind({});
 WithImages.args = {
 	label: 'Country Selector Example',
-	options: [
-		{
+	options: {
+		'option-1': {
 			label: 'Option 1',
+			value: 'option-1',
 			image: {
 				src: 'ch.svg',
 			},
 		},
-		{
+		'option-2': {
 			label: 'Option 2',
+			value: 'option-2',
 			image: {
 				src: 'ch.svg',
 			},
 		},
-		{
+		'option-3': {
 			label: 'Option 3',
+			value: 'option-3',
 			image: {
 				src: 'ch.svg',
 			},
 		},
-	],
+	},
 };

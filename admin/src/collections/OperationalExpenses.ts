@@ -1,5 +1,5 @@
 import { buildProperties } from 'firecms';
-import { OperationalExpense, OPERATIONAL_EXPENSE_FIRESTORE_PATH } from '../../../shared/src/types';
+import { OPERATIONAL_EXPENSE_FIRESTORE_PATH, OperationalExpense } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 
 export const operationalExpensesCollection = buildAuditedCollection<OperationalExpense>({

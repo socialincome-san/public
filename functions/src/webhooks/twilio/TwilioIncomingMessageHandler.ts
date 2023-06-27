@@ -1,9 +1,9 @@
 import * as functions from 'firebase-functions';
 import {
-	MessageType,
 	MESSAGE_FIRESTORE_PATH,
-	Recipient,
+	MessageType,
 	RECIPIENT_FIRESTORE_PATH,
+	Recipient,
 	TwilioMessage,
 } from '../../../../shared/src/types';
 import { AbstractFirebaseAdmin, FunctionProvider } from '../../firebase';

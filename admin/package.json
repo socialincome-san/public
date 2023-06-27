@@ -1,6 +1,6 @@
 {
 	"name": "@socialincome/admin",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"private": true,
 	"license": "see LICENSE",
 	"scripts": {
@@ -43,7 +43,7 @@
 		"@mui/material": "^5.11.13",
 		"@mui/x-date-pickers": "^5.0.20",
 		"@mui/x-data-grid": "^6.3.0",
-		"@socialincome/shared": "^0.1.0",
+		"@socialincome/shared": "^1.0.0",
 		"algoliasearch": "^4.15.0",
 		"firebase": "^9.18.0",
 		"lodash": "^4.17.21",

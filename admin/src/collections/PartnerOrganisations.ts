@@ -1,5 +1,5 @@
 import { buildProperties } from 'firecms';
-import { PartnerOrganisation, PARTNER_ORGANISATION_FIRESTORE_PATH } from '../../../shared/src/types';
+import { PARTNER_ORGANISATION_FIRESTORE_PATH, PartnerOrganisation } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 
 export const buildPartnerOrganisationsCollection = () => {

@@ -13,9 +13,9 @@ import {
 	StatusKey,
 	User,
 } from '../../../../../shared/src/types';
+import { Translator } from '../../../../../shared/src/utils/i18n';
 import { sendEmail } from '../../../../../shared/src/utils/messaging/email';
 import { renderTemplate } from '../../../../../shared/src/utils/templates';
-import { Translator } from '../../../../../shared/src/utils/translate';
 import { ASSET_DIR, NOTIFICATION_EMAIL_PASSWORD_KERRIN, NOTIFICATION_EMAIL_USER_KERRIN } from '../../../config';
 import { AbstractFirebaseAdmin, FunctionProvider } from '../../../firebase';
 

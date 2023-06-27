@@ -2,14 +2,14 @@ import { describe, expect, test } from '@jest/globals';
 import axios from 'axios';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import { promises as fs, unlinkSync } from 'fs';
-import { getOrInitializeApp } from './app';
 import { StorageAdmin } from './StorageAdmin';
+import { getOrInitializeFirebaseAdmin } from './app';
 
 const { cleanup } = firebaseFunctionsTest();
 
 describe('useStorageAdmin', () => {
 	const tmpFile = 'tmp.txt';
-	const storageAdmin = new StorageAdmin(getOrInitializeApp());
+	const storageAdmin = new StorageAdmin(getOrInitializeFirebaseAdmin());
 
 	afterEach(() => {
 		unlinkSync(tmpFile);
