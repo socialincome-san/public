@@ -1,7 +1,7 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { useState } from 'react';
 
-import { SoCombobox, SoComboboxProps, SO_COMBOBOX_SIZES } from './Combobox';
+import { SO_COMBOBOX_SIZES, SoCombobox, SoComboboxProps } from './Combobox';
 
 export default {
 	component: SoCombobox,

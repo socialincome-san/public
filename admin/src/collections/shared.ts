@@ -1,7 +1,7 @@
 import { UpdateData } from '@firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { DocumentReference, updateDoc } from 'firebase/firestore';
-import { buildCollection, EntityOnSaveProps } from 'firecms';
+import { EntityOnSaveProps, buildCollection } from 'firecms';
 import { EntityCollection, User } from 'firecms/dist/types';
 
 /**

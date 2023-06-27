@@ -1,3 +1,5 @@
+'use client';
+
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
 import classNames from 'classnames';
@@ -12,6 +14,11 @@ export type SoSelectItem = {
 	 * The visible text
 	 */
 	label: string;
+
+	/**
+	 * Unique value of the item
+	 */
+	value: string;
 
 	/**
 	 * An optional image
@@ -30,32 +37,29 @@ export interface SoSelectProps extends Pick<ListboxProps, 'onChange' | 'name' | 
 	/**
 	 * Options available for selection
 	 */
-	options: SoSelectItem[];
+	options: Record<string, SoSelectItem>;
 
 	/**
 	 * The selected/current value
 	 */
-	value: SoSelectItem;
-
-	/**
-	 * Emits the selected value on change
-	 */
-	onChange?(value: SoSelectItem): void;
-
+	selected: string;
 	/**
 	 * Render full width
 	 */
 	block?: boolean;
-
 	/**
 	 * If true, the label is visually hidden. It will still be available to screenreaders.
 	 */
 	labelHidden?: boolean;
-
 	/**
 	 * Visual size of the button
 	 */
 	size?: (typeof SO_SELECT_SIZES)[number];
+
+	/**
+	 * Emits the selected value on change
+	 */
+	onChange?(value: string): void;
 }
 
 /**
@@ -66,7 +70,7 @@ export const SoSelect = ({
 	options,
 	name,
 	size = 'base',
-	value = options[0],
+	selected = Object.keys(options)[0],
 	block = false,
 	labelHidden = false,
 	...props
@@ -101,16 +105,21 @@ export const SoSelect = ({
 							)}
 						>
 							<span className="flex items-center">
-								{value?.image && (
-									<img src={value.image.src} alt="" className="h-6 w-6 flex-shrink-0 rounded-full object-cover" />
+								{options[selected]?.image && (
+									<img
+										src={options[selected]?.image?.src}
+										alt=""
+										className="h-6 w-6 flex-shrink-0 rounded-full object-cover"
+									/>
 								)}
-								<span className={classNames({ 'ml-3': value.image }, 'block', 'truncate')}>{value.label}</span>
+								<span className={classNames({ 'ml-3': Boolean(options[selected]?.image) }, 'block', 'truncate')}>
+									{options[selected]?.label}
+								</span>
 							</span>
 							<span className="pointer-events-none absolute inset-y-0 right-0 ml-2 flex items-center pr-2">
 								<ChevronDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
 							</span>
 						</Listbox.Button>
-
 						<Transition
 							show={open}
 							as={Fragment}
@@ -137,7 +146,7 @@ export const SoSelect = ({
 									{ 'w-full': block }
 								)}
 							>
-								{options.map((option, i) => (
+								{Object.entries(options).map(([value, option], i) => (
 									<Listbox.Option
 										key={i}
 										className={({ active }) =>
@@ -146,9 +155,9 @@ export const SoSelect = ({
 												'relative cursor-default select-none py-2 pl-3 pr-12'
 											)
 										}
-										value={option}
+										value={value}
 									>
-										{({ selected, active }) => (
+										{({ selected: isSelected, active }) => (
 											<>
 												<div className="flex items-center">
 													{option?.image && (
@@ -160,14 +169,14 @@ export const SoSelect = ({
 													)}
 													<span
 														className={classNames(active ? 'font-semibold' : 'font-normal', 'truncate', {
-															'ml-3': value.image,
+															'ml-3': Boolean(option?.image),
 														})}
 													>
 														{option.label}
 													</span>
 												</div>
 
-												{selected && (
+												{isSelected && (
 													<span className={classNames('absolute inset-y-0 right-0 flex items-center pr-4')}>
 														<CheckIcon className="h-5 w-5" aria-hidden="true" />
 													</span>

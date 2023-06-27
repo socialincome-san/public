@@ -4,7 +4,7 @@ import imaps from 'imap-simple';
 
 import _ from 'lodash';
 import { simpleParser, Source } from 'mailparser';
-import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../shared/src/types';
+import { BANK_BALANCE_FIRESTORE_PATH, BankBalance, getIdFromBankBalance } from '../../../shared/src/types';
 import { POSTFINANCE_EMAIL_PASSWORD, POSTFINANCE_EMAIL_USER } from '../config';
 import { AbstractFirebaseAdmin, FunctionProvider } from '../firebase';
 
