@@ -1,12 +1,11 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
 import ContributionStats from '@/app/[lang]/[country]/(website)/transparency/[currency]/contribution-stats';
+import { firestoreAdmin } from '@/firebase/admin';
 import { ValidCountry, ValidLanguage } from '@/i18n';
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/FirestoreAdmin';
-import { getOrInitializeFirebaseAdmin } from '@socialincome/shared/src/firebase/app';
 import { ContributionStatsCalculator } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
 
-const getStats = async (firestoreAdmin: FirestoreAdmin, currency: string) => {
+const getStats = async (currency: string) => {
 	const contributionCalculator = await ContributionStatsCalculator.build(firestoreAdmin, currency);
 	const contributionStats = contributionCalculator.allStats();
 
@@ -29,8 +28,7 @@ interface FinancesProps extends DefaultPageProps {
 }
 
 export default async function Page({ params: { currency } }: FinancesProps) {
-	const firestoreAdmin = new FirestoreAdmin(getOrInitializeFirebaseAdmin());
-	const stats = await getStats(firestoreAdmin, currency);
+	const stats = await getStats(currency);
 
 	return (
 		<div>

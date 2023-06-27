@@ -1,9 +1,11 @@
 import { DefaultParams } from '@/app/[lang]/[country]';
 import LanguageSwitcher from '@/components/language-switcher/language-switcher';
+import { languages } from '@/i18n';
 import { Bars3BottomRightIcon } from '@heroicons/react/24/solid';
 import { LocaleLanguage } from '@socialincome/shared/src/types';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { CollapsibleMenu, Dropdown } from '@socialincome/ui';
+import _ from 'lodash';
 import Link from 'next/link';
 
 interface NavbarProps {
@@ -45,7 +47,7 @@ export default async function Navbar({ params }: NavbarProps) {
 			</div>
 
 			<div className="navbar-end">
-				<LanguageSwitcher params={params} />
+				<LanguageSwitcher params={params} languages={_.without(languages, 'kri')} />
 				<Dropdown alignEnd={true} className="lg:hidden bg-blue-50">
 					<Dropdown.Label>
 						<div className="btn btn-ghost">

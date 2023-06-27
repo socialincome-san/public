@@ -1,7 +1,7 @@
 import { firestore } from 'firebase-admin';
 import _ from 'lodash';
 import { DateTime } from 'luxon';
-import { FirestoreAdmin } from '../../firebase/FirestoreAdmin';
+import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
 import { Contribution, CONTRIBUTION_FIRESTORE_PATH, StatusKey, User, USER_FIRESTORE_PATH } from '../../types';
 import { getLatestExchangeRate } from '../exchangeRates';
 import { cumulativeSum, StatsEntry } from './utils';

@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
 import functions from 'firebase-functions-test';
-import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
-import { getOrInitializeFirebaseAdmin } from '../../../shared/src/firebase/app';
+import { FirestoreAdmin } from '../../../shared/src/firebase/admin/FirestoreAdmin';
+import { getOrInitializeFirebaseAdmin } from '../../../shared/src/firebase/admin/app';
 import { BANK_BALANCE_FIRESTORE_PATH, BankBalance, getIdFromBankBalance } from '../../../shared/src/types';
 import { PostFinanceImporter } from './PostFinanceImporter';
 

@@ -61,7 +61,11 @@ Before you can start developing, you need to install the dependencies by
 running. Make sure you are using Node.js 18. If you are using Homebrew,
 you can install it with `brew install node@18` and follow
 [this](https://ralphjsmit.com/switch-between-nodejs-versions-homebrew)
-guide to switch between different versions of Node.js if need be.
+guide to switch between different versions of Node.js if need be. On
+MacBook Pro (Intel) there seems to be an issue if you don't use exactly
+the 18.15.0 Version:
+[Download](https://nodejs.org/dist/v18.15.0/node-v18.15.0.pkg) /
+[Issue](https://github.com/firebase/firebase-tools/issues/5614)
 
 ```shell
 npm install

@@ -1,8 +1,8 @@
 import functions from 'firebase-functions-test';
 import { DateTime } from 'luxon';
 
-import { getOrInitializeFirebaseAdmin } from '../../../../../shared/src/firebase/app';
-import { FirestoreAdmin } from '../../../../../shared/src/firebase/FirestoreAdmin';
+import { getOrInitializeFirebaseAdmin } from '../../../../../shared/src/firebase/admin/app';
+import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
 import {
 	Payment,
 	PAYMENT_FIRESTORE_PATH,

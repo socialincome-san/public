@@ -1,8 +1,8 @@
 import { Timestamp } from '@google-cloud/firestore';
 import { describe, expect, test } from '@jest/globals';
 import functions from 'firebase-functions-test';
-import { FirestoreAdmin } from '../../firebase/FirestoreAdmin';
-import { getOrInitializeFirebaseAdmin } from '../../firebase/app';
+import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
+import { getOrInitializeFirebaseAdmin } from '../../firebase/admin/app';
 import {
 	CONTRIBUTION_FIRESTORE_PATH,
 	ContributionSourceKey,

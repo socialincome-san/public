@@ -1,7 +1,7 @@
 import { QueryDocumentSnapshot } from '@google-cloud/firestore';
 import { DateTime } from 'luxon';
 import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
-import { FirestoreAdmin } from '../../../../../../shared/src/firebase/FirestoreAdmin';
+import { FirestoreAdmin } from '../../../../../../shared/src/firebase/admin/FirestoreAdmin';
 import {
 	MESSAGE_FIRESTORE_PATH,
 	MessageType,

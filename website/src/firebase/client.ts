@@ -1,9 +1,5 @@
 import { initializeFirebaseClient } from '@socialincome/shared/src/firebase/client/init';
 
-/**
- * Initializes public clients. In contrast to the admin clients, this can be used directly from the client
- * since the security rules are applied.
- */
 export const { app, auth, firestore, functions, storage } = initializeFirebaseClient({
 	firebaseConfig: {
 		apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,

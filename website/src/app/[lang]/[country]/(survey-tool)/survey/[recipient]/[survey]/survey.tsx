@@ -1,4 +1,4 @@
-import { getFirebaseClients } from '@/firebase';
+import { firestore } from '@/firebase';
 import {
 	LocaleLanguage,
 	RECIPIENT_FIRESTORE_PATH,
@@ -24,7 +24,6 @@ interface SurveyProps {
 }
 
 export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
-	const { firestore } = getFirebaseClients();
 	const ref = doc(firestore, [RECIPIENT_FIRESTORE_PATH, recipientId, SURVEY_FIRETORE_PATH, surveyId].join('/'));
 
 	const { data: survey } = useQuery(

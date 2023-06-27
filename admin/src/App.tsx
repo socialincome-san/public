@@ -19,7 +19,7 @@ import { buildRecipientsPaymentsCollection } from './collections/recipients/Reci
 import { buildRecipientsSurveysCollection } from './collections/recipients/RecipientsSurveys';
 import { createPendingSurveyColumn, createSurveyColumn } from './collections/surveys/Surveys';
 import { usersCollection } from './collections/Users';
-import { getFirebaseConfig, onFirebaseInit } from './init';
+import { firebaseConfig, onFirebaseInit } from './init';
 import { PaymentsConfirmationView } from './views/PaymentsConfirmationView';
 import { ScriptsView } from './views/ScriptsView';
 
@@ -96,12 +96,12 @@ export default function App() {
 			authentication={myAuthenticator}
 			collections={collections}
 			dateTimeFormat={'dd/MM/yyyy'}
-			firebaseConfig={getFirebaseConfig()}
+			firebaseConfig={firebaseConfig as Record<string, any>}
+			onFirebaseInit={onFirebaseInit}
 			locale={'enUS'}
 			logo={'logo.svg'}
 			logoDark={'logo.svg'}
 			name={'Social Income Admin'}
-			onFirebaseInit={onFirebaseInit}
 			signInOptions={['google.com', 'password']}
 			textSearchController={textSearchController}
 			views={views}
