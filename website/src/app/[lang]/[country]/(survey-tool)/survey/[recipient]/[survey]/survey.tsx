@@ -8,7 +8,7 @@ import {
 } from '@socialincome/shared/src/types';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { useQuery } from '@tanstack/react-query';
-import { doc, getDoc, updateDoc } from 'firebase/firestore/lite';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useCallback } from 'react';
 import { Model } from 'survey-core';
 import 'survey-core/defaultV2.min.css';
