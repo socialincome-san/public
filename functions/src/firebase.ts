@@ -1,8 +1,8 @@
 import { HttpsFunction } from 'firebase-functions/lib/v1/cloud-functions';
-import { AuthAdmin } from '../../shared/src/firebase/AuthAdmin';
-import { FirestoreAdmin } from '../../shared/src/firebase/FirestoreAdmin';
-import { StorageAdmin } from '../../shared/src/firebase/StorageAdmin';
-import { getOrInitializeFirebaseAdmin } from '../../shared/src/firebase/app';
+import { AuthAdmin } from '../../shared/src/firebase/admin/AuthAdmin';
+import { FirestoreAdmin } from '../../shared/src/firebase/admin/FirestoreAdmin';
+import { StorageAdmin } from '../../shared/src/firebase/admin/StorageAdmin';
+import { getOrInitializeFirebaseAdmin } from '../../shared/src/firebase/admin/app';
 
 export interface FunctionProvider {
 	getFunction: () => HttpsFunction;

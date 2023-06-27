@@ -1,6 +1,6 @@
 'use client';
 
-import { getFirebaseClients } from '@/firebase';
+import { auth } from '@/firebase';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { User, signInWithEmailAndPassword } from 'firebase/auth';
 import { useSearchParams } from 'next/navigation';
@@ -14,8 +14,6 @@ export default function Page({ params }: SurveyPageProps) {
 	const [user, setUser] = useState<User>();
 	const searchParams = useSearchParams();
 	const queryClient = new QueryClient();
-
-	const { auth } = getFirebaseClients();
 
 	useEffect(() => {
 		setEmail(searchParams.get('email'));
