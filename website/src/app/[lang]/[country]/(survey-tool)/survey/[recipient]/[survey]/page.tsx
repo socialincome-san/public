@@ -1,19 +1,12 @@
 'use client';
 
-import { DefaultParams } from '@/app/[lang]/[country]';
 import { getFirebaseClients } from '@/firebase';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { User, signInWithEmailAndPassword } from 'firebase/auth';
 import { useSearchParams } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
+import { SurveyPageProps } from './layout';
 import { Survey } from './survey';
-
-interface SurveyPageProps {
-	params: {
-		recipient: string;
-		survey: string;
-	} & DefaultParams;
-}
 
 export default function Page({ params }: SurveyPageProps) {
 	const [email, setEmail] = useState<string | null>(null);

@@ -9,7 +9,7 @@ interface CollapsibleMenuProps extends DefaultComponentProps {
 }
 
 export function CollapsibleMenu({ children, ...props }: PropsWithChildren<CollapsibleMenuProps>) {
-	let label: ReactElement;
+	let label: ReactElement | null = null;
 	const items: ReactElement[] = [];
 
 	Children.forEach(children, (child) => {

@@ -1,9 +1,16 @@
-import { DefaultPageProps } from '@/app/[lang]/[country]';
+import { DefaultParams } from '@/app/[lang]/[country]';
 import LanguageSwitcher from '@/components/language-switcher/language-switcher';
 import { SILogo } from '@/components/logos/si-logo';
 import { PropsWithChildren } from 'react';
 
-export default function Layout({ children, params }: DefaultPageProps & PropsWithChildren) {
+export interface SurveyPageProps {
+	params: {
+		recipient: string;
+		survey: string;
+	} & DefaultParams;
+}
+
+export default function Layout({ children, params }: PropsWithChildren<SurveyPageProps>) {
 	return (
 		<div className="min-h-screen bg-gray-100">
 			<div className="navbar bg-white">

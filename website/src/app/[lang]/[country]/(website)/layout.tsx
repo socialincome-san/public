@@ -5,7 +5,7 @@ import { PropsWithChildren } from 'react';
 
 export const generateStaticParams = () => countries.flatMap((country) => languages.map((lang) => ({ lang, country })));
 
-export default function Layout({ children, params }: DefaultPageProps & PropsWithChildren) {
+export default function Layout({ children, params }: PropsWithChildren<DefaultPageProps>) {
 	return (
 		<div className="max-w-7xl mx-auto">
 			<Navbar params={params} />
