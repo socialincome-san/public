@@ -9,7 +9,7 @@
 		"build:emulator": "firebase emulators:exec --project social-income-staging --only firestore --config ../firebase.json --import ../seed  'npm run build'",
 		"start": "next start -p 3001",
 		"start:emulator": "firebase emulators:exec --project social-income-staging --only firestore --config ../firebase.json --import ../seed  'npm run start'",
-		"test": "jest",
+		"test": "jest --passWithNoTests",
 		"test:emulator": "firebase emulators:exec --project social-income-staging --only firestore --config ../firebase.json --import ../seed  'npm run test'",
 		"test:e2e": "npx playwright install --with-deps && playwright test",
 		"test:e2e:emulator": "firebase emulators:exec --project social-income-staging --only firestore --config ../firebase.json --import ../seed  'npm run test:e2e'",
