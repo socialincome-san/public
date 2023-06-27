@@ -3,22 +3,25 @@ import { EntityCollection, PropertiesOrBuilders } from 'firecms/dist/types';
 
 import { Chip, Tooltip } from '@mui/material';
 import {
+	RECIPIENT_FIRESTORE_PATH,
+	Recipient,
 	calcLastPaymentDate,
 	calcPaymentsLeft,
-	Recipient,
-	RECIPIENT_FIRESTORE_PATH,
 } from '@socialincome/shared/src/types';
 import { messagesCollection } from '../Messages';
 import { paymentsCollection } from '../Payments';
 import { buildAuditedCollection } from '../shared';
 import {
+	InstagramProperty,
+	SIStartDateProperty,
+	TestRecipientProperty,
+	TwitterProperty,
 	birthDateProperty,
 	callingNameProperty,
 	communicationMobilePhoneProperty,
 	emailProperty,
 	firstNameProperty,
 	genderProperty,
-	InstagramProperty,
 	lastNameProperty,
 	mainLanguageProperty,
 	mobileMoneyPhoneProperty,
@@ -26,9 +29,6 @@ import {
 	organisationProperty,
 	professionProperty,
 	programStatusProperty,
-	SIStartDateProperty,
-	TestRecipientProperty,
-	TwitterProperty,
 } from './RecipientsProperties';
 
 export const PaymentsLeft: AdditionalFieldDelegate<Partial<Recipient>> = {

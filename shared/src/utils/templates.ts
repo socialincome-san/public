@@ -6,8 +6,8 @@ import i18next from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import mjml2html from 'mjml';
 import path from 'path';
-import { LocaleLanguage } from '../types/admin/Language';
-import { FALLBACK_LANGUAGE } from './translate';
+import { LocaleLanguage } from '../types';
+import { FALLBACK_LANGUAGE } from './i18n';
 
 export interface RenderTemplateProps {
 	language?: LocaleLanguage;

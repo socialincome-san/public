@@ -1,14 +1,14 @@
-import { Payment, Recipient, RecipientProgramStatus, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { Payment, RECIPIENT_FIRESTORE_PATH, Recipient, RecipientProgramStatus } from '@socialincome/shared/src/types';
 import { getMonthIDs } from '@socialincome/shared/src/utils/date';
 import {
 	AdditionalFieldDelegate,
 	AsyncPreviewComponent,
-	buildProperties,
 	Entity,
 	StringPropertyPreview,
+	buildProperties,
 } from 'firecms';
 import { PaymentProcessAction } from '../../actions/PaymentProcessAction';
-import { paymentsCollection, paymentStatusEnumValues } from '../Payments';
+import { paymentStatusEnumValues, paymentsCollection } from '../Payments';
 import { buildAuditedCollection } from '../shared';
 import { PaymentsLeft } from './Recipients';
 import {

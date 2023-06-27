@@ -1,1 +1,8 @@
-{}
+{
+	"languages": {
+		"de": "Deutsch",
+		"en": "Englisch",
+		"fr": "Französisch",
+		"kri": "Krio"
+	}
+}

@@ -10,7 +10,7 @@ import {
 import _ from 'lodash';
 import { DateTime } from 'luxon';
 import { Fragment } from 'react';
-import { Recipient, Survey, SurveyStatus, SURVEY_FIRETORE_PATH } from '../../../../shared/src/types';
+import { Recipient, SURVEY_FIRETORE_PATH, Survey, SurveyStatus } from '../../../../shared/src/types';
 import CopyToClipboard from '../../components/CopyToClipboard';
 import { mainLanguageProperty } from '../recipients/RecipientsProperties';
 import { buildAuditedCollection } from '../shared';
@@ -155,8 +155,7 @@ const getSurveyUrl = (entity: Entity<Partial<Survey>>, recipientId: string) => {
 		email: entity.values.access_email!,
 		pw: entity.values.access_pw!,
 	};
-	// TODO change me
-	const url = new URL(['https://public-dusky-eight.vercel.app/survey', recipientId, entity.id].join('/'));
+	const url = new URL([import.meta.env.VITE_WEBSITE_BASE_URL, 'survey', recipientId, entity.id].join('/'));
 	url.search = new URLSearchParams(getParams).toString();
 	return url.toString();
 };

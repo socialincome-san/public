@@ -1,12 +1,10 @@
 import classNames from 'classnames';
-import './button.css';
+import { ButtonHTMLAttributes, PropsWithChildren } from 'react';
 
 export const SO_BUTTON_VARIANTS = ['primary', 'secondary', 'tertiary', 'outlined'] as const;
 export const SO_BUTTON_SIZES = ['base', 'xl'];
 
-export interface SoButtonProps
-	extends React.PropsWithChildren,
-		React.ButtonHTMLAttributes<HTMLButtonElement | HTMLAnchorElement> {
+export interface SoButtonProps extends PropsWithChildren, ButtonHTMLAttributes<HTMLButtonElement | HTMLAnchorElement> {
 	variant?: (typeof SO_BUTTON_VARIANTS)[number];
 	size?: (typeof SO_BUTTON_SIZES)[number];
 	href?: string;

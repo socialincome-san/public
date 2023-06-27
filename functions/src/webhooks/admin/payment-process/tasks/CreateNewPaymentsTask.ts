@@ -2,15 +2,15 @@ import { QueryDocumentSnapshot, Timestamp } from '@google-cloud/firestore';
 import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../../../../../shared/src/firebase/FirestoreAdmin';
 import {
-	calcLastPaymentDate,
 	ExchangeRates,
-	Payment,
-	PaymentStatus,
 	PAYMENT_AMOUNT,
 	PAYMENT_CURRENCY,
 	PAYMENT_FIRESTORE_PATH,
-	Recipient,
+	Payment,
+	PaymentStatus,
 	RECIPIENT_FIRESTORE_PATH,
+	Recipient,
+	calcLastPaymentDate,
 } from '../../../../../../shared/src/types';
 import { PaymentTask } from '../PaymentTaskProcessor';
 

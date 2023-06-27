@@ -2,8 +2,8 @@ import { describe, test } from '@jest/globals';
 import * as admin from 'firebase-admin';
 import functions from 'firebase-functions-test';
 import Stripe from 'stripe';
-import { getOrInitializeApp } from '../../../../shared/src/firebase/app';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/FirestoreAdmin';
+import { getOrInitializeFirebaseAdmin } from '../../../../shared/src/firebase/app';
 import { Contribution, ContributionSourceKey, StatusKey, User, UserStatusKey } from '../../../../shared/src/types';
 import { StripeWebhook } from './StripeWebhook';
 import Timestamp = admin.firestore.Timestamp;
@@ -11,7 +11,7 @@ import Timestamp = admin.firestore.Timestamp;
 describe('stripeWebhook', () => {
 	const projectId = 'test-' + new Date().getTime();
 	const testEnv = functions({ projectId });
-	const firestoreAdmin = new FirestoreAdmin(getOrInitializeApp({ projectId: projectId }));
+	const firestoreAdmin = new FirestoreAdmin(getOrInitializeFirebaseAdmin({ projectId: projectId }));
 	const stripeWebhook = new StripeWebhook({ firestoreAdmin });
 
 	beforeEach(async () => {

@@ -1,9 +1,9 @@
 import { AdditionalFieldDelegate, buildProperties } from 'firecms';
 import {
 	CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH,
+	USER_FIRESTORE_PATH,
 	User,
 	UserReferralSource,
-	USER_FIRESTORE_PATH,
 } from '../../../shared/src/types';
 import { CreateDonationCertificatesAction } from '../actions/CreateDonationCertificatesAction';
 import { contributionsCollection } from './Contributions';
