@@ -3,9 +3,9 @@ import * as functions from 'firebase-functions';
 import { DateTime } from 'luxon';
 import {
 	PaymentProcessTaskType,
+	RECIPIENT_FIRESTORE_PATH,
 	Recipient,
 	RecipientProgramStatus,
-	RECIPIENT_FIRESTORE_PATH,
 } from '../../../../../shared/src/types';
 import { ExchangeRateImporter } from '../../../cron/ExchangeRateImporter';
 import { AbstractFirebaseAdmin, FunctionProvider } from '../../../firebase';

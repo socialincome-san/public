@@ -1,15 +1,15 @@
 import { Timestamp } from '@google-cloud/firestore';
 import { describe, expect, test } from '@jest/globals';
 import functions from 'firebase-functions-test';
-import { getOrInitializeFirebaseAdmin } from '../../firebase/app';
 import { FirestoreAdmin } from '../../firebase/FirestoreAdmin';
+import { getOrInitializeFirebaseAdmin } from '../../firebase/app';
 import {
-	ContributionSourceKey,
 	CONTRIBUTION_FIRESTORE_PATH,
+	ContributionSourceKey,
 	StatusKey,
+	USER_FIRESTORE_PATH,
 	User,
 	UserStatusKey,
-	USER_FIRESTORE_PATH,
 } from '../../types';
 import { ContributionStatsCalculator } from './ContributionStatsCalculator';
 

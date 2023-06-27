@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/react';
 
-import { SoButton, SO_BUTTON_SIZES, SO_BUTTON_VARIANTS } from './Button';
+import { SO_BUTTON_SIZES, SO_BUTTON_VARIANTS, SoButton } from './Button';
 
 export default {
 	component: SoButton,

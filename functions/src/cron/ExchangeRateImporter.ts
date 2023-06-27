@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as functions from 'firebase-functions';
 import { DateTime } from 'luxon';
-import { ExchangeRates, ExchangeRatesEntry, EXCHANGE_RATES_PATH } from '../../../shared/src/types';
+import { EXCHANGE_RATES_PATH, ExchangeRates, ExchangeRatesEntry } from '../../../shared/src/types';
 import { EXCHANGE_RATES_API } from '../config';
 import { AbstractFirebaseAdmin, FunctionProvider } from '../firebase';
 

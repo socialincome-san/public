@@ -10,7 +10,7 @@ import {
 import _ from 'lodash';
 import { DateTime } from 'luxon';
 import { Fragment } from 'react';
-import { Recipient, Survey, SurveyStatus, SURVEY_FIRETORE_PATH } from '../../../../shared/src/types';
+import { Recipient, SURVEY_FIRETORE_PATH, Survey, SurveyStatus } from '../../../../shared/src/types';
 import CopyToClipboard from '../../components/CopyToClipboard';
 import { mainLanguageProperty } from '../recipients/RecipientsProperties';
 import { buildAuditedCollection } from '../shared';

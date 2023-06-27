@@ -1,7 +1,7 @@
 import { describe, test } from '@jest/globals';
 import { default as functions } from 'firebase-functions-test';
-import { getOrInitializeFirebaseAdmin } from './app';
 import { FirestoreAdmin } from './FirestoreAdmin';
+import { getOrInitializeFirebaseAdmin } from './app';
 
 interface TestInterface {
 	name: string;

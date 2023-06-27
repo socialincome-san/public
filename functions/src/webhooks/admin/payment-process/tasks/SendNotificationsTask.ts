@@ -3,12 +3,12 @@ import { DateTime } from 'luxon';
 import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
 import { FirestoreAdmin } from '../../../../../../shared/src/firebase/FirestoreAdmin';
 import {
-	MessageType,
 	MESSAGE_FIRESTORE_PATH,
-	Payment,
+	MessageType,
 	PAYMENT_FIRESTORE_PATH,
-	Recipient,
+	Payment,
 	RECIPIENT_FIRESTORE_PATH,
+	Recipient,
 	TwilioMessage,
 } from '../../../../../../shared/src/types';
 import { sendSms } from '../../../../../../shared/src/utils/messaging/sms';

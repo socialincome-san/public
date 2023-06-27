@@ -1,7 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react';
 import { useState } from 'react';
 
-import { SoSelect, SoSelectProps, SO_SELECT_SIZES } from './Select';
+import { SO_SELECT_SIZES, SoSelect, SoSelectProps } from './Select';
 
 export default {
 	component: SoSelect,

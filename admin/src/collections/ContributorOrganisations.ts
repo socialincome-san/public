@@ -1,5 +1,5 @@
 import { buildProperties } from 'firecms';
-import { ContributorOrganisation, CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH } from '../../../shared/src/types';
+import { CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH, ContributorOrganisation } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 
 // this collection is publicly accessible. no personal data of user should be added here.

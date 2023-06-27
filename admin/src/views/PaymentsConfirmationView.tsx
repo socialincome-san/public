@@ -2,6 +2,7 @@ import { Box, Button, Link, Popover, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { Payment, PaymentStatus, Recipient } from '@socialincome/shared/src/types';
 import {
+	QueryDocumentSnapshot,
 	collectionGroup,
 	getDoc,
 	getFirestore,
@@ -9,7 +10,6 @@ import {
 	or,
 	orderBy,
 	query,
-	QueryDocumentSnapshot,
 	where,
 } from 'firebase/firestore';
 import { StringPropertyPreview } from 'firecms';

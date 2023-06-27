@@ -1,5 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
-import { SoTypography, SO_TYPOGRAPHY_SIZES } from './Typography';
+import { SO_TYPOGRAPHY_SIZES, SoTypography } from './Typography';
 
 export default {
 	component: SoTypography,

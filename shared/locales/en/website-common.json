@@ -1,7 +1,7 @@
 {
-  "navigation": {
-    "about-us": "About Us",
-    "our-work": "Our Work",
-    "how-it-works": "How It Works"
-  }
+	"navigation": {
+		"about-us": "About Us",
+		"our-work": "Our Work",
+		"how-it-works": "How It Works"
+	}
 }

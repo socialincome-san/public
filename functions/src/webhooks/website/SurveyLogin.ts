@@ -1,12 +1,12 @@
 import assert from 'assert';
 import * as functions from 'firebase-functions';
 import {
-	Recipient,
 	RECIPIENT_FIRESTORE_PATH,
+	Recipient,
+	SURVEY_FIRETORE_PATH,
 	Survey,
 	SurveyCredentialRequest,
 	SurveyCredentialResponse,
-	SURVEY_FIRETORE_PATH,
 } from '../../../../shared/src/types';
 import { AbstractFirebaseAdmin, FunctionProvider } from '../../firebase';
 

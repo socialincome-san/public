@@ -2,8 +2,8 @@ import { describe, expect, test } from '@jest/globals';
 import axios from 'axios';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import { promises as fs, unlinkSync } from 'fs';
-import { getOrInitializeFirebaseAdmin } from './app';
 import { StorageAdmin } from './StorageAdmin';
+import { getOrInitializeFirebaseAdmin } from './app';
 
 const { cleanup } = firebaseFunctionsTest();
 

@@ -1,8 +1,8 @@
 {
-  "languages": {
-    "de": "German",
-    "en": "English",
-    "fr": "French",
-    "kri": "Krio"
-  }
+	"languages": {
+		"de": "German",
+		"en": "English",
+		"fr": "French",
+		"kri": "Krio"
+	}
 }

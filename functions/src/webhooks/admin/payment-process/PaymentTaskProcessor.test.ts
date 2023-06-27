@@ -5,12 +5,12 @@ import { getOrInitializeFirebaseAdmin } from '../../../../../shared/src/firebase
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/FirestoreAdmin';
 import {
 	Payment,
+	PAYMENT_FIRESTORE_PATH,
 	PaymentProcessTaskType,
 	PaymentStatus,
-	PAYMENT_FIRESTORE_PATH,
 	Recipient,
-	RecipientProgramStatus,
 	RECIPIENT_FIRESTORE_PATH,
+	RecipientProgramStatus,
 } from '../../../../../shared/src/types';
 import { runAdminPaymentProcessTask } from '../../index';
 

@@ -2,15 +2,15 @@ import { Timestamp } from '@google-cloud/firestore';
 import * as functions from 'firebase-functions';
 import { DateTime } from 'luxon';
 import {
+	RECIPIENT_FIRESTORE_PATH,
 	Recipient,
 	RecipientMainLanguage,
 	RecipientProgramStatus,
-	recipientSurveys,
-	RECIPIENT_FIRESTORE_PATH,
+	SURVEY_FIRETORE_PATH,
 	Survey,
 	SurveyQuestionnaire,
 	SurveyStatus,
-	SURVEY_FIRETORE_PATH,
+	recipientSurveys,
 } from '../../../../../shared/src/types';
 import { rndString } from '../../../../../shared/src/utils/crypto';
 import { AbstractFirebaseAdmin, FunctionProvider } from '../../../firebase';
