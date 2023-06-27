@@ -17,13 +17,13 @@ Finding a good issue: `↗`
 
 ### You can contribute to all three tools that run Social Income:
 
-|                  |                                   Admin Tool                                    |                                     Website                                      |                                     Mobile App                                      |
-| ---------------- | :-----------------------------------------------------------------------------: | :------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------: |
-| **Purpose**      |               Staff manages contributors, recipients and payments               |                     Raising donations and inform the public                      |                          User manages payments and surveys                          |
-| **Instructions** |                            [Readme](admin/README.md)                            |                           [Readme](website/README.md)                            | [Readme](recipients_app/README.md) / [Contributing](recipients_app/CONTRIBUTING.md) |
-| **Live**         |            [admin.socialincome.org](https://admin.socialincome.org)             |                  [socialincome.org](https://socialincome.org)\*                  |                                 App store links tba                                 |
+|                  |                                   Admin Tool                                    |                            Website                            |                                     Mobile App                                      |
+| ---------------- | :-----------------------------------------------------------------------------: | :-----------------------------------------------------------: | :---------------------------------------------------------------------------------: |
+| **Purpose**      |               Staff manages contributors, recipients and payments               |            Raising donations and inform the public            |                          User manages payments and surveys                          |
+| **Instructions** |                            [Readme](admin/README.md)                            |                  [Readme](website/README.md)                  | [Readme](recipients_app/README.md) / [Contributing](recipients_app/CONTRIBUTING.md) |
+| **Live**         |            [admin.socialincome.org](https://admin.socialincome.org)             |        [socialincome.org](https://socialincome.org)\*         |                                 App store links tba                                 |
 | **Staging**      |    [staging-admin.socialincome.org](https://staging-admin.socialincome.org)     | [staging.socialincome.org](https://staging.socialincome.org/) |                                          –                                          |
-| **Localhost**    | [localhost:3000](http://localhost:3000) [localhost:4000](http://localhost:4000) |                     [localhost:3001](http://localhost:3001)                      |                                          –                                          |
+| **Localhost**    | [localhost:3000](http://localhost:3000) [localhost:4000](http://localhost:4000) |            [localhost:3001](http://localhost:3001)            |                                          –                                          |
 
 The website and admin tool use cloud functions
 ([Readme](functions/README.md)). You can also develop UI components with
@@ -34,7 +34,8 @@ our [Storybook](https://socialincome-san.github.io/public/).
 \* The current website socialincome.org is still on a private repo. We
 are rebuilding the site with NextJS, Tailwind CSS and React on this
 public repo. You can visit the new website in the making on
-[staging](https://staging.socialincome.org/) or [production](https://prod.socialincome.org/).
+[staging](https://staging.socialincome.org/) or
+[production](https://prod.socialincome.org/).
 
 ### Basic Development Setup
 
@@ -60,8 +61,11 @@ Before you can start developing, you need to install the dependencies by
 running. Make sure you are using Node.js 18. If you are using Homebrew,
 you can install it with `brew install node@18` and follow
 [this](https://ralphjsmit.com/switch-between-nodejs-versions-homebrew)
-guide to switch between different versions of Node.js if need be. On MacBook Pro (Intel) there seems to be an issue if you don't use exactly the 18.15.0 Version: [Download](https://nodejs.org/dist/v18.15.0/node-v18.15.0.pkg) / [Issue](https://github.com/firebase/firebase-tools/issues/5614)
-
+guide to switch between different versions of Node.js if need be. On
+MacBook Pro (Intel) there seems to be an issue if you don't use exactly
+the 18.15.0 Version:
+[Download](https://nodejs.org/dist/v18.15.0/node-v18.15.0.pkg) /
+[Issue](https://github.com/firebase/firebase-tools/issues/5614)
 
 ```shell
 npm install
