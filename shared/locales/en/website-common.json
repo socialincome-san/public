@@ -1,21 +1,7 @@
 {
-	"website-common": {
-		"takeAction": "Take Action",
-		"ourWork": "Our Work",
-		"aboutUs": "About Us",
-		"newsletter": "Newsletter",
-		"privacyPolicy": "Privacy Policy",
-		"termsContributions": "Terms for Contributions",
-		"termsUse": "Terms of Use",
-		"theArts": "The Arts",
-		"faq": "FAQ",
-		"downloads": "Downloads",
-		"bankDetails": "Bank Details",
-		"login": "Login",
-		"account": "Account",
-		"books": "Books",
-		"social-responsibility": "Social Responsiblity",
-		"showImpact": "Show my Impact",
-		"close": "Close"
-	}
+  "navigation": {
+    "about-us": "About Us",
+    "our-work": "Our Work",
+    "how-it-works": "How It Works"
+  }
 }

@@ -1,3 +1,5 @@
+'use client';
+
 import { Combobox, Transition } from '@headlessui/react';
 import { CheckIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
 import classNames from 'classnames';
@@ -36,31 +38,27 @@ export interface SoComboboxProps extends Pick<ComboboxProps, 'name' | 'disabled'
 	 * The selected/current value
 	 */
 	value: SoComboboxItem;
+	/**
+	 * If true, the options get visible when the user focuses the text field
+	 */
+	openOnFocus?: boolean;
+	/**
+	 * Render full width
+	 */
+	block?: boolean;
+	/**
+	 * If true, the label is visually hidden. It will still be available to screenreaders.
+	 */
+	labelHidden?: boolean;
+	/**
+	 * Visual size of the button
+	 */
+	size?: (typeof SO_COMBOBOX_SIZES)[number];
 
 	/**
 	 * Emits the selected value on change
 	 */
 	onChange?(value: SoComboboxItem): void;
-
-	/**
-	 * If true, the options get visible when the user focuses the text field
-	 */
-	openOnFocus?: boolean;
-
-	/**
-	 * Render full width
-	 */
-	block?: boolean;
-
-	/**
-	 * If true, the label is visually hidden. It will still be available to screenreaders.
-	 */
-	labelHidden?: boolean;
-
-	/**
-	 * Visual size of the button
-	 */
-	size?: (typeof SO_COMBOBOX_SIZES)[number];
 }
 
 /**
@@ -200,7 +198,7 @@ export const SoCombobox = ({
 													)}
 													<span
 														className={classNames(active ? 'font-semibold' : 'font-normal', 'truncate', {
-															'ml-3': value.image,
+															'ml-3': Boolean(value.image),
 														})}
 													>
 														{option.label}

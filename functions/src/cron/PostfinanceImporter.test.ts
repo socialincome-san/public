@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 import functions from 'firebase-functions-test';
-import { getOrInitializeApp } from '../../../shared/src/firebase/app';
+import { getOrInitializeFirebaseAdmin } from '../../../shared/src/firebase/app';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { BankBalance, BANK_BALANCE_FIRESTORE_PATH, getIdFromBankBalance } from '../../../shared/src/types';
 import { PostFinanceImporter } from './PostFinanceImporter';
@@ -8,7 +8,7 @@ import { PostFinanceImporter } from './PostFinanceImporter';
 describe('importPostfinanceBalance', () => {
 	const projectId = 'test' + new Date().getTime();
 	const testEnv = functions({ projectId: projectId });
-	const firestoreAdmin = new FirestoreAdmin(getOrInitializeApp({ projectId: projectId }));
+	const firestoreAdmin = new FirestoreAdmin(getOrInitializeFirebaseAdmin({ projectId: projectId }));
 	const postfinanceImporter = new PostFinanceImporter({ firestoreAdmin });
 
 	beforeEach(async () => {

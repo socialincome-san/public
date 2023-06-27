@@ -1,7 +1,7 @@
 import { Timestamp } from '@google-cloud/firestore';
 import { describe, expect, test } from '@jest/globals';
 import functions from 'firebase-functions-test';
-import { getOrInitializeApp } from '../../firebase/app';
+import { getOrInitializeFirebaseAdmin } from '../../firebase/app';
 import { FirestoreAdmin } from '../../firebase/FirestoreAdmin';
 import {
 	ContributionSourceKey,
@@ -16,7 +16,7 @@ import { ContributionStatsCalculator } from './ContributionStatsCalculator';
 describe('calcFinancialStats', () => {
 	const projectId = 'test' + new Date().getTime();
 	const testEnv = functions({ projectId: projectId });
-	const firestoreAdmin = new FirestoreAdmin(getOrInitializeApp({ projectId: projectId }));
+	const firestoreAdmin = new FirestoreAdmin(getOrInitializeFirebaseAdmin({ projectId: projectId }));
 	let calculator: ContributionStatsCalculator;
 
 	beforeAll(async () => {

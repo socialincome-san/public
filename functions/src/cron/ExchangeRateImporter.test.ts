@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from '@jest/globals';
 import functions from 'firebase-functions-test';
-import { getOrInitializeApp } from '../../../shared/src/firebase/app';
+import { getOrInitializeFirebaseAdmin } from '../../../shared/src/firebase/app';
 import { FirestoreAdmin } from '../../../shared/src/firebase/FirestoreAdmin';
 import { ExchangeRates, ExchangeRatesEntry, EXCHANGE_RATES_PATH } from '../../../shared/src/types';
 import { ExchangeRateImporter, ExchangeRateResponse } from './ExchangeRateImporter';
@@ -8,7 +8,7 @@ import { ExchangeRateImporter, ExchangeRateResponse } from './ExchangeRateImport
 describe('importExchangeRates', () => {
 	const projectId = 'test' + new Date().getTime();
 	const testEnv = functions({ projectId: projectId });
-	const firestoreAdmin = new FirestoreAdmin(getOrInitializeApp({ projectId: projectId }));
+	const firestoreAdmin = new FirestoreAdmin(getOrInitializeFirebaseAdmin({ projectId: projectId }));
 	const exchangeRateImporter = new ExchangeRateImporter();
 
 	beforeEach(async () => {

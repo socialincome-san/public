@@ -1,6 +1,6 @@
 import { describe, test } from '@jest/globals';
 import { default as functions } from 'firebase-functions-test';
-import { getOrInitializeApp } from './app';
+import { getOrInitializeFirebaseAdmin } from './app';
 import { FirestoreAdmin } from './FirestoreAdmin';
 
 interface TestInterface {
@@ -10,7 +10,7 @@ interface TestInterface {
 describe('useFirestoreAdmin', () => {
 	const projectId = 'test-' + new Date().getTime();
 	const testEnv = functions({ projectId });
-	const firestoreAdmin = new FirestoreAdmin(getOrInitializeApp({ projectId: projectId }));
+	const firestoreAdmin = new FirestoreAdmin(getOrInitializeFirebaseAdmin({ projectId: projectId }));
 
 	beforeEach(async () => {
 		await testEnv.firestore.clearFirestoreData({ projectId });

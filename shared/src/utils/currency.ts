@@ -1,7 +1,3 @@
-// support languages in website / precomputed stats
-
-export const displayedCurrencies = ['CHF', 'USD', 'EUR'];
-
 // best guess mapping from two-letter country code to supported currency
 export const bestGuessCurrency = (country: string | undefined): string => {
 	if (!country) return fallbackCurrency;

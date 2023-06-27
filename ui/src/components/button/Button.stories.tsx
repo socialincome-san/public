@@ -1,6 +1,4 @@
-// Button.stories.ts|tsx
-
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 
 import { SoButton, SO_BUTTON_SIZES, SO_BUTTON_VARIANTS } from './Button';
 
@@ -16,9 +14,9 @@ export default {
 			control: { type: 'select' },
 		},
 	},
-} as ComponentMeta<typeof SoButton>;
+} as Meta<typeof SoButton>;
 
-const Template: ComponentStory<typeof SoButton> = (args) => <SoButton {...args} />;
+const Template: StoryFn<typeof SoButton> = (args) => <SoButton {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {

@@ -1,4 +1,6 @@
 import classNames from 'classnames';
+import { HTMLAttributes, PropsWithChildren } from 'react';
+import IntrinsicElements = React.JSX.IntrinsicElements;
 
 export const SO_TYPOGRAPHY_SIZES = [
 	'xs',
@@ -18,11 +20,11 @@ export const SO_TYPOGRAPHY_SIZES = [
 
 export type SoTypographySize = (typeof SO_TYPOGRAPHY_SIZES)[number];
 
-export interface SoTypographyProps extends React.PropsWithChildren, React.HTMLAttributes<any> {
+export interface SoTypographyProps extends PropsWithChildren, HTMLAttributes<any> {
 	/**
 	 * The DOM element type e.g. h1, h2, h3,..., p
 	 */
-	element?: keyof Pick<JSX.IntrinsicElements, 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'>;
+	element?: keyof Pick<IntrinsicElements, 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'>;
 
 	/**
 	 * The text size from the predefined stack

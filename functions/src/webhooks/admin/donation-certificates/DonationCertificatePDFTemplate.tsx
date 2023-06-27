@@ -2,7 +2,7 @@
 // TODO: Use this basic working example to render PDF instead of pdfkit.
 import ReactPDF, { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 import { User } from '../../../../../shared/src/types';
-import { Translator } from '../../../../../shared/src/utils/translate';
+import { Translator } from '../../../../../shared/src/utils/i18n';
 
 const styles = StyleSheet.create({
 	page: {

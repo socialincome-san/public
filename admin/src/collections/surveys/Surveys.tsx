@@ -155,8 +155,7 @@ const getSurveyUrl = (entity: Entity<Partial<Survey>>, recipientId: string) => {
 		email: entity.values.access_email!,
 		pw: entity.values.access_pw!,
 	};
-	// TODO change me
-	const url = new URL(['https://public-dusky-eight.vercel.app/survey', recipientId, entity.id].join('/'));
+	const url = new URL([import.meta.env.VITE_WEBSITE_BASE_URL, 'survey', recipientId, entity.id].join('/'));
 	url.search = new URLSearchParams(getParams).toString();
 	return url.toString();
 };

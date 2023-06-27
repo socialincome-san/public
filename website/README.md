@@ -1,122 +1,34 @@
-# Website
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-Customer facing website of Social Income.
+## Getting Started
 
-## Basic Setup
+First, run the development server:
 
-For the basic setup, please refer to the main [README](../README.md)
-
-## Start Website Locally
-
-To serve the development server locally, run the following commands as
-separate processes:
-
-```shell
-npm run firebase:serve
-npm run website:serve
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
 ```
 
-Or if you directly want to run the firebase emulator and the website
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-```shell
-npm run website:serve:emulator
-```
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-The website will be accessible at http://localhost:3001
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Build Website Locally
+## Learn More
 
-To test the "production" bundling using the test data from the firebase
-emulator, run:
+To learn more about Next.js, take a look at the following resources:
 
-```shell
-npm run website:build:emulator
-```
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## Translations
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-We use [next-i18next](https://github.com/i18next/next-i18next) as
-translation framework for nextjs. It builds up on
-[i18next](https://www.i18next.com).
+## Deploy on Vercel
 
-Please refer to
-[this](https://www.i18next.com/translation-function/essentials) and the
-following documentation sections to understand how the details of
-interpolation, formatting and plurals work.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-The translation files are located in `/shared/locales`. This allows us
-to reuse generic translations (like for example country names) among
-several services. Website specific files can be prefixed with
-`website-`.
-
-We integrated
-[i18next-parser](https://github.com/i18next/i18next-parser) to
-automatically sync the keys used in the code with the ones available in
-the translations jsons.
-
-For the website, we will split the translation files into namespaces
-(e.g. one per page or component). This allows to avoid pushing unused
-data to the client. The
-[next-i18next Readme](https://github.com/i18next/next-i18next#3-project-setup)
-explains all the details.
-
-In a nutshell, adding translations to a page involves 3 steps:
-
-- Add
-  `...(await serverSideTranslations(locale, ['website-myNewPage'])),` to
-  the `getStaticProps` of your page
-- Add `const { t } = useTranslation('website-myNewPage');` in your
-  component and use it in your code `<p>{t('description')}</p>`
-- Run `npm run website:extract-translations` for npm to update the json
-  files.
-
-If you want to use multiple translation files (namespaces) in 1 page you
-can do it like this:
-
-- Add
-  `...(await serverSideTranslations(locale, ['website-myNewPage', 'common'])),`
-  to the `getStaticProps` of your page
-- Add `const { t } = useTranslation('website-myNewPage');` By default we
-  use the `website-myNewPage` file. E.g. `{t('yourKeyInmyNewPage')}`
-- If you want to use a key from the common file you can write
-  `{t('yourKeyInCommon', { ns: 'common' })}`.
-
-Within the GitHub PR checks, we will run `check-translations` which
-returns an error if the jsons files are not in sync with the code.
-
-## Run tests
-
-### Unit Tests
-
-To test individual components with jest. They are located in the `tests`
-directory.
-
-```shell
-npm run website:test:emulator
-```
-
-### End-to-End Tests
-
-We use playwright to test against unwanted regressions on several
-browsers. The e2e tests are located in `tests-e2e`.
-
-To add a visual snapshot regression test for a new page, create a new
-spec ts file with the following content:
-
-```
-import { multiLanguageSnapshotTest } from './__utils__/snapshots';
-multiLanguageSnapshotTest('/your-new-path');
-```
-
-The test is executed as part of `website` GitHub Action when creating a
-PR. A link to the hosted report is automatically posted in a comment.
-
-To update the baseline snapshots post a comment with
-`/update-website-snapshots` to the PR. This will trigger the
-`website-update-snapshots` action which will commit the new pngs.
-
-## Deployment
-
-The website is hosted on vercel.com. The deployment is done
-automatically after merging a PR into the main branch. In the PRs, a
-preview version is deployed.
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.

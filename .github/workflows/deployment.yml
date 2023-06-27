@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     if: inputs.component == 'admin'
     env:
+      VITE_WEBSITE_BASE_URL: ${{ (inputs.project == 'social-income-prod' && 'https://prod.socialincome.org' || 'https://staging.socialincome.org' }}
       VITE_ADMIN_ALGOLIA_APPLICATION_ID: ${{ secrets.REACT_APP_ADMIN_ALGOLIA_APPLICATION_ID }}
       VITE_ADMIN_ALGOLIA_SEARCH_KEY: ${{ secrets.REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY }}
     steps:

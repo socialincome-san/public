@@ -1,7 +1,7 @@
 import functions from 'firebase-functions-test';
 import { DateTime } from 'luxon';
 
-import { getOrInitializeApp } from '../../../../../shared/src/firebase/app';
+import { getOrInitializeFirebaseAdmin } from '../../../../../shared/src/firebase/app';
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/FirestoreAdmin';
 import {
 	Payment,
@@ -18,7 +18,7 @@ const paymentDate = DateTime.fromSeconds(1681516800); // Exchange rate for this 
 
 describe('AdminPaymentTaskProcessor', () => {
 	const projectId = 'test' + new Date().getTime();
-	const firestoreAdmin = new FirestoreAdmin(getOrInitializeApp({ projectId: projectId }));
+	const firestoreAdmin = new FirestoreAdmin(getOrInitializeFirebaseAdmin({ projectId: projectId }));
 	const testEnv = functions({ projectId: projectId });
 	const triggerFunction = testEnv.wrap(runAdminPaymentProcessTask);
 

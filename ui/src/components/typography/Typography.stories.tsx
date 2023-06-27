@@ -1,4 +1,4 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { Meta, StoryFn } from '@storybook/react';
 import { SoTypography, SO_TYPOGRAPHY_SIZES } from './Typography';
 
 export default {
@@ -9,9 +9,9 @@ export default {
 			control: { type: 'select' },
 		},
 	},
-} as ComponentMeta<typeof SoTypography>;
+} as Meta<typeof SoTypography>;
 
-const Template: ComponentStory<typeof SoTypography> = ({ children, ...args }) => (
+const Template: StoryFn<typeof SoTypography> = ({ children, ...args }) => (
 	<SoTypography {...args}>{children}</SoTypography>
 );
 
