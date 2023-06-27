@@ -1,4 +1,4 @@
-import { FirestoreAdmin } from '../firebase/FirestoreAdmin';
+import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
 import { EXCHANGE_RATES_PATH, ExchangeRatesEntry } from '../types';
 
 export const getLatestExchangeRate = async (firestoreAdmin: FirestoreAdmin, currency: string): Promise<number> => {

@@ -1,6 +1,6 @@
 import { QueryDocumentSnapshot, Timestamp } from '@google-cloud/firestore';
 import { DateTime } from 'luxon';
-import { FirestoreAdmin } from '../../../../../../shared/src/firebase/FirestoreAdmin';
+import { FirestoreAdmin } from '../../../../../../shared/src/firebase/admin/FirestoreAdmin';
 import {
 	ExchangeRates,
 	PAYMENT_AMOUNT,
