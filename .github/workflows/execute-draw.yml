@@ -1,0 +1,35 @@
+name: execute-draw
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+env:
+  BOT_NAME: "drawbot"
+  BOT_EMAIL: "drawbot@noemail.com"
+
+jobs:
+  execute_draw:
+    if: "!contains(github.event.head_commit.author, 'drawbot')"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install nodejs 🔧
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+      - name: Draw 🎲
+        uses: drand/draw-action@v0.0.8
+        with:
+          inputDir: ./lists
+          outputDir: ./draws
+          count: 2
+      - name: Commit 🔐
+        run: |
+          git config --global user.name $BOT_NAME
+          git config --global user.email $BOT_EMAIL
+          git add .
+          git commit -m "completed a recipient draw"
+          git push
