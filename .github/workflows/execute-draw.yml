@@ -20,6 +20,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: latest
+
+      - name: Make folders if necessary 📁
+        run: mkdir -p draws
+
       - name: Draw 🎲
         uses: drand/draw-action@v0.0.8
         with:
