@@ -40,7 +40,7 @@ export function Dropdown({ children, ...props }: PropsWithChildren<DropdownProps
 					[`dropdown-${props.position}`]: props.position,
 					'dropdown-end': props.alignEnd,
 				},
-				props.className
+				props.className,
 			)}
 		>
 			{label}

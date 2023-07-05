@@ -101,7 +101,7 @@ export const SoSelect = ({
 								'hover:shadow-lg',
 								'hover:shadow-gray-200',
 								`text-${size}`,
-								{ 'w-full': block }
+								{ 'w-full': block },
 							)}
 						>
 							<span className="flex items-center">
@@ -143,7 +143,7 @@ export const SoSelect = ({
 									'ring-opacity-5',
 									'focus:outline-none',
 									`text-${size}`,
-									{ 'w-full': block }
+									{ 'w-full': block },
 								)}
 							>
 								{Object.entries(options).map(([value, option], i) => (
@@ -152,7 +152,7 @@ export const SoSelect = ({
 										className={({ active }) =>
 											classNames(
 												active ? 'text-white bg-so-color-accent-2-primary-500' : 'text-gray-900',
-												'relative cursor-default select-none py-2 pl-3 pr-12'
+												'relative cursor-default select-none py-2 pl-3 pr-12',
 											)
 										}
 										value={value}

@@ -98,7 +98,7 @@ describe('FirestoreAuditor', () => {
 		await testSubColDoc.set({ foo: 'after', last_updated_at: 123 });
 		const snapBefore = testEnv.firestore.makeDocumentSnapshot(
 			{ foo: 'before', last_updated_at: 123 },
-			testSubColDoc.path
+			testSubColDoc.path,
 		);
 		const snapAfter = testEnv.firestore.makeDocumentSnapshot({ foo: 'after' }, testSubColDoc.path);
 		const change = testEnv.makeChange(snapBefore, snapAfter);
@@ -138,7 +138,7 @@ describe('FirestoreAuditor', () => {
 		// setup simulated deletion
 		const snapBefore = testEnv.firestore.makeDocumentSnapshot(
 			{ foo: 'before', last_updated_at: 123 },
-			testSubColDoc.path
+			testSubColDoc.path,
 		);
 		const change = testEnv.makeChange(snapBefore, null);
 		const wrapped = testEnv.wrap(auditor.getFunction());

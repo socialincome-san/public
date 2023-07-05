@@ -47,7 +47,7 @@ export class TwilioOutgoingMessageHandler extends AbstractFirebaseAdmin implemen
 
 				if (message) {
 					const messageCollection = this.firestoreAdmin.collection<TwilioMessage>(
-						`${RECIPIENT_FIRESTORE_PATH}/${id}/${MESSAGE_FIRESTORE_PATH}`
+						`${RECIPIENT_FIRESTORE_PATH}/${id}/${MESSAGE_FIRESTORE_PATH}`,
 					);
 					await messageCollection.add({ type: MessageType.WHATSAPP, ...message.toJSON() });
 					successCount += 1;

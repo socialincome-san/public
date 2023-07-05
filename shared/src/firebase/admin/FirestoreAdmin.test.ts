@@ -25,7 +25,7 @@ describe('useFirestoreAdmin', () => {
 		};
 		await firestoreAdmin.doc<TestInterface>(collection, document).set(testDocument);
 		const retrievedDocument = await firestoreAdmin.findFirst<TestInterface>(collection, (query) =>
-			query.where('name', '==', name)
+			query.where('name', '==', name),
 		);
 		expect(retrievedDocument!.data()).toEqual(testDocument);
 	});

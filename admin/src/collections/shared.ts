@@ -12,9 +12,9 @@ import { EntityCollection, User } from 'firecms/dist/types';
 export const buildAuditedCollection = <
 	M extends Record<string, any> = any,
 	AdditionalKey extends string = string,
-	UserType extends User = User
+	UserType extends User = User,
 >(
-	collection: EntityCollection<M, AdditionalKey, UserType>
+	collection: EntityCollection<M, AdditionalKey, UserType>,
 ): EntityCollection<M, AdditionalKey, UserType> => {
 	collection.properties = {
 		...collection.properties,

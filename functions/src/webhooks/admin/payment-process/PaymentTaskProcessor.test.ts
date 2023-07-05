@@ -27,7 +27,7 @@ describe('AdminPaymentTaskProcessor', () => {
 	test('payment csv', async () => {
 		const result = await triggerFunction(
 			{ type: PaymentProcessTaskType.GetPaymentCSV, timestamp: paymentDate.toSeconds() },
-			{ auth: { token: { email: 'admin@socialincome.org' } } }
+			{ auth: { token: { email: 'admin@socialincome.org' } } },
 		);
 		const currentDateAndYear = new Date().toLocaleString('default', { month: 'long' }) + ' ' + new Date().getFullYear();
 		const rows = result.split('\n').map((row: string) => row.split(','));
@@ -74,7 +74,7 @@ describe('AdminPaymentTaskProcessor', () => {
 	test('registration csv', async () => {
 		const result = await triggerFunction(
 			{ type: PaymentProcessTaskType.GetRegistrationCSV, timestamp: paymentDate.toSeconds() },
-			{ auth: { token: { email: 'admin@socialincome.org' } } }
+			{ auth: { token: { email: 'admin@socialincome.org' } } },
 		);
 
 		const rows = result.split('\n').map((row: string) => row.split(','));
@@ -91,7 +91,7 @@ describe('AdminPaymentTaskProcessor', () => {
 			{ type: PaymentProcessTaskType.CreateNewPayments, timestamp: paymentDate.toSeconds() },
 			{
 				auth: { token: { email: 'admin@socialincome.org' } },
-			}
+			},
 		);
 		expect(result).toEqual('Set 3 payments to paid and created 3 payments for next month');
 
@@ -107,7 +107,7 @@ describe('AdminPaymentTaskProcessor', () => {
 			const paymentDoc = await firestoreAdmin
 				.doc<Payment>(
 					`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${PAYMENT_FIRESTORE_PATH}`,
-					paymentDate.toFormat('yyyy-MM')
+					paymentDate.toFormat('yyyy-MM'),
 				)
 				.get();
 			expect(paymentDoc.exists).toBeTruthy();
@@ -121,7 +121,7 @@ describe('AdminPaymentTaskProcessor', () => {
 			const nextPaymentDoc = await firestoreAdmin
 				.doc<Payment>(
 					`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${PAYMENT_FIRESTORE_PATH}`,
-					nextMonthPaymentDate.toFormat('yyyy-MM')
+					nextMonthPaymentDate.toFormat('yyyy-MM'),
 				)
 				.get();
 			expect(nextPaymentDoc.exists).toBeTruthy();
@@ -134,7 +134,7 @@ describe('AdminPaymentTaskProcessor', () => {
 
 		const secondExecutionResult = await triggerFunction(
 			{ type: PaymentProcessTaskType.CreateNewPayments, timestamp: paymentDate.toSeconds() },
-			{ auth: { token: { email: 'admin@socialincome.org' } } }
+			{ auth: { token: { email: 'admin@socialincome.org' } } },
 		);
 		expect(secondExecutionResult).toEqual('Set 0 payments to paid and created 0 payments for next month');
 	});

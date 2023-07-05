@@ -31,7 +31,7 @@ export class SendNotificationsTask {
 
 			const paymentDocRef = this.firestoreAdmin.doc<Payment>(
 				`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${PAYMENT_FIRESTORE_PATH}`,
-				now.toFormat('yyyy-MM')
+				now.toFormat('yyyy-MM'),
 			);
 
 			if ((await paymentDocRef.get()).exists) {
@@ -52,7 +52,7 @@ export class SendNotificationsTask {
 							},
 						});
 						const messageCollection = this.firestoreAdmin.collection<TwilioMessage>(
-							`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${MESSAGE_FIRESTORE_PATH}`
+							`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${MESSAGE_FIRESTORE_PATH}`,
 						);
 						const messageDocRef = await messageCollection.add({ type: MessageType.SMS, ...message.toJSON() });
 						await paymentDocRef.update({ message: messageDocRef });

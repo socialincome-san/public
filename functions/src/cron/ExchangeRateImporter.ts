@@ -47,7 +47,7 @@ export class ExchangeRateImporter extends AbstractFirebaseAdmin implements Funct
 		return new Map(
 			exchangeRates.map((exchangeRate) => {
 				return [exchangeRate.timestamp, exchangeRate.rates]; // rounded to day
-			})
+			}),
 		);
 	};
 
@@ -67,7 +67,7 @@ export class ExchangeRateImporter extends AbstractFirebaseAdmin implements Funct
 		const day = dt.toFormat('yyyy-MM-dd');
 		const { data, status, statusText } = await axios.get<ExchangeRateResponse>(
 			`https://api.apilayer.com/exchangerates_data/${day}?base=chf`,
-			{ headers: { apiKey: EXCHANGE_RATES_API } }
+			{ headers: { apiKey: EXCHANGE_RATES_API } },
 		);
 		if (status !== 200) {
 			throw new Error(`Exchange Rate Request Failure for ${day}: ${statusText}`);

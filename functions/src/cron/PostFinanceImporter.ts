@@ -67,7 +67,7 @@ export class PostFinanceImporter extends AbstractFirebaseAdmin implements Functi
 					const idHeader = 'Imap-Id: ' + id + '\r\n';
 					const source = idHeader + all?.body;
 					return this.parseEmail(source);
-				})
+				}),
 			);
 			connection.end();
 			functions.logger.info('Retrieved balances');

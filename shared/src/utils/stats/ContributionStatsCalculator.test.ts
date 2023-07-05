@@ -38,7 +38,7 @@ describe('calcFinancialStats', () => {
 			expect.arrayContaining([
 				{ amount: 400, currency: 'USD' },
 				{ amount: 2000, currency: 'CHF' },
-			])
+			]),
 		);
 	});
 
@@ -47,7 +47,7 @@ describe('calcFinancialStats', () => {
 			expect.arrayContaining([
 				{ amount: 400, isInstitution: 'false' },
 				{ amount: 2000, isInstitution: 'true' },
-			])
+			]),
 		);
 	});
 
@@ -56,7 +56,7 @@ describe('calcFinancialStats', () => {
 			expect.arrayContaining([
 				{ amount: 400, country: 'US' },
 				{ amount: 2000, country: 'CH' },
-			])
+			]),
 		);
 	});
 
@@ -65,7 +65,7 @@ describe('calcFinancialStats', () => {
 			expect.arrayContaining([
 				{ amount: 2000, source: 'benevity' },
 				{ amount: 400, source: 'stripe' },
-			])
+			]),
 		);
 	});
 
@@ -76,7 +76,7 @@ describe('calcFinancialStats', () => {
 				{ amount: 100, month: '2023-02-01' },
 				{ amount: 100, month: '2023-03-01' },
 				{ amount: 1100, month: '2023-04-01' },
-			])
+			]),
 		);
 	});
 

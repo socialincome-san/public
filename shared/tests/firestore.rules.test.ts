@@ -56,13 +56,13 @@ describe('Test admins collection', () => {
 			setDoc(doc(globalAdminStore, 'admins', 'admin2@socialincome.org'), {
 				name: 'Test',
 				is_global_admin: true,
-			})
+			}),
 		);
 		await assertFails(
 			setDoc(doc(globalAnalystStore, 'admins', 'admin3@socialincome.org'), {
 				name: 'Test',
 				is_global_admin: true,
-			})
+			}),
 		);
 	});
 });
@@ -81,13 +81,13 @@ describe('Test recipients collection', () => {
 	it('Read payments subcollection', async () => {
 		// Access as organisation admin
 		const globalAdminDocs = await getDocs(
-			query(collection(globalAdminStore, 'recipients', 'z9zBQaDI8GB8tZ36HwDE', 'payments'))
+			query(collection(globalAdminStore, 'recipients', 'z9zBQaDI8GB8tZ36HwDE', 'payments')),
 		);
 		expect(globalAdminDocs.size).toBe(3);
 
 		// Access through phone number
 		const phoneNumberAccessDocs = await getDocs(
-			query(collection(recipientAppAccess, 'recipients', 'iF8bLEoUjqOIlq84XQmi', 'payments'))
+			query(collection(recipientAppAccess, 'recipients', 'iF8bLEoUjqOIlq84XQmi', 'payments')),
 		);
 		expect(phoneNumberAccessDocs.size).toBe(3);
 
