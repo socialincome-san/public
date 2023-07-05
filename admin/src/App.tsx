@@ -27,7 +27,7 @@ const algoliaIndex = (indexName: string) => {
 	return import.meta.env.VITE_ADMIN_ALGOLIA_APPLICATION_ID && import.meta.env.VITE_ADMIN_ALGOLIA_SEARCH_KEY
 		? algoliasearch(
 				import.meta.env.VITE_ADMIN_ALGOLIA_APPLICATION_ID,
-				import.meta.env.VITE_ADMIN_ALGOLIA_SEARCH_KEY
+				import.meta.env.VITE_ADMIN_ALGOLIA_SEARCH_KEY,
 		  ).initIndex(indexName)
 		: undefined;
 };
@@ -59,7 +59,7 @@ export default function App() {
 		buildRecipientsSurveysCollection('Next Surveys', 'next-surveys')([createPendingSurveyColumn(0)]),
 		buildRecipientsSurveysCollection(
 			'All Surveys',
-			'all-surveys'
+			'all-surveys',
 		)(recipientSurveys.map((s) => createSurveyColumn(s.name))),
 	];
 

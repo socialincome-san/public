@@ -22,7 +22,7 @@ export class CreateNewPaymentsTask implements PaymentTask {
 	constructor(
 		recipients: FirebaseFirestore.QueryDocumentSnapshot<Recipient>[],
 		exchangeRates: ExchangeRates,
-		firestoreAdmin: FirestoreAdmin
+		firestoreAdmin: FirestoreAdmin,
 	) {
 		this.recipients = recipients;
 		this.exchangeRates = exchangeRates;
@@ -41,7 +41,7 @@ export class CreateNewPaymentsTask implements PaymentTask {
 
 			const currentMonthPaymentRef = this.firestoreAdmin.doc<Payment>(
 				`${RECIPIENT_FIRESTORE_PATH}/${recipient.id}/${PAYMENT_FIRESTORE_PATH}`,
-				thisMonthPaymentDate.toFormat('yyyy-MM')
+				thisMonthPaymentDate.toFormat('yyyy-MM'),
 			);
 			const currentMonthPaymentDoc = await currentMonthPaymentRef.get();
 			// Payments are set to paid if they have status set to created or if the document doesn't exist yet
@@ -59,7 +59,7 @@ export class CreateNewPaymentsTask implements PaymentTask {
 
 			const nextMonthPaymentRef = this.firestoreAdmin.doc<Payment>(
 				`${RECIPIENT_FIRESTORE_PATH}/${recipient.id}/${PAYMENT_FIRESTORE_PATH}`,
-				nextMonthPaymentDate.toFormat('yyyy-MM')
+				nextMonthPaymentDate.toFormat('yyyy-MM'),
 			);
 			const nextMonthPaymentDoc = await nextMonthPaymentRef.get();
 			const lastPaymentDate = calcLastPaymentDate(recipient.get('si_start_date').toDate());

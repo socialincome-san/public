@@ -131,7 +131,7 @@ export class DonationCertificateHandler extends AbstractFirebaseAdmin implements
 		translator: Translator,
 		year: number,
 		contributionsByCurrency: _.Object<{ [currency: string]: number }>,
-		filePath: string
+		filePath: string,
 	) => {
 		const user = userEntity.values;
 		const genderContext = this.createGenderContext(user);
@@ -210,7 +210,7 @@ export class DonationCertificateHandler extends AbstractFirebaseAdmin implements
 						translator.t('contribution', {
 							// TODO: use correct locale
 							context: { currency, amount: contributionsByCurrency.get(currency), locale: 'de-CH' },
-						})
+						}),
 				);
 			});
 			pdfDocument.moveDown();

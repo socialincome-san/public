@@ -14,14 +14,14 @@ export class SurveyLogin extends AbstractFirebaseAdmin implements FunctionProvid
 	getFunction = () => {
 		return functions.https.onCall(async (props: SurveyCredentialRequest) => {
 			const recipient = await this.firestoreAdmin.findFirst<Recipient>(RECIPIENT_FIRESTORE_PATH, (q) =>
-				q.where('mobile_money_phone.phone', '==', Number(props.phoneNumber))
+				q.where('mobile_money_phone.phone', '==', Number(props.phoneNumber)),
 			);
 
 			assert(recipient != undefined, 'Recipient not found');
 
 			const survey = await this.firestoreAdmin.findFirst<Survey>(
 				[recipient.ref.path, SURVEY_FIRETORE_PATH].join('/'),
-				(q) => q.where('access_token', '==', props.accessToken)
+				(q) => q.where('access_token', '==', props.accessToken),
 			);
 
 			assert(survey != undefined, 'Survey not found');

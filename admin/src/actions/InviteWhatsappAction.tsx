@@ -34,7 +34,7 @@ export function InviteWhatsappAction({ selectionController }: CollectionActionsP
 	const functions = getFunctions();
 	const twilioOutgoingMessage = httpsCallable<TwilioOutgoingMessageFunctionProps, string>(
 		functions,
-		'twilioOutgoingMessage'
+		'twilioOutgoingMessage',
 	);
 
 	const onClick = () => {

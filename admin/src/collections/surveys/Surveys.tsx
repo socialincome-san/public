@@ -88,8 +88,8 @@ export const createPendingSurveyColumn = (i: number): AdditionalFieldDelegate<Pa
 									(survey) =>
 										survey.values?.status != undefined &&
 										[SurveyStatus.New, SurveyStatus.Sent, SurveyStatus.Scheduled, SurveyStatus.InProgress].includes(
-											survey.values?.status
-										)
+											survey.values?.status,
+										),
 								)
 								.value()
 								.at(i);
@@ -112,7 +112,7 @@ export const createPendingSurveyColumn = (i: number): AdditionalFieldDelegate<Pa
 const surveyPreview = (
 	entity: Entity<Partial<Survey>>,
 	recipientId: string,
-	sideEntityController: SideEntityController
+	sideEntityController: SideEntityController,
 ) => {
 	return (
 		<Fragment>
