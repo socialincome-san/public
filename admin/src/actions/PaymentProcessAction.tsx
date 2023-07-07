@@ -25,7 +25,7 @@ export function PaymentProcessAction() {
 	const [isOpen, setIsOpen] = useState(false);
 	const [confirmCreateNewPayments, setConfirmCreateNewPayments] = useState(false);
 	const [isFunctionRunning, setIsFunctionRunning] = useState(false);
-	const [paymentDate, setPaymentDate] = useState<DateTime>(toPaymentDate(DateTime.now()));
+	const [paymentDate, setPaymentDate] = useState<DateTime>(toPaymentDate(DateTime.local({ zone: 'utc' })));
 
 	const handleOpen = () => setIsOpen(true);
 	const handleClose = () => {

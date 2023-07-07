@@ -15,7 +15,7 @@ import { runPaymentProcessTask } from '../../../index';
 
 const projectId = 'update-recipients-task-test';
 const testEnv = functionsTest({ projectId });
-const paymentDate = toPaymentDate(DateTime.fromObject({ year: 2023, month: 4, day: 15 }));
+const paymentDate = toPaymentDate(DateTime.fromObject({ year: 2023, month: 4, day: 15 }, { zone: 'utc' }));
 const triggerFunction = testEnv.wrap(runPaymentProcessTask);
 const firestoreAdmin = new FirestoreAdmin(getOrInitializeFirebaseAdmin({ projectId }));
 
@@ -31,7 +31,7 @@ afterEach(async () => {
 test('UpdateRecipients 1', async () => {
 	const result = await triggerFunction(
 		{ type: PaymentProcessTaskType.UpdateRecipients, timestamp: paymentDate.toSeconds() },
-		{ auth: { token: { email: 'admin@socialincome.org' } } },
+		{ auth: { token: { email: 'admin@socialincome.org' } } }
 	);
 	expect(result).toEqual('Set status of 1 recipients to active and 0 recipients to former');
 });
@@ -44,7 +44,7 @@ test('UpdateRecipients 2', async () => {
 	await expect(
 		triggerFunction(
 			{ type: PaymentProcessTaskType.UpdateRecipients, timestamp: paymentDate.toSeconds() },
-			{ auth: { token: { email: 'admin@socialincome.org' } } },
-		),
+			{ auth: { token: { email: 'admin@socialincome.org' } } }
+		)
 	).rejects.toThrow('Orange Money Id missing for designated recipient');
 });

@@ -6,7 +6,7 @@ import { runPaymentProcessTask } from '../../../index';
 
 const projectId = 'payment-csv-task-test';
 const testEnv = functionsTest({ projectId });
-const paymentDate = toPaymentDate(DateTime.fromObject({ year: 2023, month: 4, day: 15 }));
+const paymentDate = toPaymentDate(DateTime.fromObject({ year: 2023, month: 4, day: 15 }, { zone: 'utc' }));
 const triggerFunction = testEnv.wrap(runPaymentProcessTask);
 
 beforeEach(async () => {
@@ -21,7 +21,7 @@ afterEach(async () => {
 test('GetPaymentCSV', async () => {
 	const result = await triggerFunction(
 		{ type: PaymentProcessTaskType.GetPaymentCSV, timestamp: paymentDate.toSeconds() },
-		{ auth: { token: { email: 'admin@socialincome.org' } } },
+		{ auth: { token: { email: 'admin@socialincome.org' } } }
 	);
 
 	const rows = result.split('\n').map((row: string) => row.split(','));

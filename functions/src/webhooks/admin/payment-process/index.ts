@@ -17,7 +17,7 @@ export interface PaymentProcessProps {
 export default functions.https.onCall(async ({ type, timestamp }: PaymentProcessProps, { auth }) => {
 	const firestoreAdmin = new FirestoreAdmin();
 	await firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
-	const paymentDate = toPaymentDate(DateTime.fromSeconds(timestamp));
+	const paymentDate = toPaymentDate(DateTime.fromSeconds(timestamp, { zone: 'utc' }));
 	let task: PaymentTask;
 
 	switch (type) {
