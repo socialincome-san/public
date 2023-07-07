@@ -2,7 +2,7 @@
 	"survey": {
 		"login": {
 			"message": "Please enter your phone number and the access token which we sent you.",
-			"phoneNumber": "Orange Money Phone Number",
+			"phoneNumber": "Mobile Money Number",
 			"accessCode": "Survey Access Code",
 			"loadSurvey": "Load Survey",
 			"loading": "Loading...",
@@ -31,14 +31,16 @@
 				"yes": "Yes",
 				"no": "No"
 			},
-			"ratingChoices": {
-				"extremelyUnlikely": "Extremely unlikely",
-				"unlikely": "Unlikely",
-				"neutral": "Neutral",
-				"likely": "Likely",
-				"extremelyLikely": "Extremely likely"
+			"livingLocationTitleV1": "Where do you live?",
+			"livingLocationChoices": {
+				"westernAreaUrbanFreetown": "Western Area Urban (Freetown)",
+				"westernAreaRural": "Western Area Rural",
+				"easternProvince": "Eastern Province",
+				"northernProvince": "Northern Province",
+				"southernProvince": "Southern Province",
+				"northWestProvince": "North West Province"
 			},
-			"maritalStatusTitle": "What is your marital status?",
+			"maritalStatusTitleV1": "What is your marital status?",
 			"maritalStatusChoices": {
 				"married": "Married",
 				"widowed": "Widowed",
@@ -46,39 +48,9 @@
 				"separated": "Separated",
 				"neverMarried": "Never married"
 			},
-			"financialSituationTitle": "How do you assess your current financial situation?",
-			"financialSituationChoices": {
-				"livingComfortably": "Living comfortably",
-				"doingOk": "Doing ok",
-				"difficultyMakingEndsMeet": "Difficulty making ends meet",
-				"barelyGettingBy": "Barely getting by"
-			},
-			"employmentStatusTitle": "What is your current employment status?",
-			"employmentStatusChoices": {
-				"employed": "Employed",
-				"selfEmployed": "Self-employed",
-				"notEmployed": "Not employed",
-				"retired": "Retired"
-			},
-			"employedTitle": "Are you working more or less than 40 hours per week?",
-			"employedChoices": {
-				"less": "Less",
-				"more": "More"
-			},
-			"notEmployedTitle": "Are you currently looking for work?",
-			"disabilityTitle": "Do you suffer from a disability or illness that affects your possibilities of getting work or keeping your job?",
-			"livingLocationTitle": "Where do you live?",
-			"livingLocationChoices": {
-				"westernAreaUrbanFreetown": "Western Area Urban (i.e., Freetown)",
-				"westernAreaRural": "Western Area Rural",
-				"easternProvince": "Eastern Province",
-				"northernProvince": "Northern Province",
-				"southernProvince": "Southern Province",
-				"northWestProvince": "North West Province"
-			},
-			"hasDependentsTitle": "Do you have any dependents?",
-			"hasDependentsDesc": "People who depend on you.",
-			"nrDependentsTitle": "Number of people who depend on you.",
+			"hasDependentsTitleV1": "Do you have any dependents?",
+			"hasDependentsDescV1": "People who depend financially on you.",
+			"nrDependentsTitleV1": "How many people depend on you financially?",
 			"nrDependentsChoices": {
 				"1-2": "1-2",
 				"3-4": "3-4",
@@ -86,37 +58,51 @@
 				"8-10": "8-10",
 				"10-": "more than 10"
 			},
-			"basicNeedsCoverageTitle": "How likely are you able to cover basic needs such as food, clothing, and shelter?",
-			"expensesCoveredTitle": "How likely are you able to pay all your bills on time (e.g., utilities, loans, etc.)?",
-			"unexpectedExpensesCoveredTitle": "How likely are you able to handle an unexpected expense like seeing a doctor?",
-			"ownIncomeTitle": "In addition to Social Income, how likely are you able to generate income on your own?",
-			"educationAccessTitle": "How likely are you to have access to education?",
-			"savingsTitle": "How likely are you able to save money?",
-			"deptTitle": "Are you or anyone in your household in debt? (SLE 500 or above)",
-			"mainDeptPayerTitle": "Are you the main person repaying the debt?",
-			"spendingTitle": "Tell us what are the key categories that you spend your Social Income payments on.",
-			"spendingChoices": {
-				"education": "Education (school fees, supplies, ...)",
-				"food": "Food (food for you or your household)",
-				"housing": "Housing (rent, house maintenance, ...)",
-				"healthCare": "Health Care (doctor, hospital visit, medicine, ...)",
-				"mobility": "Mobility (bus, shared taxi, poda poda, keke, ...)",
-				"saving": "Saving for the future (saving it in a bank account or on my mobile money account, ...)",
-				"investment": "Investment (fertilizers, tools, diesel for machinery, ...)"
+			"attendingSchoolV1": "Are you currently attending school?",
+			"employmentStatusTitleV1": "What is your current employment status?",
+			"employmentStatusChoices": {
+				"employed": "Employed",
+				"selfEmployed": "Self-employed",
+				"notEmployed": "Not employed",
+				"retired": "Retired"
 			},
-			"spendingRankingTitle": "Please rank the selected spending categories from the most important to the least.",
-			"spendingRankingDesc": "You can drag and drop the categories.",
-			"plannedAchievementOnboardingTitle": "What do you hope to achieve within the next 3 years with Social Income?",
-			"plannedAchievementCheckingTitle": "What do you hope to achieve with the remaining Social Incomes payments?",
-			"achievementsAchievedTitle": "Have you achieved what you hoped to over the course of the last three years?",
-			"achievementsNotAchievedCommentTitle": "What has kept you from achieving this goal? Is there something we could have done to further support you? (e.g. mentoring, connections)",
-			"moreFinanciallySecureTitle": "Has Social Income made you feel more financially secure?",
-			"happierTitle": "Has Social Income made you feel happier?",
-			"happierCommentTitle": "How so?",
-			"notHappierCommentTitle": "Can you tell us why?",
-			"longEnoughTitle": "Was three years of Social Income payments long enough to become financially stable?",
-			"selfSustainableTitle": "Will you be able to sustain yourself financially after your Social Income period has expired (e.g., pay your bills on time, handle an unexpected expense, etc.)?",
-			"notSelfSustainableCommentTitle": "Is there anything in the program that could be changed to make your transition easier?"
+			"notEmployedTitleV1": "Are you currently looking for work?",
+			"disabilityTitleV1": "Do you have a disability or illness that affects your possibilities of getting work or keeping your job?",
+			"skippingMealsTitleV1": "Do you or other family members in your household ever skip meals because there wasn't enough money for food?",
+			"skippingMealsLastWeekTitleV1": "Did this happen last week?",
+			"skippingMealsLastWeek3MealsTitleV1": "Did you skip more than 3 meals in the past week?",
+			"unexpectedExpensesCoveredTitleV1": "Do you have enough money to cover unexpected expenses like seeing a doctor costing 100 SLE?",
+			"savingsTitleV1": "Are you currently able to save money?",
+			"debtPersonalTitleV1": "Are you in debt? (SLE 500 or above)",
+			"debtPersonalRepayTitleV1": "Are you able to repay the debt?",
+			"debtHouseholdTitleV1": "Is anyone in your household in debt? (SLE 500 or above)",
+			"debtHouseholdWhoRepaysTitleV1": "Are you the main person repaying the debt?",
+			"otherSupportTitleV1": "Are you currently receiving any other form of financial support from anywhere else?",
+			"plannedAchievementTitleV1": "What do you hope to achieve within the next 3 years with Social Income? ",
+
+			"spendingTitleV1": "Tell us what are the key categories that you spend your Social Income payments on:",
+			"spendingChoices": {
+				"education": "Education (school fees, stationary, textbooks ...)",
+				"food": "Food for you or your household",
+				"housing": "Housing (rent, house maintenance ...)",
+				"healthCare": "Health care (doctor, hospital visit, medicine ...)",
+				"mobility": "Transportation (bus, taxi, poda poda, keke ...)",
+				"saving": "Saving for the future (saving it in a bank account or on my mobile money account ...)",
+				"investment": "Investment (fertilizers, tools, diesel for machinery ...)"
+			},
+			"spendingRankingTitleV1": "Please rank the selected spending categories from the most important to the least.",
+			"spendingRankingDescV1": "You can drag and drop the categories.",
+			"plannedAchievementRemainingTitleV1": "What do you hope to achieve within the remaining time in the Social Income program? ",
+
+			"financialIndependenceTitleV1": "Did Social Income make you feel financially more secure and independent?",
+			"impactLifeGeneralTitleV1": "What impact did Social Income have on your life?",
+
+			"longEnoughTitleV1": "Was three years of Social Income payments long enough to become financially stable?",
+			"achievementsAchievedTitleV1": "Have you achieved what you hoped to over the course of the last three years?",
+			"achievementsNotAchievedCommentTitleV1": "What has kept you from achieving this goal? Is there something we could have done to further support you? (e.g. mentoring, connections)",
+			"happierTitleV1": "Has Social Income made you feel happier?",
+			"happierCommentTitleV1": "How so?",
+			"notHappierCommentTitleV1": "Can you tell us why?"
 		}
 	}
 }
