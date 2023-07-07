@@ -24,11 +24,13 @@ export type Payment = {
 };
 
 export enum PaymentProcessTaskType {
+	UpdateRecipients = 'UpdateRecipients',
 	GetRegistrationCSV = 'GetRegistrationCSV',
 	GetPaymentCSV = 'GetPaymentCSV',
-	CreateNewPayments = 'CreateNewPayments',
+	CreatePayments = 'CreatePayments',
 	SendNotifications = 'SendNotifications',
 }
 
 export const PAYMENT_AMOUNT = 700;
+export const PAYMENTS_COUNT = 36;
 export const PAYMENT_CURRENCY = 'SLE';

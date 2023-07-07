@@ -2,6 +2,7 @@ import { DocumentReference } from 'firebase-admin/firestore';
 import { CollectionReference } from 'firebase-admin/lib/firestore';
 import * as functions from 'firebase-functions';
 import Stripe from 'stripe';
+import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
 import {
 	CONTRIBUTION_FIRESTORE_PATH,
 	Contribution,
@@ -12,39 +13,13 @@ import {
 	UserStatusKey,
 	splitName,
 } from '../../../../shared/src/types';
-import { STRIPE_API_READ_KEY, STRIPE_WEBHOOK_SECRET } from '../../config';
-import { AbstractFirebaseAdmin, FunctionProvider } from '../../firebase';
 
-export class StripeWebhook extends AbstractFirebaseAdmin implements FunctionProvider {
-	/**
-	 * Stripe webhook to ingest charge events into firestore.
-	 * Adds the relevant information to the contributions subcollection of users.
-	 */
-	getFunction = () =>
-		functions.https.onRequest(async (request, response) => {
-			const stripe = new Stripe(STRIPE_API_READ_KEY, { apiVersion: '2022-08-01' });
-			try {
-				const sig = request.headers['stripe-signature']!;
-				const event = stripe.webhooks.constructEvent(request.rawBody, sig, STRIPE_WEBHOOK_SECRET);
-				switch (event.type) {
-					case 'charge.succeeded': {
-						await this.handleChargeEvent(event, stripe);
-						break;
-					}
-					case 'charge.failed': {
-						await this.handleChargeEvent(event, stripe);
-						break;
-					}
-					default: {
-						functions.logger.info(`Unhandled event type ${event.type}`);
-					}
-				}
-				response.send();
-			} catch (error) {
-				functions.logger.error(error);
-				response.status(500).send(`Webhook Error. Check the logs.`);
-			}
-		});
+export class StripeWebhook {
+	private readonly firestoreAdmin: FirestoreAdmin;
+
+	constructor() {
+		this.firestoreAdmin = new FirestoreAdmin();
+	}
 
 	handleChargeEvent = async (event: Stripe.Event, stripe: Stripe) => {
 		const charge = event.data.object as Stripe.Charge;

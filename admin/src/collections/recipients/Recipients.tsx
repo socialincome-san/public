@@ -5,9 +5,10 @@ import { Chip, Tooltip } from '@mui/material';
 import {
 	RECIPIENT_FIRESTORE_PATH,
 	Recipient,
-	calcLastPaymentDate,
+	calcFinalPaymentDate,
 	calcPaymentsLeft,
 } from '@socialincome/shared/src/types';
+import { DateTime } from 'luxon';
 import { messagesCollection } from '../Messages';
 import { paymentsCollection } from '../Payments';
 import { buildAuditedCollection } from '../shared';
@@ -35,13 +36,13 @@ export const PaymentsLeft: AdditionalFieldDelegate<Partial<Recipient>> = {
 	id: 'payments_left',
 	name: 'Payments Left',
 	Builder: ({ entity }) => {
-		const lastPaymentDate = entity.values.si_start_date
-			? calcLastPaymentDate(entity.values.si_start_date as Date)
+		const finalPaymentDate = entity.values.si_start_date
+			? calcFinalPaymentDate(DateTime.fromJSDate(entity.values.si_start_date as Date))
 			: undefined;
-		const paymentsLeft = lastPaymentDate ? calcPaymentsLeft(lastPaymentDate) : undefined;
-		if (paymentsLeft && lastPaymentDate) {
+		const paymentsLeft = finalPaymentDate ? calcPaymentsLeft(finalPaymentDate) : undefined;
+		if (paymentsLeft && finalPaymentDate) {
 			return (
-				<Tooltip title={'Last Payment Date ' + lastPaymentDate.toFormat('dd/MM/yyyy')}>
+				<Tooltip title={'Last Payment Date ' + finalPaymentDate.toFormat('dd/MM/yyyy')}>
 					<Chip
 						size={'small'}
 						color={paymentsLeft < 0 ? 'info' : paymentsLeft <= 1 ? 'error' : paymentsLeft <= 3 ? 'warning' : 'success'}

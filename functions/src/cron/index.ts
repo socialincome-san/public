@@ -1,5 +1,5 @@
-import { ExchangeRateImporter } from './ExchangeRateImporter';
-import { PostFinanceImporter } from './PostFinanceImporter';
+import importExchangeRatesFunction from './exchange-rate-import';
+import importBalanceMailFunction from './postfinance-import';
 
-export const importBalanceMail = new PostFinanceImporter().getFunction();
-export const importExchangeRates = new ExchangeRateImporter().getFunction();
+export const importBalanceMail = importBalanceMailFunction;
+export const importExchangeRates = importExchangeRatesFunction;
