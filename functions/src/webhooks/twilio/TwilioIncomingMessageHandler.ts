@@ -1,4 +1,5 @@
 import * as functions from 'firebase-functions';
+import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
 import {
 	MESSAGE_FIRESTORE_PATH,
 	MessageType,
@@ -6,9 +7,8 @@ import {
 	Recipient,
 	TwilioMessage,
 } from '../../../../shared/src/types';
-import { AbstractFirebaseAdmin, FunctionProvider } from '../../firebase';
 
-export class TwilioIncomingMessageHandler extends AbstractFirebaseAdmin implements FunctionProvider {
+export class TwilioIncomingMessageHandler {
 	/**
 	 * For local testing purposes we use ngrok to forward webhooks:
 	 * 1. Setup Whatsapp Sandbox in Twilio and activate your personal phone number on https://console.twilio.com/us1/develop/sms/try-it-out/whatsapp-learn
@@ -18,6 +18,12 @@ export class TwilioIncomingMessageHandler extends AbstractFirebaseAdmin implemen
 	 *    the incoming message field with https://xxxx-yyy-vvv-www-zzz.eu.ngrok.io/social-income-staging/us-central1/twilioIncomingMessage
 	 * 5. Send test whatsapp to your personal phone number, by answering the function below is triggered
 	 */
+	private readonly firestoreAdmin: FirestoreAdmin;
+
+	constructor() {
+		this.firestoreAdmin = new FirestoreAdmin();
+	}
+
 	getFunction() {
 		return functions.https.onRequest(async (request, response) => {
 			if (request.body) {
@@ -45,7 +51,7 @@ export class TwilioIncomingMessageHandler extends AbstractFirebaseAdmin implemen
 					}
 
 					const messageCollection = this.firestoreAdmin.collection<TwilioMessage>(
-						`${RECIPIENT_FIRESTORE_PATH}/${recipientId}/${MESSAGE_FIRESTORE_PATH}`
+						`${RECIPIENT_FIRESTORE_PATH}/${recipientId}/${MESSAGE_FIRESTORE_PATH}`,
 					);
 					await messageCollection.add({ type: MessageType.WHATSAPP, ...request.body });
 				}

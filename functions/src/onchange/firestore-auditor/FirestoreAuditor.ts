@@ -1,27 +1,19 @@
-import { firestore } from 'firebase-admin';
-import * as functions from 'firebase-functions';
+import { DocumentSnapshot } from '@google-cloud/firestore';
 import { Change, EventContext } from 'firebase-functions';
 import { isEqual } from 'lodash';
-import { AbstractFirebaseAdmin } from '../firebase';
-import DocumentSnapshot = firestore.DocumentSnapshot;
+import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
 
 /**
  * Watches write updates in collection and subcollections and inserts the previous record value into a
  * "{collectionName}-history" collection. In there, for each document id we maintain a history subcollection
  * with containing all the previous versions of a document.
  */
-export class FirestoreAuditor extends AbstractFirebaseAdmin {
-	/**
-	 * Triggers changes to documents of root collections
-	 */
-	getFunction() {
-		return functions.firestore
-			.document('{collectionId}/{document=**}')
-			.onWrite(async (change: Change<DocumentSnapshot>, context: EventContext) => {
-				return this.auditFirestore(change, context);
-			});
-	}
+export class FirestoreAuditor {
+	private readonly firestoreAdmin: FirestoreAdmin;
 
+	constructor() {
+		this.firestoreAdmin = new FirestoreAdmin();
+	}
 	/**
 	 * Takes care of
 	 * - updating the last_updated_at to now field in the document which got changed
@@ -35,7 +27,7 @@ export class FirestoreAuditor extends AbstractFirebaseAdmin {
 		// that there was a change besides the updatedAt field, otherwise we end up in an infinite loop
 		const onlyUpdatedAtChanged = isEqual(
 			{ ...change.after?.data(), last_updated_at: 0 },
-			{ ...change.before?.data(), last_updated_at: 0 }
+			{ ...change.before?.data(), last_updated_at: 0 },
 		);
 		if (onlyUpdatedAtChanged) return Promise.resolve(false);
 		await this.populateHistory(change, context);
@@ -50,7 +42,7 @@ export class FirestoreAuditor extends AbstractFirebaseAdmin {
 			{
 				last_updated_at: new Date(context.timestamp),
 			},
-			{ merge: true }
+			{ merge: true },
 		);
 	};
 

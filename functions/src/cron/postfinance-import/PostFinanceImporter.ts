@@ -3,27 +3,21 @@ import * as functions from 'firebase-functions';
 import imaps from 'imap-simple';
 
 import _ from 'lodash';
-import { simpleParser, Source } from 'mailparser';
-import { BANK_BALANCE_FIRESTORE_PATH, BankBalance, getIdFromBankBalance } from '../../../shared/src/types';
-import { POSTFINANCE_EMAIL_PASSWORD, POSTFINANCE_EMAIL_USER } from '../config';
-import { AbstractFirebaseAdmin, FunctionProvider } from '../firebase';
+import { Source, simpleParser } from 'mailparser';
+import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
+import { BANK_BALANCE_FIRESTORE_PATH, BankBalance, getIdFromBankBalance } from '../../../../shared/src/types';
+import { POSTFINANCE_EMAIL_PASSWORD, POSTFINANCE_EMAIL_USER } from '../../config';
 
-export class PostFinanceImporter extends AbstractFirebaseAdmin implements FunctionProvider {
-	accountRegex = /(?<=account\W)(?<account>.*?)(?=\W)/; // regex to retrieve the account name from the email
-	balanceRegex = /balance: CHF (?<balance>[0-9’.]*)/; // regex to retrieve the balance from the email
+export class PostFinanceImporter {
+	private readonly accountRegex = /(?<=account\W)(?<account>.*?)(?=\W)/; // regex to retrieve the account name from the email
+	private readonly balanceRegex = /balance: CHF (?<balance>[0-9’.]*)/; // regex to retrieve the balance from the email
 	// we retrieve only unseen mails and mark them as seen once we imported the balance
-	searchCriteria = ['UNSEEN'];
-	fetchOptions = { bodies: ['HEADER', 'TEXT', ''], markSeen: true };
+	private readonly searchCriteria = ['UNSEEN'];
+	private readonly fetchOptions = { bodies: ['HEADER', 'TEXT', ''], markSeen: true };
+	private readonly firestoreAdmin: FirestoreAdmin;
 
-	/**
-	 * Function periodically connects to the gmail account where we send the postfinance balance statements,
-	 * parses the emails and stores the current balances into firestore.
-	 */
-	getFunction() {
-		return functions.pubsub.schedule('0 * * * *').onRun(async () => {
-			const balances = await this.retrieveBalanceMails();
-			await this.storeBalances(balances);
-		});
+	constructor() {
+		this.firestoreAdmin = new FirestoreAdmin();
 	}
 
 	extractBalance = (html: String) => {
@@ -67,7 +61,7 @@ export class PostFinanceImporter extends AbstractFirebaseAdmin implements Functi
 					const idHeader = 'Imap-Id: ' + id + '\r\n';
 					const source = idHeader + all?.body;
 					return this.parseEmail(source);
-				})
+				}),
 			);
 			connection.end();
 			functions.logger.info('Retrieved balances');

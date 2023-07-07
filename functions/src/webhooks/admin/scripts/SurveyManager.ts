@@ -1,6 +1,7 @@
 import { Timestamp } from '@google-cloud/firestore';
-import * as functions from 'firebase-functions';
 import { DateTime } from 'luxon';
+import { AuthAdmin } from '../../../../../shared/src/firebase/admin/AuthAdmin';
+import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
 import {
 	RECIPIENT_FIRESTORE_PATH,
 	Recipient,
@@ -13,65 +14,59 @@ import {
 	recipientSurveys,
 } from '../../../../../shared/src/types';
 import { rndString } from '../../../../../shared/src/utils/crypto';
-import { AbstractFirebaseAdmin, FunctionProvider } from '../../../firebase';
 
 /**
  * Takes care of creating surveys for recipients
  */
-export class SurveyManager extends AbstractFirebaseAdmin implements FunctionProvider {
-	/**
-	 * Batch implementation to create all surveys for all recipients.
-	 * Checks for existing surveys and ignores them. So, it can be called multiple times without creating duplicates.
-	 */
-	getFunction = () =>
-		functions
-			.runWith({
-				timeoutSeconds: 540,
-				memory: '2GB',
-			})
-			.https.onCall(async (_, { auth }) => {
-				await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
-
-				const recipients = await this.firestoreAdmin.collection<Recipient>(RECIPIENT_FIRESTORE_PATH).get();
-
-				await Promise.all(
-					recipients.docs
-						.filter((recipient) => recipient.data().progr_status != RecipientProgramStatus.Waitlisted)
-						.map(async (recipient) => this.createAllSurveysForRecipient(recipient))
-				);
-			});
-
+export class SurveyManager {
 	/**
 	 * Create all surveys for 1 recipient. TODO trigger this method when a recipient gets selected.
 	 * Checks for existing surveys and ignores them. So, it can be called multiple times without creating duplicates.
 	 */
+
+	private readonly authAdmin: AuthAdmin;
+	private readonly firestoreAdmin: FirestoreAdmin;
+
+	constructor() {
+		this.authAdmin = new AuthAdmin();
+		this.firestoreAdmin = new FirestoreAdmin();
+	}
+
+	batchCreateSurveys = async () => {
+		const recipients = await this.firestoreAdmin.collection<Recipient>(RECIPIENT_FIRESTORE_PATH).get();
+		await Promise.all(
+			recipients.docs
+				.filter((recipient) => recipient.data().progr_status != RecipientProgramStatus.Waitlisted)
+				.map(async (recipient) => this.createAllSurveysForRecipient(recipient)),
+		);
+	};
+
 	createAllSurveysForRecipient = async (recipient: FirebaseFirestore.QueryDocumentSnapshot<Recipient>) => {
-		if (recipient.data().si_start_date) {
-			return Promise.all(
-				recipientSurveys.map(async (survey) => {
-					try {
-						const dueDate = DateTime.fromJSDate((recipient.data().si_start_date as Timestamp).toDate()).plus({
-							months: survey.startDateOffsetMonths,
-						});
-						const surveyStatus = dueDate < DateTime.now() ? SurveyStatus.Missed : SurveyStatus.New;
-						await this.createSurvey(
-							recipient.id,
-							survey.questionaire,
-							survey.name,
-							recipient.data().first_name,
-							recipient.data().main_language || RecipientMainLanguage.Krio,
-							surveyStatus,
-							dueDate.toJSDate()
-						);
-					} catch {
-						console.error(`Could not create ${survey.questionaire} survey for recipient ${recipient.id}`);
-					}
-				})
-			);
-		} else {
+		if (!recipient.get('si_start_date')) {
 			console.log('No start date for recipient ${}');
 			return Promise.resolve();
 		}
+		return Promise.all(
+			recipientSurveys.map(async (survey) => {
+				try {
+					const dueDate = DateTime.fromJSDate((recipient.data().si_start_date as Timestamp).toDate()).plus({
+						months: survey.startDateOffsetMonths,
+					});
+					const surveyStatus = dueDate < DateTime.now() ? SurveyStatus.Missed : SurveyStatus.New;
+					await this.createSurvey(
+						recipient.id,
+						survey.questionaire,
+						survey.name,
+						recipient.data().first_name,
+						recipient.data().main_language || RecipientMainLanguage.Krio,
+						surveyStatus,
+						dueDate.toJSDate(),
+					);
+				} catch {
+					console.error(`Could not create ${survey.questionaire} survey for recipient ${recipient.id}`);
+				}
+			}),
+		);
 	};
 
 	/**
@@ -86,10 +81,10 @@ export class SurveyManager extends AbstractFirebaseAdmin implements FunctionProv
 		recipientName: string,
 		language: RecipientMainLanguage,
 		status: SurveyStatus,
-		due_date_at: Date
+		due_date_at: Date,
 	) => {
 		const surveysCollection = this.firestoreAdmin.collection<Survey>(
-			[RECIPIENT_FIRESTORE_PATH, recipientId, SURVEY_FIRETORE_PATH].join('/')
+			[RECIPIENT_FIRESTORE_PATH, recipientId, SURVEY_FIRETORE_PATH].join('/'),
 		);
 		const surveyDocRef = surveysCollection.doc(surveyName);
 		if (!(await surveyDocRef.get()).exists) {

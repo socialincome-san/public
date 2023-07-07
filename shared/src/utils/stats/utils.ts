@@ -4,7 +4,7 @@ export const groupByAndSort = <T>(
 	collection: _.Collection<T>,
 	groupAttribute: string,
 	aggregation: (group: T[]) => number,
-	aggregationName: string
+	aggregationName: string,
 ) => {
 	return collection
 		.groupBy(groupAttribute)

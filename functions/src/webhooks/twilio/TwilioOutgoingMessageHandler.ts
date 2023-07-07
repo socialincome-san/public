@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions';
 import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
+import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
 import {
 	Entity,
 	LocaleLanguage,
@@ -11,14 +12,19 @@ import {
 } from '../../../../shared/src/types';
 import { sendWhatsapp } from '../../../../shared/src/utils/messaging/whatsapp';
 import { TWILIO_SENDER_PHONE, TWILIO_SID, TWILIO_TOKEN } from '../../config';
-import { AbstractFirebaseAdmin, FunctionProvider } from '../../firebase';
 
 export interface TwilioOutgoingMessageFunctionProps {
 	recipients: Entity<Recipient>[];
 	template: 'opt-in';
 }
 
-export class TwilioOutgoingMessageHandler extends AbstractFirebaseAdmin implements FunctionProvider {
+export class TwilioOutgoingMessageHandler {
+	private readonly firestoreAdmin: FirestoreAdmin;
+
+	constructor() {
+		this.firestoreAdmin = new FirestoreAdmin();
+	}
+
 	getFunction = () =>
 		functions.https.onCall(async ({ recipients, template }: TwilioOutgoingMessageFunctionProps, { auth }) => {
 			await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
@@ -29,7 +35,7 @@ export class TwilioOutgoingMessageHandler extends AbstractFirebaseAdmin implemen
 					case 'opt-in':
 						message = await sendWhatsapp({
 							from: TWILIO_SENDER_PHONE,
-							to: `+${recipient.communication_mobile_phone.phone}`,
+							to: `+${recipient.communication_mobile_phone?.phone}`,
 							twilioConfig: { sid: TWILIO_SID, token: TWILIO_TOKEN },
 							templateProps: {
 								language: LocaleLanguage.English,
@@ -47,7 +53,7 @@ export class TwilioOutgoingMessageHandler extends AbstractFirebaseAdmin implemen
 
 				if (message) {
 					const messageCollection = this.firestoreAdmin.collection<TwilioMessage>(
-						`${RECIPIENT_FIRESTORE_PATH}/${id}/${MESSAGE_FIRESTORE_PATH}`
+						`${RECIPIENT_FIRESTORE_PATH}/${id}/${MESSAGE_FIRESTORE_PATH}`,
 					);
 					await messageCollection.add({ type: MessageType.WHATSAPP, ...message.toJSON() });
 					successCount += 1;
