@@ -31,7 +31,7 @@ afterEach(async () => {
 test('UpdateRecipients 1', async () => {
 	const result = await triggerFunction(
 		{ type: PaymentProcessTaskType.UpdateRecipients, timestamp: paymentDate.toSeconds() },
-		{ auth: { token: { email: 'admin@socialincome.org' } } }
+		{ auth: { token: { email: 'admin@socialincome.org' } } },
 	);
 	expect(result).toEqual('Set status of 1 recipients to active and 0 recipients to former');
 });
@@ -44,7 +44,7 @@ test('UpdateRecipients 2', async () => {
 	await expect(
 		triggerFunction(
 			{ type: PaymentProcessTaskType.UpdateRecipients, timestamp: paymentDate.toSeconds() },
-			{ auth: { token: { email: 'admin@socialincome.org' } } }
-		)
+			{ auth: { token: { email: 'admin@socialincome.org' } } },
+		),
 	).rejects.toThrow('Orange Money Id missing for designated recipient');
 });

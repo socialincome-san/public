@@ -23,7 +23,7 @@ export class CreatePaymentsTask extends PaymentTask {
 			const paymentsCount = (await recipient.ref.collection('payments').count().get()).data()['count'];
 			const currentMonthPaymentRef = this.firestoreAdmin.doc<Payment>(
 				`${RECIPIENT_FIRESTORE_PATH}/${recipient.id}/${PAYMENT_FIRESTORE_PATH}`,
-				paymentDate.toFormat('yyyy-MM')
+				paymentDate.toFormat('yyyy-MM'),
 			);
 			const currentMonthPaymentDoc = await currentMonthPaymentRef.get();
 			if (!currentMonthPaymentDoc.exists || currentMonthPaymentDoc.get('status') === PaymentStatus.Created) {
@@ -41,7 +41,7 @@ export class CreatePaymentsTask extends PaymentTask {
 			const nextMonthPaymentDoc = await this.firestoreAdmin
 				.doc<Payment>(
 					`${RECIPIENT_FIRESTORE_PATH}/${recipient.id}/${PAYMENT_FIRESTORE_PATH}`,
-					nextMonthPaymentDate.toFormat('yyyy-MM')
+					nextMonthPaymentDate.toFormat('yyyy-MM'),
 				)
 				.get();
 			if (!nextMonthPaymentDoc.exists && paymentsCount < PAYMENTS_COUNT) {
@@ -49,7 +49,7 @@ export class CreatePaymentsTask extends PaymentTask {
 				await this.firestoreAdmin
 					.doc<Payment>(
 						`${RECIPIENT_FIRESTORE_PATH}/${recipient.id}/${PAYMENT_FIRESTORE_PATH}`,
-						nextMonthPaymentDate.toFormat('yyyy-MM')
+						nextMonthPaymentDate.toFormat('yyyy-MM'),
 					)
 					.set({
 						amount: PAYMENT_AMOUNT,

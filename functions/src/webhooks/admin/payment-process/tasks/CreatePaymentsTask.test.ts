@@ -35,7 +35,7 @@ test('CreatePayments', async () => {
 		{ type: PaymentProcessTaskType.CreatePayments, timestamp: paymentDate.toSeconds() },
 		{
 			auth: { token: { email: 'admin@socialincome.org' } },
-		}
+		},
 	);
 	expect(result).toEqual('Set 2 payments to paid and created 2 payments for next month');
 
@@ -51,7 +51,7 @@ test('CreatePayments', async () => {
 		const paymentDoc = await firestoreAdmin
 			.doc<Payment>(
 				`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${PAYMENT_FIRESTORE_PATH}`,
-				paymentDate.toFormat('yyyy-MM')
+				paymentDate.toFormat('yyyy-MM'),
 			)
 			.get();
 		expect(paymentDoc.exists).toBeTruthy();
@@ -65,7 +65,7 @@ test('CreatePayments', async () => {
 		const nextPaymentDoc = await firestoreAdmin
 			.doc<Payment>(
 				`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${PAYMENT_FIRESTORE_PATH}`,
-				nextMonthPaymentDate.toFormat('yyyy-MM')
+				nextMonthPaymentDate.toFormat('yyyy-MM'),
 			)
 			.get();
 		expect(nextPaymentDoc.exists).toBeTruthy();
@@ -78,7 +78,7 @@ test('CreatePayments', async () => {
 
 	const secondExecutionResult = await triggerFunction(
 		{ type: PaymentProcessTaskType.CreatePayments, timestamp: paymentDate.toSeconds() },
-		{ auth: { token: { email: 'admin@socialincome.org' } } }
+		{ auth: { token: { email: 'admin@socialincome.org' } } },
 	);
 	expect(secondExecutionResult).toEqual('Set 0 payments to paid and created 0 payments for next month');
 });
