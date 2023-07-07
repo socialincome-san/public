@@ -16,7 +16,7 @@ export function useInitializeFirebaseClient({ firebaseConfig, appName = '[DEFAUL
 		if (!firebaseApp) {
 			setFirebaseApp(initializeApp(firebaseConfig, appName));
 		}
-	}, [firebaseApp]);
+	}, [firebaseApp, firebaseConfig, appName]);
 
 	return firebaseApp;
 }

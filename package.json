@@ -29,6 +29,7 @@
 		"ui:serve": "npm --workspace=@socialincome/ui run serve",
 		"website:build": "npm --workspace=@socialincome/website run build",
 		"website:build:emulator": "npm --workspace=@socialincome/website run build:emulator",
+		"website:lint": "npm --workspace=@socialincome/website run lint",
 		"website:serve": "npm --workspace=@socialincome/website run serve",
 		"website:serve:emulator": "npm --workspace=@socialincome/website run serve:emulator",
 		"website:start": "npm --workspace=@socialincome/website run start",

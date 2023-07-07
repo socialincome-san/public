@@ -18,7 +18,7 @@ export default function Page({ params }: SurveyPageProps) {
 	useEffect(() => {
 		setEmail(searchParams.get('email'));
 		setPassword(searchParams.get('pw'));
-	}, []);
+	}, [searchParams]);
 
 	useEffect(() => {
 		if (email && password) {
