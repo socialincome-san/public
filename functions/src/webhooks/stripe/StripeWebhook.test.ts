@@ -1,18 +1,17 @@
+import { Timestamp } from '@google-cloud/firestore';
 import { describe, test } from '@jest/globals';
-import * as admin from 'firebase-admin';
 import functions from 'firebase-functions-test';
 import Stripe from 'stripe';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
 import { getOrInitializeFirebaseAdmin } from '../../../../shared/src/firebase/admin/app';
 import { Contribution, ContributionSourceKey, StatusKey, User, UserStatusKey } from '../../../../shared/src/types';
 import { StripeWebhook } from './StripeWebhook';
-import Timestamp = admin.firestore.Timestamp;
 
 describe('stripeWebhook', () => {
 	const projectId = 'test-' + new Date().getTime();
 	const testEnv = functions({ projectId });
 	const firestoreAdmin = new FirestoreAdmin(getOrInitializeFirebaseAdmin({ projectId: projectId }));
-	const stripeWebhook = new StripeWebhook({ firestoreAdmin });
+	const stripeWebhook = new StripeWebhook();
 
 	beforeEach(async () => {
 		await testEnv.firestore.clearFirestoreData({ projectId });

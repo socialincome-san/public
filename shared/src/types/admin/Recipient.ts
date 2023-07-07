@@ -1,5 +1,4 @@
 import { Timestamp } from '@google-cloud/firestore';
-import { EntityReference } from 'firecms';
 import { DateTime } from 'luxon';
 
 export const RECIPIENT_FIRESTORE_PATH = 'recipients';
@@ -19,47 +18,50 @@ export enum RecipientMainLanguage {
 
 export type Recipient = {
 	birth_date: Date;
-	calling_name: string;
-	communication_mobile_phone: {
+	calling_name?: string;
+	communication_mobile_phone?: {
 		phone: number;
 		has_whatsapp: boolean;
 		whatsapp_activated: boolean;
 	};
-	email: string;
+	email?: string;
 	first_name: string;
-	gender: string;
-	insta_handle: string;
+	gender: 'male' | 'female';
+	insta_handle?: string;
 	last_name: string;
-	main_language: RecipientMainLanguage;
-	mobile_money_phone: {
+	main_language?: RecipientMainLanguage;
+	mobile_money_phone?: {
 		phone: number;
 		has_whatsapp: boolean;
 	};
-	organisation: EntityReference;
-	om_uid: number;
-	profession: string;
+	organisation: string;
+	om_uid?: number;
+	profession?: string;
 	progr_status: RecipientProgramStatus;
-	si_start_date: Date | Timestamp; //for NGO disabled
-	test_recipient: boolean;
-	twitter_handle: string;
+	si_start_date?: Date | Timestamp; // for NGO disabled
+	test_recipient?: boolean;
+	twitter_handle?: string;
 };
 
-/**
- * The start date defines the first payment. Afterwards we expect 35 more contributions
- */
-export const calcLastPaymentDate = (startDate: Date) => {
-	return DateTime.fromObject({
-		year: startDate.getFullYear(),
-		month: startDate.getMonth() + 1, // month is indexed from 0 in JS
+export const toPaymentDate = (dateTime: DateTime) => {
+	return dateTime.set({
 		day: 15,
 		hour: 0,
 		minute: 0,
 		second: 0,
 		millisecond: 0,
-	}).plus({
+	});
+};
+
+/**
+ * The start date defines the first payment. Afterward, we expect 35 more contributions
+ */
+export const calcFinalPaymentDate = (startDate: DateTime) => {
+	return toPaymentDate(startDate).plus({
 		months: 35,
 	});
 };
+
 /**
  * How many payments (months) are still left
  */

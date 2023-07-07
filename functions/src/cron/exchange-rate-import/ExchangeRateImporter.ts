@@ -1,9 +1,9 @@
 import axios from 'axios';
 import * as functions from 'firebase-functions';
 import { DateTime } from 'luxon';
-import { EXCHANGE_RATES_PATH, ExchangeRates, ExchangeRatesEntry } from '../../../shared/src/types';
-import { EXCHANGE_RATES_API } from '../config';
-import { AbstractFirebaseAdmin, FunctionProvider } from '../firebase';
+import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
+import { EXCHANGE_RATES_PATH, ExchangeRates, ExchangeRatesEntry } from '../../../../shared/src/types';
+import { EXCHANGE_RATES_API } from '../../config';
 
 export type ExchangeRateResponse = {
 	base: string;
@@ -11,35 +11,13 @@ export type ExchangeRateResponse = {
 	rates: ExchangeRates;
 };
 
-export class ExchangeRateImporter extends AbstractFirebaseAdmin implements FunctionProvider {
+export class ExchangeRateImporter {
 	static readonly secondsInDay = 60 * 60 * 24;
 	static readonly startTimestamp = 1583020800; // 2020-03-01 00:00:00
+	private readonly firestoreAdmin: FirestoreAdmin;
 
-	/**
-	 * Function periodically scrapes currency exchange rates and saves them to firebase
-	 */
-	getFunction() {
-		return functions
-			.runWith({
-				timeoutSeconds: 540,
-			})
-			.pubsub.schedule('0 1 * * *')
-			.onRun(async () => {
-				const existingExchangeRates = await this.getAllExchangeRates();
-				for (
-					let timestamp = ExchangeRateImporter.startTimestamp;
-					timestamp <= Date.now() / 1000;
-					timestamp += ExchangeRateImporter.secondsInDay
-				) {
-					if (!existingExchangeRates.has(timestamp)) {
-						try {
-							await this.fetchAndStoreExchangeRates(DateTime.fromSeconds(timestamp));
-						} catch (error) {
-							functions.logger.error(`Could not ingest exchange rate`, error);
-						}
-					}
-				}
-			});
+	constructor() {
+		this.firestoreAdmin = new FirestoreAdmin();
 	}
 
 	getAllExchangeRates = async (): Promise<Map<number, ExchangeRates>> => {
@@ -47,7 +25,7 @@ export class ExchangeRateImporter extends AbstractFirebaseAdmin implements Funct
 		return new Map(
 			exchangeRates.map((exchangeRate) => {
 				return [exchangeRate.timestamp, exchangeRate.rates]; // rounded to day
-			})
+			}),
 		);
 	};
 
@@ -67,7 +45,7 @@ export class ExchangeRateImporter extends AbstractFirebaseAdmin implements Funct
 		const day = dt.toFormat('yyyy-MM-dd');
 		const { data, status, statusText } = await axios.get<ExchangeRateResponse>(
 			`https://api.apilayer.com/exchangerates_data/${day}?base=chf`,
-			{ headers: { apiKey: EXCHANGE_RATES_API } }
+			{ headers: { apiKey: EXCHANGE_RATES_API } },
 		);
 		if (status !== 200) {
 			throw new Error(`Exchange Rate Request Failure for ${day}: ${statusText}`);
@@ -86,7 +64,7 @@ export class ExchangeRateImporter extends AbstractFirebaseAdmin implements Funct
 			.set(exchangeRates);
 	};
 
-	private fetchAndStoreExchangeRates = async (dt: DateTime): Promise<ExchangeRateResponse> => {
+	fetchAndStoreExchangeRates = async (dt: DateTime): Promise<ExchangeRateResponse> => {
 		const rates = await this.fetchExchangeRates(dt);
 		await this.storeExchangeRates(rates);
 		functions.logger.info('Ingested exchange rates');

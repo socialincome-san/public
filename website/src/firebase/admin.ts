@@ -11,7 +11,7 @@ export const app = getOrInitializeFirebaseAdmin(
 				credential: credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON)),
 				databaseURL: process.env.FIREBASE_DATABASE_URL,
 		  }
-		: undefined
+		: undefined,
 );
 export const authAdmin = new AuthAdmin(app);
 export const firestoreAdmin = new FirestoreAdmin(app);

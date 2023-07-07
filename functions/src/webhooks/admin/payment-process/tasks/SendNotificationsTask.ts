@@ -1,7 +1,5 @@
-import { QueryDocumentSnapshot } from '@google-cloud/firestore';
 import { DateTime } from 'luxon';
 import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
-import { FirestoreAdmin } from '../../../../../../shared/src/firebase/admin/FirestoreAdmin';
 import {
 	MESSAGE_FIRESTORE_PATH,
 	MessageType,
@@ -13,33 +11,27 @@ import {
 } from '../../../../../../shared/src/types';
 import { sendSms } from '../../../../../../shared/src/utils/messaging/sms';
 import { TWILIO_SENDER_PHONE, TWILIO_SID, TWILIO_TOKEN } from '../../../../config';
+import { PaymentTask } from './PaymentTask';
 
-export class SendNotificationsTask {
-	recipients: QueryDocumentSnapshot<Recipient>[];
-	firestoreAdmin: FirestoreAdmin;
-
-	constructor(recipients: QueryDocumentSnapshot<Recipient>[], firestoreAdmin: FirestoreAdmin) {
-		this.recipients = recipients;
-		this.firestoreAdmin = firestoreAdmin;
-	}
+export class SendNotificationsTask extends PaymentTask {
 	async run(): Promise<string> {
 		let [notificationsSent, existingNotifications, failedMessages] = [0, 0, 0];
 		const now = DateTime.now();
 
-		for (const recipientDoc of this.recipients) {
+		for (const recipientDoc of await this.getRecipients()) {
 			if (recipientDoc.get('test_recipient')) continue;
 
 			const paymentDocRef = this.firestoreAdmin.doc<Payment>(
 				`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${PAYMENT_FIRESTORE_PATH}`,
-				now.toFormat('yyyy-MM')
+				now.toFormat('yyyy-MM'),
 			);
 
 			if ((await paymentDocRef.get()).exists) {
 				const paymentDocSnap = await paymentDocRef.get();
 				const payment = paymentDocSnap.data() as Payment;
-				if (!payment.message) {
+				const recipient: Recipient = recipientDoc.data();
+				if (!payment.message && recipient.mobile_money_phone) {
 					try {
-						const recipient: Recipient = recipientDoc.data();
 						const message: MessageInstance = await sendSms({
 							from: TWILIO_SENDER_PHONE,
 							to: `+${recipient.mobile_money_phone.phone}`,
@@ -52,7 +44,7 @@ export class SendNotificationsTask {
 							},
 						});
 						const messageCollection = this.firestoreAdmin.collection<TwilioMessage>(
-							`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${MESSAGE_FIRESTORE_PATH}`
+							`${RECIPIENT_FIRESTORE_PATH}/${recipientDoc.id}/${MESSAGE_FIRESTORE_PATH}`,
 						);
 						const messageDocRef = await messageCollection.add({ type: MessageType.SMS, ...message.toJSON() });
 						await paymentDocRef.update({ message: messageDocRef });

@@ -37,7 +37,9 @@ export const renderTemplate = async ({
 	const i18n = i18next.createInstance();
 	await i18n
 		.use(
-			resourcesToBackend((language: string, namespace: string) => import(`../../locales/${language}/${namespace}.json`))
+			resourcesToBackend(
+				(language: string, namespace: string) => import(`../../locales/${language}/${namespace}.json`),
+			),
 		)
 		.init({
 			lng: language,

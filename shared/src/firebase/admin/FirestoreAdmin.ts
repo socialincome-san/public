@@ -11,6 +11,7 @@ import {
 } from 'firebase-admin/firestore';
 import { App } from 'firebase-admin/lib/app';
 import { AdminUser } from '../../types';
+import { getOrInitializeFirebaseAdmin } from './app';
 import Firestore = firestore.Firestore;
 
 export class FirestoreAdmin {
@@ -19,7 +20,8 @@ export class FirestoreAdmin {
 	 */
 	readonly firestore: Firestore;
 
-	constructor(app: App) {
+	constructor(app?: App) {
+		app = app ? app : getOrInitializeFirebaseAdmin();
 		this.firestore = getFirestore(app);
 	}
 
@@ -40,8 +42,8 @@ export class FirestoreAdmin {
 	/**
 	 * Access the typed document of a collection
 	 */
-	doc = <T = DocumentData>(collectionName: string, docId: string): DocumentReference<T> => {
-		return this.collection<T>(collectionName).doc(docId);
+	doc = <T = DocumentData>(collectionName: string, docId?: string): DocumentReference<T> => {
+		return docId ? this.collection<T>(collectionName).doc(docId) : this.collection<T>(collectionName).doc();
 	};
 
 	/**
@@ -49,7 +51,7 @@ export class FirestoreAdmin {
 	 */
 	findFirst = async <T = DocumentData>(
 		collectionName: string,
-		query: (col: CollectionReference<T>) => Query<T> = (query) => query
+		query: (col: CollectionReference<T>) => Query<T> = (query) => query,
 	): Promise<QueryDocumentSnapshot<T> | undefined> => {
 		const snapshot = await query(this.collection<T>(collectionName)).get();
 		return snapshot.docs.at(0);
@@ -60,7 +62,7 @@ export class FirestoreAdmin {
 	 */
 	getAll = async <T = DocumentData>(
 		collectionName: string,
-		query: (col: CollectionReference<T>) => Query<T> = (query) => query
+		query: (col: CollectionReference<T>) => Query<T> = (query) => query,
 	): Promise<T[]> => {
 		const snapshot = await query(this.collection<T>(collectionName)).get();
 		return snapshot.docs.map((q) => q.data());
