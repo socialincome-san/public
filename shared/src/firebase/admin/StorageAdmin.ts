@@ -46,7 +46,7 @@ export class StorageAdmin {
 			? `http://${process.env.FIREBASE_STORAGE_EMULATOR_HOST}`
 			: 'https://firebasestorage.googleapis.com';
 		const downloadUrl = `${host}/v0/b/${metadata.bucket}/o/${encodeURIComponent(
-			metadata.name
+			metadata.name,
 		)}?alt=media&token=${token}`;
 		return {
 			file,

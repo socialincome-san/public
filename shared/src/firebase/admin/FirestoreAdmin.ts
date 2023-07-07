@@ -51,7 +51,7 @@ export class FirestoreAdmin {
 	 */
 	findFirst = async <T = DocumentData>(
 		collectionName: string,
-		query: (col: CollectionReference<T>) => Query<T> = (query) => query
+		query: (col: CollectionReference<T>) => Query<T> = (query) => query,
 	): Promise<QueryDocumentSnapshot<T> | undefined> => {
 		const snapshot = await query(this.collection<T>(collectionName)).get();
 		return snapshot.docs.at(0);
@@ -62,7 +62,7 @@ export class FirestoreAdmin {
 	 */
 	getAll = async <T = DocumentData>(
 		collectionName: string,
-		query: (col: CollectionReference<T>) => Query<T> = (query) => query
+		query: (col: CollectionReference<T>) => Query<T> = (query) => query,
 	): Promise<T[]> => {
 		const snapshot = await query(this.collection<T>(collectionName)).get();
 		return snapshot.docs.map((q) => q.data());

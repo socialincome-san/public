@@ -33,9 +33,9 @@ export class Translator {
 		await translator.instance
 			.use(
 				resourcesToBackend(
-					(language: string, namespace: string) => import(`@socialincome/shared/locales/${language}/${namespace}.json`)
+					(language: string, namespace: string) => import(`@socialincome/shared/locales/${language}/${namespace}.json`),
 					// import(path.join(__dirname, '..', '..', 'locales', language, `${namespace}.json`))
-				)
+				),
 			)
 			.init({
 				lng: language,

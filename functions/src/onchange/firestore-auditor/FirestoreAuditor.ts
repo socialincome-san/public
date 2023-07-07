@@ -27,7 +27,7 @@ export class FirestoreAuditor {
 		// that there was a change besides the updatedAt field, otherwise we end up in an infinite loop
 		const onlyUpdatedAtChanged = isEqual(
 			{ ...change.after?.data(), last_updated_at: 0 },
-			{ ...change.before?.data(), last_updated_at: 0 }
+			{ ...change.before?.data(), last_updated_at: 0 },
 		);
 		if (onlyUpdatedAtChanged) return Promise.resolve(false);
 		await this.populateHistory(change, context);
@@ -42,7 +42,7 @@ export class FirestoreAuditor {
 			{
 				last_updated_at: new Date(context.timestamp),
 			},
-			{ merge: true }
+			{ merge: true },
 		);
 	};
 

@@ -61,7 +61,7 @@ export class PostFinanceImporter {
 					const idHeader = 'Imap-Id: ' + id + '\r\n';
 					const source = idHeader + all?.body;
 					return this.parseEmail(source);
-				})
+				}),
 			);
 			connection.end();
 			functions.logger.info('Retrieved balances');

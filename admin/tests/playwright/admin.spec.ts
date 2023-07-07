@@ -5,7 +5,7 @@ import * as path from 'path';
 export const test = base.extend({
 	context: async ({ context }, use) => {
 		const sessionStorage = JSON.parse(
-			fs.readFileSync(path.join(__dirname, 'sessionStorage.json'), { encoding: 'utf8' })
+			fs.readFileSync(path.join(__dirname, 'sessionStorage.json'), { encoding: 'utf8' }),
 		);
 		await context.addInitScript((storage: string) => {
 			for (const [key, value] of Object.entries(storage)) {

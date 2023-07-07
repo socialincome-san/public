@@ -85,7 +85,7 @@ export class PaymentStatsCalculator {
 
 	groupByAndSortPayments = (
 		groupAttribute: string,
-		aggregate: <T>(collection: T[], iteratee?: ((value: T) => number) | string) => number
+		aggregate: <T>(collection: T[], iteratee?: ((value: T) => number) | string) => number,
 	) => {
 		return this.payments
 			.groupBy(groupAttribute)
@@ -122,7 +122,7 @@ export class PaymentStatsCalculator {
 				});
 				return acc;
 			},
-			[] as CumulativeRecipients[]
+			[] as CumulativeRecipients[],
 		);
 		return cumulativeRecipientsIdsByMonth.map((element) => {
 			return {
