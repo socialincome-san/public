@@ -11,6 +11,7 @@ import {
 } from 'firebase-admin/firestore';
 import { App } from 'firebase-admin/lib/app';
 import { AdminUser } from '../../types';
+import { getOrInitializeFirebaseAdmin } from './app';
 import Firestore = firestore.Firestore;
 
 export class FirestoreAdmin {
@@ -19,7 +20,8 @@ export class FirestoreAdmin {
 	 */
 	readonly firestore: Firestore;
 
-	constructor(app: App) {
+	constructor(app?: App) {
+		app = app ? app : getOrInitializeFirebaseAdmin();
 		this.firestore = getFirestore(app);
 	}
 
@@ -40,8 +42,8 @@ export class FirestoreAdmin {
 	/**
 	 * Access the typed document of a collection
 	 */
-	doc = <T = DocumentData>(collectionName: string, docId: string): DocumentReference<T> => {
-		return this.collection<T>(collectionName).doc(docId);
+	doc = <T = DocumentData>(collectionName: string, docId?: string): DocumentReference<T> => {
+		return docId ? this.collection<T>(collectionName).doc(docId) : this.collection<T>(collectionName).doc();
 	};
 
 	/**

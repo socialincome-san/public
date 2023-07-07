@@ -3,6 +3,7 @@ import { randomBytes } from 'crypto';
 import { storage } from 'firebase-admin';
 import { App } from 'firebase-admin/lib/app';
 import { getStorage } from 'firebase-admin/storage';
+import { getOrInitializeFirebaseAdmin } from './app';
 import Storage = storage.Storage;
 
 /**
@@ -24,7 +25,8 @@ export class StorageAdmin {
 	 */
 	readonly storage: Storage;
 
-	constructor(app: App) {
+	constructor(app?: App) {
+		app = app ? app : getOrInitializeFirebaseAdmin();
 		this.storage = getStorage(app);
 	}
 

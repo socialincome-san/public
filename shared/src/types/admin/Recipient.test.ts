@@ -1,11 +1,13 @@
 import { describe, test } from '@jest/globals';
 
 import { DateTime } from 'luxon';
-import { calcLastPaymentDate, calcPaymentsLeft } from '../index';
+import { calcFinalPaymentDate, calcPaymentsLeft } from '../index';
 
 describe('Recipient', () => {
 	test('calc last payment', () => {
-		expect(calcLastPaymentDate(new Date('2020-01-15')).toISO()).toStrictEqual(DateTime.local(2022, 12, 15).toISO());
+		expect(calcFinalPaymentDate(DateTime.fromObject({ year: 2020, month: 1, day: 15 })).toISO()).toStrictEqual(
+			DateTime.local(2022, 12, 15).toISO()
+		);
 	});
 
 	test('calc months left', () => {

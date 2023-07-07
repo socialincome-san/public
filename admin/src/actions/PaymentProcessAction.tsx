@@ -1,14 +1,15 @@
 import { Box, Button, CircularProgress, Modal, Tooltip, Typography } from '@mui/material';
-import { PaymentProcessTaskType } from '@socialincome/shared/src/types';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { downloadStringAsFile } from '@socialincome/shared/src/utils/html';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { useSnackbarController } from 'firecms';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
-import { PaymentProcessTaskProps } from '../../../functions/src/webhooks/admin/payment-process/PaymentTaskProcessor';
+import { PaymentProcessTaskType, toPaymentDate } from '../../..//shared/src/types';
+import { PaymentProcessProps } from '../../../functions/src/webhooks/admin/payment-process';
 
-const STYLE = {
-	position: 'absolute' as 'absolute',
+const BOX_STYLE = {
+	position: 'absolute',
 	top: '50%',
 	left: '50%',
 	transform: 'translate(-50%, -50%)',
@@ -17,11 +18,14 @@ const STYLE = {
 	p: 4,
 };
 
+const createNewPaymentsDescription = 'Set payment status to paid and create new payments for the upcoming month.';
+
 export function PaymentProcessAction() {
 	const snackbarController = useSnackbarController();
 	const [isOpen, setIsOpen] = useState(false);
 	const [confirmCreateNewPayments, setConfirmCreateNewPayments] = useState(false);
 	const [isFunctionRunning, setIsFunctionRunning] = useState(false);
+	const [paymentDate, setPaymentDate] = useState<DateTime>(toPaymentDate(DateTime.now()));
 
 	const handleOpen = () => setIsOpen(true);
 	const handleClose = () => {
@@ -29,26 +33,23 @@ export function PaymentProcessAction() {
 	};
 
 	const triggerFirebaseFunction = (task: PaymentProcessTaskType) => {
-		const runAdminPaymentProcessTask = httpsCallable<PaymentProcessTaskProps, string>(
-			getFunctions(),
-			'runAdminPaymentProcessTask'
-		);
+		const runPaymentProcessTask = httpsCallable<PaymentProcessProps, string>(getFunctions(), 'runPaymentProcessTask');
 		setIsFunctionRunning(true);
-		runAdminPaymentProcessTask({
+		runPaymentProcessTask({
 			type: task,
-			timestamp: DateTime.now().toSeconds(),
+			timestamp: paymentDate.toSeconds(),
 		})
 			.then((result) => {
 				if (task === PaymentProcessTaskType.GetRegistrationCSV || task === PaymentProcessTaskType.GetPaymentCSV) {
-					const fileName = `11866_${new Date().toLocaleDateString('sv')}.csv`; // 11866_YYYY-MM-DD.csv
+					const fileName = `11866_${paymentDate.toFormat('yyyy_MM_dd')}.csv`;
 					downloadStringAsFile(result.data, fileName);
 				} else {
 					snackbarController.open({ type: 'success', message: result.data });
 				}
 				setConfirmCreateNewPayments(false);
 			})
-			.catch(() => {
-				snackbarController.open({ type: 'error', message: 'Oops, something went wrong.' });
+			.catch((reason: Error) => {
+				snackbarController.open({ type: 'error', message: reason.message });
 			})
 			.finally(() => setIsFunctionRunning(false));
 	};
@@ -59,7 +60,7 @@ export function PaymentProcessAction() {
 				Payment Process
 			</Button>
 			<Modal open={isOpen} onClose={handleClose}>
-				<Box sx={STYLE}>
+				<Box sx={BOX_STYLE}>
 					{isFunctionRunning ? (
 						<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 							<CircularProgress />
@@ -76,6 +77,20 @@ export function PaymentProcessAction() {
 							<Typography variant="h5" textAlign="center">
 								Payment Process
 							</Typography>
+							<DatePicker
+								label="Payment month"
+								views={['month', 'year']}
+								value={paymentDate.toJSDate()}
+								onChange={(value) => {
+									if (value) setPaymentDate(toPaymentDate(DateTime.fromJSDate(value)));
+								}}
+							/>
+							<Button
+								variant="outlined"
+								onClick={() => triggerFirebaseFunction(PaymentProcessTaskType.UpdateRecipients)}
+							>
+								Update Recipients
+							</Button>
 							<Button
 								variant="outlined"
 								onClick={() => triggerFirebaseFunction(PaymentProcessTaskType.GetRegistrationCSV)}
@@ -86,7 +101,7 @@ export function PaymentProcessAction() {
 								Payments CSV
 							</Button>
 							{!confirmCreateNewPayments && (
-								<Tooltip title="This will create new payments for all active recipients for this month and the next months if the payments don't exist yet.">
+								<Tooltip title={createNewPaymentsDescription}>
 									<Button variant="outlined" onClick={() => setConfirmCreateNewPayments(true)}>
 										Create new payments
 									</Button>
@@ -95,7 +110,7 @@ export function PaymentProcessAction() {
 							{confirmCreateNewPayments && (
 								<Button
 									variant="contained"
-									onClick={() => triggerFirebaseFunction(PaymentProcessTaskType.CreateNewPayments)}
+									onClick={() => triggerFirebaseFunction(PaymentProcessTaskType.CreatePayments)}
 								>
 									Confirm
 								</Button>

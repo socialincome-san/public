@@ -1,5 +1,6 @@
 import { App } from 'firebase-admin/app';
 import { Auth, getAuth } from 'firebase-admin/auth';
+import { getOrInitializeFirebaseAdmin } from './app';
 
 export class AuthAdmin {
 	/**
@@ -7,7 +8,8 @@ export class AuthAdmin {
 	 */
 	readonly auth: Auth;
 
-	constructor(app: App) {
+	constructor(app?: App) {
+		app = app ? app : getOrInitializeFirebaseAdmin();
 		this.auth = getAuth(app);
 	}
 }

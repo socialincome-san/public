@@ -1,16 +1,12 @@
-import { QueryDocumentSnapshot } from '@google-cloud/firestore';
-import { Recipient } from '../../../../../../shared/src/types';
+import { PaymentTask } from './PaymentTask';
 
-export class RegistrationCSVTask {
-	private readonly recipients: QueryDocumentSnapshot<Recipient>[];
-
-	constructor(recipients: QueryDocumentSnapshot<Recipient>[]) {
-		this.recipients = recipients;
-	}
-
+export class RegistrationCSVTask extends PaymentTask {
 	async run(): Promise<string> {
 		const csvRows = [['Mobile Number*', 'Unique Code*', 'User Type*']];
-		for (const recipient of this.recipients) {
+		const recipients = await this.getRecipients();
+		recipients.sort((a, b) => a.get('om_uid') - b.get('om_uid'));
+
+		for (const recipient of recipients) {
 			csvRows.push([
 				recipient.get('mobile_money_phone').phone.toString().slice(-8),
 				recipient.get('om_uid').toString(),

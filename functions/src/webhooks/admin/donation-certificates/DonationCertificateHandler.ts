@@ -1,10 +1,11 @@
 import { Timestamp } from '@google-cloud/firestore';
-import * as functions from 'firebase-functions';
 import { createWriteStream } from 'fs';
 import _ from 'lodash';
 import * as path from 'path';
 import PDFDocument from 'pdfkit';
 import { withFile } from 'tmp-promise';
+import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
+import { StorageAdmin } from '../../../../../shared/src/firebase/admin/StorageAdmin';
 import {
 	Contribution,
 	DonationCertificate,
@@ -17,7 +18,6 @@ import { Translator } from '../../../../../shared/src/utils/i18n';
 import { sendEmail } from '../../../../../shared/src/utils/messaging/email';
 import { renderTemplate } from '../../../../../shared/src/utils/templates';
 import { ASSET_DIR, NOTIFICATION_EMAIL_PASSWORD_KERRIN, NOTIFICATION_EMAIL_USER_KERRIN } from '../../../config';
-import { AbstractFirebaseAdmin, FunctionProvider } from '../../../firebase';
 
 export interface CreateDonationCertificatesFunctionProps {
 	users: Entity<User>[];
@@ -25,77 +25,14 @@ export interface CreateDonationCertificatesFunctionProps {
 	sendEmails: boolean;
 }
 
-export class DonationCertificateHandler extends AbstractFirebaseAdmin implements FunctionProvider {
-	getFunction = () =>
-		functions.https.onCall(async ({ users, year, sendEmails }: CreateDonationCertificatesFunctionProps, { auth }) => {
-			await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
-			let [successCount, skippedCount] = [0, 0];
-			const usersWithFailures = [];
-			for await (const userEntity of users) {
-				const user = userEntity.values;
-				const genderContext = this.createGenderContext(user);
-				try {
-					await withFile(async ({ path }) => {
-						if (!user.address?.country) throw new Error('Country of user unknown.');
-						const translator = await Translator.getInstance({
-							language: user.language || LocaleLanguage.German,
-							namespaces: ['email-donation-certificate', 'countries'],
-						});
+export class DonationCertificateHandler {
+	private readonly firestoreAdmin: FirestoreAdmin;
+	private readonly storageAdmin: StorageAdmin;
 
-						// TODO: Use ContributionStatsCalculator to get contributions by user
-						const contributionsByCurrency = await this.getContributionsByCurrency(userEntity.id, year);
-
-						// TODO: Use @react-pdf/renderer instead of pdfkit, see DonationCertificatePDFTemplate.tsx
-						await this.generateDonationCertificatePDF(userEntity, translator, year, contributionsByCurrency, path);
-
-						const { downloadUrl } = await this.storageAdmin.uploadAndGetDownloadURL({
-							sourceFilePath: path,
-							destinationFilePath: `donation-certificates/${userEntity.id}/${year}_${user.address?.country}.pdf`,
-						});
-						this.storeDonationCertificate(userEntity.id, {
-							url: downloadUrl,
-							country: user.address.country,
-							year: year,
-						});
-						if (sendEmails) {
-							await sendEmail({
-								to: user.email,
-								subject: translator.t('email-subject'),
-								// TODO: Use renderEmailTemplate() instead of renderTemplate()
-								content: await renderTemplate({
-									language: user.language || LocaleLanguage.German,
-									translationNamespace: 'email-donation-certificate',
-									hbsTemplatePath: 'email/donation-certificate.hbs',
-									context: {
-										title: translator.t('title', { context: { year } }),
-										signature: translator.t('title', { context: { year } }),
-										firstname: user.personal?.name,
-										year,
-										context: genderContext,
-									},
-								}),
-								attachments: [
-									{
-										filename: translator.t('filename', { context: { year } }),
-										path: path,
-									},
-								],
-								from: NOTIFICATION_EMAIL_USER_KERRIN,
-								user: NOTIFICATION_EMAIL_USER_KERRIN,
-								password: NOTIFICATION_EMAIL_PASSWORD_KERRIN,
-							});
-						}
-					});
-					successCount += 1;
-				} catch (e) {
-					skippedCount += 1;
-					usersWithFailures.push(user.email);
-					console.error(e);
-				}
-			}
-			return `Successfully created ${successCount} donation certificates for ${year} (${skippedCount} skipped. 
-			Users with errors ${usersWithFailures.join(',')})`;
-		});
+	constructor() {
+		this.firestoreAdmin = new FirestoreAdmin();
+		this.storageAdmin = new StorageAdmin();
+	}
 
 	getContributionsByCurrency = async (userId: string, year: number) => {
 		let contributions: Contribution[] = [];
@@ -258,4 +195,73 @@ export class DonationCertificateHandler extends AbstractFirebaseAdmin implements
 	createGenderContext = (user: User) => {
 		return user.personal?.gender === 'male' || user.personal?.gender === 'female' ? user.personal?.gender : undefined;
 	};
+
+	async run(users: Entity<User>[], year: number, sendEmails: boolean) {
+		let [successCount, skippedCount] = [0, 0];
+		const usersWithFailures = [];
+		for await (const userEntity of users) {
+			const user = userEntity.values;
+			const genderContext = this.createGenderContext(user);
+			try {
+				await withFile(async ({ path }) => {
+					if (!user.address?.country) throw new Error('Country of user unknown.');
+					const translator = await Translator.getInstance({
+						language: user.language || LocaleLanguage.German,
+						namespaces: ['email-donation-certificate', 'countries'],
+					});
+
+					// TODO: Use ContributionStatsCalculator to get contributions by user
+					const contributionsByCurrency = await this.getContributionsByCurrency(userEntity.id, year);
+
+					// TODO: Use @react-pdf/renderer instead of pdfkit, see DonationCertificatePDFTemplate.tsx
+					await this.generateDonationCertificatePDF(userEntity, translator, year, contributionsByCurrency, path);
+
+					const { downloadUrl } = await this.storageAdmin.uploadAndGetDownloadURL({
+						sourceFilePath: path,
+						destinationFilePath: `donation-certificates/${userEntity.id}/${year}_${user.address?.country}.pdf`,
+					});
+					this.storeDonationCertificate(userEntity.id, {
+						url: downloadUrl,
+						country: user.address.country,
+						year: year,
+					});
+					if (sendEmails) {
+						await sendEmail({
+							to: user.email,
+							subject: translator.t('email-subject'),
+							// TODO: Use renderEmailTemplate() instead of renderTemplate()
+							content: await renderTemplate({
+								language: user.language || LocaleLanguage.German,
+								translationNamespace: 'email-donation-certificate',
+								hbsTemplatePath: 'email/donation-certificate.hbs',
+								context: {
+									title: translator.t('title', { context: { year } }),
+									signature: translator.t('title', { context: { year } }),
+									firstname: user.personal?.name,
+									year,
+									context: genderContext,
+								},
+							}),
+							attachments: [
+								{
+									filename: translator.t('filename', { context: { year } }),
+									path: path,
+								},
+							],
+							from: NOTIFICATION_EMAIL_USER_KERRIN,
+							user: NOTIFICATION_EMAIL_USER_KERRIN,
+							password: NOTIFICATION_EMAIL_PASSWORD_KERRIN,
+						});
+					}
+				});
+				successCount += 1;
+			} catch (e) {
+				skippedCount += 1;
+				usersWithFailures.push(user.email);
+				console.error(e);
+			}
+		}
+		return `Successfully created ${successCount} donation certificates for ${year} (${skippedCount} skipped. 
+			Users with errors ${usersWithFailures.join(',')})`;
+	}
 }
