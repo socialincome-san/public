@@ -1,122 +1,108 @@
 {
 	"survey": {
 		"login": {
-			"message": "Duya, rayt yu fon nɔmba ɛn di akses token we wi sɛn to yu.",
-			"phoneNumber": "Ɔrɛnj Mɔni Fɔn Nɔmba",
-			"accessCode": "Sɔv Akses Kɔd",
-			"loadSurvey": "Lod Sɔv we dɛn kin du",
-			"loading": "We yu de lod...",
-			"error": "Wi nɔ bin ebul fɔ fɛn di sɔv."
+			"message": "Duya put yu fon nɔmba ɛn di lili tin we wi bin sɛn to yu.",
+			"phoneNumber": "Mobayl Mɔni Nɔmba",
+			"accessCode": "Di kod fɔ di sɔve",
+			"loadSurvey": "Lod sɔve",
+			"loading": "I de lod...",
+			"error": "Wi nɔ ebul si di sɔve. Duya chɛk di fon nɔmba ɛn di lili tin we wi bin gi yu bak. If yu stil de gɛt prɔblɛm na fɔ kɔl di Social Income Tim."
 		},
 		"common": {
 			"start": "Stat",
-			"previous": "Bifo",
+			"previous": "Go biyɛn",
 			"next": "Nɛks",
-			"complete": "Dɔn",
-			"preview": "Fɔ si di tɛm bifo dis tɛm",
-			"edit": "Kɔrɛkt",
-			"loading": "We yu de lod...",
-			"missingCredentials": "Kredɛnshal dɛn we nɔ de fɔ di sɔv. ",
-			"authError": "Mistek we yu de login. ",
-			"loadingError": "Erɔd we dɛn de lod di sɔv. ",
-			"progressSavingSuccess": "Yu ansa bin sev fayn fayn wan.",
-			"progressSavingError": "Yu ansa nɔ bin ebul fɔ sev. ",
-			"completed": "Wi tɛl una tɛnki fɔ we una dɔn di sɔv.",
-			"alreadyCompleted": "Dis sɔv dɔn ɔlrɛdi dɔn. ",
-			"hello": "Adu",
-			"welcome": "Di gol fɔ dis sɔv na fɔ no di impak we Sɔshial Inkam gɛt fɔ yu. "
+			"complete": "Tap ya",
+			"preview": "Fɔ Wach",
+			"edit": "Chenj Di Ansa",
+			"loading": "I de lod ...",
+			"missingCredentials": "Yu nɔ ebul go insay di sɔve. Duya rich awt to di Social Income tim.",
+			"authError": "Yu de gɛt prɔblɛm fɔ lɔg-in? Duya rich awt to di Social Income tim.",
+			"loadingError": "Yu de gɛt prɔblɛm fɔ opin di sɔve. Duya rich awt to di Social Income tim.",
+			"progressSavingSuccess": "Yu ansa dɔn sev faynali.",
+			"progressSavingError": "Wi nɔ ebul sev yu ansa. Tray bak...,, If di prɔblɛm de kam fas fas, duya rich awt to di Social Income tim.",
+			"completed": "Plɛnti tɛnki we yu dɔn dɔn dis sɔve.",
+			"alreadyCompleted": "Faynali yu dɔn dɔn dis sɔve. Tɛnki tɛnki ɔ.",
+			"hello": "Kabɔ",
+			"welcome": "Wi dɔn mek dis sɔve fɔ fɛnɔt aw Social Income dɔn chenj yu layf. I go tek yu abawt 5 minit."
 		},
 		"questions": {
 			"yesNoChoices": {
 				"yes": "Yɛs",
 				"no": "Nɔ"
 			},
-			"ratingChoices": {
-				"extremelyUnlikely": "I nɔ go izi fɔ du am",
-				"unlikely": "I nɔ go bi se i go bi",
-				"neutral": "Nɔ put an pan",
-				"likely": "Go mɔs bi",
-				"extremelyLikely": "I rili pɔsibul"
-			},
-			"maritalStatusTitle": "Wetin na yu mared-os?",
-			"maritalStatusChoices": {
-				"married": "Mared",
-				"widowed": "We in man dɔn day",
-				"divorced": "Dɛn dɔn dayvɔs",
-				"separated": "Dɛn dɔn separet",
-				"neverMarried": "Nɔ ɛva mared"
-			},
-			"financialSituationTitle": "Aw yu kin asɛs yu mɔni biznɛs naw?",
-			"financialSituationChoices": {
-				"livingComfortably": "Fɔ liv fayn fayn wan",
-				"doingOk": "Duin ok",
-				"difficultyMakingEndsMeet": "I nɔ izi fɔ mek yu ebul fɔ liv",
-				"barelyGettingBy": "Barely getin by"
-			},
-			"employmentStatusTitle": "Wetin na di wok we yu de du naw?",
-			"employmentStatusChoices": {
-				"employed": "Na wok we dɛn de du",
-				"selfEmployed": "Di wan dɛn we de wok fɔ dɛnsɛf",
-				"notEmployed": "Nɔto wok",
-				"retired": "Lɛf fɔ wok"
-			},
-			"employedTitle": "Yu de wok fɔ pas 40 awa insay di wik?",
-			"employedChoices": {
-				"less": "Nɔ",
-				"more": "Mɔ"
-			},
-			"notEmployedTitle": "Yu de luk fɔ wok naw?",
-			"disabilityTitle": "Yu gɛt disabled ɔ sik wae de afɛkt yu possibiliti fɔ gɛt wok ɔr kip yu wok?",
-			"livingLocationTitle": "Usay yu de?",
+			"livingLocationTitleV1": "Usay yu tap?",
 			"livingLocationChoices": {
-				"westernAreaUrbanFreetown": "Wɛstɛn Eria Ɔban (i.e., Fritɔun) .",
-				"westernAreaRural": "Wɛstɛn Eria Rural",
-				"easternProvince": "Istan Prɔvins",
-				"northernProvince": "Nɔtan Prɔvins",
-				"southernProvince": "Sawt Prɔvins",
+				"westernAreaUrbanFreetown": "Wɛstɛn Erya Ɔban (Fritɔng)",
+				"westernAreaRural": "Wɛstɛn Erya Rural",
+				"easternProvince": "Istɛn Prɔvins",
+				"northernProvince": "Nɔdan Prɔvins",
+				"southernProvince": "Sawtan Prɔvins",
 				"northWestProvince": "Nɔt Wɛst Prɔvins"
 			},
-			"hasDependentsTitle": "Yu gɛt ɛnibɔdi we de dipen pan yu?",
-			"hasDependentsDesc": "Pipul dɛn we de dipen pan yu.",
-			"nrDependentsTitle": "Nɔmba fɔ pipul dɛn we de dipen pan yu.",
+			"maritalStatusTitleV1": "Us wan yu bi naw?",
+			"maritalStatusChoices": {
+				"married": "Mared",
+				"widowed": "Wido/Widowa",
+				"divorced": "Divɔs",
+				"separated": "Dɔn pat wit yu wɛf ɔ ɔsban",
+				"neverMarried": "Nɔ mared wan de"
+			},
+			"hasDependentsTitleV1": "Yu gɛt pipul dɛn we yu de tek kiya ɔf?",
+			"hasDependentsDescV1": "People who depend financially on you.",
+			"nrDependentsTitleV1": "Ɔmɔs pikin ɔ fambul yu gɛt we abop pan yu fɔ mɔni?",
 			"nrDependentsChoices": {
 				"1-2": "1-2",
 				"3-4": "3-4",
 				"5-7": "5-7",
 				"8-10": "8-10",
-				"10-": "pas 10 pipul dɛn"
+				"10-": "i pas 10"
 			},
-			"basicNeedsCoverageTitle": "Aw yu go ebul fɔ pe fɔ di tin dɛn we yu nid lɛk it, klos, ɛn say fɔ slip?",
-			"expensesCoveredTitle": "Aw yu go ebul fɔ pe ɔl yu bil dɛn di rayt tɛm (e.g., yutiliti, lɔn, ɛn ɔda tin dɛn)?",
-			"unexpectedExpensesCoveredTitle": "Aw yu go ebul fɔ du sɔntin we yu nɔ bin de tink bɔt lɛk fɔ go to dɔktɔ?",
-			"ownIncomeTitle": "Apat frɔm Sɔshial Inkam, aw yu go ebul fɔ gɛt mɔni fɔ yusɛf?",
-			"educationAccessTitle": "Aw yu go ebul fɔ lan buk?",
-			"savingsTitle": "Aw yu go ebul fɔ kip mɔni?",
-			"deptTitle": "Yu ɔ ɛnibɔdi na yu os gɛt dɛt? ",
-			"mainDeptPayerTitle": "Yu na di men pɔsin we de pe bak di dɛt?",
-			"spendingTitle": "Tɛl wi wetin na di men kategori dɛm we yu de spɛn yu Sɔshial Inkam pemɛnt pan.",
+			"attendingSchoolV1": "Yu de go skul naw?",
+			"employmentStatusTitleV1": "Yu gɛt ɛni wok we yu de du naw?",
+			"employmentStatusChoices": {
+				"employed": "Yu de wok fɔ pɔsin",
+				"selfEmployed": "Yu de wok fɔ yu sɛf",
+				"notEmployed": "Yu nɔ de wok",
+				"retired": "Yu dɔn ritaya"
+			},
+			"notEmployedTitleV1": "Yu de fɛn wok?",
+			"disabilityTitleV1": "Yu gɛt ɛni kaynaba sik ɔ prɔblɛm we mek i nɔ izi fɔ fɛn wok ɔ we go mek i at fɔ kip yu jab?",
+			"skippingMealsTitleV1": "Tɛm kin de fas fas we yu ɔ ɛni yu fambul dɛn na yu os nɔ ebul it bikɔs mɔni nɔ de fɔ bay it?",
+			"skippingMealsLastWeekTitleV1": "Dis bin apin las wik?",
+			"skippingMealsLastWeek3MealsTitleV1": "Yu dɔn ɛva de las wik pas tri tɛm yu nɔ it?",
+			"unexpectedExpensesCoveredTitleV1": "Yu gɛt mɔni fɔ ɛniola we rich SLE 100 fɔ si dɔkta?",
+			"savingsTitleV1": "Yu ebul kip kɔpɔ rayt naw?",
+			"debtPersonalTitleV1": "Yu o ɛnibɔdi mɔni? (SLE 500 ɔ i pas dat)",
+			"debtPersonalRepayTitleV1": "Yu go ebul fɔ pe di mɔni we yu o?",
+			"debtHouseholdTitleV1": "Pɔsin de ɔnda yu ruf we o mɔni? (SLE 500 ɔ i pas dat)",
+			"debtHouseholdWhoRepaysTitleV1": "Na yu de pe fɔ dis pɔsin?",
+			"otherSupportTitleV1": "Ɛni ɔda say de we dɛn de ɛp yu wit mɔni?",
+			"plannedAchievementTitleV1": "Wetin yu op fɔ du wit Social Income oba di nɛks 3 iya?",
+
+			"spendingTitleV1": "Wetin na di men tin dɛn we yu de yus yu Social Income mɔni fɔ?",
 			"spendingChoices": {
-				"education": "Edukeshon (skul fi, saplae, ...)",
-				"food": "Fɔd (fud fɔ yu ɔ yu os) .",
-				"housing": "Haus (rɛnt, mentenɛns fɔ os, ...) .",
-				"healthCare": "Wɛlbɔdi Keya (dɔktɔ, ɔspitul visit, mɛrɛsin, ...)",
-				"mobility": "Mobiliti (bɔs, shered taksi, poda poda, keke, ...)",
-				"saving": "Sev fɔ di fyuchu (sev am na bank akaun ɔ na mi mobayl mɔni akɔn, ...)",
-				"investment": "Invɛstmɛnt (fɛtilayza, tul, dizil fɔ mashin, ...)"
+				"education": "Buk lanin (skul fi, not buk ɛn pɛn, tɛksbuk ...)",
+				"food": "Nyayam ɔ it (it fɔ yu ɔ di wan dɛn ɔnda yu ruf)",
+				"housing": "Os biznɛs (rɛnt, fɔ du smɔl smɔl wok pan di os ...)",
+				"healthCare": "Wɛlbɔdi biznɛs (dɔkta, fɔ go na ɔspitul, mɛrɛsin ...)",
+				"mobility": "Yu de tek transpɔr (bɔs, tausin, podapoda, kɛkɛ ...)",
+				"saving": "Yu de kip mɔni fɔ di bambay (yu de sev na yu bank akawnt ɔ na yu mobayl mɔni akawnt ...)",
+				"investment": "Invɛstmɛnt (fatilayza, gadin tul dɛm, dizul fɔ mashin...)"
 			},
-			"spendingRankingTitle": "Duya, put di kategori dɛn we yu dɔn pik fɔ spɛnd mɔni frɔm di wan dɛn we impɔtant pas ɔl to di wan dɛn we smɔl pas ɔl.",
-			"spendingRankingDesc": "Yu kin drɛg ɛn drɔp di kategori dɛn.",
-			"plannedAchievementOnboardingTitle": "Wetin yu op fɔ ajɔst insay di nɛks 3 ia wit Sɔshial Inkam?",
-			"plannedAchievementCheckingTitle": "Wetin yu op fɔ ajɔst wit di ɔda Soshal Inkam pemɛnt dɛn we lɛf?",
-			"achievementsAchievedTitle": "Yu dɔn ebul fɔ du wetin yu bin op fɔ du insay di las tri ia?",
-			"achievementsNotAchievedCommentTitle": "Wetin dɔn mek yu nɔ ebul fɔ du dis gol? ",
-			"moreFinanciallySecureTitle": "Sɔshial Inkam dɔn mek yu fil se yu gɛt mɔ mɔni?",
-			"happierTitle": "Sɔshial Inkam dɔn mek yu fil gladi?",
-			"happierCommentTitle": "Aw so i bi?",
-			"notHappierCommentTitle": "Yu kin tɛl wi wetin mek?",
-			"longEnoughTitle": "Yu tink se tri ia we dɛn bin de pe di Sɔshial Inkam bin lɔng fɔ mek dɛn gɛt mɔni?",
-			"selfSustainableTitle": "Yu go ebul fɔ sɔpɔt yusɛf wit mɔni afta yu Sɔshial Inkam tɛm dɔn dɔn (e.g., pe yu bil dɛn di rayt tɛm, handle wan ɛkspɛns we yu nɔ bin de ɛkspɛkt, ɛn ɔda tin dɛn)?",
-			"notSelfSustainableCommentTitle": "Ɛnitin de na di program we dɛn go chenj fɔ mek yu chenj izi?"
+			"spendingRankingTitleV1": "Duya, rayt di nɔmba dɛn we de niya dɛn katɛgɔri we yu de yus yu mɔni pan, fɔ sho wi di wan dɛm we impɔtant pas ɔl fɔ yu",
+			"spendingRankingDescV1": "Yu kin drɛg di katɛgori ɛn put am ya.",
+			"plannedAchievementRemainingTitleV1": "Wetin yu op fɔ gɛt wit Social Income ɛnitɛm dɛn kam yu we?",
+
+			"financialIndependenceTitleV1": "Social Income dɔn mek yu fil se bɛtɛ de ɛn nɔbɔdi nɔ go put an ɔnda yu?",
+			"impactLifeGeneralTitleV1": "Ɔmɔs Social Income dɔn chenj yu layf?",
+
+			"longEnoughTitleV1": "Di tri iya we yu dɔn gɛt Social Income mɔni dɔn du fɔ manej pe fɔ wetin yu nid?",
+			"achievementsAchievedTitleV1": "Yu dɔn manej fɔ du wetin yu bin op fɔ du dɛn las tri iya?",
+			"achievementsNotAchievedCommentTitleV1": "Wetin mek yu nɔ bin ebul du am? Yu tink se wi bin ebul du sɔm ɔda tin fɔ sɔpɔt yu? (Fɔ ɛgzampul: tich yu sɔm skil dɛm, kɔnɛkt yu wit ɔda savis dɛm)",
+			"happierTitleV1": "Social Income dɔn mek yu gɛ alafiya?",
+			"happierCommentTitleV1": "Aw?",
+			"notHappierCommentTitleV1": "Yu ebul tɛl wi wetin mek?"
 		}
 	}
 }
