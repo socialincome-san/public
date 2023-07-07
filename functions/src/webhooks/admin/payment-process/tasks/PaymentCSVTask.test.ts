@@ -21,7 +21,7 @@ afterEach(async () => {
 test('GetPaymentCSV', async () => {
 	const result = await triggerFunction(
 		{ type: PaymentProcessTaskType.GetPaymentCSV, timestamp: paymentDate.toSeconds() },
-		{ auth: { token: { email: 'admin@socialincome.org' } } }
+		{ auth: { token: { email: 'admin@socialincome.org' } } },
 	);
 
 	const rows = result.split('\n').map((row: string) => row.split(','));

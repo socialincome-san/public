@@ -31,7 +31,7 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 		() => getDoc(ref).then((snapshot) => snapshot.data() as SurveyModel),
 		{
 			staleTime: 1000 * 60 * 60, // 1 hour
-		}
+		},
 	);
 
 	const { data: translator } = useQuery(
@@ -43,7 +43,7 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 			}),
 		{
 			staleTime: Infinity, // never refetch
-		}
+		},
 	);
 
 	// TODO: implement session storage caching
@@ -62,7 +62,7 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 					window.setTimeout(() => saveSurveyData(survey, status), 3000);
 				});
 		},
-		[ref]
+		[ref],
 	);
 
 	if (survey && translator) {

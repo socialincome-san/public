@@ -68,7 +68,7 @@ export class DonationCertificateHandler {
 		translator: Translator,
 		year: number,
 		contributionsByCurrency: _.Object<{ [currency: string]: number }>,
-		filePath: string
+		filePath: string,
 	) => {
 		const user = userEntity.values;
 		const genderContext = this.createGenderContext(user);
@@ -147,7 +147,7 @@ export class DonationCertificateHandler {
 						translator.t('contribution', {
 							// TODO: use correct locale
 							context: { currency, amount: contributionsByCurrency.get(currency), locale: 'de-CH' },
-						})
+						}),
 				);
 			});
 			pdfDocument.moveDown();

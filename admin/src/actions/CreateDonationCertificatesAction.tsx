@@ -46,7 +46,7 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 	const functions = getFunctions();
 	const createDonationCertificatesFunction = httpsCallable<CreateDonationCertificatesFunctionProps, string>(
 		functions,
-		'createDonationCertificates'
+		'createDonationCertificates',
 	);
 
 	const setMailCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {

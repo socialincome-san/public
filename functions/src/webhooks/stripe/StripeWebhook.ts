@@ -43,7 +43,7 @@ export class StripeWebhook {
 			if (userToCreate) {
 				const newUserRef = await this.firestoreAdmin.collection<User>(USER_FIRESTORE_PATH).add(userToCreate);
 				functions.logger.info(
-					`New user created for charge: ${charge.id}, stripe user: ${charge.customer}, user id: ${newUserRef.id}`
+					`New user created for charge: ${charge.id}, stripe user: ${charge.customer}, user id: ${newUserRef.id}`,
 				);
 				return newUserRef;
 			} else {
@@ -61,10 +61,10 @@ export class StripeWebhook {
 	findUser = async (charge: Stripe.Charge) => {
 		return (
 			(await this.firestoreAdmin.findFirst<User>('users', (col) =>
-				col.where('stripe_customer_id', '==', charge.customer)
+				col.where('stripe_customer_id', '==', charge.customer),
 			)) ??
 			(await this.firestoreAdmin.findFirst<User>('users', (col) =>
-				col.where('email', '==', charge.billing_details.email)
+				col.where('email', '==', charge.billing_details.email),
 			))
 		);
 	};
@@ -123,7 +123,7 @@ export class StripeWebhook {
 			};
 		} else {
 			functions.logger.warn(
-				`User not created for charge: ${charge.id}, stripe user: ${charge.customer}. Missing attributes.`
+				`User not created for charge: ${charge.id}, stripe user: ${charge.customer}. Missing attributes.`,
 			);
 			return undefined;
 		}

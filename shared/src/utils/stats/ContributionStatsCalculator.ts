@@ -44,7 +44,7 @@ export class ContributionStatsCalculator {
 
 		const getContributionsForUser = async (userId: string): Promise<Contribution[]> => {
 			return await firestoreAdmin.getAll<Contribution>(
-				`${USER_FIRESTORE_PATH}/${userId}/${CONTRIBUTION_FIRESTORE_PATH}`
+				`${USER_FIRESTORE_PATH}/${userId}/${CONTRIBUTION_FIRESTORE_PATH}`,
 			);
 		};
 
@@ -60,7 +60,7 @@ export class ContributionStatsCalculator {
 							(contribution) =>
 								contribution.status == StatusKey.SUCCEEDED ||
 								contribution.status == StatusKey.UNKNOWN ||
-								contribution.status == undefined
+								contribution.status == undefined,
 						)
 						.map((contribution) => {
 							const created = (contribution.created as Timestamp).toDate();
@@ -79,7 +79,7 @@ export class ContributionStatsCalculator {
 								}).toFormat('yyyy-MM-dd'),
 							} as ContributionStatsEntry;
 						});
-				})
+				}),
 		);
 		return new ContributionStatsCalculator(_(contributions.flat()));
 	}
@@ -130,11 +130,11 @@ export class ContributionStatsCalculator {
 				month: group,
 				institutional: _.sumBy(
 					contributions.filter((x) => x.isInstitution),
-					(c) => c.amount
+					(c) => c.amount,
 				),
 				individual: _.sumBy(
 					contributions.filter((x) => !x.isInstitution),
-					(c) => c.amount
+					(c) => c.amount,
 				),
 			}))
 			.sortBy((x) => x['month'])

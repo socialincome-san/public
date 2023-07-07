@@ -9,5 +9,5 @@ export default functions.https.onCall(
 
 		const donationCertificateHandler = new DonationCertificateHandler();
 		return await donationCertificateHandler.run(users, year, sendEmails);
-	}
+	},
 );

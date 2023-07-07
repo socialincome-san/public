@@ -70,7 +70,7 @@ export function PaymentsConfirmationView() {
 			query(
 				collectionGroup(db, 'payments'),
 				or(where('status', '==', PaymentStatus.Paid), where('status', '==', PaymentStatus.Contested)),
-				orderBy('payment_at', 'desc')
+				orderBy('payment_at', 'desc'),
 			),
 			async (result) => {
 				result.docChanges().forEach((change) => {
@@ -89,14 +89,14 @@ export function PaymentsConfirmationView() {
 											prev.set(paymentDoc.ref.path, {
 												paymentDoc: paymentDoc as QueryDocumentSnapshot<Payment>,
 												recipientDoc: recipientDoc as QueryDocumentSnapshot<Recipient>,
-											})
-										)
+											}),
+										),
 								);
 							});
 						}
 					}
 				});
-			}
+			},
 		);
 		return () => {
 			unsubscribe();

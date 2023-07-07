@@ -37,7 +37,7 @@ export class SurveyManager {
 		await Promise.all(
 			recipients.docs
 				.filter((recipient) => recipient.data().progr_status != RecipientProgramStatus.Waitlisted)
-				.map(async (recipient) => this.createAllSurveysForRecipient(recipient))
+				.map(async (recipient) => this.createAllSurveysForRecipient(recipient)),
 		);
 	};
 
@@ -60,12 +60,12 @@ export class SurveyManager {
 						recipient.data().first_name,
 						recipient.data().main_language || RecipientMainLanguage.Krio,
 						surveyStatus,
-						dueDate.toJSDate()
+						dueDate.toJSDate(),
 					);
 				} catch {
 					console.error(`Could not create ${survey.questionaire} survey for recipient ${recipient.id}`);
 				}
-			})
+			}),
 		);
 	};
 
@@ -81,10 +81,10 @@ export class SurveyManager {
 		recipientName: string,
 		language: RecipientMainLanguage,
 		status: SurveyStatus,
-		due_date_at: Date
+		due_date_at: Date,
 	) => {
 		const surveysCollection = this.firestoreAdmin.collection<Survey>(
-			[RECIPIENT_FIRESTORE_PATH, recipientId, SURVEY_FIRETORE_PATH].join('/')
+			[RECIPIENT_FIRESTORE_PATH, recipientId, SURVEY_FIRETORE_PATH].join('/'),
 		);
 		const surveyDocRef = surveysCollection.doc(surveyName);
 		if (!(await surveyDocRef.get()).exists) {

@@ -6,7 +6,7 @@ import { calcFinalPaymentDate, calcPaymentsLeft } from '../index';
 describe('Recipient', () => {
 	test('calc last payment', () => {
 		expect(calcFinalPaymentDate(DateTime.fromObject({ year: 2020, month: 1, day: 15 })).toISO()).toStrictEqual(
-			DateTime.local(2022, 12, 15).toISO()
+			DateTime.local(2022, 12, 15).toISO(),
 		);
 	});
 
