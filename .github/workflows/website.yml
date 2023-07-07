@@ -35,6 +35,9 @@ jobs:
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
 
+      - name: Run linters
+        run: npm run website:lint
+
       - name: Run unit tests
         run: npm run website:test:emulator
 
