@@ -1,6 +1,6 @@
 <mjml>
     <mj-head>
-        <mj-preview>We're all about transparency and keeping things up‑to‑date.</mj-preview>
+        <mj-preview> ... </mj-preview>
         <mj-title> ... </mj-title>
         <!-- TODO: Add Unica77 font. For now: closest Google Font available -->
         <mj-font name="Open Sans" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" />
@@ -30,30 +30,75 @@
             </mj-column>
         </mj-section>
         <!-- Main -->
+        <!-- Grey banner -->
+        <mj-wrapper padding-bottom="40px" padding-left="25px" padding-right="25px">
+            <mj-section background-color="#C8CCC9" padding="2px" border-radius="50px">
+                <mj-column border-radius="50px"  background-color="#C8CCC9">
+                    <mj-text line-height="1.5" font-size="18px" color="#191A19" align="middle">
+                        This is a normal text in a banner with  <a class="grey-banner-link-style" href="https://google.com" target="_blank">random link</a>
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
+        <!-- Text -->
         <mj-section>
-            {{> @partial-block }}
+            <mj-column>
+                <mj-text color="#191A19" font-size="22px" font-weight="600">
+                    I am a title
+                </mj-text>
+                <mj-text align="left" color="#191A19" font-size="18px" line-height="1.5">
+                   I am a normal text about nothing but <span class="yellowbold">with a nice yellow highlighted text.</span>
+                </mj-text>
+                <mj-text align="left" color="#191A19" font-size="18px" line-height="1.5">
+                    I am a normal text about nothing but <span class="bluebold">with a nice blue highlighted text.</span> Do you like it?
+                </mj-text>
+            </mj-column>
         </mj-section>
-        <!-- Aurelie -->
+        <!-- CTA  -->
+        <mj-section padding-bottom="30px">
+            <mj-column width="100%" padding-bottom="20px">
+                <mj-button href="https://socialincome.org/login" css-class="btn-block" padding="0" border-radius="35px" width="92%" background-color="#3980D0" color="white" border="2px solid #3980D0" inner-padding="20px 20px" font-size="18px">Main CTA</mj-button>
+            </mj-column>
+            <mj-column width="100%">
+                <mj-button href="https://socialincome.org/login" css-class="btn-block" padding="0" border-radius="35px" width="92%" background-color="#F4F5F4" color="#4A4D4A" border="2px solid #4A4D4A" inner-padding="20px 20px" font-size="18px">Secondary CTA</mj-button>
+            </mj-column>
+        </mj-section>
+        <mj-section padding-bottom="30px">
+            <mj-group width="95%">
+                <mj-column width="50%" padding-bottom="20px">
+                    <mj-button href="https://socialincome.org/login" css-class="btn-block" padding="0" border-radius="35px" width="92%" background-color="#3980D0" color="white" border="2px solid #3980D0" inner-padding="20px 20px" font-size="18px">Main CTA</mj-button>
+                </mj-column>
+                <mj-column width="50%">
+                    <mj-button href="https://socialincome.org/login" css-class="btn-block" padding="0" border-radius="35px" width="92%" background-color="#F4F5F4" color="#4A4D4A" border="2px solid #4A4D4A" inner-padding="20px 20px" font-size="18px">Secondary CTA</mj-button>
+                </mj-column>
+            </mj-group>
+        </mj-section>
+        <mj-section>
+            <mj-column>
+                <mj-text align="left" color="#191A19" font-size="18px" line-height="1.5">
+                    Thank you for lifting people out of poverty – month by month.
+                </mj-text>
+            </mj-column>
+        </mj-section>
         <mj-section padding-bottom="50px">
             <mj-group>
                 <mj-column width="25%" vertical-align="middle">
                     <mj-image
                             href="https://socialincome.org"
-                            title="Aurelie Schmiedlin"
-                            alt="Aurelie Schmiedlin"
+                            title="Social Income"
+                            alt="Social Income"
                             width="80px"
                             align="left"
                             src="https://i.ibb.co/hRbPMHK/596c26f8-46f9-97fd-5a08-f3d2aaec2685.png"
                     />
                 </mj-column>
                 <mj-column width="75%" vertical-align="middle">
-                    <mj-text align="left" color="#191A19" font-size="18px">
-                        Aurelie Schmiedlin
+                    <mj-text align="left" color="#191A19" font-size="18px" line-height="1.5">
+                        Aurelie Schmiedlin<br>Communication
                     </mj-text>
                 </mj-column>
             </mj-group>
         </mj-section>
-        <!-- Footer -->
         <mj-wrapper padding-right="20px" padding-top="15px" padding-bottom="20px" full-width="full-width" background-color="#C8CCC9">
             <mj-section>
                 <mj-group>

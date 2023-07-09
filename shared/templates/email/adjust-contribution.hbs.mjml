@@ -30,17 +30,58 @@
             </mj-column>
         </mj-section>
         <!-- Main -->
+        <!-- Grey banner -->
+        <mj-wrapper padding-bottom="40px" padding-left="25px" padding-right="25px">
+            <mj-section background-color="#C8CCC9" padding="2px" border-radius="50px">
+                <mj-column border-radius="50px"  background-color="#C8CCC9">
+                    <mj-text line-height="1.5" font-size="18px" color="#191A19" align="middle">
+                        We're all about <a class="grey-banner-link-style" href="https://socialincome.org/transparency" target="_blank">transparency</a> and keeping&nbsp;things&nbsp;up&#8209;to&#8209;date.
+                    </mj-text>
+                </mj-column>
+            </mj-section>
+        </mj-wrapper>
+        <!-- Text -->
         <mj-section>
-            {{> @partial-block }}
+            <mj-column>
+                <mj-text color="#191A19" font-size="22px" font-weight="600">
+                    Still close to 1 percent?
+                </mj-text>
+                <mj-text align="left" color="#191A19" font-size="18px" line-height="1.5">
+                    We know that salaries can change over time due to all sorts of reasons like career moves or <span class="bluebold">simply life happening.</span>
+                </mj-text>
+                <mj-text align="left" color="#191A19" font-size="18px" line-height="1.5">
+                    Right now, your monthly donation stands at CHF 60, which corresponds to a <span class="bluebold">yearly salary of CHF 72,000.</span>
+                </mj-text>
+                <mj-text align="left" color="#191A19" font-size="18px" line-height="1.5">
+                    If your salary has changed, <span class="bluebold">whether it's up or down,</span> just adjust it with a few clicks.
+                </mj-text>
+            </mj-column>
         </mj-section>
-        <!-- Aurelie -->
+        <!-- CTA  -->
+        <mj-section padding-bottom="30px">
+            <mj-group width="95%">
+                <mj-column width="50%" padding-bottom="20px">
+                    <mj-button href="https://socialincome.org/login" css-class="btn-block" padding="0" border-radius="35px" width="92%" background-color="#3980D0" color="white" border="2px solid #3980D0" inner-padding="20px 20px" font-size="18px"> Adjust your 1% </mj-button>
+                </mj-column>
+                <mj-column width="50%">
+                    <mj-button href="https://socialincome.org/login" css-class="btn-block" padding="0" border-radius="35px" width="92%" background-color="#F4F5F4" color="#4A4D4A" border="2px solid #4A4D4A" inner-padding="20px 20px" font-size="18px">CHF 60 is fine</mj-button>
+                </mj-column>
+            </mj-group>
+        </mj-section>
+        <mj-section>
+            <mj-column>
+                <mj-text align="left" color="#191A19" font-size="18px" line-height="1.5">
+                    Thank you for lifting people out of poverty – month by month.
+                </mj-text>
+            </mj-column>
+        </mj-section>
         <mj-section padding-bottom="50px">
             <mj-group>
                 <mj-column width="25%" vertical-align="middle">
                     <mj-image
                             href="https://socialincome.org"
-                            title="Aurelie Schmiedlin"
-                            alt="Aurelie Schmiedlin"
+                            title="Social Income"
+                            alt="Social Income"
                             width="80px"
                             align="left"
                             src="https://i.ibb.co/hRbPMHK/596c26f8-46f9-97fd-5a08-f3d2aaec2685.png"
@@ -53,7 +94,6 @@
                 </mj-column>
             </mj-group>
         </mj-section>
-        <!-- Footer -->
         <mj-wrapper padding-right="20px" padding-top="15px" padding-bottom="20px" full-width="full-width" background-color="#C8CCC9">
             <mj-section>
                 <mj-group>
