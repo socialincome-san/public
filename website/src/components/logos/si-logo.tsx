@@ -10,7 +10,7 @@ export function SILogo({ className, ...props }: HTMLAttributes<SVGElement>) {
 			aria-hidden={true}
 			aria-labelledby="si-logo-title"
 			viewBox="0 0 1494.3 157.3"
-			className={classNames('text-yellow', className)}
+			className={classNames('text-primary', className)}
 			{...props}
 		>
 			<title id="si-logo-title">Social Income Logo</title>

@@ -6,7 +6,7 @@ import { User, signInWithEmailAndPassword } from 'firebase/auth';
 import { useSearchParams } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
 import { SurveyPageProps } from './layout';
-import { Survey } from './survey';
+import { Survey, SurveyLanguage } from './survey';
 
 export default function Page({ params }: SurveyPageProps) {
 	const [email, setEmail] = useState<string | null>(null);
@@ -43,7 +43,7 @@ export default function Page({ params }: SurveyPageProps) {
 	if (user) {
 		return (
 			<QueryClientProvider client={queryClient}>
-				<Survey surveyId={params.survey} recipientId={params.recipient} lang={params.lang} />
+				<Survey surveyId={params.survey} recipientId={params.recipient} lang={params.lang as SurveyLanguage} />
 			</QueryClientProvider>
 		);
 	} else {
