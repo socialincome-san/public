@@ -8,7 +8,7 @@ import { StripeWebhook } from './StripeWebhook';
  * Adds the relevant information to the contributions subcollection of users.
  */
 export default functions.https.onRequest(async (request, response) => {
-	const stripe = new Stripe(STRIPE_API_READ_KEY, { apiVersion: '2022-08-01' });
+	const stripe = new Stripe(STRIPE_API_READ_KEY, { apiVersion: '2022-11-15' });
 	const stripeWebhook = new StripeWebhook();
 	try {
 		const sig = request.headers['stripe-signature']!;

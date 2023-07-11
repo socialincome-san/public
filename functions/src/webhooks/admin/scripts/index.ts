@@ -48,7 +48,7 @@ const batchImportStripeChargesFunction = functions
 		const stripeBatchSize = 100; // max batch size supported by stripe
 		const charges = [];
 		try {
-			const stripe = new Stripe(STRIPE_API_READ_KEY, { apiVersion: '2022-08-01' });
+			const stripe = new Stripe(STRIPE_API_READ_KEY, { apiVersion: '2022-11-15' });
 			functions.logger.info('Querying Stripe API...');
 			for await (const charge of stripe.charges.list({
 				expand: ['data.balance_transaction', 'data.invoice'],
