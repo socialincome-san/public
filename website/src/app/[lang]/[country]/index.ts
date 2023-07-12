@@ -1,7 +1,7 @@
-import { ValidCountry, ValidLanguage } from '@/i18n';
+import { ValidCountry, WebsiteLanguage } from '@/i18n';
 
 export interface DefaultParams {
-	lang: ValidLanguage;
+	lang: WebsiteLanguage;
 	country: ValidCountry;
 }
 

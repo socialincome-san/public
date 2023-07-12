@@ -32,7 +32,8 @@
 		"recharts": "^2.7.2",
 		"server-only": "^0.0.1",
 		"survey-core": "^1.9.96",
-		"survey-react-ui": "^1.9.96"
+		"survey-react-ui": "^1.9.96",
+		"tailwind-merge": "^1.13.2"
 	},
 	"devDependencies": {
 		"@types/accept-language-parser": "^1.5.3",

@@ -1,7 +1,7 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
 import ContributionStats from '@/app/[lang]/[country]/(website)/transparency/[currency]/contribution-stats';
 import { firestoreAdmin } from '@/firebase/admin';
-import { ValidCountry, ValidLanguage } from '@/i18n';
+import { ValidCountry, WebsiteLanguage } from '@/i18n';
 import { ContributionStatsCalculator } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
 
@@ -22,7 +22,7 @@ const getStats = async (currency: string) => {
 interface FinancesProps extends DefaultPageProps {
 	params: {
 		country: ValidCountry;
-		lang: ValidLanguage;
+		lang: WebsiteLanguage;
 		currency: string;
 	};
 }
