@@ -1,8 +1,8 @@
 import i18next, { i18n } from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
-import { LocaleLanguage } from '../types';
+import { Language } from '../types';
 
-export const FALLBACK_LANGUAGE = LocaleLanguage.English;
+export const FALLBACK_LANGUAGE = 'en';
 
 interface TranslateProps {
 	namespace?: string;
@@ -11,18 +11,18 @@ interface TranslateProps {
 }
 
 interface TranslatorProps {
-	language: LocaleLanguage;
+	language: Language;
 	namespaces: string[];
 }
 
 export type TranslateFunction = (key: string, translateProps?: TranslateProps) => string;
 
 export class Translator {
-	language: LocaleLanguage;
+	language: Language;
 	namespaces: string[];
 	instance: i18n;
 
-	constructor(language: LocaleLanguage, namespaces: string[]) {
+	constructor(language: Language, namespaces: string[]) {
 		this.language = language;
 		this.namespaces = namespaces;
 		this.instance = i18next.createInstance();
@@ -34,7 +34,6 @@ export class Translator {
 			.use(
 				resourcesToBackend(
 					(language: string, namespace: string) => import(`@socialincome/shared/locales/${language}/${namespace}.json`),
-					// import(path.join(__dirname, '..', '..', 'locales', language, `${namespace}.json`))
 				),
 			)
 			.init({

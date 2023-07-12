@@ -1,10 +1,9 @@
-import { LocaleLanguage } from '../types';
 import { Translator } from './i18n';
 
 describe('Test translations', () => {
 	it('German translations', async () => {
 		const translator = await Translator.getInstance({
-			language: LocaleLanguage.German,
+			language: 'de',
 			namespaces: ['email-donation-certificate', 'countries'],
 		});
 		expect(translator.t('email-subject')).toBe('Social Income Spendenbescheinigung');
@@ -15,7 +14,7 @@ describe('Test translations', () => {
 
 	it('French translations', async () => {
 		const translator = await Translator.getInstance({
-			language: LocaleLanguage.French,
+			language: 'fr',
 			namespaces: ['email-donation-certificate', 'countries'],
 		});
 		expect(translator.t('email-subject')).toBe('Attestation de don – Social Income');
@@ -25,7 +24,7 @@ describe('Test translations', () => {
 
 	it('English translations', async () => {
 		const translator = await Translator.getInstance({
-			language: LocaleLanguage.English,
+			language: 'en',
 			namespaces: ['email-donation-certificate', 'countries'],
 		});
 		expect(translator.t('email-subject')).toBe('Social Income Donation Certificate');

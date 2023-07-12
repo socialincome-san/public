@@ -1,17 +1,16 @@
 import { DefaultParams } from '@/app/[lang]/[country]';
-import { ValidLanguage, languages as validLanguages } from '@/i18n';
-import { LocaleLanguage } from '@socialincome/shared/src/types';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import LanguageSwitcherDropdown from './language-switcher-dropdown';
+import { Language } from '@socialincome/shared/src/types';
 
 interface LanguageSwitcherProps {
 	params: DefaultParams;
-	languages?: ValidLanguage[];
+	languages?: Language[];
 }
 
-export default async function LanguageSwitcher({ params, languages = validLanguages }: LanguageSwitcherProps) {
+export default async function LanguageSwitcher({ params, languages = ['en', 'de'] }: LanguageSwitcherProps) {
 	const translator = await Translator.getInstance({
-		language: params.lang as LocaleLanguage,
+		language: params.lang,
 		namespaces: ['common'],
 	});
 

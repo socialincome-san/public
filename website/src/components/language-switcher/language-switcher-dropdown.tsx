@@ -1,19 +1,19 @@
 'use client';
 
-import { ValidLanguage } from '@/i18n';
 import { LanguageIcon } from '@heroicons/react/24/solid';
 import { Dropdown } from '@socialincome/ui';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Language } from '@socialincome/shared/src/types';
 
 interface LanguageSwitcherProps {
-	languages: { label: string; value: ValidLanguage }[];
+	languages: { label: string; value: Language }[];
 }
 
 export default function LanguageSwitcherDropdown({ languages }: LanguageSwitcherProps) {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
-	const onLanguageChange = (lang: ValidLanguage) => {
+	const onLanguageChange = (lang: Language) => {
 		const pathSegments = window.location.pathname.split('/');
 		pathSegments[1] = lang;
 		const current = new URLSearchParams(Array.from(searchParams.entries()));
