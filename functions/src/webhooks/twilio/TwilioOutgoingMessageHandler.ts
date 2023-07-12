@@ -3,7 +3,6 @@ import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
 import {
 	Entity,
-	LocaleLanguage,
 	MESSAGE_FIRESTORE_PATH,
 	MessageType,
 	RECIPIENT_FIRESTORE_PATH,
@@ -38,7 +37,7 @@ export class TwilioOutgoingMessageHandler {
 							to: `+${recipient.communication_mobile_phone?.phone}`,
 							twilioConfig: { sid: TWILIO_SID, token: TWILIO_TOKEN },
 							templateProps: {
-								language: LocaleLanguage.English,
+								language: 'en',
 								translationNamespace: 'message-whatsapp-opt-in',
 								hbsTemplatePath: 'message/freetext.hbs',
 								context: { name: recipient.calling_name ? recipient.calling_name : recipient.first_name },

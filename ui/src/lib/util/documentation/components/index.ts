@@ -1,2 +1,2 @@
-export * from './TypographyItem';
-export * from './TypographyList';
+export * from './typography-item';
+export * from './typography-list';
