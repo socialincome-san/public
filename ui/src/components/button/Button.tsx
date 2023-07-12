@@ -1,40 +1,49 @@
+import * as React from 'react';
+import { ComponentPropsWithoutRef, ElementType } from 'react';
 import classNames from 'classnames';
-import { ButtonHTMLAttributes, PropsWithChildren } from 'react';
+import { Color } from '../../interfaces/color';
+import { Size } from '../../interfaces/size';
 
-export const SO_BUTTON_VARIANTS = ['primary', 'secondary', 'tertiary', 'outlined'] as const;
-export const SO_BUTTON_SIZES = ['base', 'xl'];
+type ButtonSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg'>;
+const BUTTON_SIZE_MAP: { [key in ButtonSize]: string } = {
+	xs: 'btn-xs',
+	sm: 'btn-sm',
+	md: '',
+	lg: 'btn-lg',
+};
 
-export interface SoButtonProps extends PropsWithChildren, ButtonHTMLAttributes<HTMLButtonElement | HTMLAnchorElement> {
-	variant?: (typeof SO_BUTTON_VARIANTS)[number];
-	size?: (typeof SO_BUTTON_SIZES)[number];
-	href?: string;
-}
+type ButtonColor = Extract<Color, 'primary' | 'secondary' | 'accent'>;
+const BUTTON_COLOR_MAP: { [key in ButtonColor]: string } = {
+	primary: 'btn-primary',
+	secondary: 'btn-secondary',
+	accent: 'btn-accent',
+};
 
-/**
- * Primary UI component for user interaction
- */
-export const SoButton = ({
+export type ButtonProps<C extends ElementType> = {
+	as?: C;
+	color?: ButtonColor;
+	size?: ButtonSize;
+	// icon?: Icon;
+	// iconClassName?: string;
+} & ComponentPropsWithoutRef<C>;
+
+export function Button<C extends ElementType = 'button'>({
+	as,
+	background = 'primary',
+	size = 'md',
+	color = 'accent',
+	// icon,
+	// iconClassName,
 	children,
-	type = 'button',
-	className = '',
-	variant = 'primary',
-	size = 'default',
-	href,
+	className,
 	...props
-}: SoButtonProps) => {
-	const defaultClassNames = ['so-c-button', `so-c-button--${variant}`, `so-c-button--${size}`];
-
-	className = classNames(defaultClassNames, className);
-
-	if (href) {
-		<a href={href} className={className} {...props}>
-			{children}
-		</a>;
-	}
+}: ButtonProps<C>) {
+	// const Icon = icon;
 
 	return (
-		<button type={type} className={className} {...props}>
+		<button className={classNames('btn', BUTTON_SIZE_MAP[size], BUTTON_COLOR_MAP[color], className)} {...props}>
+			{/*{Icon && <Icon className={classNames(BUTTON_ICON_SIZING_MAP[size], iconClassName)} />}*/}
 			{children}
 		</button>
 	);
-};
+}

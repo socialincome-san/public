@@ -9,11 +9,11 @@ export interface DocTypographyItemProps extends React.PropsWithChildren {
 export const DocTypographyItem = ({ title, children, description }: DocTypographyItemProps) => {
 	return (
 		<>
-			<figure className="so-docs-typography-item__example text-right" aria-hidden>
+			<figure className="" aria-hidden>
 				{children}
 			</figure>
-			<div className="so-docs-typography-item__text">
-				<h2 className="so-docs-typography-item__title font-bold">{title}</h2>
+			<div>
+				<h2 className="font-bold">{title}</h2>
 				{description}
 			</div>
 		</>

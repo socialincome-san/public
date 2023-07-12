@@ -1,50 +1,24 @@
 import { Meta, StoryFn } from '@storybook/react';
-
-import { SO_BUTTON_SIZES, SO_BUTTON_VARIANTS, SoButton } from './Button';
-
+import { Button } from './button';
 export default {
-	component: SoButton,
-	argTypes: {
-		variant: {
-			options: SO_BUTTON_VARIANTS,
-			control: { type: 'select' },
-		},
-		size: {
-			options: SO_BUTTON_SIZES,
-			control: { type: 'select' },
-		},
-	},
-} as Meta<typeof SoButton>;
-
-const Template: StoryFn<typeof SoButton> = (args) => <SoButton {...args} />;
+	component: Button,
+} as Meta<typeof Button>;
+const Template: StoryFn<typeof Button> = (args) => <Button {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {
 	children: 'Primary button',
-	variant: 'primary',
+	color: 'primary',
 };
 
 export const Secondary = Template.bind({});
 Secondary.args = {
 	children: 'Secondary button',
-	variant: 'secondary',
+	color: 'secondary',
 };
 
-export const Tertiary = Template.bind({});
-Tertiary.args = {
-	children: 'Tertiary Button',
-	variant: 'tertiary',
-};
-
-export const Outlined = Template.bind({});
-Outlined.args = {
-	children: 'Outlined button',
-	variant: 'outlined',
-};
-
-export const Anchor = Template.bind({});
-Anchor.args = {
-	children: 'Secondary button',
-	variant: 'primary',
-	href: '#',
+export const Accent = Template.bind({});
+Accent.args = {
+	children: 'Accent Button',
+	color: 'accent',
 };

@@ -1,0 +1,73 @@
+import { DocTypographyList } from '../lib';
+import { Typography } from '../index';
+import { Meta } from '@storybook/addon-docs';
+import '../globals.css'
+
+<Meta title="Foundations/Typography" />
+
+# Typography
+
+Social Income uses the [Unica77](https://lineto.com/typefaces/unica77)
+font family. The font family is not open-source, therefore the fonts in
+the source repository can only be used in the context of the Social
+Income projects.
+
+There is a React component to utilize the typography stack, see
+**Components** > **Typography**.
+
+**Font:** Unica77 (`font-family: 'Unica77, sans-serif';`)
+
+**Weights:** 400(regular), 500(medium), 700(bold)
+
+<div>
+	<Typography size='4xl'>Hello</Typography>
+</div>
+
+<DocTypographyList items={[
+	{
+		size: '5xl',
+		title: 'Extra Large 5',
+		children: <Typography size="5xl">Extra large 5</Typography>,
+	},
+	{
+		size: '4xl',
+		title: 'Extra Large 4',
+		children: <Typography size="4xl">4xl</Typography>,
+	},
+	{
+		size: '3xl',
+		title: 'Extra Large 3',
+		children: <Typography size="3xl">3xl</Typography>,
+	},
+	{
+		size: '2xl',
+		title: 'Extra Large 2',
+		children: <Typography size="2xl">2xl</Typography>,
+	},
+	{
+		size: 'xl',
+		title: 'Extra Large',
+		children: <Typography size="xl">xl</Typography>,
+	},
+	{
+		size: 'lg',
+		title: 'Large',
+		children: <Typography size="lg">lg</Typography>,
+	},
+	{
+		size: 'base',
+		title: 'Base',
+		description: 'Default size for body text',
+		children: <Typography size="base">base</Typography>,
+	},
+	{
+		size: 'sm',
+		title: 'Small',
+		children: <Typography size="sm">sm</Typography>,
+	},
+	{
+		size: 'xs',
+		title: 'Extra Small',
+		children: <Typography size="xs">xs</Typography>,
+	},
+]} />

@@ -1,23 +1,15 @@
 import { Meta, StoryFn } from '@storybook/react';
-import { SO_TYPOGRAPHY_SIZES, SoTypography } from './Typography';
+import { Typography } from './typography';
 
 export default {
-	component: SoTypography,
-	argTypes: {
-		size: {
-			options: SO_TYPOGRAPHY_SIZES,
-			control: { type: 'select' },
-		},
-	},
-} as Meta<typeof SoTypography>;
+	component: Typography,
+} as Meta<typeof Typography>;
 
-const Template: StoryFn<typeof SoTypography> = ({ children, ...args }) => (
-	<SoTypography {...args}>{children}</SoTypography>
-);
+const Template: StoryFn<typeof Typography> = ({ children, ...args }) => <Typography {...args}>{children}</Typography>;
 
 export const Overview: typeof Template = Template.bind({});
 Overview.args = {
 	children: 'Text',
-	element: 'h1',
+	as: 'h1',
 	size: 'xl',
 };
