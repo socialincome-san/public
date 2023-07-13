@@ -18,6 +18,10 @@ jobs:
           # Make sure the value of GITHUB_TOKEN will not be persisted in repo's config
           persist-credentials: false
 
+      # Force install dependencies because of bug in creyD/prettier_action (https://github.com/creyD/prettier_action/issues/111)
+      - name: Force install dependencies
+        run: npm install --only=prod
+
       - name: Prettify code
         uses: creyD/prettier_action@v4.3
         with:
