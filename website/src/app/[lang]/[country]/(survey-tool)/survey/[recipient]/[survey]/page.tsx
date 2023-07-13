@@ -48,13 +48,13 @@ export default function Page({ params }: SurveyPageProps) {
 		);
 	} else {
 		return (
-			<form className="flex flex-col mx-auto space-y-2" method="post" onSubmit={handleSubmit}>
-				<input name="email" type="text" placeholder="Email" className="input input-bordered w-full max-w-xs mx-auto" />
+			<form className="mx-auto flex flex-col space-y-2" method="post" onSubmit={handleSubmit}>
+				<input name="email" type="text" placeholder="Email" className="input input-bordered mx-auto w-full max-w-xs" />
 				<input
 					name="password"
 					type="text"
 					placeholder="Password"
-					className="input input-bordered w-full max-w-xs mx-auto"
+					className="input input-bordered mx-auto w-full max-w-xs"
 				/>
 				<button type="submit" className="btn btn-primary mx-auto">
 					Save

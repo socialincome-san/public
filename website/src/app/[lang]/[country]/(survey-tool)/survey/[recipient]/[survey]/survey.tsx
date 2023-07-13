@@ -1,8 +1,9 @@
 import { firestore } from '@/firebase';
+import { WebsiteLanguage } from '@/i18n';
 import {
 	RECIPIENT_FIRESTORE_PATH,
-	Survey as SurveyModel,
 	SURVEY_FIRETORE_PATH,
+	Survey as SurveyModel,
 	SurveyStatus,
 } from '@socialincome/shared/src/types';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -15,7 +16,6 @@ import { Survey as SurveyReact } from 'survey-react-ui';
 import { settings } from './common';
 import { getQuestionnaire } from './questionnaires';
 import './survey.css';
-import { WebsiteLanguage } from '@/i18n';
 
 export type SurveyLanguage = Extract<WebsiteLanguage, 'en' | 'kri'>;
 

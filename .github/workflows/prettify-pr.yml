@@ -4,11 +4,7 @@ on: pull_request
 jobs:
   prettify:
     name: Prettify
-    if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: admin
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -18,8 +14,13 @@ jobs:
           # Make sure the value of GITHUB_TOKEN will not be persisted in repo's config
           persist-credentials: false
 
+      - name: Initialize repository
+        uses: ./.github/workflows/actions/init
+
       - name: Prettify code
         uses: creyD/prettier_action@v4.3
         with:
+          prettier_version: "3.0.0"
+          prettier_plugins: "prettier-plugin-organize-imports@3.2.2 prettier-plugin-tailwindcss@0.4.0"
           prettier_options: "--write ./"
           github_token: ${{ secrets.WORKFLOW_TOKEN }}

@@ -173,14 +173,14 @@ export const SoCombobox = ({
 							)}
 						>
 							{filteredOptions.length === 0 && query !== '' ? (
-								<div className="relative cursor-default select-none py-2 px-4 text-gray-700">Nothing found.</div>
+								<div className="relative cursor-default select-none px-4 py-2 text-gray-700">Nothing found.</div>
 							) : (
 								filteredOptions.map((option) => (
 									<Combobox.Option
 										key={option.label}
 										className={({ active }) =>
 											classNames(
-												active ? 'text-white bg-so-color-accent-2-primary-500' : 'text-gray-900',
+												active ? 'bg-so-color-accent-2-primary-500 text-white' : 'text-gray-900',
 												'relative cursor-default select-none py-2 pl-3 pr-12',
 											)
 										}

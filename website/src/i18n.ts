@@ -1,6 +1,6 @@
+import { Language } from '@socialincome/shared/src/types';
 import langParser from 'accept-language-parser';
 import { NextRequest, NextResponse } from 'next/server';
-import { Language } from '@socialincome/shared/src/types';
 
 export const defaultCountry = 'us';
 export const countries = ['us', 'ca', 'ch', 'sl'];

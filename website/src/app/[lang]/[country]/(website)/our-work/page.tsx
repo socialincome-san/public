@@ -8,8 +8,8 @@ export default async function Page({ params }: DefaultPageProps) {
 	});
 
 	return (
-		<div className="flex flex-row items-center h-screen">
-			<div className="text-center w-full">{translator.t('title-1')}</div>
+		<div className="flex h-screen flex-row items-center">
+			<div className="w-full text-center">{translator.t('title-1')}</div>
 		</div>
 	);
 }

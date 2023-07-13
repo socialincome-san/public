@@ -9,7 +9,7 @@ export default async function Page({ params }: DefaultPageProps) {
 	});
 
 	return (
-		<div className="flex flex-row items-center h-screen">
+		<div className="flex h-screen flex-row items-center">
 			<Typography>{translator.t('navigation.about-us')}</Typography>
 		</div>
 	);

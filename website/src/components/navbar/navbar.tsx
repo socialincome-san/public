@@ -1,10 +1,10 @@
 import { DefaultParams } from '@/app/[lang]/[country]';
 import LanguageSwitcher from '@/components/language-switcher/language-switcher';
+import { SILogo } from '@/components/logos/si-logo';
 import { Bars3BottomRightIcon } from '@heroicons/react/24/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, CollapsibleMenu, Dropdown } from '@socialincome/ui';
 import Link from 'next/link';
-import { SILogo } from '@/components/logos/si-logo';
 import { Suspense } from 'react';
 
 interface NavbarProps {
@@ -25,7 +25,7 @@ export default async function Navbar({ params }: NavbarProps) {
 		<BaseContainer className="bg-blue-50">
 			<div className="navbar h-20">
 				<div className="navbar-start">
-					<Link className="normal-case text-xl" href={`/${params.lang}/${params.country}`}>
+					<Link className="text-xl normal-case" href={`/${params.lang}/${params.country}`}>
 						<SILogo className="h-4" />
 					</Link>
 				</div>
@@ -50,7 +50,7 @@ export default async function Navbar({ params }: NavbarProps) {
 					<Suspense>
 						<LanguageSwitcher params={params} />
 					</Suspense>
-					<Dropdown alignEnd={true} className="lg:hidden bg-blue-50">
+					<Dropdown alignEnd={true} className="bg-blue-50 lg:hidden">
 						<Dropdown.Label>
 							<div className="btn btn-ghost">
 								<Bars3BottomRightIcon className="h-5 w-5" />
