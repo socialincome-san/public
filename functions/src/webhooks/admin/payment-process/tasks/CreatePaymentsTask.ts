@@ -1,4 +1,4 @@
-import { Timestamp } from '@google-cloud/firestore';
+import { toTimestamp } from '@socialincome/shared/src/utils/date';
 import { DateTime } from 'luxon';
 import {
 	PAYMENTS_COUNT,
@@ -32,7 +32,7 @@ export class CreatePaymentsTask extends PaymentTask {
 					amount: PAYMENT_AMOUNT,
 					amount_chf: amountChf,
 					currency: PAYMENT_CURRENCY,
-					payment_at: Timestamp.fromMillis(paymentDate.toMillis()),
+					payment_at: toTimestamp(paymentDate),
 					status: PaymentStatus.Paid,
 					phone_number: recipient.get('mobile_money_phone').phone,
 				});
@@ -54,7 +54,7 @@ export class CreatePaymentsTask extends PaymentTask {
 					.set({
 						amount: PAYMENT_AMOUNT,
 						currency: PAYMENT_CURRENCY,
-						payment_at: Timestamp.fromMillis(nextMonthPaymentDate.toMillis()),
+						payment_at: toTimestamp(nextMonthPaymentDate),
 						status: PaymentStatus.Created,
 					});
 				paymentsCreated++;

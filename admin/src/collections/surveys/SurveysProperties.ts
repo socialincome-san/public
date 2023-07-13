@@ -1,5 +1,5 @@
-import { SurveyQuestionnaire, SurveyStatus } from '@socialincome/shared/src/types';
-import { Property, StringProperty } from 'firecms/dist/types/properties';
+import { RecipientMainLanguage, SurveyQuestionnaire, SurveyStatus } from '@socialincome/shared/src/types';
+import { DateProperty, MapProperty, Property, StringProperty } from 'firecms/dist/types/properties';
 
 export const surveyStatusProperty: StringProperty = {
 	name: 'Status',
@@ -24,20 +24,31 @@ export const surveyQuestionnaireProperty: StringProperty = {
 		{ id: SurveyQuestionnaire.OffboardedCheckin, label: 'OffboardedCheckin' },
 	],
 };
-export const recipientNameProperty: Property = {
+export const recipientNameProperty: StringProperty = {
 	name: 'Recipient Name',
 	validation: { required: true },
 	dataType: 'string',
 };
 
-export const dueDateAtProperty: Property = {
+export const languageProperty: StringProperty = {
+	name: 'Preferred Language',
+	dataType: 'string',
+
+	validation: { required: true },
+	enumValues: [
+		{ id: RecipientMainLanguage.Krio, label: 'Krio' },
+		{ id: RecipientMainLanguage.English, label: 'English' },
+	],
+};
+
+export const dueDateAtProperty: DateProperty = {
 	name: 'Due Date At',
 	dataType: 'date',
 	mode: 'date',
 	readOnly: true,
 };
 
-export const sentAtProperty: Property = {
+export const sentAtProperty: DateProperty = {
 	name: 'Sent At',
 	dataType: 'date',
 	mode: 'date',
@@ -60,4 +71,25 @@ export const accessTokenProperty: StringProperty = {
 	dataType: 'string',
 	name: 'Access Token',
 	readOnly: true,
+};
+
+export const accessEmailProperty: StringProperty = {
+	dataType: 'string',
+	name: 'Access Email',
+	readOnly: true,
+	hideFromCollection: true,
+};
+
+export const accessPasswordProperty: StringProperty = {
+	dataType: 'string',
+	name: 'Access Password',
+	readOnly: true,
+	hideFromCollection: true,
+};
+
+export const dataProperty: MapProperty = {
+	dataType: 'map',
+	name: 'Data',
+	readOnly: true,
+	hideFromCollection: true,
 };

@@ -1,11 +1,9 @@
-import { firestore } from 'firebase-admin';
 import _ from 'lodash';
-import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
 import { Payment, PAYMENT_FIRESTORE_PATH } from '../../types';
+import { toDateTime } from '../date';
 import { getLatestExchangeRate } from '../exchangeRates';
 import { cumulativeSum, groupByAndSort, StatsEntry } from './utils';
-import Timestamp = firestore.Timestamp;
 
 /**
  * Simplified version of Payment, for easy computation of several contribution related stats
@@ -40,12 +38,11 @@ export class PaymentStatsCalculator {
 			.filter((payment) => payment.data().amount_chf != undefined)
 			.map((paymentDoc) => {
 				const payment = paymentDoc.data();
-				const paymentAt = (payment.payment_at as Timestamp).toMillis();
 				return {
 					recipientId: paymentDoc.ref.parent?.parent?.id,
 					amount: payment.amount_chf! * exchangeRate,
 					amountSle: payment.currency === 'SLE' ? payment.amount : payment.amount / 1000,
-					month: DateTime.fromMillis(paymentAt).toFormat('yyyy-MM'),
+					month: toDateTime(payment.payment_at).toFormat('yyyy-MM'),
 				} as PaymentStatsEntry;
 			});
 		return new PaymentStatsCalculator(_(contributions));
