@@ -1,10 +1,10 @@
 import { DefaultParams } from '@/app/[lang]/[country]';
 import LanguageSwitcher from '@/components/language-switcher/language-switcher';
+import { SILogo } from '@/components/logos/si-logo';
 import { Bars3BottomRightIcon } from '@heroicons/react/24/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, CollapsibleMenu, Dropdown } from '@socialincome/ui';
 import Link from 'next/link';
-import { SILogo } from '@/components/logos/si-logo';
 import { Suspense } from 'react';
 
 interface NavbarProps {

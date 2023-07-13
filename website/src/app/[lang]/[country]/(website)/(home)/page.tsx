@@ -1,7 +1,7 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
-import { BaseContainer, Typography } from '@socialincome/ui';
-import Section2 from '@/app/[lang]/[country]/(website)/(home)/section-2';
 import Section1 from '@/app/[lang]/[country]/(website)/(home)/section-1';
+import Section2 from '@/app/[lang]/[country]/(website)/(home)/section-2';
+import { BaseContainer, Typography } from '@socialincome/ui';
 
 export default async function Page(props: DefaultPageProps) {
 	return (

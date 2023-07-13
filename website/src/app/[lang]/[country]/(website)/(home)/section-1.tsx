@@ -1,6 +1,6 @@
-import { BaseContainer, Button, Input, Typography } from '@socialincome/ui';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { DefaultPageProps } from '@/app/[lang]/[country]';
+import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { BaseContainer, Button, Input, Typography } from '@socialincome/ui';
 
 export default async function Section1({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({

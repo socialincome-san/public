@@ -1,9 +1,9 @@
 'use client';
 
 import { LanguageIcon } from '@heroicons/react/24/solid';
+import { Language } from '@socialincome/shared/src/types';
 import { Dropdown } from '@socialincome/ui';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Language } from '@socialincome/shared/src/types';
 
 interface LanguageSwitcherProps {
 	languages: { label: string; value: Language }[];

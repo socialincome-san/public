@@ -1,9 +1,9 @@
+import classNames from 'classnames';
 import { ComponentPropsWithoutRef } from 'react';
 import { twMerge } from 'tailwind-merge';
-import IntrinsicElements = React.JSX.IntrinsicElements;
 import { Color } from '../../interfaces/color';
 import { Size } from '../../interfaces/size';
-import classNames from 'classnames';
+import IntrinsicElements = React.JSX.IntrinsicElements;
 
 export type FontSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl'>;
 const FONT_SIZE_MAP: { [key in FontSize]: string } = {

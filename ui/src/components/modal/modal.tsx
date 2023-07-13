@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '../index';
-import { PropsWithChildren, useEffect, useRef } from 'react';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import classNames from 'classnames';
+import { PropsWithChildren, useEffect, useRef } from 'react';
+import { Button } from '../index';
 
 type ModalProps = {
 	isOpen?: boolean;

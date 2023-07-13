@@ -1,14 +1,14 @@
 'use client';
 
-import Image from 'next/image';
-import houseGif from './house.gif';
-import { BaseContainer, Modal, Typography } from '@socialincome/ui';
-import { useEffect, useRef, useState } from 'react';
-import Player from '@vimeo/player';
-import { PlayCircleIcon } from '@heroicons/react/24/outline';
-import { useQuery } from '@tanstack/react-query';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { DefaultPageProps } from '@/app/[lang]/[country]';
+import { PlayCircleIcon } from '@heroicons/react/24/outline';
+import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { BaseContainer, Modal, Typography } from '@socialincome/ui';
+import { useQuery } from '@tanstack/react-query';
+import Player from '@vimeo/player';
+import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
+import houseGif from './house.gif';
 
 export default function Section2({ params }: DefaultPageProps) {
 	const playerRef = useRef<HTMLDivElement>(null);

@@ -1,6 +1,6 @@
+import { QueryClientWrapper } from '@/app/query-client';
 import { PropsWithChildren } from 'react';
 import './globals.css';
-import { QueryClientWrapper } from '@/app/query-client';
 
 export const metadata = {
 	title: 'Social Income',

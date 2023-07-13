@@ -1,6 +1,5 @@
-import * as React from 'react';
-import { ComponentPropsWithoutRef, ElementType } from 'react';
 import classNames from 'classnames';
+import { ComponentPropsWithoutRef, ElementType } from 'react';
 import { Color } from '../../interfaces/color';
 import { Size } from '../../interfaces/size';
 
