@@ -22,6 +22,6 @@ jobs:
         uses: creyD/prettier_action@v4.3
         with:
           prettier_version: "3.0.0"
-          prettier_plugins: "prettier-plugin-organize-imports prettier-plugin-tailwindcss"
+          prettier_plugins: "prettier-plugin-organize-imports, prettier-plugin-tailwindcss"
           prettier_options: "--write ./"
           github_token: ${{ secrets.WORKFLOW_TOKEN }}
