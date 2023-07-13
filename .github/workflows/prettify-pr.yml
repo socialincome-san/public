@@ -9,10 +9,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Force install dependencies because of bug in creyD/prettier_action (https://github.com/creyD/prettier_action/issues/111)
+      - name: Install dependencies
+        run: npm install -g prettier@3.0.0 prettier-plugin-organize-imports@3.2.2 prettier-plugin-tailwindcss@0.4.0
+
       - name: Prettify code
         uses: creyD/prettier_action@v4.3
         with:
           prettier_version: "3.0.0"
-          prettier_plugins: "prettier-plugin-organize-imports prettier-plugin-tailwindcss"
+          prettier_plugins: "prettier-plugin-organize-imports@3.2.2 prettier-plugin-tailwindcss@0.4.0"
           prettier_options: "--write ./"
           github_token: ${{ secrets.WORKFLOW_TOKEN }}
