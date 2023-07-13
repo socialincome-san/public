@@ -1,0 +1,2 @@
+import{j as t,c as n}from"./index-c5ffc9dc.js";function a({className:e,placeholder:r,...s}){return t("input",{placeholder:r,className:n("input",e),...s})}try{a.displayName="Input",a.__docgenInfo={description:"",displayName:"Input",props:{placeholder:{defaultValue:null,description:"",name:"placeholder",required:!1,type:{name:"string"}},className:{defaultValue:null,description:"",name:"className",required:!1,type:{name:"string"}}}}}catch{}export{a as I};
+//# sourceMappingURL=input-c4263e3f.js.map
