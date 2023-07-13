@@ -1,8 +1,7 @@
-import { getOrInitializeFirebaseAdmin } from '@socialincome/shared/src/firebase/admin/app';
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
-import { toDateTime } from '@socialincome/shared/src/utils/date';
 import functionsTest from 'firebase-functions-test';
 import { DateTime } from 'luxon';
+import { getOrInitializeFirebaseAdmin } from '../../../../../../shared/src/firebase/admin/app';
+import { FirestoreAdmin } from '../../../../../../shared/src/firebase/admin/FirestoreAdmin';
 import {
 	Payment,
 	PAYMENT_FIRESTORE_PATH,
@@ -13,6 +12,7 @@ import {
 	RecipientProgramStatus,
 	toPaymentDate,
 } from '../../../../../../shared/src/types';
+import { toDateTime } from '../../../../../../shared/src/utils/date';
 import { initializeGlobalTestData } from '../../../../firebase';
 import { runPaymentProcessTask } from '../../../index';
 
