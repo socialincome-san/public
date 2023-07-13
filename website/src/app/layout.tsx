@@ -1,5 +1,6 @@
 import { PropsWithChildren } from 'react';
 import './globals.css';
+import { QueryClientWrapper } from '@/app/query-client';
 
 export const metadata = {
 	title: 'Social Income',
@@ -9,7 +10,9 @@ export const metadata = {
 export default function RootLayout({ children }: PropsWithChildren) {
 	return (
 		<html>
-			<body>{children}</body>
+			<body>
+				<QueryClientWrapper>{children}</QueryClientWrapper>
+			</body>
 		</html>
 	);
 }

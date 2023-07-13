@@ -19,10 +19,28 @@ const BUTTON_COLOR_MAP: { [key in ButtonColor]: string } = {
 	accent: 'btn-accent',
 };
 
+type ButtonVariant = 'solid' | 'outline' | 'ghost';
+const BUTTON_VARIANT_MAP: { [key in ButtonVariant]: string } = {
+	solid: 'btn-solid',
+	outline: 'btn-outline',
+	ghost: 'btn-ghost',
+};
+
+type ButtonShape = 'regular' | 'wide' | 'block' | 'circle' | 'square';
+const BUTTON_SHAPE_MAP: { [key in ButtonShape]: string } = {
+	regular: '',
+	wide: 'btn-wide',
+	block: 'btn-block',
+	circle: 'btn-circle',
+	square: 'btn-square',
+};
+
 export type ButtonProps<C extends ElementType> = {
 	as?: C;
 	color?: ButtonColor;
 	size?: ButtonSize;
+	variant?: ButtonVariant;
+	shape?: ButtonShape;
 	// icon?: Icon;
 	// iconClassName?: string;
 } & ComponentPropsWithoutRef<C>;
@@ -32,6 +50,8 @@ export function Button<C extends ElementType = 'button'>({
 	background = 'primary',
 	size = 'md',
 	color = 'accent',
+	variant = 'solid',
+	shape = 'regular',
 	// icon,
 	// iconClassName,
 	children,
@@ -41,7 +61,17 @@ export function Button<C extends ElementType = 'button'>({
 	// const Icon = icon;
 
 	return (
-		<button className={classNames('btn', BUTTON_SIZE_MAP[size], BUTTON_COLOR_MAP[color], className)} {...props}>
+		<button
+			className={classNames(
+				'btn',
+				BUTTON_SIZE_MAP[size],
+				BUTTON_COLOR_MAP[color],
+				BUTTON_VARIANT_MAP[variant],
+				BUTTON_SHAPE_MAP[shape],
+				className,
+			)}
+			{...props}
+		>
 			{/*{Icon && <Icon className={classNames(BUTTON_ICON_SIZING_MAP[size], iconClassName)} />}*/}
 			{children}
 		</button>

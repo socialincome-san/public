@@ -22,7 +22,7 @@ export default function Layout({ children, params }: PropsWithChildren<SurveyPag
 					<LanguageSwitcher params={params} languages={['en', 'kri']} />
 				</div>
 			</div>
-			<main className="max-w-5xl mx-auto py-4">{children}</main>
+			<main className="mx-auto max-w-5xl py-4">{children}</main>
 		</div>
 	);
 }

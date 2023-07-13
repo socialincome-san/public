@@ -44,7 +44,7 @@ export function Dropdown({ children, ...props }: PropsWithChildren<DropdownProps
 			)}
 		>
 			{label}
-			<ul tabIndex={0} className={classNames('dropdown-content menu shadow bg-base-100 rounded-box mt-4 z-50')}>
+			<ul tabIndex={0} className={classNames('dropdown-content menu bg-base-100 rounded-box z-50 mt-4 shadow')}>
 				{items.map((item) => item)}
 			</ul>
 		</div>

@@ -151,7 +151,7 @@ export const SoSelect = ({
 										key={i}
 										className={({ active }) =>
 											classNames(
-												active ? 'text-white bg-so-color-accent-2-primary-500' : 'text-gray-900',
+												active ? 'bg-so-color-accent-2-primary-500 text-white' : 'text-gray-900',
 												'relative cursor-default select-none py-2 pl-3 pr-12',
 											)
 										}
