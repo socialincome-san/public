@@ -1,5 +1,6 @@
 import { getOrInitializeFirebaseAdmin } from '@socialincome/shared/src/firebase/admin/app';
 import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
+import { toDateTime } from '@socialincome/shared/src/utils/date';
 import functionsTest from 'firebase-functions-test';
 import { DateTime } from 'luxon';
 import {
@@ -71,7 +72,7 @@ test('CreatePayments', async () => {
 		expect(nextPaymentDoc.exists).toBeTruthy();
 		const nextPayment = nextPaymentDoc.data() as Payment;
 		expect(nextPayment.amount).toEqual(700);
-		expect(DateTime.fromMillis(nextPayment.payment_at.toMillis(), { zone: 'utc' })).toEqual(nextMonthPaymentDate);
+		expect(toDateTime(nextPayment.payment_at)).toEqual(nextMonthPaymentDate);
 		expect(nextPayment.status).toEqual(PaymentStatus.Created);
 		expect(nextPayment.currency).toEqual('SLE');
 	}

@@ -12,6 +12,7 @@ import { DateTime } from 'luxon';
 import { messagesCollection } from '../Messages';
 import { paymentsCollection } from '../Payments';
 import { buildAuditedCollection } from '../shared';
+import { buildSurveysCollection } from '../surveys/Surveys';
 import {
 	InstagramProperty,
 	SIStartDateProperty,
@@ -92,7 +93,7 @@ export const buildRecipientsCollection = () => {
 			si_start_date: SIStartDateProperty,
 			test_recipient: TestRecipientProperty,
 		}),
-		subcollections: [paymentsCollection, messagesCollection],
+		subcollections: [paymentsCollection, buildSurveysCollection(), messagesCollection],
 	};
 	return buildAuditedCollection<Partial<Recipient>>(collection);
 };
