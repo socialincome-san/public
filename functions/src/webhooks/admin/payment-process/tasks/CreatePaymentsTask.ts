@@ -1,4 +1,3 @@
-import { toTimestamp } from '@socialincome/shared/src/utils/date';
 import { DateTime } from 'luxon';
 import {
 	PAYMENTS_COUNT,
@@ -9,6 +8,7 @@ import {
 	PaymentStatus,
 	RECIPIENT_FIRESTORE_PATH,
 } from '../../../../../../shared/src/types';
+import { toTimestamp } from '../../../../../../shared/src/utils/date';
 import { ExchangeRateImporter } from '../../../../cron/exchange-rate-import/ExchangeRateImporter';
 import { PaymentTask } from './PaymentTask';
 
