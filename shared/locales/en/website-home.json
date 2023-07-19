@@ -11,5 +11,51 @@
 		"subtitle-1": "Not much, right? Your life would go on as usual.",
 		"video-button": "Watch the video",
 		"vimeo-video-id": "433937157"
+	},
+	"section-4": {
+		"title-1": "How can we address inequality? ",
+		"title-2": " Ourselves.",
+		"subtitle": "Social Income is an initiative in solidarity that aims to connect people across the world through small, impactful donations.",
+		"paragraph-1": "If you think about it, we already have everything we need to offset inequality: those who can help and those who can use it. All we need to do is bring them together.",
+		"paragraph-2": "That’s where Social Income comes in ― to carry out a direct redistribution of wealth based on solidarity and enabled by technology.",
+		"paragraph-3": "Of course, Social Income won’t end structural inequality once and for all. But it will build a foundation for real change.",
+		"paragraph-4": "By asking for a modest contribution of just 1%, we make it possible for people from all walks of life to help those in need and contribute to a fairer world."
+	},
+	"section-5": {
+		"articles": "Articles",
+		"faqs": "Frequently Asked Questions",
+		"title": "We combine three approaches to change.",
+		"card-1": {
+			"title": "Universal Basic Income",
+			"item-1": "Reduces discrimination",
+			"item-2": "Fights income inequality",
+			"item-3": "Empowers marginalized groups",
+			"item-4": "Improves working conditions",
+
+			"paragraph-1": "Universal Basic Income (UBI) is a government-guaranteed payment program for people in need. The goal is to provide sufficient funds to cover basic living expenses and improve recipients' financial security.",
+			"paragraph-2": "Like UBI, the idea of Social Income is based on regular cash transfers to secure minimum subsistence needs. While UBI is financed by the state, Social Income is an initiative in solidarity – directly from human to human.",
+
+			"article-1-title": "The Case for a Universal Basic Income",
+			"article-1-author": "Kanni Wignaraja, UN Assistant Secretary-General",
+			"article-1-link": "https://www.undp.org/content/undp/en/home/blog/2020/the-case-for-a-universal-basic-income.html",
+
+			"article-2-title": "The UN has called for UBI for the world's poorest during the pandemic",
+			"article-2-author": "Michelle Nichols, Journalist (Reuters)",
+			"article-2-link": "https://www.weforum.org/agenda/2020/07/un-report-development-coronavirus-covid-ubi-poverty/",
+
+			"article-3-title": "How Universal Basic Income Can Help Address the Racial Wealth Gap",
+			"article-3-author": "Dr. Bernice King and Michael Tubbs for Times",
+			"article-3-link": "https://time.com/5863751/dr-bernice-king-and-mayor-michael-tubbs-on-how-universal-basic-income-can-help-address-the-racial-wealth-gap/",
+
+			"article-4-title": "Ten Reasons to Support Basic Income",
+			"article-4-author": "Basic Income UK",
+			"article-4-link": "https://www.basicincome.org.uk/reasons-support-basic-income/",
+
+			"faq-1-question": "What is the difference between Social Income and Universal Basic Income?",
+			"faq-1-link": "/faq",
+
+			"faq-2-question": "What do recipients need the money for?",
+			"faq-2-link": "/faq"
+		}
 	}
 }

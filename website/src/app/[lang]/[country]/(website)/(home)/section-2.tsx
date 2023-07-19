@@ -43,7 +43,7 @@ export default function Section2({ params }: DefaultPageProps) {
 	}, [showModal]);
 
 	return (
-		<BaseContainer className="bg-amber-50">
+		<BaseContainer className="bg-base-yellow">
 			<div className="flex min-h-screen flex-col items-center justify-center lg:flex-row">
 				<div className="flex flex-1 flex-col justify-center p-4 text-center lg:p-8 lg:text-left">
 					<Typography as="span" size="4xl" weight="bold" lineHeight="relaxed">
@@ -65,8 +65,8 @@ export default function Section2({ params }: DefaultPageProps) {
 								{translator?.t('section-2.video-button')}
 							</Typography>
 						</div>
-						<Modal isOpen={showModal} width="full">
-							<div ref={playerRef}></div>
+						<Modal open={showModal} className="w-11/12 max-w-7xl">
+							<Modal.Body ref={playerRef} />
 						</Modal>
 					</div>
 				</div>
