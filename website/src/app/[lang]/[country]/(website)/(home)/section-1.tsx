@@ -22,7 +22,7 @@ export default async function Section1({ params }: DefaultPageProps) {
 				</div>
 				<div className="flex flex-1 flex-col p-4 text-center lg:p-8 lg:text-left">
 					<Typography size="2xl">{translator.t('section-1.income-text')}</Typography>
-					<Input placeholder="6700" className="my-4" />
+					<Input color="secondary" placeholder="6700" className="my-4" />
 					<Button color="secondary" size="lg" className="btn-block">
 						Show my Impact
 					</Button>

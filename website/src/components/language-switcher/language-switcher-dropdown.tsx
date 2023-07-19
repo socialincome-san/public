@@ -21,17 +21,17 @@ export default function LanguageSwitcherDropdown({ languages }: LanguageSwitcher
 	};
 
 	return (
-		<Dropdown alignEnd>
-			<Dropdown.Label>
-				<div className="btn btn-ghost">
-					<LanguageIcon className="h-5 w-5" />
-				</div>
-			</Dropdown.Label>
-			{languages.map((language, index) => (
-				<Dropdown.Item key={index} onClick={() => onLanguageChange(language.value)}>
-					{language.label}
-				</Dropdown.Item>
-			))}
+		<Dropdown end>
+			<Dropdown.Toggle color="ghost">
+				<LanguageIcon className="h-5 w-5" />
+			</Dropdown.Toggle>
+			<Dropdown.Menu>
+				{languages.map((language, index) => (
+					<Dropdown.Item key={index} onClick={() => onLanguageChange(language.value)}>
+						{language.label}
+					</Dropdown.Item>
+				))}
+			</Dropdown.Menu>
 		</Dropdown>
 	);
 }

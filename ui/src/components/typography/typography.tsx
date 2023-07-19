@@ -30,30 +30,46 @@ type FontColor = Extract<
 	Color,
 	| 'primary'
 	| 'primary-focus'
+	| 'primary-content'
 	| 'secondary'
 	| 'secondary-focus'
+	| 'secondary-content'
 	| 'accent'
 	| 'accent-focus'
+	| 'accent-content'
 	| 'neutral'
 	| 'neutral-focus'
+	| 'neutral-content'
 	| 'info'
+	| 'info-content'
 	| 'success'
+	| 'success-content'
 	| 'warning'
+	| 'warning-content'
 	| 'error'
+	| 'error-content'
 >;
 const FONT_COLOR_MAP: { [key in FontColor]: string } = {
 	primary: 'text-primary',
 	'primary-focus': 'text-primary-focus',
+	'primary-content': 'text-primary-content',
 	secondary: 'text-secondary',
 	'secondary-focus': 'text-secondary-focus',
+	'secondary-content': 'text-secondary-content',
 	accent: 'text-accent',
 	'accent-focus': 'text-accent-focus',
+	'accent-content': 'text-accent-content',
 	neutral: 'text-neutral',
 	'neutral-focus': 'text-neutral-focus',
+	'neutral-content': 'text-neutral-content',
 	info: 'text-info',
+	'info-content': 'text-info-content',
 	success: 'text-success',
+	'success-content': 'text-success-content',
 	warning: 'text-warning',
+	'warning-content': 'text-warning-content',
 	error: 'text-error',
+	'error-content': 'text-error-content',
 };
 
 const LINE_HEIGHTS = ['none', 'tight', 'snug', 'normal', 'relaxed', 'loose'] as const;
@@ -69,7 +85,7 @@ const LINE_HEIGHT_MAP: { [key in LineHeight]: string } = {
 
 type ElementType = keyof Pick<IntrinsicElements, 'div' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'>;
 
-type TypographyProps<C extends ElementType> = {
+export type TypographyProps<C extends ElementType> = {
 	as?: C;
 	size?: FontSize;
 	weight?: FontWeight;

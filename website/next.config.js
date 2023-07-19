@@ -2,6 +2,7 @@
 
 const nextConfig = {
 	transpilePackages: ['@socialincome/ui'],
+	reactStrictMode: true,
 };
 
 module.exports = nextConfig;
