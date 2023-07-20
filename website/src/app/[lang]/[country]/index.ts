@@ -7,5 +7,4 @@ export interface DefaultParams {
 
 export interface DefaultPageProps {
 	params: DefaultParams;
-	searchParams: {};
 }

@@ -1,5 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
-import Navbar from '@/components/navbar/navbar';
+import NavbarWrapper from '@/components/navbar/navbar-wrapper';
 import { countries, websiteLanguages } from '@/i18n';
 import { PropsWithChildren } from 'react';
 
@@ -9,7 +9,7 @@ export const generateStaticParams = () =>
 export default function Layout({ children, params }: PropsWithChildren<DefaultPageProps>) {
 	return (
 		<div className="mx-auto">
-			<Navbar params={params} />
+			<NavbarWrapper params={params} />
 			<main>{children}</main>
 		</div>
 	);

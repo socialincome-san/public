@@ -38,7 +38,7 @@ export type Recipient = {
 	om_uid?: number;
 	profession?: string;
 	progr_status: RecipientProgramStatus;
-	si_start_date?: Date | Timestamp; // for NGO disabled
+	si_start_date?: Timestamp;
 	test_recipient?: boolean;
 	twitter_handle?: string;
 };

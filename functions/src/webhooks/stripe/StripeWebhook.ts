@@ -1,6 +1,8 @@
+import { toTimestamp } from '@socialincome/shared/src/utils/date';
 import { DocumentReference } from 'firebase-admin/firestore';
 import { CollectionReference } from 'firebase-admin/lib/firestore';
 import * as functions from 'firebase-functions';
+import { DateTime } from 'luxon';
 import Stripe from 'stripe';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
 import {
@@ -78,7 +80,7 @@ export class StripeWebhook {
 		const balanceTransaction = charge.balance_transaction as Stripe.BalanceTransaction;
 		return {
 			source: ContributionSourceKey.STRIPE,
-			created: new Date(charge.created * 1000),
+			created: toTimestamp(DateTime.fromSeconds(charge.created)),
 			amount: charge.amount / 100,
 			currency: charge.currency,
 			amount_chf: balanceTransaction?.amount ? balanceTransaction.amount / 100 : 0,

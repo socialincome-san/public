@@ -1,15 +1,10 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
+import Section1 from './section-1';
 
-export default async function Page({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['website-home'],
-	});
-
+export default async function Page(props: DefaultPageProps) {
 	return (
-		<div className="flex h-screen flex-row items-center">
-			<div className="w-full text-center">{translator.t('title-1')}</div>
-		</div>
+		<>
+			<Section1 {...props} />
+		</>
 	);
 }

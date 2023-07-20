@@ -23,7 +23,7 @@ export type Survey = {
 	questionnaire: SurveyQuestionnaire; // set of questions
 	recipient_name: string; // used to address the recipient in the form. E.g. Hello XYZ.
 	language: RecipientMainLanguage; // used to issue the survey in the appropriate language
-	due_date_at: Date | Timestamp; // till when the survey should be completed
+	due_date_at: Timestamp; // till when the survey should be completed
 	sent_at?: Timestamp; // date when the survey was sent to the recipient
 	completed_at?: Timestamp; // date when the survey was completed
 	status: SurveyStatus; // the different states of a survey

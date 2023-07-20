@@ -21,11 +21,11 @@ export default function LanguageSwitcherDropdown({ languages }: LanguageSwitcher
 	};
 
 	return (
-		<Dropdown end>
+		<Dropdown hover end>
 			<Dropdown.Toggle color="ghost">
 				<LanguageIcon className="h-5 w-5" />
 			</Dropdown.Toggle>
-			<Dropdown.Menu>
+			<Dropdown.Menu className="z-40">
 				{languages.map((language, index) => (
 					<Dropdown.Item key={index} onClick={() => onLanguageChange(language.value)}>
 						{language.label}

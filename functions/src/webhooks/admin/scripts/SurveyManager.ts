@@ -1,4 +1,4 @@
-import { Timestamp } from '@google-cloud/firestore';
+import { toDateTime, toTimestamp } from '@socialincome/shared/src/utils/date';
 import { DateTime } from 'luxon';
 import { AuthAdmin } from '../../../../../shared/src/firebase/admin/AuthAdmin';
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
@@ -49,9 +49,7 @@ export class SurveyManager {
 		return Promise.all(
 			recipientSurveys.map(async (survey) => {
 				try {
-					const dueDate = DateTime.fromJSDate((recipient.data().si_start_date as Timestamp).toDate()).plus({
-						months: survey.startDateOffsetMonths,
-					});
+					const dueDate = toDateTime(recipient.get('si_start_date')).plus({ months: survey.startDateOffsetMonths });
 					const surveyStatus = dueDate < DateTime.now() ? SurveyStatus.Missed : SurveyStatus.New;
 					await this.createSurvey(
 						recipient.id,
@@ -102,7 +100,7 @@ export class SurveyManager {
 				language: language,
 				status: status,
 				data: {},
-				due_date_at: due_date_at,
+				due_date_at: toTimestamp(due_date_at),
 				access_email: email,
 				access_pw: password,
 				access_token: token,
