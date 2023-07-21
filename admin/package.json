@@ -44,7 +44,7 @@
 		"@mui/x-date-pickers": "^6.10.0",
 		"@socialincome/shared": "^1.0.0",
 		"algoliasearch": "^4.18.0",
-		"firebase": "^10.0.0",
+		"firebase": "^10.1.0",
 		"firecms": "2.0.5",
 		"lodash": "^4.17.21",
 		"luxon": "^3.3.0",

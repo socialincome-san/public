@@ -1,19 +1,8 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
+import { getStats } from '@/app/[lang]/[country]/(website)/transparency/[currency]/get-stats';
 import TransparencyCharts from '@/app/[lang]/[country]/(website)/transparency/[currency]/transparency-charts';
-import { firestoreAdmin } from '@/firebase/admin';
 import { ValidCountry, WebsiteLanguage } from '@/i18n';
-import { ContributionStatsCalculator } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
-import { PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
 import { BaseContainer, Stats } from '@socialincome/ui';
-
-const getStats = async (currency: string) => {
-	const contributionCalculator = await ContributionStatsCalculator.build(firestoreAdmin, currency);
-	const contributionStats = contributionCalculator.allStats();
-
-	const paymentCalculator = await PaymentStatsCalculator.build(firestoreAdmin, currency);
-	const paymentStats = paymentCalculator.allStats();
-	return { contributionStats, paymentStats };
-};
 
 export const generateStaticParams = () => ['USD', 'CHF'].map((currency) => ({ currency: currency.toLowerCase() }));
 
