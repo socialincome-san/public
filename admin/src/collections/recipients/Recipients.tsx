@@ -8,7 +8,7 @@ import {
 	calcFinalPaymentDate,
 	calcPaymentsLeft,
 } from '@socialincome/shared/src/types';
-import { DateTime } from 'luxon';
+import { toDateTime } from '@socialincome/shared/src/utils/date';
 import { messagesCollection } from '../Messages';
 import { paymentsCollection } from '../Payments';
 import { buildAuditedCollection } from '../shared';
@@ -38,7 +38,7 @@ export const PaymentsLeft: AdditionalFieldDelegate<Partial<Recipient>> = {
 	name: 'Payments Left',
 	Builder: ({ entity }) => {
 		const finalPaymentDate = entity.values.si_start_date
-			? calcFinalPaymentDate(DateTime.fromJSDate(entity.values.si_start_date as Date))
+			? calcFinalPaymentDate(toDateTime(entity.values.si_start_date))
 			: undefined;
 		const paymentsLeft = finalPaymentDate ? calcPaymentsLeft(finalPaymentDate) : undefined;
 		if (paymentsLeft && finalPaymentDate) {

@@ -1,6 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[country]';
 import { Language } from '@socialincome/shared/src/types';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { Suspense } from 'react';
 import LanguageSwitcherDropdown from './language-switcher-dropdown';
 
 interface LanguageSwitcherProps {
@@ -15,11 +16,13 @@ export default async function LanguageSwitcher({ params, languages = ['en', 'de'
 	});
 
 	return (
-		<LanguageSwitcherDropdown
-			languages={languages.map((lang) => ({
-				label: translator.t(`languages.${lang}`),
-				value: lang,
-			}))}
-		/>
+		<Suspense>
+			<LanguageSwitcherDropdown
+				languages={languages.map((lang) => ({
+					label: translator.t(`languages.${lang}`),
+					value: lang,
+				}))}
+			/>
+		</Suspense>
 	);
 }

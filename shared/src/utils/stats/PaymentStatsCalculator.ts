@@ -5,6 +5,15 @@ import { toDateTime } from '../date';
 import { getLatestExchangeRate } from '../exchangeRates';
 import { cumulativeSum, groupByAndSort, StatsEntry } from './utils';
 
+export interface PaymentStats {
+	totalPayments: number;
+	totalPaymentsByMonth: StatsEntry[];
+	socialIncomesByMonth: StatsEntry[];
+	cumulativePaymentsByMonth: StatsEntry[];
+	cumulativeRecipientsByMonth: StatsEntry[];
+	meanPaymentsByMonth: StatsEntry[];
+}
+
 /**
  * Simplified version of Payment, for easy computation of several contribution related stats
  */
@@ -129,7 +138,7 @@ export class PaymentStatsCalculator {
 		});
 	};
 
-	allStats = () => {
+	allStats = (): PaymentStats => {
 		return {
 			totalPayments: this.totalPayments(),
 			totalPaymentsByMonth: this.totalPaymentsByMonth(),
@@ -139,13 +148,4 @@ export class PaymentStatsCalculator {
 			socialIncomesByMonth: this.socialIncomesByMonth(),
 		} as PaymentStats;
 	};
-}
-
-export interface PaymentStats {
-	totalPayments: number;
-	totalPaymentsByMonth: StatsEntry[];
-	socialIncomesByMonth: StatsEntry[];
-	cumulativePaymentsByMonth: StatsEntry[];
-	cumulativeRecipientsByMonth: StatsEntry[];
-	meanPaymentsByMonth: StatsEntry[];
 }

@@ -1,55 +1,65 @@
-import { DefaultParams } from '@/app/[lang]/[country]';
+import { DefaultPageProps } from '@/app/[lang]/[country]';
 import LanguageSwitcher from '@/components/language-switcher/language-switcher';
 import { SILogo } from '@/components/logos/si-logo';
 import { Bars3BottomRightIcon } from '@heroicons/react/24/outline';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Dropdown } from '@socialincome/ui';
+import { BaseContainer, Navbar as DaisyNavbar, Dropdown, Menu, Typography } from '@socialincome/ui';
+import classNames from 'classnames';
 import Link from 'next/link';
 
-interface NavbarProps {
-	params: DefaultParams;
-}
+type NavbarProps = {
+	backgroundColor?: string;
+} & DefaultPageProps;
 
-export default async function Navbar({ params }: NavbarProps) {
+export default async function Navbar({ params, backgroundColor }: NavbarProps) {
 	const translator = await Translator.getInstance({
 		language: params.lang,
 		namespaces: ['website-common'],
 	});
-
 	const ourWork = translator.t('navigation.our-work');
-	const howItWorks = translator.t('navigation.how-it-works');
 	const aboutUs = translator.t('navigation.about-us');
+	const transparency = translator.t('navigation.transparency');
 
 	return (
-		<BaseContainer className="bg-blue-50">
-			<div className="navbar h-20">
-				<div className="navbar-start">
+		<BaseContainer className={classNames(backgroundColor)}>
+			<DaisyNavbar className="h-20">
+				<DaisyNavbar.Start>
 					<Link className="text-xl normal-case" href={`/${params.lang}/${params.country}`}>
 						<SILogo className="h-4" />
 					</Link>
-				</div>
+				</DaisyNavbar.Start>
 
-				<div className="navbar-center hidden lg:flex">
-					{/*<Collapse>*/}
-					{/*	<Collapse.Title>Hello</Collapse.Title>*/}
-					{/*</Collapse>*/}
-					{/*	<Collapse.Title>{ourWork}</Collapse.Title>*/}
-					{/*	<Collapse.Details>*/}
-					{/*		<Link href={`/${params.lang}/${params.country}/our-work`}>{ourWork}</Link>*/}
-					{/*	</Collapse.Details>*/}
-					{/*</Collapse>*/}
-					{/*<Collapse>*/}
-					{/*	<Collapse.Title>{aboutUs}</Collapse.Title>*/}
-					{/*	<Collapse.Details>*/}
-					{/*		<Link href={`/${params.lang}/${params.country}/about-us`}>{aboutUs}</Link>*/}
-					{/*	</Collapse.Details>*/}
-					{/*</Collapse>*/}
-					{/*<Link href={`/${params.lang}/${params.country}/transparency/usd`}>Transparency</Link>*/}
-				</div>
+				<DaisyNavbar.Center>
+					<Menu horizontal className="hidden lg:flex">
+						{/*<Menu.Item>*/}
+						{/*	<Menu.Details label={ourWork}>*/}
+						{/*		<Menu.Item>*/}
+						{/*			<Link href={`/${params.lang}/${params.country}/about-us`}>{aboutUs}</Link>*/}
+						{/*			<Link href={`/${params.lang}/${params.country}/our-work`}>{ourWork}</Link>*/}
+						{/*		</Menu.Item>*/}
+						{/*	</Menu.Details>*/}
+						{/*</Menu.Item>*/}
+						<Menu.Item>
+							<Link href={`/${params.lang}/${params.country}/our-work`}>
+								<Typography size="md">{ourWork}</Typography>
+							</Link>
+						</Menu.Item>
+						<Menu.Item>
+							<Link href={`/${params.lang}/${params.country}/about-us`}>
+								<Typography size="md">{aboutUs}</Typography>
+							</Link>
+						</Menu.Item>
+						<Menu.Item>
+							<Link href={`/${params.lang}/${params.country}/transparency/usd`}>
+								<Typography size="md">{transparency}</Typography>
+							</Link>
+						</Menu.Item>
+					</Menu>
+				</DaisyNavbar.Center>
 
-				<div className="navbar-end">
+				<DaisyNavbar.End>
 					<LanguageSwitcher params={params} />
-					<Dropdown end className="bg-blue-50 lg:hidden">
+					<Dropdown hover end className="lg:hidden">
 						<Dropdown.Toggle color="ghost">
 							<Bars3BottomRightIcon className="h-5 w-5" />
 						</Dropdown.Toggle>
@@ -68,8 +78,8 @@ export default async function Navbar({ params }: NavbarProps) {
 							</Dropdown.Item>
 						</Dropdown.Menu>
 					</Dropdown>
-				</div>
-			</div>
+				</DaisyNavbar.End>
+			</DaisyNavbar>
 		</BaseContainer>
 	);
 }

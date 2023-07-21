@@ -1,11 +1,20 @@
-import { firestore } from 'firebase-admin';
 import _ from 'lodash';
 import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
 import { Contribution, CONTRIBUTION_FIRESTORE_PATH, StatusKey, User, USER_FIRESTORE_PATH } from '../../types';
 import { getLatestExchangeRate } from '../exchangeRates';
 import { cumulativeSum, StatsEntry } from './utils';
-import Timestamp = firestore.Timestamp;
+
+export interface ContributionStats {
+	totalContributions: number;
+	totalContributionsByCurrency: Record<string, string | number>[];
+	totalContributionsByIsInstitution: StatsEntry[];
+	totalContributionsByCountry: StatsEntry[];
+	totalContributionsBySource: StatsEntry[];
+	totalContributionsByMonth: StatsEntry[];
+	totalContributionsByMonthAndType: StatsEntry[];
+	totalPaymentFeesByIsInstitution: StatsEntry[];
+}
 
 /**
  * Simplified version of Contribution, for easy computation of several contribution related stats
@@ -51,7 +60,7 @@ export class ContributionStatsCalculator {
 		const users = await firestoreAdmin.collection<User>(USER_FIRESTORE_PATH).get();
 		const contributions = await Promise.all(
 			users.docs
-				.filter((userDoc) => !userDoc.data().test_user)
+				.filter((userDoc) => !userDoc.get('test_user'))
 				.map(async (userDoc) => {
 					const user = userDoc.data();
 					const contributions = await getContributionsForUser(userDoc.id);
@@ -63,7 +72,10 @@ export class ContributionStatsCalculator {
 								contribution.status == undefined,
 						)
 						.map((contribution) => {
-							const created = (contribution.created as Timestamp).toDate();
+							const created = contribution.created.toDate();
+							if (created.getFullYear() < 2020) {
+								console.log(userDoc.id, created);
+							}
 							return {
 								userId: userDoc.id,
 								isInstitution: user.institution ?? false,
@@ -75,8 +87,7 @@ export class ContributionStatsCalculator {
 								month: DateTime.fromObject({
 									year: created.getFullYear(),
 									month: created.getMonth() + 1, // month is indexed from 0 in JS
-									day: 1,
-								}).toFormat('yyyy-MM-dd'),
+								}).toFormat('yyyy-MM'),
 							} as ContributionStatsEntry;
 						});
 				}),
@@ -154,27 +165,16 @@ export class ContributionStatsCalculator {
 			.value();
 	};
 
-	allStats = () => {
+	allStats = (): ContributionStats => {
 		return {
 			totalContributions: this.totalContributions(),
 			totalContributionsByCurrency: this.totalContributionsByCurrency(),
 			totalContributionsByIsInstitution: this.totalContributionsByIsInstitution(),
 			totalContributionsByCountry: this.totalContributionsByCountry(),
 			totalContributionsBySource: this.totalContributionsBySource(),
-			totalContributionsBymonth: this.totalContributionsByMonth(),
+			totalContributionsByMonth: this.totalContributionsByMonth(),
 			totalContributionsByMonthAndType: this.totalContributionsByMonthAndType(),
 			totalPaymentFeesByIsInstitution: this.totalPaymentFeesByInstitution(),
 		};
 	};
-}
-
-export interface ContributionStats {
-	totalContributions: number;
-	totalContributionsByCurrency: StatsEntry[];
-	totalContributionsByIsInstitution: StatsEntry[];
-	totalContributionsByCountry: StatsEntry[];
-	totalContributionsBySource: StatsEntry[];
-	totalContributionsBymonth: StatsEntry[];
-	totalContributionsByMonthAndType: StatsEntry[];
-	totalPaymentFeesByIsInstitution: StatsEntry[];
 }
