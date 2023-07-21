@@ -1,4 +1,3 @@
-import { toTimestamp } from '@socialincome/shared/src/utils/date';
 import { DocumentReference } from 'firebase-admin/firestore';
 import { CollectionReference } from 'firebase-admin/lib/firestore';
 import * as functions from 'firebase-functions';
@@ -15,6 +14,7 @@ import {
 	UserStatusKey,
 	splitName,
 } from '../../../../shared/src/types';
+import { toTimestamp } from '../../../../shared/src/utils/date';
 
 export class StripeWebhook {
 	private readonly firestoreAdmin: FirestoreAdmin;
