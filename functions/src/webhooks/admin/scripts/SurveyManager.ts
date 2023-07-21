@@ -1,4 +1,3 @@
-import { toDateTime, toTimestamp } from '@socialincome/shared/src/utils/date';
 import { DateTime } from 'luxon';
 import { AuthAdmin } from '../../../../../shared/src/firebase/admin/AuthAdmin';
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
@@ -14,6 +13,7 @@ import {
 	recipientSurveys,
 } from '../../../../../shared/src/types';
 import { rndString } from '../../../../../shared/src/utils/crypto';
+import { toDateTime, toTimestamp } from '../../../../../shared/src/utils/date';
 
 /**
  * Takes care of creating surveys for recipients
