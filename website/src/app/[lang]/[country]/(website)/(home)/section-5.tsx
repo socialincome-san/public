@@ -153,7 +153,7 @@ export default async function Section5({ params }: DefaultPageProps) {
 							{
 								question: translator.t('section-5.card-3.faq-1-question'),
 								link: translator.t('section-5.card-3.faq-1-link'),
-							}
+							},
 						]}
 					/>
 				</div>
