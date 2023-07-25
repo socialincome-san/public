@@ -107,6 +107,10 @@ export default async function Section5({ params }: DefaultPageProps) {
 								question: translator.t('section-5.card-2.faq-2-question'),
 								link: translator.t('section-5.card-2.faq-2-link'),
 							},
+							{
+								question: translator.t('section-5.card-2.faq-3-question'),
+								link: translator.t('section-5.card-2.faq-3-link'),
+							},
 						]}
 					/>
 
@@ -149,11 +153,7 @@ export default async function Section5({ params }: DefaultPageProps) {
 							{
 								question: translator.t('section-5.card-3.faq-1-question'),
 								link: translator.t('section-5.card-3.faq-1-link'),
-							},
-							{
-								question: translator.t('section-5.card-3.faq-2-question'),
-								link: translator.t('section-5.card-3.faq-2-link'),
-							},
+							}
 						]}
 					/>
 				</div>

@@ -1,5 +1,6 @@
 import { Meta, StoryFn } from '@storybook/react';
 import { Typography } from './typography';
+import React from 'react';
 
 export default {
 	component: Typography,
