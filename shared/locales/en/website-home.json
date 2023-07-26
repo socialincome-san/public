@@ -56,6 +56,70 @@
 
 			"faq-2-question": "What do recipients need the money for?",
 			"faq-2-link": "/faq"
+		},
+		"card-2": {
+			"title": "Direct Cash Transfers",
+			"item-1": "No overhead costs",
+			"item-2": "Reduces poverty",
+			"item-3": "Empowers individuals",
+			"item-4": "Stimulates local markets",
+
+			"paragraph-1": "Direct Cash Transfers are payments made to eligible groups of people in need, often by governments or NGOs. They can be provided either conditionally or unconditionally. Cash transfers allow recipients to obtain a range of goods and services of their choice directly from local markets and service providers.",
+			"paragraph-2": "Social Income's direct cash payments are not dependent on political decisions, government budgets or taxes. The primary goal of Social Income is the voluntary and direct redistribution of wealth between individuals.",
+
+			"article-1-title": "Direct Cash Transfers",
+			"article-1-author": "Cash Transfer Evidence Paper",
+			"article-1-link": "https://www.who.int/alliance-hpsr/alliancehpsr_dfidevidencepaper.pdf",
+
+			"article-2-title": "Guidelines for Cash Transfer Programming",
+			"article-2-author": "International Red Cross",
+			"article-2-link": "https://www.ifrc.org/Global/Publications/disasters/finance/cash-guidelines-en.pdf",
+
+			"article-3-title": "Is Cash Better for Poor People Than Conventional Foreign Aid?",
+			"article-3-author": "Marc Gunther, New York Times",
+			"article-3-link": "https://www.nytimes.com/2018/09/11/opinion/is-cash-better-for-poor-people-than-conventional-foreign-aid.html",
+
+			"article-4-title": "Cash Transfers for Children—Investing into the Future",
+			"article-4-author": "The Lancet",
+			"article-4-link": "https://www.thelancet.com/action/showPdf?pii=S0140-6736%2809%2961166-1",
+
+			"faq-1-question": "Are direct cash payments an effective way to fight poverty?",
+			"faq-1-link": "/faq",
+
+			"faq-2-question": "Is it helpful to send money to people in need?",
+			"faq-2-link": "/faq",
+
+			"faq-3-question": "What are Direct Cash Transfers?",
+			"faq-3-link": "/faq"
+		},
+		"card-3": {
+			"title": "Mobile Banking",
+			"item-1": "Low fees",
+			"item-2": "Immediate",
+			"item-3": "Scalable",
+			"item-4": "Crisis-proof (Covid-19)",
+
+			"paragraph-1": "Mobile banking is a service provided by a bank, mobile provider or other financial institution that allows its customers to conduct financial transactions remotely using a mobile device such as a phone or tablet. Africa is leading the way in mainstream adoption of mobile banking.",
+			"paragraph-2": "Social Income is aimed at people who live in poverty and whose access to financial services can (only) be guaranteed via mobile phone.",
+
+			"article-1-title": "Mobile Phones Are Replacing Bank Accounts in Africa",
+			"article-1-author": "Moses Mozart Dzawu, Bloomberg",
+			"article-1-link": "https://www.bloomberg.com/news/articles/2019-08-13/mobile-phones-are-replacing-bank-accounts-in-africa",
+
+			"article-2-title": "The Future of African Banking and the Impact of Mobile Money",
+			"article-2-author": "Fabio Scala, Further Africa",
+			"article-2-link": "https://furtherafrica.com/2020/01/06/the-future-of-african-banking-and-the-impact-of-mobile-money/",
+
+			"article-3-title": "How Mobile Money Can Lead a Fintech Revolution in Africa",
+			"article-3-author": "Amadou N. R. Sy, Advisor in the African Department, IMF",
+			"article-3-link": "https://www.weforum.org/agenda/2019/02/fintech-in-sub-saharan-africa-a-potential-game-changer",
+
+			"article-4-title": "You’ve Got Money: Mobile Payments Help People During the Pandemic",
+			"article-4-author": "Sonja Davidovic, Delphine Prady, Economists at IMF",
+			"article-4-link": "https://basicincome.org.uk/reasons-support-basic-income/",
+
+			"faq-1-question": "Are direct cash payments an effective way to fight poverty?",
+			"faq-1-link": "/faq"
 		}
 	}
 }
