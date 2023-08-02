@@ -12,6 +12,7 @@ class InputText extends StatelessWidget {
   final bool isReadOnly;
   final Widget? suffixIcon;
   final TextInputType? keyboardType;
+  final int? maxLength;
 
   const InputText({
     super.key,
@@ -25,6 +26,7 @@ class InputText extends StatelessWidget {
     this.isReadOnly = false,
     this.suffixIcon,
     this.keyboardType = TextInputType.text,
+    this.maxLength,
   });
 
   @override
@@ -37,6 +39,7 @@ class InputText extends StatelessWidget {
             // labelText: hintText,
             suffixIcon: suffixIcon,
             floatingLabelBehavior: FloatingLabelBehavior.never,
+            counter: const SizedBox.shrink()
           ),
           style: AppStyles.inputText,
           readOnly: isReadOnly,
@@ -47,6 +50,7 @@ class InputText extends StatelessWidget {
           focusNode: focusNode,
           validator: validator,
           keyboardType: keyboardType,
+          maxLength: maxLength,
         ),
         if (hintText != null)
           Positioned(
