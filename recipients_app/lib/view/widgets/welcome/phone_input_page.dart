@@ -86,6 +86,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                         initialValue: number,
                         selectorConfig: const SelectorConfig(
                           selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                          useBottomSheetSafeArea: true,
                         ),
                         keyboardType: TextInputType.phone,
                         selectorTextStyle: const TextStyle(
