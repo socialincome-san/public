@@ -22,7 +22,7 @@ dependencies:
   intl: ^0.17.0
   # use the lib itself after improvements are merged
   # https://github.com/natintosh/intl_phone_number_input/pull/400
-  intl_phone_number_input: 
+  intl_phone_number_input:
     git:
       url: https://github.com/MDikkii/intl_phone_number_input.git
       ref: safe-area-bottom-sheet
