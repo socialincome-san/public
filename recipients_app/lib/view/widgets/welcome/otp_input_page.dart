@@ -57,6 +57,7 @@ class _OtpInputPageState extends State<OtpInputPage> {
                 ),
               ),
             ),
+            const SizedBox(height: 200),
           ],
         ),
       ),

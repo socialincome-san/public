@@ -41,7 +41,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
@@ -124,19 +124,24 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                 ],
               ),
             ),
-            ButtonBig(
-              isLoading: isLoading,
-              onPressed: () {
-                if (number.phoneNumber != null &&
-                    number.phoneNumber!.isNotEmpty) {
-                  context.read<SignupCubit>().signupWithPhoneNumber(
-                        phoneNumber: number.phoneNumber!,
-                      );
-                }
-              },
-              label: "Continue",
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ButtonBig(
+                  isLoading: isLoading,
+                  onPressed: () {
+                    if (number.phoneNumber != null &&
+                        number.phoneNumber!.isNotEmpty) {
+                      context.read<SignupCubit>().signupWithPhoneNumber(
+                            phoneNumber: number.phoneNumber!,
+                          );
+                    }
+                  },
+                  label: "Continue",
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 32),
           ],
         ),
       ),
