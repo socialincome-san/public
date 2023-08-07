@@ -1,11 +1,9 @@
 'use client';
 
 import { Card, Modal, Typography } from '@socialincome/ui';
+import Image from 'next/image';
 import { useCallback, useRef } from 'react';
-import Image from 'next/image'
-import sdgLogo from './sdgLogo.svg'
-
-
+import sdgLogo from './sdgLogo.svg';
 
 type SectionCardProps = {
 	titles: {
@@ -39,7 +37,7 @@ export function SectionCardSix({ titles, items = [], paragraphs = [], articles =
 								</Typography>
 							</div>
 						))}
-					<Image className="h-auto max-w-xs" src={sdgLogo} alt="" />
+						<Image className="h-auto max-w-xs" src={sdgLogo} alt="" />
 					</div>
 				</Card.Body>
 			</Card>

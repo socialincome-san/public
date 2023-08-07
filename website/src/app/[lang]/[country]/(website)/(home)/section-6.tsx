@@ -20,26 +20,22 @@ export default async function Section6({ params }: DefaultPageProps) {
 						{translator.t('section-6.title-2')}
 					</Typography>
 				</p>
-				<div className="grid grid-rows-5s-1 gap-4 md:grid-rows-2 lg:grid-rows-3">
+				<div className="grid-rows-5s-1 grid gap-4 md:grid-rows-2 lg:grid-rows-3">
 					<SectionCardSix
 						titles={{
 							main: translator.t('section-6.card-1.title'),
 							articles: translator.t('section-6.articles'),
 							faqs: translator.t('section-6.faqs'),
 						}}
-						items={[
-							translator.t('section-6.card-1.item-1')
-						]}
+						items={[translator.t('section-6.card-1.item-1')]}
 						paragraphs={[translator.t('section-5.card-2.paragraph-1')]}
 						articles={[
 							{
 								title: translator.t('section-5.card-1.article-1-title'),
 								author: translator.t('section-5.card-1.article-1-author'),
 								link: translator.t('section-5.card-1.article-1-link'),
-							}
+							},
 						]}
-
-						
 					/>
 
 					<SectionCardSix
@@ -48,20 +44,17 @@ export default async function Section6({ params }: DefaultPageProps) {
 							articles: translator.t('section-6.articles'),
 							faqs: translator.t('section-6.faqs'),
 						}}
-						items={[
-							translator.t('section-6.card-2.item-1'),
-						]}
+						items={[translator.t('section-6.card-2.item-1')]}
 						paragraphs={[translator.t('section-6.card-2.paragraph-1')]}
 						articles={[
 							{
 								title: translator.t('section-6.card-2.article-1-title'),
 								author: translator.t('section-6.card-2.article-1-author'),
 								link: translator.t('section-6.card-2.article-1-link'),
-							}
+							},
 						]}
 					/>
 				</div>
-	
 			</div>
 		</BaseContainer>
 	);
