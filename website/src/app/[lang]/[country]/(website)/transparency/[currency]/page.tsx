@@ -5,10 +5,9 @@ import { BaseContainer, Stats } from '@socialincome/ui';
 import {firestoreAdmin} from "@/firebase/admin";
 import { ContributionStatsCalculator } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
-import Test from "@/app/[lang]/[country]/(website)/transparency/[currency]/test";
 
 export const generateStaticParams = () => ['USD', 'CHF'].map((currency) => ({ currency: currency.toLowerCase() }));
-export const revalidate = 60 // once an hour
+export const revalidate = 3600 // update once an hour
 
 export type TransparencyPageProps = {
 	params: {
@@ -40,7 +39,7 @@ export default async function Page(props: TransparencyPageProps) {
 					<Stats.Stat.Item variant="value">{contributionStats.totalContributions}</Stats.Stat.Item>
 				</Stats.Stat>
 			</Stats>
-			<TransparencyCharts contributionStats={contributionStats} paymentStats={paymentStats} />
+			<TransparencyCharts contributionStats={contributionStats} paymentStats={paymentStats} lang={props.params.lang} currency={props.params.currency} />
 		</BaseContainer>
 	);
 }
