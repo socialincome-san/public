@@ -387,10 +387,11 @@ packages:
   intl_phone_number_input:
     dependency: "direct main"
     description:
-      name: intl_phone_number_input
-      sha256: b812c6e3924e56e65b9684076ccd8eb24126abe0c84091d35d75a25e613a1793
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: safe-area-bottom-sheet
+      resolved-ref: e02f2c92cd17987c3776d51da1f77a1fa47da277
+      url: "https://github.com/MDikkii/intl_phone_number_input.git"
+    source: git
     version: "0.7.3+1"
   io:
     dependency: transitive

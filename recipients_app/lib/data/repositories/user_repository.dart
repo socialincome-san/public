@@ -59,18 +59,20 @@ class UserRepository {
 
   Future<void> verifyPhoneNumber({
     required String phoneNumber,
-    required Function(String) onCodeSend,
+    required Function(String, int?) onCodeSend,
     required Function(FirebaseAuthException) onVerificationFailed,
     required Function(PhoneAuthCredential) onVerificationCompleted,
+    required int? forceResendingToken,
   }) async {
     await firebaseAuth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
+      forceResendingToken: forceResendingToken,
       timeout: const Duration(seconds: 60),
       verificationCompleted: (credential) =>
           onVerificationCompleted(credential),
       verificationFailed: (ex) => onVerificationFailed(ex),
-      codeSent: (verificationId, [forceResendingToken]) =>
-          onCodeSend(verificationId),
+      codeSent: (verificationId, forceResendingToken) =>
+          onCodeSend(verificationId, forceResendingToken),
       codeAutoRetrievalTimeout: (e) {
         log("auto-retrieval timeout");
       },

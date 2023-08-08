@@ -94,6 +94,8 @@ class AccountPageState extends State<AccountPage> {
                   "Failed to update profile. Please try again or contact our support"),
             ),
           );
+        } else if (state.status == AuthStatus.unauthenticated) {
+          Navigator.of(context).pop();
         }
       },
       builder: (context, state) {

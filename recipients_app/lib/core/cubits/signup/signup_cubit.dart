@@ -34,11 +34,13 @@ class SignupCubit extends Cubit<SignupState> {
     try {
       await userRepository.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        onCodeSend: (verificationId) {
+        forceResendingToken: state.forceResendingToken,
+        onCodeSend: (verificationId, forceResendingToken) {
           emit(
             state.copyWith(
               status: SignupStatus.enterVerificationCode,
               phoneNumber: phoneNumber,
+              forceResendingToken: forceResendingToken,
               verificationId: verificationId,
             ),
           );
