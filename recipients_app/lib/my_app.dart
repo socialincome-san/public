@@ -2,6 +2,7 @@ import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/main_app_page.dart";
+import "package:app/view/pages/terms_and_conditions_page.dart";
 import "package:app/view/pages/welcome_page.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
@@ -73,7 +74,11 @@ class MyApp extends StatelessWidget {
                 case AuthStatus.updateRecipientFailure:
                 case AuthStatus.updateRecipientSuccess:
                 case AuthStatus.updatingRecipient:
-                  return const MainAppPage();
+                  if (state.recipient?.termsAccepted == true) {
+                    return const MainAppPage();
+                  } else {
+                    return const TermsAndConditionsPage();
+                  }
               }
             },
           ),
