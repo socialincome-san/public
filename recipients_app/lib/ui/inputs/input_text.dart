@@ -39,6 +39,9 @@ class InputText extends StatelessWidget {
             // labelText: hintText,
             suffixIcon: suffixIcon,
             floatingLabelBehavior: FloatingLabelBehavior.never,
+            // when maxLength is added TextFormField shows counter e.g. 0/1, 
+            // we don't need it and one of the solutions is to provide SizedBox.shrink()
+            // see https://stackoverflow.com/a/58819500
             counter: const SizedBox.shrink()
           ),
           style: AppStyles.inputText,
