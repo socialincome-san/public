@@ -29,6 +29,8 @@ export default function TransparencyCharts({
 			staleTime: Infinity, // never refetch
 		},
 	);
+	console.log(contributionStats)
+	console.log(paymentStats)
 
 	return (
 		<div className="grid grid-cols-1 gap-8  lg:grid-cols-2">
