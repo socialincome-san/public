@@ -1,12 +1,12 @@
 'use client';
 
+import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { ContributionStats } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { PaymentStats } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
 import { Typography } from '@socialincome/ui';
 import { useQuery } from '@tanstack/react-query';
 import { Area, AreaChart, Bar, BarChart, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import {WebsiteLanguage} from "@/i18n";
 
 type ContributionStatsProps = {
 	contributionStats: ContributionStats;
@@ -19,7 +19,7 @@ export default function TransparencyCharts({
 	contributionStats,
 	paymentStats,
 	lang,
-	currency
+	currency,
 }: ContributionStatsProps) {
 	const { data: translator } = useQuery(
 		[lang],
@@ -32,8 +32,8 @@ export default function TransparencyCharts({
 			staleTime: Infinity, // never refetch
 		},
 	);
-	console.log(contributionStats)
-	console.log(paymentStats)
+	console.log(contributionStats);
+	console.log(paymentStats);
 	return (
 		<div className="grid grid-cols-1 gap-8  lg:grid-cols-2">
 			<div className="flex flex-col space-y-4">
