@@ -14,8 +14,6 @@ class OtpInputPage extends StatefulWidget {
 class _OtpInputPageState extends State<OtpInputPage> {
   @override
   Widget build(BuildContext context) {
-    final isLoading = context.watch<SignupCubit>().state.status ==
-        SignupStatus.loadingVerificationCode;
     final phoneNumber = context.watch<SignupCubit>().state.phoneNumber ?? "";
 
     return Scaffold(

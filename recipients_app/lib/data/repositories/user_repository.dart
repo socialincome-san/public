@@ -71,9 +71,8 @@ class UserRepository {
       verificationCompleted: (credential) =>
           onVerificationCompleted(credential),
       verificationFailed: (ex) => onVerificationFailed(ex),
-      codeSent: (verificationId, forceResendingToken) {
-        onCodeSend(verificationId, forceResendingToken);
-      },
+      codeSent: (verificationId, forceResendingToken) =>
+          onCodeSend(verificationId, forceResendingToken),
       codeAutoRetrievalTimeout: (e) {
         log("auto-retrieval timeout");
       },
