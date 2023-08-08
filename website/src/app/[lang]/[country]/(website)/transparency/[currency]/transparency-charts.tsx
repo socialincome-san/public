@@ -11,27 +11,24 @@ import { Area, AreaChart, Bar, BarChart, Line, LineChart, ResponsiveContainer, T
 type ContributionStatsProps = {
 	contributionStats: ContributionStats;
 	paymentStats: PaymentStats;
-} & TransparencyPageProps;
+};
 
 export default function TransparencyCharts({
-	params: { lang, currency },
 	contributionStats,
 	paymentStats,
 }: ContributionStatsProps) {
-	const { data: translator } = useQuery(
-		[lang],
-		async () =>
-			Translator.getInstance({
-				language: lang,
-				namespaces: ['website-transparency'],
-			}),
-		{
-			staleTime: Infinity, // never refetch
-		},
-	);
+	// const { data: translator } = useQuery(
+	// 	[lang],
+	// 	async () =>
+	// 		Translator.getInstance({
+	// 			language: lang,
+	// 			namespaces: ['website-transparency'],
+	// 		}),
+	// 	{
+	// 		staleTime: Infinity, // never refetch
+	// 	},
+	// );
 	console.log(contributionStats)
-	console.log(paymentStats)
-
 	return (
 		<div className="grid grid-cols-1 gap-8  lg:grid-cols-2">
 			<div className="flex flex-col space-y-4">
@@ -75,9 +72,9 @@ export default function TransparencyCharts({
 					<LineChart data={paymentStats.cumulativePaymentsByMonth}>
 						<XAxis dataKey="month" />
 						<YAxis />
-						<Tooltip
-							formatter={(value) => [translator?.t('finances.totalPayoutTooltip', { context: { currency, value } })]}
-						/>
+						{/*<Tooltip*/}
+						{/*	// formatter={(value) => [translator?.t('finances.totalPayoutTooltip', { context: { currency, value } })]}*/}
+						{/*/>*/}
 						<Line dataKey="payment" stroke="#3980d0" />
 					</LineChart>
 				</ResponsiveContainer>
