@@ -55,4 +55,8 @@ jobs:
       #          action: auto
 
       - name: Test build
-        run: npm run website:build:emulator
+        # To use the emulator during the build, we need to rename the .env.development file to .env.production.
+        # Next.js doesn't now allow to use NODE_ENV=development in the build process.
+        run: |
+          mv website/.env.development website/.env.production
+          npm run website:build:emulator
