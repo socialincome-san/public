@@ -6,8 +6,7 @@ import { StripeContext } from '@/components/stripe/stripe-context-provider';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
-// TODO: load key from env
-const stripePromise = loadStripe('pk_test_M5VnV50Xby2B0EROhPybQ8kF00WWbjDJk2');
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 interface PaymentIntentFetcherProps {
 	amount: number; // in smallest currency unit, e.g. cents
