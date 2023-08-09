@@ -40,7 +40,7 @@ export default function Section2({ params }: DefaultPageProps) {
 
 	useEffect(() => {
 		void player?.pause();
-	}, [showModal]);
+	}, [player, showModal]);
 
 	return (
 		<BaseContainer className="bg-base-yellow">

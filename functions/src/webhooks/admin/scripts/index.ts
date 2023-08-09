@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
-import Stripe from 'stripe';
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
+import { initializeStripe } from '../../../../../shared/src/stripe';
 import { STRIPE_API_READ_KEY } from '../../../config';
 import { StripeWebhook } from '../../stripe/StripeWebhook';
 import { PaymentsManager } from './PaymentsManager';
@@ -48,7 +48,7 @@ const batchImportStripeChargesFunction = functions
 		const stripeBatchSize = 100; // max batch size supported by stripe
 		const charges = [];
 		try {
-			const stripe = new Stripe(STRIPE_API_READ_KEY, { apiVersion: '2022-11-15' });
+			const stripe = initializeStripe(STRIPE_API_READ_KEY);
 			functions.logger.info('Querying Stripe API...');
 			for await (const charge of stripe.charges.list({
 				expand: ['data.balance_transaction', 'data.invoice'],
