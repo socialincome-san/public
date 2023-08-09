@@ -1,11 +1,11 @@
 'use client';
 
-import { DefaultPageProps } from '@/app/[lang]/[country]';
+import { DefaultLayoutProps } from '@/app/[lang]/[country]';
 import { usePathname } from 'next/navigation';
 import { PropsWithChildren } from 'react';
 import Navbar from './navbar';
 
-export default function NavbarWrapper({ params }: PropsWithChildren<DefaultPageProps>) {
+export default function NavbarWrapper({ params }: PropsWithChildren<DefaultLayoutProps>) {
 	const pathname = usePathname();
 	const baseSegment = pathname?.split('/')[3];
 	let backgroundColor;

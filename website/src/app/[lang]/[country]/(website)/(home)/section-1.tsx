@@ -1,6 +1,7 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Button, Input, Typography } from '@socialincome/ui';
+import { BaseContainer, Typography } from '@socialincome/ui';
+import Section1Input from './section-1-input';
 
 export default async function Section1({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
@@ -22,10 +23,7 @@ export default async function Section1({ params }: DefaultPageProps) {
 				</div>
 				<div className="flex flex-1 flex-col p-4 text-center lg:p-8 lg:text-left">
 					<Typography size="2xl">{translator.t('section-1.income-text')}</Typography>
-					<Input color="secondary" placeholder="6700" className="my-4" />
-					<Button color="secondary" size="lg" className="btn-block">
-						Show my Impact
-					</Button>
+					<Section1Input text={translator.t('section-1.income-text')} />
 				</div>
 			</div>
 		</BaseContainer>

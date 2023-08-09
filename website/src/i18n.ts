@@ -10,26 +10,6 @@ export const defaultLanguage = 'en';
 export type WebsiteLanguage = Extract<Language, 'en' | 'de' | 'kri'>;
 export const websiteLanguages: WebsiteLanguage[] = ['en', 'de', 'kri'];
 
-const loadDictionary = async (locale: WebsiteLanguage, namespace: string) =>
-	import(`@socialincome/shared/locales/${locale}/${namespace}.json`).then((module) => module.default);
-
-export type TranslateFunctionO = (key: string, params?: { [p: string]: string | number }) => string;
-export const getTranslator = async (locale: WebsiteLanguage, namespace: string): Promise<TranslateFunctionO> => {
-	const dictionary = await loadDictionary(locale, namespace);
-
-	return (key: string, params?: { [key: string]: string | number }) => {
-		let translation = key.split('.').reduce((obj, key) => obj && obj[key], dictionary);
-		if (!translation) return key;
-
-		if (params && Object.entries(params).length) {
-			Object.entries(params).forEach(([key, value]) => {
-				translation = translation!.replace(`{{ ${key} }}`, String(value));
-			});
-		}
-		return translation;
-	};
-};
-
 const findBestLocale = (request: NextRequest) => {
 	const options = langParser.parse(request.headers.get('Accept-Language') || 'en');
 	let language;

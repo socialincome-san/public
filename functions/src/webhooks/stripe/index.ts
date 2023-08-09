@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions';
-import Stripe from 'stripe';
+import { initializeStripe } from '../../../../shared/src/stripe';
 import { STRIPE_API_READ_KEY, STRIPE_WEBHOOK_SECRET } from '../../config';
 import { StripeWebhook } from './StripeWebhook';
 
@@ -8,7 +8,7 @@ import { StripeWebhook } from './StripeWebhook';
  * Adds the relevant information to the contributions subcollection of users.
  */
 export default functions.https.onRequest(async (request, response) => {
-	const stripe = new Stripe(STRIPE_API_READ_KEY, { apiVersion: '2022-11-15' });
+	const stripe = initializeStripe(STRIPE_API_READ_KEY);
 	const stripeWebhook = new StripeWebhook();
 	try {
 		const sig = request.headers['stripe-signature']!;
