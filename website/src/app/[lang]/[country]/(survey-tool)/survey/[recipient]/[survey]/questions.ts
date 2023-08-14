@@ -378,7 +378,7 @@ export const longEnoughPage = (t: TranslateFunction) => {
 				type: 'radiogroup',
 				name: 'longEnough',
 				isRequired: true,
-				title: t('survey.questions.longEnoughTitle'),
+				title: t('survey.questions.longEnoughTitleV1'),
 				choices: yesNoChoices(t),
 			},
 		],
