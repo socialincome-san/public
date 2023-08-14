@@ -49,7 +49,7 @@ export default function Page({ params, searchParams }: DefaultPageProps) {
 						<Input
 							type="number"
 							name="amount"
-							placeholder="Email"
+							placeholder="Amount" // TODO: i18n
 							onChange={handleChange}
 							onBlur={handleBlur}
 							value={values.amount}

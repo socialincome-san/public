@@ -42,7 +42,7 @@ export default function Page({ params }: DefaultPageProps) {
 						<Input
 							type="email"
 							name="email"
-							placeholder="Email"
+							placeholder="Email" // TODO: i18n
 							onChange={handleChange}
 							onBlur={handleBlur}
 							value={values.email}
@@ -51,7 +51,7 @@ export default function Page({ params }: DefaultPageProps) {
 						<Input
 							type="password"
 							name="password"
-							placeholder="Password"
+							placeholder="Password" // TODO: i18n
 							onChange={handleChange}
 							onBlur={handleBlur}
 							value={values.password}

@@ -42,7 +42,7 @@ export function CreateUserForm({ checkoutSessionId, email }: CreateUserFormProps
 					<Input
 						type="password"
 						name="password"
-						placeholder="Password"
+						placeholder="Password" // TODO: i18n
 						onChange={handleChange}
 						onBlur={handleBlur}
 						value={values.password}
