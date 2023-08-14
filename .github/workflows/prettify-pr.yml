@@ -5,6 +5,8 @@ jobs:
   prettify:
     name: Prettify
     runs-on: ubuntu-latest
+    # This action only works on the original repository, not on forks
+    if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
