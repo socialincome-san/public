@@ -7,7 +7,6 @@ export function SILogo({ className, ...props }: HTMLAttributes<SVGElement>) {
 			version="1.1"
 			xmlns="http://www.w3.org/2000/svg"
 			xmlSpace="preserve"
-			id="Layer_1"
 			fill="currentColor"
 			aria-hidden={true}
 			aria-labelledby="si-logo-title"
