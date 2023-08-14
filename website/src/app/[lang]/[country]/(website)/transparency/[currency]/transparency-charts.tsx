@@ -1,6 +1,6 @@
 'use client';
 
-import { TransparencyPageProps } from '@/app/[lang]/[country]/(website)/transparency/[currency]/page';
+import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { ContributionStats } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { PaymentStats } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
@@ -11,12 +11,15 @@ import { Area, AreaChart, Bar, BarChart, Line, LineChart, ResponsiveContainer, T
 type ContributionStatsProps = {
 	contributionStats: ContributionStats;
 	paymentStats: PaymentStats;
-} & TransparencyPageProps;
+	lang: WebsiteLanguage;
+	currency: string;
+};
 
 export default function TransparencyCharts({
-	params: { lang, currency },
 	contributionStats,
 	paymentStats,
+	lang,
+	currency,
 }: ContributionStatsProps) {
 	const { data: translator } = useQuery(
 		[lang],
@@ -31,7 +34,6 @@ export default function TransparencyCharts({
 	);
 	console.log(contributionStats);
 	console.log(paymentStats);
-
 	return (
 		<div className="grid grid-cols-1 gap-8  lg:grid-cols-2">
 			<div className="flex flex-col space-y-4">

@@ -5,6 +5,10 @@ export interface DefaultParams {
 	country: ValidCountry;
 }
 
-export interface DefaultPageProps {
+export interface DefaultLayoutProps {
 	params: DefaultParams;
+}
+
+export interface DefaultPageProps extends DefaultLayoutProps {
+	searchParams: Record<string, string>;
 }

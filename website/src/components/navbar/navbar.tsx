@@ -1,4 +1,4 @@
-import { DefaultPageProps } from '@/app/[lang]/[country]';
+import { DefaultLayoutProps } from '@/app/[lang]/[country]';
 import LanguageSwitcher from '@/components/language-switcher/language-switcher';
 import { SILogo } from '@/components/logos/si-logo';
 import { Bars3BottomRightIcon } from '@heroicons/react/24/outline';
@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 type NavbarProps = {
 	backgroundColor?: string;
-} & DefaultPageProps;
+} & DefaultLayoutProps;
 
 export default async function Navbar({ params, backgroundColor }: NavbarProps) {
 	const translator = await Translator.getInstance({
