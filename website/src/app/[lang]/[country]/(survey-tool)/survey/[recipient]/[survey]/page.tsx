@@ -1,6 +1,6 @@
 'use client';
 
-import { auth } from '@/firebase';
+import { auth } from '@/firebase/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { User, signInWithEmailAndPassword } from 'firebase/auth';
 import { useSearchParams } from 'next/navigation';
@@ -53,7 +53,7 @@ export default function Page({ params }: SurveyPageProps) {
 				<input
 					name="password"
 					type="text"
-					placeholder="Password"
+					placeholder="Password" // TODO: i18n
 					className="input input-bordered mx-auto w-full max-w-xs"
 				/>
 				<button type="submit" className="btn btn-primary mx-auto">
