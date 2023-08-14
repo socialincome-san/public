@@ -37,7 +37,7 @@ export function SectionCardSix({ titles, items = [], paragraphs = [], articles =
 								</Typography>
 							</div>
 						))}
-					<Image className="w-auto max-w-xs" src={sdgLogo} alt="Sustainable Development Goals Logo" />
+						<Image className="w-auto max-w-xs" src={sdgLogo} alt="Sustainable Development Goals Logo" />
 					</div>
 				</Card.Body>
 			</Card>
