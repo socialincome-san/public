@@ -1,7 +1,5 @@
 import { getOrInitializeFirebaseAdmin } from '../../shared/src/firebase/admin/app';
-import { AuthAdmin } from '../../shared/src/firebase/admin/AuthAdmin';
 import { FirestoreAdmin } from '../../shared/src/firebase/admin/FirestoreAdmin';
-import { StorageAdmin } from '../../shared/src/firebase/admin/StorageAdmin';
 import {
 	ADMIN_USER_FIRESTORE_PATH,
 	AdminUser,
@@ -13,24 +11,6 @@ import {
 	RECIPIENT_FIRESTORE_PATH,
 	RecipientProgramStatus,
 } from '../../shared/src/types';
-
-interface AbstractFirebaseFunctionProps {
-	firestoreAdmin?: FirestoreAdmin;
-	storageAdmin?: StorageAdmin;
-	authAdmin?: AuthAdmin;
-}
-
-export abstract class AbstractFirebaseAdmin {
-	protected readonly firestoreAdmin: FirestoreAdmin;
-	protected readonly storageAdmin: StorageAdmin;
-	protected readonly authAdmin: AuthAdmin;
-
-	constructor(props?: AbstractFirebaseFunctionProps) {
-		this.firestoreAdmin = props?.firestoreAdmin ?? new FirestoreAdmin();
-		this.storageAdmin = props?.storageAdmin ?? new StorageAdmin();
-		this.authAdmin = props?.authAdmin ?? new AuthAdmin();
-	}
-}
 
 export async function initializeGlobalTestData(projectId?: string) {
 	const firestoreAdmin = new FirestoreAdmin(getOrInitializeFirebaseAdmin({ projectId }));

@@ -27,6 +27,7 @@ export type UserAddress = {
 };
 
 export type User = {
+	authUserId?: string;
 	personal?: {
 		name?: string; // TODO: discuss if should be renamed to firstname
 		lastname?: string;
@@ -43,7 +44,7 @@ export type User = {
 	institution?: boolean;
 	language?: Language;
 	location?: string; // TODO: discuss if still needed
-	currency?: string; // TODO: proper typing
+	currency?: string | null; // TODO: proper typing
 	contributor_organisations?: EntityReference[];
 };
 

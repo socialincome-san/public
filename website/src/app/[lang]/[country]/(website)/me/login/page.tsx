@@ -1,33 +1,33 @@
 'use client';
 
 import { DefaultPageProps } from '@/app/[lang]/[country]';
-import { auth } from '@/firebase';
+import { auth } from '@/firebase/client';
 import { BaseContainer, Button, Input } from '@socialincome/ui';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { browserSessionPersistence, signInWithEmailAndPassword } from 'firebase/auth';
 import { Formik } from 'formik';
 import { FormikHelpers } from 'formik/dist/types';
+import { useRouter } from 'next/navigation';
 
 type LoginFormValues = {
 	email: string;
 	password: string;
 };
 
-export default function Page(props: DefaultPageProps) {
-	const initialValues: LoginFormValues = { email: '', password: '' };
+export default function Page({ params }: DefaultPageProps) {
+	const router = useRouter();
 
-	const onSubmit = (values: LoginFormValues, formikHelpers: FormikHelpers<LoginFormValues>) => {
-		signInWithEmailAndPassword(auth, values.email, values.password);
-		console.log('yay');
-		setTimeout(() => {
-			alert(JSON.stringify(values, null, 2));
-			formikHelpers.setSubmitting(false);
-		}, 4000);
+	const onSubmit = async (values: LoginFormValues, { setSubmitting }: FormikHelpers<LoginFormValues>) => {
+		setSubmitting(true);
+		await auth.setPersistence(browserSessionPersistence);
+		await signInWithEmailAndPassword(auth, values.email, values.password);
+		setSubmitting(false);
+		router.push(`${params.lang}/${params.country}/me`);
 	};
 
 	return (
 		<BaseContainer className="bg-base-blue">
 			<Formik
-				initialValues={initialValues}
+				initialValues={{ email: '', password: '' }}
 				validate={(values) => {
 					if (!values.email) {
 						return { email: 'Required' };
@@ -42,7 +42,7 @@ export default function Page(props: DefaultPageProps) {
 						<Input
 							type="email"
 							name="email"
-							placeholder="Email"
+							placeholder="Email" // TODO: i18n
 							onChange={handleChange}
 							onBlur={handleBlur}
 							value={values.email}
@@ -51,7 +51,7 @@ export default function Page(props: DefaultPageProps) {
 						<Input
 							type="password"
 							name="password"
-							placeholder="Password"
+							placeholder="Password" // TODO: i18n
 							onChange={handleChange}
 							onBlur={handleBlur}
 							value={values.password}

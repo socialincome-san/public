@@ -1,31 +1,33 @@
 import { Timestamp } from '@google-cloud/firestore';
 import { describe, test } from '@jest/globals';
-import functions from 'firebase-functions-test';
 import Stripe from 'stripe';
-import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
-import { getOrInitializeFirebaseAdmin } from '../../../../shared/src/firebase/admin/app';
-import { Contribution, ContributionSourceKey, StatusKey, User, UserStatusKey } from '../../../../shared/src/types';
-import { StripeWebhook } from './StripeWebhook';
+import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
+import { getOrInitializeFirebaseAdmin } from '../firebase/admin/app';
+import { Contribution, ContributionSourceKey, StatusKey, User, UserStatusKey } from '../types';
+import { StripeEventHandler } from './StripeEventHandler';
 
 describe('stripeWebhook', () => {
 	const projectId = 'test-' + new Date().getTime();
-	const testEnv = functions({ projectId });
 	const firestoreAdmin = new FirestoreAdmin(getOrInitializeFirebaseAdmin({ projectId: projectId }));
-	const stripeWebhook = new StripeWebhook();
+	const stripeWebhook = new StripeEventHandler(process.env.STRIPE_SECRET_KEY!, firestoreAdmin);
 
-	beforeEach(async () => {
-		await testEnv.firestore.clearFirestoreData({ projectId });
+	// Mock the Stripe API call
+	jest.spyOn(stripeWebhook.stripe.customers, 'retrieve').mockImplementation(async () => {
+		return {
+			lastResponse: { headers: {}, requestId: 'req_123', statusCode: 1 },
+			...testCustomer,
+		};
 	});
 
 	test('storeCharge for inexisting user', async () => {
-		const initialUser = await stripeWebhook.findUser(testCharge);
+		const initialUser = await stripeWebhook.findUser(testCustomer);
 		expect(initialUser).toBeUndefined();
 
 		const ref = await stripeWebhook.storeCharge(testCharge);
 		const contribution = await ref!.get();
 		expect(contribution.data()).toEqual(expectedContribution);
 
-		const createdUser = await stripeWebhook.findUser(testCharge);
+		const createdUser = await stripeWebhook.findUser(testCustomer);
 		expect(createdUser!.data()).toEqual(expectedUser);
 	});
 
@@ -48,6 +50,48 @@ describe('stripeWebhook', () => {
 		const contribution = await ref!.get();
 		expect(contribution.data()).toEqual(expectedContribution);
 	});
+
+	// TODO: add test for stripeWebhook.handleCheckoutSessionCompletedEvent()
+	// test('handleCheckoutSessionCompletedEvent', async () => {
+	// 	await stripeWebhook.handleCheckoutSessionCompletedEvent('dummy_id', 'test-user');
+	// });
+
+	const testCustomer: Stripe.Customer = {
+		id: 'cus_123',
+		object: 'customer',
+		address: {
+			city: null,
+			country: 'US',
+			line1: null,
+			line2: null,
+			postal_code: null,
+			state: null,
+		},
+		balance: 0,
+		created: 1691595992,
+		currency: 'USD',
+		default_source: null,
+		delinquent: false,
+		description: null,
+		discount: null,
+		email: 'test@socialincome.org',
+		invoice_prefix: 'D4D6270R',
+		invoice_settings: {
+			custom_fields: null,
+			default_payment_method: null,
+			footer: null,
+			rendering_options: null,
+		},
+		livemode: false,
+		metadata: {},
+		name: 'Test User',
+		next_invoice_sequence: 2,
+		phone: null,
+		preferred_locales: ['en-US'],
+		shipping: null,
+		tax_exempt: 'none',
+		test_clock: null,
+	};
 
 	const testCharge: Stripe.Charge = {
 		id: 'ch_123',
@@ -93,7 +137,7 @@ describe('stripeWebhook', () => {
 				state: null,
 			},
 			email: 'test@socialincome.org',
-			name: 'test user',
+			name: 'Test User',
 			phone: null,
 		},
 		calculated_statement_descriptor: 'SOCIAL INCOME',
@@ -353,8 +397,8 @@ describe('stripeWebhook', () => {
 
 	const expectedUser: User = {
 		personal: {
-			name: 'test',
-			lastname: 'user',
+			name: 'Test',
+			lastname: 'User',
 		},
 		email: 'test@socialincome.org',
 		stripe_customer_id: 'cus_123',
