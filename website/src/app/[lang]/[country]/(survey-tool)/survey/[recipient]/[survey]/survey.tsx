@@ -1,4 +1,4 @@
-import { firestore } from '@/firebase';
+import { firestore } from '@/firebase/client';
 import { WebsiteLanguage } from '@/i18n';
 import {
 	RECIPIENT_FIRESTORE_PATH,

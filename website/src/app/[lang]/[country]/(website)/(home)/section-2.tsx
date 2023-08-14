@@ -30,7 +30,7 @@ export default function Section2({ params }: DefaultPageProps) {
 		if (playerRef.current && translator) {
 			setPlayer(
 				new Player(playerRef.current, {
-					id: Number(translator?.t('section-2.vimeo-video-id')),
+					id: Number(translator.t('section-2.vimeo-video-id')),
 					controls: true,
 					responsive: true,
 				}),
