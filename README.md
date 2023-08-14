@@ -2,7 +2,6 @@
 
 ![Social Income Logo](https://github.com/socialincome-san/public/assets/6095849/e33d03b3-7502-46cc-bfe8-f70ff4374a0e)
 
-
 https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-ade9-2cc0e153d947.mp4
 
 ## Social Income is a radically simple solution in the fight against poverty. We turn 1% of anyone's salary into an unconditional basic income for people living in poverty – sent directly to their mobile phones. The tools that make this possible are built and continuously improved upon by an open source community, who use their technical skills to take on the [SDG 1](https://sdgs.un.org/goals/goal1) and the [SDG 10](https://sdgs.un.org/goals/goal10).
@@ -18,33 +17,45 @@ Finding a good issue: `↗`
 
 ### You can contribute to all three tools that run Social Income:
 
-|                  |                                   Admin Tool                                    |                            Website                            |                                     Mobile App                                      |
-| ---------------- | :-----------------------------------------------------------------------------: | :-----------------------------------------------------------: | :---------------------------------------------------------------------------------: |
-|       |               ![](https://github.com/socialincome-san/public/assets/6095849/42a8ce3e-4ff3-4d25-a298-1b4bc1570b0a)              |            ![](https://github.com/socialincome-san/public/assets/6095849/e4dbf692-d4b9-4253-88ea-2da7970919d8)            |                          ![](https://github.com/socialincome-san/public/assets/6095849/94d0f653-d894-4e9e-ab0d-b1cd8bfe9eab)                          |
-| **Purpose**      |               Make it simple to manage payments, contributors and recipients              |            Raising donations and inform the public            |                          Make it simple for recipients to manage payments and surveys                          |
-| **Instructions** |                            [Readme](admin/README.md)                            |                  [Readme](website/README.md)                  | [Readme](recipients_app/README.md) / [Contributing](recipients_app/CONTRIBUTING.md) |
-| **Localhost**    | [localhost:3000](http://localhost:3000) / [4000](http://localhost:4000) |            [localhost:3001](http://localhost:3001)            |                                          –                                          |
-| **Staging**      |    [staging-admin.socialincome.org](https://staging-admin.socialincome.org)     | [staging.socialincome.org](https://staging.socialincome.org/) |                                          Testflight                                          |
-| **Production**         |            [admin.socialincome.org](https://admin.socialincome.org)             |        [socialincome.org](https://socialincome.org)\*         |                                  [iOS](https://apps.apple.com/ch/app/social-income/id6444860109?l=en-GB) / [Android](https://play.google.com/store/apps/details?id=org.socialincome.app&pcampaignid=web_share)                                 |
+|                  |                                             Admin Tool                                              |                                               Website                                               |                                                                                  Mobile App                                                                                   |
+| ---------------- | :-------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                  | ![](https://github.com/socialincome-san/public/assets/6095849/42a8ce3e-4ff3-4d25-a298-1b4bc1570b0a) | ![](https://github.com/socialincome-san/public/assets/6095849/e4dbf692-d4b9-4253-88ea-2da7970919d8) |                                      ![](https://github.com/socialincome-san/public/assets/6095849/94d0f653-d894-4e9e-ab0d-b1cd8bfe9eab)                                      |
+| **Purpose**      |                   Make it simple to manage payments, contributors and recipients                    |                               Raising donations and inform the public                               |                                                         Make it simple for recipients to manage payments and surveys                                                          |
+| **Instructions** |                                      [Readme](admin/README.md)                                      |                                     [Readme](website/README.md)                                     |                                              [Readme](recipients_app/README.md) / [Contributing](recipients_app/CONTRIBUTING.md)                                              |
+| **Localhost**    |               [localhost:3000](http://localhost:3000) / [4000](http://localhost:4000)               |                               [localhost:3001](http://localhost:3001)                               |                                                                                       –                                                                                       |
+| **Staging**      |              [staging-admin.socialincome.org](https://staging-admin.socialincome.org)               |                    [staging.socialincome.org](https://staging.socialincome.org/)                    |                                                                                  Testflight                                                                                   |
+| **Production**   |                      [admin.socialincome.org](https://admin.socialincome.org)                       |                           [socialincome.org](https://socialincome.org)\*                            | [iOS](https://apps.apple.com/ch/app/social-income/id6444860109?l=en-GB) / [Android](https://play.google.com/store/apps/details?id=org.socialincome.app&pcampaignid=web_share) |
 
-
-The website and admin tool use [cloud functions](functions/README.md). For frontend developers: you can also develop UI components with
+The website and admin tool use [cloud functions](functions/README.md).
+For frontend developers: you can also develop UI components with
 Tailwind CSS independent of the website ([Readme](ui/README.md) /
 [Contributing](ui/CONTRIBUTING.md)). The components are all collected in
 our [Storybook](https://socialincome-san.github.io/public/).
 
-\* The website socialincome.org is still on a private repo. On this repo we currently rebuild the site with NextJS, Tailwind CSS and React. You can visit the website in the making on
+\* The website socialincome.org is still on a private repo. On this repo
+we currently rebuild the site with NextJS, Tailwind CSS and React. You
+can visit the website in the making on
 [staging](https://staging.socialincome.org/) or
 [production](https://prod.socialincome.org/).
 
 #### Basic steps to contribute
-1. Choose an [issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue) and leave a comment that you'd like to work on it (upon we assign it to you)
-2. Clone the repo and work on it
-3. Make a PR and wait for review - it will be merged by team if approved without comment
-7. Your code is now merged into `main` branch and deployed on the staging environment ([admin](https://staging-admin.socialincome.org)/[web](https://staging.socialincome.org/))
-8. Your code is then released on the production environment with the next release
 
-Contributors who have done a few commits can deploy directly on the staging environment without approval ([upon request](https://github.com/orgs/socialincome-san/teams/si-open-source-contributors)). 
+1. Choose an
+   [issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue)
+   and leave a comment that you'd like to work on it (upon we assign it
+   to you)
+2. Clone the repo and work on it
+3. Make a PR and wait for review - it will be merged by team if approved
+   without comment
+4. Your code is now merged into `main` branch and deployed on the
+   staging environment
+   ([admin](https://staging-admin.socialincome.org)/[web](https://staging.socialincome.org/))
+5. Your code is then released on the production environment with the
+   next release
+
+Contributors who have done a few commits can deploy directly on the
+staging environment without approval
+([upon request](https://github.com/orgs/socialincome-san/teams/si-open-source-contributors)).
 
 ### Basic Development Setup
 
@@ -117,8 +128,8 @@ npm run format-code
 
 ### Deployment
 
-When a PR is merged into the `main` branch, the code is 
-deployed to the staging environment after being authorized by a core developer. See the
+When a PR is merged into the `main` branch, the code is deployed to the
+staging environment after being authorized by a core developer. See the
 [Github Actions](./.github/workflows) for more details.
 
 Production deployments are done manually through GitHub releases. A
