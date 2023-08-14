@@ -2,7 +2,11 @@ import { Config } from 'tailwindcss';
 import * as colors from 'tailwindcss/colors';
 
 export default {
-	content: ['./src/**/*.{js,jsx,ts,tsx,mdx,html}'],
+	content: [
+		'./src/**/*.{js,jsx,ts,tsx,mdx,html}',
+		'../node_modules/daisyui/dist/**/*.js',
+		'../node_modules/react-daisyui/dist/**/*.js',
+	],
 	theme: {
 		extend: {
 			colors: {
