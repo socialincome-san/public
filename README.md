@@ -32,8 +32,8 @@ Tailwind CSS independent of the website ([Readme](ui/README.md) /
 [Contributing](ui/CONTRIBUTING.md)). The components are all collected in
 our [Storybook](https://socialincome-san.github.io/public/).
 
-\* The website socialincome.org is still on a private repo. On this repo
-we currently rebuild the site with NextJS, Tailwind CSS and React. You
+\* The website socialincome.org is still on a private repo. In this repo,
+we are rebuilding the existing website with Next.js, DaisyUI and Tailwind CSS. You
 can visit the website in the making on
 [staging](https://staging.socialincome.org/) or
 [production](https://prod.socialincome.org/).
@@ -55,7 +55,7 @@ can visit the website in the making on
 
 Contributors who have done a few commits can deploy directly on the
 staging environment without approval
-([upon request](https://github.com/orgs/socialincome-san/teams/si-open-source-contributors)).
+([upon request](mailto:dev@socialincome.org)).
 
 ### Basic Development Setup
 
