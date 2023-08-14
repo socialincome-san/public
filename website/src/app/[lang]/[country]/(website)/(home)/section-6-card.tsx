@@ -37,7 +37,7 @@ export function SectionCardSix({ titles, items = [], paragraphs = [], articles =
 								</Typography>
 							</div>
 						))}
-						<Image className="h-auto max-w-xs" src={sdgLogo} alt="" />
+					<Image className="w-auto max-w-xs" src={sdgLogo} alt="Sustainable Development Goals Logo" />
 					</div>
 				</Card.Body>
 			</Card>
@@ -54,23 +54,6 @@ export function SectionCardSix({ titles, items = [], paragraphs = [], articles =
 							{paragraph}
 						</Typography>
 					))}
-					{/* {articles.length > 0 && (
-						<div>
-							<Typography size="xl" weight="medium">
-								{titles.articles}
-							</Typography>
-							<div className="grid grid-cols-1 divide-y">
-								{articles.map((article, index) => (
-									<div key={index} className="py-4">
-										<Typography>{article.author}</Typography>
-										<Link href={article.link} target="_blank">
-											<Typography color="secondary">{article.title}</Typography>
-										</Link>
-									</div>
-								))}
-							</div>
-						</div>
-					)} */}
 				</Modal.Body>
 			</Modal>
 		</>
