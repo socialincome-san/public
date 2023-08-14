@@ -1,25 +1,22 @@
+import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
 import * as functions from 'firebase-functions';
-import { initializeStripe } from '../../../../shared/src/stripe';
+import Stripe from 'stripe';
+import { StripeEventHandler } from '../../../../shared/src/stripe/StripeEventHandler';
 import { STRIPE_API_READ_KEY, STRIPE_WEBHOOK_SECRET } from '../../config';
-import { StripeWebhook } from './StripeWebhook';
 
 /**
  * Stripe webhook to ingest charge events into firestore.
  * Adds the relevant information to the contributions subcollection of users.
  */
 export default functions.https.onRequest(async (request, response) => {
-	const stripe = initializeStripe(STRIPE_API_READ_KEY);
-	const stripeWebhook = new StripeWebhook();
+	const stripeEventHandler = new StripeEventHandler(STRIPE_API_READ_KEY, new FirestoreAdmin());
 	try {
 		const sig = request.headers['stripe-signature']!;
-		const event = stripe.webhooks.constructEvent(request.rawBody, sig, STRIPE_WEBHOOK_SECRET);
+		const event = stripeEventHandler.constructWebhookEvent(request.rawBody, sig, STRIPE_WEBHOOK_SECRET);
 		switch (event.type) {
-			case 'charge.succeeded': {
-				await stripeWebhook.handleChargeEvent(event, stripe);
-				break;
-			}
+			case 'charge.succeeded':
 			case 'charge.failed': {
-				await stripeWebhook.handleChargeEvent(event, stripe);
+				await stripeEventHandler.handleChargeEvent(event.data.object as Stripe.Charge);
 				break;
 			}
 			default: {

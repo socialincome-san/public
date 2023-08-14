@@ -1,7 +1,8 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[country]';
 import LanguageSwitcher from '@/components/language-switcher/language-switcher';
 import { SILogo } from '@/components/logos/si-logo';
-import { Bars3BottomRightIcon } from '@heroicons/react/24/outline';
+import { UserCircleIcon } from '@heroicons/react/24/outline';
+import { Bars3BottomRightIcon } from '@heroicons/react/24/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Navbar as DaisyNavbar, Dropdown, Menu, Typography } from '@socialincome/ui';
 import classNames from 'classnames';
@@ -31,14 +32,6 @@ export default async function Navbar({ params, backgroundColor }: NavbarProps) {
 
 				<DaisyNavbar.Center>
 					<Menu horizontal className="hidden lg:flex">
-						{/*<Menu.Item>*/}
-						{/*	<Menu.Details label={ourWork}>*/}
-						{/*		<Menu.Item>*/}
-						{/*			<Link href={`/${params.lang}/${params.country}/about-us`}>{aboutUs}</Link>*/}
-						{/*			<Link href={`/${params.lang}/${params.country}/our-work`}>{ourWork}</Link>*/}
-						{/*		</Menu.Item>*/}
-						{/*	</Menu.Details>*/}
-						{/*</Menu.Item>*/}
 						<Menu.Item>
 							<Link href={`/${params.lang}/${params.country}/our-work`}>
 								<Typography size="md">{ourWork}</Typography>
@@ -59,6 +52,10 @@ export default async function Navbar({ params, backgroundColor }: NavbarProps) {
 
 				<DaisyNavbar.End>
 					<LanguageSwitcher params={params} />
+					<Link href="/me">
+						<UserCircleIcon className="h-5 w-5 cursor-pointer" />
+					</Link>
+
 					<Dropdown hover end className="lg:hidden">
 						<Dropdown.Toggle color="ghost">
 							<Bars3BottomRightIcon className="h-5 w-5" />
