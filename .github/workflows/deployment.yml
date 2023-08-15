@@ -67,19 +67,6 @@ jobs:
     name: Deploy functions on Firebase
     runs-on: ubuntu-latest
     if: inputs.component == 'functions'
-    env:
-      POSTFINANCE_EMAIL_USER: ${{ secrets.POSTFINANCE_EMAIL_USER }}
-      POSTFINANCE_EMAIL_PASSWORD: ${{ secrets.POSTFINANCE_EMAIL_PASSWORD }}
-      STRIPE_API_READ_KEY: ${{ (inputs.project == 'social-income-prod' && secrets.STRIPE_API_READ_KEY) || secrets.STRIPE_API_READ_KEY_STAGING }}
-      STRIPE_WEBHOOK_SECRET: ${{ (inputs.project == 'social-income-prod' && secrets.STRIPE_WEBHOOK_SECRET) || secrets.STRIPE_WEBHOOK_SECRET_STAGING }}
-      NOTIFICATION_EMAIL_USER: ${{ secrets.NOTIFICATION_EMAIL_USER }}
-      NOTIFICATION_EMAIL_PASSWORD: ${{ secrets.NOTIFICATION_EMAIL_PASSWORD }}
-      NOTIFICATION_EMAIL_USER_KERRIN: ${{ secrets.NOTIFICATION_EMAIL_USER_KERRIN }}
-      NOTIFICATION_EMAIL_PASSWORD_KERRIN: ${{ secrets.NOTIFICATION_EMAIL_PASSWORD_KERRIN }}
-      TWILIO_SID: ${{ secrets.TWILIO_SID }}
-      TWILIO_TOKEN: ${{ secrets.TWILIO_TOKEN }}
-      TWILIO_SENDER_PHONE: ${{ secrets.TWILIO_SENDER_PHONE }}
-      EXCHANGE_RATES_API: ${{ secrets.EXCHANGE_RATES_API }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -89,6 +76,22 @@ jobs:
         with:
           project: ${{ inputs.project }}
           firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
+
+      - name: Add secrets to functions/.env file
+        working-directory: functions
+        run: |
+          echo POSTFINANCE_EMAIL_PASSWORD=${{ secrets.POSTFINANCE_EMAIL_PASSWORD }} > .env
+          echo STRIPE_API_READ_KEY=${{ (inputs.project == 'social-income-prod' && secrets.STRIPE_API_READ_KEY) || secrets.STRIPE_API_READ_KEY_STAGING }} >> .env
+          echo STRIPE_WEBHOOK_SECRET=${{ (inputs.project == 'social-income-prod' && secrets.STRIPE_WEBHOOK_SECRET) || secrets.STRIPE_WEBHOOK_SECRET_STAGING }} >> .env
+          echo NOTIFICATION_EMAIL_USER=${{ secrets.NOTIFICATION_EMAIL_USER }} >> .env
+          echo NOTIFICATION_EMAIL_PASSWORD=${{ secrets.NOTIFICATION_EMAIL_PASSWORD }} >> .env
+          echo NOTIFICATION_EMAIL_USER_KERRIN=${{ secrets.NOTIFICATION_EMAIL_USER_KERRIN }} >> .env
+          echo NOTIFICATION_EMAIL_PASSWORD_KERRIN=${{ secrets.NOTIFICATION_EMAIL_PASSWORD_KERRIN }} >> .env
+          echo TWILIO_SID=${{ secrets.TWILIO_SID }} >> .env
+          echo TWILIO_TOKEN=${{ secrets.TWILIO_TOKEN }} >> .env
+          echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_SENDER_PHONE }} >> .env
+          echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} >> .env
+          echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
 
       - name: Build functions
         run: npm run functions:build
