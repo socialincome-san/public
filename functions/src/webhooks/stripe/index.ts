@@ -1,6 +1,6 @@
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
 import * as functions from 'firebase-functions';
 import Stripe from 'stripe';
+import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
 import { StripeEventHandler } from '../../../../shared/src/stripe/StripeEventHandler';
 import { STRIPE_API_READ_KEY, STRIPE_WEBHOOK_SECRET } from '../../config';
 
