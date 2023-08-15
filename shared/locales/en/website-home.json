@@ -127,16 +127,12 @@
 		"title-2": " Sustainable Development Goals.",
 		"card-1": {
 			"title": "SDG 1",
-			"item-1": "End poverty in all its forms, everywhere.",
-			"item-2": "https://socialincome.org/assets/svg/logos/sdg-grey_2.svg",
-
+			"description": "End poverty in all its forms, everywhere.",
 			"paragraph-1": "The U.N.’s first sustainability goal calls for an end to poverty in all its forms by 2030. It also aims to ensure social protection for the poor and vulnerable, increase access to basic services, and support those harmed by social, economic, and environmental shocks of any kind."
 		},
 		"card-2": {
 			"title": "SDG 10",
-			"item-1": "Reduce inequality within and among countries.",
-			"item-2": "https://socialincome.org/assets/svg/logos/sdg-grey_2.svg",
-
+			"description": "Reduce inequality within and among countries.",
 			"paragraph-1": "Reducing inequalities and ensuring that no one is left behind is integral to achieving the Sustainable Development Goals. Despite some positive signs toward reducing inequality in some dimensions (e.g reducing relative income inequality in some countries and preferential trade status benefiting lower-income countries), many inequalities continue to persist or are even increasing."
 		}
 	}

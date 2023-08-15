@@ -1,7 +1,7 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
-import { SectionCardSix } from './section-6-card';
+import { SectionCard } from './section-6-card';
 
 export default async function Section6({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
@@ -21,38 +21,16 @@ export default async function Section6({ params }: DefaultPageProps) {
 					</Typography>
 				</p>
 				<div className="grid-rows-5s-1 grid gap-4 md:grid-rows-2 lg:grid-rows-3">
-					<SectionCardSix
-						titles={{
-							main: translator.t('section-6.card-1.title'),
-							articles: translator.t('section-6.articles'),
-							faqs: translator.t('section-6.faqs'),
-						}}
-						items={[translator.t('section-6.card-1.item-1')]}
-						paragraphs={[translator.t('section-5.card-2.paragraph-1')]}
-						articles={[
-							{
-								title: translator.t('section-5.card-1.article-1-title'),
-								author: translator.t('section-5.card-1.article-1-author'),
-								link: translator.t('section-5.card-1.article-1-link'),
-							},
-						]}
+					<SectionCard
+						title={translator.t('section-6.card-1.title')}
+						description={translator.t('section-6.card-1.description')}
+						paragraphs={[translator.t('section-6.card-2.paragraph-1')]}
 					/>
 
-					<SectionCardSix
-						titles={{
-							main: translator.t('section-6.card-2.title'),
-							articles: translator.t('section-6.articles'),
-							faqs: translator.t('section-6.faqs'),
-						}}
-						items={[translator.t('section-6.card-2.item-1')]}
+					<SectionCard
+						title={translator.t('section-6.card-2.title')}
+						description={translator.t('section-6.card-2.description')}
 						paragraphs={[translator.t('section-6.card-2.paragraph-1')]}
-						articles={[
-							{
-								title: translator.t('section-6.card-2.article-1-title'),
-								author: translator.t('section-6.card-2.article-1-author'),
-								link: translator.t('section-6.card-2.article-1-link'),
-							},
-						]}
 					/>
 				</div>
 			</div>
