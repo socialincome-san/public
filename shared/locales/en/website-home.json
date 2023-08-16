@@ -121,5 +121,19 @@
 			"faq-1-question": "Are direct cash payments an effective way to fight poverty?",
 			"faq-1-link": "/faq"
 		}
+	},
+	"section-6": {
+		"title-1": "Contribute to the United Nations’",
+		"title-2": " Sustainable Development Goals.",
+		"card-1": {
+			"title": "SDG 1",
+			"description": "End poverty in all its forms, everywhere.",
+			"paragraph-1": "The U.N.’s first sustainability goal calls for an end to poverty in all its forms by 2030. It also aims to ensure social protection for the poor and vulnerable, increase access to basic services, and support those harmed by social, economic, and environmental shocks of any kind."
+		},
+		"card-2": {
+			"title": "SDG 10",
+			"description": "Reduce inequality within and among countries.",
+			"paragraph-1": "Reducing inequalities and ensuring that no one is left behind is integral to achieving the Sustainable Development Goals. Despite some positive signs toward reducing inequality in some dimensions (e.g reducing relative income inequality in some countries and preferential trade status benefiting lower-income countries), many inequalities continue to persist or are even increasing."
+		}
 	}
 }
