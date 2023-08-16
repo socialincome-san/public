@@ -1,6 +1,6 @@
 name: "🐞 Bug Report: Mobile App"
 description: Create a report to help us improve the mobile app
-title: "[BUG]: <title>"
+title: "[Mobile App Bug]: <title>"
 labels: bug, flutter, mobileapp
 body:
   - type: markdown

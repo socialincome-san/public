@@ -1,6 +1,6 @@
 name: "🐞 Bug Report: Website"
 description: Create a report to help us improve the website
-title: "[BUG]: <title>"
+title: "[Website Bug]: <title>"
 labels: bug, website
 body:
   - type: markdown
