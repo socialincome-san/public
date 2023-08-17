@@ -316,6 +316,7 @@ describe('stripeWebhook', () => {
 				voided_at: null,
 			},
 			subscription: 'sub_123',
+			subscription_details: null,
 			subtotal: 90000,
 			subtotal_excluding_tax: 90000,
 			tax: null,

@@ -1,4 +1,5 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[country]';
+import Footer from '@/components/footer/footer';
 import NavbarWrapper from '@/components/navbar/navbar-wrapper';
 import { countries, websiteLanguages } from '@/i18n';
 import { PropsWithChildren } from 'react';
@@ -11,6 +12,7 @@ export default function Layout({ children, params }: PropsWithChildren<DefaultLa
 		<div className="mx-auto">
 			<NavbarWrapper params={params} />
 			<main>{children}</main>
+			<Footer params={params} />
 		</div>
 	);
 }
