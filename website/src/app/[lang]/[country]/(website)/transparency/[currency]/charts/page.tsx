@@ -1,16 +1,13 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
-import { contributionStats } from '@/app/[lang]/[country]/(website)/transparency/[currency]/contribution-stats';
-import { paymentStats } from '@/app/[lang]/[country]/(website)/transparency/[currency]/payment-stats';
 import { firestoreAdmin } from '@/firebase/admin';
 import { ValidCountry, WebsiteLanguage } from '@/i18n';
 import { ContributionStatsCalculator } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
 import { BaseContainer, Typography } from '@socialincome/ui';
-import flagCH from 'flag-icons/flags/4x3/ch.svg';
-import flagSL from 'flag-icons/flags/4x3/sl.svg';
-import Image from 'next/image';
+import TransparencyCharts from './transparency-charts';
 
 export const generateStaticParams = () => ['USD', 'CHF'].map((currency) => ({ currency: currency.toLowerCase() }));
+export const revalidate = 3600; // update once an hour
 
 export type TransparencyPageProps = {
 	params: {
@@ -28,18 +25,19 @@ export default async function Page(props: TransparencyPageProps) {
 		const paymentStats = paymentCalculator.allStats();
 		return { contributionStats, paymentStats };
 	};
-
-	// TODO: Uncomment when deleting ./payment-stats.ts and ./contribution-stats.ts files
-	// const { contributionStats, paymentStats } = await getStats(props.params.currency);
+	const { contributionStats, paymentStats } = await getStats(props.params.currency);
 
 	return (
 		<BaseContainer className="bg-base-blue min-h-screen">
-			<Image className="w-8" src={flagSL} alt="Sierra Leone Flag" />
-			<Image className="w-8" src={flagCH} alt="Swiss Flag" />
-			<Typography size="2xl">Contribution Stats</Typography>
-			{JSON.stringify(contributionStats)}
-			<Typography size="2xl">Payment Stats</Typography>
-			{JSON.stringify(paymentStats)}
+			<Typography as="h2" size="2xl" weight="medium">
+				Total contributions: {contributionStats.totalContributions}
+			</Typography>
+			<TransparencyCharts
+				contributionStats={contributionStats}
+				paymentStats={paymentStats}
+				lang={props.params.lang}
+				currency={props.params.currency}
+			/>
 		</BaseContainer>
 	);
 }

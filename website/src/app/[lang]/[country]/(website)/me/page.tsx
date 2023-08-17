@@ -12,7 +12,7 @@ export default function Page() {
 
 	useEffect(() => {
 		auth.onAuthStateChanged((user) => setUser(user));
-	}, [auth]);
+	}, []);
 
 	return (
 		<BaseContainer>
