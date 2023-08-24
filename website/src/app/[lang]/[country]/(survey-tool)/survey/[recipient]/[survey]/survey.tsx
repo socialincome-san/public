@@ -1,4 +1,5 @@
 import { firestore } from '@/firebase/client';
+import { useTranslator } from '@/hooks/useTranslator';
 import { WebsiteLanguage } from '@/i18n';
 import {
 	RECIPIENT_FIRESTORE_PATH,
@@ -6,7 +7,6 @@ import {
 	Survey as SurveyModel,
 	SurveyStatus,
 } from '@socialincome/shared/src/types';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { useQuery } from '@tanstack/react-query';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useCallback } from 'react';
@@ -27,7 +27,7 @@ interface SurveyProps {
 
 export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 	const ref = doc(firestore, [RECIPIENT_FIRESTORE_PATH, recipientId, SURVEY_FIRETORE_PATH, surveyId].join('/'));
-
+	const translator = useTranslator(lang, ['website-survey']);
 	const { data: survey } = useQuery(
 		[recipientId, surveyId],
 		() => getDoc(ref).then((snapshot) => snapshot.data() as SurveyModel),
@@ -35,19 +35,6 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 			staleTime: 1000 * 60 * 60, // 1 hour
 		},
 	);
-
-	const { data: translator } = useQuery(
-		[lang],
-		async () =>
-			Translator.getInstance({
-				language: lang,
-				namespaces: ['website-survey'],
-			}),
-		{
-			staleTime: Infinity, // never refetch
-		},
-	);
-
 	// TODO: implement session storage caching
 	const saveSurveyData = useCallback(
 		(survey: Model, status: SurveyStatus) => {

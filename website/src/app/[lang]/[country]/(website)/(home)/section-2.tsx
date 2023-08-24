@@ -1,30 +1,19 @@
 'use client';
 
 import { DefaultPageProps } from '@/app/[lang]/[country]';
+import { useTranslator } from '@/hooks/useTranslator';
 import { PlayCircleIcon } from '@heroicons/react/24/outline';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Modal, Typography } from '@socialincome/ui';
-import { useQuery } from '@tanstack/react-query';
 import Player from '@vimeo/player';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import houseGif from './house.gif';
 
 export default function Section2({ params }: DefaultPageProps) {
+	const translator = useTranslator(params.lang, 'website-home');
 	const playerRef = useRef<HTMLDivElement>(null);
 	const [player, setPlayer] = useState<Player | null>(null);
 	const [showModal, setShowModal] = useState(false);
-	const { data: translator } = useQuery(
-		[params.lang],
-		async () =>
-			Translator.getInstance({
-				language: params.lang,
-				namespaces: ['website-home'],
-			}),
-		{
-			staleTime: Infinity, // never refetch
-		},
-	);
 
 	useEffect(() => {
 		if (playerRef.current && translator) {
