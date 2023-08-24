@@ -11,6 +11,7 @@ import { Typography } from '@socialincome/ui';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Suspense } from 'react';
 
 type NavbarProps = {
 	backgroundColor?: string;
@@ -88,7 +89,9 @@ export default function Navbar({ params, backgroundColor }: NavbarProps) {
 							</div>
 							<div className="flex items-center">
 								<div className="flex-shrink-0">
-									<LanguageSwitcher params={params} />
+									<Suspense>
+										<LanguageSwitcher params={params} />
+									</Suspense>
 								</div>
 								<Link
 									href={
