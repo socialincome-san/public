@@ -1,11 +1,11 @@
 {
-  "login": {
-    "title": "Melde dich an",
-    "email": "E-Mail",
-    "invalid-email": "Ungültige E-Mail-Adresse",
-    "password": "Passwort",
-    "forgot-password": "Passwort vergessen?",
-    "required-field": "Dieses Feld ist erforderlich",
-    "submit-button": "Anmelden"
-  }
+	"login": {
+		"title": "Melde dich an",
+		"email": "E-Mail",
+		"invalid-email": "Ungültige E-Mail-Adresse",
+		"password": "Passwort",
+		"forgot-password": "Passwort vergessen?",
+		"required-field": "Dieses Feld ist erforderlich",
+		"submit-button": "Anmelden"
+	}
 }
