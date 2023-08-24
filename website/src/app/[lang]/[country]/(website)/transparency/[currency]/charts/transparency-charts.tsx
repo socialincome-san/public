@@ -20,7 +20,7 @@ export default function TransparencyCharts({
 	lang,
 	currency,
 }: ContributionStatsProps) {
-	const translator = useTranslator(lang, ['website-transparency']);
+	const translator = useTranslator(lang, 'website-transparency');
 
 	return (
 		<div className="grid grid-cols-1 gap-8  lg:grid-cols-2">
