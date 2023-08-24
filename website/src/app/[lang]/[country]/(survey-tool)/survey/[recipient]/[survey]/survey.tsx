@@ -27,7 +27,7 @@ interface SurveyProps {
 
 export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 	const ref = doc(firestore, [RECIPIENT_FIRESTORE_PATH, recipientId, SURVEY_FIRETORE_PATH, surveyId].join('/'));
-	const translator = useTranslator(lang, ['website-survey']);
+	const translator = useTranslator(lang, 'website-survey');
 	const { data: survey } = useQuery(
 		[recipientId, surveyId],
 		() => getDoc(ref).then((snapshot) => snapshot.data() as SurveyModel),
