@@ -6,6 +6,7 @@ import { LanguageIcon } from '@heroicons/react/24/solid';
 import { Language } from '@socialincome/shared/src/types';
 import { Dropdown } from '@socialincome/ui';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 interface LanguageSwitcherProps {
 	params: DefaultParams;
@@ -25,17 +26,20 @@ export default function LanguageSwitcher({ params, languages = ['en', 'de'] }: L
 	};
 
 	return (
-		<Dropdown hover end>
-			<Dropdown.Toggle color="ghost" className="hover:bg-none">
-				<LanguageIcon className="h-5 w-5" />
-			</Dropdown.Toggle>
-			<Dropdown.Menu className="z-40">
-				{languages.map((language, index) => (
-					<Dropdown.Item key={index} onClick={() => onLanguageChange(language)}>
-						{translator?.t(`languages.${language}`)}
-					</Dropdown.Item>
-				))}
-			</Dropdown.Menu>
-		</Dropdown>
+		// Suspense is needed because of useSearchParams hook (https://nextjs.org/docs/messages/deopted-into-client-rendering)
+		<Suspense>
+			<Dropdown hover end>
+				<Dropdown.Toggle color="ghost" className="hover:bg-none">
+					<LanguageIcon className="h-5 w-5" />
+				</Dropdown.Toggle>
+				<Dropdown.Menu className="z-40">
+					{languages.map((language, index) => (
+						<Dropdown.Item key={index} onClick={() => onLanguageChange(language)}>
+							{translator?.t(`languages.${language}`)}
+						</Dropdown.Item>
+					))}
+				</Dropdown.Menu>
+			</Dropdown>
+		</Suspense>
 	);
 }
