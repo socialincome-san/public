@@ -70,7 +70,7 @@ describe('Test admins collection', () => {
 describe('Test recipients collection', () => {
 	it('Read recipients doc', async () => {
 		const recipients = await getDocs(query(collection(globalAdminStore, 'recipients')));
-		expect(recipients.size).toBe(5);
+		expect(recipients.size).toBe(6);
 
 		const phoneNumberAccessDoc = await getDoc(doc(recipientAppAccess, 'recipients', 'iF8bLEoUjqOIlq84XQmi'));
 		expect(phoneNumberAccessDoc.exists()).toBe(true);
@@ -83,13 +83,13 @@ describe('Test recipients collection', () => {
 		const globalAdminDocs = await getDocs(
 			query(collection(globalAdminStore, 'recipients', 'z9zBQaDI8GB8tZ36HwDE', 'payments')),
 		);
-		expect(globalAdminDocs.size).toBe(2);
+		expect(globalAdminDocs.size).toBe(7);
 
 		// Access through phone number
 		const phoneNumberAccessDocs = await getDocs(
 			query(collection(recipientAppAccess, 'recipients', 'iF8bLEoUjqOIlq84XQmi', 'payments')),
 		);
-		expect(phoneNumberAccessDocs.size).toBe(2);
+		expect(phoneNumberAccessDocs.size).toBe(7);
 
 		// Phone number mismatch
 		await assertFails(getDocs(query(collection(recipientAppAccess, 'recipients', 'z9zBQaDI8GB8tZ36HwDE', 'payments'))));

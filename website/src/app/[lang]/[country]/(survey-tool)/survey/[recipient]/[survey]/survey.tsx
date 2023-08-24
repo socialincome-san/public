@@ -1,6 +1,6 @@
-import { firestore } from '@/firebase';
+import { firestore } from '@/firebase/client';
+import { WebsiteLanguage } from '@/i18n';
 import {
-	LocaleLanguage,
 	RECIPIENT_FIRESTORE_PATH,
 	SURVEY_FIRETORE_PATH,
 	Survey as SurveyModel,
@@ -17,10 +17,12 @@ import { settings } from './common';
 import { getQuestionnaire } from './questionnaires';
 import './survey.css';
 
+export type SurveyLanguage = Extract<WebsiteLanguage, 'en' | 'kri'>;
+
 interface SurveyProps {
 	surveyId: string;
 	recipientId: string;
-	lang: string;
+	lang: SurveyLanguage;
 }
 
 export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
@@ -38,7 +40,7 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 		[lang],
 		async () =>
 			Translator.getInstance({
-				language: lang as LocaleLanguage,
+				language: lang,
 				namespaces: ['website-survey'],
 			}),
 		{

@@ -71,10 +71,10 @@ test('calculate contributions by source', async () => {
 test('calculate contributions by first day in month', async () => {
 	expect(calculator.totalContributionsByMonth()).toEqual(
 		expect.arrayContaining([
-			{ amount: 1100, month: '2023-01-01' },
-			{ amount: 100, month: '2023-02-01' },
-			{ amount: 100, month: '2023-03-01' },
-			{ amount: 1100, month: '2023-04-01' },
+			{ amount: 1100, month: '2023-01' },
+			{ amount: 100, month: '2023-02' },
+			{ amount: 100, month: '2023-03' },
+			{ amount: 1100, month: '2023-04' },
 		]),
 	);
 });

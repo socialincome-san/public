@@ -3,7 +3,7 @@ import {
 	RecipientMainLanguage,
 	RecipientProgramStatus,
 } from '@socialincome/shared/src/types';
-import { Property } from 'firecms/dist/types/properties';
+import { Property, StringProperty } from 'firecms/dist/types/properties';
 
 export const programStatusProperty: Property = {
 	name: 'Status',
@@ -16,21 +16,25 @@ export const programStatusProperty: Property = {
 		{ id: RecipientProgramStatus.Former, label: 'Former Recipient' },
 	],
 };
+
 export const orangeMoneyUIDProperty: Property = {
 	name: 'OM ID',
 	dataType: 'number',
 	columnWidth: 70,
 };
+
 export const firstNameProperty: Property = {
 	name: 'First Name',
 	validation: { required: true },
 	dataType: 'string',
 };
+
 export const lastNameProperty: Property = {
 	name: 'Last Name',
 	validation: { required: true },
 	dataType: 'string',
 };
+
 export const communicationMobilePhoneProperty: Property = {
 	name: 'Contact Phone',
 	dataType: 'map',
@@ -54,6 +58,7 @@ export const communicationMobilePhoneProperty: Property = {
 		},
 	},
 };
+
 export const mobileMoneyPhoneProperty: Property = {
 	name: 'Orange Money Phone Number',
 	dataType: 'map',
@@ -70,6 +75,7 @@ export const mobileMoneyPhoneProperty: Property = {
 		},
 	},
 };
+
 export const genderProperty: Property = {
 	name: 'Gender',
 	dataType: 'string',
@@ -83,7 +89,8 @@ export const genderProperty: Property = {
 		private: 'Private',
 	},
 };
-export const mainLanguageProperty: Property = {
+
+export const mainLanguageProperty: StringProperty = {
 	name: 'Preferred Language',
 	dataType: 'string',
 	validation: { required: true },
@@ -92,21 +99,25 @@ export const mainLanguageProperty: Property = {
 		{ id: RecipientMainLanguage.English, label: 'English' },
 	],
 };
+
 export const birthDateProperty: Property = {
 	name: 'Birthday',
 	dataType: 'date',
 	mode: 'date',
 };
+
 export const callingNameProperty: Property = {
 	name: 'Nickname',
 	dataType: 'string',
 	hideFromCollection: true,
 };
+
 export const professionProperty: Property = {
 	name: 'Profession',
 	dataType: 'string',
 	hideFromCollection: true,
 };
+
 export const organisationProperty: Property = {
 	name: 'Recommending Organisation',
 	dataType: 'reference',
@@ -117,46 +128,25 @@ export const emailProperty: Property = {
 	dataType: 'string',
 	hideFromCollection: true,
 };
+
 export const InstagramProperty: Property = {
 	name: 'Instagram',
 	dataType: 'string',
 	hideFromCollection: true,
 };
+
 export const TwitterProperty: Property = {
 	name: 'Twitter',
 	dataType: 'string',
 	hideFromCollection: true,
 };
-export const IMUIDProperty: Property = {
-	name: 'IM UID',
-	dataType: 'string',
-	hideFromCollection: true,
-};
-export const IMLinkProperty: Property = {
-	name: 'IM Link',
-	dataType: 'string',
-	url: true,
-};
-export const IMInitialProperty: Property = {
-	name: 'IM Initial',
-	dataType: 'string',
-	url: true,
-};
-export const IMLinkRegularProperty: Property = {
-	name: 'IM Regular',
-	dataType: 'string',
-	url: true,
-};
-export const IsSuspendedProperty: Property = {
-	name: 'Suspended',
-	dataType: 'boolean',
-	hideFromCollection: true,
-};
+
 export const SIStartDateProperty: Property = {
-	name: 'Start',
+	name: 'Start Date',
 	dataType: 'date',
 	mode: 'date',
 };
+
 export const TestRecipientProperty: Property = {
 	name: 'Test Recipient',
 	dataType: 'boolean',

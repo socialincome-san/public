@@ -6,24 +6,28 @@ Social Income services and platforms.
 - Reusable components for React
 - Documentation, preview and test environment with Storybook.
 
-## Usage in React
+## Usage in projects
 
 To use the React components in a project:
 
-### Install
+### Installation
 
-**Important: The package is not yet published to npm and cannot be
-installed this way**.
+Add to `package.json` file in project:
 
-```sh
-$ npm i @socialincome/ui
 ```
+"@socialincome/ui": "^1.0.0",
+```
+
+### Usage
 
 Use the components:
 
 ```tsx
-import { SoButton } from '@socialincome/ui';
+import { Typography } from '@socialincome/ui';
 ```
+
+Next to the custom components, the UI package also exports the all components
+from `react-daisyui`. See the [documentation](https://react.daisyui.com/) for more information.
 
 ## Development
 

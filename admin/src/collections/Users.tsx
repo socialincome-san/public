@@ -1,10 +1,5 @@
 import { AdditionalFieldDelegate, buildProperties } from 'firecms';
-import {
-	CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH,
-	USER_FIRESTORE_PATH,
-	User,
-	UserReferralSource,
-} from '../../../shared/src/types';
+import { USER_FIRESTORE_PATH, User, UserReferralSource } from '../../../shared/src/types';
 import { CreateDonationCertificatesAction } from '../actions/CreateDonationCertificatesAction';
 import { contributionsCollection } from './Contributions';
 import { donationCertificateCollection } from './DonationCertificate';
@@ -158,14 +153,6 @@ export const usersCollection = buildAuditedCollection<User>({
 		institution: {
 			name: 'Institutional',
 			dataType: 'boolean',
-		},
-		contributor_organisations: {
-			dataType: 'array',
-			name: 'Employed by',
-			of: {
-				dataType: 'reference',
-				path: CONTRIBUTOR_ORGANISATION_FIRESTORE_PATH,
-			},
 		},
 		language: {
 			name: 'Language',

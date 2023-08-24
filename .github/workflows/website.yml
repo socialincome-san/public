@@ -28,9 +28,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 # Load all commits
-          token: ${{ secrets.WORKFLOW_TOKEN }}
 
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
@@ -55,4 +52,8 @@ jobs:
       #          action: auto
 
       - name: Test build
-        run: npm run website:build:emulator
+        # To use the emulator during the build, we need to rename the .env.development file to .env.production.
+        # Next.js doesn't now allow to use NODE_ENV=development in the build process.
+        run: |
+          mv website/.env.development website/.env.production
+          npm run website:build:emulator

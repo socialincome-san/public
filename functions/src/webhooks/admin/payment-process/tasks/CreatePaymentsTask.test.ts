@@ -1,7 +1,7 @@
-import { getOrInitializeFirebaseAdmin } from '@socialincome/shared/src/firebase/admin/app';
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
 import functionsTest from 'firebase-functions-test';
 import { DateTime } from 'luxon';
+import { getOrInitializeFirebaseAdmin } from '../../../../../../shared/src/firebase/admin/app';
+import { FirestoreAdmin } from '../../../../../../shared/src/firebase/admin/FirestoreAdmin';
 import {
 	Payment,
 	PAYMENT_FIRESTORE_PATH,
@@ -12,6 +12,7 @@ import {
 	RecipientProgramStatus,
 	toPaymentDate,
 } from '../../../../../../shared/src/types';
+import { toDateTime } from '../../../../../../shared/src/utils/date';
 import { initializeGlobalTestData } from '../../../../firebase';
 import { runPaymentProcessTask } from '../../../index';
 
@@ -71,7 +72,7 @@ test('CreatePayments', async () => {
 		expect(nextPaymentDoc.exists).toBeTruthy();
 		const nextPayment = nextPaymentDoc.data() as Payment;
 		expect(nextPayment.amount).toEqual(700);
-		expect(DateTime.fromMillis(nextPayment.payment_at.toMillis(), { zone: 'utc' })).toEqual(nextMonthPaymentDate);
+		expect(toDateTime(nextPayment.payment_at)).toEqual(nextMonthPaymentDate);
 		expect(nextPayment.status).toEqual(PaymentStatus.Created);
 		expect(nextPayment.currency).toEqual('SLE');
 	}

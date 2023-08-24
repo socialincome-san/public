@@ -1,15 +1,18 @@
-import { DefaultPageProps } from '@/app/[lang]/[country]';
-import Navbar from '@/components/navbar/navbar';
-import { countries, languages } from '@/i18n';
+import { DefaultLayoutProps } from '@/app/[lang]/[country]';
+import Footer from '@/components/footer/footer';
+import NavbarWrapper from '@/components/navbar/navbar-wrapper';
+import { countries, websiteLanguages } from '@/i18n';
 import { PropsWithChildren } from 'react';
 
-export const generateStaticParams = () => countries.flatMap((country) => languages.map((lang) => ({ lang, country })));
+export const generateStaticParams = () =>
+	countries.flatMap((country) => websiteLanguages.map((lang) => ({ lang, country })));
 
-export default function Layout({ children, params }: PropsWithChildren<DefaultPageProps>) {
+export default function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	return (
-		<div className="max-w-7xl mx-auto">
-			<Navbar params={params} />
+		<div className="mx-auto">
+			<NavbarWrapper params={params} />
 			<main>{children}</main>
+			<Footer params={params} />
 		</div>
 	);
 }

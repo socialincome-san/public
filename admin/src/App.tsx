@@ -7,19 +7,17 @@ import {
 	FirestoreTextSearchController,
 	performAlgoliaTextSearch,
 } from 'firecms';
-import { AdminUser, recipientSurveys } from '../../shared/src/types';
+import { AdminUser } from '../../shared/src/types';
 
 import { adminsCollection } from './collections/Admins';
-import { contributorOrganisationsCollection } from './collections/ContributorOrganisations';
-import { newsletterSubscribersCollection } from './collections/NewsletterSubscribers';
 import { operationalExpensesCollection } from './collections/OperationalExpenses';
 import { buildPartnerOrganisationsCollection } from './collections/PartnerOrganisations';
+import { usersCollection } from './collections/Users';
 import { buildRecipientsCollection } from './collections/recipients/Recipients';
 import { buildRecipientsPaymentsCollection } from './collections/recipients/RecipientsPayments';
-import { buildRecipientsSurveysCollection } from './collections/recipients/RecipientsSurveys';
-import { createPendingSurveyColumn, createSurveyColumn } from './collections/surveys/Surveys';
-import { usersCollection } from './collections/Users';
+import { buildSurveysCollection } from './collections/surveys/Surveys';
 import { firebaseConfig, onFirebaseInit } from './init';
+import { NextSurveysView } from './views/NextSurveysView';
 import { PaymentsConfirmationView } from './views/PaymentsConfirmationView';
 import { ScriptsView } from './views/ScriptsView';
 
@@ -51,16 +49,10 @@ export default function App() {
 		buildRecipientsCollection(),
 		buildRecipientsPaymentsCollection(),
 		buildPartnerOrganisationsCollection(),
-		contributorOrganisationsCollection,
+		buildSurveysCollection({ collectionGroup: true }),
 		adminsCollection,
 		operationalExpensesCollection,
-		newsletterSubscribersCollection,
 		usersCollection,
-		buildRecipientsSurveysCollection('Next Surveys', 'next-surveys')([createPendingSurveyColumn(0)]),
-		buildRecipientsSurveysCollection(
-			'All Surveys',
-			'all-surveys',
-		)(recipientSurveys.map((s) => createSurveyColumn(s.name))),
 	];
 
 	const views: CMSView[] = [
@@ -78,6 +70,14 @@ export default function App() {
 			group: 'Recipients',
 			icon: 'PriceCheck',
 			view: <PaymentsConfirmationView />,
+		},
+		{
+			path: 'upcoming-surveys',
+			name: 'Upcoming Surveys',
+			description: 'Upcoming surveys',
+			group: 'Surveys',
+			icon: 'MarkunreadMailbox',
+			view: <NextSurveysView />,
 		},
 	];
 

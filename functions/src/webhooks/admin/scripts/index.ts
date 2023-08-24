@@ -1,8 +1,7 @@
 import * as functions from 'firebase-functions';
-import Stripe from 'stripe';
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
+import { StripeEventHandler } from '../../../../../shared/src/stripe/StripeEventHandler';
 import { STRIPE_API_READ_KEY } from '../../../config';
-import { StripeWebhook } from '../../stripe/StripeWebhook';
 import { PaymentsManager } from './PaymentsManager';
 import { SurveyManager } from './SurveyManager';
 
@@ -44,13 +43,12 @@ const batchImportStripeChargesFunction = functions
 		const firestoreAdmin = new FirestoreAdmin();
 		await firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
 
-		const stripeWebhook = new StripeWebhook();
+		const stripeEventHandler = new StripeEventHandler(STRIPE_API_READ_KEY, firestoreAdmin);
 		const stripeBatchSize = 100; // max batch size supported by stripe
 		const charges = [];
 		try {
-			const stripe = new Stripe(STRIPE_API_READ_KEY, { apiVersion: '2022-08-01' });
 			functions.logger.info('Querying Stripe API...');
-			for await (const charge of stripe.charges.list({
+			for await (const charge of stripeEventHandler.stripe.charges.list({
 				expand: ['data.balance_transaction', 'data.invoice'],
 				limit: stripeBatchSize,
 			})) {
@@ -58,7 +56,15 @@ const batchImportStripeChargesFunction = functions
 			}
 			functions.logger.info(`Querying stripe finished.`);
 
-			await Promise.all(charges.map((charge) => stripeWebhook.storeCharge(charge)));
+			await Promise.all(
+				charges.map((charge) => {
+					try {
+						stripeEventHandler.storeCharge(charge);
+					} catch (error) {
+						functions.logger.error(error);
+					}
+				}),
+			);
 			functions.logger.info(`Ingestion finished.`);
 		} catch (error) {
 			functions.logger.error(error);

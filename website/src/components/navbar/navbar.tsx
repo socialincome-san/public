@@ -1,64 +1,82 @@
-import { DefaultParams } from '@/app/[lang]/[country]';
+import { DefaultLayoutProps } from '@/app/[lang]/[country]';
 import LanguageSwitcher from '@/components/language-switcher/language-switcher';
-import { languages } from '@/i18n';
+import { SILogo } from '@/components/logos/si-logo';
+import { UserCircleIcon } from '@heroicons/react/24/outline';
 import { Bars3BottomRightIcon } from '@heroicons/react/24/solid';
-import { LocaleLanguage } from '@socialincome/shared/src/types';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { CollapsibleMenu, Dropdown } from '@socialincome/ui';
-import _ from 'lodash';
+import { BaseContainer, Dropdown, Menu, Navbar, Typography } from '@socialincome/ui';
+import classNames from 'classnames';
 import Link from 'next/link';
 
-interface NavbarProps {
-	params: DefaultParams;
-}
+type NavbarProps = {
+	backgroundColor?: string;
+} & DefaultLayoutProps;
 
-export default async function Navbar({ params }: NavbarProps) {
+export default async function ({ params, backgroundColor }: NavbarProps) {
 	const translator = await Translator.getInstance({
-		language: params.lang as LocaleLanguage,
+		language: params.lang,
 		namespaces: ['website-common'],
 	});
-
-	const title = 'Social Income';
 	const ourWork = translator.t('navigation.our-work');
-	const howItWorks = translator.t('navigation.how-it-works');
 	const aboutUs = translator.t('navigation.about-us');
+	const transparency = translator.t('navigation.transparency');
 
 	return (
-		<div className="navbar bg-base-100">
-			<div className="navbar-start">
-				<Link className="btn btn-ghost normal-case text-xl" href={`/${params.lang}/${params.country}`}>
-					{title}
-				</Link>
-			</div>
+		<BaseContainer className={classNames(backgroundColor)}>
+			<Navbar className="h-20">
+				<Navbar.Start>
+					<Link className="text-xl normal-case" href={`/${params.lang}/${params.country}`}>
+						<SILogo className="h-4" />
+					</Link>
+				</Navbar.Start>
 
-			<div className="navbar-center hidden lg:flex">
-				<CollapsibleMenu>
-					<CollapsibleMenu.Label>{ourWork}</CollapsibleMenu.Label>
-					<CollapsibleMenu.Item>
-						<Link href={`/${params.lang}/${params.country}/how-it-works`}>{howItWorks}</Link>
-					</CollapsibleMenu.Item>
-				</CollapsibleMenu>
-				<CollapsibleMenu>
-					<CollapsibleMenu.Label>{aboutUs}</CollapsibleMenu.Label>
-					<CollapsibleMenu.Item>
-						<Link href={`/${params.lang}/${params.country}/how-it-works`}>{howItWorks}</Link>
-					</CollapsibleMenu.Item>
-				</CollapsibleMenu>
-			</div>
+				<Navbar.Center>
+					<Menu horizontal className="hidden lg:flex">
+						<Menu.Item>
+							<Link href={`/${params.lang}/${params.country}/our-work`}>
+								<Typography size="md">{ourWork}</Typography>
+							</Link>
+						</Menu.Item>
+						<Menu.Item>
+							<Link href={`/${params.lang}/${params.country}/about-us`}>
+								<Typography size="md">{aboutUs}</Typography>
+							</Link>
+						</Menu.Item>
+						<Menu.Item>
+							<Link href={`/${params.lang}/${params.country}/transparency/usd`}>
+								<Typography size="md">{transparency}</Typography>
+							</Link>
+						</Menu.Item>
+					</Menu>
+				</Navbar.Center>
 
-			<div className="navbar-end">
-				<LanguageSwitcher params={params} languages={_.without(languages, 'kri')} />
-				<Dropdown alignEnd={true} className="lg:hidden bg-blue-50">
-					<Dropdown.Label>
-						<div className="btn btn-ghost">
+				<Navbar.End>
+					<LanguageSwitcher params={params} />
+					<Link href="/me">
+						<UserCircleIcon className="h-5 w-5 cursor-pointer" />
+					</Link>
+
+					<Dropdown hover end className="lg:hidden">
+						<Dropdown.Toggle color="ghost">
 							<Bars3BottomRightIcon className="h-5 w-5" />
-						</div>
-					</Dropdown.Label>
-					<Dropdown.Item>
-						<Link href={`/${params.lang}/${params.country}/how-it-works`}>{howItWorks}</Link>
-					</Dropdown.Item>
-				</Dropdown>
-			</div>
-		</div>
+						</Dropdown.Toggle>
+						<Dropdown.Menu className="w-52">
+							<Dropdown.Item>
+								Our work
+								{/*<Link href={`/${params.lang}/${params.country}/our-work`}>{howItWorks}</Link>*/}
+							</Dropdown.Item>
+							<Dropdown.Item>
+								About us
+								{/*<Link href={`/${params.lang}/${params.country}/about-us`}>{aboutUs}</Link>*/}
+							</Dropdown.Item>
+							<Dropdown.Item>
+								Transparency
+								{/*<Link href={`/${params.lang}/${params.country}/transparency/usd`}>Transparency</Link>*/}
+							</Dropdown.Item>
+						</Dropdown.Menu>
+					</Dropdown>
+				</Navbar.End>
+			</Navbar>
+		</BaseContainer>
 	);
 }

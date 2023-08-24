@@ -3,11 +3,13 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>51495651779-tge57s75sh38pcd76g03lpfc1prv8rvd.apps.googleusercontent.com</string>
+	<string>51495651779-m8sno9cgf85q5u8pb3t0kkoh4crd2p0a.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.51495651779-tge57s75sh38pcd76g03lpfc1prv8rvd</string>
+	<string>com.googleusercontent.apps.51495651779-m8sno9cgf85q5u8pb3t0kkoh4crd2p0a</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>51495651779-esk1gdivait81filmepqp52t178pul9f.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>demo-key</string>
+	<string>AIzaSyAulbY2rmZhf8jjeaZkPSpAwaHNHVZ5lhI</string>
 	<key>GCM_SENDER_ID</key>
 	<string>51495651779</string>
 	<key>PLIST_VERSION</key>
@@ -15,7 +17,7 @@
 	<key>BUNDLE_ID</key>
 	<string>org.socialincome.app.dev</string>
 	<key>PROJECT_ID</key>
-	<string>social-income-prod</string>
+	<string>social-income-staging</string>
 	<key>STORAGE_BUCKET</key>
 	<string>social-income-staging.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:51495651779:ios:d4d28e75065983fb185576</string>
+	<string>1:51495651779:ios:747b91584b9e54b5185576</string>
 </dict>
 </plist>

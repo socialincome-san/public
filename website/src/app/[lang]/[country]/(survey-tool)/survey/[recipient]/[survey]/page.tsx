@@ -1,12 +1,12 @@
 'use client';
 
-import { auth } from '@/firebase';
+import { auth } from '@/firebase/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { User, signInWithEmailAndPassword } from 'firebase/auth';
 import { useSearchParams } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
 import { SurveyPageProps } from './layout';
-import { Survey } from './survey';
+import { Survey, SurveyLanguage } from './survey';
 
 export default function Page({ params }: SurveyPageProps) {
 	const [email, setEmail] = useState<string | null>(null);
@@ -43,18 +43,18 @@ export default function Page({ params }: SurveyPageProps) {
 	if (user) {
 		return (
 			<QueryClientProvider client={queryClient}>
-				<Survey surveyId={params.survey} recipientId={params.recipient} lang={params.lang} />
+				<Survey surveyId={params.survey} recipientId={params.recipient} lang={params.lang as SurveyLanguage} />
 			</QueryClientProvider>
 		);
 	} else {
 		return (
-			<form className="flex flex-col mx-auto space-y-2" method="post" onSubmit={handleSubmit}>
-				<input name="email" type="text" placeholder="Email" className="input input-bordered w-full max-w-xs mx-auto" />
+			<form className="mx-auto flex flex-col space-y-2" method="post" onSubmit={handleSubmit}>
+				<input name="email" type="text" placeholder="Email" className="input input-bordered mx-auto w-full max-w-xs" />
 				<input
 					name="password"
 					type="text"
-					placeholder="Password"
-					className="input input-bordered w-full max-w-xs mx-auto"
+					placeholder="Password" // TODO: i18n
+					className="input input-bordered mx-auto w-full max-w-xs"
 				/>
 				<button type="submit" className="btn btn-primary mx-auto">
 					Save

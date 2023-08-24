@@ -1,4 +1,3 @@
-import { Timestamp } from '@google-cloud/firestore';
 import { createWriteStream } from 'fs';
 import _ from 'lodash';
 import * as path from 'path';
@@ -6,14 +5,7 @@ import PDFDocument from 'pdfkit';
 import { withFile } from 'tmp-promise';
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
 import { StorageAdmin } from '../../../../../shared/src/firebase/admin/StorageAdmin';
-import {
-	Contribution,
-	DonationCertificate,
-	Entity,
-	LocaleLanguage,
-	StatusKey,
-	User,
-} from '../../../../../shared/src/types';
+import { Contribution, DonationCertificate, Entity, StatusKey, User } from '../../../../../shared/src/types';
 import { Translator } from '../../../../../shared/src/utils/i18n';
 import { sendEmail } from '../../../../../shared/src/utils/messaging/email';
 import { renderTemplate } from '../../../../../shared/src/utils/templates';
@@ -50,7 +42,7 @@ export class DonationCertificateHandler {
 			});
 
 		return _(contributions)
-			.filter((contribution) => (contribution.created as Timestamp)?.toDate().getFullYear() === year)
+			.filter((contribution) => contribution.created.toDate().getFullYear() === year)
 			.groupBy((contribution) => contribution.currency)
 			.mapValues((contributions) => _.sumBy(contributions, (contribution) => contribution.amount));
 	};
@@ -206,7 +198,7 @@ export class DonationCertificateHandler {
 				await withFile(async ({ path }) => {
 					if (!user.address?.country) throw new Error('Country of user unknown.');
 					const translator = await Translator.getInstance({
-						language: user.language || LocaleLanguage.German,
+						language: user.language || 'de',
 						namespaces: ['email-donation-certificate', 'countries'],
 					});
 
@@ -231,7 +223,7 @@ export class DonationCertificateHandler {
 							subject: translator.t('email-subject'),
 							// TODO: Use renderEmailTemplate() instead of renderTemplate()
 							content: await renderTemplate({
-								language: user.language || LocaleLanguage.German,
+								language: user.language || 'de',
 								translationNamespace: 'email-donation-certificate',
 								hbsTemplatePath: 'email/donation-certificate.hbs',
 								context: {

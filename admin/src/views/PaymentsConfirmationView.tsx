@@ -1,19 +1,18 @@
 import { Box, Button, Link, Popover, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { Payment, PaymentStatus, Recipient } from '@socialincome/shared/src/types';
+import { toDateTime } from '@socialincome/shared/src/utils/date';
 import {
 	QueryDocumentSnapshot,
 	collectionGroup,
 	getDoc,
 	getFirestore,
 	onSnapshot,
-	or,
 	orderBy,
 	query,
 	where,
 } from 'firebase/firestore';
 import { StringPropertyPreview } from 'firecms';
-import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import { paymentStatusEnumValues } from '../collections/Payments';
 import { auditedUpdateDoc } from '../collections/shared';
@@ -23,7 +22,6 @@ function UpdatePaymentButton({ paymentDoc }: { paymentDoc: QueryDocumentSnapshot
 	const [confirmed, setConfirmed] = useState<boolean>(false);
 
 	const updatePayment = (status: PaymentStatus) => auditedUpdateDoc(paymentDoc.ref, { status });
-
 	return (
 		<>
 			{confirmed ? (
@@ -69,7 +67,7 @@ export function PaymentsConfirmationView() {
 		const unsubscribe = onSnapshot(
 			query(
 				collectionGroup(db, 'payments'),
-				or(where('status', '==', PaymentStatus.Paid), where('status', '==', PaymentStatus.Contested)),
+				where('status', 'in', [PaymentStatus.Paid, PaymentStatus.Contested]),
 				orderBy('payment_at', 'desc'),
 			),
 			async (result) => {
@@ -113,11 +111,12 @@ export function PaymentsConfirmationView() {
 		<Box sx={{ m: 2, display: 'grid', rowGap: 2 }}>
 			<SearchBar onTextSearch={(text) => setSearchTerm(text)} />
 			<DataGrid
+				autoHeight
 				rows={Array.from(documents.values())
 					.filter(nameFilter)
 					.map((row) => ({
 						confirm: row.paymentDoc,
-						date: DateTime.fromMillis(row.paymentDoc.get('payment_at').seconds * 1000).toFormat('MM/yyyy'),
+						date: toDateTime(row.paymentDoc.get('payment_at')).toFormat('MM/yyyy'),
 						id: row.paymentDoc.ref.path,
 						name: {
 							name: `${row.recipientDoc.get('first_name')} ${row.recipientDoc.get('last_name')}`,

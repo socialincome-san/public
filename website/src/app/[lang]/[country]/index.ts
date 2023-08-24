@@ -1,11 +1,14 @@
-import { ValidCountry, ValidLanguage } from '@/i18n';
+import { ValidCountry, WebsiteLanguage } from '@/i18n';
 
 export interface DefaultParams {
-	lang: ValidLanguage;
+	lang: WebsiteLanguage;
 	country: ValidCountry;
 }
 
-export interface DefaultPageProps {
+export interface DefaultLayoutProps {
 	params: DefaultParams;
-	searchParams: {};
+}
+
+export interface DefaultPageProps extends DefaultLayoutProps {
+	searchParams: Record<string, string>;
 }

@@ -1,161 +1,43 @@
-import { Chip, Tooltip } from '@mui/material';
-import {
-	AdditionalFieldDelegate,
-	AsyncPreviewComponent,
-	Entity,
-	SideEntityController,
-	StringPropertyPreview,
-	useSideEntityController,
-} from 'firecms';
-import _ from 'lodash';
-import { DateTime } from 'luxon';
-import { Fragment } from 'react';
-import { Recipient, SURVEY_FIRETORE_PATH, Survey, SurveyStatus } from '../../../../shared/src/types';
-import CopyToClipboard from '../../components/CopyToClipboard';
-import { mainLanguageProperty } from '../recipients/RecipientsProperties';
+import { EntityCollection } from 'firecms/dist/types/collections';
+import { SURVEY_FIRETORE_PATH, Survey } from '../../../../shared/src/types';
 import { buildAuditedCollection } from '../shared';
 import {
+	accessEmailProperty,
+	accessPasswordProperty,
 	accessTokenProperty,
 	commentsProperty,
 	completedAtProperty,
+	dataProperty,
 	dueDateAtProperty,
+	languageProperty,
 	recipientNameProperty,
 	sentAtProperty,
 	surveyQuestionnaireProperty,
 	surveyStatusProperty,
 } from './SurveysProperties';
 
-export const surveysCollection = buildAuditedCollection<Partial<Survey>>({
-	additionalFields: [],
-	inlineEditing: false,
-	name: 'Surveys',
-	path: SURVEY_FIRETORE_PATH,
-	singularName: 'Survey',
-	properties: {
-		questionnaire: surveyQuestionnaireProperty,
-		recipient_name: recipientNameProperty,
-		language: mainLanguageProperty,
-		due_date_at: dueDateAtProperty,
-		sent_at: sentAtProperty,
-		completed_at: completedAtProperty,
-		status: surveyStatusProperty,
-		comments: commentsProperty,
-		access_token: accessTokenProperty,
-	},
-});
-
-export const createSurveyColumn = (surveyName: string): AdditionalFieldDelegate<Partial<Recipient>> => {
-	const sideEntityController = useSideEntityController();
-	return {
-		id: surveyName,
-		name: surveyName,
-		width: 400,
-		Builder: ({ entity, context }) => {
-			return (
-				<AsyncPreviewComponent
-					builder={context.dataSource
-						.fetchEntity({
-							path: [entity.path, entity.id, SURVEY_FIRETORE_PATH].join('/'),
-							entityId: surveyName,
-							collection: surveysCollection,
-						})
-						.then((surveyEntity) => surveyEntity && surveyPreview(surveyEntity, entity.id, sideEntityController))}
-				/>
-			);
+export function buildSurveysCollection(collectionProps?: Partial<EntityCollection<Survey>>) {
+	return buildAuditedCollection<Survey>({
+		name: 'Surveys',
+		path: SURVEY_FIRETORE_PATH,
+		inlineEditing: false,
+		singularName: 'Survey',
+		group: 'Surveys',
+		icon: 'QuestionAnswer',
+		properties: {
+			questionnaire: surveyQuestionnaireProperty,
+			recipient_name: recipientNameProperty,
+			language: languageProperty,
+			due_date_at: dueDateAtProperty,
+			sent_at: sentAtProperty,
+			completed_at: completedAtProperty,
+			status: surveyStatusProperty,
+			comments: commentsProperty,
+			access_token: accessTokenProperty,
+			access_pw: accessPasswordProperty,
+			access_email: accessEmailProperty,
+			data: dataProperty,
 		},
-	};
-};
-
-export const createPendingSurveyColumn = (i: number): AdditionalFieldDelegate<Partial<Recipient>> => {
-	const sideEntityController = useSideEntityController();
-	return {
-		id: 'nextSurvey',
-		name: 'nextSurvey',
-		width: 400,
-		Builder: ({ entity, context }) => {
-			const path = [entity.path, entity.id, SURVEY_FIRETORE_PATH].join('/');
-			return (
-				<AsyncPreviewComponent
-					builder={context.dataSource
-						.fetchCollection({
-							path: path,
-							collection: surveysCollection,
-						})
-						.then((collection) => {
-							const nextSurvey = _(collection)
-								.sortBy((survey) => survey.values.due_date_at)
-								.filter(
-									(survey) =>
-										survey.values?.status != undefined &&
-										[SurveyStatus.New, SurveyStatus.Sent, SurveyStatus.Scheduled, SurveyStatus.InProgress].includes(
-											survey.values?.status,
-										),
-								)
-								.value()
-								.at(i);
-
-							return (
-								nextSurvey && (
-									<Fragment>
-										<Chip size={'small'} color={'info'} label={nextSurvey.id} />
-										{surveyPreview(nextSurvey, entity.id, sideEntityController)}
-									</Fragment>
-								)
-							);
-						})}
-				/>
-			);
-		},
-	};
-};
-
-const surveyPreview = (
-	entity: Entity<Partial<Survey>>,
-	recipientId: string,
-	sideEntityController: SideEntityController,
-) => {
-	return (
-		<Fragment>
-			<StringPropertyPreview property={surveyStatusProperty} value={entity?.values?.status || ''} size={'small'} />
-			&nbsp;
-			{surveyDueDateClip(entity)}
-			{/*TODO ahee fix me*/}
-			{/*&nbsp;*/}
-			{/*<OpenDetailView entity={entity} collection={surveysCollection} sideEntityController={sideEntityController} />*/}
-			&nbsp;
-			{/*// todo add proper survey link*/}
-			<CopyToClipboard title={'Copy survey url to clipboard'} data={getSurveyUrl(entity, recipientId)} />
-			&nbsp;
-			<Tooltip title={'This token can be used to login using the orange money phone number'}>
-				<Chip color="info" label={entity?.values?.access_token} size={'small'} />
-			</Tooltip>
-		</Fragment>
-	);
-};
-
-const surveyDueDateClip = (entity: Entity<Partial<Survey>>) => {
-	// TODO: discuss logic
-	const dueDate = DateTime.fromJSDate(entity.values.due_date_at as Date);
-
-	return (
-		entity.values.due_date_at && (
-			<Tooltip title={'Due date ' + dueDate.toFormat('dd/MM/yyyy')}>
-				<Chip
-					size={'small'}
-					color={dueDate < DateTime.now() && entity.values.status != SurveyStatus.Completed ? 'warning' : 'info'}
-					label={dueDate.diffNow(['months', 'days']).toHuman({ unitDisplay: 'narrow', maximumFractionDigits: 0 })}
-				/>
-			</Tooltip>
-		)
-	);
-};
-
-const getSurveyUrl = (entity: Entity<Partial<Survey>>, recipientId: string) => {
-	const getParams = {
-		email: entity.values.access_email!,
-		pw: entity.values.access_pw!,
-	};
-	const url = new URL([import.meta.env.VITE_WEBSITE_BASE_URL, 'survey', recipientId, entity.id].join('/'));
-	url.search = new URLSearchParams(getParams).toString();
-	return url.toString();
-};
+		...collectionProps,
+	});
+}

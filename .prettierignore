@@ -4,5 +4,6 @@ seed/
 dist/
 .next/
 *.hbs
-ui/storybook-static/
+ui/src/react-daisyui/
 ui/README.md
+ui/storybook-static/

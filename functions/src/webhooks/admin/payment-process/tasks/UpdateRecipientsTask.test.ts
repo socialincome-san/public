@@ -1,9 +1,9 @@
 import { FieldValue } from '@google-cloud/firestore';
 import { expect } from '@jest/globals';
-import { getOrInitializeFirebaseAdmin } from '@socialincome/shared/src/firebase/admin/app';
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
 import functionsTest from 'firebase-functions-test';
 import { DateTime } from 'luxon';
+import { getOrInitializeFirebaseAdmin } from '../../../../../../shared/src/firebase/admin/app';
+import { FirestoreAdmin } from '../../../../../../shared/src/firebase/admin/FirestoreAdmin';
 import {
 	PaymentProcessTaskType,
 	Recipient,

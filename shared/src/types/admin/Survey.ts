@@ -1,3 +1,4 @@
+import { Timestamp } from '@google-cloud/firestore';
 import { RecipientMainLanguage } from './Recipient';
 
 export const SURVEY_FIRETORE_PATH = 'surveys';
@@ -22,9 +23,9 @@ export type Survey = {
 	questionnaire: SurveyQuestionnaire; // set of questions
 	recipient_name: string; // used to address the recipient in the form. E.g. Hello XYZ.
 	language: RecipientMainLanguage; // used to issue the survey in the appropriate language
-	due_date_at: Date; // till when the survey should be completed
-	sent_at?: Date; // date when the survey was sent to the recipient
-	completed_at?: Date; // date when the survey was completed
+	due_date_at: Timestamp; // till when the survey should be completed
+	sent_at?: Timestamp; // date when the survey was sent to the recipient
+	completed_at?: Timestamp; // date when the survey was completed
 	status: SurveyStatus; // the different states of a survey
 	comments?: string; // additional comments
 	data: any; // the survey data
@@ -58,3 +59,10 @@ export interface SurveyCredentialResponse {
 	email: string;
 	pw: string;
 }
+
+export const getSurveyUrl = (baseUrl: string, survey: Survey, surveyId: string, recipientId: string) => {
+	const url = new URL([baseUrl, 'survey', recipientId, surveyId].join('/'));
+	const getParams = { email: survey.access_email, pw: survey.access_pw };
+	url.search = new URLSearchParams(getParams).toString();
+	return url.toString();
+};

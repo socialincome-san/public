@@ -3,9 +3,6 @@ import { Box, Button, Card, CardActions, CardContent, Container, Grid, Typograph
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { useSnackbarController } from 'firecms';
 
-/**
- * Collection of admin scripts
- */
 export function ScriptsView() {
 	const functions = getFunctions();
 	const snackbarController = useSnackbarController();
