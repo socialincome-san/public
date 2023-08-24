@@ -11,7 +11,7 @@ export default async function Page({ searchParams }: DefaultPageProps) {
 	return (
 		<BaseContainer>
 			<div className="flex flex-col items-center space-y-3">
-				<Typography size="4xl" color="primary" weight="bold">
+				<Typography size="4xl" color="primary-content" weight="bold">
 					Thank you
 				</Typography>
 				<CreateUserForm

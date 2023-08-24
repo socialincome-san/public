@@ -4,7 +4,7 @@ import { BaseContainer, Typography } from '@socialincome/ui';
 import { SiFacebook, SiInstagram } from '@icons-pack/react-simple-icons';
 import Link from 'next/link';
 
-export default async function ({ params }: DefaultLayoutProps) {
+export default async function Footer({ params }: DefaultLayoutProps) {
 	return (
 		<BaseContainer>
 			<div className="grid grid-cols-4 py-8">

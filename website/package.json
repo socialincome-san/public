@@ -18,6 +18,7 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
+		"@headlessui/react": "^1.7.16",
 		"@heroicons/react": "^2.0.18",
 		"@icons-pack/react-simple-icons": "^8.0.1",
 		"@socialincome/shared": "^1.0.0",

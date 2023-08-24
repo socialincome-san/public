@@ -1,0 +1,11 @@
+{
+	"login": {
+		"title": "Sign in to your account",
+		"email": "Email",
+		"invalid-email": "Invalid email address",
+		"password": "Password",
+		"forgot-password": "Forgot password?",
+		"required-field": "This field is required",
+		"submit-button": "Sign in"
+	}
+}

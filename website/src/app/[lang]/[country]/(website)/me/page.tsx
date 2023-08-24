@@ -1,28 +1,32 @@
 'use client';
 
 import { auth } from '@/firebase/client';
+import { useAuthUser } from '@/hooks/useAuthUser';
 import { BaseContainer, Button, Typography } from '@socialincome/ui';
-import { User, signOut } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 export default function Page() {
 	const router = useRouter();
-	const [user, setUser] = useState<User | null>(null);
+	const [user, isReady] = useAuthUser();
 
 	useEffect(() => {
-		auth.onAuthStateChanged((user) => setUser(user));
-	}, []);
+		if (isReady && user === null) router.push('./me/login');
+	});
 
 	return (
-		<BaseContainer>
-			<Typography>{user?.displayName || 'No display name'}</Typography>
-			<Typography>{user?.email || 'No email'}</Typography>
+		<BaseContainer className="bg-base-blue min-h-screen">
+			{isReady && (
+				<div className="flex flex-col items-center">
+					<Typography>{user?.displayName || 'No display name'}</Typography>
+					<Typography>{user?.email || 'No email'}</Typography>
 
-			<div className="flex flex-row space-x-4">
-				<Button onClick={() => signOut(auth)}>Log out</Button>
-				<Button onClick={() => router.push('/me/login')}>Log in</Button>
-			</div>
+					<div className="flex flex-row space-x-4">
+						<Button onClick={() => signOut(auth)}>Log out</Button>
+					</div>
+				</div>
+			)}
 		</BaseContainer>
 	);
 }

@@ -28,8 +28,7 @@ const FONT_WEIGHT_MAP: { [key in FontWeight]: string } = {
 
 type FontColor = Extract<
 	Color,
-	| 'primary'
-	| 'primary-focus'
+	| 'base-content'
 	| 'primary-content'
 	| 'secondary'
 	| 'secondary-focus'
@@ -49,9 +48,9 @@ type FontColor = Extract<
 	| 'error'
 	| 'error-content'
 >;
+
 const FONT_COLOR_MAP: { [key in FontColor]: string } = {
-	primary: 'text-primary',
-	'primary-focus': 'text-primary-focus',
+	'base-content': 'text-base-content',
 	'primary-content': 'text-primary-content',
 	secondary: 'text-secondary',
 	'secondary-focus': 'text-secondary-focus',
@@ -97,7 +96,7 @@ export function Typography<C extends ElementType = 'p'>({
 	as,
 	size = 'md',
 	weight = 'normal',
-	color = 'neutral',
+	color = 'base-content',
 	lineHeight = 'normal',
 	className,
 	children,
