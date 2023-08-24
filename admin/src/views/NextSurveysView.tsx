@@ -77,6 +77,7 @@ export function NextSurveysView() {
 	return (
 		<Box sx={{ m: 2, display: 'grid', rowGap: 2 }}>
 			<DataGrid
+				autoHeight
 				rows={Array.from(documents.values()).map((row) => ({
 					date: toDateTime(row.surveyDoc.get('due_date_at')).toFormat('MM/yyyy'),
 					id: row.surveyDoc.ref.path,

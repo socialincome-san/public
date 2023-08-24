@@ -206,7 +206,8 @@ be, or how it will look. Thank you:
 Thanks to [Google Nonprofit](https://www.google.com/nonprofits/),
 [GitHub](https://socialimpact.github.com),
 [Codemagic](https://codemagic.io/start/), [Linktree](https://linktr.ee),
-[Twilio](https://twilio.org), and [JetBrain](https://www.jetbrains.com),
+[Twilio](https://twilio.org), [algolia](https://www.algolia.com),
+[JetBrain](https://www.jetbrains.com) and
 [1Password](https://1password.com/). Font Unica77 by
 [Lineto](https://www.lineto.com).
 

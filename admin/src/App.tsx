@@ -10,8 +10,6 @@ import {
 import { AdminUser } from '../../shared/src/types';
 
 import { adminsCollection } from './collections/Admins';
-import { contributorOrganisationsCollection } from './collections/ContributorOrganisations';
-import { newsletterSubscribersCollection } from './collections/NewsletterSubscribers';
 import { operationalExpensesCollection } from './collections/OperationalExpenses';
 import { buildPartnerOrganisationsCollection } from './collections/PartnerOrganisations';
 import { usersCollection } from './collections/Users';
@@ -52,10 +50,8 @@ export default function App() {
 		buildRecipientsPaymentsCollection(),
 		buildPartnerOrganisationsCollection(),
 		buildSurveysCollection({ collectionGroup: true }),
-		contributorOrganisationsCollection,
 		adminsCollection,
 		operationalExpensesCollection,
-		newsletterSubscribersCollection,
 		usersCollection,
 	];
 

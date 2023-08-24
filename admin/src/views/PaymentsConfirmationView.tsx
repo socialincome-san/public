@@ -111,6 +111,7 @@ export function PaymentsConfirmationView() {
 		<Box sx={{ m: 2, display: 'grid', rowGap: 2 }}>
 			<SearchBar onTextSearch={(text) => setSearchTerm(text)} />
 			<DataGrid
+				autoHeight
 				rows={Array.from(documents.values())
 					.filter(nameFilter)
 					.map((row) => ({
