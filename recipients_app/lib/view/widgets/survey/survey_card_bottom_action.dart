@@ -30,7 +30,7 @@ class SurveyCardBottomAction extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                _getStatusLabel(mappedSurvey),
+                _getStatusLabel(mappedSurvey, context),
                 style: TextStyle(color: foregroundColor),
               ),
             ),
@@ -109,10 +109,10 @@ class SurveyCardBottomAction extends StatelessWidget {
     }
   }
 
-  String _getStatusLabel(MappedSurvey mappedSurvey) {
+  String _getStatusLabel(MappedSurvey mappedSurvey, BuildContext context) {
     switch (mappedSurvey.cardStatus) {
       case SurveyCardStatus.answered:
-        return DateFormat("dd.MM.yyyy").format(
+        return DateFormat("dd.MM.yyyy", Localizations.localeOf(context).toString()).format(
             mappedSurvey.survey.completedAt?.toDate() ?? DateTime.now());
       case SurveyCardStatus.overdue:
         final daysAfterOverdue = mappedSurvey.daysAfterOverdue ?? 0;

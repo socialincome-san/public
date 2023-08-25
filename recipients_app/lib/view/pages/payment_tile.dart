@@ -32,7 +32,7 @@ class PaymentTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  _formatDate(mappedPayment.payment.paymentAt?.toDate()),
+                  _formatDate(mappedPayment.payment.paymentAt?.toDate(), context),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.black,
                       ),
@@ -50,7 +50,7 @@ class PaymentTile extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime? dateTime) {
+  String _formatDate(DateTime? dateTime, BuildContext context) {
     if (dateTime == null) return "";
 
     String dateFormat;
@@ -64,7 +64,7 @@ class PaymentTile extends StatelessWidget {
     if (_reviewUiStatuses.contains(mappedPayment.uiStatus)) {
       formattedDate = "Review ";
     }
-    formattedDate += "${DateFormat(dateFormat).format(dateTime)}";
+    formattedDate += "${DateFormat(dateFormat, Localizations.localeOf(context).toString()).format(dateTime)}";
     return formattedDate;
   }
 

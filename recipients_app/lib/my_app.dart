@@ -9,11 +9,21 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_crashlytics/firebase_crashlytics.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_localizations/flutter_localizations.dart";
+import "package:i18next/i18next.dart";
+import "package:intl/intl.dart";
 
-class MyApp extends StatelessWidget {
+import "krio_intl.dart";
+
+class MyApp extends StatefulWidget {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firestore;
   final FirebaseCrashlytics crashlytics;
+
+  final List<Locale> locales = const [
+    Locale("en"),
+    Locale("kri"),
+  ];
 
   const MyApp({
     super.key,
@@ -22,6 +32,20 @@ class MyApp extends StatelessWidget {
     required this.crashlytics,
   });
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late Locale locale;
+
+  @override
+  void initState() {
+    super.initState();
+
+    locale = widget.locales.last;
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -29,28 +53,28 @@ class MyApp extends StatelessWidget {
       providers: [
         RepositoryProvider(
           create: (context) => UserRepository(
-            firebaseAuth: firebaseAuth,
-            firestore: firestore,
+            firebaseAuth: widget.firebaseAuth,
+            firestore: widget.firestore,
           ),
         ),
         RepositoryProvider(
           create: (context) => CrashReportingRepository(
-            crashlytics: crashlytics,
+            crashlytics: widget.crashlytics,
           ),
         ),
         RepositoryProvider(
           create: (context) => PaymentRepository(
-            firestore: firestore,
+            firestore: widget.firestore,
           ),
         ),
         RepositoryProvider(
           create: (context) => SurveyRepository(
-            firestore: firestore,
+            firestore: widget.firestore,
           ),
         ),
         RepositoryProvider(
           create: (context) => OrganizationRepository(
-            firestore: firestore,
+            firestore: widget.firestore,
           ),
         ),
       ],
@@ -63,6 +87,20 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: "Profile Page",
           theme: AppTheme.lightTheme,
+          localizationsDelegates: [
+            GlobalWidgetsLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            KrioMaterialLocalizations.delegate,
+            KrioCupertinoLocalizations.delegate,
+            I18NextLocalizationDelegate(
+              locales: widget.locales,
+              dataSource: AssetBundleLocalizationDataSource(
+                bundlePath: "assets/localizations",
+              ),
+              options: I18NextOptions(formats: formatters()),
+            ),
+          ],
           home: BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
               switch (state.status) {
@@ -83,8 +121,29 @@ class MyApp extends StatelessWidget {
             },
           ),
           debugShowCheckedModeBanner: false,
+          locale: locale,
+          supportedLocales: widget.locales,
         ),
       ),
     );
   }
+
+  void updateLocale(Locale newLocale) {
+    setState(() {
+      locale = newLocale;
+    });
+  }
+
+  static Map<String, ValueFormatter> formatters() => {
+        "uppercase": (value, format, locale, options) =>
+            value?.toString().toUpperCase(),
+        "lowercase": (value, format, locale, options) =>
+            value?.toString().toLowerCase(),
+        "datetime": (value, format, locale, options) {
+          if (value is! DateTime) return value;
+          var dateFormat = format.options["format"];
+          dateFormat = dateFormat is String ? dateFormat : "dd/MM/yyyy";
+          return DateFormat(dateFormat, locale.toString()).format(value);
+        },
+      };
 }

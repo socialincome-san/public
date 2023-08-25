@@ -3,6 +3,7 @@ import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:i18next/i18next.dart";
 import "package:intl_phone_number_input/intl_phone_number_input.dart";
 import "package:rounded_loading_button/rounded_loading_button.dart";
 
@@ -54,10 +55,10 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                     height: MediaQuery.of(context).size.height * 0.3,
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    "Your mobile phone",
+                  Text(
+                    I18Next.of(context)!.t("common:phoneInputTitle"),
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 24,
                       color: AppColors.primaryColor,
                       fontWeight: FontWeight.bold,

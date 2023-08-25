@@ -408,6 +408,7 @@ class AccountPageState extends State<AccountPage> {
 
   String? getFormattedDate(Timestamp? timestamp) {
     if (timestamp == null) return null;
-    return DateFormat("dd.MM.yyyy").format(timestamp.toDate());
+    return DateFormat("dd.MM.yyyy", Localizations.localeOf(context).toString())
+        .format(timestamp.toDate());
   }
 }
