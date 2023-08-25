@@ -1,4 +1,5 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
+import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/gestures.dart";
@@ -62,11 +63,11 @@ class TermsAndConditionsPage extends StatelessWidget {
                                     text: "https://socialincome.org/privacy",
                                   ),
                                 ).then((_) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          "Can't open privacy policy right now. Copied website address to the clipboard."),
-                                    ),
+                                  FlushbarHelper.showFlushbar(
+                                    context,
+                                    message:
+                                        "Can't open privacy policy right now. Copied website address to the clipboard.",
+                                    type: FlushbarType.error,
                                   );
                                 });
                               }

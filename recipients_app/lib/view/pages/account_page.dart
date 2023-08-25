@@ -1,4 +1,5 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
+import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/models/models.dart";
 import "package:app/data/models/organization.dart";
 import "package:app/ui/buttons/buttons.dart";
@@ -84,15 +85,16 @@ class AccountPageState extends State<AccountPage> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.updateRecipientSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Profile updated successfully")),
+          FlushbarHelper.showFlushbar(
+            context,
+            message: "Profile updated successfully",
           );
         } else if (state.status == AuthStatus.updateRecipientFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                  "Failed to update profile. Please try again or contact our support"),
-            ),
+          FlushbarHelper.showFlushbar(
+            context,
+            message:
+                "Failed to update profile. Please try again or contact our support",
+            type: FlushbarType.error,
           );
         } else if (state.status == AuthStatus.unauthenticated) {
           Navigator.of(context).pop();
