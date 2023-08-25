@@ -32,3 +32,7 @@ setup.
 ## Rebuilding JSON Serialization
 
 flutter pub run build_runner watch --delete-conflicting-outputs
+
+# Testing
+## Run golden tests
+Run `flutter test --update-golden` to update golden files.
