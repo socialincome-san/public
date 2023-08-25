@@ -18,7 +18,10 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.3
-  intl: ^0.18.1
+  flutter_localizations:
+    sdk: flutter
+  i18next: ^0.6.1
+  intl: ^0.18.0
   # use the lib itself after improvements are merged
   # https://github.com/natintosh/intl_phone_number_input/pull/400
   intl_phone_number_input:
@@ -44,6 +47,8 @@ flutter:
   assets:
     - assets/
     - assets/fonts/
+    - assets/localizations/en/
+    - assets/localizations/kri/
 
   fonts:
     - family: Unica77LL
