@@ -1,7 +1,7 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
 import { initializeStripe } from '@socialincome/shared/src/stripe';
 import { BaseContainer, Typography } from '@socialincome/ui';
-import { CreateUserForm } from './create-user-form';
+import { CreateUsergorm } from './create-user-form';
 import { LinkGoogleForm } from './link-google-form';
 
 export default async function Page({ searchParams }: DefaultPageProps) {
