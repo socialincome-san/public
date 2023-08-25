@@ -36,18 +36,22 @@ class PaymentRepository {
     return payments;
   }
 
+  /// This updates the payment status to confirmed
+  /// and also sets lastUpdatedAt and lastUpdatedBy to the
+  /// current time and recipient
   Future<void> confirmPayment({
-    required String recipientId,
+    required Recipient recipient,
     required SocialIncomePayment payment,
   }) async {
     final updatedPayment = payment.copyWith(
       status: PaymentStatus.confirmed,
-      updatedBy: kUpdatedByAppUser,
+      updatedBy: '${(recipient.firstName ?? '')} ${recipient.lastName ?? ''}',
+      updatedAt: Timestamp.now(),
     );
 
     await firestore
         .collection(recipientCollection)
-        .doc(recipientId)
+        .doc(recipient.userId)
         .collection(paymentCollection)
         .doc(payment.id)
         .set(updatedPayment.toJson());
