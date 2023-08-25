@@ -58,19 +58,20 @@ class PaymentRepository {
   }
 
   Future<void> contestPayment({
-    required String recipientId,
+    required Recipient recipient,
     required SocialIncomePayment payment,
     required String contestReason,
   }) async {
     final updatedPayment = payment.copyWith(
       status: PaymentStatus.contested,
       comments: contestReason,
-      updatedBy: kUpdatedByAppUser,
+      updatedBy: '${(recipient.firstName ?? '')} ${recipient.lastName ?? ''}',
+      updatedAt: Timestamp.now(),
     );
 
     await firestore
         .collection(recipientCollection)
-        .doc(recipientId)
+        .doc(recipient.userId)
         .collection(paymentCollection)
         .doc(payment.id)
         .set(updatedPayment.toJson());
