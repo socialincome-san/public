@@ -1,3 +1,4 @@
+import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
@@ -80,9 +81,10 @@ class SocialIncomeContactDialog extends StatelessWidget {
     if (await canLaunchUrlString(whatsappURL)) {
       await launchUrlString(whatsappURL);
     } else {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("whatsapp no installed")),
+      FlushbarHelper.showFlushbar(
+        context,
+        message: "WhatsApp not installed",
+        type: FlushbarType.error,
       );
     }
   }

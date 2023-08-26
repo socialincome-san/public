@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   animations: ^2.0.7
+  another_flushbar: ^1.12.30
   cloud_firestore: ^4.9.0
   collection: ^1.17.1
   equatable: ^2.0.5

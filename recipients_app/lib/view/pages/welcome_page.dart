@@ -1,5 +1,5 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
-import "package:app/core/helpers/snackbar_helper.dart";
+import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/view/widgets/welcome/otp_input_page.dart";
 import "package:app/view/widgets/welcome/phone_input_page.dart";
@@ -30,16 +30,16 @@ class _WelcomeView extends StatelessWidget {
       body: BlocConsumer<SignupCubit, SignupState>(
         listener: (context, state) {
           if (state.status == SignupStatus.verificationFailure) {
-            SnackbarHelper.showSnackbar(
+            FlushbarHelper.showFlushbar(
               context,
               message: state.exception.toString(),
-              type: SnackbarType.error,
+              type: FlushbarType.error,
             );
           } else if (state.status == SignupStatus.phoneNumberFailure) {
-            SnackbarHelper.showSnackbar(
+            FlushbarHelper.showFlushbar(
               context,
               message: state.exception.toString(),
-              type: SnackbarType.error,
+              type: FlushbarType.error,
             );
           }
         },
