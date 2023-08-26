@@ -9,6 +9,7 @@ import "package:app/view/widgets/income/balance_card/balance_card_container.dart
 import "package:app/view/widgets/survey/survey_card_container.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -50,6 +51,8 @@ class _DashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     final List<DashboardItem> dashboardItems = context
         .watch<DashboardCardManagerCubit>()
         .state
@@ -79,12 +82,12 @@ class _DashboardView extends StatelessWidget {
               const BalanceCardContainer(),
               const SizedBox(height: 8),
               if (items.isEmpty)
-                const Expanded(
+                Expanded(
                   child: Padding(
                     padding: AppSpacings.a8,
                     child: Center(
                       child: Text(
-                        "You are up to date.\nNo news today.",
+                        localizations.dashboardUp2Date,
                         textAlign: TextAlign.center,
                       ),
                     ),

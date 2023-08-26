@@ -3,6 +3,7 @@ import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/welcome/otp_input.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class OtpInputPage extends StatefulWidget {
   const OtpInputPage({super.key});
@@ -14,6 +15,7 @@ class OtpInputPage extends StatefulWidget {
 class _OtpInputPageState extends State<OtpInputPage> {
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final phoneNumber = context.watch<SignupCubit>().state.phoneNumber ?? "";
 
     return Scaffold(
@@ -32,7 +34,7 @@ class _OtpInputPageState extends State<OtpInputPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Text(
-              "We sent you a verification code to $phoneNumber",
+              localizations.verificationSent(phoneNumber),
               style: AppStyles.headlineLarge.copyWith(
                   color: AppColors.primaryColor, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
@@ -47,9 +49,9 @@ class _OtpInputPageState extends State<OtpInputPage> {
             TextButton(
               onPressed: () async =>
                   context.read<SignupCubit>().resendVerificationCode(),
-              child: const Text(
-                "Resend verification code",
-                style: TextStyle(
+              child: Text(
+                localizations.resendVerificationCode,
+                style: const TextStyle(
                   color: AppColors.primaryColor,
                   decoration: TextDecoration.underline,
                 ),

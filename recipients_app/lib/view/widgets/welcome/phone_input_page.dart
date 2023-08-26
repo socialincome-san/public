@@ -3,6 +3,7 @@ import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:intl_phone_number_input/intl_phone_number_input.dart";
 import "package:rounded_loading_button/rounded_loading_button.dart";
 
@@ -34,6 +35,8 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     final isLoading = context.watch<SignupCubit>().state.status ==
         SignupStatus.loadingPhoneNumber;
 
@@ -54,10 +57,10 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                     height: MediaQuery.of(context).size.height * 0.3,
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    "Your mobile phone",
+                  Text(
+                    localizations.yourMobilePhone,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 24,
                       color: AppColors.primaryColor,
                       fontWeight: FontWeight.bold,
@@ -93,19 +96,19 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                           color: AppColors.primaryColor,
                           fontSize: 18,
                         ),
-                        inputDecoration: const InputDecoration(
-                            labelText: "Phone number",
-                            labelStyle: TextStyle(
+                        inputDecoration: InputDecoration(
+                            labelText: localizations.phoneNumber,
+                            labelStyle: const TextStyle(
                               color: AppColors.primaryColor,
                               fontSize: 18,
                             ),
-                            enabledBorder: OutlineInputBorder(
+                            enabledBorder: const OutlineInputBorder(
                               borderSide:
                                   BorderSide(color: AppColors.primaryColor),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10)),
                             ),
-                            focusedBorder: OutlineInputBorder(
+                            focusedBorder: const OutlineInputBorder(
                               borderSide:
                                   BorderSide(color: AppColors.primaryColor),
                               borderRadius:
@@ -137,7 +140,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                           );
                     }
                   },
-                  label: "Continue",
+                  label: localizations.continueText,
                 ),
               ],
             ),

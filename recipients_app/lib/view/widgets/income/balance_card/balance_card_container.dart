@@ -8,6 +8,7 @@ import "package:app/view/widgets/income/balance_card/balance_card_header.dart";
 import "package:app/view/widgets/income/balance_card/on_hold_bottom_card.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 const _kShowPaymentCardStatuses = [
   PaymentUiStatus.contested,
@@ -20,6 +21,8 @@ class BalanceCardContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     final paymentsUiState =
         context.watch<PaymentsCubit>().state.paymentsUiState;
 
@@ -51,9 +54,9 @@ class BalanceCardContainer extends StatelessWidget {
                             BalanceCardStatus.allConfirmed,
                       ),
                       const SizedBox(height: 16),
-                      const Text(
-                        "My Payments",
-                        style: TextStyle(
+                      Text(
+                        localizations.myPayments,
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 13.0,
                           fontWeight: FontWeight.w400,

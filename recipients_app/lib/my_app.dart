@@ -1,5 +1,7 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
+import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
+import "package:app/kri_intl.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/main_app_page.dart";
 import "package:app/view/pages/terms_and_conditions_page.dart";
@@ -9,6 +11,8 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_crashlytics/firebase_crashlytics.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
+import "package:flutter_localizations/flutter_localizations.dart";
 
 class MyApp extends StatelessWidget {
   final FirebaseAuth firebaseAuth;
@@ -54,16 +58,63 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ],
-      child: BlocProvider(
-        create: (context) => AuthCubit(
-          crashReportingRepository: context.read<CrashReportingRepository>(),
-          organizationRepository: context.read<OrganizationRepository>(),
-          userRepository: context.read<UserRepository>(),
-        )..init(),
-        child: MaterialApp(
-          title: "Profile Page",
-          theme: AppTheme.lightTheme,
-          home: BlocBuilder<AuthCubit, AuthState>(
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AuthCubit(
+              crashReportingRepository:
+                  context.read<CrashReportingRepository>(),
+              organizationRepository: context.read<OrganizationRepository>(),
+              userRepository: context.read<UserRepository>(),
+            )..init(),
+          ),
+          BlocProvider(
+            create: (context) => SettingsCubit(
+              defaultLocale: const Locale("en", "US"),
+            ),
+          ),
+        ],
+        child: const _App(),
+      ),
+    );
+  }
+}
+
+class _App extends StatelessWidget {
+  const _App();
+
+  @override
+  Widget build(BuildContext context) {
+    final currentLocale = context.watch<SettingsCubit>().state.locale;
+
+    return MaterialApp(
+      title: "Social Income",
+      theme: AppTheme.lightTheme,
+      locale: currentLocale,
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        KriMaterialLocalizations.delegate,
+        KriCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale("en", "US"),
+        const Locale("kri"),
+      ],
+      home: BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state.status == AuthStatus.authenticated) {
+            // change language to the user's preferred language
+            final selectedLanguage = state.recipient?.selectedLanguage;
+
+            if (selectedLanguage != null)
+              context.read<SettingsCubit>().changeLanguage(selectedLanguage);
+          }
+        },
+        builder: (context, state) {
+          return BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
               switch (state.status) {
                 case AuthStatus.loading:
@@ -81,10 +132,10 @@ class MyApp extends StatelessWidget {
                   }
               }
             },
-          ),
-          debugShowCheckedModeBanner: false,
-        ),
+          );
+        },
       ),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

@@ -7,6 +7,7 @@ import "package:app/ui/icons/survey_status_icon_with_text.dart";
 import "package:app/view/pages/survey_page.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:intl/intl.dart";
 
 class SurveyCardBottomAction extends StatelessWidget {
@@ -19,6 +20,7 @@ class SurveyCardBottomAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final foregroundColor = _getForegroundColor(mappedSurvey.cardStatus);
 
     return Container(
@@ -30,28 +32,28 @@ class SurveyCardBottomAction extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                _getStatusLabel(mappedSurvey),
+                _getStatusLabel(mappedSurvey, localizations),
                 style: TextStyle(color: foregroundColor),
               ),
             ),
             if (_shouldShowActionButton(mappedSurvey.cardStatus)) ...[
               ButtonSmall(
                 onPressed: () => _navigateToSurvey(context),
-                label: "Start Survey",
+                label: localizations.startSurvey,
                 buttonType: ButtonSmallType.outlined,
                 color: foregroundColor,
                 fontColor: foregroundColor,
               ),
             ] else if (mappedSurvey.cardStatus ==
                 SurveyCardStatus.answered) ...[
-              const SurveyStatusIconWithText(
+              SurveyStatusIconWithText(
                 status: SurveyCardStatus.answered,
-                text: "Answered",
+                text: localizations.surveyStatusAnswered,
               ),
             ] else if (mappedSurvey.cardStatus == SurveyCardStatus.missed) ...[
-              const SurveyStatusIconWithText(
+              SurveyStatusIconWithText(
                 status: SurveyCardStatus.missed,
-                text: "Missed survey",
+                text: localizations.surveyStatusMissed,
               ),
             ],
           ],
@@ -109,26 +111,29 @@ class SurveyCardBottomAction extends StatelessWidget {
     }
   }
 
-  String _getStatusLabel(MappedSurvey mappedSurvey) {
+  String _getStatusLabel(
+    MappedSurvey mappedSurvey,
+    AppLocalizations localizations,
+  ) {
+    var daysText = localizations.day;
+
     switch (mappedSurvey.cardStatus) {
       case SurveyCardStatus.answered:
         return DateFormat("dd.MM.yyyy").format(
             mappedSurvey.survey.completedAt?.toDate() ?? DateTime.now());
       case SurveyCardStatus.overdue:
         final daysAfterOverdue = mappedSurvey.daysAfterOverdue ?? 0;
-        var daysText = "day";
         if (daysAfterOverdue > 1) {
-          daysText += "s";
+          daysText = localizations.days;
         }
-        return "$daysAfterOverdue $daysText overdue";
+        return "$daysAfterOverdue $daysText ${localizations.overdue}";
       case SurveyCardStatus.firstReminder:
       case SurveyCardStatus.newSurvey:
         final daysToOverdue = mappedSurvey.daysToOverdue ?? 0;
-        var daysText = "day";
         if (daysToOverdue > 1) {
-          daysText += "s";
+          daysText = localizations.days;
         }
-        return "You have $daysToOverdue $daysText to answer";
+        return localizations.surveyDaysLeft(daysToOverdue, daysText);
       case SurveyCardStatus.missed:
         return "";
     }

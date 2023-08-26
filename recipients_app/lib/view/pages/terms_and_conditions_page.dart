@@ -6,6 +6,7 @@ import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:url_launcher/url_launcher_string.dart";
 
 class TermsAndConditionsPage extends StatelessWidget {
@@ -13,10 +14,12 @@ class TermsAndConditionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: const Text("Account"),
+        title: Text(localizations.account),
         centerTitle: true,
       ),
       body: Padding(
@@ -35,7 +38,7 @@ class TermsAndConditionsPage extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                            text: "By creating an account, you agree with our ",
+                            text: localizations.createAccountInfo,
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineLarge!
@@ -44,7 +47,7 @@ class TermsAndConditionsPage extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 )),
                         TextSpan(
-                          text: "privacy policy.",
+                          text: localizations.privacyPolicy,
                           style: Theme.of(context)
                               .textTheme
                               .headlineLarge!
@@ -66,7 +69,7 @@ class TermsAndConditionsPage extends StatelessWidget {
                                   FlushbarHelper.showFlushbar(
                                     context,
                                     message:
-                                        "Can't open privacy policy right now. Copied website address to the clipboard.",
+                                        localizations.privacyPolicyError,
                                     type: FlushbarType.error,
                                   );
                                 });
@@ -96,7 +99,7 @@ class TermsAndConditionsPage extends StatelessWidget {
                       context.read<AuthCubit>().updateRecipient(updated);
                     }
                   },
-                  label: "Create account",
+                  label: localizations.createAccount,
                 ),
               ],
             ),
