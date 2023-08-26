@@ -83,7 +83,7 @@ class BalanceCardHeader extends StatelessWidget {
     } else if (daysTo == 1) {
       daysText = localizations.oneDay;
     } else {
-      daysText = localizations.daysAgo(daysTo);
+      daysText = localizations.inDays(daysTo);
     }
 
     return daysText;

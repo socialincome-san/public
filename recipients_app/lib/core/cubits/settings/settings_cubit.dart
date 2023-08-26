@@ -17,6 +17,10 @@ class SettingsCubit extends Cubit<SettingsState> {
         ? const Locale("kri")
         : const Locale("en", "US");
 
+    // check whats the current language
+    // if its the same as the new language, do nothing
+    if (state.locale == locale) return;
+
     emit(
       SettingsState(
         status: SettingsStatus.success,

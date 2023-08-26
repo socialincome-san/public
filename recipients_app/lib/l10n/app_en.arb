@@ -81,6 +81,21 @@
     "today": "Today",
     "oneDay": "1 day",
     "daysAgo": "{number} days ago",
+    "@daysAgo": {
+        "placeholders": {
+            "number": {
+                "type": "int"
+            }
+        }
+    },
+    "inDays": "{number} days",
+    "@inDays": {
+        "placeholders": {
+            "number": {
+                "type": "int"
+            }
+        }
+    },
     "day": "day",
     "days": "days",
     "myPayments": "My Payments",

@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => SettingsCubit(
-              defaultLocale: const Locale("kri"),
+              defaultLocale: const Locale("en", "US"),
             ),
           ),
         ],
@@ -103,23 +103,36 @@ class _App extends StatelessWidget {
         const Locale("en", "US"),
         const Locale("kri"),
       ],
-      home: BlocBuilder<AuthCubit, AuthState>(
-        builder: (context, state) {
-          switch (state.status) {
-            case AuthStatus.loading:
-            case AuthStatus.unauthenticated:
-            case AuthStatus.failure:
-              return const WelcomePage();
-            case AuthStatus.authenticated:
-            case AuthStatus.updateRecipientFailure:
-            case AuthStatus.updateRecipientSuccess:
-            case AuthStatus.updatingRecipient:
-              if (state.recipient?.termsAccepted == true) {
-                return const MainAppPage();
-              } else {
-                return const TermsAndConditionsPage();
-              }
+      home: BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state.status == AuthStatus.authenticated) {
+            // change language to the user's preferred language
+            final selectedLanguage = state.recipient?.selectedLanguage;
+
+            if (selectedLanguage != null)
+              context.read<SettingsCubit>().changeLanguage(selectedLanguage);
           }
+        },
+        builder: (context, state) {
+          return BlocBuilder<AuthCubit, AuthState>(
+            builder: (context, state) {
+              switch (state.status) {
+                case AuthStatus.loading:
+                case AuthStatus.unauthenticated:
+                case AuthStatus.failure:
+                  return const WelcomePage();
+                case AuthStatus.authenticated:
+                case AuthStatus.updateRecipientFailure:
+                case AuthStatus.updateRecipientSuccess:
+                case AuthStatus.updatingRecipient:
+                  if (state.recipient?.termsAccepted == true) {
+                    return const MainAppPage();
+                  } else {
+                    return const TermsAndConditionsPage();
+                  }
+              }
+            },
+          );
         },
       ),
       debugShowCheckedModeBanner: false,
