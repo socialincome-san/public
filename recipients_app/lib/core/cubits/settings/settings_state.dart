@@ -9,12 +9,12 @@ enum SettingsStatus {
 
 class SettingsState extends Equatable {
   final SettingsStatus status;
-  final Locale? locale;
+  final Locale locale;
   final Exception? exception;
 
   const SettingsState({
     this.status = SettingsStatus.initial,
-    this.locale,
+    required this.locale,
     this.exception,
   });
 

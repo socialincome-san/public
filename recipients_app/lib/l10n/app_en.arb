@@ -10,7 +10,7 @@
     "callingName": "Calling Name",
     "gender": "Gender",
     "male": "Male",
-    "female": "Male",
+    "female": "Female",
     "other": "Other",
     "genderError": "Please select a gender",
     "dateOfBirth": "Date of Birth",

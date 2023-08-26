@@ -9,9 +9,7 @@ class SettingsCubit extends Cubit<SettingsState> {
 
   SettingsCubit({
     required this.defaultLocale,
-  }) : super(const SettingsState()) {
-    initLanguage(defaultLocale);
-  }
+  }) : super(SettingsState(locale: defaultLocale));
 
   /// Currently english = en and krio = kri are supported
   void changeLanguage(String languageString) {
@@ -25,21 +23,5 @@ class SettingsCubit extends Cubit<SettingsState> {
         locale: locale,
       ),
     );
-  }
-
-  void initLanguage(Locale defaultLocale) {
-    // if defaultLocale is krio, we need to make an artifical switching
-    // to load the data into memory
-    if (defaultLocale.languageCode == "kri") {
-      changeLanguage("english");
-      changeLanguage("krio");
-    } else {
-      emit(
-        SettingsState(
-          status: SettingsStatus.success,
-          locale: defaultLocale,
-        ),
-      );
-    }
   }
 }
