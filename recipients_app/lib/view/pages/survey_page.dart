@@ -15,6 +15,35 @@ class SurveyPage extends StatefulWidget {
 
 class SurveyPageState extends State<SurveyPage> {
   var isLoading = true;
+  late final WebViewController _webViewController;
+
+  @override
+  void initState() {
+    super.initState();
+    _webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            // Update loading bar.
+          },
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {
+            setState(() {
+              isLoading = false;
+            });
+          },
+          onWebResourceError: (WebResourceError error) {},
+          onNavigationRequest: (NavigationRequest request) {
+            if (request.url.startsWith("https://www.youtube.com/")) {
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.mappedSurvey.surveyUrl));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +59,7 @@ class SurveyPageState extends State<SurveyPage> {
       ),
       body: Stack(
         children: [
-          WebView(
-            initialUrl: widget.mappedSurvey.surveyUrl,
-            javascriptMode: JavascriptMode.unrestricted,
-            onPageFinished: (url) {
-              setState(() {
-                isLoading = false;
-              });
-            },
-          ),
+          WebViewWidget(controller: _webViewController),
           if (isLoading) ...[
             const Center(
               child: CircularProgressIndicator(),
