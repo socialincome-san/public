@@ -1,5 +1,7 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
+import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
+import "package:app/kri_intl.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/main_app_page.dart";
 import "package:app/view/pages/terms_and_conditions_page.dart";
@@ -56,48 +58,71 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ],
-      child: BlocProvider(
-        create: (context) => AuthCubit(
-          crashReportingRepository: context.read<CrashReportingRepository>(),
-          organizationRepository: context.read<OrganizationRepository>(),
-          userRepository: context.read<UserRepository>(),
-        )..init(),
-        child: MaterialApp(
-          title: "Social Income",
-          theme: AppTheme.lightTheme,
-          localizationsDelegates: [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: [
-            const Locale("en"),
-            // TODO add krio language
-            // const Locale("kri"),
-          ],
-          home: BlocBuilder<AuthCubit, AuthState>(
-            builder: (context, state) {
-              switch (state.status) {
-                case AuthStatus.loading:
-                case AuthStatus.unauthenticated:
-                case AuthStatus.failure:
-                  return const WelcomePage();
-                case AuthStatus.authenticated:
-                case AuthStatus.updateRecipientFailure:
-                case AuthStatus.updateRecipientSuccess:
-                case AuthStatus.updatingRecipient:
-                  if (state.recipient?.termsAccepted == true) {
-                    return const MainAppPage();
-                  } else {
-                    return const TermsAndConditionsPage();
-                  }
-              }
-            },
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AuthCubit(
+              crashReportingRepository:
+                  context.read<CrashReportingRepository>(),
+              organizationRepository: context.read<OrganizationRepository>(),
+              userRepository: context.read<UserRepository>(),
+            )..init(),
           ),
-          debugShowCheckedModeBanner: false,
-        ),
+          BlocProvider(
+            create: (context) => SettingsCubit(
+              defaultLocale: const Locale("kri"),
+            ),
+          ),
+        ],
+        child: const _App(),
       ),
+    );
+  }
+}
+
+class _App extends StatelessWidget {
+  const _App();
+
+  @override
+  Widget build(BuildContext context) {
+    final currentLocale = context.watch<SettingsCubit>().state.locale;
+
+    return MaterialApp(
+      title: "Social Income",
+      theme: AppTheme.lightTheme,
+      locale: currentLocale,
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        KriMaterialLocalizations.delegate,
+        KriCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale("en", "US"),
+        const Locale("kri"),
+      ],
+      home: BlocBuilder<AuthCubit, AuthState>(
+        builder: (context, state) {
+          switch (state.status) {
+            case AuthStatus.loading:
+            case AuthStatus.unauthenticated:
+            case AuthStatus.failure:
+              return const WelcomePage();
+            case AuthStatus.authenticated:
+            case AuthStatus.updateRecipientFailure:
+            case AuthStatus.updateRecipientSuccess:
+            case AuthStatus.updatingRecipient:
+              if (state.recipient?.termsAccepted == true) {
+                return const MainAppPage();
+              } else {
+                return const TermsAndConditionsPage();
+              }
+          }
+        },
+      ),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

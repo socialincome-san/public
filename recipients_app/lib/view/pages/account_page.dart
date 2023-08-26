@@ -1,4 +1,5 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
+import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/data/models/models.dart";
 import "package:app/data/models/organization.dart";
 import "package:app/ui/buttons/buttons.dart";
@@ -248,10 +249,13 @@ class AccountPageState extends State<AccountPage> {
                     }
                     return null;
                   },
-                  onChanged: (value) =>
-                      context.read<AuthCubit>().updateRecipient(
-                            widget.recipient.copyWith(selectedLanguage: value),
-                          ),
+                  onChanged: (value) {
+                    // change language accordingly
+                    context.read<SettingsCubit>().changeLanguage(value!);
+                    context.read<AuthCubit>().updateRecipient(
+                          widget.recipient.copyWith(selectedLanguage: value),
+                        );
+                  },
                   value: widget.recipient.selectedLanguage,
                 ),
 
