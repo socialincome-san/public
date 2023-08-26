@@ -32,3 +32,12 @@ setup.
 ## Rebuilding JSON Serialization
 
 flutter pub run build_runner watch --delete-conflicting-outputs
+
+## Rebuilding Translations
+Translations are stored in lib/l10n/app_en.arb. To rebuild the translations after you changed something run:
+`flutter gen-l10n`
+
+To use a translated string in the code use:
+`AppLocalizations.of(context).helloWorld`
+and import:
+`import 'package:flutter_gen/gen_l10n/app_localizations.dart';`

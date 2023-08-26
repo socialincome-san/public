@@ -11,6 +11,7 @@ import "package:app/view/widgets/dialogs/social_income_contact_dialog.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:intl/intl.dart";
 
 class AccountPage extends StatefulWidget {
@@ -81,17 +82,18 @@ class AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.updateRecipientSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Profile updated successfully")),
+            SnackBar(content: Text(localizations.profileUpdateSuccess)),
           );
         } else if (state.status == AuthStatus.updateRecipientFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                  "Failed to update profile. Please try again or contact our support"),
+            SnackBar(
+              content: Text(localizations.profileUpdateError),
             ),
           );
         } else if (state.status == AuthStatus.unauthenticated) {
@@ -101,7 +103,7 @@ class AccountPageState extends State<AccountPage> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text("Profile"),
+            title: Text(localizations.profile),
             centerTitle: true,
             elevation: 0,
           ),
@@ -112,16 +114,16 @@ class AccountPageState extends State<AccountPage> {
               padding: AppSpacings.a16,
               children: [
                 Text(
-                  "Personal",
+                  localizations.personal,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 16),
                 InputText(
-                  hintText: "Name*",
+                  hintText: localizations.name + "*",
                   controller: _nameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Please enter your name";
+                      return localizations.nameError;
                     }
                     return null;
                   },
@@ -135,10 +137,10 @@ class AccountPageState extends State<AccountPage> {
                 const SizedBox(height: 16),
                 InputText(
                   controller: _surnameController,
-                  hintText: "Surname*",
+                  hintText: localizations.surname + "*",
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Please enter your surname";
+                      return localizations.surnameError;
                     }
                     return null;
                   },
@@ -154,7 +156,7 @@ class AccountPageState extends State<AccountPage> {
                 const SizedBox(height: 16),
                 InputText(
                   controller: _callingNameController,
-                  hintText: "Calling Name",
+                  hintText: localizations.callingName,
                   onSubmitted: (value) =>
                       context.read<AuthCubit>().updateRecipient(
                             widget.recipient.copyWith(callingName: value),
@@ -162,25 +164,25 @@ class AccountPageState extends State<AccountPage> {
                 ),
                 const SizedBox(height: 16),
                 InputDropdown<String>(
-                  label: "Gender*",
+                  label: localizations.gender + "*",
                   items: [
-                    const DropdownMenuItem(
-                      child: Text("Male"),
+                    DropdownMenuItem(
+                      child: Text(localizations.male),
                       value: "male",
                     ),
-                    const DropdownMenuItem(
-                      child: Text("Female"),
+                    DropdownMenuItem(
+                      child: Text(localizations.female),
                       value: "female",
                     ),
-                    const DropdownMenuItem(
-                      child: Text("Other"),
+                    DropdownMenuItem(
+                      child: Text(localizations.other),
                       value: "other",
                     ),
                   ],
                   value: widget.recipient.gender,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Please select a gender";
+                      return localizations.genderError;
                     }
                     return null;
                   },
@@ -193,7 +195,7 @@ class AccountPageState extends State<AccountPage> {
                 ),
                 const SizedBox(height: 16),
                 InputText(
-                  hintText: "Date of birth*",
+                  hintText: localizations.dateOfBirth + "*",
                   controller: _birthDateController,
                   isReadOnly: true,
                   onTap: () async => showDatePicker(
@@ -222,27 +224,27 @@ class AccountPageState extends State<AccountPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Please enter your date of birth";
+                      return localizations.dateOfBirthError;
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 16),
                 InputDropdown<String>(
-                  label: "Language*",
+                  label: localizations.language + "*",
                   items: [
-                    const DropdownMenuItem(
-                      child: Text("English"),
+                    DropdownMenuItem(
+                      child: Text(localizations.english),
                       value: "english",
                     ),
-                    const DropdownMenuItem(
-                      child: Text("Krio"),
+                    DropdownMenuItem(
+                      child: Text(localizations.krio),
                       value: "krio",
                     ),
                   ],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Please select a language";
+                      return localizations.languageError;
                     }
                     return null;
                   },
@@ -255,7 +257,7 @@ class AccountPageState extends State<AccountPage> {
 
                 const SizedBox(height: 16),
                 InputText(
-                  hintText: "Email",
+                  hintText: localizations.email,
                   controller: _emailController,
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty)
@@ -267,12 +269,12 @@ class AccountPageState extends State<AccountPage> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  "Payment Phone",
+                  localizations.paymentPhone,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 16),
                 InputText(
-                  hintText: "Payment Number*",
+                  hintText: localizations.paymentNumber + "*",
                   isReadOnly: true,
                   controller: _paymentNumberController,
                   keyboardType: TextInputType.number,
@@ -287,11 +289,11 @@ class AccountPageState extends State<AccountPage> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Please enter your phone number";
+                      return localizations.paymentNumberError;
                     }
 
                     if (int.tryParse(value) == null) {
-                      return "Please enter a valid phone number. Only numbers are allowed";
+                      return localizations.paymentNumberError2;
                     }
 
                     return null;
@@ -299,7 +301,7 @@ class AccountPageState extends State<AccountPage> {
                 ),
                 const SizedBox(height: 16),
                 InputDropdown<String>(
-                  label: "Mobile Payment Provider*",
+                  label: localizations.mobilePaymentProvider + "*",
                   items: [
                     const DropdownMenuItem(
                       child: Text("Orange Money SL"),
@@ -313,7 +315,7 @@ class AccountPageState extends State<AccountPage> {
                   value: widget.recipient.paymentProvider,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Please select a payment provider";
+                      return localizations.paymentProviderError;
                     }
                     return null;
                   },
@@ -326,21 +328,21 @@ class AccountPageState extends State<AccountPage> {
 
                 /// CONTACT PHONE
                 Text(
-                  "Contact Phone",
+                  localizations.contactPhone,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 16),
                 InputText(
-                  hintText: "Contact Number*",
+                  hintText: localizations.contactNumber + "*",
                   controller: _contactNumberController,
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return "Please enter your contact phone number";
+                      return localizations.contactNumberError;
                     }
 
                     if (int.tryParse(value) == null) {
-                      return "Please enter a valid phone number. Only numbers are allowed";
+                      return localizations.contactNumberError2;
                     }
 
                     return null;
@@ -379,24 +381,24 @@ class AccountPageState extends State<AccountPage> {
                 if (widget.organization != null)
                   OrganizationInfo(organization: widget.organization!),
                 const SizedBox(height: 24),
-                Text("Support", style: Theme.of(context).textTheme.bodyLarge),
+                Text(localizations.support,
+                    style: Theme.of(context).textTheme.bodyLarge),
                 const SizedBox(height: 16),
-                const Text(
-                    "In case you have any questions or problems, please contact us."),
+                Text(localizations.supportInfo),
                 const SizedBox(height: 16),
                 ButtonBig(
                   onPressed: () => const SocialIncomeContactDialog(),
-                  label: "Get in touch",
+                  label: localizations.getInTouch,
                 ),
                 const SizedBox(height: 24),
-                Text("Account", style: Theme.of(context).textTheme.bodyLarge),
+                Text(localizations.account,
+                    style: Theme.of(context).textTheme.bodyLarge),
                 const SizedBox(height: 16),
-                const Text(
-                    "In case you want to delete your account, please contact us."),
+                Text(localizations.accountInfo),
                 const SizedBox(height: 16),
                 ButtonBig(
                   onPressed: () => context.read<AuthCubit>().logout(),
-                  label: "Sign Out",
+                  label: localizations.signOut,
                 ),
               ],
             ),
