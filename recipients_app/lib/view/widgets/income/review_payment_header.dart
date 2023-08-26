@@ -1,15 +1,18 @@
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class ReviewPaymentModalHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text("Contest payment"),
+            Text(localizations.contestPayment),
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);
@@ -30,7 +33,7 @@ class ReviewPaymentModalHeader extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(top: 24),
             child: Text(
-              "A payment has not reached you. What happened?",
+              localizations.contestPaymentInfo,
               textAlign: TextAlign.center,
               style: AppStyles.headlineLarge.copyWith(
                 color: AppColors.primaryColor,

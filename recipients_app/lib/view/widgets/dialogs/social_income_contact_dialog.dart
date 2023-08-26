@@ -1,6 +1,7 @@
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:url_launcher/url_launcher_string.dart";
 
 class SocialIncomeContactDialog extends StatelessWidget {
@@ -8,6 +9,8 @@ class SocialIncomeContactDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return FractionallySizedBox(
       widthFactor: 0.9,
       heightFactor: 0.8,
@@ -32,32 +35,32 @@ class SocialIncomeContactDialog extends StatelessWidget {
                       image: const AssetImage("assets/team.png"),
                       width: MediaQuery.of(context).size.width * 0.6,
                     ),
-                    const Text(
-                      "Support Team",
-                      style: TextStyle(fontSize: 24),
+                    Text(
+                      localizations.supportTeam,
+                      style: const TextStyle(fontSize: 24),
                     ),
-                    const Text(
-                      "Get in touch with us",
-                      style: TextStyle(fontSize: 15, color: Colors.grey),
+                    Text(
+                      localizations.getInTouch,
+                      style: const TextStyle(fontSize: 15, color: Colors.grey),
                     )
                   ],
                 ),
                 Column(
                   children: [
                     _IconAndContact(
-                      contactMethod: "Whatsapp",
+                      contactMethod: "WhatsApp",
                       contactDetails: "+41 76 251 55 69",
                       onOpen: (String value) => openWhatsapp(context, value),
                     ),
                     const SizedBox(height: 16),
                     _IconAndContact(
-                      contactMethod: "Phone",
+                      contactMethod: localizations.phone,
                       contactDetails: "+232 75 588647",
                       onOpen: (String value) => makePhoneCall(value),
                     ),
                     const SizedBox(height: 16),
                     _IconAndContact(
-                      contactMethod: "Email",
+                      contactMethod: localizations.email,
                       contactDetails: "support@socialincome.org",
                       onOpen: (String value) => writeEmail(value),
                     ),
@@ -65,7 +68,7 @@ class SocialIncomeContactDialog extends StatelessWidget {
                 ),
                 ButtonBig(
                   onPressed: () => Navigator.of(context).pop(),
-                  label: "Close",
+                  label: localizations.close,
                 ),
               ],
             ),
@@ -76,13 +79,15 @@ class SocialIncomeContactDialog extends StatelessWidget {
   }
 
   Future<void> openWhatsapp(BuildContext context, String number) async {
+    final localizations = AppLocalizations.of(context)!;
+
     final whatsappURL = "whatsapp://send?phone=$number&text=hello";
     if (await canLaunchUrlString(whatsappURL)) {
       await launchUrlString(whatsappURL);
     } else {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("whatsapp no installed")),
+        SnackBar(content: Text(localizations.whatsappError)),
       );
     }
   }

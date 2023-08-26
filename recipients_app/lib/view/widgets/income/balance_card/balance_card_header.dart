@@ -1,6 +1,7 @@
 import "package:app/data/models/payment/payment.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class BalanceCardHeader extends StatelessWidget {
   final int daysTo;
@@ -16,6 +17,8 @@ class BalanceCardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     TextStyle dynamicTextStyle =
         Theme.of(context).textTheme.headlineLarge!.copyWith(
               fontWeight: FontWeight.bold,
@@ -29,13 +32,13 @@ class BalanceCardHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Next payment",
-                style: TextStyle(fontSize: 13),
+              Text(
+                localizations.nextPayment,
+                style: const TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 4),
               Text(
-                _getNextDateText(),
+                _getNextDateText(localizations),
                 style: dynamicTextStyle,
               ),
             ],
@@ -45,9 +48,9 @@ class BalanceCardHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Amount",
-                style: TextStyle(fontSize: 13),
+              Text(
+                localizations.amount,
+                style: const TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 4),
               Text(
@@ -69,18 +72,18 @@ class BalanceCardHeader extends StatelessWidget {
     }
   }
 
-  String _getNextDateText() {
+  String _getNextDateText(AppLocalizations localizations) {
     String daysText;
     if (balanceCardStatus == BalanceCardStatus.onHold) {
-      daysText = "Suspended";
+      daysText = localizations.paymentsSuspended;
     } else if (daysTo < 0) {
-      daysText = "Next month";
+      daysText = localizations.nextMonth;
     } else if (daysTo == 0) {
-      daysText = "Today";
+      daysText = localizations.today;
     } else if (daysTo == 1) {
-      daysText = "1 day";
+      daysText = localizations.oneDay;
     } else {
-      daysText = "$daysTo days";
+      daysText = localizations.daysAgo(daysTo);
     }
 
     return daysText;

@@ -2,6 +2,7 @@ import "package:app/core/cubits/survey/survey_cubit.dart";
 import "package:app/data/models/survey/mapped_survey.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:webview_flutter/webview_flutter.dart";
 
 class SurveyPage extends StatefulWidget {
@@ -24,9 +25,7 @@ class SurveyPageState extends State<SurveyPage> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
-          },
+          onProgress: (int progress) {},
           onPageStarted: (String url) {},
           onPageFinished: (String url) {
             setState(() {
@@ -34,12 +33,8 @@ class SurveyPageState extends State<SurveyPage> {
             });
           },
           onWebResourceError: (WebResourceError error) {},
-          onNavigationRequest: (NavigationRequest request) {
-            if (request.url.startsWith("https://www.youtube.com/")) {
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-          },
+          onNavigationRequest: (NavigationRequest request) =>
+              NavigationDecision.navigate,
         ),
       )
       ..loadRequest(Uri.parse(widget.mappedSurvey.surveyUrl));
@@ -47,10 +42,12 @@ class SurveyPageState extends State<SurveyPage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: const Text("Survey"),
+        title: Text(localizations.survey),
         leading: BackButton(onPressed: () {
           context.read<SurveyCubit>().getSurveys();
           Navigator.maybePop(context);

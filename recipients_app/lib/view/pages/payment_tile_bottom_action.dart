@@ -5,6 +5,7 @@ import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/income/review_payment_modal.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class PaymentTileBottomAction extends StatelessWidget {
   final MappedPayment mappedPayment;
@@ -16,6 +17,8 @@ class PaymentTileBottomAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
+
     final foregroundColor = _getForegroundColor(mappedPayment.uiStatus);
     final isContested = mappedPayment.uiStatus == PaymentUiStatus.contested ||
         mappedPayment.uiStatus == PaymentUiStatus.onHoldContested;
@@ -30,8 +33,8 @@ class PaymentTileBottomAction extends StatelessWidget {
             Expanded(
               child: Text(
                 isContested
-                    ? "Currently under investigation"
-                    : "Did you get your Social Income?",
+                    ? localization.underInvestigation
+                    : localization.didYouGetSocialIncome,
                 style: TextStyle(color: foregroundColor),
               ),
             ),
@@ -41,7 +44,7 @@ class PaymentTileBottomAction extends StatelessWidget {
                   onPressed: () => context
                       .read<PaymentsCubit>()
                       .confirmPayment(mappedPayment.payment),
-                  label: isContested ? "Resolved" : "Yes",
+                  label: isContested ? localization.resolved : localization.yes,
                   buttonType: ButtonSmallType.outlined,
                   color: foregroundColor,
                   fontColor: foregroundColor,
@@ -50,7 +53,7 @@ class PaymentTileBottomAction extends StatelessWidget {
                   const SizedBox(width: 8),
                   ButtonSmall(
                     onPressed: () => _onPressedNo(context),
-                    label: "No",
+                    label: localization.no,
                     buttonType: ButtonSmallType.outlined,
                     color: foregroundColor,
                     fontColor: foregroundColor,
