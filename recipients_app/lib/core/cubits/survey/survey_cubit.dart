@@ -13,6 +13,8 @@ const _kOverdueEndDay = 15;
 const _kOverduePeriodDays = 6;
 const _kEndOfDisplaySurveyDay = 20;
 
+const _kSurveyBaseUrlKey = "SURVEY_BASE_URL";
+
 class SurveyCubit extends Cubit<SurveyState> {
   final Recipient recipient;
   final SurveyRepository surveyRepository;
@@ -63,9 +65,8 @@ class SurveyCubit extends Cubit<SurveyState> {
       "pw": survey.accessPassword!,
     };
 
-    // TODO: confirm url, what about stage / local?
     final uri = Uri.https(
-      "public-dusky-eight.vercel.app",
+      const String.fromEnvironment(_kSurveyBaseUrlKey),
       "survey/$recipientId/${survey.id}",
       params,
     );
