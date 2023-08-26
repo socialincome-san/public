@@ -61,6 +61,53 @@ const kriLocaleDatePatterns = {
   "ZZZZ": "ZZZZ",
 };
 
+const enUsLocaleDataPatterns = {
+  "d": "d",
+  "E": "ccc",
+  "EEEE": "cccc",
+  "LLL": "LLL",
+  "LLLL": "LLLL",
+  "M": "L",
+  "Md": "M/d",
+  "MEd": "EEE, M/d",
+  "MMM": "LLL",
+  "MMMd": "MMM d",
+  "MMMEd": "EEE, MMM d",
+  "MMMM": "LLLL",
+  "MMMMd": "MMMM d",
+  "MMMMEEEEd": "EEEE, MMMM d",
+  "QQQ": "QQQ",
+  "QQQQ": "QQQQ",
+  "y": "y",
+  "yM": "M/y",
+  "yMd": "M/d/y",
+  "yMEd": "EEE, M/d/y",
+  "yMMM": "MMM y",
+  "yMMMd": "MMM d, y",
+  "yMMMEd": "EEE, MMM d, y",
+  "yMMMM": "MMMM y",
+  "yMMMMd": "MMMM d, y",
+  "yMMMMEEEEd": "EEEE, MMMM d, y",
+  "yQQQ": "QQQ y",
+  "yQQQQ": "QQQQ y",
+  "H": "HH",
+  "Hm": "HH:mm",
+  "Hms": "HH:mm:ss",
+  "j": "h a",
+  "jm": "h:mm a",
+  "jms": "h:mm:ss a",
+  "jmv": "h:mm a v",
+  "jmz": "h:mm a z",
+  "jz": "h a z",
+  "m": "m",
+  "ms": "mm:ss",
+  "s": "s",
+  "v": "v",
+  "z": "z",
+  "zzzz": "zzzz",
+  "ZZZZ": "ZZZZ",
+};
+
 /// A custom set of date symbols for the `kri` locale.
 ///
 /// These are not accurate and are just a clone of the date symbols for the
@@ -319,6 +366,12 @@ class _KriCupertinoLocalizationsDelegate
       symbols: intl.DateSymbols.deserializeFromMap(kriDateSymbols),
     );
 
+    date_symbol_data_custom.initializeDateFormattingCustom(
+      locale: "en_US",
+      patterns: enUsLocaleDataPatterns,
+      symbols: intl.en_USSymbols,
+    );
+
     return SynchronousFuture<CupertinoLocalizations>(
       KriCupertinoLocalizations(
         localeName: localeName,
@@ -542,6 +595,12 @@ class _KriMaterialLocalizationsDelegate
       locale: localeName,
       patterns: kriLocaleDatePatterns,
       symbols: intl.DateSymbols.deserializeFromMap(kriDateSymbols),
+    );
+
+    date_symbol_data_custom.initializeDateFormattingCustom(
+      locale: "en_US",
+      patterns: enUsLocaleDataPatterns,
+      symbols: intl.en_USSymbols,
     );
 
     return SynchronousFuture<MaterialLocalizations>(
@@ -1033,4 +1092,25 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
 
   @override
   String get scrimLabel => "Scrim";
+
+  @override
+  String get collapsedHint => "Expanded";
+
+  @override
+  String get expandedHint => "Collapsed";
+
+  @override
+  String get expansionTileCollapsedHint => "double tap to expand";
+
+  @override
+  String get expansionTileCollapsedTapHint => "Expand for more details";
+
+  @override
+  String get expansionTileExpandedHint => "double tap to collapse'";
+
+  @override
+  String get expansionTileExpandedTapHint => "Collapse";
+
+  @override
+  String get scanTextButtonLabel => "Scan text";
 }
