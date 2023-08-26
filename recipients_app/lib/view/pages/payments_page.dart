@@ -60,7 +60,7 @@ class PaymentsPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Past Payments",
+                                  localizations.pastPayments,
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                                 const SizedBox(height: 4),
