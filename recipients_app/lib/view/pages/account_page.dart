@@ -1,7 +1,7 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
+import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/models/models.dart";
-import "package:app/data/models/organization.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/ui/configs/app_spacings.dart";
@@ -88,14 +88,15 @@ class AccountPageState extends State<AccountPage> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.updateRecipientSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(localizations.profileUpdateSuccess)),
+          FlushbarHelper.showFlushbar(
+            context,
+            message: localizations.profileUpdateSuccess,
           );
         } else if (state.status == AuthStatus.updateRecipientFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(localizations.profileUpdateError),
-            ),
+          FlushbarHelper.showFlushbar(
+            context,
+            message: localizations.profileUpdateError,
+            type: FlushbarType.error,
           );
         } else if (state.status == AuthStatus.unauthenticated) {
           Navigator.of(context).pop();

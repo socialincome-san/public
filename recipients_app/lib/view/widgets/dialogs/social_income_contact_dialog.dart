@@ -1,3 +1,4 @@
+import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
@@ -85,9 +86,10 @@ class SocialIncomeContactDialog extends StatelessWidget {
     if (await canLaunchUrlString(whatsappURL)) {
       await launchUrlString(whatsappURL);
     } else {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(localizations.whatsappError)),
+      FlushbarHelper.showFlushbar(
+        context,
+        message: localizations.whatsappError,
+        type: FlushbarType.error,
       );
     }
   }

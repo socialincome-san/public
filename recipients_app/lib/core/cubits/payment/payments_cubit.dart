@@ -53,7 +53,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
 
     try {
       await paymentRepository.confirmPayment(
-        recipientId: recipient.userId,
+        recipient: recipient,
         payment: payment,
       );
 
@@ -88,7 +88,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
 
     try {
       await paymentRepository.contestPayment(
-        recipientId: recipient.userId,
+        recipient: recipient,
         payment: payment,
         contestReason: contestReason,
       );

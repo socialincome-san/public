@@ -1,6 +1,7 @@
 import "package:app/core/helpers/custom_bloc_observer.dart";
 import "package:app/my_app.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:firebase_app_check/firebase_app_check.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_core/firebase_core.dart";
 import "package:firebase_crashlytics/firebase_crashlytics.dart";
@@ -18,6 +19,7 @@ Future<void> main() async {
   );
 
   await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate();
 
   final firestore = FirebaseFirestore.instance;
   final firebaseAuth = FirebaseAuth.instance;
