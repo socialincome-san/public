@@ -24,9 +24,7 @@ class SurveyPageState extends State<SurveyPage> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
-          },
+          onProgress: (int progress) {},
           onPageStarted: (String url) {},
           onPageFinished: (String url) {
             setState(() {
@@ -34,12 +32,8 @@ class SurveyPageState extends State<SurveyPage> {
             });
           },
           onWebResourceError: (WebResourceError error) {},
-          onNavigationRequest: (NavigationRequest request) {
-            if (request.url.startsWith("https://www.youtube.com/")) {
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-          },
+          onNavigationRequest: (NavigationRequest request) =>
+              NavigationDecision.navigate,
         ),
       )
       ..loadRequest(Uri.parse(widget.mappedSurvey.surveyUrl));
