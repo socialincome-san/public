@@ -45,7 +45,7 @@ class PaymentRepository {
   }) async {
     final updatedPayment = payment.copyWith(
       status: PaymentStatus.confirmed,
-      updatedBy: '${(recipient.firstName ?? '')} ${recipient.lastName ?? ''}',
+      updatedBy: "${recipient.userId}",
       updatedAt: Timestamp.now(),
     );
 
@@ -65,7 +65,7 @@ class PaymentRepository {
     final updatedPayment = payment.copyWith(
       status: PaymentStatus.contested,
       comments: contestReason,
-      updatedBy: '${(recipient.firstName ?? '')} ${recipient.lastName ?? ''}',
+      updatedBy: "${recipient.userId}",
       updatedAt: Timestamp.now(),
     );
 
