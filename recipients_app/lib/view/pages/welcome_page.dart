@@ -70,6 +70,8 @@ class _WelcomeView extends StatelessWidget {
       return switch (ex.code) {
         "invalid-verification-code" => localizations.invalidVerificationCodeError,
         "invalid-phone-number" => localizations.invalidPhoneNumberError,
+        "invalid-credential" => "",
+        "user-disabled" => "",
         _ => ex.toString(),
       };
     }

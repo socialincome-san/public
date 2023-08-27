@@ -146,5 +146,7 @@
     "continueText": "Continue",
     "phoneNumber": "Phone number",
     "invalidPhoneNumberError": "Invalid phone number. Please check your phone number and try again.",
-    "invalidVerificationCodeError": "Invalid verification code. Please check provided SMS code and try again."
+    "invalidVerificationCodeError": "Invalid verification code. Please check provided SMS code and try again.",
+    "userDisabledError": "Your user account was disabled. Contact with us if you need more information.",
+    "invalidCredentialError": "Provided phone number or verification code are no longer valid. Please try again."
 }
