@@ -26,7 +26,7 @@ class MessagingRepository {
     );
 
     /// This is needed for testing and specific targeting of devices
-    final fcmToken = await messaging.getToken();
+    await messaging.getToken();
 
     /// handle background messages when app is not in foreground
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
@@ -38,13 +38,16 @@ class MessagingRepository {
 
     /// handle messages when app is in foreground
     /// if we want to display notifications while the app is open
-    /// we have to handle them ourselfes with for eg using flutter_local_notifications
-    final initialMessage = await messaging.getInitialMessage();
-    handleMessage(initialMessage);
+    /// we have to handle them ourselfes with for eg using
+    /// flutter_local_notifications and then we can use it like this:
+    // final initialMessage = await messaging.getInitialMessage();
+    // handleMessage(initialMessage);
   }
 
   void handleMessage(RemoteMessage? message) {
     if (message == null) return;
+
+    // TODO implement displaying push notifications if app is open
   }
 
   Future<String?> getToken() async {
