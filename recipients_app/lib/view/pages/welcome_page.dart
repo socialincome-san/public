@@ -1,10 +1,13 @@
+
 import "package:app/core/cubits/signup/signup_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/view/widgets/welcome/otp_input_page.dart";
 import "package:app/view/widgets/welcome/phone_input_page.dart";
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage();
@@ -26,19 +29,21 @@ class _WelcomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: BlocConsumer<SignupCubit, SignupState>(
         listener: (context, state) {
           if (state.status == SignupStatus.verificationFailure) {
             FlushbarHelper.showFlushbar(
               context,
-              message: state.exception.toString(),
+              message: _localizeExceptionMessage(state.exception, localizations),
               type: FlushbarType.error,
             );
           } else if (state.status == SignupStatus.phoneNumberFailure) {
             FlushbarHelper.showFlushbar(
               context,
-              message: state.exception.toString(),
+              message: _localizeExceptionMessage(state.exception, localizations),
               type: FlushbarType.error,
             );
           }
@@ -58,5 +63,17 @@ class _WelcomeView extends StatelessWidget {
         },
       ),
     );
+  }
+
+  String _localizeExceptionMessage(Exception? ex, AppLocalizations localizations) {
+    if (ex is FirebaseAuthException) {
+      return switch (ex.code) {
+        "invalid-verification-code" => localizations.invalidVerificationCodeError,
+        "invalid-phone-number" => localizations.invalidPhoneNumberError,
+        _ => ex.toString(),
+      };
+    }
+
+    return ex.toString();
   }
 }
