@@ -14,6 +14,7 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
+import "package:flutter_native_splash/flutter_native_splash.dart";
 
 class MyApp extends StatelessWidget {
   final FirebaseAuth firebaseAuth;
@@ -129,13 +130,16 @@ class _App extends StatelessWidget {
             builder: (context, state) {
               switch (state.status) {
                 case AuthStatus.loading:
+                  return const SizedBox.shrink();
                 case AuthStatus.unauthenticated:
                 case AuthStatus.failure:
+                  FlutterNativeSplash.remove();
                   return const WelcomePage();
                 case AuthStatus.authenticated:
                 case AuthStatus.updateRecipientFailure:
                 case AuthStatus.updateRecipientSuccess:
                 case AuthStatus.updatingRecipient:
+                  FlutterNativeSplash.remove();
                   if (state.recipient?.termsAccepted == true) {
                     return const MainAppPage();
                   } else {
