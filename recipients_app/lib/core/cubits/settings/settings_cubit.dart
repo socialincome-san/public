@@ -13,7 +13,7 @@ class SettingsCubit extends Cubit<SettingsState> {
 
   /// Currently english = en and krio = kri are supported
   void changeLanguage(String languageString) {
-    final locale = languageString == "krio"
+    final locale = languageString == "kri"
         ? const Locale("kri")
         : const Locale("en", "US");
 

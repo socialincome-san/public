@@ -237,11 +237,11 @@ class AccountPageState extends State<AccountPage> {
                   items: [
                     DropdownMenuItem(
                       child: Text(localizations.english),
-                      value: "english",
+                      value: "en",
                     ),
                     DropdownMenuItem(
                       child: Text(localizations.krio),
-                      value: "krio",
+                      value: "kri",
                     ),
                   ],
                   validator: (value) {

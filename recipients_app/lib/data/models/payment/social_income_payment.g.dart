@@ -15,6 +15,7 @@ SocialIncomePayment _$SocialIncomePaymentFromJson(Map<String, dynamic> json) =>
       status: $enumDecodeNullable(_$PaymentStatusEnumMap, json['status']),
       comments: json['comments'] as String?,
       updatedBy: json['last_updated_by'] as String?,
+      updatedAt: const TimestampConverter().fromJson(json['last_updated_at']),
     );
 
 Map<String, dynamic> _$SocialIncomePaymentToJson(
@@ -27,6 +28,7 @@ Map<String, dynamic> _$SocialIncomePaymentToJson(
       'status': _$PaymentStatusEnumMap[instance.status],
       'comments': instance.comments,
       'last_updated_by': instance.updatedBy,
+      'last_updated_at': const TimestampConverter().toJson(instance.updatedAt),
     };
 
 const _$PaymentStatusEnumMap = {
