@@ -67,7 +67,7 @@ flutter:
           weight: 700
 
 flutter_native_splash:
-  # This package generates native code to customize Flutter's default white native splash screen, 
+  # This package generates native code to customize Flutter's default white native splash screen,
   # also let us to keep splash screen longer on the screen.
   # See flutter_native_splash documentation for more info
 
