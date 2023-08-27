@@ -51,7 +51,7 @@ class Recipient extends Equatable {
   @JsonKey(name: "gender")
   final String? gender;
 
-  @JsonKey(name: "selected_language")
+  @JsonKey(name: "main_language")
   final String? selectedLanguage;
 
   @JsonKey(name: "organisation")
