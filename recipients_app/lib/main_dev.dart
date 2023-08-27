@@ -5,6 +5,7 @@ import "package:firebase_app_check/firebase_app_check.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_core/firebase_core.dart";
 import "package:firebase_crashlytics/firebase_crashlytics.dart";
+import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
@@ -24,6 +25,7 @@ Future<void> main() async {
   final firestore = FirebaseFirestore.instance;
   final firebaseAuth = FirebaseAuth.instance;
   final crashlytics = FirebaseCrashlytics.instance;
+  final messaging = FirebaseMessaging.instance;
 
   firestore.useFirestoreEmulator("localhost", 8080);
   firebaseAuth.useAuthEmulator("localhost", 9099);
@@ -42,6 +44,7 @@ Future<void> main() async {
       firebaseAuth: firebaseAuth,
       firestore: firestore,
       crashlytics: crashlytics,
+      messaging: messaging,
     ),
   );
 }
