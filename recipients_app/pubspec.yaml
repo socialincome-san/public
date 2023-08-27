@@ -36,6 +36,7 @@ dependencies:
   rounded_loading_button: ^2.1.0
   url_launcher: ^6.1.12
   webview_flutter: ^4.2.3
+  firebase_messaging: ^14.6.7
 
 dev_dependencies:
   alchemist: ^0.6.1

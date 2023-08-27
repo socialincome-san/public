@@ -9,6 +9,7 @@ import "package:app/view/pages/welcome_page.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_crashlytics/firebase_crashlytics.dart";
+import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -18,12 +19,14 @@ class MyApp extends StatelessWidget {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firestore;
   final FirebaseCrashlytics crashlytics;
+  final FirebaseMessaging messaging;
 
   const MyApp({
     super.key,
     required this.firebaseAuth,
     required this.firestore,
     required this.crashlytics,
+    required this.messaging,
   });
 
   // This widget is the root of your application.
@@ -31,6 +34,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
+        RepositoryProvider(
+          create: (context) => MessagingRepository(
+            messaging: messaging,
+          ),
+        ),
         RepositoryProvider(
           create: (context) => UserRepository(
             firebaseAuth: firebaseAuth,
@@ -70,8 +78,11 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => SettingsCubit(
-              defaultLocale: const Locale("en", "US"),
-            ),
+                defaultLocale: const Locale("en", "US"),
+                messagingRepository: context.read<MessagingRepository>(),
+                crashReportingRepository:
+                    context.read<CrashReportingRepository>())
+              ..initMessaging(),
           ),
         ],
         child: const _App(),
