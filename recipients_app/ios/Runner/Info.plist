@@ -82,5 +82,7 @@
 		<array>
 			<string>tel</string>
 		</array>
+		<key>UIStatusBarHidden</key>
+		<false/>
 	</dict>
 </plist>
