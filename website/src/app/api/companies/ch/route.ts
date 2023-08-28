@@ -7,12 +7,12 @@ type ZefixCompany = {
 	// ...
 };
 
-const ZEFIX_COMPANY_SEARCH_URL = "https://www.zefix.admin.ch/ZefixPublicREST/api/v1/company/search"; 
+const ZEFIX_COMPANY_SEARCH_URL = 'https://www.zefix.admin.ch/ZefixPublicREST/api/v1/company/search';
 
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
 	const searchTerm = searchParams.get('searchTerm');
-     
+
 	try {
 		const result = await fetch(ZEFIX_COMPANY_SEARCH_URL, {
 			method: 'POST',
@@ -25,14 +25,14 @@ export async function GET(request: Request) {
 				activeOnly: true,
 			}),
 		})
-		.then((response) => {
-			if (!response.ok) {
-				throw new Error(response.status.toString())
-			} else {
-				return response.json()
-			}
-		})
-		.then((response_json) => NextResponse.json(response_json));
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error(response.status.toString());
+				} else {
+					return response.json();
+				}
+			})
+			.then((response_json) => NextResponse.json(response_json));
 		return result;
 	} catch (error) {
 		// TODO : add more descriptive error
