@@ -2,6 +2,7 @@ import "package:app/data/models/models.dart";
 import "package:app/ui/icons/payment_status_icon_with_text.dart";
 import "package:app/view/pages/payment_tile_bottom_action.dart";
 import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:intl/intl.dart";
 
 const _reviewUiStatuses = [
@@ -19,6 +20,8 @@ class PaymentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Column(
@@ -32,7 +35,8 @@ class PaymentTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  _formatDate(mappedPayment.payment.paymentAt?.toDate()),
+                  _formatDate(
+                      mappedPayment.payment.paymentAt?.toDate(), localizations),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.black,
                       ),
@@ -50,19 +54,19 @@ class PaymentTile extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime? dateTime) {
+  String _formatDate(DateTime? dateTime, AppLocalizations localizations) {
     if (dateTime == null) return "";
 
     String dateFormat;
     String formattedDate = "";
     if (mappedPayment.uiStatus == PaymentUiStatus.toBePaid) {
       dateFormat = "dd MMMM yyyy";
-      formattedDate = "Next payment ";
+      formattedDate = localizations.nextPayment + " ";
     } else {
       dateFormat = "MMMM yyyy";
     }
     if (_reviewUiStatuses.contains(mappedPayment.uiStatus)) {
-      formattedDate = "Review ";
+      formattedDate = localizations.review + " ";
     }
     formattedDate += "${DateFormat(dateFormat).format(dateTime)}";
     return formattedDate;

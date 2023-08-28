@@ -24,7 +24,7 @@ Recipient _$RecipientFromJson(Map<String, dynamic> json) => Recipient(
       callingName: json['calling_name'] as String?,
       paymentProvider: json['paymentProvider'] as String?,
       gender: json['gender'] as String?,
-      selectedLanguage: json['selected_language'] as String?,
+      selectedLanguage: json['main_language'] as String?,
       termsAccepted: json['terms_accepted'] as bool?,
       recipientSince: _$JsonConverterFromJson<String, DateTime>(
           json['recipient_since'], const DateTimeConverter().fromJson),
@@ -49,7 +49,7 @@ Map<String, dynamic> _$RecipientToJson(Recipient instance) => <String, dynamic>{
       'preferred_name': instance.preferredName,
       'calling_name': instance.callingName,
       'gender': instance.gender,
-      'selected_language': instance.selectedLanguage,
+      'main_language': instance.selectedLanguage,
       'organisation':
           _$JsonConverterToJson<dynamic, DocumentReference<Object?>>(
               instance.organizationRef,

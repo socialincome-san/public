@@ -7,6 +7,7 @@ import "package:app/view/widgets/income/review_payment_modal.dart";
 import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class BalanceCardBottomAction extends StatelessWidget {
   final PaymentsUiState paymentsUiState;
@@ -18,6 +19,8 @@ class BalanceCardBottomAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     final foregroundColor = _getForegroundColor(paymentsUiState.status);
 
     final shouldShowSecondaryActionButton = _shouldShowSecondaryActionButton(
@@ -33,7 +36,7 @@ class BalanceCardBottomAction extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                _getStatusLabel(paymentsUiState),
+                _getStatusLabel(paymentsUiState, localizations),
                 style: TextStyle(color: foregroundColor),
               ),
             ),
@@ -44,7 +47,7 @@ class BalanceCardBottomAction extends StatelessWidget {
                     shouldShowSecondaryActionButton,
                     context,
                   ),
-                  label: _getPrimaryActionLabel(paymentsUiState),
+                  label: _getPrimaryActionLabel(paymentsUiState, localizations),
                   buttonType: ButtonSmallType.outlined,
                   color: foregroundColor,
                   fontColor: foregroundColor,
@@ -53,7 +56,7 @@ class BalanceCardBottomAction extends StatelessWidget {
                   const SizedBox(width: 8),
                   ButtonSmall(
                     onPressed: () => _onPressedNo(context),
-                    label: "No",
+                    label: localizations.no,
                     buttonType: ButtonSmallType.outlined,
                     color: foregroundColor,
                     fontColor: foregroundColor,
@@ -153,35 +156,43 @@ class BalanceCardBottomAction extends StatelessWidget {
     }
   }
 
-  String _getStatusLabel(PaymentsUiState paymentsUiState) {
+  String _getStatusLabel(
+    PaymentsUiState paymentsUiState,
+    AppLocalizations localizations,
+  ) {
     switch (paymentsUiState.status) {
       case BalanceCardStatus.allConfirmed:
-        return "${paymentsUiState.confirmedPaymentsCount} payments received";
+        return "${paymentsUiState.confirmedPaymentsCount} ${localizations.paymentsConfirmedCount}";
       case BalanceCardStatus.recentToReview:
-        return "Did you receive the last payment?";
+        return localizations.paymentsInReview;
       case BalanceCardStatus.needsAttention:
         if (paymentsUiState.unconfirmedPaymentsCount == 1) {
-          return "You have 1 payment to review. Did you receive it?";
+          return localizations.paymentsInReviewOne;
         }
-        return "You have ${paymentsUiState.unconfirmedPaymentsCount} payments to review";
+        return localizations
+            .paymentsInReviewMany(paymentsUiState.unconfirmedPaymentsCount);
       case BalanceCardStatus.onHold:
-        return "You have 2 payments to review in a row";
+        return localizations.paymentsInReviewTwo;
     }
   }
 
-  String _getPrimaryActionLabel(PaymentsUiState paymentsUiState) {
+  String _getPrimaryActionLabel(
+    PaymentsUiState paymentsUiState,
+    AppLocalizations localizations,
+  ) {
     switch (paymentsUiState.status) {
       case BalanceCardStatus.allConfirmed:
-        return "Payments overview";
+        return localizations.paymentsOverview;
+
       case BalanceCardStatus.recentToReview:
       case BalanceCardStatus.needsAttention:
         if (paymentsUiState.unconfirmedPaymentsCount == 1) {
-          return "Yes";
+          return localizations.yes;
         } else {
-          return "Review";
+          return localizations.review;
         }
       case BalanceCardStatus.onHold:
-        return "Review";
+        return localizations.review;
     }
   }
 }

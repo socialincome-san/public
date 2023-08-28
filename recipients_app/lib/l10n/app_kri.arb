@@ -1,0 +1,149 @@
+{
+    "@@locale": "kri",
+    "profileUpdateSuccess": "Profile don update fine",
+    "profileUpdateError": "Profile no update. Try agen or link we support",
+    "profile": "Profile",
+    "personal": "Pesin own",
+    "name": "Name",
+    "nameError": "Put yu name",
+    "surname": "Famili name",
+    "surnameError": "Put yu famili name",
+    "callingName": "Oda name",
+    "gender": "Man or woman",
+    "male": "Man",
+    "female": "Woman",
+    "other": "Oda one",
+    "genderError": "Choose if na man or woman",
+    "dateOfBirth": "Bette day",
+    "dateOfBirthError": "Choose yu bette day",
+    "language": "Language",
+    "english": "English",
+    "krio": "Krio",
+    "languageError": "Choose language",
+    "email": "Email",
+    "paymentPhone": "Payment fone",
+    "paymentNumber": "Payment number",
+    "paymentNumberError": "Put yu fone number",
+    "paymentNumberError2": "Put correct fone number. Na only number dem wan",
+    "mobilePaymentProvider": "Mobile payment side",
+    "paymentProviderError": "Choose payment side",
+    "contactPhone": "Contact fone",
+    "contactNumber": "Contact number",
+    "contactNumberError": "Put yu contact fone number",
+    "contactNumberError2": "Put correct fone number. Na only number dem wan",
+    "support": "Support",
+    "supportInfo": "If yu get wahala or kweshon, link we.",
+    "getInTouch": "Link we",
+    "account": "Account",
+    "accountInfo": "If yu wan delete yu account, link we.",
+    "signOut": "Komot",
+    "dashboardUp2Date": "Evritin update.\nNo news tiday.",
+    "edit": "Change am",
+    "underInvestigation": "Dem dey look inside am",
+    "didYouGetSocialIncome": "Yu get yu Social Income?",
+    "resolved": "Dem don setul am",
+    "yes": "Yes",
+    "no": "No",
+    "nextPayment": "Nex payment",
+    "review": "Check am",
+    "payments": "Payments",
+    "orangeMoneyNumber": "Orange Money number",
+    "pastPayments": "Payments we don pass",
+    "futurePayments": "Payments we go come",
+    "paymentsSuspended": "Hold am",
+    "survey": "Survey",
+    "createAccountInfo": "If yu dey open account, yu gree with wi ",
+    "privacyPolicy": "Privacy Policy",
+    "privacyPolicyError": "No fit open privacy policy now. Dem don copy website address.",
+    "createAccount": "Open account",
+    "recommendingOrganization": "Side we talk say make yu join",
+    "call": "Call",
+    "supportTeam": "Support team",
+    "phone": "Fone",
+    "email": "Email",
+    "close": "Close am",
+    "whatsappError": "WhatsApp no dey",
+    "paymentsConfirmedCount": "payments we dem don confirm",
+    "paymentsInReview": "Yu don get di las payment?",
+    "paymentsInReviewOne": "Yu get 1 payment for check. Yu don get am?",
+    "paymentsInReviewTwo": "Yu get 2 payments for check wan time",
+    "paymentsInReviewMany": "Yu get {count} payments for check. Yu don get dem?",
+    "@paymentsInReviewMany": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "paymentsOverview": "Payments we dey",
+    "paymentsSuspendedTwoUnreviewed": "2 payments no check wan time. Dem hold payments.",
+    "amount": "How much",
+    "nextMonth": "Nex month",
+    "today": "Tiday",
+    "oneDay": "1 day",
+    "daysAgo": "{number} days we don pass",
+    "@daysAgo": {
+        "placeholders": {
+            "number": {
+                "type": "int"
+            }
+        }
+    },
+    "inDays": "{number} days",
+    "@inDays": {
+        "placeholders": {
+            "number": {
+                "type": "int"
+            }
+        }
+    },
+    "day": "day",
+    "days": "days",
+    "myPayments": "My Payments",
+    "contestPayment": "Problem payment",
+    "contestPaymentInfo": "Payment no reach yu. Wetin happen?",
+    "submit": "Send am",
+    "next": "Nex",
+    "describeWhatHappened": "Talk wetin happen",
+    "startSurvey": "Start survey",
+    "surveyStatusAnswered": "Yu don ansa",
+    "surveyStatusMissed": "Yu no ansa di survey",
+    "surveyDaysToAnswer": "Yu get {daysOverdue} {daysText} for ansa",
+    "@surveyDaysToAnswer": {
+        "placeholders": {
+            "daysOverdue": {
+                "type": "int"
+            },
+            "daysText": {
+                "type": "String"
+            }
+        }
+    },
+    "overdue": "e pass di time",
+    "surveyDaysLeft": "Yu get {days} {dayText} for ansa",
+    "@surveyDaysLeft": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            },
+            "dayText": {
+                "type": "String"
+            }
+        }
+    },
+    "survey12Months": "12 months survey",
+    "survey12MonthsInfo": "Abeg take 5 minutes ansa kweshon make e help beta Social Income",
+    "verification": "Check am",
+    "verificationSent": "We don send yu code to {phoneNumber}",
+    "@verificationSent": {
+        "placeholders": {
+            "phoneNumber": {
+                "type": "String"
+            }
+        }
+    },
+    "resendVerificationCode": "Send di code again",
+    "yourMobilePhone": "Yu mobile fone",
+    "continueText": "Go front",
+    "phoneNumber": "Fone number"
+}

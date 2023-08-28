@@ -1,0 +1,148 @@
+{
+    "profileUpdateSuccess": "Profile updated successfully",
+    "profileUpdateError": "Failed to update profile. Please try again or contact our support",
+    "profile": "Profile",
+    "personal": "Personal",
+    "name": "Name",
+    "nameError": "Please enter your name",
+    "surname": "Surname",
+    "surnameError": "Please enter your surname",
+    "callingName": "Calling Name",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "genderError": "Please select a gender",
+    "dateOfBirth": "Date of Birth",
+    "dateOfBirthError": "Please select a date of birth",
+    "language": "Language",
+    "english": "English",
+    "krio": "Krio",
+    "languageError": "Please select a language",
+    "email": "Email",
+    "paymentPhone": "Payment Phone",
+    "paymentNumber": "Payment Number",
+    "paymentNumberError": "Please enter your phone number",
+    "paymentNumberError2": "Please enter a valid phone number. Only numbers are allowed",
+    "mobilePaymentProvider": "Mobile Payment Provider",
+    "paymentProviderError": "Please select a payment provider",
+    "contactPhone": "Contact Phone",
+    "contactNumber": "Contact Number",
+    "contactNumberError": "Please enter your contact phone number",
+    "contactNumberError2": "Please enter a valid phone number. Only numbers are allowed",
+    "support": "Support",
+    "supportInfo": "In case you have any questions or problems, please contact us.",
+    "getInTouch": "Get in touch with us",
+    "account": "Account",
+    "accountInfo": "In case you want to delete your account, please contact us.",
+    "signOut": "Sign Out",
+    "dashboardUp2Date": "You are up to date.\nNo news today.",
+    "edit": "Edit",
+    "underInvestigation": "Currently under investigation",
+    "didYouGetSocialIncome" : "Did you get your Social Income?",
+    "resolved" : "Resolved",
+    "yes" : "Yes",
+    "no" : "No",
+    "nextPayment" : "Next Payment",
+    "review" : "Review",
+    "payments" : "Payments",
+    "orangeMoneyNumber" : "Orange Money Number",
+    "pastPayments" : "Past Payments",
+    "futurePayments" : "Future Payments",
+    "paymentsSuspended" : "Suspended",
+    "survey" : "Survey",
+    "createAccountInfo":"By creating an account, you agree with our ",
+    "privacyPolicy":"Privacy Policy",
+    "privacyPolicyError": "Can't open privacy policy right now. Copied website address to the clipboard.",
+    "createAccount": "Create Account",
+    "recommendingOrganization": "Recommending Organization",
+    "call": "Call",
+    "supportTeam": "Support Team",
+    "phone": "Phone",
+    "email": "Email",
+    "close": "Close",
+    "whatsappError": "WhatsApp not installed",
+    "paymentsConfirmedCount": "payments received",
+    "paymentsInReview": "Did you receive the last payment?",
+    "paymentsInReviewOne": "You have 1 payment to review. Did you receive it?",
+    "paymentsInReviewTwo": "You have 2 payments to review in a row",
+    "paymentsInReviewMany": "You have {count} payments to review. Did you receive them?",
+    "@paymentsInReviewMany": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "paymentsOverview": "Payments Overview",
+    "paymentsSuspendedTwoUnreviewed": "2 unreviewed payments in a row. Suspended payments.",
+    "amount": "Amount",
+    "nextMonth": "Next month",
+    "today": "Today",
+    "oneDay": "1 day",
+    "daysAgo": "{number} days ago",
+    "@daysAgo": {
+        "placeholders": {
+            "number": {
+                "type": "int"
+            }
+        }
+    },
+    "inDays": "{number} days",
+    "@inDays": {
+        "placeholders": {
+            "number": {
+                "type": "int"
+            }
+        }
+    },
+    "day": "day",
+    "days": "days",
+    "myPayments": "My Payments",
+    "contestPayment": "Contest Payment",
+    "contestPaymentInfo":  "A payment has not reached you. What happened?",
+    "submit": "Submit",
+    "next": "Next",
+    "describeWhatHappened": "Describe what happened",
+    "startSurvey": "Start Survey",
+    "surveyStatusAnswered": "Answered",
+    "surveyStatusMissed": "Missed Survey",
+    "surveyDaysToAnswer": "You have {daysOverdue} {daysText} to answer",
+    "@surveyDaysToAnswer": {
+        "placeholders": {
+            "daysOverdue": {
+                "type": "int"
+            },
+            "daysText": {
+                "type": "String"
+            }
+        }
+    },
+    "overdue": "overdue",
+    "surveyDaysLeft": "You have {days} {dayText} to answer",
+    "@surveyDaysLeft": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            },
+            "dayText": {
+                "type": "String"
+            }
+        }
+    },
+    "survey12Months": "12 months survey",
+    "survey12MonthsInfo": "Please take 5 minutes to answer questions and help to improve Social Income",
+    "verification": "Verification",
+    "verificationSent": "We sent you a verification code to {phoneNumber}",
+    "@verificationSent": {
+        "placeholders": {
+            "phoneNumber": {
+                "type": "String"
+            }
+        }
+    },
+    "resendVerificationCode": "Resend verification code",
+    "yourMobilePhone": "Your mobile phone",
+    "continueText": "Continue",
+    "phoneNumber": "Phone number"
+}

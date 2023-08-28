@@ -3,3 +3,4 @@ export "balance_card_container.dart";
 export "balance_card_grid.dart";
 export "balance_card_header.dart";
 export "balance_card_ui_state.dart";
+export "on_hold_bottom_card.dart";
