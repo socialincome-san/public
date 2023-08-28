@@ -4,7 +4,7 @@ export type Company = {
 }
 
 export interface CompanyRegistry {
-	searchCompanies(searchTerm: string) : Company[];
+	searchCompanies(searchTerm: string) : Promise<Company[]>;
 
-        static createInstance<T extends CompanyRegistry>() : T; 
+	// createInstance<T extends CompanyRegistry>() : T;
 }

@@ -1,18 +1,23 @@
 'use client';
-import {useState } from 'react'; 
-import { Combobox, Transition } from '@headlessui/react'; 
+import {useState } from 'react';
+import { Combobox, Transition } from '@headlessui/react';
 import _ from 'lodash';
 
 import { DefaultPageProps } from '@/app/[lang]/[country]';
 import { BaseContainer, Typography, Button, Card }  from '@socialincome/ui';
 
-import { Company, CompanyRegister } from './types';
+import { Company, CompanyRegistry } from './types';
+import getCompanyRegistry from './companies_registers/CompanyRegistriesCatalog';
+import { ZefixCompanyRegistry } from "./companies_registers/ZefixCompanyRegistry";
 
-async function searchCompanies(searchTerm: string, registry: CompanyRegister) : Promise<Company[]> {
-	return fetch("http://localhost:3001/api/companies/ch?" + new URLSearchParams({ searchTerm : searchTerm}))
-		.then((response) => { if (!response.ok) { throw new Error("could not retrieve companies") } else { return response }} )
-		.then((response) => response.json())
-}
+
+let companyRegister: CompanyRegistry = new ZefixCompanyRegistry();  // = getCompanyRegistry( { params }: DefaultPageProps );
+
+// async function searchCompanies(searchTerm: string) : Promise<Company[]> {
+// 	return fetch("http://localhost:3001/api/companies/ch?" + new URLSearchParams({ searchTerm : searchTerm}))
+// 		.then((response) => { if (!response.ok) { throw new Error("could not retrieve companies") } else { return response }} )
+// 		.then((response) => response.json())
+// }
 
 const NUMBER_OF_DISPLAYED_COMPANIES = 10;
 
@@ -31,7 +36,7 @@ export default function Page(props: DefaultPageProps) {
 
 	async function onComboBoxInputChange(searchTerm: string) {
 		try {
-			const companies = await searchCompanies(searchTerm);
+			const companies = await companyRegister.searchCompanies(searchTerm);  //
 			const result = mergeCompanies(companies);
 			setSelectedCompanies(result);
 
@@ -63,7 +68,7 @@ export default function Page(props: DefaultPageProps) {
 			<div>
 				<Typography className="text-center p-4" size="2xl">How Swiss Organisations support Social Income</Typography>
 			</div>
-			<div class="flex p-4 justify-center">
+			<div className="flex p-4 justify-center">
 				<Card normal bordered className="border-neutral my-4 cursor-pointer lg:mx-4">
 					<Card.Body>
 						<Card.Title>
@@ -99,8 +104,8 @@ export default function Page(props: DefaultPageProps) {
 
 			</div>
 			<div className="text-center p-4 flex justify-center">
-				<div class="p-4"><Button color="primary">Save</Button></div>
-				<div class="p-4"><Button variant="outline">Skip</Button></div>
+				<div className="p-4"><Button color="primary">Save</Button></div>
+				<div className="p-4"><Button variant="outline">Skip</Button></div>
 			</div>
 		</BaseContainer>
 	);
