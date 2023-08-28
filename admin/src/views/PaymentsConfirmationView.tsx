@@ -16,6 +16,7 @@ import { StringPropertyPreview } from 'firecms';
 import { useEffect, useState } from 'react';
 import { paymentStatusEnumValues } from '../collections/Payments';
 import { auditedUpdateDoc } from '../collections/shared';
+import { NoRowsOverlay } from '../components/Overlays';
 import SearchBar from '../components/SearchBar';
 
 function UpdatePaymentButton({ paymentDoc }: { paymentDoc: QueryDocumentSnapshot<Payment> }) {
@@ -184,6 +185,7 @@ export function PaymentsConfirmationView() {
 				}}
 				pageSizeOptions={[10, 50, 100]}
 				disableRowSelectionOnClick
+				slots={{ noRowsOverlay: NoRowsOverlay }}
 			/>
 		</Box>
 	);

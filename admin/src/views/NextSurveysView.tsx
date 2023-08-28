@@ -18,6 +18,7 @@ import { StringPropertyPreview } from 'firecms';
 import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import { surveyStatusProperty } from '../collections/surveys/SurveysProperties';
+import { NoRowsOverlay } from '../components/Overlays';
 
 type RecipientSurveyDocs = {
 	surveyDoc: QueryDocumentSnapshot<Survey>;
@@ -151,6 +152,7 @@ export function NextSurveysView() {
 				}}
 				pageSizeOptions={[10, 50, 100]}
 				disableRowSelectionOnClick
+				slots={{ noRowsOverlay: NoRowsOverlay }}
 			/>
 		</Box>
 	);
