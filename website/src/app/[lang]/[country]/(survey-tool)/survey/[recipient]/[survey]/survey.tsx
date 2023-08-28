@@ -26,11 +26,14 @@ interface SurveyProps {
 }
 
 export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
-	const ref = doc(firestore, [RECIPIENT_FIRESTORE_PATH, recipientId, SURVEY_FIRETORE_PATH, surveyId].join('/'));
+	const surveyDocRef = doc(
+		firestore,
+		[RECIPIENT_FIRESTORE_PATH, recipientId, SURVEY_FIRETORE_PATH, surveyId].join('/'),
+	);
 	const translator = useTranslator(lang, 'website-survey');
 	const { data: survey } = useQuery(
 		[recipientId, surveyId],
-		() => getDoc(ref).then((snapshot) => snapshot.data() as SurveyModel),
+		() => getDoc(surveyDocRef).then((snapshot) => snapshot.data() as SurveyModel),
 		{
 			staleTime: 1000 * 60 * 60, // 1 hour
 		},
@@ -40,7 +43,7 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 		(survey: Model, status: SurveyStatus) => {
 			const data = survey.data;
 			data.pageNo = survey.currentPageNo;
-			updateDoc(ref, {
+			updateDoc(surveyDocRef, {
 				data: data,
 				status: status,
 				completed_at: status == SurveyStatus.Completed ? new Date(Date.now()) : null,
@@ -51,7 +54,7 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 					window.setTimeout(() => saveSurveyData(survey, status), 3000);
 				});
 		},
-		[ref],
+		[surveyDocRef],
 	);
 
 	if (survey && translator) {

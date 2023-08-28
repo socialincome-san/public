@@ -1,7 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[country]';
-import LanguageSwitcher from '@/components/language-switcher/language-switcher';
 import { SILogo } from '@/components/logos/si-logo';
-import { PropsWithChildren, Suspense } from 'react';
+import { PropsWithChildren } from 'react';
+import { LanguageSwitcher } from './language-switcher';
 
 export interface SurveyPageProps {
 	params: {
@@ -19,10 +19,7 @@ export default function Layout({ children, params }: PropsWithChildren<SurveyPag
 					<SILogo className="h-4" />
 				</div>
 				<div className="navbar-end">
-					{/* Suspense is needed because of useSearchParams hook (https://nextjs.org/docs/messages/deopted-into-client-rendering)*/}
-					<Suspense>
-						<LanguageSwitcher params={params} languages={['en', 'kri']} />
-					</Suspense>
+					<LanguageSwitcher params={params} languages={['en', 'kri']} />
 				</div>
 			</div>
 			<main className="mx-auto max-w-5xl py-4">{children}</main>
