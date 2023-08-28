@@ -6,13 +6,14 @@ import { LanguageIcon } from '@heroicons/react/24/solid';
 import { Language } from '@socialincome/shared/src/types';
 import { Dropdown } from '@socialincome/ui';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 interface LanguageSwitcherProps {
 	params: DefaultParams;
 	languages?: Language[];
 }
 
-export default function LanguageSwitcher({ params, languages = ['en', 'de'] }: LanguageSwitcherProps) {
+function LanguageSwitcherDropdown({ params, languages = ['en', 'de'] }: LanguageSwitcherProps) {
 	const translator = useTranslator(params.lang, 'common');
 	const router = useRouter();
 	const searchParams = useSearchParams();
@@ -37,5 +38,13 @@ export default function LanguageSwitcher({ params, languages = ['en', 'de'] }: L
 				))}
 			</Dropdown.Menu>
 		</Dropdown>
+	);
+}
+
+export function LanguageSwitcher(props: LanguageSwitcherProps) {
+	return (
+		<Suspense>
+			<LanguageSwitcherDropdown {...props} />
+		</Suspense>
 	);
 }

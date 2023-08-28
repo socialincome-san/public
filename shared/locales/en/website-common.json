@@ -1,8 +1,10 @@
 {
 	"navigation": {
 		"about-us": "About Us",
-		"our-work": "Our Work",
 		"how-it-works": "How It Works",
+		"my-profile": "My Profile",
+		"our-work": "Our Work",
+		"team": "Team",
 		"transparency": "Transparency"
 	}
 }
