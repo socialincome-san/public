@@ -145,5 +145,9 @@
     "resendVerificationCode": "Send di code again",
     "yourMobilePhone": "Yu mobile fone",
     "continueText": "Go front",
-    "phoneNumber": "Fone number"
+    "phoneNumber": "Fone number",
+    "invalidPhoneNumberError": "Di fon nomba we no rayt. Duya chɛk yu fon nomba ɛn tray bak.",
+    "invalidVerificationCodeError": "Invalid verifyeshon kod. Duya chɛk di SMS kod we dɛn gi ɛn tray bak.",
+    "userDisabledError": "Yu yuz akon bin don disable. Kontakt wit wi if yu nid mo infomeshon.",
+    "invalidCredentialError": "Di fon nomba o verifyeshon kod we dɛn gi no de wok igen. Duya tray bak leta."
 }

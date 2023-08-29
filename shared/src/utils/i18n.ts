@@ -12,17 +12,17 @@ interface TranslateProps {
 
 interface TranslatorProps {
 	language: Language;
-	namespaces: string[];
+	namespaces: string[] | string;
 }
 
 export type TranslateFunction = (key: string, translateProps?: TranslateProps) => string;
 
 export class Translator {
 	language: Language;
-	namespaces: string[];
+	namespaces: string[] | string;
 	instance: i18n;
 
-	constructor(language: Language, namespaces: string[]) {
+	constructor(language: Language, namespaces: string[] | string) {
 		this.language = language;
 		this.namespaces = namespaces;
 		this.instance = i18next.createInstance();
