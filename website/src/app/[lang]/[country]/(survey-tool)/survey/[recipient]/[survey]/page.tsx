@@ -31,7 +31,7 @@ export default function Page({ params }: SurveyPageProps) {
 					console.log(error);
 				});
 		}
-	}, [email, password]);
+	}, [auth, email, password]);
 
 	function handleSubmit(e: FormEvent<HTMLFormElement>) {
 		// Prevent the browser from reloading the page
