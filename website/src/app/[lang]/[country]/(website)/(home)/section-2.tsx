@@ -32,7 +32,7 @@ export default function Section2({ vimeoVideoId, translations }: Section2Props) 
 				}),
 			);
 		}
-	}, [playerRef]);
+	}, [playerRef, vimeoVideoId]);
 
 	useEffect(() => {
 		void player?.pause();

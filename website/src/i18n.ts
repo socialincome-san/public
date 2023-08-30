@@ -1,6 +1,5 @@
 import { Language } from '@socialincome/shared/src/types';
 import langParser from 'accept-language-parser';
-import _ from 'lodash';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const defaultCountry = 'us';
@@ -18,12 +17,19 @@ const findBestLocale = (request: NextRequest) => {
 	console.log('requestCountry', requestCountry);
 
 	const bestOption = options.find(
-		(option) => _.includes(websiteLanguages, option.code) && _.includes(countries, option.region),
+		(option) =>
+			option.code &&
+			option.region &&
+			websiteLanguages.includes(option.code as WebsiteLanguage) &&
+			countries.includes(option.region),
 	);
 
 	return {
 		language: bestOption?.code || defaultLanguage,
-		country: bestOption?.region || (_.includes(websiteLanguages, requestCountry) && requestCountry) || defaultCountry,
+		country:
+			bestOption?.region ||
+			(websiteLanguages.includes(requestCountry as WebsiteLanguage) && requestCountry) ||
+			defaultCountry,
 	};
 };
 
