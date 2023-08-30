@@ -1,4 +1,8 @@
 {
+	"tabs": {
+		"contact-details": "Contact Details",
+		"payments": "Payments"
+	},
 	"login": {
 		"title": "Sign in to your account",
 		"email": "Email",
@@ -6,6 +10,9 @@
 		"password": "Password",
 		"forgot-password": "Forgot password?",
 		"required-field": "This field is required",
-		"submit-button": "Sign in"
-	}
+		"submit-button": "Sign in",
+		"unknown-user": "This user does not exist",
+		"wrong-password": "Wrong password"
+	},
+	"sign-out": "Sign out"
 }

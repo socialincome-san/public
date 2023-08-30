@@ -12,15 +12,24 @@ export const websiteLanguages: WebsiteLanguage[] = ['en', 'de', 'kri'];
 
 const findBestLocale = (request: NextRequest) => {
 	const options = langParser.parse(request.headers.get('Accept-Language') || 'en');
-	let language;
-	let country;
-	for (const option of options) {
-		if (!language && option.code in websiteLanguages) language = option.code;
-		if (!country && option.region && option.region in countries) country = option.region;
-	}
+	const requestCountry = request.geo?.country?.toLowerCase();
+
+	console.log('requestCountry', requestCountry);
+
+	const bestOption = options.find(
+		(option) =>
+			option.code &&
+			option.region &&
+			websiteLanguages.includes(option.code as WebsiteLanguage) &&
+			countries.includes(option.region),
+	);
+
 	return {
-		language: language || defaultLanguage,
-		country: country || request.geo?.country?.toLowerCase() || defaultCountry,
+		language: bestOption?.code || defaultLanguage,
+		country:
+			bestOption?.region ||
+			(websiteLanguages.includes(requestCountry as WebsiteLanguage) && requestCountry) ||
+			defaultCountry,
 	};
 };
 

@@ -1,14 +1,16 @@
 'use client';
 
-import { auth } from '@/firebase/client';
 import { Button } from '@socialincome/ui';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { useAuth } from 'reactfire';
 
 type LinkGoogleFormProps = {
 	checkoutSessionId: string;
 };
 
 export function LinkGoogleForm({ checkoutSessionId }: LinkGoogleFormProps) {
+	const auth = useAuth();
+
 	const onClick2 = async () => {
 		const provider = new GoogleAuthProvider();
 

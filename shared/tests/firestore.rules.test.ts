@@ -9,12 +9,13 @@ import firebase from 'firebase/compat/app';
 import { collection, doc, getDoc, getDocs, query, setDoc } from 'firebase/firestore';
 import * as fs from 'fs';
 import * as path from 'path';
-import { AdminUser } from '../src/types';
+import { AdminUser, USER_FIRESTORE_PATH } from '../src/types';
 
 let testEnvironment: RulesTestEnvironment;
 let globalAdminStore: firebase.firestore.Firestore;
 let globalAnalystStore: firebase.firestore.Firestore;
 let recipientAppAccess: firebase.firestore.Firestore;
+let userAppAccess: firebase.firestore.Firestore;
 
 beforeAll(async () => {
 	testEnvironment = await initializeTestEnvironment({
@@ -33,6 +34,9 @@ beforeAll(async () => {
 		.firestore();
 	recipientAppAccess = testEnvironment
 		.authenticatedContext('recipient_app', { phone_number: '+23225000501' })
+		.firestore();
+	userAppAccess = testEnvironment
+		.authenticatedContext('JfPfN1qsdomTcpk9meUh5FnRxY18', { email: 'test@example.com' })
 		.firestore();
 });
 
@@ -93,6 +97,18 @@ describe('Test recipients collection', () => {
 
 		// Phone number mismatch
 		await assertFails(getDocs(query(collection(recipientAppAccess, 'recipients', 'z9zBQaDI8GB8tZ36HwDE', 'payments'))));
+	});
+});
+
+describe('Test user access', () => {
+	it('Read user doc', async () => {
+		// Access own user document
+		const userDocsAllowed = await getDoc(doc(userAppAccess, USER_FIRESTORE_PATH, 'cCj3O9gQuopmPZ15JTI0'));
+		expect(userDocsAllowed.exists()).toBe(true);
+		expect(userDocsAllowed.get('authUserId')).toBe('JfPfN1qsdomTcpk9meUh5FnRxY18');
+
+		// Access other user document (not allowed)
+		await assertFails(getDoc(doc(userAppAccess, USER_FIRESTORE_PATH, 'EgDWTYqz7zNyQ4CdxieW')));
 	});
 });
 
