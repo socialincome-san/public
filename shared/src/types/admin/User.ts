@@ -31,7 +31,7 @@ export type User = {
 	personal?: {
 		name?: string; // TODO: discuss if should be renamed to firstname
 		lastname?: string;
-		gender?: string; // TODO: proper typing
+		gender?: 'male' | 'female' | 'other';
 		company?: string;
 		phone?: string;
 		referral?: UserReferralSource;

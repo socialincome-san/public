@@ -1,16 +1,18 @@
 'use client';
 
+import { DefaultParams } from '@/app/[lang]/[country]';
 import { SILogo } from '@/components/logos/si-logo';
-import { useAuthUser } from '@/hooks/useAuthUser';
 import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, UserCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { LanguageIcon } from '@heroicons/react/24/solid';
 import { Language } from '@socialincome/shared/src/types';
 import { Button, Dropdown, Menu, Typography } from '@socialincome/ui';
 import classNames from 'classnames';
+import { signOut } from 'firebase/auth';
 import _ from 'lodash';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useAuth, useUser } from 'reactfire';
 
 type NavbarSection = {
 	title: string;
@@ -27,16 +29,20 @@ type NavbarProps = {
 	translations: {
 		currentLanguage: string;
 		myProfile: string;
+		contactDetails: string;
+		payments: string;
+		signOut: string;
 	};
 	languages: {
 		code: Language;
 		translation: string;
 	}[];
-};
+} & DefaultParams;
 
-export default function NavbarClient({ translations, languages, sections = [] }: NavbarProps) {
-	const [authUser, authUserReady] = useAuthUser();
+export default function NavbarClient({ lang, country, translations, languages, sections = [] }: NavbarProps) {
 	const router = useRouter();
+	const auth = useAuth();
+	const { status: authUserReady, data: authUser } = useUser();
 	const searchParams = useSearchParams();
 	const pathname = usePathname();
 	const baseSegment = pathname?.split('/')[3];
@@ -64,7 +70,7 @@ export default function NavbarClient({ translations, languages, sections = [] }:
 					<div className="mx-auto max-w-7xl px-2 sm:px-5">
 						<div className="flex h-16 justify-between">
 							<div className="flex flex-shrink-0 items-center">
-								<Link href="/">
+								<Link href={`/${lang}/${country}`}>
 									<SILogo className="h-6" />
 								</Link>
 							</div>
@@ -118,7 +124,7 @@ export default function NavbarClient({ translations, languages, sections = [] }:
 									<Dropdown.Toggle color="ghost" className="hover:bg-none">
 										<LanguageIcon className="h-5 w-5" />
 									</Dropdown.Toggle>
-									<Dropdown.Menu className="z-40">
+									<Dropdown.Menu className="z-40 min-w-[6rem]">
 										{languages.map((lang, index) => (
 											<Dropdown.Item key={index} onClick={() => onLanguageChange(lang.code)}>
 												{lang.translation}
@@ -126,11 +132,33 @@ export default function NavbarClient({ translations, languages, sections = [] }:
 										))}
 									</Dropdown.Menu>
 								</Dropdown>
-								<Button color="ghost">
-									<Link href={authUserReady && authUser ? '/me' : '/me/login'}>
+								<Dropdown hover end>
+									<Dropdown.Toggle color="ghost" className="hover:bg-none">
 										<UserCircleIcon className="h-6 w-6" />
-									</Link>
-								</Button>
+									</Dropdown.Toggle>
+									<Dropdown.Menu className="z-40 min-w-[6rem]">
+										{authUserReady === 'success' && authUser ? (
+											<>
+												<Dropdown.Item anchor={false}>
+													<Link href={`/${lang}/${country}/me/contact-details`}>{translations.contactDetails}</Link>
+												</Dropdown.Item>
+												<Dropdown.Item anchor={false}>
+													<Link href={`/${lang}/${country}/me/payments`}>{translations.payments}</Link>
+												</Dropdown.Item>
+												<Dropdown.Item
+													className="border-t"
+													onClick={() => signOut(auth).then(() => router.push(`/${lang}/${country}`))}
+												>
+													{translations.signOut}
+												</Dropdown.Item>
+											</>
+										) : (
+											<Dropdown.Item anchor={false}>
+												<Link href={`/${lang}/${country}/login`}>Log in</Link>
+											</Dropdown.Item>
+										)}
+									</Dropdown.Menu>
+								</Dropdown>
 							</div>
 
 							{/* Mobile menu button */}
@@ -194,10 +222,34 @@ export default function NavbarClient({ translations, languages, sections = [] }:
 									</Menu.Details>
 								</Menu.Item>
 								<Menu.Item>
-									<Link href={authUserReady && authUser ? '/me' : '/me/login'}>
-										<UserCircleIcon className="h-5 w-5" />
-										<Typography size="sm">{translations.myProfile}</Typography>
-									</Link>
+									<Menu.Details
+										label={
+											<div className="flex-inline flex space-x-2">
+												<UserCircleIcon className="h-5 w-5" />
+												<Typography size="sm">{translations.myProfile}</Typography>
+											</div>
+										}
+									>
+										{authUserReady === 'success' && authUser ? (
+											<>
+												<Menu.Item>
+													<Link href={`/${lang}/${country}/me/contact-details`}>{translations.contactDetails}</Link>
+												</Menu.Item>
+												<Menu.Item>
+													<Link href={`/${lang}/${country}/me/payments`}>{translations.payments}</Link>
+												</Menu.Item>
+												<Menu.Item>
+													<a onClick={() => signOut(auth).then(() => router.push(`/${lang}/${country}`))}>
+														{translations.signOut}
+													</a>
+												</Menu.Item>
+											</>
+										) : (
+											<Menu.Item>
+												<Link href={`/${lang}/${country}/login`}>Log in</Link>
+											</Menu.Item>
+										)}
+									</Menu.Details>
 								</Menu.Item>
 							</Menu>
 						</div>

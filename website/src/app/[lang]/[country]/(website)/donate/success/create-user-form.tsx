@@ -1,17 +1,20 @@
 'use client';
 
-import { auth } from '@/firebase/client';
 import { Button, Input, Typography } from '@socialincome/ui';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { Formik } from 'formik';
 import { useRouter } from 'next/navigation';
+import { useAuth } from 'reactfire';
 
 type CreateUserFormProps = {
 	email: string;
 	checkoutSessionId: string;
 };
+
 export function CreateUserForm({ checkoutSessionId, email }: CreateUserFormProps) {
 	const router = useRouter();
+	const auth = useAuth();
+
 	const onSubmit = async () => {
 		createUserWithEmailAndPassword(auth, email, 'hallotest')
 			.then(async (userCredential) => {

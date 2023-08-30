@@ -18,3 +18,15 @@ export const { app, auth, firestore, functions, storage } = initializeFirebaseCl
 	functionsEmulatorHost: process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_EMULATOR_HOST,
 	functionsEmulatorPort: Number(process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_EMULATOR_PORT),
 });
+
+export let asdf: string | undefined = undefined;
+
+export function initAsdf() {
+	console.log('initAsdf called');
+	new Promise(async () => {
+		setTimeout(() => {
+			console.log('setting asdf');
+			asdf = 'asdf';
+		}, 3000);
+	});
+}

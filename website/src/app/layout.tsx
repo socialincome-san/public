@@ -1,4 +1,4 @@
-import { QueryClientWrapper } from '@/app/query-client';
+import { Providers } from '@/app/providers';
 import { PropsWithChildren } from 'react';
 import './globals.css';
 
@@ -11,7 +11,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
 	return (
 		<html suppressHydrationWarning={true}>
 			<body>
-				<QueryClientWrapper>{children}</QueryClientWrapper>
+				<Providers>{children}</Providers>
 			</body>
 		</html>
 	);

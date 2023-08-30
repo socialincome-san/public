@@ -1,14 +1,15 @@
 'use client';
 
-import { auth } from '@/firebase/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { User, signInWithEmailAndPassword } from 'firebase/auth';
 import { useSearchParams } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
+import { useAuth } from 'reactfire';
 import { SurveyPageProps } from './layout';
 import { Survey, SurveyLanguage } from './survey';
 
 export default function Page({ params }: SurveyPageProps) {
+	const auth = useAuth();
 	const [email, setEmail] = useState<string | null>(null);
 	const [password, setPassword] = useState<string | null>(null);
 	const [user, setUser] = useState<User>();

@@ -1,4 +1,8 @@
 {
+	"tabs": {
+		"contact-details": "Kontakt",
+		"payments": "Zahlungen"
+	},
 	"login": {
 		"title": "Melde dich an",
 		"email": "E-Mail",
@@ -6,6 +10,9 @@
 		"password": "Passwort",
 		"forgot-password": "Passwort vergessen?",
 		"required-field": "Dieses Feld ist erforderlich",
-		"submit-button": "Anmelden"
-	}
+		"submit-button": "Anmelden",
+		"unknown-user": "Es gibt keinen Benutzer mit dieser E-Mail-Adresse",
+		"wrong-password": "Das Passwort ist falsch"
+	},
+	"sign-out": "Abmelden"
 }

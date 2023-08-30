@@ -1,4 +1,3 @@
-import { firestore } from '@/firebase/client';
 import { useTranslator } from '@/hooks/useTranslator';
 import { WebsiteLanguage } from '@/i18n';
 import {
@@ -10,6 +9,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useCallback } from 'react';
+import { useFirestore } from 'reactfire';
 import { Model } from 'survey-core';
 import 'survey-core/defaultV2.min.css';
 import { Survey as SurveyReact } from 'survey-react-ui';
@@ -26,6 +26,7 @@ interface SurveyProps {
 }
 
 export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
+	const firestore = useFirestore();
 	const surveyDocRef = doc(
 		firestore,
 		[RECIPIENT_FIRESTORE_PATH, recipientId, SURVEY_FIRETORE_PATH, surveyId].join('/'),
