@@ -1,13 +1,13 @@
 'use client';
 
-import { USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types';
+import { UserContext } from '@/app/[lang]/[country]/(website)/me/user-context-provider';
+import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types';
 import { Button, Input, Select, Typography } from '@socialincome/ui';
-import { useQuery } from '@tanstack/react-query';
-import assert from 'assert';
-import { QueryDocumentSnapshot, collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { Formik } from 'formik';
+import { useContext } from 'react';
 import toast from 'react-hot-toast';
-import { useFirestore, useUser } from 'reactfire';
+import { useFirestore } from 'reactfire';
 
 type UserFormValues = {
 	firstname: string;
@@ -24,23 +24,7 @@ type UserFormValues = {
 
 export default function Page() {
 	const firestore = useFirestore();
-	const { data: authUser } = useUser();
-
-	const { data: user } = useQuery(
-		[authUser, firestore],
-		async () => {
-			if (authUser && firestore) {
-				let snapshot = await getDocs(
-					query(collection(firestore, USER_FIRESTORE_PATH), where('authUserId', '==', authUser?.uid)),
-				);
-				assert(snapshot.size === 1);
-				return snapshot.docs[0] as QueryDocumentSnapshot<User>;
-			} else return null;
-		},
-		{
-			staleTime: 1000 * 60 * 60, // 1 hour
-		},
-	);
+	const { user } = useContext(UserContext);
 
 	const onSubmit = async (values: UserFormValues) => {
 		await updateDoc(doc(firestore, USER_FIRESTORE_PATH, user!.id), {
@@ -77,17 +61,10 @@ export default function Page() {
 	return (
 		<Formik initialValues={initialValues} onSubmit={onSubmit}>
 			{({ values, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
-				<form className="grid gap-4 md:grid-cols-2" onSubmit={handleSubmit}>
-					<div className="flex flex-col">
+				<form className="grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-x-4" onSubmit={handleSubmit}>
+					<div className="flex flex-col space-y-1">
 						<Typography>First name</Typography>
-						<Input
-							type="text"
-							name="firstname"
-							onChange={handleChange}
-							onBlur={handleBlur}
-							value={values.firstname}
-							className="mt-1"
-						/>
+						<Input type="text" name="firstname" onChange={handleChange} onBlur={handleBlur} value={values.firstname} />
 					</div>
 					<div className="flex flex-col">
 						<Typography>Last name</Typography>

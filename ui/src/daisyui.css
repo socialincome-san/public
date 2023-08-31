@@ -1,0 +1,8 @@
+.table {
+	:where(thead, tbody) {
+		:where(tr:not(:last-child)),
+		:where(tr:first-child:last-child) {
+			@apply border-b border-b-neutral-200;
+		}
+	}
+}

@@ -1,4 +1,5 @@
-import { Timestamp } from '@google-cloud/firestore';
+import { DateTime } from 'luxon';
+import { toFirebaseAdminTimestamp } from '../../../../../shared/src/firebase/admin/utils';
 import { ExchangeRates, Payment, PaymentStatus } from '../../../../../shared/src/types';
 import { PaymentsManager } from './PaymentsManager';
 
@@ -12,14 +13,14 @@ test('BatchAddCHFToPayments', async () => {
 	const paymentSLL: Payment = {
 		amount: 500000,
 		currency: 'SLL',
-		payment_at: Timestamp.fromMillis(1682672487 * 1000), // 2023-04-28 09:01:00
+		payment_at: toFirebaseAdminTimestamp(DateTime.fromSeconds(1682672487)), // 2023-04-28 09:01:00
 		status: PaymentStatus.Confirmed,
 	};
 
 	const paymentSLE: Payment = {
 		amount: 500,
 		currency: 'SLE',
-		payment_at: Timestamp.fromMillis(1682672487 * 1000), // 2023-04-28 09:01:00
+		payment_at: toFirebaseAdminTimestamp(DateTime.fromSeconds(1682672487)), // 2023-04-28 09:01:00
 		status: PaymentStatus.Confirmed,
 	};
 

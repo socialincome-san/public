@@ -1,5 +1,5 @@
-import { Timestamp } from '@google-cloud/firestore';
 import { DateTime } from 'luxon';
+import { Timestamp } from '../firebase';
 
 export function getMonthId(year: number, month: number) {
 	return year + '-' + (month + '').padStart(2, '0');
@@ -19,10 +19,6 @@ export function getMonthIDs(date: Date, last_n: number) {
 		last_n -= 1;
 	}
 	return months;
-}
-
-export function toTimestamp(dateTime: DateTime | Date) {
-	return dateTime instanceof Date ? Timestamp.fromDate(dateTime) : Timestamp.fromMillis(dateTime.toMillis());
 }
 
 export function toDateTime(timestamp: Timestamp | Date, timezone: string = 'utc') {

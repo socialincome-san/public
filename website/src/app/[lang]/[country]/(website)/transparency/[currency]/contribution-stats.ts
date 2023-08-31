@@ -36,7 +36,6 @@ export const contributionStats: ContributionStats = {
 		{ source: 'benevity', amount: 47947 },
 		{ source: 'cash', amount: 1500 },
 		{ source: 'stripe', amount: 121346.56999999988 },
-		{ source: 'twint', amount: 694.62 },
 		{ source: 'wire-transfer', amount: 12184 },
 	],
 	totalContributionsByMonth: [

@@ -27,7 +27,7 @@ export default async function Navbar({ lang, country }: DefaultParams) {
 				currentLanguage: translator.t(`languages.${lang}`),
 				myProfile: translator.t('navigation.my-profile'),
 				contactDetails: translator.t('tabs.contact-details'),
-				payments: translator.t('tabs.payments'),
+				payments: translator.t('tabs.contributions'),
 				signOut: translator.t('sign-out'),
 			}}
 			languages={languages.map((lang) => ({ code: lang, translation: translator.t(`languages.${lang}`) }))}

@@ -140,10 +140,10 @@ export default function NavbarClient({ lang, country, translations, languages, s
 										{authUserReady === 'success' && authUser ? (
 											<>
 												<Dropdown.Item anchor={false}>
-													<Link href={`/${lang}/${country}/me/contact-details`}>{translations.contactDetails}</Link>
+													<Link href={`/${lang}/${country}/me/contributions`}>{translations.payments}</Link>
 												</Dropdown.Item>
 												<Dropdown.Item anchor={false}>
-													<Link href={`/${lang}/${country}/me/payments`}>{translations.payments}</Link>
+													<Link href={`/${lang}/${country}/me/contact-details`}>{translations.contactDetails}</Link>
 												</Dropdown.Item>
 												<Dropdown.Item
 													className="border-t"

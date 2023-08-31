@@ -1,4 +1,5 @@
 import { DateTime } from 'luxon';
+import { toFirebaseAdminTimestamp } from '../../../../../../shared/src/firebase/admin/utils';
 import {
 	PAYMENTS_COUNT,
 	PAYMENT_AMOUNT,
@@ -8,7 +9,6 @@ import {
 	PaymentStatus,
 	RECIPIENT_FIRESTORE_PATH,
 } from '../../../../../../shared/src/types';
-import { toTimestamp } from '../../../../../../shared/src/utils/date';
 import { ExchangeRateImporter } from '../../../../cron/exchange-rate-import/ExchangeRateImporter';
 import { PaymentTask } from './PaymentTask';
 
@@ -34,7 +34,7 @@ export class CreatePaymentsTask extends PaymentTask {
 						amount: PAYMENT_AMOUNT,
 						amount_chf: amountChf,
 						currency: PAYMENT_CURRENCY,
-						payment_at: toTimestamp(paymentDate),
+						payment_at: toFirebaseAdminTimestamp(paymentDate),
 						status: PaymentStatus.Paid,
 						phone_number: recipient.get('mobile_money_phone').phone,
 					});
@@ -56,7 +56,7 @@ export class CreatePaymentsTask extends PaymentTask {
 						.set({
 							amount: PAYMENT_AMOUNT,
 							currency: PAYMENT_CURRENCY,
-							payment_at: toTimestamp(nextMonthPaymentDate),
+							payment_at: toFirebaseAdminTimestamp(nextMonthPaymentDate),
 							status: PaymentStatus.Created,
 						});
 					paymentsCreated++;

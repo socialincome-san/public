@@ -1,7 +1,12 @@
 {
 	"tabs": {
-		"contact-details": "Contact Details",
-		"payments": "Payments"
+		"contact-details": "Contact Info",
+		"contributions": "Contributions"
+	},
+	"contributions": {
+		"amount": "Amount",
+		"amount-currency": "{{ amount, currency }}",
+		"date": "Date"
 	},
 	"login": {
 		"title": "Sign in to your account",

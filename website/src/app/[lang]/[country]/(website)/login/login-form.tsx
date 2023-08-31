@@ -3,15 +3,14 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
 import { SiGoogle } from '@icons-pack/react-simple-icons';
 import { Button, Input, Typography } from '@socialincome/ui';
+import { FirebaseError } from 'firebase/app';
 import { browserSessionPersistence, signInWithEmailAndPassword } from 'firebase/auth';
-import firebase from 'firebase/compat';
 import { Formik } from 'formik';
 import { FormikHelpers } from 'formik/dist/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useAuth } from 'reactfire';
-import FirebaseError = firebase.FirebaseError;
 
 type LoginFormValues = {
 	email: string;

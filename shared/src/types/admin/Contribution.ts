@@ -1,4 +1,4 @@
-import { Timestamp } from '@google-cloud/firestore';
+import { Timestamp } from '@socialincome/shared/src/firebase';
 
 export const CONTRIBUTION_FIRESTORE_PATH = 'contributions';
 
@@ -6,7 +6,6 @@ export const CONTRIBUTION_FIRESTORE_PATH = 'contributions';
 export enum ContributionSourceKey {
 	BENEVITY = 'benevity',
 	CASH = 'cash',
-	TWINT = 'twint',
 	STRIPE = 'stripe',
 	WIRE_TRANSFER = 'wire-transfer',
 }
