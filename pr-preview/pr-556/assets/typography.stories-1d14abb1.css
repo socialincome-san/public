@@ -1,0 +1,1 @@
+.table :where(thead,tbody) :where(tr:first-child:last-child),.table :where(thead,tbody) :where(tr:not(:last-child)){--tw-border-opacity:1;border-bottom-color:rgb(229 229 229/var(--tw-border-opacity));border-bottom-width:1px}
