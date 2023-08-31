@@ -3,6 +3,7 @@ import { CollectionReference } from 'firebase-admin/lib/firestore';
 import { DateTime } from 'luxon';
 import Stripe from 'stripe';
 import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
+import { toFirebaseAdminTimestamp } from '../firebase/admin/utils';
 import {
 	CONTRIBUTION_FIRESTORE_PATH,
 	Contribution,
@@ -13,7 +14,6 @@ import {
 	UserStatusKey,
 	splitName,
 } from '../types';
-import { toTimestamp } from '../utils/date';
 
 export class StripeEventHandler {
 	readonly stripe: Stripe;
@@ -89,7 +89,7 @@ export class StripeEventHandler {
 		const balanceTransaction = charge.balance_transaction as Stripe.BalanceTransaction;
 		return {
 			source: ContributionSourceKey.STRIPE,
-			created: toTimestamp(DateTime.fromSeconds(charge.created)),
+			created: toFirebaseAdminTimestamp(DateTime.fromSeconds(charge.created)),
 			amount: charge.amount / 100,
 			currency: charge.currency,
 			amount_chf: balanceTransaction?.amount ? balanceTransaction.amount / 100 : 0,

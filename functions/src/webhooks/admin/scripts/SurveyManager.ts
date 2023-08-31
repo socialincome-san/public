@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import { AuthAdmin } from '../../../../../shared/src/firebase/admin/AuthAdmin';
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
+import { toFirebaseAdminTimestamp } from '../../../../../shared/src/firebase/admin/utils';
 import {
 	RECIPIENT_FIRESTORE_PATH,
 	Recipient,
@@ -13,7 +14,7 @@ import {
 	recipientSurveys,
 } from '../../../../../shared/src/types';
 import { rndString } from '../../../../../shared/src/utils/crypto';
-import { toDateTime, toTimestamp } from '../../../../../shared/src/utils/date';
+import { toDateTime } from '../../../../../shared/src/utils/date';
 
 /**
  * Takes care of creating surveys for recipients
@@ -100,7 +101,7 @@ export class SurveyManager {
 				language: language,
 				status: status,
 				data: {},
-				due_date_at: toTimestamp(due_date_at),
+				due_date_at: toFirebaseAdminTimestamp(due_date_at),
 				access_email: email,
 				access_pw: password,
 				access_token: token,
