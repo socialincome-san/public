@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp } from '@socialincome/shared/src/firebase';
 import { DateTime } from 'luxon';
 
 export const RECIPIENT_FIRESTORE_PATH = 'recipients';

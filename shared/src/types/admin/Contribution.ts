@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp } from '@socialincome/shared/src/firebase';
 
 export const CONTRIBUTION_FIRESTORE_PATH = 'contributions';
 

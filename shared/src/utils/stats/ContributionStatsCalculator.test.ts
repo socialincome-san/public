@@ -1,6 +1,5 @@
 import { expect, test } from '@jest/globals';
 import functions from 'firebase-functions-test';
-import { Timestamp } from 'firebase/firestore';
 import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
 import { getOrInitializeFirebaseAdmin } from '../../firebase/admin/app';
 import {
@@ -11,6 +10,7 @@ import {
 	User,
 	UserStatusKey,
 } from '../../types';
+import { toTimestamp } from '../date';
 import { ContributionStatsCalculator } from './ContributionStatsCalculator';
 
 const projectId = 'contribution-stats-calculator-test';
@@ -94,7 +94,7 @@ const user1: User = {
 const contributionsUser1 = ['2023-01-05', '2023-02-05', '2023-03-05', '2023-04-05'].map((date) => {
 	return {
 		source: ContributionSourceKey.STRIPE,
-		created: Timestamp.fromDate(new Date(date)),
+		created: toTimestamp(new Date(date)),
 		amount: 100,
 		currency: 'usd',
 		amount_chf: 100,
@@ -121,7 +121,7 @@ const user2: User = {
 const contributionsUser2 = ['2023-01-08', '2023-04-09'].map((date) => {
 	return {
 		source: ContributionSourceKey.BENEVITY,
-		created: Timestamp.fromDate(new Date(date)),
+		created: toTimestamp(new Date(date)),
 		amount: 1000,
 		currency: 'chf',
 		amount_chf: 1000,
@@ -148,7 +148,7 @@ const testUser: User = {
 const contributionsTestUser = ['2023-01-05'].map((date) => {
 	return {
 		source: ContributionSourceKey.STRIPE,
-		created: Timestamp.fromDate(new Date(date)),
+		created: toTimestamp(new Date(date)),
 		amount: 100,
 		currency: 'usd',
 		amount_chf: 818.68,

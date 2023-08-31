@@ -1,9 +1,9 @@
 import { describe, test } from '@jest/globals';
-import { Timestamp } from 'firebase/firestore';
 import Stripe from 'stripe';
 import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
 import { getOrInitializeFirebaseAdmin } from '../firebase/admin/app';
 import { Contribution, ContributionSourceKey, StatusKey, User, UserStatusKey } from '../types';
+import { toTimestamp } from '../utils/date';
 import { StripeEventHandler } from './StripeEventHandler';
 
 describe('stripeWebhook', () => {
@@ -386,7 +386,7 @@ describe('stripeWebhook', () => {
 
 	const expectedContribution: Contribution = {
 		source: ContributionSourceKey.STRIPE,
-		created: Timestamp.fromDate(new Date('2021-03-05T18:36:21.000Z')),
+		created: toTimestamp(new Date('2021-03-05T18:36:21.000Z')),
 		amount: 900,
 		currency: 'usd',
 		amount_chf: 818.68,

@@ -1,5 +1,7 @@
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp as FirestoreAdminTimestamp } from 'firebase-admin/firestore';
+import { Timestamp as FirestoreClientTimestamp } from 'firebase/firestore';
 import { DateTime } from 'luxon';
+import { Timestamp } from '../firebase';
 
 export function getMonthId(year: number, month: number) {
 	return year + '-' + (month + '').padStart(2, '0');
@@ -21,8 +23,20 @@ export function getMonthIDs(date: Date, last_n: number) {
 	return months;
 }
 
-export function toTimestamp(dateTime: DateTime | Date) {
-	return dateTime instanceof Date ? Timestamp.fromDate(dateTime) : Timestamp.fromMillis(dateTime.toMillis());
+/**
+ * Convert a DateTime or Date to a Firestore Timestamp. As the Firebase Admin SDK and the Firebase Client SDK use
+ * different Timestamp classes, the useFirebaseAdminSDK parameter can be used to specify which one to use.
+ */
+export function toTimestamp(dateTime: DateTime | Date, useFirebaseAdminSDK = true): Timestamp {
+	if (dateTime instanceof Date) {
+		return useFirebaseAdminSDK
+			? FirestoreAdminTimestamp.fromDate(dateTime)
+			: FirestoreClientTimestamp.fromDate(dateTime);
+	} else {
+		return useFirebaseAdminSDK
+			? FirestoreAdminTimestamp.fromMillis(dateTime.toMillis())
+			: FirestoreClientTimestamp.fromMillis(dateTime.toMillis());
+	}
 }
 
 export function toDateTime(timestamp: Timestamp | Date, timezone: string = 'utc') {
