@@ -1,4 +1,4 @@
-import { Timestamp } from '@google-cloud/firestore';
+import { Timestamp } from 'firebase/firestore';
 import { EntityReference } from 'firecms';
 
 export const PAYMENT_FIRESTORE_PATH = 'payments';

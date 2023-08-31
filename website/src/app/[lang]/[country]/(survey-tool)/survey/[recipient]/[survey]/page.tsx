@@ -1,12 +1,13 @@
 'use client';
 
+import { Survey, SurveyLanguage } from '@/app/[lang]/[country]/(survey-tool)/survey/[recipient]/[survey]/survey';
+import { Button, Input } from '@socialincome/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { User, signInWithEmailAndPassword } from 'firebase/auth';
 import { useSearchParams } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
 import { useAuth } from 'reactfire';
 import { SurveyPageProps } from './layout';
-import { Survey, SurveyLanguage } from './survey';
 
 export default function Page({ params }: SurveyPageProps) {
 	const auth = useAuth();
@@ -49,17 +50,16 @@ export default function Page({ params }: SurveyPageProps) {
 		);
 	} else {
 		return (
-			<form className="mx-auto flex flex-col space-y-2" method="post" onSubmit={handleSubmit}>
-				<input name="email" type="text" placeholder="Email" className="input input-bordered mx-auto w-full max-w-xs" />
-				<input
+			<form className="mx-auto flex max-w-md flex-col space-y-2" method="post" onSubmit={handleSubmit}>
+				<Input name="email" type="text" placeholder="Email" />
+				<Input
 					name="password"
-					type="text"
+					type="password"
 					placeholder="Password" // TODO: i18n
-					className="input input-bordered mx-auto w-full max-w-xs"
 				/>
-				<button type="submit" className="btn btn-primary mx-auto">
+				<Button type="submit" className="btn btn-primary mx-auto">
 					Save
-				</button>
+				</Button>
 			</form>
 		);
 	}

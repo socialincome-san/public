@@ -1,6 +1,6 @@
-import { Timestamp } from '@google-cloud/firestore';
 import { expect, test } from '@jest/globals';
 import functions from 'firebase-functions-test';
+import { Timestamp } from 'firebase/firestore';
 import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
 import { getOrInitializeFirebaseAdmin } from '../../firebase/admin/app';
 import {

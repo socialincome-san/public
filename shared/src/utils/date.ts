@@ -1,4 +1,4 @@
-import { Timestamp } from '@google-cloud/firestore';
+import { Timestamp } from 'firebase/firestore';
 import { DateTime } from 'luxon';
 
 export function getMonthId(year: number, month: number) {

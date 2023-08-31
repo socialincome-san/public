@@ -1,7 +1,7 @@
 import { AdditionalFieldDelegate, buildProperties } from 'firecms';
 import { USER_FIRESTORE_PATH, User, UserReferralSource } from '../../../shared/src/types';
 import { CreateDonationCertificatesAction } from '../actions/CreateDonationCertificatesAction';
-import { contributionsCollection } from './Contributions';
+import { buildContributionsCollection } from './Contributions';
 import { donationCertificateCollection } from './DonationCertificate';
 import { buildAuditedCollection } from './shared';
 
@@ -68,7 +68,7 @@ export const usersCollection = buildAuditedCollection<User>({
 		delete: false,
 	}),
 	additionalFields: [FirstNameCol, LastNameCol, GenderCol, PhoneCol, CountryCol, CityCol, ReferralCol],
-	subcollections: [contributionsCollection, donationCertificateCollection],
+	subcollections: [buildContributionsCollection(), donationCertificateCollection],
 	Actions: CreateDonationCertificatesAction,
 	properties: buildProperties<User>({
 		test_user: {
@@ -79,6 +79,11 @@ export const usersCollection = buildAuditedCollection<User>({
 			name: 'Email',
 			validation: { required: true },
 			dataType: 'string',
+		},
+		authUserId: {
+			name: 'Auth User Id',
+			dataType: 'string',
+			readOnly: true,
 		},
 		personal: {
 			name: 'Personal Info',
@@ -186,7 +191,7 @@ export const usersCollection = buildAuditedCollection<User>({
 		stripe_customer_id: {
 			name: 'stripe customer id',
 			dataType: 'string',
-			disabled: true,
+			readOnly: true,
 		},
 	}),
 });

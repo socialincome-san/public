@@ -1,5 +1,5 @@
-import { Timestamp } from '@google-cloud/firestore';
 import { describe, test } from '@jest/globals';
+import { Timestamp } from 'firebase/firestore';
 import Stripe from 'stripe';
 import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
 import { getOrInitializeFirebaseAdmin } from '../firebase/admin/app';

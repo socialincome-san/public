@@ -10,6 +10,7 @@ import {
 import { AdminUser } from '../../shared/src/types';
 
 import { adminsCollection } from './collections/Admins';
+import { buildContributionsCollection } from './collections/Contributions';
 import { operationalExpensesCollection } from './collections/OperationalExpenses';
 import { buildPartnerOrganisationsCollection } from './collections/PartnerOrganisations';
 import { usersCollection } from './collections/Users';
@@ -53,6 +54,7 @@ export default function App() {
 		adminsCollection,
 		operationalExpensesCollection,
 		usersCollection,
+		buildContributionsCollection({ collectionGroup: true }),
 	];
 
 	const views: CMSView[] = [

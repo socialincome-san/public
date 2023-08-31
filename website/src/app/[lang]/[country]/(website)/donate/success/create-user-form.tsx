@@ -19,9 +19,7 @@ export function CreateUserForm({ checkoutSessionId, email }: CreateUserFormProps
 		createUserWithEmailAndPassword(auth, email, 'hallotest')
 			.then(async (userCredential) => {
 				const user = userCredential.user;
-				await fetch(
-					`${window.location.origin}/api/stripe/checkout/success?stripeCheckoutSessionId=${checkoutSessionId}&userId=${user.uid}`,
-				);
+				await fetch(`/api/stripe/checkout/success?stripeCheckoutSessionId=${checkoutSessionId}&userId=${user.uid}`);
 				router.push('/me');
 			})
 			.catch((error) => {

@@ -1,4 +1,4 @@
-import { Timestamp } from '@google-cloud/firestore';
+import { Timestamp } from 'firebase/firestore';
 import { DateTime } from 'luxon';
 
 export const RECIPIENT_FIRESTORE_PATH = 'recipients';

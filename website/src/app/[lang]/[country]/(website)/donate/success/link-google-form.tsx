@@ -17,9 +17,7 @@ export function LinkGoogleForm({ checkoutSessionId }: LinkGoogleFormProps) {
 		signInWithPopup(auth, provider)
 			.then(async (result) => {
 				const user = result.user;
-				await fetch(
-					`${window.location.origin}/api/stripe/checkout/success?stripeCheckoutSessionId=${checkoutSessionId}&userId=${user.uid}`,
-				);
+				await fetch(`/api/stripe/checkout/success?stripeCheckoutSessionId=${checkoutSessionId}&userId=${user.uid}`);
 			})
 			.catch((error) => {
 				console.log(error);

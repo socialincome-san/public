@@ -67,6 +67,10 @@ service cloud.firestore {
       allow read, write: if request.auth.uid == resource.data.authUserId;
     }
 
+    match /users/{userId}/{data=**} {
+      allow read, write: if request.auth.uid == get(/databases/$(database)/documents/users/$(userId)).data.authUserId;
+    }
+
     match /users/{data=**} {
       allow read: if isGlobalAdmin(request.auth.token.email) || isGlobalAnalyst(request.auth.token.email);
       allow write: if isGlobalAdmin(request.auth.token.email);

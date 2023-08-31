@@ -1,4 +1,4 @@
-import { Timestamp } from '@google-cloud/firestore';
+import { Timestamp } from 'firebase/firestore';
 import { ExchangeRates, Payment, PaymentStatus } from '../../../../../shared/src/types';
 import { PaymentsManager } from './PaymentsManager';
 

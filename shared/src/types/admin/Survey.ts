@@ -1,4 +1,4 @@
-import { Timestamp } from '@google-cloud/firestore';
+import { Timestamp } from 'firebase/firestore';
 import { RecipientMainLanguage } from './Recipient';
 
 export const SURVEY_FIRETORE_PATH = 'surveys';
