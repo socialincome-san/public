@@ -11,7 +11,7 @@ import classNames from 'classnames';
 import { signOut } from 'firebase/auth';
 import _ from 'lodash';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useAuth, useUser } from 'reactfire';
 
 type NavbarSection = {
@@ -40,7 +40,6 @@ type NavbarProps = {
 } & DefaultParams;
 
 export default function NavbarClient({ lang, country, translations, languages, sections = [] }: NavbarProps) {
-	const router = useRouter();
 	const auth = useAuth();
 	const { status: authUserReady, data: authUser } = useUser();
 	const pathname = usePathname();
@@ -126,11 +125,8 @@ export default function NavbarClient({ lang, country, translations, languages, s
 												<Dropdown.Item anchor={false}>
 													<Link href={`/${lang}/${country}/me/contact-details`}>{translations.contactDetails}</Link>
 												</Dropdown.Item>
-												<Dropdown.Item
-													className="border-t"
-													onClick={() => signOut(auth).then(() => router.push(`/${lang}/${country}`))}
-												>
-													{translations.signOut}
+												<Dropdown.Item className="border-t">
+													<a onClick={() => signOut(auth)}>{translations.signOut}</a>
 												</Dropdown.Item>
 											</>
 										) : (
@@ -211,9 +207,7 @@ export default function NavbarClient({ lang, country, translations, languages, s
 													<Link href={`/${lang}/${country}/me/contributions`}>{translations.payments}</Link>
 												</Menu.Item>
 												<Menu.Item>
-													<a onClick={() => signOut(auth).then(() => router.push(`/${lang}/${country}`))}>
-														{translations.signOut}
-													</a>
+													<a onClick={() => signOut(auth)}>{translations.signOut}</a>
 												</Menu.Item>
 											</>
 										) : (
