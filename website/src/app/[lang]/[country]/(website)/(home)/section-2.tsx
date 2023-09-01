@@ -61,7 +61,7 @@ export default function Section2({ vimeoVideoId, translations }: Section2Props) 
 								{translations.videoButton}
 							</Typography>
 						</div>
-						<Modal open={showModal} className="w-11/12 max-w-7xl">
+						<Modal open={showModal} className="w-11/12 max-w-6xl">
 							<Modal.Body ref={playerRef} />
 						</Modal>
 					</div>

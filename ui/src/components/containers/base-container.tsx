@@ -8,7 +8,7 @@ interface BaseContainerProps {
 export function BaseContainer({ children, className }: PropsWithChildren<BaseContainerProps>) {
 	return (
 		<div className={className}>
-			<div className={classNames('mx-auto max-w-7xl px-2 sm:px-5')}>{children}</div>
+			<div className={classNames('mx-auto max-w-6xl px-2 sm:px-5')}>{children}</div>
 		</div>
 	);
 }

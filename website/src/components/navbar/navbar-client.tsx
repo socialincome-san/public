@@ -2,16 +2,16 @@
 
 import { DefaultParams } from '@/app/[lang]/[country]';
 import { SILogo } from '@/components/logos/si-logo';
+import { LanguageSwitcher } from '@/components/navbar/language-switcher';
 import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, UserCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { LanguageIcon } from '@heroicons/react/24/solid';
 import { Language } from '@socialincome/shared/src/types';
 import { Button, Dropdown, Menu, Typography } from '@socialincome/ui';
 import classNames from 'classnames';
 import { signOut } from 'firebase/auth';
 import _ from 'lodash';
 import Link from 'next/link';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useAuth, useUser } from 'reactfire';
 
 type NavbarSection = {
@@ -40,10 +40,8 @@ type NavbarProps = {
 } & DefaultParams;
 
 export default function NavbarClient({ lang, country, translations, languages, sections = [] }: NavbarProps) {
-	const router = useRouter();
 	const auth = useAuth();
 	const { status: authUserReady, data: authUser } = useUser();
-	const searchParams = useSearchParams();
 	const pathname = usePathname();
 	const baseSegment = pathname?.split('/')[3];
 	let backgroundColor;
@@ -56,18 +54,11 @@ export default function NavbarClient({ lang, country, translations, languages, s
 			backgroundColor = 'bg-base-blue';
 	}
 
-	const onLanguageChange = (lang: Language) => {
-		const pathSegments = window.location.pathname.split('/');
-		pathSegments[1] = lang;
-		const current = new URLSearchParams(Array.from(searchParams.entries()));
-		router.push(pathSegments.join('/') + '?' + current.toString());
-	};
-
 	return (
 		<Disclosure as="nav" className={classNames(backgroundColor, 'pt-2 shadow')}>
 			{({ open }) => (
 				<>
-					<div className="mx-auto max-w-7xl px-2 sm:px-5">
+					<div className="mx-auto max-w-6xl px-2 sm:px-5">
 						<div className="flex h-16 justify-between">
 							<div className="flex flex-shrink-0 items-center">
 								<Link href={`/${lang}/${country}`}>
@@ -120,18 +111,7 @@ export default function NavbarClient({ lang, country, translations, languages, s
 							</div>
 
 							<div className="hidden items-center md:flex">
-								<Dropdown hover end>
-									<Dropdown.Toggle color="ghost" className="hover:bg-none">
-										<LanguageIcon className="h-5 w-5" />
-									</Dropdown.Toggle>
-									<Dropdown.Menu className="z-40 min-w-[6rem]">
-										{languages.map((lang, index) => (
-											<Dropdown.Item key={index} onClick={() => onLanguageChange(lang.code)}>
-												{lang.translation}
-											</Dropdown.Item>
-										))}
-									</Dropdown.Menu>
-								</Dropdown>
+								<LanguageSwitcher languages={languages} mobile={false} currentLanguage={translations.currentLanguage} />
 								<Dropdown hover end>
 									<Dropdown.Toggle color="ghost" className="hover:bg-none">
 										<UserCircleIcon className="h-6 w-6" />
@@ -145,11 +125,8 @@ export default function NavbarClient({ lang, country, translations, languages, s
 												<Dropdown.Item anchor={false}>
 													<Link href={`/${lang}/${country}/me/contact-details`}>{translations.contactDetails}</Link>
 												</Dropdown.Item>
-												<Dropdown.Item
-													className="border-t"
-													onClick={() => signOut(auth).then(() => router.push(`/${lang}/${country}`))}
-												>
-													{translations.signOut}
+												<Dropdown.Item className="border-t">
+													<a onClick={() => signOut(auth)}>{translations.signOut}</a>
 												</Dropdown.Item>
 											</>
 										) : (
@@ -206,20 +183,11 @@ export default function NavbarClient({ lang, country, translations, languages, s
 						<div className="neutral-content border-t pb-3 pt-4">
 							<Menu>
 								<Menu.Item>
-									<Menu.Details
-										label={
-											<div className="flex-inline flex space-x-2">
-												<LanguageIcon className="h-5 w-5" />
-												<Typography size="sm">{translations.currentLanguage}</Typography>
-											</div>
-										}
-									>
-										{languages.map((lang, index) => (
-											<Menu.Item key={index}>
-												<a onClick={() => onLanguageChange(lang.code)}>{lang.translation}</a>
-											</Menu.Item>
-										))}
-									</Menu.Details>
+									<LanguageSwitcher
+										languages={languages}
+										mobile={true}
+										currentLanguage={translations.currentLanguage}
+									/>
 								</Menu.Item>
 								<Menu.Item>
 									<Menu.Details
@@ -236,12 +204,10 @@ export default function NavbarClient({ lang, country, translations, languages, s
 													<Link href={`/${lang}/${country}/me/contact-details`}>{translations.contactDetails}</Link>
 												</Menu.Item>
 												<Menu.Item>
-													<Link href={`/${lang}/${country}/me/payments`}>{translations.payments}</Link>
+													<Link href={`/${lang}/${country}/me/contributions`}>{translations.payments}</Link>
 												</Menu.Item>
 												<Menu.Item>
-													<a onClick={() => signOut(auth).then(() => router.push(`/${lang}/${country}`))}>
-														{translations.signOut}
-													</a>
+													<a onClick={() => signOut(auth)}>{translations.signOut}</a>
 												</Menu.Item>
 											</>
 										) : (

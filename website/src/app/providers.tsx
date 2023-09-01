@@ -1,13 +1,21 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Analytics, getAnalytics, isSupported as isAnalyticsSupported } from 'firebase/analytics';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
-import { AuthProvider, FirebaseAppProvider, FirestoreProvider, StorageProvider, useFirebaseApp } from 'reactfire';
+import {
+	AnalyticsProvider,
+	AuthProvider,
+	FirebaseAppProvider,
+	FirestoreProvider,
+	StorageProvider,
+	useFirebaseApp,
+} from 'reactfire';
 
 // These variables are needed so that the emulators are only initialized once. Probably due to the React Strict mode, it
 // happens that the emulators get initialized multiple times in the development environment.
@@ -15,6 +23,28 @@ let connectAuthEmulatorCalled = false;
 let connectFirestoreEmulatorCalled = false;
 let connectStorageEmulatorCalled = false;
 let connectFunctionsEmulatorCalled = false;
+
+function AnalyticsProviderWrapper({ children }: PropsWithChildren) {
+	const app = useFirebaseApp();
+	const [analytics, setAnalytics] = useState<Analytics | null>(null);
+
+	useEffect(() => {
+		if (process.env.NEXT_PUBLIC_FIREBASE_APP_ID) {
+			isAnalyticsSupported().then((isSupported) => {
+				if (isSupported) {
+					console.log('Using analytics');
+					setAnalytics(getAnalytics(app));
+				}
+			});
+		}
+	}, [app]);
+
+	if (analytics) {
+		return <AnalyticsProvider sdk={analytics}>{children}</AnalyticsProvider>;
+	} else {
+		return children;
+	}
+}
 
 function FirebaseSDKProviders({ children }: PropsWithChildren) {
 	const app = useFirebaseApp();
@@ -55,7 +85,9 @@ function FirebaseSDKProviders({ children }: PropsWithChildren) {
 	return (
 		<AuthProvider sdk={auth}>
 			<FirestoreProvider sdk={firestore}>
-				<StorageProvider sdk={storage}>{children}</StorageProvider>
+				<StorageProvider sdk={storage}>
+					<AnalyticsProviderWrapper>{children}</AnalyticsProviderWrapper>
+				</StorageProvider>
 			</FirestoreProvider>
 		</AuthProvider>
 	);
@@ -64,8 +96,12 @@ function FirebaseSDKProviders({ children }: PropsWithChildren) {
 export function Providers({ children }: PropsWithChildren) {
 	const firebaseConfig = {
 		apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+		appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 		authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+		measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+		messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
 		projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+		storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
 	};
 	const queryClient = new QueryClient();
 

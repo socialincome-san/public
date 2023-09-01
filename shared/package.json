@@ -17,16 +17,16 @@
 		"ts-jest": "^29.1.1"
 	},
 	"dependencies": {
-		"axios": "^1.4.0",
+		"axios": "^1.5.0",
 		"firebase-admin": "^11.10.1",
 		"handlebars": "^4.7.8",
 		"handlebars-i18next": "^1.0.3",
-		"i18next": "^23.4.4",
+		"i18next": "^23.4.6",
 		"i18next-resources-to-backend": "^1.1.4",
-		"luxon": "^3.4.0",
+		"luxon": "^3.4.2",
 		"mjml": "^4.14.1",
 		"nodemailer": "^6.9.4",
-		"stripe": "^12.18.0",
+		"stripe": "^13.4.0",
 		"twilio": "^4.15.0"
 	}
 }
