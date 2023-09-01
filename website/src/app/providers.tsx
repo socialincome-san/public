@@ -1,12 +1,12 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { getAnalytics } from 'firebase/analytics';
+import { Analytics, getAnalytics, isSupported as isAnalyticsSupported } from 'firebase/analytics';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import {
 	AnalyticsProvider,
@@ -26,9 +26,15 @@ let connectFunctionsEmulatorCalled = false;
 
 function AnalyticsProviderWrapper({ children }: PropsWithChildren) {
 	const app = useFirebaseApp();
+	const [analytics, setAnalytics] = useState<Analytics | null>(null);
 
-	if (process.env.NEXT_PUBLIC_FIREBASE_APP_ID) {
-		const analytics = getAnalytics(app);
+	useEffect(() => {
+		if (process.env.NEXT_PUBLIC_FIREBASE_APP_ID) {
+			isAnalyticsSupported().then((isSupported) => isSupported && setAnalytics(getAnalytics(app)));
+		}
+	}, []);
+
+	if (analytics) {
 		return <AnalyticsProvider sdk={analytics}>{children}</AnalyticsProvider>;
 	} else {
 		return children;
