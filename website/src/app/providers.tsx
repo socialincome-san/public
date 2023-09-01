@@ -32,7 +32,7 @@ function AnalyticsProviderWrapper({ children }: PropsWithChildren) {
 		if (process.env.NEXT_PUBLIC_FIREBASE_APP_ID) {
 			isAnalyticsSupported().then((isSupported) => isSupported && setAnalytics(getAnalytics(app)));
 		}
-	}, []);
+	}, [app]);
 
 	if (analytics) {
 		return <AnalyticsProvider sdk={analytics}>{children}</AnalyticsProvider>;
