@@ -8,8 +8,8 @@ export default async function Navbar({ lang, country }: DefaultParams) {
 		language: lang,
 		namespaces: ['common', 'website-common', 'website-me'],
 	});
-	const languages: Language[] = ['en', 'de'];
 
+	const languages: Language[] = ['en', 'de'];
 	const aboutUs = translator.t('navigation.about-us');
 	const aboutUsHref = `/${lang}/${country}/about-us`;
 	const ourWork = translator.t('navigation.our-work');

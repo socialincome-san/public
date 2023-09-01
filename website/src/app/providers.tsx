@@ -30,7 +30,12 @@ function AnalyticsProviderWrapper({ children }: PropsWithChildren) {
 
 	useEffect(() => {
 		if (process.env.NEXT_PUBLIC_FIREBASE_APP_ID) {
-			isAnalyticsSupported().then((isSupported) => isSupported && setAnalytics(getAnalytics(app)));
+			isAnalyticsSupported().then((isSupported) => {
+				if (isSupported) {
+					console.log('Using analytics');
+					setAnalytics(getAnalytics(app));
+				}
+			});
 		}
 	}, [app]);
 
