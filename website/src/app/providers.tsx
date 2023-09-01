@@ -24,13 +24,23 @@ let connectFirestoreEmulatorCalled = false;
 let connectStorageEmulatorCalled = false;
 let connectFunctionsEmulatorCalled = false;
 
+function AnalyticsProviderWrapper({ children }: PropsWithChildren) {
+	const app = useFirebaseApp();
+
+	if (process.env.NEXT_PUBLIC_FIREBASE_APP_ID) {
+		const analytics = getAnalytics(app);
+		return <AnalyticsProvider sdk={analytics}>{children}</AnalyticsProvider>;
+	} else {
+		return children;
+	}
+}
+
 function FirebaseSDKProviders({ children }: PropsWithChildren) {
 	const app = useFirebaseApp();
 	const auth = getAuth(app);
 	const firestore = getFirestore(app);
 	const functions = getFunctions(app);
 	const storage = getStorage(app);
-	const analytics = getAnalytics(app);
 
 	const authEmulatorUrl = process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL;
 	const firestoreEmulatorHost = process.env.NEXT_PUBLIC_FIREBASE_FIRESTORE_EMULATOR_HOST;
@@ -62,13 +72,13 @@ function FirebaseSDKProviders({ children }: PropsWithChildren) {
 	}
 
 	return (
-		<AnalyticsProvider sdk={analytics}>
-			<AuthProvider sdk={auth}>
-				<FirestoreProvider sdk={firestore}>
-					<StorageProvider sdk={storage}>{children}</StorageProvider>
-				</FirestoreProvider>
-			</AuthProvider>
-		</AnalyticsProvider>
+		<AuthProvider sdk={auth}>
+			<FirestoreProvider sdk={firestore}>
+				<StorageProvider sdk={storage}>
+					<AnalyticsProviderWrapper>{children}</AnalyticsProviderWrapper>
+				</StorageProvider>
+			</FirestoreProvider>
+		</AuthProvider>
 	);
 }
 

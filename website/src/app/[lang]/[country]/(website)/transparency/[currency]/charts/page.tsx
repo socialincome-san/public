@@ -1,5 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
-import { firestoreAdmin } from '@/firebase/admin';
+import { firestoreAdmin } from '@/firebase-admin';
 import { ValidCountry, WebsiteLanguage } from '@/i18n';
 import { ContributionStatsCalculator } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';

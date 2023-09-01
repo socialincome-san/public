@@ -1,4 +1,4 @@
-import { firestoreAdmin } from '@/firebase/admin';
+import { firestoreAdmin } from '@/firebase-admin';
 import { StripeEventHandler } from '@socialincome/shared/src/stripe/StripeEventHandler';
 
 export async function GET(request: Request) {
