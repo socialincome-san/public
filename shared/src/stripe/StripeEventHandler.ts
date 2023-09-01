@@ -23,7 +23,7 @@ export class StripeEventHandler {
 		this.firestoreAdmin = firestoreAdmin;
 		this.stripe = new Stripe(apiKey, {
 			typescript: true,
-			apiVersion: '2022-11-15',
+			apiVersion: '2023-08-16',
 		});
 	}
 
@@ -57,15 +57,16 @@ export class StripeEventHandler {
 	 * Try to find an existing user using create a new on.
 	 */
 	getOrCreateUser = async (customer: Stripe.Customer): Promise<DocumentReference<User>> => {
-		const userRef = await this.findUser(customer);
-		if (!userRef) {
+		const userDoc = await this.findUser(customer);
+		if (!userDoc) {
 			console.info(`User not found for stripe customer: ${customer.id}`);
 			const userToCreate = this.constructUser(customer);
 			const newUserRef = await this.firestoreAdmin.collection<User>(USER_FIRESTORE_PATH).add(userToCreate);
 			console.info(`New user created for Stripe user: ${customer.id}, user id: ${newUserRef.id}`);
 			return newUserRef;
 		} else {
-			return userRef.ref;
+			await userDoc.ref.update({ stripe_customer_id: customer.id });
+			return userDoc.ref;
 		}
 	};
 

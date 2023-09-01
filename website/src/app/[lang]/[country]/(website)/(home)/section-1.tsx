@@ -21,9 +21,9 @@ export default async function Section1({ params }: DefaultPageProps) {
 						{translator.t('section-1.title-3')}
 					</Typography>
 				</div>
-				<div className="flex flex-1 flex-col p-4 text-center lg:p-8 lg:text-left">
+				<div className="flex flex-1 flex-col space-y-4 p-4 text-center lg:p-8 lg:text-left">
 					<Typography size="2xl">{translator.t('section-1.income-text')}</Typography>
-					<Section1Input text={translator.t('section-1.income-text')} />
+					<Section1Input text={translator.t('section-1.button-text')} />
 				</div>
 			</div>
 		</BaseContainer>

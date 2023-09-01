@@ -1,13 +1,21 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { getAnalytics } from 'firebase/analytics';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import { PropsWithChildren } from 'react';
 import { Toaster } from 'react-hot-toast';
-import { AuthProvider, FirebaseAppProvider, FirestoreProvider, StorageProvider, useFirebaseApp } from 'reactfire';
+import {
+	AnalyticsProvider,
+	AuthProvider,
+	FirebaseAppProvider,
+	FirestoreProvider,
+	StorageProvider,
+	useFirebaseApp,
+} from 'reactfire';
 
 // These variables are needed so that the emulators are only initialized once. Probably due to the React Strict mode, it
 // happens that the emulators get initialized multiple times in the development environment.
@@ -22,6 +30,7 @@ function FirebaseSDKProviders({ children }: PropsWithChildren) {
 	const firestore = getFirestore(app);
 	const functions = getFunctions(app);
 	const storage = getStorage(app);
+	const analytics = getAnalytics(app);
 
 	const authEmulatorUrl = process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL;
 	const firestoreEmulatorHost = process.env.NEXT_PUBLIC_FIREBASE_FIRESTORE_EMULATOR_HOST;
@@ -53,19 +62,25 @@ function FirebaseSDKProviders({ children }: PropsWithChildren) {
 	}
 
 	return (
-		<AuthProvider sdk={auth}>
-			<FirestoreProvider sdk={firestore}>
-				<StorageProvider sdk={storage}>{children}</StorageProvider>
-			</FirestoreProvider>
-		</AuthProvider>
+		<AnalyticsProvider sdk={analytics}>
+			<AuthProvider sdk={auth}>
+				<FirestoreProvider sdk={firestore}>
+					<StorageProvider sdk={storage}>{children}</StorageProvider>
+				</FirestoreProvider>
+			</AuthProvider>
+		</AnalyticsProvider>
 	);
 }
 
 export function Providers({ children }: PropsWithChildren) {
 	const firebaseConfig = {
 		apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+		appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 		authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+		measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+		messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
 		projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+		storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
 	};
 	const queryClient = new QueryClient();
 

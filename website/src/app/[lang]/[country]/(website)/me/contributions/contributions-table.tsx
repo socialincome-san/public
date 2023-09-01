@@ -3,11 +3,11 @@
 import { DefaultParams } from '@/app/[lang]/[country]';
 import { UserContext } from '@/app/[lang]/[country]/(website)/me/user-context-provider';
 import { useTranslator } from '@/hooks/useTranslator';
-import { CONTRIBUTION_FIRESTORE_PATH, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { CONTRIBUTION_FIRESTORE_PATH, StatusKey, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types';
 import { toDateTime } from '@socialincome/shared/src/utils/date';
 import { Table, Typography } from '@socialincome/ui';
 import { useQuery } from '@tanstack/react-query';
-import { collection, getDocs, query } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useContext } from 'react';
 import { useFirestore } from 'reactfire';
 
@@ -27,7 +27,12 @@ export function ContributionsTable({ lang, translations }: ContributionsTablePro
 		[user],
 		async () => {
 			if (user && firestore) {
-				return await getDocs(query(collection(firestore, USER_FIRESTORE_PATH, user.id, CONTRIBUTION_FIRESTORE_PATH)));
+				return await getDocs(
+					query(
+						collection(firestore, USER_FIRESTORE_PATH, user.id, CONTRIBUTION_FIRESTORE_PATH),
+						where('status', '==', StatusKey.SUCCEEDED),
+					),
+				);
 			} else return null;
 		},
 		{
@@ -36,10 +41,14 @@ export function ContributionsTable({ lang, translations }: ContributionsTablePro
 	);
 
 	return (
-		<Table size="lg">
+		<Table size="sm">
 			<Table.Head>
-				<Typography as="span">{translations.date}</Typography>
-				<Typography as="span">{translations.amount}</Typography>
+				<Typography weight="medium" as="span">
+					{translations.date}
+				</Typography>
+				<Typography weight="medium" as="span">
+					{translations.amount}
+				</Typography>
 			</Table.Head>
 			<Table.Body>
 				{contributions?.docs.map((contribution, index) => {

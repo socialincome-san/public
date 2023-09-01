@@ -146,8 +146,6 @@ describe('stripeWebhook', () => {
 		currency: 'usd',
 		customer: 'cus_123',
 		description: 'Subscription update',
-		destination: null,
-		dispute: null,
 		disputed: false,
 		failure_balance_transaction: null,
 		failure_code: null,

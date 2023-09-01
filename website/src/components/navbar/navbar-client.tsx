@@ -67,7 +67,7 @@ export default function NavbarClient({ lang, country, translations, languages, s
 		<Disclosure as="nav" className={classNames(backgroundColor, 'pt-2 shadow')}>
 			{({ open }) => (
 				<>
-					<div className="mx-auto max-w-7xl px-2 sm:px-5">
+					<div className="mx-auto max-w-6xl px-2 sm:px-5">
 						<div className="flex h-16 justify-between">
 							<div className="flex flex-shrink-0 items-center">
 								<Link href={`/${lang}/${country}`}>
@@ -236,7 +236,7 @@ export default function NavbarClient({ lang, country, translations, languages, s
 													<Link href={`/${lang}/${country}/me/contact-details`}>{translations.contactDetails}</Link>
 												</Menu.Item>
 												<Menu.Item>
-													<Link href={`/${lang}/${country}/me/payments`}>{translations.payments}</Link>
+													<Link href={`/${lang}/${country}/me/contributions`}>{translations.payments}</Link>
 												</Menu.Item>
 												<Menu.Item>
 													<a onClick={() => signOut(auth).then(() => router.push(`/${lang}/${country}`))}>
