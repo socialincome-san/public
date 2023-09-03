@@ -7,6 +7,7 @@ import { FirebaseError } from 'firebase/app';
 import { browserSessionPersistence, signInWithEmailAndPassword } from 'firebase/auth';
 import { Formik } from 'formik';
 import { FormikHelpers } from 'formik/dist/types';
+import _ from 'lodash';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -100,7 +101,12 @@ export default function LoginForm({ params, translations }: LoginFormProps) {
 						<Typography size="sm" color="error" className="-mt-4">
 							{errors.password && touched.password && errors.password}
 						</Typography>
-						<Button type="submit" color="primary" disabled={isSubmitting} className="mt-8">
+						<Button
+							type="submit"
+							color="accent"
+							disabled={isSubmitting || _.isEmpty(values.email) || _.isEmpty(values.password)}
+							className="mt-8"
+						>
 							{translations.submitButton}
 						</Button>
 					</form>

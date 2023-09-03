@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useUser } from 'reactfire';
 import Stripe from 'stripe';
 
+// TODO: i18n
 export function BillingPortalButton() {
 	const router = useRouter();
 	const { data: authUser } = useUser();
@@ -22,7 +23,7 @@ export function BillingPortalButton() {
 	}, [authUser]);
 
 	return (
-		<Button color="secondary" onClick={() => router.push(billingPortalUrl!)} disabled={!billingPortalUrl}>
+		<Button color="primary" onClick={() => router.push(billingPortalUrl!)} disabled={!billingPortalUrl}>
 			Update Payment Settings
 		</Button>
 	);

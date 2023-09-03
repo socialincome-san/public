@@ -20,7 +20,7 @@ export function SectionCard({ title, description, paragraphs = [] }: SectionCard
 			<Card normal bordered className="border-neutral my-4 cursor-pointer lg:mx-4" onClick={handleShow}>
 				<Card.Body>
 					<Card.Title>
-						<Typography size="2xl" weight="bold" color="accent">
+						<Typography size="2xl" weight="bold" color="secondary">
 							{title}
 						</Typography>
 					</Card.Title>

@@ -9,9 +9,9 @@ export default async function Page({ searchParams }: DefaultPageProps) {
 	const checkoutSession = await stripe.checkout.sessions.retrieve(searchParams.stripeCheckoutSessionId);
 
 	return (
-		<BaseContainer>
+		<BaseContainer className="min-h-screen">
 			<div className="flex flex-col items-center space-y-3">
-				<Typography size="4xl" color="primary-content" weight="bold">
+				<Typography size="4xl" color="accent" weight="bold">
 					Thank you
 				</Typography>
 				<CreateUserForm

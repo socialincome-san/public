@@ -16,7 +16,7 @@ export default async function Section6({ params }: DefaultPageProps) {
 					<Typography as="span" size="4xl" weight="bold" lineHeight="relaxed">
 						{translator.t('section-6.title-1')}
 					</Typography>
-					<Typography as="span" size="4xl" weight="bold" lineHeight="relaxed" color="accent">
+					<Typography as="span" size="4xl" weight="bold" lineHeight="relaxed" color="secondary">
 						{translator.t('section-6.title-2')}
 					</Typography>
 				</p>

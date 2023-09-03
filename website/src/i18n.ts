@@ -13,7 +13,6 @@ export const websiteLanguages: WebsiteLanguage[] = ['en', 'de', 'kri'];
 const findBestLocale = (request: NextRequest) => {
 	const options = langParser.parse(request.headers.get('Accept-Language') || 'en');
 	const requestCountry = request.geo?.country?.toLowerCase();
-
 	console.log('requestCountry', requestCountry);
 
 	const bestOption = options.find(

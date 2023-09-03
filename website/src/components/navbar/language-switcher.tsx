@@ -2,7 +2,7 @@
 
 import { LanguageIcon } from '@heroicons/react/24/solid';
 import { Language } from '@socialincome/shared/src/types';
-import { Dropdown, Menu, Typography } from '@socialincome/ui';
+import { Dropdown, Menu, Theme, Typography } from '@socialincome/ui';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -48,13 +48,15 @@ function LanguageSwitcherComponent({ languages, mobile, currentLanguage }: Langu
 				<Dropdown.Toggle color="ghost" className="hover:bg-none">
 					<LanguageIcon className="h-5 w-5" />
 				</Dropdown.Toggle>
-				<Dropdown.Menu className="z-40 min-w-[6rem]">
-					{languages.map((lang, index) => (
-						<Dropdown.Item key={index} onClick={() => onLanguageChange(lang.code)}>
-							{lang.translation}
-						</Dropdown.Item>
-					))}
-				</Dropdown.Menu>
+				<Theme dataTheme="siDefault">
+					<Dropdown.Menu className="z-40 min-w-[6rem]">
+						{languages.map((lang, index) => (
+							<Dropdown.Item key={index} onClick={() => onLanguageChange(lang.code)}>
+								{lang.translation}
+							</Dropdown.Item>
+						))}
+					</Dropdown.Menu>
+				</Theme>
 			</Dropdown>
 		);
 	}
