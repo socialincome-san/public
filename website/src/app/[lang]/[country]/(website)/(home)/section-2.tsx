@@ -45,7 +45,7 @@ export default function Section2({ vimeoVideoId, translations }: Section2Props) 
 					<Typography as="span" size="4xl" weight="bold" lineHeight="relaxed">
 						{translations.title1}
 					</Typography>
-					<Typography as="span" size="4xl" weight="bold" color="accent" lineHeight="relaxed">
+					<Typography as="span" size="4xl" weight="bold" color="secondary" lineHeight="relaxed">
 						{translations.title2}
 					</Typography>
 					<Typography size="xl" className="mt-4">

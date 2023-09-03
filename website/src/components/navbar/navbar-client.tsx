@@ -6,7 +6,7 @@ import { LanguageSwitcher } from '@/components/navbar/language-switcher';
 import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, UserCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Language } from '@socialincome/shared/src/types';
-import { Button, Dropdown, Menu, Typography } from '@socialincome/ui';
+import { Button, Dropdown, Menu, Theme, Typography } from '@socialincome/ui';
 import classNames from 'classnames';
 import { signOut } from 'firebase/auth';
 import _ from 'lodash';
@@ -43,19 +43,9 @@ export default function NavbarClient({ lang, country, translations, languages, s
 	const auth = useAuth();
 	const { status: authUserReady, data: authUser } = useUser();
 	const pathname = usePathname();
-	const baseSegment = pathname?.split('/')[3];
-	let backgroundColor;
-
-	switch (baseSegment) {
-		case 'about-us':
-			backgroundColor = 'bg-neutral-100';
-			break;
-		default:
-			backgroundColor = 'bg-base-blue';
-	}
 
 	return (
-		<Disclosure as="nav" className={classNames(backgroundColor, 'pt-2 shadow')}>
+		<Disclosure as="nav" className="pt-2">
 			{({ open }) => (
 				<>
 					<div className="mx-auto max-w-6xl px-2 sm:px-5">
@@ -71,8 +61,8 @@ export default function NavbarClient({ lang, country, translations, languages, s
 									const linkClassNames = classNames(
 										'inline-flex items-center border-b-2 py-4 justify-center min-w-[8rem]',
 										{
-											'border-primary': active,
-											'hover:border-primary-content border-transparent': !active,
+											'border-accent': active,
+											'hover:border-neutral-content border-transparent': !active,
 										},
 									);
 
@@ -82,7 +72,6 @@ export default function NavbarClient({ lang, country, translations, languages, s
 												<Typography
 													weight={active ? 'medium' : 'normal'}
 													size="lg"
-													color={active ? 'neutral' : 'neutral-focus'}
 													className={classNames({ 'hover:text-base-content': !active })}
 												>
 													{section.title}
@@ -97,13 +86,15 @@ export default function NavbarClient({ lang, country, translations, languages, s
 														{section.title}
 													</Typography>
 												</Link>
-												<Dropdown.Menu className="z-40 w-full">
-													{section.links!.map((link, index) => (
-														<Dropdown.Item key={index} anchor={false}>
-															<Link href={link.href}>{link.text}</Link>
-														</Dropdown.Item>
-													))}
-												</Dropdown.Menu>
+												<Theme dataTheme="siDefault">
+													<Dropdown.Menu className="z-40 w-full">
+														{section.links!.map((link, index) => (
+															<Dropdown.Item key={index} anchor={false}>
+																<Link href={link.href}>{link.text}</Link>
+															</Dropdown.Item>
+														))}
+													</Dropdown.Menu>
+												</Theme>
 											</Dropdown>
 										);
 									}
@@ -116,25 +107,27 @@ export default function NavbarClient({ lang, country, translations, languages, s
 									<Dropdown.Toggle color="ghost" className="hover:bg-none">
 										<UserCircleIcon className="h-6 w-6" />
 									</Dropdown.Toggle>
-									<Dropdown.Menu className="z-40 min-w-[6rem]">
-										{authUserReady === 'success' && authUser ? (
-											<>
+									<Theme dataTheme="siDefault">
+										<Dropdown.Menu className="z-40 min-w-[6rem]">
+											{authUserReady === 'success' && authUser ? (
+												<>
+													<Dropdown.Item anchor={false}>
+														<Link href={`/${lang}/${country}/me/contributions`}>{translations.payments}</Link>
+													</Dropdown.Item>
+													<Dropdown.Item anchor={false}>
+														<Link href={`/${lang}/${country}/me/contact-details`}>{translations.contactDetails}</Link>
+													</Dropdown.Item>
+													<Dropdown.Item className="border-t" onClick={() => signOut(auth)}>
+														{translations.signOut}
+													</Dropdown.Item>
+												</>
+											) : (
 												<Dropdown.Item anchor={false}>
-													<Link href={`/${lang}/${country}/me/contributions`}>{translations.payments}</Link>
+													<Link href={`/${lang}/${country}/login`}>Log in</Link>
 												</Dropdown.Item>
-												<Dropdown.Item anchor={false}>
-													<Link href={`/${lang}/${country}/me/contact-details`}>{translations.contactDetails}</Link>
-												</Dropdown.Item>
-												<Dropdown.Item className="border-t">
-													<a onClick={() => signOut(auth)}>{translations.signOut}</a>
-												</Dropdown.Item>
-											</>
-										) : (
-											<Dropdown.Item anchor={false}>
-												<Link href={`/${lang}/${country}/login`}>Log in</Link>
-											</Dropdown.Item>
-										)}
-									</Dropdown.Menu>
+											)}
+										</Dropdown.Menu>
+									</Theme>
 								</Dropdown>
 							</div>
 

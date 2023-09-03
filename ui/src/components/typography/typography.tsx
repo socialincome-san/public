@@ -96,7 +96,7 @@ export function Typography<C extends ElementType = 'p'>({
 	as,
 	size = 'md',
 	weight = 'normal',
-	color = 'base-content',
+	color,
 	lineHeight = 'normal',
 	className,
 	children,

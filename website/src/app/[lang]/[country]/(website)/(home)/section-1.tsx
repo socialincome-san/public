@@ -15,7 +15,7 @@ export default async function Section1({ params }: DefaultPageProps) {
 				<div className="flex flex-1 items-center p-4 text-center lg:p-8 lg:text-left">
 					<Typography size="4xl" weight="bold" lineHeight="relaxed">
 						{translator.t('section-1.title-1')}
-						<Typography as="span" size="4xl" weight="bold" color="accent" lineHeight="relaxed">
+						<Typography as="span" size="4xl" weight="bold" color="secondary" lineHeight="relaxed">
 							{translator.t('section-1.title-2')}
 						</Typography>
 						{translator.t('section-1.title-3')}
