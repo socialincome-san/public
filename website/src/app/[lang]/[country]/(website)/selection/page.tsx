@@ -21,17 +21,18 @@ export default function Page(props: DefaultPageProps) {
     if (!translator) {
         return <LoaderIcon></LoaderIcon>
     }
+
     return (
         <BaseContainer className="bg-base-blue min-h-screen">
             <div className="p-2">
-                <Typography size="xl">To read more about draws visit <a className="underline"
-                                                                        href="https://some-blog-post.com">some
-                    website</a> to find out about how they
-                    work</Typography>
+                <Typography size="xl">
+                    {translator?.t("read-draws")}
+                    <a className="underline" href="https://some-blog-post.com">{translator?.t("read-draws-link")}</a>
+                    {translator?.t("read-draws-2")}
+                </Typography>
             </div>
             <Typography as="h2" size="3xl">{translator?.t("upcoming")}</Typography>
-            <Typography>Future draws for new recipients are announced here and depend on the financial possibilities of
-                Social Income.</Typography>
+            <Typography>{translator?.t("future-draws")}</Typography>
 
             {futureDraws.map(draw =>
                 <Collapsible
@@ -83,10 +84,12 @@ function Collapsible(props: CollapsibleProps) {
 }
 
 type DrawSummaryProps = {
-    draw: PastDraw | FutureDraw
+    draw: PastDraw | FutureDraw,
+    translator?: Translator
+
 }
 
-function DrawSummary({draw}: DrawSummaryProps) {
+function DrawSummary({draw, translator}: DrawSummaryProps) {
     return (
         <div className="flex flex-row w-full h-full items-center">
             <div className="basis-1/4">
@@ -96,43 +99,48 @@ function DrawSummary({draw}: DrawSummaryProps) {
                 {draw.name}
             </div>
             <div className="basis-1/4">
-                {draw.count} from {draw.total}
+                {draw.count} {translator?.t("from")} {draw.total}
             </div>
         </div>
     )
 }
 
 type DrawDetailProps = {
-    draw: PastDraw
+    draw: PastDraw,
+    translator?: Translator
 }
 
-function DrawDetail({draw}: DrawDetailProps) {
+function DrawDetail({draw, translator}: DrawDetailProps) {
     return (
         <div>
             <div className="flex p-2 justify-between">
                 <div>
-                    <Typography weight="bold">Random number:</Typography>
+                    <Typography weight="bold">{translator?.t("random-number")}:</Typography>
                     <Typography>{draw.drandRandomness}</Typography>
                 </div>
                 <div>
                     <a
                         className="underline"
                         href={`https://api.drand.sh/public/${draw.drandRound}`}
-                    >Confirm on drand
-                    </a>
+                    >{translator?.t("confirm-drand")}</a>
                 </div>
             </div>
             <div className="flex p-2 justify-between">
                 <div>
                     <Typography weight="bold">People:</Typography>
-                    <Typography>{draw.total} people on the long list. {draw.count} selected</Typography>
+                    <Typography>{translator?.t("longlist", {
+                        context: {
+                            total: draw.total,
+                            count: draw.count
+                        }
+                    })}</Typography>
                 </div>
                 <div>
                     <a
                         className="underline"
                         href={`https://github.com/socialincome-san/public/tree/main/lists${draw.name}`}
                     >
-                        Confirm on Github
+                        {translator?.t("confirm-github")}
                     </a>
                 </div>
             </div>

@@ -1,4 +1,13 @@
 {
-  "upcoming": "Kommende",
-  "past": "Zurückliegend"
+  "upcoming": "In Zukunft",
+  "past": "Zurückliegend",
+  "read-draws": "Um mehr über die Auswahlverfahren zu lesen, besuchen Sie",
+  "read-draws-link": "some website",
+  "read-draws-2": "um zu herausfinde, wie sie funktionieren",
+  "future-draws": "Zukünftliche Auswahlverfahren werden hier veröffentlicht, und sind abhängig von den finanzielle Möglichkeiten des Social Incomes.",
+  "random-number": "Zusätzliche Zahl",
+  "confirm-drand": "Bestätigen bei drand",
+  "confirm-github": "Bestätigen bei Github",
+  "long-list": "{{ total }} Personen stehen auf der langen Liste. {{ count }} ausgewählt",
+  "from": "von"
 }
