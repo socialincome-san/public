@@ -3,7 +3,7 @@ import langParser from 'accept-language-parser';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const defaultCountry = 'us';
-export const countries = ['us', 'ca', 'ch', 'sl'];
+export const countries = ['us', 'ch', 'sl'];
 export type ValidCountry = (typeof countries)[number];
 
 export const defaultLanguage = 'en';
@@ -12,6 +12,8 @@ export const websiteLanguages: WebsiteLanguage[] = ['en', 'de', 'kri'];
 
 const findBestLocale = (request: NextRequest) => {
 	const options = langParser.parse(request.headers.get('Accept-Language') || 'en');
+	// TODO: make sure country is supported
+	// TODO: save country/language/currency in cookie if manually updated
 	const requestCountry = request.geo?.country?.toLowerCase();
 	console.log('requestCountry', requestCountry);
 
@@ -26,8 +28,8 @@ const findBestLocale = (request: NextRequest) => {
 	return {
 		language: bestOption?.code || defaultLanguage,
 		country:
-			bestOption?.region ||
 			(websiteLanguages.includes(requestCountry as WebsiteLanguage) && requestCountry) ||
+			bestOption?.region ||
 			defaultCountry,
 	};
 };

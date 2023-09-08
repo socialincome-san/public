@@ -29,6 +29,7 @@ const FONT_WEIGHT_MAP: { [key in FontWeight]: string } = {
 type FontColor = Extract<
 	Color,
 	| 'base-content'
+	| 'primary'
 	| 'primary-content'
 	| 'secondary'
 	| 'secondary-focus'
@@ -51,6 +52,7 @@ type FontColor = Extract<
 
 const FONT_COLOR_MAP: { [key in FontColor]: string } = {
 	'base-content': 'text-base-content',
+	primary: 'text-primary',
 	'primary-content': 'text-primary-content',
 	secondary: 'text-secondary',
 	'secondary-focus': 'text-secondary-focus',

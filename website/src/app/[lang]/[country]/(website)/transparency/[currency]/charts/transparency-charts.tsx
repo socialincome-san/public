@@ -65,9 +65,7 @@ export default function TransparencyCharts({
 					<LineChart data={paymentStats.cumulativePaymentsByMonth}>
 						<XAxis dataKey="month" />
 						<YAxis />
-						<Tooltip
-							formatter={(value) => [translator?.t('finances.totalPayoutTooltip', { context: { currency, value } })]}
-						/>
+						<Tooltip formatter={(value) => [translator?.t('amount', { context: { currency, value } })]} />
 						<Line dataKey="payment" stroke="#3980d0" />
 					</LineChart>
 				</ResponsiveContainer>

@@ -1,15 +1,18 @@
-import { DefaultPageProps } from '@/app/[lang]/[country]';
-import { contributionStats } from '@/app/[lang]/[country]/(website)/transparency/[currency]/contribution-stats';
-import { paymentStats } from '@/app/[lang]/[country]/(website)/transparency/[currency]/payment-stats';
+import { DefaultPageProps, DefaultParams } from '@/app/[lang]/[country]';
 import { firestoreAdmin } from '@/firebase-admin';
 import { ValidCountry, WebsiteLanguage } from '@/i18n';
-import { ContributionStatsCalculator } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
-import { PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
-import { BaseContainer, Typography } from '@socialincome/ui';
-import flagCH from 'flag-icons/flags/4x3/ch.svg';
-import flagSL from 'flag-icons/flags/4x3/sl.svg';
-import Image from 'next/image';
+import {
+	ContributionStats,
+	ContributionStatsCalculator,
+} from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
+import { PaymentStats, PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
+import { BaseContainer } from '@socialincome/ui';
+import { Section1 } from './section-1';
+import { Section2 } from './section-2';
+import { Section3 } from './section-3';
+import { Section4 } from './section-4';
 
+export const revalidate = 3600; // update once an hour
 export const generateStaticParams = () => ['USD', 'CHF'].map((currency) => ({ currency: currency.toLowerCase() }));
 
 export type TransparencyPageProps = {
@@ -20,7 +23,13 @@ export type TransparencyPageProps = {
 	};
 } & DefaultPageProps;
 
-export default async function Page(props: TransparencyPageProps) {
+export type SectionProps = {
+	params: DefaultParams & { currency: string };
+	contributionStats: ContributionStats;
+	paymentStats: PaymentStats;
+};
+
+export default async function Page({ params }: TransparencyPageProps) {
 	const getStats = async (currency: string) => {
 		const contributionCalculator = await ContributionStatsCalculator.build(firestoreAdmin, currency);
 		const contributionStats = contributionCalculator.allStats();
@@ -28,18 +37,16 @@ export default async function Page(props: TransparencyPageProps) {
 		const paymentStats = paymentCalculator.allStats();
 		return { contributionStats, paymentStats };
 	};
-
-	// TODO: Uncomment when deleting ./payment-stats.ts and ./contribution-stats.ts files
-	// const { contributionStats, paymentStats } = await getStats(props.params.currency);
+	const { contributionStats, paymentStats } = await getStats(params.currency.toUpperCase());
 
 	return (
-		<BaseContainer className="bg-base-blue min-h-screen">
-			<Image className="w-8" src={flagSL} alt="Sierra Leone Flag" />
-			<Image className="w-8" src={flagCH} alt="Swiss Flag" />
-			<Typography size="2xl">Contribution Stats</Typography>
-			{JSON.stringify(contributionStats)}
-			<Typography size="2xl">Payment Stats</Typography>
-			{JSON.stringify(paymentStats)}
+		<BaseContainer className="bg-base-blue">
+			<div className="flex flex-col space-y-16">
+				<Section1 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
+				<Section2 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
+				<Section3 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
+				<Section4 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
+			</div>
 		</BaseContainer>
 	);
 }

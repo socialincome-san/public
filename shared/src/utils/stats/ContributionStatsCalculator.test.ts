@@ -29,14 +29,14 @@ test('building ContributionStatsCalculator', async () => {
 });
 
 test('calculate overall contributions', async () => {
-	expect(calculator.totalContributions()).toEqual(2400);
+	expect(calculator.totalContributionsAmount()).toEqual(2400);
 });
 
 test('calculate contributions by currency', async () => {
 	expect(calculator.totalContributionsByCurrency()).toEqual(
 		expect.arrayContaining([
-			{ amount: 400, currency: 'USD' },
-			{ amount: 2000, currency: 'CHF' },
+			{ amount: 400, currency: 'USD', usersCount: 1 },
+			{ amount: 2000, currency: 'CHF', usersCount: 1 },
 		]),
 	);
 });
@@ -44,8 +44,8 @@ test('calculate contributions by currency', async () => {
 test('calculate contributions by isInstitutuion', async () => {
 	expect(calculator.totalContributionsByIsInstitution()).toEqual(
 		expect.arrayContaining([
-			{ amount: 400, isInstitution: 'false' },
-			{ amount: 2000, isInstitution: 'true' },
+			{ amount: 400, isInstitution: 'false', usersCount: 1 },
+			{ amount: 2000, isInstitution: 'true', usersCount: 1 },
 		]),
 	);
 });
@@ -53,8 +53,8 @@ test('calculate contributions by isInstitutuion', async () => {
 test('calculate contributions by country', async () => {
 	expect(calculator.totalContributionsByCountry()).toEqual(
 		expect.arrayContaining([
-			{ amount: 400, country: 'US' },
-			{ amount: 2000, country: 'CH' },
+			{ amount: 400, country: 'US', usersCount: 1 },
+			{ amount: 2000, country: 'CH', usersCount: 1 },
 		]),
 	);
 });
@@ -62,8 +62,8 @@ test('calculate contributions by country', async () => {
 test('calculate contributions by source', async () => {
 	expect(calculator.totalContributionsBySource()).toEqual(
 		expect.arrayContaining([
-			{ amount: 2000, source: 'benevity' },
-			{ amount: 400, source: 'stripe' },
+			{ amount: 2000, source: 'benevity', usersCount: 1 },
+			{ amount: 400, source: 'stripe', usersCount: 1 },
 		]),
 	);
 });
@@ -71,10 +71,10 @@ test('calculate contributions by source', async () => {
 test('calculate contributions by first day in month', async () => {
 	expect(calculator.totalContributionsByMonth()).toEqual(
 		expect.arrayContaining([
-			{ amount: 1100, month: '2023-01' },
-			{ amount: 100, month: '2023-02' },
-			{ amount: 100, month: '2023-03' },
-			{ amount: 1100, month: '2023-04' },
+			{ amount: 1100, month: '2023-01', usersCount: 2 },
+			{ amount: 100, month: '2023-02', usersCount: 1 },
+			{ amount: 100, month: '2023-03', usersCount: 1 },
+			{ amount: 1100, month: '2023-04', usersCount: 2 },
 		]),
 	);
 });
