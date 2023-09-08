@@ -1,5 +1,5 @@
 export const defaultTheme = {
-	neutral: '#c1c4c7',
+	neutral: '#a4a4b2',
 	'neutral-content': '#1E293B',
 
 	'base-100': '#fefffe',

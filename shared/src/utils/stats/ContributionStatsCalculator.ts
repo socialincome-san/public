@@ -6,7 +6,13 @@ import { getLatestExchangeRate } from '../exchangeRates';
 import { cumulativeSum, StatsEntry } from './utils';
 
 export interface ContributionStats {
-	totalContributions: number;
+	totalContributionsAmount: number;
+	totalContributionsCount: number;
+	totalContributorsCount: number;
+	totalIndividualContributionsAmount: number;
+	totalIndividualContributorsCount: number;
+	totalInstitutionalContributionsAmount: number;
+	totalInstitutionalContributorsCount: number;
 	totalContributionsByCurrency: Record<string, string | number>[];
 	totalContributionsByIsInstitution: StatsEntry[];
 	totalContributionsByCountry: StatsEntry[];
@@ -38,7 +44,7 @@ type ContributionStatsEntry = {
 export class ContributionStatsCalculator {
 	readonly contributions: _.Collection<ContributionStatsEntry>;
 
-	constructor(contributions: _.Collection<ContributionStatsEntry>) {
+	private constructor(contributions: _.Collection<ContributionStatsEntry>) {
 		this.contributions = contributions;
 	}
 
@@ -78,7 +84,7 @@ export class ContributionStatsCalculator {
 							}
 							return {
 								userId: userDoc.id,
-								isInstitution: user.institution ?? false,
+								isInstitution: Boolean(user.institution),
 								country: user.location?.toUpperCase() ?? 'CH',
 								amount: contribution.amount_chf * exchangeRate,
 								paymentFees: contribution.fees_chf * exchangeRate,
@@ -92,11 +98,11 @@ export class ContributionStatsCalculator {
 						});
 				}),
 		);
-		return new ContributionStatsCalculator(_(contributions.flat()));
+		return new ContributionStatsCalculator(_(contributions.flat()), exchangeRate);
 	}
 
-	totalContributions = () => {
-		return this.contributions.sumBy((c) => c.amount);
+	totalContributionsAmount = () => {
+		return this.contributions.sumBy('amount');
 	};
 
 	totalContributionsByCurrency = () => {
@@ -128,7 +134,8 @@ export class ContributionStatsCalculator {
 			.groupBy(attribute)
 			.map((contributions, group) => ({
 				[attribute]: group,
-				amount: _.sumBy(contributions, (c) => c.amount),
+				amount: _.sumBy(contributions, 'amount'),
+				usersCount: _.size(_.countBy(contributions, 'userId')),
 			}))
 			.sortBy((x) => x[attribute])
 			.value();
@@ -166,10 +173,20 @@ export class ContributionStatsCalculator {
 	};
 
 	allStats = (): ContributionStats => {
+		const totalContributionsByIsInstitution = this.totalContributionsByIsInstitution();
+		const totalIndividualContributions = totalContributionsByIsInstitution.find((e) => e.isInstitution === 'false')!;
+		const totalInstitutionalContributions = totalContributionsByIsInstitution.find((e) => e.isInstitution === 'true')!;
+
 		return {
-			totalContributions: this.totalContributions(),
+			totalContributionsAmount: this.totalContributionsAmount(),
+			totalContributionsCount: this.contributions.size(),
+			totalContributorsCount: this.contributions.groupBy('userId').size(),
+			totalIndividualContributionsAmount: totalIndividualContributions.amount,
+			totalIndividualContributorsCount: totalIndividualContributions.usersCount,
+			totalInstitutionalContributionsAmount: totalInstitutionalContributions.amount,
+			totalInstitutionalContributorsCount: totalInstitutionalContributions.usersCount,
 			totalContributionsByCurrency: this.totalContributionsByCurrency(),
-			totalContributionsByIsInstitution: this.totalContributionsByIsInstitution(),
+			totalContributionsByIsInstitution: totalContributionsByIsInstitution,
 			totalContributionsByCountry: this.totalContributionsByCountry(),
 			totalContributionsBySource: this.totalContributionsBySource(),
 			totalContributionsByMonth: this.totalContributionsByMonth(),

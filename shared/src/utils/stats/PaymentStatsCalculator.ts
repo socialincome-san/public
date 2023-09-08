@@ -6,12 +6,14 @@ import { getLatestExchangeRate } from '../exchangeRates';
 import { cumulativeSum, groupByAndSort, StatsEntry } from './utils';
 
 export interface PaymentStats {
-	totalPayments: number;
+	totalPaymentsAmount: number;
+	totalPaymentsCount: number;
 	totalPaymentsByMonth: StatsEntry[];
 	socialIncomesByMonth: StatsEntry[];
 	cumulativePaymentsByMonth: StatsEntry[];
 	cumulativeRecipientsByMonth: StatsEntry[];
 	meanPaymentsByMonth: StatsEntry[];
+	totalRecipientsCount: number;
 }
 
 /**
@@ -20,7 +22,7 @@ export interface PaymentStats {
 type PaymentStatsEntry = {
 	recipientId: string;
 	amount: number;
-	amountSle: number;
+	amountSLE: number;
 	month: string;
 };
 
@@ -50,7 +52,7 @@ export class PaymentStatsCalculator {
 				return {
 					recipientId: paymentDoc.ref.parent?.parent?.id,
 					amount: payment.amount_chf! * exchangeRate,
-					amountSle: payment.currency === 'SLE' ? payment.amount : payment.amount / 1000,
+					amountSLE: payment.currency === 'SLE' ? payment.amount : payment.amount / 1000, // some payments are in SLE, some in SLL
 					month: toDateTime(payment.payment_at).toFormat('yyyy-MM'),
 				} as PaymentStatsEntry;
 			});
@@ -95,10 +97,11 @@ export class PaymentStatsCalculator {
 	) => {
 		return this.payments
 			.groupBy(groupAttribute)
-			.map((contributions, group) => ({
+			.map((payments, group) => ({
 				[groupAttribute]: group,
-				payment: aggregate(contributions, 'amount'),
-				paymentSle: aggregate(contributions, 'amountSle'),
+				amount: aggregate(payments, 'amount'),
+				amountSLE: aggregate(payments, 'amountSLE'),
+				recipientsCount: _.size(_.groupBy(payments, 'recipientId')),
 			}))
 			.sortBy((x) => x[groupAttribute])
 			.value();
@@ -140,12 +143,14 @@ export class PaymentStatsCalculator {
 
 	allStats = (): PaymentStats => {
 		return {
-			totalPayments: this.totalPayments(),
+			totalPaymentsAmount: this.totalPayments(),
+			totalPaymentsCount: this.payments.size(),
 			totalPaymentsByMonth: this.totalPaymentsByMonth(),
 			cumulativePaymentsByMonth: this.cumulativePaymentsByMonth(),
 			cumulativeRecipientsByMonth: this.cumulativeRecipientsByMonth(),
 			meanPaymentsByMonth: this.meanPaymentsByMonth(),
 			socialIncomesByMonth: this.socialIncomesByMonth(),
+			totalRecipientsCount: this.payments.groupBy('recipientId').size(),
 		} as PaymentStats;
 	};
 }
