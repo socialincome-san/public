@@ -174,17 +174,17 @@ export class ContributionStatsCalculator {
 
 	allStats = (): ContributionStats => {
 		const totalContributionsByIsInstitution = this.totalContributionsByIsInstitution();
-		const totalIndividualContributions = totalContributionsByIsInstitution.find((e) => e.isInstitution === 'false')!;
-		const totalInstitutionalContributions = totalContributionsByIsInstitution.find((e) => e.isInstitution === 'true')!;
+		const totalIndividualContributions = totalContributionsByIsInstitution.find((e) => e.isInstitution === 'false');
+		const totalInstitutionalContributions = totalContributionsByIsInstitution.find((e) => e.isInstitution === 'true');
 
 		return {
 			totalContributionsAmount: this.totalContributionsAmount(),
 			totalContributionsCount: this.contributions.size(),
 			totalContributorsCount: this.contributions.groupBy('userId').size(),
-			totalIndividualContributionsAmount: totalIndividualContributions.amount,
-			totalIndividualContributorsCount: totalIndividualContributions.usersCount,
-			totalInstitutionalContributionsAmount: totalInstitutionalContributions.amount,
-			totalInstitutionalContributorsCount: totalInstitutionalContributions.usersCount,
+			totalIndividualContributionsAmount: totalIndividualContributions?.amount || 0,
+			totalIndividualContributorsCount: totalIndividualContributions?.usersCount || 0,
+			totalInstitutionalContributionsAmount: totalInstitutionalContributions?.amount || 0,
+			totalInstitutionalContributorsCount: totalInstitutionalContributions?.usersCount || 0,
 			totalContributionsByCurrency: this.totalContributionsByCurrency(),
 			totalContributionsByIsInstitution: totalContributionsByIsInstitution,
 			totalContributionsByCountry: this.totalContributionsByCountry(),
