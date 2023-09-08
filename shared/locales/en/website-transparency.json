@@ -12,6 +12,7 @@
 		"totalRecipients": "{{ value }} recipients enrolled for a 3-year program"
 	},
 	"section-2": {
+		"title": "How is Social Income funded?",
 		"donations": "Donations",
 		"contributions-from": "{{ value, currency }} contributions from",
 		"individuals": "{{ count }} Individuals",
@@ -20,7 +21,7 @@
 		"used-for-operating-costs": "Used to cover operational costs: {{ value, currency }}"
 	},
 	"section-3": {
-		"title": "How is Social Income funded?",
+		"title": "Where are our contributors from?",
 		"subtitle": "We received contributions from {{ value }} countries.",
 		"country-amount": "{{ value, currency }} from {{ contributorsCount }} contributors",
 		"all-countries": "Show All Countries"
