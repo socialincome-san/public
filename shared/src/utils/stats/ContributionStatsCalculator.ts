@@ -98,7 +98,7 @@ export class ContributionStatsCalculator {
 						});
 				}),
 		);
-		return new ContributionStatsCalculator(_(contributions.flat()), exchangeRate);
+		return new ContributionStatsCalculator(_(contributions.flat()));
 	}
 
 	totalContributionsAmount = () => {
