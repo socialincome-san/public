@@ -180,7 +180,7 @@ export const SoCombobox = ({
 										key={option.label}
 										className={({ active }) =>
 											classNames(
-												active ? 'bg-so-color-accent-2-primary-500 text-white' : 'text-gray-900',
+												active ? 'bg-so-color-accent-2-primary-500' : 'text-gray-900',
 												'relative cursor-default select-none py-2 pl-3 pr-12',
 											)
 										}
