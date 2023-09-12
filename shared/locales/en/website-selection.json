@@ -9,5 +9,6 @@
   "confirm-drand": "Confirm on drand",
   "confirm-github": "Confirm on Github",
   "long-list": "{{ total }} people on the long list. {{ count }} selected",
+  "people": "People",
   "from": "from"
 }
