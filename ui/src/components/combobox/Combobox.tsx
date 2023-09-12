@@ -94,7 +94,7 @@ export const SoCombobox = ({
 	const inputDisplayValue = (option: SoComboboxItem) => option?.label || value.label;
 
 	return (
-		<Combobox {...props}>
+		<Combobox value={value} {...props}>
 			{({ open }) => (
 				<>
 					<Combobox.Label
