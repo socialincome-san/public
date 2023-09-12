@@ -3,7 +3,8 @@
 import { LanguageIcon } from '@heroicons/react/24/solid';
 import { Language } from '@socialincome/shared/src/types';
 import { Dropdown, Menu, Theme, Typography } from '@socialincome/ui';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
+import { useRouter, useSearchParams, ReadonlyURLSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
 type LanguageSwitcherProps = {
@@ -15,16 +16,17 @@ type LanguageSwitcherProps = {
 	}[];
 };
 
+export function onLanguageChange(lang: Language, router: AppRouterInstance, searchParams: ReadonlyURLSearchParams) {
+	const pathSegments = window.location.pathname.split('/');
+	pathSegments[1] = lang;
+	const current = new URLSearchParams(Array.from(searchParams.entries()));
+	router.push(pathSegments.join('/') + '?' + current.toString());
+}
+
 function LanguageSwitcherComponent({ languages, mobile, currentLanguage }: LanguageSwitcherProps) {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
-	const onLanguageChange = (lang: Language) => {
-		const pathSegments = window.location.pathname.split('/');
-		pathSegments[1] = lang;
-		const current = new URLSearchParams(Array.from(searchParams.entries()));
-		router.push(pathSegments.join('/') + '?' + current.toString());
-	};
 	if (mobile) {
 		return (
 			<Menu.Details
@@ -37,7 +39,7 @@ function LanguageSwitcherComponent({ languages, mobile, currentLanguage }: Langu
 			>
 				{languages.map((lang, index) => (
 					<Menu.Item key={index}>
-						<a onClick={() => onLanguageChange(lang.code)}>{lang.translation}</a>
+						<a onClick={() => onLanguageChange(lang.code, router, searchParams)}>{lang.translation}</a>
 					</Menu.Item>
 				))}
 			</Menu.Details>
@@ -51,7 +53,7 @@ function LanguageSwitcherComponent({ languages, mobile, currentLanguage }: Langu
 				<Theme dataTheme="siDefault">
 					<Dropdown.Menu className="z-40 min-w-[6rem]">
 						{languages.map((lang, index) => (
-							<Dropdown.Item key={index} onClick={() => onLanguageChange(lang.code)}>
+							<Dropdown.Item key={index} onClick={() => onLanguageChange(lang.code, router, searchParams)}>
 								{lang.translation}
 							</Dropdown.Item>
 						))}

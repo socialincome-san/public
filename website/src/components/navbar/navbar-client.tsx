@@ -1,6 +1,4 @@
 'use client';
-
-import { DefaultParams } from '@/app/[lang]/[country]';
 import { SILogo } from '@/components/logos/si-logo';
 import { LanguageSwitcher } from '@/components/navbar/language-switcher';
 import { Disclosure } from '@headlessui/react';
