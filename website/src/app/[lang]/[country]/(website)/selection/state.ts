@@ -17,7 +17,7 @@ export type PastDraw = {
 
 export const futureDraws: Array<FutureDraw> = [
 	{
-		time: new Date(2023, 9, 15, 12).getUTCMilliseconds(),
+		time: new Date(2023, 9, 15, 12).getTime(),
 		name: 'Aurora Draw',
 		count: 10,
 		total: 400,

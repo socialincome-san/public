@@ -6,13 +6,13 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';
 import * as React from 'react';
 
-export interface CollapsibleProps extends React.PropsWithChildren {
+export interface DrawCardsProps {
 	summary: React.ReactNode;
 	detail?: React.ReactNode;
 }
 
 // a collapsible element rendering the summary, and optionally a button to open the detailed view
-export function Collapsible(props: CollapsibleProps) {
+export function DrawCard(props: DrawCardsProps) {
 	return (
 		<Disclosure>
 			<div className="m-4 bg-gray-200 p-2 shadow-xl">

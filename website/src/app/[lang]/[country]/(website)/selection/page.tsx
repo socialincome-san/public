@@ -1,5 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
-import { Collapsible, DrawDetail, DrawSummary } from '@/app/[lang]/[country]/(website)/selection/collapsible';
+import { DrawCard, DrawDetail, DrawSummary } from '@/app/[lang]/[country]/(website)/selection/drawCard';
 import { futureDraws, pastDraws } from '@/app/[lang]/[country]/(website)/selection/state';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
@@ -22,7 +22,7 @@ export default async function Page(props: DefaultPageProps) {
 			</Typography>
 			<Typography>{translator.t('future-draws')}</Typography>
 			{futureDraws.map((draw) => (
-				<Collapsible
+				<DrawCard
 					key={draw.time}
 					summary={
 						<DrawSummary
@@ -39,7 +39,7 @@ export default async function Page(props: DefaultPageProps) {
 				{translator.t('past')}
 			</Typography>
 			{pastDraws.map((draw) => (
-				<Collapsible
+				<DrawCard
 					key={draw.time}
 					summary={
 						<DrawSummary
