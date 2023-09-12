@@ -57,7 +57,7 @@ export default async function Page(props: DefaultPageProps) {
 								confirmGithub: translator.t('confirm-github'),
 								confirmDrand: translator.t('confirm-drand'),
 								people: translator.t('people'),
-								longlist: translator.t('longlist', { context: { total: draw.total, count: draw.count } }),
+								longlist: translator.t('long-list', { context: { total: draw.total, count: draw.count } }),
 							}}
 						/>
 					}
