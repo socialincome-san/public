@@ -9,6 +9,7 @@ export type ValidCountry = (typeof countries)[number];
 export const defaultLanguage = 'en';
 export type WebsiteLanguage = Extract<Language, 'en' | 'de' | 'kri'>;
 export const websiteLanguages: WebsiteLanguage[] = ['en', 'de', 'kri'];
+export const supportedWebsiteLanguages : WebsiteLanguage[] = ['en', 'de'];
 
 const findBestLocale = (request: NextRequest) => {
 	const options = langParser.parse(request.headers.get('Accept-Language') || 'en');
