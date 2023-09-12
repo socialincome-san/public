@@ -23,7 +23,7 @@ export type SoComboboxItem = {
 	};
 };
 
-export interface SoComboboxProps extends Pick<ComboboxProps, 'name' | 'disabled'> {
+export interface SoComboboxProps<V extends SoComboboxItem> extends Pick<ComboboxProps, 'name' | 'disabled'> {
 	/**
 	 * The select's label elements
 	 */
@@ -37,7 +37,7 @@ export interface SoComboboxProps extends Pick<ComboboxProps, 'name' | 'disabled'
 	/**
 	 * The selected/current value
 	 */
-	value: SoComboboxItem;
+	value: V;
 	/**
 	 * If true, the options get visible when the user focuses the text field
 	 */
@@ -58,7 +58,7 @@ export interface SoComboboxProps extends Pick<ComboboxProps, 'name' | 'disabled'
 	/**
 	 * Emits the selected value on change
 	 */
-	onChange?(value: SoComboboxItem): void;
+	onChange?(value: V): void;
 }
 
 /**
@@ -84,8 +84,8 @@ export const SoCombobox = ({
 		query === ''
 			? options
 			: options.filter((option) => {
-					return option.label.toLowerCase().includes(query.toLowerCase());
-			  });
+				return option.label.toLowerCase().includes(query.toLowerCase());
+			});
 
 	/**
 	 * Handles user input in the text field
