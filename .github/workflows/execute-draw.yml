@@ -25,7 +25,7 @@ jobs:
         run: mkdir -p draws
 
       - name: Draw 🎲
-        uses: drand/draw-action@v0.0.8
+        uses: drand/draw-action@v0.0.9
         with:
           inputDir: ./lists
           outputDir: ./draws
@@ -36,4 +36,8 @@ jobs:
           git config --global user.email $BOT_EMAIL
           git add .
           git commit -m "completed a recipient draw"
-          git push
+      - name: Raise PR
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: draw/results
+          branch-suffix: timestamp
