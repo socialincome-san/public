@@ -8,7 +8,9 @@
 	"random-number": "Random number",
 	"confirm-drand": "Confirm on drand",
 	"confirm-github": "Confirm on Github",
-	"long-list": "{{ total }} people on the long list. {{ count }} selected",
+	"long-list": "{{ total }} people on the long list, {{ count }} selected",
 	"people": "People",
-	"from": "from"
+	"from": "from",
+	"none-completed": "No draws have been completed yet",
+	"none-scheduled": "No future draws have been scheduled yet"
 }

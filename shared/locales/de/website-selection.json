@@ -8,7 +8,9 @@
 	"random-number": "Zusätzliche Zahl",
 	"confirm-drand": "Bestätigen bei drand",
 	"confirm-github": "Bestätigen bei Github",
-	"long-list": "{{ total }} Personen stehen auf der langen Liste. {{ count }} ausgewählt",
+	"long-list": "{{ total }} Personen stehen auf der langen Liste, {{ count }} ausgewählt",
 	"people": "Personen",
-	"from": "von"
+	"from": "von",
+	"none-completed": "Kein Auswahlverfahren wurde schon abgeschlossen",
+	"none-scheduled": "Kein zukünftiges Auswahlverfahren wurde aufgeführt"
 }

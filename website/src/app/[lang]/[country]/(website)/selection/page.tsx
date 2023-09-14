@@ -1,11 +1,14 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
 import { DrawCard, DrawDetail, DrawSummary } from '@/app/[lang]/[country]/(website)/selection/drawCard';
-import { futureDraws, pastDraws } from '@/app/[lang]/[country]/(website)/selection/state';
+import { loadFutureDraws, loadPastDraws } from '@/app/[lang]/[country]/(website)/selection/state';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
 export default async function Page(props: DefaultPageProps) {
 	const translator = await Translator.getInstance({ language: props.params.lang, namespaces: 'website-selection' });
+
+	const futureDraws = await loadFutureDraws();
+	const pastDraws = await loadPastDraws();
 
 	return (
 		<BaseContainer className="bg-base-blue min-h-screen">
@@ -20,6 +23,9 @@ export default async function Page(props: DefaultPageProps) {
 			<Typography as="h2" size="3xl">
 				{translator.t('upcoming')}
 			</Typography>
+
+			{futureDraws.length === 0 && <Typography>{translator.t('none-scheduled')}</Typography>}
+
 			<Typography>{translator.t('future-draws')}</Typography>
 			{futureDraws.map((draw) => (
 				<DrawCard
@@ -38,6 +44,9 @@ export default async function Page(props: DefaultPageProps) {
 			<Typography as="h2" size="3xl">
 				{translator.t('past')}
 			</Typography>
+
+			{pastDraws.length === 0 && <Typography>{translator.t('none-completed')}</Typography>}
+
 			{pastDraws.map((draw) => (
 				<DrawCard
 					key={draw.time}
@@ -74,6 +83,7 @@ type IntroTextProps = {
 		readDrawsLink: string;
 	};
 };
+
 function IntroText({ translations }: IntroTextProps) {
 	return (
 		<div className="p-2">

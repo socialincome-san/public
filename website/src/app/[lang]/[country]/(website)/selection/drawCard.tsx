@@ -1,7 +1,7 @@
 'use client';
 import { FutureDraw, PastDraw } from '@/app/[lang]/[country]/(website)/selection/state';
 import { Disclosure } from '@headlessui/react';
-import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';
 import * as React from 'react';
@@ -15,22 +15,28 @@ export interface DrawCardsProps {
 export function DrawCard(props: DrawCardsProps) {
 	return (
 		<Disclosure>
-			<div className="m-4 bg-gray-200 p-2 shadow-xl">
-				<div className="flex h-20 h-full w-full flex-row items-center">
-					<div className="grow">{props.summary}</div>
-					<div>
-						{!!props.detail ? (
-							<Disclosure.Button>
-								<ChevronDownIcon height="2em"></ChevronDownIcon>
-							</Disclosure.Button>
-						) : (
-							/* this is a filthy hack for spacing, but is actually responsive by some sorcery */
-							<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-						)}
+			{({ open }) => (
+				<div className="m-4 rounded-md border border-gray-500 p-10">
+					<div className="flex h-full w-full flex-row items-center">
+						<div className="grow">{props.summary}</div>
+						<div>
+							{!!props.detail ? (
+								<Disclosure.Button>
+									{open ? (
+										<ChevronUpIcon height="2em"></ChevronUpIcon>
+									) : (
+										<ChevronDownIcon height="2em"></ChevronDownIcon>
+									)}
+								</Disclosure.Button>
+							) : (
+								/* this is a filthy hack for spacing, but is actually responsive by some sorcery */
+								<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+							)}
+						</div>
 					</div>
+					{!!props.detail && <Disclosure.Panel>{props.detail}</Disclosure.Panel>}
 				</div>
-				{!!props.detail && <Disclosure.Panel>{props.detail}</Disclosure.Panel>}
-			</div>
+			)}
 		</Disclosure>
 	);
 }
@@ -46,10 +52,20 @@ export type DrawSummaryProps = {
 export function DrawSummary({ draw, translations }: DrawSummaryProps) {
 	return (
 		<div className="flex h-full w-full flex-row items-center">
-			<div className="basis-1/4">{new Date(draw.time).toLocaleDateString()}</div>
-			<div className="grow">{draw.name}</div>
 			<div className="basis-1/4">
-				{draw.count} {translations.from} {draw.total}
+				<Typography as="p" size="lg">
+					{new Date(draw.time).toLocaleDateString()}
+				</Typography>
+			</div>
+			<div className="grow">
+				<Typography as="p" size="lg">
+					{draw.name}
+				</Typography>
+			</div>
+			<div className="basis-1/4">
+				<Typography as="p" size="lg">
+					{draw.count} {translations.from} {draw.total}
+				</Typography>
 			</div>
 		</div>
 	);
@@ -86,7 +102,7 @@ export function DrawDetail({ draw, translations }: DrawDetailProps) {
 					<Typography>{translations.longlist}</Typography>
 				</div>
 				<div>
-					<a className="underline" href={`https://github.com/socialincome-san/public/tree/main/lists${draw.name}`}>
+					<a className="underline" href={`https://github.com/socialincome-san/public/tree/main/lists/${draw.filename}`}>
 						{translations.confirmGithub}
 					</a>
 				</div>
