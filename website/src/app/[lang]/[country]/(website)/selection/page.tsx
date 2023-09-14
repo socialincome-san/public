@@ -7,8 +7,8 @@ import { BaseContainer, Typography } from '@socialincome/ui';
 export default async function Page(props: DefaultPageProps) {
 	const translator = await Translator.getInstance({ language: props.params.lang, namespaces: 'website-selection' });
 
-	const futureDraws = await loadFutureDraws();
-	const pastDraws = await loadPastDraws();
+	const futureDraws = await loadFutureDraws().catch(_ => []);
+	const pastDraws = await loadPastDraws().catch(_ => []);
 
 	return (
 		<BaseContainer className="bg-base-blue min-h-screen">
