@@ -31,7 +31,7 @@ export async function Section2({ params, contributionStats, paymentStats }: Sect
 								{translator.t('section-2.contributions-from', {
 									context: { value: contributionStats.totalIndividualContributionsAmount, currency: params.currency },
 								})}
-								<Badge size="lg" color="accent" className="mx-1">
+								<Badge color="accent" className="mx-1">
 									{translator.t('section-2.individuals', {
 										context: { count: contributionStats.totalIndividualContributorsCount },
 									})}
@@ -67,7 +67,7 @@ export async function Section2({ params, contributionStats, paymentStats }: Sect
 										currency: params.currency,
 									},
 								})}
-								<Badge size="lg" color="primary" className="mx-1">
+								<Badge color="primary" className="mx-1">
 									{translator.t('section-2.institutions', {
 										context: { count: contributionStats.totalInstitutionalContributorsCount },
 									})}

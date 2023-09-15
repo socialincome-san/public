@@ -70,7 +70,7 @@ export default function Page() {
 				zip: user?.get('address.zip') || '',
 			});
 		}
-	}, [user]);
+	}, [user, form]);
 
 	const onSubmit = async (values: FormSchema) => {
 		console.log(values);
