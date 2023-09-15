@@ -18,6 +18,8 @@ export function UserContextProvider({ children }: PropsWithChildren) {
 	const firestore = useFirestore();
 	const { status: authUserStatus, data: authUser } = useUser();
 
+	console.log('user context', authUserStatus, authUser);
+
 	useEffect(() => {
 		if (authUserStatus === 'success' && authUser === null) {
 			redirect('../login');
@@ -37,6 +39,7 @@ export function UserContextProvider({ children }: PropsWithChildren) {
 		},
 		{
 			staleTime: 1000 * 60 * 60, // 1 hour
+			refetchOnMount: false,
 		},
 	);
 

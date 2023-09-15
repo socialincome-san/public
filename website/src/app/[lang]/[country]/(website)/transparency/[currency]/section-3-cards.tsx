@@ -44,7 +44,7 @@ export function CountryCardList({ children, buttonText }: PropsWithChildren<{ bu
 				{!expanded ? Children.toArray(children).slice(0, 6) : children}
 			</ul>
 			{!expanded && (
-				<Button wide color="ghost" onClick={() => setExpanded(true)} className="self-center">
+				<Button onClick={() => setExpanded(true)} className="self-center">
 					{buttonText}
 				</Button>
 			)}

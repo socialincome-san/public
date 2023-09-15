@@ -1,7 +1,7 @@
 'use client';
 
 import { PlayCircleIcon } from '@heroicons/react/24/outline';
-import { BaseContainer, Modal, Typography } from '@socialincome/ui';
+import { BaseContainer, Dialog, DialogContent, DialogTrigger, Typography } from '@socialincome/ui';
 import Player from '@vimeo/player';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
@@ -39,7 +39,7 @@ export default function Section2({ vimeoVideoId, translations }: Section2Props) 
 	}, [player, showModal]);
 
 	return (
-		<BaseContainer className="bg-base-yellow">
+		<BaseContainer>
 			<div className="flex min-h-screen flex-col items-center justify-center lg:flex-row">
 				<div className="flex flex-1 flex-col justify-center p-4 text-center lg:p-8 lg:text-left">
 					<Typography as="span" size="4xl" weight="bold" lineHeight="relaxed">
@@ -55,15 +55,19 @@ export default function Section2({ vimeoVideoId, translations }: Section2Props) 
 				<div className="flex flex-1 flex-col items-center">
 					<div className="group cursor-pointer" onClick={() => setShowModal((prevState) => !prevState)}>
 						<Image className="px-16 py-4" src={houseGif} alt="House Animation for Video Preview" />
-						<div className="my-1 flex h-12 flex-row items-center justify-center space-x-2 group-hover:my-0 group-hover:h-14 group-hover:transition-all">
-							<PlayCircleIcon className="h-full"></PlayCircleIcon>
-							<Typography className="text-xl group-hover:text-2xl group-hover:transition-all" weight="medium">
-								{translations.videoButton}
-							</Typography>
-						</div>
-						<Modal open={showModal} className="w-11/12 max-w-6xl">
-							<Modal.Body ref={playerRef} />
-						</Modal>
+						<Dialog>
+							<DialogTrigger>
+								<div className="my-1 flex h-12 flex-row items-center justify-center space-x-2 group-hover:my-0 group-hover:h-14 group-hover:transition-all">
+									<PlayCircleIcon className="h-full"></PlayCircleIcon>
+									<Typography className="text-xl group-hover:text-2xl group-hover:transition-all" weight="medium">
+										{translations.videoButton}
+									</Typography>
+								</div>
+							</DialogTrigger>
+							<DialogContent>
+								<div className="w-11/12 max-w-6xl" ref={playerRef} />
+							</DialogContent>
+						</Dialog>
 					</div>
 				</div>
 			</div>

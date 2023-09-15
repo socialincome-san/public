@@ -38,7 +38,9 @@ test('CreatePayments', async () => {
 			auth: { token: { email: 'admin@socialincome.org' } },
 		},
 	);
-	expect(result).toEqual('Set 2 payments to paid and created 2 payments for next month');
+	expect(result).toEqual(
+		'Set status of 3 payments to paid and created 3 payments for next month. Set status to "former" for 0 recipients and status to active for 1 recipients.',
+	);
 
 	const recipientDocs = (
 		await firestoreAdmin
@@ -46,7 +48,7 @@ test('CreatePayments', async () => {
 			.where('progr_status', '==', RecipientProgramStatus.Active)
 			.get()
 	).docs;
-	expect(recipientDocs).toHaveLength(2);
+	expect(recipientDocs).toHaveLength(3);
 
 	for (const recipientDoc of recipientDocs) {
 		const paymentDoc = await firestoreAdmin
@@ -81,5 +83,7 @@ test('CreatePayments', async () => {
 		{ type: PaymentProcessTaskType.CreatePayments, timestamp: paymentDate.toSeconds() },
 		{ auth: { token: { email: 'admin@socialincome.org' } } },
 	);
-	expect(secondExecutionResult).toEqual('Set 0 payments to paid and created 0 payments for next month');
+	expect(secondExecutionResult).toEqual(
+		'Set status of 0 payments to paid and created 0 payments for next month. Set status to "former" for 0 recipients and status to active for 0 recipients.',
+	);
 });

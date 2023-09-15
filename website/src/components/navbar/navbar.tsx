@@ -1,5 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[country]';
-import NavbarClient from '@/components/navbar/navbar-client';
+import { NavbarClient } from '@/components/navbar/navbar-client';
 import { Language } from '@socialincome/shared/src/types';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 

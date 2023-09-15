@@ -2,7 +2,7 @@
 
 import { LanguageIcon } from '@heroicons/react/24/solid';
 import { Language } from '@socialincome/shared/src/types';
-import { Dropdown, Menu, Theme, Typography } from '@socialincome/ui';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@socialincome/ui';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -26,38 +26,21 @@ function LanguageSwitcherComponent({ languages, mobile, currentLanguage }: Langu
 		router.push(pathSegments.join('/') + '?' + current.toString());
 	};
 	if (mobile) {
-		return (
-			<Menu.Details
-				label={
-					<div className="flex-inline flex space-x-2">
-						<LanguageIcon className="h-5 w-5" />
-						<Typography size="sm">{currentLanguage}</Typography>
-					</div>
-				}
-			>
-				{languages.map((lang, index) => (
-					<Menu.Item key={index}>
-						<a onClick={() => onLanguageChange(lang.code)}>{lang.translation}</a>
-					</Menu.Item>
-				))}
-			</Menu.Details>
-		);
+		return null;
 	} else {
 		return (
-			<Dropdown hover end>
-				<Dropdown.Toggle color="ghost" className="hover:bg-none">
+			<DropdownMenu>
+				<DropdownMenuTrigger>
 					<LanguageIcon className="h-5 w-5" />
-				</Dropdown.Toggle>
-				<Theme dataTheme="siDefault">
-					<Dropdown.Menu className="z-40 min-w-[6rem]">
-						{languages.map((lang, index) => (
-							<Dropdown.Item key={index} onClick={() => onLanguageChange(lang.code)}>
-								{lang.translation}
-							</Dropdown.Item>
-						))}
-					</Dropdown.Menu>
-				</Theme>
-			</Dropdown>
+				</DropdownMenuTrigger>
+				<DropdownMenuContent className="z-40 min-w-[6rem]">
+					{languages.map((lang, index) => (
+						<DropdownMenuItem key={index} onClick={() => onLanguageChange(lang.code)}>
+							{lang.translation}
+						</DropdownMenuItem>
+					))}
+				</DropdownMenuContent>
+			</DropdownMenu>
 		);
 	}
 }

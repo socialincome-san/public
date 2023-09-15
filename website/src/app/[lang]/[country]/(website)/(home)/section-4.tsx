@@ -9,7 +9,7 @@ export default async function Section4({ params }: DefaultPageProps) {
 	});
 
 	return (
-		<BaseContainer className="bg-base-red">
+		<BaseContainer>
 			<div className="flex min-h-screen flex-col justify-center">
 				<p className="mb-8 lg:mb-16">
 					<Typography as="span" size="4xl" weight="bold" lineHeight="relaxed">

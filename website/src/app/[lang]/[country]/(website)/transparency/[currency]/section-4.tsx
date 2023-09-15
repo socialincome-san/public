@@ -6,7 +6,7 @@ import { BanknotesIcon, BuildingLibraryIcon, DevicePhoneMobileIcon } from '@hero
 import { PAYMENT_AMOUNT } from '@socialincome/shared/src/types';
 import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRates';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Tooltip, Typography } from '@socialincome/ui';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Typography } from '@socialincome/ui';
 import _ from 'lodash';
 
 // TODO: fix tooltips on mobile
@@ -89,9 +89,14 @@ export async function Section4({ params, paymentStats, contributionStats }: Sect
 									currency: params.currency,
 								},
 							})}
-							<Tooltip color="accent" message={translator.t('section-4.payment-fees-tooltip')}>
-								<InformationCircleIcon className="mx-2 h-5 w-5" />
-							</Tooltip>
+							<TooltipProvider>
+								<Tooltip>
+									<TooltipTrigger>
+										<InformationCircleIcon className="mx-2 h-5 w-5" />
+									</TooltipTrigger>
+									<TooltipContent>{translator.t('section-4.payment-fees-tooltip')}</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 						</Typography>
 						<Typography as="div" className="flex-inline flex items-center">
 							{translator.t('section-4.transaction-fees', {
@@ -100,9 +105,9 @@ export async function Section4({ params, paymentStats, contributionStats }: Sect
 									currency: params.currency,
 								},
 							})}
-							<Tooltip color="accent" message={translator.t('section-4.transaction-fees-tooltip')}>
-								<InformationCircleIcon className="mx-2 h-5 w-5" />
-							</Tooltip>
+							{/*<Tooltip color="accent" content={translator.t('section-4.transaction-fees-tooltip')}>*/}
+							{/*	<InformationCircleIcon className="mx-2 h-5 w-5" />*/}
+							{/*</Tooltip>*/}
 						</Typography>
 						<Typography as="div" className="flex-inline flex items-center">
 							{translator.t('section-4.operating-costs', {
@@ -111,9 +116,9 @@ export async function Section4({ params, paymentStats, contributionStats }: Sect
 									currency: params.currency,
 								},
 							})}
-							<Tooltip color="accent" message={translator.t('section-4.operating-costs-tooltip')}>
-								<InformationCircleIcon className="mx-2 h-5 w-5" />
-							</Tooltip>
+							{/*<Tooltip color="accent" content={translator.t('section-4.operating-costs-tooltip')}>*/}
+							{/*	<InformationCircleIcon className="mx-2 h-5 w-5" />*/}
+							{/*</Tooltip>*/}
 						</Typography>
 						<Typography as="div" className="flex-inline flex items-center">
 							{translator.t('section-4.other-costs', {
@@ -122,9 +127,9 @@ export async function Section4({ params, paymentStats, contributionStats }: Sect
 									currency: params.currency,
 								},
 							})}
-							<Tooltip color="accent" message={translator.t('section-4.other-costs-tooltip')}>
-								<InformationCircleIcon className="mx-2 h-5 w-5" />
-							</Tooltip>
+							{/*<Tooltip color="accent" content={translator.t('section-4.other-costs-tooltip')}>*/}
+							{/*	<InformationCircleIcon className="mx-2 h-5 w-5" />*/}
+							{/*</Tooltip>*/}
 						</Typography>
 					</div>
 				}

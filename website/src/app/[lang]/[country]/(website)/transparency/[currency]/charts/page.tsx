@@ -28,7 +28,7 @@ export default async function Page(props: TransparencyPageProps) {
 	const { contributionStats, paymentStats } = await getStats(props.params.currency);
 
 	return (
-		<BaseContainer className="bg-base-blue min-h-screen">
+		<BaseContainer className="min-h-screen">
 			<Typography as="h2" size="2xl" weight="medium">
 				Total contributions: {contributionStats.totalContributionsAmount}
 			</Typography>

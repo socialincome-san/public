@@ -24,7 +24,6 @@ export type Payment = {
 };
 
 export enum PaymentProcessTaskType {
-	UpdateRecipients = 'UpdateRecipients',
 	GetRegistrationCSV = 'GetRegistrationCSV',
 	GetPaymentCSV = 'GetPaymentCSV',
 	CreatePayments = 'CreatePayments',

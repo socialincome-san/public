@@ -8,13 +8,14 @@ import {
 	Payment,
 	PaymentStatus,
 	RECIPIENT_FIRESTORE_PATH,
+	RecipientProgramStatus,
 } from '../../../../../../shared/src/types';
 import { ExchangeRateImporter } from '../../../../cron/exchange-rate-import/ExchangeRateImporter';
 import { PaymentTask } from './PaymentTask';
 
-export class CreatePaymentsTask extends PaymentTask {
+export class UpdateDatabaseEntriesTask extends PaymentTask {
 	async run(paymentDate: DateTime): Promise<string> {
-		let [paymentsPaid, paymentsCreated] = [0, 0];
+		let [paymentsPaid, paymentsCreated, setToActiveCount, setToFormerCount] = [0, 0, 0, 0];
 		const nextMonthPaymentDate = paymentDate.plus({ months: 1 });
 		const exchangeRates = await new ExchangeRateImporter().getExchangeRates(paymentDate);
 		const amountChf = Math.round((PAYMENT_AMOUNT / exchangeRates[PAYMENT_CURRENCY]) * 100) / 100;
@@ -61,9 +62,23 @@ export class CreatePaymentsTask extends PaymentTask {
 						});
 					paymentsCreated++;
 				}
+				if (paymentsCount == PAYMENTS_COUNT) {
+					// If a recipient has received all their payments, set their status to former
+					await recipient.ref.update({
+						progr_status: RecipientProgramStatus.Former,
+					});
+					setToFormerCount++;
+				}
+				if (recipient.get('progr_status') === RecipientProgramStatus.Designated) {
+					await recipient.ref.update({
+						si_start_date: paymentDate.toJSDate(),
+						progr_status: RecipientProgramStatus.Active,
+					});
+					setToActiveCount++;
+				}
 			}),
 		);
 
-		return `Set ${paymentsPaid} payments to paid and created ${paymentsCreated} payments for next month`;
+		return `Set status of ${paymentsPaid} payments to paid and created ${paymentsCreated} payments for next month. Set status to "former" for ${setToFormerCount} recipients and status to active for ${setToActiveCount} recipients.`;
 	}
 }

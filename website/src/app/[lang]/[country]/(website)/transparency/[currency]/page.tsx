@@ -40,7 +40,7 @@ export default async function Page({ params }: TransparencyPageProps) {
 	const { contributionStats, paymentStats } = await getStats(params.currency.toUpperCase());
 
 	return (
-		<BaseContainer className="bg-base-blue">
+		<BaseContainer>
 			<div className="flex flex-col space-y-16">
 				<Section1 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
 				<Section2 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
