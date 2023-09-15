@@ -77,7 +77,7 @@ export const SoCombobox = ({
 	block = false,
 	labelHidden = false,
 	...props
-}: SoComboboxProps) => {
+}: SoComboboxProps<any>) => {
 	const [query, setQuery] = useState('');
 
 	const filteredOptions =

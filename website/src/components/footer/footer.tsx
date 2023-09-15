@@ -25,7 +25,7 @@ function FooterLink({ label, url, Icon }: FooterLinkProps) {
 			className="group inline-flex items-center space-x-4"
 		>
 			{Icon && <Icon className="h-4 w-4 fill-neutral-600 group-hover:fill-base-content" />}
-			<Typography size='s' className="text-neutral-600 group-hover:text-base-content">{label}</Typography>
+			<Typography size='sm' className="text-neutral-600 group-hover:text-base-content">{label}</Typography>
 		</Link>
 
 	)
