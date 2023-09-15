@@ -4,7 +4,7 @@ import { Language } from '@socialincome/shared/src/types';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 
 export type NavbarProps = {
-	supportedLanguages: Language[] 
+	supportedLanguages: Language[];
 } & DefaultParams;
 
 export default async function Navbar({ lang, country, supportedLanguages }: NavbarProps) {

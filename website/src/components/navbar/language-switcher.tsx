@@ -4,7 +4,7 @@ import { LanguageIcon } from '@heroicons/react/24/solid';
 import { Language } from '@socialincome/shared/src/types';
 import { Dropdown, Menu, Theme, Typography } from '@socialincome/ui';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
-import { useRouter, useSearchParams, ReadonlyURLSearchParams } from 'next/navigation';
+import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
 type LanguageSwitcherProps = {

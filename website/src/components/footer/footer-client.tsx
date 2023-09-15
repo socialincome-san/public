@@ -7,8 +7,8 @@ import { onLanguageChange } from '@/components/navbar/language-switcher';
 import { ValidCountry } from '@/i18n';
 import { Language } from '@socialincome/shared/src/types';
 import { SoCombobox, SoSelect } from '@socialincome/ui';
-import { useState } from 'react';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
+import { useState } from 'react';
 
 type FooterClientProps = {
 	supportedTranslatedLanguages: { code: Language; translation: string }[];

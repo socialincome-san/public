@@ -1,6 +1,6 @@
 'use client';
-import { SILogo } from '@/components/logos/si-logo';
 import { DefaultParams } from '@/app/[lang]/[country]';
+import { SILogo } from '@/components/logos/si-logo';
 import { LanguageSwitcher } from '@/components/navbar/language-switcher';
 import { Disclosure } from '@headlessui/react';
 import { Bars3Icon, UserCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';

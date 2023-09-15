@@ -84,8 +84,8 @@ export const SoCombobox = ({
 		query === ''
 			? options
 			: options.filter((option) => {
-				return option.label.toLowerCase().includes(query.toLowerCase());
-			});
+					return option.label.toLowerCase().includes(query.toLowerCase());
+			  });
 
 	/**
 	 * Handles user input in the text field
