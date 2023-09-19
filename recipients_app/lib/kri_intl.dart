@@ -703,7 +703,7 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String get drawerLabel => r"Fɔ sho yu usay fɔ go";
 
   @override
-  String get expandedIconTapHint => r"Fɔgɛt bɔt dis";
+  String get expandedIconTapHint => r"Ridyus am";
 
   @override
   String get firstPageTooltip => r"Fɔs pej";
@@ -837,7 +837,7 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String get showMenuTooltip => r"Tin dɛn we yu fɔ si";
 
   @override
-  String get signedInLabel => r"Put ɔltin bɔt yu ya";
+  String get signedInLabel => r"Yu de insai naw";
 
   @override
   String get tabLabelRaw => r"Tab $tabIndex of $tabCount";
@@ -871,7 +871,7 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String get dateInputLabel => r"Put det";
 
   @override
-  String get dateOutOfRangeLabel => r"Out of range.";
+  String get dateOutOfRangeLabel => r"Nɔ ebul si am.";
 
   @override
   String get datePickerHelpText => r"PIK DET";
@@ -1096,7 +1096,7 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String get collapsedHint => "Go insay mɔ";
 
   @override
-  String get expandedHint => "Fɔgɛt bɔt dis";
+  String get expandedHint => "Ridyus am";
 
   @override
   String get expansionTileCollapsedHint => "double tap to expand";
@@ -1108,7 +1108,7 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String get expansionTileExpandedHint => "double tap to collapse'";
 
   @override
-  String get expansionTileExpandedTapHint => "Fɔgɛt bɔt dis";
+  String get expansionTileExpandedTapHint => "Ridyus am";
 
   @override
   String get scanTextButtonLabel => "Skan tɛkst";
