@@ -1,7 +1,7 @@
-import { SectionProps } from '@/app/[lang]/[country]/(website)/transparency/[currency]/page';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';
 import _ from 'lodash';
+import { SectionProps } from './page';
 
 export async function Section1({ params, paymentStats, contributionStats }: SectionProps) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-transparency'] });

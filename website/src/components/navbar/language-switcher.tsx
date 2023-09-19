@@ -2,7 +2,16 @@
 
 import { LanguageIcon } from '@heroicons/react/24/solid';
 import { Language } from '@socialincome/shared/src/types';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@socialincome/ui';
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+	MenubarContent,
+	MenubarItem,
+	MenubarMenu,
+	MenubarTrigger,
+} from '@socialincome/ui';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -25,22 +34,38 @@ function LanguageSwitcherComponent({ languages, mobile, currentLanguage }: Langu
 		const current = new URLSearchParams(Array.from(searchParams.entries()));
 		router.push(pathSegments.join('/') + '?' + current.toString());
 	};
+
 	if (mobile) {
-		return null;
+		return (
+			<Accordion type="single" collapsible className="w-full">
+				<AccordionItem value="item-1">
+					<AccordionTrigger>
+						<div>
+							<LanguageIcon className="h-5 w-5" />
+						</div>
+					</AccordionTrigger>
+					{languages.map((lang, index) => (
+						<AccordionContent key={index} onClick={() => onLanguageChange(lang.code)}>
+							{lang.translation}
+						</AccordionContent>
+					))}
+				</AccordionItem>
+			</Accordion>
+		);
 	} else {
 		return (
-			<DropdownMenu>
-				<DropdownMenuTrigger>
+			<MenubarMenu>
+				<MenubarTrigger className="cursor-pointer">
 					<LanguageIcon className="h-5 w-5" />
-				</DropdownMenuTrigger>
-				<DropdownMenuContent className="z-40 min-w-[6rem]">
+				</MenubarTrigger>
+				<MenubarContent>
 					{languages.map((lang, index) => (
-						<DropdownMenuItem key={index} onClick={() => onLanguageChange(lang.code)}>
+						<MenubarItem key={index} onClick={() => onLanguageChange(lang.code)}>
 							{lang.translation}
-						</DropdownMenuItem>
+						</MenubarItem>
 					))}
-				</DropdownMenuContent>
-			</DropdownMenu>
+				</MenubarContent>
+			</MenubarMenu>
 		);
 	}
 }

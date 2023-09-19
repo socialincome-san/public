@@ -107,7 +107,7 @@ export function ThemeProvider({ children }: PropsWithChildren) {
 			theme = 'theme-default';
 	}
 
-	return <div className={theme}>{children}</div>;
+	return <body className={theme}>{children}</body>;
 }
 
 export function Providers({ children }: PropsWithChildren) {

@@ -1,5 +1,3 @@
-import { InfoCard } from '@/app/[lang]/[country]/(website)/transparency/[currency]/info-card';
-import { SectionProps } from '@/app/[lang]/[country]/(website)/transparency/[currency]/page';
 import { firestoreAdmin } from '@/firebase-admin';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { BanknotesIcon, BuildingLibraryIcon, DevicePhoneMobileIcon } from '@heroicons/react/24/solid';
@@ -8,6 +6,8 @@ import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRa
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Typography } from '@socialincome/ui';
 import _ from 'lodash';
+import { InfoCard } from './info-card';
+import { SectionProps } from './page';
 
 // TODO: fix tooltips on mobile
 export async function Section4({ params, paymentStats, contributionStats }: SectionProps) {

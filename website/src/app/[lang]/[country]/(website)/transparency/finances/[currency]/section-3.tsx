@@ -1,6 +1,6 @@
-import { SectionProps } from '@/app/[lang]/[country]/(website)/transparency/[currency]/page';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';
+import { SectionProps } from './page';
 import { CountryCard, CountryCardList } from './section-3-cards';
 
 export async function Section3({ params, contributionStats }: SectionProps) {

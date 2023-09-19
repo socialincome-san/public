@@ -42,9 +42,7 @@ export default function Section1Input({ text }: Section1InputProps) {
 						</FormItem>
 					)}
 				/>
-				<Button size="lg" type="submit">
-					{text}
-				</Button>
+				<Button type="submit">{text}</Button>
 			</form>
 		</Form>
 	);
