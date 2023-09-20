@@ -3,7 +3,7 @@
 import { DefaultParams } from '@/app/[lang]/[country]';
 import { useTranslator } from '@/hooks/useTranslator';
 import { LanguageIcon } from '@heroicons/react/24/solid';
-import { Language } from '@socialincome/shared/src/types';
+import { LanguageCode } from '@socialincome/shared/src/types';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -16,7 +16,7 @@ import { Suspense } from 'react';
 
 interface LanguageSwitcherProps {
 	params: DefaultParams;
-	languages?: Language[];
+	languages?: LanguageCode[];
 }
 
 function LanguageSwitcherDropdown({ params, languages = ['en', 'de'] }: LanguageSwitcherProps) {
@@ -24,7 +24,7 @@ function LanguageSwitcherDropdown({ params, languages = ['en', 'de'] }: Language
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
-	const onLanguageChange = (lang: Language) => {
+	const onLanguageChange = (lang: LanguageCode) => {
 		const pathSegments = window.location.pathname.split('/');
 		pathSegments[1] = lang;
 		const current = new URLSearchParams(Array.from(searchParams.entries()));

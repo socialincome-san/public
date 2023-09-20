@@ -10,7 +10,7 @@ export const generateStaticParams = () =>
 export default function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	return (
 		<div className="mx-auto">
-			<Navbar lang={params.lang} country={params.country} />
+			<Navbar lang={params.lang} country={params.country} supportedLanguages={supportedWebsiteLanguages} />
 			<main>{children}</main>
 			<Footer params={params} supportedLanguages={supportedWebsiteLanguages} supportedCountries={countries} />
 		</div>

@@ -1,24 +1,26 @@
 'use client';
 
-import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation';
-
 import { DefaultLayoutProps } from '@/app/[lang]/[country]';
 import { onLanguageChange } from '@/components/navbar/language-switcher';
 import { ValidCountry } from '@/i18n';
-import { Language } from '@socialincome/shared/src/types';
-import { SoCombobox, SoSelect } from '@socialincome/ui';
+import { GlobeAltIcon, LanguageIcon } from '@heroicons/react/24/solid';
+import { LanguageCode } from '@socialincome/shared/src/types';
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+} from '@socialincome/ui';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
-import { useState } from 'react';
+import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation';
 
 type FooterClientProps = {
-	supportedTranslatedLanguages: { code: Language; translation: string }[];
+	supportedTranslatedLanguages: { code: LanguageCode; translation: string }[];
 	supportedTranslatedCountries: { code: ValidCountry; translation: string }[];
 } & DefaultLayoutProps;
-
-type CountryOption = {
-	label: string;
-	code: ValidCountry;
-};
 
 function onCountryChange(country: ValidCountry, router: AppRouterInstance, searchParams: ReadonlyURLSearchParams) {
 	const pathSegments = window.location.pathname.split('/');
@@ -27,6 +29,7 @@ function onCountryChange(country: ValidCountry, router: AppRouterInstance, searc
 	router.push(pathSegments.join('/') + '?' + current.toString());
 }
 
+// TODO: i18n
 export function FooterClient({
 	params,
 	supportedTranslatedLanguages,
@@ -35,46 +38,47 @@ export function FooterClient({
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
-	const languageOptions = supportedTranslatedLanguages.reduce(
-		(obj, current) => ({ ...obj, [current.code]: { label: current.translation, value: current.code } }),
-		{},
+	const initialCountry = supportedTranslatedCountries.find(
+		(candidateCountry) => candidateCountry.code === params.country,
 	);
-	const initialLanguage = params.lang;
-
-	const countriesOptions = supportedTranslatedCountries.map((country) => {
-		return {
-			label: country.translation,
-			code: country.code,
-		};
-	});
-	const initialCountry = countriesOptions.find((candidateCountry) => candidateCountry.code === params.country);
-	const [selectedCountry, setSelectedCountry] = useState(initialCountry);
+	const initialLanguage = supportedTranslatedLanguages.find(
+		(candidateLanguage) => candidateLanguage.code === params.lang,
+	);
 
 	return (
-		<>
-			<div>
-				<SoSelect
-					label="language"
-					labelHidden={true}
-					block={true}
-					selected={initialLanguage}
-					options={languageOptions}
-					onChange={(l: Language) => onLanguageChange(l, router, searchParams)}
-				/>
-			</div>
-			<div>
-				<SoCombobox
-					label="country"
-					labelHidden={true}
-					block={true}
-					options={countriesOptions}
-					value={selectedCountry}
-					onChange={(c: CountryOption) => {
-						setSelectedCountry(c);
-						onCountryChange(c.code, router, searchParams);
-					}}
-				/>
-			</div>
-		</>
+		<div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+			<Select onValueChange={(l: LanguageCode) => onLanguageChange(l, router, searchParams)}>
+				<SelectTrigger className="">
+					<LanguageIcon className="h-4 w-4" />
+					<SelectValue placeholder={initialLanguage?.translation} />
+				</SelectTrigger>
+				<SelectContent>
+					<SelectGroup>
+						<SelectLabel>Language</SelectLabel>
+						{supportedTranslatedLanguages.map((supportedLanguage, index) => (
+							<SelectItem key={index} value={supportedLanguage.code}>
+								{supportedLanguage.translation}
+							</SelectItem>
+						))}
+					</SelectGroup>
+				</SelectContent>
+			</Select>
+			<Select onValueChange={(c: ValidCountry) => onCountryChange(c, router, searchParams)}>
+				<SelectTrigger className="space-x-2">
+					<GlobeAltIcon className="h-4 w-4" />
+					<SelectValue placeholder={initialCountry?.translation} />
+				</SelectTrigger>
+				<SelectContent>
+					<SelectGroup>
+						<SelectLabel>Country</SelectLabel>
+						{supportedTranslatedCountries.map((country, index) => (
+							<SelectItem key={index} value={country.code}>
+								{country.translation}
+							</SelectItem>
+						))}
+					</SelectGroup>
+				</SelectContent>
+			</Select>
+		</div>
 	);
 }

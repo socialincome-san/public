@@ -1,4 +1,4 @@
-import { Language } from '@socialincome/shared/src/types';
+import { LanguageCode } from '@socialincome/shared/src/types';
 import langParser from 'accept-language-parser';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -7,7 +7,7 @@ export const countries = ['us', 'ch', 'sl'];
 export type ValidCountry = (typeof countries)[number];
 
 export const defaultLanguage = 'en';
-export type WebsiteLanguage = Extract<Language, 'en' | 'de' | 'kri'>;
+export type WebsiteLanguage = Extract<LanguageCode, 'en' | 'de' | 'kri'>;
 export const websiteLanguages: WebsiteLanguage[] = ['en', 'de', 'kri'];
 export const supportedWebsiteLanguages: WebsiteLanguage[] = ['en', 'de'];
 

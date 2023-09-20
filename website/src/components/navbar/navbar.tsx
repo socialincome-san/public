@@ -1,10 +1,10 @@
 import { DefaultParams } from '@/app/[lang]/[country]';
 import { NavbarClient } from '@/components/navbar/navbar-client';
-import { Language } from '@socialincome/shared/src/types';
+import { LanguageCode } from '@socialincome/shared/src/types';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 
 export type NavbarProps = {
-	supportedLanguages: Language[];
+	supportedLanguages: LanguageCode[];
 } & DefaultParams;
 
 export default async function Navbar({ lang, country, supportedLanguages }: NavbarProps) {

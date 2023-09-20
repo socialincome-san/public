@@ -4,7 +4,7 @@ import { SILogo } from '@/components/logos/si-logo';
 import { LanguageSwitcher } from '@/components/navbar/language-switcher';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
-import { Language } from '@socialincome/shared/src/types';
+import { LanguageCode } from '@socialincome/shared/src/types';
 import {
 	Accordion,
 	AccordionContent,
@@ -55,7 +55,7 @@ type NavbarProps = {
 		signOut: string;
 	};
 	languages: {
-		code: Language;
+		code: LanguageCode;
 		translation: string;
 	}[];
 } & DefaultParams;
@@ -71,7 +71,7 @@ export function NavbarClient({ lang, country, translations, languages, sections 
 			<Collapsible
 				open={isOpen}
 				onOpenChange={setIsOpen}
-				className="flex w-screen max-w-6xl flex-col space-y-4 px-3 py-2 md:px-6 md:py-4"
+				className="flex w-screen max-w-6xl flex-col space-y-4 px-3 py-2 md:px-5 md:py-4"
 			>
 				<div className="grid grid-cols-2 items-center md:grid-cols-4">
 					<Link href={`/${lang}/${country}`}>

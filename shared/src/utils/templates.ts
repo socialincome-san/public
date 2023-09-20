@@ -6,11 +6,11 @@ import i18next from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import mjml2html from 'mjml';
 import path from 'path';
-import { Language } from '../types';
+import { LanguageCode } from '../types';
 import { FALLBACK_LANGUAGE } from './i18n';
 
 export interface RenderTemplateProps {
-	language?: Language;
+	language?: LanguageCode;
 	translationNamespace?: string | string[];
 	hbsTemplatePath: string; // path starting from /shared/templates/{hbsTemplatePath}
 	context: object;
