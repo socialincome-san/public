@@ -1,5 +1,4 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[country]';
-import { ThemeProvider } from '@/app/[lang]/[country]/(website)/theme-provider';
 import Footer from '@/components/footer/footer';
 import Navbar from '@/components/navbar/navbar';
 import { countries, supportedWebsiteLanguages, websiteLanguages } from '@/i18n';
@@ -10,12 +9,10 @@ export const generateStaticParams = () =>
 
 export default function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	return (
-		<ThemeProvider>
-			<div className="mx-auto">
-				<Navbar lang={params.lang} country={params.country} supportedLanguages={supportedWebsiteLanguages} />
-				<main>{children}</main>
-				<Footer params={params} supportedLanguages={supportedWebsiteLanguages} supportedCountries={countries} />
-			</div>
-		</ThemeProvider>
+		<div className="mx-auto">
+			<Navbar lang={params.lang} country={params.country} />
+			<main>{children}</main>
+			<Footer params={params} supportedLanguages={supportedWebsiteLanguages} supportedCountries={countries} />
+		</div>
 	);
 }

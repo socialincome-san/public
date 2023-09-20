@@ -6,6 +6,7 @@ import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
+import { usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import {
@@ -93,6 +94,22 @@ function FirebaseSDKProviders({ children }: PropsWithChildren) {
 	);
 }
 
+export function ThemeProvider({ children }: PropsWithChildren) {
+	const pathname = usePathname();
+	const baseSegment = pathname?.split('/')[3];
+
+	let theme;
+	switch (baseSegment) {
+		case 'donate':
+			theme = 'theme-blue';
+			break;
+		default:
+			theme = 'theme-default';
+	}
+
+	return <body className={theme}>{children}</body>;
+}
+
 export function Providers({ children }: PropsWithChildren) {
 	const firebaseConfig = {
 		apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -109,8 +126,10 @@ export function Providers({ children }: PropsWithChildren) {
 		<FirebaseAppProvider firebaseConfig={firebaseConfig}>
 			<FirebaseSDKProviders>
 				<QueryClientProvider client={queryClient}>
-					<Toaster />
-					{children}
+					<ThemeProvider>
+						<Toaster />
+						{children}
+					</ThemeProvider>
 				</QueryClientProvider>
 			</FirebaseSDKProviders>
 		</FirebaseAppProvider>

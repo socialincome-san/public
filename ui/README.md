@@ -27,7 +27,7 @@ import { Typography } from '@socialincome/ui';
 ```
 
 Next to the custom components, the UI package also exports the all components
-from `react-daisyui`. See the [documentation](https://react.daisyui.com/) for more information.
+from `shadcn/ui`. See the [documentation](https://ui.shadcn.com/) for more information.
 
 ## Development
 

@@ -33,7 +33,7 @@ Tailwind CSS independent of the website ([Readme](ui/README.md) /
 our [Storybook](https://socialincome-san.github.io/public/).
 
 \* The website socialincome.org is still on a private repo. In this
-repo, we are rebuilding the existing website with Next.js, DaisyUI and
+repo, we are rebuilding the existing website with Next.js, shadcn/ui and
 Tailwind CSS. You can visit the website in the making on
 [staging](https://staging.socialincome.org/) or
 [production](https://prod.socialincome.org/).

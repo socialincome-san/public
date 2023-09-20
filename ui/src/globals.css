@@ -3,21 +3,77 @@
 @tailwind utilities;
 
 @layer base {
-	@font-face {
-		font-family: 'Unica77';
-		font-weight: normal;
-		src: url('../../shared/assets/fonts/Unica77LLWeb-Regular.woff2') format('woff2');
+	.theme-default {
+		--si-yellow: hsl(48, 100%, 49%);
+		--background: hsl(0 0% 100%);
+		--foreground: hsl(20 14.3% 4.1%);
+
+		--card: hsl(0 100% 100%);
+		--card-foreground: hsl(20 14.3% 4.1%);
+
+		--popover: hsl(0, 0%, 97%);
+		--popover-foreground: hsl(20 14.3% 4.1%);
+
+		--primary: hsl(216, 54%, 55%);
+		--primary-foreground: hsl(60 9.1% 97.8%);
+
+		--secondary: hsl(8, 89%, 62%);
+		--secondary-foreground: hsl(240, 2%, 21%);
+
+		--muted: hsl(60 4.8% 95.9%);
+		--muted-foreground: hsl(25 5.3% 44.7%);
+
+		--accent: hsl(48, 80%, 90%);
+		--accent-foreground: hsl(24 9.8% 10%);
+
+		--destructive: hsl(0, 75%, 42%);
+		--destructive-foreground: hsl(60 9.1% 97.8%);
+
+		--border: hsl(20 5.9% 90%);
+		--input: hsl(20 5.9% 90%);
+		--ring: hsl(216, 54%, 55%);
+
+		--radius: 0.5rem;
 	}
 
-	@font-face {
-		font-family: 'Unica77';
-		font-weight: 500;
-		src: url('../../shared/assets/fonts/Unica77LLWeb-Medium.woff2') format('woff2');
-	}
+	.theme-blue {
+		--si-yellow: hsl(48, 100%, 49%);
+		--background: hsl(216, 54%, 55%);
+		--foreground: hsl(60 9.1% 97.8%);
 
-	@font-face {
-		font-family: 'Unica77';
-		font-weight: 700;
-		src: url('../../shared/assets/fonts/Unica77LLWeb-Bold.woff2') format('woff2');
+		--card: hsl(0 0% 100%);
+		--card-foreground: hsl(20 14.3% 4.1%);
+
+		--popover: hsl(216, 54%, 55%);
+		--popover-foreground: hsl(60 9.1% 97.8%);
+
+		--primary: hsl(60 9.1% 97.8%);
+		--primary-foreground: hsl(216, 54%, 55%);
+
+		--secondary: hsl(8, 89%, 62%);
+		--secondary-foreground: hsl(240, 2%, 21%);
+
+		--muted: hsl(60 4.8% 95.9%);
+		--muted-foreground: hsl(25 5.3% 44.7%);
+
+		--accent: hsl(216, 54%, 60%);
+		--accent-foreground: hsl(60 9.1% 97.8%);
+
+		--destructive: hsl(0, 75%, 42%);
+		--destructive-foreground: hsl(60 9.1% 97.8%);
+
+		--border: hsl(20 5.9% 90%);
+		--input: hsl(20 5.9% 90%);
+		--ring: hsl(216, 54%, 55%);
+
+		--radius: 0.5rem;
+	}
+}
+
+@layer base {
+	body,
+	.theme-default,
+	.theme-blue {
+		@apply bg-background text-foreground;
 	}
 }

@@ -17,6 +17,12 @@ export default async function Page({ searchParams }: DefaultPageProps) {
 				<CreateUserForm
 					email={checkoutSession.customer_details?.email!}
 					checkoutSessionId={searchParams.stripeCheckoutSessionId}
+					translations={{
+						invalidEmail: 'Invalid email',
+						title: 'Create an account',
+						password: 'Password',
+						submitButton: 'Create account',
+					}}
 				/>
 				<LinkGoogleForm checkoutSessionId={searchParams.stripeCheckoutSessionId} />
 			</div>
