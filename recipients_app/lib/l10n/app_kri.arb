@@ -75,7 +75,7 @@
             }
         }
     },
-    "paymentsOverview": "Ɔltin bɔt Pemɛnt dɛm",
+    "paymentsOverview": "Ɔltin Bɔt Pemɛnt Dɛm",
     "paymentsSuspendedTwoUnreviewed": "2 pemɛnt dɛm we nɔ ɔke yet. Dɛn ol am.",
     "amount": "Ɔmɔs",
     "nextMonth": "Nɛks mɔnt",
@@ -99,8 +99,8 @@
     },
     "day": "day",
     "days": "days",
-    "myPayments": "Mi Pemɛnt dɛm",
-    "contestPayment": "Pemɛnt we yu nɔ gri wit/Agyu bɔt we dɛn nɔ pe yu di rayt amawnt.",
+    "myPayments": "Mi Pemɛnt Dɛm",
+    "contestPayment": "Pemɛnt we yu nɔ gri wit",
     "contestPaymentInfo": "Di pemɛnt nɔ rich yu. Wetin apin?",
     "submit": "Put am insay",
     "next": "Go bifo",
