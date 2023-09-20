@@ -1,6 +1,6 @@
 import { EntityReference } from 'firecms';
 import { capitalizeStringIfUppercase } from '../../utils/strings';
-import { Language } from './Language';
+import { LanguageCode } from './Language';
 
 export const USER_FIRESTORE_PATH = 'users';
 
@@ -42,7 +42,7 @@ export type User = {
 	stripe_customer_id?: string;
 	test_user?: boolean; // TODO: discuss if still needed
 	institution?: boolean;
-	language?: Language;
+	language?: LanguageCode;
 	location?: string; // TODO: discuss if still needed
 	currency?: string | null; // TODO: proper typing
 	contributor_organisations?: EntityReference[];

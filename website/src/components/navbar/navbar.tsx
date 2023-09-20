@@ -1,15 +1,17 @@
 import { DefaultParams } from '@/app/[lang]/[country]';
 import { NavbarClient } from '@/components/navbar/navbar-client';
-import { Language } from '@socialincome/shared/src/types';
+import { LanguageCode } from '@socialincome/shared/src/types';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 
-export default async function Navbar({ lang, country }: DefaultParams) {
+export type NavbarProps = {
+	supportedLanguages: LanguageCode[];
+} & DefaultParams;
+
+export default async function Navbar({ lang, country, supportedLanguages }: NavbarProps) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['common', 'website-common', 'website-me'],
 	});
-
-	const languages: Language[] = ['en', 'de'];
 
 	return (
 		<NavbarClient
@@ -22,7 +24,7 @@ export default async function Navbar({ lang, country }: DefaultParams) {
 				payments: translator.t('tabs.contributions'),
 				signOut: translator.t('sign-out'),
 			}}
-			languages={languages.map((lang) => ({ code: lang, translation: translator.t(`languages.${lang}`) }))}
+			languages={supportedLanguages.map((lang) => ({ code: lang, translation: translator.t(`languages.${lang}`) }))}
 			sections={[
 				{
 					title: translator.t('navigation.our-work'),

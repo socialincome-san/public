@@ -1,7 +1,7 @@
 'use client';
 
 import { LanguageIcon } from '@heroicons/react/24/solid';
-import { Language } from '@socialincome/shared/src/types';
+import { LanguageCode } from '@socialincome/shared/src/types';
 import {
 	Accordion,
 	AccordionContent,
@@ -12,28 +12,29 @@ import {
 	MenubarMenu,
 	MenubarTrigger,
 } from '@socialincome/ui';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
+import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
 type LanguageSwitcherProps = {
 	mobile?: boolean;
 	currentLanguage: string;
 	languages: {
-		code: Language;
+		code: LanguageCode;
 		translation: string;
 	}[];
 };
 
+export function onLanguageChange(lang: LanguageCode, router: AppRouterInstance, searchParams: ReadonlyURLSearchParams) {
+	const pathSegments = window.location.pathname.split('/');
+	pathSegments[1] = lang;
+	const current = new URLSearchParams(Array.from(searchParams.entries()));
+	router.push(pathSegments.join('/') + '?' + current.toString());
+}
+
 function LanguageSwitcherComponent({ languages, mobile, currentLanguage }: LanguageSwitcherProps) {
 	const router = useRouter();
 	const searchParams = useSearchParams();
-
-	const onLanguageChange = (lang: Language) => {
-		const pathSegments = window.location.pathname.split('/');
-		pathSegments[1] = lang;
-		const current = new URLSearchParams(Array.from(searchParams.entries()));
-		router.push(pathSegments.join('/') + '?' + current.toString());
-	};
 
 	if (mobile) {
 		return (
@@ -45,7 +46,7 @@ function LanguageSwitcherComponent({ languages, mobile, currentLanguage }: Langu
 						</div>
 					</AccordionTrigger>
 					{languages.map((lang, index) => (
-						<AccordionContent key={index} onClick={() => onLanguageChange(lang.code)}>
+						<AccordionContent key={index} onClick={() => onLanguageChange(lang.code, router, searchParams)}>
 							{lang.translation}
 						</AccordionContent>
 					))}
@@ -60,7 +61,7 @@ function LanguageSwitcherComponent({ languages, mobile, currentLanguage }: Langu
 				</MenubarTrigger>
 				<MenubarContent>
 					{languages.map((lang, index) => (
-						<MenubarItem key={index} onClick={() => onLanguageChange(lang.code)}>
+						<MenubarItem key={index} onClick={() => onLanguageChange(lang.code, router, searchParams)}>
 							{lang.translation}
 						</MenubarItem>
 					))}
