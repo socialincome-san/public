@@ -12,7 +12,7 @@ export abstract class PaymentTask {
 	}
 
 	public async getRecipients(
-		allowedStatus: RecipientProgramStatus[] = [RecipientProgramStatus.Active],
+		allowedStatus: RecipientProgramStatus[] = [RecipientProgramStatus.Active, RecipientProgramStatus.Designated],
 	): Promise<QueryDocumentSnapshot<Recipient>[]> {
 		return (
 			await this.firestoreAdmin

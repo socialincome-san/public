@@ -2,12 +2,11 @@ import * as functions from 'firebase-functions';
 import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
 import { PaymentProcessTaskType, toPaymentDate } from '../../../../../shared/src/types';
-import { CreatePaymentsTask } from './tasks/CreatePaymentsTask';
 import { PaymentCSVTask } from './tasks/PaymentCSVTask';
 import { PaymentTask } from './tasks/PaymentTask';
 import { RegistrationCSVTask } from './tasks/RegistrationCSVTask';
 import { SendNotificationsTask } from './tasks/SendNotificationsTask';
-import { UpdateRecipientsTask } from './tasks/UpdateRecipientsTask';
+import { UpdateDatabaseEntriesTask } from './tasks/UpdateDatabaseEntriesTask';
 
 export interface PaymentProcessProps {
 	type: PaymentProcessTaskType;
@@ -21,9 +20,6 @@ export default functions.https.onCall(async ({ type, timestamp }: PaymentProcess
 	let task: PaymentTask;
 
 	switch (type) {
-		case PaymentProcessTaskType.UpdateRecipients:
-			task = new UpdateRecipientsTask(firestoreAdmin);
-			break;
 		case PaymentProcessTaskType.GetRegistrationCSV:
 			task = new RegistrationCSVTask(firestoreAdmin);
 			break;
@@ -31,7 +27,7 @@ export default functions.https.onCall(async ({ type, timestamp }: PaymentProcess
 			task = new PaymentCSVTask(firestoreAdmin);
 			break;
 		case PaymentProcessTaskType.CreatePayments:
-			task = new CreatePaymentsTask(firestoreAdmin);
+			task = new UpdateDatabaseEntriesTask(firestoreAdmin);
 			break;
 		case PaymentProcessTaskType.SendNotifications:
 			task = new SendNotificationsTask(firestoreAdmin);

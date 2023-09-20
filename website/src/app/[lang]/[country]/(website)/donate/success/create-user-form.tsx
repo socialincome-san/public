@@ -1,19 +1,37 @@
 'use client';
 
-import { Button, Input, Typography } from '@socialincome/ui';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input, Typography } from '@socialincome/ui';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { Formik } from 'formik';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 import { useAuth } from 'reactfire';
+import * as z from 'zod';
 
 type CreateUserFormProps = {
 	email: string;
 	checkoutSessionId: string;
+	translations: {
+		title: string;
+		password: string;
+		submitButton: string;
+		invalidEmail: string;
+	};
 };
 
-export function CreateUserForm({ checkoutSessionId, email }: CreateUserFormProps) {
+export function CreateUserForm({ checkoutSessionId, email, translations }: CreateUserFormProps) {
 	const router = useRouter();
 	const auth = useAuth();
+
+	const formSchema = z.object({
+		password: z.string(),
+	});
+
+	type FormSchema = z.infer<typeof formSchema>;
+	const form = useForm<FormSchema>({
+		resolver: zodResolver(formSchema),
+		defaultValues: { password: '' },
+	});
 
 	const onSubmit = async () => {
 		createUserWithEmailAndPassword(auth, email, 'hallotest')
@@ -28,32 +46,25 @@ export function CreateUserForm({ checkoutSessionId, email }: CreateUserFormProps
 	};
 
 	return (
-		<Formik
-			initialValues={{ password: '' }}
-			validate={(values) => {
-				if (!values.password) {
-					return { password: 'Required' };
-				}
-			}}
-			onSubmit={onSubmit}
-		>
-			{({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
-				<form className="flex max-w-3xl flex-col space-y-2" onSubmit={handleSubmit}>
-					<Typography>{email}</Typography>
-					<Input
-						type="password"
-						name="password"
-						placeholder="Password" // TODO: i18n
-						onChange={handleChange}
-						onBlur={handleBlur}
-						value={values.password}
-					/>
-					{errors.password && touched.password && errors.password}
-					<Button type="submit" color="primary" disabled={isSubmitting}>
-						Submit
-					</Button>
-				</form>
-			)}
-		</Formik>
+		<Form {...form}>
+			<form className="flex flex-col space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
+				<Typography weight="bold" size="3xl" className="my-4">
+					{translations.title}
+				</Typography>
+				<FormField
+					control={form.control}
+					name="password"
+					render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<Input type="password" placeholder={translations.password} {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<Button type="submit">{translations.submitButton}</Button>
+			</form>
+		</Form>
 	);
 }

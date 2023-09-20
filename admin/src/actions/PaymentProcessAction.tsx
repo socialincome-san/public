@@ -18,7 +18,8 @@ const BOX_STYLE = {
 	p: 4,
 };
 
-const createNewPaymentsDescription = 'Set payment status to paid and create new payments for the upcoming month.';
+const createNewPaymentsDescription =
+	'Update status of payments, create new payments for the upcoming month, and update status of recipients.';
 
 export function PaymentProcessAction() {
 	const snackbarController = useSnackbarController();
@@ -87,12 +88,6 @@ export function PaymentProcessAction() {
 							/>
 							<Button
 								variant="outlined"
-								onClick={() => triggerFirebaseFunction(PaymentProcessTaskType.UpdateRecipients)}
-							>
-								Update Recipients
-							</Button>
-							<Button
-								variant="outlined"
 								onClick={() => triggerFirebaseFunction(PaymentProcessTaskType.GetRegistrationCSV)}
 							>
 								Registration CSV
@@ -103,7 +98,7 @@ export function PaymentProcessAction() {
 							{!confirmCreateNewPayments && (
 								<Tooltip title={createNewPaymentsDescription}>
 									<Button variant="outlined" onClick={() => setConfirmCreateNewPayments(true)}>
-										Create new payments
+										Update Database
 									</Button>
 								</Tooltip>
 							)}

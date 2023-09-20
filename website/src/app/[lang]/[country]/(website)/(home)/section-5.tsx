@@ -10,7 +10,7 @@ export default async function Section5({ params }: DefaultPageProps) {
 	});
 
 	return (
-		<BaseContainer className="bg-base-yellow">
+		<BaseContainer>
 			<div className="flex flex-col py-16">
 				<Typography as="span" size="4xl" weight="bold" lineHeight="relaxed">
 					{translator?.t('section-5.title')}

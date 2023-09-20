@@ -2,7 +2,16 @@
 
 import { LanguageIcon } from '@heroicons/react/24/solid';
 import { Language } from '@socialincome/shared/src/types';
-import { Dropdown, Menu, Theme, Typography } from '@socialincome/ui';
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+	MenubarContent,
+	MenubarItem,
+	MenubarMenu,
+	MenubarTrigger,
+} from '@socialincome/ui';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -25,39 +34,38 @@ function LanguageSwitcherComponent({ languages, mobile, currentLanguage }: Langu
 		const current = new URLSearchParams(Array.from(searchParams.entries()));
 		router.push(pathSegments.join('/') + '?' + current.toString());
 	};
+
 	if (mobile) {
 		return (
-			<Menu.Details
-				label={
-					<div className="flex-inline flex space-x-2">
-						<LanguageIcon className="h-5 w-5" />
-						<Typography size="sm">{currentLanguage}</Typography>
-					</div>
-				}
-			>
-				{languages.map((lang, index) => (
-					<Menu.Item key={index}>
-						<a onClick={() => onLanguageChange(lang.code)}>{lang.translation}</a>
-					</Menu.Item>
-				))}
-			</Menu.Details>
+			<Accordion type="single" collapsible className="w-full">
+				<AccordionItem value="item-1">
+					<AccordionTrigger>
+						<div>
+							<LanguageIcon className="h-5 w-5" />
+						</div>
+					</AccordionTrigger>
+					{languages.map((lang, index) => (
+						<AccordionContent key={index} onClick={() => onLanguageChange(lang.code)}>
+							{lang.translation}
+						</AccordionContent>
+					))}
+				</AccordionItem>
+			</Accordion>
 		);
 	} else {
 		return (
-			<Dropdown hover end>
-				<Dropdown.Toggle color="ghost" className="hover:bg-none">
+			<MenubarMenu>
+				<MenubarTrigger className="cursor-pointer">
 					<LanguageIcon className="h-5 w-5" />
-				</Dropdown.Toggle>
-				<Theme dataTheme="siDefault">
-					<Dropdown.Menu className="z-40 min-w-[6rem]">
-						{languages.map((lang, index) => (
-							<Dropdown.Item key={index} onClick={() => onLanguageChange(lang.code)}>
-								{lang.translation}
-							</Dropdown.Item>
-						))}
-					</Dropdown.Menu>
-				</Theme>
-			</Dropdown>
+				</MenubarTrigger>
+				<MenubarContent>
+					{languages.map((lang, index) => (
+						<MenubarItem key={index} onClick={() => onLanguageChange(lang.code)}>
+							{lang.translation}
+						</MenubarItem>
+					))}
+				</MenubarContent>
+			</MenubarMenu>
 		);
 	}
 }

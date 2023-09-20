@@ -1,10 +1,20 @@
 {
 	"navigation": {
-		"about-us": "Wer wir sind",
-		"how-it-works": "So funktioniert's",
-		"my-profile": "Mein Profil",
 		"our-work": "Was wir tun",
+		"our-work-description": "Kampf gegen globale Armut.",
+		"about-us": "Wer wir sind",
 		"team": "Team",
-		"transparency": "Transparenz"
+		"how-it-works": "So funktioniert's",
+		"how-it-works-description": "Untertitel...",
+		"contributors": "Spender:innen",
+		"contributors-description": "Wer ist dabei?",
+
+		"transparency": "Transparenz",
+		"finances": "Finanzen",
+		"finances-description": "Untertitel...",
+		"recipient-selection": "Selektion der Empfänger:innen",
+		"recipient-selection-description": "Untertitel...",
+
+		"my-profile": "Mein Profil"
 	}
 }

@@ -4,7 +4,13 @@ import { DefaultParams } from '@/app/[lang]/[country]';
 import { useTranslator } from '@/hooks/useTranslator';
 import { LanguageIcon } from '@heroicons/react/24/solid';
 import { Language } from '@socialincome/shared/src/types';
-import { Dropdown } from '@socialincome/ui';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from '@socialincome/ui';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -26,18 +32,20 @@ function LanguageSwitcherDropdown({ params, languages = ['en', 'de'] }: Language
 	};
 
 	return (
-		<Dropdown hover end>
-			<Dropdown.Toggle color="ghost" className="hover:bg-none">
+		<DropdownMenu>
+			<DropdownMenuTrigger>
 				<LanguageIcon className="h-5 w-5" />
-			</Dropdown.Toggle>
-			<Dropdown.Menu className="z-40">
-				{languages.map((language, index) => (
-					<Dropdown.Item key={index} onClick={() => onLanguageChange(language)}>
-						{translator?.t(`languages.${language}`)}
-					</Dropdown.Item>
-				))}
-			</Dropdown.Menu>
-		</Dropdown>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent>
+				<DropdownMenuGroup>
+					{languages.map((language, index) => (
+						<DropdownMenuItem key={index} onClick={() => onLanguageChange(language)}>
+							{translator?.t(`languages.${language}`)}
+						</DropdownMenuItem>
+					))}
+				</DropdownMenuGroup>
+			</DropdownMenuContent>
+		</DropdownMenu>
 	);
 }
 

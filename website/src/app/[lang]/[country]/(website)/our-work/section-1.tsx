@@ -11,7 +11,7 @@ export default async function Section1({ params }: DefaultPageProps) {
 	});
 
 	return (
-		<BaseContainer className="bg-base-blue">
+		<BaseContainer>
 			<div className="flex min-h-[calc(100vh-theme(spacing.20))] flex-col items-center lg:flex-row">
 				<Image className="flex-1 px-16 py-4" src={phonesGif} alt="Change animation" style={{ objectFit: 'cover' }} />
 				<div className="flex flex-1 flex-col justify-center p-4 text-center lg:p-8 lg:text-left">
