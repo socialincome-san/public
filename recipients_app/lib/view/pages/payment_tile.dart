@@ -21,6 +21,7 @@ class PaymentTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).toLanguageTag();
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -36,7 +37,10 @@ class PaymentTile extends StatelessWidget {
               children: [
                 Text(
                   _formatDate(
-                      mappedPayment.payment.paymentAt?.toDate(), localizations),
+                    mappedPayment.payment.paymentAt?.toDate(),
+                    localizations,
+                    locale,
+                  ),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Colors.black,
                       ),
@@ -54,7 +58,8 @@ class PaymentTile extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime? dateTime, AppLocalizations localizations) {
+  String _formatDate(
+      DateTime? dateTime, AppLocalizations localizations, String locale) {
     if (dateTime == null) return "";
 
     String dateFormat;
@@ -68,7 +73,7 @@ class PaymentTile extends StatelessWidget {
     if (_reviewUiStatuses.contains(mappedPayment.uiStatus)) {
       formattedDate = localizations.review + " ";
     }
-    formattedDate += "${DateFormat(dateFormat).format(dateTime)}";
+    formattedDate += "${DateFormat(dateFormat, locale).format(dateTime)}";
     return formattedDate;
   }
 

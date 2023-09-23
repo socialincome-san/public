@@ -152,32 +152,32 @@ const kriDateSymbols = {
     "D",
   ],
   "MONTHS": <dynamic>[
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    "Jɛnyuari",
+    "Fɛbyuari",
+    "Mach",
+    "Epril",
+    "Me",
+    "Jun",
+    "Julay",
+    "Ɔgɔst",
+    "Sɛptɛmba",
+    "Ɔktoba",
+    "Novɛmba",
+    "Disɛmba",
   ],
   "STANDALONEMONTHS": <dynamic>[
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    "Jɛnyuari",
+    "Fɛbyuari",
+    "Mach",
+    "Epril",
+    "Me",
+    "Jun",
+    "Julay",
+    "Ɔgɔst",
+    "Sɛptɛmba",
+    "Ɔktoba",
+    "Novɛmba",
+    "Disɛmba",
   ],
   "SHORTMONTHS": <dynamic>[
     "Jan",
@@ -208,22 +208,22 @@ const kriDateSymbols = {
     "Dec",
   ],
   "WEEKDAYS": <dynamic>[
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
+    "Sɔnde",
+    "Mɔnde",
+    "Tyusde",
+    "Wɛnsde",
+    "Tɔsde",
+    "Frayde",
+    "Satide",
   ],
   "STANDALONEWEEKDAYS": <dynamic>[
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
+    "Sɔnde",
+    "Mɔnde",
+    "Tyusde",
+    "Wɛnsde",
+    "Tɔsde",
+    "Frayde",
+    "Satide",
   ],
   "SHORTWEEKDAYS": <dynamic>[
     "Sun",
@@ -331,18 +331,18 @@ const List<String> _shortMonths = <String>[
 ];
 
 const List<String> _months = <String>[
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+    "Jɛnyuari",
+    "Fɛbyuari",
+    "Mach",
+    "Epril",
+    "Me",
+    "Jun",
+    "Julay",
+    "Ɔgɔst",
+    "Sɛptɛmba",
+    "Ɔktoba",
+    "Novɛmba",
+    "Disɛmba",
 ];
 
 // #docregion Delegate
@@ -656,13 +656,13 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
 
   // #docregion Getters
   @override
-  String get moreButtonTooltip => r"More";
+  String get moreButtonTooltip => r"Mɔ";
 
   @override
   String get aboutListTileTitleRaw => r"About $applicationName";
 
   @override
-  String get alertDialogLabel => r"Alert";
+  String get alertDialogLabel => r"Alat";
 
 // #enddocregion Getters
 
@@ -670,64 +670,64 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String get anteMeridiemAbbreviation => r"AM";
 
   @override
-  String get backButtonTooltip => r"Back";
+  String get backButtonTooltip => r"Go biyɛn";
 
   @override
-  String get cancelButtonLabel => r"CANCEL";
+  String get cancelButtonLabel => r"TAP YA";
 
   @override
-  String get closeButtonLabel => r"CLOSE";
+  String get closeButtonLabel => r"LƆK AM";
 
   @override
-  String get closeButtonTooltip => r"Close";
+  String get closeButtonTooltip => r"Lɔk Am";
 
   @override
-  String get collapsedIconTapHint => r"Expand";
+  String get collapsedIconTapHint => r"Opin am mɔ";
 
   @override
-  String get continueButtonLabel => r"CONTINUE";
+  String get continueButtonLabel => r"KƆNTINYU";
 
   @override
-  String get copyButtonLabel => r"COPY";
+  String get copyButtonLabel => r"TEK AM";
 
   @override
-  String get cutButtonLabel => r"CUT";
+  String get cutButtonLabel => r"KƆT AM";
 
   @override
-  String get deleteButtonTooltip => r"Delete";
+  String get deleteButtonTooltip => r"Pul am";
 
   @override
-  String get dialogLabel => r"Dialog";
+  String get dialogLabel => r"Mek wi tɔk";
 
   @override
-  String get drawerLabel => r"Navigation menu";
+  String get drawerLabel => r"Fɔ sho yu usay fɔ go";
 
   @override
-  String get expandedIconTapHint => r"Collapse";
+  String get expandedIconTapHint => r"Ridyus am";
 
   @override
-  String get firstPageTooltip => r"First page";
+  String get firstPageTooltip => r"Fɔs pej";
 
   @override
-  String get hideAccountsLabel => r"Hide accounts";
+  String get hideAccountsLabel => r"Ayd di akawnt";
 
   @override
-  String get lastPageTooltip => r"Last page";
+  String get lastPageTooltip => r"Las pej";
 
   @override
-  String get licensesPageTitle => r"Licenses";
+  String get licensesPageTitle => r"Laysin dɛm";
 
   @override
-  String get modalBarrierDismissLabel => r"Dismiss";
+  String get modalBarrierDismissLabel => r"Fɔgɛt bɔt am";
 
   @override
-  String get nextMonthTooltip => r"Next month";
+  String get nextMonthTooltip => r"Nɛks mɔnt";
 
   @override
-  String get nextPageTooltip => r"Next page";
+  String get nextPageTooltip => r"Nɛks pej";
 
   @override
-  String get okButtonLabel => r"OK";
+  String get okButtonLabel => r"ƆKE";
 
   @override
   // A custom drawer tooltip message.
@@ -743,10 +743,10 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
 // #enddocregion Raw
 
   @override
-  String get pasteButtonLabel => r"PASTE";
+  String get pasteButtonLabel => r"PUT AM YA";
 
   @override
-  String get popupMenuLabel => r"Popup menu";
+  String get popupMenuLabel => r"Tin dɛn we yu fɔ si";
 
   @override
   String get menuBarMenuLabel => r"Menu Bar Label";
@@ -755,13 +755,13 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String get postMeridiemAbbreviation => r"PM";
 
   @override
-  String get previousMonthTooltip => r"Previous month";
+  String get previousMonthTooltip => r"Mɔnt dɛn we dɔn pas";
 
   @override
-  String get previousPageTooltip => r"Previous page";
+  String get previousPageTooltip => r"Pej dɛn we dɔn pas";
 
   @override
-  String get refreshIndicatorSemanticLabel => r"Refresh";
+  String get refreshIndicatorSemanticLabel => r"Do am igen";
 
   @override
   String? get remainingTextFieldCharacterCountFew => null;
@@ -770,47 +770,47 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String? get remainingTextFieldCharacterCountMany => null;
 
   @override
-  String get remainingTextFieldCharacterCountOne => r"1 character remaining";
+  String get remainingTextFieldCharacterCountOne => r"1 karakta lɛf";
 
   @override
   String get remainingTextFieldCharacterCountOther =>
-      r"$remainingCount characters remaining";
+      r"$remainingCount karakta lɛf";
 
   @override
   String? get remainingTextFieldCharacterCountTwo => null;
 
   @override
-  String get remainingTextFieldCharacterCountZero => r"No characters remaining";
+  String get remainingTextFieldCharacterCountZero => r"No karakta nɔ lɛf";
 
   @override
-  String get reorderItemDown => r"Move down";
+  String get reorderItemDown => r"Go dɔng";
 
   @override
-  String get reorderItemLeft => r"Move left";
+  String get reorderItemLeft => r"Go lɛft";
 
   @override
-  String get reorderItemRight => r"Move right";
+  String get reorderItemRight => r"Go rayt";
 
   @override
-  String get reorderItemToEnd => r"Move to the end";
+  String get reorderItemToEnd => r"Go usay di tin tap";
 
   @override
-  String get reorderItemToStart => r"Move to the start";
+  String get reorderItemToStart => r"Go usay i bigin";
 
   @override
-  String get reorderItemUp => r"Move up";
+  String get reorderItemUp => r"Go ɔp";
 
   @override
-  String get rowsPerPageTitle => r"Rows per page:";
+  String get rowsPerPageTitle => r"Ɔmɔs ro de na di pej dɛm:";
 
   @override
   ScriptCategory get scriptCategory => ScriptCategory.englishLike;
 
   @override
-  String get searchFieldLabel => r"Search";
+  String get searchFieldLabel => r"Wach insay";
 
   @override
-  String get selectAllButtonLabel => r"SELECT ALL";
+  String get selectAllButtonLabel => r"PIK ƆLTIN";
 
   @override
   String? get selectedRowCountTitleFew => null;
@@ -819,7 +819,7 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String? get selectedRowCountTitleMany => null;
 
   @override
-  String get selectedRowCountTitleOne => r"1 item selected";
+  String get selectedRowCountTitleOne => r"Dɔn pik 1 tin";
 
   @override
   String get selectedRowCountTitleOther => r"$selectedRowCount items selected";
@@ -828,16 +828,16 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String? get selectedRowCountTitleTwo => null;
 
   @override
-  String get selectedRowCountTitleZero => r"No items selected";
+  String get selectedRowCountTitleZero => r"Nɔ pik natin";
 
   @override
-  String get showAccountsLabel => r"Show accounts";
+  String get showAccountsLabel => r"Sho akawnt";
 
   @override
-  String get showMenuTooltip => r"Show menu";
+  String get showMenuTooltip => r"Tin dɛn we yu fɔ si";
 
   @override
-  String get signedInLabel => r"Signed in";
+  String get signedInLabel => r"Yu de insai naw";
 
   @override
   String get tabLabelRaw => r"Tab $tabIndex of $tabCount";
@@ -846,13 +846,13 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   TimeOfDayFormat get timeOfDayFormatRaw => TimeOfDayFormat.h_colon_mm_space_a;
 
   @override
-  String get timePickerHourModeAnnouncement => r"Select hours";
+  String get timePickerHourModeAnnouncement => r"Pik ɔmɔs awa";
 
   @override
-  String get timePickerMinuteModeAnnouncement => r"Select minutes";
+  String get timePickerMinuteModeAnnouncement => r"Pik ɔmɔs minit";
 
   @override
-  String get viewLicensesButtonLabel => r"VIEW LICENSES";
+  String get viewLicensesButtonLabel => r"WACH LAYSIN DƐM";
 
   @override
   List<String> get narrowWeekdays =>
@@ -862,25 +862,25 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   int get firstDayOfWeekIndex => 0;
 
   @override
-  String get calendarModeButtonLabel => r"Switch to calendar";
+  String get calendarModeButtonLabel => r"Go to kalɛnda";
 
   @override
   String get dateHelpText => r"mm/dd/yyyy";
 
   @override
-  String get dateInputLabel => r"Enter Date";
+  String get dateInputLabel => r"Put det";
 
   @override
-  String get dateOutOfRangeLabel => r"Out of range.";
+  String get dateOutOfRangeLabel => r"Nɔ ebul si am.";
 
   @override
-  String get datePickerHelpText => r"SELECT DATE";
+  String get datePickerHelpText => r"PIK DET";
 
   @override
   String get dateRangeEndDateSemanticLabelRaw => r"End date $fullDate";
 
   @override
-  String get dateRangeEndLabel => r"End Date";
+  String get dateRangeEndLabel => r"Det we yu dɔn";
 
   @override
   String get dateRangePickerHelpText => "SELECT RANGE";
@@ -889,7 +889,7 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String get dateRangeStartDateSemanticLabelRaw => "Start date \$fullDate";
 
   @override
-  String get dateRangeStartLabel => "Start Date";
+  String get dateRangeStartLabel => "Det we yu bigin";
 
   @override
   String get dateSeparator => "/";
@@ -904,37 +904,37 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String get inputTimeModeButtonLabel => "Switch to text input mode";
 
   @override
-  String get invalidDateFormatLabel => "Invalid format.";
+  String get invalidDateFormatLabel => "Fɔmat nɔ kɔrɛkt.";
 
   @override
   String get invalidDateRangeLabel => "Invalid range.";
 
   @override
-  String get invalidTimeLabel => "Enter a valid time";
+  String get invalidTimeLabel => "Put tɛm we kɔrɛkt ";
 
   @override
   String get licensesPackageDetailTextOther => "\$licenseCount licenses";
 
   @override
-  String get saveButtonLabel => "SAVE";
+  String get saveButtonLabel => "KIP AM";
 
   @override
-  String get selectYearSemanticsLabel => "Select year";
+  String get selectYearSemanticsLabel => "Pik iya";
 
   @override
-  String get timePickerDialHelpText => "SELECT TIME";
+  String get timePickerDialHelpText => "PIK TƐM";
 
   @override
-  String get timePickerHourLabel => "Hour";
+  String get timePickerHourLabel => "Awa";
 
   @override
-  String get timePickerInputHelpText => "ENTER TIME";
+  String get timePickerInputHelpText => "PUT TƐM";
 
   @override
-  String get timePickerMinuteLabel => "Minute";
+  String get timePickerMinuteLabel => "Minit";
 
   @override
-  String get unspecifiedDate => "Date";
+  String get unspecifiedDate => "Det";
 
   @override
   String get unspecifiedDateRange => "Date Range";
@@ -1060,19 +1060,19 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String get keyboardKeyPageUp => "PgUp";
 
   @override
-  String get keyboardKeyPower => "Power";
+  String get keyboardKeyPower => "Put am ɔn";
 
   @override
-  String get keyboardKeyPowerOff => "Power Off";
+  String get keyboardKeyPowerOff => "Ɔt am";
 
   @override
-  String get keyboardKeyPrintScreen => "Print Screen";
+  String get keyboardKeyPrintScreen => "Print skrin";
 
   @override
   String get keyboardKeyScrollLock => "Scroll Lock";
 
   @override
-  String get keyboardKeySelect => "Select";
+  String get keyboardKeySelect => "Pik";
 
   @override
   String get keyboardKeyShift => "Shift";
@@ -1087,16 +1087,16 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String get bottomSheetLabel => "Bottom Sheet";
 
   @override
-  String get currentDateLabel => "Today";
+  String get currentDateLabel => "Tide";
 
   @override
   String get scrimLabel => "Scrim";
 
   @override
-  String get collapsedHint => "Expanded";
+  String get collapsedHint => "Go insay mɔ";
 
   @override
-  String get expandedHint => "Collapsed";
+  String get expandedHint => "Ridyus am";
 
   @override
   String get expansionTileCollapsedHint => "double tap to expand";
@@ -1108,8 +1108,8 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String get expansionTileExpandedHint => "double tap to collapse'";
 
   @override
-  String get expansionTileExpandedTapHint => "Collapse";
+  String get expansionTileExpandedTapHint => "Ridyus am";
 
   @override
-  String get scanTextButtonLabel => "Scan text";
+  String get scanTextButtonLabel => "Skan tɛkst";
 }
