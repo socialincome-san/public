@@ -36,13 +36,18 @@ export default async function Navbar({ lang, country, supportedLanguages }: Navb
 						},
 						{
 							title: translator.t('navigation.how-it-works'),
-							href: `/${lang}/${country}/our-work`,
+							href: `/${lang}/${country}/our-work#how-it-works`,
 							description: translator.t('navigation.how-it-works-description'),
 						},
 						{
 							title: translator.t('navigation.contributors'),
-							href: `/${lang}/${country}/our-work`,
+							href: `/${lang}/${country}/our-work#contributors`,
 							description: translator.t('navigation.contributors-description'),
+						},
+						{
+							title: translator.t('navigation.recipients'),
+							href: `/${lang}/${country}/our-work#recipients`,
+							description: translator.t('navigation.recipients-description'),
 						},
 					],
 				},

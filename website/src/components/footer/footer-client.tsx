@@ -16,6 +16,7 @@ import {
 } from '@socialincome/ui';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 type FooterClientProps = {
 	supportedTranslatedLanguages: { code: LanguageCode; translation: string }[];
@@ -30,11 +31,7 @@ function onCountryChange(country: ValidCountry, router: AppRouterInstance, searc
 }
 
 // TODO: i18n
-export function FooterClient({
-	params,
-	supportedTranslatedLanguages,
-	supportedTranslatedCountries,
-}: FooterClientProps) {
+function FooterComponent({ params, supportedTranslatedLanguages, supportedTranslatedCountries }: FooterClientProps) {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
@@ -48,7 +45,7 @@ export function FooterClient({
 	return (
 		<div className="grid grid-cols-1 gap-2 md:grid-cols-2">
 			<Select onValueChange={(l: LanguageCode) => onLanguageChange(l, router, searchParams)}>
-				<SelectTrigger className="">
+				<SelectTrigger className="space-x-2">
 					<LanguageIcon className="h-4 w-4" />
 					<SelectValue placeholder={initialLanguage?.translation} />
 				</SelectTrigger>
@@ -80,5 +77,12 @@ export function FooterClient({
 				</SelectContent>
 			</Select>
 		</div>
+	);
+}
+export function FooterClient(props: FooterClientProps) {
+	return (
+		<Suspense>
+			<FooterComponent {...props} />
+		</Suspense>
 	);
 }

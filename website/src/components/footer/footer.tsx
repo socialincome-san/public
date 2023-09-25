@@ -59,7 +59,7 @@ export default async function Footer({ params, supportedLanguages, supportedCoun
 	});
 
 	return (
-		<BaseContainer className="bg-muted mt-8 py-8">
+		<BaseContainer backgroundColor="bg-muted" className="theme-default py-16">
 			<div className="space-y-4">
 				<div className="flex flex-row justify-between">
 					<SILogo className="fill-muted-foreground h-4" />

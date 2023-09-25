@@ -1,10 +1,14 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
-import Section1 from './section-1';
+import { SectionContributors } from './section-contributors';
+import { SectionHowItWorks } from './section-how-it-works';
+import { SectionOurWork } from './section-our-work';
 
 export default async function Page(props: DefaultPageProps) {
 	return (
 		<>
-			<Section1 {...props} />
+			<SectionOurWork {...props} />
+			<SectionHowItWorks {...props} />
+			<SectionContributors {...props} />
 		</>
 	);
 }

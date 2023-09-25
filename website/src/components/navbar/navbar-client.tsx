@@ -67,7 +67,7 @@ export function NavbarClient({ lang, country, translations, languages, sections 
 	const { status: authUserReady, data: authUser } = useUser();
 
 	return (
-		<NavigationMenu className="mx-auto">
+		<NavigationMenu className="mx-auto md:h-20">
 			<Collapsible
 				open={isOpen}
 				onOpenChange={setIsOpen}

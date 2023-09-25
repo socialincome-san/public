@@ -23,9 +23,9 @@ export function SectionCard({ title, description, paragraphs = [] }: SectionCard
 	return (
 		<Dialog>
 			<DialogTrigger>
-				<Card className="border-neutral my-4 cursor-pointer lg:mx-4">
+				<Card className="border-foreground my-4 cursor-pointer bg-red-50 lg:mx-4">
 					<CardHeader>
-						<Typography size="2xl" weight="bold" color="secondary">
+						<Typography size="2xl" weight="bold" color="secondary-foreground">
 							{title}
 						</Typography>
 					</CardHeader>

@@ -1,31 +1,55 @@
 export const COLORS = [
+	'foreground',
+	'background',
+	'border',
+	'input',
+	'ring',
+	'si-yellow',
 	'primary',
-	'primary-focus',
-	'primary-content',
+	'primary-foreground',
 	'secondary',
-	'secondary-focus',
-	'secondary-content',
+	'secondary-foreground',
+	'destructive',
+	'destructive-foreground',
+	'muted',
+	'muted-foreground',
 	'accent',
-	'accent-focus',
-	'accent-content',
-	'neutral',
-	'neutral-focus',
-	'neutral-content',
-	'base-100',
-	'base-200',
-	'base-300',
-	'base-content',
-	'info',
-	'info-focus',
-	'info-content',
-	'success',
-	'success-focus',
-	'success-content',
-	'warning',
-	'warning-focus',
-	'warning-content',
-	'error',
-	'error-focus',
-	'error-content',
+	'accent-foreground',
+	'popover',
+	'popover-foreground',
+	'card',
+	'card-foreground',
+	'bg-red-50',
+	'bg-yellow-50',
+	'bg-green-50',
+	'bg-blue-50',
+	'bg-indigo-50',
+	'bg-purple-50',
+	'bg-pink-50',
+	'bg-muted',
 ] as const;
 export type Color = (typeof COLORS)[number];
+
+export type FontColor = Extract<
+	Color,
+	| 'foreground'
+	| 'primary-foreground'
+	| 'secondary-foreground'
+	| 'accent-foreground'
+	| 'destructive-foreground'
+	| 'muted-foreground'
+	| 'popover-foreground'
+	| 'card-foreground'
+>;
+
+export type BackgroundColor = Extract<
+	Color,
+	| 'bg-red-50'
+	| 'bg-yellow-50'
+	| 'bg-green-50'
+	| 'bg-blue-50'
+	| 'bg-indigo-50'
+	| 'bg-purple-50'
+	| 'bg-pink-50'
+	| 'bg-muted'
+>;

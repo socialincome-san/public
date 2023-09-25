@@ -6,8 +6,10 @@
 		"team": "Team",
 		"how-it-works": "How It Works",
 		"how-it-works-description": "Subtitle...",
-		"contributors": "Spender:innen",
+		"contributors": "Contributors",
 		"contributors-description": "Subtitle...",
+		"recipients": "Recipients",
+		"recipients-description": "Subtitle...",
 
 		"transparency": "Transparency",
 		"finances": "Finanzen",

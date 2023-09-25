@@ -34,7 +34,7 @@ export async function Section1({ params, paymentStats, contributionStats }: Sect
 					{translator.t('section-1.title-2')}
 				</Typography>
 			</div>
-			<Typography color="neutral">{translator.t('section-1.since-march-2020')}</Typography>
+			<Typography color="muted-foreground">{translator.t('section-1.since-march-2020')}</Typography>
 			{cards.map((card, index) => (
 				<div key={index} className="border-neutral rounded-lg border px-4 py-6 duration-200 hover:scale-[102%]">
 					<Typography size="xl" weight="normal">
