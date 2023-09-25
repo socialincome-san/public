@@ -9,13 +9,13 @@ export default async function Section4({ params }: DefaultPageProps) {
 	});
 
 	return (
-		<BaseContainer>
+		<BaseContainer backgroundColor="bg-blue-50">
 			<div className="flex min-h-screen flex-col justify-center">
 				<p className="mb-8 lg:mb-16">
 					<Typography as="span" size="4xl" weight="bold" lineHeight="relaxed">
 						{translator.t('section-4.title-1')}
 					</Typography>
-					<Typography as="span" size="4xl" weight="bold" lineHeight="relaxed" color="secondary">
+					<Typography as="span" size="4xl" weight="bold" lineHeight="relaxed" color="secondary-foreground">
 						{translator.t('section-4.title-2')}
 					</Typography>
 				</p>

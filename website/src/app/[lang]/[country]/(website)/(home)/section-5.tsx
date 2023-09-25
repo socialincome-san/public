@@ -11,11 +11,11 @@ export default async function Section5({ params }: DefaultPageProps) {
 
 	return (
 		<BaseContainer>
-			<div className="flex flex-col py-16">
-				<Typography as="span" size="4xl" weight="bold" lineHeight="relaxed">
+			<div className="flex min-h-screen flex-col justify-center space-y-8">
+				<Typography as="h2" size="4xl" weight="bold">
 					{translator?.t('section-5.title')}
 				</Typography>
-				<div className="grid lg:grid-cols-3">
+				<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 lg:grid-cols-3">
 					<SectionCard
 						titles={{
 							main: translator.t('section-5.card-1.title'),

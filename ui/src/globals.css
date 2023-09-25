@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-	.theme-default {
+	:root, .theme-default {
 		--si-yellow: hsl(48, 100%, 49%);
 		--background: hsl(0 0% 100%);
 		--foreground: hsl(20 14.3% 4.1%);
@@ -36,7 +36,11 @@
 		--radius: 0.5rem;
 	}
 
-	.theme-blue {
+	.theme-light-blue {
+		--background: hsl(216, 54%, 95%);
+	}
+
+	.theme-dark-blue {
 		--si-yellow: hsl(48, 100%, 49%);
 		--background: hsl(216, 54%, 55%);
 		--foreground: hsl(60 9.1% 97.8%);
@@ -73,7 +77,7 @@
 @layer base {
 	body,
 	.theme-default,
-	.theme-blue {
+	.theme-dark-blue {
 		@apply bg-background text-foreground;
 	}
 }

@@ -101,7 +101,7 @@ export function ThemeProvider({ children }: PropsWithChildren) {
 	let theme;
 	switch (baseSegment) {
 		case 'donate':
-			theme = 'theme-blue';
+			theme = 'theme-dark-blue';
 			break;
 		default:
 			theme = 'theme-default';

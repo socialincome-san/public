@@ -86,7 +86,7 @@ export default function LoginForm({ params, translations }: LoginFormProps) {
 							</FormItem>
 						)}
 					/>
-					<Button type="submit" color="accent" className="mt-8">
+					<Button type="submit" className="mt-8">
 						{translations.submitButton}
 					</Button>
 				</form>

@@ -1,9 +1,17 @@
 'use client';
 
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
-import { Dialog, DialogContent, DialogTrigger, Typography } from '@socialincome/ui';
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+	Dialog,
+	DialogContent,
+	DialogTrigger,
+	Typography,
+} from '@socialincome/ui';
 import Link from 'next/link';
-import { useCallback, useRef } from 'react';
 
 type SectionCardProps = {
 	titles: {
@@ -18,31 +26,28 @@ type SectionCardProps = {
 };
 
 export function SectionCard({ titles, items = [], paragraphs = [], articles = [], faqs = [] }: SectionCardProps) {
-	const ref = useRef<HTMLDialogElement>(null);
-	const handleShow = useCallback(() => ref.current?.showModal(), [ref]);
-
 	return (
 		<Dialog>
 			<DialogTrigger>
-				<div className="border-neutral my-4 cursor-pointer border lg:mx-4" onClick={handleShow}>
-					<Typography size="2xl" weight="bold">
-						{titles.main}
-					</Typography>
-					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1">
-						{items.map((item, index) => (
-							<div key={index} className="flex flex-row items-start space-x-2">
-								<CheckCircleIcon className="h-8 w-8" />
-								<Typography size="xl" lineHeight="relaxed">
-									{item}
-								</Typography>
-							</div>
-						))}
-					</div>
-				</div>
+				<Card className="text-left">
+					<CardHeader>
+						<CardTitle>{titles.main}</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<ul className="grid grid-cols-1 gap-4">
+							{items.map((item, index) => (
+								<li key={index} className="flex flex-row items-start space-x-2">
+									<CheckCircleIcon className="h-8 w-8 flex-none" />
+									<Typography size="xl">{item}</Typography>
+								</li>
+							))}
+						</ul>
+					</CardContent>
+				</Card>
 			</DialogTrigger>
 
-			<DialogContent>
-				<div className="w-11/12 max-w-3xl">
+			<DialogContent className="max-h-[80vh] max-w-screen-md overflow-y-auto">
+				<div>
 					<Typography as="h2" size="2xl" weight="bold">
 						{titles.main}
 					</Typography>
@@ -62,7 +67,7 @@ export function SectionCard({ titles, items = [], paragraphs = [], articles = []
 										<div key={index} className="py-4">
 											<Typography>{article.author}</Typography>
 											<Link href={article.link} target="_blank">
-												<Typography color="secondary">{article.title}</Typography>
+												<Typography color="secondary-foreground">{article.title}</Typography>
 											</Link>
 										</div>
 									))}
@@ -78,7 +83,7 @@ export function SectionCard({ titles, items = [], paragraphs = [], articles = []
 									{faqs.map((faq, index) => (
 										<div key={index} className="py-4">
 											<Link href={faq.link}>
-												<Typography color="secondary">{faq.question}</Typography>
+												<Typography color="secondary-foreground">{faq.question}</Typography>
 											</Link>
 										</div>
 									))}

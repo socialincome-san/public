@@ -1,6 +1,11 @@
 {
-	"section-1": {
-		"title-1": "Wir bauen das Fundament für echte Veränderung. ",
-		"title-2": "Zeitgemäss. Digital. Gemeinsam."
-	}
+  "section-our-work": {
+    "title-1": "Wir bauen das Fundament für echte Veränderung. ",
+    "title-2": "Zeitgemäss. Digital. Gemeinsam.",
+    "vimeo-video-id": "488184818"
+  },
+  "section-how-it-works": {
+    "title": "Ein solidarischer Beitrag, von Mensch zu Mensch. So einfach.",
+		"subtitle": "Mach einen Unterschied in weniger als 1 Minute."
+  }
 }

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { ComponentPropsWithoutRef } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { Color } from '../../interfaces/color';
+import { FontColor } from '../../interfaces/color';
 import { Size } from '../../interfaces/size';
 import IntrinsicElements = React.JSX.IntrinsicElements;
 
@@ -26,51 +26,15 @@ const FONT_WEIGHT_MAP: { [key in FontWeight]: string } = {
 	bold: 'font-bold',
 };
 
-type FontColor = Extract<
-	Color,
-	| 'base-content'
-	| 'primary'
-	| 'primary-content'
-	| 'secondary'
-	| 'secondary-focus'
-	| 'secondary-content'
-	| 'accent'
-	| 'accent-focus'
-	| 'accent-content'
-	| 'neutral'
-	| 'neutral-focus'
-	| 'neutral-content'
-	| 'info'
-	| 'info-content'
-	| 'success'
-	| 'success-content'
-	| 'warning'
-	| 'warning-content'
-	| 'error'
-	| 'error-content'
->;
-
 const FONT_COLOR_MAP: { [key in FontColor]: string } = {
-	'base-content': 'text-base-content',
-	primary: 'text-primary',
-	'primary-content': 'text-primary-content',
-	secondary: 'text-secondary',
-	'secondary-focus': 'text-secondary-focus',
-	'secondary-content': 'text-secondary-content',
-	accent: 'text-accent',
-	'accent-focus': 'text-accent-focus',
-	'accent-content': 'text-accent-content',
-	neutral: 'text-neutral',
-	'neutral-focus': 'text-neutral-focus',
-	'neutral-content': 'text-neutral-content',
-	info: 'text-info',
-	'info-content': 'text-info-content',
-	success: 'text-success',
-	'success-content': 'text-success-content',
-	warning: 'text-warning',
-	'warning-content': 'text-warning-content',
-	error: 'text-error',
-	'error-content': 'text-error-content',
+	foreground: 'text-foreground',
+	'primary-foreground': 'text-primary-foreground',
+	'secondary-foreground': 'text-secondary-foreground',
+	'accent-foreground': 'text-accent-foreground',
+	'destructive-foreground': 'text-destructive-foreground',
+	'muted-foreground': 'text-muted-foreground',
+	'popover-foreground': 'text-popover-foreground',
+	'card-foreground': 'text-card-foreground',
 };
 
 const LINE_HEIGHTS = ['none', 'tight', 'snug', 'normal', 'relaxed', 'loose'] as const;
@@ -98,7 +62,7 @@ export function Typography<C extends ElementType = 'p'>({
 	as,
 	size = 'md',
 	weight = 'normal',
-	color = 'base-content',
+	color = 'foreground',
 	lineHeight = 'normal',
 	className,
 	children,

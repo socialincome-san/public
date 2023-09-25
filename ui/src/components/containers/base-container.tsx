@@ -1,14 +1,21 @@
-import classNames from 'classnames';
-import { PropsWithChildren } from 'react';
+import React from 'react';
+import { twMerge } from 'tailwind-merge';
+import { BackgroundColor } from '../../interfaces/color';
 
-interface BaseContainerProps {
-	className?: string;
-}
+type BaseContainerProps = {
+	backgroundColor?: BackgroundColor;
+} & React.HTMLAttributes<HTMLDivElement>;
 
-export function BaseContainer({ children, className }: PropsWithChildren<BaseContainerProps>) {
-	return (
-		<div className={className}>
-			<div className={classNames('mx-auto max-w-6xl px-3 md:px-5')}>{children}</div>
-		</div>
-	);
-}
+export const BaseContainer = React.forwardRef<HTMLDivElement, BaseContainerProps>(
+	({ children, className, backgroundColor, ...props }, ref) => {
+		return (
+			<div className={backgroundColor}>
+				<div className="mx-auto max-w-6xl px-3 md:px-6">
+					<div className={twMerge(backgroundColor, className)} ref={ref} {...props}>
+						{children}
+					</div>
+				</div>
+			</div>
+		);
+	},
+);

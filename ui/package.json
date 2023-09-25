@@ -61,6 +61,8 @@
 		"classnames": "^2.3.2",
 		"clsx": "^1.2.1",
 		"cmdk": "^0.2.0",
+		"embla-carousel-autoplay": "^8.0.0-rc14",
+		"embla-carousel-react": "^8.0.0-rc14",
 		"lucide-react": "^0.276.0",
 		"react-hook-form": "^7.46.1",
 		"tailwindcss-animate": "^1.0.7",

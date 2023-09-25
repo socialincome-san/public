@@ -97,7 +97,7 @@ export default function Page({ params, searchParams }: DefaultPageProps) {
 
 	return (
 		<BaseContainer className="flex min-h-screen flex-col items-center justify-center">
-			<Typography color="primary-content" weight="bold" size="3xl" className="mb-12 text-center">
+			<Typography weight="bold" size="3xl" className="mb-12 text-center">
 				How would you like to pay?
 			</Typography>
 			<Form {...form}>
@@ -146,7 +146,7 @@ export default function Page({ params, searchParams }: DefaultPageProps) {
 							name="amount"
 							render={({ field }) => (
 								<FormItem>
-									<Typography size="lg" color="primary-content" weight="bold">
+									<Typography size="lg" weight="bold">
 										Amount
 									</Typography>
 									<FormControl>
