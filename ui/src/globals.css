@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-	:root, .theme-default {
+	:root,
+	.theme-default {
 		--si-yellow: hsl(48, 100%, 49%);
 		--background: hsl(0 0% 100%);
 		--foreground: hsl(20 14.3% 4.1%);
