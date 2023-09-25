@@ -23,7 +23,7 @@ export const Carousel = ({ children, className, options = {}, showDots = true, .
 
 	useEffect(() => {
 		function selectHandler() {
-			const index = emblaApi.selectedScrollSnap();
+			const index = emblaApi?.selectedScrollSnap();
 			setSelectedIndex(index || 0);
 		}
 		emblaApi?.on('select', selectHandler);
