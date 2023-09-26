@@ -1,9 +1,10 @@
 import { onObjectFinalized } from 'firebase-functions/v2/storage';
 import { PostfinancePaymentsFileImporter } from './PostfinancePaymentsFileImporter';
 
-const BUCKET_NAME = 'postfinance-payments-files';
+const bucket = 'postfinance-payments-files';
+const region = 'europe-west6';
 
-export default onObjectFinalized({ bucket: BUCKET_NAME }, async (event) => {
-	const paymentsFileImporter = new PostfinancePaymentsFileImporter(BUCKET_NAME);
+export default onObjectFinalized({ bucket, region }, async (event) => {
+	const paymentsFileImporter = new PostfinancePaymentsFileImporter(bucket);
 	paymentsFileImporter.processPaymentFile(event.data.name);
 });
