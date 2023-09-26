@@ -1,7 +1,7 @@
 import { firestoreAdmin } from '@/firebase-admin';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { BanknotesIcon, BuildingLibraryIcon, DevicePhoneMobileIcon } from '@heroicons/react/24/solid';
-import { PAYMENT_AMOUNT } from '@socialincome/shared/src/types';
+import { PAYMENT_AMOUNT } from '@socialincome/shared/src/types/Payment';
 import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRates';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Typography } from '@socialincome/ui';

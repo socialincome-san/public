@@ -4,7 +4,7 @@ import { SILogo } from '@/components/logos/si-logo';
 import { LanguageSwitcher } from '@/components/navbar/language-switcher';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
-import { LanguageCode } from '@socialincome/shared/src/types';
+import { LanguageCode } from '@socialincome/shared/src/types/Language';
 import {
 	Accordion,
 	AccordionContent,

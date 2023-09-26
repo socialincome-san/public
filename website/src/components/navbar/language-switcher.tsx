@@ -1,7 +1,7 @@
 'use client';
 
 import { LanguageIcon } from '@heroicons/react/24/solid';
-import { LanguageCode } from '@socialincome/shared/src/types';
+import { LanguageCode } from '@socialincome/shared/src/types/Language';
 import {
 	Accordion,
 	AccordionContent,
@@ -12,7 +12,7 @@ import {
 	MenubarMenu,
 	MenubarTrigger,
 } from '@socialincome/ui';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 

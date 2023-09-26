@@ -1,6 +1,6 @@
 import { authAdmin, firestoreAdmin } from '@/firebase-admin';
 import { initializeStripe } from '@socialincome/shared/src/stripe';
-import { USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types';
+import { USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types/User';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {

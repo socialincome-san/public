@@ -1,5 +1,5 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[country]';
-import { LanguageCode } from '@socialincome/shared/src/types';
+import { LanguageCode } from '@socialincome/shared/src/types/Language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 
 import { FooterClient } from '@/components/footer/footer-client';

@@ -1,5 +1,5 @@
 import { authAdmin, firestoreAdmin } from '@/firebase-admin';
-import { USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types';
+import { USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types/User';
 import { NextResponse } from 'next/server';
 
 export type ResetPasswordData = {

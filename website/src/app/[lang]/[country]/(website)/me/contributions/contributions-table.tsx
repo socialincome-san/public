@@ -3,7 +3,8 @@
 import { DefaultParams } from '@/app/[lang]/[country]';
 import { UserContext } from '@/app/[lang]/[country]/(website)/me/user-context-provider';
 import { useTranslator } from '@/hooks/useTranslator';
-import { CONTRIBUTION_FIRESTORE_PATH, StatusKey, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { CONTRIBUTION_FIRESTORE_PATH, StatusKey } from '@socialincome/shared/src/types/Contribution';
+import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/User';
 import { toDateTime } from '@socialincome/shared/src/utils/date';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Typography } from '@socialincome/ui';
 import { useQuery } from '@tanstack/react-query';

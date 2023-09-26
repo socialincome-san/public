@@ -4,7 +4,7 @@ import { DefaultLayoutProps } from '@/app/[lang]/[country]';
 import { onLanguageChange } from '@/components/navbar/language-switcher';
 import { ValidCountry } from '@/i18n';
 import { GlobeAltIcon, LanguageIcon } from '@heroicons/react/24/solid';
-import { LanguageCode } from '@socialincome/shared/src/types';
+import { LanguageCode } from '@socialincome/shared/src/types/Language';
 import {
 	Select,
 	SelectContent,
