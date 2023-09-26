@@ -1,11 +1,7 @@
 import { useTranslator } from '@/hooks/useTranslator';
 import { WebsiteLanguage } from '@/i18n';
-import {
-	RECIPIENT_FIRESTORE_PATH,
-	SURVEY_FIRETORE_PATH,
-	Survey as SurveyModel,
-	SurveyStatus,
-} from '@socialincome/shared/src/types';
+import { RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types/Recipient';
+import { SURVEY_FIRETORE_PATH, Survey as SurveyModel, SurveyStatus } from '@socialincome/shared/src/types/Survey';
 import { useQuery } from '@tanstack/react-query';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useCallback } from 'react';

@@ -3,7 +3,7 @@
 import { DefaultParams } from '@/app/[lang]/[country]';
 import { useTranslator } from '@/hooks/useTranslator';
 import { LanguageIcon } from '@heroicons/react/24/solid';
-import { LanguageCode } from '@socialincome/shared/src/types';
+import { LanguageCode } from '@socialincome/shared/src/types/Language';
 import {
 	DropdownMenu,
 	DropdownMenuContent,

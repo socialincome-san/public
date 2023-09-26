@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { PAYMENT_AMOUNT } from '../../../../../../shared/src/types';
+import { PAYMENT_AMOUNT } from '../../../../../../shared/src/types/Payment';
 import { PaymentTask } from './PaymentTask';
 
 export class PaymentCSVTask extends PaymentTask {

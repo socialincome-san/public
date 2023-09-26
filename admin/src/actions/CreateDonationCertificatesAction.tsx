@@ -10,13 +10,12 @@ import {
 	Select,
 	Typography,
 } from '@mui/material';
-import { CollectionActionsProps, useAuthController, useSnackbarController } from 'firecms';
-import { User } from '../../../shared/src/types';
-
 import { getFunctions, httpsCallable } from 'firebase/functions';
+import { CollectionActionsProps, useAuthController, useSnackbarController } from 'firecms';
 import _ from 'lodash';
 import React from 'react';
 import { CreateDonationCertificatesFunctionProps } from '../../../functions/src/webhooks/admin/donation-certificates/DonationCertificateHandler';
+import { User } from '../../../shared/src/types/User';
 
 const style = {
 	position: 'absolute' as 'absolute',

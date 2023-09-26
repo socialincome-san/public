@@ -1,4 +1,4 @@
-import { LanguageCode } from '@socialincome/shared/src/types';
+import { LanguageCode } from '@socialincome/shared/src/types/Language';
 import langParser from 'accept-language-parser';
 import { NextRequest, NextResponse } from 'next/server';
 

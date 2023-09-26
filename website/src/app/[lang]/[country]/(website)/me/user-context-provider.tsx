@@ -1,6 +1,6 @@
 'use client';
 
-import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/User';
 import { useQuery } from '@tanstack/react-query';
 import assert from 'assert';
 import { collection, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore';

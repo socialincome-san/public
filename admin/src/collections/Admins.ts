@@ -1,5 +1,6 @@
+import { ADMIN_USER_FIRESTORE_PATH, AdminUser } from '@socialincome/shared/src/types/AdminUser';
+import { PARTNER_ORGANISATION_FIRESTORE_PATH } from '@socialincome/shared/src/types/PartnerOrganisation';
 import { buildProperties } from 'firecms';
-import { ADMIN_USER_FIRESTORE_PATH, AdminUser, PARTNER_ORGANISATION_FIRESTORE_PATH } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 
 export const adminsCollection = buildAuditedCollection<AdminUser>({

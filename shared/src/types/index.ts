@@ -15,17 +15,3 @@ export interface Entity<M> {
 	 */
 	values: EntityValues<M>;
 }
-
-export * from './admin/AdminUser';
-export * from './admin/BankBalance';
-export * from './admin/Contribution';
-export * from './admin/DonationCertificate';
-export * from './admin/ExchangeRates';
-export * from './admin/Language';
-export * from './admin/Message';
-export * from './admin/OperationalExpense';
-export * from './admin/PartnerOrganisation';
-export * from './admin/Payment';
-export * from './admin/Recipient';
-export * from './admin/Survey';
-export * from './admin/User';

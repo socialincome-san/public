@@ -4,7 +4,7 @@ import { DefaultLayoutProps } from '@/app/[lang]/[country]';
 import { onLanguageChange } from '@/components/navbar/language-switcher';
 import { ValidCountry } from '@/i18n';
 import { GlobeAltIcon, LanguageIcon } from '@heroicons/react/24/solid';
-import { LanguageCode } from '@socialincome/shared/src/types';
+import { LanguageCode } from '@socialincome/shared/src/types/Language';
 import {
 	Select,
 	SelectContent,
@@ -14,7 +14,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@socialincome/ui';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 

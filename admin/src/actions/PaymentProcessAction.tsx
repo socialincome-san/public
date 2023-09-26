@@ -1,11 +1,12 @@
 import { Box, Button, CircularProgress, Modal, Tooltip, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { PaymentProcessTaskType } from '@socialincome/shared/src/types/Payment';
+import { toPaymentDate } from '@socialincome/shared/src/types/Recipient';
 import { downloadStringAsFile } from '@socialincome/shared/src/utils/html';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { useSnackbarController } from 'firecms';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
-import { PaymentProcessTaskType, toPaymentDate } from '../../..//shared/src/types';
 import { PaymentProcessProps } from '../../../functions/src/webhooks/admin/payment-process';
 
 const BOX_STYLE = {

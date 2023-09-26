@@ -1,6 +1,6 @@
 import { Timestamp as FirestoreAdminTimestamp } from '@google-cloud/firestore';
 import { DateTime } from 'luxon';
-import { Timestamp } from '../index';
+import { Timestamp } from '../../types/Timestamp';
 
 export function toFirebaseAdminTimestamp(dateTime: DateTime | Date): Timestamp {
 	if (dateTime instanceof Date) {

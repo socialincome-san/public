@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[country]';
 import { NavbarClient } from '@/components/navbar/navbar-client';
-import { LanguageCode } from '@socialincome/shared/src/types';
+import { LanguageCode } from '@socialincome/shared/src/types/Language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 
 export type NavbarProps = {

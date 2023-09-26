@@ -2,7 +2,7 @@
 
 import { UserContext } from '@/app/[lang]/[country]/(website)/me/user-context-provider';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/User';
 import {
 	Button,
 	Form,

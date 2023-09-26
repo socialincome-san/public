@@ -1,4 +1,4 @@
-import { Timestamp } from '@socialincome/shared/src/firebase';
+import { Timestamp } from './Timestamp';
 
 export const CONTRIBUTION_FIRESTORE_PATH = 'contributions';
 
@@ -19,12 +19,22 @@ export enum StatusKey {
 
 export type Contribution = {
 	source: ContributionSourceKey;
+	status: StatusKey;
 	created: Timestamp;
 	amount: number;
-	currency: string;
 	amount_chf: number;
 	fees_chf: number;
-	reference_id: string; // e.g stripe charge id
+	currency: string;
+};
+
+export type StripeContribution = Contribution & {
+	source: ContributionSourceKey.STRIPE;
 	monthly_interval: number;
-	status: StatusKey;
+	reference_id: string; // stripe charge id
+};
+
+export type BankWireContribution = Contribution & {
+	source: ContributionSourceKey.WIRE_TRANSFER;
+	rawContent: string;
+	referenceId: number; // reference number from the bank wire
 };

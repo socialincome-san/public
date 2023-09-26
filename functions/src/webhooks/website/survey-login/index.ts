@@ -1,14 +1,13 @@
 import assert from 'assert';
 import * as functions from 'firebase-functions';
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
+import { Recipient, RECIPIENT_FIRESTORE_PATH } from '../../../../../shared/src/types/Recipient';
 import {
-	RECIPIENT_FIRESTORE_PATH,
-	Recipient,
-	SURVEY_FIRETORE_PATH,
 	Survey,
+	SURVEY_FIRETORE_PATH,
 	SurveyCredentialRequest,
 	SurveyCredentialResponse,
-} from '../../../../../shared/src/types';
+} from '../../../../../shared/src/types/Survey';
 
 export default functions.https.onCall(async (props: SurveyCredentialRequest) => {
 	const firestoreAdmin = new FirestoreAdmin();

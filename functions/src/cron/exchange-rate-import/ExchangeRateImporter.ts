@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as functions from 'firebase-functions';
 import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
-import { EXCHANGE_RATES_PATH, ExchangeRates, ExchangeRatesEntry } from '../../../../shared/src/types';
+import { EXCHANGE_RATES_PATH, ExchangeRates, ExchangeRatesEntry } from '../../../../shared/src/types/ExchangeRates';
 import { EXCHANGE_RATES_API } from '../../config';
 
 export type ExchangeRateResponse = {

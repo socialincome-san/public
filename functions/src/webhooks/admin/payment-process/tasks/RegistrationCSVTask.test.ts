@@ -1,6 +1,7 @@
 import functionsTest from 'firebase-functions-test';
 import { DateTime } from 'luxon';
-import { PaymentProcessTaskType, toPaymentDate } from '../../../../../../shared/src/types';
+import { PaymentProcessTaskType } from '../../../../../../shared/src/types/Payment';
+import { toPaymentDate } from '../../../../../../shared/src/types/Recipient';
 import { initializeGlobalTestData } from '../../../../firebase';
 import { runPaymentProcessTask } from '../../../index';
 
