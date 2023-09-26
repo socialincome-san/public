@@ -1,5 +1,5 @@
-import { Timestamp } from '@socialincome/shared/src/firebase';
 import { DateTime } from 'luxon';
+import { Timestamp } from './Timestamp';
 
 export const RECIPIENT_FIRESTORE_PATH = 'recipients';
 

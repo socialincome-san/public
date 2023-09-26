@@ -31,6 +31,7 @@
 		"typescript": "^5.2.2"
 	},
 	"dependencies": {
+		"@xmldom/xmldom": "^0.8.10",
 		"axios": "^1.5.0",
 		"dotenv": "^16.3.1",
 		"firebase-admin": "^11.10.1",
@@ -47,6 +48,7 @@
 		"pdfkit": "^0.13.0",
 		"stripe": "^13.4.0",
 		"tmp-promise": "^3.0.3",
-		"twilio": "^4.16.0"
+		"twilio": "^4.16.0",
+		"xpath": "^0.0.33"
 	}
 }

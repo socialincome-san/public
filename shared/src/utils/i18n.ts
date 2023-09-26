@@ -1,6 +1,6 @@
 import i18next, { i18n } from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
-import { LanguageCode } from '../types';
+import { LanguageCode } from '../types/Language';
 
 export const FALLBACK_LANGUAGE = 'en';
 

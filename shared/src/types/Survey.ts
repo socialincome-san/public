@@ -1,5 +1,5 @@
-import { Timestamp } from '@socialincome/shared/src/firebase';
 import { RecipientMainLanguage } from './Recipient';
+import { Timestamp } from './Timestamp';
 
 export const SURVEY_FIRETORE_PATH = 'surveys';
 

@@ -1,4 +1,7 @@
-import { DONATION_CERTIFICATE_FIRESTORE_PATH, DonationCertificate } from '@socialincome/shared/src/types';
+import {
+	DONATION_CERTIFICATE_FIRESTORE_PATH,
+	DonationCertificate,
+} from '@socialincome/shared/src/types/DonationCertificate';
 import { AdditionalFieldDelegate, buildProperties } from 'firecms';
 import { buildAuditedCollection } from './shared';
 

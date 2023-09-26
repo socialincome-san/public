@@ -1,5 +1,4 @@
 import { Box, Button, Card, CardActions, CardContent, Container, Grid, Typography } from '@mui/material';
-
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { useSnackbarController } from 'firecms';
 

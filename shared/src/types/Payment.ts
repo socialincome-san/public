@@ -1,4 +1,4 @@
-import { Timestamp } from '@socialincome/shared/src/firebase';
+import { Timestamp } from '@socialincome/shared/src/types/Timestamp';
 import { EntityReference } from 'firecms';
 
 export const PAYMENT_FIRESTORE_PATH = 'payments';

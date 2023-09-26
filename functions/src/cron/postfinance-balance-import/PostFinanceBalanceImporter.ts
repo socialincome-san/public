@@ -1,14 +1,16 @@
 import * as functions from 'firebase-functions';
-
 import imaps from 'imap-simple';
-
 import _ from 'lodash';
 import { Source, simpleParser } from 'mailparser';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
-import { BANK_BALANCE_FIRESTORE_PATH, BankBalance, getIdFromBankBalance } from '../../../../shared/src/types';
+import {
+	BANK_BALANCE_FIRESTORE_PATH,
+	BankBalance,
+	getIdFromBankBalance,
+} from '../../../../shared/src/types/BankBalance';
 import { POSTFINANCE_EMAIL_PASSWORD, POSTFINANCE_EMAIL_USER } from '../../config';
 
-export class PostFinanceImporter {
+export class PostFinanceBalanceImporter {
 	private readonly accountRegex = /(?<=account\W)(?<account>.*?)(?=\W)/; // regex to retrieve the account name from the email
 	private readonly balanceRegex = /balance: CHF (?<balance>[0-9’.]*)/; // regex to retrieve the balance from the email
 	// we retrieve only unseen mails and mark them as seen once we imported the balance

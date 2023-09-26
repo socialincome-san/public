@@ -1,7 +1,8 @@
 import * as functions from 'firebase-functions';
 import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
-import { PaymentProcessTaskType, toPaymentDate } from '../../../../../shared/src/types';
+import { PaymentProcessTaskType } from '../../../../../shared/src/types/Payment';
+import { toPaymentDate } from '../../../../../shared/src/types/Recipient';
 import { PaymentCSVTask } from './tasks/PaymentCSVTask';
 import { PaymentTask } from './tasks/PaymentTask';
 import { RegistrationCSVTask } from './tasks/RegistrationCSVTask';

@@ -1,4 +1,5 @@
-import { Payment, RECIPIENT_FIRESTORE_PATH, Recipient, RecipientProgramStatus } from '@socialincome/shared/src/types';
+import { Payment } from '@socialincome/shared/src/types/Payment';
+import { RECIPIENT_FIRESTORE_PATH, Recipient, RecipientProgramStatus } from '@socialincome/shared/src/types/Recipient';
 import { getMonthIDs } from '@socialincome/shared/src/utils/date';
 import {
 	AdditionalFieldDelegate,

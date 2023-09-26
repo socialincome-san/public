@@ -1,5 +1,6 @@
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
-import { ExchangeRates, Payment, PAYMENT_FIRESTORE_PATH } from '../../../../../shared/src/types';
+import { ExchangeRates } from '../../../../../shared/src/types/ExchangeRates';
+import { Payment, PAYMENT_FIRESTORE_PATH } from '../../../../../shared/src/types/Payment';
 import { ExchangeRateImporter } from '../../../cron/exchange-rate-import/ExchangeRateImporter';
 
 export class PaymentsManager {

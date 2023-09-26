@@ -1,5 +1,5 @@
+import { Email, MESSAGE_FIRESTORE_PATH, TwilioMessage } from '@socialincome/shared/src/types/Message';
 import { buildProperties } from 'firecms';
-import { Email, MESSAGE_FIRESTORE_PATH, TwilioMessage } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 
 export const messagesCollection = buildAuditedCollection<Partial<TwilioMessage | Email>>({

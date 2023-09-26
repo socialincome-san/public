@@ -1,7 +1,7 @@
 import { describe, test } from '@jest/globals';
 
 import { DateTime } from 'luxon';
-import { calcFinalPaymentDate, calcPaymentsLeft } from '../index';
+import { calcFinalPaymentDate, calcPaymentsLeft } from './Recipient';
 
 describe('Recipient', () => {
 	test('calc last payment', () => {

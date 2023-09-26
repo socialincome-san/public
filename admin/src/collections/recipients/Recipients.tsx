@@ -1,14 +1,13 @@
-import { AdditionalFieldDelegate, buildProperties } from 'firecms';
-import { EntityCollection, PropertiesOrBuilders } from 'firecms/dist/types';
-
 import { Chip, Tooltip } from '@mui/material';
 import {
 	RECIPIENT_FIRESTORE_PATH,
 	Recipient,
 	calcFinalPaymentDate,
 	calcPaymentsLeft,
-} from '@socialincome/shared/src/types';
+} from '@socialincome/shared/src/types/Recipient';
 import { toDateTime } from '@socialincome/shared/src/utils/date';
+import { AdditionalFieldDelegate, buildProperties } from 'firecms';
+import { EntityCollection, PropertiesOrBuilders } from 'firecms/dist/types';
 import { messagesCollection } from '../Messages';
 import { paymentsCollection } from '../Payments';
 import { buildAuditedCollection } from '../shared';

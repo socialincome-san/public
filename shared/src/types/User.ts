@@ -1,5 +1,5 @@
 import { EntityReference } from 'firecms';
-import { capitalizeStringIfUppercase } from '../../utils/strings';
+import { capitalizeStringIfUppercase } from '../utils/strings';
 import { LanguageCode } from './Language';
 
 export const USER_FIRESTORE_PATH = 'users';
@@ -39,6 +39,7 @@ export type User = {
 	address?: UserAddress;
 	email: string;
 	status?: UserStatusKey;
+	payment_reference_id: number; // used to identify user in wire transfer
 	stripe_customer_id?: string;
 	test_user?: boolean; // TODO: discuss if still needed
 	institution?: boolean;
