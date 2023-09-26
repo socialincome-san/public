@@ -14,7 +14,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@socialincome/ui';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { ReadonlyURLSearchParams, useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
