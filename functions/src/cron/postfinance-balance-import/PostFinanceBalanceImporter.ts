@@ -1,4 +1,4 @@
-import * as functions from 'firebase-functions';
+import { logger } from 'firebase-functions';
 import imaps from 'imap-simple';
 import _ from 'lodash';
 import { Source, simpleParser } from 'mailparser';
@@ -40,7 +40,7 @@ export class PostFinanceBalanceImporter {
 
 	retrieveBalanceMails = async (): Promise<BankBalance[]> => {
 		try {
-			functions.logger.info('Start checking balance inbox');
+			logger.info('Start checking balance inbox');
 			const config = {
 				imap: {
 					user: POSTFINANCE_EMAIL_USER,
@@ -54,7 +54,7 @@ export class PostFinanceBalanceImporter {
 			};
 			const connection = await imaps.connect(config);
 			await connection.openBox('INBOX');
-			functions.logger.info('Connected to inbox');
+			logger.info('Connected to inbox');
 			const messages = await connection.search(this.searchCriteria, this.fetchOptions);
 			const balances = await Promise.all(
 				messages.map(async (item: any) => {
@@ -66,10 +66,10 @@ export class PostFinanceBalanceImporter {
 				}),
 			);
 			connection.end();
-			functions.logger.info('Retrieved balances');
+			logger.info('Retrieved balances');
 			return balances.flat();
 		} catch (error) {
-			functions.logger.error('Could not ingest balance mails', error);
+			logger.error('Could not ingest balance mails', error);
 			return [];
 		}
 	};
@@ -87,7 +87,7 @@ export class PostFinanceBalanceImporter {
 				} as BankBalance,
 			];
 		} catch {
-			functions.logger.info(`Could not parse email with subject ${mail.subject}`);
+			logger.info(`Could not parse email with subject ${mail.subject}`);
 			return [];
 		}
 	};

@@ -1,4 +1,4 @@
-import * as functions from 'firebase-functions';
+import { logger } from 'firebase-functions';
 import { onCall } from 'firebase-functions/v2/https';
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
 import { StripeEventHandler } from '../../../../../shared/src/stripe/StripeEventHandler';
@@ -34,27 +34,27 @@ const batchImportStripeChargesFunction = onCall(async ({ auth }) => {
 	const stripeBatchSize = 100; // max batch size supported by stripe
 	const charges = [];
 	try {
-		functions.logger.info('Querying Stripe API...');
+		logger.info('Querying Stripe API...');
 		for await (const charge of stripeEventHandler.stripe.charges.list({
 			expand: ['data.balance_transaction', 'data.invoice'],
 			limit: stripeBatchSize,
 		})) {
 			charges.push(charge);
 		}
-		functions.logger.info(`Querying stripe finished.`);
+		logger.info(`Querying stripe finished.`);
 
 		await Promise.all(
 			charges.map((charge) => {
 				try {
 					stripeEventHandler.storeCharge(charge);
 				} catch (error) {
-					functions.logger.error(error);
+					logger.error(error);
 				}
 			}),
 		);
-		functions.logger.info(`Ingestion finished.`);
+		logger.info(`Ingestion finished.`);
 	} catch (error) {
-		functions.logger.error(error);
+		logger.error(error);
 		throw error;
 	}
 });

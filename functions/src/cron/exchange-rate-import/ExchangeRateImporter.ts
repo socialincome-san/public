@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as functions from 'firebase-functions';
+import { logger } from 'firebase-functions';
 import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
 import { EXCHANGE_RATES_PATH, ExchangeRates, ExchangeRatesEntry } from '../../../../shared/src/types/ExchangeRates';
@@ -67,7 +67,7 @@ export class ExchangeRateImporter {
 	fetchAndStoreExchangeRates = async (dt: DateTime): Promise<ExchangeRateResponse> => {
 		const rates = await this.fetchExchangeRates(dt);
 		await this.storeExchangeRates(rates);
-		functions.logger.info('Ingested exchange rates');
+		logger.info('Ingested exchange rates');
 		return rates;
 	};
 }

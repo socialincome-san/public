@@ -1,4 +1,4 @@
-import * as functions from 'firebase-functions';
+import { logger } from 'firebase-functions';
 import { onRequest } from 'firebase-functions/v2/https';
 import Stripe from 'stripe';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
@@ -21,12 +21,12 @@ export default onRequest(async (request, response) => {
 				break;
 			}
 			default: {
-				functions.logger.info(`Unhandled event type ${event.type}`);
+				logger.info(`Unhandled event type ${event.type}`);
 			}
 		}
 		response.send();
 	} catch (error) {
-		functions.logger.error(error);
+		logger.error(error);
 		response.status(500).send(`Webhook Error. Check the logs.`);
 	}
 });
