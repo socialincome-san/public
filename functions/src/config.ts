@@ -3,6 +3,7 @@ import 'dotenv/config';
 import * as path from 'path';
 
 export const ASSET_DIR = path.join(__dirname, '..', '..', 'shared', 'assets');
+export const DEFAULT_REGION = 'europe-west6';
 
 // Env variables
 export const STRIPE_API_READ_KEY = process.env.STRIPE_API_READ_KEY!;
