@@ -15,6 +15,7 @@ import { CollectionActionsProps, useAuthController, useSnackbarController } from
 import _ from 'lodash';
 import React from 'react';
 import { CreateDonationCertificatesFunctionProps } from '../../../functions/src/webhooks/admin/donation-certificates/DonationCertificateHandler';
+import { DEFAULT_REGION } from '../../../shared/src/firebase';
 import { User } from '../../../shared/src/types/User';
 
 const style = {
@@ -42,7 +43,7 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
 
-	const functions = getFunctions();
+	const functions = getFunctions(undefined, DEFAULT_REGION);
 	const createDonationCertificatesFunction = httpsCallable<CreateDonationCertificatesFunctionProps, string>(
 		functions,
 		'createDonationCertificates',
