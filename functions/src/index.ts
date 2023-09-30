@@ -1,6 +1,6 @@
 import { setGlobalOptions } from 'firebase-functions/v2/options';
 
-setGlobalOptions({ maxInstances: 10 });
+setGlobalOptions({ maxInstances: 10, region: 'europe-west6' });
 
 export * from './cron/index';
 export * from './firestore/index';
