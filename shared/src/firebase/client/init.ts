@@ -3,6 +3,7 @@ import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
+import { DEFAULT_REGION } from '../index';
 import { getOrInitializeFirebaseClientApp } from './app';
 
 interface InitializeFirebaseClientProps {
@@ -28,7 +29,7 @@ export const initializeFirebaseClient = ({
 }: InitializeFirebaseClientProps) => {
 	const app = getOrInitializeFirebaseClientApp(firebaseConfig);
 	const auth = getAuth(app);
-	const functions = getFunctions(app);
+	const functions = getFunctions(app, DEFAULT_REGION);
 	const firestore = getFirestore(app);
 	const storage = getStorage(app);
 

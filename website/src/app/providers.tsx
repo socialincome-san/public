@@ -1,5 +1,6 @@
 'use client';
 
+import { DEFAULT_REGION } from '@socialincome/shared/src/firebase';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Analytics, getAnalytics, isSupported as isAnalyticsSupported } from 'firebase/analytics';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
@@ -51,7 +52,7 @@ function FirebaseSDKProviders({ children }: PropsWithChildren) {
 	const app = useFirebaseApp();
 	const auth = getAuth(app);
 	const firestore = getFirestore(app);
-	const functions = getFunctions(app);
+	const functions = getFunctions(app, DEFAULT_REGION);
 	const storage = getStorage(app);
 
 	const authEmulatorUrl = process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL;

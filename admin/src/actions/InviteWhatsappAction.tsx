@@ -3,6 +3,7 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 import { CollectionActionsProps, useAuthController, useSnackbarController } from 'firecms';
 import React from 'react';
 import { TwilioOutgoingMessageFunctionProps } from '../../../functions/src/webhooks/twilio/TwilioOutgoingMessageHandler';
+import { DEFAULT_REGION } from '../../../shared/src/firebase';
 import { Recipient } from '../../../shared/src/types/Recipient';
 
 const STYLE = {
@@ -30,7 +31,7 @@ export function InviteWhatsappAction({ selectionController }: CollectionActionsP
 	};
 	const handleClose = () => setOpen(false);
 
-	const functions = getFunctions();
+	const functions = getFunctions(undefined, DEFAULT_REGION);
 	const twilioOutgoingMessage = httpsCallable<TwilioOutgoingMessageFunctionProps, string>(
 		functions,
 		'twilioOutgoingMessage',

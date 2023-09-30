@@ -1,9 +1,10 @@
 import { Box, Button, Card, CardActions, CardContent, Container, Grid, Typography } from '@mui/material';
+import { DEFAULT_REGION } from '@socialincome/shared/src/firebase';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { useSnackbarController } from 'firecms';
 
 export function ScriptsView() {
-	const functions = getFunctions();
+	const functions = getFunctions(undefined, DEFAULT_REGION);
 	const snackbarController = useSnackbarController();
 	const batchImportStripeCharges = () => {
 		snackbarController.open({

@@ -1,5 +1,6 @@
 import { Box, Button, CircularProgress, Modal, Tooltip, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DEFAULT_REGION } from '@socialincome/shared/src/firebase';
 import { PaymentProcessTaskType } from '@socialincome/shared/src/types/Payment';
 import { toPaymentDate } from '@socialincome/shared/src/types/Recipient';
 import { downloadStringAsFile } from '@socialincome/shared/src/utils/html';
@@ -35,7 +36,10 @@ export function PaymentProcessAction() {
 	};
 
 	const triggerFirebaseFunction = (task: PaymentProcessTaskType) => {
-		const runPaymentProcessTask = httpsCallable<PaymentProcessProps, string>(getFunctions(), 'runPaymentProcessTask');
+		const runPaymentProcessTask = httpsCallable<PaymentProcessProps, string>(
+			getFunctions(undefined, DEFAULT_REGION),
+			'runPaymentProcessTask',
+		);
 		setIsFunctionRunning(true);
 		runPaymentProcessTask({
 			type: task,
