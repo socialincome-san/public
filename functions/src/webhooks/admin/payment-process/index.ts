@@ -15,8 +15,8 @@ export interface PaymentProcessProps {
 	timestamp: number; // seconds
 }
 
-// Using v1 functions because tests are not supported with v2 yet: https://github.com/firebase/firebase-functions-test/issues/163
 export default functions
+	// Using v1 functions because tests are not supported with v2 yet: https://github.com/firebase/firebase-functions-test/issues/163
 	.region(DEFAULT_REGION)
 	.https.onCall(async ({ type, timestamp }: PaymentProcessProps, { auth }) => {
 		const firestoreAdmin = new FirestoreAdmin();
