@@ -1,5 +1,5 @@
 import { logger } from 'firebase-functions';
-import { onSchedule } from 'firebase-functions/lib/v2/providers/scheduler';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { DateTime } from 'luxon';
 import { ExchangeRateImporter } from './ExchangeRateImporter';
 
