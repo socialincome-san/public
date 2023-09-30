@@ -1,5 +1,5 @@
 import assert from 'assert';
-import * as functions from 'firebase-functions';
+import { onCall } from 'firebase-functions/v2/https';
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
 import { Recipient, RECIPIENT_FIRESTORE_PATH } from '../../../../../shared/src/types/Recipient';
 import {
@@ -9,17 +9,17 @@ import {
 	SurveyCredentialResponse,
 } from '../../../../../shared/src/types/Survey';
 
-export default functions.https.onCall(async (props: SurveyCredentialRequest) => {
+export default onCall<SurveyCredentialRequest, Promise<SurveyCredentialResponse>>(async (request) => {
 	const firestoreAdmin = new FirestoreAdmin();
 
 	const recipient = await firestoreAdmin.findFirst<Recipient>(RECIPIENT_FIRESTORE_PATH, (q) =>
-		q.where('mobile_money_phone.phone', '==', Number(props.phoneNumber)),
+		q.where('mobile_money_phone.phone', '==', Number(request.data.phoneNumber)),
 	);
 
 	assert(recipient != undefined, 'Recipient not found');
 
 	const survey = await firestoreAdmin.findFirst<Survey>([recipient.ref.path, SURVEY_FIRETORE_PATH].join('/'), (q) =>
-		q.where('access_token', '==', props.accessToken),
+		q.where('access_token', '==', request.data.accessToken),
 	);
 
 	assert(survey != undefined, 'Survey not found');
