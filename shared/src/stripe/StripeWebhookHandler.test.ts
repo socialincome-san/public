@@ -30,8 +30,9 @@ describe('stripeWebhook', () => {
 		expect(contribution.data()).toEqual(expectedContribution);
 
 		const createdUser = (await stripeWebhook.findUser(testCustomer))!.data();
-		expect(Math.round(createdUser.payment_reference_id / 10000)).toEqual(
-			Math.round(expectedUser.payment_reference_id / 10000),
+		expect(Math.round(createdUser.payment_reference_id / 100000)).toEqual(
+			// rounded to 100 seconds
+			Math.round(expectedUser.payment_reference_id / 100000),
 		);
 		expect(createdUser.personal).toEqual(expectedUser.personal);
 		expect(createdUser.email).toEqual(expectedUser.email);
