@@ -1,6 +1,24 @@
 {
-	"section-1": {
+	"section-our-work": {
 		"title-1": "Our work is made possible by you. Make a ",
-		"title-2": "change with us."
+		"title-2": "change with us.",
+		"vimeo-video-id": "433937157"
+	},
+	"section-how-it-works": {
+		"title": "From you to someone in need. This is solidarity.",
+		"subtitle": "Make a difference in under a minute.",
+		"item-1": "100% of individual contributions are paid out to recipients",
+		"item-2": "Flexible payment schedules. Adjust or cancel anytime",
+		"item-3": "Social Income payments are sent directly to recipients’ mobile phones.",
+		"item-4": "The amount disbursed is determined by the average salary where recipients live."
+	},
+	"section-contributors": {
+		"header-1": "Contributors",
+		"title-1": "People from all walks of life contribute.",
+		"text-1": "We receive, amongst others, regular individual contributions from employees at the following organisations and companies:",
+
+		"header-2": "Why contribute?",
+		"title-2": "One goal. Greater social justice.",
+		"text-2": "Our contributors want to help people for a variety of reasons. Here are just a few driving forces behind the humanitarians who contribute their 1% to Social Income:"
 	}
 }

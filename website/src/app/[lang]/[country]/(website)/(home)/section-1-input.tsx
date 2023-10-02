@@ -1,8 +1,10 @@
 'use client';
 
-import { Button, Input } from '@socialincome/ui';
-import { Field, Form, Formik } from 'formik';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Form, FormControl, FormField, FormItem, Input } from '@socialincome/ui';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
 
 interface Section1InputProps {
 	text: string;
@@ -12,37 +14,36 @@ interface Section1InputProps {
 export default function Section1Input({ text }: Section1InputProps) {
 	const router = useRouter();
 
-	const onSubmit = (values: { amount: number | string }) => {
+	const formSchema = z.object({
+		amount: z.coerce.number().min(1).optional(),
+	});
+
+	type FormSchema = z.infer<typeof formSchema>;
+	const form = useForm<FormSchema>({
+		resolver: zodResolver(formSchema),
+		defaultValues: { amount: '' as any },
+	});
+
+	const onSubmit = (values: FormSchema) => {
 		router.push(`/donate/individual?amount=${(Number(values.amount) / 100).toFixed(2)}`);
 	};
 
 	return (
-		<Formik
-			initialValues={{ amount: '' }}
-			onSubmit={onSubmit}
-			validate={(values) => {
-				if (!values.amount) {
-					return { amount: true };
-				}
-			}}
-		>
-			{({ values, handleChange, handleBlur, errors, handleSubmit }) => (
-				<Form className="flex max-w-3xl flex-col space-y-4" onSubmit={handleSubmit}>
-					<Field
-						as={Input}
-						type="number"
-						name="amount"
-						placeholder="Amount"
-						onChange={handleChange}
-						onBlur={handleBlur}
-						color={errors.amount ? 'error' : 'primary'}
-						value={values.amount}
-					/>
-					<Button type="submit" color="primary" size="lg">
-						{text}
-					</Button>
-				</Form>
-			)}
-		</Formik>
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+				<FormField
+					control={form.control}
+					name="amount"
+					render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<Input type="number" placeholder="Amount" {...field} />
+							</FormControl>
+						</FormItem>
+					)}
+				/>
+				<Button type="submit">{text}</Button>
+			</form>
+		</Form>
 	);
 }

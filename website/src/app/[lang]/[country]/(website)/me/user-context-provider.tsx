@@ -1,6 +1,6 @@
 'use client';
 
-import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/User';
 import { useQuery } from '@tanstack/react-query';
 import assert from 'assert';
 import { collection, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
@@ -17,6 +17,8 @@ export const UserContext = createContext<UserContextProps>({ user: null });
 export function UserContextProvider({ children }: PropsWithChildren) {
 	const firestore = useFirestore();
 	const { status: authUserStatus, data: authUser } = useUser();
+
+	console.log('user context', authUserStatus, authUser);
 
 	useEffect(() => {
 		if (authUserStatus === 'success' && authUser === null) {
@@ -37,6 +39,7 @@ export function UserContextProvider({ children }: PropsWithChildren) {
 		},
 		{
 			staleTime: 1000 * 60 * 60, // 1 hour
+			refetchOnMount: false,
 		},
 	);
 

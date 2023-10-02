@@ -1,5 +1,5 @@
+import { USER_FIRESTORE_PATH, User, UserReferralSource } from '@socialincome/shared/src/types/User';
 import { AdditionalFieldDelegate, buildProperties } from 'firecms';
-import { USER_FIRESTORE_PATH, User, UserReferralSource } from '../../../shared/src/types';
 import { CreateDonationCertificatesAction } from '../actions/CreateDonationCertificatesAction';
 import { buildContributionsCollection } from './Contributions';
 import { donationCertificateCollection } from './DonationCertificate';
@@ -191,6 +191,11 @@ export const usersCollection = buildAuditedCollection<User>({
 		stripe_customer_id: {
 			name: 'stripe customer id',
 			dataType: 'string',
+			readOnly: true,
+		},
+		payment_reference_id: {
+			name: 'Swiss QR-bill payment reference id',
+			dataType: 'number',
 			readOnly: true,
 		},
 	}),

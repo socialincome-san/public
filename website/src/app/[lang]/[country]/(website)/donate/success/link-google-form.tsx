@@ -25,7 +25,9 @@ export function LinkGoogleForm({ checkoutSessionId }: LinkGoogleFormProps) {
 	};
 	return (
 		<div>
-			<Button onClick={onClick2}>Sign In With Google</Button>
+			<Button variant="outline" onClick={onClick2}>
+				Sign In With Google
+			</Button>
 		</div>
 	);
 }

@@ -22,7 +22,7 @@ export default async function Page(props: DefaultPageProps) {
 					videoButton: translator.t('section-2.video-button'),
 				}}
 			/>
-			<Section3 {...props} />
+			{props.params.country === 'ch' && <Section3 {...props} />}
 			<Section4 {...props} />
 			<Section5 {...props} />
 			<Section6 {...props} />

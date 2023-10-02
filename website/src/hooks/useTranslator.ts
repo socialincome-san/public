@@ -1,8 +1,8 @@
-import { Language } from '@socialincome/shared/src/types';
+import { LanguageCode } from '@socialincome/shared/src/types/Language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { useState } from 'react';
 
-export function useTranslator(language: Language, namespace: string) {
+export function useTranslator(language: LanguageCode, namespace: string) {
 	const [translators, setTranslators] = useState<Map<string, Translator>>(new Map());
 
 	if (!translators.has(namespace)) {

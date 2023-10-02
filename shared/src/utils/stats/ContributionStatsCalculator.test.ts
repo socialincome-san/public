@@ -1,16 +1,11 @@
 import { expect, test } from '@jest/globals';
 import functions from 'firebase-functions-test';
+import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
 import { getOrInitializeFirebaseAdmin } from '../../firebase/admin/app';
 import { toFirebaseAdminTimestamp } from '../../firebase/admin/utils';
-import {
-	CONTRIBUTION_FIRESTORE_PATH,
-	ContributionSourceKey,
-	StatusKey,
-	USER_FIRESTORE_PATH,
-	User,
-	UserStatusKey,
-} from '../../types';
+import { CONTRIBUTION_FIRESTORE_PATH, ContributionSourceKey, StatusKey } from '../../types/Contribution';
+import { USER_FIRESTORE_PATH, User, UserStatusKey } from '../../types/User';
 import { ContributionStatsCalculator } from './ContributionStatsCalculator';
 
 const projectId = 'contribution-stats-calculator-test';
@@ -86,6 +81,7 @@ const user1: User = {
 	},
 	email: '123@socialincome.org',
 	stripe_customer_id: 'cus_123',
+	payment_reference_id: DateTime.now().toMillis(),
 	test_user: false,
 	status: UserStatusKey.INITIALIZED,
 	location: 'US',
@@ -112,6 +108,7 @@ const user2: User = {
 	},
 	email: '456@socialincome.org',
 	stripe_customer_id: 'cus_456',
+	payment_reference_id: DateTime.now().toMillis(),
 	test_user: false,
 	status: UserStatusKey.INITIALIZED,
 	institution: true,
@@ -140,6 +137,7 @@ const testUser: User = {
 	},
 	email: 'test@socialincome.org',
 	stripe_customer_id: 'cus_123',
+	payment_reference_id: DateTime.now().toMillis(),
 	test_user: true,
 	status: UserStatusKey.INITIALIZED,
 	location: 'US',

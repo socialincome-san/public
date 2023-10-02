@@ -1,23 +1,17 @@
 import { DefaultParams } from '@/app/[lang]/[country]';
-import NavbarClient from '@/components/navbar/navbar-client';
-import { Language } from '@socialincome/shared/src/types';
+import { NavbarClient } from '@/components/navbar/navbar-client';
+import { LanguageCode } from '@socialincome/shared/src/types/Language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 
-export default async function Navbar({ lang, country }: DefaultParams) {
+export type NavbarProps = {
+	supportedLanguages: LanguageCode[];
+} & DefaultParams;
+
+export default async function Navbar({ lang, country, supportedLanguages }: NavbarProps) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['common', 'website-common', 'website-me'],
 	});
-
-	const languages: Language[] = ['en', 'de'];
-	const aboutUs = translator.t('navigation.about-us');
-	const aboutUsHref = `/${lang}/${country}/about-us`;
-	const ourWork = translator.t('navigation.our-work');
-	const ourWorkHref = `/${lang}/${country}/our-work`;
-	const team = translator.t('navigation.team');
-	const teamHref = `/${lang}/${country}/about-us/team`;
-	const transparency = translator.t('navigation.transparency');
-	const transparencyHref = `/${lang}/${country}/transparency/usd`;
 
 	return (
 		<NavbarClient
@@ -30,18 +24,63 @@ export default async function Navbar({ lang, country }: DefaultParams) {
 				payments: translator.t('tabs.contributions'),
 				signOut: translator.t('sign-out'),
 			}}
-			languages={languages.map((lang) => ({ code: lang, translation: translator.t(`languages.${lang}`) }))}
+			languages={supportedLanguages.map((lang) => ({ code: lang, translation: translator.t(`languages.${lang}`) }))}
 			sections={[
-				{ title: ourWork, href: ourWorkHref },
 				{
-					title: aboutUs,
-					href: aboutUsHref,
+					title: translator.t('navigation.our-work'),
 					links: [
-						{ text: aboutUs, href: aboutUsHref },
-						{ text: team, href: teamHref },
+						{
+							title: translator.t('navigation.our-work'),
+							href: `/${lang}/${country}/our-work`,
+							description: translator.t('navigation.our-work-description'),
+						},
+						{
+							title: translator.t('navigation.how-it-works'),
+							href: `/${lang}/${country}/our-work#how-it-works`,
+							description: translator.t('navigation.how-it-works-description'),
+						},
+						{
+							title: translator.t('navigation.contributors'),
+							href: `/${lang}/${country}/our-work#contributors`,
+							description: translator.t('navigation.contributors-description'),
+						},
+						{
+							title: translator.t('navigation.recipients'),
+							href: `/${lang}/${country}/our-work#recipients`,
+							description: translator.t('navigation.recipients-description'),
+						},
 					],
 				},
-				{ title: transparency, href: transparencyHref },
+				{
+					title: translator.t('navigation.about-us'),
+					links: [
+						{
+							title: translator.t('navigation.about-us'),
+							href: `/${lang}/${country}/about-us`,
+							description: translator.t('navigation.about-us-description'),
+						},
+						{
+							title: translator.t('navigation.team'),
+							href: `/${lang}/${country}/about-us/team`,
+							description: translator.t('navigation.team-description'),
+						},
+					],
+				},
+				{
+					title: translator.t('navigation.transparency'),
+					links: [
+						{
+							title: translator.t('navigation.finances'),
+							href: `/${lang}/${country}/transparency/finances/usd`,
+							description: translator.t('navigation.finances-description'),
+						},
+						{
+							title: translator.t('navigation.recipient-selection'),
+							href: `/${lang}/${country}/transparency/recipient-selection`,
+							description: translator.t('navigation.recipient-selection-description'),
+						},
+					],
+				},
 			]}
 		/>
 	);

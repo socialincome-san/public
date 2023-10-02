@@ -1,8 +1,5 @@
-import {
-	PARTNER_ORGANISATION_FIRESTORE_PATH,
-	RecipientMainLanguage,
-	RecipientProgramStatus,
-} from '@socialincome/shared/src/types';
+import { PARTNER_ORGANISATION_FIRESTORE_PATH } from '@socialincome/shared/src/types/PartnerOrganisation';
+import { RecipientMainLanguage, RecipientProgramStatus } from '@socialincome/shared/src/types/Recipient';
 import { Property, StringProperty } from 'firecms/dist/types/properties';
 
 export const programStatusProperty: Property = {

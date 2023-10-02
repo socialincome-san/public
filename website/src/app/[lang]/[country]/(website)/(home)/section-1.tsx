@@ -10,12 +10,12 @@ export default async function Section1({ params }: DefaultPageProps) {
 	});
 
 	return (
-		<BaseContainer className="bg-blue-50">
+		<BaseContainer>
 			<div className="flex min-h-[calc(100vh-theme(spacing.20))] flex-col items-center lg:flex-row">
 				<div className="flex flex-1 items-center p-4 text-center lg:p-8 lg:text-left">
 					<Typography size="4xl" weight="bold" lineHeight="relaxed">
 						{translator.t('section-1.title-1')}
-						<Typography as="span" size="4xl" weight="bold" color="secondary" lineHeight="relaxed">
+						<Typography as="span" size="4xl" weight="bold" color="secondary-foreground" lineHeight="relaxed">
 							{translator.t('section-1.title-2')}
 						</Typography>
 						{translator.t('section-1.title-3')}

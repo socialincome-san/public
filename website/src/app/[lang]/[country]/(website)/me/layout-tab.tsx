@@ -12,7 +12,7 @@ export function LayoutTab(tab: { title: string; href: string }) {
 		<Link
 			href={tab.href}
 			className={classNames('border-b-2 px-5 py-2', {
-				'border-b-neutral': pathname === tab.href,
+				'border-b-si-yellow': pathname === tab.href,
 			})}
 		>
 			<Typography size="lg">{tab.title}</Typography>

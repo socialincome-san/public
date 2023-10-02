@@ -1,16 +1,28 @@
 'use client';
 
 import { DefaultPageProps } from '@/app/[lang]/[country]';
-import { Button, Input, Typography } from '@socialincome/ui';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input, Typography } from '@socialincome/ui';
 import { FirebaseError } from 'firebase/app';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { Formik } from 'formik';
+import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useAuth } from 'reactfire';
+import * as z from 'zod';
 
 // TODO: i18n
 export default function Page({ params }: DefaultPageProps) {
 	const auth = useAuth();
+
+	const formSchema = z.object({
+		email: z.string().email({ message: 'Invalid Email' }),
+	});
+	type FormSchema = z.infer<typeof formSchema>;
+
+	const form = useForm<FormSchema>({
+		resolver: zodResolver(formSchema),
+		defaultValues: { email: '' },
+	});
 
 	const onSubmit = async (values: { email: string }) => {
 		const message = 'You should have received an email with a link to reset your password.';
@@ -41,38 +53,25 @@ export default function Page({ params }: DefaultPageProps) {
 	};
 
 	return (
-		<div className="mx-auto flex max-w-xl flex-col space-y-4 pt-16">
-			<Typography size="2xl" weight="medium">
-				Enter your Email
-			</Typography>
-			<Formik
-				initialValues={{ email: '' }}
-				validate={(values) => {
-					if (!values.email) {
-						return { email: 'Required' };
-					} else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-						return { email: 'Invalid Email address' };
-					}
-				}}
-				onSubmit={onSubmit}
-			>
-				{({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
-					<form className="flex flex-col space-y-2" onSubmit={handleSubmit}>
-						<Input
-							type="email"
-							name="email"
-							placeholder="Email"
-							onChange={handleChange}
-							onBlur={handleBlur}
-							value={values.email}
-						/>
-						{errors.email && touched.email && errors.email}
-						<Button type="submit" color="primary" disabled={isSubmitting}>
-							Submit
-						</Button>
-					</form>
-				)}
-			</Formik>
-		</div>
+		<Form {...form}>
+			<form className="mx-auto flex max-w-lg flex-col space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
+				<Typography weight="bold" size="3xl" className="my-4">
+					Reset Password
+				</Typography>
+				<FormField
+					control={form.control}
+					name="email"
+					render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<Input type="email" placeholder="Email" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<Button type="submit">Submit</Button>
+			</form>
+		</Form>
 	);
 }

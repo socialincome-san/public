@@ -21,6 +21,7 @@ class SurveyCardBottomAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).toLanguageTag();
     final foregroundColor = _getForegroundColor(mappedSurvey.cardStatus);
 
     return Container(
@@ -32,7 +33,7 @@ class SurveyCardBottomAction extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                _getStatusLabel(mappedSurvey, localizations),
+                _getStatusLabel(mappedSurvey, localizations, locale),
                 style: TextStyle(color: foregroundColor),
               ),
             ),
@@ -114,12 +115,13 @@ class SurveyCardBottomAction extends StatelessWidget {
   String _getStatusLabel(
     MappedSurvey mappedSurvey,
     AppLocalizations localizations,
+    String locale,
   ) {
     var daysText = localizations.day;
 
     switch (mappedSurvey.cardStatus) {
       case SurveyCardStatus.answered:
-        return DateFormat("dd.MM.yyyy").format(
+        return DateFormat("dd.MM.yyyy", locale).format(
             mappedSurvey.survey.completedAt?.toDate() ?? DateTime.now());
       case SurveyCardStatus.overdue:
         final daysAfterOverdue = mappedSurvey.daysAfterOverdue ?? 0;
