@@ -130,8 +130,8 @@
             }
         }
     },
-    "survey12Months": "12 months survey",
-    "survey12MonthsInfo": "Please take 5 minutes to answer questions and help to improve Social Income",
+    "surveyCardTitle": "Survey",
+    "surveyCardInfo": "Please take 5 minutes to answer questions and help to improve Social Income",
     "verification": "Verification",
     "verificationSent": "We sent you a verification code to {phoneNumber}",
     "@verificationSent": {
