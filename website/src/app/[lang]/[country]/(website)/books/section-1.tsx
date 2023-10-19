@@ -12,7 +12,7 @@ export default async function Section1({ params }: DefaultPageProps) {
 	return (
 		<BaseContainer className="mt-20 flex flex-col content-center justify-center text-center">
 			<Typography size="4xl" weight="bold" lineHeight="loose" className="m-3 w-auto pb-4">
-                {translator.t('section-1.title')}
+				{translator.t('section-1.title')}
 			</Typography>
 			<Typography as="p" size="xl" weight="normal" lineHeight="relaxed" className="m-auto w-4/5 px-1 pb-3 sm:w-3/5">
 				{translator.t('section-1.subtitle-1')}
