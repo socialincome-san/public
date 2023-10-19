@@ -1,4 +1,11 @@
 {
+    "section-1": {
+        "title": "Recommended Reading",
+        "subtitle-1": "A suggested reading list to provide a foundation for understanding Social Income, Basic Income, financial aid, and poverty",
+        "subtitle-2": "If you have any additional book recommendations, don't hesitate to ",
+        "subtitle-3": "let us know",
+        "lastUpdate": "Last Update: Oct 19, 2023"
+    },
 	"section-2": {
 		"book-1": {
 			"author": "Peter Singer",

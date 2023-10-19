@@ -1,5 +1,7 @@
-import { BaseContainer, Typography } from '@socialincome/ui';
+import { BaseContainer, Typography, Badge } from '@socialincome/ui';
+import classNames from 'classnames';
 import Image, { StaticImageData } from 'next/image';
+import Link from 'next/link';
 
 type BookProps = {
 	cover: StaticImageData;
@@ -26,47 +28,39 @@ export default async function Book({
 	year,
 	currentlyReading,
 }: BookProps) {
-	let baseClass = currentlyReading
-		? 'flex flex-nowrap flex-col sm:flex-row pb-5 h-fit shadow-md my-40'
-		: 'flex flex-nowrap flex-col sm:flex-row pb-5 h-fit shadow-md my-8 ';
-
 	return (
 		<BaseContainer>
-			<div className={baseClass}>
+			<div className={classNames('flex flex-nowrap flex-col sm:flex-row pb-5 h-fit shadow-md ', {
+					'my-40': currentlyReading,
+					'my-8': !currentlyReading,
+			})}>
 				<div className="w-fit basis-1/3">
 					<Image src={cover} height={4000} alt="book cover" />
 				</div>
 				<div className="mx-8 flex w-fit basis-5/12 flex-col">
 					<div className="flex flex-col items-baseline sm:flex-row">
-						<Typography as="div" className="mt-6 text-blue-500 sm:mb-2">
+						<Typography className="mt-6 text-blue-500 sm:mb-2">
 							{author}
 						</Typography>
-						{currentlyReading ? (
-							<Typography
-								as="span"
-								size="xs"
-								weight="bold"
-								className="my-1 rounded-md bg-blue-500 px-2 py-0.5 text-white sm:mx-1"
-							>
+						{currentlyReading && (
+							<Badge className="my-1 rounded-md bg-blue-500 px-2 py-0.5 text-white sm:mx-1">
 								Currently reading
-							</Typography>
-						) : (
-							<></>
+							</Badge>
 						)}
 					</div>
-					<Typography as="div" weight="bold" size="xl" lineHeight="relaxed" className="mb-1">
-						<a href={authorLink}>{title}</a>
-					</Typography>
+					<Link href={authorLink}>
+						<Typography weight="bold" size="xl" lineHeight="relaxed" className="mb-1">{title}</Typography>
+					</Link>
 					<Typography as="p">{description}</Typography>
 					<Typography as="p" className="my-5">
 						{quote}
 					</Typography>
-					<Typography as="div" weight="bold">
-						<a href={publisherLink} className="hover:text-blue-800">
+					<Link href={publisherLink}>
+						<Typography weight="bold" className="hover:text-blue-800">
 							{publisher}
-						</a>
-					</Typography>
-					<Typography as="div" size="sm">
+						</Typography>
+					</Link>
+					<Typography size="sm">
 						Published {year}
 					</Typography>
 				</div>
