@@ -1,5 +1,6 @@
 'use client';
 
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import Autoplay, { AutoplayOptionsType } from 'embla-carousel-autoplay';
 import useEmblaCarousel, { EmblaOptionsType } from 'embla-carousel-react';
 import React, { useContext, useEffect } from 'react';
@@ -10,9 +11,17 @@ export const CarouselContext = React.createContext<EmblaOptionsType>({});
 type CarouselProps = {
 	options?: EmblaOptionsType & { autoPlay?: { enabled: boolean } & AutoplayOptionsType };
 	showDots?: boolean;
+	showControls?: boolean;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export const Carousel = ({ children, className, options = {}, showDots = true, ...props }: CarouselProps) => {
+export const Carousel = ({
+	children,
+	className,
+	options = {},
+	showDots = false,
+	showControls = false,
+	...props
+}: CarouselProps) => {
 	const [emblaRef, emblaApi] = useEmblaCarousel(
 		options,
 		options?.autoPlay?.enabled ? [Autoplay(options.autoPlay)] : [],
@@ -26,6 +35,7 @@ export const Carousel = ({ children, className, options = {}, showDots = true, .
 			const index = emblaApi?.selectedScrollSnap();
 			setSelectedIndex(index || 0);
 		}
+
 		emblaApi?.on('select', selectHandler);
 
 		return () => {
@@ -39,23 +49,26 @@ export const Carousel = ({ children, className, options = {}, showDots = true, .
 
 	return (
 		<CarouselContext.Provider value={emblaOptions}>
-			<div className={cn('overflow-hidden', className)} ref={emblaRef} {...props}>
-				<div className="flex">{children}</div>
+			<div className={cn('relative', { 'px-8': showControls })}>
+				<div className={cn('overflow-hidden', className)} ref={emblaRef} {...props}>
+					<div className="flex">{children}</div>
+					{showDots && (
+						<CarouselDots
+							itemsLength={Math.ceil(slidesCount / (Number(options.slidesToScroll) || 1))}
+							selectedIndex={selectedIndex}
+							onClick={(index) => emblaApi?.scrollTo(index)}
+						/>
+					)}
+					{showControls && (
+						<CarouselControls
+							canScrollNext={!!emblaApi?.canScrollNext()}
+							canScrollPrev={!!emblaApi?.canScrollPrev()}
+							onNext={() => emblaApi?.scrollNext()}
+							onPrev={() => emblaApi?.scrollPrev()}
+						/>
+					)}
+				</div>
 			</div>
-			{showDots && (
-				<CarouselDots
-					itemsLength={Math.ceil(slidesCount / (Number(options.slidesToScroll) || 1))}
-					selectedIndex={selectedIndex}
-					onClick={(index) => emblaApi?.scrollTo(index)}
-				/>
-			)}
-
-			<CarouselControls
-				canScrollNext={!!emblaApi?.canScrollNext()}
-				canScrollPrev={!!emblaApi?.canScrollPrev()}
-				onNext={() => emblaApi?.scrollNext()}
-				onPrev={() => emblaApi?.scrollPrev()}
-			/>
 		</CarouselContext.Provider>
 	);
 };
@@ -102,7 +115,7 @@ const CarouselDots = ({ itemsLength, selectedIndex, onClick }: CarouselDots) => 
 				return (
 					<div
 						key={index}
-						className={cn('h-2 w-2 rounded-full bg-indigo-400 transition-all duration-300', {
+						className={cn('bg-muted-foreground h-2 w-2 rounded-full transition-all duration-300', {
 							'opacity-50': !selected,
 						})}
 						onClick={() => onClick?.(index)}
@@ -121,36 +134,13 @@ type Props = {
 };
 const CarouselControls = (props: Props) => {
 	return (
-		<div className="flex justify-end gap-2 ">
-			<button
-				onClick={() => {
-					if (props.canScrollPrev) {
-						props.onPrev();
-					}
-				}}
-				disabled={!props.canScrollPrev}
-				className={cn('rounded-md px-4 py-2 text-white', {
-					'bg-indigo-200': !props.canScrollPrev,
-					'bg-indigo-400': props.canScrollPrev,
-				})}
-			>
-				Prev
-			</button>
-			<button
-				onClick={() => {
-					if (props.canScrollNext) {
-						props.onNext();
-					}
-				}}
-				disabled={!props.canScrollNext}
-				className={cn('rounded-md px-4 py-2 text-white', {
-					'bg-indigo-200': !props.canScrollNext,
-					'bg-indigo-400': props.canScrollNext,
-				})}
-			>
-				Next
-			</button>
-		</div>
+		<>
+			<div className="absolute inset-y-0 left-0 flex items-center">
+				<ChevronLeftIcon className="text-muted-foreground my-auto h-8 w-8 cursor-pointer" onClick={props.onPrev} />
+			</div>
+			<div className="absolute inset-y-0 right-0 flex items-center">
+				<ChevronRightIcon className="text-muted-foreground my-auto h-8 w-8 cursor-pointer" onClick={props.onNext} />
+			</div>
+		</>
 	);
 };
-export default CarouselControls;

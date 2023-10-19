@@ -45,6 +45,7 @@ export function SectionContributorsCarousel() {
 				autoPlay: { enabled: true },
 				slidesToScroll: slidesToScroll,
 			}}
+			showDots
 		>
 			{companyLogos.map((entry, index) => (
 				<CarouselContent key={index} className="aspect-video p-2 md:p-4">
