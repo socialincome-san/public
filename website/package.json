@@ -40,7 +40,7 @@
 		"stripe": "^13.7.0",
 		"survey-core": "^1.9.109",
 		"survey-react-ui": "^1.9.109",
-		"zod": "3.21.4"
+		"zod": "3.22.3"
 	},
 	"devDependencies": {
 		"@types/accept-language-parser": "^1.5.4",
