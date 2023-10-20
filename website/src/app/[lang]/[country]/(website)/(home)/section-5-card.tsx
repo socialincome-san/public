@@ -67,7 +67,7 @@ export function SectionCard({ titles, items = [], paragraphs = [], articles = []
 										<div key={index} className="py-4">
 											<Typography>{article.author}</Typography>
 											<Link href={article.link} target="_blank">
-												<Typography color="secondary-foreground">{article.title}</Typography>
+												<Typography color="secondary">{article.title}</Typography>
 											</Link>
 										</div>
 									))}
@@ -83,7 +83,7 @@ export function SectionCard({ titles, items = [], paragraphs = [], articles = []
 									{faqs.map((faq, index) => (
 										<div key={index} className="py-4">
 											<Link href={faq.link}>
-												<Typography color="secondary-foreground">{faq.question}</Typography>
+												<Typography color="secondary">{faq.question}</Typography>
 											</Link>
 										</div>
 									))}
