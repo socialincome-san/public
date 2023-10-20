@@ -10,7 +10,7 @@ export default async function Page({ params }: DefaultPageProps) {
 		<div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 			<div className="flex max-w-lg flex-col space-y-4">
 				<ContributionsTable
-					translations={{ title: translator.t('contributions.date'), amount: translator.t('contributions.amount') }}
+					translations={{ date: translator.t('contributions.date'), amount: translator.t('contributions.amount') }}
 					{...params}
 				/>
 			</div>
