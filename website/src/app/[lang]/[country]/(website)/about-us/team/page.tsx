@@ -95,7 +95,7 @@ export default async function Page({ params }: DefaultPageProps) {
 					{translator.t('title-2')}
 				</Typography>
 			</Typography>
-			<div className="mt-16 space-y-12">
+			<div className="mt-16 space-y-20">
 				{groups.map((group, index1) => (
 					<div key={index1}>
 						<Typography size="3xl" weight="bold" className="mb-4">
