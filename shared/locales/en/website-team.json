@@ -1,24 +1,24 @@
 {
-  "header": "Our Team",
-  "title-1": "We're making Social Income ",
-  "title-2": "a reality.",
-  "roles": {
-    "finance": "Finances",
-    "operations": "Operations",
-    "marketing": "Marketing",
-    "communications": "Communications",
-    "co-president": "Co-President",
-    "founder": "Founder",
-    "board-member": "Board Member",
-    "software-development": "Software Development",
-    "app-development": "App Development",
-    "impact-measurement": "Impact Measurement",
-    "strategy": "Strategy"
-  },
-  "groups": {
-    "staff": "Staff",
-    "board": "Board of Association",
-    "volunteers": "Volunteers",
-    "special-thanks": "Special Thanks"
-  }
+	"header": "Our Team",
+	"title-1": "We're making Social Income ",
+	"title-2": "a reality.",
+	"roles": {
+		"finance": "Finances",
+		"operations": "Operations",
+		"marketing": "Marketing",
+		"communications": "Communications",
+		"co-president": "Co-President",
+		"founder": "Founder",
+		"board-member": "Board Member",
+		"software-development": "Software Development",
+		"app-development": "App Development",
+		"impact-measurement": "Impact Measurement",
+		"strategy": "Strategy"
+	},
+	"groups": {
+		"staff": "Staff",
+		"board": "Board of Association",
+		"volunteers": "Volunteers",
+		"special-thanks": "Special Thanks"
+	}
 }
