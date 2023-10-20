@@ -3,15 +3,15 @@
 import { useScreenSize } from '@/hooks/useScreenSize';
 import { Carousel, CarouselContent } from '@socialincome/ui';
 import Image from 'next/image';
-import epflSVG from './(assets)/epfl.svg';
-import govSVG from './(assets)/gov.svg';
-import mckinseySVG from './(assets)/mckinsey.svg';
-import microsoftSVG from './(assets)/microsoft.svg';
-import r17SVG from './(assets)/r17.svg';
-import srgSVG from './(assets)/srg.svg';
-import unSVG from './(assets)/un.svg';
+import epflSVG from '../(assets)/epfl.svg';
+import govSVG from '../(assets)/gov.svg';
+import mckinseySVG from '../(assets)/mckinsey.svg';
+import microsoftSVG from '../(assets)/microsoft.svg';
+import r17SVG from '../(assets)/r17.svg';
+import srgSVG from '../(assets)/srg.svg';
+import unSVG from '../(assets)/un.svg';
 
-export function SectionContributorsCarousel() {
+export function ContributorsOrgsCarousel() {
 	const screenSize = useScreenSize();
 
 	const companyLogos = [
@@ -48,7 +48,7 @@ export function SectionContributorsCarousel() {
 			showDots
 		>
 			{companyLogos.map((entry, index) => (
-				<CarouselContent key={index} className="aspect-video p-2 md:p-4">
+				<CarouselContent key={index} className="aspect-video p-4">
 					<Image src={entry.logo} alt={`${entry.name} Logo`} className="h-full object-contain" />
 				</CarouselContent>
 			))}
