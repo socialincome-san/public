@@ -1,0 +1,23 @@
+{
+  "header": "Unser Team",
+  "title-1": "Wir verhelfen Social Income ",
+  "title-2": "zur Realität.",
+  "roles": {
+    "finance": "Finanzen",
+    "operations": "Betrieb",
+    "marketing": "Marketing",
+    "communications": "Kommunikation",
+    "co-president": "Co-Präsident:in",
+    "founder": "Gründer",
+    "board-member": "Vorstandsmitglied",
+    "software-development": "Softwareentwicklung",
+    "app-development": "App-Entwicklung",
+    "impact-measurement": "Impact Measurement"
+  },
+  "groups": {
+    "staff": "Mitarbeiter:innen",
+    "board": "Vorstand",
+    "volunteers": "Freiwillige",
+    "special-thanks": "Besonderer Dank"
+  }
+}
