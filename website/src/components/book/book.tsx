@@ -1,5 +1,4 @@
-import { Badge, BaseContainer, Typography } from '@socialincome/ui';
-import classNames from 'classnames';
+import { Badge, Card, Typography } from '@socialincome/ui';
 import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
 
@@ -29,40 +28,31 @@ export default async function Book({
 	currentlyReading,
 }: BookProps) {
 	return (
-		<BaseContainer>
-			<div
-				className={classNames('flex h-fit flex-col flex-nowrap pb-5 shadow-md sm:flex-row ', {
-					'my-40': currentlyReading,
-					'my-8': !currentlyReading,
-				})}
-			>
-				<div className="w-fit basis-1/3">
-					<Image src={cover} height={4000} alt="book cover" />
-				</div>
-				<div className="mx-8 flex w-fit basis-5/12 flex-col">
-					<div className="flex flex-col items-baseline sm:flex-row">
-						<Typography className="mt-6 text-blue-500 sm:mb-2">{author}</Typography>
-						{currentlyReading && (
-							<Badge className="my-1 rounded-md bg-blue-500 px-2 py-0.5 text-white sm:mx-1">Currently reading</Badge>
-						)}
-					</div>
-					<Link href={authorLink}>
-						<Typography weight="bold" size="xl" lineHeight="relaxed" className="mb-1">
-							{title}
-						</Typography>
-					</Link>
-					<Typography as="p">{description}</Typography>
-					<Typography as="p" className="my-5">
-						{quote}
-					</Typography>
-					<Link href={publisherLink}>
-						<Typography weight="bold" className="hover:text-blue-800">
-							{publisher}
-						</Typography>
-					</Link>
-					<Typography size="sm">Published {year}</Typography>
-				</div>
+		<Card className="flex flex-col sm:flex-row">
+			<div className="w-fit basis-2/5 self-center">
+				<Image src={cover} alt="Book cover" className="w-full rounded-sm" />
 			</div>
-		</BaseContainer>
+			<div className="flex w-fit basis-3/5 flex-col px-8 py-6">
+				<div className="flex-inline mb-1 flex items-center">
+					<Typography as="h3" color="primary">
+						{author}
+					</Typography>
+					{currentlyReading && <Badge className="ml-2 rounded-md">Currently reading</Badge>}
+				</div>
+				<Link href={authorLink} target="_blank" rel="noreferrer" className="mb-2">
+					<Typography weight="bold" size="xl" lineHeight="relaxed" as="h2" className="hover:text-primary">
+						{title}
+					</Typography>
+				</Link>
+				<Typography>{description}</Typography>
+				<Typography className="my-5">{quote}</Typography>
+				<Link href={publisherLink} target="_blank" rel="noreferrer">
+					<Typography weight="bold" className="hover:text-primary">
+						{publisher}
+					</Typography>
+				</Link>
+				<Typography size="sm">Published {year}</Typography>
+			</div>
+		</Card>
 	);
 }
