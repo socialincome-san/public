@@ -14,7 +14,7 @@ export function buildContributionsCollection(
 	return buildAuditedCollection<Contribution>({
 		name: 'Contributions',
 		group: 'Contributors',
-		icon: 'Paid',
+		Icon: 'Paid',
 		path: CONTRIBUTION_FIRESTORE_PATH,
 		textSearchEnabled: false,
 		initialSort: ['created', 'desc'],

@@ -79,7 +79,7 @@ export const buildRecipientsCollection = () => {
 		defaultSize: 'xs',
 		description: 'List of people who receive a Social Income',
 		group: 'Recipients',
-		icon: 'RememberMeTwoTone',
+		Icon: 'RememberMeTwoTone',
 		name: 'Recipients',
 		path: RECIPIENT_FIRESTORE_PATH,
 		singularName: 'Recipient',

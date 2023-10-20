@@ -68,7 +68,7 @@ export default function App() {
 			name: 'Payments Confirmation',
 			description: 'All payments that need to be confirmed',
 			group: 'Recipients',
-			icon: 'PriceCheck',
+			Icon: 'PriceCheck',
 			view: <PaymentsConfirmationView />,
 		},
 		{
@@ -76,7 +76,7 @@ export default function App() {
 			name: 'Upcoming Surveys',
 			description: 'Upcoming surveys',
 			group: 'Surveys',
-			icon: 'MarkunreadMailbox',
+			Icon: 'MarkunreadMailbox',
 			view: <NextSurveysView />,
 		},
 	];

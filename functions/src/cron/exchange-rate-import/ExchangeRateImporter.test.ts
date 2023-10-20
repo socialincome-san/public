@@ -18,7 +18,7 @@ describe('importExchangeRates', () => {
 	test('inserts exchange rates into firestore', async () => {
 		const rawResponse: ExchangeRateResponse = {
 			base: 'CHF',
-			date: '2022-12-20',
+			title: '2022-12-20',
 			rates: { AED: 3.9, AFN: 94.03 },
 		};
 

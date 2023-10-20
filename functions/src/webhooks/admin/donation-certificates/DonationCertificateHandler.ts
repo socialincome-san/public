@@ -225,7 +225,7 @@ export class DonationCertificateHandler {
 							to: user.email,
 							subject: translator.t('email-subject'),
 							// TODO: Use renderEmailTemplate() instead of renderTemplate()
-							content: await renderTemplate({
+							text: await renderTemplate({
 								language: user.language || 'de',
 								translationNamespace: 'email-donation-certificate',
 								hbsTemplatePath: 'email/donation-certificate.hbs',
