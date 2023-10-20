@@ -65,7 +65,7 @@ export const buildRecipientsPaymentsCollection = () => {
 		path: RECIPIENT_FIRESTORE_PATH,
 		alias: 'recent-payments',
 		group: 'Recipients',
-		Icon: 'AttachMoneyTwoTone',
+		icon: 'AttachMoneyTwoTone',
 		description: 'Payment overview over the last three months',
 		defaultSize: 'xs',
 		textSearchEnabled: true,

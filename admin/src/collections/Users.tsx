@@ -57,7 +57,7 @@ const ReferralCol: AdditionalFieldDelegate<User> = {
 export const usersCollection = buildAuditedCollection<User>({
 	path: USER_FIRESTORE_PATH,
 	group: 'Contributors',
-	Icon: 'VolunteerActivism',
+	icon: 'VolunteerActivism',
 	name: 'Contributors',
 	singularName: 'Contributor',
 	description: 'Lists all contributors',

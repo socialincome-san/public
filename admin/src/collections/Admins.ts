@@ -7,7 +7,7 @@ export const adminsCollection = buildAuditedCollection<AdminUser>({
 	name: 'Admins',
 	group: 'Admin',
 	path: ADMIN_USER_FIRESTORE_PATH,
-	Icon: 'SupervisorAccountTwoTone',
+	icon: 'SupervisorAccountTwoTone',
 	description: 'Lists all admins for this admin panel',
 	customId: true,
 	properties: buildProperties<AdminUser>({

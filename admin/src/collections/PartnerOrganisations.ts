@@ -10,7 +10,7 @@ export const buildPartnerOrganisationsCollection = () => {
 		name: 'Partner Organisations',
 		group: 'Admin',
 		path: PARTNER_ORGANISATION_FIRESTORE_PATH,
-		Icon: 'CorporateFare',
+		icon: 'CorporateFare',
 		description: 'Lists all our partner organisations',
 		customId: true,
 		properties: buildProperties<PartnerOrganisation>({

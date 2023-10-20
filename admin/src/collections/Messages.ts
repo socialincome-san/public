@@ -11,7 +11,7 @@ export const messagesCollection = buildAuditedCollection<Partial<TwilioMessage |
 		edit: false,
 	},
 	path: MESSAGE_FIRESTORE_PATH,
-	Icon: 'SupervisorAccountTwoTone',
+	icon: 'SupervisorAccountTwoTone',
 	description: 'Lists all messages for one recipient or user',
 	customId: true,
 	properties: buildProperties<Partial<TwilioMessage | Email>>({

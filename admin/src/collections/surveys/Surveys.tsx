@@ -23,7 +23,7 @@ export function buildSurveysCollection(collectionProps?: Partial<EntityCollectio
 		inlineEditing: false,
 		singularName: 'Survey',
 		group: 'Surveys',
-		Icon: 'QuestionAnswer',
+		icon: 'QuestionAnswer',
 		properties: {
 			questionnaire: surveyQuestionnaireProperty,
 			recipient_name: recipientNameProperty,

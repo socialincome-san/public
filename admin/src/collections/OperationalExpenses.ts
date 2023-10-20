@@ -10,7 +10,7 @@ export const operationalExpensesCollection = buildAuditedCollection<OperationalE
 	group: 'Finances',
 	path: OPERATIONAL_EXPENSE_FIRESTORE_PATH,
 	textSearchEnabled: false,
-	Icon: 'LocalAtm',
+	icon: 'LocalAtm',
 	description: 'Add operational costs for transparency page',
 	initialSort: ['created', 'desc'],
 	permissions: ({ authController }) => ({
