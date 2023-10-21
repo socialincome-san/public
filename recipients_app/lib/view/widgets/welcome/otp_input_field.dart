@@ -4,11 +4,13 @@ import "package:flutter/material.dart";
 class OtpInputField extends StatelessWidget {
   final TextEditingController? controller;
   final Function(String?)? onChanged;
+  final bool isFirstField;
 
   const OtpInputField({
     super.key,
     this.controller,
     this.onChanged,
+    this.isFirstField = false,
   });
 
   @override
@@ -43,7 +45,7 @@ class OtpInputField extends StatelessWidget {
             validator: null,
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
-            maxLength: 1,
+            maxLength: isFirstField ? 6 : 1,
           ),
         ),
       ),
