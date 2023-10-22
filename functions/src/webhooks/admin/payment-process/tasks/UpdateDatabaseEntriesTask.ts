@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { toFirebaseAdminTimestamp } from '../../../../../../shared/src/firebase/admin/utils';
+import { toFirebaseAdminTimestamp } from '../../@socialincome/shared/src/firebase/admin/utils';
 import {
 	PAYMENTS_COUNT,
 	PAYMENT_AMOUNT,
@@ -7,8 +7,8 @@ import {
 	PAYMENT_FIRESTORE_PATH,
 	Payment,
 	PaymentStatus,
-} from '../../../../../../shared/src/types/Payment';
-import { RECIPIENT_FIRESTORE_PATH, RecipientProgramStatus } from '../../../../../../shared/src/types/Recipient';
+} from '../../@socialincome/shared/src/types/Payment';
+import { RECIPIENT_FIRESTORE_PATH, RecipientProgramStatus } from '../../@socialincome/shared/src/types/Recipient';
 import { ExchangeRateImporter } from '../../../../cron/exchange-rate-import/ExchangeRateImporter';
 import { PaymentTask } from './PaymentTask';
 

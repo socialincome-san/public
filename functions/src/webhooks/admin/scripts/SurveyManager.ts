@@ -1,22 +1,22 @@
 import { DateTime } from 'luxon';
-import { AuthAdmin } from '../../../../../shared/src/firebase/admin/AuthAdmin';
-import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
-import { toFirebaseAdminTimestamp } from '../../../../../shared/src/firebase/admin/utils';
+import { AuthAdmin } from '../@socialincome/shared/src/firebase/admin/AuthAdmin';
+import { FirestoreAdmin } from '../@socialincome/shared/src/firebase/admin/FirestoreAdmin';
+import { toFirebaseAdminTimestamp } from '../@socialincome/shared/src/firebase/admin/utils';
 import {
 	RECIPIENT_FIRESTORE_PATH,
 	Recipient,
 	RecipientMainLanguage,
 	RecipientProgramStatus,
-} from '../../../../../shared/src/types/Recipient';
+} from '../@socialincome/shared/src/types/Recipient';
 import {
 	SURVEY_FIRETORE_PATH,
 	Survey,
 	SurveyQuestionnaire,
 	SurveyStatus,
 	recipientSurveys,
-} from '../../../../../shared/src/types/Survey';
-import { rndString } from '../../../../../shared/src/utils/crypto';
-import { toDateTime } from '../../../../../shared/src/utils/date';
+} from '../@socialincome/shared/src/types/Survey';
+import { rndString } from '../@socialincome/shared/src/utils/crypto';
+import { toDateTime } from '../@socialincome/shared/src/utils/date';
 
 /**
  * Takes care of creating surveys for recipients

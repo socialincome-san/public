@@ -1,8 +1,8 @@
 import { logger } from 'firebase-functions';
 import { onRequest } from 'firebase-functions/v2/https';
 import Stripe from 'stripe';
-import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
-import { StripeEventHandler } from '../../../../shared/src/stripe/StripeEventHandler';
+import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
+import { StripeEventHandler } from '@socialincome/shared/src/stripe/StripeEventHandler';
 import { STRIPE_API_READ_KEY, STRIPE_WEBHOOK_SECRET } from '../../config';
 
 /**

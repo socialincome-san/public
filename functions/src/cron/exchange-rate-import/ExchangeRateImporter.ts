@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { logger } from 'firebase-functions';
 import { DateTime } from 'luxon';
-import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
-import { EXCHANGE_RATES_PATH, ExchangeRates, ExchangeRatesEntry } from '../../../../shared/src/types/ExchangeRates';
+import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
+import { EXCHANGE_RATES_PATH, ExchangeRates, ExchangeRatesEntry } from '@socialincome/shared/src/types/ExchangeRates';
 import { EXCHANGE_RATES_API } from '../../config';
 
 export type ExchangeRateResponse = {

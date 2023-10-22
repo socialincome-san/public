@@ -1,7 +1,7 @@
 import { logger } from 'firebase-functions';
 import { onCall } from 'firebase-functions/v2/https';
-import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
-import { StripeEventHandler } from '../../../../../shared/src/stripe/StripeEventHandler';
+import { FirestoreAdmin } from '../@socialincome/shared/src/firebase/admin/FirestoreAdmin';
+import { StripeEventHandler } from '../@socialincome/shared/src/stripe/StripeEventHandler';
 import { STRIPE_API_READ_KEY } from '../../../config';
 import { PaymentsManager } from './PaymentsManager';
 import { SurveyManager } from './SurveyManager';

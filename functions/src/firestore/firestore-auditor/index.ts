@@ -2,7 +2,7 @@ import { DocumentSnapshot } from '@google-cloud/firestore';
 import * as functions from 'firebase-functions';
 import { Change, EventContext } from 'firebase-functions';
 import { DateTime } from 'luxon';
-import { DEFAULT_REGION } from '../../../../shared/src/firebase';
+import { DEFAULT_REGION } from '@socialincome/shared/src/firebase';
 import { FirestoreAuditor } from './FirestoreAuditor';
 
 /**

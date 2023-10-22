@@ -1,12 +1,12 @@
 import { describe, expect, test } from '@jest/globals';
 import functions from 'firebase-functions-test';
-import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
-import { getOrInitializeFirebaseAdmin } from '../../../../shared/src/firebase/admin/app';
+import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
+import { getOrInitializeFirebaseAdmin } from '@socialincome/shared/src/firebase/admin/app';
 import {
 	BANK_BALANCE_FIRESTORE_PATH,
 	BankBalance,
 	getIdFromBankBalance,
-} from '../../../../shared/src/types/BankBalance';
+} from '@socialincome/shared/src/types/BankBalance';
 import { PostFinanceBalanceImporter } from './PostFinanceBalanceImporter';
 
 describe('importPostfinanceBalance', () => {

@@ -18,7 +18,7 @@
 		"firebase:export": "firebase emulators:export --project social-income-staging --force ./seed",
 		"firebase:serve": "firebase emulators:start --project social-income-staging --config firebase.json --import ./seed",
 		"format-code": "prettier --write .",
-		"functions:build": "npm --workspace=@socialincome/functions run build",
+		"functions:build": "npm --workspace=@socialincome/functions run build && npx isolate",
 		"functions:deploy": "npm --workspace=@socialincome/functions run deploy",
 		"functions:serve": "npm --workspace=@socialincome/functions run serve",
 		"functions:test": "npm --workspace=@socialincome/functions run test",
@@ -49,5 +49,8 @@
 		"prettier-plugin-organize-imports": "3.2.3",
 		"prettier-plugin-tailwindcss": "0.4.1",
 		"typescript": "^5.2.2"
+	},
+	"dependencies": {
+		"isolate-package": "^1.3.3"
 	}
 }

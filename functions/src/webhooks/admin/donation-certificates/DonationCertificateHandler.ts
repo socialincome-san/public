@@ -3,15 +3,15 @@ import _ from 'lodash';
 import * as path from 'path';
 import PDFDocument from 'pdfkit';
 import { withFile } from 'tmp-promise';
-import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
-import { StorageAdmin } from '../../../../../shared/src/firebase/admin/StorageAdmin';
-import { Entity } from '../../../../../shared/src/types';
-import { Contribution, StatusKey } from '../../../../../shared/src/types/Contribution';
-import { DonationCertificate } from '../../../../../shared/src/types/DonationCertificate';
-import { User } from '../../../../../shared/src/types/User';
-import { Translator } from '../../../../../shared/src/utils/i18n';
-import { sendEmail } from '../../../../../shared/src/utils/messaging/email';
-import { renderTemplate } from '../../../../../shared/src/utils/templates';
+import { FirestoreAdmin } from '../@socialincome/shared/src/firebase/admin/FirestoreAdmin';
+import { StorageAdmin } from '../@socialincome/shared/src/firebase/admin/StorageAdmin';
+import { Entity } from '../@socialincome/shared/src/types';
+import { Contribution, StatusKey } from '../@socialincome/shared/src/types/Contribution';
+import { DonationCertificate } from '../@socialincome/shared/src/types/DonationCertificate';
+import { User } from '../@socialincome/shared/src/types/User';
+import { Translator } from '../@socialincome/shared/src/utils/i18n';
+import { sendEmail } from '../@socialincome/shared/src/utils/messaging/email';
+import { renderTemplate } from '../@socialincome/shared/src/utils/templates';
 import { ASSET_DIR, NOTIFICATION_EMAIL_PASSWORD_KERRIN, NOTIFICATION_EMAIL_USER_KERRIN } from '../../../config';
 
 export interface CreateDonationCertificatesFunctionProps {

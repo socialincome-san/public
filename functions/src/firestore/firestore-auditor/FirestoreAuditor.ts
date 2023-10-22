@@ -2,8 +2,8 @@ import { DocumentSnapshot } from '@google-cloud/firestore';
 import { Change } from 'firebase-functions';
 import { isEqual } from 'lodash';
 import { DateTime } from 'luxon';
-import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
-import { toFirebaseAdminTimestamp } from '../../../../shared/src/firebase/admin/utils';
+import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
+import { toFirebaseAdminTimestamp } from '@socialincome/shared/src/firebase/admin/utils';
 
 /**
  * Watches write updates in collection and subcollections and inserts the previous record value into a

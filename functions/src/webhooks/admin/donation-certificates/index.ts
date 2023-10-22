@@ -1,5 +1,5 @@
 import { onCall } from 'firebase-functions/v2/https';
-import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
+import { FirestoreAdmin } from '../@socialincome/shared/src/firebase/admin/FirestoreAdmin';
 import { CreateDonationCertificatesFunctionProps, DonationCertificateHandler } from './DonationCertificateHandler';
 
 export default onCall<CreateDonationCertificatesFunctionProps, Promise<string>>(async (request) => {

@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
-import { toFirebaseAdminTimestamp } from '../../../../../shared/src/firebase/admin/utils';
-import { ExchangeRates } from '../../../../../shared/src/types/ExchangeRates';
-import { Payment, PaymentStatus } from '../../../../../shared/src/types/Payment';
+import { toFirebaseAdminTimestamp } from '../@socialincome/shared/src/firebase/admin/utils';
+import { ExchangeRates } from '../@socialincome/shared/src/types/ExchangeRates';
+import { Payment, PaymentStatus } from '../@socialincome/shared/src/types/Payment';
 import { PaymentsManager } from './PaymentsManager';
 
 test('BatchAddCHFToPayments', async () => {

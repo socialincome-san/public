@@ -1,20 +1,20 @@
 import functionsTest from 'firebase-functions-test';
 import { DateTime } from 'luxon';
-import { getOrInitializeFirebaseAdmin } from '../../../../../../shared/src/firebase/admin/app';
-import { FirestoreAdmin } from '../../../../../../shared/src/firebase/admin/FirestoreAdmin';
+import { getOrInitializeFirebaseAdmin } from '../../@socialincome/shared/src/firebase/admin/app';
+import { FirestoreAdmin } from '../../@socialincome/shared/src/firebase/admin/FirestoreAdmin';
 import {
 	Payment,
 	PAYMENT_FIRESTORE_PATH,
 	PaymentProcessTaskType,
 	PaymentStatus,
-} from '../../../../../../shared/src/types/Payment';
+} from '../../@socialincome/shared/src/types/Payment';
 import {
 	Recipient,
 	RECIPIENT_FIRESTORE_PATH,
 	RecipientProgramStatus,
 	toPaymentDate,
-} from '../../../../../../shared/src/types/Recipient';
-import { toDateTime } from '../../../../../../shared/src/utils/date';
+} from '../../@socialincome/shared/src/types/Recipient';
+import { toDateTime } from '../../@socialincome/shared/src/utils/date';
 import { initializeGlobalTestData } from '../../../../firebase';
 import { runPaymentProcessTask } from '../../../index';
 

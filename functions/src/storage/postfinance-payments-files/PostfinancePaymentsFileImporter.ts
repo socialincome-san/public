@@ -1,16 +1,16 @@
 import xmldom from '@xmldom/xmldom';
 import { DateTime } from 'luxon';
 import xpath from 'xpath';
-import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
-import { StorageAdmin } from '../../../../shared/src/firebase/admin/StorageAdmin';
-import { toFirebaseAdminTimestamp } from '../../../../shared/src/firebase/admin/utils';
+import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
+import { StorageAdmin } from '@socialincome/shared/src/firebase/admin/StorageAdmin';
+import { toFirebaseAdminTimestamp } from '@socialincome/shared/src/firebase/admin/utils';
 import {
 	BankWireContribution,
 	CONTRIBUTION_FIRESTORE_PATH,
 	ContributionSourceKey,
 	StatusKey,
-} from '../../../../shared/src/types/Contribution';
-import { USER_FIRESTORE_PATH, User } from '../../../../shared/src/types/User';
+} from '@socialincome/shared/src/types/Contribution';
+import { USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types/User';
 
 // TODO: write tests
 export class PostfinancePaymentsFileImporter {

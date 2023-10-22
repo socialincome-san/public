@@ -14,7 +14,8 @@
 	],
 	"functions": {
 		"ignore": ["**/*.log", "scripts/", "src/", "tests/"],
-		"source": "functions",
+		"source": "./isolate",
+		"predeploy": ["npm run build", "isolate"],
 		"runtime": "nodejs18"
 	},
 	"storage": {

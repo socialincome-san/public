@@ -2,12 +2,12 @@ import { logger } from 'firebase-functions';
 import imaps from 'imap-simple';
 import _ from 'lodash';
 import { Source, simpleParser } from 'mailparser';
-import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
+import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
 import {
 	BANK_BALANCE_FIRESTORE_PATH,
 	BankBalance,
 	getIdFromBankBalance,
-} from '../../../../shared/src/types/BankBalance';
+} from '@socialincome/shared/src/types/BankBalance';
 import { POSTFINANCE_EMAIL_PASSWORD, POSTFINANCE_EMAIL_USER } from '../../config';
 
 export class PostFinanceBalanceImporter {

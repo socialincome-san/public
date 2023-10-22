@@ -1,11 +1,11 @@
 import { firestore } from 'firebase-admin';
 import { DateTime } from 'luxon';
-import { FirestoreAdmin } from '../../../../../../shared/src/firebase/admin/FirestoreAdmin';
+import { FirestoreAdmin } from '../../@socialincome/shared/src/firebase/admin/FirestoreAdmin';
 import {
 	Recipient,
 	RECIPIENT_FIRESTORE_PATH,
 	RecipientProgramStatus,
-} from '../../../../../../shared/src/types/Recipient';
+} from '../../@socialincome/shared/src/types/Recipient';
 import QueryDocumentSnapshot = firestore.QueryDocumentSnapshot;
 
 export abstract class PaymentTask {
