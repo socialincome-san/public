@@ -1,15 +1,17 @@
 {
-	"bankDetails": {
+	"section-1": {
 		"title": "Bank Details",
-		"bankIntroText": "Account details for bank transfers.",
-		"bankInfoTextRecurring": "Recurring contributions",
-		"bankInfoTextRecurringComment": "100% paid out to recipients",
+		"bankIntroText": "Account details for bank transfers",
+		"bankInfoTextRecurring": "Recurring contributions (100% paid out to recipients)",
 		"bankOneTime": "One-time contributions",
+		"bankPrompt": "Bank",
 		"bankPostFinance": "PostFinance, Zurich (Switzerland)",
+		"bankAccountHolderPrompt": "Account Holder",
 		"bankAccountHolder": "Social Income",
-		"bankTxtIBAN": "IBAN",
-		"bankTxtIBAN1": "CH19 0900 0000 1511 2638 6",
-		"bankTxtIBAN2": "CH57 0900 0000 1548 6088 1",
-		"bankTxtBIC": "POFICHBEXXX"
+		"bankIBANPrompt": "IBAN",
+		"bankIBAN1": "CH19 0900 0000 1511 2638 6",
+		"bankIBAN2": "CH57 0900 0000 1548 6088 1",
+		"bankBICPrompt" : "BIC",
+		"bankBIC": "POFICHBEXXX"
 	}
 }

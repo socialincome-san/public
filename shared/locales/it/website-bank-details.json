@@ -1,15 +1,17 @@
 {
-	"bankDetails": {
+	"section-1": {
 		"title": "Dettagli bancari",
 		"bankIntroText": "Dettagli del conto per i bonifici bancari",
-		"bankInfoTextRecurring": "Donazioni ricorrenti",
-		"bankInfoTextRecurringComment": "Di cui il 100% trasferito ai beneficiari",
+		"bankInfoTextRecurring": "Donazioni ricorrenti (Di cui il 100% trasferito ai beneficiari)",
 		"bankOneTime": "Donazioni una tantum",
+		"bankPrompt": "Bank",
 		"bankPostFinance": "PostFinance, Zurigo (Svizzera)",
+		"bankAccountHolderPrompt": "Titolare del conto",
 		"bankAccountHolder": "Social Income",
-		"bankTxtIBAN": "IBAN ",
-		"bankTxtIBAN1": "CH19 0900 0000 1511 2638 6",
-		"bankTxtIBAN2": "CH57 0900 0000 1548 6088 1",
-		"bankTxtBIC": "POFICHBEXXX"
+		"bankIBANPrompt": "IBAN",
+		"bankIBAN1": "CH19 0900 0000 1511 2638 6",
+		"bankIBAN2": "CH57 0900 0000 1548 6088 1",
+		"bankBICPrompt" : "BIC",
+		"bankBIC": "POFICHBEXXX"
 	}
 }
