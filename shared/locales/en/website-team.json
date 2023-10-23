@@ -16,9 +16,21 @@
 		"strategy": "Strategy"
 	},
 	"groups": {
-		"staff": "Staff",
-		"board": "Board of Association",
-		"volunteers": "Volunteers",
-		"special-thanks": "Special Thanks"
+		"staff": {
+			"name": "Staff",
+			"description": "Our local staff in Sierra Leone."
+		},
+		"volunteers": {
+			"name": "Volunteers",
+			"description": "The people who make it all happen."
+		},
+		"board": {
+			"name": "Board of Association",
+			"description": "The overseers of the organization."
+		},
+		"special-thanks": {
+			"name": "Special Thanks",
+			"description": "These individuals have volunteered and made generous contributions towards Social Income."
+		}
 	}
 }
