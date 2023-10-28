@@ -1,6 +1,7 @@
 import functionsTest from 'firebase-functions-test';
 import { DateTime } from 'luxon';
-import { PaymentProcessTaskType, toPaymentDate } from '../../../../../../shared/src/types';
+import { PaymentProcessTaskType } from '../../../../../../shared/src/types/Payment';
+import { toPaymentDate } from '../../../../../../shared/src/types/Recipient';
 import { initializeGlobalTestData } from '../../../../firebase';
 import { runPaymentProcessTask } from '../../../index';
 
@@ -26,7 +27,7 @@ test('GetPaymentCSV', async () => {
 
 	const rows = result.split('\n').map((row: string) => row.split(','));
 
-	expect(rows).toHaveLength(3);
+	expect(rows).toHaveLength(4);
 	expect(rows[0]).toEqual([
 		'Mobile Number*',
 		'Amount*',
@@ -38,4 +39,5 @@ test('GetPaymentCSV', async () => {
 	]);
 	expect(rows[1]).toEqual(['25000052', '700', 'Test2', 'User2', '2', `Social Income April 2023`, 'subscriber']);
 	expect(rows[2]).toEqual(['25000053', '700', 'Test3', 'User3', '3', `Social Income April 2023`, 'subscriber']);
+	expect(rows[3]).toEqual(['25000054', '700', 'Test4', 'User4', '4', `Social Income April 2023`, 'subscriber']);
 });

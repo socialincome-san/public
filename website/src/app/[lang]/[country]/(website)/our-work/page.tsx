@@ -1,10 +1,18 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
-import Section1 from './section-1';
+import { Contributors } from './(sections)/contributors';
+import { HowItWorks } from './(sections)/how-it-works';
+import { OurWork } from './(sections)/our-work';
+import { Recipients } from './(sections)/recipients';
+import { WhatsNext } from './(sections)/whats-next';
 
 export default async function Page(props: DefaultPageProps) {
 	return (
 		<>
-			<Section1 {...props} />
+			<OurWork {...props} />
+			<HowItWorks {...props} />
+			<Contributors {...props} />
+			<Recipients {...props} />
+			<WhatsNext {...props} />
 		</>
 	);
 }

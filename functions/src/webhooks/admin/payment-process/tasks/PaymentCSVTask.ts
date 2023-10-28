@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { PAYMENT_AMOUNT } from '../../../../../../shared/src/types';
+import { PAYMENT_AMOUNT } from '../../../../../../shared/src/types/Payment';
 import { PaymentTask } from './PaymentTask';
 
 export class PaymentCSVTask extends PaymentTask {
@@ -8,17 +8,19 @@ export class PaymentCSVTask extends PaymentTask {
 		const recipients = await this.getRecipients();
 		recipients.sort((a, b) => a.get('om_uid') - b.get('om_uid'));
 
-		for (const recipient of recipients) {
-			csvRows.push([
-				recipient.get('mobile_money_phone').phone.toString().slice(-8),
-				PAYMENT_AMOUNT.toString(),
-				recipient.get('first_name'),
-				recipient.get('last_name'),
-				recipient.get('om_uid').toString(),
-				`Social Income ${paymentDate.toFormat('LLLL yyyy')}`,
-				'subscriber',
-			]);
-		}
+		await Promise.all(
+			recipients.map(async (recipient) => {
+				csvRows.push([
+					recipient.get('mobile_money_phone').phone.toString().slice(-8),
+					PAYMENT_AMOUNT.toString(),
+					recipient.get('first_name'),
+					recipient.get('last_name'),
+					recipient.get('om_uid').toString(),
+					`Social Income ${paymentDate.toFormat('LLLL yyyy')}`,
+					'subscriber',
+				]);
+			}),
+		);
 		return csvRows.map((row) => row.join(',')).join('\n');
 	}
 }

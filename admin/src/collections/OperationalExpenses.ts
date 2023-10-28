@@ -1,5 +1,8 @@
+import {
+	OPERATIONAL_EXPENSE_FIRESTORE_PATH,
+	OperationalExpense,
+} from '@socialincome/shared/src/types/OperationalExpense';
 import { buildProperties } from 'firecms';
-import { OPERATIONAL_EXPENSE_FIRESTORE_PATH, OperationalExpense } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 
 export const operationalExpensesCollection = buildAuditedCollection<OperationalExpense>({

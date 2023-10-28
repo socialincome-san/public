@@ -1,6 +1,89 @@
 {
-	"section-1": {
+	"our-work": {
 		"title-1": "Our work is made possible by you. Make a ",
-		"title-2": "change with us."
+		"title-2": "change with us.",
+		"subtitle": "Social Income is a new way to fight poverty in the Global South, creating real change, from human to human.",
+		"vimeo-video-id": "433937157"
+	},
+	"how-it-works": {
+		"header": "How it works",
+		"title-1": "From you to someone in need. ",
+		"title-2": "This is solidarity.",
+		"text": "We are convinced that people in poverty know best how to improve their living conditions.",
+		"subtitle": "Make a difference in under a minute.",
+		"item-1": "100% of individual contributions are paid out to recipients",
+		"item-2": "Flexible payment schedules. Adjust or cancel anytime",
+		"item-3": "Social Income payments are sent directly to recipients’ mobile phones.",
+		"item-4": "The amount disbursed is determined by the average salary where recipients live."
+	},
+	"contributors": {
+		"header-1": "Contributors",
+		"title-1": "People from all walks of life contribute.",
+		"text-1": "We receive, amongst others, regular individual contributions from employees at the following organisations and companies:",
+		"header-2": "Why contribute?",
+		"title-2": "One goal. Greater social justice.",
+		"text-2": "Our contributors want to help people for a variety of reasons. Here are just a few driving forces behind the humanitarians who contribute their 1% to Social Income:",
+		"portraits": {
+			"carlos": "We are living in a world of opportunities, let's make sure we share this privilege with everyone else.",
+			"vanja": "It’s a great example of redistribution of wealth based on solidarity and enabled by today's technology.",
+			"ruben": "I contribute to Social Income not only because it's simple, but because research has shown it's extremely effective.",
+			"han": "The question is not why to get involved, but how to possibly abide not doing so. Social Income is an urgent necessity in contemporary society.",
+			"claudia": "Today's global inequality is the consequence of centuries of unequal progress. Social Income is a new way to address this."
+		}
+	},
+	"recipients": {
+		"header": "Recipients",
+		"title-1": "We work where we can make an impact. ",
+		"title-2": "Sierra Leone.",
+		"subtitle": "As of March 2020, recipients in Sierra Leone each get USD 30 per month, guaranteed for three years.",
+		"our-criteria": "Our criteria",
+		"item-1": {
+			"title": "Low-Income Country",
+			"text": "We've started helping recipients in Sierra Leone, one of the poorest countries on Earth. There, a small donation can go a long way.",
+			"caption": "Average income in Sierra Leone is USD 42.5 per month – World Bank, 2022 (GNI per capita, Atlas method and PPP)"
+		},
+		"item-2": {
+			"title": "Low-Income Community",
+			"text": "For the selection of recipients, we collaborate with local NGOs who support vulnerable and disadvantaged communities.",
+			"caption": "Partners: Aurora, Jamil & Nyanga Jaward, Reachout Salone, Equal Rights Alliance, Polio B&S Organisation, Freetown City Council"
+		},
+		"item-3": {
+			"title": "Age and Gender Parity",
+			"text": "Recipients have to be older than 16 years old. We also strive for gender equality among recipients.",
+			"caption": ""
+		},
+		"voices": "Voices",
+		"portraits": {
+			"kai": "I use Social Income to help manage my finances. With the first payment I received, I was able to buy new crutches that I’ve used ever since.",
+			"aminata": "I crush stones into gravel for a living. This is hard work with a salary that doesn’t make it easy to raise four children with. I just want to say thank you for the monthly support.",
+			"gbassay": "Social Income made it possible for me to buy school supplies and send my child to school. Thank you for everything you’ve done to help!",
+			"lamin": "Social Income helps both me and my entire family.",
+			"onikeh": "Social Income has helped me immensely. It serves as an extra source of strength to draw from in our everyday lives. It feels amazing to have people support and believe in your dreams.",
+			"neneh": "I use my monthly Social Income to invest in my small business and pay for lunch for my kids at school. It makes me so happy I could cry!"
+		}
+	},
+	"whats-next": {
+		"header": "What's next?",
+		"title-1": "We take things ",
+		"title-2": "one step at a time.",
+		"subtitle": "Social Income’s long-term goal is to create a global system of wealth redistribution for people in need, with the help of contributors from all around the world. Like any ambitious project, it takes time to scale.",
+		"timeline": {
+			"item-1": {
+				"title": "March 2020",
+				"text": "We started our Pilot Phase and paid out the first installments to a small community in Freetown, Sierra Leone."
+			},
+			"item-2": {
+				"title": "September 2021",
+				"text": "We started our Development Phase and optimized our payment process."
+			},
+			"item-3": {
+				"title": "January 2022",
+				"text": "We reached our Public Phase and have since been progressively rolling out Social Income to recipients and contributors on a larger scale."
+			},
+			"item-4": {
+				"title": "Upcoming: Impact Measurement",
+				"text": "We have established a method and a set of qualitative and quantitative criteria to measure the project’s impact. We are now collecting essential data and refining our method with the help of our recipients."
+			}
+		}
 	}
 }

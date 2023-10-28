@@ -10,13 +10,13 @@ import {
 	Select,
 	Typography,
 } from '@mui/material';
-import { CollectionActionsProps, useAuthController, useSnackbarController } from 'firecms';
-import { User } from '../../../shared/src/types';
-
 import { getFunctions, httpsCallable } from 'firebase/functions';
+import { CollectionActionsProps, useAuthController, useSnackbarController } from 'firecms';
 import _ from 'lodash';
 import React from 'react';
 import { CreateDonationCertificatesFunctionProps } from '../../../functions/src/webhooks/admin/donation-certificates/DonationCertificateHandler';
+import { DEFAULT_REGION } from '../../../shared/src/firebase';
+import { User } from '../../../shared/src/types/User';
 
 const style = {
 	position: 'absolute' as 'absolute',
@@ -43,7 +43,7 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 	const handleOpen = () => setOpen(true);
 	const handleClose = () => setOpen(false);
 
-	const functions = getFunctions();
+	const functions = getFunctions(undefined, DEFAULT_REGION);
 	const createDonationCertificatesFunction = httpsCallable<CreateDonationCertificatesFunctionProps, string>(
 		functions,
 		'createDonationCertificates',

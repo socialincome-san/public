@@ -10,9 +10,7 @@ export const metadata = {
 export default function RootLayout({ children }: PropsWithChildren) {
 	return (
 		<html suppressHydrationWarning={true}>
-			<body>
-				<Providers>{children}</Providers>
-			</body>
+			<Providers>{children}</Providers>
 		</html>
 	);
 }

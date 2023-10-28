@@ -3,9 +3,10 @@
 import { DefaultParams } from '@/app/[lang]/[country]';
 import { UserContext } from '@/app/[lang]/[country]/(website)/me/user-context-provider';
 import { useTranslator } from '@/hooks/useTranslator';
-import { CONTRIBUTION_FIRESTORE_PATH, StatusKey, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types';
+import { CONTRIBUTION_FIRESTORE_PATH, StatusKey } from '@socialincome/shared/src/types/Contribution';
+import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/User';
 import { toDateTime } from '@socialincome/shared/src/utils/date';
-import { Table, Typography } from '@socialincome/ui';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Typography } from '@socialincome/ui';
 import { useQuery } from '@tanstack/react-query';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useContext } from 'react';
@@ -22,10 +23,9 @@ export function ContributionsTable({ lang, translations }: ContributionsTablePro
 	const firestore = useFirestore();
 	const { user } = useContext(UserContext);
 	const translator = useTranslator(lang, 'website-me');
-
-	const { data: contributions } = useQuery(
-		[user],
-		async () => {
+	const { data: contributions } = useQuery({
+		queryKey: [user, firestore],
+		queryFn: async () => {
 			if (user && firestore) {
 				return await getDocs(
 					query(
@@ -35,37 +35,40 @@ export function ContributionsTable({ lang, translations }: ContributionsTablePro
 				);
 			} else return null;
 		},
-		{
-			staleTime: 1000 * 60 * 60, // 1 hour
-		},
-	);
+		staleTime: 1000 * 60 * 60, // 1 hour
+	});
+	console.log(user?.id, firestore, contributions?.size);
 
 	return (
-		<Table size="sm">
-			<Table.Head>
-				<Typography weight="medium" as="span">
-					{translations.date}
-				</Typography>
-				<Typography weight="medium" as="span">
-					{translations.amount}
-				</Typography>
-			</Table.Head>
-			<Table.Body>
+		<Table>
+			<TableHeader>
+				<TableRow>
+					<TableHead>{translations.date}</TableHead>
+					<TableHead className="text-right">{translations.amount}</TableHead>
+				</TableRow>
+			</TableHeader>
+			<TableBody>
 				{contributions?.docs.map((contribution, index) => {
 					return (
-						<Table.Row key={index}>
-							<Typography as="span">
-								{toDateTime(contribution.get('created')).toFormat('DD', { locale: lang })}
-							</Typography>
-							<Typography as="span">
-								{translator?.t('contributions.amount-currency', {
-									context: { amount: contribution.get('amount'), currency: contribution.get('currency'), locale: lang },
-								})}
-							</Typography>
-						</Table.Row>
+						<TableRow key={index}>
+							<TableCell>
+								<Typography>{toDateTime(contribution.get('created')).toFormat('DD', { locale: lang })}</Typography>
+							</TableCell>
+							<TableCell className="text-right">
+								<Typography>
+									{translator?.t('contributions.amount-currency', {
+										context: {
+											amount: contribution.get('amount'),
+											currency: contribution.get('currency'),
+											locale: lang,
+										},
+									})}
+								</Typography>
+							</TableCell>
+						</TableRow>
 					);
 				})}
-			</Table.Body>
+			</TableBody>
 		</Table>
 	);
 }

@@ -1,4 +1,4 @@
-import { SurveyQuestionnaire } from '@socialincome/shared/src/types/admin/Survey';
+import { SurveyQuestionnaire } from '@socialincome/shared/src/types/Survey';
 import { TranslateFunction } from '@socialincome/shared/src/utils/i18n';
 import {
 	achievementsAchievedPage,

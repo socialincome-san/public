@@ -1,5 +1,5 @@
 import { EntityCollection } from 'firecms/dist/types/collections';
-import { SURVEY_FIRETORE_PATH, Survey } from '../../../../shared/src/types';
+import { SURVEY_FIRETORE_PATH, Survey } from '../../../../shared/src/types/Survey';
 import { buildAuditedCollection } from '../shared';
 import {
 	accessEmailProperty,
@@ -28,6 +28,7 @@ export function buildSurveysCollection(collectionProps?: Partial<EntityCollectio
 			questionnaire: surveyQuestionnaireProperty,
 			recipient_name: recipientNameProperty,
 			language: languageProperty,
+			// @ts-ignore
 			due_date_at: dueDateAtProperty,
 			sent_at: sentAtProperty,
 			completed_at: completedAtProperty,

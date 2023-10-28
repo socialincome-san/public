@@ -20,7 +20,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 
 	return (
 		<UserContextProvider>
-			<BaseContainer className="bg-base-blue min-h-screen">
+			<BaseContainer backgroundColor="bg-blue-50">
 				<div className="mb-8 flex flex-row">
 					{tabs.map((tab, index) => (
 						<LayoutTab key={index} title={tab.title} href={tab.href} />

@@ -1,9 +1,4 @@
 export default {
-	content: [
-		'./src/**/*.{js,ts,jsx,tsx,mdx}',
-		'../ui/src/**/*.{js,jsx,ts,tsx,mdx,html}',
-		'../node_modules/daisyui/dist/**/*.js',
-		'../node_modules/react-daisyui/dist/**/*.js',
-	],
+	content: ['./src/**/*.{js,ts,jsx,tsx,mdx}', '../ui/src/components/**/*.{js,jsx,ts,tsx,mdx,html}'],
 	presets: [require('../ui/tailwind.config')],
 };

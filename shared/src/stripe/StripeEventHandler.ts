@@ -1,19 +1,15 @@
-import { DocumentReference } from 'firebase-admin/firestore';
-import { CollectionReference } from 'firebase-admin/lib/firestore';
+import { CollectionReference, DocumentReference } from 'firebase-admin/firestore';
 import { DateTime } from 'luxon';
 import Stripe from 'stripe';
 import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
 import { toFirebaseAdminTimestamp } from '../firebase/admin/utils';
 import {
 	CONTRIBUTION_FIRESTORE_PATH,
-	Contribution,
 	ContributionSourceKey,
 	StatusKey,
-	USER_FIRESTORE_PATH,
-	User,
-	UserStatusKey,
-	splitName,
-} from '../types';
+	StripeContribution,
+} from '../types/Contribution';
+import { USER_FIRESTORE_PATH, User, UserStatusKey, splitName } from '../types/User';
 
 export class StripeEventHandler {
 	readonly stripe: Stripe;
@@ -23,7 +19,7 @@ export class StripeEventHandler {
 		this.firestoreAdmin = firestoreAdmin;
 		this.stripe = new Stripe(apiKey, {
 			typescript: true,
-			apiVersion: '2023-08-16',
+			apiVersion: '2023-10-16',
 		});
 	}
 
@@ -84,7 +80,7 @@ export class StripeEventHandler {
 	/**
 	 * Transforms the stripe charge into our own Contribution representation
 	 */
-	constructContribution = (charge: Stripe.Charge): Contribution => {
+	constructContribution = (charge: Stripe.Charge): StripeContribution => {
 		const plan = (charge.invoice as Stripe.Invoice)?.lines?.data[0]?.plan;
 		const monthlyInterval = plan?.interval === 'month' ? plan?.interval_count : plan?.interval === 'year' ? 12 : 0;
 		const balanceTransaction = charge.balance_transaction as Stripe.BalanceTransaction;
@@ -131,6 +127,7 @@ export class StripeEventHandler {
 			email: customer.email,
 			status: UserStatusKey.INITIALIZED,
 			stripe_customer_id: customer.id,
+			payment_reference_id: DateTime.now().toMillis(),
 			test_user: false,
 			location: customer.address?.country?.toLowerCase(),
 			currency: customer.currency,
@@ -140,14 +137,14 @@ export class StripeEventHandler {
 	/**
 	 * Converts the stripe charge to a contribution and stores it in the contributions subcollection of the corresponding user.
 	 */
-	storeCharge = async (charge: Stripe.Charge): Promise<DocumentReference<Contribution>> => {
+	storeCharge = async (charge: Stripe.Charge): Promise<DocumentReference<StripeContribution>> => {
 		const customer = await this.stripe.customers.retrieve(charge.customer as string);
 		if (customer.deleted) throw Error(`Dealing with a deleted Stripe customer (id=${customer.id})`);
 		const userRef = await this.getOrCreateUser(customer);
 		const contribution = this.constructContribution(charge);
-		const contributionRef = (userRef.collection(CONTRIBUTION_FIRESTORE_PATH) as CollectionReference<Contribution>).doc(
-			charge.id,
-		);
+		const contributionRef = (
+			userRef.collection(CONTRIBUTION_FIRESTORE_PATH) as CollectionReference<StripeContribution>
+		).doc(charge.id);
 		await contributionRef.set(contribution);
 		console.info(`Ingested ${charge.id} into firestore for user ${userRef.id}`);
 		return contributionRef;

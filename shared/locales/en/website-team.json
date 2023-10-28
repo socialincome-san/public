@@ -1,0 +1,36 @@
+{
+	"header": "Our Team",
+	"title-1": "We're making Social Income ",
+	"title-2": "a reality.",
+	"roles": {
+		"finance": "Finances",
+		"operations": "Operations",
+		"marketing": "Marketing",
+		"communications": "Communications",
+		"co-president": "Co-President",
+		"founder": "Founder",
+		"board-member": "Board Member",
+		"software-development": "Software Development",
+		"app-development": "App Development",
+		"impact-measurement": "Impact Measurement",
+		"strategy": "Strategy"
+	},
+	"groups": {
+		"staff": {
+			"name": "Staff",
+			"description": "Our local staff in Sierra Leone."
+		},
+		"volunteers": {
+			"name": "Volunteers",
+			"description": "The people who make it all happen."
+		},
+		"board": {
+			"name": "Board of Association",
+			"description": "The overseers of the organization."
+		},
+		"special-thanks": {
+			"name": "Special Thanks",
+			"description": "These individuals have volunteered and made generous contributions towards Social Income."
+		}
+	}
+}

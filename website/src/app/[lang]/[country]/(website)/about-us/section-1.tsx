@@ -12,9 +12,9 @@ export default async function Section1({ params }: DefaultPageProps) {
 
 	return (
 		<BaseContainer>
-			<div className="flex min-h-[calc(100vh-theme(spacing.20))] flex-col items-center lg:flex-row">
-				<Image className="flex-1 px-16 py-4" src={changeGif} alt="Change animation" />
-				<div className="flex flex-1 flex-col justify-center p-4 text-center lg:p-8 lg:text-left">
+			<div className="flex min-h-[80vh] flex-col items-center md:flex-row">
+				<Image className="flex-1 px-16 py-4" src={changeGif} alt="Change animation" style={{ objectFit: 'cover' }} />
+				<div className="flex flex-1 flex-col justify-center p-4 text-center">
 					<Typography as="span" size="4xl" weight="bold" lineHeight="relaxed">
 						{translator?.t('section-1.title-1')}
 					</Typography>

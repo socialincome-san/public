@@ -81,6 +81,7 @@ jobs:
         working-directory: functions
         run: |
           echo POSTFINANCE_EMAIL_PASSWORD=${{ secrets.POSTFINANCE_EMAIL_PASSWORD }} > .env
+          echo POSTFINANCE_PAYMENTS_FILES_BUCKET=${{ (inputs.project == 'social-income-prod' && vars.POSTFINANCE_PAYMENTS_FILES_BUCKET) || vars.POSTFINANCE_PAYMENTS_FILES_BUCKET_STAGING }} >> .env
           echo STRIPE_API_READ_KEY=${{ (inputs.project == 'social-income-prod' && secrets.STRIPE_API_READ_KEY) || secrets.STRIPE_API_READ_KEY_STAGING }} >> .env
           echo STRIPE_WEBHOOK_SECRET=${{ (inputs.project == 'social-income-prod' && secrets.STRIPE_WEBHOOK_SECRET) || secrets.STRIPE_WEBHOOK_SECRET_STAGING }} >> .env
           echo NOTIFICATION_EMAIL_USER=${{ secrets.NOTIFICATION_EMAIL_USER }} >> .env

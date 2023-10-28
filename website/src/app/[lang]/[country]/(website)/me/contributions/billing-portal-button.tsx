@@ -23,7 +23,7 @@ export function BillingPortalButton() {
 	}, [authUser]);
 
 	return (
-		<Button color="primary" onClick={() => router.push(billingPortalUrl!)} disabled={!billingPortalUrl}>
+		<Button onClick={() => router.push(billingPortalUrl!)} disabled={!billingPortalUrl}>
 			Update Payment Settings
 		</Button>
 	);

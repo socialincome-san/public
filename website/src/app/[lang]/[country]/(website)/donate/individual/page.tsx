@@ -2,82 +2,87 @@
 
 import { DefaultPageProps } from '@/app/[lang]/[country]';
 import { CreateSubscriptionData } from '@/app/api/stripe/checkout/new/route';
-import { RadioGroup } from '@headlessui/react';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
-import { BaseContainer, Button, Input, Theme, Typography } from '@socialincome/ui';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+	BaseContainer,
+	Button,
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormMessage,
+	Input,
+	RadioGroup,
+	Typography,
+} from '@socialincome/ui';
 import classNames from 'classnames';
-import { Formik, useFormikContext } from 'formik';
-import { FormikHelpers } from 'formik/dist/types';
 import { useRouter } from 'next/navigation';
+import { UseFormReturn, useForm } from 'react-hook-form';
 import Stripe from 'stripe';
-
-type DonateFormValues = {
-	amount: number;
-	intervalCount: number;
-};
+import * as z from 'zod';
 
 // TODO: i18n
-function IntervalCountRadioGroup() {
-	const { setFieldValue, values } = useFormikContext<DonateFormValues>();
+type RadioGroupFormItem = {
+	active: boolean;
+	value: '1' | '3' | '12';
+	title: string;
+	description: string;
+	form: UseFormReturn<{ amount: number; intervalCount: '1' | '3' | '12' }, any, undefined>;
+};
 
-	const intervalCountOptions = [
-		{ title: 'Monthly', description: 'Pay every month', value: 1 },
-		{ title: 'Quarterly', description: 'Pay every 3 months', value: 3 },
-		{ title: 'Annually', description: 'Pay every year', value: 12 },
-	];
+function RadioGroupFormItem({ active, title, value, form, description }: RadioGroupFormItem) {
+	const updateForm = () => {
+		const annualAmount = (form.getValues('amount') / Number(form.getValues('intervalCount'))) * 12;
+		form.setValue('amount', (Number(value) / 12) * annualAmount);
+		form.setValue('intervalCount', value);
+	};
 
 	return (
-		<RadioGroup
-			name="intervalCount"
-			value={values.intervalCount}
-			onChange={(value) => {
-				const annualAmount = (values.amount / values.intervalCount) * 12;
-				void setFieldValue('amount', (value / 12) * annualAmount);
-				void setFieldValue('intervalCount', value);
-			}}
-		>
-			<div className="grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4">
-				{intervalCountOptions.map((option, index) => (
-					<RadioGroup.Option
-						key={index}
-						value={option.value}
-						className={({ checked }) =>
-							classNames(
-								checked ? 'border-accent' : 'border-neutral',
-								'bg-base-100 relative flex cursor-pointer rounded-lg border-2 p-4 shadow-sm focus:outline-none',
-							)
-						}
-					>
-						{({ checked }) => (
-							<>
-								<span className="flex flex-1">
-									<span className="flex flex-col">
-										<Typography weight="bold">{option.title}</Typography>
-										<Typography size="sm">{option.description}</Typography>
-									</span>
-								</span>
-								<CheckCircleIcon
-									className={classNames(!checked ? 'invisible' : '', 'text-accent h-5 w-5')}
-									aria-hidden="true"
-								/>
-							</>
-						)}
-					</RadioGroup.Option>
-				))}
-			</div>
-		</RadioGroup>
+		<FormItem>
+			<FormControl
+				className={classNames(
+					'flex flex-1 cursor-pointer flex-row rounded-lg border-2 p-4 shadow-sm focus:outline-none',
+					{
+						'border-si-yellow': active,
+					},
+				)}
+			>
+				<div className="theme-default" onClick={updateForm}>
+					<span className="flex flex-1">
+						<span className="flex flex-col">
+							<Typography weight="bold">{title}</Typography>
+							<Typography size="sm">{description}</Typography>
+						</span>
+					</span>
+					<CheckCircleIcon
+						className={classNames(!active ? 'invisible' : '', 'text-si-yellow h-5 w-5')}
+						aria-hidden="true"
+					/>
+				</div>
+			</FormControl>
+		</FormItem>
 	);
 }
 
 export default function Page({ params, searchParams }: DefaultPageProps) {
 	const router = useRouter();
 
-	const onSubmit = async (values: DonateFormValues, { setSubmitting }: FormikHelpers<DonateFormValues>) => {
-		setSubmitting(true);
+	const formSchema = z.object({
+		amount: z.coerce.number(),
+		intervalCount: z.enum(['1', '3', '12']),
+	});
+	type FormSchema = z.infer<typeof formSchema>;
 
+	const form = useForm<FormSchema>({
+		resolver: zodResolver(formSchema),
+		defaultValues: { intervalCount: '1', amount: Number(searchParams.amount) || 50 },
+	});
+
+	const onSubmit = async (values: FormSchema) => {
 		const data: CreateSubscriptionData = {
 			amount: values.amount * 100, // The amount is in cents, so we need to multiply by 100 to get the correct amount.
-			intervalCount: values.intervalCount,
+			intervalCount: Number(values.intervalCount),
 			successUrl: `${window.location.origin}/${params.lang}/${params.country}/donate/success?stripeCheckoutSessionId={CHECKOUT_SESSION_ID}`,
 		};
 		const response = await fetch('/api/stripe/checkout/new', {
@@ -91,45 +96,72 @@ export default function Page({ params, searchParams }: DefaultPageProps) {
 	};
 
 	return (
-		<Theme className="bg-primary" dataTheme="siDefault">
-			<BaseContainer className="flex min-h-screen flex-col items-center justify-center pb-24">
-				<Typography color="primary-content" weight="medium" size="3xl" className="mb-12 text-center">
-					How would you like to pay?
-				</Typography>
-				<Formik
-					initialValues={{ amount: Number(searchParams.amount), intervalCount: 1 }}
-					validate={(values) => {
-						if (!values.amount) {
-							return { amount: 'Required' };
-						}
-					}}
-					onSubmit={onSubmit}
-				>
-					{({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
-						<form className="flex flex-col space-y-8" onSubmit={handleSubmit}>
-							<IntervalCountRadioGroup />
-							<div className="flex-inline flex items-center justify-center space-x-4">
-								<Typography size="lg" color="primary-content" weight="bold">
-									Amount
-								</Typography>
-								<Input
-									type="number"
-									name="amount"
-									size="lg"
-									placeholder="Amount"
-									onChange={handleChange}
-									onBlur={handleBlur}
-									value={values.amount}
-								/>
-							</div>
-							{errors.amount && touched.amount && errors.amount}
-							<Button size="lg" type="submit" color="accent" disabled={isSubmitting || !values.amount}>
-								Start Donating
-							</Button>
-						</form>
-					)}
-				</Formik>
-			</BaseContainer>
-		</Theme>
+		<BaseContainer className="flex min-h-screen flex-col items-center justify-center">
+			<Typography weight="bold" size="3xl" className="mb-12 text-center">
+				How would you like to pay?
+			</Typography>
+			<Form {...form}>
+				<form className="flex flex-col space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
+					<FormField
+						control={form.control}
+						name="intervalCount"
+						render={({ field }) => (
+							<FormItem className="space-y-3">
+								<FormControl>
+									<RadioGroup
+										onValueChange={field.onChange}
+										defaultValue={field.value}
+										className="grid grid-cols-3 gap-4"
+									>
+										<RadioGroupFormItem
+											form={form}
+											active={field.value === '1'}
+											value="1"
+											title="Monthly"
+											description="Pay every month"
+										/>
+										<RadioGroupFormItem
+											form={form}
+											active={field.value === '3'}
+											value="3"
+											title="Quarterly"
+											description="Pay every 3 months"
+										/>
+										<RadioGroupFormItem
+											form={form}
+											active={field.value === '12'}
+											value="12"
+											title="Yearly"
+											description="Pay every year"
+										/>
+									</RadioGroup>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<div className="flex-inline flex items-center justify-center space-x-4">
+						<FormField
+							control={form.control}
+							name="amount"
+							render={({ field }) => (
+								<FormItem>
+									<Typography size="lg" weight="bold">
+										Amount
+									</Typography>
+									<FormControl>
+										<Input type="number" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					</div>
+					<Button size="lg" type="submit">
+						Start Donating
+					</Button>
+				</form>
+			</Form>
+		</BaseContainer>
 	);
 }

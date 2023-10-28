@@ -1,5 +1,6 @@
+import { MESSAGE_FIRESTORE_PATH } from '@socialincome/shared/src/types/Message';
+import { Payment, PAYMENT_FIRESTORE_PATH, PaymentStatus } from '@socialincome/shared/src/types/Payment';
 import { buildProperties, EnumValues } from 'firecms';
-import { MESSAGE_FIRESTORE_PATH, Payment, PAYMENT_FIRESTORE_PATH, PaymentStatus } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 
 export const paymentStatusEnumValues: EnumValues = [

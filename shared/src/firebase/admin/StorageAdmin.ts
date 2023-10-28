@@ -1,10 +1,8 @@
 import { Bucket } from '@google-cloud/storage';
 import { randomBytes } from 'crypto';
-import { storage } from 'firebase-admin';
-import { App } from 'firebase-admin/lib/app';
-import { getStorage } from 'firebase-admin/storage';
+import { App } from 'firebase-admin/app';
+import { getStorage, Storage } from 'firebase-admin/storage';
 import { getOrInitializeFirebaseAdmin } from './app';
-import Storage = storage.Storage;
 
 /**
  * Unfortunately, in contrast to the client sdk, the admin storage sdk doesn't support to directly retrieve the download url of a file

@@ -1,5 +1,5 @@
+import { AdminUser } from '@socialincome/shared/src/types/AdminUser';
 import algoliasearch from 'algoliasearch';
-
 import {
 	Authenticator,
 	CMSView,
@@ -7,8 +7,6 @@ import {
 	FirestoreTextSearchController,
 	performAlgoliaTextSearch,
 } from 'firecms';
-import { AdminUser } from '../../shared/src/types';
-
 import { adminsCollection } from './collections/Admins';
 import { buildContributionsCollection } from './collections/Contributions';
 import { operationalExpensesCollection } from './collections/OperationalExpenses';

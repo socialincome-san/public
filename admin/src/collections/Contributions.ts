@@ -1,6 +1,11 @@
+import {
+	CONTRIBUTION_FIRESTORE_PATH,
+	Contribution,
+	ContributionSourceKey,
+	StatusKey,
+} from '@socialincome/shared/src/types/Contribution';
 import { buildProperties } from 'firecms';
 import { EntityCollection } from 'firecms/dist/types/collections';
-import { CONTRIBUTION_FIRESTORE_PATH, Contribution, ContributionSourceKey, StatusKey } from '../../../shared/src/types';
 import { buildAuditedCollection } from './shared';
 
 export function buildContributionsCollection(
@@ -26,6 +31,7 @@ export function buildContributionsCollection(
 				validation: { required: true },
 			},
 			created: {
+				// @ts-ignore
 				dataType: 'date',
 				name: 'Created',
 				mode: 'date',

@@ -1,5 +1,6 @@
 import assert from 'assert';
 import { firestore } from 'firebase-admin';
+import { App } from 'firebase-admin/app';
 import {
 	CollectionGroup,
 	CollectionReference,
@@ -9,8 +10,7 @@ import {
 	Query,
 	QueryDocumentSnapshot,
 } from 'firebase-admin/firestore';
-import { App } from 'firebase-admin/lib/app';
-import { AdminUser } from '../../types';
+import { AdminUser } from '../../types/AdminUser';
 import { getOrInitializeFirebaseAdmin } from './app';
 import Firestore = firestore.Firestore;
 

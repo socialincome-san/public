@@ -1,11 +1,13 @@
 'use client';
 
+import { DEFAULT_REGION } from '@socialincome/shared/src/firebase';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Analytics, getAnalytics, isSupported as isAnalyticsSupported } from 'firebase/analytics';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
+import { usePathname } from 'next/navigation';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import {
@@ -50,7 +52,7 @@ function FirebaseSDKProviders({ children }: PropsWithChildren) {
 	const app = useFirebaseApp();
 	const auth = getAuth(app);
 	const firestore = getFirestore(app);
-	const functions = getFunctions(app);
+	const functions = getFunctions(app, DEFAULT_REGION);
 	const storage = getStorage(app);
 
 	const authEmulatorUrl = process.env.NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_URL;
@@ -93,6 +95,22 @@ function FirebaseSDKProviders({ children }: PropsWithChildren) {
 	);
 }
 
+export function ThemeProvider({ children }: PropsWithChildren) {
+	const pathname = usePathname();
+	const baseSegment = pathname?.split('/')[3];
+
+	let theme;
+	switch (baseSegment) {
+		case 'donate':
+			theme = 'theme-dark-blue';
+			break;
+		default:
+			theme = 'theme-default';
+	}
+
+	return <body className={theme}>{children}</body>;
+}
+
 export function Providers({ children }: PropsWithChildren) {
 	const firebaseConfig = {
 		apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -109,8 +127,10 @@ export function Providers({ children }: PropsWithChildren) {
 		<FirebaseAppProvider firebaseConfig={firebaseConfig}>
 			<FirebaseSDKProviders>
 				<QueryClientProvider client={queryClient}>
-					<Toaster />
-					{children}
+					<ThemeProvider>
+						<Toaster />
+						{children}
+					</ThemeProvider>
 				</QueryClientProvider>
 			</FirebaseSDKProviders>
 		</FirebaseAppProvider>

@@ -1,6 +1,7 @@
 import functionsTest from 'firebase-functions-test';
 import { DateTime } from 'luxon';
-import { PaymentProcessTaskType, toPaymentDate } from '../../../../../../shared/src/types';
+import { PaymentProcessTaskType } from '../../../../../../shared/src/types/Payment';
+import { toPaymentDate } from '../../../../../../shared/src/types/Recipient';
 import { initializeGlobalTestData } from '../../../../firebase';
 import { runPaymentProcessTask } from '../../../index';
 
@@ -25,8 +26,9 @@ test('GetRegistrationCSV', async () => {
 	);
 
 	const rows = result.split('\n').map((row: string) => row.split(','));
-	expect(rows).toHaveLength(3);
+	expect(rows).toHaveLength(4);
 	expect(rows[0]).toEqual(['Mobile Number*', 'Unique Code*', 'User Type*']);
 	expect(rows[1]).toEqual(['25000052', '2', 'subscriber']);
 	expect(rows[2]).toEqual(['25000053', '3', 'subscriber']);
+	expect(rows[3]).toEqual(['25000054', '4', 'subscriber']);
 });

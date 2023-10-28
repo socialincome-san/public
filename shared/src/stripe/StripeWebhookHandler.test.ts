@@ -1,9 +1,11 @@
-import { describe, test } from '@jest/globals';
+import { describe, expect, test } from '@jest/globals';
+import { DateTime } from 'luxon';
 import Stripe from 'stripe';
 import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
 import { getOrInitializeFirebaseAdmin } from '../firebase/admin/app';
 import { toFirebaseAdminTimestamp } from '../firebase/admin/utils';
-import { Contribution, ContributionSourceKey, StatusKey, User, UserStatusKey } from '../types';
+import { ContributionSourceKey, StatusKey, StripeContribution } from '../types/Contribution';
+import { User, UserStatusKey } from '../types/User';
 import { StripeEventHandler } from './StripeEventHandler';
 
 describe('stripeWebhook', () => {
@@ -27,8 +29,18 @@ describe('stripeWebhook', () => {
 		const contribution = await ref!.get();
 		expect(contribution.data()).toEqual(expectedContribution);
 
-		const createdUser = await stripeWebhook.findUser(testCustomer);
-		expect(createdUser!.data()).toEqual(expectedUser);
+		const createdUser = (await stripeWebhook.findUser(testCustomer))!.data();
+		expect(Math.round(createdUser.payment_reference_id / 100000)).toEqual(
+			// rounded to 100 seconds
+			Math.round(expectedUser.payment_reference_id / 100000),
+		);
+		expect(createdUser.personal).toEqual(expectedUser.personal);
+		expect(createdUser.email).toEqual(expectedUser.email);
+		expect(createdUser.stripe_customer_id).toEqual(expectedUser.stripe_customer_id);
+		expect(createdUser.status).toEqual(expectedUser.status);
+		expect(createdUser.currency).toEqual(expectedUser.currency);
+		expect(createdUser.test_user).toEqual(expectedUser.test_user);
+		expect(createdUser.location).toEqual(expectedUser.location);
 	});
 
 	test('storeCharge for existing user through stripe id', async () => {
@@ -302,6 +314,7 @@ describe('stripeWebhook', () => {
 			quote: null,
 			receipt_number: '123',
 			rendering_options: null,
+			rendering: null,
 			shipping_cost: null,
 			shipping_details: null,
 			starting_balance: 0,
@@ -382,7 +395,7 @@ describe('stripeWebhook', () => {
 		transfer_group: null,
 	};
 
-	const expectedContribution: Contribution = {
+	const expectedContribution: StripeContribution = {
 		source: ContributionSourceKey.STRIPE,
 		created: toFirebaseAdminTimestamp(new Date('2021-03-05T18:36:21.000Z')),
 		amount: 900,
@@ -401,6 +414,7 @@ describe('stripeWebhook', () => {
 		},
 		email: 'test@socialincome.org',
 		stripe_customer_id: 'cus_123',
+		payment_reference_id: DateTime.now().toMillis(),
 		test_user: false,
 		status: UserStatusKey.INITIALIZED,
 		location: 'us',

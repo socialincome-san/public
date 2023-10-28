@@ -1,16 +1,16 @@
 import classNames from 'classnames';
 import { ComponentPropsWithoutRef } from 'react';
 import { twMerge } from 'tailwind-merge';
-import { Color } from '../../interfaces/color';
+import { FontColor } from '../../interfaces/color';
 import { Size } from '../../interfaces/size';
 import IntrinsicElements = React.JSX.IntrinsicElements;
 
 export type FontSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl'>;
 const FONT_SIZE_MAP: { [key in FontSize]: string } = {
-	'5xl': 'text-5xl lg:text-6xl lg:tracking-tight xl:text-7xl',
-	'4xl': 'text-4xl lg:text-4xl lg:tracking-tight xl:text-5xl',
-	'3xl': 'text-3xl lg:text-3xl lg:tracking-tight',
-	'2xl': 'text-2xl tracking-tight',
+	'5xl': 'text-5xl',
+	'4xl': 'text-4xl',
+	'3xl': 'text-3xl',
+	'2xl': 'text-2xl',
 	xl: 'text-xl',
 	lg: 'text-lg',
 	md: 'text-base',
@@ -18,70 +18,42 @@ const FONT_SIZE_MAP: { [key in FontSize]: string } = {
 	xs: 'text-xs',
 };
 
-const FONT_WEIGHTS = ['normal', 'medium', 'bold'] as const;
+const FONT_WEIGHTS = ['normal', 'medium', 'semibold', 'bold'] as const;
 export type FontWeight = (typeof FONT_WEIGHTS)[number];
 const FONT_WEIGHT_MAP: { [key in FontWeight]: string } = {
 	normal: 'font-normal',
 	medium: 'font-medium',
+	semibold: 'font-semibold',
 	bold: 'font-bold',
 };
 
-type FontColor = Extract<
-	Color,
-	| 'base-content'
-	| 'primary'
-	| 'primary-content'
-	| 'secondary'
-	| 'secondary-focus'
-	| 'secondary-content'
-	| 'accent'
-	| 'accent-focus'
-	| 'accent-content'
-	| 'neutral'
-	| 'neutral-focus'
-	| 'neutral-content'
-	| 'info'
-	| 'info-content'
-	| 'success'
-	| 'success-content'
-	| 'warning'
-	| 'warning-content'
-	| 'error'
-	| 'error-content'
->;
-
 const FONT_COLOR_MAP: { [key in FontColor]: string } = {
-	'base-content': 'text-base-content',
+	background: 'text-background',
+	foreground: 'text-foreground',
+	'si-yellow': 'text-si-yellow',
 	primary: 'text-primary',
-	'primary-content': 'text-primary-content',
+	'primary-foreground': 'text-primary-foreground',
 	secondary: 'text-secondary',
-	'secondary-focus': 'text-secondary-focus',
-	'secondary-content': 'text-secondary-content',
+	'secondary-foreground': 'text-secondary-foreground',
 	accent: 'text-accent',
-	'accent-focus': 'text-accent-focus',
-	'accent-content': 'text-accent-content',
-	neutral: 'text-neutral',
-	'neutral-focus': 'text-neutral-focus',
-	'neutral-content': 'text-neutral-content',
-	info: 'text-info',
-	'info-content': 'text-info-content',
-	success: 'text-success',
-	'success-content': 'text-success-content',
-	warning: 'text-warning',
-	'warning-content': 'text-warning-content',
-	error: 'text-error',
-	'error-content': 'text-error-content',
+	'accent-foreground': 'text-accent-foreground',
+	destructive: 'text-destructive',
+	'destructive-foreground': 'text-destructive-foreground',
+	muted: 'text-muted',
+	'muted-foreground': 'text-muted-foreground',
+	popover: 'text-popover',
+	'popover-foreground': 'text-popover-foreground',
 };
 
 const LINE_HEIGHTS = ['none', 'tight', 'snug', 'normal', 'relaxed', 'loose'] as const;
 export type LineHeight = (typeof LINE_HEIGHTS)[number];
 const LINE_HEIGHT_MAP: { [key in LineHeight]: string } = {
-	none: 'xs:leading-none sm:leading-none md:leading-none lg:leading-none xl:leading-none',
-	tight: 'xs:leading-tight sm:leading-tight md:leading-tight lg:leading-tight xl:leading-tight',
-	snug: 'xs:leading-snug sm:leading-snug md:leading-snug lg:leading-snug xl:leading-snug',
-	normal: 'xs:leading-normal sm:leading-normal md:leading-normal lg:leading-normal xl:leading-normal',
-	relaxed: 'xs:leading-relaxed sm:leading-relaxed md:leading-relaxed lg:leading-relaxed xl:leading-relaxed',
-	loose: 'xs:leading-loose sm:leading-loose md:leading-loose lg:leading-loose xl:leading-loose',
+	none: 'leading-none',
+	tight: 'leading-tight',
+	snug: 'leading-snug',
+	normal: 'leading-normal',
+	relaxed: 'leading-relaxed',
+	loose: 'leading-loose',
 };
 
 type ElementType = keyof Pick<IntrinsicElements, 'div' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'>;
@@ -94,16 +66,18 @@ export type TypographyProps<C extends ElementType> = {
 	lineHeight?: LineHeight;
 } & ComponentPropsWithoutRef<C>;
 
-export function Typography<C extends ElementType = 'p'>({
-	as,
-	size = 'md',
-	weight = 'normal',
-	color = 'base-content',
-	lineHeight = 'normal',
-	className,
-	children,
-	...props
-}: TypographyProps<C>) {
+export function Typography<C extends ElementType = 'p'>(
+	{
+		as,
+		size = 'md',
+		weight = 'normal',
+		color = 'foreground',
+		lineHeight = 'normal',
+		className,
+		children,
+		...props
+	}: TypographyProps<C>,
+) {
 	const Component = as || 'p';
 	return (
 		<Component
