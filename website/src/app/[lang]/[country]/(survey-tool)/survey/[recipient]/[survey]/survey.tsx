@@ -28,13 +28,12 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 		[RECIPIENT_FIRESTORE_PATH, recipientId, SURVEY_FIRETORE_PATH, surveyId].join('/'),
 	);
 	const translator = useTranslator(lang, 'website-survey');
-	const { data: survey } = useQuery(
-		[recipientId, surveyId],
-		() => getDoc(surveyDocRef).then((snapshot) => snapshot.data() as SurveyModel),
-		{
-			staleTime: 1000 * 60 * 60, // 1 hour
-		},
-	);
+	const { data: survey } = useQuery({
+		queryFn: () => getDoc(surveyDocRef).then((snapshot) => snapshot.data() as SurveyModel),
+		queryKey: [recipientId, surveyId],
+		staleTime: 1000 * 60 * 60, // 1 hour
+	});
+
 	// TODO: implement session storage caching
 	const saveSurveyData = useCallback(
 		(survey: Model, status: SurveyStatus) => {

@@ -37,10 +37,11 @@
 		"reactfire": "^4.2.3",
 		"recharts": "^2.9.0",
 		"server-only": "^0.0.1",
+		"sharp": "^0.32.6",
 		"stripe": "^14.2.0",
 		"survey-core": "^1.9.114",
 		"survey-react-ui": "^1.9.114",
-		"zod": "3.22.4"
+		"zod": "^3.22.4"
 	},
 	"devDependencies": {
 		"@types/accept-language-parser": "^1.5.5",

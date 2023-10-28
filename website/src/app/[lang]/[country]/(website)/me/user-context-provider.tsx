@@ -26,9 +26,9 @@ export function UserContextProvider({ children }: PropsWithChildren) {
 		}
 	}, [authUserStatus, authUser]);
 
-	const { data: user } = useQuery(
-		[authUser, firestore],
-		async () => {
+	const { data: user } = useQuery({
+		queryKey: [authUser, firestore],
+		queryFn: async () => {
 			if (authUser && firestore) {
 				let snapshot = await getDocs(
 					query(collection(firestore, USER_FIRESTORE_PATH), where('authUserId', '==', authUser?.uid)),
@@ -37,11 +37,9 @@ export function UserContextProvider({ children }: PropsWithChildren) {
 				return snapshot.docs[0] as QueryDocumentSnapshot<User>;
 			} else return null;
 		},
-		{
-			staleTime: 1000 * 60 * 60, // 1 hour
-			refetchOnMount: false,
-		},
-	);
+		staleTime: 1000 * 60 * 60, // 1 hour
+		refetchOnMount: false,
+	});
 
 	return <UserContext.Provider value={{ user: user }}>{children}</UserContext.Provider>;
 }
