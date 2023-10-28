@@ -14,14 +14,9 @@ type CarouselProps = {
 	showControls?: boolean;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export const Carousel = ({
-	children,
-	className,
-	options = {},
-	showDots = false,
-	showControls = false,
-	...props
-}: CarouselProps) => {
+export const Carousel = (
+	{ children, className, options = {}, showDots = false, showControls = false, ...props }: CarouselProps,
+) => {
 	const [emblaRef, emblaApi] = useEmblaCarousel(
 		options,
 		options?.autoPlay?.enabled ? [Autoplay(options.autoPlay)] : [],
