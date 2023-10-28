@@ -23,9 +23,9 @@ export function ContributionsTable({ lang, translations }: ContributionsTablePro
 	const firestore = useFirestore();
 	const { user } = useContext(UserContext);
 	const translator = useTranslator(lang, 'website-me');
-	const { data: contributions } = useQuery(
-		[user, firestore],
-		async () => {
+	const { data: contributions } = useQuery({
+		queryKey: [user, firestore],
+		queryFn: async () => {
 			if (user && firestore) {
 				return await getDocs(
 					query(
@@ -35,10 +35,8 @@ export function ContributionsTable({ lang, translations }: ContributionsTablePro
 				);
 			} else return null;
 		},
-		{
-			staleTime: 1000 * 60 * 60, // 1 hour
-		},
-	);
+		staleTime: 1000 * 60 * 60, // 1 hour
+	});
 	console.log(user?.id, firestore, contributions?.size);
 
 	return (

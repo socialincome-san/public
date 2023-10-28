@@ -1,11 +1,88 @@
 {
-	"section-our-work": {
+	"our-work": {
 		"title-1": "Wir bauen das Fundament für echte Veränderung. ",
 		"title-2": "Zeitgemäss. Digital. Gemeinsam.",
+		"subtitle": "Social Income ist ein neuer Weg, um die Armut im globalen Süden zu bekämpfen. Einfach, effizient und digital.",
 		"vimeo-video-id": "488184818"
 	},
-	"section-how-it-works": {
-		"title": "Ein solidarischer Beitrag, von Mensch zu Mensch. So einfach.",
-		"subtitle": "Mach einen Unterschied in weniger als 1 Minute."
+	"how-it-works": {
+		"header": "So funkioniert's",
+		"title-1": "Ein solidarischer Beitrag, von Mensch zu Mensch. ",
+		"title-2": "So einfach.",
+		"subtitle": "Mach einen Unterschied in weniger als 1 Minute.",
+		"item-1": "Individuelle Beiträge werden zu 100% an Empfänger:innen ausbezahlt",
+		"item-2": "Flexible Zahlungspläne. Modifiziere oder kündige jederzeit",
+		"item-3": "Social Income-Überweisungen werden direkt auf die Mobiltelefone der Empfänger:innen transferiert",
+		"item-4": "Die Höhe des ausbezahlten Betrags basiert auf dem Durchschnittssalär, wo die Empfänger:innen leben."
+	},
+	"contributors": {
+		"header-1": "Spender:innen",
+		"title-1": "Menschen aus allen Lebensschichten leisten einen Beitrag.",
+		"text-1": "Wir erhalten u.a. regelmässige individuelle Spenden von Angestellten aus folgenden Organisationen und Unternehmen:",
+		"header-2": "Wieso Mitmachen?",
+		"title-2": "Ein Ziel. Mehr soziale Gerechtigkeit.",
+		"text-2": "Menschen, die 1% ihres Einkommens an Social Income spenden, haben ganz unterschiedliche Beweggründe:",
+		"portraits": {
+			"carlos": "Wir leben in einer Welt voller Möglichkeiten. Lasst uns dieses Privileg teilen.",
+			"vanja": "Ein grossartiges Beispiel dafür, wie sich Wohlstand umverteilen lässt, basierend auf Solidarität und ermöglicht durch die heutige Technologie.",
+			"ruben": "Ich unterstütze Social Income nicht nur, weil es einfach ist, sondern weil die Forschung gezeigt hat, dass der Ansatz extrem effektiv ist.",
+			"han": "Die Frage ist nicht, warum man sich engagieren sollte, sondern vielmehr, warum man es bleiben lässt. Social Income ist eine dringende Notwendigkeit in unserer Gesellschaft.",
+			"claudia": "Die heutige globale Ungleichheit ist die Folge jahrhundertelanger ungleicher Fortschritte. Social Income ist ein neuer Weg, diese Ungleichheit anzugehen."
+		}
+	},
+	"recipients": {
+		"header": "Empfänger:innen",
+		"title-1": "Wir arbeiten dort, wo wir die grösste Wirkung entfalten können. ",
+		"title-2": "Sierra Leone.",
+		"subtitle": "Seit März 2020, erhalten alle Empfänger:innen in Sierra Leone 30 US Dollar pro Monat, garantiert für drei Jahre.",
+		"our-criteria": "Unsere Kriterien",
+		"item-1": {
+			"title": "Land mit niedrigem Einkommen",
+			"text": "Wir starteten in Sierra Leone, einem der ärmsten Länder der Welt. Hier kann eine kleine Spende viel bewirken.",
+			"caption": "Das Durchschnittseinkommen in Sierra Leone beträgt USD 42.5 pro Monat – Weltbank, 2022 (BNE pro Kopf, Atlas-Methode und Kaufkraftparität)"
+		},
+		"item-2": {
+			"title": "Einkommensschwache Communities",
+			"text": "Für die Auswahl der Empfänger:innen arbeiten wir mit lokalen NGOs zusammen, die besonders marginalisierte Bevölkerungsgruppen unterstützen.",
+			"caption": "Partner: Aurora Foundation, Jamil & Nyanga Jaward Foundation, Reachout Salone, Equal Rights Alliance, Polio B&S Organisation, Freetown City Council"
+		},
+		"item-3": {
+			"title": "Alter und Geschlechterparität",
+			"text": "Die Empfänger:innen müssen älter als 16 Jahre sein. Wir garantieren ausserdem ein ausgeglichenes Geschlechterverhältnis.",
+			"caption": ""
+		},
+		"voices": "Stimmen",
+		"portraits": {
+			"kai": "Ich brauche Social Income um meine Finanzen zu verwalten. Mit der ersten Überweisung konnte ich mir neue Krücken kaufen, die ich seither benutze.",
+			"aminata": "Fürs tägliche Brot zerkleinere ich Steine zu Kies. Es ist harte Arbeit und mit dem Lohn ist es nicht leicht, vier Kinder grosszuziehen. Ich möchte mich für die monatliche Unterstützung bedanken.",
+			"gbassay": "Social Income ermöglichte es mir, Schulmaterial zu kaufen und meine Kinder zur Schule zu schicken. Danke für alles, was ihr getan habt, um zu helfen.",
+			"lamin": "Social Income hilft sowohl mir als auch meiner ganzen Familie.",
+			"onikeh": "Social Income hat mir enorm geholfen. Es dient als Quelle, aus der wir zusätzliche Kraft für unser tägliches Leben schöpfen können. Es ist ein grossartiges Gefühl, dass uns Menschen unterstützen und an unsere Träume glauben.",
+			"neneh": "Ich brauche mein monatliches Social Income um in mein kleines Unternehmen zu investieren und um das Mittagessen an der Schule meiner Kinder zu bezahlen. Es macht mich so glücklich, ich könnte weinen."
+		}
+	},
+	"whats-next": {
+		"header": "Was kommt als Nächstes?",
+		"title-1": "Wir gehen die Dinge ",
+		"title-2": "Schritt für Schritt an.",
+		"subtitle": "Das langfristige Ziel von Social Income besteht darin, für bedürftige Menschen ein globales System der Wohlstands(um)verteilung zu kreieren – basierend auf freiwilligen Spender*innen aus aller Welt. Das Projekt ist ambitioniert. Für die Skalierung braucht es entsprechend Zeit.",
+		"timeline": {
+			"item-1": {
+				"title": "März 2020",
+				"text": "In der Pilotphase zahlten wir die ersten Beiträge an eine kleine Gemeinschaft in Freetown, Sierra Leone."
+			},
+			"item-2": {
+				"title": "September 2021",
+				"text": "In der Entwicklungsphase erhöhten wir die Anzahl der Empfänger:innen und verbesserten den Zahlungsprozess."
+			},
+			"item-3": {
+				"title": "Januar 2022",
+				"text": "Seit Beginn dieses Jahres können wir Social Income kontinuierlich für immer mehr Empfänger:innen und Spender:innen ausrollen."
+			},
+			"item-4": {
+				"title": "Anstehend: Wirkungsmessung",
+				"text": "Um die Wirksamkeit von Social Income messbar zu machen, haben wir eine Methode und eine Reihe an quantitativen und qualitativen Indikatoren entwickelt. Momentan sammeln wir Daten und optimieren unsere Vorgehensweise mit Hilfe der Empfänger:innen."
+			}
+		}
 	}
 }

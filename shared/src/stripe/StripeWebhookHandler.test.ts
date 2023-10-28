@@ -314,6 +314,7 @@ describe('stripeWebhook', () => {
 			quote: null,
 			receipt_number: '123',
 			rendering_options: null,
+			rendering: null,
 			shipping_cost: null,
 			shipping_details: null,
 			starting_balance: 0,
