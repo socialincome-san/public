@@ -19,7 +19,7 @@ export class StripeEventHandler {
 		this.firestoreAdmin = firestoreAdmin;
 		this.stripe = new Stripe(apiKey, {
 			typescript: true,
-			apiVersion: '2023-08-16',
+			apiVersion: '2023-10-16',
 		});
 	}
 
