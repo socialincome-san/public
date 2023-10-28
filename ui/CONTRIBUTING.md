@@ -54,11 +54,9 @@ UI elements:
    **Example**:
 
    ```tsx
-   export const SoExampleComponent = ({
-   	children,
-   	exampleProperty,
-   	...props
-   }: SoExampleComponentProps) => {
+   export const SoExampleComponent = (
+   	{ children, exampleProperty, ...props }: SoExampleComponentProps,
+   ) => {
    	return (
    		<p example-property={exampleProperty} {...props}>
    			{children}
