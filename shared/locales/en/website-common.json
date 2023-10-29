@@ -1,16 +1,16 @@
 {
-  "navigation": {
-    "about-us": "About Us",
-    "contributors": "Contributors",
-    "faq": "FAQ",
-    "finances": "Finances",
-    "how-it-works": "How It Works",
-    "my-profile": "My Profile",
-    "our-work": "Our Work",
-    "recipient-selection": "Recipient Selection",
-    "recipients": "Recipients",
-    "team": "Team",
-    "transparency": "Transparency",
-    "whats-next": "What's next?"
-  }
+	"navigation": {
+		"about-us": "About Us",
+		"contributors": "Contributors",
+		"faq": "FAQ",
+		"finances": "Finances",
+		"how-it-works": "How It Works",
+		"my-profile": "My Profile",
+		"our-work": "Our Work",
+		"recipient-selection": "Recipient Selection",
+		"recipients": "Recipients",
+		"team": "Team",
+		"transparency": "Transparency",
+		"whats-next": "What's next?"
+	}
 }

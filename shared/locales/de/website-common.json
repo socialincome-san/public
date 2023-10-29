@@ -1,15 +1,15 @@
 {
-  "navigation": {
-    "about-us": "Wer wir sind",
-    "contributors": "Spender:innen",
-    "finances": "Finanzen",
-    "how-it-works": "So funktioniert's",
-    "my-profile": "Mein Profil",
-    "our-work": "Was wir tun",
-    "recipient-selection": "Selektion der Empfänger:innen",
-    "recipients": "Empfänger:innen",
-    "team": "Team",
-    "transparency": "Transparenz",
-    "whats-next": "Was kommt als nächstes?"
-  }
+	"navigation": {
+		"about-us": "Wer wir sind",
+		"contributors": "Spender:innen",
+		"finances": "Finanzen",
+		"how-it-works": "So funktioniert's",
+		"my-profile": "Mein Profil",
+		"our-work": "Was wir tun",
+		"recipient-selection": "Selektion der Empfänger:innen",
+		"recipients": "Empfänger:innen",
+		"team": "Team",
+		"transparency": "Transparenz",
+		"whats-next": "Was kommt als nächstes?"
+	}
 }
