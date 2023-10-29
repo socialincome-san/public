@@ -1,22 +1,15 @@
 {
-	"navigation": {
-		"our-work": "Was wir tun",
-		"our-work-description": "Kampf gegen globale Armut.",
-		"about-us": "Wer wir sind",
-		"team": "Team",
-		"how-it-works": "So funktioniert's",
-		"how-it-works-description": "Untertitel...",
-		"contributors": "Spender:innen",
-		"contributors-description": "Wer ist dabei?",
-		"recipients": "Empfänger:innen",
-		"recipients-description": "Subtitle...",
-		"whats-next": "Was kommt als nächstes?",
-		"whats-next-description": "Subtitle...",
-		"transparency": "Transparenz",
-		"finances": "Finanzen",
-		"finances-description": "Untertitel...",
-		"recipient-selection": "Selektion der Empfänger:innen",
-		"recipient-selection-description": "Untertitel...",
-		"my-profile": "Mein Profil"
-	}
+  "navigation": {
+    "about-us": "Wer wir sind",
+    "contributors": "Spender:innen",
+    "finances": "Finanzen",
+    "how-it-works": "So funktioniert's",
+    "my-profile": "Mein Profil",
+    "our-work": "Was wir tun",
+    "recipient-selection": "Selektion der Empfänger:innen",
+    "recipients": "Empfänger:innen",
+    "team": "Team",
+    "transparency": "Transparenz",
+    "whats-next": "Was kommt als nächstes?"
+  }
 }

@@ -1,22 +1,16 @@
 {
-	"navigation": {
-		"our-work": "Our Work",
-		"our-work-description": "Fight against global poverty.",
-		"about-us": "About Us",
-		"team": "Team",
-		"how-it-works": "How It Works",
-		"how-it-works-description": "Subtitle...",
-		"contributors": "Contributors",
-		"contributors-description": "Subtitle...",
-		"recipients": "Recipients",
-		"recipients-description": "Subtitle...",
-		"whats-next": "What's next?",
-		"whats-next-description": "Subtitle...",
-		"transparency": "Transparency",
-		"finances": "Finanzen",
-		"finances-description": "Subtitle...",
-		"recipient-selection": "Recipient Selection",
-		"recipient-selection-description": "Subtitle...",
-		"my-profile": "My Profile"
-	}
+  "navigation": {
+    "about-us": "About Us",
+    "contributors": "Contributors",
+    "faq": "FAQ",
+    "finances": "Finances",
+    "how-it-works": "How It Works",
+    "my-profile": "My Profile",
+    "our-work": "Our Work",
+    "recipient-selection": "Recipient Selection",
+    "recipients": "Recipients",
+    "team": "Team",
+    "transparency": "Transparency",
+    "whats-next": "What's next?"
+  }
 }
