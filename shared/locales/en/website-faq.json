@@ -111,10 +111,10 @@
 	"volunteering": {
 		"title": "Volunteering",
 		"question-1": {
-			"question": "What is Social Income's link to the arts?",
+			"question": "How can I join the team of volunteers?",
 			"answer": "If you are interested in making a social impact with your skillset, take a look at the open opportunities on our Idealist page or get in touch with us today!",
 			"link-1": {
-				"title": "Idealist page",
+				"title": "Idealist",
 				"href": "https://www.idealist.org/en/nonprofit/41a885fa176b4793a029f131834fd48a-social-income-zurich"
 			}
 		}
