@@ -25,11 +25,11 @@ jobs:
         run: mkdir -p draws
 
       - name: Draw 🎲
-        uses: drand/draw-action@v0.0.9
+        uses: drand/draw-action@v0.0.10
         with:
           inputDir: ./lists
           outputDir: ./draws
-          count: 2
+          count: 10
       - name: Commit 🔐
         run: |
           git config --global user.name $BOT_NAME
