@@ -51,10 +51,10 @@ class _OtpInputPageState extends State<OtpInputPage> {
                   context.read<SignupCubit>().resendVerificationCode(),
               child: Text(
                 localizations.resendVerificationCode,
-                style: const TextStyle(
-                  color: AppColors.primaryColor,
-                  decoration: TextDecoration.underline,
-                ),
+                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                      color: AppColors.primaryColor,
+                      decoration: TextDecoration.underline,
+                    ),
               ),
             ),
             const SizedBox(height: 200),

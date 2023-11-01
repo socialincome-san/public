@@ -98,10 +98,10 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                         ),
                         inputDecoration: InputDecoration(
                             labelText: localizations.phoneNumber,
-                            labelStyle: const TextStyle(
-                              color: AppColors.primaryColor,
-                              fontSize: 18,
-                            ),
+                            labelStyle: Theme.of(context)
+                                .textTheme
+                                .headlineMedium!
+                                .copyWith(color: AppColors.primaryColor),
                             enabledBorder: const OutlineInputBorder(
                               borderSide:
                                   BorderSide(color: AppColors.primaryColor),
