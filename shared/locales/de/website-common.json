@@ -8,13 +8,15 @@
 		"how-it-works-description": "Untertitel...",
 		"contributors": "Spender:innen",
 		"contributors-description": "Wer ist dabei?",
-
+		"recipients": "Empfänger:innen",
+		"recipients-description": "Subtitle...",
+		"whats-next": "Was kommt als nächstes?",
+		"whats-next-description": "Subtitle...",
 		"transparency": "Transparenz",
 		"finances": "Finanzen",
 		"finances-description": "Untertitel...",
 		"recipient-selection": "Selektion der Empfänger:innen",
 		"recipient-selection-description": "Untertitel...",
-
 		"my-profile": "Mein Profil"
 	}
 }

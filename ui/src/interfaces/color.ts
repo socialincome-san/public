@@ -33,13 +33,20 @@ export type Color = (typeof COLORS)[number];
 export type FontColor = Extract<
 	Color,
 	| 'foreground'
+	| 'background'
+	| 'si-yellow'
+	| 'primary'
 	| 'primary-foreground'
+	| 'secondary'
 	| 'secondary-foreground'
-	| 'accent-foreground'
+	| 'destructive'
 	| 'destructive-foreground'
+	| 'muted'
 	| 'muted-foreground'
+	| 'accent'
+	| 'accent-foreground'
+	| 'popover'
 	| 'popover-foreground'
-	| 'card-foreground'
 >;
 
 export type BackgroundColor = Extract<

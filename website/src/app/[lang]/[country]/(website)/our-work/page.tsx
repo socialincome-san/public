@@ -1,14 +1,18 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
-import { SectionContributors } from './section-contributors';
-import { SectionHowItWorks } from './section-how-it-works';
-import { SectionOurWork } from './section-our-work';
+import { Contributors } from './(sections)/contributors';
+import { HowItWorks } from './(sections)/how-it-works';
+import { OurWork } from './(sections)/our-work';
+import { Recipients } from './(sections)/recipients';
+import { WhatsNext } from './(sections)/whats-next';
 
 export default async function Page(props: DefaultPageProps) {
 	return (
 		<>
-			<SectionOurWork {...props} />
-			<SectionHowItWorks {...props} />
-			<SectionContributors {...props} />
+			<OurWork {...props} />
+			<HowItWorks {...props} />
+			<Contributors {...props} />
+			<Recipients {...props} />
+			<WhatsNext {...props} />
 		</>
 	);
 }

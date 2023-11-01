@@ -6,6 +6,7 @@ import Section3 from './section-3';
 import Section4 from './section-4';
 import Section5 from './section-5';
 import Section6 from './section-6';
+import Section7 from './section-7';
 
 export default async function Page(props: DefaultPageProps) {
 	const translator = await Translator.getInstance({ language: props.params.lang, namespaces: 'website-home' });
@@ -26,6 +27,7 @@ export default async function Page(props: DefaultPageProps) {
 			<Section4 {...props} />
 			<Section5 {...props} />
 			<Section6 {...props} />
+			<Section7 {...props} />
 		</>
 	);
 }

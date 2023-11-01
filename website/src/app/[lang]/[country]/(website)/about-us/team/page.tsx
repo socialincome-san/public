@@ -1,11 +1,169 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
-import { BaseContainer, Typography } from '@socialincome/ui';
+import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { BaseContainer, FontSize, Typography } from '@socialincome/ui';
+import classNames from 'classnames';
+import { StaticImport } from 'next/dist/shared/lib/get-img-props';
+import Image from 'next/image';
+import ajlaImage from './(assets)/ajla.jpg';
+import alexandreImage from './(assets)/alexandre.jpeg';
+import andersImage from './(assets)/anders.jpeg';
+import andrasImage from './(assets)/andras.jpeg';
+import annalinaImage from './(assets)/anna-lina.jpeg';
+import anvitaImage from './(assets)/anvita.jpeg';
+import aurelieImage from './(assets)/aurelie.jpeg';
+import carlosImage from './(assets)/carlos.jpeg';
+import flavienImage from './(assets)/flavien.jpeg';
+import juanImage from './(assets)/juan.jpeg';
+import juliaImage from './(assets)/julia.jpeg';
+import kabeloImage from './(assets)/kabelo.jpeg';
+import kerrinImage from './(assets)/kerrin.jpeg';
+import larissaImage from './(assets)/larissa.jpeg';
+import lorenzoImage from './(assets)/lorenzo.jpg';
+import mabelImage from './(assets)/mabel.jpeg';
+import mariatuImage from './(assets)/mariatu.jpg';
+import marionImage from './(assets)/marion.jpeg';
+import michaelImage from './(assets)/michael.jpeg';
+import mikolajImage from './(assets)/mikolaj.jpeg';
+import patrikImage from './(assets)/patrik.jpeg';
+import reneImage from './(assets)/rene.jpeg';
+import riccardoImage from './(assets)/riccardo.jpg';
+import sandinoImage from './(assets)/sandino.jpg';
+import sarahImage from './(assets)/sarah.jpeg';
+import sarveshImage from './(assets)/sarvesh.jpeg';
+import simonImage from './(assets)/simon.jpeg';
+import simoneImage from './(assets)/simone.jpeg';
+import thomasImage from './(assets)/thomas.jpeg';
+import verenaImage from './(assets)/verena.jpeg';
 
-export default async function Page(props: DefaultPageProps) {
+type Group = {
+	name: string;
+	size: 'sm' | 'md' | 'lg';
+	people: Person[];
+};
+
+type Person = {
+	name: string;
+	role: string;
+	image: string | StaticImport;
+};
+
+const groups: Group[] = [
+	{
+		name: 'staff',
+		size: 'md',
+		people: [
+			{ name: 'Mabel Turay', role: 'finance', image: mabelImage },
+			{ name: 'Mariatu Haja Sesay', role: 'operations', image: mariatuImage },
+		],
+	},
+	{
+		name: 'volunteers',
+		size: 'md',
+		people: [
+			{ name: 'Sandino Scheidegger', role: 'founder', image: sandinoImage },
+			{ name: 'Kerrin Dieckmann', role: 'finance', image: kerrinImage },
+			{ name: 'Aurélie Schmiedlin', role: 'communications', image: aurelieImage },
+			{ name: 'Julia Bachmann', role: 'communications', image: juliaImage },
+			{ name: 'Riccardo Tamburini', role: 'communications', image: riccardoImage },
+			{ name: 'Michael Kündig', role: 'software-development', image: michaelImage },
+			{ name: 'Mikołaj Demkow', role: 'app-development', image: mikolajImage },
+			{ name: 'Verena Zaiser', role: 'app-development', image: verenaImage },
+			{ name: 'András Heé', role: 'software-development', image: andrasImage },
+			{ name: 'Carlos Badilla', role: 'impact-measurement', image: carlosImage },
+		],
+	},
+	{
+		name: 'board',
+		size: 'md',
+		people: [
+			{ name: 'Kabelo Ruffo', role: 'co-president', image: kabeloImage },
+			{ name: 'Simone Huser', role: 'co-president', image: simoneImage },
+			{ name: 'Anvita Pandey', role: 'board-member', image: anvitaImage },
+			{ name: 'Flavien Meyer', role: 'board-member', image: flavienImage },
+			{ name: 'Marion Quartier', role: 'board-member', image: marionImage },
+		],
+	},
+
+	{
+		name: 'special-thanks',
+		size: 'sm',
+		people: [
+			{ name: 'Juan Morales', role: 'software-development', image: juanImage },
+			{ name: 'René Stalder', role: 'software-development', image: reneImage },
+			{ name: 'Sarvesh Dwivedi', role: 'software-development', image: sarveshImage },
+			{ name: 'Thomas Brenner', role: 'software-development', image: thomasImage },
+			{ name: 'Alexandre Milan', role: 'software-development', image: alexandreImage },
+			{ name: 'Patrik Sopran', role: 'app-development', image: patrikImage },
+			{ name: 'Anders Nordhag', role: 'communications', image: andersImage },
+			{ name: 'Larissa dos Santos Lima', role: 'communications', image: larissaImage },
+			{ name: 'Ajla Murati', role: 'strategy', image: ajlaImage },
+			{ name: 'Simon Bühler', role: 'communications', image: simonImage },
+			{ name: 'Sarah Mekni', role: 'strategy', image: sarahImage },
+			{ name: 'Lorenzo Garovi', role: 'strategy', image: lorenzoImage },
+			{ name: 'Anna-Lina Müller', role: 'strategy', image: annalinaImage },
+		],
+	},
+];
+export default async function Page({ params }: DefaultPageProps) {
+	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['countries', 'website-team'] });
 	return (
-		<BaseContainer className="min-h-screen">
-			<Typography size="3xl">Team</Typography>
-			<Typography>Coming soon</Typography>
+		<BaseContainer className="py-8">
+			<Typography as="h3" size="xl" color="muted-foreground" className="mb-4">
+				{translator.t('header')}
+			</Typography>
+			<Typography size="5xl" weight="bold" lineHeight="tight">
+				{translator.t('title-1')}
+				<Typography as="span" size="5xl" weight="bold" color="secondary" lineHeight="tight">
+					{translator.t('title-2')}
+				</Typography>
+			</Typography>
+			<div className="mt-16 space-y-20">
+				{groups.map((group, index1) => (
+					<div key={index1}>
+						<Typography size="3xl" weight="bold">
+							{translator.t(`groups.${group.name}.name`)}
+						</Typography>
+						<Typography size="md" className="mb-8">
+							{translator.t(`groups.${group.name}.description`)}
+						</Typography>
+						<ul
+							role="list"
+							className={classNames(
+								'grid lg:mx-0 lg:max-w-none',
+								{
+									'grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7': group.size === 'sm',
+								},
+								{
+									'grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5': group.size === 'md',
+								},
+								{
+									'grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4': group.size == 'lg',
+								},
+							)}
+						>
+							{group.people.map((person: Person, index2) => (
+								<li key={index2} className="flex flex-col">
+									<Image
+										className="aspect-[5/6] w-full rounded-2xl object-cover"
+										src={person.image}
+										alt={`${person.name} image`}
+									/>
+									<Typography as="h3" size={group.size} weight="semibold" lineHeight="tight" className="mt-6">
+										{person.name}
+									</Typography>
+									<Typography
+										color="muted-foreground"
+										size={{ sm: 'xs', md: 'sm', lg: 'md' }[group.size] as FontSize}
+										className="hyphens-auto break-words"
+									>
+										{translator.t(`roles.${person.role}`)}
+									</Typography>
+								</li>
+							))}
+						</ul>
+					</div>
+				))}
+			</div>
 		</BaseContainer>
 	);
 }

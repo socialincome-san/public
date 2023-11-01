@@ -10,13 +10,13 @@
 		"contributors-description": "Subtitle...",
 		"recipients": "Recipients",
 		"recipients-description": "Subtitle...",
-
+		"whats-next": "What's next?",
+		"whats-next-description": "Subtitle...",
 		"transparency": "Transparency",
 		"finances": "Finanzen",
 		"finances-description": "Subtitle...",
 		"recipient-selection": "Recipient Selection",
 		"recipient-selection-description": "Subtitle...",
-
 		"my-profile": "My Profile"
 	}
 }
