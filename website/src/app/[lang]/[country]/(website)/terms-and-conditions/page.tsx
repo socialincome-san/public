@@ -5,7 +5,7 @@ import { BaseContainer, Typography } from '@socialincome/ui';
 export default async function Page({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
 		language: params.lang,
-		namespaces: ['website-terms-for-contributions'],
+		namespaces: ['website-terms-and-conditions'],
 	});
 
 	return (

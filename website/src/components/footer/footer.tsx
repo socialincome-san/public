@@ -122,7 +122,7 @@ export default async function Footer({ params, supportedLanguages, supportedCoun
 						<FooterLink
 							Icon={UserGroupIcon}
 							label="Terms and Conditions"
-							url={`/${params.lang}/${params.country}/terms-for-contributions`}
+							url={`/${params.lang}/${params.country}/terms-and-conditions`}
 						/>
 					</div>
 					<div className="flex flex-col space-y-2">
