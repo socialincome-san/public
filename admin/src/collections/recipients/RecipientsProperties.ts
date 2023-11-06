@@ -99,6 +99,7 @@ export const mainLanguageProperty: StringProperty = {
 
 export const birthDateProperty: Property = {
 	name: 'Birthday',
+	longDescription: 'Date of birth',
 	dataType: 'date',
 	mode: 'date',
 };
@@ -140,6 +141,7 @@ export const TwitterProperty: Property = {
 
 export const SIStartDateProperty: Property = {
 	name: 'Start Date',
+	longDescription: 'Starting date',
 	dataType: 'date',
 	mode: 'date',
 };
