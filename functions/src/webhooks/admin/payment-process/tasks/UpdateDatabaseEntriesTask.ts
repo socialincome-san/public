@@ -40,6 +40,13 @@ export class UpdateDatabaseEntriesTask extends PaymentTask {
 					});
 					paymentsPaid++;
 				}
+				if (paymentsCount == PAYMENTS_COUNT) {
+					// If a recipient has received all their payments, set their status to former
+					await recipient.ref.update({
+						progr_status: RecipientProgramStatus.Former,
+					});
+					setToFormerCount++;
+				}
 				const nextMonthPaymentDoc = await this.firestoreAdmin
 					.doc<Payment>(
 						`${RECIPIENT_FIRESTORE_PATH}/${recipient.id}/${PAYMENT_FIRESTORE_PATH}`,
@@ -60,13 +67,6 @@ export class UpdateDatabaseEntriesTask extends PaymentTask {
 							status: PaymentStatus.Created,
 						});
 					paymentsCreated++;
-				}
-				if (paymentsCount == PAYMENTS_COUNT) {
-					// If a recipient has received all their payments, set their status to former
-					await recipient.ref.update({
-						progr_status: RecipientProgramStatus.Former,
-					});
-					setToFormerCount++;
 				}
 				if (recipient.get('progr_status') === RecipientProgramStatus.Designated) {
 					await recipient.ref.update({
