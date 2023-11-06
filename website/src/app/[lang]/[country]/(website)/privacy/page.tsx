@@ -66,6 +66,9 @@ export default async function Page({ params }: DefaultPageProps) {
 					},
 				]}
 			/>
+			{params.lang!=="en" && (
+				<Typography className="prose" dangerouslySetInnerHTML={{ __html: translator.t('comment') }} />
+	)}
 		</BaseContainer>
 	);
 }
