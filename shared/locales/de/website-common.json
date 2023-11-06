@@ -1,15 +1,25 @@
 {
 	"navigation": {
 		"about-us": "Wer wir sind",
+		"about-us-description": "Erfahre mehr über Social Income und den Menschen dahinter",
+		"team-description": "Wer sich für Social Income engagiert",
 		"contributors": "Spender:innen",
 		"finances": "Finanzen",
 		"how-it-works": "So funktioniert's",
 		"my-profile": "Mein Profil",
 		"our-work": "Was wir tun",
+		"our-work-description": "Erfahre, was wir tun und wofür wir stehen",
+		"contributors-description": "Erfahre mehr über die Menschen, die spenden",
+		"whats-next-description": "Erfahre, woran wir gerade arbeiten",
+		"how-it-works-description": "Verstehe, wie alles funktioniert",
+		"recipients-description": "Erfahre mehr über die Menschen, die wir unterstützen",
 		"recipient-selection": "Selektion der Empfänger:innen",
 		"recipients": "Empfänger:innen",
 		"team": "Team",
 		"transparency": "Transparenz",
+		"finances-description": "Learn about our finances",
+		"recipient-selection-description": "Erfahre mehr über unseren Auswahlprozess",
+		"faq-description": "Lerne aus den Fragen anderer Leute",
 		"whats-next": "Was kommt als nächstes?"
 	}
 }
