@@ -84,6 +84,11 @@ export default async function Navbar({ lang, country, supportedLanguages }: Navb
 							href: `/${lang}/${country}/transparency/recipient-selection`,
 							description: translator.t('navigation.recipient-selection-description'),
 						},
+						{
+							title: translator.t('navigation.faq'),
+							href: `/${lang}/${country}/faq`,
+							description: translator.t('navigation.faq-description'),
+						},
 					],
 				},
 			]}
