@@ -1,16 +1,26 @@
 {
 	"navigation": {
 		"about-us": "About Us",
+		"about-us-description": "Learn more about Social Income and the people behind it",
+		"team-description": "Who is involved with Social Income",
 		"contributors": "Contributors",
 		"faq": "FAQ",
 		"finances": "Finances",
 		"how-it-works": "How It Works",
 		"my-profile": "My Profile",
 		"our-work": "Our Work",
+		"our-work-description": "Learn what we do and stand for",
+		"contributors-description": "Learn about the people donating",
+		"whats-next-description": "Learn what we are working on",
+		"how-it-works-description": "Learn how everything works",
+		"recipients-description": "Learn about the people we support",
 		"recipient-selection": "Recipient Selection",
 		"recipients": "Recipients",
 		"team": "Team",
 		"transparency": "Transparency",
+		"finances-description": "Learn about our finances",
+		"recipient-selection-description": "Learn about our selection process",
+		"faq-description": "Learn from other people's questions",
 		"whats-next": "What's next?"
 	}
 }
