@@ -1,6 +1,6 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer } from '@socialincome/ui';
+import { BaseContainer, Typography } from '@socialincome/ui';
 import { FAQSection } from './faq-section';
 
 export default async function Page({ params }: DefaultPageProps) {
@@ -11,6 +11,9 @@ export default async function Page({ params }: DefaultPageProps) {
 
 	return (
 		<BaseContainer className="mx-auto flex max-w-2xl flex-col space-y-16 py-8">
+			<Typography size="5xl" weight="bold">
+				{translator.t('title')}
+			</Typography>
 			<FAQSection
 				title={translator.t('fighting-poverty.title')}
 				questions={[

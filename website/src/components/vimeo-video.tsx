@@ -3,18 +3,18 @@
 import Player from '@vimeo/player';
 import { useEffect, useRef } from 'react';
 
-export function VimeoVideoComponent({ vimeoVideoId }: { vimeoVideoId: number }) {
+export function VimeoVideo({ videoId }: { videoId: number }) {
 	const playerRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		if (playerRef.current) {
 			new Player(playerRef.current, {
-				id: vimeoVideoId,
+				id: videoId,
 				controls: true,
 				responsive: true,
 			});
 		}
-	}, [vimeoVideoId]);
+	}, [videoId]);
 
 	return <div ref={playerRef}></div>;
 }

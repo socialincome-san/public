@@ -1,5 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[country]';
-import { VimeoVideoComponent } from '@/components/VimeoVideoComponent';
+import { VimeoVideo } from '@/components/vimeo-video';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Dialog, DialogContent, DialogTrigger, Typography } from '@socialincome/ui';
 import Image from 'next/image';
@@ -34,7 +34,7 @@ export async function OurWork({ params }: DefaultPageProps) {
 					</div>
 				</DialogTrigger>
 				<DialogContent className="max-w-screen-lg">
-					<VimeoVideoComponent vimeoVideoId={Number(translator.t('our-work.vimeo-video-id'))} />
+					<VimeoVideo videoId={Number(translator.t('our-work.vimeo-video-id'))} />
 				</DialogContent>
 			</Dialog>
 		</BaseContainer>

@@ -11,7 +11,6 @@ import {
 	EnvelopeOpenIcon,
 	InformationCircleIcon,
 	ShieldCheckIcon,
-	SwatchIcon,
 	UserCircleIcon,
 	UserGroupIcon,
 } from '@heroicons/react/24/solid';
@@ -115,13 +114,16 @@ export default async function Footer({ params, supportedLanguages, supportedCoun
 							label="Privacy Policy"
 							url={`/${params.lang}/${params.country}/privacy`}
 						/>
-						<FooterLink Icon={BriefcaseIcon} label="Terms of Use" url={`/${params.lang}/${params.country}/terms-use`} />
+						<FooterLink
+							Icon={BriefcaseIcon}
+							label="Terms of Use"
+							url={`/${params.lang}/${params.country}/terms-of-use`}
+						/>
 						<FooterLink
 							Icon={UserGroupIcon}
 							label="Terms for contributions"
-							url={`/${params.lang}/${params.country}/terms-contributions`}
+							url={`/${params.lang}/${params.country}/terms-for-contributions`}
 						/>
-						<FooterLink Icon={SwatchIcon} label="The Arts" url={`/${params.lang}/${params.country}/arts`} />
 					</div>
 					<div className="flex flex-col space-y-2">
 						<Typography className="mb-2" size="lg" weight="medium">
