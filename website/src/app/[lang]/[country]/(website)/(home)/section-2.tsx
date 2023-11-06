@@ -1,6 +1,6 @@
 'use client';
 
-import { VimeoVideoComponent } from '@/components/VimeoVideoComponent';
+import { VimeoVideo } from '@/components/vimeo-video';
 import { PlayCircleIcon } from '@heroicons/react/24/outline';
 import { BaseContainer, Dialog, DialogContent, DialogTrigger, Typography } from '@socialincome/ui';
 import Image from 'next/image';
@@ -48,7 +48,7 @@ export default function Section2({ vimeoVideoId, translations }: Section2Props) 
 						</Typography>
 					</DialogTrigger>
 					<DialogContent className="max-w-screen-lg">
-						<VimeoVideoComponent vimeoVideoId={vimeoVideoId} />
+						<VimeoVideo videoId={vimeoVideoId} />
 					</DialogContent>
 				</Dialog>
 			</div>

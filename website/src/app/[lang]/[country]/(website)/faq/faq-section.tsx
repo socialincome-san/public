@@ -1,5 +1,3 @@
-'use client';
-
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
@@ -26,11 +24,12 @@ export function FAQSection({ title, questions }: FAQSectionProps) {
 				{questions.map((question, index) => (
 					<AccordionItem key={index} value={`item-${index}`}>
 						<AccordionTrigger>
-							<Typography size="lg">{question.question}</Typography>
+							<Typography size="lg" className="text-left">
+								{question.question}
+							</Typography>
 						</AccordionTrigger>
-						<AccordionContent>
-							<Typography className="prose">{question.answer}</Typography>
-
+						<AccordionContent className="prose">
+							<Typography>{question.answer}</Typography>
 							{question.links && (
 								<ul className="mt-4 flex list-inside list-disc flex-col space-y-1">
 									{question.links?.map((link, index2) => (
