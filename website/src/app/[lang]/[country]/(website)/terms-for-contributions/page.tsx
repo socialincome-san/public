@@ -75,6 +75,9 @@ export default async function Page({ params }: DefaultPageProps) {
 				<Typography dangerouslySetInnerHTML={{ __html: translator.t('disagreements.section-1') }} />
 				<Typography dangerouslySetInnerHTML={{ __html: translator.t('disagreements.section-2') }} />
 			</div>
+			{params.lang!=="en" && (
+				<Typography className="prose" dangerouslySetInnerHTML={{ __html: translator.t('comment') }} />
+			)}
 		</BaseContainer>
 	);
 }

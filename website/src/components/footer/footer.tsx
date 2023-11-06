@@ -121,7 +121,7 @@ export default async function Footer({ params, supportedLanguages, supportedCoun
 						/>
 						<FooterLink
 							Icon={UserGroupIcon}
-							label="Terms for contributions"
+							label="Terms and Conditions"
 							url={`/${params.lang}/${params.country}/terms-for-contributions`}
 						/>
 					</div>
