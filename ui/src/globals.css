@@ -6,13 +6,13 @@
 	:root,
 	.theme-default {
 		--si-yellow: hsl(48, 100%, 49%);
-		--background: hsl(0 0% 100%);
+		--background: hsl(219, 100%, 97%);
 		--foreground: hsl(20 14.3% 4.1%);
 
 		--card: hsl(0 100% 100%);
 		--card-foreground: hsl(20 14.3% 4.1%);
 
-		--popover: hsl(0, 0%, 97%);
+		--popover: hsl(0 100% 100%);
 		--popover-foreground: hsl(20 14.3% 4.1%);
 
 		--primary: hsl(216, 54%, 55%);
@@ -24,13 +24,13 @@
 		--muted: hsl(60 4.8% 95.9%);
 		--muted-foreground: hsl(25 5.3% 44.7%);
 
-		--accent: hsl(48, 80%, 90%);
+		--accent: hsl(219, 100%, 95%);
 		--accent-foreground: hsl(24 9.8% 10%);
 
 		--destructive: hsl(0, 75%, 42%);
 		--destructive-foreground: hsl(60 9.1% 97.8%);
 
-		--border: hsl(20 5.9% 90%);
+		--border: hsl(20 5.9% 80%);
 		--input: hsl(20 5.9% 90%);
 		--ring: hsl(216, 54%, 55%);
 

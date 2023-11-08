@@ -6,7 +6,7 @@ import i18next from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import mjml2html from 'mjml';
 import path from 'path';
-import { LanguageCode } from '../types/Language';
+import { LanguageCode } from '../types/language';
 import { FALLBACK_LANGUAGE } from './i18n';
 
 export interface RenderTemplateProps {

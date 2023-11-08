@@ -1,7 +1,7 @@
 import {
 	PARTNER_ORGANISATION_FIRESTORE_PATH,
 	PartnerOrganisation,
-} from '@socialincome/shared/src/types/PartnerOrganisation';
+} from '@socialincome/shared/src/types/partner-organisation';
 import { buildProperties } from 'firecms';
 import { buildAuditedCollection } from './shared';
 

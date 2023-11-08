@@ -7,8 +7,8 @@ import {
 	PAYMENT_FIRESTORE_PATH,
 	Payment,
 	PaymentStatus,
-} from '../../../../../../shared/src/types/Payment';
-import { RECIPIENT_FIRESTORE_PATH, RecipientProgramStatus } from '../../../../../../shared/src/types/Recipient';
+} from '../../../../../../shared/src/types/payment';
+import { RECIPIENT_FIRESTORE_PATH, RecipientProgramStatus } from '../../../../../../shared/src/types/recipient';
 import { ExchangeRateImporter } from '../../../../cron/exchange-rate-import/ExchangeRateImporter';
 import { PaymentTask } from './PaymentTask';
 

@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
-import { MESSAGE_FIRESTORE_PATH, MessageType, TwilioMessage } from '../../../../shared/src/types/Message';
-import { RECIPIENT_FIRESTORE_PATH, Recipient } from '../../../../shared/src/types/Recipient';
+import { MESSAGE_FIRESTORE_PATH, MessageType, TwilioMessage } from '../../../../shared/src/types/message';
+import { RECIPIENT_FIRESTORE_PATH, Recipient } from '../../../../shared/src/types/recipient';
 
 export class TwilioIncomingMessageHandler {
 	/**

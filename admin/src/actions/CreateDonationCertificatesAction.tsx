@@ -10,13 +10,13 @@ import {
 	Select,
 	Typography,
 } from '@mui/material';
+import { DEFAULT_REGION } from '@socialincome/shared/src/firebase';
+import { User } from '@socialincome/shared/src/types/user';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { CollectionActionsProps, useAuthController, useSnackbarController } from 'firecms';
 import _ from 'lodash';
 import React from 'react';
 import { CreateDonationCertificatesFunctionProps } from '../../../functions/src/webhooks/admin/donation-certificates/DonationCertificateHandler';
-import { DEFAULT_REGION } from '../../../shared/src/firebase';
-import { User } from '../../../shared/src/types/User';
 
 const style = {
 	position: 'absolute' as 'absolute',

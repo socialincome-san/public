@@ -1,4 +1,4 @@
-import { USER_FIRESTORE_PATH, User, UserReferralSource } from '@socialincome/shared/src/types/User';
+import { USER_FIRESTORE_PATH, User, UserReferralSource } from '@socialincome/shared/src/types/user';
 import { AdditionalFieldDelegate, buildProperties } from 'firecms';
 import { CreateDonationCertificatesAction } from '../actions/CreateDonationCertificatesAction';
 import { buildContributionsCollection } from './Contributions';

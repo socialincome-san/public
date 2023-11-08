@@ -1,5 +1,5 @@
 import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
-import { EXCHANGE_RATES_PATH, ExchangeRatesEntry } from '../types/ExchangeRates';
+import { EXCHANGE_RATES_PATH, ExchangeRatesEntry } from '../types/exchange-rates';
 
 export const getLatestExchangeRate = async (firestoreAdmin: FirestoreAdmin, currency: string): Promise<number> => {
 	if (currency === 'CHF') return 1.0;

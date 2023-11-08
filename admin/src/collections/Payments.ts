@@ -1,5 +1,5 @@
-import { MESSAGE_FIRESTORE_PATH } from '@socialincome/shared/src/types/Message';
-import { Payment, PAYMENT_FIRESTORE_PATH, PaymentStatus } from '@socialincome/shared/src/types/Payment';
+import { MESSAGE_FIRESTORE_PATH } from '@socialincome/shared/src/types/message';
+import { Payment, PAYMENT_FIRESTORE_PATH, PaymentStatus } from '@socialincome/shared/src/types/payment';
 import { buildProperties, EnumValues } from 'firecms';
 import { buildAuditedCollection } from './shared';
 

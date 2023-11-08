@@ -9,8 +9,8 @@ import {
 	CONTRIBUTION_FIRESTORE_PATH,
 	ContributionSourceKey,
 	StatusKey,
-} from '../../../../shared/src/types/Contribution';
-import { USER_FIRESTORE_PATH, User } from '../../../../shared/src/types/User';
+} from '../../../../shared/src/types/contribution';
+import { USER_FIRESTORE_PATH, User } from '../../../../shared/src/types/user';
 
 // TODO: write tests
 export class PostfinancePaymentsFileImporter {

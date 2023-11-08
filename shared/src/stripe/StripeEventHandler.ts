@@ -8,8 +8,8 @@ import {
 	ContributionSourceKey,
 	StatusKey,
 	StripeContribution,
-} from '../types/Contribution';
-import { USER_FIRESTORE_PATH, User, UserStatusKey, splitName } from '../types/User';
+} from '../types/contribution';
+import { USER_FIRESTORE_PATH, User, UserStatusKey, splitName } from '../types/user';
 
 export class StripeEventHandler {
 	readonly stripe: Stripe;

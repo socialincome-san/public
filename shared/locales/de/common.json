@@ -1,4 +1,18 @@
 {
+	"currency": "Währung",
+	"currencies": {
+		"CHF": "Schweizer Franken",
+		"USD": "US Dollar",
+		"EUR": "Euro",
+		"SLE": "Sierra-leonischer Leone"
+	},
+	"region": "Region",
+	"regions": {
+		"int": "International",
+		"ch": "Schweiz",
+		"sl": "Sierra Leone"
+	},
+	"language": "Sprache",
 	"languages": {
 		"de": "Deutsch",
 		"en": "Englisch",

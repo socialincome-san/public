@@ -1,4 +1,4 @@
-import { LanguageCode } from '@socialincome/shared/src/types/Language';
+import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { useState } from 'react';
 

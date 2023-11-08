@@ -7,13 +7,13 @@ import {
 	PAYMENT_FIRESTORE_PATH,
 	PaymentProcessTaskType,
 	PaymentStatus,
-} from '../../../../../../shared/src/types/Payment';
+} from '../../../../../../shared/src/types/payment';
 import {
 	Recipient,
 	RECIPIENT_FIRESTORE_PATH,
 	RecipientProgramStatus,
 	toPaymentDate,
-} from '../../../../../../shared/src/types/Recipient';
+} from '../../../../../../shared/src/types/recipient';
 import { toDateTime } from '../../../../../../shared/src/utils/date';
 import { initializeGlobalTestData } from '../../../../firebase';
 import { runPaymentProcessTask } from '../../../index';

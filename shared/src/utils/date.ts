@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { Timestamp } from '../types/Timestamp';
+import { Timestamp } from '../types/timestamp';
 
 export function getMonthId(year: number, month: number) {
 	return year + '-' + (month + '').padStart(2, '0');

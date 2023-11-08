@@ -10,7 +10,7 @@ import {
 	Query,
 	QueryDocumentSnapshot,
 } from 'firebase-admin/firestore';
-import { AdminUser } from '../../types/AdminUser';
+import { AdminUser } from '../../types/admin-user';
 import { getOrInitializeFirebaseAdmin } from './app';
 import Firestore = firestore.Firestore;
 
