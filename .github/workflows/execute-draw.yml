@@ -33,14 +33,14 @@ jobs:
         working-directory: recipients_selection
         run: ./draw.sh
 
-      - name: Commit 🔐
+      - name: Configure some git params 🔧
         run: |
           git config --global user.name $BOT_NAME
           git config --global user.email $BOT_EMAIL
-          git add .
-          git commit -m "completed a recipient draw"
-      - name: Raise PR
+
+      - name: Commit and raise PR 🔐
         uses: peter-evans/create-pull-request@v5
         with:
           branch: draw/results
           branch-suffix: timestamp
+          commit-message: completed a recipient draw
