@@ -1,6 +1,6 @@
 import { CURRENCY_COOKIE, DefaultParams } from '@/app/[lang]/[region]';
 import { NavbarClient } from '@/components/navbar/navbar-client';
-import { websiteCurrencies, WebsiteLanguage, websiteRegions } from '@/i18n';
+import { WebsiteLanguage, websiteCurrencies, websiteRegions } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { cookies } from 'next/headers';
 
