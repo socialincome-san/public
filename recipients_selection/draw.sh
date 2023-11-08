@@ -13,6 +13,11 @@ $(cd ./draws && find . -type f | sort > "$draw_file")
 # we compare the contents to find files that exist as lists but not as draws
 remaining_draw_filenames=$(comm -3 "$list_file" "$draw_file" |  awk '{print $1}')
 
+if [ -z "$remaining_draw_filenames" ]; then
+  echo "no draws to execute"
+  exit 0
+fi
+
 # we then actually run the draw
 while IFS= read -r filename; do
   # first we strip any leading ./
