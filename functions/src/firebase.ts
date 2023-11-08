@@ -1,9 +1,9 @@
 import { getOrInitializeFirebaseAdmin } from '../../shared/src/firebase/admin/app';
 import { FirestoreAdmin } from '../../shared/src/firebase/admin/FirestoreAdmin';
-import { ADMIN_USER_FIRESTORE_PATH, AdminUser } from '../../shared/src/types/AdminUser';
-import { EXCHANGE_RATES_PATH, ExchangeRatesEntry } from '../../shared/src/types/ExchangeRates';
-import { PARTNER_ORGANISATION_FIRESTORE_PATH, PartnerOrganisation } from '../../shared/src/types/PartnerOrganisation';
-import { Recipient, RECIPIENT_FIRESTORE_PATH, RecipientProgramStatus } from '../../shared/src/types/Recipient';
+import { ADMIN_USER_FIRESTORE_PATH, AdminUser } from '../../shared/src/types/admin-user';
+import { EXCHANGE_RATES_PATH, ExchangeRatesEntry } from '../../shared/src/types/exchange-rates';
+import { PARTNER_ORGANISATION_FIRESTORE_PATH, PartnerOrganisation } from '../../shared/src/types/partner-organisation';
+import { Recipient, RECIPIENT_FIRESTORE_PATH, RecipientProgramStatus } from '../../shared/src/types/recipient';
 
 export async function initializeGlobalTestData(projectId?: string) {
 	const firestoreAdmin = new FirestoreAdmin(getOrInitializeFirebaseAdmin({ projectId }));

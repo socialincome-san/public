@@ -6,7 +6,7 @@ import {
 	BANK_BALANCE_FIRESTORE_PATH,
 	BankBalance,
 	getIdFromBankBalance,
-} from '../../../../shared/src/types/BankBalance';
+} from '../../../../shared/src/types/bank-balance';
 import { PostFinanceBalanceImporter } from './PostFinanceBalanceImporter';
 
 describe('importPostfinanceBalance', () => {

@@ -1,10 +1,11 @@
 'use client';
-import { DefaultParams } from '@/app/[lang]/[country]';
+
+import { I18nDialog } from '@/components/i18n-dialog';
 import { SILogo } from '@/components/logos/si-logo';
-import { LanguageSwitcher } from '@/components/navbar/language-switcher';
+import { WebsiteCurrency } from '@/i18n';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
-import { LanguageCode } from '@socialincome/shared/src/types/Language';
+import { Bars3Icon, GlobeEuropeAfricaIcon, LanguageIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import { LanguageCode } from '@socialincome/shared/src/types/language';
 import {
 	Accordion,
 	AccordionContent,
@@ -14,25 +15,15 @@ import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
-	Menubar,
-	MenubarContent,
-	MenubarItem,
-	MenubarMenu,
-	MenubarTrigger,
-	NavigationMenu,
-	NavigationMenuContent,
-	NavigationMenuItem,
-	NavigationMenuLink,
-	NavigationMenuList,
-	NavigationMenuTrigger,
+	HoverCard,
+	HoverCardContent,
+	HoverCardTrigger,
 	Typography,
-	navigationMenuTriggerStyle,
 } from '@socialincome/ui';
-import { signOut } from 'firebase/auth';
 import _ from 'lodash';
 import Link from 'next/link';
 import { useState } from 'react';
-import { useAuth, useUser } from 'reactfire';
+import { DefaultParams } from '../../app/[lang]/[region]';
 
 type NavbarSection = {
 	title: string;
@@ -48,7 +39,12 @@ type NavbarProps = {
 	backgroundColor?: string;
 	sections: NavbarSection[];
 	translations: {
+		language: string;
 		currentLanguage: string;
+		region: string;
+		currentRegion: string;
+		currency: string;
+		currentCurrency: string;
 		myProfile: string;
 		contactDetails: string;
 		payments: string;
@@ -58,108 +54,134 @@ type NavbarProps = {
 		code: LanguageCode;
 		translation: string;
 	}[];
+	regions: {
+		code: string;
+		translation: string;
+	}[];
+	currencies: {
+		code: WebsiteCurrency;
+		translation: string;
+	}[];
 } & DefaultParams;
 
-export function NavbarClient({ lang, country, translations, languages, sections = [] }: NavbarProps) {
-	const auth = useAuth();
+export function NavbarClient({
+	lang,
+	region,
+	translations,
+	languages,
+	regions,
+	currencies,
+	sections = [],
+}: NavbarProps) {
 	const [isOpen, setIsOpen] = useState(false);
 
-	const { status: authUserReady, data: authUser } = useUser();
+	const i18nDialog = (
+		<I18nDialog
+			languages={languages}
+			regions={regions}
+			currencies={currencies}
+			translations={{
+				language: translations.language,
+				currentLanguage: translations.currentLanguage,
+				region: translations.region,
+				currentRegion: translations.currentRegion,
+				currency: translations.currency,
+				currentCurrency: translations.currentCurrency,
+			}}
+		>
+			<Button variant="ghost" className="flex max-w-md space-x-2">
+				<LanguageIcon className="h-4 w-4" />
+				<GlobeEuropeAfricaIcon className="h-4 w-4" />
+			</Button>
+		</I18nDialog>
+	);
 
 	return (
-		<NavigationMenu className="mx-auto md:h-20">
+		<nav className="md:h-20">
 			<Collapsible
 				open={isOpen}
 				onOpenChange={setIsOpen}
-				className="flex w-screen max-w-6xl flex-col space-y-4 px-3 py-2 md:px-5 md:py-4"
+				className="mx-auto flex w-screen max-w-6xl flex-col space-y-4 px-3 py-2 md:px-5 md:py-4"
 			>
-				<div className="grid grid-cols-2 items-center md:grid-cols-4">
-					<Link href={`/${lang}/${country}`}>
+				<div className="flex flex-row items-center justify-between md:grid-cols-4">
+					<Link href={`/${lang}/${region}`}>
 						<SILogo className="h-6" />
 					</Link>
+					{/*Desktop menu*/}
 					<div className="mx-auto hidden md:col-span-2 md:flex md:items-center">
-						<NavigationMenuList>
-							{sections.map((section, index) => {
-								return (
-									<NavigationMenuItem key={index}>
-										{_.isEmpty(section.links) && section.href ? (
-											<Link href={section.href} legacyBehavior passHref>
-												<NavigationMenuLink className={navigationMenuTriggerStyle()}>
+						{sections.map((section, index) => {
+							return (
+								<div key={index}>
+									{_.isEmpty(section.links) && section.href ? (
+										<Link href={section.href} key={index}>
+											<Button variant="ghost">
+												<Typography size="md" weight="medium">
 													{section.title}
-												</NavigationMenuLink>
-											</Link>
-										) : (
-											<div key={index}>
-												<NavigationMenuTrigger>{section.title}</NavigationMenuTrigger>
-												<NavigationMenuContent>
-													<ul className="grid w-[40rem] grid-cols-2 gap-2 p-4">
-														{section.links?.map((link, index) => (
-															<li key={index} className="hover:bg-accent rounded p-2">
-																<Link href={link.href}>
-																	<Typography size="md" weight="medium" lineHeight="loose">
-																		{link.title}
-																	</Typography>
-																	{link.description && <Typography size="xs">{link.description}</Typography>}
-																</Link>
-															</li>
-														))}
-													</ul>
-												</NavigationMenuContent>
-											</div>
-										)}
-									</NavigationMenuItem>
-								);
-							})}
-						</NavigationMenuList>
+												</Typography>
+											</Button>
+										</Link>
+									) : (
+										<HoverCard key={index} openDelay={0} closeDelay={1}>
+											<HoverCardTrigger asChild>
+												<Button variant="ghost">
+													<Typography size="md" weight="medium">
+														{section.title}
+													</Typography>
+												</Button>
+											</HoverCardTrigger>
+											<HoverCardContent asChild alignOffset={20} className="bg-popover w-72">
+												<ul>
+													{section.links?.map((link, index) => (
+														<li key={index} className="hover:bg-accent rounded p-2">
+															<Link href={link.href}>
+																<Typography size="md" weight="medium" lineHeight="loose">
+																	{link.title}
+																</Typography>
+															</Link>
+														</li>
+													))}
+												</ul>
+											</HoverCardContent>
+										</HoverCard>
+									)}
+								</div>
+							);
+						})}
 					</div>
 					<div className="hidden md:flex md:flex-row md:items-center md:justify-self-end">
-						<Menubar className="border-none">
-							<LanguageSwitcher languages={languages} mobile={false} currentLanguage={translations.currentLanguage} />
-							<MenubarMenu>
-								<MenubarTrigger className="cursor-pointer">
-									<UserCircleIcon className="h-5 w-5" />
-								</MenubarTrigger>
-								<MenubarContent>
-									{authUserReady === 'success' && authUser ? (
-										<>
-											<MenubarItem>
-												<Link href={`/${lang}/${country}/me/contributions`}>{translations.payments}</Link>
-											</MenubarItem>
-											<MenubarItem>
-												<Link href={`/${lang}/${country}/me/contact-details`}>{translations.contactDetails}</Link>
-											</MenubarItem>
-											<MenubarItem>
-												<a onClick={() => signOut(auth)}>{translations.signOut}</a>
-											</MenubarItem>
-										</>
-									) : (
-										<MenubarItem>
-											<Link href={`/${lang}/${country}/login`}>Log in</Link>
-										</MenubarItem>
-									)}
-								</MenubarContent>
-							</MenubarMenu>
-						</Menubar>
+						{i18nDialog}
+						<Link href={`/${lang}/${region}/me`}>
+							<Button variant="ghost" className="cursor-pointer">
+								<UserCircleIcon className="h-5 w-5" />
+							</Button>
+						</Link>
 					</div>
-					<CollapsibleTrigger asChild className="justify-self-end md:hidden">
-						<Button variant="ghost" size="icon" className="w-9 p-0">
-							{isOpen ? (
-								<XMarkIcon className="block h-5 w-5" aria-hidden="true" />
-							) : (
-								<Bars3Icon className="block h-5 w-5" aria-hidden="true" />
-							)}
-						</Button>
-					</CollapsibleTrigger>
+					<div className="flex justify-self-end md:hidden">
+						{i18nDialog}
+						<CollapsibleTrigger asChild>
+							<Button variant="ghost" size="icon" className="w-9 p-0">
+								{isOpen ? (
+									<XMarkIcon className="block h-5 w-5" aria-hidden="true" />
+								) : (
+									<Bars3Icon className="block h-5 w-5" aria-hidden="true" />
+								)}
+							</Button>
+						</CollapsibleTrigger>
+					</div>
 				</div>
-				<CollapsibleContent className="space-y-2 md:hidden">
-					<Accordion type="single" collapsible className="w-full">
+
+				{/*Mobile menu*/}
+				<CollapsibleContent className="border-b md:hidden">
+					<Accordion type="single" collapsible className="border-border mb-4 flex w-full flex-col">
 						{sections.map((section, index) => (
 							<div key={index}>
 								{_.isEmpty(section.links) && section.href ? (
-									<Link href={section.href}>{section.title}</Link>
+									<div className="flex flex-1 items-center justify-between py-1.5 font-medium">
+										<Link href={section.href}>{section.title}</Link>
+									</div>
 								) : (
-									<AccordionItem value={`value-${index}`} className="border-none">
-										<AccordionTrigger>{section.title}</AccordionTrigger>
+									<AccordionItem value={`value-${index}`} className="hover:underline-none border-none">
+										<AccordionTrigger className="py-1.5">{section.title}</AccordionTrigger>
 										{section.links?.map((link, index2) => (
 											<AccordionContent key={index2}>
 												<Link href={link.href}>{link.title}</Link>
@@ -170,9 +192,8 @@ export function NavbarClient({ lang, country, translations, languages, sections 
 							</div>
 						))}
 					</Accordion>
-					<LanguageSwitcher languages={languages} mobile={true} currentLanguage={translations.currentLanguage} />
 				</CollapsibleContent>
 			</Collapsible>
-		</NavigationMenu>
+		</nav>
 	);
 }

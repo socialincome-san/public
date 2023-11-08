@@ -7,14 +7,14 @@ import {
 	Recipient,
 	RecipientMainLanguage,
 	RecipientProgramStatus,
-} from '../../../../../shared/src/types/Recipient';
+} from '../../../../../shared/src/types/recipient';
 import {
 	SURVEY_FIRETORE_PATH,
 	Survey,
 	SurveyQuestionnaire,
 	SurveyStatus,
 	recipientSurveys,
-} from '../../../../../shared/src/types/Survey';
+} from '../../../../../shared/src/types/survey';
 import { rndString } from '../../../../../shared/src/utils/crypto';
 import { toDateTime } from '../../../../../shared/src/utils/date';
 

@@ -1,5 +1,5 @@
-import { RecipientMainLanguage } from '@socialincome/shared/src/types/Recipient';
-import { SurveyQuestionnaire, SurveyStatus } from '@socialincome/shared/src/types/Survey';
+import { RecipientMainLanguage } from '@socialincome/shared/src/types/recipient';
+import { SurveyQuestionnaire, SurveyStatus } from '@socialincome/shared/src/types/survey';
 import { DateProperty, MapProperty, Property, StringProperty } from 'firecms/dist/types/properties';
 
 export const surveyStatusProperty: StringProperty = {

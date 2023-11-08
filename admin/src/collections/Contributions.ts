@@ -3,7 +3,7 @@ import {
 	Contribution,
 	ContributionSourceKey,
 	StatusKey,
-} from '@socialincome/shared/src/types/Contribution';
+} from '@socialincome/shared/src/types/contribution';
 import { buildProperties } from 'firecms';
 import { EntityCollection } from 'firecms/dist/types/collections';
 import { buildAuditedCollection } from './shared';

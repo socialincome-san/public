@@ -1,7 +1,7 @@
 import { Box, Button, Link, Popover, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { Recipient } from '@socialincome/shared/src/types/Recipient';
-import { Survey, SurveyStatus, getSurveyUrl } from '@socialincome/shared/src/types/Survey';
+import { Recipient } from '@socialincome/shared/src/types/recipient';
+import { Survey, SurveyStatus, getSurveyUrl } from '@socialincome/shared/src/types/survey';
 import { toDate, toDateTime } from '@socialincome/shared/src/utils/date';
 import {
 	QueryDocumentSnapshot,

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
-import { Payment, PAYMENT_FIRESTORE_PATH } from '../../types/Payment';
+import { Payment, PAYMENT_FIRESTORE_PATH } from '../../types/payment';
 import { toDateTime } from '../date';
 import { getLatestExchangeRate } from '../exchangeRates';
 import { cumulativeSum, groupByAndSort, StatsEntry } from './utils';

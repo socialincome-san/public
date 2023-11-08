@@ -1,5 +1,5 @@
-import { ADMIN_USER_FIRESTORE_PATH, AdminUser } from '@socialincome/shared/src/types/AdminUser';
-import { PARTNER_ORGANISATION_FIRESTORE_PATH } from '@socialincome/shared/src/types/PartnerOrganisation';
+import { ADMIN_USER_FIRESTORE_PATH, AdminUser } from '@socialincome/shared/src/types/admin-user';
+import { PARTNER_ORGANISATION_FIRESTORE_PATH } from '@socialincome/shared/src/types/partner-organisation';
 import { buildProperties } from 'firecms';
 import { buildAuditedCollection } from './shared';
 

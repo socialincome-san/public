@@ -7,7 +7,7 @@ import {
 	BANK_BALANCE_FIRESTORE_PATH,
 	BankBalance,
 	getIdFromBankBalance,
-} from '../../../../shared/src/types/BankBalance';
+} from '../../../../shared/src/types/bank-balance';
 import { POSTFINANCE_EMAIL_PASSWORD, POSTFINANCE_EMAIL_USER } from '../../config';
 
 export class PostFinanceBalanceImporter {

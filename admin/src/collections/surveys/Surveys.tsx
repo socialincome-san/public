@@ -1,5 +1,5 @@
+import { SURVEY_FIRETORE_PATH, Survey } from '@socialincome/shared/src/types/survey';
 import { EntityCollection } from 'firecms/dist/types/collections';
-import { SURVEY_FIRETORE_PATH, Survey } from '../../../../shared/src/types/Survey';
 import { buildAuditedCollection } from '../shared';
 import {
 	accessEmailProperty,

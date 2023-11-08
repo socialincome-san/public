@@ -1,8 +1,8 @@
 import { Box, Button, CircularProgress, Modal, Tooltip, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DEFAULT_REGION } from '@socialincome/shared/src/firebase';
-import { PaymentProcessTaskType } from '@socialincome/shared/src/types/Payment';
-import { toPaymentDate } from '@socialincome/shared/src/types/Recipient';
+import { PaymentProcessTaskType } from '@socialincome/shared/src/types/payment';
+import { toPaymentDate } from '@socialincome/shared/src/types/recipient';
 import { downloadStringAsFile } from '@socialincome/shared/src/utils/html';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { useSnackbarController } from 'firecms';
