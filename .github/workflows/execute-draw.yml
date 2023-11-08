@@ -21,15 +21,18 @@ jobs:
         with:
           node-version: latest
 
+      - name: Install dchoose 🔧
+        run: npm install -g dchoose
+
       - name: Make folders if necessary 📁
-        run: mkdir -p draws
+        run: |
+          mkdir -p ./recipients_selection/draws
+          mkdir -p ./recipients_selection/lists
 
       - name: Draw 🎲
-        uses: drand/draw-action@v0.0.10
-        with:
-          inputDir: ./lists
-          outputDir: ./draws
-          count: 10
+        working-directory: recipients_selection
+        run: ./draw.sh
+
       - name: Commit 🔐
         run: |
           git config --global user.name $BOT_NAME
