@@ -13,15 +13,15 @@ export default async function Page({ params }: DefaultPageProps) {
       <BaseContainer className="flex flex-col items-center space-y-12 py-8 min-h-screen">
 
         {/* Linked manually but could be done with GitHub's API in the future */}
-        <div className="pt-8 ">
+        <div className="pt-4">
           <a href="https://github.com/socialincome-san/public/issues/550" target="_blank" rel="noopener noreferrer" className="group flex items-center pl-2 pr-2 py-2 bg-black bg-opacity-5 hover:bg-black focus:outline-none focus:ring-4 focus:ring-primary font-medium rounded-full text-base text-black/80 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-dark hover:bg-opacity-10">
             <img src="https://avatars.githubusercontent.com/u/9919?v=4" className="w-10 h-10 rounded-full mr-2 group-hover:scale-110 transition-transform duration-300" alt="Avatar" />
-            <span className="text-md text-black/75 pl-3 pr-6">{translator.t('issue-unassigned')}</span>
+            <span className="text-lg text-black/75 pl-3 pr-6">{translator.t('issue-unassigned')}</span>
           </a>
         </div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 space-y-12 w-full">
-          <Typography as="h1" size="5xl" weight="bold" className="mx-auto text text-center" >{translator.t('title')}</Typography>
-          <Typography size="2xl" className="max-w-3xl mx-auto text text-center">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 space-y-12 w-full px-5 sm:px-4">
+          <Typography as="h1" size="5xl" weight="bold" lineHeight="tight" className="mx-auto text text-center" >{translator.t('title')}</Typography>
+          <Typography as="h2" size="3xl" lineHeight="snug" className="max-w-3xl mx-auto text text-center">
             {translator.t('subtitle')}</Typography>
 
           <div className="flex justify-center space-x-4">

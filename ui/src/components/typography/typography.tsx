@@ -5,12 +5,12 @@ import { FontColor } from '../../interfaces/color';
 import { Size } from '../../interfaces/size';
 import IntrinsicElements = React.JSX.IntrinsicElements;
 
-export type FontSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl'>;
+export type FontSize = Extract<Size, 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl'>;
 const FONT_SIZE_MAP: { [key in FontSize]: string } = {
-	'5xl': 'text-5xl',
-	'4xl': 'text-4xl',
-	'3xl': 'text-3xl',
-	'2xl': 'text-2xl',
+	'5xl': 'text-3xl sm:text-4xl md:text-5xl lg:text-5xl',
+	'4xl': 'text-2xl sm:text-3xl md:text-4xl lg:text-4xl',
+	'3xl': 'text-2xl sm:text-2xl md:text-3xl lg:text-3xl',
+	'2xl': 'text-2xl sm:text-2xl md:text-2xl lg:text-2xl',
 	xl: 'text-xl',
 	lg: 'text-lg',
 	md: 'text-base',
@@ -48,12 +48,12 @@ const FONT_COLOR_MAP: { [key in FontColor]: string } = {
 const LINE_HEIGHTS = ['none', 'tight', 'snug', 'normal', 'relaxed', 'loose'] as const;
 export type LineHeight = (typeof LINE_HEIGHTS)[number];
 const LINE_HEIGHT_MAP: { [key in LineHeight]: string } = {
-	none: 'leading-none',
-	tight: 'leading-tight',
-	snug: 'leading-snug',
-	normal: 'leading-normal',
-	relaxed: 'leading-relaxed',
-	loose: 'leading-loose',
+	none: 'leading-none xs:leading-none md:leading-none lg:leading-none xl:leading-none',
+	tight: 'leading-tight xs:leading-tight md:leading-tight lg:leading-tight xl:leading-tight',
+	snug: 'leading-snug xs:leading-snug md:leading-snug lg:leading-snug xl:leading-snug',
+	normal: 'leading-normal xs:leading-normal md:leading-tight lg:leading-tight xl:leading-tight',
+	relaxed: 'leading-relaxed xs:leading-relaxed md:leading-relaxed lg:leading-relaxed xl:leading-relaxed',
+	loose: 'leading-loose xs:leading-loose md:leading-loose lg:leading-loose xl:leading-loose',
 };
 
 type ElementType = keyof Pick<IntrinsicElements, 'div' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'>;
