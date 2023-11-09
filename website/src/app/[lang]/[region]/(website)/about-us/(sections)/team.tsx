@@ -77,9 +77,9 @@ const groups: Group[] = [
 		size: 'md',
 		people: [
 			{ name: 'Kabelo Ruffo', role: 'co-president', image: kabeloImage },
-			{ name: 'Simone Huser', role: 'co-president', image: simoneImage },
+			{ name: 'Flavien Meyer', role: 'co-president', image: flavienImage },
+			{ name: 'Simone Huser', role: 'president', image: simoneImage },
 			{ name: 'Anvita Pandey', role: 'board-member', image: anvitaImage },
-			{ name: 'Flavien Meyer', role: 'board-member', image: flavienImage },
 			{ name: 'Marion Quartier', role: 'board-member', image: marionImage },
 		],
 	},
