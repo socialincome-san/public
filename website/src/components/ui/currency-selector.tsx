@@ -1,6 +1,6 @@
 'use client';
 
-import { useI18n } from '@/app/providers/i18n-provider-client';
+import { useI18n } from '@/app/context-providers';
 import { getFlagComponentByCurrency } from '@/components/country-flags';
 import { WebsiteCurrency } from '@/i18n';
 import {
@@ -22,14 +22,14 @@ type CurrencySelectorProps = {
 
 const CurrencySelector = React.forwardRef<HTMLDivElement, CurrencySelectorProps>(
 	({ currencies, fontSize = 'md', ...props }: CurrencySelectorProps, ref) => {
-		const { currency, setCurrency } = useI18n();
+		let { currency, setCurrency } = useI18n();
 		const Flag = getFlagComponentByCurrency(currency);
 
 		return (
 			<div ref={ref} {...props}>
 				<Select value={currency} onValueChange={(currency: WebsiteCurrency) => setCurrency(currency)}>
 					<SelectTrigger className="h-full">
-						<Flag className="h-5 w-5" />
+						{Flag && <Flag className="h-5 w-5" />}
 						<SelectValue>
 							<Typography size={fontSize}>{currency}</Typography>
 						</SelectValue>

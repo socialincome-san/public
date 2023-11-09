@@ -1,8 +1,7 @@
-import { CURRENCY_COOKIE, DefaultParams } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { NavbarClient } from '@/components/navbar/navbar-client';
 import { WebsiteLanguage, websiteCurrencies, websiteRegions } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { cookies } from 'next/headers';
 
 export default async function Navbar({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
@@ -10,7 +9,6 @@ export default async function Navbar({ lang, region }: DefaultParams) {
 		namespaces: ['common', 'website-common', 'website-me'],
 	});
 	const supportedLanguages: WebsiteLanguage[] = ['en', 'de'];
-	const currency = cookies().get(CURRENCY_COOKIE)?.value.toLowerCase();
 
 	return (
 		<NavbarClient
@@ -18,11 +16,8 @@ export default async function Navbar({ lang, region }: DefaultParams) {
 			region={region}
 			translations={{
 				language: translator.t('language'),
-				currentLanguage: translator.t(`languages.${lang}`),
 				region: translator.t('region'),
-				currentRegion: translator.t(`regions.${region}`),
 				currency: translator.t('currency'),
-				currentCurrency: translator.t(`currencies.${cookies().get(CURRENCY_COOKIE)}`),
 				myProfile: translator.t('navigation.my-profile'),
 				contactDetails: translator.t('tabs.contact-details'),
 				payments: translator.t('tabs.contributions'),
@@ -54,7 +49,7 @@ export default async function Navbar({ lang, region }: DefaultParams) {
 					links: [
 						{
 							title: translator.t('navigation.finances'),
-							href: `/${lang}/${region}/transparency/finances/${currency}`,
+							href: `/${lang}/${region}/transparency/finances`,
 							description: translator.t('navigation.finances-description'),
 						},
 						{
