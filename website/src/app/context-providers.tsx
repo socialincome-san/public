@@ -1,5 +1,8 @@
 'use client';
 
+import { CURRENCY_COOKIE, LANGUAGE_COOKIE, REGION_COOKIE } from '@/app/[lang]/[region]';
+import { useCookieState } from '@/hooks/useCookieState';
+import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { DEFAULT_REGION } from '@socialincome/shared/src/firebase';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Analytics, getAnalytics, isSupported as isAnalyticsSupported } from 'firebase/analytics';
@@ -7,8 +10,8 @@ import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
-import { usePathname } from 'next/navigation';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import {
 	AnalyticsProvider,
@@ -95,7 +98,7 @@ function FirebaseSDKProviders({ children }: PropsWithChildren) {
 	);
 }
 
-export function ThemeProvider({ children }: PropsWithChildren) {
+function ThemeProvider({ children }: PropsWithChildren) {
 	const pathname = usePathname();
 	const baseSegment = pathname?.split('/')[3];
 
@@ -111,7 +114,58 @@ export function ThemeProvider({ children }: PropsWithChildren) {
 	return <body className={theme}>{children}</body>;
 }
 
-export function ProvidersClient({ children }: PropsWithChildren) {
+type I18nContextType = {
+	language: WebsiteLanguage | undefined;
+	setLanguage: (language: WebsiteLanguage) => void;
+	region: WebsiteRegion | undefined;
+	setRegion: (country: WebsiteRegion) => void;
+	currency: WebsiteCurrency | undefined;
+	setCurrency: (currency: WebsiteCurrency) => void;
+};
+
+const I18nContext = createContext<I18nContextType>(undefined!);
+export const useI18n = () => useContext(I18nContext);
+
+function I18nProvider({ children }: PropsWithChildren) {
+	const router = useRouter();
+
+	const { value: language, setCookie: setLanguage } = useCookieState<WebsiteLanguage>(LANGUAGE_COOKIE);
+	const { value: region, setCookie: setRegion } = useCookieState<WebsiteRegion>(REGION_COOKIE);
+	const { value: currency, setCookie: setCurrency } = useCookieState<WebsiteCurrency>(CURRENCY_COOKIE);
+
+	useEffect(() => {
+		const pathSegments = window.location.pathname.split('/');
+		if (language && pathSegments[1] !== language) {
+			pathSegments[1] = language;
+			router.push(pathSegments.join('/'));
+		}
+	}, [language, router]);
+
+	useEffect(() => {
+		const pathSegments = window.location.pathname.split('/');
+		if (region && pathSegments[2] !== region) {
+			pathSegments[2] = region;
+			router.push(pathSegments.join('/'));
+		}
+	}, [region, router]);
+
+	return (
+		<I18nContext.Provider
+			value={{
+				language: language,
+				setLanguage: (language) => setLanguage(language, { expires: 365 }),
+				region: region,
+				setRegion: (country) => setRegion(country, { expires: 365 }),
+				currency: currency,
+				setCurrency: (currency) => setCurrency(currency, { expires: 365 }),
+			}}
+		>
+			{children}
+		</I18nContext.Provider>
+	);
+}
+
+export function ContextProviders({ children }: PropsWithChildren) {
 	const firebaseConfig = {
 		apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
 		appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
@@ -128,8 +182,10 @@ export function ProvidersClient({ children }: PropsWithChildren) {
 			<FirebaseSDKProviders>
 				<QueryClientProvider client={queryClient}>
 					<ThemeProvider>
-						<Toaster />
-						{children}
+						<I18nProvider>
+							<Toaster />
+							{children}
+						</I18nProvider>
 					</ThemeProvider>
 				</QueryClientProvider>
 			</FirebaseSDKProviders>

@@ -1,7 +1,6 @@
 import { WebsiteCurrency } from '@/i18n';
 import { CH, EU } from 'country-flag-icons/react/1x1';
 import { SL, US } from 'country-flag-icons/react/3x2';
-import { Component } from 'react';
 
 export function getFlagComponentByCurrency(currency: WebsiteCurrency | undefined) {
 	switch (currency) {
@@ -13,7 +12,7 @@ export function getFlagComponentByCurrency(currency: WebsiteCurrency | undefined
 			return EU;
 		case 'SLE':
 			return SL;
-		case undefined:
-			return Component;
+		default:
+			return undefined;
 	}
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { useI18n } from '@/app/providers/i18n-provider-client';
+import { useI18n } from '@/app/context-providers';
 import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { GlobeAltIcon, LanguageIcon } from '@heroicons/react/24/solid';
 import {
