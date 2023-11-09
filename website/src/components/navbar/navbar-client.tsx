@@ -1,5 +1,6 @@
 'use client';
 
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { I18nDialog } from '@/components/i18n-dialog';
 import { SILogo } from '@/components/logos/si-logo';
 import { WebsiteCurrency } from '@/i18n';
@@ -23,7 +24,6 @@ import {
 import _ from 'lodash';
 import Link from 'next/link';
 import { useState } from 'react';
-import { DefaultParams } from '../../app/[lang]/[region]';
 
 type NavbarSection = {
 	title: string;
@@ -40,11 +40,8 @@ type NavbarProps = {
 	sections: NavbarSection[];
 	translations: {
 		language: string;
-		currentLanguage: string;
 		region: string;
-		currentRegion: string;
 		currency: string;
-		currentCurrency: string;
 		myProfile: string;
 		contactDetails: string;
 		payments: string;
@@ -64,9 +61,15 @@ type NavbarProps = {
 	}[];
 } & DefaultParams;
 
-export function NavbarClient(
-	{ lang, region, translations, languages, regions, currencies, sections = [] }: NavbarProps,
-) {
+export function NavbarClient({
+	lang,
+	region,
+	translations,
+	languages,
+	regions,
+	currencies,
+	sections = [],
+}: NavbarProps) {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const i18nDialog = (
@@ -76,11 +79,8 @@ export function NavbarClient(
 			currencies={currencies}
 			translations={{
 				language: translations.language,
-				currentLanguage: translations.currentLanguage,
 				region: translations.region,
-				currentRegion: translations.currentRegion,
 				currency: translations.currency,
-				currentCurrency: translations.currentCurrency,
 			}}
 		>
 			<Button variant="ghost" className="flex max-w-md space-x-2">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useI18n } from '@/app/providers/i18n-provider-client';
+import { useI18n } from '@/app/context-providers';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import { GlobeEuropeAfricaIcon, LanguageIcon } from '@heroicons/react/24/solid';
@@ -36,17 +36,18 @@ type I18nDialogProps = {
 	}[];
 	translations: {
 		language: string;
-		currentLanguage: string;
 		region: string;
-		currentRegion: string;
 		currency: string;
-		currentCurrency: string;
 	};
 };
 
-export function I18nDialog(
-	{ languages, regions, currencies, translations, children }: PropsWithChildren<I18nDialogProps>,
-) {
+export function I18nDialog({
+	languages,
+	regions,
+	currencies,
+	translations,
+	children,
+}: PropsWithChildren<I18nDialogProps>) {
 	const [open, setOpen] = useState(false);
 	const { language, setLanguage, region, setRegion, currency, setCurrency } = useI18n();
 
@@ -58,7 +59,7 @@ export function I18nDialog(
 					<Select value={language} onValueChange={(l: WebsiteLanguage) => setLanguage(l)}>
 						<SelectTrigger className="space-x-2">
 							<LanguageIcon className="h-4 w-4" />
-							<SelectValue placeholder={translations.currentLanguage} />
+							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>
 							<SelectGroup>
@@ -77,7 +78,7 @@ export function I18nDialog(
 					<Select value={region} onValueChange={(c: WebsiteRegion) => setRegion(c)}>
 						<SelectTrigger className="space-x-2">
 							<GlobeEuropeAfricaIcon className="h-4 w-4" />
-							<SelectValue placeholder={translations.currentRegion} />
+							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>
 							<SelectGroup>
@@ -102,7 +103,7 @@ export function I18nDialog(
 					>
 						<SelectTrigger className="space-x-2">
 							<CurrencyDollarIcon className="h-4 w-4" />
-							<SelectValue placeholder={translations.currentCurrency} />
+							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>
 							<SelectGroup>

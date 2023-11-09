@@ -15,7 +15,6 @@ export default async function Page(props: DefaultPageProps) {
 				requiredField: translator.t('login.required-field'),
 				invalidEmail: translator.t('login.invalid-email'),
 				submitButton: translator.t('login.submit-button'),
-
 				unknownUser: translator.t('login.unknown-user'),
 				wrongPassword: translator.t('login.wrong-password'),
 			}}
