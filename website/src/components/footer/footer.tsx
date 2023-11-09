@@ -1,3 +1,4 @@
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { FooterClient } from '@/components/footer/footer-client';
 import { SILogo } from '@/components/logos/si-logo';
 import { websiteLanguages, websiteRegions } from '@/i18n';
@@ -16,7 +17,6 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 import { HTMLAttributeAnchorTarget } from 'react';
-import { DefaultParams } from '../../app/[lang]/[region]';
 
 type FooterLinkProps = {
 	label: string;
@@ -102,8 +102,8 @@ export default async function Footer({ lang, region }: DefaultParams) {
 						<FooterLink Icon={BriefcaseIcon} label="Terms of Use" url={`/${lang}/${region}/terms-of-use`} />
 						<FooterLink
 							Icon={UserGroupIcon}
-							label="Terms for contributions"
-							url={`/${lang}/${region}/terms-for-contributions`}
+							label="Terms and conditions"
+							url={`/${lang}/${region}/terms-and-conditions`}
 						/>
 					</div>
 					<div className="flex flex-col space-y-2">
