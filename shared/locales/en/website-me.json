@@ -1,12 +1,44 @@
 {
-	"tabs": {
-		"contact-details": "Contact Info",
-		"contributions": "Contributions"
+	"sections": {
+		"account": {
+			"title": "My Account",
+			"personal-info": "Personal Info",
+			"security": "Security"
+		},
+		"contributions": {
+			"title": "My Contributions",
+			"payments": "Payments",
+			"subscriptions": "Subscriptions"
+		}
 	},
 	"contributions": {
 		"amount": "Amount",
+		"date": "Date",
+		"source": "Source",
+		"total": "Total",
 		"amount-currency": "{{ amount, currency }}",
-		"date": "Date"
+		"sources": {
+			"benevity": "Benevity",
+			"cash": "Cash",
+			"stripe": "Stripe",
+			"wire-transfer": "Wire Transfer"
+		}
+	},
+	"subscriptions": {
+		"amount": "Amount",
+		"date": "Date",
+		"source": "Source",
+		"total": "Total",
+		"amount-currency": "{{ amount, currency }}",
+		"interval": "Interval",
+		"interval-1": "Monthly",
+		"interval-3": "Quarterly",
+		"interval-12": "Annually",
+		"status": {
+			"active": "Active",
+			"canceled": "Canceled",
+			"paused": "Paused"
+		}
 	},
 	"login": {
 		"title": "Sign in to your account",

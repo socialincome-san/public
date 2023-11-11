@@ -10,14 +10,14 @@ export const useCookieState = <T extends string>(key: string, initialValue?: T, 
 		// Setting the initial value for a cookie is intentionally done in useEffect and not in useState, so that the
 		// initial state value is always undefined. This is required so that statically rendered pages are always the
 		// same as the initial state of the client side rendered page.
-		let value = Cookies.get(key) as T;
-		if (value) {
-			setValue(value);
+		const val = Cookies.get(key) as T;
+		if (val) {
+			setValue(val);
 		} else if (initialValue) {
 			Cookies.set(key, initialValue, options);
 			setValue(initialValue);
 		}
-	}, []);
+	}, [key, initialValue, options]);
 
 	const setCookie = (val: T, options?: CookieAttributes) => {
 		Cookies.set(key, val, options);

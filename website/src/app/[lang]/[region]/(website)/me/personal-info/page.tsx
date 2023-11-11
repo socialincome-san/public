@@ -1,6 +1,8 @@
 'use client';
 
-import { UserContext } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
+import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { useUserContext } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
+import { useTranslator } from '@/hooks/useTranslator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import {
@@ -20,16 +22,17 @@ import {
 } from '@socialincome/ui';
 import { doc, updateDoc } from 'firebase/firestore';
 import _ from 'lodash';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useFirestore } from 'reactfire';
 import * as z from 'zod';
 
 // TODO: i18n
-export default function Page() {
+export default function Page({ params }: DefaultPageProps) {
 	const firestore = useFirestore();
-	const { user } = useContext(UserContext);
+	const { user, refetch } = useUserContext();
+	const translator = useTranslator(params.lang, 'common');
 
 	const formSchema = z.object({
 		firstname: z.string(),
@@ -40,6 +43,7 @@ export default function Page() {
 		streetNumber: z.string(),
 		city: z.string(),
 		zip: z.coerce.number(),
+		language: z.enum(['en', 'de']),
 	});
 
 	type FormSchema = z.infer<typeof formSchema>;
@@ -54,6 +58,7 @@ export default function Page() {
 			streetNumber: '',
 			city: '',
 			zip: '' as any,
+			language: undefined as any,
 		},
 	});
 
@@ -68,18 +73,19 @@ export default function Page() {
 				streetNumber: user?.get('address.number') || '',
 				city: user?.get('address.city') || '',
 				zip: user?.get('address.zip') || '',
+				language: user?.get('language') || '',
 			});
 		}
 	}, [user, form]);
 
 	const onSubmit = async (values: FormSchema) => {
-		console.log(values);
 		await updateDoc(doc(firestore, USER_FIRESTORE_PATH, user!.id), {
 			personal: {
 				name: values.firstname,
 				lastname: values.lastname,
 				gender: values.gender,
 			},
+			language: values.language,
 			email: values.email,
 			address: {
 				street: values.street,
@@ -89,6 +95,7 @@ export default function Page() {
 			},
 		}).then(() => {
 			toast.success('User updated');
+			refetch();
 		});
 	};
 
@@ -142,7 +149,7 @@ export default function Page() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>Gender</FormLabel>
-							<Select onValueChange={field.onChange} defaultValue={field.value}>
+							<Select onValueChange={field.onChange}>
 								<FormControl>
 									<SelectTrigger>
 										<SelectValue>{_.capitalize(field.value)}</SelectValue>
@@ -189,19 +196,6 @@ export default function Page() {
 				<div className="flex flex-row space-x-2">
 					<FormField
 						control={form.control}
-						name="city"
-						render={({ field }) => (
-							<FormItem className="flex w-3/4 flex-col">
-								<FormLabel>City</FormLabel>
-								<FormControl>
-									<Input type="text" placeholder="city" {...field} />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
 						name="zip"
 						render={({ field }) => (
 							<FormItem className="flex w-1/4 flex-col">
@@ -213,8 +207,42 @@ export default function Page() {
 							</FormItem>
 						)}
 					/>
+					<FormField
+						control={form.control}
+						name="city"
+						render={({ field }) => (
+							<FormItem className="flex w-3/4 flex-col">
+								<FormLabel>City</FormLabel>
+								<FormControl>
+									<Input type="text" placeholder="city" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 				</div>
-				<Button type="submit" className="md:col-span-2">
+				<FormField
+					control={form.control}
+					name="language"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Language</FormLabel>
+							<Select onValueChange={field.onChange}>
+								<FormControl>
+									<SelectTrigger>
+										<SelectValue>{field.value && translator?.t(`languages.${field.value}`)}</SelectValue>
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent>
+									<SelectItem value="en">English</SelectItem>
+									<SelectItem value="de">German</SelectItem>
+								</SelectContent>
+							</Select>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<Button variant="outline" type="submit" className="md:col-span-2">
 					Update
 				</Button>
 			</form>

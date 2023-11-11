@@ -1,13 +1,11 @@
-'use client';
-
-import { useI18n } from '@/app/context-providers';
+import { CURRENCY_COOKIE } from '@/app/[lang]/[region]';
+import { defaultCurrency } from '@/i18n';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { useEffect } from 'react';
+
+export const dynamic = 'force-dynamic';
 
 export default function Page() {
-	const { currency } = useI18n();
-
-	useEffect(() => {
-		redirect('./finances/' + currency?.toLowerCase());
-	}, [currency]);
+	const currency = cookies().get(CURRENCY_COOKIE)?.value.toLowerCase() || defaultCurrency;
+	redirect('./finances/' + currency);
 }

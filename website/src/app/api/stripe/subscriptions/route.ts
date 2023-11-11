@@ -1,13 +1,13 @@
 import { authAdmin, firestoreAdmin } from '@/firebase-admin';
 import { initializeStripe } from '@socialincome/shared/src/stripe';
 import { USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types/user';
+import _ from 'lodash';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
 	const accessToken = searchParams.get('accessToken');
-	const returnUrl = searchParams.get('returnUrl');
-	if (!accessToken || !returnUrl) {
+	if (!accessToken) {
 		return new Response(null, { status: 400, statusText: 'Missing accessToken or returnUrl' });
 	}
 
@@ -16,10 +16,12 @@ export async function GET(request: Request) {
 	const userDoc = await firestoreAdmin.findFirst<User>(USER_FIRESTORE_PATH, (q) =>
 		q.where('authUserId', '==', decodedToken.uid),
 	);
-	const session = await stripe.billingPortal.sessions.create({
-		customer: userDoc?.get('stripe_customer_id'),
-		return_url: returnUrl,
-		locale: userDoc?.get('language'),
-	});
-	return NextResponse.json(session);
+
+	if (_.isUndefined(userDoc)) {
+		return new Response(null, { status: 400, statusText: 'User not found' });
+	} else {
+		return NextResponse.json(
+			(await stripe.subscriptions.list({ customer: userDoc.get('stripe_customer_id'), status: 'all' })).data,
+		);
+	}
 }

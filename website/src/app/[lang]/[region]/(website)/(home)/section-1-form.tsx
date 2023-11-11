@@ -54,10 +54,8 @@ export default function Section1Form({ translations }: Section1InputProps) {
 						/>
 						<CurrencySelector className="h-16 sm:flex-1" currencies={websiteCurrencies} fontSize="lg" />
 					</div>
-					<Button size="lg" type="submit" variant="default">
-						<Typography size="lg" weight="semibold" color="primary-foreground">
-							{translations.submit}
-						</Typography>
+					<Button size="lg" type="submit" variant="default" className="text-lg">
+						{translations.submit}
 					</Button>
 				</form>
 			</Form>
