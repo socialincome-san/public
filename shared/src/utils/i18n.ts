@@ -8,6 +8,7 @@ interface TranslateProps {
 	namespace?: string;
 	language?: string;
 	context?: object;
+    returnObjects?: boolean;
 }
 
 interface TranslatorProps {
@@ -15,7 +16,7 @@ interface TranslatorProps {
 	namespaces: string[] | string;
 }
 
-export type TranslateFunction = (key: string, translateProps?: TranslateProps) => string;
+export type TranslateFunction = (key: string, translateProps?: TranslateProps) => any;
 
 export class Translator {
 	language: LanguageCode;
@@ -40,6 +41,7 @@ export class Translator {
 				lng: language,
 				ns: namespaces,
 				fallbackLng: FALLBACK_LANGUAGE,
+                returnObjects: false,
 				interpolation: {
 					escapeValue: false,
 				},
@@ -51,6 +53,7 @@ export class Translator {
 		return this.instance.t(key, {
 			ns: translateProps?.namespace || this.namespaces,
 			lng: translateProps?.language || this.language,
+            returnObjects: translateProps?.returnObjects || false,
 			...translateProps?.context,
 		});
 	};
