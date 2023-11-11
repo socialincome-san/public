@@ -10,6 +10,7 @@ import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
+import _ from 'lodash';
 import { usePathname, useRouter } from 'next/navigation';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
@@ -134,18 +135,24 @@ function I18nProvider({ children }: PropsWithChildren) {
 	const { value: currency, setCookie: setCurrency } = useCookieState<WebsiteCurrency>(CURRENCY_COOKIE);
 
 	useEffect(() => {
-		const pathSegments = window.location.pathname.split('/');
-		if (language && pathSegments[1] !== language) {
-			pathSegments[1] = language;
-			router.push(pathSegments.join('/'));
+		const urlSegments = window.location.pathname.split('/');
+		const languageInUrl = urlSegments[1] as WebsiteLanguage;
+		if (_.isUndefined(language)) {
+			setLanguage(languageInUrl);
+		} else if (languageInUrl !== language) {
+			urlSegments[1] = language;
+			router.push(urlSegments.join('/'));
 		}
 	}, [language, router]);
 
 	useEffect(() => {
-		const pathSegments = window.location.pathname.split('/');
-		if (region && pathSegments[2] !== region) {
-			pathSegments[2] = region;
-			router.push(pathSegments.join('/'));
+		const urlSegments = window.location.pathname.split('/');
+		const regionInUrl = urlSegments[2] as WebsiteRegion;
+		if (_.isUndefined(region)) {
+			setRegion(regionInUrl);
+		} else if (regionInUrl !== region) {
+			urlSegments[2] = region;
+			router.push(urlSegments.join('/'));
 		}
 	}, [region, router]);
 

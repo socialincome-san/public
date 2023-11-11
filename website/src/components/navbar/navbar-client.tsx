@@ -61,9 +61,15 @@ type NavbarProps = {
 	}[];
 } & DefaultParams;
 
-export function NavbarClient(
-	{ lang, region, translations, languages, regions, currencies, sections = [] }: NavbarProps,
-) {
+export function NavbarClient({
+	lang,
+	region,
+	translations,
+	languages,
+	regions,
+	currencies,
+	sections = [],
+}: NavbarProps) {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const i18nDialog = (

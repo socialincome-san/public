@@ -2,11 +2,13 @@ import { DefaultPageProps } from '@/app/[lang]/[region]';
 import LoginForm from '@/app/[lang]/[region]/(website)/login/login-form';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 
-export default async function Page(props: DefaultPageProps) {
-	const translator = await Translator.getInstance({ language: props.params.lang, namespaces: 'website-me' });
+export default async function Page({ params }: DefaultPageProps) {
+	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-me'] });
 
 	return (
 		<LoginForm
+			lang={params.lang}
+			region={params.region}
 			translations={{
 				title: translator.t('login.title'),
 				email: translator.t('login.email'),
@@ -18,7 +20,6 @@ export default async function Page(props: DefaultPageProps) {
 				unknownUser: translator.t('login.unknown-user'),
 				wrongPassword: translator.t('login.wrong-password'),
 			}}
-			{...props}
 		/>
 	);
 }

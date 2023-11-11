@@ -1,20 +1,19 @@
 import { DefaultPageProps, DefaultParams } from '@/app/[lang]/[region]';
 import { CurrencyRedirect } from '@/app/[lang]/[region]/(website)/transparency/finances/[currency]/currency-redirect';
 import { firestoreAdmin } from '@/firebase-admin';
-import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
+import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion, websiteCurrencies } from '@/i18n';
 import {
 	ContributionStats,
 	ContributionStatsCalculator,
 } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { PaymentStats, PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
-import { BaseContainer } from '@socialincome/ui';
 import { Section1 } from './section-1';
 import { Section2 } from './section-2';
 import { Section3 } from './section-3';
 import { Section4 } from './section-4';
 
 export const revalidate = 3600; // update once an hour
-export const generateStaticParams = () => ['USD', 'CHF'].map((currency) => ({ currency: currency.toLowerCase() }));
+export const generateStaticParams = () => websiteCurrencies.map((currency) => ({ currency: currency.toLowerCase() }));
 
 export type TransparencyPageProps = {
 	params: {
@@ -43,7 +42,7 @@ export default async function Page({ params }: TransparencyPageProps) {
 	const { contributionStats, paymentStats } = await getStats(currency);
 
 	return (
-		<BaseContainer>
+		<div>
 			<CurrencyRedirect currency={currency} />
 			<div className="flex flex-col space-y-16">
 				<Section1 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
@@ -51,6 +50,6 @@ export default async function Page({ params }: TransparencyPageProps) {
 				<Section3 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
 				<Section4 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
 			</div>
-		</BaseContainer>
+		</div>
 	);
 }

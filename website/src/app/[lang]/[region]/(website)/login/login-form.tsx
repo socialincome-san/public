@@ -1,12 +1,13 @@
 'use client';
 
-import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SiGoogle } from '@icons-pack/react-simple-icons';
 import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input, Typography } from '@socialincome/ui';
 import { FirebaseError } from 'firebase/app';
 import { browserSessionPersistence, signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useAuth } from 'reactfire';
@@ -26,9 +27,9 @@ type LoginFormProps = {
 		unknownUser: string;
 		wrongPassword: string;
 	};
-} & DefaultPageProps;
+} & DefaultParams;
 
-export default function LoginForm({ params, translations }: LoginFormProps) {
+export default function LoginForm({ lang, region, translations }: LoginFormProps) {
 	const router = useRouter();
 	const auth = useAuth();
 
@@ -43,17 +44,20 @@ export default function LoginForm({ params, translations }: LoginFormProps) {
 		defaultValues: { email: '', password: '' },
 	});
 
-	const onSubmit = async (values: FormSchema) => {
-		await auth.setPersistence(browserSessionPersistence);
-		await signInWithEmailAndPassword(auth, values.email, values.password)
-			.then(() => {
-				router.push(`/${params.lang}/${params.region}/me`);
-			})
-			.catch((error: FirebaseError) => {
-				error.code === 'auth/wrong-password' && toast.error(translations.wrongPassword);
-				error.code === 'auth/user-not-found' && toast.error(translations.unknownUser);
-			});
-	};
+	const onSubmit = useCallback(
+		async (values: FormSchema) => {
+			await auth.setPersistence(browserSessionPersistence);
+			await signInWithEmailAndPassword(auth, values.email, values.password)
+				.then(() => {
+					router.push(`/${lang}/${region}/me`);
+				})
+				.catch((error: FirebaseError) => {
+					error.code === 'auth/wrong-password' && toast.error(translations.wrongPassword);
+					error.code === 'auth/user-not-found' && toast.error(translations.unknownUser);
+				});
+		},
+		[auth, lang, region, router, translations.wrongPassword, translations.unknownUser],
+	);
 
 	return (
 		<div className="mx-auto flex max-w-xl flex-col space-y-8">

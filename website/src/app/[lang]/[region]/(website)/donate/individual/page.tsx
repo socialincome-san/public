@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { CreateSubscriptionData } from '@/app/api/stripe/checkout/new/route';
+import { CreateSubscriptionData } from '@/app/api/stripe/checkout/new-payment/route';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -19,6 +19,7 @@ import {
 import classNames from 'classnames';
 import { useRouter } from 'next/navigation';
 import { UseFormReturn, useForm } from 'react-hook-form';
+import { useUser } from 'reactfire';
 import Stripe from 'stripe';
 import * as z from 'zod';
 
@@ -67,6 +68,7 @@ function RadioGroupFormItem({ active, title, value, form, description }: RadioGr
 
 export default function Page({ params, searchParams }: DefaultPageProps) {
 	const router = useRouter();
+	const { data: authUser } = useUser();
 
 	const formSchema = z.object({
 		amount: z.coerce.number(),
@@ -80,12 +82,15 @@ export default function Page({ params, searchParams }: DefaultPageProps) {
 	});
 
 	const onSubmit = async (values: FormSchema) => {
+		const authToken = await authUser?.getIdToken(true);
 		const data: CreateSubscriptionData = {
 			amount: values.amount * 100, // The amount is in cents, so we need to multiply by 100 to get the correct amount.
 			intervalCount: Number(values.intervalCount),
 			successUrl: `${window.location.origin}/${params.lang}/${params.region}/donate/success?stripeCheckoutSessionId={CHECKOUT_SESSION_ID}`,
+			recurring: true,
+			firebaseAuthToken: authToken,
 		};
-		const response = await fetch('/api/stripe/checkout/new', {
+		const response = await fetch('/api/stripe/checkout/new-payment', {
 			method: 'POST',
 			body: JSON.stringify(data),
 		});
