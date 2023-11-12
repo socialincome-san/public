@@ -121,7 +121,7 @@
 							"link": "https://drive.google.com/file/d/1KTsAwaWPH0NaiD2SLVQmJZHn2bxeWFHz/view?usp=sharing"
 						},
 						"part-2": {
-							"text":", ",
+							"text": ", ",
 							"text-blue": "Covarrubias 2012",
 							"link": "https://drive.google.com/file/d/1OEFeYCgxnbbrFVNFoYYQsSrnmVxZdz9v/view?usp=sharing"
 						},
@@ -160,9 +160,9 @@
 			}
 		}
 	},
-    "section-3": {
-        "topic": "Empowerment",
-        "title-black": "How does Social Income ",
+	"section-3": {
+		"topic": "Empowerment",
+		"title-black": "How does Social Income ",
 		"title-red": "empower people?",
 		"evidence": "Studies of direct cash transfer programs like Social Income have measured a range of beneficial effects on recipients’ lives.",
 		"cards": {
@@ -299,7 +299,7 @@
 				}
 			},
 			"card-4": {
-				"title" : "Empowerment of women",
+				"title": "Empowerment of women",
 				"description": "By enabling them to make freer decisions, direct cash transfers help women become more resilient, self-reliant, and involved in society.",
 				"paragraphs": {
 					"paragraph-1": {
@@ -433,7 +433,7 @@
 				}
 			}
 		}
-    },
+	},
 	"section-4": {
 		"topic": "Well-being",
 		"title-black": "How does Social Income contribute to ",
