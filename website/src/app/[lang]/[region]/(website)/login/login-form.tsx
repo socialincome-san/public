@@ -5,7 +5,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SiGoogle } from '@icons-pack/react-simple-icons';
 import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input, Typography } from '@socialincome/ui';
 import { FirebaseError } from 'firebase/app';
-import { browserSessionPersistence, signInWithEmailAndPassword } from 'firebase/auth';
+import {
+	GoogleAuthProvider,
+	browserSessionPersistence,
+	signInWithEmailAndPassword,
+	signInWithPopup,
+} from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
@@ -20,6 +25,7 @@ type LoginFormProps = {
 		password: string;
 		forgotPassword: string;
 		submitButton: string;
+		signInWithGoogle: string;
 
 		// Errors
 		requiredField: string;
@@ -59,6 +65,17 @@ export default function LoginForm({ lang, region, translations }: LoginFormProps
 		[auth, lang, region, router, translations.wrongPassword, translations.unknownUser],
 	);
 
+	const onGoogleSignIn = () => {
+		const provider = new GoogleAuthProvider();
+		signInWithPopup(auth, provider)
+			.then(async () => {
+				router.push(`/${lang}/${region}/me`);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+
 	return (
 		<div className="mx-auto flex max-w-xl flex-col space-y-8">
 			<Form {...form}>
@@ -96,9 +113,8 @@ export default function LoginForm({ lang, region, translations }: LoginFormProps
 				</form>
 			</Form>
 			<div className="mx-auto flex max-w-md flex-col">
-				<Button variant="outline" className="inline-flex" onClick={() => alert('Coming soon')}>
-					<SiGoogle className="mr-2 h-5 w-5" />
-					Continue with Google
+				<Button variant="default" className="inline-flex" Icon={SiGoogle} onClick={onGoogleSignIn}>
+					{translations.signInWithGoogle}
 				</Button>
 			</div>
 		</div>

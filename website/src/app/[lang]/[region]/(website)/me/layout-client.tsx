@@ -50,19 +50,19 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 
 	const navigationMenu = (
 		<ul className="pr-4">
+			<NavigationSectionTitle>{translations.contributionsTitle}</NavigationSectionTitle>
+			<NavigationLink href={`/${params.lang}/${params.region}/me/payments`} Icon={CurrencyDollarIcon}>
+				{translations.payments}
+			</NavigationLink>
+			<NavigationLink href={`/${params.lang}/${params.region}/me/subscriptions`} Icon={ArrowPathIcon}>
+				{translations.subscriptions}
+			</NavigationLink>
 			<NavigationSectionTitle>{translations.accountTitle}</NavigationSectionTitle>
 			<NavigationLink href={`/${params.lang}/${params.region}/me/personal-info`} Icon={UserCircleIcon}>
 				{translations.personalInfo}
 			</NavigationLink>
 			<NavigationLink href={`/${params.lang}/${params.region}/me/security`} Icon={ShieldCheckIcon}>
 				{translations.security}
-			</NavigationLink>
-			<NavigationSectionTitle>{translations.contributionsTitle}</NavigationSectionTitle>
-			<NavigationLink href={`/${params.lang}/${params.region}/me/contributions`} Icon={CurrencyDollarIcon}>
-				{translations.payments}
-			</NavigationLink>
-			<NavigationLink href={`/${params.lang}/${params.region}/me/subscriptions`} Icon={ArrowPathIcon}>
-				{translations.subscriptions}
 			</NavigationLink>
 		</ul>
 	);
@@ -75,7 +75,7 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 		case `/${params.lang}/${params.region}/me/security`:
 			title = translations.security;
 			break;
-		case `/${params.lang}/${params.region}/me/contributions`:
+		case `/${params.lang}/${params.region}/me/payments`:
 			title = translations.payments;
 			break;
 		case `/${params.lang}/${params.region}/me/subscriptions`:

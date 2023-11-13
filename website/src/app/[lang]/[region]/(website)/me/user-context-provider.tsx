@@ -18,13 +18,7 @@ export const useUserContext = () => useContext(UserContext);
 
 export function UserContextProvider({ children }: PropsWithChildren) {
 	const firestore = useFirestore();
-	const { status: authUserStatus, data: authUser } = useUser();
-
-	useEffect(() => {
-		if (authUserStatus === 'success' && authUser === null) {
-			redirect('../login');
-		}
-	}, [authUserStatus, authUser]);
+	const { data: authUser } = useUser();
 
 	const { data: user, refetch } = useQuery({
 		queryKey: ['UserContextProvider', authUser?.uid, firestore],
@@ -40,7 +34,13 @@ export function UserContextProvider({ children }: PropsWithChildren) {
 		staleTime: 1000 * 60 * 60, // 1 hour
 	});
 
+	useEffect(() => {
+		if (user === null) {
+			redirect('../login');
+		}
+	}, [user]);
+
 	if (user) {
 		return <UserContext.Provider value={{ user, refetch }}>{children}</UserContext.Provider>;
-	} else return null;
+	}
 }

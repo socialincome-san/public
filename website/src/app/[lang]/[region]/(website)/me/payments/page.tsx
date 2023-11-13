@@ -1,5 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { ContributionsTable } from '@/app/[lang]/[region]/(website)/me/contributions/contributions-table';
+import { ContributionsTable } from '@/app/[lang]/[region]/(website)/me/payments/contributions-table';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 
 export default async function Page({ params }: DefaultPageProps) {

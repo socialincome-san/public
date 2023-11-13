@@ -46,6 +46,7 @@
 		"invalid-email": "Invalid email address",
 		"password": "Password",
 		"forgot-password": "Forgot password?",
+		"sign-in-with-google": "Sign in with Google",
 		"required-field": "This field is required",
 		"submit-button": "Sign in",
 		"unknown-user": "This user does not exist",

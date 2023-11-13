@@ -1,12 +1,44 @@
 {
-	"tabs": {
-		"contact-details": "Kontaktangaben",
-		"contributions": "Zuwendungen"
+	"sections": {
+		"account": {
+			"title": "My Account",
+			"personal-info": "Personal Info",
+			"security": "Security"
+		},
+		"contributions": {
+			"title": "My Contributions",
+			"payments": "Payments",
+			"subscriptions": "Subscriptions"
+		}
 	},
 	"contributions": {
-		"amount": "Betrag",
+		"amount": "Amount",
+		"date": "Date",
+		"source": "Source",
+		"total": "Total",
 		"amount-currency": "{{ amount, currency }}",
-		"date": "Datum"
+		"sources": {
+			"benevity": "Benevity",
+			"cash": "Cash",
+			"stripe": "Stripe",
+			"wire-transfer": "Wire Transfer"
+		}
+	},
+	"subscriptions": {
+		"amount": "Amount",
+		"date": "Date",
+		"source": "Source",
+		"total": "Total",
+		"amount-currency": "{{ amount, currency }}",
+		"interval": "Interval",
+		"interval-1": "Monatlich",
+		"interval-3": "Quartalsweise",
+		"interval-12": "Jährlich",
+		"status": {
+			"active": "Aktiv",
+			"canceled": "Beendet",
+			"paused": "Pausiert"
+		}
 	},
 	"login": {
 		"title": "Melde dich an",
@@ -14,6 +46,7 @@
 		"invalid-email": "Ungültige E-Mail-Adresse",
 		"password": "Passwort",
 		"forgot-password": "Passwort vergessen?",
+		"sign-in-with-google": "Mit Google anmelden",
 		"required-field": "Dieses Feld ist erforderlich",
 		"submit-button": "Anmelden",
 		"unknown-user": "Es gibt keinen Benutzer mit dieser E-Mail-Adresse",

@@ -9,9 +9,9 @@ export const generateStaticParams = () =>
 
 export default function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	return (
-		<div className="mx-auto">
+		<div className="mx-auto flex flex-col">
 			<Navbar lang={params.lang} region={params.region} />
-			<main>{children}</main>
+			<main className="min-h-screen-navbar flex-1">{children}</main>
 			<Footer lang={params.lang} region={params.region} />
 		</div>
 	);

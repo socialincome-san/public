@@ -83,7 +83,7 @@ export function ContributionsTable({ lang, translations }: ContributionsTablePro
 							{translator?.t('contributions.amount-currency', {
 								context: {
 									amount: _.sum(contributions?.docs.map((contribution) => contribution.get('amount'))),
-									currency: contributions?.docs[0].get('currency'),
+									currency: contributions?.docs.at(0)?.get('currency'),
 									locale: lang,
 								},
 							})}

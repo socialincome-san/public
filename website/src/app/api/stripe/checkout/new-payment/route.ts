@@ -1,17 +1,18 @@
 import { getUserDocFromAuthToken } from '@/firebase-admin';
+import { WebsiteCurrency } from '@/i18n';
 import { initializeStripe } from '@socialincome/shared/src/stripe';
 import { NextResponse } from 'next/server';
 
-export type CreateSubscriptionData = {
+export type CreatePaymentData = {
 	amount: number; // in the lowest currency unit, e.g. cents
 	successUrl: string;
 	recurring?: boolean;
-	currency?: string;
+	currency?: WebsiteCurrency;
 	intervalCount?: number;
 	firebaseAuthToken?: string;
 };
 
-type CreateSubscriptionRequest = { json(): Promise<CreateSubscriptionData> } & Request;
+type CreateSubscriptionRequest = { json(): Promise<CreatePaymentData> } & Request;
 
 export async function POST(request: CreateSubscriptionRequest) {
 	const {
@@ -24,6 +25,7 @@ export async function POST(request: CreateSubscriptionRequest) {
 	} = await request.json();
 	const stripe = initializeStripe(process.env.STRIPE_SECRET_KEY!);
 	const userDoc = await getUserDocFromAuthToken(firebaseAuthToken);
+	const customerId = userDoc?.get('stripe_customer_id');
 	const price = await stripe.prices.create({
 		active: true,
 		unit_amount: amount,
@@ -34,7 +36,8 @@ export async function POST(request: CreateSubscriptionRequest) {
 	const session = await stripe.checkout.sessions.create({
 		mode: recurring ? 'subscription' : 'payment',
 		payment_method_types: ['card'],
-		customer: userDoc?.get('stripe_customer_id'),
+		customer: customerId,
+		customer_creation: customerId ? undefined : 'always',
 		line_items: [
 			{
 				price: price.id,
