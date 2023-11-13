@@ -1,10 +1,10 @@
-import { DefaultPageProps } from '@/app/[lang]/[country]';
+import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { SectionCard } from './section-card';
 
-export default async function Section4({ params }: DefaultPageProps) {
-	const section = 4;
+export default async function Section2({ params }: DefaultPageProps) {
+	const section = 2;
 	const translator = await Translator.getInstance({
 		language: params.lang,
 		namespaces: ['website-evidence'],
@@ -18,7 +18,7 @@ export default async function Section4({ params }: DefaultPageProps) {
 	let i = 0;
 
 	return (
-		<BaseContainer backgroundColor="bg-yellow-50" className="flex flex-col items-start space-y-1 rounded-sm p-10">
+		<BaseContainer backgroundColor="bg-blue-50" className="mt-12 flex flex-col items-start space-y-1 rounded-sm p-10">
 			<Typography size="xl" weight="medium" color="muted-foreground">
 				{translator.t(`section-${section}.topic`)}
 			</Typography>

@@ -1,7 +1,7 @@
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';
 import Link from 'next/link';
-import { DefaultParams } from '../..';
 
 type SectionParagraphProps = {
 	section: number;

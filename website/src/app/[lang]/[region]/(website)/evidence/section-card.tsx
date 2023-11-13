@@ -1,4 +1,6 @@
-import { DefaultParams } from '@/app/[lang]/[country]';
+'use client';
+
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import {
 	Button,

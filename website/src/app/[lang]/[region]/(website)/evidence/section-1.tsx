@@ -1,4 +1,4 @@
-import { DefaultPageProps } from '@/app/[lang]/[country]';
+import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
