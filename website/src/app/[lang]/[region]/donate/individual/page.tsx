@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { CreateSubscriptionData } from '@/app/api/stripe/checkout/new-payment/route';
+import { CreatePaymentData } from '@/app/api/stripe/checkout/new-payment/route';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -83,7 +83,7 @@ export default function Page({ params, searchParams }: DefaultPageProps) {
 
 	const onSubmit = async (values: FormSchema) => {
 		const authToken = await authUser?.getIdToken(true);
-		const data: CreateSubscriptionData = {
+		const data: CreatePaymentData = {
 			amount: values.amount * 100, // The amount is in cents, so we need to multiply by 100 to get the correct amount.
 			intervalCount: Number(values.intervalCount),
 			successUrl: `${window.location.origin}/${params.lang}/${params.region}/donate/success?stripeCheckoutSessionId={CHECKOUT_SESSION_ID}`,
@@ -101,7 +101,7 @@ export default function Page({ params, searchParams }: DefaultPageProps) {
 	};
 
 	return (
-		<BaseContainer className="flex min-h-screen flex-col items-center justify-center">
+		<BaseContainer className="flex flex-col items-center justify-center">
 			<Typography weight="bold" size="3xl" className="mb-12 text-center">
 				How would you like to pay?
 			</Typography>

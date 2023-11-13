@@ -14,7 +14,7 @@ export const websiteRegions: WebsiteRegion[] = ['int', 'ch', 'sl'];
 
 export type WebsiteCurrency = Extract<Currency, 'USD' | 'EUR' | 'CHF' | 'SLE'>;
 export const defaultCurrency: WebsiteCurrency = 'USD';
-export const websiteCurrencies: WebsiteCurrency[] = ['USD', 'EUR', 'CHF', 'SLE'];
+export const websiteCurrencies: WebsiteCurrency[] = ['USD', 'EUR', 'CHF'];
 
 export const getCurrencyTranslations = (currencies: WebsiteCurrency[], translator: Translator) =>
 	currencies.map((currency) => ({

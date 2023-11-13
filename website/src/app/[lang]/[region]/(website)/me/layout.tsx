@@ -9,7 +9,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: 'website-me' });
 
 	return (
-		<BaseContainer backgroundColor="bg-blue-50" className="min-h-screen">
+		<BaseContainer>
 			<UserContextProvider>
 				<LayoutClient
 					params={params}

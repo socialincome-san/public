@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+	--h-navbar: 4.5rem;
+	--h-navbar-mobile: 4rem;
+}
+
+.min-h-navbar {
+	min-height: var(--h-navbar-mobile);
+	@media screen(md) {
+		min-height: var(--h-navbar);
+	}
+}
+
+.min-h-screen-navbar {
+	min-height: calc(100vh - var(--h-navbar-mobile));
+	@media screen(md) {
+		min-height: calc(100vh - var(--h-navbar));
+	}
+}

@@ -8,7 +8,6 @@ export async function GET(request: Request) {
 	if (!stripeCheckoutSessionId || !userId) {
 		return new Response(null, { status: 400, statusText: 'Missing stripeCheckoutSessionId or userId' });
 	}
-
 	const stripeEventHandler = new StripeEventHandler(process.env.STRIPE_SECRET_KEY!, firestoreAdmin);
 	await stripeEventHandler.handleCheckoutSessionCompletedEvent(stripeCheckoutSessionId, userId);
 	return new Response(null, { status: 200 });
