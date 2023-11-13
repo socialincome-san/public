@@ -12,7 +12,7 @@ export default async function Section1({ params }: DefaultPageProps) {
 	return (
 		<BaseContainer
 			backgroundColor="bg-blue-50"
-			className="grid min-h-[calc(100vh-theme(spacing.20))] grid-cols-1 content-center items-center gap-y-8 lg:grid-cols-2"
+			className="min-h-screen-navbar grid grid-cols-1 content-center items-center gap-y-8 lg:grid-cols-2"
 		>
 			<div className="mx-auto max-w-3xl">
 				<Typography size="5xl" weight="bold" lineHeight="tight">
@@ -25,10 +25,16 @@ export default async function Section1({ params }: DefaultPageProps) {
 			</div>
 			<div className="mx-auto max-w-2xl">
 				<Section1Form
+					lang={params.lang}
+					region={params.region}
 					translations={{
 						text: translator.t('section-1.income-text'),
 						currency: translator.t('currency'),
+						amount: translator.t('section-1.amount'),
 						submit: translator.t('section-1.button-text'),
+						privacyCommitment: translator.t('section-1.privacy-commitment'),
+						taxDeductible: translator.t('section-1.tax-deductible'),
+						oneTimeDonation: translator.t('section-1.one-time-donation'),
 					}}
 				/>
 			</div>

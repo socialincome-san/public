@@ -4,7 +4,10 @@
 		"title-2": "aus der Armut helfen?",
 		"title-3": "",
 		"income-text": "Gib dein monatliches Einkommen ein und schau, was du bewirken kannst.",
-		"button-text": "Beitrag berechnen"
+		"button-text": "Beitrag berechnen",
+		"privacy-commitment": "Wir verpflichten uns zum Datenschutz",
+		"tax-deductible": "Dein Beitrag ist in der Schweiz steuerbefreit",
+		"one-time-donation": "Make a one-time donation"
 	},
 	"section-2": {
 		"title-1": "Was würde sich in deinem Alltag ändern, ",

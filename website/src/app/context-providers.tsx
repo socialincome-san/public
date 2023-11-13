@@ -143,7 +143,7 @@ function I18nProvider({ children }: PropsWithChildren) {
 			urlSegments[1] = language;
 			router.push(urlSegments.join('/'));
 		}
-	}, [language, router]);
+	}, [language, router, setLanguage]);
 
 	useEffect(() => {
 		const urlSegments = window.location.pathname.split('/');
@@ -154,7 +154,7 @@ function I18nProvider({ children }: PropsWithChildren) {
 			urlSegments[2] = region;
 			router.push(urlSegments.join('/'));
 		}
-	}, [region, router]);
+	}, [region, router, setRegion]);
 
 	return (
 		<I18nContext.Provider

@@ -13,6 +13,7 @@ import {
 	SelectValue,
 	Typography,
 } from '@socialincome/ui';
+import classNames from 'classnames';
 import React from 'react';
 
 type CurrencySelectorProps = {
@@ -21,24 +22,28 @@ type CurrencySelectorProps = {
 } & React.HTMLAttributes<HTMLDivElement>;
 
 const CurrencySelector = React.forwardRef<HTMLDivElement, CurrencySelectorProps>(
-	({ currencies, fontSize = 'md', ...props }: CurrencySelectorProps, ref) => {
+	({ currencies, fontSize = 'md', className, ...props }: CurrencySelectorProps, ref) => {
 		let { currency, setCurrency } = useI18n();
 		const Flag = getFlagComponentByCurrency(currency);
 
 		return (
-			<div ref={ref} {...props}>
+			<div ref={ref} className={classNames('w-full md:max-w-[12rem]', className)} {...props}>
 				<Select value={currency} onValueChange={(currency: WebsiteCurrency) => setCurrency(currency)}>
 					<SelectTrigger className="h-full">
 						{Flag && <Flag className="h-5 w-5" />}
 						<SelectValue>
-							<Typography size={fontSize}>{currency}</Typography>
+							<Typography size={fontSize} color="popover-foreground">
+								{currency}
+							</Typography>
 						</SelectValue>
 					</SelectTrigger>
 					<SelectContent>
 						<SelectGroup>
 							{currencies.map((curr, index) => (
 								<SelectItem key={index} value={curr}>
-									<Typography size={fontSize}>{curr}</Typography>
+									<Typography size={fontSize} color="popover-foreground">
+										{curr}
+									</Typography>
 								</SelectItem>
 							))}
 						</SelectGroup>

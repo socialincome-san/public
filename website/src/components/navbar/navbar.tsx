@@ -3,7 +3,11 @@ import { NavbarClient } from '@/components/navbar/navbar-client';
 import { WebsiteLanguage, websiteCurrencies, websiteRegions } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 
-export default async function Navbar({ lang, region }: DefaultParams) {
+type NavbarProps = {
+	showNavigation?: boolean;
+} & DefaultParams;
+
+export default async function Navbar({ lang, region, showNavigation = true }: NavbarProps) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['common', 'website-common', 'website-me'],
@@ -14,6 +18,7 @@ export default async function Navbar({ lang, region }: DefaultParams) {
 		<NavbarClient
 			lang={lang}
 			region={region}
+			showNavigation={showNavigation}
 			translations={{
 				language: translator.t('language'),
 				region: translator.t('region'),
@@ -35,7 +40,7 @@ export default async function Navbar({ lang, region }: DefaultParams) {
 				code: currency,
 				translation: translator.t(`currencies.${currency}`),
 			}))}
-			sections={[
+			navigation={[
 				{
 					title: translator.t('navigation.our-work'),
 					href: `/${lang}/${region}/our-work`,

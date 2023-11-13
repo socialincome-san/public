@@ -4,7 +4,6 @@ import * as LabelPrimitive from '@radix-ui/react-label';
 import { Slot } from '@radix-ui/react-slot';
 import * as React from 'react';
 import { Controller, ControllerProps, FieldPath, FieldValues, FormProvider, useFormContext } from 'react-hook-form';
-
 import { cn } from '../lib/utils';
 import { Label } from './label';
 
@@ -22,9 +21,9 @@ const FormFieldContext = React.createContext<FormFieldContextValue>({} as FormFi
 const FormField = <
 	TFieldValues extends FieldValues = FieldValues,
 	TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->(
-	{ ...props }: ControllerProps<TFieldValues, TName>,
-) => {
+>({
+	...props
+}: ControllerProps<TFieldValues, TName>) => {
 	return (
 		<FormFieldContext.Provider value={{ name: props.name }}>
 			<Controller {...props} />
@@ -67,7 +66,7 @@ const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
 
 		return (
 			<FormItemContext.Provider value={{ id }}>
-				<div ref={ref} className={cn('space-y-2', className)} {...props} />
+				<div ref={ref} className={cn('space-y-1', className)} {...props} />
 			</FormItemContext.Provider>
 		);
 	},
@@ -120,7 +119,15 @@ const FormMessage = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<
 		}
 
 		return (
-			<p ref={ref} id={formMessageId} className={cn('text-destructive text-sm font-medium', className)} {...props}>
+			<p
+				ref={ref}
+				id={formMessageId}
+				className={cn(
+					'text-destructive-foreground bg-destructive ml-1 rounded px-2 py-1 text-sm font-medium',
+					className,
+				)}
+				{...props}
+			>
 				{body}
 			</p>
 		);

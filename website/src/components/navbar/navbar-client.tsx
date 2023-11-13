@@ -25,7 +25,7 @@ import _ from 'lodash';
 import Link from 'next/link';
 import { useState } from 'react';
 
-type NavbarSection = {
+type NavigationSection = {
 	title: string;
 	href?: string;
 	links?: {
@@ -37,7 +37,8 @@ type NavbarSection = {
 
 type NavbarProps = {
 	backgroundColor?: string;
-	sections: NavbarSection[];
+	navigation: NavigationSection[];
+	showNavigation?: boolean;
 	translations: {
 		language: string;
 		region: string;
@@ -61,9 +62,16 @@ type NavbarProps = {
 	}[];
 } & DefaultParams;
 
-export function NavbarClient(
-	{ lang, region, translations, languages, regions, currencies, sections = [] }: NavbarProps,
-) {
+export function NavbarClient({
+	lang,
+	region,
+	translations,
+	languages,
+	regions,
+	currencies,
+	navigation = [],
+	showNavigation = true,
+}: NavbarProps) {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const i18nDialog = (
@@ -85,83 +93,89 @@ export function NavbarClient(
 	);
 
 	return (
-		<nav className="md:h-20">
+		<nav className="min-h-navbar flex flex-col justify-start pt-4">
 			<Collapsible
 				open={isOpen}
 				onOpenChange={setIsOpen}
-				className="mx-auto flex w-screen max-w-6xl flex-col space-y-4 px-3 py-2 md:px-5 md:py-4"
+				className="mx-auto flex w-screen max-w-6xl flex-col space-y-4 px-3 md:px-5"
 			>
 				<div className="flex flex-row items-center justify-between md:grid-cols-4">
 					<Link href={`/${lang}/${region}`}>
 						<SILogo className="h-6" />
 					</Link>
 					{/*Desktop menu*/}
-					<div className="mx-auto hidden md:col-span-2 md:flex md:items-center">
-						{sections.map((section, index) => {
-							return (
-								<div key={index}>
-									{_.isEmpty(section.links) && section.href ? (
-										<Link href={section.href} key={index}>
-											<Button variant="ghost">
-												<Typography size="md" weight="medium">
-													{section.title}
-												</Typography>
-											</Button>
-										</Link>
-									) : (
-										<HoverCard key={index} openDelay={0} closeDelay={1}>
-											<HoverCardTrigger asChild>
+					{showNavigation && (
+						<div className="mx-auto hidden md:col-span-2 md:flex md:items-center">
+							{navigation.map((section, index) => {
+								return (
+									<div key={index}>
+										{_.isEmpty(section.links) && section.href ? (
+											<Link href={section.href} key={index}>
 												<Button variant="ghost">
 													<Typography size="md" weight="medium">
 														{section.title}
 													</Typography>
 												</Button>
-											</HoverCardTrigger>
-											<HoverCardContent asChild alignOffset={20} className="bg-popover w-72">
-												<ul>
-													{section.links?.map((link, index) => (
-														<li key={index} className="hover:bg-accent rounded p-2">
-															<Link href={link.href}>
-																<Typography size="md" weight="medium" lineHeight="loose">
-																	{link.title}
-																</Typography>
-															</Link>
-														</li>
-													))}
-												</ul>
-											</HoverCardContent>
-										</HoverCard>
-									)}
-								</div>
-							);
-						})}
-					</div>
+											</Link>
+										) : (
+											<HoverCard key={index} openDelay={0} closeDelay={1}>
+												<HoverCardTrigger asChild>
+													<Button variant="ghost">
+														<Typography size="md" weight="medium">
+															{section.title}
+														</Typography>
+													</Button>
+												</HoverCardTrigger>
+												<HoverCardContent asChild alignOffset={20} className="bg-popover w-72">
+													<ul>
+														{section.links?.map((link, index) => (
+															<li key={index} className="hover:bg-accent rounded p-2">
+																<Link href={link.href}>
+																	<Typography size="md" weight="medium" lineHeight="loose">
+																		{link.title}
+																	</Typography>
+																</Link>
+															</li>
+														))}
+													</ul>
+												</HoverCardContent>
+											</HoverCard>
+										)}
+									</div>
+								);
+							})}
+						</div>
+					)}
 					<div className="hidden md:flex md:flex-row md:items-center md:justify-self-end">
 						{i18nDialog}
-						<Link href={`/${lang}/${region}/me`}>
-							<Button variant="ghost" className="cursor-pointer">
-								<UserCircleIcon className="h-5 w-5" />
-							</Button>
-						</Link>
+						{showNavigation && (
+							<Link href={`/${lang}/${region}/me`}>
+								<Button variant="ghost" className="cursor-pointer">
+									<UserCircleIcon className="h-5 w-5" />
+								</Button>
+							</Link>
+						)}
 					</div>
-					<div className="flex justify-self-end md:hidden">
+					<div className="flex flex-row justify-self-end md:hidden">
 						{i18nDialog}
-						<CollapsibleTrigger asChild>
-							<Button variant="ghost" size="icon" className="w-9 p-0">
-								{isOpen ? (
-									<XMarkIcon className="block h-5 w-5" aria-hidden="true" />
-								) : (
-									<Bars3Icon className="block h-5 w-5" aria-hidden="true" />
-								)}
-							</Button>
-						</CollapsibleTrigger>
+						{showNavigation && (
+							<CollapsibleTrigger asChild>
+								<Button variant="ghost" size="icon" className="w-9 p-0">
+									{isOpen ? (
+										<XMarkIcon className="block h-5 w-5" aria-hidden="true" />
+									) : (
+										<Bars3Icon className="block h-5 w-5" aria-hidden="true" />
+									)}
+								</Button>
+							</CollapsibleTrigger>
+						)}
 					</div>
 				</div>
 
 				{/*Mobile menu*/}
 				<CollapsibleContent className="border-b md:hidden">
 					<Accordion type="single" collapsible className="border-border mb-4 flex w-full flex-col">
-						{sections.map((section, index) => (
+						{navigation.map((section, index) => (
 							<div key={index}>
 								{_.isEmpty(section.links) && section.href ? (
 									<div className="flex flex-1 items-center justify-between py-1.5 font-medium">
@@ -179,6 +193,9 @@ export function NavbarClient(
 								)}
 							</div>
 						))}
+						<div className="flex flex-1 items-center justify-between py-1.5 font-medium">
+							<Link href={`/${lang}/${region}/me`}>{translations.myProfile}</Link>
+						</div>
 					</Accordion>
 				</CollapsibleContent>
 			</Collapsible>
