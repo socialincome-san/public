@@ -4,7 +4,11 @@
 		"title-2": "lift out of poverty ",
 		"title-3": "with 1% of your income?",
 		"income-text": "Enter your monthly income and calculate your impact.",
-		"button-text": "Show my Impact"
+		"amount": "Amount",
+		"button-text": "Show my Impact",
+		"privacy-commitment": "Our commitment to privacy",
+		"tax-deductible": "Contributions are tax-deductible in Switzerland",
+		"one-time-donation": "Make a one-time donation"
 	},
 	"section-2": {
 		"title-1": "What would change ",

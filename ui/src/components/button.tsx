@@ -1,3 +1,4 @@
+import { IconType } from '@icons-pack/react-simple-icons/types';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
@@ -18,7 +19,7 @@ const buttonVariants = cva(
 			size: {
 				default: 'h-10 px-4 py-2',
 				sm: 'h-9 rounded-md px-3',
-				lg: 'h-16 rounded-md px-8 font-semibold',
+				lg: 'h-16 rounded-md px-8 font-semibold text-lg',
 				icon: 'h-10 w-10',
 			},
 		},
@@ -33,12 +34,18 @@ export interface ButtonProps
 	extends React.ButtonHTMLAttributes<HTMLButtonElement>,
 		VariantProps<typeof buttonVariants> {
 	asChild?: boolean;
+	Icon?: IconType;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-	({ className, variant, size, asChild = false, ...props }, ref) => {
+	({ className, variant, size, asChild = false, Icon, children, ...props }, ref) => {
 		const Comp = asChild ? Slot : 'button';
-		return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
+		return (
+			<Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
+				{Icon && <Icon className={cn('h-4 w-4', { 'mr-2': size !== 'icon' })} />}
+				{children}
+			</Comp>
+		);
 	},
 );
 Button.displayName = 'Button';
