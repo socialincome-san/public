@@ -144,7 +144,7 @@ export default async function Team({ params }: DefaultPageProps) {
 							{group.people.map((person: Person, index2) => (
 								<li key={index2} className="flex flex-col">
 									<Image
-										className="aspect-[5/6] w-full rounded-2xl object-cover hover:scale-105 transition-transform duration-300"
+										className="aspect-[5/6] w-full rounded-2xl object-cover transition-transform duration-300 hover:scale-105"
 										src={person.image}
 										alt={`${person.name} image`}
 									/>
