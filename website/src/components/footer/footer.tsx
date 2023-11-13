@@ -1,22 +1,19 @@
-import { DefaultLayoutProps } from '@/app/[lang]/[country]';
-import { LanguageCode } from '@socialincome/shared/src/types/Language';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
-
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { FooterClient } from '@/components/footer/footer-client';
 import { SILogo } from '@/components/logos/si-logo';
-import { ValidCountry } from '@/i18n';
+import { websiteLanguages, websiteRegions } from '@/i18n';
 import {
 	BriefcaseIcon,
 	EnvelopeIcon,
 	EnvelopeOpenIcon,
 	InformationCircleIcon,
 	ShieldCheckIcon,
-	SwatchIcon,
 	UserCircleIcon,
 	UserGroupIcon,
 } from '@heroicons/react/24/solid';
 import { SiFacebook, SiInstagram, SiLinkedin, SiTwitter } from '@icons-pack/react-simple-icons';
 import { IconType } from '@icons-pack/react-simple-icons/types';
+import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 import { HTMLAttributeAnchorTarget } from 'react';
@@ -39,35 +36,31 @@ function FooterLink({ label, url, Icon, target = '_self' }: FooterLinkProps) {
 	);
 }
 
-type FooterProps = {
-	supportedLanguages: LanguageCode[];
-	supportedCountries: ValidCountry[];
-} & DefaultLayoutProps;
-
 // TODO: i18n
-export default async function Footer({ params, supportedLanguages, supportedCountries }: FooterProps) {
+export default async function Footer({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['common', 'website-common', 'website-me', 'countries'],
+		language: lang,
+		namespaces: ['common', 'website-common', 'website-me'],
 	});
 
-	const supportedTranslatedLanguages = supportedLanguages.map((lang) => {
+	const supportedTranslatedLanguages = websiteLanguages.map((lang) => {
 		return { translation: translator.t(`languages.${lang}`), code: lang };
 	});
-	const supportedTranslatedCountries = supportedCountries.map((country) => {
-		return { translation: translator.t(`${country.toUpperCase()}`), code: country };
+	const supportedTranslatedCountries = websiteRegions.map((region) => {
+		return { translation: translator.t(`regions.${region}`), code: region };
 	});
 
 	return (
 		<BaseContainer backgroundColor="bg-muted" className="theme-default py-16">
 			<div className="space-y-4">
-				<div className="flex flex-row justify-between">
+				<div className="flex flex-row items-center justify-between">
 					<SILogo className="fill-muted-foreground h-4" />
 					<div className="hidden items-center gap-x-1 md:flex">
 						<FooterClient
-							params={params}
-							supportedTranslatedLanguages={supportedTranslatedLanguages}
-							supportedTranslatedCountries={supportedTranslatedCountries}
+							lang={lang}
+							region={region}
+							languages={supportedTranslatedLanguages}
+							regions={supportedTranslatedCountries}
 						/>
 					</div>
 				</div>
@@ -97,56 +90,47 @@ export default async function Footer({ params, supportedLanguages, supportedCoun
 							url="https://www.linkedin.com/company/socialincome"
 							target="_blank"
 						/>
-						<FooterLink
-							Icon={EnvelopeOpenIcon}
-							label="Newsletter"
-							url={`/${params.lang}/${params.country}/updates`}
-							target="_blank"
-						/>
+						<FooterLink Icon={EnvelopeOpenIcon} label="Newsletter" url={`/${lang}/${region}/updates`} target="_blank" />
 					</div>
 					<div className="flex flex-col space-y-2">
 						<Typography className="mb-2" size="lg" weight="medium">
 							Resources
 						</Typography>
-						<FooterLink Icon={InformationCircleIcon} label="FAQ" url={`/${params.lang}/${params.country}/faq`} />
-						<FooterLink Icon={UserCircleIcon} label="Account" url={`/${params.lang}/${params.country}/login`} />
-						<FooterLink
-							Icon={ShieldCheckIcon}
-							label="Privacy Policy"
-							url={`/${params.lang}/${params.country}/privacy`}
-						/>
-						<FooterLink Icon={BriefcaseIcon} label="Terms of Use" url={`/${params.lang}/${params.country}/terms-use`} />
+						<FooterLink Icon={InformationCircleIcon} label="FAQ" url={`/${lang}/${region}/faq`} />
+						<FooterLink Icon={UserCircleIcon} label="Account" url={`/${lang}/${region}/login`} />
+						<FooterLink Icon={ShieldCheckIcon} label="Privacy Policy" url={`/${lang}/${region}/privacy`} />
+						<FooterLink Icon={BriefcaseIcon} label="Terms of Use" url={`/${lang}/${region}/terms-of-use`} />
 						<FooterLink
 							Icon={UserGroupIcon}
-							label="Terms for contributions"
-							url={`/${params.lang}/${params.country}/terms-contributions`}
+							label="Terms and conditions"
+							url={`/${lang}/${region}/terms-and-conditions`}
 						/>
-						<FooterLink Icon={SwatchIcon} label="The Arts" url={`/${params.lang}/${params.country}/arts`} />
 					</div>
 					<div className="flex flex-col space-y-2">
 						<Typography className="mb-2" size="lg" weight="medium">
 							Our Work
 						</Typography>
-						<FooterLink label="How It Works" url={`/${params.lang}/${params.country}/our-work#process`} />
-						<FooterLink label="Contributors" url={`/${params.lang}/${params.country}/our-work#contributors`} />
-						<FooterLink label="Recipients" url={`/${params.lang}/${params.country}/our-work#recipients`} />
-						<FooterLink label="What's Next" url={`/${params.lang}/${params.country}/our-work#next`} />
+						<FooterLink label="How It Works" url={`/${lang}/${region}/our-work#process`} />
+						<FooterLink label="Contributors" url={`/${lang}/${region}/our-work#contributors`} />
+						<FooterLink label="Recipients" url={`/${lang}/${region}/our-work#recipients`} />
+						<FooterLink label="What's Next" url={`/${lang}/${region}/our-work#next`} />
 					</div>
 					<div className="flex flex-col space-y-2">
 						<Typography className="mb-2" size="lg" weight="medium">
 							About us
 						</Typography>
-						<FooterLink label="Our Mission" url={`/${params.lang}/${params.country}/about-us#about-us-1`} />
-						<FooterLink label="Why Contribute?" url={`/${params.lang}/${params.country}/about-us#motivations`} />
-						<FooterLink label="Team" url={`/${params.lang}/${params.country}/about-us#about-us-3`} />
-						<FooterLink label="Contact" url={`/${params.lang}/${params.country}/about-us#about-us-4`} />
+						<FooterLink label="Our Mission" url={`/${lang}/${region}/about-us#about-us-1`} />
+						<FooterLink label="Why Contribute?" url={`/${lang}/${region}/about-us#motivations`} />
+						<FooterLink label="Team" url={`/${lang}/${region}/about-us#about-us-3`} />
+						<FooterLink label="Contact" url={`/${lang}/${region}/about-us#about-us-4`} />
 					</div>
 				</div>
 				<div className="md:invisible">
 					<FooterClient
-						params={params}
-						supportedTranslatedLanguages={supportedTranslatedLanguages}
-						supportedTranslatedCountries={supportedTranslatedCountries}
+						lang={lang}
+						region={region}
+						languages={supportedTranslatedLanguages}
+						regions={supportedTranslatedCountries}
 					/>
 				</div>
 			</div>

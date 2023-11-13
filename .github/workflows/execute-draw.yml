@@ -21,23 +21,26 @@ jobs:
         with:
           node-version: latest
 
+      - name: Install dchoose 🔧
+        run: npm install -g dchoose
+
       - name: Make folders if necessary 📁
-        run: mkdir -p draws
+        run: |
+          mkdir -p ./recipients_selection/draws
+          mkdir -p ./recipients_selection/lists
 
       - name: Draw 🎲
-        uses: drand/draw-action@v0.0.9
-        with:
-          inputDir: ./lists
-          outputDir: ./draws
-          count: 2
-      - name: Commit 🔐
+        working-directory: recipients_selection
+        run: ./draw.sh
+
+      - name: Configure some git params 🔧
         run: |
           git config --global user.name $BOT_NAME
           git config --global user.email $BOT_EMAIL
-          git add .
-          git commit -m "completed a recipient draw"
-      - name: Raise PR
+
+      - name: Commit and raise PR 🔐
         uses: peter-evans/create-pull-request@v5
         with:
           branch: draw/results
           branch-suffix: timestamp
+          commit-message: completed a recipient draw

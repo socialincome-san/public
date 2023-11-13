@@ -5,7 +5,7 @@ import {
 	Recipient,
 	RECIPIENT_FIRESTORE_PATH,
 	RecipientProgramStatus,
-} from '../../../../../../shared/src/types/Recipient';
+} from '../../../../../../shared/src/types/recipient';
 import QueryDocumentSnapshot = firestore.QueryDocumentSnapshot;
 
 export abstract class PaymentTask {

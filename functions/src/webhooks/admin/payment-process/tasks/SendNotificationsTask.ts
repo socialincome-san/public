@@ -1,9 +1,8 @@
 import { DateTime } from 'luxon';
 import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
-import {} from '../../../../../../shared/src/types';
-import { MESSAGE_FIRESTORE_PATH, MessageType, TwilioMessage } from '../../../../../../shared/src/types/Message';
-import { PAYMENT_FIRESTORE_PATH, Payment } from '../../../../../../shared/src/types/Payment';
-import { RECIPIENT_FIRESTORE_PATH, Recipient } from '../../../../../../shared/src/types/Recipient';
+import { MESSAGE_FIRESTORE_PATH, MessageType, TwilioMessage } from '../../../../../../shared/src/types/message';
+import { PAYMENT_FIRESTORE_PATH, Payment } from '../../../../../../shared/src/types/payment';
+import { RECIPIENT_FIRESTORE_PATH, Recipient } from '../../../../../../shared/src/types/recipient';
 import { sendSms } from '../../../../../../shared/src/utils/messaging/sms';
 import { TWILIO_SENDER_PHONE, TWILIO_SID, TWILIO_TOKEN } from '../../../../config';
 import { PaymentTask } from './PaymentTask';

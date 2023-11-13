@@ -1,4 +1,4 @@
-import { Email, MESSAGE_FIRESTORE_PATH, TwilioMessage } from '@socialincome/shared/src/types/Message';
+import { Email, MESSAGE_FIRESTORE_PATH, TwilioMessage } from '@socialincome/shared/src/types/message';
 import { buildProperties } from 'firecms';
 import { buildAuditedCollection } from './shared';
 

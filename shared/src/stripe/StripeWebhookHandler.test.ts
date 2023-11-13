@@ -4,8 +4,8 @@ import Stripe from 'stripe';
 import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
 import { getOrInitializeFirebaseAdmin } from '../firebase/admin/app';
 import { toFirebaseAdminTimestamp } from '../firebase/admin/utils';
-import { ContributionSourceKey, StatusKey, StripeContribution } from '../types/Contribution';
-import { User, UserStatusKey } from '../types/User';
+import { ContributionSourceKey, StatusKey, StripeContribution } from '../types/contribution';
+import { User, UserStatusKey } from '../types/user';
 import { StripeEventHandler } from './StripeEventHandler';
 
 describe('stripeWebhook', () => {
@@ -314,6 +314,7 @@ describe('stripeWebhook', () => {
 			quote: null,
 			receipt_number: '123',
 			rendering_options: null,
+			rendering: null,
 			shipping_cost: null,
 			shipping_details: null,
 			starting_balance: 0,

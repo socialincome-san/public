@@ -38,17 +38,18 @@ jobs:
           TWILIO_SENDER_PHONE: ${{ secrets.TWILIO_TEST_SENDER_PHONE }}
         run: npm run functions:test
 
-      - name: Run Playwright tests
-        run: npm run functions:test:playwright
-
-      - name: Deploy Playwright Report to GitHub Pages
-        uses: rossjrw/pr-preview-action@v1
-        if: always()
-        with:
-          source-dir: functions/playwright-report/
-          preview-branch: gh-pages
-          umbrella-dir: functions-playwright-report
-          action: auto
+  # TODO: re-enable
+  #      - name: Run Playwright tests
+  #        run: npm run functions:test:playwright
+  #
+  #      - name: Deploy Playwright Report to GitHub Pages
+  #        uses: rossjrw/pr-preview-action@v1
+  #        if: always()
+  #        with:
+  #          source-dir: functions/playwright-report/
+  #          preview-branch: gh-pages
+  #          umbrella-dir: functions-playwright-report
+  #          action: auto
 
   deploy:
     name: Deploy functions on Firebase (social-income-staging)

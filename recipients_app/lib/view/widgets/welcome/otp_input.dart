@@ -27,6 +27,24 @@ class _OtpInputState extends State<OtpInput> {
     digit4Controller = TextEditingController();
     digit5Controller = TextEditingController();
     digit6Controller = TextEditingController();
+
+    final controllers = [
+      digit1Controller,
+      digit2Controller,
+      digit3Controller,
+      digit4Controller,
+      digit5Controller,
+      digit6Controller,
+    ];
+
+    digit1Controller.addListener(() {
+      final text = digit1Controller.text;
+      if (text.length > 1) {
+        for (int i = 0; i < text.length; i++) {
+          controllers[i].text = text[i];
+        }
+      }
+    });
   }
 
   @override
@@ -54,6 +72,7 @@ class _OtpInputState extends State<OtpInput> {
             }
             _checkCodeStatus();
           },
+          isFirstField: true,
         ),
         OtpInputField(
           controller: digit2Controller,

@@ -33,7 +33,7 @@ class SurveyCardContainer extends DashboardItem {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  localizations.survey12Months,
+                  localizations.surveyCardTitle,
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 13.0,
@@ -52,7 +52,7 @@ class SurveyCardContainer extends DashboardItem {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  localizations.survey12MonthsInfo,
+                  localizations.surveyCardInfo,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.black,

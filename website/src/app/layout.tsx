@@ -1,4 +1,4 @@
-import { Providers } from '@/app/providers';
+import { ContextProviders } from '@/app/context-providers';
 import { PropsWithChildren } from 'react';
 import './globals.css';
 
@@ -10,7 +10,7 @@ export const metadata = {
 export default function RootLayout({ children }: PropsWithChildren) {
 	return (
 		<html suppressHydrationWarning={true}>
-			<Providers>{children}</Providers>
+			<ContextProviders>{children}</ContextProviders>
 		</html>
 	);
 }

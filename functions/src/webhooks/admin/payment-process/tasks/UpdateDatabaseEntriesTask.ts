@@ -7,8 +7,8 @@ import {
 	PAYMENT_FIRESTORE_PATH,
 	Payment,
 	PaymentStatus,
-} from '../../../../../../shared/src/types/Payment';
-import { RECIPIENT_FIRESTORE_PATH, RecipientProgramStatus } from '../../../../../../shared/src/types/Recipient';
+} from '../../../../../../shared/src/types/payment';
+import { RECIPIENT_FIRESTORE_PATH, RecipientProgramStatus } from '../../../../../../shared/src/types/recipient';
 import { ExchangeRateImporter } from '../../../../cron/exchange-rate-import/ExchangeRateImporter';
 import { PaymentTask } from './PaymentTask';
 
@@ -40,6 +40,13 @@ export class UpdateDatabaseEntriesTask extends PaymentTask {
 					});
 					paymentsPaid++;
 				}
+				if (paymentsCount == PAYMENTS_COUNT) {
+					// If a recipient has received all their payments, set their status to former
+					await recipient.ref.update({
+						progr_status: RecipientProgramStatus.Former,
+					});
+					setToFormerCount++;
+				}
 				const nextMonthPaymentDoc = await this.firestoreAdmin
 					.doc<Payment>(
 						`${RECIPIENT_FIRESTORE_PATH}/${recipient.id}/${PAYMENT_FIRESTORE_PATH}`,
@@ -60,13 +67,6 @@ export class UpdateDatabaseEntriesTask extends PaymentTask {
 							status: PaymentStatus.Created,
 						});
 					paymentsCreated++;
-				}
-				if (paymentsCount == PAYMENTS_COUNT) {
-					// If a recipient has received all their payments, set their status to former
-					await recipient.ref.update({
-						progr_status: RecipientProgramStatus.Former,
-					});
-					setToFormerCount++;
 				}
 				if (recipient.get('progr_status') === RecipientProgramStatus.Designated) {
 					await recipient.ref.update({

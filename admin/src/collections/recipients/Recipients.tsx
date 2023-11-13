@@ -4,7 +4,7 @@ import {
 	Recipient,
 	calcFinalPaymentDate,
 	calcPaymentsLeft,
-} from '@socialincome/shared/src/types/Recipient';
+} from '@socialincome/shared/src/types/recipient';
 import { toDateTime } from '@socialincome/shared/src/utils/date';
 import { AdditionalFieldDelegate, buildProperties } from 'firecms';
 import { EntityCollection, PropertiesOrBuilders } from 'firecms/dist/types';

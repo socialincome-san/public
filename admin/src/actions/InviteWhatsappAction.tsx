@@ -1,10 +1,10 @@
 import { Box, Button, Modal, Typography } from '@mui/material';
+import { DEFAULT_REGION } from '@socialincome/shared/src/firebase';
+import { Recipient } from '@socialincome/shared/src/types/recipient';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 import { CollectionActionsProps, useAuthController, useSnackbarController } from 'firecms';
 import React from 'react';
 import { TwilioOutgoingMessageFunctionProps } from '../../../functions/src/webhooks/twilio/TwilioOutgoingMessageHandler';
-import { DEFAULT_REGION } from '../../../shared/src/firebase';
-import { Recipient } from '../../../shared/src/types/Recipient';
 
 const STYLE = {
 	position: 'absolute' as 'absolute',

@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { toFirebaseAdminTimestamp } from '../../../../../shared/src/firebase/admin/utils';
-import { ExchangeRates } from '../../../../../shared/src/types/ExchangeRates';
-import { Payment, PaymentStatus } from '../../../../../shared/src/types/Payment';
+import { ExchangeRates } from '../../../../../shared/src/types/exchange-rates';
+import { Payment, PaymentStatus } from '../../../../../shared/src/types/payment';
 import { PaymentsManager } from './PaymentsManager';
 
 test('BatchAddCHFToPayments', async () => {

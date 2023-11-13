@@ -1,4 +1,4 @@
-import { AdminUser } from '@socialincome/shared/src/types/AdminUser';
+import { AdminUser } from '@socialincome/shared/src/types/admin-user';
 import algoliasearch from 'algoliasearch';
 import {
 	Authenticator,

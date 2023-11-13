@@ -5,7 +5,7 @@ part "phone.g.dart";
 
 @JsonSerializable()
 class Phone extends Equatable {
-  @JsonKey(name: "phone")
+  @JsonKey(name: "phone", defaultValue: 0)
   final int phoneNumber;
 
   const Phone(this.phoneNumber);

@@ -9,8 +9,9 @@ import { SurveyManager } from './SurveyManager';
 /**
  * Batch implementation to create all surveys for all recipients.
  * Checks for existing surveys and ignores them. So, it can be called multiple times without creating duplicates.
+ * The default memory limit of 256MB is not enough for this function.
  */
-const createAllSurveysFunction = onCall(async ({ auth }) => {
+const createAllSurveysFunction = onCall({ memory: '2GiB' }, async ({ auth }) => {
 	const firestoreAdmin = new FirestoreAdmin();
 	await firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
 

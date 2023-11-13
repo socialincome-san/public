@@ -8,8 +8,8 @@ import {
 	ContributionSourceKey,
 	StatusKey,
 	StripeContribution,
-} from '../types/Contribution';
-import { USER_FIRESTORE_PATH, User, UserStatusKey, splitName } from '../types/User';
+} from '../types/contribution';
+import { USER_FIRESTORE_PATH, User, UserStatusKey, splitName } from '../types/user';
 
 export class StripeEventHandler {
 	readonly stripe: Stripe;
@@ -19,7 +19,7 @@ export class StripeEventHandler {
 		this.firestoreAdmin = firestoreAdmin;
 		this.stripe = new Stripe(apiKey, {
 			typescript: true,
-			apiVersion: '2023-08-16',
+			apiVersion: '2023-10-16',
 		});
 	}
 

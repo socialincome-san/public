@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
-import { Contribution, CONTRIBUTION_FIRESTORE_PATH, StatusKey } from '../../types/Contribution';
-import { User, USER_FIRESTORE_PATH } from '../../types/User';
+import { Contribution, CONTRIBUTION_FIRESTORE_PATH, StatusKey } from '../../types/contribution';
+import { User, USER_FIRESTORE_PATH } from '../../types/user';
 import { getLatestExchangeRate } from '../exchangeRates';
 import { cumulativeSum, StatsEntry } from './utils';
 

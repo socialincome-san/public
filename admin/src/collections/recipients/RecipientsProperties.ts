@@ -1,5 +1,5 @@
-import { PARTNER_ORGANISATION_FIRESTORE_PATH } from '@socialincome/shared/src/types/PartnerOrganisation';
-import { RecipientMainLanguage, RecipientProgramStatus } from '@socialincome/shared/src/types/Recipient';
+import { PARTNER_ORGANISATION_FIRESTORE_PATH } from '@socialincome/shared/src/types/partner-organisation';
+import { RecipientMainLanguage, RecipientProgramStatus } from '@socialincome/shared/src/types/recipient';
 import { Property, StringProperty } from 'firecms/dist/types/properties';
 
 export const programStatusProperty: Property = {
@@ -99,6 +99,7 @@ export const mainLanguageProperty: StringProperty = {
 
 export const birthDateProperty: Property = {
 	name: 'Birthday',
+	longDescription: 'Date of birth',
 	dataType: 'date',
 	mode: 'date',
 };
@@ -140,6 +141,7 @@ export const TwitterProperty: Property = {
 
 export const SIStartDateProperty: Property = {
 	name: 'Start Date',
+	longDescription: 'Starting date',
 	dataType: 'date',
 	mode: 'date',
 };

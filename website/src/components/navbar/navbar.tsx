@@ -1,88 +1,66 @@
-import { DefaultParams } from '@/app/[lang]/[country]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { NavbarClient } from '@/components/navbar/navbar-client';
-import { LanguageCode } from '@socialincome/shared/src/types/Language';
+import { WebsiteLanguage, websiteCurrencies, websiteRegions } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 
-export type NavbarProps = {
-	supportedLanguages: LanguageCode[];
-} & DefaultParams;
-
-export default async function Navbar({ lang, country, supportedLanguages }: NavbarProps) {
+export default async function Navbar({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['common', 'website-common', 'website-me'],
 	});
+	const supportedLanguages: WebsiteLanguage[] = ['en', 'de'];
 
 	return (
 		<NavbarClient
 			lang={lang}
-			country={country}
+			region={region}
 			translations={{
-				currentLanguage: translator.t(`languages.${lang}`),
+				language: translator.t('language'),
+				region: translator.t('region'),
+				currency: translator.t('currency'),
 				myProfile: translator.t('navigation.my-profile'),
 				contactDetails: translator.t('tabs.contact-details'),
 				payments: translator.t('tabs.contributions'),
 				signOut: translator.t('sign-out'),
 			}}
-			languages={supportedLanguages.map((lang) => ({ code: lang, translation: translator.t(`languages.${lang}`) }))}
+			languages={supportedLanguages.map((lang) => ({
+				code: lang,
+				translation: translator.t(`languages.${lang}`),
+			}))}
+			regions={websiteRegions.map((country) => ({
+				code: country,
+				translation: translator.t(`regions.${country}`),
+			}))}
+			currencies={websiteCurrencies.map((currency) => ({
+				code: currency,
+				translation: translator.t(`currencies.${currency}`),
+			}))}
 			sections={[
 				{
 					title: translator.t('navigation.our-work'),
-					links: [
-						{
-							title: translator.t('navigation.our-work'),
-							href: `/${lang}/${country}/our-work`,
-							description: translator.t('navigation.our-work-description'),
-						},
-						{
-							title: translator.t('navigation.how-it-works'),
-							href: `/${lang}/${country}/our-work#how-it-works`,
-							description: translator.t('navigation.how-it-works-description'),
-						},
-						{
-							title: translator.t('navigation.contributors'),
-							href: `/${lang}/${country}/our-work#contributors`,
-							description: translator.t('navigation.contributors-description'),
-						},
-						{
-							title: translator.t('navigation.recipients'),
-							href: `/${lang}/${country}/our-work#recipients`,
-							description: translator.t('navigation.recipients-description'),
-						},
-						{
-							title: translator.t('navigation.whats-next'),
-							href: `/${lang}/${country}/our-work#whats-next`,
-							description: translator.t('navigation.whats-next-description'),
-						},
-					],
+					href: `/${lang}/${region}/our-work`,
 				},
 				{
 					title: translator.t('navigation.about-us'),
-					links: [
-						{
-							title: translator.t('navigation.about-us'),
-							href: `/${lang}/${country}/about-us`,
-							description: translator.t('navigation.about-us-description'),
-						},
-						{
-							title: translator.t('navigation.team'),
-							href: `/${lang}/${country}/about-us/team`,
-							description: translator.t('navigation.team-description'),
-						},
-					],
+					href: `/${lang}/${region}/about-us`,
 				},
 				{
 					title: translator.t('navigation.transparency'),
 					links: [
 						{
 							title: translator.t('navigation.finances'),
-							href: `/${lang}/${country}/transparency/finances/usd`,
+							href: `/${lang}/${region}/transparency/finances`,
 							description: translator.t('navigation.finances-description'),
 						},
 						{
 							title: translator.t('navigation.recipient-selection'),
-							href: `/${lang}/${country}/transparency/recipient-selection`,
+							href: `/${lang}/${region}/transparency/recipient-selection`,
 							description: translator.t('navigation.recipient-selection-description'),
+						},
+						{
+							title: translator.t('navigation.faq'),
+							href: `/${lang}/${region}/faq`,
+							description: translator.t('navigation.faq-description'),
 						},
 					],
 				},

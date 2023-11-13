@@ -1,7 +1,7 @@
 import {
 	OPERATIONAL_EXPENSE_FIRESTORE_PATH,
 	OperationalExpense,
-} from '@socialincome/shared/src/types/OperationalExpense';
+} from '@socialincome/shared/src/types/operational-expense';
 import { buildProperties } from 'firecms';
 import { buildAuditedCollection } from './shared';
 
@@ -13,11 +13,11 @@ export const operationalExpensesCollection = buildAuditedCollection<OperationalE
 	icon: 'LocalAtm',
 	description: 'Add operational costs for transparency page',
 	initialSort: ['created', 'desc'],
-	permissions: ({ authController }) => ({
+	permissions: {
 		edit: true,
 		create: true,
 		delete: true,
-	}),
+	},
 	properties: buildProperties<OperationalExpense>({
 		name: {
 			dataType: 'string',
