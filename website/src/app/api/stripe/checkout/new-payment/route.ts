@@ -30,7 +30,7 @@ export async function POST(request: CreateSubscriptionRequest) {
 		active: true,
 		unit_amount: amount,
 		currency: currency,
-		product: process.env.STRIPE_PRODUCT_ID,
+		product: recurring ? process.env.STRIPE_PRODUCT_RECURRING : process.env.STRIPE_PRODUCT_ONETIME,
 		recurring: recurring ? { interval: 'month', interval_count: intervalCount } : undefined,
 	});
 	const session = await stripe.checkout.sessions.create({
