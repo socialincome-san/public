@@ -115,16 +115,29 @@ class PaymentsPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: paymentsUiState.payments.length,
-                itemBuilder: (context, index) {
-                  return PaymentTile(
-                    mappedPayment: paymentsUiState.payments[index],
-                  );
-                },
+            if (paymentsUiState.payments.isEmpty)
+              Expanded(
+                child: Padding(
+                  padding: AppSpacings.a8,
+                  child: Center(
+                    child: Text(
+                      localizations.paymentsEmptyList,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              )
+            else
+              Expanded(
+                child: ListView.builder(
+                  itemCount: paymentsUiState.payments.length,
+                  itemBuilder: (context, index) {
+                    return PaymentTile(
+                      mappedPayment: paymentsUiState.payments[index],
+                    );
+                  },
+                ),
               ),
-            ),
           ],
         ),
       ),

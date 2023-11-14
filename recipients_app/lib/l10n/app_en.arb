@@ -50,6 +50,7 @@
     "pastPayments" : "Past Payments",
     "futurePayments" : "Future Payments",
     "paymentsSuspended" : "Suspended",
+    "paymentsEmptyList": "No payments.",
     "survey" : "Survey",
     "createAccountInfo":"By creating an account, you agree with our ",
     "privacyPolicy":"Privacy Policy",
