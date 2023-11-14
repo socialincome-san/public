@@ -104,7 +104,7 @@ function RadioGroupFormItem({ active, title, donationInterval, lang }: RadioGrou
 
 	useEffect(() => {
 		setPreviewAmount(getDonationAmount(monthlyIncome, donationInterval));
-	}, [monthlyIncome]);
+	}, [monthlyIncome, donationInterval]);
 
 	return (
 		<FormItem>

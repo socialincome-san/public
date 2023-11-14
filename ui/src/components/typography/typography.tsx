@@ -68,27 +68,25 @@ export type TypographyProps<C extends ElementType> = {
 	lineHeight?: LineHeight;
 } & ComponentPropsWithoutRef<C>;
 
-export function Typography<C extends ElementType = 'p'>(
-	{
-		as,
-		size = 'md',
-		weight = 'normal',
-		color = undefined,
-		lineHeight = 'normal',
-		className,
-		children,
-		...props
-	}: TypographyProps<C>,
-) {
+export function Typography<C extends ElementType = 'p'>({
+	as,
+	size,
+	weight,
+	color,
+	lineHeight,
+	className,
+	children,
+	...props
+}: TypographyProps<C>) {
 	const Component = as || 'p';
 	return (
 		<Component
 			className={twMerge(
 				classNames(
-					FONT_SIZE_MAP[size],
-					FONT_WEIGHT_MAP[weight],
-					FONT_COLOR_MAP[color] || '',
-					LINE_HEIGHT_MAP[lineHeight],
+					size && FONT_SIZE_MAP[size],
+					weight && FONT_WEIGHT_MAP[weight],
+					color && FONT_COLOR_MAP[color],
+					lineHeight && LINE_HEIGHT_MAP[lineHeight],
 					className,
 				),
 			)}
