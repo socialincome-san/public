@@ -14,12 +14,9 @@ type ContributionStatsProps = {
 	currency: string;
 };
 
-export default function TransparencyCharts({
-	contributionStats,
-	paymentStats,
-	lang,
-	currency,
-}: ContributionStatsProps) {
+export default function TransparencyCharts(
+	{ contributionStats, paymentStats, lang, currency }: ContributionStatsProps,
+) {
 	const translator = useTranslator(lang, 'website-transparency');
 
 	return (
