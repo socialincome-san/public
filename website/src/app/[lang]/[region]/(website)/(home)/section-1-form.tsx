@@ -38,7 +38,7 @@ export default function Section1Form({ translations, lang, region }: Section1Inp
 	});
 
 	const onSubmit = (values: FormSchema) => {
-		router.push(`/donate/individual?amount=${(Number(values.amount) / 100).toFixed(2)}`);
+		router.push(`/${lang}/${region}/donate/individual?amount=${Number(values.amount).toFixed(0)}`);
 	};
 
 	return (
@@ -51,7 +51,7 @@ export default function Section1Form({ translations, lang, region }: Section1Inp
 							control={form.control}
 							name="amount"
 							render={({ field }) => (
-								<FormItem className="sm:basis-2/3">
+								<FormItem className="flex-1">
 									<FormControl>
 										<Input className="h-16 text-lg" placeholder={translations.amount} {...field} />
 									</FormControl>

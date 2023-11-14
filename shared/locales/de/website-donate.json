@@ -1,0 +1,35 @@
+{
+	"amount-currency": "{{ amount, currency }}",
+	"title": "Was ist dein durchschnittliches monatliches Einkommen?",
+	"how-to-pay": "Wie möchtest du bezahlen?",
+	"amount": "Betrag",
+	"button-text": "Einen Unterschied machen",
+	"donation-impact": {
+		"monthly-contribution": "Dein monatlicher Beitrag:",
+		"direct-payout": "Dein Beitrag wird direkt auf das Mobiltelefon der Social Income Empfänger:innen ausgezahlt.",
+		"your-impact": "Dein Einfluss:",
+		"0": "{{ amount, currency }} legt den Grundstein für eine bedeutende Sache. Es ermöglicht uns, einer Person in Not ein Social Income zu bieten.",
+		"1": "{{ amount, currency }} deckt mehr als ein Drittel eines Social Incomes für eine bedürftige Person.",
+		"2": "{{ amount, currency }} finanziert mehr als die Hälfte eines Social Incomes für eine Person.",
+		"3": "Großartig! Dein monatlicher Beitrag von {{ amount, currency }} ermöglicht es mindestens einer bedürftigen Person ein vollständiges Social Income bereitzustellen.",
+		"4": "{{ amount, currency }} ermöglicht ein Social Income für mehr als zwei bedürftige Personen.",
+		"5": "Wunderbar! Dein Beitrag von {{ amount, currency }} finanziert ein Social Income für mehr als drei bedürftige Personen.",
+		"6": "Dein Beitrag von {{ amount, currency }} sichert ein Social Income für mehr als vier bedürftige Personen.",
+		"7": "Dein Beitrag von {{ amount, currency }} sichert ein Social Income für mehr als fünf bedürftige Personen.",
+		"8": "Dein monatlicher Beitrag von {{ amount, currency }} ist außergewöhnlich, ebenso wie dein Einfluss."
+	},
+	"donation-interval": {
+		"1": {
+			"title": "Monatlich",
+			"text": "{{ amount, currency }} jeden Monat zahlen"
+		},
+		"3": {
+			"title": "Quartalsweise",
+			"text": "{{ amount, currency }} alle 3 Monate zahlen"
+		},
+		"12": {
+			"title": "Jährlich",
+			"text": "{{ amount, currency }} jedes Jahr zahlen"
+		}
+	}
+}

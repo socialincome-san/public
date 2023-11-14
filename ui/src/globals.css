@@ -46,6 +46,9 @@
 		--background: hsl(216, 54%, 55%);
 		--foreground: hsl(60 9.1% 97.8%);
 
+		--card: hsl(216, 54%, 95%);
+		--card-foreground: hsl(0, 0%, 10%);
+
 		--primary: hsl(48, 100%, 49%);
 		--primary-foreground: hsl(0, 0%, 20%);
 	}

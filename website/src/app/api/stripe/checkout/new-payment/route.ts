@@ -37,7 +37,7 @@ export async function POST(request: CreateSubscriptionRequest) {
 		mode: recurring ? 'subscription' : 'payment',
 		payment_method_types: ['card'],
 		customer: customerId,
-		customer_creation: customerId ? undefined : 'always',
+		customer_creation: customerId || recurring ? undefined : 'always',
 		line_items: [
 			{
 				price: price.id,

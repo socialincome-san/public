@@ -17,18 +17,16 @@ interface InitializeFirebaseClientProps {
 	functionsEmulatorPort?: number;
 }
 
-export const initializeFirebaseClient = (
-	{
-		firebaseConfig,
-		authEmulatorUrl,
-		firestoreEmulatorHost,
-		firestoreEmulatorPort,
-		storageEmulatorHost,
-		storageEmulatorPort,
-		functionsEmulatorHost,
-		functionsEmulatorPort,
-	}: InitializeFirebaseClientProps,
-) => {
+export const initializeFirebaseClient = ({
+	firebaseConfig,
+	authEmulatorUrl,
+	firestoreEmulatorHost,
+	firestoreEmulatorPort,
+	storageEmulatorHost,
+	storageEmulatorPort,
+	functionsEmulatorHost,
+	functionsEmulatorPort,
+}: InitializeFirebaseClientProps) => {
 	const app = getOrInitializeFirebaseClientApp(firebaseConfig);
 	const auth = getAuth(app);
 	const functions = getFunctions(app, DEFAULT_REGION);
