@@ -12,22 +12,23 @@
 		}
 	},
 	"contributions": {
-		"amount": "Amount",
-		"date": "Date",
-		"source": "Source",
+		"amount": "Betrag",
+		"date": "Datum",
+		"source": "Quelle",
 		"total": "Total",
+		"one-time-payment": "Neue einmalige Spende",
 		"amount-currency": "{{ amount, currency }}",
 		"sources": {
 			"benevity": "Benevity",
-			"cash": "Cash",
+			"cash": "Bar",
 			"stripe": "Stripe",
-			"wire-transfer": "Wire Transfer"
+			"wire-transfer": "Banküberweisung"
 		}
 	},
 	"subscriptions": {
-		"amount": "Amount",
-		"date": "Date",
-		"source": "Source",
+		"amount": "Betrag",
+		"date": "Datum",
+		"source": "Quelle",
 		"total": "Total",
 		"amount-currency": "{{ amount, currency }}",
 		"interval": "Interval",

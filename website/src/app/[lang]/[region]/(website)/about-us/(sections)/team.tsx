@@ -107,7 +107,7 @@ const groups: Group[] = [
 export default async function Team({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['countries', 'website-team'] });
 	return (
-		<BaseContainer className="py-8">
+		<BaseContainer id="team" className="py-8">
 			<Typography as="h3" size="xl" color="muted-foreground" className="mb-4">
 				{translator.t('header')}
 			</Typography>

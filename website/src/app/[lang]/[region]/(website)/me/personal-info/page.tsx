@@ -111,7 +111,7 @@ export default function Page({ params }: DefaultPageProps) {
 						<FormItem>
 							<FormLabel>First name</FormLabel>
 							<FormControl>
-								<Input type="text" placeholder="First name" {...field} />
+								<Input type="text" {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -124,7 +124,7 @@ export default function Page({ params }: DefaultPageProps) {
 						<FormItem>
 							<FormLabel>Last name</FormLabel>
 							<FormControl>
-								<Input type="text" placeholder="Last name" {...field} />
+								<Input type="text" {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -137,7 +137,7 @@ export default function Page({ params }: DefaultPageProps) {
 						<FormItem>
 							<FormLabel>Email</FormLabel>
 							<FormControl>
-								<Input type="email" placeholder="Email" {...field} />
+								<Input type="email" {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -173,7 +173,7 @@ export default function Page({ params }: DefaultPageProps) {
 							<FormItem className="flex w-3/4 flex-col">
 								<FormLabel>Street</FormLabel>
 								<FormControl>
-									<Input type="text" placeholder="street" {...field} />
+									<Input type="text" {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -186,7 +186,7 @@ export default function Page({ params }: DefaultPageProps) {
 							<FormItem className="flex w-1/4 flex-col">
 								<FormLabel>Number</FormLabel>
 								<FormControl>
-									<Input type="text" placeholder="streetNumber" {...field} />
+									<Input type="text" {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -201,7 +201,7 @@ export default function Page({ params }: DefaultPageProps) {
 							<FormItem className="flex w-1/4 flex-col">
 								<FormLabel>Zip</FormLabel>
 								<FormControl>
-									<Input type="number" placeholder="zip" {...field} />
+									<Input type="number" {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -214,7 +214,7 @@ export default function Page({ params }: DefaultPageProps) {
 							<FormItem className="flex w-3/4 flex-col">
 								<FormLabel>City</FormLabel>
 								<FormControl>
-									<Input type="text" placeholder="city" {...field} />
+									<Input type="text" {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -226,7 +226,7 @@ export default function Page({ params }: DefaultPageProps) {
 					name="language"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Language</FormLabel>
+							<FormLabel>Communication Language</FormLabel>
 							<Select onValueChange={field.onChange}>
 								<FormControl>
 									<SelectTrigger>

@@ -1,172 +1,30 @@
-'use client';
-
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { CreatePaymentData } from '@/app/api/stripe/checkout/new-payment/route';
-import { CheckCircleIcon } from '@heroicons/react/24/outline';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-	BaseContainer,
-	Button,
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormMessage,
-	Input,
-	RadioGroup,
-	Typography,
-} from '@socialincome/ui';
-import classNames from 'classnames';
-import { useRouter } from 'next/navigation';
-import { UseFormReturn, useForm } from 'react-hook-form';
-import { useUser } from 'reactfire';
-import Stripe from 'stripe';
-import * as z from 'zod';
+import { DonationForm } from '@/app/[lang]/[region]/donate/individual/donation-form';
+import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { BaseContainer } from '@socialincome/ui';
 
-// TODO: i18n
-type RadioGroupFormItem = {
-	active: boolean;
-	value: '1' | '3' | '12';
-	title: string;
-	description: string;
-	form: UseFormReturn<{ amount: number; intervalCount: '1' | '3' | '12' }, any, undefined>;
-};
-
-function RadioGroupFormItem({ active, title, value, form, description }: RadioGroupFormItem) {
-	const updateForm = () => {
-		const annualAmount = (form.getValues('amount') / Number(form.getValues('intervalCount'))) * 12;
-		form.setValue('amount', (Number(value) / 12) * annualAmount);
-		form.setValue('intervalCount', value);
-	};
+export default async function Page({ params: { lang, region }, searchParams }: DefaultPageProps) {
+	const amount = Number(searchParams.amount) || undefined;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-donate'] });
 
 	return (
-		<FormItem>
-			<FormControl
-				className={classNames(
-					'flex flex-1 cursor-pointer flex-row rounded-lg border-2 p-4 shadow-sm focus:outline-none',
-					{
-						'border-si-yellow': active,
+		<BaseContainer className="mx-auto max-w-5xl pt-16">
+			<DonationForm
+				amount={amount}
+				lang={lang}
+				region={region}
+				translations={{
+					title: translator.t('title'),
+					amount: translator.t('amount'),
+					howToPay: translator.t('how-to-pay'),
+					buttonText: translator.t('button-text'),
+					donationImpact: {
+						yourMonthlyContribution: translator.t('donation-impact.monthly-contribution'),
+						directPayout: translator.t('donation-impact.direct-payout'),
+						yourImpact: translator.t('donation-impact.your-impact'),
 					},
-				)}
-			>
-				<div className="theme-default" onClick={updateForm}>
-					<span className="flex flex-1">
-						<span className="flex flex-col">
-							<Typography weight="bold">{title}</Typography>
-							<Typography size="sm">{description}</Typography>
-						</span>
-					</span>
-					<CheckCircleIcon
-						className={classNames(!active ? 'invisible' : '', 'text-si-yellow h-5 w-5')}
-						aria-hidden="true"
-					/>
-				</div>
-			</FormControl>
-		</FormItem>
-	);
-}
-
-export default function Page({ params, searchParams }: DefaultPageProps) {
-	const router = useRouter();
-	const { data: authUser } = useUser();
-
-	const formSchema = z.object({
-		amount: z.coerce.number(),
-		intervalCount: z.enum(['1', '3', '12']),
-	});
-	type FormSchema = z.infer<typeof formSchema>;
-
-	const form = useForm<FormSchema>({
-		resolver: zodResolver(formSchema),
-		defaultValues: { intervalCount: '1', amount: Number(searchParams.amount) || 50 },
-	});
-
-	const onSubmit = async (values: FormSchema) => {
-		const authToken = await authUser?.getIdToken(true);
-		const data: CreatePaymentData = {
-			amount: values.amount * 100, // The amount is in cents, so we need to multiply by 100 to get the correct amount.
-			intervalCount: Number(values.intervalCount),
-			successUrl: `${window.location.origin}/${params.lang}/${params.region}/donate/success?stripeCheckoutSessionId={CHECKOUT_SESSION_ID}`,
-			recurring: true,
-			firebaseAuthToken: authToken,
-		};
-		const response = await fetch('/api/stripe/checkout/new-payment', {
-			method: 'POST',
-			body: JSON.stringify(data),
-		});
-		const { url } = (await response.json()) as Stripe.Response<Stripe.Checkout.Session>;
-
-		// This sends the user to stripe.com where payment is completed
-		if (url) router.push(url);
-	};
-
-	return (
-		<BaseContainer className="flex flex-col items-center justify-center">
-			<Typography weight="bold" size="3xl" className="mb-12 text-center">
-				How would you like to pay?
-			</Typography>
-			<Form {...form}>
-				<form className="flex flex-col space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
-					<FormField
-						control={form.control}
-						name="intervalCount"
-						render={({ field }) => (
-							<FormItem className="space-y-3">
-								<FormControl>
-									<RadioGroup
-										onValueChange={field.onChange}
-										defaultValue={field.value}
-										className="grid grid-cols-3 gap-4"
-									>
-										<RadioGroupFormItem
-											form={form}
-											active={field.value === '1'}
-											value="1"
-											title="Monthly"
-											description="Pay every month"
-										/>
-										<RadioGroupFormItem
-											form={form}
-											active={field.value === '3'}
-											value="3"
-											title="Quarterly"
-											description="Pay every 3 months"
-										/>
-										<RadioGroupFormItem
-											form={form}
-											active={field.value === '12'}
-											value="12"
-											title="Yearly"
-											description="Pay every year"
-										/>
-									</RadioGroup>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<div className="flex-inline flex items-center justify-center space-x-4">
-						<FormField
-							control={form.control}
-							name="amount"
-							render={({ field }) => (
-								<FormItem>
-									<Typography size="lg" weight="bold">
-										Amount
-									</Typography>
-									<FormControl>
-										<Input type="number" {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-					</div>
-					<Button size="lg" type="submit">
-						Start Donating
-					</Button>
-				</form>
-			</Form>
+				}}
+			/>
 		</BaseContainer>
 	);
 }
