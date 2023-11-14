@@ -17,7 +17,8 @@ Recipient _$RecipientFromJson(Map<String, dynamic> json) => Recipient(
           : Phone.fromJson(json['mobile_money_phone'] as Map<String, dynamic>),
       firstName: json['first_name'] as String?,
       lastName: json['last_name'] as String?,
-      birthDate: const TimestampConverter().fromJson(json['birth_date']),
+      birthDate: _$JsonConverterFromJson<Object, Timestamp>(
+          json['birth_date'], const TimestampConverter().fromJson),
       email: json['email'] as String?,
       country: json['country'] as String?,
       preferredName: json['preferred_name'] as String?,
@@ -30,9 +31,12 @@ Recipient _$RecipientFromJson(Map<String, dynamic> json) => Recipient(
           json['recipient_since'], const DateTimeConverter().fromJson),
       imLinkInitial: json['im_link_initial'] as String?,
       imLinkRegular: json['im_link_regular'] as String?,
-      nextSurvey: const TimestampConverter().fromJson(json['next_survey']),
+      nextSurvey: _$JsonConverterFromJson<Object, Timestamp>(
+          json['next_survey'], const TimestampConverter().fromJson),
       organizationRef:
-          const DocumentReferenceConverter().fromJson(json['organisation']),
+          _$JsonConverterFromJson<Object, DocumentReference<Object?>>(
+              json['organisation'],
+              const DocumentReferenceConverter().fromJson),
       updatedBy: json['last_updated_by'] as String?,
     );
 
@@ -43,23 +47,23 @@ Map<String, dynamic> _$RecipientToJson(Recipient instance) => <String, dynamic>{
       'paymentProvider': instance.paymentProvider,
       'first_name': instance.firstName,
       'last_name': instance.lastName,
-      'birth_date': const TimestampConverter().toJson(instance.birthDate),
+      'birth_date': _$JsonConverterToJson<Object, Timestamp>(
+          instance.birthDate, const TimestampConverter().toJson),
       'email': instance.email,
       'country': instance.country,
       'preferred_name': instance.preferredName,
       'calling_name': instance.callingName,
       'gender': instance.gender,
       'main_language': instance.selectedLanguage,
-      'organisation':
-          _$JsonConverterToJson<dynamic, DocumentReference<Object?>>(
-              instance.organizationRef,
-              const DocumentReferenceConverter().toJson),
+      'organisation': _$JsonConverterToJson<Object, DocumentReference<Object?>>(
+          instance.organizationRef, const DocumentReferenceConverter().toJson),
       'terms_accepted': instance.termsAccepted,
       'recipient_since': _$JsonConverterToJson<String, DateTime>(
           instance.recipientSince, const DateTimeConverter().toJson),
       'im_link_initial': instance.imLinkInitial,
       'im_link_regular': instance.imLinkRegular,
-      'next_survey': const TimestampConverter().toJson(instance.nextSurvey),
+      'next_survey': _$JsonConverterToJson<Object, Timestamp>(
+          instance.nextSurvey, const TimestampConverter().toJson),
       'last_updated_by': instance.updatedBy,
     };
 
