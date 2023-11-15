@@ -36,14 +36,14 @@ class UserRepository {
       return null;
     }
 
-    final userSnapshot = matchingUsers.docs.first;
+    final userSnapshot = matchingUsers.docs.firstOrNull;
 
     // This doesnt work because user id from firebaseAuth is not related to user id from firestore
     // Needs to be discussed if changes should be made or not
     // final userSnapshot =
     //     await firestore.collection("/recipients").doc(firebaseUser.uid).get();
 
-    if (userSnapshot.exists) {
+    if (userSnapshot != null && userSnapshot.exists) {
       // TODO: decide if we should keep it in user object in the app at all
       final payments = await PaymentRepository(firestore: firestore)
           .fetchPayments(recipientId: userSnapshot.id);
