@@ -1,23 +1,20 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { SectionCard } from '@/app/[lang]/[region]/(website)/(home)/section-5-card';
+import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
-export default async function Section5({ params }: DefaultPageProps) {
+export async function Section5({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({
-		language: params.lang,
+		language: lang,
 		namespaces: ['website-home', 'website-common'],
 	});
 
 	return (
-		<BaseContainer
-			backgroundColor="bg-blue-50"
-			className="flex flex-col justify-center space-y-8 py-20 sm:min-h-screen"
-		>
+		<BaseContainer backgroundColor="bg-blue-50" className="flex min-h-screen flex-col justify-center py-16 md:py-32">
 			<Typography as="h2" size="4xl" weight="bold">
 				{translator?.t('section-5.title')}
 			</Typography>
-			<div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 lg:grid-cols-3">
+			<div className="mt-16 grid grid-cols-1 items-start gap-4 md:grid-cols-2 lg:grid-cols-3">
 				<SectionCard
 					titles={{
 						main: translator.t('section-5.card-1.title'),

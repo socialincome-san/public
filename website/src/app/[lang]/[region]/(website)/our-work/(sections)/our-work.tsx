@@ -12,7 +12,7 @@ export async function OurWork({ params }: DefaultPageProps) {
 	});
 
 	return (
-		<BaseContainer className="flex min-h-[calc(100vh-theme(spacing.20))] justify-center py-20">
+		<BaseContainer className="flex min-h-[calc(100vh-theme(spacing.20))] justify-center py-16 md:py-32">
 			<Dialog>
 				<DialogTrigger className="grid grid-cols-1 items-center lg:grid-cols-2">
 					<Image

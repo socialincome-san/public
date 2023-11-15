@@ -41,6 +41,8 @@ const FONT_COLOR_MAP: { [key in FontColor]: string } = {
 	'destructive-foreground': 'text-destructive-foreground',
 	muted: 'text-muted',
 	'muted-foreground': 'text-muted-foreground',
+	card: 'text-card',
+	'card-foreground': 'text-card-foreground',
 	popover: 'text-popover',
 	'popover-foreground': 'text-popover-foreground',
 };
@@ -67,26 +69,17 @@ export type TypographyProps<C extends ElementType> = {
 } & ComponentPropsWithoutRef<C>;
 
 export function Typography<C extends ElementType = 'p'>(
-	{
-		as,
-		size = 'md',
-		weight = 'normal',
-		color = 'foreground',
-		lineHeight = 'normal',
-		className,
-		children,
-		...props
-	}: TypographyProps<C>,
+	{ as, size, weight, color, lineHeight, className, children, ...props }: TypographyProps<C>,
 ) {
 	const Component = as || 'p';
 	return (
 		<Component
 			className={twMerge(
 				classNames(
-					FONT_SIZE_MAP[size],
-					FONT_WEIGHT_MAP[weight],
-					FONT_COLOR_MAP[color],
-					LINE_HEIGHT_MAP[lineHeight],
+					size && FONT_SIZE_MAP[size],
+					weight && FONT_WEIGHT_MAP[weight],
+					color && FONT_COLOR_MAP[color],
+					lineHeight && LINE_HEIGHT_MAP[lineHeight],
 					className,
 				),
 			)}

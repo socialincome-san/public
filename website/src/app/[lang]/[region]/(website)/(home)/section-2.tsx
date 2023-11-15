@@ -16,7 +16,7 @@ type Section2Props = {
 	};
 };
 
-export default function Section2({ vimeoVideoId, translations }: Section2Props) {
+export function Section2({ vimeoVideoId, translations }: Section2Props) {
 	return (
 		<BaseContainer
 			backgroundColor="bg-yellow-50"
@@ -29,7 +29,7 @@ export default function Section2({ vimeoVideoId, translations }: Section2Props) 
 				<Typography as="span" size="4xl" weight="bold" color="secondary">
 					{translations.title2}
 				</Typography>
-				<Typography size="xl" className="mt-4">
+				<Typography size="2xl" className="mt-4">
 					{translations.subtitle1}
 				</Typography>
 			</div>

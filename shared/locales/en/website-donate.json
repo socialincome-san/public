@@ -1,0 +1,35 @@
+{
+	"amount-currency": "{{ amount, currency }}",
+	"title": "What's your average monthly income?",
+	"how-to-pay": "How would you like to pay?",
+	"amount": "Amount",
+	"button-text": "Make a Difference",
+	"donation-impact": {
+		"monthly-contribution": "Your monthly contribution:",
+		"direct-payout": "The people in need receive your contribution directly on their mobile phones.",
+		"your-impact": "Your impact:",
+		"0": "{{ amount, currency }} lays the groundwork for a significant cause. It enables us to provide a Social Income to an individual facing hardship.",
+		"1": "{{ amount, currency }} pays for more than a third of a Social Income for one person in need.",
+		"2": "{{ amount, currency }} funds more than half of someone’s Social Income.",
+		"3": "Great! Your monthly contribution of {{ amount, currency }} will allow at least one person in need to receive a full Social Income.",
+		"4": "{{ amount, currency }} provides a Social Income for more than two people in need.",
+		"5": "Wonderful! Your contribution of {{ amount, currency }} funds a Social Income for more than three people in need.",
+		"6": "Your contribution of {{ amount, currency }} sustains a Social Income for more than four people in need.",
+		"7": "Your contribution of {{ amount, currency }} sustains a Social Income for more than five people in need.",
+		"8": "Your monthly contribution of {{ amount, currency }} is extraordinary, as well as your impact."
+	},
+	"donation-interval": {
+		"1": {
+			"title": "Monthly",
+			"text": "Pay {{ amount, currency }} every month"
+		},
+		"3": {
+			"title": "Quarterly",
+			"text": "Pay {{ amount, currency }} every 3 months"
+		},
+		"12": {
+			"title": "Yearly",
+			"text": "Pay {{ amount, currency }} every year"
+		}
+	}
+}

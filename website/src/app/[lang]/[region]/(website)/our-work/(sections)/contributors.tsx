@@ -19,7 +19,7 @@ export async function Contributors({ params }: DefaultPageProps) {
 		<BaseContainer
 			id="contributors"
 			backgroundColor="bg-red-50"
-			className="flex flex-col justify-center space-y-24 py-20 sm:min-h-screen lg:space-y-36"
+			className="flex min-h-screen flex-col justify-center space-y-24 py-16 md:py-32 lg:space-y-36"
 		>
 			<div className="space-y-4">
 				<Typography as="h3" size="xl" color="muted-foreground">

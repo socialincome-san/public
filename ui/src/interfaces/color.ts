@@ -45,6 +45,8 @@ export type FontColor = Extract<
 	| 'muted-foreground'
 	| 'accent'
 	| 'accent-foreground'
+	| 'card'
+	| 'card-foreground'
 	| 'popover'
 	| 'popover-foreground'
 >;

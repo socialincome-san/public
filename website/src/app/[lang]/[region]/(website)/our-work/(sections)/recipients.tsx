@@ -23,7 +23,7 @@ export async function Recipients({ params }: DefaultPageProps) {
 		<BaseContainer
 			id="recipients"
 			backgroundColor="bg-indigo-50"
-			className="flex flex-col justify-center space-y-8 py-20 sm:min-h-screen"
+			className="flex min-h-screen flex-col justify-center space-y-8 py-16 md:py-32"
 		>
 			<div className="space-y-4">
 				<Typography as="h3" size="xl" color="muted-foreground">

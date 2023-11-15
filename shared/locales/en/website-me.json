@@ -16,6 +16,7 @@
 		"date": "Date",
 		"source": "Source",
 		"total": "Total",
+		"one-time-payment": "New one-time donation",
 		"amount-currency": "{{ amount, currency }}",
 		"sources": {
 			"benevity": "Benevity",

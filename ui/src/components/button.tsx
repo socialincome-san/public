@@ -42,7 +42,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 		const Comp = asChild ? Slot : 'button';
 		return (
 			<Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props}>
-				{Icon && <Icon className={cn('h-4 w-4', { 'mr-2': size !== 'icon' })} />}
+				{Icon && <Icon className={cn('h-4 w-4', { 'mr-2': size !== 'icon', 'h-6 w-6': size === 'lg' })} />}
 				{children}
 			</Comp>
 		);

@@ -2,7 +2,6 @@
 
 import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { useQuery } from '@tanstack/react-query';
-import assert from 'assert';
 import { collection, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
 import { redirect } from 'next/navigation';
 import { createContext, PropsWithChildren, useContext, useEffect } from 'react';
@@ -18,8 +17,7 @@ export const useUserContext = () => useContext(UserContext);
 
 export function UserContextProvider({ children }: PropsWithChildren) {
 	const firestore = useFirestore();
-	const { data: authUser } = useUser();
-
+	const { data: authUser, status: authUserStatus } = useUser();
 	const { data: user, refetch } = useQuery({
 		queryKey: ['UserContextProvider', authUser?.uid, firestore],
 		queryFn: async () => {
@@ -27,18 +25,23 @@ export function UserContextProvider({ children }: PropsWithChildren) {
 				let snapshot = await getDocs(
 					query(collection(firestore, USER_FIRESTORE_PATH), where('authUserId', '==', authUser?.uid)),
 				);
-				assert(snapshot.size === 1);
-				return snapshot.docs[0] as QueryDocumentSnapshot<User>;
-			} else return null;
+				if (snapshot.size === 1) {
+					return snapshot.docs[0] as QueryDocumentSnapshot<User>;
+				}
+				return null;
+			}
+			return null;
 		},
 		staleTime: 1000 * 60 * 60, // 1 hour
 	});
 
 	useEffect(() => {
-		if (user === null) {
+		if (user === null && authUserStatus === 'success') {
+			// If the user is null, it couldn't be found in the database, so redirect to the login page.
+			// If the user is undefined, the query is still loading, so no redirect.
 			redirect('../login');
 		}
-	}, [user]);
+	}, [user, authUserStatus]);
 
 	if (user) {
 		return <UserContext.Provider value={{ user, refetch }}>{children}</UserContext.Provider>;
