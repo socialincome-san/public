@@ -60,7 +60,7 @@ export default function Section1Form({ translations, lang, region }: Section1Inp
 						/>
 						<CurrencySelector className="h-16 w-full sm:flex-1" currencies={websiteCurrencies} fontSize="lg" />
 					</div>
-					<Button size="lg" type="submit" variant="default" className="text-lg">
+					<Button size="lg" type="submit" variant="default">
 						{translations.submit}
 					</Button>
 					<Link href={`/${lang}/${region}/privacy`} className="inline-flex items-center pt-2 hover:underline">

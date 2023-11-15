@@ -17,6 +17,18 @@
 		"video-button": "Watch the video",
 		"vimeo-video-id": "433937157"
 	},
+	"section-3": {
+		"title": [{ "text": "Who should, if not us " }, { "text": "here in Switzerland?", "color": "secondary" }],
+		"jackpot-title": "Life in Switzerland is like winning the jackpot.",
+		"jackpot-text": "People in Switzerland have systematically more opportunities and higher chances of leading a life worth living than anywhere else in the world.",
+		"jackpot-button": "Share the love",
+		"helping-others-title": "Helping others makes us happier.",
+		"helping-others-text": "Let’s start by helping those who don’t have the privilege of leading a life without financial difficulties. If not now, when?",
+		"helping-others-button": "Take Action",
+		"together-title": "Together we can make a major difference.",
+		"together-text": "If every fourth person in Switzerland contributed 1% of their income, every citizen of Sierra Leone could receive universal basic income and make poverty a thing of the past.",
+		"together-button": "Lead the Way"
+	},
 	"section-4": {
 		"title-1": "How can we address inequality? ",
 		"title-2": " Ourselves.",
