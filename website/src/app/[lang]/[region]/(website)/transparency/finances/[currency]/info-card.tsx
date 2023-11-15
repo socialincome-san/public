@@ -14,15 +14,9 @@ type TransparencyCardProps = {
 	secondContent?: ReactElement;
 };
 
-export function InfoCard({
-	sectionTitle,
-	title,
-	text,
-	firstIcon,
-	firstContent,
-	secondIcon,
-	secondContent,
-}: TransparencyCardProps) {
+export function InfoCard(
+	{ sectionTitle, title, text, firstIcon, firstContent, secondIcon, secondContent }: TransparencyCardProps,
+) {
 	return (
 		<div className="divide-neutral grid grid-cols-1 items-center divide-y rounded-lg bg-neutral-200 py-8 md:grid-cols-2 md:divide-x md:divide-y-0">
 			<div className="space-y-2 p-8">
