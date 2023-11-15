@@ -1,7 +1,6 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
-import Link from 'next/link';
 
 type TextFragment = {
 	text: string;
@@ -19,7 +18,7 @@ export default async function Page({ params }: DefaultPageProps) {
 	return (
 		<BaseContainer>
 			<Typography size="2xl">{translator.t('take-action')}</Typography>
-			{paragraphs.map((paragraph, key) => (
+			{/*paragraphs.map((paragraph, key) => (
 				<p key={key} className="mt-2">
 					{paragraph.map((fragment, key) => (
 						<span key={key}>
@@ -35,7 +34,7 @@ export default async function Page({ params }: DefaultPageProps) {
 						</span>
 					))}
 				</p>
-			))}
+			))*/}
 		</BaseContainer>
 	);
 }

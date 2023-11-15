@@ -3,22 +3,29 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { SectionCard } from './section-card';
 
-export default async function Section3({ params }: DefaultPageProps) {
+type TextFragment = {
+	text: string;
+	href?: string;
+};
+type Paragraph = TextFragment[];
+type Card = {
+	title: string;
+	description: string;
+	paragraphs: Paragraph[];
+};
+
+export default async function Section2({ params }: DefaultPageProps) {
 	const section = 3;
 	const translator = await Translator.getInstance({
 		language: params.lang,
 		namespaces: ['website-evidence'],
 	});
 
-	const c = translator.t(`section-${section}.cards`, { returnObjects: true });
-	let cards: Object[] = [];
-	for (const card in c) {
-		cards.push(card);
-	}
-	let i = 0;
+	const cards = translator.t<Card[]>(`section-${section}.cards`);
+	const takeAction = translator.t('take-action');
 
 	return (
-		<BaseContainer backgroundColor="bg-pink-50" className="flex flex-col items-start space-y-1 rounded-sm p-10">
+		<BaseContainer backgroundColor="bg-yellow-50" className="mt-12 flex flex-col items-start space-y-1 rounded-sm p-10">
 			<Typography size="xl" weight="medium" color="muted-foreground">
 				{translator.t(`section-${section}.topic`)}
 			</Typography>
@@ -36,8 +43,15 @@ export default async function Section3({ params }: DefaultPageProps) {
 				</Typography>
 				<div className="h-fit w-2/5 space-y-10 text-left">
 					{cards.map((card, key) => {
-						i++;
-						return <SectionCard section={section} cardNumber={i} params={params} key={key} />;
+						return (
+							<SectionCard
+								key={key}
+								title={card.title}
+								description={card.description}
+								paragraphs={card.paragraphs}
+								takeAction={takeAction}
+							/>
+						);
 					})}
 				</div>
 			</div>
