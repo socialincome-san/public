@@ -1,6 +1,129 @@
 {
-	"section-1": {
-		"title-1": "We wanted to act. We found a way to do it. ",
-		"title-2": "Social Income was born."
-	}
+  "landing-page": {
+    "title": [
+      {
+        "text": "We wanted to act. We found a way to do it. "
+      },
+      {
+        "text": "Social Income was born.",
+        "color": "secondary"
+      }
+    ]
+  },
+  "our-mission": {
+    "header": "Our Mission",
+    "title": [
+      {
+        "text": "Fighting global poverty with the "
+      },
+      {
+        "text": "help of everyday people.",
+        "color": "secondary"
+      }
+    ],
+    "subtitle": "Many people in wealthier countries are committed to addressing inequality, but don’t know how or where to start.",
+    "paragraphs": [
+      "Thanks to the widespread use of mobile phone-based money transfer services in developing countries, it is easier than ever to send money directly to people in need, at almost no cost.",
+      "Social Income wants to harness this potential by combining two approaches to wealth redistribution. The first is the concept of Universal Basic Income, which is a promising path towards a more equal and inclusive society.",
+      "The second is the use of direct and anticipatory cash transfers to people living in poverty. Research has shown that those who receive direct aid greatly benefit from the money and that they reinvest it locally, responsibly, and successfully.",
+      "We make an impact by sending regular long-term cash transfers directly to recipients: from person to person, because many of the world's poorest countries lack solid social infrastructure.",
+      "And we do so in a radically transparent way that allows us to avoid the high administrative costs normally associated with such projects."
+    ]
+  },
+  "100-percent-model": {
+    "header": "100% Model",
+    "title": [
+      {
+        "text": "Zero overhead costs. "
+      },
+      {
+        "text": "Our pledge to you.",
+        "color": "secondary"
+      }
+    ],
+    "paragraphs": [
+      "We believe that 100% of our contributors’ donations should go to our recipients. To maintain this promise, all our operating costs and financial expenses are covered by philanthropic grants and institutional donations.",
+      "Thanks to this support, we can guarantee that 100% of the money from our individual contributors reaches our recipients.",
+      "Additionally, we receive various in-kind support from organizations, such as <a href='https://www.google.com/nonprofits/' class='underline' target='_blank'>Google Non-profit</a> or <a href='https://lineto.com/' class='underline' target='_blank'>Lineto</a> (Unica77 font). Thank you!"
+    ]
+  },
+  "flow-of-funds": {
+    "header": "Flow of Funds",
+    "title": [
+      {
+        "text": "Social Income payments are sent directly to "
+      },
+      {
+        "text": "recipients’ mobile phones.",
+        "color": "secondary"
+      }
+    ],
+    "paragraphs": [
+      "We receive contributions from all over the world. They are safely stored in our bank account, in the most stable currency in the world: Swiss Francs. Every month we transfer just enough money to local banks in the countries where we are active. We then distribute Social Incomes with the help of mobile money directly to the phones of beneficiaries."
+    ],
+    "vimeo-video-id": "840215695"
+  },
+  "team": {
+    "header": "Our Team",
+    "title": [
+      {
+        "text": "We're making Social Income "
+      },
+      {
+        "text": "a reality.",
+        "color": "secondary"
+      }
+    ],
+    "roles": {
+      "finance": "Finances",
+      "operations": "Operations",
+      "marketing": "Marketing",
+      "communications": "Communications",
+      "co-president": "Co-President",
+      "founder": "Founder",
+      "board-member": "Board Member",
+      "software-development": "Software Development",
+      "app-development": "App Development",
+      "impact-measurement": "Impact Measurement",
+      "strategy": "Strategy"
+    },
+    "groups": {
+      "staff": {
+        "name": "Staff",
+        "description": "Our local staff in Sierra Leone."
+      },
+      "volunteers": {
+        "name": "Volunteers",
+        "description": "The people who make it all happen."
+      },
+      "board": {
+        "name": "Board of Association",
+        "description": "The overseers of the organization."
+      },
+      "special-thanks": {
+        "name": "Special Thanks",
+        "description": "These individuals have volunteered and made generous contributions towards Social Income."
+      }
+    }
+  },
+  "contact": {
+    "header": "Contact",
+    "title": [
+      {
+        "text": "We're a Swiss "
+      },
+      {
+        "text": "non-profit organization.",
+        "color": "secondary"
+      }
+    ],
+    "paragraph": "Social Income was founded as a non-profit association in Zurich, Switzerland. An independent board oversees the organization.",
+    "legal-status": "Legal Status",
+    "legal-status-paragraphs": [
+      "Non-profit organization founded under Swiss law in 2019 with tax exempt status.",
+      "UID: CHE-289.611.695",
+      "DUNS: 48-045-6376"
+    ],
+    "find-us": "Find us on"
+  }
 }

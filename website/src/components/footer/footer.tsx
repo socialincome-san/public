@@ -73,7 +73,7 @@ export default async function Footer({ lang, region }: DefaultParams) {
 						<FooterLink
 							Icon={SiInstagram}
 							label="Instagram"
-							url="https://www.instagram.com/so_income/"
+							url="https://www.instagram.com/so_income"
 							target="_blank"
 						/>
 						<FooterLink Icon={SiTwitter} label="Twitter" url="https://twitter.com/so_income" target="_blank" />
@@ -124,8 +124,8 @@ export default async function Footer({ lang, region }: DefaultParams) {
 						<Typography className="mb-2" size="lg" weight="medium" color="muted-foreground">
 							About us
 						</Typography>
-						<FooterLink label="Our Mission" url={`/${lang}/${region}/our-work#our-mission`} />
-						<FooterLink label="100% Model" url={`/${lang}/${region}/our-work#100-percent-model`} />
+						<FooterLink label="Our Mission" url={`/${lang}/${region}/about-us#our-mission`} />
+						<FooterLink label="100% Model" url={`/${lang}/${region}/about-us#100-percent-model`} />
 						<FooterLink label="Team" url={`/${lang}/${region}/about-us#team`} />
 						<FooterLink label="Contact" url={`/${lang}/${region}/about-us#contact`} />
 					</div>
