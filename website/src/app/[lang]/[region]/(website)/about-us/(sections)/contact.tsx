@@ -7,7 +7,7 @@ import { BaseContainer, Button, Card, CardContent, CardHeader, Typography } from
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Link from 'next/link';
 
-function SocialMediaButton({ Icon, title, href }: { Icon: IconType; href: string; title: string }) {
+export function SocialMediaButton({ Icon, title, href }: { Icon: IconType; href: string; title: string }) {
 	return (
 		<Link href={href} target="_blank" className="flex flex-col">
 			<Button Icon={Icon} variant="ghost" size="lg">
