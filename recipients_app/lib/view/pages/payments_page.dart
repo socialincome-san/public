@@ -115,16 +115,29 @@ class PaymentsPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: paymentsUiState.payments.length,
-                itemBuilder: (context, index) {
-                  return PaymentTile(
-                    mappedPayment: paymentsUiState.payments[index],
-                  );
-                },
+            if (paymentsUiState.payments.isEmpty)
+              Expanded(
+                child: Padding(
+                  padding: AppSpacings.a8,
+                  child: Center(
+                    child: Text(
+                      localizations.paymentsEmptyList,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              )
+            else
+              Expanded(
+                child: ListView.builder(
+                  itemCount: paymentsUiState.payments.length,
+                  itemBuilder: (context, index) {
+                    return PaymentTile(
+                      mappedPayment: paymentsUiState.payments[index],
+                    );
+                  },
+                ),
               ),
-            ),
           ],
         ),
       ),
@@ -141,7 +154,7 @@ class PaymentsPage extends StatelessWidget {
       total += (mappedPayment.payment.amount ?? 0) ~/ factor;
     }
 
-    return "${mappedPayments.first.payment.currency} $total";
+    return "${mappedPayments.firstOrNull?.payment.currency ?? "SLE"} $total";
   }
 
   String _calculateFuturePayments(List<MappedPayment> mappedPayments) {
@@ -150,6 +163,6 @@ class PaymentsPage extends StatelessWidget {
     final futurePayments = (kProgramDurationMonths - mappedPayments.length) *
         kCurrentPaymentAmount;
 
-    return "${mappedPayments.first.payment.currency} ${futurePayments}";
+    return "${mappedPayments.firstOrNull?.payment.currency ?? "SLE"} ${futurePayments}";
   }
 }

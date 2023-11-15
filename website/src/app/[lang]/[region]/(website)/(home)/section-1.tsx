@@ -1,11 +1,11 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import Section1Form from './section-1-form';
 
-export default async function Section1({ params }: DefaultPageProps) {
+export async function Section1({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
-		language: params.lang,
+		language: lang,
 		namespaces: ['website-home', 'common'],
 	});
 
@@ -15,9 +15,9 @@ export default async function Section1({ params }: DefaultPageProps) {
 			className="min-h-screen-navbar grid grid-cols-1 content-center items-center gap-y-8 lg:grid-cols-2"
 		>
 			<div className="mx-auto max-w-3xl">
-				<Typography size="5xl" weight="bold" lineHeight="tight">
+				<Typography size="5xl" weight="bold">
 					{translator.t('section-1.title-1')}
-					<Typography as="span" size="5xl" weight="bold" color="secondary" lineHeight="tight">
+					<Typography as="span" size="5xl" weight="bold" color="secondary">
 						{translator.t('section-1.title-2')}
 					</Typography>
 					{translator.t('section-1.title-3')}
@@ -25,8 +25,8 @@ export default async function Section1({ params }: DefaultPageProps) {
 			</div>
 			<div className="mx-auto max-w-2xl">
 				<Section1Form
-					lang={params.lang}
-					region={params.region}
+					lang={lang}
+					region={region}
 					translations={{
 						text: translator.t('section-1.income-text'),
 						currency: translator.t('currency'),

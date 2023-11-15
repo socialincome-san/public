@@ -1,4 +1,3 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
 import ajlaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/ajla.jpg';
 import alexandreImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/alexandre.jpeg';
 import andersImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/anders.jpeg';
@@ -29,8 +28,10 @@ import simonImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon.
 import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simone.jpeg';
 import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
 import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
+import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, FontSize, Typography } from '@socialincome/ui';
+import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import classNames from 'classnames';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
@@ -104,27 +105,28 @@ const groups: Group[] = [
 		],
 	},
 ];
-export default async function Team({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['countries', 'website-team'] });
+export default async function Team({ lang }: { lang: WebsiteLanguage }) {
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['countries', 'website-about-us'] });
 	return (
-		<BaseContainer className="py-8">
+		<BaseContainer id="team" className="py-16 md:py-32">
 			<Typography as="h3" size="xl" color="muted-foreground" className="mb-4">
-				{translator.t('header')}
+				{translator.t('team.header')}
 			</Typography>
-			<Typography size="5xl" weight="bold" lineHeight="tight">
-				{translator.t('title-1')}
-				<Typography as="span" size="5xl" weight="bold" color="secondary" lineHeight="tight">
-					{translator.t('title-2')}
-				</Typography>
-			</Typography>
+			<p className="mb-8 lg:mb-16">
+				{translator.t<{ text: string; color?: FontColor }[]>('team.title').map((title, index) => (
+					<Typography as="span" key={index} size="4xl" weight="bold" color={title.color}>
+						{title.text}
+					</Typography>
+				))}
+			</p>
 			<div className="mt-16 space-y-20">
 				{groups.map((group, index1) => (
 					<div key={index1}>
 						<Typography size="3xl" weight="bold">
-							{translator.t(`groups.${group.name}.name`)}
+							{translator.t(`team.groups.${group.name}.name`)}
 						</Typography>
 						<Typography size="md" className="mb-8">
-							{translator.t(`groups.${group.name}.description`)}
+							{translator.t(`team.groups.${group.name}.description`)}
 						</Typography>
 						<ul
 							role="list"
@@ -156,7 +158,7 @@ export default async function Team({ params }: DefaultPageProps) {
 										size={{ sm: 'xs', md: 'sm', lg: 'md' }[group.size] as FontSize}
 										className="hyphens-auto break-words"
 									>
-										{translator.t(`roles.${person.role}`)}
+										{translator.t(`team.roles.${person.role}`)}
 									</Typography>
 								</li>
 							))}
