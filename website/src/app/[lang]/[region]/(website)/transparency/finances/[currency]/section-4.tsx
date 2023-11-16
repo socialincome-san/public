@@ -14,7 +14,7 @@ export async function Section4({ params, paymentStats, contributionStats }: Sect
 	const paymentFees = _.sumBy(contributionStats.totalPaymentFeesByIsInstitution, 'amount');
 
 	// TODO: make these dynamic
-	const transactionFees = 8000; // "Exchange rate and currency losses" + "Account fees" + difference between "Transaction fees" and paymentFees
+	const transactionFees = 7800; // "Exchange rate and currency losses" + "Account fees" + "Transaction fees" (without stripe fees)
 	const operatingCosts = 9300; // "Total operative expenses"
 	const otherCosts = 9600; // "Other project costs"
 
@@ -94,7 +94,8 @@ export async function Section4({ params, paymentStats, contributionStats }: Sect
 									<TooltipTrigger>
 										<InformationCircleIcon className="mx-2 h-5 w-5" />
 									</TooltipTrigger>
-									<TooltipContent>{translator.t('section-4.payment-fees-tooltip')}</TooltipContent>
+									{/*<TooltipContent>{translator.t('section-4.payment-fees-tooltip')}</TooltipContent>*/}
+									<TooltipContent>Stripe fees</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
 						</Typography>
@@ -110,7 +111,10 @@ export async function Section4({ params, paymentStats, contributionStats }: Sect
 									<TooltipTrigger>
 										<InformationCircleIcon className="mx-2 h-5 w-5" />
 									</TooltipTrigger>
-									<TooltipContent>{translator.t('section-4.transaction-fees-tooltip')}</TooltipContent>
+									{/*<TooltipContent>{translator.t('section-4.transaction-fees-tooltip')}</TooltipContent>*/}
+									<TooltipContent>
+										"Exchange rate and currency losses" + "Account fees" + "Transaction fees" (without Stripe fees)
+									</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
 						</Typography>
@@ -126,7 +130,8 @@ export async function Section4({ params, paymentStats, contributionStats }: Sect
 									<TooltipTrigger>
 										<InformationCircleIcon className="mx-2 h-5 w-5" />
 									</TooltipTrigger>
-									<TooltipContent>{translator.t('section-4.operating-costs-tooltip')}</TooltipContent>
+									{/*<TooltipContent>{translator.t('section-4.operating-costs-tooltip')}</TooltipContent>*/}
+									<TooltipContent>"Total operative expenses"</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
 						</Typography>
@@ -142,7 +147,8 @@ export async function Section4({ params, paymentStats, contributionStats }: Sect
 									<TooltipTrigger>
 										<InformationCircleIcon className="mx-2 h-5 w-5" />
 									</TooltipTrigger>
-									<TooltipContent>{translator.t('section-4.other-costs-tooltip')}</TooltipContent>
+									{/*<TooltipContent>{translator.t('section-4.other-costs-tooltip')}</TooltipContent>*/}
+									<TooltipContent>"Other project costs"</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
 						</Typography>
