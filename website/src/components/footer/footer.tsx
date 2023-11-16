@@ -130,7 +130,7 @@ export default async function Footer({ lang, region }: DefaultParams) {
 						<FooterLink label="Contact" url={`/${lang}/${region}/about-us#contact`} />
 					</div>
 				</div>
-				<div className="flex md:hidden">
+				<div className="flex flex-col md:hidden">
 					<FooterClient
 						lang={lang}
 						region={region}

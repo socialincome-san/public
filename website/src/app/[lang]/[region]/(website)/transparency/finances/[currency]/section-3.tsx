@@ -19,7 +19,7 @@ export async function Section3({ params, contributionStats }: SectionProps) {
 			<Typography weight="bold" size="3xl">
 				{translator.t('section-3.title')}
 			</Typography>
-			<Typography weight="bold" size="xl" className="mb-8">
+			<Typography weight="semibold" size="xl" className="mb-8">
 				{translator.t('section-3.subtitle', { context: { value: totalContributionsByCountry.length } })}
 			</Typography>
 			<CountryCardList buttonText={translator.t('section-3.all-countries')}>

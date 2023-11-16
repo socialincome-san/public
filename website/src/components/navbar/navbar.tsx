@@ -57,11 +57,11 @@ export default async function Navbar({ lang, region, showNavigation = true }: Na
 							href: `/${lang}/${region}/transparency/finances`,
 							description: translator.t('navigation.finances-description'),
 						},
-						{
-							title: translator.t('navigation.recipient-selection'),
-							href: `/${lang}/${region}/transparency/recipient-selection`,
-							description: translator.t('navigation.recipient-selection-description'),
-						},
+						// {
+						// 	title: translator.t('navigation.recipient-selection'),
+						// 	href: `/${lang}/${region}/transparency/recipient-selection`,
+						// 	description: translator.t('navigation.recipient-selection-description'),
+						// },
 						{
 							title: translator.t('navigation.faq'),
 							href: `/${lang}/${region}/faq`,

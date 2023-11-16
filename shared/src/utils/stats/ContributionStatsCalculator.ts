@@ -54,8 +54,13 @@ export class ContributionStatsCalculator {
 	 * ContributionStatsCalculator with the flattened intermediate data structure.
 	 * @param firestoreAdmin
 	 * @param currency
+	 * @param contributionFilter
 	 */
-	static async build(firestoreAdmin: FirestoreAdmin, currency: string): Promise<ContributionStatsCalculator> {
+	static async build(
+		firestoreAdmin: FirestoreAdmin,
+		currency: string,
+		contributionFilter = (c: Contribution) => c.status === StatusKey.SUCCEEDED,
+	): Promise<ContributionStatsCalculator> {
 		const exchangeRate = await getLatestExchangeRate(firestoreAdmin, currency);
 
 		const getContributionsForUser = async (userId: string): Promise<Contribution[]> => {
@@ -71,32 +76,25 @@ export class ContributionStatsCalculator {
 				.map(async (userDoc) => {
 					const user = userDoc.data();
 					const contributions = await getContributionsForUser(userDoc.id);
-					return contributions
-						.filter(
-							(contribution) =>
-								contribution.status == StatusKey.SUCCEEDED ||
-								contribution.status == StatusKey.UNKNOWN ||
-								contribution.status == undefined,
-						)
-						.map((contribution) => {
-							const created = contribution.created.toDate();
-							if (created.getFullYear() < 2020) {
-								console.log(userDoc.id, created);
-							}
-							return {
-								userId: userDoc.id,
-								isInstitution: Boolean(user.institution),
-								country: user.location?.toUpperCase() ?? 'CH',
-								amount: contribution.amount_chf * exchangeRate,
-								paymentFees: contribution.fees_chf * exchangeRate,
-								source: contribution.source,
-								currency: contribution.currency.toUpperCase() ?? '',
-								month: DateTime.fromObject({
-									year: created.getFullYear(),
-									month: created.getMonth() + 1, // month is indexed from 0 in JS
-								}).toFormat('yyyy-MM'),
-							} as ContributionStatsEntry;
-						});
+					return contributions.filter(contributionFilter).map((contribution) => {
+						const created = contribution.created.toDate();
+						if (created.getFullYear() < 2020) {
+							console.log(userDoc.id, created);
+						}
+						return {
+							userId: userDoc.id,
+							isInstitution: Boolean(user.institution),
+							country: user.location?.toUpperCase() ?? 'CH',
+							amount: contribution.amount_chf * exchangeRate,
+							paymentFees: contribution.fees_chf * exchangeRate,
+							source: contribution.source,
+							currency: contribution.currency.toUpperCase() ?? '',
+							month: DateTime.fromObject({
+								year: created.getFullYear(),
+								month: created.getMonth() + 1, // month is indexed from 0 in JS
+							}).toFormat('yyyy-MM'),
+						} as ContributionStatsEntry;
+					});
 				}),
 		);
 		return new ContributionStatsCalculator(_(contributions.flat()));
