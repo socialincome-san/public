@@ -90,10 +90,10 @@ npm install
 Once the dependencies are installed, you can start the different
 environments:
 
-### Step 1 ###
-Start the Firebase emulator with `npm run firebase:serve` —
-  console dashboard is available at
-  [localhost:4000](http://localhost:4000).
+### Step 1
+
+Start the Firebase emulator with `npm run firebase:serve` — console
+dashboard is available at [localhost:4000](http://localhost:4000).
 
 <details>
 <summary><strong>Troubleshooting Errors</strong></summary>
@@ -101,32 +101,38 @@ Start the Firebase emulator with `npm run firebase:serve` —
 #### macOS Error Handling
 
 ### Issue 1:
+
 > Error: Could not start Pub/Sub Emulator, port taken.
 
 **Solution:**
+
 1. Identify the Process Using Port 8085:
 
 ```
-lsof -i -P -n | grep java 
+lsof -i -P -n | grep java
 ```
+
 2. Terminate the Conflicting Process:
+
 ```
 kill [PID]
 ```
 
 ### Issue 2
+
 > Error: Fatal error occurred.
 
-On MacBook Pro (Intel) there seems to be an issue if you don't use exactly
- Node.js version 18.15.0 ([Issue](https://github.com/firebase/firebase-tools/issues/5614)).
-
+On MacBook Pro (Intel) there seems to be an issue if you don't use
+exactly Node.js version 18.15.0
+([Issue](https://github.com/firebase/firebase-tools/issues/5614)).
 
 **Solution:**
 [Download 18.15.02](https://nodejs.org/dist/v18.15.0/node-v18.15.0.pkg)
 
 </details>
 
-### Step 2 ###
+### Step 2
+
 - To start the Admin Tool, run `npm run admin:serve` and open
   [localhost:3000](http://localhost:3000).
 - To start the Website, run `npm run website:serve` and open
