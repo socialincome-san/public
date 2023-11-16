@@ -23,11 +23,13 @@ export default async function Section2({ params }: DefaultPageProps) {
 				<Typography as="span" size="4xl" weight="bold" className="text-red-400">
 					{translator.t(`section-4.title-red`)}
 				</Typography>
-                {translator.t(`section-4.title-black-2`)!= 'section-4.title-black-2'?
-                <Typography as="span" size="4xl" weight="bold">
-					{translator.t(`section-4.title-black-2`)}
-				</Typography>
-                :<></>}
+				{translator.t(`section-4.title-black-2`) != 'section-4.title-black-2' ? (
+					<Typography as="span" size="4xl" weight="bold">
+						{translator.t(`section-4.title-black-2`)}
+					</Typography>
+				) : (
+					<></>
+				)}
 			</div>
 			<div className="my-32 flex space-x-20">
 				<Typography size="2xl" weight="semibold" className="w-1/4">
