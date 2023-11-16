@@ -3,9 +3,10 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { I18nDialog } from '@/components/i18n-dialog';
 import { SILogo } from '@/components/logos/si-logo';
+import { SIIcon } from '@/components/logos/si-icon';
 import { WebsiteCurrency } from '@/i18n';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
-import { Bars3Icon, GlobeEuropeAfricaIcon, LanguageIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import { Bars3Icon, GlobeEuropeAfricaIcon, LanguageIcon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import {
 	Accordion,
@@ -79,14 +80,14 @@ export function NavbarClient(
 			}}
 		>
 			<Button variant="ghost" className="flex max-w-md space-x-2">
-				<LanguageIcon className="h-4 w-4" />
-				<GlobeEuropeAfricaIcon className="h-4 w-4" />
+				<LanguageIcon className="h-6 w-6" />
+				<GlobeEuropeAfricaIcon className="h-6 w-6" />
 			</Button>
 		</I18nDialog>
 	);
 
 	return (
-		<nav className="min-h-navbar flex flex-col justify-start pt-4">
+		<nav className="min-h-navbar flex flex-col justify-start pt-4 py-8">
 			<Collapsible
 				open={isOpen}
 				onOpenChange={setIsOpen}
@@ -94,7 +95,10 @@ export function NavbarClient(
 			>
 				<div className="flex flex-row items-center justify-between md:grid-cols-4">
 					<Link href={`/${lang}/${region}`}>
-						<SILogo className="h-6" />
+						{/* Large Screen Logo */}
+						<SILogo className="hidden lg:block h-6" />
+						{/* Small Screen Icon */}
+						<SIIcon className="block lg:hidden h-11" />
 					</Link>
 					{/*Desktop menu*/}
 					{showNavigation && (
@@ -104,8 +108,8 @@ export function NavbarClient(
 									<div key={index}>
 										{_.isEmpty(section.links) && section.href ? (
 											<Link href={section.href} key={index}>
-												<Button variant="ghost">
-													<Typography size="md" weight="medium">
+												<Button variant="ghost" className="text-gray-800 hover:text-black">
+													<Typography size="xl" weight="medium">
 														{section.title}
 													</Typography>
 												</Button>
@@ -113,18 +117,21 @@ export function NavbarClient(
 										) : (
 											<HoverCard key={index} openDelay={0} closeDelay={200}>
 												<HoverCardTrigger asChild>
-													<Button variant="ghost">
-														<Typography size="md" weight="medium">
+													<Button variant="ghost" className="flex items-center space-x-2">
+														<Typography size="xl" weight="medium" className="text-gray-800 hover:text-black">
 															{section.title}
 														</Typography>
+														{(section.links?.length ?? 0) > 0 && (
+															<ChevronDownIcon className="h-4 w-4" />
+														)}
 													</Button>
 												</HoverCardTrigger>
-												<HoverCardContent asChild alignOffset={20} className="bg-popover w-72">
-													<ul>
+												<HoverCardContent asChild alignOffset={20} className="bg-popover w-72 p-0">
+													<ul  className="divide-y divide-gray-100">
 														{section.links?.map((link, index) => (
-															<li key={index} className="hover:bg-accent rounded p-2">
+															<li key={index} className="pl-10 py-3 hover:bg-accent rounded">
 																<Link href={link.href}>
-																	<Typography size="md" weight="medium" lineHeight="loose">
+																	<Typography size="xl" weight="medium" lineHeight="loose" className="text-gray-700 hover:text-black">
 																		{link.title}
 																	</Typography>
 																</Link>
@@ -144,7 +151,7 @@ export function NavbarClient(
 						{showNavigation && (
 							<Link href={`/${lang}/${region}/me`}>
 								<Button variant="ghost" className="cursor-pointer">
-									<UserCircleIcon className="h-5 w-5" />
+									<UserCircleIcon className="h-6 w-6" />
 								</Button>
 							</Link>
 						)}
@@ -155,9 +162,9 @@ export function NavbarClient(
 							<CollapsibleTrigger asChild>
 								<Button variant="ghost" size="icon" className="w-9 p-0">
 									{isOpen ? (
-										<XMarkIcon className="block h-5 w-5" aria-hidden="true" />
+										<XMarkIcon className="block h-6 w-6" aria-hidden="true" />
 									) : (
-										<Bars3Icon className="block h-5 w-5" aria-hidden="true" />
+										<Bars3Icon className="block h-6 w-6" aria-hidden="true" />
 									)}
 								</Button>
 							</CollapsibleTrigger>
@@ -167,18 +174,18 @@ export function NavbarClient(
 
 				{/*Mobile menu*/}
 				<CollapsibleContent className="border-b md:hidden">
-					<Accordion type="single" collapsible className="border-border mb-4 flex w-full flex-col">
+					<Accordion type="single" collapsible className="divide-y divide-gray-200 mb-0 flex w-full flex-col">
 						{navigation.map((section, index) => (
 							<div key={index}>
 								{_.isEmpty(section.links) && section.href ? (
-									<div className="flex flex-1 items-center justify-between py-1.5 font-medium">
+									<div className="flex flex-1 items-center justify-between py-3 text-lg font-medium">
 										<Link href={section.href}>{section.title}</Link>
 									</div>
 								) : (
-									<AccordionItem value={`value-${index}`} className="hover:underline-none border-none">
-										<AccordionTrigger className="py-1.5">{section.title}</AccordionTrigger>
+									<AccordionItem value={`value-${index}`} className="hover:underline-none border-none text-lg font-medium">
+										<AccordionTrigger className="py-3 pr-2">{section.title}</AccordionTrigger>
 										{section.links?.map((link, index2) => (
-											<AccordionContent key={index2}>
+											<AccordionContent key={index2} className="text-lg">
 												<Link href={link.href}>{link.title}</Link>
 											</AccordionContent>
 										))}
@@ -186,7 +193,7 @@ export function NavbarClient(
 								)}
 							</div>
 						))}
-						<div className="flex flex-1 items-center justify-between py-1.5 font-medium">
+						<div className="flex flex-1 items-center justify-between py-3 text-lg font-medium">
 							<Link href={`/${lang}/${region}/me`}>{translations.myProfile}</Link>
 						</div>
 					</Accordion>
