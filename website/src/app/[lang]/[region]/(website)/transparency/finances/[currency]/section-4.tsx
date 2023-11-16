@@ -14,9 +14,9 @@ export async function Section4({ params, paymentStats, contributionStats }: Sect
 	const paymentFees = _.sumBy(contributionStats.totalPaymentFeesByIsInstitution, 'amount');
 
 	// TODO: make these dynamic
-	const transactionFees = 8600;
-	const operatingCosts = 9300;
-	const otherCosts = 9600;
+	const transactionFees = 8000; // "Exchange rate and currency losses" + "Account fees" + difference between "Transaction fees" and paymentFees
+	const operatingCosts = 9300; // "Total operative expenses"
+	const otherCosts = 9600; // "Other project costs"
 
 	const totalExpenses = paymentFees + transactionFees + operatingCosts + otherCosts + paymentStats.totalPaymentsAmount;
 	const totalReserves = contributionStats.totalContributionsAmount - totalExpenses;
