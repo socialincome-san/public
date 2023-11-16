@@ -113,7 +113,7 @@ export async function Section4({ params, paymentStats, contributionStats }: Sect
 									</TooltipTrigger>
 									{/*<TooltipContent>{translator.t('section-4.transaction-fees-tooltip')}</TooltipContent>*/}
 									<TooltipContent>
-										"Exchange rate and currency losses" + "Account fees" + "Transaction fees" (without Stripe fees)
+										{'"Exchange rate and currency losses" + "Account fees" + "Transaction fees" (without Stripe fees)'}
 									</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
@@ -131,7 +131,7 @@ export async function Section4({ params, paymentStats, contributionStats }: Sect
 										<InformationCircleIcon className="mx-2 h-5 w-5" />
 									</TooltipTrigger>
 									{/*<TooltipContent>{translator.t('section-4.operating-costs-tooltip')}</TooltipContent>*/}
-									<TooltipContent>"Total operative expenses"</TooltipContent>
+									<TooltipContent>{'"Total operative expenses"'}</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
 						</Typography>
@@ -148,7 +148,7 @@ export async function Section4({ params, paymentStats, contributionStats }: Sect
 										<InformationCircleIcon className="mx-2 h-5 w-5" />
 									</TooltipTrigger>
 									{/*<TooltipContent>{translator.t('section-4.other-costs-tooltip')}</TooltipContent>*/}
-									<TooltipContent>"Other project costs"</TooltipContent>
+									<TooltipContent>{'"Other project costs"'}</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
 						</Typography>
