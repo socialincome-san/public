@@ -2,11 +2,11 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { I18nDialog } from '@/components/i18n-dialog';
-import { SILogo } from '@/components/logos/si-logo';
 import { SIIcon } from '@/components/logos/si-icon';
+import { SILogo } from '@/components/logos/si-logo';
 import { WebsiteCurrency } from '@/i18n';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
-import { Bars3Icon, GlobeEuropeAfricaIcon, LanguageIcon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
+import { Bars3Icon, ChevronDownIcon, GlobeEuropeAfricaIcon, LanguageIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import {
 	Accordion,
@@ -87,7 +87,7 @@ export function NavbarClient(
 	);
 
 	return (
-		<nav className="min-h-navbar flex flex-col justify-start pt-4 py-8">
+		<nav className="min-h-navbar flex flex-col justify-start py-8 pt-4">
 			<Collapsible
 				open={isOpen}
 				onOpenChange={setIsOpen}
@@ -96,9 +96,9 @@ export function NavbarClient(
 				<div className="flex flex-row items-center justify-between md:grid-cols-4">
 					<Link href={`/${lang}/${region}`}>
 						{/* Large Screen Logo */}
-						<SILogo className="hidden lg:block h-6" />
+						<SILogo className="hidden h-6 lg:block" />
 						{/* Small Screen Icon */}
-						<SIIcon className="block lg:hidden h-11" />
+						<SIIcon className="block h-11 lg:hidden" />
 					</Link>
 					{/*Desktop menu*/}
 					{showNavigation && (
@@ -121,17 +121,20 @@ export function NavbarClient(
 														<Typography size="xl" weight="medium" className="text-gray-800 hover:text-black">
 															{section.title}
 														</Typography>
-														{(section.links?.length ?? 0) > 0 && (
-															<ChevronDownIcon className="h-4 w-4" />
-														)}
+														{(section.links?.length ?? 0) > 0 && <ChevronDownIcon className="h-4 w-4" />}
 													</Button>
 												</HoverCardTrigger>
 												<HoverCardContent asChild alignOffset={20} className="bg-popover w-72 p-0">
-													<ul  className="divide-y divide-gray-100">
+													<ul className="divide-y divide-gray-100">
 														{section.links?.map((link, index) => (
-															<li key={index} className="pl-10 py-3 hover:bg-accent rounded">
+															<li key={index} className="hover:bg-accent rounded py-3 pl-10">
 																<Link href={link.href}>
-																	<Typography size="xl" weight="medium" lineHeight="loose" className="text-gray-700 hover:text-black">
+																	<Typography
+																		size="xl"
+																		weight="medium"
+																		lineHeight="loose"
+																		className="text-gray-700 hover:text-black"
+																	>
 																		{link.title}
 																	</Typography>
 																</Link>
@@ -174,7 +177,7 @@ export function NavbarClient(
 
 				{/*Mobile menu*/}
 				<CollapsibleContent className="border-b md:hidden">
-					<Accordion type="single" collapsible className="divide-y divide-gray-200 mb-0 flex w-full flex-col">
+					<Accordion type="single" collapsible className="mb-0 flex w-full flex-col divide-y divide-gray-200">
 						{navigation.map((section, index) => (
 							<div key={index}>
 								{_.isEmpty(section.links) && section.href ? (
@@ -182,7 +185,10 @@ export function NavbarClient(
 										<Link href={section.href}>{section.title}</Link>
 									</div>
 								) : (
-									<AccordionItem value={`value-${index}`} className="hover:underline-none border-none text-lg font-medium">
+									<AccordionItem
+										value={`value-${index}`}
+										className="hover:underline-none border-none text-lg font-medium"
+									>
 										<AccordionTrigger className="py-3 pr-2">{section.title}</AccordionTrigger>
 										{section.links?.map((link, index2) => (
 											<AccordionContent key={index2} className="text-lg">
