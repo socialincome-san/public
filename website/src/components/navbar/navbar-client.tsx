@@ -62,9 +62,16 @@ type NavbarProps = {
 	}[];
 } & DefaultParams;
 
-export function NavbarClient(
-	{ lang, region, translations, languages, regions, currencies, navigation = [], showNavigation = true }: NavbarProps,
-) {
+export function NavbarClient({
+	lang,
+	region,
+	translations,
+	languages,
+	regions,
+	currencies,
+	navigation = [],
+	showNavigation = true,
+}: NavbarProps) {
 	const [isOpen, setIsOpen] = useState(false);
 
 	const i18nDialog = (
@@ -111,7 +118,7 @@ export function NavbarClient(
 												</Button>
 											</Link>
 										) : (
-											<HoverCard key={index} openDelay={0} closeDelay={1}>
+											<HoverCard key={index} openDelay={0} closeDelay={200}>
 												<HoverCardTrigger asChild>
 													<Button variant="ghost">
 														<Typography size="md" weight="medium">

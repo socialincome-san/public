@@ -1,51 +1,52 @@
 {
-	"amount": "{{ value, currency }}",
-	"amount-since-march-2020": "Insgesamt seit März 2020",
-	"future-payouts": "Künftige Auszahlungen: {{ value, currency }}",
-	"past-payouts": "Vergangene Auszahlungen: {{ value, currency }}",
-	"section-1": {
-		"title-1": "Transparenz schafft Vertrauen.",
-		"title-2": "Vertrauen schafft Solidarität.",
-		"since-march-2020": "Seit März 2020",
-		"totalContributions": "{{ contributorCount }} Spender:innen spendeten insgesamt {{value, currency}}",
-		"totalPayments": "{{ value }} Auszahlungen direkt aufs Mobiltelefon",
-		"totalRecipients": "{{ value }} Empfänger:innen wurden aufgenommen in unserem 3-Jahresprogramm"
-	},
-	"section-2": {
-		"title": "Wie wird Social Income finanziert?",
-		"donations": "Spenden",
-		"contributions-from": "{{ value, currency }} von",
-		"individuals": "{{ count }} Individuen",
-		"institutions": "{{ count }} Institutionen",
-		"used-for-fees": "Für Zustellgebühren von Individualspenden verwendet: {{ value, currency }}",
-		"used-for-operating-costs": "Für Betriebsgebühren verwendet: {{ value, currency }}"
-	},
-	"section-3": {
-		"title": "Von wo kommen die Spender:innen?",
-		"subtitle": "Wir erhalten Spenden aus {{ value }} Ländern.",
-		"country-amount": "{{ value, currency }} von {{ contributorsCount }} Spender:innen",
-		"all-countries": "Alle Länder anzeigen"
-	},
-	"section-4": {
-		"title": "Wie werden Spenden ausbezahlt?",
-		"subtitle": "Individuelle Spenden werden zu 100% ausbezahlt. Institutionell Spenden werden gebraucht um die operativen Kosten zu decken.",
-		"expenses": "Ausgaben",
-		"payments-total": "{{ value, currency }} ausbezahlt an {{ recipientsCount }} Empfänger:innen",
-		"payments-last-month": "Letzter Monat: {{ value, currency }} an {{ recipientsCount }} Empfänger:innen",
-		"total-costs": "{{ value, currency }} fees and costs",
-		"payment-fees": "Zustellgebühren: {{ value, currency }}",
-		"payment-fees-tooltip": "Dies beinhaltet die Transaktionsgebühren von Zahlungsportalen wie Stripe.",
-		"transaction-fees": "Transaktionsgebühren: {{ value, currency }}",
-		"transaction-fees-tooltip": "Dies beinhaltet Kontogebühren, Geldwechselgebühren, sowie Währungsverluste.",
-		"operating-costs": "Operative Kosten: {{ value, currency }}",
-		"operating-costs-tooltip": "Dies beinhaltet Kosten für Saläre, Marketing, Fundraising.",
-		"other-costs": "Andere Kosten: {{ value, currency }}",
-		"other-costs-tooltip": "??",
-
-		"reserves": "Reserven",
-		"covers-payments": "Reserven decken Auszahlungen für",
-		"covers-payments-1": "{{ recipientsCount }} Empfänger:innen für {{ monthsCount }} Monate",
-		"covers-payments-2": "{{ recipientsCount }} Empfänger:innen für einen Monat",
-		"reserves-text": "Wir halten liquide Mittel um Zahlungen über mehrere Monate ohne Neugeld finanzieren zu können."
-	}
+  "amount": "{{ value, currency }}",
+  "section-1": {
+    "title-1": "Transparenz schafft Vertrauen.",
+    "title-2": "Vertrauen schafft Solidarität.",
+    "since-march-2020": "Seit März 2020",
+    "totalContributions": "{{ contributorCount }} Spender:innen spendeten insgesamt {{value, currency}}",
+    "totalPayments": "{{ value }} Auszahlungen direkt aufs Mobiltelefon",
+    "totalRecipients": "{{ value }} Empfänger:innen wurden aufgenommen in unserem 3-Jahresprogramm"
+  },
+  "section-2": {
+    "title": "Wie wird Social Income finanziert?",
+    "donations": "Spenden",
+    "amount-since-march-2020": "Insgesamt seit März 2020",
+    "contributions-from": "{{ value, currency }} von",
+    "individuals": "{{ count }} Individuen",
+    "institutions": "{{ count }} Institutionen",
+    "past-payouts": "Vergangene Auszahlungen: {{ value, currency }}",
+    "future-payouts": "Künftige Auszahlungen: {{ value, currency }}",
+    "past-costs": "Bereits verwendet um Kosten zu decken: {{ value, currency }}",
+    "future-costs": "Um kommende Kosten zu decken: {{ value, currency }}"
+  },
+  "section-3": {
+    "title": "Von wo kommen die Spender:innen?",
+    "subtitle": "Wir erhalten Spenden aus {{ value }} Ländern.",
+    "country-amount": "{{ value, currency }} von {{ contributorsCount }} Spender:innen",
+    "all-countries": "Alle Länder anzeigen"
+  },
+  "section-4": {
+    "title": "Wie werden Spenden ausbezahlt?",
+    "subtitle": "Individuelle Spenden werden zu 100% ausbezahlt. Institutionell Spenden werden gebraucht um die operativen Kosten zu decken.",
+    "amount-since-march-2020": "Insgesamt seit März 2020",
+    "expenses": "Ausgaben",
+    "payments-total": "{{ value, currency }} ausbezahlt an {{ recipientsCount }} Empfänger:innen",
+    "payments-last-month": "Letzter Monat: {{ value, currency }} an {{ recipientsCount }} Empfänger:innen",
+    "future-payouts": "Künftige Auszahlungen: {{ value, currency }}",
+    "total-costs": "{{ value, currency }} Gebühren und Kosten",
+    "payment-fees": "Zustellgebühren: {{ value, currency }}",
+    "payment-fees-tooltip": "Dies beinhaltet die Transaktionsgebühren von Zahlungsportalen wie Stripe.",
+    "transaction-fees": "Transaktionsgebühren: {{ value, currency }}",
+    "transaction-fees-tooltip": "Dies beinhaltet Kontogebühren, Geldwechselgebühren, sowie Währungsverluste.",
+    "operating-costs": "Operative Kosten: {{ value, currency }}",
+    "operating-costs-tooltip": "Dies beinhaltet Kosten für Saläre, Marketing, Fundraising.",
+    "other-costs": "Andere Kosten: {{ value, currency }}",
+    "other-costs-tooltip": "??",
+    "reserves": "Reserven",
+    "covers-payments": "Reserven decken Auszahlungen für",
+    "covers-payments-1": "{{ recipientsCount }} Empfänger:innen für {{ monthsCount }} Monate",
+    "covers-payments-2": "{{ recipientsCount }} Empfänger:innen für einen Monat",
+    "reserves-text": "Wir halten liquide Mittel um Zahlungen über mehrere Monate ohne Neugeld finanzieren zu können."
+  }
 }

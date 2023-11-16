@@ -1,52 +1,52 @@
 {
-	"amount": "{{ value, currency }}",
-	"amount-since-march-2020": "Total amount since March 2020",
-	"future-payouts": "To be paid out: {{ value, currency }}",
-	"past-payouts": "Already paid out: {{ value, currency }}",
-	"section-1": {
-		"title-1": "Transparency builds trust.",
-		"title-2": "Trust builds solidarity.",
-		"since-march-2020": "Since March 2020",
-		"totalContributions": "{{ contributorCount }} contributors donated a total of {{value, currency}}",
-		"totalPayments": "{{ value }} mobile money payments made",
-		"totalRecipients": "{{ value }} recipients enrolled for a 3-year program"
-	},
-	"section-2": {
-		"title": "How is Social Income funded?",
-		"donations": "Donations",
-		"contributions-from": "{{ value, currency }} contributions from",
-		"individuals": "{{ count }} Individuals",
-		"institutions": "{{ count }} Institutions",
-		"used-for-fees": "Used to cover payment fees: {{ value, currency }}",
-		"used-for-operating-costs": "Used to cover operational costs: {{ value, currency }}"
-	},
-	"section-3": {
-		"title": "Where are our contributors from?",
-		"subtitle": "We received contributions from {{ value }} countries.",
-		"country-amount": "{{ value, currency }} from {{ contributorsCount }} contributors",
-		"all-countries": "Show All Countries"
-	},
-	"section-4": {
-		"title": "How are the funds used?",
-		"subtitle": "Recurring individual donations are always paid out to 100%. Institutional donations are used to cover our operational costs.",
-		"expenses": "Expenses",
-		"payments-total": "{{ value, currency }} paid out to {{ recipientsCount }} recipients",
-		"payments-last-month": "Last month: {{ value, currency }} to {{ recipientsCount }} recipients",
-
-		"total-costs": "{{ value, currency }} fees and costs",
-		"payment-fees": "Payment fees: {{ value, currency }}",
-		"payment-fees-tooltip": "This includes transaction fees charged by payment providers like Stripe.",
-		"transaction-fees": "Transaction fees: {{ value, currency }}",
-		"transaction-fees-tooltip": "This includes bank account fees, exchange rate fees, or foreign currency losses.",
-		"operating-costs": "Operating costs: {{ value, currency }}",
-		"operating-costs-tooltip": "This includes salaries, fundraising, and other costs to run the organization.",
-		"other-costs": "Other costs: {{ value, currency }}",
-		"other-costs-tooltip": "??",
-		"reserves": "Reserves",
-
-		"covers-payments": "This covers payments for",
-		"covers-payments-1": "{{ recipientsCount }} recipients for {{ monthsCount }} months",
-		"covers-payments-2": "{{ recipientsCount }} recipients for 1 month",
-		"reserves-text": "We keep liquid funds to make sure we can cover payments over multiple months without being dependent on contributions."
-	}
+  "amount": "{{ value, currency }}",
+  "section-1": {
+    "title-1": "Transparency builds trust.",
+    "title-2": "Trust builds solidarity.",
+    "since-march-2020": "Since March 2020",
+    "totalContributions": "{{ contributorCount }} contributors donated a total of {{value, currency}}",
+    "totalPayments": "{{ value }} mobile money payments made",
+    "totalRecipients": "{{ value }} recipients enrolled for a 3-year program"
+  },
+  "section-2": {
+    "title": "How is Social Income funded?",
+    "donations": "Donations",
+    "amount-since-march-2020": "Total amount since March 2020",
+    "contributions-from": "{{ value, currency }} contributions from",
+    "individuals": "{{ count }} Individuals",
+    "institutions": "{{ count }} Institutions",
+    "past-payouts": "Already paid out: {{ value, currency }}",
+    "future-payouts": "To be paid out: {{ value, currency }}",
+    "past-costs": "Already used to cover costs: {{ value, currency }}",
+    "future-costs": "To be used to cover costs: {{ value, currency }}"
+  },
+  "section-3": {
+    "title": "Where are our contributors from?",
+    "subtitle": "We received contributions from {{ value }} countries.",
+    "country-amount": "{{ value, currency }} from {{ contributorsCount }} contributors",
+    "all-countries": "Show All Countries"
+  },
+  "section-4": {
+    "title": "How are the funds used?",
+    "subtitle": "Recurring individual donations are always paid out to 100%. Institutional donations are used to cover our operational costs.",
+    "amount-since-march-2020": "Total amount since March 2020",
+    "expenses": "Expenses",
+    "payments-total": "{{ value, currency }} paid out to {{ recipientsCount }} recipients",
+    "payments-last-month": "Last month: {{ value, currency }} to {{ recipientsCount }} recipients",
+    "future-payouts": "To be paid out: {{ value, currency }}",
+    "total-costs": "{{ value, currency }} fees and costs",
+    "payment-fees": "Payment fees: {{ value, currency }}",
+    "payment-fees-tooltip": "This includes transaction fees charged by payment providers like Stripe.",
+    "transaction-fees": "Transaction fees: {{ value, currency }}",
+    "transaction-fees-tooltip": "This includes bank account fees, exchange rate fees, or foreign currency losses.",
+    "operating-costs": "Operating costs: {{ value, currency }}",
+    "operating-costs-tooltip": "This includes salaries, fundraising, and other costs to run the organization.",
+    "other-costs": "Other costs: {{ value, currency }}",
+    "other-costs-tooltip": "??",
+    "reserves": "Reserves",
+    "covers-payments": "This covers payments for",
+    "covers-payments-1": "{{ recipientsCount }} recipients for {{ monthsCount }} months",
+    "covers-payments-2": "{{ recipientsCount }} recipients for 1 month",
+    "reserves-text": "We keep liquid funds to make sure we can cover payments over multiple months without being dependent on contributions."
+  }
 }
