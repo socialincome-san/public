@@ -15,37 +15,38 @@ import {
 } from '@socialincome/ui';
 import Link from 'next/link';
 
-type TextFragment = {
-	text: string;
-	href?: string;
-};
-type Paragraph = TextFragment[];
-type SectionCardProps = {
+export type CardTranslation = {
 	title: string;
 	description: string;
-	paragraphs: Paragraph[];
-	takeAction: string;
+	paragraphs: {
+		text: string;
+		href?: string;
+	}[][];
 };
 
-export function SectionCard({ title, description, paragraphs, takeAction }: SectionCardProps) {
+type SectionCardProps = {
+	translations: { card: CardTranslation; takeAction: string };
+};
+
+export function SectionCard({ translations: { card, takeAction } }: SectionCardProps) {
 	return (
 		<Dialog>
 			<DialogTrigger>
 				<Card className="w-full scale-100 border border-black bg-inherit px-10 py-4 text-left duration-200 ease-in hover:scale-105">
-					<CardTitle className="py-2 text-red-400 ">{title}</CardTitle>
-					<Typography size="lg">{description}</Typography>
+					<CardTitle className="py-2 text-red-400 ">{card.title}</CardTitle>
+					<Typography size="lg">{card.description}</Typography>
 				</Card>
 			</DialogTrigger>
 			<DialogContent className="w-full">
 				<DialogHeader>
 					<DialogTitle>
 						<Typography size="2xl" weight="bold">
-							{title}
+							{card.title}
 						</Typography>
 					</DialogTitle>
 				</DialogHeader>
 				<DialogDescription>
-					{paragraphs.map((paragraph, key) => (
+					{card.paragraphs.map((paragraph, key) => (
 						<p key={key} className="mt-2">
 							{paragraph.map((fragment, key) => (
 								<span key={key}>
