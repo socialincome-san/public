@@ -1,7 +1,619 @@
 {
+	"take-action": "Handle jetzt",
 	"section-1": {
 		"title": "Möchtest du erfahren, wie und warum Social Income funktioniert?",
 		"red-title": "Hier bist du richtig.",
 		"subtitle": "Auf dieser Seite möchten wir den aktuellen Stand der Forschung und den messbaren Impact von Social Income zeigen."
+	},
+	"section-2": {
+		"topic": "Armutsreduktion",
+		"title-black": "Wie verringert Social Income ",
+		"title-red": "die Armut?",
+		"evidence": "Es ist erwiesen, dass direkte Geldtransfers die Armut auf zwei verschiedene Arten entscheidend verringern können.",
+		"cards": [
+			{
+				"title": "Finanzielle Sicherheit für die persönliche Entfaltung",
+				"description": "Direkte Geldtransfers zählen zu den schnellsten und effizientesten Mitteln in der Armutsreduktion.",
+				"paragraphs": [
+					[
+						{
+							"text": "Darüber hinaus besteht allgemeiner Konsens darüber, dass direkte Geldtransfers  den Anteil der Kinder erhöhen, die eine Schule besuchen und sich sowohl Ersparnisse als auch Viehbestand bei Empfänger*innen steigern (siehe ähnliche Ergebnisse in "
+						},
+						{
+							"text": "Hagen-Zanker et al 2011",
+							"href": "https://drive.google.com/file/d/176YeOEO49o55eQPuPVBFQ-uTRbBtfuiY/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Sodokin 2021",
+							"href": "https://drive.google.com/file/d/1vgUmvRXWOMmEznjN4KQfNinCc8P8uBHG/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "World Bank Group 2016",
+							"href": "https://drive.google.com/file/d/1uEWLlGNcu0K92FXMAyTg1HFqI4N10AaC/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer and Shapiro 2016",
+							"href": "https://drive.google.com/file/d/1Soek9GEAJJ7sLj7TxnKumZwcA_ICAGpJ/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Direkte Geldtransfers haben sich ausserdem als besonders wirksam in unvorhergesehenen Krisen erwiesen (z. B. in der Covid-19 Pandemie oder bei Klimakatastrophen, siehe z.B. "
+						},
+						{
+							"text": "Pople et al 2021",
+							"href": "https://drive.google.com/file/d/1xa3wWkn9aZKAAqwxoQeL2HkePyvGsN8Y/view?usp=sharing"
+						},
+						{
+							"text": "). Inbesondere bei jungen Menschen ist der Effekt gross, wenn sie ihre finanzielle Zukunft sicherer gestalten können (siehe z.B. "
+						},
+						{
+							"text": "Owusu-Addo et al 2018",
+							"href": "https://drive.google.com/file/d/1_uThMOcVf2vYCSvQJRMCVo94wZk-YL1n/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Stimulierung lokaler Märkte",
+				"description": "Indem lokale Märkte stimuliert werden, schaffen direkte Geldtransfers nicht nur direkte, sondern auch indirekte Begünstigte.",
+				"paragraphs": [
+					[
+						{
+							"text": "Mehrere Studien belegen, dass die lokale Verwendung des Geldes durch die Empfänger*innen vielen lokalen Anbieter*innen, wie etwa mittelständischen Landwirt*innen und lokalen Händler*innen, zugute kommt, die ihr zusätzliches Einkommen wiederum in produktive Anlagen investieren. Diese indirekten Investitionen und Zunahme der Produktivität verbessern die lokale Wirtschaftsleistung und den Lebensstandard ganzer Gemeinschaften (siehe z.B. "
+						},
+						{
+							"text": "Creti 2010",
+							"href": "https://drive.google.com/file/d/1-S_tRJZYlXLI-oIi3hdLmsyyuY-N4bja/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Holmes and Bhuvanendra 2013",
+							"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Handa et al 2018",
+							"href": "https://drive.google.com/file/d/1c_p1BH09NmgKT8SNCRly9Mykbp9ahaXW/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Direkte Geldtransfers sind deshalb in den meisten Fällen ein besseres Instrument zur Armutsbekämpfung als einfache Sachspenden, da das Geld für den Kauf von Gütern vor Ort verwendet wird, was die Wirtschaft in den jeweiligen Gemeinschaften ankurbelt (siehe "
+						},
+						{
+							"text": "Soares et al 2010",
+							"href": "https://drive.google.com/file/d/1KTsAwaWPH0NaiD2SLVQmJZHn2bxeWFHz/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Covarrubias 2012",
+							"href": "https://drive.google.com/file/d/1OEFeYCgxnbbrFVNFoYYQsSrnmVxZdz9v/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Gertler et al 2012",
+							"href": "https://drive.google.com/file/d/1UtLpJcX8AJyitZhWW_KFSEuC7sCJhyXs/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer and Shapiro 2016",
+							"href": "https://drive.google.com/file/d/1Soek9GEAJJ7sLj7TxnKumZwcA_ICAGpJ/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Tirivayi et al 2013",
+							"href": "https://drive.google.com/file/d/1SXVjb7hU7I3JOrE39tE6LZG4uicNB_Ro/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Daidone et al 2019",
+							"href": "https://drive.google.com/file/d/1bsI8iyC54V0Yx2nETsRlnPKkO1ntASrv/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Schwab 2019",
+							"href": "https://drive.google.com/file/d/19mK5JaO5UsiTUXzHx1Pzkm4jxqSn7_Py/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			}
+		]
+	},
+	"section-3": {
+		"topic": "Empowerment",
+		"title-black": "Wie ",
+		"title-red": "stärkt und ermächtigt ",
+		"title-black-2": "Social Income die Menschen?",
+		"evidence": "Direkte Geldtransfers (wie diejenigen von Social Income) haben erwiesenermassen eine Reihe positiver Auswirkungen auf das Leben von Empfänger*innen.",
+		"cards": [
+			{
+				"title": "Mehr Selbstbestimmung",
+				"description": "Direkte Geldtransfers ermöglichen Empfänger*innen, selbst zu entscheiden, wofür das Geld am besten verwenden wird.",
+				"paragraphs": [
+					[
+						{
+							"text": "Direkte Geldtransfers bildet die Grundlage für eigenverantwortliches Entscheiden und mehr Selbstbestimmung. Viele Studien zeigen zudem auf, dass mit der Autonomie ein erhöhtes Selbstvertrauen und ein Gefühl der Kontrolle über das eigene Leben aufgebaut werden (siehe z.B. a "
+						},
+						{
+							"text": "Molyneux et al 2016",
+							"href": "https://drive.google.com/file/d/1HdrtpZj91cUcQQbzfdaiUKTJzDNk7P1j/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "McGuire et al 2020",
+							"href": "https://drive.google.com/file/d/1O5Tg0vsc2E_6HbP7a3YW9yKc70f9Twz4/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Dies kann sowohl ermutigen als auch motivieren und Empfänger*innen die Möglichkeit geben, nach etwas zu streben, von dem er immer geträumt, aber nie für möglich gehalten hatte (siehe z.B. "
+						},
+						{
+							"text": "Garcia et al 2016",
+							"href": "https://drive.google.com/file/d/1iJDEjcqEN-OD0unY7f1Q-JZMgjT6krxz/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Bessere Bildung",
+				"description": "Direkte Geldtransfers ermöglichen Empfänger*innen ein höheres Bildungsniveau zu erreichen und eröffnen damit den Zugang zu besseren Arbeitsbedingungen.",
+				"paragraphs": [
+					[
+						{
+							"text": "Viele Studien, darunter ein kürzlich erschienenes Papier der Weltbank ("
+						},
+						{
+							"text": "Behrman et al 2019",
+							"href": "https://drive.google.com/file/d/1q5NUyaSbti33yjoz4fivNopJ8q3yJqxd/view?usp=sharing"
+						},
+						{
+							"text": "), haben gezeigt, dass Empfänger*innen von direkten Geldüberweisungen eher bessere Schulen besuchen und bessere Ergebnisse erzielen als diejenigen, die keine solchen Leistungen erhalten (siehe z.B. "
+						},
+						{
+							"text": "Schultz 2001",
+							"href": "https://drive.google.com/file/d/1uOHu9JOPz6ffVB6EIAuXKBHQKd1-eO2V/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Attanasio et al 2012",
+							"href": "https://drive.google.com/file/d/1Fbszsu2T2mcoMV2GAuHdtavh-il7bqDF/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Covarrubias 2012",
+							"href": "https://drive.google.com/file/d/1OEFeYCgxnbbrFVNFoYYQsSrnmVxZdz9v/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Garcia et al 2016",
+							"href": "https://drive.google.com/file/d/1iJDEjcqEN-OD0unY7f1Q-JZMgjT6krxz/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Eine bessere Ausbildung und finanzielle Absicherung ermöglicht es den Empfänger*innen außerdem, ausbeuterische Arbeitsbedingungen leichter abzulehnen, wenn sie nicht durch finanzielle Not dazu gezwungen sind. Eine Arbeit zu verrichten, die Spass macht, erhöht wiederum die Motivation und Produktivität der Empfänger*innen (siehe z.B. "
+						},
+						{
+							"text": "Sutrisno and Sunarsi 2019",
+							"href": "https://drive.google.com/file/d/1b_IV9XvT12jNAP2QhLm0H-95HcrnScBY/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Schutz vor unvorhergesehenen Schocks",
+				"description": "Direkte Geldtransfers ermöglichen es Empfänger*innen, sich (besser) auf unvorhergesehene Schocks (z.B. extreme Klimaereignisse oder Krisen der öffentlichen Gesundheit) vorzubereiten.",
+				"paragraphs": [
+					[
+						{
+							"text": "Studien der Weltbank zeigen, dass direkte Geldtransfers die Widerstandsfähigkeit gegenüber Schocks erhöhen, und zwar indem sie das Sparen erleichtern, ein konstantes Einkommen konstituieren und die Schulbildung von Kindern schützen: während sich unvorhergesehene Krisen oft negativ auf den Schulbesuch von Kindern auswirken, unterstützen direkte Geldtransfers eine Aufrechterhaltung des Schulbesuchs (siehe z.B. "
+						},
+						{
+							"text": "Finan et al 2004",
+							"href": "https://drive.google.com/file/d/1qlAzeM-R_xH4zT92HxT1M0eq3O8MShDt/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Premand and Stoeffler 2020",
+							"href": "https://drive.google.com/file/d/1_wjxwljgd65Y-ptxahaWxcsdJwC5SBHH/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "In der jüngsten Covid-19-Krise haben Forscher*innen ausserdem aufgezeigt, dass direkte Geldtransfers nicht nur die Armut verringern, sondern auch arbeitslose Empfänger*innen in die Lage versetzen, sich einen Arbeitsplatz zu suchen. Diejenigen, die Zahlungen erhalten, können aktiver und engagierter am Gesellschaftsleben teilnehmen, was letztendlich zur Erholung des Arbeitsmarktes beiträgt (siehe z. B. "
+						},
+						{
+							"text": "Köhler and Bhorat 2021",
+							"href": "https://drive.google.com/file/d/1qwtorYiGsHG3n4i6cxFIbU8H4DHNmUAR/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Eine neuere Studie hat darüber hinaus sogar gezeigt, dass direkte Geldtransfers die Entwaldung verringern können, da Empfänger*innen nicht gezwungen sind, sich durch das Abholzen von Wäldern finanziell abzusichern ("
+						},
+						{
+							"text": "Ferraro and Simorangkir 2020",
+							"href": "https://drive.google.com/file/d/1PTjFxP39mtjSutkup-wXBL_JGUbqVmq_/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Stärkung der Rolle der Frau",
+				"description": "Direkte Geldtransfers helfen Frauen dabei, freiere Entscheidungen zu treffen. Sie werden besser in die Gesellschaft eingebunden und haben ein erhöhtes Mitspracherecht.",
+				"paragraphs": [
+					[
+						{
+							"text": "Studien zeigen, dass direkte Geldtransfers Frauen langfristig zu mehr Selbstbestimmung, Resilienz und Mitspracherecht verhelfen, gerade in Kontexten, in denen soziale oder familiäre Strukturen ihre finanzielle Unabhängigkeit einschränkt (siehe z.B. "
+						},
+						{
+							"text": "Plagerson and Ulriksen 2015",
+							"href": "https://drive.google.com/file/d/1IgycTY0sID-jxZ7Sw3-UYqQZa3ORzvuW/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Iqbal et al 2021",
+							"href": "https://drive.google.com/file/d/1-7WWiwGYDXRYddq3B2IGSnTvkCnmxzje/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Zahlreiche Forschungsergebnisse deuten ausserdem darauf hin, dass Geldtransfers die physische und emotionale Gewalt gegen Frauen verringern (siehe z.B. "
+						},
+						{
+							"text": "Perova and Vakis 2013",
+							"href": "https://drive.google.com/file/d/1fEM834PcOLC5qvOLvw1-mnhKgWHA4wPX/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Buller et al 2018",
+							"href": "https://drive.google.com/file/d/14Ga66Oj-8L7JFxAANlptZJCkzu1uOs4Y/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer et al 2019",
+							"href": "https://drive.google.com/file/d/1J3Np833YeKa0GyQQLXAWR8WP3RZt6YQv/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Heath et al 2020",
+							"href": "https://drive.google.com/file/d/1y-KSIJZaDpLGYcIAVmxWOxeqdDMa6y02/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Stärkung der Rolle von Kindern",
+				"description": "Direkte Geldtransfers stärken auch die Stellung der Kinder, nämlich indem Kinderarbeit verringert und das intergenerationelle Einkommen erhöht werden.",
+				"paragraphs": [
+					[
+						{
+							"text": "Es ist erwiesen, dass Geldtransfers nicht nur positive Auswirkungen auf die Empfänger*innen, sondern auch auf deren Kinder haben. Da die Gesundheit von Kindern untrennbar mit ihrem Umfeld verbunden ist, kann ein soziales Einkommen Kinder stärken (insbesondere Mädchen), indem es ihre Chancen auf eine Ausbildung und einen längeren Schulbesuch erhöht, einen sicheren Übergang ins Erwachsenenalter schafft und später zu einem höheren Einkommen führt ("
+						},
+						{
+							"text": "Save the children report 2009",
+							"href": "https://drive.google.com/file/d/1dpDPU_O2gCfssbJ3pmIItu3TnT908Tn-/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Covarrubias 2012",
+							"href": "https://drive.google.com/file/d/1OEFeYCgxnbbrFVNFoYYQsSrnmVxZdz9v/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Akresh et al 2016",
+							"href": "https://drive.google.com/file/d/1Iwkads4Sr3-MiBi3_hzHnF1BYaxYDr8J/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Boo and Creamer 2019",
+							"href": "https://drive.google.com/file/d/1lzLamggvPgL_7xF2EIlxm7qShAFdVFJU/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Weniger Kriminalität",
+				"description": "Direkte Geldüberweisungen verringern das Risiko, kriminell zu werden, um auf diese Weise lebenswichtige Güter zu erwerben.",
+				"paragraphs": [
+					[
+						{
+							"text": "Durch direkte Geldüberweisungen müssen sich Menschen weniger Sorgen um die Beschaffung lebenswichtiger Güter machen. Ihr Risiko, kriminell zu werden, sinkt. Untersuchungen zum Bolsa Familia-Programm in Brasilien haben hierzu beispielsweise ergeben, dass Geldtransfers an junge Menschen zu einer Verringerung der nachbarschaftlichen Kriminalität um 6,5% führten und mehr Jugendliche die Schule besuchten. Langfristig hat dies auch dazu beigetragen, dass die Empfänger*innen ihr Leben selbstbestimmter und angstfreier gestalten konnten (siehe "
+						},
+						{
+							"text": "Chioda et al 2016",
+							"href": "https://drive.google.com/file/d/1zrmIYftuzNZe-Lx-0OFs7IEn2E_0R0Jq/view?usp=sharing"
+						},
+						{
+							"text": ", siehe auch M"
+						},
+						{
+							"text": "Machado et al 2018",
+							"href": "https://drive.google.com/file/d/15Jz2IAb5_8EL45Q24SlsqQaOXuzYonfD/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Breckin 2019",
+							"href": "https://drive.google.com/file/d/1-ESV8byS_qgd2ye4ZeZsAq7svnb0_RF-/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Mehr Kreativität",
+				"description": "Direkte Geldtransfers stimulieren Kunst und Kultur. Sie schaffen für kreative Menschen mehr finanziellen Freiraum, da die existentiellen Lebenshaltungskosten langfristig gesichert sind.",
+				"paragraphs": [
+					[
+						{
+							"text": "Direkte Geldüberweisungen ermöglichen es Künstler*innen, sich ihrem Handwerk zu widmen, ohne sich um existenzielle Bedürfnisse sorgen zu müssen. Tatsächlich waren die allerersten Empfänger*innen von Social Income eine kleine, künstlerische Kohorte in Freetown, Sierra Leone. Die Gruppe berichtete, dass Social Income sie dabei unterstützte, ihrer Kunstpraxis nachzugehen und kreativ zu sein. (siehe auch "
+						},
+						{
+							"text": "Thomas 2016",
+							"href": "https://drive.google.com/file/d/1tJOjneX3fZau_ZYm3DnCtaIGy9V6L1m2/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			}
+		]
+	},
+	"section-4": {
+		"topic": "Wohlergehen",
+		"title-black": "Wie trägt das Social Income zum ",
+		"title-red": "Wohlergehen der Menschen ",
+		"title-black-2": "bei?",
+		"evidence": "Die Forschung zeigt, dass direkte Geldtransfers in dreierlei Hinsicht zum Wohlergehen der Empfänger*innen beitragen.",
+		"cards": [
+			{
+				"title": "Verbesserung des Gesundheitszustands",
+				"description": "Direkte Geldtransfers ermöglichen es den Empfänger*innen, Medikamente und Hygieneprodukte zu kaufen, die sie sich sonst nicht leisten könnten.",
+				"paragraphs": [
+					[
+						{
+							"text": "Eine Studie zeigte, dass direkte Geldtransfers sowohl kurzfristig (18 Monate), als auch langfristig (7 bis 10 Jahre) zu einer signifikant besseren Gesundheit der Empfänger*innen führte (vgl. "
+						},
+						{
+							"text": "Banerjee et al 2021",
+							"href": "https://drive.google.com/file/d/1d8f-DixZ1YOE7nsbFtlBG7dETXFbnUAd/view?usp=sharing"
+						},
+						{
+							"text": "). Eine andere Studie ("
+						},
+						{
+							"text": "Baird et al 2016",
+							"href": "https://drive.google.com/file/d/1d8f-DixZ1YOE7nsbFtlBG7dETXFbnUAd/view?usp=sharing"
+						},
+						{
+							"text": ") zeigte ausserdem, dass Geldtransferprogramme die HIV-Prävalenz und Anzahl an Teenagerschwangerschaften verringerten (siehe auch "
+						},
+						{
+							"text": "Nery et al 2017",
+							"href": "https://drive.google.com/file/d/1wjoTvq_XHoMg5q1gelpCufm9qWBWrKUx/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Okeke and Abubakar 2020",
+							"href": "https://drive.google.com/file/d/1QYAF2ocBzQKjewye69WYy2MDLN80ClWW/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Verbesserung des emotionalen Wohlbefindens",
+				"description": "Direkte Geldüberweisungen können den Teufelskreis durchbrechen.",
+				"paragraphs": [
+					[
+						{
+							"text": "Diverse Studien haben gezeigt, dass Armut zu Stress führt, der mit der Zeit zu schweren psychischen Erkrankungen führen kann (vgl. "
+						},
+						{
+							"text": "Hammen 2005",
+							"href": "https://drive.google.com/file/d/1-CIQdKuc96fO9rIjU-pPYhjdTxssuHEi/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer and Fehr 2014",
+							"href": "https://drive.google.com/file/d/1eVKh2KA_xqAckBaYMg6Rp9ws9OeiEWo4/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer and Shapiro 2018",
+							"href": "https://drive.google.com/file/d/11NkzvnwyGKi3EEJRx3pGHoOwsEftmXUJ/view?usp=sharing"
+						},
+						{
+							"text": "). Parallel dazu kann eine schlechte psychische Gesundheit die Erwerbsbeteiligung und die Produktivität beeinträchtigen und somit die Armut weiter verschlimmern ("
+						},
+						{
+							"text": "Biasi et al 2019",
+							"href": "https://drive.google.com/file/d/1fcYgy2H66VNpIRpqPPKynB5aIpDKgyEX/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Forscher*innen der Princeton University liefern Beweise dafür, dass direkte Geldüberweisungen diesen Teufelskreis durchbrechen können: Sie helfen massgeblich dabei, Stress und Depressionen zu lindern, die in den allermeisten Fällen mit einem Leben in Armut einhergehen. ("
+						},
+						{
+							"text": "Haushofer et al 2020",
+							"href": "https://drive.google.com/file/d/1efsdQk4tY4_g7bbpVZcMvEbwIDOv7IjP/view?usp=sharing"
+						},
+						{
+							"text": ", siehe auch "
+						},
+						{
+							"text": "Samuels and Stavropoulou 2016",
+							"href": "https://drive.google.com/file/d/1ImB0ADXWXKyR31B-AYOMiCyKRCU1Bht1/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Kilburn et al 2016",
+							"href": "https://drive.google.com/file/d/1mtUBaD6vMC4_n5pR-ygwZHI3N1B52eg8/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Bessere Nahrungssicherheit",
+				"description": "Direkte Geldüberweisungen verbessern nachhaltig die Ernährungssicherheit.",
+				"paragraphs": [
+					[
+						{
+							"text": "Zahlreiche Studien haben ergeben, dass direkte Geldtransfers zwei wichtige Auswirkungen auf die Ernährungssicherheit der Empfänger*innen haben. Erstens verbessern sie den Zugang zu qualitativ hochwertigeren Lebensmitteln. Zweitens tragen sie indirekt dazu bei, dass das Wissen über Ernährung, Kochmethoden und den sicheren Umgang mit Lebensmitteln zunimmt. Zusammen verbesserten diese beiden Aspekte die Ernährungssicherheit und die Ernährung der Studienteilnehmer*innen in signifikanter Weise."
+						},
+						{
+							"text": "Gitter and Caldes 2010",
+							"href": "https://drive.google.com/file/d/1Wcf0QM1NSGyLQSrFQU1H89JpBoWgY0qz/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Miller et al 2011",
+							"href": "https://drive.google.com/file/d/1QPRopxSVxciuC3waoExX5rzEzv5ArTkx/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Burchi et al 2018",
+							"href": "https://drive.google.com/file/d/1P-7ajyyh-7p5l5QtrP6R0jC2nOfQxkWR/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Hidrobo et al 2018",
+							"href": "https://drive.google.com/file/d/1ckppauMz4yPe_XF_NMW-qOo2Cv77MNGp/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer et al 2020",
+							"href": "https://drive.google.com/file/d/1efsdQk4tY4_g7bbpVZcMvEbwIDOv7IjP/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			}
+		]
 	}
 }
