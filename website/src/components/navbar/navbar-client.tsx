@@ -2,11 +2,11 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { I18nDialog } from '@/components/i18n-dialog';
-import { SIIcon } from '@/components/logos/si-icon';
 import { SILogo } from '@/components/logos/si-logo';
+import { SIIcon } from '@/components/logos/si-icon';
 import { WebsiteCurrency } from '@/i18n';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
-import { Bars3Icon, ChevronDownIcon, GlobeEuropeAfricaIcon, LanguageIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import { Bars3Icon, GlobeEuropeAfricaIcon, LanguageIcon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/solid';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import {
 	Accordion,
@@ -79,7 +79,7 @@ export function NavbarClient(
 				currency: translations.currency,
 			}}
 		>
-			<Button variant="ghost" className="flex max-w-md space-x-2">
+			<Button variant="ghost" className="flex max-w-md space-x-2 py-6">
 				<LanguageIcon className="h-6 w-6" />
 				<GlobeEuropeAfricaIcon className="h-6 w-6" />
 			</Button>
@@ -87,18 +87,18 @@ export function NavbarClient(
 	);
 
 	return (
-		<nav className="min-h-navbar flex flex-col justify-start py-8 pt-4">
+		<nav className="min-h-navbar flex flex-col justify-start pt-4 py-8">
 			<Collapsible
 				open={isOpen}
 				onOpenChange={setIsOpen}
-				className="mx-auto flex w-screen max-w-6xl flex-col space-y-4 px-3 md:px-5"
+				className="mx-auto flex w-screen max-w-6xl flex-col space-y-4 md:px-5"
 			>
-				<div className="flex flex-row items-center justify-between md:grid-cols-4">
+				<div className="flex flex-row items-center justify-between md:grid-cols-4 px-5 md:px-0">
 					<Link href={`/${lang}/${region}`}>
 						{/* Large Screen Logo */}
-						<SILogo className="hidden h-6 lg:block" />
+						<SILogo className="hidden lg:block h-6" />
 						{/* Small Screen Icon */}
-						<SIIcon className="block h-11 lg:hidden" />
+						<SIIcon className="block lg:hidden h-11" />
 					</Link>
 					{/*Desktop menu*/}
 					{showNavigation && (
@@ -108,7 +108,7 @@ export function NavbarClient(
 									<div key={index}>
 										{_.isEmpty(section.links) && section.href ? (
 											<Link href={section.href} key={index}>
-												<Button variant="ghost" className="text-gray-800 hover:text-black">
+												<Button variant="ghost" className="text-gray-800 hover:text-black py-6">
 													<Typography size="xl" weight="medium">
 														{section.title}
 													</Typography>
@@ -117,24 +117,21 @@ export function NavbarClient(
 										) : (
 											<HoverCard key={index} openDelay={0} closeDelay={200}>
 												<HoverCardTrigger asChild>
-													<Button variant="ghost" className="flex items-center space-x-2">
+													<Button variant="ghost" className="flex items-center space-x-2 py-6">
 														<Typography size="xl" weight="medium" className="text-gray-800 hover:text-black">
 															{section.title}
 														</Typography>
-														{(section.links?.length ?? 0) > 0 && <ChevronDownIcon className="h-4 w-4" />}
+														{(section.links?.length ?? 0) > 0 && (
+															<ChevronDownIcon className="h-4 w-4" />
+														)}
 													</Button>
 												</HoverCardTrigger>
-												<HoverCardContent asChild alignOffset={20} className="bg-popover w-72 p-0">
-													<ul className="divide-y divide-gray-100">
+												<HoverCardContent asChild alignOffset={20} className="bg-popover w-56 p-0">
+													<ul  className="divide-y divide-gray-100">
 														{section.links?.map((link, index) => (
-															<li key={index} className="hover:bg-accent rounded py-3 pl-10">
+															<li key={index} className="pl-10 py-2 hover:bg-accent">
 																<Link href={link.href}>
-																	<Typography
-																		size="xl"
-																		weight="medium"
-																		lineHeight="loose"
-																		className="text-gray-700 hover:text-black"
-																	>
+																	<Typography size="xl" weight="medium" lineHeight="loose" className="text-gray-700 hover:text-black">
 																		{link.title}
 																	</Typography>
 																</Link>
@@ -153,7 +150,7 @@ export function NavbarClient(
 						{i18nDialog}
 						{showNavigation && (
 							<Link href={`/${lang}/${region}/me`}>
-								<Button variant="ghost" className="cursor-pointer">
+								<Button variant="ghost" className="cursor-pointer py-6">
 									<UserCircleIcon className="h-6 w-6" />
 								</Button>
 							</Link>
@@ -163,7 +160,7 @@ export function NavbarClient(
 						{i18nDialog}
 						{showNavigation && (
 							<CollapsibleTrigger asChild>
-								<Button variant="ghost" size="icon" className="w-9 p-0">
+								<Button variant="ghost" size="icon" className="w-11 py-6">
 									{isOpen ? (
 										<XMarkIcon className="block h-6 w-6" aria-hidden="true" />
 									) : (
@@ -177,31 +174,34 @@ export function NavbarClient(
 
 				{/*Mobile menu*/}
 				<CollapsibleContent className="border-b md:hidden">
-					<Accordion type="single" collapsible className="mb-0 flex w-full flex-col divide-y divide-gray-200">
+					<Accordion type="single" collapsible className="divide-y divide-gray-200 mb-0 flex w-full flex-col">
 						{navigation.map((section, index) => (
 							<div key={index}>
 								{_.isEmpty(section.links) && section.href ? (
-									<div className="flex flex-1 items-center justify-between py-3 text-lg font-medium">
-										<Link href={section.href}>{section.title}</Link>
-									</div>
+									// Entire section is a link with hover effect
+									<Link href={section.href} className="flex flex-1 items-center justify-between py-4 text-lg font-medium px-5 md:px-0 hover:bg-accent">
+										<span>{section.title}</span>
+									</Link>
 								) : (
-									<AccordionItem
-										value={`value-${index}`}
-										className="hover:underline-none border-none text-lg font-medium"
-									>
-										<AccordionTrigger className="py-3 pr-2">{section.title}</AccordionTrigger>
+									// Accordion section
+									<AccordionItem value={`value-${index}`} className="divide-y divide-gray-200 border-none text-lg font-medium">
+										<AccordionTrigger className=" pt-4 pr-8 pl-5 md:pl-0 hover:bg-accent hover:no-underline">{section.title}</AccordionTrigger>
 										{section.links?.map((link, index2) => (
-											<AccordionContent key={index2} className="text-lg">
-												<Link href={link.href}>{link.title}</Link>
+											<AccordionContent key={index2} className="px-10 md:px-0 text-lg pt-2 hover:bg-accent">
+												<Link href={link.href} className="block mt-2">
+													{link.title}
+												</Link>
 											</AccordionContent>
 										))}
 									</AccordionItem>
 								)}
 							</div>
 						))}
-						<div className="flex flex-1 items-center justify-between py-3 text-lg font-medium">
-							<Link href={`/${lang}/${region}/me`}>{translations.myProfile}</Link>
-						</div>
+						<Link href={`/${lang}/${region}/me`} className="block">
+							<div className="flex flex-1 items-center justify-between px-5 md:px-0 py-4 text-lg font-medium hover:bg-accent">
+								{translations.myProfile}
+							</div>
+						</Link>
 					</Accordion>
 				</CollapsibleContent>
 			</Collapsible>
