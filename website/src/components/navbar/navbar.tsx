@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { NavbarClient } from '@/components/navbar/navbar-client';
-import { WebsiteLanguage, websiteCurrencies, websiteRegions } from '@/i18n';
+import { mainWebsiteLanguages, websiteCurrencies, websiteRegions } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 
 type NavbarProps = {
@@ -12,7 +12,6 @@ export default async function Navbar({ lang, region, showNavigation = true }: Na
 		language: lang,
 		namespaces: ['common', 'website-common', 'website-me'],
 	});
-	const supportedLanguages: WebsiteLanguage[] = ['en', 'de'];
 
 	return (
 		<NavbarClient
@@ -28,7 +27,7 @@ export default async function Navbar({ lang, region, showNavigation = true }: Na
 				payments: translator.t('tabs.contributions'),
 				signOut: translator.t('sign-out'),
 			}}
-			languages={supportedLanguages.map((lang) => ({
+			languages={mainWebsiteLanguages.map((lang) => ({
 				code: lang,
 				translation: translator.t(`languages.${lang}`),
 			}))}
