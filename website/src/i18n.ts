@@ -7,11 +7,12 @@ import { Currency } from '../../shared/src/types/currency';
 
 export type WebsiteLanguage = Extract<LanguageCode, 'en' | 'de' | 'kri'>;
 export const defaultLanguage: WebsiteLanguage = 'en';
-export const websiteLanguages: WebsiteLanguage[] = ['en', 'de', 'kri'];
+export const mainWebsiteLanguages: WebsiteLanguage[] = ['en', 'de'];
+export const allWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'kri'];
 
 export type WebsiteRegion = 'int' | 'ch' | 'sl';
 export const defaultRegion: WebsiteRegion = 'int';
-export const websiteRegions: WebsiteRegion[] = ['int', 'ch', 'sl'];
+export const websiteRegions: WebsiteRegion[] = ['int', 'ch'];
 
 export type WebsiteCurrency = Extract<Currency, 'USD' | 'EUR' | 'CHF' | 'SLE'>;
 export const defaultCurrency: WebsiteCurrency = 'USD';
@@ -35,7 +36,7 @@ export const findBestLocale = (
 	 */
 	if (
 		request.cookies.has(LANGUAGE_COOKIE) &&
-		websiteLanguages.includes(request.cookies.get(LANGUAGE_COOKIE)!.value as WebsiteLanguage) &&
+		mainWebsiteLanguages.includes(request.cookies.get(LANGUAGE_COOKIE)!.value as WebsiteLanguage) &&
 		request.cookies.has(REGION_COOKIE) &&
 		websiteRegions.includes(request.cookies.get(REGION_COOKIE)!.value as WebsiteRegion)
 	) {
@@ -51,7 +52,7 @@ export const findBestLocale = (
 		(option) =>
 			option.code &&
 			option.region &&
-			websiteLanguages.includes(option.code as WebsiteLanguage) &&
+			mainWebsiteLanguages.includes(option.code as WebsiteLanguage) &&
 			websiteRegions.includes(option.region as WebsiteRegion),
 	);
 
