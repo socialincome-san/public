@@ -23,7 +23,6 @@ SocialIncomePayment _$SocialIncomePaymentFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$SocialIncomePaymentToJson(
         SocialIncomePayment instance) =>
     <String, dynamic>{
-      'id': instance.id,
       'amount': instance.amount,
       'payment_at': _$JsonConverterToJson<Object, Timestamp>(
           instance.paymentAt, const TimestampConverter().toJson),
