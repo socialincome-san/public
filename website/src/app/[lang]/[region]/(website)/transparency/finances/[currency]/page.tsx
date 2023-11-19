@@ -42,14 +42,12 @@ export default async function Page({ params }: TransparencyPageProps) {
 	const { contributionStats, paymentStats } = await getStats(currency);
 
 	return (
-		<div>
+		<div className="flex flex-col space-y-16 py-8">
 			<CurrencyRedirect currency={currency} />
-			<div className="flex flex-col space-y-16">
-				<Section1 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
-				<Section2 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
-				<Section3 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
-				<Section4 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
-			</div>
+			<Section1 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
+			<Section2 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
+			<Section3 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
+			<Section4 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
 		</div>
 	);
 }

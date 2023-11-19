@@ -26,7 +26,6 @@ type Section1InputProps = {
 
 export default function Section1Form({ translations, lang, region }: Section1InputProps) {
 	const router = useRouter();
-
 	const formSchema = z.object({
 		amount: z.coerce.number().min(1).optional(),
 	});

@@ -1,5 +1,5 @@
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Typography } from '@socialincome/ui';
+import { Card, CardContent, Typography } from '@socialincome/ui';
 import _ from 'lodash';
 import { SectionProps } from './page';
 
@@ -25,23 +25,27 @@ export async function Section1({ params, paymentStats, contributionStats }: Sect
 	];
 
 	return (
-		<div className="flex flex-col justify-center space-y-2">
-			<div className="my-8">
-				<Typography weight="bold" size="4xl" lineHeight="tight">
+		<div>
+			<div className="mb-8">
+				<Typography weight="bold" size="4xl">
 					{translator.t('section-1.title-1')}
 				</Typography>
-				<Typography weight="bold" size="4xl" lineHeight="tight">
+				<Typography weight="bold" size="4xl" color="secondary">
 					{translator.t('section-1.title-2')}
 				</Typography>
 			</div>
-			<Typography color="muted-foreground">{translator.t('section-1.since-march-2020')}</Typography>
-			{cards.map((card, index) => (
-				<div key={index} className="border-neutral rounded-lg border px-4 py-6 duration-200 hover:scale-[102%]">
-					<Typography size="xl" weight="normal">
-						{card}
-					</Typography>
-				</div>
-			))}
+			<div className="flex flex-col space-y-2">
+				<Typography color="muted-foreground">{translator.t('section-1.since-march-2020')}</Typography>
+				{cards.map((card, index) => (
+					<Card key={index} className="duration-200 hover:scale-[102%]">
+						<CardContent className="py-8">
+							<Typography size="xl" weight="normal">
+								{card}
+							</Typography>
+						</CardContent>
+					</Card>
+				))}
+			</div>
 		</div>
 	);
 }

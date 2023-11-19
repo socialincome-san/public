@@ -111,7 +111,7 @@ export function NavbarClient(
 												</Button>
 											</Link>
 										) : (
-											<HoverCard key={index} openDelay={0} closeDelay={1}>
+											<HoverCard key={index} openDelay={0} closeDelay={200}>
 												<HoverCardTrigger asChild>
 													<Button variant="ghost">
 														<Typography size="md" weight="medium">

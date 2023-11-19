@@ -21,5 +21,10 @@
 		"recipient-selection-description": "Erfahre mehr über unseren Auswahlprozess",
 		"faq-description": "Lerne aus den Fragen anderer Leute",
 		"whats-next": "Was kommt als nächstes?"
+	},
+	"cookie-consent-banner": {
+		"text": "Dürfen wir Cookies benützen um den Traffic und die Leistung unserer Website zu analysieren? Wir sammeln niemals persönliche Daten. <a href='/privacy' class='underline'>Datenschutzrichtlinie</a>.",
+		"button-accept": "Akzeptieren",
+		"button-refuse": "Ablehnen"
 	}
 }
