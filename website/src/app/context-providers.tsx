@@ -1,19 +1,21 @@
 'use client';
 
 import { CURRENCY_COOKIE, LANGUAGE_COOKIE, REGION_COOKIE } from '@/app/[lang]/[region]';
+import { FacebookTracking } from '@/components/tracking/facebook-tracking';
+import { LinkedInTracking } from '@/components/tracking/linkedin-tracking';
 import { useCookieState } from '@/hooks/useCookieState';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
+import { initializeAnalytics } from '@firebase/analytics';
 import { DEFAULT_REGION } from '@socialincome/shared/src/firebase';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Analytics, getAnalytics, isSupported as isAnalyticsSupported } from 'firebase/analytics';
+import { ConsentSettings, ConsentStatusString, setConsent } from 'firebase/analytics';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import _ from 'lodash';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
-import { Toaster } from 'react-hot-toast';
 import {
 	AnalyticsProvider,
 	AuthProvider,
@@ -30,26 +32,56 @@ let connectFirestoreEmulatorCalled = false;
 let connectStorageEmulatorCalled = false;
 let connectFunctionsEmulatorCalled = false;
 
+export const getAnalyticsCookieConsent = (mode: ConsentStatusString) =>
+	({
+		analytics_storage: mode,
+		ad_storage: mode,
+		functionality_storage: mode,
+		security_storage: mode,
+		personalization_storage: mode,
+	}) as ConsentSettings;
+
+if (typeof window !== 'undefined') {
+	const cookieConsent = localStorage.getItem('cookie_consent');
+	if (cookieConsent === 'granted') {
+		setConsent(getAnalyticsCookieConsent('granted'));
+		console.debug('Set default consent mode to granted');
+	} else {
+		setConsent(getAnalyticsCookieConsent('denied'));
+		console.debug('Set default consent mode to denied');
+	}
+}
+
 function AnalyticsProviderWrapper({ children }: PropsWithChildren) {
 	const app = useFirebaseApp();
-	const [analytics, setAnalytics] = useState<Analytics | null>(null);
+	const [allowTracking, setAllowTracking] = useState(false);
 
 	useEffect(() => {
 		if (process.env.NEXT_PUBLIC_FIREBASE_APP_ID) {
-			isAnalyticsSupported().then((isSupported) => {
-				if (isSupported) {
-					console.log('Using analytics');
-					setAnalytics(getAnalytics(app));
-				}
-			});
+			initializeAnalytics(app);
+			const cookieConsent = localStorage.getItem('cookie_consent');
+			if (cookieConsent === 'granted') {
+				setConsent(getAnalyticsCookieConsent('granted'));
+				setAllowTracking(true);
+			} else {
+				setConsent(getAnalyticsCookieConsent('denied'));
+			}
 		}
-	}, [app]);
+	}, [allowTracking]);
 
-	if (analytics) {
-		return <AnalyticsProvider sdk={analytics}>{children}</AnalyticsProvider>;
-	} else {
-		return children;
-	}
+	return (
+		<>
+			{allowTracking ? (
+				<>
+					<FacebookTracking />
+					<LinkedInTracking />
+					<AnalyticsProvider sdk={initializeAnalytics(app)}>{children}</AnalyticsProvider>
+				</>
+			) : (
+				children
+			)}
+		</>
+	);
 }
 
 function FirebaseSDKProviders({ children }: PropsWithChildren) {
@@ -97,22 +129,6 @@ function FirebaseSDKProviders({ children }: PropsWithChildren) {
 			</FirestoreProvider>
 		</AuthProvider>
 	);
-}
-
-function ThemeProvider({ children }: PropsWithChildren) {
-	const pathname = usePathname();
-	const baseSegment = pathname?.split('/')[3];
-
-	let theme;
-	switch (baseSegment) {
-		case 'donate':
-			theme = 'theme-dark-blue';
-			break;
-		default:
-			theme = 'theme-default';
-	}
-
-	return <body className={theme}>{children}</body>;
 }
 
 type I18nContextType = {
@@ -188,12 +204,7 @@ export function ContextProviders({ children }: PropsWithChildren) {
 		<FirebaseAppProvider firebaseConfig={firebaseConfig}>
 			<FirebaseSDKProviders>
 				<QueryClientProvider client={queryClient}>
-					<ThemeProvider>
-						<I18nProvider>
-							<Toaster />
-							{children}
-						</I18nProvider>
-					</ThemeProvider>
+					<I18nProvider>{children}</I18nProvider>
 				</QueryClientProvider>
 			</FirebaseSDKProviders>
 		</FirebaseAppProvider>

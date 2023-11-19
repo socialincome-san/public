@@ -1,5 +1,5 @@
 import { CURRENCY_COOKIE } from '@/app/[lang]/[region]';
-import { WebsiteLanguage, WebsiteRegion, findBestLocale, websiteLanguages, websiteRegions } from '@/i18n';
+import { WebsiteLanguage, WebsiteRegion, allWebsiteLanguages, findBestLocale, websiteRegions } from '@/i18n';
 import { NextRequest, NextResponse } from 'next/server';
 import { bestGuessCurrency, isValidCurrency } from '../../shared/src/types/currency';
 
@@ -26,7 +26,7 @@ export const i18nRedirectMiddleware = (request: NextRequest) => {
 	const detectedLanguage = segments.at(1) ?? '';
 	const detectedCountry = segments.at(2) ?? '';
 
-	const pathnameIsMissingLanguage = !websiteLanguages.includes(detectedLanguage as WebsiteLanguage);
+	const pathnameIsMissingLanguage = !allWebsiteLanguages.includes(detectedLanguage as WebsiteLanguage);
 	const pathnameIsMissingCountry = !websiteRegions.includes(detectedCountry as WebsiteRegion);
 
 	if (pathnameIsMissingCountry || pathnameIsMissingLanguage) {
