@@ -22,5 +22,10 @@
 		"recipient-selection-description": "Learn about our selection process",
 		"faq-description": "Learn from other people's questions",
 		"whats-next": "What's next?"
+	},
+	"cookie-consent-banner": {
+		"text": "Do you allow us to use cookies for analyzing our website traffic and performance? We never collect any personal data. <a href='/privacy' class='underline'>Privacy Policy</a>.",
+		"button-accept": "Accept",
+		"button-refuse": "Refuse"
 	}
 }

@@ -37,10 +37,6 @@
 		--radius: 0.5rem;
 	}
 
-	.theme-light-blue {
-		--background: hsl(216, 54%, 95%);
-	}
-
 	.theme-dark-blue {
 		--si-yellow: hsl(48, 100%, 49%);
 		--background: hsl(216, 54%, 55%);
@@ -51,6 +47,8 @@
 
 		--primary: hsl(48, 100%, 49%);
 		--primary-foreground: hsl(0, 0%, 20%);
+
+		--border: hsl(60 9.1% 97.8%);
 	}
 }
 

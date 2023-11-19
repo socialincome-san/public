@@ -4,7 +4,7 @@ import { PropsWithChildren } from 'react';
 
 export default function Layout({ children, params: { lang, region } }: PropsWithChildren<DefaultLayoutProps>) {
 	return (
-		<div>
+		<div className="theme-dark-blue min-h-screen">
 			<Navbar lang={lang} region={region} showNavigation={false} />
 			<main>{children}</main>
 		</div>
