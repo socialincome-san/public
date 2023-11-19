@@ -108,7 +108,7 @@ export function NavbarClient(
 									<div key={index}>
 										{_.isEmpty(section.links) && section.href ? (
 											<Link href={section.href} key={index}>
-												<Button variant="ghost" className="py-6 text-gray-800 hover:text-black">
+												<Button variant="ghost" className="py-6 text-secondary-foreground">
 													<Typography size="xl" weight="medium">
 														{section.title}
 													</Typography>
@@ -118,14 +118,14 @@ export function NavbarClient(
 											<HoverCard key={index} openDelay={0} closeDelay={200}>
 												<HoverCardTrigger asChild>
 													<Button variant="ghost" className="flex items-center space-x-2 py-6">
-														<Typography size="xl" weight="medium" className="text-gray-800 hover:text-black">
+														<Typography size="xl" weight="medium" className="text-secondary-foreground">
 															{section.title}
 														</Typography>
 														{(section.links?.length ?? 0) > 0 && <ChevronDownIcon className="h-4 w-4" />}
 													</Button>
 												</HoverCardTrigger>
 												<HoverCardContent asChild alignOffset={20} className="bg-popover w-56 p-0">
-													<ul className="divide-y divide-gray-100">
+													<ul className="divide-y divide-muted">
 														{section.links?.map((link, index) => (
 															<li key={index} className="hover:bg-accent py-2 pl-10">
 																<Link href={link.href}>
@@ -133,7 +133,7 @@ export function NavbarClient(
 																		size="xl"
 																		weight="medium"
 																		lineHeight="loose"
-																		className="text-gray-700 hover:text-black"
+																		className="text-secondary-foreground"
 																	>
 																		{link.title}
 																	</Typography>
@@ -177,7 +177,7 @@ export function NavbarClient(
 
 				{/*Mobile menu*/}
 				<CollapsibleContent className="border-b md:hidden">
-					<Accordion type="single" collapsible className="mb-0 flex w-full flex-col divide-y divide-gray-200">
+					<Accordion type="single" collapsible className="mb-0 flex w-full flex-col divide-y divide-border">
 						{navigation.map((section, index) => (
 							<div key={index}>
 								{_.isEmpty(section.links) && section.href ? (
@@ -192,7 +192,7 @@ export function NavbarClient(
 									// Accordion section
 									<AccordionItem
 										value={`value-${index}`}
-										className="divide-y divide-gray-200 border-none text-lg font-medium"
+										className="divide-y divide-border border-none text-lg font-medium"
 									>
 										<AccordionTrigger className=" hover:bg-accent pl-5 pr-8 pt-4 hover:no-underline md:pl-0">
 											{section.title}
