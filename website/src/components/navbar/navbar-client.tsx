@@ -108,7 +108,7 @@ export function NavbarClient(
 									<div key={index}>
 										{_.isEmpty(section.links) && section.href ? (
 											<Link href={section.href} key={index}>
-												<Button variant="ghost" className="py-6 text-secondary-foreground">
+												<Button variant="ghost" className="text-secondary-foreground py-6">
 													<Typography size="xl" weight="medium">
 														{section.title}
 													</Typography>
@@ -125,7 +125,7 @@ export function NavbarClient(
 													</Button>
 												</HoverCardTrigger>
 												<HoverCardContent asChild alignOffset={20} className="bg-popover w-56 p-0">
-													<ul className="divide-y divide-muted">
+													<ul className="divide-muted divide-y">
 														{section.links?.map((link, index) => (
 															<li key={index} className="hover:bg-accent py-2 pl-10">
 																<Link href={link.href}>
@@ -177,7 +177,7 @@ export function NavbarClient(
 
 				{/*Mobile menu*/}
 				<CollapsibleContent className="border-b md:hidden">
-					<Accordion type="single" collapsible className="mb-0 flex w-full flex-col divide-y divide-border">
+					<Accordion type="single" collapsible className="divide-border mb-0 flex w-full flex-col divide-y">
 						{navigation.map((section, index) => (
 							<div key={index}>
 								{_.isEmpty(section.links) && section.href ? (
@@ -192,7 +192,7 @@ export function NavbarClient(
 									// Accordion section
 									<AccordionItem
 										value={`value-${index}`}
-										className="divide-y divide-border border-none text-lg font-medium"
+										className="divide-border divide-y border-none text-lg font-medium"
 									>
 										<AccordionTrigger className=" hover:bg-accent pl-5 pr-8 pt-4 hover:no-underline md:pl-0">
 											{section.title}
