@@ -16,9 +16,15 @@ interface SendEmailProps {
 	password: string;
 }
 
-export const sendEmail = async (
-	{ from = 'no-reply@socialincome.org', to, subject, content, attachments = [], user, password }: SendEmailProps,
-) => {
+export const sendEmail = async ({
+	from = 'no-reply@socialincome.org',
+	to,
+	subject,
+	content,
+	attachments = [],
+	user,
+	password,
+}: SendEmailProps) => {
 	let transporter: Transporter;
 	if (!user) {
 		const testAccount = await nodemailer.createTestAccount();

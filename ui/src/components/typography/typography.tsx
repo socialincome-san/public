@@ -68,9 +68,16 @@ export type TypographyProps<C extends ElementType> = {
 	lineHeight?: LineHeight;
 } & ComponentPropsWithoutRef<C>;
 
-export function Typography<C extends ElementType = 'p'>(
-	{ as, size, weight, color, lineHeight, className, children, ...props }: TypographyProps<C>,
-) {
+export function Typography<C extends ElementType = 'p'>({
+	as,
+	size,
+	weight,
+	color,
+	lineHeight,
+	className,
+	children,
+	...props
+}: TypographyProps<C>) {
 	const Component = as || 'p';
 	return (
 		<Component

@@ -12,9 +12,12 @@ export interface SendWhatsappProps {
 	templateProps: RenderTemplateProps;
 }
 
-export const sendWhatsapp = async (
-	{ to, from, twilioConfig, templateProps }: SendWhatsappProps,
-): Promise<MessageInstance> => {
+export const sendWhatsapp = async ({
+	to,
+	from,
+	twilioConfig,
+	templateProps,
+}: SendWhatsappProps): Promise<MessageInstance> => {
 	const client = new Twilio(twilioConfig.sid, twilioConfig.token);
 	const body = await renderTemplate(templateProps);
 	return client.messages.create({ body: body, from: `whatsapp:${from}`, to: `whatsapp:${to}` });
