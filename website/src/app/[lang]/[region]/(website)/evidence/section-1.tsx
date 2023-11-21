@@ -11,13 +11,13 @@ export default async function Section1({ params }: DefaultPageProps) {
 
 	return (
 		<BaseContainer className="mt-12 flex flex-col items-center space-y-4">
-            <div className='w-2/3 text-center'>
+			<div className="w-2/3 text-center">
 				{translator.t<{ text: string; color?: FontColor }[]>('section-1.title').map((title, index) => (
 					<Typography as="span" key={index} size="4xl" weight="bold" color={title.color}>
 						{title.text}
 					</Typography>
 				))}
-            </div>
+			</div>
 			<Typography as="h2" size="xl" className="max-w-2xl text-center">
 				{translator.t('section-1.subtitle')}
 			</Typography>

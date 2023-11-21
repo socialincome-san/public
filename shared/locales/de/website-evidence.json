@@ -1,12 +1,15 @@
 {
 	"take-action": "Handle jetzt",
 	"section-1": {
-		"title": [{"text":"Möchtest du erfahren, wie und warum Social Income funktioniert?"},{"text": "Hier bist du richtig.", "color": "secondary"}],
+		"title": [
+			{ "text": "Möchtest du erfahren, wie und warum Social Income funktioniert?" },
+			{ "text": "Hier bist du richtig.", "color": "secondary" }
+		],
 		"subtitle": "Auf dieser Seite möchten wir den aktuellen Stand der Forschung und den messbaren Impact von Social Income zeigen."
 	},
 	"section-2": {
 		"topic": "Armutsreduktion",
-        "title": [{"text": "Wie verringert Social Income "}, {"text": "die Armut?", "color": "secondary"}],
+		"title": [{ "text": "Wie verringert Social Income " }, { "text": "die Armut?", "color": "secondary" }],
 		"evidence": "Es ist erwiesen, dass direkte Geldtransfers die Armut auf zwei verschiedene Arten entscheidend verringern können.",
 		"cards": [
 			{
@@ -157,7 +160,11 @@
 	},
 	"section-3": {
 		"topic": "Empowerment",
-        "title": [{"text": "Wie "}, {"text": "stärkt und ermächtigt ", "color": "secondary"}, {"text": "Social Income die Menschen?"}],
+		"title": [
+			{ "text": "Wie " },
+			{ "text": "stärkt und ermächtigt ", "color": "secondary" },
+			{ "text": "Social Income die Menschen?" }
+		],
 		"evidence": "Direkte Geldtransfers (wie diejenigen von Social Income) haben erwiesenermassen eine Reihe positiver Auswirkungen auf das Leben von Empfänger*innen.",
 		"cards": [
 			{
@@ -455,7 +462,11 @@
 	},
 	"section-4": {
 		"topic": "Wohlergehen",
-        "title": [{"text": "Wie trägt das Social Income zum "}, {"text": "Wohlergehen der Menschen ", "color": "secondary"}, {"text": "bei?"}],
+		"title": [
+			{ "text": "Wie trägt das Social Income zum " },
+			{ "text": "Wohlergehen der Menschen ", "color": "secondary" },
+			{ "text": "bei?" }
+		],
 		"evidence": "Die Forschung zeigt, dass direkte Geldtransfers in dreierlei Hinsicht zum Wohlergehen der Empfänger*innen beitragen.",
 		"cards": [
 			{
