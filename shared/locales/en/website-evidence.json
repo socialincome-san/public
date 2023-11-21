@@ -1,14 +1,12 @@
 {
 	"take-action": "Take Action",
 	"section-1": {
-		"title": "Want to learn how and why Social Income works? You’ve come to ",
-		"red-title": "the right place.",
+		"title": [{"text": "Want to learn how and why Social Income works? You’ve come to "}, {"text": "the right place.", "color": "secondary"}],
 		"subtitle": "Here we’ll run through some of the research that shows Social Income’s measurable impact in the real world."
 	},
 	"section-2": {
 		"topic": "Poverty Reduction",
-		"title-black": "How does Social Income ",
-		"title-red": "reduce poverty?",
+        "title": [{"text": "How does Social Income "}, {"text": "reduce poverty", "color": "secondary"}],
 		"evidence": "Evidence shows that direct cash transfer programs like Social Income significantly improve recipients’ financial health in two important ways.",
 		"cards": [
 			{
@@ -186,8 +184,7 @@
 	},
 	"section-3": {
 		"topic": "Empowerment",
-		"title-black": "How does Social Income ",
-		"title-red": "empower people?",
+        "title": [{"text": "How does Social Income "}, {"text": "empower people?", "color": "secondary"}],
 		"evidence": "Studies of direct cash transfer programs like Social Income have measured a range of beneficial effects on recipients’ lives.",
 		"cards": [
 			{
@@ -492,8 +489,7 @@
 	},
 	"section-4": {
 		"topic": "Well-being",
-		"title-black": "How does Social Income contribute to ",
-		"title-red": "greater well-being?",
+        "title": [{"text": "How does Social Income contribute to "}, {"text": "greater well-being?", "color": "secondary"}],
 		"evidence": "Research shows that direct cash transfers programs like Social Income contribute to recipients’ well-being in three important ways.",
 		"cards": [
 			{

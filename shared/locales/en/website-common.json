@@ -6,6 +6,7 @@
 		"contributors": "Contributors",
 		"faq": "FAQ",
 		"finances": "Finances",
+        "evidence": "Evidence",
 		"how-it-works": "How It Works",
 		"my-profile": "My Profile",
 		"our-work": "Our Work",
@@ -21,6 +22,7 @@
 		"finances-description": "Learn about our finances",
 		"recipient-selection-description": "Learn about our selection process",
 		"faq-description": "Learn from other people's questions",
+        "evidence-description": "",
 		"whats-next": "What's next?"
 	},
 	"cookie-consent-banner": {

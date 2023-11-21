@@ -5,6 +5,7 @@
 		"team-description": "Wer sich für Social Income engagiert",
 		"contributors": "Spender:innen",
 		"finances": "Finanzen",
+        "evidence": "Evidenz",
 		"how-it-works": "So funktioniert's",
 		"my-profile": "Mein Profil",
 		"our-work": "Was wir tun",
@@ -20,6 +21,7 @@
 		"finances-description": "Learn about our finances",
 		"recipient-selection-description": "Erfahre mehr über unseren Auswahlprozess",
 		"faq-description": "Lerne aus den Fragen anderer Leute",
+        "evidence-description": "",
 		"whats-next": "Was kommt als nächstes?"
 	},
 	"cookie-consent-banner": {
