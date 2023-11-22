@@ -11,5 +11,5 @@ export default function Page() {
 
 	useEffect(() => {
 		redirect('./finances/' + currency?.toLowerCase());
-	}, []);
+	}, [currency]);
 }
