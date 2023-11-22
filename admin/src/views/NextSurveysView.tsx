@@ -41,7 +41,7 @@ export function NextSurveysView() {
 						where('status', '==', SurveyStatus.Scheduled),
 						where('status', '==', SurveyStatus.InProgress),
 					),
-					where('due_date_at', '<=', toDate(DateTime.now().minus({ days: 14 }))),
+					where('due_date_at', '<=', toDate(DateTime.now().plus({ days: 14 }))),
 				),
 				orderBy('due_date_at', 'desc'),
 			),
