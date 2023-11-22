@@ -32,7 +32,7 @@ export function SectionCard({ translations: { card, takeAction } }: SectionCardP
 	return (
 		<Dialog>
 			<DialogTrigger>
-				<Card className="w-full scale-100 border border-black bg-inherit px-10 py-4 text-left duration-200 ease-in hover:scale-105">
+				<Card className="w-full px-10 py-4 text-left duration-200 ease-in md:hover:scale-105">
 					<CardTitle className="py-2 text-red-400 ">{card.title}</CardTitle>
 					<Typography size="lg">{card.description}</Typography>
 				</Card>
@@ -66,7 +66,7 @@ export function SectionCard({ translations: { card, takeAction } }: SectionCardP
 					<br />
 				</DialogDescription>
 				<DialogFooter>
-					<Link href="/get-involved">
+					<Link href="/donate/individual">
 						<Button>{takeAction}</Button>
 					</Link>
 				</DialogFooter>

@@ -13,7 +13,7 @@ export default async function Section4({ params }: DefaultPageProps) {
 	const takeAction = translator.t('take-action');
 
 	return (
-		<BaseContainer backgroundColor="bg-pink-50" className="flex flex-col items-start space-y-1 rounded-sm px-10 py-16">
+		<BaseContainer backgroundColor="bg-pink-50" className="flex flex-col space-y-1 py-16 md:px-20">
 			<Typography size="xl" weight="medium" color="muted-foreground">
 				{translator.t(`section-4.topic`)}
 			</Typography>
@@ -24,11 +24,11 @@ export default async function Section4({ params }: DefaultPageProps) {
 					</Typography>
 				))}
 			</div>
-			<div className="my-32 flex space-x-20">
-				<Typography size="2xl" weight="semibold" className="w-1/4">
+			<div className="my-32 grid grid-cols-1 gap-16 md:grid-cols-6 lg:grid-cols-8">
+				<Typography size="2xl" weight="semibold" className="md:col-span-3">
 					{translator.t(`section-4.evidence`)}
 				</Typography>
-				<div className="h-fit w-2/5 space-y-10 text-left">
+				<div className="h-full space-y-10 text-left md:col-span-3 lg:col-span-4">
 					{cards.map((card, key) => (
 						<SectionCard key={key} translations={{ card: card, takeAction: takeAction }} />
 					))}
