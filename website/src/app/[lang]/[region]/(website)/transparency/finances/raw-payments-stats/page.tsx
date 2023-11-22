@@ -19,15 +19,17 @@ export default async function Page({ params }: TransparencyPageProps) {
 				Payments by month
 			</Typography>
 			<div className="mt-4 grid grid-cols-3 gap-4">
-				{paymentStats.totalPaymentsByMonth.map((payment) => (
-					<Card className="p-4">
+				{paymentStats.totalPaymentsByMonth.map((monthlyStat, index) => (
+					<Card key={index} className="p-4">
 						<Typography size="lg" weight="semibold">
-							{payment.month}
+							{monthlyStat.month}
 						</Typography>
-						<Typography>SLE: {payment.amountSLE}</Typography>
-						<Typography>CHF: {Number(payment.amount).toFixed(2)}</Typography>
-						<Typography>Exchange Rate: {(Number(payment.amount) / Number(payment.amountSLE)).toFixed(6)}</Typography>
-						<Typography>Number of recipients: {payment.recipientsCount}</Typography>
+						<Typography>SLE: {monthlyStat.amountSLE}</Typography>
+						<Typography>CHF: {Number(monthlyStat.amount).toFixed(2)}</Typography>
+						<Typography>
+							Exchange Rate: {(Number(monthlyStat.amount) / Number(monthlyStat.amountSLE)).toFixed(6)}
+						</Typography>
+						<Typography>Number of recipients: {monthlyStat.recipientsCount}</Typography>
 					</Card>
 				))}
 			</div>
