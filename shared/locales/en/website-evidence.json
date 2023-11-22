@@ -1,0 +1,653 @@
+{
+	"take-action": "Take Action",
+	"section-1": {
+		"title": [
+			{ "text": "Want to learn how and why Social Income works? You’ve come to " },
+			{ "text": "the right place.", "color": "secondary" }
+		],
+		"subtitle": "Here we’ll run through some of the research that shows Social Income’s measurable impact in the real world."
+	},
+	"section-2": {
+		"topic": "Poverty Reduction",
+		"title": [{ "text": "How does Social Income " }, { "text": "reduce poverty", "color": "secondary" }],
+		"evidence": "Evidence shows that direct cash transfer programs like Social Income significantly improve recipients’ financial health in two important ways.",
+		"cards": [
+			{
+				"title": "Financial empowerment",
+				"description": "Direct cash transfers are the fastest and most effective way to reduce recipients’ poverty levels.",
+				"paragraphs": [
+					[
+						{ "text": "A review of more than 200 studies (" },
+						{
+							"text": "Overseas Development Institute 2016",
+							"href": "https://drive.google.com/file/d/18SN24gxbdUxLnx1m35T5I5NqXWh5Fj7q/view?usp=sharing"
+						},
+						{
+							"text": ") shows that direct cash transfers increase recipients' expenditures (particularly on food) and make it easier for them to pay for healthcare services (see "
+						},
+						{
+							"text": "Kabeer et al 2012",
+							"href": "https://drive.google.com/file/d/1Q-0qm8j9vePagynE0HDiLT50h8s605i4/view?usp=sharing"
+						},
+						{ "text": ") for an overview, as well as, " },
+						{
+							"text": "Attanasio et al 2006",
+							"href": "https://drive.google.com/file/d/1Fbszsu2T2mcoMV2GAuHdtavh-il7bqDF/view?usp=sharing"
+						},
+						{ "text": ", " },
+						{
+							"text": "Gitter and Caldes 2010",
+							"href": "https://drive.google.com/file/d/1Wcf0QM1NSGyLQSrFQU1H89JpBoWgY0qz/view?usp=sharing"
+						},
+						{
+							"text": ", and "
+						},
+						{
+							"text": "Gertler et al 2012",
+							"href": "https://drive.google.com/file/d/1UtLpJcX8AJyitZhWW_KFSEuC7sCJhyXs/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "In addition, studies agree that direct cash transfers increase school attendance and raise the savings as well as livestock ownership of recipients (see similar findings in "
+						},
+						{
+							"text": "Hagen-Zanker et al 2011",
+							"href": "https://drive.google.com/file/d/176YeOEO49o55eQPuPVBFQ-uTRbBtfuiY/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Sodokin 2021, World Bank Group 2016",
+							"href": "https://drive.google.com/file/d/1uEWLlGNcu0K92FXMAyTg1HFqI4N10AaC/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer and Shapiro 2016",
+							"href": "https://drive.google.com/file/d/1Soek9GEAJJ7sLj7TxnKumZwcA_ICAGpJ/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Finally, direct cash transfers have been particularly effective in moments of unexpected crises (e.g., during the Covid-19 pandemic or when facing climate disasters, see "
+						},
+						{
+							"text": "Pople et al 2021",
+							"href": "https://drive.google.com/file/d/1xa3wWkn9aZKAAqwxoQeL2HkePyvGsN8Y/view?usp=sharing"
+						},
+						{
+							"text": "). They’ve also been especially impactful in helping young people make their financial futures more secure (see "
+						},
+						{
+							"text": "Owusu-Addo et al 2018",
+							"href": "https://drive.google.com/file/d/1_uThMOcVf2vYCSvQJRMCVo94wZk-YL1n/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Boost to local markets",
+				"description": "Direct cash transfers create both direct and indirect beneficiaries by stimulating local markets.",
+				"paragraphs": [
+					[
+						{
+							"text": "Several studies show that the circulation of recipients’ money benefits local farmers and traders, who (re)invest this additional income in productive assets. Investments by these indirect beneficiaries increase and diversify their levels of production, thereby significantly improving the cost and quality of the goods they supply their communities with (see Several studies show that the circulation of recipients’ money benefits local farmers and traders, who (re)invest this additional income in productive assets. Investments by these indirect beneficiaries increase and diversify their levels of production, thereby significantly improving the cost and quality of the goods they supply their communities with (see "
+						},
+						{
+							"text": "Creti 2010",
+							"href": "https://drive.google.com/file/d/1-S_tRJZYlXLI-oIi3hdLmsyyuY-N4bja/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Holmes and Bhuvanendra 2013",
+							"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Handa et al 2018",
+							"href": "https://drive.google.com/file/d/1c_p1BH09NmgKT8SNCRly9Mykbp9ahaXW/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Direct cash transfers are therefore a more far-ranging and effective anti-poverty tool than simply donating goods, as the money involved stimulates entire communities (see "
+						},
+						{
+							"text": "Soares et al 2010",
+							"href": "https://drive.google.com/file/d/1KTsAwaWPH0NaiD2SLVQmJZHn2bxeWFHz/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Covarrubias 2012",
+							"href": "https://drive.google.com/file/d/1OEFeYCgxnbbrFVNFoYYQsSrnmVxZdz9v/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Gertler et al 2012",
+							"href": "https://drive.google.com/file/d/1UtLpJcX8AJyitZhWW_KFSEuC7sCJhyXs/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer and Shapiro 2016",
+							"href": "https://drive.google.com/file/d/1Soek9GEAJJ7sLj7TxnKumZwcA_ICAGpJ/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Tirivayi et al 2013",
+							"href": "https://drive.google.com/file/d/1SXVjb7hU7I3JOrE39tE6LZG4uicNB_Ro/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Daidone et al 2019",
+							"href": "https://drive.google.com/file/d/1bsI8iyC54V0Yx2nETsRlnPKkO1ntASrv/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Schwab 2019",
+							"href": "https://drive.google.com/file/d/19mK5JaO5UsiTUXzHx1Pzkm4jxqSn7_Py/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			}
+		]
+	},
+	"section-3": {
+		"topic": "Empowerment",
+		"title": [{ "text": "How does Social Income " }, { "text": "empower people?", "color": "secondary" }],
+		"evidence": "Studies of direct cash transfer programs like Social Income have measured a range of beneficial effects on recipients’ lives.",
+		"cards": [
+			{
+				"title": "Self-determination",
+				"description": "Direct cash transfers let recipients decide how best to use the money they receive.",
+				"paragraphs": [
+					[
+						{
+							"text": "Direct cash transfers serve as a foundation for responsible decision-making and increased well-being. Many studies show that the autonomy recipients are given over the money they receive helps build self-confidence and a sense of control over their lives (see "
+						},
+						{
+							"text": "Molyneux et al 2016",
+							"href": "https://drive.google.com/file/d/1HdrtpZj91cUcQQbzfdaiUKTJzDNk7P1j/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "McGuire et al 2020",
+							"href": "https://drive.google.com/file/d/1O5Tg0vsc2E_6HbP7a3YW9yKc70f9Twz4/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "This can be both empowering and motivating, giving someone the means to strive for something they had always dreamed of but never thought possible (see "
+						},
+						{
+							"text": "Garcia et al 2016",
+							"href": "https://drive.google.com/file/d/1iJDEjcqEN-OD0unY7f1Q-JZMgjT6krxz/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Better Education",
+				"description": "Direct cash transfers help recipients reach higher levels of education and access better employment opportunities.",
+				"paragraphs": [
+					[
+						{
+							"text": "Many studies, including a recent paper by the World Bank ("
+						},
+						{
+							"text": "Behrman et al 2019",
+							"href": "https://drive.google.com/file/d/1q5NUyaSbti33yjoz4fivNopJ8q3yJqxd/view?usp=sharing"
+						},
+						{
+							"text": "), have demonstrated that recipients of direct cash transfers are more likely to attend better schools and achieve better results than those who don’t receive such benefits (see "
+						},
+						{
+							"text": "Schultz 2001",
+							"href": "https://drive.google.com/file/d/1uOHu9JOPz6ffVB6EIAuXKBHQKd1-eO2V/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Attanasio et al 2006",
+							"href": "https://drive.google.com/file/d/1Fbszsu2T2mcoMV2GAuHdtavh-il7bqDF/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Covarrubias 2012",
+							"href": "https://drive.google.com/file/d/1OEFeYCgxnbbrFVNFoYYQsSrnmVxZdz9v/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Garcia et al 2016",
+							"href": "https://drive.google.com/file/d/1iJDEjcqEN-OD0unY7f1Q-JZMgjT6krxz/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Furthermore, better education and greater financial security allow recipients to more easily refuse exploitative labor practices. Finally, doing work that they enjoy increases recipients’ motivation and success (see "
+						},
+						{
+							"text": "Sutrisno and Sunarsi 2019",
+							"href": "https://drive.google.com/file/d/1b_IV9XvT12jNAP2QhLm0H-95HcrnScBY/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Protection against unforeseen shocks",
+				"description": "Direct cash transfers allow recipients to better deal with unforeseen shocks like extreme climatic events or public health crises.",
+				"paragraphs": [
+					[
+						{
+							"text": "Studies carried out by the World Bank have shown that direct cash transfers foster people's resilience to the adverse effects of external shocks by lowering income risks and facilitating savings. Direct cash transfers also contribute to helping children stay in class in times of crisis, which often lead to a drop in attendance (see "
+						},
+						{
+							"text": "Finan et al 2004",
+							"href": "https://drive.google.com/file/d/1qlAzeM-R_xH4zT92HxT1M0eq3O8MShDt/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Premand and Stoeffler 2020",
+							"href": "https://drive.google.com/file/d/1_wjxwljgd65Y-ptxahaWxcsdJwC5SBHH/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "During the recent Covid-19 pandemic, researchers also found that direct cash transfers both reduced poverty as well as enabled unemployed recipients to look for work. Those who received payments could be more active and engaged in society, which ultimately aids labor market recovery (see "
+						},
+						{
+							"text": "Köhler and Bhorat 2021",
+							"href": "https://drive.google.com/file/d/1qwtorYiGsHG3n4i6cxFIbU8H4DHNmUAR/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "In addition, a recent study suggests that direct cash transfers may even reduce deforestation because recipients do not have any need to insure themselves by earning money through forest clearing work ("
+						},
+						{
+							"text": "Ferraro and Simorangkir 2020",
+							"href": "https://drive.google.com/file/d/1PTjFxP39mtjSutkup-wXBL_JGUbqVmq_/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Empowerment of women",
+				"description": "By enabling them to make freer decisions, direct cash transfers help women become more resilient, self-reliant, and involved in society.",
+				"paragraphs": [
+					[
+						{
+							"text": "Evidence suggests that especially from a long-term perspective, direct cash transfers help women make freer decisions in contexts where social or familial structures would otherwise limit their financial independence (see "
+						},
+						{
+							"text": "Plagerson and Ulriksen 2015",
+							"href": "https://drive.google.com/file/d/1IgycTY0sID-jxZ7Sw3-UYqQZa3ORzvuW/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Iqbal et al 2021",
+							"href": "https://drive.google.com/file/d/1-7WWiwGYDXRYddq3B2IGSnTvkCnmxzje/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "A large body of research further suggests that cash transfer programs help decrease physical and emotional violence against women in domestic partnerships (see "
+						},
+						{
+							"text": "Perova and Vakis 2013",
+							"href": "https://drive.google.com/file/d/1fEM834PcOLC5qvOLvw1-mnhKgWHA4wPX/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Buller et al 2018",
+							"href": "https://drive.google.com/file/d/14Ga66Oj-8L7JFxAANlptZJCkzu1uOs4Y/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer et al 2019",
+							"href": "https://drive.google.com/file/d/1J3Np833YeKa0GyQQLXAWR8WP3RZt6YQv/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Heath et al 2020",
+							"href": "https://drive.google.com/file/d/1y-KSIJZaDpLGYcIAVmxWOxeqdDMa6y02/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Empowerment of children",
+				"description": "Direct cash transfers empower children by reducing child labor and increasing the inter-generational income.",
+				"paragraphs": [
+					[
+						{
+							"text": "Evidence shows that cash transfers have a positive effect on families, too. They increase the chances of recipients’ children staying healthy (especially girls), receiving an education, and enjoying a safer transition into adulthood, which, as several studies have demonstrated, leads to a higher income as an adult ("
+						},
+						{
+							"text": "Save the children report 2009",
+							"href": "https://drive.google.com/file/d/1dpDPU_O2gCfssbJ3pmIItu3TnT908Tn-/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Covarrubias 2012",
+							"href": "https://drive.google.com/file/d/1OEFeYCgxnbbrFVNFoYYQsSrnmVxZdz9v/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Akresh et al 2016",
+							"href": "https://drive.google.com/file/d/1Iwkads4Sr3-MiBi3_hzHnF1BYaxYDr8J/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Boo and Creamer 2019",
+							"href": "https://drive.google.com/file/d/1lzLamggvPgL_7xF2EIlxm7qShAFdVFJU/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Reduction of crime",
+				"description": "Direct cash transfers reduce the risk of turning to crime as a way to acquire essential goods.",
+				"paragraphs": [
+					[
+						{
+							"text": "Research on the Bolsa Familia program in Brazil, for example, found that an expansion of cash transfers to young people caused a 6.5% reduction in crime in neighborhoods with schools, increasing attendance and allowing young people to worry less about paying for essential goods. In the long run, this also contributed to helping recipients live their lives more freely and with less fear (see "
+						},
+						{
+							"text": "Chioda et al 2016",
+							"href": "https://drive.google.com/file/d/1zrmIYftuzNZe-Lx-0OFs7IEn2E_0R0Jq/view?usp=sharing"
+						},
+						{
+							"text": ", see also "
+						},
+						{
+							"text": "Machado et al 2018",
+							"href": "https://drive.google.com/file/d/15Jz2IAb5_8EL45Q24SlsqQaOXuzYonfD/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Breckin 2019",
+							"href": "https://drive.google.com/file/d/1-ESV8byS_qgd2ye4ZeZsAq7svnb0_RF-/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Fostering of creativity and innovation",
+				"description": "Direct cash transfers stimulate the arts and culture by allowing artists and young entrepreneurs to worry less about basic needs.",
+				"paragraphs": [
+					[
+						{
+							"text": "Direct cash transfers enable entrepreneurs and artists to dedicate themselves to their craft without having to worry about food or basic necessities. In fact, the very first recipients of Social Income were a small cohort of artists in Freetown, Sierra Leone. The group reported that Social Income helped them above all to be more creative in their art practice (see "
+						},
+						{
+							"text": "Thomas 2016",
+							"href": "https://drive.google.com/file/d/1tJOjneX3fZau_ZYm3DnCtaIGy9V6L1m2/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Teer 2020",
+							"href": "https://books.google.com/books/about/COMING_AGE_OF_IMAGINATION.html?id=33-5wgEACAAJ&redir_esc=y"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			}
+		]
+	},
+	"section-4": {
+		"topic": "Well-being",
+		"title": [
+			{ "text": "How does Social Income contribute to " },
+			{ "text": "greater well-being?", "color": "secondary" }
+		],
+		"evidence": "Research shows that direct cash transfers programs like Social Income contribute to recipients’ well-being in three important ways.",
+		"cards": [
+			{
+				"title": "Improvement and protection of health",
+				"description": "Direct cash transfers allow recipients to buy medicine and hygiene products that they otherwise couldn’t afford.",
+				"paragraphs": [
+					[
+						{
+							"text": "One study has shown that a direct cash transfer program led to significantly better health for participants in the short term (18 months) and even more so in the long term (7 to 10 years) (see "
+						},
+						{
+							"text": "Banerjee et at 2021",
+							"href": "https://drive.google.com/file/d/1cmOQi1z3DlQaEmvFEBfIHmXgMN4if3Tx/view?usp=sharing"
+						},
+						{
+							"text": "). Another study ("
+						},
+						{
+							"text": "Baird et al 2016",
+							"href": "https://drive.google.com/file/d/1d8f-DixZ1YOE7nsbFtlBG7dETXFbnUAd/view?usp=sharing"
+						},
+						{
+							"text": ") further showed that cash transfer programs reduced HIV prevalence and the rate of teen pregnancy (see also "
+						},
+						{
+							"text": "Nery et al 2017",
+							"href": "https://drive.google.com/file/d/1wjoTvq_XHoMg5q1gelpCufm9qWBWrKUx/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Okeke and Abubakar 2020",
+							"href": "https://drive.google.com/file/d/1QYAF2ocBzQKjewye69WYy2MDLN80ClWW/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Emotional well-being",
+				"description": "Direct cash transfers can break the vicious circle of poverty-induced mental health problems.",
+				"paragraphs": [
+					[
+						{
+							"text": "Many studies have shown that poverty leads to stress, which over time can cause severe mental illness (see "
+						},
+						{
+							"text": "Hammen 2005",
+							"href": "https://drive.google.com/file/d/1-CIQdKuc96fO9rIjU-pPYhjdTxssuHEi/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer and Fehr 2014",
+							"href": "https://drive.google.com/file/d/1eVKh2KA_xqAckBaYMg6Rp9ws9OeiEWo4/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer and Shapiro 2016",
+							"href": "https://drive.google.com/file/d/11NkzvnwyGKi3EEJRx3pGHoOwsEftmXUJ/view?usp=sharing"
+						},
+						{
+							"text": "). In parallel, poor mental health may affect labor market participation and productivity, and thus exacerbate someone's experienced level of poverty ("
+						},
+						{
+							"text": "Biasi et al 2019",
+							"href": "https://drive.google.com/file/d/1fcYgy2H66VNpIRpqPPKynB5aIpDKgyEX/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Researchers at Princeton University provide evidence that direct cash transfers can break this vicious circle: they help alleviate the stress and depression that often come with living in poverty ("
+						},
+						{
+							"text": "Haushofer et al 2020",
+							"href": "https://drive.google.com/file/d/1efsdQk4tY4_g7bbpVZcMvEbwIDOv7IjP/view?usp=sharing"
+						},
+						{
+							"text": ", see also "
+						},
+						{
+							"text": "Samuels and Stavropoulou 2016",
+							"href": "https://drive.google.com/file/d/1ImB0ADXWXKyR31B-AYOMiCyKRCU1Bht1/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Kilburn et al 2016",
+							"href": "https://drive.google.com/file/d/1mtUBaD6vMC4_n5pR-ygwZHI3N1B52eg8/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Food Security",
+				"description": "Direct cash transfers significantly improve recipients’ diets and nutrition.",
+				"paragraphs": [
+					[
+						{
+							"text": "Many studies have found that direct cash transfers have two important effects on recipients’ food security. First, it increases access to better quality food. Second, it indirectly helps improve people's knowledge about a healthy diet, cooking methods, and the safe handling of food. These two aspects combined improve recipients’ diets and nutrition in a significant way (see "
+						},
+						{
+							"text": "Gitter and Caldes 2010",
+							"href": "https://drive.google.com/file/d/1Wcf0QM1NSGyLQSrFQU1H89JpBoWgY0qz/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Miller et al 2011",
+							"href": "https://drive.google.com/file/d/1QPRopxSVxciuC3waoExX5rzEzv5ArTkx/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Burchi et al 2018",
+							"href": "https://drive.google.com/file/d/1P-7ajyyh-7p5l5QtrP6R0jC2nOfQxkWR/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Hidrobo et al 2018",
+							"href": "https://drive.google.com/file/d/1ckppauMz4yPe_XF_NMW-qOo2Cv77MNGp/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer et al 2020",
+							"href": "https://drive.google.com/file/d/1efsdQk4tY4_g7bbpVZcMvEbwIDOv7IjP/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			}
+		]
+	}
+}

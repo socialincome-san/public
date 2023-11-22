@@ -67,7 +67,7 @@ function AnalyticsProviderWrapper({ children }: PropsWithChildren) {
 				setConsent(getAnalyticsCookieConsent('denied'));
 			}
 		}
-	}, [allowTracking]);
+	}, [app, allowTracking]);
 
 	return (
 		<>
