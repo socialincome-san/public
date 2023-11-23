@@ -10,7 +10,7 @@ import { InfoCard } from './info-card';
 import { SectionProps } from './page';
 
 export async function Section4({ params, paymentStats, contributionStats }: SectionProps) {
-	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-transparency'] });
+	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-finances'] });
 	const paymentFees = _.sumBy(contributionStats.totalPaymentFeesByIsInstitution, 'amount');
 
 	// TODO: make these dynamic

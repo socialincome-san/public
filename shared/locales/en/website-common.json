@@ -1,4 +1,12 @@
 {
+	"metadata": {
+		"title" : "Social Income",
+		"description" : "Social Income is a non-profit organization that provides unconditional cash transfers to people in need.",
+		"keywords": "Social Income, Basic Income, Unconditional Cash Transfers, Non Profit, NGO",
+		"url" : "https://socialincome.org",
+		"og-image": "/assets/metadata/og/default.jpg",
+		"twitter-image": "/assets/metadata/twitter/default.jpg"
+	},
 	"navigation": {
 		"about-us": "About Us",
 		"about-us-description": "Learn more about Social Income and the people behind it",

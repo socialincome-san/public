@@ -6,7 +6,7 @@ import { InfoCard } from './info-card';
 import { SectionProps } from './page';
 
 export async function Section2({ params, contributionStats, paymentStats }: SectionProps) {
-	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-transparency'] });
+	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-finances'] });
 	const paymentFees = _.sumBy(contributionStats.totalPaymentFeesByIsInstitution, 'amount');
 
 	// TODO: Calculate these costs dynamically

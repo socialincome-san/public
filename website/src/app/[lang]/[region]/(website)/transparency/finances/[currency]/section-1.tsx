@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { SectionProps } from './page';
 
 export async function Section1({ params, paymentStats, contributionStats }: SectionProps) {
-	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-transparency'] });
+	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-finances'] });
 
 	const cards = [
 		translator.t('section-1.totalPayments', {

@@ -1,5 +1,10 @@
-import { redirect } from 'next/navigation';
+'use client';
 
-export default async function Page() {
-	redirect('./me/payments');
+import { redirect } from 'next/navigation';
+import { useEffect } from 'react';
+
+export default function Page() {
+	useEffect(() => {
+		redirect('./me/payments');
+	}, []);
 }

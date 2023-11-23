@@ -1,4 +1,7 @@
 {
+	"metadata": {
+		"title": "Finanzen | Social Income"
+	},
 	"amount": "{{ value, currency }}",
 	"section-1": {
 		"title-1": "Transparenz schafft Vertrauen.",

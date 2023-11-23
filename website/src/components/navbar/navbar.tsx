@@ -68,7 +68,7 @@ export default async function Navbar({ lang, region, showNavigation = true }: Na
 						},
 						{
 							title: translator.t('navigation.evidence'),
-							href: `/${lang}/${region}/evidence`,
+							href: `/${lang}/${region}/transparency/evidence`,
 							description: translator.t('navigation.evidence-description'),
 						},
 					],

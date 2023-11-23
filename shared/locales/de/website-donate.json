@@ -1,4 +1,7 @@
 {
+	"metadata": {
+		"title": "Mein Beitrag | Social Income"
+	},
 	"amount-currency": "{{ amount, currency }}",
 	"title": "Was ist dein durchschnittliches monatliches Einkommen?",
 	"how-to-pay": "Wie möchtest du bezahlen?",
