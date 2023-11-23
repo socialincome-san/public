@@ -28,9 +28,12 @@ const partials = [
 ];
 partials.forEach((partial) => Handlebars.registerPartial(partial.name, readHbs(partial.path)));
 
-export const renderTemplate = async (
-	{ language, translationNamespace = [], hbsTemplatePath, context }: RenderTemplateProps,
-) => {
+export const renderTemplate = async ({
+	language,
+	translationNamespace = [],
+	hbsTemplatePath,
+	context,
+}: RenderTemplateProps) => {
 	const i18n = i18next.createInstance();
 	await i18n
 		.use(
