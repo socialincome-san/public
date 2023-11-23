@@ -4,7 +4,12 @@ import { Contact } from '@/app/[lang]/[region]/(website)/about-us/(sections)/con
 import { FlowOfFunds } from '@/app/[lang]/[region]/(website)/about-us/(sections)/flow-of-funds';
 import { OurMission } from '@/app/[lang]/[region]/(website)/about-us/(sections)/our-mission';
 import Team from '@/app/[lang]/[region]/(website)/about-us/(sections)/team';
+import { getMetadata } from '@/metadata';
 import LandingPage from './(sections)/landing-page';
+
+export async function generateMetadata({ params }: DefaultPageProps) {
+	return getMetadata(params.lang, 'website-about-us');
+}
 
 export default async function Page({ params: { lang } }: DefaultPageProps) {
 	return (

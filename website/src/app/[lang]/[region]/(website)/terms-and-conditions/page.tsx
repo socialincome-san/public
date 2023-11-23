@@ -2,6 +2,14 @@ import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
+export async function generateMetadata({ params }: DefaultPageProps) {
+	const translator = await Translator.getInstance({
+		language: params.lang,
+		namespaces: ['website-terms-and-conditions'],
+	});
+	return { title: translator.t('metadata.title') };
+}
+
 export default async function Page({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
 		language: params.lang,

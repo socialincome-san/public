@@ -1,4 +1,7 @@
 {
+	"metadata": {
+		"title": "Mein Profil | Social Income"
+	},
 	"sections": {
 		"account": {
 			"title": "My Account",
@@ -42,6 +45,9 @@
 		}
 	},
 	"login": {
+		"metadata": {
+			"title": "Login | Social Income"
+		},
 		"title": "Melde dich an",
 		"email": "E-Mail",
 		"invalid-email": "Ungültige E-Mail-Adresse",

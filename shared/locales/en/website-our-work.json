@@ -1,4 +1,10 @@
 {
+	"metadata": {
+		"title": "Our Work | Social Income",
+		"description": "Our work is made possible by you.",
+		"og-image": "/assets/metadata/og/our-work-en.jpg",
+		"twitter-image": "/assets/metadata/twitter/our-work-en.jpg"
+	},
 	"our-work": {
 		"title-1": "Our work is made possible by you. Make a ",
 		"title-2": "change with us.",

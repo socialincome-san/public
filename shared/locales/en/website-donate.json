@@ -1,4 +1,7 @@
 {
+	"metadata": {
+		"title": "My Contribution | Social Income"
+	},
 	"amount-currency": "{{ amount, currency }}",
 	"title": "What's your average monthly income?",
 	"how-to-pay": "How would you like to pay?",

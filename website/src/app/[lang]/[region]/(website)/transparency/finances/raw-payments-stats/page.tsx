@@ -1,14 +1,15 @@
-import { TransparencyPageProps } from '@/app/[lang]/[region]/(website)/transparency/finances/[currency]/page';
 import { firestoreAdmin } from '@/firebase-admin';
 import { PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
-import { BaseContainer, Card, Typography } from '@socialincome/ui';
+import { Card, Typography } from '@socialincome/ui';
 
-export default async function Page({ params }: TransparencyPageProps) {
+export const revalidate = 3600; // update once an hour
+
+export default async function Page() {
 	const paymentCalculator = await PaymentStatsCalculator.build(firestoreAdmin, 'CHF');
 	const paymentStats = paymentCalculator.allStats();
 
 	return (
-		<BaseContainer className="flex flex-col space-y-2 py-8">
+		<div className="flex flex-col space-y-2 py-8">
 			<Typography size="xl" weight="bold">
 				Total payments amount: {paymentStats.totalPaymentsAmount.toFixed(2)}
 			</Typography>
@@ -33,6 +34,6 @@ export default async function Page({ params }: TransparencyPageProps) {
 					</Card>
 				))}
 			</div>
-		</BaseContainer>
+		</div>
 	);
 }
