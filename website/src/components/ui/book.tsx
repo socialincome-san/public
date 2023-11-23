@@ -15,9 +15,18 @@ type BookProps = {
 	currentlyReading?: boolean;
 };
 
-export default async function Book(
-	{ cover, author, authorLink, title, description, quote, publisher, publisherLink, year, currentlyReading }: BookProps,
-) {
+export default async function Book({
+	cover,
+	author,
+	authorLink,
+	title,
+	description,
+	quote,
+	publisher,
+	publisherLink,
+	year,
+	currentlyReading,
+}: BookProps) {
 	return (
 		<Card className="flex flex-col sm:flex-row">
 			<div className="w-fit basis-2/5 self-center">

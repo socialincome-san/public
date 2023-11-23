@@ -41,9 +41,13 @@ type I18nDialogProps = {
 	};
 };
 
-export function I18nDialog(
-	{ languages, regions, currencies, translations, children }: PropsWithChildren<I18nDialogProps>,
-) {
+export function I18nDialog({
+	languages,
+	regions,
+	currencies,
+	translations,
+	children,
+}: PropsWithChildren<I18nDialogProps>) {
 	const [open, setOpen] = useState(false);
 	const { language, setLanguage, region, setRegion, currency, setCurrency } = useI18n();
 
