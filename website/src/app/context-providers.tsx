@@ -8,6 +8,7 @@ import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { initializeAnalytics } from '@firebase/analytics';
 import { DEFAULT_REGION } from '@socialincome/shared/src/firebase';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Analytics } from '@vercel/analytics/react';
 import { ConsentSettings, ConsentStatusString, setConsent } from 'firebase/analytics';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
@@ -71,6 +72,7 @@ function AnalyticsProviderWrapper({ children }: PropsWithChildren) {
 
 	return (
 		<>
+			<Analytics />
 			{allowTracking ? (
 				<>
 					<FacebookTracking />
@@ -100,22 +102,22 @@ function FirebaseSDKProviders({ children }: PropsWithChildren) {
 	const functionsEmulatorPort = Number(process.env.NEXT_PUBLIC_FIREBASE_FUNCTIONS_EMULATOR_PORT);
 
 	if (authEmulatorUrl && !connectAuthEmulatorCalled) {
-		console.log('Using auth emulator');
+		console.debug('Using auth emulator');
 		connectAuthEmulator(auth, authEmulatorUrl, { disableWarnings: true });
 		connectAuthEmulatorCalled = true;
 	}
 	if (firestoreEmulatorHost && firestoreEmulatorPort && !connectFirestoreEmulatorCalled) {
-		console.log('Using firestore emulator');
+		console.debug('Using firestore emulator');
 		connectFirestoreEmulator(firestore, firestoreEmulatorHost, firestoreEmulatorPort);
 		connectFirestoreEmulatorCalled = true;
 	}
 	if (storageEmulatorHost && storageEmulatorPort && !connectStorageEmulatorCalled) {
-		console.log('Using storage emulator');
+		console.debug('Using storage emulator');
 		connectStorageEmulator(storage, storageEmulatorHost, storageEmulatorPort);
 		connectStorageEmulatorCalled = true;
 	}
 	if (functionsEmulatorHost && functionsEmulatorPort && connectFunctionsEmulatorCalled) {
-		console.log('Using functions emulator');
+		console.debug('Using functions emulator');
 		connectFunctionsEmulator(functions, functionsEmulatorHost, functionsEmulatorPort);
 		connectFunctionsEmulatorCalled = true;
 	}
