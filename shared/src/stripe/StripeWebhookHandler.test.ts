@@ -355,6 +355,7 @@ describe('stripeWebhook', () => {
 		payment_method_details: {
 			card: {
 				brand: 'mastercard',
+				amount_authorized: null,
 				checks: {
 					address_line1_check: null,
 					address_postal_code_check: null,
