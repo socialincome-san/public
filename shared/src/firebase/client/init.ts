@@ -17,18 +17,16 @@ interface InitializeFirebaseClientProps {
 	functionsEmulatorPort?: number;
 }
 
-export const initializeFirebaseClient = (
-	{
-		firebaseConfig,
-		authEmulatorUrl,
-		firestoreEmulatorHost,
-		firestoreEmulatorPort,
-		storageEmulatorHost,
-		storageEmulatorPort,
-		functionsEmulatorHost,
-		functionsEmulatorPort,
-	}: InitializeFirebaseClientProps,
-) => {
+export const initializeFirebaseClient = ({
+	firebaseConfig,
+	authEmulatorUrl,
+	firestoreEmulatorHost,
+	firestoreEmulatorPort,
+	storageEmulatorHost,
+	storageEmulatorPort,
+	functionsEmulatorHost,
+	functionsEmulatorPort,
+}: InitializeFirebaseClientProps) => {
 	const app = getOrInitializeFirebaseClientApp(firebaseConfig);
 	const auth = getAuth(app);
 	const functions = getFunctions(app, DEFAULT_REGION);
@@ -37,19 +35,19 @@ export const initializeFirebaseClient = (
 
 	if (authEmulatorUrl) {
 		connectAuthEmulator(auth, authEmulatorUrl, { disableWarnings: true });
-		console.log('Using auth emulator');
+		console.debug('Using auth emulator');
 	}
 	if (firestoreEmulatorHost && firestoreEmulatorPort) {
 		connectFirestoreEmulator(firestore, firestoreEmulatorHost, firestoreEmulatorPort);
-		console.log('Using firestore emulator');
+		console.debug('Using firestore emulator');
 	}
 	if (storageEmulatorHost && storageEmulatorPort) {
 		connectStorageEmulator(storage, storageEmulatorHost, storageEmulatorPort);
-		console.log('Using storage emulator');
+		console.debug('Using storage emulator');
 	}
 	if (functionsEmulatorHost && functionsEmulatorPort) {
 		connectFunctionsEmulator(functions, functionsEmulatorHost, functionsEmulatorPort);
-		console.log('Using functions emulator');
+		console.debug('Using functions emulator');
 	}
 
 	return { app, auth, firestore, functions, storage };
