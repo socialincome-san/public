@@ -11,7 +11,7 @@ export default function Page() {
 					404 – Page not found
 				</Typography>
 				<Typography size="2xl" weight="bold" className="mt-16">
-					We couldn't find the page you were looking for.
+					{"We couldn't find the page you were looking for."}
 				</Typography>
 				<Link href="/">
 					<Button variant="link">Go back to the homepage</Button>
