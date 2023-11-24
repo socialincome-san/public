@@ -3,7 +3,6 @@ import "package:app/data/repositories/repositories.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 
 const String paymentCollection = "payments";
-const String kUpdatedByAppUser = "app user";
 
 class PaymentRepository {
   final FirebaseFirestore firestore;
@@ -37,16 +36,12 @@ class PaymentRepository {
   }
 
   /// This updates the payment status to confirmed
-  /// and also sets lastUpdatedAt and lastUpdatedBy to the
-  /// current time and recipient
   Future<void> confirmPayment({
     required Recipient recipient,
     required SocialIncomePayment payment,
   }) async {
     final updatedPayment = payment.copyWith(
       status: PaymentStatus.confirmed,
-      updatedBy: "${recipient.userId}",
-      updatedAt: Timestamp.now(),
     );
 
     await firestore
@@ -65,8 +60,6 @@ class PaymentRepository {
     final updatedPayment = payment.copyWith(
       status: PaymentStatus.contested,
       comments: contestReason,
-      updatedBy: "${recipient.userId}",
-      updatedAt: Timestamp.now(),
     );
 
     await firestore
