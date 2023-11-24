@@ -8,7 +8,7 @@ part "social_income_payment.g.dart";
 @JsonSerializable()
 @TimestampConverter()
 class SocialIncomePayment extends Equatable {
-  @JsonKey(defaultValue: "")
+  @JsonKey(defaultValue: "", includeToJson: false)
   final String id;
   final int? amount;
 

@@ -15,7 +15,7 @@ part "recipient.g.dart";
 @DocumentReferenceConverter()
 @DateTimeConverter()
 class Recipient extends Equatable {
-  @JsonKey(name: "user_id", defaultValue: "")
+  @JsonKey(name: "user_id", defaultValue: "", includeToJson: false)
   final String userId;
 
   @JsonKey(name: "communication_mobile_phone")

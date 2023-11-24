@@ -54,7 +54,7 @@ class PaymentRepository {
         .doc(recipient.userId)
         .collection(paymentCollection)
         .doc(payment.id)
-        .set(updatedPayment.toJson());
+        .update(updatedPayment.toJson());
   }
 
   Future<void> contestPayment({
@@ -74,6 +74,6 @@ class PaymentRepository {
         .doc(recipient.userId)
         .collection(paymentCollection)
         .doc(payment.id)
-        .set(updatedPayment.toJson());
+        .update(updatedPayment.toJson());
   }
 }

@@ -41,7 +41,6 @@ Recipient _$RecipientFromJson(Map<String, dynamic> json) => Recipient(
     );
 
 Map<String, dynamic> _$RecipientToJson(Recipient instance) => <String, dynamic>{
-      'user_id': instance.userId,
       'communication_mobile_phone': instance.communicationMobilePhone?.toJson(),
       'mobile_money_phone': instance.mobileMoneyPhone?.toJson(),
       'paymentProvider': instance.paymentProvider,
