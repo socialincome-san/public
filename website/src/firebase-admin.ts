@@ -26,6 +26,6 @@ export const getUserDocFromAuthToken = async (token: string | undefined) => {
 	if (!token) return undefined;
 	const decodedToken = await authAdmin.auth.verifyIdToken(token, true);
 	return await firestoreAdmin.findFirst<User>(USER_FIRESTORE_PATH, (q) =>
-		q.where('authUserId', '==', decodedToken.uid),
+		q.where('auth_user_id', '==', decodedToken.uid),
 	);
 };

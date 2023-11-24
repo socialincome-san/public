@@ -39,7 +39,7 @@ export class StripeEventHandler {
 		if (customer.deleted) throw Error(`Dealing with a deleted Stripe customer (id=${customer.id})`);
 		const userRef = await this.getOrCreateUser(customer);
 		const user = await userRef.get();
-		await this.firestoreAdmin.doc<User>(USER_FIRESTORE_PATH, user.id).update({ authUserId });
+		await this.firestoreAdmin.doc<User>(USER_FIRESTORE_PATH, user.id).update({ auth_user_id: authUserId });
 	};
 
 	/**

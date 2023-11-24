@@ -35,6 +35,7 @@ export default async function Page({ params: { lang, region }, searchParams }: D
 							invalidEmail: 'Invalid email',
 							password: 'Password',
 							passwordValidation: 'Confirm password',
+							passwordsMismatch: 'Passwords do not match',
 							submitButton: 'Sign Up',
 						}}
 					/>

@@ -80,7 +80,7 @@ export const usersCollection = buildAuditedCollection<User>({
 			validation: { required: true },
 			dataType: 'string',
 		},
-		authUserId: {
+		auth_user_id: {
 			name: 'Auth User Id',
 			dataType: 'string',
 			readOnly: true,

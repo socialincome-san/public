@@ -18,5 +18,11 @@
 		"en": "Englisch",
 		"fr": "Französisch",
 		"kri": "Krio"
+	},
+	"gender": "Geschlecht",
+	"genders": {
+		"male": "Männlich",
+		"female": "Weiblich",
+		"other": "Neutrale Anrede"
 	}
 }

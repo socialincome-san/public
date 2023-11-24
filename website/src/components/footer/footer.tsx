@@ -4,7 +4,6 @@ import { SILogo } from '@/components/logos/si-logo';
 import { WebsiteLanguage, websiteRegions } from '@/i18n';
 import {
 	BriefcaseIcon,
-	EnvelopeIcon,
 	InformationCircleIcon,
 	ShieldCheckIcon,
 	UserCircleIcon,
@@ -35,7 +34,6 @@ function FooterLink({ label, url, Icon, target = '_self' }: FooterLinkProps) {
 	);
 }
 
-// TODO: i18n
 export default async function Footer({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
@@ -67,9 +65,8 @@ export default async function Footer({ lang, region }: DefaultParams) {
 				<div className="grid grid-cols-2 gap-8 md:grid-cols-4">
 					<div className="flex flex-col space-y-1">
 						<Typography className="mb-2" size="lg" weight="medium" color="muted-foreground">
-							Connect
+							{translator.t('footer.follow-us')}
 						</Typography>
-						<FooterLink Icon={EnvelopeIcon} label="Email" url="mailto:hello@socialincome.org" />
 						<FooterLink
 							Icon={SiInstagram}
 							label="Instagram"
@@ -95,39 +92,66 @@ export default async function Footer({ lang, region }: DefaultParams) {
 							url="https://github.com/socialincome-san/public"
 							target="_blank"
 						/>
-						{/*<FooterLink Icon={EnvelopeOpenIcon} label="Newsletter" url={`/${lang}/${region}/updates`} target="_blank" />*/}
 					</div>
 					<div className="flex flex-col space-y-1">
 						<Typography className="mb-2" size="lg" weight="medium" color="muted-foreground">
-							Resources
+							{translator.t('footer.resources')}
 						</Typography>
-						<FooterLink Icon={InformationCircleIcon} label="FAQ" url={`/${lang}/${region}/faq`} />
-						<FooterLink Icon={UserCircleIcon} label="Account" url={`/${lang}/${region}/login`} />
-						<FooterLink Icon={ShieldCheckIcon} label="Privacy Policy" url={`/${lang}/${region}/privacy`} />
-						<FooterLink Icon={BriefcaseIcon} label="Terms of Use" url={`/${lang}/${region}/terms-of-use`} />
+						<FooterLink
+							Icon={InformationCircleIcon}
+							label={translator.t('navigation.faq')}
+							url={`/${lang}/${region}/faq`}
+						/>
+						<FooterLink
+							Icon={UserCircleIcon}
+							label={translator.t('navigation.my-profile')}
+							url={`/${lang}/${region}/login`}
+						/>
+						<FooterLink
+							Icon={ShieldCheckIcon}
+							label={translator.t('navigation.privacy-policy')}
+							url={`/${lang}/${region}/privacy`}
+						/>
+						<FooterLink
+							Icon={BriefcaseIcon}
+							label={translator.t('navigation.terms-of-use')}
+							url={`/${lang}/${region}/terms-of-use`}
+						/>
 						<FooterLink
 							Icon={UserGroupIcon}
-							label="Terms and conditions"
+							label={translator.t('navigation.terms-and-conditions')}
 							url={`/${lang}/${region}/terms-and-conditions`}
 						/>
 					</div>
 					<div className="flex flex-col space-y-1">
 						<Typography className="mb-2" size="lg" weight="medium" color="muted-foreground">
-							Our Work
+							{translator.t('footer.our-work')}
 						</Typography>
-						<FooterLink label="How It Works" url={`/${lang}/${region}/our-work#how-it-works`} />
-						<FooterLink label="Contributors" url={`/${lang}/${region}/our-work#contributors`} />
-						<FooterLink label="Recipients" url={`/${lang}/${region}/our-work#recipients`} />
-						<FooterLink label="What's Next" url={`/${lang}/${region}/our-work#whats-next`} />
+						<FooterLink
+							label={translator.t('navigation.how-it-works')}
+							url={`/${lang}/${region}/our-work#how-it-works`}
+						/>
+						<FooterLink
+							label={translator.t('navigation.contributors')}
+							url={`/${lang}/${region}/our-work#contributors`}
+						/>
+						<FooterLink label={translator.t('navigation.recipients')} url={`/${lang}/${region}/our-work#recipients`} />
+						<FooterLink label={translator.t('navigation.whats-next')} url={`/${lang}/${region}/our-work#whats-next`} />
 					</div>
 					<div className="flex flex-col space-y-1">
 						<Typography className="mb-2" size="lg" weight="medium" color="muted-foreground">
-							About us
+							{translator.t('footer.about-us')}
 						</Typography>
-						<FooterLink label="Our Mission" url={`/${lang}/${region}/about-us#our-mission`} />
-						<FooterLink label="100% Model" url={`/${lang}/${region}/about-us#100-percent-model`} />
-						<FooterLink label="Team" url={`/${lang}/${region}/about-us#team`} />
-						<FooterLink label="Contact" url={`/${lang}/${region}/about-us#contact`} />
+						<FooterLink
+							label={translator.t('navigation.our-mission')}
+							url={`/${lang}/${region}/about-us#our-mission`}
+						/>
+						<FooterLink
+							label={translator.t('navigation.100-percent-model')}
+							url={`/${lang}/${region}/about-us#100-percent-model`}
+						/>
+						<FooterLink label={translator.t('navigation.team')} url={`/${lang}/${region}/about-us#team`} />
+						<FooterLink label={translator.t('navigation.contact')} url={`/${lang}/${region}/about-us#contact`} />
 					</div>
 				</div>
 				<div className="flex flex-col md:hidden">

@@ -17,6 +17,7 @@ type CreateUserFormProps = {
 		email: string;
 		password: string;
 		passwordValidation: string;
+		passwordsMismatch: string;
 		submitButton: string;
 		invalidEmail: string;
 	};
@@ -30,17 +31,21 @@ export function CreateUserForm({ checkoutSessionId, email, onSuccessURL, transla
 		.object({
 			email: z.string().email({ message: translations.invalidEmail }),
 			password: z.string().min(8),
-			passwordValidation: z.string().min(8),
+			passwordConfirmation: z.string(),
 		})
-		.refine((data) => data.password === data.passwordValidation, {
-			message: 'Passwords do not match',
-			path: ['passwordValidation'],
+		.superRefine((data, ctx) => {
+			if (data.password !== data.passwordConfirmation)
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: translations.passwordsMismatch,
+					path: ['passwordConfirmation'],
+				});
 		});
 
 	type FormSchema = z.infer<typeof formSchema>;
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
-		defaultValues: { email: email, password: '', passwordValidation: '' },
+		defaultValues: { email: email, password: '', passwordConfirmation: '' },
 	});
 
 	const onSubmit = async (values: FormSchema) => {
@@ -87,7 +92,7 @@ export function CreateUserForm({ checkoutSessionId, email, onSuccessURL, transla
 				/>
 				<FormField
 					control={form.control}
-					name="passwordValidation"
+					name="passwordConfirmation"
 					render={({ field }) => (
 						<FormItem>
 							<FormControl>

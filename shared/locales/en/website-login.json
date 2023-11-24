@@ -1,0 +1,18 @@
+{
+	"metadata": {
+		"title": "Login | Social Income"
+	},
+	"title": "Sign in to your account",
+	"email": "Email",
+	"invalid-email": "Invalid email address",
+	"password": "Password",
+	"required-field": "This field is required",
+	"submit-button": "Sign in",
+	"invalid-user-or-password": "Invalid email or password",
+	"reset-password-button": "Forgot password?",
+	"reset-password-title": "Reset your password",
+	"reset-password-text": "Enter your email address and we will send you a link to reset your password.",
+	"reset-password-toast-message": "You should have received an email with a link to reset your password.",
+	"reset-password-submit-button": "Send reset link",
+	"sign-in-with-google": "Sign in with Google"
+}

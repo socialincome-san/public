@@ -14,7 +14,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: 'website-me' });
 
 	return (
-		<BaseContainer>
+		<BaseContainer className="pb-8">
 			<UserContextProvider>
 				<LayoutClient
 					params={params}

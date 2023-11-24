@@ -4,14 +4,14 @@
 	},
 	"sections": {
 		"account": {
-			"title": "My Account",
-			"personal-info": "Personal Info",
-			"security": "Security"
+			"title": "Mein Profil",
+			"personal-info": "Kontaktangaben",
+			"security": "Sicherheit"
 		},
 		"contributions": {
-			"title": "My Contributions",
-			"payments": "Payments",
-			"subscriptions": "Subscriptions"
+			"title": "Meine Spenden",
+			"payments": "Zahlungen",
+			"subscriptions": "Abonnemente"
 		}
 	},
 	"contributions": {
@@ -42,22 +42,36 @@
 			"active": "Aktiv",
 			"canceled": "Beendet",
 			"paused": "Pausiert"
-		}
-	},
-	"login": {
-		"metadata": {
-			"title": "Login | Social Income"
 		},
-		"title": "Melde dich an",
-		"email": "E-Mail",
-		"invalid-email": "Ungültige E-Mail-Adresse",
-		"password": "Passwort",
-		"forgot-password": "Passwort vergessen?",
-		"sign-in-with-google": "Mit Google anmelden",
-		"required-field": "Dieses Feld ist erforderlich",
-		"submit-button": "Anmelden",
-		"unknown-user": "Es gibt keinen Benutzer mit dieser E-Mail-Adresse",
-		"wrong-password": "Das Passwort ist falsch"
+		"manage-subscriptions": "Abonnemente verwalten"
 	},
-	"sign-out": "Abmelden"
+	"personal-info": {
+		"firstname": "Vorname",
+		"lastname": "Nachname",
+		"gender": "Geschlecht",
+		"email": "E-Mail",
+		"street": "Strasse",
+		"street-number": "Nummer",
+		"city": "Ort",
+		"zip": "PLZ",
+		"country": "Land",
+		"language": "Kommunikationssprache",
+		"submit-button": "Kontaktangaben aktualisieren",
+		"user-updated-toast": "Deine Kontaktangaben wurden aktualisiert"
+	},
+	"security": {
+		"reset-password": {
+			"title": "Passwort ändern",
+			"password": "Passwort",
+			"password-confirmation": "Passwort bestätigen",
+			"submit-button": "Passwort ändern",
+			"passwords-mismatch": "Die Passwörter stimmen nicht überein",
+			"error-toast": "Ein Fehler ist aufgetreten. Bitte versuche es später noch einmal.",
+			"success-toast": "Dein Passwort wurde geändert. Bitte melde dich mit deinem neuen Passwort an."
+		},
+		"sign-out": {
+			"title": "Möchtest du dich abmelden?",
+			"button": "Abmelden"
+		}
+	}
 }

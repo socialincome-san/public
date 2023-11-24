@@ -1,0 +1,18 @@
+{
+	"metadata": {
+		"title": "Login | Social Income"
+	},
+	"title": "Melde dich an",
+	"email": "E-Mail",
+	"invalid-email": "Ungültige E-Mail-Adresse",
+	"password": "Passwort",
+	"required-field": "Dieses Feld ist erforderlich",
+	"submit-button": "Anmelden",
+	"invalid-user-or-password": "Ungültiges Passwort oder unbekannte E-Mail-Adresse",
+	"reset-password-button": "Passwort vergessen?",
+	"reset-password-title": "Passwort zurücksetzen",
+	"reset-password-text": "Gib deine E-Mail-Adresse ein, um einen Link zum Zurücksetzen deines Passworts zu erhalten.",
+	"reset-password-toast-message": "Du solltest eine E-Mail erhalten haben, um dein Passwort zurückzusetzen.",
+	"reset-password-submit-button": "Link senden",
+	"sign-in-with-google": "Mit Google anmelden"
+}

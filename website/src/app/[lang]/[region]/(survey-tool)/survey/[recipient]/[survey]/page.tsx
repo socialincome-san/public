@@ -52,11 +52,7 @@ export default function Page({ params }: SurveyPageProps) {
 		return (
 			<form className="mx-auto flex max-w-md flex-col space-y-2" method="post" onSubmit={handleSubmit}>
 				<Input name="email" type="text" placeholder="Email" />
-				<Input
-					name="password"
-					type="password"
-					placeholder="Password" // TODO: i18n
-				/>
+				<Input name="password" type="password" placeholder="Password" />
 				<Button type="submit" className="btn btn-primary mx-auto">
 					Save
 				</Button>
