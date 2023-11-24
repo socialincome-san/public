@@ -1,4 +1,4 @@
-import { DefaultLayoutProps, DefaultPageProps } from '@/app/[lang]/[region]/index';
+import { DefaultLayoutProps } from '@/app/[lang]/[region]/index';
 import { CookieConsentBanner } from '@/components/tracking/cookie-consent-banner';
 import { mainWebsiteLanguages, websiteRegions } from '@/i18n';
 import { getMetadata } from '@/metadata';
@@ -9,7 +9,7 @@ import { Toaster } from 'react-hot-toast';
 export const generateStaticParams = () =>
 	websiteRegions.flatMap((region) => mainWebsiteLanguages.map((lang) => ({ lang, region })));
 
-export const generateMetadata = ({ params }: DefaultPageProps) => getMetadata(params.lang, 'website-common');
+export const generateMetadata = ({ params }: DefaultLayoutProps) => getMetadata(params.lang, 'website-common');
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	const translator = await Translator.getInstance({
