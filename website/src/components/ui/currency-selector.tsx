@@ -3,6 +3,7 @@
 import { useI18n } from '@/app/context-providers';
 import { getFlagComponentByCurrency } from '@/components/country-flags';
 import { WebsiteCurrency } from '@/i18n';
+import { isValidCurrency } from '@socialincome/shared/src/types/currency';
 import {
 	FontSize,
 	Select,
@@ -28,7 +29,12 @@ const CurrencySelector = React.forwardRef<HTMLDivElement, CurrencySelectorProps>
 
 		return (
 			<div ref={ref} className={classNames('w-full md:max-w-[12rem]', className)} {...props}>
-				<Select value={currency} onValueChange={(currency: WebsiteCurrency) => setCurrency(currency)}>
+				<Select
+					value={currency}
+					onValueChange={(currency: WebsiteCurrency) => {
+						isValidCurrency(currency) && setCurrency(currency);
+					}}
+				>
 					<SelectTrigger className="h-full">
 						{Flag && <Flag className="h-5 w-5" />}
 						<SelectValue>

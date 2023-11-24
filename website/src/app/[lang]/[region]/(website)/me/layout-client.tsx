@@ -100,7 +100,7 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 					</div>
 				</CollapsibleTrigger>
 				<CollapsibleContent className="-mt-10 mb-12 border-b md:hidden">{isOpen && navigationMenu}</CollapsibleContent>
-				<Typography size="xl" weight="semibold" className="-mt-10 mb-4 md:mt-0">
+				<Typography size="2xl" weight="semibold" className="-mt-10 mb-4 md:mt-0">
 					{title}
 				</Typography>
 				{children}

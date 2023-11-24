@@ -13,7 +13,7 @@ export async function Section4({ params, paymentStats, contributionStats }: Sect
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-finances'] });
 	const paymentFees = _.sumBy(contributionStats.totalPaymentFeesByIsInstitution, 'amount');
 
-	// TODO: make these dynamic
+	// TODO: Calculate these costs dynamically
 	const transactionFees = 7800; // "Exchange rate and currency losses" + "Account fees" + "Transaction fees" (without stripe fees)
 	const operatingCosts = 9300; // "Total operative expenses"
 	const otherCosts = 9600; // "Other project costs"

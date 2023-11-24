@@ -6,8 +6,13 @@ import { useRouter } from 'next/navigation';
 import { useUser } from 'reactfire';
 import Stripe from 'stripe';
 
-// TODO: i18n
-export function BillingPortalButton() {
+type BillingPortalButtonProps = {
+	translations: {
+		manageSubscriptions: string;
+	};
+};
+
+export function BillingPortalButton({ translations }: BillingPortalButtonProps) {
 	const router = useRouter();
 	const { data: authUser } = useUser();
 
@@ -25,7 +30,7 @@ export function BillingPortalButton() {
 
 	return (
 		<Button variant="ghost" size="lg" onClick={() => router.push(billingPortalUrl!)} disabled={!billingPortalUrl}>
-			Manage Subscriptions
+			{translations.manageSubscriptions}
 		</Button>
 	);
 }

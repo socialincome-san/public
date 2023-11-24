@@ -23,7 +23,7 @@ export function UserContextProvider({ children }: PropsWithChildren) {
 		queryFn: async () => {
 			if (authUser?.uid && firestore) {
 				let snapshot = await getDocs(
-					query(collection(firestore, USER_FIRESTORE_PATH), where('authUserId', '==', authUser?.uid)),
+					query(collection(firestore, USER_FIRESTORE_PATH), where('auth_user_id', '==', authUser?.uid)),
 				);
 				if (snapshot.size === 1) {
 					return snapshot.docs[0] as QueryDocumentSnapshot<User>;

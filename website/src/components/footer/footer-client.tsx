@@ -4,24 +4,14 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { useI18n } from '@/app/context-providers';
 import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { GlobeAltIcon, LanguageIcon } from '@heroicons/react/24/solid';
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-} from '@socialincome/ui';
-import { Suspense } from 'react';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@socialincome/ui';
 
 type FooterClientProps = {
 	languages: { code: WebsiteLanguage; translation: string }[];
 	regions: { code: WebsiteRegion; translation: string }[];
 } & DefaultParams;
 
-// TODO: i18n
-function FooterComponent({ lang, region, languages, regions }: FooterClientProps) {
+export function FooterClient({ lang, region, languages, regions }: FooterClientProps) {
 	const { setLanguage, setRegion } = useI18n();
 
 	const initialCountry = regions.find((candidateCountry) => candidateCountry.code === region);
@@ -36,7 +26,6 @@ function FooterComponent({ lang, region, languages, regions }: FooterClientProps
 				</SelectTrigger>
 				<SelectContent>
 					<SelectGroup>
-						<SelectLabel>Language</SelectLabel>
 						{languages.map((supportedLanguage, index) => (
 							<SelectItem key={index} value={supportedLanguage.code}>
 								{supportedLanguage.translation}
@@ -52,7 +41,6 @@ function FooterComponent({ lang, region, languages, regions }: FooterClientProps
 				</SelectTrigger>
 				<SelectContent>
 					<SelectGroup>
-						<SelectLabel>Country</SelectLabel>
 						{regions.map((country, index) => (
 							<SelectItem key={index} value={country.code}>
 								{country.translation}
@@ -62,12 +50,5 @@ function FooterComponent({ lang, region, languages, regions }: FooterClientProps
 				</SelectContent>
 			</Select>
 		</div>
-	);
-}
-export function FooterClient(props: FooterClientProps) {
-	return (
-		<Suspense>
-			<FooterComponent {...props} />
-		</Suspense>
 	);
 }

@@ -106,7 +106,7 @@ describe('Test user access', () => {
 		// Access own user document
 		const userDocsAllowed = await getDoc(doc(userAppAccess, USER_FIRESTORE_PATH, 'cCj3O9gQuopmPZ15JTI0'));
 		expect(userDocsAllowed.exists()).toBe(true);
-		expect(userDocsAllowed.get('authUserId')).toBe('JfPfN1qsdomTcpk9meUh5FnRxY18');
+		expect(userDocsAllowed.get('auth_user_id')).toBe('JfPfN1qsdomTcpk9meUh5FnRxY18');
 
 		// Access other user document (not allowed)
 		await assertFails(getDoc(doc(userAppAccess, USER_FIRESTORE_PATH, 'EgDWTYqz7zNyQ4CdxieW')));

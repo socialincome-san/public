@@ -1,3 +1,22 @@
+import Navbar from '@/components/navbar/navbar';
+import { Button, Typography } from '@socialincome/ui';
+import Link from 'next/link';
+
 export default function Page() {
-	return <div className="text-center text-2xl font-bold text-red-500">{"Where'd you go?"}</div>;
+	return (
+		<div className="theme-dark-blue min-h-screen">
+			<Navbar lang="en" region="int" showNavigation={false} />
+			<main className="text-center">
+				<Typography size="5xl" weight="bold" color="si-yellow">
+					404 – Page not found
+				</Typography>
+				<Typography size="2xl" weight="bold" className="mt-16">
+					We couldn't find the page you were looking for.
+				</Typography>
+				<Link href="/">
+					<Button variant="link">Go back to the homepage</Button>
+				</Link>
+			</main>
+		</div>
+	);
 }

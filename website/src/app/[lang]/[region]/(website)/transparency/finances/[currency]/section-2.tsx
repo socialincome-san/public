@@ -10,9 +10,9 @@ export async function Section2({ params, contributionStats, paymentStats }: Sect
 	const paymentFees = _.sumBy(contributionStats.totalPaymentFeesByIsInstitution, 'amount');
 
 	// TODO: Calculate these costs dynamically
-	const transactionFees = 8600;
-	const operatingCosts = 9300;
-	const otherCosts = 9600;
+	const transactionFees = 7800; // "Exchange rate and currency losses" + "Account fees" + "Transaction fees" (without stripe fees)
+	const operatingCosts = 9300; // "Total operative expenses"
+	const otherCosts = 9600; // "Other project costs"
 	const totalCosts = paymentFees + transactionFees + operatingCosts + otherCosts;
 
 	return (

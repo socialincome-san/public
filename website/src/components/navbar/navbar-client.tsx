@@ -115,7 +115,7 @@ export function NavbarClient({
 									<div key={index}>
 										{_.isEmpty(section.links) && section.href ? (
 											<Link href={section.href} key={index}>
-												<Button variant="ghost" className="text-secondary-foreground py-6">
+												<Button variant="ghost" className="py-6">
 													<Typography size="xl" weight="medium">
 														{section.title}
 													</Typography>
@@ -125,7 +125,7 @@ export function NavbarClient({
 											<HoverCard key={index} openDelay={0} closeDelay={200}>
 												<HoverCardTrigger asChild>
 													<Button variant="ghost" className="flex items-center space-x-2 py-6">
-														<Typography size="xl" weight="medium" className="text-secondary-foreground">
+														<Typography size="xl" weight="medium">
 															{section.title}
 														</Typography>
 														{(section.links?.length ?? 0) > 0 && <ChevronDownIcon className="h-4 w-4" />}
@@ -136,12 +136,7 @@ export function NavbarClient({
 														{section.links?.map((link, index) => (
 															<li key={index} className="hover:bg-accent py-2 pl-10">
 																<Link href={link.href}>
-																	<Typography
-																		size="xl"
-																		weight="medium"
-																		lineHeight="loose"
-																		className="text-secondary-foreground"
-																	>
+																	<Typography size="xl" weight="medium" lineHeight="loose" color="accent-foreground">
 																		{link.title}
 																	</Typography>
 																</Link>
@@ -192,6 +187,7 @@ export function NavbarClient({
 									<Link
 										href={section.href}
 										className="hover:bg-accent flex flex-1 items-center justify-between px-5 py-4 text-lg font-medium md:px-0"
+										onClick={() => setIsOpen(false)}
 									>
 										<span>{section.title}</span>
 									</Link>
@@ -206,7 +202,7 @@ export function NavbarClient({
 										</AccordionTrigger>
 										{section.links?.map((link, index2) => (
 											<AccordionContent key={index2} className="hover:bg-accent px-10 pt-2 text-lg md:px-0">
-												<Link href={link.href} className="mt-2 block">
+												<Link href={link.href} className="mt-2 block" onClick={() => setIsOpen(false)}>
 													{link.title}
 												</Link>
 											</AccordionContent>
@@ -215,7 +211,7 @@ export function NavbarClient({
 								)}
 							</div>
 						))}
-						<Link href={`/${lang}/${region}/me`} className="block">
+						<Link href={`/${lang}/${region}/me`} className="block" onClick={() => setIsOpen(false)}>
 							<div className="hover:bg-accent flex flex-1 items-center justify-between px-5 py-4 text-lg font-medium md:px-0">
 								{translations.myProfile}
 							</div>

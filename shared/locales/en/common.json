@@ -18,5 +18,10 @@
 		"en": "English",
 		"fr": "French",
 		"kri": "Krio"
+	},
+	"genders": {
+		"male": "Male",
+		"female": "Female",
+		"other": "Other"
 	}
 }

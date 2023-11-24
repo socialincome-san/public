@@ -1,5 +1,6 @@
 import { EntityReference } from 'firecms';
 import { capitalizeStringIfUppercase } from '../utils/strings';
+import { CountryCode } from './country';
 import { LanguageCode } from './language';
 
 export const USER_FIRESTORE_PATH = 'users';
@@ -19,15 +20,15 @@ export enum UserReferralSource {
 }
 
 export type UserAddress = {
-	city?: string;
-	country?: string; // TODO: proper typing
-	number?: string;
 	street?: string;
-	zip?: string; // TODO: proper typing (number?)
+	number?: string;
+	city?: string;
+	zip?: number;
+	country?: CountryCode;
 };
 
 export type User = {
-	authUserId?: string;
+	auth_user_id?: string;
 	personal?: {
 		name?: string; // TODO: discuss if should be renamed to firstname
 		lastname?: string;

@@ -1,29 +1,47 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import LoginForm from '@/app/[lang]/[region]/(website)/login/login-form';
+import ResetPasswordDialog from '@/app/[lang]/[region]/(website)/login/reset-password-dialog';
+import { SocialSignInButtons } from '@/app/[lang]/[region]/(website)/login/social-sign-in-buttons';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer } from '@socialincome/ui';
 
 export default async function Page({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-me'] });
+	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-login'] });
 
 	return (
-		<BaseContainer>
+		<div className="mx-auto flex max-w-md flex-col">
 			<LoginForm
 				lang={params.lang}
 				region={params.region}
 				translations={{
-					title: translator.t('login.title'),
-					email: translator.t('login.email'),
-					password: translator.t('login.password'),
-					forgotPassword: translator.t('login.forgot-password'),
-					signInWithGoogle: translator.t('login.sign-in-with-google'),
-					requiredField: translator.t('login.required-field'),
-					invalidEmail: translator.t('login.invalid-email'),
-					submitButton: translator.t('login.submit-button'),
-					unknownUser: translator.t('login.unknown-user'),
-					wrongPassword: translator.t('login.wrong-password'),
+					title: translator.t('title'),
+					email: translator.t('email'),
+					password: translator.t('password'),
+					forgotPassword: translator.t('forgot-password'),
+					invalidEmail: translator.t('invalid-email'),
+					invalidUserOrPassword: translator.t('invalid-user-or-password'),
+					submitButton: translator.t('submit-button'),
 				}}
 			/>
-		</BaseContainer>
+			<div className="self-end">
+				<ResetPasswordDialog
+					translations={{
+						emailPlaceholder: translator.t('email'),
+						invalidEmail: translator.t('invalid-email'),
+						resetPasswordButton: translator.t('reset-password-button'),
+						resetPasswordTitle: translator.t('reset-password-title'),
+						resetPasswordText: translator.t('reset-password-text'),
+						resetPasswordToastMessage: translator.t('reset-password-toast-message'),
+						resetPasswordSubmitButton: translator.t('reset-password-submit-button'),
+					}}
+				/>
+			</div>
+			<SocialSignInButtons
+				lang={params.lang}
+				region={params.region}
+				translations={{
+					signInWithGoogle: translator.t('sign-in-with-google'),
+				}}
+			/>
+		</div>
 	);
 }

@@ -1,25 +1,29 @@
-'use client';
+import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { SignOutButton } from '@/app/[lang]/[region]/(website)/me/security/sign-out-button';
+import UpdatePasswordForm from '@/app/[lang]/[region]/(website)/me/security/update-password-form';
+import { Translator } from '@socialincome/shared/src/utils/i18n';
 
-import { Button, Typography } from '@socialincome/ui';
-import { signOut } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
-import { useAuth } from 'reactfire';
-
-export default function Page() {
-	const router = useRouter();
-	const auth = useAuth();
-
-	const onSignOut = async () => {
-		await signOut(auth);
-		router.push('/');
-	};
-
+export default async function Page({ params }: DefaultPageProps) {
+	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-me'] });
 	return (
-		<div>
-			<Typography size="lg" weight="semibold">
-				Reset password
-			</Typography>
-			<Button onClick={onSignOut}>Sign out</Button>
+		<div className="space-y-12">
+			<UpdatePasswordForm
+				translations={{
+					title: translator.t('security.reset-password.title'),
+					password: translator.t('security.reset-password.password'),
+					passwordConfirmation: translator.t('security.reset-password.password-confirmation'),
+					submitButton: translator.t('security.reset-password.submit-button'),
+					passwordsMismatch: translator.t('security.reset-password.passwords-mismatch'),
+					passwordResetErrorToast: translator.t('security.reset-password.error-toast'),
+					passwordResetSuccessToast: translator.t('security.reset-password.success-toast'),
+				}}
+			/>
+			<SignOutButton
+				translations={{
+					title: translator.t('security.sign-out.title'),
+					buttonText: translator.t('security.sign-out.button'),
+				}}
+			/>
 		</div>
 	);
 }

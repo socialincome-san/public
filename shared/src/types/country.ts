@@ -251,3 +251,4 @@ const COUNTRIES = {
 };
 
 export type CountryCode = keyof typeof COUNTRIES;
+export const COUNTRY_CODES = Object.keys(COUNTRIES) as CountryCode[];

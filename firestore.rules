@@ -64,11 +64,11 @@ service cloud.firestore {
     }
 
     match /users/{data=**} {
-      allow read, write: if request.auth.uid == resource.data.authUserId;
+      allow read, write: if request.auth.uid == resource.data.auth_user_id;
     }
 
     match /users/{userId}/{data=**} {
-      allow read, write: if request.auth.uid == get(/databases/$(database)/documents/users/$(userId)).data.authUserId;
+      allow read, write: if request.auth.uid == get(/databases/$(database)/documents/users/$(userId)).data.auth_user_id;
     }
 
     match /users/{data=**} {

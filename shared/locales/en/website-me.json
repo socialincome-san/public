@@ -42,22 +42,36 @@
 			"active": "Active",
 			"canceled": "Canceled",
 			"paused": "Paused"
-		}
-	},
-	"login": {
-		"metadata": {
-			"title": "Login | Social Income"
 		},
-		"title": "Sign in to your account",
-		"email": "Email",
-		"invalid-email": "Invalid email address",
-		"password": "Password",
-		"forgot-password": "Forgot password?",
-		"sign-in-with-google": "Sign in with Google",
-		"required-field": "This field is required",
-		"submit-button": "Sign in",
-		"unknown-user": "This user does not exist",
-		"wrong-password": "Wrong password"
+		"manage-subscriptions": "Manage Subscriptions"
 	},
-	"sign-out": "Sign out"
+	"personal-info": {
+		"firstname": "First Name",
+		"lastname": "Last Name",
+		"gender": "Gender",
+		"email": "Email",
+		"street": "Street",
+		"street-number": "Number",
+		"city": "City",
+		"zip": "Zip",
+		"country": "Country",
+		"language": "Communication language",
+		"submit-button": "Update Personal Info",
+		"user-updated-toast": "Your personal info has been updated"
+	},
+	"security": {
+		"reset-password": {
+			"title": "Update Password",
+			"password": "Password",
+			"password-confirmation": "Confirm Password",
+			"submit-button": "Update Password",
+			"passwords-mismatch": "Passwords do not match",
+			"error-toast": "There was an error updating your password",
+			"success-toast": "Your password has been updated. Please sign in again with your new password."
+		},
+		"sign-out": {
+			"title": "Sign out of your account?",
+			"button": "Sign Out"
+		}
+	}
 }

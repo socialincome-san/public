@@ -25,7 +25,7 @@ export function SubscriptionsTable({ lang, translations }: SubscriptionsTablePro
 		queryKey: ['SubscriptionsTable', authUser?.uid],
 		queryFn: async () => {
 			const firebaseAuthToken = await authUser?.getIdToken(true);
-			const response = await fetch(`/api/stripe/subscriptions?accessToken=${firebaseAuthToken}`);
+			const response = await fetch(`/api/stripe/subscriptions?firebaseAuthToken=${firebaseAuthToken}`);
 			return (await response.json()) as Stripe.Subscription[];
 		},
 		staleTime: 1000 * 60 * 60, // 1 hour
