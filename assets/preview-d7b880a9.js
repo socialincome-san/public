@@ -1,2 +1,2 @@
 /* empty css                */const o={actions:{argTypesRegex:"^on[A-Z].*"},controls:{expanded:!0,matchers:{color:/(background|color)$/i,date:/Date$/}}};export{o as parameters};
-//# sourceMappingURL=preview-18c59e76.js.map
+//# sourceMappingURL=preview-d7b880a9.js.map
