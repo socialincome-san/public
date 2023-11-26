@@ -1,7 +1,7 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Button, Typography } from "@socialincome/ui";
-import Link from "next/link";
+import { BaseContainer, Button, Typography } from '@socialincome/ui';
+import Link from 'next/link';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
@@ -29,10 +29,10 @@ export default async function Page({ params }: DefaultPageProps) {
 			</Typography>
 			<hr className="my-4" />
 			<div className="p-4">
-				<Typography size="5xl" className="leading-normal text-center my-4">
+				<Typography size="5xl" className="my-4 text-center leading-normal">
 					{translator.t('quote')}
 				</Typography>
-				<Typography size="xl" className="leading-normal text-center mb-4">
+				<Typography size="xl" className="mb-4 text-center leading-normal">
 					{translator.t('quote-source')}
 				</Typography>
 			</div>
