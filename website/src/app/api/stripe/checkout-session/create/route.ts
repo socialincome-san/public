@@ -3,7 +3,7 @@ import { WebsiteCurrency } from '@/i18n';
 import { initializeStripe } from '@socialincome/shared/src/stripe';
 import { NextResponse } from 'next/server';
 
-export type CreatePaymentData = {
+export type CreateCheckoutSessionData = {
 	amount: number; // in the lowest currency unit, e.g. cents
 	successUrl: string;
 	recurring?: boolean;
@@ -12,9 +12,9 @@ export type CreatePaymentData = {
 	firebaseAuthToken?: string;
 };
 
-type CreateSubscriptionRequest = { json(): Promise<CreatePaymentData> } & Request;
+type CreateCheckoutSessionRequest = { json(): Promise<CreateCheckoutSessionData> } & Request;
 
-export async function POST(request: CreateSubscriptionRequest) {
+export async function POST(request: CreateCheckoutSessionRequest) {
 	const {
 		amount,
 		currency = 'USD',

@@ -5,7 +5,7 @@ import { useUserContext } from '@/app/[lang]/[region]/(website)/me/user-context-
 import { useTranslator } from '@/hooks/useTranslator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { COUNTRY_CODES } from '@socialincome/shared/src/types/country';
-import { USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types/user';
+import { GENDER_OPTIONS, USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types/user';
 import {
 	Button,
 	Form,
@@ -55,7 +55,7 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 	const formSchema = z.object({
 		firstname: z.string(),
 		lastname: z.string(),
-		gender: z.enum(['male', 'female', 'other']),
+		gender: z.enum(GENDER_OPTIONS),
 		email: z.string().email(),
 		street: z.string(),
 		streetNumber: z.string(),
@@ -71,14 +71,14 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 		defaultValues: {
 			firstname: '',
 			lastname: '',
-			gender: undefined as any,
+			gender: '' as any,
 			email: '',
 			street: '',
 			streetNumber: '',
 			city: '',
 			zip: '' as any,
-			country: undefined as any,
-			language: undefined as any,
+			country: '' as any,
+			language: '' as any,
 		},
 	});
 
@@ -174,13 +174,14 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 							<Select onValueChange={field.onChange}>
 								<FormControl>
 									<SelectTrigger>
-										<SelectValue>{commonTranslator?.t(`genders.${field.value}`)}</SelectValue>
+										<SelectValue placeholder={field.value && commonTranslator?.t(`genders.${field.value}`)} />
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent>
 									<SelectItem value="male">{commonTranslator?.t('genders.male')}</SelectItem>
 									<SelectItem value="female">{commonTranslator?.t('genders.female')}</SelectItem>
 									<SelectItem value="other">{commonTranslator?.t('genders.other')}</SelectItem>
+									<SelectItem value="private">{commonTranslator?.t('genders.private')}</SelectItem>
 								</SelectContent>
 							</Select>
 							<FormMessage />

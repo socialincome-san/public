@@ -1,29 +1,36 @@
 'use client';
 
+import { UpdateUserData } from '@/app/api/user/update/route';
 import { SiGoogle } from '@icons-pack/react-simple-icons';
 import { Button, Typography } from '@socialincome/ui';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { useAuth } from 'reactfire';
 
-type LinkGoogleFormProps = {
+type SingleSignOnFormProps = {
 	checkoutSessionId: string;
 	onSuccessURL: string;
+	translations: {
+		googleButton: string;
+	};
 };
 
-// TODO: i18n
-export function SingleSignOnForm({ checkoutSessionId, onSuccessURL }: LinkGoogleFormProps) {
+export function SingleSignOnForm({ checkoutSessionId, onSuccessURL, translations }: SingleSignOnFormProps) {
 	const auth = useAuth();
 	const router = useRouter();
 
 	const onGoogleSignUp = async () => {
 		const provider = new GoogleAuthProvider();
-
 		signInWithPopup(auth, provider)
 			.then(async (result) => {
-				const user = result.user;
-				await fetch(`/api/stripe/checkout/success?stripeCheckoutSessionId=${checkoutSessionId}&userId=${user.uid}`);
-				router.push(onSuccessURL);
+				const data: UpdateUserData = {
+					stripeCheckoutSessionId: checkoutSessionId,
+					user: { auth_user_id: result.user.uid },
+				};
+				fetch('/api/user/update', { method: 'POST', body: JSON.stringify(data) }).then((response) => {
+					if (!response.ok) throw new Error('Failed to update auth_user_id');
+					router.push(onSuccessURL);
+				});
 			})
 			.catch((error) => {
 				console.log(error);
@@ -35,7 +42,7 @@ export function SingleSignOnForm({ checkoutSessionId, onSuccessURL }: LinkGoogle
 				or...
 			</Typography>
 			<Button variant="default" onClick={onGoogleSignUp} Icon={SiGoogle}>
-				Sign Up With Google
+				{translations.googleButton}
 			</Button>
 		</div>
 	);

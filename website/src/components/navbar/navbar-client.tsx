@@ -116,27 +116,23 @@ export function NavbarClient({
 										{_.isEmpty(section.links) && section.href ? (
 											<Link href={section.href} key={index}>
 												<Button variant="ghost" className="py-6">
-													<Typography size="xl" weight="medium">
-														{section.title}
-													</Typography>
+													<Typography size="xl">{section.title}</Typography>
 												</Button>
 											</Link>
 										) : (
 											<HoverCard key={index} openDelay={0} closeDelay={200}>
 												<HoverCardTrigger asChild>
 													<Button variant="ghost" className="flex items-center space-x-2 py-6">
-														<Typography size="xl" weight="medium">
-															{section.title}
-														</Typography>
+														<Typography size="xl">{section.title}</Typography>
 														{(section.links?.length ?? 0) > 0 && <ChevronDownIcon className="h-4 w-4" />}
 													</Button>
 												</HoverCardTrigger>
 												<HoverCardContent asChild alignOffset={20} className="bg-popover w-56 p-0">
 													<ul className="divide-muted divide-y">
 														{section.links?.map((link, index) => (
-															<li key={index} className="hover:bg-accent py-2 pl-10">
+															<li key={index} className="hover:bg-accent px-10 py-3">
 																<Link href={link.href}>
-																	<Typography size="xl" weight="medium" lineHeight="loose" color="accent-foreground">
+																	<Typography size="xl" color="accent-foreground">
 																		{link.title}
 																	</Typography>
 																</Link>

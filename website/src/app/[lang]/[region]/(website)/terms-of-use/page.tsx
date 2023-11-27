@@ -38,7 +38,6 @@ export default async function Page({ params }: DefaultPageProps) {
 				</Typography>
 				<Typography dangerouslySetInnerHTML={{ __html: translator.t('data.section-1') }} />
 				<Typography dangerouslySetInnerHTML={{ __html: translator.t('data.section-2') }} />
-				<Typography dangerouslySetInnerHTML={{ __html: translator.t('data.section-3') }} />
 			</div>
 			<div className="prose">
 				<Typography as="h3" size="3xl" weight="bold">
@@ -53,7 +52,6 @@ export default async function Page({ params }: DefaultPageProps) {
 				</Typography>
 				<Typography dangerouslySetInnerHTML={{ __html: translator.t('warranty.section-1') }} />
 				<Typography dangerouslySetInnerHTML={{ __html: translator.t('warranty.section-2') }} />
-				<Typography dangerouslySetInnerHTML={{ __html: translator.t('warranty.section-3') }} />
 			</div>
 			<div className="prose">
 				<Typography as="h3" size="3xl" weight="bold">
