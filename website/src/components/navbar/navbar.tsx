@@ -31,9 +31,9 @@ export default async function Navbar({ lang, region, showNavigation = true }: Na
 				code: lang,
 				translation: translator.t(`languages.${lang}`),
 			}))}
-			regions={websiteRegions.map((country) => ({
-				code: country,
-				translation: translator.t(`regions.${country}`),
+			regions={websiteRegions.map((region) => ({
+				code: region,
+				translation: translator.t(`regions.${region}`),
 			}))}
 			currencies={websiteCurrencies.map((currency) => ({
 				code: currency,
