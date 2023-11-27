@@ -1,8 +1,8 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Button, Typography } from '@socialincome/ui';
 import Link from 'next/link';
-import { getMetadata } from "@/metadata";
 
 export async function generateMetadata({ params }: DefaultPageProps) {
 	return getMetadata(params.lang, 'website-what-is-poverty');
@@ -67,7 +67,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			<Typography size="xl" lineHeight="normal">
 				{translator.t('author')}
 			</Typography>
-			<Typography size="xl" lineHeight="normal" className="pt-8 border-t">
+			<Typography size="xl" lineHeight="normal" className="border-t pt-8">
 				{translator.t('difference')}
 			</Typography>
 			<Link href={`${lang}/${region}/donate/individual`}>
