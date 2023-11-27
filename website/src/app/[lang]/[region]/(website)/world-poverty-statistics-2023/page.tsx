@@ -3,7 +3,7 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Button, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
-export default async function Page({ params : {lang,region}}: DefaultPageProps) {
+export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-poverty-statistics-2023'],
@@ -19,7 +19,7 @@ export default async function Page({ params : {lang,region}}: DefaultPageProps) 
 			</Typography>
 			<div className="flex flex-col space-y-4">
 				{translator.t<string[]>('paragraphs').map((text, index) => (
-					<Typography dangerouslySetInnerHTML={{ __html: text }} key={index} size="lg" lineHeight="normal"/>
+					<Typography dangerouslySetInnerHTML={{ __html: text }} key={index} size="lg" lineHeight="normal" />
 				))}
 			</div>
 			<Typography size="lg" lineHeight="normal">
