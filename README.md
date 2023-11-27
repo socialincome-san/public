@@ -17,14 +17,16 @@ Finding a good issue: `↗`
 
 ### You can contribute to all three tools that run Social Income:
 
-|                  |                                             Admin Tool                                              |                                               Website                                               |                                                                                  Mobile App                                                                                   |
-| ---------------- | :-------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|                  | ![](https://github.com/socialincome-san/public/assets/6095849/42a8ce3e-4ff3-4d25-a298-1b4bc1570b0a) | ![](https://github.com/socialincome-san/public/assets/6095849/e4dbf692-d4b9-4253-88ea-2da7970919d8) |                                      ![](https://github.com/socialincome-san/public/assets/6095849/94d0f653-d894-4e9e-ab0d-b1cd8bfe9eab)                                      |
-| **Purpose**      |                   Make it simple to manage payments, contributors and recipients                    |                               Raising donations and inform the public                               |                                                         Make it simple for recipients to manage payments and surveys                                                          |
-| **Instructions** |                                      [Readme](admin/README.md)                                      |                                     [Readme](website/README.md)                                     |                                              [Readme](recipients_app/README.md) / [Contributing](recipients_app/CONTRIBUTING.md)                                              |
-| **Localhost**    |               [localhost:3000](http://localhost:3000) / [4000](http://localhost:4000)               |                               [localhost:3001](http://localhost:3001)                               |                                                                                       –                                                                                       |
-| **Staging**      |              [staging-admin.socialincome.org](https://staging-admin.socialincome.org)               |                    [staging.socialincome.org](https://staging.socialincome.org/)                    |                                                                                  Testflight                                                                                   |
-| **Production**   |                      [admin.socialincome.org](https://admin.socialincome.org)                       |                           [socialincome.org](https://socialincome.org)\*                            | [iOS](https://apps.apple.com/ch/app/social-income/id6444860109?l=en-GB) / [Android](https://play.google.com/store/apps/details?id=org.socialincome.app&pcampaignid=web_share) |
+|                 |                                                Admin Tool                                                 |                                                 Website                                                 |                                                                                  Mobile App                                                                                   |
+|-----------------|:---------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|                 |    ![](https://github.com/socialincome-san/public/assets/6095849/42a8ce3e-4ff3-4d25-a298-1b4bc1570b0a)    |   ![](https://github.com/socialincome-san/public/assets/6095849/e4dbf692-d4b9-4253-88ea-2da7970919d8)   |                                      ![](https://github.com/socialincome-san/public/assets/6095849/94d0f653-d894-4e9e-ab0d-b1cd8bfe9eab)                                      |
+| **Purpose**     |                      Make it simple to manage payments, contributors and recipients                       |                                 Raising donations and inform the public                                 |                                                         Make it simple for recipients to manage payments and surveys                                                          |
+| **Instructions** |                                         [Readme](admin/README.md)                                         |                                       [Readme](website/README.md)                                       |                                              [Readme](recipients_app/README.md) / [Contributing](recipients_app/CONTRIBUTING.md)                                              |
+| **Localhost**   |                  [localhost:3000](http://localhost:3000) / [4000](http://localhost:4000)                  |                                 [localhost:3001](http://localhost:3001)                                 |                                                                                       –                                                                                       |
+| **Staging**     |                 [staging-admin.socialincome.org](https://staging-admin.socialincome.org)                  |                      [staging.socialincome.org](https://staging.socialincome.org/)                      |                         [Testflight](https://developer.apple.com/testflight/) / [App Distribution](https://firebase.google.com/docs/app-distribution)                         |
+| **Production**  |                         [admin.socialincome.org](https://admin.socialincome.org)                          |                              [socialincome.org](https://socialincome.org)                               | [iOS](https://apps.apple.com/ch/app/social-income/id6444860109?l=en-GB) / [Android](https://play.google.com/store/apps/details?id=org.socialincome.app&pcampaignid=web_share) |
+| **Issues**  | [Open issues](https://github.com/socialincome-san/public/issues?q=is%3Aissue+is%3Aopen+label%3Aadmintool) | [Open issues](https://github.com/socialincome-san/public/issues?q=is%3Aissue+is%3Aopen+label%3Awebsite) |                                   [Open issues](https://github.com/socialincome-san/public/issues?q=is%3Aissue+is%3Aopen+label%3Amobileapp)                                   |
+
 
 The website and admin tool use [cloud functions](functions/README.md).
 For frontend developers: you can also develop UI components with
@@ -49,7 +51,7 @@ Tailwind CSS. You can visit the website in the making on
    without comment
 4. Your code is now merged into `main` branch and deployed on the
    staging environment
-   ([admin](https://staging-admin.socialincome.org)/[web](https://staging.socialincome.org/))
+   ([Admin Tool](https://staging-admin.socialincome.org) / [Website](https://staging.socialincome.org/))
 5. Your code is then released on the production environment with the
    next release
 
@@ -87,8 +89,8 @@ guide to switch between different versions of Node.js if need be.
 npm install
 ```
 
-Once the dependencies are installed, you can start the different
-environments:
+#### 2. Start environment
+Initiate development environments for specific tools as needed.
 
 ### Step 1
 
@@ -147,7 +149,7 @@ see links in table above to tool specific Readme and Contributor files.
 ### Data Seed
 
 An initial set of data is imported into the Firebase emulators during
-startup of the Admin Tool. You can add, delete or amend data directly in
+startup of the [Admin Tool](https://staging-admin.socialincome.org). You can add, delete or amend data directly in
 your local Admin Tool ([localhost:3000](http://localhost:3000)) or in
 your local Firestore Admin Interface
 ([localhost:4000](http://localhost:4000/firestore/data)). After you have
@@ -162,20 +164,15 @@ We are using [Prettier](https://prettier.io) to format the code:
 npm run format-code
 ```
 
-### Deployment
+### Deployments 
 
-When a PR is merged into the `main` branch, the code is deployed to the
-staging environment after being authorized by a core developer. See the
-[Github Actions](./.github/workflows) for more details.
+**Staging deployments:**
+PRs merged into `main` are automatically deployed to staging ([Admin Tool](https://staging-admin.socialincome.org) / [Website](https://staging.socialincome.org/)) upon core developer approval. Check [Github Actions](./.github/workflows) for details. Experienced contributors can deploy directly [without approval](mailto:dev@socialincome.org).
 
-Production deployments are done manually through GitHub releases. A
-release that begins with `release-` will trigger a production
-deployment. The release should include the date of the release in the
-format `YYYY-MM-DD`. For example, a release for a production deployment
-on Feb 27th, 2021 would be `release-2021-02-27`. A second release on the
-same day would be `release-2021-02-27.2`.
+**Production deployments:** 
+Deployments are made by core developers via [GitHub releases](https://github.com/socialincome-san/public/actions/workflows/production-deployment.yml). Use "release-YYYY-MM-DD" for the release name (example:`release-2021-02-27`). For multiple releases on the same day, append ".2", ".3", etc. (example:`release-2021-02-27.2`).
 
-### Backup
+### Backups
 
 We have a
 [function](https://console.cloud.google.com/logs/query;query=resource.type%3D%22cloud_function%22%20resource.labels.function_name%3D%22siWebFirestoreExport%22%20resource.labels.region%3D%22us-central1%22?project=social-income-prod&authuser=1&hl=en)
@@ -198,7 +195,7 @@ If you want to report a vulnareablity please refer to our
 
 # Financial Contributions
 
-### 1 Percent of Your Income
+### Donate 1 Percent of Your Income
 
 [Become a contributor](https://socialincome.org/get-involved) of Social
 Income (tax-deductible in Switzerland).
@@ -211,9 +208,9 @@ and less poverty. Donations through the GitHub Sponsor program are used
 for building a strong developer community and organizing Social Coding
 Nights.
 
-# Organisation
+# Social Income (NGO)
 
-### Non-Profit Association
+### Non-Profit Organization
 
 Social Income is a non-profit association
 ([CHE-289.611.695](https://www.uid.admin.ch/Detail.aspx?uid_id=CHE-289.611.695))
@@ -232,23 +229,20 @@ our [annual statements](https://socialincome.org/reporting) and overall
 ### Open Source Community
 
 Open Source isn’t an exclusive club. It’s made by people just like you.
-You don’t need to overthink what exactly your first contribution will
-be, or how it will look. Thank you:
+These individuals, amongst many others, have made significant contributions to Social Income's success:
 
 [![Contributors](https://contrib.rocks/image?repo=socialincome-san/public&columns=10)](https://github.com/socialincome-san/public/graphs/contributors)
 
 ### Software & Design Donations
 
-Thanks to [Google Nonprofit](https://www.google.com/nonprofits/),
+We receive in-kind donations from [Google Nonprofit](https://www.google.com/nonprofits/),
 [GitHub](https://socialimpact.github.com),
 [Codemagic](https://codemagic.io/start/), [Linktree](https://linktr.ee),
 [Twilio](https://twilio.org), [algolia](https://www.algolia.com),
-[JetBrain](https://www.jetbrains.com) and
-[1Password](https://1password.com/). Font Unica77 by
-[Lineto](https://www.lineto.com).
+[JetBrain](https://www.jetbrains.com),
+[1Password](https://1password.com/) and
+[Lineto](https://www.lineto.com). Our tools also leverage other open-source technologies, including solutions like [FireCMS](https://firecms.co), [Storybook](https://storybook.js.org) and [Tailwind CSS](https://tailwindcss.com).
 
-### License
+### Licensing Information
 
-Code: [MIT](LICENSE). The font Unica77 is licensed exclusively for the
-use on the website socialincome.org and on the mobile apps of Social
-Income.
+This project is licensed under [MIT](LICENSE), with the exception of the [Unica77 font](https://lineto.com/typefaces/unica77), which is exclusively licensed to Social Income.
