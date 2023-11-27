@@ -22,9 +22,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@socialincome/ui';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { useAuth } from 'reactfire';
 import * as z from 'zod';
 
 type SuccessFormProps = {
@@ -65,8 +64,6 @@ export function SuccessForm({
 	country,
 }: SuccessFormProps) {
 	const router = useRouter();
-	const path = usePathname();
-	const auth = useAuth();
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
 	const [firstCountry, ...restCountries] = COUNTRY_CODES;
