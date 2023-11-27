@@ -5,12 +5,12 @@ import Link from 'next/link';
 import { getMetadata } from "@/metadata";
 
 export async function generateMetadata({ params }: DefaultPageProps) {
-	return getMetadata(params.lang, 'website-poverty-statistics-2023');
+	return getMetadata(params.lang, 'website-how-to-reduce-income-inequality');
 }
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-poverty-statistics-2023'],
+		namespaces: ['website-how-to-reduce-income-inequality'],
 	});
 
 	return (
