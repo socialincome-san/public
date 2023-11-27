@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { CreatePaymentData } from '@/app/api/stripe/checkout/new-payment/route';
+import { CreateCheckoutSessionData } from '@/app/api/stripe/checkout-session/create/route';
 import { useI18n } from '@/app/context-providers';
 import { CurrencySelector } from '@/components/ui/currency-selector';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,8 +14,8 @@ import * as z from 'zod';
 
 type DonationFormProps = {
 	translations: {
+		amount: string;
 		submit: string;
-		currency: string;
 	};
 } & DefaultParams;
 
@@ -36,18 +36,15 @@ export default function OneTimeDonationForm({ translations, lang, region }: Dona
 
 	const onSubmit = async (values: FormSchema) => {
 		const authToken = await authUser?.getIdToken(true);
-		const data: CreatePaymentData = {
+		const data: CreateCheckoutSessionData = {
 			amount: values.amount * 100, // The amount is in cents, so we need to multiply by 100 to get the correct amount.
 			currency: currency,
-			successUrl: `${window.location.origin}/${lang}/${region}/donate/success?stripeCheckoutSessionId={CHECKOUT_SESSION_ID}`,
+			successUrl: `${window.location.origin}/${lang}/${region}/donate/success/stripe/{CHECKOUT_SESSION_ID}`,
 			recurring: false,
 			firebaseAuthToken: authToken,
 		};
 
-		const response = await fetch('/api/stripe/checkout/new-payment', {
-			method: 'POST',
-			body: JSON.stringify(data),
-		});
+		const response = await fetch('/api/stripe/checkout-session/create', { method: 'POST', body: JSON.stringify(data) });
 		const { url } = (await response.json()) as Stripe.Response<Stripe.Checkout.Session>;
 
 		// This sends the user to stripe.com where payment is completed
@@ -65,7 +62,7 @@ export default function OneTimeDonationForm({ translations, lang, region }: Dona
 							render={({ field }) => (
 								<FormItem className="flex-1">
 									<FormControl>
-										<Input className="h-16 text-lg" placeholder="Amount" {...field} />
+										<Input className="h-16 text-lg" placeholder={translations.amount} {...field} />
 									</FormControl>
 								</FormItem>
 							)}

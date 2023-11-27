@@ -1,5 +1,6 @@
 'use client';
 
+import { UpdateUserData } from '@/app/api/user/update/route';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input, Typography } from '@socialincome/ui';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -16,7 +17,7 @@ type CreateUserFormProps = {
 		title: string;
 		email: string;
 		password: string;
-		passwordValidation: string;
+		passwordConfirm: string;
 		passwordsMismatch: string;
 		submitButton: string;
 		invalidEmail: string;
@@ -30,7 +31,7 @@ export function CreateUserForm({ checkoutSessionId, email, onSuccessURL, transla
 	const formSchema = z
 		.object({
 			email: z.string().email({ message: translations.invalidEmail }),
-			password: z.string().min(8),
+			password: z.string().min(6),
 			passwordConfirmation: z.string(),
 		})
 		.superRefine((data, ctx) => {
@@ -50,10 +51,15 @@ export function CreateUserForm({ checkoutSessionId, email, onSuccessURL, transla
 
 	const onSubmit = async (values: FormSchema) => {
 		createUserWithEmailAndPassword(auth, email, values.password)
-			.then(async (userCredential) => {
-				const user = userCredential.user;
-				await fetch(`/api/stripe/checkout/success?stripeCheckoutSessionId=${checkoutSessionId}&userId=${user.uid}`);
-				router.push(onSuccessURL);
+			.then(async (result) => {
+				const data: UpdateUserData = {
+					stripeCheckoutSessionId: checkoutSessionId,
+					user: { auth_user_id: result.user.uid },
+				};
+				fetch('/api/user/update', { method: 'POST', body: JSON.stringify(data) }).then((response) => {
+					if (!response.ok) throw new Error('Failed to update auth_user_id');
+					router.push(onSuccessURL);
+				});
 			})
 			.catch((error) => {
 				console.log(error);
@@ -96,7 +102,7 @@ export function CreateUserForm({ checkoutSessionId, email, onSuccessURL, transla
 					render={({ field }) => (
 						<FormItem>
 							<FormControl>
-								<Input type="password" placeholder={translations.passwordValidation} {...field} />
+								<Input type="password" placeholder={translations.passwordConfirm} {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>

@@ -19,9 +19,11 @@
 		"fr": "French",
 		"kri": "Krio"
 	},
+	"gender": "Gender",
 	"genders": {
 		"male": "Male",
 		"female": "Female",
-		"other": "Other"
+		"other": "Other",
+		"private": "Prefer not to say"
 	}
 }
