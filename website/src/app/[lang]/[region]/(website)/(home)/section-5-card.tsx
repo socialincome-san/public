@@ -28,8 +28,8 @@ type SectionCardProps = {
 export function SectionCard({ titles, items = [], paragraphs = [], articles = [], faqs = [] }: SectionCardProps) {
 	return (
 		<Dialog>
-			<DialogTrigger className="h-full">
-				<Card className="h-full text-left">
+			<DialogTrigger asChild>
+				<Card className="h-full max-h-80 cursor-pointer">
 					<CardHeader>
 						<CardTitle>{titles.main}</CardTitle>
 					</CardHeader>

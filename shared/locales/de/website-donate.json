@@ -6,7 +6,7 @@
 	"title": "Was ist dein durchschnittliches monatliches Einkommen?",
 	"how-to-pay": "Wie möchtest du bezahlen?",
 	"amount": "Betrag",
-	"button-text": "Einen Unterschied machen",
+	"button-text": "Mache einen Unterschied",
 	"donation-impact": {
 		"monthly-contribution": "Dein monatlicher Beitrag:",
 		"direct-payout": "Dein Beitrag wird direkt auf das Mobiltelefon der Social Income Empfänger:innen ausgezahlt.",
@@ -33,6 +33,41 @@
 		"12": {
 			"title": "Jährlich",
 			"text": "{{ amount, currency }} jedes Jahr zahlen"
+		}
+	},
+	"one-time": {
+		"title": "Einmalige Spende",
+		"subtitle": "Unterstütze Social Income mit einem einmaligen Beitrag"
+	},
+	"success": {
+		"title": "Herzlichen Dank für deine Spende",
+		"user-form": {
+			"title": "Überprüfe deine Kontaktdaten",
+			"firstname": "Vorname",
+			"lastname": "Nachname",
+			"email": "E-Mail",
+			"country": "Land",
+			"gender": "Anrede",
+			"referral": "Wie hast du von uns erfahren?",
+			"referrals": {
+				"familyfriends": "Familie oder Freunde",
+				"socialmedia": "Social Media",
+				"work": "Arbeitskolleg:innen",
+				"media": "Presse",
+				"presentation": "Präsentation",
+				"other": "Von woanders"
+			},
+			"submit-button": "Bestätigen"
+		},
+		"activation-form": {
+			"title": "Setze ein Passwort für dein Konto",
+			"email": "E-Mail",
+			"invalid-email": "E-Mail ist ungültig",
+			"password": "Passwort",
+			"password-confirm": "Passwort bestätigen",
+			"password-mismatch": "Passwörter stimmen nicht überein",
+			"submit-button": "Account aktivieren",
+			"google-button": "Über Google anmelden"
 		}
 	}
 }

@@ -19,6 +19,7 @@ export async function POST(request: UpdatePasswordRequest) {
 	return authAdmin.auth
 		.updateUser(userDoc.get('auth_user_id'), { password: newPassword })
 		.then(() => {
+			console.log(`Password updated for user with email ${userDoc.get('email')}`);
 			return new Response(null, { status: 200, statusText: 'Password updated' });
 		})
 		.catch((error: Error) => {
