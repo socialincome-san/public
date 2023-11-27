@@ -1,73 +1,73 @@
 {
-  "metadata": {
-    "title": "Mein Beitrag | Social Income"
-  },
-  "amount-currency": "{{ amount, currency }}",
-  "title": "Was ist dein durchschnittliches monatliches Einkommen?",
-  "how-to-pay": "Wie möchtest du bezahlen?",
-  "amount": "Betrag",
-  "button-text": "Mache einen Unterschied",
-  "donation-impact": {
-    "monthly-contribution": "Dein monatlicher Beitrag:",
-    "direct-payout": "Dein Beitrag wird direkt auf das Mobiltelefon der Social Income Empfänger:innen ausgezahlt.",
-    "your-impact": "Dein Einfluss:",
-    "0": "{{ amount, currency }} legt den Grundstein für eine bedeutende Sache. Es ermöglicht uns, einer Person in Not ein Social Income zu bieten.",
-    "1": "{{ amount, currency }} deckt mehr als ein Drittel eines Social Incomes für eine bedürftige Person.",
-    "2": "{{ amount, currency }} finanziert mehr als die Hälfte eines Social Incomes für eine Person.",
-    "3": "Großartig! Dein monatlicher Beitrag von {{ amount, currency }} ermöglicht es mindestens einer bedürftigen Person ein vollständiges Social Income bereitzustellen.",
-    "4": "{{ amount, currency }} ermöglicht ein Social Income für mehr als zwei bedürftige Personen.",
-    "5": "Wunderbar! Dein Beitrag von {{ amount, currency }} finanziert ein Social Income für mehr als drei bedürftige Personen.",
-    "6": "Dein Beitrag von {{ amount, currency }} sichert ein Social Income für mehr als vier bedürftige Personen.",
-    "7": "Dein Beitrag von {{ amount, currency }} sichert ein Social Income für mehr als fünf bedürftige Personen.",
-    "8": "Dein monatlicher Beitrag von {{ amount, currency }} ist außergewöhnlich, ebenso wie dein Einfluss."
-  },
-  "donation-interval": {
-    "1": {
-      "title": "Monatlich",
-      "text": "{{ amount, currency }} jeden Monat zahlen"
-    },
-    "3": {
-      "title": "Quartalsweise",
-      "text": "{{ amount, currency }} alle 3 Monate zahlen"
-    },
-    "12": {
-      "title": "Jährlich",
-      "text": "{{ amount, currency }} jedes Jahr zahlen"
-    }
-  },
-  "one-time": {
-    "title": "Einmalige Spende",
-    "subtitle": "Unterstütze Social Income mit einem einmaligen Beitrag"
-  },
-  "success": {
-    "title": "Herzlichen Dank für deine Spende",
-    "user-form": {
-      "title": "Überprüfe deine Kontaktdaten",
-      "firstname": "Vorname",
-      "lastname": "Nachname",
-      "email": "E-Mail",
-      "country": "Land",
-      "gender": "Anrede",
-      "referral": "Wie hast du von uns erfahren?",
-      "referrals": {
-        "familyfriends": "Familie oder Freunde",
-        "socialmedia": "Social Media",
-        "work": "Arbeitskolleg:innen",
-        "media": "Presse",
-        "presentation": "Präsentation",
-        "other": "Von woanders"
-      },
-      "submit-button": "Bestätigen"
-    },
-    "activation-form": {
-      "title": "Setze ein Passwort für dein Konto",
-      "email": "E-Mail",
-      "invalid-email": "E-Mail ist ungültig",
-      "password": "Passwort",
-      "password-confirm": "Passwort bestätigen",
-      "password-mismatch": "Passwörter stimmen nicht überein",
-      "submit-button": "Account aktivieren",
-      "google-button": "Über Google anmelden"
-    }
-  }
+	"metadata": {
+		"title": "Mein Beitrag | Social Income"
+	},
+	"amount-currency": "{{ amount, currency }}",
+	"title": "Was ist dein durchschnittliches monatliches Einkommen?",
+	"how-to-pay": "Wie möchtest du bezahlen?",
+	"amount": "Betrag",
+	"button-text": "Mache einen Unterschied",
+	"donation-impact": {
+		"monthly-contribution": "Dein monatlicher Beitrag:",
+		"direct-payout": "Dein Beitrag wird direkt auf das Mobiltelefon der Social Income Empfänger:innen ausgezahlt.",
+		"your-impact": "Dein Einfluss:",
+		"0": "{{ amount, currency }} legt den Grundstein für eine bedeutende Sache. Es ermöglicht uns, einer Person in Not ein Social Income zu bieten.",
+		"1": "{{ amount, currency }} deckt mehr als ein Drittel eines Social Incomes für eine bedürftige Person.",
+		"2": "{{ amount, currency }} finanziert mehr als die Hälfte eines Social Incomes für eine Person.",
+		"3": "Großartig! Dein monatlicher Beitrag von {{ amount, currency }} ermöglicht es mindestens einer bedürftigen Person ein vollständiges Social Income bereitzustellen.",
+		"4": "{{ amount, currency }} ermöglicht ein Social Income für mehr als zwei bedürftige Personen.",
+		"5": "Wunderbar! Dein Beitrag von {{ amount, currency }} finanziert ein Social Income für mehr als drei bedürftige Personen.",
+		"6": "Dein Beitrag von {{ amount, currency }} sichert ein Social Income für mehr als vier bedürftige Personen.",
+		"7": "Dein Beitrag von {{ amount, currency }} sichert ein Social Income für mehr als fünf bedürftige Personen.",
+		"8": "Dein monatlicher Beitrag von {{ amount, currency }} ist außergewöhnlich, ebenso wie dein Einfluss."
+	},
+	"donation-interval": {
+		"1": {
+			"title": "Monatlich",
+			"text": "{{ amount, currency }} jeden Monat zahlen"
+		},
+		"3": {
+			"title": "Quartalsweise",
+			"text": "{{ amount, currency }} alle 3 Monate zahlen"
+		},
+		"12": {
+			"title": "Jährlich",
+			"text": "{{ amount, currency }} jedes Jahr zahlen"
+		}
+	},
+	"one-time": {
+		"title": "Einmalige Spende",
+		"subtitle": "Unterstütze Social Income mit einem einmaligen Beitrag"
+	},
+	"success": {
+		"title": "Herzlichen Dank für deine Spende",
+		"user-form": {
+			"title": "Überprüfe deine Kontaktdaten",
+			"firstname": "Vorname",
+			"lastname": "Nachname",
+			"email": "E-Mail",
+			"country": "Land",
+			"gender": "Anrede",
+			"referral": "Wie hast du von uns erfahren?",
+			"referrals": {
+				"familyfriends": "Familie oder Freunde",
+				"socialmedia": "Social Media",
+				"work": "Arbeitskolleg:innen",
+				"media": "Presse",
+				"presentation": "Präsentation",
+				"other": "Von woanders"
+			},
+			"submit-button": "Bestätigen"
+		},
+		"activation-form": {
+			"title": "Setze ein Passwort für dein Konto",
+			"email": "E-Mail",
+			"invalid-email": "E-Mail ist ungültig",
+			"password": "Passwort",
+			"password-confirm": "Passwort bestätigen",
+			"password-mismatch": "Passwörter stimmen nicht überein",
+			"submit-button": "Account aktivieren",
+			"google-button": "Über Google anmelden"
+		}
+	}
 }
