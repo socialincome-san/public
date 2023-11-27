@@ -10,7 +10,7 @@ export default async function Page({ params : {lang,region}}: DefaultPageProps) 
 	});
 
 	return (
-		<BaseContainer className="mx-auto flex max-w-2xl flex-col space-y-12 py-10">
+		<BaseContainer className="mx-auto flex max-w-2xl flex-col space-y-12 pt-10 pb-24">
 			<Typography as="h1" size="5xl" weight="bold" lineHeight="normal">
 				{translator.t('title')}
 			</Typography>
@@ -25,20 +25,18 @@ export default async function Page({ params : {lang,region}}: DefaultPageProps) 
 			<Typography size="lg" lineHeight="normal">
 				{translator.t('author')}
 			</Typography>
-			<hr className="my-4" />
-			<div className="p-4">
-				<Typography size="5xl" lineHeight="normal" className="my-4 text-center">
+			<div className="py-16 text-center space-y-4 border-t border-b">
+				<Typography size="5xl" lineHeight="normal">
 					{translator.t('quote')}
 				</Typography>
-				<Typography size="lg" lineHeight="normal" className="mb-4 text-center">
+				<Typography size="lg" lineHeight="normal">
 					{translator.t('quote-source')}
 				</Typography>
 			</div>
-			<hr className="my-4" />
 			<Typography size="2xl" lineHeight="normal">
 				{translator.t('difference')}
 			</Typography>
-			<Link href={`${lang}/${region}/donate/individual`} className="pb-10">
+			<Link href={`${lang}/${region}/donate/individual`}>
 				<Button size="lg" className="w-full">
 					{translator.t('take-action')}
 				</Button>
