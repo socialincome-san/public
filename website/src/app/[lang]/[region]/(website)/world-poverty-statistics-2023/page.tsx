@@ -10,7 +10,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 	});
 
 	return (
-		<BaseContainer className="mx-auto flex max-w-2xl flex-col space-y-12 pt-10 pb-24">
+		<BaseContainer className="mx-auto flex max-w-2xl flex-col space-y-12 pb-24 pt-10">
 			<Typography as="h1" size="5xl" weight="bold" lineHeight="normal">
 				{translator.t('title')}
 			</Typography>
@@ -25,7 +25,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			<Typography size="lg" lineHeight="normal">
 				{translator.t('author')}
 			</Typography>
-			<div className="py-16 text-center space-y-4 border-t border-b">
+			<div className="space-y-4 border-b border-t py-16 text-center">
 				<Typography size="5xl" lineHeight="normal">
 					{translator.t('quote')}
 				</Typography>
