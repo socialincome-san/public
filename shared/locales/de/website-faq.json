@@ -41,7 +41,7 @@
 		},
 		"question-2": {
 			"question": "Wer kann soziale Ungleichheit eliminieren?",
-			"answer": "Staaten und Märkte sind dazu imstande – zumindest in der Theorie. Doch nicht alle Staaten können angemessen für ihre Bürger*innen sorgen und nicht alle Märkte kreieren dauerhafte Chancengleichheit für alle. An diesem Punkt kommt eine dritte Option hinzu: wir selbst. Wir sind sehr wohl fähig, soziale Ungleichheit zu erkennen und wir sind auch fähig, für benachteiligte Menschen Empathie zu empfinden. Ebenso verfügen wir über finanzielle Mittel und die technologischen Fähigkeiten, Geld global zu bewegen. So betrachtet fehlt es an nichts, um die globalen Missstände von heute zu beseitigen."
+			"answer": "Staaten und Märkte sind dazu imstande – zumindest in der Theorie. Doch nicht alle Staaten können angemessen für ihre Bürger:innen sorgen und nicht alle Märkte kreieren dauerhafte Chancengleichheit für alle. An diesem Punkt kommt eine dritte Option hinzu: wir selbst. Wir sind sehr wohl fähig, soziale Ungleichheit zu erkennen und wir sind auch fähig, für benachteiligte Menschen Empathie zu empfinden. Ebenso verfügen wir über finanzielle Mittel und die technologischen Fähigkeiten, Geld global zu bewegen. So betrachtet fehlt es an nichts, um die globalen Missstände von heute zu beseitigen."
 		}
 	},
 	"solidarity": {
@@ -59,7 +59,7 @@
 		"title": "Bedingungsloses Grundeinkommen",
 		"question-1": {
 			"question": "Was ist der Unterschied zwischen Social Income und dem bedingungslosem Grundeinkommen?",
-			"answer": "Wie das bedingungslose Grundeinkommen (BGE) basiert auch die Idee von Social Income auf regelmässigen Zahlungen, die nicht an Bedingungen geknüpft sind. Dies im Sinne der Sicherung eines Existenzminimums, welches den Menschen – meist Bürger*innen eines bestimmten Landes oder einer bestimmten Stadt – individuell entrichtet wird. Während das bedingungslose Grundeinkommen vom Staat oder von einer Verwaltung ausbezahlt wird, wird Social Income von Privat- zu Privatperson überwiesen. Dies bedeutet, dass Social Income weder von politischen Entscheiden, noch von entsprechenden Budgets oder Steuern abhängig ist. Social Income richtet sich ausdrücklich an Menschen, die in Armut leben. Insofern ist das oberste Ziel von Social Income die freiwillige Umverteilung von Wohlstand – was beim bedingungslosen Grundeinkommen nicht zwingend der Fall sein muss."
+			"answer": "Wie das bedingungslose Grundeinkommen (BGE) basiert auch die Idee von Social Income auf regelmässigen Zahlungen, die nicht an Bedingungen geknüpft sind. Dies im Sinne der Sicherung eines Existenzminimums, welches den Menschen – meist Bürger:innen eines bestimmten Landes oder einer bestimmten Stadt – individuell entrichtet wird. Während das bedingungslose Grundeinkommen vom Staat oder von einer Verwaltung ausbezahlt wird, wird Social Income von Privat- zu Privatperson überwiesen. Dies bedeutet, dass Social Income weder von politischen Entscheiden, noch von entsprechenden Budgets oder Steuern abhängig ist. Social Income richtet sich ausdrücklich an Menschen, die in Armut leben. Insofern ist das oberste Ziel von Social Income die freiwillige Umverteilung von Wohlstand – was beim bedingungslosen Grundeinkommen nicht zwingend der Fall sein muss."
 		},
 		"question-2": {
 			"question": "Was sind direkte Geldtransfers?",
@@ -71,10 +71,10 @@
 		}
 	},
 	"contributors": {
-		"title": "Spender*innen",
+		"title": "Spender:innen",
 		"question-1": {
 			"question": "Was steht hinter der Idee, sich mit 1 % des Einkommens zu beteiligen?",
-			"answer": "Um die Idee von Social Income skalierbar zu machen, müssen wir sicher sein, dass das System verlässlich funktioniert. Um dies sicherzustellen, haben wir klein begonnen. Das bedeutet, dass wir in der Startphase zunächst eine überschaubare  Anzahl von Empfänger*innen mit einer entsprechenden Anzahl Spender*innen zusammenbringen, die bereit sind, regelmässig einen Beitrag zu leisten. Wir denken, dass 1&nbsp;% des Einkommens für Spender*innen ein guter Startbetrag ist, um sich zu engagieren: Der Betrag ist zu klein, als dass er grosse Auswirkungen auf den eigenen Lebensstil hätte, aber genug, um im Leben der Empfänger*innen eine positive Veränderung zu bewirken. Im Folgenden ein Beispiel, um das Potenzial der Idee von Social Income zu verdeutlichen: In der Schweiz beträgt das durchschnittliche Monatseinkommen rund 6000 CHF. Angenommen ein Viertel aller Schweizer Bürger*innen würden Social Income mit 1&nbsp;% ihres Gehalts unterstützen, so würde dies ein Grundeinkommen für ganz Sierra Leone ermöglichen. Dieses vereinfachte Rechenbeispiel vermittelt einen guten Eindruck von den Chancen des Solidaritätsprojekts."
+			"answer": "Um die Idee von Social Income skalierbar zu machen, müssen wir sicher sein, dass das System verlässlich funktioniert. Um dies sicherzustellen, haben wir klein begonnen. Das bedeutet, dass wir in der Startphase zunächst eine überschaubare  Anzahl von Empfänger:innen mit einer entsprechenden Anzahl Spender:innen zusammenbringen, die bereit sind, regelmässig einen Beitrag zu leisten. Wir denken, dass 1&nbsp;% des Einkommens für Spender:innen ein guter Startbetrag ist, um sich zu engagieren: Der Betrag ist zu klein, als dass er grosse Auswirkungen auf den eigenen Lebensstil hätte, aber genug, um im Leben der Empfänger:innen eine positive Veränderung zu bewirken. Im Folgenden ein Beispiel, um das Potenzial der Idee von Social Income zu verdeutlichen: In der Schweiz beträgt das durchschnittliche Monatseinkommen rund 6000 CHF. Angenommen ein Viertel aller Schweizer Bürger:innen würden Social Income mit 1&nbsp;% ihres Gehalts unterstützen, so würde dies ein Grundeinkommen für ganz Sierra Leone ermöglichen. Dieses vereinfachte Rechenbeispiel vermittelt einen guten Eindruck von den Chancen des Solidaritätsprojekts."
 		},
 		"question-2": {
 			"question": "Kann ich meine Beiträge stornieren?",
@@ -86,18 +86,18 @@
 		}
 	},
 	"recipients": {
-		"title": "Empfänger*innen",
+		"title": "Empfänger:innen",
 		"question-1": {
-			"question": "Wie werden die Empfänger*innen ausgewählt?",
-			"answer": "Wir bestimmen mögliche neue Empfänger*innen aufgrund der Vorarbeit unserer lokalen Kontaktpersonen und Vorschläge von Partnern und lokalen NGOs: i.e. Aurora Foundation, Reachout Salone, Equal Rights Alliance, United Polio Brothers und Sisters und Jamyl & Nyanga Jaward Foundation. Unsere Kriterien sind einfach: Die Empfänger müssen älter als 16 Jahre sein und aus einer einkommensschwachen Community stammen.Als übergeordnetes Prinzip verpflichten wir uns, Menschen in Not zu unterstützen und halten uns dabei strikt an ein ausgeglichenes Geschlechterverhältnis."
+			"question": "Wie werden die Empfänger:innen ausgewählt?",
+			"answer": "Wir bestimmen mögliche neue Empfänger:innen aufgrund der Vorarbeit unserer lokalen Kontaktpersonen und Vorschläge von Partnern und lokalen NGOs: i.e. Aurora Foundation, Reachout Salone, Equal Rights Alliance, United Polio Brothers und Sisters und Jamyl & Nyanga Jaward Foundation. Unsere Kriterien sind einfach: Die Empfänger müssen älter als 16 Jahre sein und aus einer einkommensschwachen Community stammen.Als übergeordnetes Prinzip verpflichten wir uns, Menschen in Not zu unterstützen und halten uns dabei strikt an ein ausgeglichenes Geschlechterverhältnis."
 		},
 		"question-2": {
-			"question": "Wofür verwenden die Empfänger*innen das Geld?",
-			"answer": "Die Grundidee hinter dem bedingungslosen Grundeinkommen besteht darin, den Empfänger*innen Geld für ihre Existenzsicherung zur Verfügung zu stellen, welches sie ohne Verpflichtungen und nach ihrem Gutdünken einsetzen können."
+			"question": "Wofür verwenden die Empfänger:innen das Geld?",
+			"answer": "Die Grundidee hinter dem bedingungslosen Grundeinkommen besteht darin, den Empfänger:innen Geld für ihre Existenzsicherung zur Verfügung zu stellen, welches sie ohne Verpflichtungen und nach ihrem Gutdünken einsetzen können."
 		},
 		"question-3": {
 			"question": "Wie kann ich Social Income erhalten?",
-			"answer": "Wir arbeiten eng mit lokalen Partnern vor Ort zusammen, um künftige Empfänger*innen zu bestimmen. Aktuell besteht keine Möglichkeit, über unsere Website einen Antrag auf ein Social Income zu stellen."
+			"answer": "Wir arbeiten eng mit lokalen Partnern vor Ort zusammen, um künftige Empfänger:innen zu bestimmen. Aktuell besteht keine Möglichkeit, über unsere Website einen Antrag auf ein Social Income zu stellen."
 		},
 		"question-4": {
 			"question": "Warum Sierra Leone?",

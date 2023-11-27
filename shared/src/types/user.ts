@@ -10,6 +10,9 @@ export enum UserStatusKey {
 	PROFILE_CREATED = 1, // user submitted registration form
 }
 
+export const GENDER_OPTIONS = ['male', 'female', 'other', 'private'] as const;
+export type Gender = (typeof GENDER_OPTIONS)[number];
+
 export enum UserReferralSource {
 	FamilyFriends = 'familyfriends',
 	Work = 'work',
@@ -32,7 +35,7 @@ export type User = {
 	personal?: {
 		name?: string; // TODO: discuss if should be renamed to firstname
 		lastname?: string;
-		gender?: 'male' | 'female' | 'other';
+		gender?: Gender;
 		company?: string;
 		phone?: string;
 		referral?: UserReferralSource;

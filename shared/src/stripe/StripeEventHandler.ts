@@ -9,6 +9,7 @@ import {
 	StatusKey,
 	StripeContribution,
 } from '../types/contribution';
+import { CountryCode } from '../types/country';
 import { USER_FIRESTORE_PATH, User, UserStatusKey, splitName } from '../types/user';
 
 export class StripeEventHandler {
@@ -33,13 +34,13 @@ export class StripeEventHandler {
 		await this.storeCharge(fullCharge);
 	};
 
-	handleCheckoutSessionCompletedEvent = async (checkoutSessionId: string, authUserId: string) => {
+	updateUser = async (checkoutSessionId: string, userData: Partial<User>) => {
 		const checkoutSession = await this.stripe.checkout.sessions.retrieve(checkoutSessionId);
 		const customer = await this.stripe.customers.retrieve(checkoutSession.customer as string);
 		if (customer.deleted) throw Error(`Dealing with a deleted Stripe customer (id=${customer.id})`);
 		const userRef = await this.getOrCreateUser(customer);
 		const user = await userRef.get();
-		await this.firestoreAdmin.doc<User>(USER_FIRESTORE_PATH, user.id).update({ auth_user_id: authUserId });
+		await this.firestoreAdmin.doc<User>(USER_FIRESTORE_PATH, user.id).update(userData);
 	};
 
 	/**
@@ -123,6 +124,9 @@ export class StripeEventHandler {
 			personal: {
 				name: firstname,
 				lastname: lastname,
+			},
+			address: {
+				country: customer.address?.country as CountryCode,
 			},
 			email: customer.email,
 			status: UserStatusKey.INITIALIZED,

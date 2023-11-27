@@ -12,7 +12,7 @@ export async function Section1({ lang, region }: DefaultParams) {
 	return (
 		<BaseContainer
 			backgroundColor="bg-blue-50"
-			className="min-h-screen-navbar grid grid-cols-1 content-center items-center gap-y-8 lg:grid-cols-2"
+			className="min-h-screen-navbar grid grid-cols-1 content-center items-center gap-x-4 gap-y-8 lg:grid-cols-2"
 		>
 			<div className="mx-auto max-w-3xl">
 				<Typography size="5xl" weight="bold">

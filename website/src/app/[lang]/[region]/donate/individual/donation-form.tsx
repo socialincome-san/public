@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { CreatePaymentData } from '@/app/api/stripe/checkout/new-payment/route';
+import { CreateCheckoutSessionData } from '@/app/api/stripe/checkout-session/create/route';
 import { useI18n } from '@/app/context-providers';
 import { CurrencySelector } from '@/components/ui/currency-selector';
 import { useTranslator } from '@/hooks/useTranslator';
@@ -164,18 +164,16 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 
 	const onSubmit = async (values: FormSchema) => {
 		const authToken = await authUser?.getIdToken(true);
-		const data: CreatePaymentData = {
+		const data: CreateCheckoutSessionData = {
 			amount: getDonationAmount(values.monthlyIncome, values.donationInterval) * 100, // The amount is in cents, so we need to multiply by 100 to get the correct amount.
 			intervalCount: Number(values.donationInterval),
 			currency: currency,
-			successUrl: `${window.location.origin}/${lang}/${region}/donate/success?stripeCheckoutSessionId={CHECKOUT_SESSION_ID}`,
+			successUrl: `${window.location.origin}/${lang}/${region}/donate/success/stripe/{CHECKOUT_SESSION_ID}`,
 			recurring: true,
 			firebaseAuthToken: authToken,
 		};
-		const response = await fetch('/api/stripe/checkout/new-payment', {
-			method: 'POST',
-			body: JSON.stringify(data),
-		});
+		// Call the API to create a new Stripe checkout session
+		const response = await fetch('/api/stripe/checkout-session/create', { method: 'POST', body: JSON.stringify(data) });
 		const { url } = (await response.json()) as Stripe.Response<Stripe.Checkout.Session>;
 		// This sends the user to stripe.com where payment is completed
 		if (url) router.push(url);

@@ -21,8 +21,9 @@
 	},
 	"gender": "Geschlecht",
 	"genders": {
-		"male": "Männlich",
-		"female": "Weiblich",
-		"other": "Neutrale Anrede"
+		"male": "Mann",
+		"female": "Frau",
+		"other": "Neutrale Anrede",
+		"private": "Keine Angabe"
 	}
 }
