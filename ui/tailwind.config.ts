@@ -12,7 +12,7 @@ module.exports = {
 			},
 		},
 		fontFamily: {
-			sans: ['Unica77', 'sans-serif'],
+			sans: ['Unica77, sans-serif', { fontFeatureSettings: "'ss04' on" }],
 		},
 		extend: {
 			colors: {
