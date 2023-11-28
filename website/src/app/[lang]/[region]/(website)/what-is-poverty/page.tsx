@@ -5,12 +5,13 @@ import { BaseContainer, Button, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
 export async function generateMetadata({ params }: DefaultPageProps) {
-	return getMetadata(params.lang, 'website-poverty-statistics-2023');
+	return getMetadata(params.lang, 'website-what-is-poverty');
 }
+
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-poverty-statistics-2023'],
+		namespaces: ['website-what-is-poverty'],
 	});
 
 	return (
@@ -18,7 +19,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			<Typography as="h1" size="5xl" weight="bold" lineHeight="normal">
 				{translator.t('title')}
 			</Typography>
-			<Typography as="h2" size="3xl" weight="medium" lineHeight="normal">
+			<Typography as="h2" size="3xl" weight="medium" lineHeight="normal" className="py-5">
 				{translator.t('lead')}
 			</Typography>
 			<div className="flex flex-col space-y-4">
@@ -28,14 +29,38 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			</div>
 			<div className="space-y-4 border-b border-t py-10 text-center">
 				<Typography size="4xl" lineHeight="normal">
-					{translator.t('quote')}
+					{translator.t('quote-1')}
 				</Typography>
 				<Typography size="xl" lineHeight="normal">
-					{translator.t('quote-source')}
+					{translator.t('quote-source-1')}
+				</Typography>
+			</div>
+			<Typography size="xl" weight="medium" lineHeight="normal">
+				{translator.t('subtitle-1')}
+			</Typography>
+			<div className="flex flex-col space-y-4">
+				{translator.t<string[]>('paragraphs-2').map((text, index) => (
+					<Typography dangerouslySetInnerHTML={{ __html: text }} key={index} size="xl" lineHeight="normal" />
+				))}
+			</div>
+			<Typography size="xl" weight="medium" lineHeight="normal">
+				{translator.t('subtitle-2')}
+			</Typography>
+			<div className="flex flex-col space-y-4">
+				{translator.t<string[]>('paragraphs-3').map((text, index) => (
+					<Typography dangerouslySetInnerHTML={{ __html: text }} key={index} size="xl" lineHeight="normal" />
+				))}
+			</div>
+			<div className="space-y-4 border-b border-t py-10 text-center">
+				<Typography size="4xl" lineHeight="normal">
+					{translator.t('quote-2')}
+				</Typography>
+				<Typography size="xl" lineHeight="normal">
+					{translator.t('quote-source-2')}
 				</Typography>
 			</div>
 			<div className="flex flex-col space-y-4">
-				{translator.t<string[]>('paragraphs-2').map((text, index) => (
+				{translator.t<string[]>('paragraphs-4').map((text, index) => (
 					<Typography dangerouslySetInnerHTML={{ __html: text }} key={index} size="xl" lineHeight="normal" />
 				))}
 			</div>
