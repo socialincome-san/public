@@ -1,21 +1,20 @@
+import { readFileSync } from 'fs';
 import * as fs from 'fs/promises';
 
-export type FutureDraw = {
-	time: number;
+const DRAWS_PATH = '../recipients_selection/draws';
+
+export type Draw = {
 	name: string;
+	time: number;
 	count: number;
 	total: number;
 };
 
-export type PastDraw = {
-	time: number;
-	name: string;
-	count: number;
-	total: number;
+export type CompletedDraw = {
 	drandRound: number;
 	drandRandomness: string;
 	filename: string;
-};
+} & Draw;
 
 type DrawFile = {
 	time: number;
@@ -25,27 +24,31 @@ type DrawFile = {
 	round: number;
 };
 
-export async function loadPastDraws(): Promise<Array<PastDraw>> {
-	const drawsPath = '../recipients_selection/draws';
-	const files = await fs.readdir(drawsPath);
-	const draws: Array<PastDraw> = [];
-
-	for (const file of files) {
-		const drawContents = await fs.readFile(`${drawsPath}/${file}`);
-		const drawFile: DrawFile = JSON.parse(drawContents.toString());
-
-		draws.push({
-			time: drawFile.time,
-			name: extractDrawName(file),
-			total: drawFile.totalCount,
-			drandRound: drawFile.round,
-			drandRandomness: drawFile.randomness,
-			count: drawFile.winners.length,
-			filename: file,
-		});
+export async function loadPastDraws(): Promise<Array<CompletedDraw>> {
+	const files = await fs.readdir(DRAWS_PATH);
+	try {
+		return (
+			files
+				.map((file) => {
+					const drawContents = readFileSync(`${DRAWS_PATH}/${file}`);
+					const drawFile: DrawFile = JSON.parse(drawContents.toString());
+					return {
+						time: drawFile.time,
+						name: extractDrawName(file),
+						total: drawFile.totalCount,
+						drandRound: drawFile.round,
+						drandRandomness: drawFile.randomness,
+						count: drawFile.winners.length,
+						filename: file,
+					};
+				})
+				// sort the draws in descending order by time
+				.sort((a, b) => b.time - a.time)
+		);
+	} catch (e) {
+		console.error(e);
+		return [];
 	}
-
-	return draws;
 }
 
 // extracts the name from a file of format `{count}-{name}-{date}.txt` and capitalises the first letter
