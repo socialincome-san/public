@@ -19,6 +19,7 @@ import marionImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mario
 import michaelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/michael.jpeg';
 import mikolajImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mikolaj.jpeg';
 import patrikImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/patrik.jpeg';
+import pranavImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/pranav.jpg';
 import reneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/rene.jpeg';
 import riccardoImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/riccardo.jpg';
 import sandinoImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/sandino.jpg';
@@ -28,15 +29,14 @@ import simonImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon.
 import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simone.jpeg';
 import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
 import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
-import pranavImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/pranav.jpg';
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, FontSize, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import classNames from 'classnames';
+import _ from 'lodash';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
-import _ from "lodash";
 
 type Group = {
 	name: string;
@@ -141,7 +141,7 @@ export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 						<ul
 							role="list"
 							className={classNames(
-								'grid lg:mx-0 lg:max-w-none pt-6',
+								'grid pt-6 lg:mx-0 lg:max-w-none',
 								{
 									'grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7': group.size === 'sm',
 								},
@@ -153,7 +153,7 @@ export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 								},
 							)}
 						>
-							{_.sortBy(group.people, "name").map((person: Person, index2) => (
+							{_.sortBy(group.people, 'name').map((person: Person, index2) => (
 								<li key={index2} className="flex flex-col">
 									<Image
 										className="aspect-[5/6] w-full rounded-2xl object-cover transition-transform duration-300 hover:scale-105"
