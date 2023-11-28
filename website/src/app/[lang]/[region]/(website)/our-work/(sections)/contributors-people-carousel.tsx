@@ -42,6 +42,7 @@ export function ContributorsPeopleCarousel({ portraits }: { portraits: PortraitP
 
 	let slidesToScroll;
 	switch (screenSize) {
+		case null:
 		case 'xs':
 			slidesToScroll = 1;
 			break;

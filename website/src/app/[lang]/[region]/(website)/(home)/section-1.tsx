@@ -12,9 +12,9 @@ export async function Section1({ lang, region }: DefaultParams) {
 	return (
 		<BaseContainer
 			backgroundColor="bg-blue-50"
-			className="min-h-screen-navbar grid grid-cols-1 content-center items-center gap-x-4 gap-y-8 lg:grid-cols-2"
+			className="min-h-screen-navbar grid grid-cols-1 items-start gap-x-4 align-top sm:content-center lg:grid-cols-2"
 		>
-			<div className="mx-auto max-w-3xl">
+			<div className="mx-auto max-w-2xl">
 				<Typography size="5xl" weight="bold">
 					{translator.t('section-1.title-1')}
 					<Typography as="span" size="5xl" weight="bold" color="secondary">

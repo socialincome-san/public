@@ -22,9 +22,7 @@ export async function Section7({ lang }: { lang: WebsiteLanguage }) {
 					{translator.t('section-7.title-2')}
 				</Typography>
 			</p>
-			<Typography size="2xl" weight="medium">
-				{translator.t('section-7.subtitle')}
-			</Typography>
+			<Typography size="2xl">{translator.t('section-7.subtitle')}</Typography>
 			<Section7Carousel />
 		</BaseContainer>
 	);

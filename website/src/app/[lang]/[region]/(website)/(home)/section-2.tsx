@@ -22,14 +22,14 @@ export function Section2({ vimeoVideoId, translations }: Section2Props) {
 			backgroundColor="bg-yellow-50"
 			className="flex flex-col items-center space-y-8 py-20 sm:min-h-screen lg:flex-row"
 		>
-			<div className="flex flex-1 flex-col justify-center p-4 text-center lg:p-8 lg:text-left">
+			<div className="flex flex-1 flex-col justify-center text-left lg:p-8">
 				<Typography as="span" size="4xl" weight="bold">
 					{translations.title1}
 				</Typography>
 				<Typography as="span" size="4xl" weight="bold" color="secondary">
 					{translations.title2}
 				</Typography>
-				<Typography size="2xl" className="mt-4">
+				<Typography size="lg" className="mt-4">
 					{translations.subtitle1}
 				</Typography>
 			</div>

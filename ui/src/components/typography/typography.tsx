@@ -7,10 +7,10 @@ import IntrinsicElements = React.JSX.IntrinsicElements;
 
 export type FontSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl'>;
 const FONT_SIZE_MAP: { [key in FontSize]: string } = {
-	'5xl': 'text-5xl',
-	'4xl': 'text-4xl',
-	'3xl': 'text-3xl',
-	'2xl': 'text-2xl',
+	'5xl': 'text-4xl md:text-5xl',
+	'4xl': 'text-3xl md:text-4xl',
+	'3xl': 'text-2xl md:text-3xl',
+	'2xl': 'text-xl md:text-2xl',
 	xl: 'text-xl',
 	lg: 'text-lg',
 	md: 'text-base',
