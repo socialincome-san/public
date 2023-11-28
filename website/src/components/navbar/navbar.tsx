@@ -68,6 +68,10 @@ export default async function Navbar({ lang, region, showNavigation = true }: Na
 							href: `/${lang}/${region}/transparency/evidence`,
 						},
 						{
+							title: translator.t('navigation.sustainability'),
+							href: `/${lang}/${region}/transparency/sustainability`,
+						},
+						{
 							title: translator.t('navigation.reporting'),
 							href: `/${lang}/${region}/transparency/reporting`,
 						},
