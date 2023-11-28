@@ -6,7 +6,7 @@ import { CountryCard, CountryCardList } from './section-3-cards';
 export async function Section3({ params, contributionStats }: SectionProps) {
 	const translator = await Translator.getInstance({
 		language: params.lang,
-		namespaces: ['countries', 'website-transparency'],
+		namespaces: ['countries', 'website-finances'],
 	});
 	const totalContributionsByCountry = contributionStats.totalContributionsByCountry as {
 		country: string;

@@ -43,7 +43,7 @@ export async function FlowOfFunds({ lang }: { lang: WebsiteLanguage }) {
 				<div className="md:col-span-2">
 					<div className="flex flex-col space-y-4">
 						<div className="mx-auto w-full max-w-3xl">
-							<div className="aspect-w-16 aspect-h-9 overflow-hidden rounded-xl">
+							<div className="aspect-video overflow-hidden rounded-xl">
 								<VimeoVideo videoId={translator.t('flow-of-funds.vimeo-video-id')} />
 							</div>
 						</div>

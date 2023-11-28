@@ -115,13 +115,13 @@ export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 			<Typography as="h3" size="xl" color="muted-foreground" className="mb-4">
 				{translator.t('team.header')}
 			</Typography>
-			<p className="mb-8 lg:mb-16">
+			<Typography size="4xl" weight="bold">
 				{translator.t<{ text: string; color?: FontColor }[]>('team.title').map((title, index) => (
-					<Typography as="span" key={index} size="4xl" weight="bold" color={title.color}>
+					<Typography as="span" key={index} color={title.color}>
 						{title.text}
 					</Typography>
 				))}
-			</p>
+			</Typography>
 			<div className="mt-10 space-y-16">
 				{groups.map((group, index1) => (
 					<div key={index1}>
@@ -132,7 +132,7 @@ export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 							<Typography size="xl" weight="medium">
 								{translator.t(`team.groups.${group.name}.subtitle`)}
 							</Typography>
-							<div className="flex flex-col space-y-4 md:col-span-2">
+							<div className="md:col-span-2">
 								<Typography size="lg" className="mb-8">
 									{translator.t(`team.groups.${group.name}.description`)}
 								</Typography>
