@@ -25,11 +25,11 @@ export async function OurMission({ lang }: { lang: WebsiteLanguage }) {
 					</Typography>
 				))}
 			</p>
-			<div className="grid gap-8 lg:grid-cols-3 lg:gap-16">
-				<Typography size="2xl" weight="semibold">
+			<div className="grid grid-cols-1 gap-8 md:grid-cols-3 lg:gap-16">
+				<Typography size="2xl" weight="medium">
 					{translator.t('our-mission.subtitle')}
 				</Typography>
-				<div className="flex flex-col space-y-4 lg:col-span-2">
+				<div className="flex flex-col space-y-4 md:col-span-2">
 					{translator.t<string[]>('our-mission.paragraphs').map((text, index) => (
 						<Typography key={index} size="lg">
 							{text}

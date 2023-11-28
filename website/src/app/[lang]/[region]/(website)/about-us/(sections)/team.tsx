@@ -28,6 +28,7 @@ import simonImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon.
 import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simone.jpeg';
 import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
 import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
+import pranavImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/pranav.jpg';
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, FontSize, Typography } from '@socialincome/ui';
@@ -35,6 +36,7 @@ import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import classNames from 'classnames';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
+import _ from "lodash";
 
 type Group = {
 	name: string;
@@ -71,6 +73,8 @@ const groups: Group[] = [
 			{ name: 'Verena Zaiser', role: 'app-development', image: verenaImage },
 			{ name: 'András Heé', role: 'software-development', image: andrasImage },
 			{ name: 'Carlos Badilla', role: 'impact-measurement', image: carlosImage },
+			{ name: 'Larissa dos Santos Lima', role: 'communications', image: larissaImage },
+			{ name: 'Pranav Chatur', role: 'software-development', image: pranavImage },
 		],
 	},
 	{
@@ -96,8 +100,7 @@ const groups: Group[] = [
 			{ name: 'Alexandre Milan', role: 'software-development', image: alexandreImage },
 			{ name: 'Patrik Sopran', role: 'app-development', image: patrikImage },
 			{ name: 'Anders Nordhag', role: 'communications', image: andersImage },
-			{ name: 'Larissa dos Santos Lima', role: 'communications', image: larissaImage },
-			{ name: 'Ajla Murati', role: 'strategy', image: ajlaImage },
+			{ name: 'Ajla Murati', role: 'operations', image: ajlaImage },
 			{ name: 'Simon Bühler', role: 'communications', image: simonImage },
 			{ name: 'Sarah Mekni', role: 'strategy', image: sarahImage },
 			{ name: 'Lorenzo Garovi', role: 'strategy', image: lorenzoImage },
@@ -119,19 +122,26 @@ export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 					</Typography>
 				))}
 			</p>
-			<div className="mt-16 space-y-20">
+			<div className="mt-10 space-y-16">
 				{groups.map((group, index1) => (
 					<div key={index1}>
-						<Typography size="3xl" weight="bold">
+						<Typography size="3xl" weight="bold" className="py-8">
 							{translator.t(`team.groups.${group.name}.name`)}
 						</Typography>
-						<Typography size="md" className="mb-8">
-							{translator.t(`team.groups.${group.name}.description`)}
-						</Typography>
+						<div className="grid grid-cols-1 gap-8 md:grid-cols-3 lg:gap-16">
+							<Typography size="xl" weight="medium">
+								{translator.t(`team.groups.${group.name}.subtitle`)}
+							</Typography>
+							<div className="flex flex-col space-y-4 md:col-span-2">
+								<Typography size="lg" className="mb-8">
+									{translator.t(`team.groups.${group.name}.description`)}
+								</Typography>
+							</div>
+						</div>
 						<ul
 							role="list"
 							className={classNames(
-								'grid lg:mx-0 lg:max-w-none',
+								'grid lg:mx-0 lg:max-w-none pt-6',
 								{
 									'grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7': group.size === 'sm',
 								},
@@ -143,14 +153,14 @@ export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 								},
 							)}
 						>
-							{group.people.map((person: Person, index2) => (
+							{_.sortBy(group.people, "name").map((person: Person, index2) => (
 								<li key={index2} className="flex flex-col">
 									<Image
 										className="aspect-[5/6] w-full rounded-2xl object-cover transition-transform duration-300 hover:scale-105"
 										src={person.image}
 										alt={`${person.name} image`}
 									/>
-									<Typography as="h3" size={group.size} weight="semibold" lineHeight="tight" className="mt-6">
+									<Typography as="h3" size={group.size} weight="medium" lineHeight="tight" className="mt-6">
 										{person.name}
 									</Typography>
 									<Typography

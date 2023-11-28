@@ -25,10 +25,15 @@ export async function HundredPercentModel({ lang }: { lang: WebsiteLanguage }) {
 					</Typography>
 				))}
 			</p>
-			<div>
-				<div className="flex flex-col space-y-4">
+			<div className="grid grid-cols-1 gap-8 md:grid-cols-3 lg:gap-16">
+				<Typography size="2xl" weight="medium" className="hyphens-manual" lang="de"
+					dangerouslySetInnerHTML={{ __html: translator.t('100-percent-model.subtitle') }} >
+				</Typography>
+				<div className="flex flex-col space-y-4 md:col-span-2">
 					{translator.t<string[]>('100-percent-model.paragraphs').map((text, index) => (
-						<Typography dangerouslySetInnerHTML={{ __html: text }} key={index} size="lg" />
+						<Typography key={index} size="lg">
+							{text}
+						</Typography>
 					))}
 				</div>
 			</div>
