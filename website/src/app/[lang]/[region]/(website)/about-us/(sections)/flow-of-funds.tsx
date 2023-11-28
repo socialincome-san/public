@@ -26,13 +26,29 @@ export async function FlowOfFunds({ lang }: { lang: WebsiteLanguage }) {
 					</Typography>
 				))}
 			</p>
-			<div className="mb-8 flex flex-col space-y-4 lg:mb-16">
-				{translator.t<string[]>('flow-of-funds.paragraphs').map((text, index) => (
-					<Typography dangerouslySetInnerHTML={{ __html: text }} key={index} size="lg" />
-				))}
-			</div>
-			<div className="mx-auto w-full max-w-3xl">
-				<VimeoVideo videoId={translator.t('flow-of-funds.vimeo-video-id')} />
+
+			<div className="grid grid-cols-1 gap-8 md:grid-cols-3 lg:gap-16">
+				<div className="space-y-5">
+					<div>
+						<Typography size="2xl" weight="medium">
+							{translator.t('flow-of-funds.subtitle')}
+						</Typography>
+					</div>
+					<div>
+						<Typography size="xl" weight="normal">
+							{translator.t('flow-of-funds.text')}
+						</Typography>
+					</div>
+				</div>
+				<div className="md:col-span-2">
+					<div className="flex flex-col space-y-4">
+						<div className="mx-auto w-full max-w-3xl">
+							<div className="aspect-video overflow-hidden rounded-xl">
+								<VimeoVideo videoId={translator.t('flow-of-funds.vimeo-video-id')} />
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</BaseContainer>
 	);

@@ -37,32 +37,34 @@
 		"header": "100% Model",
 		"title": [
 			{
-				"text": "Zero overhead costs. "
+				"text": "Donations are for people in need. "
 			},
 			{
-				"text": "Our pledge to you.",
+				"text": "Not to pay overhead costs.",
 				"color": "secondary"
 			}
 		],
+		"subtitle": "We believe that 100% of our contributors’ recurring donations should go to our recipients.",
 		"paragraphs": [
-			"We believe that 100% of our contributors’ donations should go to our recipients. To maintain this promise, all our operating costs and financial expenses are covered by philanthropic grants and institutional donations.",
-			"Thanks to this support, we can guarantee that 100% of the money from our individual contributors reaches our recipients.",
-			"Additionally, we receive various in-kind support from organizations, such as <a href='https://www.google.com/nonprofits/' class='underline' target='_blank'>Google Non-profit</a> or <a href='https://lineto.com/' class='underline' target='_blank'>Lineto</a> (Unica77 font). Thank you!"
+			"To maintain this promise, our operating costs and financial expenses are covered by philanthropic grants and institutional donations.",
+			"Thanks to this support, we can guarantee that 100% of the recurring donations reaches our recipients."
 		]
 	},
 	"flow-of-funds": {
 		"header": "Flow of Funds",
 		"title": [
 			{
-				"text": "Social Income payments are sent directly to "
+				"text": "From Everywhere to the Global South "
 			},
 			{
-				"text": "recipients’ mobile phones.",
+				"text": "Safe, Fast, and Direct.",
 				"color": "secondary"
 			}
 		],
+		"subtitle": "Donations are safely stored in the most stable currency in the world: Swiss Francs.",
+		"text": "Every month we transfer just enough money to local banks in the countries where we are active. We then distribute Social Incomes with the help of mobile money directly to the phones of beneficiaries.",
 		"paragraphs": [
-			"We receive contributions from all over the world. They are safely stored in our bank account, in the most stable currency in the world: Swiss Francs. Every month we transfer just enough money to local banks in the countries where we are active. We then distribute Social Incomes with the help of mobile money directly to the phones of beneficiaries."
+			"Every month we transfer just enough money to local banks in the countries where we are active. We then distribute Social Incomes with the help of mobile money directly to the phones of beneficiaries."
 		],
 		"vimeo-video-id": "840215695"
 	},
@@ -83,7 +85,7 @@
 			"marketing": "Marketing",
 			"communications": "Communications",
 			"co-president": "Co-President",
-			"founder": "Founder",
+			"founder": "Founding Director",
 			"board-member": "Board Member",
 			"software-development": "Software Development",
 			"app-development": "App Development",
@@ -92,20 +94,24 @@
 		},
 		"groups": {
 			"staff": {
-				"name": "Staff",
-				"description": "Our local staff in Sierra Leone."
+				"name": "Local Staff",
+				"subtitle": "Working in the field, ensuring that recipients and partners have a reliable point of contact.",
+				"description": "The local staff manages local operations and offers support to partners and recipients. Their insights are re-integrated into the technological tools we develop. They are compensated with a fair local salary."
 			},
 			"volunteers": {
-				"name": "Volunteers",
-				"description": "The people who make it all happen."
+				"name": "Active Volunteers",
+				"subtitle": "The people who generously contribute their time and skills to make everything possible.",
+				"description": "Running Social Income requires a diverse range of skills. These dedicated professionals who volunteer bring everything to life and manage an entire NGO through their commitment and effective teamwork."
 			},
 			"board": {
 				"name": "Board of Association",
-				"description": "The overseers of the organization."
+				"subtitle": "Responsible for compliance with ethical standards and internal guidelines.",
+				"description": "The board is responsible for the supervision of the organization. Members are elected for a term of four years. Their specific supervisory duties are defined in the statutes and organizational regulations."
 			},
 			"special-thanks": {
-				"name": "Special Thanks",
-				"description": "These individuals have volunteered and made generous contributions towards Social Income."
+				"name": "Former Volunteers",
+				"subtitle": "These individuals have significantly shaped Social Income through their voluntary efforts.",
+				"description": "Volunteers who are inactive for more than three months are considered former until they resume their participation. This approach allows us to transparently and accurately represent the true size of our organization."
 			}
 		}
 	},

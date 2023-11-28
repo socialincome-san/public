@@ -2,21 +2,90 @@
 	"metadata": {
 		"title": "Wer wir sind | Social Income"
 	},
-	"section-1": {
-		"title-1": "Etwas bewegen, nicht nur darüber sprechen. ",
-		"title-2": "Dies war der Anfang von Social Income."
+	"landing-page": {
+		"title": [
+			{
+				"text": "Etwas bewegen, nicht nur darüber sprechen. "
+			},
+			{
+				"text": "Dies war der Anfang von Social Income.",
+				"color": "secondary"
+			}
+		]
+	},
+	"our-mission": {
+		"header": "Unsere Mission",
+		"title": [
+			{
+				"text": "Einen persönlichen Beitrag leisten zur "
+			},
+			{
+				"text": "Bekämpfung der globalen Armut.",
+				"color": "secondary"
+			}
+		],
+		"subtitle": "Viele Menschen aus wohlhabenden Ländern möchten sich für globale Gerechtigkeit engagieren. Allerdings wissen sie nicht immer wie und wo.",
+		"paragraphs": [
+			"Dabei macht es die sich rasant ausbreitende Nutzung von Mobile Banking so einfach und günstig wie nie zuvor, Geld direkt an bedürftige Menschen zu überweisen.",
+			"Social Income nutzt dieses Potenzial, indem zwei Ansätze der Vermögensverteilung kombiniert werden. Der erste Ansatz basiert auf der Idee eines bedingungslosen Grundeinkommens: ein vielversprechender Weg zu einer gerechteren Welt.",
+			"Der zweite Ansatz besteht in direkten Bargeldtransfers an Menschen, die in extremer Armut leben. So hat die Forschung gezeigt, dass diejenigen, die direkte finanzielle Hilfe erhalten, nicht nur selbst profitieren, sondern diese Mittel lokal, verantwortungsvoll und nachhaltig investieren.",
+			"Kontinuierliche und langfristig angelegte Geldüberweisungen an Menschen in Not können also nachweislich und signifikant die Armut reduzieren. Wir machen uns dies zunutze, indem wir Bargeld direkt an die Empfänger*innen schicken: von Mensch zu Mensch, denn in vielen der ärmsten Ländern der Welt gibt es keine solide soziale Infrastruktur.",
+			"Und das auf eine radikal transparente Weise, die es uns ermöglicht, die hohen Verwaltungskosten zu umgehen, die normalerweise mit solchen Projekten verbunden sind."
+		]
+	},
+	"100-percent-model": {
+		"header": "100% Model",
+		"title": [
+			{
+				"text": "Spenden für Menschen in Armut. "
+			},
+			{
+				"text": "Nicht für Adminkosten.",
+				"color": "secondary"
+			}
+		],
+		"subtitle": "Wir sind der Meinung, dass 100% der wieder&shy;kehrenden Spenden Menschen in Not zugute kommen sollen.",
+		"paragraphs": [
+			"Wir haben einen Weg gefunden, dieses Versprechen einzulösen: Unsere Betriebskosten und Finanzierungsaufwendungen werden durch philanthropische Zuschüsse und institutionelle Spenden gedeckt.",
+			"Dank dieser Unterstützung können wir garantieren, dass 100 % der Beiträge unserer individuellen Spender*innen bei den Empfänger:innen ankommt."
+		]
+	},
+	"flow-of-funds": {
+		"header": "Geldfluss",
+		"title": [
+			{
+				"text": "Von überall bis in den Globalen Süden. "
+			},
+			{
+				"text": "Sicher, schnell und direkt.",
+				"color": "secondary"
+			}
+		],
+		"subtitle": "Spenden werden sicher in der stabilsten Währung der Welt aufbewahrt: Schweizer Franken.",
+		"text": "Monatlich überweisen wir Geld auf unsere Konten bei lokalen Banken in den Ländern, in denen wir aktiv sind. Anschliessend zahlen wir das Geld direkt auf die Mobiltelefone von bedürftigen Menschen mittels Mobile Money aus.",
+		"paragraphs": [
+			"Monatlich überweisen wir Geld auf unsere Konten bei lokalen Banken in den Ländern, in denen wir aktiv sind. Anschliessend zahlen wir das Geld direkt auf die Mobiltelefone von bedürftigen Menschen mittels Mobile Money aus."
+		],
+		"vimeo-video-id": "840215695"
 	},
 	"team": {
 		"header": "Unser Team",
-		"title-1": "Wir verhelfen Social Income ",
-		"title-2": "zur Realität.",
+		"title": [
+			{
+				"text": "Wir verhelfen Social Income "
+			},
+			{
+				"text": "zur Realität.",
+				"color": "secondary"
+			}
+		],
 		"roles": {
 			"finance": "Finanzen",
 			"operations": "Betrieb",
 			"marketing": "Marketing",
 			"communications": "Kommunikation",
 			"co-president": "Co-Präsident:in",
-			"founder": "Gründer",
+			"founder": "Gründungsdirektor",
 			"board-member": "Vorstandsmitglied",
 			"software-development": "Softwareentwicklung",
 			"app-development": "App-Entwicklung",
@@ -24,20 +93,24 @@
 		},
 		"groups": {
 			"staff": {
-				"name": "Mitarbeiter:innen",
-				"description": "Unsere Mitarbeiter:innen vor Ort in Sierra Leone."
+				"name": "Örtliche Mitarbeitende",
+				"subtitle": "Sie leiten den Betrieb und dessen Weiterentwicklung im Auszahlungsland.",
+				"description": "Das lokale Personal bietet zuverlässige Unterstützung für Partner:innen und Empfänger:innen. Ihre Erkenntnisse fliessen in die von uns entwickelten Tools ein. Sie werden mit einem fairen lokalen Gehalt vergütet."
 			},
 			"volunteers": {
-				"name": "Freiwillige",
-				"description": "Die Menschen, die alles möglich machen."
+				"name": "Aktive Freiwillige",
+				"subtitle": "Die Menschen, die grosszügig ihre Zeit und Fähigkeiten zur Verfügung stellen, um alles möglich zu machen.",
+				"description": "Die Leitung von Social Income erfordert vielfältige Fähigkeiten. Diese engagierten Fachleute, die freiwillig die Initiative voranbringen und mit ihrem Einsatz und ihrer effektiven Teamarbeit, machen alles erst möglich."
 			},
 			"board": {
 				"name": "Vorstand",
-				"description": "Die Aufsichtspersonen der Organisation."
+				"subtitle": "Verantwortlich für die Einhaltung ethischer Standards und interner Richtlinien.",
+				"description": "Der Vorstand ist für die Aufsicht über die Organisation zuständig. Die Mitglieder werden für eine Amtszeit von vier Jahren gewählt. Ihre spezifischen Aufsichtspflichten sind in den Statuten und dem Organisationsreglement festgelegt. "
 			},
 			"special-thanks": {
-				"name": "Besonderer Dank",
-				"description": "Diese Personen haben sich großzügig ehrenamtlich eingesetzt und zu Social Income beigetragen."
+				"name": "Ehemalige Freiwillige",
+				"subtitle": "Diese Individuen haben durch ihren ehrenamtlichen Einsatz Social Income massgeblich geprägt.",
+				"description": "Freiwillige, die mehr als drei Monate inaktiv sind, werden als ehemalige betrachtet, bis sie ihre Mitarbeit wieder aufnehmen. Dieses Vorgehen ermöglicht es uns, die wirkliche Grösse unserer Organisation transparent und präzise darzustellen."
 			}
 		}
 	}
