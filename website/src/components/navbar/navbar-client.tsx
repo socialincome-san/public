@@ -31,7 +31,6 @@ type NavigationSection = {
 	href?: string;
 	links?: {
 		title: string;
-		description?: string;
 		href: string;
 	}[];
 };
@@ -179,7 +178,7 @@ export function NavbarClient({
 						{navigation.map((section, index) => (
 							<div key={index}>
 								{_.isEmpty(section.links) && section.href ? (
-									// Entire section is a link with hover effect
+									// This section is a link with hover effect
 									<Link
 										href={section.href}
 										className="hover:bg-accent flex flex-1 items-center justify-between px-5 py-4 text-lg font-medium md:px-0"
