@@ -23,7 +23,7 @@ export default async function Section2({ params }: DefaultPageProps) {
 					</Typography>
 				))}
 			</div>
-			<div className="my-32 flex h-full flex-wrap text-left md:col-span-3 lg:col-span-4">
+			<div className="mt-32 grid grid-cols-1 gap-y-8 md:grid-cols-2 md:gap-16">
 				{cards.map((card, key) => (
 					<SectionCard key={key} card={card} />
 				))}
