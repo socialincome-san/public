@@ -130,9 +130,9 @@ export function NavbarClient({
 												<HoverCardContent asChild alignOffset={20} className="bg-popover w-56 p-0">
 													<ul className="divide-muted divide-y">
 														{section.links?.map((link, index) => (
-															<li key={index} className="hover:bg-accent px-10 py-3">
+															<li key={index} className="hover:bg-accent px-8 py-3">
 																<Link href={link.href}>
-																	<Typography size="xl" color="accent-foreground">
+																	<Typography size="lg" color="accent-foreground">
 																		{link.title}
 																	</Typography>
 																</Link>
