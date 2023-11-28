@@ -31,7 +31,6 @@ type NavigationSection = {
 	href?: string;
 	links?: {
 		title: string;
-		description?: string;
 		href: string;
 	}[];
 };
@@ -130,9 +129,9 @@ export function NavbarClient({
 												<HoverCardContent asChild alignOffset={20} className="bg-popover w-56 p-0">
 													<ul className="divide-muted divide-y">
 														{section.links?.map((link, index) => (
-															<li key={index} className="hover:bg-accent px-10 py-3">
+															<li key={index} className="hover:bg-accent px-8 py-3">
 																<Link href={link.href}>
-																	<Typography size="xl" color="accent-foreground">
+																	<Typography size="lg" color="accent-foreground">
 																		{link.title}
 																	</Typography>
 																</Link>
@@ -179,7 +178,7 @@ export function NavbarClient({
 						{navigation.map((section, index) => (
 							<div key={index}>
 								{_.isEmpty(section.links) && section.href ? (
-									// Entire section is a link with hover effect
+									// This section is a link with hover effect
 									<Link
 										href={section.href}
 										className="hover:bg-accent flex flex-1 items-center justify-between px-5 py-4 text-lg font-medium md:px-0"
