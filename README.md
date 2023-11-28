@@ -203,7 +203,7 @@ We receive in-kind donations from
 [GitHub](https://socialimpact.github.com),
 [Codemagic](https://codemagic.io/start/), [Linktree](https://linktr.ee),
 [Twilio](https://twilio.org), [algolia](https://www.algolia.com),
-[JetBrain](https://www.jetbrains.com),
+[JetBrains](https://www.jetbrains.com),
 [1Password](https://1password.com/) and
 [Lineto](https://www.lineto.com). Our tools also leverage other
 open-source technologies, including solutions like
