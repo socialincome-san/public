@@ -1,89 +1,89 @@
 {
-  "section-1": {
-    "title": "Sustainability",
-    "subtitle": "Our overall carbon footprint"
-  },
-  "section-2": {
-    "tabs": [
-      {
-        "trigger": "2021",
-        "cards": [
-          {
-            "type": "Building Emissions",
-            "amount": "1.50 tons",
-            "gas": "CO₂e"
-          },
-          {
-            "type": "Transport Emissions",
-            "amount": "3.10 tons",
-            "gas": "CO₂e"
-          },
-          {
-            "type": "ICT Emissions",
-            "amount": "0.002 tons",
-            "gas": "CO₂e"
-          },
-          {
-            "type": "Total",
-            "amount": "4.602 tons",
-            "gas": "CO₂e",
-            "theme": "theme-white",
-            "weight": "bold"
-          },
-          {
-            "type": "Double CO₂ Compensation",
-            "amount": "9 ton CO₂e",
-            "gas": "Certificate",
-            "theme": "theme-dark-blue",
-            "href": "https://drive.google.com/file/d/1E0wTQB-LApDNaV7DPHli87Nr2wLF2sPB/view?"
-          }
-        ],
-        "partner": "Our project partner in climate compensation: ",
-        "partnerLink": "https://moss.earth/"
-      },
-      {
-        "trigger": "2022",
-        "cards": [
-          {
-            "type": "Building Emissions",
-            "amount": "4.69 tons",
-            "gas": "CO₂e"
-          },
-          {
-            "type": "Transport Emissions",
-            "amount": "7.7 tons",
-            "gas": "CO₂e"
-          },
-          {
-            "type": "ICT Emissions",
-            "amount": "1.0093 tons",
-            "gas": "CO₂e"
-          },
-          {
-            "type": "Total",
-            "amount": "13.399 tons",
-            "gas": "CO₂e",
-            "weight": "bold"
-          },
-          {
-            "type": "Double CO₂ Compensation",
-            "amount": "26 ton CO₂e",
-            "gas": "Certificate",
-            "theme": "theme-dark-blue",
-            "href": ""
-          }
-        ],
-        "partner": "Our project partner in climate compensation: ",
-        "partnerLink": "https://moss.earth/"
-      },
-      {
-        "trigger": "2023",
-        "topic": "Our goal",
-        "title": "Emitting less than 10 tons of CO2 and compensating double to stay carbon negative.",
-        "subtitle": "10 metric tons of CO2 is equivalent to about 60% of annual per capita emissions in the US.",
-        "text": "Our World in Data",
-        "href": "https://ourworldindata.org/co2-and-other-greenhouse-gas-emissions"
-      }
-    ]
-  }
+	"section-1": {
+		"title": "Sustainability",
+		"subtitle": "Our overall carbon footprint"
+	},
+	"section-2": {
+		"tabs": [
+			{
+				"trigger": "2021",
+				"cards": [
+					{
+						"type": "Building Emissions",
+						"amount": "1.50 tons",
+						"gas": "CO₂e"
+					},
+					{
+						"type": "Transport Emissions",
+						"amount": "3.10 tons",
+						"gas": "CO₂e"
+					},
+					{
+						"type": "ICT Emissions",
+						"amount": "0.002 tons",
+						"gas": "CO₂e"
+					},
+					{
+						"type": "Total",
+						"amount": "4.602 tons",
+						"gas": "CO₂e",
+						"theme": "theme-white",
+						"weight": "bold"
+					},
+					{
+						"type": "Double CO₂ Compensation",
+						"amount": "9 ton CO₂e",
+						"gas": "Certificate",
+						"theme": "theme-dark-blue",
+						"href": "https://drive.google.com/file/d/1E0wTQB-LApDNaV7DPHli87Nr2wLF2sPB/view?"
+					}
+				],
+				"partner": "Our project partner in climate compensation: ",
+				"partnerLink": "https://moss.earth/"
+			},
+			{
+				"trigger": "2022",
+				"cards": [
+					{
+						"type": "Building Emissions",
+						"amount": "4.69 tons",
+						"gas": "CO₂e"
+					},
+					{
+						"type": "Transport Emissions",
+						"amount": "7.7 tons",
+						"gas": "CO₂e"
+					},
+					{
+						"type": "ICT Emissions",
+						"amount": "1.0093 tons",
+						"gas": "CO₂e"
+					},
+					{
+						"type": "Total",
+						"amount": "13.399 tons",
+						"gas": "CO₂e",
+						"weight": "bold"
+					},
+					{
+						"type": "Double CO₂ Compensation",
+						"amount": "26 ton CO₂e",
+						"gas": "Certificate",
+						"theme": "theme-dark-blue",
+						"href": ""
+					}
+				],
+				"partner": "Our project partner in climate compensation: ",
+				"partnerLink": "https://moss.earth/"
+			},
+			{
+				"trigger": "2023",
+				"topic": "Our goal",
+				"title": "Emitting less than 10 tons of CO2 and compensating double to stay carbon negative.",
+				"subtitle": "10 metric tons of CO2 is equivalent to about 60% of annual per capita emissions in the US.",
+				"text": "Our World in Data",
+				"href": "https://ourworldindata.org/co2-and-other-greenhouse-gas-emissions"
+			}
+		]
+	}
 }
