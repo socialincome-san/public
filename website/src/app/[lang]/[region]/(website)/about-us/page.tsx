@@ -1,6 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { HundredPercentModel } from '@/app/[lang]/[region]/(website)/about-us/(sections)/100-percent-model';
-import { Contact } from '@/app/[lang]/[region]/(website)/about-us/(sections)/contact';
 import { FlowOfFunds } from '@/app/[lang]/[region]/(website)/about-us/(sections)/flow-of-funds';
 import { OurMission } from '@/app/[lang]/[region]/(website)/about-us/(sections)/our-mission';
 import Team from '@/app/[lang]/[region]/(website)/about-us/(sections)/team';
