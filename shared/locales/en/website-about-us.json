@@ -5,13 +5,24 @@
 	"landing-page": {
 		"title": [
 			{
-				"text": "We wanted to act. We found a way to do it. "
+				"text": "We had the option to do nothing.  "
 			},
 			{
-				"text": "Social Income was born.",
+				"text": "We decided against it.",
 				"color": "secondary"
 			}
-		]
+		],
+		"subtitle": "We believe that improving the lives of people in need is not just a possibility but a responsibility. That's how Social Income was born.",
+		"contact": "Contact Us",
+		"contact-title": "Get in touch",
+		"contact-email": "hello@socialincome.org",
+		"registration": "NGO Registration",
+		"registration-title": "Legal status",
+		"registration-foundation": "Social Income is a non-profit organization founded under Swiss law in 2019 with tax exempt status.",
+		"registration-uid": "UID: ",
+		"registration-uid-nr": "CHE-289.611.695",
+		"registration-duns": "DUNS: ",
+		"registration-duns-nr": "48-045-6376"
 	},
 	"our-mission": {
 		"header": "Our Mission",

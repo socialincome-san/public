@@ -19,7 +19,6 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 			<HundredPercentModel lang={lang} />
 			<FlowOfFunds lang={lang} />
 			<Team lang={lang} />
-			<Contact lang={lang} />
 		</>
 	);
 }
