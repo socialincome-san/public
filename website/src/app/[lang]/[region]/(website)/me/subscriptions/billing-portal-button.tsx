@@ -1,5 +1,6 @@
 'use client';
 
+import { CreditCardIcon } from '@heroicons/react/24/outline';
 import { Button } from '@socialincome/ui';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -30,7 +31,13 @@ export function BillingPortalButton({ translations }: BillingPortalButtonProps) 
 	});
 
 	return (
-		<Button variant="ghost" size="lg" onClick={() => router.push(billingPortalUrl!)} disabled={!billingPortalUrl}>
+		<Button
+			variant="ghost"
+			size="lg"
+			Icon={CreditCardIcon}
+			onClick={() => router.push(billingPortalUrl!)}
+			disabled={!billingPortalUrl}
+		>
 			{translations.manageSubscriptions}
 		</Button>
 	);

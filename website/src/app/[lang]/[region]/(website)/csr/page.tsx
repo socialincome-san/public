@@ -19,7 +19,7 @@ export default async function Page({ params }: DefaultPageProps) {
 				href="https://github.com/anthonyray"
 				target="_blank"
 				rel="noopener noreferrer"
-				className="bg-card hover:bg-accent border-accent flex items-center rounded-full border-2 p-2 text-center"
+				className="bg-card hover:bg-muted border-accent flex items-center rounded-full border-2 p-2 text-center"
 			>
 				<Image
 					src={anthonyImage}

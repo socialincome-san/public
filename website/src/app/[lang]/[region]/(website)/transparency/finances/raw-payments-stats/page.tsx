@@ -22,7 +22,7 @@ export default async function Page() {
 			<div className="mt-4 grid grid-cols-3 gap-4">
 				{paymentStats.totalPaymentsByMonth.map((monthlyStat, index) => (
 					<Card key={index} className="p-4">
-						<Typography size="lg" weight="semibold">
+						<Typography size="lg" weight="medium">
 							{monthlyStat.month}
 						</Typography>
 						<Typography>SLE: {monthlyStat.amountSLE}</Typography>

@@ -41,7 +41,7 @@ export async function WhatsNext({ params }: DefaultPageProps) {
 		<BaseContainer
 			id="whats-next"
 			backgroundColor="bg-muted"
-			className="flex min-h-screen flex-col justify-center space-y-8 py-16 md:py-32"
+			className="flex min-h-screen flex-col justify-center space-y-8 pt-16 md:pt-32"
 		>
 			<div className="space-y-4">
 				<Typography as="h3" size="xl" color="muted-foreground">
@@ -61,7 +61,7 @@ export async function WhatsNext({ params }: DefaultPageProps) {
 			<ul role="list">
 				{timeline.map(({ Icon, iconColor, title, text }, index) => (
 					<li key={index}>
-						<div className="relative pb-8">
+						<div className="relative mb-8">
 							{index !== timeline.length - 1 ? (
 								<span className="bg-muted-foreground absolute left-6 top-6 -ml-px h-full w-0.5" aria-hidden="true" />
 							) : null}

@@ -26,6 +26,7 @@ export function ContributorsOrgsCarousel() {
 
 	let slidesToScroll;
 	switch (screenSize) {
+		case null:
 		case 'xs':
 		case 'sm':
 			slidesToScroll = 2;

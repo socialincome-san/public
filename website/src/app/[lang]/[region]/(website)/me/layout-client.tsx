@@ -3,6 +3,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { ArrowPathIcon, CurrencyDollarIcon, ShieldCheckIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { Button, Collapsible, CollapsibleContent, CollapsibleTrigger, Typography } from '@socialincome/ui';
+import { LinkProps } from 'next/dist/client/link';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
@@ -11,12 +12,12 @@ import { PropsWithChildren, useState } from 'react';
 type NavigationLinkProps = {
 	href: string;
 	Icon: React.ForwardRefExoticComponent<React.PropsWithoutRef<React.SVGProps<SVGSVGElement>>>;
-};
+} & LinkProps;
 
-function NavigationLink({ href, Icon, children }: PropsWithChildren<NavigationLinkProps>) {
+function NavigationLink({ href, Icon, children, ...props }: PropsWithChildren<NavigationLinkProps>) {
 	return (
-		<Link href={href}>
-			<li className="hover:bg-accent flex-inline flex items-center rounded px-4 py-3">
+		<Link href={href} {...props}>
+			<li className="hover:bg-muted flex-inline flex items-center rounded px-4 py-3">
 				<Icon className="mr-2 h-5 w-5" />
 				<Typography>{children}</Typography>
 			</li>
@@ -26,7 +27,7 @@ function NavigationLink({ href, Icon, children }: PropsWithChildren<NavigationLi
 
 function NavigationSectionTitle({ children }: PropsWithChildren) {
 	return (
-		<Typography weight="semibold" className="py-2">
+		<Typography weight="medium" className="py-2">
 			{children}
 		</Typography>
 	);
@@ -51,17 +52,33 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 	const navigationMenu = (
 		<ul className="pr-4">
 			<NavigationSectionTitle>{translations.contributionsTitle}</NavigationSectionTitle>
-			<NavigationLink href={`/${params.lang}/${params.region}/me/payments`} Icon={CurrencyDollarIcon}>
+			<NavigationLink
+				href={`/${params.lang}/${params.region}/me/payments`}
+				Icon={CurrencyDollarIcon}
+				onClick={() => setIsOpen(false)}
+			>
 				{translations.payments}
 			</NavigationLink>
-			<NavigationLink href={`/${params.lang}/${params.region}/me/subscriptions`} Icon={ArrowPathIcon}>
+			<NavigationLink
+				href={`/${params.lang}/${params.region}/me/subscriptions`}
+				Icon={ArrowPathIcon}
+				onClick={() => setIsOpen(false)}
+			>
 				{translations.subscriptions}
 			</NavigationLink>
 			<NavigationSectionTitle>{translations.accountTitle}</NavigationSectionTitle>
-			<NavigationLink href={`/${params.lang}/${params.region}/me/personal-info`} Icon={UserCircleIcon}>
+			<NavigationLink
+				href={`/${params.lang}/${params.region}/me/personal-info`}
+				Icon={UserCircleIcon}
+				onClick={() => setIsOpen(false)}
+			>
 				{translations.personalInfo}
 			</NavigationLink>
-			<NavigationLink href={`/${params.lang}/${params.region}/me/security`} Icon={ShieldCheckIcon}>
+			<NavigationLink
+				href={`/${params.lang}/${params.region}/me/security`}
+				Icon={ShieldCheckIcon}
+				onClick={() => setIsOpen(false)}
+			>
 				{translations.security}
 			</NavigationLink>
 		</ul>
@@ -100,7 +117,7 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 					</div>
 				</CollapsibleTrigger>
 				<CollapsibleContent className="-mt-10 mb-12 border-b md:hidden">{isOpen && navigationMenu}</CollapsibleContent>
-				<Typography size="2xl" weight="semibold" className="-mt-10 mb-4 md:mt-0">
+				<Typography size="2xl" weight="medium" className="-mt-10 mb-4 md:mt-0">
 					{title}
 				</Typography>
 				{children}

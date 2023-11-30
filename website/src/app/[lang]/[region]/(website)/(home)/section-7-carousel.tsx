@@ -11,6 +11,7 @@ import whatsappSVG from './(assets)/whatsapp.svg';
 
 export function Section7Carousel() {
 	const screenSize = useScreenSize();
+	if (!screenSize) return null;
 
 	const logos = [
 		{ logo: liaSVG, name: 'LIA' },
@@ -24,9 +25,11 @@ export function Section7Carousel() {
 		case 'xs':
 			slidesToScroll = 1;
 			break;
-		default:
+		case 'sm':
 			slidesToScroll = 2;
 			break;
+		default:
+			slidesToScroll = 3;
 	}
 
 	return (
@@ -39,7 +42,7 @@ export function Section7Carousel() {
 			showDots
 		>
 			{logos.map((entry, index) => (
-				<CarouselContent key={index} className="py-4">
+				<CarouselContent key={index} className="p-4 px-16 sm:px-4">
 					<Image src={entry.logo} alt={`${entry.name} Logo`} className="w-full object-contain sm:w-2/3" />
 				</CarouselContent>
 			))}
