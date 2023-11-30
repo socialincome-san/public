@@ -23,6 +23,7 @@ import {
 	SelectValue,
 } from '@socialincome/ui';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -66,6 +67,7 @@ export function SuccessForm({
 	const router = useRouter();
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
+	const [submitting, setSubmitting] = useState(false);
 	const [firstCountry, ...restCountries] = COUNTRY_CODES;
 
 	const formSchema = z.object({
@@ -89,7 +91,7 @@ export function SuccessForm({
 	});
 
 	const onSubmit = async (values: FormSchema) => {
-		console.log(values);
+		setSubmitting(true);
 		const data: UpdateUserData = {
 			stripeCheckoutSessionId: stripeCheckoutSessionId,
 			user: {
@@ -106,7 +108,6 @@ export function SuccessForm({
 				},
 			},
 		};
-
 		fetch('/api/user/update', { method: 'POST', body: JSON.stringify(data) }).then((response) => {
 			if (!response.ok) throw new Error('Failed to update user data');
 			router.push(`/${lang}/${region}/donate/success/stripe/${stripeCheckoutSessionId}/activate`);
@@ -229,7 +230,7 @@ export function SuccessForm({
 						</FormItem>
 					)}
 				/>
-				<Button type="submit" className="md:col-span-2 md:mt-4">
+				<Button type="submit" showLoadingSpinner={submitting} className="md:col-span-2 md:mt-4">
 					{translations.submitButton}
 				</Button>
 			</form>
