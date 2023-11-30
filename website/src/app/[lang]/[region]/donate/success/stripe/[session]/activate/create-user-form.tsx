@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input, Typography } from '@socialincome/ui';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAuth } from 'reactfire';
 import * as z from 'zod';
@@ -27,6 +28,7 @@ type CreateUserFormProps = {
 export function CreateUserForm({ checkoutSessionId, email, onSuccessURL, translations }: CreateUserFormProps) {
 	const router = useRouter();
 	const auth = useAuth();
+	const [submitting, setSubmitting] = useState(false);
 
 	const formSchema = z
 		.object({
@@ -50,6 +52,7 @@ export function CreateUserForm({ checkoutSessionId, email, onSuccessURL, transla
 	});
 
 	const onSubmit = async (values: FormSchema) => {
+		setSubmitting(true);
 		createUserWithEmailAndPassword(auth, email, values.password)
 			.then(async (result) => {
 				const data: UpdateUserData = {
@@ -108,7 +111,9 @@ export function CreateUserForm({ checkoutSessionId, email, onSuccessURL, transla
 						</FormItem>
 					)}
 				/>
-				<Button type="submit">{translations.submitButton}</Button>
+				<Button type="submit" showLoadingSpinner={submitting}>
+					{translations.submitButton}
+				</Button>
 			</form>
 		</Form>
 	);
