@@ -5,13 +5,24 @@
 	"landing-page": {
 		"title": [
 			{
-				"text": "Etwas bewegen, nicht nur darüber sprechen. "
+				"text": "Wir hatten die Möglichkeit, nichts zu tun. "
 			},
 			{
-				"text": "Dies war der Anfang von Social Income.",
+				"text": "Wir haben uns dagegen entschieden.",
 				"color": "secondary"
 			}
-		]
+		],
+		"subtitle": "Die Verbesserung der Lebensbedingungen von Menschen in Armut sehen wir als unsere Verantwortung. Aus dieser Überzeugung heraus wurde Social Income ins Leben gerufen.",
+		"contact": "Kontakt",
+		"contact-title": "Schreib uns an",
+		"contact-email": "hello@socialincome.org",
+		"registration": "NGO Registrierung",
+		"registration-title": "Rechtsstatus",
+		"registration-foundation": "Social Income ist eine gemeinnützige Organisation, die 2019 nach schweizerischem Recht gegründet wurde und steuerbefreit ist.",
+		"registration-uid": "UID: ",
+		"registration-uid-nr": "CHE-289.611.695",
+		"registration-duns": "DUNS: ",
+		"registration-duns-nr": "48-045-6376"
 	},
 	"our-mission": {
 		"header": "Unsere Mission",
