@@ -8,7 +8,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 	return (
 		<BaseContainer className="mx-auto flex max-w-3xl flex-col pt-8 md:pt-16">
 			<div className="flex flex-col items-center">
-				<Typography size="5xl" weight="medium" color="accent">
+				<Typography size="5xl" weight="bold" color="accent">
 					{translator.t('one-time.title')}
 				</Typography>
 				<Typography size="3xl" weight="medium" className="mt-4">
