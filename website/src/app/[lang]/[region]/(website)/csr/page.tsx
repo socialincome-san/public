@@ -1,11 +1,21 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { SocialMediaButton } from '@/app/[lang]/[region]/(website)/about-us/(sections)/contact';
 import { SiFigma, SiGithub } from '@icons-pack/react-simple-icons';
+import { IconType } from '@icons-pack/react-simple-icons/types';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography } from '@socialincome/ui';
+import { BaseContainer, Button, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 import Link from 'next/link';
 import anthonyImage from './anthony.jpg';
+
+function SocialMediaButton({ Icon, title, href }: { Icon: IconType; href: string; title: string }) {
+	return (
+		<Link href={href} target="_blank" className="flex flex-col">
+			<Button Icon={Icon} variant="ghost" size="lg">
+				{title}
+			</Button>
+		</Link>
+	);
+}
 
 export default async function Page({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
@@ -19,7 +29,7 @@ export default async function Page({ params }: DefaultPageProps) {
 				href="https://github.com/anthonyray"
 				target="_blank"
 				rel="noopener noreferrer"
-				className="bg-card hover:bg-accent border-accent flex items-center rounded-full border-2 p-2 text-center"
+				className="bg-card hover:bg-muted border-accent flex items-center rounded-full border-2 p-2 text-center"
 			>
 				<Image
 					src={anthonyImage}

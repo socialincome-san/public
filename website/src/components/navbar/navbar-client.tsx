@@ -129,7 +129,7 @@ export function NavbarClient({
 												<HoverCardContent asChild alignOffset={20} className="bg-popover w-56 p-0">
 													<ul className="divide-muted divide-y">
 														{section.links?.map((link, index) => (
-															<li key={index} className="hover:bg-accent px-8 py-3">
+															<li key={index} className="hover:bg-popover-muted px-8 py-3">
 																<Link href={link.href}>
 																	<Typography size="lg" color="accent-foreground">
 																		{link.title}
@@ -181,7 +181,7 @@ export function NavbarClient({
 									// This section is a link with hover effect
 									<Link
 										href={section.href}
-										className="hover:bg-accent flex flex-1 items-center justify-between px-5 py-4 text-lg font-medium md:px-0"
+										className="hover:bg-muted flex flex-1 items-center justify-between px-5 py-4 text-lg font-medium md:px-0"
 										onClick={() => setIsOpen(false)}
 									>
 										<span>{section.title}</span>
@@ -192,11 +192,11 @@ export function NavbarClient({
 										value={`value-${index}`}
 										className="divide-border divide-y border-none text-lg font-medium"
 									>
-										<AccordionTrigger className=" hover:bg-accent pl-5 pr-8 pt-4 hover:no-underline md:pl-0">
+										<AccordionTrigger className=" hover:bg-muted pl-5 pr-8 pt-4 hover:no-underline md:pl-0">
 											{section.title}
 										</AccordionTrigger>
 										{section.links?.map((link, index2) => (
-											<AccordionContent key={index2} className="hover:bg-accent px-10 pt-2 text-lg md:px-0">
+											<AccordionContent key={index2} className="hover:bg-muted px-10 pt-2 text-lg md:px-0">
 												<Link href={link.href} className="mt-2 block" onClick={() => setIsOpen(false)}>
 													{link.title}
 												</Link>
@@ -207,7 +207,7 @@ export function NavbarClient({
 							</div>
 						))}
 						<Link href={`/${lang}/${region}/me`} className="block" onClick={() => setIsOpen(false)}>
-							<div className="hover:bg-accent flex flex-1 items-center justify-between px-5 py-4 text-lg font-medium md:px-0">
+							<div className="hover:bg-muted flex flex-1 items-center justify-between px-5 py-4 text-lg font-medium md:px-0">
 								{translations.myProfile}
 							</div>
 						</Link>

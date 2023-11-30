@@ -11,7 +11,7 @@ export function SIIcon({ className, ...props }: HTMLAttributes<SVGElement>) {
 			aria-hidden={true}
 			aria-labelledby="si-icon"
 			viewBox="0 0 816 815.8"
-			className={classNames('text-si-yellow', className)}
+			className={classNames('text-accent', className)}
 			{...props}
 		>
 			<title id="si-icon">Social Income Icon</title>

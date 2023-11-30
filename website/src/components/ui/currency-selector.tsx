@@ -35,7 +35,7 @@ const CurrencySelector = React.forwardRef<HTMLDivElement, CurrencySelectorProps>
 						isValidCurrency(currency) && setCurrency(currency);
 					}}
 				>
-					<SelectTrigger className="h-full">
+					<SelectTrigger className="h-full px-5">
 						{Flag && <Flag className="h-5 w-5" />}
 						<SelectValue>
 							<Typography size={fontSize} color="popover-foreground">

@@ -27,7 +27,7 @@ export default async function Page({ params: { lang, region, session } }: Stripe
 
 	return (
 		<div className="mx-auto flex max-w-3xl flex-col space-y-8">
-			<Typography size="4xl" color="si-yellow" weight="bold">
+			<Typography size="4xl" color="accent" weight="bold">
 				{translator.t('success.title')}
 			</Typography>
 			<Card>

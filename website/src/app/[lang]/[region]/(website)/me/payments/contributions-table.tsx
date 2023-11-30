@@ -75,11 +75,11 @@ export function ContributionsTable({ lang, translations }: ContributionsTablePro
 				})}
 				<TableRow>
 					<TableCell>
-						<Typography weight="semibold">{translator?.t('contributions.total')}</Typography>
+						<Typography weight="medium">{translator?.t('contributions.total')}</Typography>
 					</TableCell>
 					<TableCell />
 					<TableCell>
-						<Typography className="text-right" weight="semibold">
+						<Typography className="text-right" weight="medium">
 							{translator?.t('contributions.amount-currency', {
 								context: {
 									amount: _.sum(contributions?.docs.map((contribution) => contribution.get('amount'))),

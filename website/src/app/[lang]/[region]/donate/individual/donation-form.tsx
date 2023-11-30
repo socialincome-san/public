@@ -41,7 +41,7 @@ const getTextOption = (amount: number) => {
 };
 
 const getDonationAmount = (amount: number, donationInterval: DonationInterval) => {
-	return amount * 0.01 * Number(donationInterval);
+	return Math.round(amount * 0.01 * Number(donationInterval));
 };
 
 type DonationImpactTranslations = {
@@ -56,7 +56,7 @@ type DonationImpactProps = {
 };
 
 function DonationImpact({ lang, translations }: DonationImpactProps) {
-	const amount = useWatch({ name: 'monthlyIncome' }) * 0.01;
+	const amount = Math.round(useWatch({ name: 'monthlyIncome' }) * 0.01);
 	const translator = useTranslator(lang, 'website-donate');
 	const { currency } = useI18n();
 	const textOption = getTextOption(amount);
@@ -64,7 +64,7 @@ function DonationImpact({ lang, translations }: DonationImpactProps) {
 	return (
 		<div className="grid grid-cols-1 gap-8 md:grid-cols-2">
 			<div className="space-y-2">
-				<Typography size="lg" weight="semibold">
+				<Typography size="lg" weight="medium">
 					{translations.yourMonthlyContribution}
 				</Typography>
 				<Typography size="xl" weight="bold">
@@ -75,7 +75,7 @@ function DonationImpact({ lang, translations }: DonationImpactProps) {
 				<Typography size="md">{translations.directPayout}</Typography>
 			</div>
 			<div className="space-y-2">
-				<Typography size="lg" weight="semibold">
+				<Typography size="lg" weight="medium">
 					{translations.yourImpact}
 				</Typography>
 				<Typography>
@@ -111,7 +111,7 @@ function RadioGroupFormItem({ active, title, donationInterval, lang }: RadioGrou
 			<FormControl
 				className={classNames(
 					'flex h-full flex-1 cursor-pointer flex-row rounded-lg border-2 p-4 shadow-sm focus:outline-none',
-					{ 'border-si-yellow': active },
+					{ 'border-primary bg-card-muted': active },
 				)}
 			>
 				<div onClick={() => setValue('donationInterval', donationInterval)}>
@@ -126,7 +126,7 @@ function RadioGroupFormItem({ active, title, donationInterval, lang }: RadioGrou
 						</div>
 					</div>
 					<CheckCircleIcon
-						className={classNames(!active ? 'invisible' : '', 'text-si-yellow h-5 w-5')}
+						className={classNames(!active ? 'invisible' : '', 'text-primary h-5 w-5')}
 						aria-hidden="true"
 					/>
 				</div>
@@ -142,12 +142,16 @@ type DonationFormProps = {
 		amount: string;
 		howToPay: string;
 		buttonText: string;
+		monthly: string;
+		quarterly: string;
+		yearly: string;
 		donationImpact: DonationImpactTranslations;
 	};
 } & DefaultParams;
 
 export function DonationForm({ amount, translations, lang, region }: DonationFormProps) {
 	const router = useRouter();
+	const [submitting, setSubmitting] = useState(false);
 	const { data: authUser } = useUser();
 	const { currency } = useI18n();
 
@@ -163,6 +167,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 	});
 
 	const onSubmit = async (values: FormSchema) => {
+		setSubmitting(true);
 		const authToken = await authUser?.getIdToken(true);
 		const data: CreateCheckoutSessionData = {
 			amount: getDonationAmount(values.monthlyIncome, values.donationInterval) * 100, // The amount is in cents, so we need to multiply by 100 to get the correct amount.
@@ -193,7 +198,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 							render={({ field }) => (
 								<FormItem className="flex-1">
 									<FormControl>
-										<Input className="h-16 text-lg" placeholder={translations.amount} {...field} />
+										<Input className="h-16 px-6 text-lg" placeholder={translations.amount} {...field} />
 									</FormControl>
 								</FormItem>
 							)}
@@ -206,7 +211,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 								<DonationImpact lang={lang} translations={translations.donationImpact} />
 							</CardHeader>
 							<CardContent className="mt-8">
-								<Typography size="lg" weight="semibold" className="mb-4">
+								<Typography size="lg" weight="medium" className="mb-4">
 									{translations.howToPay}
 								</Typography>
 								<FormField
@@ -223,19 +228,19 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 													<RadioGroupFormItem
 														active={field.value === '1'}
 														donationInterval="1"
-														title="Monthly"
+														title={translations.monthly}
 														lang={lang}
 													/>
 													<RadioGroupFormItem
 														active={field.value === '3'}
 														donationInterval="3"
-														title="Quarterly"
+														title={translations.quarterly}
 														lang={lang}
 													/>
 													<RadioGroupFormItem
 														active={field.value === '12'}
 														donationInterval="12"
-														title="Yearly"
+														title={translations.yearly}
 														lang={lang}
 													/>
 												</RadioGroup>
@@ -246,7 +251,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 								/>
 							</CardContent>
 							<CardFooter>
-								<Button size="lg" type="submit" className="w-full">
+								<Button size="lg" type="submit" className="w-full" showLoadingSpinner={submitting}>
 									{translations.buttonText}
 								</Button>
 							</CardFooter>

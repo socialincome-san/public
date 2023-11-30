@@ -19,7 +19,7 @@ export async function Section4({ lang }: { lang: WebsiteLanguage }) {
 				</Typography>
 			</p>
 			<div className="grid gap-8 lg:grid-cols-3 lg:gap-16">
-				<Typography size="2xl" weight="semibold">
+				<Typography size="2xl" weight="medium">
 					{translator.t('section-4.subtitle')}
 				</Typography>
 				<div className="col-span-2 flex max-w-2xl flex-col space-y-4">

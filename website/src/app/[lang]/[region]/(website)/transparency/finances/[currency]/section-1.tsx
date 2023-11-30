@@ -3,6 +3,8 @@ import { Card, CardContent, Typography } from '@socialincome/ui';
 import _ from 'lodash';
 import { SectionProps } from './page';
 
+export const roundAmount = (amount: number) => Math.round(amount / 10) * 10;
+
 export async function Section1({ params, paymentStats, contributionStats }: SectionProps) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-finances'] });
 
@@ -18,7 +20,7 @@ export async function Section1({ params, paymentStats, contributionStats }: Sect
 		translator.t('section-1.totalContributions', {
 			context: {
 				contributorCount: contributionStats.totalContributorsCount,
-				value: contributionStats.totalContributionsAmount,
+				value: roundAmount(contributionStats.totalContributionsAmount),
 				currency: params.currency,
 			},
 		}),

@@ -34,7 +34,7 @@
 			"program": "lib/main.dart",
 			"toolArgs": [
 				"--dart-define",
-				"SURVEY_BASE_URL=prod.socialincome.org",
+				"SURVEY_BASE_URL=socialincome.org",
 			]
 		}
 	]

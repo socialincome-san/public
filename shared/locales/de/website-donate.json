@@ -14,9 +14,9 @@
 		"0": "{{ amount, currency }} legt den Grundstein für eine bedeutende Sache. Es ermöglicht uns, einer Person in Not ein Social Income zu bieten.",
 		"1": "{{ amount, currency }} deckt mehr als ein Drittel eines Social Incomes für eine bedürftige Person.",
 		"2": "{{ amount, currency }} finanziert mehr als die Hälfte eines Social Incomes für eine Person.",
-		"3": "Großartig! Dein monatlicher Beitrag von {{ amount, currency }} ermöglicht es mindestens einer bedürftigen Person ein vollständiges Social Income bereitzustellen.",
+		"3": "Dein monatlicher Beitrag von {{ amount, currency }} ermöglicht es mindestens einer bedürftigen Person ein vollständiges Social Income bereitzustellen.",
 		"4": "{{ amount, currency }} ermöglicht ein Social Income für mehr als zwei bedürftige Personen.",
-		"5": "Wunderbar! Dein Beitrag von {{ amount, currency }} finanziert ein Social Income für mehr als drei bedürftige Personen.",
+		"5": "Dein Beitrag von {{ amount, currency }} finanziert ein Social Income für mehr als drei bedürftige Personen.",
 		"6": "Dein Beitrag von {{ amount, currency }} sichert ein Social Income für mehr als vier bedürftige Personen.",
 		"7": "Dein Beitrag von {{ amount, currency }} sichert ein Social Income für mehr als fünf bedürftige Personen.",
 		"8": "Dein monatlicher Beitrag von {{ amount, currency }} ist außergewöhnlich, ebenso wie dein Einfluss."

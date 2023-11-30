@@ -1,3 +1,4 @@
+import { roundAmount } from '@/app/[lang]/[region]/(website)/transparency/finances/[currency]/section-1';
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, Typography } from '@socialincome/ui';
@@ -5,15 +6,9 @@ import _ from 'lodash';
 import { InfoCard } from './info-card';
 import { SectionProps } from './page';
 
-export async function Section2({ params, contributionStats, paymentStats }: SectionProps) {
+export async function Section2({ params, contributionStats, paymentStats, costs }: SectionProps) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-finances'] });
-	const paymentFees = _.sumBy(contributionStats.totalPaymentFeesByIsInstitution, 'amount');
-
-	// TODO: Calculate these costs dynamically
-	const transactionFees = 7800; // "Exchange rate and currency losses" + "Account fees" + "Transaction fees" (without stripe fees)
-	const operatingCosts = 9300; // "Total operative expenses"
-	const otherCosts = 9600; // "Other project costs"
-	const totalCosts = paymentFees + transactionFees + operatingCosts + otherCosts;
+	const expensesProject = _.sum(Object.values(costs));
 
 	return (
 		<div>
@@ -23,7 +18,7 @@ export async function Section2({ params, contributionStats, paymentStats }: Sect
 			<InfoCard
 				sectionTitle={translator.t('section-2.donations')}
 				title={translator.t('amount', {
-					context: { value: contributionStats.totalContributionsAmount, currency: params.currency },
+					context: { value: roundAmount(contributionStats.totalContributionsAmount), currency: params.currency },
 				})}
 				text={translator.t('section-2.amount-since-march-2020')}
 				firstIcon={<HeartIcon className="h-8 w-8" />}
@@ -32,7 +27,10 @@ export async function Section2({ params, contributionStats, paymentStats }: Sect
 						<div className="flex-inline flex items-center">
 							<Typography as="div" weight="bold" size="lg">
 								{translator.t('section-2.contributions-from', {
-									context: { value: contributionStats.totalIndividualContributionsAmount, currency: params.currency },
+									context: {
+										value: roundAmount(contributionStats.totalIndividualContributionsAmount),
+										currency: params.currency,
+									},
 								})}
 							</Typography>
 							<Badge className="mx-1">
@@ -44,15 +42,17 @@ export async function Section2({ params, contributionStats, paymentStats }: Sect
 						<Typography>
 							{translator.t('section-2.past-payouts', {
 								context: {
-									value: paymentStats.totalPaymentsAmount,
+									value: roundAmount(paymentStats.totalPaymentsAmount),
 									currency: params.currency,
 								},
 							})}
 						</Typography>
 						<Typography>
-							{translator.t('section-2.future-payouts', {
+							{translator.t('section-2.payments-future', {
 								context: {
-									value: contributionStats.totalIndividualContributionsAmount - paymentStats.totalPaymentsAmount,
+									value: roundAmount(
+										contributionStats.totalIndividualContributionsAmount - paymentStats.totalPaymentsAmount,
+									),
 									currency: params.currency,
 								},
 							})}
@@ -66,7 +66,7 @@ export async function Section2({ params, contributionStats, paymentStats }: Sect
 							<Typography as="div" weight="bold" size="lg">
 								{translator.t('section-2.contributions-from', {
 									context: {
-										value: contributionStats.totalInstitutionalContributionsAmount,
+										value: roundAmount(contributionStats.totalInstitutionalContributionsAmount),
 										currency: params.currency,
 									},
 								})}
@@ -80,7 +80,7 @@ export async function Section2({ params, contributionStats, paymentStats }: Sect
 						<Typography>
 							{translator.t('section-2.past-costs', {
 								context: {
-									value: totalCosts,
+									value: roundAmount(expensesProject),
 									currency: params.currency,
 								},
 							})}
@@ -88,7 +88,7 @@ export async function Section2({ params, contributionStats, paymentStats }: Sect
 						<Typography>
 							{translator.t('section-2.future-costs', {
 								context: {
-									value: contributionStats.totalInstitutionalContributionsAmount - totalCosts,
+									value: roundAmount(contributionStats.totalInstitutionalContributionsAmount - expensesProject),
 									currency: params.currency,
 								},
 							})}

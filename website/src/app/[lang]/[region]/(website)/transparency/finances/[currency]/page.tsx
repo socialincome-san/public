@@ -27,6 +27,13 @@ export type SectionProps = {
 	params: DefaultParams & { currency: string };
 	contributionStats: ContributionStats;
 	paymentStats: PaymentStats;
+	costs: {
+		transaction: number;
+		delivery: number;
+		administrative: number;
+		fundraising: number;
+		staff: number;
+	};
 };
 
 export default async function Page({ params }: TransparencyPageProps) {
@@ -37,17 +44,24 @@ export default async function Page({ params }: TransparencyPageProps) {
 		const paymentStats = paymentCalculator.allStats();
 		return { contributionStats, paymentStats };
 	};
-
 	const currency = params.currency.toUpperCase() as WebsiteCurrency;
 	const { contributionStats, paymentStats } = await getStats(currency);
+	// TODO: Calculate these costs dynamically
+	const costs = {
+		transaction: 8800,
+		delivery: 5700, // "Total operative expenses"
+		administrative: 5600, // "Other project costs"
+		fundraising: 4500,
+		staff: 9600,
+	};
 
 	return (
 		<div className="flex flex-col space-y-16 py-8">
 			<CurrencyRedirect currency={currency} />
-			<Section1 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
-			<Section2 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
-			<Section3 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
-			<Section4 params={params} contributionStats={contributionStats} paymentStats={paymentStats} />
+			<Section1 params={params} contributionStats={contributionStats} paymentStats={paymentStats} costs={costs} />
+			<Section2 params={params} contributionStats={contributionStats} paymentStats={paymentStats} costs={costs} />
+			<Section3 params={params} contributionStats={contributionStats} paymentStats={paymentStats} costs={costs} />
+			<Section4 params={params} contributionStats={contributionStats} paymentStats={paymentStats} costs={costs} />
 		</div>
 	);
 }

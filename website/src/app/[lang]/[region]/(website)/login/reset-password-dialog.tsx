@@ -39,6 +39,7 @@ type PasswordResetDialogProps = {
 export default function ResetPasswordDialog({ translations }: PasswordResetDialogProps) {
 	const auth = useAuth();
 	const [dialogOpen, setDialogOpen] = useState(false);
+	const [submitting, setSubmitting] = useState(false);
 
 	const formSchema = z.object({
 		email: z.string().email({ message: translations.invalidEmail }),
@@ -51,6 +52,7 @@ export default function ResetPasswordDialog({ translations }: PasswordResetDialo
 	});
 
 	const onSubmit = async (values: { email: string }) => {
+		setSubmitting(true);
 		await sendPasswordResetEmail(auth, values.email)
 			.catch(async (error: FirebaseError) => {
 				// If the auth user does not exist, we need to call our API and check if there exists a firestore user with the
@@ -66,6 +68,7 @@ export default function ResetPasswordDialog({ translations }: PasswordResetDialo
 			.finally(() => {
 				toast.success(translations.resetPasswordToastMessage);
 				setDialogOpen(false);
+				setSubmitting(false);
 			});
 	};
 
@@ -74,10 +77,10 @@ export default function ResetPasswordDialog({ translations }: PasswordResetDialo
 			<DialogTrigger asChild>
 				<Button variant="link">{translations.resetPasswordButton}</Button>
 			</DialogTrigger>
-			<DialogContent className="bg-popover">
+			<DialogContent>
 				<Form {...form}>
 					<form className="flex flex-col space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-						<Typography weight="semibold">{translations.resetPasswordTitle}</Typography>
+						<Typography weight="medium">{translations.resetPasswordTitle}</Typography>
 						<FormField
 							control={form.control}
 							name="email"
@@ -91,7 +94,9 @@ export default function ResetPasswordDialog({ translations }: PasswordResetDialo
 								</FormItem>
 							)}
 						/>
-						<Button type="submit">{translations.resetPasswordSubmitButton}</Button>
+						<Button type="submit" showLoadingSpinner={submitting}>
+							{translations.resetPasswordSubmitButton}
+						</Button>
 					</form>
 				</Form>
 			</DialogContent>

@@ -45,7 +45,8 @@ export class PaymentStatsCalculator {
 	static async build(firestoreAdmin: FirestoreAdmin, currency: string): Promise<PaymentStatsCalculator> {
 		const payments = await firestoreAdmin.collectionGroup<Payment>(PAYMENT_FIRESTORE_PATH).get();
 		const exchangeRate = await getLatestExchangeRate(firestoreAdmin, currency);
-		const contributions = payments.docs
+		// TODO: filter out payments from test users
+		const paymentDocs = payments.docs
 			.filter((payment) => payment.data().amount_chf != undefined)
 			.map((paymentDoc) => {
 				const payment = paymentDoc.data();
@@ -56,7 +57,7 @@ export class PaymentStatsCalculator {
 					month: toDateTime(payment.payment_at).toFormat('yyyy-MM'),
 				} as PaymentStatsEntry;
 			});
-		return new PaymentStatsCalculator(_(contributions));
+		return new PaymentStatsCalculator(_(paymentDocs));
 	}
 
 	totalPayments = () => {

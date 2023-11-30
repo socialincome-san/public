@@ -18,7 +18,7 @@ function Portrait({ name, text, country, image }: PortraitProps) {
 	return (
 		<Card className="flex min-h-[24rem] flex-col">
 			<CardHeader>
-				<Image src={doubleQuotesSVG} alt="Double quotes" className="text-si-yellow h-16 w-16" />
+				<Image src={doubleQuotesSVG} alt="Double quotes" className="text-accent h-16 w-16" />
 			</CardHeader>
 			<CardContent className="flex-grow">
 				<Typography weight="normal">{text}</Typography>
@@ -42,6 +42,7 @@ export function ContributorsPeopleCarousel({ portraits }: { portraits: PortraitP
 
 	let slidesToScroll;
 	switch (screenSize) {
+		case null:
 		case 'xs':
 			slidesToScroll = 1;
 			break;

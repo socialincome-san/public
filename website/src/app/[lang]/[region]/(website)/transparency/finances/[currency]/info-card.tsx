@@ -24,14 +24,14 @@ export function InfoCard({
 	return (
 		<Card>
 			<CardContent className="grid grid-cols-1 items-center divide-y py-8 md:grid-cols-2 md:divide-x md:divide-y-0">
-				<div className="space-y-2 p-8">
+				<div className="space-y-2 py-8 md:px-8">
 					<Typography size="2xl">{sectionTitle}</Typography>
 					<Typography size="3xl" weight="bold">
 						{title}
 					</Typography>
 					<Typography size="2xl">{text}</Typography>
 				</div>
-				<div className="flex flex-col space-y-8 p-8">
+				<div className="flex flex-col space-y-8 py-8 md:px-8">
 					{!_.isNil(firstIcon) && !_.isNil(firstContent) && (
 						<div className="grid grid-cols-9">
 							<div>{firstIcon}</div>

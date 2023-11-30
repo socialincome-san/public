@@ -7,7 +7,7 @@ export default function Page() {
 		<div className="theme-dark-blue min-h-screen">
 			<Navbar lang="en" region="int" showNavigation={false} />
 			<main className="text-center">
-				<Typography size="5xl" weight="bold" color="si-yellow">
+				<Typography size="5xl" weight="bold" color="primary">
 					404 – Page not found
 				</Typography>
 				<Typography size="2xl" weight="bold" className="mt-16">
