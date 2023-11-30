@@ -6,7 +6,7 @@ import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input, Typ
 import { FirebaseError } from 'firebase/app';
 import { browserSessionPersistence, signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import { useCallback } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useAuth } from 'reactfire';
@@ -29,6 +29,7 @@ type LoginFormProps = {
 export default function LoginForm({ lang, region, translations }: LoginFormProps) {
 	const router = useRouter();
 	const auth = useAuth();
+	const [submitting, setSubmitting] = useState(false);
 
 	const formSchema = z.object({
 		email: z.string().email({ message: translations.invalidEmail }),
@@ -41,20 +42,18 @@ export default function LoginForm({ lang, region, translations }: LoginFormProps
 		defaultValues: { email: '', password: '' },
 	});
 
-	const onSubmit = useCallback(
-		async (values: FormSchema) => {
-			await auth.setPersistence(browserSessionPersistence);
-			await signInWithEmailAndPassword(auth, values.email, values.password)
-				.then(() => {
-					router.push(`/${lang}/${region}/me`);
-				})
-				.catch((error: FirebaseError) => {
-					if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found')
-						toast.error(translations.invalidUserOrPassword);
-				});
-		},
-		[auth, lang, region, router, translations.invalidUserOrPassword],
-	);
+	const onSubmit = async (values: FormSchema) => {
+		setSubmitting(true);
+		await auth.setPersistence(browserSessionPersistence);
+		await signInWithEmailAndPassword(auth, values.email, values.password)
+			.then(() => {
+				router.push(`/${lang}/${region}/me`);
+			})
+			.catch((error: FirebaseError) => {
+				if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found')
+					toast.error(translations.invalidUserOrPassword);
+			});
+	};
 
 	return (
 		<Form {...form}>
@@ -86,7 +85,7 @@ export default function LoginForm({ lang, region, translations }: LoginFormProps
 						</FormItem>
 					)}
 				/>
-				<Button type="submit" className="mt-8">
+				<Button type="submit" className="mt-8" showLoadingSpinner={submitting}>
 					{translations.submitButton}
 				</Button>
 			</form>

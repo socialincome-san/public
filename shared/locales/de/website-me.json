@@ -34,6 +34,7 @@
 		"source": "Quelle",
 		"total": "Total",
 		"amount-currency": "{{ amount, currency }}",
+		"new-subscription": "Neues Abonnement",
 		"interval": "Interval",
 		"interval-1": "Monatlich",
 		"interval-3": "Quartalsweise",

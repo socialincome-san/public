@@ -4,7 +4,6 @@ export const COLORS = [
 	'border',
 	'input',
 	'ring',
-	'si-yellow',
 	'primary',
 	'primary-foreground',
 	'secondary',
@@ -34,7 +33,6 @@ export type FontColor = Extract<
 	Color,
 	| 'foreground'
 	| 'background'
-	| 'si-yellow'
 	| 'primary'
 	| 'primary-foreground'
 	| 'secondary'

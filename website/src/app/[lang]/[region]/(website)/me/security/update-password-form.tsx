@@ -67,7 +67,7 @@ export default function UpdatePasswordForm({ translations }: LoginFormProps) {
 	return (
 		<Form {...form}>
 			<form className="max-w-md space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
-				<Typography weight="semibold" size="lg" className="my-4">
+				<Typography weight="medium" size="lg" className="my-4">
 					{translations.title}
 				</Typography>
 				<FormField

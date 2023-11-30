@@ -9,24 +9,24 @@ export default async function Section3({ params }: DefaultPageProps) {
 		language: params.lang,
 		namespaces: ['website-evidence'],
 	});
-	const cards = translator.t<CardTranslation[]>(`section-3.cards`);
+	const cards = translator.t<CardTranslation[]>(`section-4.cards`);
 	const takeAction = translator.t('take-action');
 
 	return (
-		<BaseContainer backgroundColor="bg-yellow-50" className="flex flex-col space-y-1 py-16 md:px-20">
+		<BaseContainer backgroundColor="bg-pink-50" className="flex flex-col space-y-1 py-16 md:px-20">
 			<Typography size="xl" weight="medium" color="muted-foreground">
-				{translator.t(`section-3.topic`)}
+				{translator.t(`section-4.topic`)}
 			</Typography>
 			<div className="pb-10">
-				{translator.t<{ text: string; color?: FontColor }[]>('section-3.title').map((title, index) => (
+				{translator.t<{ text: string; color?: FontColor }[]>('section-4.title').map((title, index) => (
 					<Typography as="span" key={index} size="4xl" weight="bold" color={title.color}>
 						{title.text}
 					</Typography>
 				))}
 			</div>
 			<div className="my-32 grid grid-cols-1 gap-16 md:grid-cols-6 lg:grid-cols-8">
-				<Typography size="2xl" weight="semibold" className="md:col-span-3">
-					{translator.t(`section-3.evidence`)}
+				<Typography size="2xl" weight="medium" className="md:col-span-3">
+					{translator.t(`section-4.evidence`)}
 				</Typography>
 				<div className="h-full space-y-10 text-left md:col-span-3 lg:col-span-4">
 					{cards.map((card, key) => (

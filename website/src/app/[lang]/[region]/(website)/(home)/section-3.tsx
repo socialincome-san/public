@@ -23,15 +23,13 @@ export async function Section3({ lang, region }: DefaultParams) {
 					</Typography>
 				))}
 			</p>
-			<div className="mt-32 grid grid-cols-1 content-center items-center gap-x-24 gap-y-8 lg:grid-cols-2">
+			<div className="my-16 grid grid-cols-1 content-center items-center gap-x-24 gap-y-8 md:my-64 lg:grid-cols-2">
 				<Image className="mx-auto w-full max-w-lg" src={jackpotGif} alt="Jackpot" />
 				<div className="space-y-8">
 					<Typography size="3xl" weight="bold">
 						{translator.t('section-3.jackpot-title')}
 					</Typography>
-					<Typography size="lg" weight="medium">
-						{translator.t('section-3.jackpot-text')}
-					</Typography>
+					<Typography size="lg">{translator.t('section-3.jackpot-text')}</Typography>
 					<div>
 						<Link href={`/${lang}/${region}/donate/individual`}>
 							<Button size="lg">{translator.t('section-3.jackpot-button')}</Button>
@@ -39,7 +37,7 @@ export async function Section3({ lang, region }: DefaultParams) {
 					</div>
 				</div>
 			</div>
-			<div className="mt-96 grid grid-cols-1 content-center items-center gap-x-24 gap-y-8 lg:grid-cols-2">
+			<div className="my-24 grid grid-cols-1 content-center items-center gap-x-24 gap-y-8 md:my-64 lg:grid-cols-2">
 				<Image className="mx-auto w-full max-w-lg" src={helpingOthers} alt="Helping Others" />
 				<div className="space-y-8">
 					<Typography size="3xl" weight="bold">
@@ -53,15 +51,13 @@ export async function Section3({ lang, region }: DefaultParams) {
 					</div>
 				</div>
 			</div>
-			<div className="mt-96 grid grid-cols-1 content-center items-center gap-x-24 gap-y-8 lg:grid-cols-2">
+			<div className="my-24 grid grid-cols-1 content-center items-center gap-x-24 gap-y-8 md:my-64 lg:grid-cols-2">
 				<Image className="mx-auto w-full max-w-lg" src={togetherGif} alt="Together" />
 				<div className="space-y-8">
 					<Typography size="3xl" weight="bold">
 						{translator.t('section-3.together-title')}
 					</Typography>
-					<Typography size="lg" weight="medium">
-						{translator.t('section-3.together-text')}
-					</Typography>
+					<Typography size="lg">{translator.t('section-3.together-text')}</Typography>
 					<div>
 						<Link href={`/${lang}/${region}/donate/individual`}>
 							<Button size="lg">{translator.t('section-3.together-button')}</Button>
