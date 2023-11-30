@@ -27,17 +27,14 @@ export async function OurWork({ params }: DefaultPageProps) {
 				<div className="pt-5">
 					<Dialog>
 						<DialogTrigger className="flex cursor-pointer flex-col items-center">
-							<Badge
-								variant="outline"
-								className="hover:bg-primary border-primary text-primary hover:text-secondary-foreground group border transition-transform duration-300 hover:scale-105"
-							>
+							<Badge variant="outline">
 								<Typography size="md" weight="normal" className="flex items-center p-1">
-									<PlayIcon className="text-primary group-hover:text-secondary-foreground mr-2 h-5 w-5" />
+									<PlayIcon className="group-hover:text-secondary-foreground mr-2 h-5 w-5" />
 									{translator.t('our-work.watch')}
 								</Typography>
 							</Badge>
 						</DialogTrigger>
-						<DialogContent className="max-w-screen-lg">
+						<DialogContent className="max-w-screen-lg overflow-hidden rounded p-0">
 							<VimeoVideo videoId={Number(translator.t('our-work.vimeo-video-id'))} />
 						</DialogContent>
 					</Dialog>

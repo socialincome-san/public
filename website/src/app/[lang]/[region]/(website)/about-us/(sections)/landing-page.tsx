@@ -3,6 +3,7 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, BaseContainer, Button, Popover, PopoverContent, PopoverTrigger, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
+import Link from 'next/link';
 import changeGif from '../(assets)/change.gif';
 
 export default async function LandingPage({ lang }: { lang: WebsiteLanguage }) {
@@ -26,10 +27,7 @@ export default async function LandingPage({ lang }: { lang: WebsiteLanguage }) {
 					<div>
 						<Popover>
 							<PopoverTrigger>
-								<Badge
-									variant="outline"
-									className="hover:bg-muted-foreground text-muted-foreground hover:text-secondary-foreground transition-transform duration-300 hover:scale-105"
-								>
+								<Badge variant="muted">
 									<Typography size="md" weight="normal" className="p-1">
 										{translator.t('landing-page.contact')}
 									</Typography>
@@ -40,13 +38,13 @@ export default async function LandingPage({ lang }: { lang: WebsiteLanguage }) {
 									<Typography size="md" lineHeight="normal" weight="medium">
 										{translator.t('landing-page.contact-title')}
 									</Typography>
-									<a href="mailto:hello@socialincome.org">
+									<Link href="mailto:hello@socialincome.org">
 										<Button variant="link" className="p-0">
 											<Typography size="md" lineHeight="normal" weight="normal">
 												{translator.t('landing-page.contact-email')}
 											</Typography>
 										</Button>
-									</a>
+									</Link>
 								</div>
 							</PopoverContent>
 						</Popover>
@@ -54,10 +52,7 @@ export default async function LandingPage({ lang }: { lang: WebsiteLanguage }) {
 					<div>
 						<Popover>
 							<PopoverTrigger>
-								<Badge
-									variant="outline"
-									className="hover:bg-muted-foreground text-muted-foreground hover:text-secondary-foreground transition-transform duration-300 hover:scale-105"
-								>
+								<Badge variant="muted">
 									<Typography size="md" weight="normal" className="p-1">
 										{translator.t('landing-page.registration')}
 									</Typography>
@@ -75,25 +70,25 @@ export default async function LandingPage({ lang }: { lang: WebsiteLanguage }) {
 										<Typography size="md" lineHeight="normal">
 											{translator.t('landing-page.registration-uid')}
 										</Typography>
-										<a href="https://www.uid.admin.ch/Detail.aspx?uid_id=CHE-289.611.695&lang=en">
+										<Link href="https://www.uid.admin.ch/Detail.aspx?uid_id=CHE-289.611.695&lang=en" target="_blank">
 											<Button variant="link" className="m-0 p-0">
 												<Typography size="md" lineHeight="normal" weight="normal">
 													{translator.t('landing-page.registration-uid-nr')}
 												</Typography>
 											</Button>
-										</a>
+										</Link>
 									</div>
 									<div className="flex items-center space-x-1">
 										<Typography size="md" lineHeight="normal">
 											{translator.t('landing-page.registration-duns')}
 										</Typography>
-										<a href="https://www.dnb.com/duns/what-is-a-DUNS-number.html">
+										<Link href="https://www.dnb.com/duns/what-is-a-DUNS-number.html" target="_blank">
 											<Button variant="link" className="p-0">
 												<Typography size="md" lineHeight="normal" weight="normal">
 													{translator.t('landing-page.registration-duns-nr')}
 												</Typography>
 											</Button>
-										</a>
+										</Link>
 									</div>
 								</div>
 							</PopoverContent>
