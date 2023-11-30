@@ -11,7 +11,7 @@ export default function Layout({ children, params: { lang, region } }: PropsWith
 	return (
 		<div className="theme-dark-blue min-h-screen">
 			<Navbar lang={lang} region={region} showNavigation={false} />
-			<main>{children}</main>
+			<main className="pb-8 md:pb-16">{children}</main>
 		</div>
 	);
 }

@@ -18,6 +18,9 @@ export default async function Page({ params: { lang, region }, searchParams }: D
 					amount: translator.t('amount'),
 					howToPay: translator.t('how-to-pay'),
 					buttonText: translator.t('button-text'),
+					monthly: translator.t('donation-interval.1.title'),
+					quarterly: translator.t('donation-interval.3.title'),
+					yearly: translator.t('donation-interval.12.title'),
 					donationImpact: {
 						yourMonthlyContribution: translator.t('donation-impact.monthly-contribution'),
 						directPayout: translator.t('donation-impact.direct-payout'),

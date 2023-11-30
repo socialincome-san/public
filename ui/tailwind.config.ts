@@ -21,35 +21,45 @@ module.exports = {
 				ring: 'var(--ring)',
 				background: 'var(--background)',
 				foreground: 'var(--foreground)',
-				'si-yellow': 'var(--si-yellow)',
-
-				primary: {
-					DEFAULT: 'var(--primary)',
-					foreground: 'var(--primary-foreground)',
-				},
-				secondary: {
-					DEFAULT: 'var(--secondary)',
-					foreground: 'var(--secondary-foreground)',
-				},
-				destructive: {
-					DEFAULT: 'var(--destructive)',
-					foreground: 'var(--destructive-foreground)',
-				},
 				muted: {
 					DEFAULT: 'var(--muted)',
 					foreground: 'var(--muted-foreground)',
 				},
+				primary: {
+					DEFAULT: 'var(--primary)',
+					muted: 'var(--primary-muted)',
+					foreground: 'var(--primary-foreground)',
+					'foreground-muted': 'var(--primary-foreground-muted)',
+				},
+				secondary: {
+					DEFAULT: 'var(--secondary)',
+					muted: 'var(--secondary-muted)',
+					foreground: 'var(--secondary-foreground)',
+					'foreground-muted': 'var(--secondary-foreground-muted)',
+				},
+				destructive: {
+					DEFAULT: 'var(--destructive)',
+					muted: 'var(--destructive-muted)',
+					foreground: 'var(--destructive-foreground)',
+					'foreground-muted': 'var(--destructive-foreground-muted)',
+				},
 				accent: {
 					DEFAULT: 'var(--accent)',
+					muted: 'var(--accent-muted)',
 					foreground: 'var(--accent-foreground)',
+					'foreground-muted': 'var(--accent-foreground-muted)',
 				},
 				popover: {
 					DEFAULT: 'var(--popover)',
+					muted: 'var(--popover-muted)',
 					foreground: 'var(--popover-foreground)',
+					'foreground-muted': 'var(--popover-foreground-muted)',
 				},
 				card: {
 					DEFAULT: 'var(--card)',
+					muted: 'var(--card-muted)',
 					foreground: 'var(--card-foreground)',
+					'foreground-muted': 'var(--card-foreground-muted)',
 				},
 			},
 			borderRadius: {

@@ -33,7 +33,7 @@ export async function OurWork({ params }: DefaultPageProps) {
 						<Typography size="xl">{translator.t('our-work.subtitle')}</Typography>
 					</div>
 				</DialogTrigger>
-				<DialogContent className="max-w-screen-lg">
+				<DialogContent className="max-w-screen-lg overflow-hidden rounded p-0">
 					<VimeoVideo videoId={Number(translator.t('our-work.vimeo-video-id'))} />
 				</DialogContent>
 			</Dialog>

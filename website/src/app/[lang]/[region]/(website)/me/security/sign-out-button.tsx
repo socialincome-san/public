@@ -18,7 +18,7 @@ export function SignOutButton({ translations }: SignOutButtonProps) {
 
 	return (
 		<div>
-			<Typography weight="semibold" size="lg">
+			<Typography weight="medium" size="lg">
 				{translations.title}
 			</Typography>
 			<Button variant="secondary" className="mt-2" onClick={() => signOut(auth).then(() => router.push('/'))}>

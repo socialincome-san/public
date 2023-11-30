@@ -11,7 +11,7 @@ import whatsappSVG from './(assets)/whatsapp.svg';
 
 export function Section7Carousel() {
 	const screenSize = useScreenSize();
-	console.log('screenSize', screenSize);
+	if (!screenSize) return null;
 
 	const logos = [
 		{ logo: liaSVG, name: 'LIA' },
@@ -22,12 +22,14 @@ export function Section7Carousel() {
 
 	let slidesToScroll;
 	switch (screenSize) {
-		case null:
 		case 'xs':
 			slidesToScroll = 1;
 			break;
-		default:
+		case 'sm':
 			slidesToScroll = 2;
+			break;
+		default:
+			slidesToScroll = 3;
 	}
 
 	return (

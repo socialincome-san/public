@@ -25,10 +25,10 @@ function Portrait({ name, text, country, image }: PortraitProps) {
 				/>
 			</div>
 			<div className="space-y-4 p-4 md:basis-1/2 md:space-y-8 md:p-8">
-				<Image src={doubleQuotesSVG} alt="double quotes" className="text-si-yellow h-8 w-8 md:h-16 md:w-16" />
+				<Image src={doubleQuotesSVG} alt="double quotes" className="text-accent h-8 w-8 md:h-16 md:w-16" />
 				<Typography size="xl">{text}</Typography>
 				<div>
-					<Typography size="2xl" weight="semibold">
+					<Typography size="2xl" weight="medium">
 						{name}
 					</Typography>
 					<div className="flex-inline flex items-center">

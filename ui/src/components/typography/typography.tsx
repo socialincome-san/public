@@ -18,19 +18,17 @@ const FONT_SIZE_MAP: { [key in FontSize]: string } = {
 	xs: 'text-xs',
 };
 
-const FONT_WEIGHTS = ['normal', 'medium', 'semibold', 'bold'] as const;
+const FONT_WEIGHTS = ['normal', 'medium', 'bold'] as const;
 export type FontWeight = (typeof FONT_WEIGHTS)[number];
 const FONT_WEIGHT_MAP: { [key in FontWeight]: string } = {
 	normal: 'font-normal',
 	medium: 'font-medium',
-	semibold: 'font-semibold',
 	bold: 'font-bold',
 };
 
 const FONT_COLOR_MAP: { [key in FontColor]: string } = {
 	background: 'text-background',
 	foreground: 'text-foreground',
-	'si-yellow': 'text-si-yellow',
 	primary: 'text-primary',
 	'primary-foreground': 'text-primary-foreground',
 	secondary: 'text-secondary',

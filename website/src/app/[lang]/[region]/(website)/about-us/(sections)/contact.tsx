@@ -39,7 +39,7 @@ export async function Contact({ lang }: { lang: WebsiteLanguage }) {
 				<div className="flex flex-col space-y-8">
 					<Typography size="lg">{translator.t('contact.paragraph')}</Typography>
 					<div>
-						<Typography size="2xl" weight="semibold" className="mb-4">
+						<Typography size="2xl" weight="medium" className="mb-4">
 							{translator.t('contact.legal-status')}
 						</Typography>
 						{translator.t<string[]>('contact.legal-status-paragraphs').map((text, index) => (
@@ -51,7 +51,7 @@ export async function Contact({ lang }: { lang: WebsiteLanguage }) {
 				</div>
 				<Card>
 					<CardHeader>
-						<Typography size="2xl" weight="semibold">
+						<Typography size="2xl" weight="medium">
 							{translator.t('contact.find-us')}
 						</Typography>
 					</CardHeader>

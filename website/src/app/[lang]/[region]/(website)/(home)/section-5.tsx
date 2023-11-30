@@ -10,7 +10,7 @@ export async function Section5({ lang }: { lang: WebsiteLanguage }) {
 	});
 
 	return (
-		<BaseContainer backgroundColor="bg-blue-50" className="flex min-h-screen flex-col justify-center py-16 md:py-32">
+		<BaseContainer className="flex min-h-screen flex-col justify-center py-16 md:py-32">
 			<Typography as="h2" size="4xl" weight="bold">
 				{translator?.t('section-5.title')}
 			</Typography>
