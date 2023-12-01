@@ -85,7 +85,7 @@ class UserRepository {
       firebaseAuth.signInWithCredential(credentials);
 
   Future<void> updateRecipient(Recipient recipient) async {
-    final updatedRecipient = recipient.copyWith(updatedBy: kUpdatedByAppUser);
+    final updatedRecipient = recipient.copyWith(updatedBy: "${recipient.userId}");
 
     return firestore
         .collection(recipientCollection)
