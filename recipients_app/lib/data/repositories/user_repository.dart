@@ -85,9 +85,11 @@ class UserRepository {
       firebaseAuth.signInWithCredential(credentials);
 
   Future<void> updateRecipient(Recipient recipient) async {
+    final updatedRecipient = recipient.copyWith(updatedBy: "${recipient.userId}");
+
     return firestore
         .collection(recipientCollection)
         .doc(recipient.userId)
-        .update(recipient.toJson());
+        .update(updatedRecipient.toJson());
   }
 }

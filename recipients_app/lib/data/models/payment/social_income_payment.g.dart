@@ -15,6 +15,7 @@ SocialIncomePayment _$SocialIncomePaymentFromJson(Map<String, dynamic> json) =>
       currency: json['currency'] as String?,
       status: $enumDecodeNullable(_$PaymentStatusEnumMap, json['status']),
       comments: json['comments'] as String?,
+      updatedBy: json['last_updated_by'] as String?,
     );
 
 Map<String, dynamic> _$SocialIncomePaymentToJson(
@@ -26,6 +27,7 @@ Map<String, dynamic> _$SocialIncomePaymentToJson(
       'currency': instance.currency,
       'status': _$PaymentStatusEnumMap[instance.status],
       'comments': instance.comments,
+      'last_updated_by': instance.updatedBy,
     };
 
 Value? _$JsonConverterFromJson<Json, Value>(

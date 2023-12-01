@@ -18,6 +18,9 @@ class SocialIncomePayment extends Equatable {
   final PaymentStatus? status;
   final String? comments;
 
+  @JsonKey(name: "last_updated_by")
+  final String? updatedBy;
+
   const SocialIncomePayment({
     required this.id,
     this.amount,
@@ -25,6 +28,7 @@ class SocialIncomePayment extends Equatable {
     this.currency,
     this.status,
     this.comments,
+    this.updatedBy,
   });
 
   factory SocialIncomePayment.fromJson(Map<String, dynamic> json) =>
@@ -41,6 +45,7 @@ class SocialIncomePayment extends Equatable {
       currency,
       status,
       comments,
+      updatedBy,
     ];
   }
 
@@ -51,6 +56,7 @@ class SocialIncomePayment extends Equatable {
     String? comments,
     String? currency,
     PaymentStatus? status,
+    String? updatedBy,
   }) {
     return SocialIncomePayment(
       id: id ?? this.id,
@@ -59,6 +65,7 @@ class SocialIncomePayment extends Equatable {
       comments: comments ?? this.comments,
       currency: currency ?? this.currency,
       status: status ?? this.status,
+      updatedBy: updatedBy ?? this.updatedBy
     );
   }
 }

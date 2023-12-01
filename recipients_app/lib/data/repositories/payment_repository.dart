@@ -36,12 +36,15 @@ class PaymentRepository {
   }
 
   /// This updates the payment status to confirmed
+  /// and also sets lastUpdatedAt and lastUpdatedBy to the
+  /// current time and recipient
   Future<void> confirmPayment({
     required Recipient recipient,
     required SocialIncomePayment payment,
   }) async {
     final updatedPayment = payment.copyWith(
       status: PaymentStatus.confirmed,
+      updatedBy: "${recipient.userId}",
     );
 
     await firestore
@@ -60,6 +63,7 @@ class PaymentRepository {
     final updatedPayment = payment.copyWith(
       status: PaymentStatus.contested,
       comments: contestReason,
+      updatedBy: "${recipient.userId}",
     );
 
     await firestore
