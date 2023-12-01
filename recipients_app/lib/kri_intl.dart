@@ -576,16 +576,16 @@ class KriCupertinoLocalizations extends GlobalCupertinoLocalizations {
   String get timerPickerSecondLabelOther => "sec.";
 
   @override
-  String get lookUpButtonLabel => "lookup";
+  String get lookUpButtonLabel => "Look Up";
 
   @override
-  String get menuDismissLabel => "dismiss";
+  String get menuDismissLabel => "Dismiss menu";
 
   @override
-  String get searchWebButtonLabel => "search web";
+  String get searchWebButtonLabel => "Search Web";
 
   @override
-  String get shareButtonLabel => "share";
+  String get shareButtonLabel => "Share...";
 }
 
 // #docregion Delegate
@@ -1126,14 +1126,14 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String get scanTextButtonLabel => "Skan tɛkst";
 
   @override
-  String get lookUpButtonLabel => "lookup";
+  String get lookUpButtonLabel => "Look Up";
 
   @override
-  String get menuDismissLabel => "dismiss";
+  String get menuDismissLabel => "Dismiss menu";
 
   @override
-  String get searchWebButtonLabel => "search web";
+  String get searchWebButtonLabel => "Search Web";
 
   @override
-  String get shareButtonLabel => "share";
+  String get shareButtonLabel => "Share...";
 }
