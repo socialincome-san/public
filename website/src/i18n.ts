@@ -40,7 +40,7 @@ export const findBestLocale = (
 	}
 
 	const options = langParser.parse(request.headers.get('Accept-Language') || 'en');
-	const requestCountry = request.geo?.country;
+	const requestCountry = request.geo?.country?.toLowerCase() as WebsiteRegion | undefined;
 	console.info('Country set in request header:', requestCountry);
 
 	const bestOption = options.find(
@@ -54,7 +54,7 @@ export const findBestLocale = (
 	return {
 		language: (bestOption?.code as WebsiteLanguage) || defaultLanguage,
 		region:
-			(websiteRegions.includes(requestCountry?.toLowerCase() as WebsiteRegion) && (requestCountry as WebsiteRegion)) ||
+			(requestCountry && websiteRegions.includes(requestCountry) && requestCountry) ||
 			(bestOption?.region as WebsiteRegion) ||
 			defaultRegion,
 	};
