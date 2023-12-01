@@ -65,7 +65,7 @@ class SocialIncomePayment extends Equatable {
       comments: comments ?? this.comments,
       currency: currency ?? this.currency,
       status: status ?? this.status,
-      updatedBy: updatedBy ?? this.updatedBy
+      updatedBy: updatedBy ?? this.updatedBy,
     );
   }
 }
