@@ -1,9 +1,14 @@
 'use client';
 
-import Player from '@vimeo/player';
+import Player, { Options } from '@vimeo/player';
 import { useEffect, useRef } from 'react';
 
-export function VimeoVideo({ videoId }: { videoId: number }) {
+type VimeoVideoProps = {
+	videoId: number;
+	videoOptions?: Options;
+};
+
+export function VimeoVideo({ videoId, videoOptions }: VimeoVideoProps) {
 	const playerRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -12,9 +17,10 @@ export function VimeoVideo({ videoId }: { videoId: number }) {
 				id: videoId,
 				controls: true,
 				responsive: true,
+				...videoOptions,
 			});
 		}
-	}, [videoId]);
+	}, [videoId, videoOptions]);
 
 	return <div ref={playerRef}></div>;
 }

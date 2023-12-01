@@ -8,6 +8,7 @@ import { COUNTRY_CODES, CountryCode } from '@socialincome/shared/src/types/count
 import { GENDER_OPTIONS, UserReferralSource } from '@socialincome/shared/src/types/user';
 import {
 	Button,
+	Checkbox,
 	Form,
 	FormControl,
 	FormField,
@@ -32,6 +33,7 @@ type SuccessFormProps = {
 	region: WebsiteRegion;
 	stripeCheckoutSessionId: string;
 	translations: {
+		acceptTermsAndConditions: string;
 		firstname: string;
 		lastname: string;
 		email: string;
@@ -77,6 +79,7 @@ export function SuccessForm({
 		country: z.enum([firstCountry, ...restCountries]),
 		gender: z.enum(GENDER_OPTIONS),
 		referral: z.nativeEnum(UserReferralSource),
+		termsAndConditions: z.literal<boolean>(true),
 	});
 
 	type FormSchema = z.infer<typeof formSchema>;
@@ -87,6 +90,7 @@ export function SuccessForm({
 			firstname: firstname || '',
 			lastname: lastname || '',
 			country: country,
+			termsAndConditions: false,
 		},
 	});
 
@@ -170,7 +174,7 @@ export function SuccessForm({
 								</FormControl>
 								<SelectContent className="max-h-[16rem] overflow-y-auto">
 									<SelectGroup>
-										{COUNTRY_CODES.map((country) => (
+										{COUNTRY_CODES.map((country: CountryCode) => (
 											<SelectItem key={country} value={country}>
 												{countryTranslator?.t(country)}
 											</SelectItem>
@@ -227,6 +231,20 @@ export function SuccessForm({
 								</SelectContent>
 							</Select>
 							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="termsAndConditions"
+					render={({ field }) => (
+						<FormItem className="col-span-2 flex flex-row items-start space-x-3 space-y-0 px-2 py-4">
+							<FormControl>
+								<Checkbox checked={field.value} onCheckedChange={field.onChange} />
+							</FormControl>
+							<div className="space-y-1 leading-none">
+								<FormLabel dangerouslySetInnerHTML={{ __html: translations.acceptTermsAndConditions }} />
+							</div>
 						</FormItem>
 					)}
 				/>

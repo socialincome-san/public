@@ -47,8 +47,9 @@
 			"lastname": "Nachname",
 			"email": "E-Mail",
 			"country": "Land",
-			"gender": "Anrede",
+			"gender": "Geschlecht",
 			"referral": "Wie hast du von uns erfahren?",
+			"accept-terms-and-conditions": "Ich akzeptiere die <a href='/terms-and-conditions/' target='_blank' class='underline'>Teilnahmebedingungen</a> und die <a href='/privacy/' target='_blank' class='underline'>Datenschutzrichtlinie</a>.",
 			"referrals": {
 				"familyfriends": "Familie oder Freunde",
 				"socialmedia": "Social Media",

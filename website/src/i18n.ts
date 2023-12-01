@@ -1,6 +1,5 @@
 import { LANGUAGE_COOKIE, REGION_COOKIE } from '@/app/[lang]/[region]';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import langParser from 'accept-language-parser';
 import { NextRequest } from 'next/server';
 import { Currency } from '../../shared/src/types/currency';
@@ -17,12 +16,6 @@ export const websiteRegions: WebsiteRegion[] = ['int', 'ch'];
 export type WebsiteCurrency = Extract<Currency, 'USD' | 'EUR' | 'CHF' | 'SLE'>;
 export const defaultCurrency: WebsiteCurrency = 'USD';
 export const websiteCurrencies: WebsiteCurrency[] = ['USD', 'EUR', 'CHF'];
-
-export const getCurrencyTranslations = (currencies: WebsiteCurrency[], translator: Translator) =>
-	currencies.map((currency) => ({
-		code: currency,
-		translation: translator.t(`currencies.${currency}`),
-	}));
 
 export const findBestLocale = (
 	request: NextRequest,
@@ -47,7 +40,9 @@ export const findBestLocale = (
 	}
 
 	const options = langParser.parse(request.headers.get('Accept-Language') || 'en');
-	const requestRegion = request.geo?.country;
+	const requestCountry = request.geo?.country;
+	console.info('Country set in request header:', requestCountry);
+
 	const bestOption = options.find(
 		(option) =>
 			option.code &&
@@ -59,7 +54,7 @@ export const findBestLocale = (
 	return {
 		language: (bestOption?.code as WebsiteLanguage) || defaultLanguage,
 		region:
-			(websiteRegions.includes(requestRegion as WebsiteRegion) && (requestRegion as WebsiteRegion)) ||
+			(websiteRegions.includes(requestCountry?.toLowerCase() as WebsiteRegion) && (requestCountry as WebsiteRegion)) ||
 			(bestOption?.region as WebsiteRegion) ||
 			defaultRegion,
 	};

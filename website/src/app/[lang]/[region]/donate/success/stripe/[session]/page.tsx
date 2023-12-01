@@ -52,6 +52,7 @@ export default async function Page({ params: { lang, region, session } }: Stripe
 							country: translator.t('success.user-form.country'),
 							gender: translator.t('success.user-form.gender'),
 							referral: translator.t('success.user-form.referral'),
+							acceptTermsAndConditions: translator.t('success.user-form.accept-terms-and-conditions'),
 							referrals: {
 								familyfriends: translator.t('success.user-form.referrals.familyfriends'),
 								work: translator.t('success.user-form.referrals.work'),

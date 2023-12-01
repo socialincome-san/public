@@ -6,6 +6,7 @@ export * from './components/badge';
 export * from './components/button';
 export * from './components/card';
 export * from './components/carousel';
+export * from './components/checkbox';
 export * from './components/collapsible';
 export * from './components/containers';
 export * from './components/dialog';

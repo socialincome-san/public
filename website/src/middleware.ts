@@ -1,5 +1,6 @@
 import { CURRENCY_COOKIE } from '@/app/[lang]/[region]';
 import { WebsiteLanguage, WebsiteRegion, allWebsiteLanguages, findBestLocale, websiteRegions } from '@/i18n';
+import { CountryCode } from '@socialincome/shared/src/types/country';
 import { NextRequest, NextResponse } from 'next/server';
 import { bestGuessCurrency, isValidCurrency } from '../../shared/src/types/currency';
 
@@ -14,8 +15,9 @@ export const currencyMiddleware = (request: NextRequest, response: NextResponse)
 	// Checks if a valid currency is set as a cookie, and sets one with the best guess if not.
 	if (request.cookies.has(CURRENCY_COOKIE) && isValidCurrency(request.cookies.get(CURRENCY_COOKIE)?.value))
 		return response;
-	const region = request.nextUrl.pathname.split('/').at(2);
-	const currency = bestGuessCurrency(region);
+	// We use the country code from the request header if available. If not, we use the region/country from the url path.
+	const requestCountry = request.geo?.country || request.nextUrl.pathname.split('/').at(2)?.toUpperCase();
+	const currency = bestGuessCurrency(requestCountry as CountryCode);
 	response.cookies.set({ name: CURRENCY_COOKIE, value: currency, path: '/', maxAge: 60 * 60 * 24 * 365 }); // 1 year
 	return response;
 };

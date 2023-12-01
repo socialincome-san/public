@@ -50,6 +50,7 @@ export default function LoginForm({ lang, region, translations }: LoginFormProps
 				router.push(`/${lang}/${region}/me`);
 			})
 			.catch((error: FirebaseError) => {
+				setSubmitting(false);
 				if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found')
 					toast.error(translations.invalidUserOrPassword);
 			});

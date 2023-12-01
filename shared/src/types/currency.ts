@@ -1,8 +1,10 @@
+import { CountryCode } from './country';
+
 export const CURRENCIES = ['CHF', 'EUR', 'USD', 'SLE'] as const;
 export type Currency = (typeof CURRENCIES)[number];
 
 export const FALLBACK_CURRENCY: Currency = 'USD';
-const countryToCurrency = new Map<string, Currency>([
+const countryToCurrency = new Map<CountryCode, Currency>([
 	['AD', 'EUR'],
 	['AL', 'EUR'],
 	['AM', 'EUR'],
@@ -38,15 +40,14 @@ const countryToCurrency = new Map<string, Currency>([
 	['MT', 'EUR'],
 	['NL', 'EUR'],
 	['NO', 'EUR'],
-	['PO', 'EUR'],
+	['PL', 'EUR'],
 	['PT', 'EUR'],
 ]);
 
-export const bestGuessCurrency = (country: string | undefined): Currency => {
-	// best guess mapping from two-letter country code to supported currency
+export const bestGuessCurrency = (country: CountryCode | undefined): Currency => {
+	// best guess mapping from two-letter country code to a supported currency
 	if (!country) return FALLBACK_CURRENCY;
-	const uppercaseCountry = country.toUpperCase();
-	const currency = countryToCurrency.get(uppercaseCountry);
+	const currency = countryToCurrency.get(country);
 	return currency || FALLBACK_CURRENCY;
 };
 

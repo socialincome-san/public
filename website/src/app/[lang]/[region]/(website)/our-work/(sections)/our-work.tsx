@@ -35,7 +35,7 @@ export async function OurWork({ params }: DefaultPageProps) {
 							</Badge>
 						</DialogTrigger>
 						<DialogContent className="max-w-screen-lg overflow-hidden rounded p-0">
-							<VimeoVideo videoId={Number(translator.t('our-work.vimeo-video-id'))} />
+							<VimeoVideo videoId={Number(translator.t('our-work.vimeo-video-id'))} videoOptions={{ autoplay: true }} />
 						</DialogContent>
 					</Dialog>
 				</div>

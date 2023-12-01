@@ -151,7 +151,6 @@ export default async function Footer({ lang, region }: DefaultParams) {
 							url={`/${lang}/${region}/about-us#100-percent-model`}
 						/>
 						<FooterLink label={translator.t('navigation.team')} url={`/${lang}/${region}/about-us#team`} />
-						<FooterLink label={translator.t('navigation.contact')} url={`/${lang}/${region}/about-us#contact`} />
 					</div>
 				</div>
 				<div className="flex flex-col md:hidden">
