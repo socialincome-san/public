@@ -35,6 +35,9 @@ export const redirectMiddleware = (request: NextRequest) => {
 			return NextResponse.redirect('https://github.com/orgs/socialincome-san/discussions/categories/monthly-updates');
 		case '/github':
 			return NextResponse.redirect('https://github.com/socialincome-san/public');
+		case '/world-poverty-statistics-2022':
+		case '/world-poverty-statistics-2023':
+			return NextResponse.redirect(new URL('/world-poverty-statistics-2024', request.url));
 	}
 };
 
