@@ -3,28 +3,28 @@
 import { useScreenSize } from '@/hooks/useScreenSize';
 import { Carousel, CarouselContent } from '@socialincome/ui';
 import Image from 'next/image';
-import Link from "next/link";
+import Link from 'next/link';
 import epflSVG from '../(assets)/epfl.svg';
 import govSVG from '../(assets)/gov.svg';
 import mckinseySVG from '../(assets)/mckinsey.svg';
 import microsoftSVG from '../(assets)/microsoft.svg';
+import milkSVG from '../(assets)/milk.svg';
 import r17SVG from '../(assets)/r17.svg';
 import srgSVG from '../(assets)/srg.svg';
 import unSVG from '../(assets)/un.svg';
-import milkSVG from '../(assets)/milk.svg';
 
 export function ContributorsOrgsCarousel() {
 	const screenSize = useScreenSize();
 
 	const companyLogos = [
-		{ logo: govSVG, name: 'FDFA', url:'https://www.fdfa.admin.ch' },
-		{ logo: microsoftSVG, name: 'Microsoft', url:'https://www.microsoft.com' },
-		{ logo: mckinseySVG, name: 'McKinsey', url:'https://www.mckinsey.com' },
-		{ logo: unSVG, name: 'UN', url:'https://www.un.org' },
-		{ logo: srgSVG, name: 'SRG', url:'https://srf.ch' },
-		{ logo: epflSVG, name: 'EPFL', url:'https://www.epfl.ch' },
-		{ logo: r17SVG, name: 'R17', url:'https://r17ventures.com' },
-		{ logo: milkSVG, name: 'Milk', url:'https://milkinteractive.ch' },
+		{ logo: govSVG, name: 'FDFA', url: 'https://www.fdfa.admin.ch' },
+		{ logo: microsoftSVG, name: 'Microsoft', url: 'https://www.microsoft.com' },
+		{ logo: mckinseySVG, name: 'McKinsey', url: 'https://www.mckinsey.com' },
+		{ logo: unSVG, name: 'UN', url: 'https://www.un.org' },
+		{ logo: srgSVG, name: 'SRG', url: 'https://srf.ch' },
+		{ logo: epflSVG, name: 'EPFL', url: 'https://www.epfl.ch' },
+		{ logo: r17SVG, name: 'R17', url: 'https://r17ventures.com' },
+		{ logo: milkSVG, name: 'Milk', url: 'https://milkinteractive.ch' },
 	];
 
 	let slidesToScroll;
