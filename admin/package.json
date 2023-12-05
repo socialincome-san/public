@@ -32,7 +32,7 @@
 		"ts-loader": "^9.5.1",
 		"ts-node": "^10.9.1",
 		"typescript": "^5.3.2",
-		"vite": "^5.0.2"
+		"vite": "^4.5.1"
 	},
 	"dependencies": {
 		"@emotion/react": "^11.11.1",
