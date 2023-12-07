@@ -7,6 +7,7 @@ export enum ContributionSourceKey {
 	BENEVITY = 'benevity',
 	CASH = 'cash',
 	STRIPE = 'stripe',
+	TWINT = 'twint',
 	WIRE_TRANSFER = 'wire-transfer',
 }
 

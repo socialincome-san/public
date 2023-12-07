@@ -24,6 +24,7 @@
 		"sources": {
 			"benevity": "Benevity",
 			"cash": "Cash",
+			"twint": "Twint",
 			"stripe": "Stripe",
 			"wire-transfer": "Wire Transfer"
 		}
