@@ -1,11 +1,16 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { PersonalInfoForm } from '@/app/[lang]/[region]/(website)/me/personal-info/personal-info-form';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/ui';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-me'] });
 	return (
 		<div className="space-y-12">
+			<Alert variant="primary">
+				<AlertTitle>{translator.t('personal-info.alert-title')}</AlertTitle>
+				<AlertDescription>{translator.t('personal-info.alert-description')}</AlertDescription>
+			</Alert>
 			<PersonalInfoForm
 				lang={params.lang}
 				region={params.region}

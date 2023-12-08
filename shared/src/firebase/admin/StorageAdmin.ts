@@ -12,10 +12,10 @@ import { getOrInitializeFirebaseAdmin } from './app';
  *
  * This implementation sets an explicit token for the file which can be used to authorize the download.
  */
-interface UploadAndGetDownloadURLProps {
+interface UploadProps {
 	bucket?: Bucket;
 	sourceFilePath: string;
-	destinationFilePath?: string;
+	destinationFilePath: string;
 }
 export class StorageAdmin {
 	/**
@@ -28,11 +28,16 @@ export class StorageAdmin {
 		this.storage = getStorage(app);
 	}
 
-	uploadAndGetDownloadURL = async ({ bucket, sourceFilePath, destinationFilePath }: UploadAndGetDownloadURLProps) => {
-		let destinationBucket = bucket || this.storage.bucket();
+	uploadFile = async ({ bucket, sourceFilePath, destinationFilePath }: UploadProps) => {
+		const destinationBucket = bucket || this.storage.bucket();
+		await destinationBucket.upload(sourceFilePath, { destination: destinationFilePath });
+	};
+
+	uploadAndGetDownloadURL = async ({ bucket, sourceFilePath, destinationFilePath }: UploadProps) => {
+		const destinationBucket = bucket || this.storage.bucket();
 		const token = randomBytes(32).toString('hex');
 		const [file, metadata] = await destinationBucket.upload(sourceFilePath, {
-			destination: destinationFilePath || sourceFilePath,
+			destination: destinationFilePath,
 			metadata: {
 				metadata: {
 					firebaseStorageDownloadTokens: token,
