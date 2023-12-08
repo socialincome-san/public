@@ -1,7 +1,8 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import OneTimeDonationForm from '@/app/[lang]/[region]/donate/one-time/one-time-donation-form';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography } from '@socialincome/ui';
+import { BaseContainer, Button, Typography } from '@socialincome/ui';
+import Link from 'next/link';
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	const translator = await Translator.getInstance({ language: lang, namespaces: 'website-donate' });
@@ -24,6 +25,13 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 						}}
 					/>
 				</div>
+				{region === 'ch' && (
+					<Link href="https://donate.raisenow.io/cvzzr" target="_blank">
+						<Button size="lg" variant="link" className="mt-8">
+							{translator.t('one-time.twint-button')}
+						</Button>
+					</Link>
+				)}
 			</div>
 		</BaseContainer>
 	);
