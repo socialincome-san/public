@@ -1,87 +1,87 @@
 {
-  "metadata": {
-    "title": "Mein Profil | Social Income"
-  },
-  "sections": {
-    "account": {
-      "title": "Mein Profil",
-      "personal-info": "Kontaktangaben",
-      "security": "Sicherheit"
-    },
-    "contributions": {
-      "title": "Meine Spenden",
-      "payments": "Zahlungen",
-      "subscriptions": "Abonnemente",
-      "donation-certificates-short": "Bescheinigungen",
-      "donation-certificates-long": "Spendebescheinigungen"
-    }
-  },
-  "contributions": {
-    "amount": "Betrag",
-    "date": "Datum",
-    "source": "Quelle",
-    "total": "Total",
-    "one-time-payment": "Neue einmalige Spende",
-    "amount-currency": "{{ amount, currency }}",
-    "sources": {
-      "benevity": "Benevity",
-      "cash": "Bar",
-      "stripe": "Stripe",
-      "wire-transfer": "Banküberweisung"
-    }
-  },
-  "subscriptions": {
-    "amount": "Betrag",
-    "date": "Datum",
-    "source": "Quelle",
-    "total": "Total",
-    "amount-currency": "{{ amount, currency }}",
-    "new-subscription": "Neues Abonnement",
-    "interval": "Interval",
-    "interval-1": "Monatlich",
-    "interval-3": "Quartalsweise",
-    "interval-12": "Jährlich",
-    "status": {
-      "active": "Aktiv",
-      "canceled": "Beendet",
-      "paused": "Pausiert"
-    },
-    "manage-subscriptions": "Abonnemente verwalten"
-  },
-  "donation-certificates": {
-    "year": "Jahr",
-    "download-pdf": "PDF herunterladen",
-    "no-certificates-yet": "Du hast noch keine Spendebescheinigungen. Stelle sicher, dass du deine Adresse unter \"Kontaktangaben\" hinterleget hast. <br></br> Bei Fragen kannst du uns jederzeit <a href='mailto:hello@socialincome.org' class='underline'>kontaktieren</a>."
-  },
-  "personal-info": {
-    "alert-title": "Spendebescheinigung",
-    "alert-description": "Falls du in der Schweiz Steuern zahlst, erhälst du eine Spendebscheinigung von uns, sobald du deine Adresse hinterlegt hast.",
-    "firstname": "Vorname",
-    "lastname": "Nachname",
-    "gender": "Geschlecht",
-    "email": "E-Mail",
-    "street": "Strasse",
-    "street-number": "Nummer",
-    "city": "Ort",
-    "zip": "PLZ",
-    "country": "Land",
-    "language": "Kommunikationssprache",
-    "submit-button": "Kontaktangaben aktualisieren",
-    "user-updated-toast": "Deine Kontaktangaben wurden aktualisiert"
-  },
-  "security": {
-    "reset-password": {
-      "title": "Passwort ändern",
-      "password": "Passwort",
-      "password-confirmation": "Passwort bestätigen",
-      "submit-button": "Passwort ändern",
-      "passwords-mismatch": "Die Passwörter stimmen nicht überein",
-      "error-toast": "Ein Fehler ist aufgetreten. Bitte versuche es später noch einmal.",
-      "success-toast": "Dein Passwort wurde geändert. Bitte melde dich mit deinem neuen Passwort an."
-    },
-    "sign-out": {
-      "title": "Möchtest du dich abmelden?",
-      "button": "Abmelden"
-    }
-  }
+	"metadata": {
+		"title": "Mein Profil | Social Income"
+	},
+	"sections": {
+		"account": {
+			"title": "Mein Profil",
+			"personal-info": "Kontaktangaben",
+			"security": "Sicherheit"
+		},
+		"contributions": {
+			"title": "Meine Spenden",
+			"payments": "Zahlungen",
+			"subscriptions": "Abonnemente",
+			"donation-certificates-short": "Bescheinigungen",
+			"donation-certificates-long": "Spendebescheinigungen"
+		}
+	},
+	"contributions": {
+		"amount": "Betrag",
+		"date": "Datum",
+		"source": "Quelle",
+		"total": "Total",
+		"one-time-payment": "Neue einmalige Spende",
+		"amount-currency": "{{ amount, currency }}",
+		"sources": {
+			"benevity": "Benevity",
+			"cash": "Bar",
+			"stripe": "Stripe",
+			"wire-transfer": "Banküberweisung"
+		}
+	},
+	"subscriptions": {
+		"amount": "Betrag",
+		"date": "Datum",
+		"source": "Quelle",
+		"total": "Total",
+		"amount-currency": "{{ amount, currency }}",
+		"new-subscription": "Neues Abonnement",
+		"interval": "Interval",
+		"interval-1": "Monatlich",
+		"interval-3": "Quartalsweise",
+		"interval-12": "Jährlich",
+		"status": {
+			"active": "Aktiv",
+			"canceled": "Beendet",
+			"paused": "Pausiert"
+		},
+		"manage-subscriptions": "Abonnemente verwalten"
+	},
+	"donation-certificates": {
+		"year": "Jahr",
+		"download-pdf": "PDF herunterladen",
+		"no-certificates-yet": "Du hast noch keine Spendebescheinigungen. Stelle sicher, dass du deine Adresse unter \"Kontaktangaben\" hinterleget hast. <br></br> Bei Fragen kannst du uns jederzeit <a href='mailto:hello@socialincome.org' class='underline'>kontaktieren</a>."
+	},
+	"personal-info": {
+		"alert-title": "Spendebescheinigung",
+		"alert-description": "Falls du in der Schweiz Steuern zahlst, erhälst du eine Spendebscheinigung von uns, sobald du deine Adresse hinterlegt hast.",
+		"firstname": "Vorname",
+		"lastname": "Nachname",
+		"gender": "Geschlecht",
+		"email": "E-Mail",
+		"street": "Strasse",
+		"street-number": "Nummer",
+		"city": "Ort",
+		"zip": "PLZ",
+		"country": "Land",
+		"language": "Kommunikationssprache",
+		"submit-button": "Kontaktangaben aktualisieren",
+		"user-updated-toast": "Deine Kontaktangaben wurden aktualisiert"
+	},
+	"security": {
+		"reset-password": {
+			"title": "Passwort ändern",
+			"password": "Passwort",
+			"password-confirmation": "Passwort bestätigen",
+			"submit-button": "Passwort ändern",
+			"passwords-mismatch": "Die Passwörter stimmen nicht überein",
+			"error-toast": "Ein Fehler ist aufgetreten. Bitte versuche es später noch einmal.",
+			"success-toast": "Dein Passwort wurde geändert. Bitte melde dich mit deinem neuen Passwort an."
+		},
+		"sign-out": {
+			"title": "Möchtest du dich abmelden?",
+			"button": "Abmelden"
+		}
+	}
 }
