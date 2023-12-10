@@ -29,7 +29,7 @@ export function SectionCard({ titles, items = [], paragraphs = [], articles = []
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Card className="h-full max-h-80 cursor-pointer">
+				<Card className="h-full max-h-100 cursor-pointer">
 					<CardHeader>
 						<CardTitle>{titles.main}</CardTitle>
 					</CardHeader>
@@ -48,7 +48,7 @@ export function SectionCard({ titles, items = [], paragraphs = [], articles = []
 
 			<DialogContent className="max-h-[80vh] max-w-screen-md overflow-y-auto">
 				<div>
-					<Typography as="h2" size="2xl" weight="bold">
+					<Typography as="h2" size="2xl" weight="medium">
 						{titles.main}
 					</Typography>
 					<div className="flex flex-col space-y-8">
