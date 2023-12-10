@@ -29,7 +29,7 @@ export function SectionCard({ titles, items = [], paragraphs = [], articles = []
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Card className="h-full max-h-100 cursor-pointer">
+				<Card className="max-h-100 h-full cursor-pointer">
 					<CardHeader>
 						<CardTitle>{titles.main}</CardTitle>
 					</CardHeader>
