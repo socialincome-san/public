@@ -47,7 +47,7 @@ export function Section2({ vimeoVideoId, translations }: Section2Props) {
 							{translations.videoButton}
 						</Typography>
 					</DialogTrigger>
-					<DialogContent className="max-w-screen-lg">
+					<DialogContent className="max-w-screen-lg overflow-hidden rounded p-0">
 						<VimeoVideo videoId={vimeoVideoId} videoOptions={{ autoplay: true }} />
 					</DialogContent>
 				</Dialog>
