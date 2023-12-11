@@ -6,8 +6,8 @@ export const CONTRIBUTION_FIRESTORE_PATH = 'contributions';
 export enum ContributionSourceKey {
 	BENEVITY = 'benevity',
 	CASH = 'cash',
+	RAISENOW = 'raisenow',
 	STRIPE = 'stripe',
-	TWINT = 'twint',
 	WIRE_TRANSFER = 'wire-transfer',
 }
 

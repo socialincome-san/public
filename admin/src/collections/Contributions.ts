@@ -26,7 +26,7 @@ export function buildContributionsCollection(
 					{ id: ContributionSourceKey.BENEVITY, label: 'Benevity' },
 					{ id: ContributionSourceKey.CASH, label: 'Cash' },
 					{ id: ContributionSourceKey.STRIPE, label: 'Stripe' },
-					{ id: ContributionSourceKey.TWINT, label: 'Twint' },
+					{ id: ContributionSourceKey.RAISENOW, label: 'RaiseNow' },
 					{ id: ContributionSourceKey.WIRE_TRANSFER, label: 'Wire Transfer' },
 				],
 				validation: { required: true },
