@@ -3,6 +3,7 @@
 import { CURRENCY_COOKIE, LANGUAGE_COOKIE, REGION_COOKIE } from '@/app/[lang]/[region]';
 import { FacebookTracking } from '@/components/tracking/facebook-tracking';
 import { LinkedInTracking } from '@/components/tracking/linkedin-tracking';
+import { GoogleTagManagerScript } from '@/components/tracking/google-tracking';
 import { useCookieState } from '@/hooks/useCookieState';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { initializeAnalytics } from '@firebase/analytics';
@@ -77,6 +78,7 @@ function AnalyticsProviderWrapper({ children }: PropsWithChildren) {
 				<>
 					<FacebookTracking />
 					<LinkedInTracking />
+					<GoogleTagManagerScript />
 					<AnalyticsProvider sdk={initializeAnalytics(app)}>{children}</AnalyticsProvider>
 				</>
 			) : (

@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
-export function GoogleTagManagerScript: React.FC = () => {
+export function GoogleTagManagerScript() {
     useEffect(() => {
 
         const gtmScript = `(function(w,d,s,l,i){
