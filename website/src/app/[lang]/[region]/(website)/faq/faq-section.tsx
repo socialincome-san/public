@@ -35,7 +35,7 @@ export function FAQSection({ title, questions }: FAQSectionProps) {
 									{question.links?.map((link, index2) => (
 										<li key={index2}>
 											<Link href={link.href} target="_blank" rel="noreferrer" className="no-underline">
-												<Typography as="span" size="lg" color="primary" className="hover:underline font-normal">
+												<Typography as="span" size="lg" color="primary" className="font-normal hover:underline">
 													{link.title}
 												</Typography>
 											</Link>
