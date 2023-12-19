@@ -29,13 +29,13 @@ export function FAQSection({ title, questions }: FAQSectionProps) {
 							</Typography>
 						</AccordionTrigger>
 						<AccordionContent className="prose">
-							<Typography>{question.answer}</Typography>
+							<Typography size="lg">{question.answer}</Typography>
 							{question.links && (
 								<ul className="mt-4 flex list-inside list-disc flex-col space-y-1">
 									{question.links?.map((link, index2) => (
 										<li key={index2}>
-											<Link href={link.href} target="_blank" rel="noreferrer">
-												<Typography as="span" color="primary" className="hover:underline">
+											<Link href={link.href} target="_blank" rel="noreferrer" className="no-underline">
+												<Typography as="span" size="lg" color="primary" className="hover:underline font-normal">
 													{link.title}
 												</Typography>
 											</Link>
