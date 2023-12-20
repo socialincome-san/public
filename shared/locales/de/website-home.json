@@ -157,5 +157,35 @@
 		"title-1": "Wir freuen uns über ",
 		"title-2": "die Anerkennung.",
 		"subtitle": "Social Income wurde im Rahmen verschiedener Accelerator- und Entwicklungsprogrammen gefördert und ausgezeichnet, unter anderem von folgenden Organisationen:"
+	},
+	"video": {
+		"video-id": "896169775",
+		"credits-title": "Credits",
+		"credits-content": [
+			{
+				"role": "Kamera",
+				"name": "Gabriel Koller"
+			},
+			{
+				"role": "Schnitt",
+				"name": "Nicolas Küng"
+			},
+			{
+				"role": "Sounddesign & Musik",
+				"name": "Tidiane Sane & Nicola-Miloš Mišić"
+			},
+			{
+				"role": "Kameraassistenz",
+				"name": "Felix Rhodes"
+			},
+			{
+				"role": "Erzählung",
+				"name": "Ted Limpert"
+			},
+			{
+				"role": "Grafikanimation",
+				"name": "Raphael Schoen"
+			}
+		]
 	}
 }

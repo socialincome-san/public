@@ -1,9 +1,9 @@
-import { SectionCard } from '@/app/[lang]/[region]/(website)/(home)/section-5-card';
+import { ThreeApproachesCard } from '@/app/[lang]/[region]/(website)/(home)/(sections)/three-approaches-card';
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
-export async function Section5({ lang }: { lang: WebsiteLanguage }) {
+export async function ThreeApproaches({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-home', 'website-common'],
@@ -15,7 +15,7 @@ export async function Section5({ lang }: { lang: WebsiteLanguage }) {
 				{translator?.t('section-5.title')}
 			</Typography>
 			<div className="mt-16 grid grid-cols-1 items-start gap-4 md:grid-cols-2 lg:grid-cols-3">
-				<SectionCard
+				<ThreeApproachesCard
 					titles={{
 						main: translator.t('section-5.card-1.title'),
 						articles: translator.t('section-5.articles'),
@@ -62,7 +62,7 @@ export async function Section5({ lang }: { lang: WebsiteLanguage }) {
 					]}
 				/>
 
-				<SectionCard
+				<ThreeApproachesCard
 					titles={{
 						main: translator.t('section-5.card-2.title'),
 						articles: translator.t('section-5.articles'),
@@ -113,7 +113,7 @@ export async function Section5({ lang }: { lang: WebsiteLanguage }) {
 					]}
 				/>
 
-				<SectionCard
+				<ThreeApproachesCard
 					titles={{
 						main: translator.t('section-5.card-3.title'),
 						articles: translator.t('section-5.articles'),
