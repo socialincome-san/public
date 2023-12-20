@@ -5,8 +5,6 @@ import { useEffect } from 'react';
 export function FacebookTracking() {
 	useEffect(() => {
 		if (process.env.NEXT_PUBLIC_FACEBOOK_TRACKING_ID) {
-			console.debug('Enabling Facebook tracking');
-
 			const fbeventsScript = `
         !function(f,b,e,v,n,t,s)
         {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -21,6 +19,8 @@ export function FacebookTracking() {
 			const scriptElement = document.createElement('script');
 			scriptElement.textContent = fbeventsScript;
 			document.head.appendChild(scriptElement);
+
+			console.debug('Enabled Facebook tracking');
 		}
 	}, []);
 

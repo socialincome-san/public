@@ -5,7 +5,6 @@ import { useEffect } from 'react';
 export function LinkedInTracking() {
 	useEffect(() => {
 		if (process.env.NEXT_PUBLIC_LINKEDIN_TRACKING_ID) {
-			console.debug('Enabling LinkedIn tracking');
 			// @ts-ignore
 			window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
 			// @ts-ignore
@@ -15,6 +14,8 @@ export function LinkedInTracking() {
 			scriptElement.async = true;
 			scriptElement.src = 'https://snap.licdn.com/li.lms-analytics/insight.min.js';
 			document.head.appendChild(scriptElement);
+
+			console.debug('Enabled LinkedIn tracking');
 		}
 	}, []);
 
