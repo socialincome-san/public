@@ -163,7 +163,7 @@
 		"credits-title": "Credits",
 		"credits-content": [
 			{
-				"role": "Kamera",
+				"role": "Director of Photography",
 				"name": "Gabriel Koller"
 			},
 			{
@@ -172,14 +172,22 @@
 			},
 			{
 				"role": "Sounddesign & Musik",
-				"name": "Tidiane Sane & Nicola-Miloš Mišić"
+				"name": "Tidiane Sane"
+			},
+			{
+				"role": "Mix & Mastering",
+				"name": "Nicola-Miloš Mišić"
+			},
+			{
+				"role": "Colorist",
+				"name": "Simon Hardegger"
 			},
 			{
 				"role": "Kameraassistenz",
 				"name": "Felix Rhodes"
 			},
 			{
-				"role": "Erzählung",
+				"role": "Off-Stimme",
 				"name": "Ted Limpert"
 			},
 			{
