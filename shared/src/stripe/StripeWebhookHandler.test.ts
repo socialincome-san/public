@@ -5,7 +5,7 @@ import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
 import { getOrInitializeFirebaseAdmin } from '../firebase/admin/app';
 import { toFirebaseAdminTimestamp } from '../firebase/admin/utils';
 import { ContributionSourceKey, StatusKey, StripeContribution } from '../types/contribution';
-import { User, UserStatusKey } from '../types/user';
+import { User } from '../types/user';
 import { StripeEventHandler } from './StripeEventHandler';
 
 describe('stripeWebhook', () => {
@@ -22,14 +22,14 @@ describe('stripeWebhook', () => {
 	});
 
 	test('storeCharge for inexisting user', async () => {
-		const initialUser = await stripeWebhook.findUser(testCustomer);
+		const initialUser = await stripeWebhook.findFirestoreUser(testCustomer);
 		expect(initialUser).toBeUndefined();
 
 		const ref = await stripeWebhook.storeCharge(testCharge);
 		const contribution = await ref!.get();
 		expect(contribution.data()).toEqual(expectedContribution);
 
-		const createdUser = (await stripeWebhook.findUser(testCustomer))!.data();
+		const createdUser = (await stripeWebhook.findFirestoreUser(testCustomer))!.data();
 		expect(Math.round(createdUser.payment_reference_id / 100000)).toEqual(
 			// rounded to 100 seconds
 			Math.round(expectedUser.payment_reference_id / 100000),
@@ -37,10 +37,8 @@ describe('stripeWebhook', () => {
 		expect(createdUser.personal).toEqual(expectedUser.personal);
 		expect(createdUser.email).toEqual(expectedUser.email);
 		expect(createdUser.stripe_customer_id).toEqual(expectedUser.stripe_customer_id);
-		expect(createdUser.status).toEqual(expectedUser.status);
 		expect(createdUser.currency).toEqual(expectedUser.currency);
 		expect(createdUser.test_user).toEqual(expectedUser.test_user);
-		expect(createdUser.location).toEqual(expectedUser.location);
 	});
 
 	test('storeCharge for existing user through stripe id', async () => {
@@ -413,12 +411,13 @@ describe('stripeWebhook', () => {
 			name: 'Test',
 			lastname: 'User',
 		},
+		address: {
+			country: 'CH',
+		},
 		email: 'test@socialincome.org',
 		stripe_customer_id: 'cus_123',
 		payment_reference_id: DateTime.now().toMillis(),
 		test_user: false,
-		status: UserStatusKey.INITIALIZED,
-		location: 'us',
 		currency: 'USD',
 	};
 });

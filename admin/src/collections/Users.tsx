@@ -1,58 +1,9 @@
 import { USER_FIRESTORE_PATH, User, UserReferralSource } from '@socialincome/shared/src/types/user';
-import { AdditionalFieldDelegate, buildProperties } from 'firecms';
+import { buildProperties } from 'firecms';
 import { CreateDonationCertificatesAction } from '../actions/CreateDonationCertificatesAction';
 import { buildContributionsCollection } from './Contributions';
 import { donationCertificateCollection } from './DonationCertificate';
 import { buildAuditedCollection } from './shared';
-
-const FirstNameCol: AdditionalFieldDelegate<User> = {
-	id: 'first_name_col',
-	name: 'First Name',
-	Builder: ({ entity }) => <>{entity.values?.personal?.name}</>,
-	dependencies: ['personal'],
-};
-
-const LastNameCol: AdditionalFieldDelegate<User> = {
-	id: 'last_name_col',
-	name: 'Last Name',
-	Builder: ({ entity }) => <>{entity.values?.personal?.lastname}</>,
-	dependencies: ['personal'],
-};
-
-const GenderCol: AdditionalFieldDelegate<User> = {
-	id: 'gender_col',
-	name: 'Gender',
-	Builder: ({ entity }) => <>{entity.values?.personal?.gender}</>,
-	dependencies: ['personal'],
-};
-
-const PhoneCol: AdditionalFieldDelegate<User> = {
-	id: 'phone_col',
-	name: 'Phone',
-	Builder: ({ entity }) => <>{entity.values?.personal?.phone}</>,
-	dependencies: ['personal'],
-};
-
-const CountryCol: AdditionalFieldDelegate<User> = {
-	id: 'country_col',
-	name: 'Country',
-	Builder: ({ entity }) => <>{entity.values?.address?.country}</>,
-	dependencies: ['address'],
-};
-
-const CityCol: AdditionalFieldDelegate<User> = {
-	id: 'city_col',
-	name: 'City',
-	Builder: ({ entity }) => <>{entity.values?.address?.city}</>,
-	dependencies: ['address'],
-};
-
-const ReferralCol: AdditionalFieldDelegate<User> = {
-	id: 'referral_col',
-	name: 'Referral',
-	Builder: ({ entity }) => <>{entity.values?.personal?.referral}</>,
-	dependencies: ['personal'],
-};
 
 export const usersCollection = buildAuditedCollection<User>({
 	path: USER_FIRESTORE_PATH,
@@ -62,28 +13,18 @@ export const usersCollection = buildAuditedCollection<User>({
 	singularName: 'Contributor',
 	description: 'Lists all contributors',
 	textSearchEnabled: true,
-	permissions: () => ({
-		edit: true,
-		create: true,
-		delete: false,
-	}),
-	additionalFields: [FirstNameCol, LastNameCol, GenderCol, PhoneCol, CountryCol, CityCol, ReferralCol],
+	permissions: () => ({ edit: true, create: true, delete: false }),
 	subcollections: [buildContributionsCollection(), donationCertificateCollection],
 	Actions: CreateDonationCertificatesAction,
 	properties: buildProperties<User>({
-		test_user: {
-			name: 'Test User',
+		institution: {
+			name: 'Institutional',
 			dataType: 'boolean',
 		},
 		email: {
 			name: 'Email',
 			validation: { required: true },
 			dataType: 'string',
-		},
-		auth_user_id: {
-			name: 'Auth User Id',
-			dataType: 'string',
-			readOnly: true,
 		},
 		personal: {
 			name: 'Personal Info',
@@ -92,10 +33,12 @@ export const usersCollection = buildAuditedCollection<User>({
 				name: {
 					name: 'Name',
 					dataType: 'string',
+					validation: { required: true },
 				},
 				lastname: {
 					name: 'Last Name',
 					dataType: 'string',
+					validation: { required: true },
 				},
 				gender: {
 					name: 'Gender',
@@ -136,6 +79,7 @@ export const usersCollection = buildAuditedCollection<User>({
 				country: {
 					name: 'Country',
 					dataType: 'string',
+					validation: { required: true },
 				},
 				city: {
 					name: 'City',
@@ -155,23 +99,9 @@ export const usersCollection = buildAuditedCollection<User>({
 				},
 			},
 		},
-		institution: {
-			name: 'Institutional',
-			dataType: 'boolean',
-		},
 		language: {
 			name: 'Language',
 			dataType: 'string',
-		},
-		location: {
-			name: 'Location',
-			description: 'Living location defined by List of ISO 3166 country codes',
-			dataType: 'string',
-			validation: {
-				required: true,
-				length: 2,
-				uppercase: true,
-			},
 		},
 		currency: {
 			name: 'Currency',
@@ -183,15 +113,20 @@ export const usersCollection = buildAuditedCollection<User>({
 			},
 			validation: { required: true },
 		},
-		status: {
-			name: 'Status',
-			dataType: 'number',
-			disabled: true,
-		},
-		stripe_customer_id: {
-			name: 'stripe customer id',
+		auth_user_id: {
+			name: 'Auth User Id',
 			dataType: 'string',
 			readOnly: true,
+		},
+		stripe_customer_id: {
+			name: 'Stripe Customer',
+			dataType: 'string',
+			readOnly: true,
+			Preview: (property) => (
+				<a target="_blank" href={`https://dashboard.stripe.com/customers/${property.value}`}>
+					{property.value}
+				</a>
+			),
 		},
 		payment_reference_id: {
 			name: 'Swiss QR-bill payment reference id',

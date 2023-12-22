@@ -17,6 +17,7 @@ export function buildContributionsCollection(
 		icon: 'Paid',
 		path: CONTRIBUTION_FIRESTORE_PATH,
 		textSearchEnabled: false,
+		inlineEditing: false,
 		initialSort: ['created', 'desc'],
 		properties: buildProperties<Contribution>({
 			source: {
@@ -53,25 +54,10 @@ export function buildContributionsCollection(
 				},
 				validation: { required: true },
 			},
-			amount_chf: {
-				dataType: 'number',
-				name: 'Amount Chf (without fees applied)',
-			},
-			fees_chf: {
-				dataType: 'number',
-				name: 'Fees Chf',
-			},
-			reference_id: {
-				dataType: 'string',
-				name: 'External Reference',
-			},
-			monthly_interval: {
-				dataType: 'number',
-				name: 'Monthly recurrence interval',
-			},
 			status: {
 				dataType: 'string',
 				name: 'Status',
+				validation: { required: true },
 				enumValues: [
 					{ id: StatusKey.SUCCEEDED, label: 'Succeeded' },
 					{ id: StatusKey.PENDING, label: 'Pending' },
@@ -79,6 +65,39 @@ export function buildContributionsCollection(
 					{ id: StatusKey.UNKNOWN, label: 'Unknown' },
 				],
 				defaultValue: StatusKey.SUCCEEDED,
+			},
+			amount_chf: {
+				dataType: 'number',
+				name: 'Amount CHF (same as amount if currency is CHF)',
+				validation: { required: true },
+			},
+			fees_chf: {
+				dataType: 'number',
+				name: 'Fees Chf',
+				validation: { required: true },
+			},
+			reference_id: {
+				dataType: 'string',
+				name: 'External Reference',
+				Preview: (property) => {
+					return (
+						<>
+							{property.entity?.values.source === ContributionSourceKey.STRIPE ? (
+								<a target="_blank" href={`https://dashboard.stripe.com/payments/${property.value}`}>
+									{property.value}
+								</a>
+							) : (
+								property.value
+							)}
+						</>
+					);
+				},
+			},
+			monthly_interval: {
+				dataType: 'number',
+				name: 'Monthly recurrence interval',
+				validation: { required: true },
+				enumValues: { 0: 'One time', 1: 'Monthly', 3: 'Quarterly', 12: 'Annually' },
 			},
 		}),
 		...collectionProps,

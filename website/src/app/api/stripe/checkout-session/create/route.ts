@@ -35,7 +35,6 @@ export async function POST(request: CreateCheckoutSessionRequest) {
 	});
 	const session = await stripe.checkout.sessions.create({
 		mode: recurring ? 'subscription' : 'payment',
-		payment_method_types: ['card'],
 		customer: customerId,
 		customer_creation: customerId || recurring ? undefined : 'always',
 		line_items: [

@@ -10,7 +10,8 @@ import {
 	StripeContribution,
 } from '../types/contribution';
 import { CountryCode } from '../types/country';
-import { USER_FIRESTORE_PATH, User, UserStatusKey, splitName } from '../types/user';
+import { bestGuessCurrency } from '../types/currency';
+import { USER_FIRESTORE_PATH, User, splitName } from '../types/user';
 
 export class StripeEventHandler {
 	readonly stripe: Stripe;
@@ -31,14 +32,21 @@ export class StripeEventHandler {
 		const fullCharge = await this.stripe.charges.retrieve(chargeId, {
 			expand: ['balance_transaction', 'invoice'],
 		});
-		await this.storeCharge(fullCharge);
+		// We only store non-successful charges if the user already exists.
+		// This prevents us from having users in the database that never made a successful contribution.
+		if (
+			fullCharge.status === 'succeeded' ||
+			(await this.findFirestoreUser(await this.retrieveStripeCustomer(fullCharge.customer as string)))
+		) {
+			await this.storeCharge(fullCharge);
+		}
 	};
 
 	updateUser = async (checkoutSessionId: string, userData: Partial<User>) => {
 		const checkoutSession = await this.stripe.checkout.sessions.retrieve(checkoutSessionId);
 		const customer = await this.stripe.customers.retrieve(checkoutSession.customer as string);
 		if (customer.deleted) throw Error(`Dealing with a deleted Stripe customer (id=${customer.id})`);
-		const userRef = await this.getOrCreateUser(customer);
+		const userRef = await this.getOrCreateFirestoreUser(customer);
 		const user = await userRef.get();
 		await this.firestoreAdmin.doc<User>(USER_FIRESTORE_PATH, user.id).update(userData);
 	};
@@ -53,8 +61,8 @@ export class StripeEventHandler {
 	/**
 	 * Try to find an existing user using create a new on.
 	 */
-	getOrCreateUser = async (customer: Stripe.Customer): Promise<DocumentReference<User>> => {
-		const userDoc = await this.findUser(customer);
+	getOrCreateFirestoreUser = async (customer: Stripe.Customer): Promise<DocumentReference<User>> => {
+		const userDoc = await this.findFirestoreUser(customer);
 		if (!userDoc) {
 			console.info(`User not found for stripe customer: ${customer.id}`);
 			const userToCreate = this.constructUser(customer);
@@ -68,14 +76,20 @@ export class StripeEventHandler {
 	};
 
 	/**
-	 * First tries to match using the stripe_customer_id otherwise falls back to email.
+	 * First, tries to match using the stripe_customer_id otherwise falls back to email.
 	 */
-	findUser = async (customer: Stripe.Customer) => {
+	findFirestoreUser = async (customer: Stripe.Customer) => {
 		return (
 			(await this.firestoreAdmin.findFirst<User>('users', (col) =>
 				col.where('stripe_customer_id', '==', customer.id),
 			)) ?? (await this.firestoreAdmin.findFirst<User>('users', (col) => col.where('email', '==', customer.email)))
 		);
+	};
+
+	retrieveStripeCustomer = async (customerId: string) => {
+		const customer = await this.stripe.customers.retrieve(customerId);
+		if (customer.deleted) throw Error(`Dealing with a deleted Stripe customer (id=${customer.id})`);
+		return customer;
 	};
 
 	/**
@@ -129,22 +143,19 @@ export class StripeEventHandler {
 				country: customer.address?.country as CountryCode,
 			},
 			email: customer.email,
-			status: UserStatusKey.INITIALIZED,
 			stripe_customer_id: customer.id,
 			payment_reference_id: DateTime.now().toMillis(),
+			currency: bestGuessCurrency(customer.address?.country as CountryCode),
 			test_user: false,
-			location: customer.address?.country?.toLowerCase(),
-			currency: customer.currency,
 		};
 	};
 
 	/**
-	 * Converts the stripe charge to a contribution and stores it in the contributions subcollection of the corresponding user.
+	 * Converts the stripe charge to a contribution and stores it in the 'contributions' subcollection of the corresponding user.
 	 */
 	storeCharge = async (charge: Stripe.Charge): Promise<DocumentReference<StripeContribution>> => {
-		const customer = await this.stripe.customers.retrieve(charge.customer as string);
-		if (customer.deleted) throw Error(`Dealing with a deleted Stripe customer (id=${customer.id})`);
-		const userRef = await this.getOrCreateUser(customer);
+		const customer = await this.retrieveStripeCustomer(charge.customer as string);
+		const userRef = await this.getOrCreateFirestoreUser(customer);
 		const contribution = this.constructContribution(charge);
 		const contributionRef = (
 			userRef.collection(CONTRIBUTION_FIRESTORE_PATH) as CollectionReference<StripeContribution>

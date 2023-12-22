@@ -42,6 +42,7 @@ const countryToCurrency = new Map<CountryCode, Currency>([
 	['NO', 'EUR'],
 	['PL', 'EUR'],
 	['PT', 'EUR'],
+	['US', 'USD'],
 ]);
 
 export const bestGuessCurrency = (country: CountryCode | undefined): Currency => {
