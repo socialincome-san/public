@@ -123,7 +123,7 @@ export const usersCollection = buildAuditedCollection<User>({
 			dataType: 'string',
 			readOnly: true,
 			Preview: (property) => (
-				<a target="_blank" href={`https://dashboard.stripe.com/customers/${property.value}`}>
+				<a target="_blank" rel="noopener noreferrer" href={`https://dashboard.stripe.com/customers/${property.value}`}>
 					{property.value}
 				</a>
 			),

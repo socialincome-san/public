@@ -1,3 +1,4 @@
+import { Currency } from './currency';
 import { Timestamp } from './timestamp';
 
 export const CONTRIBUTION_FIRESTORE_PATH = 'contributions';
@@ -27,7 +28,7 @@ type BaseContribution = {
 	amount: number;
 	amount_chf: number;
 	fees_chf: number;
-	currency: string;
+	currency: Currency;
 };
 
 export type StripeContribution = BaseContribution & {

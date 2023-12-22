@@ -10,7 +10,7 @@ import {
 	StripeContribution,
 } from '../types/contribution';
 import { CountryCode } from '../types/country';
-import { bestGuessCurrency } from '../types/currency';
+import { Currency, bestGuessCurrency } from '../types/currency';
 import { USER_FIRESTORE_PATH, User, splitName } from '../types/user';
 
 export class StripeEventHandler {
@@ -103,7 +103,7 @@ export class StripeEventHandler {
 			source: ContributionSourceKey.STRIPE,
 			created: toFirebaseAdminTimestamp(DateTime.fromSeconds(charge.created)),
 			amount: charge.amount / 100,
-			currency: charge.currency,
+			currency: charge.currency.toUpperCase() as Currency,
 			amount_chf: balanceTransaction?.amount ? balanceTransaction.amount / 100 : 0,
 			fees_chf: balanceTransaction?.fee ? balanceTransaction.fee / 100 : 0,
 			monthly_interval: monthlyInterval,

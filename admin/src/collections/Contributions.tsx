@@ -83,7 +83,11 @@ export function buildContributionsCollection(
 					return (
 						<>
 							{property.entity?.values.source === ContributionSourceKey.STRIPE ? (
-								<a target="_blank" href={`https://dashboard.stripe.com/payments/${property.value}`}>
+								<a
+									target="_blank"
+									rel="noopener noreferrer"
+									href={`https://dashboard.stripe.com/payments/${property.value}`}
+								>
 									{property.value}
 								</a>
 							) : (
