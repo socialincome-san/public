@@ -2,7 +2,7 @@ import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { DrawCard } from '@/app/[lang]/[region]/(website)/transparency/recipient-selection/draw-card';
 import { loadPastDraws } from '@/app/[lang]/[region]/(website)/transparency/recipient-selection/state';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Card, Typography } from '@socialincome/ui';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, BaseContainer, Card, Typography } from '@socialincome/ui';
 
 export default async function Page({ params: { lang } }: DefaultPageProps) {
 	const pastDraws = await loadPastDraws();
@@ -56,14 +56,18 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 					{translator.t('faq.title')}
 				</Typography>
 				<div className="space-y-4">
-					{translator.t<{ question: string; answer: string }[]>('faq.questions').map(({ question, answer }, index) => (
-						<div key={index}>
-							<Typography as="h3" size="xl" weight="bold">
-								{question}
-							</Typography>
-							<Typography as="p" className="mt-2" dangerouslySetInnerHTML={{ __html: answer }} />
-						</div>
-					))}
+					<Accordion type='single' collapsible className="w-full">
+						{
+							translator.t<{ question: string; answer: string }[]>('faq.questions').map(({ question, answer }, index) => (
+								<AccordionItem value={question} key={index}>
+									<AccordionTrigger>{question}</AccordionTrigger>
+									<AccordionContent>
+										<Typography as='p' dangerouslySetInnerHTML={{__html: answer}} />
+									</AccordionContent>
+								</AccordionItem>
+							))
+						}
+					</Accordion>
 				</div>
 			</div>
 
