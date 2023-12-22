@@ -1,14 +1,10 @@
 import { EntityReference } from 'firecms';
 import { capitalizeStringIfUppercase } from '../utils/strings';
 import { CountryCode } from './country';
+import { Currency } from './currency';
 import { LanguageCode } from './language';
 
 export const USER_FIRESTORE_PATH = 'users';
-
-export enum UserStatusKey {
-	INITIALIZED = 0, // automatically created through the system
-	PROFILE_CREATED = 1, // user submitted registration form
-}
 
 export const GENDER_OPTIONS = ['male', 'female', 'other', 'private'] as const;
 export type Gender = (typeof GENDER_OPTIONS)[number];
@@ -23,11 +19,11 @@ export enum UserReferralSource {
 }
 
 export type UserAddress = {
+	country: CountryCode;
 	street?: string;
 	number?: string;
 	city?: string;
 	zip?: number;
-	country?: CountryCode;
 };
 
 export type User = {
@@ -40,16 +36,14 @@ export type User = {
 		phone?: string;
 		referral?: UserReferralSource;
 	};
-	address?: UserAddress;
+	address: UserAddress;
 	email: string;
-	status?: UserStatusKey;
 	payment_reference_id: number; // used to identify user in wire transfer
 	stripe_customer_id?: string;
 	test_user?: boolean; // TODO: discuss if still needed
 	institution?: boolean;
 	language?: LanguageCode;
-	location?: string; // TODO: discuss if still needed
-	currency?: string | null; // TODO: proper typing
+	currency?: Currency;
 	contributor_organisations?: EntityReference[];
 };
 
