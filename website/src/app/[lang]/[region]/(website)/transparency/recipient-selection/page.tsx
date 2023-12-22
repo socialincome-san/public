@@ -26,33 +26,33 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 					<Typography as="h1" weight="bold" size="4xl">
 						{translator.t('title')}
 					</Typography>
-					<Typography className="mt-4" dangerouslySetInnerHTML={{ __html: translator.t('introduction') }} />
+					<Typography size="sm" className="mt-4" dangerouslySetInnerHTML={{ __html: translator.t('introduction') }} />
 				</div>
 				<div className="space-y-4">
 					<div>
-						<Typography as="h2" size="xl" weight="bold">
+						<Typography as="h2" size="lg" weight="bold">
 							{translator.t('selection-process.step-1.title')}
 						</Typography>
-						<Typography as="h2" className="mt-2">
+						<Typography as="h4" size="sm" className="mt-2">
 							{translator.t('selection-process.step-1.text')}
 						</Typography>
 					</div>
 					<div>
-						<Typography as="h2" size="xl" weight="bold">
+						<Typography as="h2" size="lg" weight="bold">
 							{translator.t('selection-process.step-2.title')}
 						</Typography>
-						<Typography as="h2" className="mt-2">
+						<Typography as="h4" size="sm" className="mt-2">
 							{translator.t('selection-process.step-2.text')}
 						</Typography>
 					</div>
 					<Card className="mx-auto max-w-xl p-4">
-						<Typography>{translator.t('selection-process.step-2.card')}</Typography>
+						<Typography size="sm">{translator.t('selection-process.step-2.card')}</Typography>
 					</Card>
 					<div>
-						<Typography as="h2" size="xl" weight="bold">
+						<Typography as="h2" size="lg" weight="bold">
 							{translator.t('selection-process.step-3.title')}
 						</Typography>
-						<Typography as="h2" className="mt-2">
+						<Typography as="h4" size="sm" className="mt-2">
 							{translator.t('selection-process.step-3.text')}
 						</Typography>
 					</div>
@@ -83,7 +83,7 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 				<Typography as="h2" size="2xl" weight="bold">
 					{translator.t('past-draws')}
 				</Typography>
-				<Typography>{translator.t('past-draws-description')}</Typography>
+				<Typography size="sm">{translator.t('past-draws-description')}</Typography>
 				<div className="mx-auto max-w-3xl space-y-4">
 					{pastDraws.map((draw, index) => (
 						<DrawCard
