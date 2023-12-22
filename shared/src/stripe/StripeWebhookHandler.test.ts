@@ -398,7 +398,7 @@ describe('stripeWebhook', () => {
 		source: ContributionSourceKey.STRIPE,
 		created: toFirebaseAdminTimestamp(new Date('2021-03-05T18:36:21.000Z')),
 		amount: 900,
-		currency: 'usd',
+		currency: 'USD',
 		amount_chf: 818.68,
 		fees_chf: 24.04,
 		monthly_interval: 3,
