@@ -10,6 +10,7 @@ import {
 	ContributionSourceKey,
 	StatusKey,
 } from '../../../../shared/src/types/contribution';
+import { Currency } from '../../../../shared/src/types/currency';
 import { USER_FIRESTORE_PATH, User } from '../../../../shared/src/types/user';
 
 // TODO: write tests
@@ -40,7 +41,7 @@ export class PostfinancePaymentsFileImporter {
 				for (let node of nodes) {
 					const contribution: BankWireContribution = {
 						reference_id: parseFloat(select('string(//ns:Refs/ns:AcctSvcrRef)', node) as string),
-						currency: (select('string(//ns:Amt/@Ccy)', node) as string).toUpperCase(),
+						currency: (select('string(//ns:Amt/@Ccy)', node) as string).toUpperCase() as Currency,
 						amount: parseFloat(select('string(//ns:Amt)', node) as string),
 						amount_chf: parseFloat(select('string(//ns:Amt)', node) as string),
 						fees_chf: 0,
