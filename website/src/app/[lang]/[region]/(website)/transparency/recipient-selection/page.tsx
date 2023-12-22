@@ -69,7 +69,7 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 							.t<{ question: string; answer: string }[]>('faq.questions')
 							.map(({ question, answer }, index) => (
 								<AccordionItem value={question} key={index}>
-									<AccordionTrigger>{question}</AccordionTrigger>
+									<AccordionTrigger className="text-left">{question}</AccordionTrigger>
 									<AccordionContent>
 										<Typography as="p" dangerouslySetInnerHTML={{ __html: answer }} />
 									</AccordionContent>
