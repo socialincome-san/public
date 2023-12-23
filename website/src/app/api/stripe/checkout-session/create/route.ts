@@ -29,13 +29,12 @@ export async function POST(request: CreateCheckoutSessionRequest) {
 	const price = await stripe.prices.create({
 		active: true,
 		unit_amount: amount,
-		currency: currency,
+		currency: currency.toLowerCase(),
 		product: recurring ? process.env.STRIPE_PRODUCT_RECURRING : process.env.STRIPE_PRODUCT_ONETIME,
 		recurring: recurring ? { interval: 'month', interval_count: intervalCount } : undefined,
 	});
 	const session = await stripe.checkout.sessions.create({
 		mode: recurring ? 'subscription' : 'payment',
-		payment_method_types: ['card'],
 		customer: customerId,
 		customer_creation: customerId || recurring ? undefined : 'always',
 		line_items: [

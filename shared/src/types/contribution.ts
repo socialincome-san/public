@@ -1,3 +1,4 @@
+import { Currency } from './currency';
 import { Timestamp } from './timestamp';
 
 export const CONTRIBUTION_FIRESTORE_PATH = 'contributions';
@@ -18,24 +19,26 @@ export enum StatusKey {
 	UNKNOWN = 'unknown',
 }
 
-export type Contribution = {
+export type Contribution = StripeContribution | BankWireContribution;
+
+type BaseContribution = {
 	source: ContributionSourceKey;
 	status: StatusKey;
 	created: Timestamp;
 	amount: number;
 	amount_chf: number;
 	fees_chf: number;
-	currency: string;
+	currency: Currency;
 };
 
-export type StripeContribution = Contribution & {
+export type StripeContribution = BaseContribution & {
 	source: ContributionSourceKey.STRIPE;
 	monthly_interval: number;
 	reference_id: string; // stripe charge id
 };
 
-export type BankWireContribution = Contribution & {
+export type BankWireContribution = BaseContribution & {
 	source: ContributionSourceKey.WIRE_TRANSFER;
-	rawContent: string;
-	referenceId: number; // reference number from the bank wire
+	raw_content: string;
+	reference_id: number; // reference number from the bank wire
 };
