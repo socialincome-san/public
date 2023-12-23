@@ -5,7 +5,7 @@ import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
 import { getOrInitializeFirebaseAdmin } from '../../firebase/admin/app';
 import { toFirebaseAdminTimestamp } from '../../firebase/admin/utils';
 import { CONTRIBUTION_FIRESTORE_PATH, ContributionSourceKey, StatusKey } from '../../types/contribution';
-import { USER_FIRESTORE_PATH, User, UserStatusKey } from '../../types/user';
+import { USER_FIRESTORE_PATH, User } from '../../types/user';
 import { ContributionStatsCalculator } from './ContributionStatsCalculator';
 
 const projectId = 'contribution-stats-calculator-test';
@@ -79,12 +79,13 @@ const user1: User = {
 		name: 'User1',
 		lastname: 'User1',
 	},
+	address: {
+		country: 'US',
+	},
 	email: '123@socialincome.org',
 	stripe_customer_id: 'cus_123',
 	payment_reference_id: DateTime.now().toMillis(),
 	test_user: false,
-	status: UserStatusKey.INITIALIZED,
-	location: 'US',
 	currency: 'USD',
 };
 const contributionsUser1 = ['2023-01-05', '2023-02-05', '2023-03-05', '2023-04-05'].map((date) => {
@@ -92,7 +93,7 @@ const contributionsUser1 = ['2023-01-05', '2023-02-05', '2023-03-05', '2023-04-0
 		source: ContributionSourceKey.STRIPE,
 		created: toFirebaseAdminTimestamp(new Date(date)),
 		amount: 100,
-		currency: 'usd',
+		currency: 'USD',
 		amount_chf: 100,
 		fees_chf: 2,
 		monthly_interval: 3,
@@ -106,21 +107,22 @@ const user2: User = {
 		name: 'User2',
 		lastname: 'User2',
 	},
+	address: {
+		country: 'CH',
+	},
 	email: '456@socialincome.org',
 	stripe_customer_id: 'cus_456',
 	payment_reference_id: DateTime.now().toMillis(),
 	test_user: false,
-	status: UserStatusKey.INITIALIZED,
 	institution: true,
-	location: 'ch',
-	currency: 'chf',
+	currency: 'CHF',
 };
 const contributionsUser2 = ['2023-01-08', '2023-04-09'].map((date) => {
 	return {
 		source: ContributionSourceKey.BENEVITY,
 		created: toFirebaseAdminTimestamp(new Date(date)),
 		amount: 1000,
-		currency: 'chf',
+		currency: 'CHF',
 		amount_chf: 1000,
 		fees_chf: 20,
 		monthly_interval: 3,
@@ -135,12 +137,13 @@ const testUser: User = {
 		name: 'Test User',
 		lastname: 'User2',
 	},
+	address: {
+		country: 'US',
+	},
 	email: 'test@socialincome.org',
-	stripe_customer_id: 'cus_123',
+	stripe_customer_id: 'cus_124',
 	payment_reference_id: DateTime.now().toMillis(),
 	test_user: true,
-	status: UserStatusKey.INITIALIZED,
-	location: 'US',
 	currency: 'USD',
 };
 const contributionsTestUser = ['2023-01-05'].map((date) => {
@@ -148,7 +151,7 @@ const contributionsTestUser = ['2023-01-05'].map((date) => {
 		source: ContributionSourceKey.STRIPE,
 		created: toFirebaseAdminTimestamp(new Date(date)),
 		amount: 100,
-		currency: 'usd',
+		currency: 'USD',
 		amount_chf: 818.68,
 		fees_chf: 24.04,
 		monthly_interval: 3,

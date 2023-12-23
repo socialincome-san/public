@@ -331,18 +331,18 @@ const List<String> _shortMonths = <String>[
 ];
 
 const List<String> _months = <String>[
-    "Jɛnyuari",
-    "Fɛbyuari",
-    "Mach",
-    "Epril",
-    "Me",
-    "Jun",
-    "Julay",
-    "Ɔgɔst",
-    "Sɛptɛmba",
-    "Ɔktoba",
-    "Novɛmba",
-    "Disɛmba",
+  "Jɛnyuari",
+  "Fɛbyuari",
+  "Mach",
+  "Epril",
+  "Me",
+  "Jun",
+  "Julay",
+  "Ɔgɔst",
+  "Sɛptɛmba",
+  "Ɔktoba",
+  "Novɛmba",
+  "Disɛmba",
 ];
 
 // #docregion Delegate
@@ -574,6 +574,18 @@ class KriCupertinoLocalizations extends GlobalCupertinoLocalizations {
 
   @override
   String get timerPickerSecondLabelOther => "sec.";
+
+  @override
+  String get lookUpButtonLabel => "Look Up";
+
+  @override
+  String get menuDismissLabel => "Dismiss menu";
+
+  @override
+  String get searchWebButtonLabel => "Search Web";
+
+  @override
+  String get shareButtonLabel => "Share...";
 }
 
 // #docregion Delegate
@@ -1112,4 +1124,16 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
 
   @override
   String get scanTextButtonLabel => "Skan tɛkst";
+
+  @override
+  String get lookUpButtonLabel => "Look Up";
+
+  @override
+  String get menuDismissLabel => "Dismiss menu";
+
+  @override
+  String get searchWebButtonLabel => "Search Web";
+
+  @override
+  String get shareButtonLabel => "Share...";
 }
