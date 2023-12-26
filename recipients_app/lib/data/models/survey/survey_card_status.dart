@@ -4,4 +4,5 @@ enum SurveyCardStatus {
   overdue,
   answered,
   missed,
+  upcoming,
 }

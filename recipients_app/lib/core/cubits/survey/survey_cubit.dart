@@ -26,26 +26,29 @@ class SurveyCubit extends Cubit<SurveyState> {
     required this.crashReportingRepository,
   }) : super(const SurveyState());
 
+  Future<void> getDashboardSurveys() async {
+    try {
+      final mappedSurveys = await _getSurveys();
+
+      final dashboardSurveys = mappedSurveys
+          .where((element) => _shouldShowSurveyCard(element.survey))
+          .toList();
+
+      emit(
+        SurveyState(
+          status: SurveyStatus.updatedSuccess,
+          mappedSurveys: dashboardSurveys,
+        ),
+      );
+    } on Exception catch (ex, stackTrace) {
+      crashReportingRepository.logError(ex, stackTrace);
+      emit(const SurveyState(status: SurveyStatus.updatedFailure));
+    }
+  }
+
   Future<void> getSurveys() async {
     try {
-      final surveys =
-          await surveyRepository.fetchSurveys(recipientId: recipient.userId);
-
-      final mappedSurveys = surveys
-          .where((element) => _shouldShowSurveyCard(element))
-          .map(
-            (survey) => MappedSurvey(
-              survey: survey,
-              surveyUrl: _getSurveyUrl(
-                survey,
-                recipient.userId,
-              ),
-              cardStatus: _getSurveyCardStatus(survey),
-              daysToOverdue: _getDaysToOverdue(survey),
-              daysAfterOverdue: _getDaysAfterOverdue(survey),
-            ),
-          )
-          .toList();
+      final mappedSurveys = await _getSurveys();
 
       emit(
         SurveyState(
@@ -57,6 +60,27 @@ class SurveyCubit extends Cubit<SurveyState> {
       crashReportingRepository.logError(ex, stackTrace);
       emit(const SurveyState(status: SurveyStatus.updatedFailure));
     }
+  }
+
+  Future<List<MappedSurvey>> _getSurveys() async {
+    final surveys =
+        await surveyRepository.fetchSurveys(recipientId: recipient.userId);
+
+    final mappedSurveys = surveys
+        .map(
+          (survey) => MappedSurvey(
+            survey: survey,
+            surveyUrl: _getSurveyUrl(
+              survey,
+              recipient.userId,
+            ),
+            cardStatus: _getSurveyCardStatus(survey),
+            daysToOverdue: _getDaysToOverdue(survey),
+            daysAfterOverdue: _getDaysAfterOverdue(survey),
+          ),
+        )
+        .toList();
+    return mappedSurveys;
   }
 
   String _getSurveyUrl(Survey survey, String recipientId) {
@@ -103,7 +127,11 @@ class SurveyCubit extends Cubit<SurveyState> {
           dateDifferenceInDays < _kOverdueEndDay) {
         return SurveyCardStatus.overdue;
       } else {
-        return SurveyCardStatus.missed;
+        if ((_getDaysAfterOverdue(survey) ?? 0) > 0) {
+          return SurveyCardStatus.missed;
+        } else {
+          return SurveyCardStatus.upcoming;
+        }
       }
     } else if (survey.status == SurveyServerStatus.completed) {
       return SurveyCardStatus.answered;

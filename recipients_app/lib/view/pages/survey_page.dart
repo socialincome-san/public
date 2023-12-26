@@ -49,7 +49,7 @@ class SurveyPageState extends State<SurveyPage> {
         elevation: 0,
         title: Text(localizations.survey),
         leading: BackButton(onPressed: () {
-          context.read<SurveyCubit>().getSurveys();
+          context.read<SurveyCubit>().getDashboardSurveys();
           Navigator.maybePop(context);
         }),
         centerTitle: true,

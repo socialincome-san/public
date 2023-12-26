@@ -38,7 +38,7 @@ class DashboardPage extends StatelessWidget {
             recipient: authCubit.state.recipient!,
             surveyRepository: context.read<SurveyRepository>(),
             crashReportingRepository: context.read<CrashReportingRepository>(),
-          )..getSurveys(),
+          )..getDashboardSurveys(),
         ),
       ],
       child: const _DashboardView(),

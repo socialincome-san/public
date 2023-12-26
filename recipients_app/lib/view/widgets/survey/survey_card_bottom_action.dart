@@ -94,6 +94,7 @@ class SurveyCardBottomAction extends StatelessWidget {
       case SurveyCardStatus.firstReminder:
         return AppColors.primaryColor;
       case SurveyCardStatus.newSurvey:
+      case SurveyCardStatus.upcoming:
         return Colors.white;
     }
   }
@@ -108,6 +109,7 @@ class SurveyCardBottomAction extends StatelessWidget {
       case SurveyCardStatus.firstReminder:
         return Colors.white;
       case SurveyCardStatus.newSurvey:
+      case SurveyCardStatus.upcoming:
         return AppColors.fontColorDark;
     }
   }
@@ -137,6 +139,7 @@ class SurveyCardBottomAction extends StatelessWidget {
         }
         return localizations.surveyDaysLeft(daysToOverdue, daysText);
       case SurveyCardStatus.missed:
+      case SurveyCardStatus.upcoming:
         return "";
     }
   }
