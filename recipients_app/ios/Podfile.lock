@@ -2,7 +2,7 @@ PODS:
   - AppCheckCore (10.18.0):
     - GoogleUtilities/Environment (~> 7.11)
     - PromisesObjC (~> 2.3)
-  - cloud_firestore (4.13.3):
+  - cloud_firestore (4.13.6):
     - Firebase/Firestore (= 10.18.0)
     - firebase_core
     - Flutter
@@ -21,23 +21,23 @@ PODS:
   - Firebase/Messaging (10.18.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 10.18.0)
-  - firebase_app_check (0.2.1-6):
+  - firebase_app_check (0.2.1-8):
     - Firebase/CoreOnly (~> 10.18.0)
     - firebase_core
     - FirebaseAppCheck (~> 10.18.0-beta)
     - Flutter
-  - firebase_auth (4.15.0):
+  - firebase_auth (4.15.3):
     - Firebase/Auth (= 10.18.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.24.0):
+  - firebase_core (2.24.2):
     - Firebase/CoreOnly (= 10.18.0)
     - Flutter
-  - firebase_crashlytics (3.4.6):
+  - firebase_crashlytics (3.4.8):
     - Firebase/Crashlytics (= 10.18.0)
     - firebase_core
     - Flutter
-  - firebase_messaging (14.7.6):
+  - firebase_messaging (14.7.9):
     - Firebase/Messaging (= 10.18.0)
     - firebase_core
     - Flutter
@@ -134,6 +134,8 @@ PODS:
     - nanopb/encode (= 2.30909.1)
   - nanopb/decode (2.30909.1)
   - nanopb/encode (2.30909.1)
+  - package_info_plus (0.4.5):
+    - Flutter
   - PhoneNumberKit (3.7.5):
     - PhoneNumberKit/PhoneNumberKitCore (= 3.7.5)
     - PhoneNumberKit/UIKit (= 3.7.5)
@@ -160,6 +162,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - libphonenumber_plugin (from `.symlinks/plugins/libphonenumber_plugin/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
 
@@ -208,6 +211,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_native_splash/ios"
   libphonenumber_plugin:
     :path: ".symlinks/plugins/libphonenumber_plugin/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
   webview_flutter_wkwebview:
@@ -220,13 +225,13 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AppCheckCore: 4687c03428947d5b26a6bf9bb5566b39f5473bf1
-  cloud_firestore: 9b25b77371a845d07a48e5146799f6d4552f5940
+  cloud_firestore: c29d4c2e96fe31374d9dab458a99d7a488d3a735
   Firebase: 414ad272f8d02dfbf12662a9d43f4bba9bec2a06
-  firebase_app_check: 1b1986f696705c793cb6bac2f429f2cbe65f0fbc
-  firebase_auth: 02d1a6340f81020cc302fb8fea8518908c546cec
-  firebase_core: f802c5c1f6caff9b8d38b591a36e7b25f8878936
-  firebase_crashlytics: 0db78a5b6badc630f21a833d0c9ab20ab5d81948
-  firebase_messaging: ca2fc59ddd52ef032d80f1a717d12eae8fa0e994
+  firebase_app_check: 375d2482bc2219ef06df67f2ad659c377b2c1075
+  firebase_auth: df44e14f8a93e8a9869d91695bd3f8e53d2c9f5a
+  firebase_core: 0af4a2b24f62071f9bf283691c0ee41556dcb3f5
+  firebase_crashlytics: 55714f63ae0973c54b3a721c451ae5f815086c1f
+  firebase_messaging: 875385354f623750aa03204a028d640108bc3412
   FirebaseAppCheck: f34226df40cf6057dc54916ab5a5d461bb51ee68
   FirebaseAppCheckInterop: 3cd914842ba46f4304050874cd284de82f154ffd
   FirebaseAuth: 12314b438fa76048540c8fb86d6cfc9e08595176
@@ -234,7 +239,7 @@ SPEC CHECKSUMS:
   FirebaseCoreExtension: 62b201498aa10535801cdf3448c7f4db5e24ed80
   FirebaseCoreInternal: 8eb002e564b533bdcf1ba011f33f2b5c10e2ed4a
   FirebaseCrashlytics: 86d5bce01f42fa1db265f87ff1d591f04db610ec
-  FirebaseFirestore: 3f48a8b2aca4c247d92b7e25bee69bbafed775c8
+  FirebaseFirestore: 584e3f563142f63d20e9ec9c505370d674d44eba
   FirebaseInstallations: e842042ec6ac1fd2e37d7706363ebe7f662afea4
   FirebaseMessaging: 9bc34a98d2e0237e1b121915120d4d48ddcf301e
   FirebaseSessions: f90fe9212ee2818641eda051c0835c9c4e30d9ae
@@ -243,8 +248,9 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 57c22343ab29bc686febbf7cbb13bad167c2d8fe
   GoogleUtilities: 0759d1a57ebb953965c2dfe0ba4c82e95ccc2e34
   GTMSessionFetcher: 41b9ef0b4c08a6db4b7eb51a21ae5183ec99a2c8
-  libphonenumber_plugin: e8a7d64a6624a7c25f2c4ab0b7ead2a8e341e35e
+  libphonenumber_plugin: 48bf4078546377eedaab4aa54978cd0f6fa23072
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
+  package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
   PhoneNumberKit: f3980e01b84615524dd496adee6a1b5ced87d3f4
   PromisesObjC: c50d2056b5253dadbd6c2bea79b0674bd5a52fa4
   PromisesSwift: 28dca69a9c40779916ac2d6985a0192a5cb4a265
