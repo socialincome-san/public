@@ -1,6 +1,8 @@
 import "package:app/data/models/models.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/data/repositories/survey_repository.dart";
+import "package:cloud_firestore/cloud_firestore.dart";
+import "package:collection/collection.dart";
 import "package:equatable/equatable.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -26,7 +28,7 @@ class SurveyCubit extends Cubit<SurveyState> {
     required this.crashReportingRepository,
   }) : super(const SurveyState());
 
-  Future<void> getDashboardSurveys() async {
+  Future<void> getSurveys() async {
     try {
       final mappedSurveys = await _getSurveys();
 
@@ -37,23 +39,8 @@ class SurveyCubit extends Cubit<SurveyState> {
       emit(
         SurveyState(
           status: SurveyStatus.updatedSuccess,
-          mappedSurveys: dashboardSurveys,
-        ),
-      );
-    } on Exception catch (ex, stackTrace) {
-      crashReportingRepository.logError(ex, stackTrace);
-      emit(const SurveyState(status: SurveyStatus.updatedFailure));
-    }
-  }
-
-  Future<void> getSurveys() async {
-    try {
-      final mappedSurveys = await _getSurveys();
-
-      emit(
-        SurveyState(
-          status: SurveyStatus.updatedSuccess,
           mappedSurveys: mappedSurveys,
+          dashboardMappedSurveys: dashboardSurveys,
         ),
       );
     } on Exception catch (ex, stackTrace) {
@@ -69,6 +56,7 @@ class SurveyCubit extends Cubit<SurveyState> {
     final mappedSurveys = surveys
         .map(
           (survey) => MappedSurvey(
+            name: _getReadableName(survey.id),
             survey: survey,
             surveyUrl: _getSurveyUrl(
               survey,
@@ -79,7 +67,9 @@ class SurveyCubit extends Cubit<SurveyState> {
             daysAfterOverdue: _getDaysAfterOverdue(survey),
           ),
         )
+        .sortedBy((element) => element.survey.dueDateAt ?? Timestamp.now())
         .toList();
+
     return mappedSurveys;
   }
 
@@ -139,6 +129,14 @@ class SurveyCubit extends Cubit<SurveyState> {
       return SurveyCardStatus.missed;
     }
   }
+}
+
+String _getReadableName(String surveyId) {
+  return surveyId
+      .split("-")
+      .map((element) =>
+          "${element[0].toUpperCase()}${element.substring(1).toLowerCase()}")
+      .join(" ");
 }
 
 int? _getDaysToOverdue(Survey survey) {

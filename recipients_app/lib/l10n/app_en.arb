@@ -147,6 +147,13 @@
     "continueText": "Continue",
     "phoneNumber": "Phone number",
     "appVersion": "App version:",
+    "surveysTitle": "Surveys",
+    "surveysEmpty": "No surveys.",
+    "surveyMissed": "Missed",
+    "surveyDue": "Due",
+    "surveyCompleted": "Completed",
+    "surveyUpcoming": "Upcoming",
+    "surveyInProgress": "In Progress",
 
     "invalidPhoneNumberError": "Invalid phone number. Please check your phone number and try again.",
     "invalidVerificationCodeError": "Invalid verification code. Please check provided SMS code and try again.",

@@ -38,7 +38,7 @@ class DashboardPage extends StatelessWidget {
             recipient: authCubit.state.recipient!,
             surveyRepository: context.read<SurveyRepository>(),
             crashReportingRepository: context.read<CrashReportingRepository>(),
-          )..getDashboardSurveys(),
+          )..getSurveys(),
         ),
       ],
       child: const _DashboardView(),
@@ -63,7 +63,7 @@ class _DashboardView extends StatelessWidget {
     final List<DashboardItem> surveysItems = context
         .watch<SurveyCubit>()
         .state
-        .mappedSurveys
+        .dashboardMappedSurveys
         .map<DashboardItem>(
           (survey) => SurveyCardContainer(
             mappedSurvey: survey,
