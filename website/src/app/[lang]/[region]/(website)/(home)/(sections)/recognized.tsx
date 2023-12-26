@@ -1,9 +1,9 @@
-import { Section7Carousel } from '@/app/[lang]/[region]/(website)/(home)/section-7-carousel';
+import { RecognizedCarousel } from '@/app/[lang]/[region]/(website)/(home)/(sections)/recognized-carousel';
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
-export async function Section7({ lang }: { lang: WebsiteLanguage }) {
+export async function Recognized({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-home'],
@@ -23,7 +23,7 @@ export async function Section7({ lang }: { lang: WebsiteLanguage }) {
 				</Typography>
 			</Typography>
 			<Typography size="lg">{translator.t('section-7.subtitle')}</Typography>
-			<Section7Carousel />
+			<RecognizedCarousel />
 		</BaseContainer>
 	);
 }

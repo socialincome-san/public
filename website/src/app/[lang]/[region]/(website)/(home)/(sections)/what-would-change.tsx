@@ -4,7 +4,7 @@ import { VimeoVideo } from '@/components/vimeo-video';
 import { PlayCircleIcon } from '@heroicons/react/24/outline';
 import { BaseContainer, Dialog, DialogContent, DialogTrigger, Typography } from '@socialincome/ui';
 import Image from 'next/image';
-import houseGif from './(assets)/house.gif';
+import houseGif from '../(assets)/house.gif';
 
 type Section2Props = {
 	vimeoVideoId: number;
@@ -16,7 +16,7 @@ type Section2Props = {
 	};
 };
 
-export function Section2({ vimeoVideoId, translations }: Section2Props) {
+export function WhatWouldChange({ vimeoVideoId, translations }: Section2Props) {
 	return (
 		<BaseContainer
 			backgroundColor="bg-yellow-50"
