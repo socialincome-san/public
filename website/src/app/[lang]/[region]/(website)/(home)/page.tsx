@@ -1,20 +1,22 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { Section1 } from '@/app/[lang]/[region]/(website)/(home)/section-1';
-import { Section2 } from '@/app/[lang]/[region]/(website)/(home)/section-2';
-import { Section3 } from '@/app/[lang]/[region]/(website)/(home)/section-3';
-import { Section4 } from '@/app/[lang]/[region]/(website)/(home)/section-4';
-import { Section5 } from '@/app/[lang]/[region]/(website)/(home)/section-5';
-import { Section6 } from '@/app/[lang]/[region]/(website)/(home)/section-6';
-import { Section7 } from '@/app/[lang]/[region]/(website)/(home)/section-7';
+import { AddressInequality } from '@/app/[lang]/[region]/(website)/(home)/(sections)/address-inequality';
+import { Hero } from '@/app/[lang]/[region]/(website)/(home)/(sections)/hero';
+import { Recognized } from '@/app/[lang]/[region]/(website)/(home)/(sections)/recognized';
+import { Sdg } from '@/app/[lang]/[region]/(website)/(home)/(sections)/sdg';
+import { SwissSection } from '@/app/[lang]/[region]/(website)/(home)/(sections)/swiss-section';
+import { ThreeApproaches } from '@/app/[lang]/[region]/(website)/(home)/(sections)/three-approaches';
+import { WhatWouldChange } from '@/app/[lang]/[region]/(website)/(home)/(sections)/what-would-change';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { Video } from './(sections)/video';
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	const translator = await Translator.getInstance({ language: lang, namespaces: 'website-home' });
 	const vimeoVideoId = Number(translator.t('section-2.vimeo-video-id'));
 	return (
 		<>
-			<Section1 lang={lang} region={region} />
-			<Section2
+			<Hero lang={lang} region={region} />
+			<Video lang={lang} />
+			<WhatWouldChange
 				vimeoVideoId={vimeoVideoId}
 				translations={{
 					title1: translator.t('section-2.title-1'),
@@ -23,11 +25,11 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 					videoButton: translator.t('section-2.video-button'),
 				}}
 			/>
-			{region === 'ch' && <Section3 lang={lang} region={region} />}
-			<Section4 lang={lang} />
-			<Section5 lang={lang} />
-			<Section6 lang={lang} />
-			<Section7 lang={lang} />
+			{region === 'ch' && <SwissSection lang={lang} region={region} />}
+			<AddressInequality lang={lang} />
+			<ThreeApproaches lang={lang} />
+			<Sdg lang={lang} />
+			<Recognized lang={lang} />
 		</>
 	);
 }
