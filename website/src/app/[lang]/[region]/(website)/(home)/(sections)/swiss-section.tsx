@@ -4,11 +4,11 @@ import { BaseContainer, Button, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
 import Link from 'next/link';
-import helpingOthers from './(assets)/helping-others.gif';
-import jackpotGif from './(assets)/jackpot.gif';
-import togetherGif from './(assets)/together.gif';
+import helpingOthers from '../(assets)/helping-others.gif';
+import jackpotGif from '../(assets)/jackpot.gif';
+import togetherGif from '../(assets)/together.gif';
 
-export async function Section3({ lang, region }: DefaultParams) {
+export async function SwissSection({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-home', 'common'],

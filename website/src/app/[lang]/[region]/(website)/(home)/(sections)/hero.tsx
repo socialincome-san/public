@@ -1,9 +1,9 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
-import Section1Form from './section-1-form';
+import HeroForm from './hero-form';
 
-export async function Section1({ lang, region }: DefaultParams) {
+export async function Hero({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-home', 'common'],
@@ -21,7 +21,7 @@ export async function Section1({ lang, region }: DefaultParams) {
 				</Typography>
 			</div>
 			<div className="mx-auto w-full max-w-2xl">
-				<Section1Form
+				<HeroForm
 					lang={lang}
 					region={region}
 					translations={{

@@ -4,12 +4,12 @@ import { Carousel, CarouselContent } from '@socialincome/ui';
 import Image from 'next/image';
 
 import { useScreenSize } from '@/hooks/useScreenSize';
-import dezaSVG from './(assets)/deza.svg';
-import innosuissseSVG from './(assets)/innosuisse.svg';
-import liaSVG from './(assets)/lia.svg';
-import whatsappSVG from './(assets)/whatsapp.svg';
+import dezaSVG from '../(assets)/deza.svg';
+import innosuissseSVG from '../(assets)/innosuisse.svg';
+import liaSVG from '../(assets)/lia.svg';
+import whatsappSVG from '../(assets)/whatsapp.svg';
 
-export function Section7Carousel() {
+export function RecognizedCarousel() {
 	const screenSize = useScreenSize();
 	if (!screenSize) return null;
 

@@ -25,7 +25,13 @@ type SectionCardProps = {
 	faqs?: { question: string; link: string }[];
 };
 
-export function SectionCard({ titles, items = [], paragraphs = [], articles = [], faqs = [] }: SectionCardProps) {
+export function ThreeApproachesCard({
+	titles,
+	items = [],
+	paragraphs = [],
+	articles = [],
+	faqs = [],
+}: SectionCardProps) {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>

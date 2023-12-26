@@ -11,7 +11,7 @@ import {
 	Typography,
 } from '@socialincome/ui';
 import Image from 'next/image';
-import sdgLogo from './(assets)/sdg-logo.svg';
+import sdgLogo from '../(assets)/sdg-logo.svg';
 
 type SectionCardProps = {
 	title: string;
@@ -19,7 +19,7 @@ type SectionCardProps = {
 	paragraphs?: string[];
 };
 
-export function SectionCard({ title, description, paragraphs = [] }: SectionCardProps) {
+export function SdgCard({ title, description, paragraphs = [] }: SectionCardProps) {
 	return (
 		<Dialog>
 			<DialogTrigger>
