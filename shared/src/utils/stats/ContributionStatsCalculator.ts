@@ -84,7 +84,7 @@ export class ContributionStatsCalculator {
 						return {
 							userId: userDoc.id,
 							isInstitution: Boolean(user.institution),
-							country: user.location?.toUpperCase() ?? 'CH',
+							country: user.address.country ?? 'CH',
 							amount: contribution.amount_chf * exchangeRate,
 							paymentFees: contribution.fees_chf * exchangeRate,
 							source: contribution.source,
