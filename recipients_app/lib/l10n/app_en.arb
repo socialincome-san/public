@@ -154,6 +154,19 @@
     "surveyCompleted": "Completed",
     "surveyUpcoming": "Upcoming",
     "surveyInProgress": "In Progress",
+    "overview": "Overview",
+    "completedSurveysCount": "{done}/{all} completed",
+    "@completedSurveysCount": {
+        "placeholders": {
+            "done": {
+                "type": "int"
+            }, 
+            "all": {
+                "type": "int"
+            }
+        }
+    },
+    "mySurveysTitle": "My surveys",
 
     "invalidPhoneNumberError": "Invalid phone number. Please check your phone number and try again.",
     "invalidVerificationCodeError": "Invalid verification code. Please check provided SMS code and try again.",

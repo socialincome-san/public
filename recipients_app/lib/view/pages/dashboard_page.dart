@@ -7,6 +7,7 @@ import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/dashboard_item.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_container.dart";
 import "package:app/view/widgets/survey/survey_card_container.dart";
+import "package:app/view/widgets/survey/surveys_overview_card.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -53,6 +54,8 @@ class _DashboardView extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
+    final surveys = context.watch<SurveyCubit>().state.mappedSurveys;
+
     final List<DashboardItem> dashboardItems = context
         .watch<DashboardCardManagerCubit>()
         .state
@@ -80,6 +83,7 @@ class _DashboardView extends StatelessWidget {
           child: Column(
             children: [
               const BalanceCardContainer(),
+              SurveysOverviewCard(mappedSurveys: surveys),
               const SizedBox(height: 8),
               if (items.isEmpty)
                 Expanded(

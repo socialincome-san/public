@@ -18,6 +18,10 @@ class SurveysPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         title: Text(localizations.surveysTitle),
+        leading: BackButton(onPressed: () {
+          context.read<SurveyCubit>().getSurveys();
+          Navigator.maybePop(context);
+        }),
         centerTitle: true,
       ),
       body: Padding(
