@@ -4,6 +4,7 @@ import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/ui/configs/app_sizes.dart";
 import "package:app/view/pages/surveys_page.dart";
+import "package:app/view/widgets/dashboard_item.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -13,7 +14,7 @@ const _doneStatuses = [
   SurveyCardStatus.answered,
 ];
 
-class SurveysOverviewCard extends StatelessWidget {
+class SurveysOverviewCard extends DashboardItem {
   final List<MappedSurvey> mappedSurveys;
 
   const SurveysOverviewCard({super.key, required this.mappedSurveys});
