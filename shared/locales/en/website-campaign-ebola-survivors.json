@@ -15,35 +15,33 @@
 	"impact-text-3": "Foster economic independence and resilience.",
 	"impact-text-4": "Rebuild lives, one step at a time.",
 	"about-si-text": "Social Income is an initiative in global solidarity that turns 1% of your salary into Universal Basic Income for people living in poverty.",
-	"about-ismatu-text": "Ismatu is a SIerra Leonean writer, ethnographer and social worker based in Chicago, IL.",
+	"about-ismatu-text": "Ismatu is a Sierra Leonean writer, ethnographer and social worker based in Chicago, IL.",
 	"about-slaes-org": "Sierra Leonean Association of Ebola Survivors (SLAES)",
 	"about-slaes-text": "The Sierra Leonean Association of Ebola Survivors works to support and provide a safe space for vulnerable people that overcame the disease.",
 	"about-slaes-article-title": "Ebola leaves a painful legacy for survivors in Sierra Leone",
 	"about-slaes-source-title": "The Guardian",
-	"issue-assigned": "is currently working on this page",
-	"issue-unassigned": "assign this issue to yourself",
 	"faq": {
 		"title": "Frequently asked questions",
 		"questions": [
 			{
-				"question": "Why do we select randomly out of a pool of qualified recipients?",
-				"answer": "The purpose of employing this random selection method is to achieve several objectives. Firstly, it helps prevent bias in our recipient selection, ensuring that relatives or acquaintances of individuals involved in the process are not given preferential treatment. Secondly, it aims to avoid tensions between recipients and non-recipients, as well as any potential conflicts between recipients and our organization. Lastly, we strive to incorporate technology where it is feasible and beneficial to the process."
+				"question": "Who is collaborating to make this fundraiser possible?",
+				"answer": "This fundraiser is under the patronage of Ismatu Bangura, an activist from Sierra Leone. It is hosted by the Swiss non-profit organization Social Income, which is also responsible for distributing the basic incomes to Ebola survivors over the next three years. Social Income has extensive experience in mobile payouts to people living in poverty in Sierra Leone. Additionally, we collaborate with the Sierra Leone Association of Ebola Survivors based in Kenema, who maintains close contact with each of the survivors."
 			},
 			{
-				"question": "Who can influence the draft?",
-				"answer": "By relying on an unpredictable random value from drand, set to be emitted in the future, it's not possible for anyone to sway the results of the selection process. This inherent randomness can be utilized to confirm the integrity of the selection. To qualify for Social Income, an individual must first be on a list provided by an NGO. While this does present a preliminary condition, it aligns with our foundational principle: ensuring that Social Income reaches those most in need."
+				"question": "How does the funds reach the Ebola survivors?",
+				"answer": "The funds are transferred directly to the Ebola survivors through mobile banking technology. This method ensures a swift and secure delivery of the funds, allowing the survivors to receive their aid promptly and efficiently. The use of mobile banking also helps maintain transparency and reduces the risk of mismanagement, ensuring that the funds are used effectively to support the survivors' needs."
 			},
 			{
-				"question": "How do we avoid bias and tensions?",
-				"answer": "To ensure we don't inadvertently prioritize a specific ethnic group, gender, or occupation, we collaborate with diverse NGOs that have varied missions. In line with our 'do no harm' policy, we strive to prevent tensions among recipients, non-recipients, communities, and the NGOs. Our random selection plays a pivotal role in achieving this. It ensures that those related to or acquainted with individuals in the process aren't shown favoritism, which could lead to conflicts."
+				"question": "What is the amount disbursed to the recipients?",
+				"answer": "Recipients of Social Income receive a monthly payment of USD 32, which is converted into their local currency and directly deposited to their mobile phones. This sum is carefully chosen to help secure the basic needs of a person living in poverty, considering that the national average income is around USD 42 (World Bank). These payments are reliably made every month over a span of three years. This sustained, long-term support strategy is intended to empower individuals in poverty, enabling them to plan and invest for the future, particularly in aspects like health, thereby enhancing their financial stability and overall well-being."
 			},
 			{
-				"question": "What is happening during the selection process?",
-				"answer": "We utilize the random number provided by drand, which is publicly accessible, to pick a set number of individuals from our list. Here's how it's done: we first organize the hashed list of recipients. Then, using the randomness element from drand, we convert it into a position on the list through a <a href='https://en.wikipedia.org/wiki/Key_derivation_function' target='_blank' class='underline'>key derivation function</a>. For those keen on the technical details, the function and its associated processes are documented in our <a href='https://github.com/drand/draw-action' target='_blank' class='underline'>GitHub repository</a>."
+				"question": "What are the uses of the funds I donate?",
+				"answer": "Your donations, up to the fundraising goal, are dedicated to supporting Ebola survivors. This includes the monthly payouts of USD 32 to each survivor and covering delivery fees such as foreign exchange fees and transaction costs. Any donations exceeding the fundraising goal will be utilized to support other vulnerable individuals and people living in poverty in Sierra Leone."
 			},
 			{
-				"question": "What is drand and who is behind it?",
-				"answer": "The drand project generates random numbers that everyone can trust. It can be applied to create truly random and verifiable drafts. Initiated in 2017 at EPFL by Nicolas Gailly, drand received support from Philipp Jovanovic and was guided by Bryan Ford.<br></br> It has since become independently managed and maintains a network called the <a href='https://www.cloudflare.com/leagueofentropy/' target='_blank' class='underline'>League of Entropy</a> with EPFL, UCL, Cloudflare, Kudelski Security, the University of Chile, and Protocol Labs. Current core maintainers of the open source project are the CEO, CSO and CTO of Randamu, respectively <a href='https://www.linkedin.com/in/erick-watson/' target='_blank' class='underline'>Erick Watson</a>, <a href='https://www.linkedin.com/in/anomalroil/' target='_blank' class='underline'>Yolan Romailler</a>, and <a href='https://www.linkedin.com/in/patrickmcclurg/' target='_blank' class='underline'>Patrick McClurg</a>."
+				"question": "How are recipients chosen?",
+				"answer": "Should the fundraising goal be met, all 154 Ebola survivors registered by the Sierra Leone Association of Ebola Survivors in Kenema will be selected as recipients. In this scenario, no further selection is required. However, if the fundraising target isn't achieved, we will conduct a random selection from these 154 candidates. This approach serves two key purposes: Firstly, it helps ensure impartiality in choosing recipients, preventing favoritism towards relatives or acquaintances of those involved in the process. Secondly, it aims to minimize any potential conflicts or tensions, both between those who receive aid and those who don't, and between recipients and the organizations involved."
 			}
 		]
 	}

@@ -3,7 +3,6 @@
 import { WebsiteLanguage } from "@/i18n";
 import { BaseContainer, Typography } from "@socialincome/ui";
 import { Translator } from "@socialincome/shared/src/utils/i18n";
-import { DrawCard } from '@/app/[lang]/[region]/(website)/transparency/recipient-selection/draw-card';
 
 export async function CampaignFaq({ lang }: { lang: WebsiteLanguage }) {
   const translator = await Translator.getInstance({
