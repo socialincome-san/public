@@ -1,15 +1,10 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { IconType } from '@icons-pack/react-simple-icons/types';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Button, Typography, Label, Switch } from "@socialincome/ui";
-import Image from 'next/image';
-import Link from 'next/link';
-import ismatuImage from './ismatu-gwendolyn.jpeg';
-import { DonationForm } from '@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/donation-form';
-import { CampaignFaq } from '@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/campaign-faq';
 import { CampaignCard } from '@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/campaign-card';
+import { CampaignFaq } from '@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/campaign-faq';
 import { CampaignTitle } from '@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/campaign-title';
-
+import { DonationForm } from '@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/donation-form';
+import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { BaseContainer } from '@socialincome/ui';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
