@@ -12,7 +12,7 @@ const PopoverOnOpenChangeContext = React.createContext({
 	closeDelay: 200,
 });
 
-const Popover: FC<React.ComponentProps<typeof PopoverPrimitive.Root> & { openDelay: number; closeDelay: number }> = ({
+const Popover: FC<React.ComponentProps<typeof PopoverPrimitive.Root> & { openDelay?: number; closeDelay?: number }> = ({
 	open,
 	onOpenChange,
 	openDelay = 0,
