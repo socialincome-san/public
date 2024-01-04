@@ -48,9 +48,9 @@ export function buildContributionsCollection(
 				dataType: 'string',
 				name: 'Currency',
 				enumValues: {
-					chf: 'CHF',
-					usd: 'USD',
-					eur: 'EUR',
+					CHF: 'CHF',
+					USD: 'USD',
+					EUR: 'EUR',
 				},
 				validation: { required: true },
 			},
