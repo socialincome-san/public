@@ -91,12 +91,44 @@ Initiate development environments for specific tools as needed.
 - To start the Website, run `npm run website:serve` and open
   [localhost:3001](http://localhost:3001).
 - To start the Storybook, run `npm run ui:serve` and open
-  [localhost:6006](http://localhost:6006).
+  [localhost:6006](http://localhost:6006). (currently broken)
 
 The [package.json](package.json) file gives you a good overview of the
 available commands. For more information on the development environment
 see table above. No production credentials are needed for local
 development.
+
+#### 3. Developer Logins
+
+<details>
+  <summary>Developer Login for Admin Tool</summary>
+
+#### Localhost Admin Tool Login ([Link](http://localhost:3000/))
+Choose "Sign in with Google" and select the listed "Admin (admin@socialincome.org)" account.
+
+#### Staging Admin Tool Login ([Link](https://staging-admin.socialincome.org))
+Contact the dev team ([dev@socialincome.org](mailto:dev@socialincome.org)) which can assign you access rights to login. 
+
+#### Production Admin Tool Login ([Link](http://admin.socialincome.org))
+Only selected people from the SI team have access. 
+</details>
+
+<details>
+  <summary>Developer Login for Website (Donor Dashboard)</summary>
+
+#### Localhost Website Login ([Link](http://localhost:3000/login))
+1. Go to the [Login page](http://localhost:3000/login) and select _Forgot Password_.
+2. Enter an existing user's email (e.g., test2@example.com) from the data seed. User emails can be found by navigating to [localhost:4000](http://localhost:4000/) > [firestore](http://localhost:4000/firestore/) > [users](http://localhost:4000/firestore/data/users/).
+3. Check your terminal for the firebase emulator process, which will provide a password reset link.
+4. Use the link to set a new password and log in.
+
+#### Staging Website Login ([Link](https://staging.socialincome.org/login))
+To create a donor account in the staging environment, proceed through the [donation process](https://staging.socialincome.org/donate/one-time). Utilize the [Stripe test card](https://stripe.com/docs/testing) (4242 4242 4242 4242) for making a test donation.
+
+#### Production Website Login ([Link](https://socialincome.org/login))
+Only actual donors have accounts and can log in. Consider making a (symbolic) donation to create your own account.
+
+</details>
 
 ### Data Seed
 
