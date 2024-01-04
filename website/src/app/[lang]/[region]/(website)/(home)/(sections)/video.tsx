@@ -3,9 +3,9 @@ import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import {
 	BaseContainer,
-	HoverCard,
-	HoverCardContent,
-	HoverCardTrigger,
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
 	Table,
 	TableBody,
 	TableCell,
@@ -25,11 +25,11 @@ export async function Video({ lang }: { lang: LanguageCode }) {
 				<VimeoVideo videoId={Number(translator.t('video.video-id'))} />
 			</div>
 			<div className="mt-2 self-end">
-				<HoverCard openDelay={0} closeDelay={200}>
-					<HoverCardTrigger>
+				<Popover openDelay={0} closeDelay={200}>
+					<PopoverTrigger>
 						<Typography>{translator.t('video.credits-title')}</Typography>
-					</HoverCardTrigger>
-					<HoverCardContent align="end" className="w-96">
+					</PopoverTrigger>
+					<PopoverContent align="end" className="w-96">
 						<Table>
 							<TableBody>
 								{translator
@@ -42,8 +42,8 @@ export async function Video({ lang }: { lang: LanguageCode }) {
 									))}
 							</TableBody>
 						</Table>
-					</HoverCardContent>
-				</HoverCard>
+					</PopoverContent>
+				</Popover>
 			</div>
 		</BaseContainer>
 	);
