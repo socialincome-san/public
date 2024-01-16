@@ -4,6 +4,7 @@ import ismatuImage from '@/app/[lang]/[region]/(website)/campaigns/ebola-survivo
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
+import { ProgressBar } from '@socialincome/ui/src/components/progress';
 import Image from 'next/image';
 
 export async function CampaignCard({ lang }: { lang: WebsiteLanguage }) {
@@ -43,8 +44,11 @@ export async function CampaignCard({ lang }: { lang: WebsiteLanguage }) {
 				</div>
 
 				{/* Progress bar placeholder */}
-				<div className="bg-primary-foreground-muted my-8 w-full rounded-lg">
-					<div className="text-accent-foreground py-1 text-center">Placeholder for progress bar</div>
+				<div className="bg-primary-foreground-muted my-8 w-full rounded-[99999px]">
+					<div className="text-accent-foreground py-1 text-center">
+						{/*Placeholder for progress bar*/}
+						<ProgressBar />
+					</div>
 				</div>
 
 				{/* Text below the progress bar */}

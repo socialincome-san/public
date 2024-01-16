@@ -2,7 +2,14 @@
 
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography } from '@socialincome/ui';
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+	BaseContainer,
+	Typography,
+} from '@socialincome/ui';
 
 export async function CampaignFaq({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({
@@ -17,14 +24,22 @@ export async function CampaignFaq({ lang }: { lang: WebsiteLanguage }) {
 					{translator.t('faq.title')}
 				</Typography>
 				<div className="space-y-4">
-					{translator.t<{ question: string; answer: string }[]>('faq.questions').map(({ question, answer }, index) => (
-						<div key={index}>
-							<Typography as="h3" size="xl" weight="bold">
-								{question}
-							</Typography>
-							<Typography as="p" className="mt-2" dangerouslySetInnerHTML={{ __html: answer }} />
-						</div>
-					))}
+					<Accordion type={'single'} collapsible className="w-full">
+						{translator
+							.t<{ question: string; answer: string }[]>('faq.questions')
+							.map(({ question, answer }, index) => (
+								<AccordionItem value={`item-${index}`} key={index}>
+									<AccordionTrigger>
+										<Typography as="h3" size="xl" weight="bold" className="text-left">
+											{question}
+										</Typography>
+									</AccordionTrigger>
+									<AccordionContent>
+										<Typography as="p" className="mt-2" dangerouslySetInnerHTML={{ __html: answer }} />
+									</AccordionContent>
+								</AccordionItem>
+							))}
+					</Accordion>
 				</div>
 			</div>
 		</BaseContainer>
