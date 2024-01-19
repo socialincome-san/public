@@ -2,10 +2,12 @@ import { DefaultPageProps, DefaultParams } from '@/app/[lang]/[region]';
 import { CurrencyRedirect } from '@/app/[lang]/[region]/(website)/transparency/finances/[currency]/currency-redirect';
 import { firestoreAdmin } from '@/firebase-admin';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion, websiteCurrencies } from '@/i18n';
+import { Currency } from '@socialincome/shared/src/types/currency';
 import {
 	ContributionStats,
 	ContributionStatsCalculator,
 } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
+import { ExpensesStatsCalculator } from '@socialincome/shared/src/utils/stats/ExpensesStatsCalculator';
 import { PaymentStats, PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
 import { Section1 } from './section-1';
 import { Section2 } from './section-2';
@@ -37,15 +39,21 @@ export type SectionProps = {
 };
 
 export default async function Page({ params }: TransparencyPageProps) {
-	const getStats = async (currency: string) => {
+	const getStats = async (currency: Currency) => {
 		const contributionCalculator = await ContributionStatsCalculator.build(firestoreAdmin, currency);
 		const contributionStats = contributionCalculator.allStats();
 		const paymentCalculator = await PaymentStatsCalculator.build(firestoreAdmin, currency);
 		const paymentStats = paymentCalculator.allStats();
-		return { contributionStats, paymentStats };
+
+		const expensesStatsCalculator = await ExpensesStatsCalculator.build(firestoreAdmin, currency);
+		const expensesStats = expensesStatsCalculator.allStats();
+		return { contributionStats, expensesStats, paymentStats };
 	};
 	const currency = params.currency.toUpperCase() as WebsiteCurrency;
-	const { contributionStats, paymentStats } = await getStats(currency);
+	const { contributionStats, expensesStats, paymentStats } = await getStats(currency);
+
+	console.info(JSON.stringify(expensesStats, null, 2));
+
 	// TODO: Calculate these costs dynamically
 	const costs = {
 		transaction: 8800,
