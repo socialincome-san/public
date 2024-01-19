@@ -126,15 +126,7 @@ Only selected people from the SI team have access.
 #### Localhost Website Login ([Link](http://localhost:3000/login))
 
 1. Go to the [Login page](http://localhost:3000/login) and select
-   _Forgot Password_.
-2. Enter an existing user's email (e.g., test2@example.com) from the
-   data seed. User emails can be found by navigating to
-   [localhost:4000](http://localhost:4000/) >
-   [firestore](http://localhost:4000/firestore/) >
-   [users](http://localhost:4000/firestore/data/users/).
-3. Check your terminal for the firebase emulator process, which will
-   provide a password reset link.
-4. Use the link to set a new password and log in.
+2. Sign in with username test@test.org and password test@test.org
 
 #### Staging Website Login ([Link](https://staging.socialincome.org/login))
 
