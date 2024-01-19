@@ -26,7 +26,7 @@ export function BillingPortalButton({ translations }: BillingPortalButtonProps) 
 				body: JSON.stringify({ firebaseAuthToken, returnUrl: window.location.href }),
 			});
 			const { url } = (await response.json()) as Stripe.Response<Stripe.BillingPortal.Session>;
-			return url;
+			return url || '';
 		},
 	});
 

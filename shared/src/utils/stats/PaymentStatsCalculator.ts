@@ -1,6 +1,9 @@
 import _ from 'lodash';
 import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
+import { Currency } from '../../types/currency';
 import { Payment, PAYMENT_FIRESTORE_PATH } from '../../types/payment';
+import { RECIPIENT_FIRESTORE_PATH } from '../../types/recipient';
+import { User } from '../../types/user';
 import { toDateTime } from '../date';
 import { getLatestExchangeRate } from '../exchangeRates';
 import { cumulativeSum, groupByAndSort, StatsEntry } from './utils';
@@ -42,12 +45,22 @@ export class PaymentStatsCalculator {
 	 * Calls the firestore database to retrieve the payments and constructs the
 	 * PaymentStatsCalculator with the flattened intermediate data structure.
 	 */
-	static async build(firestoreAdmin: FirestoreAdmin, currency: string): Promise<PaymentStatsCalculator> {
-		const payments = await firestoreAdmin.collectionGroup<Payment>(PAYMENT_FIRESTORE_PATH).get();
+	static async build(firestoreAdmin: FirestoreAdmin, currency: Currency): Promise<PaymentStatsCalculator> {
+		const recipients = await firestoreAdmin.collection<User>(RECIPIENT_FIRESTORE_PATH).get();
+		const payments = (
+			await Promise.all(
+				recipients.docs
+					.filter((recipient) => !recipient.get('test_recipient'))
+					.map(async (recipient) => {
+						return await firestoreAdmin
+							.collection<Payment>(`${RECIPIENT_FIRESTORE_PATH}/${recipient.id}/${PAYMENT_FIRESTORE_PATH}`)
+							.get();
+					}),
+			)
+		).flatMap((snapshot) => snapshot.docs);
 		const exchangeRate = await getLatestExchangeRate(firestoreAdmin, currency);
-		// TODO: filter out payments from test users
-		const paymentDocs = payments.docs
-			.filter((payment) => payment.data().amount_chf != undefined)
+		const paymentStatsEntries = payments
+			.filter((payment) => payment.get('amount_chf') != undefined)
 			.map((paymentDoc) => {
 				const payment = paymentDoc.data();
 				return {
@@ -57,7 +70,7 @@ export class PaymentStatsCalculator {
 					month: toDateTime(payment.payment_at).toFormat('yyyy-MM'),
 				} as PaymentStatsEntry;
 			});
-		return new PaymentStatsCalculator(_(paymentDocs));
+		return new PaymentStatsCalculator(_(paymentStatsEntries));
 	}
 
 	totalPayments = () => {

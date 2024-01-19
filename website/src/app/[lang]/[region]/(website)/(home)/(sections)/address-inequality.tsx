@@ -2,7 +2,7 @@ import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
-export async function Section4({ lang }: { lang: WebsiteLanguage }) {
+export async function AddressInequality({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-home'],
