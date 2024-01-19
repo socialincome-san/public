@@ -1,0 +1,120 @@
+'use client';
+
+import { UserContext } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
+import { EMPLOYERS_FIRESTORE_PATH } from '@socialincome/shared/src/types/employers';
+
+import { Table, TableBody, TableCell, TableRow, Typography } from '@socialincome/ui';
+import { useQuery } from '@tanstack/react-query';
+import { collection, getDocs, query, deleteDoc, updateDoc, doc, where, orderBy } from 'firebase/firestore';
+import { useContext } from 'react';
+import { useFirestore } from 'reactfire';
+import { AddEmployerForm, AddEmployerFormProps } from './add-employer-form';
+import { DefaultParams } from '../../..';
+
+type EmployersListProps = {
+	translations: {
+		employersList: {
+			emptyState: string,
+			deleteEmployer: string,
+			noLongerWorkHere: string,
+			pastEmployers: string,
+		},
+		addEmployerForm: AddEmployerFormProps['translations']
+	}
+} & DefaultParams;
+
+export function EmployersList({ translations }: EmployersListProps) {
+	const firestore = useFirestore();
+	const { user } = useContext(UserContext);
+	const { isLoading, data, refetch } = useQuery({
+		queryKey: ['employersList'],
+		queryFn: async () => {
+			if (user && firestore) {
+				return await getDocs(
+					query(
+						collection(firestore, EMPLOYERS_FIRESTORE_PATH),
+						where('userId', '==', user.id),
+						orderBy('created', 'desc')
+					),
+				);
+			} else return null;
+		},
+		staleTime: 1000 * 60 * 60, // an hour
+	});
+
+	const onDeleteEmployer = async (employer_id: String) => {
+		const employerRef = doc(firestore, EMPLOYERS_FIRESTORE_PATH, employer_id);
+		await deleteDoc(employerRef).then(() => onEmployersUpdated());
+	};
+
+	const onArchiveEmployer = async (employer_id: String) => {
+		const employerRef = doc(firestore, EMPLOYERS_FIRESTORE_PATH, employer_id);
+		await updateDoc(employerRef, { isCurrent: false }).then(() => onEmployersUpdated())
+	};
+
+	const onEmployersUpdated = async () => {
+		await refetch();
+	}
+
+	if (isLoading) {
+		return <span>Loading ...</span>
+	}
+
+	const currentEmployers = data!.docs.filter((e) => e.get('isCurrent'));
+	const pastEmployers = data!.docs.filter((e) => !e.get('isCurrent'));
+
+	return (
+		<>
+			{currentEmployers.length > 0
+				? <Table>
+					<TableBody>
+						{currentEmployers.map((employer, index) => {
+							return (
+								<TableRow key={index}>
+									<TableCell>
+										<div className='flex flex-row'>
+											<Typography size="lg" weight='medium' className='grow'>{employer.get('employerName')}</Typography>
+											<div className='flex flex-col'>
+												<button onClick={() => onArchiveEmployer(employer.id)}>
+													<Typography className='underline'>{translations.employersList.noLongerWorkHere}</Typography>
+												</button>
+											</div>
+										</div>
+									</TableCell>
+								</TableRow>)
+						})}
+					</TableBody>
+				</Table>
+				: <Typography>{translations.employersList.emptyState}</Typography>
+			}
+
+			<AddEmployerForm onNewEmployerSubmitted={onEmployersUpdated} translations={translations.addEmployerForm} />
+			{pastEmployers.length > 0 &&
+				<>
+					<Typography size="2xl" weight="medium" className="-mt-10 mb-4 md:mt-0">
+						{translations.employersList.pastEmployers}
+					</Typography>
+					<Table>
+						<TableBody>
+							{pastEmployers.map((employer, index) => {
+								return (
+									<TableRow key={index}>
+										<TableCell>
+											<div className='flex flex-row'>
+												<Typography size="lg" weight='medium' className='grow'>{employer.get('employerName')}</Typography>
+												<div className='flex flex-col'>
+													<button onClick={() => onDeleteEmployer(employer.id)}>
+														<Typography className='underline'>{translations.employersList.deleteEmployer}</Typography>
+													</button>
+												</div>
+											</div>
+										</TableCell>
+									</TableRow>)
+							})}
+						</TableBody>
+					</Table>
+				</>}
+
+		</>
+	)
+}

@@ -27,6 +27,8 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 						subscriptions: translator.t('sections.contributions.subscriptions'),
 						donationCertificatesShort: translator.t('sections.contributions.donation-certificates-short'),
 						donationCertificatesLong: translator.t('sections.contributions.donation-certificates-long'),
+						employerTitle: translator.t('sections.employer.title'),
+						work: translator.t('sections.employer.work'),
 					}}
 				>
 					{children}

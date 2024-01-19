@@ -14,6 +14,10 @@
 			"subscriptions": "Subscriptions",
 			"donation-certificates-short": "Certificates",
 			"donation-certificates-long": "Donation certificates"
+		}, 
+		"employer": {
+			"title": "My Employer",
+			"work": "Work"
 		}
 	},
 	"contributions": {
@@ -85,5 +89,15 @@
 			"title": "Sign out of your account?",
 			"button": "Sign Out"
 		}
+	},
+	"work-info": {
+		"work": "Work",
+		"add-employer": "Add new employer", 
+		"submit-button": "Add", 
+		"current-employer": "Current Employer", 
+		"empty-state": "You didn't specify any employer", 
+		"delete-employer": "Delete", 
+		"past-employers": "Past Employers", 
+		"no-longer-work-here": "I no longer work here"
 	}
 }

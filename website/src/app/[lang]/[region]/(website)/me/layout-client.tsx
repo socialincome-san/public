@@ -8,6 +8,7 @@ import {
 	DocumentIcon,
 	ShieldCheckIcon,
 	UserCircleIcon,
+	BriefcaseIcon
 } from '@heroicons/react/24/outline';
 import { Button, Collapsible, CollapsibleContent, CollapsibleTrigger, Typography } from '@socialincome/ui';
 import { LinkProps } from 'next/dist/client/link';
@@ -51,6 +52,8 @@ type LayoutClientProps = {
 		subscriptions: string;
 		donationCertificatesShort: string;
 		donationCertificatesLong: string;
+		employerTitle: string,
+		work: string,
 	};
 };
 
@@ -84,7 +87,16 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 				>
 					{translations.donationCertificatesShort}
 				</NavigationLink>
-			)}
+			)
+			}
+			<NavigationSectionTitle>{translations.employerTitle}</NavigationSectionTitle>
+			<NavigationLink
+				href={`/${params.lang}/${params.region}/me/work-info`}
+				Icon={BriefcaseIcon}
+				onClick={() => setIsOpen(false)}
+			>
+				{translations.work}
+			</NavigationLink>
 			<NavigationSectionTitle>{translations.accountTitle}</NavigationSectionTitle>
 			<NavigationLink
 				href={`/${params.lang}/${params.region}/me/personal-info`}
@@ -100,7 +112,7 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 			>
 				{translations.security}
 			</NavigationLink>
-		</ul>
+		</ul >
 	);
 
 	let title;
