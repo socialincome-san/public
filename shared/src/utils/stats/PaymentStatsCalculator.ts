@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
+import { Currency } from '../../types/currency';
 import { Payment, PAYMENT_FIRESTORE_PATH } from '../../types/payment';
 import { RECIPIENT_FIRESTORE_PATH } from '../../types/recipient';
 import { User } from '../../types/user';
@@ -44,7 +45,7 @@ export class PaymentStatsCalculator {
 	 * Calls the firestore database to retrieve the payments and constructs the
 	 * PaymentStatsCalculator with the flattened intermediate data structure.
 	 */
-	static async build(firestoreAdmin: FirestoreAdmin, currency: string): Promise<PaymentStatsCalculator> {
+	static async build(firestoreAdmin: FirestoreAdmin, currency: Currency): Promise<PaymentStatsCalculator> {
 		const recipients = await firestoreAdmin.collection<User>(RECIPIENT_FIRESTORE_PATH).get();
 		const payments = (
 			await Promise.all(
