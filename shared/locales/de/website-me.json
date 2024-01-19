@@ -89,12 +89,12 @@
 			"title": "Möchtest du dich abmelden?",
 			"button": "Abmelden"
 		}
-	}, 
+	},
 	"work-info": {
 		"work": "Arbeiten",
 		"add-employer": "Neuen Arbeitgeber hinzufügen",
 		"submit-button": "Hinzufügen",
-		"current-employers": "Aktueller Arbeitgeber", 
+		"current-employers": "Aktueller Arbeitgeber",
 		"empty-state": "Sie haben keinen Arbeitgeber angegeben",
 		"delete-employer": "Löschen",
 		"past-employers": "Frühere Arbeitgeber",

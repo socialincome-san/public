@@ -5,22 +5,22 @@ import { EMPLOYERS_FIRESTORE_PATH } from '@socialincome/shared/src/types/employe
 
 import { Table, TableBody, TableCell, TableRow, Typography } from '@socialincome/ui';
 import { useQuery } from '@tanstack/react-query';
-import { collection, getDocs, query, deleteDoc, updateDoc, doc, where, orderBy } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, orderBy, query, updateDoc, where } from 'firebase/firestore';
 import { useContext } from 'react';
 import { useFirestore } from 'reactfire';
-import { AddEmployerForm, AddEmployerFormProps } from './add-employer-form';
 import { DefaultParams } from '../../..';
+import { AddEmployerForm, AddEmployerFormProps } from './add-employer-form';
 
 type EmployersListProps = {
 	translations: {
 		employersList: {
-			emptyState: string,
-			deleteEmployer: string,
-			noLongerWorkHere: string,
-			pastEmployers: string,
-		},
-		addEmployerForm: AddEmployerFormProps['translations']
-	}
+			emptyState: string;
+			deleteEmployer: string;
+			noLongerWorkHere: string;
+			pastEmployers: string;
+		};
+		addEmployerForm: AddEmployerFormProps['translations'];
+	};
 } & DefaultParams;
 
 export function EmployersList({ translations }: EmployersListProps) {
@@ -34,7 +34,7 @@ export function EmployersList({ translations }: EmployersListProps) {
 					query(
 						collection(firestore, EMPLOYERS_FIRESTORE_PATH),
 						where('userId', '==', user.id),
-						orderBy('created', 'desc')
+						orderBy('created', 'desc'),
 					),
 				);
 			} else return null;
@@ -42,22 +42,22 @@ export function EmployersList({ translations }: EmployersListProps) {
 		staleTime: 1000 * 60 * 60, // an hour
 	});
 
-	const onDeleteEmployer = async (employer_id: String) => {
+	const onDeleteEmployer = async (employer_id: string) => {
 		const employerRef = doc(firestore, EMPLOYERS_FIRESTORE_PATH, employer_id);
 		await deleteDoc(employerRef).then(() => onEmployersUpdated());
 	};
 
-	const onArchiveEmployer = async (employer_id: String) => {
+	const onArchiveEmployer = async (employer_id: string) => {
 		const employerRef = doc(firestore, EMPLOYERS_FIRESTORE_PATH, employer_id);
-		await updateDoc(employerRef, { isCurrent: false }).then(() => onEmployersUpdated())
+		await updateDoc(employerRef, { isCurrent: false }).then(() => onEmployersUpdated());
 	};
 
 	const onEmployersUpdated = async () => {
 		await refetch();
-	}
+	};
 
 	if (isLoading) {
-		return <span>Loading ...</span>
+		return <span>Loading ...</span>;
 	}
 
 	const currentEmployers = data!.docs.filter((e) => e.get('isCurrent'));
@@ -65,31 +65,35 @@ export function EmployersList({ translations }: EmployersListProps) {
 
 	return (
 		<>
-			{currentEmployers.length > 0
-				? <Table>
+			{currentEmployers.length > 0 ? (
+				<Table>
 					<TableBody>
 						{currentEmployers.map((employer, index) => {
 							return (
 								<TableRow key={index}>
 									<TableCell>
-										<div className='flex flex-row'>
-											<Typography size="lg" weight='medium' className='grow'>{employer.get('employerName')}</Typography>
-											<div className='flex flex-col'>
+										<div className="flex flex-row">
+											<Typography size="lg" weight="medium" className="grow">
+												{employer.get('employerName')}
+											</Typography>
+											<div className="flex flex-col">
 												<button onClick={() => onArchiveEmployer(employer.id)}>
-													<Typography className='underline'>{translations.employersList.noLongerWorkHere}</Typography>
+													<Typography className="underline">{translations.employersList.noLongerWorkHere}</Typography>
 												</button>
 											</div>
 										</div>
 									</TableCell>
-								</TableRow>)
+								</TableRow>
+							);
 						})}
 					</TableBody>
 				</Table>
-				: <Typography>{translations.employersList.emptyState}</Typography>
-			}
+			) : (
+				<Typography>{translations.employersList.emptyState}</Typography>
+			)}
 
 			<AddEmployerForm onNewEmployerSubmitted={onEmployersUpdated} translations={translations.addEmployerForm} />
-			{pastEmployers.length > 0 &&
+			{pastEmployers.length > 0 && (
 				<>
 					<Typography size="2xl" weight="medium" className="-mt-10 mb-4 md:mt-0">
 						{translations.employersList.pastEmployers}
@@ -100,21 +104,24 @@ export function EmployersList({ translations }: EmployersListProps) {
 								return (
 									<TableRow key={index}>
 										<TableCell>
-											<div className='flex flex-row'>
-												<Typography size="lg" weight='medium' className='grow'>{employer.get('employerName')}</Typography>
-												<div className='flex flex-col'>
+											<div className="flex flex-row">
+												<Typography size="lg" weight="medium" className="grow">
+													{employer.get('employerName')}
+												</Typography>
+												<div className="flex flex-col">
 													<button onClick={() => onDeleteEmployer(employer.id)}>
-														<Typography className='underline'>{translations.employersList.deleteEmployer}</Typography>
+														<Typography className="underline">{translations.employersList.deleteEmployer}</Typography>
 													</button>
 												</div>
 											</div>
 										</TableCell>
-									</TableRow>)
+									</TableRow>
+								);
 							})}
 						</TableBody>
 					</Table>
-				</>}
-
+				</>
+			)}
 		</>
-	)
+	);
 }

@@ -1,20 +1,20 @@
-'use client'
+'use client';
 
-import { Form, FormField, FormItem, FormControl, Input, FormMessage, Button } from '@socialincome/ui';
-import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { Timestamp, addDoc, collection } from 'firebase/firestore';
-import { useFirestore } from 'reactfire';
-import { useUserContext } from '../user-context-provider';
 import { Employer } from '@socialincome/shared/src/types/employers';
+import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input } from '@socialincome/ui';
+import { Timestamp, addDoc, collection } from 'firebase/firestore';
+import { useForm } from 'react-hook-form';
+import { useFirestore } from 'reactfire';
+import * as z from 'zod';
+import { useUserContext } from '../user-context-provider';
 
 export type AddEmployerFormProps = {
 	translations: {
-		addEmployer: string,
-		submitButton: string,
-	},
-	onNewEmployerSubmitted: () => void,
+		addEmployer: string;
+		submitButton: string;
+	};
+	onNewEmployerSubmitted: () => void;
 };
 
 export function AddEmployerForm({ onNewEmployerSubmitted, translations }: AddEmployerFormProps) {
@@ -30,28 +30,32 @@ export function AddEmployerForm({ onNewEmployerSubmitted, translations }: AddEmp
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			employerName: '',
-		}
+		},
 	});
 
 	const onSubmit = async (values: FormSchema) => {
 		if (user) {
 			const userId = user!.id;
-			await addDoc<Partial<Employer>>(collection(firestore, "employers"), { ...values, isCurrent: true, userId: userId, created: Timestamp.now() }).then(() => {
+			await addDoc<Partial<Employer>>(collection(firestore, 'employers'), {
+				...values,
+				isCurrent: true,
+				userId: userId,
+				created: Timestamp.now(),
+			}).then(() => {
 				form.reset();
 				onNewEmployerSubmitted();
 			});
-
 		}
 	};
 
 	return (
 		<Form {...form}>
-			<form className="flex flex-col md:flex-row gap-x-4" onSubmit={form.handleSubmit(onSubmit)} >
+			<form className="flex flex-col gap-x-4 md:flex-row" onSubmit={form.handleSubmit(onSubmit)}>
 				<FormField
 					control={form.control}
 					name="employerName"
 					render={({ field }) => (
-						<FormItem className='grow'>
+						<FormItem className="grow">
 							<FormControl>
 								<Input type="text" {...field} placeholder={translations.addEmployer} />
 							</FormControl>
@@ -59,11 +63,8 @@ export function AddEmployerForm({ onNewEmployerSubmitted, translations }: AddEmp
 						</FormItem>
 					)}
 				/>
-				<Button type="submit">
-					{translations.submitButton}
-				</Button>
+				<Button type="submit">{translations.submitButton}</Button>
 			</form>
 		</Form>
 	);
 }
-

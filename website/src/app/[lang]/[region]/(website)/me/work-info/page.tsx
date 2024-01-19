@@ -1,6 +1,6 @@
-import { DefaultPageProps, DefaultParams } from '@/app/[lang]/[region]';
+import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Typography, Form, FormField, FormItem, FormLabel, FormControl, Input, Button } from '@socialincome/ui';
+import { Typography } from '@socialincome/ui';
 import { EmployersList } from './employers-list';
 
 export default async function Page({ params }: DefaultPageProps) {
@@ -10,20 +10,22 @@ export default async function Page({ params }: DefaultPageProps) {
 			<Typography size="2xl" weight="medium" className="-mt-10 mb-4 md:mt-0">
 				{translator.t('work-info.current-employers')}
 			</Typography>
-			<EmployersList lang={params.lang} region={params.region} translations={
-				{
+			<EmployersList
+				lang={params.lang}
+				region={params.region}
+				translations={{
 					addEmployerForm: {
 						addEmployer: translator.t('work-info.add-employer'),
-						submitButton: translator.t('work-info.submit-button')
+						submitButton: translator.t('work-info.submit-button'),
 					},
 					employersList: {
 						emptyState: translator.t('work-info.empty-state'),
 						deleteEmployer: translator.t('work-info.delete-employer'),
 						pastEmployers: translator.t('work-info.past-employers'),
-						noLongerWorkHere: translator.t('work-info.no-longer-work-here')
-					}
-				}
-			} />
+						noLongerWorkHere: translator.t('work-info.no-longer-work-here'),
+					},
+				}}
+			/>
 		</div>
 	);
 }

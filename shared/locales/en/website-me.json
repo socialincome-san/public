@@ -92,12 +92,12 @@
 	},
 	"work-info": {
 		"work": "Work",
-		"add-employer": "Add new employer", 
-		"submit-button": "Add", 
-		"current-employer": "Current Employer", 
-		"empty-state": "You didn't specify any employer", 
-		"delete-employer": "Delete", 
-		"past-employers": "Past Employers", 
+		"add-employer": "Add new employer",
+		"submit-button": "Add",
+		"current-employer": "Current Employer",
+		"empty-state": "You didn't specify any employer",
+		"delete-employer": "Delete",
+		"past-employers": "Past Employers",
 		"no-longer-work-here": "I no longer work here"
 	}
 }
