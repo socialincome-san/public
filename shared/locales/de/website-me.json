@@ -11,7 +11,9 @@
 		"contributions": {
 			"title": "Meine Spenden",
 			"payments": "Zahlungen",
-			"subscriptions": "Abonnemente"
+			"subscriptions": "Abonnemente",
+			"donation-certificates-short": "Bescheinigungen",
+			"donation-certificates-long": "Spendebescheinigungen"
 		}
 	},
 	"contributions": {
@@ -47,7 +49,14 @@
 		},
 		"manage-subscriptions": "Abonnemente verwalten"
 	},
+	"donation-certificates": {
+		"year": "Jahr",
+		"download-pdf": "PDF herunterladen",
+		"no-certificates-yet": "Du hast noch keine Spendebescheinigungen. Stelle sicher, dass du deine Adresse unter \"Kontaktangaben\" hinterleget hast. <br></br> Bei Fragen kannst du uns jederzeit <a href='mailto:hello@socialincome.org' class='underline'>kontaktieren</a>."
+	},
 	"personal-info": {
+		"alert-title": "Spendebescheinigung",
+		"alert-description": "Falls du in der Schweiz Steuern zahlst, teile uns bitte deine Adresse mit, sodass wir dir eine Spendebscheinigung erstellen können.",
 		"firstname": "Vorname",
 		"lastname": "Nachname",
 		"gender": "Geschlecht",

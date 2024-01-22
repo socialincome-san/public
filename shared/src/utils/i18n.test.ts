@@ -4,7 +4,7 @@ describe('Test translations', () => {
 	it('German translations', async () => {
 		const translator = await Translator.getInstance({
 			language: 'de',
-			namespaces: ['email-donation-certificate', 'countries'],
+			namespaces: ['donation-certificate', 'countries'],
 		});
 		expect(translator.t('email-subject')).toBe('Social Income Spendenbescheinigung');
 		expect(translator.t('title', { context: { year: 2022 } })).toBe('Spendenbescheinigung 2022');
@@ -15,7 +15,7 @@ describe('Test translations', () => {
 	it('French translations', async () => {
 		const translator = await Translator.getInstance({
 			language: 'fr',
-			namespaces: ['email-donation-certificate', 'countries'],
+			namespaces: ['donation-certificate', 'countries'],
 		});
 		expect(translator.t('email-subject')).toBe('Attestation de don – Social Income');
 		expect(translator.t('CH', { namespace: 'countries' })).toBe('Suisse');
@@ -25,7 +25,7 @@ describe('Test translations', () => {
 	it('English translations', async () => {
 		const translator = await Translator.getInstance({
 			language: 'en',
-			namespaces: ['email-donation-certificate', 'countries'],
+			namespaces: ['donation-certificate', 'countries'],
 		});
 		expect(translator.t('email-subject')).toBe('Social Income Donation Certificate');
 		expect(translator.t('CH', { namespace: 'countries' })).toBe('Switzerland');

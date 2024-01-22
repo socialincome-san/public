@@ -87,7 +87,7 @@ export const usersCollection = buildAuditedCollection<User>({
 				},
 				zip: {
 					name: 'Zipcode',
-					dataType: 'string',
+					dataType: 'number',
 				},
 				street: {
 					name: 'Street',
