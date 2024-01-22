@@ -1,4 +1,3 @@
-import fs from 'fs';
 import i18next, { i18n } from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
 import path from 'path';
@@ -35,8 +34,12 @@ export class Translator {
 		await translator.instance
 			.use(
 				resourcesToBackend((language: string, namespace: string) => {
-					const localPath = path.join(__dirname, `../../locales/${language}/${namespace}.json`);
-					if (fs.existsSync(localPath)) return import(localPath); // required for translations to work in functions
+					try {
+						// for translations to work in the functions runtime, we need to import the local translation files
+						const fs = require('fs');
+						const localPath = path.join(__dirname, `../../locales/${language}/${namespace}.json`);
+						if (fs.existsSync(localPath)) return import(localPath);
+					} catch (e) {} // do nothing if module not found
 					return import(`@socialincome/shared/locales/${language}/${namespace}.json`);
 				}),
 			)
