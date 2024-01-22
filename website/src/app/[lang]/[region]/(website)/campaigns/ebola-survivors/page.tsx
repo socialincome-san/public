@@ -6,18 +6,15 @@ import { DonationForm } from '@/app/[lang]/[region]/(website)/campaigns/ebola-su
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer } from '@socialincome/ui';
 
-export default async function Page({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['website-campaign-ebola-survivors'],
-	});
+export default async function Page({ params: { lang } }: DefaultPageProps) {
+	const translator = await Translator.getInstance({ language: lang, namespaces: 'website-campaign-ebola-survivors' });
 
 	return (
 		<BaseContainer className="min-h-screen-navbar flex flex-col space-y-12 py-16 md:py-32">
-			<CampaignCard />
-			<CampaignTitle />
-			<DonationForm />
-			<CampaignFaq />
+			<CampaignCard lang={lang} />
+			<CampaignTitle lang={lang} />
+			<DonationForm lang={lang} />
+			<CampaignFaq lang={lang} />
 		</BaseContainer>
 	);
 }
