@@ -15,7 +15,7 @@ export interface CreateDonationCertificatesFunctionProps {
 	createAll: boolean; // if true, certificates for all CH users are created
 }
 
-export default onCall<CreateDonationCertificatesFunctionProps, Promise<string>>(async (request) => {
+export default onCall<CreateDonationCertificatesFunctionProps, Promise<string>>({ memory: '4GiB' }, async (request) => {
 	const firestoreAdmin = new FirestoreAdmin();
 	await firestoreAdmin.assertGlobalAdmin(request.auth?.token?.email);
 	const storageAdmin = new StorageAdmin();
@@ -49,7 +49,7 @@ export default onCall<CreateDonationCertificatesFunctionProps, Promise<string>>(
 
 					const { downloadUrl } = await storageAdmin.uploadAndGetDownloadURL({
 						sourceFilePath: path,
-						destinationFilePath: `users/${userId}/${writer.year}_${writer.user.language}.pdf`,
+						destinationFilePath: `users/${userId}/donation-certificates/${writer.year}_${writer.user.language}.pdf`,
 					});
 
 					await firestoreAdmin
