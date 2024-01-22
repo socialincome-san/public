@@ -17,7 +17,7 @@ type ContributionsTableProps = {
 	translations: {
 		year: string;
 		downloadPDF: string;
-		noCertficatesYet: string;
+		noCertificatesYet: string;
 	};
 } & DefaultParams;
 
@@ -41,7 +41,7 @@ export function DonationCertificatesTable({ lang, translations }: ContributionsT
 	});
 
 	if (donationCertificates?.size === 0) {
-		return <Typography dangerouslySetInnerHTML={{ __html: translations.noCertficatesYet }} />;
+		return <Typography dangerouslySetInnerHTML={{ __html: translations.noCertificatesYet }} />;
 	} else {
 		return (
 			<Table>

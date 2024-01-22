@@ -24,7 +24,12 @@ export default onCall<CreateDonationCertificatesFunctionProps, Promise<string>>(
 	let userIds: string[];
 	if (request.data.createAll) {
 		userIds = (
-			await firestoreAdmin.collection(USER_FIRESTORE_PATH).where('address.country', '==', 'CH').select().get()
+			await firestoreAdmin
+				.collection(USER_FIRESTORE_PATH)
+				.where('address.country', '==', 'CH')
+				.where('address.street', '!=', null)
+				.select()
+				.get()
 		).docs.map((doc) => doc.id);
 	} else {
 		userIds = request.data.userIds;
@@ -33,6 +38,10 @@ export default onCall<CreateDonationCertificatesFunctionProps, Promise<string>>(
 	for await (const userId of userIds) {
 		try {
 			const writer = await DonationCertificateWriter.getInstance(userId, request.data.year);
+			if (writer.contributionsByCurrency.size() === 0) {
+				console.info(`No contributions found for user ${userId}`);
+				continue;
+			}
 
 			await withFile(async ({ path }) => {
 				await writer.writeDonationCertificatePDF(path);

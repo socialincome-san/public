@@ -13,7 +13,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 				translations={{
 					year: translator.t('donation-certificates.year'),
 					downloadPDF: translator.t('donation-certificates.download-pdf'),
-					noCertficatesYet: translator.t('donation-certificates.no-certificates-yet'),
+					noCertificatesYet: translator.t('donation-certificates.no-certificates-yet'),
 				}}
 			/>
 		</div>

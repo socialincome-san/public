@@ -56,7 +56,7 @@
 	},
 	"personal-info": {
 		"alert-title": "Spendebescheinigung",
-		"alert-description": "Falls du in der Schweiz Steuern zahlst, erhälst du eine Spendebscheinigung von uns, sobald du deine Adresse hinterlegt hast.",
+		"alert-description": "Falls du in der Schweiz Steuern zahlst, teile uns bitte deine Adresse mit, sodass wir dir eine Spendebscheinigung erstellen können.",
 		"firstname": "Vorname",
 		"lastname": "Nachname",
 		"gender": "Geschlecht",

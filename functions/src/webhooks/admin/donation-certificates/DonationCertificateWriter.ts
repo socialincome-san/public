@@ -12,7 +12,7 @@ import { ASSET_DIR } from '../../../config';
 export class DonationCertificateWriter {
 	public readonly year: number;
 	public readonly user: User;
-	private readonly contributionsByCurrency: _.Object<{ [p: string]: number }>;
+	public readonly contributionsByCurrency: _.Object<{ [p: string]: number }>;
 
 	private constructor(user: User, year: number, contributionsByCurrency: _.Object<{ [p: string]: number }>) {
 		assert(user.address?.country === 'CH', 'Donation Certificates are supported for Swiss residents');

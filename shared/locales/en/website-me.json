@@ -12,7 +12,8 @@
 			"title": "My Contributions",
 			"payments": "Payments",
 			"subscriptions": "Subscriptions",
-			"donation-certificates": "Certificates"
+			"donation-certificates-short": "Certificates",
+			"donation-certificates-long": "Donation certificates"
 		}
 	},
 	"contributions": {
@@ -54,6 +55,8 @@
 		"no-certificates-yet": "You have no donation certificates yet. Make sure you provide your full address with."
 	},
 	"personal-info": {
+		"alert-title": "Donation certificates",
+		"alert-description": "If you pay taxes in Switzerland, please provide us with your address so that we can issue you a donation certificate.",
 		"firstname": "First Name",
 		"lastname": "Last Name",
 		"gender": "Gender",
