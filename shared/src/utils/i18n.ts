@@ -1,5 +1,7 @@
+import fs from 'fs';
 import i18next, { i18n } from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
+import path from 'path';
 import { LanguageCode } from '../types/language';
 
 export const FALLBACK_LANGUAGE = 'en';
@@ -32,9 +34,11 @@ export class Translator {
 		const translator = new Translator(language, namespaces);
 		await translator.instance
 			.use(
-				resourcesToBackend(
-					(language: string, namespace: string) => import(`@socialincome/shared/locales/${language}/${namespace}.json`),
-				),
+				resourcesToBackend((language: string, namespace: string) => {
+					const localPath = path.join(__dirname, `../../locales/${language}/${namespace}.json`);
+					if (fs.existsSync(localPath)) return import(localPath); // required for translations to work in functions
+					return import(`@socialincome/shared/locales/${language}/${namespace}.json`);
+				}),
 			)
 			.init({
 				lng: language,
