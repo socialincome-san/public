@@ -25,7 +25,8 @@
 		"sources": {
 			"benevity": "Benevity",
 			"cash": "Cash",
-			"stripe": "Stripe",
+			"raisenow": "Twint",
+			"stripe": "Credit Card",
 			"wire-transfer": "Wire Transfer"
 		}
 	},

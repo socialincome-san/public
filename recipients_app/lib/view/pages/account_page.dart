@@ -14,6 +14,7 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:intl/intl.dart";
+import "package:package_info_plus/package_info_plus.dart";
 
 class AccountPage extends StatefulWidget {
   final Recipient recipient;
@@ -38,6 +39,15 @@ class AccountPageState extends State<AccountPage> {
   late final TextEditingController _paymentNumberController;
   late final TextEditingController _contactNumberController;
   late final TextEditingController _emailController;
+
+  PackageInfo _packageInfo = PackageInfo(
+    appName: "Unknown",
+    packageName: "Unknown",
+    version: "Unknown",
+    buildNumber: "Unknown",
+    buildSignature: "Unknown",
+    installerStore: "Unknown",
+  );
 
   @override
   void initState() {
@@ -66,6 +76,15 @@ class AccountPageState extends State<AccountPage> {
       text: widget.recipient.communicationMobilePhone?.phoneNumber.toString() ??
           "",
     );
+
+    _initAppVersionInfo();
+  }
+
+  Future<void> _initAppVersionInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
   }
 
   @override
@@ -404,6 +423,12 @@ class AccountPageState extends State<AccountPage> {
                 ButtonBig(
                   onPressed: () => context.read<AuthCubit>().logout(),
                   label: localizations.signOut,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  "${localizations.appVersion} ${_packageInfo.version} (${_packageInfo.buildNumber})",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.labelSmall,
                 ),
               ],
             ),

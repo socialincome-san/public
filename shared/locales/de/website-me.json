@@ -26,7 +26,8 @@
 		"sources": {
 			"benevity": "Benevity",
 			"cash": "Bar",
-			"stripe": "Stripe",
+			"raisenow": "Twint",
+			"stripe": "Kreditkarte",
 			"wire-transfer": "Banküberweisung"
 		}
 	},

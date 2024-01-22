@@ -26,9 +26,9 @@ class GoldenTestDeviceScenario extends StatelessWidget {
           data: MediaQuery.of(context).copyWith(
             size: device.size,
             padding: device.safeArea,
-            platformBrightness: device.brightness,
+            platformBrightness: device.brightness, 
+            textScaler: TextScaler.linear(device.textScaleFactor),
             devicePixelRatio: device.devicePixelRatio,
-            textScaleFactor: device.textScaleFactor,
           ),
           child: SizedBox(
             height: device.size.height,

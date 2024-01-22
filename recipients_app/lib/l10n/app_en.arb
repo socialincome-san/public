@@ -146,6 +146,7 @@
     "yourMobilePhone": "Your mobile phone",
     "continueText": "Continue",
     "phoneNumber": "Phone number",
+    "appVersion": "App version:",
 
     "invalidPhoneNumberError": "Invalid phone number. Please check your phone number and try again.",
     "invalidVerificationCodeError": "Invalid verification code. Please check provided SMS code and try again.",

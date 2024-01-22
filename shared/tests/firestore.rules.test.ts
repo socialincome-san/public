@@ -37,7 +37,7 @@ beforeAll(async () => {
 		.authenticatedContext('recipient_app', { phone_number: '+23225000501' })
 		.firestore();
 	userAppAccess = testEnvironment
-		.authenticatedContext('JfPfN1qsdomTcpk9meUh5FnRxY18', { email: 'test@example.com' })
+		.authenticatedContext('w43IydQbr8lgeGeevbSBoP9ui3WQ', { email: 'test@test.org' })
 		.firestore();
 });
 
@@ -106,7 +106,7 @@ describe('Test user access', () => {
 		// Access own user document
 		const userDocsAllowed = await getDoc(doc(userAppAccess, USER_FIRESTORE_PATH, 'cCj3O9gQuopmPZ15JTI0'));
 		expect(userDocsAllowed.exists()).toBe(true);
-		expect(userDocsAllowed.get('auth_user_id')).toBe('JfPfN1qsdomTcpk9meUh5FnRxY18');
+		expect(userDocsAllowed.get('auth_user_id')).toBe('w43IydQbr8lgeGeevbSBoP9ui3WQ');
 
 		// Access other user document (not allowed)
 		await assertFails(getDoc(doc(userAppAccess, USER_FIRESTORE_PATH, 'EgDWTYqz7zNyQ4CdxieW')));

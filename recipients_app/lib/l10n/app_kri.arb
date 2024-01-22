@@ -147,6 +147,8 @@
     "yourMobilePhone": "Yu mobayl fon",
     "continueText": "Kɔntinyu",
     "phoneNumber": "Fon nɔmba",
+    "appVersion": "App version:",
+
     "invalidPhoneNumberError": "Fon nɔmba nɔ kɔrɛkt. Chɛk yu fon nɔmba ɛn tray bak ya.",
     "invalidVerificationCodeError": "Di spɛshal kod we wi sɛn yu nɔ kɔrɛkt. Duya chɛk di SMS kod ɛn tray bak.",
     "userDisabledError": "Wi dɔn lɔk yu akawnt. Rich awt to wi if yu want fɔ no mɔ.",
