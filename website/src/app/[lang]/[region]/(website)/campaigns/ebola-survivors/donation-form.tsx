@@ -21,7 +21,7 @@ export async function DonationForm({ lang }: { lang: WebsiteLanguage }) {
 			</div>
 			<div className="text-left">
 				All of this campaigns donations are used to finance the basic income program for Ebola survivors. Funds beyond
-				the goal of USD 200,000 are used to support people living in extreme poverty in Sierra Leone.
+				the goal of USD 200,000 are used to support further people living in poverty.
 			</div>
 		</BaseContainer>
 	);
