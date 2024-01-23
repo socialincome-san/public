@@ -1,18 +1,17 @@
 'use client';
 
+import ismatu2 from '@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/(assets)/ismatu-2.gif';
+import ismatu3 from '@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/(assets)/ismatu-3.gif';
+import ismatu4 from '@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/(assets)/ismatu-4.gif';
+import ismatu5 from '@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/(assets)/ismatu-5.gif';
+import ismatu6 from '@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/(assets)/ismatu-6.gif';
+import { VimeoVideo } from '@/components/vimeo-video';
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Dialog, DialogContent, DialogTrigger } from "@socialincome/ui";
-import { VimeoVideo } from '@/components/vimeo-video';
-import Image from "next/image";
-import ismatu2 from "@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/(assets)/ismatu-2.gif";
-import ismatu3 from "@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/(assets)/ismatu-3.gif";
-import ismatu4 from "@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/(assets)/ismatu-4.gif";
-import ismatu5 from "@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/(assets)/ismatu-5.gif";
-import ismatu6 from "@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/(assets)/ismatu-6.gif";
+import { BaseContainer, Dialog, DialogContent, DialogTrigger } from '@socialincome/ui';
+import Image from 'next/image';
 
-
-export async function CampaignTikTokVideos ({ lang }: { lang: WebsiteLanguage }) {
+export async function CampaignTikTokVideos({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-campaign-ebola-survivors'],
@@ -25,7 +24,7 @@ export async function CampaignTikTokVideos ({ lang }: { lang: WebsiteLanguage })
 
 	return (
 		<BaseContainer className="p-0">
-			<div className="flex flex-row items-center justify-center w-full">
+			<div className="flex w-full flex-row items-center justify-center">
 				{[
 					{ src: ismatu2, videoId: vimeoVideoId2 },
 					{ src: ismatu3, videoId: vimeoVideoId3 },

@@ -1,13 +1,13 @@
 'use client';
 
+import houseGif from '@/app/[lang]/[region]/(website)/(home)/(assets)/house.gif';
+import { VimeoVideo } from '@/components/vimeo-video';
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Dialog, DialogContent, DialogTrigger } from "@socialincome/ui";
-import { VimeoVideo } from '@/components/vimeo-video';
-import Image from "next/image";
-import houseGif from "@/app/[lang]/[region]/(website)/(home)/(assets)/house.gif";
+import { BaseContainer, Dialog, DialogContent, DialogTrigger } from '@socialincome/ui';
+import Image from 'next/image';
 
-export async function CampaignSiVideo ({ lang }: { lang: WebsiteLanguage }) {
+export async function CampaignSiVideo({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-campaign-ebola-survivors'],
