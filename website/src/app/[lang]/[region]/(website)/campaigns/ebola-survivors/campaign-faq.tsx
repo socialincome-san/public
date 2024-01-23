@@ -35,7 +35,7 @@ export async function CampaignFaq({ lang }: { lang: WebsiteLanguage }) {
 										</Typography>
 									</AccordionTrigger>
 									<AccordionContent>
-										<Typography as="p" className="mt-2" dangerouslySetInnerHTML={{ __html: answer }} />
+										<Typography as="p" size="xl" className="mt-2" dangerouslySetInnerHTML={{ __html: answer }} />
 									</AccordionContent>
 								</AccordionItem>
 							))}
