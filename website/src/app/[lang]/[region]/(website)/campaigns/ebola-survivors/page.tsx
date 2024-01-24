@@ -1,4 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { AboutSI } from '@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/about-si';
 import { CampaignCard } from '@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/campaign-card';
 import { CampaignFaq } from '@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/campaign-faq';
 import { CampaignSiVideo } from '@/app/[lang]/[region]/(website)/campaigns/ebola-survivors/campaign-si-video';
@@ -14,6 +15,7 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 			<CampaignTikTokVideos lang={lang} />
 			<CampaignCard lang={lang} />
 			<DonationForm lang={lang} />
+			<AboutSI />
 			<CampaignFaq lang={lang} />
 			<CampaignSiVideo lang={lang} />
 		</BaseContainer>

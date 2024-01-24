@@ -26,6 +26,12 @@
 	"vimeo-video-id-4": "905370993",
 	"vimeo-video-id-5": "905370963",
 	"vimeo-video-id-6": "905370928",
+	"aboutsi": {
+		"title": "About Social Income",
+		"credits": "Credits",
+		"text-1": "Social Income is a nonprofit organization based in Switzerland that provides unconditional cash transfers via mobile phone to people living in multidimensional poverty in West Africa.",
+		"text-2": "Since 2020, Social Income has been running an open-ended universal basic income program in Sierra Leone."
+	},
 	"faq": {
 		"title": "Frequently asked questions",
 		"questions": [
