@@ -414,7 +414,10 @@ class AccountPageState extends State<AccountPage> {
                 Text(localizations.supportInfo),
                 const SizedBox(height: 16),
                 ButtonBig(
-                  onPressed: () => const SocialIncomeContactDialog(),
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => const SocialIncomeContactDialog(),
+                  ),
                   label: localizations.getInTouch,
                 ),
                 const SizedBox(height: 24),

@@ -20,9 +20,6 @@ class SocialIncomeContactDialog extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
             color: AppColors.backgroundColor,
-            border: Border.all(
-              color: Theme.of(context).primaryColor,
-            ),
           ),
           child: Padding(
             padding: AppSpacings.a16,
@@ -38,11 +35,11 @@ class SocialIncomeContactDialog extends StatelessWidget {
                     ),
                     Text(
                       localizations.supportTeam,
-                      style: const TextStyle(fontSize: 24),
+                      style: Theme.of(context).textTheme.headlineLarge,
                     ),
                     Text(
                       localizations.getInTouch,
-                      style: const TextStyle(fontSize: 15, color: Colors.grey),
+                      style: Theme.of(context).textTheme.bodyLarge,
                     )
                   ],
                 ),
