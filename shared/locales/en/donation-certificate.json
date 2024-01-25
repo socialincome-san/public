@@ -21,7 +21,7 @@
 	"no-contributions": "No donations",
 	"title-kerrin": "Head of Finance",
 	"title-sandino": "Director",
-	"text-1": "We hereby confirm to the tax authorities that Social Income received from {{ firstname }} {{ lastname }} residing in {{ city }} in the year {{ year }} the following donations:",
+	"text-1": "We hereby confirm to the tax authorities that Social Income received the following donations from {{ firstname }} {{ lastname }}, residing in {{ city }}, in the year {{ year }}:",
 	"text-2": "All donations received between {{ start, datetime }} and {{ end, datetime }} were taken into account.",
 	"text-3": "Please refer to the cantonal tax regulations for more information on how to deduct your donations.",
 	"text-4": "Thank you for your support.",

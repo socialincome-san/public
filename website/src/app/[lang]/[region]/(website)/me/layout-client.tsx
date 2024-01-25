@@ -1,13 +1,20 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { ArrowPathIcon, CurrencyDollarIcon, ShieldCheckIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { UserContext } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
+import {
+	ArrowPathIcon,
+	CurrencyDollarIcon,
+	DocumentIcon,
+	ShieldCheckIcon,
+	UserCircleIcon,
+} from '@heroicons/react/24/outline';
 import { Button, Collapsible, CollapsibleContent, CollapsibleTrigger, Typography } from '@socialincome/ui';
 import { LinkProps } from 'next/dist/client/link';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useContext, useState } from 'react';
 
 type NavigationLinkProps = {
 	href: string;
@@ -42,11 +49,14 @@ type LayoutClientProps = {
 		contributionsTitle: string;
 		payments: string;
 		subscriptions: string;
+		donationCertificatesShort: string;
+		donationCertificatesLong: string;
 	};
 };
 
 export function LayoutClient({ params, translations, children }: PropsWithChildren<LayoutClientProps>) {
 	const pathname = usePathname();
+	const { user } = useContext(UserContext);
 	const [isOpen, setIsOpen] = useState(false);
 
 	const navigationMenu = (
@@ -66,6 +76,15 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 			>
 				{translations.subscriptions}
 			</NavigationLink>
+			{user?.get('address.country') === 'CH' && (
+				<NavigationLink
+					href={`/${params.lang}/${params.region}/me/donation-certificates`}
+					Icon={DocumentIcon}
+					onClick={() => setIsOpen(false)}
+				>
+					{translations.donationCertificatesShort}
+				</NavigationLink>
+			)}
 			<NavigationSectionTitle>{translations.accountTitle}</NavigationSectionTitle>
 			<NavigationLink
 				href={`/${params.lang}/${params.region}/me/personal-info`}
@@ -98,6 +117,8 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 		case `/${params.lang}/${params.region}/me/subscriptions`:
 			title = translations.subscriptions;
 			break;
+		case `/${params.lang}/${params.region}/me/donation-certificates`:
+			title = translations.donationCertificatesLong;
 	}
 
 	return (

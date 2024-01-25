@@ -21,7 +21,7 @@
 	"no-contributions": "Keine Spenden",
 	"title-kerrin": "Leiterin Finanzen",
 	"title-sandino": "Geschäftsführer",
-	"text-1": "Hiermit wird bestätigt, dass Social Income von {{ firstname }} {{ lastname }}, wohnhaft in {{ city }} im Jahr {{ year }} gesamthaft folgende Zuwendungen erhalten hat:",
+	"text-1": "Hiermit wird bestätigt, dass Social Income von {{ firstname }} {{ lastname }}, wohnhaft in {{ city }}, im Jahr {{ year }} gesamthaft folgende Zuwendungen erhalten hat:",
 	"text-2": "Berücksichtigt wurden sämtliche eingegangenen Spenden zwischen dem {{ start, datetime }} und dem {{ end, datetime }}.",
 	"text-3": "Bitte beachten Sie für einen möglichen Steuerabzug die kantonalen Regelungen in Ihrem Steuerkanton.",
 	"text-4": "Vielen Dank für Ihre Unterstützung.",

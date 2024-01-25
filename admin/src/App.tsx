@@ -9,7 +9,7 @@ import {
 } from 'firecms';
 import { adminsCollection } from './collections/Admins';
 import { buildContributionsCollection } from './collections/Contributions';
-import { operationalExpensesCollection } from './collections/OperationalExpenses';
+import { expensesCollection } from './collections/Expenses';
 import { buildPartnerOrganisationsCollection } from './collections/PartnerOrganisations';
 import { usersCollection } from './collections/Users';
 import { buildRecipientsCollection } from './collections/recipients/Recipients';
@@ -50,7 +50,7 @@ export default function App() {
 		buildPartnerOrganisationsCollection(),
 		buildSurveysCollection({ collectionGroup: true }),
 		adminsCollection,
-		operationalExpensesCollection,
+		expensesCollection,
 		usersCollection,
 		buildContributionsCollection({ collectionGroup: true }),
 	];

@@ -1,6 +1,7 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { firestoreAdmin } from '@/firebase-admin';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
+import { Currency } from '@socialincome/shared/src/types/currency';
 import { ContributionStatsCalculator } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
 import { BaseContainer, Typography } from '@socialincome/ui';
@@ -18,7 +19,7 @@ export type TransparencyPageProps = {
 } & DefaultPageProps;
 
 export default async function Page(props: TransparencyPageProps) {
-	const getStats = async (currency: string) => {
+	const getStats = async (currency: Currency) => {
 		const contributionCalculator = await ContributionStatsCalculator.build(firestoreAdmin, currency);
 		const contributionStats = contributionCalculator.allStats();
 		const paymentCalculator = await PaymentStatsCalculator.build(firestoreAdmin, currency);
