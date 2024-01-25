@@ -16,12 +16,15 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 import { CollectionActionsProps, useAuthController, useSnackbarController } from 'firecms';
 import _ from 'lodash';
 import React from 'react';
-import { CreateDonationCertificatesFunctionProps } from '../../../functions/src/webhooks/admin/donation-certificates/DonationCertificateHandler';
+import { CreateDonationCertificatesFunctionProps } from '../../../functions/src/webhooks/admin/donation-certificates';
 
 const style = {
 	position: 'absolute' as 'absolute',
 	top: '50%',
 	left: '50%',
+	display: 'flex',
+	flexDirection: 'column',
+	gap: 2,
 	transform: 'translate(-50%, -50%)',
 	width: 400,
 	height: 400,
@@ -35,13 +38,10 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 	const isGlobalAdmin = useAuthController().extra?.isGlobalAdmin;
 
 	const [year, setYear] = React.useState<number>(new Date().getFullYear());
-	const [open, setOpen] = React.useState(false);
-	const [checked, setChecked] = React.useState(false);
+	const [modalOpen, setModalOpen] = React.useState(false);
+	const [createAll, setCreateAll] = React.useState(false);
 
 	if (!isGlobalAdmin) return null;
-
-	const handleOpen = () => setOpen(true);
-	const handleClose = () => setOpen(false);
 
 	const functions = getFunctions(undefined, DEFAULT_REGION);
 	const createDonationCertificatesFunction = httpsCallable<CreateDonationCertificatesFunctionProps, string>(
@@ -49,17 +49,13 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 		'createDonationCertificates',
 	);
 
-	const setMailCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setChecked(event.target.checked);
-	};
-
 	const onClick = () => {
-		const selectedEntities = selectionController?.selectedEntities;
-		if (year && selectedEntities?.length > 0) {
+		const selectedEntities = selectionController?.selectedEntities.map((s) => s.id);
+		if ((year && selectedEntities?.length > 0) || createAll) {
 			createDonationCertificatesFunction({
 				year: year,
-				users: selectedEntities,
-				sendEmails: checked,
+				userIds: selectedEntities,
+				createAll: createAll,
 			})
 				.then((result) => {
 					snackbarController.open({
@@ -83,22 +79,20 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 
 	return (
 		<div>
-			<Button onClick={handleOpen} color="primary">
+			<Button onClick={() => setModalOpen(true)} color="primary">
 				Create Certificates
 			</Button>
 			<Modal
-				open={open}
-				onClose={handleClose}
+				open={modalOpen}
+				onClose={() => setModalOpen(false)}
 				aria-labelledby="modal-modal-title"
 				aria-describedby="modal-modal-description"
 			>
 				<Box sx={style}>
 					<Typography sx={{ m: 1 }} variant="h5">
-						{' '}
 						Donation Certificates
 					</Typography>
 					<Typography sx={{ m: 1 }} variant="subtitle1">
-						{' '}
 						Specify for which year the certificate(s) should be generated:
 					</Typography>
 					<FormControl sx={{ m: 1, minWidth: 120 }} size="small">
@@ -116,12 +110,12 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 						control={
 							<Checkbox
 								sx={{ paddingLeft: 0 }}
-								checked={checked}
-								onChange={setMailCheckbox}
+								checked={createAll}
+								onChange={(event: React.ChangeEvent<HTMLInputElement>) => setCreateAll(event.target.checked)}
 								inputProps={{ 'aria-label': 'controlled' }}
 							/>
 						}
-						label={<Typography variant="body2">Email certificates to selected contributors</Typography>}
+						label={<Typography variant="body2">Create certificate for all contributor in CH</Typography>}
 					/>
 					<Button onClick={onClick} color="primary">
 						Generate Certificates

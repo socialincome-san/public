@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
 import { Contribution, CONTRIBUTION_FIRESTORE_PATH, StatusKey } from '../../types/contribution';
+import { Currency } from '../../types/currency';
 import { User, USER_FIRESTORE_PATH } from '../../types/user';
 import { getLatestExchangeRate } from '../exchangeRates';
 import { cumulativeSum, StatsEntry } from './utils';
@@ -58,7 +59,7 @@ export class ContributionStatsCalculator {
 	 */
 	static async build(
 		firestoreAdmin: FirestoreAdmin,
-		currency: string,
+		currency: Currency,
 		contributionFilter = (c: Contribution) => c.status === StatusKey.SUCCEEDED,
 	): Promise<ContributionStatsCalculator> {
 		const exchangeRate = await getLatestExchangeRate(firestoreAdmin, currency);

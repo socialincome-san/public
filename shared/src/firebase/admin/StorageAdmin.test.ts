@@ -19,7 +19,10 @@ describe('useStorageAdmin', () => {
 	test('upload private file', async () => {
 		await fs.writeFile(tmpFile, 'test');
 
-		const { downloadUrl } = await storageAdmin.uploadAndGetDownloadURL({ sourceFilePath: tmpFile });
+		const { downloadUrl } = await storageAdmin.uploadAndGetDownloadURL({
+			sourceFilePath: tmpFile,
+			destinationFilePath: tmpFile,
+		});
 
 		const response = await axios.get(downloadUrl);
 		expect(response.status).toEqual(200);

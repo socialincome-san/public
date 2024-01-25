@@ -17,9 +17,9 @@ import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
-	HoverCard,
-	HoverCardContent,
-	HoverCardTrigger,
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
 	Typography,
 } from '@socialincome/ui';
 import _ from 'lodash';
@@ -119,14 +119,14 @@ export function NavbarClient({
 												</Button>
 											</Link>
 										) : (
-											<HoverCard key={index} openDelay={0} closeDelay={200}>
-												<HoverCardTrigger asChild>
+											<Popover key={index} openDelay={100} closeDelay={200}>
+												<PopoverTrigger asChild>
 													<Button variant="ghost" className="flex items-center space-x-2 py-6">
 														<Typography size="xl">{section.title}</Typography>
 														{(section.links?.length ?? 0) > 0 && <ChevronDownIcon className="h-4 w-4" />}
 													</Button>
-												</HoverCardTrigger>
-												<HoverCardContent asChild alignOffset={20} className="bg-popover w-56 p-0">
+												</PopoverTrigger>
+												<PopoverContent asChild alignOffset={20} className="bg-popover w-56 p-0">
 													<ul className="divide-muted divide-y">
 														{section.links?.map((link, index) => (
 															<li key={index} className="hover:bg-popover-muted px-8 py-3">
@@ -138,8 +138,8 @@ export function NavbarClient({
 															</li>
 														))}
 													</ul>
-												</HoverCardContent>
-											</HoverCard>
+												</PopoverContent>
+											</Popover>
 										)}
 									</div>
 								);
