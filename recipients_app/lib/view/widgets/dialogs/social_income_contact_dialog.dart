@@ -47,7 +47,7 @@ class SocialIncomeContactDialog extends StatelessWidget {
                   children: [
                     _IconAndContact(
                       contactMethod: "WhatsApp",
-                      contactDetails: "+41 76 251 55 69",
+                      contactDetails: "+232 75 588647",
                       onOpen: (String value) => openWhatsapp(context, value),
                     ),
                     const SizedBox(height: 16),
@@ -59,7 +59,7 @@ class SocialIncomeContactDialog extends StatelessWidget {
                     const SizedBox(height: 16),
                     _IconAndContact(
                       contactMethod: localizations.email,
-                      contactDetails: "support@socialincome.org",
+                      contactDetails: "hello@socialincome.org",
                       onOpen: (String value) => writeEmail(value),
                     ),
                   ],
