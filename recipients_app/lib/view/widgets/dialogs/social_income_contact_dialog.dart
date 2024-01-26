@@ -20,9 +20,6 @@ class SocialIncomeContactDialog extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
             color: AppColors.backgroundColor,
-            border: Border.all(
-              color: Theme.of(context).primaryColor,
-            ),
           ),
           child: Padding(
             padding: AppSpacings.a16,
@@ -38,11 +35,11 @@ class SocialIncomeContactDialog extends StatelessWidget {
                     ),
                     Text(
                       localizations.supportTeam,
-                      style: const TextStyle(fontSize: 24),
+                      style: Theme.of(context).textTheme.headlineLarge,
                     ),
                     Text(
                       localizations.getInTouch,
-                      style: const TextStyle(fontSize: 15, color: Colors.grey),
+                      style: Theme.of(context).textTheme.bodyLarge,
                     )
                   ],
                 ),
@@ -50,7 +47,7 @@ class SocialIncomeContactDialog extends StatelessWidget {
                   children: [
                     _IconAndContact(
                       contactMethod: "WhatsApp",
-                      contactDetails: "+41 76 251 55 69",
+                      contactDetails: "+232 75 588647",
                       onOpen: (String value) => openWhatsapp(context, value),
                     ),
                     const SizedBox(height: 16),
@@ -62,7 +59,7 @@ class SocialIncomeContactDialog extends StatelessWidget {
                     const SizedBox(height: 16),
                     _IconAndContact(
                       contactMethod: localizations.email,
-                      contactDetails: "support@socialincome.org",
+                      contactDetails: "hello@socialincome.org",
                       onOpen: (String value) => writeEmail(value),
                     ),
                   ],
