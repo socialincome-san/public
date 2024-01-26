@@ -1,0 +1,149 @@
+{
+	"metadata": {
+		"title": "About Us | Social Income"
+	},
+	"landing-page": {
+		"title": [
+			{
+				"text": "We had the option to do nothing.  "
+			},
+			{
+				"text": "We decided against it.",
+				"color": "secondary"
+			}
+		],
+		"subtitle": "We believe that improving the lives of people in need is not just a possibility but a responsibility. That's how Social Income was born.",
+		"contact": "Contact Us",
+		"contact-title": "Get in touch",
+		"contact-email": "hello@socialincome.org",
+		"registration": "NGO Registration",
+		"registration-title": "Legal status",
+		"registration-foundation": "Social Income is a non-profit organization founded under Swiss law in 2019 with tax exempt status.",
+		"registration-uid": "UID: ",
+		"registration-uid-nr": "CHE-289.611.695",
+		"registration-duns": "DUNS: ",
+		"registration-duns-nr": "48-045-6376"
+	},
+	"our-mission": {
+		"header": "Our Mission",
+		"title": [
+			{
+				"text": "Fighting global poverty with the "
+			},
+			{
+				"text": "help of everyday people.",
+				"color": "secondary"
+			}
+		],
+		"subtitle": "Many people in wealthier countries are committed to addressing inequality, but don’t know how or where to start.",
+		"paragraphs": [
+			"Thanks to the widespread use of mobile phone-based money transfer services in developing countries, it is easier than ever to send money directly to people in need, at almost no cost.",
+			"Social Income wants to harness this potential by combining two approaches to wealth redistribution. The first is the concept of Universal Basic Income, which is a promising path towards a more equal and inclusive society.",
+			"The second is the use of direct and anticipatory cash transfers to people living in poverty. Research has shown that those who receive direct aid greatly benefit from the money and that they reinvest it locally, responsibly, and successfully.",
+			"We make an impact by sending regular long-term cash transfers directly to recipients: from person to person, because many of the world's poorest countries lack solid social infrastructure.",
+			"And we do so in a radically transparent way that allows us to avoid the high administrative costs normally associated with such projects."
+		]
+	},
+	"100-percent-model": {
+		"header": "100% Model",
+		"title": [
+			{
+				"text": "Donations are for people in need. "
+			},
+			{
+				"text": "Not to pay overhead costs.",
+				"color": "secondary"
+			}
+		],
+		"subtitle": "We believe that 100% of our contributors’ recurring donations should go to our recipients.",
+		"paragraphs": [
+			"To maintain this promise, our operating costs and financial expenses are covered by philanthropic grants and institutional donations.",
+			"Thanks to this support, we can guarantee that 100% of the recurring donations reaches our recipients."
+		]
+	},
+	"flow-of-funds": {
+		"header": "Flow of Funds",
+		"title": [
+			{
+				"text": "From Everywhere to the Global South. "
+			},
+			{
+				"text": "Safe, Fast, and Direct.",
+				"color": "secondary"
+			}
+		],
+		"subtitle": "Donations are safely stored in the most stable currency in the world: Swiss Francs.",
+		"text": "Every month we transfer just enough money to local banks in the countries where we are active. We then distribute Social Incomes with the help of mobile money directly to the phones of beneficiaries.",
+		"paragraphs": [
+			"Every month we transfer just enough money to local banks in the countries where we are active. We then distribute Social Incomes with the help of mobile money directly to the phones of beneficiaries."
+		],
+		"vimeo-video-id": "840215695"
+	},
+	"team": {
+		"header": "Our Team",
+		"title": [
+			{
+				"text": "We're making Social Income "
+			},
+			{
+				"text": "a reality.",
+				"color": "secondary"
+			}
+		],
+		"roles": {
+			"finance": "Finances",
+			"operations": "Operations",
+			"marketing": "Marketing",
+			"communications": "Communications",
+			"co-president": "Co-President",
+			"founder": "Founding Director",
+			"board-member": "Board Member",
+			"software-development": "Software Development",
+			"app-development": "App Development",
+			"impact-measurement": "Impact Measurement",
+			"strategy": "Strategy"
+		},
+		"groups": {
+			"staff": {
+				"name": "Local Staff",
+				"subtitle": "Working in the field, ensuring that recipients and partners have a reliable point of contact.",
+				"description": "The local staff manages local operations and offers support to partners and recipients. Their insights are re-integrated into the technological tools we develop. They are compensated with a fair local salary."
+			},
+			"volunteers": {
+				"name": "Active Volunteers",
+				"subtitle": "The people who generously contribute their time and skills to make everything possible.",
+				"description": "Running Social Income requires a diverse range of skills. These dedicated professionals who volunteer bring everything to life and manage an entire NGO through their commitment and effective teamwork."
+			},
+			"board": {
+				"name": "Board of Association",
+				"subtitle": "Responsible for compliance with ethical standards and internal guidelines.",
+				"description": "The board is responsible for the supervision of the organization. Members are elected for a term of four years. Their specific supervisory duties are defined in the statutes and organizational regulations."
+			},
+			"special-thanks": {
+				"name": "Former Volunteers",
+				"subtitle": "These individuals have significantly shaped Social Income through their voluntary efforts.",
+				"description": "Volunteers who are inactive for more than three months are considered former until they resume their participation. This approach allows us to transparently and accurately represent the true size of our organization."
+			}
+		}
+	},
+	"contact": {
+		"header": "Contact",
+		"title": [
+			{
+				"text": "We're a Swiss "
+			},
+			{
+				"text": "non-profit organization.",
+				"color": "secondary"
+			}
+		],
+		"paragraph": "Social Income was founded as a non-profit association in Zurich, Switzerland. An independent board oversees the organization.",
+		"legal-status": "Legal Status",
+		"legal-status-paragraphs": [
+			"Non-profit organization founded under Swiss law in 2019 with tax exempt status.",
+			"UID: CHE-289.611.695",
+			"DUNS: 48-045-6376"
+		],
+		"find-us": "Find us on"
+	}
+}

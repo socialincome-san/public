@@ -1,0 +1,88 @@
+{
+	"metadata": {
+		"title": "My Profile | Social Income"
+	},
+	"sections": {
+		"account": {
+			"title": "My Account",
+			"personal-info": "Personal Info",
+			"security": "Security"
+		},
+		"contributions": {
+			"title": "My Contributions",
+			"payments": "Payments",
+			"subscriptions": "Subscriptions",
+			"donation-certificates-short": "Certificates",
+			"donation-certificates-long": "Donation certificates"
+		}
+	},
+	"contributions": {
+		"amount": "Amount",
+		"date": "Date",
+		"source": "Source",
+		"total": "Total",
+		"one-time-payment": "New one-time donation",
+		"amount-currency": "{{ amount, currency }}",
+		"sources": {
+			"benevity": "Benevity",
+			"cash": "Cash",
+			"raisenow": "Twint",
+			"stripe": "Credit Card",
+			"wire-transfer": "Wire Transfer"
+		}
+	},
+	"subscriptions": {
+		"amount": "Amount",
+		"date": "Date",
+		"source": "Source",
+		"total": "Total",
+		"amount-currency": "{{ amount, currency }}",
+		"new-subscription": "New subscription",
+		"interval": "Interval",
+		"interval-1": "Monthly",
+		"interval-3": "Quarterly",
+		"interval-12": "Annually",
+		"status": {
+			"active": "Active",
+			"canceled": "Canceled",
+			"paused": "Paused"
+		},
+		"manage-subscriptions": "Manage Subscriptions"
+	},
+	"donation-certificates": {
+		"year": "Year",
+		"download-pdf": "Download PDF",
+		"no-certificates-yet": "You have no donation certificates yet. Make sure you provide your full address with."
+	},
+	"personal-info": {
+		"alert-title": "Donation certificates",
+		"alert-description": "If you pay taxes in Switzerland, please provide us with your address so that we can issue you a donation certificate.",
+		"firstname": "First Name",
+		"lastname": "Last Name",
+		"gender": "Gender",
+		"email": "Email",
+		"street": "Street",
+		"street-number": "Number",
+		"city": "City",
+		"zip": "Zip",
+		"country": "Country",
+		"language": "Communication language",
+		"submit-button": "Update Personal Info",
+		"user-updated-toast": "Your personal info has been updated"
+	},
+	"security": {
+		"reset-password": {
+			"title": "Update Password",
+			"password": "Password",
+			"password-confirmation": "Confirm Password",
+			"submit-button": "Update Password",
+			"passwords-mismatch": "Passwords do not match",
+			"error-toast": "There was an error updating your password",
+			"success-toast": "Your password has been updated. Please sign in again with your new password."
+		},
+		"sign-out": {
+			"title": "Sign out of your account?",
+			"button": "Sign Out"
+		}
+	}
+}

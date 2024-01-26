@@ -1,0 +1,29 @@
+{
+	"currency": "Currency",
+	"currencies": {
+		"CHF": "Swiss Franc",
+		"USD": "US Dollar",
+		"EUR": "Euro",
+		"SLE": "Sierra Leonean Leone"
+	},
+	"region": "Region",
+	"regions": {
+		"int": "International",
+		"ch": "Switzerland",
+		"sl": "Sierra Leone"
+	},
+	"language": "Language",
+	"languages": {
+		"de": "Tedesco",
+		"en": "English",
+		"fr": "French",
+		"kri": "Krio"
+	},
+	"gender": "Gender",
+	"genders": {
+		"male": "Male",
+		"female": "Female",
+		"other": "Other",
+		"private": "Prefer not to say"
+	}
+}

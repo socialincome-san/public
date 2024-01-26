@@ -1,0 +1,57 @@
+{
+	"metadata": {
+		"title": "Finances | Social Income"
+	},
+	"amount": "{{ value, currency }}",
+	"section-1": {
+		"title-1": "Transparency builds trust.",
+		"title-2": "Trust builds solidarity.",
+		"since-march-2020": "Since March 2020",
+		"totalContributions": "{{ contributorCount }} contributors donated a total of {{ value, currency }}",
+		"totalPayments": "{{ value }} mobile money payments made",
+		"totalRecipients": "{{ value }} recipients enrolled for a 3-year program"
+	},
+	"section-2": {
+		"title": "How is Social Income funded?",
+		"donations": "Donations",
+		"amount-since-march-2020": "Total amount since March 2020",
+		"contributions-from": "{{ value, currency }} contributions from",
+		"individuals": "{{ count }} Individuals",
+		"institutions": "{{ count }} Institutions",
+		"past-payouts": "Already paid out: {{ value, currency }}",
+		"payments-future": "To be paid out: {{ value, currency }}",
+		"past-costs": "Already used to cover costs: {{ value, currency }}",
+		"future-costs": "To be used to cover costs: {{ value, currency }}"
+	},
+	"section-3": {
+		"title": "Where are our contributors from?",
+		"subtitle": "We received contributions from {{ value }} countries.",
+		"country-amount": "{{ value, currency }} from {{ contributorsCount }} contributors",
+		"all-countries": "Show All Countries"
+	},
+	"section-4": {
+		"title": "How are the funds used?",
+		"subtitle": "Recurring individual donations are always paid out to 100%. Institutional donations are used to cover our operational costs.",
+		"amount-since-march-2020": "Total amount since March 2020",
+		"expenses": "Expenses",
+		"payments-total": "{{ value, currency }} paid out to {{ recipientsCount }} recipients",
+		"payments-last-month": "Last month: {{ value, currency }} to {{ recipientsCount }} recipients",
+		"payments-future": "To be paid out: {{ value, currency }}",
+		"project-costs": "{{ value, currency }} Project Management Costs",
+		"transaction-costs": "Transaction Costs: {{ value, currency }}",
+		"transaction-costs-tooltip": "Costs incurred during the transfer of money from you to us.",
+		"delivery-costs": "Delivery Costs: {{ value, currency }}",
+		"delivery-costs-tooltip": "Costs incurred during the transfer of money from us to the recipients.",
+		"administrative-costs": "Administrative Costs: {{ value, currency }}",
+		"administrative-costs-tooltip": "Costs for IT licenses, website hosting, etc.",
+		"fundraising-costs": "Fundraising & Marketing: {{ value, currency }}",
+		"fundraising-costs-tooltip": "Costs incurred for advertising and fundraising.",
+		"staff-costs": "Local Staff: {{ value, currency }}",
+		"staff-costs-tooltip": "Salary costs for staff in Sierra Leone.",
+		"reserves": "Reserves",
+		"covers-payments": "This covers payments for",
+		"covers-payments-1": "{{ recipientsCount }} recipients for {{ monthsCount }} months",
+		"covers-payments-2": "{{ recipientsCount }} recipients for 1 month",
+		"reserves-text": "We keep liquid funds to make sure we can cover payments over multiple months without being dependent on contributions."
+	}
+}
