@@ -30,9 +30,9 @@ linter:
     use_decorated_box: false
     prefer_double_quotes: true
     prefer_const_constructors: true
-    prefer_const_constructors_in_immutables:
-      trues
+    prefer_const_constructors_in_immutables: true
 
-      # avoid_print: false  # Uncomment to disable the `avoid_print` rule
-      # Additional information about this file can be found at
-      # https://dart.dev/guides/language/analysis-options
+dart_code_metrics:
+  exclude: ["lib/**/*.g.dart"]
+  rules:
+    prefer-single-widget-per-file: false

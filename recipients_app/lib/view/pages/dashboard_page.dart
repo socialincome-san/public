@@ -46,8 +46,15 @@ class DashboardPage extends StatelessWidget {
   }
 }
 
-class _DashboardView extends StatelessWidget {
+class _DashboardView extends StatefulWidget {
   const _DashboardView();
+
+  @override
+  State<_DashboardView> createState() => _DashboardViewState();
+}
+
+class _DashboardViewState extends State<_DashboardView> {
+  final _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -75,32 +82,31 @@ class _DashboardView extends StatelessWidget {
 
     return BlocBuilder<PaymentsCubit, PaymentsState>(
       builder: (context, state) {
-        return Padding(
-          padding: AppSpacings.h8,
-          child: Column(
+        return RefreshIndicator(
+          key: _refreshIndicatorKey,
+          onRefresh: () async {
+            context.read<PaymentsCubit>().loadPayments();
+            context.read<SurveyCubit>().getSurveys();
+          },
+          child: ListView(
             children: [
               const BalanceCardContainer(),
               const SizedBox(height: 8),
               if (items.isEmpty)
-                Expanded(
-                  child: Padding(
-                    padding: AppSpacings.a8,
-                    child: Center(
-                      child: Text(
-                        localizations.dashboardUp2Date,
-                        textAlign: TextAlign.center,
-                      ),
+                Padding(
+                  padding: AppSpacings.a8,
+                  child: Center(
+                    child: Text(
+                      localizations.dashboardUp2Date,
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 )
               else
-                Expanded(
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 8),
-                    itemCount: items.length,
-                    itemBuilder: (context, index) => items[index],
-                  ),
+                ListView.separated(
+                  separatorBuilder: (context, index) => const SizedBox(height: 8),
+                  itemCount: items.length,
+                  itemBuilder: (context, index) => items[index],
                 ),
             ],
           ),
