@@ -18,7 +18,7 @@ import {
 import { StringPropertyPreview } from 'firecms';
 import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
-import { surveyStatusProperty } from '../collections/surveys/SurveysProperties';
+import { surveyQuestionnaireProperty, surveyStatusProperty } from '../collections/surveys/SurveysProperties';
 import { NoRowsOverlay } from '../components/Overlays';
 
 type RecipientSurveyDocs = {
@@ -87,6 +87,7 @@ export function NextSurveysView() {
 						name: `${row.recipientDoc.get('first_name')} ${row.recipientDoc.get('last_name')}`,
 						tel: `+${row.recipientDoc.get('communication_mobile_phone.phone')}`,
 					},
+					questionnaire: row.surveyDoc.get('questionnaire'),
 					omId: row.recipientDoc.get('om_uid'),
 					status: row.surveyDoc.get('status'),
 					url: getSurveyUrl(
@@ -122,6 +123,15 @@ export function NextSurveysView() {
 						},
 					},
 					{ field: 'omId', flex: 1, headerName: 'OM ID', minWidth: 50 },
+					{
+						field: 'questionnaire',
+						flex: 1,
+						headerName: 'Questionnaire',
+						minWidth: 50,
+						renderCell: (params) => (
+							<StringPropertyPreview property={surveyQuestionnaireProperty} size="small" value={params.value} />
+						),
+					},
 					{ field: 'date', flex: 1, headerName: 'Date', minWidth: 75 },
 					{
 						field: 'status',
