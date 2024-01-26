@@ -1,3 +1,4 @@
+import { EntityReference } from 'firecms';
 import { Currency } from './currency';
 import { Timestamp } from './timestamp';
 
@@ -29,6 +30,7 @@ type BaseContribution = {
 	amount_chf: number;
 	fees_chf: number;
 	currency: Currency;
+	campaign?: EntityReference;
 };
 
 export type StripeContribution = BaseContribution & {
