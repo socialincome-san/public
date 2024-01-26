@@ -116,7 +116,7 @@ export class StripeEventHandler {
 		return charge.metadata?.campaignId
 			? ({
 					...contribution,
-					campaign: `${CAMPAIGN_FIRESTORE_PATH}/${charge.metadata?.campaignId}`,
+					campaign_path: `${CAMPAIGN_FIRESTORE_PATH}/${charge.metadata?.campaignId}`,
 			  } as StripeContribution)
 			: contribution;
 	};
@@ -125,17 +125,19 @@ export class StripeEventHandler {
 	 * Increments the total donations of a campaign if the charge is associated with a campaignId.
 	 */
 	maybeUpdateCampaign = async (contribution: StripeContribution): Promise<void> => {
-		if (contribution.campaign) {
-			const campaignRef = this.firestoreAdmin.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH).doc(contribution.campaign);
+		if (contribution.campaign_path) {
+			const campaignRef = this.firestoreAdmin
+				.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH)
+				.doc(contribution.campaign_path);
 			try {
 				const campaign = await campaignRef.get();
 				const current_amount_chf = campaign.data()?.amount_collected_chf ?? 0;
 				await campaignRef.update({
 					amount_collected_chf: current_amount_chf + contribution.amount_chf,
 				});
-				console.log(`Campaign amount ${contribution.campaign} updated.`);
+				console.log(`Campaign amount ${contribution.campaign_path} updated.`);
 			} catch (error) {
-				console.error(`Error updating campaign amount ${contribution.campaign}.`, error);
+				console.error(`Error updating campaign amount ${contribution.campaign_path}.`, error);
 			}
 		}
 	};
