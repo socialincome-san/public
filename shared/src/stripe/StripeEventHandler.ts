@@ -100,7 +100,8 @@ export class StripeEventHandler {
 		const plan = (charge.invoice as Stripe.Invoice)?.lines?.data[0]?.plan;
 		const monthlyInterval = plan?.interval === 'month' ? plan?.interval_count : plan?.interval === 'year' ? 12 : 0;
 		const balanceTransaction = charge.balance_transaction as Stripe.BalanceTransaction;
-		return {
+
+		const contribution = {
 			source: ContributionSourceKey.STRIPE,
 			created: toFirebaseAdminTimestamp(DateTime.fromSeconds(charge.created)),
 			amount: charge.amount / 100,
@@ -110,7 +111,35 @@ export class StripeEventHandler {
 			monthly_interval: monthlyInterval,
 			reference_id: charge.id,
 			status: this.constructStatus(charge.status),
-		};
+		} as StripeContribution;
+
+		return charge.metadata?.campaignId
+			? ({
+					...contribution,
+					campaign_path: `${CAMPAIGN_FIRESTORE_PATH}/${charge.metadata?.campaignId}`,
+			  } as StripeContribution)
+			: contribution;
+	};
+
+	/**
+	 * Increments the total donations of a campaign if the charge is associated with a campaignId.
+	 */
+	maybeUpdateCampaign = async (contribution: StripeContribution): Promise<void> => {
+		if (contribution.campaign_path) {
+			const campaignRef = this.firestoreAdmin
+				.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH)
+				.doc(contribution.campaign_path);
+			try {
+				const campaign = await campaignRef.get();
+				const current_amount_chf = campaign.data()?.amount_collected_chf ?? 0;
+				await campaignRef.update({
+					amount_collected_chf: current_amount_chf + contribution.amount_chf,
+				});
+				console.log(`Campaign amount ${contribution.campaign_path} updated.`);
+			} catch (error) {
+				console.error(`Error updating campaign amount ${contribution.campaign_path}.`, error);
+			}
+		}
 	};
 
 	/**
@@ -186,6 +215,7 @@ export class StripeEventHandler {
 		).doc(charge.id);
 		await contributionRef.set(contribution);
 		console.info(`Ingested ${charge.id} into firestore for user ${userRef.id}`);
+		await this.maybeUpdateCampaign(contribution);
 		return contributionRef;
 	};
 }
