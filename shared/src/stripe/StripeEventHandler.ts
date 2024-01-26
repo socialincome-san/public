@@ -115,9 +115,9 @@ export class StripeEventHandler {
 
 		return charge.metadata?.campaignId
 			? ({
-				...contribution,
-				campaign_path: `${CAMPAIGN_FIRESTORE_PATH}/${charge.metadata?.campaignId}`,
-			} as StripeContribution)
+					...contribution,
+					campaign_path: `${CAMPAIGN_FIRESTORE_PATH}/${charge.metadata?.campaignId}`,
+			  } as StripeContribution)
 			: contribution;
 	};
 
