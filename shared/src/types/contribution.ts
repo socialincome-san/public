@@ -29,6 +29,7 @@ type BaseContribution = {
 	amount_chf: number;
 	fees_chf: number;
 	currency: Currency;
+	campaign?: string;
 };
 
 export type StripeContribution = BaseContribution & {
