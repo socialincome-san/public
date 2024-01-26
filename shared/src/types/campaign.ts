@@ -7,6 +7,7 @@ export type Campaign = {
 	email: string;
 	title: string;
 	description: string;
+	amount_collected_chf: number; // automatically updated by incoming payments.
 	goal?: number;
 	goal_currency?: Currency;
 	start_date: Timestamp;

@@ -40,6 +40,11 @@ export const campaignsCollection = buildAuditedCollection<Campaign>({
 			multiline: true,
 			validation: { required: true },
 		},
+		amount_collected_chf: {
+			dataType: 'number',
+			name: 'Collected amount in CHF',
+			readOnly: true,
+		},
 		goal: {
 			dataType: 'number',
 			name: 'Optional Fundraising Goal',
