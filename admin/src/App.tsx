@@ -8,6 +8,7 @@ import {
 	performAlgoliaTextSearch,
 } from 'firecms';
 import { adminsCollection } from './collections/Admins';
+import { campaignsCollection } from './collections/Campaigns';
 import { buildContributionsCollection } from './collections/Contributions';
 import { expensesCollection } from './collections/Expenses';
 import { buildPartnerOrganisationsCollection } from './collections/PartnerOrganisations';
@@ -52,6 +53,7 @@ export default function App() {
 		adminsCollection,
 		expensesCollection,
 		usersCollection,
+		campaignsCollection,
 		buildContributionsCollection({ collectionGroup: true }),
 	];
 
