@@ -1,5 +1,4 @@
 import { CollectionReference, DocumentReference } from 'firebase-admin/firestore';
-import { EntityReference } from 'firecms';
 import { DateTime } from 'luxon';
 import Stripe from 'stripe';
 import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
@@ -101,11 +100,8 @@ export class StripeEventHandler {
 		const plan = (charge.invoice as Stripe.Invoice)?.lines?.data[0]?.plan;
 		const monthlyInterval = plan?.interval === 'month' ? plan?.interval_count : plan?.interval === 'year' ? 12 : 0;
 		const balanceTransaction = charge.balance_transaction as Stripe.BalanceTransaction;
-		const campaignRef = charge.metadata.campaignId
-			? new EntityReference(charge.metadata.campaignId, CAMPAIGN_FIRESTORE_PATH)
-			: undefined;
 
-		return {
+		const contribution = {
 			source: ContributionSourceKey.STRIPE,
 			created: toFirebaseAdminTimestamp(DateTime.fromSeconds(charge.created)),
 			amount: charge.amount / 100,
@@ -115,8 +111,14 @@ export class StripeEventHandler {
 			monthly_interval: monthlyInterval,
 			reference_id: charge.id,
 			status: this.constructStatus(charge.status),
-			campaign: campaignRef,
-		};
+		} as StripeContribution;
+
+		return charge.metadata?.campaignId
+			? ({
+					...contribution,
+					campaign: `${CAMPAIGN_FIRESTORE_PATH}/${charge.metadata?.campaignId}`,
+			  } as StripeContribution)
+			: contribution;
 	};
 
 	/**
@@ -124,19 +126,16 @@ export class StripeEventHandler {
 	 */
 	maybeUpdateCampaign = async (contribution: StripeContribution): Promise<void> => {
 		if (contribution.campaign) {
-			const campaignRef = this.firestoreAdmin
-				.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH)
-				.doc(contribution.campaign.id);
-
+			const campaignRef = this.firestoreAdmin.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH).doc(contribution.campaign);
 			try {
 				const campaign = await campaignRef.get();
 				const current_amount_chf = campaign.data()?.amount_collected_chf ?? 0;
 				await campaignRef.update({
 					amount_collected_chf: current_amount_chf + contribution.amount_chf,
 				});
-				console.log(`Campaign amount ${contribution.campaign.id} updated.`);
+				console.log(`Campaign amount ${contribution.campaign} updated.`);
 			} catch (error) {
-				console.error(`Error updating campaign amount ${contribution.campaign.id}.`, error);
+				console.error(`Error updating campaign amount ${contribution.campaign}.`, error);
 			}
 		}
 	};
