@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import Stripe from 'stripe';
 import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
 import { toFirebaseAdminTimestamp } from '../firebase/admin/utils';
+import { CAMPAIGN_FIRESTORE_PATH, Campaign } from '../types/campaign';
 import {
 	CONTRIBUTION_FIRESTORE_PATH,
 	ContributionSourceKey,
@@ -112,6 +113,28 @@ export class StripeEventHandler {
 		};
 	};
 
+	/**
+	 * Increments the total donations of a campaign if the charge is associated with a campaignId.
+	 */
+	maybeUpdateCampaign = async (charge: Stripe.Charge): Promise<void> => {
+		if (charge.metadata.campaignId) {
+			const campaignRef = this.firestoreAdmin
+				.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH)
+				.doc(charge.metadata.campaignId);
+
+			try {
+				const campaign = await campaignRef.get();
+				const current_amount_chf = campaign.data()?.amount_collected_chf ?? 0;
+				await campaignRef.update({
+					amount_collected_chf: current_amount_chf + charge.amount,
+				});
+				console.log(`Campaign amount ${charge.metadata.campaignId} updated.`);
+			} catch (error) {
+				console.error(`Error updating campaign amount ${charge.metadata.campaignId}.`, error);
+			}
+		}
+	};
+
 	constructStatus = (status: Stripe.Charge.Status) => {
 		switch (status) {
 			case 'succeeded':
@@ -156,6 +179,7 @@ export class StripeEventHandler {
 	storeCharge = async (charge: Stripe.Charge): Promise<DocumentReference<StripeContribution>> => {
 		const customer = await this.retrieveStripeCustomer(charge.customer as string);
 		const userRef = await this.getOrCreateFirestoreUser(customer);
+		await this.maybeUpdateCampaign(charge);
 		const contribution = this.constructContribution(charge);
 		const contributionRef = (
 			userRef.collection(CONTRIBUTION_FIRESTORE_PATH) as CollectionReference<StripeContribution>
