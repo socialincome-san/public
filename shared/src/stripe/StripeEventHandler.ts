@@ -115,9 +115,9 @@ export class StripeEventHandler {
 
 		return charge.metadata?.campaignId
 			? ({
-					...contribution,
-					campaign: `${CAMPAIGN_FIRESTORE_PATH}/${charge.metadata?.campaignId}`,
-			  } as StripeContribution)
+				...contribution,
+				campaign_path: `${CAMPAIGN_FIRESTORE_PATH}/${charge.metadata?.campaignId}`,
+			} as StripeContribution)
 			: contribution;
 	};
 
@@ -125,17 +125,41 @@ export class StripeEventHandler {
 	 * Increments the total donations of a campaign if the charge is associated with a campaignId.
 	 */
 	maybeUpdateCampaign = async (contribution: StripeContribution): Promise<void> => {
-		if (contribution.campaign) {
-			const campaignRef = this.firestoreAdmin.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH).doc(contribution.campaign);
+		if (contribution.campaign_path) {
+			const campaignRef = this.firestoreAdmin
+				.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH)
+				.doc(contribution.campaign_path);
 			try {
 				const campaign = await campaignRef.get();
 				const current_amount_chf = campaign.data()?.amount_collected_chf ?? 0;
 				await campaignRef.update({
 					amount_collected_chf: current_amount_chf + contribution.amount_chf,
 				});
-				console.log(`Campaign amount ${contribution.campaign} updated.`);
+				console.log(`Campaign amount ${contribution.campaign_path} updated.`);
 			} catch (error) {
-				console.error(`Error updating campaign amount ${contribution.campaign}.`, error);
+				console.error(`Error updating campaign amount ${contribution.campaign_path}.`, error);
+			}
+		}
+	};
+
+	/**
+	 * Increments the total donations of a campaign if the charge is associated with a campaignId.
+	 */
+	maybeUpdateCampaign = async (charge: Stripe.Charge): Promise<void> => {
+		if (charge.metadata.campaignId) {
+			const campaignRef = this.firestoreAdmin
+				.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH)
+				.doc(charge.metadata.campaignId);
+
+			try {
+				const campaign = await campaignRef.get();
+				const current_amount_chf = campaign.data()?.amount_collected_chf ?? 0;
+				await campaignRef.update({
+					amount_collected_chf: current_amount_chf + charge.amount,
+				});
+				console.log(`Campaign amount ${charge.metadata.campaignId} updated.`);
+			} catch (error) {
+				console.error(`Error updating campaign amount ${charge.metadata.campaignId}.`, error);
 			}
 		}
 	};
@@ -184,6 +208,7 @@ export class StripeEventHandler {
 	storeCharge = async (charge: Stripe.Charge): Promise<DocumentReference<StripeContribution>> => {
 		const customer = await this.retrieveStripeCustomer(charge.customer as string);
 		const userRef = await this.getOrCreateFirestoreUser(customer);
+		await this.maybeUpdateCampaign(charge);
 		const contribution = this.constructContribution(charge);
 		const contributionRef = (
 			userRef.collection(CONTRIBUTION_FIRESTORE_PATH) as CollectionReference<StripeContribution>

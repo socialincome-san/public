@@ -104,7 +104,7 @@ export function buildContributionsCollection(
 				validation: { required: true },
 				enumValues: { 0: 'One time', 1: 'Monthly', 3: 'Quarterly', 12: 'Annually' },
 			},
-			campaign: {
+			campaign_path: {
 				dataType: 'reference',
 				name: 'Campaign',
 				path: CAMPAIGN_FIRESTORE_PATH,
