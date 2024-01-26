@@ -21,6 +21,12 @@ export const campaignsCollection = buildAuditedCollection<Campaign>({
 		delete: true,
 	},
 	properties: buildProperties<Campaign>({
+		creator_name: {
+			dataType: 'string',
+			name: 'Creator Name',
+			description: 'Visible in the fundraising page.',
+			validation: { required: true },
+		},
 		email: {
 			dataType: 'string',
 			name: 'Email',
