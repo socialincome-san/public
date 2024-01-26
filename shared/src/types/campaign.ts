@@ -4,6 +4,7 @@ import { Timestamp } from './timestamp';
 export const CAMPAIGN_FIRESTORE_PATH = 'campaigns';
 
 export type Campaign = {
+	creator_name: string;
 	email: string;
 	title: string;
 	description: string;
