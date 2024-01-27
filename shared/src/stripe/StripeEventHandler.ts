@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import Stripe from 'stripe';
 import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
 import { toFirebaseAdminTimestamp } from '../firebase/admin/utils';
-import { CAMPAIGN_FIRESTORE_PATH, Campaign } from '../types/campaign';
+import { CAMPAIGN_FIRESTORE_PATH } from '../types/campaign';
 import {
 	CONTRIBUTION_FIRESTORE_PATH,
 	ContributionSourceKey,
@@ -116,7 +116,7 @@ export class StripeEventHandler {
 		return charge.metadata?.campaignId
 			? ({
 					...contribution,
-					campaign_path: `${CAMPAIGN_FIRESTORE_PATH}/${charge.metadata?.campaignId}`,
+					campaign_path: this.firestoreAdmin.doc(CAMPAIGN_FIRESTORE_PATH, charge.metadata?.campaignId),
 			  } as StripeContribution)
 			: contribution;
 	};
@@ -126,13 +126,10 @@ export class StripeEventHandler {
 	 */
 	maybeUpdateCampaign = async (contribution: StripeContribution): Promise<void> => {
 		if (contribution.campaign_path) {
-			const campaignRef = this.firestoreAdmin
-				.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH)
-				.doc(contribution.campaign_path);
 			try {
-				const campaign = await campaignRef.get();
+				const campaign = await contribution.campaign_path.get();
 				const current_amount_chf = campaign.data()?.amount_collected_chf ?? 0;
-				await campaignRef.update({
+				await contribution.campaign_path.update({
 					amount_collected_chf: current_amount_chf + contribution.amount_chf,
 				});
 				console.log(`Campaign amount ${contribution.campaign_path} updated.`);
