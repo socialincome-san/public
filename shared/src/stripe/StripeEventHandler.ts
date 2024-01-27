@@ -118,7 +118,7 @@ export class StripeEventHandler {
 		return checkoutMetadata?.campaignId
 			? ({
 					...contribution,
-					campaign_path: `${CAMPAIGN_FIRESTORE_PATH}/${checkoutMetadata.campaignId}`,
+					campaign_path: this.firestoreAdmin.doc(CAMPAIGN_FIRESTORE_PATH, charge.metadata?.campaignId),
 			  } as StripeContribution)
 			: contribution;
 	};
@@ -144,11 +144,10 @@ export class StripeEventHandler {
 	 */
 	maybeUpdateCampaign = async (contribution: StripeContribution): Promise<void> => {
 		if (contribution.campaign_path) {
-			const campaignRef = this.firestoreAdmin.firestore.doc(contribution.campaign_path);
 			try {
-				const campaign = await campaignRef.get();
+				const campaign = await contribution.campaign_path.get();
 				const current_amount_chf = campaign.data()?.amount_collected_chf ?? 0;
-				await campaignRef.update({
+				await contribution.campaign_path.update({
 					amount_collected_chf: current_amount_chf + contribution.amount_chf,
 				});
 				console.log(`Campaign amount ${contribution.campaign_path} updated.`);
