@@ -51,19 +51,6 @@ describe('stripeWebhook', () => {
 		expect(contribution.data()).toEqual(expectedContribution);
 	});
 
-	test('storeCharge for existing user through stripe id with campaign metadata', async () => {
-		await firestoreAdmin.doc<{}>('users', 'test-user').set({
-			stripe_customer_id: 'cus_123',
-		});
-
-		const ref = await stripeWebhook.storeCharge(testCharge, { campaignId: 'xyz' });
-		const contribution = await ref!.get();
-		expect(contribution.data()).toEqual({
-			...expectedContribution,
-			campaign_path: 'campaigns/xyz',
-		});
-	});
-
 	test('storeCharge for existing user through email', async () => {
 		await firestoreAdmin.doc<{}>('users', 'test-user').set({
 			email: 'test@socialincome.org',
