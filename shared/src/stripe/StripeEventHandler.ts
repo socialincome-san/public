@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import Stripe from 'stripe';
 import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
 import { toFirebaseAdminTimestamp } from '../firebase/admin/utils';
-import { CAMPAIGN_FIRESTORE_PATH, Campaign } from '../types/campaign';
+import { CAMPAIGN_FIRESTORE_PATH } from '../types/campaign';
 import {
 	CONTRIBUTION_FIRESTORE_PATH,
 	ContributionSourceKey,
@@ -33,13 +33,16 @@ export class StripeEventHandler {
 		const fullCharge = await this.stripe.charges.retrieve(chargeId, {
 			expand: ['balance_transaction', 'invoice'],
 		});
+
+		const checkoutMetadata = await this.getCheckoutMetadata(charge);
+
 		// We only store non-successful charges if the user already exists.
 		// This prevents us from having users in the database that never made a successful contribution.
 		if (
 			fullCharge.status === 'succeeded' ||
 			(await this.findFirestoreUser(await this.retrieveStripeCustomer(fullCharge.customer as string)))
 		) {
-			await this.storeCharge(fullCharge);
+			await this.storeCharge(fullCharge, checkoutMetadata);
 		}
 	};
 
@@ -96,11 +99,10 @@ export class StripeEventHandler {
 	/**
 	 * Transforms the stripe charge into our own Contribution representation
 	 */
-	constructContribution = (charge: Stripe.Charge): StripeContribution => {
+	constructContribution = (charge: Stripe.Charge, checkoutMetadata: Stripe.Metadata | null): StripeContribution => {
 		const plan = (charge.invoice as Stripe.Invoice)?.lines?.data[0]?.plan;
 		const monthlyInterval = plan?.interval === 'month' ? plan?.interval_count : plan?.interval === 'year' ? 12 : 0;
 		const balanceTransaction = charge.balance_transaction as Stripe.BalanceTransaction;
-
 		const contribution = {
 			source: ContributionSourceKey.STRIPE,
 			created: toFirebaseAdminTimestamp(DateTime.fromSeconds(charge.created)),
@@ -113,12 +115,28 @@ export class StripeEventHandler {
 			status: this.constructStatus(charge.status),
 		} as StripeContribution;
 
-		return charge.metadata?.campaignId
+		return checkoutMetadata?.campaignId
 			? ({
 					...contribution,
-					campaign_path: `${CAMPAIGN_FIRESTORE_PATH}/${charge.metadata?.campaignId}`,
+					campaign_path: `${CAMPAIGN_FIRESTORE_PATH}/${checkoutMetadata.campaignId}`,
 			  } as StripeContribution)
 			: contribution;
+	};
+
+	getCheckoutMetadata = async (charge: Stripe.Charge): Promise<Stripe.Metadata | null> => {
+		const paymentIntentId = charge.payment_intent;
+		if (!paymentIntentId) return null;
+
+		const sessions = await this.stripe.checkout.sessions.list({
+			payment_intent: paymentIntentId.toString(),
+		});
+
+		const session = sessions.data.length > 0 ? sessions.data[0] : null;
+		if (session) {
+			return session.metadata;
+		} else {
+			return null;
+		}
 	};
 
 	/**
@@ -126,9 +144,7 @@ export class StripeEventHandler {
 	 */
 	maybeUpdateCampaign = async (contribution: StripeContribution): Promise<void> => {
 		if (contribution.campaign_path) {
-			const campaignRef = this.firestoreAdmin
-				.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH)
-				.doc(contribution.campaign_path);
+			const campaignRef = this.firestoreAdmin.firestore.doc(contribution.campaign_path);
 			try {
 				const campaign = await campaignRef.get();
 				const current_amount_chf = campaign.data()?.amount_collected_chf ?? 0;
@@ -183,10 +199,13 @@ export class StripeEventHandler {
 	/**
 	 * Converts the stripe charge to a contribution and stores it in the 'contributions' subcollection of the corresponding user.
 	 */
-	storeCharge = async (charge: Stripe.Charge): Promise<DocumentReference<StripeContribution>> => {
+	storeCharge = async (
+		charge: Stripe.Charge,
+		checkoutMetadata: Stripe.Metadata | null,
+	): Promise<DocumentReference<StripeContribution>> => {
 		const customer = await this.retrieveStripeCustomer(charge.customer as string);
 		const userRef = await this.getOrCreateFirestoreUser(customer);
-		const contribution = this.constructContribution(charge);
+		const contribution = this.constructContribution(charge, checkoutMetadata);
 		const contributionRef = (
 			userRef.collection(CONTRIBUTION_FIRESTORE_PATH) as CollectionReference<StripeContribution>
 		).doc(charge.id);
