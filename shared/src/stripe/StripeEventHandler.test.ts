@@ -25,7 +25,7 @@ describe('stripeWebhook', () => {
 		const initialUser = await stripeWebhook.findFirestoreUser(testCustomer);
 		expect(initialUser).toBeUndefined();
 
-		const ref = await stripeWebhook.storeCharge(testCharge);
+		const ref = await stripeWebhook.storeCharge(testCharge, null);
 		const contribution = await ref!.get();
 		expect(contribution.data()).toEqual(expectedContribution);
 
@@ -46,9 +46,22 @@ describe('stripeWebhook', () => {
 			stripe_customer_id: 'cus_123',
 		});
 
-		const ref = await stripeWebhook.storeCharge(testCharge);
+		const ref = await stripeWebhook.storeCharge(testCharge, null);
 		const contribution = await ref!.get();
 		expect(contribution.data()).toEqual(expectedContribution);
+	});
+
+	test('storeCharge for existing user through stripe id with campaign metadata', async () => {
+		await firestoreAdmin.doc<{}>('users', 'test-user').set({
+			stripe_customer_id: 'cus_123',
+		});
+
+		const ref = await stripeWebhook.storeCharge(testCharge, { campaignId: 'xyz' });
+		const contribution = await ref!.get();
+		expect(contribution.data()).toEqual({
+			...expectedContribution,
+			campaign_path: 'campaigns/xyz',
+		});
 	});
 
 	test('storeCharge for existing user through email', async () => {
@@ -56,7 +69,7 @@ describe('stripeWebhook', () => {
 			email: 'test@socialincome.org',
 		});
 
-		const ref = await stripeWebhook.storeCharge(testCharge);
+		const ref = await stripeWebhook.storeCharge(testCharge, null);
 		const contribution = await ref!.get();
 		expect(contribution.data()).toEqual(expectedContribution);
 	});
