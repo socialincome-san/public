@@ -14,7 +14,7 @@ export const campaignsCollection = buildAuditedCollection<Campaign>({
 	group: 'Contributors',
 	path: CAMPAIGN_FIRESTORE_PATH,
 	textSearchEnabled: false,
-	initialSort: ['start_date', 'asc'],
+	initialSort: ['end_date', 'asc'],
 	permissions: {
 		edit: true,
 		create: true,
@@ -51,6 +51,11 @@ export const campaignsCollection = buildAuditedCollection<Campaign>({
 			name: 'Collected amount in CHF',
 			readOnly: true,
 		},
+		contributions: {
+			dataType: 'number',
+			name: 'Contributions',
+			readOnly: true,
+		},
 		goal: {
 			dataType: 'number',
 			name: 'Optional Fundraising Goal',
@@ -63,13 +68,6 @@ export const campaignsCollection = buildAuditedCollection<Campaign>({
 				USD: 'USD',
 				EUR: 'EUR',
 			},
-		},
-		start_date: {
-			// @ts-ignore
-			dataType: 'date',
-			name: 'Start Date',
-			mode: 'date',
-			validation: { required: true },
 		},
 		end_date: {
 			// @ts-ignore

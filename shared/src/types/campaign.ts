@@ -9,9 +9,9 @@ export type Campaign = {
 	title: string;
 	description: string;
 	amount_collected_chf: number; // automatically updated by incoming payments.
+	contributions: number; // automatically updated by incoming payments.
 	goal?: number;
 	goal_currency?: Currency;
-	start_date: Timestamp;
 	end_date: Timestamp;
 	status: CampaignStatus;
 };
