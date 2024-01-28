@@ -1,6 +1,7 @@
 import { SURVEY_FIRETORE_PATH, Survey } from '@socialincome/shared/src/types/survey';
 import { EntityCollection } from 'firecms/dist/types/collections';
 import { buildAuditedCollection } from '../shared';
+import { CSVDownloadAction } from './CSVDownloadAction';
 import {
 	accessEmailProperty,
 	accessPasswordProperty,
@@ -19,8 +20,11 @@ import {
 export function buildSurveysCollection(collectionProps?: Partial<EntityCollection<Survey>>) {
 	return buildAuditedCollection<Survey>({
 		name: 'Surveys',
+		Actions: [CSVDownloadAction],
 		path: SURVEY_FIRETORE_PATH,
 		inlineEditing: false,
+		exportable: false,
+		permissions: { edit: true, create: true, delete: false },
 		singularName: 'Survey',
 		group: 'Surveys',
 		icon: 'QuestionAnswer',
