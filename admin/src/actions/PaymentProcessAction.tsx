@@ -31,9 +31,7 @@ export function PaymentProcessAction() {
 	const [paymentDate, setPaymentDate] = useState<DateTime>(toPaymentDate(DateTime.local({ zone: 'utc' })));
 
 	const handleOpen = () => setIsOpen(true);
-	const handleClose = () => {
-		setIsOpen(false);
-	};
+	const handleClose = () => setIsOpen(false);
 
 	const triggerFirebaseFunction = (task: PaymentProcessTaskType) => {
 		const runPaymentProcessTask = httpsCallable<PaymentProcessProps, string>(
