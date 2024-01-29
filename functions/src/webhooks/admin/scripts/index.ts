@@ -47,7 +47,7 @@ const batchImportStripeChargesFunction = onCall(async ({ auth }) => {
 		await Promise.all(
 			charges.map((charge) => {
 				try {
-					stripeEventHandler.storeCharge(charge);
+					stripeEventHandler.storeCharge(charge, null);
 				} catch (error) {
 					logger.error(error);
 				}

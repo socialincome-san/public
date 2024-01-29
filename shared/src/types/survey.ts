@@ -7,8 +7,8 @@ export enum SurveyStatus {
 	New = 'new', // created but nothing done yet
 	Sent = 'sent', // sent with the expectation that the recipient fills it out
 	Scheduled = 'scheduled', // visit is scheduled
-	InProgress = 'in-progress', // partially filled out survey
-	Completed = 'completed', // fully filled out survey
+	InProgress = 'in-progress', // partially filled-out survey
+	Completed = 'completed', // fully filled-out survey
 	Missed = 'missed', // marked as too late to do
 }
 

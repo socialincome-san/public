@@ -71,5 +71,8 @@
 			"submit-button": "Account aktivieren",
 			"google-button": "Über Google anmelden"
 		}
+	},
+	"campaign": {
+		"not-found": "Kampagne konnte leider nicht gefunden werden."
 	}
 }

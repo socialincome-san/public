@@ -18,9 +18,10 @@ type DonationFormProps = {
 		amount: string;
 		submit: string;
 	};
+	campaignId?: string;
 } & DefaultParams;
 
-export default function OneTimeDonationForm({ translations, lang, region }: DonationFormProps) {
+export default function OneTimeDonationForm({ translations, lang, region, campaignId }: DonationFormProps) {
 	const router = useRouter();
 	const { data: authUser } = useUser();
 	const { currency } = useI18n();
@@ -45,6 +46,7 @@ export default function OneTimeDonationForm({ translations, lang, region }: Dona
 			successUrl: `${window.location.origin}/${lang}/${region}/donate/success/stripe/{CHECKOUT_SESSION_ID}`,
 			recurring: false,
 			firebaseAuthToken: authToken,
+			campaignId: campaignId,
 		};
 
 		const response = await fetch('/api/stripe/checkout-session/create', { method: 'POST', body: JSON.stringify(data) });
