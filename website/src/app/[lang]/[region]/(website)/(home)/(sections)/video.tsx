@@ -32,14 +32,12 @@ export async function Video({ lang }: { lang: LanguageCode }) {
 					<PopoverContent align="end" className="w-96">
 						<Table>
 							<TableBody>
-								{translator
-									.t<{ role: string; name: string }[]>('video-01.credits')
-									.map(({ role, name }, index) => (
-										<TableRow key={index}>
-											<TableCell className="p-1.5 font-medium">{role}</TableCell>
-											<TableCell className="p-1.5">{name}</TableCell>
-										</TableRow>
-									))}
+								{translator.t<{ role: string; name: string }[]>('video-01.credits').map(({ role, name }, index) => (
+									<TableRow key={index}>
+										<TableCell className="p-1.5 font-medium">{role}</TableCell>
+										<TableCell className="p-1.5">{name}</TableCell>
+									</TableRow>
+								))}
 							</TableBody>
 						</Table>
 					</PopoverContent>
