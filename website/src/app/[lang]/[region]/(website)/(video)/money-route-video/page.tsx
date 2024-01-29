@@ -1,4 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { VimeoVideo } from '@/components/vimeo-video';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import {
 	BaseContainer,
@@ -6,11 +7,11 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 	Table,
-	TableBody, TableCell,
+	TableBody,
+	TableCell,
 	TableRow,
-	Typography
-} from "@socialincome/ui";
-import { VimeoVideo } from '@/components/vimeo-video';
+	Typography,
+} from '@socialincome/ui';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
@@ -31,14 +32,12 @@ export default async function Page({ params }: DefaultPageProps) {
 					<PopoverContent align="end" className="w-96">
 						<Table>
 							<TableBody>
-								{translator
-									.t<{ role: string; name: string }[]>('video-03.credits')
-									.map(({ role, name }, index) => (
-										<TableRow key={index}>
-											<TableCell className="p-1.5 font-medium">{role}</TableCell>
-											<TableCell className="p-1.5">{name}</TableCell>
-										</TableRow>
-									))}
+								{translator.t<{ role: string; name: string }[]>('video-03.credits').map(({ role, name }, index) => (
+									<TableRow key={index}>
+										<TableCell className="p-1.5 font-medium">{role}</TableCell>
+										<TableCell className="p-1.5">{name}</TableCell>
+									</TableRow>
+								))}
 							</TableBody>
 						</Table>
 					</PopoverContent>
