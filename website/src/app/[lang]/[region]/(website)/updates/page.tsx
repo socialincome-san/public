@@ -1,7 +1,11 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
+import { getMetadata } from '@/metadata';
 
+export async function generateMetadata({ params }: DefaultPageProps) {
+  return getMetadata(params.lang, 'website-updates');
+}
 export default async function Page({ params: { lang } }: DefaultPageProps) {
   const translator = await Translator.getInstance({
     language: lang,
