@@ -1,12 +1,12 @@
 {
-  "metadata": {
-    "title": "Anmledung für Newsletter | Social Income",
-    "description": "Verpasse keine News mehr. "
-  },
-  "title": "Newsletter Anmeldung",
-  "subtitle": "Melde dich für unseren Newsletter an. Als Spender:in kannst du dich direkt in deinem Dashboard anmelden.",
-  "form": {
-    "legal": "Ich stimme den Allgemeinen Geschäftsbedingungen und der Datenschutzrichtlinie zu",
-    "sub": "Subscribe"
-  }
+	"metadata": {
+		"title": "Anmledung für Newsletter | Social Income",
+		"description": "Verpasse keine News mehr. "
+	},
+	"title": "Newsletter Anmeldung",
+	"subtitle": "Melde dich für unseren Newsletter an. Als Spender:in kannst du dich direkt in deinem Dashboard anmelden.",
+	"form": {
+		"legal": "Ich stimme den Allgemeinen Geschäftsbedingungen und der Datenschutzrichtlinie zu",
+		"sub": "Subscribe"
+	}
 }

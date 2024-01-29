@@ -1,12 +1,12 @@
 {
-  "metadata": {
-    "title": "Signup for Newsletter | Social Income",
-    "description": "Don't miss out on any news."
-  },
-  "title": "Newsletter Signup",
-  "subtitle": "Sign up for our newsletter. If you are already a contributor you can manage your news subscriptions in your dashboard.",
-  "form": {
-    "legal": "I agree to our Terms & Conditions and Privacy Policy",
-    "sub": "Subscribe"
-  }
+	"metadata": {
+		"title": "Signup for Newsletter | Social Income",
+		"description": "Don't miss out on any news."
+	},
+	"title": "Newsletter Signup",
+	"subtitle": "Sign up for our newsletter. If you are already a contributor you can manage your news subscriptions in your dashboard.",
+	"form": {
+		"legal": "I agree to our Terms & Conditions and Privacy Policy",
+		"sub": "Subscribe"
+	}
 }
