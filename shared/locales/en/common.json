@@ -25,5 +25,7 @@
 		"female": "Female",
 		"other": "Other",
 		"private": "Prefer not to say"
-	}
+	},
+	"email": "Email",
+	"fname": "First name"
 }

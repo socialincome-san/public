@@ -25,5 +25,7 @@
 		"female": "Frau",
 		"other": "Neutrale Anrede",
 		"private": "Keine Angabe"
-	}
+	},
+	"email": "E-Mail",
+	"fname": "Vorname"
 }
