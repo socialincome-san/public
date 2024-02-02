@@ -1,7 +1,7 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { getMetadata } from '@/metadata';
-import { BaseContainer, Typography } from '@socialincome/ui';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { BaseContainer, Typography } from '@socialincome/ui';
 
 export async function generateMetadata({ params }: DefaultPageProps) {
 	return getMetadata(params.lang, 'website-terms-of-use');

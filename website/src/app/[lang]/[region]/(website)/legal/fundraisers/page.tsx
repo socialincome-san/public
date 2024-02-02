@@ -1,7 +1,6 @@
-import { Typography, BaseContainer } from '@socialincome/ui';
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-
+import { BaseContainer, Typography } from '@socialincome/ui';
 
 export async function generateMetadata({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
@@ -10,10 +9,10 @@ export async function generateMetadata({ params }: DefaultPageProps) {
 	});
 	return { title: translator.t('metadata.title') };
 }
-export default async function Page({params} : DefaultPageProps){
-	const translator =  await Translator.getInstance({
+export default async function Page({ params }: DefaultPageProps) {
+	const translator = await Translator.getInstance({
 		language: params.lang,
-		namespaces: ['website-fundraisers']
+		namespaces: ['website-fundraisers'],
 	});
 
 	return (
@@ -32,5 +31,5 @@ export default async function Page({params} : DefaultPageProps){
 				<Typography dangerouslySetInnerHTML={{ __html: translator.t('guidelines.section-5') }} />
 			</div>
 		</BaseContainer>
-	)
+	);
 }
