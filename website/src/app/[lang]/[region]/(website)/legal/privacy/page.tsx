@@ -1,14 +1,14 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { ProseAccordion } from '@/components/prose-accordion';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
+import { DefaultPageProps } from '@/app/[lang]/[region]';
 
 export async function generateMetadata({ params }: DefaultPageProps) {
 	return getMetadata(params.lang, 'website-privacy');
 }
 
-export default async function PrivacySection({ params }: DefaultPageProps) {
+export default async function Page({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
 		language: params.lang,
 		namespaces: ['website-privacy'],

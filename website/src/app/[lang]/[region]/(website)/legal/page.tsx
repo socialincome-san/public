@@ -1,16 +1,10 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
-import PrivacySection from '@/app/[lang]/[region]/(website)/legal/privacy-section';
-import TermsOfUseSection from '@/app/[lang]/[region]/(website)/legal/terms-of-use-section';
-import TermsAndConditionsSection from '@/app/[lang]/[region]/(website)/legal/terms-and-conditions-section';
+'use client';
 
+import { redirect } from 'next/navigation';
+import { useEffect } from 'react';
 
-export default async function Page(props: DefaultPageProps) {
-
-	return (
-		<>
-			<PrivacySection {...props} />
-			<TermsOfUseSection {...props} />
-			<TermsAndConditionsSection {...props} />
-		</>
-	)
+export default function Page() {
+	useEffect(() => {
+		redirect('./legal/privacy');
+	}, []);
 }

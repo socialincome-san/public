@@ -1,16 +1,19 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
 export async function generateMetadata({ params }: DefaultPageProps) {
-	return getMetadata(params.lang, 'website-terms-of-use');
-}
-
-export default async function TermsOfUseSection({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
 		language: params.lang,
-		namespaces: ['website-terms-of-use'],
+		namespaces: ['website-terms-and-conditions'],
+	});
+	return { title: translator.t('metadata.title') };
+}
+
+export default async function Page({ params }: DefaultPageProps) {
+	const translator = await Translator.getInstance({
+		language: params.lang,
+		namespaces: ['website-terms-and-conditions'],
 	});
 
 	return (
@@ -28,9 +31,14 @@ export default async function TermsOfUseSection({ params }: DefaultPageProps) {
 			</div>
 			<div className="prose">
 				<Typography as="h3" size="3xl" weight="bold">
-					{translator.t('links.title')}
+					{translator.t('participation.title')}
 				</Typography>
-				<Typography dangerouslySetInnerHTML={{ __html: translator.t('links.section-1') }} />
+				<Typography dangerouslySetInnerHTML={{ __html: translator.t('participation.section-1') }} />
+				<Typography dangerouslySetInnerHTML={{ __html: translator.t('participation.section-2') }} />
+				<Typography dangerouslySetInnerHTML={{ __html: translator.t('participation.section-3') }} />
+				<Typography dangerouslySetInnerHTML={{ __html: translator.t('participation.section-4') }} />
+				<Typography dangerouslySetInnerHTML={{ __html: translator.t('participation.section-5') }} />
+				<Typography dangerouslySetInnerHTML={{ __html: translator.t('participation.section-6') }} />
 			</div>
 			<div className="prose">
 				<Typography as="h3" size="3xl" weight="bold">
@@ -38,6 +46,7 @@ export default async function TermsOfUseSection({ params }: DefaultPageProps) {
 				</Typography>
 				<Typography dangerouslySetInnerHTML={{ __html: translator.t('data.section-1') }} />
 				<Typography dangerouslySetInnerHTML={{ __html: translator.t('data.section-2') }} />
+				<Typography dangerouslySetInnerHTML={{ __html: translator.t('data.section-3') }} />
 			</div>
 			<div className="prose">
 				<Typography as="h3" size="3xl" weight="bold">
@@ -52,6 +61,20 @@ export default async function TermsOfUseSection({ params }: DefaultPageProps) {
 				</Typography>
 				<Typography dangerouslySetInnerHTML={{ __html: translator.t('warranty.section-1') }} />
 				<Typography dangerouslySetInnerHTML={{ __html: translator.t('warranty.section-2') }} />
+				<Typography dangerouslySetInnerHTML={{ __html: translator.t('warranty.section-3') }} />
+			</div>
+			<div className="prose">
+				<Typography as="h3" size="3xl" weight="bold">
+					{translator.t('stopping.title')}
+				</Typography>
+				<Typography dangerouslySetInnerHTML={{ __html: translator.t('stopping.section-1') }} />
+				<Typography dangerouslySetInnerHTML={{ __html: translator.t('stopping.section-2') }} />
+			</div>
+			<div className="prose">
+				<Typography as="h3" size="3xl" weight="bold">
+					{translator.t('deletion.title')}
+				</Typography>
+				<Typography dangerouslySetInnerHTML={{ __html: translator.t('deletion.section-1') }} />
 			</div>
 			<div className="prose">
 				<Typography as="h3" size="3xl" weight="bold">
