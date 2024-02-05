@@ -70,18 +70,20 @@ We are mainly leveraging the following tools:
 
 #### 1. Prerequisites
 
-**Node.js:** `brew install node@18` (Homebrew). Make sure you are using Node.js 18. Follow
-[this](https://ralphjsmit.com/switch-between-nodejs-versions-homebrew) guide to switch between different versions of Node.js if need be.
+**Node.js:** `brew install node@18` (Homebrew). Make sure you are using
+Node.js 18. Follow
+[this](https://ralphjsmit.com/switch-between-nodejs-versions-homebrew)
+guide to switch between different versions of Node.js if need be.
 
-**java**: `brew install openjdk` (Homebrew). See also troubleshooting below.
-
+**java**: `brew install openjdk` (Homebrew). See also troubleshooting
+below.
 
 <details>
   <summary>Troubleshooting</summary>
 
-#### Error Missing Java 
+#### Error Missing Java
 
-```shell
+````shell
 ➜  socialincome-public git:(main) npm run firebase:serve
 
 > @socialincome/monorepo@1.0.0 firebase:serve
@@ -95,9 +97,10 @@ Error: Process `java -version` has exited with code 1. Please make sure Java is 
 -----Original stderr-----
 The operation couldn’t be completed. Unable to locate a Java Runtime.
 Please visit http://www.java.com for information on installing Java.```
-```
+````
 
 Solution
+
 ```shell
 $ brew install openjdk
 $ sudo ln -sfn $HOMEBREW_PREFIX/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
