@@ -50,7 +50,8 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 
 	const navigationMenu = (
 		<ul className="pr-4">
-			<NavigationSectionTitle>Legal</NavigationSectionTitle>
+			<NavigationSectionTitle>Legal Information</NavigationSectionTitle>
+			{/*TO DO: For German "Rechtliche Infos" */}
 			<NavigationLink
 				href={`/${params.lang}/${params.region}/legal/privacy`}
 				Icon={DocumentTextIcon}
