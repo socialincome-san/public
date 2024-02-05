@@ -4,11 +4,11 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { UserContext } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
 import {
 	ArrowPathIcon,
+	BriefcaseIcon,
 	CurrencyDollarIcon,
 	DocumentIcon,
 	ShieldCheckIcon,
 	UserCircleIcon,
-	BriefcaseIcon
 } from '@heroicons/react/24/outline';
 import { Button, Collapsible, CollapsibleContent, CollapsibleTrigger, Typography } from '@socialincome/ui';
 import { LinkProps } from 'next/dist/client/link';
@@ -52,8 +52,8 @@ type LayoutClientProps = {
 		subscriptions: string;
 		donationCertificatesShort: string;
 		donationCertificatesLong: string;
-		employerTitle: string,
-		work: string,
+		employerTitle: string;
+		work: string;
 	};
 };
 
@@ -87,8 +87,7 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 				>
 					{translations.donationCertificatesShort}
 				</NavigationLink>
-			)
-			}
+			)}
 			<NavigationSectionTitle>{translations.employerTitle}</NavigationSectionTitle>
 			<NavigationLink
 				href={`/${params.lang}/${params.region}/me/work-info`}
@@ -112,7 +111,7 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 			>
 				{translations.security}
 			</NavigationLink>
-		</ul >
+		</ul>
 	);
 
 	let title;

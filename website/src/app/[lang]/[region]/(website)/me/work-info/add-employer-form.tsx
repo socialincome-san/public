@@ -2,8 +2,9 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Employer } from '@socialincome/shared/src/types/employers';
+import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input } from '@socialincome/ui';
-import { Timestamp, addDoc, collection } from 'firebase/firestore';
+import { Timestamp, addDoc, collection, doc } from 'firebase/firestore';
 import { useForm } from 'react-hook-form';
 import { useFirestore } from 'reactfire';
 import * as z from 'zod';
@@ -39,7 +40,7 @@ export function AddEmployerForm({ onNewEmployerSubmitted, translations }: AddEmp
 			await addDoc<Partial<Employer>>(collection(firestore, 'employers'), {
 				...values,
 				isCurrent: true,
-				userId: userId,
+				userId: doc(firestore, USER_FIRESTORE_PATH, userId).path,
 				created: Timestamp.now(),
 			}).then(() => {
 				form.reset();

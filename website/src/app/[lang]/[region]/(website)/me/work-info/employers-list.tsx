@@ -3,6 +3,7 @@
 import { UserContext } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
 import { EMPLOYERS_FIRESTORE_PATH } from '@socialincome/shared/src/types/employers';
 
+import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { Table, TableBody, TableCell, TableRow, Typography } from '@socialincome/ui';
 import { useQuery } from '@tanstack/react-query';
 import { collection, deleteDoc, doc, getDocs, orderBy, query, updateDoc, where } from 'firebase/firestore';
@@ -33,7 +34,7 @@ export function EmployersList({ translations }: EmployersListProps) {
 				return await getDocs(
 					query(
 						collection(firestore, EMPLOYERS_FIRESTORE_PATH),
-						where('userId', '==', user.id),
+						where('userId', '==', doc(firestore, USER_FIRESTORE_PATH, user.id)),
 						orderBy('created', 'desc'),
 					),
 				);
