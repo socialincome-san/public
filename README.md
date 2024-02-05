@@ -68,18 +68,50 @@ We are mainly leveraging the following tools:
 - [Firebase Emulators](https://firebase.google.com/docs/emulator-suite)
   for the local dev environment
 
-#### 1. Install the dependencies
+#### 1. Prerequisites
 
-Make sure you are using Node.js 18. If you are using Homebrew, you can
-install it with `brew install node@18` and follow
-[this](https://ralphjsmit.com/switch-between-nodejs-versions-homebrew)
-guide to switch between different versions of Node.js if need be.
+**Node.js:** `brew install node@18` (Homebrew). Make sure you are using Node.js 18. Follow
+[this](https://ralphjsmit.com/switch-between-nodejs-versions-homebrew) guide to switch between different versions of Node.js if need be.
+
+**java**: `brew install openjdk` (Homebrew). See also troubleshooting below.
+
+
+<details>
+  <summary>Troubleshooting</summary>
+
+#### Error Missing Java 
+
+```shell
+➜  socialincome-public git:(main) npm run firebase:serve
+
+> @socialincome/monorepo@1.0.0 firebase:serve
+> firebase emulators:start --project social-income-staging --config firebase.json --import ./seed
+
+⚠  emulators: You are not currently authenticated so some features may not work correctly. Please run firebase login to authenticate the CLI.
+i  emulators: Shutting down emulators.
+
+Error: Process `java -version` has exited with code 1. Please make sure Java is installed and on your system PATH.
+-----Original stdout-----
+-----Original stderr-----
+The operation couldn’t be completed. Unable to locate a Java Runtime.
+Please visit http://www.java.com for information on installing Java.```
+```
+
+Solution
+```shell
+$ brew install openjdk
+$ sudo ln -sfn $HOMEBREW_PREFIX/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
+```
+
+</details>
+
+#### 2. Install the dependencies
 
 ```shell
 npm install
 ```
 
-#### 2. Start environment
+#### 3. Start environment
 
 Initiate development environments for specific tools as needed.
 
@@ -98,7 +130,7 @@ available commands. For more information on the development environment
 see table above. No production credentials are needed for local
 development.
 
-#### 3. Developer Logins
+### Developer Logins
 
 <details>
   <summary>Developer Login for Admin Tool</summary>
@@ -126,7 +158,7 @@ Only selected people from the SI team have access.
 #### Localhost Website Login ([Link](http://localhost:3000/login))
 
 1. Go to the [Login page](http://localhost:3000/login) and select
-2. Sign in with username test@test.org and password test@test.org
+2. Sign in with username test@test.org and password test@test.org.
 
 #### Staging Website Login ([Link](https://staging.socialincome.org/login))
 
