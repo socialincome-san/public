@@ -2,19 +2,14 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { FooterClient } from '@/components/footer/footer-client';
 import { SILogo } from '@/components/logos/si-logo';
 import { WebsiteLanguage, websiteRegions } from '@/i18n';
-import {
-	BriefcaseIcon,
-	InformationCircleIcon,
-	ShieldCheckIcon,
-	UserCircleIcon,
-	UserGroupIcon,
-} from '@heroicons/react/24/solid';
+import { InformationCircleIcon, UserCircleIcon, DocumentTextIcon } from '@heroicons/react/24/solid';
 import { SiFacebook, SiGithub, SiInstagram, SiLinkedin, SiTwitter } from '@icons-pack/react-simple-icons';
 import { IconType } from '@icons-pack/react-simple-icons/types';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 import { HTMLAttributeAnchorTarget } from 'react';
+
 
 type FooterLinkProps = {
 	label: string;
@@ -108,24 +103,14 @@ export default async function Footer({ lang, region }: DefaultParams) {
 							url={`/${lang}/${region}/login`}
 						/>
 						<FooterLink
-							Icon={ShieldCheckIcon}
-							label={translator.t('navigation.privacy-policy')}
-							url={`/${lang}/${region}/privacy`}
-						/>
-						<FooterLink
-							Icon={BriefcaseIcon}
-							label={translator.t('navigation.terms-of-use')}
-							url={`/${lang}/${region}/terms-of-use`}
-						/>
-						<FooterLink
-							Icon={UserGroupIcon}
-							label={translator.t('navigation.terms-and-conditions')}
-							url={`/${lang}/${region}/terms-and-conditions`}
+							Icon={DocumentTextIcon}
+							label={translator.t('footer.legal')}
+							url={`/${lang}/${region}/legal`}
 						/>
 					</div>
 					<div className="flex flex-col space-y-1">
 						<Typography className="mb-2" size="lg" weight="medium" color="muted-foreground">
-							{translator.t('footer.our-work')}
+							{translator.t('navigation.our-work')}
 						</Typography>
 						<FooterLink
 							label={translator.t('navigation.how-it-works')}
@@ -140,15 +125,11 @@ export default async function Footer({ lang, region }: DefaultParams) {
 					</div>
 					<div className="flex flex-col space-y-1">
 						<Typography className="mb-2" size="lg" weight="medium" color="muted-foreground">
-							{translator.t('footer.about-us')}
+							{translator.t('navigation.about-us')}
 						</Typography>
 						<FooterLink
 							label={translator.t('navigation.our-mission')}
 							url={`/${lang}/${region}/about-us#our-mission`}
-						/>
-						<FooterLink
-							label={translator.t('navigation.100-percent-model')}
-							url={`/${lang}/${region}/about-us#100-percent-model`}
 						/>
 						<FooterLink label={translator.t('navigation.team')} url={`/${lang}/${region}/about-us#team`} />
 					</div>
