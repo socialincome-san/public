@@ -116,7 +116,8 @@ npm install
 
 #### 3. Start environment
 
-Initiate development environments for specific tools as needed (see [table above](#oss-tools-by-social-income)).
+Initiate development environments for specific tools as needed (see
+[table above](#oss-tools-by-social-income)).
 
 - Always start the Firebase emulator first with `npm run firebase:serve`
   — console dashboard is available at
@@ -140,7 +141,8 @@ available commands.
 Error: Could not start Firestore Emulator, port taken.
 ```
 
-Solution (macOS): In most cases it is due to port 8080 or 8085, which can be _killed_ with one command:
+Solution (macOS): In most cases it is due to port 8080 or 8085, which
+can be _killed_ with one command:
 
 ```shell
 kill $(lsof -t -i:8080) $(lsof -t -i:8085)
@@ -149,8 +151,9 @@ kill $(lsof -t -i:8080) $(lsof -t -i:8085)
 </details>
 
 ### Developer Logins
-No production credentials are needed for local
-development.
+
+No production credentials are needed for local development.
+
 <details>
   <summary>Developer Login for Admin Tool</summary>
 
