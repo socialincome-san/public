@@ -2,14 +2,13 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { FooterClient } from '@/components/footer/footer-client';
 import { SILogo } from '@/components/logos/si-logo';
 import { WebsiteLanguage, websiteRegions } from '@/i18n';
-import { InformationCircleIcon, UserCircleIcon, DocumentTextIcon } from '@heroicons/react/24/solid';
+import { DocumentTextIcon, InformationCircleIcon, UserCircleIcon } from '@heroicons/react/24/solid';
 import { SiFacebook, SiGithub, SiInstagram, SiLinkedin, SiTwitter } from '@icons-pack/react-simple-icons';
 import { IconType } from '@icons-pack/react-simple-icons/types';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 import { HTMLAttributeAnchorTarget } from 'react';
-
 
 type FooterLinkProps = {
 	label: string;
@@ -102,11 +101,7 @@ export default async function Footer({ lang, region }: DefaultParams) {
 							label={translator.t('navigation.my-profile')}
 							url={`/${lang}/${region}/login`}
 						/>
-						<FooterLink
-							Icon={DocumentTextIcon}
-							label={translator.t('footer.legal')}
-							url={`/${lang}/${region}/legal`}
-						/>
+						<FooterLink Icon={DocumentTextIcon} label={translator.t('footer.legal')} url={`/${lang}/${region}/legal`} />
 					</div>
 					<div className="flex flex-col space-y-1">
 						<Typography className="mb-2" size="lg" weight="medium" color="muted-foreground">
