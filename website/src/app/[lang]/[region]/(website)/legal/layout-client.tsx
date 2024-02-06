@@ -29,7 +29,6 @@ function NavigationSectionTitle({ children }: PropsWithChildren) {
 	return (
 		<Typography weight="medium" className="py-2">
 			{children}
-			{/*TO DO: German translations are affected, 'Legal' appears in Side-bar */}
 		</Typography>
 	);
 }
@@ -37,6 +36,7 @@ function NavigationSectionTitle({ children }: PropsWithChildren) {
 type LayoutClientProps = {
 	params: DefaultParams;
 	translations: {
+		title: string;
 		privacyTitle: string;
 		termsOfUseTitle: string;
 		termsAndConditionsTitle: string;
@@ -50,8 +50,7 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 
 	const navigationMenu = (
 		<ul className="pr-4">
-			<NavigationSectionTitle>Legal Information</NavigationSectionTitle>
-			{/*TO DO: For German "Rechtliche Infos" */}
+			<NavigationSectionTitle>{translations.title}</NavigationSectionTitle>
 			<NavigationLink
 				href={`/${params.lang}/${params.region}/legal/privacy`}
 				Icon={DocumentTextIcon}
@@ -116,9 +115,6 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 					</div>
 				</CollapsibleTrigger>
 				<CollapsibleContent className="-mt-10 mb-12 border-b md:hidden">{isOpen && navigationMenu}</CollapsibleContent>
-				<Typography size="2xl" weight="medium" className="-mt-10 mb-4 md:mt-0">
-					{title}
-				</Typography>
 				{children}
 			</div>
 		</Collapsible>

@@ -17,6 +17,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 			<LayoutClient
 				params={params}
 				translations={{
+					title: translator.t('title'),
 					privacyTitle: translator.t('privacy-title'),
 					termsOfUseTitle: translator.t('terms-of-use-title'),
 					termsAndConditionsTitle: translator.t('terms-and-conditions-title'),
