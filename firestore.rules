@@ -25,7 +25,7 @@ service cloud.firestore {
     }
 
     match /employers/{data=**} {
-      allow read, write, delete: if request.auth.uid == request.auth.uid; 
+      allow read, write, delete: if request.auth.uid == get(resource.data.userId).data.auth_user_id;
       allow create: if request.auth != null;
     }
 
