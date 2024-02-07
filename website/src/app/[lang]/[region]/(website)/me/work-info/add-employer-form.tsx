@@ -1,10 +1,9 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Employer } from '@socialincome/shared/src/types/employers';
-import { USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types/user';
+import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input } from '@socialincome/ui';
-import { DocumentReference, Timestamp, addDoc, collection, doc } from 'firebase/firestore';
+import { Timestamp, addDoc, collection, doc } from 'firebase/firestore';
 import { useForm } from 'react-hook-form';
 import { useFirestore } from 'reactfire';
 import * as z from 'zod';
@@ -37,7 +36,7 @@ export function AddEmployerForm({ onNewEmployerSubmitted, translations }: AddEmp
 	const onSubmit = async (values: FormSchema) => {
 		if (user) {
 			const userId = user!.id;
-			
+
 			await addDoc(collection(firestore, 'employers'), {
 				...values,
 				isCurrent: true,
