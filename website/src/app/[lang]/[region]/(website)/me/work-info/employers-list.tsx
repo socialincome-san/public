@@ -34,7 +34,7 @@ export function EmployersList({ translations }: EmployersListProps) {
 				return await getDocs(
 					query(
 						collection(firestore, EMPLOYERS_FIRESTORE_PATH),
-						where('userId', '==', doc(firestore, USER_FIRESTORE_PATH, user.id).path),
+						where('userId', '==', doc(firestore, USER_FIRESTORE_PATH, user.id)),
 						orderBy('created', 'desc'),
 					),
 				);
