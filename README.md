@@ -32,10 +32,13 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
    `↗`
    [Good first issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
 
-2. Setup the basic development environment `↓` [Setup](#basic-development-setup)
+2. Setup the basic development environment `↓`
+   [Setup](#basic-development-setup)
 3. Clone the repo and work on it `↓` [Developing](#developing)
 4. Create a PR and wait for it to be reviewed
-5. If approved, the PR will be merged into the `main` branch, first on the staging and subsequently on production `↓` [Deployments](#deployments)
+5. If approved, the PR will be merged into the `main` branch, first on
+   the staging and subsequently on production `↓`
+   [Deployments](#deployments)
 
 **Frontend developers:** You can also develop UI components with
 [Tailwind CSS](https://tailwindcss.com) and
@@ -46,7 +49,7 @@ components are all collected in our
 
 ### Basic Development Setup
 
-We are mainly leveraging the following tools: 
+We are mainly leveraging the following tools:
 
 - [Firestore](https://firebase.google.com/docs/firestore) for data
   management
@@ -64,18 +67,20 @@ We are mainly leveraging the following tools:
 
 #### 1. Prerequisites
 
-**Node.js:** `brew install node@18` (Homebrew). Make sure you are using Node.js 18. Follow
-[this](https://ralphjsmit.com/switch-between-nodejs-versions-homebrew) guide to switch between different versions of Node.js if need be.
+**Node.js:** `brew install node@18` (Homebrew). Make sure you are using
+Node.js 18. Follow
+[this](https://ralphjsmit.com/switch-between-nodejs-versions-homebrew)
+guide to switch between different versions of Node.js if need be.
 
-**java**: `brew install openjdk` (Homebrew). See also troubleshooting below.
-
+**java**: `brew install openjdk` (Homebrew). See also troubleshooting
+below.
 
 <details>
   <summary>Troubleshooting</summary>
 
-#### Error Missing Java 
+#### Error Missing Java
 
-```shell
+````shell
 ➜  socialincome-public git:(main) npm run firebase:serve
 
 > @socialincome/monorepo@1.0.0 firebase:serve
@@ -89,9 +94,10 @@ Error: Process `java -version` has exited with code 1. Please make sure Java is 
 -----Original stderr-----
 The operation couldn’t be completed. Unable to locate a Java Runtime.
 Please visit http://www.java.com for information on installing Java.```
-```
+````
 
 Solution
+
 ```shell
 $ brew install openjdk
 $ sudo ln -sfn $HOMEBREW_PREFIX/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
@@ -107,7 +113,8 @@ npm install
 
 #### 3. Start environment
 
-Initiate development environments for specific tools as needed (see [table above](#oss-tools-by-social-income)).
+Initiate development environments for specific tools as needed (see
+[table above](#oss-tools-by-social-income)).
 
 - Always start the Firebase emulator first with `npm run firebase:serve`
   — console dashboard is available at
@@ -131,7 +138,8 @@ available commands.
 Error: Could not start Firestore Emulator, port taken.
 ```
 
-Solution (macOS): In most cases it is due to port 8080 or 8085, which can be _killed_ with one command:
+Solution (macOS): In most cases it is due to port 8080 or 8085, which
+can be _killed_ with one command:
 
 ```shell
 kill $(lsof -t -i:8080) $(lsof -t -i:8085)
@@ -142,8 +150,9 @@ kill $(lsof -t -i:8080) $(lsof -t -i:8085)
 ### Developing
 
 #### Developer Logins
-No production credentials are needed for local
-development.
+
+No production credentials are needed for local development.
+
 <details>
   <summary>Developer Login for Admin Tool</summary>
 
@@ -189,17 +198,22 @@ Only actual donors have accounts and can log in. Consider making a
 
 #### Data Seed
 
-An initial dataset is imported into the Firebase emulators at startup. You have the flexibility to add, delete, or modify data directly through your [Admin Tool](http://localhost:3000) or the [Firestore Admin Interface](http://localhost:4000/firestore/data) locally. After making any changes, you can export the updated data to the seed folder using the command `npm run firebase:export`.
+An initial dataset is imported into the Firebase emulators at startup.
+You have the flexibility to add, delete, or modify data directly through
+your [Admin Tool](http://localhost:3000) or the
+[Firestore Admin Interface](http://localhost:4000/firestore/data)
+locally. After making any changes, you can export the updated data to
+the seed folder using the command `npm run firebase:export`.
 
 #### Format Code
 
-We are using [Prettier](https://prettier.io) to format the code: `npm run format-code`.
+We are using [Prettier](https://prettier.io) to format the code:
+`npm run format-code`.
 
 #### Deployments
 
-**Staging:** PRs merged into `main` are automatically
-deployed to staging
-([Admin Tool](https://staging-admin.socialincome.org) /
+**Staging:** PRs merged into `main` are automatically deployed to
+staging ([Admin Tool](https://staging-admin.socialincome.org) /
 [Website](https://staging.socialincome.org/)) upon core developer
 approval. Check [Github Actions](./.github/workflows) for details.
 Experienced contributors can deploy directly
@@ -208,11 +222,13 @@ Experienced contributors can deploy directly
 **Production:** Deployments are made by core developers via
 [GitHub releases](https://github.com/socialincome-san/public/actions/workflows/production-deployment.yml).
 
-
 <details>
 <summary>Naming Convention</summary>
 
-Use the format "release-YYYY-MM-DD" for naming releases (example: `release-2021-02-27`). For multiple releases on the same day, append a suffix such as ".2", ".3", and so forth, to distinguish them (example: `release-2021-02-27.2`).
+Use the format "release-YYYY-MM-DD" for naming releases (example:
+`release-2021-02-27`). For multiple releases on the same day, append a
+suffix such as ".2", ".3", and so forth, to distinguish them (example:
+`release-2021-02-27.2`).
 
 </details>
 
@@ -223,14 +239,17 @@ We have a
 which triggers hourly backups of our production firestore database. The
 exports are saved to the
 [social-income-prod](https://console.cloud.google.com/storage/browser/social-income-prod;tab=objects?forceOnBucketsSortingFiltering=false&authuser=1&project=social-income-prod&prefix=&forceOnObjectsSortingFiltering=true)
-bucket with a retention period of 30 days. 
+bucket with a retention period of 30 days.
 
 <details>
 <summary>Restore Database</summary>
 
-To restore the database you can [import](https://console.cloud.google.com/firestore/import-export?authuser=1&project=social-income-prod)
-the most recent folder directly from the [social-income-prod](https://console.cloud.google.com/storage/browser/social-income-prod;tab=objects?forceOnBucketsSortingFiltering=false&authuser=1&project=social-income-prod&prefix=&forceOnObjectsSortingFiltering=true)
+To restore the database you can
+[import](https://console.cloud.google.com/firestore/import-export?authuser=1&project=social-income-prod)
+the most recent folder directly from the
+[social-income-prod](https://console.cloud.google.com/storage/browser/social-income-prod;tab=objects?forceOnBucketsSortingFiltering=false&authuser=1&project=social-income-prod&prefix=&forceOnObjectsSortingFiltering=true)
 bucket.
+
 </details>
 
 #### Bugs & Feature Requests
@@ -243,9 +262,11 @@ If you want to report a vulnareablity please refer to our
 <details>
 <summary>Troubleshooting Development</summary>
 
-**Problem**: Added or amended translations do not appear in the localhost preview.
+**Problem**: Added or amended translations do not appear in the
+localhost preview.
 
-**Solution**: Remove the `website/.next` folder, which is automatically generated, then re-execute `npm run website:serve`.
+**Solution**: Remove the `website/.next` folder, which is automatically
+generated, then re-execute `npm run website:serve`.
 
 </details>
 
