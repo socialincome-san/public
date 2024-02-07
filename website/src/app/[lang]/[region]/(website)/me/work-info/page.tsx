@@ -8,7 +8,7 @@ export default async function Page({ params }: DefaultPageProps) {
 	return (
 		<div className="space-y-12">
 			<Typography size="2xl" weight="medium" className="-mt-10 mb-4 md:mt-0">
-				{translator.t('work-info.current-employers')}
+				{translator.t('work-info.current-employer')}
 			</Typography>
 			<EmployersList
 				lang={params.lang}
