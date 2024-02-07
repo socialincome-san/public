@@ -9,7 +9,7 @@ import {
 	UserCircleIcon,
 	UserGroupIcon,
 } from '@heroicons/react/24/solid';
-import { SiFacebook, SiGithub, SiInstagram, SiLinkedin, SiTwitter } from '@icons-pack/react-simple-icons';
+import { SiFacebook, SiGithub, SiInstagram, SiLinkedin, SiX } from '@icons-pack/react-simple-icons';
 import { IconType } from '@icons-pack/react-simple-icons/types';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
@@ -73,7 +73,7 @@ export default async function Footer({ lang, region }: DefaultParams) {
 							url="https://www.instagram.com/so_income"
 							target="_blank"
 						/>
-						<FooterLink Icon={SiTwitter} label="Twitter" url="https://twitter.com/so_income" target="_blank" />
+						<FooterLink Icon={SiX} label="X" url="https://twitter.com/so_income" target="_blank" />
 						<FooterLink
 							Icon={SiFacebook}
 							label="Facebook"
