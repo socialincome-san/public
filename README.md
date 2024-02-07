@@ -46,7 +46,7 @@ components are all collected in our
 
 ### Basic Development Setup
 
-We are mainly leveraging the following tools:
+We are mainly leveraging the following tools: 
 
 - [Firestore](https://firebase.google.com/docs/firestore) for data
   management
