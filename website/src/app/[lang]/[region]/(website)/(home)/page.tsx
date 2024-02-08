@@ -10,8 +10,10 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Video } from './(sections)/video';
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
-	const translator = await Translator.getInstance({ language: lang, namespaces: 'website-home' });
-	const vimeoVideoId = Number(translator.t('section-2.vimeo-video-id'));
+	const translator = await Translator.getInstance({ language: lang,
+		namespaces: ['website-home', 'website-videos'],
+	});
+	const vimeoVideoId = Number(translator.t('id.video-02'));
 	return (
 		<>
 			<Hero lang={lang} region={region} />
