@@ -32,16 +32,13 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
    `↗`
    [Good first issues](https://github.com/socialincome-san/public/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
 
-2. Setup the basic development environment (see below)
-3. Clone the repo and work on it
-4. Make a PR and wait for review - it will be merged by team if approved
-   without comment
-5. Your code is now merged into `main` branch and deployed on the
-   staging environment
-   ([Admin Tool](https://staging-admin.socialincome.org) /
-   [Website](https://staging.socialincome.org/))
-6. Your code is then released on the production environment with the
-   next release
+2. Setup the basic development environment `↓`
+   [Setup](#basic-development-setup)
+3. Clone the repo and work on it `↓` [Developing](#developing)
+4. Create a PR and wait for it to be reviewed
+5. If approved, the PR will be merged into the `main` branch, first on
+   the staging and subsequently on production `↓`
+   [Deployments](#deployments)
 
 **Frontend developers:** You can also develop UI components with
 [Tailwind CSS](https://tailwindcss.com) and
@@ -68,20 +65,56 @@ We are mainly leveraging the following tools:
 - [Firebase Emulators](https://firebase.google.com/docs/emulator-suite)
   for the local dev environment
 
-#### 1. Install the dependencies
+#### 1. Prerequisites
 
-Make sure you are using Node.js 18. If you are using Homebrew, you can
-install it with `brew install node@18` and follow
+**Node.js:** `brew install node@18` (Homebrew). Make sure you are using
+Node.js 18. Follow
 [this](https://ralphjsmit.com/switch-between-nodejs-versions-homebrew)
 guide to switch between different versions of Node.js if need be.
+
+**java**: `brew install openjdk` (Homebrew). See also troubleshooting
+below.
+
+<details>
+  <summary>Troubleshooting</summary>
+
+#### Error Missing Java
+
+````shell
+➜  socialincome-public git:(main) npm run firebase:serve
+
+> @socialincome/monorepo@1.0.0 firebase:serve
+> firebase emulators:start --project social-income-staging --config firebase.json --import ./seed
+
+⚠  emulators: You are not currently authenticated so some features may not work correctly. Please run firebase login to authenticate the CLI.
+i  emulators: Shutting down emulators.
+
+Error: Process `java -version` has exited with code 1. Please make sure Java is installed and on your system PATH.
+-----Original stdout-----
+-----Original stderr-----
+The operation couldn’t be completed. Unable to locate a Java Runtime.
+Please visit http://www.java.com for information on installing Java.```
+````
+
+Solution
+
+```shell
+$ brew install openjdk
+$ sudo ln -sfn $HOMEBREW_PREFIX/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
+```
+
+</details>
+
+#### 2. Install the dependencies
 
 ```shell
 npm install
 ```
 
-#### 2. Start environment
+#### 3. Start environment
 
-Initiate development environments for specific tools as needed.
+Initiate development environments for specific tools as needed (see
+[table above](#oss-tools-by-social-income)).
 
 - Always start the Firebase emulator first with `npm run firebase:serve`
   — console dashboard is available at
@@ -94,11 +127,31 @@ Initiate development environments for specific tools as needed.
   [localhost:6006](http://localhost:6006). (currently broken)
 
 The [package.json](package.json) file gives you a good overview of the
-available commands. For more information on the development environment
-see table above. No production credentials are needed for local
-development.
+available commands.
 
-#### 3. Developer Logins
+<details>
+  <summary>Troubleshooting</summary>
+
+#### Port taken
+
+```shell
+Error: Could not start Firestore Emulator, port taken.
+```
+
+Solution (macOS): In most cases it is due to port 8080 or 8085, which
+can be _killed_ with one command:
+
+```shell
+kill $(lsof -t -i:8080) $(lsof -t -i:8085)
+```
+
+</details>
+
+### Developing
+
+#### Developer Logins
+
+No production credentials are needed for local development.
 
 <details>
   <summary>Developer Login for Admin Tool</summary>
@@ -126,7 +179,7 @@ Only selected people from the SI team have access.
 #### Localhost Website Login ([Link](http://localhost:3000/login))
 
 1. Go to the [Login page](http://localhost:3000/login) and select
-2. Sign in with username test@test.org and password test@test.org
+2. Sign in with username test@test.org and password test@test.org.
 
 #### Staging Website Login ([Link](https://staging.socialincome.org/login))
 
@@ -143,61 +196,79 @@ Only actual donors have accounts and can log in. Consider making a
 
 </details>
 
-### Data Seed
+#### Data Seed
 
-An initial set of data is imported into the Firebase emulators during
-startup of the [Admin Tool](https://staging-admin.socialincome.org). You
-can add, delete or amend data directly in your local Admin Tool
-([localhost:3000](http://localhost:3000)) or in your local Firestore
-Admin Interface
-([localhost:4000](http://localhost:4000/firestore/data)). After you have
-made changes, you can export the data to the seed folder with
-`npm run firebase:export`.
+An initial dataset is imported into the Firebase emulators at startup.
+You have the flexibility to add, delete, or modify data directly through
+your [Admin Tool](http://localhost:3000) or the
+[Firestore Admin Interface](http://localhost:4000/firestore/data)
+locally. After making any changes, you can export the updated data to
+the seed folder using the command `npm run firebase:export`.
 
-### Format Code
+#### Format Code
 
 We are using [Prettier](https://prettier.io) to format the code:
+`npm run format-code`.
 
-```shell
-npm run format-code
-```
+#### Deployments
 
-### Deployments
-
-**Staging deployments:** PRs merged into `main` are automatically
-deployed to staging
-([Admin Tool](https://staging-admin.socialincome.org) /
+**Staging:** PRs merged into `main` are automatically deployed to
+staging ([Admin Tool](https://staging-admin.socialincome.org) /
 [Website](https://staging.socialincome.org/)) upon core developer
 approval. Check [Github Actions](./.github/workflows) for details.
 Experienced contributors can deploy directly
 [without approval](mailto:dev@socialincome.org).
 
-**Production deployments:** Deployments are made by core developers via
+**Production:** Deployments are made by core developers via
 [GitHub releases](https://github.com/socialincome-san/public/actions/workflows/production-deployment.yml).
-Use "release-YYYY-MM-DD" for the release name
-(example:`release-2021-02-27`). For multiple releases on the same day,
-append ".2", ".3", etc. (example:`release-2021-02-27.2`).
 
-### Backups
+<details>
+<summary>Naming Convention</summary>
+
+Use the format "release-YYYY-MM-DD" for naming releases (example:
+`release-2021-02-27`). For multiple releases on the same day, append a
+suffix such as ".2", ".3", and so forth, to distinguish them (example:
+`release-2021-02-27.2`).
+
+</details>
+
+#### Backups
 
 We have a
 [function](https://console.cloud.google.com/logs/query;query=resource.type%3D%22cloud_function%22%20resource.labels.function_name%3D%22siWebFirestoreExport%22%20resource.labels.region%3D%22us-central1%22?project=social-income-prod&authuser=1&hl=en)
 which triggers hourly backups of our production firestore database. The
 exports are saved to the
 [social-income-prod](https://console.cloud.google.com/storage/browser/social-income-prod;tab=objects?forceOnBucketsSortingFiltering=false&authuser=1&project=social-income-prod&prefix=&forceOnObjectsSortingFiltering=true)
-bucket with a retention period of 30 days. To restore the database you
-can
+bucket with a retention period of 30 days.
+
+<details>
+<summary>Restore Database</summary>
+
+To restore the database you can
 [import](https://console.cloud.google.com/firestore/import-export?authuser=1&project=social-income-prod)
 the most recent folder directly from the
 [social-income-prod](https://console.cloud.google.com/storage/browser/social-income-prod;tab=objects?forceOnBucketsSortingFiltering=false&authuser=1&project=social-income-prod&prefix=&forceOnObjectsSortingFiltering=true)
 bucket.
 
-### Bugs & Feature Requests
+</details>
+
+#### Bugs & Feature Requests
 
 You can report an issue or request a feature on our
 [issue page](https://github.com/socialincome-san/public/issues/new/choose).
 If you want to report a vulnareablity please refer to our
 [security policy](https://github.com/socialincome-san/public/blob/main/SECURITY.md).
+
+<details>
+<summary>Troubleshooting Development</summary>
+
+**Problem**: Added or amended translations do not appear in the
+localhost preview.
+
+**Solution**: Remove the `website/.next` folder, which is automatically
+generated, then re-execute `npm run website:serve`.
+
+</details>
 
 # Financial Contributions
 
