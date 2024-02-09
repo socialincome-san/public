@@ -1,8 +1,20 @@
+'use client';
+
 import classNames from 'classnames';
 import { HTMLAttributes } from 'react';
+import Lottie from 'react-lottie-player';
+import LottieLogoJson from '../../../public/assets/Social.Income.Logo.Lottie.json';
 
-export function SILogo({ className, ...props }: HTMLAttributes<SVGElement>) {
-	return (
+export function SILogo({
+	className,
+	animated,
+	...props
+}: { className?: string; animated?: boolean } & HTMLAttributes<SVGSVGElement>) {
+	return animated ? (
+		<div className={className}>
+			<Lottie play animationData={LottieLogoJson} style={{ height: '38px' }} />
+		</div>
+	) : (
 		<svg
 			version="1.1"
 			xmlns="http://www.w3.org/2000/svg"
