@@ -1,0 +1,80 @@
+{
+	"credits": "Credits",
+	"id": {
+		"video-01": "896169775",
+		"video-02": "433937157",
+		"video-03": "840215695"
+	},
+	"video-01": {
+		"credits": [
+			{
+				"role": "Director of Photography",
+				"name": "Gabriel Koller"
+			},
+			{
+				"role": "Editor",
+				"name": "Nicolas Küng"
+			},
+			{
+				"role": "Sound Design & Music",
+				"name": "Tidiane Sane"
+			},
+			{
+				"role": "Mix & Mastering",
+				"name": "Nicola-Miloš Mišić"
+			},
+			{
+				"role": "Colorist",
+				"name": "Simon Hardegger"
+			},
+			{
+				"role": "Camera Assistant",
+				"name": "Felix Rhodes"
+			},
+			{
+				"role": "Narrator",
+				"name": "Ted Limpert"
+			},
+			{
+				"role": "Graphic Animator",
+				"name": "Raphael Schoen"
+			},
+			{
+				"role": "Translator (Caption)",
+				"name": "Françoise Légeret (FR), Riccardo Tamburini (ES, IT)"
+			}
+		]
+	},
+	"video-02": {
+		"credits": [
+			{
+				"role": "Illustrations",
+				"name": "Sueter Studio"
+			},
+			{
+				"role": "Storyboard",
+				"name": "Sandino Scheidegger"
+			},
+			{
+				"role": "Narrator",
+				"name": "Ted Limpert"
+			}
+		]
+	},
+	"video-03": {
+		"credits": [
+			{
+				"role": "Illustrations",
+				"name": "Sueter Studio"
+			},
+			{
+				"role": "Storyboard",
+				"name": "Riccardo Tamburini"
+			},
+			{
+				"role": "Narrator",
+				"name": "Ted Limpert"
+			}
+		]
+	}
+}
