@@ -62,13 +62,12 @@ class AccountPageState extends State<AccountPage> {
     _callingNameController = TextEditingController(
       text: widget.recipient.callingName ?? "",
     );
-    _birthDateController = TextEditingController(
-      text: getFormattedDate(widget.recipient.birthDate) ?? "",
-    );
     _emailController = TextEditingController(
       text: widget.recipient.email ?? "",
     );
-
+    _birthDateController = TextEditingController(
+      text: "",
+    );
     _paymentNumberController = TextEditingController(
       text: widget.recipient.mobileMoneyPhone?.phoneNumber.toString() ?? "",
     );
@@ -78,6 +77,12 @@ class AccountPageState extends State<AccountPage> {
     );
 
     _initAppVersionInfo();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final locale = Localizations.localeOf(context).toLanguageTag();
+      _birthDateController.text =
+          getFormattedDate(widget.recipient.birthDate, locale) ?? "";
+    });
   }
 
   Future<void> _initAppVersionInfo() async {
@@ -103,6 +108,7 @@ class AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).toLanguageTag();
 
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
@@ -235,7 +241,7 @@ class AccountPageState extends State<AccountPage> {
                             ),
                           );
                       _birthDateController.text =
-                          getFormattedDate(timestamp) ?? "";
+                          getFormattedDate(timestamp, locale) ?? "";
                     }
                     return;
                   }),
@@ -438,8 +444,11 @@ class AccountPageState extends State<AccountPage> {
     );
   }
 
-  String? getFormattedDate(Timestamp? timestamp) {
+  String? getFormattedDate(
+    Timestamp? timestamp,
+    String locale,
+  ) {
     if (timestamp == null) return null;
-    return DateFormat("dd.MM.yyyy").format(timestamp.toDate());
+    return DateFormat.yMd(locale).format(timestamp.toDate());
   }
 }

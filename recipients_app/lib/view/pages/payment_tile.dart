@@ -65,10 +65,10 @@ class PaymentTile extends StatelessWidget {
     String dateFormat;
     String formattedDate = "";
     if (mappedPayment.uiStatus == PaymentUiStatus.toBePaid) {
-      dateFormat = "dd MMMM yyyy";
+      dateFormat = DateFormat.YEAR_MONTH_DAY;
       formattedDate = localizations.nextPayment + " ";
     } else {
-      dateFormat = "MMMM yyyy";
+      dateFormat = DateFormat.YEAR_MONTH;
     }
     if (_reviewUiStatuses.contains(mappedPayment.uiStatus)) {
       formattedDate = localizations.review + " ";

@@ -70,6 +70,6 @@ class SurveyListCard extends StatelessWidget {
   ) {
     if (dateTime == null) return "";
 
-    return "${DateFormat("dd.MM.yyyy", locale).format(dateTime)}";
+    return "${DateFormat.yMd(locale).format(dateTime)}";
   }
 }
