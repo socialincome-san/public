@@ -1,6 +1,8 @@
 import "package:app/data/models/models.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/data/repositories/survey_repository.dart";
+import "package:cloud_firestore/cloud_firestore.dart";
+import "package:collection/collection.dart";
 import "package:equatable/equatable.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
@@ -28,35 +30,47 @@ class SurveyCubit extends Cubit<SurveyState> {
 
   Future<void> getSurveys() async {
     try {
-      final surveys =
-          await surveyRepository.fetchSurveys(recipientId: recipient.userId);
+      final mappedSurveys = await _getSurveys();
 
-      final mappedSurveys = surveys
-          .where((element) => _shouldShowSurveyCard(element))
-          .map(
-            (survey) => MappedSurvey(
-              survey: survey,
-              surveyUrl: _getSurveyUrl(
-                survey,
-                recipient.userId,
-              ),
-              cardStatus: _getSurveyCardStatus(survey),
-              daysToOverdue: _getDaysToOverdue(survey),
-              daysAfterOverdue: _getDaysAfterOverdue(survey),
-            ),
-          )
+      final dashboardSurveys = mappedSurveys
+          .where((element) => _shouldShowSurveyCard(element.survey))
           .toList();
 
       emit(
         SurveyState(
           status: SurveyStatus.updatedSuccess,
           mappedSurveys: mappedSurveys,
+          dashboardMappedSurveys: dashboardSurveys,
         ),
       );
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
       emit(const SurveyState(status: SurveyStatus.updatedFailure));
     }
+  }
+
+  Future<List<MappedSurvey>> _getSurveys() async {
+    final surveys =
+        await surveyRepository.fetchSurveys(recipientId: recipient.userId);
+
+    final mappedSurveys = surveys
+        .map(
+          (survey) => MappedSurvey(
+            name: _getReadableName(survey.id),
+            survey: survey,
+            surveyUrl: _getSurveyUrl(
+              survey,
+              recipient.userId,
+            ),
+            cardStatus: _getSurveyCardStatus(survey),
+            daysToOverdue: _getDaysToOverdue(survey),
+            daysAfterOverdue: _getDaysAfterOverdue(survey),
+          ),
+        )
+        .sortedBy((element) => element.survey.dueDateAt ?? Timestamp.now())
+        .toList();
+
+    return mappedSurveys;
   }
 
   String _getSurveyUrl(Survey survey, String recipientId) {
@@ -103,7 +117,11 @@ class SurveyCubit extends Cubit<SurveyState> {
           dateDifferenceInDays < _kOverdueEndDay) {
         return SurveyCardStatus.overdue;
       } else {
-        return SurveyCardStatus.missed;
+        if ((_getDaysAfterOverdue(survey) ?? 0) > 0) {
+          return SurveyCardStatus.missed;
+        } else {
+          return SurveyCardStatus.upcoming;
+        }
       }
     } else if (survey.status == SurveyServerStatus.completed) {
       return SurveyCardStatus.answered;
@@ -111,6 +129,14 @@ class SurveyCubit extends Cubit<SurveyState> {
       return SurveyCardStatus.missed;
     }
   }
+}
+
+String _getReadableName(String surveyId) {
+  return surveyId
+      .split("-")
+      .map((element) =>
+          "${element[0].toUpperCase()}${element.substring(1).toLowerCase()}")
+      .join(" ");
 }
 
 int? _getDaysToOverdue(Survey survey) {

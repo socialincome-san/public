@@ -33,7 +33,7 @@ class SurveyCardContainer extends DashboardItem {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  localizations.surveyCardTitle,
+                  "${mappedSurvey.name} ${localizations.surveyCardTitle}",
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 13.0,
