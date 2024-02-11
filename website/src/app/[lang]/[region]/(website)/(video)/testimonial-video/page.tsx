@@ -1,5 +1,5 @@
+import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { VimeoVideo } from '@/components/vimeo-video';
-import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import {
 	BaseContainer,
@@ -13,15 +13,15 @@ import {
 	Typography,
 } from '@socialincome/ui';
 
-export async function Video({ lang }: { lang: LanguageCode }) {
+export default async function Page({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-home', 'common', 'website-videos'],
+		language: params.lang,
+		namespaces: ['website-videos'],
 	});
 
 	return (
-		<BaseContainer className="flex flex-col justify-center py-8 md:pb-16">
-			<div className="overflow-hidden rounded-lg">
+		<BaseContainer className="items-left flex flex-col space-y-8 pt-16">
+			<div className="aspect-video overflow-hidden rounded-lg">
 				<VimeoVideo videoId={Number(translator.t('id.video-01'))} />
 			</div>
 			<div className="mt-2 self-end">

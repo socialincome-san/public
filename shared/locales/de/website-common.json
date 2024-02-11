@@ -24,16 +24,13 @@
 		"recipients": "Empfänger:innen",
 		"reporting": "Dokumente",
 		"team": "Team",
-		"terms-and-conditions": "Teilnahmebedingungen",
-		"terms-of-use": "Nutzungsbedingungen",
 		"transparency": "Transparenz",
 		"whats-next": "Was als Nächstes kommt"
 	},
 	"footer": {
 		"follow-us": "Folge uns",
 		"resources": "Informationen",
-		"our-work": "Was wir tun",
-		"about-us": "Wer wir sind"
+		"legal": "Rechtliches"
 	},
 	"cookie-consent-banner": {
 		"text": "Dürfen wir Cookies benützen um den Traffic und die Leistung unserer Website zu analysieren? Wir sammeln niemals persönliche Daten. <a href='/privacy' class='underline'>Datenschutzrichtlinie</a>.",

@@ -7,7 +7,7 @@ import { FontColor } from '@socialincome/ui/src/interfaces/color';
 export async function FlowOfFunds({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-about-us'],
+		namespaces: ['website-about-us', 'website-videos'],
 	});
 
 	return (
@@ -44,7 +44,7 @@ export async function FlowOfFunds({ lang }: { lang: WebsiteLanguage }) {
 					<div className="flex flex-col space-y-4">
 						<div className="mx-auto w-full max-w-3xl">
 							<div className="aspect-video overflow-hidden rounded-xl">
-								<VimeoVideo videoId={translator.t('flow-of-funds.vimeo-video-id')} />
+								<VimeoVideo videoId={translator.t('id.video-03')} />
 							</div>
 						</div>
 					</div>

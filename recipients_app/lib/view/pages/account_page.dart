@@ -110,6 +110,9 @@ class AccountPageState extends State<AccountPage> {
     final localizations = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).toLanguageTag();
 
+    final recipient =
+        context.watch<AuthCubit>().state.recipient ?? widget.recipient;
+
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.updateRecipientSuccess) {
@@ -157,7 +160,7 @@ class AccountPageState extends State<AccountPage> {
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty)
                       context.read<AuthCubit>().updateRecipient(
-                            widget.recipient.copyWith(firstName: value),
+                            recipient.copyWith(firstName: value),
                           );
                   },
                 ),
@@ -174,7 +177,7 @@ class AccountPageState extends State<AccountPage> {
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty)
                       context.read<AuthCubit>().updateRecipient(
-                            widget.recipient.copyWith(
+                            recipient.copyWith(
                               lastName: value,
                             ),
                           );
@@ -186,7 +189,7 @@ class AccountPageState extends State<AccountPage> {
                   hintText: localizations.callingName,
                   onSubmitted: (value) =>
                       context.read<AuthCubit>().updateRecipient(
-                            widget.recipient.copyWith(callingName: value),
+                            recipient.copyWith(callingName: value),
                           ),
                 ),
                 const SizedBox(height: 16),
@@ -206,7 +209,7 @@ class AccountPageState extends State<AccountPage> {
                       value: "other",
                     ),
                   ],
-                  value: widget.recipient.gender,
+                  value: recipient.gender,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return localizations.genderError;
@@ -215,7 +218,7 @@ class AccountPageState extends State<AccountPage> {
                   },
                   onChanged: (value) =>
                       context.read<AuthCubit>().updateRecipient(
-                            widget.recipient.copyWith(
+                            recipient.copyWith(
                               gender: value,
                             ),
                           ),
@@ -229,14 +232,14 @@ class AccountPageState extends State<AccountPage> {
                     firstDate: DateTime(1950),
                     lastDate: DateTime(DateTime.now().year - 10),
                     initialDate:
-                        widget.recipient.birthDate?.toDate() ?? DateTime(2000),
+                        recipient.birthDate?.toDate() ?? DateTime(2000),
                     context: context,
                   ).then((value) {
                     if (value != null) {
                       final timestamp = Timestamp.fromDate(value);
 
                       context.read<AuthCubit>().updateRecipient(
-                            widget.recipient.copyWith(
+                            recipient.copyWith(
                               birthDate: timestamp,
                             ),
                           );
@@ -279,10 +282,10 @@ class AccountPageState extends State<AccountPage> {
                     // change language accordingly
                     context.read<SettingsCubit>().changeLanguage(value!);
                     context.read<AuthCubit>().updateRecipient(
-                          widget.recipient.copyWith(selectedLanguage: value),
+                          recipient.copyWith(selectedLanguage: value),
                         );
                   },
-                  value: widget.recipient.selectedLanguage,
+                  value: recipient.selectedLanguage,
                 ),
 
                 const SizedBox(height: 16),
@@ -292,7 +295,7 @@ class AccountPageState extends State<AccountPage> {
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty)
                       context.read<AuthCubit>().updateRecipient(
-                            widget.recipient.copyWith(email: value),
+                            recipient.copyWith(email: value),
                           );
                   },
                   keyboardType: TextInputType.emailAddress,
@@ -311,7 +314,7 @@ class AccountPageState extends State<AccountPage> {
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
-                            widget.recipient.copyWith(
+                            recipient.copyWith(
                               mobileMoneyPhone: Phone(int.parse(value)),
                             ),
                           );
@@ -342,7 +345,7 @@ class AccountPageState extends State<AccountPage> {
                       value: "africell_money",
                     ),
                   ],
-                  value: widget.recipient.paymentProvider,
+                  value: recipient.paymentProvider,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return localizations.paymentProviderError;
@@ -352,7 +355,7 @@ class AccountPageState extends State<AccountPage> {
                   onChanged: (value) => context
                       .read<AuthCubit>()
                       .updateRecipient(
-                          widget.recipient.copyWith(paymentProvider: value)),
+                          recipient.copyWith(paymentProvider: value)),
                 ),
                 const SizedBox(height: 24),
 
@@ -380,7 +383,7 @@ class AccountPageState extends State<AccountPage> {
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty)
                       context.read<AuthCubit>().updateRecipient(
-                            widget.recipient.copyWith(
+                            recipient.copyWith(
                               communicationMobilePhone: Phone(
                                 int.parse(value),
                               ),
@@ -417,7 +420,10 @@ class AccountPageState extends State<AccountPage> {
                 Text(localizations.supportInfo),
                 const SizedBox(height: 16),
                 ButtonBig(
-                  onPressed: () => const SocialIncomeContactDialog(),
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => const SocialIncomeContactDialog(),
+                  ),
                   label: localizations.getInTouch,
                 ),
                 const SizedBox(height: 24),
