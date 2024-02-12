@@ -12,7 +12,7 @@ export function SILogo({
 }: { className?: string; animated?: boolean } & HTMLAttributes<SVGSVGElement>) {
 	return animated ? (
 		<div className={className}>
-			<Lottie play animationData={LottieLogoJson} style={{ height: '38px' }} />
+			<Lottie play animationData={LottieLogoJson} style={{ height: '100%' }} />
 		</div>
 	) : (
 		<svg
