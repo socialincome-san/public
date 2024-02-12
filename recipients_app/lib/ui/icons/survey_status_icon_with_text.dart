@@ -42,6 +42,7 @@ class SurveyStatusIconWithText extends StatelessWidget {
       case SurveyCardStatus.overdue:
       case SurveyCardStatus.firstReminder:
       case SurveyCardStatus.newSurvey:
+      case SurveyCardStatus.upcoming:
         // no impl for now.
         return Container();
     }

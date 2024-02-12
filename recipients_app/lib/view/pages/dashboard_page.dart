@@ -5,11 +5,12 @@ import "package:app/core/cubits/survey/survey_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/dashboard_item.dart";
+import "package:app/view/widgets/empty_item.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_container.dart";
 import "package:app/view/widgets/survey/survey_card_container.dart";
+import "package:app/view/widgets/survey/surveys_overview_card.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -51,7 +52,7 @@ class _DashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
+    final surveys = context.watch<SurveyCubit>().state.mappedSurveys;
 
     final List<DashboardItem> dashboardItems = context
         .watch<DashboardCardManagerCubit>()
@@ -63,7 +64,7 @@ class _DashboardView extends StatelessWidget {
     final List<DashboardItem> surveysItems = context
         .watch<SurveyCubit>()
         .state
-        .mappedSurveys
+        .dashboardMappedSurveys
         .map<DashboardItem>(
           (survey) => SurveyCardContainer(
             mappedSurvey: survey,
@@ -71,38 +72,30 @@ class _DashboardView extends StatelessWidget {
         )
         .toList();
 
-    final items = dashboardItems + surveysItems;
+    final dynamicItemsCount = dashboardItems.length + surveysItems.length;
+
+    final List<DashboardItem> headerItems = [
+      const BalanceCardContainer(),
+      SurveysOverviewCard(mappedSurveys: surveys),
+    ];
+
+    List<DashboardItem> items;
+
+    if (dynamicItemsCount > 0) {
+      items = headerItems + dashboardItems + surveysItems;
+    } else {
+      items = headerItems + [const EmptyItem()];
+    }
 
     return BlocBuilder<PaymentsCubit, PaymentsState>(
       builder: (context, state) {
         return Padding(
           padding: AppSpacings.h8,
-          child: Column(
-            children: [
-              const BalanceCardContainer(),
-              const SizedBox(height: 8),
-              if (items.isEmpty)
-                Expanded(
-                  child: Padding(
-                    padding: AppSpacings.a8,
-                    child: Center(
-                      child: Text(
-                        localizations.dashboardUp2Date,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                )
-              else
-                Expanded(
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 8),
-                    itemCount: items.length,
-                    itemBuilder: (context, index) => items[index],
-                  ),
-                ),
-            ],
+          child: ListView.separated(
+            separatorBuilder: (context, index) => const SizedBox(height: 4),
+            itemCount: items.length,
+            itemBuilder: (context, index) => items[index],
+            physics: const BouncingScrollPhysics(),
           ),
         );
       },
