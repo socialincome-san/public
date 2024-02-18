@@ -8,11 +8,12 @@ import LottieLogoJson from '../../../public/assets/Social.Income.Logo.Lottie.jso
 export function SILogo({
 	className,
 	animated,
+	loop = false,
 	...props
-}: { className?: string; animated?: boolean } & HTMLAttributes<SVGSVGElement>) {
+}: { className?: string; animated?: boolean; loop?: boolean } & HTMLAttributes<SVGSVGElement>) {
 	return animated ? (
 		<div className={className}>
-			<Lottie play animationData={LottieLogoJson} style={{ height: '100%' }} />
+			<Lottie play loop={loop} animationData={LottieLogoJson} style={{ height: '100%' }} />
 		</div>
 	) : (
 		<svg
