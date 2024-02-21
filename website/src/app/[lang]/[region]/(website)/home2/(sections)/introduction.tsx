@@ -2,6 +2,20 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { JSXElementConstructor } from 'react';
+
+type Translation ={
+	title: string;
+	color?: string
+} [];
+
+const joinTranslation = (element: Translation[]): React.JSX.Element[] => {
+	return (element.map((phrase, index) => (
+		<Typography as="span" key={index} color={phrase?.color}>
+			{phrase.text}{' '}
+		</Typography>
+	)))
+}
 
 export async function Introduction({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
@@ -9,22 +23,30 @@ export async function Introduction({ lang, region }: DefaultParams) {
 		namespaces: ['website-home2'],
 	});
 
+	const titles = translator.t<Translation[][]>('section-2.titles');
+	const subtitles = translator.t<Translation[][]>('section-2.subtitles');
 	return (
 		<BaseContainer>
-			<Typography>{translator.t('section-2.title-1')}</Typography>
 			<div>
-				{translator.t<{ text: string; color?: FontColor }[]>('section-2.title-2').map((title, index) => (
-					<Typography as="span" key={index} color={title.color}>
-						{title.text}{' '}
-					</Typography>
-				))}
+				{/*{titles[0].map((title, index) => (*/}
+				{/*	<Typography as="span" key={index} color={title?.color}>*/}
+				{/*		{title.text}{' '}*/}
+				{/*	</Typography>*/}
+				{/*))}*/}
+				{joinTranslation(titles[0])}
 			</div>
-			<Typography>{translator.t('section-2.subtitle-1')}</Typography>
+			<div>
+				{joinTranslation(titles[1])}
+			</div>
+			{/*<Typography>{translator.t('section-2.subtitle-1')}</Typography>*/}
+			{joinTranslation(subtitles[0])}
 			<Typography>{translator.t('section-2.text-1.1')}</Typography>
 			<Typography>{translator.t('section-2.text-1.2')}</Typography>
-			<Typography>{translator.t('section-2.subtitle-2')}</Typography>
+			{/*<Typography>{translator.t('section-2.subtitle-2')}</Typography>*/}
+			{joinTranslation(subtitles[1])}
 			<Typography>{translator.t('section-2.text-2')}</Typography>
-			<Typography>{translator.t('section-2.subtitle-3')}</Typography>
+			{/*<Typography>{translator.t('section-2.subtitle-3')}</Typography>*/}
+			{joinTranslation(subtitles[2])}
 			<Typography>{translator.t('section-2.text-3')}</Typography>
 		</BaseContainer>
 	);
