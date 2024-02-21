@@ -13,18 +13,30 @@
 		]
 	},
 	"section-2": {
-		"title-1": "Those that live in Sierra Leone’s poorest communities know what it takes to rise out of poverty.",
-		"title-2": [
-			{ "text": "They just rarely have the opportunity – or the money – to do so. That’s where " },
-			{ "text": "you and Social Income", "color": "accent" },
-			{ "text": "come in." }
+		"titles": [
+			[
+				{"text": "Those that live in Sierra Leone’s poorest communities know what it takes to rise out of poverty."}
+			],
+			[
+				{ "text": "They just rarely have the opportunity – or the money – to do so. That’s where " },
+				{ "text": "you and Social Income", "color": "accent" },
+				{ "text": "come in." }
+			]
 		],
-		"subtitle-1": "Unique Process for Fair Selection",
+		"subtitles": [
+			[
+				{"text": "Unique Process for Fair Selection"}
+			],
+			[
+				{"text": "Direct Giving, Direct Results" }
+			],
+			[
+				{"text": "Ongoing Support"}
+			]
+		],
 		"text-1.1": "Identifying those in need: Through collaboration with local NGOs in Sierra Leone, we target individuals living in poverty who can benefit from a three-year predictable income, empowering them to invest in their future.",
 		"text-1.2": "Selecting randomly: Our randomized selection process is transparent and publicly verifiable, eliminating human biases and favoritism. This ensures fairness and equal chances for all individuals in poverty to benefit.",
-		"subtitle-2": "Direct Giving, Direct Results",
 		"text-2": "We directly transfer your contribution onto the mobile phones of individuals in need, empowering them to overcome poverty through their own choices and efforts.",
-		"subtitle-3": "Ongoing Support",
 		"text-3": "Our recipients receive continuous support from our local partners throughout and even after the program, maximizing the overall impact. Specifically, the third year of the program is focused on facilitating a seamless transition as they move on from the program."
 	},
 	"section-3": {},
