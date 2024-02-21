@@ -1,21 +1,19 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
-import { JSXElementConstructor } from 'react';
 
-type Translation ={
+type Translation = {
 	title: string;
-	color?: string
-} [];
+	color?: string;
+}[];
 
 const joinTranslation = (element: Translation[]): React.JSX.Element[] => {
-	return (element.map((phrase, index) => (
+	return element.map((phrase, index) => (
 		<Typography as="span" key={index} color={phrase?.color}>
 			{phrase.text}{' '}
 		</Typography>
-	)))
-}
+	));
+};
 
 export async function Introduction({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
@@ -35,9 +33,7 @@ export async function Introduction({ lang, region }: DefaultParams) {
 				{/*))}*/}
 				{joinTranslation(titles[0])}
 			</div>
-			<div>
-				{joinTranslation(titles[1])}
-			</div>
+			<div>{joinTranslation(titles[1])}</div>
 			{/*<Typography>{translator.t('section-2.subtitle-1')}</Typography>*/}
 			{joinTranslation(subtitles[0])}
 			<Typography>{translator.t('section-2.text-1.1')}</Typography>
