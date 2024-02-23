@@ -11,6 +11,7 @@ import "package:app/view/widgets/survey/survey_card_container.dart";
 import "package:app/view/widgets/survey/surveys_overview_card.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -59,6 +60,8 @@ class _DashboardViewState extends State<_DashboardView> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
     final surveys = context.watch<SurveyCubit>().state.mappedSurveys;
 
     final List<DashboardItem> dashboardItems = context
@@ -102,11 +105,11 @@ class _DashboardViewState extends State<_DashboardView> {
             context.read<PaymentsCubit>().loadPayments();
             context.read<SurveyCubit>().getSurveys();
           },
-          child: ListView(
+          child: Column(
             children: [
-              const BalanceCardContainer(),
-              const SizedBox(height: 8),
-              if (items.isEmpty)
+              if (items.isEmpty) ...[
+                const BalanceCardContainer(),
+                const SizedBox(height: 8),
                 Padding(
                   padding: AppSpacings.a8,
                   child: Center(
@@ -115,12 +118,14 @@ class _DashboardViewState extends State<_DashboardView> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                )
-              else
-                ListView.separated(
-                  separatorBuilder: (context, index) => const SizedBox(height: 8),
-                  itemCount: items.length,
-                  itemBuilder: (context, index) => items[index],
+                ),
+              ] else
+                Expanded(
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => const SizedBox(height: 8),
+                    itemCount: items.length,
+                    itemBuilder: (context, index) => items[index],
+                  ),
                 ),
             ],
           ),
