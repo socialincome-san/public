@@ -76,9 +76,7 @@ class _DashboardViewState extends State<_DashboardView> {
         .state
         .dashboardMappedSurveys
         .map<DashboardItem>(
-          (survey) => SurveyCardContainer(
-            mappedSurvey: survey,
-          ),
+          (survey) => SurveyCardContainer(mappedSurvey: survey),
         )
         .toList();
 
