@@ -19,7 +19,7 @@ class ReviewPaymentModal extends StatefulWidget {
 }
 
 class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
-  ContestReason? _selectedReason = null;
+  ContestReason? _selectedReason;
   bool _firstContestStep = true;
   late final TextEditingController inputController;
 
@@ -64,8 +64,7 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
                             padding: AppSpacings.v16,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: ContestReason.values
-                                  .map((ContestReason reason) {
+                              children: ContestReason.values.map((ContestReason reason) {
                                 return Padding(
                                   padding: const EdgeInsets.only(top: 8),
                                   child: RadioRow(
@@ -83,16 +82,13 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
                         ],
                       ),
                     ),
-                    if (_selectedReason != null &&
-                        _selectedReason != ContestReason.other) ...[
+                    if (_selectedReason != null && _selectedReason != ContestReason.other) ...[
                       ReviewPaymentBottomAction(
                         actionLabel: localizations.submit,
-                        onAction: () =>
-                            _onPressedContest(context, _selectedReason!),
+                        onAction: () => _onPressedContest(context, _selectedReason!),
                       ),
                     ],
-                    if (_selectedReason != null &&
-                        _selectedReason == ContestReason.other) ...[
+                    if (_selectedReason != null && _selectedReason == ContestReason.other) ...[
                       ReviewPaymentBottomAction(
                         actionLabel: localizations.next,
                         onAction: () => setState(() {
@@ -122,14 +118,15 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
                       ),
                     ),
                     ReviewPaymentBottomAction(
-                        actionLabel: localizations.submit,
-                        onAction: () {
-                          _onPressedContest(
-                            context,
-                            ContestReason.other,
-                            otherReasonComment: inputController.text,
-                          );
-                        }),
+                      actionLabel: localizations.submit,
+                      onAction: () {
+                        _onPressedContest(
+                          context,
+                          ContestReason.other,
+                          otherReasonComment: inputController.text,
+                        );
+                      },
+                    ),
                   ],
                 ),
         ),
@@ -140,11 +137,11 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
   void _onPressedContest(
     BuildContext context,
     ContestReason reason, {
-    String? otherReasonComment = null,
+    String? otherReasonComment,
   }) {
     String otherReasonCommentFormatted = "";
     if (otherReasonComment != null) {
-      otherReasonCommentFormatted = ": " + otherReasonComment;
+      otherReasonCommentFormatted = ": $otherReasonComment";
     }
     context.read<PaymentsCubit>().contestPayment(
           widget._payment,

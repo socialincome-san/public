@@ -75,8 +75,7 @@ class BalanceCardBottomAction extends StatelessWidget {
     BuildContext context,
   ) {
     if (shouldShowSecondaryActionButton) {
-      final MappedPayment? mappedPayment =
-          paymentsUiState.payments.firstWhereOrNull(
+      final MappedPayment? mappedPayment = paymentsUiState.payments.firstWhereOrNull(
         (element) =>
             element.uiStatus == PaymentUiStatus.toReview ||
             element.uiStatus == PaymentUiStatus.recentToReview,
@@ -90,10 +89,10 @@ class BalanceCardBottomAction extends StatelessWidget {
   }
 
   void _onPressedNo(BuildContext context) {
-    final MappedPayment? mappedPayment =
-        paymentsUiState.payments.firstWhereOrNull(
-      (element) => (element.uiStatus == PaymentUiStatus.toReview ||
-          element.uiStatus == PaymentUiStatus.recentToReview),
+    final MappedPayment? mappedPayment = paymentsUiState.payments.firstWhereOrNull(
+      (element) =>
+          element.uiStatus == PaymentUiStatus.toReview ||
+          element.uiStatus == PaymentUiStatus.recentToReview,
     );
 
     if (mappedPayment != null) {
@@ -169,8 +168,7 @@ class BalanceCardBottomAction extends StatelessWidget {
         if (paymentsUiState.unconfirmedPaymentsCount == 1) {
           return localizations.paymentsInReviewOne;
         }
-        return localizations
-            .paymentsInReviewMany(paymentsUiState.unconfirmedPaymentsCount);
+        return localizations.paymentsInReviewMany(paymentsUiState.unconfirmedPaymentsCount);
       case BalanceCardStatus.onHold:
         return localizations.paymentsInReviewTwo;
     }

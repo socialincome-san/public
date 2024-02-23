@@ -57,7 +57,7 @@ const kriLocaleDatePatterns = {
   "v": "v",
   "z": "z",
   "zzzz": "zzzz",
-  "ZZZZ": "ZZZZ"
+  "ZZZZ": "ZZZZ",
 };
 
 const enUsLocaleDataPatterns = {
@@ -346,8 +346,7 @@ const List<String> _months = <String>[
 ];
 
 // #docregion Delegate
-class _KriCupertinoLocalizationsDelegate
-    extends LocalizationsDelegate<CupertinoLocalizations> {
+class _KriCupertinoLocalizationsDelegate extends LocalizationsDelegate<CupertinoLocalizations> {
   const _KriCupertinoLocalizationsDelegate();
 
   @override
@@ -589,8 +588,7 @@ class KriCupertinoLocalizations extends GlobalCupertinoLocalizations {
 }
 
 // #docregion Delegate
-class _KriMaterialLocalizationsDelegate
-    extends LocalizationsDelegate<MaterialLocalizations> {
+class _KriMaterialLocalizationsDelegate extends LocalizationsDelegate<MaterialLocalizations> {
   const _KriMaterialLocalizationsDelegate();
 
   @override
@@ -668,112 +666,111 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
 
   // #docregion Getters
   @override
-  String get moreButtonTooltip => r"Mɔ";
+  String get moreButtonTooltip => "Mɔ";
 
   @override
   String get aboutListTileTitleRaw => r"About $applicationName";
 
   @override
-  String get alertDialogLabel => r"Alat";
+  String get alertDialogLabel => "Alat";
 
 // #enddocregion Getters
 
   @override
-  String get anteMeridiemAbbreviation => r"AM";
+  String get anteMeridiemAbbreviation => "AM";
 
   @override
-  String get backButtonTooltip => r"Go biyɛn";
+  String get backButtonTooltip => "Go biyɛn";
 
   @override
-  String get cancelButtonLabel => r"TAP YA";
+  String get cancelButtonLabel => "TAP YA";
 
   @override
-  String get closeButtonLabel => r"LƆK AM";
+  String get closeButtonLabel => "LƆK AM";
 
   @override
-  String get closeButtonTooltip => r"Lɔk Am";
+  String get closeButtonTooltip => "Lɔk Am";
 
   @override
-  String get collapsedIconTapHint => r"Opin am mɔ";
+  String get collapsedIconTapHint => "Opin am mɔ";
 
   @override
-  String get continueButtonLabel => r"KƆNTINYU";
+  String get continueButtonLabel => "KƆNTINYU";
 
   @override
-  String get copyButtonLabel => r"TEK AM";
+  String get copyButtonLabel => "TEK AM";
 
   @override
-  String get cutButtonLabel => r"KƆT AM";
+  String get cutButtonLabel => "KƆT AM";
 
   @override
-  String get deleteButtonTooltip => r"Pul am";
+  String get deleteButtonTooltip => "Pul am";
 
   @override
-  String get dialogLabel => r"Mek wi tɔk";
+  String get dialogLabel => "Mek wi tɔk";
 
   @override
-  String get drawerLabel => r"Fɔ sho yu usay fɔ go";
+  String get drawerLabel => "Fɔ sho yu usay fɔ go";
 
   @override
-  String get expandedIconTapHint => r"Ridyus am";
+  String get expandedIconTapHint => "Ridyus am";
 
   @override
-  String get firstPageTooltip => r"Fɔs pej";
+  String get firstPageTooltip => "Fɔs pej";
 
   @override
-  String get hideAccountsLabel => r"Ayd di akawnt";
+  String get hideAccountsLabel => "Ayd di akawnt";
 
   @override
-  String get lastPageTooltip => r"Las pej";
+  String get lastPageTooltip => "Las pej";
 
   @override
-  String get licensesPageTitle => r"Laysin dɛm";
+  String get licensesPageTitle => "Laysin dɛm";
 
   @override
-  String get modalBarrierDismissLabel => r"Fɔgɛt bɔt am";
+  String get modalBarrierDismissLabel => "Fɔgɛt bɔt am";
 
   @override
-  String get nextMonthTooltip => r"Nɛks mɔnt";
+  String get nextMonthTooltip => "Nɛks mɔnt";
 
   @override
-  String get nextPageTooltip => r"Nɛks pej";
+  String get nextPageTooltip => "Nɛks pej";
 
   @override
-  String get okButtonLabel => r"ƆKE";
+  String get okButtonLabel => "ƆKE";
 
   @override
   // A custom drawer tooltip message.
-  String get openAppDrawerTooltip => r"Custom Navigation Menu Tooltip";
+  String get openAppDrawerTooltip => "Custom Navigation Menu Tooltip";
 
 // #docregion Raw
   @override
   String get pageRowsInfoTitleRaw => r"$firstRow–$lastRow of $rowCount";
 
   @override
-  String get pageRowsInfoTitleApproximateRaw =>
-      r"$firstRow–$lastRow of about $rowCount";
+  String get pageRowsInfoTitleApproximateRaw => r"$firstRow–$lastRow of about $rowCount";
 // #enddocregion Raw
 
   @override
-  String get pasteButtonLabel => r"PUT AM YA";
+  String get pasteButtonLabel => "PUT AM YA";
 
   @override
-  String get popupMenuLabel => r"Tin dɛn we yu fɔ si";
+  String get popupMenuLabel => "Tin dɛn we yu fɔ si";
 
   @override
-  String get menuBarMenuLabel => r"Menu Bar Label";
+  String get menuBarMenuLabel => "Menu Bar Label";
 
   @override
-  String get postMeridiemAbbreviation => r"PM";
+  String get postMeridiemAbbreviation => "PM";
 
   @override
-  String get previousMonthTooltip => r"Mɔnt dɛn we dɔn pas";
+  String get previousMonthTooltip => "Mɔnt dɛn we dɔn pas";
 
   @override
-  String get previousPageTooltip => r"Pej dɛn we dɔn pas";
+  String get previousPageTooltip => "Pej dɛn we dɔn pas";
 
   @override
-  String get refreshIndicatorSemanticLabel => r"Do am igen";
+  String get refreshIndicatorSemanticLabel => "Do am igen";
 
   @override
   String? get remainingTextFieldCharacterCountFew => null;
@@ -782,47 +779,46 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String? get remainingTextFieldCharacterCountMany => null;
 
   @override
-  String get remainingTextFieldCharacterCountOne => r"1 karakta lɛf";
+  String get remainingTextFieldCharacterCountOne => "1 karakta lɛf";
 
   @override
-  String get remainingTextFieldCharacterCountOther =>
-      r"$remainingCount karakta lɛf";
+  String get remainingTextFieldCharacterCountOther => r"$remainingCount karakta lɛf";
 
   @override
   String? get remainingTextFieldCharacterCountTwo => null;
 
   @override
-  String get remainingTextFieldCharacterCountZero => r"No karakta nɔ lɛf";
+  String get remainingTextFieldCharacterCountZero => "No karakta nɔ lɛf";
 
   @override
-  String get reorderItemDown => r"Go dɔng";
+  String get reorderItemDown => "Go dɔng";
 
   @override
-  String get reorderItemLeft => r"Go lɛft";
+  String get reorderItemLeft => "Go lɛft";
 
   @override
-  String get reorderItemRight => r"Go rayt";
+  String get reorderItemRight => "Go rayt";
 
   @override
-  String get reorderItemToEnd => r"Go usay di tin tap";
+  String get reorderItemToEnd => "Go usay di tin tap";
 
   @override
-  String get reorderItemToStart => r"Go usay i bigin";
+  String get reorderItemToStart => "Go usay i bigin";
 
   @override
-  String get reorderItemUp => r"Go ɔp";
+  String get reorderItemUp => "Go ɔp";
 
   @override
-  String get rowsPerPageTitle => r"Ɔmɔs ro de na di pej dɛm:";
+  String get rowsPerPageTitle => "Ɔmɔs ro de na di pej dɛm:";
 
   @override
   ScriptCategory get scriptCategory => ScriptCategory.englishLike;
 
   @override
-  String get searchFieldLabel => r"Wach insay";
+  String get searchFieldLabel => "Wach insay";
 
   @override
-  String get selectAllButtonLabel => r"PIK ƆLTIN";
+  String get selectAllButtonLabel => "PIK ƆLTIN";
 
   @override
   String? get selectedRowCountTitleFew => null;
@@ -831,7 +827,7 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String? get selectedRowCountTitleMany => null;
 
   @override
-  String get selectedRowCountTitleOne => r"Dɔn pik 1 tin";
+  String get selectedRowCountTitleOne => "Dɔn pik 1 tin";
 
   @override
   String get selectedRowCountTitleOther => r"$selectedRowCount items selected";
@@ -840,16 +836,16 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String? get selectedRowCountTitleTwo => null;
 
   @override
-  String get selectedRowCountTitleZero => r"Nɔ pik natin";
+  String get selectedRowCountTitleZero => "Nɔ pik natin";
 
   @override
-  String get showAccountsLabel => r"Sho akawnt";
+  String get showAccountsLabel => "Sho akawnt";
 
   @override
-  String get showMenuTooltip => r"Tin dɛn we yu fɔ si";
+  String get showMenuTooltip => "Tin dɛn we yu fɔ si";
 
   @override
-  String get signedInLabel => r"Yu de insai naw";
+  String get signedInLabel => "Yu de insai naw";
 
   @override
   String get tabLabelRaw => r"Tab $tabIndex of $tabCount";
@@ -858,41 +854,40 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   TimeOfDayFormat get timeOfDayFormatRaw => TimeOfDayFormat.h_colon_mm_space_a;
 
   @override
-  String get timePickerHourModeAnnouncement => r"Pik ɔmɔs awa";
+  String get timePickerHourModeAnnouncement => "Pik ɔmɔs awa";
 
   @override
-  String get timePickerMinuteModeAnnouncement => r"Pik ɔmɔs minit";
+  String get timePickerMinuteModeAnnouncement => "Pik ɔmɔs minit";
 
   @override
-  String get viewLicensesButtonLabel => r"WACH LAYSIN DƐM";
+  String get viewLicensesButtonLabel => "WACH LAYSIN DƐM";
 
   @override
-  List<String> get narrowWeekdays =>
-      const <String>["S", "M", "T", "W", "T", "F", "S"];
+  List<String> get narrowWeekdays => const <String>["S", "M", "T", "W", "T", "F", "S"];
 
   @override
   int get firstDayOfWeekIndex => 0;
 
   @override
-  String get calendarModeButtonLabel => r"Go to kalɛnda";
+  String get calendarModeButtonLabel => "Go to kalɛnda";
 
   @override
-  String get dateHelpText => r"mm/dd/yyyy";
+  String get dateHelpText => "mm/dd/yyyy";
 
   @override
-  String get dateInputLabel => r"Put det";
+  String get dateInputLabel => "Put det";
 
   @override
-  String get dateOutOfRangeLabel => r"Nɔ ebul si am.";
+  String get dateOutOfRangeLabel => "Nɔ ebul si am.";
 
   @override
-  String get datePickerHelpText => r"PIK DET";
+  String get datePickerHelpText => "PIK DET";
 
   @override
   String get dateRangeEndDateSemanticLabelRaw => r"End date $fullDate";
 
   @override
-  String get dateRangeEndLabel => r"Det we yu dɔn";
+  String get dateRangeEndLabel => "Det we yu dɔn";
 
   @override
   String get dateRangePickerHelpText => "SELECT RANGE";

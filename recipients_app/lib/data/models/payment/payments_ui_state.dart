@@ -15,7 +15,7 @@ class PaymentsUiState extends Equatable {
     required this.confirmedPaymentsCount,
     required this.unconfirmedPaymentsCount,
     required this.nextPayment,
-    this.lastPaidPayment = null,
+    this.lastPaidPayment,
   });
 
   @override
@@ -41,10 +41,8 @@ class PaymentsUiState extends Equatable {
     return PaymentsUiState(
       status: status ?? this.status,
       payments: payments ?? this.payments,
-      confirmedPaymentsCount:
-          confirmedPaymentsCount ?? this.confirmedPaymentsCount,
-      unconfirmedPaymentsCount:
-          unconfirmedPaymentsCount ?? this.unconfirmedPaymentsCount,
+      confirmedPaymentsCount: confirmedPaymentsCount ?? this.confirmedPaymentsCount,
+      unconfirmedPaymentsCount: unconfirmedPaymentsCount ?? this.unconfirmedPaymentsCount,
       nextPayment: nextPayment ?? this.nextPayment,
       lastPaidPayment: lastPaidPayment ?? this.lastPaidPayment,
     );

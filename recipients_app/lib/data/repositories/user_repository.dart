@@ -45,8 +45,8 @@ class UserRepository {
 
     if (userSnapshot != null && userSnapshot.exists) {
       // TODO: decide if we should keep it in user object in the app at all
-      final payments = await PaymentRepository(firestore: firestore)
-          .fetchPayments(recipientId: userSnapshot.id);
+      final payments =
+          await PaymentRepository(firestore: firestore).fetchPayments(recipientId: userSnapshot.id);
 
       return Recipient.fromMap(userSnapshot.data()).copyWith(
         payments: payments,
@@ -68,8 +68,7 @@ class UserRepository {
       phoneNumber: phoneNumber,
       forceResendingToken: forceResendingToken,
       timeout: const Duration(seconds: 60),
-      verificationCompleted: (credential) =>
-          onVerificationCompleted(credential),
+      verificationCompleted: (credential) => onVerificationCompleted(credential),
       verificationFailed: (ex) => onVerificationFailed(ex),
       codeSent: (verificationId, forceResendingToken) =>
           onCodeSend(verificationId, forceResendingToken),
@@ -85,7 +84,7 @@ class UserRepository {
       firebaseAuth.signInWithCredential(credentials);
 
   Future<void> updateRecipient(Recipient recipient) async {
-    final updatedRecipient = recipient.copyWith(updatedBy: "${recipient.userId}");
+    final updatedRecipient = recipient.copyWith(updatedBy: recipient.userId);
 
     return firestore
         .collection(recipientCollection)

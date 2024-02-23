@@ -59,27 +59,29 @@ class PaymentTile extends StatelessWidget {
   }
 
   String _formatDate(
-      DateTime? dateTime, AppLocalizations localizations, String locale) {
+    DateTime? dateTime,
+    AppLocalizations localizations,
+    String locale,
+  ) {
     if (dateTime == null) return "";
 
     String dateFormat;
     String formattedDate = "";
     if (mappedPayment.uiStatus == PaymentUiStatus.toBePaid) {
       dateFormat = DateFormat.YEAR_MONTH_DAY;
-      formattedDate = localizations.nextPayment + " ";
+      formattedDate = "${localizations.nextPayment} ";
     } else {
       dateFormat = DateFormat.YEAR_MONTH;
     }
     if (_reviewUiStatuses.contains(mappedPayment.uiStatus)) {
-      formattedDate = localizations.review + " ";
+      formattedDate = "${localizations.review} ";
     }
-    formattedDate += "${DateFormat(dateFormat, locale).format(dateTime)}";
-    return formattedDate;
+
+    return formattedDate += DateFormat(dateFormat, locale).format(dateTime);
   }
 
   Widget _buildStatusIcon(MappedPayment mappedPayment) {
-    final text =
-        "${mappedPayment.payment.currency} ${mappedPayment.payment.amount}";
+    final text = "${mappedPayment.payment.currency} ${mappedPayment.payment.amount}";
 
     return PaymentStatusIconWithText(
       status: mappedPayment.uiStatus,

@@ -131,34 +131,28 @@ class PaymentsCubit extends Cubit<PaymentsState> {
       switch (currentPayment.status) {
         case PaymentStatus.created:
           paymentUiStatus = PaymentUiStatus.toBePaid;
-          break;
         case PaymentStatus.paid:
           final isRecent = _isRecent(currentPayment);
-          paymentUiStatus = isRecent
-              ? PaymentUiStatus.recentToReview
-              : PaymentUiStatus.toReview;
+          paymentUiStatus = isRecent ? PaymentUiStatus.recentToReview : PaymentUiStatus.toReview;
           unconfirmedPaymentsCount++;
-          break;
         case PaymentStatus.confirmed:
           paymentUiStatus = PaymentUiStatus.confirmed;
           confirmedPaymentsCount++;
-          break;
         case PaymentStatus.contested:
           paymentUiStatus = PaymentUiStatus.contested;
-          break;
         // TODO: check what to show in case of those statuses
         case null:
         case PaymentStatus.failed:
         case PaymentStatus.other:
           paymentUiStatus = PaymentUiStatus.empty;
-          break;
       }
 
       if (_kOnHoldCandidateStates.contains(previousState) &&
           _kOnHoldCandidateStates.contains(currentPayment.status) &&
           !_isRecent(currentPayment)) {
         mappedPayments[i - 1] = mappedPayments[i - 1].copyWith(
-            uiStatus: _getOnHoldStatus(mappedPayments[i - 1].payment));
+          uiStatus: _getOnHoldStatus(mappedPayments[i - 1].payment),
+        );
         paymentUiStatus = _getOnHoldStatus(currentPayment);
       }
 
@@ -191,9 +185,11 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     int unconfirmedPaymentsCount,
   ) {
     BalanceCardStatus balanceCardStatus = BalanceCardStatus.allConfirmed;
-    if (mappedPayments.any((element) =>
-        element.uiStatus == PaymentUiStatus.onHoldContested ||
-        element.uiStatus == PaymentUiStatus.onHoldToReview)) {
+    if (mappedPayments.any(
+      (element) =>
+          element.uiStatus == PaymentUiStatus.onHoldContested ||
+          element.uiStatus == PaymentUiStatus.onHoldToReview,
+    )) {
       balanceCardStatus = BalanceCardStatus.onHold;
     } else if (unconfirmedPaymentsCount == 1 &&
         mappedPayments.any(
@@ -211,8 +207,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     final paymentDate = payment?.paymentAt?.toDate();
 
     // checks if days between payment date and now are less than 5
-    return ((paymentDate?.difference(DateTime.now()).inDays ?? 0) * -1) <
-        kMaxReviewDays;
+    return ((paymentDate?.difference(DateTime.now()).inDays ?? 0) * -1) < kMaxReviewDays;
   }
 
   NextPaymentData _getNextPaymentData(
@@ -257,7 +252,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
 
   MappedPayment? _getLastPaidPayment(List<MappedPayment> payments) {
     final MappedPayment? lastPaidPayment;
-    var lastPayment = payments.firstOrNull;
+    final lastPayment = payments.firstOrNull;
     if (lastPayment == null) {
       lastPaidPayment = null;
     } else if (lastPayment.uiStatus != PaymentUiStatus.toBePaid) {

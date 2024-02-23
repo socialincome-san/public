@@ -15,7 +15,7 @@ class SurveyPage extends StatefulWidget {
 }
 
 class SurveyPageState extends State<SurveyPage> {
-  var isLoading = true;
+  bool isLoading = true;
   late final WebViewController _webViewController;
 
   @override
@@ -33,8 +33,7 @@ class SurveyPageState extends State<SurveyPage> {
             });
           },
           onWebResourceError: (WebResourceError error) {},
-          onNavigationRequest: (NavigationRequest request) =>
-              NavigationDecision.navigate,
+          onNavigationRequest: (NavigationRequest request) => NavigationDecision.navigate,
         ),
       )
       ..loadRequest(Uri.parse(widget.mappedSurvey.surveyUrl));
@@ -48,10 +47,12 @@ class SurveyPageState extends State<SurveyPage> {
       appBar: AppBar(
         elevation: 0,
         title: Text(localizations.survey),
-        leading: BackButton(onPressed: () {
-          context.read<SurveyCubit>().getSurveys();
-          Navigator.maybePop(context);
-        }),
+        leading: BackButton(
+          onPressed: () {
+            context.read<SurveyCubit>().getSurveys();
+            Navigator.maybePop(context);
+          },
+        ),
         centerTitle: true,
       ),
       body: Stack(
@@ -60,8 +61,8 @@ class SurveyPageState extends State<SurveyPage> {
           if (isLoading) ...[
             const Center(
               child: CircularProgressIndicator(),
-            )
-          ]
+            ),
+          ],
         ],
       ),
     );

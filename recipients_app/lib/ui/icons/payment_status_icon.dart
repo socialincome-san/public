@@ -25,12 +25,10 @@ class PaymentStatusIcon extends StatelessWidget {
           Icons.check_rounded,
           color: Colors.white,
         );
-        break;
       case PaymentUiStatus.empty:
       case PaymentUiStatus.toBePaid:
         backgroundColor = AppColors.backgroundColor;
         child = null;
-        break;
       case PaymentUiStatus.toReview:
       case PaymentUiStatus.contested:
         backgroundColor = AppColors.yellowColor;
@@ -39,7 +37,6 @@ class PaymentStatusIcon extends StatelessWidget {
           Icons.priority_high_rounded,
           color: Colors.black,
         );
-        break;
       case PaymentUiStatus.recentToReview:
         backgroundColor = AppColors.primaryColor;
         child = const Icon(
@@ -47,7 +44,6 @@ class PaymentStatusIcon extends StatelessWidget {
           Icons.question_mark_rounded,
           color: Colors.white,
         );
-        break;
       case PaymentUiStatus.onHoldToReview:
       case PaymentUiStatus.onHoldContested:
         backgroundColor = AppColors.redColor;
@@ -56,7 +52,6 @@ class PaymentStatusIcon extends StatelessWidget {
           Icons.close_rounded,
           color: Colors.black,
         );
-        break;
     }
 
     return CircleAvatar(

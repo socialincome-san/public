@@ -27,7 +27,7 @@ class SurveyRepository {
       final survey = Survey.fromJson(surveyDoc.data());
 
       surveys.add(
-        survey.copyWith(id: surveyDoc.id)
+        survey.copyWith(id: surveyDoc.id),
       );
     }
 

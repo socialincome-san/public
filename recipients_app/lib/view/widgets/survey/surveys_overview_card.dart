@@ -74,7 +74,7 @@ class SurveysOverviewCard extends DashboardItem {
     );
   }
 
-  _navigateToSurveysPage(BuildContext context) {
+  void _navigateToSurveysPage(BuildContext context) {
     final surveyCubit = context.read<SurveyCubit>();
 
     Navigator.of(context).push(
@@ -91,10 +91,11 @@ class SurveysOverviewCard extends DashboardItem {
     return mappedSurveys.fold(
       0,
       (acc, element) {
-        if (_doneStatuses.contains(element.cardStatus))
+        if (_doneStatuses.contains(element.cardStatus)) {
           return acc + 1;
-        else
+        } else {
           return acc;
+        }
       },
     );
   }

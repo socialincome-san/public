@@ -40,7 +40,7 @@ class SocialIncomeContactDialog extends StatelessWidget {
                     Text(
                       localizations.getInTouch,
                       style: Theme.of(context).textTheme.bodyLarge,
-                    )
+                    ),
                   ],
                 ),
                 Column(
@@ -83,11 +83,13 @@ class SocialIncomeContactDialog extends StatelessWidget {
     if (await canLaunchUrlString(whatsappURL)) {
       await launchUrlString(whatsappURL);
     } else {
-      FlushbarHelper.showFlushbar(
-        context,
-        message: localizations.whatsappError,
-        type: FlushbarType.error,
-      );
+      if (context.mounted) {
+        FlushbarHelper.showFlushbar(
+          context,
+          message: localizations.whatsappError,
+          type: FlushbarType.error,
+        );
+      }
     }
   }
 
@@ -159,7 +161,7 @@ class _IconAndContact extends StatelessWidget {
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
