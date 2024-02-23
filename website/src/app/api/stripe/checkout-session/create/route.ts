@@ -10,6 +10,7 @@ export type CreateCheckoutSessionData = {
 	currency?: WebsiteCurrency;
 	intervalCount?: number;
 	firebaseAuthToken?: string;
+	campaignId?: string; // to optionally associate a payment to a fundraising campaign.
 };
 
 type CreateCheckoutSessionRequest = { json(): Promise<CreateCheckoutSessionData> } & Request;
@@ -22,6 +23,7 @@ export async function POST(request: CreateCheckoutSessionRequest) {
 		successUrl,
 		recurring = false,
 		firebaseAuthToken,
+		campaignId,
 	} = await request.json();
 	const stripe = initializeStripe(process.env.STRIPE_SECRET_KEY!);
 	const userDoc = await getUserDocFromAuthToken(firebaseAuthToken);
@@ -33,6 +35,12 @@ export async function POST(request: CreateCheckoutSessionRequest) {
 		product: recurring ? process.env.STRIPE_PRODUCT_RECURRING : process.env.STRIPE_PRODUCT_ONETIME,
 		recurring: recurring ? { interval: 'month', interval_count: intervalCount } : undefined,
 	});
+	const metadata = campaignId
+		? {
+				campaignId: campaignId,
+		  }
+		: undefined;
+
 	const session = await stripe.checkout.sessions.create({
 		mode: recurring ? 'subscription' : 'payment',
 		customer: customerId,
@@ -45,6 +53,7 @@ export async function POST(request: CreateCheckoutSessionRequest) {
 		],
 		success_url: successUrl,
 		locale: 'auto',
+		metadata: metadata,
 	});
 	return NextResponse.json(session);
 }

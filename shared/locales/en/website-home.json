@@ -14,8 +14,7 @@
 		"title-1": "What would change ",
 		"title-2": "if you gave away 1% of your income every month?",
 		"subtitle-1": "Not much, right? Your life would go on as usual.",
-		"video-button": "Watch the video",
-		"vimeo-video-id": "433937157"
+		"video-button": "Watch the video"
 	},
 	"section-3": {
 		"title": [
@@ -146,45 +145,6 @@
 		"subtitle": "Social Income has received funding and support from various accelerator and development programs, including the following organisations:"
 	},
 	"video": {
-		"video-id": "896169775",
-		"credits-title": "Credits",
-		"credits-content": [
-			{
-				"role": "Director of Photography",
-				"name": "Gabriel Koller"
-			},
-			{
-				"role": "Editor",
-				"name": "Nicolas Küng"
-			},
-			{
-				"role": "Sound Design & Music",
-				"name": "Tidiane Sane"
-			},
-			{
-				"role": "Mix & Mastering",
-				"name": "Nicola-Miloš Mišić"
-			},
-			{
-				"role": "Colorist",
-				"name": "Simon Hardegger"
-			},
-			{
-				"role": "Camera Assistant",
-				"name": "Felix Rhodes"
-			},
-			{
-				"role": "Narrator",
-				"name": "Ted Limpert"
-			},
-			{
-				"role": "Graphic Animator",
-				"name": "Raphael Schoen"
-			},
-			{
-				"role": "Translator (Caption)",
-				"name": "Françoise Légeret (FR), Riccardo Tamburini (ES, IT)"
-			}
-		]
+		"video-id": "896169775"
 	}
 }

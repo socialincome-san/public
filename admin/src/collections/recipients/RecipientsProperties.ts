@@ -40,7 +40,7 @@ export const communicationMobilePhoneProperty: Property = {
 		phone: {
 			name: 'Phone Number',
 			dataType: 'number',
-			validation: { min: 23200000000, max: 23299999999 },
+			validation: { min: 10000, max: 999999999999999, integer: true },
 		},
 		has_whatsapp: {
 			name: 'WhatsApp',
@@ -64,7 +64,7 @@ export const mobileMoneyPhoneProperty: Property = {
 		phone: {
 			name: 'Orange Money Number',
 			dataType: 'number',
-			validation: { min: 23200000000, max: 23299999999 },
+			validation: { min: 10000, max: 999999999999999, integer: true },
 		},
 		has_whatsapp: {
 			name: 'WhatsApp',

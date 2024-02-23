@@ -9,7 +9,7 @@ import phonesGif from '../(assets)/phones-1.gif';
 export async function OurWork({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
 		language: params.lang,
-		namespaces: ['website-our-work'],
+		namespaces: ['website-our-work', 'website-videos'],
 	});
 
 	return (
@@ -35,7 +35,7 @@ export async function OurWork({ params }: DefaultPageProps) {
 							</Badge>
 						</DialogTrigger>
 						<DialogContent className="max-w-screen-lg overflow-hidden rounded p-0">
-							<VimeoVideo videoId={Number(translator.t('our-work.vimeo-video-id'))} videoOptions={{ autoplay: true }} />
+							<VimeoVideo videoId={Number(translator.t('id.video-02'))} videoOptions={{ autoplay: true }} />
 						</DialogContent>
 					</Dialog>
 				</div>

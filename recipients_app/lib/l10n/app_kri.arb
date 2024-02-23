@@ -149,6 +149,27 @@
     "phoneNumber": "Fon nɔmba",
     "appVersion": "App version:",
 
+    "surveysTitle": "Surveys",
+    "surveysEmpty": "No surveys.",
+    "surveyMissed": "Missed",
+    "surveyDue": "Due",
+    "surveyCompleted": "Completed",
+    "surveyUpcoming": "Upcoming",
+    "surveyInProgress": "In Progress",
+    "overview": "Overview",
+    "completedSurveysCount": "{done}/{all} completed",
+    "@completedSurveysCount": {
+        "placeholders": {
+            "done": {
+                "type": "int"
+            }, 
+            "all": {
+                "type": "int"
+            }
+        }
+    },
+    "mySurveysTitle": "My surveys",
+
     "invalidPhoneNumberError": "Fon nɔmba nɔ kɔrɛkt. Chɛk yu fon nɔmba ɛn tray bak ya.",
     "invalidVerificationCodeError": "Di spɛshal kod we wi sɛn yu nɔ kɔrɛkt. Duya chɛk di SMS kod ɛn tray bak.",
     "userDisabledError": "Wi dɔn lɔk yu akawnt. Rich awt to wi if yu want fɔ no mɔ.",

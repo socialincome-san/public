@@ -7,6 +7,7 @@ abstract class AppTheme {
 
   static final ThemeData lightTheme = ThemeData(
     fontFamily: "Unica77LL",
+    fontFamilyFallback: ["sans-serif"],
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
         TargetPlatform.android: SharedAxisPageTransitionsBuilder(
