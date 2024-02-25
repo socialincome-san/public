@@ -23,54 +23,59 @@ class SurveysOverviewCard extends DashboardItem {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
-    return GestureDetector(
-      onTap: () => _navigateToSurveysPage(context),
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () => _navigateToSurveysPage(context),
+          child: Card(
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        localizations.mySurveysTitle,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.black,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            localizations.mySurveysTitle,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Colors.black,
+                                ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            localizations.completedSurveysCount(
+                              _getDoneSurveysCount(),
+                              mappedSurveys.length,
                             ),
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: AppColors.darkGrey,
+                                ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        localizations.completedSurveysCount(
-                          _getDoneSurveysCount(),
-                          mappedSurveys.length,
-                        ),
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: AppColors.darkGrey,
-                            ),
+                      const SizedBox(width: AppSizes.small),
+                      ButtonSmall(
+                        onPressed: () => _navigateToSurveysPage(context),
+                        label: localizations.overview,
+                        buttonType: ButtonSmallType.outlined,
+                        color: AppColors.fontColorDark,
                       ),
                     ],
                   ),
-                  const SizedBox(width: AppSizes.small),
-                  ButtonSmall(
-                    onPressed: () => _navigateToSurveysPage(context),
-                    label: localizations.overview,
-                    buttonType: ButtonSmallType.outlined,
-                    color: AppColors.fontColorDark,
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+        const SizedBox(height: 4),
+      ],
     );
   }
 
