@@ -127,6 +127,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
               ListView.builder(
                 shrinkWrap: true,
                 itemCount: paymentsUiState.payments.length,
+                physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return PaymentTile(
                     mappedPayment: paymentsUiState.payments[index],
