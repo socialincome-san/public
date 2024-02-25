@@ -3,6 +3,7 @@ import "package:app/data/models/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:collection/collection.dart";
 import "package:equatable/equatable.dart";
+import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 part "payments_state.dart";
@@ -231,7 +232,9 @@ class PaymentsCubit extends Cubit<PaymentsState> {
           (previousPaymentDate?.month ?? 1) + 1,
           previousPaymentDate?.day ?? 15,
         );
-    final daysToPayment = nextPaymentDate.difference(DateTime.now()).inDays;
+    final daysToPayment = DateUtils.dateOnly(nextPaymentDate)
+        .difference(DateUtils.dateOnly(DateTime.now()))
+        .inDays;
 
     return NextPaymentData(
       amount: nextPayment?.payment.amount ?? kCurrentPaymentAmount,
