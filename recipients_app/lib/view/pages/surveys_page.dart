@@ -5,8 +5,15 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
-class SurveysPage extends StatelessWidget {
+class SurveysPage extends StatefulWidget {
   const SurveysPage({super.key});
+
+  @override
+  State<SurveysPage> createState() => _SurveysPageState();
+}
+
+class _SurveysPageState extends State<SurveysPage> {
+  final _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -18,38 +25,44 @@ class SurveysPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         title: Text(localizations.surveysTitle),
-        leading: BackButton(onPressed: () {
-          context.read<SurveyCubit>().getSurveys();
-          Navigator.maybePop(context);
-        }),
+        leading: BackButton(
+          onPressed: () {
+            context.read<SurveyCubit>().getSurveys();
+            Navigator.maybePop(context);
+          },
+        ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: AppSpacings.h8,
-        child: Column(
-          children: [
-            if (mappedSurveys.isEmpty)
-              Expanded(
-                child: Padding(
-                  padding: AppSpacings.a8,
-                  child: Center(
-                    child: Text(
-                      localizations.surveysEmpty,
-                      textAlign: TextAlign.center,
+      body: RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: () async => context.read<SurveyCubit>().getSurveys(),
+        child: Padding(
+          padding: AppSpacings.h8,
+          child: Column(
+            children: [
+              if (mappedSurveys.isEmpty)
+                Expanded(
+                  child: Padding(
+                    padding: AppSpacings.a8,
+                    child: Center(
+                      child: Text(
+                        localizations.surveysEmpty,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
+                )
+              else
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: mappedSurveys.length,
+                    itemBuilder: (context, index) {
+                      return SurveyListCard(mappedSurvey: mappedSurveys[index]);
+                    },
+                  ),
                 ),
-              )
-            else
-              Expanded(
-                child: ListView.builder(
-                  itemCount: mappedSurveys.length,
-                  itemBuilder: (context, index) {
-                    return SurveyListCard(mappedSurvey: mappedSurveys[index]);
-                  },
-                ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

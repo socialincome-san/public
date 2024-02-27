@@ -44,7 +44,7 @@ class PaymentRepository {
   }) async {
     final updatedPayment = payment.copyWith(
       status: PaymentStatus.confirmed,
-      updatedBy: "${recipient.userId}",
+      updatedBy: recipient.userId,
     );
 
     await firestore
@@ -63,7 +63,7 @@ class PaymentRepository {
     final updatedPayment = payment.copyWith(
       status: PaymentStatus.contested,
       comments: contestReason,
-      updatedBy: "${recipient.userId}",
+      updatedBy: recipient.userId,
     );
 
     await firestore

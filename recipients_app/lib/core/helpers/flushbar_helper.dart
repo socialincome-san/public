@@ -23,7 +23,7 @@ abstract class FlushbarHelper {
       flushbarPosition: FlushbarPosition.TOP,
       titleColor: _getFontColor(type),
       messageColor: _getFontColor(type),
-    )..show(context);
+    ).show(context);
   }
 
   static Color _getBackgroundColor(FlushbarType type) {

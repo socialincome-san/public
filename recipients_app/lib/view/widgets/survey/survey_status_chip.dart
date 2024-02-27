@@ -1,8 +1,8 @@
-import "package:app/data/models/survey/survey_card_status.dart";
 import "package:app/data/models/survey/survey.dart";
+import "package:app/data/models/survey/survey_card_status.dart";
 import "package:app/ui/configs/configs.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter/material.dart";
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 const statusIconHeight = 26.0;
 
@@ -27,17 +27,14 @@ class SurveyServerStatusChip extends StatelessWidget {
       case SurveyCardStatus.answered:
         color = AppColors.primaryColor;
         textColor = Colors.white;
-        break;
       case SurveyCardStatus.missed:
         color = AppColors.redColor;
         textColor = AppColors.fontColorDark;
-        break;
       case SurveyCardStatus.overdue:
       case SurveyCardStatus.firstReminder:
       case SurveyCardStatus.newSurvey:
         color = AppColors.yellowColor;
         textColor = AppColors.fontColorDark;
-        break;
       case SurveyCardStatus.upcoming:
         color = AppColors.backgroundColor;
         textColor = AppColors.fontColorDark;
