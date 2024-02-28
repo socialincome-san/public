@@ -85,18 +85,4 @@ class SurveyListCard extends StatelessWidget {
 
     return DateFormat.yMd(locale).format(dateTime);
   }
-
-  void _navigateToSurvey(BuildContext context) {
-    final surveyCubit = context.read<SurveyCubit>();
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider.value(
-          value: surveyCubit,
-          child: SurveyPage(mappedSurvey: mappedSurvey),
-        ),
-      ),
-    );
-  }
 }
