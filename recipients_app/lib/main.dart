@@ -14,7 +14,7 @@ import "package:flutter_native_splash/flutter_native_splash.dart";
 
 //Async for Firebase
 Future<void> main() async {
-  var widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   SystemChrome.setPreferredOrientations(

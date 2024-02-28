@@ -1,8 +1,8 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
-import "package:app/view/widgets/account/dashboard_card.dart";
 import "package:app/data/repositories/repositories.dart";
-import "package:bloc/bloc.dart";
+import "package:app/view/widgets/account/dashboard_card.dart";
 import "package:equatable/equatable.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
 part "dashboard_card_manager_state.dart";
 
@@ -25,7 +25,7 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
 
     if (recipient == null) return;
 
-    List<DashboardCard> cards = [];
+    final List<DashboardCard> cards = [];
 
     try {
       // TODO: currently payment phone number is used for login, we need to switch that

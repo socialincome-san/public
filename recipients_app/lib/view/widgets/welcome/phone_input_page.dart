@@ -37,14 +37,12 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
-    final isLoading = context.watch<SignupCubit>().state.status ==
-        SignupStatus.loadingPhoneNumber;
+    final isLoading = context.watch<SignupCubit>().state.status == SignupStatus.loadingPhoneNumber;
 
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
@@ -67,63 +65,62 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Stack(children: <Widget>[
-                    Positioned(
-                      bottom: 0,
-                      top: 0,
-                      left: 0,
-                      child: Container(
+                  Stack(
+                    children: <Widget>[
+                      Positioned(
+                        bottom: 0,
+                        top: 0,
+                        left: 0,
+                        child: Container(
                           width: 120,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(color: AppColors.primaryColor),
                           ),
-                          child: const SizedBox()),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
-                      child: InternationalPhoneNumberInput(
-                        ignoreBlank: true,
-                        textFieldController: phoneNumberController,
-                        initialValue: number,
-                        selectorConfig: const SelectorConfig(
-                          selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                          useBottomSheetSafeArea: true,
+                          child: const SizedBox(),
                         ),
-                        keyboardType: TextInputType.phone,
-                        selectorTextStyle: const TextStyle(
-                          color: AppColors.primaryColor,
-                          fontSize: 18,
-                        ),
-                        inputDecoration: InputDecoration(
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: InternationalPhoneNumberInput(
+                          ignoreBlank: true,
+                          textFieldController: phoneNumberController,
+                          initialValue: number,
+                          selectorConfig: const SelectorConfig(
+                            selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                            useBottomSheetSafeArea: true,
+                          ),
+                          selectorTextStyle: const TextStyle(
+                            color: AppColors.primaryColor,
+                            fontSize: 18,
+                          ),
+                          inputDecoration: InputDecoration(
                             labelText: localizations.phoneNumber,
                             labelStyle: Theme.of(context)
                                 .textTheme
                                 .headlineMedium!
                                 .copyWith(color: AppColors.primaryColor),
                             enabledBorder: const OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: AppColors.primaryColor),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
+                              borderSide: BorderSide(color: AppColors.primaryColor),
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
                             ),
                             focusedBorder: const OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: AppColors.primaryColor),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
+                              borderSide: BorderSide(color: AppColors.primaryColor),
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
                             ),
-                            floatingLabelBehavior: FloatingLabelBehavior.never),
-                        textStyle: const TextStyle(
-                          color: AppColors.primaryColor,
-                          fontSize: 20,
+                            floatingLabelBehavior: FloatingLabelBehavior.never,
+                          ),
+                          textStyle: const TextStyle(
+                            color: AppColors.primaryColor,
+                            fontSize: 20,
+                          ),
+                          onInputChanged: (PhoneNumber value) => number = value,
                         ),
-                        onInputChanged: (PhoneNumber value) => number = value,
                       ),
-                    ),
-                  ]),
-                  const SizedBox(height: 16)
+                    ],
+                  ),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
@@ -133,8 +130,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                 ButtonBig(
                   isLoading: isLoading,
                   onPressed: () {
-                    if (number.phoneNumber != null &&
-                        number.phoneNumber!.isNotEmpty) {
+                    if (number.phoneNumber != null && number.phoneNumber!.isNotEmpty) {
                       context.read<SignupCubit>().signupWithPhoneNumber(
                             phoneNumber: number.phoneNumber!,
                           );

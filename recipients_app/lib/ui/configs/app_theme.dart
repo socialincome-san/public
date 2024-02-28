@@ -7,7 +7,7 @@ abstract class AppTheme {
 
   static final ThemeData lightTheme = ThemeData(
     fontFamily: "Unica77LL",
-    fontFamilyFallback: ["sans-serif"],
+    fontFamilyFallback: const ["sans-serif"],
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
         TargetPlatform.android: SharedAxisPageTransitionsBuilder(
@@ -24,7 +24,6 @@ abstract class AppTheme {
       surface: AppColors.primaryLightColor,
       background: AppColors.backgroundColor,
       error: AppColors.redColor,
-      onPrimary: AppColors.fontColorLight,
       onError: AppColors.fontColorDark,
     ),
     primaryColor: AppColors.primaryColor,

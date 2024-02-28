@@ -14,7 +14,7 @@ class ReviewPaymentBottomAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foregroundColor = AppColors.fontColorDark;
+    const foregroundColor = AppColors.fontColorDark;
 
     return Container(
       color: AppColors.yellowColor,
@@ -28,7 +28,6 @@ class ReviewPaymentBottomAction extends StatelessWidget {
               label: actionLabel,
               buttonType: ButtonSmallType.outlined,
               color: foregroundColor,
-              fontColor: foregroundColor,
             ),
           ],
         ),

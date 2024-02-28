@@ -30,7 +30,6 @@ class SurveyStatusIconWithText extends StatelessWidget {
         textColor = Colors.white;
         iconColor = AppColors.primaryColor;
         iconBackgroundColor = Colors.white;
-        break;
       // dark font, close red icon
       case SurveyCardStatus.missed:
         color = Colors.transparent;
@@ -38,7 +37,6 @@ class SurveyStatusIconWithText extends StatelessWidget {
         textColor = AppColors.fontColorDark;
         iconColor = AppColors.fontColorDark;
         iconBackgroundColor = Colors.white;
-        break;
       case SurveyCardStatus.overdue:
       case SurveyCardStatus.firstReminder:
       case SurveyCardStatus.newSurvey:
