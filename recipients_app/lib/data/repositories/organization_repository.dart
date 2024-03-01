@@ -11,7 +11,7 @@ class OrganizationRepository {
   Future<Organization?> fetchOrganization(
     DocumentReference organizationRef,
   ) async {
-    final organization = await organizationRef.withConverter(
+    final organization = organizationRef.withConverter(
       fromFirestore: (snapshot, _) {
         final data = snapshot.data()!;
         return Organization.fromJson(data);

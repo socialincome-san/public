@@ -26,11 +26,6 @@ class DesignComponentsScreen extends StatelessWidget {
             const SizedBox(height: 16),
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // StatusIcon(status: Status.success),
-                // StatusIcon(status: Status.warning),
-                // StatusIcon(status: Status.error),
-              ],
             ),
             const SizedBox(height: 32),
             const Text(
@@ -44,12 +39,10 @@ class DesignComponentsScreen extends StatelessWidget {
                 children: [
                   SizedBox(height: 8),
                   Row(
+                    // StatusIcon(status: Status.success, isInverted: true),
+                    // StatusIcon(status: Status.warning, isInverted: true),
+                    // StatusIcon(status: Status.error, isInverted: true),
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      // StatusIcon(status: Status.success, isInverted: true),
-                      // StatusIcon(status: Status.warning, isInverted: true),
-                      // StatusIcon(status: Status.error, isInverted: true),
-                    ],
                   ),
                   SizedBox(height: 8),
                 ],

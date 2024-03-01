@@ -47,14 +47,21 @@ class DashboardPage extends StatelessWidget {
   }
 }
 
-class _DashboardView extends StatelessWidget {
+class _DashboardView extends StatefulWidget {
   const _DashboardView();
+
+  @override
+  State<_DashboardView> createState() => _DashboardViewState();
+}
+
+class _DashboardViewState extends State<_DashboardView> {
+  final _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   Widget build(BuildContext context) {
     final surveys = context.watch<SurveyCubit>().state.mappedSurveys;
 
-    final List<DashboardItem> dashboardItems = context
+    final List<DashboardItem> dashboardCardItems = context
         .watch<DashboardCardManagerCubit>()
         .state
         .cards
@@ -66,13 +73,11 @@ class _DashboardView extends StatelessWidget {
         .state
         .dashboardMappedSurveys
         .map<DashboardItem>(
-          (survey) => SurveyCardContainer(
-            mappedSurvey: survey,
-          ),
+          (survey) => SurveyCardContainer(mappedSurvey: survey),
         )
         .toList();
 
-    final dynamicItemsCount = dashboardItems.length + surveysItems.length;
+    final dynamicItemsCount = dashboardCardItems.length + surveysItems.length;
 
     final List<DashboardItem> headerItems = [
       const BalanceCardContainer(),
@@ -82,20 +87,33 @@ class _DashboardView extends StatelessWidget {
     List<DashboardItem> items;
 
     if (dynamicItemsCount > 0) {
-      items = headerItems + dashboardItems + surveysItems;
+      items = headerItems + dashboardCardItems + surveysItems;
     } else {
       items = headerItems + [const EmptyItem()];
     }
 
     return BlocBuilder<PaymentsCubit, PaymentsState>(
       builder: (context, state) {
-        return Padding(
-          padding: AppSpacings.h8,
-          child: ListView.separated(
-            separatorBuilder: (context, index) => const SizedBox(height: 4),
-            itemCount: items.length,
-            itemBuilder: (context, index) => items[index],
-            physics: const BouncingScrollPhysics(),
+        return RefreshIndicator(
+          key: _refreshIndicatorKey,
+          onRefresh: () async {
+            context.read<PaymentsCubit>().loadPayments();
+            context.read<SurveyCubit>().getSurveys();
+          },
+          child: Padding(
+            padding: AppSpacings.h8,
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 4),
+                    itemCount: items.length,
+                    itemBuilder: (context, index) => items[index],
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

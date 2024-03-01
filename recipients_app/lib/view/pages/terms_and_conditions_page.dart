@@ -31,30 +31,25 @@ class TermsAndConditionsPage extends StatelessWidget {
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
                       children: [
                         TextSpan(
-                            text: localizations.createAccountInfo,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineLarge!
-                                .copyWith(
-                                  color: AppColors.primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                )),
+                          text: localizations.createAccountInfo,
+                          style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                                color: AppColors.primaryColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
                         TextSpan(
                           text: localizations.privacyPolicy,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineLarge!
-                              .copyWith(
-                                  color: AppColors.primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline),
+                          style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                                color: AppColors.primaryColor,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () async {
                               const url = "https://socialincome.org/privacy";
@@ -68,8 +63,7 @@ class TermsAndConditionsPage extends StatelessWidget {
                                 ).then((_) {
                                   FlushbarHelper.showFlushbar(
                                     context,
-                                    message:
-                                        localizations.privacyPolicyError,
+                                    message: localizations.privacyPolicyError,
                                     type: FlushbarType.error,
                                   );
                                 });
@@ -90,10 +84,9 @@ class TermsAndConditionsPage extends StatelessWidget {
               children: [
                 ButtonBig(
                   onPressed: () {
-                    final updated =
-                        context.read<AuthCubit>().state.recipient?.copyWith(
-                              termsAccepted: true,
-                            );
+                    final updated = context.read<AuthCubit>().state.recipient?.copyWith(
+                          termsAccepted: true,
+                        );
 
                     if (updated != null) {
                       context.read<AuthCubit>().updateRecipient(updated);

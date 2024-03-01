@@ -143,7 +143,7 @@ class _OtpInputState extends State<OtpInput> {
           digit6Controller.text;
 
       // call listener with the full code,
-      var onCodeReady = widget.onCodeReady;
+      final onCodeReady = widget.onCodeReady;
       if (onCodeReady != null) {
         onCodeReady(verificationCode);
       }

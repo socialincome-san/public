@@ -40,7 +40,6 @@ class OnHoldBottomCard extends StatelessWidget {
                   label: localizations.review,
                   buttonType: ButtonSmallType.outlined,
                   color: AppColors.fontColorDark,
-                  fontColor: AppColors.fontColorDark,
                 ),
               ],
             ),
