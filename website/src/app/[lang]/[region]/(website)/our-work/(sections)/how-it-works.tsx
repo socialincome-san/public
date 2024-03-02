@@ -39,7 +39,7 @@ export async function HowItWorks({ params }: DefaultPageProps) {
 						{translator.t('how-it-works.subtitle')}
 					</Typography>
 					<ul className="flex flex-col space-y-4">
-						{_.range(1, 5).map((i) => (
+						{_.range(1, 4).map((i) => (
 							<li key={i} className="flex flex-row items-start space-x-3">
 								<CheckCircleIcon className="text-secondary h-8 w-8 flex-none" />
 								<Typography size="xl">{translator.t(`how-it-works.item-${i}`)}</Typography>
