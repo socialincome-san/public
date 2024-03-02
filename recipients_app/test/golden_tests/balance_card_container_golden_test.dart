@@ -29,21 +29,20 @@ void main() {
                 currency: "SLE",
                 daysToPayment: 10,
               ),
-              lastPaidPayment: null,
               confirmedPaymentsCount: 2,
               unconfirmedPaymentsCount: 0,
               payments: [
                 MappedPayment(
                   payment: SocialIncomePayment(
                     id: "1",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 7, 1)),
+                    paymentAt: Timestamp.fromDate(DateTime(2023, 7)),
                   ),
                   uiStatus: PaymentUiStatus.confirmed,
                 ),
                 MappedPayment(
                   payment: SocialIncomePayment(
                     id: "2",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 8, 1)),
+                    paymentAt: Timestamp.fromDate(DateTime(2023, 8)),
                   ),
                   uiStatus: PaymentUiStatus.confirmed,
                 ),
@@ -73,21 +72,20 @@ void main() {
                 currency: "SLE",
                 daysToPayment: 10,
               ),
-              lastPaidPayment: null,
               confirmedPaymentsCount: 1,
               unconfirmedPaymentsCount: 1,
               payments: [
                 MappedPayment(
                   payment: SocialIncomePayment(
                     id: "2",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 8, 1)),
+                    paymentAt: Timestamp.fromDate(DateTime(2023, 8)),
                   ),
                   uiStatus: PaymentUiStatus.toReview,
                 ),
                 MappedPayment(
                   payment: SocialIncomePayment(
                     id: "1",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 7, 1)),
+                    paymentAt: Timestamp.fromDate(DateTime(2023, 7)),
                   ),
                   uiStatus: PaymentUiStatus.confirmed,
                 ),
@@ -117,21 +115,20 @@ void main() {
                 currency: "SLE",
                 daysToPayment: 10,
               ),
-              lastPaidPayment: null,
               confirmedPaymentsCount: 1,
               unconfirmedPaymentsCount: 1,
               payments: [
                 MappedPayment(
                   payment: SocialIncomePayment(
                     id: "2",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 8, 1)),
+                    paymentAt: Timestamp.fromDate(DateTime(2023, 8)),
                   ),
                   uiStatus: PaymentUiStatus.contested,
                 ),
                 MappedPayment(
                   payment: SocialIncomePayment(
                     id: "1",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 7, 1)),
+                    paymentAt: Timestamp.fromDate(DateTime(2023, 7)),
                   ),
                   uiStatus: PaymentUiStatus.confirmed,
                 ),
@@ -161,35 +158,34 @@ void main() {
                 currency: "SLE",
                 daysToPayment: 10,
               ),
-              lastPaidPayment: null,
               confirmedPaymentsCount: 1,
               unconfirmedPaymentsCount: 3,
               payments: [
                 MappedPayment(
                   payment: SocialIncomePayment(
                     id: "1",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 10, 1)),
+                    paymentAt: Timestamp.fromDate(DateTime(2023, 10)),
                   ),
                   uiStatus: PaymentUiStatus.onHoldToReview,
                 ),
                 MappedPayment(
                   payment: SocialIncomePayment(
                     id: "2",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 9, 1)),
+                    paymentAt: Timestamp.fromDate(DateTime(2023, 9)),
                   ),
                   uiStatus: PaymentUiStatus.onHoldToReview,
                 ),
                 MappedPayment(
                   payment: SocialIncomePayment(
                     id: "3",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 8, 1)),
+                    paymentAt: Timestamp.fromDate(DateTime(2023, 8)),
                   ),
                   uiStatus: PaymentUiStatus.onHoldToReview,
                 ),
                 MappedPayment(
                   payment: SocialIncomePayment(
                     id: "4",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 7, 1)),
+                    paymentAt: Timestamp.fromDate(DateTime(2023, 7)),
                   ),
                   uiStatus: PaymentUiStatus.confirmed,
                 ),
@@ -219,35 +215,34 @@ void main() {
                 currency: "SLE",
                 daysToPayment: 10,
               ),
-              lastPaidPayment: null,
               confirmedPaymentsCount: 1,
               unconfirmedPaymentsCount: 0,
               payments: [
                 MappedPayment(
                   payment: SocialIncomePayment(
                     id: "1",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 10, 1)),
+                    paymentAt: Timestamp.fromDate(DateTime(2023, 10)),
                   ),
                   uiStatus: PaymentUiStatus.contested,
                 ),
                 MappedPayment(
                   payment: SocialIncomePayment(
                     id: "2",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 9, 1)),
+                    paymentAt: Timestamp.fromDate(DateTime(2023, 9)),
                   ),
                   uiStatus: PaymentUiStatus.contested,
                 ),
                 MappedPayment(
                   payment: SocialIncomePayment(
                     id: "3",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 8, 1)),
+                    paymentAt: Timestamp.fromDate(DateTime(2023, 8)),
                   ),
                   uiStatus: PaymentUiStatus.contested,
                 ),
                 MappedPayment(
                   payment: SocialIncomePayment(
                     id: "4",
-                    paymentAt: Timestamp.fromDate(DateTime(2023, 7, 1)),
+                    paymentAt: Timestamp.fromDate(DateTime(2023, 7)),
                   ),
                   uiStatus: PaymentUiStatus.confirmed,
                 ),

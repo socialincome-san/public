@@ -84,6 +84,7 @@ class BalanceCardContainer extends DashboardItem {
             _kShowPaymentCardStatuses.contains(lastPaidPayment.uiStatus)) ...[
           PaymentTile(mappedPayment: lastPaidPayment),
         ],
+        const SizedBox(height: 4),
       ],
     );
   }

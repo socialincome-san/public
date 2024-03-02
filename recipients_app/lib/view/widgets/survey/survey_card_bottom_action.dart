@@ -45,8 +45,7 @@ class SurveyCardBottomAction extends StatelessWidget {
                 color: foregroundColor,
                 fontColor: foregroundColor,
               ),
-            ] else if (mappedSurvey.cardStatus ==
-                SurveyCardStatus.answered) ...[
+            ] else if (mappedSurvey.cardStatus == SurveyCardStatus.answered) ...[
               SurveyStatusIconWithText(
                 status: SurveyCardStatus.answered,
                 text: localizations.surveyStatusAnswered,
@@ -80,8 +79,7 @@ class SurveyCardBottomAction extends StatelessWidget {
   bool _shouldShowActionButton(
     SurveyCardStatus status,
   ) {
-    return status != SurveyCardStatus.answered &&
-        status != SurveyCardStatus.missed;
+    return status != SurveyCardStatus.answered && status != SurveyCardStatus.missed;
   }
 
   Color _getBackgroundColor(SurveyCardStatus status) {
@@ -124,7 +122,8 @@ class SurveyCardBottomAction extends StatelessWidget {
     switch (mappedSurvey.cardStatus) {
       case SurveyCardStatus.answered:
         return DateFormat.yMd(locale).format(
-            mappedSurvey.survey.completedAt?.toDate() ?? DateTime.now());
+          mappedSurvey.survey.completedAt?.toDate() ?? DateTime.now(),
+        );
       case SurveyCardStatus.overdue:
         final daysAfterOverdue = mappedSurvey.daysAfterOverdue ?? 0;
         if (daysAfterOverdue > 1) {

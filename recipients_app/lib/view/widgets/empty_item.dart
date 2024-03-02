@@ -12,14 +12,12 @@ class EmptyItem extends DashboardItem {
 
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 200),
-      child: Container(
-        child: Padding(
-          padding: AppSpacings.a8,
-          child: Center(
-            child: Text(
-              localizations.dashboardUp2Date,
-              textAlign: TextAlign.center,
-            ),
+      child: Padding(
+        padding: AppSpacings.a8,
+        child: Center(
+          child: Text(
+            localizations.dashboardUp2Date,
+            textAlign: TextAlign.center,
           ),
         ),
       ),

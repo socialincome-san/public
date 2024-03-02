@@ -7,16 +7,22 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
-class PaymentsPage extends StatelessWidget {
+class PaymentsPage extends StatefulWidget {
   const PaymentsPage({super.key});
+
+  @override
+  State<PaymentsPage> createState() => _PaymentsPageState();
+}
+
+class _PaymentsPageState extends State<PaymentsPage> {
+  final _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
     final recipient = context.watch<AuthCubit>().state.recipient;
-    final paymentsUiState =
-        context.watch<PaymentsCubit>().state.paymentsUiState!;
+    final paymentsUiState = context.watch<PaymentsCubit>().state.paymentsUiState!;
 
     return Scaffold(
       appBar: AppBar(
@@ -24,9 +30,11 @@ class PaymentsPage extends StatelessWidget {
         title: Text(localizations.payments),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: AppSpacings.h8,
-        child: Column(
+      body: RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: () async => context.read<PaymentsCubit>().loadPayments(),
+        child: ListView(
+          padding: AppSpacings.h8,
           children: [
             Card(
               clipBehavior: Clip.antiAlias,
@@ -36,6 +44,7 @@ class PaymentsPage extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -45,67 +54,56 @@ class PaymentsPage extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         "${recipient?.mobileMoneyPhone?.phoneNumber ?? ""}",
-                        style:
-                            Theme.of(context).textTheme.headlineLarge?.copyWith(
-                                  color: AppColors.primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                              color: AppColors.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 16),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  localizations.pastPayments,
-                                  style: Theme.of(context).textTheme.bodyMedium,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                localizations.pastPayments,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                _calculatePastPayments(
+                                  paymentsUiState.payments,
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  _calculatePastPayments(
-                                      paymentsUiState.payments),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineLarge
-                                      ?.copyWith(
-                                        color: AppColors.primaryColor,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                              ],
-                            ),
+                                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                                      color: AppColors.primaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  localizations.futurePayments,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  paymentsUiState.status !=
-                                          BalanceCardStatus.onHold
-                                      ? _calculateFuturePayments(
-                                          paymentsUiState.payments)
-                                      : localizations.paymentsSuspended,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineLarge
-                                      ?.copyWith(
-                                        color: paymentsUiState.status !=
-                                                BalanceCardStatus.onHold
-                                            ? AppColors.primaryColor
-                                            : AppColors.redColor,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                              ],
-                            ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                localizations.futurePayments,
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                paymentsUiState.status != BalanceCardStatus.onHold
+                                    ? _calculateFuturePayments(
+                                        paymentsUiState.payments,
+                                      )
+                                    : localizations.paymentsSuspended,
+                                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                                      color: paymentsUiState.status != BalanceCardStatus.onHold
+                                          ? AppColors.primaryColor
+                                          : AppColors.redColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -116,27 +114,25 @@ class PaymentsPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             if (paymentsUiState.payments.isEmpty)
-              Expanded(
-                child: Padding(
-                  padding: AppSpacings.a8,
-                  child: Center(
-                    child: Text(
-                      localizations.paymentsEmptyList,
-                      textAlign: TextAlign.center,
-                    ),
+              Padding(
+                padding: AppSpacings.a8,
+                child: Center(
+                  child: Text(
+                    localizations.paymentsEmptyList,
+                    textAlign: TextAlign.center,
                   ),
                 ),
               )
             else
-              Expanded(
-                child: ListView.builder(
-                  itemCount: paymentsUiState.payments.length,
-                  itemBuilder: (context, index) {
-                    return PaymentTile(
-                      mappedPayment: paymentsUiState.payments[index],
-                    );
-                  },
-                ),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: paymentsUiState.payments.length,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return PaymentTile(
+                    mappedPayment: paymentsUiState.payments[index],
+                  );
+                },
               ),
           ],
         ),
@@ -160,9 +156,8 @@ class PaymentsPage extends StatelessWidget {
   String _calculateFuturePayments(List<MappedPayment> mappedPayments) {
     // due to problem that payment amount can change we need to calculate
     // the future payments without calculation of previous payments
-    final futurePayments = (kProgramDurationMonths - mappedPayments.length) *
-        kCurrentPaymentAmount;
+    final futurePayments = (kProgramDurationMonths - mappedPayments.length) * kCurrentPaymentAmount;
 
-    return "${mappedPayments.firstOrNull?.payment.currency ?? "SLE"} ${futurePayments}";
+    return "${mappedPayments.firstOrNull?.payment.currency ?? "SLE"} $futurePayments";
   }
 }

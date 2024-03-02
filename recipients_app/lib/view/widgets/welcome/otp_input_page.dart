@@ -22,9 +22,11 @@ class _OtpInputPageState extends State<OtpInputPage> {
       appBar: AppBar(
         elevation: 0,
         title: const Text("Verification"),
-        leading: BackButton(onPressed: () {
-          context.read<SignupCubit>().changeToPhoneInput();
-        }),
+        leading: BackButton(
+          onPressed: () {
+            context.read<SignupCubit>().changeToPhoneInput();
+          },
+        ),
         centerTitle: true,
       ),
       body: Padding(
@@ -36,19 +38,19 @@ class _OtpInputPageState extends State<OtpInputPage> {
             Text(
               localizations.verificationSent(phoneNumber),
               style: AppStyles.headlineLarge.copyWith(
-                  color: AppColors.primaryColor, fontWeight: FontWeight.bold),
+                color: AppColors.primaryColor,
+                fontWeight: FontWeight.bold,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
             OtpInput(
-              onCodeReady: (verificationCode) => context
-                  .read<SignupCubit>()
-                  .submitVerificationCode(verificationCode),
+              onCodeReady: (verificationCode) =>
+                  context.read<SignupCubit>().submitVerificationCode(verificationCode),
             ),
             const SizedBox(height: 24),
             TextButton(
-              onPressed: () async =>
-                  context.read<SignupCubit>().resendVerificationCode(),
+              onPressed: () async => context.read<SignupCubit>().resendVerificationCode(),
               child: Text(
                 localizations.resendVerificationCode,
                 style: Theme.of(context).textTheme.headlineMedium!.copyWith(

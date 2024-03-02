@@ -2,7 +2,7 @@
 	"section-1": {
 		"title": "Bankverbindung",
 		"bankIntroText": "Kontoangaben für Banküberweisungen",
-		"bankInfoTextRecurring": "Wiederkehrende Spenden (werden zu 100% an Empfänger:innen ausbezahlt)",
+		"bankInfoTextRecurring": "Wiederkehrende Spenden",
 		"bankOneTime": "Einmalige Spenden",
 		"bankPrompt": "Bank",
 		"bankPostFinance": "Postfinance, Zürich (Schweiz)",
