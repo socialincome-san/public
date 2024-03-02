@@ -1,7 +1,12 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { useUserContext } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
+import {
+	useCreateMailchimpSubscription,
+	useMailchimpSubscription,
+	useUpdateMailchimpSubscription,
+	useUserContext,
+} from '@/app/[lang]/[region]/(website)/me/user-context-provider';
 import { useTranslator } from '@/hooks/useTranslator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { COUNTRY_CODES } from '@socialincome/shared/src/types/country';
@@ -21,6 +26,7 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
+	Typography,
 } from '@socialincome/ui';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useEffect } from 'react';
@@ -49,8 +55,13 @@ type PersonalInfoFormProps = {
 export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) {
 	const firestore = useFirestore();
 	const { user, refetch } = useUserContext();
+
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
+
+	const { status, isLoading } = useMailchimpSubscription();
+	const createMailchimpSubscription = useCreateMailchimpSubscription();
+	const updateMailchimpSubscription = useUpdateMailchimpSubscription();
 
 	const formSchema = z.object({
 		firstname: z.string(),
@@ -295,6 +306,13 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 					{translations.submitButton}
 				</Button>
 			</form>
+			{isLoading ? <Typography>Loading...</Typography> : <Typography>Mailchimp subscription: {status}</Typography>}
+			{status === 'unknown' && <Button onClick={createMailchimpSubscription}>Create subscription</Button>}
+			{status === 'subscribed' ? (
+				<Button onClick={() => updateMailchimpSubscription('unsubscribed')}>Unsubscribe</Button>
+			) : (
+				<Button onClick={() => updateMailchimpSubscription('subscribed')}>Subscribe</Button>
+			)}
 		</Form>
 	);
 }
