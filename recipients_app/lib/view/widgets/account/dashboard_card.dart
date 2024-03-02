@@ -37,7 +37,6 @@ class DashboardCard extends DashboardItem {
           Padding(
             padding: AppSpacings.a16,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -99,7 +98,6 @@ class DashboardCard extends DashboardItem {
             ),
           ),
         );
-        break;
     }
   }
 
@@ -107,10 +105,8 @@ class DashboardCard extends DashboardItem {
     switch (type) {
       case DashboardCardType.paymentNumberEqualsContactNumber:
         context.read<DashboardCardManagerCubit>().updatePaymentNumber();
-        break;
       case DashboardCardType.contactNumberEqualsPaymentNumber:
         context.read<DashboardCardManagerCubit>().updateContactNumber();
-        break;
     }
   }
 }

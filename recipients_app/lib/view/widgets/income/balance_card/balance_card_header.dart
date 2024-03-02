@@ -19,11 +19,10 @@ class BalanceCardHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
-    TextStyle dynamicTextStyle =
-        Theme.of(context).textTheme.headlineLarge!.copyWith(
-              fontWeight: FontWeight.bold,
-              color: _getTextColor(),
-            );
+    final dynamicTextStyle = Theme.of(context).textTheme.headlineLarge!.copyWith(
+          fontWeight: FontWeight.bold,
+          color: _getTextColor(),
+        );
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

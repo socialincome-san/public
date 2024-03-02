@@ -2,7 +2,7 @@
 	"section-1": {
 		"title": "Bank Details",
 		"bankIntroText": "Account details for bank transfers",
-		"bankInfoTextRecurring": "Recurring contributions (100% paid out to recipients)",
+		"bankInfoTextRecurring": "Recurring contributions",
 		"bankOneTime": "One-time contributions",
 		"bankPrompt": "Bank",
 		"bankPostFinance": "PostFinance, Zurich (Switzerland)",

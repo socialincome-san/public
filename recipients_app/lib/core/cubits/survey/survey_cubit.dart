@@ -32,9 +32,8 @@ class SurveyCubit extends Cubit<SurveyState> {
     try {
       final mappedSurveys = await _getSurveys();
 
-      final dashboardSurveys = mappedSurveys
-          .where((element) => _shouldShowSurveyCard(element.survey))
-          .toList();
+      final dashboardSurveys =
+          mappedSurveys.where((element) => _shouldShowSurveyCard(element.survey)).toList();
 
       emit(
         SurveyState(
@@ -50,8 +49,7 @@ class SurveyCubit extends Cubit<SurveyState> {
   }
 
   Future<List<MappedSurvey>> _getSurveys() async {
-    final surveys =
-        await surveyRepository.fetchSurveys(recipientId: recipient.userId);
+    final surveys = await surveyRepository.fetchSurveys(recipientId: recipient.userId);
 
     final mappedSurveys = surveys
         .map(
@@ -76,7 +74,7 @@ class SurveyCubit extends Cubit<SurveyState> {
   String _getSurveyUrl(Survey survey, String recipientId) {
     final params = {
       "email": survey.accessEmail,
-      "pw": survey.accessPassword!,
+      "pw": survey.accessPassword,
     };
 
     final uri = Uri.https(
@@ -88,27 +86,25 @@ class SurveyCubit extends Cubit<SurveyState> {
   }
 
   bool _shouldShowSurveyCard(Survey survey) {
-    var dateDifferenceInDays = _getSurveyDueDateAndNowDifferenceInDays(survey);
+    final dateDifferenceInDays = _getSurveyDueDateAndNowDifferenceInDays(survey);
     if (dateDifferenceInDays == null) {
       return false;
     }
 
-    var shouldShowSurveyCard = dateDifferenceInDays > _kNewSurveyDay &&
-        dateDifferenceInDays < _kEndOfDisplaySurveyDay;
+    final shouldShowSurveyCard =
+        dateDifferenceInDays > _kNewSurveyDay && dateDifferenceInDays < _kEndOfDisplaySurveyDay;
     return shouldShowSurveyCard;
   }
 
   SurveyCardStatus _getSurveyCardStatus(Survey survey) {
     if (survey.status != SurveyServerStatus.completed &&
         survey.status != SurveyServerStatus.missed) {
-      var dateDifferenceInDays =
-          _getSurveyDueDateAndNowDifferenceInDays(survey);
+      final dateDifferenceInDays = _getSurveyDueDateAndNowDifferenceInDays(survey);
       if (dateDifferenceInDays == null) {
         return SurveyCardStatus.newSurvey;
       }
 
-      if (dateDifferenceInDays >= _kNewSurveyDay &&
-          dateDifferenceInDays < _kNormalSurveyStartDay) {
+      if (dateDifferenceInDays >= _kNewSurveyDay && dateDifferenceInDays < _kNormalSurveyStartDay) {
         return SurveyCardStatus.newSurvey;
       } else if (dateDifferenceInDays >= _kNormalSurveyStartDay &&
           dateDifferenceInDays < _kNormalSurveyEndDay) {
@@ -134,8 +130,9 @@ class SurveyCubit extends Cubit<SurveyState> {
 String _getReadableName(String surveyId) {
   return surveyId
       .split("-")
-      .map((element) =>
-          "${element[0].toUpperCase()}${element.substring(1).toLowerCase()}")
+      .map(
+        (element) => "${element[0].toUpperCase()}${element.substring(1).toLowerCase()}",
+      )
       .join(" ");
 }
 

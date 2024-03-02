@@ -2,9 +2,8 @@ import "package:app/data/models/organization.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
-import "package:url_launcher/url_launcher_string.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
-
+import "package:url_launcher/url_launcher_string.dart";
 
 class OrganizationInfo extends StatelessWidget {
   final Organization organization;
@@ -31,12 +30,9 @@ class OrganizationInfo extends StatelessWidget {
           child: Padding(
             padding: AppSpacings.a12,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Icon(
                       Icons.lock,
@@ -57,7 +53,8 @@ class OrganizationInfo extends StatelessWidget {
                         buttonType: ButtonSmallType.outlined,
                         color: Colors.black,
                         onPressed: () => launchUrlString(
-                            "tel:${organization.contactNumber}"),
+                          "tel:${organization.contactNumber}",
+                        ),
                       ),
                   ],
                 ),

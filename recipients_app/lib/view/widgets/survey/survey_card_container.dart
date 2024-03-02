@@ -64,9 +64,7 @@ class SurveyCardContainer extends DashboardItem {
               ],
             ),
           ),
-          SurveyCardBottomAction(
-            mappedSurvey: mappedSurvey,
-          ),
+          SurveyCardBottomAction(mappedSurvey: mappedSurvey),
         ],
       ),
     );
