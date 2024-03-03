@@ -17,7 +17,7 @@ import { USER_FIRESTORE_PATH, User } from '../../../shared/src/types/user';
 import {
 	POSTFINANCE_FTP_HOST,
 	POSTFINANCE_FTP_PORT,
-	POSTFINANCE_FTP_RSA_PRIVATE_KEY,
+	POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64,
 	POSTFINANCE_FTP_USER,
 } from '../config';
 
@@ -45,7 +45,7 @@ export class PostfinancePaymentsFileHandler {
 			host: POSTFINANCE_FTP_HOST,
 			port: Number(POSTFINANCE_FTP_PORT),
 			username: POSTFINANCE_FTP_USER,
-			privateKey: POSTFINANCE_FTP_RSA_PRIVATE_KEY,
+			privateKey: atob(POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64),
 		});
 		const sftpFiles = await sftp.list('/yellow-net-reports');
 		for (let file of sftpFiles) {
