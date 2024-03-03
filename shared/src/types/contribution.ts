@@ -41,6 +41,16 @@ export type StripeContribution = BaseContribution & {
 
 export type BankWireContribution = BaseContribution & {
 	source: ContributionSourceKey.WIRE_TRANSFER;
+	transaction_id: string;
+	reference_id: string; // wire transfer reference id, see below
+	monthly_interval: number;
 	raw_content: string;
-	reference_id: number; // reference number from the bank wire
+	/**
+	 * the reference_id is a 27-digit number that is constructed as follows:
+	 * trailing zeros (7 digits)
+	 * the user's payment_reference_id (13 digits) – to keep it simple, we assign the unix timestamp in milliseconds when the user is created
+	 * 4 zeroes – could be used to encode more information in the future (4 digits)
+	 * selected payment interval in months (2 digits)
+	 * modulo 10 recursive as check digit (1 digit) – required by qr bill standard
+	 */
 };
