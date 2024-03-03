@@ -5,7 +5,7 @@ import { BaseContainer, Typography } from '@socialincome/ui';
 export async function Testimonials({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-home2'],
+		namespaces: ['website-home'],
 	});
 
 	return (

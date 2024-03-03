@@ -13,25 +13,23 @@
 		]
 	},
 	"section-2": {
-		"titles": [
-			[{ "text": "Those that live in Sierra Leone’s poorest communities know what it takes to rise out of poverty." }],
-			[
-				{ "text": "They just rarely have the opportunity – or the money – to do so. That’s where " },
-				{ "text": "you and Social Income", "color": "accent" },
-				{ "text": "come in." }
-			]
+		"title-1": "Those that live in Sierra Leone’s poorest communities know what it takes to rise out of poverty.",
+		"title-2": [
+			{ "text": "They just rarely have the opportunity – or the money – to do so. That’s where " },
+			{ "text": "you and Social Income", "color": "accent" },
+			{ "text": "come in." }
 		],
-		"subtitles": [
-			[{ "text": "Unique Process for Fair Selection" }],
-			[{ "text": "Direct Giving, Direct Results" }],
-			[{ "text": "Ongoing Support" }]
-		],
+		"subtitle-1": "Unique Process for Fair Selection",
 		"text-1.1": "Identifying those in need: Through collaboration with local NGOs in Sierra Leone, we target individuals living in poverty who can benefit from a three-year predictable income, empowering them to invest in their future.",
 		"text-1.2": "Selecting randomly: Our randomized selection process is transparent and publicly verifiable, eliminating human biases and favoritism. This ensures fairness and equal chances for all individuals in poverty to benefit.",
+		"subtitle-2": "Direct Giving, Direct Results",
 		"text-2": "We directly transfer your contribution onto the mobile phones of individuals in need, empowering them to overcome poverty through their own choices and efforts.",
+		"subtitle-3": "Ongoing Support",
 		"text-3": "Our recipients receive continuous support from our local partners throughout and even after the program, maximizing the overall impact. Specifically, the third year of the program is focused on facilitating a seamless transition as they move on from the program."
+
 	},
-	"section-3": {},
+	"section-3": {
+	},
 	"section-4": {
 		"title-1": [
 			{ "text": "What would change if you gave " },
@@ -40,12 +38,18 @@
 		"cta": "Watch video and find out"
 	},
 	"section-5": {
-		"title-1": [{ "text": "Change from human to human. " }, { "text": "From mobile to mobile.", "color": "accent" }],
+		"title-1": [
+			{ "text": "Change from human to human. " },
+			{ "text": "From mobile to mobile.", "color": "accent" }
+		],
 		"subtitle-1": "Social Income is a new way to fight poverty in the Global South. Digital, efficient and mobile."
 	},
 	"section-6": {
 		"title-1": "This sounds good, but ... ",
-		"question-1": [{ "question": "Is it working" }, { "answer": "XXX" }],
+		"question-1": [
+			{ "question": "Is it working" },
+			{ "answer": "XXX" }
+		],
 		"cta": "All FAQ"
 	},
 	"section-7": {
@@ -72,7 +76,10 @@
 		"author-5": "Claudia, Switzerland"
 	},
 	"section-10": {
-		"title-1": [{ "text": "Contribute to the United Nations’ " }, { "text": "United Nations’", "color": "primary" }],
+		"title-1": [
+			{ "text": "Contribute to the United Nations’ " },
+			{ "text": "United Nations’", "color": "primary" }
+		],
 		"sdg-1-title": "End poverty in all its forms, everywhere.",
 		"sdg-1": "SDG #1",
 		"sdg-10-title": "Reduce inequality within and \namong countries.",

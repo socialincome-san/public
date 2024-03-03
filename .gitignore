@@ -18,6 +18,7 @@ dist
 .vercel
 
 # misc
+tags
 .ignore/
 .DS_Store
 .env.local
