@@ -17,9 +17,6 @@ import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
 	Typography,
 } from '@socialincome/ui';
 import _ from 'lodash';
@@ -119,14 +116,13 @@ export function NavbarClient({
 												</Button>
 											</Link>
 										) : (
-											<Popover key={index} openDelay={100} closeDelay={200}>
-												<PopoverTrigger asChild>
-													<Button variant="ghost" className="flex items-center space-x-2 py-6">
-														<Typography size="xl">{section.title}</Typography>
-														{(section.links?.length ?? 0) > 0 && <ChevronDownIcon className="h-4 w-4" />}
-													</Button>
-												</PopoverTrigger>
-												<PopoverContent asChild alignOffset={20} className="bg-popover w-56 p-0">
+											<div key={index} className="group relative">
+												<Button variant="ghost" className="flex items-center space-x-2 py-6 ">
+													<Typography size="xl">{section.title}</Typography>
+													{(section.links?.length ?? 0) > 0 && <ChevronDownIcon className="h-4 w-4" />}
+												</Button>
+
+												<div className="bg-popover group-hover:easy-in absolute z-50 w-56 -translate-x-6 scale-95 rounded-md border p-0 opacity-0 shadow-md outline-none transition-all  delay-100 duration-150 ease-out group-hover:translate-y-1 group-hover:scale-100 group-hover:opacity-100">
 													<ul className="divide-muted divide-y">
 														{section.links?.map((link, index) => (
 															<li key={index} className="hover:bg-popover-muted px-8 py-3">
@@ -138,8 +134,8 @@ export function NavbarClient({
 															</li>
 														))}
 													</ul>
-												</PopoverContent>
-											</Popover>
+												</div>
+											</div>
 										)}
 									</div>
 								);
