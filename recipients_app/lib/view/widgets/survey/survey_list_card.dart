@@ -1,10 +1,17 @@
 import "package:app/data/models/models.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/ui/configs/app_sizes.dart";
+import "package:app/view/widgets/survey/survey_card_bottom_action.dart";
 import "package:app/view/widgets/survey/survey_status_chip.dart";
 import "package:flutter/material.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:intl/intl.dart";
+
+const _kOpenableSurveyStatuses = [
+  SurveyCardStatus.newSurvey,
+  SurveyCardStatus.firstReminder,
+  SurveyCardStatus.overdue,
+];
 
 class SurveyListCard extends StatelessWidget {
   final MappedSurvey mappedSurvey;
@@ -58,6 +65,9 @@ class SurveyListCard extends StatelessWidget {
               ],
             ),
           ),
+          if (_kOpenableSurveyStatuses.contains(mappedSurvey.cardStatus)) ...[
+            SurveyCardBottomAction(mappedSurvey: mappedSurvey),
+          ],
         ],
       ),
     );

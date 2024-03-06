@@ -19,6 +19,7 @@ dist
 
 # misc
 .ignore/
+ignored/
 .DS_Store
 .env.local
 .env.development.local
