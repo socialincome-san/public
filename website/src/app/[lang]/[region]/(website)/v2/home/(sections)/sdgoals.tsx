@@ -5,7 +5,7 @@ import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
 
-export async function Sdgs({ lang, region }: DefaultParams) {
+export async function Sdgoals({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-home2'],
