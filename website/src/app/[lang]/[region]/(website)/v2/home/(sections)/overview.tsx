@@ -27,5 +27,5 @@ export async function Overview({ lang, region }: DefaultParams) {
 			<Typography>{translator.t('section-2.subtitle-3')}</Typography>
 			<Typography>{translator.t('section-2.text-3')}</Typography>
 		</BaseContainer>
-	)
+	);
 }
