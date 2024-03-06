@@ -9,6 +9,11 @@
 	"download-pdf": "PDF",
 	"reports": [
 		{
+			"title": "Annual Report 2022",
+			"href": "https://drive.google.com/file/d/1UVB6zcRefe4tEVuQUshIzg39fCCqEUSw/view",
+			"language": "English/German"
+		},
+		{
 			"title": "Financial Statement 2022",
 			"href": "https://drive.google.com/file/d/13OJlzxznbsRhE3ywYHOF3ggh7e89zZtn/view",
 			"language": "English"
@@ -16,6 +21,11 @@
 		{
 			"title": "Financial Statement 2022",
 			"href": "https://drive.google.com/file/d/1ivgdOqI3WkJ5ymSuDMNS0BP3SffVxCKk/view",
+			"language": "German"
+		},
+		{
+			"title": "Audit Report 2022",
+			"href": "https://drive.google.com/file/d/1He7DHwa3MmepahRS7Ei4PqwxJwld968W/view",
 			"language": "German"
 		},
 		{
