@@ -45,7 +45,7 @@
 		]
 	},
 	"100-percent-model": {
-		"header": "100% Model",
+		"header": "Our Promise",
 		"title": [
 			{
 				"text": "Donations are for people in need. "
@@ -55,10 +55,10 @@
 				"color": "secondary"
 			}
 		],
-		"subtitle": "We believe that 100% of our contributors’ recurring donations should go to our recipients.",
+		"subtitle": "We are committed to ensuring that the largest possible share of your donation directly benefits our recipients.",
 		"paragraphs": [
-			"To maintain this promise, our operating costs and financial expenses are covered by philanthropic grants and institutional donations.",
-			"Thanks to this support, we can guarantee that 100% of the recurring donations reaches our recipients."
+			"To maintain this promise, we specifically fundraise to cover parts of our operating costs and financial expenses through philanthropic grants and institutional donations.",
+			"This approach guarantees that only a minimal portion of your donation is allocated to overhead costs."
 		]
 	},
 	"flow-of-funds": {
@@ -76,8 +76,7 @@
 		"text": "Every month we transfer just enough money to local banks in the countries where we are active. We then distribute Social Incomes with the help of mobile money directly to the phones of beneficiaries.",
 		"paragraphs": [
 			"Every month we transfer just enough money to local banks in the countries where we are active. We then distribute Social Incomes with the help of mobile money directly to the phones of beneficiaries."
-		],
-		"vimeo-video-id": "840215695"
+		]
 	},
 	"team": {
 		"header": "Our Team",

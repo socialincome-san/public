@@ -71,19 +71,17 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => AuthCubit(
-              crashReportingRepository:
-                  context.read<CrashReportingRepository>(),
+              crashReportingRepository: context.read<CrashReportingRepository>(),
               organizationRepository: context.read<OrganizationRepository>(),
               userRepository: context.read<UserRepository>(),
             )..init(),
           ),
           BlocProvider(
             create: (context) => SettingsCubit(
-                defaultLocale: const Locale("en", "US"),
-                messagingRepository: context.read<MessagingRepository>(),
-                crashReportingRepository:
-                    context.read<CrashReportingRepository>())
-              ..initMessaging(),
+              defaultLocale: const Locale("en", "US"),
+              messagingRepository: context.read<MessagingRepository>(),
+              crashReportingRepository: context.read<CrashReportingRepository>(),
+            )..initMessaging(),
           ),
         ],
         child: const _App(),
@@ -103,7 +101,7 @@ class _App extends StatelessWidget {
       title: "Social Income",
       theme: AppTheme.lightTheme,
       locale: currentLocale,
-      localizationsDelegates: [
+      localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -111,9 +109,9 @@ class _App extends StatelessWidget {
         KriMaterialLocalizations.delegate,
         KriCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [
-        const Locale("en", "US"),
-        const Locale("kri"),
+      supportedLocales: const [
+        Locale("en", "US"),
+        Locale("kri"),
       ],
       home: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
@@ -121,8 +119,9 @@ class _App extends StatelessWidget {
             // change language to the user's preferred language
             final selectedLanguage = state.recipient?.selectedLanguage;
 
-            if (selectedLanguage != null)
+            if (selectedLanguage != null) {
               context.read<SettingsCubit>().changeLanguage(selectedLanguage);
+            }
           }
         },
         builder: (context, state) {

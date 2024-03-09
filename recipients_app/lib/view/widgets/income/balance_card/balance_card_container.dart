@@ -3,6 +3,7 @@ import "package:app/data/models/payment/payment.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/payment_tile.dart";
 import "package:app/view/pages/payments_page.dart";
+import "package:app/view/widgets/dashboard_item.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_grid.dart";
 import "package:app/view/widgets/income/balance_card/balance_card_header.dart";
 import "package:app/view/widgets/income/balance_card/on_hold_bottom_card.dart";
@@ -16,7 +17,7 @@ const _kShowPaymentCardStatuses = [
   PaymentUiStatus.toReview,
 ];
 
-class BalanceCardContainer extends StatelessWidget {
+class BalanceCardContainer extends DashboardItem {
   const BalanceCardContainer({super.key});
 
   @override
@@ -83,6 +84,7 @@ class BalanceCardContainer extends StatelessWidget {
             _kShowPaymentCardStatuses.contains(lastPaidPayment.uiStatus)) ...[
           PaymentTile(mappedPayment: lastPaidPayment),
         ],
+        const SizedBox(height: 4),
       ],
     );
   }

@@ -8,7 +8,7 @@ class InputDropdown<T> extends StatefulWidget {
   final Function(T?) onChanged;
   final T? value;
 
-  InputDropdown({
+  const InputDropdown({
     super.key,
     required this.label,
     required this.items,

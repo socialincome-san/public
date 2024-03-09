@@ -45,7 +45,7 @@
 		]
 	},
 	"100-percent-model": {
-		"header": "100% Model",
+		"header": "Unser Versprechen",
 		"title": [
 			{
 				"text": "Spenden für Menschen in Armut. "
@@ -55,10 +55,10 @@
 				"color": "secondary"
 			}
 		],
-		"subtitle": "Wir sind der Meinung, dass 100% der wieder&shy;kehrenden Spenden Menschen in Not zugute kommen sollen.",
+		"subtitle": "Wir sind der Meinung, dass der allergrösste Teil jeder Spende Menschen in Not zugute kommen sollte.",
 		"paragraphs": [
-			"Wir haben einen Weg gefunden, dieses Versprechen einzulösen: Unsere Betriebskosten und Finanzierungsaufwendungen werden durch philanthropische Zuschüsse und institutionelle Spenden gedeckt.",
-			"Dank dieser Unterstützung können wir garantieren, dass 100 % der Beiträge unserer individuellen Spender*innen bei den Empfänger:innen ankommt."
+			"Wir haben einen Weg gefunden, dieses Versprechen zu erfüllen. Institutionelle Spenden helfen uns, einen Teil der Adminkosten zu decken.",
+			"So können wir sicherstellen, dass nur ein minimaler Teil deiner Spende für Verwaltungskosten verwendet wird."
 		]
 	},
 	"flow-of-funds": {
@@ -76,8 +76,7 @@
 		"text": "Monatlich überweisen wir Geld auf unsere Konten bei lokalen Banken in den Ländern, in denen wir aktiv sind. Anschliessend zahlen wir das Geld direkt auf die Mobiltelefone von bedürftigen Menschen mittels Mobile Money aus.",
 		"paragraphs": [
 			"Monatlich überweisen wir Geld auf unsere Konten bei lokalen Banken in den Ländern, in denen wir aktiv sind. Anschliessend zahlen wir das Geld direkt auf die Mobiltelefone von bedürftigen Menschen mittels Mobile Money aus."
-		],
-		"vimeo-video-id": "840215695"
+		]
 	},
 	"team": {
 		"header": "Unser Team",

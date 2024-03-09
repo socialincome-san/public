@@ -1,8 +1,8 @@
 import { onObjectFinalized } from 'firebase-functions/v2/storage';
 import { POSTFINANCE_PAYMENTS_FILES_BUCKET } from '../../config';
-import { PostfinancePaymentsFileImporter } from './PostfinancePaymentsFileImporter';
+import { PostfinancePaymentsFileHandler } from '../../utils/PostfinancePaymentsFileHandler';
 
 export default onObjectFinalized({ bucket: POSTFINANCE_PAYMENTS_FILES_BUCKET }, async (event) => {
-	const paymentsFileImporter = new PostfinancePaymentsFileImporter(POSTFINANCE_PAYMENTS_FILES_BUCKET);
-	paymentsFileImporter.processPaymentFile(event.data.name);
+	const paymentsFileHandler = new PostfinancePaymentsFileHandler(POSTFINANCE_PAYMENTS_FILES_BUCKET);
+	await paymentsFileHandler.processPaymentFile(event.data.name);
 });

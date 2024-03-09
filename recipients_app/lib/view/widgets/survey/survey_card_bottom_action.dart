@@ -45,8 +45,7 @@ class SurveyCardBottomAction extends StatelessWidget {
                 color: foregroundColor,
                 fontColor: foregroundColor,
               ),
-            ] else if (mappedSurvey.cardStatus ==
-                SurveyCardStatus.answered) ...[
+            ] else if (mappedSurvey.cardStatus == SurveyCardStatus.answered) ...[
               SurveyStatusIconWithText(
                 status: SurveyCardStatus.answered,
                 text: localizations.surveyStatusAnswered,
@@ -80,8 +79,7 @@ class SurveyCardBottomAction extends StatelessWidget {
   bool _shouldShowActionButton(
     SurveyCardStatus status,
   ) {
-    return status != SurveyCardStatus.answered &&
-        status != SurveyCardStatus.missed;
+    return status != SurveyCardStatus.answered && status != SurveyCardStatus.missed;
   }
 
   Color _getBackgroundColor(SurveyCardStatus status) {
@@ -94,6 +92,7 @@ class SurveyCardBottomAction extends StatelessWidget {
       case SurveyCardStatus.firstReminder:
         return AppColors.primaryColor;
       case SurveyCardStatus.newSurvey:
+      case SurveyCardStatus.upcoming:
         return Colors.white;
     }
   }
@@ -108,6 +107,7 @@ class SurveyCardBottomAction extends StatelessWidget {
       case SurveyCardStatus.firstReminder:
         return Colors.white;
       case SurveyCardStatus.newSurvey:
+      case SurveyCardStatus.upcoming:
         return AppColors.fontColorDark;
     }
   }
@@ -121,8 +121,9 @@ class SurveyCardBottomAction extends StatelessWidget {
 
     switch (mappedSurvey.cardStatus) {
       case SurveyCardStatus.answered:
-        return DateFormat("dd.MM.yyyy", locale).format(
-            mappedSurvey.survey.completedAt?.toDate() ?? DateTime.now());
+        return DateFormat.yMd(locale).format(
+          mappedSurvey.survey.completedAt?.toDate() ?? DateTime.now(),
+        );
       case SurveyCardStatus.overdue:
         final daysAfterOverdue = mappedSurvey.daysAfterOverdue ?? 0;
         if (daysAfterOverdue > 1) {
@@ -137,6 +138,7 @@ class SurveyCardBottomAction extends StatelessWidget {
         }
         return localizations.surveyDaysLeft(daysToOverdue, daysText);
       case SurveyCardStatus.missed:
+      case SurveyCardStatus.upcoming:
         return "";
     }
   }

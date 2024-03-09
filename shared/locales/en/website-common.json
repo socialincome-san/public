@@ -24,16 +24,13 @@
 		"recipients": "Recipients",
 		"reporting": "Reporting",
 		"team": "Team",
-		"terms-and-conditions": "Terms and Conditions",
-		"terms-of-use": "Terms of Use",
 		"transparency": "Transparency",
 		"whats-next": "What's Next"
 	},
 	"footer": {
 		"follow-us": "Follow Us",
 		"resources": "Resources",
-		"our-work": "Our Work",
-		"about-us": "About Us"
+		"legal": "Legal"
 	},
 	"cookie-consent-banner": {
 		"text": "Do you allow us to use cookies for analyzing our website traffic and performance? We never collect any personal data. <a href='/privacy' class='underline'>Privacy Policy</a>.",

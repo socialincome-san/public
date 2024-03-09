@@ -62,22 +62,25 @@ class AccountPageState extends State<AccountPage> {
     _callingNameController = TextEditingController(
       text: widget.recipient.callingName ?? "",
     );
-    _birthDateController = TextEditingController(
-      text: getFormattedDate(widget.recipient.birthDate) ?? "",
-    );
     _emailController = TextEditingController(
       text: widget.recipient.email ?? "",
     );
-
+    _birthDateController = TextEditingController(
+      text: "",
+    );
     _paymentNumberController = TextEditingController(
       text: widget.recipient.mobileMoneyPhone?.phoneNumber.toString() ?? "",
     );
     _contactNumberController = TextEditingController(
-      text: widget.recipient.communicationMobilePhone?.phoneNumber.toString() ??
-          "",
+      text: widget.recipient.communicationMobilePhone?.phoneNumber.toString() ?? "",
     );
 
     _initAppVersionInfo();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final locale = Localizations.localeOf(context).toLanguageTag();
+      _birthDateController.text = getFormattedDate(widget.recipient.birthDate, locale) ?? "";
+    });
   }
 
   Future<void> _initAppVersionInfo() async {
@@ -103,9 +106,9 @@ class AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).toLanguageTag();
 
-    final recipient =
-        context.watch<AuthCubit>().state.recipient ?? widget.recipient;
+    final recipient = context.watch<AuthCubit>().state.recipient ?? widget.recipient;
 
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
@@ -143,7 +146,7 @@ class AccountPageState extends State<AccountPage> {
                 ),
                 const SizedBox(height: 16),
                 InputText(
-                  hintText: localizations.name + "*",
+                  hintText: "${localizations.name}*",
                   controller: _nameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -152,16 +155,17 @@ class AccountPageState extends State<AccountPage> {
                     return null;
                   },
                   onSubmitted: (value) {
-                    if (value != null && value.isNotEmpty)
+                    if (value != null && value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
                             recipient.copyWith(firstName: value),
                           );
+                    }
                   },
                 ),
                 const SizedBox(height: 16),
                 InputText(
                   controller: _surnameController,
-                  hintText: localizations.surname + "*",
+                  hintText: "${localizations.surname}*",
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return localizations.surnameError;
@@ -169,38 +173,38 @@ class AccountPageState extends State<AccountPage> {
                     return null;
                   },
                   onSubmitted: (value) {
-                    if (value != null && value.isNotEmpty)
+                    if (value != null && value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
                             recipient.copyWith(
                               lastName: value,
                             ),
                           );
+                    }
                   },
                 ),
                 const SizedBox(height: 16),
                 InputText(
                   controller: _callingNameController,
                   hintText: localizations.callingName,
-                  onSubmitted: (value) =>
-                      context.read<AuthCubit>().updateRecipient(
-                            recipient.copyWith(callingName: value),
-                          ),
+                  onSubmitted: (value) => context.read<AuthCubit>().updateRecipient(
+                        recipient.copyWith(callingName: value),
+                      ),
                 ),
                 const SizedBox(height: 16),
                 InputDropdown<String>(
-                  label: localizations.gender + "*",
+                  label: "${localizations.gender}*",
                   items: [
                     DropdownMenuItem(
-                      child: Text(localizations.male),
                       value: "male",
+                      child: Text(localizations.male),
                     ),
                     DropdownMenuItem(
-                      child: Text(localizations.female),
                       value: "female",
+                      child: Text(localizations.female),
                     ),
                     DropdownMenuItem(
-                      child: Text(localizations.other),
                       value: "other",
+                      child: Text(localizations.other),
                     ),
                   ],
                   value: recipient.gender,
@@ -210,23 +214,21 @@ class AccountPageState extends State<AccountPage> {
                     }
                     return null;
                   },
-                  onChanged: (value) =>
-                      context.read<AuthCubit>().updateRecipient(
-                            recipient.copyWith(
-                              gender: value,
-                            ),
-                          ),
+                  onChanged: (value) => context.read<AuthCubit>().updateRecipient(
+                        recipient.copyWith(
+                          gender: value,
+                        ),
+                      ),
                 ),
                 const SizedBox(height: 16),
                 InputText(
-                  hintText: localizations.dateOfBirth + "*",
+                  hintText: "${localizations.dateOfBirth}*",
                   controller: _birthDateController,
                   isReadOnly: true,
                   onTap: () async => showDatePicker(
                     firstDate: DateTime(1950),
                     lastDate: DateTime(DateTime.now().year - 10),
-                    initialDate:
-                        recipient.birthDate?.toDate() ?? DateTime(2000),
+                    initialDate: recipient.birthDate?.toDate() ?? DateTime(2000),
                     context: context,
                   ).then((value) {
                     if (value != null) {
@@ -237,8 +239,7 @@ class AccountPageState extends State<AccountPage> {
                               birthDate: timestamp,
                             ),
                           );
-                      _birthDateController.text =
-                          getFormattedDate(timestamp) ?? "";
+                      _birthDateController.text = getFormattedDate(timestamp, locale) ?? "";
                     }
                     return;
                   }),
@@ -255,15 +256,15 @@ class AccountPageState extends State<AccountPage> {
                 ),
                 const SizedBox(height: 16),
                 InputDropdown<String>(
-                  label: localizations.language + "*",
+                  label: "${localizations.language}*",
                   items: [
                     DropdownMenuItem(
-                      child: Text(localizations.english),
                       value: "en",
+                      child: Text(localizations.english),
                     ),
                     DropdownMenuItem(
-                      child: Text(localizations.krio),
                       value: "kri",
+                      child: Text(localizations.krio),
                     ),
                   ],
                   validator: (value) {
@@ -287,10 +288,11 @@ class AccountPageState extends State<AccountPage> {
                   hintText: localizations.email,
                   controller: _emailController,
                   onSubmitted: (value) {
-                    if (value != null && value.isNotEmpty)
+                    if (value != null && value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
                             recipient.copyWith(email: value),
                           );
+                    }
                   },
                   keyboardType: TextInputType.emailAddress,
                 ),
@@ -301,7 +303,7 @@ class AccountPageState extends State<AccountPage> {
                 ),
                 const SizedBox(height: 16),
                 InputText(
-                  hintText: localizations.paymentNumber + "*",
+                  hintText: "${localizations.paymentNumber}*",
                   isReadOnly: true,
                   controller: _paymentNumberController,
                   keyboardType: TextInputType.number,
@@ -328,15 +330,15 @@ class AccountPageState extends State<AccountPage> {
                 ),
                 const SizedBox(height: 16),
                 InputDropdown<String>(
-                  label: localizations.mobilePaymentProvider + "*",
-                  items: [
-                    const DropdownMenuItem(
-                      child: Text("Orange Money SL"),
+                  label: "${localizations.mobilePaymentProvider}*",
+                  items: const [
+                    DropdownMenuItem(
                       value: "orange_money_sl",
+                      child: Text("Orange Money SL"),
                     ),
-                    const DropdownMenuItem(
-                      child: Text("Africell Money"),
+                    DropdownMenuItem(
                       value: "africell_money",
+                      child: Text("Africell Money"),
                     ),
                   ],
                   value: recipient.paymentProvider,
@@ -346,10 +348,9 @@ class AccountPageState extends State<AccountPage> {
                     }
                     return null;
                   },
-                  onChanged: (value) => context
-                      .read<AuthCubit>()
-                      .updateRecipient(
-                          recipient.copyWith(paymentProvider: value)),
+                  onChanged: (value) => context.read<AuthCubit>().updateRecipient(
+                        recipient.copyWith(paymentProvider: value),
+                      ),
                 ),
                 const SizedBox(height: 24),
 
@@ -360,7 +361,7 @@ class AccountPageState extends State<AccountPage> {
                 ),
                 const SizedBox(height: 16),
                 InputText(
-                  hintText: localizations.contactNumber + "*",
+                  hintText: "${localizations.contactNumber}*",
                   controller: _contactNumberController,
                   keyboardType: TextInputType.number,
                   validator: (value) {
@@ -375,7 +376,7 @@ class AccountPageState extends State<AccountPage> {
                     return null;
                   },
                   onSubmitted: (value) {
-                    if (value != null && value.isNotEmpty)
+                    if (value != null && value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
                             recipient.copyWith(
                               communicationMobilePhone: Phone(
@@ -383,6 +384,7 @@ class AccountPageState extends State<AccountPage> {
                               ),
                             ),
                           );
+                    }
                   },
                 ),
                 // TODO add later
@@ -408,8 +410,10 @@ class AccountPageState extends State<AccountPage> {
                 if (widget.organization != null)
                   OrganizationInfo(organization: widget.organization!),
                 const SizedBox(height: 24),
-                Text(localizations.support,
-                    style: Theme.of(context).textTheme.bodyLarge),
+                Text(
+                  localizations.support,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
                 const SizedBox(height: 16),
                 Text(localizations.supportInfo),
                 const SizedBox(height: 16),
@@ -421,8 +425,10 @@ class AccountPageState extends State<AccountPage> {
                   label: localizations.getInTouch,
                 ),
                 const SizedBox(height: 24),
-                Text(localizations.account,
-                    style: Theme.of(context).textTheme.bodyLarge),
+                Text(
+                  localizations.account,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
                 const SizedBox(height: 16),
                 Text(localizations.accountInfo),
                 const SizedBox(height: 16),
@@ -444,8 +450,11 @@ class AccountPageState extends State<AccountPage> {
     );
   }
 
-  String? getFormattedDate(Timestamp? timestamp) {
+  String? getFormattedDate(
+    Timestamp? timestamp,
+    String locale,
+  ) {
     if (timestamp == null) return null;
-    return DateFormat("dd.MM.yyyy").format(timestamp.toDate());
+    return DateFormat.yMd(locale).format(timestamp.toDate());
   }
 }

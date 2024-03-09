@@ -18,7 +18,7 @@ class RadioRow<T> extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext) {
+  Widget build(BuildContext context) {
     return Material(
       color: Colors.white,
       child: InkWell(
@@ -36,7 +36,6 @@ class RadioRow<T> extends StatelessWidget {
                   padding: AppSpacings.a8,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      width: 1,
                       color: AppColors.primaryColor,
                     ),
                     borderRadius: const BorderRadius.all(
@@ -45,22 +44,23 @@ class RadioRow<T> extends StatelessWidget {
                   ),
                   child: groupValue == value
                       ? const CircleAvatar(
-                        backgroundColor: AppColors.primaryColor,
-                        radius: 10,
-                        child: Icon(
-                          Icons.check_rounded,
-                          size: 14,
-                          color: Colors.white,
-                        ),
-                      )
+                          backgroundColor: AppColors.primaryColor,
+                          radius: 10,
+                          child: Icon(
+                            Icons.check_rounded,
+                            size: 14,
+                            color: Colors.white,
+                          ),
+                        )
                       : null,
                 ),
                 const SizedBox(width: 14),
                 Text(
                   title,
                   style: AppStyles.headlineMedium.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryColor),
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryColor,
+                  ),
                 ),
               ],
             ),

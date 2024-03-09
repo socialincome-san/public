@@ -15,7 +15,7 @@ class SurveyRepository {
   Future<List<Survey>> fetchSurveys({
     required String recipientId,
   }) async {
-    final List<Survey> surveys = <Survey>[];
+    final surveys = <Survey>[];
 
     final surveysDocs = await firestore
         .collection(recipientCollection)
@@ -27,7 +27,7 @@ class SurveyRepository {
       final survey = Survey.fromJson(surveyDoc.data());
 
       surveys.add(
-        survey.copyWith(id: surveyDoc.id)
+        survey.copyWith(id: surveyDoc.id),
       );
     }
 
