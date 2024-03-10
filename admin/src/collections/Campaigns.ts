@@ -46,6 +46,28 @@ export const campaignsCollection = buildAuditedCollection<Campaign>({
 			multiline: true,
 			validation: { required: true },
 		},
+		second_description_title: {
+			dataType: 'string',
+			name: 'Second Description Title',
+			description: 'Visible in the fundraising page.',
+		},
+		second_description: {
+			dataType: 'string',
+			name: 'Second Description',
+			description: 'Visible in the fundraising page.',
+			multiline: true,
+		},
+		third_description_title: {
+			dataType: 'string',
+			name: 'Thrird Description Title',
+			description: 'Visible in the fundraising page.',
+		},
+		third_description: {
+			dataType: 'string',
+			name: 'Third Description',
+			description: 'Visible in the fundraising page.',
+			multiline: true,
+		},
 		amount_collected_chf: {
 			dataType: 'number',
 			name: 'Collected amount in CHF',

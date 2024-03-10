@@ -20,6 +20,8 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 						lang={lang}
 						region={region}
 						translations={{
+							oneTime: translator.t('donation-interval.0.title'),
+							monthly: translator.t('donation-interval.1.title'),
 							amount: translator.t('amount'),
 							submit: translator.t('button-text'),
 						}}

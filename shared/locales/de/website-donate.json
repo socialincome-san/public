@@ -22,6 +22,9 @@
 		"8": "Dein monatlicher Beitrag von {{ amount, currency }} ist außergewöhnlich, ebenso wie dein Einfluss."
 	},
 	"donation-interval": {
+		"0": {
+			"title": "Einmalig"
+		},
 		"1": {
 			"title": "Monatlich",
 			"text": "{{ amount, currency }} jeden Monat zahlen"
@@ -73,6 +76,21 @@
 		}
 	},
 	"campaign": {
-		"not-found": "Kampagne konnte leider nicht gefunden werden."
+		"not-found": "Die Kampagne konnte leider nicht gefunden werden.",
+		"by": "Von {{ creator }}",
+		"without-goal": {
+			"collected_zero": "Noch keine Spenden. Mache den ersten Schritt!",
+			"collected_other": "{{ amount, currency }} von {{ count }} Spender:innen gesammelt"
+		},
+		"with-goal": {
+			"collected-percentage": "{{percentage}}% gesammelt",
+			"goal-title": "Ziel",
+			"collected-amount": "{{ amount, currency }} von {{count}} Spender:innen",
+			"goal-amount": "{{ amount, currency }}"
+		},
+		"days-left_zero": "Letzter Tag",
+		"days-left_one": "Noch einen Tag bis zum Spendeschluss",
+		"days-left_other": "{{ count }} verbleibende Tage:",
+		"ended": "Die Kampagne ist geschlossen. Keine weiteren Spenden möglich."
 	}
 }
