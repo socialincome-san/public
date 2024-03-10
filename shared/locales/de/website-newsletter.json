@@ -16,6 +16,7 @@
 		"country": "Land",
 		"language": "Kommunikationssprache",
 		"submit-button": "Beim Newsletter anmelden",
-		"newsletter-updated-toast": "Du wurdest zum Newsletter hinzugefügt"
+		"newsletter-updated-toast": "Du wurdest zum Newsletter hinzugefügt",
+		"newsletter-error-toast": "Du konntest leider nicht zum Newsletter hinzugefügt werden"
 	}
 }

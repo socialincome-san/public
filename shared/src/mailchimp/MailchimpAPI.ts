@@ -40,16 +40,17 @@ export class MailchimpAPI {
 
 	createSubscription = async (data: MailchimpSubscriptionData, listId: string) => {
 		await mailchimp.lists.addListMember(listId, {
-			email_address: data.email,
-			status: data.status,
-			merge_fields: {
-				FNAME: data.firstname ?? '',
-				LNAME: data.lastname ?? '',
-				COUNTRY: data.country ?? '',
-				LANGUAGE: data.language,
-			},
-		});
-	};
+				email_address: data.email,
+				status: data.status,
+				merge_fields: {
+					FNAME: data.firstname ?? '',
+					LNAME: data.lastname ?? '',
+					COUNTRY: data.country ?? '',
+					LANGUAGE: data.language,
+				},
+			});	
+
+	};			
 
 	// Helper function to calculate the MD5 hash
 	md5 = (str: string): string => {

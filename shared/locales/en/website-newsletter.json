@@ -16,6 +16,7 @@
 		"country": "Country",
 		"language": "Communication language",
 		"submit-button": "Subscribe to newsletter",
-		"newsletter-updated-toast": "You have been added to the newsletter"
+		"newsletter-updated-toast": "You have been added to the newsletter",
+		"newsletter-error-toast": "We weren't able to add you to our newsletter"
 	}
 }

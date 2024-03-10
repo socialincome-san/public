@@ -22,12 +22,12 @@ export default async function Page({ params }: DefaultPageProps) {
 				translations={{
 					firstname: translator.t('updates.firstname'),
 					lastname: translator.t('updates.lastname'),
-					gender: translator.t('updates.gender'),
 					email: translator.t('updates.email'),
 					country: translator.t('updates.country'),
 					language: translator.t('updates.language'),
 					updatesSubmitButton: translator.t('updates.submit-button'),
-					toastMessage: translator.t('updates.newsletter-updated-toast')
+					toastMessage: translator.t('updates.newsletter-updated-toast'),
+					toastErrorMessage: translator.t('updates.newsletter-error-toast')
 
 				}}
 			/>

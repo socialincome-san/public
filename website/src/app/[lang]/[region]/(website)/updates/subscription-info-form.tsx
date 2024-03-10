@@ -3,9 +3,8 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useTranslator } from '@/hooks/useTranslator';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { MailchimpSubscriptionData } from '@socialincome/shared/src/mailchimp/MailchimpEventHandler';
+import { MailchimpSubscriptionData } from '@socialincome/shared/src/mailchimp/MailchimpAPI';
 import { COUNTRY_CODES } from '@socialincome/shared/src/types/country';
-import { GENDER_OPTIONS, USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types/user';
 import {
 	Button,
 	Form,
@@ -32,12 +31,12 @@ type PersonalInfoFormProps = {
 	translations: {
 		firstname: string;
 		lastname: string;
-		gender: string;
 		email: string;
 		country: string;
 		language: string;
 		updatesSubmitButton: string;
 		toastMessage: string;
+		toastErrorMessage: string;
 	};
 } & DefaultParams ;
 
@@ -49,7 +48,6 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 	const formSchema = z.object({
 		firstname: z.string(),
 		lastname: z.string(),
-		gender: z.enum(GENDER_OPTIONS),
 		email: z.string().email(),
 		country: z.enum(['', ...COUNTRY_CODES]).optional(),
 		language: z.enum(['en', 'de']),
@@ -61,7 +59,6 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 		defaultValues: {
 			firstname: '',
 			lastname: '',
-			gender: '' as any,
 			email: '',
 			country: '' as any,
 			language: '' as any,
@@ -72,17 +69,18 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 		const data: MailchimpSubscriptionData = {
 			firstname: values.firstname,
 			lastname: values.lastname,
-			gender: values.gender,
 			email: values.email,
 			country: values.country,
 			language: values.language,
 			status: "subscribed"
 		};
 		// Call the API to change Mailchimp subscription
-		fetch('/api/mailchimp/updateSubscription', { method: 'POST', body: JSON.stringify(data) })
+		fetch('/api/mailchimp/publicSubscription', { method: 'POST', body: JSON.stringify(data) })
 			.then((response) => {
 				if (response.status === 200) {
 					toast.success(translations.toastMessage);
+				} else {
+					toast.error(translations.toastErrorMessage + '(' + response.statusText + ')');
 				}
 			})
 		}
@@ -125,29 +123,6 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 							<FormControl>
 								<Input type="email" {...field} />
 							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name="gender"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>{translations.gender}</FormLabel>
-							<Select onValueChange={field.onChange}>
-								<FormControl>
-									<SelectTrigger>
-										<SelectValue placeholder={field.value && commonTranslator?.t(`genders.${field.value}`)} />
-									</SelectTrigger>
-								</FormControl>
-								<SelectContent>
-									<SelectItem value="male">{commonTranslator?.t('genders.male')}</SelectItem>
-									<SelectItem value="female">{commonTranslator?.t('genders.female')}</SelectItem>
-									<SelectItem value="other">{commonTranslator?.t('genders.other')}</SelectItem>
-									<SelectItem value="private">{commonTranslator?.t('genders.private')}</SelectItem>
-								</SelectContent>
-							</Select>
 							<FormMessage />
 						</FormItem>
 					)}
