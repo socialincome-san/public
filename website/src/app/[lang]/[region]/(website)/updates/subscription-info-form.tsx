@@ -25,8 +25,6 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
 
-
-
 type PersonalInfoFormProps = {
 	translations: {
 		firstname: string;
@@ -38,12 +36,11 @@ type PersonalInfoFormProps = {
 		toastMessage: string;
 		toastErrorMessage: string;
 	};
-} & DefaultParams ;
+} & DefaultParams;
 
 export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormProps) {
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
-
 
 	const formSchema = z.object({
 		firstname: z.string(),
@@ -72,18 +69,17 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 			email: values.email,
 			country: values.country,
 			language: values.language,
-			status: "subscribed"
+			status: 'subscribed',
 		};
 		// Call the API to change Mailchimp subscription
-		fetch('/api/mailchimp/publicSubscription', { method: 'POST', body: JSON.stringify(data) })
-			.then((response) => {
-				if (response.status === 200) {
-					toast.success(translations.toastMessage);
-				} else {
-					toast.error(translations.toastErrorMessage + '(' + response.statusText + ')');
-				}
-			})
-		}
+		fetch('/api/mailchimp/publicSubscription', { method: 'POST', body: JSON.stringify(data) }).then((response) => {
+			if (response.status === 200) {
+				toast.success(translations.toastMessage);
+			} else {
+				toast.error(translations.toastErrorMessage + '(' + response.statusText + ')');
+			}
+		});
+	};
 
 	return (
 		<Form {...form}>

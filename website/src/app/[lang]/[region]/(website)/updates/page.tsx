@@ -2,12 +2,12 @@ import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { SubscriptionInfoForm } from '@/app/[lang]/[region]/(website)/updates/subscription-info-form';
 
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/ui'; 
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/ui';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
 		language: params.lang,
-		namespaces: ['website-newsletter']
+		namespaces: ['website-newsletter'],
 	});
 
 	return (
@@ -27,8 +27,7 @@ export default async function Page({ params }: DefaultPageProps) {
 					language: translator.t('updates.language'),
 					updatesSubmitButton: translator.t('updates.submit-button'),
 					toastMessage: translator.t('updates.newsletter-updated-toast'),
-					toastErrorMessage: translator.t('updates.newsletter-error-toast')
-
+					toastErrorMessage: translator.t('updates.newsletter-error-toast'),
 				}}
 			/>
 		</div>

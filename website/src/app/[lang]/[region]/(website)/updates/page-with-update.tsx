@@ -3,12 +3,12 @@ import { SubscriptionInfoForm } from '@/app/[lang]/[region]/(website)/updates/su
 import NewsletterOverlay from '@/components/newsletter-overlay/newsletter-overlay';
 
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Alert, AlertDescription, AlertTitle } from '@socialincome/ui'; 
+import { Alert, AlertDescription, AlertTitle } from '@socialincome/ui';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
 		language: params.lang,
-		namespaces: ['common']
+		namespaces: ['common'],
 	});
 
 	return (
@@ -23,7 +23,7 @@ export default async function Page({ params }: DefaultPageProps) {
 					language: translator.t('updates.language'),
 					alertMessage: translator.t('updates.alert-description'),
 					submitButton: translator.t('updates.submit-button'),
-					toastMessage: translator.t('updates.newsletter-updated-toast')
+					toastMessage: translator.t('updates.newsletter-updated-toast'),
 				}}
 			/>
 			<Alert variant="primary">
@@ -41,8 +41,7 @@ export default async function Page({ params }: DefaultPageProps) {
 					country: translator.t('updates.country'),
 					language: translator.t('updates.language'),
 					updatesSubmitButton: translator.t('updates.submit-button'),
-					toastMessage: translator.t('updates.newsletter-updated-toast')
-
+					toastMessage: translator.t('updates.newsletter-updated-toast'),
 				}}
 			/>
 		</div>

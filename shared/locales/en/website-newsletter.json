@@ -5,7 +5,7 @@
 	"updates": {
 		"alert-title": "Social Income Newsletter",
 		"alert-description": "Sign up to stay up to date on all things of Social Income.",
-        "firstname": "First Name",
+		"firstname": "First Name",
 		"lastname": "Last Name",
 		"gender": "Gender",
 		"email": "Email",
