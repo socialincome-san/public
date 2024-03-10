@@ -6,6 +6,7 @@ import { useI18n } from '@/app/context-providers';
 import { CurrencySelector } from '@/components/ui/currency-selector';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Form, FormControl, FormField, FormItem, Input } from '@socialincome/ui';
+import { ToggleGroup, ToggleGroupItem } from '@socialincome/ui/src/components/toggle-group';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -15,11 +16,18 @@ import * as z from 'zod';
 
 type DonationFormProps = {
 	translations: {
+		monthly: string;
+		oneTime: string;
 		amount: string;
 		submit: string;
 	};
 	campaignId?: string;
 } & DefaultParams;
+
+enum DonationInterval {
+	OneTime = 'one-time',
+	Monthly = 'monthly',
+}
 
 export default function OneTimeDonationForm({ translations, lang, region, campaignId }: DonationFormProps) {
 	const router = useRouter();
@@ -28,14 +36,16 @@ export default function OneTimeDonationForm({ translations, lang, region, campai
 	const [submitting, setSubmitting] = useState(false);
 
 	const formSchema = z.object({
+		interval: z.coerce.string(),
 		amount: z.coerce.number().min(1),
 	});
 
 	type FormSchema = z.infer<typeof formSchema>;
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
-		defaultValues: { amount: '' as any },
+		defaultValues: { interval: DonationInterval.OneTime, amount: 100 },
 	});
+	const interval = form.watch('interval');
 
 	const onSubmit = async (values: FormSchema) => {
 		setSubmitting(true);
@@ -44,7 +54,8 @@ export default function OneTimeDonationForm({ translations, lang, region, campai
 			amount: values.amount * 100, // The amount is in cents, so we need to multiply by 100 to get the correct amount.
 			currency: currency,
 			successUrl: `${window.location.origin}/${lang}/${region}/donate/success/stripe/{CHECKOUT_SESSION_ID}`,
-			recurring: false,
+			recurring: values.interval === DonationInterval.Monthly,
+			intervalCount: values.interval === DonationInterval.Monthly ? 1 : undefined,
 			firebaseAuthToken: authToken,
 			campaignId: campaignId,
 		};
@@ -59,22 +70,61 @@ export default function OneTimeDonationForm({ translations, lang, region, campai
 		<div className="flex flex-col space-y-8 text-center sm:text-left">
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
-					<div className="mb-4 flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0 md:items-center">
+					<FormField
+						control={form.control}
+						name="interval"
+						render={({ field }) => (
+							<FormItem className="flex-1 sm:basis-2/3">
+								<FormControl>
+									<ToggleGroup
+										type="single"
+										style={{ width: '100%' }}
+										className={'bg-muted mb-4 rounded'}
+										value={field.value}
+										onValueChange={(v) => form.setValue('interval', v)}
+									>
+										<ToggleGroupItem style={{ width: '100%' }} className="text-lg" value={DonationInterval.OneTime}>
+											{translations.oneTime}
+										</ToggleGroupItem>
+										<ToggleGroupItem style={{ width: '100%' }} className="text-lg" value={DonationInterval.Monthly}>
+											{translations.monthly}
+										</ToggleGroupItem>
+									</ToggleGroup>
+								</FormControl>
+							</FormItem>
+						)}
+					></FormField>
+					<div className={'mb-4'}>
 						<FormField
 							control={form.control}
 							name="amount"
 							render={({ field }) => (
 								<FormItem className="flex-1 sm:basis-2/3">
 									<FormControl>
-										<Input className="h-16 text-lg" placeholder={translations.amount} {...field} />
+										<>
+											<ToggleGroup
+												type="single"
+												style={{ width: '100%' }}
+												className={'bg-muted mb-2 rounded'}
+												value={field.value.toString()}
+												onValueChange={(v) => form.setValue('amount', Number.parseInt(v))}
+											>
+												{createToggleGroupItems(
+													interval === DonationInterval.Monthly ? [40, 60, 100, 200, 300] : [25, 50, 100, 500, 1000],
+												)}
+											</ToggleGroup>
+											<div className="flex flex-col  sm:flex-row sm:space-x-2 sm:space-y-0 md:items-center">
+												<Input className="h-12 text-lg" {...field} />
+												<CurrencySelector
+													className="h-12 sm:basis-1/3 md:max-w-[12rem]"
+													currencies={['USD', 'EUR', 'CHF']}
+													fontSize="lg"
+												/>
+											</div>
+										</>
 									</FormControl>
 								</FormItem>
 							)}
-						/>
-						<CurrencySelector
-							className="h-16 sm:basis-1/3 md:max-w-[12rem]"
-							currencies={['USD', 'EUR', 'CHF']}
-							fontSize="lg"
 						/>
 					</div>
 					<Button size="lg" type="submit" variant="default" showLoadingSpinner={submitting}>
@@ -85,3 +135,11 @@ export default function OneTimeDonationForm({ translations, lang, region, campai
 		</div>
 	);
 }
+
+const createToggleGroupItems = (values: number[]) => {
+	return values.map((value) => (
+		<ToggleGroupItem key={value} style={{ width: '100%' }} className="text-lg" value={value.toString()}>
+			{value}
+		</ToggleGroupItem>
+	));
+};
