@@ -67,6 +67,7 @@
 		"zip": "Zip",
 		"country": "Country",
 		"language": "Communication language",
+		"mailingSubscription": "I would like to receive the Social Income Newsletter",
 		"submit-button": "Update Personal Info",
 		"user-updated-toast": "Your personal info has been updated"
 	},

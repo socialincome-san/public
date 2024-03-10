@@ -1,0 +1,21 @@
+{
+	"metadata": {
+		"title": "Datenschutzrichtlinie | Social Income"
+	},
+	"updates": {
+		"alert-title": "Social Income Newsletter",
+		"alert-description": "Melde dich an, um bei allen Thema rund um Social Income auf dem neusten Stand zu sein.",
+		"firstname": "Vorname",
+		"lastname": "Nachname",
+		"gender": "Geschlecht",
+		"email": "E-Mail",
+		"street": "Strasse",
+		"street-number": "Nummer",
+		"city": "Ort",
+		"zip": "PLZ",
+		"country": "Land",
+		"language": "Kommunikationssprache",
+		"submit-button": "Beim Newsletter anmelden",
+		"newsletter-updated-toast": "Du wurdest zum Newsletter hinzugefügt"
+	}
+}

@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAuth } from 'reactfire';
+import { MailchimpEventHandler } from '@socialincome/shared/src/mailchimp/MailchimpEventHandler';
 import * as z from 'zod';
 
 type CreateUserFormProps = {
