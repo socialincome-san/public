@@ -2,6 +2,7 @@ import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { SignOutButton } from '@/app/[lang]/[region]/(website)/me/security/sign-out-button';
 import UpdatePasswordForm from '@/app/[lang]/[region]/(website)/me/security/update-password-form';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
+import SwissQrBillSection from '@/app/[lang]/[region]/(website)/me/security/swiss-qr-bill';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-me'] });
@@ -24,6 +25,7 @@ export default async function Page({ params }: DefaultPageProps) {
 					buttonText: translator.t('security.sign-out.button'),
 				}}
 			/>
+			<SwissQrBillSection />
 		</div>
 	);
 }

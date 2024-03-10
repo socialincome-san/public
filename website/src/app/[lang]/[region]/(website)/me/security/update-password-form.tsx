@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import { useAuth, useUser } from 'reactfire';
 import * as z from 'zod';
 
-type LoginFormProps = {
+type UpdatePasswordFormProps = {
 	translations: {
 		title: string;
 		password: string;
@@ -22,7 +22,7 @@ type LoginFormProps = {
 	};
 };
 
-export default function UpdatePasswordForm({ translations }: LoginFormProps) {
+export default function UpdatePasswordForm({ translations }: UpdatePasswordFormProps) {
 	const auth = useAuth();
 	const router = useRouter();
 	const { data: authUser } = useUser();
