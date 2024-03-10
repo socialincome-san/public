@@ -8,6 +8,7 @@ import { daysUntilTs } from '@socialincome/shared/src/utils/date';
 import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRates';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
+import { getMetadata } from '@/metadata';
 import { Progress } from '@socialincome/ui/src/components/progress';
 
 export type CampaignPageProps = {
@@ -17,6 +18,10 @@ export type CampaignPageProps = {
 		campaign: string;
 	};
 } & DefaultPageProps;
+
+export async function generateMetadata({ params }: DefaultPageProps) {
+	return getMetadata(params.lang, 'website-donate');
+}
 
 export default async function Page({ params }: CampaignPageProps) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: 'website-donate' });
