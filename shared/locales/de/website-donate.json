@@ -80,12 +80,14 @@
 		"by": "Von {{ creator }}",
 		"without-goal": {
 			"collected_zero": "Noch keine Spenden. Mache den ersten Schritt!",
+			"collected_one": "{{ amount, currency }} von {{ count }} Spender:in gesammelt",
 			"collected_other": "{{ amount, currency }} von {{ count }} Spender:innen gesammelt"
 		},
 		"with-goal": {
 			"collected-percentage": "{{percentage}}% gesammelt",
 			"goal-title": "Ziel",
-			"collected-amount": "{{ amount, currency }} von {{count}} Spender:innen",
+			"collected-amount_one": "{{ amount, currency }} von {{count}} Spender:in",
+			"collected-amount_other": "{{ amount, currency }} von {{count}} Spender:innen",
 			"goal-amount": "{{ amount, currency }}"
 		},
 		"days-left_zero": "Letzter Tag",

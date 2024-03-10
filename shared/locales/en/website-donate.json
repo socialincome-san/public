@@ -80,12 +80,14 @@
 		"by": "By {{ creator }}",
 		"without-goal": {
 			"collected_zero": "No contributions yet. Be the first!",
+			"collected_one": "{{ amount, currency }} raised by {{ count }} contributor",
 			"collected_other": "{{ amount, currency }} raised by {{ count }} contributors"
 		},
 		"with-goal": {
 			"collected-percentage": "Raised {{percentage}}%",
 			"goal-title": "Goal",
-			"collected-amount": "{{ amount, currency }} by {{count}} contributors",
+			"collected-amount_one": "{{ amount, currency }} by {{count}} contributor",
+			"collected-amount_other": "{{ amount, currency }} by {{count}} contributors",
 			"goal-amount": "{{ amount, currency }}"
 		},
 		"days-left_zero": "Last day left to contribute",
