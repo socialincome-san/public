@@ -37,3 +37,8 @@ export function toDateTime(timestamp: Timestamp | Date | number, timezone: strin
 export function toDate(dateTime: DateTime) {
 	return new Date(dateTime.toMillis());
 }
+
+export function daysUntilTs(ts: Date): number {
+	const diffInMs = ts.getTime() - new Date().getTime();
+	return Math.ceil(diffInMs / (24 * 60 * 60 * 1000));
+}
