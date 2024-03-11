@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { useFirestore } from 'reactfire';
 import * as z from 'zod';
 import { useUserContext } from '../user-context-provider';
+import { EMPLOYERS_FIRESTORE_PATH } from '@socialincome/shared/src/types/employers';
 
 export type AddEmployerFormProps = {
 	translations: {
@@ -22,7 +23,7 @@ export function AddEmployerForm({ onNewEmployerSubmitted, translations }: AddEmp
 	const { user } = useUserContext();
 
 	const formSchema = z.object({
-		employerName: z.string().trim().min(1),
+		employerName: z.string().trim().min(1), // TODO : security 
 	});
 	type FormSchema = z.infer<typeof formSchema>;
 
@@ -37,7 +38,7 @@ export function AddEmployerForm({ onNewEmployerSubmitted, translations }: AddEmp
 		if (user) {
 			const userId = user!.id;
 
-			await addDoc(collection(firestore, 'employers'), {
+			await addDoc(collection(firestore, USER_FIRESTORE_PATH, userId, EMPLOYERS_FIRESTORE_PATH), {
 				...values,
 				isCurrent: true,
 				userId: doc(firestore, USER_FIRESTORE_PATH, userId),

@@ -33,8 +33,7 @@ export function EmployersList({ translations }: EmployersListProps) {
 			if (user && firestore) {
 				return await getDocs(
 					query(
-						collection(firestore, EMPLOYERS_FIRESTORE_PATH),
-						where('userId', '==', doc(firestore, USER_FIRESTORE_PATH, user.id)),
+						collection(firestore, USER_FIRESTORE_PATH, user.id, EMPLOYERS_FIRESTORE_PATH),
 						orderBy('created', 'desc'),
 					),
 				);
@@ -44,12 +43,12 @@ export function EmployersList({ translations }: EmployersListProps) {
 	});
 
 	const onDeleteEmployer = async (employer_id: string) => {
-		const employerRef = doc(firestore, EMPLOYERS_FIRESTORE_PATH, employer_id);
+		const employerRef = doc(firestore, USER_FIRESTORE_PATH, user!.id, EMPLOYERS_FIRESTORE_PATH, employer_id);
 		await deleteDoc(employerRef).then(() => onEmployersUpdated());
 	};
 
 	const onArchiveEmployer = async (employer_id: string) => {
-		const employerRef = doc(firestore, EMPLOYERS_FIRESTORE_PATH, employer_id);
+		const employerRef = doc(firestore, USER_FIRESTORE_PATH, user!.id, EMPLOYERS_FIRESTORE_PATH, employer_id);
 		await updateDoc(employerRef, { isCurrent: false }).then(() => onEmployersUpdated());
 	};
 
