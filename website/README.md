@@ -1,4 +1,6 @@
-## Getting Started
+## Development
+
+### Getting Started
 
 First, run the development server:
 
@@ -20,14 +22,39 @@ This project uses
 [`next/font`](https://nextjs.org/docs/basic-features/font-optimization)
 to automatically optimize and load Inter, a custom Google Font.
 
+### Storyblok
+
+The project uses Storyblok CMS to manage certain website content. Here
+are a couple of commands and steps usefull to know while working with
+Storyblok locally.
+
+- The `.env.local` contains a couple of environment variables you have
+  to setup. Folow the descriptions there.
+- The Dev-Dependency `storyblok` is the Storyblok CLI and can be used to
+  retrieve certain information about the project.
+- The Dev-Dependency `storyblok-generate-ts` generates TypeScript types
+  from meta information pulled with the Storyblok CLI.
+- Before starting to develop and while development, you want to pull
+  meta information about the Storyblok components in the space, and
+  generate TpyeScript types from it. You do that with the following
+  command (which will prompt you to login into the Storyblok the first
+  time you use it.):
+  ```sh
+  # Always run these commands from the root project folder.
+  # Creates/updates src/types/storyblok/storyblok.generated.ts which can be imported
+  # into React components to get typing for the Storyblok data
+  $ npm run --workspace=@socialincome/website storyblok:codegen
+  ```
+
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+Learn more about the setup in this project:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
   features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js
   tutorial.
+- [Storyblok React](https://github.com/storyblok/storyblok-react).
 
 You can check out
 [the Next.js GitHub repository](https://github.com/vercel/next.js/) -
