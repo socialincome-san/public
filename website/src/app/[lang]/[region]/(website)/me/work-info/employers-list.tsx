@@ -6,7 +6,7 @@ import { EMPLOYERS_FIRESTORE_PATH } from '@socialincome/shared/src/types/employe
 import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { Table, TableBody, TableCell, TableRow, Typography } from '@socialincome/ui';
 import { useQuery } from '@tanstack/react-query';
-import { collection, deleteDoc, doc, getDocs, orderBy, query, updateDoc, where } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore';
 import { useContext } from 'react';
 import { useFirestore } from 'reactfire';
 import { DefaultParams } from '../../..';

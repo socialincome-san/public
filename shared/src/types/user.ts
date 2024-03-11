@@ -2,8 +2,8 @@ import { EntityReference } from 'firecms';
 import { capitalizeStringIfUppercase } from '../utils/strings';
 import { CountryCode } from './country';
 import { Currency } from './currency';
-import { LanguageCode } from './language';
 import { Employer } from './employers';
+import { LanguageCode } from './language';
 
 export const USER_FIRESTORE_PATH = 'users';
 

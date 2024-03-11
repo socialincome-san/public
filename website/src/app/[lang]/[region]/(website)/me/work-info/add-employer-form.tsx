@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { EMPLOYERS_FIRESTORE_PATH } from '@socialincome/shared/src/types/employers';
 import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input } from '@socialincome/ui';
 import { Timestamp, addDoc, collection, doc } from 'firebase/firestore';
@@ -8,7 +9,6 @@ import { useForm } from 'react-hook-form';
 import { useFirestore } from 'reactfire';
 import * as z from 'zod';
 import { useUserContext } from '../user-context-provider';
-import { EMPLOYERS_FIRESTORE_PATH } from '@socialincome/shared/src/types/employers';
 
 export type AddEmployerFormProps = {
 	translations: {
@@ -23,7 +23,7 @@ export function AddEmployerForm({ onNewEmployerSubmitted, translations }: AddEmp
 	const { user } = useUserContext();
 
 	const formSchema = z.object({
-		employerName: z.string().trim().min(1), // TODO : security 
+		employerName: z.string().trim().min(1), // TODO : security
 	});
 	type FormSchema = z.infer<typeof formSchema>;
 
