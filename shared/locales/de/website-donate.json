@@ -95,7 +95,8 @@
 		},
 		"days-left_zero": "Letzter Tag",
 		"days-left_one": "Noch einen Tag bis zum Spendeschluss",
-		"days-left_other": "{{ count }} verbleibende Tage:",
-		"ended": "Die Kampagne ist geschlossen. Keine weiteren Spenden möglich."
+		"days-left_other": "{{ count }} verbleibende Tage",
+		"ended": "Die Kampagne ist geschlossen. Keine weiteren Spenden möglich.",
+		"card-title": "Spende"
 	}
 }
