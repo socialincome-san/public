@@ -3,28 +3,22 @@
 // For a full list of overridable settings, and general information on folder-specific settings,
 // see the documentation: https://docs.zed.dev/configuration/configuring-zed#folder-specific-settings
 {
-  "language_overrides": {
-    "TypeScript": {
-      "format_on_save": {
-        "external": {
-          "command": "node_modules/.bin/prettier",
-          "arguments": [
-            "--stdin-filepath",
-            "{buffer_path}"
-          ]
-        }
-      }
-    },
-    "TSX": {
-      "format_on_save": {
-        "external": {
-          "command": "node_modules/.bin/prettier",
-          "arguments": [
-            "--stdin-filepath",
-            "{buffer_path}"
-          ]
-        }
-      }
-    }
-  }
+	"language_overrides": {
+		"TypeScript": {
+			"format_on_save": {
+				"external": {
+					"command": "node_modules/.bin/prettier",
+					"arguments": ["--stdin-filepath", "{buffer_path}"]
+				}
+			}
+		},
+		"TSX": {
+			"format_on_save": {
+				"external": {
+					"command": "node_modules/.bin/prettier",
+					"arguments": ["--stdin-filepath", "{buffer_path}"]
+				}
+			}
+		}
+	}
 }
