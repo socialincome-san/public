@@ -78,14 +78,14 @@ export default function OneTimeDonationForm({ translations, lang, region, campai
 								<FormControl>
 									<ToggleGroup
 										type="single"
-										className={'bg-popover mb-4 rounded-full inline-flex'}
+										className={'bg-popover mb-4 inline-flex rounded-full'}
 										value={field.value}
 										onValueChange={(v) => form.setValue('interval', v)}
 									>
-										<ToggleGroupItem className="text-md rounded-full m-1 px-6" value={DonationInterval.OneTime}>
+										<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={DonationInterval.OneTime}>
 											{translations.oneTime}
 										</ToggleGroupItem>
-										<ToggleGroupItem className="text-md rounded-full m-1 px-6" value={DonationInterval.Monthly}>
+										<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={DonationInterval.Monthly}>
 											{translations.monthly}
 										</ToggleGroupItem>
 									</ToggleGroup>
@@ -112,7 +112,7 @@ export default function OneTimeDonationForm({ translations, lang, region, campai
 												)}
 											</ToggleGroup>
 											<div className="flex flex-col sm:flex-row sm:space-x-2 sm:space-y-0 md:items-center">
-												<Input className="h-12 text-lg mb-4 sm:mb-0" {...field} />
+												<Input className="mb-4 h-12 text-lg sm:mb-0" {...field} />
 												<CurrencySelector
 													className="h-12 sm:basis-1/3 md:max-w-[12rem]"
 													currencies={['USD', 'EUR', 'CHF']}
@@ -125,7 +125,13 @@ export default function OneTimeDonationForm({ translations, lang, region, campai
 							)}
 						/>
 					</div>
-					<Button size="lg" type="submit" variant="default" showLoadingSpinner={submitting}  className="bg-accent text-accent-foreground rounded-full font-medium text-lg hover:bg-accent-muted active:bg-accent-muted">
+					<Button
+						size="lg"
+						type="submit"
+						variant="default"
+						showLoadingSpinner={submitting}
+						className="bg-accent text-accent-foreground hover:bg-accent-muted active:bg-accent-muted rounded-full text-lg font-medium"
+					>
 						{translations.submit}
 					</Button>
 				</form>
@@ -136,7 +142,12 @@ export default function OneTimeDonationForm({ translations, lang, region, campai
 
 const createToggleGroupItems = (values: number[]) => {
 	return values.map((value) => (
-		<ToggleGroupItem key={value} style={{ width: '100%' }} className="text-md py-6 bg-popover rounded-full" value={value.toString()}>
+		<ToggleGroupItem
+			key={value}
+			style={{ width: '100%' }}
+			className="text-md bg-popover rounded-full py-6"
+			value={value.toString()}
+		>
 			{value}
 		</ToggleGroupItem>
 	));
