@@ -88,7 +88,7 @@ export default async function Page({ params }: CampaignPageProps) {
 								</div>
 							</div>
 							<div>
-								<Progress value={percentageCollected} className={'h-5'} />
+								<Progress value={percentageCollected} className={'h-6'} />
 							</div>
 							<div className="flex">
 								<div className="flex-1 text-left">
