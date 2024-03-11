@@ -98,6 +98,6 @@
 		"days-left_one": "1 day left to contribute",
 		"days-left_other": "{{ count }} days left to contribute",
 		"ended": "The campaign ended, no more donations possible.",
-		"card-title": "Donate"
+		"card-title": "Donate Now"
 	}
 }
