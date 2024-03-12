@@ -8,7 +8,17 @@ import { CAMPAIGN_FIRESTORE_PATH, Campaign, CampaignStatus } from '@socialincome
 import { daysUntilTs } from '@socialincome/shared/src/utils/date';
 import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRates';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Popover, PopoverContent, PopoverTrigger, Table, TableBody, TableCell, TableRow, Typography } from "@socialincome/ui";
+import {
+	BaseContainer,
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+	Table,
+	TableBody,
+	TableCell,
+	TableRow,
+	Typography,
+} from '@socialincome/ui';
 import { Progress } from '@socialincome/ui/src/components/progress';
 
 export type CampaignPageProps = {
@@ -190,7 +200,12 @@ export default async function Page({ params }: CampaignPageProps) {
 							<Typography className={'mt-4'} color="primary" size="xl">
 								{translator.t('campaign.about-si-text-2')}
 							</Typography>
-							<Typography className={'mt-4 underline'} color="primary" size="xl" dangerouslySetInnerHTML={{ __html: translator.t('campaign.about-si-link') }} />
+							<Typography
+								className={'mt-4 underline'}
+								color="primary"
+								size="xl"
+								dangerouslySetInnerHTML={{ __html: translator.t('campaign.about-si-link') }}
+							/>
 						</div>
 					</div>
 					<div className="items-left flex flex-col">
