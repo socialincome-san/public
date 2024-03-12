@@ -1,5 +1,6 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import OneTimeDonationForm from '@/app/[lang]/[region]/donate/one-time/one-time-donation-form';
+import { VimeoVideo } from '@/components/vimeo-video';
 import { firestoreAdmin } from '@/firebase-admin';
 import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { getMetadata } from '@/metadata';
@@ -7,9 +8,18 @@ import { CAMPAIGN_FIRESTORE_PATH, Campaign, CampaignStatus } from '@socialincome
 import { daysUntilTs } from '@socialincome/shared/src/utils/date';
 import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRates';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Popover, PopoverContent, PopoverTrigger, Table, TableBody, TableCell, TableRow, Typography } from "@socialincome/ui";
+import {
+	BaseContainer,
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+	Table,
+	TableBody,
+	TableCell,
+	TableRow,
+	Typography,
+} from '@socialincome/ui';
 import { Progress } from '@socialincome/ui/src/components/progress';
-import { VimeoVideo } from "@/components/vimeo-video";
 
 export type CampaignPageProps = {
 	params: {
@@ -176,12 +186,12 @@ export default async function Page({ params }: CampaignPageProps) {
 				</div>
 			</BaseContainer>
 			<BaseContainer>
-				<div className="grid grid-cols-1 gap-20 py-8 lg:py-16 lg:grid-cols-2">
+				<div className="grid grid-cols-1 gap-20 py-8 lg:grid-cols-2 lg:py-16">
 					<div>
 						<div className="flex flex-col justify-center">
-								<Typography size="2xl" color="primary">
-									{translator.t('campaign.about-si-title')}
-								</Typography>
+							<Typography size="2xl" color="primary">
+								{translator.t('campaign.about-si-title')}
+							</Typography>
 						</div>
 						<div className="flex flex-col justify-center">
 							<Typography className={'mt-4'} color="primary" size="xl">
@@ -199,19 +209,19 @@ export default async function Page({ params }: CampaignPageProps) {
 						<div className="mt-2 self-end">
 							<Popover openDelay={0} closeDelay={200}>
 								<PopoverTrigger>
-									<Typography color="primary">
-										{translator.t('credits')}
-									</Typography>
+									<Typography color="primary">{translator.t('credits')}</Typography>
 								</PopoverTrigger>
 								<PopoverContent align="end" className="w-96">
 									<Table>
 										<TableBody>
-											{translator.t<{ role: string; name: string }[]>('video-01.credits').map(({ role, name }, index) => (
-												<TableRow key={index}>
-													<TableCell className="p-1.5 font-medium">{role}</TableCell>
-													<TableCell className="p-1.5">{name}</TableCell>
-												</TableRow>
-											))}
+											{translator
+												.t<{ role: string; name: string }[]>('video-01.credits')
+												.map(({ role, name }, index) => (
+													<TableRow key={index}>
+														<TableCell className="p-1.5 font-medium">{role}</TableCell>
+														<TableCell className="p-1.5">{name}</TableCell>
+													</TableRow>
+												))}
 										</TableBody>
 									</Table>
 								</PopoverContent>
