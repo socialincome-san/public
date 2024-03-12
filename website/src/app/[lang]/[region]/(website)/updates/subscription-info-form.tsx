@@ -3,6 +3,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useTranslator } from '@/hooks/useTranslator';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { MailchimpSubscriptionData } from '@socialincome/shared/src/mailchimp/MailchimpAPI';
 import { COUNTRY_CODES } from '@socialincome/shared/src/types/country';
 import {
 	Button,
@@ -23,7 +24,6 @@ import {
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
-import { MailchimpSubscriptionData } from '../../../../../../../shared/src/mailchimp/MailchimpAPI';
 
 type PersonalInfoFormProps = {
 	translations: {

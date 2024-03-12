@@ -2,9 +2,8 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import {
-	useCreateMailchimpSubscription,
 	useMailchimpSubscription,
-	useUpdateMailchimpSubscription,
+	useUpsertMailchimpSubscription,
 	useUserContext,
 } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
 import { useTranslator } from '@/hooks/useTranslator';
@@ -62,8 +61,7 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 	const countryTranslator = useTranslator(lang, 'countries');
 
 	const { status, isLoading } = useMailchimpSubscription();
-	const createMailchimpSubscription = useCreateMailchimpSubscription();
-	const updateMailchimpSubscription = useUpdateMailchimpSubscription();
+	const upsertMailchimpSubscription = useUpsertMailchimpSubscription();
 
 	const formSchema = z.object({
 		firstname: z.string(),
@@ -315,9 +313,9 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 					disabled={isLoading}
 					onCheckedChange={(enabled) => {
 						if (enabled) {
-							updateMailchimpSubscription('subscribed');
+							upsertMailchimpSubscription('subscribed');
 						} else {
-							updateMailchimpSubscription('unsubscribed');
+							upsertMailchimpSubscription('unsubscribed');
 						}
 					}}
 				/>

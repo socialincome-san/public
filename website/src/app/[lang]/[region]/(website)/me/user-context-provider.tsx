@@ -76,30 +76,15 @@ export const useMailchimpSubscription = () => {
 	return { status, isLoading, error };
 };
 
-export const useUpdateMailchimpSubscription = () => {
+export const useUpsertMailchimpSubscription = () => {
 	const { data: authUser } = useUser();
 	const queryClient = useQueryClient();
 
 	return async (status: Status) => {
 		const token = await authUser?.getIdToken();
 		const response = await fetch(`/api/mailchimp/subscription`, {
-			method: 'PATCH',
-			body: JSON.stringify({ status, firebaseAuthToken: token }),
-		});
-		queryClient.invalidateQueries({ queryKey: ['mailchimp'] });
-		return response;
-	};
-};
-
-export const useCreateMailchimpSubscription = () => {
-	const { data: authUser } = useUser();
-	const queryClient = useQueryClient();
-
-	return async () => {
-		const token = await authUser?.getIdToken();
-		const response = await fetch(`/api/mailchimp/subscription`, {
 			method: 'POST',
-			body: JSON.stringify({ firebaseAuthToken: token }),
+			body: JSON.stringify({ status, firebaseAuthToken: token }),
 		});
 		queryClient.invalidateQueries({ queryKey: ['mailchimp'] });
 		return response;

@@ -22,36 +22,11 @@ export async function GET(request: Request) {
 }
 
 /**
- * Create Mailchimp subscription
- */
-export type MailchimpSubscriptionCreate = { firebaseAuthToken: string } & Body;
-type MailchimpSubscriptionCreateRequest = { json(): Promise<MailchimpSubscriptionCreate> } & Request;
-export async function POST(request: MailchimpSubscriptionCreateRequest) {
-	const data = await request.json();
-
-	const userDoc = await getUserDocFromAuthToken(data.firebaseAuthToken);
-	if (!userDoc) return new Response(null, { status: 400, statusText: 'No user found' });
-
-	const mailchimpAPI = new MailchimpAPI(process.env.MAILCHIMP_API_KEY!, process.env.MAILCHIMP_SERVER!);
-	await mailchimpAPI.createSubscription(
-		{
-			email: userDoc.get('email'),
-			status: 'subscribed',
-			firstname: userDoc.get('personal.name'),
-			lastname: userDoc.get('personal.lastname'),
-			language: userDoc.get('language'),
-		},
-		process.env.MAILCHIMP_LIST_ID!,
-	);
-	return new Response(null, { status: 200, statusText: 'Success' });
-}
-
-/**
  * Update Mailchimp subscription
  */
 export type MailchimpSubscriptionUpdate = { status: 'subscribed' | 'unsubscribed'; firebaseAuthToken: string } & Body;
 type MailchimpSubscriptionUpdateRequest = { json(): Promise<MailchimpSubscriptionUpdate> } & Request;
-export async function PATCH(request: MailchimpSubscriptionUpdateRequest) {
+export async function POST(request: MailchimpSubscriptionUpdateRequest) {
 	const data = await request.json();
 
 	const userDoc = await getUserDocFromAuthToken(data.firebaseAuthToken);

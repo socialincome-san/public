@@ -10,6 +10,7 @@
 		"@jest/globals": "^29.7.0",
 		"@types/jest": "^29.5.10",
 		"@types/luxon": "^3.3.5",
+		"@types/mailchimp__mailchimp_marketing": "^3.0.17",
 		"@types/mjml": "^4.7.4",
 		"@types/nodemailer": "^6.4.14",
 		"firebase-functions-test": "^3.1.0",
@@ -17,6 +18,7 @@
 		"ts-jest": "^29.1.1"
 	},
 	"dependencies": {
+		"@mailchimp/mailchimp_marketing": "^3.0.80",
 		"axios": "^1.6.2",
 		"firebase-admin": "^11.11.0",
 		"handlebars": "^4.7.8",
