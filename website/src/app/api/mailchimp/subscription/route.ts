@@ -39,7 +39,7 @@ export async function POST(request: MailchimpSubscriptionCreateRequest) {
 			status: 'subscribed',
 			firstname: userDoc.get('personal.name'),
 			lastname: userDoc.get('personal.lastname'),
-			language: userDoc.get('language') === 'de' ? 'German' : 'English',
+			language: userDoc.get('language'),
 		},
 		process.env.MAILCHIMP_LIST_ID!,
 	);
@@ -58,13 +58,13 @@ export async function PATCH(request: MailchimpSubscriptionUpdateRequest) {
 	if (!userDoc) return new Response(null, { status: 400, statusText: 'No user found' });
 
 	const mailchimpAPI = new MailchimpAPI(process.env.MAILCHIMP_API_KEY!, process.env.MAILCHIMP_SERVER!);
-	await mailchimpAPI.updateSubscription(
+	await mailchimpAPI.upsertSubscription(
 		{
 			email: userDoc.get('email'),
 			status: data.status,
 			firstname: userDoc.get('personal.name'),
 			lastname: userDoc.get('personal.lastname'),
-			language: userDoc.get('language') === 'de' ? 'German' : 'English',
+			language: userDoc.get('language'),
 		},
 		process.env.MAILCHIMP_LIST_ID!,
 	);

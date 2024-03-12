@@ -1,12 +1,13 @@
 import mailchimp, { Status } from '@mailchimp/mailchimp_marketing';
+import { CountryCode } from '../types/country';
 
 export type MailchimpSubscriptionData = {
 	email: string;
 	status: Status;
-	language?: string;
+	language?: 'de' | 'en';
 	firstname?: string;
 	lastname?: string;
-	country?: string;
+	country?: CountryCode;
 };
 
 export class MailchimpAPI {
@@ -25,17 +26,22 @@ export class MailchimpAPI {
 		}
 	};
 
-	updateSubscription = async (data: MailchimpSubscriptionData, listId: string) => {
-		await mailchimp.lists.updateListMember(listId, this.md5(data.email), {
-			email_address: data.email,
-			status: data.status,
-			merge_fields: {
-				FNAME: data.firstname ?? '',
-				LNAME: data.lastname ?? '',
-				COUNTRY: data.country ?? '',
-				LANGUAGE: data.language,
-			},
-		});
+	upsertSubscription = async (data: MailchimpSubscriptionData, listId: string) => {
+		const subscriber = await this.getSubscriber(data.email, listId);
+		if (subscriber === null) {
+			return this.createSubscription(data, listId);
+		} else {
+			await mailchimp.lists.updateListMember(listId, this.md5(data.email), {
+				email_address: data.email,
+				status: data.status,
+				merge_fields: {
+					FNAME: data.firstname ?? '',
+					LNAME: data.lastname ?? '',
+					COUNTRY: data.country ?? '',
+					LANGUAGE: data.language === 'de' ? 'German' : 'English',
+				},
+			});
+		}
 	};
 
 	createSubscription = async (data: MailchimpSubscriptionData, listId: string) => {
@@ -46,7 +52,7 @@ export class MailchimpAPI {
 				FNAME: data.firstname ?? '',
 				LNAME: data.lastname ?? '',
 				COUNTRY: data.country ?? '',
-				LANGUAGE: data.language,
+				LANGUAGE: data.language === 'de' ? 'German' : 'English',
 			},
 		});
 	};

@@ -20,13 +20,14 @@ import {
 	FormLabel,
 	FormMessage,
 	Input,
+	Label,
 	Select,
 	SelectContent,
 	SelectGroup,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-	Typography,
+	Switch,
 } from '@socialincome/ui';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useEffect } from 'react';
@@ -49,6 +50,7 @@ type PersonalInfoFormProps = {
 		language: string;
 		submitButton: string;
 		userUpdatedToast: string;
+		newsletterSwitch: string;
 	};
 } & DefaultParams;
 
@@ -302,17 +304,25 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 						</FormItem>
 					)}
 				/>
-				<Button variant="ghost" size="lg" type="submit" className="md:col-span-2">
+				<Button variant="default" type="submit" className=" md:col-span-2">
 					{translations.submitButton}
 				</Button>
 			</form>
-			{isLoading ? <Typography>Loading...</Typography> : <Typography>Mailchimp subscription: {status}</Typography>}
-			{status === 'unknown' && <Button onClick={createMailchimpSubscription}>Create subscription</Button>}
-			{status === 'subscribed' ? (
-				<Button onClick={() => updateMailchimpSubscription('unsubscribed')}>Unsubscribe</Button>
-			) : (
-				<Button onClick={() => updateMailchimpSubscription('subscribed')}>Subscribe</Button>
-			)}
+			<div className="flex items-center space-x-2">
+				<Switch
+					id="newsletter-switch"
+					checked={status === 'subscribed'}
+					disabled={isLoading}
+					onCheckedChange={(enabled) => {
+						if (enabled) {
+							updateMailchimpSubscription('subscribed');
+						} else {
+							updateMailchimpSubscription('unsubscribed');
+						}
+					}}
+				/>
+				<Label htmlFor="newsletter-switch">{translations.newsletterSwitch}</Label>
+			</div>
 		</Form>
 	);
 }
