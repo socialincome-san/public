@@ -105,7 +105,11 @@ export default function OneTimeDonationForm({ translations, lang, region, campai
 												type="single"
 												className={'mb-4'}
 												value={field.value.toString()}
-												onValueChange={(v) => form.setValue('amount', Number.parseInt(v))}
+												onValueChange={(v) => {
+													if (v) {
+														form.setValue('amount', Number.parseInt(v));
+													}
+												}}
 											>
 												{createToggleGroupItems(
 													interval === DonationInterval.Monthly ? [40, 60, 100, 200, 300] : [25, 50, 100, 500, 1000],
