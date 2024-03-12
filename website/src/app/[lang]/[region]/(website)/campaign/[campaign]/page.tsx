@@ -8,17 +8,7 @@ import { CAMPAIGN_FIRESTORE_PATH, Campaign, CampaignStatus } from '@socialincome
 import { daysUntilTs } from '@socialincome/shared/src/utils/date';
 import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRates';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import {
-	BaseContainer,
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-	Table,
-	TableBody,
-	TableCell,
-	TableRow,
-	Typography,
-} from '@socialincome/ui';
+import { BaseContainer, Popover, PopoverContent, PopoverTrigger, Table, TableBody, TableCell, TableRow, Typography } from "@socialincome/ui";
 import { Progress } from '@socialincome/ui/src/components/progress';
 
 export type CampaignPageProps = {
@@ -161,7 +151,7 @@ export default async function Page({ params }: CampaignPageProps) {
 				<div className="grid grid-cols-1 gap-20 py-16 lg:grid-cols-2">
 					<div>
 						<div className="flex flex-col justify-center">
-							<Typography size="2xl" color="primary">
+							<Typography size="2xl" color="primary" weight="medium">
 								{campaign.second_description_title}
 							</Typography>
 						</div>
@@ -173,7 +163,7 @@ export default async function Page({ params }: CampaignPageProps) {
 					</div>
 					<div>
 						<div className="flex flex-col justify-center">
-							<Typography size="2xl" color="primary">
+							<Typography size="2xl" color="primary" weight="medium">
 								{campaign.third_description_title}
 							</Typography>
 						</div>
@@ -189,7 +179,7 @@ export default async function Page({ params }: CampaignPageProps) {
 				<div className="grid grid-cols-1 gap-20 py-8 lg:grid-cols-2 lg:py-16">
 					<div>
 						<div className="flex flex-col justify-center">
-							<Typography size="2xl" color="primary">
+							<Typography size="2xl" color="primary" weight="medium">
 								{translator.t('campaign.about-si-title')}
 							</Typography>
 						</div>
@@ -200,6 +190,7 @@ export default async function Page({ params }: CampaignPageProps) {
 							<Typography className={'mt-4'} color="primary" size="xl">
 								{translator.t('campaign.about-si-text-2')}
 							</Typography>
+							<Typography className={'mt-4 underline'} color="primary" size="xl" dangerouslySetInnerHTML={{ __html: translator.t('campaign.about-si-link') }} />
 						</div>
 					</div>
 					<div className="items-left flex flex-col">
