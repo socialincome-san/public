@@ -29,8 +29,29 @@ export type CampaignPageProps = {
 	};
 } & DefaultPageProps;
 
-export async function generateMetadata({ params }: DefaultPageProps) {
-	return getMetadata(params.lang, 'website-donate');
+export async function generateMetadata({ params }: CampaignPageProps) {
+	const campaignDoc = await firestoreAdmin.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH).doc(params.campaign).get();
+	const campaign = campaignDoc.data();
+	const campaignMetadata =
+		campaign?.metadata_description && campaign?.metadata_ogImage && campaign?.metadata_twitterImage
+			? {
+					title: campaign?.title,
+					description: campaign?.metadata_description,
+					openGraph: {
+						title: campaign?.title,
+						description: campaign?.metadata_description,
+						images: campaign?.metadata_ogImage,
+					},
+					twitter: {
+						title: campaign?.title,
+						card: 'summary_large_image',
+						site: '@so_income',
+						creator: '@so_income',
+						images: campaign?.metadata_twitterImage,
+					},
+			  }
+			: undefined;
+	return getMetadata(params.lang, 'website-donate', campaignMetadata);
 }
 
 export default async function Page({ params }: CampaignPageProps) {

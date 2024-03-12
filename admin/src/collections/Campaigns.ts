@@ -104,5 +104,17 @@ export const campaignsCollection = buildAuditedCollection<Campaign>({
 			enumValues: campaignStatusEnumValues,
 			validation: { required: true },
 		},
+		metadata_description: {
+			dataType: 'string',
+			name: 'Metadata Description',
+		},
+		metadata_ogImage: {
+			dataType: 'string',
+			name: 'Metadata Open Graph Image Path',
+		},
+		metadata_twitterImage: {
+			dataType: 'string',
+			name: 'Metadata Twitter Image Path',
+		},
 	}),
 });

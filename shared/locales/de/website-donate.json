@@ -1,10 +1,4 @@
 {
-	"metadata": {
-		"title": "Rebuilding Lives With Ismatu",
-		"description": "Donate to support Ebola survivors in Sierra Leone.",
-		"og-image": "/assets/metadata/og/campaign-ismatu-en.png",
-		"twitter-image": "/assets/metadata/twitter/campaign-ismatu-en.png.jpg"
-	},
 	"amount-currency": "{{ amount, currency }}",
 	"title": "Was ist dein durchschnittliches monatliches Einkommen?",
 	"how-to-pay": "Wie möchtest du bezahlen?",
