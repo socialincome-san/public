@@ -6,7 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from '@socialincome/ui';
 export default async function Page({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-me'] });
 	return (
-		<div className="space-y-12">
+		<div className="space-y-8">
 			<Alert variant="primary">
 				<AlertTitle>{translator.t('personal-info.alert-title')}</AlertTitle>
 				<AlertDescription>{translator.t('personal-info.alert-description')}</AlertDescription>
@@ -27,6 +27,7 @@ export default async function Page({ params }: DefaultPageProps) {
 					language: translator.t('personal-info.language'),
 					submitButton: translator.t('personal-info.submit-button'),
 					userUpdatedToast: translator.t('personal-info.user-updated-toast'),
+					newsletterSwitch: translator.t('personal-info.newsletter-switch'),
 				}}
 			/>
 		</div>

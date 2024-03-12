@@ -68,7 +68,8 @@
 		"country": "Land",
 		"language": "Kommunikationssprache",
 		"submit-button": "Kontaktangaben aktualisieren",
-		"user-updated-toast": "Deine Kontaktangaben wurden aktualisiert"
+		"user-updated-toast": "Deine Kontaktangaben wurden aktualisiert",
+		"newsletter-switch": "Ich möchte den Newsletter erhalten"
 	},
 	"security": {
 		"reset-password": {

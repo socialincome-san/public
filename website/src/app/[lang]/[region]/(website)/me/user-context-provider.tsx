@@ -1,7 +1,8 @@
 'use client';
 
+import { Status } from '@mailchimp/mailchimp_marketing';
 import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { collection, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
 import { redirect } from 'next/navigation';
 import { createContext, PropsWithChildren, useContext, useEffect } from 'react';
@@ -13,7 +14,13 @@ interface UserContextProps {
 }
 
 export const UserContext = createContext<UserContextProps>(undefined!);
-export const useUserContext = () => useContext(UserContext);
+export const useUserContext = () => {
+	const { user, refetch } = useContext(UserContext);
+	if (!user) {
+		throw new Error('useUserContext must be used within a UserContextProvider');
+	}
+	return { user, refetch };
+};
 
 export function UserContextProvider({ children }: PropsWithChildren) {
 	const firestore = useFirestore();
@@ -47,3 +54,39 @@ export function UserContextProvider({ children }: PropsWithChildren) {
 		return <UserContext.Provider value={{ user, refetch }}>{children}</UserContext.Provider>;
 	}
 }
+
+export const useMailchimpSubscription = () => {
+	const { data: authUser } = useUser();
+	const {
+		data: status,
+		isLoading,
+		error,
+	} = useQuery<string | null>({
+		queryKey: ['mailchimp', authUser?.uid],
+		queryFn: async () => {
+			const token = await authUser?.getIdToken();
+			if (token) {
+				const response = await fetch(`/api/mailchimp/subscription?firebaseAuthToken=${token}`);
+				return (await response.json()).status;
+			}
+			return null;
+		},
+		staleTime: 1000 * 60 * 60, // 1 hour
+	});
+	return { status, isLoading, error };
+};
+
+export const useUpsertMailchimpSubscription = () => {
+	const { data: authUser } = useUser();
+	const queryClient = useQueryClient();
+
+	return async (status: Status) => {
+		const token = await authUser?.getIdToken();
+		const response = await fetch(`/api/mailchimp/subscription`, {
+			method: 'POST',
+			body: JSON.stringify({ status, firebaseAuthToken: token }),
+		});
+		queryClient.invalidateQueries({ queryKey: ['mailchimp'] });
+		return response;
+	};
+};
