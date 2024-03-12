@@ -22,7 +22,7 @@ export async function GET(request: Request) {
 }
 
 /**
- * Update Mailchimp subscription
+ * Upsert Mailchimp subscription
  */
 export type MailchimpSubscriptionUpdate = { status: 'subscribed' | 'unsubscribed'; firebaseAuthToken: string } & Body;
 type MailchimpSubscriptionUpdateRequest = { json(): Promise<MailchimpSubscriptionUpdate> } & Request;
