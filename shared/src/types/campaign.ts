@@ -8,10 +8,14 @@ export type Campaign = {
 	email: string;
 	title: string;
 	description: string;
+	second_description_title?: string;
+	second_description?: string;
+	third_description_title?: string;
+	third_description?: string;
 	amount_collected_chf: number; // automatically updated by incoming payments.
+	contributions: number; // automatically updated by incoming payments.
 	goal?: number;
 	goal_currency?: Currency;
-	start_date: Timestamp;
 	end_date: Timestamp;
 	status: CampaignStatus;
 };

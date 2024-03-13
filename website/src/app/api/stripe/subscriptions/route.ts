@@ -6,7 +6,7 @@ export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
 	const firebaseAuthToken = searchParams.get('firebaseAuthToken');
 	if (!firebaseAuthToken) {
-		return new Response(null, { status: 400, statusText: 'Missing firebaseAuthToken' });
+		return new Response(null, { status: 403, statusText: 'Missing firebaseAuthToken' });
 	}
 	const userDoc = await getUserDocFromAuthToken(firebaseAuthToken);
 	const stripe = initializeStripe(process.env.STRIPE_SECRET_KEY!);

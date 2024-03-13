@@ -68,7 +68,8 @@
 		"country": "Country",
 		"language": "Communication language",
 		"submit-button": "Update Personal Info",
-		"user-updated-toast": "Your personal info has been updated"
+		"user-updated-toast": "Your personal info has been updated",
+		"newsletter-switch": "I would like to receive the newsletter"
 	},
 	"security": {
 		"reset-password": {
