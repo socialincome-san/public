@@ -92,11 +92,11 @@ export default async function Page({ params }: CampaignPageProps) {
 						<div className="flex flex-col justify-center gap-3">
 							<div>
 								<Typography size="xl" color="primary">
-									{translator.t('campaign.by', { context: { creator: campaign.creator_name } })}
+									{translator.t("campaign.by", { context: { creator: campaign.creator_name } })}
 								</Typography>
 							</div>
 							<div>
-								<Typography weight="medium" color="primary" style={{ lineHeight: '70px' }} className="mt-2 text-[4rem]">
+								<Typography weight="medium" color="primary" style={{ lineHeight: "70px" }} className="mt-2 text-[4rem]">
 									{campaign.title}
 								</Typography>
 							</div>
@@ -105,107 +105,151 @@ export default async function Page({ params }: CampaignPageProps) {
 									{campaign.description}
 								</Typography>
 							</div>
-							<div className="flex">
-								<div className="flex-1 text-left">
-									<Typography size="md" color="primary">
-										{translator.t('campaign.with-goal.collected-percentage', {
-											context: {
-												percentage: percentageCollected,
-											},
-										})}
-									</Typography>
-								</div>
-								<div className="flex-1 text-right">
-									<Typography size="md" color="primary">
-										{translator.t('campaign.with-goal.goal-title')}
-									</Typography>
-								</div>
-							</div>
 							<div>
-								<Progress value={percentageCollected} className={'h-6'} />
-							</div>
-							<div className="flex">
-								<div className="flex-1 text-left">
-									<Typography size="md" color="primary">
-										{translator.t('campaign.with-goal.collected-amount', {
-											context: {
-												count: contributions,
-												amount: amountCollected,
-												currency: campaign.goal_currency,
-											},
-										})}
-									</Typography>
-								</div>
-								<div className="flex-1 text-right">
-									<Typography size="md" color="primary">
-										{translator.t('campaign.with-goal.goal-amount', {
-											context: {
-												amount: campaign.goal,
-												currency: campaign.goal_currency,
-											},
-										})}
-									</Typography>
-								</div>
+								{!campaign.goal && (
+									<div className="mb-4 flex flex-col">
+										<Typography size="2xl" weight="medium" color="accent">
+											{translator?.t('campaign.without-goal.collected', {
+												context: {
+													count: contributions,
+													amount: amountCollected,
+													currency: campaign.goal_currency,
+													total: campaign.goal,
+												},
+											})}
+										</Typography>
+									</div>
+								)}
+								{percentageCollected !== undefined && (
+									<div>
+										<div className="flex pb-2">
+											<div className="flex-1 text-left">
+												<Typography size="md" color="primary">
+													{translator.t("campaign.with-goal.collected-percentage", {
+														context: {
+															percentage: percentageCollected
+														}
+													})}
+												</Typography>
+											</div>
+											<div className="flex-1 text-right">
+												<Typography size="md" color="primary">
+													{translator.t("campaign.with-goal.goal-title")}
+												</Typography>
+											</div>
+										</div>
+										<div>
+											<Progress value={percentageCollected} className={"h-6"} />
+										</div>
+										<div className="flex pt-2">
+											<div className="flex-1 text-left">
+												<Typography size="md" color="primary">
+													{translator.t("campaign.with-goal.collected-amount", {
+														context: {
+															count: contributions,
+															amount: amountCollected,
+															currency: campaign.goal_currency
+														}
+													})}
+												</Typography>
+											</div>
+											<div className="flex-1 text-right">
+												<Typography size="md" color="primary">
+													{translator.t("campaign.with-goal.goal-amount", {
+														context: {
+															amount: campaign.goal,
+															currency: campaign.goal_currency
+														}
+													})}
+												</Typography>
+											</div>
+										</div>
+									</div>
+								)}
 							</div>
 						</div>
-						<div className="flex items-center justify-center" style={{ height: '500px' }}>
-							<div className="card bg-primary w-full rounded-xl p-6">
-								<div>
-									<Typography size="xl" color="popover">
-										{translator.t('campaign.card-title')}
-									</Typography>
+						{daysLeft >= 0 && (
+							<>
+								<div className="flex items-center justify-center" style={{ height: '500px' }}>
+									<div className="card bg-primary w-full rounded-xl p-6">
+										<div>
+											<Typography size="xl" color="popover">
+												{translator.t("campaign.card-title")}
+											</Typography>
+										</div>
+										<div className="mt-3">
+											<OneTimeDonationForm
+												lang={params.lang}
+												region={params.region}
+												translations={{
+													oneTime: translator.t("donation-interval.0.title"),
+													monthly: translator.t("donation-interval.1.title"),
+													amount: translator.t("amount"),
+													submit: translator.t("button-text-short")
+												}}
+												campaignId={params.campaign}
+											/>
+										</div>
+										{daysLeft >= 0 && (
+											<>
+												<div className="mt-4 text-center">
+													<Typography size="md" color="popover">
+														{translator?.t("campaign.days-left", { context: { count: daysLeft } })}
+													</Typography>
+												</div>
+											</>
+										)}
+										{daysLeft < 0 && (
+										<div className="mt-4 text-center">
+											<Typography size="md" color="popover">
+												{translator?.t('campaign.ended', { context: { count: daysLeft } })}
+											</Typography>
+										</div>
+										)}
+									</div>
 								</div>
-								<div className="mt-3">
-									<OneTimeDonationForm
-										lang={params.lang}
-										region={params.region}
-										translations={{
-											oneTime: translator.t('donation-interval.0.title'),
-											monthly: translator.t('donation-interval.1.title'),
-											amount: translator.t('amount'),
-											submit: translator.t('button-text-short'),
-										}}
-										campaignId={params.campaign}
-									/>
-								</div>
-								<div className="mt-4 text-center">
-									<Typography size="md" color="popover">
-										{translator?.t('campaign.days-left', { context: { count: daysLeft } })}
-									</Typography>
-								</div>
+							</>
+						)}
+						{daysLeft < 0 && (
+							<div className="flex flex-col justify-center">
+								<Typography size="xl" weight="medium" color="accent">
+									{translator?.t('campaign.ended', { context: { count: daysLeft } })}
+								</Typography>
 							</div>
-						</div>
+						)}
 					</div>
 				</div>
 			</BaseContainer>
-			<BaseContainer>
-				<div className="grid grid-cols-1 gap-20 py-16 lg:grid-cols-2">
-					<div>
-						<div className="flex flex-col justify-center">
-							<Typography size="2xl" color="primary" weight="medium">
-								{campaign.second_description_title}
-							</Typography>
+			{campaign.second_description && campaign.third_description && (
+				<BaseContainer>
+					<div className="grid grid-cols-1 gap-20 py-16 lg:grid-cols-2">
+						<div>
+							<div className="flex flex-col justify-center">
+								<Typography size="2xl" color="primary" weight="medium">
+									{campaign.second_description_title}
+								</Typography>
+							</div>
+							<div className="flex flex-col justify-center">
+								<Typography className={'mt-4'} color="primary" size="xl">
+									{campaign.second_description}
+								</Typography>
+							</div>
 						</div>
-						<div className="flex flex-col justify-center">
-							<Typography className={'mt-4'} color="primary" size="xl">
-								{campaign.second_description}
-							</Typography>
+						<div>
+							<div className="flex flex-col justify-center">
+								<Typography size="2xl" color="primary" weight="medium">
+									{campaign.third_description_title}
+								</Typography>
+							</div>
+							<div className="flex flex-col justify-center">
+								<Typography className={'mt-4'} color="primary" size="xl">
+									{campaign.third_description}
+								</Typography>
+							</div>
 						</div>
 					</div>
-					<div>
-						<div className="flex flex-col justify-center">
-							<Typography size="2xl" color="primary" weight="medium">
-								{campaign.third_description_title}
-							</Typography>
-						</div>
-						<div className="flex flex-col justify-center">
-							<Typography className={'mt-4'} color="primary" size="xl">
-								{campaign.third_description}
-							</Typography>
-						</div>
-					</div>
-				</div>
-			</BaseContainer>
+				</BaseContainer>
+			)}
 			<BaseContainer>
 				<div className="grid grid-cols-1 gap-20 py-8 lg:grid-cols-2 lg:py-16">
 					<div>
