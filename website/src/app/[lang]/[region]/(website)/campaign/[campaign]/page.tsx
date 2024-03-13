@@ -92,11 +92,11 @@ export default async function Page({ params }: CampaignPageProps) {
 						<div className="flex flex-col justify-center gap-3">
 							<div>
 								<Typography size="xl" color="primary">
-									{translator.t("campaign.by", { context: { creator: campaign.creator_name } })}
+									{translator.t('campaign.by', { context: { creator: campaign.creator_name } })}
 								</Typography>
 							</div>
 							<div>
-								<Typography weight="medium" color="primary" style={{ lineHeight: "70px" }} className="mt-2 text-[4rem]">
+								<Typography weight="medium" color="primary" style={{ lineHeight: '70px' }} className="mt-2 text-[4rem]">
 									{campaign.title}
 								</Typography>
 							</div>
@@ -125,41 +125,41 @@ export default async function Page({ params }: CampaignPageProps) {
 										<div className="flex pb-2">
 											<div className="flex-1 text-left">
 												<Typography size="md" color="primary">
-													{translator.t("campaign.with-goal.collected-percentage", {
+													{translator.t('campaign.with-goal.collected-percentage', {
 														context: {
-															percentage: percentageCollected
-														}
+															percentage: percentageCollected,
+														},
 													})}
 												</Typography>
 											</div>
 											<div className="flex-1 text-right">
 												<Typography size="md" color="primary">
-													{translator.t("campaign.with-goal.goal-title")}
+													{translator.t('campaign.with-goal.goal-title')}
 												</Typography>
 											</div>
 										</div>
 										<div>
-											<Progress value={percentageCollected} className={"h-6"} />
+											<Progress value={percentageCollected} className={'h-6'} />
 										</div>
 										<div className="flex pt-2">
 											<div className="flex-1 text-left">
 												<Typography size="md" color="primary">
-													{translator.t("campaign.with-goal.collected-amount", {
+													{translator.t('campaign.with-goal.collected-amount', {
 														context: {
 															count: contributions,
 															amount: amountCollected,
-															currency: campaign.goal_currency
-														}
+															currency: campaign.goal_currency,
+														},
 													})}
 												</Typography>
 											</div>
 											<div className="flex-1 text-right">
 												<Typography size="md" color="primary">
-													{translator.t("campaign.with-goal.goal-amount", {
+													{translator.t('campaign.with-goal.goal-amount', {
 														context: {
 															amount: campaign.goal,
-															currency: campaign.goal_currency
-														}
+															currency: campaign.goal_currency,
+														},
 													})}
 												</Typography>
 											</div>
@@ -174,7 +174,7 @@ export default async function Page({ params }: CampaignPageProps) {
 									<div className="card bg-primary w-full rounded-xl p-6">
 										<div>
 											<Typography size="xl" color="popover">
-												{translator.t("campaign.card-title")}
+												{translator.t('campaign.card-title')}
 											</Typography>
 										</div>
 										<div className="mt-3">
@@ -182,10 +182,10 @@ export default async function Page({ params }: CampaignPageProps) {
 												lang={params.lang}
 												region={params.region}
 												translations={{
-													oneTime: translator.t("donation-interval.0.title"),
-													monthly: translator.t("donation-interval.1.title"),
-													amount: translator.t("amount"),
-													submit: translator.t("button-text-short")
+													oneTime: translator.t('donation-interval.0.title'),
+													monthly: translator.t('donation-interval.1.title'),
+													amount: translator.t('amount'),
+													submit: translator.t('button-text-short'),
 												}}
 												campaignId={params.campaign}
 											/>
@@ -194,17 +194,17 @@ export default async function Page({ params }: CampaignPageProps) {
 											<>
 												<div className="mt-4 text-center">
 													<Typography size="md" color="popover">
-														{translator?.t("campaign.days-left", { context: { count: daysLeft } })}
+														{translator?.t('campaign.days-left', { context: { count: daysLeft } })}
 													</Typography>
 												</div>
 											</>
 										)}
 										{daysLeft < 0 && (
-										<div className="mt-4 text-center">
-											<Typography size="md" color="popover">
-												{translator?.t('campaign.ended', { context: { count: daysLeft } })}
-											</Typography>
-										</div>
+											<div className="mt-4 text-center">
+												<Typography size="md" color="popover">
+													{translator?.t('campaign.ended', { context: { count: daysLeft } })}
+												</Typography>
+											</div>
 										)}
 									</div>
 								</div>
