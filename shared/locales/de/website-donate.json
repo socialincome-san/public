@@ -1,12 +1,10 @@
 {
-	"metadata": {
-		"title": "Mein Beitrag | Social Income"
-	},
 	"amount-currency": "{{ amount, currency }}",
 	"title": "Was ist dein durchschnittliches monatliches Einkommen?",
 	"how-to-pay": "Wie möchtest du bezahlen?",
 	"amount": "Betrag",
 	"button-text": "Mache einen Unterschied",
+	"button-text-short": "Jetzt spenden",
 	"donation-impact": {
 		"monthly-contribution": "Dein monatlicher Beitrag:",
 		"direct-payout": "Dein Beitrag wird direkt auf das Mobiltelefon der Social Income Empfänger:innen ausgezahlt.",
@@ -92,7 +90,12 @@
 		},
 		"days-left_zero": "Letzter Tag",
 		"days-left_one": "Noch einen Tag bis zum Spendeschluss",
-		"days-left_other": "{{ count }} verbleibende Tage:",
-		"ended": "Die Kampagne ist geschlossen. Keine weiteren Spenden möglich."
+		"days-left_other": "{{ count }} verbleibende Tage",
+		"ended": "Die Kampagne ist beendet. Für reguläre Spenden verwende bitte die Hauptspendeseite.",
+		"card-title": "Mein Beitrag",
+		"about-si-title": "Über Social Income",
+		"about-si-text-1": "Social Income ist eine NGO mit Sitz in der Schweiz, die bedingungslose Geldüberweisungen per Mobiltelefon an Menschen in multidimensionaler Armut in Westafrika bereitstellt.",
+		"about-si-text-2": "Seit 2020 führt Social Income ein zeitlich unbegrenztes Programm für ein universelles Grundeinkommen in Sierra Leone durch.",
+		"about-si-link": "<a href='/faq' target=\"_blank\">Fragen und Antworten</a>"
 	}
 }

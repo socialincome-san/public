@@ -78,15 +78,14 @@ export default function OneTimeDonationForm({ translations, lang, region, campai
 								<FormControl>
 									<ToggleGroup
 										type="single"
-										style={{ width: '100%' }}
-										className={'bg-muted mb-4 rounded'}
+										className={'bg-popover mb-4 inline-flex rounded-full'}
 										value={field.value}
 										onValueChange={(v) => form.setValue('interval', v)}
 									>
-										<ToggleGroupItem style={{ width: '100%' }} className="text-lg" value={DonationInterval.OneTime}>
+										<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={DonationInterval.OneTime}>
 											{translations.oneTime}
 										</ToggleGroupItem>
-										<ToggleGroupItem style={{ width: '100%' }} className="text-lg" value={DonationInterval.Monthly}>
+										<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={DonationInterval.Monthly}>
 											{translations.monthly}
 										</ToggleGroupItem>
 									</ToggleGroup>
@@ -104,21 +103,24 @@ export default function OneTimeDonationForm({ translations, lang, region, campai
 										<>
 											<ToggleGroup
 												type="single"
-												style={{ width: '100%' }}
-												className={'bg-muted mb-2 rounded'}
+												className={'mb-4'}
 												value={field.value.toString()}
-												onValueChange={(v) => form.setValue('amount', Number.parseInt(v))}
+												onValueChange={(v) => {
+													if (v) {
+														form.setValue('amount', Number.parseInt(v));
+													}
+												}}
 											>
 												{createToggleGroupItems(
 													interval === DonationInterval.Monthly ? [40, 60, 100, 200, 300] : [25, 50, 100, 500, 1000],
 												)}
 											</ToggleGroup>
-											<div className="flex flex-col  sm:flex-row sm:space-x-2 sm:space-y-0 md:items-center">
-												<Input className="h-12 text-lg" {...field} />
+											<div className="flex flex-col sm:flex-row sm:space-x-2 sm:space-y-0 md:items-center">
+												<Input className="mb-4 h-12 text-lg sm:mb-0" {...field} />
 												<CurrencySelector
 													className="h-12 sm:basis-1/3 md:max-w-[12rem]"
 													currencies={['USD', 'EUR', 'CHF']}
-													fontSize="lg"
+													fontSize="md"
 												/>
 											</div>
 										</>
@@ -127,7 +129,13 @@ export default function OneTimeDonationForm({ translations, lang, region, campai
 							)}
 						/>
 					</div>
-					<Button size="lg" type="submit" variant="default" showLoadingSpinner={submitting}>
+					<Button
+						size="lg"
+						type="submit"
+						variant="default"
+						showLoadingSpinner={submitting}
+						className="bg-accent text-accent-foreground hover:bg-accent-muted active:bg-accent-muted rounded-full text-lg font-medium"
+					>
 						{translations.submit}
 					</Button>
 				</form>
@@ -138,7 +146,12 @@ export default function OneTimeDonationForm({ translations, lang, region, campai
 
 const createToggleGroupItems = (values: number[]) => {
 	return values.map((value) => (
-		<ToggleGroupItem key={value} style={{ width: '100%' }} className="text-lg" value={value.toString()}>
+		<ToggleGroupItem
+			key={value}
+			style={{ width: '100%' }}
+			className="text-md bg-popover rounded-full py-6"
+			value={value.toString()}
+		>
 			{value}
 		</ToggleGroupItem>
 	));
