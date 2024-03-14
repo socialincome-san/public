@@ -25,7 +25,7 @@ type EmployersListProps = {
 } & DefaultParams;
 
 type EmployerWithId = {
-	id: string
+	id: string;
 } & Employer;
 
 export function EmployersList({ translations }: EmployersListProps) {
@@ -51,7 +51,8 @@ export function EmployersList({ translations }: EmployersListProps) {
 		await deleteDoc(employerRef).then(() => onEmployersUpdated());
 	};
 
-	const onArchiveEmployer = async (employer_id: string) => { // Not leveraging type system ....
+	const onArchiveEmployer = async (employer_id: string) => {
+		// Not leveraging type system ....
 		const employerRef = doc(firestore, USER_FIRESTORE_PATH, user!.id, EMPLOYERS_FIRESTORE_PATH, employer_id);
 		await updateDoc(employerRef, { is_current: false }).then(() => onEmployersUpdated());
 	};
@@ -66,7 +67,7 @@ export function EmployersList({ translations }: EmployersListProps) {
 
 	const employers: EmployerWithId[] = data!.docs.map((e) => {
 		const employer: Employer = e.data() as Employer;
-		return { id: e.id, ...employer }
+		return { id: e.id, ...employer };
 	});
 	const currentEmployers: EmployerWithId[] = employers.filter((e) => e.is_current);
 	const pastEmployers: EmployerWithId[] = employers.filter((e) => !e.is_current);

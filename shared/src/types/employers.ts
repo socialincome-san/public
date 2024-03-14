@@ -1,4 +1,4 @@
-import { DocumentReference, Timestamp } from 'firebase-admin/firestore';
+import { Timestamp } from 'firebase-admin/firestore';
 
 export const EMPLOYERS_FIRESTORE_PATH = 'employers';
 
