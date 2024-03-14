@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { EMPLOYERS_FIRESTORE_PATH } from '@socialincome/shared/src/types/employers';
+import { EMPLOYERS_FIRESTORE_PATH, Employer } from '@socialincome/shared/src/types/employers';
 import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input } from '@socialincome/ui';
 import { Timestamp, addDoc, collection, doc } from 'firebase/firestore';
@@ -23,27 +23,27 @@ export function AddEmployerForm({ onNewEmployerSubmitted, translations }: AddEmp
 	const { user } = useUserContext();
 
 	const formSchema = z.object({
-		employerName: z.string().trim().min(1), // TODO : security
+		employer_name: z.string().trim().min(1), // TODO : security
 	});
 	type FormSchema = z.infer<typeof formSchema>;
 
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			employerName: '',
+			employer_name: '',
 		},
 	});
 
 	const onSubmit = async (values: FormSchema) => {
 		if (user) {
-			const userId = user!.id;
-
-			await addDoc(collection(firestore, USER_FIRESTORE_PATH, userId, EMPLOYERS_FIRESTORE_PATH), {
-				...values,
-				isCurrent: true,
-				userId: doc(firestore, USER_FIRESTORE_PATH, userId),
+			const user_id = user!.id;
+			let new_employer: Employer = {
+				employer_name: values.employer_name,
+				is_current: true,
 				created: Timestamp.now(),
-			}).then(() => {
+			};
+
+			await addDoc(collection(firestore, USER_FIRESTORE_PATH, user_id, EMPLOYERS_FIRESTORE_PATH), new_employer).then(() => {
 				form.reset();
 				onNewEmployerSubmitted();
 			});
@@ -55,7 +55,7 @@ export function AddEmployerForm({ onNewEmployerSubmitted, translations }: AddEmp
 			<form className="flex flex-col gap-x-4 md:flex-row" onSubmit={form.handleSubmit(onSubmit)}>
 				<FormField
 					control={form.control}
-					name="employerName"
+					name="employer_name"
 					render={({ field }) => (
 						<FormItem className="grow">
 							<FormControl>

@@ -1,7 +1,7 @@
 'use client';
 
 import { UserContext } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
-import { EMPLOYERS_FIRESTORE_PATH } from '@socialincome/shared/src/types/employers';
+import { EMPLOYERS_FIRESTORE_PATH, Employer } from '@socialincome/shared/src/types/employers';
 
 import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { Table, TableBody, TableCell, TableRow, Typography } from '@socialincome/ui';
@@ -23,6 +23,10 @@ type EmployersListProps = {
 		addEmployerForm: AddEmployerFormProps['translations'];
 	};
 } & DefaultParams;
+
+type EmployerWithId = {
+	id: string
+} & Employer;
 
 export function EmployersList({ translations }: EmployersListProps) {
 	const firestore = useFirestore();
@@ -47,9 +51,9 @@ export function EmployersList({ translations }: EmployersListProps) {
 		await deleteDoc(employerRef).then(() => onEmployersUpdated());
 	};
 
-	const onArchiveEmployer = async (employer_id: string) => {
+	const onArchiveEmployer = async (employer_id: string) => { // Not leveraging type system ....
 		const employerRef = doc(firestore, USER_FIRESTORE_PATH, user!.id, EMPLOYERS_FIRESTORE_PATH, employer_id);
-		await updateDoc(employerRef, { isCurrent: false }).then(() => onEmployersUpdated());
+		await updateDoc(employerRef, { is_current: false }).then(() => onEmployersUpdated());
 	};
 
 	const onEmployersUpdated = async () => {
@@ -60,8 +64,12 @@ export function EmployersList({ translations }: EmployersListProps) {
 		return <span>Loading ...</span>;
 	}
 
-	const currentEmployers = data!.docs.filter((e) => e.get('isCurrent'));
-	const pastEmployers = data!.docs.filter((e) => !e.get('isCurrent'));
+	const employers: EmployerWithId[] = data!.docs.map((e) => {
+		const employer: Employer = e.data() as Employer;
+		return { id: e.id, ...employer }
+	});
+	const currentEmployers: EmployerWithId[] = employers.filter((e) => e.is_current);
+	const pastEmployers: EmployerWithId[] = employers.filter((e) => !e.is_current);
 
 	return (
 		<>
@@ -74,7 +82,7 @@ export function EmployersList({ translations }: EmployersListProps) {
 									<TableCell>
 										<div className="flex flex-row">
 											<Typography size="lg" weight="medium" className="grow">
-												{employer.get('employerName')}
+												{employer.employer_name}
 											</Typography>
 											<div className="flex flex-col">
 												<button onClick={() => onArchiveEmployer(employer.id)}>
@@ -106,7 +114,7 @@ export function EmployersList({ translations }: EmployersListProps) {
 										<TableCell>
 											<div className="flex flex-row">
 												<Typography size="lg" weight="medium" className="grow">
-													{employer.get('employerName')}
+													{employer.employer_name}
 												</Typography>
 												<div className="flex flex-col">
 													<button onClick={() => onDeleteEmployer(employer.id)}>
