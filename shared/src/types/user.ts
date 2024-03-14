@@ -2,6 +2,7 @@ import { EntityReference } from 'firecms';
 import { capitalizeStringIfUppercase } from '../utils/strings';
 import { CountryCode } from './country';
 import { Currency } from './currency';
+import { Employer } from './employers';
 import { LanguageCode } from './language';
 
 export const USER_FIRESTORE_PATH = 'users';
@@ -45,6 +46,7 @@ export type User = {
 	language?: LanguageCode;
 	currency?: Currency;
 	contributor_organisations?: EntityReference[];
+	employers?: Employer[];
 };
 
 export const splitName = (name: string) => {

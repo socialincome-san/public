@@ -4,6 +4,7 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { UserContext } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
 import {
 	ArrowPathIcon,
+	BriefcaseIcon,
 	CurrencyDollarIcon,
 	DocumentIcon,
 	ShieldCheckIcon,
@@ -51,6 +52,8 @@ type LayoutClientProps = {
 		subscriptions: string;
 		donationCertificatesShort: string;
 		donationCertificatesLong: string;
+		employerTitle: string;
+		work: string;
 	};
 };
 
@@ -85,6 +88,14 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 					{translations.donationCertificatesShort}
 				</NavigationLink>
 			)}
+			<NavigationSectionTitle>{translations.employerTitle}</NavigationSectionTitle>
+			<NavigationLink
+				href={`/${params.lang}/${params.region}/me/work-info`}
+				Icon={BriefcaseIcon}
+				onClick={() => setIsOpen(false)}
+			>
+				{translations.work}
+			</NavigationLink>
 			<NavigationSectionTitle>{translations.accountTitle}</NavigationSectionTitle>
 			<NavigationLink
 				href={`/${params.lang}/${params.region}/me/personal-info`}
