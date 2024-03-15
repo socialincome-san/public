@@ -112,7 +112,7 @@ export default function OneTimeDonationForm({ translations, lang, region, campai
 												}}
 											>
 												{createToggleGroupItems(
-													interval === DonationInterval.Monthly ? [40, 60, 100, 200, 300] : [25, 50, 100, 500, 1000],
+													interval === DonationInterval.Monthly ? [10, 30, 100, 150, 200] : [25, 50, 100, 500, 1000],
 												)}
 											</ToggleGroup>
 											<div className="flex flex-col sm:flex-row sm:space-x-2 sm:space-y-0 md:items-center">

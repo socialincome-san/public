@@ -91,17 +91,17 @@ export default async function Page({ params }: CampaignPageProps) {
 					<div className="grid grid-cols-1 gap-20 lg:grid-cols-2">
 						<div className="flex flex-col justify-center gap-3">
 							<div>
-								<Typography size="xl" color="primary">
+								<Typography size="xl" color="muted-foreground">
 									{translator.t('campaign.by', { context: { creator: campaign.creator_name } })}
 								</Typography>
 							</div>
 							<div>
-								<Typography weight="medium" color="primary" style={{ lineHeight: '70px' }} className="mt-2 text-[4rem]">
+								<Typography weight="medium" color="foreground" style={{ lineHeight: '70px' }} className="mt-2 text-[4rem]">
 									{campaign.title}
 								</Typography>
 							</div>
 							<div className="my-8">
-								<Typography size="2xl" color="primary">
+								<Typography size="2xl" color="muted-foreground">
 									{campaign.description}
 								</Typography>
 							</div>
@@ -225,24 +225,24 @@ export default async function Page({ params }: CampaignPageProps) {
 					<div className="grid grid-cols-1 gap-20 py-16 lg:grid-cols-2">
 						<div>
 							<div className="flex flex-col justify-center">
-								<Typography size="2xl" color="primary" weight="medium">
+								<Typography size="2xl" color="foreground" weight="medium">
 									{campaign.second_description_title}
 								</Typography>
 							</div>
 							<div className="flex flex-col justify-center">
-								<Typography className={'mt-4'} color="primary" size="xl">
+								<Typography className={'mt-4'} color="muted-foreground" size="xl">
 									{campaign.second_description}
 								</Typography>
 							</div>
 						</div>
 						<div>
 							<div className="flex flex-col justify-center">
-								<Typography size="2xl" color="primary" weight="medium">
+								<Typography size="2xl" color="foreground" weight="medium">
 									{campaign.third_description_title}
 								</Typography>
 							</div>
 							<div className="flex flex-col justify-center">
-								<Typography className={'mt-4'} color="primary" size="xl">
+								<Typography className={'mt-4'} color="muted-foreground" size="xl">
 									{campaign.third_description}
 								</Typography>
 							</div>
@@ -254,20 +254,20 @@ export default async function Page({ params }: CampaignPageProps) {
 				<div className="grid grid-cols-1 gap-20 py-8 lg:grid-cols-2 lg:py-16">
 					<div>
 						<div className="flex flex-col justify-center">
-							<Typography size="2xl" color="primary" weight="medium">
+							<Typography size="2xl" color="foreground" weight="medium">
 								{translator.t('campaign.about-si-title')}
 							</Typography>
 						</div>
 						<div className="flex flex-col justify-center">
-							<Typography className={'mt-4'} color="primary" size="xl">
+							<Typography className={'mt-4'} color="muted-foreground" size="xl">
 								{translator.t('campaign.about-si-text-1')}
 							</Typography>
-							<Typography className={'mt-4'} color="primary" size="xl">
+							<Typography className={'mt-4'} color="muted-foreground" size="xl">
 								{translator.t('campaign.about-si-text-2')}
 							</Typography>
 							<Typography
 								className={'mt-4 underline'}
-								color="primary"
+								color="muted-foreground"
 								size="xl"
 								dangerouslySetInnerHTML={{ __html: translator.t('campaign.about-si-link') }}
 							/>
