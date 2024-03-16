@@ -1,18 +1,12 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { UserContext } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
+import { useContributions } from '@/app/[lang]/[region]/(website)/me/hooks';
+import { SpinnerIcon } from '@/components/logos/spinner-icon';
 import { useTranslator } from '@/hooks/useTranslator';
-import { orderBy } from '@firebase/firestore';
-import { CONTRIBUTION_FIRESTORE_PATH, StatusKey } from '@socialincome/shared/src/types/contribution';
-import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { toDateTime } from '@socialincome/shared/src/utils/date';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Typography } from '@socialincome/ui';
-import { useQuery } from '@tanstack/react-query';
-import { collection, getDocs, query, where } from 'firebase/firestore';
 import _ from 'lodash';
-import { useContext } from 'react';
-import { useFirestore } from 'reactfire';
 
 type ContributionsTableProps = {
 	translations: {
@@ -23,24 +17,12 @@ type ContributionsTableProps = {
 } & DefaultParams;
 
 export function ContributionsTable({ lang, translations }: ContributionsTableProps) {
-	const firestore = useFirestore();
 	const translator = useTranslator(lang, 'website-me');
-	const { user } = useContext(UserContext);
-	const { data: contributions } = useQuery({
-		queryKey: ['ContributionsTable', user, firestore],
-		queryFn: async () => {
-			if (user && firestore) {
-				return await getDocs(
-					query(
-						collection(firestore, USER_FIRESTORE_PATH, user.id, CONTRIBUTION_FIRESTORE_PATH),
-						where('status', '==', StatusKey.SUCCEEDED),
-						orderBy('created', 'desc'),
-					),
-				);
-			} else return null;
-		},
-		staleTime: 1000 * 60 * 60, // 1 hour
-	});
+	const { contributions, loading } = useContributions();
+
+	if (loading) {
+		return <SpinnerIcon />;
+	}
 
 	return (
 		<Table>

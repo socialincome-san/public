@@ -1,32 +1,25 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { EMPLOYERS_FIRESTORE_PATH, Employer } from '@socialincome/shared/src/types/employers';
-import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input } from '@socialincome/ui';
-import { Timestamp, addDoc, collection } from 'firebase/firestore';
 import { useForm } from 'react-hook-form';
-import { useFirestore } from 'reactfire';
 import * as z from 'zod';
-import { useUserContext } from '../user-context-provider';
+
+import { useAddEmployer } from '@/app/[lang]/[region]/(website)/me/hooks';
 
 export type AddEmployerFormProps = {
 	translations: {
 		addEmployer: string;
 		submitButton: string;
 	};
-	onNewEmployerSubmitted: () => void;
 };
 
-export function AddEmployerForm({ onNewEmployerSubmitted, translations }: AddEmployerFormProps) {
-	const firestore = useFirestore();
-	const { user } = useUserContext();
-
+export function AddEmployerForm({ translations }: AddEmployerFormProps) {
+	const addEmployer = useAddEmployer();
 	const formSchema = z.object({
-		employer_name: z.string().trim().min(1), // TODO : security
+		employer_name: z.string().trim().min(1),
 	});
 	type FormSchema = z.infer<typeof formSchema>;
-
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -35,21 +28,8 @@ export function AddEmployerForm({ onNewEmployerSubmitted, translations }: AddEmp
 	});
 
 	const onSubmit = async (values: FormSchema) => {
-		if (user) {
-			const user_id = user!.id;
-			let new_employer: Employer = {
-				employer_name: values.employer_name,
-				is_current: true,
-				created: Timestamp.now(),
-			};
-
-			await addDoc(collection(firestore, USER_FIRESTORE_PATH, user_id, EMPLOYERS_FIRESTORE_PATH), new_employer).then(
-				() => {
-					form.reset();
-					onNewEmployerSubmitted();
-				},
-			);
-		}
+		await addEmployer(values.employer_name);
+		form.reset();
 	};
 
 	return (
