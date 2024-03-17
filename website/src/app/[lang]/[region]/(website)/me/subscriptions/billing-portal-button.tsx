@@ -1,10 +1,10 @@
 'use client';
 
+import { useApi } from '@/hooks/useApi';
 import { CreditCardIcon } from '@heroicons/react/24/outline';
 import { Button } from '@socialincome/ui';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useUser } from 'reactfire';
 import Stripe from 'stripe';
 
 type BillingPortalButtonProps = {
@@ -15,15 +15,13 @@ type BillingPortalButtonProps = {
 
 export function BillingPortalButton({ translations }: BillingPortalButtonProps) {
 	const router = useRouter();
-	const { data: authUser } = useUser();
+	const api = useApi();
 
 	const { data: billingPortalUrl } = useQuery({
-		queryKey: ['BillingPortalButton', authUser?.uid],
+		queryKey: ['me/subscriptions-button'],
 		queryFn: async () => {
-			const firebaseAuthToken = await authUser?.getIdToken(true);
-			const response = await fetch('/api/stripe/billing-portal-session/create', {
-				method: 'POST',
-				body: JSON.stringify({ firebaseAuthToken, returnUrl: window.location.href }),
+			const response = await api.post('/api/stripe/billing-portal-session/create', {
+				returnUrl: window.location.href,
 			});
 			const { url } = (await response.json()) as Stripe.Response<Stripe.BillingPortal.Session>;
 			return url || '';

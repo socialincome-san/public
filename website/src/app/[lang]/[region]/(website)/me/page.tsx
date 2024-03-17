@@ -5,6 +5,6 @@ import { useEffect } from 'react';
 
 export default function Page() {
 	useEffect(() => {
-		redirect('./me/payments');
+		redirect('./me/contributions');
 	}, []);
 }
