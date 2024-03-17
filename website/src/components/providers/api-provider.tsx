@@ -1,19 +1,23 @@
 'use client';
 
 import { ApiClient } from '@/hooks/useApi';
-import { createContext } from 'react';
-import { useUser as useFirebaseUser, useIdTokenResult } from 'reactfire';
+import { createContext, useEffect, useState } from 'react';
+import { useUser as useFirebaseUser } from 'reactfire';
 
 export const ApiProviderContext = createContext<ApiClient | undefined>(undefined!);
 
 export function ApiProvider({ children }: { children: React.ReactNode }) {
 	const { data: authUser } = useFirebaseUser();
-	if (!authUser) {
+	const [idToken, setIdToken] = useState<string>();
+
+	useEffect(() => {
+		if (authUser) {
+			authUser.getIdToken().then(setIdToken);
+		}
+	}, [authUser, setIdToken]);
+
+	if (!authUser || !idToken) {
 		return;
 	}
-	const token = useIdTokenResult(authUser);
-	if (!token.data) {
-		return;
-	}
-	return <ApiProviderContext.Provider value={new ApiClient(token.data.token)}>{children}</ApiProviderContext.Provider>;
+	return <ApiProviderContext.Provider value={new ApiClient(idToken)}>{children}</ApiProviderContext.Provider>;
 }
