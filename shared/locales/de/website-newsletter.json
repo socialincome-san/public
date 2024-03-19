@@ -18,5 +18,14 @@
 		"submit-button": "Beim Newsletter anmelden",
 		"newsletter-updated-toast": "Du wurdest zum Newsletter hinzugefügt",
 		"newsletter-error-toast": "Du konntest leider nicht zum Newsletter hinzugefügt werden"
+	},
+	"popup": {
+		"error-no-email": "Email ist notwendig",
+		"error-invalid-email": "Diese Email ist ungültig",
+		"information-label": "Melden Sie sich für unseren Newsletter an und werden Sie Teil der Social Income Community!",
+		"toast-success": "Sie wurden zum Newsletter von Social Income hinzugefügt",
+		"toast-failure": "Es gab einen Fehler beim Hinzufügen zum Social Income Newsletter",
+		"email-placeholder": "Ihre Email",
+		"button-add-subscriber": "Füge mich zum Newsletter hinzu"
 	}
 }
