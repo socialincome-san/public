@@ -1,9 +1,9 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
+import NewsletterPopup from '@/components/newsletter-popup/newsletter-popup';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Button, Typography } from '@socialincome/ui';
 import Link from 'next/link';
-import NewsletterPopup from '@/components/newsletter-popup/newsletter-popup';
 
 export async function generateMetadata({ params }: DefaultPageProps) {
 	return getMetadata(params.lang, 'website-poverty-statistics-2024');
@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: DefaultPageProps) {
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-poverty-statistics-2024']
+		namespaces: ['website-poverty-statistics-2024'],
 	});
 
 	return (
