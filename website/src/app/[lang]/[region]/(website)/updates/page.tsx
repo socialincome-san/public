@@ -1,6 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { SubscriptionInfoForm } from '@/app/[lang]/[region]/(website)/updates/subscription-info-form';
-import NewsletterPopup from '@/components/newsletter-popup/newsletter-popup';
 
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/ui';
@@ -13,7 +12,6 @@ export default async function Page({ params }: DefaultPageProps) {
 
 	return (
 		<div className="mx-auto flex w-screen max-w-6xl flex-col space-y-4 md:px-5">
-			<NewsletterPopup lang={params.lang} region={params.region} delayTime={3000} />
 			<Alert variant="primary">
 				<AlertTitle>{translator.t('updates.alert-title')}</AlertTitle>
 				<AlertDescription>{translator.t('updates.alert-description')}</AlertDescription>
