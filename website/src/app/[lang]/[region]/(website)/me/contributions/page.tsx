@@ -1,5 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { ContributionsTable } from '@/app/[lang]/[region]/(website)/me/payments/contributions-table';
+import { ContributionsTable } from '@/app/[lang]/[region]/(website)/me/contributions/contributions-table';
 import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Button } from '@socialincome/ui';

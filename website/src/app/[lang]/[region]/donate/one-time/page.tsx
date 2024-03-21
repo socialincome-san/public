@@ -15,19 +15,21 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 				<Typography size="3xl" weight="medium" className="mt-4">
 					{translator.t('one-time.subtitle')}
 				</Typography>
-				<div className="mt-16 w-full">
+				<div className="text-popover-foreground mt-16 w-full">
 					<OneTimeDonationForm
 						lang={lang}
 						region={region}
 						translations={{
+							oneTime: translator.t('donation-interval.0.title'),
+							monthly: translator.t('donation-interval.1.title'),
 							amount: translator.t('amount'),
-							submit: translator.t('button-text'),
+							submit: translator.t('button-text-short'),
 						}}
 					/>
 				</div>
 				{region === 'ch' && (
 					<Link href="https://donate.raisenow.io/cvzzr" target="_blank">
-						<Button size="lg" variant="link" className="mt-8">
+						<Button size="lg" variant="link" className="text-popup mt-8">
 							{translator.t('one-time.twint-button')}
 						</Button>
 					</Link>

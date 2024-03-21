@@ -1,17 +1,10 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { UserContext } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
-import { useTranslator } from '@/hooks/useTranslator';
-import { orderBy } from '@firebase/firestore';
-import { DONATION_CERTIFICATE_FIRESTORE_PATH } from '@socialincome/shared/src/types/donation-certificate';
-import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
+import { useDonationCertificates } from '@/app/[lang]/[region]/(website)/me/hooks';
+import { SpinnerIcon } from '@/components/logos/spinner-icon';
 import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Typography } from '@socialincome/ui';
-import { useQuery } from '@tanstack/react-query';
-import { collection, getDocs, query } from 'firebase/firestore';
 import Link from 'next/link';
-import { useContext } from 'react';
-import { useFirestore } from 'reactfire';
 
 type ContributionsTableProps = {
 	translations: {
@@ -21,24 +14,12 @@ type ContributionsTableProps = {
 	};
 } & DefaultParams;
 
-export function DonationCertificatesTable({ lang, translations }: ContributionsTableProps) {
-	const firestore = useFirestore();
-	const translator = useTranslator(lang, 'website-me');
-	const { user } = useContext(UserContext);
-	const { data: donationCertificates } = useQuery({
-		queryKey: ['DonationCertificatesTable', user, firestore],
-		queryFn: async () => {
-			if (user && firestore) {
-				return await getDocs(
-					query(
-						collection(firestore, USER_FIRESTORE_PATH, user.id, DONATION_CERTIFICATE_FIRESTORE_PATH),
-						orderBy('year', 'desc'),
-					),
-				);
-			} else return null;
-		},
-		staleTime: 1000 * 60 * 60, // 1 hour
-	});
+export function DonationCertificatesTable({ translations }: ContributionsTableProps) {
+	const { donationCertificates, loading } = useDonationCertificates();
+
+	if (loading) {
+		return <SpinnerIcon />;
+	}
 
 	if (donationCertificates?.size === 0) {
 		return <Typography dangerouslySetInnerHTML={{ __html: translations.noCertificatesYet }} />;

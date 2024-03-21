@@ -1,9 +1,10 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { UserContext } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
+import { UserContext } from '@/components/providers/user-context-provider';
 import {
 	ArrowPathIcon,
+	BriefcaseIcon,
 	CurrencyDollarIcon,
 	DocumentIcon,
 	ShieldCheckIcon,
@@ -51,19 +52,21 @@ type LayoutClientProps = {
 		subscriptions: string;
 		donationCertificatesShort: string;
 		donationCertificatesLong: string;
+		employerTitle: string;
+		work: string;
 	};
 };
 
 export function LayoutClient({ params, translations, children }: PropsWithChildren<LayoutClientProps>) {
 	const pathname = usePathname();
-	const { user } = useContext(UserContext);
+	const user = useContext(UserContext);
 	const [isOpen, setIsOpen] = useState(false);
 
 	const navigationMenu = (
 		<ul className="pr-4">
 			<NavigationSectionTitle>{translations.contributionsTitle}</NavigationSectionTitle>
 			<NavigationLink
-				href={`/${params.lang}/${params.region}/me/payments`}
+				href={`/${params.lang}/${params.region}/me/contributions`}
 				Icon={CurrencyDollarIcon}
 				onClick={() => setIsOpen(false)}
 			>
@@ -85,6 +88,14 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 					{translations.donationCertificatesShort}
 				</NavigationLink>
 			)}
+			<NavigationSectionTitle>{translations.employerTitle}</NavigationSectionTitle>
+			<NavigationLink
+				href={`/${params.lang}/${params.region}/me/work-info`}
+				Icon={BriefcaseIcon}
+				onClick={() => setIsOpen(false)}
+			>
+				{translations.work}
+			</NavigationLink>
 			<NavigationSectionTitle>{translations.accountTitle}</NavigationSectionTitle>
 			<NavigationLink
 				href={`/${params.lang}/${params.region}/me/personal-info`}
@@ -111,7 +122,7 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 		case `/${params.lang}/${params.region}/me/security`:
 			title = translations.security;
 			break;
-		case `/${params.lang}/${params.region}/me/payments`:
+		case `/${params.lang}/${params.region}/me/contributions`:
 			title = translations.payments;
 			break;
 		case `/${params.lang}/${params.region}/me/subscriptions`:

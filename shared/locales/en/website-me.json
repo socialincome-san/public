@@ -14,6 +14,10 @@
 			"subscriptions": "Subscriptions",
 			"donation-certificates-short": "Certificates",
 			"donation-certificates-long": "Donation certificates"
+		},
+		"employer": {
+			"title": "My Employer",
+			"work": "Work"
 		}
 	},
 	"contributions": {
@@ -68,7 +72,8 @@
 		"country": "Country",
 		"language": "Communication language",
 		"submit-button": "Update Personal Info",
-		"user-updated-toast": "Your personal info has been updated"
+		"user-updated-toast": "Your personal info has been updated",
+		"newsletter-switch": "I would like to receive the newsletter"
 	},
 	"security": {
 		"reset-password": {
@@ -84,5 +89,15 @@
 			"title": "Sign out of your account?",
 			"button": "Sign Out"
 		}
+	},
+	"work-info": {
+		"work": "Work",
+		"add-employer": "Add new employer",
+		"submit-button": "Add",
+		"current-employer": "Current Employer",
+		"empty-state": "You didn't specify any employer",
+		"delete-employer": "Delete",
+		"past-employers": "Past Employers",
+		"no-longer-work-here": "I no longer work here"
 	}
 }

@@ -1,7 +1,11 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { useUserContext } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
+import {
+	useMailchimpSubscription,
+	useUpsertMailchimpSubscription,
+	useUser,
+} from '@/app/[lang]/[region]/(website)/me/hooks';
 import { useTranslator } from '@/hooks/useTranslator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { COUNTRY_CODES } from '@socialincome/shared/src/types/country';
@@ -15,13 +19,16 @@ import {
 	FormLabel,
 	FormMessage,
 	Input,
+	Label,
 	Select,
 	SelectContent,
 	SelectGroup,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
+	Switch,
 } from '@socialincome/ui';
+import { useQueryClient } from '@tanstack/react-query';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -43,14 +50,18 @@ type PersonalInfoFormProps = {
 		language: string;
 		submitButton: string;
 		userUpdatedToast: string;
+		newsletterSwitch: string;
 	};
 } & DefaultParams;
 
 export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) {
 	const firestore = useFirestore();
-	const { user, refetch } = useUserContext();
+	const user = useUser();
+	const queryClient = useQueryClient();
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
+	const { status, loading } = useMailchimpSubscription();
+	const upsertMailchimpSubscription = useUpsertMailchimpSubscription();
 
 	const formSchema = z.object({
 		firstname: z.string(),
@@ -117,7 +128,7 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 			},
 		}).then(() => {
 			toast.success(translations.userUpdatedToast);
-			refetch();
+			queryClient.invalidateQueries({ queryKey: ['me'] });
 		});
 	};
 
@@ -291,10 +302,25 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 						</FormItem>
 					)}
 				/>
-				<Button variant="ghost" size="lg" type="submit" className="md:col-span-2">
+				<Button variant="default" type="submit" className=" md:col-span-2">
 					{translations.submitButton}
 				</Button>
 			</form>
+			<div className="flex items-center space-x-2">
+				<Switch
+					id="newsletter-switch"
+					checked={status === 'subscribed'}
+					disabled={loading}
+					onCheckedChange={(enabled) => {
+						if (enabled) {
+							upsertMailchimpSubscription('subscribed');
+						} else {
+							upsertMailchimpSubscription('unsubscribed');
+						}
+					}}
+				/>
+				<Label htmlFor="newsletter-switch">{translations.newsletterSwitch}</Label>
+			</div>
 		</Form>
 	);
 }

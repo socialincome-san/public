@@ -4,24 +4,18 @@ import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { useQuery } from '@tanstack/react-query';
 import { collection, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
 import { redirect } from 'next/navigation';
-import { createContext, PropsWithChildren, useContext, useEffect } from 'react';
+import { createContext, PropsWithChildren, useEffect } from 'react';
 import { useFirestore, useUser } from 'reactfire';
 
-interface UserContextProps {
-	user: QueryDocumentSnapshot<User> | null | undefined;
-	refetch: () => void;
-}
-
-export const UserContext = createContext<UserContextProps>(undefined!);
-export const useUserContext = () => useContext(UserContext);
+export const UserContext = createContext<QueryDocumentSnapshot<User> | null | undefined>(undefined!);
 
 export function UserContextProvider({ children }: PropsWithChildren) {
 	const firestore = useFirestore();
 	const { data: authUser, status: authUserStatus } = useUser();
-	const { data: user, refetch } = useQuery({
-		queryKey: ['UserContextProvider', authUser?.uid, firestore],
+	const { data: user } = useQuery({
+		queryKey: ['me', authUser?.uid],
 		queryFn: async () => {
-			if (authUser?.uid && firestore) {
+			if (authUser?.uid) {
 				let snapshot = await getDocs(
 					query(collection(firestore, USER_FIRESTORE_PATH), where('auth_user_id', '==', authUser?.uid)),
 				);
@@ -44,6 +38,6 @@ export function UserContextProvider({ children }: PropsWithChildren) {
 	}, [user, authUserStatus]);
 
 	if (user) {
-		return <UserContext.Provider value={{ user, refetch }}>{children}</UserContext.Provider>;
+		return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 	}
 }
