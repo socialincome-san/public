@@ -20,6 +20,7 @@ dist
 # misc
 tags
 .ignore/
+ignored/
 .DS_Store
 .env.local
 .env.development.local

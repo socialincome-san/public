@@ -38,6 +38,8 @@ export const getAnalyticsCookieConsent = (mode: ConsentStatusString) =>
 	({
 		analytics_storage: mode,
 		ad_storage: mode,
+		ad_user_data: mode,
+		ad_personalization: mode,
 		functionality_storage: mode,
 		security_storage: mode,
 		personalization_storage: mode,
