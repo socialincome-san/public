@@ -9,6 +9,10 @@ import { daysUntilTs } from '@socialincome/shared/src/utils/date';
 import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRates';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
 	BaseContainer,
 	Popover,
 	PopoverContent,
@@ -18,10 +22,6 @@ import {
 	TableCell,
 	TableRow,
 	Typography,
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
 } from '@socialincome/ui';
 import { Progress } from '@socialincome/ui/src/components/progress';
 
@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: CampaignPageProps) {
 export default async function Page({ params }: CampaignPageProps) {
 	const translator = await Translator.getInstance({
 		language: params.lang,
-		namespaces: ['website-donate', 'website-videos','website-faq' ],
+		namespaces: ['website-donate', 'website-videos', 'website-faq'],
 	});
 
 	const campaignDoc = await firestoreAdmin.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH).doc(params.campaign).get();
@@ -305,7 +305,7 @@ export default async function Page({ params }: CampaignPageProps) {
 				</div>
 			</BaseContainer>
 			<BaseContainer>
-				<div className="py-8 lg:pt-16 pb-32">
+				<div className="py-8 pb-32 lg:pt-16">
 					<Typography size="2xl" color="foreground" weight="medium" className="pb-1">
 						{translator.t('campaign.title')}
 					</Typography>
@@ -321,14 +321,18 @@ export default async function Page({ params }: CampaignPageProps) {
 											</Typography>
 										</AccordionTrigger>
 										<AccordionContent>
-											<Typography size="xl" color="muted-foreground" className="mt-2"
-																	dangerouslySetInnerHTML={{ __html: answer }} />
+											<Typography
+												size="xl"
+												color="muted-foreground"
+												className="mt-2"
+												dangerouslySetInnerHTML={{ __html: answer }}
+											/>
 										</AccordionContent>
 									</AccordionItem>
 								))}
 						</Accordion>
 					</div>
-					<div className="flex flex-col justify-center items-center pt-4">
+					<div className="flex flex-col items-center justify-center pt-4">
 						<Typography
 							className="mt-4 underline"
 							color="muted-foreground"
