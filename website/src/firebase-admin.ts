@@ -2,7 +2,6 @@ import { getOrInitializeFirebaseAdmin } from '@socialincome/shared/src/firebase/
 import { AuthAdmin } from '@socialincome/shared/src/firebase/admin/AuthAdmin';
 import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
 import { StorageAdmin } from '@socialincome/shared/src/firebase/admin/StorageAdmin';
-import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { credential } from 'firebase-admin';
 
 // FIREBASE_SERVICE_ACCOUNT_JSON should only be a single line where the content of private_key contains \n characters.
@@ -21,11 +20,3 @@ export const app = getOrInitializeFirebaseAdmin(
 export const authAdmin = new AuthAdmin(app);
 export const firestoreAdmin = new FirestoreAdmin(app);
 export const storageAdmin = new StorageAdmin(app);
-
-export const getUserDocFromAuthToken = async (token: string | undefined) => {
-	if (!token) return undefined;
-	const decodedToken = await authAdmin.auth.verifyIdToken(token, true);
-	return await firestoreAdmin.findFirst<User>(USER_FIRESTORE_PATH, (q) =>
-		q.where('auth_user_id', '==', decodedToken.uid),
-	);
-};

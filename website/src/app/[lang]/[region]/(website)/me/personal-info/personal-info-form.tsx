@@ -4,8 +4,8 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import {
 	useMailchimpSubscription,
 	useUpsertMailchimpSubscription,
-	useUserContext,
-} from '@/app/[lang]/[region]/(website)/me/user-context-provider';
+	useUser,
+} from '@/app/[lang]/[region]/(website)/me/hooks';
 import { useTranslator } from '@/hooks/useTranslator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { COUNTRY_CODES } from '@socialincome/shared/src/types/country';
@@ -28,6 +28,7 @@ import {
 	SelectValue,
 	Switch,
 } from '@socialincome/ui';
+import { useQueryClient } from '@tanstack/react-query';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -55,12 +56,11 @@ type PersonalInfoFormProps = {
 
 export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) {
 	const firestore = useFirestore();
-	const { user, refetch } = useUserContext();
-
+	const user = useUser();
+	const queryClient = useQueryClient();
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
-
-	const { status, isLoading } = useMailchimpSubscription();
+	const { status, loading } = useMailchimpSubscription();
 	const upsertMailchimpSubscription = useUpsertMailchimpSubscription();
 
 	const formSchema = z.object({
@@ -94,24 +94,22 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 	});
 
 	useEffect(() => {
-		if (user) {
-			form.reset({
-				firstname: user?.get('personal.name') || '',
-				lastname: user?.get('personal.lastname') || '',
-				gender: user?.get('personal.gender') || '',
-				email: user?.get('email') || '',
-				street: user?.get('address.street') || '',
-				streetNumber: user?.get('address.number') || '',
-				city: user?.get('address.city') || '',
-				zip: user?.get('address.zip') || '',
-				country: user?.get('address.country') || '',
-				language: user?.get('language') || '',
-			});
-		}
+		form.reset({
+			firstname: user.get('personal.name') || '',
+			lastname: user.get('personal.lastname') || '',
+			gender: user.get('personal.gender') || '',
+			email: user.get('email') || '',
+			street: user.get('address.street') || '',
+			streetNumber: user.get('address.number') || '',
+			city: user.get('address.city') || '',
+			zip: user.get('address.zip') || '',
+			country: user.get('address.country') || '',
+			language: user.get('language') || '',
+		});
 	}, [user, form]);
 
 	const onSubmit = async (values: FormSchema) => {
-		await updateDoc<Partial<User>>(doc(firestore, USER_FIRESTORE_PATH, user!.id), {
+		await updateDoc<Partial<User>>(doc(firestore, USER_FIRESTORE_PATH, user.id), {
 			personal: {
 				name: values.firstname,
 				lastname: values.lastname,
@@ -128,11 +126,9 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 			},
 		}).then(() => {
 			toast.success(translations.userUpdatedToast);
-			refetch();
+			queryClient.invalidateQueries({ queryKey: ['me', user.get('auth_user_id')] });
 		});
 	};
-
-	if (!user) return null;
 
 	return (
 		<Form {...form}>
@@ -310,7 +306,7 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 				<Switch
 					id="newsletter-switch"
 					checked={status === 'subscribed'}
-					disabled={isLoading}
+					disabled={loading}
 					onCheckedChange={(enabled) => {
 						if (enabled) {
 							upsertMailchimpSubscription('subscribed');
