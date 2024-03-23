@@ -94,24 +94,22 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 	});
 
 	useEffect(() => {
-		if (user) {
-			form.reset({
-				firstname: user?.get('personal.name') || '',
-				lastname: user?.get('personal.lastname') || '',
-				gender: user?.get('personal.gender') || '',
-				email: user?.get('email') || '',
-				street: user?.get('address.street') || '',
-				streetNumber: user?.get('address.number') || '',
-				city: user?.get('address.city') || '',
-				zip: user?.get('address.zip') || '',
-				country: user?.get('address.country') || '',
-				language: user?.get('language') || '',
-			});
-		}
+		form.reset({
+			firstname: user.get('personal.name') || '',
+			lastname: user.get('personal.lastname') || '',
+			gender: user.get('personal.gender') || '',
+			email: user.get('email') || '',
+			street: user.get('address.street') || '',
+			streetNumber: user.get('address.number') || '',
+			city: user.get('address.city') || '',
+			zip: user.get('address.zip') || '',
+			country: user.get('address.country') || '',
+			language: user.get('language') || '',
+		});
 	}, [user, form]);
 
 	const onSubmit = async (values: FormSchema) => {
-		await updateDoc<Partial<User>>(doc(firestore, USER_FIRESTORE_PATH, user!.id), {
+		await updateDoc<Partial<User>>(doc(firestore, USER_FIRESTORE_PATH, user.id), {
 			personal: {
 				name: values.firstname,
 				lastname: values.lastname,
@@ -128,11 +126,9 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 			},
 		}).then(() => {
 			toast.success(translations.userUpdatedToast);
-			queryClient.invalidateQueries({ queryKey: ['me'] });
+			queryClient.invalidateQueries({ queryKey: ['me', user.get('auth_user_id')] });
 		});
 	};
-
-	if (!user) return null;
 
 	return (
 		<Form {...form}>

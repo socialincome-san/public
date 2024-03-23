@@ -18,7 +18,7 @@ export function BillingPortalButton({ translations }: BillingPortalButtonProps) 
 	const api = useApi();
 
 	const { data: billingPortalUrl } = useQuery({
-		queryKey: ['me/subscriptions-button'],
+		queryKey: ['me', 'subscriptions', 'billing-portal-button'],
 		queryFn: async () => {
 			const response = await api.post('/api/stripe/billing-portal-session/create', {
 				returnUrl: window.location.href,
