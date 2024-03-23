@@ -26,7 +26,7 @@ export function UserContextProvider({ children }: PropsWithChildren) {
 			}
 			return null;
 		},
-		staleTime: 1000 * 60 * 60, // 1 hour
+		staleTime: 3600000, // 1 hour
 	});
 
 	useEffect(() => {

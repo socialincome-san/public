@@ -16,7 +16,7 @@ import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import _ from 'lodash';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 import {
 	AnalyticsProvider,
@@ -151,6 +151,8 @@ export const useI18n = () => useContext(I18nContext);
 
 function I18nProvider({ children }: PropsWithChildren) {
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const searchParamsString = searchParams.toString();
 
 	const { value: language, setCookie: setLanguage } = useCookieState<WebsiteLanguage>(LANGUAGE_COOKIE);
 	const { value: region, setCookie: setRegion } = useCookieState<WebsiteRegion>(REGION_COOKIE);
@@ -163,7 +165,7 @@ function I18nProvider({ children }: PropsWithChildren) {
 			setLanguage(languageInUrl);
 		} else if (languageInUrl !== language) {
 			urlSegments[1] = language;
-			router.push(urlSegments.join('/'));
+			router.push(urlSegments.join('/') + (searchParamsString ? `?${searchParamsString}` : ''));
 		}
 	}, [language, router, setLanguage]);
 
@@ -174,7 +176,7 @@ function I18nProvider({ children }: PropsWithChildren) {
 			setRegion(regionInUrl);
 		} else if (regionInUrl !== region) {
 			urlSegments[2] = region;
-			router.push(urlSegments.join('/'));
+			router.push(urlSegments.join('/') + (searchParamsString ? `?${searchParamsString}` : ''));
 		}
 	}, [region, router, setRegion]);
 
