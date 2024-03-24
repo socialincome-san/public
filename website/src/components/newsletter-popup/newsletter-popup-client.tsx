@@ -100,7 +100,7 @@ export const NewsletterPopupClient = ({ delay, lang, translations }: NewsletterP
 		return () => {
 			clearTimeout(timeout);
 		};
-	}, []);
+	}, [delay, lang, translations]);
 
 	return null;
 };
