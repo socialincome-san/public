@@ -6,6 +6,7 @@ import { Sdg } from '@/app/[lang]/[region]/(website)/(home)/(sections)/sdg';
 import { SwissSection } from '@/app/[lang]/[region]/(website)/(home)/(sections)/swiss-section';
 import { ThreeApproaches } from '@/app/[lang]/[region]/(website)/(home)/(sections)/three-approaches';
 import { WhatWouldChange } from '@/app/[lang]/[region]/(website)/(home)/(sections)/what-would-change';
+import NewsletterPopup from '@/components/newsletter-popup/newsletter-popup';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Video } from './(sections)/video';
 
@@ -30,6 +31,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			<ThreeApproaches lang={lang} />
 			<Sdg lang={lang} />
 			<Recognized lang={lang} />
+			<NewsletterPopup lang={lang} region={region} delay={5000} />
 		</>
 	);
 }

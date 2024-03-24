@@ -1,9 +1,10 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { useApi } from '@/hooks/useApi';
 import { useTranslator } from '@/hooks/useTranslator';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { MailchimpSubscriptionData } from '@socialincome/shared/src/mailchimp/MailchimpAPI';
+import { NewsletterSubscriptionData } from '@socialincome/shared/src/mailchimp/MailchimpAPI';
 import { COUNTRY_CODES } from '@socialincome/shared/src/types/country';
 import {
 	Button,
@@ -41,6 +42,7 @@ type PersonalInfoFormProps = {
 export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormProps) {
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
+	const api = useApi();
 
 	const formSchema = z.object({
 		firstname: z.string(),
@@ -63,7 +65,7 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 	});
 
 	const onSubmit = async (values: FormSchema) => {
-		const data: MailchimpSubscriptionData = {
+		const data: NewsletterSubscriptionData = {
 			firstname: values.firstname,
 			lastname: values.lastname,
 			email: values.email,
@@ -71,8 +73,8 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 			language: values.language,
 			status: 'subscribed',
 		};
-		// Call the API to change Mailchimp subscription
-		fetch('/api/mailchimp/subscription/public', { method: 'POST', body: JSON.stringify(data) }).then((response) => {
+
+		api.post('/api/newsletter/subscription/public', data).then((response) => {
 			if (response.status === 200) {
 				toast.success(translations.toastMessage);
 			} else {

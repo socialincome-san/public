@@ -1,4 +1,4 @@
-import { ContextProviders } from '@/app/context-providers';
+import { ContextProviders } from '@/components/providers/context-providers';
 import { getMetadata } from '@/metadata';
 import { PropsWithChildren } from 'react';
 import './globals.css';
