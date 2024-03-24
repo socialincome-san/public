@@ -11,7 +11,9 @@ export async function Overview({ lang, region }: DefaultParams) {
 
 	return (
 		<BaseContainer>
-			<Typography>{translator.t('section-2.title-1')}</Typography>
+			<Typography size="2xl" color="foreground-dark">
+				{translator.t('section-2.title-1')}
+			</Typography>
 			<div>
 				{translator.t<{ text: string; color?: FontColor }[]>('section-2.title-2').map((title, index) => (
 					<Typography as="span" key={index} color={title.color}>

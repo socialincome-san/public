@@ -20,7 +20,10 @@ module.exports = {
 				input: 'var(--input)',
 				ring: 'var(--ring)',
 				background: 'var(--background)',
-				foreground: 'var(--foreground)',
+				foreground: {
+					DEFAULT: 'var(--foreground)',
+					dark: 'var(--foreground-dark)',
+				},
 				muted: {
 					DEFAULT: 'var(--muted)',
 					foreground: 'var(--muted-foreground)',

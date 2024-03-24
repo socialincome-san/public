@@ -79,12 +79,21 @@
 
 		--border: hsl(60 9.1% 97.8%);
 	}
+
+	.theme-v2 {
+		--background: #F9F8F3;
+		--foreground: #2A63A4;
+		--foreground-dark: #01579B;
+	}
 }
 
 @layer base {
 	body,
 	.theme-default,
 	.theme-dark-blue {
+		@apply bg-background text-foreground;
+	}
+	.theme-v2 {
 		@apply bg-background text-foreground;
 	}
 }
