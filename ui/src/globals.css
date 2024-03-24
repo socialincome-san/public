@@ -64,6 +64,11 @@
 		--radius: 0.5rem;
 	}
 
+	.theme-white {
+		--background: hsl(0, 0%, 100%);
+		--foreground: hsl(0, 0%, 10%);
+	}
+
 	.theme-dark-blue {
 		--background: hsl(216, 54%, 55%);
 		--muted: hsl(216, 54%, 61%);
@@ -84,6 +89,7 @@
 @layer base {
 	body,
 	.theme-default,
+	.theme-white,
 	.theme-dark-blue {
 		@apply bg-background text-foreground;
 	}
