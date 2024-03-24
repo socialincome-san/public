@@ -3,7 +3,7 @@ import { FooterClient } from '@/components/footer/footer-client';
 import { SILogo } from '@/components/logos/si-logo';
 import { WebsiteLanguage, websiteRegions } from '@/i18n';
 import { DocumentTextIcon, InformationCircleIcon, UserCircleIcon } from '@heroicons/react/24/solid';
-import { SiFacebook, SiGithub, SiInstagram, SiLinkedin, SiX, SiMaildotru } from '@icons-pack/react-simple-icons';
+import { SiFacebook, SiGithub, SiInstagram, SiLinkedin, SiMaildotru, SiX } from '@icons-pack/react-simple-icons';
 import { IconType } from '@icons-pack/react-simple-icons/types';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
