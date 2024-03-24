@@ -8,7 +8,7 @@ export const ApiProviderContext = createContext<ApiClient | undefined>(undefined
 
 export function ApiProvider({ children }: { children: React.ReactNode }) {
 	const { data: authUser } = useFirebaseUser();
-	const [idToken, setIdToken] = useState<string>();
+	const [idToken, setIdToken] = useState<string>('');
 
 	useEffect(() => {
 		if (authUser) {
@@ -16,8 +16,5 @@ export function ApiProvider({ children }: { children: React.ReactNode }) {
 		}
 	}, [authUser, setIdToken]);
 
-	if (!authUser || !idToken) {
-		return;
-	}
 	return <ApiProviderContext.Provider value={new ApiClient(idToken)}>{children}</ApiProviderContext.Provider>;
 }

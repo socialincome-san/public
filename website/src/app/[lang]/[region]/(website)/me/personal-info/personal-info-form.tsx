@@ -2,8 +2,8 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import {
-	useMailchimpSubscription,
-	useUpsertMailchimpSubscription,
+	useNewsletterSubscription,
+	useUpsertNewsletterSubscription,
 	useUser,
 } from '@/app/[lang]/[region]/(website)/me/hooks';
 import { useTranslator } from '@/hooks/useTranslator';
@@ -60,8 +60,8 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 	const queryClient = useQueryClient();
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
-	const { status, loading } = useMailchimpSubscription();
-	const upsertMailchimpSubscription = useUpsertMailchimpSubscription();
+	const { status, loading } = useNewsletterSubscription();
+	const upsertMailchimpSubscription = useUpsertNewsletterSubscription();
 
 	const formSchema = z.object({
 		firstname: z.string(),

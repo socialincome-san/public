@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { useI18n } from '@/app/context-providers';
+import { useI18n } from '@/components/providers/context-providers';
 import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { GlobeAltIcon, LanguageIcon } from '@heroicons/react/24/solid';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@socialincome/ui';

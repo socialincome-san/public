@@ -1,6 +1,7 @@
 'use client';
 
 import { CURRENCY_COOKIE, LANGUAGE_COOKIE, REGION_COOKIE } from '@/app/[lang]/[region]';
+import { ApiProvider } from '@/components/providers/api-provider';
 import { FacebookTracking } from '@/components/tracking/facebook-tracking';
 import { GoogleTagManager } from '@/components/tracking/google-tag-manager';
 import { LinkedInTracking } from '@/components/tracking/linkedin-tracking';
@@ -211,9 +212,11 @@ export function ContextProviders({ children }: PropsWithChildren) {
 	return (
 		<FirebaseAppProvider firebaseConfig={firebaseConfig}>
 			<FirebaseSDKProviders>
-				<QueryClientProvider client={queryClient}>
-					<I18nProvider>{children}</I18nProvider>
-				</QueryClientProvider>
+				<ApiProvider>
+					<QueryClientProvider client={queryClient}>
+						<I18nProvider>{children}</I18nProvider>
+					</QueryClientProvider>
+				</ApiProvider>
 			</FirebaseSDKProviders>
 		</FirebaseAppProvider>
 	);

@@ -20,12 +20,10 @@
 		"newsletter-error-toast": "We weren't able to add you to our newsletter"
 	},
 	"popup": {
-		"error-no-email": "Email is required",
-		"error-invalid-email": "Please enter a valid email address",
 		"information-label": "Join our newsletter and become part of the Social Income Community!",
-		"toast-success": "You have been added to Social Income newsletter",
-		"toast-failure": "There was an error to add you to Social Income newsletter",
-		"email-placeholder": "Your Email",
-		"button-add-subscriber": "Add me to the newsletter"
+		"toast-success": "Thank you for subscribing to our newsletter!",
+		"toast-failure": "Something went wrong. Try again or contact us at hello@socialincome.org",
+		"email-placeholder": "Your email",
+		"button-subscribe": "Subscribe"
 	}
 }
