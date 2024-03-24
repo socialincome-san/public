@@ -1,7 +1,7 @@
 'use client';
 
 import { ApiClient } from '@/hooks/useApi';
-import { Suspense, createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { useUser as useFirebaseUser } from 'reactfire';
 
 export const ApiProviderContext = createContext<ApiClient | undefined>(undefined!);
@@ -16,9 +16,5 @@ export function ApiProvider({ children }: { children: React.ReactNode }) {
 		}
 	}, [authUser, setIdToken]);
 
-	return (
-		<Suspense fallback={children}>
-			<ApiProviderContext.Provider value={new ApiClient(idToken)}>{children}</ApiProviderContext.Provider>;
-		</Suspense>
-	);
+	return <ApiProviderContext.Provider value={new ApiClient(idToken)}>{children}</ApiProviderContext.Provider>;
 }
