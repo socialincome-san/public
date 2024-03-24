@@ -18,5 +18,12 @@
 		"submit-button": "Subscribe to newsletter",
 		"newsletter-updated-toast": "You have been added to the newsletter",
 		"newsletter-error-toast": "We weren't able to add you to our newsletter"
+	},
+	"popup": {
+		"information-label": "Join our newsletter and become part of the Social Income Community!",
+		"toast-success": "Thank you for subscribing to our newsletter!",
+		"toast-failure": "Something went wrong. Try again or contact us at hello@socialincome.org",
+		"email-placeholder": "Your email",
+		"button-subscribe": "Subscribe"
 	}
 }

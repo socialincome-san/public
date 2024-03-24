@@ -1,6 +1,6 @@
 'use client';
 
-import { useI18n } from '@/app/context-providers';
+import { useI18n } from '@/components/providers/context-providers';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import { GlobeEuropeAfricaIcon, LanguageIcon } from '@heroicons/react/24/solid';

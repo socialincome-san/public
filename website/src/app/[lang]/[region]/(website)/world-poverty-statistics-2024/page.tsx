@@ -1,4 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
+import NewsletterPopup from '@/components/newsletter-popup/newsletter-popup';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Button, Typography } from '@socialincome/ui';
@@ -7,6 +8,7 @@ import Link from 'next/link';
 export async function generateMetadata({ params }: DefaultPageProps) {
 	return getMetadata(params.lang, 'website-poverty-statistics-2024');
 }
+
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
 		language: lang,
@@ -45,11 +47,12 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			<Typography size="xl" lineHeight="normal" className="border-t pt-8">
 				{translator.t('difference')}
 			</Typography>
-			<Link href={`${lang}/${region}/donate/individual`}>
+			<Link href={`/${lang}/${region}/donate/individual`}>
 				<Button size="lg" className="w-full">
 					{translator.t('take-action')}
 				</Button>
 			</Link>
+			<NewsletterPopup lang={lang} region={region} delay={5000} />
 		</BaseContainer>
 	);
 }

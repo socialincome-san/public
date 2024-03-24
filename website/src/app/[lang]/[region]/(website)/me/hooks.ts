@@ -84,7 +84,7 @@ export const useDonationCertificates = () => {
 };
 
 // Mailchimp
-export const useMailchimpSubscription = () => {
+export const useNewsletterSubscription = () => {
 	const api = useApi();
 	const {
 		data: status,
@@ -92,9 +92,9 @@ export const useMailchimpSubscription = () => {
 		isRefetching,
 		error,
 	} = useQuery<string | null>({
-		queryKey: ['me', 'mailchimp'],
+		queryKey: ['me', 'newsletter'],
 		queryFn: async () => {
-			const response = await api.get('/api/mailchimp/subscription');
+			const response = await api.get('/api/newsletter/subscription');
 			return (await response.json()).status;
 		},
 		staleTime: 3600000, // 1 hour
@@ -102,13 +102,13 @@ export const useMailchimpSubscription = () => {
 	return { status, loading: isLoading || isRefetching, error };
 };
 
-export const useUpsertMailchimpSubscription = () => {
+export const useUpsertNewsletterSubscription = () => {
 	const api = useApi();
 	const queryClient = useQueryClient();
 
 	return async (status: Status) => {
-		const response = await api.post('/api/mailchimp/subscription', { status });
-		await queryClient.invalidateQueries({ queryKey: ['me', 'mailchimp'] });
+		const response = await api.post('/api/newsletter/subscription', { status });
+		await queryClient.invalidateQueries({ queryKey: ['me', 'newsletter'] });
 		return response;
 	};
 };

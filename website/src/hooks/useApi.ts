@@ -24,7 +24,7 @@ export class ApiClient {
 		let url: URL;
 		if (path.startsWith('/')) {
 			url = new URL(path, window.location.origin);
-			url.searchParams.append('firebaseAuthToken', this.token);
+			if (this.token) url.searchParams.append('firebaseAuthToken', this.token);
 		} else {
 			url = new URL(path);
 		}

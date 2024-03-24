@@ -1,5 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { SubscriptionInfoForm } from '@/app/[lang]/[region]/(website)/updates/subscription-info-form';
+import { SubscriptionInfoForm } from '@/app/[lang]/[region]/(website)/newsletter/subscription-info-form';
 
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/ui';

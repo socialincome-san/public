@@ -2,7 +2,7 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { CreateCheckoutSessionData } from '@/app/api/stripe/checkout-session/create/route';
-import { useI18n } from '@/app/context-providers';
+import { useI18n } from '@/components/providers/context-providers';
 import { CurrencySelector } from '@/components/ui/currency-selector';
 import { useTranslator } from '@/hooks/useTranslator';
 import { websiteCurrencies, WebsiteLanguage } from '@/i18n';
