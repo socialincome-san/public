@@ -2,23 +2,13 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useApi } from '@/hooks/useApi';
-import { useTranslator } from '@/hooks/useTranslator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NewsletterSubscriptionData } from '@socialincome/shared/src/mailchimp/MailchimpAPI';
-import {
-	Button,
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-	Input,
-} from '@socialincome/ui';
+import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@socialincome/ui';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
-import { useState } from "react";
 
 type PersonalInfoFormProps = {
 	translations: {
@@ -73,9 +63,11 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 					name="firstname"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel className="text-md text-primary-foreground-muted font-normal">{translations.firstname}</FormLabel>
+							<FormLabel className="text-md text-primary-foreground-muted font-normal">
+								{translations.firstname}
+							</FormLabel>
 							<FormControl>
-								<Input type="text" className="h-14 text-xl p-4 w-full" {...field} />
+								<Input type="text" className="h-14 w-full p-4 text-xl" {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -88,7 +80,7 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 						<FormItem>
 							<FormLabel className="text-md text-primary-foreground-muted font-normal">{translations.email}</FormLabel>
 							<FormControl>
-								<Input type="email" className="h-14 text-xl p-4 w-full" {...field} />
+								<Input type="email" className="h-14 w-full p-4 text-xl" {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -99,7 +91,8 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 					type="submit"
 					variant="default"
 					showLoadingSpinner={submitting}
-					className="bg-accent text-accent-foreground hover:bg-accent-muted active:bg-accent-muted rounded-full text-lg font-medium mt-4">
+					className="bg-accent text-accent-foreground hover:bg-accent-muted active:bg-accent-muted mt-4 rounded-full text-lg font-medium"
+				>
 					{translations.updatesSubmitButton}
 				</Button>
 			</form>
