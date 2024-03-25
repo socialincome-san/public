@@ -38,7 +38,7 @@ const NewsletterPopupToast = ({ lang, translations, t, onClose }: NewsletterPopu
 	});
 
 	const onSubmit = async (values: FormSchema) => {
-		const body: CreateNewsletterSubscription = { email: values.email, language: lang as any };
+		const body: CreateNewsletterSubscription = { email: values.email, language: lang as any, source: 'subscriber' };
 		api.post('/api/newsletter/subscription/public', body).then((response) => {
 			if (response.status === 200) {
 				toast.dismiss(t.id);

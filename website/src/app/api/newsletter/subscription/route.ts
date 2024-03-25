@@ -19,7 +19,7 @@ export async function GET(request: Request) {
 /**
  * Upsert Mailchimp subscription
  */
-type NewsletterSubscriptionUpdateRequest = { json(): Promise<{ status: 'subscribed' | 'unsubscribed' }> } & Request;
+type NewsletterSubscriptionUpdateRequest = { json(): Promise<{ status: 'subscribed' | 'unsubscribed', source: 'subscriber' | 'contributor' }> } & Request;
 export async function POST(request: NewsletterSubscriptionUpdateRequest) {
 	try {
 		const userDoc = await authorizeRequest(request);

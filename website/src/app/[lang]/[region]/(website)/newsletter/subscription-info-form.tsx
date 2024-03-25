@@ -20,7 +20,7 @@ type PersonalInfoFormProps = {
 	};
 } & DefaultParams;
 
-export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormProps) {
+export function SubscriptionInfoForm({ lang, region, translations }: PersonalInfoFormProps) {
 	const api = useApi();
 	const [submitting, setSubmitting] = useState(false);
 
@@ -43,6 +43,7 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 		const data: NewsletterSubscriptionData = {
 			firstname: values.firstname,
 			email: values.email,
+			language: lang === 'de' ? 'de' : 'en',
 			status: 'subscribed',
 		};
 
