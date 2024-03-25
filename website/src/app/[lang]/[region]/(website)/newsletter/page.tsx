@@ -44,7 +44,7 @@ export default async function Page({ params }: DefaultPageProps) {
 								{translator.t('updates.description-2')}
 							</Typography>
 						</div>
-						<hr className="my-8 bg-gray-200 h-px border-0" />
+						<hr className="my-8 bg-border h-px border-0" />
 						<div>
 							<div className="mb-4">
 									<Typography size="xl" color="muted-foreground">
