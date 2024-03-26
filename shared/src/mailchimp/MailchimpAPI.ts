@@ -8,6 +8,7 @@ export type NewsletterSubscriptionData = {
 	firstname?: string;
 	lastname?: string;
 	country?: CountryCode;
+	source?: 'contributor' | 'subscriber';
 };
 
 export class MailchimpAPI {
@@ -39,6 +40,7 @@ export class MailchimpAPI {
 					LNAME: data.lastname ?? '',
 					COUNTRY: data.country ?? '',
 					LANGUAGE: data.language === 'de' ? 'German' : 'English',
+					SOURCE: data.source ?? 'subscriber',
 				},
 			});
 		}
@@ -53,6 +55,7 @@ export class MailchimpAPI {
 				LNAME: data.lastname ?? '',
 				COUNTRY: data.country ?? '',
 				LANGUAGE: data.language === 'de' ? 'German' : 'English',
+				SOURCE: data.source ?? 'subscriber',
 			},
 		});
 	};
