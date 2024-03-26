@@ -50,8 +50,10 @@ export function SubscriptionInfoForm({ lang, region, translations }: PersonalInf
 		api.post('/api/newsletter/subscription/public', data).then((response) => {
 			if (response.status === 200) {
 				toast.success(translations.toastMessage);
+				setSubmitting(false);
 			} else {
 				toast.error(translations.toastErrorMessage + '(' + response.statusText + ')');
+				setSubmitting(false);
 			}
 		});
 	};
