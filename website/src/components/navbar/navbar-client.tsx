@@ -21,7 +21,7 @@ import {
 } from '@socialincome/ui';
 import _ from 'lodash';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 type NavigationSection = {
 	title: string;
@@ -71,6 +71,8 @@ export function NavbarClient({
 }: NavbarProps) {
 	const [isOpen, setIsOpen] = useState(false);
 
+	const transparencySubMenu = useRef<Any>();
+
 	const i18nDialog = (
 		<I18nDialog
 			languages={languages}
@@ -116,13 +118,47 @@ export function NavbarClient({
 												</Button>
 											</Link>
 										) : (
-											<div key={index} className="group relative">
+											<div
+												key={index}
+												className="group relative"
+												tabIndex={0}
+												onKeyDown={(e) => {
+													if (e.key === 'Enter') {
+														transparencySubMenu?.current?.classList.toggle('scale-95');
+														transparencySubMenu?.current?.classList.toggle('opacity-0');
+														transparencySubMenu?.current?.classList.toggle('ease-out');
+														transparencySubMenu?.current?.classList.toggle('translate-y-1');
+													}
+												}}
+												onMouseEnter={(e) => {
+													transparencySubMenu?.current?.classList.add('scale-95');
+													transparencySubMenu?.current?.classList.add('opacity-0');
+													transparencySubMenu?.current?.classList.add('ease-out');
+													transparencySubMenu?.current?.classList.remove('translate-y-1');
+												}}
+											>
 												<Button variant="ghost" className="flex items-center space-x-2 py-6 ">
 													<Typography size="xl">{section.title}</Typography>
 													{(section.links?.length ?? 0) > 0 && <ChevronDownIcon className="h-4 w-4" />}
 												</Button>
 
-												<div className="bg-popover group-hover:easy-in absolute z-50 w-56 -translate-x-6 scale-95 rounded-md border p-0 opacity-0 shadow-md outline-none transition-all  delay-100 duration-150 ease-out group-hover:translate-y-1 group-hover:scale-100 group-hover:opacity-100">
+												<div
+													ref={transparencySubMenu}
+													tabIndex={0}
+													className={`
+														bg-popover													
+														group-hover:easy-in 
+														absolute z-50 w-56 
+														-translate-x-6
+														scale-95 rounded-md 
+														border p-0 opacity-0 shadow-md 
+														outline-none transition-all														
+														delay-100 
+														duration-150 
+														ease-out
+														group-hover:translate-y-1 group-hover:scale-100 group-hover:opacity-100
+														`}
+												>
 													<ul className="divide-muted divide-y">
 														{section.links?.map((link, index) => (
 															<li key={index} className="hover:bg-popover-muted px-8 py-3">
