@@ -102,7 +102,7 @@ export function NavbarClient({
 				<div className="flex flex-row items-center justify-between px-5 md:grid-cols-4 md:px-0">
 					<Link href={`/${lang}/${region}`}>
 						{/* Large Screen Logo */}
-						<SILogo className="hidden h-6 lg:block" />
+						<SILogo className="hidden h-6 lg:block" animated />
 						{/* Small Screen Icon */}
 						<SIIcon className="block h-11 lg:hidden" />
 					</Link>
