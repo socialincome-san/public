@@ -47,7 +47,7 @@ export default onCall<CreateDonationCertificatesFunctionProps, Promise<string>>(
 				await withFile(async ({ path }) => {
 					await writer.writeDonationCertificatePDF(path);
 
-					const { downloadUrl } = await storageAdmin.uploadAndGetDownloadURL({
+					const { downloadUrl } = await storageAdmin.uploadAndGetDownloadUrl({
 						sourceFilePath: path,
 						destinationFilePath: `users/${userId}/donation-certificates/${writer.year}_${writer.user.language}.pdf`,
 					});

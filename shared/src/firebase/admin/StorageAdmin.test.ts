@@ -19,7 +19,7 @@ describe('useStorageAdmin', () => {
 	test('upload private file', async () => {
 		await fs.writeFile(tmpFile, 'test');
 
-		const { downloadUrl } = await storageAdmin.uploadAndGetDownloadURL({
+		const { downloadUrl } = await storageAdmin.uploadAndGetDownloadUrl({
 			sourceFilePath: tmpFile,
 			destinationFilePath: tmpFile,
 		});

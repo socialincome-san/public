@@ -33,7 +33,7 @@ export class StorageAdmin {
 		await destinationBucket.upload(sourceFilePath, { destination: destinationFilePath });
 	};
 
-	uploadAndGetDownloadURL = async ({ bucket, sourceFilePath, destinationFilePath }: UploadProps) => {
+	uploadAndGetDownloadUrl = async ({ bucket, sourceFilePath, destinationFilePath }: UploadProps) => {
 		const destinationBucket = bucket || this.storage.bucket();
 		const token = randomBytes(32).toString('hex');
 		const [file, metadata] = await destinationBucket.upload(sourceFilePath, {
