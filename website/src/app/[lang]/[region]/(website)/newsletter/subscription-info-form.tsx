@@ -5,7 +5,6 @@ import { useApi } from '@/hooks/useApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NewsletterSubscriptionData } from '@socialincome/shared/src/mailchimp/MailchimpAPI';
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@socialincome/ui';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
@@ -22,7 +21,6 @@ type PersonalInfoFormProps = {
 
 export function SubscriptionInfoForm({ lang, region, translations }: PersonalInfoFormProps) {
 	const api = useApi();
-	const [submitting, setSubmitting] = useState(false);
 
 	const formSchema = z.object({
 		firstname: z.string(),
@@ -39,7 +37,6 @@ export function SubscriptionInfoForm({ lang, region, translations }: PersonalInf
 	});
 
 	const onSubmit = async (values: FormSchema) => {
-		setSubmitting(true);
 		const data: NewsletterSubscriptionData = {
 			firstname: values.firstname,
 			email: values.email,
@@ -50,10 +47,8 @@ export function SubscriptionInfoForm({ lang, region, translations }: PersonalInf
 		api.post('/api/newsletter/subscription/public', data).then((response) => {
 			if (response.status === 200) {
 				toast.success(translations.toastMessage);
-				setSubmitting(false);
 			} else {
 				toast.error(translations.toastErrorMessage + '(' + response.statusText + ')');
-				setSubmitting(false);
 			}
 		});
 	};
@@ -93,7 +88,7 @@ export function SubscriptionInfoForm({ lang, region, translations }: PersonalInf
 					size="lg"
 					type="submit"
 					variant="default"
-					showLoadingSpinner={submitting}
+					showLoadingSpinner={form.formState.isSubmitting}
 					className="bg-accent text-accent-foreground hover:bg-accent-muted active:bg-accent-muted mt-4 rounded-full text-lg font-medium"
 				>
 					{translations.updatesSubmitButton}
