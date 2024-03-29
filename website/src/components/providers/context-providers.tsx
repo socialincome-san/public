@@ -168,7 +168,7 @@ function I18nUrlUpdater() {
 			urlSegments[1] = language;
 			router.push(urlSegments.join('/') + (searchParamsString ? `?${searchParamsString}` : ''));
 		}
-	}, [language, router, setLanguage]);
+	}, [language, router, searchParamsString, setLanguage]);
 
 	useEffect(() => {
 		const urlSegments = window.location.pathname.split('/');
@@ -179,7 +179,7 @@ function I18nUrlUpdater() {
 			urlSegments[2] = region;
 			router.push(urlSegments.join('/') + (searchParamsString ? `?${searchParamsString}` : ''));
 		}
-	}, [region, router, setRegion]);
+	}, [region, router, searchParamsString, setRegion]);
 
 	return null;
 }

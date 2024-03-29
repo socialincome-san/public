@@ -2,7 +2,8 @@
 
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import Autoplay, { AutoplayOptionsType } from 'embla-carousel-autoplay';
-import useEmblaCarousel, { EmblaOptionsType } from 'embla-carousel-react';
+import useEmblaCarousel from 'embla-carousel-react';
+import { EmblaOptionsType } from 'embla-carousel/components/Options';
 import React, { useContext, useEffect } from 'react';
 import { cn } from '../lib/utils';
 
