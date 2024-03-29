@@ -18,7 +18,7 @@ import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import _ from 'lodash';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
+import { PropsWithChildren, Suspense, createContext, useContext, useEffect, useState } from 'react';
 import {
 	AnalyticsProvider,
 	AuthProvider,
@@ -150,14 +150,14 @@ type I18nContextType = {
 const I18nContext = createContext<I18nContextType>(undefined!);
 export const useI18n = () => useContext(I18nContext);
 
-function I18nProvider({ children }: PropsWithChildren) {
+function I18nUrlUpdater() {
+	// This component is used to watch the URL and update the language and region in the context if the URL changes.
+	// It's a separate component because it uses the useSearchParams hook, and needs to be wrapped in a Suspense
+	// boundary (https://nextjs.org/docs/messages/deopted-into-client-rendering).
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const searchParamsString = searchParams.toString();
-
-	const { value: language, setCookie: setLanguage } = useCookieState<WebsiteLanguage>(LANGUAGE_COOKIE);
-	const { value: region, setCookie: setRegion } = useCookieState<WebsiteRegion>(REGION_COOKIE);
-	const { value: currency, setCookie: setCurrency } = useCookieState<WebsiteCurrency>(CURRENCY_COOKIE);
+	const { language, setLanguage, region, setRegion } = useI18n();
 
 	useEffect(() => {
 		const urlSegments = window.location.pathname.split('/');
@@ -181,6 +181,14 @@ function I18nProvider({ children }: PropsWithChildren) {
 		}
 	}, [region, router, setRegion]);
 
+	return null;
+}
+
+function I18nProvider({ children }: PropsWithChildren) {
+	const { value: language, setCookie: setLanguage } = useCookieState<WebsiteLanguage>(LANGUAGE_COOKIE);
+	const { value: region, setCookie: setRegion } = useCookieState<WebsiteRegion>(REGION_COOKIE);
+	const { value: currency, setCookie: setCurrency } = useCookieState<WebsiteCurrency>(CURRENCY_COOKIE);
+
 	return (
 		<I18nContext.Provider
 			value={{
@@ -192,6 +200,9 @@ function I18nProvider({ children }: PropsWithChildren) {
 				setCurrency: (currency) => setCurrency(currency, { expires: 365 }),
 			}}
 		>
+			<Suspense fallback={null}>
+				<I18nUrlUpdater />
+			</Suspense>
 			{children}
 		</I18nContext.Provider>
 	);
