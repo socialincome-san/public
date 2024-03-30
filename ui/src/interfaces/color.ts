@@ -1,5 +1,6 @@
 export const COLORS = [
 	'foreground',
+	'foreground-dark',
 	'background',
 	'border',
 	'input',
@@ -32,6 +33,7 @@ export type Color = (typeof COLORS)[number];
 export type FontColor = Extract<
 	Color,
 	| 'foreground'
+	| 'foreground-dark'
 	| 'background'
 	| 'primary'
 	| 'primary-foreground'

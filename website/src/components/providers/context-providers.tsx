@@ -1,6 +1,7 @@
 'use client';
 
 import { CURRENCY_COOKIE, LANGUAGE_COOKIE, REGION_COOKIE } from '@/app/[lang]/[region]';
+import { ApiProvider } from '@/components/providers/api-provider';
 import { FacebookTracking } from '@/components/tracking/facebook-tracking';
 import { GoogleTagManager } from '@/components/tracking/google-tag-manager';
 import { LinkedInTracking } from '@/components/tracking/linkedin-tracking';
@@ -16,8 +17,8 @@ import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import _ from 'lodash';
-import { useRouter } from 'next/navigation';
-import { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { PropsWithChildren, Suspense, createContext, useContext, useEffect, useState } from 'react';
 import {
 	AnalyticsProvider,
 	AuthProvider,
@@ -149,12 +150,14 @@ type I18nContextType = {
 const I18nContext = createContext<I18nContextType>(undefined!);
 export const useI18n = () => useContext(I18nContext);
 
-function I18nProvider({ children }: PropsWithChildren) {
+function I18nUrlUpdater() {
+	// This component is used to watch the URL and update the language and region in the context if the URL changes.
+	// It's a separate component because it uses the useSearchParams hook, and needs to be wrapped in a Suspense
+	// boundary (https://nextjs.org/docs/messages/deopted-into-client-rendering).
 	const router = useRouter();
-
-	const { value: language, setCookie: setLanguage } = useCookieState<WebsiteLanguage>(LANGUAGE_COOKIE);
-	const { value: region, setCookie: setRegion } = useCookieState<WebsiteRegion>(REGION_COOKIE);
-	const { value: currency, setCookie: setCurrency } = useCookieState<WebsiteCurrency>(CURRENCY_COOKIE);
+	const searchParams = useSearchParams();
+	const searchParamsString = searchParams.toString();
+	const { language, setLanguage, region, setRegion } = useI18n();
 
 	useEffect(() => {
 		const urlSegments = window.location.pathname.split('/');
@@ -163,9 +166,9 @@ function I18nProvider({ children }: PropsWithChildren) {
 			setLanguage(languageInUrl);
 		} else if (languageInUrl !== language) {
 			urlSegments[1] = language;
-			router.push(urlSegments.join('/'));
+			router.push(urlSegments.join('/') + (searchParamsString ? `?${searchParamsString}` : ''));
 		}
-	}, [language, router, setLanguage]);
+	}, [language, router, searchParamsString, setLanguage]);
 
 	useEffect(() => {
 		const urlSegments = window.location.pathname.split('/');
@@ -174,9 +177,17 @@ function I18nProvider({ children }: PropsWithChildren) {
 			setRegion(regionInUrl);
 		} else if (regionInUrl !== region) {
 			urlSegments[2] = region;
-			router.push(urlSegments.join('/'));
+			router.push(urlSegments.join('/') + (searchParamsString ? `?${searchParamsString}` : ''));
 		}
-	}, [region, router, setRegion]);
+	}, [region, router, searchParamsString, setRegion]);
+
+	return null;
+}
+
+function I18nProvider({ children }: PropsWithChildren) {
+	const { value: language, setCookie: setLanguage } = useCookieState<WebsiteLanguage>(LANGUAGE_COOKIE);
+	const { value: region, setCookie: setRegion } = useCookieState<WebsiteRegion>(REGION_COOKIE);
+	const { value: currency, setCookie: setCurrency } = useCookieState<WebsiteCurrency>(CURRENCY_COOKIE);
 
 	return (
 		<I18nContext.Provider
@@ -189,6 +200,9 @@ function I18nProvider({ children }: PropsWithChildren) {
 				setCurrency: (currency) => setCurrency(currency, { expires: 365 }),
 			}}
 		>
+			<Suspense fallback={null}>
+				<I18nUrlUpdater />
+			</Suspense>
 			{children}
 		</I18nContext.Provider>
 	);
@@ -209,9 +223,11 @@ export function ContextProviders({ children }: PropsWithChildren) {
 	return (
 		<FirebaseAppProvider firebaseConfig={firebaseConfig}>
 			<FirebaseSDKProviders>
-				<QueryClientProvider client={queryClient}>
-					<I18nProvider>{children}</I18nProvider>
-				</QueryClientProvider>
+				<ApiProvider>
+					<QueryClientProvider client={queryClient}>
+						<I18nProvider>{children}</I18nProvider>
+					</QueryClientProvider>
+				</ApiProvider>
 			</FirebaseSDKProviders>
 		</FirebaseAppProvider>
 	);

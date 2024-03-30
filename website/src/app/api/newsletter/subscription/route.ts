@@ -1,5 +1,4 @@
 import { authorizeRequest, handleApiError } from '@/app/api/auth';
-import { Body } from '@mailchimp/mailchimp_marketing';
 import { MailchimpAPI } from '@socialincome/shared/src/mailchimp/MailchimpAPI';
 import { NextResponse } from 'next/server';
 
@@ -20,9 +19,8 @@ export async function GET(request: Request) {
 /**
  * Upsert Mailchimp subscription
  */
-export type MailchimpSubscriptionUpdate = { status: 'subscribed' | 'unsubscribed' } & Body;
-type MailchimpSubscriptionUpdateRequest = { json(): Promise<MailchimpSubscriptionUpdate> } & Request;
-export async function POST(request: MailchimpSubscriptionUpdateRequest) {
+type NewsletterSubscriptionUpdateRequest = { json(): Promise<{ status: 'subscribed' | 'unsubscribed' }> } & Request;
+export async function POST(request: NewsletterSubscriptionUpdateRequest) {
 	try {
 		const userDoc = await authorizeRequest(request);
 		const data = await request.json();

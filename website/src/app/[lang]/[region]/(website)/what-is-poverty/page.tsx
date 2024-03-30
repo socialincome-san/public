@@ -70,7 +70,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			<Typography size="xl" lineHeight="normal" className="border-t pt-8">
 				{translator.t('difference')}
 			</Typography>
-			<Link href={`${lang}/${region}/donate/individual`}>
+			<Link href={`/${lang}/${region}/donate/individual`}>
 				<Button size="lg" className="w-full">
 					{translator.t('take-action')}
 				</Button>

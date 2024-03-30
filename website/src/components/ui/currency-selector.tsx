@@ -1,7 +1,7 @@
 'use client';
 
-import { useI18n } from '@/app/context-providers';
 import { getFlagComponentByCurrency } from '@/components/country-flags';
+import { useI18n } from '@/components/providers/context-providers';
 import { WebsiteCurrency } from '@/i18n';
 import { isValidCurrency } from '@socialincome/shared/src/types/currency';
 import {

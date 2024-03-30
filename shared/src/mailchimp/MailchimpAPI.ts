@@ -1,7 +1,7 @@
 import mailchimp, { Status } from '@mailchimp/mailchimp_marketing';
 import { CountryCode } from '../types/country';
 
-export type MailchimpSubscriptionData = {
+export type NewsletterSubscriptionData = {
 	email: string;
 	status: Status;
 	language?: 'de' | 'en';
@@ -26,7 +26,7 @@ export class MailchimpAPI {
 		}
 	};
 
-	upsertSubscription = async (data: MailchimpSubscriptionData, listId: string) => {
+	upsertSubscription = async (data: NewsletterSubscriptionData, listId: string) => {
 		const subscriber = await this.getSubscriber(data.email, listId);
 		if (subscriber === null) {
 			return this.createSubscription(data, listId);
@@ -44,7 +44,7 @@ export class MailchimpAPI {
 		}
 	};
 
-	createSubscription = async (data: MailchimpSubscriptionData, listId: string) => {
+	createSubscription = async (data: NewsletterSubscriptionData, listId: string) => {
 		await mailchimp.lists.addListMember(listId, {
 			email_address: data.email,
 			status: data.status,

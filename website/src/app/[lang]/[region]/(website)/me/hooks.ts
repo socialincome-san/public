@@ -29,17 +29,16 @@ export const useContributions = () => {
 		isRefetching,
 		error,
 	} = useQuery({
-		queryKey: ['me/contributions'],
-		queryFn: async () => {
-			return await getDocs(
+		queryKey: ['me', 'contributions'],
+		queryFn: () =>
+			getDocs(
 				query(
 					collection(firestore, USER_FIRESTORE_PATH, user.id, CONTRIBUTION_FIRESTORE_PATH),
 					where('status', '==', StatusKey.SUCCEEDED),
 					orderBy('created', 'desc'),
 				),
-			);
-		},
-		staleTime: 1000 * 60 * 60, // 1 hour
+			),
+		staleTime: 3600000, // 1 hour
 	});
 	return { contributions, loading: isLoading || isRefetching, error };
 };
@@ -52,12 +51,12 @@ export const useSubscriptions = () => {
 		isRefetching,
 		error,
 	} = useQuery({
-		queryKey: ['me/subscriptions'],
+		queryKey: ['me', 'subscriptions'],
 		queryFn: async () => {
 			const response = await api.get('/api/stripe/subscriptions');
 			return (await response.json()) as Stripe.Subscription[];
 		},
-		staleTime: 1000 * 60 * 60, // 1 hour
+		staleTime: 3600000, // 1 hour
 	});
 	return { subscriptions, loading: isLoading || isRefetching, error };
 };
@@ -71,22 +70,21 @@ export const useDonationCertificates = () => {
 		isRefetching,
 		error,
 	} = useQuery({
-		queryKey: ['me/donation-certificates'],
-		queryFn: async () => {
-			return await getDocs(
+		queryKey: ['me', 'donation-certificates'],
+		queryFn: () =>
+			getDocs(
 				query(
 					collection(firestore, USER_FIRESTORE_PATH, user.id, DONATION_CERTIFICATE_FIRESTORE_PATH),
 					orderBy('year', 'desc'),
 				),
-			);
-		},
-		staleTime: 1000 * 60 * 60, // 1 hour
+			),
+		staleTime: 3600000, // 1 hour
 	});
 	return { donationCertificates, loading: isLoading || isRefetching, error };
 };
 
 // Mailchimp
-export const useMailchimpSubscription = () => {
+export const useNewsletterSubscription = () => {
 	const api = useApi();
 	const {
 		data: status,
@@ -94,23 +92,23 @@ export const useMailchimpSubscription = () => {
 		isRefetching,
 		error,
 	} = useQuery<string | null>({
-		queryKey: ['me/mailchimp'],
+		queryKey: ['me', 'newsletter'],
 		queryFn: async () => {
-			const response = await api.get('/api/mailchimp/subscription');
+			const response = await api.get('/api/newsletter/subscription');
 			return (await response.json()).status;
 		},
-		staleTime: 1000 * 60 * 60, // 1 hour
+		staleTime: 3600000, // 1 hour
 	});
 	return { status, loading: isLoading || isRefetching, error };
 };
 
-export const useUpsertMailchimpSubscription = () => {
+export const useUpsertNewsletterSubscription = () => {
 	const api = useApi();
 	const queryClient = useQueryClient();
 
 	return async (status: Status) => {
-		const response = await api.post('/api/mailchimp/subscription', { status });
-		queryClient.invalidateQueries({ queryKey: ['me/mailchimp'] });
+		const response = await api.post('/api/newsletter/subscription', { status });
+		await queryClient.invalidateQueries({ queryKey: ['me', 'newsletter'] });
 		return response;
 	};
 };
@@ -129,14 +127,14 @@ export const useEmployers = () => {
 		isRefetching,
 		error,
 	} = useQuery({
-		queryKey: ['me/employers'],
+		queryKey: ['me', 'employers'],
 		queryFn: async () => {
 			const data = await getDocs(
 				query(collection(firestore, USER_FIRESTORE_PATH, user.id, 'employers'), orderBy('created', 'desc')),
 			);
-			return data!.docs.map((e) => ({ id: e.id, ...e.data() }) as EmployerWithId);
+			return data.docs.map((e) => ({ id: e.id, ...e.data() }) as EmployerWithId);
 		},
-		staleTime: 1000 * 60 * 60, // 1 hour
+		staleTime: 3600000, // 1 hour
 	});
 	return { employers, loading: isLoading || isRefetching, error };
 };
@@ -149,7 +147,7 @@ export const useArchiveEmployer = () => {
 	return async (employer_id: string) => {
 		const employerRef = doc(firestore, USER_FIRESTORE_PATH, user!.id, 'employers', employer_id);
 		await updateDoc(employerRef, { is_current: false });
-		queryClient.invalidateQueries({ queryKey: ['me/employers'] });
+		await queryClient.invalidateQueries({ queryKey: ['me', 'employers'] });
 	};
 };
 
@@ -161,7 +159,7 @@ export const useDeleteEmployer = () => {
 	return async (employer_id: string) => {
 		const employerRef = doc(firestore, USER_FIRESTORE_PATH, user!.id, 'employers', employer_id);
 		await deleteDoc(employerRef);
-		queryClient.invalidateQueries({ queryKey: ['me/employers'] });
+		await queryClient.invalidateQueries({ queryKey: ['me', 'employers'] });
 	};
 };
 
@@ -176,6 +174,6 @@ export const useAddEmployer = () => {
 			is_current: true,
 			created: Timestamp.now(),
 		});
-		queryClient.invalidateQueries({ queryKey: ['me/employers'] });
+		await queryClient.invalidateQueries({ queryKey: ['me', 'employers'] });
 	};
 };

@@ -47,7 +47,7 @@ export default onCall<CreateDonationCertificatesFunctionProps, Promise<string>>(
 				await withFile(async ({ path }) => {
 					await writer.writeDonationCertificatePDF(path);
 
-					const { downloadUrl } = await storageAdmin.uploadAndGetDownloadURL({
+					await storageAdmin.uploadFile({
 						sourceFilePath: path,
 						destinationFilePath: `users/${userId}/donation-certificates/${writer.year}_${writer.user.language}.pdf`,
 					});
@@ -55,12 +55,7 @@ export default onCall<CreateDonationCertificatesFunctionProps, Promise<string>>(
 					await firestoreAdmin
 						.collection(`${USER_FIRESTORE_PATH}/${userId}/${DONATION_CERTIFICATE_FIRESTORE_PATH}`)
 						.doc(`${writer.year}-${writer.user.address?.country}`)
-						.set(
-							{ year: writer.year, country: writer.user.address?.country, url: downloadUrl } as DonationCertificate,
-							{
-								merge: true,
-							},
-						);
+						.set({ year: writer.year, country: writer.user.address?.country } as DonationCertificate, { merge: true });
 					console.info(`Donation certificate document written for user ${userId}`);
 					successCount += 1;
 
