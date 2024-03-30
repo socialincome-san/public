@@ -41,7 +41,52 @@
 	},
 	"section-6": {
 		"title-1": "This sounds good, but ... ",
-		"question-1": [{ "question": "Is it working" }, { "answer": "XXX" }],
+		"questions": [
+			{
+				"prompt": "Are direct cash payments an effective way to fight poverty?",
+				"answer": "There is a wide consensus around the benefits and long-term success of direct giving programs. We offer an overview of the latest scientific literature in our Evidence section.",
+				"links": [
+					{
+						"title": "Evidence section",
+						"href": "/evidence"
+					},
+					{
+						"title": "Policy Brief: Impacts of Unconditional Cash Transfers",
+						"href": "https://drive.google.com/file/d/1xn4BvrEHZjSUGpNZLHjIc2YYnwq399jR/view"
+					},
+					{
+						"title": "GiveDirectly's Cash Evidence Explorer",
+						"href": "https://www.givedirectly.org/cash-evidence-explorer/"
+					}
+				]
+			},
+			{
+				"prompt": "Is it helpful to send money to people in need?",
+				"answer": "It’s definitely more helpful than sending no money at all. Many people today advocate for equal opportunity in employment. This is obviously a goal worth aiming for, but it tends to ignore the fact that for many people born in the world’s poorest countries, employment as it is typically understood isn’t even possible or accessible. Giving money can help break down this barrier and give more people living in poverty access to work, education, and decent living conditions.",
+				"links": [
+					{
+						"title": "Government of Malawi’s unconditional cash transfer improves youth mental health",
+						"href": "https://drive.google.com/file/d/1GKBdHjD80Jv7lZJmKvouZv8Z7MgLw_HL/view"
+					},
+					{
+						"title": "Can unconditional cash transfers raise long-term living standards? Evidence from Zambia",
+						"href": "https://drive.google.com/file/d/1HwSLDlml0yyHrCrv8Y7pkqxz2orM02Lc/view"
+					}
+				]
+			},
+			{
+				"prompt": "Can Social Income create equality?",
+				"answer": "Social Income isn’t a theory of equality. It’s here to help make the world more fair, by taking advantage of the immense gap between rich and poor to carry out a simple, direct redistribution based on solidarity. It also helps contribute to self-driven change and a certain degree of financial independence for people in need. This process only works as long as inequality continues to exist; as soon as the distribution of wealth across the world becomes balanced, Social Income will no longer be useful."
+			},
+			{
+				"prompt": "How are recipients chosen?",
+				"answer": "We determine possible new recipients thanks to the groundwork of our local advocates and partnerships with local NGOs: Aurora Foundation, Reachout Salone and Jamyl & Nyanga Jaward Foundation. Our criterias are simple: recipients must be older than 16 and come from a low income community. One other major principle is to keep up a strict gender balance/equality and to support people in need."
+			},
+			{
+				"prompt": "How are recipients chosen?",
+				"answer": "We determine possible new recipients thanks to the groundwork of our local advocates and partnerships with local NGOs: Aurora Foundation, Reachout Salone and Jamyl & Nyanga Jaward Foundation. Our criterias are simple: recipients must be older than 16 and come from a low income community. One other major principle is to keep up a strict gender balance/equality and to support people in need."
+			}
+		],
 		"cta": "All FAQ"
 	},
 	"section-7": {
