@@ -25,8 +25,6 @@
 		"functions:test:playwright": "npm --workspace=@socialincome/functions run test:playwright",
 		"functions:test:playwright:update": "npm --workspace=@socialincome/functions run test:playwright:update",
 		"shared:test": "npm --workspace=@socialincome/shared run test",
-		"ui:build": "npm --workspace=@socialincome/ui run build",
-		"ui:serve": "npm --workspace=@socialincome/ui run serve",
 		"website:build": "npm --workspace=@socialincome/website run build",
 		"website:build:emulator": "npm --workspace=@socialincome/website run build:emulator",
 		"website:lint": "npm --workspace=@socialincome/website run lint",

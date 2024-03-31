@@ -190,6 +190,7 @@ describe('stripeWebhook', () => {
 			attempted: true,
 			auto_advance: false,
 			automatic_tax: {
+				liability: null,
 				enabled: false,
 				status: null,
 			},
@@ -220,6 +221,10 @@ describe('stripeWebhook', () => {
 			from_invoice: null,
 			hosted_invoice_url: '',
 			invoice_pdf: '',
+			issuer: {
+				account: 'acct_123',
+				type: 'account',
+			},
 			last_finalization_error: null,
 			latest_revision: null,
 			lines: {
@@ -235,6 +240,7 @@ describe('stripeWebhook', () => {
 						discount_amounts: [],
 						discountable: true,
 						discounts: [],
+						invoice: null,
 						livemode: true,
 						metadata: {},
 						period: {

@@ -1,8 +1,8 @@
-import { IconType } from '@icons-pack/react-simple-icons/types';
 import { Slot } from '@radix-ui/react-slot';
 import { SpinnerIcon } from '@socialincome/website/src/components/logos/spinner-icon';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
+import { ComponentType } from 'react';
 import { cn } from '../lib/utils';
 
 const buttonVariants = cva(
@@ -50,7 +50,7 @@ export interface ButtonProps
 		VariantProps<typeof buttonVariants> {
 	asChild?: boolean;
 	showLoadingSpinner?: boolean;
-	Icon?: IconType;
+	Icon?: ComponentType<any>;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -68,7 +68,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 		ref,
 	) => {
 		const Comp = asChild ? Slot : 'button';
-		Icon = showLoadingSpinner ? (SpinnerIcon as IconType) : Icon;
+		Icon = showLoadingSpinner ? SpinnerIcon : Icon;
 		return (
 			<Comp className={cn(buttonVariants({ size, variant, className }))} ref={ref} {...props}>
 				{Icon ? (

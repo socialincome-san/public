@@ -47,7 +47,7 @@ export default onCall<CreateDonationCertificatesFunctionProps, Promise<string>>(
 				await withFile(async ({ path }) => {
 					await writer.writeDonationCertificatePDF(path);
 
-					const { downloadUrl } = await storageAdmin.uploadAndGetDownloadURL({
+					await storageAdmin.uploadFile({
 						sourceFilePath: path,
 						destinationFilePath: `users/${userId}/donation-certificates/${writer.year}_${writer.user.language}.pdf`,
 					});
@@ -55,42 +55,11 @@ export default onCall<CreateDonationCertificatesFunctionProps, Promise<string>>(
 					await firestoreAdmin
 						.collection(`${USER_FIRESTORE_PATH}/${userId}/${DONATION_CERTIFICATE_FIRESTORE_PATH}`)
 						.doc(`${writer.year}-${writer.user.address?.country}`)
-						.set(
-							{ year: writer.year, country: writer.user.address?.country, url: downloadUrl } as DonationCertificate,
-							{
-								merge: true,
-							},
-						);
+						.set({ year: writer.year, country: writer.user.address?.country } as DonationCertificate, { merge: true });
 					console.info(`Donation certificate document written for user ${userId}`);
 					successCount += 1;
 
-					// if (request.data.sendEmails) {
-					// await sendEmail({
-					// 	to: user.email,
-					// 	subject: translator.t('email-subject'),
-					// 	// TODO: Use renderEmailTemplate() instead of renderTemplate()
-					// 	content: await renderTemplate({
-					// 		language: user.language || 'de',
-					// 		translationNamespace: 'donation-certificate',
-					// 		hbsTemplatePath: 'email/donation-certificate.hbs',
-					// 		context: {
-					// 			title: translator.t('title', { context: { year } }),
-					// 			signature: translator.t('title', { context: { year } }),
-					// 			firstname: user.personal?.name,
-					// 			year: year,
-					// 		},
-					// 	}),
-					// 	attachments: [
-					// 		{
-					// 			filename: translator.t('filename', { context: { year } }),
-					// 			path: path,
-					// 		},
-					// 	],
-					// 	from: NOTIFICATION_EMAIL_USER_KERRIN,
-					// 	user: NOTIFICATION_EMAIL_USER_KERRIN,
-					// 	password: NOTIFICATION_EMAIL_PASSWORD_KERRIN,
-					// });
-					// }
+					// TODO: Send email via Sendgrid
 				});
 			} catch (e) {
 				usersWithFailures.push(userId);

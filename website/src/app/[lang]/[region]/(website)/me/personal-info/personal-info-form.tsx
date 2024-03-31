@@ -7,6 +7,7 @@ import {
 	useUser,
 } from '@/app/[lang]/[region]/(website)/me/hooks';
 import { useTranslator } from '@/hooks/useTranslator';
+import { DocumentData } from '@firebase/firestore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { COUNTRY_CODES } from '@socialincome/shared/src/types/country';
 import { GENDER_OPTIONS, USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types/user';
@@ -109,7 +110,7 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 	}, [user, form]);
 
 	const onSubmit = async (values: FormSchema) => {
-		await updateDoc<Partial<User>>(doc(firestore, USER_FIRESTORE_PATH, user.id), {
+		await updateDoc<DocumentData, Partial<User>>(doc(firestore, USER_FIRESTORE_PATH, user.id), {
 			personal: {
 				name: values.firstname,
 				lastname: values.lastname,
