@@ -80,23 +80,18 @@ jobs:
       - name: Add secrets to functions/.env file
         working-directory: functions
         run: |
-          echo POSTFINANCE_EMAIL_PASSWORD=${{ secrets.POSTFINANCE_EMAIL_PASSWORD }} > .env
-          echo POSTFINANCE_PAYMENTS_FILES_BUCKET=${{ (inputs.project == 'social-income-prod' && vars.POSTFINANCE_PAYMENTS_FILES_BUCKET) || vars.POSTFINANCE_PAYMENTS_FILES_BUCKET_STAGING }} >> .env
+          echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
           echo POSTFINANCE_FTP_HOST=${{ vars.POSTFINANCE_FTP_HOST }} >> .env
           echo POSTFINANCE_FTP_PORT=${{ vars.POSTFINANCE_FTP_PORT }} >> .env
-          echo POSTFINANCE_FTP_USER=${{ vars.POSTFINANCE_FTP_USER }} >> .env
           echo POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64=${{ secrets.POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64 }} >> .env
+          echo POSTFINANCE_FTP_USER=${{ vars.POSTFINANCE_FTP_USER }} >> .env
+          echo POSTFINANCE_PAYMENTS_FILES_BUCKET=${{ (inputs.project == 'social-income-prod' && vars.POSTFINANCE_PAYMENTS_FILES_BUCKET) || vars.POSTFINANCE_PAYMENTS_FILES_BUCKET_STAGING }} >> .env
+          echo SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }} >> .env
           echo STRIPE_API_READ_KEY=${{ (inputs.project == 'social-income-prod' && secrets.STRIPE_API_READ_KEY) || secrets.STRIPE_API_READ_KEY_STAGING }} >> .env
           echo STRIPE_WEBHOOK_SECRET=${{ (inputs.project == 'social-income-prod' && secrets.STRIPE_WEBHOOK_SECRET) || secrets.STRIPE_WEBHOOK_SECRET_STAGING }} >> .env
-          echo NOTIFICATION_EMAIL_USER=${{ secrets.NOTIFICATION_EMAIL_USER }} >> .env
-          echo NOTIFICATION_EMAIL_PASSWORD=${{ secrets.NOTIFICATION_EMAIL_PASSWORD }} >> .env
-          echo NOTIFICATION_EMAIL_USER_KERRIN=${{ secrets.NOTIFICATION_EMAIL_USER_KERRIN }} >> .env
-          echo NOTIFICATION_EMAIL_PASSWORD_KERRIN=${{ secrets.NOTIFICATION_EMAIL_PASSWORD_KERRIN }} >> .env
+          echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_SENDER_PHONE }} >> .env
           echo TWILIO_SID=${{ secrets.TWILIO_SID }} >> .env
           echo TWILIO_TOKEN=${{ secrets.TWILIO_TOKEN }} >> .env
-          echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_SENDER_PHONE }} >> .env
-          echo POSTFINANCE_EMAIL_USER=${{ secrets.POSTFINANCE_EMAIL_USER }} >> .env
-          echo EXCHANGE_RATES_API=${{ secrets.EXCHANGE_RATES_API }} >> .env
 
       - name: Build functions
         run: npm run functions:build

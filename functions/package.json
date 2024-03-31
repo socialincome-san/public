@@ -31,6 +31,7 @@
 		"typescript": "^5.4.3"
 	},
 	"dependencies": {
+		"@sendgrid/mail": "^8.1.1",
 		"@types/ssh2-sftp-client": "^9.0.3",
 		"@xmldom/xmldom": "^0.8.10",
 		"axios": "^1.6.8",
