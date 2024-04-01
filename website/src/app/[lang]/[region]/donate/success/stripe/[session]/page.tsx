@@ -23,7 +23,7 @@ export default async function Page({ params: { lang, region, session } }: Stripe
 	const userDoc = await firestoreAdmin.findFirst<User>(USER_FIRESTORE_PATH, (q) =>
 		q.where('stripe_customer_id', '==', checkoutSession.customer),
 	);
-	if (userDoc?.exists && userDoc.get('auth_user_id')) redirect(`/${lang}/${region}/me/payments`);
+	if (userDoc?.exists && userDoc.get('auth_user_id')) redirect(`/${lang}/${region}/me/contributions`);
 
 	return (
 		<div className="mx-auto flex max-w-3xl flex-col space-y-8">

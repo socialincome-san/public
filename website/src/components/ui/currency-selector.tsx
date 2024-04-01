@@ -1,7 +1,7 @@
 'use client';
 
-import { useI18n } from '@/app/context-providers';
 import { getFlagComponentByCurrency } from '@/components/country-flags';
+import { useI18n } from '@/components/providers/context-providers';
 import { WebsiteCurrency } from '@/i18n';
 import { isValidCurrency } from '@socialincome/shared/src/types/currency';
 import {
@@ -36,7 +36,7 @@ const CurrencySelector = React.forwardRef<HTMLDivElement, CurrencySelectorProps>
 					}}
 				>
 					<SelectTrigger className="h-full px-5">
-						{Flag && <Flag className="h-5 w-5" />}
+						{Flag && <Flag className="mx-2 h-5 w-5 rounded" />}
 						<SelectValue>
 							<Typography size={fontSize} color="popover-foreground">
 								{currency}

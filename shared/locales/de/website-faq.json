@@ -121,5 +121,30 @@
 				"href": "https://www.idealist.org/en/nonprofit/41a885fa176b4793a029f131834fd48a-social-income-zurich"
 			}
 		}
+	},
+	"campaign": {
+		"title": "Fragen und Antworten",
+		"questions": [
+			{
+				"question": "Welche Partner tragen zur Realisierung dieser Spendenkampagne bei?",
+				"answer": "Diese Spendenaktion wird von Ismatu Gwendolyn Bangura, einer Autorin und Aktivistin aus Sierra Leone, sowie von Social Income, einer Schweizer Non-Profit-Organisation, gemeinsam organisiert. Wir arbeiten eng mit der in Kenema ansässigen Sierra Leone Association of Ebola Survivors zusammen. Social Income bringt umfangreiche Erfahrung in mobilen Zahlungen mit und ist für die Auszahlung der Grundeinkommen an Ebola-Überlebende in den nächsten drei Jahren verantwortlich."
+			},
+			{
+				"question": "Wie erreichen die Gelder die Ebola-Überlebenden?",
+				"answer": "Die Gelder werden direkt über Mobile Money an die Ebola-Überlebenden ausbezahlt. Dies gewährleistet einen schnellen und sicheren Geldtransfer, sodass die Überlebenden ihre Hilfe prompt und effizient erhalten können. Die Nutzung des Mobile Bankings hilft auch, Transparenz zu wahren und das Risiko von Fehlmanagement zu reduzieren. So wird sichergestellt, dass die Spenden effektiv eingesetzt werden."
+			},
+			{
+				"question": "Wie hoch ist der ausbezahlte Betrag?",
+				"answer": "Empfänger:innen des Social Income bekommen monatlich 32 USD, umgerechnet in lokale Währung und direkt auf ihre Mobiltelefone überwiesen. Diese Summe entspricht den Grundbedürfnissen einer in Armut lebenden Person, berücksichtigt das durchschnittliche Einkommen von etwa 42 USD in Sierra Leone. Die Unterstützung erfolgt zuverlässig über drei Jahre. Diese Strategie soll bedürftige Menschen befähigen, ihre Zukunft zu planen und in essenzielle Bereiche wie Gesundheit zu investieren, was ihre finanzielle Situation und ihr Wohlbefinden verbessert."
+			},
+			{
+				"question": "Wofür werden die Gelder verwendet?",
+				"answer": "Alle Spenden bis zum Erreichen des Ziels dienen der Unterstützung von Ebola-Überlebenden, einschliesslich monatlicher Zahlungen, Liefergebühren und zugehöriger Kosten. Spenden, die das Ziel übersteigen, kommen anderen gefährdeten und in Armut lebenden Menschen in Sierra Leone zugute."
+			},
+			{
+				"question": "Wie werden die Empfänger:innen ausgewählt?",
+				"answer": "Wenn wir das Spendenziel erreichen, erhalten alle 156 von der Sierra Leone Association of Ebola Survivors in Kenema registrierten Überlebenden Unterstützung. Eine zusätzliche Auswahl ist dann nicht nötig. Verfehlen wir das Ziel, wählen wir Empfänger:innen zufällig aus. Diese Methode sichert Fairness und vermeidet Bevorzugungen."
+			}
+		]
 	}
 }

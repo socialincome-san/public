@@ -148,8 +148,10 @@ export class StripeEventHandler {
 		if (contribution.campaign_path) {
 			try {
 				const campaign = await contribution.campaign_path.get();
+				const current_contributions = campaign.data()?.contributions ?? 0;
 				const current_amount_chf = campaign.data()?.amount_collected_chf ?? 0;
 				await contribution.campaign_path.update({
+					contributions: current_contributions + 1,
 					amount_collected_chf: current_amount_chf + contribution.amount_chf,
 				});
 				console.log(`Campaign amount ${contribution.campaign_path} updated.`);

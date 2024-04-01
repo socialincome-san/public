@@ -38,6 +38,8 @@ export const redirectMiddleware = (request: NextRequest) => {
 		case '/world-poverty-statistics-2022':
 		case '/world-poverty-statistics-2023':
 			return NextResponse.redirect(new URL('/world-poverty-statistics-2024', request.url));
+		case '/ismatu':
+			return NextResponse.redirect('https://socialincome.org/campaign/MZmXEVHlDjOOFOMk82jW');
 	}
 };
 

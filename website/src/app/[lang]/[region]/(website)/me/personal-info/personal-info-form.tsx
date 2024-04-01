@@ -1,8 +1,13 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { useUserContext } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
+import {
+	useNewsletterSubscription,
+	useUpsertNewsletterSubscription,
+	useUser,
+} from '@/app/[lang]/[region]/(website)/me/hooks';
 import { useTranslator } from '@/hooks/useTranslator';
+import { DocumentData } from '@firebase/firestore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { COUNTRY_CODES } from '@socialincome/shared/src/types/country';
 import { GENDER_OPTIONS, USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types/user';
@@ -15,13 +20,16 @@ import {
 	FormLabel,
 	FormMessage,
 	Input,
+	Label,
 	Select,
 	SelectContent,
 	SelectGroup,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
+	Switch,
 } from '@socialincome/ui';
+import { useQueryClient } from '@tanstack/react-query';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -43,14 +51,18 @@ type PersonalInfoFormProps = {
 		language: string;
 		submitButton: string;
 		userUpdatedToast: string;
+		newsletterSwitch: string;
 	};
 } & DefaultParams;
 
 export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) {
 	const firestore = useFirestore();
-	const { user, refetch } = useUserContext();
+	const user = useUser();
+	const queryClient = useQueryClient();
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
+	const { status, loading } = useNewsletterSubscription();
+	const upsertMailchimpSubscription = useUpsertNewsletterSubscription();
 
 	const formSchema = z.object({
 		firstname: z.string(),
@@ -83,24 +95,22 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 	});
 
 	useEffect(() => {
-		if (user) {
-			form.reset({
-				firstname: user?.get('personal.name') || '',
-				lastname: user?.get('personal.lastname') || '',
-				gender: user?.get('personal.gender') || '',
-				email: user?.get('email') || '',
-				street: user?.get('address.street') || '',
-				streetNumber: user?.get('address.number') || '',
-				city: user?.get('address.city') || '',
-				zip: user?.get('address.zip') || '',
-				country: user?.get('address.country') || '',
-				language: user?.get('language') || '',
-			});
-		}
+		form.reset({
+			firstname: user.get('personal.name') || '',
+			lastname: user.get('personal.lastname') || '',
+			gender: user.get('personal.gender') || '',
+			email: user.get('email') || '',
+			street: user.get('address.street') || '',
+			streetNumber: user.get('address.number') || '',
+			city: user.get('address.city') || '',
+			zip: user.get('address.zip') || '',
+			country: user.get('address.country') || '',
+			language: user.get('language') || '',
+		});
 	}, [user, form]);
 
 	const onSubmit = async (values: FormSchema) => {
-		await updateDoc<Partial<User>>(doc(firestore, USER_FIRESTORE_PATH, user!.id), {
+		await updateDoc<DocumentData, Partial<User>>(doc(firestore, USER_FIRESTORE_PATH, user.id), {
 			personal: {
 				name: values.firstname,
 				lastname: values.lastname,
@@ -117,11 +127,9 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 			},
 		}).then(() => {
 			toast.success(translations.userUpdatedToast);
-			refetch();
+			queryClient.invalidateQueries({ queryKey: ['me', user.get('auth_user_id')] });
 		});
 	};
-
-	if (!user) return null;
 
 	return (
 		<Form {...form}>
@@ -291,10 +299,25 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 						</FormItem>
 					)}
 				/>
-				<Button variant="ghost" size="lg" type="submit" className="md:col-span-2">
+				<Button variant="default" type="submit" className=" md:col-span-2">
 					{translations.submitButton}
 				</Button>
 			</form>
+			<div className="flex items-center space-x-2">
+				<Switch
+					id="newsletter-switch"
+					checked={status === 'subscribed'}
+					disabled={loading}
+					onCheckedChange={(enabled) => {
+						if (enabled) {
+							upsertMailchimpSubscription('subscribed');
+						} else {
+							upsertMailchimpSubscription('unsubscribed');
+						}
+					}}
+				/>
+				<Label htmlFor="newsletter-switch">{translations.newsletterSwitch}</Label>
+			</div>
 		</Form>
 	);
 }

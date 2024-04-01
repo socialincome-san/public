@@ -49,10 +49,7 @@ export default function UpdatePasswordForm({ translations }: UpdatePasswordFormP
 
 	const onSubmit = async (values: FormSchema) => {
 		if (authUser === null) return;
-		const data: UpdatePasswordData = {
-			firebaseAuthToken: await authUser.getIdToken(true),
-			newPassword: values.password,
-		};
+		const data: UpdatePasswordData = { newPassword: values.password };
 		const response = await fetch('/api/user/update-password', { method: 'POST', body: JSON.stringify(data) });
 		if (response.ok) {
 			signOut(auth).then(() => {

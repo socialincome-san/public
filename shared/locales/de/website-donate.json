@@ -1,12 +1,10 @@
 {
-	"metadata": {
-		"title": "Mein Beitrag | Social Income"
-	},
 	"amount-currency": "{{ amount, currency }}",
 	"title": "Was ist dein durchschnittliches monatliches Einkommen?",
 	"how-to-pay": "Wie möchtest du bezahlen?",
 	"amount": "Betrag",
 	"button-text": "Mache einen Unterschied",
+	"button-text-short": "Jetzt spenden",
 	"donation-impact": {
 		"monthly-contribution": "Dein monatlicher Beitrag:",
 		"direct-payout": "Dein Beitrag wird direkt auf das Mobiltelefon der Social Income Empfänger:innen ausgezahlt.",
@@ -22,6 +20,9 @@
 		"8": "Dein monatlicher Beitrag von {{ amount, currency }} ist außergewöhnlich, ebenso wie dein Einfluss."
 	},
 	"donation-interval": {
+		"0": {
+			"title": "Einmalig"
+		},
 		"1": {
 			"title": "Monatlich",
 			"text": "{{ amount, currency }} jeden Monat zahlen"
@@ -73,6 +74,28 @@
 		}
 	},
 	"campaign": {
-		"not-found": "Kampagne konnte leider nicht gefunden werden."
+		"not-found": "Die Kampagne konnte leider nicht gefunden werden.",
+		"by": "Von {{ creator }}",
+		"without-goal": {
+			"collected_zero": "Noch keine Spenden. Mache den ersten Schritt!",
+			"collected_one": "{{ amount, currency }} von {{ count }} Spender:in gesammelt",
+			"collected_other": "{{ amount, currency }} von {{ count }} Spender:innen gesammelt"
+		},
+		"with-goal": {
+			"collected-percentage": "{{percentage}}% gesammelt",
+			"goal-title": "Ziel",
+			"collected-amount_one": "{{ amount, currency }} von {{count}} Spender:in",
+			"collected-amount_other": "{{ amount, currency }} von {{count}} Spender:innen",
+			"goal-amount": "{{ amount, currency }}"
+		},
+		"days-left_zero": "Letzter Tag",
+		"days-left_one": "Noch einen Tag bis zum Spendeschluss",
+		"days-left_other": "{{ count }} verbleibende Tage",
+		"ended": "Die Kampagne ist beendet. Für reguläre Spenden verwende bitte die Hauptspendeseite.",
+		"card-title": "Mein Beitrag",
+		"about-si-title": "Über Social Income",
+		"about-si-text-1": "Social Income ist eine NGO mit Sitz in der Schweiz, die bedingungslose Geldüberweisungen per Mobiltelefon an Menschen in multidimensionaler Armut in Westafrika bereitstellt.",
+		"about-si-text-2": "Seit 2020 führt Social Income ein zeitlich unbegrenztes Programm für ein universelles Grundeinkommen in Sierra Leone durch.",
+		"more-faq": "<a href='/faq' target=\"_blank\">Mehr Fragen</a>"
 	}
 }
