@@ -12,7 +12,7 @@ export class ApiClient {
 		return this.request('GET', path);
 	}
 
-	post(path: string, body: Object) {
+	post(path: string, body?: Object) {
 		return this.request('POST', path, body);
 	}
 

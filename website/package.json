@@ -44,6 +44,7 @@
 		"stripe": "^14.23.0",
 		"survey-core": "^1.9.136",
 		"survey-react-ui": "^1.9.136",
+		"swissqrbill": "^4.0.2",
 		"zod": "^3.22.4"
 	},
 	"devDependencies": {
