@@ -19,9 +19,9 @@ export async function POST(request: CreateSwissQrBillRequest) {
 			zip: 8003,
 			country: 'CH',
 		},
-		av1: 'av1: michael@kuendig.id',
-		av2: 'av2: michael@kuendig.id',
-		message: 'Contribution by michael@kuendig.id',
+		av1: 'av1: test1234',
+		av2: 'av2: test1234',
+		message: 'Contribution by test1234',
 		reference: '000000017013512241470000010',
 		// debtor: {
 		// 	address: 'Musterstrasse',
