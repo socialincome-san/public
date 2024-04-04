@@ -51,7 +51,11 @@ const NewsletterPopupToast = ({ lang, translations, t, onClose }: NewsletterPopu
 
 	return (
 		<div
-			className={classNames('relative flex w-[32rem] flex-col gap-4 rounded-lg bg-white px-4 py-6 duration-500', {
+			className={classNames('relative flex flex-col gap-4 rounded-lg bg-white px-4 py-6 duration-500', {
+				'w-[32rem]': !t.visible, // Assuming the initial width is for non-visible state or specific animations
+				'sm:w-full': t.visible, // Makes the width 100% of the viewport on small screens when visible
+				'md:w-1/2': t.visible, // Makes the width 50% of the viewport on medium screens when visible
+				'lg:w-2/5': t.visible, // Adjusts the width to 2/5 of the viewport on large screens when visible
 				'animate-in slide-in-from-right': t.visible,
 				'animate-out slide-out-to-right-[36rem] fill-mode-forwards': !t.visible,
 			})}
@@ -59,12 +63,12 @@ const NewsletterPopupToast = ({ lang, translations, t, onClose }: NewsletterPopu
 			<XMarkIcon className="absolute right-0 top-0 m-1 h-5 w-5 cursor-pointer" onClick={onClose} />
 			<Typography>{translations.informationLabel}</Typography>
 			<Form {...form}>
-				<form className="flex gap-2" onSubmit={form.handleSubmit(onSubmit)}>
+				<form className="flex flex-wrap gap-2" onSubmit={form.handleSubmit(onSubmit)}>
 					<FormField
 						control={form.control}
 						name="email"
 						render={({ field }) => (
-							<FormItem className="flex-1">
+							<FormItem className="flex-1 min-w-[150px]">
 								<FormControl>
 									<Input type="email" placeholder={translations.emailPlaceholder} {...field} />
 								</FormControl>
@@ -72,7 +76,10 @@ const NewsletterPopupToast = ({ lang, translations, t, onClose }: NewsletterPopu
 							</FormItem>
 						)}
 					/>
-					<Button type="submit">{translations.buttonAddSubscriber}</Button>
+					<Button type="submit"
+									className="w-full border border-primary bg-transparent rounded-full px-12 truncate text-primary hover:bg-primary hover:text-white sm:w-auto">
+						{translations.buttonAddSubscriber}
+					</Button>
 				</form>
 			</Form>
 		</div>

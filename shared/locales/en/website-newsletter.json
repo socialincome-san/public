@@ -20,10 +20,10 @@
 		"newsletter-error-toast": "We weren't able to add you to our newsletter"
 	},
 	"popup": {
-		"information-label": "Join our newsletter and become part of the Social Income Community!",
+		"information-label": "Our monthly newsletter updates you on Social Income, UBI and Direct Cash Transfers.",
 		"toast-success": "Thank you for subscribing to our newsletter!",
 		"toast-failure": "Something went wrong. Try again or contact us at hello@socialincome.org",
 		"email-placeholder": "Your email",
-		"button-subscribe": "Subscribe"
+		"button-subscribe": "Subscribe Now"
 	}
 }

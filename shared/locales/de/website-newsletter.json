@@ -20,10 +20,10 @@
 		"newsletter-error-toast": "Du konntest leider nicht zum Newsletter hinzugefügt werden"
 	},
 	"popup": {
-		"information-label": "Melde dich für unseren Newsletter an und werde Teil der Social Income Community!",
+		"information-label": "Erhalte monatliche Updates über Social Income, BGE und Direktzahlungen.",
 		"toast-success": "Danke für das Abonnieren des Social Income Newsletters!",
 		"toast-failure": "Oops! Etwas ist schief gelaufen. Bitte versuche es nochmals, oder kontaktiere uns auf hello@socialincome.org",
 		"email-placeholder": "Deine E-Mail Adresse",
-		"button-subscribe": "Abonnieren"
+		"button-subscribe": "Newsletter abonnieren"
 	}
 }

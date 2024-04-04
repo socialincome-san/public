@@ -27,20 +27,24 @@ export function CookieConsentBanner({ translations }: CookieConsentBannerClientP
 	if (hideBanner) return null;
 
 	return (
-		<Card className="fixed bottom-12 left-2 right-2 mx-auto max-w-6xl shadow-xl md:left-4 md:right-4">
-			<CardContent className="flex flex-col space-y-2 p-4">
-				<Typography className="md:col-span-3">
-					<Typography as="span" dangerouslySetInnerHTML={{ __html: translations.text }} />
-				</Typography>
-				<div className="flex space-x-2">
-					<Button variant="outline" onClick={() => setCookieConsent('granted')}>
-						{translations.buttonAccept}
-					</Button>
-					<Button variant="destructive" onClick={() => setCookieConsent('denied')}>
-						{translations.buttonRefuse}
-					</Button>
-				</div>
-			</CardContent>
-		</Card>
+		<div className="fixed top-4 pr-4 pl-4 md:bottom-4 md:top-auto md:px-4 lg:px-4 w-full md:max-w-sm">
+			<Card className="w-full">
+				<CardContent className="flex flex-col space-y-2 p-4 gap-2 items-center">
+					<Typography>
+						<Typography as="span" dangerouslySetInnerHTML={{ __html: translations.text }} />
+					</Typography>
+					<div className="flex flex-wrap justify-center gap-2">
+						<Button variant="outline" onClick={() => setCookieConsent('denied')}
+										className="border border-primary bg-transparent rounded-full px-12 text-primary hover:bg-primary hover:text-white">
+							{translations.buttonRefuse}
+						</Button>
+						<Button variant="default" onClick={() => setCookieConsent('granted')}
+										className="border rounded-full px-12 text-popover hover:bg-primary hover:text-white">
+							{translations.buttonAccept}
+						</Button>
+					</div>
+				</CardContent>
+			</Card>
+		</div>
 	);
 }
