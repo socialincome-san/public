@@ -68,7 +68,7 @@ const NewsletterPopupToast = ({ lang, translations, t, onClose }: NewsletterPopu
 						control={form.control}
 						name="email"
 						render={({ field }) => (
-							<FormItem className="flex-1 min-w-[150px]">
+							<FormItem className="min-w-[150px] flex-1">
 								<FormControl>
 									<Input type="email" placeholder={translations.emailPlaceholder} {...field} />
 								</FormControl>
@@ -76,8 +76,10 @@ const NewsletterPopupToast = ({ lang, translations, t, onClose }: NewsletterPopu
 							</FormItem>
 						)}
 					/>
-					<Button type="submit"
-									className="w-full border border-primary bg-transparent rounded-full px-12 truncate text-primary hover:bg-primary hover:text-white sm:w-auto">
+					<Button
+						type="submit"
+						className="border-primary text-primary hover:bg-primary w-full truncate rounded-full border bg-transparent px-12 hover:text-white sm:w-auto"
+					>
 						{translations.buttonAddSubscriber}
 					</Button>
 				</form>
