@@ -5,12 +5,12 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@s
 import Link from 'next/link';
 
 type FaqQuestion = {
-	prompt: string,
-	answer: string,
+	prompt: string;
+	answer: string;
 	links: {
-		title: string,
-		href: string
-	}[]
+		title: string;
+		href: string;
+	}[];
 };
 
 export async function Faq({ lang, region }: DefaultParams) {
@@ -23,9 +23,11 @@ export async function Faq({ lang, region }: DefaultParams) {
 
 	return (
 		<BaseContainer>
-			<Typography size='2xl' className='text-center mb-12'>{translator.t('section-6.title-1')}</Typography>
-			<hr/>
-			<Accordion type="single" collapsible className="w-full mb-10">
+			<Typography size="2xl" className="mb-12 text-center">
+				{translator.t('section-6.title-1')}
+			</Typography>
+			<hr />
+			<Accordion type="single" collapsible className="mb-10 w-full">
 				{questions.map((question, index) => (
 					<AccordionItem key={index} value={`item-${index}`}>
 						<AccordionTrigger>
@@ -55,7 +57,9 @@ export async function Faq({ lang, region }: DefaultParams) {
 				))}
 			</Accordion>
 			<Link href={'/faq'}>
-				<Typography color='accent' className='text-center'>{translator.t('section-6.cta')+' ›'}</Typography>
+				<Typography color="accent" className="text-center">
+					{translator.t('section-6.cta') + ' ›'}
+				</Typography>
 			</Link>
 		</BaseContainer>
 	);
