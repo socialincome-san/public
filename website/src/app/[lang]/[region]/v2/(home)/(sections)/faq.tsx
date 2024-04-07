@@ -1,7 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, BaseContainer, Typography } from '@socialincome/ui';
-import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { BaseContainer, Typography } from '@socialincome/ui';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@socialincome/ui/src/components/accordion2';
 import Link from 'next/link';
 
 type FaqQuestion = {
@@ -33,7 +33,7 @@ export async function Faq({ lang, region }: DefaultParams) {
 								{question.prompt}
 							</Typography>
 						</AccordionTrigger>
-						<AccordionContent className="prose">
+						<AccordionContent className='text-popover-foreground'>
 							<Typography size="lg" className="text-left">
 								{question.answer}
 							</Typography>
@@ -42,7 +42,7 @@ export async function Faq({ lang, region }: DefaultParams) {
 									{question.links?.map((link, index2) => (
 										<li key={index2} className="mb-0 pl-3">
 											<Link href={link.href} target="_blank" rel="noreferrer" className="no-underline">
-												<Typography as="span" size="lg" color="primary" className="font-normal hover:underline">
+												<Typography as="span" size="lg" color="foreground" className="font-normal hover:underline">
 													{link.title}
 												</Typography>
 											</Link>
