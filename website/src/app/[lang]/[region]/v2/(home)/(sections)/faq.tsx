@@ -1,7 +1,12 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@socialincome/ui/src/components/accordion2';
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from '@socialincome/ui/src/components/accordion2';
 import Link from 'next/link';
 
 type FaqQuestion = {
@@ -35,7 +40,7 @@ export async function Faq({ lang, region }: DefaultParams) {
 								{question.prompt}
 							</Typography>
 						</AccordionTrigger>
-						<AccordionContent className='text-popover-foreground'>
+						<AccordionContent className="text-popover-foreground">
 							<Typography size="lg" className="text-left">
 								{question.answer}
 							</Typography>
