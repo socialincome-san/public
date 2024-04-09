@@ -55,7 +55,7 @@ export function ContributorsPeopleCarouselv2({ portraits }: { portraits: Portrai
 				slidesToScroll: slidesToScroll,
 			}}
 			showControls
-            showDots={true}
+			showDots={true}
 		>
 			{portraits.map((portrait, index) => (
 				<CarouselContent key={index} className="px-2">
