@@ -13,7 +13,7 @@ type PortraitProps = {
 
 function Portrait({ name, text, country, image }: PortraitProps) {
 	return (
-		<Card className="flex min-h-[15rem] flex-col rounded-none border-x-0 border-y-2 bg-inherit mb-10">
+		<Card className="mb-10 flex min-h-[15rem] flex-col rounded-none border-x-0 border-y-2 bg-inherit">
 			<CardHeader>
 				<Typography size="2xl" color="foreground">
 					{text}
@@ -55,7 +55,7 @@ export function ContributorsPeopleCarouselv2({ portraits }: { portraits: Portrai
 				slidesToScroll: slidesToScroll,
 			}}
 			showControls
-            showDots={true}
+			showDots={true}
 		>
 			{portraits.map((portrait, index) => (
 				<CarouselContent key={index} className="px-2">
