@@ -92,7 +92,7 @@
 	"section-7": {
 		"title-1": "Social Income combines three approaches to change."
 	},
-	"section-8": {
+	"section-x": {
 		"title-1": [
 			{ "text": "Unique Recipients Selection Process for " },
 			{ "text": "Fair Selection.", "color": "accent" }
@@ -100,9 +100,14 @@
 		"text-1.1": "Identifying those in need: Through collaboration with local NGOs in Sierra Leone, we target individuals living in poverty who can benefit from a three-year predictable income, empowering them to invest in their future.",
 		"text-1.2": "Selecting randomly: Our randomized selection process is transparent and publicly verifiable, eliminating human biases and favoritism. This ensures fairness and equal chances for all individuals in poverty to benefit."
 	},
-	"section-9": {
-		"testimonial-1": "It’s a great example of redistribution of wealth based on solidarity and enabled by today's technology.",
-		"author-1": "Vanja, Switzerland",
+	"section-8": {
+		"portraits": [
+			{
+				"name": "Vanja",
+				"country": "Switzerland",
+				"text": "It’s a great example of redistribution of wealth based on solidarity and enabled by today's technology."
+			}
+		],
 		"testimonial-2": "We are living in a world of opportunities, let's make sure we share this privilege with everyone else.",
 		"author-2": "Carlos, United States",
 		"testimonial-3": "I contribute to Social Income not only because it's simple, but because research has shown it's extremely effective.",
