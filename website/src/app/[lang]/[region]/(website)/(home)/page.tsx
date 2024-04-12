@@ -8,8 +8,8 @@ import { ThreeApproaches } from '@/app/[lang]/[region]/(website)/(home)/(section
 import { WhatWouldChange } from '@/app/[lang]/[region]/(website)/(home)/(sections)/what-would-change';
 import NewsletterPopup from '@/components/newsletter-popup/newsletter-popup';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Video } from './(sections)/video';
 import { Campaign } from './(sections)/active-campaign';
+import { Video } from './(sections)/video';
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-home', 'website-videos'] });
