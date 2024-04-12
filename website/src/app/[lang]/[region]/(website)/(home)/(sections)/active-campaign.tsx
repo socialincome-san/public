@@ -2,6 +2,7 @@ import { WebsiteLanguage } from '@/i18n';
 import { BellAlertIcon } from '@heroicons/react/24/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, BaseContainer, Typography } from '@socialincome/ui';
+import Link from 'next/link';
 
 export async function Campaign({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({
@@ -10,13 +11,8 @@ export async function Campaign({ lang }: { lang: WebsiteLanguage }) {
 	});
 
 	return (
-		<BaseContainer className="flex cursor-pointer flex-col items-center justify-center">
-			<a
-				href="https://socialincome.org/campaign/MZmXEVHlDjOOFOMk82jW"
-				target="_blank"
-				rel="noopener noreferrer"
-				className="group"
-			>
+		<BaseContainer className="mb-8 flex flex-col items-center justify-center sm:mb-0">
+			<Link href="https://socialincome.org/campaign/MZmXEVHlDjOOFOMk82jW" className="group">
 				<Badge variant="outline" className="flex-shrink-0">
 					<Typography
 						size="md"
@@ -36,7 +32,7 @@ export async function Campaign({ lang }: { lang: WebsiteLanguage }) {
 						Rebuilding Lives by Ismatu&nbsp;Gwendolyn
 					</Typography>
 				</Badge>
-			</a>
+			</Link>
 		</BaseContainer>
 	);
 }
