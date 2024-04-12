@@ -27,7 +27,7 @@ export function CookieConsentBanner({ translations }: CookieConsentBannerClientP
 	if (hideBanner) return null;
 
 	return (
-		<Card className="fixed bottom-12 left-2 right-2 mx-auto max-w-6xl shadow-xl md:left-4 md:right-4">
+		<Card className="fixed bottom-2 left-2 right-2 mx-auto max-w-6xl shadow-xl md:left-4 md:right-4">
 			<CardContent className="flex flex-col space-y-2 p-4">
 				<Typography className="md:col-span-3">
 					<Typography as="span" dangerouslySetInnerHTML={{ __html: translations.text }} />

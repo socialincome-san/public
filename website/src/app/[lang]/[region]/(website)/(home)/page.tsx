@@ -8,6 +8,7 @@ import { ThreeApproaches } from '@/app/[lang]/[region]/(website)/(home)/(section
 import { WhatWouldChange } from '@/app/[lang]/[region]/(website)/(home)/(sections)/what-would-change';
 import NewsletterPopup from '@/components/newsletter-popup/newsletter-popup';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { Campaign } from './(sections)/active-campaign';
 import { Video } from './(sections)/video';
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
@@ -15,6 +16,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 	const vimeoVideoId = Number(translator.t('id.video-02'));
 	return (
 		<>
+			<Campaign lang={lang} />
 			<Hero lang={lang} region={region} />
 			<Video lang={lang} />
 			<WhatWouldChange
