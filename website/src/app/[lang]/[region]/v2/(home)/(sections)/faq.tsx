@@ -28,7 +28,7 @@ export async function Faq({ lang, region }: DefaultParams) {
 
 	return (
 		<BaseContainer>
-			<Typography size="2xl" className="mb-12 text-center">
+			<Typography size="2xl" weight="medium" className="mb-12 text-center">
 				{translator.t('section-6.title-1')}
 			</Typography>
 			<hr />
