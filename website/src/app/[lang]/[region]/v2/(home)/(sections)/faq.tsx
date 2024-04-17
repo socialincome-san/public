@@ -36,12 +36,12 @@ export async function Faq({ lang, region }: DefaultParams) {
 				{questions.map((question, index) => (
 					<AccordionItem key={index} value={`item-${index}`}>
 						<AccordionTrigger>
-							<Typography size="lg" className="text-left">
+							<Typography size="lg">
 								{question.prompt}
 							</Typography>
 						</AccordionTrigger>
 						<AccordionContent className="text-popover-foreground">
-							<Typography size="lg" className="text-left">
+							<Typography size="lg">
 								{question.answer}
 							</Typography>
 							{question.links && (
