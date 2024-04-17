@@ -28,9 +28,9 @@ export async function Overview({ lang, region }: DefaultParams) {
 			<li><Typography>{translator.t('section-2.text-1.1')}</Typography></li>
 			<li><Typography>{translator.t('section-2.text-1.2')}</Typography></li>
 			</ol>
-			<Typography size="3xl" weight='medium' color="foreground-dark" className='text-center w-3/5 my-10'>{translator.t('section-2.title-4')}</Typography>
+			<Typography size="3xl" weight='medium' color="foreground-dark" className='text-center w-3/5 mt-12 mb-5'>{translator.t('section-2.title-4')}</Typography>
 			<Typography className='w-3/5'>{translator.t('section-2.text-2')}</Typography>
-			<Typography size="3xl" weight='medium' color="foreground-dark" className='text-center w-3/5 my-10'>{translator.t('section-2.title-5')}</Typography>
+			<Typography size="3xl" weight='medium' color="foreground-dark" className='text-center w-3/5 mt-12 mb-5'>{translator.t('section-2.title-5')}</Typography>
 			<Typography className='w-3/5'>{translator.t('section-2.text-3')}</Typography>
 		</BaseContainer>
 	);
