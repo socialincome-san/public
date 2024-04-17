@@ -1,14 +1,14 @@
 {
-  "metadata": {
-    "title": "Quick Quiz Results!",
-    "description": "Discover your quiz results instantly. Whether you nailed it or need a retry, we'll let you knonw.",
-    "keywords": "Quiz Results, Instant Feedback, Geography Quiz",
-    "url": "https://socialincome.org/",
-    "og-image": "/assets/metadata/og/default.jpg",
-    "twitter-image": "/assets/metadata/twitter/default.jpg"
-  },
-  "result": {
-    "right": "Spot on!",
-    "wrong": "Not quite, but good try!"
-  }
+	"metadata": {
+		"title": "Quick Quiz Results!",
+		"description": "Discover your quiz results instantly. Whether you nailed it or need a retry, we'll let you knonw.",
+		"keywords": "Quiz Results, Instant Feedback, Geography Quiz",
+		"url": "https://socialincome.org/",
+		"og-image": "/assets/metadata/og/default.jpg",
+		"twitter-image": "/assets/metadata/twitter/default.jpg"
+	},
+	"result": {
+		"right": "Spot on!",
+		"wrong": "Not quite, but good try!"
+	}
 }

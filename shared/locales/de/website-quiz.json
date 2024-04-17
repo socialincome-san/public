@@ -1,14 +1,14 @@
 {
-  "metadata": {
-    "title": "Quizantwort ",
-    "description": "Deine Antwort ist entweder richtig oder falsch. Finde es heraus.",
-    "keywords": "Quizergebnisse, sofortige Rückmeldung, Geografiequiz",
-    "url": "https://socialincome.org/",
-    "og-image": "/assets/metadata/og/default.jpg",
-    "twitter-image": "/assets/metadata/twitter/default.jpg"
-  },
-  "result": {
-    "right": "Genau richtig!",
-    "wrong": "Nicht ganz, aber guter Versuch!"
-  }
+	"metadata": {
+		"title": "Quizantwort ",
+		"description": "Deine Antwort ist entweder richtig oder falsch. Finde es heraus.",
+		"keywords": "Quizergebnisse, sofortige Rückmeldung, Geografiequiz",
+		"url": "https://socialincome.org/",
+		"og-image": "/assets/metadata/og/default.jpg",
+		"twitter-image": "/assets/metadata/twitter/default.jpg"
+	},
+	"result": {
+		"right": "Genau richtig!",
+		"wrong": "Nicht ganz, aber guter Versuch!"
+	}
 }
