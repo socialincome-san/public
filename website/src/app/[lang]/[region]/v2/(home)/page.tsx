@@ -2,6 +2,7 @@ import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Faq } from '@/app/[lang]/[region]/v2/(home)/(sections)/faq';
 import { Quotes } from '@/app/[lang]/[region]/v2/(home)/(sections)/quotes';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
+import {Overview} from './(sections)/overview';
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
@@ -11,7 +12,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 	return (
 		<>
 			{/*		<HeroVideo lang={lang} region={region} />*/}
-			{/*			<Overview lang={lang} region={region} />*/}
+						<Overview lang={lang} region={region} />
 			{/*			<MonthlyIncome lang={lang} region={region} />*/}
 			{/*			<ExplainerVideo lang={lang} region={region} />*/}
 			{/*			<MobileIllustration lang={lang} region={region} />*/}
