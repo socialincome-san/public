@@ -4,7 +4,7 @@
 		"description": "Hier werden die Regeln erläutert, mit denen Sie sich einverstanden erklären, wenn Sie unsere Dienste nutzen."
 	},
 	"title": "Nutzungsbedingungen",
-	"comment": "Bei der vorliegenden Nutzungsbedingungen handelt es sich um eine Übersetzung aus dem Englischen. Sollte es zwischen der vorliegenden Übersetzung und der <a href=\"/en/us/terms-of-use\">Terms of Use</a> inhaltliche Unterschiede geben, so geht die englischen Nutzungsbedinungen dieser Übersetzung vor.",
+	"comment": "Bei der vorliegenden Nutzungsbedingungen handelt es sich um eine Übersetzung aus dem Englischen. Sollte es zwischen der vorliegenden Übersetzung und der <a href=\"/en/us/legal/site-use\">Terms of Use</a> inhaltliche Unterschiede geben, so geht die englischen Nutzungsbedinungen dieser Übersetzung vor.",
 	"general": {
 		"title": "Allgemeines",
 		"section-1": "Die Webseite socialincome.org (nachfolgend \"Webseite\") wird von Social Income, einem gemeinnützigen Verein mit Sitz in Zürich, Schweiz (nachfolgend \"Social Income\") betrieben. Durch den Zugriff auf und die Nutzung der Webseite erklärst du, dass du die folgenden Nutzungsbedingungen und alle anderen auf dieser Webseite verfügbaren rechtlichen Informationen, die die Nutzung der Website regeln (im Folgenden zusammenfassend als \"Nutzungsbedingungen\"), gelesen und verstanden hast und ihnen zustimmst.",
@@ -17,8 +17,8 @@
 	},
 	"data": {
 		"title": "Deine persönlichen Daten und die Nutzung der Webseite",
-		"section-1": "Die Übertragung, Sammlung und Bearbeitung von personenbezogenen Daten über die Webseite unterliegt unserer <a href='/privacy-policy'>Datenschutzrichtlinie</a>.",
-		"section-2": "Wenn du dich entscheidest, einen Beitrag an Social Income zu leisten, werden wir dich bitten, den <a href='/terms-and-conditions'>Teilnahmebedingungen</a> zuzustimmen."
+		"section-1": "Die Übertragung, Sammlung und Bearbeitung von personenbezogenen Daten über die Webseite unterliegt unserer <a href='/legal/privacy'>Datenschutzrichtlinie</a>.",
+		"section-2": "Wenn du dich entscheidest, einen Beitrag an Social Income zu leisten, werden wir dich bitten, den <a href='/legal/donations'>Teilnahmebedingungen</a> zuzustimmen."
 	},
 	"liability": {
 		"title": "Ausschluss der Gewährleistung",

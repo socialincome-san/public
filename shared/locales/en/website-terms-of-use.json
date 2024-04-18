@@ -16,8 +16,8 @@
 	},
 	"data": {
 		"title": "Your data and website usage",
-		"section-1": "The transfer, collection and processing of personal data via this website is subject to the <a href='/privacy-policy'>Privacy Policy.</a>",
-		"section-2": "If you decide to make a contribution with Social Income’s projects, you will be asked to agree to the <a href='/terms-and-conditions'>Terms and Conditions</a>."
+		"section-1": "The transfer, collection and processing of personal data via this website is subject to the <a href='legal/privacy'>Privacy Policy.</a>",
+		"section-2": "If you decide to make a contribution with Social Income’s projects, you will be asked to agree to the <a href='/legal/donations'>Terms and Conditions</a>."
 	},
 	"liability": {
 		"title": "Limitation of liability",

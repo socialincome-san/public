@@ -33,7 +33,7 @@
 		"legal": "Legal"
 	},
 	"cookie-consent-banner": {
-		"text": "Do you allow us to use cookies for analyzing our website traffic and performance? We never collect any personal data. <a href='/privacy' class='underline'>Privacy Policy</a>.",
+		"text": "Do you allow us to use cookies for analyzing our website traffic and performance? We never collect any personal data. <a href='legal/privacy' class='underline'>Privacy Policy</a>.",
 		"button-accept": "Accept",
 		"button-refuse": "Refuse"
 	}

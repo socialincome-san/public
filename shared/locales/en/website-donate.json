@@ -51,7 +51,7 @@
 			"country": "Country",
 			"gender": "Gender",
 			"referral": "How did you hear about us?",
-			"accept-terms-and-conditions": "I accept the <a href='/terms-and-conditions/' target='_blank' class='underline'>Terms and Conditions</a> and <a href='/privacy/' target='_blank' class='underline'>Privacy Policy</a>.",
+			"accept-terms-and-conditions": "I accept the <a href='/legal/donations' target='_blank' class='underline'>Terms and Conditions</a> and <a href='legal/privacy/' target='_blank' class='underline'>Privacy Policy</a>.",
 			"referrals": {
 				"familyfriends": "Family & Friends",
 				"socialmedia": "Social Media",

@@ -33,7 +33,7 @@
 		"legal": "Rechtliches"
 	},
 	"cookie-consent-banner": {
-		"text": "Dürfen wir Cookies benützen um den Traffic und die Leistung unserer Website zu analysieren? Wir sammeln niemals persönliche Daten. <a href='/privacy' class='underline'>Datenschutzrichtlinie</a>.",
+		"text": "Dürfen wir Cookies benützen um den Traffic und die Leistung unserer Website zu analysieren? Wir sammeln niemals persönliche Daten. <a href='legal/privacy' class='underline'>Datenschutzrichtlinie</a>.",
 		"button-accept": "Akzeptieren",
 		"button-refuse": "Ablehnen"
 	}
