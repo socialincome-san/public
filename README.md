@@ -318,9 +318,9 @@ We receive in-kind donations from
 [Google Nonprofit](https://www.google.com/nonprofits/),
 [GitHub](https://socialimpact.github.com),
 [Codemagic](https://codemagic.io/start/), [Linktree](https://linktr.ee),
-[Twilio](https://twilio.org), [algolia](https://www.algolia.com),
+[Twilio](https://twilio.org), [Algolia](https://www.algolia.com),
 [JetBrains](https://www.jetbrains.com),
-[1Password](https://1password.com/), [Mux](https://www.mux.com/) and
+[1Password](https://1password.com/), [Mux](https://www.mux.com/), [Sentry](https://sentry.io) and
 [Lineto](https://www.lineto.com). Our tools also leverage other
 open-source technologies, including solutions like
 [FireCMS](https://firecms.co), [Storybook](https://storybook.js.org) and
