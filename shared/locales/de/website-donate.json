@@ -51,7 +51,7 @@
 			"country": "Land",
 			"gender": "Geschlecht",
 			"referral": "Wie hast du von uns erfahren?",
-			"accept-terms-and-conditions": "Ich akzeptiere die <a href='/legal/donations/' target='_blank' class='underline'>Teilnahmebedingungen</a> und die <a href='legal/privacy/' target='_blank' class='underline'>Datenschutzrichtlinie</a>.",
+			"accept-terms-and-conditions": "Ich akzeptiere die <a href='/legal/donations/' target='_blank' class='underline'>Teilnahmebedingungen</a> und die <a href='/legal/privacy/' target='_blank' class='underline'>Datenschutzrichtlinie</a>.",
 			"referrals": {
 				"familyfriends": "Familie oder Freunde",
 				"socialmedia": "Social Media",

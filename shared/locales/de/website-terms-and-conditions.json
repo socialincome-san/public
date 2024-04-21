@@ -3,7 +3,7 @@
 		"title": "Teilnahmebedingungen | Social Income"
 	},
 	"title": "Teilnahmebedingungen",
-	"comment": "Bei der vorliegenden Teilnahmebedingungen handelt es sich um eine Übersetzung aus dem Englischen. Sollte es zwischen der vorliegenden Übersetzung und der <a href=\"/en/us/legal/donations\">Terms and Conditions</a> inhaltliche Unterschiede geben, so geht die englischen Teilnahmebedingungen dieser Übersetzung vor.",
+	"comment": "Bei der vorliegenden Teilnahmebedingungen handelt es sich um eine Übersetzung aus dem Englischen. Sollte es zwischen der vorliegenden Übersetzung und der <a href=\"/legal/donations\">Terms and Conditions</a> inhaltliche Unterschiede geben, so geht die englischen Teilnahmebedingungen dieser Übersetzung vor.",
 	"general": {
 		"title": "Allgemeines",
 		"section-1": "Diese Teilnahmebedingungen für Spendenzahlungen (im Folgenden \"Teilnahmebedingungen \") regeln finanzielle Zuwendung zugunsten von Social Income, einer gemeinnützigen Organisation mit Sitz in Zürich, Schweiz (im Folgenden \"Social Income\").",
@@ -21,7 +21,7 @@
 	},
 	"data": {
 		"title": "Deine persönlichen Daten und die Nutzung der Webseite",
-		"section-1": "Die Übertragung, Sammlung und Bearbeitung von personenbezogenen Daten über die Webseite unterliegt unserer <a href='legal/privacy'>Datenschutzrichtlinie</a>.",
+		"section-1": "Die Übertragung, Sammlung und Bearbeitung von personenbezogenen Daten über die Webseite unterliegt unserer <a href='/legal/privacy'>Datenschutzrichtlinie</a>.",
 		"section-2": "Der Zugang zu und die Nutzung der Webseite unterliegt zudem den <a href='/legal/site-use'>Nutzungsbedingungen</a>.",
 		"section-3": "Wir empfehlen dir, diese vorgenannten Richtlinien sorgfältig zu lesen. Solltest du Fragen haben, zögere bitte nicht, uns diese zu stellen. Du kannst uns dazu unter <a href='mailto:legal@socialincome.org'>legal@socialincome.org</a> kontaktieren."
 	},
