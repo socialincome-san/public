@@ -85,6 +85,7 @@ type NewsletterPopupClientProps = {
 
 export const NewsletterPopupClient = ({ delay, lang, translations }: NewsletterPopupClientProps) => {
 	useEffect(() => {
+		if (localStorage.getItem('cookie_consent') === null) return; // Do not show the popup if the user has responded to the cookie consent banner
 		toast.dismiss();
 		const timeout = setTimeout(() => {
 			toast.custom(
