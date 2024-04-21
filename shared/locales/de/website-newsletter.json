@@ -1,6 +1,6 @@
 {
 	"metadata": {
-		"title": "Datenschutzrichtlinie | Social Income"
+		"title": "Newsletter | Social Income"
 	},
 	"updates": {
 		"title": "Bleib informiert",
@@ -8,10 +8,11 @@
 		"bullet-1": "Stories von Empfänger:innen",
 		"bullet-2": "Neue Forschung zu Direktzahlungen",
 		"bullet-3": "Berichterstattung rund um das BGE",
-		"description-2": "Versand jeden Monatsende.",
+		"description-2": "Wird an jedem Monatsende versendet.",
 		"description-3": "Newsletters verfasst von",
 		"author-name": "Aurélie Schmiedlin",
 		"author-city": "Genf",
+		"form-title": "Newsletter abonnieren",
 		"firstname": "Vorname",
 		"email": "E-Mail",
 		"submit-button": "Anmelden",

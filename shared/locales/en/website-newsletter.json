@@ -1,6 +1,6 @@
 {
 	"metadata": {
-		"title": "Datenschutzrichtlinie | Social Income"
+		"title": "Newsletter | Social Income"
 	},
 	"updates": {
 		"title": "Stay Informed",
@@ -8,10 +8,11 @@
 		"bullet-1": "Engaging stories from our recipients",
 		"bullet-2": "New research on direct cash transfers",
 		"bullet-3": "Summaries of the latest news around UBI",
-		"description-2": "Sent monthly, on the last day.",
+		"description-2": "Sent at the end month of each month.",
 		"description-3": "Newsletters written by",
 		"author-name": "Aurélie Schmiedlin",
 		"author-city": "Geneva",
+		"form-title": "Subscribe to our newsletter",
 		"firstname": "First Name",
 		"email": "Email",
 		"submit-button": "Subscribe now",

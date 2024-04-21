@@ -19,7 +19,7 @@ type PersonalInfoFormProps = {
 	};
 } & DefaultParams;
 
-export function SubscriptionInfoForm({ lang, region, translations }: PersonalInfoFormProps) {
+export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormProps) {
 	const api = useApi();
 
 	const formSchema = z.object({
@@ -61,9 +61,7 @@ export function SubscriptionInfoForm({ lang, region, translations }: PersonalInf
 					name="firstname"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel className="text-md text-primary-foreground-muted font-normal">
-								{translations.firstname}
-							</FormLabel>
+							<FormLabel className="text-md">{translations.firstname}</FormLabel>
 							<FormControl>
 								<Input type="text" className="h-14 w-full p-4 text-xl" {...field} />
 							</FormControl>
@@ -76,7 +74,7 @@ export function SubscriptionInfoForm({ lang, region, translations }: PersonalInf
 					name="email"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel className="text-md text-primary-foreground-muted font-normal">{translations.email}</FormLabel>
+							<FormLabel className="text-md">{translations.email}</FormLabel>
 							<FormControl>
 								<Input type="email" className="h-14 w-full p-4 text-xl" {...field} />
 							</FormControl>
@@ -85,11 +83,11 @@ export function SubscriptionInfoForm({ lang, region, translations }: PersonalInf
 					)}
 				/>
 				<Button
-					size="lg"
 					type="submit"
-					variant="default"
+					size="lg"
 					showLoadingSpinner={form.formState.isSubmitting}
-					className="bg-accent text-accent-foreground hover:bg-accent-muted active:bg-accent-muted mt-4 rounded-full text-lg font-medium"
+					color="accent"
+					className="mt-4 rounded-full"
 				>
 					{translations.updatesSubmitButton}
 				</Button>

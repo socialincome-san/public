@@ -30,7 +30,8 @@
 	"footer": {
 		"follow-us": "Folge uns",
 		"resources": "Informationen",
-		"legal": "Rechtliches"
+		"legal": "Rechtliches",
+		"newsletter": "Newsletter"
 	},
 	"cookie-consent-banner": {
 		"text": "Dürfen wir Cookies benützen um den Traffic und die Leistung unserer Website zu analysieren? Wir sammeln niemals persönliche Daten. <a href='/legal/privacy' class='underline'>Datenschutzrichtlinie</a>.",
