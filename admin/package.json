@@ -6,13 +6,13 @@
 	"scripts": {
 		"build": "vite build",
 		"serve": "vite serve",
-		"serve:emulator": "firebase emulators:exec --project social-income-staging --only firestore,auth --config ../firebase.json --import ../seed  'npm run serve'",
-		"test:emulator": "firebase emulators:exec --project social-income-staging --only firestore,auth --config ../firebase.json --import ../seed  'npm run test:local'",
+		"serve:emulator": "firebase emulators:exec --project social-income-local --only firestore,auth --config ../firebase.json --import ../seed  'npm run serve'",
+		"test:emulator": "firebase emulators:exec --project social-income-local --only firestore,auth --config ../firebase.json --import ../seed  'npm run test:local'",
 		"test:local": "jest --forceExit --passWithNoTests --roots src",
 		"test:playwright:local": "npx playwright install --with-deps && playwright test --trace on",
 		"test:playwright:local:update": "npx playwright install --with-deps && playwright test --update-snapshots",
-		"test:playwright:emulator": "firebase emulators:exec --project social-income-staging --only firestore,auth --config ../firebase.json --import ../seed  'npm run test:playwright:local'",
-		"test:playwright:emulator:update": "firebase emulators:exec --project social-income-staging --only firestore,auth --config ../firebase.json --import ../seed  'npm run test:playwright:local:update'"
+		"test:playwright:emulator": "firebase emulators:exec --project social-income-local --only firestore,auth --config ../firebase.json --import ../seed  'npm run test:playwright:local'",
+		"test:playwright:emulator:update": "firebase emulators:exec --project social-income-local --only firestore,auth --config ../firebase.json --import ../seed  'npm run test:playwright:local:update'"
 	},
 	"devDependencies": {
 		"@firebase/rules-unit-testing": "^3.0.2",
