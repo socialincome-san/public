@@ -62,7 +62,7 @@ export default function HeroForm({ translations, lang, region }: Section1InputPr
 					<Button size="lg" type="submit" variant="default">
 						{translations.submit}
 					</Button>
-					<Link href={`/${lang}/${region}/privacy`} className="inline-flex items-center pt-2 hover:underline">
+					<Link href={`/${lang}/${region}/legal/privacy`} className="inline-flex items-center pt-2 hover:underline">
 						<EyeSlashIcon className="mr-2 h-4 w-4" />
 						<Typography size="sm">{translations.privacyCommitment}</Typography>
 					</Link>

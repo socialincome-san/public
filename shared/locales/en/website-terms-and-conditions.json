@@ -20,8 +20,8 @@
 	},
 	"data": {
 		"title": "Your data and website usage",
-		"section-1": "The transfer, collection and processing of personal data via this website is subject to the <a href='/privacy-policy'>Privacy Policy</a>.",
-		"section-2": "The access to and use of this website is subject to the <a href='/terms-of-use'>Terms of Use</a>. We advise you to read these policies carefully. If you have any questions, please do not hesitate to <a href='mailto:hello@socialincome.org'>contact us</a>.",
+		"section-1": "The transfer, collection and processing of personal data via this website is subject to the <a href='/legal/privacy'>Privacy Policy</a>.",
+		"section-2": "The access to and use of this website is subject to the <a href='/legal/site-use'>Terms of Use</a>. We advise you to read these policies carefully. If you have any questions, please do not hesitate to <a href='mailto:hello@socialincome.org'>contact us</a>.",
 		"section-3": "We advise you to read these policies carefully. If you have any questions, please do not hesitate to <a href='mailto:hello@socialincome.org'>contact us</a>."
 	},
 	"liability": {

@@ -1,14 +1,14 @@
 {
   "projects": {
-    "default": "social-income-staging",
+    "default": "social-income-local",
     "social-income-staging": "social-income-staging",
     "social-income-prod": "social-income-prod"
   },
   "targets": {
-    "social-income-prod": {
+    "social-income-local": {
       "hosting": {
         "admin": [
-          "si-admin-production"
+          "si-admin-local"
         ]
       }
     },
@@ -16,6 +16,13 @@
       "hosting": {
         "admin": [
           "si-admin-staging"
+        ]
+      }
+    },
+    "social-income-prod": {
+      "hosting": {
+        "admin": [
+          "si-admin-production"
         ]
       }
     }
