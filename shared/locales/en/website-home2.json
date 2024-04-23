@@ -27,7 +27,11 @@
 		"title-5": "Ongoing Support",
 		"text-5": "Our recipients receive continuous support from our local partners throughout and even after the program, maximizing the overall impact. Specifically, the third year of the program is focused on facilitating a seamless transition as they move on from the program."
 	},
-	"section-3": {},
+	"section-3": {
+		"title-faded": "My impact",
+		"title": "What's your monthly income?",
+		"subtitle": "Why is this important?"
+	},
 	"section-4": {
 		"title-1": [
 			{ "text": "What would change if you gave " },
