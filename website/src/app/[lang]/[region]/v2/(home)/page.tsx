@@ -5,6 +5,7 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Approach } from './(sections)/approach';
 import { MonthlyIncome } from './(sections)/monthly-income';
 import { Overview } from './(sections)/overview';
+import {MobileIllustration} from './(sections)/mobile-illustration';
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
@@ -17,7 +18,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			<Overview lang={lang} region={region} />
 			<MonthlyIncome lang={lang} region={region} />
 			{/*			<ExplainerVideo lang={lang} region={region} />*/}
-			{/*			<MobileIllustration lang={lang} region={region} />*/}
+			<MobileIllustration lang={lang} region={region} />
 			<Faq lang={lang} region={region} />
 			<Approach lang={lang} region={region} />
 			<Quotes lang={lang} region={region} />
