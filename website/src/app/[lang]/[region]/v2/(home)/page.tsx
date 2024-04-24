@@ -3,6 +3,7 @@ import { Faq } from '@/app/[lang]/[region]/v2/(home)/(sections)/faq';
 import { Quotes } from '@/app/[lang]/[region]/v2/(home)/(sections)/quotes';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Approach } from './(sections)/approach';
+import { ExplainerVideo } from './(sections)/explainer-video';
 import { MobileIllustration } from './(sections)/mobile-illustration';
 import { MonthlyIncome } from './(sections)/monthly-income';
 import { Overview } from './(sections)/overview';
@@ -17,7 +18,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			{/*		<HeroVideo lang={lang} region={region} />*/}
 			<Overview lang={lang} region={region} />
 			<MonthlyIncome lang={lang} region={region} />
-			{/*			<ExplainerVideo lang={lang} region={region} />*/}
+			<ExplainerVideo lang={lang} region={region} />
 			<MobileIllustration lang={lang} region={region} />
 			<Faq lang={lang} region={region} />
 			<Approach lang={lang} region={region} />
