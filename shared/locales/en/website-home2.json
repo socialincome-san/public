@@ -129,7 +129,7 @@
 			}
 		]
 	},
-	"section-x": {
+	"section-8": {
 		"title-1": [
 			{ "text": "Unique Recipients Selection Process for " },
 			{ "text": "Fair Selection.", "color": "accent" }
@@ -137,7 +137,7 @@
 		"text-1.1": "Identifying those in need: Through collaboration with local NGOs in Sierra Leone, we target individuals living in poverty who can benefit from a three-year predictable income, empowering them to invest in their future.",
 		"text-1.2": "Selecting randomly: Our randomized selection process is transparent and publicly verifiable, eliminating human biases and favoritism. This ensures fairness and equal chances for all individuals in poverty to benefit."
 	},
-	"section-8": {
+	"section-x": {
 		"portraits": [
 			{
 				"name": "Vanja",

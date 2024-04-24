@@ -7,6 +7,8 @@ import { ExplainerVideo } from './(sections)/explainer-video';
 import { MobileIllustration } from './(sections)/mobile-illustration';
 import { MonthlyIncome } from './(sections)/monthly-income';
 import { Overview } from './(sections)/overview';
+import { RecipientSelection } from './(sections)/recipient-selection';
+import { Testimonials } from './(sections)/testimonials';
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
@@ -23,8 +25,8 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			<Faq lang={lang} region={region} />
 			<Approach lang={lang} region={region} />
 			<Quotes lang={lang} region={region} />
-			{/*			<RecipientSelection lang={lang} region={region} />*/}
-			{/*			<Testimonials lang={lang} region={region} />*/}
+			<RecipientSelection lang={lang} region={region} />
+			<Testimonials lang={lang} region={region} />
 			{/*			<Sdgoals lang={lang} region={region} />*/}
 			{/*			<Journal lang={lang} region={region} />*/}
 		</>
