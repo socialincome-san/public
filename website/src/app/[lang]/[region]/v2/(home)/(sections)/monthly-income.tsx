@@ -10,7 +10,7 @@ export async function MonthlyIncome({ lang, region }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer>
+		<BaseContainer backgroundColor="bg-primary">
 			<div className="bg-primary my-4 py-12 text-center text-white">
 				<Typography className="opacity-40">{translator.t('section-3.title-faded')}</Typography>
 				<Typography size="2xl" className="py-4">

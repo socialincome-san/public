@@ -12,7 +12,7 @@ export async function MobileIllustration({ lang, region }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer className="bg-primary">
+		<BaseContainer backgroundColor="bg-primary">
 			<div className="flex flex-col items-center justify-center pt-12 text-center text-white">
 				<div>
 					{translator.t<{ text: string; color?: FontColor }[]>('section-5.title-1').map((title, index) => (

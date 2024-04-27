@@ -8,6 +8,7 @@ import { MobileIllustration } from './(sections)/mobile-illustration';
 import { MonthlyIncome } from './(sections)/monthly-income';
 import { Overview } from './(sections)/overview';
 import { RecipientSelection } from './(sections)/recipient-selection';
+import { Sdgoals } from './(sections)/sdgoals';
 import { Testimonials } from './(sections)/testimonials';
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
@@ -27,7 +28,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			<Quotes lang={lang} region={region} />
 			<RecipientSelection lang={lang} region={region} />
 			<Testimonials lang={lang} region={region} />
-			{/*			<Sdgoals lang={lang} region={region} />*/}
+			<Sdgoals lang={lang} region={region} />
 			{/*			<Journal lang={lang} region={region} />*/}
 		</>
 	);

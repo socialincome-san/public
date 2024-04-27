@@ -189,7 +189,7 @@
 		"author-5": "Claudia, Switzerland"
 	},
 	"section-10": {
-		"title-1": [{ "text": "Contribute to the United Nations’ " }, { "text": "United Nations’", "color": "primary" }],
+		"title-1": [{ "text": "Contribute to the " }, { "text": "United Nations", "color": "primary" }, { "text": "’" }],
 		"sdg-1-title": "End poverty in all its forms, everywhere.",
 		"sdg-1": "SDG #1",
 		"sdg-10-title": "Reduce inequality within and \namong countries.",
