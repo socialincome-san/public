@@ -130,6 +130,40 @@
 		]
 	},
 	"section-8": {
+		"cards": [
+			{
+				"quote": [
+					{
+						"text": "«Wir müssen uns ernsthaft damit befassen "
+					},
+					{
+						"text": "ein klug konzipiertes bedingungsloses Grundeinkommen ",
+						"color": "accent"
+					},
+					{
+						"text": "zu implementieren. So können uns Krisen zwar treffen, aber ohne zerstörerische Kraft zu entfalten.»"
+					}
+				],
+				"author": "Vereinte Nationen"
+			},
+			{
+				"quote": [
+					{
+						"text": "«Wir müssen uns ernsthaft damit befassen, "
+					},
+					{
+						"text": "ein klug konzipiertes bedingungsloses Grundeinkommen ",
+						"color": "accent"
+					},
+					{
+						"text": "zu implementieren. So können uns Krisen zwar treffen, aber ohne zerstörerische Kraft zu entfalten.»"
+					}
+				],
+				"author": "Vereinte Nationen"
+			}
+		]
+	},
+	"section-9": {
 		"title-1": [
 			{ "text": "Unique Recipients Selection Process for " },
 			{ "text": "Fair Selection.", "color": "accent" }
