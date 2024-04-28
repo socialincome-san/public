@@ -96,7 +96,6 @@ export class SendgridSubscriptionClient extends Client {
                 "last_name": data.lastname ?? '',
                 "country": data.country ?? '',
                 "custom_fields": {
-                    "status": data.status,
                     "language" : data.language ?? 'en',
                     "source": data.source ?? 'subscriber',
                 }
@@ -125,7 +124,6 @@ export class SendgridSubscriptionClient extends Client {
         }
         try {
             const [,body] = await this.request(request);
-            console.log(body);
             for(let i = 0; i < body.suppressions.length; ++i) {
                 if (body.suppressions[i].id.toString() === this.suppressionListId && body.suppressions[i].suppressed) {
                     return true

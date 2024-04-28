@@ -37,6 +37,7 @@ import toast from 'react-hot-toast';
 import { useFirestore } from 'reactfire';
 import * as z from 'zod';
 
+
 type PersonalInfoFormProps = {
 	translations: {
 		firstname: string;
@@ -62,7 +63,7 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
 	const { status, loading } = useNewsletterSubscription();
-	const upsertMailchimpSubscription = useUpsertNewsletterSubscription();
+	const upsertMailSubscription = useUpsertNewsletterSubscription();
 
 	const formSchema = z.object({
 		firstname: z.string(),
@@ -310,9 +311,9 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 					disabled={loading}
 					onCheckedChange={(enabled) => {
 						if (enabled) {
-							upsertMailchimpSubscription('subscribed');
+							upsertMailSubscription('subscribed');
 						} else {
-							upsertMailchimpSubscription('unsubscribed');
+							upsertMailSubscription('unsubscribed');
 						}
 					}}
 				/>
