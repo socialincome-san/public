@@ -37,7 +37,6 @@ import toast from 'react-hot-toast';
 import { useFirestore } from 'reactfire';
 import * as z from 'zod';
 
-
 type PersonalInfoFormProps = {
 	translations: {
 		firstname: string;

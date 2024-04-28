@@ -2,7 +2,6 @@ import { UserContext } from '@/components/providers/user-context-provider';
 import { useApi } from '@/hooks/useApi';
 import { orderBy } from '@firebase/firestore';
 import { Status } from '@mailchimp/mailchimp_marketing';
-import { SendgridContactType } from '@socialincome/shared/src/sendgrid/SendgridContactType';
 import { CONTRIBUTION_FIRESTORE_PATH, StatusKey } from '@socialincome/shared/src/types/contribution';
 import { DONATION_CERTIFICATE_FIRESTORE_PATH } from '@socialincome/shared/src/types/donation-certificate';
 import { EMPLOYERS_FIRESTORE_PATH, Employer } from '@socialincome/shared/src/types/employers';
@@ -95,9 +94,9 @@ export const useNewsletterSubscription = () => {
 		queryKey: ['me', 'newsletter'],
 		queryFn: async () => {
 			const response = await api.get('/api/newsletter/subscription');
-			const responseData = (await response.json());
+			const responseData = await response.json();
 			if (responseData === null || !responseData.status) {
-				return 'unsubscribed'
+				return 'unsubscribed';
 			} else {
 				return responseData.status;
 			}
