@@ -1,9 +1,13 @@
 export const EXPENSES_FIRESTORE_PATH = 'expenses';
 
 export enum ExpenseType {
-	DonationFees = 'donation_fees',
+	AccountFees = 'account_fees',
+	Administrative = 'Administrative',
 	DeliveryFees = 'delivery_fees',
-	ExchangeRateFluctuation = 'exchange_rate_fluctuation',
+	DonationFees = 'donation_fees',
+	ExchangeRateLoss = 'exchange_rate_loss',
+	FundraisingAdvertising = 'FundraisingAdvertising',
+	Staff = 'staff',
 }
 
 export type Expense = {
