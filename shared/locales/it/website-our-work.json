@@ -39,57 +39,57 @@
 		}
 	},
 	"recipients": {
-		"header": "Recipients",
-		"title-1": "We work where we can make an impact. ",
+		"header": "I Beneficiari",
+		"title-1": "Interveniamo dove possiamo avere il maggior impatto.",
 		"title-2": "Sierra Leone.",
-		"subtitle": "Recipients in Sierra Leone each get USD 32 per month, guaranteed for three years.",
-		"our-criteria": "Our criteria",
+		"subtitle": "I beneficiari in Sierra Leone ricevono ciascuno 32 USD al mese, garantiti per tre anni.",
+		"our-criteria": "I nostri criteri",
 		"item-1": {
-			"title": "Low-Income Country",
-			"text": "We've started helping recipients in Sierra Leone, one of the poorest countries on Earth. There, a small donation can go a long way.",
-			"caption": "Average income in Sierra Leone is USD 42.5 per month – World Bank, 2022 (GNI per capita, Atlas method and PPP)"
+			"title": "Paese a basso reddito",
+			"text": "Abbiamo iniziato ad aiutare i beneficiari in Sierra Leone, uno dei paesi più poveri del pianeta. Lì, una piccola donazione può fare molto.",
+			"caption": "Il reddito medio in Sierra Leone è di 42.5 USD al mese - Banca Mondiale, 2022 (PIL nominale pro capite)"
 		},
 		"item-2": {
-			"title": "Low-Income Community",
-			"text": "For the selection of recipients, we collaborate with local NGOs who support vulnerable and disadvantaged communities.",
+			"title": "Comunità a basso reddito",
+			"text": "Per la selezione dei beneficiari, collaboriamo con ONG locali che supportano le comunità vulnerabili e svantaggiate.",
 			"caption": "Partners: Aurora, Jamil & Nyanga Jaward, Reachout Salone, Equal Rights Alliance, Polio B&S Organisation, Freetown City Council"
 		},
 		"item-3": {
-			"title": "Age and Gender Parity",
-			"text": "Recipients have to be older than 16 years old. We also strive for gender equality among recipients.",
+			"title": "Età e Parità di Genere",
+			"text": "I beneficiari devono avere più di 16 anni. Ci impegniamo anche per la parità di genere tra i beneficiari.",
 			"caption": ""
 		},
-		"voices": "Voices",
+		"voices": "Testimonianze",
 		"portraits": {
-			"kai": "I use Social Income to help manage my finances. With the first payment I received, I was able to buy new crutches that I’ve used ever since.",
-			"aminata": "I crush stones into gravel for a living. This is hard work with a salary that doesn’t make it easy to raise four children with. I just want to say thank you for the monthly support.",
-			"gbassay": "Social Income made it possible for me to buy school supplies and send my child to school. Thank you for everything you’ve done to help!",
-			"lamin": "Social Income helps both me and my entire family.",
-			"onikeh": "Social Income has helped me immensely. It serves as an extra source of strength to draw from in our everyday lives. It feels amazing to have people support and believe in your dreams.",
-			"neneh": "I use my monthly Social Income to invest in my small business and pay for lunch for my kids at school. It makes me so happy I could cry!"
+			"kai": "Uso Social Income come complemento nella gestione delle mie finanze. Con il primo trasferimento ricevuto ho potuto acquistare delle stampelle nuove, che da quel momento utilizzo sempre.",
+			"aminata": "Mi guadagno la vita spaccando pietre per ottenere la ghiaia. È un lavoro duro, con uno stipendio molto basso. Non è facile crescere quattro figli in queste condizioni. Voglio solo ringraziarvi per il supporto che ricevo ogni mese.",
+			"gbassay": "Social Income mi ha permesso di acquistare materiale scolastico e di mandare mio figlio a scuola. Grazie per tutto l’aiuto che mi avete dato.",
+			"lamin": "Social Income aiuta sia me che tutta la mia famiglia.",
+			"onikeh": "Social Income mi ha aiutato immensamente. È come avere un’ulteriore fonte di forza da cui attingere nella nostra vita quotidiana. È fantastico avere persone che ti supportano e credono nei tuoi sogni.",
+			"neneh": "Uso il denaro che ricevo mensilmente da Social Income per investire nella mia piccola impresa e per pagare il pranzo per i miei figli a scuola. Mi rende così felice che potrei piangere!"
 		}
 	},
 	"whats-next": {
-		"header": "What's next?",
-		"title-1": "We take things ",
-		"title-2": "one step at a time.",
-		"subtitle": "Social Income’s long-term goal is to create a global system of wealth redistribution for people in need, with the help of contributors from all around the world. Like any ambitious project, it takes time to scale.",
+		"header": "Qual è la prossima mossa?",
+		"title-1": "Affrontiamo le cose",
+		"title-2": "un passo alla volta.",
+		"subtitle": "L’obiettivo a lungo termine di Social Income è di creare un sistema di redistribuzione della ricchezza a favore di persone bisognose, con l’aiuto di donatori volontari provenienti da tutto il mondo. Come ogni progetto ambizioso, ci vuole tempo per crescere.",
 		"timeline": {
 			"item-1": {
-				"title": "March 2020",
-				"text": "We started our Pilot Phase and paid out the first installments to a small community in Freetown, Sierra Leone."
+				"title": "Marzo 2020",
+				"text": "Abbiamo iniziato la nostra Fase Pilota e pagato i primi contributi a una piccola comunità a Freetown, in Sierra Leone."
 			},
 			"item-2": {
-				"title": "September 2021",
-				"text": "We started our Development Phase and optimized our payment process."
+				"title": "Settembre 2021",
+				"text": "Abbiamo iniziato la nostra Fase di Sviluppo e ottimizzato il processo di pagamento."
 			},
 			"item-3": {
 				"title": "January 2022",
-				"text": "We reached our Public Phase and have since been progressively rolling out Social Income to recipients and contributors on a larger scale."
+				"text": "Abbiamo raggiunto la nostra Fase Pubblica e da allora abbiamo progressivamente offerto i servizi di Social Income a beneficiari e donatori su scala più ampia."
 			},
 			"item-4": {
-				"title": "Upcoming: Impact Measurement",
-				"text": "We have established a method and a set of qualitative and quantitative criteria to measure the project’s impact. We are now collecting essential data and refining our method with the help of our recipients."
+				"title": "Funzionalità in arrivo: Misurazione dell’impatto",
+				"text": "Abbiamo stabilito un metodo e una serie di criteri qualitativi e quantitativi per misurare l'impatto del progetto. Ora stiamo raccogliendo dati essenziali e perfezionando il nostro metodo con l’aiuto dei nostri beneficiari."
 			}
 		}
 	}
