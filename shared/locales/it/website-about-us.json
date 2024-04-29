@@ -5,43 +5,43 @@
 	"landing-page": {
 		"title": [
 			{
-				"text": "We had the option to do nothing.  "
+				"text": "Volevamo fare la differenza."
 			},
 			{
-				"text": "We decided against it.",
+				"text": "Abbiamo trovato il modo.",
 				"color": "secondary"
 			}
 		],
-		"subtitle": "We believe that improving the lives of people in need is not just a possibility but a responsibility. That's how Social Income was born.",
-		"contact": "Contact Us",
-		"contact-title": "Get in touch",
+		"subtitle": "Crediamo che migliorare le vite delle persone bisognose non sia solo una possibilità, ma anche una responsabilità. È così che è nato Social Income.",
+		"contact": "Contattaci",
+		"contact-title": "Contattaci",
 		"contact-email": "hello@socialincome.org",
-		"registration": "NGO Registration",
-		"registration-title": "Legal status",
-		"registration-foundation": "Social Income is a non-profit organization founded under Swiss law in 2019 with tax exempt status.",
+		"registration": "Registrazione come ONG",
+		"registration-title": "Forma Giuridica",
+		"registration-foundation": "Social Income è un'organizzazione no-profit fondata nel 2019 secondo la legge svizzera, con esenzione fiscale.",
 		"registration-uid": "UID: ",
 		"registration-uid-nr": "CHE-289.611.695",
 		"registration-duns": "DUNS: ",
 		"registration-duns-nr": "48-045-6376"
 	},
 	"our-mission": {
-		"header": "Our Mission",
+		"header": "La nostra missione",
 		"title": [
 			{
-				"text": "Fighting global poverty with the "
+				"text": "Combattere la povertà globale con"
 			},
 			{
-				"text": "help of everyday people.",
+				"text": "l’aiuto della gente comune.",
 				"color": "secondary"
 			}
 		],
-		"subtitle": "Many people in wealthier countries are committed to addressing inequality, but don’t know how or where to start.",
+		"subtitle": "Molte persone nei paesi più ricchi si vogliono impegnare a contrastare le disuguaglianze, ma non sempre sanno come o da dove iniziare.",
 		"paragraphs": [
-			"Thanks to the widespread use of mobile phone-based money transfer services in developing countries, it is easier than ever to send money directly to people in need, at almost no cost.",
-			"Social Income wants to harness this potential by combining two approaches to wealth redistribution. The first is the concept of Universal Basic Income, which is a promising path towards a more equal and inclusive society.",
-			"The second is the use of direct and anticipatory cash transfers to people living in poverty. Research has shown that those who receive direct aid greatly benefit from the money and that they reinvest it locally, responsibly, and successfully.",
-			"We make an impact by sending regular long-term cash transfers directly to recipients: from person to person, because many of the world's poorest countries lack solid social infrastructure.",
-			"And we do so in a radically transparent way that allows us to avoid the high administrative costs normally associated with such projects."
+			"Grazie alla diffusione dei servizi di mobile banking nei paesi in via di sviluppo, è più facile che mai inviare soldi direttamente alle persone bisognose, quasi a costo zero.",
+			"Social Income vuole sfruttare questo potenziale combinando due criteri per la redistribuzione della ricchezza. Il primo è il concetto di un Reddito Minimo Universale, che rappresenta un percorso promettente verso una società più equa e inclusiva.",
+			"Il secondo è l’uso di trasferimenti diretti di denaro a persone che vivono in estrema povertà. Numerosi studi hanno dimostrato che coloro che ricevono aiuti diretti traggono grande beneficio dal denaro e che lo utilizzano localmente, responsabilmente e con successo.",
+			"Otteniamo un notevole impatto inviando versamenti regolari e a lungo termine direttamente ai beneficiari, in modo radicalmente trasparente: da persona a persona, aggirando il problema che in molti dei paesi più poveri del mondo le infrastrutture governative siano quasi completamente assenti.",
+			"E lo facciamo in un modo radicalmente trasparente, che ci consente di evitare gli alti costi amministrativi normalmente associati a progetti del genere."
 		]
 	},
 	"100-percent-model": {
