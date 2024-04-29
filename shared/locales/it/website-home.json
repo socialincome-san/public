@@ -49,15 +49,15 @@
 	"section-5": {
 		"articles": "Articles",
 		"faqs": "Frequently Asked Questions",
-		"title": "We combine three approaches to change.",
+		"title": "Combiniamo tre criteri per ottenere un cambiamento.",
 		"card-1": {
-			"title": "Universal Basic Income",
-			"item-1": "Reduces discrimination",
-			"item-2": "Fights income inequality",
-			"item-3": "Empowers marginalized groups",
-			"item-4": "Improves working conditions",
-			"paragraph-1": "Universal Basic Income (UBI) is a government-guaranteed payment program for people in need. The goal is to provide sufficient funds to cover basic living expenses and improve recipients' financial security.",
-			"paragraph-2": "Like UBI, the idea of Social Income is based on regular cash transfers to secure minimum subsistence needs. While UBI is financed by the state, Social Income is an initiative in solidarity – directly from human to human.",
+			"title": "Reddito di Base Universale",
+			"item-1": "Riduce le discriminazioni",
+			"item-2": "Combatte la disparità di reddito",
+			"item-3": "Rafforza i gruppi più vulnerabili",
+			"item-4": "Migliora le condizioni di lavoro",
+			"paragraph-1": "Il Reddito di Base Universale (RBU) è un programma di aiuto in denaro per le persone in difficoltà garantito dal governo. L’obiettivo è di fornire abbastanza soldi per coprire le spese essenziali di sostentamento e migliorare/potenziare la sicurezza finanziaria dei beneficiari.",
+			"paragraph-2": "Simile al RBU, l’idea di Social Income si basa su trasferimenti regolari di denaro con lo scopo di assicurare il fabbisogno minimo per la sussistenza. Mentre il reddito di base incondizionato è finanziato dallo stato, Social Income nasce come un’iniziativa solidale privata dal basso verso l’alto - da persona a persona.",
 			"article-1-title": "The Case for a Universal Basic Income",
 			"article-1-author": "Kanni Wignaraja, UN Assistant Secretary-General",
 			"article-1-link": "https://www.undp.org/content/undp/en/home/blog/2020/the-case-for-a-universal-basic-income.html",
@@ -76,13 +76,13 @@
 			"faq-2-link": "/faq"
 		},
 		"card-2": {
-			"title": "Direct Cash Transfers",
-			"item-1": "Low overhead costs",
-			"item-2": "Reduces poverty",
-			"item-3": "Empowers individuals",
-			"item-4": "Stimulates local markets",
-			"paragraph-1": "Direct Cash Transfers are payments made to eligible groups of people in need, often by governments or NGOs. They can be provided either conditionally or unconditionally. Cash transfers allow recipients to obtain a range of goods and services of their choice directly from local markets and service providers.",
-			"paragraph-2": "Social Income's direct cash payments are not dependent on political decisions, government budgets or taxes. The primary goal of Social Income is the voluntary and direct redistribution of wealth between individuals.",
+			"title": "Trasferimenti Diretti di Denaro",
+			"item-1": "Minimizzano i costi operativi",
+			"item-2": "Riducono la povertà",
+			"item-3": "Aiutano le persone ad emanciparsi",
+			"item-4": "Stimolano i mercati locali",
+			"paragraph-1": "I Trasferimenti Diretti di Denaro sono versamenti effettuati a sostegno di persone in stato di necessità, spesso da parte di governi o di ONG. Possono essere erogati in maniera incondizionata o subordinati al compimento di specifici requisiti. I trasferimenti in contanti permettono ai beneficiari di ottenere una serie di beni e servizi di loro scelta direttamente dai mercati e dai fornitori di servizi locali.",
+			"paragraph-2": "L’invio diretto di denaro da parte di Social Income non dipende da decisioni politiche, da bilanci governativi o da tasse. L’obiettivo principale di Social Income è la redistribuzione volontaria e diretta della ricchezza tra singoli individui.",
 			"article-1-title": "Direct Cash Transfers",
 			"article-1-author": "Cash Transfer Evidence Paper",
 			"article-1-link": "https://www.who.int/alliance-hpsr/alliancehpsr_dfidevidencepaper.pdf",
@@ -104,12 +104,12 @@
 		},
 		"card-3": {
 			"title": "Mobile Banking",
-			"item-1": "Low fees",
-			"item-2": "Immediate",
-			"item-3": "Scalable",
-			"item-4": "Crisis-proof (Covid-19)",
-			"paragraph-1": "Mobile banking is a service provided by a bank, mobile provider or other financial institution that allows its customers to conduct financial transactions remotely using a mobile device such as a phone or tablet. Africa is leading the way in mainstream adoption of mobile banking.",
-			"paragraph-2": "Social Income is aimed at people who live in poverty and whose access to financial services can (only) be guaranteed via mobile phone.",
+			"item-1": "Commissioni ridotte",
+			"item-2": "Facile ed immediato",
+			"item-3": "Scalabile",
+			"item-4": "A prova di crisi (Covid-19)",
+			"paragraph-1": "Il Mobile Banking è un servizio offerto da una banca, da un operatore di telefonia mobile o da un altro istituto finanziario che consente ai suoi clienti di effettuare transazioni finanziarie in remoto utilizzando un dispositivo mobile come un telefono o un tablet. L’Africa è all’avanguardia nel processo di diffusione capillare del mobile banking.",
+			"paragraph-2": "Social Income si rivolge a persone che vivono in povertà e il cui accesso ai servizi finanziari può essere garantito (solo) tramite un telefono cellulare.",
 			"article-1-title": "Mobile Phones Are Replacing Bank Accounts in Africa",
 			"article-1-author": "Moses Mozart Dzawu, Bloomberg",
 			"article-1-link": "https://www.bloomberg.com/news/articles/2019-08-13/mobile-phones-are-replacing-bank-accounts-in-africa",
@@ -127,23 +127,23 @@
 		}
 	},
 	"section-6": {
-		"title-1": "Contribute to the United Nations’",
-		"title-2": " Sustainable Development Goals.",
+		"title-1": "Contribuisci agli",
+		"title-2": "Obiettivi di Sviluppo Sostenibile delle Nazioni Unite.",
 		"card-1": {
 			"title": "SDG 1",
-			"description": "End poverty in all its forms, everywhere.",
-			"paragraph-1": "The U.N.’s first sustainability goal calls for an end to poverty in all its forms by 2030. It also aims to ensure social protection for the poor and vulnerable, increase access to basic services, and support those harmed by social, economic, and environmental shocks of any kind."
+			"description": "Porre fine alla povertà in tutte le sue forme, ovunque",
+			"paragraph-1": "Il primo obiettivo di sviluppo sostenibile chiede la fine della povertà in tutte le sue forme entro il 2030. Mira inoltre a garantire la protezione sociale ai poveri e ai vulnerabili, ad aumentare l’accesso ai servizi di base, e a supportare coloro che sono danneggiati da shock sociali, economici e climatici di ogni tipo."
 		},
 		"card-2": {
 			"title": "SDG 10",
-			"description": "Reduce inequality within and among countries.",
-			"paragraph-1": "Reducing inequalities and ensuring that no one is left behind is integral to achieving the Sustainable Development Goals. Despite some positive signs toward reducing inequality in some dimensions (e.g reducing relative income inequality in some countries and preferential trade status benefiting lower-income countries), many inequalities continue to persist or are even increasing."
+			"description": "Ridurre le diseguaglianze economiche dentro e fuori dai confini nazionali",
+			"paragraph-1": "Ridurre le disuguaglianze e garantire che nessuno venga lasciato indietro sono parte integrante del raggiungimento degli Obiettivi di Sviluppo Sostenibile. Nonostante i segnali positivi riguardanti la riduzione di alcune forme di disuguaglianza (come la riduzione della disuguaglianza del reddito relativo in alcuni stati e le misure commerciali preferenziali a vantaggio dei paesi a basso reddito), la disuguaglianza continua a persistere."
 		}
 	},
 	"section-7": {
-		"title-1": "We are proud that we’ve been ",
-		"title-2": "recognized.",
-		"subtitle": "Social Income has received funding and support from various accelerator and development programs, including the following organisations:"
+		"title-1": "Siamo orgogliosi dei",
+		"title-2": "riconoscimenti ricevuti.",
+		"subtitle": "Social Income ha ricevuto finanziamenti e supporto da vari programmi di accelerazione e sviluppo, tra cui le seguenti organizzazioni:"
 	},
 	"video": {
 		"video-id": "896169775",
