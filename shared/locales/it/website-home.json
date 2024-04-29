@@ -1,20 +1,20 @@
 {
 	"section-1": {
-		"title-1": "How many people can you ",
-		"title-2": "lift out of poverty ",
-		"title-3": "with 1% of your income?",
-		"income-text": "Enter your monthly income and calculate your impact.",
+		"title-1": "Quante persone puoi aiutare",
+		"title-2": "ad uscire dalla povertà",
+		"title-3": "con l’1% del tuo reddito?",
+		"income-text": "Inserisci il tuo reddito mensile per scoprire come puoi fare la differenza.",
 		"amount": "AmountIT",
-		"button-text": "Show my Impact",
-		"privacy-commitment": "Our commitment to privacy",
-		"tax-deductible": "Contributions are tax-deductible in Switzerland",
-		"one-time-donation": "Make a one-time donation"
+		"button-text": "Mostra il mio impatto",
+		"privacy-commitment": "Il nostro impegno per la privacy",
+		"tax-deductible": "Le donazioni sono deducibili dalle tasse in Svizzera",
+		"one-time-donation": "Fai una donazione una tantum"
 	},
 	"section-2": {
-		"title-1": "What would change ",
-		"title-2": "if you gave away 1% of your income every month?",
-		"subtitle-1": "Not much, right? Your life would go on as usual.",
-		"video-button": "Watch the video",
+		"title-1": "Cosa cambierebbe",
+		"title-2": "se donassi l’1% del tuo reddito ogni mese?",
+		"subtitle-1": "Non molto, vero? La tua vita andrebbe avanti come al solito.",
+		"video-button": "Riproduci il video",
 		"vimeo-video-id": "433937157"
 	},
 	"section-3": {
