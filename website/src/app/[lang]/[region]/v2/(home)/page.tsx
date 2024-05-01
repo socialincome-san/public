@@ -19,7 +19,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 	});
 	return (
 		<>
-			{/*		<HeroVideo lang={lang} region={region} />*/}
+			{/*<HeroVideo lang={lang} region={region} />*/}
 			<Overview lang={lang} region={region} />
 			<MonthlyIncome lang={lang} region={region} />
 			<ExplainerVideo lang={lang} region={region} />

@@ -12,7 +12,7 @@ export async function Sdgoals({ lang, region }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer backgroundColor="bg-accent-foreground" className="pb-14">
+		<BaseContainer className="aspect-[8/5] bg-[url('/assets/sdg-town.jpg')] bg-cover bg-local bg-no-repeat">
 			<div className="flex flex-col items-center justify-center pt-16">
 				<div className="text-white">
 					{translator.t<{ text: string; color?: FontColor }[]>('section-10.title-1').map((title, index) => (

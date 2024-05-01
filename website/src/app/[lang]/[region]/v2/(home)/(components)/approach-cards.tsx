@@ -11,21 +11,21 @@ type ApproachCardProps = {
 
 export function ApproachCard({ category, title, points }: ApproachCardProps) {
 	return (
-		<Card className="bg-primary w-96">
+		<Card className="theme-blue-v2 w-96">
 			<CardHeader className="mb-1">
-				<Typography size="md" color="card" className="opacity-40">
+				<Typography size="md" className="opacity-40">
 					{category}
 				</Typography>
-				<Typography size="md" weight="medium" color="card">
+				<Typography size="md" weight="medium">
 					{title}
 				</Typography>
 			</CardHeader>
 			<CardContent className="mb-5 ml-4">
-				<ul className="list-disc text-white">
+				<ul className="list-disc">
 					{points.map((point, key) => {
 						return (
 							<li key={key}>
-								<Typography color="card">{point.text}</Typography>
+								<Typography>{point.text}</Typography>
 							</li>
 						);
 					})}
