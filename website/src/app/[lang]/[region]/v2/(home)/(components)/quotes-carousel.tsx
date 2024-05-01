@@ -3,7 +3,7 @@ import { useScreenSize } from '@/hooks/useScreenSize';
 import { Carousel, CarouselContent, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
-import UNImageData from '../(assets)/UN symbol.png';
+import UNImageData from '../(assets)/un-logo.png';
 
 export type CarouselCardProps = {
 	quote: {

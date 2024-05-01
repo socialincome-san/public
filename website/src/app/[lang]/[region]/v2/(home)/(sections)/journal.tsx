@@ -4,7 +4,7 @@ import { BaseContainer, Typography } from '@socialincome/ui';
 import { StaticImageData } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 import { ReactElement } from 'react';
-import avatarImgData from '../(assets)/AurélieSchmiedlin.png';
+import avatarImgData from '../(assets)/aurelie.png';
 import townImgData from '../(assets)/town.jpg';
 
 type JournalCardDetails = {
