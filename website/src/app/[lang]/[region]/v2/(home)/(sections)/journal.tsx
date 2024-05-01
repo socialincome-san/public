@@ -1,18 +1,10 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
-<<<<<<< HEAD
 import Image, { StaticImageData } from 'next/image';
 import { ReactElement } from 'react';
 import avatarImgData from '../(assets)/aurelie.png';
 import townImgData from '../(assets)/sdg-town.jpg';
-=======
-import { StaticImageData } from 'next/dist/shared/lib/get-img-props';
-import Image from 'next/image';
-import { ReactElement } from 'react';
-import avatarImgData from '../(assets)/aurelie.png';
-import townImgData from '../(assets)/town.jpg';
->>>>>>> 589d624f16008bf4ee68128fadcfc44528aa5c62
 
 type JournalCardDetails = {
 	title: string;
@@ -53,53 +45,8 @@ export async function Journal({ lang, region }: DefaultParams) {
 	});
 
 	return (
-<<<<<<< HEAD
-		<BaseContainer className="mt-64 flex flex-col items-center justify-center space-y-12">
-			<Typography size="3xl" weight="medium">
-=======
-		<BaseContainer className="mt-32 flex flex-col items-center justify-center space-y-12">
-			<Typography size="2xl" weight="medium">
->>>>>>> 589d624f16008bf4ee68128fadcfc44528aa5c62
-				{translator.t('section-11.title')}
-			</Typography>
-			<div className="flex flex-row">
-				<div className="mx-3 flex w-1/2 flex-col">
-					<hr />
-					<JournalCard
-						title={translator.t('section-11.card-1-title')}
-						author={translator.t('section-11.card-1-author')}
-						authorImgData={avatarImgData}
-						description={translator.t('section-11.card-1-description')}
-						sideImgData={townImgData}
-					/>
-					<hr />
-					<JournalCard
-						title={translator.t('section-11.card-2-title')}
-						author={translator.t('section-11.card-2-author')}
-						authorImgData={avatarImgData}
-						description={translator.t('section-11.card-2-description')}
-					/>
-					<hr />
-				</div>
-				<div className="mx-3 flex w-1/2 flex-col">
-					<hr />
-					<JournalCard
-						title={translator.t('section-11.card-3-title')}
-						author={translator.t('section-11.card-3-author')}
-						authorImgData={avatarImgData}
-						description={translator.t('section-11.card-3-description')}
-					/>
-					<hr />
-					<JournalCard
-						title={translator.t('section-11.card-4-title')}
-						author={translator.t('section-11.card-4-author')}
-						authorImgData={avatarImgData}
-						description={translator.t('section-11.card-4-description')}
-					/>
-					<hr />
-				</div>
-			</div>
-			<Typography color="accent">{translator.t('section-11.all-articles')}</Typography>
+		<BaseContainer>
+			<div>Journal section</div>
 		</BaseContainer>
 	);
 }

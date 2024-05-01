@@ -11,7 +11,6 @@ export async function HeroVideo({ lang, region }: DefaultParams) {
 	});
 
 	return (
-<<<<<<< HEAD
 		<BaseContainer className="mb-80 mt-72 flex h-fit w-fit flex-col items-center justify-center">
 			<div>
 				<div className="relative z-10 m-auto flex w-3/5 flex-col text-center text-white ">
@@ -34,15 +33,6 @@ export async function HeroVideo({ lang, region }: DefaultParams) {
 					/>
 				</div>
 				<Script src="https://player.vimeo.com/api/player.js"></Script>
-=======
-		<BaseContainer>
-			<div className="h-[calc(100vh-theme(spacing.20))]">
-				{translator.t<{ text: string; color?: FontColor }[]>('section-1.title-1').map((title, index) => (
-					<Typography as="span" key={index} color={title.color}>
-						{title.text}{' '}
-					</Typography>
-				))}
->>>>>>> 589d624f16008bf4ee68128fadcfc44528aa5c62
 			</div>
 		</BaseContainer>
 	);
