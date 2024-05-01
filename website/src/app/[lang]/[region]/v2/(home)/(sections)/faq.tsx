@@ -28,15 +28,17 @@ export async function Faq({ lang, region }: DefaultParams) {
 
 	return (
 		<BaseContainer className="mb-40 mt-32">
-			<Typography size="2xl" weight="medium" className="mb-12 text-center">
+			<Typography size="3xl" weight="medium" className="mb-16 text-center">
 				{translator.t('section-6.title-1')}
 			</Typography>
 			<hr />
 			<Accordion type="single" collapsible className="mb-10 w-full">
 				{questions.map((question, index) => (
 					<AccordionItem key={index} value={`item-${index}`}>
-						<AccordionTrigger>
-							<Typography size="lg">{question.prompt}</Typography>
+						<AccordionTrigger className="py-5">
+							<Typography size="xl" weight="normal">
+								{question.prompt}
+							</Typography>
 						</AccordionTrigger>
 						<AccordionContent className="text-popover-foreground">
 							<Typography size="lg">{question.answer}</Typography>

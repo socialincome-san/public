@@ -10,14 +10,16 @@ export async function MonthlyIncome({ lang, region }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer backgroundColor="bg-primary">
-			<div className="bg-primary my-4 py-12 text-center text-white">
-				<Typography className="opacity-40">{translator.t('section-3.title-faded')}</Typography>
-				<Typography size="2xl" className="py-4">
+		<BaseContainer backgroundColor="bg-foreground-dark" className="py-3">
+			<div className="my-4 py-12 text-center text-white">
+				<Typography size="lg" className="opacity-40">
+					{translator.t('section-3.title-faded')}
+				</Typography>
+				<Typography size="3xl" className="py-8">
 					{translator.t('section-3.title')}
 				</Typography>
 				<IncomeInput />
-				<Typography className="pb-2 pt-6 opacity-40">{translator.t('section-3.subtitle')}</Typography>
+				<Typography className="pb-2 pt-8 opacity-40">{translator.t('section-3.subtitle')}</Typography>
 			</div>
 		</BaseContainer>
 	);
