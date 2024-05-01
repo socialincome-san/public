@@ -1,7 +1,9 @@
 import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
 import { toFirebaseAdminTimestamp } from '@socialincome/shared/src/firebase/admin/utils';
 import { Contribution, CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/src/types/contribution';
+import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
+import { toDateTime } from '@socialincome/shared/src/utils/date';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { DateTime } from 'luxon';
 import { FirstPayoutEmailTemplateData, SendgridMailClient } from '../../../../shared/src/sendgrid/SendgridMailClient';
@@ -13,6 +15,7 @@ export const getFirstPayoutEmailReceivers = async (
 ): Promise<
 	{
 		email: string;
+		language: LanguageCode;
 		templateData: FirstPayoutEmailTemplateData;
 	}[]
 > => {
@@ -39,11 +42,15 @@ export const getFirstPayoutEmailReceivers = async (
 						return [
 							{
 								email: user.email,
+								language: user.language || 'en',
 								templateData: {
-									email: user.email,
 									first_name: user.personal?.name,
 									donation_amount: contribution.amount,
 									currency: contribution.currency,
+									n_days_ago: Math.abs(Math.round(toDateTime(contribution.created).diffNow('days').days)),
+									donation_amount_sm: Math.max(5, Math.floor(contribution.amount / 50) * 5),
+									donation_amount_md: Math.max(10, Math.ceil(contribution.amount / 40) * 5),
+									one_time_donation: contribution.monthly_interval === 0,
 								},
 							},
 						];
@@ -66,8 +73,8 @@ export default onSchedule('0 0 16 * *', async () => {
 
 	await Promise.all(
 		firstPayoutEmailReceivers.map(async (entry) => {
-			const { email, templateData } = entry;
-			await sendgridClient.sendFirstPayoutEmail(email, templateData);
+			const { email, language, templateData } = entry;
+			await sendgridClient.sendFirstPayoutEmail(email, language, templateData);
 		}),
 	);
 });

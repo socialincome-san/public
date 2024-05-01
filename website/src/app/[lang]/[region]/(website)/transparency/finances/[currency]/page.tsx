@@ -7,7 +7,7 @@ import {
 	ContributionStats,
 	ContributionStatsCalculator,
 } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
-import { ExpensesStatsCalculator } from '@socialincome/shared/src/utils/stats/ExpensesStatsCalculator';
+import { ExpenseStats, ExpensesStatsCalculator } from '@socialincome/shared/src/utils/stats/ExpensesStatsCalculator';
 import { PaymentStats, PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
 import { Section1 } from './section-1';
 import { Section2 } from './section-2';
@@ -29,6 +29,7 @@ export type SectionProps = {
 	params: DefaultParams & { currency: string };
 	contributionStats: ContributionStats;
 	paymentStats: PaymentStats;
+	expenseStats: ExpenseStats;
 	costs: {
 		transaction: number;
 		delivery: number;
@@ -50,9 +51,8 @@ export default async function Page({ params }: TransparencyPageProps) {
 		return { contributionStats, expensesStats, paymentStats };
 	};
 	const currency = params.currency.toUpperCase() as WebsiteCurrency;
-	const { contributionStats, expensesStats, paymentStats } = await getStats(currency);
-
-	console.info(JSON.stringify(expensesStats, null, 2));
+	const { contributionStats, expensesStats: expenseStats, paymentStats } = await getStats(currency);
+	console.info(JSON.stringify(expenseStats, null, 2));
 
 	// TODO: Calculate these costs dynamically
 	const costs = {
@@ -66,10 +66,34 @@ export default async function Page({ params }: TransparencyPageProps) {
 	return (
 		<div className="flex flex-col space-y-16 py-8">
 			<CurrencyRedirect currency={currency} />
-			<Section1 params={params} contributionStats={contributionStats} paymentStats={paymentStats} costs={costs} />
-			<Section2 params={params} contributionStats={contributionStats} paymentStats={paymentStats} costs={costs} />
-			<Section3 params={params} contributionStats={contributionStats} paymentStats={paymentStats} costs={costs} />
-			<Section4 params={params} contributionStats={contributionStats} paymentStats={paymentStats} costs={costs} />
+			<Section1
+				params={params}
+				contributionStats={contributionStats}
+				paymentStats={paymentStats}
+				costs={costs}
+				expenseStats={expenseStats}
+			/>
+			<Section2
+				params={params}
+				contributionStats={contributionStats}
+				paymentStats={paymentStats}
+				costs={costs}
+				expenseStats={expenseStats}
+			/>
+			<Section3
+				params={params}
+				contributionStats={contributionStats}
+				paymentStats={paymentStats}
+				costs={costs}
+				expenseStats={expenseStats}
+			/>
+			<Section4
+				params={params}
+				contributionStats={contributionStats}
+				paymentStats={paymentStats}
+				costs={costs}
+				expenseStats={expenseStats}
+			/>
 		</div>
 	);
 }

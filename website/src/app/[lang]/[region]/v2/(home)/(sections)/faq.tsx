@@ -27,7 +27,7 @@ export async function Faq({ lang, region }: DefaultParams) {
 	const questions = translator.t<FaqQuestion[]>('section-6.questions');
 
 	return (
-		<BaseContainer>
+		<BaseContainer className="mb-40 mt-32">
 			<Typography size="2xl" weight="medium" className="mb-12 text-center">
 				{translator.t('section-6.title-1')}
 			</Typography>
