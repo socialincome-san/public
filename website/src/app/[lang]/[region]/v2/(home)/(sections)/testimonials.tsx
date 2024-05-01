@@ -46,7 +46,11 @@ export async function Testimonials({ lang, region }: DefaultParams) {
 	];
 
 	return (
+<<<<<<< HEAD
 		<BaseContainer className="my-16">
+=======
+		<BaseContainer className="mt-10">
+>>>>>>> 589d624f16008bf4ee68128fadcfc44528aa5c62
 			<ContributorsPeopleCarouselv2 portraits={portrait} />
 		</BaseContainer>
 	);

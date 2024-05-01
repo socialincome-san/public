@@ -25,6 +25,9 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			<MonthlyIncome lang={lang} region={region} />
 			<ExplainerVideo lang={lang} region={region} />
 			<MobileIllustration lang={lang} region={region} />
+			<MonthlyIncome lang={lang} region={region} />
+			<ExplainerVideo lang={lang} region={region} />
+			<MobileIllustration lang={lang} region={region} />
 			<Faq lang={lang} region={region} />
 			<Approach lang={lang} region={region} />
 			<Quotes lang={lang} region={region} />

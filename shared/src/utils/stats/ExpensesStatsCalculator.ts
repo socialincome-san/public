@@ -8,6 +8,12 @@ type ExpenseStatsEntry = Expense & {
 	amount: number;
 };
 
+export type ExpenseStats = {
+	totalExpensesByYear: { [year: string]: number };
+	totalExpensesByType: { [type: string]: number };
+	totalExpensesByYearAndType: { [year: string]: { [type in ExpenseType]: number } };
+};
+
 export class ExpensesStatsCalculator {
 	private expenses: _.Collection<ExpenseStatsEntry>;
 
@@ -46,10 +52,10 @@ export class ExpensesStatsCalculator {
 			.reduce((a, b) => ({ ...a, ...b }), {});
 	}
 
-	public allStats() {
+	public allStats(): ExpenseStats {
 		return {
-			totalExpensesByYear: this.totalExpensesBy('year'),
-			totalExpensesByType: this.totalExpensesBy('type'),
+			totalExpensesByYear: this.totalExpensesBy('year') as { [year: string]: number },
+			totalExpensesByType: this.totalExpensesBy('type') as { [type in ExpenseType]: number },
 			totalExpensesByYearAndType: this.totalExpensesByYearAndType(),
 		};
 	}
