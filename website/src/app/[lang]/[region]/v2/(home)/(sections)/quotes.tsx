@@ -1,16 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer } from '@socialincome/ui';
-import { StaticImport } from 'next/dist/shared/lib/get-img-props';
-import avatarImgData from '../(assets)/avatarImgData.jpg';
-import { ContributorsPeopleCarouselv2 } from '../(components)/contributors-people-carousel';
-
-type PortraitProps = {
-	name: string;
-	text: string;
-	country: string;
-	image: string | StaticImport;
-};
+import { CarouselCardProps, QuotesCarousel } from '../(components)/quotes-carousel';
 
 export async function Quotes({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
@@ -18,36 +9,11 @@ export async function Quotes({ lang, region }: DefaultParams) {
 		namespaces: ['website-home2', 'common'],
 	});
 
-	const portrait: PortraitProps[] = [
-		{
-			name: 'Vanja',
-			text: "It's a great example of redistribution of wealth based on solidarity and enabled by today's technology.",
-			country: 'Switzerland',
-			image: avatarImgData,
-		},
-		{
-			name: 'Vanja',
-			text: "It's a great example of redistribution of wealth based on solidarity and enabled by today's technology.",
-			country: 'Switzerland',
-			image: avatarImgData,
-		},
-		{
-			name: 'Vanja',
-			text: "It's a great example of redistribution of wealth based on solidarity and enabled by today's technology.",
-			country: 'Switzerland',
-			image: avatarImgData,
-		},
-		{
-			name: 'Vanja',
-			text: "It's a great example of redistribution of wealth based on solidarity and enabled by today's technology.",
-			country: 'Switzerland',
-			image: avatarImgData,
-		},
-	];
+	const cards = translator.t<CarouselCardProps>('section-8.cards');
 
 	return (
-		<BaseContainer className="mt-10">
-			<ContributorsPeopleCarouselv2 portraits={portrait} />
+		<BaseContainer className="my-10">
+			<QuotesCarousel {...cards} />
 		</BaseContainer>
 	);
 }

@@ -11,7 +11,7 @@ export async function HeroVideo({ lang, region }: DefaultParams) {
 
 	return (
 		<BaseContainer>
-			<div>
+			<div className="h-[calc(100vh-theme(spacing.20))]">
 				{translator.t<{ text: string; color?: FontColor }[]>('section-1.title-1').map((title, index) => (
 					<Typography as="span" key={index} color={title.color}>
 						{title.text}{' '}
