@@ -73,7 +73,7 @@
 		--card-muted: hsl(222, 100%, 99%);
 
 		--primary: hsl(48, 100%, 49%);
-		--primary-muted: hsl(48, 100%, 57%);
+		--primary-muted: hsl(48, 100%, 85%);
 		--primary-foreground: hsl(48, 100%, 0%);
 		--primary-foreground-muted: hsl(48, 100%, 30%);
 
@@ -84,6 +84,34 @@
 		--background: #f9f8f3;
 		--foreground: #2a63a4;
 		--foreground-dark: #01579b;
+		--foreground: #3373bb;
+		--foreground-dark: #2a63a4;
+	}
+
+	.theme-blue-v2 {
+		--background: hsl(212, 57%, 47%);
+		--foreground: hsl(50, 33%, 96%);
+
+		--muted: hsl(212, 59%, 75%);
+		--muted-foreground: hsl(50, 33%, 99%);
+
+		--card: hsl(212, 57%, 47%);
+		--card-muted: hsl(212, 59%, 75%);
+		--card-foreground: hsl(50, 33%, 96%);
+		--card-foreground-muted: hsl(50, 33%, 99%);
+	}
+
+	.theme-dark-blue-v2 {
+		--background: hsl(212, 59%, 40%);
+		--foreground: hsl(50, 33%, 96%);
+
+		--muted: hsl(212, 59%, 75%);
+		--muted-foreground: hsl(50, 33%, 99%);
+
+		--card: hsl(212, 59%, 40%);
+		--card-muted: hsl(212, 59%, 75%);
+		--card-foreground: hsl(50, 33%, 96%);
+		--card-foreground-muted: hsl(50, 33%, 99%);
 	}
 }
 
@@ -94,6 +122,14 @@
 		@apply bg-background text-foreground;
 	}
 	.theme-v2 {
+		@apply bg-background text-foreground;
+	}
+
+	.theme-blue-v2 {
+		@apply bg-background text-foreground;
+	}
+
+	.theme-dark-blue-v2 {
 		@apply bg-background text-foreground;
 	}
 }

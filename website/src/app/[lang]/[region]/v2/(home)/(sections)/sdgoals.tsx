@@ -4,7 +4,7 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
-import Town from '../(assets)/town.jpg';
+import Town from '../(assets)/sdg-town.jpg';
 
 export async function Sdgoals({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
