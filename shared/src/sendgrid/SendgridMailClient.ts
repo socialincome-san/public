@@ -27,7 +27,7 @@ export class SendgridMailClient extends MailService {
 		}
 		await this.send({
 			to: email,
-			from: 'hello@socialincome.org',
+			from: { name: 'Social Income', email: 'hello@socialincome.org' },
 			templateId,
 			dynamicTemplateData: data,
 		});
