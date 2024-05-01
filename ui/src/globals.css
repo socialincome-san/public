@@ -82,8 +82,6 @@
 
 	.theme-v2 {
 		--background: #f9f8f3;
-		--foreground: #2a63a4;
-		--foreground-dark: #01579b;
 		--foreground: #3373bb;
 		--foreground-dark: #2a63a4;
 	}
@@ -121,6 +119,7 @@
 	.theme-dark-blue {
 		@apply bg-background text-foreground;
 	}
+
 	.theme-v2 {
 		@apply bg-background text-foreground;
 	}
