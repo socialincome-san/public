@@ -11,7 +11,7 @@ type ApproachCardProps = {
 
 export function ApproachCard({ category, title, points }: ApproachCardProps) {
 	return (
-		<Card className="bg-foreground-dark w-96 rounded-none">
+		<Card className="bg-foreground-dark w-96 rounded-none text-white">
 			<CardHeader className="mb-1">
 				<Typography size="md" className="opacity-40">
 					{category}
