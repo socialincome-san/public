@@ -1,6 +1,5 @@
 'use client';
 
-import { ExpenseStats } from '@socialincome/shared/src/utils/stats/ExpensesStatsCalculator';
 import { Button, Card, CardContent, Typography } from '@socialincome/ui';
 import { Children, PropsWithChildren, useState } from 'react';
 
@@ -17,12 +16,10 @@ type CountryCardProps = {
 		country: string;
 		total: string;
 	};
-	expenseStats: ExpenseStats; // TODO: remove again
 };
 
 /* eslint-disable @next/next/no-img-element */
-export function CountryCard({ country, translations, expenseStats }: CountryCardProps) {
-	console.log(expenseStats);
+export function CountryCard({ country, translations }: CountryCardProps) {
 	return (
 		<li>
 			<Card>
