@@ -29,14 +29,7 @@ export type SectionProps = {
 	params: DefaultParams & { currency: string };
 	contributionStats: ContributionStats;
 	paymentStats: PaymentStats;
-	expenseStats: ExpenseStats;
-	costs: {
-		transaction: number;
-		delivery: number;
-		administrative: number;
-		fundraising: number;
-		staff: number;
-	};
+	expensesStats: ExpenseStats;
 };
 
 export default async function Page({ params }: TransparencyPageProps) {
@@ -51,17 +44,7 @@ export default async function Page({ params }: TransparencyPageProps) {
 		return { contributionStats, expensesStats, paymentStats };
 	};
 	const currency = params.currency.toUpperCase() as WebsiteCurrency;
-	const { contributionStats, expensesStats: expenseStats, paymentStats } = await getStats(currency);
-	console.info(JSON.stringify(expenseStats, null, 2));
-
-	// TODO: Calculate these costs dynamically
-	const costs = {
-		transaction: 8800,
-		delivery: 5700, // "Total operative expenses"
-		administrative: 5600, // "Other project costs"
-		fundraising: 4500,
-		staff: 9600,
-	};
+	const { contributionStats, expensesStats, paymentStats } = await getStats(currency);
 
 	return (
 		<div className="flex flex-col space-y-16 py-8">
@@ -70,29 +53,25 @@ export default async function Page({ params }: TransparencyPageProps) {
 				params={params}
 				contributionStats={contributionStats}
 				paymentStats={paymentStats}
-				costs={costs}
-				expenseStats={expenseStats}
+				expensesStats={expensesStats}
 			/>
 			<Section2
 				params={params}
 				contributionStats={contributionStats}
 				paymentStats={paymentStats}
-				costs={costs}
-				expenseStats={expenseStats}
+				expensesStats={expensesStats}
 			/>
 			<Section3
 				params={params}
 				contributionStats={contributionStats}
 				paymentStats={paymentStats}
-				costs={costs}
-				expenseStats={expenseStats}
+				expensesStats={expensesStats}
 			/>
 			<Section4
 				params={params}
 				contributionStats={contributionStats}
 				paymentStats={paymentStats}
-				costs={costs}
-				expenseStats={expenseStats}
+				expensesStats={expensesStats}
 			/>
 		</div>
 	);

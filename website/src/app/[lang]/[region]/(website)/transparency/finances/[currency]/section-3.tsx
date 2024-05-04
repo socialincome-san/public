@@ -4,7 +4,7 @@ import { Typography } from '@socialincome/ui';
 import { SectionProps } from './page';
 import { CountryCard, CountryCardList } from './section-3-cards';
 
-export async function Section3({ params, contributionStats, expenseStats }: SectionProps) {
+export async function Section3({ params, contributionStats }: SectionProps) {
 	const translator = await Translator.getInstance({
 		language: params.lang,
 		namespaces: ['countries', 'website-finances'],
@@ -40,7 +40,6 @@ export async function Section3({ params, contributionStats, expenseStats }: Sect
 									},
 								}),
 							}}
-							expenseStats={expenseStats}
 						/>
 					))}
 			</CountryCardList>
