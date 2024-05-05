@@ -30,7 +30,7 @@ export class SendgridSubscriptionClient extends Client {
 		this.suppressionListId = sendgridClientProps.suppressionListId;
 	}
 
-	getSubscriber = async (email: string) => {
+	getContact = async (email: string): Promise<SendgridContactType | null> => {
 		try {
 			const [, body] = await this.request({
 				method: 'POST',
@@ -38,8 +38,6 @@ export class SendgridSubscriptionClient extends Client {
 				body: { emails: [email] },
 			});
 			const contact = body.result[email].contact as SendgridContactType;
-			// Check if the contact is in our list, if not return null
-			if (!contact.list_ids.includes(this.listId)) return null;
 			const isSuppressed = await this.isSuppressed(email);
 			return { ...contact, status: isSuppressed ? 'unsubscribed' : 'subscribed' } as SendgridContactType;
 		} catch (e: any) {
@@ -49,10 +47,12 @@ export class SendgridSubscriptionClient extends Client {
 	};
 
 	upsertSubscription = async (data: NewsletterSubscriptionData) => {
-		const contact: SendgridContactType | null = await this.getSubscriber(data.email);
-		if (contact == null) {
-			await this.addSubscription(data);
-		} else if (data.status === 'subscribed') {
+		const contact = await this.getContact(data.email);
+		if (!contact) {
+			await this.addContact(data);
+		}
+
+		if (data.status === 'subscribed') {
 			await this.removeSuppression(data.email);
 		} else {
 			await this.addSuppression(data.email);
@@ -78,7 +78,7 @@ export class SendgridSubscriptionClient extends Client {
 		});
 	};
 
-	addSubscription = async (data: NewsletterSubscriptionData) => {
+	addContact = async (data: NewsletterSubscriptionData) => {
 		await this.request({
 			url: `/v3/marketing/contacts`,
 			method: 'PUT',

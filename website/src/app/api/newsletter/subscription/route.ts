@@ -9,7 +9,7 @@ export async function GET(request: Request) {
 	try {
 		const userDoc = await authorizeRequest(request);
 		const sendgridSubscriptionAPI = initializeSendgridSubscriptionClient();
-		const subscriber = await sendgridSubscriptionAPI.getSubscriber(userDoc.get('email'));
+		const subscriber = await sendgridSubscriptionAPI.getContact(userDoc.get('email'));
 		return NextResponse.json(subscriber);
 	} catch (error: any) {
 		return handleApiError(error);

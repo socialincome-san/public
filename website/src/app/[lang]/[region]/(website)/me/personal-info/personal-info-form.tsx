@@ -62,7 +62,7 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
 	const { status, loading } = useNewsletterSubscription();
-	const upsertMailSubscription = useUpsertNewsletterSubscription();
+	const upsertNewsletterSubscription = useUpsertNewsletterSubscription();
 
 	const formSchema = z.object({
 		firstname: z.string(),
@@ -310,9 +310,9 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 					disabled={loading}
 					onCheckedChange={(enabled) => {
 						if (enabled) {
-							upsertMailSubscription('subscribed');
+							upsertNewsletterSubscription('subscribed');
 						} else {
-							upsertMailSubscription('unsubscribed');
+							upsertNewsletterSubscription('unsubscribed');
 						}
 					}}
 				/>
