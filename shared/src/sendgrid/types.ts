@@ -1,3 +1,11 @@
+export type Suppression = {
+	name: string;
+	id: number;
+	description: string;
+	is_default: boolean;
+	suppressed: boolean;
+};
+
 export type SendgridContactType = {
 	address_line_1?: string;
 	address_line_2?: string;

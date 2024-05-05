@@ -3,14 +3,13 @@ import { SendgridSubscriptionClient } from '@socialincome/shared/src/sendgrid/Se
 import { NextResponse } from 'next/server';
 
 /**
- * Get Mailchimp subscription
+ * Get Newsletter subscription
  */
 export async function GET(request: Request) {
 	try {
 		const userDoc = await authorizeRequest(request);
 		const sendgridSubscriptionAPI = initializeSendgridSubscriptionClient();
 		const subscriber = await sendgridSubscriptionAPI.getSubscriber(userDoc.get('email'));
-		console.log(subscriber);
 		return NextResponse.json(subscriber);
 	} catch (error: any) {
 		return handleApiError(error);
@@ -18,17 +17,15 @@ export async function GET(request: Request) {
 }
 
 /**
- * Upsert Mailchimp subscription
+ * Upsert Newsletter subscription
  */
-type NewsletterSubscriptionUpdateRequest = {
-	json(): Promise<{ status: 'subscribed' | 'unsubscribed' }>;
-} & Request;
+type NewsletterSubscriptionUpdateRequest = { json(): Promise<{ status: 'subscribed' | 'unsubscribed' }> } & Request;
 export async function POST(request: NewsletterSubscriptionUpdateRequest) {
 	try {
 		const userDoc = await authorizeRequest(request);
 		const data = await request.json();
 		const sendgridSubscriptionAPI = initializeSendgridSubscriptionClient();
-		const response = await sendgridSubscriptionAPI.upsertSubscription({
+		await sendgridSubscriptionAPI.upsertSubscription({
 			email: userDoc.get('email'),
 			status: data.status,
 			firstname: userDoc.get('personal.name'),
@@ -52,11 +49,10 @@ export function initializeSendgridSubscriptionClient(): SendgridSubscriptionClie
 	} else if (!suppressionListId) {
 		throw new Error('Sendgrid list Id is empty.');
 	} else {
-		const sendgridSubscriptionClient = new SendgridSubscriptionClient({
+		return new SendgridSubscriptionClient({
 			apiKey: apiKey,
 			listId: listId,
-			suppressionListId: suppressionListId,
+			suppressionListId: Number(suppressionListId),
 		});
-		return sendgridSubscriptionClient;
 	}
 }

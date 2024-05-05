@@ -8,7 +8,7 @@ export async function POST(request: CreateNewsletterSubscriptionReqeust) {
 	const data = await request.json();
 	const sendgridSubscriptionAPI = initializeSendgridSubscriptionClient();
 	try {
-		const response = await sendgridSubscriptionAPI.upsertSubscription({ ...data, status: 'subscribed' });
+		await sendgridSubscriptionAPI.upsertSubscription({ ...data, status: 'subscribed' });
 		return new Response(null, { status: 200 });
 	} catch (e: any) {
 		console.error(e);
