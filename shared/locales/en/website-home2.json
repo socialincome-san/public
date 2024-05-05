@@ -27,13 +27,18 @@
 		"title-5": "Ongoing Support",
 		"text-5": "Our recipients receive continuous support from our local partners throughout and even after the program, maximizing the overall impact. Specifically, the third year of the program is focused on facilitating a seamless transition as they move on from the program."
 	},
-	"section-3": {},
+	"section-3": {
+		"title-faded": "My impact",
+		"title": "What's your monthly income?",
+		"subtitle": "Why is this important?"
+	},
 	"section-4": {
 		"title-1": [
 			{ "text": "What would change if you gave " },
-			{ "text": "away 1% of your income every month?", "color": "accent" }
+			{ "text": "away 1% of your income ", "color": "accent" },
+			{ "text": "every month?" }
 		],
-		"cta": "Watch video and find out"
+		"cta": "Watch video and find out ›"
 	},
 	"section-5": {
 		"title-1": [{ "text": "Change from human to human. " }, { "text": "From mobile to mobile.", "color": "accent" }],
@@ -124,7 +129,41 @@
 			}
 		]
 	},
-	"section-x": {
+	"section-8": {
+		"cards": [
+			{
+				"quote": [
+					{
+						"text": "«Wir müssen uns ernsthaft damit befassen "
+					},
+					{
+						"text": "ein klug konzipiertes bedingungsloses Grundeinkommen ",
+						"color": "accent"
+					},
+					{
+						"text": "zu implementieren. So können uns Krisen zwar treffen, aber ohne zerstörerische Kraft zu entfalten.»"
+					}
+				],
+				"author": "Vereinte Nationen"
+			},
+			{
+				"quote": [
+					{
+						"text": "«Wir müssen uns ernsthaft damit befassen, "
+					},
+					{
+						"text": "ein klug konzipiertes bedingungsloses Grundeinkommen ",
+						"color": "accent"
+					},
+					{
+						"text": "zu implementieren. So können uns Krisen zwar treffen, aber ohne zerstörerische Kraft zu entfalten.»"
+					}
+				],
+				"author": "Vereinte Nationen"
+			}
+		]
+	},
+	"section-9": {
 		"title-1": [
 			{ "text": "Unique Recipients Selection Process for " },
 			{ "text": "Fair Selection.", "color": "accent" }
@@ -132,7 +171,7 @@
 		"text-1.1": "Identifying those in need: Through collaboration with local NGOs in Sierra Leone, we target individuals living in poverty who can benefit from a three-year predictable income, empowering them to invest in their future.",
 		"text-1.2": "Selecting randomly: Our randomized selection process is transparent and publicly verifiable, eliminating human biases and favoritism. This ensures fairness and equal chances for all individuals in poverty to benefit."
 	},
-	"section-8": {
+	"section-x": {
 		"portraits": [
 			{
 				"name": "Vanja",
@@ -150,10 +189,26 @@
 		"author-5": "Claudia, Switzerland"
 	},
 	"section-10": {
-		"title-1": [{ "text": "Contribute to the United Nations’ " }, { "text": "United Nations’", "color": "primary" }],
+		"title-1": [{ "text": "Contribute to the " }, { "text": "United Nations", "color": "primary" }, { "text": "’" }],
 		"sdg-1-title": "End poverty in all its forms, everywhere.",
 		"sdg-1": "SDG #1",
 		"sdg-10-title": "Reduce inequality within and \namong countries.",
 		"sdg-10": "SDG #10"
+	},
+	"section-11": {
+		"title": "Journal",
+		"card-1-title": "Waking up",
+		"card-1-author": "Aurélie Schmiedlin",
+		"card-1-description": "The other night I woke up with the sensation that we were hacked. Luckily this was just a dream. It may have been related to our participation in Finclusion Week, which is a big deal in the ...",
+		"card-2-title": "The other night I woke up",
+		"card-2-author": "Aurélie Schmiedlin",
+		"card-2-description": "The other night I woke up with the sensation that we were hacked. Luckily this was just a dream. It may have been related to our participation in Finclusion Week, which is a big deal in the ...",
+		"card-3-title": "The other night I woke up",
+		"card-3-author": "Aurélie Schmiedlin",
+		"card-3-description": "The other night I woke up with the sensation that we were hacked. Luckily this was just a dream. It may have been related to our participation in Finclusion Week, which is a big deal in the ...",
+		"card-4-title": "The other night I woke up",
+		"card-4-author": "Aurélie Schmiedlin",
+		"card-4-description": "The other night I woke up with the sensation that we were hacked. Luckily this was just a dream. It may have been related to our participation in Finclusion Week, which is a big deal in the ...",
+		"all-articles": "Alle Artikel ansehen ›"
 	}
 }
