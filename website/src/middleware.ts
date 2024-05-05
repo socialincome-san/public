@@ -46,6 +46,8 @@ export const redirectMiddleware = (request: NextRequest) => {
 			return NextResponse.redirect(new URL('/world-poverty-statistics-2024', request.url));
 		case '/ismatu':
 			return NextResponse.redirect('https://socialincome.org/campaign/MZmXEVHlDjOOFOMk82jW');
+		case '/thinkcell':
+			return NextResponse.redirect('https://socialincome.webdisc.ch/');
 	}
 };
 
