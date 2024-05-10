@@ -5,6 +5,7 @@ import { buildContributionsCollection } from './Contributions';
 import { donationCertificateCollection } from './DonationCertificate';
 import { buildAuditedCollection } from './shared';
 
+// @ts-ignore
 export const usersCollection = buildAuditedCollection<User>({
 	path: USER_FIRESTORE_PATH,
 	group: 'Contributors',
@@ -131,6 +132,12 @@ export const usersCollection = buildAuditedCollection<User>({
 		payment_reference_id: {
 			name: 'Swiss QR-bill payment reference id',
 			dataType: 'number',
+			readOnly: true,
+		},
+		created_at: {
+			name: 'Created At',
+			// @ts-ignore
+			dataType: 'date',
 			readOnly: true,
 		},
 	}),
