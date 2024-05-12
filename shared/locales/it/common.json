@@ -1,29 +1,29 @@
 {
-	"currency": "Currency",
+	"currency": "Valuta",
 	"currencies": {
-		"CHF": "Swiss Franc",
-		"USD": "US Dollar",
+		"CHF": "Franco Svizzero",
+		"USD": "Dollaro Statunitense",
 		"EUR": "Euro",
-		"SLE": "Sierra Leonean Leone"
+		"SLE": "Leone della Sierra Leone"
 	},
-	"region": "Region",
+	"region": "Regione",
 	"regions": {
-		"int": "International",
-		"ch": "Switzerland",
+		"int": "Internazionale",
+		"ch": "Svizzera",
 		"sl": "Sierra Leone"
 	},
-	"language": "Language",
+	"language": "Lingua",
 	"languages": {
 		"de": "Tedesco",
-		"en": "English",
-		"fr": "French",
+		"en": "Inglese",
+		"fr": "Francese",
 		"kri": "Krio"
 	},
-	"gender": "Gender",
+	"gender": "Genere",
 	"genders": {
-		"male": "Male",
-		"female": "Female",
-		"other": "Other",
-		"private": "Prefer not to say"
+		"male": "Maschio",
+		"female": "Femmina",
+		"other": "Altro",
+		"private": "Preferisco non dirlo"
 	}
 }
