@@ -1,6 +1,6 @@
 {
 	"metadata": {
-		"title": "About Us | Social Income"
+		"title": "Chi Siamo | Social Income"
 	},
 	"landing-page": {
 		"title": [
@@ -91,17 +91,17 @@
 			}
 		],
 		"roles": {
-			"finance": "Finances",
-			"operations": "Operations",
+			"finance": "Finanze",
+			"operations": "Operazioni",
 			"marketing": "Marketing",
-			"communications": "Communications",
-			"co-president": "Co-President",
-			"founder": "Founding Director",
-			"board-member": "Board Member",
-			"software-development": "Software Development",
-			"app-development": "App Development",
-			"impact-measurement": "Impact Measurement",
-			"strategy": "Strategy"
+			"communications": "Communicazione",
+			"co-president": "Co-Presidente",
+			"founder": "Fondatore",
+			"board-member": "Membro del Consiglio Direttivo",
+			"software-development": "Sviluppo del Software",
+			"app-development": "Sviluppo dell'App",
+			"impact-measurement": "Misurazione dell'Impatto",
+			"strategy": "Strategia"
 		},
 		"groups": {
 			"staff": {
