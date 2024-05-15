@@ -1,41 +1,41 @@
 {
 	"metadata": {
-		"title": "Evidence | Social Income",
-		"description": "Evidence builds trust. Trust builds solidarity.",
+		"title": "Prove Scientifiche | Social Income",
+		"description": "Le prove scientifiche generano fiducia. La fiducia genera solidarietà.",
 		"og-image": "/assets/metadata/og/evidence-en.jpg",
 		"twitter-image": "/assets/metadata/twitter/evidence-en.jpg"
 	},
-	"take-action": "Take Action",
+	"take-action": "Passa all’azione",
 	"section-1": {
 		"title": [
-			{ "text": "Want to learn how and why Social Income works? You’ve come to " },
-			{ "text": "the right place.", "color": "secondary" }
+			{ "text": "Vuoi sapere come funziona Social Income e perché è così efficace?" },
+			{ "text": "Sei nel posto giusto.", "color": "secondary" }
 		],
-		"subtitle": "Here we’ll run through some of the research that shows Social Income’s measurable impact in the real world."
+		"subtitle": "Qui analizzeremo alcune delle ricerche che mostrano l’impatto misurabile di Social Income nel mondo reale."
 	},
 	"section-2": {
-		"topic": "Poverty Reduction",
-		"title": [{ "text": "How does Social Income " }, { "text": "reduce poverty", "color": "secondary" }],
-		"evidence": "Evidence shows that direct cash transfer programs like Social Income significantly improve recipients’ financial health in two important ways.",
+		"topic": "Riduzione della Povertà",
+		"title": [{ "text": "In che modo Social Income" }, { "text": "riduce la povertà?", "color": "secondary" }],
+		"evidence": "I risultati di numerosi studi mostrano che i programmi di trasferimento diretto di denaro come Social Income migliorano significativamente le finanze dei beneficiari in due modi rilevanti.",
 		"cards": [
 			{
-				"title": "Financial empowerment",
-				"description": "Direct cash transfers are the fastest and most effective way to reduce recipients’ poverty levels.",
+				"title": "Emancipazione finanziaria",
+				"description": "I trasferimenti diretti di denaro costituiscono il modo più rapido ed efficace per ridurre il livello di povertà dei beneficiari.",
 				"paragraphs": [
 					[
-						{ "text": "A review of more than 200 studies (" },
+						{ "text": "Una revisione di oltre 200 studi (" },
 						{
 							"text": "Overseas Development Institute 2016",
 							"href": "https://drive.google.com/file/d/18SN24gxbdUxLnx1m35T5I5NqXWh5Fj7q/view?usp=sharing"
 						},
 						{
-							"text": ") shows that direct cash transfers increase recipients' expenditures (particularly on food) and make it easier for them to pay for healthcare services (see "
+							"text": ") mostra che i trasferimenti diretti di denaro aumentano le spese dei beneficiari (in particolare per il cibo) e rendono più facile pagare per i servizi sanitari (vedi anche "
 						},
 						{
 							"text": "Kabeer et al 2012",
 							"href": "https://drive.google.com/file/d/1Q-0qm8j9vePagynE0HDiLT50h8s605i4/view?usp=sharing"
 						},
-						{ "text": ") for an overview, as well as, " },
+						{ "text": ") per una panoramica, così come " },
 						{
 							"text": "Attanasio et al 2006",
 							"href": "https://drive.google.com/file/d/1Fbszsu2T2mcoMV2GAuHdtavh-il7bqDF/view?usp=sharing"
@@ -46,7 +46,7 @@
 							"href": "https://drive.google.com/file/d/1Wcf0QM1NSGyLQSrFQU1H89JpBoWgY0qz/view?usp=sharing"
 						},
 						{
-							"text": ", and "
+							"text": ", e "
 						},
 						{
 							"text": "Gertler et al 2012",
@@ -58,7 +58,7 @@
 					],
 					[
 						{
-							"text": "In addition, studies agree that direct cash transfers increase school attendance and raise the savings as well as livestock ownership of recipients (see similar findings in "
+							"text": "Inoltre, gli studi concordano sul fatto che i trasferimenti diretti di denaro favoriscono la frequenza scolastica e aumentano i risparmi e il possesso di bestiame dei beneficiari (vedi risultati simili in "
 						},
 						{
 							"text": "Hagen-Zanker et al 2011",
@@ -84,14 +84,14 @@
 					],
 					[
 						{
-							"text": "Finally, direct cash transfers have been particularly effective in moments of unexpected crises (e.g., during the Covid-19 pandemic or when facing climate disasters, see "
+							"text": "FInfine, i trasferimenti diretti di denaro si sono rivelati particolarmente efficaci nei momenti di crisi impreviste (ad esempio, durante la pandemia di Covid-19 o di fronte a disastri climatici, vedi "
 						},
 						{
 							"text": "Pople et al 2021",
 							"href": "https://drive.google.com/file/d/1xa3wWkn9aZKAAqwxoQeL2HkePyvGsN8Y/view?usp=sharing"
 						},
 						{
-							"text": "). They’ve also been especially impactful in helping young people make their financial futures more secure (see "
+							"text": "). Sono stati anche particolarmente efficaci nell'aiutare i giovani a rendere più sicuro e stabile il loro futuro finanziario (vedi "
 						},
 						{
 							"text": "Owusu-Addo et al 2018",
