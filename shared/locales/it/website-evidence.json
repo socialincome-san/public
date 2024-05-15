@@ -234,19 +234,19 @@
 				]
 			},
 			{
-				"title": "Better Education",
-				"description": "Direct cash transfers help recipients reach higher levels of education and access better employment opportunities.",
+				"title": "Istruzione e condizioni di lavoro migliori",
+				"description": "I trasferimenti diretti di denaro aiutano i beneficiari a raggiungere livelli più alti di istruzione e ad accedere a migliori opportunità di lavoro.",
 				"paragraphs": [
 					[
 						{
-							"text": "Many studies, including a recent paper by the World Bank ("
+							"text": "Molti studi, tra cui un recente documento della Banca Mondiale ("
 						},
 						{
 							"text": "Behrman et al 2019",
 							"href": "https://drive.google.com/file/d/1q5NUyaSbti33yjoz4fivNopJ8q3yJqxd/view?usp=sharing"
 						},
 						{
-							"text": "), have demonstrated that recipients of direct cash transfers are more likely to attend better schools and achieve better results than those who don’t receive such benefits (see "
+							"text": "), hhanno dimostrato che i beneficiari dei trasferimenti diretti di denaro hanno maggiori probabilità di frequentare scuole migliori e ottenere risultati migliori rispetto a coloro che non ricevono tali benefici (vedi "
 						},
 						{
 							"text": "Schultz 2001",
@@ -279,7 +279,7 @@
 					],
 					[
 						{
-							"text": "Furthermore, better education and greater financial security allow recipients to more easily refuse exploitative labor practices. Finally, doing work that they enjoy increases recipients’ motivation and success (see "
+							"text": "Inoltre, una migliore educazione e una maggiore sicurezza finanziaria permettono ai beneficiari di rifiutare più facilmente le pratiche di sfruttamento lavorativo. Infine, svolgere un lavoro che apprezzano aumenta la loro motivazione e il loro successo (vedi "
 						},
 						{
 							"text": "Sutrisno and Sunarsi 2019",
@@ -292,12 +292,12 @@
 				]
 			},
 			{
-				"title": "Protection against unforeseen shocks",
-				"description": "Direct cash transfers allow recipients to better deal with unforeseen shocks like extreme climatic events or public health crises.",
+				"title": "Protegge da shock imprevisti",
+				"description": "I trasferimenti diretti di denaro permettono ai beneficiari di affrontare in modo migliore gli shock imprevisti, come eventi climatici estremi o crisi di salute pubblica.",
 				"paragraphs": [
 					[
 						{
-							"text": "Studies carried out by the World Bank have shown that direct cash transfers foster people's resilience to the adverse effects of external shocks by lowering income risks and facilitating savings. Direct cash transfers also contribute to helping children stay in class in times of crisis, which often lead to a drop in attendance (see "
+							"text": "Studi condotti dalla Banca Mondiale mostrano che i trasferimenti diretti di denaro favoriscono la resilienza agli shock imprevisti facilitando il risparmio e il livellamento del reddito. Mentre tali eventi spesso portano a un calo della frequenza scolastica, i versamenti contribuiscono persino ad aiutare i bambini a rimanere in classe in tempi di crisi (vedi "
 						},
 						{
 							"text": "Finan et al 2004",
@@ -316,7 +316,7 @@
 					],
 					[
 						{
-							"text": "During the recent Covid-19 pandemic, researchers also found that direct cash transfers both reduced poverty as well as enabled unemployed recipients to look for work. Those who received payments could be more active and engaged in society, which ultimately aids labor market recovery (see "
+							"text": "Durante la recente pandemia di Covid-19, dei ricercatori hanno anche scoperto che i trasferimenti diretti di denaro hanno ridotto la povertà e consentito ai disoccupati di cercare lavoro. Coloro che ricevono i pagamenti potrebbero così essere più attivi e impegnati nella società, portando alla ripresa del mercato del lavoro (vedi "
 						},
 						{
 							"text": "Köhler and Bhorat 2021",
@@ -328,7 +328,7 @@
 					],
 					[
 						{
-							"text": "In addition, a recent study suggests that direct cash transfers may even reduce deforestation because recipients do not have any need to insure themselves by earning money through forest clearing work ("
+							"text": "Inoltre, uno studio recente ha mostrato che gli invii diretti di denaro possono anche ridurre la deforestazione, perché i beneficiari non hanno alcun bisogno di sostentarsi attraverso il lavoro di disboscamento ("
 						},
 						{
 							"text": "Ferraro and Simorangkir 2020",
@@ -341,12 +341,12 @@
 				]
 			},
 			{
-				"title": "Empowerment of women",
-				"description": "By enabling them to make freer decisions, direct cash transfers help women become more resilient, self-reliant, and involved in society.",
+				"title": "Dà maggior potere alle donne",
+				"description": "I trasferimenti diretti di denaro aiutano le donne a diventare più resilienti, autonome e coinvolte nella società, facilitandole nel prendere decisioni più libere.",
 				"paragraphs": [
 					[
 						{
-							"text": "Evidence suggests that especially from a long-term perspective, direct cash transfers help women make freer decisions in contexts where social or familial structures would otherwise limit their financial independence (see "
+							"text": "I risultati delle ricerche suggeriscono che, soprattutto da una prospettiva a lungo termine, i trasferimenti diretti di denaro aiutano le donne a prendere decisioni più libere in contesti dove le strutture sociali o familiari limiterebbero altrimenti la loro indipendenza finanziaria (vedi "
 						},
 						{
 							"text": "Plagerson and Ulriksen 2015",
@@ -365,7 +365,7 @@
 					],
 					[
 						{
-							"text": "A large body of research further suggests that cash transfer programs help decrease physical and emotional violence against women in domestic partnerships (see "
+							"text": "Un’ampia letteratura scientifica suggerisce inoltre che i programmi di invio di denaro aiutano a diminuire la violenza fisica ed emotiva contro le donne conviventi (vedi "
 						},
 						{
 							"text": "Perova and Vakis 2013",
@@ -399,12 +399,12 @@
 				]
 			},
 			{
-				"title": "Empowerment of children",
-				"description": "Direct cash transfers empower children by reducing child labor and increasing the inter-generational income.",
+				"title": "Dà maggior potere ai bambini",
+				"description": "I trasferimenti diretti di denaro danno potere ai bambini riducendo il lavoro minorile e aumentando il reddito intergenerazionale.",
 				"paragraphs": [
 					[
 						{
-							"text": "Evidence shows that cash transfers have a positive effect on families, too. They increase the chances of recipients’ children staying healthy (especially girls), receiving an education, and enjoying a safer transition into adulthood, which, as several studies have demonstrated, leads to a higher income as an adult ("
+							"text": "Gli invii diretti hanno un comprovato impatto positivo anche sulle famiglie. Aumentano le possibilità che i figli dei beneficiari rimangano in buona salute (soprattutto le ragazze), ricevano un’istruzione, e godano di una transizione più sicura verso l’età adulta, che, come diversi studi hanno dimostrato, porta a redditi più alti da adulti ("
 						},
 						{
 							"text": "Save the children report 2009",
@@ -438,12 +438,12 @@
 				]
 			},
 			{
-				"title": "Reduction of crime",
-				"description": "Direct cash transfers reduce the risk of turning to crime as a way to acquire essential goods.",
+				"title": "Riduzione della criminalità",
+				"description": "I trasferimenti diretti di denaro riducono il rischio di ricorrere alla criminalità come mezzo per acquisire beni essenziali.",
 				"paragraphs": [
 					[
 						{
-							"text": "Research on the Bolsa Familia program in Brazil, for example, found that an expansion of cash transfers to young people caused a 6.5% reduction in crime in neighborhoods with schools, increasing attendance and allowing young people to worry less about paying for essential goods. In the long run, this also contributed to helping recipients live their lives more freely and with less fear (see "
+							"text": "Una ricerca sul programma Bolsa Familia in Brasile, per esempio, ha rilevato che l’espansione dei trasferimenti diretti di denaro in favore di giovani ha causato una riduzione del 6.5% della criminalità nei quartieri con scuole, aumentando la frequenza e consentendo ai giovani di preoccuparsi meno di pagare i beni di prima necessità. A lungo termine, questo ha anche contribuito ad aiutare i beneficiari a vivere la loro vita in modo più liberamente e con meno paura (vedi "
 						},
 						{
 							"text": "Chioda et al 2016",
