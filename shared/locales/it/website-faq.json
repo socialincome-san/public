@@ -72,51 +72,51 @@
 		}
 	},
 	"contributors": {
-		"title": "Contributors",
+		"title": "Donatori",
 		"question-1": {
-			"question": "Why 1% of contributors’ salaries?",
-			"answer": "For Social Income to be scalable, we need to be sure it works. To ensure it works, we need to start small. This means using both a small pool of initial recipients and asking for a small initial donation from contributors. 1% is a negligible amount for contributors that can have a considerable impact on recipients’ lives, though higher donations may be possible in the future. For example, say 25% of Swiss citizens support Social Income. Given that the average salary in Switzerland is $6,000 per month, if this 30% contributed 1% of their incomes, that would pay for Social Income for every person living in Sierra Leone. This simplified illustration can still give us a good idea of the project’s potential."
+			"question": "Perché l’1% degli stipendi dei donatori?",
+			"answer": "Affinché Social Income sia scalabile, dobbiamo essere sicuri che funzioni. Per assicurarci che funzioni, dobbiamo iniziare dal basso. Ciò significa sia cominciare con un piccolo gruppo di beneficiari sia chiedere una piccola somma di partenza ai donatori. L'1% è un importo trascurabile per chi decide di contribuire, ma che può avere un impatto considerevole sulla vita dei beneficiari. Supponiamo che il 25% dei cittadini svizzeri sostenga Social Income. Dato che lo stipendio medio in Svizzera è di $6.000 al mese, se questo 30% contribuisse con l’1% del proprio reddito, ciò permetterebbe di distribuire Social Income ad ogni persona che vive in Sierra Leone. Questo esempio, benché semplificato, illustra le potenzialità del progetto."
 		},
 		"question-2": {
-			"question": "Can I cancel my contributions?",
-			"answer": "Yes, any time and without notice. Just login and opt out in the preferences."
+			"question": "Posso interrompere le mie donazioni?",
+			"answer": "Certo, in qualsiasi momento, senza preavviso. Accedi e disattivale nelle tue preferenze."
 		},
 		"question-3": {
-			"question": "Why don't we use more photos in our communications",
-			"answer": "We believe that we should do what we can to aid the lives of strangers, especially at relatively little cost to ourselves. We also believe that this rational argument is as effective at promoting charitable giving as emotional appeals. We prefer to avoid the typical imagery employed by NGOs working in Africa that can potentially fuel negative stereotypes of the continent."
+			"question": "Perché non utilizziamo molte foto nella comunicazione",
+			"answer": "Crediamo che dovremmo fare il possibile per aiutare la vita degli altri, indipendentemente da chi siano, soprattutto se lo possiamo fare ad un costo relativamente basso per noi stessi. Crediamo anche che questo approccio razionale abbia la stessa efficacia degli appelli emotivi nel promuovere le donazioni. Preferiamo quindi evitare le immagini tipiche impiegate dalle ONG che lavorano in Africa, che possono potenzialmente alimentare stereotipi negativi del continente."
 		}
 	},
 	"recipients": {
-		"title": "Recipients",
+		"title": "Beneficiari",
 		"question-1": {
-			"question": "How are recipients chosen?",
-			"answer": "We determine possible new recipients thanks to the groundwork of our local advocates and partnerships with local NGOs: Aurora Foundation, Reachout Salone and Jamyl & Nyanga Jaward Foundation. Our criterias are simple: recipients must be older than 16 and come from a low income community. One other major principle is to keep up a strict gender balance/equality and to support people in need."
+			"question": "Come vengono scelti i beneficiari?",
+			"answer": "Determiniamo possibili nuovi beneficiari grazie al lavoro sul campo dei nostri sostenitori e alle partnership con le ONG locali: Aurora Foundation, Reachout Salone, Equal Rights Alliance, United Polio Brothers and Sisters e Jamyl & Nyanga Jaward Foundation. I nostri criteri sono semplici: i beneficiari devono avere più di 16 anni e provenire da una comunità a basso reddito. Un altro principio fondamentale è quello di mantenere un rigoroso equilibrio/uguaglianza di genere e sostenere le persone in stato di necessità."
 		},
 		"question-2": {
-			"question": "What do recipients need the money for?",
-			"answer": "The very idea behind UBI is to give recipients money that they can use as they please."
+			"question": "Come usano i beneficiari il denaro?",
+			"answer": "L'idea alla base del RBU è quella di dare ai beneficiari denaro che possono utilizzare a loro piacimento."
 		},
 		"question-3": {
-			"question": "How can I receive Social Income?",
-			"answer": "We work closely with local advocates to determine future recipients. There is currently no option to sign up through our website."
+			"question": "Come posso ricevere Social Income?",
+			"answer": "Lavoriamo a stretto contatto con i nostri partner locali per determinare i futuri beneficiari. Al momento non è possibile registrarsi attraverso il nostro sito web."
 		},
 		"question-4": {
-			"question": "Why Sierra Leone?",
-			"answer": "You have to start somewhere, and Sierra Leone makes sense for several reasons. While one of the world’s younger democracies, it unfortunately regularly tops rankings as one of its poorest countries. Still, big progress has been made in recent years, notably in adopting mobile banking in urban areas across the country. So, not only is Sierra Leone in need of help, it’s also uniquely positioned to receive it from a digitally-focused approach. That said, Social Income isn’t just made for Africa. We believe that individual action can have a universal impact and hope to expand the project’s reach to people in need across the world. In the future, the initiative could also be rolled out to countries in Latin America and Asia, for example. However, to focus our energy as best as possible, it makes sense to gain experience in a single location first."
+			"question": "Perché la Sierra Leone?",
+			"answer": "Dovevamo pur iniziare da qualche parte e abbiamo scelto la Sierra Leone per diversi motivi. Sebbene sia una delle democrazie più giovani del mondo, sfortunatamente è regolarmente in cima alle classifiche come uno dei paesi più poveri. Tuttavia, negli ultimi anni sono stati compiuti grandi progressi, in particolare nell'adozione del mobile banking nelle aree urbane di tutto il paese. Quindi, non solo la Sierra Leone ha bisogno di aiuto, ma si trova in una posizione favorevole per riceverlo con un approccio incentrato sul digitale. Detto questo, Social Income non è stato creato solo per l'Africa. Crediamo che l'azione individuale possa avere un impatto universale e speriamo di estendere la portata del progetto alle persone bisognose in tutto il mondo. In futuro, l'iniziativa potrebbe essere estesa anche ai paesi dell'America Latina e dell'Asia, ad esempio. Tuttavia, per concentrare la nostra energia nel miglior modo possibile, ha senso acquisire prima esperienza in un unico luogo."
 		}
 	},
 	"the-arts": {
-		"title": "The Arts",
+		"title": "Arte",
 		"question-1": {
-			"question": "What is Social Income's link to the arts?",
-			"answer": "Social Income’s founding team has close links to the art world, which made it possible to fund the initial stages of the project. We believe that the art world has a certain responsibility to foster cultural exchange and help out fellow humans, no matter who they are."
+			"question": "Qual è il legame di questo progetto con il mondo dell’arte?",
+			"answer": "Il team che ha fondato Social Income ha stretti legami con il mondo dell'arte, che ha permesso di finanziare le fasi iniziali del progetto. Crediamo che il mondo dell'arte abbia una certa responsabilità nel promuovere lo scambio culturale e aiutare gli altri esseri umani, indipendentemente da chi siano."
 		}
 	},
 	"volunteering": {
-		"title": "Volunteering",
+		"title": "Volontariato",
 		"question-1": {
-			"question": "How can I join the team of volunteers?",
-			"answer": "If you are interested in making a social impact with your skillset, take a look at the open opportunities on our Idealist page or get in touch with us today!",
+			"question": "Come posso entrare a far parte del team di volontari?",
+			"answer": "Se sei interessato ad avere un impatto sociale con le tue competenze, dai un'occhiata alle opportunità aperte sulla nostra pagina Idealist o contattaci oggi stesso!",
 			"link-1": {
 				"title": "Idealist",
 				"href": "https://www.idealist.org/en/nonprofit/41a885fa176b4793a029f131834fd48a-social-income-zurich"
