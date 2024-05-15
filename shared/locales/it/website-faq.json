@@ -4,10 +4,10 @@
 	},
 	"title": "FAQ",
 	"fighting-poverty": {
-		"title": "Fighting Poverty",
+		"title": "Lotta alla povertà",
 		"question-1": {
-			"question": "Are direct cash payments an effective way to fight poverty?",
-			"answer": "There is a wide consensus around the benefits and long-term success of direct giving programs. We offer an overview of the latest scientific literature in our Evidence section.",
+			"question": "I trasferimenti diretti di denaro sono un modo efficace di combattere la povertà?",
+			"answer": "C'è un ampio consenso sui vantaggi e sul successo a lungo termine dei programmi di donazione diretta. Offriamo una panoramica della più recente letteratura scientifica nella nostra sezione Prove Scientifiche.",
 			"link-1": {
 				"title": "Evidence section",
 				"href": "/evidence"
@@ -22,8 +22,8 @@
 			}
 		},
 		"question-2": {
-			"question": "Is it helpful to send money to people in need?",
-			"answer": "It’s definitely more helpful than sending no money at all. Many people today advocate for equal opportunity in employment. This is obviously a goal worth aiming for, but it tends to ignore the fact that for many people born in the world’s poorest countries, employment as it is typically understood isn’t even possible or accessible. Giving money can help break down this barrier and give more people living in poverty access to work, education, and decent living conditions.",
+			"question": "È utile inviare denaro a persone in difficoltà?",
+			"answer": "È sicuramente più utile che non inviare niente. Molte persone oggi sostengono l’importanza di avere pari opportunità nel mondo del lavoro. Questo è senza dubbio un obiettivo che vale la pena perseguire, ma spesso si tende ad ignorare il fatto che per molte persone nate nei paesi più poveri del pianeta, l’occupazione come è tradizionalmente concepita nei paesi occidentali non è nemmeno possibile o accessibile. Donare denaro può aiutare ad abbattere questa barriera e a dare a più persone che vivono in povertà l’accesso a lavoro, istruzione e condizioni di vita dignitose.",
 			"link-1": {
 				"title": "Government of Malawi’s unconditional cash transfer improves youth mental health",
 				"href": "https://drive.google.com/file/d/1GKBdHjD80Jv7lZJmKvouZv8Z7MgLw_HL/view"
@@ -35,13 +35,13 @@
 		}
 	},
 	"striving-equality": {
-		"title": "Striving for equality",
+		"title": "Lotta per l’uguaglianza",
 		"question-1": {
-			"question": "Can Social Income create equality?",
-			"answer": "Social Income isn’t a theory of equality. It’s here to help make the world more fair, by taking advantage of the immense gap between rich and poor to carry out a simple, direct redistribution based on solidarity. It also helps contribute to self-driven change and a certain degree of financial independence for people in need. This process only works as long as inequality continues to exist; as soon as the distribution of wealth across the world becomes balanced, Social Income will no longer be useful."
+			"question": "Social Income può creare uguaglianza?",
+			"answer": "Social Income non è una semplice teoria su come raggiungere l’uguaglianza. È qui per contribuire a rendere il mondo più giusto, intervenendo sull’immenso divario tra ricchi e poveri per realizzare una redistribuzione semplice e diretta, basata sulla solidarietà. Social Income, inoltre, contribuisce a motivare le persone in difficoltà a cercare autonomamente un cambiamento positivo e a raggiungere un certo livello di indipendenza finanziaria. Questo processo funzionerà solo fino a quando la disuguaglianza continuerà ad esistere; non appena la distribuzione della ricchezza in tutto il mondo diventerà equilibrata, Social Income non avrà più ragione di esistere."
 		},
 		"question-2": {
-			"question": "Who can eliminate inequality?",
+			"question": "Chi può eliminare la disuguaglianza sociale?",
 			"answer": "States or markets can, in theory. But not all states (can) care for their citizens adequately and not all markets create long-lasting equality for everyone. That’s where a third option comes in: ourselves. We already know how to recognize inequality and feel empathy for disadvantaged people, even if they aren’t exactly our neighbors. And we also have the technical skills to move money globally. If you think about it, nothing is missing to start remedying the world’s economic grievances today."
 		}
 	},
