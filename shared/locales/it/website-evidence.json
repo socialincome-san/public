@@ -450,7 +450,7 @@
 							"href": "https://drive.google.com/file/d/1zrmIYftuzNZe-Lx-0OFs7IEn2E_0R0Jq/view?usp=sharing"
 						},
 						{
-							"text": ", see also "
+							"text": ", vedi anche "
 						},
 						{
 							"text": "Machado et al 2018",
@@ -470,12 +470,12 @@
 				]
 			},
 			{
-				"title": "Fostering of creativity and innovation",
-				"description": "Direct cash transfers stimulate the arts and culture by allowing artists and young entrepreneurs to worry less about basic needs.",
+				"title": "Supporta la creatività e l’innovazione",
+				"description": "I trasferimenti diretti di denaro stimolano l’arte e  la cultura consentendo agli artisti di preoccuparsi meno del cibo e dei beni di prima necessità.",
 				"paragraphs": [
 					[
 						{
-							"text": "Direct cash transfers enable entrepreneurs and artists to dedicate themselves to their craft without having to worry about food or basic necessities. In fact, the very first recipients of Social Income were a small cohort of artists in Freetown, Sierra Leone. The group reported that Social Income helped them above all to be more creative in their art practice (see "
+							"text": "Gli invii diretti di denaro consentono agli artisti di dedicarsi al loro mestiere senza doversi preoccupare del cibo o delle necessità di base. Infatti, i primissimi beneficiari di Social Income sono stati una piccola coorte di artisti a Freetown, in Sierra Leone. Questi primi partecipanti hanno riferito che Social Income li ha aiutati soprattutto ad essere più creativi nelle loro pratiche artistiche (vedi "
 						},
 						{
 							"text": "Thomas 2016",
@@ -497,34 +497,34 @@
 		]
 	},
 	"section-4": {
-		"topic": "Well-being",
+		"topic": "Benessere",
 		"title": [
-			{ "text": "How does Social Income contribute to " },
-			{ "text": "greater well-being?", "color": "secondary" }
+			{ "text": "HIn che modo Social Income contribuisce a " },
+			{ "text": "un maggiore benessere?", "color": "secondary" }
 		],
-		"evidence": "Research shows that direct cash transfers programs like Social Income contribute to recipients’ well-being in three important ways.",
+		"evidence": "Le ricerche mostrano che i programmi di trasferimento diretto di denaro come Social Income contribuiscono al benessere dei destinatari in tre modi importanti.",
 		"cards": [
 			{
-				"title": "Improvement and protection of health",
-				"description": "Direct cash transfers allow recipients to buy medicine and hygiene products that they otherwise couldn’t afford.",
+				"title": "Migliora la salute e la prevenzione",
+				"description": "I trasferimenti diretti di denaro permettono ai beneficiari di comprare medicinali e prodotti di igiene che altrimenti non potrebbero permettersi.",
 				"paragraphs": [
 					[
 						{
-							"text": "One study has shown that a direct cash transfer program led to significantly better health for participants in the short term (18 months) and even more so in the long term (7 to 10 years) (see "
+							"text": "Uno studio ha dimostrato che un programma di invio diretto di denaro ha portato a un miglioramento delle condizioni di salute dei partecipanti nel breve termine (18 mesi) ed ancora di più nel lungo termine (da 7 a 10 anni) (vedi "
 						},
 						{
 							"text": "Banerjee et at 2021",
 							"href": "https://drive.google.com/file/d/1cmOQi1z3DlQaEmvFEBfIHmXgMN4if3Tx/view?usp=sharing"
 						},
 						{
-							"text": "). Another study ("
+							"text": "). Uno studio di ("
 						},
 						{
 							"text": "Baird et al 2016",
 							"href": "https://drive.google.com/file/d/1d8f-DixZ1YOE7nsbFtlBG7dETXFbnUAd/view?usp=sharing"
 						},
 						{
-							"text": ") further showed that cash transfer programs reduced HIV prevalence and the rate of teen pregnancy (see also "
+							"text": ") ha inoltre dimostrato che i programmi di trasferimento di denaro hanno ridotto la diffusione dell’HIV e le gravidanze adolescenziali (vedi anche "
 						},
 						{
 							"text": "Nery et al 2017",
@@ -544,12 +544,12 @@
 				]
 			},
 			{
-				"title": "Emotional well-being",
-				"description": "Direct cash transfers can break the vicious circle of poverty-induced mental health problems.",
+				"title": "Migliora il benessere emotivo",
+				"description": "I trasferimenti diretti di denaro possono spezzare il circolo vizioso dei problemi mentali indotti dalla povertà.",
 				"paragraphs": [
 					[
 						{
-							"text": "Many studies have shown that poverty leads to stress, which over time can cause severe mental illness (see "
+							"text": "Molti studi hanno mostrato che la povertà è causa di stress, che nel tempo può causare gravi malattie mentali (vedi "
 						},
 						{
 							"text": "Hammen 2005",
@@ -570,7 +570,7 @@
 							"href": "https://drive.google.com/file/d/11NkzvnwyGKi3EEJRx3pGHoOwsEftmXUJ/view?usp=sharing"
 						},
 						{
-							"text": "). In parallel, poor mental health may affect labor market participation and productivity, and thus exacerbate someone's experienced level of poverty ("
+							"text": "). Parallelamente, una cattiva salute mentale può influenzare la partecipazione al mercato del lavoro e la produttività, e di conseguenza esacerbare la povertà ("
 						},
 						{
 							"text": "Biasi et al 2019",
@@ -582,14 +582,14 @@
 					],
 					[
 						{
-							"text": "Researchers at Princeton University provide evidence that direct cash transfers can break this vicious circle: they help alleviate the stress and depression that often come with living in poverty ("
+							"text": "I ricercatori dell’Università di Princeton forniscono la prova che un invio diretto di denaro ha la capacità di rompere questo circolo vizioso: aiuta ad alleviare lo stress e la depressione che spesso derivano dal vivere in povertà ("
 						},
 						{
 							"text": "Haushofer et al 2020",
 							"href": "https://drive.google.com/file/d/1efsdQk4tY4_g7bbpVZcMvEbwIDOv7IjP/view?usp=sharing"
 						},
 						{
-							"text": ", see also "
+							"text": ", vedi anche "
 						},
 						{
 							"text": "Samuels and Stavropoulou 2016",
@@ -609,12 +609,12 @@
 				]
 			},
 			{
-				"title": "Food Security",
-				"description": "Direct cash transfers significantly improve recipients’ diets and nutrition.",
+				"title": "Aumenta la sicurezza alimentare",
+				"description": "I trasferimenti diretti di denaro migliorano significativamente la dieta e la nutrizione dei beneficiari.",
 				"paragraphs": [
 					[
 						{
-							"text": "Many studies have found that direct cash transfers have two important effects on recipients’ food security. First, it increases access to better quality food. Second, it indirectly helps improve people's knowledge about a healthy diet, cooking methods, and the safe handling of food. These two aspects combined improve recipients’ diets and nutrition in a significant way (see "
+							"text": "Molti studi hanno rilevato che gli invii diretti di denaro hanno due importanti effetti sulla sicurezza alimentare dei beneficiari. In primo luogo, aumentano l’accesso a cibo di migliore qualità. In secondo luogo, contribuiscono indirettamente a migliorare le conoscenze su dieta, metodi di cottura, e gestione del cibo. Questi due aspetti combinati migliorano significativamente la dieta e la nutrizione dei beneficiari (vedi "
 						},
 						{
 							"text": "Gitter and Caldes 2010",
