@@ -42,29 +42,29 @@
 		},
 		"question-2": {
 			"question": "Chi può eliminare la disuguaglianza sociale?",
-			"answer": "States or markets can, in theory. But not all states (can) care for their citizens adequately and not all markets create long-lasting equality for everyone. That’s where a third option comes in: ourselves. We already know how to recognize inequality and feel empathy for disadvantaged people, even if they aren’t exactly our neighbors. And we also have the technical skills to move money globally. If you think about it, nothing is missing to start remedying the world’s economic grievances today."
+			"answer": "In teoria, gli stati o i mercati ne sarebbero capaci, ma non tutti gli stati si prendono cura cura dei propri cittadini in modo adeguato (o sono in grado di farlo) e non tutti i mercati creano un'uguaglianza duratura per tutti. È qui che entra in gioco una terza opzione: noi stessi. Sappiamo già riconoscere la disuguaglianza e provare empatia per le persone svantaggiate, anche se non sono esattamente i nostri vicini. Abbiamo anche le competenze tecniche per muovere i soldi a livello globale. Se ci pensi, non manca nulla per iniziare oggi stesso a rimediare alle ingiustizie economiche del mondo."
 		}
 	},
 	"solidarity": {
-		"title": "Solidarity",
+		"title": "Solidarietà",
 		"question-1": {
-			"question": "Do we have responsibilities toward our fellow human beings?",
-			"answer": "We believe so, yes. In a globalized world with almost no borders for goods and outsourced production, all histories become interconnected in shared destinies."
+			"question": "Abbiamo delle responsabilità verso i nostri simili?",
+			"answer": "Noi pensiamo di sì. In un mondo globalizzato quasi senza alcun confine per la produzione esternalizzata e l’import-export di beni, tutte le storie si intrecciano in destini condivisi."
 		},
 		"question-2": {
-			"question": "Can solidarity survive in the age of individualization?",
-			"answer": "Today, solidarity is an endangered resource. In an era that emphasizes the individual over everything else, our sense of community often takes a backseat to personal success. But this doesn’t mean that solidarity will disappear; it just has to adapt, and so do the projects that rely on it to meet their goals. From this perspective, we believe that solidarity can be stronger than ever. Individualization also means that everyone who wants to get involved in solidarity can do so, without any roadblocks to stop them. The only difference is that they’ll do it on their own terms, with their own methods. Social Income is one choice available among others. A new kind. The major issues that humanity faces, whether economic or ecological, are too complex and interlinked to be solved without recourse to solidarity. Individualism may be a fine road to personal self-discovery, but it isn’t of much use in solving collective challenges like inequality and poverty."
+			"question": "Può la solidarietà sopravvivere nell’era dell’individualismo?",
+			"answer": "Oggi la solidarietà è una risorsa in pericolo. In un'epoca che enfatizza l'individuo su tutto il resto, il nostro senso di comunità spesso passa in secondo piano rispetto al successo personale. Ma questo non significa che la solidarietà scomparirà; deve solo adattarsi, così come i progetti che fanno affidamento su di essa per raggiungere i loro obiettivi. Da questa prospettiva, crediamo che la solidarietà possa essere più forte che mai. L’individualizzazione significa anche che tutti coloro che vogliono essere coinvolti nella solidarietà possono farlo, senza ostacoli che li fermino. L'unica differenza è che lo faranno alle loro condizioni, con i loro metodi. Social Income è una delle possibili scelte disponibili. Un nuovo tipo di scelta. Le grandi questioni che l'umanità affronta, siano esse economiche o ecologiche, sono troppo complesse e interconnesse per essere risolte senza ricorrere alla solidarietà. L'individualismo può essere una buona strada per la scoperta personale di sé, ma non è di grande utilità nel risolvere sfide collettive come la disuguaglianza e la povertà."
 		}
 	},
 	"ubi": {
-		"title": "Universal Basic Income",
+		"title": "Reddito di Base Universale",
 		"question-1": {
-			"question": "What is the difference between Social Income and Universal Basic Income?",
-			"answer": "Like Universal Basic Income (UBI), Social Income provides regular, unconditional payments as a basic living stipend delivered to citizens on an individual basis. Whereas Universal Basic Income would be provided by a state or government, Social Income is provided from person to person. This means that it doesn’t have to rely on political will, budgeting, or taxation to succeed. Social Income is also specifically aimed at people living in extreme poverty, so its primary goal is wealth redistribution—which isn’t necessarily the case of UBI."
+			"question": "Qual è la differenza tra Social Income e il Reddito di Base Universale?",
+			"answer": "Come il Reddito di Base Universale (RBU), Social Income trasferisce regolarmente e in maniera incondizionata uno stipendio di base ai cittadini su base individuale. Mentre il Reddito di Base Universale sarebbe distribuito da uno stato o da un governo, Social Income lo fa da persona a persona. Ciò significa che non deve fare affidamento sulla volontà politica, sul budget o sulla tassazione per avere successo. Social Income è anche specificamente rivolto a persone che vivono in condizioni di povertà estrema, quindi il suo obiettivo principale è la ridistribuzione della ricchezza – che non è necessariamente il caso del RBU."
 		},
 		"question-2": {
-			"question": "What are Direct Cash Transfers?",
-			"answer": "According to the official OECD’s definition, cash transfers “consist of the payment of currency or transferable deposit by one unit to another without any counterpart”. More concretely, direct cash transfers are a form of social protection that includes cash or vouchers given directly to poor individuals rather than to governments or other state actors. Particularly over the past decade, they have been increasingly used as a tool for reducing poverty and vulnerability in middle and low-income countries.",
+			"question": "Cosa sono i Trasferimenti Diretti di Denaro?",
+			"answer": "Secondo la definizione ufficiale dell'OCSE, i trasferimenti di denaro consistono nel pagamento di valuta o di un deposito trasferibile da un'unità all'altra senza alcuna contropartita. Più concretamente, i trasferimenti diretti di denaro sono una forma di protezione sociale che include soldi o buoni dati direttamente a persone indigenti, piuttosto che a governi o altri enti statali. Nell'ultimo decennio in particolare sono stati sempre più utilizzati come strumento per ridurre la povertà e la vulnerabilità nei paesi a reddito medio e basso.",
 			"link-1": {
 				"title": "Social protection and resilient food systems: The role of cash transfers",
 				"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view"
