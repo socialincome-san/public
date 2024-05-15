@@ -1,6 +1,6 @@
 {
 	"metadata": {
-		"title": "Finances | Social Income"
+		"title": "Finanze | Social Income"
 	},
 	"amount": "{{ value, currency }}",
 	"section-1": {
