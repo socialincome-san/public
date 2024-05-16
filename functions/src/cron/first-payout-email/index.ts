@@ -1,14 +1,13 @@
 import { logger } from 'firebase-functions';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
 import { toFirebaseAdminTimestamp } from '../../../../shared/src/firebase/admin/utils';
+import { FirstPayoutEmailTemplateData, SendgridMailClient } from '../../../../shared/src/sendgrid/SendgridMailClient';
 import { Contribution, CONTRIBUTION_FIRESTORE_PATH } from '../../../../shared/src/types/contribution';
 import { LanguageCode } from '../../../../shared/src/types/language';
 import { User, USER_FIRESTORE_PATH } from '../../../../shared/src/types/user';
 import { toDateTime } from '../../../../shared/src/utils/date';
-
-import { DateTime } from 'luxon';
-import { FirstPayoutEmailTemplateData, SendgridMailClient } from '../../../../shared/src/sendgrid/SendgridMailClient';
 
 export const getFirstPayoutEmailReceivers = async (
 	firestoreAdmin: FirestoreAdmin,
