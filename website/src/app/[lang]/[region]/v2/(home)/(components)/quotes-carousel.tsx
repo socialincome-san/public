@@ -46,14 +46,14 @@ export function QuotesCarousel(cardsObj: CarouselCardProps) {
 		>
 			{cardsArr.map((card, index) => (
 				<CarouselContent key={index} className="flex basis-full flex-col items-center justify-center">
-					<div className="w-3/4 self-center text-center">
+					<div className="w-4/5 self-center text-center">
 						{card.quote.map((title, index) => (
-							<Typography as="span" size="2xl" weight="medium" color={title.color} key={index}>
+							<Typography as="span" size="3xl" color={title.color} key={index}>
 								{title.text}{' '}
 							</Typography>
 						))}
 					</div>
-					<Image src={UNImageData} alt="UN symbol" className="mb-3 mt-5 h-12 w-12" />
+					<Image src={UNImageData} alt="UN symbol" className="mb-3 mt-5 h-auto w-12" />
 					<Typography size="sm" className="mb-12">
 						{card.author}
 					</Typography>
