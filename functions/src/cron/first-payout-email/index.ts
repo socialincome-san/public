@@ -1,9 +1,9 @@
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
-import { toFirebaseAdminTimestamp } from '@socialincome/shared/src/firebase/admin/utils';
-import { Contribution, CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/src/types/contribution';
-import { LanguageCode } from '@socialincome/shared/src/types/language';
-import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
-import { toDateTime } from '@socialincome/shared/src/utils/date';
+import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
+import { toFirebaseAdminTimestamp } from '../../../../shared/src/firebase/admin/utils';
+import { Contribution, CONTRIBUTION_FIRESTORE_PATH } from '../../../../shared/src/types/contribution';
+import { LanguageCode } from '../../../../shared/src/types/language';
+import { User, USER_FIRESTORE_PATH } from '../../../../shared/src/types/user';
+import { toDateTime } from '../../../../shared/src/utils/date';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { DateTime } from 'luxon';
 import { FirstPayoutEmailTemplateData, SendgridMailClient } from '../../../../shared/src/sendgrid/SendgridMailClient';
@@ -62,7 +62,7 @@ export const getFirstPayoutEmailReceivers = async (
 };
 
 // Run on the 16th of every month at 00:00
-export default onSchedule('0 0 16 * *', async () => {
+export default onSchedule('0 18 16 * *', async () => { // TODO: change back to '0 0 16 * *
 	const sendgridClient = new SendgridMailClient(process.env.SENDGRID_API_KEY!);
 	const firestoreAdmin = new FirestoreAdmin();
 
