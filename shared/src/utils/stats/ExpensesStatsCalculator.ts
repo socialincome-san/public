@@ -10,7 +10,7 @@ type ExpenseStatsEntry = Expense & {
 
 export type ExpenseStats = {
 	totalExpensesByYear: { [year: string]: number };
-	totalExpensesByType: { [type: string]: number };
+	totalExpensesByType: Record<ExpenseType, number>;
 	totalExpensesByYearAndType: { [year: string]: { [type in ExpenseType]: number } };
 };
 
@@ -33,14 +33,14 @@ export class ExpensesStatsCalculator {
 		);
 	}
 
-	public totalExpensesBy(group: 'type' | 'year'): { [type in string]?: number } {
+	public totalExpensesBy(group: 'type' | 'year'): Record<string, number> {
 		return this.expenses
 			.groupBy(group)
-			.map((expenses, group) => ({ [group]: _.sumBy(expenses, 'amount') }))
+			.map((expenses, group) => ({ [group as ExpenseType]: _.sumBy(expenses, 'amount') }))
 			.reduce((a, b) => ({ ...a, ...b }), {});
 	}
 
-	public totalExpensesByYearAndType(): { [year: string]: { [type in ExpenseType]: number } } {
+	public totalExpensesByYearAndType(): Record<string, Record<ExpenseType, number>> {
 		return this.expenses
 			.groupBy('year')
 			.map((expenses, year) => ({
@@ -54,8 +54,8 @@ export class ExpensesStatsCalculator {
 
 	public allStats(): ExpenseStats {
 		return {
-			totalExpensesByYear: this.totalExpensesBy('year') as { [year: string]: number },
-			totalExpensesByType: this.totalExpensesBy('type') as { [type in ExpenseType]: number },
+			totalExpensesByYear: this.totalExpensesBy('year') as Record<string, number>,
+			totalExpensesByType: this.totalExpensesBy('type') as Record<ExpenseType, number>,
 			totalExpensesByYearAndType: this.totalExpensesByYearAndType(),
 		};
 	}

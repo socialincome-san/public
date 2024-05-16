@@ -10,9 +10,9 @@ import { InfoCard } from './info-card';
 import { SectionProps } from './page';
 import { roundAmount } from './section-1';
 
-export async function Section4({ params, paymentStats, contributionStats, costs }: SectionProps) {
+export async function Section4({ params, expensesStats, paymentStats, contributionStats }: SectionProps) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-finances'] });
-	const expensesTotal = _.sum(Object.values(costs)) + paymentStats.totalPaymentsAmount;
+	const expensesTotal = _.sum(Object.values(expensesStats.totalExpensesByType)) + paymentStats.totalPaymentsAmount;
 	const reservesTotal = contributionStats.totalContributionsAmount - expensesTotal;
 	const exchangeRateSLE = await getLatestExchangeRate(firestoreAdmin, 'SLE');
 
@@ -74,14 +74,17 @@ export async function Section4({ params, paymentStats, contributionStats, costs 
 						<div className="flex-inline flex items-center">
 							<Typography as="div" weight="bold" size="lg">
 								{translator.t('section-4.project-costs', {
-									context: { value: roundAmount(_.sum(Object.values(costs))), currency: params.currency },
+									context: {
+										value: roundAmount(_.sum(Object.values(expensesStats.totalExpensesByType))),
+										currency: params.currency,
+									},
 								})}
 							</Typography>
 						</div>
 						<Typography as="div" className="flex-inline flex items-center">
-							{translator.t('section-4.transaction-costs', {
+							{translator.t('section-4.donation-fees', {
 								context: {
-									value: roundAmount(costs.transaction),
+									value: roundAmount(expensesStats.totalExpensesByType.donation_fees),
 									currency: params.currency,
 								},
 							})}
@@ -90,39 +93,78 @@ export async function Section4({ params, paymentStats, contributionStats, costs 
 									<TooltipTrigger>
 										<InformationCircleIcon className="mx-2 h-5 w-5" />
 									</TooltipTrigger>
-									<TooltipContent>{translator.t('section-4.transaction-costs-tooltip')}</TooltipContent>
+									<TooltipContent>{translator.t('section-4.donation-fees-tooltip')}</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
 						</Typography>
 						<Typography as="div" className="flex-inline flex items-center">
-							{translator.t('section-4.delivery-costs', {
-								context: { value: roundAmount(costs.delivery), currency: params.currency },
+							{translator.t('section-4.delivery-fees', {
+								context: {
+									value: roundAmount(expensesStats.totalExpensesByType.delivery_fees),
+									currency: params.currency,
+								},
 							})}
 							<TooltipProvider delayDuration={100}>
 								<Tooltip>
 									<TooltipTrigger>
 										<InformationCircleIcon className="mx-2 h-5 w-5" />
 									</TooltipTrigger>
-									<TooltipContent>{translator.t('section-4.delivery-costs-tooltip')}</TooltipContent>
+									<TooltipContent>{translator.t('section-4.delivery-fees-tooltip')}</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
 						</Typography>
 						<Typography as="div" className="flex-inline flex items-center">
-							{translator.t('section-4.administrative-costs', {
-								context: { value: roundAmount(costs.administrative), currency: params.currency },
+							{translator.t('section-4.exchange-rate-loss', {
+								context: {
+									value: roundAmount(expensesStats.totalExpensesByType.exchange_rate_loss),
+									currency: params.currency,
+								},
 							})}
 							<TooltipProvider delayDuration={100}>
 								<Tooltip>
 									<TooltipTrigger>
 										<InformationCircleIcon className="mx-2 h-5 w-5" />
 									</TooltipTrigger>
-									<TooltipContent>{translator.t('section-4.administrative-costs-tooltip')}</TooltipContent>
+									<TooltipContent>{translator.t('section-4.exchange-rate-loss-tooltip')}</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
+						</Typography>
+						<Typography as="div" className="flex-inline flex items-center">
+							{translator.t('section-4.account-fees', {
+								context: {
+									value: roundAmount(expensesStats.totalExpensesByType.account_fees),
+									currency: params.currency,
+								},
+							})}
+							<TooltipProvider delayDuration={100}>
+								<Tooltip>
+									<TooltipTrigger>
+										<InformationCircleIcon className="mx-2 h-5 w-5" />
+									</TooltipTrigger>
+									<TooltipContent>{translator.t('section-4.account-fees-tooltip')}</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
+						</Typography>
+
+						<Typography as="div" className="flex-inline flex items-center">
+							{translator.t('section-4.staff-costs', {
+								context: { value: roundAmount(expensesStats.totalExpensesByType.staff), currency: params.currency },
+							})}
+							<TooltipProvider delayDuration={100}>
+								<Tooltip>
+									<TooltipTrigger>
+										<InformationCircleIcon className="mx-2 h-5 w-5" />
+									</TooltipTrigger>
+									<TooltipContent>{translator.t('section-4.staff-costs-tooltip')}</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
 						</Typography>
 						<Typography as="div" className="flex-inline flex items-center">
 							{translator.t('section-4.fundraising-costs', {
-								context: { value: roundAmount(costs.fundraising), currency: params.currency },
+								context: {
+									value: roundAmount(expensesStats.totalExpensesByType.fundraising_advertising),
+									currency: params.currency,
+								},
 							})}
 							<TooltipProvider delayDuration={100}>
 								<Tooltip>
@@ -134,15 +176,18 @@ export async function Section4({ params, paymentStats, contributionStats, costs 
 							</TooltipProvider>
 						</Typography>
 						<Typography as="div" className="flex-inline flex items-center">
-							{translator.t('section-4.staff-costs', {
-								context: { value: roundAmount(costs.staff), currency: params.currency },
+							{translator.t('section-4.administrative-costs', {
+								context: {
+									value: roundAmount(expensesStats.totalExpensesByType.administrative),
+									currency: params.currency,
+								},
 							})}
 							<TooltipProvider delayDuration={100}>
 								<Tooltip>
 									<TooltipTrigger>
 										<InformationCircleIcon className="mx-2 h-5 w-5" />
 									</TooltipTrigger>
-									<TooltipContent>{translator.t('section-4.staff-costs-tooltip')}</TooltipContent>
+									<TooltipContent>{translator.t('section-4.administrative-costs-tooltip')}</TooltipContent>
 								</Tooltip>
 							</TooltipProvider>
 						</Typography>

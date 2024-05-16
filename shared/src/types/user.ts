@@ -4,6 +4,7 @@ import { CountryCode } from './country';
 import { Currency } from './currency';
 import { Employer } from './employers';
 import { LanguageCode } from './language';
+import { Timestamp } from './timestamp';
 
 export const USER_FIRESTORE_PATH = 'users';
 
@@ -47,6 +48,7 @@ export type User = {
 	currency?: Currency;
 	contributor_organisations?: EntityReference[];
 	employers?: Employer[];
+	created_at: Timestamp;
 };
 
 export const splitName = (name: string) => {

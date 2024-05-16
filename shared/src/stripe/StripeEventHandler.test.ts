@@ -438,5 +438,6 @@ describe('stripeWebhook', () => {
 		payment_reference_id: DateTime.now().toMillis(),
 		test_user: false,
 		currency: 'USD',
+		created_at: toFirebaseAdminTimestamp(new Date('2023-01-01')),
 	};
 });
