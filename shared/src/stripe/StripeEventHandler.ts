@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import Stripe from 'stripe';
 import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
 import { toFirebaseAdminTimestamp } from '../firebase/admin/utils';
+import { SendgridSubscriptionClient, SendgridSubscriptionClientProps } from '../sendgrid/SendgridSubscriptionClient';
 import { CAMPAIGN_FIRESTORE_PATH } from '../types/campaign';
 import {
 	CONTRIBUTION_FIRESTORE_PATH,
@@ -46,13 +47,29 @@ export class StripeEventHandler {
 		}
 	};
 
-	updateUser = async (checkoutSessionId: string, userData: Partial<User>) => {
+	updateUser = async (checkoutSessionId: string, userData: Partial<User>, sendgridClientData: SendgridSubscriptionClientProps = {} as SendgridSubscriptionClientProps) => {
 		const checkoutSession = await this.stripe.checkout.sessions.retrieve(checkoutSessionId);
 		const customer = await this.stripe.customers.retrieve(checkoutSession.customer as string);
 		if (customer.deleted) throw Error(`Dealing with a deleted Stripe customer (id=${customer.id})`);
 		const userRef = await this.getOrCreateFirestoreUser(customer);
 		const user = await userRef.get();
 		await this.firestoreAdmin.doc<User>(USER_FIRESTORE_PATH, user.id).update(userData);
+		if (sendgridClientData.apiKey && sendgridClientData.listId && sendgridClientData.suppressionListId) {
+			const sendgridSubscriptionClient = new SendgridSubscriptionClient({
+				apiKey: sendgridClientData.apiKey, 
+				listId: sendgridClientData.listId, 
+				suppressionListId: sendgridClientData.suppressionListId
+			})
+			sendgridSubscriptionClient.upsertSubscription({
+				email: userData.email ?? '',
+				status: 'subscribed',
+				language: userData.language === 'de' ? 'de' : 'en',
+				firstname: userData.personal?.name,
+				lastname: userData.personal?.lastname,
+				country: userData.address?.country,
+				source: 'contributor'
+			})
+		}
 	};
 
 	/**
