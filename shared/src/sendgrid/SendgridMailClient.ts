@@ -19,7 +19,7 @@ export class SendgridMailClient extends MailService {
 	}
 
 	sendFirstPayoutEmail = async (email: string, language: LanguageCode, data: FirstPayoutEmailTemplateData) => {
-		let templateId = '';
+		let templateId;
 		if (language === 'de') {
 			templateId = 'd-3146eb9ee2054b28b22376113eb96ca9';
 		} else {
@@ -27,7 +27,7 @@ export class SendgridMailClient extends MailService {
 		}
 		await this.send({
 			to: email,
-			from: { name: 'Social Income', email: 'hello@socialincome.org' },
+			from: { name: 'Aurélie Schmiedlin', email: 'auerlie@socialincome.org' },
 			templateId,
 			dynamicTemplateData: data,
 		});
