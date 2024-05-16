@@ -9,13 +9,13 @@ export function IncomeInput() {
 	return (
 		<div className="flex flex-col text-white">
 			<div className="align-center flex items-center justify-center">
-				<Typography size="5xl" weight="medium" className=" mr-1 w-32 py-2 text-right opacity-40">
+				<Typography weight="medium" className=" mr-1 w-48 py-2 text-right text-7xl opacity-40">
 					6
 				</Typography>
 				<Popover openDelay={100} closeDelay={200}>
 					<PopoverTrigger asChild>
-						<Button className="flex items-center space-x-1 ">
-							<Typography size="xs">{choices[0]}</Typography>
+						<Button className="flex items-center space-x-1 bg-inherit">
+							<Typography>{choices[0]}</Typography>
 							<ChevronDownIcon className="h-4 w-4" />
 						</Button>
 					</PopoverTrigger>

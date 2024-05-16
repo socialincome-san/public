@@ -20,7 +20,7 @@ export async function Approach({ lang, region }: DefaultParams) {
 
 	return (
 		<BaseContainer className="mb-32 mt-10 flex flex-col items-center justify-center">
-			<Typography size="2xl" weight="medium" color="foreground-dark" className="my-10 w-1/3 text-center">
+			<Typography size="3xl" weight="medium" color="foreground-dark" className="mb-16 mt-10 w-2/5 text-center">
 				{translator.t('section-7.title-1')}
 			</Typography>
 			<div className="flex">

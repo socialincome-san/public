@@ -1,11 +1,10 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
-import { StaticImageData } from 'next/dist/shared/lib/get-img-props';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import { ReactElement } from 'react';
 import avatarImgData from '../(assets)/aurelie.png';
-import townImgData from '../(assets)/town.jpg';
+import townImgData from '../(assets)/sdg-town.jpg';
 
 type JournalCardDetails = {
 	title: string;
@@ -46,8 +45,8 @@ export async function Journal({ lang, region }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer className="mt-32 flex flex-col items-center justify-center space-y-12">
-			<Typography size="2xl" weight="medium">
+		<BaseContainer className="mt-64 flex flex-col items-center justify-center space-y-12">
+			<Typography size="3xl" weight="medium">
 				{translator.t('section-11.title')}
 			</Typography>
 			<div className="flex flex-row">

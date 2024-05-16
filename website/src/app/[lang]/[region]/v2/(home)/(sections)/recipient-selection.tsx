@@ -12,16 +12,16 @@ export async function RecipientSelection({ lang, region }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer className="theme-blue-v2 pt-16 text-white">
+		<BaseContainer backgroundColor="bg-foreground-dark" className="pt-16 text-white">
 			<div className="align-center flex flex-col justify-center text-center">
-				<div className="mb-12 w-2/5 self-center">
+				<div className="mb-16 mt-10 w-1/2 self-center">
 					{translator.t<{ text: string; color?: FontColor }[]>('section-9.title-1').map((title, index) => (
-						<Typography as="span" weight="medium" size="xl" key={index} color={title.color}>
+						<Typography as="span" weight="medium" size="3xl" key={index} color={title.color}>
 							{title.text}{' '}
 						</Typography>
 					))}
 				</div>
-				<Image src={YellowBlueDots} alt="Yellow and Blue dots" className="mb-16 px-80" />
+				<Image src={YellowBlueDots} alt="Yellow and Blue dots" className="mb-32 h-auto w-full px-80" />
 				<ol className="m-8 flex list-decimal flex-row gap-x-10 text-justify">
 					<li className="mx-4">
 						<Typography size="sm">{translator.t('section-9.text-1.1')}</Typography>

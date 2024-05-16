@@ -217,6 +217,7 @@ export class StripeEventHandler {
 			payment_reference_id: DateTime.now().toMillis(),
 			currency: bestGuessCurrency(customer.address?.country as CountryCode),
 			test_user: false,
+			created_at: toFirebaseAdminTimestamp(DateTime.now()),
 		};
 	};
 

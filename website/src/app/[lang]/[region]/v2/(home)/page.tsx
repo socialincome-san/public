@@ -4,6 +4,7 @@ import { Quotes } from '@/app/[lang]/[region]/v2/(home)/(sections)/quotes';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Approach } from './(sections)/approach';
 import { ExplainerVideo } from './(sections)/explainer-video';
+import { HeroVideo } from './(sections)/hero-video';
 import { Journal } from './(sections)/journal';
 import { MobileIllustration } from './(sections)/mobile-illustration';
 import { MonthlyIncome } from './(sections)/monthly-income';
@@ -19,7 +20,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 	});
 	return (
 		<>
-			{/*<HeroVideo lang={lang} region={region} />*/}
+			<HeroVideo lang={lang} region={region} />
 			<Overview lang={lang} region={region} />
 			<MonthlyIncome lang={lang} region={region} />
 			<ExplainerVideo lang={lang} region={region} />
@@ -31,6 +32,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			<Testimonials lang={lang} region={region} />
 			<Sdgoals lang={lang} region={region} />
 			<Journal lang={lang} region={region} />
+			<div className="bg-foreground-dark mt-10 h-24 w-screen" />
 		</>
 	);
 }

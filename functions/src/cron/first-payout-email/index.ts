@@ -1,12 +1,13 @@
-import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/FirestoreAdmin';
-import { toFirebaseAdminTimestamp } from '@socialincome/shared/src/firebase/admin/utils';
-import { Contribution, CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/src/types/contribution';
-import { LanguageCode } from '@socialincome/shared/src/types/language';
-import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
-import { toDateTime } from '@socialincome/shared/src/utils/date';
+import { logger } from 'firebase-functions';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { DateTime } from 'luxon';
+import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
+import { toFirebaseAdminTimestamp } from '../../../../shared/src/firebase/admin/utils';
 import { FirstPayoutEmailTemplateData, SendgridMailClient } from '../../../../shared/src/sendgrid/SendgridMailClient';
+import { Contribution, CONTRIBUTION_FIRESTORE_PATH } from '../../../../shared/src/types/contribution';
+import { LanguageCode } from '../../../../shared/src/types/language';
+import { User, USER_FIRESTORE_PATH } from '../../../../shared/src/types/user';
+import { toDateTime } from '../../../../shared/src/utils/date';
 
 export const getFirstPayoutEmailReceivers = async (
 	firestoreAdmin: FirestoreAdmin,
@@ -61,20 +62,35 @@ export const getFirstPayoutEmailReceivers = async (
 	).flat();
 };
 
-// Run on the 16th of every month at 00:00
-export default onSchedule('0 0 16 * *', async () => {
+// Run on the 16th of every month at 15:00 UTC
+export default onSchedule('0 15 16 * *', async () => {
+	let message: string = '';
 	const sendgridClient = new SendgridMailClient(process.env.SENDGRID_API_KEY!);
-	const firestoreAdmin = new FirestoreAdmin();
+	try {
+		const firestoreAdmin = new FirestoreAdmin();
+		const now = DateTime.now();
+		const fromDate = DateTime.fromObject({ year: now.year, month: now.month - 1, day: 16, hour: 0 }, { zone: 'utc' });
+		const toDate = DateTime.fromObject({ year: now.year, month: now.month, day: 16, hour: 0 }, { zone: 'utc' });
+		const firstPayoutEmailReceivers = await getFirstPayoutEmailReceivers(firestoreAdmin, fromDate, toDate);
 
-	const now = DateTime.now();
-	const fromDate = DateTime.fromObject({ year: now.year, month: now.month - 1, day: 16, hour: 0 }, { zone: 'utc' });
-	const toDate = DateTime.fromObject({ year: now.year, month: now.month, day: 16, hour: 0 }, { zone: 'utc' });
-	const firstPayoutEmailReceivers = await getFirstPayoutEmailReceivers(firestoreAdmin, fromDate, toDate);
+		await Promise.all(
+			firstPayoutEmailReceivers.map(async (entry) => {
+				const { email, language, templateData } = entry;
+				await sendgridClient.sendFirstPayoutEmail(email, language, templateData);
+			}),
+		);
 
-	await Promise.all(
-		firstPayoutEmailReceivers.map(async (entry) => {
-			const { email, language, templateData } = entry;
-			await sendgridClient.sendFirstPayoutEmail(email, language, templateData);
-		}),
-	);
+		message = `Successfully sent first payout emails to ${firstPayoutEmailReceivers.length} users`;
+		logger.info(message);
+	} catch (error) {
+		message = `Failed to send first payout emails: ${error}`;
+		logger.error(message);
+	} finally {
+		sendgridClient.send({
+			to: 'dev@socialincome.org',
+			from: 'hello@socialincome.org',
+			subject: 'First payout email cron job',
+			text: message,
+		});
+	}
 });
