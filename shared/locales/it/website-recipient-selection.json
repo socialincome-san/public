@@ -1,14 +1,14 @@
 {
-	"title": "Recipients Selection",
-	"introduction": "Social Income, like any UBI project, has limited financial resources. Choosing who gets help and who doesn't is tough. We want everyone to understand how we select our recipients. Since November 2023, we’ve employed a new way to randomly select people from poor communities, thanks to our partnership with <a href='https://drand.love' target='_blank' class='underline'>drand</a>.",
+	"title": "Selezione dei Beneficiari",
+	"introduction": "Social Income, come ogni progetto di Reddito di Base Universale (UBI), si trova a operare con risorse finanziarie limitate. La decisione su chi riceve aiuto e chi no è difficile da prendere. Desideriamo che tutti comprendano il criterio di selezione dei nostri beneficiari. A partire da novembre 2023, abbiamo adottato un nuovo metodo per selezionare in modo casuale le persone nelle comunità più svantaggiate, grazie alla nostra collaborazione con <a href='https://drand.love' target='_blank' class='underline'>drand</a>.",
 	"selection-process": {
-		"title": "Our selection process in 3 steps",
+		"title": "Il nostro processo di selezione in 3 fasi",
 		"step-1": {
-			"title": "Step 1: Finding potential recipients",
-			"text": "We team up with a variety of international and local NGOs who support marginalized communities and are familiar with poverty at the local level. After visiting and positively assessing these NGOs – as well as the areas and communities they support – we may request that they provide us with a list of all potential recipients. Potential recipients are people living in poverty with whom they maintain direct contact. Depending on the communities supported, those lists can include anything from 100 to 1000 names."
+			"title": "Fase 1: Individuare i potenziali beneficiari",
+			"text": "Collaboriamo con diverse ONG internazionali e locali che operano a sostegno delle comunità marginalizzate e hanno competenze specifiche sulla povertà a livello locale. Dopo aver visitato e valutato positivamente queste organizzazioni, così come le aree e le comunità che esse supportano, chiediamo loro di fornirci un elenco di tutti i potenziali beneficiari. Questi potenziali beneficiari sono persone in situazioni di povertà con le quali le ONG mantengono un contatto diretto. A seconda delle comunità assistite, tali elenchi possono contenere da 100 a 1000 nomi."
 		},
 		"step-2": {
-			"title": "Step 2: Selecting at random and with utmost transparency",
+			"title": "Fase 2: Selezione casuale e massima trasparenza",
 			"text": "The lists we are working with during selection contain minimal information about potential recipients. They are subsequently anonymized (hashed) and uploaded to our open-source repository. With the help of a random number generated and published by drand, a mechanism is set in place to select a predetermined number of individuals from the list. This process can be mathematically traced back and verified without compromising recipients’ data.",
 			"card": "\uD83D\uDD0E Upcoming: allowing everyone to easily verify for themselves whether or not they're on one of the NGOs' lists or whether they have been chosen."
 		},
