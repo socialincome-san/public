@@ -9,16 +9,16 @@
 		},
 		"step-2": {
 			"title": "Fase 2: Selezione casuale e massima trasparenza",
-			"text": "The lists we are working with during selection contain minimal information about potential recipients. They are subsequently anonymized (hashed) and uploaded to our open-source repository. With the help of a random number generated and published by drand, a mechanism is set in place to select a predetermined number of individuals from the list. This process can be mathematically traced back and verified without compromising recipients’ data.",
-			"card": "\uD83D\uDD0E Upcoming: allowing everyone to easily verify for themselves whether or not they're on one of the NGOs' lists or whether they have been chosen."
+			"text": "Le liste con cui operiamo durante la selezione contengono poche informazioni sui potenziali beneficiari. Questi dati vengono successivamente anonimizzati, criptati e caricati sul nostro archivio open-source. Grazie all'ausilio di un numero casuale generato e reso pubblico da drand, viene avviato un meccanismo per selezionare un numero predeterminato di individui dall'elenco. Questo processo può essere tracciato e verificato matematicamente senza compromettere i dati dei beneficiari.",
+			"card": "\uD83D\uDD0E Prossimamente: offriremo a tutti la possibilità di verificare facilmente se sono inclusi negli elenchi delle ONG o se sono stati selezionati."
 		},
 		"step-3": {
-			"title": "Step 3: Communicating transparently",
-			"text": "After a draw, we reach out to both the NGO and the community directly to share the results. The beneficiaries who were selected – upon confirming their participation – then provide additional information and are onboarded for our 3-year program"
+			"title": "Fase 3: Comunicare in modo trasparente",
+			"text": "Dopo il sorteggio, contattiamo direttamente sia l'ONG che la comunità per condividere i risultati. I beneficiari selezionati, previa conferma della loro partecipazione, forniscono ulteriori informazioni e vengono quindi inclusi nel nostro programma triennale."
 		}
 	},
 	"faq": {
-		"title": "Frequently asked questions",
+		"title": "FAQ",
 		"questions": [
 			{
 				"question": "Why do we select randomly out of a pool of qualified recipients?",
@@ -42,14 +42,14 @@
 			}
 		]
 	},
-	"past-draws": "Past Draws",
-	"past-draws-description": "The following list shows the past draws that have taken place to select recipients for Social Income.",
+	"past-draws": "Ultimi sorteggi",
+	"past-draws-description": "Di seguito sono elencati i sorteggi che si sono svolti per selezionare i beneficiari di Social Income.",
 	"draw-card": {
-		"summary": "{{ count }} out of {{ total }} selected",
-		"random-number": "Random number",
-		"confirm-drand": "Confirm on drand",
-		"confirm-github": "Confirm on Github",
-		"long-list": "{{ total }} people on the long list, {{ count }} selected",
-		"people": "People"
+		"summary": "{{ count }} su {{ total }} selezionate",
+		"random-number": "Numero casuale",
+		"confirm-drand": "Conferma su drand",
+		"confirm-github": "Conferma su Github",
+		"long-list": "{{ total }} persone nella lista d'attesa, {{ count }} selezionate",
+		"people": "Persone"
 	}
 }
