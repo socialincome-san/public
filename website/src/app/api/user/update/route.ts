@@ -1,5 +1,4 @@
 import { firestoreAdmin } from '@/firebase-admin';
-import { MailchimpAPIInitialisationData } from '@socialincome/shared/src/mailchimp/MailchimpAPI';
 import { SendgridSubscriptionClientProps } from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
 import { StripeEventHandler } from '@socialincome/shared/src/stripe/StripeEventHandler';
 import { User } from '@socialincome/shared/src/types/user';

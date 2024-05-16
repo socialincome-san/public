@@ -47,7 +47,11 @@ export class StripeEventHandler {
 		}
 	};
 
-	updateUser = async (checkoutSessionId: string, userData: Partial<User>, sendgridClientData: SendgridSubscriptionClientProps = {} as SendgridSubscriptionClientProps) => {
+	updateUser = async (
+		checkoutSessionId: string,
+		userData: Partial<User>,
+		sendgridClientData: SendgridSubscriptionClientProps = {} as SendgridSubscriptionClientProps,
+	) => {
 		const checkoutSession = await this.stripe.checkout.sessions.retrieve(checkoutSessionId);
 		const customer = await this.stripe.customers.retrieve(checkoutSession.customer as string);
 		if (customer.deleted) throw Error(`Dealing with a deleted Stripe customer (id=${customer.id})`);
@@ -56,10 +60,10 @@ export class StripeEventHandler {
 		await this.firestoreAdmin.doc<User>(USER_FIRESTORE_PATH, user.id).update(userData);
 		if (sendgridClientData.apiKey && sendgridClientData.listId && sendgridClientData.suppressionListId) {
 			const sendgridSubscriptionClient = new SendgridSubscriptionClient({
-				apiKey: sendgridClientData.apiKey, 
-				listId: sendgridClientData.listId, 
-				suppressionListId: sendgridClientData.suppressionListId
-			})
+				apiKey: sendgridClientData.apiKey,
+				listId: sendgridClientData.listId,
+				suppressionListId: sendgridClientData.suppressionListId,
+			});
 			sendgridSubscriptionClient.upsertSubscription({
 				email: userData.email ?? '',
 				status: 'subscribed',
@@ -67,8 +71,8 @@ export class StripeEventHandler {
 				firstname: userData.personal?.name,
 				lastname: userData.personal?.lastname,
 				country: userData.address?.country,
-				source: 'contributor'
-			})
+				source: 'contributor',
+			});
 		}
 	};
 
