@@ -1,0 +1,190 @@
+{
+	"section-1": {
+		"title-1": "Quante persone puoi aiutare",
+		"title-2": "ad uscire dalla povertà",
+		"title-3": "con l’1% del tuo reddito?",
+		"income-text": "Inserisci il tuo reddito mensile per scoprire come puoi fare la differenza.",
+		"amount": "AmountIT",
+		"button-text": "Mostra il mio impatto",
+		"privacy-commitment": "Il nostro impegno per la privacy",
+		"tax-deductible": "Le donazioni sono deducibili dalle tasse in Svizzera",
+		"one-time-donation": "Fai una donazione una tantum"
+	},
+	"section-2": {
+		"title-1": "Cosa cambierebbe",
+		"title-2": "se donassi l’1% del tuo reddito ogni mese?",
+		"subtitle-1": "Non molto, vero? La tua vita andrebbe avanti come al solito.",
+		"video-button": "Riproduci il video",
+		"vimeo-video-id": "433937157"
+	},
+	"section-3": {
+		"title": [
+			{
+				"text": "Who should, if not us "
+			},
+			{
+				"text": "here in Switzerland?",
+				"color": "secondary"
+			}
+		],
+		"jackpot-title": "Life in Switzerland is like winning the jackpot.",
+		"jackpot-text": "People in Switzerland have systematically more opportunities and higher chances of leading a life worth living than anywhere else in the world.",
+		"jackpot-button": "Share the love",
+		"helping-others-title": "Helping others makes us happier.",
+		"helping-others-text": "Let’s start by helping those who don’t have the privilege of leading a life without financial difficulties. If not now, when?",
+		"helping-others-button": "Take Action",
+		"together-title": "Together we can make a major difference.",
+		"together-text": "If every fourth person in Switzerland contributed 1% of their income, every citizen of Sierra Leone could receive universal basic income and make poverty a thing of the past.",
+		"together-button": "Lead the Way"
+	},
+	"section-4": {
+		"title-1": "La giustizia sociale comincia",
+		"title-2": " da noi.",
+		"subtitle": "Social income è un’iniziativa solidale che ha lo scopo di mettere in contatto persone di tutto il mondo attraverso piccole donazioni ad alto impatto sociale.",
+		"paragraph-1": "Se ci pensi, abbiamo già tutto quello che serve per contrastare le disuguaglianze: chi può offrire aiuto e chi ha bisogno di riceverlo. L’unica cosa che manca è di metterli in contatto tra loro.",
+		"paragraph-2": "Ed è qui che Social Income entra in gioco, mettendo in pratica una redistribuzione diretta della ricchezza, basata sulla solidarietà e resa possibile dalla tecnologia.",
+		"paragraph-3": "Social Income non potrà porre fine a tutte le disuguaglianze strutturali, ma getterà le basi per un cambiamento reale.",
+		"paragraph-4": "Chiedendo un modesto contributo dell’1% del reddito individuale, offriamo la possibilità a persone di tutte le estrazioni sociali di aiutare coloro che ne hanno bisogno e di contribuire ad un mondo più equo."
+	},
+	"section-5": {
+		"articles": "Articles",
+		"faqs": "Frequently Asked Questions",
+		"title": "Combiniamo tre criteri per ottenere un cambiamento.",
+		"card-1": {
+			"title": "Reddito di Base Universale",
+			"item-1": "Riduce le discriminazioni",
+			"item-2": "Combatte la disparità di reddito",
+			"item-3": "Rafforza i gruppi più vulnerabili",
+			"item-4": "Migliora le condizioni di lavoro",
+			"paragraph-1": "Il Reddito di Base Universale (RBU) è un programma di aiuto in denaro per le persone in difficoltà garantito dal governo. L’obiettivo è di fornire abbastanza soldi per coprire le spese essenziali di sostentamento e migliorare/potenziare la sicurezza finanziaria dei beneficiari.",
+			"paragraph-2": "Simile al RBU, l’idea di Social Income si basa su trasferimenti regolari di denaro con lo scopo di assicurare il fabbisogno minimo per la sussistenza. Mentre il reddito di base incondizionato è finanziato dallo stato, Social Income nasce come un’iniziativa solidale privata dal basso verso l’alto - da persona a persona.",
+			"article-1-title": "The Case for a Universal Basic Income",
+			"article-1-author": "Kanni Wignaraja, UN Assistant Secretary-General",
+			"article-1-link": "https://www.undp.org/content/undp/en/home/blog/2020/the-case-for-a-universal-basic-income.html",
+			"article-2-title": "The UN has called for UBI for the world's poorest during the pandemic",
+			"article-2-author": "Michelle Nichols, Journalist (Reuters)",
+			"article-2-link": "https://www.weforum.org/agenda/2020/07/un-report-development-coronavirus-covid-ubi-poverty/",
+			"article-3-title": "How Universal Basic Income Can Help Address the Racial Wealth Gap",
+			"article-3-author": "Dr. Bernice King and Michael Tubbs for Times",
+			"article-3-link": "https://time.com/5863751/dr-bernice-king-and-mayor-michael-tubbs-on-how-universal-basic-income-can-help-address-the-racial-wealth-gap/",
+			"article-4-title": "Ten Reasons to Support Basic Income",
+			"article-4-author": "Basic Income UK",
+			"article-4-link": "https://www.basicincome.org.uk/reasons-support-basic-income/",
+			"faq-1-question": "What is the difference between Social Income and Universal Basic Income?",
+			"faq-1-link": "/faq",
+			"faq-2-question": "What do recipients need the money for?",
+			"faq-2-link": "/faq"
+		},
+		"card-2": {
+			"title": "Trasferimenti Diretti di Denaro",
+			"item-1": "Minimizzano i costi operativi",
+			"item-2": "Riducono la povertà",
+			"item-3": "Aiutano le persone ad emanciparsi",
+			"item-4": "Stimolano i mercati locali",
+			"paragraph-1": "I Trasferimenti Diretti di Denaro sono versamenti effettuati a sostegno di persone in stato di necessità, spesso da parte di governi o di ONG. Possono essere erogati in maniera incondizionata o subordinati al compimento di specifici requisiti. I trasferimenti in contanti permettono ai beneficiari di ottenere una serie di beni e servizi di loro scelta direttamente dai mercati e dai fornitori di servizi locali.",
+			"paragraph-2": "L’invio diretto di denaro da parte di Social Income non dipende da decisioni politiche, da bilanci governativi o da tasse. L’obiettivo principale di Social Income è la redistribuzione volontaria e diretta della ricchezza tra singoli individui.",
+			"article-1-title": "Direct Cash Transfers",
+			"article-1-author": "Cash Transfer Evidence Paper",
+			"article-1-link": "https://www.who.int/alliance-hpsr/alliancehpsr_dfidevidencepaper.pdf",
+			"article-2-title": "Guidelines for Cash Transfer Programming",
+			"article-2-author": "International Red Cross",
+			"article-2-link": "https://www.ifrc.org/Global/Publications/disasters/finance/cash-guidelines-en.pdf",
+			"article-3-title": "Is Cash Better for Poor People Than Conventional Foreign Aid?",
+			"article-3-author": "Marc Gunther, New York Times",
+			"article-3-link": "https://www.nytimes.com/2018/09/11/opinion/is-cash-better-for-poor-people-than-conventional-foreign-aid.html",
+			"article-4-title": "Cash Transfers for Children—Investing into the Future",
+			"article-4-author": "The Lancet",
+			"article-4-link": "https://www.thelancet.com/action/showPdf?pii=S0140-6736%2809%2961166-1",
+			"faq-1-question": "Are direct cash payments an effective way to fight poverty?",
+			"faq-1-link": "/faq",
+			"faq-2-question": "Is it helpful to send money to people in need?",
+			"faq-2-link": "/faq",
+			"faq-3-question": "What are Direct Cash Transfers?",
+			"faq-3-link": "/faq"
+		},
+		"card-3": {
+			"title": "Mobile Banking",
+			"item-1": "Commissioni ridotte",
+			"item-2": "Facile ed immediato",
+			"item-3": "Scalabile",
+			"item-4": "A prova di crisi (Covid-19)",
+			"paragraph-1": "Il Mobile Banking è un servizio offerto da una banca, da un operatore di telefonia mobile o da un altro istituto finanziario che consente ai suoi clienti di effettuare transazioni finanziarie in remoto utilizzando un dispositivo mobile come un telefono o un tablet. L’Africa è all’avanguardia nel processo di diffusione capillare del mobile banking.",
+			"paragraph-2": "Social Income si rivolge a persone che vivono in povertà e il cui accesso ai servizi finanziari può essere garantito (solo) tramite un telefono cellulare.",
+			"article-1-title": "Mobile Phones Are Replacing Bank Accounts in Africa",
+			"article-1-author": "Moses Mozart Dzawu, Bloomberg",
+			"article-1-link": "https://www.bloomberg.com/news/articles/2019-08-13/mobile-phones-are-replacing-bank-accounts-in-africa",
+			"article-2-title": "The Future of African Banking and the Impact of Mobile Money",
+			"article-2-author": "Fabio Scala, Further Africa",
+			"article-2-link": "https://furtherafrica.com/2020/01/06/the-future-of-african-banking-and-the-impact-of-mobile-money/",
+			"article-3-title": "How Mobile Money Can Lead a Fintech Revolution in Africa",
+			"article-3-author": "Amadou N. R. Sy, Advisor in the African Department, IMF",
+			"article-3-link": "https://www.weforum.org/agenda/2019/02/fintech-in-sub-saharan-africa-a-potential-game-changer",
+			"article-4-title": "You’ve Got Money: Mobile Payments Help People During the Pandemic",
+			"article-4-author": "Sonja Davidovic, Delphine Prady, Economists at IMF",
+			"article-4-link": "https://basicincome.org.uk/reasons-support-basic-income/",
+			"faq-1-question": "Are direct cash payments an effective way to fight poverty?",
+			"faq-1-link": "/faq"
+		}
+	},
+	"section-6": {
+		"title-1": "Contribuisci agli",
+		"title-2": "Obiettivi di Sviluppo Sostenibile delle Nazioni Unite.",
+		"card-1": {
+			"title": "SDG 1",
+			"description": "Porre fine alla povertà in tutte le sue forme, ovunque",
+			"paragraph-1": "Il primo obiettivo di sviluppo sostenibile chiede la fine della povertà in tutte le sue forme entro il 2030. Mira inoltre a garantire la protezione sociale ai poveri e ai vulnerabili, ad aumentare l’accesso ai servizi di base, e a supportare coloro che sono danneggiati da shock sociali, economici e climatici di ogni tipo."
+		},
+		"card-2": {
+			"title": "SDG 10",
+			"description": "Ridurre le diseguaglianze economiche dentro e fuori dai confini nazionali",
+			"paragraph-1": "Ridurre le disuguaglianze e garantire che nessuno venga lasciato indietro sono parte integrante del raggiungimento degli Obiettivi di Sviluppo Sostenibile. Nonostante i segnali positivi riguardanti la riduzione di alcune forme di disuguaglianza (come la riduzione della disuguaglianza del reddito relativo in alcuni stati e le misure commerciali preferenziali a vantaggio dei paesi a basso reddito), la disuguaglianza continua a persistere."
+		}
+	},
+	"section-7": {
+		"title-1": "Siamo orgogliosi dei",
+		"title-2": "riconoscimenti ricevuti.",
+		"subtitle": "Social Income ha ricevuto finanziamenti e supporto da vari programmi di accelerazione e sviluppo, tra cui le seguenti organizzazioni:"
+	},
+	"video": {
+		"video-id": "896169775",
+		"credits-title": "Credits",
+		"credits-content": [
+			{
+				"role": "Director of Photography",
+				"name": "Gabriel Koller"
+			},
+			{
+				"role": "Editor",
+				"name": "Nicolas Küng"
+			},
+			{
+				"role": "Sound Design & Music",
+				"name": "Tidiane Sane"
+			},
+			{
+				"role": "Mix & Mastering",
+				"name": "Nicola-Miloš Mišić"
+			},
+			{
+				"role": "Colorist",
+				"name": "Simon Hardegger"
+			},
+			{
+				"role": "Camera Assistant",
+				"name": "Felix Rhodes"
+			},
+			{
+				"role": "Narrator",
+				"name": "Ted Limpert"
+			},
+			{
+				"role": "Graphic Animator",
+				"name": "Raphael Schoen"
+			},
+			{
+				"role": "Translator (Caption)",
+				"name": "Françoise Légeret (FR), Riccardo Tamburini (ES, IT)"
+			}
+		]
+	}
+}

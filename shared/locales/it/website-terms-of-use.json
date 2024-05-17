@@ -1,0 +1,38 @@
+{
+	"metadata": {
+		"title": "Terms of Use | Social Income",
+		"description": "We're using the phrase Terms of Use to describe a general agreement between you and us."
+	},
+	"title": "Terms of Use",
+	"general": {
+		"title": "General",
+		"section-1": "The website socialincome.org (hereinafter “website”) is operated by Social Income, a non-profit organization with a registered office in Zurich, Switzerland (hereinafter “Social Income”). By accessing and using this website, you declare that you have read and understood, and that you agree to the following terms of use and all other legal information available on this website that govern the use of this website (hereinafter collectively referred to as the “Terms of Use”).",
+		"section-2": "If you do not agree to these Terms of Use, you may not access or use the Services. If you do not agree with the Terms of Use, you must immediately stop using this website.",
+		"section-3": "You acknowledge that Social Income may, without prior notice update, modify, or remove the Terms of Use at any time. Changes apply from the moment of publication of the amended Terms of Use on the website. If we make material changes that adversely affect your rights, then we will let you know before the changes come into effect. By continuing to use this website, you explicitly agree to the changes."
+	},
+	"links": {
+		"title": "Links to third party websites",
+		"section-1": "This website may contain links to websites operated by third parties. Third-party websites are not under the control of Social Income and are subject to the respective third party’s terms and conditions. Social Income assumes no warranty or liability in connection with these third-party websites."
+	},
+	"data": {
+		"title": "Your data and website usage",
+		"section-1": "The transfer, collection and processing of personal data via this website is subject to the <a href='/privacy-policy'>Privacy Policy.</a>",
+		"section-2": "If you decide to make a contribution with Social Income’s projects, you will be asked to agree to the <a href='/terms-and-conditions'>Terms and Conditions</a>."
+	},
+	"liability": {
+		"title": "Limitation of liability",
+		"section-1": "Herewith you acknowledge that access to this website and the use thereof, the transfer of data to and from this website, the access to third party websites via links available on this website, as well as any actions taken on the basis of the contents of this website, are undertaken at your own risk. To the fullest extent permitted by law Social Income hereby excludes all contractual and non-contractual liability for any direct and indirect damages that may arise thereof.",
+		"section-2": "For this clause, “Social Income” is defined to include our subsidiaries, affiliates, officers, directors, employees, agents and third party service providers.",
+		"section-3": "Die Gewährleistungsausschlüsse unter dieser Klausel gelten auch für uns unterstellte Gesellschaften, verbundenen Unternehmen und für Drittanbieter von Dienstleistungen."
+	},
+	"warranty": {
+		"title": "Warranty disclaimer",
+		"section-1": "Social Income strives to keep the content on this website up-to-date, complete, and accurate. However, with any information provided to you through our website, rapid changes may occasionally be implemented and timeliness, accuracy, and completeness cannot always be guaranteed. The contents of this website do not contain any assurances or warranties of such kind.",
+		"section-2": "You acknowledge that Social Income is provided “as is” and without warranty of any kind. Any warranty of merchantability, fitness for a particular purpose, non-infringement, and any other warranty is excluded to the greatest extent permitted by law."
+	},
+	"disagreements": {
+		"title": "How we resolve disagreements",
+		"section-1": "We encourage you to contact us in case of any issue arising in connection with your use of Social Income and the website. Questions and concerns regarding Social Income, contributions, and our Terms and Conditions may be directed to <a href='mailto:legal@socialincome.org'>legal@socialincome.org</a> at any time. We will respond to you within two working days.",
+		"section-2": "If we cannot find a solution and if one of us has to go to court, Swiss law applies to the exclusion of the conflict of law provisions for any disputes which arise in connection with these Terms and Use. The applicable court of jurisdiction is the City of Zurich, Switzerland."
+	}
+}
