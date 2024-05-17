@@ -193,7 +193,10 @@
 	},
 	"section-3": {
 		"topic": "Emancipazione",
-		"title": [{ "text": "In che modo Social Income dà" }, { "text": "maggior potere alle persone?", "color": "secondary" }],
+		"title": [
+			{ "text": "In che modo Social Income dà" },
+			{ "text": "maggior potere alle persone?", "color": "secondary" }
+		],
 		"evidence": "Gli studi sui programmi di trasferimento diretto di denaro come Social Income hanno misurato una serie di effetti positivi sulla vita dei beneficiari.",
 		"cards": [
 			{
