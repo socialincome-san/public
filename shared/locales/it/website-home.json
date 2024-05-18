@@ -1,18 +1,18 @@
 {
 	"section-1": {
-		"title-1": "Quante persone puoi aiutare",
+		"title-1": "Quante persone puoi aiutare ",
 		"title-2": "ad uscire dalla povertà",
 		"title-3": "con l’1% del tuo reddito?",
 		"income-text": "Inserisci il tuo reddito mensile per scoprire come puoi fare la differenza.",
-		"amount": "AmountIT",
+		"amount": "Importo",
 		"button-text": "Mostra il mio impatto",
 		"privacy-commitment": "Il nostro impegno per la privacy",
 		"tax-deductible": "Le donazioni sono deducibili dalle tasse in Svizzera",
 		"one-time-donation": "Fai una donazione una tantum"
 	},
 	"section-2": {
-		"title-1": "Cosa cambierebbe",
-		"title-2": "se donassi l’1% del tuo reddito ogni mese?",
+		"title-1": "Cosa cambierebbe se donassi ",
+		"title-2": "l’1% del tuo reddito ogni mese?",
 		"subtitle-1": "Non molto, vero? La tua vita andrebbe avanti come al solito.",
 		"video-button": "Riproduci il video",
 		"vimeo-video-id": "433937157"
@@ -47,8 +47,8 @@
 		"paragraph-4": "Chiedendo un modesto contributo dell’1% del reddito individuale, offriamo la possibilità a persone di tutte le estrazioni sociali di aiutare coloro che ne hanno bisogno e di contribuire ad un mondo più equo."
 	},
 	"section-5": {
-		"articles": "Articles",
-		"faqs": "Frequently Asked Questions",
+		"articles": "Articoli",
+		"faqs": "FAQ",
 		"title": "Combiniamo tre criteri per ottenere un cambiamento.",
 		"card-1": {
 			"title": "Reddito di Base Universale",
@@ -70,9 +70,9 @@
 			"article-4-title": "Ten Reasons to Support Basic Income",
 			"article-4-author": "Basic Income UK",
 			"article-4-link": "https://www.basicincome.org.uk/reasons-support-basic-income/",
-			"faq-1-question": "What is the difference between Social Income and Universal Basic Income?",
+			"faq-1-question": "Qual è la differenza tra Social Income e il Reddito di Base Universale?",
 			"faq-1-link": "/faq",
-			"faq-2-question": "What do recipients need the money for?",
+			"faq-2-question": "Come dispongono i beneficiari del denaro ricevuto?",
 			"faq-2-link": "/faq"
 		},
 		"card-2": {
