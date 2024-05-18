@@ -20,22 +20,22 @@
 	"section-3": {
 		"title": [
 			{
-				"text": "Who should, if not us "
+				"text": "Chi dovrebbe fare qualcosa, se non noi "
 			},
 			{
-				"text": "here in Switzerland?",
+				"text": "qui in Svizzera?",
 				"color": "secondary"
 			}
 		],
-		"jackpot-title": "Life in Switzerland is like winning the jackpot.",
-		"jackpot-text": "People in Switzerland have systematically more opportunities and higher chances of leading a life worth living than anywhere else in the world.",
-		"jackpot-button": "Share the love",
-		"helping-others-title": "Helping others makes us happier.",
-		"helping-others-text": "Let’s start by helping those who don’t have the privilege of leading a life without financial difficulties. If not now, when?",
-		"helping-others-button": "Take Action",
-		"together-title": "Together we can make a major difference.",
-		"together-text": "If every fourth person in Switzerland contributed 1% of their income, every citizen of Sierra Leone could receive universal basic income and make poverty a thing of the past.",
-		"together-button": "Lead the Way"
+		"jackpot-title": "Vivere in Svizzera è come vincere alla lotteria",
+		"jackpot-text": "In Svizzera, le persone hanno sistematicamente più opportunità e maggiori possibilità di condurre una vita degna di essere vissuta rispetto a qualsiasi altra parte del mondo.",
+		"jackpot-button": "Condividi il bene",
+		"helping-others-title": "Aiutare gli altri ci rende più felici",
+		"helping-others-text": "Iniziamo con aiutare chi non ha il privilegio di vivere senza difficoltà finanziarie. Se non ora, quando?",
+		"helping-others-button": "Passa all'azione",
+		"together-title": "Insieme possiamo fare una grande differenza",
+		"together-text": "Se una persona su quattro in Svizzera donasse l'1% del proprio reddito, ogni cittadino della Sierra Leone potrebbe ricevere un reddito di base universale, e la povertà potrebbe diventare un ricordo del passato.",
+		"together-button": "Fai da apripista"
 	},
 	"section-4": {
 		"title-1": "La giustizia sociale comincia",
@@ -127,7 +127,7 @@
 		}
 	},
 	"section-6": {
-		"title-1": "Contribuisci agli",
+		"title-1": "Contribuisci agli ",
 		"title-2": "Obiettivi di Sviluppo Sostenibile delle Nazioni Unite.",
 		"card-1": {
 			"title": "SDG 1",
@@ -141,7 +141,7 @@
 		}
 	},
 	"section-7": {
-		"title-1": "Siamo orgogliosi dei",
+		"title-1": "Siamo orgogliosi dei ",
 		"title-2": "riconoscimenti ricevuti.",
 		"subtitle": "Social Income ha ricevuto finanziamenti e supporto da vari programmi di accelerazione e sviluppo, tra cui le seguenti organizzazioni:"
 	},
