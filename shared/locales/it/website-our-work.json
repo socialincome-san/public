@@ -6,7 +6,7 @@
 		"twitter-image": "/assets/metadata/twitter/our-work-en.jpg"
 	},
 	"our-work": {
-		"title-1": "Il cambiamento. Da telefono a telefono.",
+		"title-1": "Il cambiamento. Da telefono a telefono. ",
 		"title-2": "È nelle tue mani.",
 		"subtitle": "Social Income è un nuovo modo per combattere la povertà nel Sud Globale, creando un vero cambiamento, da persona a persona.",
 		"watch": "Riproduci il video",
@@ -14,11 +14,11 @@
 	},
 	"how-it-works": {
 		"header": "Come funziona",
-		"title-1": "Un contributo solidale,",
+		"title-1": "Un contributo solidale, ",
 		"title-2": "da te a chi ne ha bisogno.",
 		"text": "Siamo convinti che le persone in povertà sappiano meglio di chiunque altro come migliorare le proprie condizioni di vita.",
 		"subtitle": "Fai la differenza in meno di 1 minuto.",
-		"item-1": "100% of individual contributions are paid out to recipients",
+		"item-1": "Il 100% delle donazioni individuali viene distribuito ai destinatari.",
 		"item-2": "Programmi di pagamento flessibili. Modifica o annulla in qualsiasi momento.",
 		"item-3": "I versamenti vengono inviati direttamente ai telefoni cellulari dei beneficiari.",
 		"item-4": "L’importo versato è calcolato in base al salario medio nel luogo di residenza dei beneficiari."
@@ -40,7 +40,7 @@
 	},
 	"recipients": {
 		"header": "I Beneficiari",
-		"title-1": "Interveniamo dove possiamo avere il maggior impatto.",
+		"title-1": "Interveniamo dove possiamo avere il maggior impatto. ",
 		"title-2": "Sierra Leone.",
 		"subtitle": "I beneficiari in Sierra Leone ricevono ciascuno 32 USD al mese, garantiti per tre anni.",
 		"our-criteria": "I nostri criteri",
@@ -55,7 +55,7 @@
 			"caption": "Partners: Aurora, Jamil & Nyanga Jaward, Reachout Salone, Equal Rights Alliance, Polio B&S Organisation, Freetown City Council"
 		},
 		"item-3": {
-			"title": "Età e Parità di Genere",
+			"title": "Età e parità di genere",
 			"text": "I beneficiari devono avere più di 16 anni. Ci impegniamo anche per la parità di genere tra i beneficiari.",
 			"caption": ""
 		},
@@ -71,7 +71,7 @@
 	},
 	"whats-next": {
 		"header": "Qual è la prossima mossa?",
-		"title-1": "Affrontiamo le cose",
+		"title-1": "Affrontiamo le cose ",
 		"title-2": "un passo alla volta.",
 		"subtitle": "L’obiettivo a lungo termine di Social Income è di creare un sistema di redistribuzione della ricchezza a favore di persone bisognose, con l’aiuto di donatori volontari provenienti da tutto il mondo. Come ogni progetto ambizioso, ci vuole tempo per crescere.",
 		"timeline": {
