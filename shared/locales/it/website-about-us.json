@@ -5,14 +5,14 @@
 	"landing-page": {
 		"title": [
 			{
-				"text": "Volevamo fare la differenza."
+				"text": "Volevamo fare la differenza. "
 			},
 			{
 				"text": "Abbiamo trovato il modo.",
 				"color": "secondary"
 			}
 		],
-		"subtitle": "Crediamo che migliorare le vite delle persone bisognose non sia solo una possibilità, ma anche una responsabilità. È così che è nato Social Income.",
+		"subtitle": "Crediamo che migliorare le vite delle persone bisognose non sia solo una possibilità, ma anche una responsabilità. È così che è nata Social Income.",
 		"contact": "Contattaci",
 		"contact-title": "Contattaci",
 		"contact-email": "hello@socialincome.org",
@@ -28,7 +28,7 @@
 		"header": "La nostra missione",
 		"title": [
 			{
-				"text": "Combattere la povertà globale con"
+				"text": "Combattere la povertà globale con "
 			},
 			{
 				"text": "l’aiuto della gente comune.",
@@ -48,7 +48,7 @@
 		"header": "La nostra promessa",
 		"title": [
 			{
-				"text": "Le donazioni sono destinate alle persone bisognose,"
+				"text": "Le donazioni sono destinate alle persone bisognose, "
 			},
 			{
 				"text": "non a coprire i costi operativi.",
@@ -65,7 +65,7 @@
 		"header": "Flusso dei fondi",
 		"title": [
 			{
-				"text": "Da tutto il mondo verso i Paesi del Sud."
+				"text": "Da tutto il mondo verso i Paesi del Sud. "
 			},
 			{
 				"text": "Sicuro, veloce e diretto.",
@@ -83,7 +83,7 @@
 		"header": "Il nostro Team",
 		"title": [
 			{
-				"text": "Stiamo trasformando Social Income"
+				"text": "Stiamo trasformando Social Income "
 			},
 			{
 				"text": "in realtà.",
@@ -94,7 +94,7 @@
 			"finance": "Finanze",
 			"operations": "Operazioni",
 			"marketing": "Marketing",
-			"communications": "Communicazione",
+			"communications": "Comunicazione",
 			"co-president": "Co-Presidente",
 			"founder": "Fondatore",
 			"board-member": "Membro del Consiglio Direttivo",
