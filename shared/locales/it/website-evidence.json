@@ -15,7 +15,7 @@
 	},
 	"section-2": {
 		"topic": "Riduzione della Povertà",
-		"title": [{ "text": "In che modo Social Income" }, { "text": "riduce la povertà?", "color": "secondary" }],
+		"title": [{ "text": "In che modo Social Income " }, { "text": "riduce la povertà?", "color": "secondary" }],
 		"evidence": "I risultati di numerosi studi mostrano che i programmi di trasferimento diretto di denaro come Social Income migliorano significativamente le finanze dei beneficiari in due modi rilevanti.",
 		"cards": [
 			{
@@ -194,7 +194,7 @@
 	"section-3": {
 		"topic": "Emancipazione",
 		"title": [
-			{ "text": "In che modo Social Income dà" },
+			{ "text": "In che modo Social Income dà " },
 			{ "text": "maggior potere alle persone?", "color": "secondary" }
 		],
 		"evidence": "Gli studi sui programmi di trasferimento diretto di denaro come Social Income hanno misurato una serie di effetti positivi sulla vita dei beneficiari.",
@@ -502,7 +502,7 @@
 	"section-4": {
 		"topic": "Benessere",
 		"title": [
-			{ "text": "HIn che modo Social Income contribuisce a " },
+			{ "text": "In che modo Social Income contribuisce a " },
 			{ "text": "un maggiore benessere?", "color": "secondary" }
 		],
 		"evidence": "Le ricerche mostrano che i programmi di trasferimento diretto di denaro come Social Income contribuiscono al benessere dei destinatari in tre modi importanti.",
