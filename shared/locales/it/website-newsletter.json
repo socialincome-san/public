@@ -3,27 +3,27 @@
 		"title": "Newsletter | Social Income"
 	},
 	"updates": {
-		"title": "Stay Informed",
-		"description-1": "Receive updates on Social Income, plus:",
-		"bullet-1": "Engaging stories from our recipients",
-		"bullet-2": "New research on direct cash transfers",
-		"bullet-3": "Summaries of the latest news around UBI",
-		"description-2": "Sent at the end of each month.",
-		"description-3": "Newsletters written by",
+		"title": "Rimani Informato",
+		"description-1": "Ricevi aggiornamenti su Social Income, inoltre:",
+		"bullet-1": "Storie coinvolgenti provenienti dai nostri beneficiari",
+		"bullet-2": "Nuove ricerche sui trasferimenti diretti di denaro",
+		"bullet-3": "Le ultime notizie sul reddito di base universale ",
+		"description-2": "Inviate alla fine di ogni mese.",
+		"description-3": "Newsletters scritta da",
 		"author-name": "Aurélie Schmiedlin",
-		"author-city": "Geneva",
-		"form-title": "Subscribe to our newsletter",
-		"firstname": "First Name",
+		"author-city": "Ginevra",
+		"form-title": "Iscriviti alla nostra newsletter",
+		"firstname": "Nome",
 		"email": "Email",
-		"submit-button": "Subscribe now",
-		"newsletter-updated-toast": "You have been added to the newsletter",
-		"newsletter-error-toast": "We weren't able to add you to our newsletter"
+		"submit-button": "Iscriviti ora",
+		"newsletter-updated-toast": "Sei stato aggiunto/a alla newsletter",
+		"newsletter-error-toast": "Non siamo stati in grado di aggiungerti alla nostra newsletter"
 	},
 	"popup": {
-		"information-label": "Our monthly newsletter updates you on Social Income, UBI and Direct Cash Transfers.",
-		"toast-success": "Thank you for subscribing to our newsletter!",
-		"toast-failure": "Something went wrong. Try again or contact us at hello@socialincome.org",
-		"email-placeholder": "Your email",
-		"button-subscribe": "Subscribe now"
+		"information-label": "La nostra newsletter mensile (in inglese) ti aggiorna su Social Income, il reddito di base universale e i trasferimenti diretti di denaro.",
+		"toast-success": "Grazie per iscriverti alla nostra newsletter!",
+		"toast-failure": "Qualcosa è andato storto. Prova di nuovo o contattaci a hello@socialincome.org",
+		"email-placeholder": "La tua email",
+		"button-subscribe": "Iscriviti ora"
 	}
 }
