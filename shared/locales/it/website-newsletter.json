@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "title": "Newsletter | Social Income"
+  },
+  "updates": {
+    "title": "Stay Informed",
+    "description-1": "Receive updates on Social Income, plus:",
+    "bullet-1": "Engaging stories from our recipients",
+    "bullet-2": "New research on direct cash transfers",
+    "bullet-3": "Summaries of the latest news around UBI",
+    "description-2": "Sent at the end of each month.",
+    "description-3": "Newsletters written by",
+    "author-name": "Aurélie Schmiedlin",
+    "author-city": "Geneva",
+    "form-title": "Subscribe to our newsletter",
+    "firstname": "First Name",
+    "email": "Email",
+    "submit-button": "Subscribe now",
+    "newsletter-updated-toast": "You have been added to the newsletter",
+    "newsletter-error-toast": "We weren't able to add you to our newsletter"
+  },
+  "popup": {
+    "information-label": "Our monthly newsletter updates you on Social Income, UBI and Direct Cash Transfers.",
+    "toast-success": "Thank you for subscribing to our newsletter!",
+    "toast-failure": "Something went wrong. Try again or contact us at hello@socialincome.org",
+    "email-placeholder": "Your email",
+    "button-subscribe": "Subscribe now"
+  }
+}
