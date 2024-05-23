@@ -16,6 +16,7 @@ import lorenzoImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/lore
 import mabelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mabel.jpeg';
 import mariatuImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mariatu.jpg';
 import marionImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marion.jpeg';
+import matthewImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/matthew.jpeg';
 import michaelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/michael.jpeg';
 import mikolajImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mikolaj.jpeg';
 import patrikImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/patrik.jpeg';
@@ -29,7 +30,6 @@ import simonImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon.
 import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simone.jpeg';
 import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
 import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
-import matthewImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/matthew.jpeg';
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, FontSize, Typography } from '@socialincome/ui';
