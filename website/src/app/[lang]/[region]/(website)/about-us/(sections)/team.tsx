@@ -29,6 +29,7 @@ import simonImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon.
 import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simone.jpeg';
 import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
 import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
+import matthewImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/matthew.jpeg';
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, FontSize, Typography } from '@socialincome/ui';
@@ -72,13 +73,11 @@ const groups: Group[] = [
 			{ name: 'Mikołaj Demkow', role: 'app-development', image: mikolajImage },
 			{ name: 'Verena Zaiser', role: 'app-development', image: verenaImage },
 			{ name: 'András Heé', role: 'software-development', image: andrasImage },
-			{ name: 'Carlos Badilla', role: 'impact-measurement', image: carlosImage },
-			{ name: 'Larissa dos Santos Lima', role: 'communications', image: larissaImage },
+			{ name: 'Carlos Badilla', role: 'fundraising', image: carlosImage },
+			{ name: 'Larissa dos Santos Lima', role: 'fundraising', image: larissaImage },
 			{ name: 'Pranav Chatur', role: 'software-development', image: pranavImage },
-			{ name: 'René Stalder', role: 'software-development', image: reneImage },
-			{ name: 'Simon Bühler', role: 'communications', image: simonImage },
-			{ name: 'Sarvesh Dwivedi', role: 'software-development', image: sarveshImage },
 			{ name: 'Thomas Brenner', role: 'software-development', image: thomasImage },
+			{ name: 'Matthew Roberts', role: 'communications', image: matthewImage },
 		],
 	},
 	{
@@ -105,6 +104,9 @@ const groups: Group[] = [
 			{ name: 'Sarah Mekni', role: 'strategy', image: sarahImage },
 			{ name: 'Lorenzo Garovi', role: 'strategy', image: lorenzoImage },
 			{ name: 'Anna-Lina Müller', role: 'strategy', image: annalinaImage },
+			{ name: 'Simon Bühler', role: 'communications', image: simonImage },
+			{ name: 'René Stalder', role: 'software-development', image: reneImage },
+			{ name: 'Sarvesh Dwivedi', role: 'software-development', image: sarveshImage },
 		],
 	},
 ];
