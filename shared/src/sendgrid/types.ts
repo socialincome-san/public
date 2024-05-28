@@ -27,7 +27,7 @@ export type SendgridContactType = {
 	_metadata: any[];
 	custom_fields: {
 		language: string;
-		source: string;
+		is_contributor: string;
 	};
 	created_at: string;
 	updated_at: string;
