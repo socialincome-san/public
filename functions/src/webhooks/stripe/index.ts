@@ -20,8 +20,10 @@ const addContributorToNewsletter = async (contributionRef: DocumentReference<Con
 		listId: NEWSLETTER_LIST_ID,
 		suppressionListId: NEWSLETTER_SUPPRESSION_LIST_ID,
 	});
-
 	const user = (await contributionRef.parent.doc().get()) as unknown as DocumentSnapshot<User>;
+	logger.info(
+		`Adding contributor ${user.id} (${user.get('email')}) to Sendgrid newsletter list (${NEWSLETTER_LIST_ID}).`,
+	);
 	await newsletterClient.upsertSubscription({
 		firstname: user.get('personal.name'),
 		lastname: user.get('personal.lastname'),
@@ -49,7 +51,9 @@ export default onRequest(async (request, response) => {
 			case 'charge.succeeded':
 			case 'charge.failed': {
 				const contributionRef = await stripeEventHandler.handleChargeEvent(charge);
+				logger.info(`Charge event ${event.type} handled for charge ${charge.id}.`);
 				if (contributionRef) {
+					logger.info(`Created contribution ${contributionRef.id}. Adding contributor to newsletter.`);
 					await addContributorToNewsletter(contributionRef);
 				}
 				break;
