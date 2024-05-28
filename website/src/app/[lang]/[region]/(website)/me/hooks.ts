@@ -83,7 +83,6 @@ export const useDonationCertificates = () => {
 	return { donationCertificates, loading: isLoading || isRefetching, error };
 };
 
-// Mailchimp
 export const useNewsletterSubscription = () => {
 	const api = useApi();
 	const {
@@ -95,7 +94,12 @@ export const useNewsletterSubscription = () => {
 		queryKey: ['me', 'newsletter'],
 		queryFn: async () => {
 			const response = await api.get('/api/newsletter/subscription');
-			return (await response.json()).status;
+			const responseData = await response.json();
+			if (responseData === null || !responseData.status) {
+				return 'unsubscribed';
+			} else {
+				return responseData.status;
+			}
 		},
 		staleTime: 3600000, // 1 hour
 	});

@@ -1,42 +1,51 @@
 import { authorizeRequest, handleApiError } from '@/app/api/auth';
-import { MailchimpAPI } from '@socialincome/shared/src/mailchimp/MailchimpAPI';
+import {
+	NEWSLETTER_LIST_ID,
+	NEWSLETTER_SUPPRESSION_LIST_ID,
+	SendgridSubscriptionClient,
+} from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
 import { NextResponse } from 'next/server';
 
 /**
- * Get Mailchimp subscription
+ * Get Newsletter subscription
  */
 export async function GET(request: Request) {
 	try {
 		const userDoc = await authorizeRequest(request);
-		const mailchimpAPI = new MailchimpAPI(process.env.MAILCHIMP_API_KEY!, process.env.MAILCHIMP_SERVER!);
-		const subscriber = await mailchimpAPI.getSubscriber(userDoc.get('email'), process.env.MAILCHIMP_LIST_ID!);
-		return NextResponse.json(subscriber ? { status: subscriber.status } : { status: 'unknown' });
+		const sendgrid = new SendgridSubscriptionClient({
+			apiKey: process.env.SENDGRID_API_KEY!,
+			listId: NEWSLETTER_LIST_ID,
+			suppressionListId: NEWSLETTER_SUPPRESSION_LIST_ID,
+		});
+		const subscriber = await sendgrid.getContact(userDoc.get('email'));
+		return NextResponse.json(subscriber);
 	} catch (error: any) {
 		return handleApiError(error);
 	}
 }
 
 /**
- * Upsert Mailchimp subscription
+ * Upsert Newsletter subscription
  */
-type NewsletterSubscriptionUpdateRequest = {
-	json(): Promise<{ status: 'subscribed' | 'unsubscribed'; source: 'subscriber' | 'contributor' }>;
-} & Request;
+type NewsletterSubscriptionUpdateRequest = { json(): Promise<{ status: 'subscribed' | 'unsubscribed' }> } & Request;
+
 export async function POST(request: NewsletterSubscriptionUpdateRequest) {
 	try {
 		const userDoc = await authorizeRequest(request);
 		const data = await request.json();
-		const mailchimpAPI = new MailchimpAPI(process.env.MAILCHIMP_API_KEY!, process.env.MAILCHIMP_SERVER!);
-		await mailchimpAPI.upsertSubscription(
-			{
-				email: userDoc.get('email'),
-				status: data.status,
-				firstname: userDoc.get('personal.name'),
-				lastname: userDoc.get('personal.lastname'),
-				language: userDoc.get('language'),
-			},
-			process.env.MAILCHIMP_LIST_ID!,
-		);
+		const sendgrid = new SendgridSubscriptionClient({
+			apiKey: process.env.SENDGRID_API_KEY!,
+			listId: NEWSLETTER_LIST_ID,
+			suppressionListId: NEWSLETTER_SUPPRESSION_LIST_ID,
+		});
+		await sendgrid.upsertSubscription({
+			firstname: userDoc.get('personal.name'),
+			lastname: userDoc.get('personal.lastname'),
+			email: userDoc.get('email'),
+			status: data.status,
+			language: userDoc.get('language'),
+			country: userDoc.get('country'),
+		});
 		return new Response(null, { status: 200, statusText: 'Success' });
 	} catch (error: any) {
 		return handleApiError(error);

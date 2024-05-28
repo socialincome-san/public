@@ -1,4 +1,4 @@
-import { firestore } from 'firebase-admin';
+import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
 import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../../../../../shared/src/firebase/admin/FirestoreAdmin';
 import {
@@ -6,7 +6,6 @@ import {
 	RECIPIENT_FIRESTORE_PATH,
 	RecipientProgramStatus,
 } from '../../../../../../shared/src/types/recipient';
-import QueryDocumentSnapshot = firestore.QueryDocumentSnapshot;
 
 export abstract class PaymentTask {
 	readonly firestoreAdmin: FirestoreAdmin;
