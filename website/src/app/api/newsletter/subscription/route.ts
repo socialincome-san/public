@@ -1,5 +1,9 @@
 import { authorizeRequest, handleApiError } from '@/app/api/auth';
-import { SendgridSubscriptionClient } from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
+import {
+	NEWSLETTER_LIST_ID,
+	NEWSLETTER_SUPPRESSION_LIST_ID,
+	SendgridSubscriptionClient,
+} from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
 import { NextResponse } from 'next/server';
 
 /**
@@ -10,8 +14,8 @@ export async function GET(request: Request) {
 		const userDoc = await authorizeRequest(request);
 		const sendgrid = new SendgridSubscriptionClient({
 			apiKey: process.env.SENDGRID_API_KEY!,
-			listId: process.env.SENDGRID_LIST_ID!,
-			suppressionListId: Number(process.env.SENDGRID_SUPPRESSION_LIST_ID!),
+			listId: NEWSLETTER_LIST_ID,
+			suppressionListId: NEWSLETTER_SUPPRESSION_LIST_ID,
 		});
 		const subscriber = await sendgrid.getContact(userDoc.get('email'));
 		return NextResponse.json(subscriber);
@@ -31,15 +35,16 @@ export async function POST(request: NewsletterSubscriptionUpdateRequest) {
 		const data = await request.json();
 		const sendgrid = new SendgridSubscriptionClient({
 			apiKey: process.env.SENDGRID_API_KEY!,
-			listId: process.env.SENDGRID_LIST_ID!,
-			suppressionListId: Number(process.env.SENDGRID_SUPPRESSION_LIST_ID!),
+			listId: NEWSLETTER_LIST_ID,
+			suppressionListId: NEWSLETTER_SUPPRESSION_LIST_ID,
 		});
 		await sendgrid.upsertSubscription({
-			email: userDoc.get('email'),
-			status: data.status,
 			firstname: userDoc.get('personal.name'),
 			lastname: userDoc.get('personal.lastname'),
+			email: userDoc.get('email'),
+			status: data.status,
 			language: userDoc.get('language'),
+			country: userDoc.get('country'),
 		});
 		return new Response(null, { status: 200, statusText: 'Success' });
 	} catch (error: any) {

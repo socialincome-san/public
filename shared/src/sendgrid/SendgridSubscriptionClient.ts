@@ -3,14 +3,17 @@ import { SendgridContactType } from '@socialincome/shared/src/sendgrid/types';
 import { CountryCode } from '../types/country';
 import { Suppression } from './types';
 
+export const NEWSLETTER_LIST_ID = '2896ee4d-d1e0-4a4a-8565-7e592c377e36';
+export const NEWSLETTER_SUPPRESSION_LIST_ID = 45634;
+
 export type NewsletterSubscriptionData = {
-	email: string;
-	status: 'subscribed' | 'unsubscribed';
-	language?: 'de' | 'en';
 	firstname?: string;
 	lastname?: string;
+	email: string;
+	language: 'de' | 'en';
 	country?: CountryCode;
-	source?: 'contributor' | 'subscriber';
+	status?: 'subscribed' | 'unsubscribed';
+	isContributor?: boolean;
 };
 
 export type SendgridSubscriptionClientProps = {
@@ -70,6 +73,9 @@ export class SendgridSubscriptionClient extends Client {
 		await this.request({ url: `/v3/asm/groups/${this.suppressionListId}/suppressions/${email}`, method: 'DELETE' });
 	};
 
+	/**
+	 * Add an email to the unsubscribe list.
+	 */
 	addSuppression = async (email: string) => {
 		await this.request({
 			url: `/v3/asm/groups/${this.suppressionListId}/suppressions`,
@@ -78,6 +84,9 @@ export class SendgridSubscriptionClient extends Client {
 		});
 	};
 
+	/**
+	 * Add a contact to the global contacts list.
+	 */
 	addContact = async (data: NewsletterSubscriptionData) => {
 		await this.request({
 			url: `/v3/marketing/contacts`,
@@ -87,13 +96,10 @@ export class SendgridSubscriptionClient extends Client {
 				contacts: [
 					{
 						email: data.email,
-						first_name: data.firstname ?? '',
-						last_name: data.lastname ?? '',
-						country: data.country ?? '',
-						custom_fields: {
-							language: data.language ?? 'en',
-							source: data.source ?? 'subscriber',
-						},
+						first_name: data.firstname,
+						last_name: data.lastname,
+						country: data.country,
+						custom_fields: { language: data.language, is_contributor: data.isContributor },
 					},
 				],
 			},

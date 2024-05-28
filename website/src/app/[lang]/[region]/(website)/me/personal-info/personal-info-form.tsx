@@ -308,11 +308,11 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 					id="newsletter-switch"
 					checked={status === 'subscribed'}
 					disabled={loading}
-					onCheckedChange={(enabled) => {
+					onCheckedChange={async (enabled) => {
 						if (enabled) {
-							upsertNewsletterSubscription('subscribed');
+							await upsertNewsletterSubscription('subscribed');
 						} else {
-							upsertNewsletterSubscription('unsubscribed');
+							await upsertNewsletterSubscription('unsubscribed');
 						}
 					}}
 				/>

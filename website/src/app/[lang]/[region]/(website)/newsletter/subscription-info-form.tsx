@@ -3,7 +3,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useApi } from '@/hooks/useApi';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { NewsletterSubscriptionData } from '@socialincome/shared/src/mailchimp/MailchimpAPI';
+import { NewsletterSubscriptionData } from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@socialincome/ui';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -24,6 +24,7 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 
 	const formSchema = z.object({
 		firstname: z.string(),
+		lastname: z.string(),
 		email: z.string().email(),
 	});
 
