@@ -27,6 +27,12 @@ export const redirectMiddleware = (request: NextRequest) => {
 			return NextResponse.redirect('https://donate.raisenow.io/dpbdp');
 		case '/erklaert':
 			return NextResponse.redirect('https://vimeo.com/randominstitute/erklaert');
+		case '/privacy':
+			return NextResponse.redirect('https://socialincome.org/legal/privacy');
+		case '/terms-and-conditions':
+			return NextResponse.redirect('https://socialincome.org/legal/donations');
+		case '/terms-of-use':
+			return NextResponse.redirect('https://socialincome.org/legal/site-use');
 		case '/explained':
 			return NextResponse.redirect('https://vimeo.com/randominstitute/socialincome');
 		case '/press':
@@ -40,6 +46,8 @@ export const redirectMiddleware = (request: NextRequest) => {
 			return NextResponse.redirect(new URL('/world-poverty-statistics-2024', request.url));
 		case '/ismatu':
 			return NextResponse.redirect('https://socialincome.org/campaign/MZmXEVHlDjOOFOMk82jW');
+		case '/thinkcell':
+			return NextResponse.redirect('https://socialincome.webdisc.ch/');
 	}
 };
 

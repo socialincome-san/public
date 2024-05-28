@@ -1,17 +1,17 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { Approach } from '@/app/[lang]/[region]/v2/(home)/(sections)/approach';
-import { ExplainerVideo } from '@/app/[lang]/[region]/v2/(home)/(sections)/explainer-video';
 import { Faq } from '@/app/[lang]/[region]/v2/(home)/(sections)/faq';
-import { HeroVideo } from '@/app/[lang]/[region]/v2/(home)/(sections)/hero-video';
-import { Journal } from '@/app/[lang]/[region]/v2/(home)/(sections)/journal';
-import { MobileIllustration } from '@/app/[lang]/[region]/v2/(home)/(sections)/mobile-illustration';
-import { MonthlyIncome } from '@/app/[lang]/[region]/v2/(home)/(sections)/monthly-income';
-import { Overview } from '@/app/[lang]/[region]/v2/(home)/(sections)/overview';
 import { Quotes } from '@/app/[lang]/[region]/v2/(home)/(sections)/quotes';
-import { RecipientSelection } from '@/app/[lang]/[region]/v2/(home)/(sections)/recipient-selection';
-import { Sdgoals } from '@/app/[lang]/[region]/v2/(home)/(sections)/sdgoals';
-import { Testimonials } from '@/app/[lang]/[region]/v2/(home)/(sections)/testimonials';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { Approach } from './(sections)/approach';
+import { ExplainerVideo } from './(sections)/explainer-video';
+import { HeroVideo } from './(sections)/hero-video';
+import { Journal } from './(sections)/journal';
+import { MobileIllustration } from './(sections)/mobile-illustration';
+import { MonthlyIncome } from './(sections)/monthly-income';
+import { Overview } from './(sections)/overview';
+import { RecipientSelection } from './(sections)/recipient-selection';
+import { Sdgoals } from './(sections)/sdgoals';
+import { Testimonials } from './(sections)/testimonials';
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
@@ -32,6 +32,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			<Testimonials lang={lang} region={region} />
 			<Sdgoals lang={lang} region={region} />
 			<Journal lang={lang} region={region} />
+			<div className="bg-foreground-dark mt-10 h-24 w-screen" />
 		</>
 	);
 }

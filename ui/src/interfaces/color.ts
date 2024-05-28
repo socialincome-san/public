@@ -19,6 +19,7 @@ export const COLORS = [
 	'popover-foreground',
 	'card',
 	'card-foreground',
+	'bg-primary',
 	'bg-red-50',
 	'bg-yellow-50',
 	'bg-green-50',
@@ -27,6 +28,8 @@ export const COLORS = [
 	'bg-purple-50',
 	'bg-pink-50',
 	'bg-muted',
+	'bg-primary',
+	'bg-foreground-dark',
 ] as const;
 export type Color = (typeof COLORS)[number];
 
@@ -53,6 +56,7 @@ export type FontColor = Extract<
 
 export type BackgroundColor = Extract<
 	Color,
+	| 'bg-primary'
 	| 'bg-red-50'
 	| 'bg-yellow-50'
 	| 'bg-green-50'
@@ -61,4 +65,6 @@ export type BackgroundColor = Extract<
 	| 'bg-purple-50'
 	| 'bg-pink-50'
 	| 'bg-muted'
+	| 'bg-primary'
+	| 'bg-foreground-dark'
 >;

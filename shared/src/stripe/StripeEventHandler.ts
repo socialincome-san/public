@@ -42,8 +42,9 @@ export class StripeEventHandler {
 			fullCharge.status === 'succeeded' ||
 			(await this.findFirestoreUser(await this.retrieveStripeCustomer(fullCharge.customer as string)))
 		) {
-			await this.storeCharge(fullCharge, checkoutMetadata);
+			return await this.storeCharge(fullCharge, checkoutMetadata);
 		}
+		return null;
 	};
 
 	updateUser = async (checkoutSessionId: string, userData: Partial<User>) => {
@@ -184,18 +185,14 @@ export class StripeEventHandler {
 		}
 		const { firstname, lastname } = splitName(customer.name);
 		return {
-			personal: {
-				name: firstname,
-				lastname: lastname,
-			},
-			address: {
-				country: customer.address?.country as CountryCode,
-			},
+			personal: { name: firstname, lastname: lastname },
+			address: { country: customer.address?.country as CountryCode },
 			email: customer.email,
 			stripe_customer_id: customer.id,
 			payment_reference_id: DateTime.now().toMillis(),
 			currency: bestGuessCurrency(customer.address?.country as CountryCode),
 			test_user: false,
+			created_at: toFirebaseAdminTimestamp(DateTime.now()),
 		};
 	};
 

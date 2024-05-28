@@ -51,7 +51,7 @@
 			"country": "Land",
 			"gender": "Geschlecht",
 			"referral": "Wie hast du von uns erfahren?",
-			"accept-terms-and-conditions": "Ich akzeptiere die <a href='/terms-and-conditions/' target='_blank' class='underline'>Teilnahmebedingungen</a> und die <a href='/privacy/' target='_blank' class='underline'>Datenschutzrichtlinie</a>.",
+			"accept-terms-and-conditions": "Ich akzeptiere die <a href='/legal/donations/' target='_blank' class='underline'>Teilnahmebedingungen</a> und die <a href='/legal/privacy/' target='_blank' class='underline'>Datenschutzrichtlinie</a>.",
 			"referrals": {
 				"familyfriends": "Familie oder Freunde",
 				"socialmedia": "Social Media",
@@ -96,6 +96,7 @@
 		"about-si-title": "Über Social Income",
 		"about-si-text-1": "Social Income ist eine NGO mit Sitz in der Schweiz, die bedingungslose Geldüberweisungen per Mobiltelefon an Menschen in multidimensionaler Armut in Westafrika bereitstellt.",
 		"about-si-text-2": "Seit 2020 führt Social Income ein zeitlich unbegrenztes Programm für ein universelles Grundeinkommen in Sierra Leone durch.",
-		"more-faq": "<a href='/faq' target=\"_blank\">Mehr Fragen</a>"
+		"more-faq": "<a href='/faq' target=\"_blank\">Mehr Fragen</a>",
+		"badge-highlight": "Aktuelle Kampagne"
 	}
 }

@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"test": "firebase emulators:exec --only firestore,storage,functions --project social-income-staging --config ../firebase.json --import ../seed 'npm run test:app'",
+		"test": "firebase emulators:exec --only firestore,storage,functions --project social-income-local --config ../firebase.json --import ../seed 'npm run test:app'",
 		"test:app": "jest --forceExit --roots tests/ src/"
 	},
 	"devDependencies": {
@@ -19,6 +19,7 @@
 	},
 	"dependencies": {
 		"@mailchimp/mailchimp_marketing": "^3.0.80",
+		"@sendgrid/mail": "^8.1.1",
 		"axios": "^1.6.8",
 		"firebase-admin": "^12.0.0",
 		"handlebars": "^4.7.8",

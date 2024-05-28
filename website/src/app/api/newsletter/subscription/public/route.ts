@@ -1,16 +1,25 @@
-import { MailchimpAPI, NewsletterSubscriptionData } from '@socialincome/shared/src/mailchimp/MailchimpAPI';
+import {
+	NEWSLETTER_LIST_ID,
+	NEWSLETTER_SUPPRESSION_LIST_ID,
+	NewsletterSubscriptionData,
+	SendgridSubscriptionClient,
+} from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
 
 export type CreateNewsletterSubscription = Omit<NewsletterSubscriptionData, 'status'>;
 type CreateNewsletterSubscriptionReqeust = { json(): Promise<CreateNewsletterSubscription> } & Request;
 
 export async function POST(request: CreateNewsletterSubscriptionReqeust) {
 	const data = await request.json();
-	const mailchimpAPI = new MailchimpAPI(process.env.MAILCHIMP_API_KEY!, process.env.MAILCHIMP_SERVER!);
+	const sendgrid = new SendgridSubscriptionClient({
+		apiKey: process.env.SENDGRID_API_KEY!,
+		listId: NEWSLETTER_LIST_ID,
+		suppressionListId: NEWSLETTER_SUPPRESSION_LIST_ID,
+	});
 	try {
-		await mailchimpAPI.createSubscription({ ...data, status: 'subscribed' }, process.env.MAILCHIMP_LIST_ID!);
+		await sendgrid.upsertSubscription({ ...data, status: 'subscribed' });
 		return new Response(null, { status: 200 });
 	} catch (e: any) {
 		console.error(e);
-		return new Response(null, { status: 405, statusText: e });
+		return new Response(null, { status: 405 });
 	}
 }

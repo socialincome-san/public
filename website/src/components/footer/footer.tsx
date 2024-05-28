@@ -3,7 +3,7 @@ import { FooterClient } from '@/components/footer/footer-client';
 import { SILogo } from '@/components/logos/si-logo';
 import { WebsiteLanguage, websiteRegions } from '@/i18n';
 import { DocumentTextIcon, InformationCircleIcon, UserCircleIcon } from '@heroicons/react/24/solid';
-import { SiFacebook, SiGithub, SiInstagram, SiLinkedin, SiX } from '@icons-pack/react-simple-icons';
+import { SiFacebook, SiGithub, SiInstagram, SiLinkedin, SiMaildotru, SiX } from '@icons-pack/react-simple-icons';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import Link from 'next/link';
@@ -84,6 +84,11 @@ export default async function Footer({ lang, region }: DefaultParams) {
 							label="GitHub"
 							url="https://github.com/socialincome-san/public"
 							target="_blank"
+						/>
+						<FooterLink
+							Icon={SiMaildotru}
+							label={translator.t('footer.newsletter')}
+							url={`/${lang}/${region}/newsletter`}
 						/>
 					</div>
 					<div className="flex flex-col space-y-1">

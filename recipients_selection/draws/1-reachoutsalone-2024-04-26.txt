@@ -1,0 +1,1 @@
+{"time":1714132273347,"round":7109637,"randomness":"7aa4f51107fc324b31dad8c8f8cff6ce59ced0d5484eed663e3daca04ad643b2","totalCount":354,"winners":["3afdea18b9d626e8284d355dfd1f673c14348c3050d7f616fdf248095067d328"]}

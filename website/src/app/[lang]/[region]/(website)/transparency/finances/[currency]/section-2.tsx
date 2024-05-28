@@ -6,9 +6,9 @@ import _ from 'lodash';
 import { InfoCard } from './info-card';
 import { SectionProps } from './page';
 
-export async function Section2({ params, contributionStats, paymentStats, costs }: SectionProps) {
+export async function Section2({ params, contributionStats, expensesStats, paymentStats }: SectionProps) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-finances'] });
-	const expensesProject = _.sum(Object.values(costs));
+	const expensesProject = _.sum(Object.values(expensesStats.totalExpensesByType));
 
 	return (
 		<div>
