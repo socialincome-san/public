@@ -20,7 +20,7 @@ const addContributorToNewsletter = async (contributionRef: DocumentReference<Con
 		listId: NEWSLETTER_LIST_ID,
 		suppressionListId: NEWSLETTER_SUPPRESSION_LIST_ID,
 	});
-	const user = (await contributionRef.parent.doc().get()) as unknown as DocumentSnapshot<User>;
+	const user = (await contributionRef.parent.parent?.get()) as DocumentSnapshot<User>;
 	logger.info(
 		`Adding contributor ${user.id} (${user.get('email')}) to Sendgrid newsletter list (${NEWSLETTER_LIST_ID}).`,
 	);
