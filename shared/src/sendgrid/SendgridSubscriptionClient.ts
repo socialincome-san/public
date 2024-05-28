@@ -99,7 +99,7 @@ export class SendgridSubscriptionClient extends Client {
 						first_name: data.firstname,
 						last_name: data.lastname,
 						country: data.country,
-						custom_fields: { language: data.language, is_contributor: data.isContributor },
+						custom_fields: { language: data.language, contributor: data.isContributor ? 'yes' : 'no' },
 					},
 				],
 			},
