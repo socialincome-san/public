@@ -62,7 +62,7 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
 	const { status, loading } = useNewsletterSubscription();
-	const upsertMailchimpSubscription = useUpsertNewsletterSubscription();
+	const upsertNewsletterSubscription = useUpsertNewsletterSubscription();
 
 	const formSchema = z.object({
 		firstname: z.string(),
@@ -308,11 +308,11 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 					id="newsletter-switch"
 					checked={status === 'subscribed'}
 					disabled={loading}
-					onCheckedChange={(enabled) => {
+					onCheckedChange={async (enabled) => {
 						if (enabled) {
-							upsertMailchimpSubscription('subscribed');
+							await upsertNewsletterSubscription('subscribed');
 						} else {
-							upsertMailchimpSubscription('unsubscribed');
+							await upsertNewsletterSubscription('unsubscribed');
 						}
 					}}
 				/>

@@ -23,7 +23,7 @@ export async function Sdg({ lang }: { lang: WebsiteLanguage }) {
 				<SdgCard
 					title={translator.t('section-6.card-1.title')}
 					description={translator.t('section-6.card-1.description')}
-					paragraphs={[translator.t('section-6.card-2.paragraph-1')]}
+					paragraphs={[translator.t('section-6.card-1.paragraph-1')]}
 				/>
 				<SdgCard
 					title={translator.t('section-6.card-2.title')}

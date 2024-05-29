@@ -1,5 +1,5 @@
 import { EntityReference } from 'firecms';
-import { capitalizeStringIfUppercase } from '../utils/strings';
+import _ from 'lodash';
 import { CountryCode } from './country';
 import { Currency } from './currency';
 import { Employer } from './employers';
@@ -55,13 +55,13 @@ export const splitName = (name: string) => {
 	const stripeNames = name.split(' ');
 	if (stripeNames.length >= 2) {
 		return {
-			lastname: capitalizeStringIfUppercase(stripeNames.pop()!),
-			firstname: capitalizeStringIfUppercase(stripeNames.join(' ')),
+			lastname: _.upperFirst(stripeNames.pop()!),
+			firstname: _.upperFirst(stripeNames.join(' ')),
 		};
 	} else {
 		return {
-			lastname: capitalizeStringIfUppercase(name),
 			firstname: '',
+			lastname: _.upperFirst(name),
 		};
 	}
 };
