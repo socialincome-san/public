@@ -15,6 +15,7 @@ export async function POST(request: UpdateUserRequest) {
 		return new Response(null, { status: 400, statusText: 'Missing stripeCheckoutSessionId or user' });
 	}
 	const stripeEventHandler = new StripeEventHandler(process.env.STRIPE_SECRET_KEY!, firestoreAdmin);
+
 	await stripeEventHandler.updateUser(stripeCheckoutSessionId, user);
 	return new Response(null, { status: 200 });
 }

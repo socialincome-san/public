@@ -7,7 +7,7 @@ import {
 } from './admin/scripts';
 import stripeWebhookFunction from './stripe';
 import surveyLoginFunction from './website/survey-login';
-//
+
 export const createDonationCertificates = createDonationCertificatesFunction;
 export const runPaymentProcessTask = paymentProcessFunction;
 
@@ -17,6 +17,4 @@ export const createAllSurveys = createAllSurveysFunction;
 
 export const stripeChargeHook = stripeWebhookFunction;
 
-// export const twilioIncomingMessage = new TwilioIncomingMessageHandler().getFunction();
-// export const twilioOutgoingMessage = new TwilioOutgoingMessageHandler().getFunction();
 export const getSurveyCredentials = surveyLoginFunction;
