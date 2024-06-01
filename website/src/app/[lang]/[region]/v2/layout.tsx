@@ -11,7 +11,6 @@ export default function Layout({ children, params: { lang, region } }: PropsWith
 	return (
 		<div className="theme-v2 min-h-screen">
 			<Navbar lang={lang} region={region} />
-			{/*<main className="pb-8 md:pb-16">{children}</main>*/}
 			<main>{children}</main>
 		</div>
 	);
