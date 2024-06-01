@@ -67,7 +67,7 @@ export default async function Page({ params }: DefaultPageProps) {
 							translations={{
 								firstname: translator.t('updates.firstname'),
 								email: translator.t('updates.email'),
-								updatesSubmitButton: translator.t('updates.submit-button'),
+								submitButton: translator.t('updates.submit-button'),
 								toastMessage: translator.t('updates.newsletter-updated-toast'),
 								toastErrorMessage: translator.t('updates.newsletter-error-toast'),
 							}}
