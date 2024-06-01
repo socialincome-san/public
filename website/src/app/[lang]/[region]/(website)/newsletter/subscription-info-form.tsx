@@ -13,7 +13,7 @@ type PersonalInfoFormProps = {
 	translations: {
 		firstname: string;
 		email: string;
-		updatesSubmitButton: string;
+		submitButton: string;
 		toastMessage: string;
 		toastErrorMessage: string;
 	};
@@ -24,7 +24,6 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 
 	const formSchema = z.object({
 		firstname: z.string(),
-		lastname: z.string(),
 		email: z.string().email(),
 	});
 
@@ -90,7 +89,7 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 					color="accent"
 					className="mt-4 rounded-full"
 				>
-					{translations.updatesSubmitButton}
+					{translations.submitButton}
 				</Button>
 			</form>
 		</Form>
