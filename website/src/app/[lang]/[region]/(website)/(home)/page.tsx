@@ -16,7 +16,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 	const vimeoVideoId = Number(translator.t('id.video-02'));
 	return (
 		<>
-			<Campaign lang={lang} />
+			<Campaign params={{ lang, region }} />
 			<Hero lang={lang} region={region} />
 			<Video lang={lang} />
 			<WhatWouldChange

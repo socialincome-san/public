@@ -1,10 +1,10 @@
-import { WebsiteLanguage } from '@/i18n';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { BellAlertIcon } from '@heroicons/react/24/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, BaseContainer, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
-export async function Campaign({ lang }: { lang: WebsiteLanguage }) {
+export async function Campaign({ params: { lang, region } }: { params: DefaultParams }) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-donate'],
@@ -12,7 +12,7 @@ export async function Campaign({ lang }: { lang: WebsiteLanguage }) {
 
 	return (
 		<BaseContainer className="mb-8 flex flex-col items-center justify-center sm:mb-0">
-			<Link href="https://socialincome.org/campaign/MZmXEVHlDjOOFOMk82jW" className="group">
+			<Link href={`/${lang}/${region}/campaign/MZmXEVHlDjOOFOMk82jW`} className="group">
 				<Badge variant="outline" className="flex-shrink-0">
 					<Typography
 						size="md"
@@ -29,7 +29,7 @@ export async function Campaign({ lang }: { lang: WebsiteLanguage }) {
 						weight="medium"
 						className="group-hover:text-primary-foreground mr-4 flex items-center p-1"
 					>
-						Rebuilding Lives by Ismatu&nbsp;Gwendolyn
+						Rebuilding Lives by Ismatu Gwendolyn
 					</Typography>
 				</Badge>
 			</Link>

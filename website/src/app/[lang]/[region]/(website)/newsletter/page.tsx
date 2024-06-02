@@ -11,9 +11,9 @@ export async function generateMetadata({ params }: DefaultPageProps) {
 	return getMetadata(params.lang, 'website-newsletter');
 }
 
-export default async function Page({ params }: DefaultPageProps) {
+export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
-		language: params.lang,
+		language: lang,
 		namespaces: ['website-newsletter'],
 	});
 
@@ -42,7 +42,10 @@ export default async function Page({ params }: DefaultPageProps) {
 						<Typography className="mt-4">{translator.t('updates.description-2')}</Typography>
 						<hr className="bg-border my-8 h-px border-0" />
 						<Typography>{translator.t('updates.description-3')}</Typography>
-						<Link href="/about-us#team" className="hover:bg-muted mt-4 flex items-center rounded-full p-2">
+						<Link
+							href={`/${lang}/${region}/about-us#team`}
+							className="hover:bg-muted mt-4 flex items-center rounded-full p-2"
+						>
 							<Image
 								alt="Avatar"
 								src={aurelieImage}
@@ -62,8 +65,8 @@ export default async function Page({ params }: DefaultPageProps) {
 							{translator.t('updates.form-title')}
 						</Typography>
 						<SubscriptionInfoForm
-							lang={params.lang}
-							region={params.region}
+							lang={lang}
+							region={region}
 							translations={{
 								firstname: translator.t('updates.firstname'),
 								email: translator.t('updates.email'),
