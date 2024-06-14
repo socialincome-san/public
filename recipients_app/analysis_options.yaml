@@ -33,6 +33,5 @@ linter:
     prefer_const_constructors_in_immutables: true
 
 dart_code_metrics:
-  exclude: ["lib/**/*.g.dart"]
   rules:
     prefer-single-widget-per-file: false
