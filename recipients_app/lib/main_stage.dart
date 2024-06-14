@@ -34,7 +34,7 @@ Future<void> main() async {
       options.dsn = const String.fromEnvironment("SENTRY_URL");
       options.tracesSampleRate = 1.0;
       options.profilesSampleRate = 1.0;
-      options.environment = "prod";
+      options.environment = "stage";
     },
     appRunner: () => runApp(
       MyApp(

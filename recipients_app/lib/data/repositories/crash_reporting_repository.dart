@@ -1,10 +1,18 @@
-import "package:firebase_crashlytics/firebase_crashlytics.dart";
+import "dart:developer";
+
+import "package:sentry_flutter/sentry_flutter.dart";
 
 class CrashReportingRepository {
-  final FirebaseCrashlytics crashlytics;
+  CrashReportingRepository();
 
-  CrashReportingRepository({required this.crashlytics});
+  Future<void> logError(Exception exception, StackTrace stackTrace) async {
+    log("--- SENTRY: Logging error: $exception");
+    Sentry.captureException(exception, stackTrace: stackTrace);
+  }
 
-  Future<void> logError(Exception exception, StackTrace stackTrace) =>
-      crashlytics.recordError(exception, stackTrace);
+  Future<void> logInfo(String message) async {
+    log("--- SENTRY: Logging info: $message");
+
+    Sentry.captureMessage(message);
+  }
 }

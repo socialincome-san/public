@@ -6,7 +6,7 @@ version: 1.1.11+28
 
 environment:
   sdk: ">=3.2.0 <4.0.0"
-  flutter: 3.19.5
+  flutter: 3.19.6
 
 dependencies:
   animations: ^2.0.11
@@ -17,7 +17,6 @@ dependencies:
   firebase_app_check: ^0.2.2
   firebase_auth: ^4.19.4
   firebase_core: ^2.30.1
-  firebase_crashlytics: ^3.5.4
   firebase_messaging: ^14.9.1
   flutter:
     sdk: flutter
@@ -36,6 +35,7 @@ dependencies:
     git:
       url: https://github.com/ShamilPP/flutter_rounded_loading_button.git
       ref: master
+  sentry_flutter: ^8.2.0
   url_launcher: ^6.2.6
   webview_flutter: ^4.7.0
 
