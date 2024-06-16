@@ -1,11 +1,9 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { I18nDialog } from '@/components/i18n-dialog';
 import { WebsiteCurrency } from '@/i18n';
-import { GlobeEuropeAfricaIcon, LanguageIcon } from '@heroicons/react/24/solid';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
-import { Button, Typography } from '@socialincome/ui';
+import { Typography } from '@socialincome/ui';
 import classNames from 'classnames';
 import { useParams, usePathname } from 'next/dist/client/components/navigation';
 import { useState } from 'react';
@@ -64,24 +62,6 @@ export function NavbarClientV2({
 	console.log(params);
 	console.log(pathname);
 
-	const i18nDialog = (
-		<I18nDialog
-			languages={languages}
-			regions={regions}
-			currencies={currencies}
-			translations={{
-				language: translations.language,
-				region: translations.region,
-				currency: translations.currency,
-			}}
-		>
-			<Button variant="ghost" className="flex max-w-md space-x-2 py-6">
-				<LanguageIcon className="h-6 w-6" />
-				<GlobeEuropeAfricaIcon className="h-6 w-6" />
-			</Button>
-		</I18nDialog>
-	);
-
 	return (
 		<nav
 			className={classNames('group fixed inset-x-0 top-0 z-20 flex flex-col', {
@@ -94,7 +74,7 @@ export function NavbarClientV2({
 				<div>Selects</div>
 				<div>Langs</div>
 			</div>
-			<div className="h-0 flex-col overflow-hidden transition-[height] duration-500 ease-in group-hover:flex group-hover:h-48 group-active:h-48">
+			<div className="h-0 flex-col overflow-hidden transition-[height] duration-500 ease-in group-hover:flex group-hover:h-screen group-active:h-48">
 				<Typography>Hello</Typography>
 				<Typography>Hello</Typography>
 				<Typography>Hello</Typography>
