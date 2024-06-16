@@ -63,7 +63,7 @@ export const getFirstPayoutEmailReceivers = async (
 };
 
 // Run on the 16th of every month at 15:00 UTC
-export default onSchedule('0 15 16 * *', async () => {
+export default onSchedule({ schedule: '0 15 16 * *', memory: '2GiB' }, async () => {
 	let message: string = '';
 	const sendgridClient = new SendgridMailClient(process.env.SENDGRID_API_KEY!);
 	try {
