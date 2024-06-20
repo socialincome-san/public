@@ -5,4 +5,5 @@ export type PaymentForecastEntry = {
 	month: string;
 	numberOfRecipients: number;
 	amount_usd: number;
+	amount_sle: number;
 };

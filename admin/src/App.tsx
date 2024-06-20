@@ -20,7 +20,7 @@ import { firebaseConfig, onFirebaseInit } from './init';
 import { NextSurveysView } from './views/NextSurveysView';
 import { PaymentsConfirmationView } from './views/PaymentsConfirmationView';
 import { ScriptsView } from './views/ScriptsView';
-import { paymentForecastCollection } from './collections/PaymentForecast';
+import { buildPaymentForecastCollection } from './collections/PaymentForecast';
 
 const algoliaIndex = (indexName: string) => {
 	return import.meta.env.VITE_ADMIN_ALGOLIA_APPLICATION_ID && import.meta.env.VITE_ADMIN_ALGOLIA_SEARCH_KEY
@@ -53,7 +53,7 @@ export default function App() {
 		buildSurveysCollection({ collectionGroup: true }),
 		adminsCollection,
 		expensesCollection,
-		paymentForecastCollection,
+		buildPaymentForecastCollection(),
 		usersCollection,
 		campaignsCollection,
 		buildContributionsCollection({ collectionGroup: true }),
