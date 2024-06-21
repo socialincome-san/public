@@ -57,7 +57,8 @@ export class SendgridSubscriptionClient extends Client {
 
 		if (data.status === 'subscribed') {
 			await this.removeSuppression(data.email);
-		} else {
+		}
+		if (data.status === 'unsubscribed') {
 			await this.addSuppression(data.email);
 		}
 	};
