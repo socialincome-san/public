@@ -3,7 +3,7 @@ import { PaymentForecastEntry, PAYMENT_FORECAST_FIRESTORE_PATH } from '@socialin
 import { buildAuditedCollection } from './shared';
 import { EntityCollection } from 'firecms/dist/types/collections';
 import { CreatePaymentForecastAction } from '../actions/CreatePaymentForecastAction';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { DateTime } from 'luxon';
 import { toPaymentDate } from '@socialincome/shared/src/types/recipient';
 import { PaymentForecastProps } from '../../../functions/src/webhooks/admin/payment-forecast';
@@ -12,15 +12,15 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 
 export const buildPaymentForecastCollection = () => {
 
-	const [isInitialLoad, setInitialLoad] = useState(true);
+	const hasMounted = useRef(false);
 	const snackbarController = useSnackbarController();
 	const [, setIsFunctionRunning] = useState(false);
 	const [paymentDate] = useState<DateTime>(toPaymentDate(DateTime.local({ zone: 'utc' })));
 		
 
 	useEffect(() => {
-		if (isInitialLoad) {
-			
+		if (!hasMounted.current) {
+			hasMounted.current = true;			
 			const runPaymentForecastTask = httpsCallable<PaymentForecastProps, string>(
 				getFunctions(undefined, DEFAULT_REGION),
 				'runPaymentForecastTask',
@@ -35,11 +35,12 @@ export const buildPaymentForecastCollection = () => {
 				.catch((reason: Error) => {
 					snackbarController.open({ type: 'error', message: reason.message });
 				})
-				.finally(() => setIsFunctionRunning(false));
-			setInitialLoad(false);
+				.finally(() => {
+					setIsFunctionRunning(false)
+				});
 		} 
 		
-	  }, [isInitialLoad] );
+	  }, []);
 
 	const collection: EntityCollection<PaymentForecastEntry> = {	
 		name: 'PaymentForecast',

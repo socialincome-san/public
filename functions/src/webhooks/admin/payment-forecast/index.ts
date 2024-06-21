@@ -1,7 +1,7 @@
 import { onCall } from 'firebase-functions/v2/https';
 import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
-import { calcPaymentsLeft, calcFinalPaymentDate, RECIPIENT_FIRESTORE_PATH } from '../../../../../shared/src/types/recipient';
+import { calcPaymentsLeft, calcFinalPaymentDate, RECIPIENT_FIRESTORE_PATH, RecipientProgramStatus, } from '../../../../../shared/src/types/recipient';
 import { PAYMENT_FORECAST_FIRESTORE_PATH } from '../../../../../shared/src/types/payment-forecast';
 import { getLatestExchangeRate } from '../../../../../shared/src/utils/exchangeRates';
 
@@ -74,13 +74,13 @@ export default onCall<PaymentForecastProps, Promise<string>>({ memory: '2GiB' , 
       const nextSixMonthsList = prepareNextSixMonths();
       const recipientsSnapshot = await firestoreAdmin
         .collection(RECIPIENT_FIRESTORE_PATH)
-        .where('progr_status', 'in', ['active', 'designated'])
+        .where('progr_status', 'in', [RecipientProgramStatus.Active, RecipientProgramStatus.Designated])
         .get();
       recipientsSnapshot.docs.map((doc) => {
         const recipient = doc.data();
-        if (recipient.si_start_date && recipient.progr_status === 'active') {
+        if (recipient.si_start_date && recipient.progr_status === RecipientProgramStatus.Active) {
           addRecipient(firestoreAdmin, nextSixMonthsList, calcPaymentsLeft(calcFinalPaymentDate(DateTime.fromSeconds(recipient.si_start_date._seconds, { zone: 'utc' }))));
-        } else if (recipient.progr_status === 'designated') {
+        } else if (recipient.progr_status === RecipientProgramStatus.Designated) {
           addRecipient(firestoreAdmin, nextSixMonthsList, 6);
         }
       });
