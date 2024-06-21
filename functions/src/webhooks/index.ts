@@ -1,6 +1,6 @@
 import createDonationCertificatesFunction from './admin/donation-certificates';
+import paymentForecastFunction from './admin/payment-forecast';
 import paymentProcessFunction from './admin/payment-process';
-import paymentForecastFunction from './admin/payment-forecast'
 import {
 	addMissingAmountChfFunction,
 	batchImportStripeChargesFunction,

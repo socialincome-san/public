@@ -12,6 +12,7 @@ import { campaignsCollection } from './collections/Campaigns';
 import { buildContributionsCollection } from './collections/Contributions';
 import { expensesCollection } from './collections/Expenses';
 import { buildPartnerOrganisationsCollection } from './collections/PartnerOrganisations';
+import { buildPaymentForecastCollection } from './collections/PaymentForecast';
 import { usersCollection } from './collections/Users';
 import { buildRecipientsCollection } from './collections/recipients/Recipients';
 import { buildRecipientsPaymentsCollection } from './collections/recipients/RecipientsPayments';
@@ -20,7 +21,6 @@ import { firebaseConfig, onFirebaseInit } from './init';
 import { NextSurveysView } from './views/NextSurveysView';
 import { PaymentsConfirmationView } from './views/PaymentsConfirmationView';
 import { ScriptsView } from './views/ScriptsView';
-import { buildPaymentForecastCollection } from './collections/PaymentForecast';
 
 const algoliaIndex = (indexName: string) => {
 	return import.meta.env.VITE_ADMIN_ALGOLIA_APPLICATION_ID && import.meta.env.VITE_ADMIN_ALGOLIA_SEARCH_KEY

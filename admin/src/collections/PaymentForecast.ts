@@ -1,26 +1,24 @@
-import { buildProperties, useSnackbarController } from 'firecms';
-import { PaymentForecastEntry, PAYMENT_FORECAST_FIRESTORE_PATH } from '@socialincome/shared/src/types/payment-forecast';
-import { buildAuditedCollection } from './shared';
-import { EntityCollection } from 'firecms/dist/types/collections';
-import { CreatePaymentForecastAction } from '../actions/CreatePaymentForecastAction';
-import { useEffect, useRef, useState } from 'react';
-import { DateTime } from 'luxon';
-import { toPaymentDate } from '@socialincome/shared/src/types/recipient';
-import { PaymentForecastProps } from '../../../functions/src/webhooks/admin/payment-forecast';
 import { DEFAULT_REGION } from '@socialincome/shared/src/firebase';
+import { PAYMENT_FORECAST_FIRESTORE_PATH, PaymentForecastEntry } from '@socialincome/shared/src/types/payment-forecast';
+import { toPaymentDate } from '@socialincome/shared/src/types/recipient';
 import { getFunctions, httpsCallable } from 'firebase/functions';
+import { buildProperties, useSnackbarController } from 'firecms';
+import { EntityCollection } from 'firecms/dist/types/collections';
+import { DateTime } from 'luxon';
+import { useEffect, useRef, useState } from 'react';
+import { PaymentForecastProps } from '../../../functions/src/webhooks/admin/payment-forecast';
+import { CreatePaymentForecastAction } from '../actions/CreatePaymentForecastAction';
+import { buildAuditedCollection } from './shared';
 
 export const buildPaymentForecastCollection = () => {
-
 	const hasMounted = useRef(false);
 	const snackbarController = useSnackbarController();
 	const [, setIsFunctionRunning] = useState(false);
 	const [paymentDate] = useState<DateTime>(toPaymentDate(DateTime.local({ zone: 'utc' })));
-		
 
 	useEffect(() => {
 		if (!hasMounted.current) {
-			hasMounted.current = true;			
+			hasMounted.current = true;
 			const runPaymentForecastTask = httpsCallable<PaymentForecastProps, string>(
 				getFunctions(undefined, DEFAULT_REGION),
 				'runPaymentForecastTask',
@@ -36,13 +34,12 @@ export const buildPaymentForecastCollection = () => {
 					snackbarController.open({ type: 'error', message: reason.message });
 				})
 				.finally(() => {
-					setIsFunctionRunning(false)
+					setIsFunctionRunning(false);
 				});
-		} 
-		
-	  }, []);
+		}
+	}, []);
 
-	const collection: EntityCollection<PaymentForecastEntry> = {	
+	const collection: EntityCollection<PaymentForecastEntry> = {
 		name: 'Payout Forecast',
 		group: 'Finances',
 		path: PAYMENT_FORECAST_FIRESTORE_PATH,
@@ -60,7 +57,7 @@ export const buildPaymentForecastCollection = () => {
 			order: {
 				dataType: 'number',
 				name: 'Order',
-				validation: { required: true }
+				validation: { required: true },
 			},
 			month: {
 				dataType: 'string',
@@ -84,5 +81,5 @@ export const buildPaymentForecastCollection = () => {
 			},
 		}),
 	};
-return buildAuditedCollection<PaymentForecastEntry>(collection);
-}
+	return buildAuditedCollection<PaymentForecastEntry>(collection);
+};
