@@ -43,13 +43,13 @@ export const buildPaymentForecastCollection = () => {
 	  }, []);
 
 	const collection: EntityCollection<PaymentForecastEntry> = {	
-		name: 'PaymentForecast',
+		name: 'Payout Forecast',
 		group: 'Finances',
 		path: PAYMENT_FORECAST_FIRESTORE_PATH,
 		textSearchEnabled: false,
 		initialSort: ['order', 'asc'],
-		icon: 'LocalAtm',
-		description: 'Project expenses displayed on transparency page',
+		icon: 'LocalConvenienceStore',
+		description: 'Projected payout forecast for the next six months',
 		Actions: CreatePaymentForecastAction,
 		permissions: {
 			edit: false,
