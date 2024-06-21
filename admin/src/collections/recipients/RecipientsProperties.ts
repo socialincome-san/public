@@ -126,7 +126,7 @@ export const emailProperty: Property = {
 	dataType: 'string',
 	email: true,
 	hideFromCollection: true,
-	validation: {},
+  validation: { unique: true },
 };
 
 export const InstagramProperty: Property = {
