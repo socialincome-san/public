@@ -30,7 +30,6 @@ const addContributorToNewsletter = async (contributionRef: DocumentReference<Con
 		email: user.get('email'),
 		country: user.get('country') as CountryCode,
 		language: user.get('language') === 'de' ? 'de' : 'en',
-		status: 'subscribed',
 		isContributor: true,
 	});
 };
