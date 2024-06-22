@@ -15,7 +15,13 @@ export default function Page({ params }: SurveyPageProps) {
 	const [password, setPassword] = useState<string | null>(null);
 	const [user, setUser] = useState<User>();
 	const searchParams = useSearchParams();
-	const queryClient = new QueryClient();
+	const queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				staleTime: 3600000, // 1 hour
+			},
+		},
+	});
 
 	useEffect(() => {
 		setEmail(searchParams.get('email'));

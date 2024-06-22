@@ -18,9 +18,9 @@ type ContributionsTableProps = {
 
 export function ContributionsTable({ lang, translations }: ContributionsTableProps) {
 	const translator = useTranslator(lang, 'website-me');
-	const { contributions, loading } = useContributions();
+	const { contributions, isLoading } = useContributions();
 
-	if (loading) {
+	if (isLoading) {
 		return <SpinnerIcon />;
 	}
 
