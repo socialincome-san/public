@@ -1,4 +1,4 @@
-import { UpdateData } from '@firebase/firestore';
+import { DocumentData, UpdateData } from '@firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { DocumentReference, updateDoc } from 'firebase/firestore';
 import { EntityOnSaveProps, buildCollection } from 'firecms';
@@ -56,7 +56,10 @@ export const buildAuditedCollection = <
 	return buildCollection(collection);
 };
 
-export function auditedUpdateDoc<T extends {}>(reference: DocumentReference<T>, data: UpdateData<T>) {
+export function auditedUpdateDoc<AppModelType, DbModelType extends DocumentData>(
+	reference: DocumentReference<AppModelType, DbModelType>,
+	data: UpdateData<DbModelType>,
+) {
 	const auth = getAuth();
-	return updateDoc<T>(reference, { ...data, last_updated_by: auth.currentUser?.email });
+	return updateDoc<AppModelType, DbModelType>(reference, { ...data, last_updated_by: auth.currentUser?.email });
 }

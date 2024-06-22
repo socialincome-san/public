@@ -77,8 +77,8 @@ export function SuccessForm({
 		lastname: z.string().min(1),
 		email: z.string().email(),
 		country: z.enum([firstCountry, ...restCountries]),
-		gender: z.enum(GENDER_OPTIONS),
-		referral: z.nativeEnum(UserReferralSource),
+		gender: z.enum(GENDER_OPTIONS).optional(),
+		referral: z.nativeEnum(UserReferralSource).optional(),
 		termsAndConditions: z.literal<boolean>(true),
 	});
 
