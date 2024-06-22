@@ -124,7 +124,9 @@ export const organisationProperty: Property = {
 export const emailProperty: Property = {
 	name: 'Email',
 	dataType: 'string',
+	email: true,
 	hideFromCollection: true,
+	validation: { unique: true },
 };
 
 export const InstagramProperty: Property = {

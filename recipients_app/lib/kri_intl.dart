@@ -585,6 +585,9 @@ class KriCupertinoLocalizations extends GlobalCupertinoLocalizations {
 
   @override
   String get shareButtonLabel => "Share...";
+
+  @override
+  String get clearButtonLabel => "Clear";
 }
 
 // #docregion Delegate
