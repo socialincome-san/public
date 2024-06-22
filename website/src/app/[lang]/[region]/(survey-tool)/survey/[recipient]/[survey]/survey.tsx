@@ -31,7 +31,6 @@ export function Survey({ surveyId, recipientId, lang }: SurveyProps) {
 	const { data: survey } = useQuery({
 		queryFn: () => getDoc(surveyDocRef).then((snapshot) => snapshot.data() as SurveyModel),
 		queryKey: [recipientId, surveyId],
-		staleTime: 3600000, // 1 hour
 	});
 
 	// TODO: implement session storage caching

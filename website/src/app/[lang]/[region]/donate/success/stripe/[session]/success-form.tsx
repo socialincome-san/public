@@ -77,8 +77,8 @@ export function SuccessForm({
 		lastname: z.string().min(1),
 		email: z.string().email(),
 		country: z.enum([firstCountry, ...restCountries]),
-		gender: z.enum(GENDER_OPTIONS),
-		referral: z.nativeEnum(UserReferralSource),
+		gender: z.enum(GENDER_OPTIONS).optional(),
+		referral: z.nativeEnum(UserReferralSource).optional(),
 		termsAndConditions: z.literal<boolean>(true),
 	});
 
@@ -169,7 +169,7 @@ export function SuccessForm({
 							<Select onValueChange={field.onChange}>
 								<FormControl>
 									<SelectTrigger>
-										<SelectValue>{field.value && countryTranslator?.t(field.value)}</SelectValue>
+										<SelectValue placeholder={field.value && countryTranslator?.t(field.value)} />
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent className="max-h-[16rem] overflow-y-auto">
@@ -248,7 +248,12 @@ export function SuccessForm({
 						</FormItem>
 					)}
 				/>
-				<Button type="submit" showLoadingSpinner={submitting} className="md:col-span-2 md:mt-4">
+				<Button
+					type="submit"
+					showLoadingSpinner={submitting}
+					disabled={!form.getValues('termsAndConditions')}
+					className="md:col-span-2 md:mt-4"
+				>
 					{translations.submitButton}
 				</Button>
 			</form>
