@@ -150,6 +150,7 @@ export function NavbarClientV2({
 						<div className="flex w-full flex-col items-end">
 							{currencies.map((curr, index) => (
 								<Typography
+									key={index}
 									as="button"
 									size="lg"
 									className={classNames('hover:text-accent text-left text-lg hover:cursor-pointer', {
