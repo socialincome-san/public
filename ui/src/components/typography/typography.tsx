@@ -58,10 +58,7 @@ const LINE_HEIGHT_MAP: { [key in LineHeight]: string } = {
 	loose: 'leading-loose md:leading-loose',
 };
 
-type ElementType = keyof Pick<
-	IntrinsicElements,
-	'div' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span' | 'button'
->;
+type ElementType = keyof Pick<IntrinsicElements, 'div' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'>;
 
 export type TypographyProps<C extends ElementType> = {
 	as?: C;

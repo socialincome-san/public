@@ -151,7 +151,6 @@ export function NavbarClientV2({
 							{currencies.map((curr, index) => (
 								<Typography
 									key={index}
-									as="button"
 									size="lg"
 									className={classNames('hover:text-accent text-left text-lg hover:cursor-pointer', {
 										'text-accent': curr.code === currency,
