@@ -4,14 +4,17 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { getFlagComponentByCurrency } from '@/components/country-flags';
 import { SIIcon } from '@/components/logos/si-icon';
 import { SILogo } from '@/components/logos/si-logo';
+import { useNavbarBackgroundColor } from '@/components/navbar/useNavbarBackgroundColor';
 import { useI18n } from '@/components/providers/context-providers';
 import { WebsiteCurrency } from '@/i18n';
 import { Bars3Icon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Typography } from '@socialincome/ui';
 import classNames from 'classnames';
+import _ from 'lodash';
 import Link from 'next/link';
-import { useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 type NavigationSection = {
 	title: string;
@@ -47,44 +50,101 @@ type NavbarProps = {
 		code: WebsiteCurrency;
 		translation: string;
 	}[];
+	aboutUsLinks?: any;
+	ourWorkLinks?: any;
+	transparencyLinks?: any;
 } & DefaultParams;
 
-const MobileNavigation = ({ lang, region, languages, regions, currencies }: NavbarProps) => {
-	const [open, setOpen] = useState(false);
+const MobileNavigation = ({
+	lang,
+	region,
+	languages,
+	regions,
+	currencies,
+	aboutUsLinks,
+	transparencyLinks,
+	ourWorkLinks,
+}: NavbarProps) => {
+	const [visibleSection, setVisibleSection] = useState<'main' | 'about-us' | null>(null);
+	const NavbarLink = ({ href, children, className }: { href: string; children: string; className?: string }) => (
+		<Link
+			href={`/${lang}/${region}${href}`}
+			className={classNames('hover:text-accent text-lg', className)}
+			onClick={() => setVisibleSection(null)}
+		>
+			{children}
+		</Link>
+	);
+
+	let content;
+	switch (visibleSection) {
+		case 'about-us':
+			content = (
+				<div className="flex flex-col space-y-4">
+					{aboutUsLinks.map((link: any, index: number) => (
+						<NavbarLink href={link.href} key={index}>
+							{link.title}
+						</NavbarLink>
+					))}
+				</div>
+			);
+			break;
+		case 'main':
+		default:
+			content = (
+				<div className="flex flex-col space-y-4">
+					<Typography onClick={() => setVisibleSection('about-us')}>About Us</Typography>
+				</div>
+			);
+			break;
+	}
 
 	return (
-		<div className={classNames('flex flex-col px-4 py-5 md:hidden', { 'h-screen': open, 'h-16': !open })}>
+		<div
+			className={classNames('flex flex-col px-4 py-5 md:hidden', {
+				'bg-background h-screen': visibleSection,
+				'h-16': !visibleSection,
+			})}
+		>
 			<div className="flex flex-row justify-between">
-				{open ? (
-					<ChevronLeftIcon className="text-accent h-6 cursor-pointer" onClick={() => setOpen(false)} />
+				{visibleSection ? (
+					<ChevronLeftIcon className="text-accent h-6 cursor-pointer" onClick={() => setVisibleSection(null)} />
 				) : (
 					<SILogo className="mr-auto h-6" />
 				)}
-				{open ? (
-					<XMarkIcon className="text-accent h-6 cursor-pointer" onClick={() => setOpen(false)} />
+				{visibleSection ? (
+					<XMarkIcon className="text-accent h-6 cursor-pointer" onClick={() => setVisibleSection(null)} />
 				) : (
-					<Bars3Icon className="h-6 cursor-pointer" onClick={() => setOpen(true)} />
+					<Bars3Icon className="text-accent h-6 cursor-pointer" onClick={() => setVisibleSection('main')} />
 				)}
 			</div>
-			<div className={classNames({ hidden: !open, flex: open })}>Howdy</div>
+			<div className={classNames({ hidden: _.isNull(visibleSection), flex: !_.isNull(visibleSection) })}>{content}</div>
 		</div>
 	);
 };
-const DesktopNavigation = ({ lang, region, languages, regions, currencies }: NavbarProps) => {
+const DesktopNavigation = ({
+	lang,
+	region,
+	languages,
+	regions,
+	currencies,
+	aboutUsLinks,
+	ourWorkLinks,
+	transparencyLinks,
+}: NavbarProps) => {
 	let { currency, setCurrency } = useI18n();
-	const [transparent, setTransparent] = useState(false);
 	const Flag = getFlagComponentByCurrency(currency);
-
 	const NavbarLink = ({ href, children, className }: { href: string; children: string; className?: string }) => (
 		<Link href={`/${lang}/${region}${href}`} className={classNames('hover:text-accent text-lg', className)}>
 			{children}
 		</Link>
 	);
+
 	return (
 		<div className="hidden h-20 flex-row items-baseline justify-between gap-4 overflow-hidden px-8 py-6 transition-[height] duration-500 ease-in group-hover/navbar:h-80 md:flex">
 			<div className="flex h-full flex-shrink flex-grow-0 flex-col md:w-64">
 				<div>
-					<SILogo className="mr-auto hidden h-6 lg:block " onClick={() => setTransparent(!transparent)} />
+					<SILogo className="mr-auto hidden h-6 lg:block" />
 					<SIIcon className="-mb-2.5 block h-9 lg:hidden" />
 				</div>
 				<div className="mt-6 hidden h-full flex-col justify-start group-hover/navbar:flex group-active/navbar:flex">
@@ -99,32 +159,33 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies }: Nav
 			{/* Because the first column has flex-grow-0 */}
 			<div className="flex min-w-96 flex-1 flex-row">
 				<div className="group/about-us flex-1">
-					<NavbarLink href={`/v2`}>About us</NavbarLink>
+					<NavbarLink href={`/v2/about-us`}>About us</NavbarLink>
 					<div className="mt-6 hidden flex-col opacity-0 group-hover/navbar:flex group-hover/about-us:opacity-100">
-						<NavbarLink href={`/v2/`}>Mission</NavbarLink>
-						<NavbarLink href={`/v2/`}>People</NavbarLink>
-						<NavbarLink href={`/v2/`}>Technology</NavbarLink>
-						<NavbarLink href={`/v2/`}>Contact</NavbarLink>
+						{aboutUsLinks.map((link, index) => (
+							<NavbarLink key={index} href={link.href}>
+								{link.title}
+							</NavbarLink>
+						))}
 					</div>
 				</div>
 				<div className="group/our-work flex-1">
 					<NavbarLink href={`/v2`}>Our Work</NavbarLink>
 					<div className="mt-6 hidden flex-col opacity-0 group-hover/navbar:flex group-hover/our-work:opacity-100">
-						<NavbarLink href={`/v2/`}>Fight Poverty</NavbarLink>
-						<NavbarLink href={`/v2/`}>Cash Transfers</NavbarLink>
-						<NavbarLink href={`/v2/`}>Basic Income</NavbarLink>
-						<NavbarLink href={`/v2/`}>Active Programs</NavbarLink>
+						{ourWorkLinks.map((link, index) => (
+							<NavbarLink key={index} href={link.href}>
+								{link.title}
+							</NavbarLink>
+						))}
 					</div>
 				</div>
 				<div className="group/transparency flex-1">
 					<NavbarLink href={`/v2`}>Transparency</NavbarLink>
 					<div className="mt-6 hidden flex-col opacity-0 group-hover/navbar:flex group-hover/transparency:opacity-100">
-						<NavbarLink href={`/v2/`}>Finances</NavbarLink>
-						<NavbarLink href={`/v2/`}>Evidence</NavbarLink>
-						<NavbarLink href={`/v2/`}>Recipient Selection</NavbarLink>
-						<NavbarLink href={`/v2/`}>Open Source</NavbarLink>
-						<NavbarLink href={`/v2/`}>Reports</NavbarLink>
-						<NavbarLink href={`/v2/`}>FAQ</NavbarLink>
+						{transparencyLinks.map((link, index) => (
+							<NavbarLink key={index} href={link.href}>
+								{link.title}
+							</NavbarLink>
+						))}
 					</div>
 				</div>
 			</div>
@@ -177,14 +238,50 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies }: Nav
 };
 
 export function NavbarClientV2(props: NavbarProps) {
+	const pathname = usePathname();
+	const { backgroundColor, setBackgroundColor } = useNavbarBackgroundColor();
+
+	const aboutUsLinks = [
+		{ title: 'Mission', href: '/v2/about-us' },
+		{ title: 'People', href: '/v2/about-us' },
+		{ title: 'Technology', href: '/v2/about-us' },
+		{ title: 'Contact', href: '/v2/about-us' },
+	];
+	const ourWorkLinks = [
+		{ title: 'Fight Poverty', href: '/v2' },
+		{ title: 'Cash Transfers', href: '/v2' },
+		{ title: 'Basic Income', href: '/v2' },
+		{ title: 'Programs', href: '/v2' },
+	];
+	const transparencyLinks = [
+		{ title: 'Finances', href: '/v2' },
+		{ title: 'Evidence', href: '/v2' },
+		{ title: 'Recipients', href: '/v2' },
+		{ title: 'Open Source', href: '/v2' },
+		{ title: 'Reports', href: '/v2' },
+		{ title: 'FAQ', href: '/v2' },
+	];
+
+	useEffect(() => {
+		if (pathname.split('/').length > 4) {
+			setBackgroundColor('bg-background');
+		}
+	}, [pathname, setBackgroundColor]);
+
 	return (
-		<nav
-			className={classNames('theme-blue-v2 group/navbar bg-background fixed inset-x-0 top-0 z-20 flex flex-col', {
-				// 'bg-transparent': transparent,
-			})}
-		>
-			<DesktopNavigation {...props} />
-			<MobileNavigation {...props} />
+		<nav className={classNames('theme-blue-v2 group/navbar fixed inset-x-0 top-0 z-20 flex flex-col', backgroundColor)}>
+			<DesktopNavigation
+				{...props}
+				aboutUsLinks={aboutUsLinks}
+				ourWorkLinks={ourWorkLinks}
+				transparencyLinks={transparencyLinks}
+			/>
+			<MobileNavigation
+				{...props}
+				aboutUsLinks={aboutUsLinks}
+				ourWorkLinks={ourWorkLinks}
+				transparencyLinks={transparencyLinks}
+			/>
 		</nav>
 	);
 }
