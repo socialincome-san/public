@@ -161,7 +161,7 @@ const DesktopNavigation = ({
 				<div className="group/about-us flex-1">
 					<NavbarLink href={`/v2/about-us`}>About us</NavbarLink>
 					<div className="mt-6 hidden flex-col opacity-0 group-hover/navbar:flex group-hover/about-us:opacity-100">
-						{aboutUsLinks.map((link, index) => (
+						{aboutUsLinks.map((link: any, index: number) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
 							</NavbarLink>
@@ -171,7 +171,7 @@ const DesktopNavigation = ({
 				<div className="group/our-work flex-1">
 					<NavbarLink href={`/v2`}>Our Work</NavbarLink>
 					<div className="mt-6 hidden flex-col opacity-0 group-hover/navbar:flex group-hover/our-work:opacity-100">
-						{ourWorkLinks.map((link, index) => (
+						{ourWorkLinks.map((link: any, index: number) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
 							</NavbarLink>
@@ -181,7 +181,7 @@ const DesktopNavigation = ({
 				<div className="group/transparency flex-1">
 					<NavbarLink href={`/v2`}>Transparency</NavbarLink>
 					<div className="mt-6 hidden flex-col opacity-0 group-hover/navbar:flex group-hover/transparency:opacity-100">
-						{transparencyLinks.map((link, index) => (
+						{transparencyLinks.map((link: any, index: number) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
 							</NavbarLink>
