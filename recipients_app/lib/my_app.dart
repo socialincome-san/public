@@ -8,7 +8,6 @@ import "package:app/view/pages/terms_and_conditions_page.dart";
 import "package:app/view/pages/welcome_page.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
-import "package:firebase_crashlytics/firebase_crashlytics.dart";
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -19,14 +18,12 @@ import "package:flutter_native_splash/flutter_native_splash.dart";
 class MyApp extends StatelessWidget {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firestore;
-  final FirebaseCrashlytics crashlytics;
   final FirebaseMessaging messaging;
 
   const MyApp({
     super.key,
     required this.firebaseAuth,
     required this.firestore,
-    required this.crashlytics,
     required this.messaging,
   });
 
@@ -47,9 +44,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         RepositoryProvider(
-          create: (context) => CrashReportingRepository(
-            crashlytics: crashlytics,
-          ),
+          create: (context) => CrashReportingRepository(),
         ),
         RepositoryProvider(
           create: (context) => PaymentRepository(
