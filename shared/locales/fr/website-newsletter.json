@@ -11,19 +11,19 @@
 		"description-2": "Wird an jedem Monatsende versendet.",
 		"description-3": "Newsletters verfasst von",
 		"author-name": "Aurélie Schmiedlin",
-		"author-city": "Genf",
-		"form-title": "Newsletter abonnieren",
-		"firstname": "Vorname",
-		"email": "E-Mail",
-		"submit-button": "Anmelden",
+		"author-city": "Genève",
+		"form-title": "S'abonner à la newsletter",
+		"firstname": "Prénom",
+		"email": "Ton adresse E-Mail",
+		"submit-button": "S'abonner",
 		"newsletter-updated-toast": "Du wurdest zum Newsletter hinzugefügt",
 		"newsletter-error-toast": "Du konntest leider nicht zum Newsletter hinzugefügt werden"
 	},
 	"popup": {
-		"information-label": "Erhalte monatliche Updates über Social Income, sowie aktuelle Infos über Grundeinkommen und Direktzahlungen.",
-		"toast-success": "Danke für das Abonnieren des Social Income Newsletters!",
-		"toast-failure": "Oops! Etwas ist schief gelaufen. Bitte versuche es nochmals, oder kontaktiere uns auf hello@socialincome.org",
-		"email-placeholder": "Deine E-Mail Adresse",
-		"button-subscribe": "Newsletter abonnieren"
+		"information-label": "Reçois des informations mensuelles sur Social Income, ainsi que des informations actuelles sur le revenu de base et les paiements directs.",
+		"toast-success": "Merci de t’être abonné à la newsletter de Social Income!",
+		"toast-failure": "Oups! Ça n’a pas marché. Essaie encore une fois ou prend contact avec nous (hello@socialincome.org)",
+		"email-placeholder": "Ton adresse E-Mail",
+		"button-subscribe": "S'abonner"
 	}
 }

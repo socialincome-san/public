@@ -8,39 +8,39 @@
 	"video-01": {
 		"credits": [
 			{
-				"role": "Director of Photography",
+				"role": "Directeur de la photographie",
 				"name": "Gabriel Koller"
 			},
 			{
-				"role": "Schnitt",
+				"role": "Montage",
 				"name": "Nicolas Küng"
 			},
 			{
-				"role": "Sounddesign & Musik",
+				"role": "Conception sonore & musique",
 				"name": "Tidiane Sane"
 			},
 			{
-				"role": "Mix & Mastering",
+				"role": "Mixage & Mastering",
 				"name": "Nicola-Miloš Mišić"
 			},
 			{
-				"role": "Colorist",
+				"role": "Coloriste",
 				"name": "Simon Hardegger"
 			},
 			{
-				"role": "Kameraassistenz",
+				"role": "Assistant caméra",
 				"name": "Felix Rhodes"
 			},
 			{
-				"role": "Off-Stimme",
+				"role": "Voix off",
 				"name": "Ted Limpert"
 			},
 			{
-				"role": "Grafikanimation",
+				"role": "Animation graphique",
 				"name": "Raphael Schoen"
 			},
 			{
-				"role": "Übersetzung (Untertitel)",
+				"role": "Traduction (sous-titres)",
 				"name": "Françoise Légeret (FR), Riccardo Tamburini (ES, IT)"
 			}
 		]
@@ -48,7 +48,7 @@
 	"video-02": {
 		"credits": [
 			{
-				"role": "Grafik & Animation",
+				"role": "Animation graphique",
 				"name": "Sueter Studio"
 			},
 			{
@@ -56,7 +56,7 @@
 				"name": "Sandino Scheidegger"
 			},
 			{
-				"role": "Off-Stimme",
+				"role": "Voix off",
 				"name": "Ana Matijasevic"
 			}
 		]
@@ -64,7 +64,7 @@
 	"video-03": {
 		"credits": [
 			{
-				"role": "Grafik & Animation",
+				"role": "Animation graphique",
 				"name": "Sueter Studio"
 			},
 			{
@@ -72,7 +72,7 @@
 				"name": "Riccardo Tamburini"
 			},
 			{
-				"role": "Narrator",
+				"role": "Voix off",
 				"name": "Ted Limpert"
 			}
 		]
