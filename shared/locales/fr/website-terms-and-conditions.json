@@ -1,0 +1,53 @@
+{
+	"metadata": {
+		"title": "Teilnahmebedingungen | Social Income"
+	},
+	"title": "Teilnahmebedingungen",
+	"comment": "Bei der vorliegenden Teilnahmebedingungen handelt es sich um eine Übersetzung aus dem Englischen. Sollte es zwischen der vorliegenden Übersetzung und der <a href=\"/legal/donations\">Terms and Conditions</a> inhaltliche Unterschiede geben, so geht die englischen Teilnahmebedingungen dieser Übersetzung vor.",
+	"general": {
+		"title": "Allgemeines",
+		"section-1": "Diese Teilnahmebedingungen für Spendenzahlungen (im Folgenden \"Teilnahmebedingungen \") regeln finanzielle Zuwendung zugunsten von Social Income, einer gemeinnützigen Organisation mit Sitz in Zürich, Schweiz (im Folgenden \"Social Income\").",
+		"section-2": "Indem du einen Beitrag leistest, erklärst du dich mit diesen Teilnahmebedingungen einverstanden.",
+		"section-3": "Es kann vorkommen, dass wir Änderungen an den Teilnahmebedingungen ohne vorherige Ankündigung vornehmen. Wenn wir wesentliche Änderungen vornehmen, die sich nachteilig auf deine Rechte auswirken, werden wir dich informieren, bevor die Änderungen in Kraft treten. Änderungen gelten ab dem Zeitpunkt der Veröffentlichung der geänderten Teilnahmebedingungen auf der Webseite. Indem du Social Income nach einer Änderung der Teilnahmebedingungen weiterhin verwendest oder Beiträge zahlst, akzeptierst du die neuen Bedingungen und Konditionen."
+	},
+	"participation": {
+		"title": "Deine Beitragszahlungen",
+		"section-1": "Um Spender:in zu werden, erstellst du ein Konto auf der Webseite, berechnest deinen Spendenbetrag auf der Basis deines monatlichen Einkommens und entscheidest dich, einen prozentuallen Anteil oder einen fixen Betrag zu spenden.",
+		"section-2": "Dein Beitrag zu Gunsten von Social Income wird ausschliesslich im Sinne der Ziele von Social Income verwendet. Dein Beitrag wird an Personen überwiesen, die von Social Income unterstützt werden. Weitere Informationen zu den Empfängern deines Beitrags findest du auf der Webseite.",
+		"section-3": "Über die Webseite wählst du deine bevorzugte Zahlungsart und deinen bevorzugten Zahlungsplan. Die Zahlungsoptionen und -pläne werden dir auf der Webseite vorgestellt und können dort von dir ausgewählt werden, bevor du der Zahlung zustimmst.",
+		"section-4": "Zahlungspläne per Kreditkarte können jederzeit über dein Benutzerkonto oder durch schriftliche Mitteilung an <a href='mailto:contributors@socialincome.org'>contributors@socialincome.org</a> gekündigt werden. Daueraufträge per Banküberweisung müssen bei deiner Bank storniert werden. Ein einmal geleisteter Beitrag können wir dir nicht zurückerstatten.",
+		"section-5": "CBeiträge, die über die Website geleistet werden, werden über eine sichere SSL-Verbindung verarbeitet. Alle Online-Zahlungen von Spendern werden über den Drittanbieter Stripe oder Coinbase (für Kryptowährungen) abgewickelt. Weitere Informationen über den Drittanbieter findest du in den Datenschutzbestimmungen von <a href='https://stripe.com/en-ch/privacy' target='_blank'>Stripe</a> und <a href='https://www.coinbase.com/legal/privacy' target='_blank'>Coinbase</a>.",
+		"section-6": "In einigen Ländern sind Beiträge an Social Income steuerlich absetzbar. Nach jeder Spende senden wir dir daher eine Spendenbescheinigung per E-Mail, um dir den Abzug zu erleichtern."
+	},
+	"data": {
+		"title": "Deine persönlichen Daten und die Nutzung der Webseite",
+		"section-1": "Die Übertragung, Sammlung und Bearbeitung von personenbezogenen Daten über die Webseite unterliegt unserer <a href='/legal/privacy'>Datenschutzrichtlinie</a>.",
+		"section-2": "Der Zugang zu und die Nutzung der Webseite unterliegt zudem den <a href='/legal/site-use'>Nutzungsbedingungen</a>.",
+		"section-3": "Wir empfehlen dir, diese vorgenannten Richtlinien sorgfältig zu lesen. Solltest du Fragen haben, zögere bitte nicht, uns diese zu stellen. Du kannst uns dazu unter <a href='mailto:legal@socialincome.org'>legal@socialincome.org</a> kontaktieren."
+	},
+	"liability": {
+		"title": "Haftungsausschluss",
+		"section-1": "Hiermit anerkennst du, dass der Zugriff auf diese Webseite und deren Nutzung, die Übertragung von Daten auf und aus dieser Webseite, der Zugriff auf Webseiten Dritter über auf dieser Webseite verfügbare Links sowie alle Handlungen, die auf der Grundlage der Inhalte dieser Website vorgenommen werden, auf dein eigenes Risiko erfolgen. Social Income schliesst hiermit, soweit gesetzlich zulässig, jede vertragliche und ausservertragliche Haftung für daraus entstehende direkte und indirekte Schäden aus.",
+		"section-2": "Für diese Klausel wird \"Social Income\" so definiert, dass dieser Haftungsausschluss uns unterstellte Gesellschaften, mit uns verbundene Unternehmen, unsere leitenden Angestellten, Direktoren, Mitarbeiter, Vertreter sowie Drittanbieter von Dienstleistungen miteinschliesst."
+	},
+	"warranty": {
+		"title": "Ausschluss der Gewährleistung",
+		"section-1": "Wir tun unser Bestes, den Inhalt der Webseite stets aktuell, vollständig und genau zu halten. Bei den Informationen, die über die Webseite zur Verfügung gestellt werden, kann es jedoch zu raschen Änderungen kommen, weshalb wir Aktualität, Genauigkeit und Vollständigkeit nicht lückenlos garantieren können. Die Inhalte der Webseite enthalten keine Zusicherungen oder Gewährleistungen.",
+		"section-2": "Du anerkennst, dass Social Income ohne jegliche Garantie angeboten wird. Jegliche für Gewährleistung der Marktgängigkeit, Eignung für einen bestimmten Zweck oder Nichtverletzung der Rechte Dritter und jede andere Gewährleistung wird ausgeschlossen, soweit gesetzlich zulässig.",
+		"section-3": "Die Gewährleistungsausschlüsse unter dieser Klausel gelten auch für uns unterstellte Gesellschaften, verbundenen Unternehmen und für Drittanbieter von Dienstleistungen."
+	},
+	"stopping": {
+		"title": "Wenn du nicht mehr mitmachen möchtest",
+		"section-1": "Social Income basiert auf Solidarität und freiwilligen Spenden. Du teilst dein Einkommen mit Mitmenschen nur so lange und nur in dem Umfang, wie du möchtest. Du kannst Dein Engagement bei Social Income jederzeit und mit sofortiger Wirkung beenden. Es steht dir frei, deinen Zahlungsplan zu ändern und die Zahlungen jederzeit auszusetzen oder einzustellen.",
+		"section-2": "Wie bereits im Abschnitt \"Deine Teilnahme\" erwähnt, können wir jedoch keine Zahlungen zurückerstatten, die bereits an uns überwiesen wurden."
+	},
+	"deletion": {
+		"title": "Löschung deines Kontos",
+		"section-1": "Du kannst jederzeit von uns verlangen, dass wir dein Konto löschen oder sperren, indem du eine E-Mail an <a href='mailto:contributors@socialincome.org'>contributors@socialincome.org</a>. sendest. Wir werden deine Anfrage innerhalb von zwei Arbeitstagen beantworten und bearbeiten."
+	},
+	"disagreements": {
+		"title": "Wie wir Unstimmigkeiten klären",
+		"section-1": "Wir laden dich dazu ein, sich mit uns in Verbindung zu setzen, sollten Probleme im Zusammenhang mit deiner Nutzung von Social Income und der Webseite auftreten. Fragen und Bedenken in Bezug auf Social Income, deine Beiträge und unsere Teilnahmebedingungen kannst du jederzeit an <a href='mailto:legal@socialincome.org'>legal@socialincome.org</a> richten. Wir werden dir innerhalb von zwei Arbeitstagen antworten.",
+		"section-2": "Wenn wir keine Lösung finden und entweder du oder wir vor Gericht gehen müssen, ist für alle Streitigkeiten, die im Zusammenhang mit diesen Teilnahmebedingungen entstehen, ausschliesslich Schweizer Recht anwendbar, unter Ausschluss der kollisionsrechtlichen Bestimmungen. Der Gerichtsstand ist Zürich, Schweiz."
+	}
+}

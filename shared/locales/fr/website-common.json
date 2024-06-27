@@ -1,0 +1,41 @@
+{
+	"metadata": {
+		"title": "Social Income",
+		"description": "Social Income ist eine Non-Profit-Organisation, die bedingungslose Geldtransfers an bedürftige Menschen vergibt.",
+		"keywords": "Social Income, Grundeinkommen, Bedingungslose Geldtransfers, Non Profit, NGO",
+		"url": "https://socialincome.org",
+		"og-image": "/assets/metadata/og/default.jpg",
+		"twitter-image": "/assets/metadata/twitter/default.jpg"
+	},
+	"navigation": {
+		"100-percent-model": "100% Model",
+		"about-us": "Wer wir sind",
+		"contact": "Kontakt",
+		"contributors": "Spender:innen",
+		"evidence": "Evidenz",
+		"faq": "FAQ",
+		"finances": "Finanzen",
+		"how-it-works": "So funktioniert's",
+		"my-profile": "Mein Profil",
+		"our-mission": "Unsere Mission",
+		"our-work": "Was wir tun",
+		"privacy-policy": "Datenschutzrichtlinie",
+		"recipient-selection": "Selektion der Empfänger:innen",
+		"recipients": "Empfänger:innen",
+		"reporting": "Dokumente",
+		"team": "Team",
+		"transparency": "Transparenz",
+		"whats-next": "Was als Nächstes kommt"
+	},
+	"footer": {
+		"follow-us": "Folge uns",
+		"resources": "Informationen",
+		"legal": "Rechtliches",
+		"newsletter": "Newsletter"
+	},
+	"cookie-consent-banner": {
+		"text": "Dürfen wir Cookies benützen um den Traffic und die Leistung unserer Website zu analysieren? Wir sammeln niemals persönliche Daten. <a href='/legal/privacy' class='underline'>Datenschutzrichtlinie</a>.",
+		"button-accept": "Akzeptieren",
+		"button-refuse": "Ablehnen"
+	}
+}
