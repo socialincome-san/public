@@ -1,0 +1,61 @@
+{
+	"metadata": {
+		"title": "Finanzen | Social Income"
+	},
+	"amount": "{{ value, currency }}",
+	"section-1": {
+		"title-1": "Transparenz schafft Vertrauen.",
+		"title-2": "Vertrauen schafft Solidarität.",
+		"since-march-2020": "Seit März 2020",
+		"totalContributions": "{{ contributorCount }} Spender:innen spendeten insgesamt {{value, currency}}",
+		"totalPayments": "{{ value }} Auszahlungen direkt aufs Mobiltelefon",
+		"totalRecipients": "{{ value }} Empfänger:innen wurden aufgenommen in unserem 3-Jahresprogramm"
+	},
+	"section-2": {
+		"title": "Wie wird Social Income finanziert?",
+		"donations": "Spenden",
+		"amount-since-march-2020": "Insgesamt seit März 2020",
+		"contributions-from": "{{ value, currency }} von",
+		"individuals": "{{ count }} Individuen",
+		"institutions": "{{ count }} Institutionen",
+		"past-payouts": "Vergangene Auszahlungen: {{ value, currency }}",
+		"payments-future": "Künftige Auszahlungen: {{ value, currency }}",
+		"past-costs": "Bereits verwendet um Kosten zu decken: {{ value, currency }}",
+		"future-costs": "Um kommende Kosten zu decken: {{ value, currency }}"
+	},
+	"section-3": {
+		"title": "Von wo kommen die Spender:innen?",
+		"subtitle": "Wir erhalten Spenden aus {{ value }} Ländern.",
+		"country-amount": "{{ value, currency }} von {{ contributorsCount }} Spender:innen",
+		"all-countries": "Alle Länder anzeigen"
+	},
+	"section-4": {
+		"title": "Wie werden Spenden ausbezahlt?",
+		"subtitle": "Individuelle Spenden werden zu 100% ausbezahlt. Institutionell Spenden werden gebraucht um die operativen Kosten zu decken.",
+		"amount-since-march-2020": "Insgesamt seit März 2020",
+		"expenses": "Ausgaben",
+		"payments-total": "{{ value, currency }} ausbezahlt an {{ recipientsCount }} Empfänger:innen",
+		"payments-last-month": "Letzter Monat: {{ value, currency }} an {{ recipientsCount }} Empfänger:innen",
+		"payments-future": "Künftige Auszahlungen: {{ value, currency }}",
+		"project-costs": "{{ value, currency }} Projektführungskosten",
+		"donation-fees": "Zustellgebühren: {{ value, currency }}",
+		"donation-fees-tooltip": "Kosten, die anfallen beim Geldtransfer von dir zu uns.",
+		"delivery-fees": "Auslieferungskosten: {{ value, currency }}",
+		"delivery-fees-tooltip": "Kosten, die anfallen beim Geldtransfer von uns zu den Empfänger:innen.",
+		"exchange-rate-loss": "Währungsverluste: {{ value, currency }}",
+		"exchange-rate-loss-tooltip": "Die Währungsverluste entstehen hauptsächlich durch die Inflation in Sierra Leone.",
+		"account-fees": "Kontoführungsgebühren: {{ value, currency }}",
+		"account-fees-tooltip": "Kosten, die anfallen für die Kontoführung in Sierra Leone und der Schweiz.",
+		"administrative-costs": "Administrative Kosten: {{ value, currency }}",
+		"administrative-costs-tooltip": "Kosten für IT Lizenzen, Hosting der Webseite, und andere Dienstleistungen.",
+		"fundraising-costs": "Fundraising & Marketing: {{ value, currency }}",
+		"fundraising-costs-tooltip": "Kosten, die für Werbung und Fundraising anfallen.",
+		"staff-costs": "Lokales Personal: {{ value, currency }}",
+		"staff-costs-tooltip": "Lohnkosten für Personal in Sierra Leone.",
+		"reserves": "Reserven",
+		"covers-payments": "Reserven decken Auszahlungen für",
+		"covers-payments-1": "{{ recipientsCount }} Empfänger:innen für {{ monthsCount }} Monate",
+		"covers-payments-2": "{{ recipientsCount }} Empfänger:innen für einen Monat",
+		"reserves-text": "Wir halten liquide Mittel um Zahlungen über mehrere Monate ohne Neugeld finanzieren zu können."
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"section-1": {
+		"title": "Bankverbindung",
+		"bankIntroText": "Kontoangaben für Banküberweisungen",
+		"bankInfoTextRecurring": "Wiederkehrende Spenden",
+		"bankOneTime": "Einmalige Spenden",
+		"bankPrompt": "Bank",
+		"bankPostFinance": "Postfinance, Zürich (Schweiz)",
+		"bankAccountHolderPrompt": "Kontoinhaber",
+		"bankAccountHolder": "Social Income",
+		"bankIBANPrompt": "IBAN",
+		"bankIBAN1": "CH19 0900 0000 1511 2638 6",
+		"bankIBAN2": "CH57 0900 0000 1548 6088 1",
+		"bankBICPrompt": "BIC",
+		"bankBIC": "POFICHBEXXX"
+	}
+}

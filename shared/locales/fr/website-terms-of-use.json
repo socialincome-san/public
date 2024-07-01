@@ -1,0 +1,39 @@
+{
+	"metadata": {
+		"title": "Nutzungsbedingungen | Social Income",
+		"description": "Hier werden die Regeln erläutert, mit denen Sie sich einverstanden erklären, wenn Sie unsere Dienste nutzen."
+	},
+	"title": "Nutzungsbedingungen",
+	"comment": "Bei der vorliegenden Nutzungsbedingungen handelt es sich um eine Übersetzung aus dem Englischen. Sollte es zwischen der vorliegenden Übersetzung und der <a href=\"/legal/site-use\">Terms of Use</a> inhaltliche Unterschiede geben, so geht die englischen Nutzungsbedinungen dieser Übersetzung vor.",
+	"general": {
+		"title": "Allgemeines",
+		"section-1": "Die Webseite socialincome.org (nachfolgend \"Webseite\") wird von Social Income, einem gemeinnützigen Verein mit Sitz in Zürich, Schweiz (nachfolgend \"Social Income\") betrieben. Durch den Zugriff auf und die Nutzung der Webseite erklärst du, dass du die folgenden Nutzungsbedingungen und alle anderen auf dieser Webseite verfügbaren rechtlichen Informationen, die die Nutzung der Website regeln (im Folgenden zusammenfassend als \"Nutzungsbedingungen\"), gelesen und verstanden hast und ihnen zustimmst.",
+		"section-2": "Wenn du mit den Nutzungsbedingungen nicht einverstanden bist, ist es dir untersagt, auf unsere Dienste zuzugreifen oder diese nutzen. Wenn du mit den Nutzungsbedingungen nicht einverstanden bist und diese nicht akzeptierst, bist du verpflichtet die Nutzung der Webseite sofort einstellen und die Webseite zu verlassen.",
+		"section-3": "Es kann vorkommen, dass wir Änderungen an den Nutzungsbedingungen ohne vorherige Ankündigung vornehmen. Wenn wir wesentliche Änderungen vornehmen, die sich nachteilig auf deine Rechte auswirken, werden wir dich informieren, bevor die Änderungen in Kraft treten. Änderungen gelten ab dem Zeitpunkt der Veröffentlichung der geänderten Nutzungsbedingungen auf der Webseite. Indem du Social Income nach einer Änderung der Nutzungsbedingungen weiterhin verwendest, akzeptierst du die neuen Bedingungen und Konditionen."
+	},
+	"links": {
+		"title": "Links zu Webseiten Dritter",
+		"section-1": "Die Webseite kann Links zu Webseiten enthalten, die von Dritten betrieben werden. Die Webseiten dieser Dritten stehen nicht unter der Kontrolle von Social Income und unterliegen den Bedingungen der jeweiligen Dritten. Social Income übernimmt keine Gewährleistung oder Haftung in Bezug oder in Verbindung mit diesen Webseiten Dritter."
+	},
+	"data": {
+		"title": "Deine persönlichen Daten und die Nutzung der Webseite",
+		"section-1": "Die Übertragung, Sammlung und Bearbeitung von personenbezogenen Daten über die Webseite unterliegt unserer <a href='/legal/privacy'>Datenschutzrichtlinie</a>.",
+		"section-2": "Wenn du dich entscheidest, einen Beitrag an Social Income zu leisten, werden wir dich bitten, den <a href='/legal/donations'>Teilnahmebedingungen</a> zuzustimmen."
+	},
+	"liability": {
+		"title": "Ausschluss der Gewährleistung",
+		"section-1": "Wir tun unser Bestes, den Inhalt der Webseite stets aktuell, vollständig und genau zu halten. Bei den Informationen, die über die Webseite zur Verfügung gestellt werden, kann es jedoch zu raschen Änderungen kommen, weshalb wir Aktualität, Genauigkeit und Vollständigkeit nicht lückenlos garantieren können. Die Inhalte der Webseite enthalten keine Zusicherungen oder Gewährleistungen.",
+		"section-2": "Du anerkennst, dass Social Income ohne jegliche Garantie angeboten wird. Jegliche für Gewährleistung der Marktgängigkeit, Eignung für einen bestimmten Zweck oder Nichtverletzung der Rechte Dritter und jede andere Gewährleistung wird ausgeschlossen, soweit gesetzlich zulässig.",
+		"section-3": "Die Gewährleistungsausschlüsse unter dieser Klausel gelten auch für uns unterstellte Gesellschaften, verbundenen Unternehmen und für Drittanbieter von Dienstleistungen."
+	},
+	"warranty": {
+		"title": "Haftungsausschluss",
+		"section-1": "Hiermit anerkennst du, dass der Zugriff auf diese Webseite und deren Nutzung, die Übertragung von Daten auf und aus dieser Webseite, der Zugriff auf Webseiten Dritter über auf dieser Webseite verfügbare Links sowie alle Handlungen, die auf der Grundlage der Inhalte dieser Website vorgenommen werden, auf dein eigenes Risiko erfolgen. Social Income schliesst hiermit, soweit gesetzlich zulässig, jede vertragliche und ausservertragliche Haftung für daraus entstehende direkte und indirekte Schäden aus.",
+		"section-2": "Für diese Klausel wird \"Social Income\" so definiert, dass dieser Haftungsausschluss uns unterstellte Gesellschaften, mit uns verbundene Unternehmen, unsere leitenden Angestellten, Direktoren, Mitarbeiter, Vertreter sowie Drittanbieter von Dienstleistungen miteinschliesst."
+	},
+	"disagreements": {
+		"title": "Wie wir Unstimmigkeiten klären",
+		"section-1": "Wir laden dich dazu ein, sich mit uns in Verbindung zu setzen, sollten Probleme im Zusammenhang mit deiner Nutzung von Social Income und der Webseite auftreten. Fragen und Bedenken in Bezug auf Social Income, deine Beiträge und unsere Nutzungsbedingungen kannst du jederzeit an <a href='mailto:legal@socialincome.org'>legal@socialincome.org</a> richten. Wir werden dir innerhalb von zwei Arbeitstagen antworten.",
+		"section-2": "Wenn wir keine Lösung finden und entweder du oder wir vor Gericht gehen müssen, ist für alle Streitigkeiten, die im Zusammenhang mit diesen Nutzungsbedingungen entstehen, ausschliesslich Schweizer Recht anwendbar, unter Ausschluss der kollisionsrechtlichen Bestimmungen. Der Gerichtsstand ist Zürich, Schweiz."
+	}
+}
