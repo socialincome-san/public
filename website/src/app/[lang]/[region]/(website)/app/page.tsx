@@ -28,7 +28,7 @@ export default async function Page({ params }: DefaultPageProps) {
 							{translator.t('android')}
 						</Typography>
 						<a
-							href="https://play.google.com/store/apps/details?id=org.socialincome.app&pcampaignid=web_share"
+							href="https://play.google.com/store/apps/details?id=org.socialincome.app"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
@@ -40,7 +40,7 @@ export default async function Page({ params }: DefaultPageProps) {
 							{translator.t('apple')}
 						</Typography>
 						<a
-							href="https://apps.apple.com/ch/app/social-income/id6444860109"
+							href="https://apps.apple.com/app/social-income/id6444860109"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
