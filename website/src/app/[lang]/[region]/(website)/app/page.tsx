@@ -39,11 +39,7 @@ export default async function Page({ params }: DefaultPageProps) {
 						<Typography as="h2" size="xl" className="pb-4">
 							{translator.t('apple')}
 						</Typography>
-						<a
-							href="https://apps.apple.com/app/social-income/id6444860109"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
+						<a href="https://apps.apple.com/app/social-income/id6444860109" target="_blank" rel="noopener noreferrer">
 							<Image src={Applestore} width={150} height={50} alt="Appstore Button" />
 						</a>
 					</div>
