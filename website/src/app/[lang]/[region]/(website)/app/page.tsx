@@ -2,6 +2,7 @@ import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import Image from 'next/image';
+import Link from 'next/link';
 import Applestore from './(assets)/applestore.svg';
 import Playstore from './(assets)/playstore.svg';
 
@@ -27,21 +28,25 @@ export default async function Page({ params }: DefaultPageProps) {
 						<Typography as="h2" size="xl" className="pb-4">
 							{translator.t('android')}
 						</Typography>
-						<a
+						<Link
 							href="https://play.google.com/store/apps/details?id=org.socialincome.app"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
 							<Image src={Playstore} width={150} height={50} alt="Playstore Button" />
-						</a>
+						</Link>
 					</div>
 					<div className="m-2 flex flex-col items-center justify-center p-4 md:w-1/2">
 						<Typography as="h2" size="xl" className="pb-4">
 							{translator.t('apple')}
 						</Typography>
-						<a href="https://apps.apple.com/app/social-income/id6444860109" target="_blank" rel="noopener noreferrer">
+						<Link
+							href="https://apps.apple.com/app/social-income/id6444860109"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
 							<Image src={Applestore} width={150} height={50} alt="Appstore Button" />
-						</a>
+						</Link>
 					</div>
 				</div>
 			</div>
