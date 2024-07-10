@@ -295,6 +295,16 @@ class AccountPageState extends State<AccountPage> {
                     }
                   },
                   keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) return null;
+
+                    final emailRegex = RegExp(
+                      r"^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$",
+                    );
+                    if (!emailRegex.hasMatch(value)) return localizations.errorEmailInvalid;
+
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 24),
                 Text(
