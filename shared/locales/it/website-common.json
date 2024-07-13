@@ -1,0 +1,44 @@
+{
+	"metadata": {
+		"title": "Social Income",
+		"description": "Social Income è un'organizzazione non-profit che fornisce trasferimenti di denaro incondizionati alle persone bisognose",
+		"keywords": "Social Income, Reddito di Base Universale, Trasferimenti Diretti di Denaro, Non Profit, ONG",
+		"url": "https://socialincome.org",
+		"og-image": "/assets/metadata/og/default.jpg",
+		"twitter-image": "/assets/metadata/twitter/default.jpg"
+	},
+	"navigation": {
+		"100-percent-model": "Modello del 100%",
+		"about-us": "Chi Siamo",
+		"contact": "Contatti",
+		"contributors": "Donatori",
+		"evidence": "Prove Scientifiche",
+		"faq": "FAQ",
+		"finances": "Finanze",
+		"how-it-works": "Come Funziona",
+		"my-profile": "Il Mio Profilo",
+		"our-mission": "La Nostra Missione",
+		"our-work": "Il Nostro Lavoro",
+		"privacy-policy": "Informativa sulla Privacy",
+		"recipient-selection": "Selezione dei Beneficiari",
+		"recipients": "Beneficiari",
+		"reporting": "Documenti",
+		"team": "Team",
+		"terms-and-conditions": "Termini e Condizioni",
+		"terms-of-use": "Condizioni di Utilizzo",
+		"transparency": "Transparenza",
+		"whats-next": "In Arrivo"
+	},
+	"footer": {
+		"follow-us": "Seguici",
+		"resources": "Risorse",
+		"our-work": "Il Nostro Lavoro",
+		"legal": "Informazioni Legali",
+		"about-us": "Chi Siamo"
+	},
+	"cookie-consent-banner": {
+		"text": "Ci permetti di utilizzare i cookie per analizzare il traffico e le prestazioni del nostro sito web? Non raccogliamo mai dati personali. <a href='/privacy' class='underline'>Informativa sulla Privacy</a>.",
+		"button-accept": "Accetto",
+		"button-refuse": "Rifiuto"
+	}
+}
