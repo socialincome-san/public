@@ -10,7 +10,8 @@ export async function MonthlyIncome({ lang, region }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer backgroundColor="bg-foreground-dark" className="py-3">
+		// <BaseContainer backgroundColor="bg-foreground-dark" className="py-3">
+		<BaseContainer className="py-3 theme-blue-v2"> {/* Is there a way to use theme-blue-v2 to set background blue? */}
 			<div className="my-4 py-12 text-center text-white">
 				<Typography size="lg" className="opacity-40">
 					{translator.t('section-3.title-faded')}
