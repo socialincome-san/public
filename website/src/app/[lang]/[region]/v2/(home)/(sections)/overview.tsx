@@ -10,11 +10,11 @@ export async function Overview({ lang, region }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer className="mb-16 md:mb-48 flex flex-col items-center justify-center theme-v2">
-			<Typography size="3xl" weight="medium" className="my-10 w-full md:w-3/5 text-center">
+		<BaseContainer className="theme-v2 mb-16 flex flex-col items-center justify-center md:mb-48">
+			<Typography size="3xl" weight="medium" className="my-10 w-full text-center md:w-3/5">
 				{translator.t('section-2.title-1')}
 			</Typography>
-			<div className="mb-8 w-full md:w-3/5 text-center">
+			<div className="mb-8 w-full text-center md:w-3/5">
 				{translator.t<{ text: string; color?: FontColor }[]>('section-2.title-2').map((title, index) => (
 					<Typography
 						as="span"
@@ -28,22 +28,22 @@ export async function Overview({ lang, region }: DefaultParams) {
 					</Typography>
 				))}
 			</div>
-			<Typography size="3xl" weight="medium" className="mb-5 mt-12 w-full md:w-3/5 text-center">
+			<Typography size="3xl" weight="medium" className="mb-5 mt-12 w-full text-center md:w-3/5">
 				{translator.t('section-2.title-3')}
 			</Typography>
-			<ol className="mb-8 w-4/5 md:w-3/5 list-decimal">
+			<ol className="mb-8 w-4/5 list-decimal md:w-3/5">
 				<li>
-					<Typography as='span'>{translator.t('section-2.text-3.1')}</Typography>
+					<Typography as="span">{translator.t('section-2.text-3.1')}</Typography>
 				</li>
 				<li>
-					<Typography as='span'>{translator.t('section-2.text-3.2')}</Typography>
+					<Typography as="span">{translator.t('section-2.text-3.2')}</Typography>
 				</li>
 			</ol>
-			<Typography size="3xl" weight="medium" className="mb-5 mt-12 w-full md:w-3/5 text-center">
+			<Typography size="3xl" weight="medium" className="mb-5 mt-12 w-full text-center md:w-3/5">
 				{translator.t('section-2.title-4')}
 			</Typography>
 			<Typography className="mb-8 w-full md:w-3/5">{translator.t('section-2.text-4')}</Typography>
-			<Typography size="3xl" weight="medium" className="mb-5 mt-12 w-full md:w-3/5 text-center">
+			<Typography size="3xl" weight="medium" className="mb-5 mt-12 w-full text-center md:w-3/5">
 				{translator.t('section-2.title-5')}
 			</Typography>
 			<Typography className="w-full md:w-3/5">{translator.t('section-2.text-5')}</Typography>
