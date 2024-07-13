@@ -44,14 +44,30 @@ export default async function Navbar({ lang, region, showNavigation = true, v2 }
 				}))}
 				navigation={[
 					{
+						id: 'our-work',
 						title: translator.t('navigation.our-work'),
 						href: `/${lang}/${region}/our-work`,
+						links: [
+							{ title: 'Mission', href: `/${lang}/${region}/v2/about-us` },
+							{ title: 'People', href: `/${lang}/${region}/v2/about-us` },
+							{ title: 'Technology', href: `/${lang}/${region}/v2/about-us` },
+							{ title: 'Contact', href: `/${lang}/${region}/v2/about-us` },
+						],
 					},
 					{
+						id: 'about-us',
 						title: translator.t('navigation.about-us'),
 						href: `/${lang}/${region}/about-us`,
+						links: [
+							{ title: 'Fight Poverty', href: '/v2' },
+							{ title: 'Cash Transfers', href: '/v2' },
+							{ title: 'Basic Income', href: '/v2' },
+							{ title: 'Programs', href: '/v2' },
+						],
 					},
 					{
+						id: 'transparency',
+						href: `/${lang}/${region}/transparency`,
 						title: translator.t('navigation.transparency'),
 						links: [
 							{

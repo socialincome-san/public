@@ -1,5 +1,5 @@
-import classNames from 'classnames';
 import { HTMLAttributes } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 export function SIIcon({ className, ...props }: HTMLAttributes<SVGElement>) {
 	return (
@@ -11,7 +11,7 @@ export function SIIcon({ className, ...props }: HTMLAttributes<SVGElement>) {
 			aria-hidden={true}
 			aria-labelledby="si-icon"
 			viewBox="0 0 816 815.8"
-			className={classNames('text-accent', className)}
+			className={twMerge('text-accent', className)}
 			{...props}
 		>
 			<title id="si-icon">Social Income Icon</title>

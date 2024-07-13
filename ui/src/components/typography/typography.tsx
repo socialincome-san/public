@@ -1,9 +1,8 @@
 import classNames from 'classnames';
-import { ComponentPropsWithoutRef } from 'react';
+import React, { ComponentPropsWithoutRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { FontColor } from '../../interfaces/color';
 import { Size } from '../../interfaces/size';
-import IntrinsicElements = React.JSX.IntrinsicElements;
 
 export type FontSize = Extract<Size, 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl'>;
 const FONT_SIZE_MAP: { [key in FontSize]: string } = {
@@ -53,14 +52,12 @@ const LINE_HEIGHT_MAP: { [key in LineHeight]: string } = {
 	none: 'leading-none md:leading-none',
 	tight: 'leading-tight md:leading-tight',
 	snug: 'leading-snug md:leading-snug',
-	normal: 'leading-normal  md:leading-normal',
+	normal: 'leading-normal md:leading-normal',
 	relaxed: 'leading-relaxed md:leading-relaxed',
 	loose: 'leading-loose md:leading-loose',
 };
 
-type ElementType = keyof Pick<IntrinsicElements, 'div' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'span'>;
-
-export type TypographyProps<C extends ElementType> = {
+export type TypographyProps<C extends React.ElementType> = {
 	as?: C;
 	size?: FontSize;
 	weight?: FontWeight;
@@ -68,7 +65,7 @@ export type TypographyProps<C extends ElementType> = {
 	lineHeight?: LineHeight;
 } & ComponentPropsWithoutRef<C>;
 
-export function Typography<C extends ElementType = 'p'>({
+export function Typography<C extends React.ElementType = 'p'>({
 	as,
 	size,
 	weight,

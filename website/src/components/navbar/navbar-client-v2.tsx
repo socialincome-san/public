@@ -2,6 +2,7 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { getFlagComponentByCurrency } from '@/components/country-flags';
+import { DonateIcon } from '@/components/logos/donate-icon';
 import { SIIcon } from '@/components/logos/si-icon';
 import { SILogo } from '@/components/logos/si-logo';
 import { useNavbarBackgroundColor } from '@/components/navbar/useNavbarBackgroundColor';
@@ -15,10 +16,12 @@ import _ from 'lodash';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 type NavigationSection = {
+	id: string;
 	title: string;
-	href?: string;
+	href: string;
 	links?: {
 		title: string;
 		href: string;
@@ -50,38 +53,56 @@ type NavbarProps = {
 		code: WebsiteCurrency;
 		translation: string;
 	}[];
-	aboutUsLinks?: any;
-	ourWorkLinks?: any;
-	transparencyLinks?: any;
+	sections?: NavigationSection[];
 } & DefaultParams;
 
-const MobileNavigation = ({
-	lang,
-	region,
-	languages,
-	regions,
-	currencies,
-	aboutUsLinks,
-	transparencyLinks,
-	ourWorkLinks,
-}: NavbarProps) => {
-	const [visibleSection, setVisibleSection] = useState<'main' | 'about-us' | null>(null);
+const MobileNavigation = ({ lang, region, languages, regions, currencies, navigation, translations }: NavbarProps) => {
+	const [visibleSection, setVisibleSection] = useState<
+		'main' | 'our-work' | 'about-us' | 'transparency' | 'i18n' | null
+	>(null);
+	const { language, setLanguage, setRegion, currency, setCurrency } = useI18n();
+
+	useEffect(() => {
+		// Prevent scrolling when the navbar is expanded
+		if (_.isNull(visibleSection)) {
+			document.body.classList.remove('overflow-y-hidden');
+		} else {
+			document.body.classList.add('overflow-y-hidden');
+		}
+	}, [visibleSection]);
+
+	// Navbar is collapsed
+	if (_.isNull(visibleSection)) {
+		return (
+			<div className="flex h-16 flex-row p-5 md:hidden">
+				<SILogo className="mr-auto h-6" />
+				<Bars3Icon className="text-accent h-6 cursor-pointer" onClick={() => setVisibleSection('main')} />
+			</div>
+		);
+	}
+
 	const NavbarLink = ({ href, children, className }: { href: string; children: string; className?: string }) => (
 		<Link
-			href={`/${lang}/${region}${href}`}
-			className={classNames('hover:text-accent text-lg', className)}
+			href={href}
+			className={twMerge('hover:active:text-accent text-3xl font-medium', className)}
 			onClick={() => setVisibleSection(null)}
 		>
 			{children}
 		</Link>
 	);
-
+	// Navbar is expanded
 	let content;
 	switch (visibleSection) {
 		case 'about-us':
+		case 'our-work':
+		case 'transparency':
+			const section = navigation!.find((section) => section.id === visibleSection);
 			content = (
-				<div className="flex flex-col space-y-4">
-					{aboutUsLinks.map((link: any, index: number) => (
+				<div className="flex flex-col space-y-8">
+					<Typography size="4xl" color="accent" weight="medium">
+						{section!.title}
+					</Typography>
+					{section?.links?.map((link, index) => (
 						<NavbarLink href={link.href} key={index}>
 							{link.title}
 						</NavbarLink>
@@ -89,56 +110,76 @@ const MobileNavigation = ({
 				</div>
 			);
 			break;
+		case 'i18n':
+			content = <div>adf</div>;
+			break;
 		case 'main':
 		default:
+			const Flag = getFlagComponentByCurrency(currency);
 			content = (
-				<div className="flex flex-col space-y-4">
-					<Typography onClick={() => setVisibleSection('about-us')}>About Us</Typography>
+				<div className="flex h-full w-full flex-col justify-between">
+					<div className="flex flex-col items-start space-y-8">
+						<Typography as="button" size="5xl" weight="medium" onClick={() => setVisibleSection('our-work')}>
+							Our work
+						</Typography>
+						<Typography as="button" size="5xl" weight="medium" onClick={() => setVisibleSection('about-us')}>
+							About Us
+						</Typography>
+						<Typography as="button" size="5xl" weight="medium" onClick={() => setVisibleSection('transparency')}>
+							Transparency
+						</Typography>
+					</div>
+					<div className="flex flex-col items-start space-y-4">
+						<NavbarLink href="/v2/" className="ml-12 text-2xl">
+							My Account
+						</NavbarLink>
+						<div className="flex-inline flex items-center">
+							{Flag && <Flag className="mx-3 h-6 w-6 rounded-full" />}
+							<Typography as="button" className="text-2xl font-medium" onClick={() => setVisibleSection('i18n')}>
+								{currency} / {languages.find((l) => l.code === language)?.translation}
+							</Typography>
+						</div>
+						<div className="flex-inline flex items-center">
+							<DonateIcon className="mx-3 h-6 w-6" />
+							<NavbarLink href="/v2/" className="text-accent text-2xl">
+								Donate
+							</NavbarLink>
+						</div>
+					</div>
 				</div>
 			);
 			break;
 	}
 
 	return (
-		<div
-			className={classNames('flex flex-col px-4 py-5 md:hidden', {
-				'bg-background h-screen': visibleSection,
-				'h-16': !visibleSection,
-			})}
-		>
+		<div className="bg-background flex h-[calc(100dvh)] flex-col space-y-8 p-5 pb-8 md:hidden">
 			<div className="flex flex-row justify-between">
-				{visibleSection ? (
-					<ChevronLeftIcon className="text-accent h-6 cursor-pointer" onClick={() => setVisibleSection(null)} />
-				) : (
+				{visibleSection === 'main' ? (
 					<SILogo className="mr-auto h-6" />
-				)}
-				{visibleSection ? (
-					<XMarkIcon className="text-accent h-6 cursor-pointer" onClick={() => setVisibleSection(null)} />
 				) : (
-					<Bars3Icon className="text-accent h-6 cursor-pointer" onClick={() => setVisibleSection('main')} />
+					<ChevronLeftIcon className="text-accent h-6 cursor-pointer" onClick={() => setVisibleSection('main')} />
 				)}
+				<XMarkIcon className="text-accent h-6 cursor-pointer" onClick={() => setVisibleSection(null)} />
 			</div>
-			<div className={classNames({ hidden: _.isNull(visibleSection), flex: !_.isNull(visibleSection) })}>{content}</div>
+			<div className={classNames({ hidden: _.isNull(visibleSection), 'flex h-full': !_.isNull(visibleSection) })}>
+				{content}
+			</div>
 		</div>
 	);
 };
-const DesktopNavigation = ({
-	lang,
-	region,
-	languages,
-	regions,
-	currencies,
-	aboutUsLinks,
-	ourWorkLinks,
-	transparencyLinks,
-}: NavbarProps) => {
+
+const DesktopNavigation = ({ lang, region, languages, regions, currencies, navigation }: NavbarProps) => {
 	let { currency, setCurrency } = useI18n();
 	const Flag = getFlagComponentByCurrency(currency);
 	const NavbarLink = ({ href, children, className }: { href: string; children: string; className?: string }) => (
-		<Link href={`/${lang}/${region}${href}`} className={classNames('hover:text-accent text-lg', className)}>
+		<Link href={href} className={classNames('hover:text-accent text-lg', className)}>
 			{children}
 		</Link>
 	);
+
+	const aboutUs = navigation![0];
+	const ourWork = navigation![1];
+	const transparency = navigation![2];
 
 	return (
 		<div className="hidden h-20 flex-row items-baseline justify-between gap-4 overflow-hidden px-8 py-6 transition-[height] duration-500 ease-in group-hover/navbar:h-80 md:flex">
@@ -159,9 +200,9 @@ const DesktopNavigation = ({
 			{/* Because the first column has flex-grow-0 */}
 			<div className="flex min-w-96 flex-1 flex-row">
 				<div className="group/about-us flex-1">
-					<NavbarLink href={`/v2/about-us`}>About us</NavbarLink>
+					<NavbarLink href={aboutUs.href}>About us</NavbarLink>
 					<div className="mt-6 hidden flex-col opacity-0 group-hover/navbar:flex group-hover/about-us:opacity-100">
-						{aboutUsLinks.map((link: any, index: number) => (
+						{aboutUs?.links?.map((link, index) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
 							</NavbarLink>
@@ -171,7 +212,7 @@ const DesktopNavigation = ({
 				<div className="group/our-work flex-1">
 					<NavbarLink href={`/v2`}>Our Work</NavbarLink>
 					<div className="mt-6 hidden flex-col opacity-0 group-hover/navbar:flex group-hover/our-work:opacity-100">
-						{ourWorkLinks.map((link: any, index: number) => (
+						{ourWork?.links?.map((link: any, index: number) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
 							</NavbarLink>
@@ -181,7 +222,7 @@ const DesktopNavigation = ({
 				<div className="group/transparency flex-1">
 					<NavbarLink href={`/v2`}>Transparency</NavbarLink>
 					<div className="mt-6 hidden flex-col opacity-0 group-hover/navbar:flex group-hover/transparency:opacity-100">
-						{transparencyLinks.map((link: any, index: number) => (
+						{transparency?.links?.map((link: any, index: number) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
 							</NavbarLink>
@@ -241,27 +282,6 @@ export function NavbarClientV2(props: NavbarProps) {
 	const pathname = usePathname();
 	const { backgroundColor, setBackgroundColor } = useNavbarBackgroundColor();
 
-	const aboutUsLinks = [
-		{ title: 'Mission', href: '/v2/about-us' },
-		{ title: 'People', href: '/v2/about-us' },
-		{ title: 'Technology', href: '/v2/about-us' },
-		{ title: 'Contact', href: '/v2/about-us' },
-	];
-	const ourWorkLinks = [
-		{ title: 'Fight Poverty', href: '/v2' },
-		{ title: 'Cash Transfers', href: '/v2' },
-		{ title: 'Basic Income', href: '/v2' },
-		{ title: 'Programs', href: '/v2' },
-	];
-	const transparencyLinks = [
-		{ title: 'Finances', href: '/v2' },
-		{ title: 'Evidence', href: '/v2' },
-		{ title: 'Recipients', href: '/v2' },
-		{ title: 'Open Source', href: '/v2' },
-		{ title: 'Reports', href: '/v2' },
-		{ title: 'FAQ', href: '/v2' },
-	];
-
 	useEffect(() => {
 		if (pathname.split('/').length > 4) {
 			setBackgroundColor('bg-background');
@@ -270,18 +290,8 @@ export function NavbarClientV2(props: NavbarProps) {
 
 	return (
 		<nav className={classNames('theme-blue-v2 group/navbar fixed inset-x-0 top-0 z-20 flex flex-col', backgroundColor)}>
-			<DesktopNavigation
-				{...props}
-				aboutUsLinks={aboutUsLinks}
-				ourWorkLinks={ourWorkLinks}
-				transparencyLinks={transparencyLinks}
-			/>
-			<MobileNavigation
-				{...props}
-				aboutUsLinks={aboutUsLinks}
-				ourWorkLinks={ourWorkLinks}
-				transparencyLinks={transparencyLinks}
-			/>
+			<DesktopNavigation {...props} />
+			<MobileNavigation {...props} />
 		</nav>
 	);
 }
