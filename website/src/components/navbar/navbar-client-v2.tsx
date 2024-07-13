@@ -14,7 +14,6 @@ import { Typography } from '@socialincome/ui';
 import classNames from 'classnames';
 import _ from 'lodash';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
@@ -172,28 +171,31 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 	let { currency, setCurrency } = useI18n();
 	const Flag = getFlagComponentByCurrency(currency);
 	const NavbarLink = ({ href, children, className }: { href: string; children: string; className?: string }) => (
-		<Link href={href} className={classNames('hover:text-accent text-lg', className)}>
+		<Link href={href} className={twMerge('hover:text-accent text-lg', className)}>
 			{children}
 		</Link>
 	);
 
-	const aboutUs = navigation![0];
-	const ourWork = navigation![1];
+	const ourWork = navigation![0];
+	const aboutUs = navigation![1];
 	const transparency = navigation![2];
 
 	return (
 		<div className="hidden h-20 flex-row items-baseline justify-between gap-4 overflow-hidden px-8 py-6 transition-[height] duration-500 ease-in group-hover/navbar:h-80 md:flex">
 			<div className="flex h-full flex-shrink flex-grow-0 flex-col md:w-64">
-				<div>
+				<Link href={`/${lang}/${region}/v2`}>
 					<SILogo className="mr-auto hidden h-6 lg:block" />
 					<SIIcon className="-mb-2.5 block h-9 lg:hidden" />
-				</div>
+				</Link>
 				<div className="mt-6 hidden h-full flex-col justify-start group-hover/navbar:flex group-active/navbar:flex">
 					<NavbarLink href={`/v2/`}>Journal</NavbarLink>
 					<NavbarLink href={`/v2/`}>My Account</NavbarLink>
-					<NavbarLink href={`/v2/`} className="text-accent mt-auto">
-						Donate
-					</NavbarLink>
+					<div className="flex-inline mt-auto flex items-center space-x-2">
+						<DonateIcon className="h-4 w-4" />
+						<NavbarLink href="/v2/" className="text-accent">
+							Donate
+						</NavbarLink>
+					</div>
 				</div>
 			</div>
 			<div className="-ml-64 flex-1" />
@@ -210,7 +212,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					</div>
 				</div>
 				<div className="group/our-work flex-1">
-					<NavbarLink href={`/v2`}>Our Work</NavbarLink>
+					<NavbarLink href={ourWork.href}>Our Work</NavbarLink>
 					<div className="mt-6 hidden flex-col opacity-0 group-hover/navbar:flex group-hover/our-work:opacity-100">
 						{ourWork?.links?.map((link: any, index: number) => (
 							<NavbarLink key={index} href={link.href}>
@@ -220,7 +222,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					</div>
 				</div>
 				<div className="group/transparency flex-1">
-					<NavbarLink href={`/v2`}>Transparency</NavbarLink>
+					<NavbarLink href={transparency.href}>Transparency</NavbarLink>
 					<div className="mt-6 hidden flex-col opacity-0 group-hover/navbar:flex group-hover/transparency:opacity-100">
 						{transparency?.links?.map((link: any, index: number) => (
 							<NavbarLink key={index} href={link.href}>
@@ -279,17 +281,10 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 };
 
 export function NavbarClientV2(props: NavbarProps) {
-	const pathname = usePathname();
 	const { backgroundColor, setBackgroundColor } = useNavbarBackgroundColor();
 
-	useEffect(() => {
-		if (pathname.split('/').length > 4) {
-			setBackgroundColor('bg-background');
-		}
-	}, [pathname, setBackgroundColor]);
-
 	return (
-		<nav className={classNames('theme-blue-v2 group/navbar fixed inset-x-0 top-0 z-20 flex flex-col', backgroundColor)}>
+		<nav className={twMerge('theme-blue-v2 group/navbar fixed inset-x-0 top-0 z-20 flex flex-col', backgroundColor)}>
 			<DesktopNavigation {...props} />
 			<MobileNavigation {...props} />
 		</nav>

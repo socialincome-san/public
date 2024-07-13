@@ -46,7 +46,7 @@ export default async function Navbar({ lang, region, showNavigation = true, v2 }
 					{
 						id: 'our-work',
 						title: translator.t('navigation.our-work'),
-						href: `/${lang}/${region}/our-work`,
+						href: `/${lang}/${region}/v2/our-work`,
 						links: [
 							{ title: 'Mission', href: `/${lang}/${region}/v2/about-us` },
 							{ title: 'People', href: `/${lang}/${region}/v2/about-us` },
@@ -57,7 +57,7 @@ export default async function Navbar({ lang, region, showNavigation = true, v2 }
 					{
 						id: 'about-us',
 						title: translator.t('navigation.about-us'),
-						href: `/${lang}/${region}/about-us`,
+						href: `/${lang}/${region}/v2/about-us`,
 						links: [
 							{ title: 'Fight Poverty', href: '/v2' },
 							{ title: 'Cash Transfers', href: '/v2' },
