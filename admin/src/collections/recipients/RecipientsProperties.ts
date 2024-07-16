@@ -141,6 +141,12 @@ export const TwitterProperty: Property = {
 	hideFromCollection: true,
 };
 
+export const successorProperty: Property = {
+	name: 'Successor',
+	dataType: 'string',
+	hideFromCollection: true,
+};
+
 export const SIStartDateProperty: Property = {
 	name: 'Start Date',
 	longDescription: 'Starting date',
