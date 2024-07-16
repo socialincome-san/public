@@ -17,7 +17,6 @@ import {
 	SIStartDateProperty,
 	TestRecipientProperty,
 	TwitterProperty,
-	successorProperty,
 	birthDateProperty,
 	callingNameProperty,
 	communicationMobilePhoneProperty,
@@ -31,6 +30,7 @@ import {
 	organisationProperty,
 	professionProperty,
 	programStatusProperty,
+	successorProperty,
 } from './RecipientsProperties';
 
 export const PaymentsLeft: AdditionalFieldDelegate<Partial<Recipient>> = {
