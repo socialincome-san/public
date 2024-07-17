@@ -56,16 +56,16 @@
 	"donation-certificates": {
 		"year": "Jahr",
 		"download-pdf": "PDF herunterladen",
-		"no-certificates-yet": "Du hast noch keine Spendebescheinigungen. Stelle sicher, dass du deine Adresse unter \"Kontaktangaben\" hinterleget hast. <br></br> Bei Fragen kannst du uns jederzeit <a href='mailto:hello@socialincome.org' class='underline'>kontaktieren</a>."
+		"no-certificates-yet": "Du hast noch keine Spendebescheinigungen? Stelle sicher, dass du deine Adresse unter \"Kontaktangaben\" hinterleget hast. <br></br> Bei Fragen kannst du uns jederzeit <a href='mailto:hello@socialincome.org' class='underline'>kontaktieren</a>."
 	},
 	"personal-info": {
 		"alert-title": "Spendebescheinigung",
 		"alert-description": "Falls du in der Schweiz Steuern zahlst, teile uns bitte deine Adresse mit, sodass wir dir eine Spendebscheinigung erstellen können.",
 		"firstname": "Vorname",
 		"lastname": "Nachname",
-		"gender": "Geschlecht",
-		"email": "E-Mail",
-		"street": "Strasse",
+		"gender": "Sexe",
+		"email": "Email",
+		"street": "Rue",
 		"street-number": "Nummer",
 		"city": "Ort",
 		"zip": "PLZ",
