@@ -1,8 +1,8 @@
 {
 	"metadata": {
 		"title": "Social Income",
-		"description": "Social Income est une organisation à but non lucratif qui effectue des transferts d'argent inconditionnels aux personnes dans le besoin.",
-		"keywords": "Social Income, revenu de base, transferts d’argent inconditionnels, sans but lucratif, ONG",
+		"description": "Social Income est une organisation à but non lucratif qui effectue des transferts monétaires inconditionnels aux personnes dans le besoin.",
+		"keywords": "Social Income, revenu de base, transferts monétaires inconditionnels, sans but lucratif, ONG",
 		"url": "https://socialincome.org",
 		"og-image": "/assets/metadata/og/default.jpg",
 		"twitter-image": "/assets/metadata/twitter/default.jpg"
@@ -35,7 +35,7 @@
 	},
 	"cookie-consent-banner": {
 		"text": "Pouvons-nous utiliser des cookies pour analyser le trafic et les performances de notre site web ? Nous ne collectons jamais de données personnelles. <a href='/legal/privacy' class='underline'>Politique de confidentialité.</a>.",
-		"button-accept": "Accépter",
+		"button-accept": "Accepter",
 		"button-refuse": "Refuser"
 	}
 }

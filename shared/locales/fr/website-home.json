@@ -34,7 +34,7 @@
 		"subtitle": "Le Social Income est une initiative solidaire. Nous relions les gens du monde entier par des dons petits mais efficaces.",
 		"paragraph-1": "En principe, nous avons tout ce qu’il faut pour réduire les grandes inégalités: Celles et ceux qui peuvent apporter une aide financière, et celles et ceux qui ont besoin de cette aide financière. Il s’agit maintenant de réunir ces deux parties.",
 		"paragraph-2": "C’est là que Social Income entre en jeu - en redistribuant la richesse de manière solidaire et innovante.",
-		"paragraph-3": "Social Income ne peut évidemment pas éliminer l’inégalité structurelle une fois pour toutes. Mais nosu posons les bases d’un vrai changement.",
+		"paragraph-3": "Social Income ne peut évidemment pas éliminer l’inégalité structurelle une fois pour toutes. Mais nous posons les bases d’un vrai changement.",
 		"paragraph-4": "Il suffit d’une modeste participation de 1% de notre revenu pour permettre à des personnes moins favorisées d’améliorer leurs conditions de vie, pour réduire les inégalités porteuses de conflits et pour contribuer ainsi à un monde plus juste."
 	},
 	"section-5": {
@@ -74,13 +74,13 @@
 			"faq-2-link": "/faq"
 		},
 		"card-2": {
-			"title": "Transferts directs d’argent",
+			"title": "Le transfert monétaire direct",
 			"item-1": "Diminue les frais administratifs",
 			"item-2": "Réduit la pauvreté",
 			"item-3": "Favorise l’autonomie",
 			"item-4": "Stimule les marchés locaux",
 
-			"paragraph-1": "Les transferts directs de d’argent s’avèrent être un moyen efficace et efficient pour lutter contre la pauvreté. C'est pourquoi ils sont aujourd'hui utilisés par les gouvernements et les ONG. Les transferts en espèces peuvent être conditionnels ou inconditionnels. Ils permettent aux bénéficiaires d'acheter des biens et des services de leur choix directement sur les marchés locaux.",
+			"paragraph-1": "Les transferts monétaires directs s’avèrent être un moyen efficace et efficient pour lutter contre la pauvreté. C'est pourquoi ils sont aujourd'hui utilisés par les gouvernements et les ONG. Les transferts en espèces peuvent être conditionnels ou inconditionnels. Ils permettent aux bénéficiaires d'acheter des biens et des services de leur choix directement sur les marchés locaux.",
 			"paragraph-2": "Les versements de Social Income ne dépendent ni de décisions politiques, ni des budgets de l'État, ni des impôts. L'objectif premier de l'initiative est la redistribution volontaire et directe de la richesse entre des particuliers.",
 
 			"article-1-title": "Direct Cash Transfers",
@@ -99,13 +99,13 @@
 			"article-4-author": "The Lancet",
 			"article-4-link": "https://www.thelancet.com/action/showPdf?pii=S0140-6736%2809%2961166-1",
 
-			"faq-1-question": "Est-ce que les transferts directs d’argent sont un moyen efficace de lutter contre la pauvreté?",
+			"faq-1-question": "Est-ce que les transferts monétaires directs sont un moyen efficace de lutter contre la pauvreté?",
 			"faq-1-link": "/faq",
 
 			"faq-2-question": "Est-il vraiment utile d'envoyer de l'argent aux personnes dans le besoin?",
 			"faq-2-link": "/faq",
 
-			"faq-3-question": "Qu’est-ce que les transferts directs d’argent?",
+			"faq-3-question": "Qu’est-ce que les transferts monétaires directs?",
 			"faq-3-link": "/faq"
 		},
 		"card-3": {
