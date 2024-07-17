@@ -1,55 +1,54 @@
 {
-	"title": "Selektion der Empfänger:innen",
-	"introduction": "Social Income, wie jedes UBI-Projekt, verfügt über begrenzte finanzielle Ressourcen. Die Auswahl, wer Unterstützung erhält und wer nicht, ist schwierig. Wir möchten, dass jeder versteht, wie wir unsere Empfänger:innen auswählen. Seit November 2023 setzen wir eine neue Methode ein, um zufällig Menschen aus armen Gemeinschaften auszuwählen, dank unserer Partnerschaft mit <a href='https://drand.love' target='_blank' class='underline'>drand</a>.",
+	"title": "Sélection des bénéficiaires",
+	"introduction": "Social Income, comme tout projet de revenu universel, dispose de ressources financières limitées. Il est difficile de choisir qui reçoit de l'aide et qui n'en reçoit pas. Nous tenons à ce que tout le monde puisse comprendre comment nous sélectionnons nos bénéficiaires. Depuis novembre 2023, nous utilisons une nouvelle méthode de sélection aléatoire des personnes issues des communautés pauvres, grâce à notre partenariat avec <a href='https://drand.love' target='_blank' class='underline'>drand</a>.",
 	"selection-process": {
-		"title": "Unser Auswahlprozess in 3 Schritten",
 		"step-1": {
-			"title": "Schritt 1: Ermittlung potenzieller Empfänger:innen",
-			"text": "Wir arbeiten mit einer Vielzahl internationaler und lokaler NGOs zusammen, die marginalisierte Gemeinschaften unterstützen und mit Armut auf lokaler Ebene vertraut sind. Nach dem Besuch und der positiven Bewertung dieser NGOs - sowie der Gebiete und Gemeinschaften, die sie unterstützen - können wir sie bitten, uns eine Liste aller potenziellen Empfänger:innen zur Verfügung zu stellen. Potenzielle Empfänger:innen sind Menschen in Armut, mit denen sie direkten Kontakt pflegen. Abhängig von den unterstützten Gemeinschaften können diese Listen 100 bis 1000 Namen enthalten."
+			"title": "Étape 1: Recherche des bénéficiaires potentiels",
+			"text": "Nous collaborons avec diverses ONG internationales et locales qui soutiennent les communautés marginalisées et ont une bonne connaissance de la pauvreté au niveau local. Nous rendons visite à ces ONG et aux communautés régionales qu'elles soutiennent. Si l'évaluation est positive, nous leur demandons de nous fournir une liste de bénéficiaires potentiels. Il s'agit de personnes vivant dans la pauvreté avec lesquelles ces ONG ont un contact direct. Selon les communautés, les listes contiennent entre 100 et 1000 noms."
 		},
 		"step-2": {
-			"title": "Schritt 2: Zufällige Auswahl und größtmögliche Transparenz",
-			"text": "Die Listen, mit denen wir während der Auswahl arbeiten, enthalten minimale Informationen über potenzielle Empfänger:innen. Sie werden anschließend anonymisiert (gehasht) und in unser Open-Source-Repository hochgeladen. Mithilfe einer zufällig generierten und von drand veröffentlichten Nummer wird ein Mechanismus eingerichtet, um eine vorbestimmte Anzahl von Personen aus der Liste auszuwählen. Dieser Prozess kann mathematisch zurückverfolgt und überprüft werden, ohne die Daten der Empfänger:innen zu gefährden.",
-			"card": "\uD83D\uDD0E Bald verfügbar: Jeder kann leicht überprüfen, ob er auf einer der Listen der NGOs steht oder ob er ausgewählt wurde."
+			"title": "Étape 2: Sélection aléatoire en toute transparence",
+			"text": "Les listes avec lesquelles nous travaillons lors de la sélection contiennent un minimum d'informations sur les bénéficiaires potentiels. Elles sont anonymisées (chiffrées) et téléchargées dans notre registre open-source. À l'aide d'un nombre aléatoire généré et publié par drand, un mécanisme est mis en place pour sélectionner un nombre prédéterminé de personnes à partir de la liste. Ce processus peut être mathématiquement reconstitué et vérifié sans compromettre les données des bénéficiaires.",
+			"card": "\uD83D\uDD0E À venir : permettre à tout un chacun de vérifier facilement par lui-même s'il figure ou non sur l'une des listes des ONG ou s'il a été choisi."
 		},
 		"step-3": {
-			"title": "Schritt 3: Transparente Kommunikation",
-			"text": "Nach einer Auslosung informieren wir sowohl die NGO als auch die Gemeinschaft direkt über die Ergebnisse. Die ausgewählten Begünstigten - nach Bestätigung ihrer Teilnahme - geben dann zusätzliche Informationen an und werden für unser 3-jähriges Programm aufgenommen."
+			"title": "Étape 3: Communication transparente",
+			"text": "Après le tirage au sort, nous contactons directement l'ONG et la communauté pour leur communiquer les résultats. Les bénéficiaires sélectionnés – après avoir confirmé leur participation – transmettent des informations complémentaires et sont intégrés à notre programme de trois ans."
 		}
 	},
 	"faq": {
-		"title": "Häufig gestellte Fragen",
+		"title": "Questions fréquentes",
 		"questions": [
 			{
-				"question": "Warum wählen wir zufällig aus einem Pool qualifizierter Empfänger:innen aus?",
-				"answer": "Der Zweck der Anwendung dieser Zufallsauswahlmethode besteht darin, mehrere Ziele zu erreichen. Erstens hilft es, Voreingenommenheit bei der Auswahl der Empfänger:innen zu verhindern und sicherzustellen, dass Angehörige oder Bekannte von Personen, die am Prozess beteiligt sind, keine bevorzugte Behandlung erhalten. Zweitens zielt es darauf ab, Spannungen zwischen Empfänger:innenn und Nicht-Empfänger:innenn sowie potenzielle Konflikte zwischen Empfänger:innenn und unserer Organisation zu vermeiden. Schließlich streben wir danach, Technologie dort einzubeziehen, wo dies sinnvoll und vorteilhaft für den Prozess ist."
+				"question": "Pourquoi choisissons-nous au hasard dans une liste de bénéficiaires potentiels?",
+				"answer": "L'utilisation de cette méthode de sélection aléatoire répond à plusieurs objectifs. Tout d'abord, elle permet d'éviter les biais dans la sélection des bénéficiaires, en garantissant que les parents ou les connaissances des personnes impliquées dans le processus ne bénéficient pas d'un traitement préférentiel. Deuxièmement, elle vise à éviter les tensions entre les bénéficiaires et les non-bénéficiaires, ainsi que tout conflit potentiel entre les bénéficiaires et notre organisation. Enfin, nous nous efforçons d'intégrer la technologie lorsque cela est possible et bénéfique pour le processus."
 			},
 			{
-				"question": "Wer kann den Auswahlprozess beeinflussen?",
-				"answer": "Indem wir uns auf einen unvorhersehbaren Zufallswert von drand verlassen, der in der Zukunft erzeugt wird, ist es für niemanden möglich, die Ergebnisse des Auswahlprozesses zu beeinflussen. Diese inhärente Zufälligkeit kann genutzt werden, um die Integrität der Auswahl zu bestätigen. Um für Social Income zu qualifizieren, muss eine Person zunächst auf einer Liste einer NGO stehen. Obwohl dies eine vorläufige Bedingung darstellt, steht es im Einklang mit unserem grundlegenden Prinzip: sicherzustellen, dass Social Income diejenigen erreicht, die es am dringendsten benötigen."
+				"question": "Qui peut influencer la sélection?",
+				"answer": "En utilisant une valeur aléatoire imprévisible fournie par drand, définie pour être émise dans le futur, il est impossible à quiconque d'influencer les résultats du processus de sélection. Ce caractère aléatoire intrinsèque peut être utilisé pour confirmer l'intégrité de la sélection. Pour être éligible au Social Income, une personne doit d'abord figurer sur une liste fournie par une ONG. Cette condition préliminaire est conforme à notre principe fondamental : veiller à ce que Social Income parvienne à ceux qui en ont le plus besoin."
 			},
 			{
-				"question": "Wie vermeiden wir Voreingenommenheit und Spannungen?",
-				"answer": "Um sicherzustellen, dass wir nicht unbeabsichtigt eine bestimmte ethnische Gruppe, Geschlecht oder Berufsgruppe priorisieren, arbeiten wir mit vielfältigen NGOs zusammen, die unterschiedliche Missionen haben. Im Einklang mit unserer 'keinem Schaden zufügen'-Politik streben wir danach, Spannungen zwischen Empfänger:innenn, Nicht-Empfänger:innenn, Gemeinschaften und den NGOs zu verhindern. Unsere zufällige Auswahl spielt dabei eine entscheidende Rolle. Sie stellt sicher, dass Personen, die mit Personen im Prozess verwandt oder bekannt sind, keine Bevorzugung erfahren, die zu Konflikten führen könnte."
+				"question": "Comment éviter les biais et les tensions?",
+				"answer": "Afin de ne pas privilégier par inadvertance un groupe ethnique, un genre ou une catégorie professionnelle, nous collaborons avec plusieurs ONG aux missions variées. Conformément à notre principe \"ne pas nuire\", nous nous efforçons de prévenir les tensions entre les bénéficiaires, les non-bénéficiaires, les communautés et les ONG. Notre sélection aléatoire joue un rôle essentiel à cet égard. Elle garantit que les proches ou les connaissances des personnes impliquées dans le processus ne font pas l'objet d'un traitement de faveur, ce qui pourrait entraîner des conflits."
 			},
 			{
-				"question": "Was passiert während des Auswahlprozesses?",
-				"answer": "Wir nutzen die von drand bereitgestellte Zufallszahl, die öffentlich zugänglich ist, um eine bestimmte Anzahl von Personen aus unserer Liste auszuwählen. So wird es gemacht: Wir ordnen zunächst die gehashte Liste der Empfänger:innen. Dann verwenden wir das Zufallselement von drand, um es mithilfe einer <a href='https://de.wikipedia.org/wiki/Schl%C3%BCsselableitung' target='_blank' class='underline'>Schlüsselableitung</a> in eine Position auf der Liste umzuwandeln. Für diejenigen, die an den technischen Details interessiert sind, sind die Funktion und ihre zugehörigen Prozesse in unserem <a href='https://github.com/drand/draw-action' target='_blank' class='underline'>GitHub-Repository</a> dokumentiert."
+				"question": "Comment se déroule le processus de sélection?",
+				"answer": "Nous utilisons le nombre aléatoire fourni par drand, publiquement accessible, pour choisir un certain nombre de personnes dans notre liste. La procédure est la suivante : nous chiffrons d'abord la liste des bénéficiaires. Puis nous utilisons l'élément aléatoire de drand et nous le convertissons en une position sur la liste au moyen d'une clé de dérivation.  <a href='https://fr.wikipedia.org/wiki/Fonction_de_d%C3%A9rivation_de_cl%C3%A9' target='_blank' class='underline'>Schlüsselableitung</a> Pour les personnes intéressées par les détails techniques, la clé et les processus inhérents sont décrits dans notre <a href='https://github.com/drand/draw-action' target='_blank' class='underline'>dépôt GitHub</a>."
 			},
 			{
-				"question": "Was ist drand und wer steckt dahinter?",
-				"answer": "Das drand-Projekt generiert Zufallszahlen, denen jeder vertrauen kann. Es kann angewendet werden, um wirklich zufällige und überprüfbare Auslosungen zu erstellen. Das Projekt wurde 2017 am EPFL von Nicolas Gailly initiiert und erhielt Unterstützung von Philipp Jovanovic. Es wurde von Bryan Ford geleitet.<br></br> Es ist seitdem unabhängig verwaltet worden und betreibt ein Netzwerk namens <a href='https://www.cloudflare.com/leagueofentropy/' target='_blank' class='underline'>League of Entropy</a> mit EPFL, UCL, Cloudflare, Kudelski Security, der Universität von Chile und Protocol Labs. Aktuelle Kernbetreuer des Open-Source-Projekts sind der CEO, CSO und CTO von Randamu, <a href='https://www.linkedin.com/in/erick-watson/' target='_blank' class='underline'>Erick Watson</a>, <a href='https://www.linkedin.com/in/anomalroil/' target='_blank' class='underline'>Yolan Romailler</a> und <a href='https://www.linkedin.com/in/patrickmcclurg/' target='_blank' class='underline'>Patrick McClurg</a>."
+				"question": "Qu'est-ce que drand et qui est derrière?",
+				"answer": "Le projet drand génère des nombres aléatoires auxquels tout le monde peut se fier. Il peut être utilisé pour créer des ébauches véritablement aléatoires et vérifiables. Initié en 2017 à l'EPFL par Nicolas Gailly, drand a reçu le soutien de Philipp Jovanovic et a été encadré par Bryan Ford.<br></br>Depuis lors, il est géré de manière indépendante et entretient un réseau appelé <a href='https://www.cloudflare.com/leagueofentropy/' target='_blank' class='underline'>League of Entropy</a> avec l'EPFL, l'UCL, Cloudflare, Kudelski Security, l'Université du Chili et Protocol Labs. Les principaux responsables actuels du projet open source sont le CEO, le CSO et le CTO de Randamu, à savoir <a href='https://www.linkedin.com/in/erick-watson/' target='_blank' class='underline'>Erick Watson</a>, <a href='https://www.linkedin.com/in/anomalroil/' target='_blank' class='underline'>Yolan Romailler</a> et <a href='https://www.linkedin.com/in/patrickmcclurg/' target='_blank' class='underline'>Patrick McClurg</a>."
 			}
 		]
 	},
-	"past-draws": "Vergangene Auslosungen",
-	"past-draws-description": "Die folgende Liste zeigt die vergangenen Auslosungen, die stattgefunden haben, um Empfänger:innen für Social Income auszuwählen.",
+	"past-draws": "Tirages au sort antérieurs",
+	"past-draws-description": "La liste ci-dessous montre les tirages au sort effectués pour sélectionner les bénéficiaires de Social Income.",
 	"draw-card": {
-		"summary": "{{ count }} von {{ total }} ausgewählt",
+		"summary": "{{ count }} bénéficiaires sélectionnés sur {{ total }}",
 		"random-number": "Zufallszahl",
 		"confirm-drand": "Bestätigen auf drand",
 		"confirm-github": "Bestätigen auf Github",
-		"long-list": "{{ total }} Personen auf der langen Liste, {{ count }} ausgewählt",
+		"long-list": "{{ total }} Personen auf der Longlist, {{ count }} ausgewählt",
 		"people": "Personen"
 	}
 }
