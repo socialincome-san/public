@@ -84,6 +84,10 @@ module.exports = {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 			},
+			strokeWidth: {
+				3: '3px',
+				4: '4px',
+			},
 		},
 	},
 	plugins: [require('@tailwindcss/typography'), require('tailwindcss-animate')],

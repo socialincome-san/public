@@ -7,9 +7,8 @@ import { SIIcon } from '@/components/logos/si-icon';
 import { SILogo } from '@/components/logos/si-logo';
 import { useNavbarBackgroundColor } from '@/components/navbar/useNavbarBackgroundColor';
 import { useI18n } from '@/components/providers/context-providers';
-import { WebsiteCurrency } from '@/i18n';
-import { Bars3Icon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/solid';
-import { LanguageCode } from '@socialincome/shared/src/types/language';
+import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
+import { Bars3Icon, CheckIcon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Typography } from '@socialincome/ui';
 import classNames from 'classnames';
 import _ from 'lodash';
@@ -41,11 +40,11 @@ type NavbarProps = {
 		signOut: string;
 	};
 	languages: {
-		code: LanguageCode;
+		code: WebsiteLanguage;
 		translation: string;
 	}[];
 	regions: {
-		code: string;
+		code: WebsiteRegion;
 		translation: string;
 	}[];
 	currencies: {
@@ -73,9 +72,11 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 	// Navbar is collapsed
 	if (_.isNull(visibleSection)) {
 		return (
-			<div className="flex h-16 flex-row p-5 md:hidden">
-				<SILogo className="mr-auto h-6" />
-				<Bars3Icon className="text-accent h-6 cursor-pointer" onClick={() => setVisibleSection('main')} />
+			<div className="flex h-16 flex-row justify-between p-5 md:hidden">
+				<Link href={`/${lang}/${region}/v2`}>
+					<SILogo className="mr-auto h-6" />
+				</Link>
+				<Bars3Icon className="text-accent h-6 cursor-pointer stroke-2" onClick={() => setVisibleSection('main')} />
 			</div>
 		);
 	}
@@ -110,26 +111,105 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 			);
 			break;
 		case 'i18n':
-			content = <div>adf</div>;
+			content = (
+				<div className="flex flex-col space-y-8">
+					<Typography size="4xl" color="accent" weight="medium">
+						{translations.language}
+					</Typography>
+					<div className="flex flex-col space-y-2">
+						{regions
+							.sort((a, b) => a.translation.localeCompare(b.translation))
+							.map((reg) => (
+								<div key={reg.code} className="flex-inline flex items-center space-x-2">
+									<CheckIcon
+										className={classNames('stroke-3 h-5 w-5', {
+											'text-accent': reg.code === region,
+											'text-transparent': reg.code !== region,
+										})}
+									/>
+									<Typography
+										as="button"
+										size="3xl"
+										className="active:text-accent hover:text-accent hover:cursor-pointer"
+										onClick={() => setRegion(reg.code)}
+									>
+										{reg.translation}
+									</Typography>
+								</div>
+							))}
+					</div>
+					<div className="flex flex-col space-y-2">
+						{languages
+							.sort((a, b) => a.translation.localeCompare(b.translation))
+							.map((l) => (
+								<div key={l.code} className="flex-inline flex items-center space-x-2">
+									<CheckIcon
+										className={classNames('stroke-3 h-5 w-5', {
+											'text-accent': l.code === language,
+											'text-transparent': l.code !== language,
+										})}
+									/>
+									<Typography
+										as="button"
+										size="3xl"
+										className="active:text-accent hover:text-accent hover:cursor-pointer"
+										onClick={() => setLanguage(l.code)}
+									>
+										{l.translation}
+									</Typography>
+								</div>
+							))}
+					</div>
+					<div className="flex flex-col space-y-2">
+						{currencies
+							.sort((a, b) => a.code.localeCompare(b.code))
+							.map((curr) => (
+								<div key={curr.code} className="flex-inline flex items-center space-x-2">
+									<CheckIcon
+										className={classNames('stroke-3 h-5 w-5', {
+											'text-accent': curr.code === currency,
+											'text-transparent': curr.code !== currency,
+										})}
+									/>
+									<Typography
+										as="button"
+										size="3xl"
+										className="active:text-accent hover:text-accent hover:cursor-pointer"
+										onClick={() => setCurrency(curr.code)}
+									>
+										{curr.code}
+									</Typography>
+								</div>
+							))}
+					</div>
+				</div>
+			);
 			break;
 		case 'main':
 		default:
 			const Flag = getFlagComponentByCurrency(currency);
+			const ourWork = navigation![0];
+			const aboutUs = navigation![1];
+			const transparency = navigation![2];
+
 			content = (
 				<div className="flex h-full w-full flex-col justify-between">
 					<div className="flex flex-col items-start space-y-8">
-						<Typography as="button" size="5xl" weight="medium" onClick={() => setVisibleSection('our-work')}>
-							Our work
-						</Typography>
 						<Typography as="button" size="5xl" weight="medium" onClick={() => setVisibleSection('about-us')}>
-							About Us
+							{aboutUs.title}
+						</Typography>
+						<Typography as="button" size="5xl" weight="medium" onClick={() => setVisibleSection('our-work')}>
+							{ourWork.title}
 						</Typography>
 						<Typography as="button" size="5xl" weight="medium" onClick={() => setVisibleSection('transparency')}>
-							Transparency
+							{transparency.title}
 						</Typography>
 					</div>
 					<div className="flex flex-col items-start space-y-4">
-						<NavbarLink href="/v2/" className="ml-12 text-2xl">
+						<NavbarLink href={`/${lang}/${region}/v2/journal`} className="ml-12 text-2xl">
+							Journal
+						</NavbarLink>
+						<NavbarLink href={`/${lang}/${region}/v2/account`} className="ml-12 text-2xl">
 							My Account
 						</NavbarLink>
 						<div className="flex-inline flex items-center">
@@ -154,11 +234,16 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 		<div className="bg-background flex h-[calc(100dvh)] flex-col space-y-8 p-5 pb-8 md:hidden">
 			<div className="flex flex-row justify-between">
 				{visibleSection === 'main' ? (
-					<SILogo className="mr-auto h-6" />
+					<Link href={`/${lang}/${region}/v2`}>
+						<SILogo className="mr-auto h-6" />
+					</Link>
 				) : (
-					<ChevronLeftIcon className="text-accent h-6 cursor-pointer" onClick={() => setVisibleSection('main')} />
+					<ChevronLeftIcon
+						className="text-accent stroke-3 h-6 cursor-pointer"
+						onClick={() => setVisibleSection('main')}
+					/>
 				)}
-				<XMarkIcon className="text-accent h-6 cursor-pointer" onClick={() => setVisibleSection(null)} />
+				<XMarkIcon className="text-accent stroke-3 h-6 cursor-pointer" onClick={() => setVisibleSection(null)} />
 			</div>
 			<div className={classNames({ hidden: _.isNull(visibleSection), 'flex h-full': !_.isNull(visibleSection) })}>
 				{content}
@@ -167,7 +252,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 	);
 };
 
-const DesktopNavigation = ({ lang, region, languages, regions, currencies, navigation }: NavbarProps) => {
+const DesktopNavigation = ({ lang, region, languages, regions, currencies, navigation, translations }: NavbarProps) => {
 	let { currency, setCurrency } = useI18n();
 	const Flag = getFlagComponentByCurrency(currency);
 	const NavbarLink = ({ href, children, className }: { href: string; children: string; className?: string }) => (
@@ -181,15 +266,15 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 	const transparency = navigation![2];
 
 	return (
-		<div className="hidden h-20 flex-row items-baseline justify-between gap-4 overflow-hidden px-8 py-6 transition-[height] duration-500 ease-in group-hover/navbar:h-80 md:flex">
-			<div className="flex h-full flex-shrink flex-grow-0 flex-col md:w-64">
+		<div className="hidden h-20 flex-row items-baseline justify-between gap-4 overflow-hidden px-8 py-6 transition-[height] duration-500 ease-in group-hover/navbar:h-96 md:flex lg:group-hover/navbar:h-64">
+			<div className="flex h-full w-64 flex-shrink flex-grow-0 flex-col">
 				<Link href={`/${lang}/${region}/v2`}>
 					<SILogo className="mr-auto hidden h-6 lg:block" />
 					<SIIcon className="-mb-2.5 block h-9 lg:hidden" />
 				</Link>
 				<div className="mt-6 hidden h-full flex-col justify-start group-hover/navbar:flex group-active/navbar:flex">
-					<NavbarLink href={`/v2/`}>Journal</NavbarLink>
-					<NavbarLink href={`/v2/`}>My Account</NavbarLink>
+					<NavbarLink href={`/${lang}/${region}/v2/journal`}>Journal</NavbarLink>
+					<NavbarLink href={`/${lang}/${region}/v2/account`}>My Account</NavbarLink>
 					<div className="flex-inline mt-auto flex items-center space-x-2">
 						<DonateIcon className="h-4 w-4" />
 						<NavbarLink href="/v2/" className="text-accent">
@@ -198,23 +283,23 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					</div>
 				</div>
 			</div>
+			{/* Because the first column has flex-grow-0 and w-64 */}
 			<div className="-ml-64 flex-1" />
-			{/* Because the first column has flex-grow-0 */}
 			<div className="flex min-w-96 flex-1 flex-row">
-				<div className="group/about-us flex-1">
-					<NavbarLink href={aboutUs.href}>About us</NavbarLink>
-					<div className="mt-6 hidden flex-col opacity-0 group-hover/navbar:flex group-hover/about-us:opacity-100">
-						{aboutUs?.links?.map((link, index) => (
+				<div className="group/our-work flex-1">
+					<NavbarLink href={ourWork.href}>{ourWork.title}</NavbarLink>
+					<div className="mt-6 hidden flex-col opacity-0 group-hover/navbar:flex group-hover/our-work:opacity-100">
+						{ourWork.links?.map((link: any, index: number) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
 							</NavbarLink>
 						))}
 					</div>
 				</div>
-				<div className="group/our-work flex-1">
-					<NavbarLink href={ourWork.href}>Our Work</NavbarLink>
-					<div className="mt-6 hidden flex-col opacity-0 group-hover/navbar:flex group-hover/our-work:opacity-100">
-						{ourWork?.links?.map((link: any, index: number) => (
+				<div className="group/about-us flex-1">
+					<NavbarLink href={aboutUs.href}>{aboutUs.title}</NavbarLink>
+					<div className="mt-6 hidden flex-col opacity-0 group-hover/navbar:flex group-hover/about-us:opacity-100">
+						{aboutUs.links?.map((link, index) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
 							</NavbarLink>
@@ -222,9 +307,9 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					</div>
 				</div>
 				<div className="group/transparency flex-1">
-					<NavbarLink href={transparency.href}>Transparency</NavbarLink>
+					<NavbarLink href={transparency.href}>{transparency.title}</NavbarLink>
 					<div className="mt-6 hidden flex-col opacity-0 group-hover/navbar:flex group-hover/transparency:opacity-100">
-						{transparency?.links?.map((link: any, index: number) => (
+						{transparency.links?.map((link: any, index: number) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
 							</NavbarLink>
@@ -239,40 +324,46 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 				</div>
 				<div className="mt-6 hidden h-full grid-cols-1 justify-items-start gap-2 overflow-visible text-left opacity-0 group-hover/navbar:grid group-hover/i18n:opacity-100 lg:grid-cols-3 lg:justify-items-end lg:gap-4">
 					<div className="flex w-full flex-col items-end">
-						{regions.map((reg, index) => (
-							<Link
-								key={index}
-								href={`/${lang}/${reg.code}/v2`}
-								className={classNames('hover:text-accent text-lg', { 'text-accent': reg.code === region })}
-							>
-								{reg.translation}
-							</Link>
-						))}
+						{regions
+							.sort((a, b) => a.translation.localeCompare(b.translation))
+							.map((reg, index) => (
+								<Link
+									key={index}
+									href={`/${lang}/${reg.code}/v2`}
+									className={classNames('hover:active:text-accent text-lg', { 'text-accent': reg.code === region })}
+								>
+									{reg.translation}
+								</Link>
+							))}
 					</div>
 					<div className="flex w-full flex-col items-end">
-						{languages.map((l, index) => (
-							<Link
-								key={index}
-								href={`/${l.code}/${region}/v2`}
-								className={classNames('hover:text-accent text-lg', { 'text-accent': l.code === lang })}
-							>
-								{l.translation}
-							</Link>
-						))}
+						{languages
+							.sort((a, b) => a.translation.localeCompare(b.translation))
+							.map((l, index) => (
+								<Link
+									key={index}
+									href={`/${l.code}/${region}/v2`}
+									className={classNames('hover:active:text-accent text-lg', { 'text-accent': l.code === lang })}
+								>
+									{l.translation}
+								</Link>
+							))}
 					</div>
 					<div className="flex w-full flex-col items-end">
-						{currencies.map((curr, index) => (
-							<Typography
-								key={index}
-								size="lg"
-								className={classNames('hover:text-accent text-left text-lg hover:cursor-pointer', {
-									'text-accent': curr.code === currency,
-								})}
-								onClick={() => setCurrency(curr.code)}
-							>
-								{curr.code}
-							</Typography>
-						))}
+						{currencies
+							.sort((a, b) => a.code.localeCompare(b.code))
+							.map((curr, index) => (
+								<Typography
+									key={index}
+									size="lg"
+									className={classNames('hover:active:text-accent text-left text-lg hover:cursor-pointer', {
+										'text-accent': curr.code === currency,
+									})}
+									onClick={() => setCurrency(curr.code)}
+								>
+									{curr.code}
+								</Typography>
+							))}
 					</div>
 				</div>
 			</div>
@@ -281,7 +372,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 };
 
 export function NavbarClientV2(props: NavbarProps) {
-	const { backgroundColor, setBackgroundColor } = useNavbarBackgroundColor();
+	const { backgroundColor } = useNavbarBackgroundColor();
 
 	return (
 		<nav className={twMerge('theme-blue-v2 group/navbar fixed inset-x-0 top-0 z-20 flex flex-col', backgroundColor)}>
