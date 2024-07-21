@@ -41,6 +41,7 @@ export type Recipient = {
 	si_start_date?: Timestamp;
 	test_recipient?: boolean;
 	twitter_handle?: string;
+	successor?: string;
 };
 
 export const toPaymentDate = (dateTime: DateTime) => {
