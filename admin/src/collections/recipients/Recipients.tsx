@@ -30,6 +30,7 @@ import {
 	organisationProperty,
 	professionProperty,
 	programStatusProperty,
+	successorProperty,
 } from './RecipientsProperties';
 
 export const PaymentsLeft: AdditionalFieldDelegate<Partial<Recipient>> = {
@@ -89,6 +90,7 @@ export const buildRecipientsCollection = () => {
 			email: emailProperty,
 			insta_handle: InstagramProperty,
 			twitter_handle: TwitterProperty,
+			successor: successorProperty,
 			si_start_date: SIStartDateProperty,
 			test_recipient: TestRecipientProperty,
 		}),
