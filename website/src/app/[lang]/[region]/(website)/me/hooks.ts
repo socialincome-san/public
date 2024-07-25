@@ -26,7 +26,6 @@ export const useContributions = () => {
 	const {
 		data: contributions,
 		isLoading,
-		isRefetching,
 		error,
 	} = useQuery({
 		queryKey: ['me', 'contributions'],
@@ -38,9 +37,8 @@ export const useContributions = () => {
 					orderBy('created', 'desc'),
 				),
 			),
-		staleTime: 3600000, // 1 hour
 	});
-	return { contributions, loading: isLoading || isRefetching, error };
+	return { contributions, isLoading, error };
 };
 
 export const useSubscriptions = () => {
@@ -48,7 +46,6 @@ export const useSubscriptions = () => {
 	const {
 		data: subscriptions,
 		isLoading,
-		isRefetching,
 		error,
 	} = useQuery({
 		queryKey: ['me', 'subscriptions'],
@@ -56,9 +53,8 @@ export const useSubscriptions = () => {
 			const response = await api.get('/api/stripe/subscriptions');
 			return (await response.json()) as Stripe.Subscription[];
 		},
-		staleTime: 3600000, // 1 hour
 	});
-	return { subscriptions, loading: isLoading || isRefetching, error };
+	return { subscriptions, isLoading, error };
 };
 
 export const useDonationCertificates = () => {
@@ -67,7 +63,6 @@ export const useDonationCertificates = () => {
 	const {
 		data: donationCertificates,
 		isLoading,
-		isRefetching,
 		error,
 	} = useQuery({
 		queryKey: ['me', 'donation-certificates'],
@@ -78,9 +73,8 @@ export const useDonationCertificates = () => {
 					orderBy('year', 'desc'),
 				),
 			),
-		staleTime: 3600000, // 1 hour
 	});
-	return { donationCertificates, loading: isLoading || isRefetching, error };
+	return { donationCertificates, isLoading, error };
 };
 
 export const useNewsletterSubscription = () => {
@@ -88,7 +82,6 @@ export const useNewsletterSubscription = () => {
 	const {
 		data: status,
 		isLoading,
-		isRefetching,
 		error,
 	} = useQuery<string | null>({
 		queryKey: ['me', 'newsletter'],
@@ -101,9 +94,8 @@ export const useNewsletterSubscription = () => {
 				return responseData.status;
 			}
 		},
-		staleTime: 3600000, // 1 hour
 	});
-	return { status, loading: isLoading || isRefetching, error };
+	return { status, isLoading, error };
 };
 
 export const useUpsertNewsletterSubscription = () => {
@@ -128,7 +120,6 @@ export const useEmployers = () => {
 	const {
 		data: employers,
 		isLoading,
-		isRefetching,
 		error,
 	} = useQuery({
 		queryKey: ['me', 'employers'],
@@ -138,9 +129,8 @@ export const useEmployers = () => {
 			);
 			return data.docs.map((e) => ({ id: e.id, ...e.data() }) as EmployerWithId);
 		},
-		staleTime: 3600000, // 1 hour
 	});
-	return { employers, loading: isLoading || isRefetching, error };
+	return { employers, isLoading, error };
 };
 
 export const useArchiveEmployer = () => {

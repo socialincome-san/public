@@ -9,8 +9,8 @@ export async function generateMetadata({ params }: DefaultLayoutProps) {
 
 export default function Layout({ children, params: { lang, region } }: PropsWithChildren<DefaultLayoutProps>) {
 	return (
-		<div className="theme-v2 min-h-screen">
-			<Navbar lang={lang} region={region} />
+		<div className="theme-v2 min-h-screen overflow-scroll">
+			<Navbar lang={lang} region={region} v2 />
 			<main>{children}</main>
 		</div>
 	);

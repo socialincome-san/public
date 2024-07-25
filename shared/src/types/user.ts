@@ -1,5 +1,4 @@
 import { EntityReference } from 'firecms';
-import _ from 'lodash';
 import { CountryCode } from './country';
 import { Currency } from './currency';
 import { Employer } from './employers';
@@ -52,16 +51,21 @@ export type User = {
 };
 
 export const splitName = (name: string) => {
-	const stripeNames = name.split(' ');
+	const stripeNames = name.trim().split(' ');
+	const sanitizeName = (n: string) => n.charAt(0).toUpperCase() + n.slice(1).toLowerCase().trim();
+
 	if (stripeNames.length >= 2) {
 		return {
-			lastname: _.upperFirst(stripeNames.pop()!),
-			firstname: _.upperFirst(stripeNames.join(' ')),
+			lastname: sanitizeName(stripeNames.pop()!),
+			firstname: stripeNames
+				.map((n) => sanitizeName(n))
+				.filter(Boolean) // Remove empty strings
+				.join(' '),
 		};
 	} else {
 		return {
-			firstname: '',
-			lastname: _.upperFirst(name),
+			firstname: sanitizeName(name),
+			lastname: '',
 		};
 	}
 };

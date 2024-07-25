@@ -1,0 +1,29 @@
+{
+	"metadata": {
+		"title": "Newsletter | Social Income"
+	},
+	"updates": {
+		"title": "Rimani Informato",
+		"description-1": "Ricevi aggiornamenti su Social Income, inoltre:",
+		"bullet-1": "Storie coinvolgenti provenienti dai nostri beneficiari",
+		"bullet-2": "Nuove ricerche sui trasferimenti diretti di denaro",
+		"bullet-3": "Le ultime notizie sul reddito di base universale ",
+		"description-2": "Inviate alla fine di ogni mese.",
+		"description-3": "Newsletters scritta da",
+		"author-name": "Aurélie Schmiedlin",
+		"author-city": "Ginevra",
+		"form-title": "Iscriviti alla nostra newsletter",
+		"firstname": "Nome",
+		"email": "Email",
+		"submit-button": "Iscriviti ora",
+		"newsletter-updated-toast": "Sei stato aggiunto/a alla newsletter",
+		"newsletter-error-toast": "Non siamo stati in grado di aggiungerti alla nostra newsletter"
+	},
+	"popup": {
+		"information-label": "La nostra newsletter mensile (in inglese) ti aggiorna su Social Income, il reddito di base universale e i trasferimenti diretti di denaro.",
+		"toast-success": "Grazie per iscriverti alla nostra newsletter!",
+		"toast-failure": "Qualcosa è andato storto. Prova di nuovo o contattaci a hello@socialincome.org",
+		"email-placeholder": "La tua email",
+		"button-subscribe": "Iscriviti ora"
+	}
+}

@@ -1,0 +1,66 @@
+{
+	"metadata": {
+		"title": "Informativa Sulla Privacy | Social Income"
+	},
+	"title": "Informativa sulla privacy",
+	"responsibility": {
+		"title": "Responsabilità",
+		"content": "<p>Il sito web <span class='text-primary'>socialincome.org</span> (di seguito denominato \"sito web\") è gestito da Social Income, un'associazione svizzera con sede legale a Zurigo, in Svizzera (di seguito denominata \"Social Income\").</p><p>I dati personali raccolti tramite il sito web sono trattati in conformità con lo Swiss Federal Data Protection Act (FDPA), i principi qui descritti e conformemente agli standard del Regolamento generale sulla protezione dei dati (GDPR) dell'UE.</p><p>Il responsabile ai sensi dell'articolo 4, paragrafo 7, del GDPR è:</p><p>Social Income<br>Zweierstrasse 103<br>8003 Zurich<br>Switzerland</p><p>Se hai domande, non esitare a contattarci <a href='mailto:hello@socialincome.org'>a questo indirizzo</a>.</p>"
+	},
+	"data": {
+		"title": "Data processing",
+		"section-1": {
+			"title": "Information we collect",
+			"content": "<p>The following Privacy Policy provides information on the nature, scope and purpose of the collection of personal data by Social Income, the processing of such personal data and the related rights of data subjects.</p><p>Personal data are all information relating to an identified or identifiable person.</p>"
+		},
+		"section-2": {
+			"title": "How we use your information",
+			"content": "<p>We use the information we collect in various ways, as described in detail below, including to:</p><ul><li>Provide, operate, and maintain our website's services</li><li>Improve, personalize, and expand our website</li><li>Understand and analyze how you use our website</li><li>Develop new products, services, features, and functionality</li><li>Communicate with you, either directly or through one of our partners, including for customer service, to provide you with updates and other information relating to the website, and for marketing and promotional purposes</li><li>Send you emails</li><li>Find and prevent fraud</li></ul>"
+		},
+		"section-3": {
+			"title": "When you visit our website",
+			"content": "<p>When you visit our website, the server temporarily and automatically stores each access in a log file. Social Income’s website follows a standard procedure of using log files. These files log visitors when they visit websites. All hosting companies do this as part of hosting services' analytics. Log files are stored until they are automatically deleted.</p><p>The information collected by log files includes internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the number of clicks. These are not linked to any information that is personally identifiable.</p><p>The purpose of the information is for analyzing trends, managing the site, tracking users' movement on the website, and gathering demographic information.</p><p>In addition, we use cookies and tracking tools when you visit our website. For more information, please refer to the subsequent sections.</p>"
+		},
+		"section-4": {
+			"title": "Information you provide to us",
+			"content": "<p>When you register for an account or when you make a contribution for Social Income’s projects on our website we ask you to provide your contact information, including your name, address, e-mail, telephone number, name of employer, company or organization.</p><p>If you contact us directly, we may receive additional information about you such as the contents of the message and/or attachments you may send us, and any other information you may choose to provide. We use this information to answer the questions you have asked or to provide the services you request.</p><p>We store this data on our servers for as long as necessary to provide the services or information requested, unless a longer retention period is based on our legitimate interests or prescribed by law.</p>"
+		}
+	},
+	"tracking": {
+		"title": "Cookies and tracking",
+		"section-1": {
+			"title": "Cookies and tracking tools",
+			"content": "<p>Like any other website, Social Income’s website uses cookies. Cookies are usually small text files with ID tags that are stored on your computer's browser directory or program data subfolders. Cookies are created when you use your browser to visit a website and are used to keep track of your movements within the site, help you resume where you left off, remember your registered login, theme selection, preferences, and other customization functions.</p><p>If you give consent, we will use the following tools that utilize cookies to analyze user behavior:</p><ul><li>Google Analytics Tracking (<a href=\"https://policies.google.com/privacy\" target=\"_blank\">more</a>)</li><li>Google Tag Manager (<a href=\"https://policies.google.com/privacy\" target=\"_blank\">more</a>)</li><li>Twitter Conversion Tracking (<a href=\"https://business.twitter.com/en/help/campaign-measurement-and-analytics/conversion-tracking-for-websites.html\" target=\"_blank\">more</a>)</li><li>Facebook Conversion Tracking (<a href=\"https://www.facebook.com/business/learn/facebook-ads-pixel\" target=\"_blank\">more</a>)</li><li>LinkedIn Conversion Tracking (<a href=\"https://www.linkedin.com/legal/privacy-policy\" target=\"_blank\">more</a>)</li></ul>"
+		},
+		"section-2": {
+			"title": "How Social Income uses cookies",
+			"content": "<p>We use cookies to store information including visitors' preferences and the pages on the website that the visitor accessed or visited.</p><p>This information is used to optimize the users' experience by customizing our web page content based on visitors' browser type and/or other information. The conversion tracking cookies from social media sites allow us to directly address website visitors on each respective platform.</p>"
+		}
+	},
+	"third-party": {
+		"title": "Third party data processors",
+		"section-1": {
+			"title": "Third party data processors",
+			"content": "<p>Like most businesses we rely on third-party providers to support our day-to-day operations, for example in areas such as online file storage and email delivery. We may also hire third parties to operate, maintain or improve our website and other digital services. Some of these service providers will by necessity have access to or be directly involved in processing or storing a subset of the personal information you share with us. Please review their individual Privacy Policies.</p><p>Social Income uses the following third party data processors:</p><ul><li>Stripe for online payment processing: <a href=\"https://stripe.com/gb/checkout/legal\" target=\"_blank\">Privacy Policy</a></li><li>Coinbase for crypto payments: <a href=\"https://www.coinbase.com/legal/privacy\" target=\"_blank\">Privacy Policy</a></li><li>MailChimp for email marketing: <a href=\"https://mailchimp.com/legal/privacy/\" target=\"_blank\">Privacy Policy</a></li><li>Google for website analytics: <a href=\"https://policies.google.com/privacy\" target=\"_blank\">Privacy Policy</a></li></ul><p></p>"
+		},
+		"section-2": {
+			"title": "Payment services",
+			"content": "<p>We provide paid services on our website. When these are employed, we use the third-party service Stripe for payment processing. We will not store or collect your payment card details. This information is provided directly to our third-party payment processors whose use of your personal information is governed by their <a href=\"https://stripe.com/gb/checkout/legal\" target=\"_blank\">Privacy Policy</a>.</p><p>For crypto transactions we use the third-party service Coinbase. These transactions – if not directly sent to our wallet address – are governed by their <a href=\"https://www.coinbase.com/legal/privacy\" target=\"_blank\">Privacy Policy</a>.</p>"
+		},
+		"section-3": {
+			"title": "Website analytics",
+			"content": "<p>For the purpose of the continuous optimization of our pages and its design, we use Google Analytics, a web analysis service provided by Google Ireland Ltd. and Google Inc. (\"Google\"). In this context, pseudonymised user profiles are created and cookies are used. The information generated by the cookie about your use of the website such as</p><ul><li>Browser type/version,</li><li>Operating system used,</li><li>Referrer URL (the previously visited page),</li><li>Host name of the accessing computer (IP address),</li><li>Time of the server request,</li><li>Device</li></ul><p>are transmitted to Google servers in the US and stored there.</p><p>The information is used to evaluate the use of our website, to compile reports on the website activity and to provide further services related to website activity and internet usage for the purpose of market research and customization of these websites. This information may also be transferred to third parties if this is required by law or if third parties process this data on behalf of Social Income. According to Google, the IP address will in no case be associated with other data concerning the user. Under no circumstances will your IP address be merged with other data from Google. The IP addresses are anonymized so that an assignment is not possible (IP masking).</p>"
+		},
+		"section-4": {
+			"title": "Email marketing",
+			"content": "<p>You can subscribe to our mailing list to receive updates about our work. We use Mailchimp as a third party email platform to support our communications.</p><p>When you subscribe to our mailing lists we ask you for your contact information, including your name, company name, address, e-mail address and telephone number. Your data is held within the aforementioned third party platform. Mailchimp has its own <a href=\"https://mailchimp.com/legal/privacy/\" target=\"_blank\">security and privacy policy</a>. Mailchimp may use email tracking. Email tracking tells us when you opened an email and what links you clicked on. We use this information to improve our communications, and include general information such as open and click-through rates to inform communications planning and reporting.</p>"
+		}
+	},
+	"rights": {
+		"title": "Your rights",
+		"section-1": {
+			"title": "Your rights",
+			"content": "<p>We would like to make sure that you are fully aware of all of your data protection rights. Every user is entitled to the following:</p><ul><li>The right to information - You have the right to receive information about the personal data that we store about you upon request.</li><li>The right to access – You have the right to request copies of your personal data.</li><li>The right to rectification – You have the right to request that we correct any information you believe is inaccurate. You also have the right to request that we complete the information you believe is incomplete.</li><li>The right to erasure – You have the right to request that we erase your personal data, as far as there is no legal duty to retain or a permit that allows us to process the data.</li><li>The right to restrict processing – You have the right to request that we restrict the processing of your personal data, under certain conditions.</li><li>The right to object to processing – You have the right to object to our processing of your personal data, under certain conditions.</li><li>The right to data portability – You have the right to request that we transfer the data that we have collected to another organization, or directly to you, under certain conditions.</li><li>If you make a request, we have one month to respond to you. If you would like to exercise any of these rights, please contact <a href=\"mailto:legal@socialincome.org?subject=Privacy\">Social Income</a>.</li><li>You also have the right to complain to a data protection supervisory authority at any time.</li></ul>"
+		}
+	}
+}
