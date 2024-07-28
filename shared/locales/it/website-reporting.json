@@ -9,6 +9,26 @@
 	"download-pdf": "PDF",
 	"reports": [
 		{
+			"title": "Report annuale 2023",
+			"href": "https://drive.google.com/file/d/13vvBS6Ju6NqpIgis4CrMHrY9s2hbRjYy/view",
+			"language": "Inglese/Tedesco"
+		},
+		{
+			"title": "Rendiconto finanziario 2023",
+			"href": "https://drive.google.com/file/d/13WH2RIxJsq9HLbxvBM-Wf5XcXzCSogG3/view",
+			"language": "Inglese"
+		},
+		{
+			"title": "Rendiconto finanziario 2023",
+			"href": "https://drive.google.com/file/d/13VxN6-NHes63Bb0Cw_kWo6vqc-EbEwc-/view",
+			"language": "Tedesco"
+		},
+		{
+			"title": "Rapporto di revisione 2023",
+			"href": "https://drive.google.com/file/d/13hSSIWLDDWG6eKBDFxYmwGWRRQU_21JY/view",
+			"language": "Tedesco"
+		},
+		{
 			"title": "Rendiconto finanziario 2022",
 			"href": "https://drive.google.com/file/d/13OJlzxznbsRhE3ywYHOF3ggh7e89zZtn/view",
 			"language": "Inglese"
@@ -16,6 +36,11 @@
 		{
 			"title": "Rendiconto finanziario 2022",
 			"href": "https://drive.google.com/file/d/1ivgdOqI3WkJ5ymSuDMNS0BP3SffVxCKk/view",
+			"language": "Tedesco"
+		},
+		{
+			"title": "Rapporto di revisione 2022",
+			"href": "https://drive.google.com/file/d/13s672kRDugWm6Vd9PcdLCQASZKbBOTGF/view",
 			"language": "Tedesco"
 		},
 		{
@@ -34,7 +59,7 @@
 			"language": "Tedesco"
 		},
 		{
-			"title": "Audit Report 2021",
+			"title": "Rapporto di revisione 2021",
 			"href": "https://drive.google.com/file/d/16b-w5B2PhkRBZbBQOTmBXfxTGrDvf2FE/view",
 			"language": "Tedesco"
 		},
@@ -44,7 +69,7 @@
 			"language": "Inglese/Tedesco"
 		},
 		{
-			"title": "Audit Report 2020",
+			"title": "Rapporto di revisione 2020",
 			"href": "https://drive.google.com/file/d/15aaPhuCCTicG74lNeg6OA9vEsq4nkE0o/view",
 			"language": "Tedesco"
 		},
