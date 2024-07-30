@@ -11,14 +11,20 @@ export async function HeroVideo({ lang }: DefaultParams) {
 	});
 
 	return (
-		<div className="relative h-screen w-full">
+		<div className="relative h-[calc(100dvh)] w-full">
 			<MuxVideoComponent />
 			<div className="absolute inset-2">
 				<div className=" flex h-full flex-col justify-around">
 					<div className="hidden md:block" />
 					<div className="mx-auto max-w-4xl text-center text-white">
 						{translator.t<{ text: string; color?: FontColor }[]>('section-1.title-1').map((title, index) => (
-							<Typography as="span" size="6xl" weight="medium" key={index} lineHeight="tight" color={title.color}>
+							<Typography
+								key={index}
+								as="span"
+								weight="medium"
+								color={title.color}
+								className="text-3xl sm:text-4xl md:text-6xl"
+							>
 								{title.text}{' '}
 							</Typography>
 						))}

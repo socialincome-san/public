@@ -1,5 +1,5 @@
-import classNames from 'classnames';
 import { HTMLAttributes } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 export function SILogo({ className, ...props }: HTMLAttributes<SVGElement>) {
 	return (
@@ -11,7 +11,7 @@ export function SILogo({ className, ...props }: HTMLAttributes<SVGElement>) {
 			aria-hidden={true}
 			aria-labelledby="si-logo-title"
 			viewBox="0 0 466.7 49.9"
-			className={classNames('text-accent', className)}
+			className={twMerge('text-accent', className)}
 			{...props}
 		>
 			<title id="si-logo-title">Social Income Logo</title>
