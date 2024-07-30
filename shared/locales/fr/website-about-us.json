@@ -97,7 +97,9 @@
 			"software-development": "Développement logiciel",
 			"app-development": "Développement d’application",
 			"impact-measurement": "Mesure d’impact",
-			"fundraising": "Recherche de fonds"
+			"strategy": "Stratégie",
+			"fundraising": "Recherche de fonds",
+			"translations": "Traductions"
 		},
 		"groups": {
 			"staff": {
