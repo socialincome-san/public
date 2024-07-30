@@ -1,103 +1,103 @@
 {
 	"metadata": {
-		"title": "Mein Profil | Social Income"
+		"title": "Mon profil | Social Income"
 	},
 	"sections": {
 		"account": {
-			"title": "Mein Profil",
-			"personal-info": "Kontaktangaben",
-			"security": "Sicherheit"
+			"title": "Mon compte",
+			"personal-info": "Informations personnelles",
+			"security": "Sécurité"
 		},
 		"contributions": {
-			"title": "Meine Spenden",
-			"payments": "Zahlungen",
-			"subscriptions": "Abonnemente",
-			"donation-certificates-short": "Bescheinigungen",
-			"donation-certificates-long": "Spendebescheinigungen"
+			"title": "Mes contributions",
+			"payments": "Paiements",
+			"subscriptions": "Souscriptions",
+			"donation-certificates-short": "Attestations",
+			"donation-certificates-long": "Attestations de don"
 		},
 		"employer": {
-			"title": "Mein Arbeitgeber",
-			"work": "Arbeit"
+			"title": "Mon Employeur",
+			"work": "Travail"
 		}
 	},
 	"contributions": {
-		"amount": "Betrag",
-		"date": "Datum",
-		"source": "Quelle",
+		"amount": "Paiements",
+		"date": "Date",
+		"source": "Source",
 		"total": "Total",
-		"one-time-payment": "Neue einmalige Spende",
+		"one-time-payment": "Nouveau don unique",
 		"amount-currency": "{{ amount, currency }}",
 		"sources": {
 			"benevity": "Benevity",
-			"cash": "Bar",
+			"cash": "Cash",
 			"raisenow": "Twint",
-			"stripe": "Kreditkarte",
-			"wire-transfer": "Banküberweisung"
+			"stripe": "Carte de crédit",
+			"wire-transfer": "Virement bancaire"
 		}
 	},
 	"subscriptions": {
-		"amount": "Betrag",
+		"amount": "Montant",
 		"date": "Datum",
 		"source": "Quelle",
 		"total": "Total",
 		"amount-currency": "{{ amount, currency }}",
-		"new-subscription": "Neues Abonnement",
+		"new-subscription": "Nouvelle souscription",
 		"interval": "Interval",
-		"interval-1": "Monatlich",
-		"interval-3": "Quartalsweise",
-		"interval-12": "Jährlich",
+		"interval-1": "Mensuel",
+		"interval-3": "Trimestriel",
+		"interval-12": "Annuel",
 		"status": {
-			"active": "Aktiv",
-			"canceled": "Beendet",
-			"paused": "Pausiert"
+			"active": "Actif",
+			"canceled": "Annulé",
+			"paused": "En paus"
 		},
-		"manage-subscriptions": "Abonnemente verwalten"
+		"manage-subscriptions": "Gérer les souscriptions"
 	},
 	"donation-certificates": {
-		"year": "Jahr",
-		"download-pdf": "PDF herunterladen",
-		"no-certificates-yet": "Du hast noch keine Spendebescheinigungen? Stelle sicher, dass du deine Adresse unter \"Kontaktangaben\" hinterleget hast. <br></br> Bei Fragen kannst du uns jederzeit <a href='mailto:hello@socialincome.org' class='underline'>kontaktieren</a>."
+		"year": "Année",
+		"download-pdf": "Télécharger le PDF",
+		"no-certificates-yet": "Tu n’as pas reçu d’attestation de don? Vérifie si tu as bien indiqué ton adresse dans  \"Informations personnelles\".<br></br> Pour toute question, prends <a href='mailto:hello@socialincome.org' class='underline'> contact avec nous</a>."
 	},
 	"personal-info": {
-		"alert-title": "Spendebescheinigung",
-		"alert-description": "Falls du in der Schweiz Steuern zahlst, teile uns bitte deine Adresse mit, sodass wir dir eine Spendebscheinigung erstellen können.",
-		"firstname": "Vorname",
-		"lastname": "Nachname",
+		"alert-title": "Attestations de don",
+		"alert-description": "Si tu paies tes impôts en Suisse, indique-nous ton adresse afin que nous puissions établir une attestation de don.",
+		"firstname": "Prénom",
+		"lastname": "Nom",
 		"gender": "Sexe",
-		"email": "Email",
+		"email": "E-mail",
 		"street": "Rue",
-		"street-number": "Nummer",
-		"city": "Ort",
-		"zip": "PLZ",
-		"country": "Land",
-		"language": "Kommunikationssprache",
-		"submit-button": "Kontaktangaben aktualisieren",
-		"user-updated-toast": "Deine Kontaktangaben wurden aktualisiert",
-		"newsletter-switch": "Ich möchte den Newsletter erhalten"
+		"street-number": "Numéro",
+		"city": "Localité",
+		"zip": "Code postal",
+		"country": "Pays",
+		"language": "Langue de communication",
+		"submit-button": "Mise à jour des informations personnelles",
+		"user-updated-toast": "Les informations personnelles ont été mises à jour",
+		"newsletter-switch": "Je souhaite recevoir la newsletter"
 	},
 	"security": {
 		"reset-password": {
-			"title": "Passwort ändern",
-			"password": "Passwort",
-			"password-confirmation": "Passwort bestätigen",
-			"submit-button": "Passwort ändern",
-			"passwords-mismatch": "Die Passwörter stimmen nicht überein",
-			"error-toast": "Ein Fehler ist aufgetreten. Bitte versuche es später noch einmal.",
-			"success-toast": "Dein Passwort wurde geändert. Bitte melde dich mit deinem neuen Passwort an."
+			"title": "Mise à jour du mot de passe",
+			"password": "Mot de passe",
+			"password-confirmation": "Confirmer le mot de passe",
+			"submit-button": "Mise à jour du mot de passe",
+			"passwords-mismatch": "Non-concordance du mot de passe",
+			"error-toast": "Une erreur s’est produite lors de la mise à jour du mot de passe.",
+			"success-toast": "Ton mot de passe a été mis à jour. Connecte-toi à nouveau avec ton nouveau mot de passe."
 		},
 		"sign-out": {
-			"title": "Möchtest du dich abmelden?",
-			"button": "Abmelden"
+			"title": "Se déconnecter du compte?",
+			"button": "Se déconnecter"
 		}
 	},
 	"work-info": {
-		"work": "Arbeiten",
-		"add-employer": "Neuen Arbeitgeber hinzufügen",
-		"submit-button": "Hinzufügen",
-		"current-employer": "Aktueller Arbeitgeber",
-		"empty-state": "Sie haben keinen Arbeitgeber angegeben",
-		"delete-employer": "Löschen",
-		"past-employers": "Frühere Arbeitgeber",
-		"no-longer-work-here": "Ich arbeite nicht mehr hier"
+		"work": "Travail",
+		"add-employer": "Ajoute un nouvel employeur",
+		"submit-button": "Ajouter",
+		"current-employer": "Employeur actuel",
+		"empty-state": "Tu n’as pas indiqué d'employeur",
+		"delete-employer": "Supprimer",
+		"past-employers": "Employeurs précédents",
+		"no-longer-work-here": "Je ne travaille plus ici"
 	}
 }

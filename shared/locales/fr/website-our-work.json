@@ -7,7 +7,7 @@
 	},
 	"our-work": {
 		"title-1": "Le changement entre tes mains. ",
-		"title-2": " D’un téléphone à ‘autre.",
+		"title-2": " D’un téléphone à l‘autre.",
 		"subtitle": "Social Income est une nouvelle approche de lutte contre la pauvreté dans le sud de la planète. Numérique, efficace et moderne. ",
 		"watch": "Regarde la vidéo"
 	},
@@ -68,26 +68,26 @@
 		}
 	},
 	"whats-next": {
-		"header": "Was als Nächstes kommt",
-		"title-1": "Wir gehen die Dinge ",
-		"title-2": "Schritt für Schritt an.",
-		"subtitle": "Das langfristige Ziel von Social Income besteht darin, für bedürftige Menschen ein globales System der Wohlstands(um)verteilung zu kreieren – basierend auf freiwilligen Spender:innen aus aller Welt. Das Projekt ist ambitioniert. Für die Skalierung braucht es entsprechend Zeit.",
+		"header": "Prochainement",
+		"title-1": "Nous progressons, ",
+		"title-2": "pas à pas.",
+		"subtitle": "L’objectif à long terme de Social Income est de créer un système global de (re)distribution des richesses pour les personnes dans le besoin – reposant sur des dons volontaires en provenance du monde entier. Le projet et ambitieux, Il faut du temps pour qu’il se déploie à grande échelle.",
 		"timeline": {
 			"item-1": {
-				"title": "März 2020",
-				"text": "In der Pilotphase zahlten wir die ersten Beiträge an eine kleine Gemeinschaft in Freetown, Sierra Leone."
+				"title": "Mars 2020",
+				"text": "Lors de la phase pilote, nous avons versé les premières contributions à une petite communauté de Freetown, en Sierra Leone."
 			},
 			"item-2": {
-				"title": "September 2021",
-				"text": "In der Entwicklungsphase erhöhten wir die Anzahl der Empfänger:innen und verbesserten den Zahlungsprozess."
+				"title": "Septembre 2021",
+				"text": "Dans la phase de développement, nous avons augmenté le nombre de bénéficiaires et amélioré le processus de paiement."
 			},
 			"item-3": {
-				"title": "Januar 2022",
-				"text": "Seit Beginn dieses Jahres können wir Social Income kontinuierlich für immer mehr Empfänger:innen und Spender:innen ausrollen."
+				"title": "Janvier 2022",
+				"text": "Nous continuons à développer Social Income au profit d'un plus grand nombre de bénéficiaires."
 			},
 			"item-4": {
-				"title": "Anstehend: Wirkungsmessung",
-				"text": "Um die Wirksamkeit von Social Income messbar zu machen, haben wir eine Methode und eine Reihe an quantitativen und qualitativen Indikatoren entwickelt. Momentan sammeln wir Daten und optimieren unsere Vorgehensweise mit Hilfe der Empfänger:innen."
+				"title": "En tout temps: mesure de l’impact",
+				"text": "Afin de mesurer l'efficacité de Social Income, nous avons développé une méthode et une série d'indicateurs quantitatifs et qualitatifs. Actuellement, nous recueillons des données et optimisons notre démarche avec l'aide des bénéficiaires."
 			}
 		}
 	}

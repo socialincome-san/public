@@ -82,7 +82,7 @@
 		},
 		"question-3": {
 			"question": "Pourquoi nous n'utilisons-nous pas davantage de photos dans notre communication?",
-			"answer": "Nous essayons d'éviter les images typiques des ONG actives en Afrique, car elles ont tendance à alimenter des stéréotypes négatifs. Nous pensons que nous devons faire tout ce qui est en notre pouvoir pour améliorer la vie des personnes dans le besoin, surtout si cela nous coûte relativement peu. Et pour la collecte de fonds, nous sommes convaincus que des arguments rationnels comme ceux mentionnés ci-dessus peuvent être tout aussi efficaces que de faire àppel aux émotions."
+			"answer": "Nous essayons d'éviter les images typiques des ONG actives en Afrique, car elles ont tendance à alimenter des stéréotypes négatifs. Nous pensons que nous devons faire tout ce qui est en notre pouvoir pour améliorer la vie des personnes dans le besoin, surtout si cela nous coûte relativement peu. Et pour la collecte de fonds, nous sommes convaincus que des arguments rationnels comme ceux mentionnés ci-dessus peuvent être tout aussi efficaces que de faire appel aux émotions."
 		}
 	},
 	"recipients": {
@@ -123,27 +123,27 @@
 		}
 	},
 	"campaign": {
-		"title": "Fragen und Antworten",
+		"title": "Questions et réponses",
 		"questions": [
 			{
-				"question": "Welche Partner tragen zur Realisierung dieser Spendenkampagne bei?",
-				"answer": "Diese Spendenaktion wird von Ismatu Gwendolyn Bangura, einer Autorin und Aktivistin aus Sierra Leone, sowie von Social Income, einer Schweizer Non-Profit-Organisation, gemeinsam organisiert. Wir arbeiten eng mit der in Kenema ansässigen Sierra Leone Association of Ebola Survivors zusammen. Social Income bringt umfangreiche Erfahrung in mobilen Zahlungen mit und ist für die Auszahlung der Grundeinkommen an Ebola-Überlebende in den nächsten drei Jahren verantwortlich."
+				"question": "Quels partenaires contribuent à la réalisation de cette collecte de fonds?",
+				"answer": "Quels partenaires contribuent à la réalisation de cette collecte de fonds?\nCette collecte de fonds est organisée conjointement par Ismatu Gwendolyn Bangura, une auteure et activiste sierra-léonaise, et par Social Income, une organisation suisse à but non lucratif. Nous travaillons en étroite collaboration avec l'Association des survivants d'Ebola de Sierra Leone, basée à Kenema. Social Income apporte une grande expérience dans les paiements mobiles et se charge de verser le revenu de base aux survivants d'Ebola au cours des trois prochaines années."
 			},
 			{
-				"question": "Wie erreichen die Gelder die Ebola-Überlebenden?",
-				"answer": "Die Gelder werden direkt über Mobile Money an die Ebola-Überlebenden ausbezahlt. Dies gewährleistet einen schnellen und sicheren Geldtransfer, sodass die Überlebenden ihre Hilfe prompt und effizient erhalten können. Die Nutzung des Mobile Bankings hilft auch, Transparenz zu wahren und das Risiko von Fehlmanagement zu reduzieren. So wird sichergestellt, dass die Spenden effektiv eingesetzt werden."
+				"question": "Comment l’argent parvient-il aux survivants d’Ebola?",
+				"answer": "Les fonds sont versés directement aux survivants d'Ebola via Mobile Money. Ce transfert d'argent simple et sûr permet aux survivants de recevoir leur aide rapidement et efficacement. L'utilisation du mobile banking contribue aussi à assurer la transparence et à réduire le risque de mauvaise gestion. On s'assure ainsi que les dons sont utilisés efficacement."
 			},
 			{
-				"question": "Wie hoch ist der ausbezahlte Betrag?",
-				"answer": "Empfänger:innen des Social Income bekommen monatlich 32 USD, umgerechnet in lokale Währung und direkt auf ihre Mobiltelefone überwiesen. Diese Summe entspricht den Grundbedürfnissen einer in Armut lebenden Person, berücksichtigt das durchschnittliche Einkommen von etwa 42 USD in Sierra Leone. Die Unterstützung erfolgt zuverlässig über drei Jahre. Diese Strategie soll bedürftige Menschen befähigen, ihre Zukunft zu planen und in essenzielle Bereiche wie Gesundheit zu investieren, was ihre finanzielle Situation und ihr Wohlbefinden verbessert."
+				"question": "Quel est le montant versé?",
+				"answer": "Les bénéficiaires de Social Income reçoivent 32 USD par mois, convertis en monnaie locale et versés directement sur leur téléphone portable. Cette somme correspond aux besoins de base d'une personne vivant dans la pauvreté, sachant que le revenu moyen en Sierra Leone est d'environ 42 USD. Ce soutien est assuré pendant trois ans. Cette stratégie doit permettre aux personnes dans le besoin de planifier leur avenir et d'investir dans des domaines essentiels comme la santé, ce qui améliore leur situation financière et leur bien-être."
 			},
 			{
-				"question": "Wofür werden die Gelder verwendet?",
-				"answer": "Alle Spenden bis zum Erreichen des Ziels dienen der Unterstützung von Ebola-Überlebenden, einschliesslich monatlicher Zahlungen, Liefergebühren und zugehöriger Kosten. Spenden, die das Ziel übersteigen, kommen anderen gefährdeten und in Armut lebenden Menschen in Sierra Leone zugute."
+				"question": "Comment l’argent est-il utilisé?",
+				"answer": "Tous les dons vont aux survivants d'Ebola, à savoir les paiements mensuels, les frais de transfert et les frais inhérents, et ceci jusqu'à l'atteinte de l'objectif. Toute donation dépassant l'objectif sera versée à d'autres personnes vulnérables vivant dans la pauvreté en Sierra Leone."
 			},
 			{
-				"question": "Wie werden die Empfänger:innen ausgewählt?",
-				"answer": "Wenn wir das Spendenziel erreichen, erhalten alle 156 von der Sierra Leone Association of Ebola Survivors in Kenema registrierten Überlebenden Unterstützung. Eine zusätzliche Auswahl ist dann nicht nötig. Verfehlen wir das Ziel, wählen wir Empfänger:innen zufällig aus. Diese Methode sichert Fairness und vermeidet Bevorzugungen."
+				"question": "Comment les bénéficiaires sont-ils sélectionnés?",
+				"answer": "Si l'objectif de la collecte est atteint, chacun des 156 survivants enregistrés par l'Association sierra-léonaise des survivants d'Ebola à Kenema recevra un soutien. Aucune sélection supplémentaire n'est alors nécessaire. Si l'objectif n'est pas atteint, nous procédons à une sélection aléatoire des bénéficiaires. Cette méthode garantit un traitement équitable et évite tout favoritisme."
 			}
 		]
 	}

@@ -1,102 +1,103 @@
 {
 	"amount-currency": "{{ amount, currency }}",
-	"title": "Was ist dein durchschnittliches monatliches Einkommen?",
-	"how-to-pay": "Wie möchtest du bezahlen?",
-	"amount": "Betrag",
-	"button-text": "Mache einen Unterschied",
-	"button-text-short": "Jetzt spenden",
+	"title": "Quel est ton revenu mensuel en moyenne?",
+	"how-to-pay": "Comment aimerais-tu payer?",
+	"amount": "Montant",
+	"button-text": "Fais la différence",
+	"button-text-short": "Faire un don",
 	"donation-impact": {
-		"monthly-contribution": "Dein monatlicher Beitrag:",
-		"direct-payout": "Dein Beitrag wird direkt auf das Mobiltelefon der Social Income Empfänger:innen ausgezahlt.",
-		"your-impact": "Dein Einfluss:",
-		"0": "{{ amount, currency }} legt den Grundstein für eine bedeutende Sache. Es ermöglicht uns, einer Person in Not ein Social Income zu bieten.",
-		"1": "{{ amount, currency }} deckt mehr als ein Drittel eines Social Incomes für eine bedürftige Person.",
-		"2": "{{ amount, currency }} finanziert mehr als die Hälfte eines Social Incomes für eine Person.",
-		"3": "Dein monatlicher Beitrag von {{ amount, currency }} ermöglicht es mindestens einer bedürftigen Person ein vollständiges Social Income bereitzustellen.",
-		"4": "{{ amount, currency }} ermöglicht ein Social Income für mehr als zwei bedürftige Personen.",
-		"5": "Dein Beitrag von {{ amount, currency }} finanziert ein Social Income für mehr als drei bedürftige Personen.",
-		"6": "Dein Beitrag von {{ amount, currency }} sichert ein Social Income für mehr als vier bedürftige Personen.",
-		"7": "Dein Beitrag von {{ amount, currency }} sichert ein Social Income für mehr als fünf bedürftige Personen.",
-		"8": "Dein monatlicher Beitrag von {{ amount, currency }} ist außergewöhnlich, ebenso wie dein Einfluss."
+		"monthly-contribution": "Ta contribution mensuelle:",
+		"direct-payout": "Ta contribution est versée directement sur le téléphone mobile du ou de la bénéficiaire de Social Income.",
+		"your-impact": "Ton impact:",
+		"0": "{{ amount, currency }} permet de poser les bases d'une cause importante. Cela nous permettra de fournir un Social Income à une personne dans le besoin.",
+		"1": "{{ amount, currency }} couvre plus du tiers d’un Social Income pour une personne dans le besoin.",
+		"2": "{{ amount, currency }} finance plus de la moitié d’un Social Income pour une personne dans le besoin.",
+		"3": "Ta contribution de {{ amount, currency }} assure un Social Income complet à au moins une personne dans le besoin.",
+		"4": "{{ amount, currency }} permet de verser un Social Income pour plus de deux personnes dans le besoin.",
+		"5": "Ta contribution de {{ amount, currency }} finance un Social Income pour plus de trois personnes dans le besoin.",
+		"6": "Ta contribution de  {{ amount, currency }} assure un Social Income pour plus de quatre personnes dans le besoin.",
+		"7": "Ta contribution de  {{ amount, currency }} assure un Social Income pour plus de cinq personnes dans le besoin.",
+		"8": "Ta contribution mensuelle de {{ amount, currency }}  est extraordinaire, tout comme ton impact"
 	},
 	"donation-interval": {
 		"0": {
-			"title": "Einmalig"
+			"title": "Don unique"
 		},
 		"1": {
-			"title": "Monatlich",
-			"text": "{{ amount, currency }} jeden Monat zahlen"
+			"title": "Mensuel",
+			"text": "{{ amount, currency }} payer chaque mois"
 		},
 		"3": {
-			"title": "Quartalsweise",
-			"text": "{{ amount, currency }} alle 3 Monate zahlen"
+			"title": "Trimestriel",
+			"text": "{{ amount, currency }} tous les trois mois"
 		},
 		"12": {
-			"title": "Jährlich",
-			"text": "{{ amount, currency }} jedes Jahr zahlen"
+			"title": "Annuel",
+			"text": "{{ amount, currency }} chaque année"
 		}
 	},
 	"one-time": {
-		"title": "Einmalige Spende",
-		"subtitle": "Unterstütze Social Income mit einem einmaligen Beitrag",
-		"twint-button": "Du kannst uns auch via Twint unterstützen"
+		"title": "Don unique",
+		"subtitle": "Soutien Social Income par un don unique",
+		"twint-button": "Tu peux aussi nous soutenir par Twint"
 	},
 	"success": {
-		"title": "Herzlichen Dank für deine Spende",
+		"title": "Merci de tout coeur pour ton don",
 		"user-form": {
-			"title": "Überprüfe deine Kontaktdaten",
-			"firstname": "Vorname",
-			"lastname": "Nachname",
+			"title": "Vérifie tes coordonnées",
+			"firstname": "Prénom",
+			"lastname": "Nom",
 			"email": "E-Mail",
-			"country": "Land",
-			"gender": "Geschlecht",
-			"referral": "Wie hast du von uns erfahren?",
-			"accept-terms-and-conditions": "Ich akzeptiere die <a href='/legal/donations/' target='_blank' class='underline'>Teilnahmebedingungen</a> und die <a href='/legal/privacy/' target='_blank' class='underline'>Datenschutzrichtlinie</a>.",
+			"country": "Pays",
+			"gender": "Genre",
+			"referral": "Comment as-tu entendu parler de nous?",
+			"accept-terms-and-conditions": "J'accepte <a href='/legal/donations/' target='_blank' class='underline'>les conditions de participation</a> et <a href='/legal/privacy/' target='_blank' class='underline'>la politique de protection des données</a>.",
+
 			"referrals": {
-				"familyfriends": "Familie oder Freunde",
-				"socialmedia": "Social Media",
-				"work": "Arbeitskolleg:innen",
+				"familyfriends": "Famille ou amis",
+				"socialmedia": "Médias sociaux",
+				"work": "Collègues de travail",
 				"media": "Presse",
-				"presentation": "Präsentation",
-				"other": "Von woanders"
+				"presentation": "Présentation",
+				"other": "Autre"
 			},
-			"submit-button": "Bestätigen"
+			"submit-button": "Confirmer"
 		},
 		"activation-form": {
-			"title": "Setze ein Passwort für dein Konto",
+			"title": " Définis un mot de passe pour ton compte",
 			"email": "E-Mail",
-			"invalid-email": "E-Mail ist ungültig",
-			"password": "Passwort",
-			"password-confirm": "Passwort bestätigen",
-			"password-mismatch": "Passwörter stimmen nicht überein",
-			"submit-button": "Account aktivieren",
-			"google-button": "Über Google anmelden"
+			"invalid-email": "E-Mail incorrect",
+			"password": "Mot de passe",
+			"password-confirm": "Confirmer le mot de passe",
+			"password-mismatch": "Non-concordance du mot de passe",
+			"submit-button": "Activer le compte",
+			"google-button": "S’inscrire avec Google"
 		}
 	},
 	"campaign": {
-		"not-found": "Die Kampagne konnte leider nicht gefunden werden.",
-		"by": "Von {{ creator }}",
+		"not-found": "La campagne est malheureusement introuvable.",
+		"by": "Par {{ creator }}",
 		"without-goal": {
-			"collected_zero": "Noch keine Spenden. Mache den ersten Schritt!",
-			"collected_one": "{{ amount, currency }} von {{ count }} Spender:in gesammelt",
-			"collected_other": "{{ amount, currency }} von {{ count }} Spender:innen gesammelt"
+			"collected_zero": "Il n’y a pas encore de dons. Fais le premier pas!",
+			"collected_one": "Reçu {{ amount, currency }} de {{ count }} personne",
+			"collected_other": "Reçu {{ amount, currency }} de {{ count }} personnes"
 		},
 		"with-goal": {
-			"collected-percentage": "{{percentage}}% gesammelt",
-			"goal-title": "Ziel",
-			"collected-amount_one": "{{ amount, currency }} von {{count}} Spender:in",
-			"collected-amount_other": "{{ amount, currency }} von {{count}} Spender:innen",
+			"collected-percentage": "Reçu {{percentage}}%",
+			"goal-title": "Objectif",
+			"collected-amount_one": "Reçu {{ amount, currency }} de {{count}} personne",
+			"collected-amount_other": "Reçu {{ amount, currency }} de {{count}} personnes",
 			"goal-amount": "{{ amount, currency }}"
 		},
-		"days-left_zero": "Letzter Tag",
-		"days-left_one": "Noch einen Tag bis zum Spendeschluss",
-		"days-left_other": "{{ count }} verbleibende Tage",
-		"ended": "Die Kampagne ist beendet. Für reguläre Spenden verwende bitte die Hauptspendeseite.",
-		"card-title": "Mein Beitrag",
+		"days-left_zero": "Dernier jour",
+		"days-left_one": "Plus qu’un jour jusqu’à la clôture de la campagne",
+		"days-left_other": "Encore {{ count }} pour contribuer",
+		"ended": " La campagne est terminée. Tu peux faire un don en allant sur la page principale du site.",
+		"card-title": "Ma contribution",
 		"about-si-title": "Über Social Income",
-		"about-si-text-1": "Social Income ist eine NGO mit Sitz in der Schweiz, die bedingungslose Geldüberweisungen per Mobiltelefon an Menschen in multidimensionaler Armut in Westafrika bereitstellt.",
-		"about-si-text-2": "Seit 2020 führt Social Income ein zeitlich unbegrenztes Programm für ein universelles Grundeinkommen in Sierra Leone durch.",
-		"more-faq": "<a href='/faq' target=\"_blank\">Mehr Fragen</a>",
+		"about-si-text-1": "Social Income est une ONG basée en Suisse qui assure des transferts d’argent inconditionnels par téléphone mobile à des personnes vivant dans une pauvreté multidimensionnelle en Afrique de l’Ouest.",
+		"about-si-text-2": "Depuis 2020, Social Income gère un programme de revenu de base universel non limité dans le temps en Sierra Leone.",
+		"more-faq": "<a href='/faq' target=\"_blank\">Plus de questions</a>",
 		"badge-highlight": "Campagne actuelle"
 	}
 }

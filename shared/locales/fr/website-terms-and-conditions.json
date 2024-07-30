@@ -1,53 +1,53 @@
 {
 	"metadata": {
-		"title": "Teilnahmebedingungen | Social Income"
+		"title": "Conditions de participation | Social Income"
 	},
-	"title": "Teilnahmebedingungen",
-	"comment": "Bei der vorliegenden Teilnahmebedingungen handelt es sich um eine Übersetzung aus dem Englischen. Sollte es zwischen der vorliegenden Übersetzung und der <a href=\"/legal/donations\">Terms and Conditions</a> inhaltliche Unterschiede geben, so geht die englischen Teilnahmebedingungen dieser Übersetzung vor.",
+	"title": "Conditions de participation",
+	"comment": "Les présentes conditions de participation sont une traduction de l'anglais. En cas de divergence entre la présente traduction et les <a href=\"/legal/donations\">Terms and Conditions</a> en anglais, ces dernières prévalent.",
 	"general": {
-		"title": "Allgemeines",
-		"section-1": "Diese Teilnahmebedingungen für Spendenzahlungen (im Folgenden \"Teilnahmebedingungen \") regeln finanzielle Zuwendung zugunsten von Social Income, einer gemeinnützigen Organisation mit Sitz in Zürich, Schweiz (im Folgenden \"Social Income\").",
-		"section-2": "Indem du einen Beitrag leistest, erklärst du dich mit diesen Teilnahmebedingungen einverstanden.",
-		"section-3": "Es kann vorkommen, dass wir Änderungen an den Teilnahmebedingungen ohne vorherige Ankündigung vornehmen. Wenn wir wesentliche Änderungen vornehmen, die sich nachteilig auf deine Rechte auswirken, werden wir dich informieren, bevor die Änderungen in Kraft treten. Änderungen gelten ab dem Zeitpunkt der Veröffentlichung der geänderten Teilnahmebedingungen auf der Webseite. Indem du Social Income nach einer Änderung der Teilnahmebedingungen weiterhin verwendest oder Beiträge zahlst, akzeptierst du die neuen Bedingungen und Konditionen."
+		"title": "Généralités",
+		"section-1": "Ces conditions de participation pour les paiements de dons (ci-après \"conditions de participation\") régissent les contributions financières en faveur de Social Income, une organisation à but non lucratif basée à Zurich, Suisse (ci-après \"Social Income\").",
+		"section-2": "En effectuant une contribution, vous acceptez ces conditions de participation.",
+		"section-3": "Nous pouvons apporter des modifications aux conditions de participation sans préavis. Si nous apportons des modifications importantes qui affectent négativement vos droits, nous vous en informerons avant que les modifications ne prennent effet. Les modifications prennent effet dès la publication des conditions de participation modifiées sur le site. En continuant à utiliser Social Income ou en effectuant des contributions après une modification des conditions de participation, vous acceptez les nouvelles conditions."
 	},
 	"participation": {
-		"title": "Deine Beitragszahlungen",
-		"section-1": "Um Spender:in zu werden, erstellst du ein Konto auf der Webseite, berechnest deinen Spendenbetrag auf der Basis deines monatlichen Einkommens und entscheidest dich, einen prozentuallen Anteil oder einen fixen Betrag zu spenden.",
-		"section-2": "Dein Beitrag zu Gunsten von Social Income wird ausschliesslich im Sinne der Ziele von Social Income verwendet. Dein Beitrag wird an Personen überwiesen, die von Social Income unterstützt werden. Weitere Informationen zu den Empfängern deines Beitrags findest du auf der Webseite.",
-		"section-3": "Über die Webseite wählst du deine bevorzugte Zahlungsart und deinen bevorzugten Zahlungsplan. Die Zahlungsoptionen und -pläne werden dir auf der Webseite vorgestellt und können dort von dir ausgewählt werden, bevor du der Zahlung zustimmst.",
-		"section-4": "Zahlungspläne per Kreditkarte können jederzeit über dein Benutzerkonto oder durch schriftliche Mitteilung an <a href='mailto:contributors@socialincome.org'>contributors@socialincome.org</a> gekündigt werden. Daueraufträge per Banküberweisung müssen bei deiner Bank storniert werden. Ein einmal geleisteter Beitrag können wir dir nicht zurückerstatten.",
-		"section-5": "CBeiträge, die über die Website geleistet werden, werden über eine sichere SSL-Verbindung verarbeitet. Alle Online-Zahlungen von Spendern werden über den Drittanbieter Stripe oder Coinbase (für Kryptowährungen) abgewickelt. Weitere Informationen über den Drittanbieter findest du in den Datenschutzbestimmungen von <a href='https://stripe.com/en-ch/privacy' target='_blank'>Stripe</a> und <a href='https://www.coinbase.com/legal/privacy' target='_blank'>Coinbase</a>.",
-		"section-6": "In einigen Ländern sind Beiträge an Social Income steuerlich absetzbar. Nach jeder Spende senden wir dir daher eine Spendenbescheinigung per E-Mail, um dir den Abzug zu erleichtern."
+		"title": "Vos contributions",
+		"section-1": "Pour devenir donateur, vous créez un compte sur le site, calculez votre montant de don en fonction de votre revenu mensuel et décidez de faire un don d'un pourcentage ou d'un montant fixe.",
+		"section-2": "Votre contribution en faveur de Social Income sera utilisée exclusivement aux fins des objectifs de Social Income. Votre contribution sera transférée aux personnes soutenues par Social Income. Vous trouverez plus d'informations sur les bénéficiaires de votre contribution sur le site.",
+		"section-3": "Sur le site, vous choisissez votre mode de paiement et votre plan de paiement préférés. Les options et plans de paiement vous sont présentés sur le site et peuvent être sélectionnés par vous avant de confirmer le paiement.",
+		"section-4": "Les plans de paiement par carte de crédit peuvent être annulés à tout moment via votre compte utilisateur ou en envoyant une notification écrite à <a href='mailto:contributors@socialincome.org'>contributors@socialincome.org</a>. Les ordres permanents par virement bancaire doivent être annulés auprès de votre banque. Nous ne pouvons pas vous rembourser une contribution déjà effectuée.",
+		"section-5": "Les contributions effectuées via le site sont traitées via une connexion SSL sécurisée. Tous les paiements en ligne des donateurs sont traités par le tiers Stripe ou Coinbase (pour les cryptomonnaies). Vous trouverez plus d'informations sur le tiers dans les politiques de confidentialité de <a href='https://stripe.com/en-ch/privacy' target='_blank'>Stripe</a> et <a href='https://www.coinbase.com/legal/privacy' target='_blank'>Coinbase</a>.",
+		"section-6": "Dans certains pays, les contributions à Social Income sont déductibles des impôts. Après chaque don, nous vous envoyons donc un reçu de don par e-mail pour faciliter la déduction."
 	},
 	"data": {
-		"title": "Deine persönlichen Daten und die Nutzung der Webseite",
-		"section-1": "Die Übertragung, Sammlung und Bearbeitung von personenbezogenen Daten über die Webseite unterliegt unserer <a href='/legal/privacy'>Datenschutzrichtlinie</a>.",
-		"section-2": "Der Zugang zu und die Nutzung der Webseite unterliegt zudem den <a href='/legal/site-use'>Nutzungsbedingungen</a>.",
-		"section-3": "Wir empfehlen dir, diese vorgenannten Richtlinien sorgfältig zu lesen. Solltest du Fragen haben, zögere bitte nicht, uns diese zu stellen. Du kannst uns dazu unter <a href='mailto:legal@socialincome.org'>legal@socialincome.org</a> kontaktieren."
+		"title": "Vos données personnelles et l'utilisation du site",
+		"section-1": "La transmission, la collecte et le traitement des données personnelles via le site sont soumis à notre <a href='/legal/privacy'>politique de confidentialité</a>.",
+		"section-2": "L'accès et l'utilisation du site sont également soumis aux <a href='/legal/site-use'>conditions d'utilisation</a>.",
+		"section-3": "Nous vous recommandons de lire attentivement ces politiques mentionnées. Si vous avez des questions, n'hésitez pas à nous les poser. Vous pouvez nous contacter à <a href='mailto:legal@socialincome.org'>legal@socialincome.org</a>."
 	},
 	"liability": {
-		"title": "Haftungsausschluss",
-		"section-1": "Hiermit anerkennst du, dass der Zugriff auf diese Webseite und deren Nutzung, die Übertragung von Daten auf und aus dieser Webseite, der Zugriff auf Webseiten Dritter über auf dieser Webseite verfügbare Links sowie alle Handlungen, die auf der Grundlage der Inhalte dieser Website vorgenommen werden, auf dein eigenes Risiko erfolgen. Social Income schliesst hiermit, soweit gesetzlich zulässig, jede vertragliche und ausservertragliche Haftung für daraus entstehende direkte und indirekte Schäden aus.",
-		"section-2": "Für diese Klausel wird \"Social Income\" so definiert, dass dieser Haftungsausschluss uns unterstellte Gesellschaften, mit uns verbundene Unternehmen, unsere leitenden Angestellten, Direktoren, Mitarbeiter, Vertreter sowie Drittanbieter von Dienstleistungen miteinschliesst."
+		"title": "Clause de non-responsabilité",
+		"section-1": "Vous reconnaissez que l'accès à ce site et son utilisation, la transmission de données vers et depuis ce site, l'accès aux sites tiers via des liens disponibles sur ce site ainsi que toutes les actions effectuées sur la base des contenus de ce site se font à vos propres risques. Social Income décline, dans la mesure permise par la loi, toute responsabilité contractuelle et extracontractuelle pour les dommages directs et indirects en résultant.",
+		"section-2": "Aux fins de cette clause, \"Social Income\" est défini de manière à inclure nos filiales, entreprises affiliées, nos dirigeants, directeurs, employés, agents ainsi que les prestataires de services tiers."
 	},
 	"warranty": {
-		"title": "Ausschluss der Gewährleistung",
-		"section-1": "Wir tun unser Bestes, den Inhalt der Webseite stets aktuell, vollständig und genau zu halten. Bei den Informationen, die über die Webseite zur Verfügung gestellt werden, kann es jedoch zu raschen Änderungen kommen, weshalb wir Aktualität, Genauigkeit und Vollständigkeit nicht lückenlos garantieren können. Die Inhalte der Webseite enthalten keine Zusicherungen oder Gewährleistungen.",
-		"section-2": "Du anerkennst, dass Social Income ohne jegliche Garantie angeboten wird. Jegliche für Gewährleistung der Marktgängigkeit, Eignung für einen bestimmten Zweck oder Nichtverletzung der Rechte Dritter und jede andere Gewährleistung wird ausgeschlossen, soweit gesetzlich zulässig.",
-		"section-3": "Die Gewährleistungsausschlüsse unter dieser Klausel gelten auch für uns unterstellte Gesellschaften, verbundenen Unternehmen und für Drittanbieter von Dienstleistungen."
+		"title": "Exclusion de garantie",
+		"section-1": "Nous faisons de notre mieux pour maintenir le contenu du site à jour, complet et exact. Toutefois, les informations fournies sur le site peuvent changer rapidement, et nous ne pouvons donc pas garantir l'actualité, l'exactitude et l'exhaustivité de manière infaillible. Les contenus du site ne contiennent aucune déclaration ni garantie.",
+		"section-2": "Vous reconnaissez que Social Income est offert sans aucune garantie. Toute garantie de qualité marchande, d'adéquation à un usage particulier ou de non-violation des droits des tiers et toute autre garantie sont exclues dans la mesure permise par la loi.",
+		"section-3": "Les exclusions de garantie sous cette clause s'appliquent également à nos filiales, entreprises affiliées et aux prestataires de services tiers."
 	},
 	"stopping": {
-		"title": "Wenn du nicht mehr mitmachen möchtest",
-		"section-1": "Social Income basiert auf Solidarität und freiwilligen Spenden. Du teilst dein Einkommen mit Mitmenschen nur so lange und nur in dem Umfang, wie du möchtest. Du kannst Dein Engagement bei Social Income jederzeit und mit sofortiger Wirkung beenden. Es steht dir frei, deinen Zahlungsplan zu ändern und die Zahlungen jederzeit auszusetzen oder einzustellen.",
-		"section-2": "Wie bereits im Abschnitt \"Deine Teilnahme\" erwähnt, können wir jedoch keine Zahlungen zurückerstatten, die bereits an uns überwiesen wurden."
+		"title": "Si vous ne souhaitez plus participer",
+		"section-1": "Social Income repose sur la solidarité et les dons volontaires. Vous partagez vos revenus avec d'autres personnes aussi longtemps et dans la mesure où vous le souhaitez. Vous pouvez mettre fin à votre engagement auprès de Social Income à tout moment et avec effet immédiat. Vous êtes libre de modifier votre plan de paiement et de suspendre ou arrêter les paiements à tout moment.",
+		"section-2": "Comme mentionné dans la section \"Votre participation\", nous ne pouvons cependant pas rembourser les paiements déjà transférés."
 	},
 	"deletion": {
-		"title": "Löschung deines Kontos",
-		"section-1": "Du kannst jederzeit von uns verlangen, dass wir dein Konto löschen oder sperren, indem du eine E-Mail an <a href='mailto:contributors@socialincome.org'>contributors@socialincome.org</a>. sendest. Wir werden deine Anfrage innerhalb von zwei Arbeitstagen beantworten und bearbeiten."
+		"title": "Suppression de votre compte",
+		"section-1": "Vous pouvez nous demander à tout moment de supprimer ou de bloquer votre compte en envoyant un e-mail à <a href='mailto:contributors@socialincome.org'>contributors@socialincome.org</a>. Nous répondrons à votre demande dans un délai de deux jours ouvrables et la traiterons."
 	},
 	"disagreements": {
-		"title": "Wie wir Unstimmigkeiten klären",
-		"section-1": "Wir laden dich dazu ein, sich mit uns in Verbindung zu setzen, sollten Probleme im Zusammenhang mit deiner Nutzung von Social Income und der Webseite auftreten. Fragen und Bedenken in Bezug auf Social Income, deine Beiträge und unsere Teilnahmebedingungen kannst du jederzeit an <a href='mailto:legal@socialincome.org'>legal@socialincome.org</a> richten. Wir werden dir innerhalb von zwei Arbeitstagen antworten.",
-		"section-2": "Wenn wir keine Lösung finden und entweder du oder wir vor Gericht gehen müssen, ist für alle Streitigkeiten, die im Zusammenhang mit diesen Teilnahmebedingungen entstehen, ausschliesslich Schweizer Recht anwendbar, unter Ausschluss der kollisionsrechtlichen Bestimmungen. Der Gerichtsstand ist Zürich, Schweiz."
+		"title": "Comment nous résolvons les désaccords",
+		"section-1": "Nous vous invitons à nous contacter en cas de problème lié à votre utilisation de Social Income et du site. Vous pouvez adresser vos questions et préoccupations concernant Social Income, vos contributions et nos conditions de participation à tout moment à <a href='mailto:legal@socialincome.org'>legal@socialincome.org</a>. Nous vous répondrons dans un délai de deux jours ouvrables.",
+		"section-2": "Si nous ne trouvons pas de solution et que vous ou nous devons aller en justice, tous les litiges liés à ces conditions de participation seront régis exclusivement par le droit suisse, à l'exclusion des dispositions de conflit de lois. Le lieu de juridiction est Zurich, Suisse."
 	}
 }
