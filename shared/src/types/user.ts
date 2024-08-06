@@ -53,8 +53,8 @@ export type User = {
 export const splitName = (name: string | undefined | null) => {
 	if (!name) {
 		return {
-			firstname: undefined,
-			lastname: undefined,
+			firstname: '',
+			lastname: '',
 		};
 	}
 	const stripeNames = name.trim().split(' ');
