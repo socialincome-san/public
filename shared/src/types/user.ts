@@ -50,7 +50,7 @@ export type User = {
 	created_at: Timestamp;
 };
 
-export const splitName = (name: string | undefined) => {
+export const splitName = (name: string | undefined | null) => {
 	if (!name) {
 		return {
 			firstname: undefined,
