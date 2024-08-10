@@ -23,17 +23,21 @@ export const CURRENCIES = [
 	'BOB', // Bolivia
 	'BRL', // Brazil
 	'BSD', // Bahamas
+	'BTC', // Bitcoin
 	'BTN', // Bhutan
 	'BWP', // Botswana
 	'BYN', // Belarus
+	'BYR', // Belarus
 	'BZD', // Belize
 	'CAD', // Canada
 	'CDF', // Congo
 	'CHF', // Switzerland
+	'CLF', // Chile
 	'CLP', // Chile
 	'CNY', // China
 	'COP', // Colombia
 	'CRC', // Costa Rica
+	'CUC', // Cuba
 	'CUP', // Cuba
 	'CVE', // Cape Verde
 	'CZK', // Czech Republic
@@ -78,6 +82,7 @@ export const CURRENCIES = [
 	'KHR', // Cambodia
 	'KID', // Kiribati
 	'KMF', // Comoros
+	'KPW', // North Korea
 	'KRW', // South Korea
 	'KWD', // Kuwait
 	'KYD', // Cayman Islands
@@ -87,7 +92,9 @@ export const CURRENCIES = [
 	'LKR', // Sri Lanka
 	'LRD', // Liberia
 	'LSL', // Lesotho
+	'LTL', // Lithuania
 	'LYD', // Libya
+	'LVL', // Latvia
 	'MAD', // Morocco
 	'MDL', // Moldova
 	'MGA', // Madagascar
@@ -151,16 +158,21 @@ export const CURRENCIES = [
 	'USD', // United States
 	'UYU', // Uruguay
 	'UZS', // Uzbekistan
+	'VEF', // Venezuela
 	'VES', // Venezuela
 	'VND', // Vietnam
 	'VUV', // Vanuatu
 	'WST', // Samoa
 	'XAF', // Central African CFA franc
+	'XAU', // Gold
+	'XAG', // Silver
 	'XCD', // East Caribbean dollar
+	'XDR', // Special Drawing Rights
 	'XOF', // West African CFA franc
 	'XPF', // CFP franc
 	'YER', // Yemen
 	'ZAR', // South Africa
+	'ZMK', // Zambia
 	'ZMW', // Zambia
 	'ZWL', // Zimbabwe
 ] as const;
