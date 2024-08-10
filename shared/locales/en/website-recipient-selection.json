@@ -2,7 +2,6 @@
 	"title": "Recipients Selection",
 	"introduction": "Social Income, like any UBI project, has limited financial resources. Choosing who gets help and who doesn't is tough. We want everyone to understand how we select our recipients. Since November 2023, we’ve employed a new way to randomly select people from poor communities, thanks to our partnership with <a href='https://drand.love' target='_blank' class='underline'>drand</a>.",
 	"selection-process": {
-		"title": "Our selection process in 3 steps",
 		"step-1": {
 			"title": "Step 1: Finding potential recipients",
 			"text": "We team up with a variety of international and local NGOs who support marginalized communities and are familiar with poverty at the local level. After visiting and positively assessing these NGOs – as well as the areas and communities they support – we may request that they provide us with a list of all potential recipients. Potential recipients are people living in poverty with whom they maintain direct contact. Depending on the communities supported, those lists can include anything from 100 to 1000 names."
