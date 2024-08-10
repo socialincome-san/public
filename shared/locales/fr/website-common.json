@@ -1,0 +1,41 @@
+{
+	"metadata": {
+		"title": "Social Income",
+		"description": "Social Income est une organisation à but non lucratif qui effectue des transferts monétaires inconditionnels aux personnes dans le besoin.",
+		"keywords": "Social Income, revenu de base, transferts monétaires inconditionnels, sans but lucratif, ONG",
+		"url": "https://socialincome.org",
+		"og-image": "/assets/metadata/og/default.jpg",
+		"twitter-image": "/assets/metadata/twitter/default.jpg"
+	},
+	"navigation": {
+		"100-percent-model": "Modèle à 100 %",
+		"about-us": "Qui nous sommes",
+		"contact": "Contact",
+		"contributors": "Donateurs et donatrices",
+		"evidence": "Références",
+		"faq": "FAQ",
+		"finances": "Finances",
+		"how-it-works": "Comment ça marche",
+		"my-profile": "Mon profil",
+		"our-mission": "Notre mission",
+		"our-work": "Notre action",
+		"privacy-policy": "Protection des données",
+		"recipient-selection": "Sélection des bénéficiaires",
+		"recipients": "Bénéficiaires",
+		"reporting": "Rapports",
+		"team": "Équipe",
+		"transparency": "Transparence",
+		"whats-next": "Suite"
+	},
+	"footer": {
+		"follow-us": "Suis-nous",
+		"resources": "Informations",
+		"legal": "Mentions légales",
+		"newsletter": "Newsletter"
+	},
+	"cookie-consent-banner": {
+		"text": "Pouvons-nous utiliser des cookies pour analyser le trafic et les performances de notre site web ? Nous ne collectons jamais de données personnelles. <a href='/legal/privacy' class='underline'>Politique de confidentialité.</a>.",
+		"button-accept": "Accepter",
+		"button-refuse": "Refuser"
+	}
+}

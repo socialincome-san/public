@@ -9,6 +9,26 @@
 	"download-pdf": "PDF",
 	"reports": [
 		{
+			"title": "Jahresbericht 2023",
+			"href": "https://drive.google.com/file/d/13vvBS6Ju6NqpIgis4CrMHrY9s2hbRjYy/view",
+			"language": "Englisch/Deutsch"
+		},
+		{
+			"title": "Finanzbericht 2023",
+			"href": "https://drive.google.com/file/d/13WH2RIxJsq9HLbxvBM-Wf5XcXzCSogG3/view",
+			"language": "Englisch"
+		},
+		{
+			"title": "Finanzbericht 2023",
+			"href": "https://drive.google.com/file/d/13VxN6-NHes63Bb0Cw_kWo6vqc-EbEwc-/view",
+			"language": "Deutsch"
+		},
+		{
+			"title": "Prüfbericht 2023",
+			"href": "https://drive.google.com/file/d/13hSSIWLDDWG6eKBDFxYmwGWRRQU_21JY/view",
+			"language": "Deutsch"
+		},
+		{
 			"title": "Jahresbericht 2022",
 			"href": "https://drive.google.com/file/d/1UVB6zcRefe4tEVuQUshIzg39fCCqEUSw/view",
 			"language": "Englisch/Deutsch"
@@ -25,7 +45,7 @@
 		},
 		{
 			"title": "Prüfbericht 2022",
-			"href": "https://drive.google.com/file/d/1He7DHwa3MmepahRS7Ei4PqwxJwld968W/view",
+			"href": "https://drive.google.com/file/d/13s672kRDugWm6Vd9PcdLCQASZKbBOTGF/view",
 			"language": "Deutsch"
 		},
 		{
