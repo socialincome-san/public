@@ -1,10 +1,10 @@
 import { DateTime } from 'luxon';
 import { toFirebaseAdminTimestamp } from '../../../../../../shared/src/firebase/admin/utils';
 import {
-	PAYMENTS_COUNT,
+	Payment,
 	PAYMENT_AMOUNT_SLE,
 	PAYMENT_FIRESTORE_PATH,
-	Payment,
+	PAYMENTS_COUNT,
 	PaymentStatus,
 } from '../../../../../../shared/src/types/payment';
 import { RECIPIENT_FIRESTORE_PATH, RecipientProgramStatus } from '../../../../../../shared/src/types/recipient';
@@ -16,7 +16,7 @@ export class UpdateDatabaseEntriesTask extends PaymentTask {
 		let [paymentsPaid, paymentsCreated, setToActiveCount, setToFormerCount] = [0, 0, 0, 0];
 		const nextMonthPaymentDate = paymentDate.plus({ months: 1 });
 		const exchangeRates = await new ExchangeRateImporter().getExchangeRates(paymentDate);
-		const amountChf = Math.round((PAYMENT_AMOUNT_SLE / exchangeRates['SLE']) * 100) / 100;
+		const amountChf = Math.round((PAYMENT_AMOUNT_SLE / exchangeRates!['SLE']!) * 100) / 100;
 		const recipients = await this.getRecipients();
 
 		await Promise.all(

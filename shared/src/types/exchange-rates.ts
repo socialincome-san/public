@@ -8,4 +8,4 @@ export type ExchangeRatesEntry = {
 	rates: ExchangeRates;
 };
 
-export type ExchangeRates = Record<Currency, number>;
+export type ExchangeRates = Partial<Record<Currency, number>>;
