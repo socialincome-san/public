@@ -50,7 +50,13 @@ export type User = {
 	created_at: Timestamp;
 };
 
-export const splitName = (name: string) => {
+export const splitName = (name: string | undefined | null) => {
+	if (!name) {
+		return {
+			firstname: '',
+			lastname: '',
+		};
+	}
 	const stripeNames = name.trim().split(' ');
 	const sanitizeName = (n: string) => n.charAt(0).toUpperCase() + n.slice(1).toLowerCase().trim();
 
