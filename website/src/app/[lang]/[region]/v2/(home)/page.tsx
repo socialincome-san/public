@@ -12,7 +12,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 		namespaces: ['website-(home)', 'website-videos'],
 	});
 	return (
-		<>
+		<div className="theme-v2">
 			<HeroVideo lang={lang} region={region} />
 			<Overview lang={lang} region={region} />
 			<MonthlyIncome lang={lang} region={region} />
@@ -26,6 +26,6 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			{/*<Sdgoals lang={lang} region={region} />*/}
 			{/*<Journal lang={lang} region={region} />*/}
 			<div className="bg-foreground-dark mt-10 h-24 w-screen" />
-		</>
+		</div>
 	);
 }
