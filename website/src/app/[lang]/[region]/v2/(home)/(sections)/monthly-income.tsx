@@ -3,7 +3,7 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { IncomeInput } from '../(components)/income-input';
 
-export async function MonthlyIncome({ lang, region }: DefaultParams) {
+export async function MonthlyIncome({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-home2', 'common'],
