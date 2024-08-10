@@ -22,7 +22,6 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 				<Typography weight="bold" size="3xl">
 					{translator.t('section-4.title')}
 				</Typography>
-				<Typography size="lg">{translator.t('section-4.subtitle')}</Typography>
 			</div>
 			<InfoCard
 				sectionTitle={translator.t('section-4.expenses')}

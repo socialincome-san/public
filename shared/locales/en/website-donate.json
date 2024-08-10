@@ -17,7 +17,7 @@
 		"5": "Your contribution of {{ amount, currency }} funds a Social Income for more than three people in need.",
 		"6": "Your contribution of {{ amount, currency }} sustains a Social Income for more than four people in need.",
 		"7": "Your contribution of {{ amount, currency }} sustains a Social Income for more than five people in need.",
-		"8": "Your monthly contribution of {{ amount, currency }} is extraordinary, as well as your impact."
+		"8": "Your contribution of {{ amount, currency }} is extraordinary, as well as your impact."
 	},
 	"donation-interval": {
 		"0": {
