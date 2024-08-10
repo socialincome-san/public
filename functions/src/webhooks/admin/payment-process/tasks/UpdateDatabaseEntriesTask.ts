@@ -3,7 +3,6 @@ import { toFirebaseAdminTimestamp } from '../../../../../../shared/src/firebase/
 import {
 	PAYMENTS_COUNT,
 	PAYMENT_AMOUNT_SLE,
-	PAYMENT_CURRENCY,
 	PAYMENT_FIRESTORE_PATH,
 	Payment,
 	PaymentStatus,
@@ -17,7 +16,7 @@ export class UpdateDatabaseEntriesTask extends PaymentTask {
 		let [paymentsPaid, paymentsCreated, setToActiveCount, setToFormerCount] = [0, 0, 0, 0];
 		const nextMonthPaymentDate = paymentDate.plus({ months: 1 });
 		const exchangeRates = await new ExchangeRateImporter().getExchangeRates(paymentDate);
-		const amountChf = Math.round((PAYMENT_AMOUNT_SLE / exchangeRates[PAYMENT_CURRENCY]) * 100) / 100;
+		const amountChf = Math.round((PAYMENT_AMOUNT_SLE / exchangeRates['SLE']) * 100) / 100;
 		const recipients = await this.getRecipients();
 
 		await Promise.all(
@@ -33,7 +32,7 @@ export class UpdateDatabaseEntriesTask extends PaymentTask {
 					await currentMonthPaymentRef.set({
 						amount: PAYMENT_AMOUNT_SLE,
 						amount_chf: amountChf,
-						currency: PAYMENT_CURRENCY,
+						currency: 'SLE',
 						payment_at: toFirebaseAdminTimestamp(paymentDate),
 						status: PaymentStatus.Paid,
 						phone_number: recipient.get('mobile_money_phone').phone,
@@ -62,7 +61,7 @@ export class UpdateDatabaseEntriesTask extends PaymentTask {
 						)
 						.set({
 							amount: PAYMENT_AMOUNT_SLE,
-							currency: PAYMENT_CURRENCY,
+							currency: 'SLE',
 							payment_at: toFirebaseAdminTimestamp(nextMonthPaymentDate),
 							status: PaymentStatus.Created,
 						});
