@@ -1,20 +1,15 @@
 import { onCall } from 'firebase-functions/v2/https';
 import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
+import { PAYMENT_AMOUNT_SLE } from '../../../../../shared/src/types/payment';
 import { PAYMENT_FORECAST_FIRESTORE_PATH } from '../../../../../shared/src/types/payment-forecast';
 import {
-	RECIPIENT_FIRESTORE_PATH,
-	RecipientProgramStatus,
 	calcFinalPaymentDate,
 	calcPaymentsLeft,
+	RECIPIENT_FIRESTORE_PATH,
+	RecipientProgramStatus,
 } from '../../../../../shared/src/types/recipient';
 import { getLatestExchangeRate } from '../../../../../shared/src/utils/exchangeRates';
-
-export interface PaymentForecastProps {
-	timestamp: number; // seconds
-}
-
-const monthlyAllowanceInUSD = 32;
 
 function prepareNextSixMonths(): Map<string, number> {
 	const nextSixMonths: Map<string, number> = new Map();
@@ -26,7 +21,7 @@ function prepareNextSixMonths(): Map<string, number> {
 	return nextSixMonths;
 }
 
-function addRecipient(firestoreAdmin: FirestoreAdmin, nextSixMonths: Map<string, number>, paymentsLeft: number) {
+function addRecipient(nextSixMonths: Map<string, number>, paymentsLeft: number) {
 	nextSixMonths.forEach((value, key) => {
 		if (paymentsLeft > 0) {
 			nextSixMonths.set(key, ++value);
@@ -35,11 +30,11 @@ function addRecipient(firestoreAdmin: FirestoreAdmin, nextSixMonths: Map<string,
 	});
 }
 
-async function calculateSLEAmount(firestoreAdmin: FirestoreAdmin): Promise<number> {
+async function calculateUSDAmount(firestoreAdmin: FirestoreAdmin): Promise<number> {
 	const exchangeRateUSD = await getLatestExchangeRate(firestoreAdmin, 'USD');
 	const exchangeRateSLE = await getLatestExchangeRate(firestoreAdmin, 'SLE');
-	const monthlyAllowanceInSLE = (monthlyAllowanceInUSD / exchangeRateUSD) * exchangeRateSLE;
-	return parseFloat(monthlyAllowanceInSLE.toFixed(2));
+	const monthlyAllowanceInUSD = (PAYMENT_AMOUNT_SLE / exchangeRateSLE) * exchangeRateUSD;
+	return parseFloat(monthlyAllowanceInUSD.toFixed(2));
 }
 
 async function deleteAllDocuments(firestoreAdmin: FirestoreAdmin): Promise<void> {
@@ -56,7 +51,7 @@ async function fillNextSixMonths(
 	nextSixMonthsList: Map<string, number>,
 ): Promise<void> {
 	const batch = firestoreAdmin.firestore.batch();
-	const monthlyAllowanceInSLE = await calculateSLEAmount(firestoreAdmin);
+	const monthlyAllowanceInUSD = await calculateUSDAmount(firestoreAdmin);
 	let count = 1;
 	nextSixMonthsList.forEach((value, key) => {
 		const newDocRef = firestoreAdmin.firestore.collection(PAYMENT_FORECAST_FIRESTORE_PATH).doc();
@@ -65,18 +60,17 @@ async function fillNextSixMonths(
 			month: key,
 			numberOfRecipients: value,
 			amount_usd: value * monthlyAllowanceInUSD,
-			amount_sle: value * monthlyAllowanceInSLE,
+			amount_sle: value * PAYMENT_AMOUNT_SLE,
 		});
 		++count;
 	});
 	await batch.commit();
 }
 
-export default onCall<PaymentForecastProps, Promise<string>>({ memory: '2GiB', timeoutSeconds: 5 }, async (request) => {
+export default onCall<undefined, Promise<string>>({ memory: '2GiB' }, async (request) => {
 	const firestoreAdmin = new FirestoreAdmin();
 	try {
 		await firestoreAdmin.assertGlobalAdmin(request.auth?.token?.email);
-
 		const nextSixMonthsList = prepareNextSixMonths();
 		const recipientsSnapshot = await firestoreAdmin
 			.collection(RECIPIENT_FIRESTORE_PATH)
@@ -86,17 +80,16 @@ export default onCall<PaymentForecastProps, Promise<string>>({ memory: '2GiB', t
 			const recipient = doc.data();
 			if (recipient.si_start_date && recipient.progr_status === RecipientProgramStatus.Active) {
 				addRecipient(
-					firestoreAdmin,
 					nextSixMonthsList,
 					calcPaymentsLeft(
 						calcFinalPaymentDate(DateTime.fromSeconds(recipient.si_start_date._seconds, { zone: 'utc' })),
 					),
 				);
 			} else if (recipient.progr_status === RecipientProgramStatus.Designated) {
-				addRecipient(firestoreAdmin, nextSixMonthsList, 6);
+				addRecipient(nextSixMonthsList, 6);
 			}
 		});
-		console.log(nextSixMonthsList);
+
 		await deleteAllDocuments(firestoreAdmin);
 		await fillNextSixMonths(firestoreAdmin, nextSixMonthsList);
 
