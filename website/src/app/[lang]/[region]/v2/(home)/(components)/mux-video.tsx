@@ -24,6 +24,9 @@ const MuxVideoComponent = () => {
 				setBackgroundColor('bg-background');
 			}
 		}
+		return () => {
+			setBackgroundColor('bg-background');
+		};
 	}, [entry]);
 
 	useEffect(() => {
