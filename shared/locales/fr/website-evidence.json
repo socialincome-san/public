@@ -1,0 +1,664 @@
+{
+	"metadata": {
+		"title": "Références | Social Income",
+		"description": "Les preuves engendrent la confiance. La confiance engendre la solidarité.",
+		"og-image": "/assets/metadata/og/evidence-de.jpg",
+		"twitter-image": "/assets/metadata/twitter/evidence-de.jpg"
+	},
+	"take-action": "Passer à l’action",
+	"section-1": {
+		"title": [
+			{ "text": "Tu veux comprendre comment et pourquoi Social Income fonctionne?" },
+			{ "text": "Tu es au bon endroit.", "color": "secondary" }
+		],
+		"subtitle": "Nous présentons ici l'état actuel des recherches et la mesure de l'impact de Social Income dans le monde réel."
+	},
+	"section-2": {
+		"topic": "Réduction de la pauvreté",
+		"title": [{ "text": "Comment Social Income réduit-il  " }, { "text": "la pauvreté?", "color": "secondary" }],
+		"evidence": "Il est prouvé que les programmes de transfert monétaire direct comme Social Income améliorent considérablement la santé financière des bénéficiaires, et cela principalement de deux manières.",
+		"cards": [
+			{
+				"title": "L'autonomisation financière",
+				"description": "Les transferts monétaires directs sont le moyen le plus rapide et le plus efficace de réduire le niveau de pauvreté des bénéficiaires.",
+				"paragraphs": [
+					[
+						{ "text": "Une revue de plus de 200 études (" },
+						{
+							"text": "Overseas Development Institute 2016",
+							"href": "https://drive.google.com/file/d/18SN24gxbdUxLnx1m35T5I5NqXWh5Fj7q/view?usp=sharing"
+						},
+						{
+							"text": ") montre que les transferts monétaires directs augmentent les dépenses des bénéficiaires (en particulier pour l'alimentation) et leur permettent de payer plus facilement les services de santé (voir "
+						},
+						{
+							"text": "Kabeer et al 2012",
+							"href": "https://drive.google.com/file/d/1Q-0qm8j9vePagynE0HDiLT50h8s605i4/view?usp=sharing"
+						},
+						{ "text": ") pour une vue d'ensemble, ainsi que " },
+						{
+							"text": "Attanasio et al 2006",
+							"href": "https://drive.google.com/file/d/1Fbszsu2T2mcoMV2GAuHdtavh-il7bqDF/view?usp=sharing"
+						},
+						{ "text": ", " },
+						{
+							"text": "Gitter et Caldes 2010",
+							"href": "https://drive.google.com/file/d/1Wcf0QM1NSGyLQSrFQU1H89JpBoWgY0qz/view?usp=sharing"
+						},
+						{
+							"text": ", et "
+						},
+						{
+							"text": "Gertler et al 2012",
+							"href": "https://drive.google.com/file/d/1UtLpJcX8AJyitZhWW_KFSEuC7sCJhyXs/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "En outre, les études s'accordent à dire que les transferts monétaires directs augmentent la présence à l’école et accroissent l'épargne ainsi que la possession de bétail des bénéficiaires (voir des conclusions similaires dans "
+						},
+						{
+							"text": "Hagen-Zanker et al 2011",
+							"href": "https://drive.google.com/file/d/176YeOEO49o55eQPuPVBFQ-uTRbBtfuiY/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Sodokin 2021",
+							"href": "https://drive.google.com/file/d/1vgUmvRXWOMmEznjN4KQfNinCc8P8uBHG/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "World Bank Group 2016",
+							"href": "https://drive.google.com/file/d/1uEWLlGNcu0K92FXMAyTg1HFqI4N10AaC/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer et Shapiro 2016",
+							"href": "https://drive.google.com/file/d/1Soek9GEAJJ7sLj7TxnKumZwcA_ICAGpJ/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Enfin, les transferts monétaires directs ont été particulièrement efficaces dans les situations de crise inattendue (par exemple pendant la pandémie de Covid-19 ou lors de catastrophes climatiques, voir "
+						},
+						{
+							"text": "Pople et al 2021",
+							"href": "https://drive.google.com/file/d/1xa3wWkn9aZKAAqwxoQeL2HkePyvGsN8Y/view?usp=sharing"
+						},
+						{
+							"text": "). Ils ont également été particulièrement efficaces pour aider les jeunes à sécuriser leur avenir financier (voir "
+						},
+						{
+							"text": "Owusu-Addo et al 2018",
+							"href": "https://drive.google.com/file/d/1_uThMOcVf2vYCSvQJRMCVo94wZk-YL1n/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "La stimulation des marchés locaux",
+				"description": "Les transferts monétaires directs créent des bénéficiaires directs mais aussi indirects en stimulant les marchés locaux.",
+				"paragraphs": [
+					[
+						{
+							"text": "Plusieurs études montrent que la circulation de l'argent des bénéficiaires profite aux agriculteurs et commerçants locaux, qui (ré)investissent ce revenu supplémentaire dans des biens productifs. Les investissements de ces bénéficiaires indirects augmentent et diversifient leurs niveaux de production, améliorant ainsi de manière significative le coût et la qualité des biens qu'ils fournissent à leurs communautés (voir "
+						},
+						{
+							"text": "Creti 2010",
+							"href": "https://drive.google.com/file/d/1-S_tRJZYlXLI-oIi3hdLmsyyuY-N4bja/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Holmes et Bhuvanendra 2013",
+							"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Handa et al 2018",
+							"href": "https://drive.google.com/file/d/1c_p1BH09NmgKT8SNCRly9Mykbp9ahaXW/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Les transferts monétaires directs constituent donc un outil de lutte contre la pauvreté plus large et plus efficace que le simple don de biens, car l'argent en jeu stimule des communautés entières (voir "
+						},
+						{
+							"text": "Soares et al 2010",
+							"href": "https://drive.google.com/file/d/1KTsAwaWPH0NaiD2SLVQmJZHn2bxeWFHz/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Covarrubias 2012",
+							"href": "https://drive.google.com/file/d/1OEFeYCgxnbbrFVNFoYYQsSrnmVxZdz9v/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Gertler et al 2012",
+							"href": "https://drive.google.com/file/d/1UtLpJcX8AJyitZhWW_KFSEuC7sCJhyXs/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer et Shapiro 2016",
+							"href": "https://drive.google.com/file/d/1Soek9GEAJJ7sLj7TxnKumZwcA_ICAGpJ/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Tirivayi et al 2013",
+							"href": "https://drive.google.com/file/d/1SXVjb7hU7I3JOrE39tE6LZG4uicNB_Ro/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Daidone et al 2019",
+							"href": "https://drive.google.com/file/d/1bsI8iyC54V0Yx2nETsRlnPKkO1ntASrv/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Schwab 2019",
+							"href": "https://drive.google.com/file/d/19mK5JaO5UsiTUXzHx1Pzkm4jxqSn7_Py/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			}
+		]
+	},
+	"section-3": {
+		"topic": "L'autonomisation",
+		"title": [
+			{ "text": "Comment Social Income renforce-t-il l'" },
+			{ "text": "autonomie des personnes?", "color": "secondary" },
+			{ "text": "" }
+		],
+		"evidence": "Les études sur les programmes de transfert monétaire direct tels que Social Income ont mesuré toute une série d'effets positifs sur la vie des bénéficiaires.",
+		"cards": [
+			{
+				"title": "L'autodétermination",
+				"description": "Les transferts monétaires directs laissent les bénéficiaires décider eux-mêmes de la meilleure façon d'utiliser l'argent qu'ils reçoivent.",
+				"paragraphs": [
+					[
+						{
+							"text": "Les transferts monétaires directs servent de socle pour une prise de décision responsable et une amélioration du bien-être. De nombreuses études montrent que l'autonomie octroyée aux bénéficiaires quant à l'argent qu'ils reçoivent contribue à renforcer leur confiance en eux et leur sentiment de maîtriser leur vie (voir "
+						},
+						{
+							"text": "Molyneux et al 2016",
+							"href": "https://drive.google.com/file/d/1HdrtpZj91cUcQQbzfdaiUKTJzDNk7P1j/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "McGuire et al 2020",
+							"href": "https://drive.google.com/file/d/1O5Tg0vsc2E_6HbP7a3YW9yKc70f9Twz4/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "C’est à la fois valorisant et motivant, car cela leur fournit les moyens de réaliser des choses dont ils ont toujours rêvé mais qu’ils n'auraient jamais cru possibles (voir "
+						},
+						{
+							"text": "Garcia et al 2016",
+							"href": "https://drive.google.com/file/d/1iJDEjcqEN-OD0unY7f1Q-JZMgjT6krxz/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Une meilleure éducation",
+				"description": "Les transferts monétaires directs aident les bénéficiaires à atteindre des niveaux d'éducation plus élevés et à disposer de meilleures perspectives d'emploi.",
+				"paragraphs": [
+					[
+						{
+							"text": "De nombreuses études, y compris un document récent de la Banque mondiale ("
+						},
+						{
+							"text": "Behrman et al 2019",
+							"href": "https://drive.google.com/file/d/1q5NUyaSbti33yjoz4fivNopJ8q3yJqxd/view?usp=sharing"
+						},
+						{
+							"text": "), ont démontré que les bénéficiaires de transferts monétaires directs sont plus susceptibles de fréquenter de meilleures écoles et d'obtenir de meilleurs résultats que ceux qui ne reçoivent pas de telles prestations (voir "
+						},
+						{
+							"text": "Schultz 2001",
+							"href": "https://drive.google.com/file/d/1uOHu9JOPz6ffVB6EIAuXKBHQKd1-eO2V/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Attanasio et al 2012",
+							"href": "https://drive.google.com/file/d/1Fbszsu2T2mcoMV2GAuHdtavh-il7bqDF/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Covarrubias 2012",
+							"href": "https://drive.google.com/file/d/1OEFeYCgxnbbrFVNFoYYQsSrnmVxZdz9v/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Garcia et al 2016",
+							"href": "https://drive.google.com/file/d/1iJDEjcqEN-OD0unY7f1Q-JZMgjT6krxz/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "En outre, une meilleure éducation et une plus grande sécurité financière permettent aux bénéficiaires de refuser plus facilement les pratiques d'exploitation au travail. Enfin, le fait de faire un travail qui leur plaît augmente la motivation et la réussite des bénéficiaires (voir "
+						},
+						{
+							"text": "Sutrisno et Sunarsi 2019",
+							"href": "https://drive.google.com/file/d/1b_IV9XvT12jNAP2QhLm0H-95HcrnScBY/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Une protection contre les chocs imprévus",
+				"description": "Les transferts monétaires directs permettent aux bénéficiaires de mieux faire face à des chocs imprévus tels que des événements climatiques extrêmes ou des crises de santé publique.",
+				"paragraphs": [
+					[
+						{
+							"text": "Des études menées par la Banque mondiale ont montré que les transferts monétaires directs renforcent la résilience des gens face aux effets négatifs des chocs externes en réduisant les risques liés aux revenus et en facilitant l'épargne. Les transferts monétaires directs contribuent également à aider les enfants à rester en classe en temps de crise, qui entraînent généralement une baisse de la fréquentation scolaire (voir "
+						},
+						{
+							"text": "Finan et al 2004",
+							"href": "https://drive.google.com/file/d/1qlAzeM-R_xH4zT92HxT1M0eq3O8MShDt/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Premand et Stoeffler 2020",
+							"href": "https://drive.google.com/file/d/1_wjxwljgd65Y-ptxahaWxcsdJwC5SBHH/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Pendant la pandémie de Covid-19, les chercheurs ont également constaté que les transferts monétaires directs réduisaient la pauvreté et facilitaient la recherche d'un emploi pour les chômeurs. Ceux qui recevaient des paiements pouvaient être plus actifs et s'engager dans la société, ce qui, en fin de compte, favorisait la relance du marché du travail (voir "
+						},
+						{
+							"text": "Köhler et Bhorat 2021",
+							"href": "https://drive.google.com/file/d/1qwtorYiGsHG3n4i6cxFIbU8H4DHNmUAR/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "En outre, une étude récente suggère que les transferts monétaires directs peuvent même réduire la déforestation, puisque les bénéficiaires n'ont pas besoin de gagner de l'argent en travaillant au défrichage des forêts ("
+						},
+						{
+							"text": "Ferraro et Simorangkir 2020",
+							"href": "https://drive.google.com/file/d/1PTjFxP39mtjSutkup-wXBL_JGUbqVmq_/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "L'autonomisation des femmes",
+				"description": "Les transferts monétaires directs permettent aux femmes de prendre des décisions plus librement. Elles deviennent plus résilientes, plus autonomes et plus engagées dans la société.",
+				"paragraphs": [
+					[
+						{
+							"text": "Les données suggèrent que, surtout dans une perspective à long terme, les transferts monétaires directs aident les femmes à prendre des décisions plus libres dans des contextes où les structures sociales ou familiales limiteraient autrement leur indépendance financière (voir "
+						},
+						{
+							"text": "Plagerson et Ulriksen 2015",
+							"href": "https://drive.google.com/file/d/1IgycTY0sID-jxZ7Sw3-UYqQZa3ORzvuW/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Iqbal et al 2021",
+							"href": "https://drive.google.com/file/d/1-7WWiwGYDXRYddq3B2IGSnTvkCnmxzje/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Un grand nombre de recherches suggèrent en outre que les programmes de transferts monétaires contribuent à réduire la violence physique et émotionnelle à l'encontre des femmes dans la sphère domestique (voir "
+						},
+						{
+							"text": "Perova et Vakis 2013",
+							"href": "https://drive.google.com/file/d/1fEM834PcOLC5qvOLvw1-mnhKgWHA4wPX/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Buller et al 2018",
+							"href": "https://drive.google.com/file/d/14Ga66Oj-8L7JFxAANlptZJCkzu1uOs4Y/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer et al 2019",
+							"href": "https://drive.google.com/file/d/1J3Np833YeKa0GyQQLXAWR8WP3RZt6YQv/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Heath et al 2020",
+							"href": "https://drive.google.com/file/d/1y-KSIJZaDpLGYcIAVmxWOxeqdDMa6y02/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "L'autonomisation des enfants",
+				"description": "Les transferts monétaires directs renforcent l'autonomie des enfants en réduisant le travail infantile et en augmentant le revenu intergénérationnel.",
+				"paragraphs": [
+					[
+						{
+							"text": "Il est prouvé que les transferts monétaires ont également un effet positif sur les familles. Ils augmentent les chances des enfants des bénéficiaires de rester en bonne santé (en particulier les filles), de recevoir une éducation et de bénéficier d'une transition moins risquée vers l'âge adulte, ce qui, comme l'ont démontré plusieurs études, se traduit par un revenu plus élevé à l'âge adulte ("
+						},
+						{
+							"text": "Save the children report 2009",
+							"href": "https://drive.google.com/file/d/1dpDPU_O2gCfssbJ3pmIItu3TnT908Tn-/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Covarrubias 2012",
+							"href": "https://drive.google.com/file/d/1OEFeYCgxnbbrFVNFoYYQsSrnmVxZdz9v/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Akresh et al 2016",
+							"href": "https://drive.google.com/file/d/1Iwkads4Sr3-MiBi3_hzHnF1BYaxYDr8J/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Boo et Creamer 2019",
+							"href": "https://drive.google.com/file/d/1lzLamggvPgL_7xF2EIlxm7qShAFdVFJU/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "La réduction de la criminalité",
+				"description": "Les transferts monétaires directs réduisent le risque de recourir à la criminalité pour se procurer des biens essentiels.",
+				"paragraphs": [
+					[
+						{
+							"text": "Des recherches sur le programme Bolsa Familia au Brésil, par exemple, ont révélé qu'une expansion des transferts monétaires aux jeunes a entraîné une réduction de 6,5 % de la criminalité dans les quartiers dotés d'écoles, augmenté le taux de scolarisation et diminué l’inquiétude des jeunes quant au paiement des biens essentiels. À long terme, cela a également contribué à aider les bénéficiaires à vivre leur vie plus librement et avec moins de crainte (voir "
+						},
+						{
+							"text": "Chioda et al 2016",
+							"href": "https://drive.google.com/file/d/1zrmIYftuzNZe-Lx-0OFs7IEn2E_0R0Jq/view?usp=sharing"
+						},
+						{
+							"text": ", voir également"
+						},
+						{
+							"text": "Machado et al 2018",
+							"href": "https://drive.google.com/file/d/15Jz2IAb5_8EL45Q24SlsqQaOXuzYonfD/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Breckin 2019",
+							"href": "https://drive.google.com/file/d/1-ESV8byS_qgd2ye4ZeZsAq7svnb0_RF-/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "La promotion de la créativité et de l'innovation",
+				"description": "Les transferts monétaires directs stimulent les arts et la culture en libérant les artistes et les jeunes entrepreneurs de la préoccupation de leurs besoins fondamentaux.",
+				"paragraphs": [
+					[
+						{
+							"text": "Les transferts monétaires directs permettent aux entrepreneurs et aux artistes de se consacrer à leur métier sans avoir à se soucier de la nourriture ou des besoins élémentaires. En fait, les tout premiers bénéficiaires de Social Income étaient un petit cercle d'artistes à Freetown, en Sierra Leone. Le groupe a expliqué que Social Income les avait surtout aidés à être plus créatifs dans leur pratique artistique (voir "
+						},
+						{
+							"text": "Thomas 2016",
+							"href": "https://drive.google.com/file/d/1tJOjneX3fZau_ZYm3DnCtaIGy9V6L1m2/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			}
+		]
+	},
+	"section-4": {
+		"topic": "Le bien-être",
+		"title": [
+			{ "text": "Comment Social Income contribue-t-il à " },
+			{ "text": "améliorer le bien-être?", "color": "secondary" },
+			{ "text": "" }
+		],
+		"evidence": "La recherche montre que les programmes de transfert monétaire direct, tels que Social Income, contribuent au bien-être des bénéficiaires, et cela principalement de trois manières.",
+		"cards": [
+			{
+				"title": "L'amélioration et la préservation de la santé",
+				"description": "Les transferts monétaires directs permettent aux bénéficiaires d'acheter des médicaments et des produits d'hygiène qu'ils ne pourraient pas se procurer autrement.",
+				"paragraphs": [
+					[
+						{
+							"text": "Une étude a montré qu'un programme de transfert monétaire direct a entraîné une amélioration significative de la santé des participants à court terme (18 mois) et encore plus à long terme (7 à 10 ans) (voir "
+						},
+						{
+							"text": "Banerjee et al 2021",
+							"href": "https://drive.google.com/file/d/1d8f-DixZ1YOE7nsbFtlBG7dETXFbnUAd/view?usp=sharing"
+						},
+						{
+							"text": "). Une autre étude ("
+						},
+						{
+							"text": "Baird et al 2016",
+							"href": "https://drive.google.com/file/d/1d8f-DixZ1YOE7nsbFtlBG7dETXFbnUAd/view?usp=sharing"
+						},
+						{
+							"text": ") a également montré que les programmes de transfert monétaire réduisaient la prévalence du VIH et le taux de grossesse chez les adolescentes (voir également "
+						},
+						{
+							"text": "Nery et al 2017",
+							"href": "https://drive.google.com/file/d/1wjoTvq_XHoMg5q1gelpCufm9qWBWrKUx/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Okeke et Abubakar 2020",
+							"href": "https://drive.google.com/file/d/1QYAF2ocBzQKjewye69WYy2MDLN80ClWW/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Le bien-être émotionnel",
+				"description": "Les transferts monétaires directs peuvent briser le cercle vicieux des problèmes de santé mentale provoqués par la pauvreté.",
+				"paragraphs": [
+					[
+						{
+							"text": "De nombreuses études ont montré que la pauvreté entraîne un stress qui, avec le temps, peut provoquer des maladies mentales graves (voir "
+						},
+						{
+							"text": "Hammen 2005",
+							"href": "https://drive.google.com/file/d/1-CIQdKuc96fO9rIjU-pPYhjdTxssuHEi/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer et Fehr 2014",
+							"href": "https://drive.google.com/file/d/1eVKh2KA_xqAckBaYMg6Rp9ws9OeiEWo4/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer et Shapiro 2018",
+							"href": "https://drive.google.com/file/d/11NkzvnwyGKi3EEJRx3pGHoOwsEftmXUJ/view?usp=sharing"
+						},
+						{
+							"text": "). Dans le même temps, une mauvaise santé mentale peut affecter la participation au marché du travail et la productivité, et donc exacerber le degré de pauvreté d'une personne ("
+						},
+						{
+							"text": "Biasi et al 2019",
+							"href": "https://drive.google.com/file/d/1fcYgy2H66VNpIRpqPPKynB5aIpDKgyEX/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Des chercheurs de l'université de Princeton ont démontré que les transferts monétaires directs peuvent briser ce cercle vicieux : ils contribuent à atténuer le stress et la dépression qui accompagnent souvent la vie dans la pauvreté ("
+						},
+						{
+							"text": "Haushofer et al 2020",
+							"href": "https://drive.google.com/file/d/1efsdQk4tY4_g7bbpVZcMvEbwIDOv7IjP/view?usp=sharing"
+						},
+						{
+							"text": ", voir également "
+						},
+						{
+							"text": "Samuels et Stavropoulou 2016",
+							"href": "https://drive.google.com/file/d/1ImB0ADXWXKyR31B-AYOMiCyKRCU1Bht1/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Kilburn et al 2016",
+							"href": "https://drive.google.com/file/d/1mtUBaD6vMC4_n5pR-ygwZHI3N1B52eg8/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "La sécurité alimentaire",
+				"description": "Les transferts monétaires directs améliorent considérablement le régime alimentaire et la nutrition des bénéficiaires.",
+				"paragraphs": [
+					[
+						{
+							"text": "De nombreuses études ont montré que les transferts monétaires directs ont deux effets importants sur la sécurité alimentaire des bénéficiaires. Premièrement, ils améliorent l'accès à des aliments de meilleure qualité. Deuxièmement, ils contribuent indirectement à améliorer les connaissances des gens sur une alimentation saine, sur les méthodes de cuisson et sur une manipulation sûre des aliments. Ces deux aspects combinés améliorent de manière significative le régime alimentaire et la nutrition des bénéficiaires (voir "
+						},
+						{
+							"text": "Gitter et Caldes 2010",
+							"href": "https://drive.google.com/file/d/1Wcf0QM1NSGyLQSrFQU1H89JpBoWgY0qz/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Miller et al 2011",
+							"href": "https://drive.google.com/file/d/1QPRopxSVxciuC3waoExX5rzEzv5ArTkx/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Burchi et al 2018",
+							"href": "https://drive.google.com/file/d/1P-7ajyyh-7p5l5QtrP6R0jC2nOfQxkWR/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Hidrobo et al 2018",
+							"href": "https://drive.google.com/file/d/1ckppauMz4yPe_XF_NMW-qOo2Cv77MNGp/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer et al 2020",
+							"href": "https://drive.google.com/file/d/1efsdQk4tY4_g7bbpVZcMvEbwIDOv7IjP/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			}
+		]
+	}
+}

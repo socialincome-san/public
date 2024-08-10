@@ -180,8 +180,8 @@ export class StripeEventHandler {
 	 * This is mainly for failed payments where we didn't create a user through the website directly
 	 */
 	constructUser = (customer: Stripe.Customer): User => {
-		if (!customer.id || !customer.email || !customer.name) {
-			throw new Error(`Could not create user for Stripe customer: ${customer.id}, unknown id, email or name`);
+		if (!customer.id || !customer.email) {
+			throw new Error(`Could not create user for Stripe customer: ${customer.id}, unknown id, email`);
 		}
 		const { firstname, lastname } = splitName(customer.name);
 		return {

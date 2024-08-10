@@ -1,11 +1,10 @@
 import { DateTime } from 'luxon';
 import { toFirebaseAdminTimestamp } from '../../../../../../shared/src/firebase/admin/utils';
 import {
-	PAYMENTS_COUNT,
-	PAYMENT_AMOUNT,
-	PAYMENT_CURRENCY,
-	PAYMENT_FIRESTORE_PATH,
 	Payment,
+	PAYMENT_AMOUNT_SLE,
+	PAYMENT_FIRESTORE_PATH,
+	PAYMENTS_COUNT,
 	PaymentStatus,
 } from '../../../../../../shared/src/types/payment';
 import { RECIPIENT_FIRESTORE_PATH, RecipientProgramStatus } from '../../../../../../shared/src/types/recipient';
@@ -17,7 +16,7 @@ export class UpdateDatabaseEntriesTask extends PaymentTask {
 		let [paymentsPaid, paymentsCreated, setToActiveCount, setToFormerCount] = [0, 0, 0, 0];
 		const nextMonthPaymentDate = paymentDate.plus({ months: 1 });
 		const exchangeRates = await new ExchangeRateImporter().getExchangeRates(paymentDate);
-		const amountChf = Math.round((PAYMENT_AMOUNT / exchangeRates[PAYMENT_CURRENCY]) * 100) / 100;
+		const amountChf = Math.round((PAYMENT_AMOUNT_SLE / exchangeRates!['SLE']!) * 100) / 100;
 		const recipients = await this.getRecipients();
 
 		await Promise.all(
@@ -31,9 +30,9 @@ export class UpdateDatabaseEntriesTask extends PaymentTask {
 				if (!currentMonthPaymentDoc.exists || currentMonthPaymentDoc.get('status') === PaymentStatus.Created) {
 					// Payments are set to paid if they have status set to created or if the document doesn't exist yet
 					await currentMonthPaymentRef.set({
-						amount: PAYMENT_AMOUNT,
+						amount: PAYMENT_AMOUNT_SLE,
 						amount_chf: amountChf,
-						currency: PAYMENT_CURRENCY,
+						currency: 'SLE',
 						payment_at: toFirebaseAdminTimestamp(paymentDate),
 						status: PaymentStatus.Paid,
 						phone_number: recipient.get('mobile_money_phone').phone,
@@ -61,8 +60,8 @@ export class UpdateDatabaseEntriesTask extends PaymentTask {
 							nextMonthPaymentDate.toFormat('yyyy-MM'),
 						)
 						.set({
-							amount: PAYMENT_AMOUNT,
-							currency: PAYMENT_CURRENCY,
+							amount: PAYMENT_AMOUNT_SLE,
+							currency: 'SLE',
 							payment_at: toFirebaseAdminTimestamp(nextMonthPaymentDate),
 							status: PaymentStatus.Created,
 						});

@@ -1,7 +1,7 @@
 import { firestoreAdmin } from '@/firebase-admin';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { BanknotesIcon, BuildingLibraryIcon, DevicePhoneMobileIcon } from '@heroicons/react/24/solid';
-import { PAYMENT_AMOUNT } from '@socialincome/shared/src/types/payment';
+import { PAYMENT_AMOUNT_SLE } from '@socialincome/shared/src/types/payment';
 import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRates';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Typography } from '@socialincome/ui';
@@ -22,7 +22,6 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 				<Typography weight="bold" size="3xl">
 					{translator.t('section-4.title')}
 				</Typography>
-				<Typography size="lg">{translator.t('section-4.subtitle')}</Typography>
 			</div>
 			<InfoCard
 				sectionTitle={translator.t('section-4.expenses')}
@@ -210,7 +209,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 						<Typography>
 							{translator.t('section-4.covers-payments-1', {
 								context: {
-									recipientsCount: (reservesTotal / (PAYMENT_AMOUNT / exchangeRateSLE) / 36).toFixed(0),
+									recipientsCount: (reservesTotal / (PAYMENT_AMOUNT_SLE / exchangeRateSLE) / 36).toFixed(0),
 									monthsCount: 36,
 								},
 							})}
@@ -218,7 +217,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 						<Typography>
 							{translator.t('section-4.covers-payments-2', {
 								context: {
-									recipientsCount: (reservesTotal / (PAYMENT_AMOUNT / exchangeRateSLE)).toFixed(0),
+									recipientsCount: (reservesTotal / (PAYMENT_AMOUNT_SLE / exchangeRateSLE)).toFixed(0),
 								},
 							})}
 						</Typography>

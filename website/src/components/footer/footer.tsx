@@ -33,7 +33,7 @@ export default async function Footer({ lang, region }: DefaultParams) {
 		namespaces: ['common', 'website-common', 'website-me'],
 	});
 
-	const supportedTranslatedLanguages = (['de', 'en'] as WebsiteLanguage[]).map((lang) => {
+	const supportedTranslatedLanguages = (['de', 'en', 'it', 'fr'] as WebsiteLanguage[]).map((lang) => {
 		return { translation: translator.t(`languages.${lang}`), code: lang };
 	});
 	const supportedTranslatedCountries = websiteRegions.map((region) => {

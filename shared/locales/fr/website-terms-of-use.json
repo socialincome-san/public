@@ -1,0 +1,39 @@
+{
+	"metadata": {
+		"title": "Conditions d'utilisation | Social Income",
+		"description": "Ici sont expliquées les règles avec lesquelles vous acceptez de vous conformer lorsque vous utilisez nos services."
+	},
+	"title": "Conditions d'utilisation",
+	"comment": "Les présentes conditions d'utilisation sont une traduction de l'anglais. En cas de divergence entre la présente traduction et les <a href=\"/legal/site-use\">Terms of Use</a> en anglais, ces dernières prévalent.",
+	"general": {
+		"title": "Généralités",
+		"section-1": "Le site socialincome.org (ci-après \"site\") est exploité par Social Income, une association à but non lucratif basée à Zurich, Suisse (ci-après \"Social Income\"). En accédant au site et en l'utilisant, vous déclarez avoir lu, compris et accepté les présentes conditions d'utilisation et toutes les autres informations légales disponibles sur ce site, qui régissent l'utilisation du site (ci-après dénommées collectivement \"conditions d'utilisation\").",
+		"section-2": "Si vous n'êtes pas d'accord avec les conditions d'utilisation, il vous est interdit d'accéder à nos services ou de les utiliser. Si vous n'acceptez pas les conditions d'utilisation, vous êtes tenu de cesser immédiatement l'utilisation du site et de quitter le site.",
+		"section-3": "Nous pouvons apporter des modifications aux conditions d'utilisation sans préavis. Si nous apportons des modifications importantes qui affectent négativement vos droits, nous vous en informerons avant que les modifications ne prennent effet. Les modifications prennent effet dès la publication des conditions d'utilisation modifiées sur le site. En continuant à utiliser Social Income après une modification des conditions d'utilisation, vous acceptez les nouvelles conditions."
+	},
+	"links": {
+		"title": "Liens vers des sites tiers",
+		"section-1": "Le site peut contenir des liens vers des sites exploités par des tiers. Les sites de ces tiers ne sont pas sous le contrôle de Social Income et sont soumis aux conditions des tiers respectifs. Social Income ne donne aucune garantie et n'assume aucune responsabilité en relation avec ces sites tiers."
+	},
+	"data": {
+		"title": "Vos données personnelles et l'utilisation du site",
+		"section-1": "La transmission, la collecte et le traitement des données personnelles via le site sont soumis à notre <a href='/legal/privacy'>politique de confidentialité</a>.",
+		"section-2": "Si vous décidez de faire une contribution à Social Income, nous vous demanderons d'accepter les <a href='/legal/donations'>conditions de participation</a>."
+	},
+	"liability": {
+		"title": "Exclusion de garantie",
+		"section-1": "Nous faisons de notre mieux pour maintenir le contenu du site à jour, complet et exact. Toutefois, les informations fournies sur le site peuvent changer rapidement, et nous ne pouvons donc pas garantir l'actualité, l'exactitude et l'exhaustivité de manière infaillible. Les contenus du site ne contiennent aucune déclaration ni garantie.",
+		"section-2": "Vous reconnaissez que Social Income est offert sans aucune garantie. Toute garantie de qualité marchande, d'adéquation à un usage particulier ou de non-violation des droits des tiers et toute autre garantie sont exclues dans la mesure permise par la loi.",
+		"section-3": "Les exclusions de garantie sous cette clause s'appliquent également à nos filiales, entreprises affiliées et aux prestataires de services tiers."
+	},
+	"warranty": {
+		"title": "Clause de non-responsabilité",
+		"section-1": "Vous reconnaissez que l'accès à ce site et son utilisation, la transmission de données vers et depuis ce site, l'accès aux sites tiers via des liens disponibles sur ce site ainsi que toutes les actions effectuées sur la base des contenus de ce site se font à vos propres risques. Social Income décline, dans la mesure permise par la loi, toute responsabilité contractuelle et extracontractuelle pour les dommages directs et indirects en résultant.",
+		"section-2": "Aux fins de cette clause, \"Social Income\" est défini de manière à inclure nos filiales, entreprises affiliées, nos dirigeants, directeurs, employés, agents ainsi que les prestataires de services tiers."
+	},
+	"disagreements": {
+		"title": "Comment nous résolvons les désaccords",
+		"section-1": "Nous vous invitons à nous contacter en cas de problème lié à votre utilisation de Social Income et du site. Vous pouvez adresser vos questions et préoccupations concernant Social Income, vos contributions et nos conditions d'utilisation à tout moment à <a href='mailto:legal@socialincome.org'>legal@socialincome.org</a>. Nous vous répondrons dans un délai de deux jours ouvrables.",
+		"section-2": "Si nous ne trouvons pas de solution et que vous ou nous devons aller en justice, tous les litiges liés à ces conditions d'utilisation seront régis exclusivement par le droit suisse, à l'exclusion des dispositions de conflit de lois. Le lieu de juridiction est Zurich, Suisse."
+	}
+}

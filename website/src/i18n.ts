@@ -4,10 +4,10 @@ import langParser from 'accept-language-parser';
 import { NextRequest } from 'next/server';
 import { Currency } from '../../shared/src/types/currency';
 
-export type WebsiteLanguage = Extract<LanguageCode, 'en' | 'de' | 'it' | 'kri'>;
+export type WebsiteLanguage = Extract<LanguageCode, 'en' | 'de' | 'fr' | 'it' | 'kri'>;
 export const defaultLanguage: WebsiteLanguage = 'en';
-export const mainWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'it'];
-export const allWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'it', 'kri'];
+export const mainWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it'];
+export const allWebsiteLanguages: WebsiteLanguage[] = ['en', 'de', 'fr', 'it', 'kri'];
 
 export type WebsiteRegion = 'int' | 'ch' | 'sl';
 export const defaultRegion: WebsiteRegion = 'int';

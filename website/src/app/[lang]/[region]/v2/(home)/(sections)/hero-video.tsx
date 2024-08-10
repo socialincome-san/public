@@ -11,7 +11,7 @@ export async function HeroVideo({ lang }: DefaultParams) {
 	});
 
 	return (
-		<div className="relative h-[calc(100dvh)] w-full">
+		<div className="relative h-[calc(100svh)] w-full">
 			<MuxVideoComponent />
 			<div className="absolute inset-2">
 				<div className=" flex h-full flex-col justify-around">
