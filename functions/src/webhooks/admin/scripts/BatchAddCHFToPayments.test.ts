@@ -42,7 +42,7 @@ test('BatchAddCHFToPayments', async () => {
 	const exchangeRatesWithoutSLEAndSLL: Map<number, ExchangeRates> = new Map([
 		[
 			1682640000, // 2023-04-28 00:00:00
-			{ XYZ: 25000 },
+			{ BTC: 25000 },
 		],
 	]);
 	expect(PaymentsManager.calcAmountChf(exchangeRatesWithoutSLEAndSLL, paymentSLE)).toBe(null);
