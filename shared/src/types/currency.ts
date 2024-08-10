@@ -1,7 +1,7 @@
 import { CountryCode } from './country';
 
 // ISO 4217 currency codes
-const CURRENCIES = [
+export const CURRENCIES = [
 	'AED', // United Arab Emirates
 	'AFN', // Afghanistan
 	'ALL', // Albania
@@ -163,7 +163,7 @@ const CURRENCIES = [
 	'ZAR', // South Africa
 	'ZMW', // Zambia
 	'ZWL', // Zimbabwe
-];
+] as const;
 export type Currency = (typeof CURRENCIES)[number];
 
 export const FALLBACK_CURRENCY: Currency = 'USD';
