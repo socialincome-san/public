@@ -11,23 +11,20 @@ export async function ExplainerVideo({ lang, region }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer className="my-24 py-4">
-			<div className="align-center flex flex-col justify-center text-center">
-				<div className="mb-28 w-1/2 self-center">
-					{translator.t<{ text: string; color?: FontColor }[]>('section-4.title-1').map((title, index) => (
-						<Typography as="span" size="3xl" key={index} color={title.color}>
-							{title.text}
-							{index ? '' : <br />}
-						</Typography>
-					))}
-				</div>
-				<div className="aspect-video w-96 self-center overflow-hidden rounded-lg">
-					<VimeoVideo videoId={Number(translator.t('id.video-02'))} />
-				</div>
-				<Typography color="accent" className="mt-4">
-					{translator.t('section-4.cta')}
-				</Typography>
+		<BaseContainer className="mx-auto flex w-full flex-col py-32 text-center sm:w-3/4 md:w-2/3">
+			<Typography size="3xl" weight="medium">
+				{translator.t<{ text: string; color?: FontColor }[]>('section-4.title-1').map((title, index) => (
+					<Typography as="span" key={title.text} color={title.color}>
+						{title.text}
+					</Typography>
+				))}
+			</Typography>
+			<div className="mx-auto mt-16 aspect-video w-72 md:mt-24 md:w-96">
+				<VimeoVideo videoId={Number(translator.t('id.video-02'))} />
 			</div>
+			<Typography color="accent" className="mt-4">
+				{translator.t('section-4.cta')}
+			</Typography>
 		</BaseContainer>
 	);
 }
