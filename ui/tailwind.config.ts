@@ -20,10 +20,7 @@ module.exports = {
 				input: 'hsl(var(--input) / <alpha-value>)',
 				ring: 'hsl(var(--ring) / <alpha-value>)',
 				background: 'hsl(var(--background) / <alpha-value>)',
-				foreground: {
-					DEFAULT: 'hsl(var(--foreground) / <alpha-value>)',
-					dark: 'hsl(var(--foreground-dark) / <alpha-value>)',
-				},
+				foreground: 'hsl(var(--foreground) / <alpha-value>)',
 				muted: {
 					DEFAULT: 'hsl(var(--muted) / <alpha-value>)',
 					foreground: 'hsl(var(--muted-foreground) / <alpha-value>)',

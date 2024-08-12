@@ -12,7 +12,7 @@ export async function RecipientSelection({ lang, region }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer backgroundColor="bg-foreground-dark" className="pt-16 text-white">
+		<BaseContainer className="pt-16 text-white">
 			<div className="align-center flex flex-col justify-center text-center">
 				<div className="mb-16 mt-10 w-1/2 self-center">
 					{translator.t<{ text: string; color?: FontColor }[]>('section-9.title-1').map((title, index) => (

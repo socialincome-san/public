@@ -12,7 +12,7 @@ export async function Quotes({ lang, region }: DefaultParams) {
 	const cards = translator.t<CarouselCardProps>('section-8.cards');
 
 	return (
-		<BaseContainer className="my-10">
+		<BaseContainer className="py-16">
 			<QuotesCarousel {...cards} />
 		</BaseContainer>
 	);

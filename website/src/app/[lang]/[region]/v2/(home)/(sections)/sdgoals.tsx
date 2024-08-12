@@ -26,7 +26,7 @@ export async function Sdgoals({ lang, region }: DefaultParams) {
 					<Image className="z-10 my-4 h-9 w-auto max-w-xs" src={sdgLogo} alt="Sustainable Development Goals Logo" />
 				</div>
 				<div className="my-12 flex flex-row items-center justify-center text-center text-white">
-					<div className="bg-foreground-dark z-10 flex h-[33rem] w-1/3 -rotate-6 flex-col self-center pt-24">
+					<div className="z-10 flex h-[33rem] w-1/3 -rotate-6 flex-col self-center pt-24">
 						<Typography size="3xl" className="mb-40 w-2/3 self-center pt-32">
 							{translator.t('section-10.sdg-1-title')}
 						</Typography>

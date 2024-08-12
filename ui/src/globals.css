@@ -83,7 +83,9 @@
 	.theme-v2 {
 		--background: 50 33% 96%;
 		--foreground: 206 99% 31%;
-		--foreground-dark: 212 59% 40%;
+
+		--muted: 222 100% 98%;
+		--muted-foreground: 212 59% 40%;
 	}
 
 	.theme-blue-v2 {
