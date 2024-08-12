@@ -36,7 +36,7 @@ export function IncomeInput() {
 
 	useEffect(() => {
 		form.setValue('currency', currency);
-	}, [currency]);
+	}, [form, currency]);
 
 	const onSubmit = async (values: FormSchema) => {
 		alert(`You entered: ${values.value} ${values.currency}`);

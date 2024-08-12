@@ -23,8 +23,8 @@ export async function Approach({ lang, region }: DefaultParams) {
 				{translator.t('section-7.title-1')}
 			</Typography>
 			<div className="mx-auto flex w-full max-w-7xl flex-wrap gap-2">
-				{cards.map((card, key) => (
-					<Card className="theme-blue-v2 mx-auto min-w-80 max-w-md flex-1 rounded-none border-none">
+				{cards.map((card) => (
+					<Card key={card.title} className="theme-blue-v2 mx-auto min-w-80 max-w-md flex-1 rounded-none border-none">
 						<CardHeader className="mb-1">
 							<Typography size="md" className="opacity-40">
 								{card.category}
@@ -35,9 +35,9 @@ export async function Approach({ lang, region }: DefaultParams) {
 						</CardHeader>
 						<CardContent className="mb-5 ml-4">
 							<ul className="list-disc">
-								{card.points.map((point, key) => {
+								{card.points.map((point) => {
 									return (
-										<li key={key}>
+										<li key={point.text}>
 											<Typography>{point.text}</Typography>
 										</li>
 									);
