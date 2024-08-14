@@ -35,11 +35,12 @@ setup.
 ```
 dart run build_runner watch --delete-conflicting-outputs
 ```
+
 or
+
 ```
 dart run build_runner build --delete-conflicting-outputs
 ```
-
 
 # Testing
 
