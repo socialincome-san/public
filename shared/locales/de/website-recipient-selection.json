@@ -2,13 +2,12 @@
 	"title": "Selektion der Empfänger:innen",
 	"introduction": "Social Income, wie jedes UBI-Projekt, verfügt über begrenzte finanzielle Ressourcen. Die Auswahl, wer Unterstützung erhält und wer nicht, ist schwierig. Wir möchten, dass jeder versteht, wie wir unsere Empfänger:innen auswählen. Seit November 2023 setzen wir eine neue Methode ein, um zufällig Menschen aus armen Gemeinschaften auszuwählen, dank unserer Partnerschaft mit <a href='https://drand.love' target='_blank' class='underline'>drand</a>.",
 	"selection-process": {
-		"title": "Unser Auswahlprozess in 3 Schritten",
 		"step-1": {
 			"title": "Schritt 1: Ermittlung potenzieller Empfänger:innen",
 			"text": "Wir arbeiten mit einer Vielzahl internationaler und lokaler NGOs zusammen, die marginalisierte Gemeinschaften unterstützen und mit Armut auf lokaler Ebene vertraut sind. Nach dem Besuch und der positiven Bewertung dieser NGOs - sowie der Gebiete und Gemeinschaften, die sie unterstützen - können wir sie bitten, uns eine Liste aller potenziellen Empfänger:innen zur Verfügung zu stellen. Potenzielle Empfänger:innen sind Menschen in Armut, mit denen sie direkten Kontakt pflegen. Abhängig von den unterstützten Gemeinschaften können diese Listen 100 bis 1000 Namen enthalten."
 		},
 		"step-2": {
-			"title": "Schritt 2: Zufällige Auswahl und größtmögliche Transparenz",
+			"title": "Schritt 2: Zufällige Auswahl und grösstmögliche Transparenz",
 			"text": "Die Listen, mit denen wir während der Auswahl arbeiten, enthalten minimale Informationen über potenzielle Empfänger:innen. Sie werden anschließend anonymisiert (gehasht) und in unser Open-Source-Repository hochgeladen. Mithilfe einer zufällig generierten und von drand veröffentlichten Nummer wird ein Mechanismus eingerichtet, um eine vorbestimmte Anzahl von Personen aus der Liste auszuwählen. Dieser Prozess kann mathematisch zurückverfolgt und überprüft werden, ohne die Daten der Empfänger:innen zu gefährden.",
 			"card": "\uD83D\uDD0E Bald verfügbar: Jeder kann leicht überprüfen, ob er auf einer der Listen der NGOs steht oder ob er ausgewählt wurde."
 		},
@@ -49,7 +48,7 @@
 		"random-number": "Zufallszahl",
 		"confirm-drand": "Bestätigen auf drand",
 		"confirm-github": "Bestätigen auf Github",
-		"long-list": "{{ total }} Personen auf der langen Liste, {{ count }} ausgewählt",
+		"long-list": "{{ total }} Personen auf der Longlist, {{ count }} ausgewählt",
 		"people": "Personen"
 	}
 }

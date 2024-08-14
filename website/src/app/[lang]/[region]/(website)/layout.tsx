@@ -5,7 +5,7 @@ import { PropsWithChildren } from 'react';
 
 export default function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	return (
-		<div className="mx-auto flex flex-col">
+		<div className="theme-default mx-auto flex flex-col">
 			<Navbar lang={params.lang} region={params.region} />
 			<main className="min-h-screen-navbar flex-1">{children}</main>
 			<Footer lang={params.lang} region={params.region} />

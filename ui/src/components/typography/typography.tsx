@@ -29,7 +29,6 @@ const FONT_WEIGHT_MAP: { [key in FontWeight]: string } = {
 const FONT_COLOR_MAP: { [key in FontColor]: string } = {
 	background: 'text-background',
 	foreground: 'text-foreground',
-	'foreground-dark': 'text-primary-dark',
 	primary: 'text-primary',
 	'primary-foreground': 'text-primary-foreground',
 	secondary: 'text-secondary',

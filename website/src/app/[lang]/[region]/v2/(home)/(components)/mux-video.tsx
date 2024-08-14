@@ -24,6 +24,10 @@ const MuxVideoComponent = () => {
 				setBackgroundColor('bg-background');
 			}
 		}
+		return () => {
+			setBackgroundColor('bg-background');
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [entry]);
 
 	useEffect(() => {

@@ -7,6 +7,7 @@ import anvitaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/anvit
 import aurelieImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/aurelie.jpeg';
 import carlosImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/carlos.jpeg';
 import flavienImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/flavien.jpeg';
+import francoiseImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/francoise.jpg';
 import juanImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/juan.jpeg';
 import juliaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/julia.jpeg';
 import kabeloImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kabelo.jpeg';
@@ -73,11 +74,11 @@ const groups: Group[] = [
 			{ name: 'Mikołaj Demkow', role: 'app-development', image: mikolajImage },
 			{ name: 'Verena Zaiser', role: 'app-development', image: verenaImage },
 			{ name: 'András Heé', role: 'software-development', image: andrasImage },
-			{ name: 'Carlos Badilla', role: 'fundraising', image: carlosImage },
 			{ name: 'Larissa dos Santos Lima', role: 'fundraising', image: larissaImage },
 			{ name: 'Pranav Chatur', role: 'software-development', image: pranavImage },
 			{ name: 'Thomas Brenner', role: 'software-development', image: thomasImage },
 			{ name: 'Matthew Roberts', role: 'communications', image: matthewImage },
+			{ name: 'Françoise Légeret', role: 'translations', image: francoiseImage },
 		],
 	},
 	{
@@ -107,6 +108,7 @@ const groups: Group[] = [
 			{ name: 'Simon Bühler', role: 'communications', image: simonImage },
 			{ name: 'René Stalder', role: 'software-development', image: reneImage },
 			{ name: 'Sarvesh Dwivedi', role: 'software-development', image: sarveshImage },
+			{ name: 'Carlos Badilla', role: 'fundraising', image: carlosImage },
 		],
 	},
 ];

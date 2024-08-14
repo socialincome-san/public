@@ -1,0 +1,17 @@
+{
+	"section-1": {
+		"title": "Coordonnées bancaires",
+		"bankIntroText": "Informations de compte pour les virements bancaires",
+		"bankInfoTextRecurring": "Dons récurrents",
+		"bankOneTime": "Dons uniques",
+		"bankPrompt": "Banque",
+		"bankPostFinance": "Postfinance, Zurich (Suisse)",
+		"bankAccountHolderPrompt": "Titulaire du compte",
+		"bankAccountHolder": "Social Income",
+		"bankIBANPrompt": "IBAN",
+		"bankIBAN1": "CH19 0900 0000 1511 2638 6",
+		"bankIBAN2": "CH57 0900 0000 1548 6088 1",
+		"bankBICPrompt": "BIC",
+		"bankBIC": "POFICHBEXXX"
+	}
+}

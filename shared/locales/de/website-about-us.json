@@ -73,10 +73,7 @@
 			}
 		],
 		"subtitle": "Spenden werden sicher in der stabilsten Währung der Welt aufbewahrt: Schweizer Franken.",
-		"text": "Monatlich überweisen wir Geld auf unsere Konten bei lokalen Banken in den Ländern, in denen wir aktiv sind. Anschliessend zahlen wir das Geld direkt auf die Mobiltelefone von bedürftigen Menschen mittels Mobile Money aus.",
-		"paragraphs": [
-			"Monatlich überweisen wir Geld auf unsere Konten bei lokalen Banken in den Ländern, in denen wir aktiv sind. Anschliessend zahlen wir das Geld direkt auf die Mobiltelefone von bedürftigen Menschen mittels Mobile Money aus."
-		]
+		"text": "Monatlich überweisen wir Geld auf unsere Konten bei lokalen Banken in den Ländern, in denen wir aktiv sind. Anschliessend zahlen wir das Geld direkt auf die Mobiltelefone von bedürftigen Menschen mittels Mobile Money aus."
 	},
 	"team": {
 		"header": "Unser Team",
@@ -100,7 +97,9 @@
 			"software-development": "Softwareentwicklung",
 			"app-development": "App-Entwicklung",
 			"impact-measurement": "Impact Measurement",
-			"fundraising": "Fundraising"
+			"strategy": "Strategie",
+			"fundraising": "Fundraising",
+			"translations": "Übersetzungen"
 		},
 		"groups": {
 			"staff": {
