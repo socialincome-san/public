@@ -305,7 +305,9 @@ class AccountPageState extends State<AccountPage> {
                     final emailRegex = RegExp(
                       r"^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$",
                     );
-                    if (!emailRegex.hasMatch(value)) return localizations.errorEmailInvalid;
+                    if (!emailRegex.hasMatch(value)) {
+                      return localizations.errorEmailInvalid;
+                    }
 
                     return null;
                   },
@@ -444,8 +446,7 @@ class AccountPageState extends State<AccountPage> {
                 ),
 
                 /// RECOMMENDING ORGA
-                if (widget.organization != null)
-                  OrganizationInfo(organization: widget.organization!),
+                if (widget.organization != null) OrganizationInfo(organization: widget.organization!),
                 const SizedBox(height: 24),
                 Text(
                   localizations.support,

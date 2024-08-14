@@ -1,4 +1,5 @@
 {
+    "@@locale": "en",
     "profileUpdateSuccess": "Profile updated successfully",
     "profileUpdateError": "Failed to update profile. Please try again or contact our support",
     "profile": "Profile",
@@ -63,7 +64,6 @@
     "call": "Call",
     "supportTeam": "Support Team",
     "phone": "Phone",
-    "email": "Email",
     "close": "Close",
     "whatsappError": "WhatsApp not installed",
     "paymentsConfirmedCount": "payments received",
