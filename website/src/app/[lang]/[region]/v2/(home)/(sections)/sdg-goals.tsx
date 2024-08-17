@@ -14,7 +14,7 @@ export async function SDGGoals({ lang }: DefaultParams) {
 
 	return (
 		<div
-			className="flex flex-col bg-cover bg-center pb-40 pt-20 md:pb-80"
+			className="flex flex-col bg-cover bg-center pb-64 pt-20 md:pb-80"
 			style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.0)), url(${Town.src})` }}
 		>
 			<Typography
@@ -30,7 +30,7 @@ export async function SDGGoals({ lang }: DefaultParams) {
 				))}
 			</Typography>
 			<Image className="mx-auto mt-8 w-96 max-w-[75%]" src={sdgLogo} alt="Sustainable Development Goals Logo" />
-			<div className="mx-auto flex w-4/5 max-w-xl pt-20 text-center text-xl text-white md:pt-40 md:text-2xl">
+			<div className="mx-auto -mb-6 flex w-4/5 max-w-xl pt-20 text-center text-xl text-white md:pt-40 md:text-2xl">
 				<div className="bg-primary flex h-72 flex-1 -rotate-6 flex-col items-center justify-between py-4 md:h-96">
 					<div />
 					<Typography weight="medium" className="w-3/4">
