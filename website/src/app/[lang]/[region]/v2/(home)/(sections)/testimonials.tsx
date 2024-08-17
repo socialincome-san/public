@@ -12,7 +12,7 @@ type PortraitProps = {
 	image: string | StaticImport;
 };
 
-export async function Testimonials({ lang, region }: DefaultParams) {
+export async function Testimonials({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-home2', 'common'],

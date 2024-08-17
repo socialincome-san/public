@@ -57,8 +57,8 @@ export function IncomeInput() {
 								<Input
 									type="number"
 									className={classNames(
-										'bg-background w-full border-none text-right text-5xl text-white opacity-40 focus-visible:opacity-100 focus-visible:ring-0',
-										'[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none', // hide arrows
+										'bg-background h-full w-full border-none text-right text-5xl text-white opacity-40 focus-visible:opacity-100 focus-visible:ring-0',
+										'[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none', // hide input number arrows
 									)}
 									{...field}
 								/>

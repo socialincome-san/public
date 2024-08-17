@@ -5,7 +5,7 @@ import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
 import MobilesImg from '../(assets)/mobilesImgData.png';
 
-export async function MobileIllustration({ lang, region }: DefaultParams) {
+export async function MobileIllustration({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-home2'],

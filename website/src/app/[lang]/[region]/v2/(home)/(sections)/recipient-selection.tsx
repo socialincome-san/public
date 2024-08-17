@@ -5,7 +5,7 @@ import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
 import YellowBlueDots from '../(assets)/yellowBlueDotsImgData.png';
 
-export async function RecipientSelection({ lang, region }: DefaultParams) {
+export async function RecipientSelection({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-home2'],
