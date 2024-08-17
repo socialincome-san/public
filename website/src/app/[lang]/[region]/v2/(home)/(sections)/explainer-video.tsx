@@ -4,7 +4,7 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 
-export async function ExplainerVideo({ lang, region }: DefaultParams) {
+export async function ExplainerVideo({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-home2', 'website-videos'],
@@ -13,7 +13,7 @@ export async function ExplainerVideo({ lang, region }: DefaultParams) {
 	return (
 		<BaseContainer className="mx-auto flex w-full flex-col py-32 text-center sm:w-3/4 md:w-2/3">
 			<Typography size="3xl" weight="medium">
-				{translator.t<{ text: string; color?: FontColor }[]>('section-4.title-1').map((title, index) => (
+				{translator.t<{ text: string; color?: FontColor }[]>('section-4.title-1').map((title) => (
 					<Typography as="span" key={title.text} color={title.color}>
 						{title.text}
 					</Typography>

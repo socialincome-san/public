@@ -18,7 +18,7 @@ type FaqQuestion = {
 	}[];
 };
 
-export async function Faq({ lang, region }: DefaultParams) {
+export async function Faq({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-home2'],
