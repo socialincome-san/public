@@ -1,5 +1,4 @@
 'use client';
-import { useScreenSize } from '@/hooks/useScreenSize';
 import { Carousel, CarouselContent, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
@@ -15,7 +14,6 @@ export type CarouselCardProps = {
 }[];
 
 export function QuotesCarousel(cardsObj: CarouselCardProps) {
-	const screenSize = useScreenSize();
 	let cardsArr = [];
 	for (const index in cardsObj) {
 		cardsArr.push(cardsObj[index]);
