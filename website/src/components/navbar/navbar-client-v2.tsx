@@ -195,20 +195,17 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 			content = (
 				<div className="flex h-full w-full flex-col justify-between">
 					<div className="flex flex-col items-start space-y-8">
-						<Typography as="button" size="5xl" weight="medium" onClick={() => setVisibleSection('about-us')}>
-							{aboutUs.title}
-						</Typography>
 						<Typography as="button" size="5xl" weight="medium" onClick={() => setVisibleSection('our-work')}>
 							{ourWork.title}
+						</Typography>
+						<Typography as="button" size="5xl" weight="medium" onClick={() => setVisibleSection('about-us')}>
+							{aboutUs.title}
 						</Typography>
 						<Typography as="button" size="5xl" weight="medium" onClick={() => setVisibleSection('transparency')}>
 							{transparency.title}
 						</Typography>
 					</div>
 					<div className="flex flex-col items-start space-y-4">
-						<NavbarLink href={`/${lang}/${region}/v2/journal`} className="ml-12 text-2xl">
-							Journal
-						</NavbarLink>
 						<NavbarLink href={`/${lang}/${region}/v2/account`} className="ml-12 text-2xl">
 							My Account
 						</NavbarLink>
@@ -273,7 +270,6 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					<SIIcon className="-mb-2.5 block h-9 lg:hidden" />
 				</Link>
 				<div className="mt-6 hidden h-full flex-col justify-start group-hover/navbar:flex group-active/navbar:flex">
-					<NavbarLink href={`/${lang}/${region}/v2/journal`}>Journal</NavbarLink>
 					<NavbarLink href={`/${lang}/${region}/v2/account`}>My Account</NavbarLink>
 					<div className="flex-inline mt-auto flex items-center space-x-2">
 						<DonateIcon className="h-4 w-4" />

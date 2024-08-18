@@ -48,10 +48,8 @@ export default async function Navbar({ lang, region, showNavigation = true, v2 }
 						title: translator.t('navigation.our-work'),
 						href: `/${lang}/${region}/v2/our-work`,
 						links: [
-							{ title: 'Mission', href: `/${lang}/${region}/v2/about-us` },
-							{ title: 'People', href: `/${lang}/${region}/v2/about-us` },
-							{ title: 'Technology', href: `/${lang}/${region}/v2/about-us` },
-							{ title: 'Contact', href: `/${lang}/${region}/v2/about-us` },
+							{ title: translator.t('navigation.contributors'), href: `/${lang}/${region}/v2/our-work#contributors` },
+							{ title: translator.t('navigation.recipients'), href: `/${lang}/${region}/v2/our-work#recipients` },
 						],
 					},
 					{
@@ -59,10 +57,10 @@ export default async function Navbar({ lang, region, showNavigation = true, v2 }
 						title: translator.t('navigation.about-us'),
 						href: `/${lang}/${region}/v2/about-us`,
 						links: [
-							{ title: 'Fight Poverty', href: '/v2' },
-							{ title: 'Cash Transfers', href: '/v2' },
-							{ title: 'Basic Income', href: '/v2' },
-							{ title: 'Programs', href: '/v2' },
+							{ title: translator.t('navigation.our-mission'), href: `/${lang}/${region}/v2/about-us#our-mission` },
+							{ title: translator.t('navigation.our-promise'), href: `/${lang}/${region}/v2/about-us#our-promise` },
+							{ title: translator.t('navigation.flow-of-funds'), href: `/${lang}/${region}/v2/about-us#flow-of-funds` },
+							{ title: translator.t('navigation.team'), href: `/${lang}/${region}/v2/about-us#team` },
 						],
 					},
 					{
@@ -72,23 +70,23 @@ export default async function Navbar({ lang, region, showNavigation = true, v2 }
 						links: [
 							{
 								title: translator.t('navigation.finances'),
-								href: `/${lang}/${region}/transparency/finances`,
+								href: `/${lang}/${region}/v2/transparency/finances`,
 							},
 							{
 								title: translator.t('navigation.recipient-selection'),
-								href: `/${lang}/${region}/transparency/recipient-selection`,
+								href: `/${lang}/${region}/v2/transparency/recipient-selection`,
 							},
 							{
 								title: translator.t('navigation.faq'),
-								href: `/${lang}/${region}/faq`,
+								href: `/${lang}/${region}/v2/faq`,
 							},
 							{
 								title: translator.t('navigation.evidence'),
-								href: `/${lang}/${region}/transparency/evidence`,
+								href: `/${lang}/${region}/v2/transparency/evidence`,
 							},
 							{
 								title: translator.t('navigation.reporting'),
-								href: `/${lang}/${region}/transparency/reporting`,
+								href: `/${lang}/${region}/v2/transparency/reporting`,
 							},
 						],
 					},

@@ -1,5 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { FaqQuestion, FAQSection } from '@/app/[lang]/[region]/(website)/faq/faq-section';
+import { FaqQuestion, FAQSection } from '@/app/[lang]/[region]/v2/faq/faq-section';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import Link from 'next/link';

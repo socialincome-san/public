@@ -1,36 +1,36 @@
-import ajlaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/ajla.jpg';
-import alexandreImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/alexandre.jpeg';
-import andersImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/anders.jpeg';
-import andrasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/andras.jpeg';
-import annalinaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/anna-lina.jpeg';
-import anvitaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/anvita.jpeg';
-import aurelieImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/aurelie.jpeg';
-import carlosImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/carlos.jpeg';
-import flavienImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/flavien.jpeg';
-import francoiseImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/francoise.jpg';
-import juanImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/juan.jpeg';
-import juliaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/julia.jpeg';
-import kabeloImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kabelo.jpeg';
-import kerrinImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kerrin.jpeg';
-import larissaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/larissa.jpeg';
-import lorenzoImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/lorenzo.jpg';
-import mabelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mabel.jpeg';
-import mariatuImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mariatu.jpg';
-import marionImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marion.jpeg';
-import matthewImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/matthew.jpeg';
-import michaelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/michael.jpeg';
-import mikolajImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mikolaj.jpeg';
-import patrikImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/patrik.jpeg';
-import pranavImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/pranav.jpg';
-import reneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/rene.jpeg';
-import riccardoImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/riccardo.jpg';
-import sandinoImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/sandino.jpg';
-import sarahImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/sarah.jpeg';
-import sarveshImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/sarvesh.jpeg';
-import simonImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon.jpeg';
-import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simone.jpeg';
-import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
-import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
+import ajlaImage from '@/app/[lang]/[region]/v2/about-us/(assets)/ajla.jpg';
+import alexandreImage from '@/app/[lang]/[region]/v2/about-us/(assets)/alexandre.jpeg';
+import andersImage from '@/app/[lang]/[region]/v2/about-us/(assets)/anders.jpeg';
+import andrasImage from '@/app/[lang]/[region]/v2/about-us/(assets)/andras.jpeg';
+import annalinaImage from '@/app/[lang]/[region]/v2/about-us/(assets)/anna-lina.jpeg';
+import anvitaImage from '@/app/[lang]/[region]/v2/about-us/(assets)/anvita.jpeg';
+import aurelieImage from '@/app/[lang]/[region]/v2/about-us/(assets)/aurelie.jpeg';
+import carlosImage from '@/app/[lang]/[region]/v2/about-us/(assets)/carlos.jpeg';
+import flavienImage from '@/app/[lang]/[region]/v2/about-us/(assets)/flavien.jpeg';
+import francoiseImage from '@/app/[lang]/[region]/v2/about-us/(assets)/francoise.jpg';
+import juanImage from '@/app/[lang]/[region]/v2/about-us/(assets)/juan.jpeg';
+import juliaImage from '@/app/[lang]/[region]/v2/about-us/(assets)/julia.jpeg';
+import kabeloImage from '@/app/[lang]/[region]/v2/about-us/(assets)/kabelo.jpeg';
+import kerrinImage from '@/app/[lang]/[region]/v2/about-us/(assets)/kerrin.jpeg';
+import larissaImage from '@/app/[lang]/[region]/v2/about-us/(assets)/larissa.jpeg';
+import lorenzoImage from '@/app/[lang]/[region]/v2/about-us/(assets)/lorenzo.jpg';
+import mabelImage from '@/app/[lang]/[region]/v2/about-us/(assets)/mabel.jpeg';
+import mariatuImage from '@/app/[lang]/[region]/v2/about-us/(assets)/mariatu.jpg';
+import marionImage from '@/app/[lang]/[region]/v2/about-us/(assets)/marion.jpeg';
+import matthewImage from '@/app/[lang]/[region]/v2/about-us/(assets)/matthew.jpeg';
+import michaelImage from '@/app/[lang]/[region]/v2/about-us/(assets)/michael.jpeg';
+import mikolajImage from '@/app/[lang]/[region]/v2/about-us/(assets)/mikolaj.jpeg';
+import patrikImage from '@/app/[lang]/[region]/v2/about-us/(assets)/patrik.jpeg';
+import pranavImage from '@/app/[lang]/[region]/v2/about-us/(assets)/pranav.jpg';
+import reneImage from '@/app/[lang]/[region]/v2/about-us/(assets)/rene.jpeg';
+import riccardoImage from '@/app/[lang]/[region]/v2/about-us/(assets)/riccardo.jpg';
+import sandinoImage from '@/app/[lang]/[region]/v2/about-us/(assets)/sandino.jpg';
+import sarahImage from '@/app/[lang]/[region]/v2/about-us/(assets)/sarah.jpeg';
+import sarveshImage from '@/app/[lang]/[region]/v2/about-us/(assets)/sarvesh.jpeg';
+import simonImage from '@/app/[lang]/[region]/v2/about-us/(assets)/simon.jpeg';
+import simoneImage from '@/app/[lang]/[region]/v2/about-us/(assets)/simone.jpeg';
+import thomasImage from '@/app/[lang]/[region]/v2/about-us/(assets)/thomas.jpeg';
+import verenaImage from '@/app/[lang]/[region]/v2/about-us/(assets)/verena.jpeg';
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, FontSize, Typography } from '@socialincome/ui';
@@ -112,10 +112,11 @@ const groups: Group[] = [
 		],
 	},
 ];
+
 export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['countries', 'website-about-us'] });
 	return (
-		<BaseContainer id="team" className="py-16 md:py-32">
+		<BaseContainer id="team" className="scroll-mt-24">
 			<Typography as="h3" size="xl" color="muted-foreground" className="mb-4">
 				{translator.t('team.header')}
 			</Typography>

@@ -1,11 +1,11 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { SubscriptionInfoForm } from '@/app/[lang]/[region]/(website)/newsletter/subscription-info-form';
+import aurelieImage from '@/app/[lang]/[region]/v2/about-us/(assets)/aurelie.jpeg';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 import Link from 'next/link';
-import aurelieImage from '../about-us/(assets)/aurelie.jpeg';
 
 export async function generateMetadata({ params }: DefaultPageProps) {
 	return getMetadata(params.lang, 'website-newsletter');

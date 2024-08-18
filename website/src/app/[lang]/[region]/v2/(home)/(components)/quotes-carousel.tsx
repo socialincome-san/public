@@ -21,21 +21,6 @@ export function QuotesCarousel(cardsObj: CarouselCardProps) {
 		cardsArr.push(cardsObj[index]);
 	}
 
-	let slidesToScroll;
-	switch (screenSize) {
-		case null:
-		case 'xs':
-			slidesToScroll = 1;
-			break;
-		case 'sm':
-		case 'md':
-			slidesToScroll = 2;
-			break;
-		default:
-			slidesToScroll = 3;
-			break;
-	}
-
 	// TODO: update carousel content
 	return (
 		<Carousel

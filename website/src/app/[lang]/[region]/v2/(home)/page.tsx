@@ -22,9 +22,8 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			<Approach lang={lang} region={region} />
 			<Quotes lang={lang} region={region} />
 			{/*<RecipientSelection lang={lang} region={region} />*/}
-			<Testimonials lang={lang} region={region} />
 			<SDGGoals lang={lang} region={region} />
-			{/*<Journal lang={lang} region={region} />*/}
+			<Testimonials lang={lang} region={region} />
 		</>
 	);
 }
