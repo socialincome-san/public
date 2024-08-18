@@ -11,7 +11,7 @@ export async function ExplainerVideo({ lang }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer className="mx-auto flex w-full flex-col py-32 text-center sm:w-3/4 md:w-2/3">
+		<BaseContainer className="mx-auto my-40 flex w-full flex-col text-center sm:w-3/4 md:w-2/3">
 			<Typography size="3xl" weight="medium">
 				{translator.t<{ text: string; color?: FontColor }[]>('section-4.title-1').map((title) => (
 					<Typography as="span" key={title.text} color={title.color}>

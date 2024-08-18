@@ -85,6 +85,13 @@ module.exports = {
 				3: '3px',
 				4: '4px',
 			},
+			typography: {
+				DEFAULT: {
+					css: {
+						color: 'var(--foreground)',
+					},
+				},
+			},
 		},
 	},
 	plugins: [require('@tailwindcss/typography'), require('tailwindcss-animate')],

@@ -1,22 +1,24 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
+export type FaqQuestion = {
+	question: string;
+	answer: string;
+	links?: {
+		title: string;
+		href: string;
+	}[];
+};
+
 type FAQSectionProps = {
 	title: string;
-	questions: {
-		question: string;
-		answer: string;
-		links?: {
-			title: string;
-			href: string;
-		}[];
-	}[];
+	questions: FaqQuestion[];
 };
 
 export function FAQSection({ title, questions }: FAQSectionProps) {
 	return (
-		<div>
-			<Typography as="h2" size="3xl" weight="bold">
+		<div className="flex flex-col space-y-8">
+			<Typography size="2xl" weight="medium" className="mx-auto">
 				{title}
 			</Typography>
 
@@ -28,7 +30,7 @@ export function FAQSection({ title, questions }: FAQSectionProps) {
 								{question.question}
 							</Typography>
 						</AccordionTrigger>
-						<AccordionContent className="prose">
+						<AccordionContent className="prose prose-lg max-w-3xl">
 							<Typography size="lg" className="text-left">
 								{question.answer}
 							</Typography>

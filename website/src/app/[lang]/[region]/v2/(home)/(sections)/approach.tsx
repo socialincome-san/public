@@ -18,7 +18,7 @@ export async function Approach({ lang }: DefaultParams) {
 	const cards = translator.t<ApproachCardProps[]>('section-7.cards');
 
 	return (
-		<div className="flex flex-col items-center justify-center px-8 py-16">
+		<div className="my-40 flex flex-col items-center justify-center px-8">
 			<Typography size="3xl" weight="medium" className="mb-8 w-4/5 max-w-xl text-center md:mb-16">
 				{translator.t('section-7.title-1')}
 			</Typography>
