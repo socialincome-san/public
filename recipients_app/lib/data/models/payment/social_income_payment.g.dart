@@ -9,7 +9,7 @@ part of 'social_income_payment.dart';
 SocialIncomePayment _$SocialIncomePaymentFromJson(Map<String, dynamic> json) =>
     SocialIncomePayment(
       id: json['id'] as String? ?? '',
-      amount: json['amount'] as int?,
+      amount: (json['amount'] as num?)?.toInt(),
       paymentAt: _$JsonConverterFromJson<Object, Timestamp>(
           json['payment_at'], const TimestampConverter().fromJson),
       currency: json['currency'] as String?,
