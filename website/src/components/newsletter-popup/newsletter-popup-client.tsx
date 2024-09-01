@@ -38,9 +38,10 @@ const NewsletterPopupToast = ({ lang, translations, t, onClose }: NewsletterPopu
 	});
 
 	const onSubmit = async (values: FormSchema) => {
+		console.log()
 		const body: CreateNewsletterSubscription = {
 			email: values.email,
-			language: lang === 'de' ? 'de' : 'en',
+			language: lang = (lang === 'de') ? 'de' : (lang === 'fr') ? 'fr' : 'en'
 		};
 		api.post('/api/newsletter/subscription/public', body).then((response) => {
 			if (response.status === 200) {
