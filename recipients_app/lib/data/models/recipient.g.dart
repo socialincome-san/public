@@ -38,6 +38,7 @@ Recipient _$RecipientFromJson(Map<String, dynamic> json) => Recipient(
               json['organisation'],
               const DocumentReferenceConverter().fromJson),
       updatedBy: json['last_updated_by'] as String?,
+      successorName: json['successor'] as String?,
     );
 
 Map<String, dynamic> _$RecipientToJson(Recipient instance) => <String, dynamic>{
@@ -64,6 +65,7 @@ Map<String, dynamic> _$RecipientToJson(Recipient instance) => <String, dynamic>{
       'next_survey': _$JsonConverterToJson<Object, Timestamp>(
           instance.nextSurvey, const TimestampConverter().toJson),
       'last_updated_by': instance.updatedBy,
+      'successor': instance.successorName,
     };
 
 Value? _$JsonConverterFromJson<Json, Value>(
