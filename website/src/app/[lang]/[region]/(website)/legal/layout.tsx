@@ -13,7 +13,7 @@ export default async function Layout({ children, params }: PropsWithChildren<Def
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: 'website-legal' });
 
 	return (
-		<BaseContainer className="pb-8">
+		<BaseContainer>
 			<LayoutClient
 				params={params}
 				translations={{

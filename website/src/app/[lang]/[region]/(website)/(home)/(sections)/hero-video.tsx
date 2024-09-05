@@ -2,9 +2,10 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Button, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import Link from 'next/link';
 import MuxVideoComponent from '../(components)/mux-video';
 
-export async function HeroVideo({ lang }: DefaultParams) {
+export async function HeroVideo({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-home2', 'common'],
@@ -29,7 +30,9 @@ export async function HeroVideo({ lang }: DefaultParams) {
 							</Typography>
 						))}
 					</div>
-					<Button className="mx-auto hidden md:block">Handle Jetzt</Button>
+					<Link href={`/${lang}/${region}/donate/individual`}>
+						<Button className="mx-auto hidden md:block">Handle Jetzt</Button>
+					</Link>
 				</div>
 			</div>
 		</div>

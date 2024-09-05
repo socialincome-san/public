@@ -12,7 +12,7 @@ export async function MobileIllustration({ lang }: DefaultParams) {
 	});
 
 	return (
-		<div className="theme-blue-v2 flex flex-col items-center px-8 py-32 text-center">
+		<div className="theme-blue flex flex-col items-center px-8 py-32 text-center">
 			<Typography size="3xl">
 				{translator.t<{ text: string; color?: FontColor }[]>('section-5.title-1').map((title, index) => (
 					<Typography as="span" key={index} color={title.color}>

@@ -10,7 +10,7 @@ export async function MonthlyIncome({ lang }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer className="theme-blue-v2 my-4 py-20 text-center">
+		<BaseContainer className="theme-blue my-4 py-20 text-center">
 			<Typography size="lg" className="opacity-40">
 				{translator.t('section-3.title-faded')}
 			</Typography>

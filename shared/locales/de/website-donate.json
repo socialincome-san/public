@@ -5,6 +5,7 @@
 	"amount": "Betrag",
 	"button-text": "Mache einen Unterschied",
 	"button-text-short": "Jetzt spenden",
+	"one-time-donation": "Einmalige Spende",
 	"donation-impact": {
 		"monthly-contribution": "Dein monatlicher Beitrag:",
 		"direct-payout": "Dein Beitrag wird direkt auf das Mobiltelefon der Social Income Empfänger:innen ausgezahlt.",

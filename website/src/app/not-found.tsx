@@ -4,8 +4,8 @@ import Link from 'next/link';
 
 export default function Page() {
 	return (
-		<div className="theme-dark-blue min-h-screen">
-			<Navbar lang="en" region="int" showNavigation={false} />
+		<div className="theme-blue min-h-screen">
+			<Navbar lang="en" region="int" />
 			<main className="text-center">
 				<Typography size="5xl" weight="bold" color="primary">
 					404 – Page not found

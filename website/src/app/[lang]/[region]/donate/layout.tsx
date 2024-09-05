@@ -9,9 +9,9 @@ export async function generateMetadata({ params }: DefaultLayoutProps) {
 
 export default function Layout({ children, params: { lang, region } }: PropsWithChildren<DefaultLayoutProps>) {
 	return (
-		<div className="theme-dark-blue min-h-screen">
-			<Navbar lang={lang} region={region} showNavigation={false} />
-			<main className="pb-8 md:pb-16">{children}</main>
+		<div className="theme-blue min-h-screen">
+			<Navbar lang={lang} region={region} />
+			<main className="pt-24 md:pt-36">{children}</main>
 		</div>
 	);
 }

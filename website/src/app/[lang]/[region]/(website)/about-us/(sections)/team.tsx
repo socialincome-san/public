@@ -112,10 +112,11 @@ const groups: Group[] = [
 		],
 	},
 ];
+
 export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['countries', 'website-about-us'] });
 	return (
-		<BaseContainer id="team" className="py-16 md:py-32">
+		<BaseContainer id="team" className="scroll-mt-36">
 			<Typography as="h3" size="xl" color="muted-foreground" className="mb-4">
 				{translator.t('team.header')}
 			</Typography>

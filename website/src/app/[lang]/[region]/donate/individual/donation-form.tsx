@@ -111,7 +111,7 @@ function RadioGroupFormItem({ active, title, donationInterval, lang }: RadioGrou
 			<FormControl
 				className={classNames(
 					'flex h-full flex-1 cursor-pointer flex-row rounded-lg border-2 p-4 shadow-sm focus:outline-none',
-					{ 'border-primary bg-card-muted': active },
+					{ 'border-accent bg-card-muted': active },
 				)}
 			>
 				<div onClick={() => setValue('donationInterval', donationInterval)}>
@@ -126,7 +126,7 @@ function RadioGroupFormItem({ active, title, donationInterval, lang }: RadioGrou
 						</div>
 					</div>
 					<CheckCircleIcon
-						className={classNames(!active ? 'invisible' : '', 'text-primary h-5 w-5')}
+						className={classNames(!active ? 'invisible' : '', 'text-accent h-5 w-5')}
 						aria-hidden="true"
 					/>
 				</div>
@@ -206,7 +206,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 						<CurrencySelector className="h-16 w-full sm:flex-1" currencies={websiteCurrencies} fontSize="lg" />
 					</div>
 					{form.watch('monthlyIncome') > 0 && (
-						<Card>
+						<Card className="theme-light">
 							<CardHeader>
 								<DonationImpact lang={lang} translations={translations.donationImpact} />
 							</CardHeader>

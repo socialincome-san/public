@@ -25,7 +25,7 @@ export default async function Page({ params }: DefaultPageProps) {
 	});
 
 	return (
-		<BaseContainer className="mx-auto flex max-w-2xl flex-col	space-y-12 pb-16">
+		<BaseContainer className="mx-auto flex max-w-3xl flex-col space-y-12">
 			<Typography size="4xl" weight="bold">
 				{translator.t('title')}
 			</Typography>
@@ -38,7 +38,6 @@ export default async function Page({ params }: DefaultPageProps) {
 						<TableHead className="text-right">{translator.t('table-columns.href')}</TableHead>
 					</TableRow>
 				</TableHeader>
-
 				<TableBody>
 					{translator.t<{ title: string; href: string; language: string }[]>('reports').map((report, index) => (
 						<TableRow key={index}>

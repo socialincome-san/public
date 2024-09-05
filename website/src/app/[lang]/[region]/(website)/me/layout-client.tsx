@@ -134,8 +134,8 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 
 	return (
 		<Collapsible open={isOpen} onOpenChange={setIsOpen} className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5">
-			<div className="hidden pt-16 md:col-span-1 md:flex lg:col-span-1">{navigationMenu}</div>
-			<div className="mt-4 md:col-span-3 lg:col-span-4">
+			<div className="hidden pt-12 md:col-span-1 md:flex lg:col-span-1">{navigationMenu}</div>
+			<div className="md:col-span-3 lg:col-span-4">
 				<CollapsibleTrigger asChild>
 					<div className="flex justify-end md:hidden">
 						<Button
