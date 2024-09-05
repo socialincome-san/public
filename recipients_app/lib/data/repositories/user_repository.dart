@@ -1,7 +1,6 @@
 import "dart:developer";
 
 import "package:app/data/models/models.dart";
-import "package:app/data/repositories/repositories.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 
@@ -44,12 +43,7 @@ class UserRepository {
     //     await firestore.collection("/recipients").doc(firebaseUser.uid).get();
 
     if (userSnapshot != null && userSnapshot.exists) {
-      // TODO: decide if we should keep it in user object in the app at all
-      final payments =
-          await PaymentRepository(firestore: firestore).fetchPayments(recipientId: userSnapshot.id);
-
       return Recipient.fromMap(userSnapshot.data()).copyWith(
-        payments: payments,
         userId: userSnapshot.id,
       );
     } else {
