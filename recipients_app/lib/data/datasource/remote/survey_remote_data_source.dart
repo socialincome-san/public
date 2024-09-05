@@ -1,6 +1,6 @@
+import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/datasource/survey_data_source.dart";
 import "package:app/data/models/survey/survey.dart";
-import "package:app/data/repositories/user_repository.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 
 const String surveyCollection = "surveys";
