@@ -1,58 +1,37 @@
+import "package:app/data/datasource/demo/payment_demo_data_source.dart";
+import "package:app/data/datasource/payment_data_source.dart";
+import "package:app/data/datasource/remote/payment_remote_data_source.dart";
 import "package:app/data/models/models.dart";
-import "package:app/data/repositories/repositories.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 
-const String paymentCollection = "payments";
-
 class PaymentRepository {
+  late PaymentDataSource remoteDataSource = PaymentRemoteDataSource(firestore: firestore);
+  late PaymentDataSource demoDataSource = PaymentDemoDataSource();
+
+  final bool useRemoteDataSource;
   final FirebaseFirestore firestore;
 
-  const PaymentRepository({
+  PaymentRepository({
     required this.firestore,
+    this.useRemoteDataSource = false,
   });
+
+  PaymentDataSource get _activeDataSource => useRemoteDataSource ? remoteDataSource : demoDataSource;
 
   Future<List<SocialIncomePayment>> fetchPayments({
     required String recipientId,
   }) async {
-    final List<SocialIncomePayment> payments = <SocialIncomePayment>[];
-
-    final paymentsDocs = await firestore
-        .collection(recipientCollection)
-        .doc(recipientId)
-        .collection(paymentCollection)
-        .get();
-
-    for (final paymentDoc in paymentsDocs.docs) {
-      final payment = SocialIncomePayment.fromJson(
-        paymentDoc.data(),
-      );
-
-      payments.add(payment.copyWith(id: paymentDoc.id));
-    }
-
-    payments.sort((a, b) => a.id.compareTo(b.id));
-
-    return payments;
+    return _activeDataSource.fetchPayments(recipientId: recipientId);
   }
 
-  /// This updates the payment status to confirmed
-  /// and also sets lastUpdatedAt and lastUpdatedBy to the
-  /// current time and recipient
   Future<void> confirmPayment({
     required Recipient recipient,
     required SocialIncomePayment payment,
   }) async {
-    final updatedPayment = payment.copyWith(
-      status: PaymentStatus.confirmed,
-      updatedBy: recipient.userId,
+    await _activeDataSource.confirmPayment(
+      recipient: recipient,
+      payment: payment,
     );
-
-    await firestore
-        .collection(recipientCollection)
-        .doc(recipient.userId)
-        .collection(paymentCollection)
-        .doc(payment.id)
-        .update(updatedPayment.toJson());
   }
 
   Future<void> contestPayment({
@@ -60,17 +39,10 @@ class PaymentRepository {
     required SocialIncomePayment payment,
     required String contestReason,
   }) async {
-    final updatedPayment = payment.copyWith(
-      status: PaymentStatus.contested,
-      comments: contestReason,
-      updatedBy: recipient.userId,
+    await _activeDataSource.contestPayment(
+      recipient: recipient,
+      payment: payment,
+      contestReason: contestReason,
     );
-
-    await firestore
-        .collection(recipientCollection)
-        .doc(recipient.userId)
-        .collection(paymentCollection)
-        .doc(payment.id)
-        .update(updatedPayment.toJson());
   }
 }
