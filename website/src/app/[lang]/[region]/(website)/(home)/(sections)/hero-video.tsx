@@ -31,7 +31,9 @@ export async function HeroVideo({ lang, region }: DefaultParams) {
 						))}
 					</div>
 					<Link href={`/${lang}/${region}/donate/individual`}>
-						<Button className="mx-auto hidden md:block"><Typography>{translator.t('section-1.take-action')}</Typography></Button>
+						<Button className="mx-auto hidden md:block">
+							<Typography>{translator.t('section-1.take-action')}</Typography>
+						</Button>
 					</Link>
 				</div>
 			</div>
