@@ -6,17 +6,17 @@
 		"twitter-image": "/assets/metadata/twitter/default.jpg"
 	},
 	"section-1": {
-		"take-action": "Take Action",
+		"take-action": "Handle jetzt",
 		"title-1": [
 			{
-				"text": "How many people can you lift out of poverty "
+				"text": "Wie vielen Menschen kannst Du mit 1 % deines Einkommens "
 			},
 			{
-				"text": "with only 1%",
+				"text": "1 % deines Einkommens",
 				"color": "accent"
 			},
 			{
-				"text": "of your income?"
+				"text": "aus der Armut helfen?"
 			}
 		]
 	},
@@ -46,7 +46,7 @@
 		"title-faded": "My impact",
 		"title": "What's your monthly income?",
 		"subtitle": "Why is this important?",
-		"cta": "Show my Impact"
+		"cta": "Beitrag berechnen"
 	},
 	"section-4": {
 		"title-1": [
@@ -83,56 +83,56 @@
 		"title-1": "Social Income combines three approaches to change.",
 		"cards": [
 			{
-				"category": "Concept",
-				"title": "Universal Basic Income",
+				"category": "Konzept",
+				"title": "Bedingungs\u00ADloses Grund\u00ADeinkommen",
 				"points": [
 					{
-						"text": "Reduces discrimination"
+						"text": "Reduziert Diskriminierung"
 					},
 					{
-						"text": "Fights income inequality"
+						"text": "Bekämpft Einkommens\u00ADungleichheit"
 					},
 					{
-						"text": "Empowers marginalized groups"
+						"text": "Stärkt margi\u00ADnali\u00ADsierte Gruppen"
 					},
 					{
-						"text": "Improves working conditions"
+						"text": "Verbessert die Arbeits\u00ADbedingungen"
 					}
 				]
 			},
 			{
-				"category": "Method",
-				"title": "Direct Cash Transfers",
+				"category": "Methode",
+				"title": "Direkte Cash-Transfers",
 				"points": [
 					{
-						"text": "Low overhead costs"
+						"text": "Minimiert Verwaltungs\u00ADkosten"
 					},
 					{
-						"text": "Reduces poverty"
+						"text": "Reduziert Armut"
 					},
 					{
-						"text": "Empowers individuals"
+						"text": "Fördert ein selbst\u00ADbestimmtes Leben"
 					},
 					{
-						"text": "Stimulates local markets"
+						"text": "Stimuliert lokale Märkte"
 					}
 				]
 			},
 			{
-				"category": "Technology",
+				"category": "Technologie",
 				"title": "Mobile Banking",
 				"points": [
 					{
-						"text": "Low fees"
+						"text": "Geringe Gebühren"
 					},
 					{
-						"text": "Immediate"
+						"text": "Einfach und schnell"
 					},
 					{
-						"text": "Scalable"
+						"text": "Skalierbar"
 					},
 					{
-						"text": "Crisis-proof"
+						"text": "Krisensicher"
 					}
 				]
 			}
@@ -143,47 +143,47 @@
 			{
 				"quote": [
 					{
-						"text": "« Cash transfers allow recipients to obtain a range of goods and services "
+						"text": "« Cash-Transfers erlauben es den Empfänger*innen,  zu besorgen. "
 					},
 					{
-						"text": "of their choice directly ",
+						"text": "Güter und Dienstleistungen direkt auf lokalen Märkten ",
 						"color": "accent"
 					},
 					{
-						"text": "from local markets and service providers. »"
+						"text": "zu besorgen.»"
 					}
 				],
-				"author": "Comité international de la Croix-Rouge"
+				"author": "Internationales Rotes Kreuz"
 			},
 			{
 				"quote": [
 					{
-						"text": "« We seriously need to consider implementing a well-designed UBI, "
+						"text": "« Wir müssen uns ernsthaft damit befassen, "
 					},
 					{
-						"text": "a well-designed Universal Basic Income, ",
+						"text": "ein klug konzipiertes bedingungsloses Grundeinkommen ",
 						"color": "accent"
 					},
 					{
-						"text": "so shocks may hit, but they won’t destroy. »"
+						"text": "zu implementieren. So können uns Krisen zwar treffen, aber ohne zerstörerische Kraft zu entfalten. »"
 					}
 				],
-				"author": "United Nations"
+				"author": "Vereinte Nationen"
 			},
 			{
 				"quote": [
 					{
-						"text": "« Fixing global poverty is hard. But one solution might be "
+						"text": "« Die globale Armut zu bekämpfen ist ein hartes Stück Arbeit. Aber einfache Lösung könnte darin bestehen, "
 					},
 					{
-						"text": "as simple as using a mobile phone ",
+						"text": "Zugang zu Finanzdienstleistungen übers Mobiltelefon ",
 						"color": "accent"
 					},
 					{
-						"text": "to access financial services. »"
+						"text": "zu ermöglichen. »"
 					}
 				],
-				"author": "World Bank"
+				"author": "Weltbank"
 			}
 		]
 	},

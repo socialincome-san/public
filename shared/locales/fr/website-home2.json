@@ -6,25 +6,25 @@
 		"twitter-image": "/assets/metadata/twitter/default.jpg"
 	},
 	"section-1": {
-		"take-action": "Take Action",
+		"take-action": "Passer à l’action",
 		"title-1": [
 			{
-				"text": "How many people can you lift out of poverty "
+				"text": "Combien de personnes peux-tu sortir de la pauvreté avec "
 			},
 			{
-				"text": "with only 1%",
+				"text": "un seul pourcent ",
 				"color": "accent"
 			},
 			{
-				"text": "of your income?"
+				"text": "de ton salaire?"
 			}
 		]
 	},
 	"section-2": {
-		"title-1": "Those that live in Sierra Leone’s poorest communities know what it takes to rise out of poverty.",
+		"title-1": "Dans les communautés les plus pauvres de Sierra Leone, les gens savent très bien ce qu’il faut faire pour sortir de la pauvreté.",
 		"title-2": [
 			{
-				"text": "They just rarely have the opportunity – or the money – to do so. That’s where "
+				"text": "C’est juste qu’il ont rarement la possibilité – ou les moyens – de le faire. That’s where "
 			},
 			{
 				"text": "you and Social Income",
@@ -34,49 +34,49 @@
 				"text": "come in."
 			}
 		],
-		"title-3": "Unique Process for Fair Selection",
-		"text-3.1": "Identifying those in need: Through collaboration with local NGOs in Sierra Leone, we target individuals living in poverty who can benefit from a three-year predictable income, empowering them to invest in their future.",
-		"text-3.2": "Selecting randomly: Our randomized selection process is transparent and publicly verifiable, eliminating human biases and favoritism. This ensures fairness and equal chances for all individuals in poverty to benefit.",
-		"title-4": "Direct Giving, Direct Results",
-		"text-4": "We directly transfer your contribution onto the mobile phones of individuals in need, empowering them to overcome poverty through their own choices and efforts.",
-		"title-5": "Ongoing Support",
+		"title-3": "Un processus unique pour une sélection équitable",
+		"text-3.1": "Identifier les personnes dans le besoin : Nous collaborons avec des ONG locales en Sierra Leone pour cibler les personnes vivant dans la pauvreté qui pourraient bénéficier d’un revenu prévisible sur trois ans et investir ainsi dans leur avenir.",
+		"text-3.2": "Sélection par tirage au sort : Notre processus de sélection par tirage au sort est transparent et peut être publiquement vérifié. Ceci écarte tout préjugé ou favoritisme et garantit l’égalité de traitement.",
+		"title-4": "Don direct, résultats directs",
+		"text-4": "Nous transférons directement votre contribution sur les téléphones portables des personnes dans le besoin, qui sont les mieux à même de décider où porter leurs efforts pour surmonter la pauvreté.",
+		"title-5": "Un soutien durable",
 		"text-5": "Our recipients receive continuous support from our local partners throughout and even after the program, maximizing the overall impact. Specifically, the third year of the program is focused on facilitating a seamless transition as they move on from the program."
 	},
 	"section-3": {
-		"title-faded": "My impact",
+		"title-faded": "Mon impact",
 		"title": "What's your monthly income?",
 		"subtitle": "Why is this important?",
-		"cta": "Show my Impact"
+		"cta": "Calculer la contribution"
 	},
 	"section-4": {
 		"title-1": [
 			{
-				"text": "What would change if you gave "
+				"text": "Qu’est-ce que ça changerait si tu faisais don chaque mois de "
 			},
 			{
-				"text": "away 1% of your income ",
+				"text": "1% de ton salaire? ",
 				"color": "accent"
 			},
 			{
-				"text": "every month?"
+				"text": ""
 			}
 		],
-		"cta": "Watch video and find out ›"
+		"cta": "Regarde la vidéo pour le savoir ›"
 	},
 	"section-5": {
 		"title-1": [
 			{
-				"text": "Change from human to human. "
+				"text": "Le changement d’une personne à une autre. "
 			},
 			{
-				"text": "From mobile to mobile.",
+				"text": "D’un téléphone à l'autre.",
 				"color": "accent"
 			}
 		],
-		"subtitle-1": "Social Income is a new way to fight poverty in the Global South. Digital, efficient and mobile."
+		"subtitle-1": "Social Income est une nouvelle approche de lutte contre la pauvreté dans le sud de la planète. Numérique, efficace et mobile."
 	},
 	"section-faq": {
-		"title": "This sounds good, but ... ",
+		"title": "Tout cela est bien beau, mais… ",
 		"cta": "All FAQ"
 	},
 	"section-7": {
@@ -84,55 +84,55 @@
 		"cards": [
 			{
 				"category": "Concept",
-				"title": "Universal Basic Income",
+				"title": "Le revenu de base inconditionnel",
 				"points": [
 					{
-						"text": "Reduces discrimination"
+						"text": "Réduit la discrimination"
 					},
 					{
-						"text": "Fights income inequality"
+						"text": "Combat l’inégalité de revenu"
 					},
 					{
-						"text": "Empowers marginalized groups"
+						"text": "Renforce les groupes marginalisés"
 					},
 					{
-						"text": "Improves working conditions"
+						"text": "Améliore les conditions de travail"
 					}
 				]
 			},
 			{
-				"category": "Method",
-				"title": "Direct Cash Transfers",
+				"category": "Méthode",
+				"title": "Le transfert monétaire direct",
 				"points": [
 					{
-						"text": "Low overhead costs"
+						"text": "Diminue les frais administratifs"
 					},
 					{
-						"text": "Reduces poverty"
+						"text": "Réduit la pauvreté"
 					},
 					{
-						"text": "Empowers individuals"
+						"text": "Favorise l’autonomie"
 					},
 					{
-						"text": "Stimulates local markets"
+						"text": "Stimule les marchés locaux"
 					}
 				]
 			},
 			{
-				"category": "Technology",
-				"title": "Mobile Banking",
+				"category": "Technologie",
+				"title": "Le banking mobile",
 				"points": [
 					{
-						"text": "Low fees"
+						"text": "Frais réduits"
 					},
 					{
-						"text": "Immediate"
+						"text": "Simple et rapide"
 					},
 					{
-						"text": "Scalable"
+						"text": "Évolutif"
 					},
 					{
-						"text": "Crisis-proof"
+						"text": "Résistant aux crises"
 					}
 				]
 			}
@@ -153,7 +153,7 @@
 						"text": "from local markets and service providers. »"
 					}
 				],
-				"author": "Comité international de la Croix-Rouge"
+				"author": "International Red Cross"
 			},
 			{
 				"quote": [
@@ -168,7 +168,7 @@
 						"text": "so shocks may hit, but they won’t destroy. »"
 					}
 				],
-				"author": "United Nations"
+				"author": "Nations Unies"
 			},
 			{
 				"quote": [
@@ -183,7 +183,7 @@
 						"text": "to access financial services. »"
 					}
 				],
-				"author": "World Bank"
+				"author": "Banque mondiale"
 			}
 		]
 	},
@@ -220,20 +220,20 @@
 	"section-10": {
 		"title-1": [
 			{
-				"text": "Contribute to the "
+				"text": "Contribue à atteindre les objectifs de développement durable des "
 			},
 			{
-				"text": "United Nations",
+				"text": "Nations Unies.",
 				"color": "primary"
 			},
 			{
-				"text": "’"
+				"text": ""
 			}
 		],
-		"sdg-1-title": "End poverty in all its forms, everywhere.",
-		"sdg-1": "SDG #1",
-		"sdg-10-title": "Reduce inequality within and \namong countries.",
-		"sdg-10": "SDG #10"
+		"sdg-1-title": "Éliminer la pauvreté sous toutes ses formes et partout dans le monde.",
+		"sdg-1": "ODD 1",
+		"sdg-10-title": "Réduire les inégalités dans les pays et d’un pays à l’autre.",
+		"sdg-10": "ODD 10"
 	},
 	"section-11": {
 		"title": "Journal",

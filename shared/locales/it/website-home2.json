@@ -6,7 +6,7 @@
 		"twitter-image": "/assets/metadata/twitter/default.jpg"
 	},
 	"section-1": {
-		"take-action": "Take Action",
+		"take-action": "Passa all'azione",
 		"title-1": [
 			{
 				"text": "How many people can you lift out of poverty "
@@ -16,7 +16,7 @@
 				"color": "accent"
 			},
 			{
-				"text": "of your income?"
+				"text": "of your income"
 			}
 		]
 	},
@@ -46,7 +46,7 @@
 		"title-faded": "My impact",
 		"title": "What's your monthly income?",
 		"subtitle": "Why is this important?",
-		"cta": "Show my Impact"
+		"cta": "Mostra il mio impatto"
 	},
 	"section-4": {
 		"title-1": [
@@ -105,16 +105,16 @@
 				"title": "Direct Cash Transfers",
 				"points": [
 					{
-						"text": "Low overhead costs"
+						"text": "Reduces discrimination"
 					},
 					{
-						"text": "Reduces poverty"
+						"text": "Fights income inequality"
 					},
 					{
-						"text": "Empowers individuals"
+						"text": "Empowers marginalized groups"
 					},
 					{
-						"text": "Stimulates local markets"
+						"text": "Improves working conditions"
 					}
 				]
 			},
@@ -123,16 +123,16 @@
 				"title": "Mobile Banking",
 				"points": [
 					{
-						"text": "Low fees"
+						"text": "Reduces discrimination"
 					},
 					{
-						"text": "Immediate"
+						"text": "Fights income inequality"
 					},
 					{
-						"text": "Scalable"
+						"text": "Empowers marginalized groups"
 					},
 					{
-						"text": "Crisis-proof"
+						"text": "Improves working conditions"
 					}
 				]
 			}
@@ -143,32 +143,32 @@
 			{
 				"quote": [
 					{
-						"text": "« Cash transfers allow recipients to obtain a range of goods and services "
+						"text": "«Wir müssen uns ernsthaft damit befassen "
 					},
 					{
-						"text": "of their choice directly ",
+						"text": "ein klug konzipiertes bedingungsloses Grundeinkommen ",
 						"color": "accent"
 					},
 					{
-						"text": "from local markets and service providers. »"
+						"text": "zu implementieren. So können uns Krisen zwar treffen, aber ohne zerstörerische Kraft zu entfalten.»"
 					}
 				],
-				"author": "Comité international de la Croix-Rouge"
+				"author": "Vereinte Nationen"
 			},
 			{
 				"quote": [
 					{
-						"text": "« We seriously need to consider implementing a well-designed UBI, "
+						"text": "«Wir müssen uns ernsthaft damit befassen, "
 					},
 					{
-						"text": "a well-designed Universal Basic Income, ",
+						"text": "ein klug konzipiertes bedingungsloses Grundeinkommen ",
 						"color": "accent"
 					},
 					{
-						"text": "so shocks may hit, but they won’t destroy. »"
+						"text": "zu implementieren. So können uns Krisen zwar treffen, aber ohne zerstörerische Kraft zu entfalten.»"
 					}
 				],
-				"author": "United Nations"
+				"author": "Vereinte Nationen"
 			},
 			{
 				"quote": [
