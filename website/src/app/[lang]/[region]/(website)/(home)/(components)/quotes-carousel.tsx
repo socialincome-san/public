@@ -2,7 +2,7 @@
 import { Carousel, CarouselContent, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
-import UNImageData from '../(assets)/un-logo.png';
+import LogoUnitedNations from '../(assets)/logo-un.svg';
 
 export type CarouselCardProps = {
 	quote: {
@@ -38,7 +38,7 @@ export function QuotesCarousel(cardsObj: CarouselCardProps) {
 							</Typography>
 						))}
 					</Typography>
-					<Image src={UNImageData} alt="UN symbol" className="mb-3 mt-5 h-auto w-12" />
+					<Image src={LogoUnitedNations} alt="Logo United Nations" className="mb-3 mt-5 h-auto w-12" />
 					<Typography size="sm" className="mb-12">
 						{card.author}
 					</Typography>
