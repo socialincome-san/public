@@ -102,7 +102,7 @@ export default async function Footer({ lang, region }: DefaultParams) {
 						/>
 						<FooterLink
 							Icon={UserCircleIcon}
-							label={translator.t('navigation.my-profile')}
+							label={translator.t('navigation.my-account')}
 							url={`/${lang}/${region}/login`}
 						/>
 						<FooterLink Icon={DocumentTextIcon} label={translator.t('footer.legal')} url={`/${lang}/${region}/legal`} />

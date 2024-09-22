@@ -9,112 +9,112 @@
 		"take-action": "Passa all'azione",
 		"title-1": [
 			{
-				"text": "How many people can you lift out of poverty "
+				"text": "Quante persone puoi aiutare a sconfiggere la povertà "
 			},
 			{
-				"text": "with only 1%",
+				"text": "con solo l'1%",
 				"color": "accent"
 			},
 			{
-				"text": "of your income"
+				"text": "del tuo stipendio?"
 			}
 		]
 	},
 	"section-2": {
-		"title-1": "Those that live in Sierra Leone’s poorest communities know what it takes to rise out of poverty.",
+		"title-1": "Le persone che vivono nelle comunità più povere della Sierra Leone sanno di cosa hanno bisogno per uscire dalla povertà.",
 		"title-2": [
 			{
-				"text": "They just rarely have the opportunity – or the money – to do so. That’s where "
+				"text": "Però, raramente hanno l'opportunità – o il denaro – per farlo. È qui che "
 			},
 			{
-				"text": "you and Social Income",
+				"text": "tu puoi fare la differenza, ",
 				"color": "accent"
 			},
 			{
-				"text": "come in."
+				"text": "insieme a Social Income."
 			}
 		],
-		"title-3": "Unique Process for Fair Selection",
-		"text-3.1": "Identifying those in need: Through collaboration with local NGOs in Sierra Leone, we target individuals living in poverty who can benefit from a three-year predictable income, empowering them to invest in their future.",
-		"text-3.2": "Selecting randomly: Our randomized selection process is transparent and publicly verifiable, eliminating human biases and favoritism. This ensures fairness and equal chances for all individuals in poverty to benefit.",
-		"title-4": "Direct Giving, Direct Results",
-		"text-4": "We directly transfer your contribution onto the mobile phones of individuals in need, empowering them to overcome poverty through their own choices and efforts.",
-		"title-5": "Ongoing Support",
-		"text-5": "Our recipients receive continuous support from our local partners throughout and even after the program, maximizing the overall impact. Specifically, the third year of the program is focused on facilitating a seamless transition as they move on from the program."
+		"title-3": "Un Processo di Selezione Equo e Trasparente",
+		"text-3.1": "Come identifichiamo chi ha bisogno: In collaborazione con ONG locali in Sierra Leone, individuiamo persone che vivono in povertà e che possono beneficiare di un reddito sicuro per tre anni, aiutandole a investire nel proprio futuro.",
+		"text-3.2": "Selezione casuale: Il nostro metodo di selezione casuale è trasparente e verificabile da chiunque, eliminando pregiudizi e favoritismi. Così, tutti hanno le stesse possibilità di ricevere aiuto.",
+		"title-4": "Donazioni Dirette, Risultati Immediati",
+		"text-4": "Trasferiamo direttamente il tuo contributo sui telefoni cellulari di chi ha bisogno, permettendo loro di affrontare la povertà grazie alle proprie decisioni e impegno.",
+		"title-5": "Supporto Continuo",
+		"text-5": "I beneficiari ricevono un supporto costante dai nostri partner locali, anche dopo la fine del programma, per assicurare un impatto duraturo. In particolare, il terzo anno serve a preparare una transizione senza difficoltà verso una vita autonoma dopo il programma."
 	},
 	"section-3": {
-		"title-faded": "My impact",
-		"title": "What's your monthly income?",
-		"subtitle": "Why is this important?",
+		"title-faded": "Il mio impatto",
+		"title": "Qual è il tuo stipendio mensile?",
+		"subtitle": "Perché è importante?",
 		"cta": "Mostra il mio impatto"
 	},
 	"section-4": {
 		"title-1": [
 			{
-				"text": "What would change if you gave "
+				"text": "Cosa cambierebbe se "
 			},
 			{
-				"text": "away 1% of your income ",
+				"text": "donassi l’1% del tuo reddito ",
 				"color": "accent"
 			},
 			{
-				"text": "every month?"
+				"text": "ogni mese?"
 			}
 		],
-		"cta": "Watch video and find out ›"
+		"cta": "Guarda il video e scoprilo ›"
 	},
 	"section-5": {
 		"title-1": [
 			{
-				"text": "Change from human to human. "
+				"text": "Cambiamento da persona a persona. "
 			},
 			{
-				"text": "From mobile to mobile.",
+				"text": "Da telefono a telefono.",
 				"color": "accent"
 			}
 		],
-		"subtitle-1": "Social Income is a new way to fight poverty in the Global South. Digital, efficient and mobile."
+		"subtitle-1": "Social Income è un nuovo modo per combattere la povertà nel Sud del mondo. Digitale, efficiente e mobile."
 	},
 	"section-faq": {
-		"title": "This sounds good, but ... ",
-		"cta": "All FAQ"
+		"title": "Tutto questo sembra fantastico, ma ... ",
+		"cta": "Tutte le  FAQ"
 	},
 	"section-7": {
-		"title-1": "Social Income combines three approaches to change.",
+		"title-1": "Combiniamo tre criteri per ottenere un cambiamento.",
 		"cards": [
 			{
 				"category": "Concept",
-				"title": "Universal Basic Income",
+				"title": "Reddito di Base Universale",
 				"points": [
 					{
-						"text": "Reduces discrimination"
+						"text": "Riduce le discriminazioni"
 					},
 					{
-						"text": "Fights income inequality"
+						"text": "Combatte la disparità di reddito"
 					},
 					{
-						"text": "Empowers marginalized groups"
+						"text": "Rafforza i gruppi più vulnerabili"
 					},
 					{
-						"text": "Improves working conditions"
+						"text": "Migliora le condizioni di lavoro"
 					}
 				]
 			},
 			{
 				"category": "Method",
-				"title": "Direct Cash Transfers",
+				"title": "Trasferimenti Diretti di Denaro",
 				"points": [
 					{
-						"text": "Reduces discrimination"
+						"text": "Minimizzano i costi operativi"
 					},
 					{
-						"text": "Fights income inequality"
+						"text": "Riducono la povertà"
 					},
 					{
-						"text": "Empowers marginalized groups"
+						"text": "Aiutano le persone ad emanciparsi"
 					},
 					{
-						"text": "Improves working conditions"
+						"text": "Stimolano i mercati locali"
 					}
 				]
 			},
@@ -123,16 +123,16 @@
 				"title": "Mobile Banking",
 				"points": [
 					{
-						"text": "Reduces discrimination"
+						"text": "Commissioni ridotte"
 					},
 					{
-						"text": "Fights income inequality"
+						"text": "Facile ed immediato"
 					},
 					{
-						"text": "Empowers marginalized groups"
+						"text": "Scalabile"
 					},
 					{
-						"text": "Improves working conditions"
+						"text": "A prova di crisi"
 					}
 				]
 			}
@@ -143,112 +143,73 @@
 			{
 				"quote": [
 					{
-						"text": "«Wir müssen uns ernsthaft damit befassen "
+						"text": "« I trasferimenti di denaro consentono ai beneficiari di ottenere una serie di beni e servizi "
 					},
 					{
-						"text": "ein klug konzipiertes bedingungsloses Grundeinkommen ",
+						"text": "di loro scelta direttamente ",
 						"color": "accent"
 					},
 					{
-						"text": "zu implementieren. So können uns Krisen zwar treffen, aber ohne zerstörerische Kraft zu entfalten.»"
+						"text": "dai mercati locali e dai fornitori di servizi. »"
 					}
 				],
-				"author": "Vereinte Nationen"
+				"author": "Comitato Internazionale della Croce Rossa"
 			},
 			{
 				"quote": [
 					{
-						"text": "«Wir müssen uns ernsthaft damit befassen, "
+						"text": "« Dobbiamo seriamente considerare l'implementazione di un RBU ben progettato, "
 					},
 					{
-						"text": "ein klug konzipiertes bedingungsloses Grundeinkommen ",
+						"text": "un Reddito di Base Universale ben progettato, ",
 						"color": "accent"
 					},
 					{
-						"text": "zu implementieren. So können uns Krisen zwar treffen, aber ohne zerstörerische Kraft zu entfalten.»"
+						"text": "in modo che gli shock possano arrivare, ma non distruggano. »"
 					}
 				],
-				"author": "Vereinte Nationen"
+				"author": "Nazioni Unite"
 			},
 			{
 				"quote": [
 					{
-						"text": "« Fixing global poverty is hard. But one solution might be "
+						"text": "« Risolvere la povertà globale è difficile. Ma una soluzione potrebbe essere "
 					},
 					{
-						"text": "as simple as using a mobile phone ",
+						"text": "semplice come utilizzare un telefono cellulare ",
 						"color": "accent"
 					},
 					{
-						"text": "to access financial services. »"
+						"text": "per accedere ai servizi finanziari. »"
 					}
 				],
-				"author": "World Bank"
+				"author": "Banca Mondiale"
 			}
 		]
-	},
-	"section-9": {
-		"title-1": [
-			{
-				"text": "Unique Recipients Selection Process for "
-			},
-			{
-				"text": "Fair Selection.",
-				"color": "accent"
-			}
-		],
-		"text-1.1": "Identifying those in need: Through collaboration with local NGOs in Sierra Leone, we target individuals living in poverty who can benefit from a three-year predictable income, empowering them to invest in their future.",
-		"text-1.2": "Selecting randomly: Our randomized selection process is transparent and publicly verifiable, eliminating human biases and favoritism. This ensures fairness and equal chances for all individuals in poverty to benefit."
-	},
-	"section-x": {
-		"portraits": [
-			{
-				"name": "Vanja",
-				"country": "Switzerland",
-				"text": "It’s a great example of redistribution of wealth based on solidarity and enabled by today's technology."
-			}
-		],
-		"testimonial-2": "We are living in a world of opportunities, let's make sure we share this privilege with everyone else.",
-		"author-2": "Carlos, United States",
-		"testimonial-3": "I contribute to Social Income not only because it's simple, but because research has shown it's extremely effective.",
-		"author-3": "Ruben, Switzerland",
-		"testimonial-4": "The question is not why to get involved, but how to possibly abide not doing so. Social Income is an urgent necessity in contemporary society.",
-		"author-4": "Han, United States",
-		"testimonial-5": "Today's global inequality is the consequence of centuries of unequal progress. Social Income is a new way to address this.",
-		"author-5": "Claudia, Switzerland"
 	},
 	"section-10": {
 		"title-1": [
 			{
-				"text": "Contribute to the "
+				"text": "Contribuisci agli "
 			},
 			{
-				"text": "United Nations",
+				"text": "Obiettivi di Sviluppo Sostenibile",
 				"color": "primary"
 			},
 			{
-				"text": "’"
+				"text": "delle Nazioni Unite."
 			}
 		],
-		"sdg-1-title": "End poverty in all its forms, everywhere.",
-		"sdg-1": "SDG #1",
-		"sdg-10-title": "Reduce inequality within and \namong countries.",
-		"sdg-10": "SDG #10"
+		"sdg-1-title": "Porre fine alla povertà in tutte le sue forme, ovunque.",
+		"sdg-1": "SDG 1",
+		"sdg-10-title": "Reduce inequality within and among countries.",
+		"sdg-10": "SDG 10"
 	},
 	"section-11": {
 		"title": "Journal",
-		"card-1-title": "Waking up",
+		"card-1-title": "Test",
 		"card-1-author": "Aurélie Schmiedlin",
-		"card-1-description": "The other night I woke up with the sensation that we were hacked. Luckily this was just a dream. It may have been related to our participation in Finclusion Week, which is a big deal in the ...",
-		"card-2-title": "The other night I woke up",
-		"card-2-author": "Aurélie Schmiedlin",
-		"card-2-description": "The other night I woke up with the sensation that we were hacked. Luckily this was just a dream. It may have been related to our participation in Finclusion Week, which is a big deal in the ...",
-		"card-3-title": "The other night I woke up",
-		"card-3-author": "Aurélie Schmiedlin",
-		"card-3-description": "The other night I woke up with the sensation that we were hacked. Luckily this was just a dream. It may have been related to our participation in Finclusion Week, which is a big deal in the ...",
-		"card-4-title": "The other night I woke up",
-		"card-4-author": "Aurélie Schmiedlin",
-		"card-4-description": "The other night I woke up with the sensation that we were hacked. Luckily this was just a dream. It may have been related to our participation in Finclusion Week, which is a big deal in the ...",
-		"all-articles": "Alle Artikel ansehen ›"
+		"card-1-description": "Test",
+		"all-articles": "See all articles ›"
 	}
 }

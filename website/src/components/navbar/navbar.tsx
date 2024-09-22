@@ -17,7 +17,7 @@ export default async function Navbar({ lang, region }: DefaultParams) {
 				language: translator.t('language'),
 				region: translator.t('region'),
 				currency: translator.t('currency'),
-				myProfile: translator.t('navigation.my-profile'),
+				myProfile: translator.t('navigation.my-account'),
 				contactDetails: translator.t('tabs.contact-details'),
 				payments: translator.t('tabs.contributions'),
 				signOut: translator.t('sign-out'),
