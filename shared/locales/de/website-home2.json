@@ -9,7 +9,7 @@
 		"take-action": "Handle jetzt",
 		"title-1": [
 			{
-				"text": "Wie vielen Menschen kannst Du mit 1 % deines Einkommens "
+				"text": "Wie vielen Menschen kannst Du mit "
 			},
 			{
 				"text": "1 % deines Einkommens",
@@ -21,66 +21,66 @@
 		]
 	},
 	"section-2": {
-		"title-1": "Those that live in Sierra Leone’s poorest communities know what it takes to rise out of poverty.",
+		"title-1": "Die Menschen in den ärmsten Regionen Sierra Leones kennen den Weg aus der Armut. ",
 		"title-2": [
 			{
-				"text": "They just rarely have the opportunity – or the money – to do so. That’s where "
+				"text": "Meist fehlen jedoch die finanziellen Mittel, um diesen Weg tatsächlich zu gehen. Hier kommst "
 			},
 			{
-				"text": "you and Social Income",
+				"text": "du und Social Income",
 				"color": "accent"
 			},
 			{
-				"text": "come in."
+				"text": "ins Spiel."
 			}
 		],
-		"title-3": "Unique Process for Fair Selection",
-		"text-3.1": "Identifying those in need: Through collaboration with local NGOs in Sierra Leone, we target individuals living in poverty who can benefit from a three-year predictable income, empowering them to invest in their future.",
-		"text-3.2": "Selecting randomly: Our randomized selection process is transparent and publicly verifiable, eliminating human biases and favoritism. This ensures fairness and equal chances for all individuals in poverty to benefit.",
-		"title-4": "Direct Giving, Direct Results",
-		"text-4": "We directly transfer your contribution onto the mobile phones of individuals in need, empowering them to overcome poverty through their own choices and efforts.",
-		"title-5": "Ongoing Support",
-		"text-5": "Our recipients receive continuous support from our local partners throughout and even after the program, maximizing the overall impact. Specifically, the third year of the program is focused on facilitating a seamless transition as they move on from the program."
+		"title-3": "Ein fairer Auswahlprozess",
+		"text-3.1": "Bedürftige identifizieren: In Zusammenarbeit mit lokalen NGOs in Sierra Leone erreichen wir gezielt Menschen in Armut, die von einem dreijährigen, verlässlichen Einkommen profitieren und in ihre Zukunft investieren können.",
+		"text-3.2": "Zufallsprinzip: Unser transparentes Losverfahren wählt unter den zuvor als bedürftig Identifizierten zufällig und vorurteilsfrei, damit alle die gleiche Chance haben.",
+		"title-4": "Direkte Hilfe, direkte Wirkung",
+		"text-4": "Deine Spende wird direkt auf die Mobil\u00ADtelefone der Menschen in Not über\u00ADwiesen und gibt ihnen so die Möglich\u00ADkeit, mit ihren eigenen Entscheidungen und An\u00ADstreng\u00ADungen die Armut zu über\u00ADwinden.",
+		"title-5": "Langfristige Begleitung",
+		"text-5": "Während und nach dem Programm be\u00ADgleiten unsere lokalen NGO-Partner die Empfänger:innen, um ihre ökonomische Eigen\u00ADständig\u00ADkeit zu fördern. Im dritten Jahr liegt der Schwer\u00ADpunkt auf einem naht\u00ADlosen Über\u00ADgang in ein selbst\u00ADbestimmtes Leben."
 	},
 	"section-3": {
-		"title-faded": "My impact",
-		"title": "What's your monthly income?",
-		"subtitle": "Why is this important?",
+		"title-faded": "Mein Impact",
+		"title": "Wie hoch ist dein monatliches Einkommen?",
+		"subtitle": "Warum ist das wichtig?",
 		"cta": "Beitrag berechnen"
 	},
 	"section-4": {
 		"title-1": [
 			{
-				"text": "What would change if you gave "
+				"text": "Was würde sich in deinem Alltag ändern,wenn du "
 			},
 			{
-				"text": "away 1% of your income ",
+				"text": "monatlich 1 % deines Einkommens ",
 				"color": "accent"
 			},
 			{
-				"text": "every month?"
+				"text": "spenden würdest?"
 			}
 		],
-		"cta": "Watch video and find out ›"
+		"cta": "Video ansehen und mehr erfahren ›"
 	},
 	"section-5": {
 		"title-1": [
 			{
-				"text": "Change from human to human. "
+				"text": "Von Mensch zu Mensch. "
 			},
 			{
-				"text": "From mobile to mobile.",
+				"text": "Von Handy zu Handy.",
 				"color": "accent"
 			}
 		],
-		"subtitle-1": "Social Income is a new way to fight poverty in the Global South. Digital, efficient and mobile."
+		"subtitle-1": "Social Income ist ein neuer Weg, Armut im Globalen Süden zu bekämpfen – digital, effizient und zeitgemäss."
 	},
 	"section-faq": {
-		"title": "This sounds good, but ... ",
-		"cta": "All FAQ"
+		"title": "Das klingt gut, aber ... ",
+		"cta": "Alle Fragen"
 	},
 	"section-7": {
-		"title-1": "Social Income combines three approaches to change.",
+		"title-1": "Social Income kombiniert drei Ansätze für echten Wandel.",
 		"cards": [
 			{
 				"category": "Konzept",
@@ -220,35 +220,26 @@
 	"section-10": {
 		"title-1": [
 			{
-				"text": "Contribute to the "
+				"text": "Dein Beitrag für die Ziele der "
 			},
 			{
-				"text": "United Nations",
+				"text": "Vereinten Nationen",
 				"color": "primary"
 			},
 			{
-				"text": "’"
+				"text": ""
 			}
 		],
-		"sdg-1-title": "End poverty in all its forms, everywhere.",
-		"sdg-1": "SDG #1",
-		"sdg-10-title": "Reduce inequality within and \namong countries.",
-		"sdg-10": "SDG #10"
+		"sdg-1-title": "Armut in jeder Form und überall beenden.",
+		"sdg-1": "SDG 1",
+		"sdg-10-title": "Ungleichheit in und zwischen Staaten verringern.",
+		"sdg-10": "SDG 10"
 	},
 	"section-11": {
 		"title": "Journal",
-		"card-1-title": "Waking up",
+		"card-1-title": "Test",
 		"card-1-author": "Aurélie Schmiedlin",
-		"card-1-description": "The other night I woke up with the sensation that we were hacked. Luckily this was just a dream. It may have been related to our participation in Finclusion Week, which is a big deal in the ...",
-		"card-2-title": "The other night I woke up",
-		"card-2-author": "Aurélie Schmiedlin",
-		"card-2-description": "The other night I woke up with the sensation that we were hacked. Luckily this was just a dream. It may have been related to our participation in Finclusion Week, which is a big deal in the ...",
-		"card-3-title": "The other night I woke up",
-		"card-3-author": "Aurélie Schmiedlin",
-		"card-3-description": "The other night I woke up with the sensation that we were hacked. Luckily this was just a dream. It may have been related to our participation in Finclusion Week, which is a big deal in the ...",
-		"card-4-title": "The other night I woke up",
-		"card-4-author": "Aurélie Schmiedlin",
-		"card-4-description": "The other night I woke up with the sensation that we were hacked. Luckily this was just a dream. It may have been related to our participation in Finclusion Week, which is a big deal in the ...",
+		"card-1-description": "Test",
 		"all-articles": "Alle Artikel ansehen ›"
 	}
 }

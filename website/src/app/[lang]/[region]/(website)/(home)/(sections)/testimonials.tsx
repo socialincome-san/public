@@ -1,7 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import carlosImg from '@/app/[lang]/[region]/(website)/our-work/(assets)/carlos.jpg';
 import claudiaImage from '@/app/[lang]/[region]/(website)/our-work/(assets)/claudia.jpg';
-import hanImage from '@/app/[lang]/[region]/(website)/our-work/(assets)/han.jpg';
 import rubenImage from '@/app/[lang]/[region]/(website)/our-work/(assets)/ruben.jpg';
 import vanjaImg from '@/app/[lang]/[region]/(website)/our-work/(assets)/vanja.jpg';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -35,12 +34,6 @@ export async function Testimonials({ lang }: DefaultParams) {
 						image: rubenImage,
 						text: translator.t('contributors.portraits.ruben'),
 						country: translator.t('CH'),
-					},
-					{
-						name: 'Han',
-						image: hanImage,
-						text: translator.t('contributors.portraits.han'),
-						country: translator.t('US'),
 					},
 					{
 						name: 'Claudia',

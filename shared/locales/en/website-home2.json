@@ -223,32 +223,23 @@
 				"text": "Contribute to the "
 			},
 			{
-				"text": "United Nations",
+				"text": "United Nations’",
 				"color": "primary"
 			},
 			{
-				"text": "’"
+				"text": ""
 			}
 		],
 		"sdg-1-title": "End poverty in all its forms, everywhere.",
-		"sdg-1": "SDG #1",
-		"sdg-10-title": "Reduce inequality within and \namong countries.",
-		"sdg-10": "SDG #10"
+		"sdg-1": "SDG 1",
+		"sdg-10-title": "Reduce inequality within and among countries.",
+		"sdg-10": "SDG 10"
 	},
 	"section-11": {
 		"title": "Journal",
-		"card-1-title": "Waking up",
+		"card-1-title": "Test",
 		"card-1-author": "Aurélie Schmiedlin",
-		"card-1-description": "The other night I woke up with the sensation that we were hacked. Luckily this was just a dream. It may have been related to our participation in Finclusion Week, which is a big deal in the ...",
-		"card-2-title": "The other night I woke up",
-		"card-2-author": "Aurélie Schmiedlin",
-		"card-2-description": "The other night I woke up with the sensation that we were hacked. Luckily this was just a dream. It may have been related to our participation in Finclusion Week, which is a big deal in the ...",
-		"card-3-title": "The other night I woke up",
-		"card-3-author": "Aurélie Schmiedlin",
-		"card-3-description": "The other night I woke up with the sensation that we were hacked. Luckily this was just a dream. It may have been related to our participation in Finclusion Week, which is a big deal in the ...",
-		"card-4-title": "The other night I woke up",
-		"card-4-author": "Aurélie Schmiedlin",
-		"card-4-description": "The other night I woke up with the sensation that we were hacked. Luckily this was just a dream. It may have been related to our participation in Finclusion Week, which is a big deal in the ...",
-		"all-articles": "Alle Artikel ansehen ›"
+		"card-1-description": "Test",
+		"all-articles": "See all articles ›"
 	}
 }
