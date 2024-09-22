@@ -18,7 +18,9 @@ export async function MonthlyIncome({ lang }: DefaultParams) {
 				{translator.t('section-3.title')}
 			</Typography>
 			<IncomeInput />
-			<Button className="mt-10 mx-auto hidden md:block"><Typography>{translator.t('section-3.cta')}</Typography></Button>
+			<Button className="mx-auto mt-10 hidden md:block">
+				<Typography>{translator.t('section-3.cta')}</Typography>
+			</Button>
 		</BaseContainer>
 	);
 }
