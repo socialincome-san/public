@@ -30,6 +30,3 @@
     - Promote the release to Production
     - Send the release to Production App Review
 1. When both app reviews are approved by Apple and Google, release them into the stores
-
-
-
