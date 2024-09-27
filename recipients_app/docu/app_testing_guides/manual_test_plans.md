@@ -1,5 +1,5 @@
 # Manual test plans
-Usually these tests are done on the environment STAGING with the corresponding [test accounts](./test_accounts.md).
+Usually these tests are done on the environment STAGING with the corresponding [test accounts](https://docs.google.com/document/d/1-y__kbnLX3KCHp2pdXhzq58rbMmnXwUI-Cirihy224o/edit?pli=1#heading=h.4a9qjbxltxku).
 
 ## Registration
 - On the Account creation page, by clicking the text link “Privacy Policy” a webview with the privacy policy is opened.

@@ -22,7 +22,7 @@ See Firebase Staging Project and Admin Staging Tool
 
 ### App Name is: Stage Social Income
 
-Login Credentials: Either use these [test accounts](./test_accounts.md) or your mobile number on file in the recipients list in the [Admin Staging Tool](https://console.firebase.google.com/u/1/project/social-income-staging/overview)
+Login Credentials: Either use these [test accounts](https://docs.google.com/document/d/1-y__kbnLX3KCHp2pdXhzq58rbMmnXwUI-Cirihy224o/edit?pli=1#heading=h.4a9qjbxltxku) or your mobile number on file in the recipients list in the [Admin Staging Tool](https://console.firebase.google.com/u/1/project/social-income-staging/overview)
 
 ### iOS Platform
 Install the app either from Firebase App Distribution (Invitation needed) or TestFlight (Invitation needed on App Store Connect).
