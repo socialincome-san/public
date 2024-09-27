@@ -7,7 +7,7 @@ goals. It lets recipients;
 2. confirm monthly payments
 3. fill out surveys for the impact measurement
 
-The apps are build with Flutter and run on Android and iPhones.
+The apps are build with Flutter and run on Android and iOS.
 
 ## Basic Setup
 
@@ -22,6 +22,8 @@ Code with predefined build configs.
 We have two build flavors:
 
 - `dev` -> Connecting with Firebase Emulators (Firestore and Auth)
+- `stage` -> Connecting with staging online firebase project and need
+  real Firebase configuration json / plist file
 - `prod` -> Connecting with production online firebase project and need
   real Firebase configuration json / plist file
 
