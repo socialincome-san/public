@@ -9,7 +9,7 @@
     1. Run CodeMagic Build "iOS Production"
     1. Run CodeMagic Build "Android Production"
 1. Add git tags with current app version and code
-    - like "app-release-ios-1.1.13(30)" and "app-release-andrord-1.1.13(30)"
+    - like "app-release-ios-1.1.13(30)" and "app-release-android-1.1.13(30)"
 1. Create a new Apple App Store app version entry:
     - Login to [Appstore Connect](https://appstoreconnect.apple.com/apps)
     - Select app "Social Income"
