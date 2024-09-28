@@ -3,50 +3,43 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 
-export async function Overview({ lang, region }: DefaultParams) {
+export async function Overview({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-home2'],
 	});
 
 	return (
-		<BaseContainer className="mb-48 flex flex-col items-center justify-center">
-			<Typography size="3xl" weight="medium" color="foreground-dark" className="my-10 w-3/5 text-center">
+		<BaseContainer className="mx-auto mb-16 flex w-4/5 flex-col items-center justify-center md:mb-48 lg:w-3/5">
+			<Typography size="3xl" weight="medium" className="my-10 text-center">
 				{translator.t('section-2.title-1')}
 			</Typography>
-			<div className="mb-8 w-3/5 text-center">
+			<div className="mb-8 text-center">
 				{translator.t<{ text: string; color?: FontColor }[]>('section-2.title-2').map((title, index) => (
-					<Typography
-						as="span"
-						size="3xl"
-						weight="medium"
-						color={title.color}
-						key={index}
-						className="w-3/5 text-center"
-					>
+					<Typography as="span" size="3xl" weight="medium" color={title.color} key={index}>
 						{title.text}{' '}
 					</Typography>
 				))}
 			</div>
-			<Typography size="3xl" weight="medium" color="foreground-dark" className="mb-5 mt-12 w-3/5 text-center">
+			<Typography size="3xl" weight="medium" className="mb-5 mt-12 text-center">
 				{translator.t('section-2.title-3')}
 			</Typography>
-			<ol className="mb-8 w-3/5 list-decimal">
+			<ol className="mb-8 list-decimal">
 				<li>
-					<Typography>{translator.t('section-2.text-3.1')}</Typography>
+					<Typography as="span">{translator.t('section-2.text-3.1')}</Typography>
 				</li>
 				<li>
-					<Typography>{translator.t('section-2.text-3.2')}</Typography>
+					<Typography as="span">{translator.t('section-2.text-3.2')}</Typography>
 				</li>
 			</ol>
-			<Typography size="3xl" weight="medium" color="foreground-dark" className="mb-5 mt-12 w-3/5 text-center">
+			<Typography size="3xl" weight="medium" className="mb-5 mt-12 text-center">
 				{translator.t('section-2.title-4')}
 			</Typography>
-			<Typography className="mb-8 w-3/5">{translator.t('section-2.text-4')}</Typography>
-			<Typography size="3xl" weight="medium" color="foreground-dark" className="mb-5 mt-12 w-3/5 text-center">
+			<Typography className="mb-8">{translator.t('section-2.text-4')}</Typography>
+			<Typography size="3xl" weight="medium" className="mb-5 mt-12 text-center">
 				{translator.t('section-2.title-5')}
 			</Typography>
-			<Typography className="w-3/5">{translator.t('section-2.text-5')}</Typography>
+			<Typography className="w-full">{translator.t('section-2.text-5')}</Typography>
 		</BaseContainer>
 	);
 }

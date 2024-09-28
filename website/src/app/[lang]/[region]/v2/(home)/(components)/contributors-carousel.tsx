@@ -1,6 +1,7 @@
 'use client';
+
 import { useScreenSize } from '@/hooks/useScreenSize';
-import { Card, CardFooter, CardHeader, Carousel, CarouselContent, Typography } from '@socialincome/ui';
+import { Carousel, CarouselContent, Typography } from '@socialincome/ui';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 
@@ -13,23 +14,23 @@ type PortraitProps = {
 
 function Portrait({ name, text, country, image }: PortraitProps) {
 	return (
-		<Card className="my-10 flex min-h-[15rem] flex-col rounded-none border-x-0 border-y-2 bg-inherit">
-			<CardHeader>
+		<div className="mb-16 px-1">
+			<div className="flex h-64 flex-col justify-between border-b-2 border-t-2 py-4 md:h-72">
 				<Typography size="2xl" weight="normal" color="foreground">
 					{text}
 				</Typography>
-			</CardHeader>
-			<CardFooter className=" flex items-center space-x-6 justify-self-end">
-				<Image className="h-14 w-14 rounded-full bg-gray-50" src={image} alt={`${name} Image`} />
-				<Typography size="sm" color="foreground">
-					{name}, {country}
-				</Typography>
-			</CardFooter>
-		</Card>
+				<div className="flex">
+					<Image className="h-14 w-14 rounded-full bg-gray-50" src={image} alt={`${name} Image`} />
+					<Typography size="sm" color="foreground">
+						{name}, {country}
+					</Typography>
+				</div>
+			</div>
+		</div>
 	);
 }
 
-export function ContributorsPeopleCarouselv2({ portraits }: { portraits: PortraitProps[] }) {
+export function ContributorsCarousel({ portraits }: { portraits: PortraitProps[] }) {
 	const screenSize = useScreenSize();
 
 	let slidesToScroll;

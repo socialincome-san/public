@@ -1,0 +1,60 @@
+{
+	"metadata": {
+		"title": "Les finances | Social Income"
+	},
+	"amount": "{{ value, currency }}",
+	"section-1": {
+		"title-1": "La transparence engendre la confiance.",
+		"title-2": "La confiance engendre la solidarité.",
+		"since-march-2020": "Depuis mars 2020",
+		"totalContributions": "{{ contributorCount }} donateurs pour un montant total de {{value, currency}}",
+		"totalPayments": "{{ value }} paiements par téléphonie mobile effectués",
+		"totalRecipients": "{{ value }} bénéficiaires engagés dans un programme de 3 ans"
+	},
+	"section-2": {
+		"title": "Comment Social Income est-il financé?",
+		"donations": "Dons",
+		"amount-since-march-2020": "Montant total depuis mars 2020",
+		"contributions-from": "{{ value, currency }} de",
+		"individuals": "{{ count }} personnes",
+		"institutions": "{{ count }} institutions",
+		"past-payouts": "Montant déjà versé: {{ value, currency }}",
+		"payments-future": "Montant à verser: {{ value, currency }}",
+		"past-costs": "Montant utilisé pour couvrir les coûts: {{ value, currency }}",
+		"future-costs": "Montant à utiliser pour couvrir les coûts: {{ value, currency }}"
+	},
+	"section-3": {
+		"title": "D'où viennent nos donateurs?",
+		"subtitle": "Nous avons reçu des contributions de {{ value }} pays.",
+		"country-amount": "{{ value, currency }} de {{ contributorsCount }} contributeurs",
+		"all-countries": "Voir tous les pays"
+	},
+	"section-4": {
+		"title": "Comment est utilisé l'argent?",
+		"amount-since-march-2020": "Montant total depuis mars 2020",
+		"expenses": "Dépenses",
+		"payments-total": "{{ value, currency }} versés à {{ recipientsCount }} bénéficiaires",
+		"payments-last-month": "Le mois dernier: {{ value, currency }} versés à {{ recipientsCount }} bénéficiaires",
+		"payments-future": "À payer: {{ value, currency }}",
+		"project-costs": "{{ value, currency }} frais de fonctionnement du projet",
+		"donation-fees": "Frais de transaction: {{ value, currency }}",
+		"donation-fees-tooltip": "Frais pour le transfert d'argent entre toi et nous",
+		"delivery-fees": "Frais de livraison: {{ value, currency }}",
+		"delivery-fees-tooltip": "Frais pour le transfert d’argent entre nous et les bénéficiaires.",
+		"exchange-rate-loss": "Perte de taux de change: {{ value, currency }}",
+		"exchange-rate-loss-tooltip": "Les pertes de change sont principalement dues à l'inflation en Sierra Leone.",
+		"account-fees": "Frais de compte: {{ value, currency }}",
+		"account-fees-tooltip": "Frais pour la gestion des comptes en Sierra Leone et en Suisse.",
+		"administrative-costs": "Frais administratifs: {{ value, currency }}",
+		"administrative-costs-tooltip": "Frais de licence, d’hébergement de site internet et d’autres services.",
+		"fundraising-costs": "Collecte de fonds et marketing: {{ value, currency }}",
+		"fundraising-costs-tooltip": "Frais de publicité et de recherche de fonds.",
+		"staff-costs": "Personnel local: {{ value, currency }}",
+		"staff-costs-tooltip": "Salaires du personnel en Sierra Leone.",
+		"reserves": "Réserves",
+		"covers-payments": "Ceci couvre les paiements pour",
+		"covers-payments-1": "{{ recipientsCount }} bénéficiaires pendant {{ monthsCount }} mois",
+		"covers-payments-2": "{{ recipientsCount }} bénéficiaires pendant 1 mois",
+		"reserves-text": "Nous nous assurons d'avoir assez de  liquidités pour couvrir les paiements sur plusieurs mois sans dépendre des contributions."
+	}
+}

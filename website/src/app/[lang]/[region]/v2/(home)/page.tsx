@@ -1,5 +1,9 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { Approach } from '@/app/[lang]/[region]/v2/(home)/(sections)/approach';
+import { FAQ } from '@/app/[lang]/[region]/v2/(home)/(sections)/faq';
+import { Quotes } from '@/app/[lang]/[region]/v2/(home)/(sections)/quotes';
+import { SDGGoals } from '@/app/[lang]/[region]/v2/(home)/(sections)/sdg-goals';
+import { Testimonials } from '@/app/[lang]/[region]/v2/(home)/(sections)/testimonials';
 import { ExplainerVideo } from './(sections)/explainer-video';
 import { HeroVideo } from './(sections)/hero-video';
 import { MobileIllustration } from './(sections)/mobile-illustration';
@@ -7,10 +11,6 @@ import { MonthlyIncome } from './(sections)/monthly-income';
 import { Overview } from './(sections)/overview';
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-(home)', 'website-videos'],
-	});
 	return (
 		<>
 			<HeroVideo lang={lang} region={region} />
@@ -18,14 +18,13 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			<MonthlyIncome lang={lang} region={region} />
 			<ExplainerVideo lang={lang} region={region} />
 			<MobileIllustration lang={lang} region={region} />
-			{/*<Faq lang={lang} region={region} />*/}
-			{/*<Approach lang={lang} region={region} />*/}
-			{/*<Quotes lang={lang} region={region} />*/}
+			<FAQ lang={lang} region={region} />
+			<Approach lang={lang} region={region} />
+			<Quotes lang={lang} region={region} />
 			{/*<RecipientSelection lang={lang} region={region} />*/}
-			{/*<Testimonials lang={lang} region={region} />*/}
-			{/*<Sdgoals lang={lang} region={region} />*/}
+			<Testimonials lang={lang} region={region} />
+			<SDGGoals lang={lang} region={region} />
 			{/*<Journal lang={lang} region={region} />*/}
-			<div className="bg-foreground-dark mt-10 h-24 w-screen" />
 		</>
 	);
 }

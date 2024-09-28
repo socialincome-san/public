@@ -35,24 +35,26 @@ export function QuotesCarousel(cardsObj: CarouselCardProps) {
 			slidesToScroll = 3;
 			break;
 	}
+
+	// TODO: update carousel content
 	return (
 		<Carousel
 			options={{
 				loop: false,
 				autoPlay: { enabled: true, delay: 5000 },
-				slidesToScroll: slidesToScroll,
+				slidesToScroll: 1,
 			}}
 			showDots={true}
 		>
 			{cardsArr.map((card, index) => (
-				<CarouselContent key={index} className="flex basis-full flex-col items-center justify-center">
-					<div className="w-4/5 self-center text-center">
+				<CarouselContent key={index} className="flex flex-col items-center">
+					<Typography size="3xl" className="w-4/5 text-center">
 						{card.quote.map((title, index) => (
-							<Typography as="span" size="3xl" color={title.color} key={index}>
+							<Typography as="span" color={title.color} key={index}>
 								{title.text}{' '}
 							</Typography>
 						))}
-					</div>
+					</Typography>
 					<Image src={UNImageData} alt="UN symbol" className="mb-3 mt-5 h-auto w-12" />
 					<Typography size="sm" className="mb-12">
 						{card.author}

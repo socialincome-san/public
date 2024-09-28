@@ -20,10 +20,7 @@ module.exports = {
 				input: 'hsl(var(--input) / <alpha-value>)',
 				ring: 'hsl(var(--ring) / <alpha-value>)',
 				background: 'hsl(var(--background) / <alpha-value>)',
-				foreground: {
-					DEFAULT: 'hsl(var(--foreground) / <alpha-value>)',
-					dark: 'hsl(var(--foreground-dark) / <alpha-value>)',
-				},
+				foreground: 'hsl(var(--foreground) / <alpha-value>)',
 				muted: {
 					DEFAULT: 'hsl(var(--muted) / <alpha-value>)',
 					foreground: 'hsl(var(--muted-foreground) / <alpha-value>)',
@@ -83,6 +80,17 @@ module.exports = {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
+			},
+			strokeWidth: {
+				3: '3px',
+				4: '4px',
+			},
+			typography: {
+				DEFAULT: {
+					css: {
+						color: 'var(--foreground)',
+					},
+				},
 			},
 		},
 	},

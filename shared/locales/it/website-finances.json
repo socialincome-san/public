@@ -31,7 +31,6 @@
 	},
 	"section-4": {
 		"title": "Come vengono utilizzati i fondi?",
-		"subtitle": "Trasferiamo sempre il 100% delle donazioni individuali ricorrenti. Le donazioni istituzionali sono utilizzate per coprire i nostri costi operativi.",
 		"amount-since-march-2020": "Importo totale da marzo 2020",
 		"expenses": "Spese",
 		"payments-total": "{{ value, currency }} trasferito a {{ recipientsCount }} beneficiari",

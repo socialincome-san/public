@@ -12,9 +12,10 @@ Open `recipients_app` project folder in your development environment of
 choice. Building flavor should work seamlessly for Android Studio and VS
 Code with predefined build configs.
 
-We have two build flavors:
+We have three build flavors:
 
 - `dev` -> Connecting with Firebase Emulators (Firestore and Auth)
+- `stage` -> Connecting with staging online firebase project
 - `prod` -> Connecting with production online firebase project and need
   real Firebase configuration json / plist file
 
@@ -31,19 +32,39 @@ setup.
 
 ## Rebuilding JSON Serialization
 
-flutter pub run build_runner watch --delete-conflicting-outputs
+```
+dart run build_runner watch --delete-conflicting-outputs
+```
 
-# Testing
+or
 
-## Run golden tests
-
-Run `flutter test --update-golden` to update golden files.
+```
+dart run build_runner build --delete-conflicting-outputs
+```
 
 ## Rebuilding Translations
 
 Translations are stored in lib/l10n/app_en.arb. To rebuild the
-translations after you changed something run: `flutter gen-l10n`
+translations after you changed something run:
+
+```
+flutter gen-l10n
+```
 
 To use a translated string in the code use:
 `AppLocalizations.of(context).helloWorld` and import:
 `import 'package:flutter_gen/gen_l10n/app_localizations.dart';`
+
+## Testing
+
+### Manually
+
+See [How to test](./docu/app_testing_guides/how_to_test.md)
+
+### Run golden tests
+
+Run `flutter test --update-golden` to update golden files.
+
+## Releasing
+
+See [How to release the app](./docu/app_release_guides/releasing.md)

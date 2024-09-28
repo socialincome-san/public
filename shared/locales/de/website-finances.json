@@ -31,7 +31,6 @@
 	},
 	"section-4": {
 		"title": "Wie werden Spenden ausbezahlt?",
-		"subtitle": "Individuelle Spenden werden zu 100% ausbezahlt. Institutionell Spenden werden gebraucht um die operativen Kosten zu decken.",
 		"amount-since-march-2020": "Insgesamt seit März 2020",
 		"expenses": "Ausgaben",
 		"payments-total": "{{ value, currency }} ausbezahlt an {{ recipientsCount }} Empfänger:innen",

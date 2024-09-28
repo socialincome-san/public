@@ -1,6 +1,5 @@
 export const COLORS = [
 	'foreground',
-	'foreground-dark',
 	'background',
 	'border',
 	'input',
@@ -29,7 +28,6 @@ export const COLORS = [
 	'bg-pink-50',
 	'bg-muted',
 	'bg-primary',
-	'bg-foreground-dark',
 	'bg-background',
 	'bg-transparent',
 ] as const;
@@ -38,7 +36,6 @@ export type Color = (typeof COLORS)[number];
 export type FontColor = Extract<
 	Color,
 	| 'foreground'
-	| 'foreground-dark'
 	| 'background'
 	| 'primary'
 	| 'primary-foreground'
@@ -67,7 +64,6 @@ export type BackgroundColor = Extract<
 	| 'bg-purple-50'
 	| 'bg-pink-50'
 	| 'bg-muted'
-	| 'bg-foreground-dark'
 	| 'bg-background'
 	| 'bg-transparent'
 >;

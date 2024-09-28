@@ -1,0 +1,80 @@
+{
+	"credits": "Crédits",
+	"id": {
+		"video-01": "896169775",
+		"video-02": "488184818",
+		"video-03": "840215695"
+	},
+	"video-01": {
+		"credits": [
+			{
+				"role": "Directeur de la photographie",
+				"name": "Gabriel Koller"
+			},
+			{
+				"role": "Montage",
+				"name": "Nicolas Küng"
+			},
+			{
+				"role": "Conception sonore & musique",
+				"name": "Tidiane Sane"
+			},
+			{
+				"role": "Mixage & Mastering",
+				"name": "Nicola-Miloš Mišić"
+			},
+			{
+				"role": "Coloriste",
+				"name": "Simon Hardegger"
+			},
+			{
+				"role": "Assistant caméra",
+				"name": "Felix Rhodes"
+			},
+			{
+				"role": "Voix off",
+				"name": "Ted Limpert"
+			},
+			{
+				"role": "Animation graphique",
+				"name": "Raphael Schoen"
+			},
+			{
+				"role": "Traduction (sous-titres)",
+				"name": "Françoise Légeret (FR), Riccardo Tamburini (ES, IT)"
+			}
+		]
+	},
+	"video-02": {
+		"credits": [
+			{
+				"role": "Animation graphique",
+				"name": "Sueter Studio"
+			},
+			{
+				"role": "Storyboard",
+				"name": "Sandino Scheidegger"
+			},
+			{
+				"role": "Voix off",
+				"name": "Ana Matijasevic"
+			}
+		]
+	},
+	"video-03": {
+		"credits": [
+			{
+				"role": "Animation graphique",
+				"name": "Sueter Studio"
+			},
+			{
+				"role": "Storyboard",
+				"name": "Riccardo Tamburini"
+			},
+			{
+				"role": "Voix off",
+				"name": "Ted Limpert"
+			}
+		]
+	}
+}

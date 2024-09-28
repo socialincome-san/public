@@ -35,7 +35,7 @@ export default async function Section1({ params }: DefaultPageProps) {
 						</Typography>
 					))}
 				</Typography>
-				<div className="mt-12 grid grid-cols-1 gap-16 md:grid-cols-6 lg:grid-cols-8">
+				<div className="mb-16 mt-12 grid grid-cols-1 gap-16 md:grid-cols-6 lg:grid-cols-8">
 					<Typography size="2xl" weight="medium" className="md:col-span-3">
 						{translator.t(`section-2.evidence`)}
 					</Typography>

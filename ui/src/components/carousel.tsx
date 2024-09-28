@@ -118,6 +118,7 @@ const CarouselDots = ({ itemsLength, selectedIndex, onClick }: CarouselDots) => 
 						key={index}
 						className={cn('bg-muted-foreground h-2 w-2 rounded-full transition-all duration-300', {
 							'opacity-50': !selected,
+							'cursor-pointer': onClick,
 						})}
 						onClick={() => onClick?.(index)}
 					></div>
