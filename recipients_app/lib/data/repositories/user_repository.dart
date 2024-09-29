@@ -4,6 +4,7 @@ import "package:app/data/models/models.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
+import "package:package_info_plus/package_info_plus.dart";
 
 const String recipientCollection = "/recipients";
 
@@ -76,6 +77,35 @@ class UserRepository {
         log("auto-retrieval timeout");
       },
     );
+  }
+
+  Future<void> verifyEmail({
+    required String email,
+  }) async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    final packageName = packageInfo.packageName;
+
+    final uri = Uri.https(const String.fromEnvironment("SURVEY_BASE_URL"), "finishAuth");
+    final url = uri.toString();
+
+    final acs = ActionCodeSettings(
+      url: url,
+      handleCodeInApp: true,
+      iOSBundleId: packageName,
+      androidPackageName: packageName,
+      androidInstallApp: true,
+      androidMinimumVersion: "21",
+    );
+
+    FirebaseAuth.instance.sendSignInLinkToEmail(email: email, actionCodeSettings: acs);
+  }
+
+  Future<UserCredential?> isSignInWithEmailLink(String emailLink, String email) async {
+    // Confirm the link is a sign-in with email link.
+    if (FirebaseAuth.instance.isSignInWithEmailLink(emailLink)) {
+      return FirebaseAuth.instance.signInWithEmailLink(email: email, emailLink: emailLink);
+    }
+    return null;
   }
 
   Future<void> signOut() => firebaseAuth.signOut();
