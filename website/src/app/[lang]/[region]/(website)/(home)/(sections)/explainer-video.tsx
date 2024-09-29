@@ -19,12 +19,9 @@ export async function ExplainerVideo({ lang }: DefaultParams) {
 					</Typography>
 				))}
 			</Typography>
-			<div className="mx-auto mt-16 aspect-video w-72 md:mt-24 md:w-96">
+			<div className="mx-auto mt-16 aspect-video w-96 md:mt-24 md:w-[32rem]">
 				<VimeoVideo videoId={Number(translator.t('id.video-02'))} />
 			</div>
-			<Typography color="accent" className="mt-4">
-				{translator.t('section-4.cta')}
-			</Typography>
 		</BaseContainer>
 	);
 }

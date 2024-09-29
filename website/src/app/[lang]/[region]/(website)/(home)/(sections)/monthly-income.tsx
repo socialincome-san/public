@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Button, Typography } from '@socialincome/ui';
+import { BaseContainer, Typography } from '@socialincome/ui';
 import { IncomeInput } from '../(components)/income-input';
 
 export async function MonthlyIncome({ lang }: DefaultParams) {
@@ -17,10 +17,7 @@ export async function MonthlyIncome({ lang }: DefaultParams) {
 			<Typography size="3xl" className="py-8">
 				{translator.t('section-3.title')}
 			</Typography>
-			<IncomeInput />
-			<Button className="mx-auto mt-10 hidden md:block">
-				<Typography>{translator.t('section-3.cta')}</Typography>
-			</Button>
+			<IncomeInput translations={{ buttonText: translator.t('section-3.cta') }} />
 		</BaseContainer>
 	);
 }

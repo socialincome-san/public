@@ -14,6 +14,7 @@ export default async function Navbar({ lang, region }: DefaultParams) {
 			lang={lang}
 			region={region}
 			translations={{
+				donate: translator.t('navigation.donate'),
 				language: translator.t('language'),
 				region: translator.t('region'),
 				currency: translator.t('currency'),

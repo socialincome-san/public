@@ -1,9 +1,10 @@
 'use client';
 
 import { useI18n } from '@/components/providers/context-providers';
-import { websiteCurrencies } from '@/i18n';
+import { websiteCurrencies, WebsiteCurrency } from '@/i18n';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+	Button,
 	Form,
 	FormControl,
 	FormField,
@@ -16,12 +17,14 @@ import {
 	SelectValue,
 } from '@socialincome/ui';
 import classNames from 'classnames';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-export function IncomeInput() {
-	const { currency } = useI18n();
+export function IncomeInput({ translations }: { translations: { buttonText: string } }) {
+	const { currency, language, region, setCurrency } = useI18n();
+	const router = useRouter();
 
 	const formSchema = z.object({
 		value: z.string(),
@@ -31,63 +34,72 @@ export function IncomeInput() {
 	type FormSchema = z.infer<typeof formSchema>;
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
-		defaultValues: { value: '5000' as any, currency: currency },
+		defaultValues: { value: '' as any, currency: '' as any },
 	});
 
 	useEffect(() => {
 		form.setValue('currency', currency);
+		form.setValue('value', currency === 'CHF' ? '5000' : '2000');
 	}, [form, currency]);
 
 	const onSubmit = async (values: FormSchema) => {
-		alert(`You entered: ${values.value} ${values.currency}`);
+		setCurrency(values.currency);
+		router.push(`/${language}/${region}/donate/individual?amount=${values.value}`);
 	};
 
 	return (
 		<Form {...form}>
-			<form
-				className="mx-auto flex max-w-72 items-center justify-center border-b border-white border-opacity-40 pb-3 text-white"
-				onSubmit={form.handleSubmit(onSubmit)}
-			>
-				<FormField
-					control={form.control}
-					name="value"
-					render={({ field }) => (
-						<FormItem>
-							<FormControl>
-								<Input
-									type="number"
-									className={classNames(
-										'bg-background h-full w-full border-none text-right text-5xl text-white opacity-40 focus-visible:opacity-100 focus-visible:ring-0',
-										'[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none', // hide input number arrows
-									)}
-									{...field}
-								/>
-							</FormControl>
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name="currency"
-					render={({ field }) => (
-						<FormItem>
-							<Select onValueChange={field.onChange}>
+			<form onSubmit={form.handleSubmit(onSubmit)}>
+				<div className="mx-auto flex max-w-72 items-center justify-center border-b border-white border-opacity-40 pb-3 text-white">
+					<FormField
+						control={form.control}
+						name="value"
+						render={({ field }) => (
+							<FormItem>
 								<FormControl>
-									<SelectTrigger className="w-20 border-none bg-transparent text-lg text-white focus:ring-0">
-										<SelectValue placeholder={field.value} />
-									</SelectTrigger>
+									<Input
+										type="number"
+										className={classNames(
+											'bg-background h-full w-full border-none text-right text-5xl text-white opacity-40 focus-visible:opacity-100 focus-visible:ring-0',
+											'[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none', // hide input number arrows
+										)}
+										{...field}
+									/>
 								</FormControl>
-								<SelectContent>
-									{websiteCurrencies.map((currency) => (
-										<SelectItem key={currency} value={currency}>
-											{currency}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</FormItem>
-					)}
-				/>
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="currency"
+						render={({ field }) => (
+							<FormItem>
+								<Select
+									onValueChange={(value: WebsiteCurrency) => {
+										setCurrency(value);
+										field.onChange(value);
+									}}
+								>
+									<FormControl>
+										<SelectTrigger className="w-20 border-none bg-transparent text-lg text-white focus:ring-0">
+											<SelectValue placeholder={field.value} />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+										{websiteCurrencies.map((currency) => (
+											<SelectItem key={currency} value={currency}>
+												{currency}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</FormItem>
+						)}
+					/>
+				</div>
+				<Button type="submit" className="mx-auto mt-10 hidden md:block">
+					{translations.buttonText}
+				</Button>
 			</form>
 		</Form>
 	);

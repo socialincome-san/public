@@ -14,10 +14,10 @@
 	},
 	"language": "Lingua",
 	"languages": {
-		"de": "Tedesco",
-		"en": "Inglese",
-		"fr": "Francese",
-		"it": "Italiano",
+		"de": "DE",
+		"en": "EN",
+		"fr": "FR",
+		"it": "IT",
 		"kri": "Krio"
 	},
 	"gender": "Genere",
