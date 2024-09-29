@@ -58,7 +58,7 @@ export default async function Navbar({ lang, region }: DefaultParams) {
 				},
 				{
 					id: 'transparency',
-					href: `/${lang}/${region}/transparency`,
+					href: `/${lang}/${region}/transparency/finances`,
 					title: translator.t('navigation.transparency'),
 					links: [
 						{
