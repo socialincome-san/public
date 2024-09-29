@@ -39,8 +39,7 @@
 	},
 	"one-time": {
 		"title": "Don unique",
-		"subtitle": "Soutien Social Income par un don unique",
-		"twint-button": "Tu peux aussi nous soutenir par Twint"
+		"subtitle": "Soutien Social Income par un don unique"
 	},
 	"success": {
 		"title": "Merci de tout coeur pour ton don",

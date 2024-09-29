@@ -39,8 +39,7 @@
 	},
 	"one-time": {
 		"title": "Einmalige Spende",
-		"subtitle": "Unterstütze Social Income mit einem einmaligen Beitrag",
-		"twint-button": "Du kannst uns auch via Twint unterstützen"
+		"subtitle": "Unterstütze Social Income mit einem einmaligen Beitrag"
 	},
 	"success": {
 		"title": "Herzlichen Dank für deine Spende",

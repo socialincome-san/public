@@ -39,8 +39,7 @@
 	},
 	"one-time": {
 		"title": "One-time Donation",
-		"subtitle": "Make a one-time donation to Social Income",
-		"twint-button": "You can also support us through Twint"
+		"subtitle": "Make a one-time donation to Social Income"
 	},
 	"success": {
 		"title": "Thank you for your contribution",

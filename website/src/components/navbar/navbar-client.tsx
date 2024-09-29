@@ -206,7 +206,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 						</Typography>
 					</div>
 					<div className="flex flex-col items-start space-y-4">
-						<NavbarLink href={`/${lang}/${region}/account`} className="ml-12 text-2xl">
+						<NavbarLink href={`/${lang}/${region}/me`} className="ml-12 text-2xl">
 							{translations.myProfile}
 						</NavbarLink>
 						<div className="flex-inline flex items-center">

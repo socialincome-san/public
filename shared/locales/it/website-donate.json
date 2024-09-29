@@ -38,8 +38,7 @@
 	},
 	"one-time": {
 		"title": "Donazione Una Tantum",
-		"subtitle": "Fai una semplice donazione una tantum a Social Income",
-		"twint-button": "Puoi sostenerci anche tramite Twint."
+		"subtitle": "Fai una semplice donazione una tantum a Social Income"
 	},
 	"success": {
 		"title": "Grazie per il tuo contributo",
