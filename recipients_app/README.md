@@ -42,17 +42,29 @@ or
 dart run build_runner build --delete-conflicting-outputs
 ```
 
-# Testing
-
-## Run golden tests
-
-Run `flutter test --update-golden` to update golden files.
-
 ## Rebuilding Translations
 
 Translations are stored in lib/l10n/app_en.arb. To rebuild the
-translations after you changed something run: `flutter gen-l10n`
+translations after you changed something run:
+
+```
+flutter gen-l10n
+```
 
 To use a translated string in the code use:
 `AppLocalizations.of(context).helloWorld` and import:
 `import 'package:flutter_gen/gen_l10n/app_localizations.dart';`
+
+## Testing
+
+### Manually
+
+See [How to test](./docu/app_testing_guides/how_to_test.md)
+
+### Run golden tests
+
+Run `flutter test --update-golden` to update golden files.
+
+## Releasing
+
+See [How to release the app](./docu/app_release_guides/releasing.md)

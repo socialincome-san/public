@@ -20,12 +20,23 @@ Future<void> main() async {
     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
   );
 
+  const appFlavor = String.fromEnvironment("FLUTTER_APP_FLAVOR");
+  if (appFlavor.isEmpty) {
+    throw Exception("Missing app flavor setting");
+  }
+
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate();
 
   final firestore = FirebaseFirestore.instance;
   final firebaseAuth = FirebaseAuth.instance;
   final messaging = FirebaseMessaging.instance;
+
+  if (appFlavor == "dev") {
+    firestore.useFirestoreEmulator("localhost", 8080);
+    firebaseAuth.useAuthEmulator("localhost", 9099);
+    firebaseAuth.setSettings(appVerificationDisabledForTesting: true);
+  }
 
   Bloc.observer = CustomBlocObserver();
 
@@ -34,7 +45,7 @@ Future<void> main() async {
       options.dsn = const String.fromEnvironment("SENTRY_URL");
       options.tracesSampleRate = 1.0;
       options.profilesSampleRate = 1.0;
-      options.environment = "prod";
+      options.environment = appFlavor;
     },
     appRunner: () => runApp(
       MyApp(
