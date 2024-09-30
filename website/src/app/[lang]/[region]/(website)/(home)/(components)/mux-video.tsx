@@ -12,10 +12,9 @@ export const OVERLAY_FADE_OUT_DELAY = 4000;
 
 const MuxVideoComponent = () => {
 	const videoElementRef = useRef<HTMLVideoElement>(null);
-	const captionElementRef = useRef<HTMLTrackElement>(null);
 	const [muted, setMuted] = useState(true);
 	const [playing, setPlaying] = useState(false);
-	const [showCaptions, setShowCaptions] = useState(false);
+	const [showCaptions, setShowCaptions] = useState(true);
 	const [showControls, setShowControls] = useState(true);
 	const { isIntersecting, ref } = useIntersectionObserver({ threshold: 0.5 });
 	const { setBackgroundColor } = useNavbarBackgroundColor();
@@ -75,7 +74,6 @@ const MuxVideoComponent = () => {
 				playsInline
 			>
 				<track
-					ref={captionElementRef}
 					kind="captions"
 					src="https://stream.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/text/YZZCqh56kzyMBlwsaPsdlxaFKmlKzNNDKV7oyQb8ECZ4zpXnm500ieA.txt"
 					srcLang="en"
