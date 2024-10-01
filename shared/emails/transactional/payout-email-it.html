@@ -1,9 +1,9 @@
 <!doctype html>
-<html xmlns="http://www.w3.org/1999/html">
+<html>
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="x-ua-compatible" content="ie=edge" />
-		<title>Bienvenue {{first_name}} | Social Income</title>
+		<title>La tua donazione | Social Income</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<style type="text/css">
 			@media screen {
@@ -20,28 +20,17 @@
 					src: url(https://si-fonts.s3.eu-west-1.amazonaws.com/Unica77LLSub-Medium.woff2) format('woff2');
 				}
 			}
+
 			.feature {
 				-webkit-font-feature-settings: 'ss04' on;
 				font-feature-settings: 'ss04' on;
 			}
-			/**
-             * Bulletpoints for Gmail fix
-             */
-			u + .body .glist {
-				margin-left: 0 !important;
-			}
-
-			@media only screen and (max-width: 640px) {
-				u + .body .glist {
-					margin-left: 25px !important;
-				}
-			}
 
 			/**
-       * Avoid browser level font resizing.
-       * 1. Windows Mobile
-       * 2. iOS / OSX
-       */
+           * Avoid browser level font resizing.
+           * 1. Windows Mobile
+           * 2. iOS / OSX
+           */
 			body,
 			table,
 			td,
@@ -51,8 +40,8 @@
 			}
 
 			/**
-       * Remove extra space added to tables and cells in Outlook.
-       */
+           * Remove extra space added to tables and cells in Outlook.
+           */
 			table,
 			td {
 				mso-table-rspace: 0pt;
@@ -60,15 +49,15 @@
 			}
 
 			/**
-       * Better fluid images in Internet Explorer.
-       */
+           * Better fluid images in Internet Explorer.
+           */
 			img {
 				-ms-interpolation-mode: bicubic;
 			}
 
 			/**
-       * Remove blue links for iOS devices.
-       */
+           * Remove blue links for iOS devices.
+           */
 			a[x-apple-data-detectors] {
 				font-family: inherit !important;
 				font-size: inherit !important;
@@ -79,8 +68,8 @@
 			}
 
 			/**
-       * Fix centering issues in Android 4.4.
-       */
+           * Fix centering issues in Android 4.4.
+           */
 			div[style*='margin: 16px 0;'] {
 				margin: 0 !important;
 			}
@@ -93,8 +82,8 @@
 			}
 
 			/**
-       * Collapse table borders to avoid space between cells.
-       */
+           * Collapse table borders to avoid space between cells.
+           */
 			table {
 				border-collapse: collapse !important;
 			}
@@ -109,11 +98,6 @@
 				text-decoration: none;
 				border: 0;
 				outline: none;
-			}
-
-			.bg-rollover:hover {
-				background-color: #f9f8f3 !important;
-				color: #7d8082 !important;
 			}
 		</style>
 	</head>
@@ -132,8 +116,8 @@
 				opacity: 0;
 			"
 		>
-			Bonjour {{first_name}}! Tu fais désormais partie d’une communauté qui s’engage à lutter contre les inégalités au
-			moyen de transferts monétaires directs.&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			Ciao {{ insert first_name 'default=a te' }}, la tua donazione di {{currency}} {{donation_amount}} è arrivata dove
+			ce n'era più bisogno: in Sierra Leone&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
 			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847;
 			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
 			&#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
@@ -160,21 +144,14 @@
 			&#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847;
 			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
 			&#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
-			&#8199;&#847; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
-			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;&shy; &shy; &shy; &shy; &shy;
+			&#8199;&#847;&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
+			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;&shy; &shy; &shy; &shy; &shy; &shy;
 			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
-			&shy; &shy; &shy; &shy; &shy; &shy;&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
-			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;&shy; &shy;
+			&shy; &shy; &shy; &shy; &shy;&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
+			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;&shy; &shy; &shy;
 			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
-			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
-			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
-			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
-			&shy;&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
-			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;&shy; &shy; &shy; &shy; &shy; &shy; &shy;
-			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
-			&shy; &shy; &shy; &shy;&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
-			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;&shy; &shy; &shy; &shy;
-			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;&nbsp;
+			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
+			&shy; &shy; &shy; &shy; &shy; &shy; &shy;&nbsp;
 		</div>
 		<!-- end preheader -->
 
@@ -184,9 +161,9 @@
 			<tr>
 				<td align="center" bgcolor="#f9f8f3">
 					<!--[if (gte mso 9)|(IE)]>
-      <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+      <table align='center' border='0' cellpadding='0' cellspacing='0' width='600'>
         <tr>
-          <td align="center" valign="top" width="600">
+          <td align='center' valign='top' width='600'>
       <![endif]-->
 					<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px">
 						<tr>
@@ -201,7 +178,7 @@
 										src="http://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/b641e150-9ec7-4220-b6a3-2616e65915ac/935x101.png"
 										alt="Logo"
 										border="0"
-										width="250"
+										width="48"
 										style="display: block; width: 250px; max-width: 250px; min-width: 250px"
 									/>
 								</a>
@@ -221,9 +198,9 @@
 			<tr>
 				<td align="center" bgcolor="#f9f8f3">
 					<!--[if (gte mso 9)|(IE)]>
-      <table align="center" border="0" cellpadding="0" cellspacing="0" width="600px">
+      <table align='center' border='0' cellpadding='0' cellspacing='0' width='600px'>
         <tr>
-          <td align="center" valign="top" width="600px">
+          <td align='center' valign='top' width='600px'>
       <![endif]-->
 					<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px">
 						<!-- start hero -->
@@ -240,9 +217,10 @@
 							>
 								<h1
 									class="feature"
-									style="margin: 0 0 12px; font-size: 50px; font-weight: 500; line-height: 60px; color: #191a19"
+									style="margin: 0 0 12px; font-size: 42px; font-weight: 500; line-height: 52px; color: #191a19"
 								>
-									D’une personne à une autre.<span style="color: #01579b"> D’un téléphone à un autre.</span>
+									La tua donazione è arrivata dove serve di più.
+									<span style="color: #01579b">Grazie, {{ insert first_name 'default=trusted supporter' }}. </span>
 								</h1>
 							</td>
 						</tr>
@@ -272,23 +250,11 @@
 													font-family: 'Unica77', Helvetica, Arial, sans-serif;
 													font-weight: 400;
 													font-size: 18px;
-													line-height: 26px;
+													line-height: 30px;
 													color: #59481c;
 												"
 											>
-												<span
-													class="feature"
-													style="color: #59481c; font-family: 'Unica77', Helvetica, Arial, sans-serif; font-weight: 500"
-												></span
-												>Voici le premier de quatre emails présentant notre travail et notre impact. Tu peux te
-												<a
-													href="{{{unsubscribe_preferences}}}"
-													target="_blank"
-													rel="noopener noreferrer"
-													style="color: #59481c"
-													>désabonner</a
-												>
-												à tout moment.
+												{{n_days_ago}} giorni fa, hai donato {{currency}} {{donation_amount}} a Social Income.
 											</p>
 										</td>
 									</tr>
@@ -303,7 +269,7 @@
 								bgcolor="#f9f8f3"
 								align="left"
 								style="
-									padding: 30px 10px 20px 10px;
+									padding: 20px 10px 10px 10px;
 									font-family: 'Unica77', Helvetica, Arial, sans-serif;
 									font-size: 24px;
 									line-height: 32px;
@@ -312,7 +278,8 @@
 								<p
 									class="feature"
 									style="
-										margin: 30px 0px 0px 0px;
+										margin: 0;
+										margin-top: 15px;
 										font-family: 'Unica77', Helvetica, Arial, sans-serif;
 										font-weight: 400;
 										font-size: 22px;
@@ -320,7 +287,9 @@
 										color: #191a19;
 									"
 								>
-									Bonjour {{first_name}},
+									La tua donazione è stata appena <span style="color: #01579b">trasferita con successo</span> in
+									<span style="margin: 0px 4px 0px 4px"> 🇸🇱 </span> Sierra Leone ed è ora pronta per essere distribuita
+									tramite Mobile Money a chi ne ha bisogno. &shy;
 								</p>
 								<p
 									class="feature"
@@ -333,68 +302,92 @@
 										color: #191a19;
 									"
 								>
-									Tu fais désormais partie d’une communauté qui s’engage à
-									<span style="color: #01579b">lutter contre les inégalités</span> au moyen de transferts monétaires
-									directs. Voici comment ça marche:
+									Le persone nelle regioni più povere del mondo sanno come uscire dalla povertà. Tuttavia, spesso
+									mancano i fondi <span style="color: #01579b">per spezzare il ciclo della povertà.</span>
 								</p>
 							</td>
 						</tr>
 						<tr>
-							<td style="padding-left: 15px">
-								<ul
-									class="glist"
+							<td
+								bgcolor="#f9f8f3"
+								align="center"
+								style="
+									padding: 24px 20px 4px 20px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 28px;
+									line-height: 38px;
+								"
+							>
+								<h1
+									class="feature"
 									style="
-										margin: 0px 5px 0px 10px;
-										padding-left: 10px;
-										font-family: 'Unica77', Helvetica, Arial, sans-serif;
-										color: #01579b;
+										margin: 10px 20px 20px 20px;
+										font-size: 28px;
 										font-weight: 500;
+										line-height: 38px;
+										color: #01579b;
+									"
+								>
+									Investo il denaro che ricevo nella mia piccola attività e mi assicuro che i miei figli abbiano il
+									pranzo a scuola.
+								</h1>
+							</td>
+						</tr>
+						<tr>
+							<td
+								bgcolor="#f9f8f3"
+								align="center"
+								style="
+									padding: 0px 0px 20px 0px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 18px;
+									line-height: 24px;
+								"
+							>
+								<img
+									src="http://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/4cbcb891-e5a1-41d7-865a-0cd4cd41b550/200x200.png"
+									alt="Portrait Neneh"
+									width="50px"
+								/>
+								<p style="margin: 0; color: #7d8082">Neneh Kanteh, Beneficiaria</p>
+								<p style="margin: 0; color: #191a19">
+									<a href="https://socialincome.org/testimonial-video" target="_blank" rel="noopener noreferrer"
+										>Guarda la video-testimonianza</a
+									>
+								</p>
+							</td>
+						</tr>
+						<tr>
+							<td
+								bgcolor="#f9f8f3"
+								align="left"
+								style="
+									padding: 20px 10px 30px 10px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 24px;
+									line-height: 32px;
+								"
+							>
+								<p
+									class="feature"
+									style="
+										margin: 0;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										font-weight: 400;
 										font-size: 22px;
 										line-height: 30px;
+										color: #191a19;
 									"
-									align="left"
-									type="disc"
 								>
-									<li>
-										Connexion:<span
-											class="feature"
-											style="color: #191a19; font-family: 'Unica77', Helvetica, Arial, sans-serif; font-weight: 400"
-										>
-											Nous réunissons les personnes qui peuvent apporter de l’aide et celles à qui cette aide sera le
-											plus utile.</span
-										>
-									</li>
-									<li>
-										Solidarité:<span
-											class="feature"
-											style="color: #191a19; font-family: 'Unica77', Helvetica, Arial, sans-serif; font-weight: 400"
-										>
-											Nous sommes financés par des personnes comme toi qui donnent en général 1% de leur salaire
-											mensuel.</span
-										>
-									</li>
-									<li>
-										Technologie:<span
-											class="feature"
-											style="color: #191a19; font-family: 'Unica77', Helvetica, Arial, sans-serif; font-weight: 400"
-										>
-											Nous avons créé une plateforme
-											<a href="https://github.com/socialincome-san/public" target="_blank" rel="noopener noreferrer"
-												>100% open-source</a
-											>
-											pour gérer les dons et les paiements mobiles à des personnes vivant dans la pauvreté.</span
-										>
-									</li>
-								</ul>
-								<!-- start outlook fix to prevent additional bullet point -->
-
-								<div style="display:none;">&nbsp;</div>
-								<!-- end outlook fix to prevent additional bullet point -->
+									<span style="color: #01579b">Il nostro approccio:</span> per tre anni, le persone bisognose ricevono
+									da noi $32 al mese, direttamente sul loro telefono. Questo metodo moderno riduce i costi, previene la
+									corruzione ed è il modo più giusto e umano di aiutare.
+								</p>
 							</td>
 						</tr>
 						<!-- separator start -->
 						<tr>
-							<td align="center" bgcolor="#f9f8f3" style="padding: 40px 12px 30px 12px">
+							<td align="center" bgcolor="#f9f8f3" style="padding: 40px 12px 40px 12px">
 								<table width="100%" border="0" cellspacing="0" cellpadding="0">
 									<tr>
 										<td style="border-bottom: 1px solid #d4dadf; width: 576px"></td>
@@ -404,28 +397,27 @@
 						</tr>
 						<!-- separator end -->
 
-						<!-- title and  paragraph -->
 						<tr>
 							<td
 								bgcolor="#f9f8f3"
 								align="left"
 								style="
-									padding: 5px 10px 15px 10px;
+									padding: 10px 10px 20px 10px;
 									font-family: 'Unica77', Helvetica, Arial, sans-serif;
 									font-size: 24px;
 									line-height: 32px;
 								"
 							>
-								<h2
+								<h1
 									class="feature"
-									style="margin: 5px 0px 12px 0px; font-size: 35px; font-weight: 500; line-height: 45px; color: #fbc700"
+									style="margin: 10px 0px 0px 0px; font-size: 26px; font-weight: 500; line-height: 38px; color: #fbc700"
 								>
-									Qu’avons-nous accompli à ce jour?
-								</h2>
+									Quiz
+								</h1>
 								<p
 									class="feature"
 									style="
-										margin: 10px 0px 10px 0px;
+										margin: 15px 0px 0px 0px;
 										font-family: 'Unica77', Helvetica, Arial, sans-serif;
 										font-weight: 400;
 										font-size: 22px;
@@ -433,72 +425,170 @@
 										color: #191a19;
 									"
 								>
-									Depuis 2020, nous avons versé des
-									<a href="https://socialincome.org/transparency/finances" target="_blank" rel="noopener noreferrer"
-										>milliers</a
-									>
-									de contributions à des individus dans le besoin.
-									<span class="feature" style="color: #01579b"> Avec quel impact?</span>
-								</p>
-								<p
-									class="feature"
-									style="
-										margin: 10px 0px 5px 0px;
-										font-family: 'Unica77', Helvetica, Arial, sans-serif;
-										font-weight: 400;
-										font-size: 22px;
-										line-height: 30px;
-										color: #191a19;
-									"
-								>
-									Laissons la parole aux bénéficiaires:
-								</p>
-							</td>
-						</tr>
-						<!-- end title and paragraph -->
-						<!-- start image -->
-						<tr>
-							<td style="font-size: 6px; line-height: 10px; padding: 0px 10px 0px 10px" valign="top" align="center">
-								<a href="https://socialincome.org/testimonial-video" target="_blank">
-									<img
-										class="max-width"
-										border="0"
+									Qual è lo stipendio medio mensile in Sierra Leone?<span
 										style="
-											display: block;
-											color: #000000;
-											text-decoration: none;
-											font-family: Helvetica, arial, sans-serif;
-											font-size: 16px;
-											max-width: 100% !important;
-											width: 100%;
-											height: auto !important;
+											margin: 0px 0px 0px 8px;
+											font-family: 'Unica77', Helvetica, Arial, sans-serif;
+											font-weight: 400;
+											font-size: 18px;
+											line-height: 30px;
+											color: #7d8082;
 										"
-										width="600"
-										alt=""
-										data-proportionally-constrained="true"
-										data-responsive="true"
-										src="http://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/3bad1980-653e-4e39-b68d-32b7520e91d8/600x338.gif"
-									/>
-								</a>
+										><a
+											href="https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)_per_capita"
+											target="_blank"
+											style="color: #7d8082; text-decoration: none"
+											>PIL (nominale) pro capite in USD</a
+										></span
+									>
+								</p>
 							</td>
 						</tr>
-						<!-- end image -->
-						<!-- title and  paragraph -->
+						<!-- quiz buttons start-->
+						<tr>
+							<td align="left" bgcolor="#f9f8f3">
+								<table border="0" cellpadding="0" cellspacing="0" width="100%">
+									<tr>
+										<td align="center" bgcolor="#f9f8f3" style="padding: 10px 10px 10px 0px">
+											<table border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<td align="center" style="border-radius: 30px">
+														<a
+															class="feature"
+															href="https://socialincome.org/right"
+															target="_blank"
+															rel="noopener noreferrer"
+															style="
+																display: inline-block;
+																padding: 16px 26px;
+																font-family: 'Unica77', Helvetica, Arial, sans-serif;
+																font-size: 22px;
+																color: #01579b;
+																text-decoration: none;
+																border: 2px solid #01579b;
+																background-color: transparent;
+																border-radius: 30px;
+															"
+															>$ 40</a
+														>
+													</td>
+													<td style="width: 10px">&nbsp;</td>
+													<td align="center" style="border-radius: 30px">
+														<a
+															class="feature"
+															href="https://socialincome.org/wrong"
+															target="_blank"
+															rel="noopener noreferrer"
+															style="
+																display: inline-block;
+																padding: 16px 26px;
+																font-family: 'Unica77', Helvetica, Arial, sans-serif;
+																font-size: 22px;
+																color: #01579b;
+																text-decoration: none;
+																border: 2px solid #01579b;
+																background-color: transparent;
+																border-radius: 30px;
+															"
+															>$ 260</a
+														>
+													</td>
+													<td style="width: 10px">&nbsp;</td>
+													<td align="center" style="border-radius: 30px">
+														<a
+															class="feature"
+															href="https://socialincome.org/wrong"
+															target="_blank"
+															rel="noopener noreferrer"
+															style="
+																display: inline-block;
+																padding: 16px 26px;
+																font-family: 'Unica77', Helvetica, Arial, sans-serif;
+																font-size: 22px;
+																color: #01579b;
+																text-decoration: none;
+																border: 2px solid #01579b;
+																background-color: transparent;
+																border-radius: 30px;
+															"
+															>$ 1280</a
+														>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td
+											bgcolor="#f9f8f3"
+											align="center"
+											style="
+												padding: 10px 10px 20px 10px;
+												font-family: 'Unica77', Helvetica, Arial, sans-serif;
+												font-size: 24px;
+												line-height: 32px;
+											"
+										>
+											<p
+												class="feature"
+												style="
+													margin: 5px 0px 0px 0px;
+													font-family: 'Unica77', Helvetica, Arial, sans-serif;
+													font-weight: 400;
+													font-size: 18px;
+													line-height: 30px;
+													color: #7d8082;
+												"
+											>
+												👆🏼 Clicca sulla risposta giusta
+											</p>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- quiz buttons end -->
+
+						{{#if one_time_donation}}
+						<!-- separator start -->
+						<tr>
+							<td align="center" bgcolor="#f9f8f3" style="padding: 40px 12px 20px 12px">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td style="border-bottom: 1px solid #d4dadf; width: 576px"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- separator end -->
+						<!-- start copy only for one-time contributors -->
 						<tr>
 							<td
 								bgcolor="#f9f8f3"
 								align="left"
 								style="
-									padding: 20px 10px 40px 10px;
+									padding: 10px 10px 30px 10px;
 									font-family: 'Unica77', Helvetica, Arial, sans-serif;
 									font-size: 24px;
 									line-height: 32px;
 								"
 							>
+								<h1
+									class="feature"
+									style="
+										margin: 30px 0px 12px 0px;
+										font-size: 26px;
+										font-weight: 500;
+										line-height: 38px;
+										color: #fbc700;
+									"
+								>
+									Domanda personale
+								</h1>
 								<p
 									class="feature"
 									style="
-										margin: 10px 0px 10px 0px;
+										margin: 0;
 										font-family: 'Unica77', Helvetica, Arial, sans-serif;
 										font-weight: 400;
 										font-size: 22px;
@@ -506,13 +596,128 @@
 										color: #191a19;
 									"
 								>
-									Autrement dit, <span class="feature" style="color: #01579b">il n’y pas une manière unique</span> de
-									vaincre la pauvreté. C’est pourquoi je suis convaincue qu’il faut donner aux gens les moyens de
-									<span class="feature" style="color: #01579b">choisir leur propre voie.</span>
+									Ti andrebbe di trasformare la tua donazione una tantum di {{currency}} {{donation_amount}} in
+									<span style="color: #01579b"
+										>una donazione mensile di {{currency}} {{donation_amount_sm}} to {{donation_amount_md}}?
+									</span>
 								</p>
 							</td>
 						</tr>
-						<!-- end title and paragraph -->
+						<!-- end copy only for one-time contributors -->
+
+						<!-- start button only for one-time contributors-->
+						<tr>
+							<td align="left" bgcolor="#f9f8f3">
+								<table border="0" cellpadding="0" cellspacing="0" width="100%">
+									<tr>
+										<td align="center" bgcolor="#f9f8f3" style="padding: 10px 0px 10px 0px">
+											<table border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<td align="center" bgcolor="#01579B" style="border-radius: 30px">
+														<a
+															class="feature"
+															href="https://socialincome.org/login"
+															target="_blank"
+															rel="noopener noreferrer"
+															style="
+																display: inline-block;
+																padding: 16px 66px;
+																font-family: 'Unica77', Helvetica, Arial, sans-serif;
+																font-size: 22px;
+																color: #ffffff;
+																text-decoration: none;
+																border-radius: 6px;
+															"
+															>Sì, lo voglio!</a
+														>
+													</td>
+													<td style="width: 10px">&nbsp;</td>
+													<td align="center" style="border-radius: 30px; padding: 8px 0px 0px 0px">
+														<a href="https://socialincome.org/login" target="_blank" rel="noopener noreferrer">
+															<img
+																src="http://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/89fea64e-d36c-404e-9aa1-8e8a3c6c903f/103x65.gif"
+																alt="Payment Icons"
+																width="65px"
+														/></a>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td
+											bgcolor="#f9f8f3"
+											align="left"
+											style="
+												padding: 20px 10px 30px 10px;
+												font-family: 'Unica77', Helvetica, Arial, sans-serif;
+												font-size: 24px;
+												line-height: 32px;
+											"
+										>
+											<p
+												class="feature"
+												style="
+													margin: 5px 0px 0px 0px;
+													font-family: 'Unica77', Helvetica, Arial, sans-serif;
+													font-weight: 400;
+													font-size: 22px;
+													line-height: 30px;
+													color: #191a19;
+												"
+											>
+												Questo ci permette di concentrarci sulla nostra missione e di ridurre al minimo i costi di
+												raccolta fondi.
+												<span style="color: #01579b">Puoi annullare in qualsiasi momento.</span>
+											</p>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- end button only for one-time contributors-->
+
+						<!-- separator start -->
+						<tr>
+							<td align="center" bgcolor="#f9f8f3" style="padding: 40px 12px 40px 12px">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td style="border-bottom: 1px solid #d4dadf; width: 576px"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- separator end -->
+						{{/if}}
+
+						<!-- start copy -->
+						<tr>
+							<td
+								align="left"
+								bgcolor="#f9f8f3"
+								style="
+									padding: 30px 10px 30px 10px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 22px;
+									line-height: 30px;
+								"
+							>
+								<p
+									class="feature"
+									style="
+										margin: 0;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										font-weight: 400;
+										font-size: 22px;
+										line-height: 30px;
+										color: #191a19;
+									"
+								>
+									Per ora è tutto. Ti aggiornerò tra due settimane sulle ultime novità di Social Income.
+								</p>
+							</td>
+						</tr>
+						<!-- end copy -->
 
 						<!-- start signature -->
 						<tr>
@@ -552,7 +757,7 @@
 																color: #191a19;
 															"
 														>
-															Salutations de Genève 💙
+															Da Ginevra con 💙
 														</p>
 													</td>
 												</tr>
@@ -593,8 +798,8 @@
 																href="https://www.linkedin.com/in/aurélie-schmiedlin/"
 																target="_blank"
 																rel="noopener noreferrer"
-																>Aurélie Schmiedlin
-															</a>
+																>Aurélie Schmiedlin</a
+															>
 														</p>
 														<p
 															class="feature"
@@ -607,7 +812,7 @@
 																color: #191a19;
 															"
 														>
-															Communication
+															Comunicazione
 														</p>
 													</td>
 												</tr>
@@ -644,9 +849,9 @@
 			<tr>
 				<td align="center" bgcolor="#f9f8f3" style="padding: 30px 10px 24px 10px">
 					<!--[if (gte mso 9)|(IE)]>
-      <table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+      <table align='center' border='0' cellpadding='0' cellspacing='0' width='600'>
         <tr>
-          <td align="center" valign="top" width="600">
+          <td align='center' valign='top' width='600'>
       <![endif]-->
 					<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px">
 						<tr>
@@ -661,10 +866,10 @@
 												style="display: inline-block"
 											>
 												<img
-													src="http://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/00efcc42-51b2-4724-b566-c29b53cae2d5/100x66.png"
+													src="http://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/e82b674a-943e-4a8b-b8b2-183c1e992e6d/816x523.png"
 													alt="Logo"
 													border="0"
-													width="80"
+													width="48px"
 													style="display: block; width: 80px; max-width: 80px; min-width: 80px"
 												/>
 											</a>
@@ -682,7 +887,7 @@
 										>
 											<p class="feature" style="margin: 0">
 												Social Income <br />
-												Zurich, Suisse
+												Zurigo, Svizzera
 											</p>
 											<p class="feature" style="margin: 0">
 												<a
@@ -690,14 +895,14 @@
 													target="_blank"
 													rel="noopener noreferrer"
 													style="text-decoration: none"
-													>Préférences</a
+													>Preferenze</a
 												>,
 												<a
 													href="{{{unsubscribe}}}"
 													target="_blank"
 													rel="noopener noreferrer"
 													style="text-decoration: none"
-													>Se désabonner</a
+													>Annulla iscrizione</a
 												>
 											</p>
 										</td>

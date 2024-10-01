@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta http-equiv="x-ua-compatible" content="ie=edge" />
-		<title>Bienvenue {{first_name}} | Social Income</title>
+		<title>Benvenuti a Social Income</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<style type="text/css">
 			@media screen {
@@ -132,11 +132,11 @@
 				opacity: 0;
 			"
 		>
-			Bonjour {{first_name}}! Tu fais désormais partie d’une communauté qui s’engage à lutter contre les inégalités au
-			moyen de transferts monétaires directs.&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
-			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847;
+			Ciao {{ insert first_name 'default=a te' }}, lasciami dare quattro risposte molto personali sul perché dovremmo
+			aiutare le persone in povertà.&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847;
 			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
-			&#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
 			&#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
 			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847;
 			&#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
@@ -201,7 +201,7 @@
 										src="http://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/b641e150-9ec7-4220-b6a3-2616e65915ac/935x101.png"
 										alt="Logo"
 										border="0"
-										width="250"
+										width="48"
 										style="display: block; width: 250px; max-width: 250px; min-width: 250px"
 									/>
 								</a>
@@ -242,60 +242,12 @@
 									class="feature"
 									style="margin: 0 0 12px; font-size: 50px; font-weight: 500; line-height: 60px; color: #191a19"
 								>
-									D’une personne à une autre.<span style="color: #01579b"> D’un téléphone à un autre.</span>
+									Agire contro la povertà. <span style="color: #01579b">Se non lo facciamo noi, chi lo farà?</span>
 								</h1>
 							</td>
 						</tr>
 						<!-- end hero -->
 						<!-- start banner -->
-
-						<tr>
-							<td align="center" bgcolor="#f9f8f3" style="padding: 10px">
-								<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px">
-									<tr>
-										<td
-											bgcolor="#FAC800"
-											style="
-												background-color: #f0e08c;
-												padding: 12px 15px;
-												border-radius: 10px;
-												font-family: 'Unica77', Helvetica, Arial, sans-serif;
-												font-size: 24px;
-												line-height: 32px;
-												text-align: center;
-											"
-										>
-											<p
-												class="feature"
-												style="
-													margin: 0;
-													font-family: 'Unica77', Helvetica, Arial, sans-serif;
-													font-weight: 400;
-													font-size: 18px;
-													line-height: 26px;
-													color: #59481c;
-												"
-											>
-												<span
-													class="feature"
-													style="color: #59481c; font-family: 'Unica77', Helvetica, Arial, sans-serif; font-weight: 500"
-												></span
-												>Voici le premier de quatre emails présentant notre travail et notre impact. Tu peux te
-												<a
-													href="{{{unsubscribe_preferences}}}"
-													target="_blank"
-													rel="noopener noreferrer"
-													style="color: #59481c"
-													>désabonner</a
-												>
-												à tout moment.
-											</p>
-										</td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-
 						<!-- end banner -->
 						<!-- start copy -->
 						<tr>
@@ -320,7 +272,7 @@
 										color: #191a19;
 									"
 								>
-									Bonjour {{first_name}},
+									Ciao {{ insert first_name 'default=a te' }},
 								</p>
 								<p
 									class="feature"
@@ -333,19 +285,18 @@
 										color: #191a19;
 									"
 								>
-									Tu fais désormais partie d’une communauté qui s’engage à
-									<span style="color: #01579b">lutter contre les inégalités</span> au moyen de transferts monétaires
-									directs. Voici comment ça marche:
+									Dovremmo aiutare chi vive in povertà?
+									<span style="color: #01579b">Ecco alcune motivazioni personali:</span>
 								</p>
 							</td>
 						</tr>
 						<tr>
-							<td style="padding-left: 15px">
-								<ul
+							<td style="padding-left: 25px">
+								<ol
 									class="glist"
 									style="
 										margin: 0px 5px 0px 10px;
-										padding-left: 10px;
+										padding-left: 25px;
 										font-family: 'Unica77', Helvetica, Arial, sans-serif;
 										color: #01579b;
 										font-weight: 500;
@@ -356,42 +307,101 @@
 									type="disc"
 								>
 									<li>
-										Connexion:<span
+										Nata fortunata:<span
 											class="feature"
 											style="color: #191a19; font-family: 'Unica77', Helvetica, Arial, sans-serif; font-weight: 400"
 										>
-											Nous réunissons les personnes qui peuvent apporter de l’aide et celles à qui cette aide sera le
-											plus utile.</span
+											Sono partita avvantaggiata nella vita semplicemente perché sono nata in Svizzera.</span
 										>
 									</li>
 									<li>
-										Solidarité:<span
+										Il coraggio di agire:<span
 											class="feature"
 											style="color: #191a19; font-family: 'Unica77', Helvetica, Arial, sans-serif; font-weight: 400"
 										>
-											Nous sommes financés par des personnes comme toi qui donnent en général 1% de leur salaire
-											mensuel.</span
+											Essere consapevoli della povertà globale senza fare nulla non aiuta nessuno a uscirne.</span
 										>
 									</li>
 									<li>
-										Technologie:<span
+										Adesso, non più tardi:<span
 											class="feature"
 											style="color: #191a19; font-family: 'Unica77', Helvetica, Arial, sans-serif; font-weight: 400"
 										>
-											Nous avons créé une plateforme
-											<a href="https://github.com/socialincome-san/public" target="_blank" rel="noopener noreferrer"
-												>100% open-source</a
-											>
-											pour gérer les dons et les paiements mobiles à des personnes vivant dans la pauvreté.</span
+											Spesso troviamo scuse per non agire, perché è più facile non fare nulla. Cambiamo questo
+											atteggiamento.</span
 										>
 									</li>
-								</ul>
-								<!-- start outlook fix to prevent additional bullet point -->
-
-								<div style="display:none;">&nbsp;</div>
-								<!-- end outlook fix to prevent additional bullet point -->
+									<li>
+										Soddisfazione personale:<span
+											class="feature"
+											style="color: #191a19; font-family: 'Unica77', Helvetica, Arial, sans-serif; font-weight: 400"
+										>
+											Aiutare gli altri porta inaspettatamente gioia nella nostra vita.</span
+										>
+									</li>
+								</ol>
 							</td>
 						</tr>
+						<tr>
+							<td
+								bgcolor="#f9f8f3"
+								align="left"
+								style="
+									padding: 10px 10px 30px 10px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 24px;
+									line-height: 32px;
+								"
+							>
+								<p
+									class="feature"
+									style="
+										margin: 10px 0px 10px 0px;
+										font-family: 'Unica77', Helvetica, Arial, sans-serif;
+										font-weight: 400;
+										font-size: 22px;
+										line-height: 30px;
+										color: #191a19;
+									"
+								>
+									In sintesi: non lasciamo
+									<span
+										class="feature"
+										style="color: #01579b; font-family: 'Unica77', Helvetica, Arial, sans-serif; font-weight: 500"
+										>che le persone rimangano in difficoltà</span
+									>
+									se abbiamo i mezzi per aiutarle.
+								</p>
+							</td>
+						</tr>
+						<!-- start image -->
+						<tr>
+							<td style="font-size: 6px; line-height: 10px; padding: 0px 10px 0px 10px" valign="top" align="center">
+								<a href="https://socialincome.org/" target="_blank">
+									<img
+										class="max-width"
+										border="0"
+										style="
+											display: block;
+											color: #000000;
+											text-decoration: none;
+											font-family: Helvetica, arial, sans-serif;
+											font-size: 16px;
+											max-width: 100% !important;
+											width: 100%;
+											height: auto !important;
+										"
+										width="600"
+										alt=""
+										data-proportionally-constrained="true"
+										data-responsive="true"
+										src="http://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/2481502a-bf19-46d1-9126-ab79dbe21d5d/960x540.gif"
+									/>
+								</a>
+							</td>
+						</tr>
+						<!-- end image -->
+
 						<!-- separator start -->
 						<tr>
 							<td align="center" bgcolor="#f9f8f3" style="padding: 40px 12px 30px 12px">
@@ -410,7 +420,7 @@
 								bgcolor="#f9f8f3"
 								align="left"
 								style="
-									padding: 5px 10px 15px 10px;
+									padding: 5px 10px 40px 10px;
 									font-family: 'Unica77', Helvetica, Arial, sans-serif;
 									font-size: 24px;
 									line-height: 32px;
@@ -420,7 +430,7 @@
 									class="feature"
 									style="margin: 5px 0px 12px 0px; font-size: 35px; font-weight: 500; line-height: 45px; color: #fbc700"
 								>
-									Qu’avons-nous accompli à ce jour?
+									Come ho iniziato?
 								</h2>
 								<p
 									class="feature"
@@ -433,12 +443,8 @@
 										color: #191a19;
 									"
 								>
-									Depuis 2020, nous avons versé des
-									<a href="https://socialincome.org/transparency/finances" target="_blank" rel="noopener noreferrer"
-										>milliers</a
-									>
-									de contributions à des individus dans le besoin.
-									<span class="feature" style="color: #01579b"> Avec quel impact?</span>
+									Nel gennaio 2021 ho cominciato a donare $33 al mese, l’1% del mio stipendio da stagista presso il
+									governo svizzero. Con l’aumento del mio stipendio, sono aumentate anche le mie donazioni.
 								</p>
 								<p
 									class="feature"
@@ -451,69 +457,27 @@
 										color: #191a19;
 									"
 								>
-									Laissons la parole aux bénéficiaires:
-								</p>
-							</td>
-						</tr>
-						<!-- end title and paragraph -->
-						<!-- start image -->
-						<tr>
-							<td style="font-size: 6px; line-height: 10px; padding: 0px 10px 0px 10px" valign="top" align="center">
-								<a href="https://socialincome.org/testimonial-video" target="_blank">
-									<img
-										class="max-width"
-										border="0"
+									<span class="feature" style="color: #01579b">Pensi che la mia donazione sia insignificante?</span>
+									Ripensaci. In un paese dove il reddito medio mensile è di $40, fa davvero la differenza.
+									<span
+										class="feature"
 										style="
-											display: block;
-											color: #000000;
-											text-decoration: none;
-											font-family: Helvetica, arial, sans-serif;
-											font-size: 16px;
-											max-width: 100% !important;
-											width: 100%;
-											height: auto !important;
+											font-family: 'Unica77', Helvetica, Arial, sans-serif;
+											font-size: 18px;
+											line-height: 30px;
+											color: #7d8082;
 										"
-										width="600"
-										alt=""
-										data-proportionally-constrained="true"
-										data-responsive="true"
-										src="http://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/3bad1980-653e-4e39-b68d-32b7520e91d8/600x338.gif"
-									/>
-								</a>
-							</td>
-						</tr>
-						<!-- end image -->
-						<!-- title and  paragraph -->
-						<tr>
-							<td
-								bgcolor="#f9f8f3"
-								align="left"
-								style="
-									padding: 20px 10px 40px 10px;
-									font-family: 'Unica77', Helvetica, Arial, sans-serif;
-									font-size: 24px;
-									line-height: 32px;
-								"
-							>
-								<p
-									class="feature"
-									style="
-										margin: 10px 0px 10px 0px;
-										font-family: 'Unica77', Helvetica, Arial, sans-serif;
-										font-weight: 400;
-										font-size: 22px;
-										line-height: 30px;
-										color: #191a19;
-									"
-								>
-									Autrement dit, <span class="feature" style="color: #01579b">il n’y pas une manière unique</span> de
-									vaincre la pauvreté. C’est pourquoi je suis convaincue qu’il faut donner aux gens les moyens de
-									<span class="feature" style="color: #01579b">choisir leur propre voie.</span>
+										>Fonte
+										<a
+											href="https://en.wikipedia.org/wiki/List_of_countries_by_GDP_(nominal)_per_capita"
+											style="color: #7d8082; text-decoration: underline"
+											>Banca Mondiale</a
+										></span
+									>
 								</p>
 							</td>
 						</tr>
 						<!-- end title and paragraph -->
-
 						<!-- start signature -->
 						<tr>
 							<td align="left" bgcolor="#f9f8f3" valign="bottom">
@@ -552,7 +516,7 @@
 																color: #191a19;
 															"
 														>
-															Salutations de Genève 💙
+															Da Ginevra con 💙
 														</p>
 													</td>
 												</tr>
@@ -607,7 +571,7 @@
 																color: #191a19;
 															"
 														>
-															Communication
+															Comunicazione
 														</p>
 													</td>
 												</tr>
@@ -661,10 +625,10 @@
 												style="display: inline-block"
 											>
 												<img
-													src="http://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/00efcc42-51b2-4724-b566-c29b53cae2d5/100x66.png"
+													src="http://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/e82b674a-943e-4a8b-b8b2-183c1e992e6d/816x523.png"
 													alt="Logo"
 													border="0"
-													width="80"
+													width="48px"
 													style="display: block; width: 80px; max-width: 80px; min-width: 80px"
 												/>
 											</a>
@@ -682,7 +646,7 @@
 										>
 											<p class="feature" style="margin: 0">
 												Social Income <br />
-												Zurich, Suisse
+												Zurigo, Svizzera
 											</p>
 											<p class="feature" style="margin: 0">
 												<a
@@ -690,14 +654,14 @@
 													target="_blank"
 													rel="noopener noreferrer"
 													style="text-decoration: none"
-													>Préférences</a
+													>Preferenze</a
 												>,
 												<a
 													href="{{{unsubscribe}}}"
 													target="_blank"
 													rel="noopener noreferrer"
 													style="text-decoration: none"
-													>Se désabonner</a
+													>Annulla iscrizione</a
 												>
 											</p>
 										</td>
