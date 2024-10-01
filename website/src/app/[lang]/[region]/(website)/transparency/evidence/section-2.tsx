@@ -1,6 +1,6 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography } from '@socialincome/ui';
+import { Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import { CardTranslation, SectionCard } from './section-card';
 
@@ -13,7 +13,7 @@ export default async function Section2({ params }: DefaultPageProps) {
 	const takeAction = translator.t('take-action');
 
 	return (
-		<BaseContainer backgroundColor="bg-yellow-50" className="flex flex-col space-y-1 py-16 md:px-20">
+		<div className="flex flex-col space-y-1 py-16">
 			<Typography size="xl" weight="medium" color="muted-foreground">
 				{translator.t(`section-3.topic`)}
 			</Typography>
@@ -34,6 +34,6 @@ export default async function Section2({ params }: DefaultPageProps) {
 					))}
 				</div>
 			</div>
-		</BaseContainer>
+		</div>
 	);
 }

@@ -5,6 +5,7 @@
 	"amount": "Montant",
 	"button-text": "Fais la différence",
 	"button-text-short": "Faire un don",
+	"one-time-donation": "Don unique",
 	"donation-impact": {
 		"monthly-contribution": "Ta contribution mensuelle:",
 		"direct-payout": "Ta contribution est versée directement sur le téléphone mobile du ou de la bénéficiaire de Social Income.",
@@ -38,8 +39,7 @@
 	},
 	"one-time": {
 		"title": "Don unique",
-		"subtitle": "Soutien Social Income par un don unique",
-		"twint-button": "Tu peux aussi nous soutenir par Twint"
+		"subtitle": "Soutien Social Income par un don unique"
 	},
 	"success": {
 		"title": "Merci de tout coeur pour ton don",

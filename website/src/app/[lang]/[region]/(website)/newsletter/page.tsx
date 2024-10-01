@@ -1,11 +1,11 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
+import aurelieImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/aurelie.jpeg';
 import { SubscriptionInfoForm } from '@/app/[lang]/[region]/(website)/newsletter/subscription-info-form';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 import Link from 'next/link';
-import aurelieImage from '../about-us/(assets)/aurelie.jpeg';
 
 export async function generateMetadata({ params }: DefaultPageProps) {
 	return getMetadata(params.lang, 'website-newsletter');
@@ -60,7 +60,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 					</div>
 				</div>
 				<div className="flex items-center justify-center">
-					<div className="card theme-dark-blue w-full space-y-4 rounded-xl p-6">
+					<div className="card theme-blue w-full space-y-4 rounded-xl p-6">
 						<Typography size="2xl" weight="medium">
 							{translator.t('updates.form-title')}
 						</Typography>

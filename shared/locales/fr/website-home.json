@@ -1,202 +1,214 @@
 {
+	"metadata": {
+		"title": "Social Income",
+		"description": "Change from human to human. From mobile to mobile.",
+		"og-image": "/assets/metadata/og/default.jpg",
+		"twitter-image": "/assets/metadata/twitter/default.jpg"
+	},
 	"section-1": {
-		"title-1": "Combien de personnes peux-tu aider à",
-		"title-2": " sortir de la pauvreté ",
-		"title-3": "avec 1% de ton salaire?",
-		"amount": "Montant",
-		"income-text": "Indique ton salaire mensuel et découvre ce que tu peux changer.",
-		"button-text": "Calculer la contribution",
-		"privacy-commitment": "Nous nous engageons à garantir la protection des données",
-		"tax-deductible": "Ta contribution est exonérée d’impôt en Suisse",
-		"one-time-donation": "Don unique"
-	},
-	"section-2": {
-		"title-1": "Qu’est-ce qui changerait dans ta vie quotidienne",
-		"title-2": "si tu faisais don de 1% de ton salaire?",
-		"subtitle-1": "Pas grand-chose, n’est-ce pas? Tu continuerais à vivre comme avant.",
-		"video-button": "Regarde la vidéo"
-	},
-	"section-3": {
-		"title": [{ "text": "Si nous ne le faisons pas en Suisse, " }, { "text": "qui le fera?", "color": "secondary" }],
-		"jackpot-title": "Vivre en Suisse c’est comme gagner au jackpot",
-		"jackpot-text": "Les chances de profiter d’une belle vie sont systématiquement plus grandes en Suisse que dans le reste du monde.",
-		"jackpot-button": "Je suis solidaire",
-		"helping-others-title": "L’aide aux autres et l’engagement social rendent heureux",
-		"helping-others-text": "Aidons d’abord les personnes pour qui une vie sans problème existentiel est inaccessible. Quand si ce n’est maintenant?",
-		"helping-others-button": "Agis maintenant",
-		"together-title": "Ensemble nous pouvons faire la différence",
-		"together-text": "Il suffirait qu’un quart de la population suisse donne 1% de leur salaire pour garantir à toute la Sierra Leone un revenu de base et pour sortir le pays de la pauvreté.",
-		"together-button": "Lève-toi maintenant"
-	},
-	"section-4": {
-		"title-1": "La justice sociale",
-		"title-2": " commence par nous.",
-		"subtitle": "Le Social Income est une initiative solidaire. Nous relions les gens du monde entier par des dons petits mais efficaces.",
-		"paragraph-1": "En principe, nous avons tout ce qu’il faut pour réduire les grandes inégalités: Celles et ceux qui peuvent apporter une aide financière, et celles et ceux qui ont besoin de cette aide financière. Il s’agit maintenant de réunir ces deux parties.",
-		"paragraph-2": "C’est là que Social Income entre en jeu - en redistribuant la richesse de manière solidaire et innovante.",
-		"paragraph-3": "Social Income ne peut évidemment pas éliminer l’inégalité structurelle une fois pour toutes. Mais nous posons les bases d’un vrai changement.",
-		"paragraph-4": "Il suffit d’une modeste participation de 1% de notre revenu pour permettre à des personnes moins favorisées d’améliorer leurs conditions de vie, pour réduire les inégalités porteuses de conflits et pour contribuer ainsi à un monde plus juste."
-	},
-	"section-5": {
-		"articles": "Article",
-		"faqs": "Häufig gestellte Fragen",
-		"title": "Nous combinons trois approches pour amener un changement.",
-		"card-1": {
-			"title": "Le revenu de base inconditionnel",
-			"item-1": "Réduit la discrimination",
-			"item-2": "Combat l’inégalité de revenu",
-			"item-3": "Renforce les groupes marginalisés",
-			"item-4": "Améliore les conditions de travail",
-
-			"paragraph-1": "Le revenu de base inconditionnel (RBI) est une allocation financière garantie sans contrepartie. Le revenu doit permettre aux bénéficiaires de couvrir leurs frais de subsistance et d’assurer leur autonomie financière.",
-			"paragraph-2": "Comme le RBI, l'idée de Social Income repose sur des versements réguliers destinés à garantir le minimum vital. Alors que le RBI est financé par l'État, le Social Income se conçoit comme une initiative de solidarité – directement de personne à personne.",
-
-			"article-1-title": "The Case for a Universal Basic Income",
-			"article-1-author": "Kanni Wignaraja, UN Assistant Secretary-General",
-			"article-1-link": "https://www.undp.org/content/undp/en/home/blog/2020/the-case-for-a-universal-basic-income.html",
-
-			"article-2-title": "The UN has called for UBI for the world's poorest during the pandemic",
-			"article-2-author": "Michelle Nichols, Journalist (Reuters)",
-			"article-2-link": "https://www.weforum.org/agenda/2020/07/un-report-development-coronavirus-covid-ubi-poverty/",
-
-			"article-3-title": "How Universal Basic Income Can Help Address the Racial Wealth Gap",
-			"article-3-author": "Dr. Bernice King und Michael Tubbs für die Times",
-			"article-3-link": "https://time.com/5863751/dr-bernice-king-and-mayor-michael-tubbs-on-how-universal-basic-income-can-help-address-the-racial-wealth-gap/",
-
-			"article-4-title": "Ten Reasons to Support Basic Income",
-			"article-4-author": "Basic Income UK",
-			"article-4-link": "https://www.basicincome.org.uk/reasons-support-basic-income/",
-
-			"faq-1-question": "Was ist der Unterschied zwischen Social Income und dem bedingungslosem Grundeinkommen?",
-			"faq-1-link": "/faq",
-
-			"faq-2-question": "Wofür verwenden die Empfänger:innen das Geld?",
-			"faq-2-link": "/faq"
-		},
-		"card-2": {
-			"title": "Le transfert monétaire direct",
-			"item-1": "Diminue les frais administratifs",
-			"item-2": "Réduit la pauvreté",
-			"item-3": "Favorise l’autonomie",
-			"item-4": "Stimule les marchés locaux",
-
-			"paragraph-1": "Les transferts monétaires directs s’avèrent être un moyen efficace et efficient pour lutter contre la pauvreté. C'est pourquoi ils sont aujourd'hui utilisés par les gouvernements et les ONG. Les transferts en espèces peuvent être conditionnels ou inconditionnels. Ils permettent aux bénéficiaires d'acheter des biens et des services de leur choix directement sur les marchés locaux.",
-			"paragraph-2": "Les versements de Social Income ne dépendent ni de décisions politiques, ni des budgets de l'État, ni des impôts. L'objectif premier de l'initiative est la redistribution volontaire et directe de la richesse entre des particuliers.",
-
-			"article-1-title": "Direct Cash Transfers",
-			"article-1-author": "Cash Transfer Evidence Paper",
-			"article-1-link": "https://www.who.int/alliance-hpsr/alliancehpsr_dfidevidencepaper.pdf",
-
-			"article-2-title": "Guidelines for Cash Transfer Programming",
-			"article-2-author": " Comité international de la Croix-Rouge",
-			"article-2-link": "https://www.ifrc.org/Global/Publications/disasters/finance/cash-guidelines-en.pdf",
-
-			"article-3-title": "Is Cash Better for Poor People Than Conventional Foreign Aid?",
-			"article-3-author": "Marc Gunther, New York Times",
-			"article-3-link": "https://www.nytimes.com/2018/09/11/opinion/is-cash-better-for-poor-people-than-conventional-foreign-aid.html",
-
-			"article-4-title": "Cash Transfers for Children—Investing into the Future",
-			"article-4-author": "The Lancet",
-			"article-4-link": "https://www.thelancet.com/action/showPdf?pii=S0140-6736%2809%2961166-1",
-
-			"faq-1-question": "Est-ce que les transferts monétaires directs sont un moyen efficace de lutter contre la pauvreté?",
-			"faq-1-link": "/faq",
-
-			"faq-2-question": "Est-il vraiment utile d'envoyer de l'argent aux personnes dans le besoin?",
-			"faq-2-link": "/faq",
-
-			"faq-3-question": "Qu’est-ce que les transferts monétaires directs?",
-			"faq-3-link": "/faq"
-		},
-		"card-3": {
-			"title": "Le banking mobile",
-			"item-1": "Frais réduits",
-			"item-2": "Simple et rapide",
-			"item-3": "Évolutif",
-			"item-4": "Résistant aux crises (Covid-19)",
-
-			"paragraph-1": "Le mobile banking est un service proposé par une banque, un opérateur de téléphonie mobile ou une autre institution financière, qui permet aux client·es d'effectuer des transactions financières via un appareil mobile tel qu'un téléphone ou une tablette. L'Afrique joue un rôle de pionnier dans la diffusion du mobile banking.",
-			"paragraph-2": "Social Income est destiné aux personnes qui vivent dans la pauvreté et qui n'ont généralement pas de compte bancaire. Le téléphone portable est souvent leur seul accès aux services financiers.",
-
-			"article-1-title": "Mobile Phones Are Replacing Bank Accounts in Africa",
-			"article-1-author": "Moses Mozart Dzawu, Bloomberg",
-			"article-1-link": "https://www.bloomberg.com/news/articles/2019-08-13/mobile-phones-are-replacing-bank-accounts-in-africa",
-
-			"article-2-title": "The Future of African Banking and the Impact of Mobile Money",
-			"article-2-author": "Fabio Scala, Further Africa",
-			"article-2-link": "https://furtherafrica.com/2020/01/06/the-future-of-african-banking-and-the-impact-of-mobile-money/",
-
-			"article-3-title": "How Mobile Money Can Lead a Fintech Revolution in Africa",
-			"article-3-author": "Amadou N. R. Sy, Conseiller pour le Département africain, FMI",
-			"article-3-link": "https://www.weforum.org/agenda/2019/02/fintech-in-sub-saharan-africa-a-potential-game-changer",
-
-			"article-4-title": "You’ve Got Money: Mobile Payments Help People During the Pandemic",
-			"article-4-author": "Sonja Davidovic, Delphine Prady, Économiste au FMI",
-			"article-4-link": "https://basicincome.org.uk/reasons-support-basic-income/",
-
-			"faq-1-question": "Est-ce que les transferts directs d’argent sont un moyen efficace de lutter contre la pauvreté?",
-			"faq-1-link": "/faq"
-		}
-	},
-	"section-6": {
-		"title-1": "Contribue à atteindre les objectifs de développement durable des ",
-		"title-2": " Nations Unies.",
-		"card-1": {
-			"title": "ODD 1",
-			"description": "Éliminer la pauvreté sous toutes ses formes et partout dans le monde.",
-			"paragraph-1": "Le premier objectif de développement durable des Nations unies exige la fin de la pauvreté sous toutes ses formes d'ici 2030. Cela requiert différentes mesures pour mettre en place et renforcer les systèmes de protection sociale, car les personnes souffrant de pauvreté sont particulièrement touchées par les chocs économiques, les crises sociales et les catastrophes naturelles."
-		},
-		"card-2": {
-			"title": "ODD 10",
-			"description": "Réduire les inégalités dans les pays et d’un pays à l’autre",
-			"paragraph-1": "Réduire les inégalités dans les pays et d’un pays à l’autre est une condition préalable à la réalisation des objectifs de développement durable. La communauté internationale a certes fait des progrès considérables et permis à de nombreuses personnes de sortir de la pauvreté. De grandes inégalités subsistent toutefois dans l'accès aux soins de santé, à l'éducation et à d'autres biens essentiels."
-		}
-	},
-	"section-7": {
-		"title-1": "Nous sommes très heureux ",
-		"title-2": "d'être reconnus.",
-		"subtitle": "Social Income a reçu soutien et récompenses dans le cadre de plusieurs programmes d’accélération et de développement, notamment de la part des organisations suivantes:"
-	},
-	"video": {
-		"video-id": "896169775",
-		"credits-title": "Crédits",
-		"credits-content": [
+		"take-action": "Passer à l’action",
+		"title-1": [
 			{
-				"role": "Directeur de la photographie",
-				"name": "Gabriel Koller"
+				"text": "Combien de personnes peux-tu sortir de la pauvreté avec "
 			},
 			{
-				"role": "Montage",
-				"name": "Nicolas Küng"
+				"text": "un seul pourcent ",
+				"color": "accent"
 			},
 			{
-				"role": "Conception sonore & musique",
-				"name": "Tidiane Sane"
-			},
-			{
-				"role": "Mixage & mastering",
-				"name": "Nicola-Miloš Mišić"
-			},
-			{
-				"role": "Coloriste",
-				"name": "Simon Hardegger"
-			},
-			{
-				"role": "Assistant caméra",
-				"name": "Felix Rhodes"
-			},
-			{
-				"role": "Voix off",
-				"name": "Ted Limpert"
-			},
-			{
-				"role": "Animation graphique",
-				"name": "Raphael Schoen"
-			},
-			{
-				"role": "Traduction (sous-titres)",
-				"name": "Françoise Légeret (FR), Riccardo Tamburini (ES, IT)"
+				"text": "de ton salaire?"
 			}
 		]
+	},
+	"section-2": {
+		"title-1": "Dans les communautés les plus pauvres de Sierra Leone, les gens savent très bien ce qu’il faut faire pour sortir de la pauvreté.",
+		"title-2": [
+			{
+				"text": "C’est juste qu’ils ont rarement la possibilité – ou les moyens – de le faire. C’est là que "
+			},
+			{
+				"text": "tu entres en jeu ",
+				"color": "accent"
+			},
+			{
+				"text": "avec Social Income."
+			}
+		],
+		"title-3": "Un processus unique pour une sélection équitable",
+		"text-3.1": "Identifier les personnes dans le besoin : Nous collaborons avec des ONG locales en Sierra Leone pour cibler les personnes vivant dans la pauvreté qui pourraient bénéficier d’un revenu prévisible sur trois ans et investir ainsi dans leur avenir.",
+		"text-3.2": "Sélection par tirage au sort : Notre processus de sélection par tirage au sort est transparent et peut être publiquement vérifié. Ceci écarte tout préjugé ou favoritisme et garantit l’égalité de traitement.",
+		"title-4": "Don direct, résultats directs",
+		"text-4": "Nous transférons directement ta contribution sur les téléphones portables des personnes dans le besoin, qui sont les mieux à même de décider où porter leurs efforts pour surmonter la pauvreté.",
+		"title-5": "Un soutien durable",
+		"text-5": "Nos bénéficiaires reçoivent un soutien régulier de la part de nos partenaires locaux tout au long du programme et même au-delà, afin qu’ils en tirent le meilleur parti possible. La troisième année est axée sur une transition en douceur vers la fin du programme."
+	},
+	"section-3": {
+		"title-faded": "Mon impact",
+		"title": "Quel est ton revenu mensuel?",
+		"subtitle": "Pourquoi c'est important?",
+		"cta": "Montrer mon impact"
+	},
+	"section-4": {
+		"title-1": [
+			{
+				"text": "Qu’est-ce que ça changerait si tu faisais don chaque mois de "
+			},
+			{
+				"text": "1% de ton salaire? ",
+				"color": "accent"
+			},
+			{
+				"text": ""
+			}
+		]
+	},
+	"section-5": {
+		"title-1": [
+			{
+				"text": "Le changement d’une personne à une autre. "
+			},
+			{
+				"text": "D’un téléphone à l'autre.",
+				"color": "accent"
+			}
+		],
+		"subtitle-1": "Social Income est une nouvelle approche de lutte contre la pauvreté dans le sud de la planète. Numérique, efficace et mobile."
+	},
+	"section-faq": {
+		"title": "Tout cela est bien beau, mais… ",
+		"cta": "Toutes les FAQ"
+	},
+	"section-7": {
+		"title-1": "Social Income combine trois approches pour amener un changement.",
+		"cards": [
+			{
+				"category": "Concept",
+				"title": "Le revenu de base inconditionnel",
+				"points": [
+					{
+						"text": "Réduit la discrimination"
+					},
+					{
+						"text": "Combat l’inégalité de revenu"
+					},
+					{
+						"text": "Renforce les groupes marginalisés"
+					},
+					{
+						"text": "Améliore les conditions de travail"
+					}
+				]
+			},
+			{
+				"category": "Méthode",
+				"title": "Le transfert monétaire direct",
+				"points": [
+					{
+						"text": "Diminue les frais administratifs"
+					},
+					{
+						"text": "Réduit la pauvreté"
+					},
+					{
+						"text": "Favorise l’autonomie"
+					},
+					{
+						"text": "Stimule les marchés locaux"
+					}
+				]
+			},
+			{
+				"category": "Technologie",
+				"title": "Le banking mobile",
+				"points": [
+					{
+						"text": "Frais réduits"
+					},
+					{
+						"text": "Simple et rapide"
+					},
+					{
+						"text": "Évolutif"
+					},
+					{
+						"text": "Résistant aux crises"
+					}
+				]
+			}
+		]
+	},
+	"section-8": {
+		"cards": [
+			{
+				"quote": [
+					{
+						"text": "« Les transferts d'argent permettent aux bénéficiaires d'obtenir une gamme de biens et de services "
+					},
+					{
+						"text": "de leur choix directement ",
+						"color": "accent"
+					},
+					{
+						"text": "sur les marchés locaux et auprès des prestataires de services. »"
+					}
+				],
+				"author": "Croix-Rouge Internationale"
+			},
+			{
+				"quote": [
+					{
+						"text": "« Nous devons sérieusement envisager l’introduction d’un revenu de base inconditionnel bien conçu. "
+					},
+					{
+						"text": "Les chocs continueraient sans doute de frapper, ",
+						"color": "accent"
+					},
+					{
+						"text": "mais sans détruire. »"
+					}
+				],
+				"author": "Nations Unies"
+			},
+			{
+				"quote": [
+					{
+						"text": "« Lutter contre la pauvreté dans le monde est une tâche ardue. Mais il y aurait "
+					},
+					{
+						"text": "une solution simple: ",
+						"color": "accent"
+					},
+					{
+						"text": "l’accès aux services financiers à l'aide d'un téléphone portable. »"
+					}
+				],
+				"author": "Banque mondiale"
+			}
+		]
+	},
+	"section-10": {
+		"title-1": [
+			{
+				"text": "Soutiens les ODD des "
+			},
+			{
+				"text": "Nations Unies",
+				"color": "primary"
+			},
+			{
+				"text": ""
+			}
+		],
+		"sdg-1-title": "Éliminer la pauvreté sous toutes ses formes et partout dans le monde.",
+		"sdg-1": "ODD 1",
+		"sdg-10-title": "Réduire les inégalités dans les pays et d’un pays à l’autre.",
+		"sdg-10": "ODD 10"
+	},
+	"section-11": {
+		"title": "Journal",
+		"card-1-title": "Test",
+		"card-1-author": "Aurélie Schmiedlin",
+		"card-1-description": "Test",
+		"all-articles": "See all articles ›"
 	}
 }

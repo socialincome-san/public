@@ -82,25 +82,9 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 		</ul>
 	);
 
-	let title;
-	switch (pathname) {
-		case `/${params.lang}/${params.region}/legal/privacy`:
-			title = translations.privacyTitle;
-			break;
-		case `/${params.lang}/${params.region}/legal/site-use`:
-			title = translations.termsOfUseTitle;
-			break;
-		case `/${params.lang}/${params.region}/legal/donations`:
-			title = translations.termsAndConditionsTitle;
-			break;
-		case `/${params.lang}/${params.region}/legal/fundraisers`:
-			title = translations.fundraisersTitle;
-			break;
-	}
-
 	return (
 		<Collapsible open={isOpen} onOpenChange={setIsOpen} className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5">
-			<div className="hidden pt-16 md:col-span-1 md:flex lg:col-span-1">{navigationMenu}</div>
+			<div className="hidden md:col-span-1 md:flex lg:col-span-1">{navigationMenu}</div>
 			<div className="mt-4 md:col-span-3 lg:col-span-4">
 				<CollapsibleTrigger asChild>
 					<div className="flex justify-end md:hidden">

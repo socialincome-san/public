@@ -86,9 +86,16 @@ module.exports = {
 				4: '4px',
 			},
 			typography: {
+				h1: {
+					css: {
+						color: 'var(--foreground)',
+					},
+				},
 				DEFAULT: {
 					css: {
 						color: 'var(--foreground)',
+						'--tw-prose-headings': 'var(--foreground)',
+						'--tw-prose-links': 'var(--foreground)',
 					},
 				},
 			},

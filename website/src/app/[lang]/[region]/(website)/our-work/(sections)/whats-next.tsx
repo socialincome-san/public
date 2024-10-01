@@ -38,11 +38,7 @@ export async function WhatsNext({ params }: DefaultPageProps) {
 	];
 
 	return (
-		<BaseContainer
-			id="whats-next"
-			backgroundColor="bg-muted"
-			className="flex min-h-screen flex-col justify-center space-y-8 pt-16 md:pt-32"
-		>
+		<BaseContainer id="whats-next" className="flex flex-col justify-center space-y-8">
 			<div className="space-y-4">
 				<Typography as="h3" size="xl" color="muted-foreground">
 					{translator.t('whats-next.header')}
