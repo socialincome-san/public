@@ -8,7 +8,7 @@ import MobilesImg from '../(assets)/mobilesImgData.png';
 export async function MobileIllustration({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-home2'],
+		namespaces: ['website-home'],
 	});
 
 	return (

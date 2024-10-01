@@ -13,7 +13,7 @@ type ApproachCardProps = {
 export async function Approach({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-home2'],
+		namespaces: ['website-home'],
 	});
 	const cards = translator.t<ApproachCardProps[]>('section-7.cards');
 

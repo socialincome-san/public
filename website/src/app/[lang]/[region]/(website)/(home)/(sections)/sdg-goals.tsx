@@ -9,7 +9,7 @@ import Town from '../(assets)/sdg-town.jpg';
 export async function SDGGoals({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-home2'],
+		namespaces: ['website-home'],
 	});
 
 	return (

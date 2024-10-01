@@ -1,5 +1,5 @@
 import { DefaultPageProps, DefaultParams } from '@/app/[lang]/[region]';
-import { SuccessForm } from '@/app/[lang]/[region]/donate/success/stripe/[session]/success-form';
+import { SuccessForm } from '@/app/[lang]/[region]/(blue-theme)/donate/success/stripe/[session]/success-form';
 import { firestoreAdmin } from '@/firebase-admin';
 import { initializeStripe } from '@socialincome/shared/src/stripe';
 import { CountryCode } from '@socialincome/shared/src/types/country';

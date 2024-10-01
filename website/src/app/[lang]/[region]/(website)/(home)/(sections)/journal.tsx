@@ -14,7 +14,7 @@ type JournalCardDetails = {
 	sideImgData?: StaticImageData;
 };
 
-const JournalCard = ({ title, author, authorImgData, description, sideImgData }: JournalCardDetails): ReactElement => {
+const JournalCard = ({ title, author, description, sideImgData }: JournalCardDetails): ReactElement => {
 	return (
 		<div className="mx-3">
 			<div className="ml-3 flex flex-col items-start justify-start">
@@ -38,10 +38,10 @@ const JournalCard = ({ title, author, authorImgData, description, sideImgData }:
 	);
 };
 
-export async function Journal({ lang, region }: DefaultParams) {
+export async function Journal({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-home2', 'common'],
+		namespaces: ['website-home', 'common'],
 	});
 
 	return (

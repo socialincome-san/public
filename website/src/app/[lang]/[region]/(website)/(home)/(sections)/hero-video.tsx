@@ -7,7 +7,7 @@ import MuxVideoComponent from '../(components)/mux-video';
 export async function HeroVideo({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-home2', 'common'],
+		namespaces: ['website-home', 'common'],
 	});
 
 	return (

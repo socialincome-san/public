@@ -1,5 +1,5 @@
-import { SingleSignOnForm } from '@/app/[lang]/[region]/donate/success/stripe/[session]/activate/single-sign-on-form';
-import { StripeSuccessPageProps } from '@/app/[lang]/[region]/donate/success/stripe/[session]/page';
+import { SingleSignOnForm } from '@/app/[lang]/[region]/(blue-theme)/donate/success/stripe/[session]/activate/single-sign-on-form';
+import { StripeSuccessPageProps } from '@/app/[lang]/[region]/(blue-theme)/donate/success/stripe/[session]/page';
 import { initializeStripe } from '@socialincome/shared/src/stripe';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Card, Typography } from '@socialincome/ui';

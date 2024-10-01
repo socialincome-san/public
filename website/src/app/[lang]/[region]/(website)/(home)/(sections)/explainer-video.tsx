@@ -7,7 +7,7 @@ import { FontColor } from '@socialincome/ui/src/interfaces/color';
 export async function ExplainerVideo({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-home2', 'website-videos'],
+		namespaces: ['website-home', 'website-videos'],
 	});
 
 	return (

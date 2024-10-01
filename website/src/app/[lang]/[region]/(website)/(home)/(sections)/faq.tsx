@@ -7,7 +7,7 @@ import Link from 'next/link';
 export async function FAQ({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-home2', 'website-faq'],
+		namespaces: ['website-home', 'website-faq'],
 	});
 
 	return (

@@ -1,5 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { DonationForm } from '@/app/[lang]/[region]/donate/individual/donation-form';
+import { DonationForm } from '@/app/[lang]/[region]/(blue-theme)/donate/individual/donation-form';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer } from '@socialincome/ui';
 import Link from 'next/link';

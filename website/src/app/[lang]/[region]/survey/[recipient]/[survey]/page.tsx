@@ -1,6 +1,6 @@
 'use client';
 
-import { Survey, SurveyLanguage } from '@/app/[lang]/[region]/(survey-tool)/survey/[recipient]/[survey]/survey';
+import { Survey, SurveyLanguage } from '@/app/[lang]/[region]/survey/[recipient]/[survey]/survey';
 import { Button, Input } from '@socialincome/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { User, signInWithEmailAndPassword } from 'firebase/auth';

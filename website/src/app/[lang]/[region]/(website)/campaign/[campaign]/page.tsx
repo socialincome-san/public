@@ -1,5 +1,5 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import OneTimeDonationForm from '@/app/[lang]/[region]/donate/one-time/one-time-donation-form';
+import OneTimeDonationForm from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/one-time-donation-form';
 import { VimeoVideo } from '@/components/vimeo-video';
 import { firestoreAdmin } from '@/firebase-admin';
 import { WebsiteLanguage, WebsiteRegion } from '@/i18n';

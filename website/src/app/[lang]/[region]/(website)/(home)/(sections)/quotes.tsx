@@ -6,7 +6,7 @@ import { CarouselCardProps, QuotesCarousel } from '../(components)/quotes-carous
 export async function Quotes({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-home2', 'common'],
+		namespaces: ['website-home', 'common'],
 	});
 
 	const cards = translator.t<CarouselCardProps>('section-8.cards');
