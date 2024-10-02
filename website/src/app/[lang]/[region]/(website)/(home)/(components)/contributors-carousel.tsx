@@ -20,7 +20,7 @@ function Portrait({ name, text, country, image }: PortraitProps) {
 					{text}
 				</Typography>
 				<div className="flex items-center">
-					<Image className="h-14 w-14 rounded-full bg-gray-50 mr-4" src={image} alt={`${name} Image`} />
+					<Image className="mr-4 h-14 w-14 rounded-full bg-gray-50" src={image} alt={`${name} Image`} />
 					<Typography size="sm" color="foreground">
 						{name}, {country}
 					</Typography>
