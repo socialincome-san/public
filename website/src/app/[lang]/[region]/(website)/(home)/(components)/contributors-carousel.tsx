@@ -19,8 +19,8 @@ function Portrait({ name, text, country, image }: PortraitProps) {
 				<Typography size="2xl" weight="normal" color="foreground">
 					{text}
 				</Typography>
-				<div className="flex">
-					<Image className="h-14 w-14 rounded-full bg-gray-50" src={image} alt={`${name} Image`} />
+				<div className="flex items-center">
+					<Image className="h-14 w-14 rounded-full bg-gray-50 mr-4" src={image} alt={`${name} Image`} />
 					<Typography size="sm" color="foreground">
 						{name}, {country}
 					</Typography>

@@ -97,7 +97,7 @@ export function IncomeInput({ translations }: { translations: { buttonText: stri
 						)}
 					/>
 				</div>
-				<Button type="submit" className="mx-auto mt-10 hidden md:block">
+				<Button type="submit" className="mx-auto mt-10 md:block">
 					{translations.buttonText}
 				</Button>
 			</form>
