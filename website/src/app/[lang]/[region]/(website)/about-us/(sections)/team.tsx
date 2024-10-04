@@ -31,6 +31,8 @@ import simonImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon.
 import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simone.jpeg';
 import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
 import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
+import karinImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/karin-berg.jpg';
+import marcImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marc-werner.jpg';
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, FontSize, Typography } from '@socialincome/ui';
@@ -79,6 +81,8 @@ const groups: Group[] = [
 			{ name: 'Thomas Brenner', role: 'software-development', image: thomasImage },
 			{ name: 'Matthew Roberts', role: 'communications', image: matthewImage },
 			{ name: 'Françoise Légeret', role: 'translations', image: francoiseImage },
+			{ name: 'Karin Berg', role: 'app-development', image: karinImage },
+			{ name: 'Marc Werner', role: 'research', image: marcImage },
 		],
 	},
 	{
