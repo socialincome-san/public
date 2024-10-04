@@ -11,10 +11,12 @@ import francoiseImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/fr
 import juanImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/juan.jpeg';
 import juliaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/julia.jpeg';
 import kabeloImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kabelo.jpeg';
+import karinImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/karin-berg.jpg';
 import kerrinImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kerrin.jpeg';
 import larissaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/larissa.jpeg';
 import lorenzoImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/lorenzo.jpg';
 import mabelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mabel.jpeg';
+import marcImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marc-werner.jpg';
 import mariatuImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mariatu.jpg';
 import marionImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marion.jpeg';
 import matthewImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/matthew.jpeg';
@@ -31,8 +33,6 @@ import simonImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon.
 import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simone.jpeg';
 import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
 import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
-import karinImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/karin-berg.jpg';
-import marcImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marc-werner.jpg';
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, FontSize, Typography } from '@socialincome/ui';
