@@ -86,7 +86,8 @@ class UserRepository {
     final packageName = packageInfo.packageName;
 
     final uri = Uri.https(const String.fromEnvironment("SURVEY_BASE_URL"), "finishAuth");
-    final url = uri.toString();
+    var url = uri.toString();
+    url = "https://social-income-staging-deeplinking.web.app/finishAuth";
 
     final acs = ActionCodeSettings(
       url: url,
@@ -94,7 +95,7 @@ class UserRepository {
       iOSBundleId: packageName,
       androidPackageName: packageName,
       androidInstallApp: true,
-      androidMinimumVersion: "21",
+      androidMinimumVersion: "23",
     );
 
     FirebaseAuth.instance.sendSignInLinkToEmail(email: email, actionCodeSettings: acs);

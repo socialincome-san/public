@@ -14,6 +14,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
 import "package:flutter_native_splash/flutter_native_splash.dart";
+import "package:go_router/go_router.dart";
 
 class MyApp extends StatelessWidget {
   final FirebaseAuth firebaseAuth;
@@ -92,7 +93,27 @@ class _App extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentLocale = context.watch<SettingsCubit>().state.locale;
 
-    return MaterialApp(
+    final router = GoRouter(
+      routes: [
+        GoRoute(
+          path: "/",
+          builder: (_, __) {
+            return const Home();
+          },
+          routes: [
+            GoRoute(
+              path: "finishAuth",
+              builder: (_, __) {
+                return const Home();
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+
+    return MaterialApp.router(
+      routerConfig: router,
       title: "Social Income",
       theme: AppTheme.lightTheme,
       locale: currentLocale,
@@ -108,43 +129,53 @@ class _App extends StatelessWidget {
         Locale("en", "US"),
         Locale("kri"),
       ],
-      home: BlocConsumer<AuthCubit, AuthState>(
-        listener: (context, state) {
-          if (state.status == AuthStatus.authenticated) {
-            // change language to the user's preferred language
-            final selectedLanguage = state.recipient?.selectedLanguage;
-
-            if (selectedLanguage != null) {
-              context.read<SettingsCubit>().changeLanguage(selectedLanguage);
-            }
-          }
-        },
-        builder: (context, state) {
-          return BlocBuilder<AuthCubit, AuthState>(
-            builder: (context, state) {
-              switch (state.status) {
-                case AuthStatus.loading:
-                  return const SizedBox.shrink();
-                case AuthStatus.unauthenticated:
-                case AuthStatus.failure:
-                  FlutterNativeSplash.remove();
-                  return const WelcomePage();
-                case AuthStatus.authenticated:
-                case AuthStatus.updateRecipientFailure:
-                case AuthStatus.updateRecipientSuccess:
-                case AuthStatus.updatingRecipient:
-                  FlutterNativeSplash.remove();
-                  if (state.recipient?.termsAccepted == true) {
-                    return const MainAppPage();
-                  } else {
-                    return const TermsAndConditionsPage();
-                  }
-              }
-            },
-          );
-        },
-      ),
       debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class Home extends StatelessWidget {
+  const Home({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state.status == AuthStatus.authenticated) {
+          // change language to the user's preferred language
+          final selectedLanguage = state.recipient?.selectedLanguage;
+
+          if (selectedLanguage != null) {
+            context.read<SettingsCubit>().changeLanguage(selectedLanguage);
+          }
+        }
+      },
+      builder: (context, state) {
+        return BlocBuilder<AuthCubit, AuthState>(
+          builder: (context, state) {
+            switch (state.status) {
+              case AuthStatus.loading:
+                return const SizedBox.shrink();
+              case AuthStatus.unauthenticated:
+              case AuthStatus.failure:
+                FlutterNativeSplash.remove();
+                return const WelcomePage();
+              case AuthStatus.authenticated:
+              case AuthStatus.updateRecipientFailure:
+              case AuthStatus.updateRecipientSuccess:
+              case AuthStatus.updatingRecipient:
+                FlutterNativeSplash.remove();
+                if (state.recipient?.termsAccepted == true) {
+                  return const MainAppPage();
+                } else {
+                  return const TermsAndConditionsPage();
+                }
+            }
+          },
+        );
+      },
     );
   }
 }

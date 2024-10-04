@@ -1134,4 +1134,10 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
 
   @override
   String get shareButtonLabel => "Share...";
+
+  @override
+  String get clearButtonTooltip => "Clear text";
+
+  @override
+  String get selectedDateLabel => "Selected";
 }
