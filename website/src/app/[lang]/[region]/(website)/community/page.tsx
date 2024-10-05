@@ -11,7 +11,7 @@ export default async function Page({ params }: DefaultPageProps) {
 	return (
 		<BaseContainer className="items-left flex flex-col space-y-8 pt-16">
 			<Typography size="3xl" weight="bold">
-				{translator.t('test')}
+				{translator.t('title')}
 			</Typography>
 
 			<Typography as="h1" weight="bold" size="4xl">
