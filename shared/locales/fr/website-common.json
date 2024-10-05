@@ -36,7 +36,7 @@
 		"newsletter": "Newsletter"
 	},
 	"cookie-consent-banner": {
-		"text": "Pouvons-nous utiliser des cookies pour analyser le trafic et les performances de notre site web ? Nous ne collectons jamais de données personnelles. <a href='/legal/privacy' class='underline'>Politique de confidentialité.</a>.",
+		"text": "Nous utilisons des <a href='/legal/privacy' class='underline'>cookies</a>.",
 		"button-accept": "Accepter",
 		"button-refuse": "Refuser"
 	}
