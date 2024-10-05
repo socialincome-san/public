@@ -13,10 +13,10 @@ export default async function Page({ params }: DefaultPageProps) {
 			<Typography size="3xl" weight="bold">
 				{translator.t('test')}
 			</Typography>
-      
-      <Typography as="h1" weight="bold" size='4xl'>
-        {translator.t('test')}
-        </Typography>
+
+			<Typography as="h1" weight="bold" size="4xl">
+				{translator.t('test')}
+			</Typography>
 		</BaseContainer>
 	);
 }
