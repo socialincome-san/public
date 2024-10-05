@@ -1,29 +1,29 @@
 {
 	"section-1": {
-			"subtitle": "Aspiration",
-			"title": [
-						{
-							"text": "In the spirit of universal basic income, we aspire to be truly universal by "
-						},
-						{
-							"text": "providing Social Income to all.",
-							"color": "accent"
-						}
-					],
-			"target": [
-				{
-					"text": "8,104,666,773",
-					"color": "accent"
-				},
-				{
-					"text": "potential",
-					"color": "accent"
-				}
-			],
-			"population": "8,104,666,773",
-			"potential": "potential",
-			"scope": "beneficiaries live on Earth",
-			"continue": "However"
+		"subtitle": "Aspiration",
+		"title": [
+			{
+				"text": "In the spirit of universal basic income, we aspire to be truly universal by "
+			},
+			{
+				"text": "providing Social Income to all.",
+				"color": "accent"
+			}
+		],
+		"target": [
+			{
+				"text": "8,104,666,773",
+				"color": "accent"
+			},
+			{
+				"text": "potential",
+				"color": "accent"
+			}
+		],
+		"population": "8,104,666,773",
+		"potential": "potential",
+		"scope": "beneficiaries live on Earth",
+		"continue": "However"
 	},
 	"section-2": {
 		"subtitle": "Our Reality",

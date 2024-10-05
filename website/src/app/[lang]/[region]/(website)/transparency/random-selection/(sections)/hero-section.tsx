@@ -15,14 +15,12 @@ export async function HeroSection({ lang }: DefaultParams) {
 		<div className="theme-blue bg-background relative flex h-screen items-center justify-center">
 			<div className="text-center">
 				<div className="mb-2">
-					<Typography
-						size="xl"
-						className="mb-8 opacity-50">
+					<Typography size="xl" className="mb-8 opacity-50">
 						{translator.t('section-1.subtitle')}
 					</Typography>
 				</div>
 
-				<div className="mx-auto max-w-2xl mb-20">
+				<div className="mx-auto mb-20 max-w-2xl">
 					{translator.t<{ text: string; color?: FontColor }[]>('section-1.title').map((title, index) => (
 						<Typography
 							key={index}
@@ -36,29 +34,18 @@ export async function HeroSection({ lang }: DefaultParams) {
 					))}
 				</div>
 
-				<div className="mt-20 flex flex-col md:flex-row items-center justify-center">
-					<div className="mt-1 mb-4 mr-3 md:mb-0 flex-shrink-0">
-						<Image
-							className="h-16 w-16"
-							src={globeRotating}
-							alt="Globe"
-						/>
+				<div className="mt-20 flex flex-col items-center justify-center md:flex-row">
+					<div className="mb-4 mr-3 mt-1 flex-shrink-0 md:mb-0">
+						<Image className="h-16 w-16" src={globeRotating} alt="Globe" />
 					</div>
 
 					<div className="text-center md:text-left">
-						<div className="mx-auto max-w-4xl text-white whitespace-pre">
-							<Typography
-								as="span"
-								color="accent"
-								className="text-xl inline-block whitespace-pre"
-							>
+						<div className="mx-auto max-w-4xl whitespace-pre text-white">
+							<Typography as="span" color="accent" className="inline-block whitespace-pre text-xl">
 								{translator.t('section-1.population')} {translator.t('section-1.potential')}
 							</Typography>
 
-							<Typography
-								as="span"
-								className="text-xl whitespace-pre block"
-							>
+							<Typography as="span" className="block whitespace-pre text-xl">
 								{translator.t('section-1.scope')}
 							</Typography>
 						</div>

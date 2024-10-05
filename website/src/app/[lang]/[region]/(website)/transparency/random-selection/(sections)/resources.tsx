@@ -19,26 +19,30 @@ export async function Resources({ lang }: DefaultParams) {
 						{translator.t('section-2.subtitle')}
 					</Typography>
 				</div>
-				<div className="mx-auto max-w-2xl mb-20">
+				<div className="mx-auto mb-20 max-w-2xl">
 					{translator.t<{ text: string; color?: FontColor }[]>('section-2.title').map((title, index) => (
-						<Typography key={index} as="span" weight="medium" color={title.color} className="text-3xl sm:text-4xl md:text-4xl">
+						<Typography
+							key={index}
+							as="span"
+							weight="medium"
+							color={title.color}
+							className="text-3xl sm:text-4xl md:text-4xl"
+						>
 							{title.text}{' '}
 						</Typography>
 					))}
 				</div>
-				<div className="mt-20 flex flex-col md:flex-row items-center justify-center">
-					<div className="mt-1 mb-4 mr-3 md:mb-0 flex-shrink-0">
-						<Image className="h-16 w-16" src={transparency} alt="Globe"
-						/>
+				<div className="mt-20 flex flex-col items-center justify-center md:flex-row">
+					<div className="mb-4 mr-3 mt-1 flex-shrink-0 md:mb-0">
+						<Image className="h-16 w-16" src={transparency} alt="Globe" />
 					</div>
 
 					<div className="text-center md:text-left">
 						<div className="mx-auto max-w-4xl whitespace-pre">
-							<Typography as="span" color="accent" className="text-xl inline-block whitespace-pre">
+							<Typography as="span" color="accent" className="inline-block whitespace-pre text-xl">
 								{translator.t('section-2.amount')} {translator.t('section-2.amount-context')}
 							</Typography>
-							<Typography
-								as="span" className="text-xl whitespace-pre block">
+							<Typography as="span" className="block whitespace-pre text-xl">
 								{translator.t('section-2.scope')}
 							</Typography>
 						</div>
@@ -48,12 +52,17 @@ export async function Resources({ lang }: DefaultParams) {
 					<Typography size="xl" className="mb-1">
 						{translator.t('section-2.continue-1')}
 					</Typography>
-					<Typography size="xl" className="mb-2 text-accent">
+					<Typography size="xl" className="text-accent mb-2">
 						{translator.t('section-2.continue-2')}
 					</Typography>
 					<div className="flex justify-center">
 						<svg
-							xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							xmlns="http://www.w3.org/2000/svg"
+							className="h-6 w-6"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+						>
 							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
 						</svg>
 					</div>
