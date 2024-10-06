@@ -12,7 +12,7 @@ import { StripeEventHandler } from './StripeEventHandler';
 describe('stripeWebhook', () => {
 	const projectId = 'test-' + new Date().getTime();
 	const firestoreAdmin = new FirestoreAdmin(getOrInitializeFirebaseAdmin({ projectId: projectId }));
-	const stripeWebhook = new StripeEventHandler(process.env.STRIPE_SECRET_KEY!, firestoreAdmin);
+	const stripeWebhook = new StripeEventHandler('DUMMY_KEY', firestoreAdmin);
 
 	// Mock the Stripe API call
 	jest.spyOn(stripeWebhook.stripe.customers, 'retrieve').mockImplementation(async () => {
