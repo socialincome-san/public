@@ -39,7 +39,7 @@ export async function POST(request: CreateCheckoutSessionRequest) {
 		const metadata = campaignId
 			? {
 					campaignId: campaignId,
-			  }
+				}
 			: undefined;
 
 		const session = await stripe.checkout.sessions.create({

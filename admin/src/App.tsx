@@ -27,7 +27,7 @@ const algoliaIndex = (indexName: string) => {
 		? algoliasearch(
 				import.meta.env.VITE_ADMIN_ALGOLIA_APPLICATION_ID,
 				import.meta.env.VITE_ADMIN_ALGOLIA_SEARCH_KEY,
-		  ).initIndex(indexName)
+			).initIndex(indexName)
 		: undefined;
 };
 
