@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: CampaignPageProps) {
 						creator: '@so_income',
 						images: campaign?.metadata_twitterImage,
 					},
-			  }
+				}
 			: undefined;
 	return getMetadata(params.lang, 'website-donate', campaignMetadata);
 }
