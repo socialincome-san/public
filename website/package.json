@@ -42,6 +42,7 @@
 		"reactfire": "^4.2.3",
 		"recharts": "^2.12.7",
 		"server-only": "^0.0.1",
+		"sharp": "^0.33.5",
 		"stripe": "^17.1.0",
 		"survey-core": "^1.12.4",
 		"survey-react-ui": "^1.12.4",

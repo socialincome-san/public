@@ -1,4 +1,3 @@
-import { NewsletterSubscriptionUpdateRequest } from '@/app/api/newsletter/subscription/route';
 import { UserContext } from '@/components/providers/user-context-provider';
 import { useApi } from '@/hooks/useApi';
 import { orderBy } from '@firebase/firestore';
@@ -102,7 +101,7 @@ export const useUpsertNewsletterSubscription = () => {
 	const api = useApi();
 	const queryClient = useQueryClient();
 
-	return async (status: NewsletterSubscriptionUpdateRequest) => {
+	return async (status: 'subscribed' | 'unsubscribed') => {
 		const response = await api.post('/api/newsletter/subscription', { status });
 		await queryClient.invalidateQueries({ queryKey: ['me', 'newsletter'] });
 		return response;
