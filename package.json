@@ -42,10 +42,10 @@
 		"website:check-translations": "npm --workspace=@socialincome/website run check-translations"
 	},
 	"devDependencies": {
-		"firebase-tools": "13.0.2",
-		"prettier": "3.1.0",
-		"prettier-plugin-organize-imports": "3.2.4",
-		"prettier-plugin-tailwindcss": "0.5.7",
-		"typescript": "^5.3.2"
+		"firebase-tools": "13.20.2",
+		"prettier": "3.3.3",
+		"prettier-plugin-organize-imports": "4.1.0",
+		"prettier-plugin-tailwindcss": "0.6.8",
+		"typescript": "^5.6.2"
 	}
 }

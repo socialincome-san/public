@@ -188,6 +188,7 @@ describe('stripeWebhook', () => {
 			application_fee_amount: null,
 			attempt_count: 1,
 			attempted: true,
+			automatically_finalizes_at: null,
 			auto_advance: false,
 			automatic_tax: {
 				liability: null,
@@ -261,6 +262,7 @@ describe('stripeWebhook', () => {
 							interval_count: 3,
 							livemode: true,
 							metadata: {},
+							meter: null,
 							nickname: null,
 							product: 'prod_123',
 							tiers_mode: null,
@@ -285,6 +287,7 @@ describe('stripeWebhook', () => {
 								aggregate_usage: null,
 								interval: 'month',
 								interval_count: 3,
+								meter: null,
 								trial_period_days: null,
 								usage_type: 'licensed',
 							},
@@ -330,7 +333,6 @@ describe('stripeWebhook', () => {
 			pre_payment_credit_notes_amount: 0,
 			quote: null,
 			receipt_number: '123',
-			rendering_options: null,
 			rendering: null,
 			shipping_cost: null,
 			shipping_details: null,
@@ -372,6 +374,7 @@ describe('stripeWebhook', () => {
 		payment_method_details: {
 			card: {
 				brand: 'mastercard',
+				authorization_code: null,
 				amount_authorized: null,
 				checks: {
 					address_line1_check: null,

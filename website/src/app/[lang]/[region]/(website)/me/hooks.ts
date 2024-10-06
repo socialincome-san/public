@@ -1,13 +1,13 @@
+import { NewsletterSubscriptionUpdateRequest } from '@/app/api/newsletter/subscription/route';
 import { UserContext } from '@/components/providers/user-context-provider';
 import { useApi } from '@/hooks/useApi';
 import { orderBy } from '@firebase/firestore';
-import { Status } from '@mailchimp/mailchimp_marketing';
 import { CONTRIBUTION_FIRESTORE_PATH, StatusKey } from '@socialincome/shared/src/types/contribution';
 import { DONATION_CERTIFICATE_FIRESTORE_PATH } from '@socialincome/shared/src/types/donation-certificate';
-import { EMPLOYERS_FIRESTORE_PATH, Employer } from '@socialincome/shared/src/types/employers';
+import { Employer, EMPLOYERS_FIRESTORE_PATH } from '@socialincome/shared/src/types/employers';
 import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Timestamp, addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, query, Timestamp, updateDoc, where } from 'firebase/firestore';
 import { useContext } from 'react';
 import { useFirestore } from 'reactfire';
 import Stripe from 'stripe';
@@ -102,7 +102,7 @@ export const useUpsertNewsletterSubscription = () => {
 	const api = useApi();
 	const queryClient = useQueryClient();
 
-	return async (status: Status) => {
+	return async (status: NewsletterSubscriptionUpdateRequest) => {
 		const response = await api.post('/api/newsletter/subscription', { status });
 		await queryClient.invalidateQueries({ queryKey: ['me', 'newsletter'] });
 		return response;
