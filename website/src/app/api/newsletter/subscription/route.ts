@@ -27,7 +27,9 @@ export async function GET(request: Request) {
 /**
  * Upsert Newsletter subscription
  */
-type NewsletterSubscriptionUpdateRequest = { json(): Promise<{ status: 'subscribed' | 'unsubscribed' }> } & Request;
+export type NewsletterSubscriptionUpdateRequest = {
+	json(): Promise<{ status: 'subscribed' | 'unsubscribed' }>;
+} & Request;
 
 export async function POST(request: NewsletterSubscriptionUpdateRequest) {
 	try {

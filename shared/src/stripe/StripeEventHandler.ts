@@ -20,10 +20,7 @@ export class StripeEventHandler {
 
 	constructor(apiKey: string, firestoreAdmin: FirestoreAdmin) {
 		this.firestoreAdmin = firestoreAdmin;
-		this.stripe = new Stripe(apiKey, {
-			typescript: true,
-			apiVersion: '2023-10-16',
-		});
+		this.stripe = new Stripe(apiKey, { typescript: true });
 	}
 
 	handleChargeEvent = async (charge: Stripe.Charge) => {
@@ -122,7 +119,7 @@ export class StripeEventHandler {
 					campaign_path: this.firestoreAdmin.firestore
 						.collection(CAMPAIGN_FIRESTORE_PATH)
 						.doc(checkoutMetadata?.campaignId),
-			  } as StripeContribution)
+				} as StripeContribution)
 			: contribution;
 	};
 

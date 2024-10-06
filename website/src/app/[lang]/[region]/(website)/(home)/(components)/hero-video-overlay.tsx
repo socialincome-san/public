@@ -35,7 +35,7 @@ const HeroVideoOverlay = ({ lang, region, translations }: HeroVideoOverlayProps)
 				'opacity-0': hideOverlay,
 			})}
 		>
-			<div className=" flex h-full flex-col justify-around">
+			<div className="flex h-full flex-col justify-around">
 				<div className="hidden md:block" />
 				<div className="mx-auto max-w-4xl text-center text-white">
 					{translations.mainText.map((title, index) => (

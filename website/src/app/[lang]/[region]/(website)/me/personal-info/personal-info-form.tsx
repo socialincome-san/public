@@ -283,7 +283,7 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 						</FormItem>
 					)}
 				/>
-				<Button variant="default" type="submit" className=" md:col-span-2">
+				<Button variant="default" type="submit" className="md:col-span-2">
 					{translations.submitButton}
 				</Button>
 			</form>
