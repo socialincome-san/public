@@ -1,6 +1,6 @@
 import "package:firebase_auth/firebase_auth.dart";
 
-class FakeUser implements User {
+class DemoUser implements User {
   @override
   String? get displayName => "demo user";
 

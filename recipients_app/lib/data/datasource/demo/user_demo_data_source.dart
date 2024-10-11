@@ -1,6 +1,6 @@
 import "dart:async";
 
-import "package:app/data/datasource/demo/fake_user.dart";
+import "package:app/data/datasource/demo/demo_user.dart";
 import "package:app/data/datasource/user_data_source.dart";
 import "package:app/data/models/models.dart";
 import "package:firebase_auth/firebase_auth.dart";
@@ -8,11 +8,13 @@ import "package:firebase_auth/firebase_auth.dart";
 class UserDemoDataSource implements UserDataSource {
   Recipient? _recipient = const Recipient(
     userId: "demo",
+    firstName: "Demo",
+    lastName: "SocialIncome",
     mobileMoneyPhone: Phone(23271118897),
     communicationMobilePhone: Phone(23271118897),
   );
   final _userStreamController = StreamController<User?>();
-  final _user = FakeUser();
+  final _user = DemoUser();
 
   @override
   Stream<User?> authStateChanges() {
