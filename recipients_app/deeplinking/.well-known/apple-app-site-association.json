@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [ "7882M964MR.org.socialincome.app", "7882M964MR.org.socialincome.app.stage" ],
+        "components": [
+          {
+            "/": "/finishAuth/*",
+            "comment": "Matches any URL with a path that starts with /finishAuth/."
+          }
+        ]
+      }
+    ]
+  }
+}
