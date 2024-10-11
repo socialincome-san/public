@@ -122,7 +122,7 @@ export class StripeEventHandler {
 					campaign_path: this.firestoreAdmin.firestore
 						.collection(CAMPAIGN_FIRESTORE_PATH)
 						.doc(checkoutMetadata?.campaignId),
-			  } as StripeContribution)
+				} as StripeContribution)
 			: contribution;
 	};
 

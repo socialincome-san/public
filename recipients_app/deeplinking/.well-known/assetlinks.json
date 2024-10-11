@@ -1,29 +1,32 @@
 [
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "org.socialincome.app.stage",
-      "sha256_cert_fingerprints":
-        ["5E:7E:7D:58:66:9A:BC:84:02:DA:00:A4:7B:73:D8:87:C6:D1:2F:C8:94:64:77:37:B1:F9:F6:52:A2:08:D9:9A"]
-    }
-  },
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "org.socialincome.app.dev",
-      "sha256_cert_fingerprints":
-        ["5E:7E:7D:58:66:9A:BC:84:02:DA:00:A4:7B:73:D8:87:C6:D1:2F:C8:94:64:77:37:B1:F9:F6:52:A2:08:D9:9A"]
-    }
-  },
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "org.socialincome.app",
-      "sha256_cert_fingerprints":
-        ["D3:1E:7C:B0:FC:81:6F:60:BF:78:07:D5:98:54:ED:CA:27:70:55:4B:9D:6E:A9:19:88:57:7F:E0:C0:DF:29:97"]
-    }
-  }
+	{
+		"relation": ["delegate_permission/common.handle_all_urls"],
+		"target": {
+			"namespace": "android_app",
+			"package_name": "org.socialincome.app.stage",
+			"sha256_cert_fingerprints": [
+				"5E:7E:7D:58:66:9A:BC:84:02:DA:00:A4:7B:73:D8:87:C6:D1:2F:C8:94:64:77:37:B1:F9:F6:52:A2:08:D9:9A"
+			]
+		}
+	},
+	{
+		"relation": ["delegate_permission/common.handle_all_urls"],
+		"target": {
+			"namespace": "android_app",
+			"package_name": "org.socialincome.app.dev",
+			"sha256_cert_fingerprints": [
+				"5E:7E:7D:58:66:9A:BC:84:02:DA:00:A4:7B:73:D8:87:C6:D1:2F:C8:94:64:77:37:B1:F9:F6:52:A2:08:D9:9A"
+			]
+		}
+	},
+	{
+		"relation": ["delegate_permission/common.handle_all_urls"],
+		"target": {
+			"namespace": "android_app",
+			"package_name": "org.socialincome.app",
+			"sha256_cert_fingerprints": [
+				"D3:1E:7C:B0:FC:81:6F:60:BF:78:07:D5:98:54:ED:CA:27:70:55:4B:9D:6E:A9:19:88:57:7F:E0:C0:DF:29:97"
+			]
+		}
+	}
 ]
