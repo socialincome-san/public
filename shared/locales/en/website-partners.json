@@ -1,138 +1,138 @@
 {
-  "metadata": {
-    "title": "Social Income",
-    "description": "Our partners",
-    "og-image": "/assets/metadata/og/default.jpg",
-    "twitter-image": "/assets/metadata/twitter/default.jpg"
-  },
-  "hero": {
-    "title-1": [
-      {
-        "text": "We trust in "
-      },
-      {
-        "text": "local partners.",
-        "color": "accent"
-      },
-      {
-        "text": ". Here the list of NGOs we work with."
-      }
-    ],
-    "subtitle": "Localization drives our work. We partner with local NGOs to carefully select and manage our programs, ensuring they meet the unique needs of each community."
-  },
-  "badges": {
-    "active": "active",
-    "former": "former",
-    "suspended": "suspended",
-    "recipients": "Recipients",
-    "recipients-by": "Recipients by"
-  },
-  "ngo-generic": {
-    "founded": "Founded",
-    "partner-since": "Partner since",
-    "headquarter": "Headquarter",
-    "mission": "Mission"
-  },
-  "ngo-1": {
-    "org-short-name": "Aurora",
-    "org-long-name": "Aurora Foundation",
-    "org-foundation": "2007",
-    "org-country": "SL",
-    "org-headquarter": "Freetown",
-    "org-category": "International NGO",
-    "org-focus-1": "Poverty",
-    "org-focus-2": "Decent Work",
-    "partnership-start": "2020",
-    "recipients-total": "34",
-    "recipients-active": "31",
-    "recipients-former": "2",
-    "recipients-suspended": "1",
-    "org-mission": "This NGO encourages helps people improve their lives and communities through various development and cultural projects.",
-    "org-description": "Aurora Foundation is a grassroots NGO dedicated to improving access to education and healthcare in rural Sierra Leone. By building local partnerships, they provide essential resources to underserved communities, helping children attend school and supporting clinics with vital medical supplies. The organization also focuses on women’s empowerment through skill-building workshops, offering them opportunities for economic independence. Their work fosters sustainable development and creates lasting change for the future of Sierra Leone. ",
-    "org-quote": [
-      {
-        "text": "Social Income has helped us "
-      },
-      {
-        "text": "to focus on our mission,",
-        "color": "accent"
-      },
-      {
-        "text": "without the need to fundraise!"
-      }
-    ],
-    "org-quote-author": "Regina",
-    "org-photo": "",
-    "org-website": "https://www.aurorafoundation.is/en",
-    "org-instagram": "https://www.instagram.com/aurorafoundation_official/?hl=en",
-    "org-facebook": "https://www.facebook.com/aurorafoundationofficial/"
-  },
-  "ngo-2": {
-    "org-short-name": "Pranav",
-    "org-long-name": "Pranav Foundation",
-    "org-foundation": "2007",
-    "org-country": "SL",
-    "org-headquarter": "Freetown",
-    "org-category": "International NGO",
-    "org-focus-1": "Poverty",
-    "org-focus-2": "Inequality",
-    "partnership-start": "2020",
-    "recipients-total": "34",
-    "recipients-active": "31",
-    "recipients-former": "2",
-    "recipients-suspended": "1",
-    "org-mission": "This super NGO encourages helps people improve their lives and communities through various development and cultural projects.",
-    "org-description": "Pranav Foundation is a grassroots NGO dedicated to improving access to education and healthcare in rural Sierra Leone. By building local partnerships, they provide essential resources to underserved communities, helping children attend school and supporting clinics with vital medical supplies. The organization also focuses on women’s empowerment through skill-building workshops, offering them opportunities for economic independence. Their work fosters sustainable development and creates lasting change for the future of Sierra Leone. ",
-    "org-quote": [
-      {
-        "text": "They have helped us "
-      },
-      {
-        "text": "to focus on our mission,",
-        "color": "accent"
-      },
-      {
-        "text": "without the need to fundraise!"
-      }
-    ],
-    "org-quote-author": "Peter",
-    "org-photo": "",
-    "org-website": "https://www.aurorafoundation.is/en",
-    "org-instagram": "https://www.instagram.com/aurorafoundation_official/?hl=en",
-    "org-facebook": "https://www.facebook.com/aurorafoundationofficial/"
-  },
-  "ngo-2": {
-    "org-short-name": "Sandino",
-    "org-long-name": "Sansan Foundation",
-    "org-foundation": "2007",
-    "org-country": "SL",
-    "org-headquarter": "Freetown",
-    "org-category": "International NGO",
-    "org-focus-1": "Poverty",
-    "org-focus-2": "Inequality",
-    "partnership-start": "2020",
-    "recipients-total": "34",
-    "recipients-active": "31",
-    "recipients-former": "2",
-    "recipients-suspended": "1",
-    "org-mission": "This super NGO encourages helps people improve their lives and communities through various development and cultural projects.",
-    "org-description": "Pranav Foundation is a grassroots NGO dedicated to improving access to education and healthcare in rural Sierra Leone. By building local partnerships, they provide essential resources to underserved communities, helping children attend school and supporting clinics with vital medical supplies. The organization also focuses on women’s empowerment through skill-building workshops, offering them opportunities for economic independence. Their work fosters sustainable development and creates lasting change for the future of Sierra Leone. ",
-    "org-quote": [
-      {
-        "text": "They have helped us "
-      },
-      {
-        "text": "to focus on our mission,",
-        "color": "accent"
-      },
-      {
-        "text": "without the need to fundraise!"
-      }
-    ],
-    "org-quote-author": "Peter",
-    "org-photo": "",
-    "org-website": "https://www.aurorafoundation.is/en",
-    "org-instagram": "https://www.instagram.com/aurorafoundation_official/?hl=en",
-    "org-facebook": "https://www.facebook.com/aurorafoundationofficial/"
-  }
+	"metadata": {
+		"title": "Social Income",
+		"description": "Our partners",
+		"og-image": "/assets/metadata/og/default.jpg",
+		"twitter-image": "/assets/metadata/twitter/default.jpg"
+	},
+	"hero": {
+		"title-1": [
+			{
+				"text": "We trust in "
+			},
+			{
+				"text": "local partners.",
+				"color": "accent"
+			},
+			{
+				"text": ". Here the list of NGOs we work with."
+			}
+		],
+		"subtitle": "Localization drives our work. We partner with local NGOs to carefully select and manage our programs, ensuring they meet the unique needs of each community."
+	},
+	"badges": {
+		"active": "active",
+		"former": "former",
+		"suspended": "suspended",
+		"recipients": "Recipients",
+		"recipients-by": "Recipients by"
+	},
+	"ngo-generic": {
+		"founded": "Founded",
+		"partner-since": "Partner since",
+		"headquarter": "Headquarter",
+		"mission": "Mission"
+	},
+	"ngo-1": {
+		"org-short-name": "Aurora",
+		"org-long-name": "Aurora Foundation",
+		"org-foundation": "2007",
+		"org-country": "SL",
+		"org-headquarter": "Freetown",
+		"org-category": "International NGO",
+		"org-focus-1": "Poverty",
+		"org-focus-2": "Decent Work",
+		"partnership-start": "2020",
+		"recipients-total": "34",
+		"recipients-active": "31",
+		"recipients-former": "2",
+		"recipients-suspended": "1",
+		"org-mission": "This NGO encourages helps people improve their lives and communities through various development and cultural projects.",
+		"org-description": "Aurora Foundation is a grassroots NGO dedicated to improving access to education and healthcare in rural Sierra Leone. By building local partnerships, they provide essential resources to underserved communities, helping children attend school and supporting clinics with vital medical supplies. The organization also focuses on women’s empowerment through skill-building workshops, offering them opportunities for economic independence. Their work fosters sustainable development and creates lasting change for the future of Sierra Leone. ",
+		"org-quote": [
+			{
+				"text": "Social Income has helped us "
+			},
+			{
+				"text": "to focus on our mission,",
+				"color": "accent"
+			},
+			{
+				"text": "without the need to fundraise!"
+			}
+		],
+		"org-quote-author": "Regina",
+		"org-photo": "",
+		"org-website": "https://www.aurorafoundation.is/en",
+		"org-instagram": "https://www.instagram.com/aurorafoundation_official/?hl=en",
+		"org-facebook": "https://www.facebook.com/aurorafoundationofficial/"
+	},
+	"ngo-2": {
+		"org-short-name": "Pranav",
+		"org-long-name": "Pranav Foundation",
+		"org-foundation": "2007",
+		"org-country": "SL",
+		"org-headquarter": "Freetown",
+		"org-category": "International NGO",
+		"org-focus-1": "Poverty",
+		"org-focus-2": "Inequality",
+		"partnership-start": "2020",
+		"recipients-total": "34",
+		"recipients-active": "31",
+		"recipients-former": "2",
+		"recipients-suspended": "1",
+		"org-mission": "This super NGO encourages helps people improve their lives and communities through various development and cultural projects.",
+		"org-description": "Pranav Foundation is a grassroots NGO dedicated to improving access to education and healthcare in rural Sierra Leone. By building local partnerships, they provide essential resources to underserved communities, helping children attend school and supporting clinics with vital medical supplies. The organization also focuses on women’s empowerment through skill-building workshops, offering them opportunities for economic independence. Their work fosters sustainable development and creates lasting change for the future of Sierra Leone. ",
+		"org-quote": [
+			{
+				"text": "They have helped us "
+			},
+			{
+				"text": "to focus on our mission,",
+				"color": "accent"
+			},
+			{
+				"text": "without the need to fundraise!"
+			}
+		],
+		"org-quote-author": "Peter",
+		"org-photo": "",
+		"org-website": "https://www.aurorafoundation.is/en",
+		"org-instagram": "https://www.instagram.com/aurorafoundation_official/?hl=en",
+		"org-facebook": "https://www.facebook.com/aurorafoundationofficial/"
+	},
+	"ngo-2": {
+		"org-short-name": "Sandino",
+		"org-long-name": "Sansan Foundation",
+		"org-foundation": "2007",
+		"org-country": "SL",
+		"org-headquarter": "Freetown",
+		"org-category": "International NGO",
+		"org-focus-1": "Poverty",
+		"org-focus-2": "Inequality",
+		"partnership-start": "2020",
+		"recipients-total": "34",
+		"recipients-active": "31",
+		"recipients-former": "2",
+		"recipients-suspended": "1",
+		"org-mission": "This super NGO encourages helps people improve their lives and communities through various development and cultural projects.",
+		"org-description": "Pranav Foundation is a grassroots NGO dedicated to improving access to education and healthcare in rural Sierra Leone. By building local partnerships, they provide essential resources to underserved communities, helping children attend school and supporting clinics with vital medical supplies. The organization also focuses on women’s empowerment through skill-building workshops, offering them opportunities for economic independence. Their work fosters sustainable development and creates lasting change for the future of Sierra Leone. ",
+		"org-quote": [
+			{
+				"text": "They have helped us "
+			},
+			{
+				"text": "to focus on our mission,",
+				"color": "accent"
+			},
+			{
+				"text": "without the need to fundraise!"
+			}
+		],
+		"org-quote-author": "Peter",
+		"org-photo": "",
+		"org-website": "https://www.aurorafoundation.is/en",
+		"org-instagram": "https://www.instagram.com/aurorafoundation_official/?hl=en",
+		"org-facebook": "https://www.facebook.com/aurorafoundationofficial/"
+	}
 }

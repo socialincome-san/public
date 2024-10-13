@@ -1,30 +1,30 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { UsersIcon } from '@heroicons/react/24/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import {
-	Typography,
+	Badge,
 	Card,
 	CardContent,
 	CardFooter,
 	CardHeader,
 	CardTitle,
-	Badge,
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-	Separator,
 	HoverCard,
 	HoverCardContent,
 	HoverCardTrigger,
+	Separator,
+	Typography,
 } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import { SL } from 'country-flag-icons/react/1x1';
-import { UsersIcon } from '@heroicons/react/24/solid';
 import Image from 'next/image';
+import Link from 'next/link';
 import Ngo1 from '../(assets)/aurora.png';
 import SdgIcon from '../(assets)/sdg-circle.svg';
-import Link from 'next/link';
 export async function NgoList({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
@@ -161,7 +161,7 @@ export async function NgoList({ lang }: DefaultParams) {
 								</DialogTitle>
 							</div>
 						</DialogHeader>
-						<div className="px-8 pt-2 pb-10">
+						<div className="px-8 pb-10 pt-2">
 							<div className="flex flex-col gap-2 p-0 pb-8 pt-2 sm:flex-row sm:items-center sm:justify-between">
 								<div className="pb-4 text-center sm:order-2 sm:flex-shrink-0 sm:pb-0 sm:text-right">
 									<Typography size="md" weight="normal">
@@ -261,17 +261,20 @@ export async function NgoList({ lang }: DefaultParams) {
 								<div className="col-span-2">
 									<Link
 										href="{translator.t('ngo-1.org-website')}"
-										className="ml-auto inline-block pr-2 text-lg underline">
+										className="ml-auto inline-block pr-2 text-lg underline"
+									>
 										{translator.t('links.website')}
 									</Link>
 									<Link
 										href="{translator.t('ngo-1.org-facebook')}"
-										className="ml-auto inline-block pr-2 text-lg underline">
+										className="ml-auto inline-block pr-2 text-lg underline"
+									>
 										{translator.t('links.facebook')}
 									</Link>
 									<Link
 										href="{translator.t('ngo-1.org-instagram')}"
-										className="ml-auto inline-block pr-2 text-lg underline">
+										className="ml-auto inline-block pr-2 text-lg underline"
+									>
 										{translator.t('links.instagram')}
 									</Link>
 								</div>
