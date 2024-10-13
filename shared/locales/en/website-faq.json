@@ -3,6 +3,7 @@
 		"title": "FAQ | Social Income"
 	},
 	"title": "FAQ",
+	"title-long": "Frequently asked questions",
 	"fighting-poverty": {
 		"title": "Fighting Poverty",
 		"questions": [
@@ -144,6 +145,30 @@
 						"href": "https://www.idealist.org/en/nonprofit/41a885fa176b4793a029f131834fd48a-social-income-zurich"
 					}
 				]
+			}
+		]
+	},
+	"selection": {
+		"questions": [
+			{
+				"question": "Why do we select randomly out of a pool of qualified recipients?",
+				"answer": "The purpose of employing this random selection method is to achieve several objectives. Firstly, it helps prevent bias in our recipient selection, ensuring that relatives or acquaintances of individuals involved in the process are not given preferential treatment. Secondly, it aims to avoid tensions between recipients and non-recipients, as well as any potential conflicts between recipients and our organization. Lastly, we strive to incorporate technology where it is feasible and beneficial to the process."
+			},
+			{
+				"question": "Who can influence the draft?",
+				"answer": "By relying on an unpredictable random value from drand, set to be emitted in the future, it's not possible for anyone to sway the results of the selection process. This inherent randomness can be utilized to confirm the integrity of the selection. To qualify for Social Income, an individual must first be on a list provided by an NGO. While this does present a preliminary condition, it aligns with our foundational principle: ensuring that Social Income reaches those most in need."
+			},
+			{
+				"question": "How do we avoid bias and tensions?",
+				"answer": "To ensure we don't inadvertently prioritize a specific ethnic group, gender, or occupation, we collaborate with diverse NGOs that have varied missions. In line with our 'do no harm' policy, we strive to prevent tensions among recipients, non-recipients, communities, and the NGOs. Our random selection plays a pivotal role in achieving this. It ensures that those related to or acquainted with individuals in the process aren't shown favoritism, which could lead to conflicts."
+			},
+			{
+				"question": "What is happening during the selection process?",
+				"answer": "We utilize the random number provided by drand, which is publicly accessible, to pick a set number of individuals from our list. Here's how it's done: we first organize the hashed list of recipients. Then, using the randomness element from drand, we convert it into a position on the list through a <a href='https://en.wikipedia.org/wiki/Key_derivation_function' target='_blank' class='underline'>key derivation function</a>. For those keen on the technical details, the function and its associated processes are documented in our <a href='https://github.com/drand/draw-action' target='_blank' class='underline'>GitHub repository</a>."
+			},
+			{
+				"question": "What is drand and who is behind it?",
+				"answer": "The drand project generates random numbers that everyone can trust. It can be applied to create truly random and verifiable drafts. Initiated in 2017 at EPFL by Nicolas Gailly, drand received support from Philipp Jovanovic and was guided by Bryan Ford.<br></br> It has since become independently managed and maintains a network called the <a href='https://www.cloudflare.com/leagueofentropy/' target='_blank' class='underline'>League of Entropy</a> with EPFL, UCL, Cloudflare, Kudelski Security, the University of Chile, and Protocol Labs. Current core maintainers of the open source project are the CEO, CSO and CTO of Randamu, respectively <a href='https://www.linkedin.com/in/erick-watson/' target='_blank' class='underline'>Erick Watson</a>, <a href='https://www.linkedin.com/in/anomalroil/' target='_blank' class='underline'>Yolan Romailler</a>, and <a href='https://www.linkedin.com/in/patrickmcclurg/' target='_blank' class='underline'>Patrick McClurg</a>."
 			}
 		]
 	},
