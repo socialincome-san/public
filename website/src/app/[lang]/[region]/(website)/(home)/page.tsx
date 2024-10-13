@@ -12,7 +12,7 @@ import { Overview } from './(sections)/overview';
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	return (
-		<div className="-mt-24 md:-mt-36">
+		<div className="-mb-28 -mt-24 md:-mt-36">
 			<HeroVideo lang={lang} region={region} />
 			<Overview lang={lang} region={region} />
 			<MonthlyIncome lang={lang} region={region} />
