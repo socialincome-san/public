@@ -26,6 +26,22 @@ class SignupCubit extends Cubit<SignupState> {
     required this.crashReportingRepository,
   }) : super(const SignupState());
 
+  Future<void> signupWithEmailLink({
+    required String email,
+  }) async {
+    try {
+      await userRepository.verifyEmail(email: email);
+    } on Exception catch (ex, stackTrace) {
+      crashReportingRepository.logError(ex, stackTrace);
+      emit(
+        state.copyWith(
+          status: SignupStatus.verificationFailure,
+          exception: ex,
+        ),
+      );
+    }
+  }
+
   Future<void> signupWithPhoneNumber({
     required String phoneNumber,
   }) async {

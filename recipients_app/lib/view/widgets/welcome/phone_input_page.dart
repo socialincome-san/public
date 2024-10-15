@@ -1,6 +1,8 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
+import "package:app/view/widgets/welcome/email_input_field.dart";
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
@@ -17,19 +19,24 @@ class PhoneInputPage extends StatefulWidget {
 class _PhoneInputPageState extends State<PhoneInputPage> {
   late final RoundedLoadingButtonController btnController;
   late final TextEditingController phoneNumberController;
+  late final TextEditingController emailFieldController;
+
   late PhoneNumber number;
+  String? email;
 
   @override
   void initState() {
     super.initState();
     btnController = RoundedLoadingButtonController();
     phoneNumberController = TextEditingController();
+    emailFieldController = TextEditingController();
     number = PhoneNumber(isoCode: "SL");
   }
 
   @override
   void dispose() {
     phoneNumberController.dispose();
+    emailFieldController.dispose();
     super.dispose();
   }
 
@@ -37,7 +44,18 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
 
-    final isLoading = context.watch<SignupCubit>().state.status == SignupStatus.loadingPhoneNumber;
+    final signUpCubit = context.watch<SignupCubit>();
+    final isLoading = signUpCubit.state.status == SignupStatus.loadingPhoneNumber;
+
+    var showEmailLinkAlternative = true;
+    if (signUpCubit.state.status == SignupStatus.phoneNumberFailure) {
+      final ex = signUpCubit.state.exception;
+      if (ex is FirebaseAuthException) {
+        if (ex.code == "invalid-phone-number") {
+          showEmailLinkAlternative = true;
+        }
+      }
+    }
 
     return Scaffold(
       body: Padding(
@@ -141,6 +159,28 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
               ],
             ),
             const SizedBox(height: 32),
+            if (showEmailLinkAlternative) ...[
+              EmailInputField(
+                onChanged: (value) => email = value,
+                controller: emailFieldController,
+              ),
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: () {
+                  if (email != null && email!.isNotEmpty) {
+                    context.read<SignupCubit>().signupWithEmailLink(email: email!);
+                  }
+                },
+                child: const Text(
+                  "Verify with email",
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
           ],
         ),
       ),
