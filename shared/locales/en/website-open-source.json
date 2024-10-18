@@ -1,0 +1,52 @@
+{
+	"metadata": {
+		"title": "Open-source Insights",
+		"heading": "Contributors"
+	},
+	"contributors": {
+		"contributor1": {
+			"name": "Alice Johnson",
+			"commits": "145 commits"
+		},
+		"contributor2": {
+			"name": "Bob Smith",
+			"commits": "232 commits"
+		},
+		"contributor3": {
+			"name": "Charlie Davis",
+			"commits": "158 commits"
+		},
+		"contributor4": {
+			"name": "Diana Evans",
+			"commits": "129 commits"
+		},
+		"contributor5": {
+			"name": "Edward Green",
+			"commits": "167 commits"
+		},
+		"contributor6": {
+			"name": "Fiona Harris",
+			"commits": "114 commits"
+		},
+		"contributor7": {
+			"name": "George King",
+			"commits": "138 commits"
+		},
+		"contributor8": {
+			"name": "Hannah Lewis",
+			"commits": "23 commits"
+		},
+		"contributor9": {
+			"name": "Ian Martin",
+			"commits": "49 commits"
+		},
+		"contributor10": {
+			"name": "Jasmine Nguyen",
+			"commits": "60 commits"
+		},
+		"contributor11": {
+			"name": "Kevin O'Brien",
+			"commits": "41 commits"
+		}
+	}
+}
