@@ -47,5 +47,8 @@
 		"prettier-plugin-organize-imports": "4.1.0",
 		"prettier-plugin-tailwindcss": "0.6.8",
 		"typescript": "^5.6.2"
+	},
+	"dependencies": {
+		"@radix-ui/react-avatar": "^1.1.1"
 	}
 }
