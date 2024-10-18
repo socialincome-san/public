@@ -10,7 +10,7 @@ export async function Overview({ lang }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer className="mx-auto mb-16 flex w-4/5 flex-col items-center justify-center md:mb-48 lg:w-3/5">
+		<BaseContainer className="mx-auto mb-16 mt-8 flex w-4/5 flex-col items-center justify-center md:mb-48 md:mt-16 lg:w-3/5">
 			<Typography size="3xl" weight="medium" className="my-10 text-center">
 				{translator.t('section-2.title-1')}
 			</Typography>

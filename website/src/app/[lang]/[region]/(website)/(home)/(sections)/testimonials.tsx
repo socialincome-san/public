@@ -14,7 +14,7 @@ export async function Testimonials({ lang }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer className="my-16">
+		<BaseContainer className="my-40">
 			<ContributorsCarousel
 				portraits={[
 					{
