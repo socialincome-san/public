@@ -25,6 +25,7 @@ import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
 import { ReactElement } from 'react';
 import SdgIcon from '../(assets)/sdg-circle.svg';
+import { WebsiteLanguage } from '@/i18n';
 
 type sdgBadgeType = {
 	hoverCardOrgName: string;
@@ -69,7 +70,7 @@ type NgoCardProps = {
 	recipientsBadge: recipientsBadgeType;
 	sdgBadges?: sdgBadgeType[];
 	ngoHoverCard: ngoHoverCardType;
-	lang: string;
+	lang: WebsiteLanguage;
 };
 
 export default async function NgoCard({
