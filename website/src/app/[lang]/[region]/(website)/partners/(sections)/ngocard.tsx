@@ -43,8 +43,8 @@ type countryBadgeType = {
 };
 
 type recipientsBadgeType = {
-	hoverCardOrgName: string;
-	hoverCardTotalRecipients: number;
+	hoverCardOrgName?: string;
+	hoverCardTotalRecipients?: number;
 	hoverCardTotalActiveRecipients?: number;
 	hoverCardTotalFormerRecipients?: number;
 	hoverCardTotalSuspendedRecipients?: number;
@@ -69,7 +69,7 @@ type NgoCardProps = {
 	orgShortName: string;
 	orgMission: string;
 	countryBadge?: countryBadgeType;
-	recipientsBadge: recipientsBadgeType;
+	recipientsBadge?: recipientsBadgeType;
 	sdgBadges?: sdgBadgeType[];
 	ngoHoverCard: ngoHoverCardType;
 	lang: WebsiteLanguage;
