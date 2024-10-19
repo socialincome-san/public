@@ -1,4 +1,3 @@
-import { WebsiteLanguage } from '@/i18n';
 import { UsersIcon } from '@heroicons/react/24/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import {
@@ -26,6 +25,7 @@ import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
 import { ReactElement } from 'react';
 import SdgIcon from '../(assets)/sdg-circle.svg';
+import { WebsiteLanguage } from '@/i18n';
 
 type quoteType = {
 	text: string;
