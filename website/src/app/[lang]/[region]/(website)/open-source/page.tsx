@@ -1,6 +1,6 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography, Avatar, AvatarFallback, AvatarImage } from '@socialincome/ui';
+import { Avatar, AvatarFallback, AvatarImage, BaseContainer, Typography } from '@socialincome/ui';
 
 type ContributorProp = {
 	name: string;
