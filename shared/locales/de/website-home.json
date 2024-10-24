@@ -152,6 +152,7 @@
 						"text": "zu besorgen.»"
 					}
 				],
+				"logo": "/assets/logos/logo-icrc.svg",
 				"author": "Internationales Rotes Kreuz"
 			},
 			{
@@ -167,6 +168,7 @@
 						"text": "zu implementieren. So können uns Krisen zwar treffen, aber ohne zerstörerische Kraft zu entfalten. »"
 					}
 				],
+				"logo": "/assets/logos/logo-un.svg",
 				"author": "Vereinte Nationen"
 			},
 			{
@@ -182,6 +184,7 @@
 						"text": "zu ermöglichen. »"
 					}
 				],
+				"logo": "/assets/logos/logo-worldbank.svg",
 				"author": "Weltbank"
 			}
 		]
