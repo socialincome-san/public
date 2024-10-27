@@ -18,9 +18,7 @@ export async function Hero({ lang }: DefaultParams) {
 					</Typography>
 				))}
 			</div>
-			<Typography className="mb-8">
-				{translator.t('hero.subtitle')}
-			</Typography>
+			<Typography className="mb-8">{translator.t('hero.subtitle')}</Typography>
 		</BaseContainer>
 	);
 }
