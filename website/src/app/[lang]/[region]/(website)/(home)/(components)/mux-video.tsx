@@ -25,10 +25,10 @@ const MuxVideoComponent = () => {
 			setBackgroundColor('bg-transparent');
 		} else {
 			setPlaying(false);
-			setBackgroundColor('bg-background');
+			setBackgroundColor('!bg-background');
 		}
 		return () => {
-			setBackgroundColor('bg-background');
+			setBackgroundColor('!bg-background');
 		};
 	}, [isIntersecting]);
 
