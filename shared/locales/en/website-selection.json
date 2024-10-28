@@ -44,7 +44,7 @@
 		"scope": "visit our ",
 		"transparency-page": "transparency page ↗",
 		"continue-1": "To be thoughtful means",
-		"continue-2": "to be fair and transparent."
+		"continue-2": "to be fair and transparent"
 	},
 	"section-3": {
 		"preselection-title": "Fair Preselection",
@@ -56,10 +56,10 @@
 		"preselection-1-annex": "1.8 billion people live on less than $3.65 per day",
 		"preselection-2-title": "Condense Target Area",
 		"preselection-2-desc": "One of the highest concentrations of people in need is in Sierra Leone, where 57% of the population lives under the poverty line and the typical monthly earnings are below USD 45.",
-		"preselection-2-annex": "4,902,000 qualify in Sierra Leone",
+		"preselection-2-annex": "4.9 million people in Sierra Leone qualify as poor",
 		"preselection-3-title": "Creating a Pool of Potential Recipients",
 		"preselection-3-desc": "We partner with local NGOs dedicated to poverty alleviation to identify those in need, building a large, scalable pool of potential beneficiaries.",
-		"preselection-3-annex": "5000+ potential beneficiaries currently in the pool, which can be scaled up",
+		"preselection-3-annex": "5,000+ potential beneficiaries are in our pool",
 		"selection-title": "Transparent Selection",
 		"selection-subtitle": "Minimize possible tensions",
 		"selection-desc": "Making sure our selection process is bias-free, transparent to all, and avoids favoritism.",
@@ -69,10 +69,10 @@
 		"selection-1-annex": "Selecting from individuals, all of whom stand to benefit",
 		"selection-2-title": "Truly Random",
 		"selection-2-desc": "A lottery’s integrity depends on its unpredictability. Confidence grows when people know it's purely by chance, without manipulation and publicly verifiable.",
-		"selection-2-annex": "The newest random number operating our draws",
+		"selection-2-annex": "Latest random number used in draws",
 		"selection-3-title": "Publicly Verifiable",
-		"selection-3-desc": "By publishing the source code that operates the random selection, we empower everyone to verify the process and ensure there is no manipulation.",
-		"selection-3-annex": "Review our source code. Verify our draws below"
+		"selection-3-desc": "By publishing the code that operates the random selection, we empower everyone to verify the process and ensure there is no manipulation.",
+		"selection-3-annex": "Verify our source code and draws below"
 	},
 
 	"section-4": {

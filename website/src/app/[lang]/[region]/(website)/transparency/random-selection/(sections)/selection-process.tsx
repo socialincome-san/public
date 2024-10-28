@@ -68,8 +68,7 @@ export function SelectionProcess({ lang }: DefaultParams) {
 							</a>
 
 							{/* Second Box */}
-							<a
-								href="#selection"
+							<a href="#selection"
 								onClick={() => setActiveBox('selection')}
 								className={`border-primary group flex cursor-pointer items-center gap-4 rounded-lg border-2 p-4 ${
 									activeBox === 'selection' ? 'bg-primary' : 'hover:bg-primary hover:text-popover-foreground'
