@@ -21,7 +21,7 @@ const buttonVariants = cva(
 				outline: 'border border-input bg-background hover:bg-muted font-medium',
 				secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary-muted font-medium',
 				ghost: 'hover:bg-muted font-normal',
-				link: 'text-primary underline-offset-4 hover:underline p-0 font-normal',
+				link: 'text-foreground underline-offset-4 hover:underline p-0 font-normal',
 			},
 		},
 		defaultVariants: {

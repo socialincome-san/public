@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography } from '@socialincome/ui';
+import { BaseContainer, Typography, Button } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
 import transparency from '../(assets)/transparency.svg';
@@ -38,13 +38,22 @@ export async function Resources({ lang }: DefaultParams) {
 					</div>
 
 					<div className="text-center md:text-left">
-						<div className="mx-auto max-w-4xl whitespace-pre">
-							<Typography as="span" color="accent" className="inline-block whitespace-pre text-xl">
+						<div className="mx-auto max-w-4xl">
+							<Typography as="span" color="accent" className="block text-xl">
 								{translator.t('section-2.amount')} {translator.t('section-2.amount-context')}
 							</Typography>
-							<Typography as="span" className="block whitespace-pre text-xl">
-								{translator.t('section-2.scope')}
-							</Typography>
+							<div className="flex items-center justify-center md:justify-start space-x-1">
+								<Typography as="span" className="text-xl">
+									{translator.t('section-2.scope')}
+								</Typography>
+								<Button variant="link">
+									<a href="../transparency/finances" target="_blank" rel="noopener noreferrer">
+										<Typography as="span" className="text-xl">
+											{translator.t('section-2.transparency-page')}
+										</Typography>
+									</a>
+								</Button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -52,7 +61,7 @@ export async function Resources({ lang }: DefaultParams) {
 					<Typography size="xl" className="mb-1">
 						{translator.t('section-2.continue-1')}
 					</Typography>
-					<Typography size="xl" className="text-accent mb-2">
+					<Typography size="xl" className=" mb-2">
 						{translator.t('section-2.continue-2')}
 					</Typography>
 					<div className="flex justify-center">

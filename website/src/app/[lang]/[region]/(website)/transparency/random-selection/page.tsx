@@ -5,6 +5,7 @@ import { PastRounds } from './(sections)/past-rounds';
 import { Resources } from './(sections)/resources';
 import { SelectionProcess } from './(sections)/selection-process';
 
+
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	return (
 		<div className="-mt-24 md:-mt-36">

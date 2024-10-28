@@ -29,20 +29,21 @@
 		"subtitle": "Our Reality",
 		"title": [
 			{
-				"text": "Given our "
+				"text": "Because we have finite resources , it’s essential for us to "
 			},
 			{
-				"text": "limited resources,",
+				"text": "thoughtfully select",
 				"color": "accent"
 			},
 			{
-				"text": "we must thoughtfully select our beneficiaries."
+				"text": "whom receives a Social Income."
 			}
 		],
 		"amount": "USD 300,000",
 		"amount-context": "raised to date",
-		"scope": "visit our transparency page ↗",
-		"continue-1": "To be thoughtful means ",
+		"scope": "visit our ",
+		"transparency-page": "transparency page ↗",
+		"continue-1": "To be thoughtful means",
 		"continue-2": "to be fair and transparent."
 	},
 	"section-3": {
@@ -50,13 +51,13 @@
 		"preselection-subtitle": "Prioritizing based on need",
 		"preselection-desc": "Identifying and building a pool of qualifying individuals with the aid of local knowledge.",
 		"preselection-goal": "Goal: Prioritizing based on need.",
-		"preselection-1-title": "Target the poorest",
+		"preselection-1-title": "Target the Poorest",
 		"preselection-1-desc": "We've committed to focusing our efforts on the most vulnerable, ensuring our aid delivers the biggest impact where it’s most needed.",
 		"preselection-1-annex": "3,404,666,773 potential beneficiaries (international poverty line).",
-		"preselection-2-title": "Condense target area.",
+		"preselection-2-title": "Condense Target Area",
 		"preselection-2-desc": "One of the highest concentrations of people in need is in Sierra Leone, where 57% of the population lives under the poverty line and the typical monthly earnings are below USD 45.",
 		"preselection-2-annex": "2,666,773 qualify in Sierra Leone.",
-		"preselection-3-title": "Creating a pool of potential recipients",
+		"preselection-3-title": "Creating a Pool of Potential Recipients",
 		"preselection-3-desc": "We partner with local NGOs dedicated to poverty alleviation to identify those in need, building a large, scalable pool of potential beneficiaries.",
 		"preselection-3-annex": "5000+ potential beneficiaries currently in the pool, which can be scaled up.",
 		"selection-title": "Transparent Selection",
