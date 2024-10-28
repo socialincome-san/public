@@ -83,8 +83,6 @@ export async function NgoList({ lang }: DefaultParams) {
 		language: lang,
 		namespaces: ['website-partners'],
 	});
-	//TODO: change image base path
-	// const image_base_path = '/../src/app/[lang]/[region]/(website)/partners/(assets)/';
 	const image_base_path = '/assets/partners/';
 
 	const ngoArray: NgoEntryJSON[] = translator.t('ngos');
