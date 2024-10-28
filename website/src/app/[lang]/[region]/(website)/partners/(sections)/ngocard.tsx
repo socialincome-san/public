@@ -207,7 +207,13 @@ export default async function NgoCard({
 			<DialogContent className="bg-background mx-0 mt-4 h-[98vh] max-h-[98vh] w-11/12 overflow-y-auto rounded-3xl border-none p-0 sm:min-w-[600px] md:min-w-[750px]">
 				{' '}
 				<DialogHeader className="relative">
-					<Image className="h-auto w-full rounded-t-lg" src={ngoHoverCard.orgImage} width={48} height={48} alt="Organization Photo" />
+					<Image
+						className="h-auto w-full rounded-t-lg"
+						src={ngoHoverCard.orgImage}
+						width={48}
+						height={48}
+						alt="Organization Photo"
+					/>
 					<div className="absolute bottom-0 left-0 h-32 w-full bg-gradient-to-t from-black to-transparent">
 						<DialogTitle className="text-accent absolute bottom-0 left-0 px-8 py-4">
 							<Typography size="5xl" weight="medium">
