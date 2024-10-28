@@ -5,7 +5,6 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import { SL } from 'country-flag-icons/react/1x1';
 import { ReactElement } from 'react';
-import Ngo1 from '../(assets)/aurora.png';
 
 type quoteType = {
 	text: string;
@@ -32,9 +31,7 @@ type recipientsBadgeType = {
 };
 
 type ngoHoverCardType = {
-	//TODO: Remove any
-	orgImage: any;
-	// orgImage: StaticImageData;
+	orgImage: string;
 	orgLongName: string;
 	partnershipStart: string;
 	orgDescription: string;
@@ -58,6 +55,7 @@ type NgoCardProps = {
 };
 
 type NgoEntryJSON = {
+	'org-image': string;
 	'org-short-name': string;
 	'org-long-name': string;
 	'org-foundation': string;
@@ -85,6 +83,9 @@ export async function NgoList({ lang }: DefaultParams) {
 		language: lang,
 		namespaces: ['website-partners'],
 	});
+	//TODO: change image base path
+	// const image_base_path = '/../src/app/[lang]/[region]/(website)/partners/(assets)/';
+	const image_base_path = '/assets/partners/';
 
 	const ngoArray: NgoEntryJSON[] = translator.t('ngos');
 	const ngoCardPropsArray: NgoCardProps[] = [];
@@ -109,10 +110,9 @@ export async function NgoList({ lang }: DefaultParams) {
 			//TODO: Component hardcoded for all ngos
 			countryFlagComponent: <SL className="h-5 w-5 rounded-full" />,
 		};
-
+		console.log(image_base_path.concat(ngoArray[i]['org-image']));
 		const ngoHoverCard: ngoHoverCardType = {
-			//TODO: Image hardcoded for all ngos
-			orgImage: Ngo1,
+			orgImage: image_base_path.concat(ngoArray[i]['org-image']),
 			orgLongName: ngoArray[i]['org-long-name'],
 			partnershipStart: ngoArray[i]['partnership-start'],
 			orgDescription: ngoArray[i]['org-description'],
