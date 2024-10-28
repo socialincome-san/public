@@ -1,6 +1,6 @@
 {
 	"section-1": {
-		"subtitle": "Aspiration",
+		"subtitle": "Our Aspiration",
 		"title": [
 			{
 				"text": "In the spirit of universal basic income, we aspire to be truly universal by "
@@ -29,28 +29,28 @@
 		"subtitle": "Our Reality",
 		"title": [
 			{
-				"text": "Because we have finite resources , it’s essential for us to "
+				"text": "Due to limited resources,  "
 			},
 			{
-				"text": "thoughtfully select",
+				"text": "we focus on those",
 				"color": "accent"
 			},
 			{
-				"text": "whom receives a Social Income."
+				"text": "who need Social Income the most."
 			}
 		],
 		"amount": "USD 300,000",
 		"amount-context": "raised to date",
 		"scope": "visit our ",
 		"transparency-page": "transparency page ↗",
-		"continue-1": "To be thoughtful means",
-		"continue-2": "to be fair and transparent"
+		"continue-1": "For us, selecting is about",
+		"continue-2": "fairness and transparency"
 	},
 	"section-3": {
 		"preselection-title": "Fair Preselection",
 		"preselection-subtitle": "Prioritizing based on need",
 		"preselection-desc": "Identifying and building a pool of qualifying individuals with the aid of local knowledge.",
-		"preselection-goal": "Goal: Prioritizing based on need",
+		"preselection-goal": "Prioritizing based on need",
 		"preselection-1-title": "Target the Poorest",
 		"preselection-1-desc": "We've committed to focusing our efforts on the most vulnerable, ensuring our aid delivers the biggest impact where it’s most needed.",
 		"preselection-1-annex": "1.8 billion people live on less than $3.65 per day",
@@ -63,7 +63,7 @@
 		"selection-title": "Transparent Selection",
 		"selection-subtitle": "Minimize possible tensions",
 		"selection-desc": "Making sure our selection process is bias-free, transparent to all, and avoids favoritism.",
-		"selection-goal": "Goal: Minimize possible tensions",
+		"selection-goal": "Minimize possible tensions",
 		"selection-1-title": "Lottery Approach",
 		"selection-1-desc": "When faced with making a choice, the lottery stands out as fair and unbiased approach. This is especially true when all options are equally desirable.",
 		"selection-1-annex": "Selecting from individuals, all of whom stand to benefit",
@@ -72,7 +72,8 @@
 		"selection-2-annex": "Latest random number used in draws",
 		"selection-3-title": "Publicly Verifiable",
 		"selection-3-desc": "By publishing the code that operates the random selection, we empower everyone to verify the process and ensure there is no manipulation.",
-		"selection-3-annex": "Verify our source code and draws below"
+		"selection-3-annex": "Verify our source code and draws below",
+		"goal": "Goal"
 	},
 
 	"section-4": {
