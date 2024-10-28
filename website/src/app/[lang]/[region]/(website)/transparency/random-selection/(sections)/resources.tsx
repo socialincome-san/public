@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography, Button } from '@socialincome/ui';
+import { BaseContainer, Button, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
 import transparency from '../(assets)/transparency.svg';
@@ -42,7 +42,7 @@ export async function Resources({ lang }: DefaultParams) {
 							<Typography as="span" color="accent" className="block text-xl">
 								{translator.t('section-2.amount')} {translator.t('section-2.amount-context')}
 							</Typography>
-							<div className="flex items-center justify-center md:justify-start space-x-1">
+							<div className="flex items-center justify-center space-x-1 md:justify-start">
 								<Typography as="span" className="text-xl">
 									{translator.t('section-2.scope')}
 								</Typography>

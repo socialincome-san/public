@@ -1,8 +1,8 @@
-'use client'
-import { useEffect, useState } from 'react';
+'use client';
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
+import { useEffect, useState } from 'react';
 
 export function SelectionProcess({ lang }: DefaultParams) {
 	const [translator, setTranslator] = useState<Translator | null>(null);

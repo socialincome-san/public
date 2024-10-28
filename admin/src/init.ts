@@ -8,7 +8,7 @@ export const firebaseConfig: FirebaseOptions | undefined =
 				apiKey: import.meta.env.VITE_ADMIN_FB_API_KEY,
 				authDomain: import.meta.env.VITE_ADMIN_FB_AUTH_DOMAIN,
 				projectId: import.meta.env.VITE_ADMIN_FB_PROJECT_ID,
-		  }
+			}
 		: undefined; // In staging/production, config is loaded from the environment variables set by Firebase Hosting
 
 export async function onFirebaseInit() {
