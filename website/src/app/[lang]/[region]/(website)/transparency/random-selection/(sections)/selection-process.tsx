@@ -1,8 +1,8 @@
-'use client'
-import { useEffect, useState } from 'react';
+'use client';
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography, Badge } from '@socialincome/ui';
+import { Badge, BaseContainer, Typography } from '@socialincome/ui';
+import { useEffect, useState } from 'react';
 
 export function SelectionProcess({ lang }: DefaultParams) {
 	const [translator, setTranslator] = useState<Translator | null>(null);
@@ -147,44 +147,44 @@ export function SelectionProcess({ lang }: DefaultParams) {
 					</div>
 
 					{/* Selection Section */}
-						<div id="selection" className="pt-8" style={{ scrollMarginTop: '60px' }}>
-							<Typography weight="medium" className="mb-4 text-3xl sm:text-4xl md:text-4xl">
-								{translator.t('section-3.selection-title')}
+					<div id="selection" className="pt-8" style={{ scrollMarginTop: '60px' }}>
+						<Typography weight="medium" className="mb-4 text-3xl sm:text-4xl md:text-4xl">
+							{translator.t('section-3.selection-title')}
+						</Typography>
+						<Typography className="mb-4 text-xl">{translator.t('section-3.selection-desc')}</Typography>
+						<div className="mb-6 flex items-center space-x-2">
+							<Badge className="bg-primary text-md border-none">
+								<Typography weight="normal">{translator.t('section-3.goal')}</Typography>
+							</Badge>
+							<Typography className="text-md">{translator.t('section-3.selection-goal')}</Typography>
+						</div>
+					</div>
+					<div>
+						{/* Selection Subsections */}
+						<div>
+							<Typography weight="medium" className="text-accent mb-2 text-xl">
+								{translator.t('section-3.selection-1-title')}
 							</Typography>
-							<Typography className="mb-4 text-xl">{translator.t('section-3.selection-desc')}</Typography>
-							<div className="mb-6 flex items-center space-x-2">
-								<Badge className="bg-primary text-md border-none">
-									<Typography weight="normal">{translator.t('section-3.goal')}</Typography>
-								</Badge>
-								<Typography className="text-md">{translator.t('section-3.selection-goal')}</Typography>
-							</div>
+							<Typography className="mb-4 text-xl">{translator.t('section-3.selection-1-desc')}</Typography>
+							<Typography className="text-md mb-6">{translator.t('section-3.selection-1-annex')}</Typography>
 						</div>
 						<div>
-							{/* Selection Subsections */}
-							<div>
-								<Typography weight="medium" className="text-accent mb-2 text-xl">
-									{translator.t('section-3.selection-1-title')}
-								</Typography>
-								<Typography className="mb-4 text-xl">{translator.t('section-3.selection-1-desc')}</Typography>
-								<Typography className="text-md mb-6">{translator.t('section-3.selection-1-annex')}</Typography>
-							</div>
-							<div>
-								<Typography weight="medium" className="text-accent mb-2 text-xl">
-									{translator.t('section-3.selection-2-title')}
-								</Typography>
-								<Typography className="mb-4 text-xl">{translator.t('section-3.selection-2-desc')}</Typography>
-								<Typography className="text-md mb-6">{translator.t('section-3.selection-2-annex')}</Typography>
-							</div>
-							<div>
-								<Typography weight="medium" className="text-accent mb-2 text-xl">
-									{translator.t('section-3.selection-3-title')}
-								</Typography>
-								<Typography className="mb-4 text-xl">{translator.t('section-3.selection-3-desc')}</Typography>
-								<Typography className="text-md mb-6">{translator.t('section-3.selection-3-annex')}</Typography>
-							</div>
+							<Typography weight="medium" className="text-accent mb-2 text-xl">
+								{translator.t('section-3.selection-2-title')}
+							</Typography>
+							<Typography className="mb-4 text-xl">{translator.t('section-3.selection-2-desc')}</Typography>
+							<Typography className="text-md mb-6">{translator.t('section-3.selection-2-annex')}</Typography>
+						</div>
+						<div>
+							<Typography weight="medium" className="text-accent mb-2 text-xl">
+								{translator.t('section-3.selection-3-title')}
+							</Typography>
+							<Typography className="mb-4 text-xl">{translator.t('section-3.selection-3-desc')}</Typography>
+							<Typography className="text-md mb-6">{translator.t('section-3.selection-3-annex')}</Typography>
 						</div>
 					</div>
 				</div>
+			</div>
 		</BaseContainer>
-);
+	);
 }
