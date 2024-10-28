@@ -61,7 +61,7 @@ export async function Resources({ lang }: DefaultParams) {
 					<Typography size="xl" className="mb-1">
 						{translator.t('section-2.continue-1')}
 					</Typography>
-					<Typography size="xl" className=" mb-2">
+					<Typography size="xl" className="mb-2">
 						{translator.t('section-2.continue-2')}
 					</Typography>
 					<div className="flex justify-center">
