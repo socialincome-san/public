@@ -52,7 +52,7 @@ type recipientsBadgeType = {
 };
 
 type ngoHoverCardType = {
-	orgImage: StaticImageData;
+	orgImage: string;
 	orgLongName: string;
 	partnershipStart: string;
 	orgDescription: string;
