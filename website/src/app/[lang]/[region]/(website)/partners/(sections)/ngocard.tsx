@@ -213,6 +213,7 @@ export default async function NgoCard({
 						width={48}
 						height={48}
 						alt="Organization Photo"
+						unoptimized
 					/>
 					<div className="absolute bottom-0 left-0 h-32 w-full bg-gradient-to-t from-black to-transparent">
 						<DialogTitle className="text-accent absolute bottom-0 left-0 px-8 py-4">
