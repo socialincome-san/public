@@ -115,7 +115,6 @@ export function SelectionProcess({ lang }: DefaultParams) {
 						</Typography>
 						<Typography className="mb-4 text-xl">{translator.t('section-3.preselection-desc')}</Typography>
 						<Typography className="text-md mb-6">{translator.t('section-3.preselection-goal')}</Typography>
-
 						{/* Preselection Subsections */}
 						<div>
 							<Typography weight="medium" className="text-accent mb-2 text-xl">
