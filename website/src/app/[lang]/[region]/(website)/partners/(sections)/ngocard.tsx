@@ -22,7 +22,7 @@ import {
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import { cn } from '@socialincome/ui/src/lib/utils';
 import { SL } from 'country-flag-icons/react/1x1';
-import Image, { StaticImageData } from 'next/image';
+import Image from 'next/image';
 import Link from 'next/link';
 import { ReactElement } from 'react';
 import SdgIcon from '../(assets)/sdg-circle.svg';
