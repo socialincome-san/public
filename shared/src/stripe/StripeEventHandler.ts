@@ -20,10 +20,7 @@ export class StripeEventHandler {
 
 	constructor(apiKey: string, firestoreAdmin: FirestoreAdmin) {
 		this.firestoreAdmin = firestoreAdmin;
-		this.stripe = new Stripe(apiKey, {
-			typescript: true,
-			apiVersion: '2023-10-16',
-		});
+		this.stripe = new Stripe(apiKey, { typescript: true });
 	}
 
 	handleChargeEvent = async (charge: Stripe.Charge) => {

@@ -17,7 +17,7 @@ export default async function Page({ params }: DefaultPageProps) {
 	});
 
 	return (
-		<BaseContainer className="mx-auto flex max-w-2xl flex-col	space-y-12 py-8">
+		<BaseContainer className="mx-auto flex max-w-2xl flex-col space-y-12 py-8">
 			<Typography size="5xl" weight="bold">
 				{translator.t('title')}
 			</Typography>

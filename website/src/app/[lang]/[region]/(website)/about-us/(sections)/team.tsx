@@ -11,10 +11,12 @@ import francoiseImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/fr
 import juanImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/juan.jpeg';
 import juliaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/julia.jpeg';
 import kabeloImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kabelo.jpeg';
+import karinImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/karin-berg.jpg';
 import kerrinImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kerrin.jpeg';
 import larissaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/larissa.jpeg';
 import lorenzoImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/lorenzo.jpg';
 import mabelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mabel.jpeg';
+import marcImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marc-werner.jpg';
 import mariatuImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mariatu.jpg';
 import marionImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marion.jpeg';
 import matthewImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/matthew.jpeg';
@@ -79,6 +81,8 @@ const groups: Group[] = [
 			{ name: 'Thomas Brenner', role: 'software-development', image: thomasImage },
 			{ name: 'Matthew Roberts', role: 'communications', image: matthewImage },
 			{ name: 'Françoise Légeret', role: 'translations', image: francoiseImage },
+			{ name: 'Karin Berg', role: 'app-development', image: karinImage },
+			{ name: 'Marc Werner', role: 'research', image: marcImage },
 		],
 	},
 	{

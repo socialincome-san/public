@@ -27,17 +27,17 @@ export function CookieConsentBanner({ translations }: CookieConsentBannerClientP
 	if (hideBanner) return null;
 
 	return (
-		<Card className="fixed bottom-2 left-2 right-2 mx-auto max-w-6xl shadow-xl md:left-4 md:right-4">
-			<CardContent className="flex flex-col space-y-2 p-4">
-				<Typography className="md:col-span-3">
+		<Card className="bg-background border-border fixed bottom-2 right-2 mx-auto w-fit max-w-6xl rounded-full px-4 md:right-4">
+			<CardContent className="flex flex-col space-y-2 p-4 md:h-full md:flex-row md:items-center md:justify-between">
+				<Typography className="md:col-span-3 md:mr-4 md:flex-1 md:self-center">
 					<Typography as="span" dangerouslySetInnerHTML={{ __html: translations.text }} />
 				</Typography>
-				<div className="flex space-x-2">
+				<div className="flex space-x-2 pb-1 md:h-full md:flex-none md:flex-row md:items-center md:justify-center md:self-center md:align-middle">
+					<Button variant="outline" onClick={() => setCookieConsent('denied')}>
+						{translations.buttonRefuse}
+					</Button>
 					<Button variant="outline" onClick={() => setCookieConsent('granted')}>
 						{translations.buttonAccept}
-					</Button>
-					<Button variant="destructive" onClick={() => setCookieConsent('denied')}>
-						{translations.buttonRefuse}
 					</Button>
 				</div>
 			</CardContent>

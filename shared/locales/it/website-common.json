@@ -39,7 +39,7 @@
 		"about-us": "Chi Siamo"
 	},
 	"cookie-consent-banner": {
-		"text": "Ci permetti di utilizzare i cookie per analizzare il traffico e le prestazioni del nostro sito web? Non raccogliamo mai dati personali. <a href='/privacy' class='underline'>Informativa sulla Privacy</a>.",
+		"text": "Utilizziamo i <a href='/privacy' class='underline'>cookie</a>.",
 		"button-accept": "Accetto",
 		"button-refuse": "Rifiuto"
 	}
