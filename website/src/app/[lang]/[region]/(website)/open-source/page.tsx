@@ -1,14 +1,12 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Avatar, AvatarFallback, AvatarImage, BaseContainer, Typography } from '@socialincome/ui';
+import { getContributors } from './contributors';
 
 type ContributorProp = {
 	name: string;
-	commits: string;
-};
-
-type Contributors = {
-	[key: string]: ContributorProp;
+	commits: number;
+	avatarUrl: string;
 };
 
 type Metadata = {
@@ -16,19 +14,19 @@ type Metadata = {
 	heading: string;
 };
 
-function Contributor({ name, commits }: ContributorProp) {
+function Contributor({ name, commits, avatarUrl }: ContributorProp) {
 	return (
 		<article className="flex min-w-80 basis-1/5 flex-row items-center justify-between px-3 py-2">
 			<Avatar className="max-w-10 basis-1/5">
-				<AvatarImage src={'https://github.com/shadcn.png'} />
-				<AvatarFallback>CN</AvatarFallback>
+				<AvatarImage src={avatarUrl} alt={`${name}'s avatar`} />
+				<AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
 			</Avatar>
 			<div className="flex basis-4/5">
-				<Typography as="p" size="lg" className="mx-2 self-end">
+				<Typography as="p" size="lg" className="mx-2 self-end text-darkText">
 					{name}
 				</Typography>
-				<Typography as="span" size="xs" className="mt-2 self-center">
-					{commits}
+				<Typography as="span" size="xs" className="text-subtleText mt-2 self-center">
+					{commits} {commits === 1 ? 'commit' : 'commits'}
 				</Typography>
 			</div>
 		</article>
@@ -41,10 +39,11 @@ export default async function Page({ params }: DefaultPageProps) {
 		namespaces: ['website-open-source'],
 	});
 
-	const contributors: Contributors = translator.t('contributors');
-	const Metadata: Metadata = translator.t('metadata');
-	const title = Metadata.title;
-	const heading = Metadata.heading;
+	const metadata: Metadata = translator.t('metadata');
+	const title = metadata.title;
+	const heading = metadata.heading;
+
+	const contributors = await getContributors();
 
 	return (
 		<BaseContainer className="flex flex-col justify-self-start">
@@ -57,8 +56,13 @@ export default async function Page({ params }: DefaultPageProps) {
 				</Typography>
 			</section>
 			<section className="flex flex-wrap gap-4">
-				{Object.entries(contributors).map(([key, contributor]) => (
-					<Contributor key={key} {...contributor} />
+				{contributors.map((contributor) => (
+					<Contributor
+						key={contributor.id}
+						name={contributor.name}
+						commits={contributor.commits}
+						avatarUrl={contributor.avatarUrl}
+					/>
 				))}
 			</section>
 		</BaseContainer>
