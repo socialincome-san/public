@@ -6,11 +6,14 @@ import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import { CH, SL } from 'country-flag-icons/react/1x1';
 import { ReactElement } from 'react';
 
-const country_abbreviations_to_flag_map = {
+const country_abbreviations_to_flag_map: Record<string, ReactElement> = {
 	SL: <SL className="h-5 w-5 rounded-full" />,
 	CH: <CH className="h-5 w-5 rounded-full" />,
 };
 
+function getFlag(abbreviation: string): ReactElement {
+	return country_abbreviations_to_flag_map[abbreviation] || <SL className="h-5 w-5 rounded-full" />;
+}
 type quoteType = {
 	text: string;
 	color: FontColor;
@@ -120,7 +123,7 @@ export async function NgoList({ lang }: DefaultParams) {
 
 		const countryBadge: countryBadgeType = {
 			countryAbbreviation: ngoArray[i]['org-country'],
-			countryFlagComponent: country_abbreviations_to_flag_map[ngoArray[i]['org-country']],
+			countryFlagComponent: getFlag(ngoArray[i]['org-country']),
 		};
 		const ngoHoverCard: ngoHoverCardType = {
 			orgImage: image_base_path.concat(ngoArray[i]['org-image']),
