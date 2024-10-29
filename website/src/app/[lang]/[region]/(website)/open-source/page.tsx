@@ -22,7 +22,7 @@ function Contributor({ name, commits, avatarUrl }: ContributorProp) {
 				<AvatarFallback>{name.slice(0, 2).toUpperCase()}</AvatarFallback>
 			</Avatar>
 			<div className="flex basis-4/5">
-				<Typography as="p" size="lg" className="mx-2 self-end text-darkText">
+				<Typography as="p" size="lg" className="text-darkText mx-2 self-end">
 					{name}
 				</Typography>
 				<Typography as="span" size="xs" className="text-subtleText mt-2 self-center">
