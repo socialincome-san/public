@@ -3,8 +3,13 @@ import NgoCard from '@/app/[lang]/[region]/(website)/partners/(sections)/ngocard
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
-import { SL } from 'country-flag-icons/react/1x1';
+import { CH, SL } from 'country-flag-icons/react/1x1';
 import { ReactElement } from 'react';
+
+const country_abbreviations_to_flag_map = {
+	SL: <SL className="h-5 w-5 rounded-full" />,
+	CH: <CH className="h-5 w-5 rounded-full" />,
+};
 
 type quoteType = {
 	text: string;
@@ -34,14 +39,19 @@ type ngoHoverCardType = {
 	orgImage: string;
 	orgLongName: string;
 	partnershipStart: string;
-	orgDescription: string;
-	quote: quoteType;
-	quoteAuthor: string;
+	orgDescriptionParagraphs: {
+		text: string;
+		href?: string;
+	}[][];
+	quote?: quoteType;
+	quoteAuthor?: string;
 	orgFoundation: string;
 	orgHeadquarter: string;
 	orgWebsite?: string;
 	orgFacebook?: string;
 	orgInstagram?: string;
+	orgLinkedIn?: string;
+	orgYoutube?: string;
 };
 
 type NgoCardProps = {
@@ -69,13 +79,18 @@ type NgoEntryJSON = {
 	'recipients-former': number;
 	'recipients-suspend': number;
 	'org-mission': string;
-	'org-description': string;
+	'org-description-paragraphs': {
+		text: string;
+		href?: string;
+	}[][];
 	'org-quote': [];
 	'org-quote-author': string;
 	'org-photo': string;
 	'org-website': string;
 	'org-instagram': string;
 	'org-facebook': string;
+	'org-linkedin': string;
+	'org-youtube': string;
 };
 
 export async function NgoList({ lang }: DefaultParams) {
@@ -105,22 +120,22 @@ export async function NgoList({ lang }: DefaultParams) {
 
 		const countryBadge: countryBadgeType = {
 			countryAbbreviation: ngoArray[i]['org-country'],
-			//TODO: Component hardcoded for all ngos
-			countryFlagComponent: <SL className="h-5 w-5 rounded-full" />,
+			countryFlagComponent: country_abbreviations_to_flag_map[ngoArray[i]['org-country']],
 		};
-		console.log(image_base_path.concat(ngoArray[i]['org-image']));
 		const ngoHoverCard: ngoHoverCardType = {
 			orgImage: image_base_path.concat(ngoArray[i]['org-image']),
 			orgLongName: ngoArray[i]['org-long-name'],
 			partnershipStart: ngoArray[i]['partnership-start'],
-			orgDescription: ngoArray[i]['org-description'],
-			quote: ngoArray[i]['org-quote'],
-			quoteAuthor: ngoArray[i]['org-quote-author'],
+			orgDescriptionParagraphs: ngoArray[i]['org-description-paragraphs'],
+			quote: ngoArray[i]['org-quote'] ?? null,
+			quoteAuthor: ngoArray[i]['org-quote-author'] ?? null,
 			orgFoundation: ngoArray[i]['org-foundation'],
 			orgHeadquarter: ngoArray[i]['org-headquarter'],
 			orgWebsite: ngoArray[i]['org-website'] ?? null,
 			orgFacebook: ngoArray[i]['org-facebook'] ?? null,
 			orgInstagram: ngoArray[i]['org-instagram'] ?? null,
+			orgLinkedIn: ngoArray[i]['org-linkedin'] ?? null,
+			orgYoutube: ngoArray[i]['org-youtube'] ?? null,
 		};
 
 		const ngoCardProps: NgoCardProps = {

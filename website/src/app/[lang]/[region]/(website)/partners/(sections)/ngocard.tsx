@@ -55,14 +55,19 @@ type ngoHoverCardType = {
 	orgImage: string;
 	orgLongName: string;
 	partnershipStart: string;
-	orgDescription: string;
-	quote: quoteType;
-	quoteAuthor: string;
+	orgDescriptionParagraphs: {
+		text: string;
+		href?: string;
+	}[][];
+	quote?: quoteType;
+	quoteAuthor?: string;
 	orgFoundation: string;
 	orgHeadquarter: string;
 	orgWebsite?: string;
 	orgFacebook?: string;
 	orgInstagram?: string;
+	orgLinkedIn?: string;
+	orgYoutube?: string;
 };
 
 type NgoCardProps = {
@@ -155,7 +160,8 @@ export default async function NgoCard({
 					<div className="flex items-center">
 						<Image className="mr-1 h-4 w-4 rounded-full" src={SdgIcon} alt="SDG Icon" />
 						<Typography size="sm" weight="normal">
-							{translator.t('sdg.sdg')} 1: {translator.t('sdg.sdg' + sdgNumber.toString() + '-title')}
+							{translator.t('sdg.sdg')} {sdgNumber.toString()}:{' '}
+							{translator.t('sdg.sdg' + sdgNumber.toString() + '-title')}
 						</Typography>
 					</div>
 					<Separator className="bg-primary mb-3 mt-3 bg-opacity-20" />
@@ -169,6 +175,13 @@ export default async function NgoCard({
 			</HoverCard>
 		);
 	}
+	const showVisitOnline: boolean = !!(
+		ngoHoverCard.orgInstagram ||
+		ngoHoverCard.orgFacebook ||
+		ngoHoverCard.orgWebsite ||
+		ngoHoverCard.orgLinkedIn ||
+		ngoHoverCard.orgYoutube
+	);
 
 	return (
 		<Dialog>
@@ -185,7 +198,7 @@ export default async function NgoCard({
 					<CardContent className="my-4 p-0">
 						<Typography size="lg">{orgMission}</Typography>
 					</CardContent>
-					<CardFooter className="gap-2 p-0 pt-2">
+					<CardFooter className="flex-row flex-wrap gap-2 p-0 pt-2">
 						<HoverCard>
 							<HoverCardTrigger>
 								{countryBadge?.countryFlagComponent || <SL className="h-5 w-5 rounded-full" />}
@@ -195,7 +208,7 @@ export default async function NgoCard({
 									{countryBadge?.countryFlagComponent || <SL className="mr-2 h-5 w-5 rounded-full" />}
 								</div>
 								<Typography size="sm" weight="normal" className="text-inherit">
-									{countryBadge?.countryAbbreviation || ''}
+									{translator.t(countryBadge?.countryAbbreviation || 'SL')}
 								</Typography>
 							</HoverCardContent>
 						</HoverCard>
@@ -240,23 +253,47 @@ export default async function NgoCard({
 							</Badge>
 						</div>
 					</div>
-					<Typography size="lg">{ngoHoverCard.orgDescription}</Typography>
+					{ngoHoverCard.orgDescriptionParagraphs.map((paragraph, index) => {
+						return (
+							<div key={index} className="mb-4">
+								{paragraph.map((fragment, index2) => {
+									return fragment.href ? (
+										<Link href={fragment.href} key={index2}>
+											<Typography as="span" size="lg" color="primary">
+												{fragment.text}
+											</Typography>
+										</Link>
+									) : (
+										<Typography as="span" size="lg" key={index}>
+											{fragment.text}
+										</Typography>
+									);
+								})}
+							</div>
+						);
+					})}
 					<Separator className="bg-primary my-6 bg-opacity-10" />
-					<div className="py-12 text-center">
-						<div className="my-4 px-6">
-							{ngoHoverCard.quote.map((title, index) => (
-								<Typography as="span" size="3xl" weight="medium" color={title.color} key={index}>
-									{title.text}{' '}
-								</Typography>
-							))}
-						</div>
-						<div className="my-4">
-							<Typography size="lg">
-								{ngoHoverCard.quoteAuthor}, {orgShortName}
-							</Typography>
-						</div>
-					</div>
-					<Separator className="bg-primary my-6 bg-opacity-10" />
+					{ngoHoverCard.quote && ngoHoverCard.quoteAuthor ? (
+						<>
+							<div className="py-12 text-center">
+								<div className="my-4 px-6">
+									{ngoHoverCard.quote.map((title, index) => (
+										<Typography as="span" size="3xl" weight="medium" color={title.color} key={index}>
+											{title.text}{' '}
+										</Typography>
+									))}
+								</div>
+								<div className="my-4">
+									<Typography size="lg">
+										{ngoHoverCard.quoteAuthor}, {orgShortName}
+									</Typography>
+								</div>
+							</div>
+							<Separator className="bg-primary my-6 bg-opacity-10" />
+						</>
+					) : (
+						''
+					)}
 					<div className="grid grid-cols-3 gap-4">
 						<div className="col-span-1">
 							<Typography size="lg">{translator.t('ngo-generic.mission')}</Typography>
@@ -281,34 +318,52 @@ export default async function NgoCard({
 							<Typography size="lg">{ngoHoverCard.orgHeadquarter}</Typography>
 						</div>
 					</div>
-					<div className="grid grid-cols-3 gap-4">
-						<div className="col-span-1">
-							<Typography size="lg">{translator.t('links.more')}</Typography>
+					{showVisitOnline ? (
+						<div className="grid grid-cols-3 gap-4">
+							<div className="col-span-1">
+								<Typography size="lg">{translator.t('links.more')}</Typography>
+							</div>
+							<div className="col-span-2">
+								{ngoHoverCard.orgWebsite ? (
+									<Link href={ngoHoverCard.orgWebsite} className="ml-auto inline-block pr-2 text-lg underline">
+										{translator.t('links.website')}
+									</Link>
+								) : (
+									''
+								)}
+								{ngoHoverCard.orgFacebook ? (
+									<Link href={ngoHoverCard.orgFacebook} className="ml-auto inline-block pr-2 text-lg underline">
+										{translator.t('links.facebook')}
+									</Link>
+								) : (
+									''
+								)}
+								{ngoHoverCard.orgInstagram ? (
+									<Link href={ngoHoverCard.orgInstagram} className="ml-auto inline-block pr-2 text-lg underline">
+										{translator.t('links.instagram')}
+									</Link>
+								) : (
+									''
+								)}
+								{ngoHoverCard.orgLinkedIn ? (
+									<Link href={ngoHoverCard.orgLinkedIn} className="ml-auto inline-block pr-2 text-lg underline">
+										{translator.t('links.linkedin')}
+									</Link>
+								) : (
+									''
+								)}
+								{ngoHoverCard.orgYoutube ? (
+									<Link href={ngoHoverCard.orgYoutube} className="ml-auto inline-block pr-2 text-lg underline">
+										{translator.t('links.youtube')}
+									</Link>
+								) : (
+									''
+								)}
+							</div>
 						</div>
-						<div className="col-span-2">
-							{ngoHoverCard.orgWebsite ? (
-								<Link href={ngoHoverCard.orgWebsite} className="ml-auto inline-block pr-2 text-lg underline">
-									{translator.t('links.website')}
-								</Link>
-							) : (
-								''
-							)}
-							{ngoHoverCard.orgFacebook ? (
-								<Link href={ngoHoverCard.orgFacebook} className="ml-auto inline-block pr-2 text-lg underline">
-									{translator.t('links.facebook')}
-								</Link>
-							) : (
-								''
-							)}
-							{ngoHoverCard.orgInstagram ? (
-								<Link href={ngoHoverCard.orgInstagram} className="ml-auto inline-block pr-2 text-lg underline">
-									{translator.t('links.instagram')}
-								</Link>
-							) : (
-								''
-							)}
-						</div>
-					</div>
+					) : (
+						''
+					)}
 				</div>
 			</DialogContent>
 		</Dialog>

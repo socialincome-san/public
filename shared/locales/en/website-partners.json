@@ -46,7 +46,30 @@
 			"recipients-former": "22",
 			"recipients-suspended": "0",
 			"org-mission": "The NGO encourages creativity and helps people improve their lives and communities through development and cultural projects.",
-			"org-description": "The Aurora Foundation fosters impact through cultural and development projects that celebrate creativity and community resilience. Founded in 2007 in Iceland, Aurora promotes local artistry and sustainable practices in Sierra Leone through initiatives like Lettie Stuart Pottery and the Sweet Salone handcraft shop, bringing traditional crafts to a global audience. Additionally, Aurora Impact supports visionary projects addressing global challenges, with entrepreneurship as a catalyst for transformative change.",
+			"org-description-paragraphs": [
+				[
+					{
+						"text": "The Aurora Foundation fosters impact through cultural and development projects that "
+					},
+					{
+						"text": "celebrate creativity ",
+						"href": "https://www.aurorafoundation.is/en"
+					},
+					{
+						"text": "and community resilience."
+					}
+				],
+				[
+					{
+						"text": "Founded in 2007 in Iceland, Aurora promotes local artistry and sustainable practices in Sierra Leone through initiatives like Lettie Stuart Pottery and the Sweet Salone handcraft shop, bringing traditional crafts to a global audience."
+					}
+				],
+				[
+					{
+						"text": "Additionally, Aurora Impact supports visionary projects addressing global challenges, with entrepreneurship as a catalyst for transformative change."
+					}
+				]
+			],
 			"org-quote": [
 				{
 					"text": "Thanks to Social Income, artisans have the  "
@@ -70,7 +93,7 @@
 			"org-long-name": "Jamil & Nyanga Jaward Foundation",
 			"org-foundation": "2017",
 			"org-image": "jamil.png",
-			"org-country": "SL",
+			"org-country": "CH",
 			"org-headquarter": "Freetown",
 			"org-category": "Local NGO",
 			"org-focus-sdg-numbers": [1, 5],
@@ -80,7 +103,13 @@
 			"recipients-former": "7",
 			"recipients-suspended": "0",
 			"org-mission": "The NGO provides widows and children in need with education, support, and opportunities to build better futures.",
-			"org-description": "The Jamil and Nyanga Jaward Foundation (JNJF), founded in 2017, empowers underprivileged widows and children through education, personal growth, and community support. With a vision of re-establishing hope and rebuilding lives, the foundation seeks to break cycles of poverty, enabling widows and children to overcome social exclusion and build brighter futures.",
+			"org-description-paragraphs": [
+				[
+					{
+						"text": "The Jamil and Nyanga Jaward Foundation (JNJF), founded in 2017, empowers underprivileged widows and children through education, personal growth, and community support. With a vision of re-establishing hope and rebuilding lives, the foundation seeks to break cycles of poverty, enabling widows and children to overcome social exclusion and build brighter futures."
+					}
+				]
+			],
 			"org-quote": [
 				{
 					"text": "Social Income provides a straightforward solution with a "
@@ -115,7 +144,13 @@
 			"recipients-former": "24",
 			"recipients-suspended": "0",
 			"org-mission": "The NGO empowers coastal communities, providing young people with the support and opportunities needed to break the cycle of poverty and build brighter futures.",
-			"org-description": "Reachout Salone (ROSL) is a registered youth-led organization in Sierra Leone focused on advocacy and charitable efforts in coastal communities. Established in 2020, ROSL promotes sustainable human development and climate change adaptation. With an emphasis on youth—especially women and girls—ROSL partners with government agencies, NGOs, and humanitarian organizations to foster sustainable livelihoods and uphold human dignity and security. Its mission is to support the deprived and vulnerable, offering pathways to a better life, while its vision is to empower individuals and communities, break the cycle of poverty, and create equal opportunities for underserved groups.",
+			"org-description-paragraphs": [
+				[
+					{
+						"text": "Reachout Salone (ROSL) is a registered youth-led organization in Sierra Leone focused on advocacy and charitable efforts in coastal communities. Established in 2020, ROSL promotes sustainable human development and climate change adaptation. With an emphasis on youth—especially women and girls—ROSL partners with government agencies, NGOs, and humanitarian organizations to foster sustainable livelihoods and uphold human dignity and security. Its mission is to support the deprived and vulnerable, offering pathways to a better life, while its vision is to empower individuals and communities, break the cycle of poverty, and create equal opportunities for underserved groups."
+					}
+				]
+			],
 			"org-quote": [
 				{
 					"text": "Social Income has brought "
@@ -148,7 +183,13 @@
 			"recipients-former": "0",
 			"recipients-suspended": "0",
 			"org-mission": "The NGO advances human rights by increasing awareness and understanding of equal rights, inclusion, and social justice within communities.",
-			"org-description": "Equal Rights Alliance is a non-profit organization committed to protecting and promoting human rights, working toward a society free from violence and discrimination. Its mission is to raise awareness on equal rights, inclusion, and social justice. Focused on advancing human rights in Sierra Leone, the organization advocates for key population groups and promotes international human rights standards. Additionally, it integrates disability into development initiatives, supports disability policies and programs, and bridges the gap between disability and broader human rights issues.",
+			"org-description-paragraphs": [
+				[
+					{
+						"text": "Equal Rights Alliance is a non-profit organization committed to protecting and promoting human rights, working toward a society free from violence and discrimination. Its mission is to raise awareness on equal rights, inclusion, and social justice. Focused on advancing human rights in Sierra Leone, the organization advocates for key population groups and promotes international human rights standards. Additionally, it integrates disability into development initiatives, supports disability policies and programs, and bridges the gap between disability and broader human rights issues."
+					}
+				]
+			],
 			"org-quote": [
 				{
 					"text": "Social Income is a vital tool "
@@ -180,7 +221,13 @@
 			"recipients-former": "0",
 			"recipients-suspended": "0",
 			"org-mission": "The NGO supports disabled and vulnerable individuals by providing housing, training, and resources to improve their lives and uphold their dignity.",
-			"org-description": "United Polio Brothers and Sisters (UPBSA), founded in 1999 by 12 individuals affected by polio, advocates for housing and training opportunities for disabled and vulnerable people. In 2001, UPBSA established a provisional technical and vocational training center in Freetown and later expanded with three additional branches in rural areas. UPBSA’s mission is to provide a safe, supportive space that equips its members with the tools and opportunities to lead dignified lives.",
+			"org-description-paragraphs": [
+				[
+					{
+						"text": "United Polio Brothers and Sisters (UPBSA), founded in 1999 by 12 individuals affected by polio, advocates for housing and training opportunities for disabled and vulnerable people. In 2001, UPBSA established a provisional technical and vocational training center in Freetown and later expanded with three additional branches in rural areas. UPBSA’s mission is to provide a safe, supportive space that equips its members with the tools and opportunities to lead dignified lives."
+					}
+				]
+			],
 			"org-quote": [
 				{
 					"text": "Social Income has empowered the most vulnerable to "
@@ -211,7 +258,13 @@
 			"recipients-former": "2",
 			"recipients-suspended": "1",
 			"org-mission": "The community-based NGO supports individuals who have survived the Ebola virus, focusing on those affected by the devastating 2014 outbreak in Sierra Leone.",
-			"org-description": "The Sierra Leone Association of Ebola Survivors (SLAES) is an organization committed to supporting individuals who have overcome the Ebola virus. SLAES offers comprehensive assistance, including access to medical care, psychological support, and ongoing advocacy to ensure that survivors’ rights and needs are recognized and addressed. Through its work, SLAES aims to help survivors rebuild their lives and foster resilience in affected communities.",
+			"org-description-paragraphs": [
+				[
+					{
+						"text": "The Sierra Leone Association of Ebola Survivors (SLAES) is an organization committed to supporting individuals who have overcome the Ebola virus. SLAES offers comprehensive assistance, including access to medical care, psychological support, and ongoing advocacy to ensure that survivors’ rights and needs are recognized and addressed. Through its work, SLAES aims to help survivors rebuild their lives and foster resilience in affected communities."
+					}
+				]
+			],
 			"org-quote": [
 				{
 					"text": "It’s more than financial support—it’s a step "
