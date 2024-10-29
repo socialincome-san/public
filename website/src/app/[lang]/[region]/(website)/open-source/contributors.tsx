@@ -35,8 +35,15 @@ export async function getContributors(): Promise<Contributor[]> {
 	}
 
 	const contributors = await res.json();
-	if (!contributors) {
-		throw new Error('No contributors data returned from GitHub.');
+
+	// Check if the response is an empty object
+	if (Object.keys(contributors).length === 0) {
+		console.warn('No contributor data available. The API returned an empty object.');
+		return [];  // Return an empty array if no data is available
+	}
+
+	if (!Array.isArray(contributors)) {
+		throw new Error('Expected contributors to be an array, but received a different format.');
 	}
 
 	return contributors
