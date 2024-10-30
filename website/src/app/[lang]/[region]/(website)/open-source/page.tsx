@@ -52,7 +52,7 @@ export default async function Page({ params }: DefaultPageProps) {
 					{title}
 				</Typography>
 				<Typography as="h2" size="2xl" lineHeight="snug" className="mb-16">
-					{heading}
+					{`${contributors.length} ${heading}`}
 				</Typography>
 			</section>
 			<section className="flex flex-wrap gap-4">
