@@ -33,12 +33,11 @@ function Contributor({ name, commits, avatarUrl }: ContributorProp) {
 	);
 }
 
-
 export async function OpenSourceContributors({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
-			language: lang,
-			namespaces: ['website-open-source'],
-		});
+		language: lang,
+		namespaces: ['website-open-source'],
+	});
 
 	const metadata: Metadata = translator.t('metadata');
 	const title = metadata.title;
