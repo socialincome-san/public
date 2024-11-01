@@ -152,6 +152,7 @@
 						"text": "dai mercati locali e dai fornitori di servizi. »"
 					}
 				],
+				"logo": "/assets/logos/logo-icrc.svg",
 				"author": "Comitato Internazionale della Croce Rossa"
 			},
 			{
@@ -167,6 +168,7 @@
 						"text": "in modo che gli shock possano arrivare, ma non distruggano. »"
 					}
 				],
+				"logo": "/assets/logos/logo-un.svg",
 				"author": "Nazioni Unite"
 			},
 			{
@@ -182,6 +184,7 @@
 						"text": "per accedere ai servizi finanziari. »"
 					}
 				],
+				"logo": "/assets/logos/logo-worldbank.svg",
 				"author": "Banca Mondiale"
 			}
 		]
