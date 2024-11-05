@@ -12,7 +12,7 @@
 				"color": "accent"
 			},
 			{
-				"text": "We'd like to present our local partner."
+				"text": "We'd like to present our local partners."
 			}
 		],
 		"subtitle": "By working together with local partners, we ensure that projects are more effective, resilient, and rooted in the realities of the communities we aim to support."
@@ -93,7 +93,7 @@
 			"org-long-name": "Jamil & Nyanga Jaward Foundation",
 			"org-foundation": "2017",
 			"org-image": "jamil.png",
-			"org-country": "CH",
+			"org-country": "SL",
 			"org-headquarter": "Freetown",
 			"org-category": "Local NGO",
 			"org-focus-sdg-numbers": [1, 5],
