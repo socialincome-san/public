@@ -217,8 +217,7 @@ export default async function NgoCard({
 					</CardFooter>
 				</Card>
 			</DialogTrigger>
-			<DialogContent className="bg-background mx-0 mt-4 h-[98vh] max-h-[98vh] w-11/12 overflow-y-auto rounded-3xl border-none p-0 sm:min-w-[600px] md:min-w-[750px]">
-				{' '}
+			<DialogContent className="bg-background h-[90vh] w-11/12 overflow-y-auto rounded-3xl border-none p-0 sm:min-w-[600px] md:min-w-[750px]">
 				<DialogHeader className="relative">
 					<Image
 						className="h-auto w-full rounded-t-lg"
