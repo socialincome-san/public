@@ -22,13 +22,13 @@ const MuxVideoComponent = () => {
 	useEffect(() => {
 		if (isIntersecting) {
 			setPlaying(true);
-			setBackgroundColor('bg-transparent');
+			setBackgroundColor('!bg-transparent');
 		} else {
 			setPlaying(false);
-			setBackgroundColor('bg-background');
+			setBackgroundColor('!bg-background');
 		}
 		return () => {
-			setBackgroundColor('bg-background');
+			setBackgroundColor(null);
 		};
 	}, [isIntersecting]);
 

@@ -6,12 +6,12 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 export const useNavbarBackgroundColor = () => {
 	const queryClient = useQueryClient();
 
-	const { data: backgroundColor } = useQuery<string>({
+	const { data: backgroundColor } = useQuery<string | null>({
 		enabled: false,
 		queryKey: ['navbar/background-color'],
-		initialData: 'bg-background',
+		initialData: null,
 	});
-	const setBackgroundColor = (color: string) => queryClient.setQueryData(['navbar/background-color'], color);
+	const setBackgroundColor = (color: string | null) => queryClient.setQueryData(['navbar/background-color'], color);
 
 	return { backgroundColor, setBackgroundColor };
 };
