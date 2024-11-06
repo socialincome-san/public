@@ -1,34 +1,34 @@
 {
 	"metadata": {
 		"title": "Social Income",
-		"description": "Our partners",
+		"description": "I nostri partner",
 		"og-image": "/assets/metadata/og/default.jpg",
 		"twitter-image": "/assets/metadata/twitter/default.jpg"
 	},
 	"hero": {
 		"title-1": [
 			{
-				"text": "Localization drives our work. ",
+				"text": "La localizzazione è al centro del nostro lavoro. ",
 				"color": "accent"
 			},
 			{
-				"text": "We'd like to present our local partners."
+				"text": "Siamo lieti di presentare i nostri partner locali."
 			}
 		],
-		"subtitle": "By working together with local partners, we ensure that projects are more effective, resilient, and rooted in the realities of the communities we aim to support."
+		"subtitle": "Lavorando insieme a organizzazioni non-profit locali, garantiamo che i nostri progetti siano più efficaci, resilienti e profondamente radicati nelle realtà delle comunità che intendiamo sostenere."
 	},
 	"badges": {
-		"active": "active",
-		"former": "former",
-		"suspended": "suspended",
-		"recipients": "Recipients",
-		"recipients-by": "recipients by"
+		"active": "attivo",
+		"former": "precedente",
+		"suspended": "sospeso",
+		"recipients": "Beneficiari",
+		"recipients-by": "beneficiari per"
 	},
 	"ngo-generic": {
-		"founded": "Founded",
-		"partner-since": "Partner since",
-		"headquarter": "Headquarter",
-		"mission": "Mission"
+		"founded": "Fondato",
+		"partner-since": "Partner dal",
+		"headquarter": "Sede",
+		"mission": "Missione"
 	},
 	"ngos": [
 		{
