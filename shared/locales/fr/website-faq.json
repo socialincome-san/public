@@ -3,7 +3,7 @@
 		"title": "Questions fréquentes | Social Income"
 	},
 	"title": "FAQ",
-	"title-long": "Frequently asked questions",
+	"title-long": "Questions fréquentes",
 	"fighting-poverty": {
 		"title": "La lutte contre la pauvreté",
 		"questions": [
@@ -149,6 +149,7 @@
 		]
 	},
 	"selection": {
+		"title": "Sélection des bénéficiaires",
 		"questions": [
 			{
 				"question": "Pourquoi choisissons-nous au hasard dans une liste de bénéficiaires potentiels?",

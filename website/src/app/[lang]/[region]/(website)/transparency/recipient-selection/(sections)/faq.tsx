@@ -1,5 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { FaqQuestion, FAQSection } from '@/app/[lang]/[region]/(website)/faq/faq-section';
+import { FaqQuestion, FAQSection } from '@/components/faq/faq-section';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
@@ -22,11 +22,11 @@ export async function SelectionFaq({ lang }: DefaultParams) {
 						color={title.color}
 						className="text-3xl sm:text-4xl md:text-4xl"
 					>
-						{title.text}{' '}
+						{title.text}
 					</Typography>
 				))}
 			</div>
-			<FAQSection title={translator.t('title')} questions={[...translator.t<FaqQuestion[]>('selection.questions')]} />
+			<FAQSection questions={[...translator.t<FaqQuestion[]>('selection.questions')]} />
 			<Link href={'/faq'}>
 				<Typography color="accent" className="text-center">
 					{translator.t('section-faq.cta') + ' ›'}

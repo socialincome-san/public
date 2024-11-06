@@ -2,7 +2,7 @@ import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
-import { FAQSection } from './faq-section';
+import { FAQSection } from '../../../../../components/faq/faq-section';
 
 export async function generateMetadata({ params }: DefaultPageProps) {
 	return getMetadata(params.lang, 'website-faq');
@@ -31,6 +31,7 @@ export default async function Page({ params }: DefaultPageProps) {
 			<FAQSection title={translator.t('ubi.title')} questions={translator.t('ubi.questions')} />
 			<FAQSection title={translator.t('contributors.title')} questions={translator.t('contributors.questions')} />
 			<FAQSection title={translator.t('recipients.title')} questions={translator.t('recipients.questions')} />
+			<FAQSection title={translator.t('selection.title')} questions={translator.t('selection.questions')} />
 			<FAQSection title={translator.t('the-arts.title')} questions={translator.t('the-arts.questions')} />
 			<FAQSection title={translator.t('volunteering.title')} questions={translator.t('volunteering.questions')} />
 		</BaseContainer>

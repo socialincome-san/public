@@ -149,6 +149,7 @@
 		]
 	},
 	"selection": {
+		"title": "Selektion der Empfänger:innen",
 		"questions": [
 			{
 				"question": "Warum wählen wir zufällig aus einem Pool qualifizierter Empfänger:innen aus?",

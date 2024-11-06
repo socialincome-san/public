@@ -1,4 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import ScrollToChevron from '@/app/[lang]/[region]/(website)/transparency/recipient-selection/(components)/scroll-to-chevron';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Button, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
@@ -12,7 +13,7 @@ export async function Resources({ lang }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer className="bg-background relative flex h-screen items-center justify-center">
+		<BaseContainer id="resources-section" className="bg-background relative flex h-screen items-center justify-center">
 			<div className="text-center">
 				<div className="mb-2">
 					<Typography size="xl" className="mb-8">
@@ -57,7 +58,7 @@ export async function Resources({ lang }: DefaultParams) {
 						</div>
 					</div>
 				</div>
-				<div className="absolute bottom-[20px] left-1/2 -translate-x-1/2 transform text-center">
+				<div className="absolute bottom-[20px] left-0 right-0 text-center">
 					<Typography size="xl" className="mb-1">
 						{translator.t('section-2.continue-1')}
 					</Typography>
@@ -65,15 +66,7 @@ export async function Resources({ lang }: DefaultParams) {
 						{translator.t('section-2.continue-2')}
 					</Typography>
 					<div className="flex justify-center">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="h-6 w-6"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-						</svg>
+						<ScrollToChevron elementId="selection-process-section" />
 					</div>
 				</div>
 			</div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { CompletedDraw } from '@/app/[lang]/[region]/(website)/transparency/random-selection/(sections)/state';
+import { CompletedDraw } from '@/app/[lang]/[region]/(website)/transparency/recipient-selection/(sections)/state';
 import { WebsiteLanguage } from '@/i18n';
 import { Card, Collapsible, CollapsibleContent, CollapsibleTrigger, Typography } from '@socialincome/ui';
 import Link from 'next/link';

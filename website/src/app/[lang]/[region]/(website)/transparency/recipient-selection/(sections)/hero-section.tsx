@@ -1,4 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import ScrollToChevron from '@/app/[lang]/[region]/(website)/transparency/recipient-selection/(components)/scroll-to-chevron';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
@@ -57,15 +58,7 @@ export async function HeroSection({ lang }: DefaultParams) {
 						{translator.t('section-1.continue')}
 					</Typography>
 					<div className="flex justify-center">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							className="h-6 w-6 text-white"
-							fill="none"
-							viewBox="0 0 24 24"
-							stroke="currentColor"
-						>
-							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-						</svg>
+						<ScrollToChevron elementId="resources-section" />
 					</div>
 				</div>
 			</div>
