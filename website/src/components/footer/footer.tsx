@@ -41,7 +41,7 @@ export default async function Footer({ lang, region }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer backgroundColor="bg-muted" className="pb-8 pt-16">
+		<BaseContainer className="pb-8 pt-16">
 			<div className="space-y-4">
 				<div className="flex flex-row items-center justify-between">
 					<SILogo className="fill-muted-foreground h-4" />
@@ -102,7 +102,7 @@ export default async function Footer({ lang, region }: DefaultParams) {
 						/>
 						<FooterLink
 							Icon={UserCircleIcon}
-							label={translator.t('navigation.my-profile')}
+							label={translator.t('navigation.my-account')}
 							url={`/${lang}/${region}/login`}
 						/>
 						<FooterLink Icon={DocumentTextIcon} label={translator.t('footer.legal')} url={`/${lang}/${region}/legal`} />

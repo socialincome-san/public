@@ -44,7 +44,7 @@
 			"Et nous agissons de manière totalement transparente, ce qui nous permet d'éviter les frais de gestion élevés généralement inhérents à ce type de projets."
 		]
 	},
-	"100-percent-model": {
+	"our-promise": {
 		"header": "Notre promesse",
 		"title": [
 			{
@@ -99,7 +99,8 @@
 			"impact-measurement": "Mesure d’impact",
 			"strategy": "Stratégie",
 			"fundraising": "Recherche de fonds",
-			"translations": "Traductions"
+			"translations": "Traductions",
+			"research": "Recherche"
 		},
 		"groups": {
 			"staff": {

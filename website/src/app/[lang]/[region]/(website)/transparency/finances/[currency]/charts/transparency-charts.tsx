@@ -23,7 +23,7 @@ export default function TransparencyCharts({
 	const translator = useTranslator(lang, 'website-finances');
 
 	return (
-		<div className="grid grid-cols-1 gap-8  lg:grid-cols-2">
+		<div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
 			<div className="flex flex-col space-y-4">
 				<Typography as="h2" size="2xl" weight="medium">
 					Contributions by type

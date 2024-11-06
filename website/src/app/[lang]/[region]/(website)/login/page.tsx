@@ -25,7 +25,7 @@ export default async function Page({ params }: DefaultPageProps) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-login'] });
 
 	return (
-		<BaseContainer className="min-h-screen-navbar mx-auto mt-8 flex max-w-lg flex-col">
+		<BaseContainer className="min-h-screen-navbar mx-auto flex max-w-lg flex-col">
 			<Alert variant="accent" className="mb-8">
 				<AlertTitle className="flex-inline flex">
 					{translator.t('alert.title')}

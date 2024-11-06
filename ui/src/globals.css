@@ -23,14 +23,15 @@
 @layer base {
 	:root,
 	.theme-default {
-		--background: 222 100% 97%;
-		--foreground: 20 14.3% 4.1%;
-		--muted: 222 100% 98%;
-		--muted-foreground: 0 0% 30%;
+		--background: 50 33% 96%;
+		--foreground: 206 99% 31%;
 
-		--card: 0 100% 100%;
+		--muted: 222 100% 98%;
+		--muted-foreground: 212 59% 40%;
+
+		--card: 50 33% 92%;
+		--card-foreground: 206 99% 31%;
 		--card-muted: 0 0% 98%;
-		--card-foreground: 20 14.3% 4.1%;
 		--card-foreground-muted: 0 0% 40%;
 
 		--popover: 0 100% 100%;
@@ -64,13 +65,29 @@
 		--radius: 0.5rem;
 	}
 
-	.theme-dark-blue {
-		--background: 216 54% 55%;
-		--muted: 216 54% 61%;
-		--foreground: 60 9.1% 97.8%;
+	.theme-light {
+		--background: 212 59% 40%;
+		--foreground: 20 14.3% 4.1%;
+		--muted: 222 100% 98%;
+		--muted-foreground: 0 0% 30%;
 
 		--card: 222 100% 97%;
 		--card-muted: 222 100% 99%;
+		--card-foreground: 206 99% 31%;
+		--card-foreground-muted: 50 33% 45%;
+	}
+
+	.theme-blue {
+		--background: 212 57% 47%;
+		--foreground: 50 33% 96%;
+
+		--muted: 212 59% 75%;
+		--muted-foreground: 50 33% 99%;
+
+		--card: 212 57% 47%;
+		--card-muted: 212 57% 75%;
+		--card-foreground: 50 33% 96%;
+		--card-foreground-muted: 0 0% 40%;
 
 		--primary: 48 100% 49%;
 		--primary-muted: 48 100% 85%;
@@ -79,58 +96,16 @@
 
 		--border: 60 9.1% 97.8%;
 	}
-
-	.theme-v2 {
-		--background: 50 33% 96%;
-		--foreground: 206 99% 31%;
-
-		--muted: 222 100% 98%;
-		--muted-foreground: 212 59% 40%;
-	}
-
-	.theme-blue-v2 {
-		--background: 212 57% 47%;
-		--foreground: 50 33% 96%;
-
-		--muted: 212 59% 75%;
-		--muted-foreground: 50 33% 99%;
-
-		--card: 212 57% 47%;
-		--card-muted: 212 59% 75%;
-		--card-foreground: 50 33% 96%;
-		--card-foreground-muted: 50 33% 99%;
-	}
-
-	.theme-dark-blue-v2 {
-		--background: 212 59% 40%;
-		--foreground: 50 33% 96%;
-
-		--muted: 212 59% 75%;
-		--muted-foreground: 50 33% 99%;
-
-		--card: 212 59% 40%;
-		--card-muted: 212 59% 75%;
-		--card-foreground: 50 33% 96%;
-		--card-foreground-muted: 50 33% 99%;
-	}
 }
 
 @layer base {
 	body,
 	.theme-default,
-	.theme-dark-blue {
+	.theme-light {
 		@apply bg-background text-foreground;
 	}
 
-	.theme-v2 {
-		@apply bg-background text-foreground;
-	}
-
-	.theme-blue-v2 {
-		@apply bg-background text-foreground;
-	}
-
-	.theme-dark-blue-v2 {
+	.theme-blue {
 		@apply bg-background text-foreground;
 	}
 }

@@ -5,6 +5,7 @@
 	"amount": "Amount",
 	"button-text": "Make a Difference",
 	"button-text-short": "Donate Now",
+	"one-time-donation": "Make a one-time donation",
 	"donation-impact": {
 		"monthly-contribution": "Your monthly contribution",
 		"direct-payout": "The people in need receive your contribution directly on their mobile phones.",
@@ -38,8 +39,7 @@
 	},
 	"one-time": {
 		"title": "One-time Donation",
-		"subtitle": "Make a one-time donation to Social Income",
-		"twint-button": "You can also support us through Twint"
+		"subtitle": "Make a one-time donation to Social Income"
 	},
 	"success": {
 		"title": "Thank you for your contribution",

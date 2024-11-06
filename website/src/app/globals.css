@@ -23,8 +23,8 @@
 }
 
 .min-h-screen-navbar {
-	min-height: calc(100vh - var(--h-navbar-mobile));
+	min-height: calc(100dvh - 4rem);
 	@media screen(md) {
-		min-height: calc(100vh - var(--h-navbar));
+		min-height: calc(100dvh - 5rem);
 	}
 }

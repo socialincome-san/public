@@ -13,7 +13,7 @@ export default async function LandingPage({ lang }: { lang: WebsiteLanguage }) {
 	});
 
 	return (
-		<BaseContainer className="min-h-screen-navbar grid grid-cols-1 content-center items-center gap-16 md:grid-cols-5">
+		<BaseContainer className="grid grid-cols-1 content-center items-center gap-16 md:grid-cols-5">
 			<div className="mx-auto max-w-lg space-y-5 md:col-span-3">
 				{translator.t<{ text: string; color?: FontColor }[]>('landing-page.title').map((title, index) => (
 					<Typography as="span" key={index} size="5xl" weight="bold" lineHeight="tight" color={title.color}>

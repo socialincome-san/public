@@ -16,11 +16,7 @@ export async function Contributors({ params }: DefaultPageProps) {
 	});
 
 	return (
-		<BaseContainer
-			id="contributors"
-			backgroundColor="bg-red-50"
-			className="flex min-h-screen flex-col justify-center space-y-24 py-16 md:py-32 lg:space-y-36"
-		>
+		<BaseContainer id="contributors" className="flex scroll-mt-36 flex-col justify-center space-y-24 lg:space-y-36">
 			<div className="space-y-4">
 				<Typography as="h3" size="xl" color="muted-foreground">
 					{translator.t('contributors.header-1')}

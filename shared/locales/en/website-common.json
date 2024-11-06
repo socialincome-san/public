@@ -8,15 +8,17 @@
 		"twitter-image": "/assets/metadata/twitter/default.jpg"
 	},
 	"navigation": {
-		"100-percent-model": "100% Model",
+		"our-promise": "Our Promise",
 		"about-us": "About Us",
 		"contact": "Contact",
 		"contributors": "Contributors",
+		"donate": "Donate",
 		"evidence": "Evidence",
 		"faq": "FAQ",
 		"finances": "Finances",
+		"flow-of-funds": "Flow of Funds",
 		"how-it-works": "How It Works",
-		"my-profile": "My Profile",
+		"my-account": "My Account",
 		"our-mission": "Our Mission",
 		"our-work": "Our Work",
 		"privacy-policy": "Privacy Policy",
@@ -34,7 +36,7 @@
 		"newsletter": "Newsletter"
 	},
 	"cookie-consent-banner": {
-		"text": "Do you allow us to use cookies for analyzing our website traffic and performance? We never collect any personal data. <a href='/legal/privacy' class='underline'>Privacy Policy</a>.",
+		"text": "We use <a href='/legal/privacy' class='underline'>cookies</a>.",
 		"button-accept": "Accept",
 		"button-refuse": "Refuse"
 	}

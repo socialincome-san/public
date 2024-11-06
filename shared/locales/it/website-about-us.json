@@ -44,7 +44,7 @@
 			"E lo facciamo in un modo radicalmente trasparente, che ci consente di evitare gli alti costi amministrativi normalmente associati a progetti del genere."
 		]
 	},
-	"100-percent-model": {
+	"our-promise": {
 		"header": "La nostra promessa",
 		"title": [
 			{
@@ -98,7 +98,8 @@
 			"app-development": "Sviluppo dell'App",
 			"impact-measurement": "Misurazione dell'Impatto",
 			"strategy": "Strategia",
-			"translations": "Traduzioni"
+			"translations": "Traduzioni",
+			"research": "Ricerca"
 		},
 		"groups": {
 			"staff": {

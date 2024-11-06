@@ -8,15 +8,17 @@
 		"twitter-image": "/assets/metadata/twitter/default.jpg"
 	},
 	"navigation": {
-		"100-percent-model": "Modello del 100%",
+		"our-promise": "Modello del 100%",
 		"about-us": "Chi Siamo",
 		"contact": "Contatti",
 		"contributors": "Donatori",
+		"donate": "Dona",
 		"evidence": "Prove Scientifiche",
 		"faq": "FAQ",
 		"finances": "Finanze",
+		"flow-of-funds": "Flusso dei Fondi",
 		"how-it-works": "Come Funziona",
-		"my-profile": "Il Mio Profilo",
+		"my-account": "Il Mio Account",
 		"our-mission": "La Nostra Missione",
 		"our-work": "Il Nostro Lavoro",
 		"privacy-policy": "Informativa sulla Privacy",
@@ -37,7 +39,7 @@
 		"about-us": "Chi Siamo"
 	},
 	"cookie-consent-banner": {
-		"text": "Ci permetti di utilizzare i cookie per analizzare il traffico e le prestazioni del nostro sito web? Non raccogliamo mai dati personali. <a href='/privacy' class='underline'>Informativa sulla Privacy</a>.",
+		"text": "Utilizziamo i <a href='/privacy' class='underline'>cookie</a>.",
 		"button-accept": "Accetto",
 		"button-refuse": "Rifiuto"
 	}
