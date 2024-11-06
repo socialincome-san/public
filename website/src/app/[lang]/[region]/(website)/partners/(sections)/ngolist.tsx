@@ -22,6 +22,10 @@ type QuoteType = {
 type SdgBadgeType = {
 	hoverCardOrgName: string;
 	sdgNumber: number;
+	translatorSdg: string;
+	translatorSdgTitle: string;
+	translatorSdgMission1: string;
+	translatorSdgMission2: string;
 };
 
 type CountryBadgeType = {
@@ -30,12 +34,17 @@ type CountryBadgeType = {
 };
 
 type RecipientsBadgeType = {
-	hoverCardOrgName?: string;
+	hoverCardOrgName: string;
 	hoverCardTotalRecipients?: number;
 	hoverCardTotalActiveRecipients?: number;
 	hoverCardTotalFormerRecipients?: number;
 	hoverCardTotalSuspendedRecipients?: number;
 	isInsideHoverCard?: boolean;
+	translatorBadgeRecipients: string;
+	translatorBadgeRecipientsBy: string;
+	translatorBadgeActive: string;
+	translatorBadgeFormer: string;
+	translatorBadgeSuspended: string;
 };
 
 type NgoHoverCardType = {
@@ -60,9 +69,9 @@ type NgoHoverCardType = {
 type NgoCardProps = {
 	orgShortName: string;
 	orgMission: string;
-	countryBadge?: CountryBadgeType;
-	recipientsBadge?: RecipientsBadgeType;
-	sdgBadges?: SdgBadgeType[];
+	countryBadge: CountryBadgeType;
+	recipientsBadge: RecipientsBadgeType;
+	sdgBadges: SdgBadgeType[];
 	ngoHoverCard: NgoHoverCardType;
 	lang: WebsiteLanguage;
 };
@@ -112,12 +121,21 @@ export async function NgoList({ lang }: DefaultParams) {
 			hoverCardTotalActiveRecipients: ngoArray[i]['recipients-active'],
 			hoverCardTotalFormerRecipients: ngoArray[i]['recipients-former'],
 			hoverCardTotalSuspendedRecipients: ngoArray[i]['recipients-suspend'],
+			translatorBadgeRecipients: '',
+			translatorBadgeRecipientsBy: '',
+			translatorBadgeActive: '',
+			translatorBadgeFormer: '',
+			translatorBadgeSuspended: '',
 		};
 		const sdgBadges: SdgBadgeType[] = [];
 		ngoArray[i]['org-focus-sdg-numbers'].forEach((sdgNumber) => {
 			sdgBadges.push({
 				hoverCardOrgName: ngoArray[i]['org-short-name'],
 				sdgNumber: sdgNumber,
+				translatorSdg: '',
+				translatorSdgTitle: '',
+				translatorSdgMission1: '',
+				translatorSdgMission2: '',
 			});
 		});
 

@@ -82,9 +82,9 @@ type NgoHoverCardType = {
 type NgoCardProps = {
 	orgShortName: string;
 	orgMission: string;
-	countryBadge?: CountryBadgeType;
-	recipientsBadge?: RecipientsBadgeType;
-	sdgBadges?: SdgBadgeType[];
+	countryBadge: CountryBadgeType;
+	recipientsBadge: RecipientsBadgeType;
+	sdgBadges: SdgBadgeType[];
 	ngoHoverCard: NgoHoverCardType;
 	lang: WebsiteLanguage;
 };
