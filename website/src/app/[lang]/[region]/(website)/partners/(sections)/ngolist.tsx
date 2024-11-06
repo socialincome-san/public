@@ -14,22 +14,22 @@ const country_abbreviations_to_flag_map: Record<string, ReactElement> = {
 function getFlag(abbreviation: string): ReactElement {
 	return country_abbreviations_to_flag_map[abbreviation] || <SL className="h-5 w-5 rounded-full" />;
 }
-type quoteType = {
+type QuoteType = {
 	text: string;
 	color: FontColor;
 }[];
 
-type sdgBadgeType = {
+type SdgBadgeType = {
 	hoverCardOrgName: string;
 	sdgNumber: number;
 };
 
-type countryBadgeType = {
+type CountryBadgeType = {
 	countryFlagComponent?: ReactElement;
 	countryAbbreviation: string;
 };
 
-type recipientsBadgeType = {
+type RecipientsBadgeType = {
 	hoverCardOrgName?: string;
 	hoverCardTotalRecipients?: number;
 	hoverCardTotalActiveRecipients?: number;
@@ -38,7 +38,7 @@ type recipientsBadgeType = {
 	isInsideHoverCard?: boolean;
 };
 
-type ngoHoverCardType = {
+type NgoHoverCardType = {
 	orgImage: string;
 	orgLongName: string;
 	partnershipStart: string;
@@ -46,7 +46,7 @@ type ngoHoverCardType = {
 		text: string;
 		href?: string;
 	}[][];
-	quote?: quoteType;
+	quote?: QuoteType;
 	quoteAuthor?: string;
 	orgFoundation: string;
 	orgHeadquarter: string;
@@ -60,10 +60,10 @@ type ngoHoverCardType = {
 type NgoCardProps = {
 	orgShortName: string;
 	orgMission: string;
-	countryBadge?: countryBadgeType;
-	recipientsBadge?: recipientsBadgeType;
-	sdgBadges?: sdgBadgeType[];
-	ngoHoverCard: ngoHoverCardType;
+	countryBadge?: CountryBadgeType;
+	recipientsBadge?: RecipientsBadgeType;
+	sdgBadges?: SdgBadgeType[];
+	ngoHoverCard: NgoHoverCardType;
 	lang: WebsiteLanguage;
 };
 
@@ -106,14 +106,14 @@ export async function NgoList({ lang }: DefaultParams) {
 	const ngoArray: NgoEntryJSON[] = translator.t('ngos');
 	const ngoCardPropsArray: NgoCardProps[] = [];
 	for (let i = 0; i < ngoArray.length; ++i) {
-		const recipientsBadge: recipientsBadgeType = {
+		const recipientsBadge: RecipientsBadgeType = {
 			hoverCardOrgName: ngoArray[i]['org-long-name'],
 			hoverCardTotalRecipients: ngoArray[i]['recipients-total'],
 			hoverCardTotalActiveRecipients: ngoArray[i]['recipients-active'],
 			hoverCardTotalFormerRecipients: ngoArray[i]['recipients-former'],
 			hoverCardTotalSuspendedRecipients: ngoArray[i]['recipients-suspend'],
 		};
-		const sdgBadges: sdgBadgeType[] = [];
+		const sdgBadges: SdgBadgeType[] = [];
 		ngoArray[i]['org-focus-sdg-numbers'].forEach((sdgNumber) => {
 			sdgBadges.push({
 				hoverCardOrgName: ngoArray[i]['org-short-name'],
@@ -121,11 +121,11 @@ export async function NgoList({ lang }: DefaultParams) {
 			});
 		});
 
-		const countryBadge: countryBadgeType = {
+		const countryBadge: CountryBadgeType = {
 			countryAbbreviation: ngoArray[i]['org-country'],
 			countryFlagComponent: getFlag(ngoArray[i]['org-country']),
 		};
-		const ngoHoverCard: ngoHoverCardType = {
+		const ngoHoverCard: NgoHoverCardType = {
 			orgImage: image_base_path.concat(ngoArray[i]['org-image']),
 			orgLongName: ngoArray[i]['org-long-name'],
 			partnershipStart: ngoArray[i]['partnership-start'],
