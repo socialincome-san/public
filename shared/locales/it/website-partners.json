@@ -45,41 +45,41 @@
 			"recipients-active": "20",
 			"recipients-former": "22",
 			"recipients-suspended": "0",
-			"org-mission": "The NGO encourages creativity and helps people improve their lives and communities through development and cultural projects.",
+			"org-mission": "L'ONG sostiene la creatività e aiuta le persone a migliorare la propria vita e le comunità attraverso progetti di sviluppo e culturali.",
 			"org-description-paragraphs": [
 				[
 					{
-						"text": "The Aurora Foundation fosters impact through cultural and development projects that "
+						"text": "La Fondazione Aurora genera impatto attraverso progetti culturali e di sviluppo che "
 					},
 					{
-						"text": "celebrate creativity ",
+						"text": "celebrano la creatività ",
 						"href": "https://www.aurorafoundation.is/en"
 					},
 					{
-						"text": "and community resilience."
+						"text": "e la resilienza delle comunità."
 					}
 				],
 				[
 					{
-						"text": "Founded in 2007 in Iceland, Aurora promotes local artistry and sustainable practices in Sierra Leone through initiatives like Lettie Stuart Pottery and the Sweet Salone handcraft shop, bringing traditional crafts to a global audience."
+						"text": "Fondata nel 2007 in Islanda, Aurora promuove l’artigianato locale e pratiche sostenibili in Sierra Leone con iniziative come Lettie Stuart Pottery e il negozio Sweet Salone, portando le arti tradizionali a un pubblico globale."
 					}
 				],
 				[
 					{
-						"text": "Additionally, Aurora Impact supports visionary projects addressing global challenges, with entrepreneurship as a catalyst for transformative change."
+						"text": "Aurora Impact sostiene inoltre progetti visionari per affrontare sfide globali, utilizzando l’imprenditorialità come motore del cambiamento."
 					}
 				]
 			],
 			"org-quote": [
 				{
-					"text": "Thanks to Social Income, artisans have the  "
+					"text": "Grazie a Social Income, gli artigiani hanno la "
 				},
 				{
-					"text": "stability to focus on their craft,",
+					"text": "stabilità per concentrarsi sul loro mestiere,",
 					"color": "accent"
 				},
 				{
-					"text": "creating more sustainable livelihoods."
+					"text": "creando mezzi di sostentamento più sostenibili."
 				}
 			],
 			"org-quote-author": "Regína Bjarnadóttir",
@@ -102,29 +102,29 @@
 			"recipients-active": "28",
 			"recipients-former": "7",
 			"recipients-suspended": "0",
-			"org-mission": "The NGO provides widows and children in need with education, support, and opportunities to build better futures.",
+			"org-mission": "L'ONG fornisce a vedove e bambini bisognosi istruzione, supporto e opportunità per costruire un futuro migliore.",
 			"org-description-paragraphs": [
 				[
 					{
-						"text": "The Jamil and Nyanga Jaward Foundation (JNJF), founded in 2017, empowers underprivileged widows and children through education, personal growth, and community support."
+						"text": "La Fondazione Jamil e Nyanga Jaward (JNJF), fondata nel 2017, sostiene vedove e bambini svantaggiati attraverso l’istruzione, la crescita personale e il supporto della comunità."
 					}
 				],
 				[
 					{
-						"text": "With a vision of re-establishing hope and rebuilding lives, the foundation seeks to break cycles of poverty, enabling widows and children to overcome social exclusion and build brighter futures."
+						"text": "Con la visione di restituire speranza e ricostruire vite, la fondazione si propone di spezzare i cicli di povertà, permettendo a vedove e bambini di superare l'esclusione sociale e costruire un futuro più luminoso."
 					}
 				]
 			],
 			"org-quote": [
 				{
-					"text": "Social Income provides a straightforward solution with a "
+					"text": "Social Income offre una soluzione semplice con un "
 				},
 				{
-					"text": "powerful impact on our beneficiaries,",
+					"text": "grande impatto sui nostri beneficiari,",
 					"color": "accent"
 				},
 				{
-					"text": "serving as a financial lifeline that has profoundly transformed their lives."
+					"text": "fornendo un sostegno finanziario che ha trasformato profondamente le loro vite."
 				}
 			],
 			"org-quote-author": "Jamil Jaward",
@@ -148,29 +148,29 @@
 			"recipients-active": "12",
 			"recipients-former": "24",
 			"recipients-suspended": "0",
-			"org-mission": "The NGO empowers coastal communities, providing young people with the support and opportunities needed to break the cycle of poverty and build brighter futures.",
+			"org-mission": "L'ONG sostiene le comunità costiere, offrendo ai giovani il supporto e le opportunità necessari per spezzare il ciclo della povertà e costruire un futuro migliore.",
 			"org-description-paragraphs": [
 				[
 					{
-						"text": "Reachout Salone (ROSL) is a registered youth-led organization in Sierra Leone focused on advocacy and charitable efforts in coastal communities. Established in 2020, ROSL promotes sustainable human development and climate change adaptation. With an emphasis on youth—especially women and girls—ROSL partners with government agencies, NGOs, and humanitarian organizations to foster sustainable livelihoods and uphold human dignity and security."
+						"text": "Reachout Salone (ROSL) è un'organizzazione guidata dai giovani e registrata in Sierra Leone, focalizzata sulla sensibilizzazione e le iniziative caritative nelle comunità costiere. Fondata nel 2020, ROSL promuove lo sviluppo umano sostenibile e l’adattamento ai cambiamenti climatici. Con un’attenzione speciale ai giovani, in particolare donne e ragazze, ROSL collabora con enti governativi, ONG e organizzazioni umanitarie per sostenere mezzi di sussistenza sostenibili, garantendo dignità e sicurezza."
 					}
 				],
 				[
 					{
-						"text": "Its mission is to support the deprived and vulnerable, offering pathways to a better life, while its vision is to empower individuals and communities, break the cycle of poverty, and create equal opportunities for underserved groups."
+						"text": "La sua missione è sostenere i più poveri e vulnerabili, offrendo loro vie per una vita migliore. La visione di ROSL è quella di dare potere a individui e comunità, spezzare il ciclo della povertà e creare pari opportunità per i gruppi svantaggiati."
 					}
 				]
 			],
 			"org-quote": [
 				{
-					"text": "Social Income has brought "
+					"text": "Social Income ha portato un "
 				},
 				{
-					"text": "meaningful change ",
+					"text": "cambiamento significativo ",
 					"color": "accent"
 				},
 				{
-					"text": "to many of the most vulnerable people and communities."
+					"text": "a molte delle persone e comunità più vulnerabili."
 				}
 			],
 			"org-quote-author": "Edmond Margai",
@@ -192,29 +192,29 @@
 			"recipients-active": "13",
 			"recipients-former": "0",
 			"recipients-suspended": "0",
-			"org-mission": "The NGO advances human rights by increasing awareness and understanding of equal rights, inclusion, and social justice within communities.",
+			"org-mission": "L'ONG promuove i diritti umani sensibilizzando ai diritti uguali, all'inclusione e alla giustizia sociale nelle comunità.",
 			"org-description-paragraphs": [
 				[
 					{
-						"text": "Equal Rights Alliance is a non-profit organization committed to protecting and promoting human rights, working toward a society free from violence and discrimination. Its mission is to raise awareness on equal rights, inclusion, and social justice. Focused on advancing human rights in Sierra Leone, the organization advocates for key population groups and promotes international human rights standards."
+						"text": "Equal Rights Alliance è un’organizzazione senza scopo di lucro impegnata a proteggere e promuovere i diritti umani, lavorando per una società libera da violenza e discriminazione. La sua missione è sensibilizzare sui diritti uguali, l'inclusione e la giustizia sociale. Focalizzata sull'avanzamento dei diritti umani in Sierra Leone, l'organizzazione sostiene gruppi chiave della popolazione e promuove gli standard internazionali sui diritti umani."
 					}
 				],
 				[
 					{
-						"text": "Additionally, it integrates disability into development initiatives, supports disability policies and programs, and bridges the gap between disability and broader human rights issues."
+						"text": "Inoltre, integra la disabilità nelle iniziative di sviluppo, supporta politiche e programmi per la disabilità, e colma il divario tra disabilità e questioni più ampie dei diritti umani."
 					}
 				]
 			],
 			"org-quote": [
 				{
-					"text": "Social Income is a vital tool "
+					"text": "Social Income è uno strumento fondamentale "
 				},
 				{
-					"text": "against poverty for the vulnerable. ",
+					"text": "contro la povertà per le persone vulnerabili. ",
 					"color": "accent"
 				},
 				{
-					"text": "We hope the government adopts it as a key social protection measure."
+					"text": "Speriamo che il governo lo adotti come misura chiave di protezione sociale."
 				}
 			],
 			"org-quote-author": "Arnold Gibril Kamara",
@@ -235,29 +235,29 @@
 			"recipients-active": "10",
 			"recipients-former": "0",
 			"recipients-suspended": "0",
-			"org-mission": "The NGO supports disabled and vulnerable individuals by providing housing, training, and resources to improve their lives and uphold their dignity.",
+			"org-mission": "L'ONG sostiene persone disabili e vulnerabili, offrendo alloggi, formazione e risorse per migliorare la loro vita e preservare la loro dignità.",
 			"org-description-paragraphs": [
 				[
 					{
-						"text": "United Polio Brothers and Sisters (UPBSA), founded in 1999 by 12 individuals affected by polio, advocates for housing and training opportunities for disabled and vulnerable people. In 2001, UPBSA established a provisional technical and vocational training center in Freetown and later expanded with three additional branches in rural areas."
+						"text": "United Polio Brothers and Sisters (UPBSA), fondata nel 1999 da 12 persone colpite dalla polio, sostiene il diritto alla casa e alle opportunità di formazione per persone disabili e vulnerabili. Nel 2001, UPBSA ha istituito un centro tecnico e professionale provvisorio a Freetown, espandendosi poi con tre altre sedi nelle aree rurali."
 					}
 				],
 				[
 					{
-						"text": "UPBSA’s mission is to provide a safe, supportive space that equips its members with the tools and opportunities to lead dignified lives."
+						"text": "La missione di UPBSA è fornire uno spazio sicuro e di supporto che dia ai suoi membri gli strumenti e le opportunità per condurre una vita dignitosa."
 					}
 				]
 			],
 			"org-quote": [
 				{
-					"text": "Social Income has empowered the most vulnerable to "
+					"text": "Social Income ha permesso ai più vulnerabili di "
 				},
 				{
-					"text": "launch small businesses, ",
+					"text": "avviare piccole attività, ",
 					"color": "accent"
 				},
 				{
-					"text": "generating steady income through its dependable monthly support."
+					"text": "generando un reddito stabile grazie al suo affidabile supporto mensile."
 				}
 			],
 			"org-quote-author": "Paul Osman Kabia",
@@ -277,25 +277,25 @@
 			"recipients-active": "17",
 			"recipients-former": "2",
 			"recipients-suspended": "1",
-			"org-mission": "The community-based NGO supports individuals who have survived the Ebola virus, focusing on those affected by the devastating 2014 outbreak in Sierra Leone.",
+			"org-mission": "L'ONG comunitaria sostiene le persone sopravvissute al virus Ebola, con un focus su coloro colpiti dalla devastante epidemia del 2014 in Sierra Leone.",
 			"org-description-paragraphs": [
 				[
 					{
-						"text": "The Sierra Leone Association of Ebola Survivors (SLAES) is an organization committed to supporting individuals who have overcome the Ebola virus. SLAES offers comprehensive assistance, including access to medical care, psychological support, and ongoing advocacy to ensure that survivors’ rights and needs are recognized and addressed."
+						"text": "La Sierra Leone Association of Ebola Survivors (SLAES) è un’organizzazione impegnata a sostenere le persone che hanno superato il virus Ebola. SLAES offre un'assistenza completa, tra cui accesso alle cure mediche, supporto psicologico e un'azione continua per garantire che i diritti e i bisogni dei sopravvissuti siano riconosciuti e soddisfatti."
 					}
 				],
 				[
 					{
-						"text": "Through its work, SLAES aims to help survivors rebuild their lives and foster resilience in affected communities."
+						"text": "Attraverso il suo lavoro, SLAES mira ad aiutare i sopravvissuti a ricostruire le loro vite e a rafforzare la resilienza nelle comunità colpite."
 					}
 				]
 			],
 			"org-quote": [
 				{
-					"text": "It’s more than financial support—it’s a step "
+					"text": "È più di un semplice supporto finanziario—è un passo "
 				},
 				{
-					"text": "towards dignity and resilience.",
+					"text": "verso la dignità e la resilienza.",
 					"color": "accent"
 				}
 			],
