@@ -1,0 +1,306 @@
+{
+	"metadata": {
+		"title": "Social Income",
+		"description": "Nos partenaires",
+		"og-image": "/assets/metadata/og/default.jpg",
+		"twitter-image": "/assets/metadata/twitter/default.jpg"
+	},
+	"hero": {
+		"title-1": [
+			{
+				"text": "L’ancrage local est notre clé. ",
+				"color": "accent"
+			},
+			{
+				"text": "Permettez-nous de vous présenter nos partenaires locaux."
+			}
+		],
+		"subtitle": "La collaboration avec des partenaires locaux nous donne l’assurance que les projets sont plus efficaces, plus résilients et plus ancrés dans la réalité des communautés que nous voulons soutenir."
+	},
+	"badges": {
+		"active": "actif",
+		"former": "ancien",
+		"suspended": "suspendu",
+		"recipients": "Bénéficiaires",
+		"recipients-by": "bénéficiaires par"
+	},
+	"ngo-generic": {
+		"founded": "Fondation",
+		"partner-since": "Partenaire depuis",
+		"headquarter": "Siège social",
+		"mission": "Mission"
+	},
+	"ngos": [
+		{
+			"org-short-name": "Fondation Aurora",
+			"org-long-name": "Fondation Aurora",
+			"org-foundation": "2007",
+			"org-image": "aurora.png",
+			"org-country": "SL",
+			"org-headquarter": "Freetown",
+			"org-category": "International NGO",
+			"org-focus-sdg-numbers": [1, 8],
+			"partnership-start": "2020",
+			"recipients-total": "42",
+			"recipients-active": "20",
+			"recipients-former": "22",
+			"recipients-suspended": "0",
+			"org-mission": "L'ONG soutient la créativité et aide les gens à améliorer leur vie et leurs communautés grâce à des projets culturels et de développement.",
+			"org-description-paragraphs": [
+				[
+					{
+						"text": "La Fondation Aurora crée un impact par des projets culturels et de développement qui "
+					},
+					{
+						"text": "valorisent la créativité ",
+						"href": "https://www.aurorafoundation.is/en"
+					},
+					{
+						"text": "et la résilience des communautés."
+					}
+				],
+				[
+					{
+						"text": "Fondée en 2007 en Islande, Aurora promeut l’artisanat local et les pratiques durables en Sierra Leone à travers des initiatives comme Lettie Stuart Pottery et la boutique d’artisanat Sweet Salone, pour faire connaître les arts traditionnels à l’international."
+					}
+				],
+				[
+					{
+						"text": "Aurora Impact soutient également des projets visionnaires pour relever les défis mondiaux, en utilisant l’entrepreneuriat comme moteur de changement."
+					}
+				]
+			],
+			"org-quote": [
+				{
+					"text": "Grâce à Social Income, les artisans ont la "
+				},
+				{
+					"text": "stabilité pour se consacrer à leur art,",
+					"color": "accent"
+				},
+				{
+					"text": "créant ainsi des moyens de subsistance plus durables."
+				}
+			],
+			"org-quote-author": "Regína Bjarnadóttir",
+			"org-photo": "",
+			"org-website": "https://www.aurorafoundation.is/en",
+			"org-instagram": "https://www.instagram.com/aurorafoundation_official/?hl=en",
+			"org-facebook": "https://www.facebook.com/aurorafoundationofficial/"
+		},
+		{
+			"org-short-name": "JNJF",
+			"org-long-name": "Jamil & Nyanga Jaward Foundation",
+			"org-foundation": "2017",
+			"org-image": "jamil.png",
+			"org-country": "SL",
+			"org-headquarter": "Freetown",
+			"org-category": "Local NGO",
+			"org-focus-sdg-numbers": [1, 5],
+			"partnership-start": "2021",
+			"recipients-total": "35",
+			"recipients-active": "28",
+			"recipients-former": "7",
+			"recipients-suspended": "0",
+			"org-mission": "L'ONG offre aux veuves et aux enfants dans le besoin éducation, soutien et opportunités pour construire un avenir meilleur.",
+			"org-description-paragraphs": [
+				[
+					{
+						"text": "La Fondation Jamil and Nyanga Jaward (JNJF), fondée en 2017, donne aux veuves et aux enfants défavorisés les moyens de réussir grâce à l'éducation, au développement personnel et au soutien communautaire."
+					}
+				],
+				[
+					{
+						"text": "Avec la vision de redonner espoir et de reconstruire des vies, la fondation vise à briser les cycles de pauvreté, permettant aux veuves et aux enfants de surmonter l'exclusion sociale et de bâtir un avenir meilleur."
+					}
+				]
+			],
+			"org-quote": [
+				{
+					"text": "Social Income offre une solution simple avec un "
+				},
+				{
+					"text": "impact puissant pour nos bénéficiaires,",
+					"color": "accent"
+				},
+				{
+					"text": "agissant comme un soutien financier qui a transformé leur vie de manière profonde."
+				}
+			],
+			"org-quote-author": "Jamil Jaward",
+			"org-photo": "",
+			"org-website": "https://www.jnjf.org/",
+			"org-instagram": "https://instagram.com/jnjaward?igshid=NGVhN2U2NjQ0Yg",
+			"org-facebook": "https://www.facebook.com/JNJFoundation",
+			"org-linkedin": "https://www.linkedin.com/company/the-jamil-nyanga-jaward-foundation/"
+		},
+		{
+			"org-short-name": "Reachout Salone",
+			"org-long-name": "Reachout Salone",
+			"org-foundation": "2020",
+			"org-image": "reachout.png",
+			"org-country": "SL",
+			"org-headquarter": "Freetown",
+			"org-category": "Local NGO",
+			"org-focus-sdg-numbers": [1, 5],
+			"partnership-start": "2021",
+			"recipients-total": "36",
+			"recipients-active": "12",
+			"recipients-former": "24",
+			"recipients-suspended": "0",
+			"org-mission": "L'ONG soutient les communautés côtières en offrant aux jeunes le soutien et les opportunités nécessaires pour briser le cycle de la pauvreté et bâtir un avenir meilleur.",
+			"org-description-paragraphs": [
+				[
+					{
+						"text": "Reachout Salone (ROSL) est une organisation dirigée par des jeunes et enregistrée en Sierra Leone, centrée sur le plaidoyer et les actions caritatives dans les communautés côtières. Créée en 2020, ROSL promeut le développement humain durable et l’adaptation au changement climatique. Avec un accent particulier sur les jeunes, notamment les femmes et les filles, ROSL collabore avec des agences gouvernementales, des ONG et des organisations humanitaires pour favoriser des moyens de subsistance durables, en veillant à la dignité et à la sécurité des personnes."
+					}
+				],
+				[
+					{
+						"text": "Sa mission est de soutenir les démunis et les personnes vulnérables en leur offrant des voies vers une vie meilleure. Sa vision est de donner aux individus et aux communautés les moyens de briser le cycle de la pauvreté et de créer des opportunités égales pour les groupes défavorisés."
+					}
+				]
+			],
+			"org-quote": [
+				{
+					"text": "Social Income a apporté un "
+				},
+				{
+					"text": "changement significatif ",
+					"color": "accent"
+				},
+				{
+					"text": "à de nombreuses personnes et communautés parmi les plus vulnérables."
+				}
+			],
+			"org-quote-author": "Edmond Margai",
+			"org-photo": "",
+			"org-facebook": "https://www.facebook.com/profile.php?id=100070050743284&sk=about_details",
+			"org-youtube": "https://www.youtube.com/@reachoutsalone8395"
+		},
+		{
+			"org-short-name": "Equal Rights Alliance",
+			"org-long-name": "Equal Rights Alliance",
+			"org-foundation": "2019",
+			"org-image": "equal-rights-alliance.png",
+			"org-country": "SL",
+			"org-headquarter": "Freetown",
+			"org-category": "Local NGO",
+			"org-focus-sdg-numbers": [3, 10],
+			"partnership-start": "2022",
+			"recipients-total": "13",
+			"recipients-active": "13",
+			"recipients-former": "0",
+			"recipients-suspended": "0",
+			"org-mission": "L'ONG promeut les droits humains en sensibilisant aux droits égaux, à l'inclusion et à la justice sociale dans les communautés.",
+			"org-description-paragraphs": [
+				[
+					{
+						"text": "Equal Rights Alliance est une organisation à but non lucratif engagée dans la protection et la promotion des droits humains, œuvrant pour une société sans violence ni discrimination. Sa mission est de sensibiliser aux droits égaux, à l'inclusion et à la justice sociale. Focalisée sur l'avancement des droits humains en Sierra Leone, l'organisation défend les groupes de population clés et promeut les normes internationales en matière de droits humains."
+					}
+				],
+				[
+					{
+						"text": "Elle intègre également la question du handicap dans les initiatives de développement, soutient des politiques et programmes en faveur des personnes handicapées, et comble le fossé entre handicap et droits humains."
+					}
+				]
+			],
+			"org-quote": [
+				{
+					"text": "Social Income est un outil essentiel "
+				},
+				{
+					"text": "contre la pauvreté pour les personnes vulnérables. ",
+					"color": "accent"
+				},
+				{
+					"text": "Nous espérons que le gouvernement l'adopte comme une mesure clé de protection sociale."
+				}
+			],
+			"org-quote-author": "Arnold Gibril Kamara",
+			"org-photo": "",
+			"org-facebook": "https://www.facebook.com/groups/693921621002955/"
+		},
+		{
+			"org-short-name": "United Polio Brothers and Sisters",
+			"org-long-name": "United Polio Brothers and Sisters",
+			"org-foundation": "1999",
+			"org-image": "united-polio.png",
+			"org-country": "SL",
+			"org-headquarter": "Freetown",
+			"org-category": "Local NGO",
+			"org-focus-sdg-numbers": [1, 8],
+			"partnership-start": "2022",
+			"recipients-total": "10",
+			"recipients-active": "10",
+			"recipients-former": "0",
+			"recipients-suspended": "0",
+			"org-mission": "L'ONG soutient les personnes handicapées et vulnérables en leur fournissant logement, formation et ressources pour améliorer leur vie et préserver leur dignité.",
+			"org-description-paragraphs": [
+				[
+					{
+						"text": "United Polio Brothers and Sisters (UPBSA), fondée en 1999 par 12 personnes touchées par la polio, défend le droit au logement et aux opportunités de formation pour les personnes handicapées et vulnérables. En 2001, UPBSA a créé un centre provisoire de formation technique et professionnelle à Freetown, puis a ouvert trois autres antennes en zones rurales."
+					}
+				],
+				[
+					{
+						"text": "La mission de UPBSA est de fournir un espace sûr et solidaire qui offre à ses membres les outils et les opportunités nécessaires pour mener une vie digne."
+					}
+				]
+			],
+			"org-quote": [
+				{
+					"text": "Social Income a permis aux plus vulnérables de "
+				},
+				{
+					"text": "lancer de petites entreprises, ",
+					"color": "accent"
+				},
+				{
+					"text": "générant un revenu stable grâce à son soutien mensuel fiable."
+				}
+			],
+			"org-quote-author": "Paul Osman Kabia",
+			"org-photo": ""
+		},
+		{
+			"org-short-name": "SLAES",
+			"org-long-name": "Sierra Leone Association of Ebola Survivors",
+			"org-foundation": "2015",
+			"org-image": "slaes.png",
+			"org-country": "SL",
+			"org-headquarter": "Kenema",
+			"org-category": "Local NGO",
+			"org-focus-sdg-numbers": [4, 5],
+			"partnership-start": "2024",
+			"recipients-total": "20",
+			"recipients-active": "17",
+			"recipients-former": "2",
+			"recipients-suspended": "1",
+			"org-mission": "L'ONG communautaire soutient les personnes ayant survécu au virus Ebola, en se concentrant sur celles touchées par l'épidémie dévastatrice de 2014 en Sierra Leone.",
+			"org-description-paragraphs": [
+				[
+					{
+						"text": "La Sierra Leone Association of Ebola Survivors (SLAES) est une organisation dédiée à soutenir les personnes qui ont surmonté le virus Ebola. SLAES offre une assistance complète, y compris l'accès aux soins médicaux, un soutien psychologique et une défense continue des droits pour garantir que les besoins des survivants soient reconnus et pris en compte."
+					}
+				],
+				[
+					{
+						"text": "Grâce à son travail, SLAES vise à aider les survivants à reconstruire leur vie et à renforcer la résilience dans les communautés touchées."
+					}
+				]
+			],
+			"org-quote": [
+				{
+					"text": "C’est plus qu’un soutien financier—c’est un pas "
+				},
+				{
+					"text": "vers la dignité et la résilience.",
+					"color": "accent"
+				}
+			],
+			"org-quote-author": "Paul Osman Kabia",
+			"org-photo": ""
+		}
+	]
+}
