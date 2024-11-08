@@ -54,6 +54,7 @@ export default async function Navbar({ lang, region }: DefaultParams) {
 						{ title: translator.t('navigation.our-promise'), href: `/${lang}/${region}/about-us#our-promise` },
 						{ title: translator.t('navigation.flow-of-funds'), href: `/${lang}/${region}/about-us#flow-of-funds` },
 						{ title: translator.t('navigation.team'), href: `/${lang}/${region}/about-us#team` },
+						{ title: translator.t('navigation.partners'), href: `/${lang}/${region}/partners` },
 					],
 				},
 				{
