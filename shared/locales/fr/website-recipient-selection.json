@@ -33,7 +33,7 @@
 			},
 			{
 				"question": "Comment se déroule le processus de sélection?",
-				"answer": "Nous utilisons le nombre aléatoire fourni par drand, publiquement accessible, pour choisir un certain nombre de personnes dans notre liste. La procédure est la suivante : nous chiffrons d'abord la liste des bénéficiaires. Puis nous utilisons l'élément aléatoire de drand et nous le convertissons en une position sur la liste au moyen d'une clé de dérivation.  <a href='https://fr.wikipedia.org/wiki/Fonction_de_d%C3%A9rivation_de_cl%C3%A9' target='_blank' class='underline'>Schlüsselableitung</a> Pour les personnes intéressées par les détails techniques, la clé et les processus inhérents sont décrits dans notre <a href='https://github.com/drand/draw-action' target='_blank' class='underline'>dépôt GitHub</a>."
+				"answer": "Nous utilisons le nombre aléatoire fourni par drand, publiquement accessible, pour choisir un certain nombre de personnes dans notre liste. La procédure est la suivante : nous chiffrons d'abord la liste des bénéficiaires. Puis nous utilisons l'élément aléatoire de drand et nous le convertissons en une position sur la liste au moyen d'une clé de dérivation. <a href='https://fr.wikipedia.org/wiki/Fonction_de_d%C3%A9rivation_de_cl%C3%A9' target='_blank' class='underline'>Fonction de dérivation de clé</a> Pour les personnes intéressées par les détails techniques, la clé et les processus inhérents sont décrits dans notre <a href='https://github.com/drand/draw-action' target='_blank' class='underline'>dépôt GitHub</a>."
 			},
 			{
 				"question": "Qu'est-ce que drand et qui est derrière?",
