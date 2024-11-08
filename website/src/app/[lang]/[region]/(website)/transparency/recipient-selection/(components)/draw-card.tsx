@@ -43,7 +43,7 @@ export function DrawCard({ lang, draw, translations }: DrawCardProps) {
 									<Typography className="break-all">{draw.drandRandomness}</Typography>
 								</div>
 								<div className="justify-self-end">
-									<Link href={`https://api.drand.sh/public/${draw.drandRound}`} target="_blank" className="underline">
+									<Link href={`https://api.drand.sh/52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971/public/${draw.drandRound}`} target="_blank" className="underline">
 										{translations.confirmDrand}
 									</Link>
 								</div>
