@@ -2,7 +2,7 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useTranslator } from '@/hooks/useTranslator';
-import { Badge, BaseContainer, Typography } from '@socialincome/ui';
+import { Badge, BaseContainer, Button, Typography } from '@socialincome/ui';
 import classNames from 'classnames';
 import { useState } from 'react';
 
@@ -146,14 +146,22 @@ export function SelectionProcess({ lang }: DefaultParams) {
 								{translator?.t('section-3.selection-2-title')}
 							</Typography>
 							<Typography className="mb-4 text-xl">{translator?.t('section-3.selection-2-desc')}</Typography>
-							<Typography className="text-md mb-6">{translator?.t('section-3.selection-2-annex')}</Typography>
+							<Button variant="link" className="text-md">
+								<a href="https://api.drand.sh/public/latest" target="_blank" rel="noopener noreferrer">
+									<Typography className="mb-6">{translator?.t('section-3.selection-2-annex')}</Typography>
+								</a>
+							</Button>
 						</div>
 						<div>
 							<Typography weight="medium" className="text-accent mb-2 text-xl">
 								{translator?.t('section-3.selection-3-title')}
 							</Typography>
 							<Typography className="mb-4 text-xl">{translator?.t('section-3.selection-3-desc')}</Typography>
-							<Typography className="text-md mb-6">{translator?.t('section-3.selection-3-annex')}</Typography>
+							<Button variant="link" className="text-md">
+								<a href="https://github.com/socialincome-san/public/tree/main/recipients_selection" target="_blank" rel="noopener noreferrer">
+									<Typography className="mb-6">{translator?.t('section-3.selection-3-annex')}</Typography>
+								</a>
+							</Button>
 						</div>
 					</div>
 				</div>

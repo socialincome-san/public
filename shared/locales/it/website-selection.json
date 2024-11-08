@@ -39,7 +39,7 @@
 				"text": "che hanno più bisogno di Social Income."
 			}
 		],
-		"amount": "USD 300,000",
+		"amount": "USD 300,000+",
 		"amount-context": "raccolti fino a oggi",
 		"scope": "Più ",
 		"transparency-page": "trasparenza e numeri ↗",
@@ -59,7 +59,7 @@
 		"preselection-2-annex": "4,9 milioni di persone in Sierra Leone vivono in povertà",
 		"preselection-3-title": "Creiamo un bacino di potenziali beneficiari",
 		"preselection-3-desc": "Collaboriamo con ONG locali che si dedicano a combattere la povertà per identificare le persone in difficoltà, costruendo un bacino ampio ed espandibile di potenziali beneficiari.",
-		"preselection-3-annex": "5.000+ potenziali beneficiari sono stati identificati nel nostro bacino.",
+		"preselection-3-annex": "5.000+ potenziali beneficiari sono stati identificati nel nostro bacino",
 		"selection-title": "Selezione Trasparente",
 		"selection-subtitle": "Minimizziamo possibili tensioni",
 		"selection-desc": "Garantiamo che il nostro processo di selezione sia senza alcun pregiudizio, trasparente per tutti e privo di favoritismi.",
@@ -69,9 +69,9 @@
 		"selection-1-annex": "Il sorteggio avviene tra un gruppo di individui che sono nella stessa condizione di possibili beneficiari",
 		"selection-2-title": "Veramente casuale",
 		"selection-2-desc": "L'integrità di un sorteggio dipende dalla sua imprevedibilità. Quando le persone sono sicure che la selezione è puramente casuale, senza manipolazioni e verificabile pubblicamente, sanno di potersi fidare.",
-		"selection-2-annex": "Visualizza il numero casuale attuale.",	"selection-3-title": "Verificabile pubblicamente",
+		"selection-2-annex": "Visualizza il numero casuale attuale ↗",	"selection-3-title": "Verificabile pubblicamente",
 		"selection-3-desc": "Pubblicando il codice che gestisce la selezione casuale, diamo a tutti la possibilità di verificare il processo e assicurarsi che non ci siano manipolazioni.",
-		"selection-3-annex": "Verifica il nostro source code e i sorteggi qui sotto",
+		"selection-3-annex": "Verifica il nostro source code e i sorteggi qui sotto  ↗",
 		"goal": "Obiettivo"
 	},
 
