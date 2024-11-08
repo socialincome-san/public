@@ -69,7 +69,8 @@
 		"selection-1-annex": "La sélection se fait parmi des personnes qui ont toutes de bonnes raisons d’en profiter",
 		"selection-2-title": "Vraiment aléatoire",
 		"selection-2-desc": "L’intégrité d’un tirage au sort dépend de son imprédictibilité. La confiance augmente lorsque les gens savent que le tirage est vraiment aléatoire, sans manipulation et publiquement vérifiable.",
-		"selection-2-annex": "Afficher le nombre aléatoire actuel ↗",	"selection-3-title": "Publiquement vérifiable",
+		"selection-2-annex": "Afficher le nombre aléatoire actuel ↗",
+		"selection-3-title": "Publiquement vérifiable",
 		"selection-3-desc": "En publiant le code qui génère la sélection aléatoire, nous permettons à tout le monde de vérifier le processus et de s’assurer qu’il n’y a pas de manipulation.",
 		"selection-3-annex": "Vérifie le code source et les tirages au sort  ↗",
 		"goal": "Objectif"
