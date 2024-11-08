@@ -158,7 +158,11 @@ export function SelectionProcess({ lang }: DefaultParams) {
 							</Typography>
 							<Typography className="mb-4 text-xl">{translator?.t('section-3.selection-3-desc')}</Typography>
 							<Button variant="link" className="text-md">
-								<a href="https://github.com/socialincome-san/public/tree/main/recipients_selection" target="_blank" rel="noopener noreferrer">
+								<a
+									href="https://github.com/socialincome-san/public/tree/main/recipients_selection"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
 									<Typography className="mb-6">{translator?.t('section-3.selection-3-annex')}</Typography>
 								</a>
 							</Button>

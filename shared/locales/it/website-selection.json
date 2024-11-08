@@ -69,7 +69,8 @@
 		"selection-1-annex": "Il sorteggio avviene tra un gruppo di individui che sono nella stessa condizione di possibili beneficiari",
 		"selection-2-title": "Veramente casuale",
 		"selection-2-desc": "L'integrità di un sorteggio dipende dalla sua imprevedibilità. Quando le persone sono sicure che la selezione è puramente casuale, senza manipolazioni e verificabile pubblicamente, sanno di potersi fidare.",
-		"selection-2-annex": "Visualizza il numero casuale attuale ↗",	"selection-3-title": "Verificabile pubblicamente",
+		"selection-2-annex": "Visualizza il numero casuale attuale ↗",
+		"selection-3-title": "Verificabile pubblicamente",
 		"selection-3-desc": "Pubblicando il codice che gestisce la selezione casuale, diamo a tutti la possibilità di verificare il processo e assicurarsi che non ci siano manipolazioni.",
 		"selection-3-annex": "Verifica il nostro source code e i sorteggi qui sotto  ↗",
 		"goal": "Obiettivo"
