@@ -69,7 +69,7 @@
 		"selection-1-annex": "Selecting from individuals, all of whom stand to benefit",
 		"selection-2-title": "Truly Random",
 		"selection-2-desc": "A lottery’s integrity depends on its unpredictability. Confidence grows when people know it's purely by chance, without manipulation and publicly verifiable.",
-		"selection-2-annex": "Latest random number used in draws",
+		"selection-2-annex": "Show latest random number used for draws",
 		"selection-3-title": "Publicly Verifiable",
 		"selection-3-desc": "By publishing the code that operates the random selection, we empower everyone to verify the process and ensure there is no manipulation.",
 		"selection-3-annex": "Verify our source code and draws below",
