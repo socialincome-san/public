@@ -1,7 +1,7 @@
 name: "Mobile App: ✨ Feature Request"
 description: Suggest a feature for the mobile app
 title: "[Mobile App Feature]: <title>"
-labels: mobile
+labels: ["mobile"]
 type: 'enhancement'
 body:
   - type: markdown

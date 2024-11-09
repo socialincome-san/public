@@ -1,7 +1,7 @@
 name: "Website: ✨Feature Request"
 description: Suggest a feature for the website
 title: "[Web]: <title>"
-labels: website
+labels: ["website"]
 type: 'enhancement'
 body:
   - type: markdown

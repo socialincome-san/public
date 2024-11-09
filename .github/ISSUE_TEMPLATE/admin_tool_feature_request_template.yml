@@ -1,7 +1,7 @@
 name: "Admin Tool: ✨ Feature Request"
 description: Suggest a feature for the admin tool
 title: "[Admin]: <title>"
-labels: admin
+labels: ["admin"]
 type: 'enhancement'
 body:
   - type: markdown
