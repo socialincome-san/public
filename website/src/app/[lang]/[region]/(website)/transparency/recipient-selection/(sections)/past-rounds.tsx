@@ -5,6 +5,8 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 
+export const revalidate = 3600 * 24; // update once a day
+
 export async function PastRounds({ lang }: DefaultParams) {
 	const pastDraws = await loadPastDraws();
 	const translator = await Translator.getInstance({
@@ -23,7 +25,7 @@ export async function PastRounds({ lang }: DefaultParams) {
 						color={title.color}
 						className="text-3xl sm:text-4xl md:text-4xl"
 					>
-						{title.text}{' '}
+						{title.text}
 					</Typography>
 				))}
 			</div>

@@ -13,7 +13,7 @@ export async function HeroSection({ lang }: DefaultParams) {
 	});
 
 	return (
-		<div className="theme-blue bg-background relative flex h-screen items-center justify-center">
+		<div className="theme-blue bg-background relative flex h-[calc(100svh)] items-center justify-center">
 			<div className="text-center">
 				<div className="mb-2">
 					<Typography size="xl" className="mb-8 opacity-50">
@@ -30,7 +30,7 @@ export async function HeroSection({ lang }: DefaultParams) {
 							color={title.color}
 							className="text-3xl sm:text-4xl md:text-4xl"
 						>
-							{title.text}{' '}
+							{title.text}
 						</Typography>
 					))}
 				</div>

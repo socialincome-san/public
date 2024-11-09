@@ -205,7 +205,7 @@ export default async function NgoCard({
 	return (
 		<Dialog>
 			<DialogTrigger className="text-left">
-				<Card className="hover:bg-primary max-w-lg rounded-lg border-none bg-transparent p-6 shadow-none hover:bg-opacity-10">
+				<Card className="hover:bg-primary max-w-lg rounded-lg p-6 shadow-none hover:bg-opacity-10">
 					<CardHeader className="p-0">
 						<CardTitle className="flex items-center justify-between">
 							<Typography size="2xl" weight="medium">

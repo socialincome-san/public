@@ -13,7 +13,10 @@ export async function Resources({ lang }: DefaultParams) {
 	});
 
 	return (
-		<BaseContainer id="resources-section" className="bg-background relative flex h-screen items-center justify-center">
+		<BaseContainer
+			id="resources-section"
+			className="bg-background relative flex h-[calc(100svh)] items-center justify-center"
+		>
 			<div className="text-center">
 				<div className="mb-2">
 					<Typography size="xl" className="mb-8">

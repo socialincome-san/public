@@ -16,13 +16,14 @@ const MuxVideoComponent = () => {
 	const [playing, setPlaying] = useState(false);
 	const [showCaptions, setShowCaptions] = useState(true);
 	const [showControls, setShowControls] = useState(true);
-	const { isIntersecting, ref } = useIntersectionObserver({ threshold: 0.5 });
+	const { entry, isIntersecting, ref } = useIntersectionObserver();
 	const { setBackgroundColor } = useNavbarBackgroundColor();
 
 	useEffect(() => {
+		if (!entry) return;
 		if (isIntersecting) {
 			setPlaying(true);
-			setBackgroundColor('!bg-transparent');
+			setBackgroundColor(null);
 		} else {
 			setPlaying(false);
 			setBackgroundColor('!bg-background');
@@ -30,7 +31,7 @@ const MuxVideoComponent = () => {
 		return () => {
 			setBackgroundColor(null);
 		};
-	}, [isIntersecting]);
+	}, [entry, isIntersecting]);
 
 	useEffect(() => {
 		if (playing) {
@@ -41,6 +42,12 @@ const MuxVideoComponent = () => {
 	}, [playing]);
 
 	useEventListener('mousemove', () => {
+		setShowCaptions(false);
+		setShowControls(true);
+	});
+
+	useEventListener('scroll', () => {
+		console.log('scrooollll');
 		setShowCaptions(false);
 		setShowControls(true);
 	});
@@ -67,7 +74,8 @@ const MuxVideoComponent = () => {
 				ref={videoElementRef}
 				className="h-full w-full object-cover"
 				playbackId="IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE"
-				poster="https://image.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/thumbnail.jpg?time=0"
+				poster="https://image.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/thumbnail.jpg?time=2"
+				startTime={2}
 				loop
 				muted={muted}
 				autoPlay={playing}

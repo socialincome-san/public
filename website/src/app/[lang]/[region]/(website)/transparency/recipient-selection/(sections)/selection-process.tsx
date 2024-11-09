@@ -4,7 +4,9 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { useTranslator } from '@/hooks/useTranslator';
 import { Badge, BaseContainer, Button, Typography } from '@socialincome/ui';
 import classNames from 'classnames';
-import { useState } from 'react';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { useIntersectionObserver } from 'usehooks-ts';
 
 type BoxProps = {
 	active: boolean;
@@ -62,6 +64,17 @@ function Box({ active, number, title, subtitle, onClick }: BoxProps) {
 export function SelectionProcess({ lang }: DefaultParams) {
 	const translator = useTranslator(lang, 'website-selection');
 	const [activeBox, setActiveBox] = useState<'preselection' | 'selection'>('preselection');
+	const { ref, isIntersecting, entry } = useIntersectionObserver({ threshold: 0.2 });
+
+	useEffect(() => {
+		// if only 20% (threshold) of the box is visible, and the top of the box is above the viewport,
+		// set the active box to selection
+		if (!isIntersecting && entry && entry.boundingClientRect.top < 0) {
+			setActiveBox('selection');
+		} else {
+			setActiveBox('preselection');
+		}
+	}, [isIntersecting, entry?.boundingClientRect.bottom, entry?.boundingClientRect.top]);
 
 	return (
 		<BaseContainer id="selection-process-section" className="mt-36 scroll-mt-36">
@@ -89,7 +102,7 @@ export function SelectionProcess({ lang }: DefaultParams) {
 					/>
 				</div>
 				<div className="space-y-16">
-					<div id="preselection-section" className="scroll-mt-36">
+					<div id="preselection-section" ref={ref} className="scroll-mt-36">
 						<Typography weight="medium" className="mb-4 text-3xl sm:text-4xl md:text-4xl">
 							{translator?.t('section-3.preselection-title')}
 						</Typography>
@@ -147,9 +160,9 @@ export function SelectionProcess({ lang }: DefaultParams) {
 							</Typography>
 							<Typography className="mb-4 text-xl">{translator?.t('section-3.selection-2-desc')}</Typography>
 							<Button variant="link" className="text-md">
-								<a href="https://api.drand.sh/public/latest" target="_blank" rel="noopener noreferrer">
+								<Link href="https://api.drand.sh/public/latest" target="_blank" rel="noopener noreferrer">
 									<Typography className="mb-6">{translator?.t('section-3.selection-2-annex')}</Typography>
-								</a>
+								</Link>
 							</Button>
 						</div>
 						<div>
@@ -158,13 +171,13 @@ export function SelectionProcess({ lang }: DefaultParams) {
 							</Typography>
 							<Typography className="mb-4 text-xl">{translator?.t('section-3.selection-3-desc')}</Typography>
 							<Button variant="link" className="text-md">
-								<a
+								<Link
 									href="https://github.com/socialincome-san/public/tree/main/recipients_selection"
 									target="_blank"
 									rel="noopener noreferrer"
 								>
 									<Typography className="mb-6">{translator?.t('section-3.selection-3-annex')}</Typography>
-								</a>
+								</Link>
 							</Button>
 						</div>
 					</div>

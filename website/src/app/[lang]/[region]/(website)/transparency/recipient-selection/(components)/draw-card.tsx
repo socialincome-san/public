@@ -3,8 +3,8 @@
 import { CompletedDraw } from '@/app/[lang]/[region]/(website)/transparency/recipient-selection/(sections)/state';
 import { WebsiteLanguage } from '@/i18n';
 import { Card, Collapsible, CollapsibleContent, CollapsibleTrigger, Typography } from '@socialincome/ui';
+import { DateTime } from 'luxon';
 import Link from 'next/link';
-import { useState } from 'react';
 
 type DrawCardProps = {
 	lang: WebsiteLanguage;
@@ -20,16 +20,12 @@ type DrawCardProps = {
 };
 
 export function DrawCard({ lang, draw, translations }: DrawCardProps) {
-	const [open, setOpen] = useState(false);
-
 	return (
-		<Collapsible onOpenChange={(open) => setOpen(open)}>
+		<Collapsible>
 			<CollapsibleTrigger asChild>
-				<Card className="border-primary cursor-pointer border-2 bg-transparent p-4 shadow-none duration-200 hover:scale-[101%] md:p-8">
+				<Card className="cursor-pointer p-4 duration-100 hover:scale-[101%] md:p-8">
 					<div className="grid grid-cols-2 items-center gap-2 md:grid-cols-3">
-						<Typography className="col-span-1">
-							{new Intl.DateTimeFormat(lang, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(draw.time)}
-						</Typography>
+						<Typography className="col-span-1">{DateTime.fromMillis(draw.time).toFormat('dd/MM/yyyy')}</Typography>
 						<Typography className="col-span-1 text-right md:text-left">NGO {draw.name}</Typography>
 						<div className="col-span-2 text-right md:col-span-1">
 							<Typography className="truncate">{translations.summary}</Typography>
