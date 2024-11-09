@@ -41,16 +41,13 @@ const MuxVideoComponent = () => {
 		}
 	}, [playing]);
 
-	useEventListener('mousemove', () => {
-		setShowCaptions(false);
+	const handleShowControls = () => {
 		setShowControls(true);
-	});
+		setShowCaptions(false);
+	};
 
-	useEventListener('scroll', () => {
-		console.log('scrooollll');
-		setShowCaptions(false);
-		setShowControls(true);
-	});
+	useEventListener('mousemove', handleShowControls);
+	useEventListener('scroll', handleShowControls);
 
 	useEffect(() => {
 		let id;
