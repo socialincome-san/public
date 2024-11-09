@@ -1,6 +1,6 @@
 'use client';
 
-import { useNavbarBackgroundColor } from '@/components/navbar/useNavbarBackgroundColor';
+import { useGlobalStateProvider } from '@/components/providers/global-state-provider';
 import { PauseIcon, PlayIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/24/solid';
 import MuxVideo from '@mux/mux-video-react';
 import { Button } from '@socialincome/ui';
@@ -17,14 +17,11 @@ const MuxVideoComponent = () => {
 	const [showCaptions, setShowCaptions] = useState(true);
 	const [showControls, setShowControls] = useState(true);
 	const { entry, isIntersecting, ref } = useIntersectionObserver({ initialIsIntersecting: true, threshold: 0.5 });
-	const { setBackgroundColor } = useNavbarBackgroundColor();
+	const { setBackgroundColor } = useGlobalStateProvider();
 
 	useEffect(() => {
-		console.log(isIntersecting, entry?.boundingClientRect.top, entry?.boundingClientRect.bottom);
 		if (!entry) return;
-
 		if (!isIntersecting && entry.boundingClientRect.top < 0) {
-			console.log('updating background color');
 			setPlaying(false);
 			setBackgroundColor('!bg-background');
 		} else {
@@ -32,7 +29,6 @@ const MuxVideoComponent = () => {
 			setBackgroundColor(null);
 		}
 		return () => {
-			console.log('bye bye');
 			setBackgroundColor(null);
 		};
 	}, [entry, isIntersecting]);
