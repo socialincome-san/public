@@ -379,6 +379,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 
 export function NavbarClient(props: NavbarProps) {
 	const { backgroundColor } = useNavbarBackgroundColor();
+	console.log('nav background color', backgroundColor);
 
 	return (
 		<nav className={twMerge('theme-blue group/navbar fixed inset-x-0 top-0 z-20 flex flex-col', backgroundColor)}>
