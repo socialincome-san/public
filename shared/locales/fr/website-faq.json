@@ -165,11 +165,35 @@
 			},
 			{
 				"question": "Comment se déroule le processus de sélection?",
-				"answer": "Nous utilisons le nombre aléatoire fourni par drand, publiquement accessible, pour choisir un certain nombre de personnes dans notre liste. La procédure est la suivante : nous chiffrons d'abord la liste des bénéficiaires. Puis nous utilisons l'élément aléatoire de drand et nous le convertissons en une position sur la liste au moyen d'une clé de dérivation. <a href='https://fr.wikipedia.org/wiki/Fonction_de_d%C3%A9rivation_de_cl%C3%A9' target='_blank' class='underline'>Fonction de dérivation de clé</a> Pour les personnes intéressées par les détails techniques, la clé et les processus inhérents sont décrits dans notre <a href='https://github.com/drand/draw-action' target='_blank' class='underline'>dépôt GitHub</a>."
+				"answer": "Nous utilisons le nombre aléatoire fourni par drand, publiquement accessible, pour choisir un certain nombre de personnes dans notre liste. La procédure est la suivante : nous chiffrons d'abord la liste des bénéficiaires. Puis nous utilisons l'élément aléatoire de drand et nous le convertissons en une position sur la liste au moyen d'une clé de dérivation. Pour les personnes intéressées par les détails techniques, la clé et les processus inhérents sont décrits dans notre dépôt GitHub.",
+				"links": [
+					{
+						"title": "Notre dépôt GitHub",
+						"href": "https://github.com/socialincome-san/public/tree/main/recipients_selection"
+					},
+					{
+						"title": "Fonction de dérivation de clé",
+						"href": "https://fr.wikipedia.org/wiki/Fonction_de_d%C3%A9rivation_de_cl%C3%A9"
+					}
+				]
 			},
 			{
 				"question": "Qu'est-ce que drand et qui est derrière?",
-				"answer": "Le projet drand génère des nombres aléatoires auxquels tout le monde peut se fier. Il peut être utilisé pour créer des ébauches véritablement aléatoires et vérifiables. Initié en 2017 à l'EPFL par Nicolas Gailly, drand a reçu le soutien de Philipp Jovanovic et a été encadré par Bryan Ford.<br></br>Depuis lors, il est géré de manière indépendante et entretient un réseau appelé <a href='https://www.cloudflare.com/leagueofentropy/' target='_blank' class='underline'>League of Entropy</a> avec l'EPFL, l'UCL, Cloudflare, Kudelski Security, l'Université du Chili et Protocol Labs. Les principaux responsables actuels du projet open source sont le CEO, le CSO et le CTO de Randamu, à savoir <a href='https://www.linkedin.com/in/erick-watson/' target='_blank' class='underline'>Erick Watson</a>, <a href='https://www.linkedin.com/in/anomalroil/' target='_blank' class='underline'>Yolan Romailler</a> et <a href='https://www.linkedin.com/in/patrickmcclurg/' target='_blank' class='underline'>Patrick McClurg</a>."
+				"answer": "Le projet drand génère des nombres aléatoires auxquels tout le monde peut se fier. Il peut être utilisé pour créer des ébauches véritablement aléatoires et vérifiables. Initié en 2017 à l'EPFL par Nicolas Gailly, drand a reçu le soutien de Philipp Jovanovic et a été encadré par Bryan Ford. Depuis lors, il est géré de manière indépendante et entretient un réseau appelé League of Entropy avec l'EPFL, l'UCL, Cloudflare, Kudelski Security, l'Université du Chili et Protocol Labs. Les principaux responsables actuels du projet open source sont Erick Watson, Yolan Romailler et Patrick McClurg de Randamu.",
+				"links": [
+					{
+						"title": "League of Entropy",
+						"href": "https://www.cloudflare.com/leagueofentropy/"
+					},
+					{
+						"title": "Randamu",
+						"href": "https://randa.mu"
+					},
+					{
+						"title": "Drand",
+						"href": "https://drand.love"
+					}
+				]
 			}
 		]
 	},

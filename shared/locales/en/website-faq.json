@@ -169,17 +169,29 @@
 				"links": [
 					{
 						"title": "GitHub repository",
-						"href": "https://github.com/drand/draw-action"
+						"href": "https://github.com/socialincome-san/public/tree/main/recipients_selection"
+					},
+					{
+						"title": "Key derivation function",
+						"href": "https://en.wikipedia.org/wiki/Key_derivation_function"
 					}
 				]
 			},
 			{
 				"question": "What is drand and who is behind it?",
-				"answer": "The drand project generates random numbers that everyone can trust. It can be applied to create truly random and verifiable drafts. Initiated in 2017 at EPFL by Nicolas Gailly, drand received support from Philipp Jovanovic and was guided by Bryan Ford. It has since become independently managed and maintains a network called the League of Entropy with EPFL, UCL, Cloudflare, Kudelski Security, the University of Chile, and Protocol Labs. Current core maintainers of the open source project are the CEO, CSO and CTO of Randamu, respectively Erick Watson, Yolan Romailler, and Patrick McClurg.",
+				"answer": "The drand project generates random numbers that everyone can trust. It can be applied to create truly random and verifiable drafts. Initiated in 2017 at EPFL by Nicolas Gailly, drand received support from Philipp Jovanovic and was guided by Bryan Ford. It has since become independently managed and maintains a network called the League of Entropy with EPFL, UCL, Cloudflare, Kudelski Security, the University of Chile, and Protocol Labs. Current core maintainers of the open source project are Erick Watson, Yolan Romailler and Patrick McClurg from Randamu.",
 				"links": [
 					{
 						"title": "League of Entropy",
 						"href": "https://www.cloudflare.com/leagueofentropy/"
+					},
+					{
+						"title": "Randamu",
+						"href": "https://randa.mu"
+					},
+					{
+						"title": "Drand",
+						"href": "https://drand.love"
 					}
 				]
 			}
