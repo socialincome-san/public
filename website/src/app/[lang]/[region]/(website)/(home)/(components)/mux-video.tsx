@@ -20,6 +20,7 @@ const MuxVideoComponent = () => {
 	const { setBackgroundColor } = useNavbarBackgroundColor();
 
 	useEffect(() => {
+		console.log(entry);
 		if (!entry) return;
 		if (isIntersecting) {
 			setPlaying(true);
@@ -29,6 +30,7 @@ const MuxVideoComponent = () => {
 			setBackgroundColor('!bg-background');
 		}
 		return () => {
+			console.log('bye bye');
 			setBackgroundColor(null);
 		};
 	}, [entry, isIntersecting]);
