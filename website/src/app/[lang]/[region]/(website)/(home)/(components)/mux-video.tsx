@@ -16,18 +16,20 @@ const MuxVideoComponent = () => {
 	const [playing, setPlaying] = useState(false);
 	const [showCaptions, setShowCaptions] = useState(true);
 	const [showControls, setShowControls] = useState(true);
-	const { entry, isIntersecting, ref } = useIntersectionObserver();
+	const { entry, isIntersecting, ref } = useIntersectionObserver({ initialIsIntersecting: true, threshold: 0.5 });
 	const { setBackgroundColor } = useNavbarBackgroundColor();
 
 	useEffect(() => {
-		console.log(entry);
+		console.log(isIntersecting, entry?.boundingClientRect.top, entry?.boundingClientRect.bottom);
 		if (!entry) return;
-		if (isIntersecting) {
-			setPlaying(true);
-			setBackgroundColor(null);
-		} else {
+
+		if (!isIntersecting && entry.boundingClientRect.top < 0) {
+			console.log('updating background color');
 			setPlaying(false);
 			setBackgroundColor('!bg-background');
+		} else {
+			setPlaying(true);
+			setBackgroundColor(null);
 		}
 		return () => {
 			console.log('bye bye');

@@ -19,7 +19,7 @@ type DrawCardProps = {
 	};
 };
 
-export function DrawCard({ lang, draw, translations }: DrawCardProps) {
+export function DrawCard({ draw, translations }: DrawCardProps) {
 	return (
 		<Collapsible>
 			<CollapsibleTrigger asChild>
