@@ -27,7 +27,7 @@ const addMissingAmountChfFunction = onCall(async ({ auth }) => {
 	await paymentsManager.batchAddPayments();
 });
 
-const batchImportStripeChargesFunction = onCall(async ({ auth }) => {
+const batchImportStripeChargesFunction = onCall({ memory: '2GiB', timeoutSeconds: 3600 }, async ({ auth }) => {
 	const firestoreAdmin = new FirestoreAdmin();
 	await firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
 

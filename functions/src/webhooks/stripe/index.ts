@@ -53,7 +53,11 @@ export default onRequest(async (request, response) => {
 				logger.info(`Charge event ${event.type} handled for charge ${charge.id}.`);
 				if (contributionRef) {
 					logger.info(`Created contribution ${contributionRef.id}. Adding contributor to newsletter.`);
-					await addContributorToNewsletter(contributionRef);
+					try {
+						await addContributorToNewsletter(contributionRef);
+					} catch (error) {
+						logger.error(`Failed to add contributor to newsletter: ${error}`);
+					}
 				}
 				break;
 			}
