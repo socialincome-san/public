@@ -42,6 +42,7 @@ export function DrawCard({ lang, draw, translations }: DrawCardProps) {
 									<Link
 										href={`https://api.drand.sh/52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971/public/${draw.drandRound}`}
 										target="_blank"
+										rel="noopener noreferrer"
 										className="underline"
 									>
 										{translations.confirmDrand}
@@ -57,6 +58,7 @@ export function DrawCard({ lang, draw, translations }: DrawCardProps) {
 									<Link
 										href={`https://github.com/socialincome-san/public/blob/main/recipients_selection/lists/${draw.filename}`}
 										target="_blank"
+										rel="noopener noreferrer"
 										className="underline"
 									>
 										{translations.confirmGithub}
