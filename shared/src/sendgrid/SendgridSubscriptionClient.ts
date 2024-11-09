@@ -44,8 +44,8 @@ export class SendgridSubscriptionClient extends Client {
 			const isSuppressed = await this.isSuppressed(email);
 			return { ...contact, status: isSuppressed ? 'unsubscribed' : 'subscribed' } as SendgridContactType;
 		} catch (e: any) {
-			if (e.code === 404) return null;
-			throw e;
+			if (e.code !== 404) console.error('Unable to get contact', e);
+			return null;
 		}
 	};
 
