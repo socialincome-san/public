@@ -147,7 +147,11 @@ export function SelectionProcess({ lang }: DefaultParams) {
 							</Typography>
 							<Typography className="mb-4 text-xl">{translator?.t('section-3.selection-2-desc')}</Typography>
 							<Button variant="link" className="text-md">
-								<a href="https://api.drand.sh/v2/beacons/quicknet/rounds/latest" target="_blank" rel="noopener noreferrer">
+								<a
+									href="https://api.drand.sh/v2/beacons/quicknet/rounds/latest"
+									target="_blank"
+									rel="noopener noreferrer"
+								>
 									<Typography className="mb-6">{translator?.t('section-3.selection-2-annex')}</Typography>
 								</a>
 							</Button>
