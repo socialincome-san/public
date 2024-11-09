@@ -2,7 +2,7 @@ name: "Website: 🐞 Bug Report"
 description: Create a report to help us improve the website
 title: "[Web]: <title>"
 labels: ["website"]
-type: 'bug'
+type: "bug"
 body:
   - type: markdown
     attributes:

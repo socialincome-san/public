@@ -2,7 +2,7 @@ name: "Mobile App: 🐞 Bug Report"
 description: Create a report to help us improve the mobile app
 title: "[Mobile]: <title>"
 labels: ["mobile"]
-type: 'bug'
+type: "bug"
 body:
   - type: markdown
     attributes:
