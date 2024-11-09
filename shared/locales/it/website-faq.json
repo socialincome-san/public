@@ -165,11 +165,35 @@
 			},
 			{
 				"question": "Cosa avviene durante il processo di selezione casuale?",
-				"answer": "Utilizziamo il numero casuale fornito da drand, che è accessibile pubblicamente, per selezionare un certo numero di individui dalla nostra lista. Ecco come funziona: prima organizziamo la lista anonimizzata dei destinatari. Poi, utilizzando il numero casuale fornito da drand, lo convertiamo in una posizione nella lista attraverso una <a href='https://en.wikipedia.org/wiki/Key_derivation_function' target='_blank' class='underline'>key derivation function</a>. Per coloro interessati ai dettagli tecnici, la funzione e i processi associati sono documentati nel nostro <a href='https://github.com/drand/draw-action' target='_blank' class='underline'>archivio su GitHub</a>."
+				"answer": "Utilizziamo il numero casuale fornito da drand, che è accessibile pubblicamente, per selezionare un certo numero di individui dalla nostra lista. Ecco come funziona: prima organizziamo la lista anonimizzata dei destinatari. Poi, utilizzando il numero casuale fornito da drand, lo convertiamo in una posizione nella lista attraverso una derivazione di una chiave crittografica. Per coloro interessati ai dettagli tecnici, la funzione e i processi associati sono documentati nel nostro repository su GitHub.",
+				"links": [
+					{
+						"title": "Repository GitHub",
+						"href": "https://github.com/socialincome-san/public/tree/main/recipients_selection"
+					},
+					{
+						"title": "Derivazione di una chiave crittografica",
+						"href": "https://it.wikipedia.org/wiki/Derivazione_di_una_chiave_crittografica"
+					}
+				]
 			},
 			{
 				"question": "Cos'è drand e chi c'è dietro?",
-				"answer": "Il progetto drand genera numeri casuali affidabili, utili per creare selezioni casuali e verificabili. Avviato nel 2017 presso l'EPFL da Nicolas Gailly, drand ha ricevuto il supporto di Philipp Jovanovic ed è stato guidato dal professor Bryan Ford.<br></br> Ora è gestito in maniera indipendente e mantiene una rete chiamata <a href='https://www.cloudflare.com/leagueofentropy/' target='_blank' class='underline'>League of Entropy</a> con EPFL, UCL, Cloudflare, Kudelski Security, l'Università del Cile e Protocol Labs. Attualmente, il progetto open source è gestito dal CEO, CSO e CTO di Randamu: <a href='https://www.linkedin.com/in/erick-watson/' target='_blank' class='underline'>Erick Watson</a>, <a href='https://www.linkedin.com/in/anomalroil/' target='_blank' class='underline'>Yolan Romailler</a>, e <a href='https://www.linkedin.com/in/patrickmcclurg/' target='_blank' class='underline'>Patrick McClurg</a>."
+				"answer": "Il progetto drand genera numeri casuali affidabili, utili per creare selezioni casuali e verificabili. Avviato nel 2017 presso l'EPFL da Nicolas Gailly, drand ha ricevuto il supporto di Philipp Jovanovic ed è stato guidato dal professor Bryan Ford. Ora è gestito in maniera indipendente e mantiene una rete chiamata League of Entropy con EPFL, UCL, Cloudflare, Kudelski Security, l'Università del Cile e Protocol Labs. Attualmente, il progetto open source è gestito dal Erick Watson, Yolan Romailler, e Patrick McClurg di Randamu.",
+				"links": [
+					{
+						"title": "League of Entropy",
+						"href": "https://www.cloudflare.com/leagueofentropy/"
+					},
+					{
+						"title": "Randamu",
+						"href": "https://randa.mu"
+					},
+					{
+						"title": "Drand",
+						"href": "https://drand.love"
+					}
+				]
 			}
 		]
 	},
