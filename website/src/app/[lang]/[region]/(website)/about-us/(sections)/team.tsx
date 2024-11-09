@@ -33,6 +33,10 @@ import simonImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon.
 import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simone.jpeg';
 import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
 import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
+import gavriilImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/gavriil-tzortzakis.jpg';
+import mathildeImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mathilde-dumont.jpg';
+import patrickImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/patrick-mcclurg.jpeg';
+
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, FontSize, Typography } from '@socialincome/ui';
@@ -83,6 +87,9 @@ const groups: Group[] = [
 			{ name: 'Françoise Légeret', role: 'translations', image: francoiseImage },
 			{ name: 'Karin Berg', role: 'app-development', image: karinImage },
 			{ name: 'Marc Werner', role: 'research', image: marcImage },
+			{ name: 'Mathilde Dumond', role: 'software-development', image: mathildeImage },
+			{ name: 'Gavriil Tzortzakis', role: 'software-development', image: gavriilImage },
+			{ name: 'Patrick McClurg', role: 'software-development', image: patrickImage },
 		],
 	},
 	{
