@@ -36,7 +36,7 @@ function Box({ active, number, title, subtitle, onClick }: BoxProps) {
 			>
 				{number}
 			</div>
-			<div>
+			<div className="text-left">
 				<Typography
 					weight="medium"
 					size="xl"
