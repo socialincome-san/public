@@ -7,9 +7,10 @@ export const useNavbarBackgroundColor = () => {
 	const queryClient = useQueryClient();
 
 	const { data: backgroundColor } = useQuery<string | null>({
-		enabled: false,
 		queryKey: ['navbar/background-color'],
 		initialData: null,
+		// Optional: Disable automatic refetching since this is just state
+		staleTime: Infinity,
 	});
 	const setBackgroundColor = (color: string | null) => queryClient.setQueryData(['navbar/background-color'], color);
 
