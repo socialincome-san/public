@@ -8,6 +8,7 @@ import aurelieImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/aure
 import carlosImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/carlos.jpeg';
 import flavienImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/flavien.jpeg';
 import francoiseImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/francoise.jpg';
+import gavriilImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/gavriil-tzortzakis.jpg';
 import juanImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/juan.jpeg';
 import juliaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/julia.jpeg';
 import kabeloImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kabelo.jpeg';
@@ -19,9 +20,11 @@ import mabelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mabel.
 import marcImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marc-werner.jpg';
 import mariatuImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mariatu.jpg';
 import marionImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marion.jpeg';
+import mathildeImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mathilde-dumont.jpg';
 import matthewImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/matthew.jpeg';
 import michaelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/michael.jpeg';
 import mikolajImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mikolaj.jpeg';
+import patrickImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/patrick-mcclurg.jpeg';
 import patrikImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/patrik.jpeg';
 import pranavImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/pranav.jpg';
 import reneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/rene.jpeg';
@@ -33,9 +36,6 @@ import simonImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon.
 import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simone.jpeg';
 import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
 import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
-import gavriilImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/gavriil-tzortzakis.jpg';
-import mathildeImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mathilde-dumont.jpg';
-import patrickImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/patrick-mcclurg.jpeg';
 
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
