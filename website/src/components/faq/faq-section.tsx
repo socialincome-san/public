@@ -11,16 +11,18 @@ export type FaqQuestion = {
 };
 
 type FAQSectionProps = {
-	title: string;
+	title?: string;
 	questions: FaqQuestion[];
 };
 
 export function FAQSection({ title, questions }: FAQSectionProps) {
 	return (
 		<div className="flex flex-col space-y-8">
-			<Typography size="2xl" weight="medium" className="mx-auto">
-				{title}
-			</Typography>
+			{title && (
+				<Typography size="2xl" weight="medium" className="mx-auto">
+					{title}
+				</Typography>
+			)}
 
 			<Accordion type="single" collapsible className="w-full">
 				{questions.map((question, index) => (

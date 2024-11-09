@@ -5,8 +5,8 @@ import { getFlagComponentByCurrency } from '@/components/country-flags';
 import { DonateIcon } from '@/components/logos/donate-icon';
 import { SIIcon } from '@/components/logos/si-icon';
 import { SILogo } from '@/components/logos/si-logo';
-import { useNavbarBackgroundColor } from '@/components/navbar/useNavbarBackgroundColor';
 import { useI18n } from '@/components/providers/context-providers';
+import { useGlobalStateProvider } from '@/components/providers/global-state-provider';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { Bars3Icon, CheckIcon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Typography } from '@socialincome/ui';
@@ -378,7 +378,8 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 };
 
 export function NavbarClient(props: NavbarProps) {
-	const { backgroundColor } = useNavbarBackgroundColor();
+	const { backgroundColor } = useGlobalStateProvider();
+	console.log('nav background color', backgroundColor);
 
 	return (
 		<nav className={twMerge('theme-blue group/navbar fixed inset-x-0 top-0 z-20 flex flex-col', backgroundColor)}>

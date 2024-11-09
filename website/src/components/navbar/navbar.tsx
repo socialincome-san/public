@@ -3,7 +3,7 @@ import { NavbarClient } from '@/components/navbar/navbar-client';
 import { mainWebsiteLanguages, websiteCurrencies, websiteRegions } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 
-export default async function Navbar({ lang, region }: DefaultParams) {
+async function Navbar({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['common', 'website-common', 'website-me'],
@@ -88,3 +88,5 @@ export default async function Navbar({ lang, region }: DefaultParams) {
 		/>
 	);
 }
+
+export default Navbar;

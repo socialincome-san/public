@@ -20,8 +20,8 @@ const buttonVariants = cva(
 				destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive-muted font-medium',
 				outline: 'border border-primary bg-background hover:bg-muted font-medium',
 				secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary-muted font-medium',
-				ghost: 'hover:bg-muted font-normal',
-				link: 'text-primary underline-offset-4 hover:underline p-0 font-normal',
+				ghost: 'font-normal',
+				link: 'text-foreground underline-offset-4 hover:underline p-0 font-normal',
 			},
 		},
 		defaultVariants: {

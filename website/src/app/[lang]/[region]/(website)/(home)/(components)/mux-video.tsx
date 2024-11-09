@@ -1,6 +1,6 @@
 'use client';
 
-import { useNavbarBackgroundColor } from '@/components/navbar/useNavbarBackgroundColor';
+import { useGlobalStateProvider } from '@/components/providers/global-state-provider';
 import { PauseIcon, PlayIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/24/solid';
 import MuxVideo from '@mux/mux-video-react';
 import { Button } from '@socialincome/ui';
@@ -16,21 +16,22 @@ const MuxVideoComponent = () => {
 	const [playing, setPlaying] = useState(false);
 	const [showCaptions, setShowCaptions] = useState(true);
 	const [showControls, setShowControls] = useState(true);
-	const { isIntersecting, ref } = useIntersectionObserver({ threshold: 0.5 });
-	const { setBackgroundColor } = useNavbarBackgroundColor();
+	const { entry, isIntersecting, ref } = useIntersectionObserver({ initialIsIntersecting: true, threshold: 0.5 });
+	const { setBackgroundColor } = useGlobalStateProvider();
 
 	useEffect(() => {
-		if (isIntersecting) {
-			setPlaying(true);
-			setBackgroundColor('!bg-transparent');
-		} else {
+		if (!entry) return;
+		if (!isIntersecting && entry.boundingClientRect.top < 0) {
 			setPlaying(false);
 			setBackgroundColor('!bg-background');
+		} else {
+			setPlaying(true);
+			setBackgroundColor(null);
 		}
 		return () => {
 			setBackgroundColor(null);
 		};
-	}, [isIntersecting]);
+	}, [entry, isIntersecting]);
 
 	useEffect(() => {
 		if (playing) {
@@ -40,10 +41,13 @@ const MuxVideoComponent = () => {
 		}
 	}, [playing]);
 
-	useEventListener('mousemove', () => {
-		setShowCaptions(false);
+	const handleShowControls = () => {
 		setShowControls(true);
-	});
+		setShowCaptions(false);
+	};
+
+	useEventListener('mousemove', handleShowControls);
+	useEventListener('scroll', handleShowControls);
 
 	useEffect(() => {
 		let id;
@@ -67,7 +71,8 @@ const MuxVideoComponent = () => {
 				ref={videoElementRef}
 				className="h-full w-full object-cover"
 				playbackId="IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE"
-				poster="https://image.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/thumbnail.jpg?time=0"
+				poster="https://image.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/thumbnail.jpg?time=2"
+				startTime={2}
 				loop
 				muted={muted}
 				autoPlay={playing}

@@ -2,6 +2,8 @@
 	"metadata": {
 		"title": "Questions fréquentes | Social Income"
 	},
+	"title": "FAQ",
+	"title-long": "Questions fréquentes",
 	"fighting-poverty": {
 		"title": "La lutte contre la pauvreté",
 		"questions": [
@@ -141,6 +143,55 @@
 					{
 						"title": "Idealist",
 						"href": "https://www.idealist.org/en/nonprofit/41a885fa176b4793a029f131834fd48a-social-income-zurich"
+					}
+				]
+			}
+		]
+	},
+	"selection": {
+		"title": "Sélection des bénéficiaires",
+		"questions": [
+			{
+				"question": "Pourquoi choisissons-nous au hasard dans une liste de bénéficiaires potentiels?",
+				"answer": "L'utilisation de cette méthode de sélection aléatoire répond à plusieurs objectifs. Tout d'abord, elle permet d'éviter les biais dans la sélection des bénéficiaires, en garantissant que les parents ou les connaissances des personnes impliquées dans le processus ne bénéficient pas d'un traitement préférentiel. Deuxièmement, elle vise à éviter les tensions entre les bénéficiaires et les non-bénéficiaires, ainsi que tout conflit potentiel entre les bénéficiaires et notre organisation. Enfin, nous nous efforçons d'intégrer la technologie lorsque cela est possible et bénéfique pour le processus."
+			},
+			{
+				"question": "Qui peut influencer la sélection?",
+				"answer": "En utilisant une valeur aléatoire imprévisible fournie par drand, définie pour être émise dans le futur, il est impossible à quiconque d'influencer les résultats du processus de sélection. Ce caractère aléatoire intrinsèque peut être utilisé pour confirmer l'intégrité de la sélection. Pour être éligible au Social Income, une personne doit d'abord figurer sur une liste fournie par une ONG. Cette condition préliminaire est conforme à notre principe fondamental : veiller à ce que Social Income parvienne à ceux qui en ont le plus besoin."
+			},
+			{
+				"question": "Comment éviter les biais et les tensions?",
+				"answer": "Afin de ne pas privilégier par inadvertance un groupe ethnique, un genre ou une catégorie professionnelle, nous collaborons avec plusieurs ONG aux missions variées. Conformément à notre principe \"ne pas nuire\", nous nous efforçons de prévenir les tensions entre les bénéficiaires, les non-bénéficiaires, les communautés et les ONG. Notre sélection aléatoire joue un rôle essentiel à cet égard. Elle garantit que les proches ou les connaissances des personnes impliquées dans le processus ne font pas l'objet d'un traitement de faveur, ce qui pourrait entraîner des conflits."
+			},
+			{
+				"question": "Comment se déroule le processus de sélection?",
+				"answer": "Nous utilisons le nombre aléatoire fourni par drand, publiquement accessible, pour choisir un certain nombre de personnes dans notre liste. La procédure est la suivante : nous chiffrons d'abord la liste des bénéficiaires. Puis nous utilisons l'élément aléatoire de drand et nous le convertissons en une position sur la liste au moyen d'une clé de dérivation. Pour les personnes intéressées par les détails techniques, la clé et les processus inhérents sont décrits dans notre dépôt GitHub.",
+				"links": [
+					{
+						"title": "Notre dépôt GitHub",
+						"href": "https://github.com/socialincome-san/public/tree/main/recipients_selection"
+					},
+					{
+						"title": "Fonction de dérivation de clé",
+						"href": "https://fr.wikipedia.org/wiki/Fonction_de_d%C3%A9rivation_de_cl%C3%A9"
+					}
+				]
+			},
+			{
+				"question": "Qu'est-ce que drand et qui est derrière?",
+				"answer": "Le projet drand génère des nombres aléatoires auxquels tout le monde peut se fier. Il peut être utilisé pour créer des ébauches véritablement aléatoires et vérifiables. Initié en 2017 à l'EPFL par Nicolas Gailly, drand a reçu le soutien de Philipp Jovanovic et a été encadré par Bryan Ford. Depuis lors, il est géré de manière indépendante et entretient un réseau appelé League of Entropy avec l'EPFL, l'UCL, Cloudflare, Kudelski Security, l'Université du Chili et Protocol Labs. Les principaux responsables actuels du projet open source sont Erick Watson, Yolan Romailler et Patrick McClurg de Randamu.",
+				"links": [
+					{
+						"title": "League of Entropy",
+						"href": "https://www.cloudflare.com/leagueofentropy/"
+					},
+					{
+						"title": "Randamu",
+						"href": "https://randa.mu"
+					},
+					{
+						"title": "Drand",
+						"href": "https://drand.love"
 					}
 				]
 			}
