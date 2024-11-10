@@ -2,12 +2,14 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useApi } from '@/hooks/useApi';
+import { SpinnerIcon } from '@/components/logos/spinner-icon';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NewsletterSubscriptionData } from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@socialincome/ui';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
+import { useState } from 'react';
 
 type PersonalInfoFormProps = {
 	translations: {
@@ -21,6 +23,7 @@ type PersonalInfoFormProps = {
 
 export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormProps) {
 	const api = useApi();
+	const [isSubmitting, setIsSubmitting] = useState(false); 
 
 	const formSchema = z.object({
 		firstname: z.string(),
@@ -37,19 +40,22 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 	});
 
 	const onSubmit = async (values: FormSchema) => {
+		setIsSubmitting(true);
 		const data: NewsletterSubscriptionData = {
 			firstname: values.firstname,
 			email: values.email,
-			language: lang === 'de' ? 'de' : 'en',
+			language: lang === 'de' ? 'de' : lang === 'fr' ? 'fr' : 'en',
 			status: 'subscribed',
 		};
 
 		api.post('/api/newsletter/subscription/public', data).then((response) => {
 			if (response.status === 200) {
 				toast.success(translations.toastMessage);
+				form.reset();
 			} else {
 				toast.error(translations.toastErrorMessage + '(' + response.statusText + ')');
 			}
+			setIsSubmitting(false);
 		});
 	};
 
@@ -82,15 +88,21 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 						</FormItem>
 					)}
 				/>
-				<Button
+				{isSubmitting ? (
+					<div key="spinner" className="flex justify-center mt-4">
+						<SpinnerIcon />
+					</div>
+				) : (
+					<Button
+					key="button"
 					type="submit"
 					size="lg"
-					showLoadingSpinner={form.formState.isSubmitting}
 					color="accent"
 					className="mt-4 rounded-full"
 				>
 					{translations.submitButton}
 				</Button>
+				)}
 			</form>
 		</Form>
 	);
