@@ -4,8 +4,6 @@ import { onRequest } from 'firebase-functions/v2/https';
 import Stripe from 'stripe';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
 import {
-	NEWSLETTER_LIST_ID,
-	NEWSLETTER_SUPPRESSION_LIST_ID,
 	SendgridSubscriptionClient,
 } from '../../../../shared/src/sendgrid/SendgridSubscriptionClient';
 import { StripeEventHandler } from '../../../../shared/src/stripe/StripeEventHandler';
@@ -17,12 +15,12 @@ import { STRIPE_API_READ_KEY, STRIPE_WEBHOOK_SECRET } from '../../config';
 const addContributorToNewsletter = async (contributionRef: DocumentReference<Contribution>) => {
 	const newsletterClient = new SendgridSubscriptionClient({
 		apiKey: process.env.SENDGRID_API_KEY!,
-		listId: NEWSLETTER_LIST_ID,
-		suppressionListId: NEWSLETTER_SUPPRESSION_LIST_ID,
+		listId: process.env.SENDGRID_LIST_ID!,
+		suppressionListId: parseInt(process.env.SENDGRID_SUPPRESSION_LIST_ID!),
 	});
 	const user = (await contributionRef.parent.parent?.get()) as DocumentSnapshot<User>;
 	logger.info(
-		`Adding contributor ${user.id} (${user.get('email')}) to Sendgrid newsletter list (${NEWSLETTER_LIST_ID}).`,
+		`Adding contributor ${user.id} (${user.get('email')}) to Sendgrid newsletter list (${process.env.SENDGRID_LIST_ID}).`,
 	);
 	await newsletterClient.upsertSubscription({
 		firstname: user.get('personal.name'),

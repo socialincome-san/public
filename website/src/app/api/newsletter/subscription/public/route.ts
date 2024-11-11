@@ -1,6 +1,4 @@
 import {
-	NEWSLETTER_LIST_ID,
-	NEWSLETTER_SUPPRESSION_LIST_ID,
 	NewsletterSubscriptionData,
 	SendgridSubscriptionClient,
 } from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
@@ -12,8 +10,8 @@ export async function POST(request: CreateNewsletterSubscriptionReqeust) {
 	const data = await request.json();
 	const sendgrid = new SendgridSubscriptionClient({
 		apiKey: process.env.SENDGRID_API_KEY!,
-		listId: NEWSLETTER_LIST_ID,
-		suppressionListId: NEWSLETTER_SUPPRESSION_LIST_ID,
+		listId: process.env.SENDGRID_LIST_ID!,
+		suppressionListId: parseInt(process.env.SENDGRID_SUPPRESSION_LIST_ID!),
 	});
 	try {
 		await sendgrid.upsertSubscription({ ...data, status: 'subscribed' });
