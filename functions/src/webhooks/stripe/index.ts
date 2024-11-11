@@ -3,9 +3,7 @@ import { logger } from 'firebase-functions';
 import { onRequest } from 'firebase-functions/v2/https';
 import Stripe from 'stripe';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
-import {
-	SendgridSubscriptionClient,
-} from '../../../../shared/src/sendgrid/SendgridSubscriptionClient';
+import { SendgridSubscriptionClient } from '../../../../shared/src/sendgrid/SendgridSubscriptionClient';
 import { StripeEventHandler } from '../../../../shared/src/stripe/StripeEventHandler';
 import { Contribution } from '../../../../shared/src/types/contribution';
 import { CountryCode } from '../../../../shared/src/types/country';

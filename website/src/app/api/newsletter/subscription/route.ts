@@ -1,7 +1,5 @@
 import { authorizeRequest, handleApiError } from '@/app/api/auth';
-import {
-	SendgridSubscriptionClient,
-} from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
+import { SendgridSubscriptionClient } from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
 import { NextResponse } from 'next/server';
 
 /**
