@@ -42,26 +42,26 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 	const onSubmit = async (values: FormSchema) => {
 		setIsSubmitting(true);
 		const data: NewsletterSubscriptionData = {
-			firstname: values.firstname,
-			email: values.email,
-			language: lang === 'de' ? 'de' : lang === 'fr' ? 'fr' : 'en',
-			status: 'subscribed',
+		  firstname: values.firstname,
+		  email: values.email,
+		  language: lang === 'de' ? 'de' : lang === 'fr' ? 'fr' : 'en',
+		  status: 'subscribed',
 		};
+	  
 		try {
-			api.post('/api/newsletter/subscription/public', data).then((response) => {
-				if (response.status === 200) {
-					toast.success(translations.toastMessage);
-					form.reset();
-				} else {
-					toast.error(translations.toastErrorMessage + '(' + response.statusText + ')');
-				}
-			});
+		  const response = await api.post('/api/newsletter/subscription/public', data);
+		  if (response.status === 200) {
+			toast.success(translations.toastMessage);
+			form.reset();
+		  } else {
+			toast.error(translations.toastErrorMessage + '(' + response.statusText + ')');
+		  }
 		} catch (error) {
-			toast.error(translations.toastErrorMessage);
+		  toast.error(translations.toastErrorMessage);
 		} finally {
-			setIsSubmitting(false);
+		  setIsSubmitting(false);
 		}
-	};
+	  };
 
 	return (
 		<Form {...form}>
