@@ -36,7 +36,7 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 		defaultValues: {
 			firstname: '',
 			email: '',
-		},
+		}
 	});
 
 	const onSubmit = async (values: FormSchema) => {
@@ -47,16 +47,20 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 			language: lang === 'de' ? 'de' : lang === 'fr' ? 'fr' : 'en',
 			status: 'subscribed',
 		};
-
-		api.post('/api/newsletter/subscription/public', data).then((response) => {
-			if (response.status === 200) {
-				toast.success(translations.toastMessage);
-				form.reset();
-			} else {
-				toast.error(translations.toastErrorMessage + '(' + response.statusText + ')');
-			}
+		try {
+			api.post('/api/newsletter/subscription/public', data).then((response) => {
+				if (response.status === 200) {
+					toast.success(translations.toastMessage);
+					form.reset();
+				} else {
+					toast.error(translations.toastErrorMessage + '(' + response.statusText + ')');
+				}
+			});
+		} catch (error) {
+			toast.error(translations.toastErrorMessage);
+		} finally {
 			setIsSubmitting(false);
-		});
+		}
 	};
 
 	return (
