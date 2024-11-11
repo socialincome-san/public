@@ -1,15 +1,15 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { useApi } from '@/hooks/useApi';
 import { SpinnerIcon } from '@/components/logos/spinner-icon';
+import { useApi } from '@/hooks/useApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NewsletterSubscriptionData } from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@socialincome/ui';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
-import { useState } from 'react';
 
 type PersonalInfoFormProps = {
 	translations: {
@@ -23,7 +23,7 @@ type PersonalInfoFormProps = {
 
 export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormProps) {
 	const api = useApi();
-	const [isSubmitting, setIsSubmitting] = useState(false); 
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const formSchema = z.object({
 		firstname: z.string(),
@@ -93,19 +93,13 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 					)}
 				/>
 				{isSubmitting ? (
-					<div key="spinner" className="flex justify-center mt-4">
+					<div key="spinner" className="mt-4 flex justify-center">
 						<SpinnerIcon />
 					</div>
 				) : (
-					<Button
-					key="button"
-					type="submit"
-					size="lg"
-					color="accent"
-					className="mt-4 rounded-full"
-				>
-					{translations.submitButton}
-				</Button>
+					<Button key="button" type="submit" size="lg" color="accent" className="mt-4 rounded-full">
+						{translations.submitButton}
+					</Button>
 				)}
 			</form>
 		</Form>
