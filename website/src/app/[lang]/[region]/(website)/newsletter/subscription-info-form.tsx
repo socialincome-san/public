@@ -36,7 +36,7 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 		defaultValues: {
 			firstname: '',
 			email: '',
-		}
+		},
 	});
 
 	const onSubmit = async (values: FormSchema) => {
