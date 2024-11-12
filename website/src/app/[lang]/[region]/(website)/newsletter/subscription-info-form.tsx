@@ -44,7 +44,7 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 		const data: NewsletterSubscriptionData = {
 			firstname: values.firstname,
 			email: values.email,
-			language: lang === 'de' ? 'de' : lang === 'fr' ? 'fr' : 'en',
+			language: lang === 'de' ? 'de' : lang === 'fr' ? 'fr' : lang === 'it' ? 'it' : 'en',
 			status: 'subscribed',
 		};
 

@@ -7,7 +7,7 @@ export type NewsletterSubscriptionData = {
 	firstname?: string;
 	lastname?: string;
 	email: string;
-	language: 'de' | 'en' | 'fr';
+	language: 'de' | 'en' | 'fr' | 'it';
 	country?: CountryCode;
 	status?: 'subscribed' | 'unsubscribed';
 	isContributor?: boolean;
