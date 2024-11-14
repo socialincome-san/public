@@ -18,15 +18,18 @@ interface GitHubContributor {
 }
 
 export async function getContributors(): Promise<Contributor[]> {
-	const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/stats/contributors`);
+	const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/stats/contributors`, {
+		headers: {
+			Authorization: `Bearer ${process.env.GITHUB_PAT}`,
+			Accept: 'application/vnd.github+json',
+		},
+	});
 
 	if (!res.ok) {
 		const errorDetails = await res.text();
 		const status = res.status;
-		if (status === 403 && errorDetails.includes('API rate limit exceeded')) {
-			throw new Error(
-				'GitHub API rate limit exceeded. Please try again later or increase rate limit by authenticating.',
-			);
+		if (status === 403) {
+			throw new Error(`GitHub API rate limit exceeded: ${status} - ${errorDetails}.`);
 		} else if (status === 404) {
 			throw new Error(`GitHub repository ${owner}/${repo} not found.`);
 		} else {
@@ -36,10 +39,9 @@ export async function getContributors(): Promise<Contributor[]> {
 
 	const contributors = await res.json();
 
-	// Check if the response is an empty object
 	if (Object.keys(contributors).length === 0) {
 		console.warn('No contributor data available. The API returned an empty object.');
-		return []; // Return an empty array if no data is available
+		return [];
 	}
 
 	if (!Array.isArray(contributors)) {

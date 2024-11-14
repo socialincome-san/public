@@ -1,7 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Avatar, AvatarFallback, AvatarImage, BaseContainer, Typography } from '@socialincome/ui';
-import { getContributors } from '../(components)/contributors';
+import { Avatar, AvatarFallback, AvatarImage, Typography } from '@socialincome/ui';
+import { getContributors } from '../(components)/get-contributors';
 
 type ContributorProp = {
 	name: string;
@@ -10,7 +10,6 @@ type ContributorProp = {
 };
 
 type Metadata = {
-	title: string;
 	heading: string;
 };
 
@@ -40,18 +39,14 @@ export async function OpenSourceContributors({ lang }: DefaultParams) {
 	});
 
 	const metadata: Metadata = translator.t('metadata');
-	const title = metadata.title;
 	const heading = metadata.heading;
 
 	const contributors = await getContributors();
 
 	return (
-		<BaseContainer className="flex flex-col justify-self-start">
+		<section className="flex flex-col justify-self-start">
 			<section className="">
-				<Typography as="h1" size="5xl" weight="bold" className="my-10">
-					{title}
-				</Typography>
-				<Typography as="h2" size="2xl" lineHeight="snug" className="mb-16">
+				<Typography as="h2" size="2xl" lineHeight="snug" className="mb-10">
 					{`${contributors.length} ${heading}`}
 				</Typography>
 			</section>
@@ -65,6 +60,6 @@ export async function OpenSourceContributors({ lang }: DefaultParams) {
 					/>
 				))}
 			</section>
-		</BaseContainer>
+		</section>
 	);
 }

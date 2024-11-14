@@ -2,5 +2,19 @@
 	"metadata": {
 		"title": "Open-Source Insights ",
 		"heading": "Contributors"
+	},
+	"overview": {
+		"forks": {
+			"title": "Total Forks",
+			"time": "last month"
+		},
+		"commits": {
+			"title": "Total Commits",
+			"time": "last month"
+		},
+		"stars": {
+			"title": "Stars on Github",
+			"time": "last month"
+		}
 	}
 }
