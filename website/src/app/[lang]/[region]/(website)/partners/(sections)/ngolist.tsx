@@ -57,6 +57,7 @@ type NgoHoverCardType = {
 	}[][];
 	quote?: QuoteType;
 	quoteAuthor?: string;
+	quotePhoto?: string | null;
 	orgFoundation: string;
 	orgHeadquarter: string;
 	orgWebsite?: string;
@@ -97,6 +98,7 @@ type NgoEntryJSON = {
 	}[][];
 	'org-quote': [];
 	'org-quote-author': string;
+	'org-quote-photo': string;
 	'org-photo': string;
 	'org-website': string;
 	'org-instagram': string;
@@ -150,6 +152,7 @@ export async function NgoList({ lang }: DefaultParams) {
 			orgDescriptionParagraphs: ngoArray[i]['org-description-paragraphs'],
 			quote: ngoArray[i]['org-quote'] ?? null,
 			quoteAuthor: ngoArray[i]['org-quote-author'] ?? null,
+			quotePhoto: ngoArray[i]['org-quote-photo'] ? image_base_path.concat(ngoArray[i]['org-quote-photo']) : null,
 			orgFoundation: ngoArray[i]['org-foundation'],
 			orgHeadquarter: ngoArray[i]['org-headquarter'],
 			orgWebsite: ngoArray[i]['org-website'] ?? null,

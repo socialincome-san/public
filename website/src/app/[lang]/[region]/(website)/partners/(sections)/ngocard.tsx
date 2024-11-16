@@ -70,6 +70,7 @@ type NgoHoverCardType = {
 	}[][];
 	quote?: QuoteType;
 	quoteAuthor?: string;
+	quotePhoto?: string | null;
 	orgFoundation: string;
 	orgHeadquarter: string;
 	orgWebsite?: string;
@@ -325,7 +326,16 @@ export default async function NgoCard({
 										</Typography>
 									))}
 								</div>
-								<div className="my-4">
+								<div className="my-4 flex items-center justify-center space-x-3">
+									{ngoHoverCard.quotePhoto && (
+										<Image
+											src={ngoHoverCard.quotePhoto}
+											alt={ngoHoverCard.quoteAuthor}
+											width="48"
+											height="48"
+											className="my-3 h-auto w-12"
+										/>
+									)}
 									<Typography size="lg">
 										{ngoHoverCard.quoteAuthor}, {orgShortName}
 									</Typography>
