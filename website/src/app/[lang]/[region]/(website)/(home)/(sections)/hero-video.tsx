@@ -14,7 +14,7 @@ export async function HeroVideo({ lang, region }: DefaultParams) {
 		<div className="relative h-[calc(100svh)] w-full">
 			<MuxVideoComponent
 				translations={{
-					subtitles: translator.t<{ text: string }[]>('video-subtitle'),
+					subtitles: translator.t<string>('video-subtitle'),
 				}}
 				lang={lang}
 				region={region}
