@@ -7,10 +7,17 @@ import { Button } from '@socialincome/ui';
 import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { useEventListener, useIntersectionObserver } from 'usehooks-ts';
+import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { DefaultParams } from '@/app/[lang]/[region]';
 
 export const OVERLAY_FADE_OUT_DELAY = 4000;
+type HeroVideoSubtitles = {
+	translations: {
+		subtitles: string;
+	};
+} & DefaultParams;
 
-const MuxVideoComponent = () => {
+const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 	const videoElementRef = useRef<HTMLVideoElement>(null);
 	const [muted, setMuted] = useState(true);
 	const [playing, setPlaying] = useState(false);
@@ -80,8 +87,8 @@ const MuxVideoComponent = () => {
 			>
 				<track
 					kind="captions"
-					src="https://stream.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/text/YZZCqh56kzyMBlwsaPsdlxaFKmlKzNNDKV7oyQb8ECZ4zpXnm500ieA.txt"
-					srcLang="en"
+					src={translations.subtitles}
+					srcLang={lang}
 					label="English"
 					default
 				/>
