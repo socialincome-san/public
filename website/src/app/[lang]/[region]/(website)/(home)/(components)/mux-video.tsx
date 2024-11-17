@@ -1,5 +1,6 @@
 'use client';
 
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { useGlobalStateProvider } from '@/components/providers/global-state-provider';
 import { PauseIcon, PlayIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/24/solid';
 import MuxVideo from '@mux/mux-video-react';
@@ -7,8 +8,6 @@ import { Button } from '@socialincome/ui';
 import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { useEventListener, useIntersectionObserver } from 'usehooks-ts';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { DefaultParams } from '@/app/[lang]/[region]';
 
 export const OVERLAY_FADE_OUT_DELAY = 4000;
 type HeroVideoSubtitles = {
@@ -85,13 +84,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 				autoPlay={playing}
 				playsInline
 			>
-				<track
-					kind="captions"
-					src={translations.subtitles}
-					srcLang={lang}
-					label="English"
-					default
-				/>
+				<track kind="captions" src={translations.subtitles} srcLang={lang} label="English" default />
 				<style>{`
         video::cue {
           background-color: rgba(0, 0, 0, 0.8);
