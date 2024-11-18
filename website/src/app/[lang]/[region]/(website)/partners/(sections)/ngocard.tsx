@@ -32,6 +32,10 @@ type QuoteType = {
 	color: FontColor;
 }[];
 
+type FundRaiserBadgeType = {
+	fundRaiserTranslation: string;
+};
+
 type SdgBadgeType = {
 	hoverCardOrgName: string;
 	sdgNumber: number;
@@ -78,6 +82,10 @@ type NgoHoverCardType = {
 	orgInstagram?: string;
 	orgLinkedIn?: string;
 	orgYoutube?: string;
+	orgFundRaiserText?: {
+		text: string;
+		href?: string;
+	}[];
 };
 
 type NgoCardProps = {
@@ -181,6 +189,23 @@ function SDGBadge({
 		</HoverCard>
 	);
 }
+
+function FundraiserBadge({ fundRaiserTranslation }: FundRaiserBadgeType) {
+	return (
+		<HoverCard>
+			<HoverCardTrigger>
+				<Badge className="bg-accent text-primary hover:bg-accent bg-opacity-50 hover:bg-opacity-100 hover:text-white">
+					<Typography size="sm" weight="normal" className="text-inherit">
+						{fundRaiserTranslation}
+					</Typography>
+				</Badge>
+			</HoverCardTrigger>
+			{/*<HoverCardContent>*/}
+			{/*TODO: Should anything go here?*/}
+			{/*</HoverCardContent>*/}
+		</HoverCard>
+	);
+}
 export default async function NgoCard({
 	orgShortName,
 	orgMission,
@@ -202,6 +227,8 @@ export default async function NgoCard({
 		ngoHoverCard.orgLinkedIn ||
 		ngoHoverCard.orgYoutube
 	);
+
+	const showFundRaiser: boolean = !!ngoHoverCard.orgFundRaiserText;
 
 	return (
 		<Dialog>
@@ -250,6 +277,7 @@ export default async function NgoCard({
 								translatorSdgMission2={translator.t('sdg.sdg' + sdgBadge.sdgNumber.toString() + '-mission-2')}
 							/>
 						))}
+						{showFundRaiser && <FundraiserBadge fundRaiserTranslation={translator.t('ngo-generic.fundraiser')} />}
 					</CardFooter>
 				</Card>
 			</DialogTrigger>
@@ -296,6 +324,26 @@ export default async function NgoCard({
 							</Badge>
 						</div>
 					</div>
+					{showFundRaiser && (
+						<div className="border-primary mb-8 flex items-center justify-start space-x-5 rounded-md border-2 border-opacity-80 py-4 pl-4">
+							<FundraiserBadge fundRaiserTranslation={translator.t('ngo-generic.fundraiser')} />
+							<span>
+								{ngoHoverCard.orgFundRaiserText.map((fragment, index) => {
+									return fragment.href ? (
+										<Link href={fragment.href} key={index}>
+											<Typography as="span" size="md" color="primary">
+												{fragment.text}
+											</Typography>
+										</Link>
+									) : (
+										<Typography as="span" size="md" key={index}>
+											{fragment.text}
+										</Typography>
+									);
+								})}
+							</span>
+						</div>
+					)}
 					{ngoHoverCard.orgDescriptionParagraphs.map((paragraph, index) => {
 						return (
 							<div key={index} className="mb-4">

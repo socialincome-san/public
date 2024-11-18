@@ -65,6 +65,10 @@ type NgoHoverCardType = {
 	orgInstagram?: string;
 	orgLinkedIn?: string;
 	orgYoutube?: string;
+	orgFundRaiserText?: {
+		text: string;
+		href?: string;
+	}[];
 };
 
 type NgoCardProps = {
@@ -105,6 +109,10 @@ type NgoEntryJSON = {
 	'org-facebook': string;
 	'org-linkedin': string;
 	'org-youtube': string;
+	'org-fundraiser-text': {
+		text: string;
+		href?: string;
+	}[];
 };
 
 export async function NgoList({ lang }: DefaultParams) {
@@ -160,6 +168,7 @@ export async function NgoList({ lang }: DefaultParams) {
 			orgInstagram: ngoArray[i]['org-instagram'] ?? null,
 			orgLinkedIn: ngoArray[i]['org-linkedin'] ?? null,
 			orgYoutube: ngoArray[i]['org-youtube'] ?? null,
+			orgFundRaiserText: ngoArray[i]['org-fundraiser-text'] ?? null,
 		};
 
 		const ngoCardProps: NgoCardProps = {

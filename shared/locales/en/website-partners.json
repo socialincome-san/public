@@ -28,7 +28,8 @@
 		"founded": "Founded",
 		"partner-since": "Partner since",
 		"headquarter": "Headquarter",
-		"mission": "Mission"
+		"mission": "Mission",
+		"fundraiser": "Fundraiser"
 	},
 	"ngos": [
 		{
@@ -290,6 +291,15 @@
 						"text": "Through its work, SLAES aims to help survivors rebuild their lives and foster resilience in affected communities."
 					}
 				]
+			],
+			"org-fundraiser-text": [
+				{
+					"text": "SLAES is currently fundraising: "
+				},
+				{
+					"text": "Rebuilding Lives",
+					"href": "https://www.facebook.com/Sierra.Leone.Association.of.Ebola.Survivors/"
+				}
 			],
 			"org-quote": [
 				{
