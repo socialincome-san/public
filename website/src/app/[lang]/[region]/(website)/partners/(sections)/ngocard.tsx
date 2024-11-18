@@ -328,7 +328,7 @@ export default async function NgoCard({
 						<div className="border-primary mb-8 flex items-center justify-start space-x-5 rounded-md border-2 border-opacity-80 py-4 pl-4">
 							<FundraiserBadge fundRaiserTranslation={translator.t('ngo-generic.fundraiser')} />
 							<span>
-								{ngoHoverCard.orgFundRaiserText.map((fragment, index) => {
+								{ngoHoverCard.orgFundRaiserText?.map((fragment, index) => {
 									return fragment.href ? (
 										<Link href={fragment.href} key={index}>
 											<Typography as="span" size="md" color="primary">
