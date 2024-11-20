@@ -1,46 +1,36 @@
-import {
-	FundraiserBadge,
-	RecipientsBadge,
-	SDGBadge,
-} from '@/app/[lang]/[region]/(website)/partners/(components)/PartnerBadges';
-import { NgoCardProps } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
-import {
-	Badge,
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-	HoverCard,
-	HoverCardContent,
-	HoverCardTrigger,
-	Separator,
-	Typography,
-} from '@socialincome/ui';
+'use client';
+//TODO: use-client still async-await, need to figure this out
+import { FundraiserBadge, RecipientsBadge } from '@/app/[lang]/[region]/(website)/partners/(components)/PartnerBadges';
+import { NgoHomeProps } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
+import { Badge, Separator, Typography } from '@socialincome/ui';
 import { SL } from 'country-flag-icons/react/1x1';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default async function NgoCard({
-	orgShortName,
-	orgMission,
-	countryBadge,
-	recipientsBadge,
-	sdgBadges,
+export function PartnerHome({
 	ngoHoverCard,
-	lang,
-}: NgoCardProps) {
-	const translator = await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-common', 'countries', 'website-partners'],
-	});
-
+	recipientsBadge,
+	partnerSinceTranslation,
+	orgMission,
+	countryLongName,
+	badgeRecipientTranslation,
+	badgeRecipientTranslationBy,
+	badgeActiveTranslation,
+	badgeFormerTranslation,
+	badgeSuspendedTranslation,
+	countryBadge,
+	fundRaiserTranslation,
+	orgShortName,
+	missionTranslation,
+	foundedTranslation,
+	headquarterTranslation,
+	moreLinksTranslation,
+	websiteTranslation,
+	facebookTranslation,
+	instagramTranslation,
+	linkedinTranslation,
+	youtubeTranslation,
+}: NgoHomeProps) {
 	const showVisitOnline: boolean = !!(
 		ngoHoverCard.orgInstagram ||
 		ngoHoverCard.orgFacebook ||
@@ -50,60 +40,10 @@ export default async function NgoCard({
 	);
 
 	const showFundRaiser: boolean = !!ngoHoverCard.orgFundRaiserText;
-
 	return (
-		<Dialog>
-			<DialogTrigger className="text-left">
-				<Card className="hover:bg-primary max-w-lg rounded-lg p-6 shadow-none hover:bg-opacity-10">
-					<CardHeader className="p-0">
-						<CardTitle className="flex items-center justify-between">
-							<Typography size="2xl" weight="medium">
-								{orgShortName}
-							</Typography>
-						</CardTitle>
-					</CardHeader>
-					<Separator className="bg-primary mt-4 bg-opacity-30" />
-					<CardContent className="my-4 p-0">
-						<Typography size="lg">{orgMission}</Typography>
-					</CardContent>
-					<CardFooter className="flex-row flex-wrap gap-2 p-0 pt-2">
-						<HoverCard>
-							<HoverCardTrigger>
-								{countryBadge?.countryFlagComponent || <SL className="h-5 w-5 rounded-full" />}
-							</HoverCardTrigger>
-							<HoverCardContent className="inline-flex w-auto items-center">
-								<div className="mr-3">
-									{countryBadge?.countryFlagComponent || <SL className="mr-2 h-5 w-5 rounded-full" />}
-								</div>
-								<Typography size="sm" weight="normal" className="text-inherit">
-									{translator.t(countryBadge?.countryAbbreviation || 'SL')}
-								</Typography>
-							</HoverCardContent>
-						</HoverCard>
-						<RecipientsBadge
-							{...recipientsBadge}
-							translatorBadgeRecipients={translator.t('badges.recipients')}
-							translatorBadgeRecipientsBy={translator.t('badges.recipients-by')}
-							translatorBadgeActive={translator.t('badges.active')}
-							translatorBadgeFormer={translator.t('badges.former')}
-							translatorBadgeSuspended={translator.t('badges.suspended')}
-						/>
-						{sdgBadges?.map((sdgBadge, index) => (
-							<SDGBadge
-								{...sdgBadge}
-								key={index}
-								translatorSdg={translator.t('sdg.sdg')}
-								translatorSdgTitle={translator.t('sdg.sdg' + sdgBadge.sdgNumber.toString() + '-title')}
-								translatorSdgMission1={translator.t('sdg.sdg' + sdgBadge.sdgNumber.toString() + '-mission-1')}
-								translatorSdgMission2={translator.t('sdg.sdg' + sdgBadge.sdgNumber.toString() + '-mission-2')}
-							/>
-						))}
-						{showFundRaiser && <FundraiserBadge fundRaiserTranslation={translator.t('ngo-generic.fundraiser')} />}
-					</CardFooter>
-				</Card>
-			</DialogTrigger>
-			<DialogContent className="bg-background h-[90vh] w-11/12 overflow-y-auto rounded-3xl border-none p-0 sm:min-w-[600px] md:min-w-[750px]">
-				<DialogHeader className="relative">
+		<div className="flex items-center justify-center">
+			<div className="w-3/4">
+				<div className="relative">
 					<Image
 						className="h-auto w-full rounded-t-lg"
 						src={ngoHoverCard.orgImage}
@@ -113,46 +53,46 @@ export default async function NgoCard({
 						unoptimized
 					/>
 					<div className="absolute bottom-0 left-0 h-32 w-full bg-gradient-to-t from-black to-transparent">
-						<DialogTitle className="text-accent absolute bottom-0 left-0 px-8 py-4">
+						<div className="text-accent absolute bottom-0 left-0 px-8 py-4">
 							<Typography size="5xl" weight="medium">
 								{ngoHoverCard.orgLongName}
 							</Typography>
-						</DialogTitle>
+						</div>
 					</div>
-				</DialogHeader>
+				</div>
 				<div className="px-8 pb-10 pt-2">
 					<div className="flex flex-col gap-2 p-0 pb-8 pt-2 sm:flex-row sm:items-center sm:justify-between">
 						<div className="pb-4 text-center sm:order-2 sm:flex-shrink-0 sm:pb-0 sm:text-right">
 							<Typography size="md" weight="normal">
-								{translator.t('ngo-generic.partner-since')} {ngoHoverCard.partnershipStart}
+								{partnerSinceTranslation} {ngoHoverCard.partnershipStart}
 							</Typography>
 						</div>
 						<div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
 							<RecipientsBadge
 								{...recipientsBadge}
 								isInsideHoverCard={true}
-								translatorBadgeRecipients={translator.t('badges.recipients')}
-								translatorBadgeRecipientsBy={translator.t('badges.recipients-by')}
-								translatorBadgeActive={translator.t('badges.active')}
-								translatorBadgeFormer={translator.t('badges.former')}
-								translatorBadgeSuspended={translator.t('badges.suspended')}
+								translatorBadgeRecipients={badgeRecipientTranslation}
+								translatorBadgeRecipientsBy={badgeRecipientTranslationBy}
+								translatorBadgeActive={badgeActiveTranslation}
+								translatorBadgeFormer={badgeFormerTranslation}
+								translatorBadgeSuspended={badgeSuspendedTranslation}
 							/>
 							<Badge className="bg-primary hover:bg-primary text-primary space-x-2 bg-opacity-10 px-4 py-2 hover:bg-opacity-100 hover:text-white">
 								{countryBadge?.countryFlagComponent || <SL className="h-5 w-5 rounded-full" />}
 								<Typography size="md" weight="normal" className="text-inherit">
-									{translator.t(countryBadge?.countryAbbreviation || 'SL')}
+									{countryLongName}
 								</Typography>
 							</Badge>
 						</div>
 					</div>
 					{showFundRaiser && (
 						<div className="border-primary mb-8 flex items-center justify-start space-x-5 rounded-md border-2 border-opacity-80 py-4 pl-4">
-							<FundraiserBadge fundRaiserTranslation={translator.t('ngo-generic.fundraiser')} />
+							<FundraiserBadge fundRaiserTranslation={fundRaiserTranslation} />
 							<span>
 								{ngoHoverCard.orgFundRaiserText?.map((fragment, index) => {
 									return fragment.href ? (
 										<Link href={fragment.href} key={index}>
-											<Typography as="span" size="md" color="primary" className="underline">
+											<Typography as="span" size="md" color="primary">
 												{fragment.text}
 											</Typography>
 										</Link>
@@ -217,7 +157,7 @@ export default async function NgoCard({
 					)}
 					<div className="grid grid-cols-3 gap-4">
 						<div className="col-span-1">
-							<Typography size="lg">{translator.t('ngo-generic.mission')}</Typography>
+							<Typography size="lg">{missionTranslation}</Typography>
 						</div>
 						<div className="col-span-2">
 							<Typography size="lg">{orgMission}</Typography>
@@ -225,7 +165,7 @@ export default async function NgoCard({
 					</div>
 					<div className="grid grid-cols-3 gap-4">
 						<div className="col-span-1">
-							<Typography size="lg">{translator.t('ngo-generic.founded')}</Typography>
+							<Typography size="lg">{foundedTranslation}</Typography>
 						</div>
 						<div className="col-span-2">
 							<Typography size="lg">{ngoHoverCard.orgFoundation}</Typography>
@@ -233,7 +173,7 @@ export default async function NgoCard({
 					</div>
 					<div className="grid grid-cols-3 gap-4">
 						<div className="col-span-1">
-							<Typography size="lg">{translator.t('ngo-generic.headquarter')}</Typography>
+							<Typography size="lg">{headquarterTranslation}</Typography>
 						</div>
 						<div className="col-span-2">
 							<Typography size="lg">{ngoHoverCard.orgHeadquarter}</Typography>
@@ -242,39 +182,39 @@ export default async function NgoCard({
 					{showVisitOnline && (
 						<div className="grid grid-cols-3 gap-4">
 							<div className="col-span-1">
-								<Typography size="lg">{translator.t('links.more')}</Typography>
+								<Typography size="lg">{moreLinksTranslation}</Typography>
 							</div>
 							<div className="col-span-2">
 								{ngoHoverCard.orgWebsite && (
 									<Link href={ngoHoverCard.orgWebsite} className="ml-auto inline-block pr-2 text-lg underline">
-										{translator.t('links.website')}
+										{websiteTranslation}
 									</Link>
 								)}
 								{ngoHoverCard.orgFacebook && (
 									<Link href={ngoHoverCard.orgFacebook} className="ml-auto inline-block pr-2 text-lg underline">
-										{translator.t('links.facebook')}
+										{facebookTranslation}
 									</Link>
 								)}
 								{ngoHoverCard.orgInstagram && (
 									<Link href={ngoHoverCard.orgInstagram} className="ml-auto inline-block pr-2 text-lg underline">
-										{translator.t('links.instagram')}
+										{instagramTranslation}
 									</Link>
 								)}
 								{ngoHoverCard.orgLinkedIn && (
 									<Link href={ngoHoverCard.orgLinkedIn} className="ml-auto inline-block pr-2 text-lg underline">
-										{translator.t('links.linkedin')}
+										{linkedinTranslation}
 									</Link>
 								)}
 								{ngoHoverCard.orgYoutube && (
 									<Link href={ngoHoverCard.orgYoutube} className="ml-auto inline-block pr-2 text-lg underline">
-										{translator.t('links.youtube')}
+										{youtubeTranslation}
 									</Link>
 								)}
 							</div>
 						</div>
 					)}
 				</div>
-			</DialogContent>
-		</Dialog>
+			</div>
+		</div>
 	);
 }
