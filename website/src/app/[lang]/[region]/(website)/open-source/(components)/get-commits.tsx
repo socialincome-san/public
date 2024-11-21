@@ -23,11 +23,15 @@ export async function getCommits() {
 
 	// Fetch recent commits from the last 30 days
 	const commitUrl = `https://api.github.com/repos/${owner}/${repo}/commits?since=${startDateISO}&until=${endDate}`;
+	const headers: Record<string, string> = {
+		Accept: 'application/vnd.github+json',
+	};
+	// Conditionally add the Authorization header if GITHUB_PAT is available
+	if (process.env.GITHUB_PAT) {
+		headers['Authorization'] = `Bearer ${process.env.GITHUB_PAT}`;
+	}
 	const res = await fetch(commitUrl, {
-		headers: {
-			Authorization: `Bearer ${process.env.GITHUB_PAT}`,
-			Accept: 'application/vnd.github+json',
-		},
+		headers,
 	});
 
 	if (!res.ok) {
@@ -49,10 +53,7 @@ export async function getCommits() {
 	// Fetch total commit count
 	const totalCommitsUrl = `https://api.github.com/repos/${owner}/${repo}/commits?per_page=1`;
 	const totalCommitsRes = await fetch(totalCommitsUrl, {
-		headers: {
-			Authorization: `Bearer ${process.env.GITHUB_PAT}`,
-			Accept: 'application/vnd.github+json',
-		},
+		headers,
 	});
 
 	if (!totalCommitsRes.ok) {

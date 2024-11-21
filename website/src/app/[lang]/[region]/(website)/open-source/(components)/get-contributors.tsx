@@ -18,11 +18,15 @@ interface GitHubContributor {
 }
 
 export async function getContributors(): Promise<Contributor[]> {
+	const headers: Record<string, string> = {
+		Accept: 'application/vnd.github+json',
+	};
+	// Conditionally add the Authorization header if GITHUB_PAT is available
+	if (process.env.GITHUB_PAT) {
+		headers['Authorization'] = `Bearer ${process.env.GITHUB_PAT}`;
+	}
 	const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/stats/contributors`, {
-		headers: {
-			Authorization: `Bearer ${process.env.GITHUB_PAT}`,
-			Accept: 'application/vnd.github+json',
-		},
+		headers,
 	});
 
 	if (!res.ok) {

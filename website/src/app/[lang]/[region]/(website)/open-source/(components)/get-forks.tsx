@@ -8,11 +8,15 @@ interface GitHubFork {
 
 export async function getForkCount(): Promise<{ totalForks: number; newForks: number }> {
 	const repoUrl = `https://api.github.com/repos/${owner}/${repo}`;
+	const headers: Record<string, string> = {
+		Accept: 'application/vnd.github+json',
+	};
+	// Conditionally add the Authorization header if GITHUB_PAT is available
+	if (process.env.GITHUB_PAT) {
+		headers['Authorization'] = `Bearer ${process.env.GITHUB_PAT}`;
+	}
 	const repoRes = await fetch(repoUrl, {
-		headers: {
-			Authorization: `Bearer ${process.env.GITHUB_PAT}`,
-			Accept: 'application/vnd.github+json',
-		},
+		headers,
 	});
 
 	if (!repoRes.ok) {
@@ -43,10 +47,7 @@ export async function getForkCount(): Promise<{ totalForks: number; newForks: nu
 
 	while (hasMore) {
 		const pagedRes = await fetch(`${forksUrl}&page=${page}`, {
-			headers: {
-				Authorization: `Bearer ${process.env.GITHUB_PAT}`,
-				Accept: 'application/vnd.github+json',
-			},
+			headers,
 		});
 
 		if (!pagedRes.ok) {

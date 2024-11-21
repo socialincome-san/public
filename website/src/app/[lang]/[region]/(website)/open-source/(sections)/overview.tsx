@@ -50,7 +50,7 @@ export async function Overview({ lang }: DefaultParams) {
 	const { forks, commits, stars }: Overview = translator.t('overview');
 
 	return (
-		<section className="flex w-full flex-wrap gap-3 space-x-6">
+		<section className="flex w-full flex-col flex-wrap gap-6 md:flex-row">
 			<OverviewCard
 				title={forks.title}
 				total={totalForks}

@@ -11,11 +11,15 @@ interface GitHubStar {
 
 export async function getStarCount(): Promise<{ totalStars: number; newStars: number }> {
 	const repoUrl = `https://api.github.com/repos/${owner}/${repo}`;
+	const headers: Record<string, string> = {
+		Accept: 'application/vnd.github.star+json',
+	};
+	// Conditionally add the Authorization header if GITHUB_PAT is available
+	if (process.env.GITHUB_PAT) {
+		headers['Authorization'] = `Bearer ${process.env.GITHUB_PAT}`;
+	}
 	const repoRes = await fetch(repoUrl, {
-		headers: {
-			Authorization: `Bearer ${process.env.GITHUB_PAT}`,
-			Accept: 'application/vnd.github+json',
-		},
+		headers,
 	});
 
 	if (!repoRes.ok) {
@@ -46,10 +50,7 @@ export async function getStarCount(): Promise<{ totalStars: number; newStars: nu
 
 	while (hasMore) {
 		const pagedRes = await fetch(`${starUrl}&page=${page}`, {
-			headers: {
-				Authorization: `Bearer ${process.env.GITHUB_PAT}`,
-				Accept: 'application/vnd.github.star+json',
-			},
+			headers,
 		});
 
 		if (!pagedRes.ok) {
@@ -68,6 +69,8 @@ export async function getStarCount(): Promise<{ totalStars: number; newStars: nu
 		}
 
 		const stars: GitHubStar[] = await pagedRes.json();
+		console.log(stars[stars.length - 1]);
+
 
 		// Count new stars within the last 30 days
 		for (const star of stars) {
