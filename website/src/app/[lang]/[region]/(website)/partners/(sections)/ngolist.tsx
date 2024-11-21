@@ -77,6 +77,7 @@ export async function NgoList({ lang }: DefaultParams) {
 			orgLinkedIn: ngoArray[i]['org-linkedin'] ?? null,
 			orgYoutube: ngoArray[i]['org-youtube'] ?? null,
 			orgFundRaiserText: ngoArray[i]['org-fundraiser-text'] ?? null,
+			orgPermalink: ngoArray[i]['org-permalink'],
 		};
 
 		const ngoCardProps: NgoCardProps = {

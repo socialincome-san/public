@@ -29,7 +29,8 @@
 		"partner-since": "Partner since",
 		"headquarter": "Headquarter",
 		"mission": "Mission",
-		"fundraiser": "Fundraiser"
+		"fundraiser": "Fundraiser",
+		"permalink": "Permalink"
 	},
 	"ngos": [
 		{
@@ -88,7 +89,8 @@
 			"org-quote-photo": "avatar.jpg",
 			"org-website": "https://www.aurorafoundation.is/en",
 			"org-instagram": "https://www.instagram.com/aurorafoundation_official/?hl=en",
-			"org-facebook": "https://www.facebook.com/aurorafoundationofficial/"
+			"org-facebook": "https://www.facebook.com/aurorafoundationofficial/",
+			"org-permalink": "socialincome.org/partners/aurora-foundation"
 		},
 		{
 			"org-short-name": "JNJF",
@@ -134,7 +136,8 @@
 			"org-website": "https://www.jnjf.org/",
 			"org-instagram": "https://instagram.com/jnjaward?igshid=NGVhN2U2NjQ0Yg",
 			"org-facebook": "https://www.facebook.com/JNJFoundation",
-			"org-linkedin": "https://www.linkedin.com/company/the-jamil-nyanga-jaward-foundation/"
+			"org-linkedin": "https://www.linkedin.com/company/the-jamil-nyanga-jaward-foundation/",
+			"org-permalink": "socialincome.org/partners/jamil-&-nyanga-jaward-foundation"
 		},
 		{
 			"org-short-name": "Reachout Salone",
@@ -178,7 +181,8 @@
 			"org-quote-author": "Edmond Margai",
 			"org-photo": "",
 			"org-facebook": "https://www.facebook.com/profile.php?id=100070050743284&sk=about_details",
-			"org-youtube": "https://www.youtube.com/@reachoutsalone8395"
+			"org-youtube": "https://www.youtube.com/@reachoutsalone8395",
+			"org-permalink": "socialincome.org/partners/reachout-salone"
 		},
 		{
 			"org-short-name": "Equal Rights Alliance",
@@ -221,7 +225,8 @@
 			],
 			"org-quote-author": "Arnold Gibril Kamara",
 			"org-photo": "",
-			"org-facebook": "https://www.facebook.com/groups/693921621002955/"
+			"org-facebook": "https://www.facebook.com/groups/693921621002955/",
+			"org-permalink": "socialincome.org/partners/equal-rights-alliance"
 		},
 		{
 			"org-short-name": "United Polio Brothers and Sisters",
@@ -263,7 +268,8 @@
 				}
 			],
 			"org-quote-author": "Paul Osman Kabia",
-			"org-photo": ""
+			"org-photo": "",
+			"org-permalink": "socialincome.org/partners/united-polio-brothers-and-sisters"
 		},
 		{
 			"org-short-name": "SLAES",
@@ -311,7 +317,8 @@
 				}
 			],
 			"org-quote-author": "Paul Osman Kabia",
-			"org-photo": ""
+			"org-photo": "",
+			"org-permalink": "socialincome.org/partners/sierra-leone-association-of-ebola-survivors"
 		}
 	]
 }

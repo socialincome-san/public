@@ -24,6 +24,7 @@ type NgoHoverCardType = {
 	orgInstagram?: string;
 	orgLinkedIn?: string;
 	orgYoutube?: string;
+	orgPermalink: string;
 	orgFundRaiserText?: {
 		text: string;
 		href?: string;
@@ -68,6 +69,7 @@ type NgoEntryJSON = {
 	'org-facebook': string;
 	'org-linkedin': string;
 	'org-youtube': string;
+	'org-permalink': string;
 	'org-fundraiser-text': {
 		text: string;
 		href?: string;
@@ -75,11 +77,7 @@ type NgoEntryJSON = {
 };
 
 type NgoHomeProps = {
-	ngoHoverCard: NgoHoverCardType;
-	countryBadge: CountryBadgeType;
-	recipientsBadge: RecipientsBadgeType;
-	orgMission: string;
-	countryLongName: string;
+	ngoArray: NgoEntryJSON[];
 	partnerSinceTranslation: string;
 	badgeRecipientTranslation: string;
 	badgeRecipientTranslationBy: string;
@@ -87,7 +85,6 @@ type NgoHomeProps = {
 	badgeFormerTranslation: string;
 	badgeSuspendedTranslation: string;
 	fundRaiserTranslation: string;
-	orgShortName: string;
 	missionTranslation: string;
 	foundedTranslation: string;
 	headquarterTranslation: string;
@@ -97,6 +94,7 @@ type NgoHomeProps = {
 	instagramTranslation: string;
 	linkedinTranslation: string;
 	youtubeTranslation: string;
+	permalinkTranslation: string;
 };
 
 export type { NgoCardProps, NgoEntryJSON, NgoHomeProps, NgoHoverCardType };

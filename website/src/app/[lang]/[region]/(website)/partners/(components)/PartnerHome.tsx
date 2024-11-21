@@ -1,26 +1,34 @@
 'use client';
-//TODO: use-client still async-await, need to figure this out
 import { FundraiserBadge, RecipientsBadge } from '@/app/[lang]/[region]/(website)/partners/(components)/PartnerBadges';
-import { NgoHomeProps } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
+import { CountryBadgeType, RecipientsBadgeType } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerBadges';
+import {
+	NgoEntryJSON,
+	NgoHomeProps,
+	NgoHoverCardType,
+} from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
 import { Badge, Separator, Typography } from '@socialincome/ui';
-import { SL } from 'country-flag-icons/react/1x1';
+import { CH, SL } from 'country-flag-icons/react/1x1';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import { ReactElement } from 'react';
 
+const country_abbreviations_to_flag_map: Record<string, ReactElement> = {
+	SL: <SL className="h-5 w-5 rounded-full" />,
+	CH: <CH className="h-5 w-5 rounded-full" />,
+};
+function getFlag(abbreviation: string): ReactElement {
+	return country_abbreviations_to_flag_map[abbreviation] || <SL className="h-5 w-5 rounded-full" />;
+}
 export function PartnerHome({
-	ngoHoverCard,
-	recipientsBadge,
+	ngoArray,
 	partnerSinceTranslation,
-	orgMission,
-	countryLongName,
 	badgeRecipientTranslation,
 	badgeRecipientTranslationBy,
 	badgeActiveTranslation,
 	badgeFormerTranslation,
 	badgeSuspendedTranslation,
-	countryBadge,
 	fundRaiserTranslation,
-	orgShortName,
 	missionTranslation,
 	foundedTranslation,
 	headquarterTranslation,
@@ -30,7 +38,56 @@ export function PartnerHome({
 	instagramTranslation,
 	linkedinTranslation,
 	youtubeTranslation,
+	permalinkTranslation,
 }: NgoHomeProps) {
+	const router = useRouter();
+	const { orgLongName } = useParams() as { orgLongName: string };
+
+	const deSlugifiedOrgLongName = orgLongName.replaceAll('-', ' ').replace('%26', '&');
+	const currentNgo: NgoEntryJSON | undefined = ngoArray.find(
+		(ngo) => ngo['org-long-name'].toLowerCase() === deSlugifiedOrgLongName,
+	);
+	if (!currentNgo) {
+		router.replace('/not-found');
+		return;
+	}
+
+	const image_base_path = '/assets/partners/';
+	const recipientsBadge: RecipientsBadgeType = {
+		hoverCardOrgName: currentNgo!['org-long-name'],
+		hoverCardTotalRecipients: currentNgo!['recipients-total'],
+		hoverCardTotalActiveRecipients: currentNgo!['recipients-active'],
+		hoverCardTotalFormerRecipients: currentNgo!['recipients-former'],
+		hoverCardTotalSuspendedRecipients: currentNgo!['recipients-suspend'],
+		translatorBadgeRecipients: '',
+		translatorBadgeRecipientsBy: '',
+		translatorBadgeActive: '',
+		translatorBadgeFormer: '',
+		translatorBadgeSuspended: '',
+	};
+
+	const countryBadge: CountryBadgeType = {
+		countryAbbreviation: currentNgo!['org-country'],
+		countryFlagComponent: getFlag(currentNgo!['org-country']),
+	};
+	const ngoHoverCard: NgoHoverCardType = {
+		orgImage: image_base_path.concat(currentNgo!['org-image']),
+		orgLongName: currentNgo!['org-long-name'],
+		partnershipStart: currentNgo!['partnership-start'],
+		orgDescriptionParagraphs: currentNgo!['org-description-paragraphs'],
+		quote: currentNgo!['org-quote'] ?? null,
+		quoteAuthor: currentNgo!['org-quote-author'] ?? null,
+		quotePhoto: currentNgo!['org-quote-photo'] ? image_base_path.concat(currentNgo!['org-quote-photo']) : null,
+		orgFoundation: currentNgo!['org-foundation'],
+		orgHeadquarter: currentNgo!['org-headquarter'],
+		orgWebsite: currentNgo!['org-website'] ?? null,
+		orgFacebook: currentNgo!['org-facebook'] ?? null,
+		orgInstagram: currentNgo!['org-instagram'] ?? null,
+		orgLinkedIn: currentNgo!['org-linkedin'] ?? null,
+		orgYoutube: currentNgo!['org-youtube'] ?? null,
+		orgFundRaiserText: currentNgo!['org-fundraiser-text'] ?? null,
+		orgPermalink: currentNgo!['org-permalink'],
+	};
 	const showVisitOnline: boolean = !!(
 		ngoHoverCard.orgInstagram ||
 		ngoHoverCard.orgFacebook ||
@@ -42,7 +99,7 @@ export function PartnerHome({
 	const showFundRaiser: boolean = !!ngoHoverCard.orgFundRaiserText;
 	return (
 		<div className="flex items-center justify-center">
-			<div className="w-3/4">
+			<div className="sm:w-3/4">
 				<div className="relative">
 					<Image
 						className="h-auto w-full rounded-t-lg"
@@ -80,7 +137,7 @@ export function PartnerHome({
 							<Badge className="bg-primary hover:bg-primary text-primary space-x-2 bg-opacity-10 px-4 py-2 hover:bg-opacity-100 hover:text-white">
 								{countryBadge?.countryFlagComponent || <SL className="h-5 w-5 rounded-full" />}
 								<Typography size="md" weight="normal" className="text-inherit">
-									{countryLongName}
+									{currentNgo!['org-long-name']}
 								</Typography>
 							</Badge>
 						</div>
@@ -146,7 +203,7 @@ export function PartnerHome({
 										/>
 									)}
 									<Typography size="lg">
-										{ngoHoverCard.quoteAuthor}, {orgShortName}
+										{ngoHoverCard.quoteAuthor}, {currentNgo['org-short-name']}
 									</Typography>
 								</div>
 							</div>
@@ -160,7 +217,7 @@ export function PartnerHome({
 							<Typography size="lg">{missionTranslation}</Typography>
 						</div>
 						<div className="col-span-2">
-							<Typography size="lg">{orgMission}</Typography>
+							<Typography size="lg">{currentNgo!['org-mission']}</Typography>
 						</div>
 					</div>
 					<div className="grid grid-cols-3 gap-4">
@@ -213,6 +270,18 @@ export function PartnerHome({
 							</div>
 						</div>
 					)}
+					<div className="grid grid-cols-3 gap-4">
+						<div className="col-span-1">
+							<Typography size="lg">{permalinkTranslation}</Typography>
+						</div>
+						<div className="col-span-2">
+							<Link href={`https://www.${ngoHoverCard.orgPermalink}`}>
+								<Typography size="lg" className="underline">
+									{ngoHoverCard.orgPermalink}
+								</Typography>
+							</Link>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
