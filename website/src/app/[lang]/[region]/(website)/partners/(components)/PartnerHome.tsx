@@ -43,7 +43,7 @@ export function PartnerHome({
 	const router = useRouter();
 	const { orgLongName } = useParams() as { orgLongName: string };
 
-	const deSlugifiedOrgLongName = orgLongName.replaceAll('-', ' ').replace('%26', '&');
+	const deSlugifiedOrgLongName = orgLongName.replaceAll('-', ' ').replaceAll('%26', '&');
 	const currentNgo: NgoEntryJSON | undefined = ngoArray.find(
 		(ngo) => ngo['org-long-name'].toLowerCase() === deSlugifiedOrgLongName,
 	);
