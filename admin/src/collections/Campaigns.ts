@@ -149,6 +149,13 @@ export const campaignsCollection = buildAuditedCollection<Campaign>({
 		slug: {
 			dataType: 'string',
 			name: 'Url Slug',
+			validation: {
+				required: true,
+				matches: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+				matchMessage: 'Slug must contain only lowercase letters, numbers, and hyphens',
+			},
+			description:
+				'URL-friendly version of the title. Must be unique and contain only lowercase letters, numbers, and hyphens.',
 		},
 		metadata_description: {
 			dataType: 'string',
