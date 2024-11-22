@@ -104,6 +104,18 @@ export const campaignsCollection = buildAuditedCollection<Campaign>({
 			enumValues: campaignStatusEnumValues,
 			validation: { required: true },
 		},
+		public: {
+			dataType: 'boolean',
+			name: 'Public',
+			description: 'Listed on campaign overview',
+			defaultValue: false,
+		},
+		featured: {
+			dataType: 'boolean',
+			name: 'Featured',
+			description: 'Featured on campaign overview',
+			defaultValue: false,
+		},
 		metadata_description: {
 			dataType: 'string',
 			name: 'Metadata Description',

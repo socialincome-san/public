@@ -18,6 +18,8 @@ export type Campaign = {
 	goal_currency?: Currency;
 	end_date: Timestamp;
 	status: CampaignStatus;
+	public?: boolean;
+	featured?: boolean;
 	metadata_description?: string;
 	metadata_ogImage?: string;
 	metadata_twitterImage?: string;
