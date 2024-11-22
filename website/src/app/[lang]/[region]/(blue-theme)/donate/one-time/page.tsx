@@ -1,7 +1,12 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import OneTimeDonationForm from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/one-time-donation-form';
+import GenericDonationForm from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/generic-donation-form';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
+
+export enum DonationInterval {
+	OneTime = 'one-time',
+	Monthly = 'monthly',
+}
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	const translator = await Translator.getInstance({ language: lang, namespaces: 'website-donate' });
@@ -15,7 +20,8 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 					{translator.t('one-time.subtitle')}
 				</Typography>
 				<div className="text-popover-foreground mt-16 w-full">
-					<OneTimeDonationForm
+					<GenericDonationForm
+						defaultInterval={DonationInterval.OneTime}
 						lang={lang}
 						region={region}
 						translations={{
