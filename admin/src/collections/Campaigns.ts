@@ -68,6 +68,36 @@ export const campaignsCollection = buildAuditedCollection<Campaign>({
 			description: 'Visible in the fundraising page.',
 			multiline: true,
 		},
+		link_website: {
+			title: 'Website Link',
+			dataType: 'string',
+			validation: { required: false },
+			description: 'The link to the website (optional)',
+		},
+		link_instagram: {
+			title: 'Instagram Link',
+			dataType: 'string',
+			validation: { required: false },
+			description: 'The link to the Instagram profile (optional)',
+		},
+		link_tiktok: {
+			title: 'TikTok Link',
+			dataType: 'string',
+			validation: { required: false },
+			description: 'The link to the TikTok profile (optional)',
+		},
+		link_facebook: {
+			title: 'Facebook Link',
+			dataType: 'string',
+			validation: { required: false },
+			description: 'The link to the Facebook profile (optional)',
+		},
+		link_x: {
+			title: 'X (formerly Twitter) Link',
+			dataType: 'string',
+			validation: { required: false },
+			description: 'The link to the X profile (optional)',
+		},
 		amount_collected_chf: {
 			dataType: 'number',
 			name: 'Collected amount in CHF',
@@ -103,6 +133,29 @@ export const campaignsCollection = buildAuditedCollection<Campaign>({
 			name: 'Status',
 			enumValues: campaignStatusEnumValues,
 			validation: { required: true },
+		},
+		public: {
+			dataType: 'boolean',
+			name: 'Public',
+			description: 'Listed on campaign overview',
+			defaultValue: false,
+		},
+		featured: {
+			dataType: 'boolean',
+			name: 'Featured',
+			description: 'Featured on campaign overview',
+			defaultValue: false,
+		},
+		slug: {
+			dataType: 'string',
+			name: 'Url Slug',
+			validation: {
+				required: true,
+				matches: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+				matchMessage: 'Slug must contain only lowercase letters, numbers, and hyphens',
+			},
+			description:
+				'URL-friendly version of the title. Must be unique and contain only lowercase letters, numbers, and hyphens.',
 		},
 		metadata_description: {
 			dataType: 'string',
