@@ -215,7 +215,7 @@ export default async function NgoCard({
 					) : (
 						''
 					)}
-					<div className="grid grid-cols-3 gap-4">
+					<div className="grid grid-cols-3 gap-12 sm:gap-4">
 						<div className="col-span-1">
 							<Typography size="lg">{translator.t('ngo-generic.mission')}</Typography>
 						</div>
@@ -223,7 +223,7 @@ export default async function NgoCard({
 							<Typography size="lg">{orgMission}</Typography>
 						</div>
 					</div>
-					<div className="grid grid-cols-3 gap-4">
+					<div className="grid grid-cols-3 gap-12 sm:gap-4">
 						<div className="col-span-1">
 							<Typography size="lg">{translator.t('ngo-generic.founded')}</Typography>
 						</div>
@@ -231,7 +231,7 @@ export default async function NgoCard({
 							<Typography size="lg">{ngoHoverCard.orgFoundation}</Typography>
 						</div>
 					</div>
-					<div className="grid grid-cols-3 gap-4">
+					<div className="grid grid-cols-3 gap-12 sm:gap-4">
 						<div className="col-span-1">
 							<Typography size="lg">{translator.t('ngo-generic.headquarter')}</Typography>
 						</div>
@@ -240,7 +240,7 @@ export default async function NgoCard({
 						</div>
 					</div>
 					{showVisitOnline && (
-						<div className="grid grid-cols-3 gap-4">
+						<div className="grid grid-cols-3 gap-12 sm:gap-4">
 							<div className="col-span-1">
 								<Typography size="lg">{translator.t('links.more')}</Typography>
 							</div>
@@ -273,13 +273,13 @@ export default async function NgoCard({
 							</div>
 						</div>
 					)}
-					<div className="grid grid-cols-3 gap-4">
+					<div className="grid grid-cols-3 gap-12 sm:gap-4">
 						<div className="col-span-1">
 							<Typography size="lg">{translator.t('ngo-generic.permalink')}</Typography>
 						</div>
 						<div className="col-span-2">
 							<Link href={`https://www.${ngoHoverCard.orgPermalink}`}>
-								<Typography size="lg" className="underline">
+								<Typography size="lg" className="break-words underline">
 									{ngoHoverCard.orgPermalink}
 								</Typography>
 							</Link>
