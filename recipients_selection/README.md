@@ -17,4 +17,5 @@ you can take the hashed recipient list and the corresponding drand
 randomness, and re-run the draw using the
 [dchoose](https://github.com/drand/dchoose) tool to confirm that the
 outputs are the same. For further information on the draw process, check
-out the [Social Income website](https://socialincome.org).
+out the
+[Social Income website](https://socialincome.org/transparency/recipient-selection).
