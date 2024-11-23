@@ -103,7 +103,7 @@ export default async function NgoCard({
 				</Card>
 			</DialogTrigger>
 			<DialogContent className="bg-background h-[90vh] w-11/12 overflow-y-auto rounded-3xl border-none p-0 sm:min-w-[600px] md:min-w-[750px]">
-				<DialogHeader className="relative">
+				<DialogHeader className="relative -top-4">
 					<Image
 						className="h-auto w-full rounded-t-lg"
 						src={ngoHoverCard.orgImage}
@@ -120,7 +120,7 @@ export default async function NgoCard({
 						</DialogTitle>
 					</div>
 				</DialogHeader>
-				<div className="px-8 pb-10 pt-2">
+				<div className="px-8 pb-10">
 					<div className="flex flex-col gap-2 p-0 pb-8 pt-2 sm:flex-row sm:items-center sm:justify-between">
 						<div className="pb-4 text-center sm:order-2 sm:flex-shrink-0 sm:pb-0 sm:text-right">
 							<Typography size="md" weight="normal">
