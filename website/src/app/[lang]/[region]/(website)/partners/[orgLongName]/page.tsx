@@ -1,12 +1,30 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { DefaultPageProps, DefaultParams } from '@/app/[lang]/[region]';
 import { PartnerHome } from '@/app/[lang]/[region]/(website)/partners/(components)/PartnerHome';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 
-export default async function Page({ params: { lang } }: DefaultPageProps) {
+type NGOTranslation = {
+	name: string;
+	// more fields
+};
+
+export function getNGOTranslation(translator: Translator, slug: string): NGOTranslation {
+	return translator.t(slug);
+}
+
+type PartnerPageProps = {
+	params: {
+		slug: string;
+	} & DefaultParams;
+} & DefaultPageProps;
+
+export default async function Page({ params: { lang, slug } }: PartnerPageProps) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-partners', 'website-common', 'countries'],
 	});
+
+	const translation = getNGOTranslation(translator, slug);
+
 
 	return (
 		<PartnerHome

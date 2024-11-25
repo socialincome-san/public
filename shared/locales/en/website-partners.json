@@ -32,6 +32,12 @@
 		"fundraiser": "Fundraiser",
 		"permalink": "Permalink"
 	},
+	"aurora": {
+		"name": "Aurora"
+
+	},
+
+
 	"ngos": [
 		{
 			"org-short-name": "Aurora Foundation",

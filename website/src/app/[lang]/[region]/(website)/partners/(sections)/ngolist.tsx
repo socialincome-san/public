@@ -10,6 +10,7 @@ import {
 	NgoEntryJSON,
 	NgoHoverCardType,
 } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
+import { getNGOTranslation } from '@/app/[lang]/[region]/(website)/partners/[orgLongName]/page';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { CH, SL } from 'country-flag-icons/react/1x1';
 import { ReactElement } from 'react';
@@ -29,6 +30,10 @@ export async function NgoList({ lang }: DefaultParams) {
 		namespaces: ['website-partners'],
 	});
 	const image_base_path = '/assets/partners/';
+
+	const slugs = ['aurora', 'orgs'];
+
+	const translations = slugs.map((slug) => getNGOTranslation(translator, slug));
 
 	const ngoArray: NgoEntryJSON[] = translator.t('ngos');
 	const ngoCardPropsArray: NgoCardProps[] = [];
