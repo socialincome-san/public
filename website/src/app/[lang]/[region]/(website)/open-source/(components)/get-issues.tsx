@@ -6,12 +6,12 @@ interface Issue {
 	url: string;
 	title: string;
 	labels: string[];
-};
+}
 
 interface IssuesResponse {
 	issues: Issue[];
 	labels: string[];
-};
+}
 
 export async function getIssuesData(): Promise<IssuesResponse> {
 	const headers: Record<string, string> = {

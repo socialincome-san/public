@@ -2,8 +2,8 @@ import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { OpenSourceContributors } from './(sections)/contributors';
-import { Overview } from './(sections)/overview';
 import { OpenIssues } from './(sections)/open-issues';
+import { Overview } from './(sections)/overview';
 
 type Metadata = {
 	title: string;
