@@ -69,7 +69,6 @@ export async function getStarCount(): Promise<{ totalStars: number; newStars: nu
 		}
 
 		const stars: GitHubStar[] = await pagedRes.json();
-		console.log(stars[stars.length - 1]);
 
 		// Count new stars within the last 30 days
 		for (const star of stars) {
