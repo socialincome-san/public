@@ -25,7 +25,7 @@ export function FilterForm({ labels, handleLabel, filterText }: FilterFormProps)
 	return (
 		<section className="mb-8 max-w-44">
 			<Select value={selectedLabel} onValueChange={handleChange}>
-				<SelectTrigger aria-label="Filter issues by label" className="text-foreground bg-transparent rounded-none">
+				<SelectTrigger aria-label="Filter issues by label" className="text-foreground rounded-none bg-transparent">
 					<SelectValue placeholder={filterText} />
 				</SelectTrigger>
 				<SelectContent className="bg-primary text-primary-foreground px-4 py-3 pr-10 font-medium">
