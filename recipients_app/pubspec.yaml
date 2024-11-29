@@ -2,7 +2,7 @@ name: app
 description: Social Income App
 
 publish_to: "none"
-version: 1.1.13+30
+version: 1.1.14+31
 
 environment:
   sdk: ">=3.4.4 <4.0.0"
