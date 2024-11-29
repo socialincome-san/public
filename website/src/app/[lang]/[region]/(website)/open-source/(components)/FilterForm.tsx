@@ -1,5 +1,6 @@
 'use client';
 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@socialincome/ui';
 import { useState } from 'react';
 
 interface FilterFormProps {
@@ -11,34 +12,37 @@ interface FilterFormProps {
 export function FilterForm({ labels, handleLabel, filterText }: FilterFormProps) {
 	const [selectedLabel, setSelectedLabel] = useState('');
 
-	const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		const value = event.target.value;
-
-		// Reset to show all issues if `filterText` is selected
+	const handleChange = (value: string) => {
 		if (value === filterText) {
-			setSelectedLabel(''); // Reset the local state
-			handleLabel(''); // Notify parent to show all issues
+			setSelectedLabel('');
+			handleLabel('');
 		} else {
 			setSelectedLabel(value);
-			handleLabel(value); // Notify parent with selected label
+			handleLabel(value);
 		}
 	};
 
 	return (
-		<section className="filter-form mb-8">
-			<select
-				value={selectedLabel}
-				onChange={handleChange}
-				aria-label="Filter issues by label"
-				className="border-foreground bg-background border px-4 py-3 pr-10 focus:border-blue-500 focus:outline-none"
-			>
-				<option value={filterText}>{filterText}</option>
-				{labels.map((label) => (
-					<option key={label} value={label}>
-						{label}
-					</option>
-				))}
-			</select>
+		<section className="mb-8 max-w-44">
+			<Select value={selectedLabel} onValueChange={handleChange}>
+				<SelectTrigger aria-label="Filter issues by label" className="text-foreground bg-transparent rounded-none">
+					<SelectValue placeholder={filterText} />
+				</SelectTrigger>
+				<SelectContent className="bg-primary text-primary-foreground px-4 py-3 pr-10 font-medium">
+					<SelectItem value={filterText} className="bg-primary text-primary-foreground hover:text-foreground">
+						{filterText}
+					</SelectItem>
+					{labels.map((label) => (
+						<SelectItem
+							key={label}
+							value={label}
+							className="bg-primary text-primary-foreground hover:text-foreground font-medium"
+						>
+							{label}
+						</SelectItem>
+					))}
+				</SelectContent>
+			</Select>
 		</section>
 	);
 }

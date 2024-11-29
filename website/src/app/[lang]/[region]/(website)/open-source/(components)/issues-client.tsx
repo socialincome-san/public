@@ -2,7 +2,7 @@
 
 import { Button, Table, TableBody, TableCell, TableHeader, TableRow, Typography } from '@socialincome/ui';
 import { useState } from 'react';
-import { FilterForm } from './FilterForm';
+import { FilterForm } from './filterForm';
 import { Issue } from './issue';
 
 interface Issue {
