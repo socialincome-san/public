@@ -53,7 +53,6 @@ export async function getContributors(): Promise<Contributor[]> {
 	}
 
 	return contributors
-		.filter((contributor: GitHubContributor) => contributor.author != null)
 		.map((contributor: GitHubContributor) => ({
 			id: contributor.author.id,
 			name: contributor.author.login,
