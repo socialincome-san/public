@@ -26,19 +26,21 @@ class AuthState extends Equatable {
   });
 
   @override
-  List<Object?> get props => [status, firebaseUser, recipient, exception];
+  List<Object?> get props => [status, firebaseUser, recipient, exception, organization];
 
   AuthState copyWith({
     AuthStatus? status,
     User? firebaseUser,
     Recipient? recipient,
     Exception? exception,
+    Organization? organization,
   }) {
     return AuthState(
       status: status ?? this.status,
       firebaseUser: firebaseUser ?? this.firebaseUser,
       recipient: recipient ?? this.recipient,
       exception: exception ?? this.exception,
+      organization: organization ?? this.organization,
     );
   }
 }
