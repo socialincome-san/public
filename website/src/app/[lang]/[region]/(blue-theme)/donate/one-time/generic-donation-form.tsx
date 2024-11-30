@@ -1,6 +1,7 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { DonationInterval } from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/page';
 import { CreateCheckoutSessionData } from '@/app/api/stripe/checkout-session/create/route';
 import { useI18n } from '@/components/providers/context-providers';
 import { CurrencySelector } from '@/components/ui/currency-selector';
@@ -15,6 +16,7 @@ import Stripe from 'stripe';
 import * as z from 'zod';
 
 type DonationFormProps = {
+	defaultInterval: DonationInterval;
 	translations: {
 		monthly: string;
 		oneTime: string;
@@ -24,12 +26,13 @@ type DonationFormProps = {
 	campaignId?: string;
 } & DefaultParams;
 
-enum DonationInterval {
-	OneTime = 'one-time',
-	Monthly = 'monthly',
-}
-
-export default function OneTimeDonationForm({ translations, lang, region, campaignId }: DonationFormProps) {
+export default function GenericDonationForm({
+	defaultInterval,
+	translations,
+	lang,
+	region,
+	campaignId,
+}: DonationFormProps) {
 	const router = useRouter();
 	const { data: authUser } = useUser();
 	const { currency } = useI18n();
@@ -43,7 +46,7 @@ export default function OneTimeDonationForm({ translations, lang, region, campai
 	type FormSchema = z.infer<typeof formSchema>;
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
-		defaultValues: { interval: DonationInterval.OneTime, amount: 100 },
+		defaultValues: { interval: defaultInterval, amount: 100 },
 	});
 	const interval = form.watch('interval');
 
