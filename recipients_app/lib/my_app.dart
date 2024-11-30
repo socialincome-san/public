@@ -65,6 +65,7 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(
           create: (context) => OrganizationRepository(
             firestore: firestore,
+            demoManager: demoManager,
           ),
         ),
       ],

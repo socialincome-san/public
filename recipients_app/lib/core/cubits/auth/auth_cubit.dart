@@ -23,12 +23,18 @@ class AuthCubit extends Cubit<AuthState> {
       if (user != null) {
         try {
           final recipient = await userRepository.fetchRecipient(user);
+          Organization? organization;
+
+          if (recipient?.organizationRef != null) {
+            organization = await organizationRepository.fetchOrganization(recipient!.organizationRef!);
+          }
 
           emit(
             AuthState(
               status: AuthStatus.authenticated,
               firebaseUser: user,
               recipient: recipient,
+              organization: organization,
             ),
           );
         } on Exception catch (ex, stackTrace) {
@@ -59,8 +65,7 @@ class AuthCubit extends Cubit<AuthState> {
       Organization? organization;
 
       if (recipient?.organizationRef != null) {
-        organization = await organizationRepository
-            .fetchOrganization(recipient!.organizationRef!);
+        organization = await organizationRepository.fetchOrganization(recipient!.organizationRef!);
       }
 
       emit(

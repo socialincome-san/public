@@ -8,7 +8,7 @@ import "package:cloud_firestore/cloud_firestore.dart";
 
 class SurveyRepository {
   late SurveyDataSource remoteDataSource = SurveyRemoteDataSource(firestore: firestore);
-  late SurveyDataSource demoDataSource = SurveyDemoDataSource(); // Assuming you have a demo source
+  late SurveyDataSource demoDataSource = SurveyDemoDataSource();
 
   final DemoManager demoManager;
   final FirebaseFirestore firestore;
