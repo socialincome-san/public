@@ -21,8 +21,8 @@ class ButtonOutlinedBig extends StatelessWidget {
       height: _buttonHeight,
       child: OutlinedButton(
         style: Theme.of(context).outlinedButtonTheme.style?.copyWith(
-              backgroundColor: MaterialStateProperty.all(Colors.white),
-              side: MaterialStateProperty.all(
+              backgroundColor: WidgetStateProperty.all(Colors.white),
+              side: WidgetStateProperty.all(
                 const BorderSide(
                   color: AppColors.primaryColor,
                   width: 2,

@@ -31,9 +31,9 @@ class ButtonSmall extends StatelessWidget {
           child: ElevatedButton(
             style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
                   backgroundColor:
-                      MaterialStateProperty.all(Colors.transparent),
-                  foregroundColor: MaterialStateProperty.all(color),
-                  shape: MaterialStateProperty.all(
+                      WidgetStateProperty.all(Colors.transparent),
+                  foregroundColor: WidgetStateProperty.all(color),
+                  shape: WidgetStateProperty.all(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
                       side: BorderSide(
@@ -56,9 +56,9 @@ class ButtonSmall extends StatelessWidget {
           height: 26,
           child: ElevatedButton(
             style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
-                  backgroundColor: MaterialStateProperty.all(color),
-                  foregroundColor: MaterialStateProperty.all(Colors.white),
-                  shape: MaterialStateProperty.all(
+                  backgroundColor: WidgetStateProperty.all(color),
+                  foregroundColor: WidgetStateProperty.all(Colors.white),
+                  shape: WidgetStateProperty.all(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
                     ),

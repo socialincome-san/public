@@ -32,6 +32,8 @@ if (keystorePropertiesFile.exists()) {
 android {
     compileSdkVersion 34
 
+    namespace "org.socialincome.app"
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -77,6 +79,15 @@ android {
         prod {
             dimension "environment"
         }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
