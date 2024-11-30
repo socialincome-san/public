@@ -1136,6 +1136,5 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   String get clearButtonTooltip => "Clear text";
 
   @override
-  // TODO: implement selectedDateLabel
   String get selectedDateLabel => "Selected";
 }
