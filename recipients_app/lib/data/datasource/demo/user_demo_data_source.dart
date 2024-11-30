@@ -14,12 +14,17 @@ class UserDemoDataSource implements UserDataSource {
     communicationMobilePhone: Phone(23271118897),
   );
   final _userStreamController = StreamController<User?>();
+  late final _userBroadcastStreamController = _getBroadcastStream();
   final _user = DemoUser();
 
   @override
   Stream<User?> authStateChanges() {
     _userStreamController.add(_user);
-    return _userStreamController.stream;
+    return _userBroadcastStreamController;
+  }
+
+  Stream<User?> _getBroadcastStream() {
+    return _userStreamController.stream.asBroadcastStream();
   }
 
   @override
@@ -46,7 +51,6 @@ class UserDemoDataSource implements UserDataSource {
   @override
   Future<void> signOut() async {
     _userStreamController.add(null);
-    _userStreamController.done;
   }
 
   @override

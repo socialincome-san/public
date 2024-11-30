@@ -2,21 +2,22 @@ import "package:app/data/datasource/demo/payment_demo_data_source.dart";
 import "package:app/data/datasource/payment_data_source.dart";
 import "package:app/data/datasource/remote/payment_remote_data_source.dart";
 import "package:app/data/models/models.dart";
+import "package:app/demo_manager.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 
 class PaymentRepository {
   late PaymentDataSource remoteDataSource = PaymentRemoteDataSource(firestore: firestore);
   late PaymentDataSource demoDataSource = PaymentDemoDataSource();
 
-  final bool useRemoteDataSource;
+  final DemoManager demoManager;
   final FirebaseFirestore firestore;
 
   PaymentRepository({
     required this.firestore,
-    this.useRemoteDataSource = false,
+    required this.demoManager,
   });
 
-  PaymentDataSource get _activeDataSource => useRemoteDataSource ? remoteDataSource : demoDataSource;
+  PaymentDataSource get _activeDataSource => demoManager.isDemoEnabled ? demoDataSource : remoteDataSource;
 
   Future<List<SocialIncomePayment>> fetchPayments({
     required String recipientId,

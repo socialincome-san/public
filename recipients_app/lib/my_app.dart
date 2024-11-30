@@ -1,6 +1,7 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
+import "package:app/demo_manager.dart";
 import "package:app/kri_intl.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/main_app_page.dart";
@@ -19,12 +20,14 @@ class MyApp extends StatelessWidget {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firestore;
   final FirebaseMessaging messaging;
+  final DemoManager demoManager;
 
   const MyApp({
     super.key,
     required this.firebaseAuth,
     required this.firestore,
     required this.messaging,
+    required this.demoManager,
   });
 
   // This widget is the root of your application.
@@ -41,6 +44,7 @@ class MyApp extends StatelessWidget {
           create: (context) => UserRepository(
             firebaseAuth: firebaseAuth,
             firestore: firestore,
+            demoManager: demoManager,
           ),
         ),
         RepositoryProvider(
@@ -49,11 +53,13 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(
           create: (context) => PaymentRepository(
             firestore: firestore,
+            demoManager: demoManager,
           ),
         ),
         RepositoryProvider(
           create: (context) => SurveyRepository(
             firestore: firestore,
+            demoManager: demoManager,
           ),
         ),
         RepositoryProvider(
