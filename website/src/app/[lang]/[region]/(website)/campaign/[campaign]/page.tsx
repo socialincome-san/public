@@ -56,13 +56,13 @@ export async function generateMetadata({ params }: CampaignPageProps) {
 					},
 				}
 			: undefined;
-	return getMetadata(params.lang, 'website-donate', campaignMetadata);
+	return getMetadata(params.lang, 'website-campaign', campaignMetadata);
 }
 
 export default async function Page({ params }: CampaignPageProps) {
 	const translator = await Translator.getInstance({
 		language: params.lang,
-		namespaces: ['website-donate', 'website-videos', 'website-faq'],
+		namespaces: ['website-campaign', 'website-donate', 'website-videos', 'website-faq'],
 	});
 
 	const campaignDoc = await firestoreAdmin.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH).doc(params.campaign).get();
