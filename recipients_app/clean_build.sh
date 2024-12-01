@@ -1,7 +1,5 @@
 #!/bin/zsh
 
-#!/bin/zsh
-
 # Exit on error
 set -e
 
