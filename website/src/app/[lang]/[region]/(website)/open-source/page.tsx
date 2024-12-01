@@ -1,5 +1,4 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer } from '@socialincome/ui';
 import { OpenSourceContributors } from './(sections)/contributors';
 import { OpenIssues } from './(sections)/open-issues';
