@@ -79,7 +79,8 @@ Mobile App for Recipients of a Social Income.
 - Open `recipients_app` project folder in vsCode
 - Open a terminal inside of vsCode and check `flutter --version` is
   listing the right flutter version (See above or pubspec.yaml).
-- Add executable permissions to the script clean_build.sh via `chmod +x clean_build.sh`
+- Add executable permissions to the script clean_build.sh via
+  `chmod +x clean_build.sh`
 - Run `./clean_build.sh`
 - Choose in vsCode the device to deploy on (iOS Simulator, Android
   emulator, real Android or iOS device)
