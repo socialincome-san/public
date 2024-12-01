@@ -2,24 +2,83 @@
 
 Mobile App for Recipients of a Social Income.
 
-## Basic Setup
+## Tools needed for building the app on a Apple Silicon Mac
 
-For the basic setup, please refer to the main [README](../README.md)
+- [Homebrew](https://brew.sh/de/)
+- Flutter 3.19.6, Dart 3.3.4
+- Java JDK 17 
+- Android Studio LadyBug or later
+- Latest vsCode
+- Xcode 16.1
 
-## Getting Started
+## Configure the Apple Silicon Mac environment to build our app
+- Install [Homebrew](https://brew.sh/de/) 
+  ```
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  ```
+- Install Android Studio LadyBug or later
+  - Set ANDROID_HOME and deprecated ANDROID_SDK_ROOT. Add the following lines in your USER's HOME directory in your .zshrc file:
+    ```
+    export ANDROID_HOME="/Users/karinberg/Development/Android/SDK"
+    export ANDROID_SDK_ROOT="$ANDROID_HOME" # ANDROID_SDK_ROOT is deprecated, but still in use
+    export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
+    ````
+  - Restart your terminal so that these changes take effect
+- Install Java 17 via Homebrew `brew install openjdk@17`
+  - Homebrew is telling you to execute a symlink command, so that the system Java wrappers can find this JDK. Please do this.
+  - Additionally in your USER's HOME directory in the file '.zshrc', add the lines to set the JAVA_HOME environment variable to Java 17 and add Java to the PATH environment variable
+    ```
+    export JAVA_HOME=$(/usr/libexec/java_home -v17)
+    export PATH="$PATH:$JAVA_HOME/bin"
+    ```
+  - Restart your terminal so that these changes take effect
+- Install Flutter 3.19.6
+  - Tell Flutter to not use the Java JDK from Android Studio via `flutter config --jdk-dir $JAVA_HOME`
+  - Restart your terminal and IDE so that these changes take effect
+- Install vsCode
+  - Install Flutter extension
+- Install Xcode 16.1
+  - Set is as default via `sudo xcode-select -s <path/to/>Xcode.app`
+  - To agree to the Xcode license from the command line, you can use the following command: `sudo xcodebuild -license accept`
 
-Open `recipients_app` project folder in your development environment of
-choice. Building flavor should work seamlessly for Android Studio and VS
+ ## Optionally: Use the version manager [asdf](https://asdf-vm.com/)
+ - Install [asdf](https://asdf-vm.com/) via Homebrew with `brew install asdf`
+ - Install flutter plugin for asdf via `asdf plugin-add flutter`
+ - Add the following lines in your .zshrc file:
+    ```
+    export FLUTTER_ROOT="$(asdf where flutter)"
+    ### asdf stuff ############
+    source $(brew --prefix asdf)/libexec/asdf.sh
+    export ASDF_NODEJS_LEGACY_FILE_DYNAMIC_STRATEGY=latest_available
+    # This is optional. It installs tools defined in .tool-versions on terminal start
+    asdf install
+    ###########################
+    ```
+  
+## Build and run the app the first time with vsCode
+- Checkout main branch: `git clone https://github.com/socialincome-san/public.git ./social-income/`
+- Copy file `./.vscode/launch.json.example` and rename it to `./.vscode/launch.json`
+  - Replace the value "FILL IN SENTRY URL" after "SENTRY_URL=" with the real Sentry url to be able to use Sentry
+  - Decide which flavor and backend environment you what to use and change it if necessary. 
+- Open `recipients_app` project folder in vsCode
+- Open an terminal inside of vsCode and check `flutter --version` is listing the right flutter version (See above or pubspec.yaml).
+- Run `./clean_build.sh`
+- Choose in vsCode the device to deploy on (iOS Simulator, Android emulator, real Android or iOS device)
+- Run the launch configuration "stage_recipients_app (debug mode)" to deploy and run the app on the selected devive in debug mode
+- Happy testing!!
+
+## Available app flavors
+
+ Building flavor should work seamlessly for Android Studio and VS
 Code with predefined build configs.
 
 We have three build flavors:
 
 - `dev` -> Connecting with Firebase Emulators (Firestore and Auth)
 - `stage` -> Connecting with staging online firebase project
-- `prod` -> Connecting with production online firebase project and need
-  real Firebase configuration json / plist file
+- `prod` -> Connecting with production online firebase project and need real Firebase configuration json / plist file (not in the repo)
 
-For development use `dev` flavor.
+For development use the `dev` or `stage` flavor.
 
 As Firebase emulators work on your local host machine the easiest way to
 run app is on the Android emulator. Real devices need some additional
@@ -35,9 +94,7 @@ setup.
 ```
 dart run build_runner watch --delete-conflicting-outputs
 ```
-
 or
-
 ```
 dart run build_runner build --delete-conflicting-outputs
 ```
