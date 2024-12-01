@@ -18,7 +18,7 @@ export default async function Page({ params }: DefaultPageProps) {
 	return (
 		<BaseContainer className="space-y-20">
 			<Typography size="5xl" weight="bold">
-				{translator.t('form.title')}
+				{translator.t('campaign-form.title')}
 			</Typography>
 			<CampaignForm lang={params.lang} region={params.region} />
 		</BaseContainer>

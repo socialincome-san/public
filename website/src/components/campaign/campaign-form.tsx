@@ -24,7 +24,7 @@ export function CampaignForm({ lang }: DefaultParams) {
 
 	if (!translator) return <></>;
 
-	if (mutation.isSuccess) return <Alert variant="primary">{translator.t('form.created')}</Alert>;
+	if (mutation.isSuccess) return <Alert variant="primary">{translator.t('campaign-form.created')}</Alert>;
 
 	return (
 		<>
@@ -33,7 +33,7 @@ export function CampaignForm({ lang }: DefaultParams) {
 				showLoadingSpinner={mutation.isPending}
 				onClick={() => mutation.mutate(testCampaignObject)}
 			>
-				{translator.t('form.submit')}
+				{translator.t('campaign-form.submit')}
 			</Button>
 		</>
 	);
