@@ -1,11 +1,14 @@
 # How to release the apps
 
 1. Increment app version and build number in pubspec.yaml
-   - Open 'pubspec.yaml' and increase 'version' with the desired app version and the version code by incrementing the '+' part by 1. Incrementing the version code is a must-have for a new prod version. Otherwise, the stores will not accept the new app.
-   
-     Example:
-     Current: version: 1.1.0+12
-     New:     version: 1.1.1+13
+
+   - Open 'pubspec.yaml' and increase 'version' with the desired app
+     version and the version code by incrementing the '+' part by 1.
+     Incrementing the version code is a must-have for a new prod
+     version. Otherwise, the stores will not accept the new app.
+
+     Example: Current: version: 1.1.0+12 New: version: 1.1.1+13
+
 1. Run CodeMagic Build "iOS Staging (Firebase App Distribution)"
 1. Run CodeMagic Build "Android Staging (Firebase App Distribution)"
 1. Test the app on the Staging environment. See
