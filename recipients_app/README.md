@@ -73,7 +73,8 @@ Mobile App for Recipients of a Social Income.
 - Copy file `./.vscode/launch.json.example` and rename it to
   `./.vscode/launch.json`
   - Replace the value "FILL IN SENTRY URL" after "SENTRY_URL=" with the
-    real Sentry url to be able to use Sentry
+    real Sentry url to be able to use Sentry. If you do not prive a Sentry Url, no issues will be reported to Sentry but you can still run the app.
+    To get the real Sentry url see [here](https://social-income.sentry.io/settings/projects/si-mobileapp/keys/) under "DSN". 
   - Decide which flavor and backend environment you want to use and
     change it if necessary.
 - Open `recipients_app` project folder in vsCode
