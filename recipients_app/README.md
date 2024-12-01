@@ -2,7 +2,7 @@
 
 Mobile App for Recipients of a Social Income.
 
-## Tools needed for building the app on a Apple Silicon Mac
+## Tools needed for building the app on an Apple Silicon Mac
 
 - [Homebrew](https://brew.sh/de/)
 - Flutter 3.19.6, Dart 3.3.4
@@ -14,13 +14,13 @@ Mobile App for Recipients of a Social Income.
 ## Configure the Apple Silicon Mac environment to build our app
 
 - Install [Homebrew](https://brew.sh/de/)
-  ```
+  ```shell
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   ```
 - Install Android Studio
   - Set ANDROID_HOME and deprecated ANDROID_SDK_ROOT. Add the following
     lines in your USER's HOME directory in your .zshrc file:
-    ```
+    ```shell
     export ANDROID_HOME="/Users/karinberg/Development/Android/SDK"
     export ANDROID_SDK_ROOT="$ANDROID_HOME" # ANDROID_SDK_ROOT is deprecated, but still in use
     export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
@@ -32,14 +32,14 @@ Mobile App for Recipients of a Social Income.
   - Additionally in your USER's HOME directory in the file '.zshrc', add
     the lines to set the JAVA_HOME environment variable to Java 17 and
     add Java to the PATH environment variable
-    ```
+    ```shell
     export JAVA_HOME=$(/usr/libexec/java_home -v17)
     export PATH="$PATH:$JAVA_HOME/bin"
     ```
   - Restart your terminal so that these changes take effect
 - Install Flutter
   - Tell Flutter to use our Java 17 JDK and not the one bundle with
-    Android Studio via `flutter config --jdk-dir $JAVA_HOME`. Otherwise
+    Android Studio via `flutter config --jdk-dir $JAVA_HOME`. Otherwise,
     you will get the error "Unsupported class file major version 65”
     when building the app for Android.
   - Restart your terminal and IDE so that these changes take effect
@@ -56,7 +56,7 @@ Mobile App for Recipients of a Social Income.
   `brew install asdf`
 - Install flutter plugin for asdf via `asdf plugin-add flutter`
 - Add the following lines in your .zshrc file:
-  ```
+  ```shell
   export FLUTTER_ROOT="$(asdf where flutter)"
   ### asdf stuff ############
   source $(brew --prefix asdf)/libexec/asdf.sh
@@ -77,7 +77,7 @@ Mobile App for Recipients of a Social Income.
   - Decide which flavor and backend environment you what to use and
     change it if necessary.
 - Open `recipients_app` project folder in vsCode
-- Open an terminal inside of vsCode and check `flutter --version` is
+- Open a terminal inside of vsCode and check `flutter --version` is
   listing the right flutter version (See above or pubspec.yaml).
 - Run `./clean_build.sh`
 - Choose in vsCode the device to deploy on (iOS Simulator, Android
@@ -98,7 +98,7 @@ We have three build flavors:
 - `prod` -> Connecting with production online firebase project and need
   real Firebase configuration json / plist file (not in the repo)
 
-For development use the `dev` or `stage` flavor.
+For development, use the `dev` or `stage` flavor.
 
 As Firebase emulators work on your local host machine the easiest way to
 run app is on the Android emulator. Real devices need some additional
