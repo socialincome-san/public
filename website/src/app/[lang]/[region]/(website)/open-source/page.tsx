@@ -1,9 +1,9 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { BaseContainer } from '@socialincome/ui';
 import { OpenSourceContributors } from './(sections)/contributors';
+import { Hero } from './(sections)/hero';
 import { OpenIssues } from './(sections)/open-issues';
 import { Overview } from './(sections)/overview';
-import { Hero } from './(sections)/hero';
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	return (

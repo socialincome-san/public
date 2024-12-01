@@ -66,9 +66,7 @@ export function OpenSourceContributorsClient({
 
 			{!showAllContributors && totalContributors > 16 && (
 				<div className="mt-12 flex justify-center">
-					<Button
-						variant="link"
-						onClick={handleShowAllContributors} className="mr-20 text-xl text-card-foreground">
+					<Button variant="link" onClick={handleShowAllContributors} className="text-card-foreground mr-20 text-xl">
 						{`Show all ${totalContributors} contributors`}
 					</Button>
 				</div>

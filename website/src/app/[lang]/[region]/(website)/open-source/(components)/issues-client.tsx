@@ -72,7 +72,7 @@ export function IssueClient({ title, issues, labels, tableHeader, filterText, li
 					<Button
 						variant="link"
 						onClick={handleShowAllIssues}
-						className="mr-20 text-xl text-card-foreground"
+						className="text-card-foreground mr-20 text-xl"
 					>{`Show all ${filteredIssues.length} issues`}</Button>
 				</div>
 			)}

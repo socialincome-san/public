@@ -29,14 +29,9 @@ export function FilterForm({ labels, handleLabel, filterText }: FilterFormProps)
 					<SelectValue placeholder={filterText} />
 				</SelectTrigger>
 				<SelectContent>
-					<SelectItem value={filterText}>
-						{filterText}
-					</SelectItem>
+					<SelectItem value={filterText}>{filterText}</SelectItem>
 					{labels.map((label) => (
-						<SelectItem
-							key={label}
-							value={label}
-						>
+						<SelectItem key={label} value={label}>
 							{label}
 						</SelectItem>
 					))}
