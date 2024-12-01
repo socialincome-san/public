@@ -53,10 +53,10 @@ export function IssueClient({ title, issues, labels, tableHeader, filterText, li
 				{title}
 			</Typography>
 			<FilterForm labels={labels} handleLabel={handleFilterChange} filterText={filterText} />
-			<div className="border-foreground rounded-2xl border border-solid">
+			<div className="border-foreground rounded-md">
 				<Table>
 					<TableHeader>
-						<TableRow className="border-foreground p-5">
+						<TableRow className="border-foreground p-5 hover:bg-transparent">
 							<TableCell className="text-xl">{tableHeader}</TableCell>
 						</TableRow>
 					</TableHeader>
@@ -68,7 +68,7 @@ export function IssueClient({ title, issues, labels, tableHeader, filterText, li
 				</Table>
 			</div>
 			{!showAllIssues && filteredIssues.length > 6 && (
-				<div className="mt-12 flex justify-center">
+				<div className="mt-6 flex justify-center">
 					<Button
 						variant="link"
 						onClick={handleShowAllIssues}
