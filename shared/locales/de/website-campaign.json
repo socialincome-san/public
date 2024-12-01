@@ -1,12 +1,12 @@
 {
-  "metadata": {
-    "title": "Eigene Kampagne erstellen | Social Income"
-  },
-  "campaign-form": {
-    "title": "Erstelle deine Kampagne",
-    "submit": "Test Kampagne erstellen",
-    "created": "Kampagne erstellt"
-  },
+	"metadata": {
+		"title": "Eigene Kampagne erstellen | Social Income"
+	},
+	"campaign-form": {
+		"title": "Erstelle deine Kampagne",
+		"submit": "Test Kampagne erstellen",
+		"created": "Kampagne erstellt"
+	},
 	"campaign": {
 		"not-found": "Die Kampagne konnte leider nicht gefunden werden.",
 		"by": "Von {{ creator }}",
