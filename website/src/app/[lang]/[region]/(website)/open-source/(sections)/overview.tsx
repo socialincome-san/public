@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Typography, Card } from '@socialincome/ui';
+import { Card, Typography } from '@socialincome/ui';
 import { getCommits } from '../(components)/get-commits';
 import { getForkCount } from '../(components)/get-forks';
 import { getStarCount } from '../(components)/get-stars';
@@ -24,9 +24,9 @@ interface Overview {
 
 export function OverviewCard({ title, total, time }: OverviewProp) {
 	return (
-		<Card className="bg-background hover:bg-primary rounded-lg py-5 md:py-5 px-2 md:px-5 shadow-none hover:bg-opacity-10 border-2 border-opacity-80">
+		<Card className="bg-background hover:bg-primary rounded-lg border-2 border-opacity-80 px-2 py-5 shadow-none hover:bg-opacity-10 md:px-5 md:py-5">
 			{/* Large screens layout */}
-			<div className="hidden md:flex items-center justify-between h-full gap-4">
+			<div className="hidden h-full items-center justify-between gap-4 md:flex">
 				{/* Number on the left */}
 				<div className="flex-shrink-0">
 					<Typography as="span" size="5xl" weight="medium">
@@ -74,7 +74,7 @@ export async function Overview({ lang }: DefaultParams) {
 
 	return (
 		<section>
-			<div className="grid grid-cols-3 gap-3 md:gap-6 ">
+			<div className="grid grid-cols-3 gap-3 md:gap-6">
 				<OverviewCard
 					title={commits.title}
 					total={totalCommits}
