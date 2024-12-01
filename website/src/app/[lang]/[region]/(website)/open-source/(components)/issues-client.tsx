@@ -49,7 +49,7 @@ export function IssueClient({ title, issues, labels, tableHeader, filterText, li
 
 	return (
 		<section>
-			<Typography as="h2" size="2xl" lineHeight="snug" className="mb-10">
+			<Typography as="h2" size="3xl" lineHeight="snug" className="mb-10">
 				{title}
 			</Typography>
 			<FilterForm labels={labels} handleLabel={handleFilterChange} filterText={filterText} />
@@ -70,8 +70,9 @@ export function IssueClient({ title, issues, labels, tableHeader, filterText, li
 			{!showAllIssues && filteredIssues.length > 6 && (
 				<div className="mt-12 flex justify-center">
 					<Button
+						variant="link"
 						onClick={handleShowAllIssues}
-						className="mr-20 text-xl"
+						className="mr-20 text-xl text-card-foreground"
 					>{`Show all ${filteredIssues.length} issues`}</Button>
 				</div>
 			)}

@@ -3,6 +3,9 @@
 		"title": "Open-Source Insights ",
 		"heading": "Contributors"
 	},
+	"contributors": {
+		"title": "Contributors"
+	},
 	"hero": {
 		"title-1": [
 			{
@@ -17,22 +20,22 @@
 	},
 	"overview": {
 		"forks": {
-			"title": "Total Forks",
+			"title": "Forks",
 			"time": "last month"
 		},
 		"commits": {
-			"title": "Total Commits",
+			"title": "Commits",
 			"time": "last month"
 		},
 		"stars": {
-			"title": "Stars on Github",
+			"title": "GitHub Stars",
 			"time": "last month"
 		}
 	},
 	"issues": {
 		"title": "Open Issues",
 		"header": "Issue Title",
-		"link": "Open on GitHub",
-		"filter": "All issues"
+		"link": "View on GitHub",
+		"filter": "All Issues"
 	}
 }

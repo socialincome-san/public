@@ -48,7 +48,7 @@ export function OpenSourceContributorsClient({
 	return (
 		<section className="flex flex-col justify-self-start">
 			<section>
-				<Typography as="h2" size="2xl" lineHeight="snug" className="mb-10">
+				<Typography as="h2" size="3xl" lineHeight="snug" className="mb-10">
 					{`${totalContributors} ${heading}`}
 				</Typography>
 			</section>
@@ -66,7 +66,9 @@ export function OpenSourceContributorsClient({
 
 			{!showAllContributors && totalContributors > 16 && (
 				<div className="mt-12 flex justify-center">
-					<Button onClick={handleShowAllContributors} className="mr-20 text-xl">
+					<Button
+						variant="link"
+						onClick={handleShowAllContributors} className="mr-20 text-xl text-card-foreground">
 						{`Show all ${totalContributors} contributors`}
 					</Button>
 				</div>

@@ -76,11 +76,6 @@ export async function Overview({ lang }: DefaultParams) {
 		<section>
 			<div className="grid grid-cols-3 gap-3 md:gap-6 ">
 				<OverviewCard
-					title={forks.title}
-					total={totalForks}
-					time={newForks > 0 ? `+${newForks} last month` : `${newForks} last month`}
-				/>
-				<OverviewCard
 					title={commits.title}
 					total={totalCommits}
 					time={newCommits > 0 ? `+${newCommits} last month` : `${newCommits} last month`}
@@ -89,6 +84,11 @@ export async function Overview({ lang }: DefaultParams) {
 					title={stars.title}
 					total={totalStars}
 					time={newStars > 0 ? `+${newStars} last month` : `${newStars} last month`}
+				/>
+				<OverviewCard
+					title={forks.title}
+					total={totalForks}
+					time={newForks > 0 ? `+${newForks} last month` : `${newForks} last month`}
 				/>
 			</div>
 		</section>
