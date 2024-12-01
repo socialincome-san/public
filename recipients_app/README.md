@@ -21,7 +21,7 @@ Mobile App for Recipients of a Social Income.
   - Set ANDROID_HOME and deprecated ANDROID_SDK_ROOT. Add the following
     lines in your USER's HOME directory in your .zshrc file:
     ```shell
-    export ANDROID_HOME="/Users/karinberg/Development/Android/SDK"
+    export ANDROID_HOME="YOUR PATH TO YOUR ANDROID SDK"
     export ANDROID_SDK_ROOT="$ANDROID_HOME" # ANDROID_SDK_ROOT is deprecated, but still in use
     export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
     ```
