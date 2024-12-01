@@ -3,7 +3,6 @@
 Mobile App for Recipients of a Social Income.
 
 ## Tools needed for building the app on a Apple Silicon Mac
-
 - [Homebrew](https://brew.sh/de/)
 - Flutter 3.19.6, Dart 3.3.4
 - Java JDK 17 
@@ -16,7 +15,7 @@ Mobile App for Recipients of a Social Income.
   ```
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   ```
-- Install Android Studio LadyBug or later
+- Install Android Studio
   - Set ANDROID_HOME and deprecated ANDROID_SDK_ROOT. Add the following lines in your USER's HOME directory in your .zshrc file:
     ```
     export ANDROID_HOME="/Users/karinberg/Development/Android/SDK"
@@ -32,12 +31,12 @@ Mobile App for Recipients of a Social Income.
     export PATH="$PATH:$JAVA_HOME/bin"
     ```
   - Restart your terminal so that these changes take effect
-- Install Flutter 3.19.6
+- Install Flutter
   - Tell Flutter to not use the Java JDK from Android Studio via `flutter config --jdk-dir $JAVA_HOME`
   - Restart your terminal and IDE so that these changes take effect
 - Install vsCode
   - Install Flutter extension
-- Install Xcode 16.1
+- Install Xcode
   - Set is as default via `sudo xcode-select -s <path/to/>Xcode.app`
   - To agree to the Xcode license from the command line, you can use the following command: `sudo xcodebuild -license accept`
 
@@ -89,7 +88,8 @@ setup.
 1. Github for issue related discussion
 2. Everything else on [Slack](https://social-income.slack.com/home)
 
-## Rebuilding JSON Serialization
+## How tos
+### Rebuilding JSON Serialization
 
 ```
 dart run build_runner watch --delete-conflicting-outputs
@@ -99,7 +99,7 @@ or
 dart run build_runner build --delete-conflicting-outputs
 ```
 
-## Rebuilding Translations
+### Rebuilding Translations
 
 Translations are stored in lib/l10n/app_en.arb. To rebuild the
 translations after you changed something run:
@@ -111,6 +111,16 @@ flutter gen-l10n
 To use a translated string in the code use:
 `AppLocalizations.of(context).helloWorld` and import:
 `import 'package:flutter_gen/gen_l10n/app_localizations.dart';`
+
+### Upgrade flutter version
+If you upgrade the flutter version, you have to change the following locations as well:
+- pubspec.yaml
+  - Under 'environment' adjust the 'sdk' and 'flutter' versions
+- .tool-versions (version file for version manager ASDF) 
+  - If you use 'asdf' run the comman `asdf local flutter x.y.z` #Replace x.y.z with the new Flutter version.
+  - Otherwise just update the version number in the file
+- README.md
+  - Find all places in the README.md which mentions the Flutter version number
 
 ## Testing
 
