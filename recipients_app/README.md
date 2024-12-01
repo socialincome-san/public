@@ -149,6 +149,7 @@ locations as well:
   - If you use 'asdf' run the comman `asdf local flutter x.y.z` #Replace
     x.y.z with the new Flutter version.
   - Otherwise just update the version number in the file
+- Adjust variable 'REQUIRED_VERSION' in 'clean_build.sh'
 - README.md
   - Find all places in the README.md which mentions the Flutter version
     number

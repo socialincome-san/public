@@ -4,8 +4,18 @@
 set -e
 
 # Check if Flutter is installed
+echo "Verify Flutter is installed..."
 if ! command -v flutter &> /dev/null; then
     echo "Error: Flutter is not installed"
+    exit 1
+fi
+
+# Verify Flutter version
+echo "Verify Flutter version..."
+REQUIRED_VERSION="3.19.6"
+CURRENT_VERSION=$(flutter --version | head -n 1 | awk '{print $2}')
+if [ "$CURRENT_VERSION" != "$REQUIRED_VERSION" ]; then
+    echo "Error: Flutter version $REQUIRED_VERSION is required (current: $CURRENT_VERSION)"
     exit 1
 fi
 
