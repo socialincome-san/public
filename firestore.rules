@@ -79,6 +79,10 @@ service cloud.firestore {
     match /world-development-indicators/{data} {
       allow read: if true;
     }
+
+    match /campaigns/{document=**} {
+      allow create: if true;
+    }
   }
 
   match /databases/{database}/documents {
