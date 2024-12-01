@@ -74,7 +74,7 @@ Mobile App for Recipients of a Social Income.
   `./.vscode/launch.json`
   - Replace the value "FILL IN SENTRY URL" after "SENTRY_URL=" with the
     real Sentry url to be able to use Sentry
-  - Decide which flavor and backend environment you what to use and
+  - Decide which flavor and backend environment you want to use and
     change it if necessary.
 - Open `recipients_app` project folder in vsCode
 - Open a terminal inside of vsCode and check `flutter --version` is
