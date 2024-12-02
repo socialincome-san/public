@@ -110,12 +110,6 @@ As Firebase emulators work on your local host machine the easiest way to
 run app is on the Android emulator. Real devices need some additional
 setup.
 
-Used flutter and dart version:
-- See pubspec.yaml or
-- .tool-versions if you use the version manager [asdf](https://asdf-vm.com/) and its [flutter plugin](https://github.com/asdf-community/asdf-flutter)
-
-Update both locations if the versions are changing!
-
 ## Communication Channel
 
 1. Github for issue related discussion
