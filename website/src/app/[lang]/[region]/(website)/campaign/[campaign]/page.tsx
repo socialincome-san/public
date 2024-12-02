@@ -1,10 +1,11 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import OneTimeDonationForm from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/one-time-donation-form';
+import GenericDonationForm from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/generic-donation-form';
+import { DonationInterval } from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/page';
 import { VimeoVideo } from '@/components/vimeo-video';
 import { firestoreAdmin } from '@/firebase-admin';
 import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { getMetadata } from '@/metadata';
-import { CAMPAIGN_FIRESTORE_PATH, Campaign, CampaignStatus } from '@socialincome/shared/src/types/campaign';
+import { Campaign, CAMPAIGN_FIRESTORE_PATH, CampaignStatus } from '@socialincome/shared/src/types/campaign';
 import { daysUntilTs } from '@socialincome/shared/src/utils/date';
 import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRates';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -187,7 +188,8 @@ export default async function Page({ params }: CampaignPageProps) {
 											</Typography>
 										</div>
 										<div className="mt-3">
-											<OneTimeDonationForm
+											<GenericDonationForm
+												defaultInterval={DonationInterval.Monthly}
 												lang={params.lang}
 												region={params.region}
 												translations={{
