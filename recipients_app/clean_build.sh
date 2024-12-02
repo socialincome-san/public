@@ -12,7 +12,7 @@ fi
 
 # Verify Flutter version
 echo "Verify Flutter version..."
-REQUIRED_VERSION="3.19.6"
+REQUIRED_VERSION="3.22.3"
 CURRENT_VERSION=$(flutter --version | head -n 1 | awk '{print $2}')
 if [ "$CURRENT_VERSION" != "$REQUIRED_VERSION" ]; then
     echo "Error: Flutter version $REQUIRED_VERSION is required (current: $CURRENT_VERSION)"
