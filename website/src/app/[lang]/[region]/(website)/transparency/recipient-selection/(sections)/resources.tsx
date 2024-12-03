@@ -13,7 +13,7 @@ export async function Resources({ lang }: DefaultParams) {
 	});
 
 	return (
-		<div id="resources-section" className="flex h-screen min-h-[600px] flex-col">
+		<div id="resources-section" className="flex h-[calc(100svh)] min-h-[600px] flex-col">
 			<div className="mt-[80px] flex flex-grow flex-col items-center justify-center p-6 text-center">
 				<div className="pb-4">
 					<Typography size="xl">{translator.t('section-2.subtitle')}</Typography>

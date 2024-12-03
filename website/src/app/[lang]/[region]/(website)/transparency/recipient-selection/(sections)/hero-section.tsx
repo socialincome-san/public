@@ -13,7 +13,7 @@ export async function HeroSection({ lang }: DefaultParams) {
 	});
 
 	return (
-		<div className="theme-blue flex h-screen min-h-[600px] flex-col">
+		<div className="theme-blue flex h-[calc(100svh)] min-h-[600px] flex-col">
 			<div className="mt-[80px] flex flex-grow flex-col items-center justify-center p-6 text-center">
 				<div className="pb-4">
 					<Typography size="xl" className="opacity-60">
