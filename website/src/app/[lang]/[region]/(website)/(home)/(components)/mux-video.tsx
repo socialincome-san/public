@@ -45,13 +45,15 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 		const video = videoElementRef.current;
 		if (playing && video) {
 			// Hide poster when video is ready
-			video.addEventListener('canplay', () => {
+			const handleCanPlay = () => {
 				if (posterRef.current) {
 					posterRef.current.style.opacity = '0';
 					posterRef.current.style.transition = 'opacity 0.5s ease';
 				}
-			});
+			};
+			video.addEventListener('canplay', handleCanPlay);
 			video.play();
+			return () => video.removeEventListener('canplay', handleCanPlay);
 		} else {
 			videoElementRef.current?.pause();
 		}
@@ -101,7 +103,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 				playsInline
 				onCanPlay={() => setPlaying(true)} // Ensure smooth start
 			>
-				<track kind="captions" src={translations.subtitles} srcLang={lang} label="English" default />
+				<track kind="captions" src={translations.subtitles} srcLang={lang} label={lang.toUpperCase()} default />
 				<style>{`
           video::cue {
             background-color: rgba(0, 0, 0, 0.8);
