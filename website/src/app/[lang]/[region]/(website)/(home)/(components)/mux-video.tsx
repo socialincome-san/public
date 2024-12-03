@@ -39,8 +39,6 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 	const [showControls, setShowControls] = useState(true);
 	const { entry, isIntersecting, ref } = useIntersectionObserver({ initialIsIntersecting: true, threshold: 0.5 });
 	const { setBackgroundColor } = useGlobalStateProvider();
-	// Safari Detection
-	const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 	useEffect(() => {
 		if (!entry) return;
 		if (!isIntersecting && entry.boundingClientRect.top < 0) {
