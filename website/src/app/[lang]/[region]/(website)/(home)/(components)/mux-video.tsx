@@ -17,6 +17,20 @@ type HeroVideoSubtitles = {
 } & DefaultParams;
 
 const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
+	const [error, setError] = useState<Error | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+	const handleError = (e: Event) => {
+		setError(new Error('Failed to load video'));
+		setIsLoading(false);
+	};
+
+	useEffect(() => {
+		const video = videoElementRef.current;
+		if (video) {
+			video.addEventListener('error', handleError);
+			return () => video.removeEventListener('error', handleError);
+		}
+	}, []);
 	const videoElementRef = useRef<HTMLVideoElement>(null);
 	const posterRef = useRef<HTMLDivElement>(null);
 	const [muted, setMuted] = useState(true);
