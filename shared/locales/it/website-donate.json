@@ -23,6 +23,9 @@
 		"8": "Il tuo contributo mensile di {{ amount, currency }} è straordinario, così come il tuo impatto."
 	},
 	"donation-interval": {
+		"0": {
+			"title": "Donazione una tantum"
+		},
 		"1": {
 			"title": "Mensile",
 			"text": "Dona {{ amount, currency }} ogni mese"

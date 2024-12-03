@@ -1,0 +1,28 @@
+{
+	"campaign": {
+		"not-found": "La campagne est malheureusement introuvable.",
+		"by": "Par {{ creator }}",
+		"without-goal": {
+			"collected_zero": "Il n’y a pas encore de dons. Fais le premier pas!",
+			"collected_one": "Reçu {{ amount, currency }} de {{ count }} personne",
+			"collected_other": "Reçu {{ amount, currency }} de {{ count }} personnes"
+		},
+		"with-goal": {
+			"collected-percentage": "Reçu {{percentage}}%",
+			"goal-title": "Objectif",
+			"collected-amount_one": "Reçu {{ amount, currency }} de {{count}} personne",
+			"collected-amount_other": "Reçu {{ amount, currency }} de {{count}} personnes",
+			"goal-amount": "{{ amount, currency }}"
+		},
+		"days-left_zero": "Dernier jour",
+		"days-left_one": "Plus qu’un jour jusqu’à la clôture de la campagne",
+		"days-left_other": "Encore {{ count }} pour contribuer",
+		"ended": " La campagne est terminée. Tu peux faire un don en allant sur la page principale du site.",
+		"card-title": "Ma contribution",
+		"about-si-title": "Über Social Income",
+		"about-si-text-1": "Social Income est une ONG basée en Suisse qui assure des transferts d’argent inconditionnels par téléphone mobile à des personnes vivant dans une pauvreté multidimensionnelle en Afrique de l’Ouest.",
+		"about-si-text-2": "Depuis 2020, Social Income gère un programme de revenu de base universel non limité dans le temps en Sierra Leone.",
+		"more-faq": "<a href='/faq' target=\"_blank\">Plus de questions</a>",
+		"badge-highlight": "Campagne actuelle"
+	}
+}
