@@ -2,7 +2,7 @@ import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { useEffect, useState } from 'react';
 
-export function useTranslator(language: LanguageCode, namespace: string) {
+export function useTranslator(language: LanguageCode, namespace: string): Translator | undefined {
 	const [translators, setTranslators] = useState<Map<string, Translator>>(new Map());
 
 	useEffect(() => {
