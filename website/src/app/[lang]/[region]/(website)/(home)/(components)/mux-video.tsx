@@ -1,24 +1,45 @@
 'use client';
 
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { useGlobalStateProvider } from '@/components/providers/global-state-provider';
 import { PauseIcon, PlayIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/24/solid';
 import MuxVideo from '@mux/mux-video-react';
 import { Button } from '@socialincome/ui';
 import classNames from 'classnames';
+import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { useEventListener, useIntersectionObserver } from 'usehooks-ts';
 
 export const OVERLAY_FADE_OUT_DELAY = 4000;
+type HeroVideoSubtitles = {
+	translations: {
+		subtitles: string;
+	};
+} & DefaultParams;
 
-const MuxVideoComponent = () => {
+const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
+	const [error, setError] = useState<Error | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+	const handleError = (e: Event) => {
+		setError(new Error('Failed to load video'));
+		setIsLoading(false);
+	};
+
+	useEffect(() => {
+		const video = videoElementRef.current;
+		if (video) {
+			video.addEventListener('error', handleError);
+			return () => video.removeEventListener('error', handleError);
+		}
+	}, []);
 	const videoElementRef = useRef<HTMLVideoElement>(null);
+	const posterRef = useRef<HTMLDivElement>(null);
 	const [muted, setMuted] = useState(true);
 	const [playing, setPlaying] = useState(false);
 	const [showCaptions, setShowCaptions] = useState(true);
 	const [showControls, setShowControls] = useState(true);
 	const { entry, isIntersecting, ref } = useIntersectionObserver({ initialIsIntersecting: true, threshold: 0.5 });
 	const { setBackgroundColor } = useGlobalStateProvider();
-
 	useEffect(() => {
 		if (!entry) return;
 		if (!isIntersecting && entry.boundingClientRect.top < 0) {
@@ -34,8 +55,18 @@ const MuxVideoComponent = () => {
 	}, [entry, isIntersecting]);
 
 	useEffect(() => {
-		if (playing) {
-			videoElementRef.current?.play();
+		const video = videoElementRef.current;
+		if (playing && video) {
+			// Hide poster when video is ready
+			const handleCanPlay = () => {
+				if (posterRef.current) {
+					posterRef.current.style.opacity = '0';
+					posterRef.current.style.transition = 'opacity 0.5s ease';
+				}
+			};
+			video.addEventListener('canplay', handleCanPlay);
+			video.play();
+			return () => video.removeEventListener('canplay', handleCanPlay);
 		} else {
 			videoElementRef.current?.pause();
 		}
@@ -67,32 +98,34 @@ const MuxVideoComponent = () => {
 
 	return (
 		<>
+			<div ref={posterRef} className="absolute inset-0 z-0">
+				<Image
+					alt="Video Poster"
+					className="h-full w-full object-cover"
+					src="https://image.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/thumbnail.jpg?time=2"
+				/>
+			</div>
 			<MuxVideo
 				ref={videoElementRef}
-				className="h-full w-full object-cover"
+				className="z-10 h-full w-full object-cover"
 				playbackId="IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE"
-				poster="https://image.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/thumbnail.jpg?time=2"
 				startTime={2}
 				loop
 				muted={muted}
 				autoPlay={playing}
 				playsInline
+				onCanPlay={() => setPlaying(true)} // Ensure smooth start
 			>
-				<track
-					kind="captions"
-					src="https://stream.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/text/YZZCqh56kzyMBlwsaPsdlxaFKmlKzNNDKV7oyQb8ECZ4zpXnm500ieA.txt"
-					srcLang="en"
-					label="English"
-					default
-				/>
+				<track kind="captions" src={translations.subtitles} srcLang={lang} label={lang.toUpperCase()} default />
 				<style>{`
-        video::cue {
-          background-color: rgba(0, 0, 0, 0.8);
-          color: white;
-          font-family: Arial, sans-serif;
-          font-size: 24px;
-          opacity: ${showCaptions ? 1 : 0};
-      `}</style>
+          video::cue {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            opacity: ${showCaptions ? 1 : 0};
+          }
+        `}</style>
 			</MuxVideo>
 			{/* Transparent element used to track whether navbar should be transparent or not  */}
 			<div ref={ref} className="absolute inset-x-0 top-24 z-10 h-2 opacity-100"></div>
@@ -131,5 +164,4 @@ const MuxVideoComponent = () => {
 		</>
 	);
 };
-
 export default MuxVideoComponent;

@@ -12,7 +12,13 @@ export async function HeroVideo({ lang, region }: DefaultParams) {
 
 	return (
 		<div className="relative h-[calc(100svh)] w-full">
-			<MuxVideoComponent />
+			<MuxVideoComponent
+				translations={{
+					subtitles: translator.t<string>('video-subtitle'),
+				}}
+				lang={lang}
+				region={region}
+			/>
 			<HeroVideoOverlay
 				translations={{
 					buttonText: translator.t('section-1.take-action'),
