@@ -92,7 +92,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 			</div>
 			<MuxVideo
 				ref={videoElementRef}
-				className="h-full w-full object-cover z-10"
+				className="z-10 h-full w-full object-cover"
 				playbackId="IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE"
 				startTime={2}
 				loop
