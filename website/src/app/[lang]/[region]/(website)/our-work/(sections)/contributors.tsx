@@ -5,7 +5,6 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import carlosImg from '../(assets)/carlos.jpg';
 import claudiaImage from '../(assets)/claudia.jpg';
-import hanImage from '../(assets)/han.jpg';
 import rubenImage from '../(assets)/ruben.jpg';
 import vanjaImg from '../(assets)/vanja.jpg';
 
@@ -40,40 +39,36 @@ export async function Contributors({ params }: DefaultPageProps) {
 				<Typography as="h2" size="2xl">
 					{translator.t('contributors.text-2')}
 				</Typography>
-				<ContributorsPeopleCarousel
-					portraits={[
-						{
-							name: 'Carlos',
-							image: carlosImg,
-							text: translator.t('contributors.portraits.carlos'),
-							country: translator.t('US'),
-						},
-						{
-							name: 'Vanja',
-							image: vanjaImg,
-							text: translator.t('contributors.portraits.vanja'),
-							country: translator.t('CH'),
-						},
-						{
-							name: 'Ruben',
-							image: rubenImage,
-							text: translator.t('contributors.portraits.ruben'),
-							country: translator.t('CH'),
-						},
-						{
-							name: 'Han',
-							image: hanImage,
-							text: translator.t('contributors.portraits.han'),
-							country: translator.t('US'),
-						},
-						{
-							name: 'Claudia',
-							image: claudiaImage,
-							text: translator.t('contributors.portraits.claudia'),
-							country: translator.t('CH'),
-						},
-					]}
-				/>
+				<div className="pt-10">
+					<ContributorsPeopleCarousel
+						portraits={[
+							{
+								name: 'Carlos',
+								image: carlosImg,
+								text: translator.t('contributors.portraits.carlos'),
+								country: translator.t('US'),
+							},
+							{
+								name: 'Vanja',
+								image: vanjaImg,
+								text: translator.t('contributors.portraits.vanja'),
+								country: translator.t('CH'),
+							},
+							{
+								name: 'Ruben',
+								image: rubenImage,
+								text: translator.t('contributors.portraits.ruben'),
+								country: translator.t('CH'),
+							},
+							{
+								name: 'Claudia',
+								image: claudiaImage,
+								text: translator.t('contributors.portraits.claudia'),
+								country: translator.t('CH'),
+							},
+						]}
+					/>
+				</div>
 			</div>
 		</BaseContainer>
 	);
