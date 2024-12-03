@@ -13,9 +13,8 @@ export async function HeroSection({ lang }: DefaultParams) {
 	});
 
 	return (
-		<div className="theme-blue h-screen min-h-[600px] flex flex-col">
-
-			<div className="mt-[80px] flex-grow flex flex-col items-center justify-center p-6 text-center">
+		<div className="theme-blue flex h-screen min-h-[600px] flex-col">
+			<div className="mt-[80px] flex flex-grow flex-col items-center justify-center p-6 text-center">
 				<div className="pb-4">
 					<Typography size="xl" className="opacity-60">
 						{translator.t('section-1.subtitle')}
@@ -36,10 +35,10 @@ export async function HeroSection({ lang }: DefaultParams) {
 				</div>
 			</div>
 
-			<div className="flex-grow flex items-start justify-center">
+			<div className="flex flex-grow items-start justify-center">
 				<div className="flex flex-col items-center sm:flex-row sm:space-x-4">
 					<Image className="h-12 w-12 md:h-20 md:w-20" src={globeRotating} alt="Globe Icon" />
-					<div className="my-4 mx-auto max-w-4xl whitespace-pre text-center sm:text-left">
+					<div className="mx-auto my-4 max-w-4xl whitespace-pre text-center sm:text-left">
 						<Typography as="span" color="accent" className="inline-block text-xl sm:text-2xl">
 							{translator.t('section-1.population')} {translator.t('section-1.potential')}
 						</Typography>
@@ -50,10 +49,8 @@ export async function HeroSection({ lang }: DefaultParams) {
 				</div>
 			</div>
 
-			<div className="text-center py-4 flex flex-col items-center">
-				<Typography size="xl">
-					{translator.t('section-1.continue')}
-				</Typography>
+			<div className="flex flex-col items-center py-4 text-center">
+				<Typography size="xl">{translator.t('section-1.continue')}</Typography>
 				<div className="flex justify-center">
 					<ScrollToChevron elementId="resources-section" />
 				</div>
