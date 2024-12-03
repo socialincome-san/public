@@ -25,7 +25,7 @@
 		],
 		"population": "8,104,666,773",
 		"potential": "potenzielle",
-		"scope": "Empfänger:innen leben auf der Erde.",
+		"scope": "Empfänger:innen leben auf der Erde",
 		"continue": "Jedoch"
 	},
 	"section-2": {
@@ -43,11 +43,9 @@
 			}
 		],
 		"amount": "USD 300,000+",
-		"amount-context": "an Spenden erhalten",
+		"amount-context": "Spenden erhalten ↗",
 		"scope": "Mehr ",
-		"transparency-page": "Zahlen und Transparenz ↗",
-		"continue-1": "Unsere Auswahlprinzipien sind",
-		"continue-2": "Fairness und Transparenz"
+		"continue-1": "Auswahlverfahren"
 	},
 	"section-3": {
 		"preselection-title": "Faire Vorauswahl",

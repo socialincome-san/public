@@ -29,7 +29,7 @@
 		"subtitle": "La nostra realtà",
 		"title": [
 			{
-				"text": "A causa delle risorse limitate che abbiamo a disposizione,"
+				"text": "A causa delle risorse limitate che abbiamo a disposizione, "
 			},
 			{
 				"text": "ci concentriamo su coloro ",
@@ -40,11 +40,9 @@
 			}
 		],
 		"amount": "USD 300,000+",
-		"amount-context": "raccolti fino a oggi",
+		"amount-context": "raccolti fino a oggi ↗",
 		"scope": "Più ",
-		"transparency-page": "trasparenza e numeri ↗",
-		"continue-1": "Per noi, scegliere significa",
-		"continue-2": "equità e trasparenza"
+		"continue-1": "Processo di selezione"
 	},
 	"section-3": {
 		"preselection-title": "Preselezione Equa",
