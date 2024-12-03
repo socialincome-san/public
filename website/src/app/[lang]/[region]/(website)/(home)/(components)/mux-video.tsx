@@ -6,6 +6,7 @@ import { PauseIcon, PlayIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroico
 import MuxVideo from '@mux/mux-video-react';
 import { Button } from '@socialincome/ui';
 import classNames from 'classnames';
+import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { useEventListener, useIntersectionObserver } from 'usehooks-ts';
 
@@ -98,10 +99,10 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 	return (
 		<>
 			<div ref={posterRef} className="absolute inset-0 z-0">
-				<img
+				<Image
+					alt="Video Poster"
 					className="h-full w-full object-cover"
 					src="https://image.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/thumbnail.jpg?time=2"
-					alt="Video Poster"
 				/>
 			</div>
 			<MuxVideo
