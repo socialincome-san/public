@@ -18,13 +18,15 @@ type HeroVideoSubtitles = {
 
 const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 	const videoElementRef = useRef<HTMLVideoElement>(null);
+	const posterRef = useRef<HTMLDivElement>(null);
 	const [muted, setMuted] = useState(true);
 	const [playing, setPlaying] = useState(false);
 	const [showCaptions, setShowCaptions] = useState(true);
 	const [showControls, setShowControls] = useState(true);
 	const { entry, isIntersecting, ref } = useIntersectionObserver({ initialIsIntersecting: true, threshold: 0.5 });
 	const { setBackgroundColor } = useGlobalStateProvider();
-
+	// Safari Detection
+	const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 	useEffect(() => {
 		if (!entry) return;
 		if (!isIntersecting && entry.boundingClientRect.top < 0) {
@@ -40,8 +42,16 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 	}, [entry, isIntersecting]);
 
 	useEffect(() => {
-		if (playing) {
-			videoElementRef.current?.play();
+		const video = videoElementRef.current;
+		if (playing && video) {
+			// Hide poster when video is ready
+			video.addEventListener('canplay', () => {
+				if (posterRef.current) {
+					posterRef.current.style.opacity = '0';
+					posterRef.current.style.transition = 'opacity 0.5s ease';
+				}
+			});
+			video.play();
 		} else {
 			videoElementRef.current?.pause();
 		}
@@ -73,26 +83,34 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 
 	return (
 		<>
+			<div ref={posterRef} className="absolute inset-0 z-0">
+				<img
+					className="h-full w-full object-cover"
+					src="https://image.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/thumbnail.jpg?time=2"
+					alt="Video Poster"
+				/>
+			</div>
 			<MuxVideo
 				ref={videoElementRef}
-				className="h-full w-full object-cover"
+				className="h-full w-full object-cover z-10"
 				playbackId="IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE"
-				poster="https://image.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/thumbnail.jpg?time=2"
 				startTime={2}
 				loop
 				muted={muted}
 				autoPlay={playing}
 				playsInline
+				onCanPlay={() => setPlaying(true)} // Ensure smooth start
 			>
 				<track kind="captions" src={translations.subtitles} srcLang={lang} label="English" default />
 				<style>{`
-        video::cue {
-          background-color: rgba(0, 0, 0, 0.8);
-          color: white;
-          font-family: Arial, sans-serif;
-          font-size: 24px;
-          opacity: ${showCaptions ? 1 : 0};
-      `}</style>
+          video::cue {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            opacity: ${showCaptions ? 1 : 0};
+          }
+        `}</style>
 			</MuxVideo>
 			{/* Transparent element used to track whether navbar should be transparent or not  */}
 			<div ref={ref} className="absolute inset-x-0 top-24 z-10 h-2 opacity-100"></div>
@@ -131,5 +149,4 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 		</>
 	);
 };
-
 export default MuxVideoComponent;
