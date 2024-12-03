@@ -40,11 +40,9 @@
 			}
 		],
 		"amount": "USD 300,000+",
-		"amount-context": "raised to date",
+		"amount-context": "raised to date ↗",
 		"scope": "visit our ",
-		"transparency-page": "transparency page ↗",
-		"continue-1": "For us, selecting is about",
-		"continue-2": "fairness and transparency"
+		"continue-1": "Selection Process"
 	},
 	"section-3": {
 		"preselection-title": "Fair Preselection",

@@ -29,7 +29,7 @@
 		"subtitle": "Notre réalité",
 		"title": [
 			{
-				"text": "Nos ressources étant limitées,  "
+				"text": "Nos ressources étant limitées, "
 			},
 			{
 				"text": "nous concentrons nos efforts ",
@@ -40,11 +40,9 @@
 			}
 		],
 		"amount": "USD 300,000+",
-		"amount-context": "reçus à ce jour",
+		"amount-context": "reçus à ce jour ↗",
 		"scope": "Plus de ",
-		"transparency-page": "transparence et chiffres ↗",
-		"continue-1": "Pour nous, la sélection est une",
-		"continue-2": "question d'équité et de transparence"
+		"continue-1": "Processus de sélection"
 	},
 	"section-3": {
 		"preselection-title": "Une présélection équitable",

@@ -17,7 +17,7 @@ export async function Resources({ lang }: DefaultParams) {
 
 					<div className="mt-[80px] flex-grow flex flex-col items-center justify-center p-6 text-center">
 						<div className="pb-4">
-							<Typography size="xl" className="opacity-60">
+							<Typography size="xl">
 								{translator.t('section-2.subtitle')}
 							</Typography>
 						</div>
@@ -40,15 +40,10 @@ export async function Resources({ lang }: DefaultParams) {
 							<Image className="h-12 w-12 md:h-20 md:w-20" src={transparency} alt="Transparency Icon" />
 							<div className="my-4 mx-auto max-w-4xl text-center sm:text-left">
 								<div>
-									<Typography as="span" className="block text-xl sm:text-2xl">
-										{translator.t('section-2.amount')} {translator.t('section-2.amount-context')}
-									</Typography>
-								</div>
-								<div>
 									<Button variant="link">
 										<a href="../transparency/finances" target="_blank" rel="noopener noreferrer">
 											<Typography as="span" className="text-xl sm:text-2xl">
-												{translator.t('section-2.transparency-page')}
+												{translator.t('section-2.amount')} {translator.t('section-2.amount-context')}
 											</Typography>
 										</a>
 									</Button>
@@ -60,9 +55,6 @@ export async function Resources({ lang }: DefaultParams) {
 					<div className="text-center py-4 flex flex-col items-center">
 						<Typography size="xl">
 							{translator.t('section-2.continue-1')}
-						</Typography>
-						<Typography size="xl">
-							{translator.t('section-2.continue-2')}
 						</Typography>
 						<div className="flex justify-center">
 							<ScrollToChevron elementId="selection-process-section" />
