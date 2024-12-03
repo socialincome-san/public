@@ -6,7 +6,6 @@ import { PauseIcon, PlayIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroico
 import MuxVideo from '@mux/mux-video-react';
 import { Button } from '@socialincome/ui';
 import classNames from 'classnames';
-import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { useEventListener, useIntersectionObserver } from 'usehooks-ts';
 
@@ -18,20 +17,6 @@ type HeroVideoSubtitles = {
 } & DefaultParams;
 
 const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
-	const [error, setError] = useState<Error | null>(null);
-	const [isLoading, setIsLoading] = useState(true);
-	const handleError = (e: Event) => {
-		setError(new Error('Failed to load video'));
-		setIsLoading(false);
-	};
-
-	useEffect(() => {
-		const video = videoElementRef.current;
-		if (video) {
-			video.addEventListener('error', handleError);
-			return () => video.removeEventListener('error', handleError);
-		}
-	}, []);
 	const videoElementRef = useRef<HTMLVideoElement>(null);
 	const posterRef = useRef<HTMLDivElement>(null);
 	const [muted, setMuted] = useState(true);
@@ -99,7 +84,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 	return (
 		<>
 			<div ref={posterRef} className="absolute inset-0 z-0">
-				<Image
+				<img
 					alt="Video Poster"
 					className="h-full w-full object-cover"
 					src="https://image.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/thumbnail.jpg?time=2"
