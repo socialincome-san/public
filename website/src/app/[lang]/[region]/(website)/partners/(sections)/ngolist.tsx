@@ -30,7 +30,12 @@ export async function NgoList({ lang }: DefaultParams) {
 	});
 	const image_base_path = '/assets/partners/';
 
-	const ngoArray: NgoEntryJSON[] = translator.t('ngos');
+	const ngos: string[] = translator.t('ngos');
+	const ngoArray: NgoEntryJSON[] = [];
+	ngos.forEach((slug: string) => {
+		const ngo: NgoEntryJSON = translator.t(slug);
+		ngoArray.push(ngo);
+	});
 	const ngoCardPropsArray: NgoCardProps[] = [];
 	for (let i = 0; i < ngoArray.length; ++i) {
 		const recipientsBadge: RecipientsBadgeType = {
@@ -77,7 +82,7 @@ export async function NgoList({ lang }: DefaultParams) {
 			orgLinkedIn: ngoArray[i]['org-linkedin'] ?? null,
 			orgYoutube: ngoArray[i]['org-youtube'] ?? null,
 			orgFundRaiserText: ngoArray[i]['org-fundraiser-text'] ?? null,
-			orgPermalink: ngoArray[i]['org-permalink'],
+			orgSlug: ngoArray[i]['org-slug'],
 		};
 
 		const ngoCardProps: NgoCardProps = {

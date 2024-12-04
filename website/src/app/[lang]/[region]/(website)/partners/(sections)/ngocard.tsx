@@ -278,9 +278,9 @@ export default async function NgoCard({
 							<Typography size="lg">{translator.t('ngo-generic.permalink')}</Typography>
 						</div>
 						<div className="col-span-2">
-							<Link href={`https://www.${ngoHoverCard.orgPermalink}`}>
+							<Link href={`https://socialincome.org/en/int/partners/${ngoHoverCard.orgSlug}`}>
 								<Typography size="lg" className="break-words underline">
-									{ngoHoverCard.orgPermalink}
+									{`socialincome.org/partners/${ngoHoverCard.orgSlug}`}
 								</Typography>
 							</Link>
 						</div>

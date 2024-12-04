@@ -1,16 +1,11 @@
 'use client';
 import { FundraiserBadge, RecipientsBadge } from '@/app/[lang]/[region]/(website)/partners/(components)/PartnerBadges';
 import { CountryBadgeType, RecipientsBadgeType } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerBadges';
-import {
-	NgoEntryJSON,
-	NgoHomeProps,
-	NgoHoverCardType,
-} from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
+import { NgoHomeProps, NgoHoverCardType } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
 import { Badge, Separator, Typography } from '@socialincome/ui';
 import { CH, SL } from 'country-flag-icons/react/1x1';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
 import { ReactElement } from 'react';
 
 const country_abbreviations_to_flag_map: Record<string, ReactElement> = {
@@ -20,38 +15,7 @@ const country_abbreviations_to_flag_map: Record<string, ReactElement> = {
 function getFlag(abbreviation: string): ReactElement {
 	return country_abbreviations_to_flag_map[abbreviation] || <SL className="h-5 w-5 rounded-full" />;
 }
-export function PartnerHome({
-	ngoArray,
-	partnerSinceTranslation,
-	badgeRecipientTranslation,
-	badgeRecipientTranslationBy,
-	badgeActiveTranslation,
-	badgeFormerTranslation,
-	badgeSuspendedTranslation,
-	fundRaiserTranslation,
-	missionTranslation,
-	foundedTranslation,
-	headquarterTranslation,
-	moreLinksTranslation,
-	websiteTranslation,
-	facebookTranslation,
-	instagramTranslation,
-	linkedinTranslation,
-	youtubeTranslation,
-	permalinkTranslation,
-}: NgoHomeProps) {
-	const router = useRouter();
-	const { orgLongName } = useParams() as { orgLongName: string };
-
-	const deSlugifiedOrgLongName = orgLongName.replaceAll('-', ' ').replaceAll('%26', '&');
-	const currentNgo: NgoEntryJSON | undefined = ngoArray.find(
-		(ngo) => ngo['org-long-name'].toLowerCase() === deSlugifiedOrgLongName,
-	);
-	if (!currentNgo) {
-		router.replace('/not-found');
-		return;
-	}
-
+export function PartnerHome({ currentNgo, translations }: NgoHomeProps) {
 	const image_base_path = '/assets/partners/';
 	const recipientsBadge: RecipientsBadgeType = {
 		hoverCardOrgName: currentNgo!['org-long-name'],
@@ -86,7 +50,7 @@ export function PartnerHome({
 		orgLinkedIn: currentNgo!['org-linkedin'] ?? null,
 		orgYoutube: currentNgo!['org-youtube'] ?? null,
 		orgFundRaiserText: currentNgo!['org-fundraiser-text'] ?? null,
-		orgPermalink: currentNgo!['org-permalink'],
+		orgSlug: currentNgo!['org-slug'],
 	};
 	const showVisitOnline: boolean = !!(
 		ngoHoverCard.orgInstagram ||
@@ -121,18 +85,18 @@ export function PartnerHome({
 					<div className="flex flex-col gap-2 p-0 pb-8 pt-2 sm:flex-row sm:items-center sm:justify-between">
 						<div className="pb-4 text-center sm:order-2 sm:flex-shrink-0 sm:pb-0 sm:text-right">
 							<Typography size="md" weight="normal">
-								{partnerSinceTranslation} {ngoHoverCard.partnershipStart}
+								{translations.partnerSince} {ngoHoverCard.partnershipStart}
 							</Typography>
 						</div>
 						<div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
 							<RecipientsBadge
 								{...recipientsBadge}
 								isInsideHoverCard={true}
-								translatorBadgeRecipients={badgeRecipientTranslation}
-								translatorBadgeRecipientsBy={badgeRecipientTranslationBy}
-								translatorBadgeActive={badgeActiveTranslation}
-								translatorBadgeFormer={badgeFormerTranslation}
-								translatorBadgeSuspended={badgeSuspendedTranslation}
+								translatorBadgeRecipients={translations.badgeRecipient}
+								translatorBadgeRecipientsBy={translations.badgeRecipientBy}
+								translatorBadgeActive={translations.badgeActive}
+								translatorBadgeFormer={translations.badgeFormer}
+								translatorBadgeSuspended={translations.badgeSuspended}
 							/>
 							<Badge className="bg-primary hover:bg-primary text-primary space-x-2 bg-opacity-10 px-4 py-2 hover:bg-opacity-100 hover:text-white">
 								{countryBadge?.countryFlagComponent || <SL className="h-5 w-5 rounded-full" />}
@@ -144,7 +108,7 @@ export function PartnerHome({
 					</div>
 					{showFundRaiser && (
 						<div className="border-primary mb-8 flex items-center justify-start space-x-5 rounded-md border-2 border-opacity-80 py-4 pl-4">
-							<FundraiserBadge fundRaiserTranslation={fundRaiserTranslation} />
+							<FundraiserBadge fundRaiserTranslation={translations.fundRaiser} />
 							<span>
 								{ngoHoverCard.orgFundRaiserText?.map((fragment, index) => {
 									return fragment.href ? (
@@ -214,7 +178,7 @@ export function PartnerHome({
 					)}
 					<div className="grid grid-cols-3 gap-4">
 						<div className="col-span-1">
-							<Typography size="lg">{missionTranslation}</Typography>
+							<Typography size="lg">{translations.mission}</Typography>
 						</div>
 						<div className="col-span-2">
 							<Typography size="lg">{currentNgo!['org-mission']}</Typography>
@@ -222,7 +186,7 @@ export function PartnerHome({
 					</div>
 					<div className="grid grid-cols-3 gap-4">
 						<div className="col-span-1">
-							<Typography size="lg">{foundedTranslation}</Typography>
+							<Typography size="lg">{translations.founded}</Typography>
 						</div>
 						<div className="col-span-2">
 							<Typography size="lg">{ngoHoverCard.orgFoundation}</Typography>
@@ -230,7 +194,7 @@ export function PartnerHome({
 					</div>
 					<div className="grid grid-cols-3 gap-4">
 						<div className="col-span-1">
-							<Typography size="lg">{headquarterTranslation}</Typography>
+							<Typography size="lg">{translations.headquarter}</Typography>
 						</div>
 						<div className="col-span-2">
 							<Typography size="lg">{ngoHoverCard.orgHeadquarter}</Typography>
@@ -239,32 +203,32 @@ export function PartnerHome({
 					{showVisitOnline && (
 						<div className="grid grid-cols-3 gap-4">
 							<div className="col-span-1">
-								<Typography size="lg">{moreLinksTranslation}</Typography>
+								<Typography size="lg">{translations.moreLinks}</Typography>
 							</div>
 							<div className="col-span-2">
 								{ngoHoverCard.orgWebsite && (
 									<Link href={ngoHoverCard.orgWebsite} className="ml-auto inline-block pr-2 text-lg underline">
-										{websiteTranslation}
+										{translations.website}
 									</Link>
 								)}
 								{ngoHoverCard.orgFacebook && (
 									<Link href={ngoHoverCard.orgFacebook} className="ml-auto inline-block pr-2 text-lg underline">
-										{facebookTranslation}
+										{translations.facebook}
 									</Link>
 								)}
 								{ngoHoverCard.orgInstagram && (
 									<Link href={ngoHoverCard.orgInstagram} className="ml-auto inline-block pr-2 text-lg underline">
-										{instagramTranslation}
+										{translations.instagram}
 									</Link>
 								)}
 								{ngoHoverCard.orgLinkedIn && (
 									<Link href={ngoHoverCard.orgLinkedIn} className="ml-auto inline-block pr-2 text-lg underline">
-										{linkedinTranslation}
+										{translations.linkedin}
 									</Link>
 								)}
 								{ngoHoverCard.orgYoutube && (
 									<Link href={ngoHoverCard.orgYoutube} className="ml-auto inline-block pr-2 text-lg underline">
-										{youtubeTranslation}
+										{translations.youtube}
 									</Link>
 								)}
 							</div>
@@ -272,12 +236,12 @@ export function PartnerHome({
 					)}
 					<div className="grid grid-cols-3 gap-4">
 						<div className="col-span-1">
-							<Typography size="lg">{permalinkTranslation}</Typography>
+							<Typography size="lg">{translations.permalink}</Typography>
 						</div>
 						<div className="col-span-2">
-							<Link href={`https://www.${ngoHoverCard.orgPermalink}`}>
-								<Typography size="lg" className="underline">
-									{ngoHoverCard.orgPermalink}
+							<Link href={`https://socialincome.org/en/int/partners/${ngoHoverCard.orgSlug}`}>
+								<Typography size="lg" className="break-words underline">
+									{`socialincome.org/partners/${ngoHoverCard.orgSlug}`}
 								</Typography>
 							</Link>
 						</div>
