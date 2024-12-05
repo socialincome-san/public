@@ -29,7 +29,7 @@
 		"partner-since": "Partner seit",
 		"headquarter": "Hauptsitz",
 		"mission": "Mission",
-		"fundraiser": "Fundraiser",
+		"fundraiser": "Spendenaktion",
 		"permalink": "Permalink"
 	},
 	"ngos": [
@@ -309,6 +309,15 @@
 					"text": "Durch ihre Arbeit hilft SLAES den Überlebenden, ihr Leben neu aufzubauen und stärkt die Widerstandsfähigkeit in den betroffenen Gemeinschaften."
 				}
 			]
+		],
+		"org-fundraiser-text": [
+			{
+				"text": "SLAES sammelt aktuell Spenden: "
+			},
+			{
+				"text": "Rebuilding Lives",
+				"href": "https://socialincome.org/campaign/MZmXEVHlDjOOFOMk82jW"
+			}
 		],
 		"org-quote": [
 			{
