@@ -3,14 +3,11 @@ import { SendgridContactType } from '@socialincome/shared/src/sendgrid/types';
 import { CountryCode } from '../types/country';
 import { Suppression } from './types';
 
-export const NEWSLETTER_LIST_ID = '2896ee4d-d1e0-4a4a-8565-7e592c377e36';
-export const NEWSLETTER_SUPPRESSION_LIST_ID = 45634;
-
 export type NewsletterSubscriptionData = {
 	firstname?: string;
 	lastname?: string;
 	email: string;
-	language: 'de' | 'en';
+	language: 'de' | 'en' | 'fr' | 'it';
 	country?: CountryCode;
 	status?: 'subscribed' | 'unsubscribed';
 	isContributor?: boolean;

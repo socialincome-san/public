@@ -20,7 +20,7 @@
 	"dependencies": {
 		"@heroicons/react": "^2.1.5",
 		"@icons-pack/react-simple-icons": "^10.0.0",
-		"@mux/mux-video-react": "^0.11.4",
+		"@mux/mux-video-react": "^0.12.0",
 		"@sentry/nextjs": "^8.33.1",
 		"@socialincome/shared": "^1.0.0",
 		"@socialincome/ui": "^1.0.0",
