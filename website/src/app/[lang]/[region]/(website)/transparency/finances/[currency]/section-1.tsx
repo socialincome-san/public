@@ -3,7 +3,7 @@ import { Card, CardContent, Typography } from '@socialincome/ui';
 import _ from 'lodash';
 import { SectionProps } from './page';
 
-export const roundAmount = (amount: number) => (!Number.isNaN(amount) ? Math.round(amount / 10) * 10 : 0);
+export const roundAmount = (amount: number) => (amount ? Math.round(amount / 10) * 10 : 0);
 
 export async function Section1({ params, paymentStats, contributionStats }: SectionProps) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-finances'] });
