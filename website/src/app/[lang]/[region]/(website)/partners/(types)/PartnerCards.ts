@@ -78,6 +78,7 @@ type NgoEntryJSON = {
 
 type NgoHomeProps = {
 	currentNgo: NgoEntryJSON;
+	currentNgoCountry: string;
 	translations: {
 		partnerSince: string;
 		badgeRecipient: string;

@@ -15,7 +15,7 @@ const country_abbreviations_to_flag_map: Record<string, ReactElement> = {
 function getFlag(abbreviation: string): ReactElement {
 	return country_abbreviations_to_flag_map[abbreviation] || <SL className="h-5 w-5 rounded-full" />;
 }
-export function PartnerHome({ currentNgo, translations }: NgoHomeProps) {
+export function PartnerHome({ currentNgo, currentNgoCountry, translations }: NgoHomeProps) {
 	const image_base_path = '/assets/partners/';
 	const recipientsBadge: RecipientsBadgeType = {
 		hoverCardOrgName: currentNgo!['org-long-name'],
@@ -101,7 +101,7 @@ export function PartnerHome({ currentNgo, translations }: NgoHomeProps) {
 							<Badge className="bg-primary hover:bg-primary text-primary space-x-2 bg-opacity-10 px-4 py-2 hover:bg-opacity-100 hover:text-white">
 								{countryBadge?.countryFlagComponent || <SL className="h-5 w-5 rounded-full" />}
 								<Typography size="md" weight="normal" className="text-inherit">
-									{currentNgo!['org-long-name']}
+									{currentNgoCountry}
 								</Typography>
 							</Badge>
 						</div>

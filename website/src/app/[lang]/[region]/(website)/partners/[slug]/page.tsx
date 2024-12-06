@@ -45,6 +45,7 @@ export default async function Page({ params: { lang, slug } }: PartnerPageProps)
 		redirect('/not-found');
 		return;
 	}
+	const currentNgoCountry = translator.t(currentNgo!['org-country'] || 'SL');
 
-	return <PartnerHome currentNgo={currentNgo} translations={translations} />;
+	return <PartnerHome currentNgo={currentNgo} currentNgoCountry={currentNgoCountry} translations={translations} />;
 }
