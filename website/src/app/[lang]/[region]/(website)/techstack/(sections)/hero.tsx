@@ -22,5 +22,5 @@ export async function Hero({ lang }: DefaultParams) {
 				{translator.t('hero.subtitle')}
 			</Typography>
 		</div>
-	)
+	);
 }
