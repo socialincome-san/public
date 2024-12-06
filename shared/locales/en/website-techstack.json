@@ -1,0 +1,23 @@
+{
+  "metadata": {
+    "title": "Social Income",
+    "description": "Our Techstack",
+    "og-image": "/assets/metadata/og/default.jpg",
+    "twitter-image": "/assets/metadata/twitter/default.jpg"
+  },
+  "hero": {
+    "title-1": [
+      {
+        "text": "Hello ",
+        "color": "accent"
+      },
+      {
+        "text": "Hallo."
+      }
+    ],
+    "subtitle": "Guten Tag"
+  },
+  "cards": {
+    "title-1": "Vercel"
+  }
+}
