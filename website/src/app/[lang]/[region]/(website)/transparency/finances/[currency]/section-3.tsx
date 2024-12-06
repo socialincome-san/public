@@ -34,9 +34,10 @@ export async function Section3({ params, contributionStats }: SectionProps) {
 								country: translator.t(entry.country),
 								total: translator.t('section-3.country-amount', {
 									context: {
+										contributorsCount: entry.usersCount,
 										value: roundAmount(entry.amount),
 										currency: params.currency,
-										contributorsCount: entry.usersCount,
+										maximumFractionDigits: 0,
 									},
 								}),
 							}}

@@ -22,6 +22,7 @@ export async function Section1({ params, paymentStats, contributionStats }: Sect
 				contributorCount: contributionStats.totalContributorsCount,
 				value: roundAmount(contributionStats.totalContributionsAmount),
 				currency: params.currency,
+				maximumFractionDigits: 0,
 			},
 		}),
 	];
