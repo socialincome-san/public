@@ -10,9 +10,9 @@ export async function TechList({ lang }: DefaultParams) {
 
 	return (
 		<div>
-				<Typography color="accent" className="text-center">
-					 {translator.t('cards.title-1')}
-				</Typography>
+			<Typography color="accent" className="text-center">
+				{translator.t('cards.title-1')}
+			</Typography>
 		</div>
 	);
 }
