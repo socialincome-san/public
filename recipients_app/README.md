@@ -5,7 +5,7 @@ Mobile App for Recipients of a Social Income.
 ## Tools needed for building the app on an Apple Silicon Mac
 
 - [Homebrew](https://brew.sh/de/)
-- Flutter 3.19.6, Dart 3.3.4
+- Flutter (Version see file .tool-versions)
 - Java JDK 17
 - Android Studio LadyBug or later
 - Latest vsCode
@@ -153,10 +153,6 @@ locations as well:
   - If you use 'asdf' run the comman `asdf local flutter x.y.z` #Replace
     x.y.z with the new Flutter version.
   - Otherwise just update the version number in the file
-- Adjust variable 'REQUIRED_VERSION' in 'clean_build.sh'
-- README.md
-  - Find all places in the README.md which mentions the Flutter version
-    number
 
 ## Testing
 
