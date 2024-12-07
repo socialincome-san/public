@@ -75,7 +75,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 		return (
 			<div className="flex h-16 flex-row justify-between p-5 md:hidden">
 				<Link href={`/${lang}/${region}`}>
-					<SILogo className="mr-auto h-6" />
+					<SIAnimatedLogo className="mr-auto h-6" />
 				</Link>
 				<Bars3Icon className="text-accent h-6 cursor-pointer stroke-2" onClick={() => setVisibleSection('main')} />
 			</div>
