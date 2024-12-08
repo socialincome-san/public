@@ -39,9 +39,9 @@ Mobile App for Recipients of a Social Income.
   - Restart your terminal so that these changes take effect
 - Install Flutter
   - Tell Flutter to use our Java 17 JDK and not the one bundle with
-    Android Studio via `flutter config --jdk-dir "$JAVA_HOME"`. Otherwise,
-    you will get the error "Unsupported class file major version 65”
-    when building the app for Android.
+    Android Studio via `flutter config --jdk-dir "$JAVA_HOME"`.
+    Otherwise, you will get the error "Unsupported class file major
+    version 65” when building the app for Android.
   - Restart your terminal and IDE so that these changes take effect
 - Install vsCode
   - Install Flutter extension
