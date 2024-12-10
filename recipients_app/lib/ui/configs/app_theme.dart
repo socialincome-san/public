@@ -22,7 +22,6 @@ abstract class AppTheme {
       primary: AppColors.primaryColor,
       secondary: AppColors.primaryColor,
       surface: AppColors.primaryLightColor,
-      background: AppColors.backgroundColor,
       error: AppColors.redColor,
       onError: AppColors.fontColorDark,
     ),
