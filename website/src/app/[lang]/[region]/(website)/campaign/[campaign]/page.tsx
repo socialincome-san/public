@@ -319,7 +319,7 @@ export default async function Page({ params }: CampaignPageProps) {
 									{
 										question: string;
 										answer: string;
-										links?: { title: string; href: string }[]
+										links?: { title: string; href: string }[];
 									}[]
 								>('campaign.questions')
 								.map(({ question, answer, links }, index) => (
