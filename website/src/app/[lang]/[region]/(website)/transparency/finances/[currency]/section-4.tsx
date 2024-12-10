@@ -29,6 +29,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 					context: {
 						value: roundAmount(expensesTotal),
 						currency: params.currency,
+						maximumFractionDigits: 0,
 					},
 				})}
 				text={translator.t('section-4.amount-since-march-2020')}
@@ -41,6 +42,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 									context: {
 										value: roundAmount(paymentStats.totalPaymentsAmount),
 										currency: params.currency,
+										maximumFractionDigits: 0,
 										recipientsCount: paymentStats.totalRecipientsCount,
 									},
 								})}
@@ -51,6 +53,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 								context: {
 									value: roundAmount(_.last(paymentStats.totalPaymentsByMonth)?.amount as number),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 									recipientsCount: _.last(paymentStats.totalPaymentsByMonth)?.recipientsCount,
 								},
 							})}
@@ -62,6 +65,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 										contributionStats.totalIndividualContributionsAmount - paymentStats.totalPaymentsAmount,
 									),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 						</Typography>
@@ -76,6 +80,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 									context: {
 										value: roundAmount(_.sum(Object.values(expensesStats.totalExpensesByType))),
 										currency: params.currency,
+										maximumFractionDigits: 0,
 									},
 								})}
 							</Typography>
@@ -85,6 +90,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.donation_fees),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -101,6 +107,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.delivery_fees),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -117,6 +124,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.exchange_rate_loss),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -133,6 +141,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.account_fees),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -147,7 +156,11 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 
 						<Typography as="div" className="flex-inline flex items-center">
 							{translator.t('section-4.staff-costs', {
-								context: { value: roundAmount(expensesStats.totalExpensesByType.staff), currency: params.currency },
+								context: {
+									value: roundAmount(expensesStats.totalExpensesByType.staff),
+									currency: params.currency,
+									maximumFractionDigits: 0,
+								},
 							})}
 							<TooltipProvider delayDuration={100}>
 								<Tooltip>
@@ -163,6 +176,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.fundraising_advertising),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -179,6 +193,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.administrative),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -197,7 +212,11 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 			<InfoCard
 				sectionTitle={translator.t('section-4.reserves')}
 				title={translator.t('amount', {
-					context: { value: roundAmount(reservesTotal), currency: params.currency },
+					context: {
+						value: roundAmount(reservesTotal),
+						currency: params.currency,
+						maximumFractionDigits: 0,
+					},
 				})}
 				text={translator.t('section-4.amount-since-march-2020')}
 				firstIcon={<DevicePhoneMobileIcon className="h-8 w-8" />}

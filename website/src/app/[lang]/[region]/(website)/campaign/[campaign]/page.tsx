@@ -25,6 +25,7 @@ import {
 	Typography,
 } from '@socialincome/ui';
 import { Progress } from '@socialincome/ui/src/components/progress';
+import Link from 'next/link';
 
 export type CampaignPageProps = {
 	params: {
@@ -56,13 +57,13 @@ export async function generateMetadata({ params }: CampaignPageProps) {
 					},
 				}
 			: undefined;
-	return getMetadata(params.lang, 'website-donate', campaignMetadata);
+	return getMetadata(params.lang, 'website-campaign', campaignMetadata);
 }
 
 export default async function Page({ params }: CampaignPageProps) {
 	const translator = await Translator.getInstance({
 		language: params.lang,
-		namespaces: ['website-donate', 'website-videos', 'website-faq'],
+		namespaces: ['website-campaign', 'website-donate', 'website-videos', 'website-faq'],
 	});
 
 	const campaignDoc = await firestoreAdmin.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH).doc(params.campaign).get();
@@ -312,10 +313,16 @@ export default async function Page({ params }: CampaignPageProps) {
 						{translator.t('campaign.title')}
 					</Typography>
 					<div className="space-y-6">
-						<Accordion type={'single'} collapsible className="w-full">
+						<Accordion type="single" collapsible className="w-full">
 							{translator
-								.t<{ question: string; answer: string }[]>('campaign.questions')
-								.map(({ question, answer }, index) => (
+								.t<
+									{
+										question: string;
+										answer: string;
+										links?: { title: string; href: string }[];
+									}[]
+								>('campaign.questions')
+								.map(({ question, answer, links }, index) => (
 									<AccordionItem value={`item-${index}`} key={index}>
 										<AccordionTrigger>
 											<Typography size="xl" color="muted-foreground" className="text-left" weight="normal">
@@ -329,6 +336,19 @@ export default async function Page({ params }: CampaignPageProps) {
 												className="mt-2"
 												dangerouslySetInnerHTML={{ __html: answer }}
 											/>
+											{links && (
+												<ul className="mt-4 flex list-outside list-disc flex-col space-y-1 pl-3">
+													{links.map((link: { title: string; href: string }, index: number) => (
+														<li key={index} className="mb-0 pl-3">
+															<Link href={link.href} target="_blank" rel="noreferrer" className="no-underline">
+																<Typography as="span" size="lg" color="primary" className="font-normal hover:underline">
+																	{link.title}
+																</Typography>
+															</Link>
+														</li>
+													))}
+												</ul>
+											)}
 										</AccordionContent>
 									</AccordionItem>
 								))}

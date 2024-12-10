@@ -108,7 +108,13 @@
 		"questions": [
 			{
 				"question": "Wie werden die Empfänger:innen ausgewählt?",
-				"answer": "Wir bestimmen mögliche neue Empfänger:innen aufgrund der Vorarbeit unserer lokalen Kontaktpersonen und Vorschläge von Partnern und lokalen NGOs: i.e. Aurora Foundation, Reachout Salone, Equal Rights Alliance, United Polio Brothers und Sisters und Jamyl & Nyanga Jaward Foundation. Unsere Kriterien sind einfach: Die Empfänger müssen älter als 16 Jahre sein und aus einer einkommensschwachen Community stammen. Als übergeordnetes Prinzip verpflichten wir uns, Menschen in Not zu unterstützen und halten uns dabei strikt an ein ausgeglichenes Geschlechterverhältnis."
+				"answer": "Wir identifizieren potenzielle Empfänger:innen in enger Zusammenarbeit mit lokalen NGO-Partnern. Unsere Auswahlkriterien sind klar: Die Empfänger:innen müssen über 16 Jahre alt sein und aus einer einkommensschwachen Community stammen (unterhalb der Armutsgrenze lebend).",
+				"links": [
+					{
+						"title": "Lokale Partner",
+						"href": "/partners"
+					}
+				]
 			},
 			{
 				"question": "Wofür verwenden die Empfänger:innen das Geld?",
@@ -201,6 +207,39 @@
 		"title": "Fragen und Antworten",
 		"questions": [
 			{
+				"question": "Was sind direkte Geldtransfers?",
+				"answer": "Konkret handelt es sich bei direkten Geldtransfers um eine Form des Sozialschutzes, bei der Bargeld oder Gutscheine direkt an arme Menschen und nicht an Regierungen oder andere staatliche Akteure ausgezahlt werden. Insbesondere in den letzten zehn Jahren wurden sie zunehmend als Instrument zur Verringerung von Armut und Gefährdung in Ländern mit mittlerem und niedrigem Einkommen eingesetzt.",
+				"links": [
+					{
+						"title": "Social protection and resilient food systems: The role of cash transfers",
+						"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view"
+					}
+				]
+			},
+			{
+				"question": "Warum Sierra Leone?",
+				"answer": "Man muss irgendwo anfangen, und Sierra Leone ist ein idealer Startpunkt. Das Land gehört zu den ärmsten der Welt, geprägt von einem Bürgerkrieg bis 2002, schlechter Infrastruktur, mangelnder Bildung und Ungleichheit. Dennoch gibt es Fortschritte, etwa im Mobile Banking in urbanen Gebieten. Sierra Leone benötigt Hilfe und ist zugleich gut auf einen digital-fokussierten Ansatz vorbereitet."
+			},
+			{
+				"question": "Wie werden die Empfänger:innen ausgewählt?",
+				"answer": "Wir identifizieren potenzielle Empfänger:innen in enger Zusammenarbeit mit lokalen NGO-Partnern. Unsere Auswahlkriterien sind klar: Die Empfänger:innen müssen über 16 Jahre alt sein und aus einer einkommensschwachen Community stammen (unterhalb der Armutsgrenze lebend).",
+				"links": [
+					{
+						"title": "Lokale Partner",
+						"href": "/partners"
+					}
+				]
+			},
+			{
+				"question": "Wie hoch ist der ausbezahlte Betrag?",
+				"answer": "Empfänger:innen des Social Income bekommen monatlich 32 USD, umgerechnet in lokale Währung und direkt auf ihre Mobiltelefone überwiesen. Diese Summe entspricht den Grundbedürfnissen einer in Armut lebenden Person, berücksichtigt das durchschnittliche Einkommen von etwa 42 USD in Sierra Leone. Die Unterstützung erfolgt über drei Jahre. Diese Strategie soll bedürftige Menschen befähigen, ihre Zukunft zu planen und in essenzielle Bereiche wie Gesundheit zu investieren, was ihre finanzielle Situation und ihr Wohlbefinden verbessert."
+			}
+		]
+	},
+	"campaign-ismatu": {
+		"title": "Fragen und Antworten",
+		"questions": [
+			{
 				"question": "Welche Partner tragen zur Realisierung dieser Spendenkampagne bei?",
 				"answer": "Diese Spendenaktion wird von Ismatu Gwendolyn Bangura, einer Autorin und Aktivistin aus Sierra Leone, sowie von Social Income, einer Schweizer Non-Profit-Organisation, gemeinsam organisiert. Wir arbeiten eng mit der in Kenema ansässigen Sierra Leone Association of Ebola Survivors zusammen. Social Income bringt umfangreiche Erfahrung in mobilen Zahlungen mit und ist für die Auszahlung der Grundeinkommen an Ebola-Überlebende in den nächsten drei Jahren verantwortlich."
 			},
@@ -210,7 +249,7 @@
 			},
 			{
 				"question": "Wie hoch ist der ausbezahlte Betrag?",
-				"answer": "Empfänger:innen des Social Income bekommen monatlich 32 USD, umgerechnet in lokale Währung und direkt auf ihre Mobiltelefone überwiesen. Diese Summe entspricht den Grundbedürfnissen einer in Armut lebenden Person, berücksichtigt das durchschnittliche Einkommen von etwa 42 USD in Sierra Leone. Die Unterstützung erfolgt zuverlässig über drei Jahre. Diese Strategie soll bedürftige Menschen befähigen, ihre Zukunft zu planen und in essenzielle Bereiche wie Gesundheit zu investieren, was ihre finanzielle Situation und ihr Wohlbefinden verbessert."
+				"answer": "Empfänger:innen des Social Income bekommen monatlich 32 USD, umgerechnet in lokale Währung und direkt auf ihre Mobiltelefone überwiesen. Diese Summe entspricht den Grundbedürfnissen einer in Armut lebenden Person, berücksichtigt das durchschnittliche Einkommen von etwa 42 USD in Sierra Leone. Die Unterstützung erfolgt über drei Jahre. Diese Strategie soll bedürftige Menschen befähigen, ihre Zukunft zu planen und in essenzielle Bereiche wie Gesundheit zu investieren, was ihre finanzielle Situation und ihr Wohlbefinden verbessert."
 			},
 			{
 				"question": "Wofür werden die Gelder verwendet?",
