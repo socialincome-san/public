@@ -96,10 +96,6 @@
 			{
 				"question": "Can I cancel my contributions?",
 				"answer": "Yes, any time and without notice. Just login and opt out in the preferences."
-			},
-			{
-				"question": "Why don't we use more photos in our communications",
-				"answer": "We believe that we should do what we can to aid the lives of strangers, especially at relatively little cost to ourselves. We also believe that this rational argument is as effective at promoting charitable giving as emotional appeals. We prefer to avoid the typical imagery employed by NGOs working in Africa that can potentially fuel negative stereotypes of the continent."
 			}
 		]
 	},
@@ -108,7 +104,13 @@
 		"questions": [
 			{
 				"question": "How are recipients chosen?",
-				"answer": "We determine possible new recipients thanks to the groundwork of our local advocates and partnerships with local NGOs: Aurora Foundation, Reachout Salone and Jamyl & Nyanga Jaward Foundation. Our criterias are simple: recipients must be older than 16 and come from a low income community. One other major principle is to keep up a strict gender balance/equality and to support people in need."
+				"answer": "We identify potential recipients through the essential groundwork laid by our local advocates and strong collaborations with trusted local NGOs. Our selection criteria are clear: recipients must be over 16 years old and part of a low-income community (living below the poverty line).",
+				"links": [
+					{
+						"title": "Local Partners",
+						"href": "/partners"
+					}
+				]
 			},
 			{
 				"question": "What do recipients need the money for?",
@@ -198,6 +200,39 @@
 		]
 	},
 	"campaign": {
+		"title": "Frequently asked questions",
+		"questions": [
+			{
+				"question": "What are Direct Cash Transfers?",
+				"answer": "According to the official OECD’s definition, cash transfers “consist of the payment of currency or transferable deposit by one unit to another without any counterpart”. More concretely, direct cash transfers are a form of social protection that includes cash or vouchers given directly to poor individuals rather than to governments or other state actors. Particularly over the past decade, they have been increasingly used as a tool for reducing poverty and vulnerability in middle and low-income countries.",
+				"links": [
+					{
+						"title": "Social protection and resilient food systems: The role of cash transfers",
+						"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view"
+					}
+				]
+			},
+			{
+				"question": "Why Sierra Leone?",
+				"answer": "You have to start somewhere, and Sierra Leone makes sense for several reasons. While one of the world’s younger democracies, it unfortunately regularly tops rankings as one of its poorest countries. Still, big progress has been made in recent years, notably in adopting mobile banking in urban areas across the country. So, not only is Sierra Leone in need of help, it’s also uniquely positioned to receive it from a digitally-focused approach."
+			},
+			{
+				"question": "How are recipients chosen?",
+				"answer": "We identify potential recipients through the essential groundwork laid by our local advocates and strong collaborations with trusted local NGOs. Our selection criteria are clear: recipients must be over 16 years old and part of a low-income community (living below the poverty line).",
+				"links": [
+					{
+						"title": "Local Partners",
+						"href": "/partners"
+					}
+				]
+			},
+			{
+				"question": "What is the amount disbursed to the recipients?",
+				"answer": "Recipients of Social Income receive a monthly payment of USD 32, which is converted into their local currency and directly deposited to their mobile phones. This sum is carefully chosen to help secure the basic needs of a person living in poverty, considering that the national average income is around USD 42 (World Bank). These payments are reliably made every month over a span of three years. This sustained, long-term support strategy is intended to empower individuals in poverty, enabling them to plan and invest for the future, particularly in aspects like health, thereby enhancing their financial stability and overall well-being."
+			}
+		]
+	},
+	"campaign-ismatu": {
 		"title": "Frequently asked questions",
 		"questions": [
 			{
