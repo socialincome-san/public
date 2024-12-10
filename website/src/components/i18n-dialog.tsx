@@ -1,6 +1,7 @@
 'use client';
 
 import { useI18n } from '@/components/providers/context-providers';
+import { useIsPage } from '@/hooks/useIsPage';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import { GlobeEuropeAfricaIcon, LanguageIcon } from '@heroicons/react/24/solid';
@@ -48,6 +49,7 @@ export function I18nDialog({
 	translations,
 	children,
 }: PropsWithChildren<I18nDialogProps>) {
+	const isSurveyPage = useIsPage('survey');
 	const [open, setOpen] = useState(false);
 	const { language, setLanguage, region, setRegion, currency, setCurrency } = useI18n();
 
@@ -74,7 +76,7 @@ export function I18nDialog({
 					</Select>
 				)}
 
-				{!_.isEmpty(regions) && (
+				{!_.isEmpty(regions) && !isSurveyPage && (
 					<Select value={region} onValueChange={(c: WebsiteRegion) => setRegion(c)}>
 						<SelectTrigger className="space-x-2">
 							<GlobeEuropeAfricaIcon className="h-4 w-4" />
