@@ -108,7 +108,13 @@
 		"questions": [
 			{
 				"question": "Comment les bénéficiaires sont-ils choisis?",
-				"answer": "Nous déterminons les nouveaux bénéficiaires potentiels grâce au travail de nos représentants locaux et aux suggestions de nos partenaires et ONG locales: i.e. Aurora Foundation, Reachout Salone, Equal Rights Alliance, United Polio Brothers and Sisters et Jamyl & Nyanga Jaward Foundation. Nos critères sont simples: les bénéficiaires doivent avoir plus de 16 ans et provenir d'une communauté à faible revenu. En tant que principe directeur, nous nous engageons à soutenir les personnes dans le besoin et à respecter strictement un équilibre entre les sexes."
+				"answer": "Nous déterminons les nouveaux bénéficiaires potentiels grâce au travail de nos représentants locaux et aux suggestions de nos partenaires et ONG locales. Nos critères sont simples: les bénéficiaires doivent avoir plus de 16 ans et provenir d'une communauté à faible revenu.",
+				"links": [
+					{
+						"title": "Partenaires locaux",
+						"href": "/partners"
+					}
+				]
 			},
 			{
 				"question": "Comment les bénéficiaires utilisent-ils l'argent?",
@@ -198,6 +204,39 @@
 		]
 	},
 	"campaign": {
+		"title": "Questions et réponses",
+		"questions": [
+			{
+				"question": "Qu'est-ce que les transferts monétaires directs?",
+				"answer": "Concrètement, les transferts monétaires directs sont une forme de protection sociale, où de l'argent ou des bons sont directement versés aux personnes pauvres et non aux gouvernements ou autres acteurs étatiques. En particulier au cours des dix dernières années, ils ont été de plus en plus utilisés comme un outil pour réduire la pauvreté et la vulnérabilité dans les pays à revenu intermédiaire et faible.",
+				"links": [
+					{
+						"title": "Social protection and resilient food systems: The role of cash transfers",
+						"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view"
+					}
+				]
+			},
+			{
+				"question": "Pourquoi la Sierra Leone?",
+				"answer": "Il fallait bien commencer quelque part. La Sierra Leone est un point de départ judicieux à bien des égards. C'est l'une des plus jeunes démocraties du monde, et le pays figure régulièrement en tête du classement des nations les plus pauvres. Cette situation est due à une guerre civile qui a duré jusqu'en 2002. Les infrastructures déficientes, le manque d'accès à l'éducation et l'inégalité engendrent une grande précarité. Des progrès importants ont toutefois été réalisés, notamment dans la diffusion du mobile banking dans les parties urbanisées du pays."
+			},
+			{
+				"question": "Comment les bénéficiaires sont-ils choisis?",
+				"answer": "Nous déterminons les nouveaux bénéficiaires potentiels grâce au travail de nos représentants locaux et aux suggestions de nos partenaires et ONG locales. Nos critères sont simples: les bénéficiaires doivent avoir plus de 16 ans et provenir d'une communauté à faible revenu.",
+				"links": [
+					{
+						"title": "Partenaires locaux",
+						"href": "/partners"
+					}
+				]
+			},
+			{
+				"question": "Quel est le montant versé?",
+				"answer": "Les bénéficiaires de Social Income reçoivent un paiement mensuel de 32 USD, converti en monnaie locale et directement versé sur leurs téléphones mobiles. Cette somme correspond aux besoins de base d'une personne vivant dans la pauvreté, en tenant compte du revenu moyen d'environ 42 USD en Sierra Leone. Le soutien est assuré de manière fiable sur trois ans. Cette stratégie vise à permettre aux personnes dans le besoin de planifier leur avenir et d'investir dans des domaines essentiels tels que la santé, améliorant ainsi leur situation financière et leur bien-être."
+			}
+		]
+	},
+	"campaign-ismatu": {
 		"title": "Questions et réponses",
 		"questions": [
 			{
