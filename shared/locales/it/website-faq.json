@@ -108,7 +108,13 @@
 		"questions": [
 			{
 				"question": "Come vengono scelti i beneficiari?",
-				"answer": "Determiniamo possibili nuovi beneficiari grazie al lavoro sul campo dei nostri sostenitori e alle partnership con le ONG locali: Aurora Foundation, Reachout Salone, Equal Rights Alliance, United Polio Brothers and Sisters e Jamyl & Nyanga Jaward Foundation. I nostri criteri sono semplici: i beneficiari devono avere più di 16 anni e provenire da una comunità a basso reddito. Un altro principio fondamentale è quello di mantenere un rigoroso equilibrio/uguaglianza di genere e sostenere le persone in stato di necessità."
+				"answer": "Determiniamo possibili nuovi beneficiari grazie al lavoro sul campo dei nostri sostenitori e alle partnership con le ONG locali. I nostri criteri sono semplici: i beneficiari devono avere più di 16 anni e provenire da una comunità a basso reddito. Un altro principio fondamentale è quello di mantenere un rigoroso equilibrio/uguaglianza di genere e sostenere le persone in stato di necessità.",
+				"links": [
+					{
+						"title": "Partner locali",
+						"href": "/partners"
+					}
+				]
 			},
 			{
 				"question": "Come dispongono i beneficiari del denaro ricevuto?",
@@ -198,6 +204,39 @@
 		]
 	},
 	"campaign": {
+		"title": "Domande frequenti",
+		"questions": [
+			{
+				"question": "Cosa sono i Trasferimenti Diretti di Denaro?",
+				"answer": "Secondo la definizione ufficiale dell'OCSE, i trasferimenti di denaro consistono nel pagamento di valuta o di un deposito trasferibile da un'unità all'altra senza alcuna contropartita. Più concretamente, i trasferimenti diretti di denaro sono una forma di protezione sociale che include soldi o buoni dati direttamente a persone indigenti, piuttosto che a governi o altri enti statali. Nell'ultimo decennio in particolare sono stati sempre più utilizzati come strumento per ridurre la povertà e la vulnerabilità nei paesi a reddito medio e basso.",
+				"links": [
+					{
+						"title": "Social protection and resilient food systems: The role of cash transfers",
+						"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view"
+					}
+				]
+			},
+			{
+				"question": "Perché la Sierra Leone?",
+				"answer": "Dovevamo pur iniziare da qualche parte e abbiamo scelto la Sierra Leone per diversi motivi. Sebbene sia una delle democrazie più giovani del mondo, sfortunatamente è regolarmente in cima alle classifiche come uno dei paesi più poveri. Tuttavia, negli ultimi anni sono stati compiuti grandi progressi, in particolare nell'adozione del mobile banking nelle aree urbane di tutto il paese. Quindi, non solo la Sierra Leone ha bisogno di aiuto, ma si trova in una posizione favorevole per riceverlo con un approccio incentrato sul digitale."
+			},
+			{
+				"question": "Come vengono scelti i beneficiari?",
+				"answer": "Determiniamo possibili nuovi beneficiari grazie al lavoro sul campo dei nostri sostenitori e alle partnership con le ONG locali. I nostri criteri sono semplici: i beneficiari devono avere più di 16 anni e provenire da una comunità a basso reddito. Un altro principio fondamentale è quello di mantenere un rigoroso equilibrio/uguaglianza di genere e sostenere le persone in stato di necessità.",
+				"links": [
+					{
+						"title": "Partner locali",
+						"href": "/partners"
+					}
+				]
+			},
+			{
+				"question": "Qual è l'importo erogato ai beneficiari?",
+				"answer": "I beneficiari di Social Income ricevono un pagamento mensile di 32 USD, che viene convertito nella loro valuta locale e depositato direttamente sui loro telefoni cellulari. Questa somma è scelta con attenzione per contribuire a soddisfare i bisogni di base di una persona che vive in povertà, considerando che il reddito medio nazionale è di circa 42 USD (Banca Mondiale). Questi pagamenti vengono effettuati in modo affidabile ogni mese per un periodo di tre anni. Questa strategia di supporto sostenuto a lungo termine è pensata per dare potere alle persone che vivono in povertà, permettendo loro di pianificare e investire per il futuro, in particolare in aspetti come la salute, migliorando così la loro stabilità finanziaria e il benessere complessivo."
+			}
+		]
+	},
+	"campaign-ismatu": {
 		"title": "Domande frequenti",
 		"questions": [
 			{
