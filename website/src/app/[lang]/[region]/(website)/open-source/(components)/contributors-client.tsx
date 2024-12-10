@@ -41,10 +41,6 @@ export function OpenSourceContributorsClient({
 
 	const displayedContributors = showAllContributors ? contributors : contributors.slice(0, 16);
 
-	const handleShowAllContributors = () => {
-		setShowAllContributors(true);
-	};
-
 	return (
 		<section className="flex flex-col justify-self-start">
 			<section>
@@ -66,7 +62,11 @@ export function OpenSourceContributorsClient({
 
 			{!showAllContributors && totalContributors > 16 && (
 				<div className="mt-12 flex justify-center">
-					<Button variant="link" onClick={handleShowAllContributors} className="text-card-foreground mr-20 text-xl">
+					<Button
+						variant="link"
+						onClick={() => setShowAllContributors(true)}
+						className="text-card-foreground mr-20 text-xl"
+					>
 						{`Show all ${totalContributors} contributors`}
 					</Button>
 				</div>

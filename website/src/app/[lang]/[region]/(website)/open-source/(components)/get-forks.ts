@@ -15,9 +15,7 @@ export async function getForkCount(): Promise<{ totalForks: number; newForks: nu
 	if (process.env.GITHUB_PAT) {
 		headers['Authorization'] = `Bearer ${process.env.GITHUB_PAT}`;
 	}
-	const repoRes = await fetch(repoUrl, {
-		headers,
-	});
+	const repoRes = await fetch(repoUrl, { headers });
 
 	if (!repoRes.ok) {
 		const errorDetails = await repoRes.text();

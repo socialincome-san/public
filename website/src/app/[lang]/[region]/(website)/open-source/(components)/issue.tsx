@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, TableCell, TableRow } from '@socialincome/ui';
+import Link from 'next/link';
 
 interface Issue {
 	id: number;
@@ -19,9 +20,9 @@ export function Issue({ title, url, text }: IssueProps) {
 			<TableCell className="text-xl">{title}</TableCell>
 			<TableCell className="text-right text-xl">
 				<Button asChild variant="link" className="hover:underline">
-					<a href={url} target="_blank" rel="noopener noreferrer">
+					<Link href={url} target="_blank" rel="noopener noreferrer">
 						{text}
-					</a>
+					</Link>
 				</Button>
 			</TableCell>
 		</TableRow>

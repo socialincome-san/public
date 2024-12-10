@@ -21,7 +21,6 @@ interface IssueClientProps {
 	filterText: string;
 }
 
-// IssueClient Component
 export function IssueClient({ title, issues, labels, tableHeader, filterText, linkText }: IssueClientProps) {
 	const [filteredLabel, setFilteredLabel] = useState('');
 	const [showAllIssues, setShowAllIssues] = useState(false);
@@ -41,10 +40,6 @@ export function IssueClient({ title, issues, labels, tableHeader, filterText, li
 			setFilteredLabel(label);
 			setShowAllIssues(false);
 		}
-	};
-
-	const handleShowAllIssues = () => {
-		setShowAllIssues(true);
 	};
 
 	return (
@@ -71,7 +66,7 @@ export function IssueClient({ title, issues, labels, tableHeader, filterText, li
 				<div className="mt-6 flex justify-center">
 					<Button
 						variant="link"
-						onClick={handleShowAllIssues}
+						onClick={() => setShowAllIssues(true)}
 						className="text-card-foreground mr-20 text-xl"
 					>{`Show all ${filteredIssues.length} issues`}</Button>
 				</div>
