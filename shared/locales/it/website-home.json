@@ -20,6 +20,7 @@
 			}
 		]
 	},
+	"video-subtitle": "/assets/video/subtitle-video-testimonials.it_IT.vtt",
 	"section-2": {
 		"title-1": "Le persone che vivono nelle comunità più povere della Sierra Leone sanno di cosa hanno bisogno per uscire dalla povertà.",
 		"title-2": [
@@ -100,7 +101,7 @@
 				]
 			},
 			{
-				"category": "Method",
+				"category": "Metodo",
 				"title": "Trasferimenti Diretti di Denaro",
 				"points": [
 					{
@@ -118,7 +119,7 @@
 				]
 			},
 			{
-				"category": "Technology",
+				"category": "Tecnologia",
 				"title": "Mobile Banking",
 				"points": [
 					{
@@ -152,6 +153,7 @@
 						"text": "dai mercati locali e dai fornitori di servizi. »"
 					}
 				],
+				"logo": "/assets/logos/logo-icrc.svg",
 				"author": "Comitato Internazionale della Croce Rossa"
 			},
 			{
@@ -167,6 +169,7 @@
 						"text": "in modo che gli shock possano arrivare, ma non distruggano. »"
 					}
 				],
+				"logo": "/assets/logos/logo-un.svg",
 				"author": "Nazioni Unite"
 			},
 			{
@@ -182,6 +185,7 @@
 						"text": "per accedere ai servizi finanziari. »"
 					}
 				],
+				"logo": "/assets/logos/logo-worldbank.svg",
 				"author": "Banca Mondiale"
 			}
 		]
@@ -199,9 +203,9 @@
 				"text": "delle Nazioni Unite."
 			}
 		],
-		"sdg-1-title": "Porre fine alla povertà in tutte le sue forme, ovunque.",
+		"sdg-1-title": "Porre fine ad ogni forma di povertà nel mondo.",
 		"sdg-1": "SDG 1",
-		"sdg-10-title": "Reduce inequality within and among countries.",
+		"sdg-10-title": "Ridurre l’ineguaglianza all’interno di e fra le Nazioni.",
 		"sdg-10": "SDG 10"
 	},
 	"section-11": {

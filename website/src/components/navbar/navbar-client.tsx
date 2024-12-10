@@ -3,10 +3,11 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { getFlagComponentByCurrency } from '@/components/country-flags';
 import { DonateIcon } from '@/components/logos/donate-icon';
+import { SIAnimatedLogo } from '@/components/logos/si-animated-logo';
 import { SIIcon } from '@/components/logos/si-icon';
 import { SILogo } from '@/components/logos/si-logo';
-import { useNavbarBackgroundColor } from '@/components/navbar/useNavbarBackgroundColor';
 import { useI18n } from '@/components/providers/context-providers';
+import { useGlobalStateProvider } from '@/components/providers/global-state-provider';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { Bars3Icon, CheckIcon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Typography } from '@socialincome/ui';
@@ -74,7 +75,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 		return (
 			<div className="flex h-16 flex-row justify-between p-5 md:hidden">
 				<Link href={`/${lang}/${region}`}>
-					<SILogo className="mr-auto h-6" />
+					<SIAnimatedLogo className="mr-auto h-6" />
 				</Link>
 				<Bars3Icon className="text-accent h-6 cursor-pointer stroke-2" onClick={() => setVisibleSection('main')} />
 			</div>
@@ -266,7 +267,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 		<div className="hidden h-20 flex-row items-baseline justify-between gap-x-4 overflow-hidden px-8 py-6 transition-[height] duration-500 ease-in group-hover/navbar:h-96 md:flex lg:group-hover/navbar:h-64">
 			<div className="flex h-full flex-1 shrink-0 basis-1/4 flex-col">
 				<Link href={`/${lang}/${region}`}>
-					<SILogo className="mr-auto hidden h-6 lg:block" />
+					<SIAnimatedLogo className="mr-auto hidden h-6 lg:block" />
 					<SIIcon className="-mb-2.5 block h-9 lg:hidden" />
 				</Link>
 				<div className="mt-6 hidden h-full flex-col justify-start group-hover/navbar:flex group-active/navbar:flex">
@@ -378,7 +379,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 };
 
 export function NavbarClient(props: NavbarProps) {
-	const { backgroundColor } = useNavbarBackgroundColor();
+	const { backgroundColor } = useGlobalStateProvider();
 
 	return (
 		<nav className={twMerge('theme-blue group/navbar fixed inset-x-0 top-0 z-20 flex flex-col', backgroundColor)}>

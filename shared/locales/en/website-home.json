@@ -20,6 +20,7 @@
 			}
 		]
 	},
+	"video-subtitle": "/assets/video/subtitle-video-testimonials.en_US.vtt",
 	"section-2": {
 		"title-1": "Those that live in Sierra Leone’s poorest communities know what it takes to rise out of poverty.",
 		"title-2": [
@@ -152,6 +153,7 @@
 						"text": "from local markets and service providers. »"
 					}
 				],
+				"logo": "/assets/logos/logo-icrc.svg",
 				"author": "International Red Cross"
 			},
 			{
@@ -167,6 +169,7 @@
 						"text": "so shocks may hit, but they won’t destroy. »"
 					}
 				],
+				"logo": "/assets/logos/logo-un.svg",
 				"author": "United Nations"
 			},
 			{
@@ -182,6 +185,7 @@
 						"text": "to access financial services. »"
 					}
 				],
+				"logo": "/assets/logos/logo-worldbank.svg",
 				"author": "World Bank"
 			}
 		]

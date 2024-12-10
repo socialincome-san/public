@@ -20,7 +20,8 @@
 	"dependencies": {
 		"@heroicons/react": "^2.1.5",
 		"@icons-pack/react-simple-icons": "^10.0.0",
-		"@mux/mux-video-react": "^0.11.4",
+		"@lottiefiles/react-lottie-player": "^3.5.4",
+		"@mux/mux-video-react": "^0.12.0",
 		"@sentry/nextjs": "^8.33.1",
 		"@socialincome/shared": "^1.0.0",
 		"@socialincome/ui": "^1.0.0",
@@ -35,6 +36,7 @@
 		"i18next": "^23.15.2",
 		"js-cookie": "^3.0.5",
 		"lodash": "^4.17.21",
+		"luxon": "^3.5.0",
 		"next": "14.2.14",
 		"react": "18.3.1",
 		"react-dom": "18.3.1",

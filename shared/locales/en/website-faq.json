@@ -3,6 +3,7 @@
 		"title": "FAQ | Social Income"
 	},
 	"title": "FAQ",
+	"title-long": "Frequently asked questions",
 	"fighting-poverty": {
 		"title": "Fighting Poverty",
 		"questions": [
@@ -95,10 +96,6 @@
 			{
 				"question": "Can I cancel my contributions?",
 				"answer": "Yes, any time and without notice. Just login and opt out in the preferences."
-			},
-			{
-				"question": "Why don't we use more photos in our communications",
-				"answer": "We believe that we should do what we can to aid the lives of strangers, especially at relatively little cost to ourselves. We also believe that this rational argument is as effective at promoting charitable giving as emotional appeals. We prefer to avoid the typical imagery employed by NGOs working in Africa that can potentially fuel negative stereotypes of the continent."
 			}
 		]
 	},
@@ -107,7 +104,13 @@
 		"questions": [
 			{
 				"question": "How are recipients chosen?",
-				"answer": "We determine possible new recipients thanks to the groundwork of our local advocates and partnerships with local NGOs: Aurora Foundation, Reachout Salone and Jamyl & Nyanga Jaward Foundation. Our criterias are simple: recipients must be older than 16 and come from a low income community. One other major principle is to keep up a strict gender balance/equality and to support people in need."
+				"answer": "We identify potential recipients through the essential groundwork laid by our local advocates and strong collaborations with trusted local NGOs. Our selection criteria are clear: recipients must be over 16 years old and part of a low-income community (living below the poverty line).",
+				"links": [
+					{
+						"title": "Local Partners",
+						"href": "/partners"
+					}
+				]
 			},
 			{
 				"question": "What do recipients need the money for?",
@@ -147,7 +150,89 @@
 			}
 		]
 	},
+	"selection": {
+		"title": "Recipient Selection",
+		"questions": [
+			{
+				"question": "Why do we select randomly out of a pool of qualified recipients?",
+				"answer": "The purpose of employing this random selection method is to achieve several objectives. Firstly, it helps prevent bias in our recipient selection, ensuring that relatives or acquaintances of individuals involved in the process are not given preferential treatment. Secondly, it aims to avoid tensions between recipients and non-recipients, as well as any potential conflicts between recipients and our organization. Lastly, we strive to incorporate technology where it is feasible and beneficial to the process."
+			},
+			{
+				"question": "Who can influence the draft?",
+				"answer": "By relying on an unpredictable random value from drand, set to be emitted in the future, it's not possible for anyone to sway the results of the selection process. This inherent randomness can be utilized to confirm the integrity of the selection. To qualify for Social Income, an individual must first be on a list provided by an NGO. While this does present a preliminary condition, it aligns with our foundational principle: ensuring that Social Income reaches those most in need."
+			},
+			{
+				"question": "How do we avoid bias and tensions?",
+				"answer": "To ensure we don't inadvertently prioritize a specific ethnic group, gender, or occupation, we collaborate with diverse NGOs that have varied missions. In line with our 'do no harm' policy, we strive to prevent tensions among recipients, non-recipients, communities, and the NGOs. Our random selection plays a pivotal role in achieving this. It ensures that those related to or acquainted with individuals in the process aren't shown favoritism, which could lead to conflicts."
+			},
+			{
+				"question": "What is happening during the selection process?",
+				"answer": "We utilize the random number provided by drand, which is publicly accessible, to pick a set number of individuals from our list. Here's how it's done: we first organize the hashed list of recipients. Then, using the randomness element from drand, we convert it into a position on the list through a key derivation function. For those keen on the technical details, the function and its associated processes are documented in our open source repository.",
+				"links": [
+					{
+						"title": "GitHub repository",
+						"href": "https://github.com/socialincome-san/public/tree/main/recipients_selection"
+					},
+					{
+						"title": "Key derivation function",
+						"href": "https://en.wikipedia.org/wiki/Key_derivation_function"
+					}
+				]
+			},
+			{
+				"question": "What is drand and who is behind it?",
+				"answer": "The drand project generates random numbers that everyone can trust. It can be applied to create truly random and verifiable drafts. Initiated in 2017 at EPFL by Nicolas Gailly, drand received support from Philipp Jovanovic and was guided by Bryan Ford. It has since become independently managed and maintains a network called the League of Entropy with EPFL, UCL, Cloudflare, Kudelski Security, the University of Chile, and Protocol Labs. Current core maintainers of the open source project are Erick Watson, Yolan Romailler and Patrick McClurg from Randamu.",
+				"links": [
+					{
+						"title": "League of Entropy",
+						"href": "https://www.cloudflare.com/leagueofentropy/"
+					},
+					{
+						"title": "Randamu",
+						"href": "https://randa.mu"
+					},
+					{
+						"title": "Drand",
+						"href": "https://drand.love"
+					}
+				]
+			}
+		]
+	},
 	"campaign": {
+		"title": "Frequently asked questions",
+		"questions": [
+			{
+				"question": "What are Direct Cash Transfers?",
+				"answer": "According to the official OECD’s definition, cash transfers “consist of the payment of currency or transferable deposit by one unit to another without any counterpart”. More concretely, direct cash transfers are a form of social protection that includes cash or vouchers given directly to poor individuals rather than to governments or other state actors. Particularly over the past decade, they have been increasingly used as a tool for reducing poverty and vulnerability in middle and low-income countries.",
+				"links": [
+					{
+						"title": "Social protection and resilient food systems: The role of cash transfers",
+						"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view"
+					}
+				]
+			},
+			{
+				"question": "Why Sierra Leone?",
+				"answer": "You have to start somewhere, and Sierra Leone makes sense for several reasons. While one of the world’s younger democracies, it unfortunately regularly tops rankings as one of its poorest countries. Still, big progress has been made in recent years, notably in adopting mobile banking in urban areas across the country. So, not only is Sierra Leone in need of help, it’s also uniquely positioned to receive it from a digitally-focused approach."
+			},
+			{
+				"question": "How are recipients chosen?",
+				"answer": "We identify potential recipients through the essential groundwork laid by our local advocates and strong collaborations with trusted local NGOs. Our selection criteria are clear: recipients must be over 16 years old and part of a low-income community (living below the poverty line).",
+				"links": [
+					{
+						"title": "Local Partners",
+						"href": "/partners"
+					}
+				]
+			},
+			{
+				"question": "What is the amount disbursed to the recipients?",
+				"answer": "Recipients of Social Income receive a monthly payment of USD 32, which is converted into their local currency and directly deposited to their mobile phones. This sum is carefully chosen to help secure the basic needs of a person living in poverty, considering that the national average income is around USD 42 (World Bank). These payments are reliably made every month over a span of three years. This sustained, long-term support strategy is intended to empower individuals in poverty, enabling them to plan and invest for the future, particularly in aspects like health, thereby enhancing their financial stability and overall well-being."
+			}
+		]
+	},
+	"campaign-ismatu": {
 		"title": "Frequently asked questions",
 		"questions": [
 			{

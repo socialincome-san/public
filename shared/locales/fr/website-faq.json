@@ -2,6 +2,8 @@
 	"metadata": {
 		"title": "Questions fréquentes | Social Income"
 	},
+	"title": "FAQ",
+	"title-long": "Questions fréquentes",
 	"fighting-poverty": {
 		"title": "La lutte contre la pauvreté",
 		"questions": [
@@ -106,7 +108,13 @@
 		"questions": [
 			{
 				"question": "Comment les bénéficiaires sont-ils choisis?",
-				"answer": "Nous déterminons les nouveaux bénéficiaires potentiels grâce au travail de nos représentants locaux et aux suggestions de nos partenaires et ONG locales: i.e. Aurora Foundation, Reachout Salone, Equal Rights Alliance, United Polio Brothers and Sisters et Jamyl & Nyanga Jaward Foundation. Nos critères sont simples: les bénéficiaires doivent avoir plus de 16 ans et provenir d'une communauté à faible revenu. En tant que principe directeur, nous nous engageons à soutenir les personnes dans le besoin et à respecter strictement un équilibre entre les sexes."
+				"answer": "Nous déterminons les nouveaux bénéficiaires potentiels grâce au travail de nos représentants locaux et aux suggestions de nos partenaires et ONG locales. Nos critères sont simples: les bénéficiaires doivent avoir plus de 16 ans et provenir d'une communauté à faible revenu.",
+				"links": [
+					{
+						"title": "Partenaires locaux",
+						"href": "/partners"
+					}
+				]
 			},
 			{
 				"question": "Comment les bénéficiaires utilisent-ils l'argent?",
@@ -146,7 +154,89 @@
 			}
 		]
 	},
+	"selection": {
+		"title": "Sélection des bénéficiaires",
+		"questions": [
+			{
+				"question": "Pourquoi choisissons-nous au hasard dans une liste de bénéficiaires potentiels?",
+				"answer": "L'utilisation de cette méthode de sélection aléatoire répond à plusieurs objectifs. Tout d'abord, elle permet d'éviter les biais dans la sélection des bénéficiaires, en garantissant que les parents ou les connaissances des personnes impliquées dans le processus ne bénéficient pas d'un traitement préférentiel. Deuxièmement, elle vise à éviter les tensions entre les bénéficiaires et les non-bénéficiaires, ainsi que tout conflit potentiel entre les bénéficiaires et notre organisation. Enfin, nous nous efforçons d'intégrer la technologie lorsque cela est possible et bénéfique pour le processus."
+			},
+			{
+				"question": "Qui peut influencer la sélection?",
+				"answer": "En utilisant une valeur aléatoire imprévisible fournie par drand, définie pour être émise dans le futur, il est impossible à quiconque d'influencer les résultats du processus de sélection. Ce caractère aléatoire intrinsèque peut être utilisé pour confirmer l'intégrité de la sélection. Pour être éligible au Social Income, une personne doit d'abord figurer sur une liste fournie par une ONG. Cette condition préliminaire est conforme à notre principe fondamental : veiller à ce que Social Income parvienne à ceux qui en ont le plus besoin."
+			},
+			{
+				"question": "Comment éviter les biais et les tensions?",
+				"answer": "Afin de ne pas privilégier par inadvertance un groupe ethnique, un genre ou une catégorie professionnelle, nous collaborons avec plusieurs ONG aux missions variées. Conformément à notre principe \"ne pas nuire\", nous nous efforçons de prévenir les tensions entre les bénéficiaires, les non-bénéficiaires, les communautés et les ONG. Notre sélection aléatoire joue un rôle essentiel à cet égard. Elle garantit que les proches ou les connaissances des personnes impliquées dans le processus ne font pas l'objet d'un traitement de faveur, ce qui pourrait entraîner des conflits."
+			},
+			{
+				"question": "Comment se déroule le processus de sélection?",
+				"answer": "Nous utilisons le nombre aléatoire fourni par drand, publiquement accessible, pour choisir un certain nombre de personnes dans notre liste. La procédure est la suivante : nous chiffrons d'abord la liste des bénéficiaires. Puis nous utilisons l'élément aléatoire de drand et nous le convertissons en une position sur la liste au moyen d'une clé de dérivation. Pour les personnes intéressées par les détails techniques, la clé et les processus inhérents sont décrits dans notre dépôt GitHub.",
+				"links": [
+					{
+						"title": "Notre dépôt GitHub",
+						"href": "https://github.com/socialincome-san/public/tree/main/recipients_selection"
+					},
+					{
+						"title": "Fonction de dérivation de clé",
+						"href": "https://fr.wikipedia.org/wiki/Fonction_de_d%C3%A9rivation_de_cl%C3%A9"
+					}
+				]
+			},
+			{
+				"question": "Qu'est-ce que drand et qui est derrière?",
+				"answer": "Le projet drand génère des nombres aléatoires auxquels tout le monde peut se fier. Il peut être utilisé pour créer des ébauches véritablement aléatoires et vérifiables. Initié en 2017 à l'EPFL par Nicolas Gailly, drand a reçu le soutien de Philipp Jovanovic et a été encadré par Bryan Ford. Depuis lors, il est géré de manière indépendante et entretient un réseau appelé League of Entropy avec l'EPFL, l'UCL, Cloudflare, Kudelski Security, l'Université du Chili et Protocol Labs. Les principaux responsables actuels du projet open source sont Erick Watson, Yolan Romailler et Patrick McClurg de Randamu.",
+				"links": [
+					{
+						"title": "League of Entropy",
+						"href": "https://www.cloudflare.com/leagueofentropy/"
+					},
+					{
+						"title": "Randamu",
+						"href": "https://randa.mu"
+					},
+					{
+						"title": "Drand",
+						"href": "https://drand.love"
+					}
+				]
+			}
+		]
+	},
 	"campaign": {
+		"title": "Questions et réponses",
+		"questions": [
+			{
+				"question": "Qu'est-ce que les transferts monétaires directs?",
+				"answer": "Concrètement, les transferts monétaires directs sont une forme de protection sociale, où de l'argent ou des bons sont directement versés aux personnes pauvres et non aux gouvernements ou autres acteurs étatiques. En particulier au cours des dix dernières années, ils ont été de plus en plus utilisés comme un outil pour réduire la pauvreté et la vulnérabilité dans les pays à revenu intermédiaire et faible.",
+				"links": [
+					{
+						"title": "Social protection and resilient food systems: The role of cash transfers",
+						"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view"
+					}
+				]
+			},
+			{
+				"question": "Pourquoi la Sierra Leone?",
+				"answer": "Il fallait bien commencer quelque part. La Sierra Leone est un point de départ judicieux à bien des égards. C'est l'une des plus jeunes démocraties du monde, et le pays figure régulièrement en tête du classement des nations les plus pauvres. Cette situation est due à une guerre civile qui a duré jusqu'en 2002. Les infrastructures déficientes, le manque d'accès à l'éducation et l'inégalité engendrent une grande précarité. Des progrès importants ont toutefois été réalisés, notamment dans la diffusion du mobile banking dans les parties urbanisées du pays."
+			},
+			{
+				"question": "Comment les bénéficiaires sont-ils choisis?",
+				"answer": "Nous déterminons les nouveaux bénéficiaires potentiels grâce au travail de nos représentants locaux et aux suggestions de nos partenaires et ONG locales. Nos critères sont simples: les bénéficiaires doivent avoir plus de 16 ans et provenir d'une communauté à faible revenu.",
+				"links": [
+					{
+						"title": "Partenaires locaux",
+						"href": "/partners"
+					}
+				]
+			},
+			{
+				"question": "Quel est le montant versé?",
+				"answer": "Les bénéficiaires de Social Income reçoivent un paiement mensuel de 32 USD, converti en monnaie locale et directement versé sur leurs téléphones mobiles. Cette somme correspond aux besoins de base d'une personne vivant dans la pauvreté, en tenant compte du revenu moyen d'environ 42 USD en Sierra Leone. Le soutien est assuré de manière fiable sur trois ans. Cette stratégie vise à permettre aux personnes dans le besoin de planifier leur avenir et d'investir dans des domaines essentiels tels que la santé, améliorant ainsi leur situation financière et leur bien-être."
+			}
+		]
+	},
+	"campaign-ismatu": {
 		"title": "Questions et réponses",
 		"questions": [
 			{

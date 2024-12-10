@@ -1,0 +1,119 @@
+{
+	"section-1": {
+		"subtitle": "Unser Bestreben",
+		"title": [
+			{
+				"text": "Im Sinne des bedingungslosen Grundeinkommens "
+			},
+			{
+				"text": "wollen wir allen ",
+				"color": "accent"
+			},
+			{
+				"text": "ein Social Income ermöglichen."
+			}
+		],
+		"target": [
+			{
+				"text": "8,104,666,773",
+				"color": "accent"
+			},
+			{
+				"text": "potential",
+				"color": "accent"
+			}
+		],
+		"population": "8,104,666,773",
+		"potential": "potenzielle",
+		"scope": "Empfänger:innen leben auf der Erde",
+		"continue": "Jedoch"
+	},
+	"section-2": {
+		"subtitle": "Unsere Realität",
+		"title": [
+			{
+				"text": "Da unsere Mittel begrenzt sind, "
+			},
+			{
+				"text": "konzentrieren wir uns auf jene,",
+				"color": "accent"
+			},
+			{
+				"text": "die die Unterstützung am meisten benötigen.”"
+			}
+		],
+		"amount": "USD 300,000+",
+		"amount-context": "Spenden erhalten ↗",
+		"scope": "Mehr ",
+		"continue-1": "Auswahlverfahren"
+	},
+	"section-3": {
+		"preselection-title": "Faire Vorauswahl",
+		"preselection-subtitle": "Priorisierung nach Bedarf",
+		"preselection-desc": "Mit lokalen Partnern erstellen wir einen Pool potenzieller Empfänger:innen, die Unterstützung benötigen.",
+		"preselection-goal": "Priorisierung nach Bedarf",
+		"preselection-1-title": "Fokus auf die Ärmsten",
+		"preselection-1-desc": "Wir setzen unsere Mittel dort ein, wo die Hilfe am dringendsten gebraucht wird und am meisten bewirkt.",
+		"preselection-1-annex": "1,8 Milliarden Menschen leben von weniger als $3,65 pro Tag",
+		"preselection-2-title": "Zielgebiet danach ausrichten",
+		"preselection-2-desc": "Eine der höchsten Konzentrationen an Bedürftigen befindet sich in Sierra Leone, wo 57 % der Bevölkerung unterhalb der Armutsgrenze lebt und das monatliche Einkommen meist unter 45 USD liegt.",
+		"preselection-2-annex": "4,9 Millionen Menschen in Sierra Leone gelten als arm",
+		"preselection-3-title": "Potentielle Empfänger:innen ermitteln",
+		"preselection-3-desc": "Zusammen mit lokalen NGOs, die Armut bekämpfen, identifizieren wir Menschen in Not und erstellen eine Liste potentieller Empfänger:innen.",
+		"preselection-3-annex": "Über 5.000 potenzielle Empfänger:innen erfasst",
+		"selection-title": "Transparente Auswahl",
+		"selection-subtitle": "Mögliche Spannungen minimieren",
+		"selection-desc": "Unser Auswahlverfahren ist für alle nachvollziehbar, fair und frei von Bevorzugung.",
+		"selection-goal": "Mögliche Spannungen minimieren",
+		"selection-1-title": "Lotterieprinzip",
+		"selection-1-desc": "Eine Verlosung ist die fairste Methode, wenn eine Auswahl notwendig ist und alle Optionen gleichwertig sind.",
+		"selection-1-annex": "Nur qualifizierte Personen kommen somit für die Auswahl in Betracht",
+		"selection-2-title": "Zufallsprinzip",
+		"selection-2-desc": "Die Integrität einer Verlosung beruht auf ihrer Unvorhersehbarkeit. Vertrauen entsteht, wenn klar ist, dass die Auswahl dem Zufall überlassen und öffentlich überprüfbar ist.",
+		"selection-2-annex": "Aktuelle Zufallszahl anzeigen ↗",
+		"selection-3-title": "Öffentlich überprüfbar",
+		"selection-3-desc": "Indem wir den Code zur Auswahl veröffentlichen, ermöglichen wir es allen, den Prozess zu prüfen und sicherzustellen, dass keine Manipulation vorliegt.",
+		"selection-3-annex": "Prüfe den Quellcode und die Ziehungen ↗",
+		"goal": "Ziel"
+	},
+
+	"section-4": {
+		"title": [
+			{
+				"text": "Unsere "
+			},
+			{
+				"text": "vergangenen ",
+				"color": "accent"
+			},
+			{
+				"text": "Ziehungen."
+			}
+		],
+		"past-draws-description": "Die folgende Liste zeigt die bisherigen Ziehungen zur Auswahl der Empfänger:innen.",
+		"draw-card": {
+			"summary": "{{ count }} von {{ total }} ausgewählt",
+			"random-number": "Zufallszahl",
+			"confirm-drand": "Bestätigen mit drand",
+			"confirm-github": "Ziehung auf Github",
+			"long-list": "{{ total }} Personen auf der Longlist, {{ count }} ausgewählt",
+			"people": "Personen",
+			"ngo": "NGO"
+		}
+	},
+
+	"section-5": {
+		"title": [
+			{
+				"text": "Das  "
+			},
+			{
+				"text": "klingt gut, ",
+				"color": "accent"
+			},
+			{
+				"text": "aber..."
+			}
+		]
+	}
+}

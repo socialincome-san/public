@@ -20,6 +20,7 @@
 			}
 		]
 	},
+	"video-subtitle": "/assets/video/subtitle-video-testimonials.fr_FR.vtt",
 	"section-2": {
 		"title-1": "Dans les communautés les plus pauvres de Sierra Leone, les gens savent très bien ce qu’il faut faire pour sortir de la pauvreté.",
 		"title-2": [
@@ -152,6 +153,7 @@
 						"text": "sur les marchés locaux et auprès des prestataires de services. »"
 					}
 				],
+				"logo": "/assets/logos/logo-icrc.svg",
 				"author": "Croix-Rouge Internationale"
 			},
 			{
@@ -167,6 +169,7 @@
 						"text": "mais sans détruire. »"
 					}
 				],
+				"logo": "/assets/logos/logo-un.svg",
 				"author": "Nations Unies"
 			},
 			{
@@ -182,6 +185,7 @@
 						"text": "l’accès aux services financiers à l'aide d'un téléphone portable. »"
 					}
 				],
+				"logo": "/assets/logos/logo-worldbank.svg",
 				"author": "Banque mondiale"
 			}
 		]

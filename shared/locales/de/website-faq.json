@@ -2,6 +2,8 @@
 	"metadata": {
 		"title": "FAQ | Social Income"
 	},
+	"title": "FAQ",
+	"title-long": "Oft gestellte Fragen",
 	"fighting-poverty": {
 		"title": "Armut bekämpfen",
 		"questions": [
@@ -106,7 +108,13 @@
 		"questions": [
 			{
 				"question": "Wie werden die Empfänger:innen ausgewählt?",
-				"answer": "Wir bestimmen mögliche neue Empfänger:innen aufgrund der Vorarbeit unserer lokalen Kontaktpersonen und Vorschläge von Partnern und lokalen NGOs: i.e. Aurora Foundation, Reachout Salone, Equal Rights Alliance, United Polio Brothers und Sisters und Jamyl & Nyanga Jaward Foundation. Unsere Kriterien sind einfach: Die Empfänger müssen älter als 16 Jahre sein und aus einer einkommensschwachen Community stammen. Als übergeordnetes Prinzip verpflichten wir uns, Menschen in Not zu unterstützen und halten uns dabei strikt an ein ausgeglichenes Geschlechterverhältnis."
+				"answer": "Wir identifizieren potenzielle Empfänger:innen in enger Zusammenarbeit mit lokalen NGO-Partnern. Unsere Auswahlkriterien sind klar: Die Empfänger:innen müssen über 16 Jahre alt sein und aus einer einkommensschwachen Community stammen (unterhalb der Armutsgrenze lebend).",
+				"links": [
+					{
+						"title": "Lokale Partner",
+						"href": "/partners"
+					}
+				]
 			},
 			{
 				"question": "Wofür verwenden die Empfänger:innen das Geld?",
@@ -135,8 +143,8 @@
 		"title": "Freiwilliges Engagement",
 		"questions": [
 			{
-				"question": "Wie kann ich mich als Volontär*in beteiligen?",
-				"answer": " Wenn du eine sinnstiftende Aufgabe mit Social Impact suchst, besuche das Portal Idealist für mehr Informationen zu offenen Stellen oder schreib uns.",
+				"question": "Wie kann ich mich als Volontär:in beteiligen?",
+				"answer": "Wenn du eine sinnstiftende Aufgabe mit Social Impact suchst, besuche das Portal Idealist für mehr Informationen zu offenen Stellen oder schreib uns.",
 				"links": [
 					{
 						"title": "Idealist",
@@ -146,7 +154,89 @@
 			}
 		]
 	},
+	"selection": {
+		"title": "Selektion der Empfänger:innen",
+		"questions": [
+			{
+				"question": "Warum wählen wir zufällig aus einem Pool qualifizierter Empfänger:innen aus?",
+				"answer": "Der Zweck der Anwendung dieser Zufallsauswahlmethode besteht darin, mehrere Ziele zu erreichen. Erstens hilft es, Voreingenommenheit bei der Auswahl der Empfänger:innen zu verhindern und sicherzustellen, dass Angehörige oder Bekannte von Personen, die am Prozess beteiligt sind, keine bevorzugte Behandlung erhalten. Zweitens zielt es darauf ab, Spannungen zwischen Empfänger:innen und Nicht-Empfänger:innen sowie potenzielle Konflikte zwischen Empfänger:innen und unserer Organisation zu vermeiden. Schliesslich streben wir danach, Technologie dort einzubeziehen, wo dies sinnvoll und vorteilhaft für den Prozess ist."
+			},
+			{
+				"question": "Wer kann den Auswahlprozess beeinflussen?",
+				"answer": "Indem wir uns auf einen unvorhersehbaren Zufallswert von drand verlassen, der in der Zukunft erzeugt wird, ist es für niemanden möglich, die Ergebnisse des Auswahlprozesses zu beeinflussen. Diese inhärente Zufälligkeit kann genutzt werden, um die Integrität der Auswahl zu bestätigen. Um für Social Income zu qualifizieren, muss eine Person zunächst auf einer Liste einer NGO stehen. Obwohl dies eine vorläufige Bedingung darstellt, steht es im Einklang mit unserem grundlegenden Prinzip: sicherzustellen, dass Social Income diejenigen erreicht, die es am dringendsten benötigen."
+			},
+			{
+				"question": "Wie vermeiden wir Voreingenommenheit und Spannungen?",
+				"answer": "Um sicherzustellen, dass wir nicht unbeabsichtigt eine bestimmte ethnische Gruppe, Geschlecht oder Berufsgruppe priorisieren, arbeiten wir mit vielfältigen NGOs zusammen, die unterschiedliche Missionen haben. Im Einklang mit unserer 'keinem Schaden zufügen'-Politik streben wir danach, Spannungen zwischen Empfänger:innen, Nicht-Empfänger:innen, Gemeinschaften und den NGOs zu verhindern. Unsere zufällige Auswahl spielt dabei eine entscheidende Rolle. Sie stellt sicher, dass Personen, die mit Personen im Prozess verwandt oder bekannt sind, keine Bevorzugung erfahren, die zu Konflikten führen könnte."
+			},
+			{
+				"question": "Was passiert während des Auswahlprozesses?",
+				"answer": "Wir nutzen die von drand bereitgestellte Zufallszahl, die öffentlich zugänglich ist, um eine bestimmte Anzahl von Personen aus unserer Liste auszuwählen. So wird es gemacht: Wir ordnen zunächst die gehashte Liste der Empfänger:innen. Dann verwenden wir das Zufallselement von drand, um es mithilfe einer Schlüsselableitung in eine Position auf der Liste umzuwandeln. Für diejenigen, die an den technischen Details interessiert sind, sind die Funktion und ihre zugehörigen Prozesse in unserem GitHub-Repository dokumentiert.",
+				"links": [
+					{
+						"title": "GitHub-Repository",
+						"href": "https://github.com/socialincome-san/public/tree/main/recipients_selection"
+					},
+					{
+						"title": "Schlüsselableitungsverfahren",
+						"href": "https://de.wikipedia.org/wiki/Schl%C3%BCsselableitung"
+					}
+				]
+			},
+			{
+				"question": "Was ist drand und wer steckt dahinter?",
+				"answer": "Das drand-Projekt generiert Zufallszahlen, denen jeder vertrauen kann. Es kann angewendet werden, um wirklich zufällige und überprüfbare Auslosungen zu erstellen. Das Projekt wurde 2017 am EPFL von Nicolas Gailly initiiert und erhielt Unterstützung von Philipp Jovanovic. Es wurde von Bryan Ford geleitet. Es ist seitdem unabhängig verwaltet worden und betreibt ein Netzwerk namens League of Entropy mit EPFL, UCL, Cloudflare, Kudelski Security, der Universität von Chile und Protocol Labs. Aktuelle Kernbetreuer des Open-Source-Projekts ist Erick Watson, Yolan Romailler und Patrick McClurg von Randamu.",
+				"links": [
+					{
+						"title": "League of Entropy",
+						"href": "https://www.cloudflare.com/leagueofentropy/"
+					},
+					{
+						"title": "Randamu",
+						"href": "https://randa.mu"
+					},
+					{
+						"title": "Drand",
+						"href": "https://drand.love"
+					}
+				]
+			}
+		]
+	},
 	"campaign": {
+		"title": "Fragen und Antworten",
+		"questions": [
+			{
+				"question": "Was sind direkte Geldtransfers?",
+				"answer": "Konkret handelt es sich bei direkten Geldtransfers um eine Form des Sozialschutzes, bei der Bargeld oder Gutscheine direkt an arme Menschen und nicht an Regierungen oder andere staatliche Akteure ausgezahlt werden. Insbesondere in den letzten zehn Jahren wurden sie zunehmend als Instrument zur Verringerung von Armut und Gefährdung in Ländern mit mittlerem und niedrigem Einkommen eingesetzt.",
+				"links": [
+					{
+						"title": "Social protection and resilient food systems: The role of cash transfers",
+						"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view"
+					}
+				]
+			},
+			{
+				"question": "Warum Sierra Leone?",
+				"answer": "Man muss irgendwo anfangen, und Sierra Leone ist ein idealer Startpunkt. Das Land gehört zu den ärmsten der Welt, geprägt von einem Bürgerkrieg bis 2002, schlechter Infrastruktur, mangelnder Bildung und Ungleichheit. Dennoch gibt es Fortschritte, etwa im Mobile Banking in urbanen Gebieten. Sierra Leone benötigt Hilfe und ist zugleich gut auf einen digital-fokussierten Ansatz vorbereitet."
+			},
+			{
+				"question": "Wie werden die Empfänger:innen ausgewählt?",
+				"answer": "Wir identifizieren potenzielle Empfänger:innen in enger Zusammenarbeit mit lokalen NGO-Partnern. Unsere Auswahlkriterien sind klar: Die Empfänger:innen müssen über 16 Jahre alt sein und aus einer einkommensschwachen Community stammen (unterhalb der Armutsgrenze lebend).",
+				"links": [
+					{
+						"title": "Lokale Partner",
+						"href": "/partners"
+					}
+				]
+			},
+			{
+				"question": "Wie hoch ist der ausbezahlte Betrag?",
+				"answer": "Empfänger:innen des Social Income bekommen monatlich 32 USD, umgerechnet in lokale Währung und direkt auf ihre Mobiltelefone überwiesen. Diese Summe entspricht den Grundbedürfnissen einer in Armut lebenden Person, berücksichtigt das durchschnittliche Einkommen von etwa 42 USD in Sierra Leone. Die Unterstützung erfolgt über drei Jahre. Diese Strategie soll bedürftige Menschen befähigen, ihre Zukunft zu planen und in essenzielle Bereiche wie Gesundheit zu investieren, was ihre finanzielle Situation und ihr Wohlbefinden verbessert."
+			}
+		]
+	},
+	"campaign-ismatu": {
 		"title": "Fragen und Antworten",
 		"questions": [
 			{
@@ -159,7 +249,7 @@
 			},
 			{
 				"question": "Wie hoch ist der ausbezahlte Betrag?",
-				"answer": "Empfänger:innen des Social Income bekommen monatlich 32 USD, umgerechnet in lokale Währung und direkt auf ihre Mobiltelefone überwiesen. Diese Summe entspricht den Grundbedürfnissen einer in Armut lebenden Person, berücksichtigt das durchschnittliche Einkommen von etwa 42 USD in Sierra Leone. Die Unterstützung erfolgt zuverlässig über drei Jahre. Diese Strategie soll bedürftige Menschen befähigen, ihre Zukunft zu planen und in essenzielle Bereiche wie Gesundheit zu investieren, was ihre finanzielle Situation und ihr Wohlbefinden verbessert."
+				"answer": "Empfänger:innen des Social Income bekommen monatlich 32 USD, umgerechnet in lokale Währung und direkt auf ihre Mobiltelefone überwiesen. Diese Summe entspricht den Grundbedürfnissen einer in Armut lebenden Person, berücksichtigt das durchschnittliche Einkommen von etwa 42 USD in Sierra Leone. Die Unterstützung erfolgt über drei Jahre. Diese Strategie soll bedürftige Menschen befähigen, ihre Zukunft zu planen und in essenzielle Bereiche wie Gesundheit zu investieren, was ihre finanzielle Situation und ihr Wohlbefinden verbessert."
 			},
 			{
 				"question": "Wofür werden die Gelder verwendet?",

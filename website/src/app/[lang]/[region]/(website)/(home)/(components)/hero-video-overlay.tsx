@@ -28,6 +28,7 @@ const HeroVideoOverlay = ({ lang, region, translations }: HeroVideoOverlayProps)
 	}, [hideOverlay, setHideOverlay]);
 
 	useEventListener('mousemove', () => setHideOverlay(false));
+	useEventListener('scroll', () => setHideOverlay(false));
 
 	return (
 		<div
