@@ -47,7 +47,7 @@ export function SectionCard({ translations: { card, takeAction } }: SectionCardP
 				</DialogHeader>
 				<DialogDescription>
 					{card.paragraphs.map((paragraph, key) => (
-						<p key={key} className="mt-2">
+						<Typography key={key} className="mt-2">
 							{paragraph.map((fragment, key) => (
 								<span key={key}>
 									{fragment.href ? (
@@ -61,7 +61,7 @@ export function SectionCard({ translations: { card, takeAction } }: SectionCardP
 									)}
 								</span>
 							))}
-						</p>
+						</Typography>
 					))}
 					<br />
 				</DialogDescription>

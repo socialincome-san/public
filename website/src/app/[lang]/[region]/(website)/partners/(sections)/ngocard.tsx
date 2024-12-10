@@ -35,6 +35,7 @@ export default async function NgoCard({
 	sdgBadges,
 	ngoHoverCard,
 	lang,
+	region,
 }: NgoCardProps) {
 	const translator = await Translator.getInstance({
 		language: lang,
@@ -278,7 +279,7 @@ export default async function NgoCard({
 							<Typography size="lg">{translator.t('ngo-generic.permalink')}</Typography>
 						</div>
 						<div className="col-span-2">
-							<Link href={`https://socialincome.org/en/int/partners/${ngoHoverCard.orgSlug}`}>
+							<Link href={`/${lang}/${region}/partners/${ngoHoverCard.orgSlug}`}>
 								<Typography size="lg" className="break-words underline">
 									{`socialincome.org/partners/${ngoHoverCard.orgSlug}`}
 								</Typography>

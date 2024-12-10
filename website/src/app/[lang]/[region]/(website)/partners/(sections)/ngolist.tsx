@@ -23,7 +23,7 @@ function getFlag(abbreviation: string): ReactElement {
 	return country_abbreviations_to_flag_map[abbreviation] || <SL className="h-5 w-5 rounded-full" />;
 }
 
-export async function NgoList({ lang }: DefaultParams) {
+export async function NgoList({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-partners'],
@@ -37,6 +37,7 @@ export async function NgoList({ lang }: DefaultParams) {
 		ngoArray.push(ngo);
 	});
 	const ngoCardPropsArray: NgoCardProps[] = [];
+
 	for (let i = 0; i < ngoArray.length; ++i) {
 		const recipientsBadge: RecipientsBadgeType = {
 			hoverCardOrgName: ngoArray[i]['org-long-name'],
@@ -93,6 +94,7 @@ export async function NgoList({ lang }: DefaultParams) {
 			sdgBadges: sdgBadges,
 			ngoHoverCard: ngoHoverCard,
 			lang: lang,
+			region: region,
 		};
 		ngoCardPropsArray.push(ngoCardProps);
 	}
@@ -101,7 +103,7 @@ export async function NgoList({ lang }: DefaultParams) {
 		<div className="mx-auto max-w-6xl">
 			<div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-2">
 				{ngoCardPropsArray.map((props, index) => (
-					<NgoCard {...props} key={index} />
+					<NgoCard key={index} {...props} />
 				))}
 			</div>
 		</div>

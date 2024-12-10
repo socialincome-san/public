@@ -1,4 +1,5 @@
 'use client';
+
 import { FundraiserBadge, RecipientsBadge } from '@/app/[lang]/[region]/(website)/partners/(components)/PartnerBadges';
 import { CountryBadgeType, RecipientsBadgeType } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerBadges';
 import { NgoHomeProps, NgoHoverCardType } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
@@ -12,10 +13,12 @@ const country_abbreviations_to_flag_map: Record<string, ReactElement> = {
 	SL: <SL className="h-5 w-5 rounded-full" />,
 	CH: <CH className="h-5 w-5 rounded-full" />,
 };
+
 function getFlag(abbreviation: string): ReactElement {
 	return country_abbreviations_to_flag_map[abbreviation] || <SL className="h-5 w-5 rounded-full" />;
 }
-export function PartnerHome({ currentNgo, currentNgoCountry, translations }: NgoHomeProps) {
+
+export function PartnerHome({ currentNgo, currentNgoCountry, translations, lang, region }: NgoHomeProps) {
 	const image_base_path = '/assets/partners/';
 	const recipientsBadge: RecipientsBadgeType = {
 		hoverCardOrgName: currentNgo!['org-long-name'],
@@ -239,7 +242,7 @@ export function PartnerHome({ currentNgo, currentNgoCountry, translations }: Ngo
 							<Typography size="lg">{translations.permalink}</Typography>
 						</div>
 						<div className="col-span-2">
-							<Link href={`https://socialincome.org/en/int/partners/${ngoHoverCard.orgSlug}`}>
+							<Link href={`/${lang}/${region}/partners/${ngoHoverCard.orgSlug}`}>
 								<Typography size="lg" className="break-words underline">
 									{`socialincome.org/partners/${ngoHoverCard.orgSlug}`}
 								</Typography>

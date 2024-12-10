@@ -14,7 +14,7 @@ type PartnerPageProps = {
 	} & DefaultParams;
 } & DefaultPageProps;
 
-export default async function Page({ params: { lang, slug } }: PartnerPageProps) {
+export default async function Page({ params: { lang, region, slug } }: PartnerPageProps) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-partners', 'website-common', 'countries'],
@@ -43,9 +43,16 @@ export default async function Page({ params: { lang, slug } }: PartnerPageProps)
 	const currentNgo: NgoEntryJSON | undefined = getNGOTranslation(translator, slug.replaceAll('%26', '&'));
 	if (!currentNgo) {
 		redirect('/not-found');
-		return;
 	}
 	const currentNgoCountry = translator.t(currentNgo!['org-country'] || 'SL');
 
-	return <PartnerHome currentNgo={currentNgo} currentNgoCountry={currentNgoCountry} translations={translations} />;
+	return (
+		<PartnerHome
+			lang={lang}
+			region={region}
+			currentNgo={currentNgo}
+			currentNgoCountry={currentNgoCountry}
+			translations={translations}
+		/>
+	);
 }
