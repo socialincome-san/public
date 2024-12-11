@@ -9,11 +9,13 @@ import { HeroVideo } from './(sections)/hero-video';
 import { MobileIllustration } from './(sections)/mobile-illustration';
 import { MonthlyIncome } from './(sections)/monthly-income';
 import { Overview } from './(sections)/overview';
+import { ActiveFundraisers } from './(sections)/active-fundraisers';
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	return (
 		<div className="hero-video -mb-28 -mt-24 md:-mt-36">
 			<HeroVideo lang={lang} region={region} />
+			<ActiveFundraisers lang={lang} region={region} />
 			<Overview lang={lang} region={region} />
 			<MonthlyIncome lang={lang} region={region} />
 			<ExplainerVideo lang={lang} region={region} />
