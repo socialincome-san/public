@@ -16,7 +16,7 @@ export async function ActiveFundraisers({ lang }: DefaultParams) {
 		<BaseContainer className="mx-auto mb-8 mt-12 flex items-center justify-center">
 			<Link
 				href={`https://socialincome.org`}
-				className="border-text-popover-foreground-muted hover:bg-primary group relative mt-4 flex w-[270px] items-center rounded-full border-2 px-6 py-2 transition-all duration-300 hover:w-[300px] hover:text-white hover:border-primary"
+				className="border-text-popover-foreground-muted hover:bg-primary hover:border-primary group relative mt-4 flex w-[270px] items-center rounded-full border-2 px-6 py-2 transition-all duration-300 hover:w-[300px] hover:text-white"
 			>
 				{/* Avatar */}
 				<div className="-ml-2 mr-2 h-10 w-10 overflow-hidden rounded-full transition-transform duration-300 group-hover:scale-125">
@@ -26,18 +26,17 @@ export async function ActiveFundraisers({ lang }: DefaultParams) {
 				{/* Text Content */}
 				<div className="flex flex-col pl-2">
 					{/* Default Text */}
-					<div className="w-[150px] text-popover-foreground-muted flex items-center space-x-1 group-hover:hidden">
+					<div className="text-popover-foreground-muted flex w-[150px] items-center space-x-1 group-hover:hidden">
 						<Typography size="lg">{translator.t('badges.by')}</Typography>
-						<Typography size="lg" className="truncate overflow-hidden whitespace-nowrap">
+						<Typography size="lg" className="overflow-hidden truncate whitespace-nowrap">
 							Ismatu Banjura
 						</Typography>
 					</div>
-					<div  className="w-[150px] text-primary group-hover:hidden">
-						<Typography size="lg" weight="medium" className="truncate overflow-hidden whitespace-nowrap">
+					<div className="text-primary w-[150px] group-hover:hidden">
+						<Typography size="lg" weight="medium" className="overflow-hidden truncate whitespace-nowrap">
 							Rebuilding Lives
 						</Typography>
 					</div>
-
 
 					{/* Hover Text */}
 					<div className="flex items-baseline space-x-2 leading-none">
