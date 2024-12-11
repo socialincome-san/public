@@ -9,14 +9,14 @@ import ismatuImage from '../(assets)/avatar-ismatu.png';
 export async function ActiveFundraisers({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-home'],
+		namespaces: ['website-campaign'],
 	});
 
 	return (
 		<BaseContainer className="mx-auto mb-8 mt-12 flex items-center justify-center">
 			<Link
-				href={`/${lang}/fundraisers`}
-				className="border-text-popover-foreground-muted hover:bg-primary group relative mt-4 flex w-[260px] items-center rounded-full border-2 px-6 py-2 transition-all duration-300 hover:w-[300px] hover:text-white"
+				href={`https://socialincome.org`}
+				className="border-text-popover-foreground-muted hover:bg-primary group relative mt-4 flex w-[270px] items-center rounded-full border-2 px-6 py-2 transition-all duration-300 hover:w-[300px] hover:text-white hover:border-primary"
 			>
 				{/* Avatar */}
 				<div className="-ml-2 mr-2 h-10 w-10 overflow-hidden rounded-full transition-transform duration-300 group-hover:scale-125">
@@ -26,12 +26,18 @@ export async function ActiveFundraisers({ lang }: DefaultParams) {
 				{/* Text Content */}
 				<div className="flex flex-col pl-2">
 					{/* Default Text */}
-					<Typography size="lg" className="text-popover-foreground-muted group-hover:hidden">
-						By Ismatu Banjura
-					</Typography>
-					<Typography size="lg" weight="medium" className="text-primary group-hover:hidden">
-						Rebuilding Lives
-					</Typography>
+					<div className="w-[150px] text-popover-foreground-muted flex items-center space-x-1 group-hover:hidden">
+						<Typography size="lg">{translator.t('badges.by')}</Typography>
+						<Typography size="lg" className="truncate overflow-hidden whitespace-nowrap">
+							Ismatu Banjura
+						</Typography>
+					</div>
+					<div  className="w-[150px] text-primary group-hover:hidden">
+						<Typography size="lg" weight="medium" className="truncate overflow-hidden whitespace-nowrap">
+							Rebuilding Lives
+						</Typography>
+					</div>
+
 
 					{/* Hover Text */}
 					<div className="flex items-baseline space-x-2 leading-none">
@@ -42,9 +48,14 @@ export async function ActiveFundraisers({ lang }: DefaultParams) {
 							23%
 						</Typography>
 					</div>
-					<Typography size="lg" weight="medium" className="text-accent hidden group-hover:inline">
-						2344 contributors
-					</Typography>
+					<div className="text-accent hidden items-center space-x-1 group-hover:flex">
+						<Typography size="lg" weight="medium">
+							2344
+						</Typography>
+						<Typography size="lg" weight="medium">
+							{translator.t('badges.contributors')}
+						</Typography>
+					</div>
 				</div>
 
 				{/* Chevron Circle */}
