@@ -1,10 +1,10 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
-import Image from 'next/image';
-import ismatuImage from '../(assets)/avatar-ismatu.png';
-import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import ismatuImage from '../(assets)/avatar-ismatu.png';
 
 export async function ActiveFundraisers({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
@@ -19,7 +19,7 @@ export async function ActiveFundraisers({ lang }: DefaultParams) {
 				className="border-text-popover-foreground-muted hover:bg-primary group relative mt-4 flex w-[260px] items-center rounded-full border-2 px-6 py-2 transition-all duration-300 hover:w-[300px] hover:text-white"
 			>
 				{/* Avatar */}
-				<div className="mr-2 -ml-2 h-10 w-10 overflow-hidden rounded-full transition-transform duration-300 group-hover:scale-125">
+				<div className="-ml-2 mr-2 h-10 w-10 overflow-hidden rounded-full transition-transform duration-300 group-hover:scale-125">
 					<Image alt="Avatar" src={ismatuImage} width={40} height={40} className="object-cover" />
 				</div>
 
@@ -54,17 +54,10 @@ export async function ActiveFundraisers({ lang }: DefaultParams) {
 			</Link>
 			<Link
 				href={`/${lang}/fundraisers`}
-				className="border-text-popover-foreground-muted relative mt-4 flex items-center rounded-full border-2 px-6 py-2 text-primary transition-all duration-300"
+				className="border-text-popover-foreground-muted text-primary relative mt-4 flex items-center rounded-full border-2 px-6 py-2 transition-all duration-300"
 			>
 				{/* Loading Dots Animation */}
-				<svg
-					width="48"
-					height="12"
-					viewBox="0 0 48 12"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-					className="pr-2"
-				>
+				<svg width="48" height="12" viewBox="0 0 48 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="pr-2">
 					<circle cx="6" cy="6" r="6" fill="currentColor">
 						<animate
 							attributeName="opacity"

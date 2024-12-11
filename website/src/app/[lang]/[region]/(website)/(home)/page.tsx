@@ -4,12 +4,12 @@ import { FAQ } from '@/app/[lang]/[region]/(website)/(home)/(sections)/faq';
 import { Quotes } from '@/app/[lang]/[region]/(website)/(home)/(sections)/quotes';
 import { SDGGoals } from '@/app/[lang]/[region]/(website)/(home)/(sections)/sdg-goals';
 import { Testimonials } from '@/app/[lang]/[region]/(website)/(home)/(sections)/testimonials';
+import { ActiveFundraisers } from './(sections)/active-fundraisers';
 import { ExplainerVideo } from './(sections)/explainer-video';
 import { HeroVideo } from './(sections)/hero-video';
 import { MobileIllustration } from './(sections)/mobile-illustration';
 import { MonthlyIncome } from './(sections)/monthly-income';
 import { Overview } from './(sections)/overview';
-import { ActiveFundraisers } from './(sections)/active-fundraisers';
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	return (
