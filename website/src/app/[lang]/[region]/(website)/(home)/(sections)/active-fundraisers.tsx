@@ -15,13 +15,17 @@ export async function ActiveFundraisers({ lang }: DefaultParams) {
 	return (
 		<div className="mx-auto mb-8 mt-12 flex flex-col items-center justify-center space-y-4">
 			{/* Badge Temporary */}
-			<div className="w-full flex justify-center">
-				<div
-					className="border-text-popover-foreground-muted text-primary relative flex items-center rounded-full border-2 px-6 py-2 transition-all duration-300"
-				>
+			<div className="flex w-full justify-center">
+				<div className="border-text-popover-foreground-muted text-primary relative flex items-center rounded-full border-2 px-6 py-2 transition-all duration-300">
 					{/* Loading Dots Animation */}
-					<svg width="48" height="12" viewBox="0 0 48 12" fill="none" xmlns="http://www.w3.org/2000/svg"
-							 className="pr-2">
+					<svg
+						width="48"
+						height="12"
+						viewBox="0 0 48 12"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+						className="pr-2"
+					>
 						<circle cx="6" cy="6" r="6" fill="currentColor">
 							<animate
 								attributeName="opacity"
@@ -69,26 +73,24 @@ export async function ActiveFundraisers({ lang }: DefaultParams) {
 					<Link
 						key={index}
 						href={`https://socialincome.org`}
-						className={`border-text-popover-foreground-muted hover:bg-primary group relative flex w-[260px] items-center rounded-full border-2 px-6 py-2 transition-all duration-300 hover:w-[280px] hover:text-white hover:border-primary
-              ${index === 1 ? 'hidden md:flex' : index === 2 ? 'hidden lg:flex' : ''}`}
+						className={`border-text-popover-foreground-muted hover:bg-primary hover:border-primary group relative flex w-[260px] items-center rounded-full border-2 px-6 py-2 transition-all duration-300 hover:w-[280px] hover:text-white ${index === 1 ? 'hidden md:flex' : index === 2 ? 'hidden lg:flex' : ''}`}
 					>
 						{/* Avatar */}
-						<div
-							className="-ml-2 mr-2 h-10 w-10 overflow-hidden rounded-full transition-transform duration-300 group-hover:scale-125">
+						<div className="-ml-2 mr-2 h-10 w-10 overflow-hidden rounded-full transition-transform duration-300 group-hover:scale-125">
 							<Image alt="Avatar" src={ismatuImage} width={40} height={40} className="object-cover" />
 						</div>
 
 						{/* Text Content */}
 						<div className="flex flex-col pl-2">
 							{/* Default Text */}
-							<div className="w-[150px] text-popover-foreground-muted flex items-center space-x-1 group-hover:hidden">
+							<div className="text-popover-foreground-muted flex w-[150px] items-center space-x-1 group-hover:hidden">
 								<Typography size="lg">{translator.t('badges.by')}</Typography>
-								<Typography size="lg" className="truncate overflow-hidden whitespace-nowrap">
+								<Typography size="lg" className="overflow-hidden truncate whitespace-nowrap">
 									Ismatu Banjura
 								</Typography>
 							</div>
-							<div className="w-[150px] text-primary group-hover:hidden">
-								<Typography size="lg" weight="medium" className="truncate overflow-hidden whitespace-nowrap">
+							<div className="text-primary w-[150px] group-hover:hidden">
+								<Typography size="lg" weight="medium" className="overflow-hidden truncate whitespace-nowrap">
 									Rebuilding Lives
 								</Typography>
 							</div>
@@ -113,8 +115,7 @@ export async function ActiveFundraisers({ lang }: DefaultParams) {
 						</div>
 
 						{/* Chevron Circle */}
-						<div
-							className="absolute right-3 hidden h-8 w-8 items-center justify-center rounded-full bg-white group-hover:flex">
+						<div className="absolute right-3 hidden h-8 w-8 items-center justify-center rounded-full bg-white group-hover:flex">
 							<ChevronRight className="text-primary" />
 						</div>
 					</Link>
@@ -128,6 +129,5 @@ export async function ActiveFundraisers({ lang }: DefaultParams) {
 				</Link>
 			</div>
 		</div>
-	)
+	);
 }
-
