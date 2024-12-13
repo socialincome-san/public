@@ -24,7 +24,7 @@ export function CountryCard({ country, translations }: CountryCardProps) {
 		<li>
 			<Card>
 				<CardContent className="flex min-w-0 gap-x-4 py-8">
-					<img className="size-12 flex-none rounded-full object-cover" src={getFlagImageURL(country)} alt="" />
+					<img className="size-12 flex-none rounded-full" src={getFlagImageURL(country)} alt="" />
 					<div className="min-w-0 flex-auto">
 						<Typography weight="medium" size="lg">
 							{translations.country}
