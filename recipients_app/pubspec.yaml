@@ -25,7 +25,11 @@ dependencies:
     sdk: flutter
   flutter_native_splash: ^2.4.0
   intl: ^0.19.0
-  intl_phone_number_input: ^0.7.4
+  # v0.8.0 is not publish on pub.dev but it is released on Github. This version fixes the build error on iOS with the message "Cannot find type 'PhoneNumberKit' in scope".
+  intl_phone_number_input:
+    git:
+      url: https://github.com/natintosh/intl_phone_number_input.git
+      ref: v0.8.0
   json_annotation: ^4.9.0
   json_serializable: ^6.8.0
   package_info_plus: ^8.1.1
