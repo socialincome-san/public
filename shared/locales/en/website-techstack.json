@@ -8,16 +8,137 @@
 	"hero": {
 		"title-1": [
 			{
-				"text": "Hello ",
-				"color": "accent"
+				"text": "To work efficiently and effectively, "
 			},
 			{
-				"text": "Hallo."
+				"text": "we rely on the right tools.",
+				"color": "accent"
 			}
 		],
-		"subtitle": "Guten Tag"
+		"subtitle": "At Social Income, donated tech and software play a crucial role in driving our mission forward."
 	},
-	"cards": {
-		"title-1": "Vercel"
-	}
+	"badges": {
+		"donated": "Donated"
+	},
+	"cards": [
+		{
+			"title": "Google Suite",
+			"description": "We use the tools to organize and communicate. Thanks to Google Nonprofit, this is free for us.",
+			"link": "https://www.google.com/nonprofits/",
+			"logo": "google-nonprofit.png",
+			"donated": true
+		},
+		{
+			"title": "GitHub",
+			"description": "We use GitHub to collaborate on code; without it, maintaining an open-source approach would be difficult.",
+			"link": "https://socialimpact.github.com/",
+			"logo": "",
+			"donated": false
+		},
+		{
+			"title": "Codemagic",
+			"description": "We use Codemagic to simplify app builds and reduce deployment complexity.",
+			"link": "https://codemagic.io/start/",
+			"logo": "",
+			"donated": false
+		},
+		{
+			"title": "Linktree",
+			"description": "We use Linktree to keep all our social media links in one accessible place.",
+			"link": "https://linktr.ee/",
+			"logo": "",
+			"donated": false
+		},
+		{
+			"title": "Twilio",
+			"description": "We use Twilio to send newsletters and transactional emails to donors, ensuring reliable communication.",
+			"link": "https://twilio.org/",
+			"logo": "",
+			"donated": false
+		},
+		{
+			"title": "Algolia",
+			"description": "We use Algolia to enable fast and accurate search within our admin tool.",
+			"link": "https://www.algolia.com/",
+			"logo": "",
+			"donated": false
+		},
+		{
+			"title": "JetBrains",
+			"description": "We use JetBrains to write code and review open-source contributions efficiently.",
+			"link": "https://www.jetbrains.com/",
+			"logo": "",
+			"donated": false
+		},
+		{
+			"title": "1Password",
+			"description": "We use 1Password to keep our team’s credentials secure and easy to access when needed.",
+			"link": "https://1password.com/",
+			"logo": "",
+			"donated": false
+		},
+		{
+			"title": "Mux",
+			"description": "We use Mux to provide fast and adaptable video experiences to website users.",
+			"link": "https://www.mux.com/",
+			"logo": "",
+			"donated": false
+		},
+		{
+			"title": "Sentry",
+			"description": "We use Sentry to monitor, identify, and fix issues across all our tools, improving reliability.",
+			"link": "https://sentry.io/",
+			"logo": "",
+			"donated": false
+		},
+		{
+			"title": "Unica77",
+			"description": "We use Unica77, a donated font by Lineto, to give our platform a distinctive and professional look.",
+			"link": "https://lineto.com/typefaces/unica77",
+			"logo": "",
+			"donated": false
+		},
+		{
+			"title": "FireCMS",
+			"description": "We use FireCMS to manage our Firestore data and run the admin tool seamlessly.",
+			"link": "https://firecms.co/",
+			"logo": "",
+			"donated": false
+		},
+		{
+			"title": "Storybook",
+			"description": "We use Storybook to maintain a consistent and cohesive design across components.",
+			"link": "https://storybook.js.org/",
+			"logo": "",
+			"donated": false
+		},
+		{
+			"title": "Tailwind CSS",
+			"description": "We use Tailwind CSS to style quickly and flexibly, adapting to our evolving needs.",
+			"link": "https://tailwindcss.com/",
+			"logo": "",
+			"donated": false
+		},
+		{
+			"title": "Shadcn",
+			"description": "We use Shadcn components because they offer a great balance of simplicity and versatility.",
+			"link": "https://ui.shadcn.com/",
+			"logo": "",
+			"donated": false
+		},
+		{
+			"title": "TypeScript",
+			"description": "We use TypeScript to write safer and more maintainable code with fewer bugs.",
+			"link": "https://www.typescriptlang.org/",
+			"logo": "",
+			"donated": false
+		},
+		{
+			"title": "Next.js",
+			"description": "We use Next.js to deploy our website as fast as possible.",
+			"link": "https://nextjs.org/",
+			"logo": "",
+			"donated": false
+		}
+	]
 }
