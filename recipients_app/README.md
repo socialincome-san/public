@@ -49,6 +49,8 @@ Mobile App for Recipients of a Social Income.
   - Set is as default via `sudo xcode-select -s <path/to/>Xcode.app`
   - To agree to the Xcode license from the command line, you can use the
     following command: `sudo xcodebuild -license accept`
+- Install CocoaPods
+  - Install via Homebrew `brew install cocoapods`
 
 ## Optionally: Use the version manager [asdf](https://asdf-vm.com/)
 
