@@ -1,6 +1,14 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
+import TechCard from '@/app/[lang]/[region]/(website)/techstack/(sections)/techcard';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Typography } from '@socialincome/ui';
+
+type TechEntryJSON = {
+	title: string;
+	description: string;
+	link: string;
+	logo: string;
+	donated: boolean;
+};
 
 export async function TechList({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
@@ -8,11 +16,15 @@ export async function TechList({ lang }: DefaultParams) {
 		namespaces: ['website-techstack'],
 	});
 
+	const techArray: TechEntryJSON[] = translator.t('cards');
+
 	return (
-		<div>
-			<Typography color="accent" className="text-center">
-				{translator.t('cards.title-1')}
-			</Typography>
+		<div className="mx-auto max-w-6xl">
+			<div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-2">
+				{techArray.map((techEntry, index) => (
+					<TechCard {...techEntry} translations={{badgeDonated: translator.t('badges.donated')}} key={index} />
+				))}
+			</div>
 		</div>
 	);
 }
