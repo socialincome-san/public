@@ -224,7 +224,15 @@ const MobileNavigation = ({
 						</NavbarLink>
 						<div className="flex-inline flex items-center">
 							{country ? (
-								<Image src={getFlagImageURL(country)} width={24} height={24} alt="" className="mx-3 rounded-full" />
+								<Image
+									src={getFlagImageURL(country)}
+									width={24}
+									height={24}
+									alt=""
+									priority
+									unoptimized
+									className="mx-3 rounded-full"
+								/>
 							) : (
 								Flag && <Flag className="mx-3 h-6 w-6 rounded-full" />
 							)}
@@ -347,7 +355,15 @@ const DesktopNavigation = ({
 			<div className="group/i18n flex h-full flex-1 shrink-0 basis-1/4 flex-col">
 				<div className="flex flex-row items-baseline justify-end">
 					{country ? (
-						<Image src={getFlagImageURL(country)} width={20} height={20} alt="" className="m-auto mx-2 rounded-full" />
+						<Image
+							src={getFlagImageURL(country)}
+							width={20}
+							height={20}
+							alt=""
+							priority
+							unoptimized
+							className="m-auto mx-2 rounded-full"
+						/>
 					) : (
 						Flag && <Flag className="m-auto mx-2 h-5 w-5 rounded-full" />
 					)}

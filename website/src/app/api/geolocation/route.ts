@@ -1,5 +1,5 @@
-import { geolocation } from '@vercel/functions';
 import { handleApiError } from '@/app/api/auth';
+import { geolocation } from '@vercel/functions';
 
 export async function GET(request: Request) {
 	try {
