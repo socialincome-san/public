@@ -1,9 +1,11 @@
 import { handleApiError } from '@/app/api/auth';
-import { geolocation } from '@vercel/functions';
+import { Geo, geolocation } from '@vercel/functions';
 
 export async function GET(request: Request) {
 	try {
-		return Response.json(geolocation(request));
+		const geo = geolocation(request);
+
+		return Response.json({ country: geo.country } as Geo);
 	} catch (error: any) {
 		return handleApiError(error);
 	}
