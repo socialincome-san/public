@@ -11,16 +11,14 @@ interface Contributor {
 }
 
 interface GitHubContributor {
-	author: {
-		id: number;
-		login: string;
-		avatar_url: string;
-	};
-	total: number;
+	id: number;
+	login: string;
+	avatar_url: string;
+	contributions: number;
 }
 
 export async function getContributors() {
-	const url = `https://api.github.com/repos/${owner}/${repo}/stats/contributors`;
+	const url = `https://api.github.com/repos/${owner}/${repo}/contributors`;
 	const contributorsRes = await fetchData(owner, repo, url);
 	const contributors = await contributorsRes.json();
 
@@ -35,10 +33,10 @@ export async function getContributors() {
 
 	return contributors
 		.map((contributor: GitHubContributor) => ({
-			id: contributor.author.id,
-			name: contributor.author.login,
-			commits: contributor.total,
-			avatarUrl: contributor.author.avatar_url,
+			id: contributor.id,
+			name: contributor.login,
+			commits: contributor.contributions,
+			avatarUrl: contributor.avatar_url,
 		}))
 		.sort((a: Contributor, b: Contributor) => b.commits - a.commits);
 }
