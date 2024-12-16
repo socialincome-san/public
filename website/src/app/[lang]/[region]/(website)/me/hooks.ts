@@ -6,6 +6,7 @@ import { DONATION_CERTIFICATE_FIRESTORE_PATH } from '@socialincome/shared/src/ty
 import { Employer, EMPLOYERS_FIRESTORE_PATH } from '@socialincome/shared/src/types/employers';
 import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Geo } from '@vercel/functions';
 import { addDoc, collection, deleteDoc, doc, getDocs, query, Timestamp, updateDoc, where } from 'firebase/firestore';
 import { useContext } from 'react';
 import { useFirestore } from 'reactfire';
@@ -169,4 +170,21 @@ export const useAddEmployer = () => {
 		});
 		await queryClient.invalidateQueries({ queryKey: ['me', 'employers'] });
 	};
+};
+
+export const useGeolocation = () => {
+	const api = useApi();
+	const {
+		data: geolocation,
+		isLoading,
+		error,
+	} = useQuery({
+		queryKey: ['geolocation'],
+		queryFn: async () => {
+			const response = await api.get('/api/geolocation');
+			return (await response.json()) as Geo;
+		},
+	});
+
+	return { geolocation, isLoading, error };
 };

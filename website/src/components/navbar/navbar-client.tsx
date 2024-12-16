@@ -1,6 +1,7 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { useGeolocation } from '@/app/[lang]/[region]/(website)/me/hooks';
 import { getFlagComponentByCurrency } from '@/components/country-flags';
 import { DonateIcon } from '@/components/logos/donate-icon';
 import { SIAnimatedLogo } from '@/components/logos/si-animated-logo';
@@ -408,11 +409,12 @@ const DesktopNavigation = ({
 
 export function NavbarClient(props: NavbarProps) {
 	const { backgroundColor } = useGlobalStateProvider();
+	const { geolocation } = useGeolocation();
 
 	return (
 		<nav className={twMerge('theme-blue group/navbar fixed inset-x-0 top-0 z-20 flex flex-col', backgroundColor)}>
-			<DesktopNavigation {...props} />
-			<MobileNavigation {...props} />
+			<DesktopNavigation {...props} country={geolocation?.country} />
+			<MobileNavigation {...props} country={geolocation?.country} />
 		</nav>
 	);
 }
