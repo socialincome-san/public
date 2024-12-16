@@ -184,6 +184,7 @@ export const useGeolocation = () => {
 			const response = await api.get('/api/geolocation');
 			return (await response.json()) as Geo;
 		},
+		staleTime: Infinity,
 	});
 
 	return { geolocation, isLoading, error };
