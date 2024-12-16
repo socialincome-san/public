@@ -2,7 +2,6 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useGeolocation } from '@/app/[lang]/[region]/(website)/me/hooks';
-import { getFlagComponentByCurrency } from '@/components/country-flags';
 import { DonateIcon } from '@/components/logos/donate-icon';
 import { SIAnimatedLogo } from '@/components/logos/si-animated-logo';
 import { SIIcon } from '@/components/logos/si-icon';
@@ -200,7 +199,6 @@ const MobileNavigation = ({
 			break;
 		case 'main':
 		default:
-			const Flag = getFlagComponentByCurrency(currency);
 			const ourWork = navigation![0];
 			const aboutUs = navigation![1];
 			const transparency = navigation![2];
@@ -223,7 +221,7 @@ const MobileNavigation = ({
 							{translations.myProfile}
 						</NavbarLink>
 						<div className="flex-inline flex items-center">
-							{country ? (
+							{country && (
 								<Image
 									src={getFlagImageURL(country)}
 									width={24}
@@ -233,8 +231,6 @@ const MobileNavigation = ({
 									unoptimized
 									className="mx-3 rounded-full"
 								/>
-							) : (
-								Flag && <Flag className="mx-3 h-6 w-6 rounded-full" />
 							)}
 							<Typography as="button" className="text-2xl font-medium" onClick={() => setVisibleSection('i18n')}>
 								{currency} / {languages.find((l) => l.code === language)?.translation}
@@ -285,7 +281,6 @@ const DesktopNavigation = ({
 	translations,
 }: NavbarProps) => {
 	let { currency, setCurrency, setLanguage, setRegion } = useI18n();
-	const Flag = getFlagComponentByCurrency(currency);
 	const NavbarLink = ({ href, children, className }: { href: string; children: string; className?: string }) => (
 		<Link href={href} className={twMerge('hover:text-accent text-lg', className)}>
 			{children}
@@ -354,7 +349,7 @@ const DesktopNavigation = ({
 			</div>
 			<div className="group/i18n flex h-full flex-1 shrink-0 basis-1/4 flex-col">
 				<div className="flex flex-row items-baseline justify-end">
-					{country ? (
+					{country && (
 						<Image
 							src={getFlagImageURL(country)}
 							width={20}
@@ -364,8 +359,6 @@ const DesktopNavigation = ({
 							unoptimized
 							className="m-auto mx-2 rounded-full"
 						/>
-					) : (
-						Flag && <Flag className="m-auto mx-2 h-5 w-5 rounded-full" />
 					)}
 					<Typography size="lg">{languages.find((l) => l.code === lang)?.translation}</Typography>
 				</div>
