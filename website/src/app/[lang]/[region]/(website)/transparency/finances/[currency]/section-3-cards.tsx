@@ -1,14 +1,8 @@
 'use client';
 
 import { Button, Card, CardContent, Typography } from '@socialincome/ui';
+import { getFlagImageURL } from '@socialincome/ui/src/lib/utils';
 import { Children, PropsWithChildren, useState } from 'react';
-
-/**
- * We use the files from GitHub instead of the package so that donations from new countries are automatically supported.
- */
-const getFlagImageURL = (country: string) => {
-	return `https://raw.githubusercontent.com/lipis/flag-icons/a87d8b256743c9b0df05f20de2c76a7975119045/flags/1x1/${country.toLowerCase()}.svg`;
-};
 
 type CountryCardProps = {
 	country: string;
