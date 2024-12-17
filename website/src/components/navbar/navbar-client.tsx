@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { getFlagComponentByCurrency } from '@/components/country-flags';
+import { useGeolocation } from '@/app/[lang]/[region]/(website)/me/hooks';
 import { DonateIcon } from '@/components/logos/donate-icon';
 import { SIAnimatedLogo } from '@/components/logos/si-animated-logo';
 import { SIIcon } from '@/components/logos/si-icon';
@@ -11,8 +11,10 @@ import { useGlobalStateProvider } from '@/components/providers/global-state-prov
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { Bars3Icon, CheckIcon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Typography } from '@socialincome/ui';
+import { getFlagImageURL } from '@socialincome/ui/src/lib/utils';
 import classNames from 'classnames';
 import _ from 'lodash';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
@@ -55,7 +57,16 @@ type NavbarProps = {
 	sections?: NavigationSection[];
 } & DefaultParams;
 
-const MobileNavigation = ({ lang, region, languages, regions, currencies, navigation, translations }: NavbarProps) => {
+const MobileNavigation = ({
+	lang,
+	country,
+	region,
+	languages,
+	regions,
+	currencies,
+	navigation,
+	translations,
+}: NavbarProps) => {
 	const [visibleSection, setVisibleSection] = useState<
 		'main' | 'our-work' | 'about-us' | 'transparency' | 'i18n' | null
 	>(null);
@@ -188,7 +199,6 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 			break;
 		case 'main':
 		default:
-			const Flag = getFlagComponentByCurrency(currency);
 			const ourWork = navigation![0];
 			const aboutUs = navigation![1];
 			const transparency = navigation![2];
@@ -211,7 +221,17 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 							{translations.myProfile}
 						</NavbarLink>
 						<div className="flex-inline flex items-center">
-							{Flag && <Flag className="mx-3 h-6 w-6 rounded-full" />}
+							{country && (
+								<Image
+									src={getFlagImageURL(country)}
+									width={24}
+									height={24}
+									alt=""
+									priority
+									unoptimized
+									className="mx-3 rounded-full"
+								/>
+							)}
 							<Typography as="button" className="text-2xl font-medium" onClick={() => setVisibleSection('i18n')}>
 								{currency} / {languages.find((l) => l.code === language)?.translation}
 							</Typography>
@@ -250,9 +270,17 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 	);
 };
 
-const DesktopNavigation = ({ lang, region, languages, regions, currencies, navigation, translations }: NavbarProps) => {
+const DesktopNavigation = ({
+	lang,
+	country,
+	region,
+	languages,
+	regions,
+	currencies,
+	navigation,
+	translations,
+}: NavbarProps) => {
 	let { currency, setCurrency, setLanguage, setRegion } = useI18n();
-	const Flag = getFlagComponentByCurrency(currency);
 	const NavbarLink = ({ href, children, className }: { href: string; children: string; className?: string }) => (
 		<Link href={href} className={twMerge('hover:text-accent text-lg', className)}>
 			{children}
@@ -321,7 +349,17 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 			</div>
 			<div className="group/i18n flex h-full flex-1 shrink-0 basis-1/4 flex-col">
 				<div className="flex flex-row items-baseline justify-end">
-					{Flag && <Flag className="m-auto mx-2 h-5 w-5 rounded-full" />}
+					{country && (
+						<Image
+							src={getFlagImageURL(country)}
+							width={20}
+							height={20}
+							alt=""
+							priority
+							unoptimized
+							className="m-auto mx-2 rounded-full"
+						/>
+					)}
 					<Typography size="lg">{languages.find((l) => l.code === lang)?.translation}</Typography>
 				</div>
 				<div className="ml-auto mt-6 hidden h-full grid-cols-1 justify-items-start gap-2 text-left opacity-0 group-hover/navbar:grid group-hover/i18n:opacity-100 lg:grid-cols-[repeat(3,auto)] lg:justify-items-end lg:gap-8">
@@ -380,11 +418,12 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 
 export function NavbarClient(props: NavbarProps) {
 	const { backgroundColor } = useGlobalStateProvider();
+	const { geolocation } = useGeolocation();
 
 	return (
 		<nav className={twMerge('theme-blue group/navbar fixed inset-x-0 top-0 z-20 flex flex-col', backgroundColor)}>
-			<DesktopNavigation {...props} />
-			<MobileNavigation {...props} />
+			<DesktopNavigation {...props} country={geolocation?.country} />
+			<MobileNavigation {...props} country={geolocation?.country} />
 		</nav>
 	);
 }
