@@ -5,11 +5,13 @@ import {
 	RulesTestEnvironment,
 } from '@firebase/rules-unit-testing';
 import { describe, expect } from '@jest/globals';
+import { DocumentData } from 'firebase-admin/firestore';
 import firebase from 'firebase/compat/app';
-import { collection, doc, getDoc, getDocs, query, setDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, query, setDoc } from 'firebase/firestore';
 import * as fs from 'fs';
 import * as path from 'path';
 import { AdminUser } from '../src/types/admin-user';
+import { CAMPAIGN_FIRESTORE_PATH } from '../src/types/campaign';
 import { USER_FIRESTORE_PATH } from '../src/types/user';
 
 let testEnvironment: RulesTestEnvironment;
@@ -110,6 +112,17 @@ describe('Test user access', () => {
 
 		// Access other user document (not allowed)
 		await assertFails(getDoc(doc(userAppAccess, USER_FIRESTORE_PATH, 'EgDWTYqz7zNyQ4CdxieW')));
+	});
+});
+
+describe('Test campaign rules', () => {
+	it('Permission to create campaigns, but not reading them', async () => {
+		const ref = await addDoc(collection(userAppAccess, CAMPAIGN_FIRESTORE_PATH), {
+			title: 'TestCampaign',
+		} as DocumentData);
+		expect(ref.id).toBeDefined();
+
+		await assertFails(getDoc(doc(userAppAccess, CAMPAIGN_FIRESTORE_PATH, ref.id)));
 	});
 });
 
