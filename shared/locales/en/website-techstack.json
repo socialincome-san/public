@@ -17,6 +17,10 @@
 		],
 		"subtitle": "At Social Income, donated tech and software play a crucial role in driving our mission forward."
 	},
+	"tabs": {
+		"tech-stack": "Tech Stack",
+		"donated-tech": "Donated Tech"
+	},
 	"badges": {
 		"donated": "Donated"
 	},

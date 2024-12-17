@@ -1,6 +1,10 @@
+'use client';
+
 import { DefaultParams } from '@/app/[lang]/[region]';
 import TechCard from '@/app/[lang]/[region]/(website)/techstack/(sections)/techcard';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { useTranslator } from '@/hooks/useTranslator';
+import { Tabs, TabsList, TabsTrigger } from '@socialincome/ui';
+import { useState } from 'react';
 
 type TechEntryJSON = {
 	title: string;
@@ -10,20 +14,36 @@ type TechEntryJSON = {
 	donated: boolean;
 };
 
-export async function TechList({ lang }: DefaultParams) {
-	const translator = await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-techstack'],
-	});
+export function TechList({ lang }: DefaultParams) {
+	const [isDonated, setIsDonated] = useState(false);
 
-	const techArray: TechEntryJSON[] = translator.t('cards');
+	const translator = useTranslator(lang, 'website-techstack');
+	const techArray: TechEntryJSON[] | undefined = translator?.t('cards');
+
+	const handleTabChange = (value: string) => {
+		setIsDonated(value === 'donated');
+	};
 
 	return (
 		<div className="mx-auto max-w-6xl">
+			<div className="flex justify-center pb-10">
+				<Tabs defaultValue="tech" className="w-[400px]" onValueChange={handleTabChange}>
+					<TabsList className="grid w-full grid-cols-2 bg-primary bg-opacity-10">
+						<TabsTrigger value="tech">{translator?.t('tabs.tech-stack')}</TabsTrigger>
+						<TabsTrigger value="donated">{translator?.t('tabs.donated-tech')}</TabsTrigger>
+					</TabsList>
+				</Tabs>
+			</div>
 			<div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-2">
-				{techArray.map((techEntry, index) => (
-					<TechCard {...techEntry} translations={{badgeDonated: translator.t('badges.donated')}} key={index} />
-				))}
+				{techArray
+					?.filter((t) => !isDonated || t.donated)
+					.map((techEntry, index) => (
+						<TechCard
+							{...techEntry}
+							translations={{ badgeDonated: translator?.t('badges.donated') || '' }}
+							key={index}
+						/>
+					))}
 			</div>
 		</div>
 	);
