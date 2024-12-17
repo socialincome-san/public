@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 type TechCardTranslations = {
 	badgeDonated: string;
-}
+};
 
 type TechCardProps = {
 	title: string;

@@ -28,7 +28,7 @@ export function TechList({ lang }: DefaultParams) {
 		<div className="mx-auto max-w-6xl">
 			<div className="flex justify-center pb-10">
 				<Tabs defaultValue="tech" className="w-[400px]" onValueChange={handleTabChange}>
-					<TabsList className="grid w-full grid-cols-2 bg-primary bg-opacity-10">
+					<TabsList className="bg-primary grid w-full grid-cols-2 bg-opacity-10">
 						<TabsTrigger value="tech">{translator?.t('tabs.tech-stack')}</TabsTrigger>
 						<TabsTrigger value="donated">{translator?.t('tabs.donated-tech')}</TabsTrigger>
 					</TabsList>
