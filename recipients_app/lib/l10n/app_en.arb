@@ -276,5 +276,6 @@
     "missingRecaptchaVersion": "Missing reCAPTCHA version",
     "invalidRecaptchaVersion": "Invalid reCAPTCHA version",
     "invalidReqType": "Invalid request type",
-    "errorEmailInvalid": "Invalid email address"
+    "errorEmailInvalid": "Invalid email address",
+    "demoCta": "Demo"
 }
