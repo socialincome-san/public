@@ -1,4 +1,37 @@
 // Generic set of question pages and choices
+import {
+	ACHIEVEMENTS_ACHIEVED,
+	ACHIEVEMENTS_NOT_ACHIEVED,
+	DEBT_HOUSEHOLD,
+	DEBT_HOUSEHOLD_WHO_REPAYS,
+	DEBT_PERSONAL,
+	DEBT_PERSONAL_REPAY,
+	DISABILITY,
+	EMPLOYMENT_STATUS,
+	HAPPIER,
+	HAPPIER_COMMENT,
+	HAS_DEPENDENTS,
+	IMPACT_FINANCIAL_INDEPENDENCE,
+	IMPACT_LIFE_GENERAL,
+	LIVING_LOCATION,
+	LONG_ENOUGH,
+	MARITAL_STATUS,
+	NOT_EMPLOYED,
+	NOT_HAPPIER_COMMENT,
+	NUMBER_OF_DEPENDENTS,
+	OTHER_SUPPORT,
+	PLANNED_ACHIEVEMENT,
+	PLANNED_ACHIEVEMENT_REMAINING,
+	Question,
+	RANKING,
+	SAVINGS,
+	SCHOOL_ATTENDANCE,
+	SKIPPING_MEALS,
+	SKIPPING_MEALS_LAST_WEEK,
+	SKIPPING_MEALS_LAST_WEEK_3_MEALS,
+	SPENDING,
+	UNEXPECTED_EXPENSES_COVERED,
+} from '@socialincome/shared/src/types/question';
 import { TranslateFunction } from '@socialincome/shared/src/utils/i18n';
 
 // Final question pages
@@ -24,15 +57,25 @@ export const welcomePage = (t: TranslateFunction, name: string) => {
 
 // Questions for onboarding survey (reused in other surveys)
 
+function getSimpleMapping(question: Question, t: TranslateFunction): Object {
+	return {
+		type: question.type,
+		name: question.name,
+		title: t(question.translationKey),
+		description: question.descriptionTranslationKey && t(question.descriptionTranslationKey),
+		choices:
+			question.choices && question.choices.length
+				? translateChoices(t, question.choices, question.choicesTranslationKey!)
+				: undefined,
+	};
+}
+
 export const livingLocationPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'livingLocationV1',
+				...getSimpleMapping(LIVING_LOCATION, t),
 				isRequired: true,
-				title: t('survey.questions.livingLocationTitleV1'),
-				choices: livingLocationChoices(t),
 			},
 		],
 	};
@@ -42,11 +85,8 @@ export const maritalStatusPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'maritalStatusV1',
+				...getSimpleMapping(MARITAL_STATUS, t),
 				isRequired: true,
-				title: t('survey.questions.maritalStatusTitleV1'),
-				choices: maritalStatusChoices(t),
 			},
 		],
 	};
@@ -56,20 +96,13 @@ export const dependentsPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'hasDependentsV1',
+				...getSimpleMapping(HAS_DEPENDENTS, t),
 				isRequired: true,
-				title: t('survey.questions.hasDependentsTitleV1'),
-				description: t('survey.questions.hasDependentsDescV1'),
-				choices: yesNoChoices(t),
 			},
 			{
-				type: 'radiogroup',
-				name: 'nrDependentsV1',
+				...getSimpleMapping(NUMBER_OF_DEPENDENTS, t),
 				isRequired: true,
-				title: t('survey.questions.nrDependentsTitleV1'),
 				visibleIf: '{hasDependentsV1}=true',
-				choices: nrDependentsChoices(t),
 			},
 		],
 	};
@@ -79,11 +112,8 @@ export const schoolAttendancePage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'schoolAttendanceV1',
+				...getSimpleMapping(SCHOOL_ATTENDANCE, t),
 				isRequired: true,
-				title: t('survey.questions.attendingSchoolV1'),
-				choices: yesNoChoices(t),
 			},
 		],
 	};
@@ -93,19 +123,13 @@ export const employmentStatusPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'employmentStatusV1',
+				...getSimpleMapping(EMPLOYMENT_STATUS, t),
 				isRequired: true,
-				title: t('survey.questions.employmentStatusTitleV1'),
-				choices: employmentStatusChoices(t),
 			},
 			{
-				type: 'radiogroup',
-				name: 'notEmployedV1',
+				...getSimpleMapping(NOT_EMPLOYED, t),
 				visibleIf: '{employmentStatusV1}=notEmployed',
-				title: t('survey.questions.notEmployedTitleV1'),
 				isRequired: true,
-				choices: yesNoChoices(t),
 			},
 		],
 	};
@@ -115,11 +139,8 @@ export const disabilityPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'disabilityV1',
+				...getSimpleMapping(DISABILITY, t),
 				isRequired: true,
-				title: t('survey.questions.disabilityTitleV1'),
-				choices: yesNoChoices(t),
 			},
 		],
 	};
@@ -129,27 +150,18 @@ export const skippingMealsPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'skippingMealsV1',
+				...getSimpleMapping(SKIPPING_MEALS, t),
 				isRequired: true,
-				title: t('survey.questions.skippingMealsTitleV1'),
-				choices: yesNoChoices(t),
 			},
 			{
-				type: 'radiogroup',
-				name: 'skippingMealsLastWeekV1',
+				...getSimpleMapping(SKIPPING_MEALS_LAST_WEEK, t),
 				visibleIf: '{skippingMealsV1}=true',
-				title: t('survey.questions.skippingMealsLastWeekTitleV1'),
 				isRequired: true,
-				choices: yesNoChoices(t),
 			},
 			{
-				type: 'radiogroup',
-				name: 'skippingMealsLastWeek3MealsV1',
+				...getSimpleMapping(SKIPPING_MEALS_LAST_WEEK_3_MEALS, t),
 				visibleIf: '{skippingMealsLastWeekV1}=true',
-				title: t('survey.questions.skippingMealsLastWeek3MealsTitleV1'),
 				isRequired: true,
-				choices: yesNoChoices(t),
 			},
 		],
 	};
@@ -159,11 +171,8 @@ export const unexpectedExpensesCoveredPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'unexpectedExpensesCoveredV1',
+				...getSimpleMapping(UNEXPECTED_EXPENSES_COVERED, t),
 				isRequired: true,
-				title: t('survey.questions.unexpectedExpensesCoveredTitleV1'),
-				choices: yesNoChoices(t),
 			},
 		],
 	};
@@ -173,11 +182,8 @@ export const savingsPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'savingsV1',
+				...getSimpleMapping(SAVINGS, t),
 				isRequired: true,
-				title: t('survey.questions.savingsTitleV1'),
-				choices: yesNoChoices(t),
 			},
 		],
 	};
@@ -187,19 +193,13 @@ export const debtPersonalPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'debtPersonalV1',
+				...getSimpleMapping(DEBT_PERSONAL, t),
 				isRequired: true,
-				title: t('survey.questions.debtPersonalTitleV1'),
-				choices: yesNoChoices(t),
 			},
 			{
-				type: 'radiogroup',
-				name: 'debtPersonalRepayV1',
+				...getSimpleMapping(DEBT_PERSONAL_REPAY, t),
 				visibleIf: '{debtPersonalV1}=true',
-				title: t('survey.questions.debtPersonalRepayTitleV1'),
 				isRequired: true,
-				choices: yesNoChoices(t),
 			},
 		],
 	};
@@ -209,19 +209,13 @@ export const debtHouseholdPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'debtHouseholdV1',
+				...getSimpleMapping(DEBT_HOUSEHOLD, t),
 				isRequired: true,
-				title: t('survey.questions.debtHouseholdTitleV1'),
-				choices: yesNoChoices(t),
 			},
 			{
-				type: 'radiogroup',
-				name: 'debtHouseholdWhoRepaysV1',
+				...getSimpleMapping(DEBT_HOUSEHOLD_WHO_REPAYS, t),
 				visibleIf: '{debtHouseholdV1}=true',
-				title: t('survey.questions.debtHouseholdWhoRepaysTitleV1'),
 				isRequired: true,
-				choices: yesNoChoices(t),
 			},
 		],
 	};
@@ -231,11 +225,8 @@ export const otherSupportPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'otherSupportV1',
+				...getSimpleMapping(OTHER_SUPPORT, t),
 				isRequired: true,
-				title: t('survey.questions.otherSupportTitleV1'),
-				choices: yesNoChoices(t),
 			},
 		],
 	};
@@ -245,10 +236,8 @@ export const plannedAchievementsPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'comment',
-				name: 'plannedAchievementV1',
+				...getSimpleMapping(PLANNED_ACHIEVEMENT, t),
 				isRequired: true,
-				title: t('survey.questions.plannedAchievementTitleV1'),
 			},
 		],
 	};
@@ -260,17 +249,11 @@ export const spendingPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'checkbox',
-				name: 'spendingV1',
+				...getSimpleMapping(SPENDING, t),
 				isRequired: true,
-				title: t('survey.questions.spendingTitleV1'),
-				choices: spendingChoices(t),
 			},
 			{
-				type: 'ranking',
-				name: 'spendingRankedV1',
-				title: t('survey.questions.spendingRankingTitleV1'),
-				description: t('survey.questions.spendingRankingDescV1'),
+				...getSimpleMapping(RANKING, t),
 				visibleIf: '{spendingV1.length} > 1',
 				isRequired: true,
 				choicesFromQuestion: 'spendingV1',
@@ -284,10 +267,8 @@ export const plannedAchievementsRemainingPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'comment',
-				name: 'plannedAchievementRemainingV1',
+				...getSimpleMapping(PLANNED_ACHIEVEMENT_REMAINING, t),
 				isRequired: true,
-				title: t('survey.questions.plannedAchievementRemainingTitleV1'),
 			},
 		],
 	};
@@ -299,11 +280,8 @@ export const impactFinancialPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'impactFinancialIndependenceV1',
+				...getSimpleMapping(IMPACT_FINANCIAL_INDEPENDENCE, t),
 				isRequired: true,
-				title: t('survey.questions.financialIndependenceTitleV1'),
-				choices: yesNoChoices(t),
 			},
 		],
 	};
@@ -313,10 +291,8 @@ export const impactLifePage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'comment',
-				name: 'impactLifeGeneralV1',
+				...getSimpleMapping(IMPACT_LIFE_GENERAL, t),
 				isRequired: true,
-				title: t('survey.questions.impactLifeGeneralTitleV1'),
 			},
 		],
 	};
@@ -326,17 +302,13 @@ export const achievementsAchievedPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'achievementsAchievedV1',
+				...getSimpleMapping(ACHIEVEMENTS_ACHIEVED, t),
 				isRequired: true,
-				title: t('survey.questions.achievementsAchievedTitleV1'),
-				choices: yesNoChoices(t),
 			},
 			{
-				type: 'comment',
-				name: 'achievementsNotAchievedCommentV1',
+				...getSimpleMapping(ACHIEVEMENTS_NOT_ACHIEVED, t),
+
 				visibleIf: '{achievementsAchievedV1}=false',
-				title: t('survey.questions.achievementsNotAchievedCommentTitleV1'),
 				isRequired: true,
 			},
 		],
@@ -347,24 +319,17 @@ export const happierPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'happierV1',
+				...getSimpleMapping(HAPPIER, t),
 				isRequired: true,
-				title: t('survey.questions.happierTitleV1'),
-				choices: yesNoChoices(t),
 			},
 			{
-				type: 'comment',
-				name: 'happierCommentV1',
+				...getSimpleMapping(HAPPIER_COMMENT, t),
 				visibleIf: '{happier}=true',
-				title: t('survey.questions.happierCommentTitleV1'),
 				isRequired: true,
 			},
 			{
-				type: 'comment',
-				name: 'notHappierCommentV1',
+				...getSimpleMapping(NOT_HAPPIER_COMMENT, t),
 				visibleIf: '{happierCommentV1}=false',
-				title: t('survey.questions.notHappierCommentTitleV1'),
 				isRequired: true,
 			},
 		],
@@ -375,73 +340,17 @@ export const longEnoughPage = (t: TranslateFunction) => {
 	return {
 		elements: [
 			{
-				type: 'radiogroup',
-				name: 'longEnough',
+				...getSimpleMapping(LONG_ENOUGH, t),
 				isRequired: true,
-				title: t('survey.questions.longEnoughTitleV1'),
-				choices: yesNoChoices(t),
 			},
 		],
 	};
 };
 
-// Additional questions for check-in survey for former recipients
-
-// Reusable choices
-
-export const yesNoChoices = (t: TranslateFunction) =>
-	[
-		[true, 'yes'],
-		[false, 'no'],
-	].map(([value, translationKey]) => {
-		return {
-			value: value,
-			text: t('survey.questions.yesNoChoices.' + translationKey),
-		};
-	});
-
-export const maritalStatusChoices = (t: TranslateFunction) =>
-	['married', 'widowed', 'divorced', 'separated', 'neverMarried'].map((key) => {
+export const translateChoices = (t: TranslateFunction, choices: any[], choicesTranslationKey: String) =>
+	choices.map((key) => {
 		return {
 			value: key,
-			text: t('survey.questions.maritalStatusChoices.' + key),
-		};
-	});
-
-export const nrDependentsChoices = (t: TranslateFunction) =>
-	['1-2', '3-4', '5-7', '8-10', '10-'].map((key) => {
-		return {
-			value: key,
-			text: t('survey.questions.nrDependentsChoices.' + key),
-		};
-	});
-export const employmentStatusChoices = (t: TranslateFunction) =>
-	['employed', 'selfEmployed', 'notEmployed', 'retired'].map((key) => {
-		return {
-			value: key,
-			text: t('survey.questions.employmentStatusChoices.' + key),
-		};
-	});
-
-export const livingLocationChoices = (t: TranslateFunction) =>
-	[
-		'westernAreaUrbanFreetown',
-		'westernAreaRural',
-		'easternProvince',
-		'northernProvince',
-		'southernProvince',
-		'northWestProvince',
-	].map((key) => {
-		return {
-			value: key,
-			text: t('survey.questions.livingLocationChoices.' + key),
-		};
-	});
-
-export const spendingChoices = (t: TranslateFunction) =>
-	['education', 'food', 'housing', 'healthCare', 'mobility', 'saving', 'investment'].map((key) => {
-		return {
-			value: key,
-			text: t('survey.questions.spendingChoices.' + key),
+			text: t(choicesTranslationKey + '.' + key),
 		};
 	});
