@@ -26,13 +26,14 @@ Mobile App for Recipients of a Social Income.
     export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
     ```
   - Restart your terminal so that these changes take effect
-- Optional: Pin Flutter's JDK version and do not use the JDK from Android Studio by default
+- Optional: Pin Flutter's JDK version and do not use the JDK from
+  Android Studio by default
   - Install Java 21 via Homebrew `brew install openjdk@21`
     - Homebrew is telling you to execute a symlink command, so that the
       system Java wrappers can find this JDK. Please do this.
-    - Additionally in your USER's HOME directory in the file '.zshrc', add
-      the lines to set the JAVA_HOME environment variable to Java 21 and
-      add Java to the PATH environment variable
+    - Additionally in your USER's HOME directory in the file '.zshrc',
+      add the lines to set the JAVA_HOME environment variable to Java 21
+      and add Java to the PATH environment variable
       ```shell
       export JAVA_HOME=$(/usr/libexec/java_home -v21)
       export PATH="$PATH:$JAVA_HOME/bin"
