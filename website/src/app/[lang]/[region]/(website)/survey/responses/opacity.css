@@ -1,0 +1,3 @@
+.survey-chart .recharts-wrapper::before {
+	@apply to-background pointer-events-none absolute bottom-0 right-0 top-0 w-[40px] bg-gradient-to-r from-transparent content-[''];
+}
