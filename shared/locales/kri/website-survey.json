@@ -29,7 +29,9 @@
 		"questions": {
 			"yesNoChoices": {
 				"yes": "Yɛs",
-				"no": "Nɔ"
+				"no": "Nɔ",
+				"true": "Yɛs",
+				"false": "Nɔ"
 			},
 			"livingLocationTitleV1": "Usay yu tap?",
 			"livingLocationChoices": {
