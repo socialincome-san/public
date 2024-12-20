@@ -9,7 +9,7 @@ Mobile App for Recipients of a Social Income.
 - Java JDK 17
 - Android Studio LadyBug or later
 - Latest vsCode
-- Xcode 16.1
+- Xcode 16.x
 
 ## Configure the Apple Silicon Mac environment to build our app
 
