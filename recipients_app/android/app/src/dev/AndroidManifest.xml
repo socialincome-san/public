@@ -1,6 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="org.socialincome.app">
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- Flutter needs it for communicate with firebase emulators -->
     <application
         android:label="Dev Social Income"
