@@ -5,8 +5,8 @@ export const REGION_COOKIE = 'si_region';
 export const CURRENCY_COOKIE = 'si_currency';
 
 export interface DefaultParams {
-	lang: WebsiteLanguage;
 	country?: string;
+	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 }
 
