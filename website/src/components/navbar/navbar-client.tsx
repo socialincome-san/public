@@ -67,6 +67,7 @@ const MobileNavigation = ({
 	navigation,
 	translations,
 }: NavbarProps) => {
+	const isIntRegion = region === 'int';
 	const [visibleSection, setVisibleSection] = useState<
 		'main' | 'our-work' | 'about-us' | 'transparency' | 'i18n' | null
 	>(null);
@@ -221,9 +222,9 @@ const MobileNavigation = ({
 							{translations.myProfile}
 						</NavbarLink>
 						<div className="flex-inline flex items-center">
-							{country && (
+							{region && country && (
 								<Image
-									src={getFlagImageURL(country)}
+									src={getFlagImageURL(isIntRegion ? country : region)}
 									width={24}
 									height={24}
 									alt=""
@@ -280,6 +281,7 @@ const DesktopNavigation = ({
 	navigation,
 	translations,
 }: NavbarProps) => {
+	const isIntRegion = region === 'int';
 	let { currency, setCurrency, setLanguage, setRegion } = useI18n();
 	const NavbarLink = ({ href, children, className }: { href: string; children: string; className?: string }) => (
 		<Link href={href} className={twMerge('hover:text-accent text-lg', className)}>
@@ -349,9 +351,9 @@ const DesktopNavigation = ({
 			</div>
 			<div className="group/i18n flex h-full flex-1 shrink-0 basis-1/4 flex-col">
 				<div className="flex flex-row items-baseline justify-end">
-					{country && (
+					{region && country && (
 						<Image
-							src={getFlagImageURL(country)}
+							src={getFlagImageURL(isIntRegion ? country : region)}
 							width={20}
 							height={20}
 							alt=""
