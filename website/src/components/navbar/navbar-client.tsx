@@ -1,7 +1,6 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { useGeolocation } from '@/app/[lang]/[region]/(website)/me/hooks';
 import { DonateIcon } from '@/components/logos/donate-icon';
 import { SIAnimatedLogo } from '@/components/logos/si-animated-logo';
 import { SIIcon } from '@/components/logos/si-icon';
@@ -9,6 +8,7 @@ import { SILogo } from '@/components/logos/si-logo';
 import { useI18n } from '@/components/providers/context-providers';
 import { useGlobalStateProvider } from '@/components/providers/global-state-provider';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
+import { useGeolocation } from '@/hooks/queries';
 import { Bars3Icon, CheckIcon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Typography } from '@socialincome/ui';
 import { getFlagImageURL } from '@socialincome/ui/src/lib/utils';
