@@ -1,7 +1,9 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
+    // The Google services Gradle plugin
     id "com.google.gms.google-services"
 }
 
@@ -30,7 +32,17 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    namespace 'org.socialincome.app'
     compileSdkVersion 34
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -38,7 +50,7 @@ android {
 
     defaultConfig {
         applicationId "org.socialincome.app"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -83,8 +95,4 @@ android {
 flutter {
     source '../..'
 }
-
-dependencies {
-}
-
 
