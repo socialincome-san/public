@@ -7,7 +7,6 @@ import { SIIcon } from '@/components/logos/si-icon';
 import { SILogo } from '@/components/logos/si-logo';
 import { useI18n } from '@/components/providers/context-providers';
 import { useGlobalStateProvider } from '@/components/providers/global-state-provider';
-import { useGeolocation } from '@/hooks/queries';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { Bars3Icon, CheckIcon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Typography } from '@socialincome/ui';
@@ -57,21 +56,11 @@ type NavbarProps = {
 	sections?: NavigationSection[];
 } & DefaultParams;
 
-const MobileNavigation = ({
-	lang,
-	country,
-	region,
-	languages,
-	regions,
-	currencies,
-	navigation,
-	translations,
-}: NavbarProps) => {
-	const isIntRegion = region === 'int';
+const MobileNavigation = ({ lang, region, languages, regions, currencies, navigation, translations }: NavbarProps) => {
 	const [visibleSection, setVisibleSection] = useState<
 		'main' | 'our-work' | 'about-us' | 'transparency' | 'i18n' | null
 	>(null);
-	const { language, setLanguage, setRegion, currency, setCurrency } = useI18n();
+	const { country, language, setLanguage, setRegion, currency, setCurrency } = useI18n();
 
 	useEffect(() => {
 		// Prevent scrolling when the navbar is expanded
@@ -224,7 +213,7 @@ const MobileNavigation = ({
 						<div className="flex-inline flex items-center">
 							{region && country && (
 								<Image
-									src={getFlagImageURL(isIntRegion ? country : region)}
+									src={getFlagImageURL(country)}
 									width={24}
 									height={24}
 									alt=""
@@ -271,18 +260,9 @@ const MobileNavigation = ({
 	);
 };
 
-const DesktopNavigation = ({
-	lang,
-	country,
-	region,
-	languages,
-	regions,
-	currencies,
-	navigation,
-	translations,
-}: NavbarProps) => {
-	const isIntRegion = region === 'int';
-	let { currency, setCurrency, setLanguage, setRegion } = useI18n();
+const DesktopNavigation = ({ lang, region, languages, regions, currencies, navigation, translations }: NavbarProps) => {
+	const { country, currency, setCurrency, setLanguage, setRegion } = useI18n();
+
 	const NavbarLink = ({ href, children, className }: { href: string; children: string; className?: string }) => (
 		<Link href={href} className={twMerge('hover:text-accent text-lg', className)}>
 			{children}
@@ -353,7 +333,7 @@ const DesktopNavigation = ({
 				<div className="flex flex-row items-baseline justify-end">
 					{region && country && (
 						<Image
-							src={getFlagImageURL(isIntRegion ? country : region)}
+							src={getFlagImageURL(country)}
 							width={20}
 							height={20}
 							alt=""
@@ -420,12 +400,11 @@ const DesktopNavigation = ({
 
 export function NavbarClient(props: NavbarProps) {
 	const { backgroundColor } = useGlobalStateProvider();
-	const { geolocation } = useGeolocation();
 
 	return (
 		<nav className={twMerge('theme-blue group/navbar fixed inset-x-0 top-0 z-20 flex flex-col', backgroundColor)}>
-			<DesktopNavigation {...props} country={geolocation?.country} />
-			<MobileNavigation {...props} country={geolocation?.country} />
+			<DesktopNavigation {...props} />
+			<MobileNavigation {...props} />
 		</nav>
 	);
 }
