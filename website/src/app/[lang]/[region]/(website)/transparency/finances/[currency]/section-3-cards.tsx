@@ -1,11 +1,12 @@
 'use client';
 
+import { CountryCode } from '@socialincome/shared/src/types/country';
 import { Button, Card, CardContent, Typography } from '@socialincome/ui';
 import { getFlagImageURL } from '@socialincome/ui/src/lib/utils';
 import { Children, PropsWithChildren, useState } from 'react';
 
 type CountryCardProps = {
-	country: string;
+	country: CountryCode;
 	translations: {
 		country: string;
 		total: string;

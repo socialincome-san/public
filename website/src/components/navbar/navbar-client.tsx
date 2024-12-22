@@ -211,15 +211,15 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 							{translations.myProfile}
 						</NavbarLink>
 						<div className="flex-inline flex items-center">
-							{region && country && (
+							{country && (
 								<Image
+									className="mx-3 rounded-full"
 									src={getFlagImageURL(country)}
 									width={24}
 									height={24}
 									alt=""
 									priority
 									unoptimized
-									className="mx-3 rounded-full"
 								/>
 							)}
 							<Typography as="button" className="text-2xl font-medium" onClick={() => setVisibleSection('i18n')}>
@@ -331,15 +331,15 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 			</div>
 			<div className="group/i18n flex h-full flex-1 shrink-0 basis-1/4 flex-col">
 				<div className="flex flex-row items-baseline justify-end">
-					{region && country && (
+					{country && (
 						<Image
+							className="m-auto mx-2 rounded-full"
 							src={getFlagImageURL(country)}
 							width={20}
 							height={20}
 							alt=""
 							priority
 							unoptimized
-							className="m-auto mx-2 rounded-full"
 						/>
 					)}
 					<Typography size="lg">{languages.find((l) => l.code === lang)?.translation}</Typography>
