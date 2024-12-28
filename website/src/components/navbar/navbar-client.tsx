@@ -335,7 +335,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 				<div className="flex flex-row items-baseline justify-end">
 					{(!isIntRegion || (isIntRegion && country)) && (
 						<Image
-							className="mx-3 rounded-full"
+							className="m-auto mx-2 rounded-full"
 							src={getFlagImageURL(isIntRegion ? country! : region)}
 							width={24}
 							height={24}
