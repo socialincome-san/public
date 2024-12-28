@@ -37,7 +37,9 @@
 		"questions": {
 			"yesNoChoices": {
 				"yes": "Yes",
-				"no": "No"
+				"no": "No",
+				"true": "Yes",
+				"false": "No"
 			},
 			"livingLocationTitleV1": "Where do you live?",
 			"livingLocationChoices": {
