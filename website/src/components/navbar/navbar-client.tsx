@@ -61,6 +61,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 		'main' | 'our-work' | 'about-us' | 'transparency' | 'i18n' | null
 	>(null);
 	const { country, language, setLanguage, setRegion, currency, setCurrency } = useI18n();
+	const isIntRegion = region === 'int';
 
 	useEffect(() => {
 		// Prevent scrolling when the navbar is expanded
@@ -211,13 +212,13 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 							{translations.myProfile}
 						</NavbarLink>
 						<div className="flex-inline flex items-center">
-							{country && (
+							{(!isIntRegion || (isIntRegion && country)) && (
 								<Image
 									className="mx-3 rounded-full"
-									src={getFlagImageURL(country)}
+									src={getFlagImageURL(isIntRegion ? country! : region)}
 									width={24}
 									height={24}
-									alt=""
+									alt="Country flag"
 									priority
 									unoptimized
 								/>
@@ -262,6 +263,7 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 
 const DesktopNavigation = ({ lang, region, languages, regions, currencies, navigation, translations }: NavbarProps) => {
 	const { country, currency, setCurrency, setLanguage, setRegion } = useI18n();
+	const isIntRegion = region === 'int';
 
 	const NavbarLink = ({ href, children, className }: { href: string; children: string; className?: string }) => (
 		<Link href={href} className={twMerge('hover:text-accent text-lg', className)}>
@@ -331,17 +333,17 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 			</div>
 			<div className="group/i18n flex h-full flex-1 shrink-0 basis-1/4 flex-col">
 				<div className="flex flex-row items-baseline justify-end">
-					{country && (
+					{(!isIntRegion || (isIntRegion && country)) && (
 						<Image
-							className="m-auto mx-2 rounded-full"
-							src={getFlagImageURL(country)}
-							width={20}
-							height={20}
-							alt=""
+							className="mx-3 rounded-full"
+							src={getFlagImageURL(isIntRegion ? country! : region)}
+							width={24}
+							height={24}
+							alt="Country flag"
 							priority
 							unoptimized
 						/>
-					)}
+					)}{' '}
 					<Typography size="lg">{languages.find((l) => l.code === lang)?.translation}</Typography>
 				</div>
 				<div className="ml-auto mt-6 hidden h-full grid-cols-1 justify-items-start gap-2 text-left opacity-0 group-hover/navbar:grid group-hover/i18n:opacity-100 lg:grid-cols-[repeat(3,auto)] lg:justify-items-end lg:gap-8">
