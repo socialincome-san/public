@@ -14,21 +14,31 @@ export interface SurveyAnswersByType {
 	question: Question;
 }
 
+type AggregatedSurveyData = { [key in SurveyQuestionnaire]: { [questionKey: string]: SurveyAnswersByType } };
+
 const SUPPORTED_SURVEY_QUESTION_TYPES = [QuestionInputType.RADIO_GROUP, QuestionInputType.CHECKBOX];
 
 export class SurveyStatsCalculator {
 	private readonly _data: SurveyStats[];
-	private readonly _aggregatedData: { [key: string]: { [key: string]: SurveyAnswersByType } };
+	private readonly _aggregatedData: AggregatedSurveyData;
 	private readonly _oldestDate: Date;
 
-	private constructor(
-		data: SurveyStats[],
-		aggregatedData: { [key: string]: { [key: string]: SurveyAnswersByType } },
-		oldestDate: Date,
-	) {
+	private constructor(data: SurveyStats[], aggregatedData: AggregatedSurveyData, oldestDate: Date) {
 		this._data = data;
 		this._aggregatedData = aggregatedData;
 		this._oldestDate = oldestDate;
+	}
+
+	get oldestDate(): Date {
+		return this._oldestDate;
+	}
+
+	get data(): SurveyStats[] {
+		return this._data;
+	}
+
+	get aggregatedData(): AggregatedSurveyData {
+		return this._aggregatedData;
 	}
 
 	/**
@@ -61,10 +71,15 @@ export class SurveyStatsCalculator {
 
 	private static aggregateSurveyData(surveysData: Survey[]): {
 		typeCounts: { [type: string]: number };
-		aggregatedData: { [key: string]: { [key: string]: SurveyAnswersByType } };
+		aggregatedData: AggregatedSurveyData;
 		oldestDate: Date;
 	} {
-		const aggregatedData: { [key: string]: { [key: string]: SurveyAnswersByType } } = {};
+		const aggregatedSurveyData: AggregatedSurveyData = {
+			[SurveyQuestionnaire.Checkin]: {},
+			[SurveyQuestionnaire.Onboarding]: {},
+			[SurveyQuestionnaire.OffboardedCheckin]: {},
+			[SurveyQuestionnaire.Offboarding]: {},
+		};
 		const typeCounts: { [type: string]: number } = {};
 		let oldestDate = new Date();
 
@@ -77,12 +92,12 @@ export class SurveyStatsCalculator {
 				const questionnaire = survey.questionnaire!;
 				typeCounts[questionnaire] = (typeCounts[questionnaire] || 0) + 1;
 				Object.entries(survey.data!).forEach(([questionKey, response]) => {
-					this.processSurveyResponse(aggregatedData, questionnaire, questionKey, response);
+					this.processSurveyResponse(aggregatedSurveyData, questionnaire, questionKey, response);
 				});
 			}
 		});
 
-		return { typeCounts, aggregatedData, oldestDate };
+		return { typeCounts, aggregatedData: aggregatedSurveyData, oldestDate };
 	}
 
 	private static isCompletedSurvey(survey: Survey): boolean {
@@ -90,15 +105,14 @@ export class SurveyStatsCalculator {
 	}
 
 	private static processSurveyResponse(
-		aggregatedData: { [key: string]: { [key: string]: SurveyAnswersByType } },
-		questionnaire: string,
+		aggregatedData: { [key in SurveyQuestionnaire]: { [key: string]: SurveyAnswersByType } },
+		questionnaire: SurveyQuestionnaire,
 		questionKey: string,
 		response: any,
 	): void {
 		const question = QUESTIONS_DICTIONARY.get(questionKey);
 		if (!question || !SUPPORTED_SURVEY_QUESTION_TYPES.includes(question.type)) return;
 
-		aggregatedData[questionnaire] = aggregatedData[questionnaire] || {};
 		aggregatedData[questionnaire][questionKey] = aggregatedData[questionnaire][questionKey] || {
 			answers: {},
 			total: 0,
@@ -115,17 +129,5 @@ export class SurveyStatsCalculator {
 			questionData.answers[responseValue] = (questionData.answers[responseValue] || 0) + 1;
 		}
 		questionData.total++;
-	}
-
-	get oldestDate(): Date {
-		return this._oldestDate;
-	}
-
-	get data(): SurveyStats[] {
-		return this._data;
-	}
-
-	get aggregatedData(): { [key: string]: { [key: string]: SurveyAnswersByType } } {
-		return this._aggregatedData;
 	}
 }

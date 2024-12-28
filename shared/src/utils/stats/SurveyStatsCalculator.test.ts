@@ -79,7 +79,12 @@ test('handle edge cases with empty data', async () => {
 	await testEnv.firestore.clearFirestoreData({ projectId });
 	const emptyCalculator = await SurveyStatsCalculator.build(firestoreAdmin);
 	expect(emptyCalculator.data).toEqual([]);
-	expect(emptyCalculator.aggregatedData).toEqual({});
+	expect(emptyCalculator.aggregatedData).toEqual({
+		[SurveyQuestionnaire.Checkin]: {},
+		[SurveyQuestionnaire.Onboarding]: {},
+		[SurveyQuestionnaire.OffboardedCheckin]: {},
+		[SurveyQuestionnaire.Offboarding]: {},
+	});
 });
 
 const surveyRecords = [

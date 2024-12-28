@@ -1,3 +1,0 @@
-.card-tab[data-state='inactive'] .card-tab-title {
-	@apply text-accent-foreground;
-}
