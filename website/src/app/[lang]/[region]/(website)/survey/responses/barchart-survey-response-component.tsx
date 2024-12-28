@@ -33,7 +33,7 @@ function BarchartSurveyResponseComponent({ data }: { data: ChartData[] }) {
 		<ResponsiveContainer height={chartHeight}>
 			<BarChart
 				data={data}
-				className="before:to-background before:absolute before:inset-y-0 before:right-0 before:w-10 before:bg-gradient-to-r before:from-transparent before:content-['']"
+				className="before:to-background before:pointer-events-none before:absolute before:inset-y-0 before:right-0 before:w-10 before:bg-gradient-to-r before:from-transparent before:content-['']"
 				layout="vertical"
 				margin={{ top: 20, right: 100, bottom: 20, left: 20 }}
 				barGap={0}
