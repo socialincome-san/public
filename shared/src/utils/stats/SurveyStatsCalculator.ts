@@ -105,7 +105,7 @@ export class SurveyStatsCalculator {
 	}
 
 	private static processSurveyResponse(
-		aggregatedData: { [key in SurveyQuestionnaire]: { [key: string]: SurveyAnswersByType } },
+		aggregatedData: AggregatedSurveyData,
 		questionnaire: SurveyQuestionnaire,
 		questionKey: string,
 		response: any,
