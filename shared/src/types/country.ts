@@ -250,3 +250,5 @@ export const COUNTRY_CODES = [
 	'ZW', // 'Zimbabwe',
 ] as const;
 export type CountryCode = (typeof COUNTRY_CODES)[number];
+
+export const isValidCountryCode = (code: string): code is CountryCode => COUNTRY_CODES.includes(code as CountryCode);
