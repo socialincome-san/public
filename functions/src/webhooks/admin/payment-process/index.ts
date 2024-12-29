@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
+import { onCall } from 'firebase-functions/v2/https';
 import { DateTime } from 'luxon';
-import { DEFAULT_REGION } from '../../../../../shared/src/firebase';
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
 import { PaymentProcessTaskType } from '../../../../../shared/src/types/payment';
 import { toPaymentDate } from '../../../../../shared/src/types/recipient';
@@ -15,10 +15,9 @@ export interface PaymentProcessProps {
 	timestamp: number; // seconds
 }
 
-export default functions
-	// Using v1 functions because tests are not supported with v2 yet: https://github.com/firebase/firebase-functions-test/issues/163
-	.region(DEFAULT_REGION)
-	.https.onCall(async ({ type, timestamp }: PaymentProcessProps, { auth }) => {
+export default onCall<PaymentProcessProps, Promise<string>>(
+	{ memory: '2GiB' },
+	async ({ auth, data: { timestamp, type } }) => {
 		const firestoreAdmin = new FirestoreAdmin();
 		await firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
 		const paymentDate = toPaymentDate(DateTime.fromSeconds(timestamp, { zone: 'utc' }));
@@ -42,4 +41,5 @@ export default functions
 		}
 
 		return await task.run(paymentDate);
-	});
+	},
+);

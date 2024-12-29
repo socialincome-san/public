@@ -34,12 +34,11 @@ afterEach(async () => {
 });
 
 test('CreatePayments', async () => {
-	const result = await triggerFunction(
-		{ type: PaymentProcessTaskType.CreatePayments, timestamp: paymentDate.toSeconds() },
-		{
-			auth: { token: { email: 'admin@socialincome.org' } },
-		},
-	);
+	const result = await triggerFunction({
+		data: { type: PaymentProcessTaskType.CreatePayments, timestamp: paymentDate.toSeconds() },
+		// @ts-ignore
+		auth: { token: { email: 'admin@socialincome.org' } },
+	});
 	expect(result).toEqual(
 		'Set status of 3 payments to paid and created 3 payments for next month. Set status to "former" for 0 recipients and status to active for 1 recipients.',
 	);
@@ -81,10 +80,11 @@ test('CreatePayments', async () => {
 		expect(nextPayment.currency).toEqual('SLE');
 	}
 
-	const secondExecutionResult = await triggerFunction(
-		{ type: PaymentProcessTaskType.CreatePayments, timestamp: paymentDate.toSeconds() },
-		{ auth: { token: { email: 'admin@socialincome.org' } } },
-	);
+	const secondExecutionResult = await triggerFunction({
+		data: { type: PaymentProcessTaskType.CreatePayments, timestamp: paymentDate.toSeconds() },
+		// @ts-ignore
+		auth: { token: { email: 'admin@socialincome.org' } },
+	});
 	expect(secondExecutionResult).toEqual(
 		'Set status of 0 payments to paid and created 0 payments for next month. Set status to "former" for 0 recipients and status to active for 0 recipients.',
 	);

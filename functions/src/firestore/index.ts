@@ -1,3 +1,3 @@
-import auditCollectionTriggerFunction from './firestore-auditor';
+import auditFirestore from './firestore-auditor';
 
-export const auditCollectionTrigger = auditCollectionTriggerFunction;
+export const auditCollectionTrigger = auditFirestore;

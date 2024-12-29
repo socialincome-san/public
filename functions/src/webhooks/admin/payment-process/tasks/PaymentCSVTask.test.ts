@@ -20,10 +20,11 @@ afterEach(async () => {
 });
 
 test('GetPaymentCSV', async () => {
-	const result = await triggerFunction(
-		{ type: PaymentProcessTaskType.GetPaymentCSV, timestamp: paymentDate.toSeconds() },
-		{ auth: { token: { email: 'admin@socialincome.org' } } },
-	);
+	const result = await triggerFunction({
+		data: { type: PaymentProcessTaskType.GetPaymentCSV, timestamp: paymentDate.toSeconds() },
+		// @ts-ignore
+		auth: { token: { email: 'admin@socialincome.org' } },
+	});
 
 	const rows = result.split('\n').map((row: string) => row.split(','));
 
