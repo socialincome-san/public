@@ -74,8 +74,7 @@ export default onSchedule({ schedule: '0 15 16 * *', memory: '2GiB' }, async () 
 		const firstPayoutEmailReceivers = await getFirstPayoutEmailReceivers(firestoreAdmin, fromDate, toDate);
 
 		await Promise.all(
-			firstPayoutEmailReceivers.map(async (entry) => {
-				const { email, language, templateData } = entry;
+			firstPayoutEmailReceivers.map(async ({ email, language, templateData }) => {
 				await sendgridClient.sendFirstPayoutEmail(email, language, templateData);
 			}),
 		);
