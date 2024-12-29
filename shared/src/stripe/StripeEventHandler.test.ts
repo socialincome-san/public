@@ -191,6 +191,7 @@ describe('stripeWebhook', () => {
 			automatically_finalizes_at: null,
 			auto_advance: false,
 			automatic_tax: {
+				disabled_reason: null,
 				liability: null,
 				enabled: false,
 				status: null,
@@ -362,6 +363,8 @@ describe('stripeWebhook', () => {
 		metadata: {},
 		on_behalf_of: null,
 		outcome: {
+			network_advice_code: null,
+			network_decline_code: null,
 			network_status: 'approved_by_network',
 			reason: null,
 			risk_level: 'normal',
