@@ -27,7 +27,7 @@ runs:
     - name: Install and set up firebase-tools
       shell: bash
       run: |
-        npm -g install firebase-tools@13.20.2 && \
+        npm -g install firebase-tools@13.29.1 && \
         firebase setup:emulators:firestore && \
         firebase setup:emulators:storage && \
         firebase setup:emulators:ui

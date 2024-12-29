@@ -1,11 +1,11 @@
 {
   "projects": {
-    "default": "social-income-local",
+    "default": "demo-social-income-local",
     "social-income-staging": "social-income-staging",
     "social-income-prod": "social-income-prod"
   },
   "targets": {
-    "social-income-local": {
+    "demo-social-income-local": {
       "hosting": {
         "admin": [
           "si-admin-local"
