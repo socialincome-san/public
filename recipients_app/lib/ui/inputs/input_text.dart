@@ -62,7 +62,7 @@ class InputText extends StatelessWidget {
             child: Text(
               hintText!,
               style: AppStyles.inputHint.copyWith(
-                color: AppColors.darkGrey.withOpacity(0.6),
+                color: AppColors.darkGrey.withValues(alpha: 0.6),
                 fontWeight: FontWeight.bold,
                 fontSize: 12,
               ),
