@@ -5,6 +5,7 @@ import TechCard from '@/app/[lang]/[region]/(website)/techstack/(sections)/techc
 import { useTranslator } from '@/hooks/useTranslator';
 import { Tabs, TabsList, TabsTrigger } from '@socialincome/ui';
 import { useState } from 'react';
+import { SpinnerIcon } from '@/components/logos/spinner-icon';
 
 type TechEntryJSON = {
 	title: string;
@@ -24,6 +25,16 @@ export function TechList({ lang }: DefaultParams) {
 		setIsDonated(value === 'donated');
 	};
 
+	if (!translator || !techArray) {
+		return (
+			<div className="mx-auto max-w-6xl">
+				<div className="flex justify-center pb-10">
+					<SpinnerIcon />
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<div className="mx-auto max-w-6xl">
 			<div className="flex justify-center pb-10">
@@ -36,11 +47,11 @@ export function TechList({ lang }: DefaultParams) {
 			</div>
 			<div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-2">
 				{techArray
-					?.filter((t) => !isDonated || t.donated)
+					.filter((t) => !isDonated || t.donated)
 					.map((techEntry, index) => (
 						<TechCard
 							{...techEntry}
-							translations={{ badgeDonated: translator?.t('badges.donated') || '' }}
+							translations={{ badgeDonated: translator.t('badges.donated') || '' }}
 							key={index}
 						/>
 					))}
