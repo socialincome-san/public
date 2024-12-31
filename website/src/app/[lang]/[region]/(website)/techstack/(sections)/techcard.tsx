@@ -32,7 +32,6 @@ export default function TechCard({ title, description, link, logo, donated, tran
 							className="mx-auto w-1/2 rounded-sm sm:w-full"
 							width="48"
 							height="48"
-							unoptimized
 						/>
 					</div>
 				)}
