@@ -2,10 +2,10 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import TechCard from '@/app/[lang]/[region]/(website)/techstack/(sections)/techcard';
+import { SpinnerIcon } from '@/components/logos/spinner-icon';
 import { useTranslator } from '@/hooks/useTranslator';
 import { Tabs, TabsList, TabsTrigger } from '@socialincome/ui';
 import { useState } from 'react';
-import { SpinnerIcon } from '@/components/logos/spinner-icon';
 
 type TechEntryJSON = {
 	title: string;
