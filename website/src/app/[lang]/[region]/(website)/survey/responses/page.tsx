@@ -56,7 +56,6 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 						(surveyData) =>
 							surveyData && (
 								<TabsTrigger key={surveyData.type} value={surveyData.type} asChild={true}>
-
 									<Card className="card-tab data-[state=active]:bg-primary [&_h3]:data-[state=inactive]: data-[state=active]:cursor-default data-[state=inactive]:cursor-pointer data-[state=active]:text-white hover:bg-primary hover:bg-opacity-10 ">
 										<CardHeader className="pl-5 pb-0">
 											<CardTitle>{translator.t(`${surveyData.type}.title`)}</CardTitle>
@@ -74,7 +73,6 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 							),
 					)}
 				</TabsList>
-
 				{Object.values(SurveyQuestionnaire).map((selectedSurvey) => (
 					<TabsContent value={selectedSurvey} key={selectedSurvey}>
 						<div className="mx-auto mb-5 mt-20">
@@ -84,7 +82,6 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 								</Typography>
 							</div>
 							<div className="grid w-full grid-cols-1 items-stretch gap-2 md:grid-cols-2">
-								{/* Description with Clock Icon */}
 								<div className="flex items-center justify-start text-left">
 									<ClockIcon className="text-primary mr-2 h-5 w-5" />
 									<Typography>{translator.t(`${selectedSurvey}.description`)}</Typography>
@@ -100,10 +97,7 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 						</div>
 						<div className="px-0 py-8">
 							<div className="relative">
-								{/* Horizontal line */}
 								<div className="absolute h-0.5 bg-border w-full top-1/2 transform -translate-y-1/2" />
-
-								{/* Dots container */}
 								<div className="relative flex justify-between">
 									{Array.from({ length: 11 }).map((_, index) => (
 										<div
