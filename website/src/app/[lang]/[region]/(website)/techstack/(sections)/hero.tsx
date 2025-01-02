@@ -1,9 +1,9 @@
-import { DefaultParams } from '@/app/[lang]/[region]';
+import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 
-export async function Hero({ lang }: DefaultParams) {
+export async function Hero({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-techstack'],

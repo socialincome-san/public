@@ -1,9 +1,9 @@
 'use client';
 
-import { DefaultParams } from '@/app/[lang]/[region]';
 import TechCard from '@/app/[lang]/[region]/(website)/techstack/(sections)/techcard';
 import { SpinnerIcon } from '@/components/logos/spinner-icon';
 import { useTranslator } from '@/hooks/useTranslator';
+import { WebsiteLanguage } from '@/i18n';
 import { Tabs, TabsList, TabsTrigger } from '@socialincome/ui';
 import { useState } from 'react';
 
@@ -15,7 +15,7 @@ type TechEntryJSON = {
 	donated: boolean;
 };
 
-export function TechList({ lang }: DefaultParams) {
+export function TechList({ lang }: { lang: WebsiteLanguage }) {
 	const [isDonated, setIsDonated] = useState(false);
 
 	const translator = useTranslator(lang, 'website-techstack');
