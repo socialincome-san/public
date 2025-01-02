@@ -82,7 +82,8 @@
 			"skippingMealsTitleV1": "Do you or other family members in your household ever skip meals because there wasn't enough money for food?",
 			"skippingMealsLastWeekTitleV1": "Did this happen last week?",
 			"skippingMealsLastWeek3MealsTitleV1": "Did you skip more than 3 meals in the past week?",
-			"unexpectedExpensesCoveredTitleV1": "Do you have enough money to cover unexpected expenses like seeing a doctor costing 100 SLE?",
+			"unexpectedExpensesCoveredTitleV1": "Do you have enough money to cover unexpected expenses like seeing a doctor?",
+			"unexpectedExpensesCoveredDescV1": "A doctor costing for example 100 SLE or above.",
 			"savingsTitleV1": "Are you currently able to save money?",
 			"debtPersonalTitleV1": "Are you in debt?",
 			"debtPersonalDescV1": "SLE 500 or above.",
@@ -93,15 +94,15 @@
 			"otherSupportTitleV1": "Are you currently receiving any other form of financial support from anywhere else?",
 			"plannedAchievementTitleV1": "What do you hope to achieve within the next 3 years with Social Income? ",
 
-			"spendingTitleV1": "Tell us what are the key categories that you spend your Social Income payments on:",
-			"spendingDescV1": "Education includes school fees, stationary, textbooks etc. Food includes for you or your household. Housing includes rent, house maintenance etc. Health care includes doctor, hospital visit, medicine etc. Transportation includes bus, taxi, poda poda, keke etc. Saving for the future includes saving it in a bank account or on a mobile money account etc. Investment includes fertilizers, tools, diesel for machinery etc.",
+			"spendingTitleV1": "What are the key categories that you spend your Social Income payments on?",
+			"spendingDescV1": "Education: school fees, stationary, textbooks etc. // Food for you or your household // Housing: rent, house maintenance etc. // Health care: doctor, hospital visit, medicine etc. // Transportation: bus, taxi, poda poda, keke etc. // Saving: on bank account or mobile money account etc. // Investment: fertilizers, tools, diesel for machinery etc.",
 			"spendingChoices": {
 				"education": "Education",
 				"food": "Food",
 				"housing": "Housing",
 				"healthCare": "Health care",
 				"mobility": "Transportation",
-				"saving": "Saving for the future",
+				"saving": "Savings",
 				"investment": "Investment"
 			},
 			"spendingRankingTitleV1": "Please rank the selected spending categories from the most important to the least.",
