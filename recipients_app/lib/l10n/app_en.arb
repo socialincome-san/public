@@ -277,5 +277,6 @@
     "invalidRecaptchaVersion": "Invalid reCAPTCHA version",
     "invalidReqType": "Invalid request type",
     "errorEmailInvalid": "Invalid email address",
-    "demoCta": "Demo"
+    "demoCta": "Demo",
+    "createAccountDemo": "Enter demo"
 }

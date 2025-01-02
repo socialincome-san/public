@@ -177,5 +177,6 @@
     "userDisabledError": "Wi dɔn lɔk yu akawnt. Rich awt to wi if yu want fɔ no mɔ.",
     "invalidCredentialError": " Di fon nɔmba ɔ di spɛshal kod we wi sɛn to yu in tɛm dɔn pas fɔ yuz. Duya tray bak.",
     "errorEmailInvalid": "Imel nɔ kɔrɛkt",
-    "demoCta": "Demo"
+    "demoCta": "Demo",
+    "createAccountDemo": "Enta di demo"
 }
