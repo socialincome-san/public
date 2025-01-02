@@ -3,6 +3,7 @@ import BarchartSurveyResponseComponent, {
 	ChartData,
 } from '@/app/[lang]/[region]/(website)/survey/responses/barchart-survey-response-component';
 import { firestoreAdmin } from '@/firebase-admin';
+import { ClockIcon, ViewfinderCircleIcon } from '@heroicons/react/24/outline';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
 import { QuestionInputType } from '@socialincome/shared/src/types/question';
 import { SurveyQuestionnaire } from '@socialincome/shared/src/types/survey';
@@ -18,7 +19,6 @@ import {
 	Separator,
 	Typography,
 } from '@socialincome/ui';
-import { ClockIcon, ViewfinderCircleIcon } from '@heroicons/react/24/outline';
 
 import { Fragment } from 'react';
 
@@ -56,14 +56,13 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 						(surveyData) =>
 							surveyData && (
 								<TabsTrigger key={surveyData.type} value={surveyData.type} asChild={true}>
-
-									<Card className="card-tab data-[state=active]:bg-primary [&_h3]:data-[state=inactive]: data-[state=active]:cursor-default data-[state=inactive]:cursor-pointer data-[state=active]:text-white hover:bg-primary hover:bg-opacity-10 ">
-										<CardHeader className="pl-5 pb-0">
+									<Card className="card-tab data-[state=active]:bg-primary [&_h3]:data-[state=inactive]: hover:bg-primary hover:bg-opacity-10 data-[state=active]:cursor-default data-[state=inactive]:cursor-pointer data-[state=active]:text-white">
+										<CardHeader className="pb-0 pl-5">
 											<CardTitle>{translator.t(`${surveyData.type}.title`)}</CardTitle>
 										</CardHeader>
-										<CardContent className="pl-5 pt-4 flex items-center">
+										<CardContent className="flex items-center pl-5 pt-4">
 											{/* Viewfinder Icon */}
-											<ViewfinderCircleIcon className="h-5 w-5 mr-2 group-data-[state=active]:text-white" />
+											<ViewfinderCircleIcon className="mr-2 h-5 w-5 group-data-[state=active]:text-white" />
 											{/* Data Points Text */}
 											<Typography>
 												{surveyData.total} {translator.t('data-points')}
@@ -101,17 +100,15 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 						<div className="px-0 py-8">
 							<div className="relative">
 								{/* Horizontal line */}
-								<div className="absolute h-0.5 bg-border w-full top-1/2 transform -translate-y-1/2" />
+								<div className="bg-border absolute top-1/2 h-0.5 w-full -translate-y-1/2 transform" />
 
 								{/* Dots container */}
 								<div className="relative flex justify-between">
 									{Array.from({ length: 11 }).map((_, index) => (
 										<div
 											key={index}
-											className={`w-6 h-6 rounded-full border-2 ${
-												index === 0
-													? 'bg-accent border-accent'
-													: 'bg-background border-border'
+											className={`h-6 w-6 rounded-full border-2 ${
+												index === 0 ? 'bg-accent border-accent' : 'bg-background border-border'
 											}`}
 										/>
 									))}
@@ -127,7 +124,9 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 										<Typography size="2xl" weight="medium" className="my-2">
 											{translator.t(data[selectedSurvey][questionKey].question.translationKey)}
 											{data[selectedSurvey][questionKey].question.type == QuestionInputType.CHECKBOX && (
-												<Typography size="sm" weight="normal">({translator.t('multiple-answers')})</Typography>
+												<Typography size="sm" weight="normal">
+													({translator.t('multiple-answers')})
+												</Typography>
 											)}
 										</Typography>
 										<Badge variant="accent" className="font-normal">
