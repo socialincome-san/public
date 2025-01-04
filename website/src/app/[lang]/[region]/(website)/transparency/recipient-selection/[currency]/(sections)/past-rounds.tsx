@@ -1,9 +1,9 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { DrawCard } from '@/app/[lang]/[region]/(website)/transparency/recipient-selection/(components)/draw-card';
-import { loadPastDraws } from '@/app/[lang]/[region]/(website)/transparency/recipient-selection/(sections)/state';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
+import { DrawCard } from '../(components)/draw-card';
+import { loadPastDraws } from './state';
 
 export const revalidate = 3600 * 24; // update once a day
 

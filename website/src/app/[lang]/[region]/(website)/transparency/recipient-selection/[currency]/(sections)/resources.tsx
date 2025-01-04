@@ -1,16 +1,32 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import ScrollToChevron from '@/app/[lang]/[region]/(website)/transparency/recipient-selection/(components)/scroll-to-chevron';
+import { firestoreAdmin } from '@/firebase-admin';
+import { WebsiteCurrency, WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { ContributionStatsCalculator } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { Button, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
 import transparency from '../(assets)/transparency.svg';
+import ScrollToChevron from '../(components)/scroll-to-chevron';
 
-export async function Resources({ lang }: DefaultParams) {
+type ResourcePageProps = {
+	lang: WebsiteLanguage;
+	currency: string;
+} & DefaultParams;
+
+const roundAmount = (amount: number) => (amount ? Math.round(amount / 10) * 10 : 0);
+
+export async function Resources({ lang, currency }: ResourcePageProps) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-selection'],
 	});
+
+	const contributionCalculator = await ContributionStatsCalculator.build(
+		firestoreAdmin,
+		currency.toUpperCase() as WebsiteCurrency,
+	);
+	const totalContributionsAmount = contributionCalculator.totalContributionsAmount();
 
 	return (
 		<div id="resources-section" className="flex h-[calc(100svh)] min-h-[600px] flex-col">
@@ -41,7 +57,8 @@ export async function Resources({ lang }: DefaultParams) {
 							<Button variant="link">
 								<a href="../transparency/finances" target="_blank" rel="noopener noreferrer">
 									<Typography as="span" className="text-xl sm:text-2xl">
-										{translator.t('section-2.amount')} {translator.t('section-2.amount-context')}
+										{currency.toUpperCase()} {roundAmount(totalContributionsAmount)}{' '}
+										{translator.t('section-2.amount-context')}
 									</Typography>
 								</a>
 							</Button>

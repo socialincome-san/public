@@ -1,10 +1,10 @@
 'use client';
 
-import { CompletedDraw } from '@/app/[lang]/[region]/(website)/transparency/recipient-selection/(sections)/state';
 import { WebsiteLanguage } from '@/i18n';
 import { Card, Collapsible, CollapsibleContent, CollapsibleTrigger, Typography } from '@socialincome/ui';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
+import { CompletedDraw } from '../(sections)/state';
 
 type DrawCardProps = {
 	lang: WebsiteLanguage;
