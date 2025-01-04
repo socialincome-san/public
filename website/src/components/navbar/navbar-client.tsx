@@ -314,7 +314,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					<NavbarLink className="bg-red-50 whitespace-nowrap px-2" href={aboutUs.href}>
 						{aboutUs.title}
 					</NavbarLink>
-					<div className="bg-indigo-200 absolute left-2 top-full mt-0 hidden flex-col overflow-visible whitespace-nowrap opacity-0 group-hover/navbar:flex group-hover/about-us:opacity-100">
+					<div className="bg-indigo-200 absolute left-2 top-full pt-2 mt-0 hidden flex-col overflow-visible whitespace-nowrap opacity-0 group-hover/navbar:flex group-hover/about-us:opacity-100">
 						{aboutUs.links?.map((link, index) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
@@ -326,7 +326,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					<NavbarLink className="whitespace-nowrap px-2" href={transparency.href}>
 						{transparency.title}
 					</NavbarLink>
-					<div className="absolute left-2 top-full mt-0 hidden flex-col overflow-visible whitespace-nowrap opacity-0 group-hover/navbar:flex group-hover/transparency:opacity-100">
+					<div className="absolute left-2 top-full pt-2 mt-0 hidden flex-col overflow-visible whitespace-nowrap opacity-0 group-hover/navbar:flex group-hover/transparency:opacity-100">
 						{transparency.links?.map((link: any, index: number) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
