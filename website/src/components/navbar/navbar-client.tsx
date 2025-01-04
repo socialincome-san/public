@@ -280,16 +280,16 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 			<div className="relative inline-flex shrink-0 flex-col text-left">
 				<Link href={`/${lang}/${region}`}>
 					<div
-						className=" h-6 w-[230px] items-center justify-center block md:hidden lg:block"
+						className="block h-6 w-[230px] items-center justify-center md:hidden lg:block"
 						style={{ minWidth: '230px', minHeight: '24px' }}
 					>
-						<SIAnimatedLogo className="h-[24px] w-[230px] " />
+						<SIAnimatedLogo className="h-[24px] w-[230px]" />
 					</div>
 					<SIIcon className="-mb-2.5 block h-9 pr-20 lg:hidden" />
 				</Link>
 				<div className="absolute left-0 mt-12 hidden flex-col justify-start overflow-visible whitespace-nowrap group-hover/navbar:flex group-active/navbar:flex">
 					<NavbarLink href={`/${lang}/${region}/me`}>{translations.myProfile}</NavbarLink>
-					<div className="flex-inline mt-auto flex items-center space-x-2 ">
+					<div className="flex-inline mt-auto flex items-center space-x-2">
 						<DonateIcon className="h-4 w-4" />
 						<NavbarLink href={`/${lang}/${region}/donate/individual`} className="text-accent">
 							{translations.donate}
@@ -298,7 +298,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 				</div>
 			</div>
 			<div className="flex flex-row items-center justify-evenly gap-x-10 overflow-visible">
-				<div className="group/our-work relative flex flex-1 justify-end ">
+				<div className="group/our-work relative flex flex-1 justify-end">
 					<NavbarLink className="whitespace-nowrap px-2" href={ourWork.href}>
 						{ourWork.title}
 					</NavbarLink>
@@ -310,7 +310,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 						))}
 					</div>
 				</div>
-				<div className="group/about-us relative flex flex-1 justify-center ">
+				<div className="group/about-us relative flex flex-1 justify-center">
 					<NavbarLink className="whitespace-nowrap px-2" href={aboutUs.href}>
 						{aboutUs.title}
 					</NavbarLink>
@@ -322,7 +322,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 						))}
 					</div>
 				</div>
-				<div className="group/transparency relative flex flex-1 justify-start ">
+				<div className="group/transparency relative flex flex-1 justify-start">
 					<NavbarLink className="whitespace-nowrap px-2" href={transparency.href}>
 						{transparency.title}
 					</NavbarLink>
@@ -336,7 +336,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 				</div>
 			</div>
 			<div className="group/i18n relative flex flex-col overflow-visible whitespace-nowrap pl-[80px] lg:pl-[200px]">
-				<div className="flex flex-row items-baseline justify-end ">
+				<div className="flex flex-row items-baseline justify-end">
 					{(!isIntRegion || (isIntRegion && country)) && (
 						<Image
 							className="m-auto mx-2 rounded-full"
@@ -350,15 +350,15 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					)}{' '}
 					<Typography size="lg">{languages.find((l) => l.code === lang)?.translation}</Typography>
 				</div>
-				<div className="absolute right-0 mt-10  hidden min-w-[160px] max-w-[170px] grid-cols-3 gap-x-6 text-left opacity-0 group-hover/navbar:grid group-hover/i18n:opacity-100">
-					<div className="flex flex-col items-end lg:pr-4 pr-0">
+				<div className="absolute right-0 mt-10 hidden min-w-[160px] max-w-[170px] grid-cols-3 gap-x-6 text-left opacity-0 group-hover/navbar:grid group-hover/i18n:opacity-100">
+					<div className="flex flex-col items-end pr-0 lg:pr-4">
 						{regions
 							.sort((a, b) => a.translation.localeCompare(b.translation))
 							.map((reg, index) => (
 								<Link
 									key={index}
 									href={`/${lang}/${reg.code}`}
-									className={classNames('hover:active:text-accent hover:text-accent text-left text-lg cursor-pointer', {
+									className={classNames('hover:active:text-accent hover:text-accent cursor-pointer text-left text-lg', {
 										'text-accent': reg.code === region,
 									})}
 									onClick={() => setRegion(reg.code)}
@@ -373,7 +373,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 							.map((l, index) => (
 								<Typography
 									key={index}
-									className={classNames('hover:active:text-accent hover:text-accent text-left text-lg cursor-pointer', {
+									className={classNames('hover:active:text-accent hover:text-accent cursor-pointer text-left text-lg', {
 										'text-accent': l.code === lang,
 									})}
 									onClick={() => setLanguage(l.code)}
@@ -389,7 +389,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 								<Typography
 									key={index}
 									size="lg"
-									className={classNames('hover:active:text-accent hover:text-accent text-left text-lg cursor-pointer', {
+									className={classNames('hover:active:text-accent hover:text-accent cursor-pointer text-left text-lg', {
 										'text-accent': curr.code === currency,
 									})}
 									onClick={() => setCurrency(curr.code)}
