@@ -302,19 +302,19 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					<NavbarLink className="whitespace-nowrap px-2 " href={ourWork.href}>
 						{ourWork.title}
 					</NavbarLink>
-					<div className="absolute left-2 top-full mt-0 pt-4 hidden flex-col overflow-visible whitespace-nowrap opacity-0 group-hover/our-work:flex group-hover/our-work:opacity-100">
+					<div className="absolute left-2 top-full mt-0 hidden flex-col overflow-visible whitespace-nowrap opacity-0 group-hover/our-work:flex group-hover/our-work:opacity-100">
 						{ourWork.links?.map((link: any, index: number) => (
-							<NavbarLink key={index} href={link.href}>
+							<NavbarLink key={index} href={link.href} className={index === 0 ? "pt-2 bg-red-600" : ""}>
 								{link.title}
 							</NavbarLink>
 						))}
 					</div>
 				</div>
 				<div className="group/about-us relative flex flex-1 justify-center ">
-					<NavbarLink className="whitespace-nowrap px-2" href={aboutUs.href}>
+					<NavbarLink className="bg-red-50 whitespace-nowrap px-2" href={aboutUs.href}>
 						{aboutUs.title}
 					</NavbarLink>
-					<div className="absolute left-2 top-full mt-0 pt-4 hidden flex-col overflow-visible whitespace-nowrap opacity-0 group-hover/navbar:flex group-hover/about-us:opacity-100">
+					<div className="bg-indigo-200 absolute left-2 top-full mt-0 hidden flex-col overflow-visible whitespace-nowrap opacity-0 group-hover/navbar:flex group-hover/about-us:opacity-100">
 						{aboutUs.links?.map((link, index) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
@@ -326,7 +326,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					<NavbarLink className="whitespace-nowrap px-2" href={transparency.href}>
 						{transparency.title}
 					</NavbarLink>
-					<div className="absolute left-2 top-full mt-0 pt-4 hidden flex-col overflow-visible whitespace-nowrap opacity-0 group-hover/navbar:flex group-hover/transparency:opacity-100">
+					<div className="absolute left-2 top-full mt-0 hidden flex-col overflow-visible whitespace-nowrap opacity-0 group-hover/navbar:flex group-hover/transparency:opacity-100">
 						{transparency.links?.map((link: any, index: number) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
