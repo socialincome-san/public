@@ -314,7 +314,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					<NavbarLink className="whitespace-nowrap px-2" href={aboutUs.href}>
 						{aboutUs.title}
 					</NavbarLink>
-					<div className="absolute left-2 top-full mt-0 hidden flex-col overflow-visible whitespace-nowrap bg-indigo-200 pt-2 opacity-0 group-hover/navbar:flex group-hover/about-us:opacity-100">
+					<div className="absolute left-2 top-full mt-0 hidden flex-col overflow-visible whitespace-nowrap pt-2 opacity-0 group-hover/navbar:flex group-hover/about-us:opacity-100">
 						{aboutUs.links?.map((link, index) => (
 							<NavbarLink key={index} href={link.href}>
 								{link.title}
