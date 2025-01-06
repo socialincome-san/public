@@ -1,3 +1,4 @@
+//TODO: Duplicate code fragment, can be eliminated by storing it's source somewhere common.
 'use client';
 
 import { useI18n } from '@/components/providers/context-providers';

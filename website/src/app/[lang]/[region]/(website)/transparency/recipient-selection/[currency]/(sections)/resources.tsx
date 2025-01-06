@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { firestoreAdmin } from '@/firebase-admin';
-import { WebsiteCurrency, WebsiteLanguage } from '@/i18n';
+import { WebsiteCurrency } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { ContributionStatsCalculator } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { Button, Typography } from '@socialincome/ui';
@@ -10,7 +10,6 @@ import transparency from '../(assets)/transparency.svg';
 import ScrollToChevron from '../(components)/scroll-to-chevron';
 
 type ResourcePageProps = {
-	lang: WebsiteLanguage;
 	currency: string;
 } & DefaultParams;
 
