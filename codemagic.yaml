@@ -23,6 +23,7 @@ definitions:
             echo "Required version: $REQUIRED_VERSION == Current version: $CURRENT_VERSION"
             echo "Flutter version is correct"
         fi
+      working_directory: recipients_app
 
 workflows:
   android-staging-firebase-app-distribution-workflow:
@@ -72,6 +73,7 @@ workflows:
           set -e # exit on first failed command
 
           flutter packages pub get
+        working_directory: recipients_app
       - name: Build AAB with Flutter
         script: |
           #!/usr/bin/env sh
@@ -170,6 +172,7 @@ workflows:
           set -e # exit on first failed command
 
           flutter packages pub get
+        working_directory: recipients_app
       - name: Build AAB with Flutter
         script: |
           #!/usr/bin/env sh
@@ -251,6 +254,7 @@ workflows:
           set -e # exit on first failed command
 
           flutter packages pub get
+        working_directory: recipients_app
       - name: Install pods
         script: |
           #!/usr/bin/env sh
@@ -341,6 +345,7 @@ workflows:
           set -e # exit on first failed command
 
           flutter packages pub get
+        working_directory: recipients_app
       - name: Install pods
         script: |
           #!/usr/bin/env sh
@@ -437,6 +442,7 @@ workflows:
           set -e # exit on first failed command
 
           flutter packages pub get
+        working_directory: recipients_app
       - name: Install pods
         script: |
           #!/usr/bin/env sh
