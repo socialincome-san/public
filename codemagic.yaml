@@ -88,9 +88,9 @@ workflows:
         working_directory: recipients_app
 
     artifacts:
-      - build/**/outputs/**/*.apk
-      - build/**/outputs/**/*.aab
-      - build/**/outputs/**/mapping.txt
+      - recipients_app/build/**/outputs/**/*.apk
+      - recipients_app/build/**/outputs/**/*.aab
+      - recipients_app/build/**/outputs/**/mapping.txt
       - flutter_drive.log
 
     publishing:
@@ -187,9 +187,9 @@ workflows:
         working_directory: recipients_app
 
     artifacts:
-      - build/**/outputs/**/*.apk
-      - build/**/outputs/**/*.aab
-      - build/**/outputs/**/mapping.txt
+      - recipients_app/build/**/outputs/**/*.apk
+      - recipients_app/build/**/outputs/**/*.aab
+      - recipients_app/build/**/outputs/**/mapping.txt
       - flutter_drive.log
 
     publishing:
@@ -275,7 +275,7 @@ workflows:
         working_directory: recipients_app
 
     artifacts:
-      - build/ios/ipa/*.ipa
+      - recipients_app/build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
       - flutter_drive.log
 
@@ -366,7 +366,7 @@ workflows:
         working_directory: recipients_app
 
     artifacts:
-      - build/ios/ipa/*.ipa
+      - recipients_app/build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
       - flutter_drive.log
 
@@ -463,7 +463,7 @@ workflows:
         working_directory: recipients_app
 
     artifacts:
-      - build/ios/ipa/*.ipa
+      - recipients_app/build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
       - flutter_drive.log
 
