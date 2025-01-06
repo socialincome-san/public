@@ -23,11 +23,7 @@ class AuthCubit extends Cubit<AuthState> {
       if (user != null) {
         try {
           final recipient = await userRepository.fetchRecipient(user);
-          Organization? organization;
-
-          if (recipient?.organizationRef != null) {
-            organization = await organizationRepository.fetchOrganization(recipient!.organizationRef!);
-          }
+          final Organization? organization = await _fetchOrganization(recipient);
 
           emit(
             AuthState(
@@ -62,11 +58,7 @@ class AuthCubit extends Cubit<AuthState> {
 
     if (user != null) {
       final recipient = await userRepository.fetchRecipient(user);
-      Organization? organization;
-
-      if (recipient?.organizationRef != null) {
-        organization = await organizationRepository.fetchOrganization(recipient!.organizationRef!);
-      }
+      final Organization? organization = await _fetchOrganization(recipient);
 
       emit(
         AuthState(
@@ -108,5 +100,12 @@ class AuthCubit extends Cubit<AuthState> {
     emit(const AuthState(status: AuthStatus.loading));
     await userRepository.signOut();
     emit(const AuthState());
+  }
+
+  Future<Organization?> _fetchOrganization(Recipient? recipient) async {
+    if (recipient?.organizationRef != null) {
+      return await organizationRepository.fetchOrganization(recipient!.organizationRef!);
+    }
+    return null;
   }
 }
