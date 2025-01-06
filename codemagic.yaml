@@ -9,9 +9,9 @@ definitions:
     cocoapods: default
 
   scripts:
-    - &verify_flutter_version      
+    - &verify_flutter_version
       name: Verify Flutter version
-      script: | 
+      script: |
         # Verify Flutter version
         echo "Verify Flutter version..."
         REQUIRED_VERSION=$(grep flutter .tool-versions | awk '{print $2}')
