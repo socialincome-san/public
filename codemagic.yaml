@@ -46,11 +46,6 @@ workflows:
         - $FLUTTER_ROOT/.pub-cache
 
     scripts:
-      - name: Print environment variables
-        script: |
-          #!/bin/sh
-          set -ex
-          printenv
       - name: Set up key.properties
         script: |
           #!/usr/bin/env sh
@@ -139,11 +134,6 @@ workflows:
         - $FLUTTER_ROOT/.pub-cache
 
     scripts:
-      - name: Print environment variables
-        script: |
-          #!/bin/sh
-          set -ex
-          printenv
       - name: Set up key.properties
         script: |
           #!/usr/bin/env sh
@@ -236,11 +226,6 @@ workflows:
         - $HOME/Library/Caches/CocoaPods
 
     scripts:
-      - name: Print environment variables
-        script: |
-          #!/bin/sh
-          set -ex
-          printenv
       - name: Set up code signing settings on Xcode project
         script: |
           #!/usr/bin/env sh
@@ -327,11 +312,6 @@ workflows:
         - $HOME/Library/Caches/CocoaPods
 
     scripts:
-      - name: Print environment variables
-        script: |
-          #!/bin/sh
-          set -ex
-          printenv
       - name: Set up code signing settings on Xcode project
         script: |
           #!/usr/bin/env sh
@@ -417,11 +397,6 @@ workflows:
         - $HOME/Library/Caches/CocoaPods
 
     scripts:
-      - name: Print environment variables
-        script: |
-          #!/bin/sh
-          set -ex
-          printenv
       - name: Load Prod Firebase configuration
         script: |
           #!/usr/bin/env sh
