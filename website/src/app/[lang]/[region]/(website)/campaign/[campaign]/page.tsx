@@ -119,7 +119,7 @@ export default async function Page({ params }: CampaignPageProps) {
 							<div>
 								{!campaign.goal && (
 									<div className="mb-4 flex flex-col">
-										<Typography size="2xl" weight="medium" color="accent">
+										<Typography size="2xl" weight="medium" color="secondary">
 											{translator?.t('campaign.without-goal.collected', {
 												context: {
 													count: contributions,
