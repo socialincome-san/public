@@ -1,5 +1,5 @@
 import { Slot } from '@radix-ui/react-slot';
-import { SpinnerIcon } from '@socialincome/website/src/components/logos/spinner-icon';
+import { SpinnerIcon } from '../logos/spinner-icon';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 import { ComponentType } from 'react';
