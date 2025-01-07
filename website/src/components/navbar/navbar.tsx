@@ -86,6 +86,10 @@ async function Navbar({ lang, region }: DefaultParams) {
 							title: translator.t('navigation.reporting'),
 							href: `/${lang}/${region}/transparency/reporting`,
 						},
+						{
+							title: translator.t('navigation.faq'),
+							href: `/${lang}/${region}/faq`,
+						},
 					],
 				},
 			]}
