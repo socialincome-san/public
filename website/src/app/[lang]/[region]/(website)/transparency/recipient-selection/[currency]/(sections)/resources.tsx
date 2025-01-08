@@ -54,7 +54,7 @@ export async function Resources({ lang, currency }: ResourcePageProps) {
 					<div className="mx-auto my-4 max-w-4xl text-center sm:text-left">
 						<div>
 							<Button variant="link">
-								<a href="../transparency/finances" target="_blank" rel="noopener noreferrer">
+								<a href="../finances" target="_blank" rel="noopener noreferrer">
 									<Typography as="span" className="text-xl sm:text-2xl">
 										{currency.toUpperCase()} {roundAmount(totalContributionsAmount)}{' '}
 										{translator.t('section-2.amount-context')}
