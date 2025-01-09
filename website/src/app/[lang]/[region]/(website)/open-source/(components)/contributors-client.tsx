@@ -37,28 +37,28 @@ function Contributor({ name, commits, avatarUrl }: ContributorProp) {
 }
 
 export function OpenSourceContributorsClient({
-	ContributorsByCommitCount,
-	ContributorsByLatestCommit,
+	contributorsByCommitCount,
+	contributorsByLatestCommit,
 	heading,
 	totalContributors,
 }: {
-	ContributorsByCommitCount: Contributor[];
-	ContributorsByLatestCommit: Contributor[];
+	contributorsByCommitCount: Contributor[];
+	contributorsByLatestCommit: Contributor[];
 	heading: string;
 	totalContributors: number;
 }) {
 	const [showAllContributors, setShowAllContributors] = useState(false);
 	const [selectedToggle, setSelectedToggle] = useState("commit count");
-	const [contributors, setContributors] = useState(ContributorsByCommitCount);
+	const [contributors, setContributors] = useState(contributorsByCommitCount);
 
 	const displayedContributors = showAllContributors ? contributors : contributors.slice(0, 16);
 
 	const handleToggleChange = (value: string) => {
 		setSelectedToggle(value);
 		if (value === "latest commit") {
-			setContributors(ContributorsByLatestCommit);
+			setContributors(contributorsByLatestCommit);
 		} else {
-			setContributors(ContributorsByCommitCount);
+			setContributors(contributorsByCommitCount);
 		}
 	};
 

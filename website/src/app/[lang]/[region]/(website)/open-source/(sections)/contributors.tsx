@@ -69,18 +69,18 @@ export async function OpenSourceContributors({ lang }: DefaultParams) {
 		}
 	});
 
-	const ContributorsByCommitCount = [...combinedContributors].sort(
+	const contributorsByCommitCount = [...combinedContributors].sort(
 		(a: CombinedContributor, b: CombinedContributor) => b.commits - a.commits
 	);
 
-	const ContributorsByLatestCommit = [...combinedContributors].sort(
+	const contributorsByLatestCommit = [...combinedContributors].sort(
 		(a: CombinedContributor, b: CombinedContributor) => b.latestCommitDate.getTime() - a.latestCommitDate.getTime()
 	);
 
 	return (
 		<OpenSourceContributorsClient
-			ContributorsByCommitCount={ContributorsByCommitCount}
-			ContributorsByLatestCommit={ContributorsByLatestCommit}
+			contributorsByCommitCount={contributorsByCommitCount}
+			contributorsByLatestCommit={contributorsByLatestCommit}
 			heading={heading}
 			totalContributors={totalContributors}
 		/>
