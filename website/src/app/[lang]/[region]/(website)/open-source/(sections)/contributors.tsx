@@ -48,25 +48,23 @@ export async function OpenSourceContributors({ lang }: DefaultParams) {
 		if (commit.author?.id && commit.commit?.author?.date) {
 			const contributorId = commit.author.id;
 			const commitDate = new Date(commit.commit.author.date);
-			if (!latestCommitDates.has(contributorId) || commitDate > latestCommitDates.get(contributorId)) {
+			const existingDate = latestCommitDates.get(contributorId);
+			if (!existingDate || commitDate > existingDate) {
 				latestCommitDates.set(contributorId, commitDate);
 			}
 		}
 	});
 
 	// Combine contributors' data with their latest commit dates
-	const combinedContributors: CombinedContributor[] = [];
-	contributors.forEach((contributor) => {
-		if (latestCommitDates.has(contributor.id)) {
-			combinedContributors.push({
-				id: contributor.id,
-				name: contributor.name,
-				avatarUrl: contributor.avatarUrl,
-				commits: contributor.commits,
-				latestCommitDate: latestCommitDates.get(contributor.id),
-			});
-		}
-	});
+	const combinedContributors = contributors
+		.filter((contributor) => latestCommitDates.has(contributor.id))
+		.map((contributor) => ({
+			id: contributor.id,
+			name: contributor.name,
+			avatarUrl: contributor.avatarUrl,
+			commits: contributor.commits,
+			latestCommitDate: latestCommitDates.get(contributor.id) || new Date(0),
+		}));
 
 	const totalContributors = combinedContributors.length;
 
