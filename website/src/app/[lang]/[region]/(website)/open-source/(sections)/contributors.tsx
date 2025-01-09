@@ -1,6 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { ToggleGroup, ToggleGroupItem } from '@socialincome/ui';
 import { getCommits } from '../(components)/get-commits';
 import { getContributors } from '../(components)/get-contributors';
 import { OpenSourceContributorsClient } from '../(components)/contributors-client';
