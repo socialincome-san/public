@@ -8,13 +8,13 @@ interface GitHubCommit {
 		id: number;
 		login: string;
 		avatar_url: string;
-	} | null;
+	};
 	commit: {
 		author: {
 			date: string;
 		};
 	};
-}
+};
 
 export async function getCommits() {
 	// Calculate the date 30 days ago from today
@@ -34,7 +34,6 @@ export async function getCommits() {
 
 	// Extract the last page number from the Link header to get the total commit count
 	const linkHeader = totalCommitsRes.headers.get('link');
-	// Default to 1 in case no Link header is provided
 	let totalCommits = 1;
 
 	if (linkHeader) {
@@ -48,8 +47,20 @@ export async function getCommits() {
 		console.warn('No Link header found; assuming a single commit.');
 	}
 
+	// Fetch total commit data
+	let totalCommitsData: GitHubCommit[] = [];
+	for (let page = 1; page <= Math.ceil(totalCommits / 100); page++) {
+		const pagedUrl = `https://api.github.com/repos/${owner}/${repo}/commits?per_page=100&page=${page}`;
+		const pagedRes = await fetchData(owner, repo, pagedUrl);
+		const pagedData: GitHubCommit[] = await pagedRes.json();
+		totalCommitsData = totalCommitsData.concat(pagedData);
+	}
+
+	// return the total number of commits,
+	// the total number of commits made in the last 30 days, and the total commit data
 	return {
 		totalCommits,
 		newCommits: recentCommits.length,
+		totalCommitsData,
 	};
 }

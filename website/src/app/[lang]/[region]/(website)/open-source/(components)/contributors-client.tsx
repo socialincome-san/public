@@ -1,6 +1,7 @@
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage, Button, Typography } from '@socialincome/ui';
+import { ToggleGroup, ToggleGroupItem } from '@socialincome/ui';
 import { useState } from 'react';
 
 type ContributorProp = {
@@ -8,6 +9,13 @@ type ContributorProp = {
 	commits: number;
 	avatarUrl: string;
 };
+
+interface Contributor {
+	id: number;
+	name: string;
+	avatarUrl: string;
+	commits: number;
+}
 
 function Contributor({ name, commits, avatarUrl }: ContributorProp) {
 	return (
@@ -29,17 +37,30 @@ function Contributor({ name, commits, avatarUrl }: ContributorProp) {
 }
 
 export function OpenSourceContributorsClient({
-	contributors,
+	ContributorsByCommitCount,
+	ContributorsByLatestCommit,
 	heading,
 	totalContributors,
 }: {
-	contributors: Array<{ name: string; commits: number; avatarUrl: string; id: number }>;
+	ContributorsByCommitCount: Contributor[];
+	ContributorsByLatestCommit: Contributor[];
 	heading: string;
 	totalContributors: number;
 }) {
 	const [showAllContributors, setShowAllContributors] = useState(false);
+	const [selectedToggle, setSelectedToggle] = useState("commit count");
+	const [contributors, setContributors] = useState(ContributorsByCommitCount);
 
 	const displayedContributors = showAllContributors ? contributors : contributors.slice(0, 16);
+
+	const handleToggleChange = (value: string) => {
+		setSelectedToggle(value);
+		if (value === "latest commit") {
+			setContributors(ContributorsByLatestCommit);
+		} else {
+			setContributors(ContributorsByCommitCount);
+		}
+	};
 
 	return (
 		<section className="flex flex-col justify-self-start">
@@ -49,8 +70,15 @@ export function OpenSourceContributorsClient({
 				</Typography>
 			</section>
 
+			<section className="flex mb-10">
+				<ToggleGroup type="single" value={selectedToggle} onValueChange={handleToggleChange}>
+					<ToggleGroupItem value="commit count">Commit Count</ToggleGroupItem>
+					<ToggleGroupItem value="latest commit">Latest Commit</ToggleGroupItem>
+				</ToggleGroup>
+			</section>
+
 			<section className="flex flex-wrap gap-4">
-				{displayedContributors.map((contributor) => (
+				{displayedContributors.map((contributor: Contributor) => (
 					<Contributor
 						key={contributor.id}
 						name={contributor.name}
