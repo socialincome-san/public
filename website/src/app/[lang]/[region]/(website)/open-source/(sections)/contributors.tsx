@@ -46,7 +46,7 @@ export async function OpenSourceContributors({ lang }: DefaultParams) {
 	// Collect the latest commit date for each contributor
 	const latestCommitDates = new Map<number, Date>();
 	totalCommitsData.forEach((commit: GitHubCommit) => {
-		if (commit.author && commit.author.id && commit.commit.author.date) {
+		if (commit.author?.id && commit.commit?.author?.date) {
 			const contributorId = commit.author.id;
 			const commitDate = new Date(commit.commit.author.date);
 			if (!latestCommitDates.has(contributorId) || commitDate > latestCommitDates.get(contributorId)) {
