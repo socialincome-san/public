@@ -41,7 +41,6 @@ export async function OpenSourceContributors({ lang }: DefaultParams) {
 
 	const contributors = await getContributors();
 	const { totalCommitsData } = await getCommits();
-	const totalContributors = contributors.length;
 
 	// Collect the latest commit date for each contributor
 	const latestCommitDates = new Map<number, Date>();
@@ -68,6 +67,8 @@ export async function OpenSourceContributors({ lang }: DefaultParams) {
 			});
 		}
 	});
+
+	const totalContributors = combinedContributors.length;
 
 	const contributorsByCommitCount = [...combinedContributors].sort(
 		(a: CombinedContributor, b: CombinedContributor) => b.commits - a.commits
