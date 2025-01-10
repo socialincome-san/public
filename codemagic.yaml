@@ -303,7 +303,7 @@ workflows:
     environment:
       ios_signing:
         distribution_type: ad_hoc
-        bundle_identifier: "*" # Wildcard bundle identifier
+        bundle_identifier: org.socialincome.app.stage
       groups:
         - slack
         - app-config-stage
@@ -318,6 +318,15 @@ workflows:
         - $HOME/Library/Caches/CocoaPods
 
     scripts:
+      - name: Set up keychain to be used for code signing using Codemagic CLI 'keychain' command
+        script: keychain initialize
+      - name: Fetch signing files
+        script: | 
+          app-store-connect fetch-signing-files "org.socialincome.app.stage" \
+            --type IOS_APP_ADHOC \
+            --create
+      - name: Set up signing certificate
+        script: keychain add-certificates
       - name: Set up code signing settings on Xcode project
         script: |
           #!/usr/bin/env sh
