@@ -194,12 +194,12 @@ workflows:
       #  submit_as_draft: true
 
       # Notifications
-      email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
-        recipients:
-          - sandino@socialincome.org
-        notify:
-          success: true # To receive a notification when a build succeeds
-          failure: false # To not receive a notification when a build fails
+      # email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
+      #   recipients:
+      #     - sandino@socialincome.org
+      #   notify:
+      #     success: true # To receive a notification when a build succeeds
+      #     failure: false # To not receive a notification when a build fails
       # slack: # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
       #   channel: $SLACK_CHANNEL_NAME
       #   notify_on_build_start: false
