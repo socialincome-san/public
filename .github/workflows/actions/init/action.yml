@@ -24,10 +24,10 @@ runs:
         cache: npm
         cache-dependency-path: package-lock.json
 
-    - name: Install and set up firebase-tools
+    - name: Install and set up vercel & firebase-tools
       shell: bash
       run: |
-        npm -g install firebase-tools@13.29.1 && \
+        npm -g install firebase-tools@13.29.1 vercel@39.2.6 && \
         firebase setup:emulators:firestore && \
         firebase setup:emulators:storage && \
         firebase setup:emulators:ui
