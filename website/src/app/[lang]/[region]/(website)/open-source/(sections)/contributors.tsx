@@ -1,8 +1,8 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { OpenSourceContributorsClient } from '../(components)/contributors-client';
 import { getCommits } from '../(components)/get-commits';
 import { getContributors } from '../(components)/get-contributors';
-import { OpenSourceContributorsClient } from '../(components)/contributors-client';
 
 type Metadata = {
 	heading: string;
@@ -68,11 +68,11 @@ export async function OpenSourceContributors({ lang }: DefaultParams) {
 	const totalContributors = combinedContributors.length;
 
 	const contributorsByCommitCount = [...combinedContributors].sort(
-		(a: CombinedContributor, b: CombinedContributor) => b.commits - a.commits
+		(a: CombinedContributor, b: CombinedContributor) => b.commits - a.commits,
 	);
 
 	const contributorsByLatestCommit = [...combinedContributors].sort(
-		(a: CombinedContributor, b: CombinedContributor) => b.latestCommitDate.getTime() - a.latestCommitDate.getTime()
+		(a: CombinedContributor, b: CombinedContributor) => b.latestCommitDate.getTime() - a.latestCommitDate.getTime(),
 	);
 
 	return (

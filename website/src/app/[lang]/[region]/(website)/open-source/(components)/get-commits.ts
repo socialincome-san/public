@@ -14,7 +14,7 @@ interface GitHubCommit {
 			date: string;
 		};
 	};
-};
+}
 
 export async function getCommits() {
 	// Calculate the date 30 days ago from today
