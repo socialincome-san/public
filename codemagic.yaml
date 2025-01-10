@@ -321,7 +321,7 @@ workflows:
       - name: Set up keychain to be used for code signing using Codemagic CLI 'keychain' command
         script: keychain initialize
       - name: Fetch signing files
-        script: | 
+        script: |
           app-store-connect fetch-signing-files "org.socialincome.app.stage" \
             --type IOS_APP_ADHOC \
             --create
