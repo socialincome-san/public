@@ -15,12 +15,10 @@ definitions:
       script: |
         # Verify Flutter version
         echo "Verify Flutter version..."
+
         REQUIRED_VERSION=$(grep flutter .tool-versions | awk '{print $2}')
         echo "REQUIRED_VERSION: $REQUIRED_VERSION"
-
-        FLUTTER_LINE=$(flutter --version | grep -m 1 "^Flutter")
-        echo "FLUTTER_LINE: $FLUTTER_LINE"
-        CURRENT_VERSION=$($FLUTTER_LINE | awk '{print $2}')
+        CURRENT_VERSION=$(flutter --version | grep -m 1 "^Flutter" | awk '{print $2}')
         echo "CURRENT_VERSION: $CURRENT_VERSION"
 
         if [ "$CURRENT_VERSION" != "$REQUIRED_VERSION" ]; then
