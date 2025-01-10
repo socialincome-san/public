@@ -301,9 +301,9 @@ workflows:
       app_store_connect: Social Income Recipient App
 
     environment:
-      ios_signing:
-        distribution_type: ad_hoc
-        bundle_identifier: org.socialincome.app.stage
+      # ios_signing:
+      #   distribution_type: ad_hoc
+      #   bundle_identifier: org.socialincome.app.stage
       groups:
         - slack
         - app-config-stage
