@@ -17,7 +17,7 @@ interface IssueProps extends Pick<Issue, 'title' | 'url'> {
 export function Issue({ title, url, text }: IssueProps) {
 	return (
 		<TableRow className="p-5 hover:bg-transparent">
-			<TableCell className="text-xl">{title}</TableCell>
+			<TableCell className="max-w-80 text-xl">{title}</TableCell>
 			<TableCell className="text-right text-xl">
 				<Button asChild variant="link" className="hover:underline">
 					<Link href={url} target="_blank" rel="noopener noreferrer">
