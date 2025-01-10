@@ -61,7 +61,7 @@ workflows:
       #   script: |
       #     echo $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT > $GOOGLE_APPLICATION_CREDENTIALS
       # Define reusable section 'verify_flutter_version'
-      # - *verify_flutter_version
+      - *verify_flutter_version
       - name: Get Flutter packages
         script: |
           #!/usr/bin/env sh
@@ -155,7 +155,7 @@ workflows:
           cd prod
 
           echo $ANDROID_FIREBASE_SECRET > google-services.json
-      # - *verify_flutter_version
+      - *verify_flutter_version
       - name: Get Flutter packages
         script: |
           #!/usr/bin/env sh
@@ -232,7 +232,7 @@ workflows:
           set -e # exit on first failed command
 
           xcode-project use-profiles
-      # - *verify_flutter_version
+      - *verify_flutter_version
       - name: Get Flutter packages
         script: |
           #!/usr/bin/env sh
@@ -318,7 +318,7 @@ workflows:
           set -e # exit on first failed command
 
           xcode-project use-profiles
-      # - *verify_flutter_version
+      - *verify_flutter_version
       - name: Get Flutter packages
         script: |
           #!/usr/bin/env sh
@@ -410,7 +410,7 @@ workflows:
           set -e # exit on first failed command
 
           xcode-project use-profiles
-      # - *verify_flutter_version
+      - *verify_flutter_version
       - name: Get Flutter packages
         script: |
           #!/usr/bin/env sh
