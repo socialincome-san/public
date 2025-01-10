@@ -94,8 +94,9 @@ module.exports = {
 				DEFAULT: {
 					css: {
 						color: 'var(--foreground)',
-						'--tw-prose-headings': 'var(--foreground)',
-						'--tw-prose-links': 'var(--foreground)',
+						'--tw-prose-headings': 'hsl(var(--foreground))',
+						'--tw-prose-quotes': 'hsl(var(--accent))',
+						'--tw-prose-links': 'hsl(var(--foreground))',
 					},
 				},
 			},
