@@ -303,7 +303,7 @@ workflows:
     environment:
       ios_signing:
         distribution_type: ad_hoc
-        bundle_identifier: '*' # Wildcard bundle identifier
+        bundle_identifier: "*" # Wildcard bundle identifier
       groups:
         - slack
         - app-config-stage
