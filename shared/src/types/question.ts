@@ -162,8 +162,8 @@ export const SPENDING: Question = {
 	type: QuestionInputType.CHECKBOX,
 	name: 'spendingV1',
 	choices: ['education', 'food', 'housing', 'healthCare', 'mobility', 'saving', 'investment'],
-	translationKey: 'survey.questions.spendingDescV1',
-	descriptionTranslationKey: 'survey.questions.hasDependentsDescV1',
+	translationKey: 'survey.questions.spendingTitleV1',
+	descriptionTranslationKey: 'survey.questions.spendingDescV1',
 	choicesTranslationKey: 'survey.questions.spendingChoices',
 };
 
