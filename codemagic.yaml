@@ -346,7 +346,8 @@ workflows:
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
-          find . -name "Podfile" -execdir pod install \;
+          pod install
+        working_directory: recipients_app/ios
       - name: Flutter build ipa
         script: |
           #!/usr/bin/env sh
