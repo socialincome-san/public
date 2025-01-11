@@ -107,18 +107,18 @@ workflows:
           artifact_type: "apk"
 
       # Notifications
-      # email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
-      #   recipients:
-      #     - sandino@socialincome.org
-      #   notify:
-      #     success: true # To receive a notification when a build succeeds
-      #     failure: false # To not receive a notification when a build fails
-      # slack: # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
-      #   channel: $SLACK_CHANNEL_NAME
-      #   notify_on_build_start: false
-      #   notify:
-      #     success: true # To receive a notification when a build succeeds
-      #     failure: true # To not receive a notification when a build fails
+      email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
+        recipients:
+          - sandino@socialincome.org
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: false # To not receive a notification when a build fails
+      slack: # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
+        channel: $SLACK_CHANNEL_NAME
+        notify_on_build_start: false
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: true # To not receive a notification when a build fails
 
   android-production-workflow:
     name: Android Production
@@ -201,12 +201,12 @@ workflows:
         notify:
           success: true # To receive a notification when a build succeeds
           failure: false # To not receive a notification when a build fails
-      # slack: # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
-      #   channel: $SLACK_CHANNEL_NAME
-      #   notify_on_build_start: false
-      #   notify:
-      #     success: true # To receive a notification when a build succeeds
-      #     failure: true # To not receive a notification when a build fails
+      slack: # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
+        channel: $SLACK_CHANNEL_NAME
+        notify_on_build_start: false
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: true # To not receive a notification when a build fails
 
   ios-staging-testflight-workflow:
     name: iOS Staging (Test Flight)
@@ -281,18 +281,18 @@ workflows:
         submit_to_testflight: true
 
       # Notifications
-      # email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
-      #   recipients:
-      #     - sandino@socialincome.org
-      #   notify:
-      #     success: true # To receive a notification when a build succeeds
-      #     failure: false # To not receive a notification when a build fails
-      # slack: # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
-      #   channel: $SLACK_CHANNEL_NAME
-      #   notify_on_build_start: false
-      #   notify:
-      #     success: true # To receive a notification when a build succeeds
-      #     failure: true # To not receive a notification when a build fails
+      email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
+        recipients:
+          - sandino@socialincome.org
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: false # To not receive a notification when a build fails
+      slack: # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
+        channel: $SLACK_CHANNEL_NAME
+        notify_on_build_start: false
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: true # To not receive a notification when a build fails
 
   ios-staging-firebase-app-distribution-workflow:
     name: iOS Staging (Firebase App Distribution)
@@ -377,18 +377,18 @@ workflows:
             - internal-testers
 
       # Notifications
-      # email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
-      #   recipients:
-      #     - sandino@socialincome.org
-      #   notify:
-      #     success: true # To receive a notification when a build succeeds
-      #     failure: false # To not receive a notification when a build fails
-      # slack: # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
-      #   channel: $SLACK_CHANNEL_NAME
-      #   notify_on_build_start: false
-      #   notify:
-      #     success: true # To receive a notification when a build succeeds
-      #     failure: true # To not receive a notification when a build fails
+      email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
+        recipients:
+          - sandino@socialincome.org
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: false # To not receive a notification when a build fails
+      slack: # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
+        channel: $SLACK_CHANNEL_NAME
+        notify_on_build_start: false
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: true # To not receive a notification when a build fails
 
   ios-production-workflow:
     name: iOS Production
@@ -470,15 +470,15 @@ workflows:
         submit_to_testflight: true
 
       # Notifications
-      # email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
-      #   recipients:
-      #     - sandino@socialincome.org
-      #   notify:
-      #     success: true # To receive a notification when a build succeeds
-      #     failure: false # To not receive a notification when a build fails
-      # slack: # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
-      #   channel: $SLACK_CHANNEL_NAME
-      #   notify_on_build_start: false
-      #   notify:
-      #     success: true # To receive a notification when a build succeeds
-      #     failure: true # To not receive a notification when a build fails
+      email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
+        recipients:
+          - sandino@socialincome.org
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: false # To not receive a notification when a build fails
+      slack: # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
+        channel: $SLACK_CHANNEL_NAME
+        notify_on_build_start: false
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: true # To not receive a notification when a build fails
