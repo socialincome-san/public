@@ -246,7 +246,7 @@ workflows:
 
           flutter pub get
           find . -name "Podfile" -execdir pod install \;
-        working_directory: recipients_app 
+        working_directory: recipients_app
       - name: Flutter build ipa
         script: |
           #!/usr/bin/env sh
