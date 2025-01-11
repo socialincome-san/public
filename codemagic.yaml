@@ -360,7 +360,8 @@ workflows:
             --flavor stage \
             -t lib/main.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
-            --dart-define=SENTRY_URL=$SENTRY_URL
+            --dart-define=SENTRY_URL=$SENTRY_URL \
+            --export-method ad-hoc
         working_directory: recipients_app
 
     artifacts:
