@@ -328,7 +328,12 @@ workflows:
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
-          xcode-project use-profiles
+          xcode-project use-profiles \
+            --archive-method=ad-hoc \
+            --export-options-plist=$CM_BUILD_DIR/recipients_app/ios/export_options.plist
+
+          # Print the export options plist
+          more $CM_BUILD_DIR/recipients_app/ios/export_options.plist
       - *verify_flutter_version
       - name: Get Flutter packages & Install pods
         script: |
@@ -349,7 +354,7 @@ workflows:
             -t lib/main.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
-            --export-method ad-hoc
+            --export-options-plist=$CM_BUILD_DIR/recipients_app/ios/export_options.plist
         working_directory: recipients_app
 
     artifacts:
