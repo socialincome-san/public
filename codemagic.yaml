@@ -72,7 +72,7 @@ workflows:
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
-          flutter packages pub get
+          flutter pub get
         working_directory: recipients_app
       - name: Build AAB with Flutter
         script: |
