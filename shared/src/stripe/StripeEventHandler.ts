@@ -33,12 +33,12 @@ export class StripeEventHandler {
 
 		const checkoutMetadata = await this.getCheckoutMetadata(charge);
 
-		// We only store non-successful charges if the user already exists.
-		// This prevents us from having users in the database that never made a successful contribution.
-		if (
-			fullCharge.status === 'succeeded' ||
-			(await this.findFirestoreUser(await this.retrieveStripeCustomer(fullCharge.customer as string)))
-		) {
+		const firestoreUser = await this.findFirestoreUser(
+			await this.retrieveStripeCustomer(fullCharge.customer as string),
+		);
+		if (fullCharge.status === 'succeeded' || firestoreUser) {
+			// We only store non-successful charges if the user already exists.
+			// This prevents us from having users in the database that never made a successful contribution.
 			return await this.storeCharge(fullCharge, checkoutMetadata);
 		}
 		return null;
@@ -101,6 +101,7 @@ export class StripeEventHandler {
 		const plan = (charge.invoice as Stripe.Invoice)?.lines?.data[0]?.plan;
 		const monthlyInterval = plan?.interval === 'month' ? plan?.interval_count : plan?.interval === 'year' ? 12 : 0;
 		const balanceTransaction = charge.balance_transaction as Stripe.BalanceTransaction;
+
 		const contribution = {
 			source: ContributionSourceKey.STRIPE,
 			created: toFirebaseAdminTimestamp(DateTime.fromSeconds(charge.created)),
@@ -205,8 +206,8 @@ export class StripeEventHandler {
 		const contributionRef = (
 			userRef.collection(CONTRIBUTION_FIRESTORE_PATH) as CollectionReference<StripeContribution>
 		).doc(charge.id);
-		await contributionRef.set(contribution);
-		console.info(`Ingested ${charge.id} into firestore for user ${userRef.id}`);
+		await contributionRef.set(contribution, { merge: true });
+		console.info(`Updated contribution document: ${contributionRef.path}`);
 		await this.maybeUpdateCampaign(contribution);
 		return contributionRef;
 	};

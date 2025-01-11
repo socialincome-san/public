@@ -1,7 +1,6 @@
 import { DocumentReference, DocumentSnapshot } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { onRequest } from 'firebase-functions/v2/https';
-import Stripe from 'stripe';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
 import { SendgridSubscriptionClient } from '../../../../shared/src/sendgrid/SendgridSubscriptionClient';
 import { StripeEventHandler } from '../../../../shared/src/stripe/StripeEventHandler';
@@ -43,12 +42,14 @@ export default onRequest(async (request, response) => {
 	try {
 		const sig = request.headers['stripe-signature']!;
 		const event = stripeEventHandler.constructWebhookEvent(request.rawBody, sig, STRIPE_WEBHOOK_SECRET);
-		const charge = event.data.object as Stripe.Charge;
 		switch (event.type) {
 			case 'charge.succeeded':
+			// The charge.succeeded events do sometimes not contain the balance_transaction, so we need to listen to charge.updated event
+			// to get the final balance_transaction and update the contribution document with the final amount.
+			case 'charge.updated':
 			case 'charge.failed': {
-				const contributionRef = await stripeEventHandler.handleChargeEvent(charge);
-				logger.info(`Charge event ${event.type} handled for charge ${charge.id}.`);
+				const contributionRef = await stripeEventHandler.handleChargeEvent(event.data.object);
+				logger.info(`Charge event ${event.type} handled for charge ${event.data.object.id}.`);
 				if (contributionRef) {
 					logger.info(`Created contribution ${contributionRef.id}. Adding contributor to newsletter.`);
 					try {
