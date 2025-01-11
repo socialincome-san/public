@@ -156,14 +156,20 @@ locations as well:
 - .tool-versions (version file for version manager ASDF)
   - If you use 'asdf' run the comman `asdf local flutter x.y.z` #Replace
     x.y.z with the new Flutter version.
-  - Otherwise just update the version number in the file with the text editor
-- Update Flutter and dependent tool versions like Xcode, Java, etc. "env_versions" in codemagic.yaml
+  - Otherwise just update the version number in the file with the text
+    editor
+- Update Flutter and dependent tool versions like Xcode, Java, etc.
+  "env_versions" in codemagic.yaml
 
 ## CI/CD Pipelines
-We use CodeMagic to build our apps. The pipeline/workflows to build and release the apps are define in the file codemagic.yaml.
 
-CodeMagic documentation: https://docs.codemagic.io/yaml-quick-start/building-a-flutter-app/
-CodeMagic Cheetsheet: https://docs.codemagic.io/codemagic-yaml-cheatsheet.html
+We use CodeMagic to build our apps. The pipeline/workflows to build and
+release the apps are define in the file codemagic.yaml.
+
+CodeMagic documentation:
+https://docs.codemagic.io/yaml-quick-start/building-a-flutter-app/
+CodeMagic Cheetsheet:
+https://docs.codemagic.io/codemagic-yaml-cheatsheet.html
 
 ## Testing
 
