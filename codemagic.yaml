@@ -304,7 +304,7 @@ workflows:
     environment:
       ios_signing:
         distribution_type: ad_hoc
-        bundle_identifier: "*"
+        bundle_identifier: org.socialincome.app.stage
       groups:
         - slack
         - app-config-stage
