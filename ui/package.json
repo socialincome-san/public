@@ -4,21 +4,6 @@
 	"description": "The UI guidelines, specifications, assets and components to be used for Social Income services and platforms.",
 	"main": "src/index.ts",
 	"license": "MIT",
-	"devDependencies": {
-		"@tailwindcss/forms": "^0.5.7",
-		"@tailwindcss/typography": "^0.5.13",
-		"@types/react": "^18.2.73",
-		"autoprefixer": "^10.4.19",
-		"cssnano": "^7.0.4",
-		"postcss": "^8.4.39",
-		"postcss-import": "^16.1.0",
-		"postcss-nesting": "^12.1.5",
-		"prop-types": "^15.8.1",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"tailwind-merge": "^2.4.0",
-		"tailwindcss": "^3.4.4"
-	},
 	"dependencies": {
 		"@headlessui/react": "^2.1.2",
 		"@heroicons/react": "^2.1.5",
@@ -44,7 +29,6 @@
 		"@radix-ui/react-toggle": "^1.1.0",
 		"@radix-ui/react-toggle-group": "^1.1.0",
 		"@radix-ui/react-tooltip": "^1.1.2",
-		"@types/react": ">=18.3.3",
 		"class-variance-authority": "^0.7.0",
 		"classnames": "^2.5.1",
 		"clsx": "^2.1.1",
@@ -57,5 +41,20 @@
 		"react-hook-form": "^7.52.1",
 		"tailwindcss-animate": "^1.0.7",
 		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@tailwindcss/forms": "^0.5.7",
+		"@tailwindcss/typography": "^0.5.13",
+		"@types/react": "^18.3.18",
+		"autoprefixer": "^10.4.19",
+		"cssnano": "^7.0.4",
+		"postcss": "^8.4.39",
+		"postcss-import": "^16.1.0",
+		"postcss-nesting": "^12.1.5",
+		"prop-types": "^15.8.1",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"tailwind-merge": "^2.4.0",
+		"tailwindcss": "^3.4.4"
 	}
 }

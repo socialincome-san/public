@@ -62,6 +62,7 @@ export type TypographyProps<C extends React.ElementType> = {
 	weight?: FontWeight;
 	color?: FontColor;
 	lineHeight?: LineHeight;
+	children?: React.ReactNode;
 } & ComponentPropsWithoutRef<C>;
 
 export function Typography<C extends React.ElementType = 'p'>({

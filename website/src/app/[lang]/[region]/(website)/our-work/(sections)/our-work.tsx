@@ -45,6 +45,7 @@ export async function OurWork({ params }: DefaultPageProps) {
 				src={phonesGif}
 				alt="Change animation"
 				style={{ objectFit: 'cover' }}
+				unoptimized
 			/>
 		</BaseContainer>
 	);

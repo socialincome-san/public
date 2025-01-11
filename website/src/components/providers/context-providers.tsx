@@ -1,6 +1,6 @@
 'use client';
 
-import { CURRENCY_COOKIE, LANGUAGE_COOKIE, REGION_COOKIE } from '@/app/[lang]/[region]';
+import { COUNTRY_COOKIE, CURRENCY_COOKIE, LANGUAGE_COOKIE, REGION_COOKIE } from '@/app/[lang]/[region]';
 import { ApiProvider } from '@/components/providers/api-provider';
 import { GlobalStateProviderProvider } from '@/components/providers/global-state-provider';
 import { FacebookTracking } from '@/components/tracking/facebook-tracking';
@@ -10,6 +10,7 @@ import { useCookieState } from '@/hooks/useCookieState';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { initializeAnalytics } from '@firebase/analytics';
 import { DEFAULT_REGION } from '@socialincome/shared/src/firebase';
+import { CountryCode } from '@socialincome/shared/src/types/country';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Analytics } from '@vercel/analytics/react';
 import { ConsentSettings, ConsentStatusString, setConsent } from 'firebase/analytics';
@@ -140,6 +141,8 @@ function FirebaseSDKProviders({ children }: PropsWithChildren) {
 }
 
 type I18nContextType = {
+	country: CountryCode | undefined;
+	setCountry: (country: CountryCode) => void;
 	language: WebsiteLanguage | undefined;
 	setLanguage: (language: WebsiteLanguage) => void;
 	region: WebsiteRegion | undefined;
@@ -189,16 +192,19 @@ function I18nProvider({ children }: PropsWithChildren) {
 	const { value: language, setCookie: setLanguage } = useCookieState<WebsiteLanguage>(LANGUAGE_COOKIE);
 	const { value: region, setCookie: setRegion } = useCookieState<WebsiteRegion>(REGION_COOKIE);
 	const { value: currency, setCookie: setCurrency } = useCookieState<WebsiteCurrency>(CURRENCY_COOKIE);
+	const { value: country, setCookie: setCountry } = useCookieState<CountryCode>(COUNTRY_COOKIE);
 
 	return (
 		<I18nContext.Provider
 			value={{
+				country: country,
+				setCountry: (country) => setCountry(country, { expires: 7 }),
 				language: language,
-				setLanguage: (language) => setLanguage(language, { expires: 365 }),
+				setLanguage: (language) => setLanguage(language, { expires: 7 }),
 				region: region,
-				setRegion: (country) => setRegion(country, { expires: 365 }),
+				setRegion: (country) => setRegion(country, { expires: 7 }),
 				currency: currency,
-				setCurrency: (currency) => setCurrency(currency, { expires: 365 }),
+				setCurrency: (currency) => setCurrency(currency, { expires: 7 }),
 			}}
 		>
 			<Suspense fallback={null}>

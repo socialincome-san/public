@@ -1,6 +1,6 @@
-import { CURRENCY_COOKIE } from '@/app/[lang]/[region]';
+import { COUNTRY_COOKIE, CURRENCY_COOKIE } from '@/app/[lang]/[region]';
 import { WebsiteLanguage, WebsiteRegion, allWebsiteLanguages, findBestLocale, websiteRegions } from '@/i18n';
-import { CountryCode } from '@socialincome/shared/src/types/country';
+import { CountryCode, isValidCountryCode } from '@socialincome/shared/src/types/country';
 import { NextRequest, NextResponse } from 'next/server';
 import { bestGuessCurrency, isValidCurrency } from '../../shared/src/types/currency';
 
@@ -11,17 +11,39 @@ export const config = {
 	],
 };
 
-export const currencyMiddleware = (request: NextRequest, response: NextResponse) => {
-	// Checks if a valid currency is set as a cookie, and sets one with the best guess if not.
+/**
+ * Checks if a valid country is set as a cookie, and sets one based on the request header if available.
+ */
+const countryMiddleware = (request: NextRequest, response: NextResponse) => {
+	if (request.cookies.has(COUNTRY_COOKIE) && isValidCountryCode(request.cookies.get(COUNTRY_COOKIE)?.value!))
+		return response;
+
+	const requestCountry = request.geo?.country;
+	if (requestCountry)
+		response.cookies.set({
+			name: COUNTRY_COOKIE,
+			value: requestCountry as CountryCode,
+			path: '/',
+			maxAge: 60 * 60 * 24 * 7,
+		}); // 1 week
+	return response;
+};
+
+/**
+ * Checks if a valid currency is set as a cookie, and sets one based on the country cookie if available.
+ */
+const currencyMiddleware = (request: NextRequest, response: NextResponse) => {
 	if (request.cookies.has(CURRENCY_COOKIE) && isValidCurrency(request.cookies.get(CURRENCY_COOKIE)?.value))
 		return response;
 	// We use the country code from the request header if available. If not, we use the region/country from the url path.
-	const requestCountry = request.geo?.country || request.nextUrl.pathname.split('/').at(2)?.toUpperCase();
-	const currency = bestGuessCurrency(requestCountry as CountryCode);
-	response.cookies.set({ name: CURRENCY_COOKIE, value: currency, path: '/', maxAge: 60 * 60 * 24 * 365 }); // 1 year
+	const country = request.cookies.get(CURRENCY_COOKIE)?.value as CountryCode | undefined;
+	const currency = bestGuessCurrency(country);
+
+	response.cookies.set({ name: CURRENCY_COOKIE, value: currency, path: '/', maxAge: 60 * 60 * 24 * 7 }); // 1 week
 	return response;
 };
-export const redirectMiddleware = (request: NextRequest) => {
+
+const redirectMiddleware = (request: NextRequest) => {
 	switch (request.nextUrl.pathname) {
 		case '/twint':
 			return NextResponse.redirect('https://donate.raisenow.io/dpbdp');
@@ -53,7 +75,7 @@ export const redirectMiddleware = (request: NextRequest) => {
 	}
 };
 
-export const i18nRedirectMiddleware = (request: NextRequest) => {
+const i18nRedirectMiddleware = (request: NextRequest) => {
 	// Checks if the language and country in the URL are supported, and redirects to the best locale if not.
 	const segments = request.nextUrl.pathname.split('/');
 	const detectedLanguage = segments.at(1) ?? '';
@@ -82,7 +104,9 @@ export function middleware(request: NextRequest) {
 	let response = redirectMiddleware(request) || i18nRedirectMiddleware(request);
 	if (response) return response;
 
+	// If no redirect was triggered, we continue with the country and currency middleware.
 	response = NextResponse.next();
+	response = countryMiddleware(request, response);
 	response = currencyMiddleware(request, response);
 	return response;
 }

@@ -33,6 +33,8 @@ const addContributorToNewsletter = async (contributionRef: DocumentReference<Con
 /**
  * Stripe webhook to ingest charge events into firestore.
  * Adds the relevant information to the user's contributions subcollection.
+ * To test this in local development, you can use the Stripe CLI:
+ * stripe listen --forward-to http://127.0.0.1:5001/demo-social-income-local/europe-west6/stripeChargeHook
  */
 export default onRequest(async (request, response) => {
 	const firestoreAdmin = new FirestoreAdmin();
