@@ -1,5 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { CurrencyRedirect } from '@/app/[lang]/[region]/(website)/transparency/recipient-selection/[currency]/currency-redirect';
+import { CurrencyRedirect } from '@/app/[lang]/[region]/(website)/transparency/(components)/currency-redirect';
 import { WebsiteCurrency } from '@/i18n';
 import { SelectionFaq } from './(sections)/faq';
 import { HeroSection } from './(sections)/hero-section';
