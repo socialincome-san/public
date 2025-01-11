@@ -345,9 +345,11 @@ workflows:
         script: |
           #!/usr/bin/env sh
           set -e # exit on first failed command
-
+          flutter pub get
+          cd ios
           pod install
-        working_directory: recipients_app/ios
+          cd ..
+        working_directory: recipients_app
       - name: Flutter build ipa
         script: |
           #!/usr/bin/env sh
