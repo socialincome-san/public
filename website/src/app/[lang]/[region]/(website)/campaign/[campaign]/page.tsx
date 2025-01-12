@@ -161,7 +161,7 @@ export default async function Page({ params }: CampaignPageProps) {
 												<Typography size="md" color="primary">
 													{translator.t('campaign.with-goal.collected-amount', {
 														context: {
-															count: contributions,
+															count: contributions.docs.length,
 															amount: amountCollected,
 															currency: campaign.goal_currency,
 														},
