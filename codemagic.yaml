@@ -89,9 +89,7 @@ workflows:
 
     artifacts:
       - recipients_app/build/**/outputs/**/*.apk
-      - recipients_app/build/**/outputs/**/*.aab
       - recipients_app/build/**/outputs/**/mapping.txt
-      - flutter_drive.log
 
     publishing:
       #google_play:
@@ -183,9 +181,7 @@ workflows:
 
     artifacts:
       - recipients_app/build/**/outputs/**/*.apk
-      - recipients_app/build/**/outputs/**/*.aab
       - recipients_app/build/**/outputs/**/mapping.txt
-      - flutter_drive.log
 
     publishing:
       #google_play:
@@ -269,7 +265,6 @@ workflows:
     artifacts:
       - recipients_app/build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
-      - flutter_drive.log
 
     publishing:
       # Publish to Apple's Testflight via AppStore Connect
@@ -365,7 +360,6 @@ workflows:
     artifacts:
       - recipients_app/build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
-      - flutter_drive.log
 
     publishing:
       # Publish to Firebase App Distribution
@@ -458,7 +452,6 @@ workflows:
     artifacts:
       - recipients_app/build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
-      - flutter_drive.log
 
     publishing:
       # Publish to Apple's Testflight via AppStore Connect
