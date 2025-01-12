@@ -7,7 +7,7 @@ definitions:
     flutter: 3.27.1
     xcode: 16.2
     cocoapods: 1.16.2
-    java: 17
+    java: 21
 
   scripts:
     - &verify_flutter_version
