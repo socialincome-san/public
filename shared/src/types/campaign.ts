@@ -17,8 +17,6 @@ export type Campaign = {
 	link_tiktok?: string;
 	link_facebook?: string;
 	link_x?: string;
-	amount_collected_chf: number; // automatically updated by incoming payments.
-	contributions: number; // automatically updated by incoming payments.
 	goal?: number;
 	goal_currency?: Currency;
 	end_date: Timestamp;

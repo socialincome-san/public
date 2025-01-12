@@ -139,26 +139,6 @@ export class StripeEventHandler {
 		}
 	};
 
-	/**
-	 * Increments the total donations of a campaign if the charge is associated with a campaignId.
-	 */
-	maybeUpdateCampaign = async (contribution: StripeContribution): Promise<void> => {
-		if (contribution.campaign_path) {
-			try {
-				const campaign = await contribution.campaign_path.get();
-				const current_contributions = campaign.data()?.contributions ?? 0;
-				const current_amount_chf = campaign.data()?.amount_collected_chf ?? 0;
-				await contribution.campaign_path.update({
-					contributions: current_contributions + 1,
-					amount_collected_chf: current_amount_chf + contribution.amount_chf,
-				});
-				console.log(`Campaign amount ${contribution.campaign_path} updated.`);
-			} catch (error) {
-				console.error(`Error updating campaign amount ${contribution.campaign_path}.`, error);
-			}
-		}
-	};
-
 	constructStatus = (status: Stripe.Charge.Status) => {
 		switch (status) {
 			case 'succeeded':
@@ -207,7 +187,6 @@ export class StripeEventHandler {
 		).doc(charge.id);
 		await contributionRef.set(contribution, { merge: true });
 		console.info(`Updated contribution document: ${contributionRef.path}`);
-		await this.maybeUpdateCampaign(contribution);
 		return contributionRef;
 	};
 }

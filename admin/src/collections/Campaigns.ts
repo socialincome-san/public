@@ -69,44 +69,34 @@ export const campaignsCollection = buildAuditedCollection<Campaign>({
 			multiline: true,
 		},
 		link_website: {
-			title: 'Website Link',
+			name: 'Website Link',
 			dataType: 'string',
 			validation: { required: false },
 			description: 'The link to the website (optional)',
 		},
 		link_instagram: {
-			title: 'Instagram Link',
+			name: 'Instagram Link',
 			dataType: 'string',
 			validation: { required: false },
 			description: 'The link to the Instagram profile (optional)',
 		},
 		link_tiktok: {
-			title: 'TikTok Link',
+			name: 'TikTok Link',
 			dataType: 'string',
 			validation: { required: false },
 			description: 'The link to the TikTok profile (optional)',
 		},
 		link_facebook: {
-			title: 'Facebook Link',
+			name: 'Facebook Link',
 			dataType: 'string',
 			validation: { required: false },
 			description: 'The link to the Facebook profile (optional)',
 		},
 		link_x: {
-			title: 'X (formerly Twitter) Link',
+			name: 'X (formerly Twitter) Link',
 			dataType: 'string',
 			validation: { required: false },
 			description: 'The link to the X profile (optional)',
-		},
-		amount_collected_chf: {
-			dataType: 'number',
-			name: 'Collected amount in CHF',
-			readOnly: true,
-		},
-		contributions: {
-			dataType: 'number',
-			name: 'Contributions',
-			readOnly: true,
 		},
 		goal: {
 			dataType: 'number',
@@ -152,7 +142,7 @@ export const campaignsCollection = buildAuditedCollection<Campaign>({
 			validation: {
 				required: true,
 				matches: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
-				matchMessage: 'Slug must contain only lowercase letters, numbers, and hyphens',
+				matchesMessage: 'Slug must contain only lowercase letters, numbers, and hyphens',
 			},
 			description:
 				'URL-friendly version of the title. Must be unique and contain only lowercase letters, numbers, and hyphens.',
