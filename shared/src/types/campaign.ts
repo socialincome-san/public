@@ -19,6 +19,7 @@ export type Campaign = {
 	link_x?: string;
 	goal?: number;
 	goal_currency?: Currency;
+	additional_amount_chf?: number;
 	end_date: Timestamp;
 	status: CampaignStatus;
 	public?: boolean;

@@ -111,6 +111,12 @@ export const campaignsCollection = buildAuditedCollection<Campaign>({
 				EUR: 'EUR',
 			},
 		},
+		additional_amount_chf: {
+			dataType: 'number',
+			name: 'Additional Amount CHF',
+			description:
+				'Amount that is added to the amount raised (e.g. estimated amount that was donated because of the campaign, but not through the campaign page)',
+		},
 		end_date: {
 			// @ts-ignore
 			dataType: 'date',
@@ -140,7 +146,6 @@ export const campaignsCollection = buildAuditedCollection<Campaign>({
 			dataType: 'string',
 			name: 'Url Slug',
 			validation: {
-				required: true,
 				matches: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
 				matchesMessage: 'Slug must contain only lowercase letters, numbers, and hyphens',
 			},

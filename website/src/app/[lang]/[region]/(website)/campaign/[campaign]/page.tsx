@@ -90,7 +90,10 @@ export default async function Page({ params }: CampaignPageProps) {
 		.collectionGroup<Contribution>(CONTRIBUTION_FIRESTORE_PATH)
 		.where('campaign_path', '==', firestoreAdmin.firestore.doc([CAMPAIGN_FIRESTORE_PATH, params.campaign].join('/')))
 		.get();
-	const amountCollected = (contributions.docs.reduce((sum, c) => sum + c.data().amount_chf, 0) ?? 0) * exchangeRate;
+	let amountCollected = contributions.docs.reduce((sum, c) => sum + c.data().amount_chf, 0);
+	amountCollected += campaign.additional_amount_chf || 0;
+	amountCollected *= exchangeRate;
+
 	const percentageCollected = campaign.goal ? Math.round((amountCollected / campaign.goal) * 100) : undefined;
 	const daysLeft = daysUntilTs(campaign.end_date.toDate());
 
