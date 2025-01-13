@@ -9,7 +9,7 @@ Mobile App for Recipients of a Social Income.
 - Java JDK 17
 - Android Studio LadyBug or later
 - Latest vsCode
-- Xcode 16.1
+- Xcode 16.x
 
 ## Configure the Apple Silicon Mac environment to build our app
 
@@ -26,23 +26,25 @@ Mobile App for Recipients of a Social Income.
     export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools"
     ```
   - Restart your terminal so that these changes take effect
-- Install Java 17 via Homebrew `brew install openjdk@17`
-  - Homebrew is telling you to execute a symlink command, so that the
-    system Java wrappers can find this JDK. Please do this.
-  - Additionally in your USER's HOME directory in the file '.zshrc', add
-    the lines to set the JAVA_HOME environment variable to Java 17 and
-    add Java to the PATH environment variable
-    ```shell
-    export JAVA_HOME=$(/usr/libexec/java_home -v17)
-    export PATH="$PATH:$JAVA_HOME/bin"
-    ```
-  - Restart your terminal so that these changes take effect
-- Install Flutter
-  - Tell Flutter to use our Java 17 JDK and not the one bundle with
-    Android Studio via `flutter config --jdk-dir "$JAVA_HOME"`.
-    Otherwise, you will get the error "Unsupported class file major
-    version 65” when building the app for Android.
-  - Restart your terminal and IDE so that these changes take effect
+- Optional: Pin Flutter's JDK version and do not use the JDK from
+  Android Studio by default
+  - Install Java 21 via Homebrew `brew install openjdk@21`
+    - Homebrew is telling you to execute a symlink command, so that the
+      system Java wrappers can find this JDK. Please do this.
+    - Additionally in your USER's HOME directory in the file '.zshrc',
+      add the lines to set the JAVA_HOME environment variable to Java 21
+      and add Java to the PATH environment variable
+      ```shell
+      export JAVA_HOME=$(/usr/libexec/java_home -v21)
+      export PATH="$PATH:$JAVA_HOME/bin"
+      ```
+    - Restart your terminal so that these changes take effect
+  - Install Flutter
+    - Tell Flutter to use our Java 21 JDK and not the one bundle with
+      Android Studio via `flutter config --jdk-dir "$JAVA_HOME"`.
+      Otherwise, you will get the error "Unsupported class file major
+      version XX" when building the app for Android.
+    - Restart your terminal and IDE so that these changes take effect
 - Install vsCode
   - Install Flutter extension
 - Install Xcode
@@ -154,7 +156,20 @@ locations as well:
 - .tool-versions (version file for version manager ASDF)
   - If you use 'asdf' run the comman `asdf local flutter x.y.z` #Replace
     x.y.z with the new Flutter version.
-  - Otherwise just update the version number in the file
+  - Otherwise just update the version number in the file with the text
+    editor
+- Update Flutter and dependent tool versions like Xcode, Java, etc.
+  "env_versions" in codemagic.yaml
+
+## CI/CD Pipelines
+
+We use CodeMagic to build our apps. The pipeline/workflows to build and
+release the apps are define in the file codemagic.yaml.
+
+CodeMagic documentation:
+https://docs.codemagic.io/yaml-quick-start/building-a-flutter-app/
+CodeMagic Cheetsheet:
+https://docs.codemagic.io/codemagic-yaml-cheatsheet.html
 
 ## Testing
 

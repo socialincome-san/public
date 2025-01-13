@@ -45,7 +45,7 @@ class _InputDropdownState<T> extends State<InputDropdown<T>> {
             contentPadding: AppSpacings.h12v16,
             label: Text(widget.label),
             labelStyle: AppStyles.inputHint.copyWith(
-              color: AppColors.darkGrey.withOpacity(0.6),
+              color: AppColors.darkGrey.withValues(alpha: 0.6),
               fontWeight: FontWeight.bold,
             ),
             border: OutlineInputBorder(
@@ -73,7 +73,7 @@ class _InputDropdownState<T> extends State<InputDropdown<T>> {
             child: Text(
               widget.label,
               style: AppStyles.inputHint.copyWith(
-                color: AppColors.darkGrey.withOpacity(0.6),
+                color: AppColors.darkGrey.withValues(alpha: 0.6),
                 fontWeight: FontWeight.bold,
                 fontSize: 12,
               ),
