@@ -1,4 +1,5 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
+import "package:app/demo_manager.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:flutter/material.dart";
@@ -18,6 +19,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
   late final RoundedLoadingButtonController btnController;
   late final TextEditingController phoneNumberController;
   late PhoneNumber number;
+  late DemoManager demoManager;
 
   @override
   void initState() {
@@ -25,6 +27,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
     btnController = RoundedLoadingButtonController();
     phoneNumberController = TextEditingController();
     number = PhoneNumber(isoCode: "SL");
+    demoManager = DemoManager();
   }
 
   @override
@@ -45,6 +48,18 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Align(
+              alignment: Alignment.topRight,
+              child: SafeArea(
+                child: ButtonSmall(
+                  onPressed: () {
+                    demoManager.isDemoEnabled = true;
+                  },
+                  label: localizations.demoCta,
+                  buttonType: ButtonSmallType.outlined,
+                ),
+              ),
+            ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -97,10 +112,8 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                           ),
                           inputDecoration: InputDecoration(
                             labelText: localizations.phoneNumber,
-                            labelStyle: Theme.of(context)
-                                .textTheme
-                                .headlineMedium!
-                                .copyWith(color: AppColors.primaryColor),
+                            labelStyle:
+                                Theme.of(context).textTheme.headlineMedium!.copyWith(color: AppColors.primaryColor),
                             enabledBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: AppColors.primaryColor),
                               borderRadius: BorderRadius.all(Radius.circular(10)),

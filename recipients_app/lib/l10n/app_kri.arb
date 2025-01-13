@@ -176,5 +176,7 @@
     "invalidVerificationCodeError": "Di spɛshal kod we wi sɛn yu nɔ kɔrɛkt. Duya chɛk di SMS kod ɛn tray bak.",
     "userDisabledError": "Wi dɔn lɔk yu akawnt. Rich awt to wi if yu want fɔ no mɔ.",
     "invalidCredentialError": " Di fon nɔmba ɔ di spɛshal kod we wi sɛn to yu in tɛm dɔn pas fɔ yuz. Duya tray bak.",
-    "errorEmailInvalid": "Imel nɔ kɔrɛkt"
+    "errorEmailInvalid": "Imel nɔ kɔrɛkt",
+    "demoCta": "Demo",
+    "createAccountDemo": "Enta di demo"
 }
