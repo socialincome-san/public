@@ -4,6 +4,7 @@ import { FAQ } from '@/app/[lang]/[region]/(website)/(home)/(sections)/faq';
 import { Quotes } from '@/app/[lang]/[region]/(website)/(home)/(sections)/quotes';
 import { SDGGoals } from '@/app/[lang]/[region]/(website)/(home)/(sections)/sdg-goals';
 import { Testimonials } from '@/app/[lang]/[region]/(website)/(home)/(sections)/testimonials';
+import { ActiveFundraisers } from './(sections)/active-fundraisers';
 import { ExplainerVideo } from './(sections)/explainer-video';
 import { HeroVideo } from './(sections)/hero-video';
 import { MobileIllustration } from './(sections)/mobile-illustration';
@@ -14,6 +15,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 	return (
 		<div className="hero-video -mb-28 -mt-24 md:-mt-36">
 			<HeroVideo lang={lang} region={region} />
+			<ActiveFundraisers lang={lang} region={region} />
 			<Overview lang={lang} region={region} />
 			<MonthlyIncome lang={lang} region={region} />
 			<ExplainerVideo lang={lang} region={region} />
