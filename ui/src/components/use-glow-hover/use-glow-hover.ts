@@ -9,11 +9,7 @@ export const useGlowHover = ({ disabled = false, ...options }: GlowHoverHookOpti
 	const ref = useRef<HTMLElement>(null);
 
 	useEffect(
-		() =>
-			!disabled && ref.current
-				? glowHoverEffect(ref.current, options)
-				:
-					() => {},
+		() => (!disabled && ref.current ? glowHoverEffect(ref.current, options) : () => {}),
 		[disabled, ...Object.values(options)],
 	);
 	return ref;
