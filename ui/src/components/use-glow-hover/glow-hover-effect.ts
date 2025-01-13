@@ -1,13 +1,6 @@
 'use client';
 
 import { linearAnimation } from './linear-animation';
-/*import presets, { GlowHoverPreset } from './presets';*/
-
-/*import {
-  forceLightTheme,
-  forceDarkTheme,
-  resetForcedTheme
-} from './theme-utils';*/
 
 export type GlowHoverOptions = {
 	hoverBg?: string;
@@ -16,10 +9,6 @@ export type GlowHoverOptions = {
 	lightSizeLeaveAnimationTime?: number;
 	isElementMovable?: boolean;
 	customStaticBg?: string;
-	/*  /!**
-   * Force theme on hover. Use with caution.
-   *!/
-  forceTheme?: 'light' | 'dark' | false;*/
 	enableBurst?: boolean;
 } & (
 	| {
@@ -57,20 +46,10 @@ export function parseColor(colorToParse: string) {
 	}
 }
 
-// eslint-disable-next-line complexity
 export const glowHoverEffect = (el: HTMLElement, { preset, ...options }: GlowHoverOptions) => {
 	if (!el) {
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		return () => {};
 	}
-	/*let presetCfg: GlowHoverPreset = {};
-  if (preset) {
-    const maybePreset = presets[preset] as GlowHoverPreset;
-    if (!maybePreset) {
-      throw new Error(`Unknown preset ${preset}`);
-    }
-    presetCfg = maybePreset;
-  }*/
 
 	const lightColor = options.lightColor ?? '#CEFF00';
 	const lightSize = options.lightSize ?? 130;
@@ -78,8 +57,6 @@ export const glowHoverEffect = (el: HTMLElement, { preset, ...options }: GlowHov
 	const lightSizeLeaveAnimationTime = options.lightSizeLeaveAnimationTime ?? 50;
 	const isElementMovable = options.isElementMovable ?? false;
 	const customStaticBg = options.customStaticBg ?? null;
-
-	/*let forceTheme = options.forceTheme ?? null;*/
 
 	const enableBurst = options.enableBurst ?? false;
 
@@ -136,12 +113,6 @@ export const glowHoverEffect = (el: HTMLElement, { preset, ...options }: GlowHov
 		window.cancelAnimationFrame(lightSizeEnterAnimationId);
 		window.cancelAnimationFrame(lightSizeLeaveAnimationId);
 
-		/*if (forceTheme === 'light') {
-      forceLightTheme(el);
-    } else if (forceTheme === 'dark') {
-      forceDarkTheme(el);
-    }*/
-
 		// animate currentLightSize from 0 to lightSize
 		linearAnimation({
 			onProgress: (progress) => {
@@ -181,10 +152,6 @@ export const glowHoverEffect = (el: HTMLElement, { preset, ...options }: GlowHov
 				} else {
 					el.style.background = customStaticBg ? customStaticBg : '';
 				}
-
-				/*if (forceTheme && progress === 1) {
-          resetForcedTheme(el);
-        }*/
 			},
 			time: lightSizeLeaveAnimationTime,
 			initialProgress: 1 - currentLightSize / lightSize,
@@ -261,10 +228,6 @@ export const glowHoverEffect = (el: HTMLElement, { preset, ...options }: GlowHov
 			el.removeEventListener('mousedown', onMouseDown);
 			el.removeEventListener('mouseup', onMouseUp);
 		}
-
-		/*if (forceTheme) {
-      resetForcedTheme(el);
-    }*/
 
 		if (resizeObserver) {
 			resizeObserver.unobserve(el);

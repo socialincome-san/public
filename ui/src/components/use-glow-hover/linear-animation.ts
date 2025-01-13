@@ -9,7 +9,6 @@ interface LinearAnimationParams {
 
 export const linearAnimation = ({
 	onProgress,
-	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	onIdUpdate = () => {},
 	time,
 	initialProgress = 0,

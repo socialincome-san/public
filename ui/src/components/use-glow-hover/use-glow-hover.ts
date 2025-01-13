@@ -12,7 +12,7 @@ export const useGlowHover = ({ disabled = false, ...options }: GlowHoverHookOpti
 		() =>
 			!disabled && ref.current
 				? glowHoverEffect(ref.current, options)
-				: // eslint-disable-next-line @typescript-eslint/no-empty-function
+				:
 					() => {},
 		[disabled, ...Object.values(options)],
 	);
