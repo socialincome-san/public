@@ -39,7 +39,7 @@ function BarchartSurveyResponseComponent({ data }: { data: ChartData[] }) {
 				barGap={0}
 				barCategoryGap="0%"
 			>
-				<Bar barSize={barHeight} dataKey="value" fill={fillColor}>
+				<Bar barSize={barHeight} dataKey="value" fill={fillColor} radius={[4, 4, 4, 4]}>
 					<LabelList dataKey="name" position="right" content={customLabel} />
 				</Bar>
 				<XAxis type="number" hide />
@@ -48,7 +48,7 @@ function BarchartSurveyResponseComponent({ data }: { data: ChartData[] }) {
 					dataKey="value"
 					axisLine={false}
 					tickLine={false}
-					className={'font-bold'}
+					className={'font-medium'}
 					tick={{ fill: fillColor }}
 					tickFormatter={(value) => `${value}%`}
 					minTickGap={1}
