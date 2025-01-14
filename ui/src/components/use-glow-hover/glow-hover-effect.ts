@@ -111,8 +111,12 @@ export const glowHoverEffect = (el: HTMLElement, { preset, ...options }: GlowHov
 		const curBox = el.getBoundingClientRect();
 		lastElPos = { x: curBox.left, y: curBox.top };
 		isMouseInside = true;
-		window.cancelAnimationFrame(lightSizeEnterAnimationId);
-		window.cancelAnimationFrame(lightSizeLeaveAnimationId);
+		if (lightSizeEnterAnimationId !== undefined) {
+			window.cancelAnimationFrame(lightSizeEnterAnimationId);
+		}
+		if (lightSizeLeaveAnimationId !== undefined) {
+			window.cancelAnimationFrame(lightSizeLeaveAnimationId);
+		}
 
 		// animate currentLightSize from 0 to lightSize
 		linearAnimation({
@@ -137,10 +141,18 @@ export const glowHoverEffect = (el: HTMLElement, { preset, ...options }: GlowHov
 
 	const onMouseLeave = () => {
 		isMouseInside = false;
-		window.cancelAnimationFrame(lightSizeEnterAnimationId);
-		window.cancelAnimationFrame(lightSizeLeaveAnimationId);
-		window.cancelAnimationFrame(blownSizeIncreaseAnimationId);
-		window.cancelAnimationFrame(blownSizeDecreaseAnimationId);
+		if (lightSizeEnterAnimationId !== undefined) {
+			window.cancelAnimationFrame(lightSizeEnterAnimationId);
+		}
+		if (lightSizeLeaveAnimationId !== undefined) {
+			window.cancelAnimationFrame(lightSizeLeaveAnimationId);
+		}
+		if (blownSizeIncreaseAnimationId !== undefined) {
+			window.cancelAnimationFrame(blownSizeIncreaseAnimationId);
+		}
+		if (blownSizeDecreaseAnimationId !== undefined) {
+			window.cancelAnimationFrame(blownSizeDecreaseAnimationId);
+		}
 
 		// animate currentLightSize from lightSize to 0
 		linearAnimation({
@@ -164,8 +176,12 @@ export const glowHoverEffect = (el: HTMLElement, { preset, ...options }: GlowHov
 		lastMousePos = { x: e.clientX, y: e.clientY };
 		const curBox = el.getBoundingClientRect();
 		lastElPos = { x: curBox.left, y: curBox.top };
-		window.cancelAnimationFrame(blownSizeIncreaseAnimationId);
-		window.cancelAnimationFrame(blownSizeDecreaseAnimationId);
+		if (blownSizeIncreaseAnimationId !== undefined) {
+			window.cancelAnimationFrame(blownSizeIncreaseAnimationId);
+		}
+		if (blownSizeDecreaseAnimationId !== undefined) {
+			window.cancelAnimationFrame(blownSizeDecreaseAnimationId);
+		}
 
 		// animate blownSize from 0 to 100
 		linearAnimation({
@@ -183,8 +199,12 @@ export const glowHoverEffect = (el: HTMLElement, { preset, ...options }: GlowHov
 		lastMousePos = { x: e.clientX, y: e.clientY };
 		const curBox = el.getBoundingClientRect();
 		lastElPos = { x: curBox.left, y: curBox.top };
-		window.cancelAnimationFrame(blownSizeIncreaseAnimationId);
-		window.cancelAnimationFrame(blownSizeDecreaseAnimationId);
+		if (blownSizeIncreaseAnimationId !== undefined) {
+			window.cancelAnimationFrame(blownSizeIncreaseAnimationId);
+		}
+		if (blownSizeDecreaseAnimationId !== undefined) {
+			window.cancelAnimationFrame(blownSizeDecreaseAnimationId);
+		}
 
 		// animate blownSize from 100 to 0
 		linearAnimation({
@@ -215,10 +235,18 @@ export const glowHoverEffect = (el: HTMLElement, { preset, ...options }: GlowHov
 	}
 
 	return () => {
-		window.cancelAnimationFrame(lightSizeEnterAnimationId);
-		window.cancelAnimationFrame(lightSizeLeaveAnimationId);
-		window.cancelAnimationFrame(blownSizeIncreaseAnimationId);
-		window.cancelAnimationFrame(blownSizeDecreaseAnimationId);
+		if (lightSizeEnterAnimationId !== undefined) {
+			window.cancelAnimationFrame(lightSizeEnterAnimationId);
+		}
+		if (lightSizeLeaveAnimationId !== undefined) {
+			window.cancelAnimationFrame(lightSizeLeaveAnimationId);
+		}
+		if (blownSizeIncreaseAnimationId !== undefined) {
+			window.cancelAnimationFrame(blownSizeIncreaseAnimationId);
+		}
+		if (blownSizeDecreaseAnimationId !== undefined) {
+			window.cancelAnimationFrame(blownSizeDecreaseAnimationId);
+		}
 
 		document.removeEventListener('scroll', updateEffectWithPosition);
 		window.removeEventListener('resize', updateEffectWithPosition);
