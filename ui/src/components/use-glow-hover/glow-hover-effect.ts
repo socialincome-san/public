@@ -13,14 +13,14 @@ export type GlowHoverOptions = {
 	enableBurst?: boolean;
 } & (
 	| {
-			preset: keyof typeof presets;
-			lightColor?: string;
-	  }
+	preset: keyof typeof presets;
+	lightColor?: string;
+}
 	| {
-			preset?: undefined;
-			lightColor: string;
-	  }
-);
+	preset?: undefined;
+	lightColor: string;
+}
+	);
 
 type Coords = {
 	x: number;

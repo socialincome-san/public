@@ -2,35 +2,37 @@
 
 interface LinearAnimationParams {
 	onProgress: (progress: number) => void;
-	onIdUpdate?: (id: number) => void;
+	onIdUpdate?: (id: number | undefined) => void;
 	time: number;
 	initialProgress?: number;
 }
 
 export const linearAnimation = ({
-	onProgress,
-	onIdUpdate = () => {},
-	time,
-	initialProgress = 0,
-}: LinearAnimationParams) => {
+																	onProgress,
+																	onIdUpdate = () => {},
+																	time,
+																	initialProgress = 0,
+																}: LinearAnimationParams) => {
 	if (time === 0) {
 		onProgress(1);
-		onIdUpdate(null);
+		onIdUpdate(undefined);
 		return;
 	}
 
-	let start: number = null;
+	let start: number | undefined = undefined;
 	const step = (timestamp: number) => {
-		if (!start) start = timestamp;
+		if (start === undefined) start = timestamp;
 		const progress = Math.min((timestamp - start) / time + initialProgress, 1);
 
 		onProgress(progress);
 
 		if (progress < 1) {
-			onIdUpdate(window.requestAnimationFrame(step));
+			const id = window.requestAnimationFrame(step);
+			onIdUpdate(id);
 		} else {
-			onIdUpdate(null);
+			onIdUpdate(undefined);
 		}
 	};
-	onIdUpdate(window.requestAnimationFrame(step));
+	const id = window.requestAnimationFrame(step);
+	onIdUpdate(id);
 };
