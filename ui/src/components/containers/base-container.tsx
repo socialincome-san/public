@@ -7,6 +7,7 @@ import { useGlowHover } from '../use-glow-hover';
 
 type BaseContainerProps = {
 	backgroundColor?: BackgroundColor;
+	wrapperClassName?: string;
 	wrapperRef?: React.Ref<HTMLDivElement>;
 } & React.HTMLAttributes<HTMLDivElement>;
 
