@@ -1,6 +1,7 @@
 'use client';
 
 import { linearAnimation } from './linear-animation';
+import { presets } from './presets'; // Ensure this import statement is present
 
 export type GlowHoverOptions = {
 	hoverBg?: string;
@@ -10,16 +11,16 @@ export type GlowHoverOptions = {
 	isElementMovable?: boolean;
 	customStaticBg?: string;
 	enableBurst?: boolean;
-} & (
-	| {
-			/*preset: keyof typeof presets;*/
+		} & (
+			| {
+			preset: keyof typeof presets;
 			lightColor?: string;
-	  }
-	| {
-			/*preset?: never;*/
+		}
+			| {
+			preset?: undefined;
 			lightColor: string;
-	  }
-);
+		}
+	);
 
 type Coords = {
 	x: number;
