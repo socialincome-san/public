@@ -11,16 +11,16 @@ export type GlowHoverOptions = {
 	isElementMovable?: boolean;
 	customStaticBg?: string;
 	enableBurst?: boolean;
-		} & (
-			| {
+} & (
+	| {
 			preset: keyof typeof presets;
 			lightColor?: string;
-		}
-			| {
+	  }
+	| {
 			preset?: undefined;
 			lightColor: string;
-		}
-	);
+	  }
+);
 
 type Coords = {
 	x: number;
