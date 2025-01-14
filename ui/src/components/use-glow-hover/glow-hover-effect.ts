@@ -1,7 +1,7 @@
 'use client';
 
 import { linearAnimation } from './linear-animation';
-import { presets } from './presets'; // Ensure this import statement is present
+import { presets } from './presets';
 
 export type GlowHoverOptions = {
 	hoverBg?: string;
@@ -11,15 +11,15 @@ export type GlowHoverOptions = {
 	isElementMovable?: boolean;
 	customStaticBg?: string;
 	enableBurst?: boolean;
-		} & (
-			| {
-			preset: keyof typeof presets;
-			lightColor?: string;
-		}
-			| {
-			preset?: undefined;
-			lightColor: string;
-		}
+} & (
+	| {
+	preset: keyof typeof presets;
+	lightColor?: string;
+}
+	| {
+	preset?: undefined;
+	lightColor: string;
+}
 	);
 
 type Coords = {
@@ -74,10 +74,10 @@ export const glowHoverEffect = (el: HTMLElement, { preset, ...options }: GlowHov
 	let isMouseInside = false;
 	let currentLightSize = 0;
 	let blownSize = 0;
-	let lightSizeEnterAnimationId: number = null;
-	let lightSizeLeaveAnimationId: number = null;
-	let blownSizeIncreaseAnimationId: number = null;
-	let blownSizeDecreaseAnimationId: number = null;
+	let lightSizeEnterAnimationId: number | undefined = undefined;
+	let lightSizeLeaveAnimationId: number | undefined = undefined;
+	let blownSizeIncreaseAnimationId: number | undefined = undefined;
+	let blownSizeDecreaseAnimationId: number | undefined = undefined;
 	let lastMousePos: Coords;
 	const defaultBox = el.getBoundingClientRect();
 	let lastElPos: Coords = { x: defaultBox.left, y: defaultBox.top };
