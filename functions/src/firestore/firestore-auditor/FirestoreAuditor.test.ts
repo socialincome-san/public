@@ -1,6 +1,6 @@
 import { beforeEach, describe, test } from '@jest/globals';
 import functionsTest from 'firebase-functions-test';
-import auditCollectionTriggerFunction from '.';
+import auditFirestore from '.';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
 import { getOrInitializeFirebaseAdmin } from '../../../../shared/src/firebase/admin/app';
 
@@ -35,9 +35,9 @@ describe('FirestoreAuditor', () => {
 		await testDoc.set({ foo: 'bar' });
 		const snap = testEnv.firestore.makeDocumentSnapshot({ foo: 'bar' }, testDoc.path);
 		const change = testEnv.makeChange(null, snap);
-		const wrapped = testEnv.wrap(auditCollectionTriggerFunction);
+		const wrapped = testEnv.wrap(auditFirestore);
 		// call the trigger with the simulated change
-		await wrapped(change);
+		await wrapped({ data: change });
 		// retrieve the doc. Test that last_updated_at is set
 		const updatedDoc = await testDoc.get();
 		expect(updatedDoc.data()!.foo).toEqual('bar');
@@ -53,9 +53,9 @@ describe('FirestoreAuditor', () => {
 		await testSubColDoc.set({ foo: 'bar' });
 		const snap = testEnv.firestore.makeDocumentSnapshot({ foo: 'bar' }, testSubColDoc.path);
 		const change = testEnv.makeChange(null, snap);
-		const wrapped = testEnv.wrap(auditCollectionTriggerFunction);
+		const wrapped = testEnv.wrap(auditFirestore);
 		// call the trigger with the simulated change
-		await wrapped(change);
+		await wrapped({ data: change });
 		// retrieve the doc. Test that last_updated_at is set
 		const updatedDoc = await testSubColDoc.get();
 		expect(updatedDoc.data()!.foo).toEqual('bar');
@@ -76,9 +76,9 @@ describe('FirestoreAuditor', () => {
 		const snapBefore = testEnv.firestore.makeDocumentSnapshot({ foo: 'before', last_updated_at: 123 }, testDoc.path);
 		const snapAfter = testEnv.firestore.makeDocumentSnapshot({ foo: 'after' }, testDoc.path);
 		const change = testEnv.makeChange(snapBefore, snapAfter);
-		const wrapped = testEnv.wrap(auditCollectionTriggerFunction);
+		const wrapped = testEnv.wrap(auditFirestore);
 		// call the trigger with the simulated change
-		await wrapped(change);
+		await wrapped({ data: change });
 		// retrieve the doc. Test that last_updated_at is updated
 		const updatedDoc = await testDoc.get();
 		expect(updatedDoc.data()!.foo).toEqual('after');
@@ -101,9 +101,9 @@ describe('FirestoreAuditor', () => {
 		);
 		const snapAfter = testEnv.firestore.makeDocumentSnapshot({ foo: 'after' }, testSubColDoc.path);
 		const change = testEnv.makeChange(snapBefore, snapAfter);
-		const wrapped = testEnv.wrap(auditCollectionTriggerFunction);
+		const wrapped = testEnv.wrap(auditFirestore);
 		// call the trigger with the simulated change
-		await wrapped(change);
+		await wrapped({ data: change });
 		// retrieve the doc. Test that last_updated_at is updated
 		const updatedDoc = await testSubColDoc.get();
 		expect(updatedDoc.data()!.foo).toEqual('after');
@@ -121,9 +121,9 @@ describe('FirestoreAuditor', () => {
 		// setup simulated deletion
 		const snapBefore = testEnv.firestore.makeDocumentSnapshot({ foo: 'before', last_updated_at: 123 }, testDoc.path);
 		const change = testEnv.makeChange(snapBefore, null);
-		const wrapped = testEnv.wrap(auditCollectionTriggerFunction);
+		const wrapped = testEnv.wrap(auditFirestore);
 		// call the trigger with the simulated change
-		await wrapped(change);
+		await wrapped({ data: change });
 
 		// test that the history is populated
 		const history = await testColHistoryEntry.get();
@@ -140,9 +140,9 @@ describe('FirestoreAuditor', () => {
 			testSubColDoc.path,
 		);
 		const change = testEnv.makeChange(snapBefore, null);
-		const wrapped = testEnv.wrap(auditCollectionTriggerFunction);
+		const wrapped = testEnv.wrap(auditFirestore);
 		// call the trigger with the simulated change
-		await wrapped(change);
+		await wrapped({ data: change });
 
 		// test that the history is populated
 		const history = await testSubColHistoryEntry.get();
@@ -159,9 +159,9 @@ describe('FirestoreAuditor', () => {
 		await testHistoryEntry.set({ foo: 'bar' });
 		const snap = testEnv.firestore.makeDocumentSnapshot({ foo: 'bar' }, testHistoryEntry.path);
 		const change = testEnv.makeChange(null, snap);
-		const wrapped = testEnv.wrap(auditCollectionTriggerFunction);
+		const wrapped = testEnv.wrap(auditFirestore);
 		// call the trigger with the simulated change
-		await wrapped(change);
+		await wrapped({ data: change });
 		// retrieve the doc. Test that last_updated_at is not set
 		const updatedDoc = await testHistoryEntry.get();
 		expect(updatedDoc.data()!.foo).toEqual('bar');

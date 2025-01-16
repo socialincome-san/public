@@ -24,11 +24,11 @@ type EmployersListProps = {
 } & DefaultParams;
 
 export function EmployersList({ translations }: EmployersListProps) {
-	const { employers, loading } = useEmployers();
+	const { employers, isLoading } = useEmployers();
 	const archiveEmployer = useArchiveEmployer();
 	const deleteEmployer = useDeleteEmployer();
 
-	if (loading) {
+	if (isLoading) {
 		return <SpinnerIcon />;
 	}
 

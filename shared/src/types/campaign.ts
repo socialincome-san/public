@@ -12,12 +12,20 @@ export type Campaign = {
 	second_description?: string;
 	third_description_title?: string;
 	third_description?: string;
+	link_website?: string;
+	link_instagram?: string;
+	link_tiktok?: string;
+	link_facebook?: string;
+	link_x?: string;
 	amount_collected_chf: number; // automatically updated by incoming payments.
 	contributions: number; // automatically updated by incoming payments.
 	goal?: number;
 	goal_currency?: Currency;
 	end_date: Timestamp;
 	status: CampaignStatus;
+	public?: boolean;
+	featured?: boolean;
+	slug?: string; // optional, for nicer url instead of firestore id
 	metadata_description?: string;
 	metadata_ogImage?: string;
 	metadata_twitterImage?: string;
@@ -27,3 +35,8 @@ export enum CampaignStatus {
 	Active = 'active',
 	Inactive = 'inactive',
 }
+
+export type Link = {
+	name: string;
+	url: string;
+};

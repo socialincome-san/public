@@ -1,0 +1,77 @@
+{
+	"amount-currency": "{{ amount, currency }}",
+	"title": "Quel est ton revenu mensuel en moyenne?",
+	"how-to-pay": "Comment aimerais-tu payer?",
+	"amount": "Montant",
+	"button-text": "Fais la différence",
+	"button-text-short": "Faire un don",
+	"one-time-donation": "Don unique",
+	"donation-impact": {
+		"monthly-contribution": "Ta contribution mensuelle:",
+		"direct-payout": "Ta contribution est versée directement sur le téléphone mobile du ou de la bénéficiaire de Social Income.",
+		"your-impact": "Ton impact:",
+		"0": "{{ amount, currency }} permet de poser les bases d'une cause importante. Cela nous permettra de fournir un Social Income à une personne dans le besoin.",
+		"1": "{{ amount, currency }} couvre plus du tiers d’un Social Income pour une personne dans le besoin.",
+		"2": "{{ amount, currency }} finance plus de la moitié d’un Social Income pour une personne dans le besoin.",
+		"3": "Ta contribution de {{ amount, currency }} assure un Social Income complet à au moins une personne dans le besoin.",
+		"4": "{{ amount, currency }} permet de verser un Social Income pour plus de deux personnes dans le besoin.",
+		"5": "Ta contribution de {{ amount, currency }} finance un Social Income pour plus de trois personnes dans le besoin.",
+		"6": "Ta contribution de  {{ amount, currency }} assure un Social Income pour plus de quatre personnes dans le besoin.",
+		"7": "Ta contribution de  {{ amount, currency }} assure un Social Income pour plus de cinq personnes dans le besoin.",
+		"8": "Ta contribution mensuelle de {{ amount, currency }}  est extraordinaire, tout comme ton impact"
+	},
+	"donation-interval": {
+		"0": {
+			"title": "Don unique"
+		},
+		"1": {
+			"title": "Mensuel",
+			"text": "{{ amount, currency }} payer chaque mois"
+		},
+		"3": {
+			"title": "Trimestriel",
+			"text": "{{ amount, currency }} tous les trois mois"
+		},
+		"12": {
+			"title": "Annuel",
+			"text": "{{ amount, currency }} chaque année"
+		}
+	},
+	"one-time": {
+		"title": "Don unique",
+		"subtitle": "Soutien Social Income par un don unique"
+	},
+	"success": {
+		"title": "Merci de tout coeur pour ton don",
+		"user-form": {
+			"title": "Vérifie tes coordonnées",
+			"firstname": "Prénom",
+			"lastname": "Nom",
+			"email": "E-Mail",
+			"country": "Pays",
+			"gender": "Genre",
+			"referral": "Comment as-tu entendu parler de nous?",
+			"accept-terms-and-conditions": "J'accepte <a href='/legal/donations/' target='_blank' class='underline'>les conditions de participation</a> et <a href='/legal/privacy/' target='_blank' class='underline'>la politique de protection des données</a>.",
+
+			"referrals": {
+				"familyfriends": "Famille ou amis",
+				"socialmedia": "Médias sociaux",
+				"work": "Collègues de travail",
+				"media": "Presse",
+				"presentation": "Présentation",
+				"other": "Autre"
+			},
+			"submit-button": "Confirmer"
+		},
+		"activation-form": {
+			"title": " Définis un mot de passe pour ton compte",
+			"email": "E-Mail",
+			"invalid-email": "E-Mail incorrect",
+			"password": "Mot de passe",
+			"password-confirm": "Confirmer le mot de passe",
+			"password-mismatch": "Non-concordance du mot de passe",
+			"submit-button": "Activer le compte",
+			"google-button": "S’inscrire avec Google"
+		}
+	}
+}

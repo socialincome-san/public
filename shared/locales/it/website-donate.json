@@ -1,0 +1,78 @@
+{
+	"metadata": {
+		"title": "Il Mio Contributo | Social Income"
+	},
+	"amount-currency": "{{ amount, currency }}",
+	"title": "Qual è il tuo salario medio mensile?",
+	"how-to-pay": "Scegli il tuo metodo di pagamento.",
+	"amount": "Importo",
+	"button-text": "Fai la differenza",
+	"one-time-donation": "Fai una donazione una tantum",
+	"donation-impact": {
+		"monthly-contribution": "Il tuo contributo mensile",
+		"direct-payout": "La tua donazione sarà ricevuta dai beneficiari direttamente nel loro telefono cellulare.",
+		"your-impact": "Il tuo impatto",
+		"0": "{{ amount, currency }} gettano le basi per una grande causa. Aiuta a distribuire una mensilità di Social Income ad una persona bisognosa.",
+		"1": "{{ amount, currency }} corrispondono ad un terzo di una mensilità di Social Income per una persona bisognosa.",
+		"2": "{{ amount, currency }} coprono la metà di una mensilità di Social Income per una persona bisognosa.",
+		"3": "Il tuo contributo mensile di {{ amount, currency }} permetterà ad una persona bisognosa di ricevere l’intero importo di una mensilità di Social Income.",
+		"4": "{{ amount, currency }} coprono la mensilità di Social Income per più di due persone bisognose.",
+		"5": "Il tuo contributo di {{ amount, currency }} copre la mensilità di Social Income per più di tre persone bisognose.",
+		"6": "Il tuo contributo di {{ amount, currency }} copre la mensilità di Social Income per più di quattro persone bisognose.",
+		"7": "Il tuo contributo di {{ amount, currency }} copre la mensilità di Social Income per più di cinque persone bisognose.",
+		"8": "Il tuo contributo mensile di {{ amount, currency }} è straordinario, così come il tuo impatto."
+	},
+	"donation-interval": {
+		"0": {
+			"title": "Donazione una tantum"
+		},
+		"1": {
+			"title": "Mensile",
+			"text": "Dona {{ amount, currency }} ogni mese"
+		},
+		"3": {
+			"title": "Trimestrale",
+			"text": "Dona {{ amount, currency }} ogni 3 mesi"
+		},
+		"12": {
+			"title": "Annuale",
+			"text": "Dona {{ amount, currency }} ogni anno"
+		}
+	},
+	"one-time": {
+		"title": "Donazione Una Tantum",
+		"subtitle": "Fai una semplice donazione una tantum a Social Income"
+	},
+	"success": {
+		"title": "Grazie per il tuo contributo",
+		"user-form": {
+			"title": "Rivedi i tuoi dati di contatto",
+			"firstname": "Nome",
+			"lastname": "Cognome",
+			"email": "Email",
+			"country": "Paese",
+			"gender": "Genere",
+			"referral": "Come hai scoperto Social Income?",
+			"accept-terms-and-conditions": "Accetto i <a href='/terms-and-conditions/' target='_blank' class='underline'>Termini e Condizioni</a> and <a href='/privacy/' target='_blank' class='underline'>Privacy Policy</a>.",
+			"referrals": {
+				"familyfriends": "Famiglia e Amici",
+				"socialmedia": "Social Media",
+				"work": "Lavoro",
+				"media": "Media",
+				"presentation": "Evento",
+				"other": "Altro"
+			},
+			"submit-button": "Conferma"
+		},
+		"activation-form": {
+			"title": "Scegli una password per attivare il tuo account",
+			"email": "Email",
+			"invalid-email": "Email non valido",
+			"password": "Password",
+			"password-confirm": "Conferma la password",
+			"password-mismatch": "Le password non coincidono",
+			"submit-button": "Attiva il tuo account",
+			"google-button": "Usa Google per la registrazione"
+		}
+	}
+}

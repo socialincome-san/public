@@ -2,6 +2,9 @@
 	"name": "@socialincome/monorepo",
 	"version": "1.0.0",
 	"private": true,
+	"engines": {
+		"node": "22"
+	},
 	"workspaces": [
 		"admin",
 		"functions",
@@ -15,8 +18,8 @@
 		"admin:test": "npm --workspace=@socialincome/admin run test:emulator",
 		"admin:test:playwright": "npm --workspace=@socialincome/admin run test:playwright:emulator",
 		"admin:test:playwright:update": "npm --workspace=@socialincome/admin run test:playwright:emulator:update",
-		"firebase:export": "firebase emulators:export --project social-income-local --force ./seed",
-		"firebase:serve": "firebase emulators:start --project social-income-local --config firebase.json --import ./seed",
+		"firebase:export": "firebase emulators:export --project demo-social-income-local --force ./seed",
+		"firebase:serve": "firebase emulators:start --project demo-social-income-local --config firebase.json --import ./seed",
 		"format-code": "prettier --write .",
 		"functions:build": "npm --workspace=@socialincome/functions run build",
 		"functions:deploy": "npm --workspace=@socialincome/functions run deploy",
@@ -42,10 +45,10 @@
 		"website:check-translations": "npm --workspace=@socialincome/website run check-translations"
 	},
 	"devDependencies": {
-		"firebase-tools": "13.0.2",
-		"prettier": "3.1.0",
-		"prettier-plugin-organize-imports": "3.2.4",
-		"prettier-plugin-tailwindcss": "0.5.7",
-		"typescript": "^5.3.2"
+		"firebase-tools": "13.29.1",
+		"prettier": "3.4.2",
+		"prettier-plugin-organize-imports": "4.1.0",
+		"prettier-plugin-tailwindcss": "0.6.9",
+		"typescript": "^5.7.2"
 	}
 }

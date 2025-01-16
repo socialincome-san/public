@@ -14,9 +14,10 @@
 	},
 	"language": "Sprache",
 	"languages": {
-		"de": "Deutsch",
-		"en": "Englisch",
-		"fr": "Französisch",
+		"de": "DE",
+		"en": "EN",
+		"fr": "FR",
+		"it": "IT",
 		"kri": "Krio"
 	},
 	"gender": "Geschlecht",

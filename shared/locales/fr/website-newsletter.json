@@ -1,0 +1,29 @@
+{
+	"metadata": {
+		"title": "Newsletter | Social Income"
+	},
+	"updates": {
+		"title": "Reste informé",
+		"description-1": "Reçois des nouvelles de Social Income, et aussi:",
+		"bullet-1": "Les récits de nos bénéficiaires",
+		"bullet-2": "Les nouvelles études les transferts monétaires directs",
+		"bullet-3": "Des nouvelles sur le thème du revenu de base",
+		"description-2": "Envoi à la fin de chaque mois.",
+		"description-3": "Newsletters rédigées par",
+		"author-name": "Aurélie Schmiedlin",
+		"author-city": "Genève",
+		"form-title": "S'abonner à la newsletter",
+		"firstname": "Prénom",
+		"email": "Ton adresse E-Mail",
+		"submit-button": "S'abonner",
+		"newsletter-updated-toast": "Merci de t’être abonné à la newsletter de Social Income!",
+		"newsletter-error-toast": "Oups! Ça n’a pas marché. Essaie encore une fois ou prend contact avec nous (hello@socialincome.org)"
+	},
+	"popup": {
+		"information-label": "Reçois des informations mensuelles sur Social Income, ainsi que des informations actuelles sur le revenu de base et les paiements directs.",
+		"toast-success": "Merci de t’être abonné à la newsletter de Social Income!",
+		"toast-failure": "Oups! Ça n’a pas marché. Essaie encore une fois ou prend contact avec nous (hello@socialincome.org)",
+		"email-placeholder": "Ton adresse E-Mail",
+		"button-subscribe": "S'abonner"
+	}
+}

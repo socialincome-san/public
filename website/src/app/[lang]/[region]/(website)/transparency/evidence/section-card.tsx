@@ -33,7 +33,7 @@ export function SectionCard({ translations: { card, takeAction } }: SectionCardP
 		<Dialog>
 			<DialogTrigger>
 				<Card className="w-full px-10 py-4 text-left duration-200 ease-in md:hover:scale-105">
-					<CardTitle className="py-2 text-red-400 ">{card.title}</CardTitle>
+					<CardTitle className="py-2 text-red-400">{card.title}</CardTitle>
 					<Typography size="lg">{card.description}</Typography>
 				</Card>
 			</DialogTrigger>
@@ -47,7 +47,7 @@ export function SectionCard({ translations: { card, takeAction } }: SectionCardP
 				</DialogHeader>
 				<DialogDescription>
 					{card.paragraphs.map((paragraph, key) => (
-						<p key={key} className="mt-2">
+						<Typography key={key} className="mt-2">
 							{paragraph.map((fragment, key) => (
 								<span key={key}>
 									{fragment.href ? (
@@ -61,7 +61,7 @@ export function SectionCard({ translations: { card, takeAction } }: SectionCardP
 									)}
 								</span>
 							))}
-						</p>
+						</Typography>
 					))}
 					<br />
 				</DialogDescription>

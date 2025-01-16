@@ -1,4 +1,5 @@
 {
+    "@@locale": "en",
     "profileUpdateSuccess": "Profile updated successfully",
     "profileUpdateError": "Failed to update profile. Please try again or contact our support",
     "profile": "Profile",
@@ -30,6 +31,9 @@
     "contactNumber": "Contact Number",
     "contactNumberError": "Please enter your contact phone number",
     "contactNumberError2": "Please enter a valid phone number. Only numbers are allowed",
+    "inCaseOfDeathTitle": "⁠In Case of Death",
+    "inCaseOfDeathDescription": "Who should be the recipient of your Social Income payments if you pass away during the program?",
+    "successorName": "Successor Name",
     "support": "Support",
     "supportInfo": "In case you have any questions or problems, please contact us.",
     "getInTouch": "Get in touch with us",
@@ -60,7 +64,6 @@
     "call": "Call",
     "supportTeam": "Support Team",
     "phone": "Phone",
-    "email": "Email",
     "close": "Close",
     "whatsappError": "WhatsApp not installed",
     "paymentsConfirmedCount": "payments received",
@@ -160,7 +163,7 @@
         "placeholders": {
             "done": {
                 "type": "int"
-            }, 
+            },
             "all": {
                 "type": "int"
             }
@@ -250,7 +253,7 @@
     "secondFactorAlreadyEnrolled": "Second factor already enrolled",
     "secondFactorLimitExceeded": "Maximum second factor count exceeded",
     "tenantIdMismatch": "Tenant ID mismatch",
-    "timeoutError": "Timeout",   
+    "timeoutError": "Timeout",
     "tokenExpired": "User token expired",
     "tooManyAttemptsTryLater": "Too many requests, try again later",
     "unauthorizedDomain": "Unauthorized domain for resource",
@@ -272,5 +275,6 @@
     "missingClientType": "Missing client type",
     "missingRecaptchaVersion": "Missing reCAPTCHA version",
     "invalidRecaptchaVersion": "Invalid reCAPTCHA version",
-    "invalidReqType": "Invalid request type"
+    "invalidReqType": "Invalid request type",
+    "errorEmailInvalid": "Invalid email address"
 }

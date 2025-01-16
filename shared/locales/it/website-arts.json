@@ -1,0 +1,104 @@
+{
+	"section-1": {
+		"title": [
+			{
+				"text": "We wouldn’t exist without support from "
+			},
+			{
+				"text": "the arts.",
+				"color": "secondary"
+			}
+		]
+	},
+	"section-2": {
+		"topic": "Basic Principle",
+		"title": [
+			{
+				"text": "We believe that the art world has a responsibility to foster cultural exchange and "
+			},
+			{
+				"text": "help out fellow humans",
+				"color": "secondary"
+			},
+			{
+				"text": ", no matter who they are."
+			}
+		],
+		"cards": [
+			{
+				"title": "Where We Started",
+				"description": "Our first recipients were a group of young artists in Sierra Leone who had financial difficulties keeping their practices going. These artists are also part of our core team based in Freetown.",
+				"links": [
+					{
+						"icon": "...",
+						"text": "Meet the Team",
+						"href": "/about-us#team"
+					}
+				]
+			},
+			{
+				"title": "Where We're From",
+				"description": "Our founding team is behind Random Institute, an art initiative that has produced over a hundred interventions worldwide.",
+				"links": [
+					{
+						"icon": "...",
+						"text": "Random Institute",
+						"href": "https://randominstitute.org/"
+					}
+				]
+			},
+			{
+				"title": "Where We're Funded",
+				"description": "We’ve received initial contributions from the following institutions:",
+				"links": [
+					{
+						"text": "Stroom",
+						"href": "https://www.stroom.nl/"
+					},
+					{
+						"text": "Kadist",
+						"href": "https://kadist.org/"
+					},
+					{
+						"text": "Sies + Höke",
+						"href": "https://www.sieshoeke.com/"
+					},
+					{
+						"text": "Kunsthalle Tropical",
+						"href": "https://kunsthalletropical.xyz/#"
+					},
+					{
+						"text": "Random Institute",
+						"href": "https://randominstitute.org/"
+					}
+				]
+			},
+			{
+				"title": "Where Our Contributors Work",
+				"description": "We receive regular individual contributions from employees at the following institutions:",
+				"links": [
+					{
+						"text": "Centre d’Art Neuchâtel",
+						"href": "https://www.can.ch/"
+					},
+					{
+						"text": "Kunsthalle Zurich",
+						"href": "http://kunsthallezurich.ch/"
+					},
+					{
+						"text": "Swiss Nex",
+						"href": "https://www.swissnex.org/"
+					},
+					{
+						"text": "Galerie Tschudi",
+						"href": "https://www.galerie-tschudi.ch/"
+					},
+					{
+						"text": "Federal Office of Culture",
+						"href": "https://www.bak.admin.ch/bak/en/home.html"
+					}
+				]
+			}
+		]
+	}
+}

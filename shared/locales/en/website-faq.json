@@ -3,127 +3,236 @@
 		"title": "FAQ | Social Income"
 	},
 	"title": "FAQ",
+	"title-long": "Frequently asked questions",
 	"fighting-poverty": {
 		"title": "Fighting Poverty",
-		"question-1": {
-			"question": "Are direct cash payments an effective way to fight poverty?",
-			"answer": "There is a wide consensus around the benefits and long-term success of direct giving programs. We offer an overview of the latest scientific literature in our Evidence section.",
-			"link-1": {
-				"title": "Evidence section",
-				"href": "/evidence"
+		"questions": [
+			{
+				"question": "Are direct cash payments an effective way to fight poverty?",
+				"answer": "There is a wide consensus around the benefits and long-term success of direct giving programs. We offer an overview of the latest scientific literature in our Evidence section.",
+				"links": [
+					{
+						"title": "Evidence section",
+						"href": "/evidence"
+					},
+					{
+						"title": "Policy Brief: Impacts of Unconditional Cash Transfers",
+						"href": "https://drive.google.com/file/d/1xn4BvrEHZjSUGpNZLHjIc2YYnwq399jR/view"
+					},
+					{
+						"title": "GiveDirectly's Cash Evidence Explorer",
+						"href": "https://www.givedirectly.org/cash-evidence-explorer/"
+					}
+				]
 			},
-			"link-2": {
-				"title": "Policy Brief: Impacts of Unconditional Cash Transfers",
-				"href": "https://drive.google.com/file/d/1xn4BvrEHZjSUGpNZLHjIc2YYnwq399jR/view"
-			},
-			"link-3": {
-				"title": "GiveDirectly's Cash Evidence Explorer",
-				"href": "https://www.givedirectly.org/cash-evidence-explorer/"
+			{
+				"question": "Is it helpful to send money to people in need?",
+				"answer": "It’s definitely more helpful than sending no money at all. Many people today advocate for equal opportunity in employment. This is obviously a goal worth aiming for, but it tends to ignore the fact that for many people born in the world’s poorest countries, employment as it is typically understood isn’t even possible or accessible. Giving money can help break down this barrier and give more people living in poverty access to work, education, and decent living conditions.",
+				"links": [
+					{
+						"title": "The Case for Cash",
+						"href": "https://drive.google.com/file/d/1GKBdHjD80Jv7lZJmKvouZv8Z7MgLw_HL/view"
+					},
+					{
+						"title": "Can unconditional cash transfers raise long-term living standards? Evidence from Zambia",
+						"href": "https://drive.google.com/file/d/1HwSLDlml0yyHrCrv8Y7pkqxz2orM02Lc/view"
+					}
+				]
 			}
-		},
-		"question-2": {
-			"question": "Is it helpful to send money to people in need?",
-			"answer": "It’s definitely more helpful than sending no money at all. Many people today advocate for equal opportunity in employment. This is obviously a goal worth aiming for, but it tends to ignore the fact that for many people born in the world’s poorest countries, employment as it is typically understood isn’t even possible or accessible. Giving money can help break down this barrier and give more people living in poverty access to work, education, and decent living conditions.",
-			"link-1": {
-				"title": "Government of Malawi’s unconditional cash transfer improves youth mental health",
-				"href": "https://drive.google.com/file/d/1GKBdHjD80Jv7lZJmKvouZv8Z7MgLw_HL/view"
-			},
-			"link-2": {
-				"title": "Can unconditional cash transfers raise long-term living standards? Evidence from Zambia",
-				"href": "https://drive.google.com/file/d/1HwSLDlml0yyHrCrv8Y7pkqxz2orM02Lc/view"
-			}
-		}
+		]
 	},
 	"striving-equality": {
 		"title": "Striving for equality",
-		"question-1": {
-			"question": "Can Social Income create equality?",
-			"answer": "Social Income isn’t a theory of equality. It’s here to help make the world more fair, by taking advantage of the immense gap between rich and poor to carry out a simple, direct redistribution based on solidarity. It also helps contribute to self-driven change and a certain degree of financial independence for people in need. This process only works as long as inequality continues to exist; as soon as the distribution of wealth across the world becomes balanced, Social Income will no longer be useful."
-		},
-		"question-2": {
-			"question": "Who can eliminate inequality?",
-			"answer": "States or markets can, in theory. But not all states (can) care for their citizens adequately and not all markets create long-lasting equality for everyone. That’s where a third option comes in: ourselves. We already know how to recognize inequality and feel empathy for disadvantaged people, even if they aren’t exactly our neighbors. And we also have the technical skills to move money globally. If you think about it, nothing is missing to start remedying the world’s economic grievances today."
-		}
+		"questions": [
+			{
+				"question": "Can Social Income create equality?",
+				"answer": "Social Income isn’t a theory of equality. It’s here to help make the world more fair, by taking advantage of the immense gap between rich and poor to carry out a simple, direct redistribution based on solidarity. It also helps contribute to self-driven change and a certain degree of financial independence for people in need. This process only works as long as inequality continues to exist; as soon as the distribution of wealth across the world becomes balanced, Social Income will no longer be useful."
+			},
+			{
+				"question": "Who can eliminate inequality?",
+				"answer": "States or markets can, in theory. But not all states (can) care for their citizens adequately and not all markets create long-lasting equality for everyone. That’s where a third option comes in: ourselves. We already know how to recognize inequality and feel empathy for disadvantaged people, even if they aren’t exactly our neighbors. And we also have the technical skills to move money globally. If you think about it, nothing is missing to start remedying the world’s economic grievances today."
+			}
+		]
 	},
 	"solidarity": {
 		"title": "Solidarity",
-		"question-1": {
-			"question": "Do we have responsibilities toward our fellow human beings?",
-			"answer": "We believe so, yes. In a globalized world with almost no borders for goods and outsourced production, all histories become interconnected in shared destinies."
-		},
-		"question-2": {
-			"question": "Can solidarity survive in the age of individualization?",
-			"answer": "Today, solidarity is an endangered resource. In an era that emphasizes the individual over everything else, our sense of community often takes a backseat to personal success. But this doesn’t mean that solidarity will disappear; it just has to adapt, and so do the projects that rely on it to meet their goals. From this perspective, we believe that solidarity can be stronger than ever. Individualization also means that everyone who wants to get involved in solidarity can do so, without any roadblocks to stop them. The only difference is that they’ll do it on their own terms, with their own methods. Social Income is one choice available among others. A new kind. The major issues that humanity faces, whether economic or ecological, are too complex and interlinked to be solved without recourse to solidarity. Individualism may be a fine road to personal self-discovery, but it isn’t of much use in solving collective challenges like inequality and poverty."
-		}
+		"questions": [
+			{
+				"question": "Do we have responsibilities toward our fellow human beings?",
+				"answer": "We believe so, yes. In a globalized world with almost no borders for goods and outsourced production, all histories become interconnected in shared destinies."
+			},
+			{
+				"question": "Can solidarity survive in the age of individualization?",
+				"answer": "Today, solidarity is an endangered resource. In an era that emphasizes the individual over everything else, our sense of community often takes a backseat to personal success. But this doesn’t mean that solidarity will disappear; it just has to adapt, and so do the projects that rely on it to meet their goals. From this perspective, we believe that solidarity can be stronger than ever. Individualization also means that everyone who wants to get involved in solidarity can do so, without any roadblocks to stop them. The only difference is that they’ll do it on their own terms, with their own methods. Social Income is one choice available among others. A new kind. The major issues that humanity faces, whether economic or ecological, are too complex and interlinked to be solved without recourse to solidarity. Individualism may be a fine road to personal self-discovery, but it isn’t of much use in solving collective challenges like inequality and poverty."
+			}
+		]
 	},
 	"ubi": {
 		"title": "Universal Basic Income",
-		"question-1": {
-			"question": "What is the difference between Social Income and Universal Basic Income?",
-			"answer": "Like Universal Basic Income (UBI), Social Income provides regular, unconditional payments as a basic living stipend delivered to citizens on an individual basis. Whereas Universal Basic Income would be provided by a state or government, Social Income is provided from person to person. This means that it doesn’t have to rely on political will, budgeting, or taxation to succeed. Social Income is also specifically aimed at people living in extreme poverty, so its primary goal is wealth redistribution—which isn’t necessarily the case of UBI."
-		},
-		"question-2": {
-			"question": "What are Direct Cash Transfers?",
-			"answer": "According to the official OECD’s definition, cash transfers “consist of the payment of currency or transferable deposit by one unit to another without any counterpart”. More concretely, direct cash transfers are a form of social protection that includes cash or vouchers given directly to poor individuals rather than to governments or other state actors. Particularly over the past decade, they have been increasingly used as a tool for reducing poverty and vulnerability in middle and low-income countries.",
-			"link-1": {
-				"title": "Social protection and resilient food systems: The role of cash transfers",
-				"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view"
+		"questions": [
+			{
+				"question": "What is the difference between Social Income and Universal Basic Income?",
+				"answer": "Like Universal Basic Income (UBI), Social Income provides regular, unconditional payments as a basic living stipend delivered to citizens on an individual basis. Whereas Universal Basic Income would be provided by a state or government, Social Income is provided from person to person. This means that it doesn’t have to rely on political will, budgeting, or taxation to succeed. Social Income is also specifically aimed at people living in extreme poverty, so its primary goal is wealth redistribution—which isn’t necessarily the case of UBI."
+			},
+			{
+				"question": "What are Direct Cash Transfers?",
+				"answer": "According to the official OECD’s definition, cash transfers “consist of the payment of currency or transferable deposit by one unit to another without any counterpart”. More concretely, direct cash transfers are a form of social protection that includes cash or vouchers given directly to poor individuals rather than to governments or other state actors. Particularly over the past decade, they have been increasingly used as a tool for reducing poverty and vulnerability in middle and low-income countries.",
+				"links": [
+					{
+						"title": "Social protection and resilient food systems: The role of cash transfers",
+						"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view"
+					}
+				]
 			}
-		}
+		]
 	},
 	"contributors": {
 		"title": "Contributors",
-		"question-1": {
-			"question": "Why 1% of contributors’ salaries?",
-			"answer": "For Social Income to be scalable, we need to be sure it works. To ensure it works, we need to start small. This means using both a small pool of initial recipients and asking for a small initial donation from contributors. 1% is a negligible amount for contributors that can have a considerable impact on recipients’ lives, though higher donations may be possible in the future. For example, say 25% of Swiss citizens support Social Income. Given that the average salary in Switzerland is $6,000 per month, if this 30% contributed 1% of their incomes, that would pay for Social Income for every person living in Sierra Leone. This simplified illustration can still give us a good idea of the project’s potential."
-		},
-		"question-2": {
-			"question": "Can I cancel my contributions?",
-			"answer": "Yes, any time and without notice. Just login and opt out in the preferences."
-		},
-		"question-3": {
-			"question": "Why don't we use more photos in our communications",
-			"answer": "We believe that we should do what we can to aid the lives of strangers, especially at relatively little cost to ourselves. We also believe that this rational argument is as effective at promoting charitable giving as emotional appeals. We prefer to avoid the typical imagery employed by NGOs working in Africa that can potentially fuel negative stereotypes of the continent."
-		}
+		"questions": [
+			{
+				"question": "Why 1% of contributors’ salaries?",
+				"answer": "For Social Income to be scalable, we need to be sure it works. To ensure it works, we need to start small. This means using both a small pool of initial recipients and asking for a small initial donation from contributors. 1% is a negligible amount for contributors that can have a considerable impact on recipients’ lives, though higher donations may be possible in the future. For example, say 25% of Swiss citizens support Social Income with 1% of their income. Given that the average salary in Switzerland is $6,000 per month, this would pay for Social Income for every person living in Sierra Leone. This very simplified illustration can still give us a good idea of the project’s potential."
+			},
+			{
+				"question": "Can I cancel my contributions?",
+				"answer": "Yes, any time and without notice. Just login and opt out in the preferences."
+			}
+		]
 	},
 	"recipients": {
 		"title": "Recipients",
-		"question-1": {
-			"question": "How are recipients chosen?",
-			"answer": "We determine possible new recipients thanks to the groundwork of our local advocates and partnerships with local NGOs: Aurora Foundation, Reachout Salone and Jamyl & Nyanga Jaward Foundation. Our criterias are simple: recipients must be older than 16 and come from a low income community. One other major principle is to keep up a strict gender balance/equality and to support people in need."
-		},
-		"question-2": {
-			"question": "What do recipients need the money for?",
-			"answer": "The very idea behind UBI is to give recipients money that they can use as they please."
-		},
-		"question-3": {
-			"question": "How can I receive Social Income?",
-			"answer": "We work closely with local advocates to determine future recipients. There is currently no option to sign up through our website."
-		},
-		"question-4": {
-			"question": "Why Sierra Leone?",
-			"answer": "You have to start somewhere, and Sierra Leone makes sense for several reasons. While one of the world’s younger democracies, it unfortunately regularly tops rankings as one of its poorest countries. Still, big progress has been made in recent years, notably in adopting mobile banking in urban areas across the country. So, not only is Sierra Leone in need of help, it’s also uniquely positioned to receive it from a digitally-focused approach. That said, Social Income isn’t just made for Africa. We believe that individual action can have a universal impact and hope to expand the project’s reach to people in need across the world. In the future, the initiative could also be rolled out to countries in Latin America and Asia, for example. However, to focus our energy as best as possible, it makes sense to gain experience in a single location first."
-		}
+		"questions": [
+			{
+				"question": "How are recipients chosen?",
+				"answer": "We identify potential recipients through the essential groundwork laid by our local advocates and strong collaborations with trusted local NGOs. Our selection criteria are clear: recipients must be over 16 years old and part of a low-income community (living below the poverty line).",
+				"links": [
+					{
+						"title": "Local Partners",
+						"href": "/partners"
+					}
+				]
+			},
+			{
+				"question": "What do recipients need the money for?",
+				"answer": "The very idea behind UBI is to give recipients money that they can use as they please."
+			},
+			{
+				"question": "How can I receive Social Income?",
+				"answer": "We work closely with local advocates to determine future recipients. There is currently no option to sign up through our website."
+			},
+			{
+				"question": "Why Sierra Leone?",
+				"answer": "You have to start somewhere, and Sierra Leone makes sense for several reasons. While one of the world’s younger democracies, it unfortunately regularly tops rankings as one of its poorest countries. Still, big progress has been made in recent years, notably in adopting mobile banking in urban areas across the country. So, not only is Sierra Leone in need of help, it’s also uniquely positioned to receive it from a digitally-focused approach. That said, Social Income isn’t just made for Africa. We believe that individual action can have a universal impact and hope to expand the project’s reach to people in need across the world. In the future, the initiative could also be rolled out to countries in Latin America and Asia, for example. However, to focus our energy as best as possible, it makes sense to gain experience in a single location first."
+			}
+		]
 	},
 	"the-arts": {
 		"title": "The Arts",
-		"question-1": {
-			"question": "What is Social Income's link to the arts?",
-			"answer": "Social Income’s founding team has close links to the art world, which made it possible to fund the initial stages of the project. We believe that the art world has a certain responsibility to foster cultural exchange and help out fellow humans, no matter who they are."
-		}
+		"questions": [
+			{
+				"question": "What is Social Income's link to the arts?",
+				"answer": "Social Income’s founding team has close links to the art world, which made it possible to fund the initial stages of the project. We believe that the art world has a certain responsibility to foster cultural exchange and help out fellow humans, no matter who they are."
+			}
+		]
 	},
 	"volunteering": {
 		"title": "Volunteering",
-		"question-1": {
-			"question": "How can I join the team of volunteers?",
-			"answer": "If you are interested in making a social impact with your skillset, take a look at the open opportunities on our Idealist page or get in touch with us today!",
-			"link-1": {
-				"title": "Idealist",
-				"href": "https://www.idealist.org/en/nonprofit/41a885fa176b4793a029f131834fd48a-social-income-zurich"
+		"questions": [
+			{
+				"question": "How can I join the team of volunteers?",
+				"answer": "If you are interested in making a social impact with your skillset, take a look at the open opportunities on our Idealist page or get in touch with us today!",
+				"links": [
+					{
+						"title": "Idealist",
+						"href": "https://www.idealist.org/en/nonprofit/41a885fa176b4793a029f131834fd48a-social-income-zurich"
+					}
+				]
 			}
-		}
+		]
+	},
+	"selection": {
+		"title": "Recipient Selection",
+		"questions": [
+			{
+				"question": "Why do we select randomly out of a pool of qualified recipients?",
+				"answer": "The purpose of employing this random selection method is to achieve several objectives. Firstly, it helps prevent bias in our recipient selection, ensuring that relatives or acquaintances of individuals involved in the process are not given preferential treatment. Secondly, it aims to avoid tensions between recipients and non-recipients, as well as any potential conflicts between recipients and our organization. Lastly, we strive to incorporate technology where it is feasible and beneficial to the process."
+			},
+			{
+				"question": "Who can influence the draft?",
+				"answer": "By relying on an unpredictable random value from drand, set to be emitted in the future, it's not possible for anyone to sway the results of the selection process. This inherent randomness can be utilized to confirm the integrity of the selection. To qualify for Social Income, an individual must first be on a list provided by an NGO. While this does present a preliminary condition, it aligns with our foundational principle: ensuring that Social Income reaches those most in need."
+			},
+			{
+				"question": "How do we avoid bias and tensions?",
+				"answer": "To ensure we don't inadvertently prioritize a specific ethnic group, gender, or occupation, we collaborate with diverse NGOs that have varied missions. In line with our 'do no harm' policy, we strive to prevent tensions among recipients, non-recipients, communities, and the NGOs. Our random selection plays a pivotal role in achieving this. It ensures that those related to or acquainted with individuals in the process aren't shown favoritism, which could lead to conflicts."
+			},
+			{
+				"question": "What is happening during the selection process?",
+				"answer": "We utilize the random number provided by drand, which is publicly accessible, to pick a set number of individuals from our list. Here's how it's done: we first organize the hashed list of recipients. Then, using the randomness element from drand, we convert it into a position on the list through a key derivation function. For those keen on the technical details, the function and its associated processes are documented in our open source repository.",
+				"links": [
+					{
+						"title": "GitHub repository",
+						"href": "https://github.com/socialincome-san/public/tree/main/recipients_selection"
+					},
+					{
+						"title": "Key derivation function",
+						"href": "https://en.wikipedia.org/wiki/Key_derivation_function"
+					}
+				]
+			},
+			{
+				"question": "What is drand and who is behind it?",
+				"answer": "The drand project generates random numbers that everyone can trust. It can be applied to create truly random and verifiable drafts. Initiated in 2017 at EPFL by Nicolas Gailly, drand received support from Philipp Jovanovic and was guided by Bryan Ford. It has since become independently managed and maintains a network called the League of Entropy with EPFL, UCL, Cloudflare, Kudelski Security, the University of Chile, and Protocol Labs. Current core maintainers of the open source project are Erick Watson, Yolan Romailler and Patrick McClurg from Randamu.",
+				"links": [
+					{
+						"title": "League of Entropy",
+						"href": "https://www.cloudflare.com/leagueofentropy/"
+					},
+					{
+						"title": "Randamu",
+						"href": "https://randa.mu"
+					},
+					{
+						"title": "Drand",
+						"href": "https://drand.love"
+					}
+				]
+			}
+		]
 	},
 	"campaign": {
+		"title": "Frequently asked questions",
+		"questions": [
+			{
+				"question": "What are Direct Cash Transfers?",
+				"answer": "According to the official OECD’s definition, cash transfers “consist of the payment of currency or transferable deposit by one unit to another without any counterpart”. More concretely, direct cash transfers are a form of social protection that includes cash or vouchers given directly to poor individuals rather than to governments or other state actors. Particularly over the past decade, they have been increasingly used as a tool for reducing poverty and vulnerability in middle and low-income countries.",
+				"links": [
+					{
+						"title": "Social protection and resilient food systems: The role of cash transfers",
+						"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view"
+					}
+				]
+			},
+			{
+				"question": "Why Sierra Leone?",
+				"answer": "You have to start somewhere, and Sierra Leone makes sense for several reasons. While one of the world’s younger democracies, it unfortunately regularly tops rankings as one of its poorest countries. Still, big progress has been made in recent years, notably in adopting mobile banking in urban areas across the country. So, not only is Sierra Leone in need of help, it’s also uniquely positioned to receive it from a digitally-focused approach."
+			},
+			{
+				"question": "How are recipients chosen?",
+				"answer": "We identify potential recipients through the essential groundwork laid by our local advocates and strong collaborations with trusted local NGOs. Our selection criteria are clear: recipients must be over 16 years old and part of a low-income community (living below the poverty line).",
+				"links": [
+					{
+						"title": "Local Partners",
+						"href": "/partners"
+					}
+				]
+			},
+			{
+				"question": "What is the amount disbursed to the recipients?",
+				"answer": "Recipients of Social Income receive a monthly payment of USD 32, which is converted into their local currency and directly deposited to their mobile phones. This sum is carefully chosen to help secure the basic needs of a person living in poverty, considering that the national average income is around USD 42 (World Bank). These payments are reliably made every month over a span of three years. This sustained, long-term support strategy is intended to empower individuals in poverty, enabling them to plan and invest for the future, particularly in aspects like health, thereby enhancing their financial stability and overall well-being."
+			}
+		]
+	},
+	"campaign-ismatu": {
 		"title": "Frequently asked questions",
 		"questions": [
 			{

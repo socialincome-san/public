@@ -20,10 +20,7 @@ export class StripeEventHandler {
 
 	constructor(apiKey: string, firestoreAdmin: FirestoreAdmin) {
 		this.firestoreAdmin = firestoreAdmin;
-		this.stripe = new Stripe(apiKey, {
-			typescript: true,
-			apiVersion: '2023-10-16',
-		});
+		this.stripe = new Stripe(apiKey, { typescript: true });
 	}
 
 	handleChargeEvent = async (charge: Stripe.Charge) => {
@@ -64,7 +61,7 @@ export class StripeEventHandler {
 	};
 
 	/**
-	 * Try to find an existing user using create a new on.
+	 * Try to find an existing user using create a new one.
 	 */
 	getOrCreateFirestoreUser = async (customer: Stripe.Customer): Promise<DocumentReference<User>> => {
 		const userDoc = await this.findFirestoreUser(customer);
@@ -122,7 +119,7 @@ export class StripeEventHandler {
 					campaign_path: this.firestoreAdmin.firestore
 						.collection(CAMPAIGN_FIRESTORE_PATH)
 						.doc(checkoutMetadata?.campaignId),
-			  } as StripeContribution)
+				} as StripeContribution)
 			: contribution;
 	};
 
@@ -177,11 +174,10 @@ export class StripeEventHandler {
 
 	/**
 	 * Extracts information out of the stripe charge to build a User.
-	 * This is mainly for failed payments where we didn't create a user through the website directly
 	 */
 	constructUser = (customer: Stripe.Customer): User => {
-		if (!customer.id || !customer.email || !customer.name) {
-			throw new Error(`Could not create user for Stripe customer: ${customer.id}, unknown id, email or name`);
+		if (!customer.id || !customer.email) {
+			throw new Error(`Could not create user for Stripe customer: ${customer.id}, unknown id, email`);
 		}
 		const { firstname, lastname } = splitName(customer.name);
 		return {

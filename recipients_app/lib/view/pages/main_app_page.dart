@@ -25,8 +25,7 @@ class _MainAppPageState extends State<MainAppPage> {
     final editButtonRow = Row(
       children: [
         ButtonSmall(
-          onPressed: () {
-            // TODO display error message
+          onPressed: () async {
             if (recipient == null) return;
 
             final organization = context.read<AuthCubit>().state.organization;
@@ -66,19 +65,17 @@ class _MainAppPageState extends State<MainAppPage> {
                   children: [
                     Text(
                       _getName(recipient),
-                      style:
-                          Theme.of(context).textTheme.headlineLarge?.copyWith(
-                                color: AppColors.primaryColor,
-                                fontWeight: FontWeight.bold,
-                              ),
+                      style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       "+${recipient?.mobileMoneyPhone?.phoneNumber}",
-                      style:
-                          Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                color: AppColors.primaryColor,
-                              ),
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            color: AppColors.primaryColor,
+                          ),
                     ),
                   ],
                 ),

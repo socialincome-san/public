@@ -1,202 +1,218 @@
 {
+	"metadata": {
+		"title": "Social Income",
+		"description": "Change from human to human. From mobile to mobile.",
+		"og-image": "/assets/metadata/og/default.jpg",
+		"twitter-image": "/assets/metadata/twitter/default.jpg"
+	},
 	"section-1": {
-		"title-1": "Wie vielen Menschen kannst Du mit 1 % deines Schweizer Einkommens ",
-		"title-2": "aus der Armut helfen?",
-		"title-3": "",
-		"amount": "Betrag",
-		"income-text": "Gib dein monatliches Einkommen ein und schau, was du bewirken kannst.",
-		"button-text": "Beitrag berechnen",
-		"privacy-commitment": "Wir verpflichten uns zum Datenschutz",
-		"tax-deductible": "Dein Beitrag ist in der Schweiz steuerbefreit",
-		"one-time-donation": "Einmalige Spende"
-	},
-	"section-2": {
-		"title-1": "Was würde sich in deinem Alltag ändern, ",
-		"title-2": "wenn du jeden Monat 1 % deines Einkommens spenden würdest?",
-		"subtitle-1": "Nicht viel, oder? Dein Leben würde wie gewohnt weitergehen.",
-		"video-button": "Schau dir das Video an"
-	},
-	"section-3": {
-		"title": [{ "text": "Wenn nicht wir in der Schweiz, " }, { "text": "wer dann?", "color": "secondary" }],
-		"jackpot-title": "Das Leben in der Schweiz gleicht einem Jackpotgewinn.",
-		"jackpot-text": "Menschen in der Schweiz haben systematisch bessere Chancen auf ein gutes Leben als Menschen anderswo auf der Welt.",
-		"jackpot-button": "Sich solidarisch zeigen",
-		"helping-others-title": "Anderen Menschen zu helfen und sich sozial engagieren, macht glücklich.",
-		"helping-others-text": "Lasst uns zuerst den Menschen helfen, für die ein Leben ohne Existenzprobleme unerreichbar ist. Wann, wenn nicht jetzt?",
-		"helping-others-button": "Handle jetzt",
-		"together-title": "Gemeinsam können wir viel verändern.",
-		"together-text": "Wenn bereits jede vierte Schweizerin und Schweizer 1 % des Einkommens spenden würde, könnte ganz Sierra Leone ein bedingungsloses Grundeinkommen garantiert und das Land aus der Armut befreit werden.",
-		"together-button": "Jetzt aufstehen"
-	},
-	"section-4": {
-		"title-1": "Soziale Gerechtigkeit fängt ",
-		"title-2": " bei uns an.",
-		"subtitle": "Social Income ist eine Solidaritätsinitative. Durch kleine, aber effektvolle Spenden verbinden wir Menschen weltweit.",
-		"paragraph-1": "Im Prinzip haben wir alles zur Hand, um die grossen Ungleichheiten zu verringern: Jene, die finanziell helfen können und jene, die finanzielle Hilfe benötigen. Diese beiden Seiten müssen wir jetzt zusammenbringen.",
-		"paragraph-2": "Hier kommt Social Income ins Spiel – Vermögen wird solidarisch und innovativ umverteilt.",
-		"paragraph-3": "Natürlich kann Social Income die strukturelle Ungleichheit nicht auf einen Schlag und für immer beseitigen. Aber wir legen das Fundament für echte Veränderung.",
-		"paragraph-4": "Bereits mit einer bescheidenen Beteiligung von 1 % unseres Einkommens ermöglichen wir finanziell weniger begünstigten Menschen bessere Lebensumstände, mindern die konfliktträchtige Ungleichheit und tragen so zu einer gerechteren Welt bei."
-	},
-	"section-5": {
-		"articles": "Artikel",
-		"faqs": "Häufig gestellte Fragen",
-		"title": "Wir kombinieren drei Ansätze, um einen Wandel herbeizuführen.",
-		"card-1": {
-			"title": "Bedingungsloses Grundeinkommen",
-			"item-1": "Reduziert Diskriminierung",
-			"item-2": "Bekämpft Einkommensungleichheit",
-			"item-3": "Stärkt marginalisierte Gruppen",
-			"item-4": "Verbessert die Arbeitsbedingungen",
-
-			"paragraph-1": "Das bedingungslose Grundeinkommen (BGE) ist eine garantierte finanzielle Zuwendung, ohne dafür eine Gegenleistung erbringen zu müssen. Das Einkommen soll Empfänger*innen ermöglichen, ihre grundlegenden Lebenshaltungskosten zu decken und sich finanziell abzusichern.",
-			"paragraph-2": "Wie das BGE basiert auch die Idee von Social Income auf regelmässigen Zahlungen zur Sicherung des Existenzminimums. Während das BGE staatlich finanziert wird, versteht sich Social Income als Solidaritätsinitiative – direkt von Mensch zu Mensch.",
-
-			"article-1-title": "The Case for a Universal Basic Income",
-			"article-1-author": "Kanni Wignaraja, UN Assistant Secretary-General",
-			"article-1-link": "https://www.undp.org/content/undp/en/home/blog/2020/the-case-for-a-universal-basic-income.html",
-
-			"article-2-title": "The UN has called for UBI for the world's poorest during the pandemic",
-			"article-2-author": "Michelle Nichols, Journalist (Reuters)",
-			"article-2-link": "https://www.weforum.org/agenda/2020/07/un-report-development-coronavirus-covid-ubi-poverty/",
-
-			"article-3-title": "How Universal Basic Income Can Help Address the Racial Wealth Gap",
-			"article-3-author": "Dr. Bernice King und Michael Tubbs für die Times",
-			"article-3-link": "https://time.com/5863751/dr-bernice-king-and-mayor-michael-tubbs-on-how-universal-basic-income-can-help-address-the-racial-wealth-gap/",
-
-			"article-4-title": "Ten Reasons to Support Basic Income",
-			"article-4-author": "Basic Income UK",
-			"article-4-link": "https://www.basicincome.org.uk/reasons-support-basic-income/",
-
-			"faq-1-question": "Was ist der Unterschied zwischen Social Income und dem bedingungslosem Grundeinkommen?",
-			"faq-1-link": "/faq",
-
-			"faq-2-question": "Wofür verwenden die Empfänger:innen das Geld?",
-			"faq-2-link": "/faq"
-		},
-		"card-2": {
-			"title": "Direkte Cash-Transfers",
-			"item-1": "Minimiert Verwaltungskosten",
-			"item-2": "Reduziert Armut",
-			"item-3": "Fördert ein selbstbestimmtes Leben",
-			"item-4": "Stimuliert lokale Märkte",
-
-			"paragraph-1": "Direkte Cash-Transfers haben sich als effizientes und effektives Mittel zur Armutsbekämpfung erwiesen. Darum werden sie heute von Regierungen und NGOs eingesetzt. Cash-Transfers können an Bedingungen geknüpft sein oder bedingungslos gewährt werden. Sie ermöglichen es den Empfänger:innen, Waren und Dienstleistungen ihrer Wahl direkt von lokalen Märkten zu beziehen.",
-			"paragraph-2": "Die Auszahlungen von Social Income sind weder von politischen Entscheidungen, noch von staatlichen Budgets oder Steuern abhängig. Oberstes Ziel der Initiative ist die freiwillige und direkte Umverteilung von Vermögen zwischen Privatpersonen.",
-
-			"article-1-title": "Direct Cash Transfers",
-			"article-1-author": "Cash Transfer Evidence Paper",
-			"article-1-link": "https://www.who.int/alliance-hpsr/alliancehpsr_dfidevidencepaper.pdf",
-
-			"article-2-title": "Guidelines for Cash Transfer Programming",
-			"article-2-author": " Internationale Komitee vom Roten Kreuz",
-			"article-2-link": "https://www.ifrc.org/Global/Publications/disasters/finance/cash-guidelines-en.pdf",
-
-			"article-3-title": "Is Cash Better for Poor People Than Conventional Foreign Aid?",
-			"article-3-author": "Marc Gunther, New York Times",
-			"article-3-link": "https://www.nytimes.com/2018/09/11/opinion/is-cash-better-for-poor-people-than-conventional-foreign-aid.html",
-
-			"article-4-title": "Cash Transfers for Children—Investing into the Future",
-			"article-4-author": "The Lancet",
-			"article-4-link": "https://www.thelancet.com/action/showPdf?pii=S0140-6736%2809%2961166-1",
-
-			"faq-1-question": "Sind direkte Cash-Transfers ein effektiver Weg zur Armutsbekämpfung?",
-			"faq-1-link": "/faq",
-
-			"faq-2-question": "Ist es hilfreich, Menschen in Not Geld zu schicken?",
-			"faq-2-link": "/faq",
-
-			"faq-3-question": "Was sind direkte Geldtransfers?",
-			"faq-3-link": "/faq"
-		},
-		"card-3": {
-			"title": "Mobile Banking",
-			"item-1": "Geringe Gebühren",
-			"item-2": "Einfach und schnell",
-			"item-3": "Skalierbar",
-			"item-4": "Krisensicher (Covid-19)",
-
-			"paragraph-1": "Mobile Banking ist ein Service einer Bank, eines Mobilfunkanbieters oder eines anderen Finanzinstituts, welcher es den Kund*innen ermöglicht, Finanztransaktionen über ein mobiles Gerät wie ein Telefon oder Tablet zu tätigen. Afrika nimmt bei der Verbreitung von Mobile Banking eine Vorreiterrolle ein.",
-			"paragraph-2": "Social Income richtet sich an Menschen, die in Armut leben und meist kein Bankkonto haben. Das Mobiltelefon ist oft ihr einziger Zugang zu Finanzdienstleistungen.",
-
-			"article-1-title": "Mobile Phones Are Replacing Bank Accounts in Africa",
-			"article-1-author": "Moses Mozart Dzawu, Bloomberg",
-			"article-1-link": "https://www.bloomberg.com/news/articles/2019-08-13/mobile-phones-are-replacing-bank-accounts-in-africa",
-
-			"article-2-title": "The Future of African Banking and the Impact of Mobile Money",
-			"article-2-author": "Fabio Scala, Further Africa",
-			"article-2-link": "https://furtherafrica.com/2020/01/06/the-future-of-african-banking-and-the-impact-of-mobile-money/",
-
-			"article-3-title": "How Mobile Money Can Lead a Fintech Revolution in Africa",
-			"article-3-author": "Amadou N. R. Sy, Berater für das African Department, IMF",
-			"article-3-link": "https://www.weforum.org/agenda/2019/02/fintech-in-sub-saharan-africa-a-potential-game-changer",
-
-			"article-4-title": "You’ve Got Money: Mobile Payments Help People During the Pandemic",
-			"article-4-author": "Sonja Davidovic, Delphine Prady, Economists beim IMF",
-			"article-4-link": "https://basicincome.org.uk/reasons-support-basic-income/",
-
-			"faq-1-question": "Sind direkte Cash-Transfers ein effektiver Weg zur Armutsbekämpfung?",
-			"faq-1-link": "/faq"
-		}
-	},
-	"section-6": {
-		"title-1": "Beteilige dich an den nachhaltigen Entwicklungszielen der",
-		"title-2": " Vereinten Nationen.",
-		"card-1": {
-			"title": "SDG 1",
-			"description": "Armut in jeder Form und überall beenden.",
-			"paragraph-1": "Das erste nachhaltige Entwicklungsziel der Vereinten Nationen verlangt bis 2030 die Beendigung von Armut in all ihren Formen. Dafür braucht es verschiedene Massnahmen zum Aufbau und zur Stärkung von sozialen Sicherungssystemen, denn unter Armut leidende Menschen sind besonders betroffen von wirtschaftlichen Schocks, sozialen Krisen und Naturkatastrophen."
-		},
-		"card-2": {
-			"title": "SDG 10",
-			"description": "Ungleichheit in und zwischen Staaten verringern.",
-			"paragraph-1": "Ungleichheiten in und zwischen Ländern zu verringern ist eine integrale Voraussetzung, um die nachhaltigen Entwicklungsziele zu erreichen. Die internationale Gemeinschaft hat zwar erhebliche Fortschritte gemacht und viele Menschen aus der Armut befreit. Beim Zugang zu Gesundheitsversorgung, Bildung und anderen, essentiellen Gütern bestehen allerdings immer noch grosse Ungleichheiten."
-		}
-	},
-	"section-7": {
-		"title-1": "Wir freuen uns über ",
-		"title-2": "die Anerkennung.",
-		"subtitle": "Social Income wurde im Rahmen verschiedener Accelerator- und Entwicklungsprogrammen gefördert und ausgezeichnet, unter anderem von folgenden Organisationen:"
-	},
-	"video": {
-		"video-id": "896169775",
-		"credits-title": "Credits",
-		"credits-content": [
+		"take-action": "Handle jetzt",
+		"title-1": [
 			{
-				"role": "Director of Photography",
-				"name": "Gabriel Koller"
+				"text": "Wie vielen Menschen kannst Du mit "
 			},
 			{
-				"role": "Schnitt",
-				"name": "Nicolas Küng"
+				"text": "1 % deines Einkommens",
+				"color": "accent"
 			},
 			{
-				"role": "Sounddesign & Musik",
-				"name": "Tidiane Sane"
-			},
-			{
-				"role": "Mix & Mastering",
-				"name": "Nicola-Miloš Mišić"
-			},
-			{
-				"role": "Colorist",
-				"name": "Simon Hardegger"
-			},
-			{
-				"role": "Kameraassistenz",
-				"name": "Felix Rhodes"
-			},
-			{
-				"role": "Off-Stimme",
-				"name": "Ted Limpert"
-			},
-			{
-				"role": "Grafikanimation",
-				"name": "Raphael Schoen"
-			},
-			{
-				"role": "Übersetzung (Untertitel)",
-				"name": "Françoise Légeret (FR), Riccardo Tamburini (ES, IT)"
+				"text": "aus der Armut helfen?"
 			}
 		]
+	},
+	"video-subtitle": "https://stream.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/text/tEQo12YOEV00SFEKb006bK0100EPQ01Fcgzkp901ZRyxZZ9I4rxwmpNj01zGQ.vtt",
+	"section-2": {
+		"title-1": "Die Menschen in den ärmsten Regionen Sierra Leones kennen den Weg aus der Armut. ",
+		"title-2": [
+			{
+				"text": "Meist fehlen jedoch die finanziellen Mittel, um diesen Weg tatsächlich zu gehen. Hier kommst "
+			},
+			{
+				"text": "du und Social Income",
+				"color": "accent"
+			},
+			{
+				"text": "ins Spiel."
+			}
+		],
+		"title-3": "Ein fairer Auswahlprozess",
+		"text-3.1": "Bedürftige identifizieren: In Zusammenarbeit mit lokalen NGOs in Sierra Leone erreichen wir gezielt Menschen in Armut, die von einem dreijährigen, verlässlichen Einkommen profitieren und in ihre Zukunft investieren können.",
+		"text-3.2": "Zufallsprinzip: Unser transparentes Losverfahren wählt unter den zuvor als bedürftig Identifizierten zufällig und vorurteilsfrei, damit alle die gleiche Chance haben.",
+		"title-4": "Direkte Hilfe, direkte Wirkung",
+		"text-4": "Deine Spende wird direkt auf die Mobil\u00ADtelefone der Menschen in Not über\u00ADwiesen und gibt ihnen so die Möglich\u00ADkeit, mit ihren eigenen Entscheidungen und An\u00ADstreng\u00ADungen die Armut zu über\u00ADwinden.",
+		"title-5": "Langfristige Begleitung",
+		"text-5": "Während und nach dem Programm be\u00ADgleiten unsere lokalen NGO-Partner die Empfänger:innen, um ihre ökonomische Eigen\u00ADständig\u00ADkeit zu fördern. Im dritten Jahr liegt der Schwer\u00ADpunkt auf einem naht\u00ADlosen Über\u00ADgang in ein selbst\u00ADbestimmtes Leben."
+	},
+	"section-3": {
+		"title-faded": "Mein Impact",
+		"title": "Wie hoch ist dein monatliches Einkommen?",
+		"subtitle": "Warum ist das wichtig?",
+		"cta": "Beitrag berechnen"
+	},
+	"section-4": {
+		"title-1": [
+			{
+				"text": "Was würde sich in deinem Alltag ändern,wenn du "
+			},
+			{
+				"text": "monatlich 1 % deines Einkommens ",
+				"color": "accent"
+			},
+			{
+				"text": "spenden würdest?"
+			}
+		]
+	},
+	"section-5": {
+		"title-1": [
+			{
+				"text": "Von Mensch zu Mensch. "
+			},
+			{
+				"text": "Von Handy zu Handy.",
+				"color": "accent"
+			}
+		],
+		"subtitle-1": "Social Income ist ein neuer Weg, Armut im Globalen Süden zu bekämpfen – digital, effizient und zeitgemäss."
+	},
+	"section-faq": {
+		"title": "Das klingt gut, aber ... ",
+		"cta": "Alle Fragen"
+	},
+	"section-7": {
+		"title-1": "Social Income kombiniert drei Ansätze für echten Wandel.",
+		"cards": [
+			{
+				"category": "Konzept",
+				"title": "Bedingungs\u00ADloses Grund\u00ADeinkommen",
+				"points": [
+					{
+						"text": "Reduziert Diskriminierung"
+					},
+					{
+						"text": "Bekämpft Einkommens\u00ADungleichheit"
+					},
+					{
+						"text": "Stärkt margi\u00ADnali\u00ADsierte Gruppen"
+					},
+					{
+						"text": "Verbessert die Arbeits\u00ADbedingungen"
+					}
+				]
+			},
+			{
+				"category": "Methode",
+				"title": "Direkte Cash-Transfers",
+				"points": [
+					{
+						"text": "Minimiert Verwaltungs\u00ADkosten"
+					},
+					{
+						"text": "Reduziert Armut"
+					},
+					{
+						"text": "Fördert ein selbst\u00ADbestimmtes Leben"
+					},
+					{
+						"text": "Stimuliert lokale Märkte"
+					}
+				]
+			},
+			{
+				"category": "Technologie",
+				"title": "Mobile Banking",
+				"points": [
+					{
+						"text": "Geringe Gebühren"
+					},
+					{
+						"text": "Einfach und schnell"
+					},
+					{
+						"text": "Skalierbar"
+					},
+					{
+						"text": "Krisensicher"
+					}
+				]
+			}
+		]
+	},
+	"section-8": {
+		"cards": [
+			{
+				"quote": [
+					{
+						"text": "« Cash-Transfers erlauben es den Empfänger*innen,  zu besorgen. "
+					},
+					{
+						"text": "Güter und Dienstleistungen direkt auf lokalen Märkten ",
+						"color": "accent"
+					},
+					{
+						"text": "zu besorgen.»"
+					}
+				],
+				"logo": "/assets/logos/logo-icrc.svg",
+				"author": "Internationales Rotes Kreuz"
+			},
+			{
+				"quote": [
+					{
+						"text": "« Wir müssen uns ernsthaft damit befassen, "
+					},
+					{
+						"text": "ein klug konzipiertes bedingungsloses Grundeinkommen ",
+						"color": "accent"
+					},
+					{
+						"text": "zu implementieren. So können uns Krisen zwar treffen, aber ohne zerstörerische Kraft zu entfalten. »"
+					}
+				],
+				"logo": "/assets/logos/logo-un.svg",
+				"author": "Vereinte Nationen"
+			},
+			{
+				"quote": [
+					{
+						"text": "« Die globale Armut zu bekämpfen ist ein hartes Stück Arbeit. Aber einfache Lösung könnte darin bestehen, "
+					},
+					{
+						"text": "Zugang zu Finanzdienstleistungen übers Mobiltelefon ",
+						"color": "accent"
+					},
+					{
+						"text": "zu ermöglichen. »"
+					}
+				],
+				"logo": "/assets/logos/logo-worldbank.svg",
+				"author": "Weltbank"
+			}
+		]
+	},
+	"section-10": {
+		"title-1": [
+			{
+				"text": "Dein Beitrag für die Ziele der "
+			},
+			{
+				"text": "Vereinten Nationen",
+				"color": "primary"
+			},
+			{
+				"text": ""
+			}
+		],
+		"sdg-1-title": "Armut in jeder Form und überall beenden.",
+		"sdg-1": "SDG 1",
+		"sdg-10-title": "Ungleichheit in und zwischen Staaten verringern.",
+		"sdg-10": "SDG 10"
+	},
+	"section-11": {
+		"title": "Journal",
+		"card-1-title": "Test",
+		"card-1-author": "Aurélie Schmiedlin",
+		"card-1-description": "Test",
+		"all-articles": "Alle Artikel ansehen ›"
 	}
 }

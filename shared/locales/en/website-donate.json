@@ -5,6 +5,7 @@
 	"amount": "Amount",
 	"button-text": "Make a Difference",
 	"button-text-short": "Donate Now",
+	"one-time-donation": "Make a one-time donation",
 	"donation-impact": {
 		"monthly-contribution": "Your monthly contribution",
 		"direct-payout": "The people in need receive your contribution directly on their mobile phones.",
@@ -17,7 +18,7 @@
 		"5": "Your contribution of {{ amount, currency }} funds a Social Income for more than three people in need.",
 		"6": "Your contribution of {{ amount, currency }} sustains a Social Income for more than four people in need.",
 		"7": "Your contribution of {{ amount, currency }} sustains a Social Income for more than five people in need.",
-		"8": "Your monthly contribution of {{ amount, currency }} is extraordinary, as well as your impact."
+		"8": "Your contribution of {{ amount, currency }} is extraordinary, as well as your impact."
 	},
 	"donation-interval": {
 		"0": {
@@ -38,8 +39,7 @@
 	},
 	"one-time": {
 		"title": "One-time Donation",
-		"subtitle": "Make a one-time donation to Social Income",
-		"twint-button": "You can also support us through Twint"
+		"subtitle": "Make a one-time donation to Social Income"
 	},
 	"success": {
 		"title": "Thank you for your contribution",
@@ -72,31 +72,5 @@
 			"submit-button": "Activate Account",
 			"google-button": "Sign up with Google"
 		}
-	},
-	"campaign": {
-		"not-found": "Unfortunately, the campaign couldn't be found.",
-		"by": "By {{ creator }}",
-		"without-goal": {
-			"collected_zero": "No contributions yet. Be the first!",
-			"collected_one": "{{ amount, currency }} raised by {{ count }} contributor",
-			"collected_other": "{{ amount, currency }} raised by {{ count }} contributors"
-		},
-		"with-goal": {
-			"collected-percentage": "Raised {{percentage}}%",
-			"goal-title": "Goal",
-			"collected-amount_one": "{{ amount, currency }} by {{count}} contributor",
-			"collected-amount_other": "{{ amount, currency }} by {{count}} contributors",
-			"goal-amount": "{{ amount, currency }}"
-		},
-		"days-left_zero": "Last day left to contribute",
-		"days-left_one": "1 day left to contribute",
-		"days-left_other": "{{ count }} days left to contribute",
-		"ended": "The campaign has ended.  For regular donations, please use the main donation page.",
-		"card-title": "My Contribution",
-		"about-si-title": "About Social Income",
-		"about-si-text-1": "Social Income is a nonprofit organization based in Switzerland that provides unconditional cash transfers via mobile phone to people living in multidimensional poverty in West Africa.",
-		"about-si-text-2": "Since 2020, Social Income has been running an open-ended universal basic income program in Sierra Leone.",
-		"more-faq": "<a href='/faq' target=\"_blank\">More questions</a>",
-		"badge-highlight": "Ongoing Campaign"
 	}
 }

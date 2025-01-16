@@ -1,150 +1,218 @@
 {
+	"metadata": {
+		"title": "Social Income",
+		"description": "Change from human to human. From mobile to mobile.",
+		"og-image": "/assets/metadata/og/default.jpg",
+		"twitter-image": "/assets/metadata/twitter/default.jpg"
+	},
 	"section-1": {
-		"title-1": "How many people can you ",
-		"title-2": "lift out of poverty ",
-		"title-3": "with 1% of your income?",
-		"income-text": "Enter your monthly income and calculate your impact.",
-		"amount": "Amount",
-		"button-text": "Show my Impact",
-		"privacy-commitment": "Our commitment to privacy",
-		"tax-deductible": "Contributions are tax-deductible in Switzerland",
-		"one-time-donation": "Make a one-time donation"
-	},
-	"section-2": {
-		"title-1": "What would change ",
-		"title-2": "if you gave away 1% of your income every month?",
-		"subtitle-1": "Not much, right? Your life would go on as usual.",
-		"video-button": "Watch the video"
-	},
-	"section-3": {
-		"title": [
+		"take-action": "Take Action",
+		"title-1": [
 			{
-				"text": "Who should, if not us "
+				"text": "How many people can you lift out of poverty "
 			},
 			{
-				"text": "here in Switzerland?",
-				"color": "secondary"
+				"text": "with only 1%",
+				"color": "accent"
+			},
+			{
+				"text": "of your income?"
+			}
+		]
+	},
+	"video-subtitle": "https://stream.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/text/e4IuMXCAcXeGaFiskrAlXSEXIvAZXkugk3UweHfU9thkgNjaAGtdlw.vtt",
+	"section-2": {
+		"title-1": "Those that live in Sierra Leone’s poorest communities know what it takes to rise out of poverty.",
+		"title-2": [
+			{
+				"text": "They just rarely have the opportunity – or the money – to do so. That’s where "
+			},
+			{
+				"text": "you and Social Income",
+				"color": "accent"
+			},
+			{
+				"text": "come in."
 			}
 		],
-		"jackpot-title": "Life in Switzerland is like winning the jackpot.",
-		"jackpot-text": "People in Switzerland have systematically more opportunities and higher chances of leading a life worth living than anywhere else in the world.",
-		"jackpot-button": "Share the love",
-		"helping-others-title": "Helping others makes us happier.",
-		"helping-others-text": "Let’s start by helping those who don’t have the privilege of leading a life without financial difficulties. If not now, when?",
-		"helping-others-button": "Take Action",
-		"together-title": "Together we can make a major difference.",
-		"together-text": "If every fourth person in Switzerland contributed 1% of their income, every citizen of Sierra Leone could receive universal basic income and make poverty a thing of the past.",
-		"together-button": "Lead the Way"
+		"title-3": "Unique Process for Fair Selection",
+		"text-3.1": "Identifying those in need: Through collaboration with local NGOs in Sierra Leone, we target individuals living in poverty who can benefit from a three-year predictable income, empowering them to invest in their future.",
+		"text-3.2": "Selecting randomly: Our randomized selection process is transparent and publicly verifiable, eliminating human biases and favoritism. This ensures fairness and equal chances for all individuals in poverty to benefit.",
+		"title-4": "Direct Giving, Direct Results",
+		"text-4": "We directly transfer your contribution onto the mobile phones of individuals in need, empowering them to overcome poverty through their own choices and efforts.",
+		"title-5": "Ongoing Support",
+		"text-5": "Our recipients receive continuous support from our local partners throughout and even after the program, maximizing the overall impact. Specifically, the third year of the program is focused on facilitating a seamless transition as they move on from the program."
+	},
+	"section-3": {
+		"title-faded": "My impact",
+		"title": "What's your monthly income?",
+		"subtitle": "Why is this important?",
+		"cta": "Show my Impact"
 	},
 	"section-4": {
-		"title-1": "How can we address inequality? ",
-		"title-2": " Ourselves.",
-		"subtitle": "Social Income is an initiative in solidarity that aims to connect people across the world through small, impactful donations.",
-		"paragraph-1": "If you think about it, we already have everything we need to offset inequality: those who can help and those who can use it. All we need to do is bring them together.",
-		"paragraph-2": "That’s where Social Income comes in ― to carry out a direct redistribution of wealth based on solidarity and enabled by technology.",
-		"paragraph-3": "Of course, Social Income won’t end structural inequality once and for all. But it will build a foundation for real change.",
-		"paragraph-4": "By asking for a modest contribution of just 1%, we make it possible for people from all walks of life to help those in need and contribute to a fairer world."
+		"title-1": [
+			{
+				"text": "What would change if you gave "
+			},
+			{
+				"text": "away 1% of your income ",
+				"color": "accent"
+			},
+			{
+				"text": "every month?"
+			}
+		]
 	},
 	"section-5": {
-		"articles": "Articles",
-		"faqs": "Frequently Asked Questions",
-		"title": "We combine three approaches to change.",
-		"card-1": {
-			"title": "Universal Basic Income",
-			"item-1": "Reduces discrimination",
-			"item-2": "Fights income inequality",
-			"item-3": "Empowers marginalized groups",
-			"item-4": "Improves working conditions",
-			"paragraph-1": "Universal Basic Income (UBI) is a government-guaranteed payment program for people in need. The goal is to provide sufficient funds to cover basic living expenses and improve recipients' financial security.",
-			"paragraph-2": "Like UBI, the idea of Social Income is based on regular cash transfers to secure minimum subsistence needs. While UBI is financed by the state, Social Income is an initiative in solidarity – directly from human to human.",
-			"article-1-title": "The Case for a Universal Basic Income",
-			"article-1-author": "Kanni Wignaraja, UN Assistant Secretary-General",
-			"article-1-link": "https://www.undp.org/content/undp/en/home/blog/2020/the-case-for-a-universal-basic-income.html",
-			"article-2-title": "The UN has called for UBI for the world's poorest during the pandemic",
-			"article-2-author": "Michelle Nichols, Journalist (Reuters)",
-			"article-2-link": "https://www.weforum.org/agenda/2020/07/un-report-development-coronavirus-covid-ubi-poverty/",
-			"article-3-title": "How Universal Basic Income Can Help Address the Racial Wealth Gap",
-			"article-3-author": "Dr. Bernice King and Michael Tubbs for Times",
-			"article-3-link": "https://time.com/5863751/dr-bernice-king-and-mayor-michael-tubbs-on-how-universal-basic-income-can-help-address-the-racial-wealth-gap/",
-			"article-4-title": "Ten Reasons to Support Basic Income",
-			"article-4-author": "Basic Income UK",
-			"article-4-link": "https://www.basicincome.org.uk/reasons-support-basic-income/",
-			"faq-1-question": "What is the difference between Social Income and Universal Basic Income?",
-			"faq-1-link": "/faq",
-			"faq-2-question": "What do recipients need the money for?",
-			"faq-2-link": "/faq"
-		},
-		"card-2": {
-			"title": "Direct Cash Transfers",
-			"item-1": "Low overhead costs",
-			"item-2": "Reduces poverty",
-			"item-3": "Empowers individuals",
-			"item-4": "Stimulates local markets",
-			"paragraph-1": "Direct Cash Transfers are payments made to eligible groups of people in need, often by governments or NGOs. They can be provided either conditionally or unconditionally. Cash transfers allow recipients to obtain a range of goods and services of their choice directly from local markets and service providers.",
-			"paragraph-2": "Social Income's direct cash payments are not dependent on political decisions, government budgets or taxes. The primary goal of Social Income is the voluntary and direct redistribution of wealth between individuals.",
-			"article-1-title": "Direct Cash Transfers",
-			"article-1-author": "Cash Transfer Evidence Paper",
-			"article-1-link": "https://www.who.int/alliance-hpsr/alliancehpsr_dfidevidencepaper.pdf",
-			"article-2-title": "Guidelines for Cash Transfer Programming",
-			"article-2-author": "International Red Cross",
-			"article-2-link": "https://www.ifrc.org/Global/Publications/disasters/finance/cash-guidelines-en.pdf",
-			"article-3-title": "Is Cash Better for Poor People Than Conventional Foreign Aid?",
-			"article-3-author": "Marc Gunther, New York Times",
-			"article-3-link": "https://www.nytimes.com/2018/09/11/opinion/is-cash-better-for-poor-people-than-conventional-foreign-aid.html",
-			"article-4-title": "Cash Transfers for Children—Investing into the Future",
-			"article-4-author": "The Lancet",
-			"article-4-link": "https://www.thelancet.com/action/showPdf?pii=S0140-6736%2809%2961166-1",
-			"faq-1-question": "Are direct cash payments an effective way to fight poverty?",
-			"faq-1-link": "/faq",
-			"faq-2-question": "Is it helpful to send money to people in need?",
-			"faq-2-link": "/faq",
-			"faq-3-question": "What are Direct Cash Transfers?",
-			"faq-3-link": "/faq"
-		},
-		"card-3": {
-			"title": "Mobile Banking",
-			"item-1": "Low fees",
-			"item-2": "Immediate",
-			"item-3": "Scalable",
-			"item-4": "Crisis-proof (Covid-19)",
-			"paragraph-1": "Mobile banking is a service provided by a bank, mobile provider or other financial institution that allows its customers to conduct financial transactions remotely using a mobile device such as a phone or tablet. Africa is leading the way in mainstream adoption of mobile banking.",
-			"paragraph-2": "Social Income is aimed at people who live in poverty and whose access to financial services can (only) be guaranteed via mobile phone.",
-			"article-1-title": "Mobile Phones Are Replacing Bank Accounts in Africa",
-			"article-1-author": "Moses Mozart Dzawu, Bloomberg",
-			"article-1-link": "https://www.bloomberg.com/news/articles/2019-08-13/mobile-phones-are-replacing-bank-accounts-in-africa",
-			"article-2-title": "The Future of African Banking and the Impact of Mobile Money",
-			"article-2-author": "Fabio Scala, Further Africa",
-			"article-2-link": "https://furtherafrica.com/2020/01/06/the-future-of-african-banking-and-the-impact-of-mobile-money/",
-			"article-3-title": "How Mobile Money Can Lead a Fintech Revolution in Africa",
-			"article-3-author": "Amadou N. R. Sy, Advisor in the African Department, IMF",
-			"article-3-link": "https://www.weforum.org/agenda/2019/02/fintech-in-sub-saharan-africa-a-potential-game-changer",
-			"article-4-title": "You’ve Got Money: Mobile Payments Help People During the Pandemic",
-			"article-4-author": "Sonja Davidovic, Delphine Prady, Economists at IMF",
-			"article-4-link": "https://basicincome.org.uk/reasons-support-basic-income/",
-			"faq-1-question": "Are direct cash payments an effective way to fight poverty?",
-			"faq-1-link": "/faq"
-		}
+		"title-1": [
+			{
+				"text": "Change from human to human. "
+			},
+			{
+				"text": "From mobile to mobile.",
+				"color": "accent"
+			}
+		],
+		"subtitle-1": "Social Income is a new way to fight poverty in the Global South. Digital, efficient and mobile."
 	},
-	"section-6": {
-		"title-1": "Contribute to the United Nations’",
-		"title-2": " Sustainable Development Goals.",
-		"card-1": {
-			"title": "SDG 1",
-			"description": "End poverty in all its forms, everywhere.",
-			"paragraph-1": "The U.N.’s first sustainability goal calls for an end to poverty in all its forms by 2030. It also aims to ensure social protection for the poor and vulnerable, increase access to basic services, and support those harmed by social, economic, and environmental shocks of any kind."
-		},
-		"card-2": {
-			"title": "SDG 10",
-			"description": "Reduce inequality within and among countries.",
-			"paragraph-1": "Reducing inequalities and ensuring that no one is left behind is integral to achieving the Sustainable Development Goals. Despite some positive signs toward reducing inequality in some dimensions (e.g reducing relative income inequality in some countries and preferential trade status benefiting lower-income countries), many inequalities continue to persist or are even increasing."
-		}
+	"section-faq": {
+		"title": "This sounds good, but ... ",
+		"cta": "All FAQ"
 	},
 	"section-7": {
-		"title-1": "We are proud that we’ve been ",
-		"title-2": "recognized.",
-		"subtitle": "Social Income has received funding and support from various accelerator and development programs, including the following organisations:"
+		"title-1": "Social Income combines three approaches to change.",
+		"cards": [
+			{
+				"category": "Concept",
+				"title": "Universal Basic Income",
+				"points": [
+					{
+						"text": "Reduces discrimination"
+					},
+					{
+						"text": "Fights income inequality"
+					},
+					{
+						"text": "Empowers marginalized groups"
+					},
+					{
+						"text": "Improves working conditions"
+					}
+				]
+			},
+			{
+				"category": "Method",
+				"title": "Direct Cash Transfers",
+				"points": [
+					{
+						"text": "Low overhead costs"
+					},
+					{
+						"text": "Reduces poverty"
+					},
+					{
+						"text": "Empowers individuals"
+					},
+					{
+						"text": "Stimulates local markets"
+					}
+				]
+			},
+			{
+				"category": "Technology",
+				"title": "Mobile Banking",
+				"points": [
+					{
+						"text": "Low fees"
+					},
+					{
+						"text": "Immediate"
+					},
+					{
+						"text": "Scalable"
+					},
+					{
+						"text": "Crisis-proof"
+					}
+				]
+			}
+		]
 	},
-	"video": {
-		"video-id": "896169775"
+	"section-8": {
+		"cards": [
+			{
+				"quote": [
+					{
+						"text": "« Cash transfers allow recipients to obtain a range of goods and services "
+					},
+					{
+						"text": "of their choice directly ",
+						"color": "accent"
+					},
+					{
+						"text": "from local markets and service providers. »"
+					}
+				],
+				"logo": "/assets/logos/logo-icrc.svg",
+				"author": "International Red Cross"
+			},
+			{
+				"quote": [
+					{
+						"text": "« We seriously need to consider implementing a well-designed UBI, "
+					},
+					{
+						"text": "a well-designed Universal Basic Income, ",
+						"color": "accent"
+					},
+					{
+						"text": "so shocks may hit, but they won’t destroy. »"
+					}
+				],
+				"logo": "/assets/logos/logo-un.svg",
+				"author": "United Nations"
+			},
+			{
+				"quote": [
+					{
+						"text": "« Fixing global poverty is hard. But one solution might be "
+					},
+					{
+						"text": "as simple as using a mobile phone ",
+						"color": "accent"
+					},
+					{
+						"text": "to access financial services. »"
+					}
+				],
+				"logo": "/assets/logos/logo-worldbank.svg",
+				"author": "World Bank"
+			}
+		]
+	},
+	"section-10": {
+		"title-1": [
+			{
+				"text": "Contribute to the "
+			},
+			{
+				"text": "United Nations’",
+				"color": "primary"
+			},
+			{
+				"text": ""
+			}
+		],
+		"sdg-1-title": "End poverty in all its forms, everywhere.",
+		"sdg-1": "SDG 1",
+		"sdg-10-title": "Reduce inequality within and among countries.",
+		"sdg-10": "SDG 10"
+	},
+	"section-11": {
+		"title": "Journal",
+		"card-1-title": "Test",
+		"card-1-author": "Aurélie Schmiedlin",
+		"card-1-description": "Test",
+		"all-articles": "See all articles ›"
 	}
 }

@@ -4,18 +4,14 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 
-export async function FlowOfFunds({ lang }: { lang: WebsiteLanguage }) {
+export default async function FlowOfFunds({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-about-us', 'website-videos'],
 	});
 
 	return (
-		<BaseContainer
-			id="flow-of-funds"
-			backgroundColor="bg-red-50"
-			className="flex flex-col justify-center pb-16 md:pb-32"
-		>
+		<BaseContainer id="flow-of-funds" className="flex scroll-mt-36 flex-col justify-center">
 			<Typography as="h3" size="xl" color="muted-foreground" className="mb-4">
 				{translator.t('flow-of-funds.header')}
 			</Typography>

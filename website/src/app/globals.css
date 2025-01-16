@@ -7,6 +7,14 @@
 	--h-navbar-mobile: 6rem;
 }
 
+.h-navbar {
+	height: var(--h-navbar-mobile);
+
+	@media screen(md) {
+		height: var(--h-navbar);
+	}
+}
+
 .min-h-navbar {
 	min-height: var(--h-navbar-mobile);
 	@media screen(md) {
@@ -15,8 +23,8 @@
 }
 
 .min-h-screen-navbar {
-	min-height: calc(100vh - var(--h-navbar-mobile));
+	min-height: calc(100dvh - 4rem);
 	@media screen(md) {
-		min-height: calc(100vh - var(--h-navbar));
+		min-height: calc(100dvh - 5rem);
 	}
 }

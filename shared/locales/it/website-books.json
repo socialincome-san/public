@@ -1,0 +1,101 @@
+{
+	"section-1": {
+		"title": "Recommended Reading",
+		"subtitle-1": "A suggested reading list to provide a foundation for understanding Social Income, Basic Income, financial aid, and poverty",
+		"subtitle-2": "If you have any additional book recommendations, don't hesitate to ",
+		"subtitle-3": "let us know",
+		"lastUpdate": "Last Update: Oct 19, 2023"
+	},
+	"section-2": {
+		"book-1": {
+			"author": "Peter Singer",
+			"authorLink": "https://www.thelifeyoucansave.org/the-book/",
+			"title": "The Life You Can Save – How to Do Your Part to End World Poverty",
+			"description": "In The Life You Can Save, Peter Singer makes the convincing argument that giving will make a huge difference in the lives of others without diminishing the quality of our own. This book is an urgent call to action and a hopeful primer on how the power of compassion, mixed with rigorous investigation and careful reasoning, can lift others out of despair.",
+			"quote": "Singer contends that we need to change our views of what is involved in living an ethical life.",
+			"publisher": "Free Download",
+			"publisherLink": "https://www.thelifeyoucansave.org/the-book/",
+			"year": "2019"
+		},
+		"book-2": {
+			"author": "Jason Hickel",
+			"authorLink": "https://www.jasonhickel.org/the-divide",
+			"title": "The Divide – Global Inequality from Conquest to Free Marketsy",
+			"description": "Since 1960, the income gap between the North and South has roughly tripled in size. Today 4.3 billion people, 60 per cent of the world's population, live on less than $5 per day. The richest eight people now control the same amount of wealth as the poorest half of the world combined.",
+			"quote": "What is causing this growing divide? We are told that poverty is a natural phenomenon that can be fixed with aid. But in reality it is a political problem: poverty doesn’t just exist, it has been created.",
+			"publisher": "Bloomsbury Publishing",
+			"publisherLink": "https://wwnorton.com/books/The-Divide/",
+			"year": "2018"
+		},
+		"book-3": {
+			"author": "Rutger Bregman",
+			"authorLink": "https://www.rutgerbregman.com/",
+			"title": "Utopia For Realists – How We Can Build the Ideal World",
+			"description": "Utopia for Realists is one of those rare books that takes you by surprise and challenges what you thought was possible. From a Canadian city that once eradicated poverty to Richard Nixon's near implementation of basic income for millions of Americans, Bregman takes us on a journey through history and beyond the usual left-right divides to champion exciting ideas whose time has yet come.",
+			"quote": "\"A more politically radical Malcolm Gladwell.\" – New York Times",
+			"publisher": "W. W. Norton & Company Publishing",
+			"publisherLink": "https://crownpublishing.com/archives/feature/annie-lowrey-author-give-people-money",
+			"year": "2017"
+		},
+		"book-4": {
+			"author": "Abhijit Banerjee & Esther Duflo",
+			"authorLink": "http://economics.mit.edu/faculty/eduflo/",
+			"title": "Good Economics for Hard Times – Better Answers to Our Biggest Problems",
+			"description": "In this revolutionary book, prize-winning economists Abhijit V. Banerjee and Esther Duflo show how economics, when done right, can help us solve the thorniest social and political problems of our day. From immigration to inequality, slowing growth to accelerating climate change, we have the resources to address the challenges we face but we are so often blinded by ideology.",
+			"quote": "\"Wonderfully refreshing . . . A must read\" – Thomas Piketty",
+			"publisher": "Penguin Random House Publishing",
+			"publisherLink": "https://www.penguin.co.uk/books/305/305539/good-economics-for-hard-times/9780141986197.html",
+			"year": "2019"
+		},
+		"book-5": {
+			"author": "Phil Teer",
+			"authorLink": "https://twitter.com/pteer",
+			"title": "The Coming Age of Imagination",
+			"description": "Phil Teer draws insights from the creative and entrepreneurial effects of basic income experiments and weaves them into stories of how the Romantic poets invented consumerism; artists regenerated cities like New York, Glasgow and Berlin; and creative geniuses like David Bowie, Bob Dylan, Kurt Vonnegut, Haruki Murakami and many others liberated their creative spirits and transformed their lives.",
+			"quote": "The Coming Age of Imagination is a creative manifesto for universal basic income. When we no longer have to worry about money, we have the opportunity to be creative on a mass scale. Simply put, basic income changes everything.",
+			"publisher": "Unbound",
+			"publisherLink": "https://unbound.com/books/the-coming-age-of-imagination/",
+			"year": "2020"
+		},
+		"book-6": {
+			"author": "William MacAskill",
+			"authorLink": "https://www.williammacaskill.com/book",
+			"title": "Doing Good Better – How Effective Altruism Can Help You Make a Difference",
+			"description": "Most of us want to make a difference. We donate our time and money to charities and causes we deem worthy, choose careers we consider meaningful, and patronize businesses and buy products we believe make the world a better place. Unfortunately, we often base these decisions on assumptions and emotions rather than facts. As a result, even our best intentions often lead to ineffective—and sometimes downright harmful—outcomes. How can we do better?",
+			"quote": "\"Even for small givers, a more rational approach to philanthropy can focus attention on areas that make the biggest enduring contribution to human welfare.\" – New York Times",
+			"publisher": "Penguin Random House Publishing",
+			"publisherLink": "https://www.penguinrandomhouse.com/books/316786/doing-good-better-by-william-macaskill/",
+			"year": "2015"
+		},
+		"book-7": {
+			"author": "Amartya Sen",
+			"authorLink": "https://en.wikipedia.org/wiki/Amartya_Sen",
+			"title": "Development as Freedom",
+			"description": "In Development as Freedom Amartya Sen explains how in a world of unprecedented increase in overall opulence millions of people living in the Third World are still unfree. Even if they are not technically slaves, they are denied elementary freedoms and remain imprisoned in one way or another by economic poverty, social deprivation, political tyranny or cultural authoritarianism.",
+			"quote": "By the winner of the 1988 Nobel Prize in Economics, an essential and paradigm-altering framework for understanding economic development — for both rich and poor — in the twenty-first century.",
+			"publisher": "Oxford University Press",
+			"publisherLink": "https://global.oup.com/?cc=ch",
+			"year": "2001"
+		},
+		"book-8": {
+			"author": "Annie Lowrey",
+			"authorLink": "https://en.wikipedia.org/wiki/Annie_Lowrey",
+			"title": "Give People Money",
+			"description": "In this sparkling and provocative book, economics writer Annie Lowrey examines the UBI movement from many angles. She travels to Kenya to see how a UBI is lifting the poorest people on earth out of destitution, India to see how inefficient government programs are failing the poor, South Korea to interrogate UBI’s intellectual pedigree, and Silicon Valley to meet the tech titans financing UBI pilots in expectation of a world with advanced artificial intelligence and little need for human labor.",
+			"quote": "\"Like UBI, the book is ambitious, and it presents a strong case for cash aid.\" — Financial Times",
+			"publisher": "Crown Publishing",
+			"publisherLink": "https://crownpublishing.com/archives/feature/annie-lowrey-author-give-people-money",
+			"year": "2018"
+		},
+		"book-9": {
+			"author": "Abhijit V. Banerjee & Esther Duflo",
+			"authorLink": "https://en.wikipedia.org/wiki/Poor_Economics",
+			"title": "Poor Economics",
+			"description": "This eye-opening book overturns the myths about what it is like to live on very little, revealing the unexpected decisions that millions of people make every day. Looking at some of the most paradoxical aspects of life below the poverty line - why the poor need to borrow in order to save, why incentives that seem effective to us may not be for them, and why, despite being more risk-taking than high financiers, they start businesses but rarely grow them.",
+			"quote": "\"Refreshingly original, wonderfully insightful ... an entirely new perspective\" — Guardian",
+			"publisher": "Penguin Publishing",
+			"publisherLink": "https://www.penguin.co.uk/books/186/186390/poor-economics/9780718193669.html",
+			"year": "2012"
+		}
+	}
+}

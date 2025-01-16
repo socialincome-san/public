@@ -1,0 +1,82 @@
+{
+	"title": "Documenti",
+	"table-columns": {
+		"title": "Documento",
+		"language": "Lingua",
+		"href": "Link"
+	},
+	"table-caption": "Questa pagina viene costantemente aggiornata.",
+	"download-pdf": "PDF",
+	"reports": [
+		{
+			"title": "Report annuale 2023",
+			"href": "https://drive.google.com/file/d/13vvBS6Ju6NqpIgis4CrMHrY9s2hbRjYy/view",
+			"language": "Inglese/Tedesco"
+		},
+		{
+			"title": "Rendiconto finanziario 2023",
+			"href": "https://drive.google.com/file/d/13WH2RIxJsq9HLbxvBM-Wf5XcXzCSogG3/view",
+			"language": "Inglese"
+		},
+		{
+			"title": "Rendiconto finanziario 2023",
+			"href": "https://drive.google.com/file/d/13VxN6-NHes63Bb0Cw_kWo6vqc-EbEwc-/view",
+			"language": "Tedesco"
+		},
+		{
+			"title": "Rapporto di revisione 2023",
+			"href": "https://drive.google.com/file/d/13hSSIWLDDWG6eKBDFxYmwGWRRQU_21JY/view",
+			"language": "Tedesco"
+		},
+		{
+			"title": "Rendiconto finanziario 2022",
+			"href": "https://drive.google.com/file/d/13OJlzxznbsRhE3ywYHOF3ggh7e89zZtn/view",
+			"language": "Inglese"
+		},
+		{
+			"title": "Rendiconto finanziario 2022",
+			"href": "https://drive.google.com/file/d/1ivgdOqI3WkJ5ymSuDMNS0BP3SffVxCKk/view",
+			"language": "Tedesco"
+		},
+		{
+			"title": "Rapporto di revisione 2022",
+			"href": "https://drive.google.com/file/d/13s672kRDugWm6Vd9PcdLCQASZKbBOTGF/view",
+			"language": "Tedesco"
+		},
+		{
+			"title": "Report annuale 2021",
+			"href": "https://drive.google.com/file/d/1WmuWDMvbngCY73scZM5_qD3BpIambigG/view",
+			"language": "English/Tedesco"
+		},
+		{
+			"title": "Rendiconto finanziario 2021",
+			"href": "https://drive.google.com/file/d/1WdTi_NWhpGX7nHQh1Duu9W-klmGQT1Ik/view",
+			"language": "Inglese"
+		},
+		{
+			"title": "Rendiconto finanziario 2021",
+			"href": "https://drive.google.com/file/d/1WfUPKVuEcCICqNn4PR_dPU1Rg2ji1q6W/view",
+			"language": "Tedesco"
+		},
+		{
+			"title": "Rapporto di revisione 2021",
+			"href": "https://drive.google.com/file/d/16b-w5B2PhkRBZbBQOTmBXfxTGrDvf2FE/view",
+			"language": "Tedesco"
+		},
+		{
+			"title": "Report annuale 2020",
+			"href": "https://drive.google.com/file/d/15_v8B7eLJxDJVNfoYWABwKNcfHbz1U_o/view",
+			"language": "Inglese/Tedesco"
+		},
+		{
+			"title": "Rapporto di revisione 2020",
+			"href": "https://drive.google.com/file/d/15aaPhuCCTicG74lNeg6OA9vEsq4nkE0o/view",
+			"language": "Tedesco"
+		},
+		{
+			"title": "Conferma esenzione fiscale",
+			"href": "https://drive.google.com/file/d/1-YAtyYjUL_LqMKyG0IN41Cohr58EAy7S/view",
+			"language": "Tedesco"
+		}
+	]
+}

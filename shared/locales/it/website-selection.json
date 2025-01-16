@@ -1,0 +1,116 @@
+{
+	"section-1": {
+		"subtitle": "Il nostro sogno",
+		"title": [
+			{
+				"text": "Fedeli all’idea di un reddito di base universale, aspiriamo a "
+			},
+			{
+				"text": "offrire Social Income a tutto il mondo.",
+				"color": "accent"
+			}
+		],
+		"target": [
+			{
+				"text": "8,104,666,773",
+				"color": "accent"
+			},
+			{
+				"text": "potential",
+				"color": "accent"
+			}
+		],
+		"population": "8,104,666,773",
+		"potential": "potenziali",
+		"scope": "beneficiari vivono sulla Terra",
+		"continue": "Tuttavia"
+	},
+	"section-2": {
+		"subtitle": "La nostra realtà",
+		"title": [
+			{
+				"text": "A causa delle risorse limitate che abbiamo a disposizione, "
+			},
+			{
+				"text": "ci concentriamo su coloro ",
+				"color": "accent"
+			},
+			{
+				"text": "che hanno più bisogno di Social Income."
+			}
+		],
+		"amount": "USD 300,000+",
+		"amount-context": "raccolti fino a oggi ↗",
+		"scope": "Più ",
+		"continue-1": "Processo di selezione"
+	},
+	"section-3": {
+		"preselection-title": "Preselezione Equa",
+		"preselection-subtitle": "Diamo priorità in base alle necessità reali",
+		"preselection-desc": "Identifichiamo e costruiamo un bacino di individui idonei con l’aiuto e l’esperienza di partner locali.",
+		"preselection-goal": "Dare priorità a chi ha più bisogno",
+		"preselection-1-title": "Ci concentriamo sui più poveri",
+		"preselection-1-desc": "Ci impegniamo a concentrare i nostri sforzi per sostenere le persone più vulnerabili e per garantire che il nostro aiuto abbia il massimo impatto dove è più necessario.",
+		"preselection-1-annex": "1.8 miliardi di persone vivono con meno di 3,65 USD al giorno",
+		"preselection-2-title": "Operiamo dove c’è un alto tasso di povertà",
+		"preselection-2-desc": "Una delle maggiori quantità di persone in difficoltà si trova in Sierra Leone, dove il 57% della popolazione vive sotto la soglia di povertà e il reddito medio mensile è inferiore a 45 USD.",
+		"preselection-2-annex": "4,9 milioni di persone in Sierra Leone vivono in povertà",
+		"preselection-3-title": "Creiamo un bacino di potenziali beneficiari",
+		"preselection-3-desc": "Collaboriamo con ONG locali che si dedicano a combattere la povertà per identificare le persone in difficoltà, costruendo un bacino ampio ed espandibile di potenziali beneficiari.",
+		"preselection-3-annex": "5.000+ potenziali beneficiari sono stati identificati nel nostro bacino",
+		"selection-title": "Selezione Trasparente",
+		"selection-subtitle": "Minimizziamo possibili tensioni",
+		"selection-desc": "Garantiamo che il nostro processo di selezione sia senza alcun pregiudizio, trasparente per tutti e privo di favoritismi.",
+		"selection-goal": "Ridurre al minimo le possibili tensioni",
+		"selection-1-title": "Approccio con sorteggio",
+		"selection-1-desc": "Di fronte alla necessità di fare una scelta, il sorteggio si distingue come un metodo equo e imparziale. Questo è particolarmente vero quando tutte le opzioni sono ugualmente desiderabili.",
+		"selection-1-annex": "Il sorteggio avviene tra un gruppo di individui che sono nella stessa condizione di possibili beneficiari",
+		"selection-2-title": "Veramente casuale",
+		"selection-2-desc": "L'integrità di un sorteggio dipende dalla sua imprevedibilità. Quando le persone sono sicure che la selezione è puramente casuale, senza manipolazioni e verificabile pubblicamente, sanno di potersi fidare.",
+		"selection-2-annex": "Visualizza il numero casuale attuale ↗",
+		"selection-3-title": "Verificabile pubblicamente",
+		"selection-3-desc": "Pubblicando il codice che gestisce la selezione casuale, diamo a tutti la possibilità di verificare il processo e assicurarsi che non ci siano manipolazioni.",
+		"selection-3-annex": "Verifica il nostro source code e i sorteggi qui sotto  ↗",
+		"goal": "Obiettivo"
+	},
+
+	"section-4": {
+		"title": [
+			{
+				"text": "I nostri "
+			},
+			{
+				"text": "ultimi sorteggi ",
+				"color": "accent"
+			},
+			{
+				"text": "dei beneficiari."
+			}
+		],
+		"past-draws-description": "La seguente lista mostra i sorteggi effettuati in passato per selezionare i destinatari di Social Income.",
+		"draw-card": {
+			"summary": "{{ count }} su {{ total }} selezionati",
+			"random-number": "Numero casuale",
+			"confirm-drand": "Conferma su drand",
+			"confirm-github": "Conferma su Github",
+			"long-list": "{{ total }} persone nella lista lunga, {{ count }} selezionati",
+			"people": "Persone",
+			"ngo": "ONG"
+		}
+	},
+
+	"section-5": {
+		"title": [
+			{
+				"text": "Va "
+			},
+			{
+				"text": "bene, ",
+				"color": "accent"
+			},
+			{
+				"text": "ma..."
+			}
+		]
+	}
+}

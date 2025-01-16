@@ -1,0 +1,147 @@
+{
+	"metadata": {
+		"title": "Chi Siamo | Social Income"
+	},
+	"landing-page": {
+		"title": [
+			{
+				"text": "Volevamo fare la differenza. "
+			},
+			{
+				"text": "Abbiamo trovato il modo.",
+				"color": "secondary"
+			}
+		],
+		"subtitle": "Crediamo che migliorare le vite delle persone bisognose non sia solo una possibilità, ma anche una responsabilità. È così che è nata Social Income.",
+		"contact": "Contattaci",
+		"contact-title": "Contattaci",
+		"contact-email": "hello@socialincome.org",
+		"registration": "Registrazione come ONG",
+		"registration-title": "Forma Giuridica",
+		"registration-foundation": "Social Income è un'organizzazione no-profit fondata nel 2019 secondo la legge svizzera, con esenzione fiscale.",
+		"registration-uid": "UID: ",
+		"registration-uid-nr": "CHE-289.611.695",
+		"registration-duns": "DUNS: ",
+		"registration-duns-nr": "48-045-6376"
+	},
+	"our-mission": {
+		"header": "La nostra missione",
+		"title": [
+			{
+				"text": "Combattere la povertà globale con "
+			},
+			{
+				"text": "l’aiuto della gente comune.",
+				"color": "secondary"
+			}
+		],
+		"subtitle": "Molte persone nei paesi più ricchi si vogliono impegnare a contrastare le disuguaglianze, ma non sempre sanno come o da dove iniziare.",
+		"paragraphs": [
+			"Grazie alla diffusione dei servizi di mobile banking nei paesi in via di sviluppo, è più facile che mai inviare soldi direttamente alle persone bisognose, quasi a costo zero.",
+			"Social Income vuole sfruttare questo potenziale combinando due criteri per la redistribuzione della ricchezza. Il primo è il concetto di un Reddito Minimo Universale, che rappresenta un percorso promettente verso una società più equa e inclusiva.",
+			"Il secondo è l’uso di trasferimenti diretti di denaro a persone che vivono in estrema povertà. Numerosi studi hanno dimostrato che coloro che ricevono aiuti diretti traggono grande beneficio dal denaro e che lo utilizzano localmente, responsabilmente e con successo.",
+			"Otteniamo un notevole impatto inviando versamenti regolari e a lungo termine direttamente ai beneficiari, in modo radicalmente trasparente: da persona a persona, aggirando il problema che in molti dei paesi più poveri del mondo le infrastrutture governative siano quasi completamente assenti.",
+			"E lo facciamo in un modo radicalmente trasparente, che ci consente di evitare gli alti costi amministrativi normalmente associati a progetti del genere."
+		]
+	},
+	"our-promise": {
+		"header": "La nostra promessa",
+		"title": [
+			{
+				"text": "Le donazioni sono destinate alle persone bisognose, "
+			},
+			{
+				"text": "non a coprire i costi operativi.",
+				"color": "secondary"
+			}
+		],
+		"subtitle": "Ci impegniamo a garantire che la parte più ampia possibile della tua donazione raggiunga e benefici direttamente i nostri destinatari. ",
+		"paragraphs": [
+			"Per mantenere questa promessa, raccogliamo fondi specifici per coprire parte dei nostri costi operativi e spese finanziarie attraverso sovvenzioni filantropiche e donazioni istituzionali.",
+			"Questo approccio garantisce che solo una minima parte della tua donazione venga destinata ai costi operativi."
+		]
+	},
+	"flow-of-funds": {
+		"header": "Flusso dei fondi",
+		"title": [
+			{
+				"text": "Da tutto il mondo verso i Paesi del Sud. "
+			},
+			{
+				"text": "Sicuro, veloce e diretto.",
+				"color": "secondary"
+			}
+		],
+		"subtitle": "Le donazioni sono conservate in modo sicuro nella valuta più stabile al mondo: i Franchi Svizzeri.",
+		"text": "Ogni mese trasferiamo esattamente la somma necessaria ai conti bancari locali nei paesi in cui operiamo. Successivamente distribuiamo Social Income direttamente sui telefoni dei beneficiari, tramite servizi di mobile banking."
+	},
+	"team": {
+		"header": "Il nostro Team",
+		"title": [
+			{
+				"text": "Stiamo trasformando Social Income "
+			},
+			{
+				"text": "in realtà.",
+				"color": "secondary"
+			}
+		],
+		"roles": {
+			"finance": "Finanze",
+			"operations": "Operazioni",
+			"marketing": "Marketing",
+			"communications": "Comunicazione",
+			"co-president": "Co-Presidente",
+			"founder": "Fondatore",
+			"board-member": "Membro del Consiglio Direttivo",
+			"software-development": "Sviluppo del Software",
+			"app-development": "Sviluppo dell'App",
+			"impact-measurement": "Misurazione dell'Impatto",
+			"strategy": "Strategia",
+			"translations": "Traduzioni",
+			"research": "Ricerca"
+		},
+		"groups": {
+			"staff": {
+				"name": "Staff locale",
+				"subtitle": "Lavorando sul campo, garantendo che i beneficiari e i partner abbiano un punto di contatto affidabile.",
+				"description": "Il personale locale si occupa delle operazioni sul territorio e fornisce supporto ai partner e ai beneficiari. Le loro esperienze vengono incorporate negli strumenti tecnologici che sviluppiamo. Ricevono una retribuzione equa in base agli standard locali."
+			},
+			"volunteers": {
+				"name": "Volontari attivi",
+				"subtitle": "Le persone che generosamente dedicano il loro tempo e le loro competenze per rendere tutto questo possibile.",
+				"description": "Per far funzionare Social Income serve una gran varietà di competenze. Questi professionisti, che offrono con dedizione il loro tempo come volontari, fanno in modo che tutto proceda senza intoppi e gestiscono l'intera organizzazione attraverso il loro impegno e un efficace lavoro di squadra."
+			},
+			"board": {
+				"name": "Consiglio direttivo",
+				"subtitle": "Responsabile del rispetto degli standard etici e delle linee guida interne.",
+				"description": "Il consiglio è responsabile della supervisione dell'organizzazione. I membri sono eletti per un mandato di tre anni. I loro specifici compiti di supervisione sono definiti nello statuto e nei regolamenti dell'organizzazione."
+			},
+			"special-thanks": {
+				"name": "Ex volontari",
+				"subtitle": "Queste persone hanno dato un contributo significativo a Social Income attraverso il loro impegno come volontari.",
+				"description": "I volontari che sono inattivi da più di tre mesi sono considerati ex volontari fino a quando non riprendono la loro partecipazione. Questo approccio ci consente di rappresentare in modo trasparente e accurato le dimensioni effettive della nostra organizzazione."
+			}
+		}
+	},
+	"contact": {
+		"header": "Contatti",
+		"title": [
+			{
+				"text": "Siamo una organizzazione no-profit"
+			},
+			{
+				"text": "con sede in Svizzera.",
+				"color": "secondary"
+			}
+		],
+		"paragraph": "Social Income è stata fondata come un’organizzazione no-profit a Zurigo, in Svizzera. Un comitato indipendente supervisiona l'organizzazione.",
+		"legal-status": "Forma Giuridica",
+		"legal-status-paragraphs": [
+			"Organizzazione no-profit fondata nel 2019 secondo la legge svizzera, con esenzione fiscale.",
+			"UID: CHE-289.611.695",
+			"DUNS: 48-045-6376"
+		],
+		"find-us": "Trovaci su"
+	}
+}

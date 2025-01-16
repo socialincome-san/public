@@ -1,0 +1,113 @@
+{
+	"section-1": {
+		"subtitle": "Notre ambition",
+		"title": [
+			{
+				"text": "Dans l’esprit du revenu de base inconditionnel, nous visons une réelle universalité par  "
+			},
+			{
+				"text": "le versement de Social Income à chaque être humain.",
+				"color": "accent"
+			}
+		],
+		"target": [
+			{
+				"text": "8,104,666,773",
+				"color": "accent"
+			},
+			{
+				"text": "bénéficiaires potentiels",
+				"color": "accent"
+			}
+		],
+		"population": "8,104,666,773",
+		"potential": "bénéficiaires",
+		"scope": "potentiels vivent sur terre",
+		"continue": "Toutefois"
+	},
+	"section-2": {
+		"subtitle": "Notre réalité",
+		"title": [
+			{
+				"text": "Nos ressources étant limitées, "
+			},
+			{
+				"text": "nous concentrons nos efforts ",
+				"color": "accent"
+			},
+			{
+				"text": "sur les personnes qui ont le plus besoin de Social Income."
+			}
+		],
+		"amount": "USD 300,000+",
+		"amount-context": "reçus à ce jour ↗",
+		"scope": "Plus de ",
+		"continue-1": "Processus de sélection"
+	},
+	"section-3": {
+		"preselection-title": "Une présélection équitable",
+		"preselection-subtitle": "Fixation des priorités en fonction des besoins",
+		"preselection-desc": "La connaissance du terrain nous permet d‘identifier et de constituer un groupe de personnes éligibles.",
+		"preselection-goal": "Établir des priorités en fonction des besoins",
+		"preselection-1-title": "Cibler les plus pauvres",
+		"preselection-1-desc": "Nous nous engageons à concentrer nos efforts sur les plus vulnérables, en nous assurant que notre aide a un maximum d’impact là où elle est la plus utile.",
+		"preselection-1-annex": "1.8 milliard de personnes vivent avec moins de 3,65 dollars US par jour",
+		"preselection-2-title": "Se concentrer sur une zone limitée",
+		"preselection-2-desc": "La Sierra Leone est l’un des pays où la concentration de personnes dans le besoin est la plus élevée. 57% de la population vit en-dessous du seuil de pauvreté, et le revenu mensuel moyen est inférieur à 45 dollars US.",
+		"preselection-2-annex": "4.9 millions de personnes en Sierra Leone sont considérées comme pauvres",
+		"preselection-3-title": "Créer un groupe de bénéficiaires potentiels",
+		"preselection-3-desc": "Nous travaillons en partenariat avec des ONG locales spécialisées dans la lutte contre la pauvreté pour identifier les personnes dans le besoin. Nous constituons ainsi un large groupe de bénéficiaires potentiels.",
+		"preselection-3-annex": "5,000+ bénéficiaires potentiels constituent notre groupe",
+		"selection-title": "Une sélection transparente",
+		"selection-subtitle": "Réduction des risques de tension",
+		"selection-desc": "Nous garantissons un processus de sélection impartial et transparent, excluant tout favoritisme.",
+		"selection-goal": "Minimiser les risques de tension",
+		"selection-1-title": "Par tirage au sort",
+		"selection-1-desc": "Lorsqu’on doit choisir, le tirage au sort se révèle être une méthode juste et impartiale, surtout lorque toutes les options sont souhaitables.",
+		"selection-1-annex": "La sélection se fait parmi des personnes qui ont toutes de bonnes raisons d’en profiter",
+		"selection-2-title": "Vraiment aléatoire",
+		"selection-2-desc": "L’intégrité d’un tirage au sort dépend de son imprédictibilité. La confiance augmente lorsque les gens savent que le tirage est vraiment aléatoire, sans manipulation et publiquement vérifiable.",
+		"selection-2-annex": "Afficher le nombre aléatoire actuel ↗",
+		"selection-3-title": "Publiquement vérifiable",
+		"selection-3-desc": "En publiant le code qui génère la sélection aléatoire, nous permettons à tout le monde de vérifier le processus et de s’assurer qu’il n’y a pas de manipulation.",
+		"selection-3-annex": "Vérifie le code source et les tirages au sort  ↗",
+		"goal": "Objectif"
+	},
+
+	"section-4": {
+		"title": [
+			{
+				"text": "Tirages au sort ",
+				"color": "accent"
+			},
+			{
+				"text": "précédents"
+			}
+		],
+		"past-draws-description": "La liste ci-dessous présente les tirages au sort effectués jusqu’ici pour sélectionner les bénéficiaires de Social Income.",
+		"draw-card": {
+			"summary": "{{ count }} sélectionnés sur {{ total }}",
+			"random-number": "Nombre aléatoire",
+			"confirm-drand": "Confirmation sur drand",
+			"confirm-github": "Confirmation sur Github",
+			"long-list": "{{ total }} personnes sur la liste, {{ count }} sélectionnées",
+			"people": "Personnes",
+			"ngo": "ONG"
+		}
+	},
+
+	"section-5": {
+		"title": [
+			{
+				"text": "Tout ceci est "
+			},
+			{
+				"text": "bien beau,",
+				"color": "accent"
+			},
+			{
+				"text": "mais..."
+			}
+		]
+	}
+}

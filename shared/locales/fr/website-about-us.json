@@ -1,0 +1,128 @@
+{
+	"metadata": {
+		"title": "Qui nous sommes | Social Income"
+	},
+	"landing-page": {
+		"title": [
+			{
+				"text": "Nous aurions pu ne rien faire. "
+			},
+			{
+				"text": "Nous en avons décidé autrement.",
+				"color": "secondary"
+			}
+		],
+		"subtitle": "Pour nous, améliorer la vie de personnes dans le besoin n'est pas seulement une  possibilité mais une responsabilité. Ainsi est né Social Income.",
+		"contact": "Contact",
+		"contact-title": "Prends contact avec nous",
+		"contact-email": "hello@socialincome.org",
+		"registration": "Enregistrement en tant qu'ONG",
+		"registration-title": "Statut légal",
+		"registration-foundation": "Social Income est une organisation à but non lucratif fondée en 2019 selon le droit suisse et bénéficiant d'un statut d'exonération fiscale.",
+		"registration-uid": "IDE: ",
+		"registration-uid-nr": "CHE-289.611.695",
+		"registration-duns": "DUNS: ",
+		"registration-duns-nr": "48-045-6376"
+	},
+	"our-mission": {
+		"header": "Notre mission",
+		"title": [
+			{
+				"text": "Combattre la pauvreté globale avec l'aide "
+			},
+			{
+				"text": "de gens ordinaires.",
+				"color": "secondary"
+			}
+		],
+		"subtitle": "Beaucoup de gens dans les pays riches désirent s'engager dans la lutte contre les inégalités, mais ils ne savent pas comment ni par où commencer.",
+		"paragraphs": [
+			"Grâce à l'utilisation généralisée des services de transfert monétaires par téléphone mobile dans les pays en développement, il est plus facile que jamais d'envoyer de l'argent directement aux personnes dans le besoin, pratiquement sans frais.",
+			"Social Income veut exploiter ce potentiel en combinant deux approches de la redistribution des richesses. La première est le revenu de base, une voie prometteuse vers une société plus égalitaire et plus inclusive.",
+			"La seconde approche est le transfert direct et anticipé d'argent aux personnes vivant dans la pauvreté. Des études ont montré que les personnes qui reçoivent une aide directe profitent pleinement de l'argent et qu'elles le réinvestissent localement, de manière responsable et efficace.",
+			"Nous contribuons donc à réduire la pauvreté en transférant régulièrement et à long terme de l'argent directement aux bénéficiaires: de personne à personne, parce que dans de nombreux pays parmi les plus pauvres du monde, il n'y a pas d'infrastructure sociale fiable.",
+			"Et nous agissons de manière totalement transparente, ce qui nous permet d'éviter les frais de gestion élevés généralement inhérents à ce type de projets."
+		]
+	},
+	"our-promise": {
+		"header": "Notre promesse",
+		"title": [
+			{
+				"text": "Les dons pour les personnes dans le besoin. "
+			},
+			{
+				"text": "Pas pour les frais généraux.",
+				"color": "secondary"
+			}
+		],
+		"subtitle": "Nous nous engageons à ce que la plus grande partie possible de vos dons profite directement à nos bénéficiaires.",
+		"paragraphs": [
+			"Pour tenir cette promesse, nous récoltons des fonds auprès d'institutions qui couvrent en partie nos frais de fonctionnement.",
+			"Nous garantissons ainsi que seule une part minime de vos dons est allouée aux frais de fonctionnement."
+		]
+	},
+	"flow-of-funds": {
+		"header": "Flux de fonds",
+		"title": [
+			{
+				"text": "De partout vers le sud global. "
+			},
+			{
+				"text": "Sûr, rapide et direct.",
+				"color": "secondary"
+			}
+		],
+		"subtitle": "Les dons sont conservés en toute sécurité dans la devise la plus stable au monde: le franc suisse.",
+		"text": "Chaque mois, nous transférons juste assez d'argent aux banques locales des pays où nous intervenons. Nous distribuons ensuite le Social Income directement par transfert sur le téléphone mobile des bénéficiaires."
+	},
+	"team": {
+		"header": "Notre équipe",
+		"title": [
+			{
+				"text": "Nous faisons de Social Income "
+			},
+			{
+				"text": "une réalité.",
+				"color": "secondary"
+			}
+		],
+		"roles": {
+			"finance": "Finances",
+			"operations": "Gestion",
+			"marketing": "Marketing",
+			"communications": "Communication",
+			"co-president": "Co-président·e",
+			"founder": "Directeur fondateur",
+			"board-member": "Membre du comité",
+			"software-development": "Développement logiciel",
+			"app-development": "Développement d’application",
+			"impact-measurement": "Mesure d’impact",
+			"strategy": "Stratégie",
+			"fundraising": "Recherche de fonds",
+			"translations": "Traductions",
+			"research": "Recherche"
+		},
+		"groups": {
+			"staff": {
+				"name": "Personnel local",
+				"subtitle": "Ils et elles gèrent et développent les activités dans le pays de destination.",
+				"description": "Le personnel local gère les opérations locales et offre un soutien aux partenaires et aux bénéficiaires. Leurs observations sont prises en compte dans les outils technologiques que nous développons. Ils perçoivent un salaire local équitable."
+			},
+			"volunteers": {
+				"name": "Bénévoles actifs",
+				"subtitle": "Les personnes qui offrent généreusement leur temps et leurs compétences pour rendre tout cela possible.",
+				"description": "La gestion de Social Income requiert un large éventail de compétences. Des professionnels passionnés travaillent bénévolement pour gérer toute l'ONG et lui donner vie grâce à leur engagement et un travail d'équipe efficace."
+			},
+			"board": {
+				"name": "Comité de l'association",
+				"subtitle": "Responsable du respect des normes éthiques et des lignes directrices internes.",
+				"description": "Les membres du comité sont responsables de la supervision de l'organisation et élus pour un mandat de trois ans. Leurs tâches sont définies par les statuts et le règlement de l'organisation."
+			},
+			"special-thanks": {
+				"name": "Anciens bénévoles",
+				"subtitle": "Ces bénévoles ont apporté une contribution significative à Social Income.",
+				"description": "Les bénévoles inactifs depuis au moins trois mois sont considérés comme anciens bénévoles jusqu'à ce qu'ils reprennent une activité. Cette approche nous permet de représenter de manière transparente et exacte la taille réelle de notre organisation."
+			}
+		}
+	}
+}

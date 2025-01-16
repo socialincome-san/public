@@ -44,7 +44,7 @@
 			"And we do so in a radically transparent way that allows us to avoid the high administrative costs normally associated with such projects."
 		]
 	},
-	"100-percent-model": {
+	"our-promise": {
 		"header": "Our Promise",
 		"title": [
 			{
@@ -73,10 +73,7 @@
 			}
 		],
 		"subtitle": "Donations are safely stored in the most stable currency in the world: Swiss Francs.",
-		"text": "Every month we transfer just enough money to local banks in the countries where we are active. We then distribute Social Incomes with the help of mobile money directly to the phones of beneficiaries.",
-		"paragraphs": [
-			"Every month we transfer just enough money to local banks in the countries where we are active. We then distribute Social Incomes with the help of mobile money directly to the phones of beneficiaries."
-		]
+		"text": "Every month we transfer just enough money to local banks in the countries where we are active. We then distribute Social Incomes with the help of mobile money directly to the phones of beneficiaries."
 	},
 	"team": {
 		"header": "Our Team",
@@ -101,7 +98,9 @@
 			"app-development": "App Development",
 			"impact-measurement": "Impact Measurement",
 			"strategy": "Strategy",
-			"fundraising": "Fundraising"
+			"fundraising": "Fundraising",
+			"translations": "Translations",
+			"research": "Research"
 		},
 		"groups": {
 			"staff": {
@@ -117,7 +116,7 @@
 			"board": {
 				"name": "Board of Association",
 				"subtitle": "Responsible for compliance with ethical standards and internal guidelines.",
-				"description": "The board is responsible for the supervision of the organization. Members are elected for a term of four years. Their specific supervisory duties are defined in the statutes and organizational regulations."
+				"description": "The board is responsible for the supervision of the organization. Members are elected for a term of three years. Their specific supervisory duties are defined in the statutes and organizational regulations."
 			},
 			"special-thanks": {
 				"name": "Former Volunteers",

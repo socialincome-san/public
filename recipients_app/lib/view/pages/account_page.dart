@@ -38,6 +38,7 @@ class AccountPageState extends State<AccountPage> {
   late final TextEditingController _callingNameController;
   late final TextEditingController _paymentNumberController;
   late final TextEditingController _contactNumberController;
+  late final TextEditingController _successorNameController;
   late final TextEditingController _emailController;
 
   PackageInfo _packageInfo = PackageInfo(
@@ -73,6 +74,9 @@ class AccountPageState extends State<AccountPage> {
     );
     _contactNumberController = TextEditingController(
       text: widget.recipient.communicationMobilePhone?.phoneNumber.toString() ?? "",
+    );
+    _successorNameController = TextEditingController(
+      text: widget.recipient.successorName ?? "",
     );
 
     _initAppVersionInfo();
@@ -295,6 +299,18 @@ class AccountPageState extends State<AccountPage> {
                     }
                   },
                   keyboardType: TextInputType.emailAddress,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) return null;
+
+                    final emailRegex = RegExp(
+                      r"^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$",
+                    );
+                    if (!emailRegex.hasMatch(value)) {
+                      return localizations.errorEmailInvalid;
+                    }
+
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 24),
                 Text(
@@ -387,6 +403,7 @@ class AccountPageState extends State<AccountPage> {
                     }
                   },
                 ),
+                const SizedBox(height: 24),
                 // TODO add later
                 /*const SizedBox(height: 8),
                      DropdownButtonFormField<String>(
@@ -406,9 +423,30 @@ class AccountPageState extends State<AccountPage> {
                           : null,
                     ), */
 
+                /// SUCCESSOR IN THE CASE OF DEATH
+                Text(
+                  localizations.inCaseOfDeathTitle,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  localizations.inCaseOfDeathDescription,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: 16),
+                InputText(
+                  hintText: localizations.successorName,
+                  controller: _successorNameController,
+                  keyboardType: TextInputType.name,
+                  onSubmitted: (value) {
+                    context.read<AuthCubit>().updateRecipient(
+                          recipient.copyWith(successorName: value),
+                        );
+                  },
+                ),
+
                 /// RECOMMENDING ORGA
-                if (widget.organization != null)
-                  OrganizationInfo(organization: widget.organization!),
+                if (widget.organization != null) OrganizationInfo(organization: widget.organization!),
                 const SizedBox(height: 24),
                 Text(
                   localizations.support,

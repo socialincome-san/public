@@ -1,19 +1,13 @@
-name: "✨ Feature Request: Mobile App"
+name: "Mobile App: ✨ Feature Request"
 description: Suggest a feature for the mobile app
 title: "[Mobile App Feature]: <title>"
-labels: feature, flutter, mobileapp
+labels: ["mobile"]
+type: "enhancement"
 body:
   - type: markdown
     attributes:
       value: |
-        # Thank you for taking the time to help us improve the app!
-  - type: checkboxes
-    attributes:
-      label: Is there an existing request for this feature?
-      description: Please search to see if a request already exists for the feature you'd like.
-      options:
-        - label: I have searched the existing issues
-          required: true
+        # Improving Social Income
   - type: textarea
     attributes:
       label: Is your feature request related to a problem? Please describe.

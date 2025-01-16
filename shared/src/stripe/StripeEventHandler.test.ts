@@ -12,7 +12,7 @@ import { StripeEventHandler } from './StripeEventHandler';
 describe('stripeWebhook', () => {
 	const projectId = 'test-' + new Date().getTime();
 	const firestoreAdmin = new FirestoreAdmin(getOrInitializeFirebaseAdmin({ projectId: projectId }));
-	const stripeWebhook = new StripeEventHandler(process.env.STRIPE_SECRET_KEY!, firestoreAdmin);
+	const stripeWebhook = new StripeEventHandler('DUMMY_KEY', firestoreAdmin);
 
 	// Mock the Stripe API call
 	jest.spyOn(stripeWebhook.stripe.customers, 'retrieve').mockImplementation(async () => {
@@ -188,8 +188,10 @@ describe('stripeWebhook', () => {
 			application_fee_amount: null,
 			attempt_count: 1,
 			attempted: true,
+			automatically_finalizes_at: null,
 			auto_advance: false,
 			automatic_tax: {
+				disabled_reason: null,
 				liability: null,
 				enabled: false,
 				status: null,
@@ -261,6 +263,7 @@ describe('stripeWebhook', () => {
 							interval_count: 3,
 							livemode: true,
 							metadata: {},
+							meter: null,
 							nickname: null,
 							product: 'prod_123',
 							tiers_mode: null,
@@ -285,6 +288,7 @@ describe('stripeWebhook', () => {
 								aggregate_usage: null,
 								interval: 'month',
 								interval_count: 3,
+								meter: null,
 								trial_period_days: null,
 								usage_type: 'licensed',
 							},
@@ -330,7 +334,6 @@ describe('stripeWebhook', () => {
 			pre_payment_credit_notes_amount: 0,
 			quote: null,
 			receipt_number: '123',
-			rendering_options: null,
 			rendering: null,
 			shipping_cost: null,
 			shipping_details: null,
@@ -360,6 +363,8 @@ describe('stripeWebhook', () => {
 		metadata: {},
 		on_behalf_of: null,
 		outcome: {
+			network_advice_code: null,
+			network_decline_code: null,
 			network_status: 'approved_by_network',
 			reason: null,
 			risk_level: 'normal',
@@ -372,6 +377,7 @@ describe('stripeWebhook', () => {
 		payment_method_details: {
 			card: {
 				brand: 'mastercard',
+				authorization_code: null,
 				amount_authorized: null,
 				checks: {
 					address_line1_check: null,

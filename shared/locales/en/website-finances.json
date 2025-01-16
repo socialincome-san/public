@@ -31,7 +31,6 @@
 	},
 	"section-4": {
 		"title": "How are the funds used?",
-		"subtitle": "Recurring individual donations are always paid out to 100%. Institutional donations are used to cover our operational costs.",
 		"amount-since-march-2020": "Total amount since March 2020",
 		"expenses": "Expenses",
 		"payments-total": "{{ value, currency }} paid out to {{ recipientsCount }} recipients",

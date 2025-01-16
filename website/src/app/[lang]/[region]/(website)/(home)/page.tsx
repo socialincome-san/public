@@ -1,39 +1,29 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { AddressInequality } from '@/app/[lang]/[region]/(website)/(home)/(sections)/address-inequality';
-import { Hero } from '@/app/[lang]/[region]/(website)/(home)/(sections)/hero';
-import { Recognized } from '@/app/[lang]/[region]/(website)/(home)/(sections)/recognized';
-import { Sdg } from '@/app/[lang]/[region]/(website)/(home)/(sections)/sdg';
-import { SwissSection } from '@/app/[lang]/[region]/(website)/(home)/(sections)/swiss-section';
-import { ThreeApproaches } from '@/app/[lang]/[region]/(website)/(home)/(sections)/three-approaches';
-import { WhatWouldChange } from '@/app/[lang]/[region]/(website)/(home)/(sections)/what-would-change';
-import NewsletterPopup from '@/components/newsletter-popup/newsletter-popup';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Campaign } from './(sections)/active-campaign';
-import { Video } from './(sections)/video';
+import { Approach } from '@/app/[lang]/[region]/(website)/(home)/(sections)/approach';
+import { FAQ } from '@/app/[lang]/[region]/(website)/(home)/(sections)/faq';
+import { Quotes } from '@/app/[lang]/[region]/(website)/(home)/(sections)/quotes';
+import { SDGGoals } from '@/app/[lang]/[region]/(website)/(home)/(sections)/sdg-goals';
+import { Testimonials } from '@/app/[lang]/[region]/(website)/(home)/(sections)/testimonials';
+import { ExplainerVideo } from './(sections)/explainer-video';
+import { HeroVideo } from './(sections)/hero-video';
+import { MobileIllustration } from './(sections)/mobile-illustration';
+import { MonthlyIncome } from './(sections)/monthly-income';
+import { Overview } from './(sections)/overview';
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-home', 'website-videos'] });
-	const vimeoVideoId = Number(translator.t('id.video-02'));
 	return (
-		<>
-			<Campaign lang={lang} />
-			<Hero lang={lang} region={region} />
-			<Video lang={lang} />
-			<WhatWouldChange
-				vimeoVideoId={vimeoVideoId}
-				translations={{
-					title1: translator.t('section-2.title-1'),
-					title2: translator.t('section-2.title-2'),
-					subtitle1: translator.t('section-2.subtitle-1'),
-					videoButton: translator.t('section-2.video-button'),
-				}}
-			/>
-			{region === 'ch' && <SwissSection lang={lang} region={region} />}
-			<AddressInequality lang={lang} />
-			<ThreeApproaches lang={lang} />
-			<Sdg lang={lang} />
-			<Recognized lang={lang} />
-			<NewsletterPopup lang={lang} region={region} delay={5000} />
-		</>
+		<div className="hero-video -mb-28 -mt-24 md:-mt-36">
+			<HeroVideo lang={lang} region={region} />
+			<Overview lang={lang} region={region} />
+			<MonthlyIncome lang={lang} region={region} />
+			<ExplainerVideo lang={lang} region={region} />
+			<MobileIllustration lang={lang} region={region} />
+			<FAQ lang={lang} region={region} />
+			<Approach lang={lang} region={region} />
+			<Quotes lang={lang} region={region} />
+			{/*<RecipientSelection lang={lang} region={region} />*/}
+			<SDGGoals lang={lang} region={region} />
+			<Testimonials lang={lang} region={region} />
+		</div>
 	);
 }

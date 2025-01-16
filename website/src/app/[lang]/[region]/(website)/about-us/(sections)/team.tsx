@@ -7,18 +7,24 @@ import anvitaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/anvit
 import aurelieImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/aurelie.jpeg';
 import carlosImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/carlos.jpeg';
 import flavienImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/flavien.jpeg';
+import francoiseImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/francoise.jpg';
+import gavriilImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/gavriil-tzortzakis.jpg';
 import juanImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/juan.jpeg';
 import juliaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/julia.jpeg';
 import kabeloImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kabelo.jpeg';
+import karinImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/karin-berg.jpg';
 import kerrinImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kerrin.jpeg';
 import larissaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/larissa.jpeg';
 import lorenzoImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/lorenzo.jpg';
 import mabelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mabel.jpeg';
+import marcImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marc-werner.jpg';
 import mariatuImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mariatu.jpg';
 import marionImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marion.jpeg';
+import mathildeImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mathilde-dumont.jpg';
 import matthewImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/matthew.jpeg';
 import michaelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/michael.jpeg';
 import mikolajImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mikolaj.jpeg';
+import patrickImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/patrick-mcclurg.jpeg';
 import patrikImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/patrik.jpeg';
 import pranavImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/pranav.jpg';
 import reneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/rene.jpeg';
@@ -30,6 +36,7 @@ import simonImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon.
 import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simone.jpeg';
 import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
 import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
+
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, FontSize, Typography } from '@socialincome/ui';
@@ -73,11 +80,16 @@ const groups: Group[] = [
 			{ name: 'Mikołaj Demkow', role: 'app-development', image: mikolajImage },
 			{ name: 'Verena Zaiser', role: 'app-development', image: verenaImage },
 			{ name: 'András Heé', role: 'software-development', image: andrasImage },
-			{ name: 'Carlos Badilla', role: 'fundraising', image: carlosImage },
 			{ name: 'Larissa dos Santos Lima', role: 'fundraising', image: larissaImage },
 			{ name: 'Pranav Chatur', role: 'software-development', image: pranavImage },
 			{ name: 'Thomas Brenner', role: 'software-development', image: thomasImage },
 			{ name: 'Matthew Roberts', role: 'communications', image: matthewImage },
+			{ name: 'Françoise Légeret', role: 'translations', image: francoiseImage },
+			{ name: 'Karin Berg', role: 'app-development', image: karinImage },
+			{ name: 'Marc Werner', role: 'research', image: marcImage },
+			{ name: 'Mathilde Dumond', role: 'software-development', image: mathildeImage },
+			{ name: 'Gavriil Tzortzakis', role: 'software-development', image: gavriilImage },
+			{ name: 'Patrick McClurg', role: 'software-development', image: patrickImage },
 		],
 	},
 	{
@@ -107,13 +119,15 @@ const groups: Group[] = [
 			{ name: 'Simon Bühler', role: 'communications', image: simonImage },
 			{ name: 'René Stalder', role: 'software-development', image: reneImage },
 			{ name: 'Sarvesh Dwivedi', role: 'software-development', image: sarveshImage },
+			{ name: 'Carlos Badilla', role: 'fundraising', image: carlosImage },
 		],
 	},
 ];
+
 export default async function Team({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['countries', 'website-about-us'] });
 	return (
-		<BaseContainer id="team" className="py-16 md:py-32">
+		<BaseContainer id="team" className="scroll-mt-36">
 			<Typography as="h3" size="xl" color="muted-foreground" className="mb-4">
 				{translator.t('team.header')}
 			</Typography>

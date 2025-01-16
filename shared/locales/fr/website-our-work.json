@@ -1,0 +1,93 @@
+{
+	"metadata": {
+		"title": "Notre action | Social Income",
+		"description": "Social Income est une nouvelle approche de lutte contre la pauvreté dans le sud de la planète. Numérique, efficace et moderne.",
+		"og-image": "/assets/metadata/og/our-work-de.jpg",
+		"twitter-image": "/assets/metadata/twitter/our-work-de.jpg"
+	},
+	"our-work": {
+		"title-1": "Le changement entre tes mains. ",
+		"title-2": " D’un téléphone à l‘autre.",
+		"subtitle": "Social Income est une nouvelle approche de lutte contre la pauvreté dans le sud de la planète. Numérique, efficace et moderne. ",
+		"watch": "Regarde la vidéo"
+	},
+	"how-it-works": {
+		"header": "Comment ça marche",
+		"title-1": "Une contribution solidaire d’une personne à une autre. ",
+		"title-2": "Rien de plus simple.",
+		"text": "Nous sommes convaincus que les personnes en situation de pauvreté savent très bien se prendre en charge si on leur en donne les moyens.",
+		"subtitle": "Tu peux faire la différence en moins d’une minute.",
+		"item-1": "Les formules de paiement sont souples. Tu peux les adapter ou les annuler en tout temps.",
+		"item-2": "Les virements de Social Income arrivent directement sur les téléphones mobiles des bénéficiaires.",
+		"item-3": "Le montant versé se base sur le salaire moyen là où vivent les bénéficiaires."
+	},
+	"contributors": {
+		"header-1": "Donateurs et donatrices",
+		"title-1": "Des personnes de tous les milieux offrent leur contribution.",
+		"text-1": "Nous recevons notamment des dons individuels réguliers de la part d'employés des organisations et entreprises suivantes:",
+		"header-2": "Pourquoi s’engager?",
+		"title-2": "Un seul but. Renforcer la justice sociale.",
+		"text-2": "Des motivations variées amènent les gens à faire don de 1% de leur revenu à Social Income:",
+		"portraits": {
+			"carlos": "Notre monde nous offre tant de possibilités. Partageons ces privilèges.",
+			"vanja": "Un bel exemple de redistribution des richesses basée sur la solidarité et rendue possible par la technologie.",
+			"ruben": "Je soutiens Social Income non seulement parce que c’est simple, mais parce que les recherches ont montré que c’est extrêmement efficace.",
+			"claudia": "Les inégalités d’aujourd’hui dans le monde résultent de siècles de progrès inégaux. Social Income est un nouveau moyen d’y remédier."
+		}
+	},
+	"recipients": {
+		"header": "Bénéficiaires",
+		"title-1": "Nous intervenons là où notre impact fait vraiment la différence. ",
+		"title-2": "En Sierra Leone.",
+		"subtitle": "Les bénéficiaires en Sierra Leone reçoivent 32 dollars US par mois, garantis pour trois ans.",
+		"our-criteria": "Nos critères",
+		"item-1": {
+			"title": "Pays à bas revenus",
+			"text": "Nous avons commencé notre action en Sierra Leone, un des pays les plus pauvres du monde. Là-bas, un petit don peut produire de grands effets.",
+			"caption": "Le revenu moyen en Sierra Leone est de 42,5 dollars US par mois – Banque mondiale, 2022 (RNB par habitant, méthode Atlas et parité de pouvoir d'achat)"
+		},
+		"item-2": {
+			"title": "Communauté à bas revenus",
+			"text": "Pour sélectionner les bénéficiaires, nous collaborons avec des ONG locales qui soutiennent des communautés vulnérables et défavorisées.",
+			"caption": "Nos partenaires: Aurora Foundation, Jamil & Nyanga Jaward Foundation, Reachout Salone, Equal Rights Alliance, Polio B&S Organisation, Freetown City Council"
+		},
+		"item-3": {
+			"title": "Âge et égalité de genre",
+			"text": "Les bénéficiaires ont plus de 16 ans. Nous garantissons par ailleurs l’égalité entre les genres.",
+			"caption": ""
+		},
+		"voices": "Témoignages",
+		"portraits": {
+			"kai": "Social Income m’aide à gérer mes finances. Avec le premier virement, j’ai pu acheter de nouvelles béquilles qui me servent tous les jours.",
+			"aminata": "Je gagne ma vie en cassant des pierres pour en faire du gravier. C'est un travail dur, très mal payé. Il n'est pas facile d'élever quatre enfants dans ces conditions. Je veux simplement dire merci pour l'aide que je reçois chaque mois.",
+			"gbassay": "Social Income m'a permis d'acheter des fournitures scolaires et d'envoyer mon fils à l'école. Merci pour toute l'aide que vous m'avez apportée.",
+			"lamin": "Social Income constitue une aide tant pour moi que pour toute ma famille.",
+			"onikeh": "Social Income m’a énormément aidée. C’est comme une source à laquelle puiser des forces supplémentaires pour notre vie quotidienne. Quelle sensation extraordinaire de savoir que des gens vous soutiennent et croient en vos rêves.",
+			"neneh": "J’investis mon Social Income mensuel dans mon petit commerce et pour payer les repas de mes enfants à l’école. Ça me remplit d’une telle joie que je pourrais me mettre à pleurer!"
+		}
+	},
+	"whats-next": {
+		"header": "Prochainement",
+		"title-1": "Nous progressons, ",
+		"title-2": "pas à pas.",
+		"subtitle": "L’objectif à long terme de Social Income est de créer un système global de (re)distribution des richesses pour les personnes dans le besoin – reposant sur des dons volontaires en provenance du monde entier. Le projet et ambitieux, Il faut du temps pour qu’il se déploie à grande échelle.",
+		"timeline": {
+			"item-1": {
+				"title": "Mars 2020",
+				"text": "Lors de la phase pilote, nous avons versé les premières contributions à une petite communauté de Freetown, en Sierra Leone."
+			},
+			"item-2": {
+				"title": "Septembre 2021",
+				"text": "Dans la phase de développement, nous avons augmenté le nombre de bénéficiaires et amélioré le processus de paiement."
+			},
+			"item-3": {
+				"title": "Janvier 2022",
+				"text": "Nous continuons à développer Social Income au profit d'un plus grand nombre de bénéficiaires."
+			},
+			"item-4": {
+				"title": "En tout temps: mesure de l’impact",
+				"text": "Afin de mesurer l'efficacité de Social Income, nous avons développé une méthode et une série d'indicateurs quantitatifs et qualitatifs. Actuellement, nous recueillons des données et optimisons notre démarche avec l'aide des bénéficiaires."
+			}
+		}
+	}
+}

@@ -22,7 +22,7 @@ jobs:
       - name: Prettify code
         uses: creyD/prettier_action@v4.3
         with:
-          prettier_version: "3.1.0"
-          prettier_plugins: "prettier-plugin-organize-imports@3.2.4 prettier-plugin-tailwindcss@0.5.7"
+          prettier_version: "3.4.2"
+          prettier_plugins: "prettier-plugin-organize-imports@4.1.0 prettier-plugin-tailwindcss@0.6.9"
           prettier_options: "--write ./"
           github_token: ${{ secrets.WORKFLOW_TOKEN }}

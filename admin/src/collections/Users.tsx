@@ -32,7 +32,7 @@ export const usersCollection = buildAuditedCollection<User>({
 			dataType: 'map',
 			properties: {
 				name: {
-					name: 'Name',
+					name: 'First Name',
 					dataType: 'string',
 					validation: { required: true },
 				},

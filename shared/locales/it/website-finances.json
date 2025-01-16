@@ -1,0 +1,60 @@
+{
+	"metadata": {
+		"title": "Finanze | Social Income"
+	},
+	"amount": "{{ value, currency }}",
+	"section-1": {
+		"title-1": "La trasparenza genera fiducia.",
+		"title-2": "La fiducia genera solidarietà.",
+		"since-march-2020": "Da marzo 2020",
+		"totalContributions": "{{ contributorCount }} donatori hanno contribuito per un totale di {{ value, currency }}",
+		"totalPayments": "{{ value }} trasferimenti diretti realizzati sui telefoni cellulari",
+		"totalRecipients": "{{ value }} beneficiari aggiunti al nostro programma triennale"
+	},
+	"section-2": {
+		"title": "Come viene finanziato Social Income?",
+		"donations": "Donazioni",
+		"amount-since-march-2020": "Importo totale da marzo 2020",
+		"contributions-from": "{{ value, currency }} donazioni da",
+		"individuals": "{{ count }} singoli individui",
+		"institutions": "{{ count }} istituzioni",
+		"past-payouts": "Importo già trasferito: {{ value, currency }}",
+		"payments-future": "Importo non ancora trasferito: {{ value, currency }}",
+		"past-costs": "Importo utilizzato per coprire i costi operativi: {{ value, currency }}",
+		"future-costs": "Importo disponibile per coprire i futuri costi operativi: {{ value, currency }}"
+	},
+	"section-3": {
+		"title": "Da dove vengono i nostri donatori?",
+		"subtitle": "Riceviamo donazioni da {{ value }} paesi.",
+		"country-amount": "{{ value, currency }} da {{ contributorsCount }} donatori",
+		"all-countries": "Mostra tutti i paesi"
+	},
+	"section-4": {
+		"title": "Come vengono utilizzati i fondi?",
+		"amount-since-march-2020": "Importo totale da marzo 2020",
+		"expenses": "Spese",
+		"payments-total": "{{ value, currency }} trasferito a {{ recipientsCount }} beneficiari",
+		"payments-last-month": "Nell'ultimo mese: {{ value, currency }} a {{ recipientsCount }} beneficiari",
+		"payments-future": "Da trasferire: {{ value, currency }}",
+		"project-costs": "{{ value, currency }} Costi di gestione del progetto",
+		"donation-fees": "Costi di transazione: {{ value, currency }}",
+		"donation-fees-tooltip": "Costi sostenuti durante il trasferimento di denaro da te a noi.",
+		"delivery-fees": "Costi di invio: {{ value, currency }}",
+		"delivery-fees-tooltip": "Costi sostenuti durante il trasferimento di denaro dai nostri conti ai beneficiari.",
+		"exchange-rate-loss": "Perdite dovute al tasso di cambio: {{ value, currency }}",
+		"exchange-rate-loss-tooltip": "Le perdite dovute al tasso di cambio si verificano principalmente a causa dell'inflazione in Sierra Leone.",
+		"account-fees": "Commissioni bancarie: {{ value, currency }}",
+		"account-fees-tooltip": "Commissioni per i nostri conti bancari in Svizzera e in Sierra Leone.",
+		"administrative-costs": "Costi amministrativi: {{ value, currency }}",
+		"administrative-costs-tooltip": "Costi per licenze, hosting del sito web, ecc.",
+		"fundraising-costs": "Fundraising e marketing: {{ value, currency }}",
+		"fundraising-costs-tooltip": "Costi sostenuti per pubblicità e raccolta fondi.",
+		"staff-costs": "Staff locale: {{ value, currency }}",
+		"staff-costs-tooltip": "Costi salariali dello staff in Sierra Leone.",
+		"reserves": "Riserve",
+		"covers-payments": "Questa somma copre i trasferimenti per",
+		"covers-payments-1": "{{ recipientsCount }} beneficiari per {{ monthsCount }} mesi",
+		"covers-payments-2": "{{ recipientsCount }} beneficiari per 1 mese",
+		"reserves-text": "Manteniamo dei fondi liquidi per assicurarci di poter coprire i trasferimenti per più mesi senza dover dipendere dal volume delle donazioni."
+	}
+}

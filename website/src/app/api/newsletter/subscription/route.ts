@@ -1,9 +1,5 @@
 import { authorizeRequest, handleApiError } from '@/app/api/auth';
-import {
-	NEWSLETTER_LIST_ID,
-	NEWSLETTER_SUPPRESSION_LIST_ID,
-	SendgridSubscriptionClient,
-} from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
+import { SendgridSubscriptionClient } from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
 import { NextResponse } from 'next/server';
 
 /**
@@ -14,8 +10,8 @@ export async function GET(request: Request) {
 		const userDoc = await authorizeRequest(request);
 		const sendgrid = new SendgridSubscriptionClient({
 			apiKey: process.env.SENDGRID_API_KEY!,
-			listId: NEWSLETTER_LIST_ID,
-			suppressionListId: NEWSLETTER_SUPPRESSION_LIST_ID,
+			listId: process.env.SENDGRID_LIST_ID!,
+			suppressionListId: parseInt(process.env.SENDGRID_SUPPRESSION_LIST_ID!),
 		});
 		const subscriber = await sendgrid.getContact(userDoc.get('email'));
 		return NextResponse.json(subscriber);
@@ -27,7 +23,9 @@ export async function GET(request: Request) {
 /**
  * Upsert Newsletter subscription
  */
-type NewsletterSubscriptionUpdateRequest = { json(): Promise<{ status: 'subscribed' | 'unsubscribed' }> } & Request;
+export type NewsletterSubscriptionUpdateRequest = {
+	json(): Promise<{ status: 'subscribed' | 'unsubscribed' }>;
+} & Request;
 
 export async function POST(request: NewsletterSubscriptionUpdateRequest) {
 	try {
@@ -35,8 +33,8 @@ export async function POST(request: NewsletterSubscriptionUpdateRequest) {
 		const data = await request.json();
 		const sendgrid = new SendgridSubscriptionClient({
 			apiKey: process.env.SENDGRID_API_KEY!,
-			listId: NEWSLETTER_LIST_ID,
-			suppressionListId: NEWSLETTER_SUPPRESSION_LIST_ID,
+			listId: process.env.SENDGRID_LIST_ID!,
+			suppressionListId: parseInt(process.env.SENDGRID_SUPPRESSION_LIST_ID!),
 		});
 		await sendgrid.upsertSubscription({
 			firstname: userDoc.get('personal.name'),

@@ -84,7 +84,7 @@ export function PaymentProcessAction() {
 							<DatePicker
 								label="Payment month"
 								views={['month', 'year']}
-								value={paymentDate.toJSDate()}
+								value={paymentDate.toJSDate() as any}
 								onChange={(value) => {
 									if (value) setPaymentDate(toPaymentDate(DateTime.fromJSDate(value)));
 								}}

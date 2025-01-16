@@ -31,6 +31,9 @@
     "contactNumber": "Nɔmba we fɔ kɔl yu",
     "contactNumberError": "Duya put yu fon nɔmba ya",
     "contactNumberError2": "Put di fon nɔmba prɔpa wan ɛn tayp di nɔmba dɛm nɔmɔ.",
+    "inCaseOfDeathTitle": "⁠If yu day",
+    "inCaseOfDeathDescription": "Udat na di pɔsin we wi fɔ gi yu Social Income pemɛnt if yu day we di program nɔ dɔn yet? Yu wɛf, pikin, mama, papa, brɔda ɔ sista",
+    "successorName": "Wetin na in nem?",
     "support": "Yu want ɛp",
     "supportInfo": "If yu get ɛni kwɛstyɔn ɔ di fesin prɔblɛm, duya rich awt to wi.",
     "getInTouch": "Mek wi no aw yu fil",
@@ -61,7 +64,6 @@
     "call": "Kɔl",
     "supportTeam": "Sɔpɔt Tim",
     "phone": "Fon",
-    "email": "Imel",
     "close": "Lɔk am",
     "whatsappError": "Wasap nɔ go insay yu fon yet",
     "paymentsConfirmedCount": "Pemɛnt dɛn we yu dɔn gɛt",
@@ -162,7 +164,7 @@
         "placeholders": {
             "done": {
                 "type": "int"
-            }, 
+            },
             "all": {
                 "type": "int"
             }
@@ -173,5 +175,6 @@
     "invalidPhoneNumberError": "Fon nɔmba nɔ kɔrɛkt. Chɛk yu fon nɔmba ɛn tray bak ya.",
     "invalidVerificationCodeError": "Di spɛshal kod we wi sɛn yu nɔ kɔrɛkt. Duya chɛk di SMS kod ɛn tray bak.",
     "userDisabledError": "Wi dɔn lɔk yu akawnt. Rich awt to wi if yu want fɔ no mɔ.",
-    "invalidCredentialError": " Di fon nɔmba ɔ di spɛshal kod we wi sɛn to yu in tɛm dɔn pas fɔ yuz. Duya tray bak."
+    "invalidCredentialError": " Di fon nɔmba ɔ di spɛshal kod we wi sɛn to yu in tɛm dɔn pas fɔ yuz. Duya tray bak.",
+    "errorEmailInvalid": "Imel nɔ kɔrɛkt"
 }

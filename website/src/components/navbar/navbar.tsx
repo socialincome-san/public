@@ -3,11 +3,7 @@ import { NavbarClient } from '@/components/navbar/navbar-client';
 import { mainWebsiteLanguages, websiteCurrencies, websiteRegions } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 
-type NavbarProps = {
-	showNavigation?: boolean;
-} & DefaultParams;
-
-export default async function Navbar({ lang, region, showNavigation = true }: NavbarProps) {
+async function Navbar({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['common', 'website-common', 'website-me'],
@@ -17,12 +13,12 @@ export default async function Navbar({ lang, region, showNavigation = true }: Na
 		<NavbarClient
 			lang={lang}
 			region={region}
-			showNavigation={showNavigation}
 			translations={{
+				donate: translator.t('navigation.donate'),
 				language: translator.t('language'),
 				region: translator.t('region'),
 				currency: translator.t('currency'),
-				myProfile: translator.t('navigation.my-profile'),
+				myProfile: translator.t('navigation.my-account'),
 				contactDetails: translator.t('tabs.contact-details'),
 				payments: translator.t('tabs.contributions'),
 				signOut: translator.t('sign-out'),
@@ -41,14 +37,29 @@ export default async function Navbar({ lang, region, showNavigation = true }: Na
 			}))}
 			navigation={[
 				{
+					id: 'our-work',
 					title: translator.t('navigation.our-work'),
 					href: `/${lang}/${region}/our-work`,
+					links: [
+						{ title: translator.t('navigation.contributors'), href: `/${lang}/${region}/our-work#contributors` },
+						{ title: translator.t('navigation.recipients'), href: `/${lang}/${region}/our-work#recipients` },
+					],
 				},
 				{
+					id: 'about-us',
 					title: translator.t('navigation.about-us'),
 					href: `/${lang}/${region}/about-us`,
+					links: [
+						{ title: translator.t('navigation.our-mission'), href: `/${lang}/${region}/about-us#our-mission` },
+						{ title: translator.t('navigation.our-promise'), href: `/${lang}/${region}/about-us#our-promise` },
+						{ title: translator.t('navigation.flow-of-funds'), href: `/${lang}/${region}/about-us#flow-of-funds` },
+						{ title: translator.t('navigation.team'), href: `/${lang}/${region}/about-us#team` },
+						{ title: translator.t('navigation.partners'), href: `/${lang}/${region}/partners` },
+					],
 				},
 				{
+					id: 'transparency',
+					href: `/${lang}/${region}/transparency/finances`,
 					title: translator.t('navigation.transparency'),
 					links: [
 						{
@@ -77,3 +88,5 @@ export default async function Navbar({ lang, region, showNavigation = true }: Na
 		/>
 	);
 }
+
+export default Navbar;

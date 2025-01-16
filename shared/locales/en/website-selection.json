@@ -1,0 +1,116 @@
+{
+	"section-1": {
+		"subtitle": "Our Aspiration",
+		"title": [
+			{
+				"text": "In the spirit of universal basic income, we aspire to be truly universal by "
+			},
+			{
+				"text": "providing Social Income to all.",
+				"color": "accent"
+			}
+		],
+		"target": [
+			{
+				"text": "8,104,666,773",
+				"color": "accent"
+			},
+			{
+				"text": "potential",
+				"color": "accent"
+			}
+		],
+		"population": "8,104,666,773",
+		"potential": "potential",
+		"scope": "beneficiaries live on Earth",
+		"continue": "However"
+	},
+	"section-2": {
+		"subtitle": "Our Reality",
+		"title": [
+			{
+				"text": "Due to limited resources,  "
+			},
+			{
+				"text": "we focus on those ",
+				"color": "accent"
+			},
+			{
+				"text": "who need Social Income the most."
+			}
+		],
+		"amount": "USD 300,000+",
+		"amount-context": "raised to date ↗",
+		"scope": "visit our ",
+		"continue-1": "Selection Process"
+	},
+	"section-3": {
+		"preselection-title": "Fair Preselection",
+		"preselection-subtitle": "Prioritizing based on need",
+		"preselection-desc": "Identifying and building a pool of qualifying individuals with the aid of local knowledge.",
+		"preselection-goal": "Prioritizing based on need",
+		"preselection-1-title": "Target the Poorest",
+		"preselection-1-desc": "We've committed to focusing our efforts on the most vulnerable, ensuring our aid delivers the biggest impact where it’s most needed.",
+		"preselection-1-annex": "1.8 billion people live on less than $3.65 per day",
+		"preselection-2-title": "Condense Target Area",
+		"preselection-2-desc": "One of the highest concentrations of people in need is in Sierra Leone, where 57% of the population lives under the poverty line and the typical monthly earnings are below USD 45.",
+		"preselection-2-annex": "4.9 million people in Sierra Leone qualify as poor",
+		"preselection-3-title": "Creating a Pool of Potential Recipients",
+		"preselection-3-desc": "We partner with local NGOs dedicated to poverty alleviation to identify those in need, building a large, scalable pool of potential beneficiaries.",
+		"preselection-3-annex": "5,000+ potential beneficiaries are in our pool",
+		"selection-title": "Transparent Selection",
+		"selection-subtitle": "Minimize possible tensions",
+		"selection-desc": "Making sure our selection process is bias-free, transparent to all, and avoids favoritism.",
+		"selection-goal": "Minimize possible tensions",
+		"selection-1-title": "Lottery Approach",
+		"selection-1-desc": "When faced with making a choice, the lottery stands out as fair and unbiased approach. This is especially true when all options are equally desirable.",
+		"selection-1-annex": "Selecting from individuals, all of whom stand to benefit",
+		"selection-2-title": "Truly Random",
+		"selection-2-desc": "A lottery’s integrity depends on its unpredictability. Confidence grows when people know it's purely by chance, without manipulation and publicly verifiable.",
+		"selection-2-annex": "Show latest random number used for draws ↗",
+		"selection-3-title": "Publicly Verifiable",
+		"selection-3-desc": "By publishing the code that operates the random selection, we empower everyone to verify the process and ensure there is no manipulation.",
+		"selection-3-annex": "Verify our source code and draws ↗",
+		"goal": "Goal"
+	},
+
+	"section-4": {
+		"title": [
+			{
+				"text": "Our "
+			},
+			{
+				"text": "past ",
+				"color": "accent"
+			},
+			{
+				"text": "recipient draws."
+			}
+		],
+		"past-draws-description": "The following list shows the past draws that have taken place to select recipients for Social Income.",
+		"draw-card": {
+			"summary": "{{ count }} out of {{ total }} selected",
+			"random-number": "Random number",
+			"confirm-drand": "Confirm on drand",
+			"confirm-github": "Confirm on Github",
+			"long-list": "{{ total }} people on the long list, {{ count }} selected",
+			"people": "People",
+			"ngo": "NGO"
+		}
+	},
+
+	"section-5": {
+		"title": [
+			{
+				"text": "That "
+			},
+			{
+				"text": "sounds good ",
+				"color": "accent"
+			},
+			{
+				"text": "but..."
+			}
+		]
+	}
+}

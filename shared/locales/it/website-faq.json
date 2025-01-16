@@ -1,0 +1,264 @@
+{
+	"metadata": {
+		"title": "FAQ | Social Income"
+	},
+	"title": "FAQ",
+	"title-long": "Domande frequenti",
+	"fighting-poverty": {
+		"title": "Lotta alla povertà",
+		"questions": [
+			{
+				"question": "I trasferimenti diretti di denaro sono un modo efficace di combattere la povertà?",
+				"answer": "C'è un ampio consenso sui vantaggi e sul successo a lungo termine dei programmi di donazione diretta. Offriamo una panoramica della più recente letteratura scientifica nella nostra sezione Prove Scientifiche.",
+				"links": [
+					{
+						"title": "Evidence section",
+						"href": "/evidence"
+					},
+					{
+						"title": "Policy Brief: Impacts of Unconditional Cash Transfers",
+						"href": "https://drive.google.com/file/d/1xn4BvrEHZjSUGpNZLHjIc2YYnwq399jR/view"
+					},
+					{
+						"title": "GiveDirectly's Cash Evidence Explorer",
+						"href": "https://www.givedirectly.org/cash-evidence-explorer/"
+					}
+				]
+			},
+			{
+				"question": "È utile inviare denaro a persone in difficoltà?",
+				"answer": "È sicuramente più utile che non inviare niente. Molte persone oggi sostengono l’importanza di avere pari opportunità nel mondo del lavoro. Questo è senza dubbio un obiettivo che vale la pena perseguire, ma spesso si tende ad ignorare il fatto che per molte persone nate nei paesi più poveri del pianeta, l’occupazione come è tradizionalmente concepita nei paesi occidentali non è nemmeno possibile o accessibile. Donare denaro può aiutare ad abbattere questa barriera e a dare a più persone che vivono in povertà l’accesso a lavoro, istruzione e condizioni di vita dignitose.",
+				"links": [
+					{
+						"title": "The Case for Cash",
+						"href": "https://drive.google.com/file/d/1GKBdHjD80Jv7lZJmKvouZv8Z7MgLw_HL/view"
+					},
+					{
+						"title": "Can unconditional cash transfers raise long-term living standards? Evidence from Zambia",
+						"href": "https://drive.google.com/file/d/1HwSLDlml0yyHrCrv8Y7pkqxz2orM02Lc/view"
+					}
+				]
+			}
+		]
+	},
+	"striving-equality": {
+		"title": "Lotta per l’uguaglianza",
+		"questions": [
+			{
+				"question": "Social Income può creare uguaglianza?",
+				"answer": "Social Income non è una semplice teoria su come raggiungere l’uguaglianza. È qui per contribuire a rendere il mondo più giusto, intervenendo sull’immenso divario tra ricchi e poveri per realizzare una redistribuzione semplice e diretta, basata sulla solidarietà. Social Income, inoltre, contribuisce a motivare le persone in difficoltà a cercare autonomamente un cambiamento positivo e a raggiungere un certo livello di indipendenza finanziaria. Questo processo funzionerà solo fino a quando la disuguaglianza continuerà ad esistere; non appena la distribuzione della ricchezza in tutto il mondo diventerà equilibrata, Social Income non avrà più ragione di esistere."
+			},
+			{
+				"question": "Chi può eliminare la disuguaglianza sociale?",
+				"answer": "In teoria, gli stati o i mercati ne sarebbero capaci, ma non tutti gli stati si prendono cura cura dei propri cittadini in modo adeguato (o sono in grado di farlo) e non tutti i mercati creano un'uguaglianza duratura per tutti. È qui che entra in gioco una terza opzione: noi stessi. Sappiamo già riconoscere la disuguaglianza e provare empatia per le persone svantaggiate, anche se non sono esattamente i nostri vicini. Abbiamo anche le competenze tecniche per muovere i soldi a livello globale. Se ci pensi, non manca nulla per iniziare oggi stesso a rimediare alle ingiustizie economiche del mondo."
+			}
+		]
+	},
+	"solidarity": {
+		"title": "Solidarietà",
+		"questions": [
+			{
+				"question": "Abbiamo delle responsabilità verso i nostri simili?",
+				"answer": "Noi pensiamo di sì. In un mondo globalizzato quasi senza alcun confine per la produzione esternalizzata e l’import-export di beni, tutte le storie si intrecciano in destini condivisi."
+			},
+			{
+				"question": "Può la solidarietà sopravvivere nell’era dell’individualismo?",
+				"answer": "Oggi la solidarietà è una risorsa in pericolo. In un'epoca che enfatizza l'individuo su tutto il resto, il nostro senso di comunità spesso passa in secondo piano rispetto al successo personale. Ma questo non significa che la solidarietà scomparirà; deve solo adattarsi, così come i progetti che fanno affidamento su di essa per raggiungere i loro obiettivi. Da questa prospettiva, crediamo che la solidarietà possa essere più forte che mai. L’individualizzazione significa anche che tutti coloro che vogliono essere coinvolti nella solidarietà possono farlo, senza ostacoli che li fermino. L'unica differenza è che lo faranno alle loro condizioni, con i loro metodi. Social Income è una delle possibili scelte disponibili. Un nuovo tipo di scelta. Le grandi questioni che l'umanità affronta, siano esse economiche o ecologiche, sono troppo complesse e interconnesse per essere risolte senza ricorrere alla solidarietà. L'individualismo può essere una buona strada per la scoperta personale di sé, ma non è di grande utilità nel risolvere sfide collettive come la disuguaglianza e la povertà."
+			}
+		]
+	},
+	"ubi": {
+		"title": "Reddito di Base Universale",
+		"questions": [
+			{
+				"question": "Qual è la differenza tra Social Income e il Reddito di Base Universale?",
+				"answer": "Come il Reddito di Base Universale (RBU), Social Income trasferisce regolarmente e in maniera incondizionata uno stipendio di base ai cittadini su base individuale. Mentre il Reddito di Base Universale sarebbe distribuito da uno stato o da un governo, Social Income lo fa da persona a persona. Ciò significa che non deve fare affidamento sulla volontà politica, sul budget o sulla tassazione per avere successo. Social Income è anche specificamente rivolto a persone che vivono in condizioni di povertà estrema, quindi il suo obiettivo principale è la ridistribuzione della ricchezza – che non è necessariamente il caso del RBU."
+			},
+			{
+				"question": "Cosa sono i Trasferimenti Diretti di Denaro?",
+				"answer": "Secondo la definizione ufficiale dell'OCSE, i trasferimenti di denaro consistono nel pagamento di valuta o di un deposito trasferibile da un'unità all'altra senza alcuna contropartita. Più concretamente, i trasferimenti diretti di denaro sono una forma di protezione sociale che include soldi o buoni dati direttamente a persone indigenti, piuttosto che a governi o altri enti statali. Nell'ultimo decennio in particolare sono stati sempre più utilizzati come strumento per ridurre la povertà e la vulnerabilità nei paesi a reddito medio e basso.",
+				"links": [
+					{
+						"title": "Social protection and resilient food systems: The role of cash transfers",
+						"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view"
+					}
+				]
+			}
+		]
+	},
+	"contributors": {
+		"title": "Donatori",
+		"questions": [
+			{
+				"question": "Perché l’1% degli stipendi dei donatori?",
+				"answer": "Affinché Social Income sia scalabile, dobbiamo essere sicuri che funzioni. Per assicurarci che funzioni, dobbiamo iniziare dal basso. Ciò significa sia cominciare con un piccolo gruppo di beneficiari sia chiedere una piccola somma di partenza ai donatori. L'1% è un importo trascurabile per chi decide di contribuire, ma che può avere un impatto considerevole sulla vita dei beneficiari. Supponiamo che il 25% dei cittadini svizzeri sostenga Social Income. Dato che lo stipendio medio in Svizzera è di $6.000 al mese, se questo 25% contribuisse con l’1% del proprio reddito, ciò permetterebbe di distribuire Social Income ad ogni persona che vive in Sierra Leone. Questo esempio, benché semplificato, illustra le potenzialità del progetto."
+			},
+			{
+				"question": "Posso interrompere le mie donazioni?",
+				"answer": "Certo, in qualsiasi momento, senza preavviso. Accedi e disattivale nelle tue preferenze."
+			},
+			{
+				"question": "Perché non utilizziamo molte foto nella comunicazione",
+				"answer": "Crediamo che dovremmo fare il possibile per aiutare la vita degli altri, indipendentemente da chi siano, soprattutto se lo possiamo fare ad un costo relativamente basso per noi stessi. Crediamo anche che questo approccio razionale abbia la stessa efficacia degli appelli emotivi nel promuovere le donazioni. Preferiamo quindi evitare le immagini tipiche impiegate dalle ONG che lavorano in Africa, che possono potenzialmente alimentare stereotipi negativi del continente."
+			}
+		]
+	},
+	"recipients": {
+		"title": "Beneficiari",
+		"questions": [
+			{
+				"question": "Come vengono scelti i beneficiari?",
+				"answer": "Determiniamo possibili nuovi beneficiari grazie al lavoro sul campo dei nostri sostenitori e alle partnership con le ONG locali. I nostri criteri sono semplici: i beneficiari devono avere più di 16 anni e provenire da una comunità a basso reddito. Un altro principio fondamentale è quello di mantenere un rigoroso equilibrio/uguaglianza di genere e sostenere le persone in stato di necessità.",
+				"links": [
+					{
+						"title": "Partner locali",
+						"href": "/partners"
+					}
+				]
+			},
+			{
+				"question": "Come dispongono i beneficiari del denaro ricevuto?",
+				"answer": "L'idea alla base del RBU è quella di dare ai beneficiari denaro che possono utilizzare a loro piacimento."
+			},
+			{
+				"question": "Come posso ricevere Social Income?",
+				"answer": "Lavoriamo a stretto contatto con i nostri partner locali per determinare i futuri beneficiari. Al momento non è possibile registrarsi attraverso il nostro sito web."
+			},
+			{
+				"question": "Perché la Sierra Leone?",
+				"answer": "Dovevamo pur iniziare da qualche parte e abbiamo scelto la Sierra Leone per diversi motivi. Sebbene sia una delle democrazie più giovani del mondo, sfortunatamente è regolarmente in cima alle classifiche come uno dei paesi più poveri. Tuttavia, negli ultimi anni sono stati compiuti grandi progressi, in particolare nell'adozione del mobile banking nelle aree urbane di tutto il paese. Quindi, non solo la Sierra Leone ha bisogno di aiuto, ma si trova in una posizione favorevole per riceverlo con un approccio incentrato sul digitale. Detto questo, Social Income non è stato creato solo per l'Africa. Crediamo che l'azione individuale possa avere un impatto universale e speriamo di estendere la portata del progetto alle persone bisognose in tutto il mondo. In futuro, l'iniziativa potrebbe essere estesa anche ai paesi dell'America Latina e dell'Asia, ad esempio. Tuttavia, per concentrare la nostra energia nel miglior modo possibile, ha senso acquisire prima esperienza in un unico luogo."
+			}
+		]
+	},
+	"the-arts": {
+		"title": "Arte",
+		"questions": [
+			{
+				"question": "Qual è il legame di questo progetto con il mondo dell’arte?",
+				"answer": "Il team che ha fondato Social Income ha stretti legami con il mondo dell'arte, che ha permesso di finanziare le fasi iniziali del progetto. Crediamo che il mondo dell'arte abbia una certa responsabilità nel promuovere lo scambio culturale e aiutare gli altri esseri umani, indipendentemente da chi siano."
+			}
+		]
+	},
+	"volunteering": {
+		"title": "Volontariato",
+		"questions": [
+			{
+				"question": "Come posso entrare a far parte del team di volontari?",
+				"answer": "Se sei interessato ad avere un impatto sociale con le tue competenze, dai un'occhiata alle opportunità aperte sulla nostra pagina Idealist o contattaci oggi stesso!",
+				"links": [
+					{
+						"title": "Idealist",
+						"href": "https://www.idealist.org/en/nonprofit/41a885fa176b4793a029f131834fd48a-social-income-zurich"
+					}
+				]
+			}
+		]
+	},
+	"selection": {
+		"title": "Selezione Dei Beneficiari",
+		"questions": [
+			{
+				"question": "Per quale motivo effettuiamo una selezione casuale da una lista di beneficiari qualificati?",
+				"answer": "L'adozione di questo metodo di selezione casuale ha diversi scopi. In primo luogo, contribuisce a prevenire ogni forma di favoritismo nella selezione dei beneficiari, garantendo che parenti o conoscenti delle persone coinvolte nel processo non vengano privilegiati. In secondo luogo, mira ad evitare tensioni tra i beneficiari e coloro che non sono stati selezionati, così come eventuali conflitti tra i beneficiari e la nostra organizzazione. Infine, ci impegniamo ad integrare la tecnologia dove possibile e vantaggiosa per il processo."
+			},
+			{
+				"question": "Chi può influenzare il sorteggio?",
+				"answer": "Affidandoci a un risultato casuale imprevedibile fornito da drand, non è possibile per nessuno influenzare i risultati del processo di selezione. La natura casuale del sorteggio serve a confermare l’imparzialità della selezione. Per essere idonei a ricevere Social Income, gli individui devono essere prima inclusi in un elenco fornito da una ONG. Sebbene ciò rappresenti una condizione preliminare, è in linea con il nostro principio fondamentale: garantire che Social Income raggiunga coloro che ne hanno più bisogno."
+			},
+			{
+				"question": "Come evitiamo parzialità e tensioni?",
+				"answer": "Per evitare di favorire involontariamente un particolare gruppo etnico, genere o professione, collaboriamo con diverse ONG che hanno missioni differenti. In linea con la nostra politica del 'non danneggiare', ci impegniamo a prevenire tensioni tra i beneficiari, coloro che non ricevono Social Income, le comunità e le ONG. La nostra selezione casuale svolge un ruolo fondamentale in questo processo. Garantisce che non vi sia favoritismo nei confronti di coloro che hanno legami o conoscono individui coinvolti nel processo, dato che questo potrebbe generare conflitti."
+			},
+			{
+				"question": "Cosa avviene durante il processo di selezione casuale?",
+				"answer": "Utilizziamo il numero casuale fornito da drand, che è accessibile pubblicamente, per selezionare un certo numero di individui dalla nostra lista. Ecco come funziona: prima organizziamo la lista anonimizzata dei destinatari. Poi, utilizzando il numero casuale fornito da drand, lo convertiamo in una posizione nella lista attraverso una derivazione di una chiave crittografica. Per coloro interessati ai dettagli tecnici, la funzione e i processi associati sono documentati nel nostro repository su GitHub.",
+				"links": [
+					{
+						"title": "Repository GitHub",
+						"href": "https://github.com/socialincome-san/public/tree/main/recipients_selection"
+					},
+					{
+						"title": "Derivazione di una chiave crittografica",
+						"href": "https://it.wikipedia.org/wiki/Derivazione_di_una_chiave_crittografica"
+					}
+				]
+			},
+			{
+				"question": "Cos'è drand e chi c'è dietro?",
+				"answer": "Il progetto drand genera numeri casuali affidabili, utili per creare selezioni casuali e verificabili. Avviato nel 2017 presso l'EPFL da Nicolas Gailly, drand ha ricevuto il supporto di Philipp Jovanovic ed è stato guidato dal professor Bryan Ford. Ora è gestito in maniera indipendente e mantiene una rete chiamata League of Entropy con EPFL, UCL, Cloudflare, Kudelski Security, l'Università del Cile e Protocol Labs. Attualmente, il progetto open source è gestito dal Erick Watson, Yolan Romailler, e Patrick McClurg di Randamu.",
+				"links": [
+					{
+						"title": "League of Entropy",
+						"href": "https://www.cloudflare.com/leagueofentropy/"
+					},
+					{
+						"title": "Randamu",
+						"href": "https://randa.mu"
+					},
+					{
+						"title": "Drand",
+						"href": "https://drand.love"
+					}
+				]
+			}
+		]
+	},
+	"campaign": {
+		"title": "Domande frequenti",
+		"questions": [
+			{
+				"question": "Cosa sono i Trasferimenti Diretti di Denaro?",
+				"answer": "Secondo la definizione ufficiale dell'OCSE, i trasferimenti di denaro consistono nel pagamento di valuta o di un deposito trasferibile da un'unità all'altra senza alcuna contropartita. Più concretamente, i trasferimenti diretti di denaro sono una forma di protezione sociale che include soldi o buoni dati direttamente a persone indigenti, piuttosto che a governi o altri enti statali. Nell'ultimo decennio in particolare sono stati sempre più utilizzati come strumento per ridurre la povertà e la vulnerabilità nei paesi a reddito medio e basso.",
+				"links": [
+					{
+						"title": "Social protection and resilient food systems: The role of cash transfers",
+						"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view"
+					}
+				]
+			},
+			{
+				"question": "Perché la Sierra Leone?",
+				"answer": "Dovevamo pur iniziare da qualche parte e abbiamo scelto la Sierra Leone per diversi motivi. Sebbene sia una delle democrazie più giovani del mondo, sfortunatamente è regolarmente in cima alle classifiche come uno dei paesi più poveri. Tuttavia, negli ultimi anni sono stati compiuti grandi progressi, in particolare nell'adozione del mobile banking nelle aree urbane di tutto il paese. Quindi, non solo la Sierra Leone ha bisogno di aiuto, ma si trova in una posizione favorevole per riceverlo con un approccio incentrato sul digitale."
+			},
+			{
+				"question": "Come vengono scelti i beneficiari?",
+				"answer": "Determiniamo possibili nuovi beneficiari grazie al lavoro sul campo dei nostri sostenitori e alle partnership con le ONG locali. I nostri criteri sono semplici: i beneficiari devono avere più di 16 anni e provenire da una comunità a basso reddito. Un altro principio fondamentale è quello di mantenere un rigoroso equilibrio/uguaglianza di genere e sostenere le persone in stato di necessità.",
+				"links": [
+					{
+						"title": "Partner locali",
+						"href": "/partners"
+					}
+				]
+			},
+			{
+				"question": "Qual è l'importo erogato ai beneficiari?",
+				"answer": "I beneficiari di Social Income ricevono un pagamento mensile di 32 USD, che viene convertito nella loro valuta locale e depositato direttamente sui loro telefoni cellulari. Questa somma è scelta con attenzione per contribuire a soddisfare i bisogni di base di una persona che vive in povertà, considerando che il reddito medio nazionale è di circa 42 USD (Banca Mondiale). Questi pagamenti vengono effettuati in modo affidabile ogni mese per un periodo di tre anni. Questa strategia di supporto sostenuto a lungo termine è pensata per dare potere alle persone che vivono in povertà, permettendo loro di pianificare e investire per il futuro, in particolare in aspetti come la salute, migliorando così la loro stabilità finanziaria e il benessere complessivo."
+			}
+		]
+	},
+	"campaign-ismatu": {
+		"title": "Domande frequenti",
+		"questions": [
+			{
+				"question": "Chi sta collaborando per rendere possibile questa raccolta fondi?",
+				"answer": "Questa raccolta fondi è patrocinata da Ismatu Gwendolyn Bangura, un'autrice e attivista della Sierra Leone. È ospitata dall'organizzazione svizzera senza scopo di lucro Social Income, che è anche responsabile della distribuzione dei redditi di base ai sopravvissuti all'Ebola nei prossimi tre anni. Social Income ha una vasta esperienza nei pagamenti mobili alle persone che vivono in condizioni di povertà in Sierra Leone. Inoltre, collaboriamo con l'Associazione dei Sopravvissuti all'Ebola della Sierra Leone, con sede a Kenema, che mantiene un contatto stretto con ciascuno dei sopravvissuti."
+			},
+			{
+				"question": "Come arrivano i fondi ai sopravvissuti all'Ebola?",
+				"answer": "I fondi vengono trasferiti direttamente ai sopravvissuti all'Ebola attraverso la tecnologia del mobile banking. Questo metodo garantisce una consegna rapida e sicura dei fondi, permettendo ai sopravvissuti di ricevere il loro aiuto in modo tempestivo ed efficiente. L'utilizzo del mobile banking contribuisce anche a mantenere la trasparenza e riduce il rischio di cattiva gestione, assicurando che i fondi siano utilizzati efficacemente per soddisfare le esigenze dei sopravvissuti."
+			},
+			{
+				"question": "Qual è l'importo erogato ai beneficiari?",
+				"answer": "I beneficiari di Social Income ricevono un pagamento mensile di 32 USD, che viene convertito nella loro valuta locale e depositato direttamente sui loro telefoni cellulari. Questa somma è scelta con attenzione per contribuire a soddisfare i bisogni di base di una persona che vive in povertà, considerando che il reddito medio nazionale è di circa 42 USD (Banca Mondiale). Questi pagamenti vengono effettuati in modo affidabile ogni mese per un periodo di tre anni. Questa strategia di supporto sostenuto a lungo termine è pensata per dare potere alle persone che vivono in povertà, permettendo loro di pianificare e investire per il futuro, in particolare in aspetti come la salute, migliorando così la loro stabilità finanziaria e il benessere complessivo."
+			},
+			{
+				"question": "Qual è l'uso dei fondi che dono?",
+				"answer": "Le tue donazioni, fino all'obiettivo della raccolta fondi, sono destinate a sostenere i sopravvissuti all'Ebola. Ciò include i pagamenti mensili a ciascun sopravvissuto, comprese le spese di consegna e i costi associati. Eventuali donazioni che superano l'obiettivo della raccolta fondi saranno utilizzate per sostenere altre persone vulnerabili e che vivono in povertà in Sierra Leone."
+			},
+			{
+				"question": "Come vengono scelti i beneficiari?",
+				"answer": "Se l'obiettivo della raccolta fondi verrà raggiunto, tutti i 156 sopravvissuti all'Ebola registrati dall'Associazione dei Sopravvissuti all'Ebola della Sierra Leone a Kenema saranno selezionati come beneficiari. In questo caso, non sarà necessaria alcuna ulteriore selezione. Tuttavia, se l'obiettivo della raccolta fondi non verrà raggiunto, procederemo a una selezione casuale tra i candidati. Questo approccio ha due scopi principali: in primo luogo, aiuta a garantire l'imparzialità nella scelta dei beneficiari, prevenendo favoritismi verso parenti o conoscenti delle persone coinvolte nel processo. In secondo luogo, mira a ridurre al minimo potenziali conflitti o tensioni, sia tra coloro che ricevono aiuti e coloro che non li ricevono, sia tra i beneficiari e le organizzazioni coinvolte."
+			}
+		]
+	}
+}

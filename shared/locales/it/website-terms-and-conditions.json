@@ -1,0 +1,52 @@
+{
+	"metadata": {
+		"title": "Terms and Conditions | Social Income"
+	},
+	"title": "Terms and Conditions",
+	"general": {
+		"title": "General",
+		"section-1": "These terms and conditions (hereinafter “Terms and Conditions”) apply to all contributions in favor of Social Income, a non profit organisation with a registered office in Zurich, Switzerland (hereinafter “Social Income”).",
+		"section-2": "By making a contribution, you agree to these Terms and Conditions.",
+		"section-3": "We may sometimes make changes to these Terms for Contributions without prior notice. If we make material changes that adversely affect your rights, then we will let you know before the changes come into effect. Changes apply from the moment of publication of the amended Terms and Conditions on this website. By continuing to use Social Income after a change you accept the new terms and conditions."
+	},
+	"participation": {
+		"title": "Your participation",
+		"section-1": "To become a contributor, you create an account on the website, calculate a donation amount based on 1% of your monthly income, and decide to donate this 1% to a person or persons selected by Social Income.",
+		"section-2": "Your contribution in favor of Social Income will be used solely in accordance with the objectives of Social Income. Your contribution will be transferred to individuals supported by Social Income. For more information about the recipients of your contribution, please refer to the website.",
+		"section-3": "You will choose your preferred payment option and preferred payment schedule. The payment options and schedules will be presented to you and selected by you before you consent to make the payment.",
+		"section-4": "Payment plans by Credit Card can be terminated at any time on your account page or by written notification to <a href='mailto:contributors@socialincome.org'>contributors@socialincome.org</a>. Standing orders via bank transfer must be stopped at your bank. Once made, a contribution cannot be reimbursed.",
+		"section-5": "Contributions made via this website are processed using a secure SSL connection. All online payments from contributors are processed by the third party service provider Stripe or Coinbase for cryptocurrencies transactions. For more information about the third party service provider please refer to privacy policies of <a href='https://stripe.com/en-ch/privacy' target='_blank'>Stripe</a> and <a href='https://www.coinbase.com/legal/privacy' target='_blank'>Coinbase</a>.",
+		"section-6": "Contributions to Social Income are tax deductible in some jurisdictions. After each donation, you will receive a donation receipt by email, to facilitate this process if need be."
+	},
+	"data": {
+		"title": "Your data and website usage",
+		"section-1": "The transfer, collection and processing of personal data via this website is subject to the <a href='/privacy-policy'>Privacy Policy</a>.",
+		"section-2": "The access to and use of this website is subject to the <a href='/terms-of-use'>Terms of Use</a>. We advise you to read these policies carefully. If you have any questions, please do not hesitate to <a href='mailto:hello@socialincome.org'>contact us</a>.",
+		"section-3": "We advise you to read these policies carefully. If you have any questions, please do not hesitate to <a href='mailto:hello@socialincome.org'>contact us</a>."
+	},
+	"liability": {
+		"title": "Limitation of liability",
+		"section-1": "Herewith you acknowledge that access to this website and the use thereof, the transfer of data to and from this website, the access to third party websites via links available on this website, as well as any actions taken on the basis of the contents of this website, are undertaken at your own risk. To the fullest extent permitted by law Social Income hereby excludes all contractual and non-contractual liability for any direct and indirect damages that may arise thereof.",
+		"section-2": "For this clause, “Social Income” is defined to include our subsidiaries, affiliates, officers, directors, employees, agents and third party service providers."
+	},
+	"warranty": {
+		"title": "Warranty disclaimer",
+		"section-1": "Social Income strives to keep the content on this website up-to-date, complete, and accurate. However, with any information provided to you through our website, rapid changes may occasionally be implemented and timeliness, accuracy, and completeness cannot always be guaranteed. The contents of this website do not contain any assurances or warranties of such kind.",
+		"section-2": "You acknowledge that Social Income is provided “as is” and without warranty of any kind. Any warranty of merchantability, fitness for a particular purpose, non-infringement, and any other warranty is excluded to the greatest extent permitted by law.",
+		"section-3": "The disclaimers of warranty under this clause also apply to our subsidiaries, affiliates, and third party service providers."
+	},
+	"stopping": {
+		"title": "If you want to stop participating",
+		"section-1": "Social Income is based on solidarity and voluntary donations. You share your income with persons only for as long and as much as you would like to. You can end your involvement with Social Income at any time and with immediate effect. You are free to change your payment plan and suspend or stop payments at any time.",
+		"section-2": "However, as already mentioned in the section titled “Your Participation,” we cannot refund payments that have already been transferred to us."
+	},
+	"deletion": {
+		"title": "Account deletion",
+		"section-1": "You can request that we terminate or suspend your account at any time, at our discretion, by sending an email to <a href='mailto:contributors@socialincome.org'>contributors@socialincome.org</a>. We will answer and process your request within two working days."
+	},
+	"disagreements": {
+		"title": "How we resolve disagreements",
+		"section-1": "We encourage you to contact us in case of any issue arising in connection with your use of Social Income and the website. Questions and concerns regarding Social Income, contributions, and our Terms and Conditions may be directed to <a href='mailto:legal@socialincome.org'>legal@socialincome.org</a> at any time. We will respond to you within two working days.",
+		"section-2": "If we cannot find a solution and if one of us has to go to court, Swiss law applies to the exclusion of the conflict of law provisions for any disputes which arise in connection with these Terms and Conditions. The applicable court of jurisdiction is the City of Zurich, Switzerland."
+	}
+}

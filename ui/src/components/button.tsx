@@ -6,22 +6,22 @@ import { ComponentType } from 'react';
 import { cn } from '../lib/utils';
 
 const buttonVariants = cva(
-	'inline-flex items-center justify-center rounded-md text-sm ring-offset-background transition-all duration-200 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+	'inline-flex items-center justify-center rounded-full text-sm ring-offset-background transition-all duration-200 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
 	{
 		variants: {
 			size: {
-				default: 'h-10 px-4 py-2',
-				sm: 'h-9 rounded-md px-3',
-				lg: 'h-16 rounded-md px-8 text-lg',
+				default: 'h-10 px-6 py-2',
+				sm: 'h-9 px-4',
+				lg: 'h-16 px-10 text-lg',
 				icon: 'h-10 w-10',
 			},
 			variant: {
 				default: 'bg-primary text-primary-foreground hover:bg-primary-muted font-medium',
 				destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive-muted font-medium',
-				outline: 'border border-input bg-background hover:bg-muted font-medium',
+				outline: 'border border-primary bg-background hover:bg-muted font-medium',
 				secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary-muted font-medium',
-				ghost: 'hover:bg-muted font-normal',
-				link: 'text-primary underline-offset-4 hover:underline p-0 font-normal',
+				ghost: 'font-normal',
+				link: 'text-foreground underline-offset-4 hover:underline p-0 font-normal',
 			},
 		},
 		defaultVariants: {

@@ -1,10 +1,12 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { SpinnerIcon } from '@/components/logos/spinner-icon';
 import { useApi } from '@/hooks/useApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NewsletterSubscriptionData } from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@socialincome/ui';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
@@ -13,7 +15,7 @@ type PersonalInfoFormProps = {
 	translations: {
 		firstname: string;
 		email: string;
-		updatesSubmitButton: string;
+		submitButton: string;
 		toastMessage: string;
 		toastErrorMessage: string;
 	};
@@ -21,10 +23,10 @@ type PersonalInfoFormProps = {
 
 export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormProps) {
 	const api = useApi();
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const formSchema = z.object({
 		firstname: z.string(),
-		lastname: z.string(),
 		email: z.string().email(),
 	});
 
@@ -38,20 +40,27 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 	});
 
 	const onSubmit = async (values: FormSchema) => {
+		setIsSubmitting(true);
 		const data: NewsletterSubscriptionData = {
 			firstname: values.firstname,
 			email: values.email,
-			language: lang === 'de' ? 'de' : 'en',
+			language: lang === 'de' ? 'de' : lang === 'fr' ? 'fr' : lang === 'it' ? 'it' : 'en',
 			status: 'subscribed',
 		};
 
-		api.post('/api/newsletter/subscription/public', data).then((response) => {
+		try {
+			const response = await api.post('/api/newsletter/subscription/public', data);
 			if (response.status === 200) {
 				toast.success(translations.toastMessage);
+				form.reset();
 			} else {
 				toast.error(translations.toastErrorMessage + '(' + response.statusText + ')');
 			}
-		});
+		} catch (error) {
+			toast.error(translations.toastErrorMessage);
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	return (
@@ -83,15 +92,15 @@ export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormPro
 						</FormItem>
 					)}
 				/>
-				<Button
-					type="submit"
-					size="lg"
-					showLoadingSpinner={form.formState.isSubmitting}
-					color="accent"
-					className="mt-4 rounded-full"
-				>
-					{translations.updatesSubmitButton}
-				</Button>
+				{isSubmitting ? (
+					<div key="spinner" className="mt-4 flex justify-center">
+						<SpinnerIcon />
+					</div>
+				) : (
+					<Button key="button" type="submit" size="lg" color="accent" className="mt-4 rounded-full">
+						{translations.submitButton}
+					</Button>
+				)}
 			</form>
 		</Form>
 	);

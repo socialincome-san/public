@@ -1,6 +1,5 @@
 import i18next, { i18n } from 'i18next';
 import resourcesToBackend from 'i18next-resources-to-backend';
-import path from 'path';
 import { LanguageCode } from '../types/language';
 
 export const FALLBACK_LANGUAGE = 'en';
@@ -37,6 +36,7 @@ export class Translator {
 					try {
 						// for translations to work in the functions runtime, we need to import the local translation files
 						const fs = require('fs');
+						const path = require('path');
 						const localPath = path.join(__dirname, `../../locales/${language}/${namespace}.json`);
 						if (fs.existsSync(localPath)) return import(localPath);
 					} catch (e) {} // do nothing if module not found

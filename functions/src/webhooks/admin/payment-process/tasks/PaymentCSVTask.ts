@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { PAYMENT_AMOUNT } from '../../../../../../shared/src/types/payment';
+import { PAYMENT_AMOUNT_SLE } from '../../../../../../shared/src/types/payment';
 import { PaymentTask } from './PaymentTask';
 
 export class PaymentCSVTask extends PaymentTask {
@@ -12,7 +12,7 @@ export class PaymentCSVTask extends PaymentTask {
 			recipients.map(async (recipient) => {
 				csvRows.push([
 					recipient.get('mobile_money_phone').phone.toString().slice(-8),
-					PAYMENT_AMOUNT.toString(),
+					PAYMENT_AMOUNT_SLE.toString(),
 					recipient.get('first_name'),
 					recipient.get('last_name'),
 					recipient.get('om_uid').toString(),

@@ -23,112 +23,89 @@
 @layer base {
 	:root,
 	.theme-default {
-		--background: hsl(222, 100%, 97%);
-		--foreground: hsl(20 14.3% 4.1%);
-		--muted: hsl(222, 100%, 98%);
-		--muted-foreground: hsl(0, 0%, 30%);
+		--background: 50 33% 96%;
+		--foreground: 206 99% 31%;
 
-		--card: hsl(0 100% 100%);
-		--card-muted: hsl(0, 0%, 98%);
-		--card-foreground: hsl(20 14.3% 4.1%);
-		--card-foreground-muted: hsl(0, 0%, 40%);
+		--muted: 222 100% 98%;
+		--muted-foreground: 212 59% 40%;
 
-		--popover: hsl(0 100% 100%);
-		--popover-muted: hsl(0, 0%, 98%);
-		--popover-foreground: hsl(0, 0%, 35%);
-		--popover-foreground-muted: hsl(0, 0%, 45%);
+		--card: 50 33% 95%;
+		--card-foreground: 206 99% 31%;
+		--card-muted: 0 0% 98%;
+		--card-foreground-muted: 0 0% 40%;
 
-		--primary: hsl(216, 54%, 55%);
-		--primary-muted: hsl(216, 54%, 63%);
-		--primary-foreground: hsl(216 54% 100%);
-		--primary-foreground-muted: hsl(216, 54%, 97%);
+		--popover: 0 100% 100%;
+		--popover-muted: 0 0% 98%;
+		--popover-foreground: 0 0% 35%;
+		--popover-foreground-muted: 0 0% 45%;
 
-		--secondary: hsl(8, 89%, 62%);
-		--secondary-muted: hsl(8, 89%, 70%);
-		--secondary-foreground: hsl(8, 89%, 100%);
-		--secondary-foreground-muted: hsl(8, 89%, 97%);
+		--primary: 212 57% 47%;
+		--primary-muted: 216 54% 63%;
+		--primary-foreground: 216 54% 100%;
+		--primary-foreground-muted: 216 54% 97%;
 
-		--accent: hsl(48, 100%, 49%);
-		--accent-muted: hsl(48, 100%, 57%);
-		--accent-foreground: hsl(48, 100%, 0%);
-		--accent-foreground-muted: hsl(48, 100%, 30%);
+		--secondary: 8 89% 62%;
+		--secondary-muted: 8 89% 70%;
+		--secondary-foreground: 8 89% 100%;
+		--secondary-foreground-muted: 8 89% 97%;
 
-		--destructive: hsl(0, 75%, 42%);
-		--destructive-muted: hsl(0, 73%, 65%);
-		--destructive-foreground: hsl(60 9.1% 97.8%);
-		--destructive-foreground-muted: hsl(0, 100%, 98%);
+		--accent: 48 100% 49%;
+		--accent-muted: 48 100% 57%;
+		--accent-foreground: 48 100% 0%;
+		--accent-foreground-muted: 48 100% 30%;
 
-		--border: hsl(20 5.9% 80%);
-		--input: hsl(20 5.9% 90%);
-		--ring: hsl(216, 54%, 55%);
+		--destructive: 0 75% 42%;
+		--destructive-muted: 0 73% 65%;
+		--destructive-foreground: 60 9.1% 97.8%;
+		--destructive-foreground-muted: 0 100% 98%;
+
+		--border: 20 5.9% 80%;
+		--input: 20 5.9% 90%;
+		--ring: 216 54% 55%;
 		--radius: 0.5rem;
 	}
 
-	.theme-dark-blue {
-		--background: hsl(216, 54%, 55%);
-		--muted: hsl(216, 54%, 61%);
-		--foreground: hsl(60 9.1% 97.8%);
+	.theme-light {
+		--background: 212 59% 40%;
+		--foreground: 20 14.3% 4.1%;
 
-		--card: hsl(222, 100%, 97%);
-		--card-muted: hsl(222, 100%, 99%);
+		--muted: 222 100% 98%;
+		--muted-foreground: 0 0% 30%;
 
-		--primary: hsl(48, 100%, 49%);
-		--primary-muted: hsl(48, 100%, 85%);
-		--primary-foreground: hsl(48, 100%, 0%);
-		--primary-foreground-muted: hsl(48, 100%, 30%);
-
-		--border: hsl(60 9.1% 97.8%);
+		--card: 0 100% 100%;
+		--card-muted: 0 0% 97%;
+		--card-foreground: 206 99% 31%;
+		--card-foreground-muted: 50 33% 45%;
 	}
 
-	.theme-v2 {
-		--background: #f9f8f3;
-		--foreground: #3373bb;
-		--foreground-dark: #2a63a4;
-	}
+	.theme-blue {
+		--background: 212 57% 47%;
+		--foreground: 50 33% 96%;
 
-	.theme-blue-v2 {
-		--background: hsl(212, 57%, 47%);
-		--foreground: hsl(50, 33%, 96%);
+		--muted: 212 59% 75%;
+		--muted-foreground: 50 33% 99%;
 
-		--muted: hsl(212, 59%, 75%);
-		--muted-foreground: hsl(50, 33%, 99%);
+		--card: 212 57% 47%;
+		--card-muted: 212 57% 75%;
+		--card-foreground: 50 33% 96%;
+		--card-foreground-muted: 0 0% 40%;
 
-		--card: hsl(212, 57%, 47%);
-		--card-muted: hsl(212, 59%, 75%);
-		--card-foreground: hsl(50, 33%, 96%);
-		--card-foreground-muted: hsl(50, 33%, 99%);
-	}
+		--primary: 48 100% 49%;
+		--primary-muted: 48 100% 85%;
+		--primary-foreground: 48 100% 0%;
+		--primary-foreground-muted: 48 100% 30%;
 
-	.theme-dark-blue-v2 {
-		--background: hsl(212, 59%, 40%);
-		--foreground: hsl(50, 33%, 96%);
-
-		--muted: hsl(212, 59%, 75%);
-		--muted-foreground: hsl(50, 33%, 99%);
-
-		--card: hsl(212, 59%, 40%);
-		--card-muted: hsl(212, 59%, 75%);
-		--card-foreground: hsl(50, 33%, 96%);
-		--card-foreground-muted: hsl(50, 33%, 99%);
+		--border: 60 9.1% 97.8%;
 	}
 }
 
 @layer base {
 	body,
 	.theme-default,
-	.theme-dark-blue {
+	.theme-light {
 		@apply bg-background text-foreground;
 	}
-
-	.theme-v2 {
-		@apply bg-background text-foreground;
-	}
-
-	.theme-blue-v2 {
-		@apply bg-background text-foreground;
-	}
-
-	.theme-dark-blue-v2 {
+	.theme-blue {
 		@apply bg-background text-foreground;
 	}
 }

@@ -3,18 +3,14 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 
-export async function OurMission({ lang }: { lang: WebsiteLanguage }) {
+export default async function OurMission({ lang }: { lang: WebsiteLanguage }) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-about-us'],
 	});
 
 	return (
-		<BaseContainer
-			id="our-mission"
-			backgroundColor="bg-yellow-50"
-			className="flex min-h-screen flex-col justify-center py-16 md:py-32"
-		>
+		<BaseContainer id="our-mission" className="scroll-mt-36 flex-col justify-center">
 			<Typography as="h3" size="xl" color="muted-foreground" className="mb-4">
 				{translator.t('our-mission.header')}
 			</Typography>

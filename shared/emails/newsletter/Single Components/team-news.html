@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="x-ua-compatible" content="ie=edge" />
+		<title>Monthly Update | Social Income</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<style type="text/css">
+			@media screen {
+				@font-face {
+					font-family: 'Unica77';
+					font-style: normal;
+					font-weight: 400;
+					src: url(https://si-fonts.s3.eu-west-1.amazonaws.com/Unica77LLSub-Regular.woff2) format('woff2');
+				}
+				@font-face {
+					font-family: 'Unica77';
+					font-style: italic;
+					font-weight: 400;
+					src: url(https://si-fonts.s3.eu-west-1.amazonaws.com/Unica77LLSub-Italic.woff2) format('woff2');
+				}
+				@font-face {
+					font-family: 'Unica77';
+					font-style: normal;
+					font-weight: 500;
+					src: url(https://si-fonts.s3.eu-west-1.amazonaws.com/Unica77LLSub-Medium.woff2) format('woff2');
+				}
+				@font-face {
+					font-family: 'Unica77';
+					font-style: italic;
+					font-weight: 500;
+					src: url(https://si-fonts.s3.eu-west-1.amazonaws.com/Unica77LLSub-MediumItalic.woff2) format('woff2');
+				}
+			}
+			.feature {
+				-webkit-font-feature-settings: 'ss04' on;
+				font-feature-settings: 'ss04' on;
+			}
+			/**
+						 * Bulletpoints for Gmail fix
+						 */
+			u + .body .glist {
+				margin-left: 0 !important;
+			}
+
+			@media only screen and (max-width: 640px) {
+				u + .body .glist {
+					margin-left: 25px !important;
+				}
+			}
+
+			/**
+			 * Avoid browser level font resizing.
+			 * 1. Windows Mobile
+			 * 2. iOS / OSX
+			 */
+			body,
+			table,
+			td,
+			a {
+				-ms-text-size-adjust: 100%; /* 1 */
+				-webkit-text-size-adjust: 100%; /* 2 */
+			}
+
+			/**
+			 * Remove extra space added to tables and cells in Outlook.
+			 */
+			table,
+			td {
+				mso-table-rspace: 0pt;
+				mso-table-lspace: 0pt;
+			}
+
+			/**
+			 * Better fluid images in Internet Explorer.
+			 */
+			img {
+				-ms-interpolation-mode: bicubic;
+			}
+
+			/**
+			 * Remove blue links for iOS devices.
+			 */
+			a[x-apple-data-detectors] {
+				font-family: inherit !important;
+				font-size: inherit !important;
+				font-weight: inherit !important;
+				line-height: inherit !important;
+				color: inherit !important;
+				text-decoration: none !important;
+			}
+
+			/**
+			 * Fix centering issues in Android 4.4.
+			 */
+			div[style*='margin: 16px 0;'] {
+				margin: 0 !important;
+			}
+
+			body {
+				width: 100% !important;
+				height: 100% !important;
+				padding: 0 !important;
+				margin: 0 !important;
+			}
+
+			/**
+			 * Collapse table borders to avoid space between cells.
+			 */
+			table {
+				border-collapse: collapse !important;
+			}
+
+			a {
+				color: #111111;
+			}
+
+			img {
+				height: auto;
+				line-height: 100%;
+				text-decoration: none;
+				border: 0;
+				outline: none;
+			}
+
+			.bg-rollover:hover {
+				background-color: #f9f8f3 !important;
+				color: #7d8082 !important;
+			}
+		</style>
+	</head>
+	<body style="background-color: #f9f8f3">
+		<!-- start preheader -->
+		<div
+			class="preheader"
+			style="
+				display: none;
+				max-width: 0;
+				max-height: 0;
+				overflow: hidden;
+				font-size: 1px;
+				line-height: 1px;
+				color: #f9f8f3;
+				opacity: 0;
+			"
+		>
+			Hey {{ insert first_name 'default=you' }}, here are a few things that have been on my mind this last month:
+			Randomness, Doubts and War.&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&#8199;&#847;
+			&#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847; &#8199;&#847;&shy; &shy; &shy; &shy; &shy; &shy; &shy;
+			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
+			&shy; &shy; &shy; &shy;&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
+			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;&shy; &shy; &shy; &shy;
+			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
+			&shy; &shy; &shy; &shy; &shy; &shy; &shy;&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;
+			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;&shy;
+			&shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy; &shy;&nbsp;
+		</div>
+		<!-- end preheader -->
+
+		<!-- start body -->
+		<table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<!-- start logo -->
+			<tr>
+				<td align="center" bgcolor="#f9f8f3">
+					<!--[if (gte mso 9)|(IE)]>
+			<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+				<tr>
+					<td align="center" valign="top" width="600">
+			<![endif]-->
+					<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px">
+						<tr>
+							<td align="left" valign="top" style="padding: 36px 10px">
+								<a
+									href="https://socialincome.org"
+									target="_blank"
+									rel="noopener noreferrer"
+									style="display: inline-block"
+								>
+									<img
+										src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/b641e150-9ec7-4220-b6a3-2616e65915ac/935x101.png"
+										alt="Logo"
+										border="0"
+										width="250"
+										style="display: block; width: 250px; max-width: 250px; min-width: 250px"
+									/>
+								</a>
+							</td>
+						</tr>
+					</table>
+					<!--[if (gte mso 9)|(IE)]>
+			</td>
+			</tr>
+			</table>
+			<![endif]-->
+				</td>
+			</tr>
+			<!-- end logo -->
+
+			<!-- start copy block -->
+			<tr>
+				<td align="center" bgcolor="#f9f8f3">
+					<!--[if (gte mso 9)|(IE)]>
+			<table align="center" border="0" cellpadding="0" cellspacing="0" width="600px">
+				<tr>
+					<td align="center" valign="top" width="600px">
+			<![endif]-->
+					<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px">
+						<!-- TEAM BLOCK start -->
+						<!-- start hero -->
+						<tr>
+							<td
+								bgcolor="#f9f8f3"
+								align="left"
+								style="
+									padding: 10px 10px 10px 10px;
+									font-family: 'Unica77', Helvetica, Arial, sans-serif;
+									font-size: 42px;
+									line-height: 52px;
+								"
+							>
+								<h1
+									class="feature"
+									style="margin: 0 0 12px; font-size: 50px; font-weight: 500; line-height: 60px; color: #191a19"
+								>
+									Volunteer News and <span style="color: #01579b">Newsletter Preview</span>
+								</h1>
+							</td>
+						</tr>
+						<!-- end hero -->
+
+						<!-- start team news -->
+						<tr>
+							<td align="center" bgcolor="#f9f8f3" style="padding: 30px 10px 40px 10px">
+								<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px">
+									<tr>
+										<td
+											bgcolor="#FAC800"
+											style="
+												background-color: #f0e08c;
+												padding: 20px 20px 20px 20px;
+												border-radius: 10px;
+												font-family: 'Unica77', Helvetica, Arial, sans-serif;
+												font-size: 32px;
+												line-height: 32px;
+												text-align: left;
+											"
+										>
+											<p
+												class="feature"
+												style="
+													margin: 0px 0px 20px 0px;
+													font-family: 'Unica77', Helvetica, Arial, sans-serif;
+													font-weight: 500;
+													font-size: 24px;
+													line-height: 32px;
+													color: #59481c;
+												"
+											>
+												Behind the Scenes
+											</p>
+											<p
+												class="feature"
+												style="
+													margin: 0;
+													font-family: 'Unica77', Helvetica, Arial, sans-serif;
+													font-weight: 400;
+													font-size: 18px;
+													line-height: 30px;
+													color: #59481c;
+													padding: 10px 0px;
+												"
+											>
+												Hey {{ insert first_name 'default=Volunteers' }},
+											</p>
+											<p
+												class="feature"
+												style="
+													margin: 0;
+													font-family: 'Unica77', Helvetica, Arial, sans-serif;
+													font-weight: 400;
+													font-size: 18px;
+													line-height: 30px;
+													color: #59481c;
+													padding: 10px 0px;
+												"
+											>
+												Sorry to burst the bubble, but there’s no Santa Claus 🎅🏼. There is, however, Riccardo—he has
+												organized a Sierra Leone chocolate sale at the Christmas market in Trentino to raise funds. What
+												a great initiative!
+											</p>
+											<p
+												class="feature"
+												style="
+													margin: 0;
+													font-family: 'Unica77', Helvetica, Arial, sans-serif;
+													font-weight: 400;
+													font-size: 18px;
+													line-height: 30px;
+													color: #59481c;
+													padding: 10px 0px;
+												"
+											>
+												Writing newsletters in HTML has its perks—like spying on what our devs are cooking up on
+												<a
+													style="color: #59481c"
+													href="https://github.com/socialincome-san/public/"
+													target="_blank"
+													rel="noopener noreferrer"
+													>GitHub</a
+												>. Here are four things I’m especially excited about:
+											</p>
+
+											<!-- Added table -->
+											<table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 20px">
+												<tr>
+													<!-- Spacer Row Start -->
+												</tr>
+
+												<tr>
+													<td
+														colspan="2"
+														style="
+															height: 16px;
+															padding: 0;
+															line-height: 16px;
+															border-top: 1px solid #d8c97c;
+															vertical-align: middle;
+														"
+													></td>
+												</tr>
+												<!-- Spacer Row End -->
+												<!-- News Item Start -->
+												<tr>
+													<td align="center" style="vertical-align: middle; text-align: left; width: 20px">
+														<img
+															src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/47bdbb6d-270a-489a-bec6-0dae86607d40/80x80.png"
+															alt="Image"
+															style="height: 40px; margin-left: 10px"
+														/>
+													</td>
+													<td
+														style="
+															vertical-align: middle;
+															padding: 0px 0px 15px 20px;
+															font-family: 'Unica77', Helvetica, Arial, sans-serif;
+															font-size: 18px;
+															line-height: 28px;
+															color: #59481c;
+														"
+													>
+														We’ve long owed our partners better visibility—time to make it happen. Big thanks to XXX for
+														stepping up! Part 1 is
+														<a
+															style="color: #59481c"
+															href="https://socialincome.org/en/int/partners"
+															target="_blank"
+															rel="noopener noreferrer"
+															>done</a
+														>, and part 2 is
+														<a
+															style="color: #59481c"
+															href="https://github.com/socialincome-san/public/pull/943"
+															target="_blank"
+															rel="noopener noreferrer"
+															>on the way</a
+														>.
+													</td>
+												</tr>
+												<!-- News Item End -->
+												<!-- Spacer Row Start -->
+												<tr>
+													<td
+														colspan="2"
+														style="
+															height: 16px;
+															padding: 0;
+															line-height: 16px;
+															border-top: 1px solid #d8c97c;
+															vertical-align: middle;
+														"
+													></td>
+												</tr>
+												<!-- Spacer Row End -->
+												<!-- News Item Start -->
+												<tr>
+													<td align="center" style="vertical-align: middle; text-align: left; width: 20px">
+														<img
+															src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/9d0fee10-ac74-4275-a29d-1a895d1c3290/80x80.png"
+															alt="Image"
+															style="height: 40px; margin-left: 10px"
+														/>
+													</td>
+													<td
+														style="
+															vertical-align: middle;
+															padding: 0px 0px 15px 20px;
+															font-family: 'Unica77', Helvetica, Arial, sans-serif;
+															font-size: 18px;
+															line-height: 28px;
+															color: #59481c;
+														"
+													>
+														XXX’s
+														<a
+															style="color: #59481c"
+															href="https://github.com/socialincome-san/public/issues/927"
+															target="_blank"
+															rel="noopener noreferrer"
+															>patching up</a
+														>
+														the transparency page—retiring the duct tape with honors. This is all about earning and
+														keeping trust—because without it, there are no donations, and without donations, no impact.
+													</td>
+												</tr>
+												<!-- News Item End -->
+												<!-- Spacer Row Start -->
+												<tr>
+													<td
+														colspan="2"
+														style="
+															height: 16px;
+															padding: 0;
+															line-height: 16px;
+															border-top: 1px solid #d8c97c;
+															vertical-align: middle;
+														"
+													></td>
+												</tr>
+												<!-- Spacer Row End -->
+												<!-- News Item Start -->
+												<tr>
+													<td align="center" style="vertical-align: middle; text-align: left; width: 20px">
+														<img
+															src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/5c508ea6-9c40-4ef6-945c-c33009abd3a0/80x80.png"
+															alt="Image"
+															style="height: 40px; margin-left: 10px"
+														/>
+													</td>
+													<td
+														style="
+															vertical-align: middle;
+															padding: 0px 0px 15px 20px;
+															font-family: 'Unica77', Helvetica, Arial, sans-serif;
+															font-size: 18px;
+															line-height: 28px;
+															color: #59481c;
+														"
+													>
+														Ismatu has raised nearly USD 50k with
+														<a
+															style="color: #59481c"
+															href="https://socialincome.org/ismatu"
+															target="_blank"
+															rel="noopener noreferrer"
+															>her fundraiser</a
+														>—thanks to the awesome page XXXX built for her. Now he’s making it
+														<a
+															style="color: #59481c"
+															href="https://github.com/socialincome-san/public/issues/931"
+															target="_blank"
+															rel="noopener noreferrer"
+															>for everyone</a
+														>. If you’re quick, I might even do a 🎄 fundraiser. No pressure, XXX… okay, maybe a little.
+													</td>
+												</tr>
+												<!-- News Item End -->
+												<!-- Spacer Row Start -->
+												<tr>
+													<td
+														colspan="2"
+														style="
+															height: 16px;
+															padding: 0;
+															line-height: 16px;
+															border-top: 1px solid #d8c97c;
+															vertical-align: middle;
+														"
+													></td>
+												</tr>
+												<!-- Spacer Row End -->
+												<!-- News Item Start -->
+												<tr>
+													<td align="center" style="vertical-align: middle; text-align: left; width: 20px">
+														<img
+															src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/9f5a4509-9875-4323-92e3-defe3c7d8c63/80x80.png"
+															alt="Image"
+															style="height: 40px; margin-left: 10px"
+														/>
+													</td>
+													<td
+														style="
+															vertical-align: middle;
+															padding: 0px 0px 15px 20px;
+															font-family: 'Unica77', Helvetica, Arial, sans-serif;
+															font-size: 18px;
+															line-height: 28px;
+															color: #59481c;
+														"
+													>
+														Conducting impact surveys is great, but showing real impact? Even better—and long overdue.
+														<a
+															style="color: #59481c"
+															href="https://github.com/socialincome-san/public/pull/928"
+															target="_blank"
+															rel="noopener noreferrer"
+															>XXX’s on it!</a
+														>
+													</td>
+												</tr>
+												<!-- News Item End -->
+												<!-- Spacer Row Start -->
+												<tr>
+													<td
+														colspan="2"
+														style="
+															height: 16px;
+															padding: 0;
+															line-height: 16px;
+															border-top: 1px solid #d8c97c;
+															vertical-align: middle;
+														"
+													></td>
+												</tr>
+												<!-- Spacer Row End -->
+											</table>
+											<p
+												class="feature"
+												style="
+													margin: 0;
+													font-family: 'Unica77', Helvetica, Arial, sans-serif;
+													font-weight: 400;
+													font-size: 18px;
+													line-height: 30px;
+													color: #59481c;
+													padding: 10px 0px;
+												"
+											>
+												PS. I asked a dev friend 👩🏻‍💻 what I could teach our volunteer devs who seem to know everything
+												already? Her reply: “Don't even try.” Well, I do it anyway. Did you know that adding “<a
+													style="color: #59481c"
+													href="https://werd.io/2024/browsers-imply-noopener-for-links-in-new-tab"
+													target="_blank"
+													>noopener</a
+												>” to
+												<a
+													style="color: #59481c"
+													href="https://werd.io/2024/browsers-imply-noopener-for-links-in-new-tab"
+													target="_blank"
+													>target="_blank"</a
+												>
+												is like locking a car that’s already in a garage, totally
+												<a
+													style="color: #59481c"
+													href="https://werd.io/2024/browsers-imply-noopener-for-links-in-new-tab"
+													target="_blank"
+													>unnecessary</a
+												>. And did you know?
+												<a style="color: #59481c" href="https://www.youtube.com/watch?v=3HF6Oj9GeLg" target="_blank"
+													>Yes or No?</a
+												>
+											</p>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- end team news -->
+						<!-- TEAM BLOCK end -->
+
+						<!-- separator start -->
+						<tr>
+							<td align="center" bgcolor="#f9f8f3" style="padding: 60px 12px 40px 12px">
+								<table width="100%" border="0" cellspacing="0" cellpadding="0">
+									<tr>
+										<td style="border-bottom: 1px solid #d4dadf; width: 576px"></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<!-- separator end -->
+					</table>
+					<!--[if (gte mso 9)|(IE)]>
+			</td>
+			</tr>
+			</table>
+			<![endif]-->
+				</td>
+			</tr>
+			<!-- end copy block -->
+
+			<!-- start footer -->
+			<tr>
+				<td align="center" bgcolor="#f9f8f3" style="padding: 30px 10px 24px 10px">
+					<!--[if (gte mso 9)|(IE)]>
+			<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">
+				<tr>
+					<td align="center" valign="top" width="600">
+			<![endif]-->
+					<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px">
+						<tr>
+							<td>
+								<table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px">
+									<tr>
+										<td align="left" valign="top" style="padding: 6px 10px 5px 10px">
+											<a
+												href="https://socialincome.org"
+												target="_blank"
+												rel="noopener noreferrer"
+												style="display: inline-block"
+											>
+												<img
+													src="https://cdn.mcauto-images-production.sendgrid.net/044784a789c4863a/00efcc42-51b2-4724-b566-c29b53cae2d5/100x66.png"
+													alt="Logo"
+													border="0"
+													width="80"
+													style="display: block; width: 80px; max-width: 80px; min-width: 80px"
+												/>
+											</a>
+										</td>
+										<td
+											align="right"
+											bgcolor="#f9f8f3"
+											style="
+												padding: 1px 10px 40px 10px;
+												font-family: 'Unica77', Helvetica, Arial, sans-serif;
+												font-size: 16px;
+												line-height: 20px;
+												color: #191a19;
+											"
+										>
+											<p class="feature" style="margin: 0">
+												Social Income <br />
+												Zurich, Switzerland
+											</p>
+											<p class="feature" style="margin: 0">
+												<a
+													href="https://github.com/orgs/socialincome-san/discussions/categories/monthly-updates"
+													target="_blank"
+													rel="noopener noreferrer"
+													style="text-decoration: none"
+													>Archive</a
+												>
+												/
+												<a
+													href="{{{unsubscribe_preferences}}}"
+													target="_blank"
+													rel="noopener noreferrer"
+													style="text-decoration: none"
+													>Preferences</a
+												>
+												/
+												<a
+													href="{{{unsubscribe}}}"
+													target="_blank"
+													rel="noopener noreferrer"
+													style="text-decoration: none"
+													>Unsubscribe</a
+												>
+											</p>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+					<!--[if (gte mso 9)|(IE)]>
+			</td>
+			</tr>
+			</table>
+			<![endif]-->
+				</td>
+			</tr>
+			<!-- end footer -->
+		</table>
+		<!-- end body -->
+	</body>
+</html>

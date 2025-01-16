@@ -1,7 +1,7 @@
 import { firestoreAdmin } from '@/firebase-admin';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { BanknotesIcon, BuildingLibraryIcon, DevicePhoneMobileIcon } from '@heroicons/react/24/solid';
-import { PAYMENT_AMOUNT } from '@socialincome/shared/src/types/payment';
+import { PAYMENT_AMOUNT_SLE } from '@socialincome/shared/src/types/payment';
 import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRates';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Typography } from '@socialincome/ui';
@@ -22,7 +22,6 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 				<Typography weight="bold" size="3xl">
 					{translator.t('section-4.title')}
 				</Typography>
-				<Typography size="lg">{translator.t('section-4.subtitle')}</Typography>
 			</div>
 			<InfoCard
 				sectionTitle={translator.t('section-4.expenses')}
@@ -30,6 +29,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 					context: {
 						value: roundAmount(expensesTotal),
 						currency: params.currency,
+						maximumFractionDigits: 0,
 					},
 				})}
 				text={translator.t('section-4.amount-since-march-2020')}
@@ -42,6 +42,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 									context: {
 										value: roundAmount(paymentStats.totalPaymentsAmount),
 										currency: params.currency,
+										maximumFractionDigits: 0,
 										recipientsCount: paymentStats.totalRecipientsCount,
 									},
 								})}
@@ -52,6 +53,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 								context: {
 									value: roundAmount(_.last(paymentStats.totalPaymentsByMonth)?.amount as number),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 									recipientsCount: _.last(paymentStats.totalPaymentsByMonth)?.recipientsCount,
 								},
 							})}
@@ -63,6 +65,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 										contributionStats.totalIndividualContributionsAmount - paymentStats.totalPaymentsAmount,
 									),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 						</Typography>
@@ -77,6 +80,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 									context: {
 										value: roundAmount(_.sum(Object.values(expensesStats.totalExpensesByType))),
 										currency: params.currency,
+										maximumFractionDigits: 0,
 									},
 								})}
 							</Typography>
@@ -86,6 +90,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.donation_fees),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -102,6 +107,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.delivery_fees),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -118,6 +124,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.exchange_rate_loss),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -134,6 +141,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.account_fees),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -148,7 +156,11 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 
 						<Typography as="div" className="flex-inline flex items-center">
 							{translator.t('section-4.staff-costs', {
-								context: { value: roundAmount(expensesStats.totalExpensesByType.staff), currency: params.currency },
+								context: {
+									value: roundAmount(expensesStats.totalExpensesByType.staff),
+									currency: params.currency,
+									maximumFractionDigits: 0,
+								},
 							})}
 							<TooltipProvider delayDuration={100}>
 								<Tooltip>
@@ -164,6 +176,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.fundraising_advertising),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -180,6 +193,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.administrative),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -198,7 +212,11 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 			<InfoCard
 				sectionTitle={translator.t('section-4.reserves')}
 				title={translator.t('amount', {
-					context: { value: roundAmount(reservesTotal), currency: params.currency },
+					context: {
+						value: roundAmount(reservesTotal),
+						currency: params.currency,
+						maximumFractionDigits: 0,
+					},
 				})}
 				text={translator.t('section-4.amount-since-march-2020')}
 				firstIcon={<DevicePhoneMobileIcon className="h-8 w-8" />}
@@ -210,7 +228,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 						<Typography>
 							{translator.t('section-4.covers-payments-1', {
 								context: {
-									recipientsCount: (reservesTotal / (PAYMENT_AMOUNT / exchangeRateSLE) / 36).toFixed(0),
+									recipientsCount: (reservesTotal / (PAYMENT_AMOUNT_SLE / exchangeRateSLE) / 36).toFixed(0),
 									monthsCount: 36,
 								},
 							})}
@@ -218,7 +236,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 						<Typography>
 							{translator.t('section-4.covers-payments-2', {
 								context: {
-									recipientsCount: (reservesTotal / (PAYMENT_AMOUNT / exchangeRateSLE)).toFixed(0),
+									recipientsCount: (reservesTotal / (PAYMENT_AMOUNT_SLE / exchangeRateSLE)).toFixed(0),
 								},
 							})}
 						</Typography>

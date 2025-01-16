@@ -15,7 +15,7 @@
 		"header": "So funkioniert's",
 		"title-1": "Ein solidarischer Beitrag, von Mensch zu Mensch. ",
 		"title-2": "So einfach.",
-		"text": "Wir sind überzeugt, dass Menschen in Armut sich selber helfen können, wenn sie die Mittel dazu erhalten.",
+		"text": "Wir sind überzeugt, dass Menschen in Armut sich selbst helfen können, wenn sie die Mittel dazu erhalten.",
 		"subtitle": "Mach einen Unterschied in weniger als 1 Minute.",
 		"item-1": "Flexible Zahlungspläne. Modifiziere oder kündige jederzeit",
 		"item-2": "Social Income-Überweisungen werden direkt auf die Mobiltelefone der Empfänger:innen transferiert",
@@ -32,7 +32,6 @@
 			"carlos": "Wir leben in einer Welt voller Möglichkeiten. Lasst uns dieses Privileg teilen.",
 			"vanja": "Ein grossartiges Beispiel dafür, wie sich Wohlstand umverteilen lässt, basierend auf Solidarität und ermöglicht durch die heutige Technologie.",
 			"ruben": "Ich unterstütze Social Income nicht nur, weil es einfach ist, sondern weil die Forschung gezeigt hat, dass der Ansatz extrem effektiv ist.",
-			"han": "Die Frage ist nicht, warum man sich engagieren sollte, sondern vielmehr, warum man es bleiben lässt. Social Income ist eine dringende Notwendigkeit in unserer Gesellschaft.",
 			"claudia": "Die heutige globale Ungleichheit ist die Folge jahrhundertelanger ungleicher Fortschritte. Social Income ist ein neuer Weg, diese Ungleichheit anzugehen."
 		}
 	},
@@ -83,10 +82,10 @@
 			},
 			"item-3": {
 				"title": "Januar 2022",
-				"text": "Seit Beginn dieses Jahres können wir Social Income kontinuierlich für immer mehr Empfänger:innen und Spender:innen ausrollen."
+				"text": "Wir rollen Social Income kontinuierlich für mehr Empfänger:innen aus."
 			},
 			"item-4": {
-				"title": "Anstehend: Wirkungsmessung",
+				"title": "Fortlaufend: Wirkungsmessung",
 				"text": "Um die Wirksamkeit von Social Income messbar zu machen, haben wir eine Methode und eine Reihe an quantitativen und qualitativen Indikatoren entwickelt. Momentan sammeln wir Daten und optimieren unsere Vorgehensweise mit Hilfe der Empfänger:innen."
 			}
 		}

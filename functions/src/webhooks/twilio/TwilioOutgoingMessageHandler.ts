@@ -1,4 +1,4 @@
-import * as functions from 'firebase-functions';
+import { onCall } from 'firebase-functions/v2/https';
 import { MessageInstance } from 'twilio/lib/rest/api/v2010/account/message';
 import { FirestoreAdmin } from '../../../../shared/src/firebase/admin/FirestoreAdmin';
 import { Entity } from '../../../../shared/src/types';
@@ -20,7 +20,7 @@ export class TwilioOutgoingMessageHandler {
 	}
 
 	getFunction = () =>
-		functions.https.onCall(async ({ recipients, template }: TwilioOutgoingMessageFunctionProps, { auth }) => {
+		onCall<TwilioOutgoingMessageFunctionProps>(async ({ data: { template, recipients }, auth }) => {
 			await this.firestoreAdmin.assertGlobalAdmin(auth?.token?.email);
 			let [successCount, skippedCount] = [0, 0];
 			for await (const { values: recipient, id } of recipients) {

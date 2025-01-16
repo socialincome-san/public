@@ -13,7 +13,7 @@ export async function OurWork({ params }: DefaultPageProps) {
 	});
 
 	return (
-		<BaseContainer className="min-h-screen-navbar grid grid-cols-1 content-center items-center gap-16 md:grid-cols-5">
+		<BaseContainer id="mission" className="grid grid-cols-1 content-center items-center gap-16 md:grid-cols-5">
 			<div className="mx-auto max-w-lg space-y-5 md:col-span-3">
 				<Typography as="span" size="5xl" weight="bold" lineHeight="tight">
 					{translator?.t('our-work.title-1')}
@@ -45,6 +45,7 @@ export async function OurWork({ params }: DefaultPageProps) {
 				src={phonesGif}
 				alt="Change animation"
 				style={{ objectFit: 'cover' }}
+				unoptimized
 			/>
 		</BaseContainer>
 	);

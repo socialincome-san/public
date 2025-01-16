@@ -413,8 +413,7 @@ class KriCupertinoLocalizations extends GlobalCupertinoLocalizations {
     required super.singleDigitSecondFormat,
   });
 
-  static const LocalizationsDelegate<CupertinoLocalizations> delegate =
-      _KriCupertinoLocalizationsDelegate();
+  static const LocalizationsDelegate<CupertinoLocalizations> delegate = _KriCupertinoLocalizationsDelegate();
 
   @override
   String datePickerYear(int yearIndex) => yearIndex.toString();
@@ -459,8 +458,7 @@ class KriCupertinoLocalizations extends GlobalCupertinoLocalizations {
   DatePickerDateOrder get datePickerDateOrder => DatePickerDateOrder.mdy;
 
   @override
-  DatePickerDateTimeOrder get datePickerDateTimeOrder =>
-      DatePickerDateTimeOrder.date_time_dayPeriod;
+  DatePickerDateTimeOrder get datePickerDateTimeOrder => DatePickerDateTimeOrder.date_time_dayPeriod;
 
   @override
   String get anteMeridiemAbbreviation => "AM";
@@ -585,6 +583,9 @@ class KriCupertinoLocalizations extends GlobalCupertinoLocalizations {
 
   @override
   String get shareButtonLabel => "Share...";
+
+  @override
+  String get clearButtonLabel => "Clear";
 }
 
 // #docregion Delegate
@@ -661,8 +662,7 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
     required super.twoDigitZeroPaddedFormat,
   });
 
-  static const LocalizationsDelegate<MaterialLocalizations> delegate =
-      _KriMaterialLocalizationsDelegate();
+  static const LocalizationsDelegate<MaterialLocalizations> delegate = _KriMaterialLocalizationsDelegate();
 
   // #docregion Getters
   @override
@@ -1131,4 +1131,10 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
 
   @override
   String get shareButtonLabel => "Share...";
+
+  @override
+  String get clearButtonTooltip => "Clear text";
+
+  @override
+  String get selectedDateLabel => "Selected";
 }

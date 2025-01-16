@@ -9,6 +9,7 @@ import {
 } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { ExpenseStats, ExpensesStatsCalculator } from '@socialincome/shared/src/utils/stats/ExpensesStatsCalculator';
 import { PaymentStats, PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
+import { BaseContainer } from '@socialincome/ui';
 import { Section1 } from './section-1';
 import { Section2 } from './section-2';
 import { Section3 } from './section-3';
@@ -47,7 +48,7 @@ export default async function Page({ params }: TransparencyPageProps) {
 	const { contributionStats, expensesStats, paymentStats } = await getStats(currency);
 
 	return (
-		<div className="flex flex-col space-y-16 py-8">
+		<BaseContainer className="flex flex-col space-y-16">
 			<CurrencyRedirect currency={currency} />
 			<Section1
 				params={params}
@@ -73,6 +74,6 @@ export default async function Page({ params }: TransparencyPageProps) {
 				paymentStats={paymentStats}
 				expensesStats={expensesStats}
 			/>
-		</div>
+		</BaseContainer>
 	);
 }

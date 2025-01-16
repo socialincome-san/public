@@ -20,11 +20,7 @@ export async function Recipients({ params }: DefaultPageProps) {
 	});
 
 	return (
-		<BaseContainer
-			id="recipients"
-			backgroundColor="bg-indigo-50"
-			className="flex min-h-screen flex-col justify-center space-y-8 py-16 md:py-32"
-		>
+		<BaseContainer id="recipients" className="flex scroll-mt-36 flex-col justify-center space-y-8">
 			<div className="space-y-4">
 				<Typography as="h3" size="xl" color="muted-foreground">
 					{translator.t('recipients.header')}

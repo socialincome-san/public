@@ -1,0 +1,104 @@
+{
+	"section-1": {
+		"title": [
+			{
+				"text": "Wir würden ohne Unterstützung aus "
+			},
+			{
+				"text": "der Kunstwelt",
+				"color": "secondary"
+			}
+		]
+	},
+	"section-2": {
+		"topic": "Grundprinzip",
+		"title": [
+			{
+				"text": "Wir glauben, dass die Kunstwelt die Verantwortung hat, den kulturellen Austausch zu fördern und "
+			},
+			{
+				"text": "anderen Menschen zu helfen",
+				"color": "secondary"
+			},
+			{
+				"text": ", unabhängig davon, wer sie sind."
+			}
+		],
+		"cards": [
+			{
+				"title": "Wo wir angefangen haben",
+				"description": "Unsere ersten Empfänger waren eine Gruppe junger Künstler in Sierra Leone, die finanzielle Schwierigkeiten hatten, ihre Praktiken aufrechtzuerhalten. Diese Künstler sind auch Teil unseres Kernteams mit Sitz in Freetown.",
+				"links": [
+					{
+						"icon": "...",
+						"text": "Team kennenlernen",
+						"href": "/about-us#team"
+					}
+				]
+			},
+			{
+				"title": "Woher wir kommen",
+				"description": "Unser Gründungsteam steht hinter dem Random Institute, einer Kunstinitiative, die weltweit über hundert Interventionen durchgeführt hat.",
+				"links": [
+					{
+						"icon": "...",
+						"text": "Random Institute",
+						"href": "https://randominstitute.org/"
+					}
+				]
+			},
+			{
+				"title": "Woher wir finanziert werden",
+				"description": "Wir haben anfängliche Beiträge von folgenden Institutionen erhalten:",
+				"links": [
+					{
+						"text": "Stroom",
+						"href": "https://www.stroom.nl/"
+					},
+					{
+						"text": "Kadist",
+						"href": "https://kadist.org/"
+					},
+					{
+						"text": "Sies + Höke",
+						"href": "https://www.sieshoeke.com/"
+					},
+					{
+						"text": "Kunsthalle Tropical",
+						"href": "https://kunsthalletropical.xyz/#"
+					},
+					{
+						"text": "Random Institute",
+						"href": "https://randominstitute.org/"
+					}
+				]
+			},
+			{
+				"title": "Wo unsere Unterstützer arbeiten",
+				"description": "Wir erhalten regelmäßige individuelle Beiträge von Mitarbeitern folgender Institutionen:",
+				"links": [
+					{
+						"text": "Centre d’Art Neuchâtel",
+						"href": "https://www.can.ch/"
+					},
+					{
+						"text": "Kunsthalle Zürich",
+						"href": "http://kunsthallezurich.ch/"
+					},
+					{
+						"text": "Swissnex",
+						"href": "https://www.swissnex.org/"
+					},
+					{
+						"text": "Galerie Tschudi",
+						"href": "https://www.galerie-tschudi.ch/"
+					},
+					{
+						"text": "Bundesamt für Kultur",
+						"href": "https://www.bak.admin.ch/bak/de/home.html"
+					}
+				]
+			}
+		]
+	}
+}

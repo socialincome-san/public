@@ -1,0 +1,9 @@
+#react-survey {
+	--primary: #fbc700;
+	--background: #ffffff;
+	--background-dim: transparent;
+	--background-dim-light: #f9f9f9;
+	--primary-foreground: #ffffff;
+	--foreground: #161616;
+	--base-unit: 8px;
+}

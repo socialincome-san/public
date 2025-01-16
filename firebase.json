@@ -24,6 +24,7 @@
 		"rules": "firestore.rules"
 	},
 	"emulators": {
+		"singleProjectMode": false,
 		"auth": {
 			"port": 9099,
 			"host": "0.0.0.0"

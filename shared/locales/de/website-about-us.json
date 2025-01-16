@@ -44,7 +44,7 @@
 			"Und das auf eine radikal transparente Weise, die es uns ermöglicht, die hohen Verwaltungskosten zu umgehen, die normalerweise mit solchen Projekten verbunden sind."
 		]
 	},
-	"100-percent-model": {
+	"our-promise": {
 		"header": "Unser Versprechen",
 		"title": [
 			{
@@ -73,10 +73,7 @@
 			}
 		],
 		"subtitle": "Spenden werden sicher in der stabilsten Währung der Welt aufbewahrt: Schweizer Franken.",
-		"text": "Monatlich überweisen wir Geld auf unsere Konten bei lokalen Banken in den Ländern, in denen wir aktiv sind. Anschliessend zahlen wir das Geld direkt auf die Mobiltelefone von bedürftigen Menschen mittels Mobile Money aus.",
-		"paragraphs": [
-			"Monatlich überweisen wir Geld auf unsere Konten bei lokalen Banken in den Ländern, in denen wir aktiv sind. Anschliessend zahlen wir das Geld direkt auf die Mobiltelefone von bedürftigen Menschen mittels Mobile Money aus."
-		]
+		"text": "Monatlich überweisen wir Geld auf unsere Konten bei lokalen Banken in den Ländern, in denen wir aktiv sind. Anschliessend zahlen wir das Geld direkt auf die Mobiltelefone von bedürftigen Menschen mittels Mobile Money aus."
 	},
 	"team": {
 		"header": "Unser Team",
@@ -100,7 +97,10 @@
 			"software-development": "Softwareentwicklung",
 			"app-development": "App-Entwicklung",
 			"impact-measurement": "Impact Measurement",
-			"fundraising": "Fundraising"
+			"strategy": "Strategie",
+			"fundraising": "Fundraising",
+			"translations": "Übersetzungen",
+			"research": "Forschung"
 		},
 		"groups": {
 			"staff": {
@@ -116,7 +116,7 @@
 			"board": {
 				"name": "Vorstand",
 				"subtitle": "Verantwortlich für die Einhaltung ethischer Standards und interner Richtlinien.",
-				"description": "Der Vorstand ist für die Aufsicht über die Organisation zuständig. Die Mitglieder werden für eine Amtszeit von vier Jahren gewählt. Ihre spezifischen Aufsichtspflichten sind in den Statuten und dem Organisationsreglement festgelegt. "
+				"description": "Der Vorstand ist für die Aufsicht über die Organisation zuständig. Die Mitglieder werden für eine Amtszeit von drei Jahren gewählt. Ihre spezifischen Aufsichtspflichten sind in den Statuten und dem Organisationsreglement festgelegt. "
 			},
 			"special-thanks": {
 				"name": "Ehemalige Freiwillige",

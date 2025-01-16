@@ -1,0 +1,14 @@
+{
+	"metadata": {
+		"title": "Réponse au quiz ",
+		"description": "Vérifie si ta réponse est correcte",
+		"keywords": "Résultats du quiz, réponse immédiate, quiz de géographie",
+		"url": "https://socialincome.org/",
+		"og-image": "/assets/metadata/og/default.jpg",
+		"twitter-image": "/assets/metadata/twitter/default.jpg"
+	},
+	"result": {
+		"right": "Réponse correcte!",
+		"wrong": "Ce n’est pas tout à fait ça!"
+	}
+}

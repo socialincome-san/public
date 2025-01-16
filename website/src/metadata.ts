@@ -29,11 +29,11 @@ export async function getMetadata(
 		// https://nextjs.org/docs/app/api-reference/functions/generate-metadata
 		metadataBase: null,
 		alternates: {
-			canonical: '/',
+			canonical: '/en/int',
 			languages: {
 				en: '/en/int',
 				de: '/de/int',
-				'de-CH': '/de-ch/',
+				'de-CH': '/de/ch/',
 			},
 		},
 		openGraph: {

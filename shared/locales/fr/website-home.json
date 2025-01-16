@@ -1,0 +1,218 @@
+{
+	"metadata": {
+		"title": "Social Income",
+		"description": "Change from human to human. From mobile to mobile.",
+		"og-image": "/assets/metadata/og/default.jpg",
+		"twitter-image": "/assets/metadata/twitter/default.jpg"
+	},
+	"section-1": {
+		"take-action": "Passer à l’action",
+		"title-1": [
+			{
+				"text": "Combien de personnes peux-tu sortir de la pauvreté avec "
+			},
+			{
+				"text": "un seul pourcent ",
+				"color": "accent"
+			},
+			{
+				"text": "de ton salaire?"
+			}
+		]
+	},
+	"video-subtitle": "https://stream.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/text/P5NvG8n9pzG6BgZQrjarFedZ9hNkuYpy2R47XrmsAepuPFam9aEymA.vtt",
+	"section-2": {
+		"title-1": "Dans les communautés les plus pauvres de Sierra Leone, les gens savent très bien ce qu’il faut faire pour sortir de la pauvreté.",
+		"title-2": [
+			{
+				"text": "C’est juste qu’ils ont rarement la possibilité – ou les moyens – de le faire. C’est là que "
+			},
+			{
+				"text": "tu entres en jeu ",
+				"color": "accent"
+			},
+			{
+				"text": "avec Social Income."
+			}
+		],
+		"title-3": "Un processus unique pour une sélection équitable",
+		"text-3.1": "Identifier les personnes dans le besoin : Nous collaborons avec des ONG locales en Sierra Leone pour cibler les personnes vivant dans la pauvreté qui pourraient bénéficier d’un revenu prévisible sur trois ans et investir ainsi dans leur avenir.",
+		"text-3.2": "Sélection par tirage au sort : Notre processus de sélection par tirage au sort est transparent et peut être publiquement vérifié. Ceci écarte tout préjugé ou favoritisme et garantit l’égalité de traitement.",
+		"title-4": "Don direct, résultats directs",
+		"text-4": "Nous transférons directement ta contribution sur les téléphones portables des personnes dans le besoin, qui sont les mieux à même de décider où porter leurs efforts pour surmonter la pauvreté.",
+		"title-5": "Un soutien durable",
+		"text-5": "Nos bénéficiaires reçoivent un soutien régulier de la part de nos partenaires locaux tout au long du programme et même au-delà, afin qu’ils en tirent le meilleur parti possible. La troisième année est axée sur une transition en douceur vers la fin du programme."
+	},
+	"section-3": {
+		"title-faded": "Mon impact",
+		"title": "Quel est ton revenu mensuel?",
+		"subtitle": "Pourquoi c'est important?",
+		"cta": "Montrer mon impact"
+	},
+	"section-4": {
+		"title-1": [
+			{
+				"text": "Qu’est-ce que ça changerait si tu faisais don chaque mois de "
+			},
+			{
+				"text": "1% de ton salaire? ",
+				"color": "accent"
+			},
+			{
+				"text": ""
+			}
+		]
+	},
+	"section-5": {
+		"title-1": [
+			{
+				"text": "Le changement d’une personne à une autre. "
+			},
+			{
+				"text": "D’un téléphone à l'autre.",
+				"color": "accent"
+			}
+		],
+		"subtitle-1": "Social Income est une nouvelle approche de lutte contre la pauvreté dans le sud de la planète. Numérique, efficace et mobile."
+	},
+	"section-faq": {
+		"title": "Tout cela est bien beau, mais… ",
+		"cta": "Toutes les FAQ"
+	},
+	"section-7": {
+		"title-1": "Social Income combine trois approches pour amener un changement.",
+		"cards": [
+			{
+				"category": "Concept",
+				"title": "Le revenu de base inconditionnel",
+				"points": [
+					{
+						"text": "Réduit la discrimination"
+					},
+					{
+						"text": "Combat l’inégalité de revenu"
+					},
+					{
+						"text": "Renforce les groupes marginalisés"
+					},
+					{
+						"text": "Améliore les conditions de travail"
+					}
+				]
+			},
+			{
+				"category": "Méthode",
+				"title": "Le transfert monétaire direct",
+				"points": [
+					{
+						"text": "Diminue les frais administratifs"
+					},
+					{
+						"text": "Réduit la pauvreté"
+					},
+					{
+						"text": "Favorise l’autonomie"
+					},
+					{
+						"text": "Stimule les marchés locaux"
+					}
+				]
+			},
+			{
+				"category": "Technologie",
+				"title": "Le banking mobile",
+				"points": [
+					{
+						"text": "Frais réduits"
+					},
+					{
+						"text": "Simple et rapide"
+					},
+					{
+						"text": "Évolutif"
+					},
+					{
+						"text": "Résistant aux crises"
+					}
+				]
+			}
+		]
+	},
+	"section-8": {
+		"cards": [
+			{
+				"quote": [
+					{
+						"text": "« Les transferts d'argent permettent aux bénéficiaires d'obtenir une gamme de biens et de services "
+					},
+					{
+						"text": "de leur choix directement ",
+						"color": "accent"
+					},
+					{
+						"text": "sur les marchés locaux et auprès des prestataires de services. »"
+					}
+				],
+				"logo": "/assets/logos/logo-icrc.svg",
+				"author": "Croix-Rouge Internationale"
+			},
+			{
+				"quote": [
+					{
+						"text": "« Nous devons sérieusement envisager l’introduction d’un revenu de base inconditionnel bien conçu. "
+					},
+					{
+						"text": "Les chocs continueraient sans doute de frapper, ",
+						"color": "accent"
+					},
+					{
+						"text": "mais sans détruire. »"
+					}
+				],
+				"logo": "/assets/logos/logo-un.svg",
+				"author": "Nations Unies"
+			},
+			{
+				"quote": [
+					{
+						"text": "« Lutter contre la pauvreté dans le monde est une tâche ardue. Mais il y aurait "
+					},
+					{
+						"text": "une solution simple: ",
+						"color": "accent"
+					},
+					{
+						"text": "l’accès aux services financiers à l'aide d'un téléphone portable. »"
+					}
+				],
+				"logo": "/assets/logos/logo-worldbank.svg",
+				"author": "Banque mondiale"
+			}
+		]
+	},
+	"section-10": {
+		"title-1": [
+			{
+				"text": "Soutiens les ODD des "
+			},
+			{
+				"text": "Nations Unies",
+				"color": "primary"
+			},
+			{
+				"text": ""
+			}
+		],
+		"sdg-1-title": "Éliminer la pauvreté sous toutes ses formes et partout dans le monde.",
+		"sdg-1": "ODD 1",
+		"sdg-10-title": "Réduire les inégalités dans les pays et d’un pays à l’autre.",
+		"sdg-10": "ODD 10"
+	},
+	"section-11": {
+		"title": "Journal",
+		"card-1-title": "Test",
+		"card-1-author": "Aurélie Schmiedlin",
+		"card-1-description": "Test",
+		"all-articles": "See all articles ›"
+	}
+}

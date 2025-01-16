@@ -1,0 +1,218 @@
+{
+	"metadata": {
+		"title": "Social Income",
+		"description": "Change from human to human. From mobile to mobile.",
+		"og-image": "/assets/metadata/og/default.jpg",
+		"twitter-image": "/assets/metadata/twitter/default.jpg"
+	},
+	"section-1": {
+		"take-action": "Passa all'azione",
+		"title-1": [
+			{
+				"text": "Quante persone puoi aiutare a sconfiggere la povertà "
+			},
+			{
+				"text": "con solo l'1%",
+				"color": "accent"
+			},
+			{
+				"text": "del tuo stipendio?"
+			}
+		]
+	},
+	"video-subtitle": "https://stream.mux.com/IPdwilTUVkKs2nK8zKZi5eKwbKhpCWxgsYNVxcANeFE/text/ugRzh7SCujZ9jda01Z7l025RBOKxwO51TObfKlgSAFOltwhey00QbF1gQ.vtt",
+	"section-2": {
+		"title-1": "Le persone che vivono nelle comunità più povere della Sierra Leone sanno di cosa hanno bisogno per uscire dalla povertà.",
+		"title-2": [
+			{
+				"text": "Però, raramente hanno l'opportunità – o il denaro – per farlo. È qui che "
+			},
+			{
+				"text": "tu puoi fare la differenza, ",
+				"color": "accent"
+			},
+			{
+				"text": "insieme a Social Income."
+			}
+		],
+		"title-3": "Un Processo di Selezione Equo e Trasparente",
+		"text-3.1": "Come identifichiamo chi ha bisogno: In collaborazione con ONG locali in Sierra Leone, individuiamo persone che vivono in povertà e che possono beneficiare di un reddito sicuro per tre anni, aiutandole a investire nel proprio futuro.",
+		"text-3.2": "Selezione casuale: Il nostro metodo di selezione casuale è trasparente e verificabile da chiunque, eliminando pregiudizi e favoritismi. Così, tutti hanno le stesse possibilità di ricevere aiuto.",
+		"title-4": "Donazioni Dirette, Risultati Immediati",
+		"text-4": "Trasferiamo direttamente il tuo contributo sui telefoni cellulari di chi ha bisogno, permettendo loro di affrontare la povertà grazie alle proprie decisioni e impegno.",
+		"title-5": "Supporto Continuo",
+		"text-5": "I beneficiari ricevono un supporto costante dai nostri partner locali, anche dopo la fine del programma, per assicurare un impatto duraturo. In particolare, il terzo anno serve a preparare una transizione senza difficoltà verso una vita autonoma dopo il programma."
+	},
+	"section-3": {
+		"title-faded": "Il mio impatto",
+		"title": "Qual è il tuo stipendio mensile?",
+		"subtitle": "Perché è importante?",
+		"cta": "Mostra il mio impatto"
+	},
+	"section-4": {
+		"title-1": [
+			{
+				"text": "Cosa cambierebbe se "
+			},
+			{
+				"text": "donassi l’1% del tuo reddito ",
+				"color": "accent"
+			},
+			{
+				"text": "ogni mese?"
+			}
+		]
+	},
+	"section-5": {
+		"title-1": [
+			{
+				"text": "Cambiamento da persona a persona. "
+			},
+			{
+				"text": "Da telefono a telefono.",
+				"color": "accent"
+			}
+		],
+		"subtitle-1": "Social Income è un nuovo modo per combattere la povertà nel Sud del mondo. Digitale, efficiente e mobile."
+	},
+	"section-faq": {
+		"title": "Tutto questo sembra fantastico, ma ... ",
+		"cta": "Tutte le  FAQ"
+	},
+	"section-7": {
+		"title-1": "Combiniamo tre criteri per ottenere un cambiamento.",
+		"cards": [
+			{
+				"category": "Concept",
+				"title": "Reddito di Base Universale",
+				"points": [
+					{
+						"text": "Riduce le discriminazioni"
+					},
+					{
+						"text": "Combatte la disparità di reddito"
+					},
+					{
+						"text": "Rafforza i gruppi più vulnerabili"
+					},
+					{
+						"text": "Migliora le condizioni di lavoro"
+					}
+				]
+			},
+			{
+				"category": "Metodo",
+				"title": "Trasferimenti Diretti di Denaro",
+				"points": [
+					{
+						"text": "Minimizzano i costi operativi"
+					},
+					{
+						"text": "Riducono la povertà"
+					},
+					{
+						"text": "Aiutano le persone ad emanciparsi"
+					},
+					{
+						"text": "Stimolano i mercati locali"
+					}
+				]
+			},
+			{
+				"category": "Tecnologia",
+				"title": "Mobile Banking",
+				"points": [
+					{
+						"text": "Commissioni ridotte"
+					},
+					{
+						"text": "Facile ed immediato"
+					},
+					{
+						"text": "Scalabile"
+					},
+					{
+						"text": "A prova di crisi"
+					}
+				]
+			}
+		]
+	},
+	"section-8": {
+		"cards": [
+			{
+				"quote": [
+					{
+						"text": "« I trasferimenti di denaro consentono ai beneficiari di ottenere una serie di beni e servizi "
+					},
+					{
+						"text": "di loro scelta direttamente ",
+						"color": "accent"
+					},
+					{
+						"text": "dai mercati locali e dai fornitori di servizi. »"
+					}
+				],
+				"logo": "/assets/logos/logo-icrc.svg",
+				"author": "Comitato Internazionale della Croce Rossa"
+			},
+			{
+				"quote": [
+					{
+						"text": "« Dobbiamo seriamente considerare l'implementazione di un RBU ben progettato, "
+					},
+					{
+						"text": "un Reddito di Base Universale ben progettato, ",
+						"color": "accent"
+					},
+					{
+						"text": "in modo che gli shock possano arrivare, ma non distruggano. »"
+					}
+				],
+				"logo": "/assets/logos/logo-un.svg",
+				"author": "Nazioni Unite"
+			},
+			{
+				"quote": [
+					{
+						"text": "« Risolvere la povertà globale è difficile. Ma una soluzione potrebbe essere "
+					},
+					{
+						"text": "semplice come utilizzare un telefono cellulare ",
+						"color": "accent"
+					},
+					{
+						"text": "per accedere ai servizi finanziari. »"
+					}
+				],
+				"logo": "/assets/logos/logo-worldbank.svg",
+				"author": "Banca Mondiale"
+			}
+		]
+	},
+	"section-10": {
+		"title-1": [
+			{
+				"text": "Contribuisci agli "
+			},
+			{
+				"text": "Obiettivi di Sviluppo Sostenibile",
+				"color": "primary"
+			},
+			{
+				"text": "delle Nazioni Unite."
+			}
+		],
+		"sdg-1-title": "Porre fine ad ogni forma di povertà nel mondo.",
+		"sdg-1": "SDG 1",
+		"sdg-10-title": "Ridurre l’ineguaglianza all’interno di e fra le Nazioni.",
+		"sdg-10": "SDG 10"
+	},
+	"section-11": {
+		"title": "Journal",
+		"card-1-title": "Test",
+		"card-1-author": "Aurélie Schmiedlin",
+		"card-1-description": "Test",
+		"all-articles": "See all articles ›"
+	}
+}

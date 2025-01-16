@@ -1,0 +1,87 @@
+{
+	"title": "Documents",
+	"table-columns": {
+		"title": "Document",
+		"language": "Langue",
+		"href": "Lien"
+	},
+	"table-caption": "De nouveaux rapports sont ajoutés régulièrement",
+	"download-pdf": "PDF",
+	"reports": [
+		{
+			"title": "Rapport d’activité 2023",
+			"href": "https://drive.google.com/file/d/13vvBS6Ju6NqpIgis4CrMHrY9s2hbRjYy/view",
+			"language": "Anglais/Allemand"
+		},
+		{
+			"title": "Rapport financier 2023",
+			"href": "https://drive.google.com/file/d/13WH2RIxJsq9HLbxvBM-Wf5XcXzCSogG3/view",
+			"language": "Allemand"
+		},
+		{
+			"title": "Rapport financier 2023",
+			"href": "https://drive.google.com/file/d/13VxN6-NHes63Bb0Cw_kWo6vqc-EbEwc-/view",
+			"language": "Allemand"
+		},
+		{
+			"title": "Rapport d’audit 2023",
+			"href": "https://drive.google.com/file/d/13hSSIWLDDWG6eKBDFxYmwGWRRQU_21JY/view",
+			"language": "Allemand"
+		},
+		{
+			"title": "Rapport d’activité 2022",
+			"href": "https://drive.google.com/file/d/1UVB6zcRefe4tEVuQUshIzg39fCCqEUSw/view",
+			"language": "Anglais/Allemand"
+		},
+		{
+			"title": "Rapport financier 2022",
+			"href": "https://drive.google.com/file/d/13OJlzxznbsRhE3ywYHOF3ggh7e89zZtn/view",
+			"language": "Anglais"
+		},
+		{
+			"title": "Rapport financier 2022",
+			"href": "https://drive.google.com/file/d/1ivgdOqI3WkJ5ymSuDMNS0BP3SffVxCKk/view",
+			"language": "Allemand"
+		},
+		{
+			"title": "Rapport d’audit 2022",
+			"href": "https://drive.google.com/file/d/13s672kRDugWm6Vd9PcdLCQASZKbBOTGF/view",
+			"language": "Allemand"
+		},
+		{
+			"title": "Rapport financier 2021",
+			"href": "https://drive.google.com/file/d/1WmuWDMvbngCY73scZM5_qD3BpIambigG/view",
+			"language": "Anglais/Allemand"
+		},
+		{
+			"title": "Rapport d’activité 2021",
+			"href": "https://drive.google.com/file/d/1WdTi_NWhpGX7nHQh1Duu9W-klmGQT1Ik/view",
+			"language": "Anglais"
+		},
+		{
+			"title": "Rapport financier 2021",
+			"href": "https://drive.google.com/file/d/1WfUPKVuEcCICqNn4PR_dPU1Rg2ji1q6W/view",
+			"language": "Allemand"
+		},
+		{
+			"title": "Rapport d’audit 2021",
+			"href": "https://drive.google.com/file/d/16b-w5B2PhkRBZbBQOTmBXfxTGrDvf2FE/view",
+			"language": "Allemand"
+		},
+		{
+			"title": "Rapport d’activité 2020",
+			"href": "https://drive.google.com/file/d/15_v8B7eLJxDJVNfoYWABwKNcfHbz1U_o/view",
+			"language": "Allemand"
+		},
+		{
+			"title": "Rapport d’audit 2020",
+			"href": "https://drive.google.com/file/d/15aaPhuCCTicG74lNeg6OA9vEsq4nkE0o/view",
+			"language": "Allemand"
+		},
+		{
+			"title": "Attestation d'exonération fiscale",
+			"href": "https://drive.google.com/file/d/1-YAtyYjUL_LqMKyG0IN41Cohr58EAy7S/view",
+			"language": "Anglais"
+		}
+	]
+}

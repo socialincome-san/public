@@ -1,19 +1,13 @@
-name: "🐞 Bug Report: Admin Tool"
+name: "Admin Tool: 🐞 Bug Report"
 description: Create a report to help us improve the admin tool
-title: "[Admin Tool]: <title>"
-labels: bug, admintool
+title: "[Admin]: <title>"
+labels: ["admin"]
+type: "bug"
 body:
   - type: markdown
     attributes:
       value: |
-        # Thank you for taking the time to help us improve the app!
-  - type: checkboxes
-    attributes:
-      label: Is there an existing issue for this?
-      description: Please search to see if an issue already exists for the bug you encountered.
-      options:
-        - label: I have searched the existing issues
-          required: true
+        # Improving Social Income
   - type: textarea
     attributes:
       label: Describe the bug

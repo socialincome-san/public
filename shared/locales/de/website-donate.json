@@ -5,10 +5,11 @@
 	"amount": "Betrag",
 	"button-text": "Mache einen Unterschied",
 	"button-text-short": "Jetzt spenden",
+	"one-time-donation": "Einmalige Spende",
 	"donation-impact": {
 		"monthly-contribution": "Dein monatlicher Beitrag:",
 		"direct-payout": "Dein Beitrag wird direkt auf das Mobiltelefon der Social Income Empfänger:innen ausgezahlt.",
-		"your-impact": "Dein Einfluss:",
+		"your-impact": "Dein Impact:",
 		"0": "{{ amount, currency }} legt den Grundstein für eine bedeutende Sache. Es ermöglicht uns, einer Person in Not ein Social Income zu bieten.",
 		"1": "{{ amount, currency }} deckt mehr als ein Drittel eines Social Incomes für eine bedürftige Person.",
 		"2": "{{ amount, currency }} finanziert mehr als die Hälfte eines Social Incomes für eine Person.",
@@ -17,7 +18,7 @@
 		"5": "Dein Beitrag von {{ amount, currency }} finanziert ein Social Income für mehr als drei bedürftige Personen.",
 		"6": "Dein Beitrag von {{ amount, currency }} sichert ein Social Income für mehr als vier bedürftige Personen.",
 		"7": "Dein Beitrag von {{ amount, currency }} sichert ein Social Income für mehr als fünf bedürftige Personen.",
-		"8": "Dein monatlicher Beitrag von {{ amount, currency }} ist außergewöhnlich, ebenso wie dein Einfluss."
+		"8": "Dein Beitrag von {{ amount, currency }} ist aussergewöhnlich, ebenso wie dein Impact."
 	},
 	"donation-interval": {
 		"0": {
@@ -38,8 +39,7 @@
 	},
 	"one-time": {
 		"title": "Einmalige Spende",
-		"subtitle": "Unterstütze Social Income mit einem einmaligen Beitrag",
-		"twint-button": "Du kannst uns auch via Twint unterstützen"
+		"subtitle": "Unterstütze Social Income mit einem einmaligen Beitrag"
 	},
 	"success": {
 		"title": "Herzlichen Dank für deine Spende",
@@ -72,31 +72,5 @@
 			"submit-button": "Account aktivieren",
 			"google-button": "Über Google anmelden"
 		}
-	},
-	"campaign": {
-		"not-found": "Die Kampagne konnte leider nicht gefunden werden.",
-		"by": "Von {{ creator }}",
-		"without-goal": {
-			"collected_zero": "Noch keine Spenden. Mache den ersten Schritt!",
-			"collected_one": "{{ amount, currency }} von {{ count }} Spender:in gesammelt",
-			"collected_other": "{{ amount, currency }} von {{ count }} Spender:innen gesammelt"
-		},
-		"with-goal": {
-			"collected-percentage": "{{percentage}}% gesammelt",
-			"goal-title": "Ziel",
-			"collected-amount_one": "{{ amount, currency }} von {{count}} Spender:in",
-			"collected-amount_other": "{{ amount, currency }} von {{count}} Spender:innen",
-			"goal-amount": "{{ amount, currency }}"
-		},
-		"days-left_zero": "Letzter Tag",
-		"days-left_one": "Noch einen Tag bis zum Spendeschluss",
-		"days-left_other": "{{ count }} verbleibende Tage",
-		"ended": "Die Kampagne ist beendet. Für reguläre Spenden verwende bitte die Hauptspendeseite.",
-		"card-title": "Mein Beitrag",
-		"about-si-title": "Über Social Income",
-		"about-si-text-1": "Social Income ist eine NGO mit Sitz in der Schweiz, die bedingungslose Geldüberweisungen per Mobiltelefon an Menschen in multidimensionaler Armut in Westafrika bereitstellt.",
-		"about-si-text-2": "Seit 2020 führt Social Income ein zeitlich unbegrenztes Programm für ein universelles Grundeinkommen in Sierra Leone durch.",
-		"more-faq": "<a href='/faq' target=\"_blank\">Mehr Fragen</a>",
-		"badge-highlight": "Aktuelle Kampagne"
 	}
 }

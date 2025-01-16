@@ -1,0 +1,56 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+
+    // This is our example launch config. Set the prefered flavor, SURVEY_BASE_URL and SENTRY_URL
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "stage_recipients_app (debug mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "program": "lib/main.dart",
+            "args": [
+                "--flavor",
+                "stage",
+                "--dart-define",
+                "SURVEY_BASE_URL=staging.socialincome.org",
+                "--dart-define",
+                "SENTRY_URL=FILL IN SENTRY URL",
+
+            ],
+        },
+        {
+            "name": "stage_recipients_app (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile",
+            "program": "lib/main.dart",
+            "args": [
+                "--flavor",
+                "stage",
+                "--dart-define",
+                "SURVEY_BASE_URL=staging.socialincome.org",
+                "--dart-define",
+                "SENTRY_URL=FILL IN SENTRY URL",
+            ],
+        },
+        {
+            "name": "stage_recipients_app (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "program": "lib/main.dart",
+            "args": [
+                "--flavor",
+                "stage",
+                "--dart-define",
+                "SURVEY_BASE_URL=staging.socialincome.org",
+                "--dart-define",
+                "SENTRY_URL=FILL IN SENTRY URL",
+            ],
+        }
+    ]
+}

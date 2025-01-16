@@ -1,0 +1,662 @@
+{
+	"metadata": {
+		"title": "Prove Scientifiche | Social Income",
+		"description": "Le prove scientifiche generano fiducia. La fiducia genera solidarietà.",
+		"og-image": "/assets/metadata/og/evidence-en.jpg",
+		"twitter-image": "/assets/metadata/twitter/evidence-en.jpg"
+	},
+	"take-action": "Passa all’azione",
+	"section-1": {
+		"title": [
+			{ "text": "Vuoi sapere come funziona Social Income e perché è così efficace?" },
+			{ "text": "Sei nel posto giusto.", "color": "secondary" }
+		],
+		"subtitle": "Qui analizzeremo alcune delle ricerche che mostrano l’impatto misurabile di Social Income nel mondo reale."
+	},
+	"section-2": {
+		"topic": "Riduzione della Povertà",
+		"title": [{ "text": "In che modo Social Income " }, { "text": "riduce la povertà?", "color": "secondary" }],
+		"evidence": "I risultati di numerosi studi mostrano che i programmi di trasferimento diretto di denaro come Social Income migliorano significativamente le finanze dei beneficiari in due modi rilevanti.",
+		"cards": [
+			{
+				"title": "Emancipazione finanziaria",
+				"description": "I trasferimenti diretti di denaro costituiscono il modo più rapido ed efficace per ridurre il livello di povertà dei beneficiari.",
+				"paragraphs": [
+					[
+						{ "text": "Una revisione di oltre 200 studi (" },
+						{
+							"text": "Overseas Development Institute 2016",
+							"href": "https://drive.google.com/file/d/18SN24gxbdUxLnx1m35T5I5NqXWh5Fj7q/view?usp=sharing"
+						},
+						{
+							"text": ") mostra che i trasferimenti diretti di denaro aumentano le spese dei beneficiari (in particolare per il cibo) e rendono più facile pagare per i servizi sanitari (vedi anche "
+						},
+						{
+							"text": "Kabeer et al 2012",
+							"href": "https://drive.google.com/file/d/1Q-0qm8j9vePagynE0HDiLT50h8s605i4/view?usp=sharing"
+						},
+						{ "text": ") per una panoramica, così come " },
+						{
+							"text": "Attanasio et al 2006",
+							"href": "https://drive.google.com/file/d/1Fbszsu2T2mcoMV2GAuHdtavh-il7bqDF/view?usp=sharing"
+						},
+						{ "text": ", " },
+						{
+							"text": "Gitter and Caldes 2010",
+							"href": "https://drive.google.com/file/d/1Wcf0QM1NSGyLQSrFQU1H89JpBoWgY0qz/view?usp=sharing"
+						},
+						{
+							"text": ", e "
+						},
+						{
+							"text": "Gertler et al 2012",
+							"href": "https://drive.google.com/file/d/1UtLpJcX8AJyitZhWW_KFSEuC7sCJhyXs/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Inoltre, gli studi concordano sul fatto che i trasferimenti diretti di denaro favoriscono la frequenza scolastica e aumentano i risparmi e il possesso di bestiame dei beneficiari (vedi risultati simili in "
+						},
+						{
+							"text": "Hagen-Zanker et al 2011",
+							"href": "https://drive.google.com/file/d/176YeOEO49o55eQPuPVBFQ-uTRbBtfuiY/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Sodokin 2021, World Bank Group 2016",
+							"href": "https://drive.google.com/file/d/1uEWLlGNcu0K92FXMAyTg1HFqI4N10AaC/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer and Shapiro 2016",
+							"href": "https://drive.google.com/file/d/1Soek9GEAJJ7sLj7TxnKumZwcA_ICAGpJ/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Infine, i trasferimenti diretti di denaro si sono rivelati particolarmente efficaci nei momenti di crisi impreviste (ad esempio, durante la pandemia di Covid-19 o di fronte a disastri climatici, vedi "
+						},
+						{
+							"text": "Pople et al 2021",
+							"href": "https://drive.google.com/file/d/1xa3wWkn9aZKAAqwxoQeL2HkePyvGsN8Y/view?usp=sharing"
+						},
+						{
+							"text": "). Sono stati anche particolarmente efficaci nell'aiutare i giovani a rendere più sicuro e stabile il loro futuro finanziario (vedi "
+						},
+						{
+							"text": "Owusu-Addo et al 2018",
+							"href": "https://drive.google.com/file/d/1_uThMOcVf2vYCSvQJRMCVo94wZk-YL1n/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Rafforza i mercati locali",
+				"description": "I trasferimenti diretti di denaro creano beneficiari diretti e indiretti rafforzando i mercati locali.",
+				"paragraphs": [
+					[
+						{
+							"text": "Numerosi studi mostrano che la circolazione di denaro dei beneficiari va a vantaggio dei piccoli e medi agricoltori e commercianti della zona, che investono questo reddito aggiuntivo in beni produttivi. Gli investimenti di questi beneficiari indiretti aumenta e diversifica i loro livelli di produzione, migliorando notevolmente il costo e la qualità dei beni che forniscono alle loro comunità. (vedi "
+						},
+						{
+							"text": "Creti 2010",
+							"href": "https://drive.google.com/file/d/1-S_tRJZYlXLI-oIi3hdLmsyyuY-N4bja/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Holmes and Bhuvanendra 2013",
+							"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Handa et al 2018",
+							"href": "https://drive.google.com/file/d/1c_p1BH09NmgKT8SNCRly9Mykbp9ahaXW/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "I trasferimenti diretti di denaro sono quindi uno strumento più efficace per la riduzione della povertà rispetto alla semplice donazione di beni, perché i soldi inviati stimolano inevitabilmente le imprese nell’intera comunità di cui i beneficiari fanno parte (vedi "
+						},
+						{
+							"text": "Soares et al 2010",
+							"href": "https://drive.google.com/file/d/1KTsAwaWPH0NaiD2SLVQmJZHn2bxeWFHz/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Covarrubias 2012",
+							"href": "https://drive.google.com/file/d/1OEFeYCgxnbbrFVNFoYYQsSrnmVxZdz9v/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Gertler et al 2012",
+							"href": "https://drive.google.com/file/d/1UtLpJcX8AJyitZhWW_KFSEuC7sCJhyXs/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer and Shapiro 2016",
+							"href": "https://drive.google.com/file/d/1Soek9GEAJJ7sLj7TxnKumZwcA_ICAGpJ/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Tirivayi et al 2013",
+							"href": "https://drive.google.com/file/d/1SXVjb7hU7I3JOrE39tE6LZG4uicNB_Ro/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Daidone et al 2019",
+							"href": "https://drive.google.com/file/d/1bsI8iyC54V0Yx2nETsRlnPKkO1ntASrv/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Schwab 2019",
+							"href": "https://drive.google.com/file/d/19mK5JaO5UsiTUXzHx1Pzkm4jxqSn7_Py/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			}
+		]
+	},
+	"section-3": {
+		"topic": "Emancipazione",
+		"title": [
+			{ "text": "In che modo Social Income dà " },
+			{ "text": "maggior potere alle persone?", "color": "secondary" }
+		],
+		"evidence": "Gli studi sui programmi di trasferimento diretto di denaro come Social Income hanno misurato una serie di effetti positivi sulla vita dei beneficiari.",
+		"cards": [
+			{
+				"title": "Autodeterminazione",
+				"description": "I trasferimenti diretti di denaro consentono ai beneficiari di decidere come utilizzare al meglio i soldi ricevuti.",
+				"paragraphs": [
+					[
+						{
+							"text": "I trasferimenti diretti di denaro servono come base per un processo decisionale responsabile ed un maggiore benessere. Molti studi mostrano anche che l’autonomia di cui i beneficiari godono in merito ai soldi che ricevono aiuta a sviluppare fiducia in sé stessi e un senso di controllo sulla loro vita (vedi "
+						},
+						{
+							"text": "Molyneux et al 2016",
+							"href": "https://drive.google.com/file/d/1HdrtpZj91cUcQQbzfdaiUKTJzDNk7P1j/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "McGuire et al 2020",
+							"href": "https://drive.google.com/file/d/1O5Tg0vsc2E_6HbP7a3YW9yKc70f9Twz4/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Questo può dare ai beneficiari sia una maggiore responsabilità sia una maggiore motivazione, fornendo loro gli strumenti per perseguire qualcosa che avevano sempre sognato, ma che non avevano mai creduto possibile (vedi "
+						},
+						{
+							"text": "Garcia et al 2016",
+							"href": "https://drive.google.com/file/d/1iJDEjcqEN-OD0unY7f1Q-JZMgjT6krxz/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Istruzione e condizioni di lavoro migliori",
+				"description": "I trasferimenti diretti di denaro aiutano i beneficiari a raggiungere livelli più alti di istruzione e ad accedere a migliori opportunità di lavoro.",
+				"paragraphs": [
+					[
+						{
+							"text": "Molti studi, tra cui un recente documento della Banca Mondiale ("
+						},
+						{
+							"text": "Behrman et al 2019",
+							"href": "https://drive.google.com/file/d/1q5NUyaSbti33yjoz4fivNopJ8q3yJqxd/view?usp=sharing"
+						},
+						{
+							"text": "), hhanno dimostrato che i beneficiari dei trasferimenti diretti di denaro hanno maggiori probabilità di frequentare scuole migliori e ottenere risultati migliori rispetto a coloro che non ricevono tali benefici (vedi "
+						},
+						{
+							"text": "Schultz 2001",
+							"href": "https://drive.google.com/file/d/1uOHu9JOPz6ffVB6EIAuXKBHQKd1-eO2V/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Attanasio et al 2006",
+							"href": "https://drive.google.com/file/d/1Fbszsu2T2mcoMV2GAuHdtavh-il7bqDF/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Covarrubias 2012",
+							"href": "https://drive.google.com/file/d/1OEFeYCgxnbbrFVNFoYYQsSrnmVxZdz9v/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Garcia et al 2016",
+							"href": "https://drive.google.com/file/d/1iJDEjcqEN-OD0unY7f1Q-JZMgjT6krxz/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Inoltre, una migliore educazione e una maggiore sicurezza finanziaria permettono ai beneficiari di rifiutare più facilmente le pratiche di sfruttamento lavorativo. Infine, svolgere un lavoro che apprezzano aumenta la loro motivazione e il loro successo (vedi "
+						},
+						{
+							"text": "Sutrisno and Sunarsi 2019",
+							"href": "https://drive.google.com/file/d/1b_IV9XvT12jNAP2QhLm0H-95HcrnScBY/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Protegge da shock imprevisti",
+				"description": "I trasferimenti diretti di denaro permettono ai beneficiari di affrontare in modo migliore gli shock imprevisti, come eventi climatici estremi o crisi di salute pubblica.",
+				"paragraphs": [
+					[
+						{
+							"text": "Studi condotti dalla Banca Mondiale mostrano che i trasferimenti diretti di denaro favoriscono la resilienza agli shock imprevisti facilitando il risparmio e il livellamento del reddito. Mentre tali eventi spesso portano a un calo della frequenza scolastica, i versamenti contribuiscono persino ad aiutare i bambini a rimanere in classe in tempi di crisi (vedi "
+						},
+						{
+							"text": "Finan et al 2004",
+							"href": "https://drive.google.com/file/d/1qlAzeM-R_xH4zT92HxT1M0eq3O8MShDt/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Premand and Stoeffler 2020",
+							"href": "https://drive.google.com/file/d/1_wjxwljgd65Y-ptxahaWxcsdJwC5SBHH/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Durante la recente pandemia di Covid-19, dei ricercatori hanno anche scoperto che i trasferimenti diretti di denaro hanno ridotto la povertà e consentito ai disoccupati di cercare lavoro. Coloro che ricevono i pagamenti potrebbero così essere più attivi e impegnati nella società, portando alla ripresa del mercato del lavoro (vedi "
+						},
+						{
+							"text": "Köhler and Bhorat 2021",
+							"href": "https://drive.google.com/file/d/1qwtorYiGsHG3n4i6cxFIbU8H4DHNmUAR/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Inoltre, uno studio recente ha mostrato che gli invii diretti di denaro possono anche ridurre la deforestazione, perché i beneficiari non hanno alcun bisogno di sostentarsi attraverso il lavoro di disboscamento ("
+						},
+						{
+							"text": "Ferraro and Simorangkir 2020",
+							"href": "https://drive.google.com/file/d/1PTjFxP39mtjSutkup-wXBL_JGUbqVmq_/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Dà maggior potere alle donne",
+				"description": "I trasferimenti diretti di denaro aiutano le donne a diventare più resilienti, autonome e coinvolte nella società, facilitandole nel prendere decisioni più libere.",
+				"paragraphs": [
+					[
+						{
+							"text": "I risultati delle ricerche suggeriscono che, soprattutto da una prospettiva a lungo termine, i trasferimenti diretti di denaro aiutano le donne a prendere decisioni più libere in contesti dove le strutture sociali o familiari limiterebbero altrimenti la loro indipendenza finanziaria (vedi "
+						},
+						{
+							"text": "Plagerson and Ulriksen 2015",
+							"href": "https://drive.google.com/file/d/1IgycTY0sID-jxZ7Sw3-UYqQZa3ORzvuW/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Iqbal et al 2021",
+							"href": "https://drive.google.com/file/d/1-7WWiwGYDXRYddq3B2IGSnTvkCnmxzje/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "Un’ampia letteratura scientifica suggerisce inoltre che i programmi di invio di denaro aiutano a diminuire la violenza fisica ed emotiva contro le donne conviventi (vedi "
+						},
+						{
+							"text": "Perova and Vakis 2013",
+							"href": "https://drive.google.com/file/d/1fEM834PcOLC5qvOLvw1-mnhKgWHA4wPX/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Buller et al 2018",
+							"href": "https://drive.google.com/file/d/14Ga66Oj-8L7JFxAANlptZJCkzu1uOs4Y/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer et al 2019",
+							"href": "https://drive.google.com/file/d/1J3Np833YeKa0GyQQLXAWR8WP3RZt6YQv/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Heath et al 2020",
+							"href": "https://drive.google.com/file/d/1y-KSIJZaDpLGYcIAVmxWOxeqdDMa6y02/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Dà maggior potere ai bambini",
+				"description": "I trasferimenti diretti di denaro danno potere ai bambini riducendo il lavoro minorile e aumentando il reddito intergenerazionale.",
+				"paragraphs": [
+					[
+						{
+							"text": "Gli invii diretti hanno un comprovato impatto positivo anche sulle famiglie. Aumentano le possibilità che i figli dei beneficiari rimangano in buona salute (soprattutto le ragazze), ricevano un’istruzione, e godano di una transizione più sicura verso l’età adulta, che, come diversi studi hanno dimostrato, porta a redditi più alti da adulti ("
+						},
+						{
+							"text": "Save the children report 2009",
+							"href": "https://drive.google.com/file/d/1dpDPU_O2gCfssbJ3pmIItu3TnT908Tn-/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Covarrubias 2012",
+							"href": "https://drive.google.com/file/d/1OEFeYCgxnbbrFVNFoYYQsSrnmVxZdz9v/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Akresh et al 2016",
+							"href": "https://drive.google.com/file/d/1Iwkads4Sr3-MiBi3_hzHnF1BYaxYDr8J/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Boo and Creamer 2019",
+							"href": "https://drive.google.com/file/d/1lzLamggvPgL_7xF2EIlxm7qShAFdVFJU/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Riduzione della criminalità",
+				"description": "I trasferimenti diretti di denaro riducono il rischio di ricorrere alla criminalità come mezzo per acquisire beni essenziali.",
+				"paragraphs": [
+					[
+						{
+							"text": "Una ricerca sul programma Bolsa Familia in Brasile, per esempio, ha rilevato che l’espansione dei trasferimenti diretti di denaro in favore di giovani ha causato una riduzione del 6.5% della criminalità nei quartieri con scuole, aumentando la frequenza e consentendo ai giovani di preoccuparsi meno di pagare i beni di prima necessità. A lungo termine, questo ha anche contribuito ad aiutare i beneficiari a vivere la loro vita in modo più liberamente e con meno paura (vedi "
+						},
+						{
+							"text": "Chioda et al 2016",
+							"href": "https://drive.google.com/file/d/1zrmIYftuzNZe-Lx-0OFs7IEn2E_0R0Jq/view?usp=sharing"
+						},
+						{
+							"text": ", vedi anche "
+						},
+						{
+							"text": "Machado et al 2018",
+							"href": "https://drive.google.com/file/d/15Jz2IAb5_8EL45Q24SlsqQaOXuzYonfD/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Breckin 2019",
+							"href": "https://drive.google.com/file/d/1-ESV8byS_qgd2ye4ZeZsAq7svnb0_RF-/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Supporta la creatività e l’innovazione",
+				"description": "I trasferimenti diretti di denaro stimolano l’arte e  la cultura consentendo agli artisti di preoccuparsi meno del cibo e dei beni di prima necessità.",
+				"paragraphs": [
+					[
+						{
+							"text": "Gli invii diretti di denaro consentono agli artisti di dedicarsi al loro mestiere senza doversi preoccupare del cibo o delle necessità di base. Infatti, i primissimi beneficiari di Social Income sono stati una piccola coorte di artisti a Freetown, in Sierra Leone. Questi primi partecipanti hanno riferito che Social Income li ha aiutati soprattutto ad essere più creativi nelle loro pratiche artistiche (vedi "
+						},
+						{
+							"text": "Thomas 2016",
+							"href": "https://drive.google.com/file/d/1tJOjneX3fZau_ZYm3DnCtaIGy9V6L1m2/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Teer 2020",
+							"href": "https://books.google.com/books/about/COMING_AGE_OF_IMAGINATION.html?id=33-5wgEACAAJ&redir_esc=y"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			}
+		]
+	},
+	"section-4": {
+		"topic": "Benessere",
+		"title": [
+			{ "text": "In che modo Social Income contribuisce a " },
+			{ "text": "un maggiore benessere?", "color": "secondary" }
+		],
+		"evidence": "Le ricerche mostrano che i programmi di trasferimento diretto di denaro come Social Income contribuiscono al benessere dei destinatari in tre modi importanti.",
+		"cards": [
+			{
+				"title": "Migliora la salute e la prevenzione",
+				"description": "I trasferimenti diretti di denaro permettono ai beneficiari di comprare medicinali e prodotti di igiene che altrimenti non potrebbero permettersi.",
+				"paragraphs": [
+					[
+						{
+							"text": "Uno studio ha dimostrato che un programma di invio diretto di denaro ha portato a un miglioramento delle condizioni di salute dei partecipanti nel breve termine (18 mesi) ed ancora di più nel lungo termine (da 7 a 10 anni) (vedi "
+						},
+						{
+							"text": "Banerjee et at 2021",
+							"href": "https://drive.google.com/file/d/1cmOQi1z3DlQaEmvFEBfIHmXgMN4if3Tx/view?usp=sharing"
+						},
+						{
+							"text": "). Uno studio di ("
+						},
+						{
+							"text": "Baird et al 2016",
+							"href": "https://drive.google.com/file/d/1d8f-DixZ1YOE7nsbFtlBG7dETXFbnUAd/view?usp=sharing"
+						},
+						{
+							"text": ") ha inoltre dimostrato che i programmi di trasferimento di denaro hanno ridotto la diffusione dell’HIV e le gravidanze adolescenziali (vedi anche "
+						},
+						{
+							"text": "Nery et al 2017",
+							"href": "https://drive.google.com/file/d/1wjoTvq_XHoMg5q1gelpCufm9qWBWrKUx/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Okeke and Abubakar 2020",
+							"href": "https://drive.google.com/file/d/1QYAF2ocBzQKjewye69WYy2MDLN80ClWW/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Migliora il benessere emotivo",
+				"description": "I trasferimenti diretti di denaro possono spezzare il circolo vizioso dei problemi mentali indotti dalla povertà.",
+				"paragraphs": [
+					[
+						{
+							"text": "Molti studi hanno mostrato che la povertà è causa di stress, che nel tempo può causare gravi malattie mentali (vedi "
+						},
+						{
+							"text": "Hammen 2005",
+							"href": "https://drive.google.com/file/d/1-CIQdKuc96fO9rIjU-pPYhjdTxssuHEi/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer and Fehr 2014",
+							"href": "https://drive.google.com/file/d/1eVKh2KA_xqAckBaYMg6Rp9ws9OeiEWo4/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer and Shapiro 2016",
+							"href": "https://drive.google.com/file/d/11NkzvnwyGKi3EEJRx3pGHoOwsEftmXUJ/view?usp=sharing"
+						},
+						{
+							"text": "). Parallelamente, una cattiva salute mentale può influenzare la partecipazione al mercato del lavoro e la produttività, e di conseguenza esacerbare la povertà ("
+						},
+						{
+							"text": "Biasi et al 2019",
+							"href": "https://drive.google.com/file/d/1fcYgy2H66VNpIRpqPPKynB5aIpDKgyEX/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					],
+					[
+						{
+							"text": "I ricercatori dell’Università di Princeton forniscono la prova che un invio diretto di denaro ha la capacità di rompere questo circolo vizioso: aiuta ad alleviare lo stress e la depressione che spesso derivano dal vivere in povertà ("
+						},
+						{
+							"text": "Haushofer et al 2020",
+							"href": "https://drive.google.com/file/d/1efsdQk4tY4_g7bbpVZcMvEbwIDOv7IjP/view?usp=sharing"
+						},
+						{
+							"text": ", vedi anche "
+						},
+						{
+							"text": "Samuels and Stavropoulou 2016",
+							"href": "https://drive.google.com/file/d/1ImB0ADXWXKyR31B-AYOMiCyKRCU1Bht1/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Kilburn et al 2016",
+							"href": "https://drive.google.com/file/d/1mtUBaD6vMC4_n5pR-ygwZHI3N1B52eg8/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			},
+			{
+				"title": "Aumenta la sicurezza alimentare",
+				"description": "I trasferimenti diretti di denaro migliorano significativamente la dieta e la nutrizione dei beneficiari.",
+				"paragraphs": [
+					[
+						{
+							"text": "Molti studi hanno rilevato che gli invii diretti di denaro hanno due importanti effetti sulla sicurezza alimentare dei beneficiari. In primo luogo, aumentano l’accesso a cibo di migliore qualità. In secondo luogo, contribuiscono indirettamente a migliorare le conoscenze su dieta, metodi di cottura, e gestione del cibo. Questi due aspetti combinati migliorano significativamente la dieta e la nutrizione dei beneficiari (vedi "
+						},
+						{
+							"text": "Gitter and Caldes 2010",
+							"href": "https://drive.google.com/file/d/1Wcf0QM1NSGyLQSrFQU1H89JpBoWgY0qz/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Miller et al 2011",
+							"href": "https://drive.google.com/file/d/1QPRopxSVxciuC3waoExX5rzEzv5ArTkx/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Burchi et al 2018",
+							"href": "https://drive.google.com/file/d/1P-7ajyyh-7p5l5QtrP6R0jC2nOfQxkWR/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Hidrobo et al 2018",
+							"href": "https://drive.google.com/file/d/1ckppauMz4yPe_XF_NMW-qOo2Cv77MNGp/view?usp=sharing"
+						},
+						{
+							"text": ", "
+						},
+						{
+							"text": "Haushofer et al 2020",
+							"href": "https://drive.google.com/file/d/1efsdQk4tY4_g7bbpVZcMvEbwIDOv7IjP/view?usp=sharing"
+						},
+						{
+							"text": ")."
+						}
+					]
+				]
+			}
+		]
+	}
+}

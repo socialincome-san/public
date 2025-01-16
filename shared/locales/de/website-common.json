@@ -8,15 +8,17 @@
 		"twitter-image": "/assets/metadata/twitter/default.jpg"
 	},
 	"navigation": {
-		"100-percent-model": "100% Model",
+		"our-promise": "Unser Versprechen",
 		"about-us": "Wer wir sind",
 		"contact": "Kontakt",
 		"contributors": "Spender:innen",
+		"donate": "Spenden",
 		"evidence": "Evidenz",
 		"faq": "FAQ",
 		"finances": "Finanzen",
+		"flow-of-funds": "Geldfluss",
 		"how-it-works": "So funktioniert's",
-		"my-profile": "Mein Profil",
+		"my-account": "Mein Konto",
 		"our-mission": "Unsere Mission",
 		"our-work": "Was wir tun",
 		"privacy-policy": "Datenschutzrichtlinie",
@@ -24,6 +26,7 @@
 		"recipients": "Empfänger:innen",
 		"reporting": "Dokumente",
 		"team": "Team",
+		"partners": "Partners",
 		"transparency": "Transparenz",
 		"whats-next": "Was als Nächstes kommt"
 	},
@@ -34,8 +37,88 @@
 		"newsletter": "Newsletter"
 	},
 	"cookie-consent-banner": {
-		"text": "Dürfen wir Cookies benützen um den Traffic und die Leistung unserer Website zu analysieren? Wir sammeln niemals persönliche Daten. <a href='/legal/privacy' class='underline'>Datenschutzrichtlinie</a>.",
+		"text": "Wir verwenden <a href='/legal/privacy' class='underline'>Cookies</a>.",
 		"button-accept": "Akzeptieren",
 		"button-refuse": "Ablehnen"
+	},
+	"links": {
+		"more": "Online",
+		"website": "Webseite",
+		"instagram": "Instagram",
+		"facebook": "Facebook",
+		"linkedin": "LinkedIn",
+		"youtube": "YouTube",
+		"x": "X"
+	},
+	"sdg": {
+		"sdg": "SDG",
+
+		"sdg1-title": "Keine Armut",
+		"sdg1-mission-1": "Die Mission von ",
+		"sdg1-mission-2": "ist es, Armut in allen ihren Formen zu beenden.",
+
+		"sdg2-title": "Kein Hunger",
+		"sdg2-mission-1": "Die Mission von ",
+		"sdg2-mission-2": "ist es, den Hunger zu beenden und Zugang zu nährstoffreicher Nahrung sicherzustellen.",
+
+		"sdg3-title": "Gesundheit",
+		"sdg3-mission-1": "Die Mission von ",
+		"sdg3-mission-2": "ist es, ein gesundes Leben für alle zu gewährleisten und Wohlbefinden zu fördern.",
+
+		"sdg4-title": "Bildung",
+		"sdg4-mission-1": "Die Mission von ",
+		"sdg4-mission-2": "ist es, inklusive und gerechte hochwertige Bildung bereitzustellen.",
+
+		"sdg5-title": "Gleichstellung",
+		"sdg5-mission-1": "Die Mission von ",
+		"sdg5-mission-2": "ist es, Geschlechtergleichstellung zu erreichen und alle Frauen und Mädchen zu stärken.",
+
+		"sdg6-title": "Sauberes Wasser",
+		"sdg6-mission-1": "Die Mission von ",
+		"sdg6-mission-2": "ist es, Verfügbarkeit und nachhaltige Bewirtschaftung von Wasser und Sanitärversorgung für alle sicherzustellen.",
+
+		"sdg7-title": "Saubere Energie",
+		"sdg7-mission-1": "Die Mission von ",
+		"sdg7-mission-2": "ist es, den Zugang zu bezahlbarer, verlässlicher und nachhaltiger Energie für alle sicherzustellen.",
+
+		"sdg8-title": "Würdige Arbeit",
+		"sdg8-mission-1": "Die Mission von ",
+		"sdg8-mission-2": "ist es, inklusives und nachhaltiges Wirtschaftswachstum, Beschäftigung und menschenwürdige Arbeit für alle zu fördern.",
+
+		"sdg9-title": "Innovation & Infrastruktur",
+		"sdg9-mission-1": "Die Mission von ",
+		"sdg9-mission-2": "ist es, widerstandsfähige Infrastruktur aufzubauen und Innovation zu fördern.",
+
+		"sdg10-title": "Ungleichheit",
+		"sdg10-mission-1": "Die Mission von ",
+		"sdg10-mission-2": "ist es, Ungleichheit innerhalb und zwischen Ländern zu verringern.",
+
+		"sdg11-title": "Nachhaltige Städte",
+		"sdg11-mission-1": "Die Mission von ",
+		"sdg11-mission-2": "ist es, Städte und Siedlungen inklusiv, sicher, widerstandsfähig und nachhaltig zu gestalten.",
+
+		"sdg12-title": "Nachhaltiger Konsum",
+		"sdg12-mission-1": "Die Mission von ",
+		"sdg12-mission-2": "ist es, nachhaltige Konsum- und Produktionsmuster sicherzustellen.",
+
+		"sdg13-title": "Klimaschutz",
+		"sdg13-mission-1": "Die Mission von ",
+		"sdg13-mission-2": "ist es, dringend Massnahmen zur Bekämpfung des Klimawandels und seiner Auswirkungen zu ergreifen.",
+
+		"sdg14-title": "Ozeane",
+		"sdg14-mission-1": "Die Mission von ",
+		"sdg14-mission-2": "ist es, Ozeane, Meere und Meeresressourcen zu schützen und nachhaltig zu nutzen.",
+
+		"sdg15-title": "Leben an Land",
+		"sdg15-mission-1": "Die Mission von ",
+		"sdg15-mission-2": "ist es, Landökosysteme zu schützen, wiederherzustellen und nachhaltig zu nutzen.",
+
+		"sdg16-title": "Frieden & Gerechtigkeit",
+		"sdg16-mission-1": "Die Mission von ",
+		"sdg16-mission-2": "ist es, friedliche und inklusive Gesellschaften zu fördern und Zugang zu Justiz für alle sicherzustellen.",
+
+		"sdg17-title": "Partnerschaften",
+		"sdg17-mission-1": "Die Mission von ",
+		"sdg17-mission-2": "ist es, globale Partnerschaften für nachhaltige Entwicklung zu stärken."
 	}
 }

@@ -13,11 +13,7 @@ export async function HowItWorks({ params }: DefaultPageProps) {
 	});
 
 	return (
-		<BaseContainer
-			id="how-it-works"
-			backgroundColor="bg-yellow-50"
-			className="flex min-h-screen flex-col justify-center space-y-8 py-16 md:py-32"
-		>
+		<BaseContainer id="how-it-works" className="flex flex-col justify-center space-y-8">
 			<div className="space-y-4">
 				<Typography as="h3" size="xl" color="muted-foreground">
 					{translator.t('how-it-works.header')}
@@ -33,7 +29,7 @@ export async function HowItWorks({ params }: DefaultPageProps) {
 				<Typography size="xl">{translator.t('how-it-works.text')}</Typography>
 			</div>
 			<div className="grid grid-cols-1 items-center gap-4 md:grid-cols-2">
-				<Image src={phonesGif} alt="Change animation" />
+				<Image src={phonesGif} alt="Change animation" unoptimized />
 				<div className="space-y-4 md:p-4">
 					<Typography as="h2" size="3xl" weight="bold">
 						{translator.t('how-it-works.subtitle')}

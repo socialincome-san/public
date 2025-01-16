@@ -12,6 +12,7 @@ import { campaignsCollection } from './collections/Campaigns';
 import { buildContributionsCollection } from './collections/Contributions';
 import { expensesCollection } from './collections/Expenses';
 import { buildPartnerOrganisationsCollection } from './collections/PartnerOrganisations';
+import { buildPaymentForecastCollection } from './collections/PaymentForecast';
 import { usersCollection } from './collections/Users';
 import { buildRecipientsCollection } from './collections/recipients/Recipients';
 import { buildRecipientsPaymentsCollection } from './collections/recipients/RecipientsPayments';
@@ -26,7 +27,7 @@ const algoliaIndex = (indexName: string) => {
 		? algoliasearch(
 				import.meta.env.VITE_ADMIN_ALGOLIA_APPLICATION_ID,
 				import.meta.env.VITE_ADMIN_ALGOLIA_SEARCH_KEY,
-		  ).initIndex(indexName)
+			).initIndex(indexName)
 		: undefined;
 };
 
@@ -52,6 +53,7 @@ export default function App() {
 		buildSurveysCollection({ collectionGroup: true }),
 		adminsCollection,
 		expensesCollection,
+		buildPaymentForecastCollection(),
 		usersCollection,
 		campaignsCollection,
 		buildContributionsCollection({ collectionGroup: true }),

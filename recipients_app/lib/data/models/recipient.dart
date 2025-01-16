@@ -75,6 +75,9 @@ class Recipient extends Equatable {
   @JsonKey(name: "last_updated_by")
   final String? updatedBy;
 
+  @JsonKey(name: "successor")
+  final String? successorName;
+
   // this should be got from `/recipients/<recipient.id>/payments` collection
   @JsonKey(includeFromJson: false, includeToJson: false)
   final List<SocialIncomePayment>? payments;
@@ -101,6 +104,7 @@ class Recipient extends Equatable {
     this.organizationRef,
     this.payments = const [],
     this.updatedBy,
+    this.successorName,
   });
 
   @override
@@ -127,6 +131,7 @@ class Recipient extends Equatable {
       organizationRef,
       payments,
       updatedBy,
+      successorName,
     ];
   }
 
@@ -152,6 +157,7 @@ class Recipient extends Equatable {
     DocumentReference? organizationRef,
     List<SocialIncomePayment>? payments,
     String? updatedBy,
+    String? successorName,
   }) {
     return Recipient(
       userId: userId ?? this.userId,
@@ -176,6 +182,7 @@ class Recipient extends Equatable {
       organizationRef: organizationRef ?? this.organizationRef,
       payments: payments ?? this.payments,
       updatedBy: updatedBy ?? this.updatedBy,
+      successorName: successorName ?? this.successorName,
     );
   }
 

@@ -24,9 +24,9 @@ type SubscriptionsTableProps = {
 
 export function SubscriptionsClient({ lang, region, translations }: SubscriptionsTableProps) {
 	const translator = useTranslator(lang, 'website-me');
-	const { subscriptions, loading } = useSubscriptions();
+	const { subscriptions, isLoading } = useSubscriptions();
 
-	if (loading) {
+	if (isLoading) {
 		return <SpinnerIcon />;
 	}
 

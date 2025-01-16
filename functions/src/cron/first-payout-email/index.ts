@@ -63,7 +63,7 @@ export const getFirstPayoutEmailReceivers = async (
 };
 
 // Run on the 16th of every month at 15:00 UTC
-export default onSchedule('0 15 16 * *', async () => {
+export default onSchedule({ schedule: '0 15 16 * *', memory: '2GiB' }, async () => {
 	let message: string = '';
 	const sendgridClient = new SendgridMailClient(process.env.SENDGRID_API_KEY!);
 	try {
@@ -74,8 +74,7 @@ export default onSchedule('0 15 16 * *', async () => {
 		const firstPayoutEmailReceivers = await getFirstPayoutEmailReceivers(firestoreAdmin, fromDate, toDate);
 
 		await Promise.all(
-			firstPayoutEmailReceivers.map(async (entry) => {
-				const { email, language, templateData } = entry;
+			firstPayoutEmailReceivers.map(async ({ email, language, templateData }) => {
 				await sendgridClient.sendFirstPayoutEmail(email, language, templateData);
 			}),
 		);

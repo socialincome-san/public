@@ -1,0 +1,41 @@
+{
+	"metadata": {
+		"title": "Open-Source Insights ",
+		"heading": "Contributors"
+	},
+	"contributors": {
+		"title": "Contributors"
+	},
+	"hero": {
+		"title-1": [
+			{
+				"text": "Tools for Change. "
+			},
+			{
+				"text": "Open to All.",
+				"color": "accent"
+			}
+		],
+		"subtitle": "Everything we build is open source—free to use, adapt, and improve. Join our volunteer community creating tools for equality and change."
+	},
+	"overview": {
+		"forks": {
+			"title": "Forks",
+			"time": "last month"
+		},
+		"commits": {
+			"title": "Commits",
+			"time": "last month"
+		},
+		"stars": {
+			"title": "GitHub Stars",
+			"time": "last month"
+		}
+	},
+	"issues": {
+		"title": "Open Issues",
+		"header": "Issue Title",
+		"link": "View on GitHub",
+		"filter": "All Issues"
+	}
+}

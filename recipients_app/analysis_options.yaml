@@ -31,8 +31,8 @@ linter:
     prefer_double_quotes: true
     prefer_const_constructors: true
     prefer_const_constructors_in_immutables: true
+    lines_longer_than_80_chars: false
 
 dart_code_metrics:
-  exclude: ["lib/**/*.g.dart"]
   rules:
     prefer-single-widget-per-file: false

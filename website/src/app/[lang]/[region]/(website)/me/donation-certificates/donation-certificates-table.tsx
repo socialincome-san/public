@@ -15,9 +15,9 @@ type ContributionsTableProps = {
 } & DefaultParams;
 
 export function DonationCertificatesTable({ translations }: ContributionsTableProps) {
-	const { donationCertificates, loading } = useDonationCertificates();
+	const { donationCertificates, isLoading } = useDonationCertificates();
 
-	if (loading) {
+	if (isLoading) {
 		return <SpinnerIcon />;
 	}
 

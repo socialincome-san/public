@@ -1,5 +1,5 @@
-import classNames from 'classnames';
 import { HTMLAttributes } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 export function SpinnerIcon({ className, ...props }: HTMLAttributes<SVGElement>) {
 	return (
@@ -11,7 +11,7 @@ export function SpinnerIcon({ className, ...props }: HTMLAttributes<SVGElement>)
 			aria-hidden={true}
 			aria-labelledby="si-logo-title"
 			viewBox="0 0 24 24"
-			className={classNames('h-5 w-5 animate-spin', className)}
+			className={twMerge('h-5 w-5 animate-spin', className)}
 			{...props}
 		>
 			<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>

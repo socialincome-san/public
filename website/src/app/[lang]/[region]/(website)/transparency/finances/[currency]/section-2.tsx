@@ -18,7 +18,11 @@ export async function Section2({ params, contributionStats, expensesStats, payme
 			<InfoCard
 				sectionTitle={translator.t('section-2.donations')}
 				title={translator.t('amount', {
-					context: { value: roundAmount(contributionStats.totalContributionsAmount), currency: params.currency },
+					context: {
+						value: roundAmount(contributionStats.totalContributionsAmount),
+						currency: params.currency,
+						maximumFractionDigits: 0,
+					},
 				})}
 				text={translator.t('section-2.amount-since-march-2020')}
 				firstIcon={<HeartIcon className="h-8 w-8" />}
@@ -30,6 +34,7 @@ export async function Section2({ params, contributionStats, expensesStats, payme
 									context: {
 										value: roundAmount(contributionStats.totalIndividualContributionsAmount),
 										currency: params.currency,
+										maximumFractionDigits: 0,
 									},
 								})}
 							</Typography>
@@ -44,6 +49,7 @@ export async function Section2({ params, contributionStats, expensesStats, payme
 								context: {
 									value: roundAmount(paymentStats.totalPaymentsAmount),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 						</Typography>
@@ -54,6 +60,7 @@ export async function Section2({ params, contributionStats, expensesStats, payme
 										contributionStats.totalIndividualContributionsAmount - paymentStats.totalPaymentsAmount,
 									),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 						</Typography>
@@ -68,6 +75,7 @@ export async function Section2({ params, contributionStats, expensesStats, payme
 									context: {
 										value: roundAmount(contributionStats.totalInstitutionalContributionsAmount),
 										currency: params.currency,
+										maximumFractionDigits: 0,
 									},
 								})}
 							</Typography>
@@ -82,6 +90,7 @@ export async function Section2({ params, contributionStats, expensesStats, payme
 								context: {
 									value: roundAmount(expensesProject),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 						</Typography>
@@ -90,6 +99,7 @@ export async function Section2({ params, contributionStats, expensesStats, payme
 								context: {
 									value: roundAmount(contributionStats.totalInstitutionalContributionsAmount - expensesProject),
 									currency: params.currency,
+									maximumFractionDigits: 0,
 								},
 							})}
 						</Typography>

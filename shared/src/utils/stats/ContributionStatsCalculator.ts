@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
 import { Contribution, CONTRIBUTION_FIRESTORE_PATH, StatusKey } from '../../types/contribution';
+import { CountryCode } from '../../types/country';
 import { Currency } from '../../types/currency';
 import { User, USER_FIRESTORE_PATH } from '../../types/user';
 import { getLatestExchangeRate } from '../exchangeRates';
@@ -30,7 +31,7 @@ export interface ContributionStats {
 type ContributionStatsEntry = {
 	userId: string;
 	isInstitution: boolean;
-	country: string;
+	country: CountryCode;
 	amount: number;
 	paymentFees: number;
 	source: string;

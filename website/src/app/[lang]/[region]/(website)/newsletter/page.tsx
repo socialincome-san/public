@@ -1,19 +1,19 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
+import aurelieImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/aurelie.jpeg';
 import { SubscriptionInfoForm } from '@/app/[lang]/[region]/(website)/newsletter/subscription-info-form';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 import Link from 'next/link';
-import aurelieImage from '../about-us/(assets)/aurelie.jpeg';
 
 export async function generateMetadata({ params }: DefaultPageProps) {
 	return getMetadata(params.lang, 'website-newsletter');
 }
 
-export default async function Page({ params }: DefaultPageProps) {
+export default async function Page({ params: { lang, region } }: DefaultPageProps) {
 	const translator = await Translator.getInstance({
-		language: params.lang,
+		language: lang,
 		namespaces: ['website-newsletter'],
 	});
 
@@ -42,7 +42,10 @@ export default async function Page({ params }: DefaultPageProps) {
 						<Typography className="mt-4">{translator.t('updates.description-2')}</Typography>
 						<hr className="bg-border my-8 h-px border-0" />
 						<Typography>{translator.t('updates.description-3')}</Typography>
-						<Link href="/about-us#team" className="hover:bg-muted mt-4 flex items-center rounded-full p-2">
+						<Link
+							href={`/${lang}/${region}/about-us#team`}
+							className="hover:bg-muted mt-4 flex items-center rounded-full p-2"
+						>
 							<Image
 								alt="Avatar"
 								src={aurelieImage}
@@ -57,17 +60,17 @@ export default async function Page({ params }: DefaultPageProps) {
 					</div>
 				</div>
 				<div className="flex items-center justify-center">
-					<div className="card theme-dark-blue w-full space-y-4 rounded-xl p-6">
+					<div className="card theme-blue w-full space-y-4 rounded-xl p-6">
 						<Typography size="2xl" weight="medium">
 							{translator.t('updates.form-title')}
 						</Typography>
 						<SubscriptionInfoForm
-							lang={params.lang}
-							region={params.region}
+							lang={lang}
+							region={region}
 							translations={{
 								firstname: translator.t('updates.firstname'),
 								email: translator.t('updates.email'),
-								updatesSubmitButton: translator.t('updates.submit-button'),
+								submitButton: translator.t('updates.submit-button'),
 								toastMessage: translator.t('updates.newsletter-updated-toast'),
 								toastErrorMessage: translator.t('updates.newsletter-error-toast'),
 							}}

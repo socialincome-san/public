@@ -2,6 +2,7 @@ import './globals.css';
 
 export * from './components/accordion';
 export * from './components/alert';
+export * from './components/avatar';
 export * from './components/badge';
 export * from './components/button';
 export * from './components/card';
@@ -20,6 +21,7 @@ export * from './components/navigation-menu';
 export * from './components/popover';
 export * from './components/radio-group';
 export * from './components/select';
+export * from './components/separator';
 export * from './components/switch';
 export * from './components/table';
 export * from './components/tabs';

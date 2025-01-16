@@ -1,0 +1,264 @@
+{
+	"metadata": {
+		"title": "Questions fréquentes | Social Income"
+	},
+	"title": "FAQ",
+	"title-long": "Questions fréquentes",
+	"fighting-poverty": {
+		"title": "La lutte contre la pauvreté",
+		"questions": [
+			{
+				"question": "Est-ce que les transferts monétaires directs sont un moyen efficace de lutter contre la pauvreté?",
+				"answer": "Il existe un large consensus sur les avantages et le succès à long terme des programmes de dons directs. Nous proposons un aperçu de la littérature scientifique la plus récente dans notre rubrique références.",
+				"links": [
+					{
+						"title": "Rubrik Evidenz",
+						"href": "/evidence"
+					},
+					{
+						"title": "Policy Brief: Impacts of Unconditional Cash Transfers",
+						"href": "https://drive.google.com/file/d/1xn4BvrEHZjSUGpNZLHjIc2YYnwq399jR/view"
+					},
+					{
+						"title": "GiveDirectly's Cash Evidence Explorer",
+						"href": "https://www.givedirectly.org/cash-evidence-explorer/"
+					}
+				]
+			},
+			{
+				"question": "Est-il vraiment utile d'envoyer de l'argent aux personnes dans le besoin?",
+				"answer": "C'est certainement plus utile que de ne pas envoyer d'argent du tout. De nos jours, beaucoup de gens prônent l'égalité des chances en matière d'emploi. Cet objectif mérite évidemment d'être poursuivi, mais il ne tient pas compte du fait que, pour les personnes nées dans les pays les plus pauvres du monde, l'emploi au sens habituel n'est souvent ni possible ni accessible. Donner de l'argent peut contribuer à éliminer cette barrière et à permettre à davantage de personnes vivant dans la pauvreté d'accéder au travail, à l'éducation et à des conditions de vie décentes.",
+				"links": [
+					{
+						"title": "Government of Malawi’s unconditional cash transfer improves youth mental health",
+						"href": "https://drive.google.com/file/d/1GKBdHjD80Jv7lZJmKvouZv8Z7MgLw_HL/view"
+					},
+					{
+						"title": "Can unconditional cash transfers raise long-term living standards? Evidence from Zambia",
+						"href": "https://drive.google.com/file/d/1HwSLDlml0yyHrCrv8Y7pkqxz2orM02Lc/view"
+					}
+				]
+			}
+		]
+	},
+	"striving-equality": {
+		"title": "La lutte pour l'égalité",
+		"questions": [
+			{
+				"question": "Social Income peut-il contribuer à plus de justice?",
+				"answer": "Social Income n'est pas une théorie de l'égalité, mais un acte de solidarité. Nous sommes ici pour rendre le monde plus juste en nous attaquant à l'immense écart entre riches et pauvres et en permettant une redistribution simple et efficace. Cette redistribution aide les personnes dans le besoin à initier des changements autonomes et à atteindre un certain degré d'indépendance financière."
+			},
+			{
+				"question": "Qui peut éliminer les inégalités sociales?",
+				"answer": "Les États et les marchés peuvent le faire - du moins en théorie. Mais tous les États ne peuvent pas prendre soin de leurs citoyens de manière adéquate et tous les marchés ne créent pas une égalité durable pour tous. C'est là qu'intervient une troisième option: nous-mêmes. Nous sommes tout à fait capables de reconnaître les inégalités sociales et nous sommes également capables d'éprouver de l'empathie pour les personnes défavorisées. Nous disposons également des moyens financiers et des compétences technologiques pour déplacer de l'argent à l'échelle mondiale. Vu sous cet angle, rien ne manque pour remédier aux injustices mondiales d'aujourd'hui."
+			}
+		]
+	},
+	"solidarity": {
+		"title": "La solidarité",
+		"questions": [
+			{
+				"question": "Avons-nous des responsabilités envers nos semblables?",
+				"answer": "Oui, nous le croyons. Dans un monde globalisé, sans presque aucune frontière, nous considérons la population mondiale comme une communauté de destin étroitement liée."
+			},
+			{
+				"question": "La solidarité peut-elle survivre?",
+				"answer": "La solidarité est aujourd'hui une ressource menacée. À une époque où l'individualité est placée au-dessus de tout, notre sens du bien commun passe souvent au second plan. Les plus grands défis auxquels l'humanité est confrontée aujourd'hui - qu'ils soient économiques ou écologiques - sont trop complexes et interdépendants pour être résolus sans la ressource de la solidarité. L'individualisme peut être un chemin vers la découverte de soi, mais il est d'une utilité limitée lorsqu'il s'agit de résoudre des défis mondiaux tels que les inégalités sociales et la pauvreté. Si les projets basés sur le principe de solidarité sont adaptés en conséquence, nous croyons que la solidarité sera plus forte que jamais à l'avenir, car la solidarité unit. Une telle adaptation signifie que tous ceux qui veulent s'engager de manière solidaire peuvent le faire, sans être arrêtés par des obstacles. Social Income offre une possibilité parmi d'autres de contribuer activement à la solidarité. Cependant, avec une approche radicalement nouvelle, une perspective globale et un potentiel de perturbation considérable."
+			}
+		]
+	},
+	"ubi": {
+		"title": "Le revenu de base",
+		"questions": [
+			{
+				"question": "Quelle est la différence entre Social Income et le revenu de base inconditionnel?",
+				"answer": "Comme le revenu de base inconditionnel (RBI), l'idée de Social Income repose sur des paiements réguliers, non conditionnés. Cela dans le but de garantir un minimum vital, qui est versé individuellement aux personnes - généralement des citoyens d'un pays ou d'une ville donnée. Alors que le revenu de base inconditionnel est versé par l'État ou une administration, Social Income est transféré de personne à personne. Cela signifie que Social Income n'est ni dépendant des décisions politiques, ni des budgets ou des impôts correspondants. Social Income s'adresse explicitement aux personnes vivant dans la pauvreté. En ce sens, l'objectif principal de Social Income est la redistribution volontaire de la richesse - ce qui n'est pas nécessairement le cas du revenu de base inconditionnel."
+			},
+			{
+				"question": "Qu'est-ce que les transferts monétaires directs?",
+				"answer": "Concrètement, les transferts monétaires directs sont une forme de protection sociale, où de l'argent ou des bons sont directement versés aux personnes pauvres et non aux gouvernements ou autres acteurs étatiques. En particulier au cours des dix dernières années, ils ont été de plus en plus utilisés comme un outil pour réduire la pauvreté et la vulnérabilité dans les pays à revenu intermédiaire et faible.",
+				"links": [
+					{
+						"title": "Social protection and resilient food systems: The role of cash transfers",
+						"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view"
+					}
+				]
+			}
+		]
+	},
+	"contributors": {
+		"title": "Les contributeurs",
+		"questions": [
+			{
+				"question": "Quelle est l'idée derrière la participation avec 1% du revenu?",
+				"answer": "Pour rendre l'idée de Social Income évolutive, nous devons être sûrs que le système fonctionne de manière fiable. Pour ce faire, nous avons commencé petit. Cela signifie que nous avons d'abord réuni un nombre limité de bénéficiaires avec un nombre correspondant de contributeurs prêts à apporter une contribution régulière. Nous pensons que 1% du revenu est un bon montant de départ pour s'engager: le montant est trop faible pour avoir un impact important sur le mode de vie des contributeurs, mais suffisant pour apporter un changement positif dans la vie des bénéficiaires. Voici un exemple pour illustrer le potentiel de l'idée de Social Income: en Suisse, le revenu mensuel moyen est d'environ 6000 CHF. Supposons qu'un quart de tous les citoyens suisses soutiennent Social Income avec 1% de leur salaire, cela permettrait de garantir un revenu de base pour toute la Sierra Leone. Cet exemple de calcul simplifié donne une bonne idée des opportunités offertes par le projet de solidarité."
+			},
+			{
+				"question": "Puis-je annuler mes contributions?",
+				"answer": "À tout moment, sans justification. Il suffit de te connecter et de modifier tes préférences en conséquence."
+			},
+			{
+				"question": "Pourquoi utilisons-nous peu de photos dans notre communication?",
+				"answer": "Nous essayons d'éviter les images typiques des ONG travaillant en Afrique, car elles ont tendance à alimenter des stéréotypes négatifs sur le continent. Nous croyons que nous devons faire tout ce que nous pouvons pour améliorer la vie des personnes dans le besoin - surtout si cela nous coûte relativement peu. Et lorsqu'il s'agit de collecter des fonds, nous sommes convaincus que des arguments rationnels, comme ceux mentionnés ci-dessus, peuvent être tout aussi efficaces que des appels émotionnels."
+			}
+		]
+	},
+	"recipients": {
+		"title": "Les bénéficiaires",
+		"questions": [
+			{
+				"question": "Comment les bénéficiaires sont-ils choisis?",
+				"answer": "Nous déterminons les nouveaux bénéficiaires potentiels grâce au travail de nos représentants locaux et aux suggestions de nos partenaires et ONG locales. Nos critères sont simples: les bénéficiaires doivent avoir plus de 16 ans et provenir d'une communauté à faible revenu.",
+				"links": [
+					{
+						"title": "Partenaires locaux",
+						"href": "/partners"
+					}
+				]
+			},
+			{
+				"question": "Comment les bénéficiaires utilisent-ils l'argent?",
+				"answer": "L'idée du revenu de base inconditionnel est de mettre à disposition des bénéficiaires de l'argent pour assurer leur existence. Ils l'utilisent comme bon leur semble sans devoir rendre des comptes."
+			},
+			{
+				"question": "Comment puis-je bénéficier de Social Income?",
+				"answer": "Nous collaborons étroitement avec nos représentants locaux pour identifier les futurs bénéficiaires. Il n'est actuellement pas possible de s'inscrire sur notre site web pour solliciter Social Income."
+			},
+			{
+				"question": "Pourquoi la Sierra Leone?",
+				"answer": "Il fallait bien commencer quelque part. La Sierra Leone est un point de départ judicieux à bien des égards. C'est l'une des plus jeunes démocraties du monde, et le pays figure régulièrement en tête du classement des nations les plus pauvres. Cette situation est due à une guerre civile qui a duré jusqu'en 2002. Les infrastructures déficientes, le manque d'accès à l'éducation et l'inégalité engendrent une grande précarité. Des progrès importants ont toutefois été réalisés, notamment dans la diffusion du mobile banking dans les parties urbanisées du pays. La Sierra Leone a donc besoin d'aide, et elle est bien placée pour la recevoir sous une forme numérique. Notre mission ne se limite toutefois pas à l'Afrique. Nous croyons que notre démarche d'action individuelle peut avoir un impact universel. Et nous espérons pouvoir étendre le projet aux personnes dans le besoin dans le monde entier, notamment en Amérique latine et en Asie. Mais dans un premier temps, notre initiative se limite à la Sierra Leone, où nous pouvons canaliser au mieux notre énergie et acquérir de l'expérience."
+			}
+		]
+	},
+	"the-arts": {
+		"title": "Le monde de l’art",
+		"questions": [
+			{
+				"question": "Pourquoi Social Income a un lien avec le monde de l’art?",
+				"answer": "L'équipe fondatrice de Social Income a des liens étroits avec le monde de l'art, ce qui a permis de financer les premières étapes du projet. Nous pensons que le monde de l'art a une certaine responsabilité dans la promotion des échanges culturels et l'aide aux êtres humains, quels qu'ils soient."
+			}
+		]
+	},
+	"volunteering": {
+		"title": "Le bénévolat",
+		"questions": [
+			{
+				"question": "Comment puis-je rejoindre l’équipe des bénévoles?",
+				"answer": "Si tu cherches un engagement qui a du sens et un impact social, rends-toi sur le portail Idealist pour plus d'informations sur les postes vacants ou écris-nous.",
+				"links": [
+					{
+						"title": "Idealist",
+						"href": "https://www.idealist.org/en/nonprofit/41a885fa176b4793a029f131834fd48a-social-income-zurich"
+					}
+				]
+			}
+		]
+	},
+	"selection": {
+		"title": "Sélection des bénéficiaires",
+		"questions": [
+			{
+				"question": "Pourquoi choisissons-nous au hasard dans une liste de bénéficiaires potentiels?",
+				"answer": "L'utilisation de cette méthode de sélection aléatoire répond à plusieurs objectifs. Tout d'abord, elle permet d'éviter les biais dans la sélection des bénéficiaires, en garantissant que les parents ou les connaissances des personnes impliquées dans le processus ne bénéficient pas d'un traitement préférentiel. Deuxièmement, elle vise à éviter les tensions entre les bénéficiaires et les non-bénéficiaires, ainsi que tout conflit potentiel entre les bénéficiaires et notre organisation. Enfin, nous nous efforçons d'intégrer la technologie lorsque cela est possible et bénéfique pour le processus."
+			},
+			{
+				"question": "Qui peut influencer la sélection?",
+				"answer": "En utilisant une valeur aléatoire imprévisible fournie par drand, définie pour être émise dans le futur, il est impossible à quiconque d'influencer les résultats du processus de sélection. Ce caractère aléatoire intrinsèque peut être utilisé pour confirmer l'intégrité de la sélection. Pour être éligible au Social Income, une personne doit d'abord figurer sur une liste fournie par une ONG. Cette condition préliminaire est conforme à notre principe fondamental : veiller à ce que Social Income parvienne à ceux qui en ont le plus besoin."
+			},
+			{
+				"question": "Comment éviter les biais et les tensions?",
+				"answer": "Afin de ne pas privilégier par inadvertance un groupe ethnique, un genre ou une catégorie professionnelle, nous collaborons avec plusieurs ONG aux missions variées. Conformément à notre principe \"ne pas nuire\", nous nous efforçons de prévenir les tensions entre les bénéficiaires, les non-bénéficiaires, les communautés et les ONG. Notre sélection aléatoire joue un rôle essentiel à cet égard. Elle garantit que les proches ou les connaissances des personnes impliquées dans le processus ne font pas l'objet d'un traitement de faveur, ce qui pourrait entraîner des conflits."
+			},
+			{
+				"question": "Comment se déroule le processus de sélection?",
+				"answer": "Nous utilisons le nombre aléatoire fourni par drand, publiquement accessible, pour choisir un certain nombre de personnes dans notre liste. La procédure est la suivante : nous chiffrons d'abord la liste des bénéficiaires. Puis nous utilisons l'élément aléatoire de drand et nous le convertissons en une position sur la liste au moyen d'une clé de dérivation. Pour les personnes intéressées par les détails techniques, la clé et les processus inhérents sont décrits dans notre dépôt GitHub.",
+				"links": [
+					{
+						"title": "Notre dépôt GitHub",
+						"href": "https://github.com/socialincome-san/public/tree/main/recipients_selection"
+					},
+					{
+						"title": "Fonction de dérivation de clé",
+						"href": "https://fr.wikipedia.org/wiki/Fonction_de_d%C3%A9rivation_de_cl%C3%A9"
+					}
+				]
+			},
+			{
+				"question": "Qu'est-ce que drand et qui est derrière?",
+				"answer": "Le projet drand génère des nombres aléatoires auxquels tout le monde peut se fier. Il peut être utilisé pour créer des ébauches véritablement aléatoires et vérifiables. Initié en 2017 à l'EPFL par Nicolas Gailly, drand a reçu le soutien de Philipp Jovanovic et a été encadré par Bryan Ford. Depuis lors, il est géré de manière indépendante et entretient un réseau appelé League of Entropy avec l'EPFL, l'UCL, Cloudflare, Kudelski Security, l'Université du Chili et Protocol Labs. Les principaux responsables actuels du projet open source sont Erick Watson, Yolan Romailler et Patrick McClurg de Randamu.",
+				"links": [
+					{
+						"title": "League of Entropy",
+						"href": "https://www.cloudflare.com/leagueofentropy/"
+					},
+					{
+						"title": "Randamu",
+						"href": "https://randa.mu"
+					},
+					{
+						"title": "Drand",
+						"href": "https://drand.love"
+					}
+				]
+			}
+		]
+	},
+	"campaign": {
+		"title": "Questions et réponses",
+		"questions": [
+			{
+				"question": "Qu'est-ce que les transferts monétaires directs?",
+				"answer": "Concrètement, les transferts monétaires directs sont une forme de protection sociale, où de l'argent ou des bons sont directement versés aux personnes pauvres et non aux gouvernements ou autres acteurs étatiques. En particulier au cours des dix dernières années, ils ont été de plus en plus utilisés comme un outil pour réduire la pauvreté et la vulnérabilité dans les pays à revenu intermédiaire et faible.",
+				"links": [
+					{
+						"title": "Social protection and resilient food systems: The role of cash transfers",
+						"href": "https://drive.google.com/file/d/188-yul_Lg1iUUX6kFhHDLVFL171cnuBQ/view"
+					}
+				]
+			},
+			{
+				"question": "Pourquoi la Sierra Leone?",
+				"answer": "Il fallait bien commencer quelque part. La Sierra Leone est un point de départ judicieux à bien des égards. C'est l'une des plus jeunes démocraties du monde, et le pays figure régulièrement en tête du classement des nations les plus pauvres. Cette situation est due à une guerre civile qui a duré jusqu'en 2002. Les infrastructures déficientes, le manque d'accès à l'éducation et l'inégalité engendrent une grande précarité. Des progrès importants ont toutefois été réalisés, notamment dans la diffusion du mobile banking dans les parties urbanisées du pays."
+			},
+			{
+				"question": "Comment les bénéficiaires sont-ils choisis?",
+				"answer": "Nous déterminons les nouveaux bénéficiaires potentiels grâce au travail de nos représentants locaux et aux suggestions de nos partenaires et ONG locales. Nos critères sont simples: les bénéficiaires doivent avoir plus de 16 ans et provenir d'une communauté à faible revenu.",
+				"links": [
+					{
+						"title": "Partenaires locaux",
+						"href": "/partners"
+					}
+				]
+			},
+			{
+				"question": "Quel est le montant versé?",
+				"answer": "Les bénéficiaires de Social Income reçoivent un paiement mensuel de 32 USD, converti en monnaie locale et directement versé sur leurs téléphones mobiles. Cette somme correspond aux besoins de base d'une personne vivant dans la pauvreté, en tenant compte du revenu moyen d'environ 42 USD en Sierra Leone. Le soutien est assuré de manière fiable sur trois ans. Cette stratégie vise à permettre aux personnes dans le besoin de planifier leur avenir et d'investir dans des domaines essentiels tels que la santé, améliorant ainsi leur situation financière et leur bien-être."
+			}
+		]
+	},
+	"campaign-ismatu": {
+		"title": "Questions et réponses",
+		"questions": [
+			{
+				"question": "Quels partenaires contribuent à la réalisation de cette campagne de dons?",
+				"answer": "Cette campagne de dons est organisée conjointement par Ismatu Gwendolyn Bangura, une auteure et activiste de Sierra Leone, et Social Income, une organisation à but non lucratif suisse. Nous travaillons en étroite collaboration avec la Sierra Leone Association of Ebola Survivors, basée à Kenema. Social Income apporte une vaste expérience dans les paiements mobiles et est responsable du versement des revenus de base aux survivants d'Ebola au cours des trois prochaines années."
+			},
+			{
+				"question": "Comment les fonds parviennent-ils aux survivants d'Ebola?",
+				"answer": "Les fonds sont directement versés aux survivants d'Ebola via Mobile Money. Cela garantit un transfert d'argent rapide et sécurisé, permettant aux survivants de recevoir leur aide rapidement et efficacement. L'utilisation du Mobile Banking aide également à maintenir la transparence et à réduire le risque de mauvaise gestion. Cela garantit que les dons sont utilisés efficacement."
+			},
+			{
+				"question": "Quel est le montant versé?",
+				"answer": "Les bénéficiaires de Social Income reçoivent un paiement mensuel de 32 USD, converti en monnaie locale et directement versé sur leurs téléphones mobiles. Cette somme correspond aux besoins de base d'une personne vivant dans la pauvreté, en tenant compte du revenu moyen d'environ 42 USD en Sierra Leone. Le soutien est assuré de manière fiable sur trois ans. Cette stratégie vise à permettre aux personnes dans le besoin de planifier leur avenir et d'investir dans des domaines essentiels tels que la santé, améliorant ainsi leur situation financière et leur bien-être."
+			},
+			{
+				"question": "À quoi servent les fonds?",
+				"answer": "Tous les dons jusqu'à l'atteinte de l'objectif servent à soutenir les survivants d'Ebola, y compris les paiements mensuels, les frais de livraison et les coûts associés. Les dons dépassant l'objectif seront utilisés pour soutenir d'autres personnes vulnérables et vivant dans la pauvreté en Sierra Leone."
+			},
+			{
+				"question": "Comment les bénéficiaires sont-ils choisis?",
+				"answer": "Si nous atteignons l'objectif de dons, tous les 156 survivants d'Ebola enregistrés par la Sierra Leone Association of Ebola Survivors à Kenema recevront un soutien. Aucune sélection supplémentaire n'est alors nécessaire. Si nous n'atteignons pas l'objectif, nous sélectionnerons les bénéficiaires au hasard. Cette méthode garantit l'équité et évite les préférences."
+			}
+		]
+	}
+}

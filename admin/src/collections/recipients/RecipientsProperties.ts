@@ -124,7 +124,9 @@ export const organisationProperty: Property = {
 export const emailProperty: Property = {
 	name: 'Email',
 	dataType: 'string',
+	email: true,
 	hideFromCollection: true,
+	validation: { unique: true },
 };
 
 export const InstagramProperty: Property = {
@@ -135,6 +137,12 @@ export const InstagramProperty: Property = {
 
 export const TwitterProperty: Property = {
 	name: 'Twitter',
+	dataType: 'string',
+	hideFromCollection: true,
+};
+
+export const successorProperty: Property = {
+	name: 'Successor',
 	dataType: 'string',
 	hideFromCollection: true,
 };

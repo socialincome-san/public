@@ -24,7 +24,7 @@ export default async function Section1({ params }: DefaultPageProps) {
 					{translator.t('section-1.subtitle-3')}
 				</Link>
 			</Typography>
-			<div className=" flex items-center">
+			<div className="flex items-center">
 				<ClockIcon className="mr-2 h-5 w-5" />
 				<Typography size="sm" color="muted-foreground">
 					{translator.t('section-1.lastUpdate')}

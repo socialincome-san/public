@@ -1,9 +1,14 @@
 import { ContextProviders } from '@/components/providers/context-providers';
 import { getMetadata } from '@/metadata';
+import type { Viewport } from 'next';
 import { PropsWithChildren } from 'react';
 import './globals.css';
 
 export const generateMetadata = () => getMetadata('en', 'website-common');
+
+export const viewport: Viewport = {
+	themeColor: '#3373BB',
+};
 
 export default function RootLayout({ children }: PropsWithChildren) {
 	return (

@@ -31,7 +31,6 @@ import {
 } from '@socialincome/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { doc, updateDoc } from 'firebase/firestore';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useFirestore } from 'reactfire';
@@ -61,7 +60,7 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 	const queryClient = useQueryClient();
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
-	const { status, loading } = useNewsletterSubscription();
+	const { status, isLoading } = useNewsletterSubscription();
 	const upsertNewsletterSubscription = useUpsertNewsletterSubscription();
 
 	const formSchema = z.object({
@@ -73,7 +72,7 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 		streetNumber: z.string(),
 		city: z.string(),
 		zip: z.coerce.number(),
-		country: z.enum(['', ...COUNTRY_CODES]).optional(),
+		country: z.enum(COUNTRY_CODES).optional(),
 		language: z.enum(['en', 'de']),
 	});
 
@@ -81,33 +80,18 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			firstname: '',
-			lastname: '',
-			gender: '' as any,
-			email: '',
-			street: '',
-			streetNumber: '',
-			city: '',
-			zip: '' as any,
-			country: '' as any,
-			language: '' as any,
+			firstname: user.get('personal.name'),
+			lastname: user.get('personal.lastname'),
+			gender: user.get('personal.gender'),
+			email: user.get('email'),
+			street: user.get('address.street'),
+			streetNumber: user.get('address.number'),
+			city: user.get('address.city'),
+			zip: user.get('address.zip'),
+			country: user.get('address.country'),
+			language: user.get('language'),
 		},
 	});
-
-	useEffect(() => {
-		form.reset({
-			firstname: user.get('personal.name') || '',
-			lastname: user.get('personal.lastname') || '',
-			gender: user.get('personal.gender') || '',
-			email: user.get('email') || '',
-			street: user.get('address.street') || '',
-			streetNumber: user.get('address.number') || '',
-			city: user.get('address.city') || '',
-			zip: user.get('address.zip') || '',
-			country: user.get('address.country') || '',
-			language: user.get('language') || '',
-		});
-	}, [user, form]);
 
 	const onSubmit = async (values: FormSchema) => {
 		await updateDoc<DocumentData, Partial<User>>(doc(firestore, USER_FIRESTORE_PATH, user.id), {
@@ -261,7 +245,7 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 							<Select onValueChange={field.onChange}>
 								<FormControl>
 									<SelectTrigger>
-										<SelectValue>{field.value && countryTranslator?.t(field.value)}</SelectValue>
+										<SelectValue placeholder={field.value && countryTranslator?.t(field.value)} />
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent className="max-h-[16rem] overflow-y-auto">
@@ -287,7 +271,7 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 							<Select onValueChange={field.onChange}>
 								<FormControl>
 									<SelectTrigger>
-										<SelectValue>{field.value && commonTranslator?.t(`languages.${field.value}`)}</SelectValue>
+										<SelectValue placeholder={field.value && commonTranslator?.t(`languages.${field.value}`)} />
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent>
@@ -299,7 +283,7 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 						</FormItem>
 					)}
 				/>
-				<Button variant="default" type="submit" className=" md:col-span-2">
+				<Button variant="default" type="submit" className="md:col-span-2">
 					{translations.submitButton}
 				</Button>
 			</form>
@@ -307,7 +291,7 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 				<Switch
 					id="newsletter-switch"
 					checked={status === 'subscribed'}
-					disabled={loading}
+					disabled={isLoading}
 					onCheckedChange={async (enabled) => {
 						if (enabled) {
 							await upsertNewsletterSubscription('subscribed');

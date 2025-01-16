@@ -1,4 +1,12 @@
 {
+	"titleOnboarding": "Onboarding Survey",
+	"titleCheckin": "Check-in Survey",
+	"titleOffboarding": "Offboarding Survey",
+	"titleFollowup": "Follow-up Survey",
+	"select": "Select",
+	"save": "Save",
+	"freetext": "Enter your answer",
+	"demo": "In demo mode the survey can't be saved",
 	"survey": {
 		"login": {
 			"message": "Please enter your phone number and the access token which we sent you.",
@@ -29,7 +37,9 @@
 		"questions": {
 			"yesNoChoices": {
 				"yes": "Yes",
-				"no": "No"
+				"no": "No",
+				"true": "Yes",
+				"false": "No"
 			},
 			"livingLocationTitleV1": "Where do you live?",
 			"livingLocationChoices": {
