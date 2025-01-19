@@ -65,7 +65,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                 children: [
                   Image(
                     image: const AssetImage("assets/earth_animation.gif"),
-                    height: MediaQuery.of(context).size.height * 0.3,
+                    height: MediaQuery.sizeOf(context).height * 0.3,
                   ),
                   const SizedBox(height: 16),
                   Text(
