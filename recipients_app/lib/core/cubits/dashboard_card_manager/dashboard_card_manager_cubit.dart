@@ -1,3 +1,5 @@
+import "dart:async";
+
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/view/widgets/account/dashboard_card.dart";
@@ -9,16 +11,23 @@ part "dashboard_card_manager_state.dart";
 class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
   final AuthCubit authCubit;
   final CrashReportingRepository crashReportingRepository;
+  late StreamSubscription<AuthState> authSubscription;
 
   DashboardCardManagerCubit({
     required this.authCubit,
     required this.crashReportingRepository,
   }) : super(const DashboardCardManagerState()) {
-    authCubit.stream.listen((event) {
+    authSubscription = authCubit.stream.listen((event) {
       fetchCards();
     });
   }
 
+  @override
+  Future<void> close() async {
+    authSubscription.cancel();
+    super.close();
+  }
+  
   Future<void> fetchCards() async {
     emit(state.copyWith(status: DashboardCardManagerStatus.loading));
     final recipient = authCubit.state.recipient;
