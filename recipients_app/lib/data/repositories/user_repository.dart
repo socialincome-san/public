@@ -32,6 +32,7 @@ class UserRepository {
       authStateController.add(authState);
     });
 
+    // Start listen on demo mode changes, so we can update the authStateSubscription if the active data source is changing.
     demoManager.isDemoEnabledStream.listen((isDemoMode) {
       authStateSubscription?.cancel();
 
