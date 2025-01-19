@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import * as fs from 'fs/promises';
 
-const DRAWS_PATH = '../recipients_selection/draws';
+const DRAWS_PATH = process.cwd() + '/../recipients_selection/draws';
 
 export type Draw = {
 	name: string;
