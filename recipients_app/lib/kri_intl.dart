@@ -391,7 +391,7 @@ class _KriCupertinoLocalizationsDelegate extends LocalizationsDelegate<Cupertino
         singleDigitHourFormat: intl.DateFormat("d", localeName),
         singleDigitMinuteFormat: intl.DateFormat("d", localeName),
         singleDigitSecondFormat: intl.DateFormat("d", localeName),
-        weekdayFormat: intl.DateFormat("EEE", localeName), // TODO: Check if this is right!!!
+        weekdayFormat: intl.DateFormat("EEE", localeName),
       ),
     );
   }
