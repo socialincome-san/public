@@ -16,6 +16,7 @@ class TermsAndConditionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final demoManager = RepositoryProvider.of<DemoManager>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -93,7 +94,7 @@ class TermsAndConditionsPage extends StatelessWidget {
                       context.read<AuthCubit>().updateRecipient(updated);
                     }
                   },
-                  label: DemoManager().isDemoEnabled ? localizations.createAccountDemo : localizations.createAccount,
+                  label: demoManager.isDemoEnabled ? localizations.createAccountDemo : localizations.createAccount,
                 ),
               ],
             ),

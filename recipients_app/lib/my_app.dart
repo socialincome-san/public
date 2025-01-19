@@ -35,6 +35,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
+        RepositoryProvider<DemoManager>(
+          create: (context) => demoManager,
+        ),
         RepositoryProvider(
           create: (context) => MessagingRepository(
             messaging: messaging,

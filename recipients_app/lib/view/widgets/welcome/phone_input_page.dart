@@ -19,7 +19,6 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
   late final RoundedLoadingButtonController btnController;
   late final TextEditingController phoneNumberController;
   late PhoneNumber number;
-  late DemoManager demoManager;
 
   @override
   void initState() {
@@ -27,7 +26,6 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
     btnController = RoundedLoadingButtonController();
     phoneNumberController = TextEditingController();
     number = PhoneNumber(isoCode: "SL");
-    demoManager = DemoManager();
   }
 
   @override
@@ -39,7 +37,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-
+    final demoManager = RepositoryProvider.of<DemoManager>(context);
     final isLoading = context.watch<SignupCubit>().state.status == SignupStatus.loadingPhoneNumber;
 
     return Scaffold(
