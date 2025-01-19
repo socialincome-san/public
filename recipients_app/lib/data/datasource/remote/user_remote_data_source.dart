@@ -71,7 +71,7 @@ class UserRemoteDataSource implements UserDataSource {
       verificationCompleted: (credential) => onVerificationCompleted(credential),
       verificationFailed: (ex) => onVerificationFailed(ex),
       codeSent: (verificationId, forceResendingToken) => onCodeSend(verificationId, forceResendingToken),
-      codeAutoRetrievalTimeout: (e) {
+      codeAutoRetrievalTimeout: (verificationId) {
         log("auto-retrieval timeout");
       },
     );

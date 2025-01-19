@@ -29,7 +29,6 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
 
     try {
       // TODO: currently payment phone number is used for login, we need to switch that
-
       final paymentPhoneNumber = recipient.mobileMoneyPhone;
       final contactPhoneNumber = recipient.communicationMobilePhone;
 
