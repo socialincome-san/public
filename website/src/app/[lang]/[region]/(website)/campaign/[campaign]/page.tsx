@@ -6,6 +6,7 @@ import { firestoreAdmin } from '@/firebase-admin';
 import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { getMetadata } from '@/metadata';
 import { Campaign, CAMPAIGN_FIRESTORE_PATH, CampaignStatus } from '@socialincome/shared/src/types/campaign';
+import { Contribution, CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/src/types/contribution';
 import { daysUntilTs } from '@socialincome/shared/src/utils/date';
 import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRates';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -85,8 +86,14 @@ export default async function Page({ params }: CampaignPageProps) {
 		? await getLatestExchangeRate(firestoreAdmin, campaign.goal_currency)
 		: 1.0;
 
-	const contributions = campaign.contributions ?? 0;
-	const amountCollected = Math.round((campaign.amount_collected_chf ?? 0) * exchangeRate);
+	const contributions = await firestoreAdmin
+		.collectionGroup<Contribution>(CONTRIBUTION_FIRESTORE_PATH)
+		.where('campaign_path', '==', firestoreAdmin.firestore.doc([CAMPAIGN_FIRESTORE_PATH, params.campaign].join('/')))
+		.get();
+	let amountCollected = contributions.docs.reduce((sum, c) => sum + c.data().amount_chf, 0);
+	amountCollected += campaign.additional_amount_chf || 0;
+	amountCollected *= exchangeRate;
+
 	const percentageCollected = campaign.goal ? Math.round((amountCollected / campaign.goal) * 100) : undefined;
 	const daysLeft = daysUntilTs(campaign.end_date.toDate());
 
@@ -122,7 +129,7 @@ export default async function Page({ params }: CampaignPageProps) {
 										<Typography size="2xl" weight="medium" color="secondary">
 											{translator?.t('campaign.without-goal.collected', {
 												context: {
-													count: contributions,
+													count: contributions.docs.length,
 													amount: amountCollected,
 													currency: campaign.goal_currency,
 													total: campaign.goal,
@@ -157,7 +164,7 @@ export default async function Page({ params }: CampaignPageProps) {
 												<Typography size="md" color="primary">
 													{translator.t('campaign.with-goal.collected-amount', {
 														context: {
-															count: contributions,
+															count: contributions.docs.length,
 															amount: amountCollected,
 															currency: campaign.goal_currency,
 														},
