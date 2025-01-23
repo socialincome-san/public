@@ -44,10 +44,10 @@ export const Sizes: Story = {
 export const Colors: Story = {
 	render: () => (
 		<div className="flex flex-wrap items-center gap-4">
-			<SIIcon className="h-8 w-8 text-accent" />
-			<SIIcon className="h-8 w-8 text-primary" />
-			<SIIcon className="h-8 w-8 text-secondary" />
-			<SIIcon className="h-8 w-8 text-destructive" />
+			<SIIcon className="text-accent h-8 w-8" />
+			<SIIcon className="text-primary h-8 w-8" />
+			<SIIcon className="text-secondary h-8 w-8" />
+			<SIIcon className="text-destructive h-8 w-8" />
 		</div>
 	),
 };

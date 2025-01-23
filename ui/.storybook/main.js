@@ -10,20 +10,20 @@ function getAbsolutePath(value) {
 
 /** @type { import('@storybook/react-vite').StorybookConfig } */
 const config = {
-    stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+	stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
 
-    addons: [
+	addons: [
 		getAbsolutePath('@storybook/addon-onboarding'),
 		getAbsolutePath('@storybook/addon-essentials'),
 		getAbsolutePath('@storybook/addon-interactions'),
 	],
 
-    framework: {
+	framework: {
 		name: getAbsolutePath('@storybook/react-vite'),
 		options: {},
 	},
 
-    viteFinal: async (config) => {
+	viteFinal: async (config) => {
 		// Use PostCSS config from postcss.config.js
 		config.css = {
 			postcss: true,
@@ -31,10 +31,10 @@ const config = {
 		return config;
 	},
 
-    docs: {},
+	docs: {},
 
-    typescript: {
-        reactDocgen: 'react-docgen-typescript'
-    }
+	typescript: {
+		reactDocgen: 'react-docgen-typescript',
+	},
 };
 export default config;
