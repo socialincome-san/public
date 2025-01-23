@@ -9,11 +9,12 @@ export function SpinnerIcon({ className, ...props }: HTMLAttributes<SVGElement>)
 			xmlSpace="preserve"
 			fill="none"
 			aria-hidden={true}
-			aria-labelledby="si-logo-title"
+			aria-labelledby="spinner-icon-title"
 			viewBox="0 0 24 24"
 			className={twMerge('h-5 w-5 animate-spin', className)}
 			{...props}
 		>
+			<title id="spinner-icon-title">Loading spinner</title>
 			<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
 			<path
 				className="opacity-75"
