@@ -6,7 +6,7 @@ import {
 	useDeleteEmployer,
 	useEmployers,
 } from '@/app/[lang]/[region]/(website)/me/hooks';
-import { Button, Table, TableBody, TableCell, TableRow, Typography, SpinnerIcon } from '@socialincome/ui';
+import { Button, SpinnerIcon, Table, TableBody, TableCell, TableRow, Typography } from '@socialincome/ui';
 import { DefaultParams } from '../../..';
 import { AddEmployerForm, AddEmployerFormProps } from './add-employer-form';
 

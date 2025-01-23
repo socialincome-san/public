@@ -2,7 +2,17 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useDonationCertificates } from '@/app/[lang]/[region]/(website)/me/hooks';
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Typography, SpinnerIcon } from '@socialincome/ui';
+import {
+	Button,
+	SpinnerIcon,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+	Typography,
+} from '@socialincome/ui';
 import Link from 'next/link';
 
 type ContributionsTableProps = {
