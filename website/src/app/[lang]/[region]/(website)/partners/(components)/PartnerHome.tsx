@@ -101,7 +101,7 @@ export function PartnerHome({ currentNgo, currentNgoCountry, translations, lang,
 								translatorBadgeFormer={translations.badgeFormer}
 								translatorBadgeSuspended={translations.badgeSuspended}
 							/>
-							<Badge className="bg-primary hover:bg-primary text-primary space-x-2 bg-opacity-10 px-4 py-2 hover:bg-opacity-100 hover:text-white">
+       <Badge variant="interactive" size="md" className="space-x-2">
 								{countryBadge?.countryFlagComponent || <SL className="h-5 w-5 rounded-full" />}
 								<Typography size="md" weight="normal" className="text-inherit">
 									{currentNgoCountry}
@@ -129,7 +129,7 @@ export function PartnerHome({ currentNgo, currentNgoCountry, translations, lang,
 							</span>
 						</div>
 					)}
-					{ngoHoverCard.orgDescriptionParagraphs.map((paragraph, index) => {
+					{ngoHoverCard.orgDescriptionParagraphs?.map((paragraph, index) => {
 						return (
 							<div key={index} className="mb-4">
 								{paragraph.map((fragment, index2) => {
