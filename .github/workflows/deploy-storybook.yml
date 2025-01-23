@@ -3,7 +3,7 @@ name: Deploy Storybook to GitHub Pages
 on:
   push:
     branches:
-      - main # Or your default branch name
+      - almsh/add-storybook # Or your default branch name
   # Enables manual trigger from the Actions tab
   workflow_dispatch:
 
@@ -30,7 +30,7 @@ jobs:
 
       - name: Read .nvmrc
         id: nvm
-        run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+        run: echo "NVMRC=$(cat '.nvmrc')" >> $GITHUB_OUTPUT
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
