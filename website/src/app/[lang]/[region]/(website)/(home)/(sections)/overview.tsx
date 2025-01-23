@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, GLowHoverContainer, Typography } from '@socialincome/ui';
+import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 
 export async function Overview({ lang }: DefaultParams) {
@@ -11,20 +11,6 @@ export async function Overview({ lang }: DefaultParams) {
 
 	return (
 		<>
-			{/* TODO: remove the example of GlowHoverContainer usage below before merge */}
-			<GLowHoverContainer className="mb-16 mt-8 flex flex-col items-center justify-center md:mb-48 md:mt-16">
-				<Typography size="3xl" weight="medium" className="my-10 text-center">
-					{translator.t('section-2.title-1')}
-				</Typography>
-				<div className="mb-8 text-center">
-					{translator.t<{ text: string; color?: FontColor }[]>('section-2.title-2').map((title, index) => (
-						<Typography as="span" size="3xl" weight="medium" color={title.color} key={index}>
-							{title.text}{' '}
-						</Typography>
-					))}
-				</div>
-			</GLowHoverContainer>
-
 			<BaseContainer className="mx-auto mb-16 mt-8 flex w-4/5 flex-col items-center justify-center md:mb-48 md:mt-16 lg:w-3/5">
 				<Typography size="3xl" weight="medium" className="my-10 text-center">
 					{translator.t('section-2.title-1')}
