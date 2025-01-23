@@ -3,9 +3,7 @@ name: Deploy Storybook to GitHub Pages
 on:
   push:
     branches:
-      - almsh/add-storybook # Or your default branch name
-  # Enables manual trigger from the Actions tab
-  workflow_dispatch:
+      - main # Or your default branch name
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
