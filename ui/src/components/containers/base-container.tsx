@@ -1,5 +1,4 @@
 import React from 'react';
-import { twMerge } from 'tailwind-merge';
 
 type BaseContainerProps = {
 	baseClassNames?: string;
@@ -10,7 +9,7 @@ export const BaseContainer = React.forwardRef<HTMLDivElement, BaseContainerProps
 		return (
 			<div className={baseClassNames}>
 				<div className="mx-auto max-w-6xl px-3 md:px-6">
-					<div className={twMerge(baseClassNames, className)} ref={ref} {...props}>
+					<div className={className} ref={ref} {...props}>
 						{children}
 					</div>
 				</div>
