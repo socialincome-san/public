@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { SpinnerIcon } from '@/components/logos/spinner-icon';
+import { SpinnerIcon } from '@socialincome/ui';
 import { useApi } from '@/hooks/useApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NewsletterSubscriptionData } from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';

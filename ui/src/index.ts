@@ -24,3 +24,5 @@ export * from './components/table';
 export * from './components/tabs';
 export * from './components/tooltip';
 export * from './components/typography';
+
+export * from './icons/spinner';

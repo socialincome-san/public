@@ -2,10 +2,9 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useContributions } from '@/app/[lang]/[region]/(website)/me/hooks';
-import { SpinnerIcon } from '@/components/logos/spinner-icon';
 import { useTranslator } from '@/hooks/useTranslator';
 import { toDateTime } from '@socialincome/shared/src/utils/date';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Typography } from '@socialincome/ui';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Typography, SpinnerIcon } from '@socialincome/ui';
 import _ from 'lodash';
 
 type ContributionsTableProps = {
