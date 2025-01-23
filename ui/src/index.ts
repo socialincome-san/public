@@ -26,3 +26,5 @@ export * from './components/tooltip';
 export * from './components/typography';
 
 export * from './icons/spinner';
+export * from './icons/donate';
+export * from './icons/si';
