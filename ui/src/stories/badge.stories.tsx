@@ -1,6 +1,6 @@
+import { ArrowRightIcon, CheckCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Badge, BadgeProps } from '../components/badge';
-import { CheckCircleIcon, ArrowRightIcon, ExclamationTriangleIcon } from '@heroicons/react/24/solid';
 
 const meta = {
 	title: 'Components/Badge',
@@ -9,7 +9,20 @@ const meta = {
 	argTypes: {
 		variant: {
 			description: 'Style variant of the badge',
-			options: ['default', 'secondary', 'destructive', 'muted', 'accent', 'outline', 'interactive', 'interactive-accent', 'interactive-secondary', 'interactive-destructive', 'interactive-muted', 'interactive-outline'],
+			options: [
+				'default',
+				'secondary',
+				'destructive',
+				'muted',
+				'accent',
+				'outline',
+				'interactive',
+				'interactive-accent',
+				'interactive-secondary',
+				'interactive-destructive',
+				'interactive-muted',
+				'interactive-outline',
+			],
 			control: { type: 'select' },
 		},
 		size: {
@@ -26,7 +39,7 @@ type Story = StoryObj<typeof Badge>;
 /**
  * The Badge component is used to highlight and display short pieces of information.
  * It supports various variants and sizes to accommodate different use cases.
- * 
+ *
  * Variants:
  * - Basic variants:
  *   - default: Primary colored badge for general use
@@ -35,7 +48,7 @@ type Story = StoryObj<typeof Badge>;
  *   - muted: For less prominent information
  *   - accent: For highlighted information
  *   - outline: Border-only style for subtle emphasis
- * 
+ *
  * - Interactive variants (with hover effects):
  *   - interactive: Primary colored with opacity hover effect
  *   - interactive-accent: Accent colored for important interactive elements
@@ -43,13 +56,13 @@ type Story = StoryObj<typeof Badge>;
  *   - interactive-destructive: For removable or dangerous actions
  *   - interactive-muted: For subtle interactive elements
  *   - interactive-outline: Outlined style that fills on hover
- * 
+ *
  * Features:
  * - Three size options (sm, md, lg)
  * - Customizable through className prop
  * - Support for icons and custom content
  * - Accessible by default
- * 
+ *
  * @see {@link https://www.figma.com/file/...} Figma Design
  */
 export const Default: Story = {
@@ -117,7 +130,6 @@ export const AllVariants: Story = {
 	),
 };
 
-
 /**
  * Examples of common use cases for badges in the application:
  * - Status indicators
@@ -130,10 +142,18 @@ export const CommonUseCases: Story = {
 		<div className="flex flex-col gap-4">
 			{/* Status indicators */}
 			<div className="flex gap-2">
-				<Badge variant="interactive" size="md">Active</Badge>
-				<Badge variant="interactive-muted" size="md">Pending</Badge>
-				<Badge variant="interactive-destructive" size="md">Blocked</Badge>
-				<Badge variant="muted" size="md">Archived</Badge>
+				<Badge variant="interactive" size="md">
+					Active
+				</Badge>
+				<Badge variant="interactive-muted" size="md">
+					Pending
+				</Badge>
+				<Badge variant="interactive-destructive" size="md">
+					Blocked
+				</Badge>
+				<Badge variant="muted" size="md">
+					Archived
+				</Badge>
 			</div>
 			{/* Content labels */}
 			<div className="flex gap-2">
@@ -174,7 +194,7 @@ export const WithIcons: StoryObj<WithIconsProps> = {
 		warningVariant: 'destructive',
 		onlineText: 'Online',
 		newText: 'New',
-		warningText: 'Warning'
+		warningText: 'Warning',
 	},
 	argTypes: {
 		onlineVariant: {
@@ -197,13 +217,13 @@ export const WithIcons: StoryObj<WithIconsProps> = {
 	render: (args) => (
 		<div className="flex gap-4">
 			<Badge variant={args.onlineVariant} size={args.size}>
-				<CheckCircleIcon className="h-4 w-4 mr-1" /> {args.onlineText}
+				<CheckCircleIcon className="mr-1 h-4 w-4" /> {args.onlineText}
 			</Badge>
 			<Badge variant={args.newVariant} size={args.size}>
-				{args.newText} <ArrowRightIcon className="h-4 w-4 ml-1" />
+				{args.newText} <ArrowRightIcon className="ml-1 h-4 w-4" />
 			</Badge>
 			<Badge variant={args.warningVariant} size={args.size}>
-				<ExclamationTriangleIcon className="h-4 w-4 mr-1" /> {args.warningText}
+				<ExclamationTriangleIcon className="mr-1 h-4 w-4" /> {args.warningText}
 			</Badge>
 		</div>
 	),

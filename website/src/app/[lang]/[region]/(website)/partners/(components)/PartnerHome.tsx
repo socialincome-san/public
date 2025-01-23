@@ -101,7 +101,7 @@ export function PartnerHome({ currentNgo, currentNgoCountry, translations, lang,
 								translatorBadgeFormer={translations.badgeFormer}
 								translatorBadgeSuspended={translations.badgeSuspended}
 							/>
-       <Badge variant="interactive" size="md" className="space-x-2">
+							<Badge variant="interactive" size="md" className="space-x-2">
 								{countryBadge?.countryFlagComponent || <SL className="h-5 w-5 rounded-full" />}
 								<Typography size="md" weight="normal" className="text-inherit">
 									{currentNgoCountry}

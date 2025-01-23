@@ -42,17 +42,17 @@ function RecipientsBadge({
 				</div>
 				<Separator className="bg-primary mb-3 mt-2 bg-opacity-20" />
 				<div className="flex flex-col space-y-2">
-					<Badge variant='faded' className="text-popover-foreground">
+					<Badge variant="faded" className="text-popover-foreground">
 						<Typography size="sm" weight="normal" className="whitespace-nowrap text-inherit">
 							{hoverCardTotalActiveRecipients || 0} {translatorBadgeActive}
 						</Typography>
 					</Badge>
-					<Badge variant="accent" className="bg-opacity-10 text-popover-foreground">
+					<Badge variant="accent" className="text-popover-foreground bg-opacity-10">
 						<Typography size="sm" weight="normal" className="whitespace-nowrap text-inherit">
 							{hoverCardTotalFormerRecipients || 0} {translatorBadgeFormer}
 						</Typography>
 					</Badge>
-					<Badge variant='secondary' className="bg-opacity-10 text-popover-foreground">
+					<Badge variant="secondary" className="text-popover-foreground bg-opacity-10">
 						<Typography size="sm" weight="normal" className="whitespace-nowrap text-inherit">
 							{hoverCardTotalSuspendedRecipients || 0} {translatorBadgeSuspended}
 						</Typography>
