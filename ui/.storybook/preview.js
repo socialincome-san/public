@@ -2,7 +2,7 @@ import '../src/globals.css';
 
 /** @type { import('@storybook/react').Preview } */
 const preview = {
-	parameters: {
+    parameters: {
 		controls: {
 			matchers: {
 				color: /(background|color)$/i,
@@ -10,6 +10,8 @@ const preview = {
 			},
 		},
 	},
+
+    tags: ['autodocs']
 };
 
 export default preview;
