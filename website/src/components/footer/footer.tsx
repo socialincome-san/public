@@ -1,5 +1,4 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { WebsiteLanguage, websiteRegions } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import Link from 'next/link';
@@ -29,15 +28,8 @@ export default async function Footer({ lang, region }: DefaultParams) {
 		namespaces: ['common', 'website-common', 'website-me'],
 	});
 
-	const supportedTranslatedLanguages = (['de', 'en', 'it', 'fr'] as WebsiteLanguage[]).map((lang) => {
-		return { translation: translator.t(`languages.${lang}`), code: lang };
-	});
-	const supportedTranslatedCountries = websiteRegions.map((region) => {
-		return { translation: translator.t(`regions.${region}`), code: region };
-	});
-
 	return (
-		<BaseContainer backgroundColor="bg-primary" className="theme-blue !bg-background pb-8 pt-10">
+		<BaseContainer baseClassNames="theme-blue" className="pb-8 pt-10">
 			<div className="space-y-4">
 				<div className="grid grid-cols-2 gap-8 md:grid-cols-4">
 					<div className="flex flex-col space-y-1">
