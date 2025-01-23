@@ -1,11 +1,20 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { SpinnerIcon } from '@socialincome/ui';
 import { useApi } from '@/hooks/useApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NewsletterSubscriptionData } from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
-import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@socialincome/ui';
+import {
+	Button,
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+	Input,
+	SpinnerIcon,
+} from '@socialincome/ui';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
