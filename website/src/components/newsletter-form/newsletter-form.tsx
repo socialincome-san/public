@@ -15,7 +15,7 @@ type NewsletterForm = {
 	translations: NewsletterPopupTranslations
 };
 
-const NewsletterForm = ({ lang, translations }) => {
+const NewsletterForm = ({ lang, translations }:NewsletterForm) => {
 	const api = useApi();
 	const formSchema = z.object({ email: z.string().email() });
 	type FormSchema = z.infer<typeof formSchema>;
