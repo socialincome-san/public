@@ -7,6 +7,13 @@ import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input } fr
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
+import {LanguageCode} from "@socialincome/shared/src/types/language";
+import {NewsletterPopupTranslations} from "@/components/newsletter-popup/newsletter-popup-client";
+
+type NewsletterForm = {
+	lang: LanguageCode;
+	translations: NewsletterPopupTranslations
+};
 
 const NewsletterForm = ({ lang, translations }) => {
 	const api = useApi();

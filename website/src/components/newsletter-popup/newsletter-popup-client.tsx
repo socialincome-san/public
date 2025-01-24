@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form';
 import toast, { Toast } from 'react-hot-toast';
 import * as z from 'zod';
 
-type NewsletterPopupTranslations = {
+export type NewsletterPopupTranslations = {
 	informationLabel: string;
 	toastSuccess: string;
 	toastFailure: string;
