@@ -1,6 +1,6 @@
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, Card, CardContent, Typography } from '@socialincome/ui';
-import { Section1Props, SectionProps } from './page';
+import { Section1Props } from './page';
 
 export const roundAmount = (amount: number) => (amount ? Math.round(amount / 10) * 10 : 0);
 
