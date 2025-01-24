@@ -9,12 +9,12 @@ export function SIIcon({ className, ...props }: HTMLAttributes<SVGElement>) {
 			xmlSpace="preserve"
 			fill="currentColor"
 			aria-hidden={true}
-			aria-labelledby="si-icon"
+			aria-labelledby="si-icon-title"
 			viewBox="0 0 816 815.8"
 			className={twMerge('text-accent', className)}
 			{...props}
 		>
-			<title id="si-icon">Social Income Icon</title>
+			<title id="si-icon-title">Social Income Icon</title>
 			<g>
 				<path id="Pfad_185" className="st0" d="M714.1,663.9h102v-512h-102V663.9z" />
 				<path id="Pfad_186" className="st0" d="M366.4,631.9l92.8,43.3l216.3-463.8l-92.8-43.3L366.4,631.9z" />

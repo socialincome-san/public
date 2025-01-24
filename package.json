@@ -42,7 +42,9 @@
 		"website:test:e2e:update": "npm --workspace=@socialincome/website run test:e2e:update",
 		"website:test:e2e:update:emulator": "npm --workspace=@socialincome/website run test:e2e:update:emulator",
 		"website:extract-translations": "npm --workspace=@socialincome/website run extract-translations",
-		"website:check-translations": "npm --workspace=@socialincome/website run check-translations"
+		"website:check-translations": "npm --workspace=@socialincome/website run check-translations",
+		"ui:serve": "npm --workspace=@socialincome/ui run storybook",
+		"ui:build": "npm --workspace=@socialincome/ui run build-storybook"
 	},
 	"devDependencies": {
 		"firebase-tools": "13.29.1",
