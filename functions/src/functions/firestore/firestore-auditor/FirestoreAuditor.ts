@@ -3,6 +3,7 @@ import { Change } from 'firebase-functions';
 import { isEqual } from 'lodash';
 import { DateTime } from 'luxon';
 import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
+
 import { toFirebaseAdminTimestamp } from '../../../../../shared/src/firebase/admin/utils';
 
 /**
@@ -16,6 +17,7 @@ export class FirestoreAuditor {
 	constructor() {
 		this.firestoreAdmin = new FirestoreAdmin();
 	}
+
 	/**
 	 * Takes care of
 	 * - updating the last_updated_at to now field in the document which got changed
