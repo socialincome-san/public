@@ -7,12 +7,12 @@ import {
 	FirstPayoutEmailTemplateData,
 	SendgridMailClient,
 } from '../../../../../shared/src/sendgrid/SendgridMailClient';
-import { CONTRIBUTION_FIRESTORE_PATH, Contribution } from '../../../../../shared/src/types/contribution';
+import { Contribution, CONTRIBUTION_FIRESTORE_PATH } from '../../../../../shared/src/types/contribution';
 import { LanguageCode } from '../../../../../shared/src/types/language';
-import { USER_FIRESTORE_PATH, User } from '../../../../../shared/src/types/user';
+import { User, USER_FIRESTORE_PATH } from '../../../../../shared/src/types/user';
 import { toDateTime } from '../../../../../shared/src/utils/date';
 
-export const getFirstPayoutEmailReceivers = async (
+const getFirstPayoutEmailReceivers = async (
 	firestoreAdmin: FirestoreAdmin,
 	from: DateTime,
 	to: DateTime,
@@ -65,15 +65,14 @@ export const getFirstPayoutEmailReceivers = async (
 	).flat();
 };
 
-// Run on the 16th of every month at 15:00 UTC
-export default onSchedule({ schedule: '0 15 16 * *', memory: '2GiB' }, async () => {
-	let message: string = '';
+export async function sendFirstPayoutEmail() {
+	let message = '';
 	const sendgridClient = new SendgridMailClient(process.env.SENDGRID_API_KEY!);
 	try {
 		const firestoreAdmin = new FirestoreAdmin();
 		const now = DateTime.now();
-		const fromDate = DateTime.fromObject({ year: now.year, month: now.month - 1, day: 16, hour: 0 }, { zone: 'utc' });
-		const toDate = DateTime.fromObject({ year: now.year, month: now.month, day: 16, hour: 0 }, { zone: 'utc' });
+		const fromDate = now.minus({ months: 1 }).set({ day: 16, hour: 0, minute: 0, second: 0, millisecond: 0 });
+		const toDate = now.set({ day: 16, hour: 0, minute: 0, second: 0, millisecond: 0 });
 		const firstPayoutEmailReceivers = await getFirstPayoutEmailReceivers(firestoreAdmin, fromDate, toDate);
 
 		await Promise.all(
@@ -81,7 +80,6 @@ export default onSchedule({ schedule: '0 15 16 * *', memory: '2GiB' }, async () 
 				await sendgridClient.sendFirstPayoutEmail(email, language, templateData);
 			}),
 		);
-
 		message = `Successfully sent first payout emails to ${firstPayoutEmailReceivers.length} users`;
 		logger.info(message);
 	} catch (error) {
@@ -95,4 +93,10 @@ export default onSchedule({ schedule: '0 15 16 * *', memory: '2GiB' }, async () 
 			text: message,
 		});
 	}
+}
+
+// Run on the 16th of every month at 15:00 UTC
+export default onSchedule({ schedule: '0 15 16 * *', memory: '2GiB' }, async () => {
+	await sendFirstPayoutEmail();
+	logger.info('First payout email cron job finished');
 });
