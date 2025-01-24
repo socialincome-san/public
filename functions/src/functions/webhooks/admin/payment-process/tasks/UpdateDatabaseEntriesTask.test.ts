@@ -16,12 +16,12 @@ import {
 } from '../../../../../../../shared/src/types/recipient';
 import { toDateTime } from '../../../../../../../shared/src/utils/date';
 import { initializeGlobalTestData } from '../../../../../firebase';
-import { runPaymentProcessTask } from '../../../index';
+import { webhookPaymentProcessTask } from '../../../index';
 
 const projectId = 'create-payments-task-test';
 const testEnv = functionsTest({ projectId });
 const paymentDate = toPaymentDate(DateTime.fromObject({ year: 2023, month: 4, day: 15 }, { zone: 'utc' }));
-const triggerFunction = testEnv.wrap(runPaymentProcessTask);
+const triggerFunction = testEnv.wrap(webhookPaymentProcessTask);
 const firestoreAdmin = new FirestoreAdmin(getOrInitializeFirebaseAdmin({ projectId }));
 
 beforeEach(async () => {
