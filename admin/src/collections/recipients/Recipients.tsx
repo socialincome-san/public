@@ -8,7 +8,6 @@ import {
 import { toDateTime } from '@socialincome/shared/src/utils/date';
 import { AdditionalFieldDelegate, buildProperties } from 'firecms';
 import { EntityCollection, PropertiesOrBuilders } from 'firecms/dist/types';
-import { messagesCollection } from '../Messages';
 import { paymentsCollection } from '../Payments';
 import { buildAuditedCollection } from '../shared';
 import { buildSurveysCollection } from '../surveys/Surveys';
@@ -94,7 +93,7 @@ export const buildRecipientsCollection = () => {
 			si_start_date: SIStartDateProperty,
 			test_recipient: TestRecipientProperty,
 		}),
-		subcollections: [paymentsCollection, buildSurveysCollection(), messagesCollection],
+		subcollections: [paymentsCollection, buildSurveysCollection()],
 	};
 	return buildAuditedCollection<Partial<Recipient>>(collection);
 };

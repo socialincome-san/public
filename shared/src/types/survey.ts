@@ -48,21 +48,8 @@ export const recipientSurveys = [
 	{ name: 'offboarded-checkin-4', startDateOffsetMonths: 72, questionaire: SurveyQuestionnaire.OffboardedCheckin },
 ];
 
-export interface SurveyCredentialRequest {
-	phoneNumber: string;
-	accessToken: string;
-}
-
-export interface SurveyCredentialResponse {
-	recipientId: string;
-	surveyId: string;
-	email: string;
-	pw: string;
-}
-
 export const getSurveyUrl = (baseUrl: string, survey: Survey, surveyId: string, recipientId: string) => {
 	const url = new URL([baseUrl, 'survey', recipientId, surveyId].join('/'));
-	const getParams = { email: survey.access_email, pw: survey.access_pw };
-	url.search = new URLSearchParams(getParams).toString();
+	url.search = new URLSearchParams({ email: survey.access_email, pw: survey.access_pw }).toString();
 	return url.toString();
 };
