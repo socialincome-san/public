@@ -1,15 +1,15 @@
 'use client';
 
-import { GlowHoverContainer, Typography } from '@socialincome/ui';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
+import { GlowHoverContainer, Typography } from '@socialincome/ui';
 
 import NewsletterForm from '@/components/newsletter-form/newsletter-form';
-import { NewsletterPopupTranslations } from "@/components/newsletter-popup/newsletter-popup-client";
+import { NewsletterPopupTranslations } from '@/components/newsletter-popup/newsletter-popup-client';
 
 type NewsletterForm = {
 	title: string;
 	lang: LanguageCode;
-	formTranslations: NewsletterPopupTranslations
+	formTranslations: NewsletterPopupTranslations;
 };
 
 const NewsletterGlowContainer = ({ title, lang, formTranslations }: NewsletterForm) => {
