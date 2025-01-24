@@ -6,12 +6,13 @@ type BaseContainerProps = {
 	backgroundColor?: BackgroundColor;
 	wrapperClassName?: string;
 	wrapperRef?: React.Ref<HTMLDivElement>;
+    baseClassNames?: string;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const BaseContainer = React.forwardRef<HTMLDivElement, BaseContainerProps>(
-	({ children, className, backgroundColor, wrapperClassName, wrapperRef, ...props }, ref) => {
+	({ children, className, baseClassNames, backgroundColor, wrapperClassName, wrapperRef, ...props }, ref) => {
 		return (
-			<div className={twMerge(wrapperClassName, backgroundColor)} ref={wrapperRef}>
+			<div className={twMerge(wrapperClassName, backgroundColor, baseClassNames)} ref={wrapperRef}>
 				<div className="mx-auto max-w-6xl px-3 md:px-6">
 					<div className={className} ref={ref} {...props}>
 						{children}
@@ -21,4 +22,3 @@ export const BaseContainer = React.forwardRef<HTMLDivElement, BaseContainerProps
 		);
 	},
 );
-
