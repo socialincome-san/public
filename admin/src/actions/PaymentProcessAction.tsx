@@ -8,7 +8,7 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 import { useSnackbarController } from 'firecms';
 import { DateTime } from 'luxon';
 import { useState } from 'react';
-import { PaymentProcessProps } from '../../../functions/src/webhooks/admin/payment-process';
+import type { PaymentProcessProps } from '../../../functions/src/functions/webhooks/admin/payment-process';
 
 const BOX_STYLE = {
 	position: 'absolute',
@@ -113,13 +113,6 @@ export function PaymentProcessAction() {
 									Confirm
 								</Button>
 							)}
-							<Button
-								disabled={true}
-								variant="outlined"
-								onClick={() => triggerFirebaseFunction(PaymentProcessTaskType.SendNotifications)}
-							>
-								Notify recipients (in development)
-							</Button>{' '}
 							<Button variant="outlined" color="error" onClick={handleClose}>
 								Close
 							</Button>

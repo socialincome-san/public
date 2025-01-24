@@ -89,9 +89,6 @@ jobs:
           echo SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }} >> .env
           echo STRIPE_API_READ_KEY=${{ (inputs.project == 'social-income-prod' && secrets.STRIPE_API_READ_KEY) || secrets.STRIPE_API_READ_KEY_STAGING }} >> .env
           echo STRIPE_WEBHOOK_SECRET=${{ (inputs.project == 'social-income-prod' && secrets.STRIPE_WEBHOOK_SECRET) || secrets.STRIPE_WEBHOOK_SECRET_STAGING }} >> .env
-          echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_SENDER_PHONE }} >> .env
-          echo TWILIO_SID=${{ secrets.TWILIO_SID }} >> .env
-          echo TWILIO_TOKEN=${{ secrets.TWILIO_TOKEN }} >> .env
 
       - name: Build functions
         run: npm run functions:build
