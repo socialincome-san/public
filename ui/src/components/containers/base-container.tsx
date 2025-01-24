@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge';
 export type BaseContainerProps = {
 	wrapperClassName?: string;
 	wrapperRef?: React.Ref<HTMLDivElement>;
-    baseClassNames?: string;
+	baseClassNames?: string;
 } & React.HTMLAttributes<HTMLDivElement>;
 
 export const BaseContainer = React.forwardRef<HTMLDivElement, BaseContainerProps>(

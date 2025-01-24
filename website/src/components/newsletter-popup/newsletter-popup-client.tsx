@@ -1,6 +1,7 @@
 'use client';
 
 import { CreateNewsletterSubscription } from '@/app/api/newsletter/subscription/public/route';
+import NewsletterForm from '@/components/newsletter-form/newsletter-form';
 import { NewsletterPopupProps } from '@/components/newsletter-popup/newsletter-popup';
 import { useApi } from '@/hooks/useApi';
 import { XMarkIcon } from '@heroicons/react/24/solid';
@@ -12,7 +13,6 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import toast, { Toast } from 'react-hot-toast';
 import * as z from 'zod';
-import NewsletterForm from '@/components/newsletter-form/newsletter-form';
 
 type NewsletterPopupTranslations = {
 	informationLabel: string;

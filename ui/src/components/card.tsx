@@ -1,18 +1,15 @@
 import * as React from 'react';
 
 import { cn } from '../lib/utils';
-import {useGlowHover} from "./use-glow-hover";
 
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => {
-/*	const refButton = useGlowHover({
+	/*	const refButton = useGlowHover({
 		preset: 'bright-red',
 		lightSize: 60,
 		enableBurst: true
 	});*/
 
-	return (
-		<div ref={ref} className={cn('bg-card text-card-foreground rounded-lg border-2', className)} {...props} />
-	)
+	return <div ref={ref} className={cn('bg-card text-card-foreground rounded-lg border-2', className)} {...props} />;
 });
 Card.displayName = 'Card';
 
