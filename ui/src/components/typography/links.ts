@@ -19,49 +19,52 @@ import { cva } from 'class-variance-authority';
  * 
  * // With icon
  * <Link href="/docs" className={linkCn({ icon: true })}>
- *   <Icon /> Documentation
+ *   <Icon className="h-4 w-4" /> Documentation
  * </Link>
+ * 
+ * // With arrows
+ * <Link href="/internal" className={linkCn({ arrow: true })}>Internal Link</Link>
+ * <Link href="https://external.com" className={linkCn({ arrow: 'external' })}>External Link</Link>
  * ```
  * 
  * @param variant - The visual style variant of the link
- *   - 'default': Primary colored link with muted hover state
- *   - 'muted': Subtle link that becomes more prominent on hover
- *   - 'nav': Large navigation link with accent hover state
- *   - 'footer': Muted link for footer usage
+ *   - 'default': Standard link that shows accent color on hover
  *   - 'accent': Accent colored link for emphasis
  *   - 'destructive': Red-colored link for dangerous actions
- *   - 'ghost': Transparent link that shows accent color on hover
  * 
  * @param size - The text size of the link
+ *   - 'inherit': Inherits font size from parent
  *   - 'sm': Small text
- *   - 'md': Medium text (default)
+ *   - 'md': Medium text
  *   - 'lg': Large text
  *   - 'xl': Extra large text
  *   - '4xl': 4x large text (for hero sections)
  * 
  * @param underline - The underline style of the link
- *   - 'none': No underline (default)
+ *   - 'none': No underline
  *   - 'hover': Shows underline on hover
- *   - 'always': Always shows underline
+ *   - 'always': Always shows underline (default)
  * 
  * @param icon - Whether the link contains an icon
- *   - true: Adds gap between icon and text
+ *   - true: Adds gap between icon and text (recommended gap: 0.5rem)
  *   - false: No gap (default)
+ * 
+ * @param arrow - The arrow style for the link
+ *   - false: No arrow (default)
+ *   - 'internal': Shows internal arrow (→) with hover animation
+ *   - 'external': Shows external arrow (↗) with hover animation
  */
 export const linkCn = cva(
   'inline-flex items-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 relative after:transition-transform after:duration-200 after:no-underline',
   {
     variants: {
       variant: {
-        default: 'text-primary hover:text-primary-muted focus-visible:text-primary-muted',
-        muted: 'text-muted-foreground hover:text-primary focus-visible:text-primary',
-        nav: 'text-foreground font-medium hover:text-accent focus-visible:text-accent active:text-accent-muted',
-        footer: 'text-muted-foreground hover:text-foreground focus-visible:text-foreground group-hover:text-foreground',
-        accent: 'text-accent hover:text-accent-muted focus-visible:text-accent-muted',
-        destructive: 'text-destructive hover:text-destructive-muted focus-visible:text-destructive-muted',
-        ghost: 'text-foreground hover:text-accent focus-visible:text-accent',
+        default: 'text-foreground focus-visible:text-accent',
+        accent: 'text-accent focus-visible:text-accent/80 active:text-accent-muted',
+        destructive: 'text-destructive focus-visible:text-destructive/80',
       },
       size: {
+        inherit: '',
         sm: 'text-sm',
         md: 'text-base',
         lg: 'text-lg',
@@ -69,25 +72,51 @@ export const linkCn = cva(
         '4xl': 'text-4xl',
       },
       underline: {
-        none: '',
-        hover: 'hover:underline underline-offset-4',
-        always: 'underline underline-offset-4',
+        none: 'no-underline hover:no-underline',
+        hover: 'hover:underline hover:decoration-accent underline-offset-4',
+        always: 'underline underline-offset-4 hover:decoration-accent',
       },
       icon: {
         true: 'gap-2',
         false: '',
       },
       arrow: {
-        true: 'after:content-["→"] after:ml-0.5 after:text-[0.85em] after:inline-block after:opacity-70 hover:after:translate-x-0.5 hover:after:opacity-100',
         false: '',
+        internal: 'after:content-["→"] after:ml-1 after:text-[1.2em] after:inline-block hover:after:translate-x-1',
+        external: 'after:content-["↗"] after:ml-1 after:text-[1.2em] after:inline-block hover:after:translate-x-1 hover:after:translate-y-[-0.1em]',
       }
     },
     defaultVariants: {
       variant: 'default',
-      size: 'md',
-      underline: 'none',
+      size: 'inherit',
+      underline: 'always',
       icon: false,
       arrow: false,
     },
+    compoundVariants: [
+      {
+        underline: "none",
+        variant: "default",
+        arrow: false,
+        className: ["hover:text-accent"]
+      },
+      {
+        underline: "none",
+        variant: "accent",
+        arrow: false,
+        className: ["hover:text-foreground/80"]
+      },
+      {
+        underline: "none",
+        variant: "destructive",
+        arrow: false,
+        className: ["hover:text-foreground/80"]
+      },
+      {
+        underline: "always",
+        variant: "accent",
+        className: ["hover:decoration-foreground"]
+      }
+    ]
   }
 );
