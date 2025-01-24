@@ -1,8 +1,12 @@
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, Card, CardContent, Typography } from '@socialincome/ui';
-import { Section1Props, SectionProps } from './page';
+import { Section1Props } from './page';
 
-export const roundAmount = (amount: number) => (amount ? Math.round(amount / 10) * 10 : 0);
+export const roundAmount = (amount: number) => {
+	if (amount === 0) return 0;
+	const rounded = Math.round(amount / 10) * 10;
+	return rounded === 0 ? 10 : rounded;
+};
 
 export async function Section1({ params, paymentStats, contributionStats, recipientStats }: Section1Props) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-finances'] });
