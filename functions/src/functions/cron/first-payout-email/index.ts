@@ -39,8 +39,6 @@ const getFirstPayoutEmailReceivers = async (
 					if (firstContribution.empty) return [];
 					const contribution = firstContribution.docs[0].data() as Contribution;
 					if (!contribution) return [];
-					console.log('from', from, typeof from);
-					console.log('firestoreTimestamp', toFirebaseAdminTimestamp(from));
 					if (
 						contribution.created >= toFirebaseAdminTimestamp(from) &&
 						contribution.created < toFirebaseAdminTimestamp(to)
