@@ -3,7 +3,7 @@ import { DEFAULT_REGION } from '../../shared/src/firebase';
 
 setGlobalOptions({ maxInstances: 10, region: DEFAULT_REGION });
 
-export * from './cron/index';
-export * from './firestore/index';
-export * from './storage/index';
-export * from './webhooks/index';
+export * from './functions/cron/index';
+export * from './functions/firestore/index';
+export * from './functions/storage/index';
+export * from './functions/webhooks/index';

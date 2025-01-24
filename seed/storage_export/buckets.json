@@ -1,16 +1,10 @@
 {
   "buckets": [
     {
-      "id": "demo-social-income.appspot.com"
-    },
-    {
-      "id": "social-income-prod.appspot.com"
+      "id": "demo-social-income-local.appspot.com"
     },
     {
       "id": "postfinance-payments-files"
-    },
-    {
-      "id": "social-income-staging.appspot.com"
     }
   ]
 }

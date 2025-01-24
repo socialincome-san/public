@@ -1,5 +1,6 @@
 import { DocumentReference } from 'firebase-admin/firestore';
 import { DateTime } from 'luxon';
+import { PartnerOrganisation } from './partner-organisation';
 import { Timestamp } from './timestamp';
 
 export const RECIPIENT_FIRESTORE_PATH = 'recipients';
@@ -35,7 +36,7 @@ export type Recipient = {
 		phone: number;
 		has_whatsapp: boolean;
 	};
-	organisation: DocumentReference;
+	organisation: DocumentReference<PartnerOrganisation>;
 	om_uid?: number;
 	profession?: string;
 	progr_status: RecipientProgramStatus;

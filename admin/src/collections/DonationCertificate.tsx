@@ -2,21 +2,8 @@ import {
 	DONATION_CERTIFICATE_FIRESTORE_PATH,
 	DonationCertificate,
 } from '@socialincome/shared/src/types/donation-certificate';
-import { AdditionalFieldDelegate, buildProperties } from 'firecms';
+import { buildProperties } from 'firecms';
 import { buildAuditedCollection } from './shared';
-
-const DownloadLinkColumn: AdditionalFieldDelegate<DonationCertificate> = {
-	id: 'download_link',
-	name: 'Download Link',
-	Builder: ({ entity }) => {
-		return (
-			<a href={entity.values.url} target="_blank" rel="noreferrer">
-				Download
-			</a>
-		);
-	},
-	dependencies: ['url'],
-};
 
 export const donationCertificateCollection = buildAuditedCollection<DonationCertificate>({
 	name: 'Donation Certificates',
@@ -25,7 +12,6 @@ export const donationCertificateCollection = buildAuditedCollection<DonationCert
 	textSearchEnabled: false,
 	initialSort: ['year', 'desc'],
 	customId: true,
-	additionalFields: [DownloadLinkColumn],
 
 	permissions: {
 		edit: true,
@@ -33,13 +19,6 @@ export const donationCertificateCollection = buildAuditedCollection<DonationCert
 		delete: true,
 	},
 	properties: buildProperties<DonationCertificate>({
-		url: {
-			dataType: 'string',
-			name: 'URL',
-			disabled: {
-				hidden: true,
-			},
-		},
 		country: {
 			dataType: 'string',
 			name: 'Created for country',
@@ -48,6 +27,11 @@ export const donationCertificateCollection = buildAuditedCollection<DonationCert
 		year: {
 			dataType: 'number',
 			name: 'Year',
+			disabled: true,
+		},
+		storage_path: {
+			dataType: 'string',
+			name: 'Storage path',
 			disabled: true,
 		},
 	}),

@@ -27,7 +27,6 @@ export enum PaymentProcessTaskType {
 	GetRegistrationCSV = 'GetRegistrationCSV',
 	GetPaymentCSV = 'GetPaymentCSV',
 	CreatePayments = 'CreatePayments',
-	SendNotifications = 'SendNotifications',
 }
 
 export const PAYMENT_AMOUNT_SLE = 700;
