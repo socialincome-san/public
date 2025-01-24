@@ -32,7 +32,7 @@ const NewsletterForm = ({ t, lang, translations }: NewsletterForm) => {
 		};
 		api.post('/api/newsletter/subscription/public', body).then((response) => {
 			if (response.status === 200) {
-				if (t.id) {
+				if (t && t.id) {
 					toast.dismiss(t.id);
 				}
 				toast.success(translations.toastSuccess);
