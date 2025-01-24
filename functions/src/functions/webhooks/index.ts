@@ -9,7 +9,6 @@ import {
 import stripeWebhookFunction from './stripe';
 import surveyLoginFunction from './website/survey-login';
 
-export const createDonationCertificates = createDonationCertificatesFunction;
 export const runPaymentProcessTask = paymentProcessFunction;
 export const runPaymentForecastTask = paymentForecastFunction;
 
@@ -18,5 +17,6 @@ export const addMissingAmountChf = addMissingAmountChfFunction;
 export const createAllSurveys = createAllSurveysFunction;
 
 export const stripeChargeHook = stripeWebhookFunction;
-
 export const getSurveyCredentials = surveyLoginFunction;
+
+export const createDonationCertificatesHook = createDonationCertificatesFunction;

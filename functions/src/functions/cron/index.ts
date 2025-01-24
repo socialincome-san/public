@@ -1,3 +1,4 @@
+import createDonationCertificatesFunction from './donation-certificates';
 import importExchangeRatesFunction from './exchange-rate-import';
 import sendFirstPayoutEmailFunction from './first-payout-email';
 import importPostfinancePaymentsFilesFunction from './postfinance-payments-files-import';
@@ -5,3 +6,4 @@ import importPostfinancePaymentsFilesFunction from './postfinance-payments-files
 export const importPostfinancePaymentsFiles = importPostfinancePaymentsFilesFunction;
 export const importExchangeRates = importExchangeRatesFunction;
 export const sendFirstPayoutEmail = sendFirstPayoutEmailFunction;
+export const createDonationCertificates = createDonationCertificatesFunction;
