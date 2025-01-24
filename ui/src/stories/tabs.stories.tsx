@@ -1,6 +1,6 @@
+import { ChatBubbleLeftIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/tabs';
-import { ChatBubbleLeftIcon, Cog6ToothIcon } from '@heroicons/react/24/outline';
 
 const meta = {
 	title: 'Components/Tabs',
@@ -20,8 +20,8 @@ Component Structure:
 			},
 		},
 		controls: {
-			exclude: ['dir', 'asChild', 'orientation']
-		}
+			exclude: ['dir', 'asChild', 'orientation'],
+		},
 	},
 	argTypes: {
 		defaultValue: {
@@ -38,7 +38,7 @@ Component Structure:
 			action: 'changed',
 			table: {
 				disable: true,
-			}
+			},
 		},
 		className: {
 			control: 'text',
@@ -49,9 +49,9 @@ Component Structure:
 		},
 		dir: {
 			table: {
-				disable: true
-			}
-		}
+				disable: true,
+			},
+		},
 	},
 } satisfies Meta<typeof Tabs>;
 
@@ -96,7 +96,13 @@ export const Basic: StoryObj<BasicStoryProps> = {
 			description: 'Content for the second tab',
 		} as const,
 	},
-	render: ({ tab1Label = 'Tab 1', tab2Label = 'Tab 2', tab1Content = 'Content for Tab 1', tab2Content = 'Content for Tab 2', ...args }) => (
+	render: ({
+		tab1Label = 'Tab 1',
+		tab2Label = 'Tab 2',
+		tab1Content = 'Content for Tab 1',
+		tab2Content = 'Content for Tab 2',
+		...args
+	}) => (
 		<Tabs {...args}>
 			<TabsList>
 				<TabsTrigger value="tab1">{tab1Label}</TabsTrigger>
@@ -114,9 +120,7 @@ interface StyledStoryProps extends React.ComponentProps<typeof Tabs> {
 	contentClassName?: string;
 }
 
-
-export const Styled: StoryObj<StyledStoryProps>
-	= {
+export const Styled: StoryObj<StyledStoryProps> = {
 	args: {
 		defaultValue: 'tab1',
 		listClassName: 'bg-gray-100 p-2 rounded-lg',
@@ -147,9 +151,15 @@ export const Styled: StoryObj<StyledStoryProps>
 	render: ({ listClassName, triggerClassName, contentClassName, ...args }) => (
 		<Tabs {...args}>
 			<TabsList className={listClassName}>
-				<TabsTrigger value="tab1" className={triggerClassName}>Active</TabsTrigger>
-				<TabsTrigger value="tab2" className={triggerClassName}>Settings</TabsTrigger>
-				<TabsTrigger value="tab3" className={triggerClassName} disabled>Disabled</TabsTrigger>
+				<TabsTrigger value="tab1" className={triggerClassName}>
+					Active
+				</TabsTrigger>
+				<TabsTrigger value="tab2" className={triggerClassName}>
+					Settings
+				</TabsTrigger>
+				<TabsTrigger value="tab3" className={triggerClassName} disabled>
+					Disabled
+				</TabsTrigger>
 			</TabsList>
 			<TabsContent value="tab1" className={contentClassName}>
 				Active tab content with custom styling
@@ -189,10 +199,16 @@ export const FullWidth: StoryObj<FullWidthStoryProps> = {
 	},
 	render: ({ gap = 2, ...args }) => (
 		<Tabs {...args}>
-			<TabsList className={`w-full flex justify-between gap-${gap}`}>
-				<TabsTrigger value="tab1" className="flex-1">Messages</TabsTrigger>
-				<TabsTrigger value="tab2" className="flex-1">Notifications</TabsTrigger>
-				<TabsTrigger value="tab3" className="flex-1">Settings</TabsTrigger>
+			<TabsList className={`flex w-full justify-between gap-${gap}`}>
+				<TabsTrigger value="tab1" className="flex-1">
+					Messages
+				</TabsTrigger>
+				<TabsTrigger value="tab2" className="flex-1">
+					Notifications
+				</TabsTrigger>
+				<TabsTrigger value="tab3" className="flex-1">
+					Settings
+				</TabsTrigger>
 			</TabsList>
 			<TabsContent value="tab1">Messages panel content</TabsContent>
 			<TabsContent value="tab2">Notifications panel content</TabsContent>
@@ -241,7 +257,6 @@ export const WithIcons: StoryObj<WithIconsStoryProps> = {
 	),
 };
 
-
 export const WithRichContent: Story = {
 	args: {
 		defaultValue: 'profile',
@@ -261,20 +276,12 @@ export const WithRichContent: Story = {
 			</TabsList>
 			<TabsContent value="profile" className={`space-y-4`}>
 				<h3 className="text-lg font-medium">Profile Settings</h3>
-					<p className="text-muted-foreground text-sm">
-						Update your profile information and preferences.
-					</p>
-				<input
-					type="text"
-					placeholder="Display Name"
-					className="flex h-10 w-full rounded-md border px-3"
-				/>
+				<p className="text-muted-foreground text-sm">Update your profile information and preferences.</p>
+				<input type="text" placeholder="Display Name" className="flex h-10 w-full rounded-md border px-3" />
 			</TabsContent>
 			<TabsContent value="notifications" className={`space-y-4`}>
 				<h3 className="text-lg font-medium">Notification Settings</h3>
-					<p className="text-muted-foreground text-sm">
-						Choose how you want to be notified.
-					</p>
+				<p className="text-muted-foreground text-sm">Choose how you want to be notified.</p>
 				<div className="flex items-center space-x-2">
 					<input type="checkbox" id="emailNotifications" />
 					<label htmlFor="emailNotifications">Email notifications</label>
