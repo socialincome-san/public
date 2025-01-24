@@ -23,7 +23,7 @@ import { cva } from 'class-variance-authority';
  * </Link>
  * 
  * // With arrows
- * <Link href="/internal" className={linkCn({ arrow: true })}>Internal Link</Link>
+ * <Link href="/internal" className={linkCn({ arrow: 'internal' })}>Internal Link</Link>
  * <Link href="https://external.com" className={linkCn({ arrow: 'external' })}>External Link</Link>
  * ```
  * 
