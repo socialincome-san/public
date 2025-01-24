@@ -36,7 +36,7 @@ export function PaymentProcessAction() {
 	const triggerFirebaseFunction = (task: PaymentProcessTaskType) => {
 		const runPaymentProcessTask = httpsCallable<PaymentProcessProps, string>(
 			getFunctions(undefined, DEFAULT_REGION),
-			'runPaymentProcessTask',
+			'webhookPaymentProcessTask',
 		);
 		setIsFunctionRunning(true);
 		runPaymentProcessTask({
