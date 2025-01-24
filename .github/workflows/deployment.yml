@@ -97,7 +97,7 @@ jobs:
         run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only functions --project ${{ inputs.project }}
 
   deploy-rules:
-    name: Deploy rules on Firebase
+    name: Deploy Firestore and Storage rules on Firebase
     runs-on: ubuntu-latest
     if: inputs.component == 'rules'
     steps:
@@ -112,4 +112,6 @@ jobs:
           firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
       - name: Deploy on Firebase (${{ inputs.project }})
-        run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only firestore:rules --project ${{ inputs.project }}
+        run: |
+          GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only firestore:rules --project ${{ inputs.project }}
+          GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only storage:rules --project ${{ inputs.project }}
