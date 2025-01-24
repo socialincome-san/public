@@ -7,15 +7,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input } from '@socialincome/ui';
 import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
+import toast, { Toast } from 'react-hot-toast';
 import * as z from 'zod';
 
 type NewsletterForm = {
 	lang: LanguageCode;
+	t?: Toast;
 	translations: NewsletterPopupTranslations;
 };
 
-const NewsletterForm = ({ lang, translations }: NewsletterForm) => {
+const NewsletterForm = ({ t, lang, translations }: NewsletterForm) => {
 	const api = useApi();
 	const formSchema = z.object({ email: z.string().email() });
 	type FormSchema = z.infer<typeof formSchema>;
@@ -31,7 +32,9 @@ const NewsletterForm = ({ lang, translations }: NewsletterForm) => {
 		};
 		api.post('/api/newsletter/subscription/public', body).then((response) => {
 			if (response.status === 200) {
-				toast.dismiss(t.id);
+				if (t.id) {
+					toast.dismiss(t.id);
+				}
 				toast.success(translations.toastSuccess);
 			} else {
 				toast.error(translations.toastFailure);
