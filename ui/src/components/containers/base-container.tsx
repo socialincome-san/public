@@ -1,8 +1,7 @@
 import React from 'react';
 import { twMerge } from 'tailwind-merge';
-import { BackgroundColor } from '../../interfaces/color';
 
-type BaseContainerProps = {
+export type BaseContainerProps = {
 	wrapperClassName?: string;
 	wrapperRef?: React.Ref<HTMLDivElement>;
     baseClassNames?: string;

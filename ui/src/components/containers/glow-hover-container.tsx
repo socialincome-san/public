@@ -4,15 +4,10 @@ import React from "react";
 import {useGlowHover} from "../use-glow-hover";
 import {twMerge} from "tailwind-merge";
 import {BaseContainer} from "./base-container";
-import {BackgroundColor} from "../../interfaces/color";
 
-type BaseContainerProps = {
-    backgroundColor?: BackgroundColor;
-    wrapperClassName?: string;
-    wrapperRef?: React.Ref<HTMLDivElement>;
-} & React.HTMLAttributes<HTMLDivElement>;
+import { BaseContainerProps } from './base-container';
 
-export const GLowHoverContainer = React.forwardRef<HTMLDivElement, Omit<BaseContainerProps, 'wrapperRef'>>(
+export const GlowHoverContainer = React.forwardRef<HTMLDivElement, Omit<BaseContainerProps, 'wrapperRef'>>(
     ({ className, ...props }, ref) => {
         const refCard = useGlowHover({ lightColor: '#CEFF00' });
 

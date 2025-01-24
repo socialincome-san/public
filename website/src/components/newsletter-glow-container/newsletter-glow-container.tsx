@@ -1,7 +1,7 @@
 'use client'
 
 import {
-    GLowHoverContainer,
+    GlowHoverContainer,
     Typography
 } from "@socialincome/ui";
 
@@ -10,7 +10,7 @@ import NewsletterForm from "@/components/newsletter-form/newsletter-form";
 const NewsletterGlowContainer = ({ title, formTranslations }) => {
 
     return (
-        <GLowHoverContainer>
+        <GlowHoverContainer>
             <div className="flex flex-col items-center py-12">
                 <div className="flex flex-col align-center">
                     <Typography size="2xl" color="foreground" weight="medium">
@@ -21,7 +21,7 @@ const NewsletterGlowContainer = ({ title, formTranslations }) => {
                     <NewsletterForm translations={formTranslations} />
                 </div>
             </div>
-        </GLowHoverContainer>
+        </GlowHoverContainer>
     );
 };
 
