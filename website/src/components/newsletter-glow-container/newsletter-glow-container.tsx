@@ -4,7 +4,7 @@ import { GlowHoverContainer, Typography } from '@socialincome/ui';
 
 import NewsletterForm from '@/components/newsletter-form/newsletter-form';
 
-const NewsletterGlowContainer = ({ title, t, lang, formTranslations }) => {
+const NewsletterGlowContainer = ({ title, lang, formTranslations }) => {
 	return (
 		<GlowHoverContainer>
 			<div className="flex flex-col items-center py-12">
@@ -14,7 +14,7 @@ const NewsletterGlowContainer = ({ title, t, lang, formTranslations }) => {
 					</Typography>
 				</div>
 				<div className="mt-8 flex w-full justify-center sm:w-full md:max-w-md">
-					<NewsletterForm lang={lang} t={t} translations={formTranslations} />
+					<NewsletterForm lang={lang} translations={formTranslations} />
 				</div>
 			</div>
 		</GlowHoverContainer>
