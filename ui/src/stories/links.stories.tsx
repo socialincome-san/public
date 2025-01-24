@@ -1,6 +1,6 @@
 import { LinkIcon } from '@heroicons/react/24/outline';
 import type { Meta, StoryObj } from '@storybook/react';
-import { linkCn } from '../components/typography/links';
+import { linkCn } from '../components/typography';
 
 const meta = {
 	title: 'Typography/Links',
@@ -23,7 +23,7 @@ interface LinkStoryProps {
 	size?: 'inherit' | 'sm' | 'md' | 'lg' | 'xl' | '4xl';
 	underline?: 'none' | 'hover' | 'always';
 	icon?: boolean;
-	arrow?: boolean | 'external';
+	arrow?: false | 'internal' | 'external';
 }
 
 type Story = StoryObj<typeof meta & { args: LinkStoryProps }>;

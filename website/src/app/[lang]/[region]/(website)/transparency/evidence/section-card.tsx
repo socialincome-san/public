@@ -52,7 +52,7 @@ export function SectionCard({ translations: { card, takeAction } }: SectionCardP
 							{paragraph.map((fragment, key) => (
 								<span key={key}>
 									{fragment.href ? (
-										<Link href={fragment.href} className={linkCn({ variant: 'muted' })}>
+										<Link href={fragment.href} className={linkCn()}>
 											{fragment.text}
 										</Link>
 									) : (
