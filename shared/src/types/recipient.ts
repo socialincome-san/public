@@ -1,7 +1,7 @@
-import { DateTime } from 'luxon';
-import { Timestamp } from './timestamp';
 import { DocumentReference } from 'firebase-admin/firestore';
+import { DateTime } from 'luxon';
 import { PartnerOrganisation } from './partner-organisation';
+import { Timestamp } from './timestamp';
 
 export const RECIPIENT_FIRESTORE_PATH = 'recipients';
 
