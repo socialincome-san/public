@@ -106,7 +106,7 @@ function FundraiserBadge({ fundRaiserTranslation }: FundRaiserBadgeType) {
 	return (
 		<HoverCard>
 			<HoverCardTrigger>
-				<Badge className="bg-accent text-primary hover:bg-accent bg-opacity-50 hover:bg-opacity-100 hover:text-white">
+				<Badge variant="accent">
 					<Typography size="sm" weight="normal" className="text-inherit">
 						{fundRaiserTranslation}
 					</Typography>

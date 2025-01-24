@@ -1,3 +1,4 @@
+import { DocumentReference } from 'firebase-admin/firestore';
 import { DateTime } from 'luxon';
 import { Timestamp } from './timestamp';
 
@@ -34,7 +35,7 @@ export type Recipient = {
 		phone: number;
 		has_whatsapp: boolean;
 	};
-	organisation: string;
+	organisation: DocumentReference;
 	om_uid?: number;
 	profession?: string;
 	progr_status: RecipientProgramStatus;

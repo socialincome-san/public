@@ -10,7 +10,9 @@ import {
 	NgoEntryJSON,
 	NgoHoverCardType,
 } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
+import { firestoreAdmin } from '@/firebase-admin';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { RecipientStatsCalculator } from '@socialincome/shared/src/utils/stats/RecipientStatsCalculator';
 import { CH, SL } from 'country-flag-icons/react/1x1';
 import { ReactElement } from 'react';
 
@@ -38,13 +40,17 @@ export async function NgoList({ lang, region }: DefaultParams) {
 	});
 	const ngoCardPropsArray: NgoCardProps[] = [];
 
+	const recipientCalculator = await RecipientStatsCalculator.build(firestoreAdmin);
+
 	for (let i = 0; i < ngoArray.length; ++i) {
+		const recipientStats = recipientCalculator.allStats(ngoArray[i]['firestore-id']);
+
 		const recipientsBadge: RecipientsBadgeType = {
 			hoverCardOrgName: ngoArray[i]['org-long-name'],
-			hoverCardTotalRecipients: ngoArray[i]['recipients-total'],
-			hoverCardTotalActiveRecipients: ngoArray[i]['recipients-active'],
-			hoverCardTotalFormerRecipients: ngoArray[i]['recipients-former'],
-			hoverCardTotalSuspendedRecipients: ngoArray[i]['recipients-suspend'],
+			hoverCardTotalRecipients: recipientStats.totalRecipientsByOrganization.total,
+			hoverCardTotalActiveRecipients: recipientStats.totalRecipientsByOrganization.active,
+			hoverCardTotalFormerRecipients: recipientStats.totalRecipientsByOrganization.former,
+			hoverCardTotalSuspendedRecipients: recipientStats.totalRecipientsByOrganization.suspended,
 			translatorBadgeRecipients: '',
 			translatorBadgeRecipientsBy: '',
 			translatorBadgeActive: '',

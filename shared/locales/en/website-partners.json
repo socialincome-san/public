@@ -41,6 +41,7 @@
 		"sierra-leone-association-of-ebola-survivors"
 	],
 	"aurora-foundation": {
+		"firestore-id": "aurora",
 		"org-slug": "aurora-foundation",
 		"org-short-name": "Aurora Foundation",
 		"org-long-name": "Aurora Foundation",
@@ -51,10 +52,6 @@
 		"org-category": "International NGO",
 		"org-focus-sdg-numbers": [1, 8],
 		"partnership-start": "2020",
-		"recipients-total": "42",
-		"recipients-active": "20",
-		"recipients-former": "22",
-		"recipients-suspended": "0",
 		"org-mission": "The NGO encourages creativity and helps people improve their lives and communities through development and cultural projects.",
 		"org-description-paragraphs": [
 			[
@@ -100,6 +97,7 @@
 		"org-facebook": "https://www.facebook.com/aurorafoundationofficial/"
 	},
 	"jamil-&-nyanga-jaward-foundation": {
+		"firestore-id": "jamil",
 		"org-slug": "jamil-&-nyanga-jaward-foundation",
 		"org-short-name": "JNJF",
 		"org-long-name": "Jamil & Nyanga Jaward Foundation",
@@ -110,10 +108,6 @@
 		"org-category": "Local NGO",
 		"org-focus-sdg-numbers": [1, 5],
 		"partnership-start": "2021",
-		"recipients-total": "35",
-		"recipients-active": "28",
-		"recipients-former": "7",
-		"recipients-suspended": "0",
 		"org-mission": "The NGO provides widows and children in need with education, support, and opportunities to build better futures.",
 		"org-description-paragraphs": [
 			[
@@ -147,6 +141,7 @@
 		"org-linkedin": "https://www.linkedin.com/company/the-jamil-nyanga-jaward-foundation/"
 	},
 	"reachout-salone": {
+		"firestore-id": "reachout",
 		"org-slug": "reachout-salone",
 		"org-short-name": "Reachout Salone",
 		"org-long-name": "Reachout Salone",
@@ -157,10 +152,6 @@
 		"org-category": "Local NGO",
 		"org-focus-sdg-numbers": [1, 5],
 		"partnership-start": "2021",
-		"recipients-total": "36",
-		"recipients-active": "12",
-		"recipients-former": "24",
-		"recipients-suspended": "0",
 		"org-mission": "The NGO empowers coastal communities, providing young people with the support and opportunities needed to break the cycle of poverty and build brighter futures.",
 		"org-description-paragraphs": [
 			[
@@ -192,6 +183,7 @@
 		"org-youtube": "https://www.youtube.com/@reachoutsalone8395"
 	},
 	"equal-rights-alliance": {
+		"firestore-id": "equal_rights",
 		"org-slug": "equal-rights-alliance",
 		"org-short-name": "Equal Rights Alliance",
 		"org-long-name": "Equal Rights Alliance",
@@ -202,10 +194,6 @@
 		"org-category": "Local NGO",
 		"org-focus-sdg-numbers": [3, 10],
 		"partnership-start": "2022",
-		"recipients-total": "13",
-		"recipients-active": "13",
-		"recipients-former": "0",
-		"recipients-suspended": "0",
 		"org-mission": "The NGO advances human rights by increasing awareness and understanding of equal rights, inclusion, and social justice within communities.",
 		"org-description-paragraphs": [
 			[
@@ -236,6 +224,7 @@
 		"org-facebook": "https://www.facebook.com/groups/693921621002955/"
 	},
 	"united-polio-brothers-and-sisters": {
+		"firestore-id": "united_polio",
 		"org-slug": "united-polio-brothers-and-sisters",
 		"org-short-name": "United Polio Brothers and Sisters",
 		"org-long-name": "United Polio Brothers and Sisters",
@@ -246,10 +235,6 @@
 		"org-category": "Local NGO",
 		"org-focus-sdg-numbers": [1, 8],
 		"partnership-start": "2022",
-		"recipients-total": "10",
-		"recipients-active": "10",
-		"recipients-former": "0",
-		"recipients-suspended": "0",
 		"org-mission": "The NGO supports disabled and vulnerable individuals by providing housing, training, and resources to improve their lives and uphold their dignity.",
 		"org-description-paragraphs": [
 			[
@@ -279,6 +264,7 @@
 		"org-photo": ""
 	},
 	"sierra-leone-association-of-ebola-survivors": {
+		"firestore-id": "slaes",
 		"org-slug": "sierra-leone-association-of-ebola-survivors",
 		"org-short-name": "SLAES",
 		"org-long-name": "Sierra Leone Association of Ebola Survivors",
@@ -289,10 +275,6 @@
 		"org-category": "Local NGO",
 		"org-focus-sdg-numbers": [4, 5],
 		"partnership-start": "2024",
-		"recipients-total": "20",
-		"recipients-active": "17",
-		"recipients-former": "2",
-		"recipients-suspended": "1",
 		"org-mission": "The community-based NGO supports individuals who have survived the Ebola virus, focusing on those affected by the devastating 2014 outbreak in Sierra Leone.",
 		"org-description-paragraphs": [
 			[
