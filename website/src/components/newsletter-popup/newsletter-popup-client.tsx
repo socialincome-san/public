@@ -62,7 +62,7 @@ const NewsletterPopupToast = ({ lang, translations, t, onClose }: NewsletterPopu
 		>
 			<XMarkIcon className="absolute right-0 top-0 m-1 h-5 w-5 cursor-pointer" onClick={onClose} />
 			<Typography>{translations.informationLabel}</Typography>
-			<NewsletterForm translations={translations} />
+			<NewsletterForm lang={lang} t={t} translations={translations} />
 		</div>
 	);
 };

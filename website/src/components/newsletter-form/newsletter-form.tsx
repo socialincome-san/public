@@ -8,7 +8,7 @@ import {CreateNewsletterSubscription} from '@/app/api/newsletter/subscription/pu
 import toast from 'react-hot-toast';
 import {Button, Form, FormControl, FormField, FormItem, FormMessage, Input} from '@socialincome/ui';
 
-const NewsletterForm = ({ lang, t, translations }) => {
+const NewsletterForm = ({ lang, translations }) => {
     const api = useApi();
     const formSchema = z.object({ email: z.string().email() });
     type FormSchema = z.infer<typeof formSchema>;

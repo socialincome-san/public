@@ -273,6 +273,7 @@ export default async function Page({ params }: CampaignPageProps) {
 			)}
 			<NewsletterGlowContainer
 				title={translator.t('campaign.information-label')}
+				lang={params.lang}
 				formTranslations={{
 					informationLabel: translator.t('popup.information-label'),
 					toastSuccess: translator.t('popup.toast-success'),

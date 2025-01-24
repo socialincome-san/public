@@ -7,7 +7,7 @@ import {
 
 import NewsletterForm from "@/components/newsletter-form/newsletter-form";
 
-const NewsletterGlowContainer = ({ title, formTranslations }) => {
+const NewsletterGlowContainer = ({ title, t, lang, formTranslations }) => {
 
     return (
         <GlowHoverContainer>
@@ -18,7 +18,7 @@ const NewsletterGlowContainer = ({ title, formTranslations }) => {
                     </Typography>
                 </div>
                 <div className="flex sm:w-full md:max-w-md w-full justify-center mt-8">
-                    <NewsletterForm translations={formTranslations} />
+                    <NewsletterForm lang={lang} t={t} translations={formTranslations} />
                 </div>
             </div>
         </GlowHoverContainer>
