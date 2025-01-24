@@ -1,10 +1,18 @@
 'use client';
 
 import { GlowHoverContainer, Typography } from '@socialincome/ui';
+import { LanguageCode } from '@socialincome/shared/src/types/language';
 
 import NewsletterForm from '@/components/newsletter-form/newsletter-form';
+import { NewsletterPopupTranslations } from "@/components/newsletter-popup/newsletter-popup-client";
 
-const NewsletterGlowContainer = ({ title, lang, formTranslations }) => {
+type NewsletterForm = {
+	title: string;
+	lang: LanguageCode;
+	formTranslations: NewsletterPopupTranslations
+};
+
+const NewsletterGlowContainer = ({ title, lang, formTranslations }: NewsletterForm) => {
 	return (
 		<GlowHoverContainer>
 			<div className="flex flex-col items-center py-12">
