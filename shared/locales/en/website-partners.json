@@ -32,16 +32,8 @@
 		"fundraiser": "Fundraiser",
 		"permalink": "Permalink"
 	},
-	"ngos": [
-		"aurora-foundation",
-		"jamil-&-nyanga-jaward-foundation",
-		"reachout-salone",
-		"equal-rights-alliance",
-		"united-polio-brothers-and-sisters",
-		"sierra-leone-association-of-ebola-survivors"
-	],
-	"aurora-foundation": {
-		"firestore-id": "aurora",
+	"ngos": ["aurora", "jamil", "reachout", "equal-rights", "united-polio", "slaes"],
+	"aurora": {
 		"org-slug": "aurora-foundation",
 		"org-short-name": "Aurora Foundation",
 		"org-long-name": "Aurora Foundation",
@@ -96,8 +88,7 @@
 		"org-instagram": "https://www.instagram.com/aurorafoundation_official/?hl=en",
 		"org-facebook": "https://www.facebook.com/aurorafoundationofficial/"
 	},
-	"jamil-&-nyanga-jaward-foundation": {
-		"firestore-id": "jamil",
+	"jamil": {
 		"org-slug": "jamil-&-nyanga-jaward-foundation",
 		"org-short-name": "JNJF",
 		"org-long-name": "Jamil & Nyanga Jaward Foundation",
@@ -140,8 +131,7 @@
 		"org-facebook": "https://www.facebook.com/JNJFoundation",
 		"org-linkedin": "https://www.linkedin.com/company/the-jamil-nyanga-jaward-foundation/"
 	},
-	"reachout-salone": {
-		"firestore-id": "reachout",
+	"reachout": {
 		"org-slug": "reachout-salone",
 		"org-short-name": "Reachout Salone",
 		"org-long-name": "Reachout Salone",
@@ -182,8 +172,7 @@
 		"org-facebook": "https://www.facebook.com/profile.php?id=100070050743284&sk=about_details",
 		"org-youtube": "https://www.youtube.com/@reachoutsalone8395"
 	},
-	"equal-rights-alliance": {
-		"firestore-id": "equal_rights",
+	"equal-rights": {
 		"org-slug": "equal-rights-alliance",
 		"org-short-name": "Equal Rights Alliance",
 		"org-long-name": "Equal Rights Alliance",
@@ -223,8 +212,7 @@
 		"org-photo": "",
 		"org-facebook": "https://www.facebook.com/groups/693921621002955/"
 	},
-	"united-polio-brothers-and-sisters": {
-		"firestore-id": "united_polio",
+	"united-polio": {
 		"org-slug": "united-polio-brothers-and-sisters",
 		"org-short-name": "United Polio Brothers and Sisters",
 		"org-long-name": "United Polio Brothers and Sisters",
@@ -263,8 +251,7 @@
 		"org-quote-author": "Paul Osman Kabia",
 		"org-photo": ""
 	},
-	"sierra-leone-association-of-ebola-survivors": {
-		"firestore-id": "slaes",
+	"slaes": {
 		"org-slug": "sierra-leone-association-of-ebola-survivors",
 		"org-short-name": "SLAES",
 		"org-long-name": "Sierra Leone Association of Ebola Survivors",

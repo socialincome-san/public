@@ -43,7 +43,6 @@ type NgoCardProps = {
 };
 
 type NgoEntryJSON = {
-	'firestore-id'?: string;
 	'org-image': string;
 	'org-slug': string;
 	'org-short-name': string;

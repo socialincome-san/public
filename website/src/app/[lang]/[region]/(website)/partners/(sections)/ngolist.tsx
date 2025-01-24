@@ -43,7 +43,7 @@ export async function NgoList({ lang, region }: DefaultParams) {
 	const recipientCalculator = await RecipientStatsCalculator.build(firestoreAdmin);
 
 	for (let i = 0; i < ngoArray.length; ++i) {
-		const recipientStats = recipientCalculator.allStats(ngoArray[i]['firestore-id']);
+		const recipientStats = recipientCalculator.allStats(ngos[i]);
 
 		const recipientsBadge: RecipientsBadgeType = {
 			hoverCardOrgName: ngoArray[i]['org-long-name'],
