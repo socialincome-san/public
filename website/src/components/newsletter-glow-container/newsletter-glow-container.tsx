@@ -6,13 +6,13 @@ import { LanguageCode } from '@socialincome/shared/src/types/language';
 import NewsletterForm from '@/components/newsletter-form/newsletter-form';
 import { NewsletterPopupTranslations } from "@/components/newsletter-popup/newsletter-popup-client";
 
-type NewsletterForm = {
+type NewsletterGlowContainerProps = {
 	title: string;
 	lang: LanguageCode;
 	formTranslations: NewsletterPopupTranslations
 };
 
-const NewsletterGlowContainer = ({ title, lang, formTranslations }: NewsletterForm) => {
+const NewsletterGlowContainer = ({ title, lang, formTranslations }: NewsletterGlowContainerProps) => {
 	return (
 		<GlowHoverContainer>
 			<div className="flex flex-col items-center py-12">
