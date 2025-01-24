@@ -53,7 +53,7 @@ export function SectionCard({ translations: { card, takeAction } }: SectionCardP
 								<span key={key}>
 									{fragment.href ? (
 										<Link href={fragment.href} className={linkCn({ variant: 'muted' })}>
-												{fragment.text}
+											{fragment.text}
 										</Link>
 									) : (
 										<Typography as="span">{fragment.text}</Typography>
