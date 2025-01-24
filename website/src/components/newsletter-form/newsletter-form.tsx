@@ -10,13 +10,13 @@ import { useForm } from 'react-hook-form';
 import toast, { Toast } from 'react-hot-toast';
 import * as z from 'zod';
 
-type NewsletterForm = {
+type NewsletterFormProps = {
 	lang: LanguageCode;
 	t?: Toast;
 	translations: NewsletterPopupTranslations;
 };
 
-const NewsletterForm = ({ t, lang, translations }: NewsletterForm) => {
+const NewsletterForm = ({ t, lang, translations }: NewsletterFormProps) => {
 	const api = useApi();
 	const formSchema = z.object({ email: z.string().email() });
 	type FormSchema = z.infer<typeof formSchema>;
