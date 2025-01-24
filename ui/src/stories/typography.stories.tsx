@@ -23,7 +23,7 @@ const FONT_COLORS: FontColor[] = [
 ];
 
 const meta = {
-	title: 'Components/Typography',
+	title: 'Typography/Texts and Headers',
 	component: Typography,
 	tags: ['autodocs'],
 } satisfies Meta<typeof Typography>;
