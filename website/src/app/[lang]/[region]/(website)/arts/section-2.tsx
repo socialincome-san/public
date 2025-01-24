@@ -12,7 +12,7 @@ export default async function Section2({ params }: DefaultPageProps) {
 	const cards = translator.t<CardTranslation[]>(`section-2.cards`);
 
 	return (
-		<BaseContainer backgroundColor="bg-yellow-50" className="flex flex-col space-y-1 py-16 md:px-20">
+		<BaseContainer baseClassNames="bg-yellow-50" className="flex flex-col space-y-1 py-16 md:px-20">
 			<Typography size="xl" weight="medium" color="muted-foreground">
 				{translator.t(`section-2.topic`)}
 			</Typography>

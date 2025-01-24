@@ -3,11 +3,20 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useSubscriptions } from '@/app/[lang]/[region]/(website)/me/hooks';
 import { BillingPortalButton } from '@/app/[lang]/[region]/(website)/me/subscriptions/billing-portal-button';
-import { SpinnerIcon } from '@/components/logos/spinner-icon';
 import { useTranslator } from '@/hooks/useTranslator';
 import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import { toDateTime } from '@socialincome/shared/src/utils/date';
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Typography } from '@socialincome/ui';
+import {
+	Button,
+	SpinnerIcon,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+	Typography,
+} from '@socialincome/ui';
 import Link from 'next/link';
 
 type SubscriptionsTableProps = {

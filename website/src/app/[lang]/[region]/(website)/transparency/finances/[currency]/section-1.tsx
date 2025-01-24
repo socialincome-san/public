@@ -40,7 +40,7 @@ export async function Section1({ params, paymentStats, contributionStats, recipi
 								},
 							})}
 						</Typography>
-						<Badge variant="accent">
+						<Badge variant="interactive-accent">
 							<Typography size="sm" weight="normal">
 								{translator.t('section-1.activeRecipients', {
 									context: {
