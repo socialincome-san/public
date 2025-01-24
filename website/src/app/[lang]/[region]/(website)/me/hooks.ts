@@ -1,8 +1,11 @@
 import { UserContext } from '@/components/providers/user-context-provider';
 import { useApi } from '@/hooks/useApi';
-import { orderBy } from '@firebase/firestore';
+import { orderBy, Query, QuerySnapshot } from '@firebase/firestore';
 import { CONTRIBUTION_FIRESTORE_PATH, StatusKey } from '@socialincome/shared/src/types/contribution';
-import { DONATION_CERTIFICATE_FIRESTORE_PATH } from '@socialincome/shared/src/types/donation-certificate';
+import {
+	DONATION_CERTIFICATE_FIRESTORE_PATH,
+	DonationCertificate,
+} from '@socialincome/shared/src/types/donation-certificate';
 import { Employer, EMPLOYERS_FIRESTORE_PATH } from '@socialincome/shared/src/types/employers';
 import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -56,21 +59,26 @@ export const useSubscriptions = () => {
 	return { subscriptions, isLoading, error };
 };
 
-export const useDonationCertificates = () => {
+export const useDonationCertificates = (): {
+	donationCertificates: QuerySnapshot<DonationCertificate> | undefined;
+	isLoading: boolean;
+	error: Error | null;
+} => {
 	const firestore = useFirestore();
 	const user = useUser();
+
 	const {
 		data: donationCertificates,
 		isLoading,
 		error,
-	} = useQuery({
+	} = useQuery<QuerySnapshot<DonationCertificate>>({
 		queryKey: ['me', 'donation-certificates'],
 		queryFn: () =>
 			getDocs(
 				query(
-					collection(firestore, USER_FIRESTORE_PATH, user.id, DONATION_CERTIFICATE_FIRESTORE_PATH),
+					collection(firestore, user.ref.path, DONATION_CERTIFICATE_FIRESTORE_PATH),
 					orderBy('year', 'desc'),
-				),
+				) as Query<DonationCertificate>,
 			),
 	});
 	return { donationCertificates, isLoading, error };

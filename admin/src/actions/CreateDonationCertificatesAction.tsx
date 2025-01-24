@@ -16,7 +16,7 @@ import { getFunctions, httpsCallable } from 'firebase/functions';
 import { CollectionActionsProps, useAuthController, useSnackbarController } from 'firecms';
 import _ from 'lodash';
 import React from 'react';
-import { CreateDonationCertificatesFunctionProps } from '../../../functions/src/webhooks/admin/donation-certificates';
+import { CreateDonationCertificatesProps } from '../../../functions/src/lib/donation-certificates';
 
 const style = {
 	position: 'absolute' as 'absolute',
@@ -44,7 +44,7 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 	if (!isGlobalAdmin) return null;
 
 	const functions = getFunctions(undefined, DEFAULT_REGION);
-	const createDonationCertificatesFunction = httpsCallable<CreateDonationCertificatesFunctionProps, string>(
+	const createDonationCertificatesFunction = httpsCallable<CreateDonationCertificatesProps, string>(
 		functions,
 		'createDonationCertificates',
 	);
@@ -54,8 +54,7 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 		if ((year && selectedEntities?.length > 0) || createAll) {
 			createDonationCertificatesFunction({
 				year: year,
-				userIds: selectedEntities,
-				createAll: createAll,
+				userIds: selectedEntities.length > 0 ? selectedEntities : undefined,
 			})
 				.then((result) => {
 					snackbarController.open({
