@@ -1,18 +1,18 @@
 'use client';
 
 import { CreateNewsletterSubscription } from '@/app/api/newsletter/subscription/public/route';
+import { NewsletterPopupTranslations } from '@/components/newsletter-popup/newsletter-popup-client';
 import { useApi } from '@/hooks/useApi';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input } from '@socialincome/ui';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
-import {LanguageCode} from "@socialincome/shared/src/types/language";
-import {NewsletterPopupTranslations} from "@/components/newsletter-popup/newsletter-popup-client";
 
 type NewsletterForm = {
 	lang: LanguageCode;
-	translations: NewsletterPopupTranslations
+	translations: NewsletterPopupTranslations;
 };
 
 const NewsletterForm = ({ lang, translations }:NewsletterForm) => {
