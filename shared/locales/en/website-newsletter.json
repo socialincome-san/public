@@ -25,5 +25,8 @@
 		"toast-failure": "Something went wrong. Try again or contact us at hello@socialincome.org",
 		"email-placeholder": "Your email",
 		"button-subscribe": "Subscribe now"
+	},
+	"campaign": {
+		"information-label": "Get updates from the fundraiser and Social Income."
 	}
 }

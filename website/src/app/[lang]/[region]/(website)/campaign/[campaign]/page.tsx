@@ -28,6 +28,8 @@ import {
 import { Progress } from '@socialincome/ui/src/components/progress';
 import Link from 'next/link';
 
+import NewsletterGlowContainer from '@/components/newsletter-glow-container/newsletter-glow-container';
+
 export type CampaignPageProps = {
 	params: {
 		country: WebsiteRegion;
@@ -64,7 +66,7 @@ export async function generateMetadata({ params }: CampaignPageProps) {
 export default async function Page({ params }: CampaignPageProps) {
 	const translator = await Translator.getInstance({
 		language: params.lang,
-		namespaces: ['website-campaign', 'website-donate', 'website-videos', 'website-faq'],
+		namespaces: ['website-campaign', 'website-donate', 'website-videos', 'website-faq', 'website-newsletter'],
 	});
 
 	const campaignDoc = await firestoreAdmin.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH).doc(params.campaign).get();
@@ -269,6 +271,16 @@ export default async function Page({ params }: CampaignPageProps) {
 					</div>
 				</BaseContainer>
 			)}
+			<NewsletterGlowContainer
+				title={translator.t('campaign.information-label')}
+				formTranslations={{
+					informationLabel: translator.t('popup.information-label'),
+					toastSuccess: translator.t('popup.toast-success'),
+					toastFailure: translator.t('popup.toast-failure'),
+					emailPlaceholder: translator.t('popup.email-placeholder'),
+					buttonAddSubscriber: translator.t('popup.button-subscribe'),
+				}}
+			/>
 			<BaseContainer>
 				<div className="grid grid-cols-1 gap-20 py-8 lg:grid-cols-2 lg:py-16">
 					<div>
