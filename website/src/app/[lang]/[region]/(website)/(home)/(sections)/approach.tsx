@@ -25,7 +25,6 @@ export async function Approach({ lang }: DefaultParams) {
 			<div className="mx-auto flex w-full max-w-7xl flex-wrap gap-2">
 				{cards.map((card) => (
 					<Card
-						hasGlowHover
 						key={card.title}
 						className="theme-blue mx-auto min-w-80 max-w-md flex-1 rounded-none border-none"
 					>
