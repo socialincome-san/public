@@ -7,16 +7,15 @@ import {
 	createAllSurveysFunction,
 } from './admin/scripts';
 import stripeWebhookFunction from './stripe';
-import surveyLoginFunction from './website/survey-login';
 
-export const createDonationCertificates = createDonationCertificatesFunction;
-export const runPaymentProcessTask = paymentProcessFunction;
-export const runPaymentForecastTask = paymentForecastFunction;
+export const webhookPaymentProcessTask = paymentProcessFunction;
+export const webhookPaymentForecastTask = paymentForecastFunction;
 
-export const batchImportStripeCharges = batchImportStripeChargesFunction;
-export const addMissingAmountChf = addMissingAmountChfFunction;
-export const createAllSurveys = createAllSurveysFunction;
+export const webhookBatchImportStripeCharges = batchImportStripeChargesFunction;
+export const webhookAddMissingAmountChf = addMissingAmountChfFunction;
+export const webhookCreateAllSurveys = createAllSurveysFunction;
 
-export const stripeChargeHook = stripeWebhookFunction;
+// Do not rename this function, it is used by the Stripe webhook.
+export const webhookStripeCharge = stripeWebhookFunction;
 
-export const getSurveyCredentials = surveyLoginFunction;
+export const webhookCreateDonationCertificates = createDonationCertificatesFunction;

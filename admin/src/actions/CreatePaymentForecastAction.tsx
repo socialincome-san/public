@@ -7,7 +7,7 @@ export function CreatePaymentForecastAction() {
 	const snackbarController = useSnackbarController();
 
 	const createPaymentForecast = () => {
-		const runPaymentForecastTask = httpsCallable(getFunctions(undefined, DEFAULT_REGION), 'runPaymentForecastTask');
+		const runPaymentForecastTask = httpsCallable(getFunctions(undefined, DEFAULT_REGION), 'webhookPaymentForecastTask');
 		runPaymentForecastTask()
 			.then((result) => {
 				snackbarController.open({ type: 'success', message: 'Payment forecast updated successfully' });

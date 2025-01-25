@@ -46,7 +46,7 @@ export function CreateDonationCertificatesAction({ selectionController }: Collec
 	const functions = getFunctions(undefined, DEFAULT_REGION);
 	const createDonationCertificatesFunction = httpsCallable<CreateDonationCertificatesProps, string>(
 		functions,
-		'createDonationCertificates',
+		'webhookCreateDonationCertificates',
 	);
 
 	const onClick = () => {

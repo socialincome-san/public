@@ -1,3 +1,3 @@
 import onPostfinancePaymentsFileCreatedFunction from './postfinance-payments-files';
 
-export const onPostfinancePaymentsFileUploaded = onPostfinancePaymentsFileCreatedFunction;
+export const storagePostfinancePaymentsFileUploaded = onPostfinancePaymentsFileCreatedFunction;

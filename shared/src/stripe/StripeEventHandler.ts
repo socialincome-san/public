@@ -11,8 +11,8 @@ import {
 	StripeContribution,
 } from '../types/contribution';
 import { CountryCode } from '../types/country';
-import { Currency, bestGuessCurrency } from '../types/currency';
-import { USER_FIRESTORE_PATH, User, splitName } from '../types/user';
+import { bestGuessCurrency, Currency } from '../types/currency';
+import { splitName, User, USER_FIRESTORE_PATH } from '../types/user';
 
 export class StripeEventHandler {
 	readonly stripe: Stripe;
