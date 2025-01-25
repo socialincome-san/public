@@ -3,12 +3,12 @@ import { DateTime } from 'luxon';
 import { PaymentProcessTaskType } from '../../../../../../../shared/src/types/payment';
 import { toPaymentDate } from '../../../../../../../shared/src/types/recipient';
 import { initializeGlobalTestData } from '../../../../../firebase';
-import { runPaymentProcessTask } from '../../../index';
+import { webhookPaymentProcessTask } from '../../../index';
 
 const projectId = 'registration-csv-task-test';
 const testEnv = functionsTest({ projectId });
 const paymentDate = toPaymentDate(DateTime.fromObject({ year: 2023, month: 4, day: 15 }, { zone: 'utc' }));
-const triggerFunction = testEnv.wrap(runPaymentProcessTask);
+const triggerFunction = testEnv.wrap(webhookPaymentProcessTask);
 
 beforeEach(async () => {
 	await initializeGlobalTestData(projectId);

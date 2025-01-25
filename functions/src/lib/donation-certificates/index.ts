@@ -37,12 +37,17 @@ export async function createDonationCertificates({ year, userIds }: CreateDonati
 				const writer = new DonationCertificateWriter(userDoc, year);
 				const user = userDoc.data() as User;
 
+				if (user.auth_user_id === undefined) {
+					console.info(`User ${userId} has no auth_user_id, skipping donation certificate creation`);
+					return;
+				}
+
 				// The Firebase auth user ID is used in the storage path to check the user's permissions in the storage rules.
-				const storagePath = `users/${user.auth_user_id}/donation-certificates/${year}.pdf`;
+				const destinationFilePath = `users/${user.auth_user_id}/donation-certificates/${year}.pdf`;
 
 				await withFile(async ({ path }) => {
 					await writer.writeDonationCertificatePDF(path);
-					await storageAdmin.uploadFile({ sourceFilePath: path, destinationFilePath: storagePath });
+					await storageAdmin.uploadFile({ sourceFilePath: path, destinationFilePath });
 					await firestoreAdmin
 						.collection(`${USER_FIRESTORE_PATH}/${userId}/${DONATION_CERTIFICATE_FIRESTORE_PATH}`)
 						.doc(`${writer.year}-${user.address.country}`)
@@ -50,7 +55,7 @@ export async function createDonationCertificates({ year, userIds }: CreateDonati
 							{
 								year,
 								country: user.address.country,
-								storage_path: storagePath,
+								storage_path: destinationFilePath,
 							} as DonationCertificate,
 							{ merge: true },
 						);
