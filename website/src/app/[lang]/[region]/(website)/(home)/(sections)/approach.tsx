@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Card, CardContent, CardHeader, Typography } from '@socialincome/ui';
+import { GlowHoverCard, CardContent, CardHeader, Typography } from '@socialincome/ui';
 
 type ApproachCardProps = {
 	category: string;
@@ -24,7 +24,7 @@ export async function Approach({ lang }: DefaultParams) {
 			</Typography>
 			<div className="mx-auto flex w-full max-w-7xl flex-wrap gap-2">
 				{cards.map((card) => (
-					<Card key={card.title} className="theme-blue mx-auto min-w-80 max-w-md flex-1 rounded-none border-none">
+					<GlowHoverCard key={card.title} className="theme-blue mx-auto min-w-80 max-w-md flex-1 rounded-none border-none">
 						<CardHeader className="mb-1">
 							<Typography size="md" className="opacity-40">
 								{card.category}
@@ -44,7 +44,7 @@ export async function Approach({ lang }: DefaultParams) {
 								})}
 							</ul>
 						</CardContent>
-					</Card>
+					</GlowHoverCard>
 				))}
 			</div>
 		</div>
