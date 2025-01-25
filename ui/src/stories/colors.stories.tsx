@@ -106,32 +106,11 @@ export const ColorSystem = () => {
 				<h2 className="mb-8 text-2xl font-bold">Color System</h2>
 
 				<div className="prose mb-8 max-w-none">
-					<p>
-						Our color system is built with accessibility and flexibility in mind. It supports multiple themes (default
-						and blue) and provides consistent color patterns across the application.
-					</p>
 					<h3>Color Values</h3>
 					<p>Colors are defined using HSL (Hue, Saturation, Lightness) values, which provides several benefits:</p>
-					<ul>
-						<li>
-							<strong>Consistent Relationships:</strong> Colors maintain their relationships across themes
-						</li>
-						<li>
-							<strong>Intuitive Adjustments:</strong> Easy to create variations by adjusting saturation and lightness
-						</li>
-						<li>
-							<strong>Semantic Understanding:</strong> HSL values are more intuitive to understand and modify than hex
-							codes
-						</li>
-					</ul>
 					<p>
 						Example: Primary color in default theme is defined as <code>--primary: 212 57% 47%</code> where:
 					</p>
-					<ul>
-						<li>212 is the hue (blue)</li>
-						<li>57% is the saturation</li>
-						<li>47% is the lightness</li>
-					</ul>
 					<h3>Usage Guidelines</h3>
 					<ul>
 						<li>
