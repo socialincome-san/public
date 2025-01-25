@@ -22,8 +22,8 @@
 	},
 	"gender": "Gender",
 	"genders": {
-		"male": "Male",
-		"female": "Female",
+		"male": "Man",
+		"female": "Woman",
 		"other": "Other",
 		"private": "Prefer not to say"
 	}
