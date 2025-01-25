@@ -6,10 +6,12 @@ export const BASE_URL = process.env.BASE_URL || 'https://socialincome.org';
 export default function sitemap(): MetadataRoute.Sitemap {
 	const pages = ['', 'about-us', 'our-work'];
 
-	return pages.flatMap((page) => ({
-        url: `${BASE_URL}/en/ch/${page}`,
-        lastModified: new Date(),
-    }));
+	return pages.flatMap((page) => (
+        mainWebsiteLanguages.flatMap((lang) => ({
+            url: `${BASE_URL}/${lang}/ch/${page}`,
+            lastModified: new Date(),
+        }),
+    )));
 	// return pages.flatMap((page) =>
 	// 	mainWebsiteLanguages.flatMap((lang) =>
 	// 		websiteRegions.map((region) => ({
