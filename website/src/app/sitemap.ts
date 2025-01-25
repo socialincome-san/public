@@ -1,10 +1,7 @@
 import { mainWebsiteLanguages, websiteRegions } from '@/i18n';
 import { MetadataRoute } from 'next';
-// import { BASE_URL } from '@/app/lib/constants'
 
-export const BASE_URL = () => {
-	return process.env.BASE_URL;
-};
+export const BASE_URL = process.env.BASE_URL || 'https://socialincome.org';
 
 export default function sitemap(): MetadataRoute.Sitemap {
 	const pages = ['', 'about-us', 'our-work'];
