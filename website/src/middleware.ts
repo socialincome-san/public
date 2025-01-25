@@ -7,7 +7,7 @@ import { bestGuessCurrency, isValidCurrency } from '../../shared/src/types/curre
 export const config = {
 	matcher: [
 		// Skip internal paths (_next)
-		'/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js).*)',
+		'/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|sitemap.xml).*)',
 	],
 };
 
