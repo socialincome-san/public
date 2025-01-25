@@ -25,5 +25,8 @@
 		"toast-failure": "Oops! Etwas ist schief gelaufen. Bitte versuche es nochmals, oder kontaktiere uns auf hello@socialincome.org",
 		"email-placeholder": "Deine E-Mail Adresse",
 		"button-subscribe": "Newsletter abonnieren"
+	},
+	"campaign": {
+		"information-label": "Erhalte Updates von diesem Fundraiser und von Social Income."
 	}
 }
