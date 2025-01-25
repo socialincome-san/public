@@ -34,10 +34,10 @@ export class RecipientStatsCalculator {
 		const completeRecipientsData = await firestoreAdmin.collection<Recipient>(RECIPIENT_FIRESTORE_PATH).get();
 		const recipientStatsEntries = await Promise.all(
 			completeRecipientsData.docs.map(async (recipientData) => {
-				const organisationSnapshot = await recipientData.data().organisation.get();
+				const organisationSnapshot = await recipientData.data().organisation?.get();
 				return {
 					progr_status: recipientData.data().progr_status,
-					organisation: organisationSnapshot.id,
+					organisation: organisationSnapshot?.id,
 					test_recipient: recipientData.data().test_recipient ?? false,
 				};
 			}),
