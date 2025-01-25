@@ -6,7 +6,7 @@ import { Button, Typography, useGlowHover } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import classNames from 'classnames';
 import Link from 'next/link';
-import {RefObject, useEffect, useState} from 'react';
+import { RefObject, useEffect, useState } from 'react';
 import { useEventListener } from 'usehooks-ts';
 
 type HeroVideoOverlayProps = {
