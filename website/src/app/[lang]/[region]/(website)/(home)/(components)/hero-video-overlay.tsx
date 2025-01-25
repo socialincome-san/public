@@ -6,7 +6,7 @@ import { Button, Typography, useGlowHover } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import classNames from 'classnames';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import {RefObject, useEffect, useState} from 'react';
 import { useEventListener } from 'usehooks-ts';
 
 type HeroVideoOverlayProps = {
@@ -53,7 +53,7 @@ const HeroVideoOverlay = ({ lang, region, translations }: HeroVideoOverlayProps)
 					))}
 				</div>
 				<Link href={`/${lang}/${region}/donate/individual`}>
-					<Button className="mx-auto hidden hover:text-black md:block" ref={refButton}>
+					<Button className="mx-auto hidden hover:text-black md:block" ref={refButton as RefObject<HTMLButtonElement>}>
 						<Typography>{translations.buttonText}</Typography>
 					</Button>
 				</Link>
