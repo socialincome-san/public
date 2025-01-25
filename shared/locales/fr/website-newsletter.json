@@ -25,5 +25,8 @@
 		"toast-failure": "Oups! Ça n’a pas marché. Essaie encore une fois ou prend contact avec nous (hello@socialincome.org)",
 		"email-placeholder": "Ton adresse E-Mail",
 		"button-subscribe": "S'abonner"
+	},
+	"campaign": {
+		"information-label": "Reçois des mises à jour du collecteur de fonds et de Social Income."
 	}
 }
