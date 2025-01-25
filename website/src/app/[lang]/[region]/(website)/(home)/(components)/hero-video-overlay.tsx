@@ -2,7 +2,7 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { OVERLAY_FADE_OUT_DELAY } from '@/app/[lang]/[region]/(website)/(home)/(components)/mux-video';
-import {Button, Typography, useGlowHover} from '@socialincome/ui';
+import { Button, Typography, useGlowHover } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import classNames from 'classnames';
 import Link from 'next/link';
@@ -53,7 +53,7 @@ const HeroVideoOverlay = ({ lang, region, translations }: HeroVideoOverlayProps)
 					))}
 				</div>
 				<Link href={`/${lang}/${region}/donate/individual`}>
-					<Button className="mx-auto hidden md:block hover:text-black" ref={refButton}>
+					<Button className="mx-auto hidden hover:text-black md:block" ref={refButton}>
 						<Typography>{translations.buttonText}</Typography>
 					</Button>
 				</Link>
