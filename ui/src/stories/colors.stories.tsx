@@ -66,9 +66,7 @@ const ThemeExample = ({ theme }: { theme: 'default' | 'blue' }) => {
 		blue: 'theme-blue',
 	}[theme];
 	return (
-		<div
-			className={cn(themeClassName, 'bg-background border-border rounded-lg border p-6')}
-		>
+		<div className={cn(themeClassName, 'bg-background border-border rounded-lg border p-6')}>
 			<h4 className="text-foreground mb-4 font-medium">{theme.charAt(0).toUpperCase() + theme.slice(1)} Theme</h4>
 			<div className="flex flex-col gap-4">
 				<div className="bg-card border-border rounded-lg border p-4">
