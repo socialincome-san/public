@@ -11,7 +11,7 @@ export function ScriptsView() {
 			type: 'success',
 			message: 'Starting import',
 		});
-		httpsCallable(functions, 'batchImportStripeCharges')()
+		httpsCallable(functions, 'webhookBatchImportStripeCharges')()
 			.then(() => {
 				snackbarController.open({
 					type: 'success',
@@ -32,7 +32,7 @@ export function ScriptsView() {
 			type: 'success',
 			message: 'Starting creating surveys',
 		});
-		httpsCallable(functions, 'createAllSurveys')()
+		httpsCallable(functions, 'webhookCreateAllSurveys')()
 			.then(() => {
 				snackbarController.open({
 					type: 'success',
@@ -53,7 +53,7 @@ export function ScriptsView() {
 			type: 'success',
 			message: 'Starting adding amount_chf',
 		});
-		httpsCallable(functions, 'addMissingAmountChf')()
+		httpsCallable(functions, 'webhookAddMissingAmountChf')()
 			.then(() => {
 				snackbarController.open({
 					type: 'success',

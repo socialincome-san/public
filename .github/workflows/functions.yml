@@ -32,10 +32,7 @@ jobs:
         uses: ./.github/workflows/actions/init
 
       - name: Run tests
-        env:
-          TWILIO_SID: ${{ secrets.TWILIO_TEST_SID }}
-          TWILIO_TOKEN: ${{ secrets.TWILIO_TEST_TOKEN }}
-          TWILIO_SENDER_PHONE: ${{ secrets.TWILIO_TEST_SENDER_PHONE }}
+        env: {}
         run: npm run functions:test
 
   # TODO: re-enable

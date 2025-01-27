@@ -48,7 +48,6 @@
 		"ssh2-sftp-client": "^11.0.0",
 		"stripe": "^17.1.0",
 		"tmp-promise": "^3.0.3",
-		"twilio": "^5.3.3",
 		"xpath": "^0.0.34"
 	}
 }
