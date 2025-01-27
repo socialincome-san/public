@@ -10,10 +10,10 @@ import {
 import { adminsCollection } from './collections/Admins';
 import { campaignsCollection } from './collections/Campaigns';
 import { buildContributionsCollection } from './collections/Contributions';
+import { contributorsCollection } from './collections/Contributors';
 import { expensesCollection } from './collections/Expenses';
 import { buildPartnerOrganisationsCollection } from './collections/PartnerOrganisations';
 import { buildPaymentForecastCollection } from './collections/PaymentForecast';
-import { usersCollection } from './collections/Users';
 import { buildRecipientsCollection } from './collections/recipients/Recipients';
 import { buildRecipientsPaymentsCollection } from './collections/recipients/RecipientsPayments';
 import { buildSurveysCollection } from './collections/surveys/Surveys';
@@ -49,14 +49,14 @@ export default function App() {
 	const collections = [
 		buildRecipientsCollection(),
 		buildRecipientsPaymentsCollection(),
+		contributorsCollection,
+		buildContributionsCollection({ collectionGroup: true }),
 		buildPartnerOrganisationsCollection(),
 		buildSurveysCollection({ collectionGroup: true }),
 		adminsCollection,
 		expensesCollection,
 		buildPaymentForecastCollection(),
-		usersCollection,
 		campaignsCollection,
-		buildContributionsCollection({ collectionGroup: true }),
 	];
 
 	const views: CMSView[] = [

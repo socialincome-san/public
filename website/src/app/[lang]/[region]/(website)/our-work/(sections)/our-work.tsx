@@ -27,7 +27,7 @@ export async function OurWork({ params }: DefaultPageProps) {
 				<div className="pt-5">
 					<Dialog>
 						<DialogTrigger className="flex cursor-pointer flex-col items-center">
-							<Badge variant="outline">
+							<Badge variant="interactive-outline">
 								<Typography size="md" weight="normal" className="flex items-center p-1">
 									<PlayIcon className="group-hover:text-secondary-foreground mr-2 h-5 w-5" />
 									{translator.t('our-work.watch')}

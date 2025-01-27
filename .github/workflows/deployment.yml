@@ -89,9 +89,6 @@ jobs:
           echo SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }} >> .env
           echo STRIPE_API_READ_KEY=${{ (inputs.project == 'social-income-prod' && secrets.STRIPE_API_READ_KEY) || secrets.STRIPE_API_READ_KEY_STAGING }} >> .env
           echo STRIPE_WEBHOOK_SECRET=${{ (inputs.project == 'social-income-prod' && secrets.STRIPE_WEBHOOK_SECRET) || secrets.STRIPE_WEBHOOK_SECRET_STAGING }} >> .env
-          echo TWILIO_SENDER_PHONE=${{ secrets.TWILIO_SENDER_PHONE }} >> .env
-          echo TWILIO_SID=${{ secrets.TWILIO_SID }} >> .env
-          echo TWILIO_TOKEN=${{ secrets.TWILIO_TOKEN }} >> .env
 
       - name: Build functions
         run: npm run functions:build
@@ -100,7 +97,7 @@ jobs:
         run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only functions --project ${{ inputs.project }}
 
   deploy-rules:
-    name: Deploy rules on Firebase
+    name: Deploy Firestore and Storage rules on Firebase
     runs-on: ubuntu-latest
     if: inputs.component == 'rules'
     steps:
@@ -115,4 +112,6 @@ jobs:
           firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
       - name: Deploy on Firebase (${{ inputs.project }})
-        run: GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only firestore:rules --project ${{ inputs.project }}
+        run: |
+          GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only firestore:rules --project ${{ inputs.project }}
+          GOOGLE_APPLICATION_CREDENTIALS=credentials.json firebase deploy --only storage --project ${{ inputs.project }}
