@@ -61,11 +61,14 @@ class TermsAndConditionsPage extends StatelessWidget {
                                     text: "https://socialincome.org/privacy",
                                   ),
                                 ).then((_) {
-                                  FlushbarHelper.showFlushbar(
-                                    context,
-                                    message: localizations.privacyPolicyError,
-                                    type: FlushbarType.error,
-                                  );
+                                  // Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check.
+                                  if (context.mounted) {
+                                    FlushbarHelper.showFlushbar(
+                                      context,
+                                      message: localizations.privacyPolicyError,
+                                      type: FlushbarType.error,
+                                    );
+                                  }
                                 });
                               }
                             },
