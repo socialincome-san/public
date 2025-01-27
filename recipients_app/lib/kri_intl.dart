@@ -391,6 +391,7 @@ class _KriCupertinoLocalizationsDelegate extends LocalizationsDelegate<Cupertino
         singleDigitHourFormat: intl.DateFormat("d", localeName),
         singleDigitMinuteFormat: intl.DateFormat("d", localeName),
         singleDigitSecondFormat: intl.DateFormat("d", localeName),
+        weekdayFormat: intl.DateFormat("EEE", localeName),
       ),
     );
   }
@@ -410,7 +411,8 @@ class KriCupertinoLocalizations extends GlobalCupertinoLocalizations {
     required super.singleDigitHourFormat,
     required super.singleDigitMinuteFormat,
     required super.doubleDigitMinuteFormat,
-    required super.singleDigitSecondFormat,
+    required super.singleDigitSecondFormat, 
+    required super.weekdayFormat,
   });
 
   static const LocalizationsDelegate<CupertinoLocalizations> delegate = _KriCupertinoLocalizationsDelegate();

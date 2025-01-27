@@ -236,14 +236,17 @@ class AccountPageState extends State<AccountPage> {
                     context: context,
                   ).then((value) {
                     if (value != null) {
-                      final timestamp = Timestamp.fromDate(value);
+                      // Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check.
+                      if (context.mounted) {
+                        final timestamp = Timestamp.fromDate(value);
 
-                      context.read<AuthCubit>().updateRecipient(
-                            recipient.copyWith(
-                              birthDate: timestamp,
-                            ),
-                          );
-                      _birthDateController.text = getFormattedDate(timestamp, locale) ?? "";
+                        context.read<AuthCubit>().updateRecipient(
+                              recipient.copyWith(
+                                birthDate: timestamp,
+                              ),
+                            );
+                        _birthDateController.text = getFormattedDate(timestamp, locale) ?? "";
+                      }
                     }
                     return;
                   }),
