@@ -1,5 +1,6 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
+import "package:app/demo_manager.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/gestures.dart";
@@ -15,6 +16,7 @@ class TermsAndConditionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final demoManager = RepositoryProvider.of<DemoManager>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -95,7 +97,7 @@ class TermsAndConditionsPage extends StatelessWidget {
                       context.read<AuthCubit>().updateRecipient(updated);
                     }
                   },
-                  label: localizations.createAccount,
+                  label: demoManager.isDemoEnabled ? localizations.createAccountDemo : localizations.createAccount,
                 ),
               ],
             ),

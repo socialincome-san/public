@@ -31,7 +31,7 @@ class SocialIncomeContactDialog extends StatelessWidget {
                   children: [
                     Image(
                       image: const AssetImage("assets/team.png"),
-                      width: MediaQuery.of(context).size.width * 0.6,
+                      width: MediaQuery.sizeOf(context).width * 0.6,
                     ),
                     Text(
                       localizations.supportTeam,

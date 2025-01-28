@@ -1,4 +1,5 @@
 import "package:app/core/helpers/custom_bloc_observer.dart";
+import "package:app/demo_manager.dart";
 import "package:app/my_app.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_app_check/firebase_app_check.dart";
@@ -31,6 +32,7 @@ Future<void> main() async {
   final firestore = FirebaseFirestore.instance;
   final firebaseAuth = FirebaseAuth.instance;
   final messaging = FirebaseMessaging.instance;
+  final demoManager = DemoManager();
 
   if (appFlavor == "dev") {
     firestore.useFirestoreEmulator("localhost", 8080);
@@ -52,6 +54,7 @@ Future<void> main() async {
         firebaseAuth: firebaseAuth,
         firestore: firestore,
         messaging: messaging,
+        demoManager: demoManager,
       ),
     ),
   );
