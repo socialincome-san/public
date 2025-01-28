@@ -30,7 +30,7 @@ export default async function Page({ params: { lang, region, session } }: Stripe
 			<Typography size="4xl" color="accent" weight="bold">
 				{translator.t('success.title')}
 			</Typography>
-			<Card className="theme-light">
+			<Card className="theme-default bg-white">
 				<CardHeader>
 					<Typography weight="bold" size="xl" className="my-4">
 						{translator.t('success.user-form.title')}
