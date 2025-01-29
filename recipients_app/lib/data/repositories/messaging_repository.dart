@@ -1,5 +1,4 @@
 // ignore_for_file: unreachable_from_main
-
 import "dart:developer";
 import "package:firebase_messaging/firebase_messaging.dart";
 
@@ -10,7 +9,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
   //await Firebase.initializeApp();
-
   MessagingRepository.logRemoteMessage(message);
 }
 
@@ -33,14 +31,6 @@ class MessagingRepository {
     /// This is needed for testing and specific targeting of devices
     final token = await getToken();
     log("PUSHNOTIFICATION: Current FCM token: $token");
-
-    /// Notification messages which arrive while the app is in foreground will not display a visible notification by default. 
-    /// So we update the presentation options for the app to change this behaviour.
-    messaging.setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
          
     /// Get any messages which caused the application to open from a terminated state.
     final initialMessage = await messaging.getInitialMessage();
@@ -57,6 +47,14 @@ class MessagingRepository {
     // Set a function which is called to handle any interaction when the app is in the foreground via a Stream listener
     // For showing local notifications another package is needed: flutter_local_notifications => https://pub.dev/packages/flutter_local_notifications#-supported-platforms
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
+
+    /// Notification messages which arrive while the app is in foreground will not display a visible notification by default. 
+    /// So we update the presentation options for the app to change this behaviour.
+    messaging.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
   }
 
   void _handleForegroundMessage(RemoteMessage message) {
