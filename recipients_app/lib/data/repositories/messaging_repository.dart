@@ -1,12 +1,17 @@
-import "dart:developer";
+// ignore_for_file: unreachable_from_main
 
+import "dart:developer";
 import "package:firebase_messaging/firebase_messaging.dart";
 
 /// This must be a top level function in order to work
-Future<void> handleBackgroundMessage(RemoteMessage message) async {
-  log("PUSHNOTIFICATION title: ${message.notification?.title}");
-  log("PUSHNOTIFICATION body: ${message.notification?.body}");
-  log("PUSHNOTIFICATION data: ${message.data}");
+@pragma("vm:entry-point")
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  log("PUSHNOTIFICATION: Terminated Background Message");
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  //await Firebase.initializeApp();
+
+  MessagingRepository.logRemoteMessage(message);
 }
 
 class MessagingRepository {
@@ -16,7 +21,7 @@ class MessagingRepository {
     required this.messaging,
   }) {
     messaging.onTokenRefresh.listen((event) {
-      log("token refreshed: $event");
+      log("PUSHNOTIFICATION: FCM Token refreshed: $event");
     });
   }
 
@@ -26,31 +31,67 @@ class MessagingRepository {
     );
 
     /// This is needed for testing and specific targeting of devices
-    await messaging.getToken();
+    final token = await getToken();
+    log("PUSHNOTIFICATION: Current FCM token: $token");
 
-    /// handle background messages when app is not in foreground
-    FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+    /// Notification messages which arrive while the app is in foreground will not display a visible notification by default. 
+    /// So we update the presentation options for the app to change this behaviour.
     messaging.setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
       sound: true,
     );
+         
+    /// Get any messages which caused the application to open from a terminated state.
+    final initialMessage = await messaging.getInitialMessage();
+    if (initialMessage != null){
+      _handleInitialMessage(initialMessage);
+    }
 
-    /// handle messages when app is in foreground
-    /// if we want to display notifications while the app is open
-    /// we have to handle them ourselfes with for eg using
-    /// flutter_local_notifications and then we can use it like this:
-    // final initialMessage = await messaging.getInitialMessage();
-    // handleMessage(initialMessage);
+    // Set function which is called when the app is in the background or terminated.
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+    // Set function which is called to handle any interaction when the app is in the background (not terminated) via a Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleBackgroundMessage);
+
+    // Set a function which is called to handle any interaction when the app is in the foreground via a Stream listener
+    // For showing local notifications another package is needed: flutter_local_notifications => https://pub.dev/packages/flutter_local_notifications#-supported-platforms
+    FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
   }
 
-  void handleMessage(RemoteMessage? message) {
-    if (message == null) return;
-
+  void _handleForegroundMessage(RemoteMessage message) {
     // TODO implement displaying push notifications if app is open
+    log("PUSHNOTIFICATION: Foreground Message received");
+    logRemoteMessage(message);
+  }
+
+  void _handleBackgroundMessage(RemoteMessage message) {
+    // TODO implement handling of push notifications if app is in background
+    log("PUSHNOTIFICATION: Background Message received");
+    logRemoteMessage(message);
+  }
+
+  void _handleInitialMessage(RemoteMessage message) {
+    // TODO implement displaying push notifications if app is open
+    log("PUSHNOTIFICATION: Initial Message received");
+    logRemoteMessage(message);
   }
 
   Future<String?> getToken() async {
     return await messaging.getToken();
+  }
+
+  static void logRemoteMessage(RemoteMessage message) {
+    if (message.notification != null) {
+      log("RemoteMessage message.notification: ${message.notification}");
+      log('RemoteMessage message.notification?.title: ${message.notification?.title ?? ''}');
+      log('RemoteMessage message.notification?.body: ${message.notification?.body ?? ''}');
+    }
+    log("RemoteMessage message.messageType: ${message.messageType}");
+    log("RemoteMessage message.messageId: ${message.messageId}");
+    log("RemoteMessage message.category: ${message.category}");
+    log("RemoteMessage message.from: ${message.from}");
+    log("RemoteMessage message.data: ${message.data}");
+    log("RemoteMessage message.sentTime: ${message.sentTime}");
   }
 }
