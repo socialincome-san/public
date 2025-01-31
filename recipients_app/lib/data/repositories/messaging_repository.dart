@@ -49,7 +49,10 @@ class MessagingRepository {
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
 
     /// Notification messages which arrive while the app is in foreground will not display a visible notification by default. 
-    /// So we update the presentation options for the app to change this behaviour.
+    /// To override this behavior on iOS, we update the presentation options for the app to change this behaviour.
+    /// To override this behavior on Android, you must create a "High Priority" notification channel which can be done 
+    /// with the above mentioned package "flutter_local_notifications".
+    /// See also blog article: https://medium.com/@ChanakaDev/android-channels-in-flutter-003907b151e5
     messaging.setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
