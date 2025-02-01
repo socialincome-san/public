@@ -1,0 +1,477 @@
+definitions:
+  instance_mac_mini_m2: &instance_mac_mini_m2
+    instance_type: mac_mini_m2
+    max_build_duration: 30
+
+  env_versions: &env_versions
+    flutter: 3.27.1
+    xcode: 16.2
+    cocoapods: 1.16.2
+    java: 21
+
+  scripts:
+    - &verify_flutter_version
+      name: Verify Flutter version
+      script: |
+        # Verify Flutter version
+        echo "Verify Flutter version..."
+
+        REQUIRED_VERSION=$(grep flutter .tool-versions | awk '{print $2}')
+        echo "REQUIRED_VERSION: $REQUIRED_VERSION"
+        CURRENT_VERSION=$(flutter --version | grep -m 1 "^Flutter" | awk '{print $2}')
+        echo "CURRENT_VERSION: $CURRENT_VERSION"
+
+        if [ "$CURRENT_VERSION" != "$REQUIRED_VERSION" ]; then
+            echo "Error: Flutter version $REQUIRED_VERSION is required (current: $CURRENT_VERSION)"
+            exit 1
+        else
+            echo "Required version: $REQUIRED_VERSION == Current version: $CURRENT_VERSION"
+            echo "Flutter version is correct"
+        fi
+      working_directory: recipients_app
+
+workflows:
+  android-staging-firebase-app-distribution-workflow:
+    name: Android Staging (Firebase App Distribution)
+    <<: *instance_mac_mini_m2
+
+    environment:
+      android_signing:
+        - social_income_upload_keystore.jks
+      groups:
+        - slack
+        - app-config-stage
+        - firebase
+        #- google_play # <-- (Includes GCLOUD_SERVICE_ACCOUNT_CREDENTIALS)
+      <<: *env_versions
+
+    cache:
+      cache_paths:
+        - $HOME/.gradle/caches
+        - $FLUTTER_ROOT/.pub-cache
+
+    scripts:
+      - name: Set up key.properties
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cat >> "$CM_BUILD_DIR/recipients_app/android/key.properties" <<EOF
+          storePassword=$CM_KEYSTORE_PASSWORD
+          keyPassword=$CM_KEY_PASSWORD
+          keyAlias=$CM_KEY_ALIAS
+          storeFile=$CM_KEYSTORE_PATH
+          EOF
+      # - name: Decode Google credentials
+      #   script: |
+      #     echo $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT > $GOOGLE_APPLICATION_CREDENTIALS
+      # Define reusable section 'verify_flutter_version'
+      - *verify_flutter_version
+      - name: Get Flutter packages
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          flutter pub get
+        working_directory: recipients_app
+      - name: Build AAB with Flutter
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          # Build the Flutter APK app
+          flutter build apk --release \
+            --flavor stage \
+            -t lib/main.dart \
+            --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
+            --dart-define=SENTRY_URL=$SENTRY_URL
+        working_directory: recipients_app
+
+    artifacts:
+      - recipients_app/build/**/outputs/apk/stage/**/*.apk
+      - recipients_app/build/**/outputs/**/mapping.txt
+
+    publishing:
+      #google_play:
+      #  credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+      #  track: internal
+      #  submit_as_draft: true
+      firebase:
+        firebase_service_account: $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT
+        android:
+          app_id: 1:51495651779:android:08ef862a962bc041185576
+          groups:
+            - internal-testers
+          artifact_type: "apk"
+
+      # Notifications
+      email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
+        recipients:
+          - sandino@socialincome.org
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: false # To not receive a notification when a build fails
+      slack: # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
+        channel: $SLACK_CHANNEL_NAME
+        notify_on_build_start: false
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: true # To not receive a notification when a build fails
+
+  android-production-workflow:
+    name: Android Production
+    <<: *instance_mac_mini_m2
+
+    environment:
+      android_signing:
+        - social_income_upload_keystore.jks
+      groups:
+        - slack
+        - app-config-prod
+        #- google_play # <-- (Includes GCLOUD_SERVICE_ACCOUNT_CREDENTIALS)
+      <<: *env_versions
+
+    cache:
+      cache_paths:
+        - $HOME/.gradle/caches
+        - $FLUTTER_ROOT/.pub-cache
+
+    scripts:
+      - name: Set up key.properties
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cat >> "$CM_BUILD_DIR/recipients_app/android/key.properties" <<EOF
+          storePassword=$CM_KEYSTORE_PASSWORD
+          keyPassword=$CM_KEY_PASSWORD
+          keyAlias=$CM_KEY_ALIAS
+          storeFile=$CM_KEYSTORE_PATH
+          EOF
+      - name: Load Firebase configuration
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app/android/app/src
+          mkdir prod
+          cd prod
+
+          echo $ANDROID_FIREBASE_SECRET > google-services.json
+      - *verify_flutter_version
+      - name: Get Flutter packages
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          flutter pub get
+        working_directory: recipients_app
+      - name: Build AAB with Flutter
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          # Build the Flutter AAB app
+          flutter build appbundle --release \
+            --flavor prod \
+            -t lib/main.dart \
+            --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
+            --dart-define=SENTRY_URL=$SENTRY_URL
+        working_directory: recipients_app
+
+    artifacts:
+      - recipients_app/build/**/outputs/apk/prod/**/*.apk
+      - recipients_app/build/**/outputs/**/mapping.txt
+
+    publishing:
+      #google_play:
+      #  credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+      #  track: internal
+      #  submit_as_draft: true
+
+      # Notifications
+      email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
+        recipients:
+          #- sandino@socialincome.org
+          - karin@karinberg.de
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: false # To not receive a notification when a build fails
+      slack: # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
+        channel: $SLACK_CHANNEL_NAME
+        notify_on_build_start: false
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: true # To not receive a notification when a build fails
+
+  ios-staging-testflight-workflow:
+    name: iOS Staging (Test Flight)
+    <<: *instance_mac_mini_m2
+
+    integrations:
+      app_store_connect: Social Income Recipient App
+
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: org.socialincome.app.stage
+      groups:
+        - slack
+        - app-config-stage
+      vars:
+        APP_ID: 6464113329 # Apple ID of App "Stage Social Income"
+      <<: *env_versions
+
+    cache:
+      cache_paths:
+        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/Library/Caches/CocoaPods
+
+    scripts:
+      - name: Set up code signing settings on Xcode project
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          xcode-project use-profiles \
+            --archive-method=app-store \
+            --export-options-plist=$CM_BUILD_DIR/recipients_app/ios/export_options.plist
+
+          # Print the export options plist
+          more $CM_BUILD_DIR/recipients_app/ios/export_options.plist
+      - *verify_flutter_version
+      - name: Get Flutter packages & Install pods
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          flutter pub get
+          find . -name "Podfile" -execdir pod install \;
+        working_directory: recipients_app
+      - name: Flutter build ipa
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          # Build the Flutter iOS app
+          flutter build ipa --release \
+            --flavor stage \
+            -t lib/main.dart \
+            --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
+            --dart-define=SENTRY_URL=$SENTRY_URL \
+            --export-options-plist=$CM_BUILD_DIR/recipients_app/ios/export_options.plist
+        working_directory: recipients_app
+
+    artifacts:
+      - recipients_app/build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+
+    publishing:
+      # Publish to Apple's Testflight via AppStore Connect
+      app_store_connect:
+        # Use referenced App Store Connect API key from above to authenticate binary upload
+        auth: integration
+        # Whether or not to submit the uploaded build to TestFlight beta review.
+        # Note: This action is performed during post-processing.
+        submit_to_testflight: true
+
+      # Notifications
+      email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
+        recipients:
+          - sandino@socialincome.org
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: false # To not receive a notification when a build fails
+      slack: # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
+        channel: $SLACK_CHANNEL_NAME
+        notify_on_build_start: false
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: true # To not receive a notification when a build fails
+
+  ios-staging-firebase-app-distribution-workflow:
+    name: iOS Staging (Firebase App Distribution)
+    <<: *instance_mac_mini_m2
+
+    integrations:
+      app_store_connect: Social Income Recipient App
+
+    environment:
+      ios_signing:
+        distribution_type: ad_hoc
+        bundle_identifier: org.socialincome.app.stage
+      groups:
+        - slack
+        - app-config-stage
+        - firebase
+      vars:
+        APP_ID: 6464113329 # Apple ID of App "Stage Social Income"
+      <<: *env_versions
+
+    cache:
+      cache_paths:
+        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/Library/Caches/CocoaPods
+
+    scripts:
+      # - name: Set up keychain to be used for code signing using Codemagic CLI 'keychain' command
+      #   script: keychain initialize
+      # - name: Fetch signing files
+      #   script: |
+      #     app-store-connect fetch-signing-files "org.socialincome.app.stage" \
+      #       --type IOS_APP_ADHOC \
+      #       --create
+      # - name: Set up signing certificate
+      #   script: keychain add-certificates
+      - name: Set up code signing settings on Xcode project
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          xcode-project use-profiles \
+            --archive-method=ad-hoc \
+            --export-options-plist=$CM_BUILD_DIR/recipients_app/ios/export_options.plist
+
+          # Print the export options plist
+          more $CM_BUILD_DIR/recipients_app/ios/export_options.plist
+      - *verify_flutter_version
+      - name: Get Flutter packages & Install pods
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          flutter pub get
+          find . -name "Podfile" -execdir pod install \;
+        working_directory: recipients_app
+      - name: Flutter build ipa
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          # Build the Flutter iOS app
+          flutter build ipa --release \
+            --flavor stage \
+            -t lib/main.dart \
+            --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
+            --dart-define=SENTRY_URL=$SENTRY_URL \
+            --export-options-plist=$CM_BUILD_DIR/recipients_app/ios/export_options.plist
+        working_directory: recipients_app
+
+    artifacts:
+      - recipients_app/build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+
+    publishing:
+      # Publish to Firebase App Distribution
+      firebase:
+        firebase_service_account: $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT
+        ios:
+          app_id: 1:51495651779:ios:d4d28e75065983fb185576
+          groups:
+            - internal-testers
+
+      # Notifications
+      email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
+        recipients:
+          - sandino@socialincome.org
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: false # To not receive a notification when a build fails
+      slack: # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
+        channel: $SLACK_CHANNEL_NAME
+        notify_on_build_start: false
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: true # To not receive a notification when a build fails
+
+  ios-production-workflow:
+    name: iOS Production
+    <<: *instance_mac_mini_m2
+
+    integrations:
+      app_store_connect: Social Income Recipient App
+
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: org.socialincome.app
+      groups:
+        - slack
+        - app-config-prod
+      vars:
+        APP_ID: 6444860109 # Apple ID of Prod App "Social Income"
+      <<: *env_versions
+
+    cache:
+      cache_paths:
+        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/Library/Caches/CocoaPods
+
+    scripts:
+      - name: Load Prod Firebase configuration
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app/ios/GoogleServicesConfig
+          echo $IOS_FIREBASE_SECRET > GoogleService-Info-Prod.plist
+      - name: Set up code signing settings on Xcode project
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          xcode-project use-profiles \
+            --archive-method=app-store \
+            --export-options-plist=$CM_BUILD_DIR/recipients_app/ios/export_options.plist
+
+          # Print the export options plist
+          more $CM_BUILD_DIR/recipients_app/ios/export_options.plist
+      - *verify_flutter_version
+      - name: Get Flutter packages & Install pods
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          flutter pub get
+          find . -name "Podfile" -execdir pod install \;
+        working_directory: recipients_app
+      - name: Flutter build ipa
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          # Build the Flutter iOS app
+          flutter build ipa --release \
+            --flavor prod \
+            -t lib/main.dart \
+            --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
+            --dart-define=SENTRY_URL=$SENTRY_URL \
+            --export-options-plist=$CM_BUILD_DIR/recipients_app/ios/export_options.plist
+        working_directory: recipients_app
+
+    artifacts:
+      - recipients_app/build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+
+    publishing:
+      # Publish to Apple's Testflight via AppStore Connect
+      app_store_connect:
+        # Use referenced App Store Connect API key from above to authenticate binary upload
+        auth: integration
+        # Whether or not to submit the uploaded build to TestFlight beta review.
+        # Note: This action is performed during post-processing.
+        submit_to_testflight: true
+
+      # Notifications
+      email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
+        recipients:
+          - sandino@socialincome.org
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: false # To not receive a notification when a build fails
+      slack: # See the following link about how to connect your Slack account - https://docs.codemagic.io/publishing-yaml/distribution/#slack
+        channel: $SLACK_CHANNEL_NAME
+        notify_on_build_start: false
+        notify:
+          success: true # To receive a notification when a build succeeds
+          failure: true # To not receive a notification when a build fails

@@ -1,5 +1,5 @@
 import { DefaultPageProps, DefaultParams } from '@/app/[lang]/[region]';
-import { CurrencyRedirect } from '@/app/[lang]/[region]/(website)/transparency/finances/[currency]/currency-redirect';
+import { CurrencyRedirect } from '@/app/[lang]/[region]/(website)/transparency/(components)/currency-redirect';
 import { firestoreAdmin } from '@/firebase-admin';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion, websiteCurrencies } from '@/i18n';
 import { Currency } from '@socialincome/shared/src/types/currency';

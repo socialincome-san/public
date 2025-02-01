@@ -27,7 +27,7 @@ export default async function LandingPage({ lang }: { lang: WebsiteLanguage }) {
 					<div>
 						<Popover>
 							<PopoverTrigger>
-								<Badge variant="muted">
+								<Badge variant="interactive-muted">
 									<Typography size="md" weight="normal" className="p-1">
 										{translator.t('landing-page.contact')}
 									</Typography>
@@ -52,7 +52,7 @@ export default async function LandingPage({ lang }: { lang: WebsiteLanguage }) {
 					<div>
 						<Popover>
 							<PopoverTrigger>
-								<Badge variant="muted">
+								<Badge variant="interactive-muted">
 									<Typography size="md" weight="normal" className="p-1">
 										{translator.t('landing-page.registration')}
 									</Typography>
