@@ -13,7 +13,7 @@ import {
 	StatusKey,
 } from '../../../shared/src/types/contribution';
 import { Currency } from '../../../shared/src/types/currency';
-import { USER_FIRESTORE_PATH, User } from '../../../shared/src/types/user';
+import { User, USER_FIRESTORE_PATH } from '../../../shared/src/types/user';
 import {
 	POSTFINANCE_FTP_HOST,
 	POSTFINANCE_FTP_PORT,

@@ -28,7 +28,11 @@ function FetchFileLink({ storagePath }: { storagePath: string }) {
 	const storage = useStorage();
 	const { data } = useStorageDownloadURL(ref(storage, storagePath));
 	if (!data) return null;
-	return <Link href={data}>Download PDF</Link>;
+	return (
+		<Link href={data} target="_blank" rel="noopener noreferrer">
+			Download PDF
+		</Link>
+	);
 }
 
 export function DonationCertificatesTable({ translations }: ContributionsTableProps) {
@@ -49,7 +53,7 @@ export function DonationCertificatesTable({ translations }: ContributionsTablePr
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{donationCertificates.docs.map((donationCertificateDoc, index) => {
+					{donationCertificates.docs.map((donationCertificateDoc) => {
 						const storagePath = donationCertificateDoc.get('storage_path');
 						if (!storagePath) return;
 						return (
