@@ -32,7 +32,6 @@
 		"fundraiser": "Collecte de fonds",
 		"permalink": "Permalink"
 	},
-	"ngos": ["aurora", "jamil", "reachout", "equal-rights", "united-polio", "slaes"],
 	"aurora": {
 		"org-slug": "aurora-foundation",
 		"org-short-name": "Fondation Aurora",

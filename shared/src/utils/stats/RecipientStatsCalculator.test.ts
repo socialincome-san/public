@@ -31,15 +31,15 @@ test('totalRecipients(): Calculate active recipients', async () => {
 });
 
 test('totalRecipientsByOrganization(): Calculate total recipients for a particular organisation', async () => {
-	expect(calculator.allStats('socialincome').totalRecipientsByOrganization.total).toEqual(1);
+	expect(calculator.allStats().totalRecipientsByOrganization['aurora'].total).toEqual(1);
 });
 
 test('totalRecipientsByOrganization(): Calculate active recipients for a particular organisation', async () => {
-	expect(calculator.allStats('socialincome').totalRecipientsByOrganization.active).toEqual(1);
+	expect(calculator.allStats().totalRecipientsByOrganization['aurora'].total).toEqual(1);
 });
 
 const org1: PartnerOrganisation = {
-	name: 'socialincome',
+	name: 'aurora',
 	contactName: 'test1',
 	contactNumber: '123',
 };
@@ -62,7 +62,7 @@ const recipient1: Recipient = {
 		phone: 9876543210,
 		has_whatsapp: true,
 	},
-	organisation: { id: 'socialincome' } as DocumentReference<PartnerOrganisation>,
+	organisation: { id: 'aurora' } as DocumentReference<PartnerOrganisation>,
 	om_uid: 12345,
 	profession: 'Software Engineer',
 	progr_status: RecipientProgramStatus.Active,
@@ -73,15 +73,12 @@ const recipient1: Recipient = {
 };
 
 const insertTestData = async () => {
-	await firestoreAdmin
-		.collection<PartnerOrganisation>(PARTNER_ORGANISATION_FIRESTORE_PATH)
-		.doc('socialincome')
-		.set(org1);
+	await firestoreAdmin.collection<PartnerOrganisation>(PARTNER_ORGANISATION_FIRESTORE_PATH).doc('aurora').set(org1);
 	const recipientWithOrgRef: Recipient = {
 		...recipient1,
 		organisation: firestoreAdmin
 			.collection<PartnerOrganisation>(PARTNER_ORGANISATION_FIRESTORE_PATH)
-			.doc('socialincome') as DocumentReference<PartnerOrganisation>,
+			.doc('aurora') as DocumentReference<PartnerOrganisation>,
 	};
 	await firestoreAdmin.collection<Recipient>(RECIPIENT_FIRESTORE_PATH).add(recipientWithOrgRef);
 };
