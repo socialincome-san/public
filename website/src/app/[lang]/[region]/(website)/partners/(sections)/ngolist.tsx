@@ -51,10 +51,10 @@ export async function NgoList({ lang, region }: DefaultParams) {
 		const currentOrgRecipientStats = recipientStats[ngos[i]];
 		const recipientsBadge: RecipientsBadgeType = {
 			hoverCardOrgName: ngoArray[i]['org-long-name'],
-			hoverCardTotalRecipients: currentOrgRecipientStats?.total,
-			hoverCardTotalActiveRecipients: currentOrgRecipientStats?.active,
-			hoverCardTotalFormerRecipients: currentOrgRecipientStats?.former,
-			hoverCardTotalSuspendedRecipients: currentOrgRecipientStats?.suspended,
+			hoverCardTotalRecipients: currentOrgRecipientStats?.total ?? 0,
+			hoverCardTotalActiveRecipients: currentOrgRecipientStats?.active ?? 0,
+			hoverCardTotalFormerRecipients: currentOrgRecipientStats?.former ?? 0,
+			hoverCardTotalSuspendedRecipients: currentOrgRecipientStats?.suspended ?? 0,
 			translatorBadgeRecipients: '',
 			translatorBadgeRecipientsBy: '',
 			translatorBadgeActive: '',

@@ -60,7 +60,7 @@ export class RecipientStatsCalculator {
 	};
 
 	totalRecipientsByOrganization = () => {
-		const orgRecipientsObject: any = {};
+		const orgRecipientsObject: OrganisationRecipientsByStatus = {};
 		recipientNGOs.forEach((orgId) => {
 			const totalRecipients = this.recipients.filter((recipient) => recipient.organisation === orgId);
 			const recipientsGroupedByProgStatus = _.groupBy(totalRecipients.toJSON(), (x) => x.progr_status);
