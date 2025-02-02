@@ -1,24 +1,19 @@
 import "dart:async";
 
-import "package:app/data/datasource/demo/user_demo_data_source.dart";
-import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/datasource/user_data_source.dart";
 import "package:app/data/models/models.dart";
 import "package:app/demo_manager.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 
 class UserRepository {
-  late UserDataSource remoteDataSource = UserRemoteDataSource(firestore: firestore, firebaseAuth: firebaseAuth);
-  late UserDataSource demoDataSource = UserDemoDataSource();
+  final UserDataSource remoteDataSource;
+  final UserDataSource demoDataSource;
 
   final DemoManager demoManager;
-  final FirebaseFirestore firestore;
-  final FirebaseAuth firebaseAuth;
 
-  UserRepository({
-    required this.firestore,
-    required this.firebaseAuth,
+  const UserRepository({
+    required this.remoteDataSource,
+    required this.demoDataSource,
     required this.demoManager,
   });
 
