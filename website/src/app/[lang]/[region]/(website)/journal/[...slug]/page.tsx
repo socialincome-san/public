@@ -8,16 +8,15 @@ import { render } from 'storyblok-rich-text-react-renderer';
 
 export const revalidate = 3600; // Update once an hour
 
-export default async function Page(props: { params: { slug: string; lang: string } }) {
+export default async function Page(props: { params: { slug: string[]; lang: string } }) {
 	const lang = props.params.lang;
-
 	async function loadArticle() {
 		const params: ISbStoriesParams = {
 			...(draftMode().isEnabled ? { version: 'draft' } : {}),
-			resolve_relations: ['article.author', 'article.tags'],
+			resolve_relations: ['article.author', 'article.topics'],
 			language: lang,
 		};
-		const { data } = await getStoryblokApi().get(`cdn/stories/journal/${props.params.slug}`, params);
+		const { data } = await getStoryblokApi().get(`cdn/stories/journal/${props.params.slug.join('/')}`, params);
 		return data;
 	}
 
@@ -45,9 +44,9 @@ export default async function Page(props: { params: { slug: string; lang: string
 				</div>
 				<div className="flex flex-col items-center justify-center p-8 text-center md:order-1 md:w-1/2 md:items-start md:text-left lg:p-16">
 					<div className="flex flex-wrap justify-center gap-2 md:justify-start">
-						{articleData.tags?.map((tag) => (
-							<Badge key={tag.slug} variant="foreground" className="mb-2">
-								{tag.content.value}
+						{articleData.topics?.map((topic) => (
+							<Badge key={topic.slug} variant="foreground" className="mb-2">
+								{topic.content.value}
 							</Badge>
 						))}
 					</div>
