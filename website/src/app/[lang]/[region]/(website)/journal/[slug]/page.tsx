@@ -14,7 +14,7 @@ export default async function Page(props: { params: { slug: string; lang: string
 	async function loadArticle() {
 		const params: ISbStoriesParams = {
 			...(draftMode().isEnabled ? { version: 'draft' } : {}),
-			resolve_relations: 'article.author',
+			resolve_relations: ['article.author', 'article.tags'],
 			language: lang,
 		};
 		const { data } = await getStoryblokApi().get(`cdn/stories/journal/${props.params.slug}`, params);
@@ -46,8 +46,8 @@ export default async function Page(props: { params: { slug: string; lang: string
 				<div className="flex flex-col items-center justify-center p-8 text-center md:order-1 md:w-1/2 md:items-start md:text-left lg:p-16">
 					<div className="flex flex-wrap justify-center gap-2 md:justify-start">
 						{articleData.tags?.map((tag) => (
-							<Badge key={tag} variant="foreground" className="mb-2">
-								{tag}
+							<Badge key={tag.slug} variant="foreground" className="mb-2">
+								{tag.content.value}
 							</Badge>
 						))}
 					</div>
