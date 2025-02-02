@@ -15,6 +15,8 @@ const badgeVariants = cva(
 				muted: 'border-muted-foreground text-muted-foreground',
 				accent: 'border-transparent bg-accent text-accent-foreground',
 				outline: 'text-primary border-primary',
+				foreground:
+					'border-transparent bg-primary-foreground-muted text-primary focus:ring-2 focus:ring-ring focus:ring-offset-2',
 				interactive:
 					'border-transparent bg-primary bg-opacity-10 text-primary hover:bg-opacity-100 hover:text-white focus:ring-2 focus:ring-ring focus:ring-offset-2',
 				'interactive-accent':
