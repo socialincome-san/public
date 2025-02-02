@@ -71,8 +71,6 @@ Future<void> main() async {
     },
     appRunner: () => runApp(
       MyApp(
-        firebaseAuth: firebaseAuth,
-        firestore: firestore,
         messaging: messaging,
         demoManager: demoManager,
         userRemoteDataSource: userRemoteDataSource,
