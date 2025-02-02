@@ -3,6 +3,13 @@ export interface StoryBlokImage {
 	filename: string;
 }
 
+export interface StoryBlokTag {
+	slug: string;
+	content: {
+		value: string;
+	};
+}
+
 export interface StoryBlokAuthor {
 	content: {
 		avatar: StoryBlokImage;
@@ -15,6 +22,6 @@ export interface StoryBlokArticle {
 	content: any;
 	subtitle: string;
 	image: StoryBlokImage;
-	tags: string[];
+	tags: StoryBlokTag[];
 	author: StoryBlokAuthor;
 }
