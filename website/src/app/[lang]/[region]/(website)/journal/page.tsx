@@ -49,9 +49,9 @@ export default async function Page(props: { params: { lang: string } }) {
 											width={100}
 											height={100}
 										/>
-										<span className="text-sm font-medium">{blog.content.author.content.fullName}</span>
+										<Typography>{blog.content.author.content.fullName}</Typography>
 									</div>
-									<p className="text-muted-foreground text-sm">{getPublishedDateFormatted(blog.published_at)}</p>
+									<Typography>{getPublishedDateFormatted(blog.published_at)}</Typography>
 								</div>
 							</CardContent>
 						</Card>
