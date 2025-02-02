@@ -143,7 +143,7 @@ flutter gen-l10n
 ```
 
 To use a translated string in the code use:
-`AppLocalizations.of(context).helloWorld` and import:
+`context.l10n.helloWorld` and import:
 `import 'package:flutter_gen/gen_l10n/app_localizations.dart';`
 
 ### Upgrade flutter version
