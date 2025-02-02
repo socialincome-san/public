@@ -38,7 +38,7 @@ export default async function Page(props: { params: { slug: string; lang: string
 					<Image
 						src={articleData.image?.filename ?? '/placeholder.svg'}
 						alt={articleData.image?.alt ?? 'Article image'}
-						className="h-full w-full object-cover"
+						className="w-full object-cover md:h-screen"
 						width={900}
 						height={700}
 					/>
