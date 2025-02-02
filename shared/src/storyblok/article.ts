@@ -18,6 +18,7 @@ export interface StoryBlokAuthor {
 }
 
 export interface StoryBlokArticle {
+	default_full_slug: string;
 	title: string;
 	content: any;
 	subtitle: string;
