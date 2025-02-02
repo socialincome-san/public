@@ -2,6 +2,7 @@ import { cookies, draftMode } from 'next/headers';
 import { redirect, RedirectType } from 'next/navigation';
 
 const ALLOWED_SLUGS_PREFIXES = ['journal'];
+const DEFAULT_LANGUAGE = 'en';
 const ALLOWED_LANGUAGES = ['en', 'it', 'fr', 'de'];
 const DRAFT_MODE_COOKIE_NAME = '__prerender_bypass';
 
@@ -11,7 +12,7 @@ function getLanguage(slug: string | null) {
 			if (slug.toLowerCase().startsWith(lang.toLowerCase())) return lang;
 		}
 	}
-	return 'en';
+	return DEFAULT_LANGUAGE;
 }
 
 function validateSecret(secret: string | null, slug: string) {
