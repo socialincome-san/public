@@ -6,12 +6,12 @@ const ALLOWED_LANGUAGES = ['en', 'it', 'fr', 'de'];
 const DRAFT_MODE_COOKIE_NAME = '__prerender_bypass';
 
 function getLanguage(slug: string | null) {
-	if (!!slug) {
+	if (slug) {
 		for (let lang of ALLOWED_LANGUAGES) {
 			if (slug.toLowerCase().startsWith(lang.toLowerCase())) return lang;
 		}
 	}
-	return 'de';
+	return 'en';
 }
 
 function validateSecret(secret: string | null, slug: string) {
@@ -23,8 +23,7 @@ function validateSlug(slug: string | undefined | null) {
 }
 
 function removeLanguagePrefix(slug: string | null, language: string) {
-	if (slug && slug.startsWith(language)) return slug.replace(language, '').replace('/', '');
-	else return slug;
+	return slug && slug.startsWith(language) ? slug.replace(language, '').replace('/', '') : slug;
 }
 
 function enableDraftModeAndAdaptCookie() {
