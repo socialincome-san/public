@@ -22,7 +22,7 @@
 		"@icons-pack/react-simple-icons": "^10.0.0",
 		"@lottiefiles/react-lottie-player": "^3.5.4",
 		"@mux/mux-video-react": "^0.12.0",
-		"@sentry/nextjs": "^8.33.1",
+		"@sentry/nextjs": "^8.49.0",
 		"@socialincome/shared": "^1.0.0",
 		"@socialincome/ui": "^1.0.0",
 		"@tanstack/react-query": "^5.59.0",
