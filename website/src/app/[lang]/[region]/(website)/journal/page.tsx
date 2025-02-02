@@ -7,8 +7,9 @@ import type { ISbStoriesParams } from 'storyblok-js-client/src/interfaces';
 
 export const revalidate = 3600; // Update once an hour
 
-export default async function Page(props: { params: { lang: string } }) {
+export default async function Page(props: { params: { lang: string; region: string } }) {
 	const lang = props.params.lang;
+	const region = props.params.region;
 	const params: ISbStoriesParams = {
 		resolve_relations: ['article.author', 'article.topics'],
 		language: lang,
@@ -27,7 +28,7 @@ export default async function Page(props: { params: { lang: string } }) {
 			<Typography size={'xl'}>Journal Overview</Typography>
 			<div className="mt-5 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
 				{blogObject.map((blog) => (
-					<Link href={'/' + blog.default_full_slug} key={blog.content.title}>
+					<Link href={'/' + lang + '/' + region + '/' + blog.default_full_slug} key={blog.content.title}>
 						<Card className="overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
 							<Image
 								src={blog.content.image.filename}
