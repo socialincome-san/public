@@ -179,8 +179,8 @@ See [How to test](./docu/app_testing_guides/how_to_test.md)
 
 ### Golden tests
 
-Run `flutter test` to run all tests incl. all golden tests. Run
-`flutter test --update-goldens` to update golden files.
+- Run `flutter test` to run all tests incl. all golden tests. 
+- Run `flutter test --update-goldens` to update golden files.
 
 ## Releasing
 
