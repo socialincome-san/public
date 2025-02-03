@@ -57,11 +57,11 @@ export default async function Page(props: { params: { slug: string[]; lang: stri
 						<Image
 							src={author.content.avatar.filename ?? '/placeholder.svg'}
 							alt="author"
-							className="size-12 flex-none rounded-full"
+							className="w-12 h-12 flex-none rounded-full object-cover object-top"
 							width={100}
 							height={100}
 						/>
-						<div>
+						<div className="text-left">
 							<Typography color={'popover'} size="sm">
 								Published {getPublishedDateFormatted(data.story.published_at, lang)}
 							</Typography>
@@ -77,7 +77,7 @@ export default async function Page(props: { params: { slug: string[]; lang: stri
 			</div>
 
 			{/* Content Section */}
-			<div className="prose mx-auto max-w-3xl content-center p-4 sm:p-6">{render(articleData.content)}</div>
+			<div className="prose mx-auto max-w-2xl content-center p-4 my-10 sm:p-6">{render(articleData.content)}</div>
 		</div>
 	);
 }
