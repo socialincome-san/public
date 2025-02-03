@@ -29,7 +29,7 @@ export default async function Page(props: { params: { lang: string; region: stri
 			<div className="mt-5 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
 				{blogObject.map((blog) => (
 					<Link href={'/' + lang + '/' + region + '/' + blog.default_full_slug} key={blog.content.title}>
-						<Card className="overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+						<Card className="overflow-hidden transition-transform duration-300 hover:scale-105">
 							<Image
 								src={blog.content.image.filename}
 								alt={blog.content.title}
@@ -38,7 +38,7 @@ export default async function Page(props: { params: { lang: string; region: stri
 								className="h-48 w-full object-cover"
 							/>
 							<CardContent className="flex flex-grow flex-col p-6">
-								<Typography className="mb-2 line-clamp-2 h-14 flex-grow text-xl font-semibold">
+								<Typography className="mb-4 line-clamp-2 h-14 flex-grow text-xl font-medium">
 									{blog.content.title}
 								</Typography>
 								<div className="mt-auto flex items-center justify-between">
@@ -46,7 +46,7 @@ export default async function Page(props: { params: { lang: string; region: stri
 										<Image
 											src={blog.content.author.content.avatar.filename}
 											alt="author"
-											className="size-12 flex-none rounded-full"
+											className="w-12 h-12 flex-none rounded-full object-cover object-top"
 											width={100}
 											height={100}
 										/>
