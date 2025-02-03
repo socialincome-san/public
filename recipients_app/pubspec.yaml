@@ -43,7 +43,7 @@ dependencies:
   webview_flutter: ^4.10.0
 
 dev_dependencies:
-  alchemist: ^0.7.0
+  alchemist: ^0.11.0
   bloc_test: ^9.1.7
   build_runner: ^2.4.14
 
