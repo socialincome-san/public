@@ -50,20 +50,20 @@ enum PaymentUiStatus {
     iconColor: AppColors.fontColorDark,
   ),
 
-  /// grey label, dark font, timer icon
+  /// backgroundColor label, dark font, no visbible icon (That's why iconColor is same as color)
   toBePaid(
-    color: AppColors.lightGrey,
+    color: AppColors.backgroundColor,
     icon: Icons.timer_outlined,
     textColor: AppColors.fontColorDark,
-    iconColor: AppColors.fontColorDark,
+    iconColor: AppColors.backgroundColor,
   ),
 
-  /// not handled yet
+  /// backgroundColor label, dark font, no visbible icon (That's why iconColor is same as color)
   empty(
     color: AppColors.backgroundColor,
     icon: Icons.question_mark_rounded,
     textColor: AppColors.fontColorDark,
-    iconColor: Colors.white,
+    iconColor: AppColors.backgroundColor,
   );
 
   final Color color;
