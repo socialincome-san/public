@@ -177,9 +177,10 @@ https://docs.codemagic.io/codemagic-yaml-cheatsheet.html
 
 See [How to test](./docu/app_testing_guides/how_to_test.md)
 
-### Run golden tests
+### Golden tests
 
-Run `flutter test --update-golden` to update golden files.
+Run `flutter test` to run all tests incl. all golden tests.
+Run `flutter test --update-goldens` to update golden files.
 
 ## Releasing
 
