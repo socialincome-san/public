@@ -1,8 +1,8 @@
 import "package:app/data/models/organization.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:url_launcher/url_launcher_string.dart";
 
 class OrganizationInfo extends StatelessWidget {
@@ -15,14 +15,12 @@ class OrganizationInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 24),
         Text(
-          localizations.recommendingOrganization,
+          context.l10n.recommendingOrganization,
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(height: 16),
@@ -41,15 +39,12 @@ class OrganizationInfo extends StatelessWidget {
                     const SizedBox(width: 8),
                     Text(
                       organization.name,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const Spacer(),
                     if (organization.contactNumber != null)
                       ButtonSmall(
-                        label: localizations.call,
+                        label: context.l10n.call,
                         buttonType: ButtonSmallType.outlined,
                         color: Colors.black,
                         onPressed: () => launchUrlString(

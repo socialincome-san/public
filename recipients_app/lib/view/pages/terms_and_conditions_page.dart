@@ -1,13 +1,13 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/demo_manager.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/gestures.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:url_launcher/url_launcher_string.dart";
 
 class TermsAndConditionsPage extends StatelessWidget {
@@ -15,13 +15,12 @@ class TermsAndConditionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-    final demoManager = RepositoryProvider.of<DemoManager>(context);
+    final demoManager = context.read<DemoManager>();
 
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text(localizations.account),
+        title: Text(context.l10n.account),
         centerTitle: true,
       ),
       body: Padding(
@@ -39,14 +38,14 @@ class TermsAndConditionsPage extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: localizations.createAccountInfo,
+                          text: context.l10n.createAccountInfo,
                           style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                                 color: AppColors.primaryColor,
                                 fontWeight: FontWeight.bold,
                               ),
                         ),
                         TextSpan(
-                          text: localizations.privacyPolicy,
+                          text: context.l10n.privacyPolicy,
                           style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                                 color: AppColors.primaryColor,
                                 fontWeight: FontWeight.bold,
@@ -67,7 +66,7 @@ class TermsAndConditionsPage extends StatelessWidget {
                                   if (context.mounted) {
                                     FlushbarHelper.showFlushbar(
                                       context,
-                                      message: localizations.privacyPolicyError,
+                                      message: context.l10n.privacyPolicyError,
                                       type: FlushbarType.error,
                                     );
                                   }
@@ -97,7 +96,7 @@ class TermsAndConditionsPage extends StatelessWidget {
                       context.read<AuthCubit>().updateRecipient(updated);
                     }
                   },
-                  label: demoManager.isDemoEnabled ? localizations.createAccountDemo : localizations.createAccount,
+                  label: demoManager.isDemoEnabled ? context.l10n.createAccountDemo : context.l10n.createAccount,
                 ),
               ],
             ),

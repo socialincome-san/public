@@ -1,20 +1,18 @@
-import "package:app/data/datasource/demo/organization_demo_data_source.dart";
 import "package:app/data/datasource/organization_data_source.dart";
-import "package:app/data/datasource/remote/organization_remote_data_source.dart";
 import "package:app/data/models/organization.dart";
 import "package:app/demo_manager.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 
 class OrganizationRepository {
-  late OrganizationDataSource remoteDataSource = OrganizationRemoteDataSource(firestore: firestore);
-  late OrganizationDataSource demoDataSource = OrganizationDemoDataSource();
+  final OrganizationDataSource remoteDataSource;
+  final OrganizationDataSource demoDataSource;
 
   final DemoManager demoManager;
-  final FirebaseFirestore firestore;
 
-  OrganizationRepository({
-    required this.firestore,
+  const OrganizationRepository({
     required this.demoManager,
+    required this.remoteDataSource,
+    required this.demoDataSource,
   });
 
   OrganizationDataSource get _activeDataSource => demoManager.isDemoEnabled ? demoDataSource : remoteDataSource;

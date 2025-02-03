@@ -1,5 +1,6 @@
 import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/models/payment/payment.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/ui/inputs/input_text_area.dart";
 import "package:app/ui/inputs/radio_row.dart";
@@ -7,7 +8,6 @@ import "package:app/view/widgets/income/review_payment_bottom_action.dart";
 import "package:app/view/widgets/income/review_payment_header.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class ReviewPaymentModal extends StatefulWidget {
   final SocialIncomePayment _payment;
@@ -37,8 +37,6 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     return FractionallySizedBox(
       widthFactor: 0.95,
       heightFactor: 0.8,
@@ -84,13 +82,13 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
                     ),
                     if (_selectedReason != null && _selectedReason != ContestReason.other) ...[
                       ReviewPaymentBottomAction(
-                        actionLabel: localizations.submit,
+                        actionLabel: context.l10n.submit,
                         onAction: () => _onPressedContest(context, _selectedReason!),
                       ),
                     ],
                     if (_selectedReason != null && _selectedReason == ContestReason.other) ...[
                       ReviewPaymentBottomAction(
-                        actionLabel: localizations.next,
+                        actionLabel: context.l10n.next,
                         onAction: () => setState(() {
                           _firstContestStep = false;
                         }),
@@ -111,14 +109,14 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
                             const SizedBox(height: 16),
                             InputTextArea(
                               controller: inputController,
-                              hintText: localizations.describeWhatHappened,
+                              hintText: context.l10n.describeWhatHappened,
                             ),
                           ],
                         ),
                       ),
                     ),
                     ReviewPaymentBottomAction(
-                      actionLabel: localizations.submit,
+                      actionLabel: context.l10n.submit,
                       onAction: () {
                         _onPressedContest(
                           context,

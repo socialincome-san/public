@@ -1,8 +1,8 @@
 import "package:app/data/models/models.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/icons/payment_status_icon_with_text.dart";
 import "package:app/view/pages/payment_tile_bottom_action.dart";
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:intl/intl.dart";
 
 const _reviewUiStatuses = [
@@ -20,7 +20,6 @@ class PaymentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).toLanguageTag();
 
     return Card(
@@ -38,7 +37,7 @@ class PaymentTile extends StatelessWidget {
                 Text(
                   _formatDate(
                     mappedPayment.payment.paymentAt?.toDate(),
-                    localizations,
+                    context.l10n,
                     locale,
                   ),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(

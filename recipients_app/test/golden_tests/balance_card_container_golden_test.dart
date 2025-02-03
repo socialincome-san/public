@@ -15,6 +15,7 @@ void main() {
   setUp(() {
     mockPaymentsCubit = MockPaymentsCubit();
   });
+
   group("ListTile Golden Tests", () {
     goldenTest(
       "renders correctly",
