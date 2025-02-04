@@ -10,7 +10,13 @@ import {
 	NgoEntryJSON,
 	NgoHoverCardType,
 } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
+import { firestoreAdmin } from '@/firebase-admin';
+import { recipientNGOs } from '@socialincome/shared/src/types/recipient';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
+import {
+	OrganisationRecipientsByStatus,
+	RecipientStatsCalculator,
+} from '@socialincome/shared/src/utils/stats/RecipientStatsCalculator';
 import { CH, SL } from 'country-flag-icons/react/1x1';
 import { ReactElement } from 'react';
 
@@ -30,7 +36,7 @@ export async function NgoList({ lang, region }: DefaultParams) {
 	});
 	const image_base_path = '/assets/partners/';
 
-	const ngos: string[] = translator.t('ngos');
+	const ngos: string[] = recipientNGOs;
 	const ngoArray: NgoEntryJSON[] = [];
 	ngos.forEach((slug: string) => {
 		const ngo: NgoEntryJSON = translator.t(slug);
@@ -38,13 +44,17 @@ export async function NgoList({ lang, region }: DefaultParams) {
 	});
 	const ngoCardPropsArray: NgoCardProps[] = [];
 
+	const recipientCalculator = await RecipientStatsCalculator.build(firestoreAdmin);
+	const recipientStats: OrganisationRecipientsByStatus = recipientCalculator.allStats().totalRecipientsByOrganization;
+
 	for (let i = 0; i < ngoArray.length; ++i) {
+		const currentOrgRecipientStats = recipientStats[ngos[i]];
 		const recipientsBadge: RecipientsBadgeType = {
 			hoverCardOrgName: ngoArray[i]['org-long-name'],
-			hoverCardTotalRecipients: ngoArray[i]['recipients-total'],
-			hoverCardTotalActiveRecipients: ngoArray[i]['recipients-active'],
-			hoverCardTotalFormerRecipients: ngoArray[i]['recipients-former'],
-			hoverCardTotalSuspendedRecipients: ngoArray[i]['recipients-suspend'],
+			hoverCardTotalRecipients: currentOrgRecipientStats?.total ?? 0,
+			hoverCardTotalActiveRecipients: currentOrgRecipientStats?.active ?? 0,
+			hoverCardTotalFormerRecipients: currentOrgRecipientStats?.former ?? 0,
+			hoverCardTotalSuspendedRecipients: currentOrgRecipientStats?.suspended ?? 0,
 			translatorBadgeRecipients: '',
 			translatorBadgeRecipientsBy: '',
 			translatorBadgeActive: '',
