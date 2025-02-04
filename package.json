@@ -45,10 +45,10 @@
 		"website:check-translations": "npm --workspace=@socialincome/website run check-translations",
 		"ui:serve": "npm --workspace=@socialincome/ui run storybook",
 		"ui:build": "npm --workspace=@socialincome/ui run build-storybook",
-		"dev:ssl-proxy": "local-ssl-proxy --source 3000 --target 3001"
+		"dev:ssl-proxy": "ssl-proxy --source 3000 --target 3001"
 	},
 	"devDependencies": {
-		"firebase-tools": "13.29.1",
+		"firebase-tools": "13.29.3",
 		"prettier": "3.4.2",
 		"prettier-plugin-organize-imports": "4.1.0",
 		"prettier-plugin-tailwindcss": "0.6.9",
