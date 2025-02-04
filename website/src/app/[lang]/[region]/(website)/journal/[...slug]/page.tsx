@@ -3,24 +3,40 @@ import { Badge, Typography } from '@socialincome/ui';
 import { getStoryblokApi } from '@storyblok/react';
 import { draftMode } from 'next/headers';
 import Image from 'next/image';
+import { notFound } from 'next/navigation';
 import type { ISbStoriesParams } from 'storyblok-js-client/src/interfaces';
 import { render } from 'storyblok-rich-text-react-renderer';
+import StoryBlokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryBlokAuthorImage';
+import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { LanguageCode } from '@socialincome/shared/src/types/language';
 
 export const revalidate = 3600; // Update once an hour
 
-export default async function Page(props: { params: { slug: string[]; lang: string } }) {
-	const lang = props.params.lang;
-	async function loadArticle() {
-		const params: ISbStoriesParams = {
-			...(draftMode().isEnabled ? { version: 'draft' } : {}),
-			resolve_relations: ['article.author', 'article.topics'],
-			language: lang,
-		};
-		const { data } = await getStoryblokApi().get(`cdn/stories/journal/${props.params.slug.join('/')}`, params);
-		return data;
-	}
+async function loadArticle(lang: string, slug: string[]) {
+	const params: ISbStoriesParams = {
+		...(draftMode().isEnabled ? { version: 'draft' } : {}),
+		resolve_relations: ['article.author', 'article.topics'],
+		language: lang
+	};
+	const result = await getStoryblokApi().get(`cdn/stories/journal/${slug?.join('/')}`, params)
+		.catch(error => {
+			if (error.status == 404) {
+				throw notFound();
+			}
+			throw error;
+		});
+	return result.data;
+}
 
-	const data = await loadArticle();
+export default async function Page(props: { params: { slug: string[]; lang: LanguageCode } }) {
+	const lang = props.params.lang;
+
+	const translator = await Translator.getInstance({
+		language: lang,
+		namespaces: ['website-journal']
+	});
+
+	const data = await loadArticle(props.params.lang, props.params.slug);
 	const articleData: StoryBlokArticle = data.story.content;
 	const author: StoryBlokAuthor = articleData.author;
 
@@ -42,7 +58,8 @@ export default async function Page(props: { params: { slug: string[]; lang: stri
 						height={700}
 					/>
 				</div>
-				<div className="flex flex-col items-center justify-center p-8 text-center md:order-1 md:w-1/2 md:items-start md:text-left lg:p-16">
+				<div
+					className="flex flex-col items-center justify-center p-8 text-center md:order-1 md:w-1/2 md:items-start md:text-left lg:p-16">
 					<div className="flex flex-wrap justify-center gap-2 md:justify-start">
 						{articleData.topics?.map((topic) => (
 							<Badge key={topic.slug} variant="foreground" className="mb-2">
@@ -54,20 +71,14 @@ export default async function Page(props: { params: { slug: string[]; lang: stri
 						{articleData.title}
 					</Typography>
 					<div className="mt-7 flex items-center space-x-4">
-						<Image
-							src={author.content.avatar.filename ?? '/placeholder.svg'}
-							alt="author"
-							className="w-12 h-12 flex-none rounded-full object-cover object-top"
-							width={100}
-							height={100}
-						/>
+						<StoryBlokAuthorImage author={author} />
 						<div className="text-left">
 							<Typography color={'popover'} size="sm">
 								Published {getPublishedDateFormatted(data.story.published_at, lang)}
 							</Typography>
 							<Typography color={'popover'} size="sm">
-								by{' '}
-								<Typography as="span" color={'accent'}>
+								{translator.t('written-by')}
+								<Typography as="span" color={'accent'} className={'ml-1'}>
 									{author.content.fullName}
 								</Typography>
 							</Typography>
@@ -76,7 +87,6 @@ export default async function Page(props: { params: { slug: string[]; lang: stri
 				</div>
 			</div>
 
-			{/* Content Section */}
 			<div className="prose mx-auto max-w-2xl content-center p-4 my-10 sm:p-6">{render(articleData.content)}</div>
 		</div>
 	);
