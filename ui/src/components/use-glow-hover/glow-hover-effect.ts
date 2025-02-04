@@ -47,7 +47,7 @@ export function parseColor(colorToParse: string) {
 	}
 }
 
-export const glowHoverEffect = (el: HTMLElement, { preset, ...options }: GlowHoverOptions) => {
+export const glowHoverEffect = <T extends HTMLElement>(el: T, { preset, ...options }: GlowHoverOptions) => {
 	if (!el) {
 		return () => {};
 	}
