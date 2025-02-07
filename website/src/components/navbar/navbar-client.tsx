@@ -230,6 +230,9 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 							<NavbarLink href={`/${lang}/${region}/donate/individual`} className="text-accent text-2xl">
 								{translations.donate}
 							</NavbarLink>
+							<NavbarLink href={`/${lang}/${region}/journal`} className=" text-2xl">
+								Journal
+							</NavbarLink>
 						</div>
 					</div>
 				</div>
@@ -291,6 +294,12 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 						<DonateIcon className="h-4 w-4" />
 						<NavbarLink href={`/${lang}/${region}/donate/individual`} className="text-accent">
 							{translations.donate}
+						</NavbarLink>
+
+					</div>
+					<div>
+						<NavbarLink href={`/${lang}/${region}/journal`}>
+							Journal
 						</NavbarLink>
 					</div>
 				</div>

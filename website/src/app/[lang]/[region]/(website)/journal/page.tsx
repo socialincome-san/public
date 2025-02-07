@@ -36,8 +36,8 @@ export default async function Page(props: { params: { lang: LanguageCode; region
 
 	return (
 		<BaseContainer>
-			<Typography size={'xl'}>{translator.t('overview.title')}</Typography>
-			<div className="mt-5 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+			<Typography className={'text-center'}  size={'3xl'}>{translator.t('overview.title')}</Typography>
+			<div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
 				{blogObject.map((blog) => (
 					<Link href={getHref(blog)} key={blog.content.title}>
 						<Card className="overflow-hidden transition-transform duration-300 hover:scale-105">

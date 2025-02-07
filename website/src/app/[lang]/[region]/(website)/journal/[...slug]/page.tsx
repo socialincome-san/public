@@ -74,7 +74,7 @@ export default async function Page(props: { params: { slug: string[]; lang: Lang
 						<StoryBlokAuthorImage author={author} />
 						<div className="text-left">
 							<Typography color={'popover'} size="sm">
-								Published {getPublishedDateFormatted(data.story.published_at, lang)}
+								{translator.t('published')} {getPublishedDateFormatted(data.story.published_at, lang)}
 							</Typography>
 							<Typography color={'popover'} size="sm">
 								{translator.t('written-by')}
