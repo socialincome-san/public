@@ -230,6 +230,8 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 							<NavbarLink href={`/${lang}/${region}/donate/individual`} className="text-accent text-2xl">
 								{translations.donate}
 							</NavbarLink>
+						</div>
+						<div className="flex-inline flex items-center">
 							<NavbarLink href={`/${lang}/${region}/journal`} className=" text-2xl">
 								Journal
 							</NavbarLink>
@@ -297,7 +299,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 						</NavbarLink>
 
 					</div>
-					<div>
+					<div className="flex-inline mt-auto">
 						<NavbarLink href={`/${lang}/${region}/journal`}>
 							Journal
 						</NavbarLink>
