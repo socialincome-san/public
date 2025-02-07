@@ -62,7 +62,7 @@ export default async function Page(props: { params: { slug: string[]; lang: Lang
 					className="flex flex-col items-center justify-center p-8 text-center md:order-1 md:w-1/2 md:items-start md:text-left lg:p-16">
 					<div className="flex flex-wrap justify-center gap-2 md:justify-start">
 						{articleData.topics?.map((topic) => (
-							<Badge key={topic.slug} variant="foreground" className="mb-2">
+							<Badge key={topic.slug} variant="white" className="mb-2">
 								{topic.content.value}
 							</Badge>
 						))}
