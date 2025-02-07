@@ -2,5 +2,6 @@
   "overview": {
     "title": "Journal Overview"
   },
-  "written-by": "by"
+  "written-by": "by",
+  "published": "published"
 }
