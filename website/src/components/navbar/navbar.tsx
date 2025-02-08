@@ -22,6 +22,7 @@ async function Navbar({ lang, region }: DefaultParams) {
 				contactDetails: translator.t('tabs.contact-details'),
 				payments: translator.t('tabs.contributions'),
 				signOut: translator.t('sign-out'),
+				journal: translator.t('navigation.journal'),
 			}}
 			languages={mainWebsiteLanguages.map((lang) => ({
 				code: lang,
