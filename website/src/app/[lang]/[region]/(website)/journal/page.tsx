@@ -29,9 +29,7 @@ export default async function Page(props: { params: { lang: LanguageCode; region
 		namespaces: ['website-journal']
 	});
 
-	function getPublishedDateFormatted(date: string | null) {
-		if (!date)
-			return '';
+	function getPublishedDateFormatted(date: string) {
 		const dateObject = new Date(date);
 		return dateObject.toLocaleDateString();
 	}
@@ -42,7 +40,8 @@ export default async function Page(props: { params: { lang: LanguageCode; region
 
 	return (
 		<BaseContainer>
-			<Typography className={'text-center'} size={'3xl'}>{translator.t('overview.title')}</Typography>
+			<Typography weight={'bold'} className={'text-center'} size={'3xl'}>{translator.t('overview.title')}</Typography>
+			<Typography className={'text-center mt-5'} size={'xl'}>{translator.t('overview.description')}</Typography>
 			<div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
 				{blogObjects.map((blog) => (
 					<Link href={getHref(blog.default_full_slug!)} key={blog.content.title}>
@@ -55,7 +54,7 @@ export default async function Page(props: { params: { lang: LanguageCode; region
 								className="h-48 w-full object-cover"
 							/>
 							<CardContent className="flex flex-grow flex-col p-6">
-								<Typography size={'xl'} className="mb-4 line-clamp-2 h-14 flex-grow font-medium">
+								<Typography size={'xl'} className="mb-4 line-clamp-2 h-14 flex-grow font-medium ">
 									{blog.content.title}
 								</Typography>
 								<div className="mt-auto flex items-center justify-between">
@@ -63,7 +62,7 @@ export default async function Page(props: { params: { lang: LanguageCode; region
 										<StoryBlokAuthorImage author={blog.content.author} />
 										<Typography>{blog.content.author.content.fullName}</Typography>
 									</div>
-									<Typography>{getPublishedDateFormatted(blog.published_at)}</Typography>
+									<Typography>{getPublishedDateFormatted(blog.published_at!)}</Typography>
 								</div>
 							</CardContent>
 						</Card>
