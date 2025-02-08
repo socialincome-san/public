@@ -28,7 +28,8 @@
 		"team": "Team",
 		"partners": "Partners",
 		"transparency": "Transparency",
-		"whats-next": "What's Next"
+		"whats-next": "What's Next",
+		"journal" : "Journal"
 	},
 	"footer": {
 		"follow-us": "Follow Us",
