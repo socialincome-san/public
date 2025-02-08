@@ -1,7 +1,8 @@
 import type { StoryBlokAuthor } from '@socialincome/shared/src/storyblok/article';
 import Image from 'next/image';
+import { ISbStoryData } from 'storyblok-js-client/src/interfaces';
 
-function StoryBlokAuthorImage(props: { author: StoryBlokAuthor }) {
+function StoryBlokAuthorImage(props: { author: ISbStoryData<StoryBlokAuthor> }) {
 	return <Image
 		src={props.author.content.avatar.filename}
 		alt="author"

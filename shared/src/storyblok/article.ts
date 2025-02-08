@@ -1,20 +1,19 @@
+import { ISbStoryData } from 'storyblok-js-client/src/interfaces';
+
 export interface StoryBlokImage {
 	alt: string;
 	filename: string;
 }
 
 export interface StoryBlokTopic {
-	slug: string;
-	content: {
-		value: string;
-	};
+	value: string;
 }
 
 export interface StoryBlokAuthor {
-	content: {
-		avatar: StoryBlokImage;
-		fullName: string;
-	};
+
+	avatar: StoryBlokImage;
+	fullName: string;
+
 }
 
 export interface StoryBlokArticle {
@@ -23,6 +22,6 @@ export interface StoryBlokArticle {
 	content: any;
 	subtitle: string;
 	image: StoryBlokImage;
-	topics: StoryBlokTopic[];
-	author: StoryBlokAuthor;
+	topics: ISbStoryData<StoryBlokTopic>[];
+	author: ISbStoryData<StoryBlokAuthor>;
 }
