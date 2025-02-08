@@ -207,6 +207,11 @@ your [Admin Tool](http://localhost:3000) or the
 locally. After making any changes, you can export the updated data to
 the seed folder using the command `npm run firebase:export`.
 
+#### Storyblok Development
+1. Read the storyblok [documentation](https://www.storyblok.com/docs).
+2. Set the values `STORYBLOK_PREVIEW_TOKEN` and `STORYBLOK_PREVIEW_SECRET` to the [env.development](website/.env.development). You can find the `STORYBLOK_PREVIEW_TOKEN` on [storyblok_token](https://app.storyblok.com/#/me/spaces/109655/settings?tab=api) and the `STORYBLOK_PREVIEW_SECRET` on [VISUAL_EDITOR](https://app.storyblok.com/#/me/spaces/109655/settings?tab=editor) on the `preview-url`
+3. (optional-step) `npm run dev:ssl-proxy`, this is needed if you want to preview the changes on the storyblok live editor for the local environment.
+
 #### Format Code
 
 We are using [Prettier](https://prettier.io) to format the code:
