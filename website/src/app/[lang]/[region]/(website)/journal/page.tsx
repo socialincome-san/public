@@ -14,7 +14,8 @@ async function loadOverviewBlogs(lang: string): Promise<ISbStories<StoryBlokArti
 	const params: ISbStoriesParams = {
 		resolve_relations: ['article.author', 'article.topics'],
 		language: lang,
-		with_tag: 'overview'
+		with_tag: 'overview',
+		sort_by: 'created_at:desc'
 	};
 	return await getStoryblokApi().get(`cdn/stories`, params);
 }

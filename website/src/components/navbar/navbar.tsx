@@ -89,7 +89,7 @@ async function Navbar({ lang, region }: DefaultParams) {
 					id: 'journal',
 					href: `/${lang}/${region}/journal`,
 					title: translator.t('navigation.journal')
-				}
+				},
 			]}
 		/>
 	);
