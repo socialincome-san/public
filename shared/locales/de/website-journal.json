@@ -1,8 +1,8 @@
 {
-  "overview": {
-    "title": "Journal",
-    "description": "News, Insights und Einblicke in die Arbeit von Social Income."
-  },
-  "written-by": "von",
-  "published": "publiziert"
+	"overview": {
+		"title": "Journal",
+		"description": "News, Insights und Einblicke in die Arbeit von Social Income."
+	},
+	"written-by": "von",
+	"published": "publiziert"
 }

@@ -10,10 +10,8 @@ export interface StoryBlokTopic {
 }
 
 export interface StoryBlokAuthor {
-
 	avatar: StoryBlokImage;
 	fullName: string;
-
 }
 
 export interface StoryBlokArticle {
