@@ -15,8 +15,8 @@ function getLanguage(slug: string | null) {
 	return DEFAULT_LANGUAGE;
 }
 
-function validateSecret(secret: string | null, slug: string) {
-	return secret !== process.env.STORYBLOK_PREVIEW_SECRET || !slug;
+function validateSecret(secret: string | null) {
+	return secret !== process.env.STORYBLOK_PREVIEW_SECRET;
 }
 
 function validateSlug(slug: string | undefined | null) {
@@ -51,10 +51,10 @@ export async function GET(request: Request) {
 	const slug = removeLanguagePrefix(searchParams.get('slug'), lang);
 
 	if (!validateSlug(slug)) {
-		return new Response('Invalid is missing', { status: 400 });
+		return new Response('Invalid slug', { status: 400 });
 	}
 
-	if (validateSecret(secret, slug!)) {
+	if (validateSecret(secret)) {
 		return new Response('Invalid token', { status: 401 });
 	}
 	enableDraftModeAndAdaptCookie();
