@@ -1,8 +1,8 @@
 {
-  "overview": {
-    "title": "Journal",
-    "description": "Stories, insights and updates on our journey to create impact."
-  },
-  "written-by": "by",
-  "published": "published"
+	"overview": {
+		"title": "Journal",
+		"description": "Stories, insights and updates on our journey to create impact."
+	},
+	"written-by": "by",
+	"published": "published"
 }

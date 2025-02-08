@@ -296,13 +296,9 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 						<NavbarLink href={`/${lang}/${region}/donate/individual`} className="text-accent">
 							{translations.donate}
 						</NavbarLink>
-
 					</div>
 
-					<NavbarLink href={`/${lang}/${region}/journal`}>
-						{translations.journal}
-					</NavbarLink>
-
+					<NavbarLink href={`/${lang}/${region}/journal`}>{translations.journal}</NavbarLink>
 				</div>
 			</div>
 			<div className="flex flex-row items-center justify-evenly gap-x-10 overflow-visible">

@@ -6,7 +6,7 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 async function Navbar({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['common', 'website-common', 'website-me']
+		namespaces: ['common', 'website-common', 'website-me'],
 	});
 
 	return (
@@ -88,7 +88,7 @@ async function Navbar({ lang, region }: DefaultParams) {
 				{
 					id: 'journal',
 					href: `/${lang}/${region}/journal`,
-					title: translator.t('navigation.journal')
+					title: translator.t('navigation.journal'),
 				},
 			]}
 		/>
