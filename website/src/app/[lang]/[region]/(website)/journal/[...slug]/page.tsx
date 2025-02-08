@@ -4,7 +4,7 @@ import { getStoryblokApi } from '@storyblok/react';
 import { draftMode } from 'next/headers';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import type { ISbStoriesParams } from 'storyblok-js-client/src/interfaces';
+import { ISbStoriesParams, ISbStoryData } from 'storyblok-js-client/src/interfaces';
 import { render } from 'storyblok-rich-text-react-renderer';
 import StoryBlokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryBlokAuthorImage';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -12,23 +12,40 @@ import { LanguageCode } from '@socialincome/shared/src/types/language';
 
 export const revalidate = 3600; // Update once an hour
 
-async function loadArticle(lang: string, slug: string[]) {
+const NOT_FOUND = 404;
+
+const DEFAULT_LANGUAGE = 'en';
+
+async function loadArticle(lang: string, slug: string[]): Promise<any> {
 	const params: ISbStoriesParams = {
 		...(draftMode().isEnabled ? { version: 'draft' } : {}),
 		resolve_relations: ['article.author', 'article.topics'],
 		language: lang
 	};
-	const result = await getStoryblokApi().get(`cdn/stories/journal/${slug?.join('/')}`, params)
-		.catch(error => {
-			if (error.status == 404) {
-				throw notFound();
-			}
-			throw error;
-		});
-	return result.data;
+	return await getStoryblokApi().get(`cdn/stories/journal/${slug?.join('/')}`, params);
 }
 
-export default async function Page(props: { params: { slug: string[]; lang: LanguageCode } }) {
+async function loadArticleWithFallbackToDefaultLanguage(lang: string, slug: string[]): Promise<any> {
+	try {
+		return await loadArticle(lang, slug);
+	} catch (error: any) {
+		if (error.status === NOT_FOUND) {
+			if (lang === DEFAULT_LANGUAGE) {
+				throw notFound();
+			}
+			return await loadArticle(DEFAULT_LANGUAGE, slug);
+		}
+		throw error;
+	}
+}
+
+function getPublishedDateFormatted(date: string, lang: string) {
+	const dateObject = new Date(date);
+	const month = dateObject.toLocaleString(lang, { month: 'long' });
+	return `${month} ${dateObject.getDate()}, ${dateObject.getFullYear()}`;
+}
+
+export default async function Page(props: { params: { slug: string[]; lang: LanguageCode; region: string } }) {
 	const lang = props.params.lang;
 
 	const translator = await Translator.getInstance({
@@ -36,23 +53,18 @@ export default async function Page(props: { params: { slug: string[]; lang: Lang
 		namespaces: ['website-journal']
 	});
 
-	const data = await loadArticle(props.params.lang, props.params.slug);
-	const articleData: StoryBlokArticle = data.story.content;
-	const author: StoryBlokAuthor = articleData.author;
+	const loadArticleResponse = await loadArticleWithFallbackToDefaultLanguage(props.params.lang, props.params.slug);
+	const articleData: StoryBlokArticle = loadArticleResponse.data.story.content;
+	const author: ISbStoryData<StoryBlokAuthor> = articleData.author;
 
-	function getPublishedDateFormatted(date: string, lang: string) {
-		const dateObject = new Date(date);
-		const month = dateObject.toLocaleString(lang, { month: 'long' });
-		return `${month} ${dateObject.getDate()}, ${dateObject.getFullYear()}`;
-	}
 
 	return (
 		<div className="blog w-full justify-center">
 			<div className="bg-primary flex flex-col md:min-h-screen md:flex-row">
 				<div className="md:order-2 md:w-1/2">
 					<Image
-						src={articleData.image?.filename ?? '/placeholder.svg'}
-						alt={articleData.image?.alt ?? 'Article image'}
+						src={articleData.image.filename}
+						alt={articleData.image?.alt}
 						className="w-full object-cover md:h-screen"
 						width={900}
 						height={700}
@@ -74,7 +86,7 @@ export default async function Page(props: { params: { slug: string[]; lang: Lang
 						<StoryBlokAuthorImage author={author} />
 						<div className="text-left">
 							<Typography color={'popover'} size="sm">
-								{translator.t('published')} {getPublishedDateFormatted(data.story.published_at, lang)}
+								{translator.t('published')} {getPublishedDateFormatted(loadArticleResponse.data.story.published_at, lang)}
 							</Typography>
 							<Typography color={'popover'} size="sm">
 								{translator.t('written-by')}
