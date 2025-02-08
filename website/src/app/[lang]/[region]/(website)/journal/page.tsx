@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ISbStories, ISbStoriesParams } from 'storyblok-js-client/src/interfaces';
 
-export const revalidate = 3600; // Update once an hour
+export const revalidate = 900;
 
 async function loadOverviewBlogs(lang: string): Promise<ISbStories<StoryBlokArticle>> {
 	const params: ISbStoriesParams = {

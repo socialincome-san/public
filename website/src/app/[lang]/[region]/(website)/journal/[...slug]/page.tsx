@@ -10,7 +10,7 @@ import { notFound } from 'next/navigation';
 import { ISbStoriesParams, ISbStoryData } from 'storyblok-js-client/src/interfaces';
 import { render } from 'storyblok-rich-text-react-renderer';
 
-export const revalidate = 3600; // Update once an hour
+export const revalidate = 900;
 
 const NOT_FOUND = 404;
 
