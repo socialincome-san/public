@@ -16,7 +16,7 @@ function getLanguage(slug: string | null) {
 }
 
 function validateSecret(secret: string | null) {
-	return secret !== process.env.STORYBLOK_PREVIEW_SECRET;
+	return secret === process.env.STORYBLOK_PREVIEW_SECRET;
 }
 
 function validateSlug(slug: string | undefined | null) {
@@ -54,7 +54,7 @@ export async function GET(request: Request) {
 		return new Response('Invalid slug', { status: 400 });
 	}
 
-	if (validateSecret(secret)) {
+	if (!validateSecret(secret)) {
 		return new Response('Invalid token', { status: 401 });
 	}
 	enableDraftModeAndAdaptCookie();
