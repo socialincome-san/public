@@ -24,7 +24,7 @@ function validateSlug(slug: string | undefined | null) {
 }
 
 function removeLanguagePrefix(slug: string | null, language: string) {
-	return slug && slug.startsWith(language) ? slug.replace(language, '').replace('/', '') : slug;
+	return slug?.startsWith(language) ? slug.replace(language, '').replace('/', '') : slug;
 }
 
 function enableDraftModeAndAdaptCookie() {
