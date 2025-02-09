@@ -16,7 +16,7 @@ function getLanguage(slug: string | null) {
 }
 
 function validateSecret(secret: string | null) {
-	return secret === process.env.STORYBLOK_PREVIEW_SECRET;
+	return process.env.STORYBLOK_PREVIEW_SECRET && secret === process.env.STORYBLOK_PREVIEW_SECRET;
 }
 
 function validateSlug(slug: string | undefined | null) {
