@@ -4,6 +4,7 @@ import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Card, CardContent, Typography } from '@socialincome/ui';
 import { getStoryblokApi } from '@storyblok/react';
+import { DateTime } from 'luxon';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ISbStories, ISbStoriesParams } from 'storyblok-js-client/src/interfaces';
@@ -31,8 +32,8 @@ export default async function Page(props: { params: { lang: LanguageCode; region
 	});
 
 	function getPublishedDateFormatted(date: string) {
-		const dateObject = new Date(date);
-		return dateObject.toLocaleDateString();
+		const dateObject = DateTime.fromISO(date);
+		return dateObject.isValid ? dateObject.toFormat('dd/MM/yyyy') : '';
 	}
 
 	function getHref(slug: string) {

@@ -4,6 +4,7 @@ import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, Typography } from '@socialincome/ui';
 import { getStoryblokApi } from '@storyblok/react';
+import { DateTime } from 'luxon';
 import { draftMode } from 'next/headers';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
@@ -40,9 +41,8 @@ async function loadArticleWithFallbackToDefaultLanguage(lang: string, slug: stri
 }
 
 function getPublishedDateFormatted(date: string, lang: string) {
-	const dateObject = new Date(date);
-	const month = dateObject.toLocaleString(lang, { month: 'long' });
-	return `${month} ${dateObject.getDate()}, ${dateObject.getFullYear()}`;
+	const dateObject = DateTime.fromISO(date).setLocale(lang);
+	return dateObject.isValid ? dateObject.toFormat('MMMM dd, yyyy') : '';
 }
 
 export default async function Page(props: { params: { slug: string[]; lang: LanguageCode; region: string } }) {
