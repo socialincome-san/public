@@ -1,15 +1,21 @@
+const { withSentryConfig } = require('@sentry/nextjs');
+
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
 	transpilePackages: ['@socialincome/ui'],
 	reactStrictMode: true,
+	images: {
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: 'a.storyblok.com',
+			},
+		],
+	},
 };
 
-module.exports = nextConfig;
-
-const { withSentryConfig } = require('@sentry/nextjs');
-
-module.exports = withSentryConfig(module.exports, {
+module.exports = withSentryConfig(nextConfig, {
 	// https://github.com/getsentry/sentry-webpack-plugin#options
 	org: 'social-income',
 	project: 'website',
@@ -24,7 +30,6 @@ module.exports = withSentryConfig(module.exports, {
 
 	// Upload a larger set of source maps for prettier stack traces (increases build time)
 	widenClientFileUpload: true,
-
 	// Uncomment to route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
 	// This can increase your server load as well as your hosting bill.
 	// Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
