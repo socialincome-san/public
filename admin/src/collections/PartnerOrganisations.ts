@@ -16,12 +16,19 @@ export const buildPartnerOrganisationsCollection = () => {
 		properties: buildProperties<PartnerOrganisation>({
 			name: {
 				dataType: 'string',
+				name: 'Org Name',
 			},
 			contactName: {
 				dataType: 'string',
+				name: 'Contact Person',
 			},
 			contactNumber: {
 				dataType: 'string',
+				name: 'Contact Number',
+			},
+			communitySize: {
+				dataType: 'number',
+				name: 'Community Size',
 			},
 		}),
 	});

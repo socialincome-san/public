@@ -17,6 +17,7 @@ export async function initializeGlobalTestData(projectId?: string) {
 		name: 'Aurora',
 		contactName: 'Contact Person',
 		contactNumber: '002020203020',
+		communitySize: 100,
 	});
 
 	// exchange rate entry for April 15, 2023
