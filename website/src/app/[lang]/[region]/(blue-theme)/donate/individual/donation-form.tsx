@@ -206,7 +206,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 						<CurrencySelector className="h-16 w-full sm:flex-1" currencies={websiteCurrencies} fontSize="lg" />
 					</div>
 					{form.watch('monthlyIncome') > 0 && (
-						<Card className="theme-light">
+						<Card className="theme-default bg-white">
 							<CardHeader>
 								<DonationImpact lang={lang} translations={translations.donationImpact} />
 							</CardHeader>
