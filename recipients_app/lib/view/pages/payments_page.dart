@@ -141,31 +141,33 @@ class _PaymentsPageState extends State<PaymentsPage> {
   String _calculatePastPayments(List<MappedPayment> mappedPayments) {
     var total = 0;
 
-    for (final mappedPayment in mappedPayments) {
-      final paymentStatus = mappedPayment.payment.status;
-      if (paymentStatus != PaymentStatus.paid && paymentStatus != PaymentStatus.confirmed) continue;
+    final List<MappedPayment> paidOrConfirmedPayments = _getAllPaidOrConfirmedPayments(mappedPayments);
 
-      // some of the users still have SLL from begining of the program,
-      // we will change it to SLE
-      final factor = (mappedPayment.payment.currency == "SLL") ? 1000 : 1;
-      total += (mappedPayment.payment.amount ?? 0) ~/ factor;
+    for (final payment in paidOrConfirmedPayments) {
+      // Some of the users still have the currency SLL from the begining of the program. We will change it to SLE.
+      final factor = (payment.payment.currency == "SLL") ? 1000 : 1;
+      total += (payment.payment.amount ?? 0) ~/ factor;
     }
 
-    return "${mappedPayments.firstOrNull?.payment.currency ?? "SLE"} $total";
+    return "${paidOrConfirmedPayments.firstOrNull?.payment.currency ?? "SLE"} $total";
   }
 
   String _calculateFuturePayments(List<MappedPayment> mappedPayments) {
+    final List<MappedPayment> paidOrConfirmedPayments = _getAllPaidOrConfirmedPayments(mappedPayments);
+
+    // Due to problem that payment amount can change, we need to calculate the future payments without calculation of previous payments
+    final futurePayments = (kProgramDurationMonths - paidOrConfirmedPayments.length) * kCurrentPaymentAmount;
+
+    return "${paidOrConfirmedPayments.firstOrNull?.payment.currency ?? "SLE"} $futurePayments";
+  }
+
+  List<MappedPayment> _getAllPaidOrConfirmedPayments(List<MappedPayment> mappedPayments) {
     final paidOrConfirmedPayments = mappedPayments.where(
       (payment) {
         final paymentStatus = payment.payment.status;
         return paymentStatus == PaymentStatus.paid || paymentStatus == PaymentStatus.confirmed;
       },
     ).toList();
-
-    // due to problem that payment amount can change we need to calculate
-    // the future payments without calculation of previous payments
-    final futurePayments = (kProgramDurationMonths - paidOrConfirmedPayments.length) * kCurrentPaymentAmount;
-
-    return "${paidOrConfirmedPayments.firstOrNull?.payment.currency ?? "SLE"} $futurePayments";
+    return paidOrConfirmedPayments;
   }
 }
