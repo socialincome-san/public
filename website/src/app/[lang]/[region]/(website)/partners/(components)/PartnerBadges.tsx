@@ -100,18 +100,11 @@ function SDGBadge({
 
 function FundraiserBadge({ fundRaiserTranslation }: FundRaiserBadgeType) {
 	return (
-		<HoverCard>
-			<HoverCardTrigger>
-				<Badge variant="interactive-accent">
-					<Typography size="sm" weight="normal" className="text-inherit">
-						{fundRaiserTranslation}
-					</Typography>
-				</Badge>
-			</HoverCardTrigger>
-			{/*<HoverCardContent>*/}
-			{/*TODO: Should anything go here?*/}
-			{/*</HoverCardContent>*/}
-		</HoverCard>
+		<Badge variant="interactive-accent">
+			<Typography size="sm" weight="normal" className="text-inherit">
+				{fundRaiserTranslation}
+			</Typography>
+		</Badge>
 	);
 }
 
