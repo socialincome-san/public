@@ -20,9 +20,9 @@
 		"it": "IT",
 		"kri": "Krio"
 	},
-	"gender": "Geschlecht",
+	"gender": "Anrede",
 	"genders": {
-		"male": "Mann",
+		"male": "Herr",
 		"female": "Frau",
 		"other": "Neutrale Anrede",
 		"private": "Keine Angabe"

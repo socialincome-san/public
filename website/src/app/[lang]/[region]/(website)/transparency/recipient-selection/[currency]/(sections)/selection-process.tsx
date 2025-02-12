@@ -108,7 +108,7 @@ export function SelectionProcess({ lang }: DefaultParams) {
 						</Typography>
 						<Typography className="mb-4 text-xl">{translator?.t('section-3.preselection-desc')}</Typography>
 						<div className="mb-6 flex items-center space-x-2">
-							<Badge className="bg-primary text-md border-none">
+							<Badge size="md">
 								<Typography weight="normal">{translator?.t('section-3.goal')}</Typography>
 							</Badge>
 							<Typography className="text-md">{translator?.t('section-3.preselection-goal')}</Typography>
@@ -142,7 +142,7 @@ export function SelectionProcess({ lang }: DefaultParams) {
 						</Typography>
 						<Typography className="mb-4 text-xl">{translator?.t('section-3.selection-desc')}</Typography>
 						<div className="mb-6 flex items-center space-x-2">
-							<Badge className="bg-primary text-md border-none">
+							<Badge size="md">
 								<Typography weight="normal">{translator?.t('section-3.goal')}</Typography>
 							</Badge>
 							<Typography className="text-md">{translator?.t('section-3.selection-goal')}</Typography>

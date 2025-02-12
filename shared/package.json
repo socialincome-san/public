@@ -27,7 +27,6 @@
 		"i18next-resources-to-backend": "^1.2.1",
 		"luxon": "^3.5.0",
 		"mjml": "^4.15.3",
-		"stripe": "^17.1.0",
-		"twilio": "^5.3.3"
+		"stripe": "^17.1.0"
 	}
 }

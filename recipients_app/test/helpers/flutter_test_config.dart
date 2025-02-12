@@ -4,7 +4,7 @@ import "package:alchemist/alchemist.dart";
 import "package:app/ui/configs/app_theme.dart";
 
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
-  const isRunningInCi = bool.fromEnvironment("CI");
+  //const isRunningInCi = bool.fromEnvironment("CI");
 
   return AlchemistConfig.runWithConfig(
     config: AlchemistConfig(
