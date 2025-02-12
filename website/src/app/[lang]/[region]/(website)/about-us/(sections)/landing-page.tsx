@@ -1,6 +1,6 @@
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Badge, BaseContainer, Button, Popover, PopoverContent, PopoverTrigger, Typography } from '@socialincome/ui';
+import { Badge, BaseContainer, linkCn, Popover, PopoverContent, PopoverTrigger, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -38,12 +38,8 @@ export default async function LandingPage({ lang }: { lang: WebsiteLanguage }) {
 									<Typography size="md" lineHeight="normal" weight="medium">
 										{translator.t('landing-page.contact-title')}
 									</Typography>
-									<Link href="mailto:hello@socialincome.org">
-										<Button variant="link" className="p-0">
-											<Typography size="md" lineHeight="normal" weight="normal">
-												{translator.t('landing-page.contact-email')}
-											</Typography>
-										</Button>
+									<Link className={linkCn()} href="mailto:hello@socialincome.org">
+										{translator.t('landing-page.contact-email')}
 									</Link>
 								</div>
 							</PopoverContent>
@@ -70,24 +66,26 @@ export default async function LandingPage({ lang }: { lang: WebsiteLanguage }) {
 										<Typography size="md" lineHeight="normal">
 											{translator.t('landing-page.registration-uid')}
 										</Typography>
-										<Link href="https://www.uid.admin.ch/Detail.aspx?uid_id=CHE-289.611.695&lang=en" target="_blank">
-											<Button variant="link" className="m-0 p-0">
-												<Typography size="md" lineHeight="normal" weight="normal">
-													{translator.t('landing-page.registration-uid-nr')}
-												</Typography>
-											</Button>
+										<Link
+											className={linkCn({ arrow: 'external', underline: 'none' })}
+											href="https://www.uid.admin.ch/Detail.aspx?uid_id=CHE-289.611.695&lang=en"
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											{translator.t('landing-page.registration-uid-nr')}
 										</Link>
 									</div>
 									<div className="flex items-center space-x-1">
 										<Typography size="md" lineHeight="normal">
 											{translator.t('landing-page.registration-duns')}
 										</Typography>
-										<Link href="https://www.dnb.com/duns/what-is-a-DUNS-number.html" target="_blank">
-											<Button variant="link" className="p-0">
-												<Typography size="md" lineHeight="normal" weight="normal">
-													{translator.t('landing-page.registration-duns-nr')}
-												</Typography>
-											</Button>
+										<Link
+											className={linkCn({ arrow: 'external', underline: 'none' })}
+											href="https://www.dnb.com/duns/what-is-a-DUNS-number.html"
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											{translator.t('landing-page.registration-duns-nr')}
 										</Link>
 									</div>
 								</div>
