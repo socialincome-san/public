@@ -83,13 +83,13 @@ export default async function Page(props: { params: { slug: string[]; lang: Lang
 					<div className="mt-7 flex items-center space-x-4">
 						<StoryBlokAuthorImage author={author} />
 						<div className="text-left">
-							<Typography color={'popover'} size="sm">
+							<Typography color="popover" size="sm">
 								{translator.t('published')}{' '}
 								{getPublishedDateFormatted(loadArticleResponse.data.story.published_at, lang)}
 							</Typography>
-							<Typography color={'popover'} size="sm">
+							<Typography color="popover" size="sm">
 								{translator.t('written-by')}
-								<Typography as="span" color={'accent'} className={'ml-1'}>
+								<Typography as="span" color={'accent'} className="ml-1">
 									{author.content.fullName}
 								</Typography>
 							</Typography>

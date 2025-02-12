@@ -42,10 +42,10 @@ export default async function Page(props: { params: { lang: LanguageCode; region
 
 	return (
 		<BaseContainer>
-			<Typography weight={'bold'} className={'text-center'} size={'3xl'}>
+			<Typography weight="bold" className="text-center" size="3xl">
 				{translator.t('overview.title')}
 			</Typography>
-			<Typography className={'mt-5 text-center'} size={'xl'}>
+			<Typography className="mt-5 text-center" size="xl">
 				{translator.t('overview.description')}
 			</Typography>
 			<div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -60,7 +60,7 @@ export default async function Page(props: { params: { lang: LanguageCode; region
 								className="h-48 w-full object-cover"
 							/>
 							<CardContent className="flex flex-grow flex-col p-6">
-								<Typography size={'xl'} className="mb-4 line-clamp-2 h-14 flex-grow font-medium">
+								<Typography size="xl" className="mb-4 line-clamp-2 h-14 flex-grow font-medium">
 									{blog.content.title}
 								</Typography>
 								<div className="mt-auto flex items-center justify-between">
