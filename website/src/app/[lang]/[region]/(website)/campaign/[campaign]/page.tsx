@@ -16,6 +16,7 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 	BaseContainer,
+	linkCn,
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
@@ -360,7 +361,12 @@ export default async function Page({ params }: CampaignPageProps) {
 												<ul className="mt-4 flex list-outside list-disc flex-col space-y-1 pl-3">
 													{links.map((link: { title: string; href: string }, index: number) => (
 														<li key={index} className="mb-0 pl-3">
-															<Link href={link.href} target="_blank" rel="noreferrer" className="no-underline">
+															<Link
+																className={linkCn({ underline: 'none' })}
+																href={link.href}
+																target="_blank"
+																rel="noreferrer"
+															>
 																<Typography as="span" size="lg" color="primary" className="font-normal hover:underline">
 																	{link.title}
 																</Typography>

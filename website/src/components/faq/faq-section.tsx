@@ -43,8 +43,8 @@ export function FAQSection({ title, questions }: FAQSectionProps) {
 											<Link
 												href={link.href}
 												target="_blank"
-												rel="noreferrer"
-												className={linkCn({ size: 'md', arrow: true, underline: 'none' })}
+												rel="noopener noreferrer"
+												className={linkCn({ size: 'md', arrow: 'external', underline: 'none' })}
 											>
 												{link.title}
 											</Link>

@@ -1,7 +1,7 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { ClockIcon } from '@heroicons/react/24/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography } from '@socialincome/ui';
+import { BaseContainer, linkCn, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
 export default async function Section1({ params }: DefaultPageProps) {
@@ -20,7 +20,7 @@ export default async function Section1({ params }: DefaultPageProps) {
 			</Typography>
 			<Typography as="h2" size="xl" className="max-w-2xl">
 				{translator.t('section-1.subtitle-2')}
-				<Link href="mailto: hello@socialincome.org" className="text-primary">
+				<Link className={linkCn()} href="mailto: hello@socialincome.org">
 					{translator.t('section-1.subtitle-3')}
 				</Link>
 			</Typography>

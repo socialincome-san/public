@@ -1,10 +1,10 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { FaqQuestion, FAQSection } from '@/components/faq/faq-section';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography } from '@socialincome/ui';
+import { BaseContainer, linkCn } from '@socialincome/ui';
 import Link from 'next/link';
 
-export async function FAQ({ lang }: DefaultParams) {
+export async function FAQ({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-home', 'website-faq'],
@@ -20,11 +20,14 @@ export async function FAQ({ lang }: DefaultParams) {
 					...translator.t<FaqQuestion[]>('recipients.questions'),
 				]}
 			/>
-			<Link href={'/faq'}>
-				<Typography color="accent" className="text-center">
-					{translator.t('section-faq.cta') + ' ›'}
-				</Typography>
-			</Link>
+			<div className="self-center">
+				<Link
+					className={linkCn({ variant: 'accent', arrow: 'internal', underline: 'none' })}
+					href={`/${lang}/${region}/faq`}
+				>
+					{translator.t('section-faq.cta')}
+				</Link>
+			</div>
 		</BaseContainer>
 	);
 }
