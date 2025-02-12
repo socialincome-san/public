@@ -1,14 +1,14 @@
-import StoryBlokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryBlokAuthorImage';
-import type { StoryBlokArticle, StoryBlokAuthor } from '@socialincome/shared/src/storyblok/article';
+import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
+import type { StoryblokArticle } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, Typography } from '@socialincome/ui';
-import { getStoryblokApi } from '@storyblok/react';
+import { getStoryblokApi, ISbStory } from '@storyblok/react';
 import { DateTime } from 'luxon';
 import { draftMode } from 'next/headers';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { ISbStoriesParams, ISbStoryData } from 'storyblok-js-client/src/interfaces';
+import { ISbStoriesParams } from 'storyblok-js-client/src/interfaces';
 import { render } from 'storyblok-rich-text-react-renderer';
 
 export const revalidate = 900;
@@ -17,7 +17,7 @@ const NOT_FOUND = 404;
 
 const DEFAULT_LANGUAGE = 'en';
 
-async function loadArticle(lang: string, slug: string[]): Promise<any> {
+async function loadArticle(lang: string, slug: string[]): Promise<ISbStory<StoryblokArticle>> {
 	const params: ISbStoriesParams = {
 		...(draftMode().isEnabled ? { version: 'draft' } : {}),
 		resolve_relations: ['article.author', 'article.topics'],
@@ -26,7 +26,10 @@ async function loadArticle(lang: string, slug: string[]): Promise<any> {
 	return await getStoryblokApi().get(`cdn/stories/journal/${slug?.join('/')}`, params);
 }
 
-async function loadArticleWithFallbackToDefaultLanguage(lang: string, slug: string[]): Promise<any> {
+async function loadArticleWithFallbackToDefaultLanguage(
+	lang: string,
+	slug: string[],
+): Promise<ISbStory<StoryblokArticle>> {
 	try {
 		return await loadArticle(lang, slug);
 	} catch (error: any) {
@@ -54,8 +57,8 @@ export default async function Page(props: { params: { slug: string[]; lang: Lang
 	});
 
 	const loadArticleResponse = await loadArticleWithFallbackToDefaultLanguage(props.params.lang, props.params.slug);
-	const articleData: StoryBlokArticle = loadArticleResponse.data.story.content;
-	const author: ISbStoryData<StoryBlokAuthor> = articleData.author;
+	const articleData = loadArticleResponse.data.story.content;
+	const author = articleData.author;
 
 	return (
 		<div className="blog w-full justify-center">
@@ -81,11 +84,11 @@ export default async function Page(props: { params: { slug: string[]; lang: Lang
 						{articleData.title}
 					</Typography>
 					<div className="mt-7 flex items-center space-x-4">
-						<StoryBlokAuthorImage author={author} />
+						<StoryblokAuthorImage author={author} />
 						<div className="text-left">
 							<Typography color="popover" size="sm">
 								{translator.t('published')}{' '}
-								{getPublishedDateFormatted(loadArticleResponse.data.story.published_at, lang)}
+								{getPublishedDateFormatted(loadArticleResponse.data.story.published_at!, lang)}
 							</Typography>
 							<Typography color="popover" size="sm">
 								{translator.t('written-by')}

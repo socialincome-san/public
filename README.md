@@ -212,12 +212,12 @@ the seed folder using the command `npm run firebase:export`.
 1. Read the storyblok [documentation](https://www.storyblok.com/docs).
 2. Set the values `STORYBLOK_PREVIEW_TOKEN` and
    `STORYBLOK_PREVIEW_SECRET` to the
-   [env.development](website/.env.development). You can find the
-   `STORYBLOK_PREVIEW_TOKEN` on
+   [env.development](website/.env.local). You can find the
+   `STORYBLOK_PREVIEW_TOKEN` at the
    [storyblok_token](https://app.storyblok.com/#/me/spaces/109655/settings?tab=api)
-   and the `STORYBLOK_PREVIEW_SECRET` on
+   and the `STORYBLOK_PREVIEW_SECRET` at the
    [VISUAL_EDITOR](https://app.storyblok.com/#/me/spaces/109655/settings?tab=editor)
-   on the `preview-url`
+   in the `preview-url`.
 3. (optional-step) `npm run dev:ssl-proxy`, this is needed if you want
    to preview the changes on the storyblok live editor for the local
    environment.

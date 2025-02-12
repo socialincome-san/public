@@ -44,6 +44,14 @@ function enableDraftModeAndAdaptCookie() {
 	}
 }
 
+/**
+ *
+ * @param request
+ * @constructor
+ *
+ * The Storyblok integration needs a way to display non-cached pages during the designing of an article from the Storyblok
+ * GUI. Therefore, we enable the preview-mode by setting the Draft Mode cookie according to the official NextJS guidelines.
+ */
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
 	const secret = searchParams.get('secret');
