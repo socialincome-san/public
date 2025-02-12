@@ -8,6 +8,7 @@ import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import { toDateTime } from '@socialincome/shared/src/utils/date';
 import {
 	Button,
+	linkCn,
 	SpinnerIcon,
 	Table,
 	TableBody,
@@ -88,7 +89,7 @@ export function SubscriptionsClient({ lang, region, translations }: Subscription
 				</TableBody>
 			</Table>
 			<div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2">
-				<Link href={`/${lang}/${region}/donate/individual`}>
+				<Link className={linkCn()} href={`/${lang}/${region}/donate/individual`}>
 					<Button Icon={PlusCircleIcon} variant="ghost" size="lg" className="w-full">
 						{translations.newSubscription}
 					</Button>

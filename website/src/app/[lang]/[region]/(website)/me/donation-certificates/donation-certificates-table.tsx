@@ -3,6 +3,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useDonationCertificates } from '@/app/[lang]/[region]/(website)/me/hooks';
 import {
+	linkCn,
 	SpinnerIcon,
 	Table,
 	TableBody,
@@ -29,7 +30,7 @@ function FetchFileLink({ storagePath }: { storagePath: string }) {
 	const { data } = useStorageDownloadURL(ref(storage, storagePath));
 	if (!data) return null;
 	return (
-		<Link href={data} target="_blank" rel="noopener noreferrer">
+		<Link className={linkCn()} href={data} target="_blank" rel="noopener noreferrer">
 			Download PDF
 		</Link>
 	);

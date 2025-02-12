@@ -1,7 +1,7 @@
 'use client';
 
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
-import { Typography } from '@socialincome/ui';
+import { linkCn, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
 export type CardTranslation = {
@@ -29,7 +29,7 @@ export function SectionCard({ card }: SectionCardProps) {
 			{card.links.map((link, key) => {
 				return (
 					<div key={key}>
-						<Link href={link.href} target="_blank">
+						<Link className={linkCn()} href={link.href} target="_blank">
 							<span className="flex items-center">
 								<CheckCircleIcon className="mr-2 h-8 w-8" />
 								<Typography as="span" size="xl">

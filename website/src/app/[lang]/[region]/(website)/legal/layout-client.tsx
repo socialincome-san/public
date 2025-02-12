@@ -5,7 +5,6 @@ import { DocumentTextIcon } from '@heroicons/react/24/outline';
 import { Button, Collapsible, CollapsibleContent, CollapsibleTrigger, Typography } from '@socialincome/ui';
 import { LinkProps } from 'next/dist/client/link';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { PropsWithChildren, useState } from 'react';
 
@@ -45,7 +44,6 @@ type LayoutClientProps = {
 };
 
 export function LayoutClient({ params, translations, children }: PropsWithChildren<LayoutClientProps>) {
-	const pathname = usePathname();
 	const [isOpen, setIsOpen] = useState(false);
 
 	const navigationMenu = (
