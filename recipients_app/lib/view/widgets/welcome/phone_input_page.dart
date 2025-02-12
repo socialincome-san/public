@@ -1,4 +1,5 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
+import "package:app/demo_manager.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:flutter/material.dart";
@@ -36,7 +37,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-
+    final demoManager = RepositoryProvider.of<DemoManager>(context);
     final isLoading = context.watch<SignupCubit>().state.status == SignupStatus.loadingPhoneNumber;
 
     return Scaffold(
@@ -45,6 +46,18 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Align(
+              alignment: Alignment.topRight,
+              child: SafeArea(
+                child: ButtonSmall(
+                  onPressed: () {
+                    demoManager.isDemoEnabled = true;
+                  },
+                  label: localizations.demoCta,
+                  buttonType: ButtonSmallType.outlined,
+                ),
+              ),
+            ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -52,7 +65,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                 children: [
                   Image(
                     image: const AssetImage("assets/earth_animation.gif"),
-                    height: MediaQuery.of(context).size.height * 0.3,
+                    height: MediaQuery.sizeOf(context).height * 0.3,
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -97,10 +110,8 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                           ),
                           inputDecoration: InputDecoration(
                             labelText: localizations.phoneNumber,
-                            labelStyle: Theme.of(context)
-                                .textTheme
-                                .headlineMedium!
-                                .copyWith(color: AppColors.primaryColor),
+                            labelStyle:
+                                Theme.of(context).textTheme.headlineMedium!.copyWith(color: AppColors.primaryColor),
                             enabledBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: AppColors.primaryColor),
                               borderRadius: BorderRadius.all(Radius.circular(10)),
