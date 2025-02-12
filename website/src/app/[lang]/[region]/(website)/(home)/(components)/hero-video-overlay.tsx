@@ -2,11 +2,11 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { OVERLAY_FADE_OUT_DELAY } from '@/app/[lang]/[region]/(website)/(home)/(components)/mux-video';
-import { Button, Typography } from '@socialincome/ui';
+import { Button, Typography, useGlowHover } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import classNames from 'classnames';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { RefObject, useEffect, useState } from 'react';
 import { useEventListener } from 'usehooks-ts';
 
 type HeroVideoOverlayProps = {
@@ -18,6 +18,7 @@ type HeroVideoOverlayProps = {
 
 const HeroVideoOverlay = ({ lang, region, translations }: HeroVideoOverlayProps) => {
 	const [hideOverlay, setHideOverlay] = useState(false);
+	const refButton = useGlowHover({ lightColor: '#CEFF00' });
 
 	useEffect(() => {
 		let id;
@@ -52,7 +53,7 @@ const HeroVideoOverlay = ({ lang, region, translations }: HeroVideoOverlayProps)
 					))}
 				</div>
 				<Link href={`/${lang}/${region}/donate/individual`}>
-					<Button className="mx-auto hidden md:block">
+					<Button className="mx-auto hidden hover:text-black md:block" ref={refButton as RefObject<HTMLButtonElement>}>
 						<Typography>{translations.buttonText}</Typography>
 					</Button>
 				</Link>

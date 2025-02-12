@@ -142,6 +142,9 @@ class _PaymentsPageState extends State<PaymentsPage> {
     var total = 0;
 
     for (final mappedPayment in mappedPayments) {
+      final paymentStatus = mappedPayment.payment.status;
+      if (paymentStatus != PaymentStatus.paid && paymentStatus != PaymentStatus.confirmed) continue;
+
       // some of the users still have SLL from begining of the program,
       // we will change it to SLE
       final factor = (mappedPayment.payment.currency == "SLL") ? 1000 : 1;
@@ -152,10 +155,17 @@ class _PaymentsPageState extends State<PaymentsPage> {
   }
 
   String _calculateFuturePayments(List<MappedPayment> mappedPayments) {
+    final paidOrConfirmedPayments = mappedPayments.where(
+      (payment) {
+        final paymentStatus = payment.payment.status;
+        return paymentStatus == PaymentStatus.paid || paymentStatus == PaymentStatus.confirmed;
+      },
+    ).toList();
+
     // due to problem that payment amount can change we need to calculate
     // the future payments without calculation of previous payments
-    final futurePayments = (kProgramDurationMonths - mappedPayments.length) * kCurrentPaymentAmount;
+    final futurePayments = (kProgramDurationMonths - paidOrConfirmedPayments.length) * kCurrentPaymentAmount;
 
-    return "${mappedPayments.firstOrNull?.payment.currency ?? "SLE"} $futurePayments";
+    return "${paidOrConfirmedPayments.firstOrNull?.payment.currency ?? "SLE"} $futurePayments";
   }
 }

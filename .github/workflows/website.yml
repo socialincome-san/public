@@ -54,6 +54,9 @@ jobs:
       - name: Test build
         # To use the emulator during the build, we need to rename the .env.development file to .env.production.
         # Next.js doesn't now allow to use NODE_ENV=development in the build process.
+        env:
+          STORYBLOK_PREVIEW_SECRET: ${{ secrets.STORYBLOK_PREVIEW_SECRET }}
+          STORYBLOK_PREVIEW_TOKEN: ${{ secrets.STORYBLOK_PREVIEW_TOKEN }}
         run: |
           mv website/.env.development website/.env.production
           npm run website:build:emulator

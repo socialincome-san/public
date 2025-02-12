@@ -38,6 +38,7 @@ type NavbarProps = {
 		payments: string;
 		region: string;
 		signOut: string;
+		journal: string;
 	};
 	languages: {
 		code: WebsiteLanguage;
@@ -231,6 +232,9 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 								{translations.donate}
 							</NavbarLink>
 						</div>
+						<NavbarLink className="ml-12 text-2xl" href={`/${lang}/${region}/journal`}>
+							{translations.journal}
+						</NavbarLink>
 					</div>
 				</div>
 			);
@@ -293,6 +297,8 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 							{translations.donate}
 						</NavbarLink>
 					</div>
+
+					<NavbarLink href={`/${lang}/${region}/journal`}>{translations.journal}</NavbarLink>
 				</div>
 			</div>
 			<div className="flex flex-row items-center justify-evenly gap-x-10 overflow-visible">

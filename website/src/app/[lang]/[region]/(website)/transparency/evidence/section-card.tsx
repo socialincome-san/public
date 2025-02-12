@@ -12,6 +12,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Typography,
+	linkCn,
 } from '@socialincome/ui';
 import Link from 'next/link';
 
@@ -51,10 +52,8 @@ export function SectionCard({ translations: { card, takeAction } }: SectionCardP
 							{paragraph.map((fragment, key) => (
 								<span key={key}>
 									{fragment.href ? (
-										<Link href={fragment.href}>
-											<Typography as="span" color="primary">
-												{fragment.text}
-											</Typography>
+										<Link className={linkCn()} href={fragment.href}>
+											{fragment.text}
 										</Link>
 									) : (
 										<Typography as="span">{fragment.text}</Typography>

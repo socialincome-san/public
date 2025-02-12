@@ -1,6 +1,6 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography } from '@socialincome/ui';
+import { BaseContainer, linkCn, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 import Link from 'next/link';
 import Applestore from './(assets)/applestore.svg';
@@ -29,6 +29,7 @@ export default async function Page({ params }: DefaultPageProps) {
 							{translator.t('android')}
 						</Typography>
 						<Link
+							className={linkCn()}
 							href="https://play.google.com/store/apps/details?id=org.socialincome.app"
 							target="_blank"
 							rel="noopener noreferrer"
@@ -41,6 +42,7 @@ export default async function Page({ params }: DefaultPageProps) {
 							{translator.t('apple')}
 						</Typography>
 						<Link
+							className={linkCn()}
 							href="https://apps.apple.com/app/social-income/id6444860109"
 							target="_blank"
 							rel="noopener noreferrer"
