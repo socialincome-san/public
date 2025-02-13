@@ -1,10 +1,10 @@
 import "package:app/data/models/models.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/ui/configs/app_sizes.dart";
 import "package:app/view/widgets/survey/survey_card_bottom_action.dart";
 import "package:app/view/widgets/survey/survey_status_chip.dart";
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:intl/intl.dart";
 
 const _kOpenableSurveyStatuses = [
@@ -20,7 +20,6 @@ class SurveyListCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).toLanguageTag();
 
     return Card(
@@ -48,7 +47,7 @@ class SurveyListCard extends StatelessWidget {
                     Text(
                       _formatDate(
                         mappedSurvey.survey.dueDateAt?.toDate(),
-                        localizations,
+                        context.l10n,
                         locale,
                       ),
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(

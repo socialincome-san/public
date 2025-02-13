@@ -1,10 +1,10 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
 import "package:app/demo_manager.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:intl_phone_number_input/intl_phone_number_input.dart";
 import "package:rounded_loading_button/rounded_loading_button.dart";
 
@@ -36,7 +36,6 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
     final demoManager = RepositoryProvider.of<DemoManager>(context);
     final isLoading = context.watch<SignupCubit>().state.status == SignupStatus.loadingPhoneNumber;
 
@@ -53,7 +52,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                   onPressed: () {
                     demoManager.isDemoEnabled = true;
                   },
-                  label: localizations.demoCta,
+                  label: context.l10n.demoCta,
                   buttonType: ButtonSmallType.outlined,
                 ),
               ),
@@ -69,7 +68,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    localizations.yourMobilePhone,
+                    context.l10n.yourMobilePhone,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 24,
@@ -109,7 +108,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                             fontSize: 18,
                           ),
                           inputDecoration: InputDecoration(
-                            labelText: localizations.phoneNumber,
+                            labelText: context.l10n.phoneNumber,
                             labelStyle:
                                 Theme.of(context).textTheme.headlineMedium!.copyWith(color: AppColors.primaryColor),
                             enabledBorder: const OutlineInputBorder(
@@ -147,7 +146,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                           );
                     }
                   },
-                  label: localizations.continueText,
+                  label: context.l10n.continueText,
                 ),
               ],
             ),

@@ -1,12 +1,12 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/data/models/recipient.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/view/pages/account_page.dart";
 import "package:app/view/pages/dashboard_page.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class MainAppPage extends StatefulWidget {
   const MainAppPage({super.key});
@@ -18,8 +18,6 @@ class MainAppPage extends StatefulWidget {
 class _MainAppPageState extends State<MainAppPage> {
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     final recipient = context.watch<AuthCubit>().state.recipient;
 
     final editButtonRow = Row(
@@ -39,7 +37,7 @@ class _MainAppPageState extends State<MainAppPage> {
               ),
             );
           },
-          label: localizations.edit,
+          label: context.l10n.edit,
           buttonType: ButtonSmallType.outlined,
           color: AppColors.fontColorDark,
         ),

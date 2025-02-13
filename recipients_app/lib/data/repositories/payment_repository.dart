@@ -1,19 +1,16 @@
-import "package:app/data/datasource/demo/payment_demo_data_source.dart";
 import "package:app/data/datasource/payment_data_source.dart";
-import "package:app/data/datasource/remote/payment_remote_data_source.dart";
 import "package:app/data/models/models.dart";
 import "package:app/demo_manager.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
 
 class PaymentRepository {
-  late PaymentDataSource remoteDataSource = PaymentRemoteDataSource(firestore: firestore);
-  late PaymentDataSource demoDataSource = PaymentDemoDataSource();
+  final PaymentDataSource remoteDataSource;
+  final PaymentDataSource demoDataSource;
 
   final DemoManager demoManager;
-  final FirebaseFirestore firestore;
 
-  PaymentRepository({
-    required this.firestore,
+  const PaymentRepository({
+    required this.remoteDataSource,
+    required this.demoDataSource,
     required this.demoManager,
   });
 
