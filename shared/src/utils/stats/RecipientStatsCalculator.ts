@@ -1,33 +1,22 @@
 import _ from 'lodash';
 import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
-import { RECIPIENT_FIRESTORE_PATH, Recipient, RecipientProgramStatus, recipientNGOs } from '../../types/recipient';
+import { Recipient, RECIPIENT_FIRESTORE_PATH, RecipientProgramStatus } from '../../types/recipient';
 
 export interface RecipientStats {
-	totalRecipients: TotalRecipientsByStatus;
-	totalRecipientsByOrganization: OrganisationRecipientsByStatus;
+	recipientsCountByStatus: TotalRecipientsByStatus;
+	recipientsCountByOrganisationAndStatus: OrganisationRecipientsByStatus;
 }
 
-/**
- * Simplified version of Recipient, for easy computation of several contribution related stats
- */
-type RecipientStatsEntry = {
-	progr_status: RecipientProgramStatus;
-	organisation: string;
-};
-
 export type TotalRecipientsByStatus = {
-	total: number;
-	active: number;
-	former: number;
-	suspended: number;
-};
+	[status in RecipientProgramStatus]: number;
+} & { total: number };
 
 export type OrganisationRecipientsByStatus = {
 	[orgId: string]: TotalRecipientsByStatus;
 };
 
 export class RecipientStatsCalculator {
-	constructor(readonly recipients: _.Collection<RecipientStatsEntry>) {}
+	constructor(readonly recipients: _.Collection<Pick<Recipient, 'progr_status' | 'organisation'>>) {}
 
 	/**
 	 * Calls the firestore database to retrieve the payments and constructs the
@@ -35,47 +24,40 @@ export class RecipientStatsCalculator {
 	 */
 	static async build(firestoreAdmin: FirestoreAdmin): Promise<RecipientStatsCalculator> {
 		const completeRecipientsData = await firestoreAdmin.collection<Recipient>(RECIPIENT_FIRESTORE_PATH).get();
-		const recipientStatsEntries = await Promise.all(
-			completeRecipientsData.docs
-				.filter((recipientData) => !recipientData.data().test_recipient)
-				.map(async (recipientData) => {
-					const organisationSnapshot = await recipientData.data().organisation?.get();
-					return {
-						progr_status: recipientData.data().progr_status,
-						organisation: organisationSnapshot?.id,
-					};
-				}),
-		);
+		const recipientStatsEntries = completeRecipientsData.docs
+			.filter((recipientData) => !recipientData.get('test_recipient'))
+			.map((recipientData) => ({
+				progr_status: recipientData.get('progr_status'),
+				organisation: recipientData.get('organisation').id,
+			}));
 		return new RecipientStatsCalculator(_(recipientStatsEntries));
 	}
 
-	totalRecipients = (): TotalRecipientsByStatus => {
-		const recipientsGroupedByProgStatus = _.groupBy(this.recipients.toJSON(), (x) => x.progr_status);
-		return {
+	recipientsCountByStatus = (): TotalRecipientsByStatus =>
+		({
 			total: this.recipients.size(),
-			active: recipientsGroupedByProgStatus['active']?.length,
-			former: recipientsGroupedByProgStatus['former']?.length,
-			suspended: recipientsGroupedByProgStatus['suspended']?.length,
-		};
-	};
+			...this.recipients
+				.groupBy('progr_status')
+				.map((recipients, status) => ({ [status]: recipients.length }))
+				.reduce((a, b) => ({ ...a, ...b }), {}),
+		}) as TotalRecipientsByStatus;
 
-	totalRecipientsByOrganization = () => {
-		const orgRecipientsObject: OrganisationRecipientsByStatus = {};
-		recipientNGOs.forEach((orgId) => {
-			const totalRecipients = this.recipients.filter((recipient) => recipient.organisation === orgId);
-			const recipientsGroupedByProgStatus = _.groupBy(totalRecipients.toJSON(), (x) => x.progr_status);
-			orgRecipientsObject[orgId] = {
-				total: totalRecipients?.size(),
-				active: recipientsGroupedByProgStatus['active']?.length,
-				former: recipientsGroupedByProgStatus['former']?.length,
-				suspended: recipientsGroupedByProgStatus['suspended']?.length,
-			};
-		});
-		return orgRecipientsObject;
-	};
+	recipientsCountByOrganisationAndStatus = () =>
+		this.recipients
+			.groupBy('organisation')
+			.map((recipients, organisation) => ({
+				[organisation]: {
+					total: recipients.length,
+					..._(recipients)
+						.groupBy('progr_status')
+						.map((recipients, status) => ({ [status]: recipients.length }))
+						.reduce((a, b) => ({ ...a, ...b }), {}),
+				},
+			}))
+			.reduce((a, b) => ({ ...a, ...b }), {}) as OrganisationRecipientsByStatus;
 
 	allStats = (): RecipientStats => ({
-		totalRecipients: this.totalRecipients(),
-		totalRecipientsByOrganization: this.totalRecipientsByOrganization(),
+		recipientsCountByStatus: this.recipientsCountByStatus(),
+		recipientsCountByOrganisationAndStatus: this.recipientsCountByOrganisationAndStatus(),
 	});
 }

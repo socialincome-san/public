@@ -1,3 +1,4 @@
+import { RecipientProgramStatus } from '@socialincome/shared/src/types/recipient';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, Card, CardContent, Typography } from '@socialincome/ui';
 import { Section1Props } from './page';
@@ -38,9 +39,8 @@ export async function Section1({ params, paymentStats, contributionStats, recipi
 							{translator.t('section-1.totalRecipients', {
 								context: {
 									value:
-										recipientStats?.totalRecipients?.active +
-										recipientStats?.totalRecipients?.former +
-										recipientStats?.totalRecipients?.suspended,
+										recipientStats.recipientsCountByStatus['total'] -
+										recipientStats.recipientsCountByStatus[RecipientProgramStatus.Waitlisted],
 								},
 							})}
 						</Typography>
@@ -48,7 +48,7 @@ export async function Section1({ params, paymentStats, contributionStats, recipi
 							<Typography size="sm" weight="normal">
 								{translator.t('section-1.activeRecipients', {
 									context: {
-										value: recipientStats?.totalRecipients.active,
+										value: recipientStats.recipientsCountByStatus[RecipientProgramStatus.Active],
 									},
 								})}
 							</Typography>

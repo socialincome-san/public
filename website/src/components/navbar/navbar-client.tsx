@@ -289,16 +289,17 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 					</div>
 					<SIIcon className="-mb-2.5 block h-9 pr-20 lg:hidden" />
 				</Link>
-				<div className="absolute left-0 mt-[50px] hidden flex-col justify-start overflow-visible whitespace-nowrap group-hover/navbar:flex group-active/navbar:flex">
-					<NavbarLink href={`/${lang}/${region}/me`}>{translations.myProfile}</NavbarLink>
+				<div className="absolute left-0 mt-[50px] hidden flex-col justify-start space-y-2 overflow-visible whitespace-nowrap group-hover/navbar:flex group-active/navbar:flex">
+					<NavbarLink href={`/${lang}/${region}/journal`}>{translations.journal}</NavbarLink>
+					<NavbarLink className="mt-auto" href={`/${lang}/${region}/me`}>
+						{translations.myProfile}
+					</NavbarLink>
 					<div className="flex-inline mt-auto flex items-center space-x-2">
 						<DonateIcon className="h-4 w-4" />
 						<NavbarLink href={`/${lang}/${region}/donate/individual`} className="text-accent">
 							{translations.donate}
 						</NavbarLink>
 					</div>
-
-					<NavbarLink href={`/${lang}/${region}/journal`}>{translations.journal}</NavbarLink>
 				</div>
 			</div>
 			<div className="flex flex-row items-center justify-evenly gap-x-10 overflow-visible">
