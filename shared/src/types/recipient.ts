@@ -46,8 +46,6 @@ export type Recipient = {
 	successor?: string;
 };
 
-export const recipientNGOs = ['aurora', 'jamil', 'reachout', 'equal-rights', 'united-polio', 'slaes'];
-
 export const toPaymentDate = (dateTime: DateTime) => {
 	return dateTime.set({
 		day: 15,
