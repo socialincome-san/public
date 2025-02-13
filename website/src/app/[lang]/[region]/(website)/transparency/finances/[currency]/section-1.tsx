@@ -39,19 +39,17 @@ export async function Section1({ params, paymentStats, contributionStats, recipi
 							{translator.t('section-1.totalRecipients', {
 								context: {
 									value:
-										recipientStats.recipientsCountByStatus['total'] -
-										recipientStats.recipientsCountByStatus[RecipientProgramStatus.Waitlisted],
+										(recipientStats.recipientsCountByStatus['total'] ?? 0) -
+										(recipientStats.recipientsCountByStatus[RecipientProgramStatus.Waitlisted] ?? 0),
 								},
 							})}
 						</Typography>
 						<Badge variant="interactive-accent">
-							<Typography size="sm" weight="normal">
-								{translator.t('section-1.activeRecipients', {
-									context: {
-										value: recipientStats.recipientsCountByStatus[RecipientProgramStatus.Active],
-									},
-								})}
-							</Typography>
+							{translator.t('section-1.activeRecipients', {
+								context: {
+									value: recipientStats.recipientsCountByStatus[RecipientProgramStatus.Active] ?? 0,
+								},
+							})}
 						</Badge>
 					</CardContent>
 				</Card>

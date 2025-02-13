@@ -8,7 +8,7 @@ export interface RecipientStats {
 }
 
 export type TotalRecipientsByStatus = {
-	[status in RecipientProgramStatus]: number;
+	[status in RecipientProgramStatus]?: number;
 } & { total: number };
 
 export type OrganisationRecipientsByStatus = {

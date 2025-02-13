@@ -11,7 +11,7 @@ import {
 	NgoHoverCardType,
 } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
 import { firestoreAdmin } from '@/firebase-admin';
-import { recipientNGOs } from '@socialincome/shared/src/types/recipient';
+import { recipientNGOs, RecipientProgramStatus } from '@socialincome/shared/src/types/recipient';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import {
 	OrganisationRecipientsByStatus,
@@ -52,10 +52,10 @@ export async function NgoList({ lang, region }: DefaultParams) {
 		const currentOrgRecipientStats = recipientStats[ngos[i]];
 		const recipientsBadge: RecipientsBadgeType = {
 			hoverCardOrgName: ngoArray[i]['org-long-name'],
-			hoverCardTotalRecipients: currentOrgRecipientStats?.total ?? 0,
-			hoverCardTotalActiveRecipients: currentOrgRecipientStats?.active ?? 0,
-			hoverCardTotalFormerRecipients: currentOrgRecipientStats?.former ?? 0,
-			hoverCardTotalSuspendedRecipients: currentOrgRecipientStats?.suspended ?? 0,
+			hoverCardTotalRecipients: currentOrgRecipientStats['total'] ?? 0,
+			hoverCardTotalActiveRecipients: currentOrgRecipientStats[RecipientProgramStatus.Active] ?? 0,
+			hoverCardTotalFormerRecipients: currentOrgRecipientStats[RecipientProgramStatus.Former] ?? 0,
+			hoverCardTotalSuspendedRecipients: currentOrgRecipientStats[RecipientProgramStatus.Suspended] ?? 0,
 			translatorBadgeRecipients: '',
 			translatorBadgeRecipientsBy: '',
 			translatorBadgeActive: '',
