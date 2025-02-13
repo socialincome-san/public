@@ -27,7 +27,7 @@ runs:
     - name: Install and set up vercel & firebase-tools
       shell: bash
       run: |
-        npm -g install firebase-tools@13.29.1 vercel@39.2.6 && \
+        npm -g install firebase-tools@13.29.3 vercel@39.2.6 && \
         firebase setup:emulators:firestore && \
         firebase setup:emulators:storage && \
         firebase setup:emulators:ui
