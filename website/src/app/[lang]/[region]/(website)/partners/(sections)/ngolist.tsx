@@ -45,7 +45,8 @@ export async function NgoList({ lang, region }: DefaultParams) {
 	const ngoCardPropsArray: NgoCardProps[] = [];
 
 	const recipientCalculator = await RecipientStatsCalculator.build(firestoreAdmin);
-	const recipientStats: OrganisationRecipientsByStatus = recipientCalculator.allStats().totalRecipientsByOrganization;
+	const recipientStats: OrganisationRecipientsByStatus =
+		recipientCalculator.allStats().recipientsCountByOrganisationAndStatus;
 
 	for (let i = 0; i < ngoArray.length; ++i) {
 		const currentOrgRecipientStats = recipientStats[ngos[i]];

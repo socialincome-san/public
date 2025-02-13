@@ -1,4 +1,5 @@
 import { DocumentReference } from 'firebase-admin/firestore';
+import { Campaign } from './campaign';
 import { Currency } from './currency';
 import { Timestamp } from './timestamp';
 
@@ -33,7 +34,7 @@ type BaseContribution = {
 	amount_chf: number; // Amount donated in CHF, including fees
 	fees_chf: number; // Transaction fees in CHF
 	currency: Currency;
-	campaign_path?: DocumentReference;
+	campaign_path?: DocumentReference<Campaign>;
 };
 
 export type StripeContribution = BaseContribution & {
