@@ -44,7 +44,7 @@ export async function Section1({ params, paymentStats, contributionStats, recipi
 								},
 							})}
 						</Typography>
-						<Badge variant="interactive-accent">
+						<Badge variant="accent" size="md">
 							{translator.t('section-1.activeRecipients', {
 								context: {
 									value: recipientStats.recipientsCountByStatus[RecipientProgramStatus.Active] ?? 0,
