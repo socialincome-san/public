@@ -145,23 +145,25 @@ test('Calculate recipient statistics', async () => {
 	expect(stats.recipientsCountByStatus[RecipientProgramStatus.Former]).toEqual(undefined);
 
 	// Verify total number of recipients for organization 1
-	expect(stats.recipientsCountByOrganisationAndStatus[org1Ref.id]['total']).toEqual(1);
+	expect(stats.recipientsCountByOrganisationAndStatus[org1Ref.id]!['total']).toEqual(1);
 
 	// Verify number of active recipients for organization 1
-	expect(stats.recipientsCountByOrganisationAndStatus[org1Ref.id][RecipientProgramStatus.Active]).toEqual(1);
+	expect(stats.recipientsCountByOrganisationAndStatus[org1Ref.id]![RecipientProgramStatus.Active]).toEqual(1);
 
 	// Verify suspended recipients status:
 	// - Organization 1 should have no suspended recipients (undefined) and 1 active recipient
 	// - Organization 2 should have 1 suspended recipient
-	expect(stats.recipientsCountByOrganisationAndStatus[org1Ref.id][RecipientProgramStatus.Suspended]).toEqual(undefined);
-	expect(stats.recipientsCountByOrganisationAndStatus[org1Ref.id][RecipientProgramStatus.Active]).toEqual(1);
-	expect(stats.recipientsCountByOrganisationAndStatus[org2Ref.id][RecipientProgramStatus.Suspended]).toEqual(1);
-	expect(stats.recipientsCountByOrganisationAndStatus[org2Ref.id][RecipientProgramStatus.Active]).toEqual(undefined);
-	expect(stats.recipientsCountByOrganisationAndStatus[org2Ref.id][RecipientProgramStatus.Waitlisted]).toEqual(1);
+	expect(stats.recipientsCountByOrganisationAndStatus[org1Ref.id]![RecipientProgramStatus.Suspended]).toEqual(
+		undefined,
+	);
+	expect(stats.recipientsCountByOrganisationAndStatus[org1Ref.id]![RecipientProgramStatus.Active]).toEqual(1);
+	expect(stats.recipientsCountByOrganisationAndStatus[org2Ref.id]![RecipientProgramStatus.Suspended]).toEqual(1);
+	expect(stats.recipientsCountByOrganisationAndStatus[org2Ref.id]![RecipientProgramStatus.Active]).toEqual(undefined);
+	expect(stats.recipientsCountByOrganisationAndStatus[org2Ref.id]![RecipientProgramStatus.Waitlisted]).toEqual(1);
 
 	// Verify total recipients count for each organization:
 	// - Organization 1 should have 1 recipient
 	// - Organization 2 should have 2 recipients
-	expect(stats.recipientsCountByOrganisationAndStatus[org1Ref.id].total).toEqual(1);
-	expect(stats.recipientsCountByOrganisationAndStatus[org2Ref.id].total).toEqual(2);
+	expect(stats.recipientsCountByOrganisationAndStatus[org1Ref.id]!['total']).toEqual(1);
+	expect(stats.recipientsCountByOrganisationAndStatus[org2Ref.id]!['total']).toEqual(2);
 });

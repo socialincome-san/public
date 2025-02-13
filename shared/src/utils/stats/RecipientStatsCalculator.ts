@@ -11,9 +11,7 @@ export type TotalRecipientsByStatus = {
 	[status in RecipientProgramStatus]?: number;
 } & { total: number };
 
-export type OrganisationRecipientsByStatus = {
-	[orgId: string]: TotalRecipientsByStatus;
-};
+export type OrganisationRecipientsByStatus = Partial<Record<string, TotalRecipientsByStatus>> & { total: number };
 
 export class RecipientStatsCalculator {
 	constructor(readonly recipients: _.Collection<Pick<Recipient, 'progr_status' | 'organisation'>>) {}
