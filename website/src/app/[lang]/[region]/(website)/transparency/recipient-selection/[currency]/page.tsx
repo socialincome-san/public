@@ -1,16 +1,17 @@
-import { DefaultParams } from '@/app/[lang]/[region]';
+import { DefaultPageProps, DefaultParams } from '@/app/[lang]/[region]';
 import { CurrencyRedirect } from '@/app/[lang]/[region]/(website)/transparency/(components)/currency-redirect';
-import { WebsiteCurrency } from '@/i18n';
+import { websiteCurrencies, WebsiteCurrency } from '@/i18n';
 import { SelectionFaq } from './(sections)/faq';
 import { HeroSection } from './(sections)/hero-section';
 import { PastRounds } from './(sections)/past-rounds';
 import { Resources } from './(sections)/resources';
 import { SelectionProcess } from './(sections)/selection-process';
 
-type RecipientSelectionPageProps = {
-	params: {
-		currency: string;
-	} & DefaultParams;
+export const revalidate = 3600; // update once an hour
+export const generateStaticParams = () => websiteCurrencies.map((currency) => ({ currency: currency.toLowerCase() }));
+
+type RecipientSelectionPageProps = DefaultPageProps & {
+	params: DefaultParams & { currency: string };
 };
 
 export default async function Page({ params: { lang, region, currency } }: RecipientSelectionPageProps) {
