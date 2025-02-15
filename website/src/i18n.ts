@@ -17,16 +17,34 @@ export type WebsiteCurrency = Extract<Currency, 'USD' | 'EUR' | 'CHF' | 'SLE'>;
 export const defaultCurrency: WebsiteCurrency = 'USD';
 export const websiteCurrencies: WebsiteCurrency[] = ['USD', 'EUR', 'CHF'];
 
+export const toLocale = (language: WebsiteLanguage, region: WebsiteRegion): string => {
+	return language + (region === 'ch' ? '-CH' : '');
+};
+
+export const toCurrencyLocale = (
+	language: WebsiteLanguage,
+	region: WebsiteRegion,
+	currency: WebsiteCurrency,
+	options?: Partial<Intl.ResolvedNumberFormatOptions>,
+): Partial<Intl.ResolvedNumberFormatOptions> => {
+	return {
+		style: 'currency' as keyof Intl.NumberFormatOptionsStyleRegistry,
+		currency: currency,
+		locale: toLocale(language, region),
+		...options,
+	};
+};
+
+/**
+ * Check if the user has set a language and region cookie, and if they are valid. If so, return them.
+ * Otherwise, try to find the best locale from the Accept-Language header, and if that fails, return the default locale.
+ */
 export const findBestLocale = (
 	request: NextRequest,
 ): {
 	region: WebsiteRegion;
 	language: WebsiteLanguage;
 } => {
-	/**
-	 * Check if the user has set a language and region cookie, and if they are valid. If so, return them.
-	 * Otherwise, try to find the best locale from the Accept-Language header, and if that fails, return the default locale.
-	 */
 	if (
 		request.cookies.has(LANGUAGE_COOKIE) &&
 		mainWebsiteLanguages.includes(request.cookies.get(LANGUAGE_COOKIE)!.value as WebsiteLanguage) &&

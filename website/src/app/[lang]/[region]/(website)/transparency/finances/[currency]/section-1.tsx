@@ -1,3 +1,4 @@
+import { toCurrencyLocale } from '@/i18n';
 import { RecipientProgramStatus } from '@socialincome/shared/src/types/recipient';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, Card, CardContent, Typography } from '@socialincome/ui';
@@ -11,6 +12,7 @@ export const roundAmount = (amount: number) => {
 
 export async function Section1({ params, paymentStats, contributionStats, recipientStats }: SectionProps) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-finances'] });
+	const currencyLocale = toCurrencyLocale(params.lang, params.region, params.currency, { maximumFractionDigits: 0 });
 
 	return (
 		<div>
@@ -60,8 +62,7 @@ export async function Section1({ params, paymentStats, contributionStats, recipi
 								context: {
 									contributorCount: contributionStats.totalContributorsCount,
 									value: roundAmount(contributionStats.totalContributionsAmount),
-									currency: params.currency,
-									maximumFractionDigits: 0,
+									...currencyLocale,
 								},
 							})}
 						</Typography>
