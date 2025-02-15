@@ -1,7 +1,7 @@
 import { DefaultPageProps, DefaultParams } from '@/app/[lang]/[region]';
 import { CurrencyRedirect } from '@/app/[lang]/[region]/(website)/transparency/(components)/currency-redirect';
 import { firestoreAdmin } from '@/firebase-admin';
-import { websiteCurrencies, WebsiteCurrency } from '@/i18n';
+import { toLocale, websiteCurrencies, WebsiteCurrency } from '@/i18n';
 import { Currency } from '@socialincome/shared/src/types/currency';
 import {
 	ContributionStats,
@@ -23,13 +23,13 @@ export const revalidate = 3600; // update once an hour
 export const generateStaticParams = () => websiteCurrencies.map((currency) => ({ currency: currency.toLowerCase() }));
 
 export type TransparencyPageProps = DefaultPageProps & {
-	params: DefaultParams & { currency: string };
+	params: DefaultParams & { currency: WebsiteCurrency };
 };
 
 export type SectionProps = {
 	contributionStats: ContributionStats;
 	expensesStats: ExpenseStats;
-	params: DefaultParams & { currency: string };
+	params: DefaultParams & { currency: WebsiteCurrency };
 	paymentStats: PaymentStats;
 	recipientStats: RecipientStats;
 };
@@ -48,7 +48,13 @@ export default async function Page({ params }: TransparencyPageProps) {
 	};
 	const currency = params.currency.toUpperCase() as WebsiteCurrency;
 	const { contributionStats, expensesStats, paymentStats, recipientStats } = await getStats(currency);
-	const sectionProps = { contributionStats, expensesStats, params, paymentStats, recipientStats };
+	const currencyLocales = {
+		style: 'currency' as keyof Intl.NumberFormatOptionsStyleRegistry,
+		currency: params.currency,
+		locale: toLocale(params.lang, params.region),
+		maximumFractionDigits: 0,
+	};
+	const sectionProps = { contributionStats, expensesStats, params, paymentStats, recipientStats, currencyLocales };
 
 	return (
 		<BaseContainer className="flex flex-col space-y-16">
