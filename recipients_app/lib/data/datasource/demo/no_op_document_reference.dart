@@ -3,6 +3,7 @@ import "package:cloud_firestore/cloud_firestore.dart";
 // We are using DocumentReference in repository / data source. That's why we need to get 
 // no-op implementation for it for demo data source.
 
+// NoOpDocumentReference is a no-op implementation of DocumentReference.
 // ignore: subtype_of_sealed_class
 class NoOpDocumentReference implements DocumentReference<Map<String, dynamic>> {
   const NoOpDocumentReference();
