@@ -1,13 +1,12 @@
-
 import "package:app/core/cubits/signup/signup_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/repositories/repositories.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/view/error_localization_helper.dart";
 import "package:app/view/widgets/welcome/otp_input_page.dart";
 import "package:app/view/widgets/welcome/phone_input_page.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage();
@@ -29,21 +28,19 @@ class _WelcomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     return Scaffold(
       body: BlocConsumer<SignupCubit, SignupState>(
         listener: (context, state) {
           if (state.status == SignupStatus.verificationFailure) {
             FlushbarHelper.showFlushbar(
               context,
-              message: localizeExceptionMessage(state.exception, localizations),
+              message: localizeExceptionMessage(state.exception, context.l10n),
               type: FlushbarType.error,
             );
           } else if (state.status == SignupStatus.phoneNumberFailure) {
             FlushbarHelper.showFlushbar(
               context,
-              message: localizeExceptionMessage(state.exception, localizations),
+              message: localizeExceptionMessage(state.exception, context.l10n),
               type: FlushbarType.error,
             );
           }

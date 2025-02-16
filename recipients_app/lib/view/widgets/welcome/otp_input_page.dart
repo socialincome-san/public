@@ -1,9 +1,9 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/welcome/otp_input.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class OtpInputPage extends StatefulWidget {
   const OtpInputPage({super.key});
@@ -15,7 +15,6 @@ class OtpInputPage extends StatefulWidget {
 class _OtpInputPageState extends State<OtpInputPage> {
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
     final phoneNumber = context.watch<SignupCubit>().state.phoneNumber ?? "";
 
     return Scaffold(
@@ -36,7 +35,7 @@ class _OtpInputPageState extends State<OtpInputPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Text(
-              localizations.verificationSent(phoneNumber),
+              context.l10n.verificationSent(phoneNumber),
               style: AppStyles.headlineLarge.copyWith(
                 color: AppColors.primaryColor,
                 fontWeight: FontWeight.bold,
@@ -45,14 +44,13 @@ class _OtpInputPageState extends State<OtpInputPage> {
             ),
             const SizedBox(height: 24),
             OtpInput(
-              onCodeReady: (verificationCode) =>
-                  context.read<SignupCubit>().submitVerificationCode(verificationCode),
+              onCodeReady: (verificationCode) => context.read<SignupCubit>().submitVerificationCode(verificationCode),
             ),
             const SizedBox(height: 24),
             TextButton(
               onPressed: () async => context.read<SignupCubit>().resendVerificationCode(),
               child: Text(
-                localizations.resendVerificationCode,
+                context.l10n.resendVerificationCode,
                 style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                       color: AppColors.primaryColor,
                       decoration: TextDecoration.underline,

@@ -1,5 +1,6 @@
 import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/models/payment/payment.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/payments_page.dart";
@@ -7,7 +8,6 @@ import "package:app/view/widgets/income/review_payment_modal.dart";
 import "package:collection/collection.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class BalanceCardBottomAction extends StatelessWidget {
   final PaymentsUiState paymentsUiState;
@@ -19,8 +19,6 @@ class BalanceCardBottomAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     final foregroundColor = _getForegroundColor(paymentsUiState.status);
 
     final shouldShowSecondaryActionButton = _shouldShowSecondaryActionButton(
@@ -36,7 +34,7 @@ class BalanceCardBottomAction extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                _getStatusLabel(paymentsUiState, localizations),
+                _getStatusLabel(paymentsUiState, context.l10n),
                 style: TextStyle(color: foregroundColor),
               ),
             ),
@@ -47,7 +45,7 @@ class BalanceCardBottomAction extends StatelessWidget {
                     shouldShowSecondaryActionButton,
                     context,
                   ),
-                  label: _getPrimaryActionLabel(paymentsUiState, localizations),
+                  label: _getPrimaryActionLabel(paymentsUiState, context.l10n),
                   buttonType: ButtonSmallType.outlined,
                   color: foregroundColor,
                   fontColor: foregroundColor,
@@ -56,7 +54,7 @@ class BalanceCardBottomAction extends StatelessWidget {
                   const SizedBox(width: 8),
                   ButtonSmall(
                     onPressed: () => _onPressedNo(context),
-                    label: localizations.no,
+                    label: context.l10n.no,
                     buttonType: ButtonSmallType.outlined,
                     color: foregroundColor,
                     fontColor: foregroundColor,
@@ -76,9 +74,7 @@ class BalanceCardBottomAction extends StatelessWidget {
   ) {
     if (shouldShowSecondaryActionButton) {
       final MappedPayment? mappedPayment = paymentsUiState.payments.firstWhereOrNull(
-        (element) =>
-            element.uiStatus == PaymentUiStatus.toReview ||
-            element.uiStatus == PaymentUiStatus.recentToReview,
+        (element) => element.uiStatus == PaymentUiStatus.toReview || element.uiStatus == PaymentUiStatus.recentToReview,
       );
       if (mappedPayment != null) {
         context.read<PaymentsCubit>().confirmPayment(mappedPayment.payment);
@@ -90,9 +86,7 @@ class BalanceCardBottomAction extends StatelessWidget {
 
   void _onPressedNo(BuildContext context) {
     final MappedPayment? mappedPayment = paymentsUiState.payments.firstWhereOrNull(
-      (element) =>
-          element.uiStatus == PaymentUiStatus.toReview ||
-          element.uiStatus == PaymentUiStatus.recentToReview,
+      (element) => element.uiStatus == PaymentUiStatus.toReview || element.uiStatus == PaymentUiStatus.recentToReview,
     );
 
     if (mappedPayment != null) {

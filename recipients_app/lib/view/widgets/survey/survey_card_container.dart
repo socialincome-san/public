@@ -1,9 +1,9 @@
 import "package:app/data/models/survey/mapped_survey.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/dashboard_item.dart";
 import "package:app/view/widgets/survey/survey_card_bottom_action.dart";
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class SurveyCardContainer extends DashboardItem {
   final MappedSurvey mappedSurvey;
@@ -15,8 +15,6 @@ class SurveyCardContainer extends DashboardItem {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     return Card(
       clipBehavior: Clip.antiAlias,
       color: Colors.white,
@@ -33,7 +31,7 @@ class SurveyCardContainer extends DashboardItem {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "${mappedSurvey.name} ${localizations.surveyCardTitle}",
+                  "${mappedSurvey.name} ${context.l10n.surveyCardTitle}",
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 13.0,
@@ -52,7 +50,7 @@ class SurveyCardContainer extends DashboardItem {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  localizations.surveyCardInfo,
+                  context.l10n.surveyCardInfo,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.black,

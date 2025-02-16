@@ -1,7 +1,7 @@
 import "package:app/data/models/payment/payment.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class BalanceCardHeader extends StatelessWidget {
   final int daysTo;
@@ -17,8 +17,6 @@ class BalanceCardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     final dynamicTextStyle = Theme.of(context).textTheme.headlineLarge!.copyWith(
           fontWeight: FontWeight.bold,
           color: _getTextColor(),
@@ -32,12 +30,12 @@ class BalanceCardHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                localizations.nextPayment,
+                context.l10n.nextPayment,
                 style: const TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 4),
               Text(
-                _getNextDateText(localizations),
+                _getNextDateText(context.l10n),
                 style: dynamicTextStyle,
               ),
             ],
@@ -48,7 +46,7 @@ class BalanceCardHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                localizations.amount,
+                context.l10n.amount,
                 style: const TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 4),

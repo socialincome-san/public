@@ -1,8 +1,8 @@
 import "package:app/data/models/survey/survey.dart";
 import "package:app/data/models/survey/survey_card_status.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 const statusIconHeight = 26.0;
 
@@ -18,8 +18,6 @@ class SurveyServerStatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     late Color color;
     late Color textColor;
 
@@ -54,7 +52,7 @@ class SurveyServerStatusChip extends StatelessWidget {
               _getStatusName(
                 status,
                 serverStatus,
-                localizations,
+                context.l10n,
               ),
               style: AppStyles.iconLabel.copyWith(
                 color: textColor,
