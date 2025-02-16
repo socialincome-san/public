@@ -297,7 +297,6 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 							{translations.donate}
 						</NavbarLink>
 					</div>
-
 					<NavbarLink href={`/${lang}/${region}/journal`}>{translations.journal}</NavbarLink>
 				</div>
 			</div>

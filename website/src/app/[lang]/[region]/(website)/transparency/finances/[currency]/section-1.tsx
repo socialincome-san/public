@@ -1,6 +1,8 @@
+import { toCurrencyLocale } from '@/i18n';
+import { RecipientProgramStatus } from '@socialincome/shared/src/types/recipient';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, Card, CardContent, Typography } from '@socialincome/ui';
-import { Section1Props } from './page';
+import { SectionProps } from './page';
 
 export const roundAmount = (amount: number) => {
 	if (amount === 0) return 0;
@@ -8,8 +10,9 @@ export const roundAmount = (amount: number) => {
 	return rounded === 0 ? 10 : rounded;
 };
 
-export async function Section1({ params, paymentStats, contributionStats, recipientStats }: Section1Props) {
+export async function Section1({ params, paymentStats, contributionStats, recipientStats }: SectionProps) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-finances'] });
+	const currencyLocale = toCurrencyLocale(params.lang, params.region, params.currency, { maximumFractionDigits: 0 });
 
 	return (
 		<div>
@@ -38,20 +41,17 @@ export async function Section1({ params, paymentStats, contributionStats, recipi
 							{translator.t('section-1.totalRecipients', {
 								context: {
 									value:
-										recipientStats?.totalRecipients?.active +
-										recipientStats?.totalRecipients?.former +
-										recipientStats?.totalRecipients?.suspended,
+										(recipientStats.recipientsCountByStatus['total'] ?? 0) -
+										(recipientStats.recipientsCountByStatus[RecipientProgramStatus.Waitlisted] ?? 0),
 								},
 							})}
 						</Typography>
-						<Badge variant="interactive-accent">
-							<Typography size="sm" weight="normal">
-								{translator.t('section-1.activeRecipients', {
-									context: {
-										value: recipientStats?.totalRecipients.active,
-									},
-								})}
-							</Typography>
+						<Badge variant="accent" size="md">
+							{translator.t('section-1.activeRecipients', {
+								context: {
+									value: recipientStats.recipientsCountByStatus[RecipientProgramStatus.Active] ?? 0,
+								},
+							})}
 						</Badge>
 					</CardContent>
 				</Card>
@@ -62,8 +62,7 @@ export async function Section1({ params, paymentStats, contributionStats, recipi
 								context: {
 									contributorCount: contributionStats.totalContributorsCount,
 									value: roundAmount(contributionStats.totalContributionsAmount),
-									currency: params.currency,
-									maximumFractionDigits: 0,
+									...currencyLocale,
 								},
 							})}
 						</Typography>

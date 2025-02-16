@@ -1,11 +1,11 @@
-import { DocumentReference, Timestamp } from 'firebase-admin/firestore';
+import { Timestamp } from 'firebase-admin/firestore';
 import functions from 'firebase-functions-test';
 import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
 import { getOrInitializeFirebaseAdmin } from '../../firebase/admin/app';
 import { PARTNER_ORGANISATION_FIRESTORE_PATH, PartnerOrganisation } from '../../types/partner-organisation';
 import {
-	RECIPIENT_FIRESTORE_PATH,
 	Recipient,
+	RECIPIENT_FIRESTORE_PATH,
 	RecipientMainLanguage,
 	RecipientProgramStatus,
 } from '../../types/recipient';
@@ -22,41 +22,23 @@ beforeAll(async () => {
 	calculator = await RecipientStatsCalculator.build(firestoreAdmin);
 });
 
-test('totalRecipients(): Calculate total recipients', async () => {
-	expect(calculator.allStats().totalRecipients.total).toEqual(3);
-});
-
-test('totalRecipients(): Calculate active recipients', async () => {
-	expect(calculator.allStats().totalRecipients.active).toEqual(1);
-});
-
-test('totalRecipientsByOrganization(): Calculate total recipients for a particular organisation', async () => {
-	expect(calculator.allStats().totalRecipientsByOrganization['aurora'].total).toEqual(2);
-});
-
-test('totalRecipientsByOrganization(): Calculate active recipients for a particular organisation', async () => {
-	expect(calculator.allStats().totalRecipientsByOrganization['aurora'].active).toEqual(1);
-});
-
-test('totalRecipientsByOrganization(): Calculate suspended recipients for a particular organisation', async () => {
-	expect(calculator.allStats().totalRecipientsByOrganization['aurora'].suspended).toEqual(1);
-});
-
-test('totalRecipientsByOrganization(): Calculate recipients for a non-existing organisation', async () => {
-	expect(calculator.allStats().totalRecipientsByOrganization['socialincome']?.total).toEqual(undefined);
-});
-
 const org1: PartnerOrganisation = {
-	name: 'aurora',
+	name: 'Aurora',
 	contactName: 'test1',
 	contactNumber: '123',
+	communitySize: 10,
 };
+const org1Ref = firestoreAdmin.collection<PartnerOrganisation>(PARTNER_ORGANISATION_FIRESTORE_PATH).doc('aurora');
 
 const org2: PartnerOrganisation = {
-	name: 'socialincome',
+	name: 'Social Income',
 	contactName: 'test2',
 	contactNumber: '456',
+	communitySize: 20,
 };
+const org2Ref = firestoreAdmin
+	.collection<PartnerOrganisation>(PARTNER_ORGANISATION_FIRESTORE_PATH)
+	.doc('social-income');
 
 const recipient1: Recipient = {
 	birth_date: new Date('1990-05-15'),
@@ -76,7 +58,7 @@ const recipient1: Recipient = {
 		phone: 9876543210,
 		has_whatsapp: true,
 	},
-	organisation: { id: 'aurora' } as DocumentReference<PartnerOrganisation>,
+	organisation: org1Ref,
 	om_uid: 12345,
 	profession: 'Software Engineer',
 	progr_status: RecipientProgramStatus.Active,
@@ -104,7 +86,7 @@ const recipient2: Recipient = {
 		phone: 9876543210,
 		has_whatsapp: true,
 	},
-	organisation: { id: 'aurora' } as DocumentReference<PartnerOrganisation>,
+	organisation: org2Ref,
 	om_uid: 12345,
 	profession: 'Software Engineer',
 	progr_status: RecipientProgramStatus.Suspended,
@@ -132,7 +114,7 @@ const recipient3: Recipient = {
 		phone: 9876543210,
 		has_whatsapp: true,
 	},
-	organisation: { id: 'socialincome' } as DocumentReference<PartnerOrganisation>,
+	organisation: org2Ref,
 	om_uid: 12345,
 	profession: 'Software Engineer',
 	progr_status: RecipientProgramStatus.Waitlisted,
@@ -143,30 +125,45 @@ const recipient3: Recipient = {
 };
 
 const insertTestData = async () => {
-	await firestoreAdmin.collection<PartnerOrganisation>(PARTNER_ORGANISATION_FIRESTORE_PATH).doc('aurora').set(org1);
-	await firestoreAdmin
-		.collection<PartnerOrganisation>(PARTNER_ORGANISATION_FIRESTORE_PATH)
-		.doc('socialincome')
-		.set(org2);
-	const recipient1WithOrgRef: Recipient = {
-		...recipient1,
-		organisation: firestoreAdmin
-			.collection<PartnerOrganisation>(PARTNER_ORGANISATION_FIRESTORE_PATH)
-			.doc('aurora') as DocumentReference<PartnerOrganisation>,
-	};
-	const recipient2WithOrgRef: Recipient = {
-		...recipient2,
-		organisation: firestoreAdmin
-			.collection<PartnerOrganisation>(PARTNER_ORGANISATION_FIRESTORE_PATH)
-			.doc('aurora') as DocumentReference<PartnerOrganisation>,
-	};
-	const recipient3WithOrgRef: Recipient = {
-		...recipient3,
-		organisation: firestoreAdmin
-			.collection<PartnerOrganisation>(PARTNER_ORGANISATION_FIRESTORE_PATH)
-			.doc('socialincome') as DocumentReference<PartnerOrganisation>,
-	};
-	await firestoreAdmin.collection<Recipient>(RECIPIENT_FIRESTORE_PATH).add(recipient1WithOrgRef);
-	await firestoreAdmin.collection<Recipient>(RECIPIENT_FIRESTORE_PATH).add(recipient2WithOrgRef);
-	await firestoreAdmin.collection<Recipient>(RECIPIENT_FIRESTORE_PATH).add(recipient3WithOrgRef);
+	await org1Ref.set(org1);
+	await org2Ref.set(org2);
+	await firestoreAdmin.collection<Recipient>(RECIPIENT_FIRESTORE_PATH).add(recipient1);
+	await firestoreAdmin.collection<Recipient>(RECIPIENT_FIRESTORE_PATH).add(recipient2);
+	await firestoreAdmin.collection<Recipient>(RECIPIENT_FIRESTORE_PATH).add(recipient3);
 };
+
+test('Calculate recipient statistics', async () => {
+	const stats = calculator.allStats();
+
+	// Verify total number of recipients across all organizations
+	expect(stats.recipientsCountByStatus['total']).toEqual(3);
+
+	// Verify number of recipients by status
+	expect(stats.recipientsCountByStatus[RecipientProgramStatus.Active]).toEqual(1);
+	expect(stats.recipientsCountByStatus[RecipientProgramStatus.Suspended]).toEqual(1);
+	expect(stats.recipientsCountByStatus[RecipientProgramStatus.Waitlisted]).toEqual(1);
+	expect(stats.recipientsCountByStatus[RecipientProgramStatus.Former]).toEqual(undefined);
+
+	// Verify total number of recipients for organization 1
+	expect(stats.recipientsCountByOrganisationAndStatus[org1Ref.id]!['total']).toEqual(1);
+
+	// Verify number of active recipients for organization 1
+	expect(stats.recipientsCountByOrganisationAndStatus[org1Ref.id]![RecipientProgramStatus.Active]).toEqual(1);
+
+	// Verify suspended recipients status:
+	// - Organization 1 should have no suspended recipients (undefined) and 1 active recipient
+	// - Organization 2 should have 1 suspended recipient
+	expect(stats.recipientsCountByOrganisationAndStatus[org1Ref.id]![RecipientProgramStatus.Suspended]).toEqual(
+		undefined,
+	);
+	expect(stats.recipientsCountByOrganisationAndStatus[org1Ref.id]![RecipientProgramStatus.Active]).toEqual(1);
+	expect(stats.recipientsCountByOrganisationAndStatus[org2Ref.id]![RecipientProgramStatus.Suspended]).toEqual(1);
+	expect(stats.recipientsCountByOrganisationAndStatus[org2Ref.id]![RecipientProgramStatus.Active]).toEqual(undefined);
+	expect(stats.recipientsCountByOrganisationAndStatus[org2Ref.id]![RecipientProgramStatus.Waitlisted]).toEqual(1);
+
+	// Verify total recipients count for each organization:
+	// - Organization 1 should have 1 recipient
+	// - Organization 2 should have 2 recipients
+	expect(stats.recipientsCountByOrganisationAndStatus[org1Ref.id]!['total']).toEqual(1);
+	expect(stats.recipientsCountByOrganisationAndStatus[org2Ref.id]!['total']).toEqual(2);
+});
