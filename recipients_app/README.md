@@ -142,8 +142,8 @@ translations after you changed something run:
 flutter gen-l10n
 ```
 
-To use a translated string in the code use:
-`AppLocalizations.of(context).helloWorld` and import:
+To use a translated string in the code use: `context.l10n.helloWorld`
+and import:
 `import 'package:flutter_gen/gen_l10n/app_localizations.dart';`
 
 ### Upgrade flutter version
@@ -177,9 +177,10 @@ https://docs.codemagic.io/codemagic-yaml-cheatsheet.html
 
 See [How to test](./docu/app_testing_guides/how_to_test.md)
 
-### Run golden tests
+### Golden tests
 
-Run `flutter test --update-golden` to update golden files.
+- Run `flutter test` to run all tests incl. all golden tests.
+- Run `flutter test --update-goldens` to update golden files.
 
 ## Releasing
 

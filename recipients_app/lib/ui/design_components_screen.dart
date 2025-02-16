@@ -24,8 +24,41 @@ class DesignComponentsScreen extends StatelessWidget {
               style: AppStyles.headlineLarge,
             ),
             const SizedBox(height: 16),
-            const Row(
+            const Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                PaymentStatusIcon(
+                  status: PaymentUiStatus.confirmed,
+                ),
+                SizedBox(height: 5),
+                PaymentStatusIcon(
+                  status: PaymentUiStatus.contested,
+                ),
+                SizedBox(height: 5),
+                PaymentStatusIcon(
+                  status: PaymentUiStatus.onHoldContested,
+                ),
+                SizedBox(height: 5),
+                PaymentStatusIcon(
+                  status: PaymentUiStatus.onHoldToReview,
+                ),
+                SizedBox(height: 5),
+                PaymentStatusIcon(
+                  status: PaymentUiStatus.recentToReview,
+                ),
+                SizedBox(height: 5),
+                PaymentStatusIcon(
+                  status: PaymentUiStatus.toBePaid,
+                ),
+                SizedBox(height: 5),
+                PaymentStatusIcon(
+                  status: PaymentUiStatus.empty,
+                ),
+                SizedBox(height: 5),
+                PaymentStatusIcon(
+                  status: PaymentUiStatus.toReview,
+                ),
+              ],
             ),
             const SizedBox(height: 32),
             const Text(
@@ -54,33 +87,44 @@ class DesignComponentsScreen extends StatelessWidget {
               style: AppStyles.headlineLarge,
             ),
             const SizedBox(height: 16),
-            const Row(
+            const Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 PaymentStatusIconWithText(
                   status: PaymentUiStatus.confirmed,
                   text: "Confirmed",
                 ),
+                SizedBox(height: 5),
                 PaymentStatusIconWithText(
                   status: PaymentUiStatus.contested,
                   text: "Contested",
                 ),
+                SizedBox(height: 5),
                 PaymentStatusIconWithText(
                   status: PaymentUiStatus.onHoldContested,
                   text: "On Hold contested",
                 ),
+                SizedBox(height: 5),
                 PaymentStatusIconWithText(
                   status: PaymentUiStatus.onHoldToReview,
                   text: "On Hold to review",
                 ),
+                SizedBox(height: 5),
                 PaymentStatusIconWithText(
                   status: PaymentUiStatus.recentToReview,
                   text: "Recent To Review",
                 ),
+                SizedBox(height: 5),
                 PaymentStatusIconWithText(
                   status: PaymentUiStatus.toBePaid,
                   text: "To Be Paid",
                 ),
+                SizedBox(height: 5),
+                PaymentStatusIconWithText(
+                  status: PaymentUiStatus.empty,
+                  text: "Empty",
+                ),
+                SizedBox(height: 5),
                 PaymentStatusIconWithText(
                   status: PaymentUiStatus.toReview,
                   text: "To Review",

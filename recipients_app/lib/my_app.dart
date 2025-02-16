@@ -1,5 +1,13 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
+import "package:app/data/datasource/demo/organization_demo_data_source.dart";
+import "package:app/data/datasource/demo/payment_demo_data_source.dart";
+import "package:app/data/datasource/demo/survey_demo_data_source.dart";
+import "package:app/data/datasource/demo/user_demo_data_source.dart";
+import "package:app/data/datasource/remote/organization_remote_data_source.dart";
+import "package:app/data/datasource/remote/payment_remote_data_source.dart";
+import "package:app/data/datasource/remote/survey_remote_data_source.dart";
+import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/demo_manager.dart";
 import "package:app/kri_intl.dart";
@@ -7,8 +15,6 @@ import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/main_app_page.dart";
 import "package:app/view/pages/terms_and_conditions_page.dart";
 import "package:app/view/pages/welcome_page.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
-import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -17,17 +23,33 @@ import "package:flutter_localizations/flutter_localizations.dart";
 import "package:flutter_native_splash/flutter_native_splash.dart";
 
 class MyApp extends StatelessWidget {
-  final FirebaseAuth firebaseAuth;
-  final FirebaseFirestore firestore;
   final FirebaseMessaging messaging;
   final DemoManager demoManager;
 
+  final UserRemoteDataSource userRemoteDataSource;
+  final UserDemoDataSource userDemoDataSource;
+
+  final PaymentRemoteDataSource paymentRemoteDataSource;
+  final PaymentDemoDataSource paymentDemoDataSource;
+
+  final SurveyRemoteDataSource surveyRemoteDataSource;
+  final SurveyDemoDataSource surveyDemoDataSource;
+
+  final OrganizationRemoteDataSource organizationRemoteDataSource;
+  final OrganizationDemoDataSource organizationDemoDataSource;
+
   const MyApp({
     super.key,
-    required this.firebaseAuth,
-    required this.firestore,
     required this.messaging,
     required this.demoManager,
+    required this.userRemoteDataSource,
+    required this.userDemoDataSource,
+    required this.paymentRemoteDataSource,
+    required this.paymentDemoDataSource,
+    required this.surveyRemoteDataSource,
+    required this.surveyDemoDataSource,
+    required this.organizationRemoteDataSource,
+    required this.organizationDemoDataSource,
   });
 
   // This widget is the root of your application.
@@ -45,29 +67,32 @@ class MyApp extends StatelessWidget {
         ),
         RepositoryProvider(
           create: (context) => UserRepository(
-            firebaseAuth: firebaseAuth,
-            firestore: firestore,
+            remoteDataSource: userRemoteDataSource,
+            demoDataSource: userDemoDataSource,
             demoManager: demoManager,
           ),
         ),
         RepositoryProvider(
-          create: (context) => CrashReportingRepository(),
+          create: (context) => const CrashReportingRepository(),
         ),
         RepositoryProvider(
           create: (context) => PaymentRepository(
-            firestore: firestore,
+            remoteDataSource: paymentRemoteDataSource,
+            demoDataSource: paymentDemoDataSource,
             demoManager: demoManager,
           ),
         ),
         RepositoryProvider(
           create: (context) => SurveyRepository(
-            firestore: firestore,
+            remoteDataSource: surveyRemoteDataSource,
+            demoDataSource: surveyDemoDataSource,
             demoManager: demoManager,
           ),
         ),
         RepositoryProvider(
           create: (context) => OrganizationRepository(
-            firestore: firestore,
+            remoteDataSource: organizationRemoteDataSource,
+            demoDataSource: organizationDemoDataSource,
             demoManager: demoManager,
           ),
         ),

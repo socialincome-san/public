@@ -1,3 +1,4 @@
+// "unreachable_from_main" is ignored beacuse of the vm:entry-point function "_firebaseMessagingBackgroundHandler"
 // ignore_for_file: unreachable_from_main
 import "dart:developer";
 import "package:firebase_messaging/firebase_messaging.dart";

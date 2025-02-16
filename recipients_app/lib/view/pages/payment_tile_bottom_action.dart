@@ -1,11 +1,11 @@
 import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/models/payment/payment.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/widgets/income/review_payment_modal.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class PaymentTileBottomAction extends StatelessWidget {
   final MappedPayment mappedPayment;
@@ -17,8 +17,6 @@ class PaymentTileBottomAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localization = AppLocalizations.of(context)!;
-
     final foregroundColor = _getForegroundColor(mappedPayment.uiStatus);
     final isContested = mappedPayment.uiStatus == PaymentUiStatus.contested ||
         mappedPayment.uiStatus == PaymentUiStatus.onHoldContested;
@@ -32,19 +30,15 @@ class PaymentTileBottomAction extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                isContested
-                    ? localization.underInvestigation
-                    : localization.didYouGetSocialIncome,
+                isContested ? context.l10n.underInvestigation : context.l10n.didYouGetSocialIncome,
                 style: TextStyle(color: foregroundColor),
               ),
             ),
             Row(
               children: [
                 ButtonSmall(
-                  onPressed: () => context
-                      .read<PaymentsCubit>()
-                      .confirmPayment(mappedPayment.payment),
-                  label: isContested ? localization.resolved : localization.yes,
+                  onPressed: () => context.read<PaymentsCubit>().confirmPayment(mappedPayment.payment),
+                  label: isContested ? context.l10n.resolved : context.l10n.yes,
                   buttonType: ButtonSmallType.outlined,
                   color: foregroundColor,
                   fontColor: foregroundColor,
@@ -53,7 +47,7 @@ class PaymentTileBottomAction extends StatelessWidget {
                   const SizedBox(width: 8),
                   ButtonSmall(
                     onPressed: () => _onPressedNo(context),
-                    label: localization.no,
+                    label: context.l10n.no,
                     buttonType: ButtonSmallType.outlined,
                     color: foregroundColor,
                     fontColor: foregroundColor,
