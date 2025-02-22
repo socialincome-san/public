@@ -19,7 +19,10 @@ export async function generateMetadata({ params }: DefaultLayoutProps) {
 	return getMetadata(params.lang, 'website-login');
 }
 
-export default async function Page({ params, searchParams }: DefaultPageProps & { searchParams: { oobCode?: string } }) {
+export default async function Page({
+	params,
+	searchParams,
+}: DefaultPageProps & { searchParams: { oobCode?: string } }) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-login'] });
 
 	if (!searchParams.oobCode) {
