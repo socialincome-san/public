@@ -180,8 +180,8 @@ workflows:
         working_directory: recipients_app
 
     artifacts:
-      - recipients_app/build/**/outputs/apk/prod/**/*.apk
-      - recipients_app/build/**/outputs/apk/prod/**/*.aab
+      - recipients_app/build/**/outputs/apk/prodRelease/**/*.apk
+      - recipients_app/build/**/outputs/bundle/prodRelease/**/*.aab
       - recipients_app/build/**/outputs/**/mapping.txt
 
     publishing:
