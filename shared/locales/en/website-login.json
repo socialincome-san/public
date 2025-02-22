@@ -29,6 +29,8 @@
 		"submit-button": "Reset password",
 		"success": "Your password has been reset successfully",
 		"error": "Failed to reset password. Please try again",
-		"invalid-code": "Invalid or expired reset password link. Please request a new one"
+		"invalid-code": "Invalid or expired reset password link. Please request a new one",
+		"expired-code": "The password reset link has expired. Please request a new one",
+		"invalid-action": "Invalid password reset link. Please request a new one"
 	}
 }

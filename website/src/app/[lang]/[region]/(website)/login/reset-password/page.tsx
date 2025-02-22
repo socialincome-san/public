@@ -1,25 +1,19 @@
 import { DefaultLayoutProps, DefaultPageProps } from '@/app/[lang]/[region]';
 import ResetPasswordForm from '@/app/[lang]/[region]/(website)/login/reset-password/reset-password-form';
 import { getMetadata } from '@/metadata';
-import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import {
-	Alert,
-	AlertDescription,
-	AlertTitle,
-	BaseContainer,
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-	Typography,
-} from '@socialincome/ui';
+import { Alert, AlertDescription, AlertTitle, BaseContainer, Typography } from '@socialincome/ui';
 
 export async function generateMetadata({ params }: DefaultLayoutProps) {
 	return getMetadata(params.lang, 'website-login');
 }
 
-export default async function Page({ params, searchParams }: DefaultPageProps & { searchParams: { oobCode?: string } }) {
+export default async function Page({
+	params,
+	searchParams,
+}: DefaultPageProps & {
+	searchParams: { oobCode?: string };
+}) {
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-login'] });
 
 	if (!searchParams.oobCode) {
@@ -37,23 +31,6 @@ export default async function Page({ params, searchParams }: DefaultPageProps & 
 
 	return (
 		<BaseContainer className="min-h-screen-navbar mx-auto flex max-w-lg flex-col">
-			<Alert variant="accent" className="mb-8">
-				<AlertTitle className="flex-inline flex">
-					{translator.t('alert.title')}
-					<TooltipProvider delayDuration={100}>
-						<Tooltip>
-							<TooltipTrigger>
-								<InformationCircleIcon className="ml-1 h-5 w-5" />
-							</TooltipTrigger>
-							<TooltipContent className="max-w-md">{translator.t('alert.tooltip')}</TooltipContent>
-						</Tooltip>
-					</TooltipProvider>
-				</AlertTitle>
-				<AlertDescription>
-					<Typography>{translator.t('alert.text')}</Typography>
-				</AlertDescription>
-			</Alert>
-
 			<ResetPasswordForm
 				params={params}
 				oobCode={searchParams.oobCode}
@@ -66,6 +43,8 @@ export default async function Page({ params, searchParams }: DefaultPageProps & 
 					resetPasswordSubmitButton: translator.t('reset-password.submit-button'),
 					resetPasswordSuccess: translator.t('reset-password.success'),
 					resetPasswordError: translator.t('reset-password.error'),
+					resetPasswordInvalid: translator.t('reset-password.invalid-action'),
+					resetPasswordExpired: translator.t('reset-password.expired-code'),
 				}}
 			/>
 		</BaseContainer>
