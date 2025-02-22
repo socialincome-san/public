@@ -112,8 +112,14 @@ export default function ResetPasswordForm({ params: { lang, region }, oobCode, t
 	return (
 		<Form {...form}>
 			<form className="flex flex-col space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-				<Typography weight="medium">{translations.title}</Typography>
-				{email && <Typography className="text-sm">{email}</Typography>}
+				<Typography weight="bold" size="2xl" className="mb-4 text-center">
+					{translations.title}
+				</Typography>
+				{email && (
+					<Typography size="lg" weight="semibold">
+						{email}
+					</Typography>
+				)}
 				<FormField
 					control={form.control}
 					name="password"

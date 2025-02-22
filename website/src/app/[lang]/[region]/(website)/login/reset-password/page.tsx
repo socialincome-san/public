@@ -18,7 +18,7 @@ export default async function Page({
 
 	if (!searchParams.oobCode) {
 		return (
-			<BaseContainer className="min-h-screen-navbar mx-auto flex max-w-lg flex-col">
+			<BaseContainer className="mx-auto flex max-w-lg flex-col">
 				<Alert variant="destructive">
 					<AlertTitle>Error</AlertTitle>
 					<AlertDescription>
@@ -30,7 +30,7 @@ export default async function Page({
 	}
 
 	return (
-		<BaseContainer className="min-h-screen-navbar mx-auto flex max-w-lg flex-col">
+		<BaseContainer className="mx-auto flex max-w-lg flex-col">
 			<ResetPasswordForm
 				params={params}
 				oobCode={searchParams.oobCode}

@@ -59,7 +59,7 @@ export default function LoginForm({ lang, region, translations }: LoginFormProps
 	return (
 		<Form {...form}>
 			<form className="flex flex-col space-y-2 text-center" onSubmit={form.handleSubmit(onSubmit)}>
-				<Typography weight="bold" size="2xl" className="my-4">
+				<Typography weight="bold" size="2xl" className="mb-4">
 					{translations.title}
 				</Typography>
 				<FormField
