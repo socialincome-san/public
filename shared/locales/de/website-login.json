@@ -2,11 +2,6 @@
 	"metadata": {
 		"title": "Login | Social Income"
 	},
-	"alert": {
-		"title": "Passwort zurücksetzen",
-		"text": "Falls du vor Dezember 2023 ein Konto bei uns erstellt hast, setze bitte dein Passwort über \"Passwort vergessen?\" zurück.",
-		"tooltip": "Mit der neuen Webseite haben wir unsere Benutzerdatenbank aktualisiert. Deine Daten sind sicher, aber du musst dein Passwort zurücksetzen, um dich wieder anmelden zu können."
-	},
 	"title": "Melde dich an",
 	"email": "E-Mail",
 	"invalid-email": "Ungültige E-Mail-Adresse",

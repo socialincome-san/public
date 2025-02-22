@@ -2,11 +2,6 @@
 	"metadata": {
 		"title": "Login | Social Income"
 	},
-	"alert": {
-		"title": "Reimposta la password",
-		"text": "Se hai creato un account con noi prima di dicembre 2023, ti preghiamo di reimpostare la password utilizzando \"Password dimenticata?\" qui sotto.",
-		"tooltip": "Con il nuovo sito web, il nostro database utenti è stato aggiornato. I tuoi dati sono al sicuro, ma è necessario reimpostare la password per accedere nuovamente."
-	},
 	"title": "Accedi al tuo account",
 	"email": "Email",
 	"invalid-email": "Indirizzo email non valido",

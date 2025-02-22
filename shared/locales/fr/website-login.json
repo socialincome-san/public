@@ -2,11 +2,6 @@
 	"metadata": {
 		"title": "Connexion | Social Income"
 	},
-	"alert": {
-		"title": "Réinitialiser le mot de passe",
-		"text": "Si tu as créé un compte avant décembre 2023, réinitialise ton mot de passe en cliquant sur \"Mot de passe oublié?\".",
-		"tooltip": "Nous avons actualisé notre banque de données des utilisateurs en même temps que notre site web. Tes données sont en sécurité, mais tu dois réinitialiser ton mot de passe pour pouvoir te réinscrire."
-	},
 	"title": "Connexion",
 	"email": "E-mail",
 	"invalid-email": "Adresse e-mail incorrecte",

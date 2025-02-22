@@ -2,11 +2,6 @@
 	"metadata": {
 		"title": "Login | Social Income"
 	},
-	"alert": {
-		"title": "Reset Password",
-		"text": "If you created an account with us before December 2023, please reset your password using \"Forgot password?\" below.",
-		"tooltip": "With the new website, our user database has been updated. Your data is secure, but you need to reset your password to log in again."
-	},
 	"title": "Sign in to your account",
 	"email": "Email",
 	"invalid-email": "Invalid email address",
