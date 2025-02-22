@@ -181,6 +181,7 @@ workflows:
 
     artifacts:
       - recipients_app/build/**/outputs/apk/prod/**/*.apk
+      - recipients_app/build/**/outputs/apk/prod/**/*.aab
       - recipients_app/build/**/outputs/**/mapping.txt
 
     publishing:
