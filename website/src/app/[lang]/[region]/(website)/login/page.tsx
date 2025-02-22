@@ -1,6 +1,6 @@
 import { DefaultLayoutProps, DefaultPageProps } from '@/app/[lang]/[region]';
 import LoginForm from '@/app/[lang]/[region]/(website)/login/login-form';
-import ResetPasswordDialog from '@/app/[lang]/[region]/(website)/login/reset-password-dialog';
+import RequestPasswordResetDialog from '@/app/[lang]/[region]/(website)/login/request-password-reset-dialog';
 import { SocialSignInButtons } from '@/app/[lang]/[region]/(website)/login/social-sign-in-buttons';
 import { getMetadata } from '@/metadata';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
@@ -56,7 +56,7 @@ export default async function Page({ params }: DefaultPageProps) {
 				}}
 			/>
 			<div className="self-end">
-				<ResetPasswordDialog
+				<RequestPasswordResetDialog
 					translations={{
 						emailPlaceholder: translator.t('email'),
 						invalidEmail: translator.t('invalid-email'),

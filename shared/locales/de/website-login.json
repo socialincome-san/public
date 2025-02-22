@@ -19,5 +19,16 @@
 	"reset-password-text": "Gib deine E-Mail-Adresse ein, um einen Link zum Zurücksetzen deines Passworts zu erhalten.",
 	"reset-password-toast-message": "Du solltest eine E-Mail erhalten haben, um dein Passwort zurückzusetzen.",
 	"reset-password-submit-button": "Link senden",
-	"sign-in-with-google": "Mit Google anmelden"
+	"sign-in-with-google": "Mit Google anmelden",
+	"reset-password": {
+		"title": "Passwort zurücksetzen",
+		"password-placeholder": "Neues Passwort",
+		"confirm-password-placeholder": "Neues Passwort bestätigen",
+		"invalid-password": "Das Passwort muss mindestens 6 Zeichen lang sein",
+		"passwords-dont-match": "Die Passwörter stimmen nicht überein",
+		"submit-button": "Passwort zurücksetzen",
+		"success": "Dein Passwort wurde erfolgreich zurückgesetzt",
+		"error": "Fehler beim Zurücksetzen des Passworts. Bitte versuche es erneut",
+		"invalid-code": "Ungültiger oder abgelaufener Link. Bitte fordere einen neuen Link an"
+	}
 }

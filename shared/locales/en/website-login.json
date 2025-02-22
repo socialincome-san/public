@@ -19,5 +19,16 @@
 	"reset-password-text": "Enter your email address and we will send you a link to reset your password.",
 	"reset-password-toast-message": "You should have received an email with a link to reset your password.",
 	"reset-password-submit-button": "Send reset link",
-	"sign-in-with-google": "Sign in with Google"
+	"sign-in-with-google": "Sign in with Google",
+	"reset-password": {
+		"title": "Reset your password",
+		"password-placeholder": "New password",
+		"confirm-password-placeholder": "Confirm new password",
+		"invalid-password": "Password must be at least 6 characters long",
+		"passwords-dont-match": "Passwords don't match",
+		"submit-button": "Reset password",
+		"success": "Your password has been reset successfully",
+		"error": "Failed to reset password. Please try again",
+		"invalid-code": "Invalid or expired reset password link. Please request a new one"
+	}
 }

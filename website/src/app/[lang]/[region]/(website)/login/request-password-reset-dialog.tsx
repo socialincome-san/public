@@ -36,7 +36,7 @@ type PasswordResetDialogProps = {
 	};
 };
 
-export default function ResetPasswordDialog({ translations }: PasswordResetDialogProps) {
+export default function RequestPasswordResetDialog({ translations }: PasswordResetDialogProps) {
 	const auth = useAuth();
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [submitting, setSubmitting] = useState(false);
