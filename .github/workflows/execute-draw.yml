@@ -39,8 +39,10 @@ jobs:
           git config --global user.email $BOT_EMAIL
 
       - name: Commit and raise PR 🔐
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
           branch: draw/results
           branch-suffix: timestamp
           commit-message: completed a recipient draw
+          body: completed a recipient draw
+          token: ${{ secrets.PAT_TOKEN }}
