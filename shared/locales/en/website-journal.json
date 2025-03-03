@@ -1,7 +1,8 @@
 {
 	"overview": {
 		"title": "Journal",
-		"description": "Stories, insights and updates on our journey to create impact."
+		"description": "Stories, insights and updates on our journey to create impact.",
+		"editors": "Contributing Editors"
 	},
 	"written-by": "by",
 	"published": "published"
