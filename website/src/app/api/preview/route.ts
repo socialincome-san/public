@@ -1,7 +1,7 @@
 import { cookies, draftMode } from 'next/headers';
 import { redirect, RedirectType } from 'next/navigation';
 
-const ALLOWED_SLUGS_PREFIXES = ['journal'];
+const ALLOWED_SLUGS_PREFIXES = ['journal', 'author', 'tag'];
 const DEFAULT_LANGUAGE = 'en';
 const ALLOWED_LANGUAGES = ['en', 'it', 'fr', 'de'];
 const DRAFT_MODE_COOKIE_NAME = '__prerender_bypass';
@@ -66,5 +66,6 @@ export async function GET(request: Request) {
 		return new Response('Invalid token', { status: 401 });
 	}
 	enableDraftModeAndAdaptCookie();
-	redirect(`/${lang}/int/${slug}`, RedirectType.push);
+	const path = slug!.startsWith('journal') ? slug : 'journal/' + slug;
+	redirect(`/${lang}/int/${path}`, RedirectType.push);
 }
