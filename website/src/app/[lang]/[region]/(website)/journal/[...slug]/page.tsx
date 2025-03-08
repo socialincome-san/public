@@ -4,7 +4,6 @@ import {
 } from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
 import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Separator, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 import { render } from 'storyblok-rich-text-react-renderer';
@@ -13,11 +12,6 @@ export const revalidate = 900;
 
 export default async function Page(props: { params: { slug: string[]; lang: LanguageCode; region: string } }) {
 	const lang = props.params.lang;
-
-	const translator = await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-journal'],
-	});
 
 	const loadArticleResponse = await loadArticleWithFallbackToDefaultLanguage(props.params.lang, props.params.slug);
 	const articleData = loadArticleResponse.data.story.content;
