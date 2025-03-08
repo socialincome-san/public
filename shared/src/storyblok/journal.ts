@@ -30,4 +30,5 @@ export interface StoryblokArticle {
 	topics: ISbStoryData<StoryblokTopic>[];
 	author: ISbStoryData<StoryblokAuthor>;
 	displayInOverviewPage: boolean;
+	leadText: string;
 }

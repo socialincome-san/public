@@ -29,13 +29,13 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 
 	return (
 		<BaseContainer>
-			<Typography weight="bold" className="text-center" size="3xl">
+			<Typography weight="bold" className="text-center" size="5xl">
 				{translator.t('overview.title')}
 			</Typography>
-			<Typography className="mt-5 text-center" size="xl">
+			<Typography className="mt-8 text-center text-black" size="xl">
 				{translator.t('overview.description')}
 			</Typography>
-			<Typography className="mt-16 text-center" size="2xl" weight="bold">
+			<Typography className="mt-16 text-center" size="4xl" weight="medium">
 				{translator.t('overview.editors')}
 			</Typography>
 			<div className="mx-auto mt-6 grid max-w-lg grid-cols-[repeat(auto-fit,minmax(60px,1fr))] place-items-center gap-2">
@@ -56,7 +56,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 				))}
 			</div>
 
-			<div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+			<div className="mt-5 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
 				{blogs.map((blog) => (
 					<Link href={`/${lang}/${region}/${blog.default_full_slug!}`} key={blog.content.id}>
 						<div className="overflow-hidden transition-transform duration-300 hover:scale-[102%]">
@@ -69,24 +69,30 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 							/>
 							<div className="mt-3 flex items-center justify-between">
 								<div className="flex items-center space-x-2">
-									<Typography weight="bold" className="uppercase accent-black">
-										{' '}
+									<Typography weight="bold" className="uppercase">
 										{blog.content.topics[0].content.value}
 									</Typography>
 								</div>
-								<Typography>{getPublishedDateFormatted(blog.published_at!, lang)}</Typography>
+								<Typography weight="normal" className="text-black">
+									{getPublishedDateFormatted(blog.published_at!, lang)}
+								</Typography>
 							</div>
 
-							<div className="mt-5 flex flex-grow flex-col">
-								<Typography size="2xl" className="mb-4 line-clamp-2 h-14 flex-grow font-medium">
+							<div className="mt-6 flex flex-grow flex-col">
+								<Typography size="3xl" className="mb-4 line-clamp-2 h-20 flex-grow" weight="medium">
 									{blog.content.title}
 								</Typography>
-								<div className="mt-auto flex items-center justify-between">
+								<div className="flex items-center justify-between">
 									<div className="flex items-center space-x-2">
-										<StoryblokAuthorImage author={blog.content.author.content} />
-										<Typography>{blog.content.author.content.fullName}</Typography>
+										<StoryblokAuthorImage size="large" author={blog.content.author.content} />
+										<Typography className="ml-1" size="lg">
+											{blog.content.author.content.fullName}
+										</Typography>
 									</div>
 								</div>
+								<Typography size="md" weight="normal" className="mt-4 line-clamp-5 text-black">
+									{blog.content.leadText}
+								</Typography>
 							</div>
 						</div>
 					</Link>

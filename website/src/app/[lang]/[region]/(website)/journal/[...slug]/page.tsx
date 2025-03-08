@@ -5,7 +5,7 @@ import {
 import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Badge, Typography } from '@socialincome/ui';
+import { Separator, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 import { render } from 'storyblok-rich-text-react-renderer';
 
@@ -37,34 +37,47 @@ export default async function Page(props: { params: { slug: string[]; lang: Lang
 				</div>
 				<div className="flex flex-col items-center justify-center p-8 text-center md:order-1 md:w-1/2 md:items-start md:text-left lg:p-16">
 					<div className="flex flex-wrap justify-center gap-2 md:justify-start">
-						{articleData.topics?.map((topic) => (
-							<Badge key={topic.slug} variant="white" className="mb-2">
-								{topic.content.value}
-							</Badge>
-						))}
+						<Typography
+							weight="medium"
+							color="popover"
+							size="lg"
+							key={articleData.topics[0].content.id}
+							className="uppercase"
+						>
+							{articleData.topics[0].content.value}
+						</Typography>
+						<Typography size="lg" weight="normal" color="popover" className="ml-4">
+							{getPublishedDateFormatted(loadArticleResponse.data.story.published_at!, lang)}
+						</Typography>
 					</div>
-					<Typography className="mt-4" color="accent" size="5xl">
+					<Typography weight="medium" className="mt-8" color="accent" size="5xl">
 						{articleData.title}
 					</Typography>
-					<div className="mt-7 flex items-center space-x-4">
-						<StoryblokAuthorImage author={author} />
-						<div className="text-left">
-							<Typography color="popover" size="sm">
-								{translator.t('published')}{' '}
-								{getPublishedDateFormatted(loadArticleResponse.data.story.published_at!, lang)}
-							</Typography>
-							<Typography color="popover" size="sm">
-								{translator.t('written-by')}
-								<Typography as="span" color={'accent'} className="ml-1">
-									{author.fullName}
-								</Typography>
-							</Typography>
-						</div>
+					<div className="mt-8 flex items-center space-x-4">
+						<StoryblokAuthorImage size="large" author={author} />
+
+						<Typography size="lg" as="span" color={'popover'} className="ml-1">
+							{author.fullName}
+						</Typography>
 					</div>
 				</div>
 			</div>
 
-			<div className="prose mx-auto my-10 max-w-2xl content-center p-4 sm:p-6">{render(articleData.content)}</div>
+			<div className="prose mx-auto my-4 max-w-2xl content-center p-4 sm:p-6">
+				<Typography weight="bold" size="2xl">
+					{articleData.leadText}
+				</Typography>
+				<Typography as="div" className="text-black">
+					{render(articleData.content)}
+				</Typography>
+				<Separator />
+				<div className="mt-6 flex items-center space-x-4">
+					<StoryblokAuthorImage size="large" author={author} />
+					<Typography size="lg" as="span" className="ml-1" color="primary">
+						{author.fullName}
+					</Typography>
+				</div>
+			</div>
 		</div>
 	);
 }

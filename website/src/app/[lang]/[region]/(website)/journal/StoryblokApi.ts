@@ -1,7 +1,6 @@
 import { type StoryblokArticle, StoryblokAuthor, StoryblokTopic } from '@socialincome/shared/src/storyblok/journal';
 import { getStoryblokApi, ISbStory } from '@storyblok/react';
 import { DateTime } from 'luxon';
-import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { ISbStories, ISbStoriesParams } from 'storyblok-js-client/src/interfaces';
 
@@ -29,7 +28,7 @@ const DEFAULT_LANGUAGE = 'en';
 
 async function loadArticle(lang: string, slug: string[]): Promise<ISbStory<StoryblokArticle>> {
 	const params: ISbStoriesParams = {
-		...(draftMode().isEnabled ? { version: 'draft' } : {}),
+		version: 'draft',
 		resolve_relations: ['article.author', 'article.topics'],
 		language: lang,
 	};
