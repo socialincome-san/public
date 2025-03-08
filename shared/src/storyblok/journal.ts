@@ -17,6 +17,7 @@ export interface StoryblokAuthor {
 	id: number;
 	firstName: string;
 	lastName: string;
+	displayInOverviewPage: boolean;
 }
 
 export interface StoryblokArticle {
@@ -28,4 +29,5 @@ export interface StoryblokArticle {
 	image: StoryblokImage;
 	topics: ISbStoryData<StoryblokTopic>[];
 	author: ISbStoryData<StoryblokAuthor>;
+	displayInOverviewPage: boolean;
 }

@@ -1,18 +1,15 @@
-import { loadArticleWithFallbackToDefaultLanguage } from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
+import {
+	getPublishedDateFormatted,
+	loadArticleWithFallbackToDefaultLanguage,
+} from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
 import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, Typography } from '@socialincome/ui';
-import { DateTime } from 'luxon';
 import Image from 'next/image';
 import { render } from 'storyblok-rich-text-react-renderer';
 
 export const revalidate = 900;
-
-function getPublishedDateFormatted(date: string, lang: string) {
-	const dateObject = DateTime.fromISO(date).setLocale(lang);
-	return dateObject.isValid ? dateObject.toFormat('MMMM dd, yyyy') : '';
-}
 
 export default async function Page(props: { params: { slug: string[]; lang: LanguageCode; region: string } }) {
 	const lang = props.params.lang;
