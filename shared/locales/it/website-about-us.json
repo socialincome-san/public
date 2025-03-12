@@ -99,7 +99,8 @@
 			"impact-measurement": "Misurazione dell'Impatto",
 			"strategy": "Strategia",
 			"translations": "Traduzioni",
-			"research": "Ricerca"
+			"research": "Ricerca",
+			"design": "Design"
 		},
 		"groups": {
 			"staff": {
@@ -118,7 +119,7 @@
 				"description": "Il consiglio è responsabile della supervisione dell'organizzazione. I membri sono eletti per un mandato di tre anni. I loro specifici compiti di supervisione sono definiti nello statuto e nei regolamenti dell'organizzazione."
 			},
 			"special-thanks": {
-				"name": "Ex volontari",
+				"name": "Ex collaboratori e volontari",
 				"subtitle": "Queste persone hanno dato un contributo significativo a Social Income attraverso il loro impegno come volontari.",
 				"description": "I volontari che sono inattivi da più di tre mesi sono considerati ex volontari fino a quando non riprendono la loro partecipazione. Questo approccio ci consente di rappresentare in modo trasparente e accurato le dimensioni effettive della nostra organizzazione."
 			}

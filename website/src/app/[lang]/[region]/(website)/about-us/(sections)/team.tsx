@@ -3,7 +3,7 @@ import alexandreImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/al
 import andersImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/anders.jpeg';
 import andrasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/andras.jpeg';
 import annalinaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/anna-lina.jpeg';
-import anvitaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/anvita.jpeg';
+import ninaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/nina-limacher.jpeg';
 import aurelieImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/aurelie.jpeg';
 import carlosImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/carlos.jpeg';
 import flavienImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/flavien.jpeg';
@@ -36,6 +36,15 @@ import simonImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon.
 import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simone.jpeg';
 import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
 import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
+import alexeyImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/alexey-shestakov.jpeg';
+import innaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/inna-abdrakhmanova.jpeg';
+import raphaelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/raphael-wirth.jpeg';
+import marcoImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marco-bohler.jpeg';
+import willemijnImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/willemijn-de-gaay-fortman.jpeg';
+import katalinImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/katalin-holanyi.jpeg';
+import leaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/lea-strohm.jpeg';
+
+
 
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -79,17 +88,18 @@ const groups: Group[] = [
 			{ name: 'Michael Kündig', role: 'software-development', image: michaelImage },
 			{ name: 'Mikołaj Demkow', role: 'app-development', image: mikolajImage },
 			{ name: 'Verena Zaiser', role: 'app-development', image: verenaImage },
-			{ name: 'András Heé', role: 'software-development', image: andrasImage },
-			{ name: 'Larissa dos Santos Lima', role: 'fundraising', image: larissaImage },
 			{ name: 'Pranav Chatur', role: 'software-development', image: pranavImage },
-			{ name: 'Thomas Brenner', role: 'software-development', image: thomasImage },
 			{ name: 'Matthew Roberts', role: 'communications', image: matthewImage },
 			{ name: 'Françoise Légeret', role: 'translations', image: francoiseImage },
 			{ name: 'Karin Berg', role: 'app-development', image: karinImage },
 			{ name: 'Marc Werner', role: 'research', image: marcImage },
-			{ name: 'Mathilde Dumond', role: 'software-development', image: mathildeImage },
 			{ name: 'Gavriil Tzortzakis', role: 'software-development', image: gavriilImage },
 			{ name: 'Patrick McClurg', role: 'software-development', image: patrickImage },
+			{ name: 'Katalin Holanyi', role: 'design', image: katalinImage },
+			{ name: 'Willemijn de Gaay Fortman', role: 'strategy', image: willemijnImage },
+			{ name: 'Lea Strohm', role: 'strategy', image: leaImage },
+			{ name: 'Marco Bohler', role: 'software-development', image: marcoImage },
+			{ name: 'Raphael Wirth', role: 'software-development', image: raphaelImage },
 		],
 	},
 	{
@@ -99,7 +109,7 @@ const groups: Group[] = [
 			{ name: 'Kabelo Ruffo', role: 'co-president', image: kabeloImage },
 			{ name: 'Flavien Meyer', role: 'co-president', image: flavienImage },
 			{ name: 'Simone Huser', role: 'board-member', image: simoneImage },
-			{ name: 'Anvita Pandey', role: 'board-member', image: anvitaImage },
+			{ name: 'Nina Limacher', role: 'board-member', image: ninaImage },
 			{ name: 'Marion Quartier', role: 'board-member', image: marionImage },
 		],
 	},
@@ -120,6 +130,14 @@ const groups: Group[] = [
 			{ name: 'René Stalder', role: 'software-development', image: reneImage },
 			{ name: 'Sarvesh Dwivedi', role: 'software-development', image: sarveshImage },
 			{ name: 'Carlos Badilla', role: 'fundraising', image: carlosImage },
+			{ name: 'Larissa dos Santos Lima', role: 'fundraising', image: larissaImage },
+			{ name: 'András Heé', role: 'software-development', image: andrasImage },
+			{ name: 'Thomas Brenner', role: 'software-development', image: thomasImage },
+			{ name: 'Mathilde Dumond', role: 'software-development', image: mathildeImage },
+			{ name: 'Inna Abdrakhmanova', role: 'software-development', image: innaImage },
+			{ name: 'Alexey Shestakov', role: 'software-development', image: alexeyImage },
+
+
 		],
 	},
 ];
