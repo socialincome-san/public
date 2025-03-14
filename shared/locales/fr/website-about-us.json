@@ -100,7 +100,8 @@
 			"strategy": "Stratégie",
 			"fundraising": "Recherche de fonds",
 			"translations": "Traductions",
-			"research": "Recherche"
+			"research": "Recherche",
+			"design": "Design"
 		},
 		"groups": {
 			"staff": {
@@ -119,7 +120,7 @@
 				"description": "Les membres du comité sont responsables de la supervision de l'organisation et élus pour un mandat de trois ans. Leurs tâches sont définies par les statuts et le règlement de l'organisation."
 			},
 			"special-thanks": {
-				"name": "Anciens bénévoles",
+				"name": "Anciens collaborateurs et bénévoles",
 				"subtitle": "Ces bénévoles ont apporté une contribution significative à Social Income.",
 				"description": "Les bénévoles inactifs depuis au moins trois mois sont considérés comme anciens bénévoles jusqu'à ce qu'ils reprennent une activité. Cette approche nous permet de représenter de manière transparente et exacte la taille réelle de notre organisation."
 			}
