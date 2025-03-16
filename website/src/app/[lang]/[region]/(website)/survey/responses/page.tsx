@@ -26,6 +26,12 @@ export const revalidate = 3600; // update once an hour
 
 export default async function Page({ params: { lang } }: DefaultPageProps) {
 	const { aggregatedData: data, oldestDate } = await SurveyStatsCalculator.build(firestoreAdmin);
+	const activeSurveyIndexes: Record<SurveyQuestionnaire, { from: number; to: number }> = {
+		[SurveyQuestionnaire.Onboarding]: { from: 0, to: 0 },
+		[SurveyQuestionnaire.Checkin]: { from: 1, to: 5 },
+		[SurveyQuestionnaire.Offboarding]: { from: 6, to: 9 },
+		[SurveyQuestionnaire.OffboardedCheckin]: { from: 10, to: 10 },
+	};
 
 	const translator = await Translator.getInstance({
 		language: lang,
@@ -102,7 +108,10 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 										<div
 											key={index}
 											className={`h-6 w-6 rounded-full border-2 ${
-												index === 0 ? 'bg-accent border-accent' : 'bg-background border-border'
+												index >= activeSurveyIndexes[selectedSurvey].from &&
+												index <= activeSurveyIndexes[selectedSurvey].to
+													? 'bg-accent border-accent'
+													: 'bg-background border-border'
 											}`}
 										/>
 									))}
