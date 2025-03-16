@@ -29,8 +29,8 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 	const activeSurveyIndexes: Record<SurveyQuestionnaire, { from: number; to: number }> = {
 		[SurveyQuestionnaire.Onboarding]: { from: 0, to: 0 },
 		[SurveyQuestionnaire.Checkin]: { from: 1, to: 5 },
-		[SurveyQuestionnaire.Offboarding]: { from: 6, to: 9 },
-		[SurveyQuestionnaire.OffboardedCheckin]: { from: 10, to: 10 },
+		[SurveyQuestionnaire.Offboarding]: { from: 6, to: 6 },
+		[SurveyQuestionnaire.OffboardedCheckin]: { from: 7, to: 10 },
 	};
 
 	const translator = await Translator.getInstance({
