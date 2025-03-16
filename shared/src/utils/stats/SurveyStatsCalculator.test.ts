@@ -21,36 +21,32 @@ beforeAll(async () => {
 const OLDEST_DATE = new Date('2022-01-01');
 
 test('building SurveyStatsCalculator', async () => {
-	expect(calculator.data).toBeDefined();
-	expect(calculator.data.length).toBeGreaterThan(0);
+	expect(calculator.aggregatedData).toBeDefined();
+	expect(calculator.aggregatedData.length).toBeGreaterThan(0);
 	expect(calculator.oldestDate.getFullYear()).toEqual(OLDEST_DATE.getFullYear());
 	expect(calculator.oldestDate.getMonth()).toEqual(OLDEST_DATE.getMonth());
 	expect(calculator.oldestDate.getDay()).toEqual(OLDEST_DATE.getDay());
 });
 
 test('calculate overall survey stats', async () => {
-	expect(calculator.data).toContainEqual(
+	expect(calculator.aggregatedData[SurveyQuestionnaire.Checkin]).toContainEqual(
 		expect.objectContaining({
-			type: SurveyQuestionnaire.Checkin,
-			total: 3,
+			completedSurveys: 3,
 		}),
 	);
-	expect(calculator.data).toContainEqual(
+	expect(calculator.aggregatedData[SurveyQuestionnaire.Onboarding]).toContainEqual(
 		expect.objectContaining({
-			type: SurveyQuestionnaire.Onboarding,
-			total: 1,
+			completedSurveys: 1,
 		}),
 	);
-	expect(calculator.data).toContainEqual(
+	expect(calculator.aggregatedData[SurveyQuestionnaire.OffboardedCheckin]).toContainEqual(
 		expect.objectContaining({
-			type: SurveyQuestionnaire.OffboardedCheckin,
-			total: 3,
+			completedSurveys: 3,
 		}),
 	);
-	expect(calculator.data).toContainEqual(
+	expect(calculator.aggregatedData[SurveyQuestionnaire.Offboarding]).toContainEqual(
 		expect.objectContaining({
-			type: SurveyQuestionnaire.Offboarding,
-			total: 1,
+			completedSurveys: 1,
 		}),
 	);
 });
@@ -59,8 +55,8 @@ test('calculate aggregated survey responses by question type', async () => {
 	const aggregatedData = calculator.aggregatedData;
 	expect(aggregatedData).toBeDefined();
 
-	const checkinData = aggregatedData[SurveyQuestionnaire.Checkin];
-	const offboardedCheckin = aggregatedData[SurveyQuestionnaire.OffboardedCheckin];
+	const checkinData = aggregatedData[SurveyQuestionnaire.Checkin].answersByQuestionType;
+	const offboardedCheckin = aggregatedData[SurveyQuestionnaire.OffboardedCheckin].answersByQuestionType;
 
 	// RADIO_GROUP text
 	expect(checkinData[EMPLOYMENT_STATUS.name].answers['selfEmployed']).toBe(2);
@@ -78,7 +74,7 @@ test('calculate aggregated survey responses by question type', async () => {
 test('handle edge cases with empty data', async () => {
 	await testEnv.firestore.clearFirestoreData({ projectId });
 	const emptyCalculator = await SurveyStatsCalculator.build(firestoreAdmin);
-	expect(emptyCalculator.data).toEqual([]);
+	expect(emptyCalculator.aggregatedData).toEqual([]);
 	expect(emptyCalculator.aggregatedData).toEqual({
 		[SurveyQuestionnaire.Checkin]: {},
 		[SurveyQuestionnaire.Onboarding]: {},

@@ -1,7 +1,7 @@
 {
 	"select-survey": "Select survey",
 	"multiple-answers": "multiple answers",
-	"responses-since": "{{X}} completed surveys since {{sinceDate}}",
+	"responses-since": "{{completedSurveys}} completed surveys since {{sinceDate}}",
 	"title": "Survey Responses",
 	"answers": "responses",
 	"data-points": "data points",

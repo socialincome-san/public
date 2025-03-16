@@ -1,7 +1,7 @@
 {
 	"select-survey": "Umfrage auswählen",
 	"multiple-answers": "mehrere Antworten",
-	"responses-since": "{{X}} abgeschlossene Umfragen seit {{sinceDate}}",
+	"responses-since": "{{completedSurveys}} abgeschlossene Umfragen seit {{sinceDate}}",
 	"title": "Umfrageergebnisse",
 	"answers": "Antworten",
 	"data-points": "Datenpunkte",

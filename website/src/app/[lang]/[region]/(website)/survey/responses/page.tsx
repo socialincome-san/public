@@ -25,11 +25,7 @@ import { Fragment } from 'react';
 export const revalidate = 3600; // update once an hour
 
 export default async function Page({ params: { lang } }: DefaultPageProps) {
-	const { aggregatedData: data, data: temp, oldestDate } = await SurveyStatsCalculator.build(firestoreAdmin);
-
-	const allSurveyData = Object.values(SurveyQuestionnaire)
-		.map((it) => temp.find((survey) => survey.type == it))
-		.filter((it) => !!it);
+	const { aggregatedData: data, oldestDate } = await SurveyStatsCalculator.build(firestoreAdmin);
 
 	const translator = await Translator.getInstance({
 		language: lang,
@@ -52,20 +48,20 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 			</Typography>
 			<Tabs defaultValue={SurveyQuestionnaire.Onboarding}>
 				<TabsList className="mx-auto mb-10 mt-2 grid grid-cols-2 gap-2 lg:grid-cols-4">
-					{allSurveyData.map(
-						(surveyData) =>
-							surveyData && (
-								<TabsTrigger key={surveyData.type} value={surveyData.type} asChild={true}>
+					{Object.values(SurveyQuestionnaire).map(
+						(surveyQuestionnaireType) =>
+							data[surveyQuestionnaireType] && (
+								<TabsTrigger key={surveyQuestionnaireType} value={surveyQuestionnaireType} asChild={true}>
 									<Card className="card-tab data-[state=active]:bg-primary [&_h3]:data-[state=inactive]: hover:bg-primary hover:bg-opacity-10 data-[state=active]:cursor-default data-[state=inactive]:cursor-pointer data-[state=active]:text-white">
 										<CardHeader className="pb-0 pl-5">
-											<CardTitle>{translator.t(`${surveyData.type}.title`)}</CardTitle>
+											<CardTitle>{translator.t(`${surveyQuestionnaireType}.title`)}</CardTitle>
 										</CardHeader>
 										<CardContent className="flex items-center pl-5 pt-4">
 											{/* Viewfinder Icon */}
 											<ViewfinderCircleIcon className="mr-2 h-5 w-5 group-data-[state=active]:text-white" />
 											{/* Data Points Text */}
 											<Typography>
-												{surveyData.total} {translator.t('data-points')}
+												{data[surveyQuestionnaireType].totalAnswersForAllQuestions} {translator.t('data-points')}
 											</Typography>
 										</CardContent>
 									</Card>
@@ -89,7 +85,10 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 								<div className="flex items-center justify-start text-left md:justify-end md:text-right">
 									<Typography>
 										{translator.t('responses-since', {
-											context: { sinceDate: oldestDate.toLocaleDateString() },
+											context: {
+												completedSurveys: data[selectedSurvey].completedSurveys,
+												sinceDate: oldestDate.toLocaleDateString(),
+											},
 										})}
 									</Typography>
 								</div>
@@ -112,13 +111,14 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 						</div>
 
 						<div className="mx-auto grid grid-cols-1 gap-2 lg:grid-cols-2">
-							{Object.keys(data[selectedSurvey] || []).map((questionKey) => (
+							{Object.keys(data[selectedSurvey]?.answersByQuestionType || {}).map((questionKey) => (
 								<Fragment key={`${selectedSurvey}-${questionKey}statistics`}>
 									<Separator className="col-span-1 mt-2 lg:col-span-2" />
 									<div key={`${selectedSurvey}-${questionKey}-question`} className="py-2">
 										<Typography size="2xl" weight="medium" className="my-2">
-											{translator.t(data[selectedSurvey][questionKey].question.translationKey)}
-											{data[selectedSurvey][questionKey].question.type == QuestionInputType.CHECKBOX && (
+											{translator.t(data[selectedSurvey].answersByQuestionType[questionKey].question.translationKey)}
+											{data[selectedSurvey].answersByQuestionType[questionKey].question.type ==
+												QuestionInputType.CHECKBOX && (
 												<Typography size="sm" weight="normal">
 													({translator.t('multiple-answers')})
 												</Typography>
@@ -126,14 +126,14 @@ export default async function Page({ params: { lang } }: DefaultPageProps) {
 										</Typography>
 										<Badge variant="accent" className="font-normal">
 											<Typography>
-												{data[selectedSurvey][questionKey].total} {translator.t('answers')}
+												{data[selectedSurvey].answersByQuestionType[questionKey].total} {translator.t('answers')}
 											</Typography>
 										</Badge>
 									</div>
 									<div key={`${selectedSurvey}-${questionKey}-answers`} className="py-2">
-										{data[selectedSurvey][questionKey].answers && (
+										{data[selectedSurvey].answersByQuestionType[questionKey].answers && (
 											<BarchartSurveyResponseComponent
-												data={convertToBarchartData(data[selectedSurvey][questionKey])}
+												data={convertToBarchartData(data[selectedSurvey].answersByQuestionType[questionKey])}
 											/>
 										)}
 									</div>
