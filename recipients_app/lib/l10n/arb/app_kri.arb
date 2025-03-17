@@ -1,0 +1,182 @@
+{
+    "@@locale": "kri",
+    "profileUpdateSuccess": "Ɔltin bɔt yu go insay wɛl wɛl",
+    "profileUpdateError": "Ɔltin bɔt yu nɔ go insay. Duya tray bak ɔ rich awt to wit",
+    "profile": "Ɔltin bɔt yu",
+    "personal": "Yu sɛf sɛf",
+    "name": "Nem",
+    "nameError": "Duya put yu nem ya",
+    "surname": "Sɔnem",
+    "surnameError": "Duya put yu sɔnem ya",
+    "callingName": "Nem aw dɛn de kɔl yu",
+    "gender": "Yu na wetin",
+    "male": "Man",
+    "female": "Uman",
+    "other": "Nɔto man ɔ uman",
+    "genderError": "Duya pik wetin yu bi",
+    "dateOfBirth": "Wɛn dɛn bɔn yu",
+    "dateOfBirthError": "Duya pik wɛn dɛn bɔn yu",
+    "language": "Wetin yu de tɔk",
+    "english": "Inglish",
+    "krio": "Krio",
+    "languageError": "Duya pik wetin yu de tɔk",
+    "email": "Imel",
+    "paymentPhone": "Fon we dɛn fɔ pe yu",
+    "paymentNumber": "Nɔmba we dɛn fɔ pe yu",
+    "paymentNumberError": "Duya put yu fon nɔmba",
+    "paymentNumberError2": "Put di fon nɔmba prɔpa wan ɛn tayp di nɔmba dɛm nɔmɔ.",
+    "mobilePaymentProvider": "Mɔbayl kɔmpin we fɔ pe yu",
+    "paymentProviderError": "Duya pik di wan we fɔ pe yu",
+    "contactPhone": "Fon we fɔ kɔl yu",
+    "contactNumber": "Nɔmba we fɔ kɔl yu",
+    "contactNumberError": "Duya put yu fon nɔmba ya",
+    "contactNumberError2": "Put di fon nɔmba prɔpa wan ɛn tayp di nɔmba dɛm nɔmɔ.",
+    "inCaseOfDeathTitle": "⁠If yu day",
+    "inCaseOfDeathDescription": "Udat na di pɔsin we wi fɔ gi yu Social Income pemɛnt if yu day we di program nɔ dɔn yet? Yu wɛf, pikin, mama, papa, brɔda ɔ sista",
+    "successorName": "Wetin na in nem?",
+    "support": "Yu want ɛp",
+    "supportInfo": "If yu get ɛni kwɛstyɔn ɔ di fesin prɔblɛm, duya rich awt to wi.",
+    "getInTouch": "Mek wi no aw yu fil",
+    "account": "Akawnt",
+    "accountInfo": "If yu want fɔ lɛf fɔ yuz yu akawnt, rich awt to wi",
+    "signOut": "Lɛf fɔs",
+    "dashboardUp2Date": "Ɔltin de fayn fayn wan. Nɔ gɛt yus tide.",
+    "edit": "Chenj am",
+    "underInvestigation": "Wi stil de wach wetin mek yu mɔni nɔ rich yu",
+    "didYouGetSocialIncome": "Yu bin gɛt yu Social Income?",
+    "resolved": "Di prɔblɛm dɔn dɔn",
+    "yes": "Yɛs",
+    "no": "Nɔ",
+    "nextPayment": "Nɛks pemɛnt",
+    "review": "Pemɛnt fɔ luk oba",
+    "payments": "Pemɛnt dɛm",
+    "orangeMoneyNumber": "Ɔrenj Mɔni Nɔmba",
+    "pastPayments": "Pemɛnt dɛm we dɛn dɔn mek",
+    "futurePayments": "Pemɛnt dɛm we yu nɔ gɛt yet",
+    "paymentsSuspended": "Dɛn ɔl am fɔs",
+    "paymentsEmptyList": "Nɔ pemɛnt.",
+    "survey": "Sɔve",
+    "createAccountInfo": "We yu mek di akawnt, yu dɔn gri wit wi ",
+    "privacyPolicy": "Wi de kip sikrit",
+    "privacyPolicyError": "Nɔ ebul opin usay wi de kip sikrit rayt naw. Kɔpi di wɛbsayt adrɛs put am na di klipbod.",
+    "createAccount": "Mek akawnt",
+    "recommendingOrganization": "Ɔganizeshɔn we go tɔk fɔ yu",
+    "call": "Kɔl",
+    "supportTeam": "Sɔpɔt Tim",
+    "phone": "Fon",
+    "close": "Lɔk am",
+    "whatsappError": "Wasap nɔ go insay yu fon yet",
+    "paymentsConfirmedCount": "Pemɛnt dɛn we yu dɔn gɛt",
+    "paymentsInReview": "Yu bin gɛt di las pemɛnt?",
+    "paymentsInReviewOne": "Yu gɛt 1 pemɛnt fɔ luk oba. Yu bin gɛt am?",
+    "paymentsInReviewTwo": "Yu gɛt 2 pemɛnt dɛm fɔ luk oba yu kes fɔ si if yu kwalifay",
+    "paymentsInReviewMany": "Yu gɛt {count} pemɛnt dɛm we wi de luk oba yu kes fɔ si if yu kwalifay ɛn ɔmɔs dɛn fɔ pe yu. Yu bin gɛt dɛm?",
+    "@paymentsInReviewMany": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "paymentsOverview": "Ɔltin Bɔt Pemɛnt Dɛm",
+    "paymentsSuspendedTwoUnreviewed": "2 pemɛnt dɛm we nɔ ɔke yet. Dɛn ol am.",
+    "amount": "Ɔmɔs",
+    "nextMonth": "Nɛks mɔnt",
+    "today": "Tide",
+    "oneDay": "1 de",
+    "daysAgo": "I dɔn pas {number} de",
+    "@daysAgo": {
+        "placeholders": {
+            "number": {
+                "type": "int"
+            }
+        }
+    },
+    "inDays": "{number} de dɛm",
+    "@inDays": {
+        "placeholders": {
+            "number": {
+                "type": "int"
+            }
+        }
+    },
+    "day": "day",
+    "days": "days",
+    "myPayments": "Mi Pemɛnt Dɛm",
+    "contestPayment": "Pemɛnt we yu nɔ gri wit",
+    "contestPaymentInfo": "Di pemɛnt nɔ rich yu. Wetin apin?",
+    "submit": "Put am insay",
+    "next": "Go bifo",
+    "describeWhatHappened": "Tɛl wi wetin apin",
+    "startSurvey": "Bigin Sɔve",
+    "surveyStatusAnswered": "Yu ansa",
+    "surveyStatusMissed": "Yu mis di sɔve",
+    "surveyDaysToAnswer": "Yu gɛt {daysOverdue} {daysText} de fɔ ansa for ansa",
+    "@surveyDaysToAnswer": {
+        "placeholders": {
+            "daysOverdue": {
+                "type": "int"
+            },
+            "daysText": {
+                "type": "String"
+            }
+        }
+    },
+    "overdue": "I dɔn pas di tɛm",
+    "surveyDaysLeft": "Yu gɛt {days} {dayText} de fɔ ansa",
+    "@surveyDaysLeft": {
+        "placeholders": {
+            "days": {
+                "type": "int"
+            },
+            "dayText": {
+                "type": "String"
+            }
+        }
+    },
+    "surveyCardTitle": "Sɔve",
+    "surveyCartInfo": "Duya tek 5 minit fɔ ansa di kwɛstyɔn dɛm ɛn ɛp wi fɔ mek Social Income bɛtɛ",
+    "verification": "Fɔ sho se na yu",
+    "verificationSent": "Wi dɔn sɛn yu wan spɛshal kod fɔ sho se na yu na yu {phoneNumber}",
+    "@verificationSent": {
+        "placeholders": {
+            "phoneNumber": {
+                "type": "String"
+            }
+        }
+    },
+    "resendVerificationCode": "Di spɛshal kod we wi sɛn to yu fɔ sho se na yu sɛn am bak",
+    "yourMobilePhone": "Yu mobayl fon",
+    "continueText": "Kɔntinyu",
+    "phoneNumber": "Fon nɔmba",
+    "appVersion": "App version:",
+
+    "surveysTitle": "Surveys",
+    "surveysEmpty": "No surveys.",
+    "surveyMissed": "Missed",
+    "surveyDue": "Due",
+    "surveyCompleted": "Completed",
+    "surveyUpcoming": "Upcoming",
+    "surveyInProgress": "In Progress",
+    "overview": "Overview",
+    "completedSurveysCount": "{done}/{all} completed",
+    "@completedSurveysCount": {
+        "placeholders": {
+            "done": {
+                "type": "int"
+            },
+            "all": {
+                "type": "int"
+            }
+        }
+    },
+    "mySurveysTitle": "My surveys",
+
+    "invalidPhoneNumberError": "Fon nɔmba nɔ kɔrɛkt. Chɛk yu fon nɔmba ɛn tray bak ya.",
+    "invalidVerificationCodeError": "Di spɛshal kod we wi sɛn yu nɔ kɔrɛkt. Duya chɛk di SMS kod ɛn tray bak.",
+    "userDisabledError": "Wi dɔn lɔk yu akawnt. Rich awt to wi if yu want fɔ no mɔ.",
+    "invalidCredentialError": " Di fon nɔmba ɔ di spɛshal kod we wi sɛn to yu in tɛm dɔn pas fɔ yuz. Duya tray bak.",
+    "errorEmailInvalid": "Imel nɔ kɔrɛkt",
+    "demoCta": "Demo",
+    "createAccountDemo": "Enta di demo"
+}

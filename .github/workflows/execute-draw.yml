@@ -4,6 +4,7 @@ on:
     branches: [main]
 permissions:
   contents: write
+  pull-requests: write
 env:
   BOT_NAME: "drawbot"
   BOT_EMAIL: "drawbot@noemail.com"
@@ -14,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install nodejs 🔧
         uses: actions/setup-node@v3
@@ -39,8 +40,12 @@ jobs:
           git config --global user.email $BOT_EMAIL
 
       - name: Commit and raise PR 🔐
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
+          add-paths: .
+          title: "Completed recipient draw"
+          commit-message: "completed a recipient draw"
+          body: "completed a recipient draw"
+          token: ${{ secrets.PAT_TOKEN }}
           branch: draw/results
           branch-suffix: timestamp
-          commit-message: completed a recipient draw

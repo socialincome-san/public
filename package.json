@@ -42,13 +42,17 @@
 		"website:test:e2e:update": "npm --workspace=@socialincome/website run test:e2e:update",
 		"website:test:e2e:update:emulator": "npm --workspace=@socialincome/website run test:e2e:update:emulator",
 		"website:extract-translations": "npm --workspace=@socialincome/website run extract-translations",
-		"website:check-translations": "npm --workspace=@socialincome/website run check-translations"
+		"website:check-translations": "npm --workspace=@socialincome/website run check-translations",
+		"ui:serve": "npm --workspace=@socialincome/ui run storybook",
+		"ui:build": "npm --workspace=@socialincome/ui run build-storybook",
+		"dev:ssl-proxy": "ssl-proxy --source 3000 --target 3001"
 	},
 	"devDependencies": {
-		"firebase-tools": "13.29.1",
+		"firebase-tools": "13.29.3",
 		"prettier": "3.4.2",
 		"prettier-plugin-organize-imports": "4.1.0",
 		"prettier-plugin-tailwindcss": "0.6.9",
-		"typescript": "^5.7.2"
+		"typescript": "^5.7.2",
+		"ssl-proxy": "1.0.3"
 	}
 }

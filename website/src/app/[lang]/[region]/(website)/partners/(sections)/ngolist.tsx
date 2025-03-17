@@ -10,7 +10,13 @@ import {
 	NgoEntryJSON,
 	NgoHoverCardType,
 } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
+import { firestoreAdmin } from '@/firebase-admin';
+import { RecipientProgramStatus } from '@socialincome/shared/src/types/recipient';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
+import {
+	OrganisationRecipientsByStatus,
+	RecipientStatsCalculator,
+} from '@socialincome/shared/src/utils/stats/RecipientStatsCalculator';
 import { CH, SL } from 'country-flag-icons/react/1x1';
 import { ReactElement } from 'react';
 
@@ -30,21 +36,24 @@ export async function NgoList({ lang, region }: DefaultParams) {
 	});
 	const image_base_path = '/assets/partners/';
 
-	const ngos: string[] = translator.t('ngos');
-	const ngoArray: NgoEntryJSON[] = [];
-	ngos.forEach((slug: string) => {
-		const ngo: NgoEntryJSON = translator.t(slug);
-		ngoArray.push(ngo);
-	});
+	const ngos = ['aurora', 'jamil', 'reachout', 'equal-rights', 'united-polio', 'slaes'];
+	const ngoArray: NgoEntryJSON[] = ngos.map((slug: string) => translator.t(slug));
 	const ngoCardPropsArray: NgoCardProps[] = [];
 
+	const recipientCalculator = await RecipientStatsCalculator.build(firestoreAdmin);
+	const recipientStats: OrganisationRecipientsByStatus =
+		recipientCalculator.allStats().recipientsCountByOrganisationAndStatus;
+
 	for (let i = 0; i < ngoArray.length; ++i) {
+		const currentOrgRecipientStats = recipientStats[ngos[i]];
+		if (!currentOrgRecipientStats) continue;
+
 		const recipientsBadge: RecipientsBadgeType = {
 			hoverCardOrgName: ngoArray[i]['org-long-name'],
-			hoverCardTotalRecipients: ngoArray[i]['recipients-total'],
-			hoverCardTotalActiveRecipients: ngoArray[i]['recipients-active'],
-			hoverCardTotalFormerRecipients: ngoArray[i]['recipients-former'],
-			hoverCardTotalSuspendedRecipients: ngoArray[i]['recipients-suspend'],
+			hoverCardTotalRecipients: currentOrgRecipientStats['total'] ?? 0,
+			hoverCardTotalActiveRecipients: currentOrgRecipientStats[RecipientProgramStatus.Active] ?? 0,
+			hoverCardTotalFormerRecipients: currentOrgRecipientStats[RecipientProgramStatus.Former] ?? 0,
+			hoverCardTotalSuspendedRecipients: currentOrgRecipientStats[RecipientProgramStatus.Suspended] ?? 0,
 			translatorBadgeRecipients: '',
 			translatorBadgeRecipientsBy: '',
 			translatorBadgeActive: '',

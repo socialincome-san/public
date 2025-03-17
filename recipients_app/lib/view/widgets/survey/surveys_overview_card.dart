@@ -1,5 +1,6 @@
 import "package:app/core/cubits/survey/survey_cubit.dart";
 import "package:app/data/models/models.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/ui/configs/app_sizes.dart";
@@ -7,7 +8,6 @@ import "package:app/view/pages/surveys_page.dart";
 import "package:app/view/widgets/dashboard_item.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 const _doneStatuses = [
   SurveyCardStatus.missed,
@@ -21,8 +21,6 @@ class SurveysOverviewCard extends DashboardItem {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     return Column(
       children: [
         GestureDetector(
@@ -43,14 +41,14 @@ class SurveysOverviewCard extends DashboardItem {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            localizations.mySurveysTitle,
+                            context.l10n.mySurveysTitle,
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                   color: Colors.black,
                                 ),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            localizations.completedSurveysCount(
+                            context.l10n.completedSurveysCount(
                               _getDoneSurveysCount(),
                               mappedSurveys.length,
                             ),
@@ -63,7 +61,7 @@ class SurveysOverviewCard extends DashboardItem {
                       const SizedBox(width: AppSizes.small),
                       ButtonSmall(
                         onPressed: () => _navigateToSurveysPage(context),
-                        label: localizations.overview,
+                        label: context.l10n.overview,
                         buttonType: ButtonSmallType.outlined,
                         color: AppColors.fontColorDark,
                       ),

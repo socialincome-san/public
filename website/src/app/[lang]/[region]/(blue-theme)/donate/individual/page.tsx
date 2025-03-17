@@ -1,7 +1,7 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { DonationForm } from '@/app/[lang]/[region]/(blue-theme)/donate/individual/donation-form';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer } from '@socialincome/ui';
+import { BaseContainer, linkCn } from '@socialincome/ui';
 import Link from 'next/link';
 
 export default async function Page({ params: { lang, region }, searchParams }: DefaultPageProps) {
@@ -30,7 +30,9 @@ export default async function Page({ params: { lang, region }, searchParams }: D
 				}}
 			/>
 			<div className="mt-4 hover:underline">
-				<Link href={`/${lang}/${region}/donate/one-time`}>{translator.t('one-time-donation')}</Link>
+				<Link className={linkCn()} href={`/${lang}/${region}/donate/one-time`}>
+					{translator.t('one-time-donation')}
+				</Link>
 			</div>
 		</BaseContainer>
 	);

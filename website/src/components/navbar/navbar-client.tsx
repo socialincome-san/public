@@ -1,15 +1,13 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { DonateIcon } from '@/components/logos/donate-icon';
 import { SIAnimatedLogo } from '@/components/logos/si-animated-logo';
-import { SIIcon } from '@/components/logos/si-icon';
 import { SILogo } from '@/components/logos/si-logo';
 import { useI18n } from '@/components/providers/context-providers';
 import { useGlobalStateProvider } from '@/components/providers/global-state-provider';
 import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { Bars3Icon, CheckIcon, ChevronLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Typography } from '@socialincome/ui';
+import { DonateIcon, SIIcon, Typography } from '@socialincome/ui';
 import { getFlagImageURL } from '@socialincome/ui/src/lib/utils';
 import classNames from 'classnames';
 import _ from 'lodash';
@@ -40,6 +38,7 @@ type NavbarProps = {
 		payments: string;
 		region: string;
 		signOut: string;
+		journal: string;
 	};
 	languages: {
 		code: WebsiteLanguage;
@@ -233,6 +232,9 @@ const MobileNavigation = ({ lang, region, languages, regions, currencies, naviga
 								{translations.donate}
 							</NavbarLink>
 						</div>
+						<NavbarLink className="ml-12 text-2xl" href={`/${lang}/${region}/journal`}>
+							{translations.journal}
+						</NavbarLink>
 					</div>
 				</div>
 			);
@@ -295,6 +297,7 @@ const DesktopNavigation = ({ lang, region, languages, regions, currencies, navig
 							{translations.donate}
 						</NavbarLink>
 					</div>
+					<NavbarLink href={`/${lang}/${region}/journal`}>{translations.journal}</NavbarLink>
 				</div>
 			</div>
 			<div className="flex flex-row items-center justify-evenly gap-x-10 overflow-visible">

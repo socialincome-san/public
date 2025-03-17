@@ -1,8 +1,8 @@
 import "package:app/core/cubits/survey/survey_cubit.dart";
 import "package:app/data/models/survey/mapped_survey.dart";
+import "package:app/l10n/l10n.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:webview_flutter/webview_flutter.dart";
 
 class SurveyPage extends StatefulWidget {
@@ -41,12 +41,10 @@ class SurveyPageState extends State<SurveyPage> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text(localizations.survey),
+        title: Text(context.l10n.survey),
         leading: BackButton(
           onPressed: () {
             context.read<SurveyCubit>().getSurveys();

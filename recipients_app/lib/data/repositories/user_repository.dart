@@ -1,61 +1,51 @@
-import "dart:developer";
+import "dart:async";
 
+import "package:app/data/datasource/user_data_source.dart";
 import "package:app/data/models/models.dart";
-import "package:app/data/repositories/repositories.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
+import "package:app/demo_manager.dart";
 import "package:firebase_auth/firebase_auth.dart";
 
-const String recipientCollection = "/recipients";
-
 class UserRepository {
-  final FirebaseFirestore firestore;
-  final FirebaseAuth firebaseAuth;
+  final UserDataSource remoteDataSource;
+  final UserDataSource demoDataSource;
+
+  final DemoManager demoManager;
 
   const UserRepository({
-    required this.firestore,
-    required this.firebaseAuth,
+    required this.remoteDataSource,
+    required this.demoDataSource,
+    required this.demoManager,
   });
 
-  Stream<User?> authStateChanges() => firebaseAuth.authStateChanges();
-  User? get currentUser => firebaseAuth.currentUser;
+  UserDataSource get _activeDataSource => demoManager.isDemoEnabled ? demoDataSource : remoteDataSource;
 
-  /// Fetches the user data by userId from firestore and maps it to a recipient object
-  /// Returns null if the user does not exist.
-  Future<Recipient?> fetchRecipient(User firebaseUser) async {
-    final phoneNumber = firebaseUser.phoneNumber ?? "";
+  Stream<User?> authStateChanges() {
+    final StreamController<User?> authStateController = StreamController();
+    StreamSubscription<User?>? authStateSubscription;
 
-    final matchingUsers = await firestore
-        .collection(recipientCollection)
-        .where(
-          "mobile_money_phone.phone",
-          isEqualTo: int.parse(phoneNumber.substring(1)),
-        )
-        .get();
+    authStateSubscription = _activeDataSource.authStateChanges().listen((authState) {
+      authStateController.add(authState);
+    });
 
-    if (matchingUsers.docs.isEmpty) {
-      return null;
-    }
+    // Start listen on demo mode changes, so we can update the authStateSubscription if the active data source is changing.
+    demoManager.isDemoEnabledStream.listen((isDemoMode) {
+      authStateSubscription?.cancel();
 
-    final userSnapshot = matchingUsers.docs.firstOrNull;
+      authStateSubscription = _activeDataSource.authStateChanges().listen((authState) {
+        authStateController.add(authState);
+      });
 
-    // This doesnt work because user id from firebaseAuth is not related to user id from firestore
-    // Needs to be discussed if changes should be made or not
-    // final userSnapshot =
-    //     await firestore.collection("/recipients").doc(firebaseUser.uid).get();
+      authStateController.onCancel = () {
+        authStateSubscription?.cancel();
+      };
+    });
 
-    if (userSnapshot != null && userSnapshot.exists) {
-      // TODO: decide if we should keep it in user object in the app at all
-      final payments =
-          await PaymentRepository(firestore: firestore).fetchPayments(recipientId: userSnapshot.id);
-
-      return Recipient.fromMap(userSnapshot.data()).copyWith(
-        payments: payments,
-        userId: userSnapshot.id,
-      );
-    } else {
-      return null;
-    }
+    return authStateController.stream;
   }
+
+  User? get currentUser => _activeDataSource.currentUser;
+
+  Future<Recipient?> fetchRecipient(User firebaseUser) => _activeDataSource.fetchRecipient(firebaseUser);
 
   Future<void> verifyPhoneNumber({
     required String phoneNumber,
@@ -63,32 +53,23 @@ class UserRepository {
     required Function(FirebaseAuthException) onVerificationFailed,
     required Function(PhoneAuthCredential) onVerificationCompleted,
     required int? forceResendingToken,
-  }) async {
-    await firebaseAuth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      forceResendingToken: forceResendingToken,
-      timeout: const Duration(seconds: 60),
-      verificationCompleted: (credential) => onVerificationCompleted(credential),
-      verificationFailed: (ex) => onVerificationFailed(ex),
-      codeSent: (verificationId, forceResendingToken) =>
-          onCodeSend(verificationId, forceResendingToken),
-      codeAutoRetrievalTimeout: (e) {
-        log("auto-retrieval timeout");
-      },
-    );
-  }
+  }) =>
+      _activeDataSource.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        onCodeSend: onCodeSend,
+        onVerificationFailed: onVerificationFailed,
+        onVerificationCompleted: onVerificationCompleted,
+        forceResendingToken: forceResendingToken,
+      );
 
-  Future<void> signOut() => firebaseAuth.signOut();
+  Future<void> signOut() {
+    return _activeDataSource.signOut().whenComplete(() {
+      demoManager.isDemoEnabled = false;
+    });
+  }
 
   Future<void> signInWithCredential(PhoneAuthCredential credentials) =>
-      firebaseAuth.signInWithCredential(credentials);
+      _activeDataSource.signInWithCredential(credentials);
 
-  Future<void> updateRecipient(Recipient recipient) async {
-    final updatedRecipient = recipient.copyWith(updatedBy: recipient.userId);
-
-    return firestore
-        .collection(recipientCollection)
-        .doc(recipient.userId)
-        .update(updatedRecipient.toJson());
-  }
+  Future<void> updateRecipient(Recipient recipient) => _activeDataSource.updateRecipient(recipient);
 }

@@ -3,11 +3,21 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useSubscriptions } from '@/app/[lang]/[region]/(website)/me/hooks';
 import { BillingPortalButton } from '@/app/[lang]/[region]/(website)/me/subscriptions/billing-portal-button';
-import { SpinnerIcon } from '@/components/logos/spinner-icon';
 import { useTranslator } from '@/hooks/useTranslator';
 import { PlusCircleIcon } from '@heroicons/react/24/outline';
 import { toDateTime } from '@socialincome/shared/src/utils/date';
-import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Typography } from '@socialincome/ui';
+import {
+	Button,
+	linkCn,
+	SpinnerIcon,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+	Typography,
+} from '@socialincome/ui';
 import Link from 'next/link';
 
 type SubscriptionsTableProps = {
@@ -79,7 +89,7 @@ export function SubscriptionsClient({ lang, region, translations }: Subscription
 				</TableBody>
 			</Table>
 			<div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2">
-				<Link href={`/${lang}/${region}/donate/individual`}>
+				<Link className={linkCn()} href={`/${lang}/${region}/donate/individual`}>
 					<Button Icon={PlusCircleIcon} variant="ghost" size="lg" className="w-full">
 						{translations.newSubscription}
 					</Button>

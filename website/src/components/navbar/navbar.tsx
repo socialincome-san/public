@@ -22,6 +22,7 @@ async function Navbar({ lang, region }: DefaultParams) {
 				contactDetails: translator.t('tabs.contact-details'),
 				payments: translator.t('tabs.contributions'),
 				signOut: translator.t('sign-out'),
+				journal: translator.t('navigation.journal'),
 			}}
 			languages={mainWebsiteLanguages.map((lang) => ({
 				code: lang,
@@ -87,6 +88,11 @@ async function Navbar({ lang, region }: DefaultParams) {
 							href: `/${lang}/${region}/transparency/reporting`,
 						},
 					],
+				},
+				{
+					id: 'journal',
+					href: `/${lang}/${region}/journal`,
+					title: translator.t('navigation.journal'),
 				},
 			]}
 		/>

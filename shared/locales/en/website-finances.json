@@ -9,7 +9,8 @@
 		"since-march-2020": "Since March 2020",
 		"totalContributions": "{{ contributorCount }} contributors donated a total of {{ value, currency }}",
 		"totalPayments": "{{ value }} mobile money payments made",
-		"totalRecipients": "{{ value }} recipients enrolled for a 3-year program"
+		"totalRecipients": "{{ value }} recipients empowered by a 3-year program",
+		"activeRecipients": "{{ value }} Active Recipients"
 	},
 	"section-2": {
 		"title": "How is Social Income funded?",

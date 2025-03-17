@@ -1,13 +1,13 @@
 import "package:app/core/cubits/survey/survey_cubit.dart";
 import "package:app/data/models/survey/mapped_survey.dart";
 import "package:app/data/models/survey/survey_card_status.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/button_small.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/ui/icons/survey_status_icon_with_text.dart";
 import "package:app/view/pages/survey_page.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:intl/intl.dart";
 
 class SurveyCardBottomAction extends StatelessWidget {
@@ -20,7 +20,6 @@ class SurveyCardBottomAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).toLanguageTag();
     final foregroundColor = _getForegroundColor(mappedSurvey.cardStatus);
 
@@ -33,14 +32,14 @@ class SurveyCardBottomAction extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                _getStatusLabel(mappedSurvey, localizations, locale),
+                _getStatusLabel(mappedSurvey, context.l10n, locale),
                 style: TextStyle(color: foregroundColor),
               ),
             ),
             if (_shouldShowActionButton(mappedSurvey.cardStatus)) ...[
               ButtonSmall(
                 onPressed: () => _navigateToSurvey(context),
-                label: localizations.startSurvey,
+                label: context.l10n.startSurvey,
                 buttonType: ButtonSmallType.outlined,
                 color: foregroundColor,
                 fontColor: foregroundColor,
@@ -48,12 +47,12 @@ class SurveyCardBottomAction extends StatelessWidget {
             ] else if (mappedSurvey.cardStatus == SurveyCardStatus.answered) ...[
               SurveyStatusIconWithText(
                 status: SurveyCardStatus.answered,
-                text: localizations.surveyStatusAnswered,
+                text: context.l10n.surveyStatusAnswered,
               ),
             ] else if (mappedSurvey.cardStatus == SurveyCardStatus.missed) ...[
               SurveyStatusIconWithText(
                 status: SurveyCardStatus.missed,
-                text: localizations.surveyStatusMissed,
+                text: context.l10n.surveyStatusMissed,
               ),
             ],
           ],

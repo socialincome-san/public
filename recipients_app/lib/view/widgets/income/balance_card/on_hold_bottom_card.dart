@@ -1,8 +1,8 @@
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/ui/configs/app_spacings.dart";
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class OnHoldBottomCard extends StatelessWidget {
   final VoidCallback reviewAction;
@@ -11,8 +11,6 @@ class OnHoldBottomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     return Card(
       clipBehavior: Clip.antiAlias,
       color: AppColors.redColor,
@@ -28,7 +26,7 @@ class OnHoldBottomCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    localizations.paymentsSuspended,
+                    context.l10n.paymentsSuspended,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Colors.black,
                         ),
@@ -37,7 +35,7 @@ class OnHoldBottomCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 ButtonSmall(
                   onPressed: reviewAction,
-                  label: localizations.review,
+                  label: context.l10n.review,
                   buttonType: ButtonSmallType.outlined,
                   color: AppColors.fontColorDark,
                 ),

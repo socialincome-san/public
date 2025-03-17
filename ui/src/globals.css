@@ -65,19 +65,6 @@
 		--radius: 0.5rem;
 	}
 
-	.theme-light {
-		--background: 212 59% 40%;
-		--foreground: 20 14.3% 4.1%;
-
-		--muted: 222 100% 98%;
-		--muted-foreground: 0 0% 30%;
-
-		--card: 0 100% 100%;
-		--card-muted: 0 0% 97%;
-		--card-foreground: 206 99% 31%;
-		--card-foreground-muted: 50 33% 45%;
-	}
-
 	.theme-blue {
 		--background: 212 57% 47%;
 		--foreground: 50 33% 96%;
