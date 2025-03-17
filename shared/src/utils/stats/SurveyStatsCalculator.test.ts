@@ -22,31 +22,34 @@ const OLDEST_DATE = new Date('2022-01-01');
 
 test('building SurveyStatsCalculator', async () => {
 	expect(calculator.aggregatedData).toBeDefined();
-	expect(calculator.aggregatedData.length).toBeGreaterThan(0);
 	expect(calculator.oldestDate.getFullYear()).toEqual(OLDEST_DATE.getFullYear());
 	expect(calculator.oldestDate.getMonth()).toEqual(OLDEST_DATE.getMonth());
 	expect(calculator.oldestDate.getDay()).toEqual(OLDEST_DATE.getDay());
 });
 
 test('calculate overall survey stats', async () => {
-	expect(calculator.aggregatedData[SurveyQuestionnaire.Checkin]).toContainEqual(
+	expect(calculator.aggregatedData[SurveyQuestionnaire.Checkin]).toEqual(
 		expect.objectContaining({
 			completedSurveys: 3,
+			totalAnswersForAllQuestions: 6,
 		}),
 	);
-	expect(calculator.aggregatedData[SurveyQuestionnaire.Onboarding]).toContainEqual(
+	expect(calculator.aggregatedData[SurveyQuestionnaire.Onboarding]).toEqual(
 		expect.objectContaining({
 			completedSurveys: 1,
+			totalAnswersForAllQuestions: 2,
 		}),
 	);
-	expect(calculator.aggregatedData[SurveyQuestionnaire.OffboardedCheckin]).toContainEqual(
+	expect(calculator.aggregatedData[SurveyQuestionnaire.OffboardedCheckin]).toEqual(
 		expect.objectContaining({
 			completedSurveys: 3,
+			totalAnswersForAllQuestions: 4,
 		}),
 	);
-	expect(calculator.aggregatedData[SurveyQuestionnaire.Offboarding]).toContainEqual(
+	expect(calculator.aggregatedData[SurveyQuestionnaire.Offboarding]).toEqual(
 		expect.objectContaining({
 			completedSurveys: 1,
+			totalAnswersForAllQuestions: 2,
 		}),
 	);
 });
@@ -74,13 +77,7 @@ test('calculate aggregated survey responses by question type', async () => {
 test('handle edge cases with empty data', async () => {
 	await testEnv.firestore.clearFirestoreData({ projectId });
 	const emptyCalculator = await SurveyStatsCalculator.build(firestoreAdmin);
-	expect(emptyCalculator.aggregatedData).toEqual([]);
-	expect(emptyCalculator.aggregatedData).toEqual({
-		[SurveyQuestionnaire.Checkin]: {},
-		[SurveyQuestionnaire.Onboarding]: {},
-		[SurveyQuestionnaire.OffboardedCheckin]: {},
-		[SurveyQuestionnaire.Offboarding]: {},
-	});
+	expect(emptyCalculator.aggregatedData).toEqual({});
 });
 
 const surveyRecords = [
