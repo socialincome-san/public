@@ -42,9 +42,9 @@ export class SurveyStatsCalculator {
 		const recipients = await firestoreAdmin.collection<Recipient>(RECIPIENT_FIRESTORE_PATH).get();
 		const surveysData = await this.fetchAndProcessSurveys(firestoreAdmin, recipients);
 
-		const betterData: { [surveyType: string]: SurveyStats } = {};
-		const { oldestDate } = this.aggregateSurveyData(surveysData, betterData);
-		return new SurveyStatsCalculator(betterData, oldestDate);
+		const aggregatedData: { [surveyType: string]: SurveyStats } = {};
+		const { oldestDate } = this.aggregateSurveyData(surveysData, aggregatedData);
+		return new SurveyStatsCalculator(aggregatedData, oldestDate);
 	}
 
 	private static async fetchAndProcessSurveys(
@@ -65,12 +65,11 @@ export class SurveyStatsCalculator {
 
 	private static aggregateSurveyData(
 		surveysData: Survey[],
-		betterData: { [p: string]: SurveyStats },
+		aggregatedData: { [key: string]: SurveyStats },
 	): {
 		oldestDate: Date;
 	} {
 		let oldestDate = new Date();
-
 		surveysData.forEach((survey) => {
 			if (this.isCompletedSurvey(survey)) {
 				oldestDate =
@@ -78,11 +77,11 @@ export class SurveyStatsCalculator {
 						? survey.completed_at.toDate()
 						: oldestDate;
 				const questionnaire = survey.questionnaire!;
-				betterData[questionnaire] = this.initiate(betterData, questionnaire);
-				betterData[questionnaire].completedSurveys = betterData[questionnaire].completedSurveys + 1;
+				aggregatedData[questionnaire] = this.initiate(aggregatedData, questionnaire);
+				aggregatedData[questionnaire].completedSurveys = aggregatedData[questionnaire].completedSurveys + 1;
 
 				Object.entries(survey.data!).forEach(([questionKey, response]) => {
-					this.processSurveyResponse(betterData[questionnaire], questionKey, response);
+					this.processSurveyResponse(aggregatedData[questionnaire], questionKey, response);
 				});
 			}
 		});
@@ -90,9 +89,9 @@ export class SurveyStatsCalculator {
 		return { oldestDate };
 	}
 
-	private static initiate(betterData: { [p: string]: SurveyStats }, questionnaire: SurveyQuestionnaire) {
+	private static initiate(aggregatedData: { [key: string]: SurveyStats }, questionnaire: SurveyQuestionnaire) {
 		return (
-			betterData[questionnaire] || {
+			aggregatedData[questionnaire] || {
 				completedSurveys: 0,
 				totalAnswersForAllQuestions: 0,
 				answersByQuestionType: {},
