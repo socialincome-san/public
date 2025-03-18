@@ -1,32 +1,38 @@
 import ajlaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/ajla.jpg';
 import alexandreImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/alexandre.jpeg';
+import alexeyImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/alexey-shestakov.jpeg';
 import andersImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/anders.jpeg';
 import andrasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/andras.jpeg';
 import annalinaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/anna-lina.jpeg';
-import anvitaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/anvita.jpeg';
 import aurelieImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/aurelie.jpeg';
 import carlosImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/carlos.jpeg';
 import flavienImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/flavien.jpeg';
 import francoiseImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/francoise.jpg';
 import gavriilImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/gavriil-tzortzakis.jpg';
+import innaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/inna-abdrakhmanova.jpeg';
 import juanImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/juan.jpeg';
 import juliaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/julia.jpeg';
 import kabeloImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kabelo.jpeg';
 import karinImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/karin-berg.jpg';
+import katalinImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/katalin-holanyi.jpeg';
 import kerrinImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kerrin.jpeg';
 import larissaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/larissa.jpeg';
+import leaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/lea-strohm.jpeg';
 import lorenzoImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/lorenzo.jpg';
 import mabelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mabel.jpeg';
 import marcImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marc-werner.jpg';
+import marcoImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marco-bohler.jpeg';
 import mariatuImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mariatu.jpg';
 import marionImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/marion.jpeg';
 import mathildeImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mathilde-dumont.jpg';
 import matthewImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/matthew.jpeg';
 import michaelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/michael.jpeg';
 import mikolajImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/mikolaj.jpeg';
+import ninaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/nina-limacher.jpeg';
 import patrickImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/patrick-mcclurg.jpeg';
 import patrikImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/patrik.jpeg';
 import pranavImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/pranav.jpg';
+import raphaelImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/raphael-wirth.jpeg';
 import reneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/rene.jpeg';
 import riccardoImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/riccardo.jpg';
 import sandinoImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/sandino.jpg';
@@ -36,6 +42,7 @@ import simonImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon.
 import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simone.jpeg';
 import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
 import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
+import willemijnImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/willemijn-de-gaay-fortman.jpeg';
 
 import { WebsiteLanguage } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -79,17 +86,18 @@ const groups: Group[] = [
 			{ name: 'Michael Kündig', role: 'software-development', image: michaelImage },
 			{ name: 'Mikołaj Demkow', role: 'app-development', image: mikolajImage },
 			{ name: 'Verena Zaiser', role: 'app-development', image: verenaImage },
-			{ name: 'András Heé', role: 'software-development', image: andrasImage },
-			{ name: 'Larissa dos Santos Lima', role: 'fundraising', image: larissaImage },
 			{ name: 'Pranav Chatur', role: 'software-development', image: pranavImage },
-			{ name: 'Thomas Brenner', role: 'software-development', image: thomasImage },
 			{ name: 'Matthew Roberts', role: 'communications', image: matthewImage },
 			{ name: 'Françoise Légeret', role: 'translations', image: francoiseImage },
 			{ name: 'Karin Berg', role: 'app-development', image: karinImage },
 			{ name: 'Marc Werner', role: 'research', image: marcImage },
-			{ name: 'Mathilde Dumond', role: 'software-development', image: mathildeImage },
 			{ name: 'Gavriil Tzortzakis', role: 'software-development', image: gavriilImage },
 			{ name: 'Patrick McClurg', role: 'software-development', image: patrickImage },
+			{ name: 'Katalin Holanyi', role: 'design', image: katalinImage },
+			{ name: 'Willemijn de Gaay Fortman', role: 'strategy', image: willemijnImage },
+			{ name: 'Lea Strohm', role: 'strategy', image: leaImage },
+			{ name: 'Marco Bohler', role: 'software-development', image: marcoImage },
+			{ name: 'Raphael Wirth', role: 'software-development', image: raphaelImage },
 		],
 	},
 	{
@@ -99,7 +107,7 @@ const groups: Group[] = [
 			{ name: 'Kabelo Ruffo', role: 'co-president', image: kabeloImage },
 			{ name: 'Flavien Meyer', role: 'co-president', image: flavienImage },
 			{ name: 'Simone Huser', role: 'board-member', image: simoneImage },
-			{ name: 'Anvita Pandey', role: 'board-member', image: anvitaImage },
+			{ name: 'Nina Limacher', role: 'board-member', image: ninaImage },
 			{ name: 'Marion Quartier', role: 'board-member', image: marionImage },
 		],
 	},
@@ -120,6 +128,12 @@ const groups: Group[] = [
 			{ name: 'René Stalder', role: 'software-development', image: reneImage },
 			{ name: 'Sarvesh Dwivedi', role: 'software-development', image: sarveshImage },
 			{ name: 'Carlos Badilla', role: 'fundraising', image: carlosImage },
+			{ name: 'Larissa dos Santos Lima', role: 'fundraising', image: larissaImage },
+			{ name: 'András Heé', role: 'software-development', image: andrasImage },
+			{ name: 'Thomas Brenner', role: 'software-development', image: thomasImage },
+			{ name: 'Mathilde Dumond', role: 'software-development', image: mathildeImage },
+			{ name: 'Inna Abdrakhmanova', role: 'software-development', image: innaImage },
+			{ name: 'Alexey Shestakov', role: 'software-development', image: alexeyImage },
 		],
 	},
 ];

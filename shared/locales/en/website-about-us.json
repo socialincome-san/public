@@ -100,7 +100,8 @@
 			"strategy": "Strategy",
 			"fundraising": "Fundraising",
 			"translations": "Translations",
-			"research": "Research"
+			"research": "Research",
+			"design": "Design"
 		},
 		"groups": {
 			"staff": {
@@ -119,7 +120,7 @@
 				"description": "The board is responsible for the supervision of the organization. Members are elected for a term of three years. Their specific supervisory duties are defined in the statutes and organizational regulations."
 			},
 			"special-thanks": {
-				"name": "Former Volunteers",
+				"name": "Former Collaborators and Volunteers",
 				"subtitle": "These individuals have significantly shaped Social Income through their voluntary efforts.",
 				"description": "Volunteers who are inactive for more than three months are considered former until they resume their participation. This approach allows us to transparently and accurately represent the true size of our organization."
 			}
