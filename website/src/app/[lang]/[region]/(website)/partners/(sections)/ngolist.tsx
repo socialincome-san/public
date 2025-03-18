@@ -28,6 +28,7 @@ const country_abbreviations_to_flag_map: Record<string, ReactElement> = {
 function getFlag(abbreviation: string): ReactElement {
 	return country_abbreviations_to_flag_map[abbreviation] || <SL className="h-5 w-5 rounded-full" />;
 }
+export const ngos = ['aurora', 'jamil', 'reachout', 'equal-rights', 'united-polio', 'slaes'];
 
 export async function NgoList({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
@@ -36,7 +37,6 @@ export async function NgoList({ lang, region }: DefaultParams) {
 	});
 	const image_base_path = '/assets/partners/';
 
-	const ngos = ['aurora', 'jamil', 'reachout', 'equal-rights', 'united-polio', 'slaes'];
 	const ngoArray: NgoEntryJSON[] = ngos.map((slug: string) => translator.t(slug));
 	const ngoCardPropsArray: NgoCardProps[] = [];
 
