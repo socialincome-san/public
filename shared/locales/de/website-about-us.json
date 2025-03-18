@@ -100,7 +100,8 @@
 			"strategy": "Strategie",
 			"fundraising": "Fundraising",
 			"translations": "Übersetzungen",
-			"research": "Forschung"
+			"research": "Forschung",
+			"design": "Design"
 		},
 		"groups": {
 			"staff": {
@@ -119,7 +120,7 @@
 				"description": "Der Vorstand ist für die Aufsicht über die Organisation zuständig. Die Mitglieder werden für eine Amtszeit von drei Jahren gewählt. Ihre spezifischen Aufsichtspflichten sind in den Statuten und dem Organisationsreglement festgelegt. "
 			},
 			"special-thanks": {
-				"name": "Ehemalige Freiwillige",
+				"name": "Ehemalige Mitwirkende und Freiwillige",
 				"subtitle": "Diese Individuen haben durch ihren ehrenamtlichen Einsatz Social Income massgeblich geprägt.",
 				"description": "Freiwillige, die mehr als drei Monate inaktiv sind, werden als ehemalige betrachtet, bis sie ihre Mitarbeit wieder aufnehmen. Dieses Vorgehen ermöglicht es uns, die wirkliche Grösse unserer Organisation transparent und präzise darzustellen."
 			}
