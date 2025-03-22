@@ -1,24 +1,24 @@
 {
 	"select-survey": "Select survey",
 	"multiple-answers": "multiple answers",
-	"responses-since": "Survey responses since {{sinceDate}}",
+	"responses-since": "{{completedSurveys}} completed surveys since {{sinceDate}}",
 	"title": "Survey Responses",
-	"answers": "answers",
+	"answers": "responses",
 	"data-points": "data points",
 	"onboarding": {
 		"title": "Onboarding Survey",
-		"description": "Filled out once before recipient is joining the program"
+		"description": "Sent once before program enrollment"
 	},
 	"checkin": {
-		"title": "Check-in Survey",
-		"description": "Filled out every 6 months while recipient is in the program"
+		"title": "Check-in Surveys",
+		"description": "Sent every six months during the program"
 	},
 	"offboarding": {
 		"title": "Offboarding Survey",
-		"description": "Filled out once when recipient is finishing the program"
+		"description": "Sent once when the program ends"
 	},
 	"offboarded-checkin": {
-		"title": "Follow-up Survey",
-		"description": "Filled out every 6 months after recipient left the program"
+		"title": "Follow-up Surveys",
+		"description": "Sent every six months after the program ends"
 	}
 }
