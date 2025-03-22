@@ -3,9 +3,17 @@ import { PartnerHome } from '@/app/[lang]/[region]/(website)/partners/(component
 import { NgoEntryJSON } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { redirect } from 'next/navigation';
+import { ngos } from '../(sections)/ngolist';
 
-function getNGOTranslation(translator: Translator, slug: string): NgoEntryJSON {
-	return translator.t(slug);
+function getNGOTranslation(translator: Translator, slug: string): NgoEntryJSON | undefined {
+	let currentNgo: NgoEntryJSON | undefined = undefined;
+	for (const ngo of ngos) {
+		if ((translator.t(ngo) as NgoEntryJSON)['org-slug'] === slug) {
+			currentNgo = translator.t(ngo);
+			break;
+		}
+	}
+	return currentNgo;
 }
 
 type PartnerPageProps = {
