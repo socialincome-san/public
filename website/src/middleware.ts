@@ -75,7 +75,7 @@ const redirectMiddleware = (request: NextRequest) => {
 		case '/what-is-poverty':
 			return NextResponse.redirect('https://socialincome.org/journal/what-is-poverty');
 		// For fundraisers that were communicated with a short URL
-			case '/ismatu':
+		case '/ismatu':
 			return NextResponse.redirect('https://socialincome.org/campaign/MZmXEVHlDjOOFOMk82jW');
 	}
 };
