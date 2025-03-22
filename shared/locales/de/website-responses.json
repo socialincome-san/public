@@ -1,0 +1,24 @@
+{
+	"select-survey": "Umfrage auswählen",
+	"multiple-answers": "mehrere Antworten",
+	"responses-since": "{{completedSurveys}} abgeschlossene Umfragen seit {{sinceDate}}",
+	"title": "Umfrageergebnisse",
+	"answers": "Antworten",
+	"data-points": "Datenpunkte",
+	"onboarding": {
+		"title": "Onboarding Umfrage",
+		"description": "Einmal gesendet, bevor das Programm beginnt"
+	},
+	"checkin": {
+		"title": "Check-in Umfragen",
+		"description": "Alle sechs Monate während des Programms gesendet"
+	},
+	"offboarding": {
+		"title": "Offboarding Umfrage",
+		"description": "Einmal gesendet, wenn das Programm endet"
+	},
+	"offboarded-checkin": {
+		"title": "Follow-up Umfragen",
+		"description": "Alle sechs Monate nach Ende des Programms gesendet"
+	}
+}

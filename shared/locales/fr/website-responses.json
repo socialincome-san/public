@@ -1,0 +1,24 @@
+{
+	"select-survey": "Sélectionner l'enquête",
+	"multiple-answers": "plusieurs réponses",
+	"responses-since": "{{completedSurveys}} enquêtes complétées depuis {{sinceDate}}",
+	"title": "Réponses à l'enquête",
+	"answers": "réponses",
+	"data-points": "points de données",
+	"onboarding": {
+		"title": "Enquête d'intégration",
+		"description": "Envoyée une seule fois avant l'inscription au programme"
+	},
+	"checkin": {
+		"title": "Enquêtes de check-in",
+		"description": "Envoyées tous les six mois pendant le programme"
+	},
+	"offboarding": {
+		"title": "Enquête de fin de participation",
+		"description": "Envoyée une seule fois lorsque le programme se termine"
+	},
+	"offboarded-checkin": {
+		"title": "Enquêtes de suivi",
+		"description": "Envoyées tous les six mois après la fin du programme"
+	}
+}

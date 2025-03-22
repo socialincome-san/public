@@ -1,0 +1,24 @@
+{
+	"select-survey": "Seleziona il questionario",
+	"multiple-answers": "più risposte",
+	"responses-since": "{{completedSurveys}} questionari completati dal {{sinceDate}}",
+	"title": "Risposte al questionario",
+	"answers": "risposte",
+	"data-points": "punti di dati",
+	"onboarding": {
+		"title": "Questionario di onboarding",
+		"description": "Inviato una sola volta prima dell'iscrizione al programma"
+	},
+	"checkin": {
+		"title": "Questionari di check-in",
+		"description": "Inviati ogni sei mesi durante il programma"
+	},
+	"offboarding": {
+		"title": "Questionario di offboarding",
+		"description": "Inviato una sola volta quando il programma termina"
+	},
+	"offboarded-checkin": {
+		"title": "Questionari di follow-up",
+		"description": "Inviati ogni sei mesi dopo la fine del programma"
+	}
+}
