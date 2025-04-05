@@ -12,3 +12,6 @@ export function cn(...inputs: ClassValue[]) {
  */
 export const getFlagImageURL = (country: CountryCode | Exclude<WebsiteRegion, 'int'>) =>
 	`https://raw.githubusercontent.com/lipis/flag-icons/a87d8b256743c9b0df05f20de2c76a7975119045/flags/1x1/${country.toLowerCase()}.svg`;
+
+export const getCurrencyFlagImageURL = (country: CountryCode) =>
+	`https://wise.com/web-art/assets/flags/${country.toLowerCase()}.svg`;
