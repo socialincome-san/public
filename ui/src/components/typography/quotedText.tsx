@@ -3,7 +3,7 @@ import { Typography } from './typography';
 export function QuotedText({ text, author, author_org }: { text: string; author: string; author_org: string }) {
 	return (
 		<div className="w-full px-0 py-16">
-			<Typography className="m-0 p-0" weight="bold" color="foreground" size="3xl">
+			<Typography className="m-0 p-0" weight="bold" color="foreground" size="5xl">
 				« {text} »
 			</Typography>
 			<div className="mt-4">
