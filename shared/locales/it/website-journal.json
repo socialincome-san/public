@@ -1,10 +1,10 @@
 {
-  "overview": {
-    "all": "Tutti",
-    "title": "Giornale",
-    "description": "Storie e aggiornamenti sul nostro percorso per creare un impatto."
-  },
-  "article": {
-    "keep-reading": "Articoli correlati"
-  }
+	"overview": {
+		"all": "Tutti",
+		"title": "Giornale",
+		"description": "Storie e aggiornamenti sul nostro percorso per creare un impatto."
+	},
+	"article": {
+		"keep-reading": "Articoli correlati"
+	}
 }
