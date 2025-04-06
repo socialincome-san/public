@@ -55,3 +55,10 @@ export interface StoryblokArticle {
 	leadText: string;
 	showRelativeArticles: boolean;
 }
+
+export interface StoryblokImageWithCaption {
+	component: 'Add image';
+	image: StoryblokImage;
+	caption: string;
+	_uid: string;
+}

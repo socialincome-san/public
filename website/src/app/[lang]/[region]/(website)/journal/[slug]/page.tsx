@@ -13,11 +13,13 @@ import {
 } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Badge, QuotedText, Separator, Typography } from '@socialincome/ui';
+import { Badge, QuotedText, Separator, Typography, ImageWithCaption } from '@socialincome/ui';
 import { ISbStoryData } from '@storyblok/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { render } from 'storyblok-rich-text-react-renderer';
+import { StoryblokImageWithCaption } from '@socialincome/shared/src/storyblok/journal';
+
 
 export const revalidate = 900;
 
@@ -26,6 +28,8 @@ function renderWrapper(articleData: StoryblokArticle) {
 		blokResolvers: {
 			// @ts-ignore
 			['quotedText']: (props: StoryblokQuotedText) => <QuotedText {...props} />,
+			// @ts-ignore
+			['Add image']: (props: StoryblokImageWithCaption) => <ImageWithCaption {...props} />,
 		},
 	});
 }
