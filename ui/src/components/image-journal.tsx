@@ -1,4 +1,4 @@
-import { Typography } from './typography/typography';
+import { Typography } from './typography';
 
 export function ImageWithCaption({ image, caption }: { image: { filename: string; alt?: string }; caption: string }) {
 	if (!image?.filename) return null;

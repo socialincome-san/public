@@ -62,3 +62,12 @@ export interface StoryblokImageWithCaption {
 	caption: string;
 	_uid: string;
 }
+
+export interface StoryblokVideoEmbed {
+	component: 'Embed video';
+	url_youtube: {
+		url: string;
+	};
+	video_caption?: string;
+	_uid: string;
+}

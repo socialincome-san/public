@@ -14,7 +14,14 @@ import {
 } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Badge, ImageWithCaption, QuotedText, Separator, Typography } from '@socialincome/ui';
+import {
+	Badge,
+	ImageWithCaption,
+	QuotedText,
+	Separator,
+	Typography,
+	VideoEmbedWithCaption,
+} from '@socialincome/ui';
 import { ISbStoryData } from '@storyblok/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -25,15 +32,25 @@ export const revalidate = 900;
 function renderWrapper(articleData: StoryblokArticle) {
 	return render(articleData.content, {
 		blokResolvers: {
-			// @ts-ignore
-			['quotedText']: (props: StoryblokQuotedText) => <QuotedText {...props} />,
-			// @ts-ignore
-			['Add image']: (props: StoryblokImageWithCaption) => <ImageWithCaption {...props} />,
+			['quotedText']: (props: any) => <QuotedText {...props} />,
+			['Add image']: (props: any) => <ImageWithCaption {...props} />,
+			['Embed video']: (props: any) => (
+				<VideoEmbedWithCaption
+					urlVideo={typeof props.url_video?.url === 'string' ? props.url_video.url : undefined}
+					muxPlaybackId={typeof props.mux_playback_id === 'string' ? props.mux_playback_id : undefined}
+					caption={typeof props.video_caption === 'string' ? props.video_caption : undefined}
+				/>
+			),
 		},
 	});
 }
 
-function badgeWithLink(lang: string, region: string, tag: ISbStoryData<StoryblokTag>, variant: 'outline' | 'default') {
+function badgeWithLink(
+	lang: string,
+	region: string,
+	tag: ISbStoryData<StoryblokTag>,
+	variant: 'outline' | 'default',
+) {
 	return (
 		<Link href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
 			<Badge key={tag.slug} variant={variant} className="mt-6">
@@ -44,12 +61,16 @@ function badgeWithLink(lang: string, region: string, tag: ISbStoryData<Storyblok
 }
 
 const NUMBER_OF_RELATIVE_ARTICLES = 3;
-export default async function Page(props: { params: { slug: string; lang: LanguageCode; region: string } }) {
+
+export default async function Page(props: {
+	params: { slug: string; lang: LanguageCode; region: string };
+}) {
 	const { slug, lang, region } = props.params;
 
 	const articleResponse = await getArticle(lang, slug);
 	const articleData = articleResponse.data.story.content;
 	const author: ISbStoryData<StoryblokAuthor> = articleData.author;
+
 	const blogs = await getRelativeArticles(
 		author.uuid,
 		articleResponse.data.story.id,
@@ -57,6 +78,7 @@ export default async function Page(props: { params: { slug: string; lang: Langua
 		lang,
 		NUMBER_OF_RELATIVE_ARTICLES,
 	);
+
 	let translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-journal'],
@@ -131,6 +153,7 @@ export default async function Page(props: { params: { slug: string; lang: Langua
 						</div>
 					</Link>
 				</div>
+
 				{articleData.showRelativeArticles && (
 					<div>
 						<Typography size="4xl" className="text-center">
