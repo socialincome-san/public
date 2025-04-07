@@ -5,23 +5,10 @@ import {
 } from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
 import { StoryblokArticleCard } from '@/app/[lang]/[region]/(website)/journal/StoryblokArticle';
 import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
-import {
-	StoryblokArticle,
-	StoryblokAuthor,
-	StoryblokImageWithCaption,
-	StoryblokQuotedText,
-	StoryblokTag,
-} from '@socialincome/shared/src/storyblok/journal';
+import { StoryblokArticle, StoryblokAuthor, StoryblokTag } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import {
-	Badge,
-	ImageWithCaption,
-	QuotedText,
-	Separator,
-	Typography,
-	VideoEmbedWithCaption,
-} from '@socialincome/ui';
+import { Badge, ImageWithCaption, QuotedText, Separator, Typography, VideoEmbedWithCaption } from '@socialincome/ui';
 import { ISbStoryData } from '@storyblok/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -45,12 +32,7 @@ function renderWrapper(articleData: StoryblokArticle) {
 	});
 }
 
-function badgeWithLink(
-	lang: string,
-	region: string,
-	tag: ISbStoryData<StoryblokTag>,
-	variant: 'outline' | 'default',
-) {
+function badgeWithLink(lang: string, region: string, tag: ISbStoryData<StoryblokTag>, variant: 'outline' | 'default') {
 	return (
 		<Link href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
 			<Badge key={tag.slug} variant={variant} className="mt-6">
@@ -62,9 +44,7 @@ function badgeWithLink(
 
 const NUMBER_OF_RELATIVE_ARTICLES = 3;
 
-export default async function Page(props: {
-	params: { slug: string; lang: LanguageCode; region: string };
-}) {
+export default async function Page(props: { params: { slug: string; lang: LanguageCode; region: string } }) {
 	const { slug, lang, region } = props.params;
 
 	const articleResponse = await getArticle(lang, slug);

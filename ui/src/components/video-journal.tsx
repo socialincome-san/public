@@ -12,10 +12,10 @@ function extractVimeoId(url: string): string | null {
 }
 
 export function VideoEmbedWithCaption({
-																				urlVideo,
-																				caption,
-																				muxPlaybackId,
-																			}: {
+	urlVideo,
+	caption,
+	muxPlaybackId,
+}: {
 	urlVideo?: string;
 	caption?: string;
 	muxPlaybackId?: string;
@@ -38,8 +38,8 @@ export function VideoEmbedWithCaption({
 				title="YouTube video player"
 				allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
 				allowFullScreen
-				className="h-full w-full border-0 aspect-video mb-2"
-			/>
+				className="mb-2 aspect-video h-full w-full border-0"
+			/>,
 		);
 	}
 
@@ -51,8 +51,8 @@ export function VideoEmbedWithCaption({
 				title="Vimeo video player"
 				allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
 				allowFullScreen
-				className="h-full w-full border-0 aspect-video mb-2"
-			/>
+				className="mb-2 aspect-video h-full w-full border-0"
+			/>,
 		);
 	}
 
@@ -66,7 +66,7 @@ export function VideoEmbedWithCaption({
 				allowFullScreen
 				style={{ width: '100%', border: 'none', aspectRatio: '16/9' }}
 				className="mb-2"
-			/>
+			/>,
 		);
 	}
 
