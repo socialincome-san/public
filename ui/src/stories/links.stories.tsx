@@ -2,6 +2,23 @@ import { LinkIcon } from '@heroicons/react/24/outline';
 import type { Meta, StoryObj } from '@storybook/react';
 import { linkCn } from '../components/typography';
 
+function getIconSizeClassByLinkSize(size: string | undefined) {
+	switch (size) {
+		case 'sm':
+			return 'h-3 w-3';
+		case 'md':
+			return 'h-4 w-4';
+		case 'lg':
+			return 'h-5 w-5';
+		case 'xl':
+			return 'h-6 w-6';
+		case '4xl':
+			return 'h-7 w-7';
+		default:
+			return 'h-4 w-4'; // default size
+	}
+}
+
 const meta = {
 	title: 'Typography/Links',
 	tags: ['autodocs'],
@@ -10,7 +27,7 @@ const meta = {
 		docs: {
 			description: {
 				component:
-					'A collection of link components with various styles and behaviors. Links can be customized with different variants (default, accent, destructive), sizes, underline styles, and optional icons or arrows (internal → or external ↗).',
+					'A collection of link components with various styles and behaviors. Links can be customized with different variants (default, accent, destructive), sizes, underline styles, font weights, and optional icons or arrows (internal → or external ↗).',
 			},
 		},
 	},
@@ -21,6 +38,7 @@ interface LinkStoryProps {
 	children: string;
 	variant?: 'default' | 'accent' | 'destructive';
 	size?: 'inherit' | 'sm' | 'md' | 'lg' | 'xl' | '4xl';
+	weight?: 'regular' | 'medium' | 'semibold' | 'bold';
 	underline?: 'none' | 'hover' | 'always';
 	icon?: boolean;
 	arrow?: false | 'internal' | 'external';
@@ -207,44 +225,20 @@ export const WithDecorations: Story = {
 	parameters: {
 		docs: {
 			description: {
-				story:
-					'Links can include icons (with recommended size h-4 w-4) and arrows. Arrows are automatically added via CSS and animate on hover.',
+				story: 'Links can include icons and arrows. Arrows are added automatically via CSS and animate on hover.',
 			},
 		},
 	},
 };
 
-interface WithControlsProps {
-	children: string;
-	variant: 'default' | 'accent' | 'destructive';
-	size: 'inherit' | 'sm' | 'md' | 'lg' | 'xl' | '4xl';
-	underline: 'none' | 'hover' | 'always';
-	icon: boolean;
-	arrow: boolean | 'external';
-}
-
-function getIconSizeClassByLinkSize(size: WithControlsProps['size']) {
-	switch (size) {
-		case 'sm':
-			return 'h-3 w-3';
-		case 'md':
-			return 'h-3 w-3';
-		case 'lg':
-			return 'h-4 w-4';
-		case 'xl':
-			return 'h-5 w-5';
-		case '4xl':
-			return 'h-8 w-8';
-		default:
-			return 'h-4 w-4';
-	}
-}
+interface WithControlsProps extends LinkStoryProps {}
 
 export const WithControls: StoryObj<WithControlsProps> = {
 	args: {
 		children: 'Interactive Link',
 		variant: 'default',
 		size: 'md',
+		weight: 'regular',
 		underline: 'none',
 		icon: false,
 		arrow: false,
@@ -253,28 +247,26 @@ export const WithControls: StoryObj<WithControlsProps> = {
 		variant: {
 			control: 'select',
 			options: ['default', 'accent', 'destructive'],
-			description: 'Visual style variant of the link',
 		},
 		size: {
 			control: 'select',
 			options: ['inherit', 'sm', 'md', 'lg', 'xl', '4xl'],
-			description: 'Text size of the link',
+		},
+		weight: {
+			control: 'select',
+			options: ['regular', 'medium', 'semibold', 'bold'],
+			description: 'Font weight of the link',
 		},
 		underline: {
 			control: 'select',
 			options: ['none', 'hover', 'always'],
-			description: 'Underline style behavior',
 		},
 		icon: {
 			control: 'boolean',
-			description:
-				'Whether to show an icon before the text (adds gap-2 for proper spacing, use h-4 w-4 classes for icons)',
 		},
 		arrow: {
 			control: 'select',
 			options: [false, 'internal', 'external'],
-			description:
-				'Arrow style (false: no arrow, "internal": → with hover animation, external: ↗ with hover animation). Arrows are added automatically via CSS.',
 		},
 	},
 	parameters: {
@@ -292,6 +284,7 @@ export const WithControls: StoryObj<WithControlsProps> = {
 				className={linkCn({
 					variant: args.variant,
 					size: args.size,
+					weight: args.weight,
 					underline: args.underline,
 					icon: args.icon,
 					arrow: args.arrow,

@@ -8,54 +8,18 @@ import { cva } from 'class-variance-authority';
  * import Link from 'next/link';
  * import { linkCn } from '@/components/typography/links';
  *
- * // Basic usage
  * <Link href="/about" className={linkCn()}>About</Link>
- *
- * // With variants
  * <Link href="/contact" className={linkCn({ variant: 'accent' })}>Contact</Link>
- *
- * // With size and underline
  * <Link href="/blog" className={linkCn({ size: 'lg', underline: 'hover' })}>Blog</Link>
- *
- * // With icon
  * <Link href="/docs" className={linkCn({ icon: true })}>
  *   <Icon className="h-4 w-4" /> Documentation
  * </Link>
- *
- * // With arrows
  * <Link href="/internal" className={linkCn({ arrow: 'internal' })}>Internal Link</Link>
  * <Link href="https://external.com" className={linkCn({ arrow: 'external' })}>External Link</Link>
  * ```
- *
- * @param variant - The visual style variant of the link
- *   - 'default': Standard link that shows accent color on hover
- *   - 'accent': Accent colored link for emphasis
- *   - 'destructive': Red-colored link for dangerous actions
- *
- * @param size - The text size of the link
- *   - 'inherit': Inherits font size from parent
- *   - 'sm': Small text
- *   - 'md': Medium text
- *   - 'lg': Large text
- *   - 'xl': Extra large text
- *   - '4xl': 4x large text (for hero sections)
- *
- * @param underline - The underline style of the link
- *   - 'none': No underline
- *   - 'hover': Shows underline on hover
- *   - 'always': Always shows underline (default)
- *
- * @param icon - Whether the link contains an icon
- *   - true: Adds gap between icon and text (recommended gap: 0.5rem)
- *   - false: No gap (default)
- *
- * @param arrow - The arrow style for the link
- *   - false: No arrow (default)
- *   - 'internal': Shows internal arrow (→) with hover animation
- *   - 'external': Shows external arrow (↗) with hover animation
  */
 export const linkCn = cva(
-	'inline-flex items-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 relative after:transition-transform after:duration-200 after:no-underline',
+	'inline-flex items-center font-normal transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 relative after:transition-transform after:duration-200 after:no-underline',
 	{
 		variants: {
 			variant: {
@@ -70,6 +34,12 @@ export const linkCn = cva(
 				lg: 'text-lg',
 				xl: 'text-xl',
 				'4xl': 'text-4xl',
+			},
+			weight: {
+				regular: 'font-normal',
+				medium: 'font-medium',
+				semibold: 'font-semibold',
+				bold: 'font-bold',
 			},
 			underline: {
 				none: 'no-underline hover:no-underline',
@@ -90,6 +60,7 @@ export const linkCn = cva(
 		defaultVariants: {
 			variant: 'default',
 			size: 'inherit',
+			weight: 'regular',
 			underline: 'always',
 			icon: false,
 			arrow: false,

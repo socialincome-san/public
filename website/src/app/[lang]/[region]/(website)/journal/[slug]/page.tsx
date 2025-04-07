@@ -9,6 +9,7 @@ import {
 	StoryblokArticle,
 	StoryblokAuthor,
 	StoryblokImageWithCaption,
+	StoryblokLinksCard,
 	StoryblokQuotedText,
 	StoryblokTag,
 } from '@socialincome/shared/src/storyblok/journal';
@@ -17,6 +18,7 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import {
 	Badge,
 	ImageWithCaption,
+	LinksCardJournal,
 	QuotedText,
 	Separator,
 	Typography,
@@ -39,6 +41,11 @@ function renderWrapper(articleData: StoryblokArticle) {
 					urlVideo={typeof props.url_video?.url === 'string' ? props.url_video.url : undefined}
 					muxPlaybackId={typeof props.mux_playback_id === 'string' ? props.mux_playback_id : undefined}
 					caption={typeof props.video_caption === 'string' ? props.video_caption : undefined}
+				/>
+			),
+			['Add links']: (props: Record<string, unknown>) => (
+				<LinksCardJournal
+					{...(props as unknown as StoryblokLinksCard)}
 				/>
 			),
 		},

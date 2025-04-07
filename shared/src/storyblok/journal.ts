@@ -71,3 +71,18 @@ export interface StoryblokVideoEmbed {
 	video_caption?: string;
 	_uid: string;
 }
+
+export interface StoryblokReferencedLink {
+	_uid: string;
+	component: 'referenced_link';
+	source_url: { url: string };
+	source_date: string;
+	source_author: string;
+}
+
+export interface StoryblokLinksCard {
+	component: 'Add links';
+	reference_context: 'no_context' | 'reference_related' | 'reference_original';
+	single_link: StoryblokReferencedLink[];
+	_uid: string;
+}

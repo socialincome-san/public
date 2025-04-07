@@ -3,3 +3,4 @@ export * from './links';
 export * from './quotedText';
 export * from './typography';
 export * from '../video-journal';
+export * from '../links-card-journal';
