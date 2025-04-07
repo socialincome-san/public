@@ -8,9 +8,7 @@ import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/Storyb
 import {
 	StoryblokArticle,
 	StoryblokAuthor,
-	StoryblokImageWithCaption,
 	StoryblokLinksCard,
-	StoryblokQuotedText,
 	StoryblokTag,
 } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
