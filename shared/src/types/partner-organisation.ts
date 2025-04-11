@@ -4,4 +4,5 @@ export type PartnerOrganisation = {
 	name: string;
 	contactName: string;
 	contactNumber: string;
+	communitySize: number;
 };

@@ -2,6 +2,7 @@ import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/models/models.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/ui/configs/app_spacings.dart";
@@ -12,7 +13,6 @@ import "package:app/view/widgets/dialogs/social_income_contact_dialog.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:intl/intl.dart";
 import "package:package_info_plus/package_info_plus.dart";
 
@@ -109,7 +109,6 @@ class AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).toLanguageTag();
 
     final recipient = context.watch<AuthCubit>().state.recipient ?? widget.recipient;
@@ -119,12 +118,12 @@ class AccountPageState extends State<AccountPage> {
         if (state.status == AuthStatus.updateRecipientSuccess) {
           FlushbarHelper.showFlushbar(
             context,
-            message: localizations.profileUpdateSuccess,
+            message: context.l10n.profileUpdateSuccess,
           );
         } else if (state.status == AuthStatus.updateRecipientFailure) {
           FlushbarHelper.showFlushbar(
             context,
-            message: localizations.profileUpdateError,
+            message: context.l10n.profileUpdateError,
             type: FlushbarType.error,
           );
         } else if (state.status == AuthStatus.unauthenticated) {
@@ -134,7 +133,7 @@ class AccountPageState extends State<AccountPage> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(localizations.profile),
+            title: Text(context.l10n.profile),
             centerTitle: true,
             elevation: 0,
           ),
@@ -145,16 +144,17 @@ class AccountPageState extends State<AccountPage> {
               padding: AppSpacings.a16,
               children: [
                 Text(
-                  localizations.personal,
+                  context.l10n.personal,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 16),
+
                 InputText(
-                  hintText: "${localizations.name}*",
+                  hintText: "${context.l10n.name}*",
                   controller: _nameController,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return localizations.nameError;
+                      return context.l10n.nameError;
                     }
                     return null;
                   },
@@ -169,10 +169,10 @@ class AccountPageState extends State<AccountPage> {
                 const SizedBox(height: 16),
                 InputText(
                   controller: _surnameController,
-                  hintText: "${localizations.surname}*",
+                  hintText: "${context.l10n.surname}*",
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return localizations.surnameError;
+                      return context.l10n.surnameError;
                     }
                     return null;
                   },
@@ -189,32 +189,32 @@ class AccountPageState extends State<AccountPage> {
                 const SizedBox(height: 16),
                 InputText(
                   controller: _callingNameController,
-                  hintText: localizations.callingName,
+                  hintText: context.l10n.callingName,
                   onSubmitted: (value) => context.read<AuthCubit>().updateRecipient(
                         recipient.copyWith(callingName: value),
                       ),
                 ),
                 const SizedBox(height: 16),
                 InputDropdown<String>(
-                  label: "${localizations.gender}*",
+                  label: "${context.l10n.gender}*",
                   items: [
                     DropdownMenuItem(
                       value: "male",
-                      child: Text(localizations.male),
+                      child: Text(context.l10n.male),
                     ),
                     DropdownMenuItem(
                       value: "female",
-                      child: Text(localizations.female),
+                      child: Text(context.l10n.female),
                     ),
                     DropdownMenuItem(
                       value: "other",
-                      child: Text(localizations.other),
+                      child: Text(context.l10n.other),
                     ),
                   ],
                   value: recipient.gender,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return localizations.genderError;
+                      return context.l10n.genderError;
                     }
                     return null;
                   },
@@ -226,7 +226,7 @@ class AccountPageState extends State<AccountPage> {
                 ),
                 const SizedBox(height: 16),
                 InputText(
-                  hintText: "${localizations.dateOfBirth}*",
+                  hintText: "${context.l10n.dateOfBirth}*",
                   controller: _birthDateController,
                   isReadOnly: true,
                   onTap: () async => showDatePicker(
@@ -236,14 +236,17 @@ class AccountPageState extends State<AccountPage> {
                     context: context,
                   ).then((value) {
                     if (value != null) {
-                      final timestamp = Timestamp.fromDate(value);
+                      // Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check.
+                      if (context.mounted) {
+                        final timestamp = Timestamp.fromDate(value);
 
-                      context.read<AuthCubit>().updateRecipient(
-                            recipient.copyWith(
-                              birthDate: timestamp,
-                            ),
-                          );
-                      _birthDateController.text = getFormattedDate(timestamp, locale) ?? "";
+                        context.read<AuthCubit>().updateRecipient(
+                              recipient.copyWith(
+                                birthDate: timestamp,
+                              ),
+                            );
+                        _birthDateController.text = getFormattedDate(timestamp, locale) ?? "";
+                      }
                     }
                     return;
                   }),
@@ -253,27 +256,27 @@ class AccountPageState extends State<AccountPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return localizations.dateOfBirthError;
+                      return context.l10n.dateOfBirthError;
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 16),
                 InputDropdown<String>(
-                  label: "${localizations.language}*",
+                  label: "${context.l10n.language}*",
                   items: [
                     DropdownMenuItem(
                       value: "en",
-                      child: Text(localizations.english),
+                      child: Text(context.l10n.english),
                     ),
                     DropdownMenuItem(
                       value: "kri",
-                      child: Text(localizations.krio),
+                      child: Text(context.l10n.krio),
                     ),
                   ],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return localizations.languageError;
+                      return context.l10n.languageError;
                     }
                     return null;
                   },
@@ -289,7 +292,7 @@ class AccountPageState extends State<AccountPage> {
 
                 const SizedBox(height: 16),
                 InputText(
-                  hintText: localizations.email,
+                  hintText: context.l10n.email,
                   controller: _emailController,
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty) {
@@ -306,7 +309,7 @@ class AccountPageState extends State<AccountPage> {
                       r"^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$",
                     );
                     if (!emailRegex.hasMatch(value)) {
-                      return localizations.errorEmailInvalid;
+                      return context.l10n.errorEmailInvalid;
                     }
 
                     return null;
@@ -314,12 +317,12 @@ class AccountPageState extends State<AccountPage> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  localizations.paymentPhone,
+                  context.l10n.paymentPhone,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 16),
                 InputText(
-                  hintText: "${localizations.paymentNumber}*",
+                  hintText: "${context.l10n.paymentNumber}*",
                   isReadOnly: true,
                   controller: _paymentNumberController,
                   keyboardType: TextInputType.number,
@@ -334,11 +337,11 @@ class AccountPageState extends State<AccountPage> {
                   },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return localizations.paymentNumberError;
+                      return context.l10n.paymentNumberError;
                     }
 
                     if (int.tryParse(value) == null) {
-                      return localizations.paymentNumberError2;
+                      return context.l10n.paymentNumberError2;
                     }
 
                     return null;
@@ -346,7 +349,7 @@ class AccountPageState extends State<AccountPage> {
                 ),
                 const SizedBox(height: 16),
                 InputDropdown<String>(
-                  label: "${localizations.mobilePaymentProvider}*",
+                  label: "${context.l10n.mobilePaymentProvider}*",
                   items: const [
                     DropdownMenuItem(
                       value: "orange_money_sl",
@@ -360,7 +363,7 @@ class AccountPageState extends State<AccountPage> {
                   value: recipient.paymentProvider,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return localizations.paymentProviderError;
+                      return context.l10n.paymentProviderError;
                     }
                     return null;
                   },
@@ -372,21 +375,21 @@ class AccountPageState extends State<AccountPage> {
 
                 /// CONTACT PHONE
                 Text(
-                  localizations.contactPhone,
+                  context.l10n.contactPhone,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 16),
                 InputText(
-                  hintText: "${localizations.contactNumber}*",
+                  hintText: "${context.l10n.contactNumber}*",
                   controller: _contactNumberController,
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return localizations.contactNumberError;
+                      return context.l10n.contactNumberError;
                     }
 
                     if (int.tryParse(value) == null) {
-                      return localizations.contactNumberError2;
+                      return context.l10n.contactNumberError2;
                     }
 
                     return null;
@@ -425,17 +428,17 @@ class AccountPageState extends State<AccountPage> {
 
                 /// SUCCESSOR IN THE CASE OF DEATH
                 Text(
-                  localizations.inCaseOfDeathTitle,
+                  context.l10n.inCaseOfDeathTitle,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  localizations.inCaseOfDeathDescription,
+                  context.l10n.inCaseOfDeathDescription,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 16),
                 InputText(
-                  hintText: localizations.successorName,
+                  hintText: context.l10n.successorName,
                   controller: _successorNameController,
                   keyboardType: TextInputType.name,
                   onSubmitted: (value) {
@@ -449,34 +452,34 @@ class AccountPageState extends State<AccountPage> {
                 if (widget.organization != null) OrganizationInfo(organization: widget.organization!),
                 const SizedBox(height: 24),
                 Text(
-                  localizations.support,
+                  context.l10n.support,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 16),
-                Text(localizations.supportInfo),
+                Text(context.l10n.supportInfo),
                 const SizedBox(height: 16),
                 ButtonBig(
                   onPressed: () => showDialog(
                     context: context,
                     builder: (context) => const SocialIncomeContactDialog(),
                   ),
-                  label: localizations.getInTouch,
+                  label: context.l10n.getInTouch,
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  localizations.account,
+                  context.l10n.account,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 16),
-                Text(localizations.accountInfo),
+                Text(context.l10n.accountInfo),
                 const SizedBox(height: 16),
                 ButtonBig(
                   onPressed: () => context.read<AuthCubit>().logout(),
-                  label: localizations.signOut,
+                  label: context.l10n.signOut,
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  "${localizations.appVersion} ${_packageInfo.version} (${_packageInfo.buildNumber})",
+                  "${context.l10n.appVersion} ${_packageInfo.version} (${_packageInfo.buildNumber})",
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.labelSmall,
                 ),

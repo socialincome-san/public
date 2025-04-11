@@ -12,11 +12,14 @@ fi
 
 # Verify Flutter version
 echo "Verify Flutter version..."
-REQUIRED_VERSION="3.19.6"
-CURRENT_VERSION=$(flutter --version | head -n 1 | awk '{print $2}')
+REQUIRED_VERSION=$(grep flutter .tool-versions | awk '{print $2}')
+CURRENT_VERSION=$(flutter --version | grep -m 1 "^Flutter" | awk '{print $2}')
 if [ "$CURRENT_VERSION" != "$REQUIRED_VERSION" ]; then
     echo "Error: Flutter version $REQUIRED_VERSION is required (current: $CURRENT_VERSION)"
     exit 1
+else
+    echo "Required version: $REQUIRED_VERSION == Current version: $CURRENT_VERSION"
+    echo "Flutter version is correct"
 fi
 
 echo "Cleaning Flutter build..."

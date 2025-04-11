@@ -37,11 +37,14 @@
 		"questions": {
 			"yesNoChoices": {
 				"yes": "Yes",
-				"no": "No"
+				"no": "No",
+				"true": "Yes",
+				"false": "No"
 			},
 			"livingLocationTitleV1": "Where do you live?",
+			"livingLocationDescV1": "Freetown = Western Area Urban",
 			"livingLocationChoices": {
-				"westernAreaUrbanFreetown": "Western Area Urban (Freetown)",
+				"westernAreaUrbanFreetown": "Western Area Urban",
 				"westernAreaRural": "Western Area Rural",
 				"easternProvince": "Eastern Province",
 				"northernProvince": "Northern Province",
@@ -79,24 +82,28 @@
 			"skippingMealsTitleV1": "Do you or other family members in your household ever skip meals because there wasn't enough money for food?",
 			"skippingMealsLastWeekTitleV1": "Did this happen last week?",
 			"skippingMealsLastWeek3MealsTitleV1": "Did you skip more than 3 meals in the past week?",
-			"unexpectedExpensesCoveredTitleV1": "Do you have enough money to cover unexpected expenses like seeing a doctor costing 100 SLE?",
+			"unexpectedExpensesCoveredTitleV1": "Do you have enough money to cover unexpected expenses like seeing a doctor?",
+			"unexpectedExpensesCoveredDescV1": "A doctor costing for example 100 SLE or above.",
 			"savingsTitleV1": "Are you currently able to save money?",
-			"debtPersonalTitleV1": "Are you in debt? (SLE 500 or above)",
+			"debtPersonalTitleV1": "Are you in debt?",
+			"debtPersonalDescV1": "SLE 500 or above.",
 			"debtPersonalRepayTitleV1": "Are you able to repay the debt?",
-			"debtHouseholdTitleV1": "Is anyone in your household in debt? (SLE 500 or above)",
+			"debtHouseholdTitleV1": "Is anyone in your household in debt?",
+			"debtHouseholdDescV1": "SLE 500 or above.",
 			"debtHouseholdWhoRepaysTitleV1": "Are you the main person repaying the debt?",
 			"otherSupportTitleV1": "Are you currently receiving any other form of financial support from anywhere else?",
 			"plannedAchievementTitleV1": "What do you hope to achieve within the next 3 years with Social Income? ",
 
-			"spendingTitleV1": "Tell us what are the key categories that you spend your Social Income payments on:",
+			"spendingTitleV1": "What are the key categories that you spend your Social Income payments on?",
+			"spendingDescV1": "Education: school fees, stationary, textbooks etc. // Food for you or your household // Housing: rent, house maintenance etc. // Health care: doctor, hospital visit, medicine etc. // Transportation: bus, taxi, poda poda, keke etc. // Saving: on bank account or mobile money account etc. // Investment: fertilizers, tools, diesel for machinery etc.",
 			"spendingChoices": {
-				"education": "Education (school fees, stationary, textbooks ...)",
-				"food": "Food for you or your household",
-				"housing": "Housing (rent, house maintenance ...)",
-				"healthCare": "Health care (doctor, hospital visit, medicine ...)",
-				"mobility": "Transportation (bus, taxi, poda poda, keke ...)",
-				"saving": "Saving for the future (saving it in a bank account or on my mobile money account ...)",
-				"investment": "Investment (fertilizers, tools, diesel for machinery ...)"
+				"education": "Education",
+				"food": "Food",
+				"housing": "Housing",
+				"healthCare": "Health care",
+				"mobility": "Transportation",
+				"saving": "Savings",
+				"investment": "Investment"
 			},
 			"spendingRankingTitleV1": "Please rank the selected spending categories from the most important to the least.",
 			"spendingRankingDescV1": "You can drag and drop the categories.",

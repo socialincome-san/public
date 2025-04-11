@@ -8,7 +8,7 @@
 		"twitter-image": "/assets/metadata/twitter/default.jpg"
 	},
 	"navigation": {
-		"our-promise": "Modèle à 100 %",
+		"our-promise": "Notre promesse",
 		"about-us": "Qui nous sommes",
 		"contact": "Contact",
 		"contributors": "Donateurs et donatrices",
@@ -28,7 +28,9 @@
 		"team": "Équipe",
 		"partners": "Partenaires",
 		"transparency": "Transparence",
-		"whats-next": "Suite"
+		"impact-measurement": "Réponses à l’enquête",
+		"whats-next": "Suite",
+		"journal": "Journal"
 	},
 	"footer": {
 		"follow-us": "Suis-nous",

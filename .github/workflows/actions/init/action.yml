@@ -20,14 +20,14 @@ runs:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 18
+        node-version: 22
         cache: npm
         cache-dependency-path: package-lock.json
 
-    - name: Install and set up firebase-tools
+    - name: Install and set up vercel & firebase-tools
       shell: bash
       run: |
-        npm -g install firebase-tools@13.20.2 && \
+        npm -g install firebase-tools@13.29.3 vercel@39.2.6 && \
         firebase setup:emulators:firestore && \
         firebase setup:emulators:storage && \
         firebase setup:emulators:ui

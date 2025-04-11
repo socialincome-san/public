@@ -17,6 +17,7 @@ export async function initializeGlobalTestData(projectId?: string) {
 		name: 'Aurora',
 		contactName: 'Contact Person',
 		contactNumber: '002020203020',
+		communitySize: 100,
 	});
 
 	// exchange rate entry for April 15, 2023
@@ -199,7 +200,7 @@ export async function initializeGlobalTestData(projectId?: string) {
 
 	await firestoreAdmin.doc<Recipient>(RECIPIENT_FIRESTORE_PATH).set({
 		gender: 'male',
-		organisation: 'organisations/aurora',
+		organisation: firestoreAdmin.doc<PartnerOrganisation>('organisations', 'aurora'),
 		progr_status: RecipientProgramStatus.Former,
 		birth_date: new Date(2001, 0, 1),
 		first_name: 'Test1',
@@ -213,7 +214,7 @@ export async function initializeGlobalTestData(projectId?: string) {
 
 	await firestoreAdmin.doc<Recipient>(RECIPIENT_FIRESTORE_PATH).set({
 		gender: 'female',
-		organisation: 'organisations/aurora',
+		organisation: firestoreAdmin.doc<PartnerOrganisation>('organisations', 'aurora'),
 		progr_status: RecipientProgramStatus.Active,
 		birth_date: new Date(2001, 0, 2),
 		first_name: 'Test2',
@@ -227,7 +228,7 @@ export async function initializeGlobalTestData(projectId?: string) {
 
 	await firestoreAdmin.doc<Recipient>(RECIPIENT_FIRESTORE_PATH).set({
 		gender: 'female',
-		organisation: 'organisations/aurora',
+		organisation: firestoreAdmin.doc<PartnerOrganisation>('organisations', 'aurora'),
 		progr_status: RecipientProgramStatus.Active,
 		birth_date: new Date(2001, 0, 3),
 		first_name: 'Test3',
@@ -241,7 +242,7 @@ export async function initializeGlobalTestData(projectId?: string) {
 
 	await firestoreAdmin.doc<Recipient>(RECIPIENT_FIRESTORE_PATH, '3RqjohcNgUXaejFC7av8').set({
 		gender: 'female',
-		organisation: 'organisations/aurora',
+		organisation: firestoreAdmin.doc<PartnerOrganisation>('organisations', 'aurora'),
 		progr_status: RecipientProgramStatus.Designated,
 		birth_date: new Date(2001, 0, 4),
 		first_name: 'Test4',
@@ -255,7 +256,7 @@ export async function initializeGlobalTestData(projectId?: string) {
 
 	await firestoreAdmin.doc<Recipient>(RECIPIENT_FIRESTORE_PATH).set({
 		gender: 'male',
-		organisation: 'organisations/aurora',
+		organisation: firestoreAdmin.doc<PartnerOrganisation>('organisations', 'aurora'),
 		progr_status: RecipientProgramStatus.Waitlisted,
 		birth_date: new Date(2001, 0, 5),
 		first_name: 'Test5',

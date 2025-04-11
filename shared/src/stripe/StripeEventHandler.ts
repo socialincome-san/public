@@ -11,8 +11,8 @@ import {
 	StripeContribution,
 } from '../types/contribution';
 import { CountryCode } from '../types/country';
-import { Currency, bestGuessCurrency } from '../types/currency';
-import { USER_FIRESTORE_PATH, User, splitName } from '../types/user';
+import { bestGuessCurrency, Currency } from '../types/currency';
+import { splitName, User, USER_FIRESTORE_PATH } from '../types/user';
 
 export class StripeEventHandler {
 	readonly stripe: Stripe;
@@ -33,12 +33,12 @@ export class StripeEventHandler {
 
 		const checkoutMetadata = await this.getCheckoutMetadata(charge);
 
-		// We only store non-successful charges if the user already exists.
-		// This prevents us from having users in the database that never made a successful contribution.
-		if (
-			fullCharge.status === 'succeeded' ||
-			(await this.findFirestoreUser(await this.retrieveStripeCustomer(fullCharge.customer as string)))
-		) {
+		const firestoreUser = await this.findFirestoreUser(
+			await this.retrieveStripeCustomer(fullCharge.customer as string),
+		);
+		if (fullCharge.status === 'succeeded' || firestoreUser) {
+			// We only store non-successful charges if the user already exists.
+			// This prevents us from having users in the database that never made a successful contribution.
 			return await this.storeCharge(fullCharge, checkoutMetadata);
 		}
 		return null;
@@ -139,26 +139,6 @@ export class StripeEventHandler {
 		}
 	};
 
-	/**
-	 * Increments the total donations of a campaign if the charge is associated with a campaignId.
-	 */
-	maybeUpdateCampaign = async (contribution: StripeContribution): Promise<void> => {
-		if (contribution.campaign_path) {
-			try {
-				const campaign = await contribution.campaign_path.get();
-				const current_contributions = campaign.data()?.contributions ?? 0;
-				const current_amount_chf = campaign.data()?.amount_collected_chf ?? 0;
-				await contribution.campaign_path.update({
-					contributions: current_contributions + 1,
-					amount_collected_chf: current_amount_chf + contribution.amount_chf,
-				});
-				console.log(`Campaign amount ${contribution.campaign_path} updated.`);
-			} catch (error) {
-				console.error(`Error updating campaign amount ${contribution.campaign_path}.`, error);
-			}
-		}
-	};
-
 	constructStatus = (status: Stripe.Charge.Status) => {
 		switch (status) {
 			case 'succeeded':
@@ -205,9 +185,8 @@ export class StripeEventHandler {
 		const contributionRef = (
 			userRef.collection(CONTRIBUTION_FIRESTORE_PATH) as CollectionReference<StripeContribution>
 		).doc(charge.id);
-		await contributionRef.set(contribution);
-		console.info(`Ingested ${charge.id} into firestore for user ${userRef.id}`);
-		await this.maybeUpdateCampaign(contribution);
+		await contributionRef.set(contribution, { merge: true });
+		console.info(`Updated contribution document: ${contributionRef.path}`);
 		return contributionRef;
 	};
 }

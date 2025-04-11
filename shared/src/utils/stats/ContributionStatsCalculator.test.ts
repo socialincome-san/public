@@ -5,7 +5,7 @@ import { FirestoreAdmin } from '../../firebase/admin/FirestoreAdmin';
 import { getOrInitializeFirebaseAdmin } from '../../firebase/admin/app';
 import { toFirebaseAdminTimestamp } from '../../firebase/admin/utils';
 import { CONTRIBUTION_FIRESTORE_PATH, ContributionSourceKey, StatusKey } from '../../types/contribution';
-import { USER_FIRESTORE_PATH, User } from '../../types/user';
+import { User, USER_FIRESTORE_PATH } from '../../types/user';
 import { ContributionStatsCalculator } from './ContributionStatsCalculator';
 
 const projectId = 'contribution-stats-calculator-test';

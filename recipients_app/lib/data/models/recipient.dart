@@ -78,10 +78,6 @@ class Recipient extends Equatable {
   @JsonKey(name: "successor")
   final String? successorName;
 
-  // this should be got from `/recipients/<recipient.id>/payments` collection
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  final List<SocialIncomePayment>? payments;
-
   const Recipient({
     required this.userId,
     required this.communicationMobilePhone,
@@ -102,7 +98,6 @@ class Recipient extends Equatable {
     this.imLinkRegular,
     this.nextSurvey,
     this.organizationRef,
-    this.payments = const [],
     this.updatedBy,
     this.successorName,
   });
@@ -129,7 +124,6 @@ class Recipient extends Equatable {
       imLinkRegular,
       nextSurvey,
       organizationRef,
-      payments,
       updatedBy,
       successorName,
     ];
@@ -155,7 +149,6 @@ class Recipient extends Equatable {
     String? imLinkRegular,
     Timestamp? nextSurvey,
     DocumentReference? organizationRef,
-    List<SocialIncomePayment>? payments,
     String? updatedBy,
     String? successorName,
   }) {
@@ -180,7 +173,6 @@ class Recipient extends Equatable {
       imLinkRegular: imLinkRegular ?? this.imLinkRegular,
       nextSurvey: nextSurvey ?? this.nextSurvey,
       organizationRef: organizationRef ?? this.organizationRef,
-      payments: payments ?? this.payments,
       updatedBy: updatedBy ?? this.updatedBy,
       successorName: successorName ?? this.successorName,
     );

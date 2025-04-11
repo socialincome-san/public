@@ -32,15 +32,7 @@
 		"fundraiser": "Raccolta fondi",
 		"permalink": "Permalink"
 	},
-	"ngos": [
-		"aurora-foundation",
-		"jamil-&-nyanga-jaward-foundation",
-		"reachout-salone",
-		"equal-rights-alliance",
-		"united-polio-brothers-and-sisters",
-		"sierra-leone-association-of-ebola-survivors"
-	],
-	"aurora-foundation": {
+	"aurora": {
 		"org-slug": "aurora-foundation",
 		"org-short-name": "Aurora Foundation",
 		"org-long-name": "Aurora Foundation",
@@ -51,10 +43,6 @@
 		"org-category": "International NGO",
 		"org-focus-sdg-numbers": [1, 8],
 		"partnership-start": "2020",
-		"recipients-total": "42",
-		"recipients-active": "20",
-		"recipients-former": "22",
-		"recipients-suspended": "0",
 		"org-mission": "L'ONG sostiene la creatività e aiuta le persone a migliorare la propria vita e le comunità attraverso progetti di sviluppo e culturali.",
 		"org-description-paragraphs": [
 			[
@@ -98,7 +86,7 @@
 		"org-instagram": "https://www.instagram.com/aurorafoundation_official/?hl=en",
 		"org-facebook": "https://www.facebook.com/aurorafoundationofficial/"
 	},
-	"jamil-&-nyanga-jaward-foundation": {
+	"jamil": {
 		"org-slug": "jamil-&-nyanga-jaward-foundation",
 		"org-short-name": "JNJF",
 		"org-long-name": "Jamil & Nyanga Jaward Foundation",
@@ -109,10 +97,6 @@
 		"org-category": "Local NGO",
 		"org-focus-sdg-numbers": [1, 5],
 		"partnership-start": "2021",
-		"recipients-total": "35",
-		"recipients-active": "28",
-		"recipients-former": "7",
-		"recipients-suspended": "0",
 		"org-mission": "L'ONG fornisce a vedove e bambini bisognosi istruzione, supporto e opportunità per costruire un futuro migliore.",
 		"org-description-paragraphs": [
 			[
@@ -145,7 +129,7 @@
 		"org-facebook": "https://www.facebook.com/JNJFoundation",
 		"org-linkedin": "https://www.linkedin.com/company/the-jamil-nyanga-jaward-foundation/"
 	},
-	"reachout-salone": {
+	"reachout": {
 		"org-slug": "reachout-salone",
 		"org-short-name": "Reachout Salone",
 		"org-long-name": "Reachout Salone",
@@ -156,10 +140,6 @@
 		"org-category": "Local NGO",
 		"org-focus-sdg-numbers": [1, 5],
 		"partnership-start": "2021",
-		"recipients-total": "36",
-		"recipients-active": "12",
-		"recipients-former": "24",
-		"recipients-suspended": "0",
 		"org-mission": "L'ONG sostiene le comunità costiere, offrendo ai giovani il supporto e le opportunità necessari per spezzare il ciclo della povertà e costruire un futuro migliore.",
 		"org-description-paragraphs": [
 			[
@@ -190,7 +170,7 @@
 		"org-facebook": "https://www.facebook.com/profile.php?id=100070050743284&sk=about_details",
 		"org-youtube": "https://www.youtube.com/@reachoutsalone8395"
 	},
-	"equal-rights-alliance": {
+	"equal_rights": {
 		"org-slug": "equal-rights-alliance",
 		"org-short-name": "Equal Rights Alliance",
 		"org-long-name": "Equal Rights Alliance",
@@ -201,10 +181,6 @@
 		"org-category": "Local NGO",
 		"org-focus-sdg-numbers": [3, 10],
 		"partnership-start": "2022",
-		"recipients-total": "13",
-		"recipients-active": "13",
-		"recipients-former": "0",
-		"recipients-suspended": "0",
 		"org-mission": "L'ONG promuove i diritti umani sensibilizzando ai diritti uguali, all'inclusione e alla giustizia sociale nelle comunità.",
 		"org-description-paragraphs": [
 			[
@@ -234,7 +210,7 @@
 		"org-photo": "",
 		"org-facebook": "https://www.facebook.com/groups/693921621002955/"
 	},
-	"united-polio-brothers-and-sisters": {
+	"united_polio": {
 		"org-slug": "united-polio-brothers-and-sisters",
 		"org-short-name": "United Polio Brothers and Sisters",
 		"org-long-name": "United Polio Brothers and Sisters",
@@ -245,10 +221,6 @@
 		"org-category": "Local NGO",
 		"org-focus-sdg-numbers": [1, 8],
 		"partnership-start": "2022",
-		"recipients-total": "10",
-		"recipients-active": "10",
-		"recipients-former": "0",
-		"recipients-suspended": "0",
 		"org-mission": "L'ONG sostiene persone disabili e vulnerabili, offrendo alloggi, formazione e risorse per migliorare la loro vita e preservare la loro dignità.",
 		"org-description-paragraphs": [
 			[
@@ -277,7 +249,7 @@
 		"org-quote-author": "Paul Osman Kabia",
 		"org-photo": ""
 	},
-	"sierra-leone-association-of-ebola-survivors": {
+	"slaes": {
 		"org-slug": "sierra-leone-association-of-ebola-survivors",
 		"org-short-name": "SLAES",
 		"org-long-name": "Sierra Leone Association of Ebola Survivors",
@@ -288,10 +260,6 @@
 		"org-category": "Local NGO",
 		"org-focus-sdg-numbers": [4, 5],
 		"partnership-start": "2024",
-		"recipients-total": "20",
-		"recipients-active": "17",
-		"recipients-former": "2",
-		"recipients-suspended": "1",
 		"org-mission": "L'ONG comunitaria sostiene le persone sopravvissute al virus Ebola, con un focus su coloro colpiti dalla devastante epidemia del 2014 in Sierra Leone.",
 		"org-description-paragraphs": [
 			[

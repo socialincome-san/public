@@ -1,3 +1,5 @@
+import { fetchData } from './fetch-data';
+
 const owner = 'socialincome-san';
 const repo = 'public';
 
@@ -11,28 +13,7 @@ interface GitHubStar {
 
 export async function getStarCount(): Promise<{ totalStars: number; newStars: number }> {
 	const repoUrl = `https://api.github.com/repos/${owner}/${repo}`;
-	const headers: Record<string, string> = {
-		Accept: 'application/vnd.github.star+json',
-	};
-	// Conditionally add the Authorization header if GITHUB_PAT is available
-	if (process.env.GITHUB_PAT) {
-		headers['Authorization'] = `Bearer ${process.env.GITHUB_PAT}`;
-	}
-	const repoRes = await fetch(repoUrl, {
-		headers,
-	});
-
-	if (!repoRes.ok) {
-		const errorDetails = await repoRes.text();
-		const status = repoRes.status;
-		if (status === 403) {
-			throw new Error(`GitHub API rate limit exceeded: ${status} - ${errorDetails}.`);
-		} else if (status === 404) {
-			throw new Error(`GitHub repository ${owner}/${repo} not found.`);
-		} else {
-			throw new Error(`Failed to fetch repository info from GitHub: ${status} - ${errorDetails}`);
-		}
-	}
+	const repoRes = await fetchData(owner, repo, repoUrl);
 
 	const repoData = await repoRes.json();
 	const totalStars = repoData.stargazers_count;
@@ -49,25 +30,7 @@ export async function getStarCount(): Promise<{ totalStars: number; newStars: nu
 	let hasMore = true;
 
 	while (hasMore) {
-		const pagedRes = await fetch(`${starUrl}&page=${page}`, {
-			headers,
-		});
-
-		if (!pagedRes.ok) {
-			const errorDetails = await pagedRes.text();
-			const status = pagedRes.status;
-
-			if (status === 403 && errorDetails.includes('API rate limit exceeded')) {
-				throw new Error(
-					'GitHub API rate limit exceeded during stargazers fetching. Please try again later or increase rate limit by authenticating.',
-				);
-			} else if (status === 404) {
-				throw new Error(`GitHub repository ${owner}/${repo} stargazers not found.`);
-			} else {
-				throw new Error(`Failed to fetch stargazers from GitHub: ${status} - ${errorDetails}`);
-			}
-		}
-
+		const pagedRes = await fetchData(owner, repo, `${starUrl}&page=${page}`);
 		const stars: GitHubStar[] = await pagedRes.json();
 
 		// Count new stars within the last 30 days

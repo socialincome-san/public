@@ -1,3 +1,5 @@
+import { fetchData } from './fetch-data';
+
 const owner = 'socialincome-san';
 const repo = 'public';
 
@@ -14,38 +16,14 @@ interface IssuesResponse {
 }
 
 export async function getIssuesData(): Promise<IssuesResponse> {
-	const headers: Record<string, string> = {
-		Accept: 'application/vnd.github+json',
-	};
-	if (process.env.GITHUB_PAT) {
-		headers['Authorization'] = `Bearer ${process.env.GITHUB_PAT}`;
-	}
-
 	const issues: Issue[] = [];
 	const labels: string[] = [];
 	let page = 1;
 	let hasMore = true;
 
 	while (hasMore) {
-		const res = await fetch(
-			`https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=100&page=${page}`,
-			{ headers },
-		);
-
-		if (!res.ok) {
-			const errorDetails = await res.text();
-			const status = res.status;
-			if (status === 403) {
-				throw new Error(
-					'GitHub API rate limit exceeded. Please try again later or increase rate limit by authenticating.',
-				);
-			} else if (status === 404) {
-				throw new Error(`GitHub repository ${owner}/${repo} not found.`);
-			} else {
-				throw new Error(`Failed to fetch issues from GitHub: ${status} - ${errorDetails}`);
-			}
-		}
-
+		const url = `https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=100&page=${page}`;
+		const res = await fetchData(owner, repo, url);
 		const data = await res.json();
 
 		// Break if no more issues

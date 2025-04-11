@@ -1,6 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
 import { DateTime } from 'luxon';
 import Stripe from 'stripe';
+import { clearFirestoreData } from '../../tests/utils';
 import { FirestoreAdmin } from '../firebase/admin/FirestoreAdmin';
 import { getOrInitializeFirebaseAdmin } from '../firebase/admin/app';
 import { toFirebaseAdminTimestamp } from '../firebase/admin/utils';
@@ -13,6 +14,10 @@ describe('stripeWebhook', () => {
 	const projectId = 'test-' + new Date().getTime();
 	const firestoreAdmin = new FirestoreAdmin(getOrInitializeFirebaseAdmin({ projectId: projectId }));
 	const stripeWebhook = new StripeEventHandler('DUMMY_KEY', firestoreAdmin);
+
+	beforeEach(async () => {
+		await clearFirestoreData(firestoreAdmin);
+	});
 
 	// Mock the Stripe API call
 	jest.spyOn(stripeWebhook.stripe.customers, 'retrieve').mockImplementation(async () => {
@@ -27,7 +32,7 @@ describe('stripeWebhook', () => {
 		expect(initialUser).toBeUndefined();
 
 		const ref = await stripeWebhook.storeCharge(testCharge, null);
-		const contribution = await ref!.get();
+		const contribution = await ref.get();
 		expect(contribution.data()).toEqual(expectedContribution);
 
 		const createdUser = (await stripeWebhook.findFirestoreUser(testCustomer))!.data();
@@ -48,7 +53,7 @@ describe('stripeWebhook', () => {
 		});
 
 		const ref = await stripeWebhook.storeCharge(testCharge, null);
-		const contribution = await ref!.get();
+		const contribution = await ref.get();
 		expect(contribution.data()).toEqual(expectedContribution);
 	});
 
@@ -58,7 +63,7 @@ describe('stripeWebhook', () => {
 		});
 
 		const ref = await stripeWebhook.storeCharge(testCharge, { campaignId: 'xyz' });
-		const contribution = await ref!.get();
+		const contribution = await ref.get();
 		expect(contribution.data()?.campaign_path).toEqual(
 			firestoreAdmin.firestore.collection(CAMPAIGN_FIRESTORE_PATH).doc('xyz'),
 		);
@@ -70,7 +75,7 @@ describe('stripeWebhook', () => {
 		});
 
 		const ref = await stripeWebhook.storeCharge(testCharge, null);
-		const contribution = await ref!.get();
+		const contribution = await ref.get();
 		expect(contribution.data()).toEqual(expectedContribution);
 	});
 
@@ -191,6 +196,7 @@ describe('stripeWebhook', () => {
 			automatically_finalizes_at: null,
 			auto_advance: false,
 			automatic_tax: {
+				disabled_reason: null,
 				liability: null,
 				enabled: false,
 				status: null,
@@ -362,6 +368,8 @@ describe('stripeWebhook', () => {
 		metadata: {},
 		on_behalf_of: null,
 		outcome: {
+			network_advice_code: null,
+			network_decline_code: null,
 			network_status: 'approved_by_network',
 			reason: null,
 			risk_level: 'normal',

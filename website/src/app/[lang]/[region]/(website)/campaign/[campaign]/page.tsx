@@ -6,6 +6,7 @@ import { firestoreAdmin } from '@/firebase-admin';
 import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { getMetadata } from '@/metadata';
 import { Campaign, CAMPAIGN_FIRESTORE_PATH, CampaignStatus } from '@socialincome/shared/src/types/campaign';
+import { Contribution, CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/src/types/contribution';
 import { daysUntilTs } from '@socialincome/shared/src/utils/date';
 import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRates';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -15,6 +16,7 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 	BaseContainer,
+	linkCn,
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
@@ -26,6 +28,8 @@ import {
 } from '@socialincome/ui';
 import { Progress } from '@socialincome/ui/src/components/progress';
 import Link from 'next/link';
+
+import NewsletterGlowContainer from '@/components/newsletter-glow-container/newsletter-glow-container';
 
 export type CampaignPageProps = {
 	params: {
@@ -63,7 +67,7 @@ export async function generateMetadata({ params }: CampaignPageProps) {
 export default async function Page({ params }: CampaignPageProps) {
 	const translator = await Translator.getInstance({
 		language: params.lang,
-		namespaces: ['website-campaign', 'website-donate', 'website-videos', 'website-faq'],
+		namespaces: ['website-campaign', 'website-donate', 'website-videos', 'website-faq', 'website-newsletter'],
 	});
 
 	const campaignDoc = await firestoreAdmin.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH).doc(params.campaign).get();
@@ -85,8 +89,14 @@ export default async function Page({ params }: CampaignPageProps) {
 		? await getLatestExchangeRate(firestoreAdmin, campaign.goal_currency)
 		: 1.0;
 
-	const contributions = campaign.contributions ?? 0;
-	const amountCollected = Math.round((campaign.amount_collected_chf ?? 0) * exchangeRate);
+	const contributions = await firestoreAdmin
+		.collectionGroup<Contribution>(CONTRIBUTION_FIRESTORE_PATH)
+		.where('campaign_path', '==', firestoreAdmin.firestore.doc([CAMPAIGN_FIRESTORE_PATH, params.campaign].join('/')))
+		.get();
+	let amountCollected = contributions.docs.reduce((sum, c) => sum + c.data().amount_chf, 0);
+	amountCollected += campaign.additional_amount_chf || 0;
+	amountCollected *= exchangeRate;
+
 	const percentageCollected = campaign.goal ? Math.round((amountCollected / campaign.goal) * 100) : undefined;
 	const daysLeft = daysUntilTs(campaign.end_date.toDate());
 
@@ -119,10 +129,10 @@ export default async function Page({ params }: CampaignPageProps) {
 							<div>
 								{!campaign.goal && (
 									<div className="mb-4 flex flex-col">
-										<Typography size="2xl" weight="medium" color="accent">
+										<Typography size="2xl" weight="medium" color="secondary">
 											{translator?.t('campaign.without-goal.collected', {
 												context: {
-													count: contributions,
+													count: contributions.docs.length,
 													amount: amountCollected,
 													currency: campaign.goal_currency,
 													total: campaign.goal,
@@ -157,7 +167,7 @@ export default async function Page({ params }: CampaignPageProps) {
 												<Typography size="md" color="primary">
 													{translator.t('campaign.with-goal.collected-amount', {
 														context: {
-															count: contributions,
+															count: contributions.docs.length,
 															amount: amountCollected,
 															currency: campaign.goal_currency,
 														},
@@ -262,6 +272,17 @@ export default async function Page({ params }: CampaignPageProps) {
 					</div>
 				</BaseContainer>
 			)}
+			<NewsletterGlowContainer
+				title={translator.t('campaign.information-label')}
+				lang={params.lang}
+				formTranslations={{
+					informationLabel: translator.t('popup.information-label'),
+					toastSuccess: translator.t('popup.toast-success'),
+					toastFailure: translator.t('popup.toast-failure'),
+					emailPlaceholder: translator.t('popup.email-placeholder'),
+					buttonAddSubscriber: translator.t('popup.button-subscribe'),
+				}}
+			/>
 			<BaseContainer>
 				<div className="grid grid-cols-1 gap-20 py-8 lg:grid-cols-2 lg:py-16">
 					<div>
@@ -340,7 +361,12 @@ export default async function Page({ params }: CampaignPageProps) {
 												<ul className="mt-4 flex list-outside list-disc flex-col space-y-1 pl-3">
 													{links.map((link: { title: string; href: string }, index: number) => (
 														<li key={index} className="mb-0 pl-3">
-															<Link href={link.href} target="_blank" rel="noreferrer" className="no-underline">
+															<Link
+																className={linkCn({ underline: 'none' })}
+																href={link.href}
+																target="_blank"
+																rel="noreferrer"
+															>
 																<Typography as="span" size="lg" color="primary" className="font-normal hover:underline">
 																	{link.title}
 																</Typography>

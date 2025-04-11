@@ -1,4 +1,6 @@
 import { roundAmount } from '@/app/[lang]/[region]/(website)/transparency/finances/[currency]/section-1';
+import { toCurrencyLocale } from '@/i18n';
+import { CountryCode } from '@socialincome/shared/src/types/country';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';
 import { SectionProps } from './page';
@@ -10,10 +12,11 @@ export async function Section3({ params, contributionStats }: SectionProps) {
 		namespaces: ['countries', 'website-finances'],
 	});
 	const totalContributionsByCountry = contributionStats.totalContributionsByCountry as {
-		country: string;
+		country: CountryCode;
 		amount: number;
 		usersCount: number;
 	}[];
+	const currencyLocale = toCurrencyLocale(params.lang, params.region, params.currency, { maximumFractionDigits: 0 });
 
 	return (
 		<div>
@@ -36,8 +39,7 @@ export async function Section3({ params, contributionStats }: SectionProps) {
 									context: {
 										contributorsCount: entry.usersCount,
 										value: roundAmount(entry.amount),
-										currency: params.currency,
-										maximumFractionDigits: 0,
+										...currencyLocale,
 									},
 								}),
 							}}

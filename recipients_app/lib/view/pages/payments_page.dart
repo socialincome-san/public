@@ -1,11 +1,11 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/models/models.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/payment_tile.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 class PaymentsPage extends StatefulWidget {
   const PaymentsPage({super.key});
@@ -19,15 +19,13 @@ class _PaymentsPageState extends State<PaymentsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     final recipient = context.watch<AuthCubit>().state.recipient;
     final paymentsUiState = context.watch<PaymentsCubit>().state.paymentsUiState!;
 
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text(localizations.payments),
+        title: Text(context.l10n.payments),
         centerTitle: true,
       ),
       body: RefreshIndicator(
@@ -48,7 +46,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        localizations.orangeMoneyNumber,
+                        context.l10n.orangeMoneyNumber,
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       const SizedBox(height: 4),
@@ -67,7 +65,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                localizations.pastPayments,
+                                context.l10n.pastPayments,
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               const SizedBox(height: 4),
@@ -86,7 +84,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                localizations.futurePayments,
+                                context.l10n.futurePayments,
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               const SizedBox(height: 4),
@@ -95,7 +93,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                                     ? _calculateFuturePayments(
                                         paymentsUiState.payments,
                                       )
-                                    : localizations.paymentsSuspended,
+                                    : context.l10n.paymentsSuspended,
                                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                                       color: paymentsUiState.status != BalanceCardStatus.onHold
                                           ? AppColors.primaryColor
@@ -118,7 +116,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                 padding: AppSpacings.a8,
                 child: Center(
                   child: Text(
-                    localizations.paymentsEmptyList,
+                    context.l10n.paymentsEmptyList,
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -143,21 +141,33 @@ class _PaymentsPageState extends State<PaymentsPage> {
   String _calculatePastPayments(List<MappedPayment> mappedPayments) {
     var total = 0;
 
-    for (final mappedPayment in mappedPayments) {
-      // some of the users still have SLL from begining of the program,
-      // we will change it to SLE
-      final factor = (mappedPayment.payment.currency == "SLL") ? 1000 : 1;
-      total += (mappedPayment.payment.amount ?? 0) ~/ factor;
+    final List<MappedPayment> paidOrConfirmedPayments = _getAllPaidOrConfirmedPayments(mappedPayments);
+
+    for (final payment in paidOrConfirmedPayments) {
+      // Some of the users still have the currency SLL from the begining of the program. We will change it to SLE.
+      final factor = (payment.payment.currency == "SLL") ? 1000 : 1;
+      total += (payment.payment.amount ?? 0) ~/ factor;
     }
 
-    return "${mappedPayments.firstOrNull?.payment.currency ?? "SLE"} $total";
+    return "${paidOrConfirmedPayments.firstOrNull?.payment.currency ?? "SLE"} $total";
   }
 
   String _calculateFuturePayments(List<MappedPayment> mappedPayments) {
-    // due to problem that payment amount can change we need to calculate
-    // the future payments without calculation of previous payments
-    final futurePayments = (kProgramDurationMonths - mappedPayments.length) * kCurrentPaymentAmount;
+    final List<MappedPayment> paidOrConfirmedPayments = _getAllPaidOrConfirmedPayments(mappedPayments);
 
-    return "${mappedPayments.firstOrNull?.payment.currency ?? "SLE"} $futurePayments";
+    // Due to problem that payment amount can change, we need to calculate the future payments without calculation of previous payments
+    final futurePayments = (kProgramDurationMonths - paidOrConfirmedPayments.length) * kCurrentPaymentAmount;
+
+    return "${paidOrConfirmedPayments.firstOrNull?.payment.currency ?? "SLE"} $futurePayments";
+  }
+
+  List<MappedPayment> _getAllPaidOrConfirmedPayments(List<MappedPayment> mappedPayments) {
+    final paidOrConfirmedPayments = mappedPayments.where(
+      (payment) {
+        final paymentStatus = payment.payment.status;
+        return paymentStatus == PaymentStatus.paid || paymentStatus == PaymentStatus.confirmed;
+      },
+    ).toList();
+    return paidOrConfirmedPayments;
   }
 }

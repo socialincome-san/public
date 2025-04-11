@@ -1,8 +1,8 @@
 import "package:app/core/helpers/flushbar_helper.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:url_launcher/url_launcher_string.dart";
 
 class SocialIncomeContactDialog extends StatelessWidget {
@@ -10,8 +10,6 @@ class SocialIncomeContactDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
     return FractionallySizedBox(
       widthFactor: 0.9,
       heightFactor: 0.8,
@@ -31,14 +29,14 @@ class SocialIncomeContactDialog extends StatelessWidget {
                   children: [
                     Image(
                       image: const AssetImage("assets/team.png"),
-                      width: MediaQuery.of(context).size.width * 0.6,
+                      width: MediaQuery.sizeOf(context).width * 0.6,
                     ),
                     Text(
-                      localizations.supportTeam,
+                      context.l10n.supportTeam,
                       style: Theme.of(context).textTheme.headlineLarge,
                     ),
                     Text(
-                      localizations.getInTouch,
+                      context.l10n.getInTouch,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   ],
@@ -52,13 +50,13 @@ class SocialIncomeContactDialog extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     _IconAndContact(
-                      contactMethod: localizations.phone,
+                      contactMethod: context.l10n.phone,
                       contactDetails: "+232 75 588647",
                       onOpen: (String value) => makePhoneCall(value),
                     ),
                     const SizedBox(height: 16),
                     _IconAndContact(
-                      contactMethod: localizations.email,
+                      contactMethod: context.l10n.email,
                       contactDetails: "hello@socialincome.org",
                       onOpen: (String value) => writeEmail(value),
                     ),
@@ -66,7 +64,7 @@ class SocialIncomeContactDialog extends StatelessWidget {
                 ),
                 ButtonBig(
                   onPressed: () => Navigator.of(context).pop(),
-                  label: localizations.close,
+                  label: context.l10n.close,
                 ),
               ],
             ),
@@ -77,8 +75,6 @@ class SocialIncomeContactDialog extends StatelessWidget {
   }
 
   Future<void> openWhatsapp(BuildContext context, String number) async {
-    final localizations = AppLocalizations.of(context)!;
-
     final whatsappURL = "whatsapp://send?phone=$number&text=hello";
     if (await canLaunchUrlString(whatsappURL)) {
       await launchUrlString(whatsappURL);
@@ -86,7 +82,7 @@ class SocialIncomeContactDialog extends StatelessWidget {
       if (context.mounted) {
         FlushbarHelper.showFlushbar(
           context,
-          message: localizations.whatsappError,
+          message: context.l10n.whatsappError,
           type: FlushbarType.error,
         );
       }

@@ -7,7 +7,7 @@ export const FALLBACK_LANGUAGE = 'en';
 interface TranslateProps {
 	namespace?: string;
 	language?: string;
-	context?: object;
+	context?: Record<string, unknown> & Partial<Intl.ResolvedNumberFormatOptions>;
 }
 
 interface TranslatorProps {
@@ -55,7 +55,7 @@ export class Translator {
 		return translator;
 	}
 
-	public t: TranslateFunction = <T = string>(key: string, translateProps?: TranslateProps): T => {
+	public t: TranslateFunction = <T = string>(key: string, translateProps?: TranslateProps) => {
 		return this.instance.t(key, {
 			ns: translateProps?.namespace || this.namespaces,
 			lng: translateProps?.language || this.language,

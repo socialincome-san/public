@@ -9,7 +9,8 @@
 		"since-march-2020": "Depuis mars 2020",
 		"totalContributions": "{{ contributorCount }} donateurs pour un montant total de {{value, currency}}",
 		"totalPayments": "{{ value }} paiements par téléphonie mobile effectués",
-		"totalRecipients": "{{ value }} bénéficiaires engagés dans un programme de 3 ans"
+		"totalRecipients": "{{ value }} bénéficiaires soutenus par un programme de 3 ans",
+		"activeRecipients": "{{ value }} bénéficiaires actifs"
 	},
 	"section-2": {
 		"title": "Comment Social Income est-il financé?",

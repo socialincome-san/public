@@ -18,12 +18,13 @@ const FONT_SIZE_MAP: { [key in FontSize]: string } = {
 	xs: 'text-xs',
 };
 
-const FONT_WEIGHTS = ['normal', 'medium', 'bold'] as const;
+const FONT_WEIGHTS = ['normal', 'medium', 'bold', 'semibold'] as const;
 export type FontWeight = (typeof FONT_WEIGHTS)[number];
 const FONT_WEIGHT_MAP: { [key in FontWeight]: string } = {
 	normal: 'font-normal',
 	medium: 'font-medium',
 	bold: 'font-bold',
+	semibold: 'font-semibold',
 };
 
 const FONT_COLOR_MAP: { [key in FontColor]: string } = {
@@ -62,6 +63,7 @@ export type TypographyProps<C extends React.ElementType> = {
 	weight?: FontWeight;
 	color?: FontColor;
 	lineHeight?: LineHeight;
+	children?: React.ReactNode;
 } & ComponentPropsWithoutRef<C>;
 
 export function Typography<C extends React.ElementType = 'p'>({

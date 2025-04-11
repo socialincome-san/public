@@ -10,7 +10,13 @@ import {
 	NgoEntryJSON,
 	NgoHoverCardType,
 } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
+import { firestoreAdmin } from '@/firebase-admin';
+import { RecipientProgramStatus } from '@socialincome/shared/src/types/recipient';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
+import {
+	OrganisationRecipientsByStatus,
+	RecipientStatsCalculator,
+} from '@socialincome/shared/src/utils/stats/RecipientStatsCalculator';
 import { CH, SL } from 'country-flag-icons/react/1x1';
 import { ReactElement } from 'react';
 
@@ -22,6 +28,7 @@ const country_abbreviations_to_flag_map: Record<string, ReactElement> = {
 function getFlag(abbreviation: string): ReactElement {
 	return country_abbreviations_to_flag_map[abbreviation] || <SL className="h-5 w-5 rounded-full" />;
 }
+export const ngos = ['aurora', 'jamil', 'reachout', 'equal_rights', 'united_polio', 'slaes'];
 
 export async function NgoList({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
@@ -30,21 +37,28 @@ export async function NgoList({ lang, region }: DefaultParams) {
 	});
 	const image_base_path = '/assets/partners/';
 
-	const ngos: string[] = translator.t('ngos');
-	const ngoArray: NgoEntryJSON[] = [];
-	ngos.forEach((slug: string) => {
-		const ngo: NgoEntryJSON = translator.t(slug);
-		ngoArray.push(ngo);
-	});
+	const ngoArray: NgoEntryJSON[] = ngos.map((slug: string) => translator.t(slug));
 	const ngoCardPropsArray: NgoCardProps[] = [];
 
+	const recipientCalculator = await RecipientStatsCalculator.build(firestoreAdmin);
+	const recipientStats: OrganisationRecipientsByStatus =
+		recipientCalculator.allStats().recipientsCountByOrganisationAndStatus;
+
 	for (let i = 0; i < ngoArray.length; ++i) {
+		const currentOrgRecipientStats = recipientStats[ngos[i]];
+
 		const recipientsBadge: RecipientsBadgeType = {
 			hoverCardOrgName: ngoArray[i]['org-long-name'],
-			hoverCardTotalRecipients: ngoArray[i]['recipients-total'],
-			hoverCardTotalActiveRecipients: ngoArray[i]['recipients-active'],
-			hoverCardTotalFormerRecipients: ngoArray[i]['recipients-former'],
-			hoverCardTotalSuspendedRecipients: ngoArray[i]['recipients-suspend'],
+			hoverCardTotalRecipients: currentOrgRecipientStats ? currentOrgRecipientStats['total'] : 0,
+			hoverCardTotalActiveRecipients: currentOrgRecipientStats
+				? currentOrgRecipientStats[RecipientProgramStatus.Active]
+				: 0,
+			hoverCardTotalFormerRecipients: currentOrgRecipientStats
+				? currentOrgRecipientStats[RecipientProgramStatus.Former]
+				: 0,
+			hoverCardTotalSuspendedRecipients: currentOrgRecipientStats
+				? currentOrgRecipientStats[RecipientProgramStatus.Suspended]
+				: 0,
 			translatorBadgeRecipients: '',
 			translatorBadgeRecipientsBy: '',
 			translatorBadgeActive: '',

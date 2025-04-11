@@ -1,4 +1,5 @@
 import { DocumentReference } from 'firebase-admin/firestore';
+import { Campaign } from './campaign';
 import { Currency } from './currency';
 import { Timestamp } from './timestamp';
 
@@ -22,21 +23,24 @@ export enum StatusKey {
 
 export type Contribution = StripeContribution | BankWireContribution;
 
+/**
+ * Represents a contribution to Social Income. The amount that ends up on our account is amount_chf - fees_chf.
+ */
 type BaseContribution = {
 	source: ContributionSourceKey;
 	status: StatusKey;
 	created: Timestamp;
 	amount: number;
-	amount_chf: number;
-	fees_chf: number;
+	amount_chf: number; // Amount donated in CHF, including fees
+	fees_chf: number; // Transaction fees in CHF
 	currency: Currency;
-	campaign_path?: DocumentReference;
+	campaign_path?: DocumentReference<Campaign>;
 };
 
 export type StripeContribution = BaseContribution & {
 	source: ContributionSourceKey.STRIPE;
 	monthly_interval: number;
-	reference_id: string; // stripe charge id
+	reference_id: string; // The stripe charge id, see: https://docs.stripe.com/api/charges
 };
 
 export type BankWireContribution = BaseContribution & {

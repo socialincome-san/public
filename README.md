@@ -10,15 +10,16 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
 
 ## OSS Tools by Social Income
 
-|                  |                                                Admin Tool                                                 |                                                 Website                                                 |                                                                                  Mobile App                                                                                   |
-| ---------------- | :-------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|                  |    ![](https://github.com/socialincome-san/public/assets/6095849/42a8ce3e-4ff3-4d25-a298-1b4bc1570b0a)    |   ![](https://github.com/socialincome-san/public/assets/6095849/e4dbf692-d4b9-4253-88ea-2da7970919d8)   |                                      ![](https://github.com/socialincome-san/public/assets/6095849/94d0f653-d894-4e9e-ab0d-b1cd8bfe9eab)                                      |
-| **Purpose**      |                      Make it simple to manage payments, contributors and recipients                       |                                 Raising donations and inform the public                                 |                                                         Make it simple for recipients to manage payments and surveys                                                          |
-| **Instructions** |                                         [Readme](admin/README.md)                                         |                                       [Readme](website/README.md)                                       |                                              [Readme](recipients_app/README.md) / [Contributing](recipients_app/CONTRIBUTING.md)                                              |
-| **Localhost**    |                  [localhost:3000](http://localhost:3000) / [4000](http://localhost:4000)                  |                                 [localhost:3001](http://localhost:3001)                                 |                                                                                       –                                                                                       |
-| **Staging**      |                 [staging-admin.socialincome.org](https://staging-admin.socialincome.org)                  |                      [staging.socialincome.org](https://staging.socialincome.org/)                      |                         [Testflight](https://developer.apple.com/testflight/) / [App Distribution](https://firebase.google.com/docs/app-distribution)                         |
-| **Production**   |                         [admin.socialincome.org](https://admin.socialincome.org)                          |                              [socialincome.org](https://socialincome.org)                               | [iOS](https://apps.apple.com/ch/app/social-income/id6444860109?l=en-GB) / [Android](https://play.google.com/store/apps/details?id=org.socialincome.app&pcampaignid=web_share) |
-| **Issues**       | [Open issues](https://github.com/socialincome-san/public/issues?q=is%3Aissue+is%3Aopen+label%3Aadmintool) | [Open issues](https://github.com/socialincome-san/public/issues?q=is%3Aissue+is%3Aopen+label%3Awebsite) |                                   [Open issues](https://github.com/socialincome-san/public/issues?q=is%3Aissue+is%3Aopen+label%3Amobileapp)                                   |
+|                  |                                                Admin Tool                                                 |                                                                                       Website                                                                                        |                                                                                  Mobile App                                                                                   |
+| ---------------- | :-------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                  |    ![](https://github.com/socialincome-san/public/assets/6095849/42a8ce3e-4ff3-4d25-a298-1b4bc1570b0a)    |                                         ![](https://github.com/socialincome-san/public/assets/6095849/e4dbf692-d4b9-4253-88ea-2da7970919d8)                                          |                                      ![](https://github.com/socialincome-san/public/assets/6095849/94d0f653-d894-4e9e-ab0d-b1cd8bfe9eab)                                      |
+| **Purpose**      |                      Make it simple to manage payments, contributors and recipients                       |                                                                       Raising donations and inform the public                                                                        |                                                         Make it simple for recipients to manage payments and surveys                                                          |
+| **Instructions** |                                         [Readme](admin/README.md)                                         |                                                                             [Readme](website/README.md)                                                                              |                                              [Readme](recipients_app/README.md) / [Contributing](recipients_app/CONTRIBUTING.md)                                              |
+| **Localhost**    |                  [localhost:3000](http://localhost:3000) / [4000](http://localhost:4000)                  |                                                                       [localhost:3001](http://localhost:3001)                                                                        |                                                                                       –                                                                                       |
+| **Staging**      |                 [staging-admin.socialincome.org](https://staging-admin.socialincome.org)                  |                                                            [staging.socialincome.org](https://staging.socialincome.org/)                                                             |                         [Testflight](https://developer.apple.com/testflight/) / [App Distribution](https://firebase.google.com/docs/app-distribution)                         |
+| **Production**   |                         [admin.socialincome.org](https://admin.socialincome.org)                          |                                                                     [socialincome.org](https://socialincome.org)                                                                     | [iOS](https://apps.apple.com/ch/app/social-income/id6444860109?l=en-GB) / [Android](https://play.google.com/store/apps/details?id=org.socialincome.app&pcampaignid=web_share) |
+| **Issues**       | [Open issues](https://github.com/socialincome-san/public/issues?q=is%3Aissue+is%3Aopen+label%3Aadmintool) |                                       [Open issues](https://github.com/socialincome-san/public/issues?q=is%3Aissue+is%3Aopen+label%3Awebsite)                                        |                                   [Open issues](https://github.com/socialincome-san/public/issues?q=is%3Aissue+is%3Aopen+label%3Amobileapp)                                   |
+| **UI Library**   |                                                     –                                                     | [Storybook](http://design.socialincome.org/) / [Figma](<https://www.figma.com/design/qGO3YI21AWIjWEyMPGUczM/Social-Income-Main-(Web%2C-App)?node-id=1653-6882&t=7cJ3pA0DfVrVtrDA-1>) |                                                                                       –                                                                                       |
 
 # Code Contributions
 
@@ -45,7 +46,8 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
 [shadcn/ui](https://ui.shadcn.com) independent of the website
 ([Readme](ui/README.md) / [Contributing](ui/CONTRIBUTING.md)). The
 components are all collected in our
-[Storybook](https://socialincome-san.github.io/public/).
+[Storybook](http://design.socialincome.org/) and
+[Figma file](<https://www.figma.com/design/qGO3YI21AWIjWEyMPGUczM/Social-Income-Main-(Web%2C-App)?node-id=1653-6882&t=7cJ3pA0DfVrVtrDA-1>).
 
 ### Basic Development Setup
 
@@ -205,6 +207,21 @@ your [Admin Tool](http://localhost:3000) or the
 locally. After making any changes, you can export the updated data to
 the seed folder using the command `npm run firebase:export`.
 
+#### Storyblok Development
+
+1. Read the storyblok [documentation](https://www.storyblok.com/docs).
+2. Set the values `STORYBLOK_PREVIEW_TOKEN` and
+   `STORYBLOK_PREVIEW_SECRET` to the
+   [env.development](website/.env.local). You can find the
+   `STORYBLOK_PREVIEW_TOKEN` at the
+   [storyblok_token](https://app.storyblok.com/#/me/spaces/109655/settings?tab=api)
+   and the `STORYBLOK_PREVIEW_SECRET` at the
+   [VISUAL_EDITOR](https://app.storyblok.com/#/me/spaces/109655/settings?tab=editor)
+   in the `preview-url`.
+3. (optional-step) `npm run dev:ssl-proxy`, this is needed if you want
+   to preview the changes on the storyblok live editor for the local
+   environment.
+
 #### Format Code
 
 We are using [Prettier](https://prettier.io) to format the code:
@@ -320,6 +337,7 @@ We receive in-kind donations from
 [Codemagic](https://codemagic.io/start/), [Linktree](https://linktr.ee),
 [Twilio](https://twilio.org), [Algolia](https://www.algolia.com),
 [JetBrains](https://www.jetbrains.com),
+[Storyblok](https://www.storyblok.com),
 [1Password](https://1password.com/), [Mux](https://www.mux.com/),
 [Sentry](https://sentry.io) and [Lineto](https://www.lineto.com). Our
 tools also leverage other open-source technologies, including solutions

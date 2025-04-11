@@ -1,4 +1,5 @@
 import { firestoreAdmin } from '@/firebase-admin';
+import { toCurrencyLocale } from '@/i18n';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { BanknotesIcon, BuildingLibraryIcon, DevicePhoneMobileIcon } from '@heroicons/react/24/solid';
 import { PAYMENT_AMOUNT_SLE } from '@socialincome/shared/src/types/payment';
@@ -15,6 +16,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 	const expensesTotal = _.sum(Object.values(expensesStats.totalExpensesByType)) + paymentStats.totalPaymentsAmount;
 	const reservesTotal = contributionStats.totalContributionsAmount - expensesTotal;
 	const exchangeRateSLE = await getLatestExchangeRate(firestoreAdmin, 'SLE');
+	const currencyLocale = toCurrencyLocale(params.lang, params.region, params.currency, { maximumFractionDigits: 0 });
 
 	return (
 		<div className="flex flex-col space-y-8">
@@ -28,8 +30,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 				title={translator.t('amount', {
 					context: {
 						value: roundAmount(expensesTotal),
-						currency: params.currency,
-						maximumFractionDigits: 0,
+						...currencyLocale,
 					},
 				})}
 				text={translator.t('section-4.amount-since-march-2020')}
@@ -41,9 +42,8 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 								{translator.t('section-4.payments-total', {
 									context: {
 										value: roundAmount(paymentStats.totalPaymentsAmount),
-										currency: params.currency,
-										maximumFractionDigits: 0,
 										recipientsCount: paymentStats.totalRecipientsCount,
+										...currencyLocale,
 									},
 								})}
 							</Typography>
@@ -52,9 +52,8 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 							{translator.t('section-4.payments-last-month', {
 								context: {
 									value: roundAmount(_.last(paymentStats.totalPaymentsByMonth)?.amount as number),
-									currency: params.currency,
-									maximumFractionDigits: 0,
 									recipientsCount: _.last(paymentStats.totalPaymentsByMonth)?.recipientsCount,
+									...currencyLocale,
 								},
 							})}
 						</Typography>
@@ -64,8 +63,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 									value: roundAmount(
 										contributionStats.totalIndividualContributionsAmount - paymentStats.totalPaymentsAmount,
 									),
-									currency: params.currency,
-									maximumFractionDigits: 0,
+									...currencyLocale,
 								},
 							})}
 						</Typography>
@@ -79,8 +77,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 								{translator.t('section-4.project-costs', {
 									context: {
 										value: roundAmount(_.sum(Object.values(expensesStats.totalExpensesByType))),
-										currency: params.currency,
-										maximumFractionDigits: 0,
+										...currencyLocale,
 									},
 								})}
 							</Typography>
@@ -89,8 +86,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 							{translator.t('section-4.donation-fees', {
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.donation_fees),
-									currency: params.currency,
-									maximumFractionDigits: 0,
+									...currencyLocale,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -106,8 +102,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 							{translator.t('section-4.delivery-fees', {
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.delivery_fees),
-									currency: params.currency,
-									maximumFractionDigits: 0,
+									...currencyLocale,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -123,8 +118,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 							{translator.t('section-4.exchange-rate-loss', {
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.exchange_rate_loss),
-									currency: params.currency,
-									maximumFractionDigits: 0,
+									...currencyLocale,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -140,8 +134,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 							{translator.t('section-4.account-fees', {
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.account_fees),
-									currency: params.currency,
-									maximumFractionDigits: 0,
+									...currencyLocale,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -158,8 +151,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 							{translator.t('section-4.staff-costs', {
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.staff),
-									currency: params.currency,
-									maximumFractionDigits: 0,
+									...currencyLocale,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -175,8 +167,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 							{translator.t('section-4.fundraising-costs', {
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.fundraising_advertising),
-									currency: params.currency,
-									maximumFractionDigits: 0,
+									...currencyLocale,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -192,8 +183,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 							{translator.t('section-4.administrative-costs', {
 								context: {
 									value: roundAmount(expensesStats.totalExpensesByType.administrative),
-									currency: params.currency,
-									maximumFractionDigits: 0,
+									...currencyLocale,
 								},
 							})}
 							<TooltipProvider delayDuration={100}>
@@ -214,8 +204,7 @@ export async function Section4({ params, expensesStats, paymentStats, contributi
 				title={translator.t('amount', {
 					context: {
 						value: roundAmount(reservesTotal),
-						currency: params.currency,
-						maximumFractionDigits: 0,
+						...currencyLocale,
 					},
 				})}
 				text={translator.t('section-4.amount-since-march-2020')}

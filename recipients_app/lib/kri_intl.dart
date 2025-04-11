@@ -391,6 +391,7 @@ class _KriCupertinoLocalizationsDelegate extends LocalizationsDelegate<Cupertino
         singleDigitHourFormat: intl.DateFormat("d", localeName),
         singleDigitMinuteFormat: intl.DateFormat("d", localeName),
         singleDigitSecondFormat: intl.DateFormat("d", localeName),
+        weekdayFormat: intl.DateFormat("EEE", localeName),
       ),
     );
   }
@@ -410,11 +411,11 @@ class KriCupertinoLocalizations extends GlobalCupertinoLocalizations {
     required super.singleDigitHourFormat,
     required super.singleDigitMinuteFormat,
     required super.doubleDigitMinuteFormat,
-    required super.singleDigitSecondFormat,
+    required super.singleDigitSecondFormat, 
+    required super.weekdayFormat,
   });
 
-  static const LocalizationsDelegate<CupertinoLocalizations> delegate =
-      _KriCupertinoLocalizationsDelegate();
+  static const LocalizationsDelegate<CupertinoLocalizations> delegate = _KriCupertinoLocalizationsDelegate();
 
   @override
   String datePickerYear(int yearIndex) => yearIndex.toString();
@@ -459,8 +460,7 @@ class KriCupertinoLocalizations extends GlobalCupertinoLocalizations {
   DatePickerDateOrder get datePickerDateOrder => DatePickerDateOrder.mdy;
 
   @override
-  DatePickerDateTimeOrder get datePickerDateTimeOrder =>
-      DatePickerDateTimeOrder.date_time_dayPeriod;
+  DatePickerDateTimeOrder get datePickerDateTimeOrder => DatePickerDateTimeOrder.date_time_dayPeriod;
 
   @override
   String get anteMeridiemAbbreviation => "AM";
@@ -664,8 +664,7 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
     required super.twoDigitZeroPaddedFormat,
   });
 
-  static const LocalizationsDelegate<MaterialLocalizations> delegate =
-      _KriMaterialLocalizationsDelegate();
+  static const LocalizationsDelegate<MaterialLocalizations> delegate = _KriMaterialLocalizationsDelegate();
 
   // #docregion Getters
   @override
@@ -1134,4 +1133,10 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
 
   @override
   String get shareButtonLabel => "Share...";
+
+  @override
+  String get clearButtonTooltip => "Clear text";
+
+  @override
+  String get selectedDateLabel => "Selected";
 }

@@ -2,52 +2,55 @@ name: app
 description: Social Income App
 
 publish_to: "none"
-version: 1.1.13+30
+version: 1.1.14+36
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
-  flutter: 3.19.6
+  sdk: ">=3.6.0 <4.0.0"
+  flutter: 3.27.3
 
 dependencies:
   animations: ^2.0.11
   another_flushbar: ^1.12.30
-  cloud_firestore: ^4.17.2
-  collection: ^1.18.0
-  equatable: ^2.0.5
-  firebase_app_check: ^0.2.2
-  firebase_auth: ^4.19.4
-  firebase_core: ^2.30.1
-  firebase_messaging: ^14.9.1
+  cloud_firestore: ^5.6.3
+  collection: ^1.19.0
+  equatable: ^2.0.7
+  firebase_app_check: ^0.3.2+2
+  firebase_auth: ^5.4.2
+  firebase_core: ^3.11.0
+  firebase_messaging: ^15.2.2
   flutter:
     sdk: flutter
-  flutter_bloc: ^8.1.5
+  flutter_bloc: ^8.1.6
   flutter_localizations:
     sdk: flutter
-  flutter_native_splash: ^2.4.0
-
-  intl: ^0.18.0
-  intl_phone_number_input: ^0.7.4
+  flutter_native_splash: ^2.4.3
+  intl: ^0.19.0
+  # v0.8.0 is not publish on pub.dev but it is released on Github. This version fixes the build error on iOS with the message "Cannot find type 'PhoneNumberKit' in scope".
+  intl_phone_number_input:
+    git:
+      url: https://github.com/natintosh/intl_phone_number_input.git
+      ref: v0.8.0
   json_annotation: ^4.9.0
-  json_serializable: ^6.8.0
-  package_info_plus: ^8.0.0
+  json_serializable: ^6.9.2
+  package_info_plus: ^8.1.2
   # https://github.com/chrisedg87/flutter_rounded_loading_button/pull/74
   rounded_loading_button:
     git:
       url: https://github.com/ShamilPP/flutter_rounded_loading_button.git
       ref: master
-  sentry_flutter: ^8.2.0
-  url_launcher: ^6.2.6
-  webview_flutter: ^4.7.0
+  sentry_flutter: ^8.11.2
+  url_launcher: ^6.3.1
+  webview_flutter: ^4.10.0
 
 dev_dependencies:
-  alchemist: ^0.7.0
+  alchemist: ^0.11.0
   bloc_test: ^9.1.7
-  build_runner: ^2.4.9
+  build_runner: ^2.4.14
 
   flutter_test:
     sdk: flutter
   lint: ^2.3.0
-  mocktail: ^1.0.3
+  mocktail: ^1.0.4
 
 flutter:
   uses-material-design: true

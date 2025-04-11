@@ -1,5 +1,4 @@
 import "package:app/data/models/payment/payment_ui_status.dart";
-import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
 
 const statusIconRadius = 10.0;
@@ -14,50 +13,14 @@ class PaymentStatusIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late Color backgroundColor;
-    late Widget? child;
-
-    switch (status) {
-      case PaymentUiStatus.confirmed:
-        backgroundColor = AppColors.primaryColor;
-        child = const Icon(
-          size: 14,
-          Icons.check_rounded,
-          color: Colors.white,
-        );
-      case PaymentUiStatus.empty:
-      case PaymentUiStatus.toBePaid:
-        backgroundColor = AppColors.backgroundColor;
-        child = null;
-      case PaymentUiStatus.toReview:
-      case PaymentUiStatus.contested:
-        backgroundColor = AppColors.yellowColor;
-        child = const Icon(
-          size: 14,
-          Icons.priority_high_rounded,
-          color: Colors.black,
-        );
-      case PaymentUiStatus.recentToReview:
-        backgroundColor = AppColors.primaryColor;
-        child = const Icon(
-          size: 14,
-          Icons.question_mark_rounded,
-          color: Colors.white,
-        );
-      case PaymentUiStatus.onHoldToReview:
-      case PaymentUiStatus.onHoldContested:
-        backgroundColor = AppColors.redColor;
-        child = const Icon(
-          size: 14,
-          Icons.close_rounded,
-          color: Colors.black,
-        );
-    }
-
     return CircleAvatar(
       radius: statusIconRadius,
-      backgroundColor: backgroundColor,
-      child: child,
+      backgroundColor: status.color,
+      child: Icon(
+        size: 14,
+        status.icon,
+        color: status.iconColor,
+      ),
     );
   }
 }

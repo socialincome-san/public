@@ -8,6 +8,6 @@ export default function Page() {
 	const { currency } = useI18n();
 
 	useEffect(() => {
-		redirect('./finances/' + currency?.toLowerCase());
+		if (currency) redirect('./finances/' + currency.toLowerCase());
 	}, [currency]);
 }

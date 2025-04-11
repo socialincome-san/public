@@ -1,38 +1,25 @@
+import "package:app/data/datasource/survey_data_source.dart";
 import "package:app/data/models/models.dart";
 import "package:app/data/models/survey/survey.dart";
-import "package:app/data/repositories/repositories.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
-
-const String surveyCollection = "surveys";
+import "package:app/demo_manager.dart";
 
 class SurveyRepository {
-  final FirebaseFirestore firestore;
+  final SurveyDataSource remoteDataSource;
+  final SurveyDataSource demoDataSource;
+
+  final DemoManager demoManager;
 
   const SurveyRepository({
-    required this.firestore,
+    required this.remoteDataSource,
+    required this.demoDataSource,
+    required this.demoManager,
   });
+
+  SurveyDataSource get _activeDataSource => demoManager.isDemoEnabled ? demoDataSource : remoteDataSource;
 
   Future<List<Survey>> fetchSurveys({
     required String recipientId,
   }) async {
-    final surveys = <Survey>[];
-
-    final surveysDocs = await firestore
-        .collection(recipientCollection)
-        .doc(recipientId)
-        .collection(surveyCollection)
-        .get();
-
-    for (final surveyDoc in surveysDocs.docs) {
-      final survey = Survey.fromJson(surveyDoc.data());
-
-      surveys.add(
-        survey.copyWith(id: surveyDoc.id),
-      );
-    }
-
-    surveys.sort((a, b) => a.id.compareTo(b.id));
-
-    return surveys;
+    return _activeDataSource.fetchSurveys(recipientId: recipientId);
   }
 }

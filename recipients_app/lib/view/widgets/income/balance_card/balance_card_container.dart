@@ -1,5 +1,6 @@
 import "package:app/core/cubits/payment/payments_cubit.dart";
 import "package:app/data/models/payment/payment.dart";
+import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/payment_tile.dart";
 import "package:app/view/pages/payments_page.dart";
@@ -9,7 +10,6 @@ import "package:app/view/widgets/income/balance_card/balance_card_header.dart";
 import "package:app/view/widgets/income/balance_card/on_hold_bottom_card.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 const _kShowPaymentCardStatuses = [
   PaymentUiStatus.contested,
@@ -22,10 +22,7 @@ class BalanceCardContainer extends DashboardItem {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-
-    final paymentsUiState =
-        context.watch<PaymentsCubit>().state.paymentsUiState;
+    final paymentsUiState = context.watch<PaymentsCubit>().state.paymentsUiState;
 
     final MappedPayment? lastPaidPayment = paymentsUiState?.lastPaidPayment;
 
@@ -51,12 +48,11 @@ class BalanceCardContainer extends DashboardItem {
                       BalanceCardHeader(
                         daysTo: paymentsUiState?.nextPayment.daysToPayment ?? 0,
                         amount: paymentsUiState?.nextPayment.amount ?? 0,
-                        balanceCardStatus: paymentsUiState?.status ??
-                            BalanceCardStatus.allConfirmed,
+                        balanceCardStatus: paymentsUiState?.status ?? BalanceCardStatus.allConfirmed,
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        localizations.myPayments,
+                        context.l10n.myPayments,
                         style: const TextStyle(
                           color: Colors.black,
                           fontSize: 13.0,
@@ -74,14 +70,12 @@ class BalanceCardContainer extends DashboardItem {
             ),
           ),
         ),
-        if (paymentsUiState != null &&
-            paymentsUiState.status == BalanceCardStatus.onHold) ...[
+        if (paymentsUiState != null && paymentsUiState.status == BalanceCardStatus.onHold) ...[
           OnHoldBottomCard(
             reviewAction: () => _navigateToPaymentsList(context),
           ),
         ],
-        if (lastPaidPayment != null &&
-            _kShowPaymentCardStatuses.contains(lastPaidPayment.uiStatus)) ...[
+        if (lastPaidPayment != null && _kShowPaymentCardStatuses.contains(lastPaidPayment.uiStatus)) ...[
           PaymentTile(mappedPayment: lastPaidPayment),
         ],
         const SizedBox(height: 4),

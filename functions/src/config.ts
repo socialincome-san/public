@@ -14,8 +14,4 @@ export const POSTFINANCE_FTP_HOST = process.env.POSTFINANCE_FTP_HOST!;
 export const POSTFINANCE_FTP_PORT = process.env.POSTFINANCE_FTP_PORT!;
 export const POSTFINANCE_FTP_USER = process.env.POSTFINANCE_FTP_USER!;
 
-export const TWILIO_SID = process.env.TWILIO_SID!;
-export const TWILIO_TOKEN = process.env.TWILIO_TOKEN!;
-export const TWILIO_SENDER_PHONE = process.env.TWILIO_SENDER_PHONE!;
-
 export const EXCHANGE_RATES_API = process.env.EXCHANGE_RATES_API!;
