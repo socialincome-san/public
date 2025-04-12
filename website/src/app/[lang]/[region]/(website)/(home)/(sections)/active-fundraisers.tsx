@@ -9,7 +9,20 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import ismatuImage from '../(assets)/avatar-ismatu.png';
 
-export function ActiveFundraisers({ lang }: DefaultParams) {
+type DefaultPageProps = {
+	campaignProps: {
+		id: string;
+		creatorName: string;
+		title: string;
+		contributorCount: number;
+		goalCurrency: string;
+		goal?: string;
+		percentageCollected?: number;
+	}[];
+	totalCampaignCount: number;
+} & DefaultParams;
+
+export function ActiveFundraisers({ lang, campaignProps, totalCampaignCount }: DefaultPageProps) {
 	const [translator, setTranslator] = useState<Translator | null>(null);
 	const [showFundraiserCards, setShowFundraiserCards] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -97,7 +110,7 @@ export function ActiveFundraisers({ lang }: DefaultParams) {
 						</svg>
 						<div className="flex flex-col pl-2">
 							<Typography size="lg" className="text-popover-foreground-muted">
-								Loading fundraisers
+								Searching current fundraisers
 							</Typography>
 						</div>
 					</div>
@@ -106,10 +119,10 @@ export function ActiveFundraisers({ lang }: DefaultParams) {
 
 			{showFundraiserCards && (
 				<div className="flex flex-wrap justify-center gap-4">
-					{[...Array(3)].map((_, index) => (
+					{campaignProps.map((campaignData, index) => (
 						<Link
 							key={index}
-							href={`https://socialincome.org`}
+							href={`/${lang}/campaign/${campaignData.id}`}
 							className={`border-text-popover-foreground-muted hover:bg-primary hover:border-primary group relative flex w-[260px] items-center rounded-full border-2 px-6 py-2 transition-all duration-300 hover:w-[280px] hover:text-white ${index === 1 ? 'hidden md:flex' : index === 2 ? 'hidden lg:flex' : ''}`}
 						>
 							<div className="-ml-2 mr-2 h-10 w-10 overflow-hidden rounded-full transition-transform duration-300 group-hover:scale-125">
@@ -119,25 +132,25 @@ export function ActiveFundraisers({ lang }: DefaultParams) {
 								<div className="text-popover-foreground-muted flex w-[150px] items-center space-x-1 group-hover:hidden">
 									<Typography size="lg">{translator.t('badges.by')}</Typography>
 									<Typography size="lg" className="overflow-hidden truncate whitespace-nowrap">
-										Ismatu Banjura
+										{campaignData.creatorName}
 									</Typography>
 								</div>
 								<div className="text-primary w-[150px] group-hover:hidden">
 									<Typography size="lg" weight="medium" className="overflow-hidden truncate whitespace-nowrap">
-										Rebuilding Lives
+										{campaignData.title}
 									</Typography>
 								</div>
 								<div className="flex items-baseline space-x-2 leading-none">
 									<Typography size="lg" className="hidden text-white group-hover:inline">
-										USD 43,000
+										{campaignData.goalCurrency} {campaignData.goal || ''}
 									</Typography>
 									<Typography size="sm" className="text-accent hidden group-hover:inline">
-										23%
+										{campaignData.percentageCollected || ''}
 									</Typography>
 								</div>
 								<div className="text-accent hidden items-center space-x-1 group-hover:flex">
 									<Typography size="lg" weight="medium">
-										2344
+										{campaignData.contributorCount}
 									</Typography>
 									<Typography size="lg" weight="medium">
 										{translator.t('badges.contributors')}
@@ -155,7 +168,7 @@ export function ActiveFundraisers({ lang }: DefaultParams) {
 			{showFundraiserCards && (
 				<div className="mt-6">
 					<Link href={`/${lang}/fundraisers`} className="text-primary hover:underline">
-						See all X fundraisers
+						See all {totalCampaignCount} fundraisers
 					</Link>
 				</div>
 			)}
