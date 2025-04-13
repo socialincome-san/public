@@ -59,7 +59,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 				))}
 			</div>
 
-			<div className="grid-cols-0 mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+			<div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 				{blogs.map((blog) => (
 					<StoryblokArticleCard lang={lang} region={region} blog={blog} author={blog.content.author} key={blog.uuid} />
 				))}

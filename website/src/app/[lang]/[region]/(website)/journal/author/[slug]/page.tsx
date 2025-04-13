@@ -37,7 +37,7 @@ export default async function Page(props: { params: { slug: string; lang: Langua
 				</div>
 			</div>
 
-			<div className="grid-cols-0 mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+			<div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 				{blogs.map((blog) => (
 					<StoryblokArticleCard key={blog.uuid} lang={lang} region={region} blog={blog} author={author} />
 				))}

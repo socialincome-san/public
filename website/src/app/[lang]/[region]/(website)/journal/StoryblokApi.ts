@@ -10,7 +10,7 @@ import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { ISbStories, ISbStoriesParams, ISbStoryData } from 'storyblok-js-client/src/interfaces';
 
-const STANDARD_RELATIONS_TO_RESOLVE = ['article.author', 'article.tags', 'article.type'];
+const STANDARD_ARTICLE_RELATIONS_TO_RESOLVE = ['article.author', 'article.tags', 'article.type'];
 const DEFAULT_LIMIT = 50;
 const NOT_FOUND = 404;
 const DEFAULT_LANGUAGE = 'en';
@@ -25,6 +25,16 @@ export function getPublishedDateFormatted(date: string, lang: string) {
 // During the development of Storyblok features or writing of new content, it is useful to use the draft version of the content.
 function addVersionParameter(properties: ISbStoriesParams): ISbStoriesParams {
 	return { ...properties, version: draftMode().isEnabled ? 'draft' : 'published' };
+}
+
+// Based on official documentation: https://www.storyblok.com/faq/image-dimensions-assets-js
+// format example: a.storyblok.com/f/51376/664x488/f4f9d1769c/visual-editor-features.jpg
+export function getDimensionsFromStoryblokImageUrl(url: string): { width: number; height: number } {
+	let dimensions = url.split('/')[5].split('x');
+	return {
+		width: Number(dimensions[0]),
+		height: Number(dimensions[1]),
+	};
 }
 
 export async function getAuthors(lang: string): Promise<ISbStories<StoryblokAuthor>> {
@@ -55,7 +65,7 @@ export async function getTags(lang: string): Promise<ISbStories<StoryblokTag>> {
 
 export async function getArticlesByTag(tagId: string, lang: string): Promise<ISbStories<StoryblokArticle>> {
 	const params: ISbStoriesParams = {
-		resolve_relations: STANDARD_RELATIONS_TO_RESOLVE,
+		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
 		language: lang,
 		excluding_fields: CONTENT,
 		sort_by: 'first_published_at:desc',
@@ -77,7 +87,7 @@ export async function getArticlesByAuthor(
 	const params: ISbStoriesParams = {
 		per_page: limit,
 		excluding_fields: CONTENT,
-		resolve_relations: STANDARD_RELATIONS_TO_RESOLVE,
+		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
 		language: lang,
 		sort_by: 'first_published_at:desc',
 		content_type: StoryblokContentType.Article,
@@ -98,7 +108,7 @@ export async function getOverviewArticles(
 	const params: ISbStoriesParams = {
 		per_page: limit,
 		excluding_fields: CONTENT,
-		resolve_relations: STANDARD_RELATIONS_TO_RESOLVE,
+		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
 		language: lang,
 		sort_by: 'first_published_at:desc',
 		content_type: StoryblokContentType.Article,
@@ -157,7 +167,7 @@ export async function getWithFallback<T>(
 }
 
 function createRelativeArticlesFilter(tags: string[], authorId: string) {
-	return !!tags
+	return tags && tags.length
 		? {
 				__or: [
 					{
@@ -190,7 +200,7 @@ async function getRelativeArticlesByAuthorAndTags(
 	const params: ISbStoriesParams = {
 		per_page: numberOfArticles,
 		excluding_fields: CONTENT,
-		resolve_relations: STANDARD_RELATIONS_TO_RESOLVE,
+		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
 		language: lang,
 		sort_by: 'first_published_at:desc',
 		excluding_ids: articleId.toString(),
@@ -200,6 +210,10 @@ async function getRelativeArticlesByAuthorAndTags(
 	return getStoryblokApi().get(STORIES_PATH, addVersionParameter(params));
 }
 
+/*
+ * Returns relative articles by the same author or the same tag. It excludes the current article by {articleId}.
+ * If there are not enough articles, the latest articles of the overview pages are returned.
+ * */
 export async function getRelativeArticles(
 	authorId: string,
 	articleId: number,
@@ -207,24 +221,29 @@ export async function getRelativeArticles(
 	lang: string,
 	numberOfArticles: number,
 ): Promise<ISbStoryData<StoryblokArticle>[]> {
-	const related = await getRelativeArticlesByAuthorAndTags(authorId, tags, lang, articleId, numberOfArticles);
-	let stories = related.data.stories;
-
-	if (stories.length < numberOfArticles) {
-		const idsToIgnore = [...stories.map((s) => s.id), articleId].join(',');
-		const remaining = numberOfArticles - stories.length;
-		const extra = await getOverviewArticles(lang, idsToIgnore, remaining);
-		stories = [...stories, ...extra.data.stories];
+	const relatedArticlesResponse = await getRelativeArticlesByAuthorAndTags(
+		authorId,
+		tags,
+		lang,
+		articleId,
+		numberOfArticles,
+	);
+	let result = relatedArticlesResponse.data.stories;
+	if (result.length < numberOfArticles) {
+		const idsToIgnore = [...result.map((s) => s.id), articleId].join(',');
+		const remaining = numberOfArticles - result.length;
+		const overviewArticles = await getOverviewArticles(lang, idsToIgnore, remaining);
+		result = [...result, ...overviewArticles.data.stories];
 	}
 
-	return stories;
+	return result;
 }
 
 export async function getArticle(lang: string, slug: string): Promise<ISbStory<StoryblokArticle>> {
 	return getWithFallback(
 		async (lang: string, slug: string): Promise<ISbStory<StoryblokArticle>> => {
 			const params: ISbStoriesParams = {
-				resolve_relations: STANDARD_RELATIONS_TO_RESOLVE,
+				resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
 				language: lang,
 			};
 			return getStoryblokApi().get(`cdn/stories/journal/${slug}`, addVersionParameter(params));
