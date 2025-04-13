@@ -50,7 +50,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 
 		const contributions = await firestoreAdmin
 			.collectionGroup<Contribution>(CONTRIBUTION_FIRESTORE_PATH)
-			.where('campaign_path', '==', firestoreAdmin.firestore.doc([CAMPAIGN_FIRESTORE_PATH, campaignData].join('/')))
+			.where('campaign_path', '==', firestoreAdmin.firestore.doc([CAMPAIGN_FIRESTORE_PATH, campaignData.id].join('/')))
 			.get();
 		let amountCollected = contributions.docs.reduce((sum, c) => sum + c.data().amount_chf, 0);
 		amountCollected += campaignData.get('additional_amount_chf') || 0;
@@ -62,7 +62,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			id: campaignData.id,
 			creatorName: campaignData.get('creator_name'),
 			title: campaignData.get('title'),
-			goal: campaignData.get('goal') || undefined,
+			amountCollected: Math.round(amountCollected),
 			goalCurrency: campaignData.get('goal_currency'),
 			percentageCollected: percentageCollected || undefined,
 			contributorCount: contributions.docs.length,

@@ -16,7 +16,7 @@ type DefaultPageProps = {
 		title: string;
 		contributorCount: number;
 		goalCurrency: string;
-		goal?: string;
+		amountCollected: number;
 		percentageCollected?: number;
 	}[];
 	totalCampaignCount: number;
@@ -142,10 +142,10 @@ export function ActiveFundraisers({ lang, campaignProps, totalCampaignCount }: D
 								</div>
 								<div className="flex items-baseline space-x-2 leading-none">
 									<Typography size="lg" className="hidden text-white group-hover:inline">
-										{campaignData.goalCurrency} {campaignData.goal || ''}
+										{campaignData.goalCurrency} {campaignData.amountCollected || 0}
 									</Typography>
 									<Typography size="sm" className="text-accent hidden group-hover:inline">
-										{campaignData.percentageCollected || ''}
+										{campaignData.percentageCollected ? `${campaignData.percentageCollected}%` : ''}
 									</Typography>
 								</div>
 								<div className="text-accent hidden items-center space-x-1 group-hover:flex">
