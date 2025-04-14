@@ -44,17 +44,19 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 	const selectedCampaigns = [...randomlyChosenCampaignIndices].map((index) => campaignStatsEntries[index]);
 	let campaignProps = [];
 	for (const campaignData of selectedCampaigns) {
-		const exchangeRate = campaignData.get('goal_currency')
-			? await getLatestExchangeRate(firestoreAdmin, campaignData.get('goal_currency'))
-			: 1.0;
-
+		// const exchangeRate = campaignData.get('goal_currency')
+		// 	? await getLatestExchangeRate(firestoreAdmin, campaignData.get('goal_currency'))
+		// 	: 1.0;
 		const contributions = await firestoreAdmin
 			.collectionGroup<Contribution>(CONTRIBUTION_FIRESTORE_PATH)
 			.where('campaign_path', '==', firestoreAdmin.firestore.doc([CAMPAIGN_FIRESTORE_PATH, campaignData.id].join('/')))
 			.get();
 		let amountCollected = contributions.docs.reduce((sum, c) => sum + c.data().amount_chf, 0);
+
+		//TODO: Exchange rate not considered, therefore slight inaccuracy in calculation
 		amountCollected += campaignData.get('additional_amount_chf') || 0;
-		amountCollected *= exchangeRate;
+		// amountCollected *= exchangeRate;
+
 		const percentageCollected = campaignData.get('goal')
 			? Math.round((amountCollected / campaignData.get('goal')) * 100)
 			: undefined;
