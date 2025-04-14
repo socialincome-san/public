@@ -19,7 +19,6 @@ const NUMBER_OF_RETRIES = 10;
 
 const chooseIndicesRandomly = (length: number): number[] => {
 	const randomIndicesSet = new Set<number>();
-	console.log('length', length);
 	if (!length) {
 		return [];
 	}
@@ -43,7 +42,6 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			campaignData.get('featured') &&
 			campaignData.get('end_date') > Timestamp.now(),
 	);
-	console.log('campaignStatEntries', campaignStatsEntries);
 	const randomlyChosenCampaignIndices = chooseIndicesRandomly(campaignStatsEntries.length);
 	const selectedCampaigns = [...randomlyChosenCampaignIndices].map((index) => campaignStatsEntries[index]);
 	let campaignProps = [];
@@ -51,7 +49,6 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 		// const exchangeRate = campaignData.get('goal_currency')
 		// 	? await getLatestExchangeRate(firestoreAdmin, campaignData.get('goal_currency'))
 		// 	: 1.0;
-		console.log(campaignData.id);
 		const contributions = await firestoreAdmin
 			.collectionGroup<Contribution>(CONTRIBUTION_FIRESTORE_PATH)
 			.where('campaign_path', '==', firestoreAdmin.firestore.collection(CAMPAIGN_FIRESTORE_PATH).doc(campaignData.id))
