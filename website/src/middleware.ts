@@ -59,7 +59,7 @@ const redirectMiddleware = (request: NextRequest) => {
 		case '/explained':
 			return NextResponse.redirect('https://socialincome.org/explainer-video');
 		case '/press':
-			return NextResponse.redirect('https://socialincome.org/journal/tag/press');
+			return NextResponse.redirect('https://socialincome.org/journal/tag/media-coverage');
 		case '/newsletter-archive':
 			return NextResponse.redirect('https://socialincome.org/journal/tag/newsletter');
 		case '/github':
