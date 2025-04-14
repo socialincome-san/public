@@ -110,7 +110,7 @@ export function ActiveFundraisers({ lang, campaignProps, totalCampaignCount }: D
 						</svg>
 						<div className="flex flex-col pl-2">
 							<Typography size="lg" className="text-popover-foreground-muted">
-								Searching current fundraisers
+								{translator.t('badges.loading')}
 							</Typography>
 						</div>
 					</div>
