@@ -126,6 +126,7 @@ export function ActiveFundraisers({ lang, campaignProps, totalCampaignCount }: D
 							className={`border-text-popover-foreground-muted hover:bg-primary hover:border-primary group relative flex w-[260px] items-center rounded-full border-2 px-6 py-2 transition-all duration-300 hover:w-[280px] hover:text-white ${index === 1 ? 'hidden md:flex' : index === 2 ? 'hidden lg:flex' : ''}`}
 						>
 							<div className="-ml-2 mr-2 h-10 w-10 overflow-hidden rounded-full transition-transform duration-300 group-hover:scale-125">
+								{/* The image is currently hardcoded to our long-running campaign. It should eventually use the campaign-specific image, which needs to be added to the campaign data model first. */}
 								<Image alt="Avatar" src={ismatuImage} width={40} height={40} className="object-cover" />
 							</div>
 							<div className="flex flex-col pl-2">
@@ -165,13 +166,16 @@ export function ActiveFundraisers({ lang, campaignProps, totalCampaignCount }: D
 				</div>
 			)}
 
-			{showFundraiserCards && (
-				<div className="mt-6">
-					<Link href={`/${lang}/fundraisers`} className="text-primary hover:underline">
-						See all {totalCampaignCount} fundraisers
-					</Link>
-				</div>
-			)}
+			{/*
+				// This will be activated later when we have the campaign overview page /fundraisers.
+				{showFundraiserCards && (
+					<div className="mt-6">
+						<Link href={`/${lang}/fundraisers`} className="text-primary hover:underline">
+							See all {totalCampaignCount} fundraisers
+						</Link>
+					</div>
+				)}
+			*/}
 		</div>
 	);
 }
