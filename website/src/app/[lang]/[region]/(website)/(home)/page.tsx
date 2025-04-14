@@ -19,6 +19,9 @@ const NUMBER_OF_RETRIES = 10;
 
 const chooseIndicesRandomly = (length: number): number[] => {
 	const randomIndicesSet = new Set<number>();
+	if (!length) {
+		return [];
+	}
 	for (let i = 0; i < NUMBER_OF_RETRIES; ++i) {
 		const randomIndex = Math.floor(Math.random() * length);
 		if (!randomIndicesSet.has(randomIndex)) {
@@ -53,20 +56,20 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 		let amountCollected = contributions.docs.reduce((sum, c) => sum + c?.data().amount_chf, 0);
 
 		//TODO: Exchange rate not considered, therefore slight inaccuracy in calculation
-		amountCollected += campaignData?.get('additional_amount_chf') || 0;
+		amountCollected += campaignData.get('additional_amount_chf') || 0;
 		// amountCollected *= exchangeRate;
 
-		const percentageCollected = campaignData?.get('goal')
-			? Math.round((amountCollected / campaignData?.get('goal')) * 100)
+		const percentageCollected = campaignData.get('goal')
+			? Math.round((amountCollected / campaignData.get('goal')) * 100)
 			: undefined;
 		campaignProps.push({
 			id: campaignData.id,
-			creatorName: campaignData?.get('creator_name'),
-			title: campaignData?.get('title'),
+			creatorName: campaignData.get('creator_name'),
+			title: campaignData.get('title'),
 			amountCollected: Math.round(amountCollected),
-			goalCurrency: campaignData?.get('goal_currency'),
+			goalCurrency: campaignData.get('goal_currency'),
 			percentageCollected: percentageCollected || undefined,
-			contributorCount: contributions.docs?.length,
+			contributorCount: contributions.docs.length,
 		});
 	}
 	return (

@@ -60,7 +60,7 @@ export function ActiveFundraisers({ lang, campaignProps, totalCampaignCount }: D
 		};
 	}, [translator]);
 
-	if (!translator) {
+	if (!translator || !campaignProps.length) {
 		return null;
 	}
 
