@@ -9,6 +9,26 @@
 	"download-pdf": "PDF",
 	"reports": [
 		{
+			"title": "Report annuale 2024",
+			"href": "https://drive.google.com/file/d/1cKwTjdDA11-k3TJEq-X1_mIOsTLLhNMP/view",
+			"language": "Inglese/Tedesco"
+		},
+		{
+			"title": "Rendiconto finanziario 2024",
+			"href": "https://drive.google.com/file/d/1cSbGJiJ3ACX0U7hW4lSkyplKJv72W8mS/view",
+			"language": "Inglese"
+		},
+		{
+			"title": "Rendiconto finanziario 2024",
+			"href": "https://drive.google.com/file/d/1cRlXyk-5QU_mOJosq7ZRuSbGzHvmsu2A/view",
+			"language": "Tedesco"
+		},
+		{
+			"title": "Rapporto di revisione 2024",
+			"href": "https://drive.google.com/file/d/1cLC6wEKUGibkpWTosKZ0CeO-KcXqlx9-/view",
+			"language": "Tedesco"
+		},
+		{
 			"title": "Report annuale 2023",
 			"href": "https://drive.google.com/file/d/13vvBS6Ju6NqpIgis4CrMHrY9s2hbRjYy/view",
 			"language": "Inglese/Tedesco"
