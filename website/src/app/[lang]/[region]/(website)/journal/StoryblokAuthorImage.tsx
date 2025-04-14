@@ -1,3 +1,4 @@
+import { getDimensionsFromStoryblokImageUrl } from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
 import { StoryblokAuthor } from '@socialincome/shared/src/storyblok/journal';
 import { ISbStoryData } from '@storyblok/react';
 import Image from 'next/image';
@@ -18,15 +19,16 @@ function StoryblokAuthorImage(props: {
 	lang: string;
 	region: string;
 }) {
-	const { author, size = 'medium', className = '', lang, region } = props;
+	const { author, size = 'medium', className = '' } = props;
+	const dimensionsFromStoryblokImage = getDimensionsFromStoryblokImageUrl(author.content.avatar.filename);
 
 	return (
 		<Image
 			src={author.content.avatar.filename}
 			alt={author.content.fullName + '-avatar'}
 			className={`${sizeClasses[size]} flex-none rounded-full object-cover object-top ${className}`}
-			width={300}
-			height={300}
+			width={dimensionsFromStoryblokImage.width}
+			height={dimensionsFromStoryblokImage.height}
 		/>
 	);
 }

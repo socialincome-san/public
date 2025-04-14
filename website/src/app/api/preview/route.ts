@@ -5,6 +5,8 @@ const ALLOWED_SLUGS_PREFIXES = ['journal', 'author', 'tag'];
 const DEFAULT_LANGUAGE = 'en';
 const ALLOWED_LANGUAGES = ['en', 'it', 'fr', 'de'];
 const DRAFT_MODE_COOKIE_NAME = '__prerender_bypass';
+const JOURNAL = 'journal';
+const DEFAULT_REGION = 'int';
 
 function getLanguage(slug: string | null) {
 	if (slug) {
@@ -66,6 +68,6 @@ export async function GET(request: Request) {
 		return new Response('Invalid token', { status: 401 });
 	}
 	enableDraftModeAndAdaptCookie();
-	const path = slug!.startsWith('journal') ? slug : 'journal/' + slug;
-	redirect(`/${lang}/int/${path}`, RedirectType.push);
+	const path = slug!.startsWith(JOURNAL) ? slug : `${JOURNAL}/${slug}`;
+	redirect(`/${lang}/${DEFAULT_REGION}/${path}`, RedirectType.push);
 }

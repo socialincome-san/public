@@ -1,27 +1,16 @@
 import {
 	getArticle,
+	getDimensionsFromStoryblokImageUrl,
 	getPublishedDateFormatted,
 	getRelativeArticles,
 } from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
 import { StoryblokArticleCard } from '@/app/[lang]/[region]/(website)/journal/StoryblokArticle';
 import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
-import {
-	StoryblokArticle,
-	StoryblokAuthor,
-	StoryblokLinksCard,
-	StoryblokTag,
-} from '@socialincome/shared/src/storyblok/journal';
+import { StoryblokImageWithCaption } from '@/app/[lang]/[region]/(website)/journal/StoryblokImageWithCaption';
+import { StoryblokArticle, StoryblokAuthor, StoryblokTag } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import {
-	Badge,
-	ImageWithCaption,
-	LinksCardJournal,
-	QuotedText,
-	Separator,
-	Typography,
-	VideoEmbedWithCaption,
-} from '@socialincome/ui';
+import { Badge, QuotedText, Separator, Typography } from '@socialincome/ui';
 import { ISbStoryData } from '@storyblok/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -33,29 +22,12 @@ function renderWrapper(articleData: StoryblokArticle) {
 	return render(articleData.content, {
 		blokResolvers: {
 			['quotedText']: (props: any) => <QuotedText {...props} />,
-			['Add image']: (props: any) => <ImageWithCaption {...props} />,
-			['Embed video']: (props: any) => (
-				<VideoEmbedWithCaption
-					urlVideo={typeof props.url_video?.url === 'string' ? props.url_video.url : undefined}
-					muxPlaybackId={typeof props.mux_playback_id === 'string' ? props.mux_playback_id : undefined}
-					caption={typeof props.video_caption === 'string' ? props.video_caption : undefined}
-				/>
-			),
-			['Add links']: (props: Record<string, unknown>) => (
-				<LinksCardJournal
-					{...(props as unknown as StoryblokLinksCard)}
-				/>
-			),
+			['imageWithCaption']: (props: any) => <StoryblokImageWithCaption {...props} />,
 		},
 	});
 }
 
-function badgeWithLink(
-	lang: string,
-	region: string,
-	tag: ISbStoryData<StoryblokTag>,
-	variant: 'outline' | 'default',
-) {
+function badgeWithLink(lang: string, region: string, tag: ISbStoryData<StoryblokTag>, variant: 'outline' | 'default') {
 	return (
 		<Link href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
 			<Badge key={tag.slug} variant={variant} className="mt-6">
@@ -67,9 +39,7 @@ function badgeWithLink(
 
 const NUMBER_OF_RELATIVE_ARTICLES = 3;
 
-export default async function Page(props: {
-	params: { slug: string; lang: LanguageCode; region: string };
-}) {
+export default async function Page(props: { params: { slug: string; lang: LanguageCode; region: string } }) {
 	const { slug, lang, region } = props.params;
 
 	const articleResponse = await getArticle(lang, slug);
@@ -88,7 +58,7 @@ export default async function Page(props: {
 		language: lang,
 		namespaces: ['website-journal'],
 	});
-
+	const dimensionsFromStoryblokImage = getDimensionsFromStoryblokImageUrl(articleData.image.filename);
 	return (
 		<div>
 			<div className="blog w-full justify-center">
@@ -98,8 +68,8 @@ export default async function Page(props: {
 							src={articleData.image.filename}
 							alt={articleData.image?.alt}
 							className="w-full object-cover md:h-screen"
-							width={900}
-							height={700}
+							width={dimensionsFromStoryblokImage.width}
+							height={dimensionsFromStoryblokImage.height}
 						/>
 					</div>
 					<div className="flex flex-col justify-center p-8 text-left md:order-1 md:w-1/2 md:items-start lg:p-16">

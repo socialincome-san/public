@@ -34,16 +34,8 @@ export interface StoryblokAuthor {
 	bio: string;
 }
 
-export interface StoryblokQuotedText {
-	text: string;
-	author: string;
-	id: number;
-	uuid: string;
-}
-
 export interface StoryblokArticle {
 	id: number;
-	default_full_slug: string;
 	title: string;
 	content: any;
 	subtitle: string;
@@ -54,35 +46,4 @@ export interface StoryblokArticle {
 	displayInOverviewPage: boolean;
 	leadText: string;
 	showRelativeArticles: boolean;
-}
-
-export interface StoryblokImageWithCaption {
-	component: 'Add image';
-	image: StoryblokImage;
-	caption: string;
-	_uid: string;
-}
-
-export interface StoryblokVideoEmbed {
-	component: 'Embed video';
-	url_youtube: {
-		url: string;
-	};
-	video_caption?: string;
-	_uid: string;
-}
-
-export interface StoryblokReferencedLink {
-	_uid: string;
-	component: 'referenced_link';
-	source_url: { url: string };
-	source_date: string;
-	source_author: string;
-}
-
-export interface StoryblokLinksCard {
-	component: 'Add links';
-	reference_context: 'no_context' | 'reference_related' | 'reference_original';
-	single_link: StoryblokReferencedLink[];
-	_uid: string;
 }
