@@ -7,7 +7,6 @@ import { Testimonials } from '@/app/[lang]/[region]/(website)/(home)/(sections)/
 import { firestoreAdmin } from '@/firebase-admin';
 import { CAMPAIGN_FIRESTORE_PATH, Campaign, CampaignStatus } from '@socialincome/shared/src/types/campaign';
 import { CONTRIBUTION_FIRESTORE_PATH, Contribution } from '@socialincome/shared/src/types/contribution';
-import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRates';
 import { Timestamp } from 'firebase/firestore';
 import { ActiveFundraisers } from './(sections)/active-fundraisers';
 import { ExplainerVideo } from './(sections)/explainer-video';
