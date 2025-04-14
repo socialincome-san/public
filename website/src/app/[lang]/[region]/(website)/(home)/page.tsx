@@ -49,25 +49,25 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 		// 	: 1.0;
 		const contributions = await firestoreAdmin
 			.collectionGroup<Contribution>(CONTRIBUTION_FIRESTORE_PATH)
-			.where('campaign_path', '==', firestoreAdmin.firestore.doc([CAMPAIGN_FIRESTORE_PATH, campaignData.id].join('/')))
+			.where('campaign_path', '==', firestoreAdmin.firestore.doc([CAMPAIGN_FIRESTORE_PATH, campaignData?.id].join('/')))
 			.get();
-		let amountCollected = contributions.docs.reduce((sum, c) => sum + c.data().amount_chf, 0);
+		let amountCollected = contributions.docs.reduce((sum, c) => sum + c?.data().amount_chf, 0);
 
 		//TODO: Exchange rate not considered, therefore slight inaccuracy in calculation
-		amountCollected += campaignData.get('additional_amount_chf') || 0;
+		amountCollected += campaignData?.get('additional_amount_chf') || 0;
 		// amountCollected *= exchangeRate;
 
-		const percentageCollected = campaignData.get('goal')
-			? Math.round((amountCollected / campaignData.get('goal')) * 100)
+		const percentageCollected = campaignData?.get('goal')
+			? Math.round((amountCollected / campaignData?.get('goal')) * 100)
 			: undefined;
 		campaignProps.push({
-			id: campaignData.id,
-			creatorName: campaignData.get('creator_name'),
-			title: campaignData.get('title'),
+			id: campaignData?.id,
+			creatorName: campaignData?.get('creator_name'),
+			title: campaignData?.get('title'),
 			amountCollected: Math.round(amountCollected),
-			goalCurrency: campaignData.get('goal_currency'),
+			goalCurrency: campaignData?.get('goal_currency'),
 			percentageCollected: percentageCollected || undefined,
-			contributorCount: contributions.docs.length,
+			contributorCount: contributions.docs?.length,
 		});
 	}
 	return (
