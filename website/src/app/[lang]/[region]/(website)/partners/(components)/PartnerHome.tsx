@@ -18,14 +18,21 @@ function getFlag(abbreviation: string): ReactElement {
 	return country_abbreviations_to_flag_map[abbreviation] || <SL className="h-5 w-5 rounded-full" />;
 }
 
-export function PartnerHome({ currentNgo, currentNgoCountry, translations, lang, region }: NgoHomeProps) {
+export function PartnerHome({
+	currentNgo,
+	currentNgoCountry,
+	translations,
+	lang,
+	region,
+	recipientCounts,
+}: NgoHomeProps) {
 	const image_base_path = '/assets/partners/';
 	const recipientsBadge: RecipientsBadgeType = {
 		hoverCardOrgName: currentNgo!['org-long-name'],
-		hoverCardTotalRecipients: currentNgo!['recipients-total'],
-		hoverCardTotalActiveRecipients: currentNgo!['recipients-active'],
-		hoverCardTotalFormerRecipients: currentNgo!['recipients-former'],
-		hoverCardTotalSuspendedRecipients: currentNgo!['recipients-suspend'],
+		hoverCardTotalRecipients: recipientCounts.totalRecipients,
+		hoverCardTotalActiveRecipients: recipientCounts.activeRecipients,
+		hoverCardTotalFormerRecipients: recipientCounts.formerRecipients,
+		hoverCardTotalSuspendedRecipients: recipientCounts.suspendedRecipients,
 		translatorBadgeRecipients: '',
 		translatorBadgeRecipientsBy: '',
 		translatorBadgeActive: '',
