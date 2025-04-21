@@ -337,6 +337,7 @@ We receive in-kind donations from
 [Codemagic](https://codemagic.io/start/), [Linktree](https://linktr.ee),
 [Twilio](https://twilio.org), [Algolia](https://www.algolia.com),
 [JetBrains](https://www.jetbrains.com),
+[Storyblok](https://www.storyblok.com),
 [1Password](https://1password.com/), [Mux](https://www.mux.com/),
 [Sentry](https://sentry.io) and [Lineto](https://www.lineto.com). Our
 tools also leverage other open-source technologies, including solutions

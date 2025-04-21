@@ -170,7 +170,7 @@
 		"org-facebook": "https://www.facebook.com/profile.php?id=100070050743284&sk=about_details",
 		"org-youtube": "https://www.youtube.com/@reachoutsalone8395"
 	},
-	"equal-rights": {
+	"equal_rights": {
 		"org-slug": "equal-rights-alliance",
 		"org-short-name": "Equal Rights Alliance",
 		"org-long-name": "Equal Rights Alliance",
@@ -210,7 +210,7 @@
 		"org-photo": "",
 		"org-facebook": "https://www.facebook.com/groups/693921621002955/"
 	},
-	"united-polio": {
+	"united_polio": {
 		"org-slug": "united-polio-brothers-and-sisters",
 		"org-short-name": "United Polio Brothers and Sisters",
 		"org-long-name": "United Polio Brothers and Sisters",

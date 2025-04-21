@@ -1,0 +1,123 @@
+{
+	"titleOnboarding": "Enquête d'intégration",
+	"titleCheckin": "Enquête de check-in",
+	"titleOffboarding": "Enquête de fin de participation",
+	"titleFollowup": "Enquête de suivi",
+	"select": "Sélectionner",
+	"save": "Enregistrer",
+	"freetext": "Entrez votre réponse",
+	"demo": "En mode démo, l'enquête ne peut pas être sauvegardée",
+	"survey": {
+		"login": {
+			"message": "Veuillez entrer votre numéro de téléphone ainsi que le code d'accès que nous vous avons envoyé.",
+			"phoneNumber": "Numéro Mobile Money",
+			"accessCode": "Code d'accès pour l'enquête",
+			"loadSurvey": "Charger l'enquête",
+			"loading": "Chargement...",
+			"error": "Nous n'avons pas trouvé l'enquête. Veuillez vérifier à nouveau votre numéro de téléphone et votre code d'accès. Contactez l'équipe Social Income si l'erreur persiste."
+		},
+		"common": {
+			"start": "Démarrer",
+			"previous": "Précédent",
+			"next": "Suivant",
+			"complete": "Terminer",
+			"preview": "Aperçu",
+			"edit": "Modifier",
+			"loading": "Chargement...",
+			"missingCredentials": "Identifiants manquants pour l'enquête. Veuillez contacter l'équipe Social Income.",
+			"authError": "Erreur lors de la connexion. Veuillez contacter l'équipe Social Income.",
+			"loadingError": "Erreur lors du chargement de l'enquête. Veuillez contacter l'équipe Social Income.",
+			"progressSavingSuccess": "Votre réponse a été enregistrée avec succès.",
+			"progressSavingError": "Impossible d'enregistrer votre réponse. Nouvel essai... Veuillez contacter l'équipe Social Income si l'erreur persiste.",
+			"completed": "Merci beaucoup d'avoir complété l'enquête.",
+			"alreadyCompleted": "Cette enquête est déjà terminée. Merci beaucoup.",
+			"hello": "Bonjour",
+			"welcome": "L’objectif de cette enquête est de découvrir l’impact d’un Social Income sur vous. Cela prend environ 5 minutes à compléter."
+		},
+		"questions": {
+			"yesNoChoices": {
+				"yes": "Oui",
+				"no": "Non",
+				"true": "Oui",
+				"false": "Non"
+			},
+			"livingLocationTitleV1": "Où habitez-vous ?",
+			"livingLocationDescV1": "Freetown = Western Area Urban",
+			"livingLocationChoices": {
+				"westernAreaUrbanFreetown": "Western Area Urban",
+				"westernAreaRural": "Western Area Rural",
+				"easternProvince": "Province de l'Est",
+				"northernProvince": "Province du Nord",
+				"southernProvince": "Province du Sud",
+				"northWestProvince": "Province du Nord-Ouest"
+			},
+			"maritalStatusTitleV1": "Quel est votre état matrimonial ?",
+			"maritalStatusChoices": {
+				"married": "Marié(e)",
+				"widowed": "Veuf / Veuve",
+				"divorced": "Divorcé(e)",
+				"separated": "Séparé(e)",
+				"neverMarried": "Jamais marié(e)"
+			},
+			"hasDependentsTitleV1": "Avez-vous des personnes à charge ?",
+			"hasDependentsDescV1": "Des personnes qui dépendent financièrement de vous.",
+			"nrDependentsTitleV1": "Combien de personnes dépendent financièrement de vous ?",
+			"nrDependentsChoices": {
+				"1-2": "1-2",
+				"3-4": "3-4",
+				"5-7": "5-7",
+				"8-10": "8-10",
+				"10-": "plus de 10"
+			},
+			"attendingSchoolV1": "Êtes-vous actuellement scolarisé(e) ?",
+			"employmentStatusTitleV1": "Quel est votre statut d'emploi actuel ?",
+			"employmentStatusChoices": {
+				"employed": "Employé(e)",
+				"selfEmployed": "Indépendant(e)",
+				"notEmployed": "Sans emploi",
+				"retired": "Retraité(e)"
+			},
+			"notEmployedTitleV1": "Êtes-vous actuellement à la recherche d'un emploi ?",
+			"disabilityTitleV1": "Avez-vous un handicap ou une maladie qui affecte vos possibilités de trouver ou de garder un emploi ?",
+			"skippingMealsTitleV1": "Vous ou d'autres membres de votre foyer sautez-vous parfois des repas parce que vous n'avez pas assez d'argent pour acheter de la nourriture ?",
+			"skippingMealsLastWeekTitleV1": "Cela s'est-il produit la semaine dernière ?",
+			"skippingMealsLastWeek3MealsTitleV1": "Avez-vous sauté plus de 3 repas au cours de la semaine dernière ?",
+			"unexpectedExpensesCoveredTitleV1": "Avez-vous suffisamment d'argent pour couvrir des dépenses imprévues comme consulter un médecin ?",
+			"unexpectedExpensesCoveredDescV1": "Par exemple, un rendez-vous chez le médecin coûtant 100 SLE ou plus.",
+			"savingsTitleV1": "Pouvez-vous actuellement mettre de l'argent de côté ?",
+			"debtPersonalTitleV1": "Avez-vous des dettes ?",
+			"debtPersonalDescV1": "À partir de 500 SLE ou plus.",
+			"debtPersonalRepayTitleV1": "Pouvez-vous rembourser vos dettes ?",
+			"debtHouseholdTitleV1": "Quelqu'un dans votre foyer a-t-il des dettes ?",
+			"debtHouseholdDescV1": "À partir de 500 SLE ou plus.",
+			"debtHouseholdWhoRepaysTitleV1": "Êtes-vous la principale personne qui rembourse ces dettes ?",
+			"otherSupportTitleV1": "Recevez-vous actuellement une autre forme d'aide financière d'ailleurs ?",
+			"plannedAchievementTitleV1": "Qu'espérez-vous accomplir au cours des 3 prochaines années grâce à Social Income ?",
+
+			"spendingTitleV1": "Quelles sont les principales catégories de dépenses pour lesquelles vous utilisez votre Social Income ?",
+			"spendingDescV1": "Éducation : frais de scolarité, fournitures, manuels, etc. // Alimentation : pour vous ou votre foyer // Logement : loyer, entretien de la maison, etc. // Santé : médecin, hôpital, médicaments, etc. // Transport : bus, taxi, poda poda, keke, etc. // Épargne : compte bancaire ou compte Mobile Money, etc. // Investissement : engrais, outils, carburant pour machines, etc.",
+			"spendingChoices": {
+				"education": "Éducation",
+				"food": "Alimentation",
+				"housing": "Logement",
+				"healthCare": "Santé",
+				"mobility": "Transport",
+				"saving": "Épargne",
+				"investment": "Investissement"
+			},
+			"spendingRankingTitleV1": "Veuillez classer les catégories de dépenses sélectionnées, de la plus importante à la moins importante.",
+			"spendingRankingDescV1": "Vous pouvez déplacer les catégories par glisser-déposer.",
+			"plannedAchievementRemainingTitleV1": "Que souhaitez-vous accomplir pendant le temps qu’il vous reste dans le programme Social Income ?",
+
+			"financialIndependenceTitleV1": "Social Income vous a-t-il permis de vous sentir plus en sécurité financièrement et plus indépendant(e) ?",
+			"impactLifeGeneralTitleV1": "Quel impact Social Income a-t-il eu sur votre vie ?",
+
+			"longEnoughTitleV1": "Trois ans de paiements Social Income étaient-ils suffisants pour atteindre une stabilité financière ?",
+			"achievementsAchievedTitleV1": "Avez-vous réalisé ce que vous espériez au cours de ces trois dernières années ?",
+			"achievementsNotAchievedCommentTitleV1": "Qu'est-ce qui vous a empêché d'atteindre cet objectif ? Y a-t-il quelque chose que nous aurions pu faire pour mieux vous soutenir ? (par exemple : mentorat, mises en relation)",
+			"happierTitleV1": "Social Income vous a-t-il rendu plus heureux/heureuse ?",
+			"happierCommentTitleV1": "Comment cela ?",
+			"notHappierCommentTitleV1": "Pouvez-vous nous dire pourquoi ?"
+		}
+	}
+}
