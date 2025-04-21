@@ -28,6 +28,7 @@ const country_abbreviations_to_flag_map: Record<string, ReactElement> = {
 function getFlag(abbreviation: string): ReactElement {
 	return country_abbreviations_to_flag_map[abbreviation] || <SL className="h-5 w-5 rounded-full" />;
 }
+export const ngos = ['aurora', 'jamil', 'reachout', 'equal_rights', 'united_polio', 'slaes'];
 
 export async function NgoList({ lang, region }: DefaultParams) {
 	const translator = await Translator.getInstance({
@@ -36,7 +37,6 @@ export async function NgoList({ lang, region }: DefaultParams) {
 	});
 	const image_base_path = '/assets/partners/';
 
-	const ngos = ['aurora', 'jamil', 'reachout', 'equal-rights', 'united-polio', 'slaes'];
 	const ngoArray: NgoEntryJSON[] = ngos.map((slug: string) => translator.t(slug));
 	const ngoCardPropsArray: NgoCardProps[] = [];
 
@@ -46,14 +46,19 @@ export async function NgoList({ lang, region }: DefaultParams) {
 
 	for (let i = 0; i < ngoArray.length; ++i) {
 		const currentOrgRecipientStats = recipientStats[ngos[i]];
-		if (!currentOrgRecipientStats) continue;
 
 		const recipientsBadge: RecipientsBadgeType = {
 			hoverCardOrgName: ngoArray[i]['org-long-name'],
-			hoverCardTotalRecipients: currentOrgRecipientStats['total'] ?? 0,
-			hoverCardTotalActiveRecipients: currentOrgRecipientStats[RecipientProgramStatus.Active] ?? 0,
-			hoverCardTotalFormerRecipients: currentOrgRecipientStats[RecipientProgramStatus.Former] ?? 0,
-			hoverCardTotalSuspendedRecipients: currentOrgRecipientStats[RecipientProgramStatus.Suspended] ?? 0,
+			hoverCardTotalRecipients: currentOrgRecipientStats ? currentOrgRecipientStats['total'] : 0,
+			hoverCardTotalActiveRecipients: currentOrgRecipientStats
+				? currentOrgRecipientStats[RecipientProgramStatus.Active]
+				: 0,
+			hoverCardTotalFormerRecipients: currentOrgRecipientStats
+				? currentOrgRecipientStats[RecipientProgramStatus.Former]
+				: 0,
+			hoverCardTotalSuspendedRecipients: currentOrgRecipientStats
+				? currentOrgRecipientStats[RecipientProgramStatus.Suspended]
+				: 0,
 			translatorBadgeRecipients: '',
 			translatorBadgeRecipientsBy: '',
 			translatorBadgeActive: '',

@@ -34,6 +34,7 @@ export const LIVING_LOCATION: Question = {
 		'northWestProvince',
 	],
 	translationKey: 'survey.questions.livingLocationTitleV1',
+	descriptionTranslationKey: 'survey.questions.livingLocationDescV1',
 	choicesTranslationKey: 'survey.questions.livingLocationChoices',
 };
 
@@ -162,6 +163,7 @@ export const SPENDING: Question = {
 	name: 'spendingV1',
 	choices: ['education', 'food', 'housing', 'healthCare', 'mobility', 'saving', 'investment'],
 	translationKey: 'survey.questions.spendingTitleV1',
+	descriptionTranslationKey: 'survey.questions.spendingDescV1',
 	choicesTranslationKey: 'survey.questions.spendingChoices',
 };
 
