@@ -80,6 +80,12 @@ type NgoEntryJSON = {
 type NgoHomeProps = {
 	currentNgo: NgoEntryJSON;
 	currentNgoCountry: string;
+	recipientCounts: {
+		totalRecipients: number;
+		activeRecipients?: number;
+		formerRecipients?: number;
+		suspendedRecipients?: number;
+	};
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 	translations: {
