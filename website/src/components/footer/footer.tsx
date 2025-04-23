@@ -50,6 +50,7 @@ export default async function Footer({ lang, region }: DefaultParams) {
 						<FooterLink label={translator.t('navigation.faq')} url={`/${lang}/${region}/faq`} />
 						<FooterLink label={translator.t('navigation.my-account')} url={`/${lang}/${region}/login`} />
 						<FooterLink label={translator.t('footer.legal')} url={`/${lang}/${region}/legal`} />
+						<FooterLink label={translator.t('footer.contact')} url={`/${lang}/${region}/contact`} />
 					</div>
 					<div className="flex flex-col space-y-1">
 						<Typography size="sm" weight="medium" color="muted-foreground">
