@@ -1,9 +1,11 @@
 'use client';
 
 import { Button, Input, Typography } from '@socialincome/ui';
+import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { Data } from 'swissqrbill/lib/cjs/shared/types';
+import { SwissQRBill } from 'swissqrbill/svg';
 import { z } from 'zod';
-
 const formSchema = z.object({
 	firstName: z.string().min(1, 'First name is required'),
 	lastName: z.string().min(1, 'Last name is required'),
@@ -23,6 +25,7 @@ type BankTransferFormProps = {
 		partialSocialIncome: string;
 		weMatchTheMissing: string;
 		generateQrBill: string;
+		confirmMonthlyOrder: string;
 		transferFeesNote: string;
 		plusPlanLink: string;
 		errors: {
@@ -40,17 +43,72 @@ export function BankTransferForm({ amount, translations }: BankTransferFormProps
 		formState: { errors },
 		register,
 	} = form;
+	const [qrBill, setQrBill] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
+	const [isSubmitted, setIsSubmitted] = useState(false);
 
-	const monthlyAmount = Math.round(amount * 0.01);
+	const monthlyAmount = Number(amount);
 	const fullSocialIncomeAmount = 32;
 	const partialSocialIncomeAmount = monthlyAmount - fullSocialIncomeAmount;
 
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-		form.handleSubmit((data) => {
-			console.log('Form submitted:', data);
-		})(e);
+	const handleSubmit = async (event: React.FormEvent) => {
+		event.preventDefault();
+		form.handleSubmit(async (formData) => {
+			setIsLoading(true);
+			const { firstName, lastName, email } = formData;
+
+			const data: Data = {
+				amount: monthlyAmount,
+				creditor: {
+					account: 'CH44 3199 9123 0008 8901 2',
+					address: 'Musterstrasse',
+					buildingNumber: 7,
+					city: 'Musterstadt',
+					country: 'CH',
+					name: 'SwissQRBill',
+					zip: 1234,
+				},
+				currency: 'CHF',
+				debtor: {
+					address: 'Musterstrasse',
+					buildingNumber: 1,
+					city: 'Musterstadt',
+					country: 'CH',
+					name: `${firstName} ${lastName}`,
+					zip: 1234,
+				},
+				reference: '21 00000 00003 13947 14300 09017',
+			};
+
+			try {
+				const svg = new SwissQRBill(data);
+				setQrBill(svg.toString());
+				setIsSubmitted(true);
+			} catch (error) {
+				console.error('Error generating QR bill:', error);
+			} finally {
+				setIsLoading(false);
+			}
+		})(event);
 	};
+
+	if (isSubmitted && qrBill) {
+		return (
+			<div className="mt-8 space-y-4">
+				<Typography size="xl" weight="bold">
+					{translations.paymentDetails}
+				</Typography>
+				<div className="mt-4 flex justify-center">
+					<div dangerouslySetInnerHTML={{ __html: qrBill }} className="max-w-full" />
+				</div>
+				<div className="space-y-4 rounded-lg bg-white p-6">
+					<Button size="lg" type="button" className="w-full">
+						{translations.confirmMonthlyOrder}
+					</Button>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="mt-8 space-y-4">
@@ -101,8 +159,8 @@ export function BankTransferForm({ amount, translations }: BankTransferFormProps
 				</div>
 
 				<div className="space-y-4 rounded-lg bg-white p-6">
-					<Button size="lg" type="submit" className="w-full" onClick={handleSubmit}>
-						{translations.generateQrBill}
+					<Button size="lg" type="submit" className="w-full" onClick={handleSubmit} disabled={isLoading}>
+						{isLoading ? 'Generating...' : translations.generateQrBill}
 					</Button>
 				</div>
 			</div>
