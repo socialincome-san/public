@@ -30,6 +30,7 @@ import { useForm, useFormContext, useWatch } from 'react-hook-form';
 import { useUser } from 'reactfire';
 import Stripe from 'stripe';
 import * as z from 'zod';
+import { PAYMENT_TYPES, PaymentTypeSelector } from './payment-type-selector';
 
 const DONATION_INTERVALS = ['1', '3', '12'] as const;
 type DonationInterval = (typeof DONATION_INTERVALS)[number];
@@ -146,6 +147,13 @@ type DonationFormProps = {
 		quarterly: string;
 		yearly: string;
 		donationImpact: DonationImpactTranslations;
+		paymentType: {
+			title: string;
+			creditCard: string;
+			bankTransfer: string;
+			creditCardDescription: string;
+			bankTransferDescription: string;
+		};
 	};
 } & DefaultParams;
 
@@ -158,24 +166,30 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 	const formSchema = z.object({
 		monthlyIncome: z.coerce.number(),
 		donationInterval: z.enum(DONATION_INTERVALS),
+		paymentType: z.enum(PAYMENT_TYPES),
 	});
 	type FormSchema = z.infer<typeof formSchema>;
 
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
-		defaultValues: { donationInterval: '1', monthlyIncome: amount || ('' as any) },
+		defaultValues: {
+			donationInterval: '1',
+			monthlyIncome: amount || ('' as any),
+			paymentType: 'credit_card',
+		},
 	});
 
 	const onSubmit = async (values: FormSchema) => {
 		setSubmitting(true);
 		const authToken = await authUser?.getIdToken(true);
 		const data: CreateCheckoutSessionData = {
-			amount: getDonationAmount(values.monthlyIncome, values.donationInterval) * 100, // The amount is in cents, so we need to multiply by 100 to get the correct amount.
+			amount: getDonationAmount(values.monthlyIncome, values.donationInterval) * 100,
 			intervalCount: Number(values.donationInterval),
 			currency: currency,
 			successUrl: `${window.location.origin}/${lang}/${region}/donate/success/stripe/{CHECKOUT_SESSION_ID}`,
 			recurring: true,
 			firebaseAuthToken: authToken,
+			paymentType: values.paymentType,
 		};
 		// Call the API to create a new Stripe checkout session
 		const response = await fetch('/api/stripe/checkout-session/create', { method: 'POST', body: JSON.stringify(data) });
@@ -210,45 +224,48 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 							<CardHeader>
 								<DonationImpact lang={lang} translations={translations.donationImpact} />
 							</CardHeader>
-							<CardContent className="mt-8">
-								<Typography size="lg" weight="medium" className="mb-4">
-									{translations.howToPay}
-								</Typography>
-								<FormField
-									control={form.control}
-									name="donationInterval"
-									render={({ field }) => (
-										<FormItem className="space-y-3">
-											<FormControl>
-												<RadioGroup
-													onValueChange={field.onChange}
-													defaultValue={field.value}
-													className="grid grid-cols-1 place-items-stretch gap-4 md:grid-cols-3"
-												>
-													<RadioGroupFormItem
-														active={field.value === '1'}
-														donationInterval="1"
-														title={translations.monthly}
-														lang={lang}
-													/>
-													<RadioGroupFormItem
-														active={field.value === '3'}
-														donationInterval="3"
-														title={translations.quarterly}
-														lang={lang}
-													/>
-													<RadioGroupFormItem
-														active={field.value === '12'}
-														donationInterval="12"
-														title={translations.yearly}
-														lang={lang}
-													/>
-												</RadioGroup>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
+							<CardContent className="mt-8 space-y-8">
+								<PaymentTypeSelector lang={lang} translations={translations.paymentType} />
+								<div>
+									<Typography size="lg" weight="medium" className="mb-4">
+										{translations.howToPay}
+									</Typography>
+									<FormField
+										control={form.control}
+										name="donationInterval"
+										render={({ field }) => (
+											<FormItem className="space-y-3">
+												<FormControl>
+													<RadioGroup
+														onValueChange={field.onChange}
+														defaultValue={field.value}
+														className="grid grid-cols-1 place-items-stretch gap-4 md:grid-cols-3"
+													>
+														<RadioGroupFormItem
+															active={field.value === '1'}
+															donationInterval="1"
+															title={translations.monthly}
+															lang={lang}
+														/>
+														<RadioGroupFormItem
+															active={field.value === '3'}
+															donationInterval="3"
+															title={translations.quarterly}
+															lang={lang}
+														/>
+														<RadioGroupFormItem
+															active={field.value === '12'}
+															donationInterval="12"
+															title={translations.yearly}
+															lang={lang}
+														/>
+													</RadioGroup>
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
 							</CardContent>
 							<CardFooter>
 								<Button size="lg" type="submit" className="w-full" showLoadingSpinner={submitting}>

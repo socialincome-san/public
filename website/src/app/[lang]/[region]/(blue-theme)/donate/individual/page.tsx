@@ -27,6 +27,13 @@ export default async function Page({ params: { lang, region }, searchParams }: D
 						directPayout: translator.t('donation-impact.direct-payout'),
 						yourImpact: translator.t('donation-impact.your-impact'),
 					},
+					paymentType: {
+						title: translator.t('payment-type.title'),
+						creditCard: translator.t('payment-type.credit-card'),
+						bankTransfer: translator.t('payment-type.bank-transfer'),
+						creditCardDescription: translator.t('payment-type.credit-card-description'),
+						bankTransferDescription: translator.t('payment-type.bank-transfer-description'),
+					},
 				}}
 			/>
 			<div className="mt-4 hover:underline">
