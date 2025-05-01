@@ -166,7 +166,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 	const formSchema = z.object({
 		monthlyIncome: z.coerce.number(),
 		donationInterval: z.enum(DONATION_INTERVALS),
-		paymentType: z.enum(PAYMENT_TYPES),
+		paymentType: region === 'ch' ? z.enum(PAYMENT_TYPES) : z.literal('credit_card'),
 	});
 	type FormSchema = z.infer<typeof formSchema>;
 
@@ -225,7 +225,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 								<DonationImpact lang={lang} translations={translations.donationImpact} />
 							</CardHeader>
 							<CardContent className="mt-8 space-y-8">
-								<PaymentTypeSelector lang={lang} translations={translations.paymentType} />
+								{region === 'ch' && <PaymentTypeSelector lang={lang} translations={translations.paymentType} />}
 								<div>
 									<Typography size="lg" weight="medium" className="mb-4">
 										{translations.howToPay}
