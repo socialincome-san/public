@@ -18,9 +18,7 @@ import {
 	FormControl,
 	FormField,
 	FormItem,
-	FormMessage,
 	Input,
-	RadioGroup,
 	Typography,
 } from '@socialincome/ui';
 import classNames from 'classnames';
@@ -30,6 +28,7 @@ import { useForm, useFormContext, useWatch } from 'react-hook-form';
 import { useUser } from 'reactfire';
 import Stripe from 'stripe';
 import * as z from 'zod';
+import { DonationIntervalSelector } from './donation-interval-selector';
 import { PAYMENT_TYPES, PaymentTypeSelector } from './payment-type-selector';
 
 const DONATION_INTERVALS = ['1', '3', '12'] as const;
@@ -226,46 +225,16 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 							</CardHeader>
 							<CardContent className="mt-8 space-y-8">
 								{region === 'ch' && <PaymentTypeSelector lang={lang} translations={translations.paymentType} />}
-								<div>
-									<Typography size="lg" weight="medium" className="mb-4">
-										{translations.howToPay}
-									</Typography>
-									<FormField
-										control={form.control}
-										name="donationInterval"
-										render={({ field }) => (
-											<FormItem className="space-y-3">
-												<FormControl>
-													<RadioGroup
-														onValueChange={field.onChange}
-														defaultValue={field.value}
-														className="grid grid-cols-1 place-items-stretch gap-4 md:grid-cols-3"
-													>
-														<RadioGroupFormItem
-															active={field.value === '1'}
-															donationInterval="1"
-															title={translations.monthly}
-															lang={lang}
-														/>
-														<RadioGroupFormItem
-															active={field.value === '3'}
-															donationInterval="3"
-															title={translations.quarterly}
-															lang={lang}
-														/>
-														<RadioGroupFormItem
-															active={field.value === '12'}
-															donationInterval="12"
-															title={translations.yearly}
-															lang={lang}
-														/>
-													</RadioGroup>
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-								</div>
+								<DonationIntervalSelector
+									lang={lang}
+									monthlyIncome={form.watch('monthlyIncome')}
+									translations={{
+										title: translations.howToPay,
+										monthly: translations.monthly,
+										quarterly: translations.quarterly,
+										yearly: translations.yearly,
+									}}
+								/>
 							</CardContent>
 							<CardFooter>
 								<Button size="lg" type="submit" className="w-full" showLoadingSpinner={submitting}>
