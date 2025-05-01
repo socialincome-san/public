@@ -28,6 +28,7 @@ import { useForm, useFormContext, useWatch } from 'react-hook-form';
 import { useUser } from 'reactfire';
 import Stripe from 'stripe';
 import * as z from 'zod';
+import { BankTransferForm } from './bank-transfer-form';
 import { DonationIntervalSelector } from './donation-interval-selector';
 import { PAYMENT_TYPES, PaymentTypeSelector } from './payment-type-selector';
 
@@ -153,6 +154,26 @@ type DonationFormProps = {
 			creditCardDescription: string;
 			bankTransferDescription: string;
 		};
+		bankTransfer: {
+			paymentDetails: string;
+			firstName: string;
+			lastName: string;
+			email: string;
+			plan: string;
+			yourContribution: string;
+			fullSocialIncome: string;
+			partialSocialIncome: string;
+			weMatchTheMissing: string;
+			generateQrBill: string;
+			transferFeesNote: string;
+			plusPlanLink: string;
+			errors: {
+				firstNameRequired: string;
+				lastNameRequired: string;
+				emailRequired: string;
+				emailInvalid: string;
+			};
+		};
 	};
 } & DefaultParams;
 
@@ -162,11 +183,40 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 	const { data: authUser } = useUser();
 	const { currency } = useI18n();
 
-	const formSchema = z.object({
-		monthlyIncome: z.coerce.number(),
-		donationInterval: z.enum(DONATION_INTERVALS),
-		paymentType: region === 'ch' ? z.enum(PAYMENT_TYPES) : z.literal('credit_card'),
-	});
+	const formSchema = z
+		.object({
+			monthlyIncome: z.coerce.number(),
+			donationInterval: z.enum(DONATION_INTERVALS),
+			paymentType: region === 'ch' ? z.enum(PAYMENT_TYPES) : z.literal('credit_card'),
+			firstName: z.string().min(1, 'First name is required').optional(),
+			lastName: z.string().min(1, 'Last name is required').optional(),
+			email: z.string().min(1, 'Email is required').email('Invalid email address').optional(),
+		})
+		.superRefine((data, ctx) => {
+			if (data.paymentType === 'bank_transfer') {
+				if (!data.firstName) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: 'First name is required',
+						path: ['firstName'],
+					});
+				}
+				if (!data.lastName) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: 'Last name is required',
+						path: ['lastName'],
+					});
+				}
+				if (!data.email) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: 'Email is required',
+						path: ['email'],
+					});
+				}
+			}
+		});
 	type FormSchema = z.infer<typeof formSchema>;
 
 	const form = useForm<FormSchema>({
@@ -235,11 +285,16 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 										yearly: translations.yearly,
 									}}
 								/>
+								{form.watch('paymentType') === 'bank_transfer' && (
+									<BankTransferForm amount={form.watch('monthlyIncome')} translations={translations.bankTransfer} />
+								)}
 							</CardContent>
 							<CardFooter>
-								<Button size="lg" type="submit" className="w-full" showLoadingSpinner={submitting}>
-									{translations.buttonText}
-								</Button>
+								{form.watch('paymentType') === 'credit_card' && (
+									<Button size="lg" type="submit" className="w-full" showLoadingSpinner={submitting}>
+										{translations.buttonText}
+									</Button>
+								)}
 							</CardFooter>
 						</Card>
 					)}

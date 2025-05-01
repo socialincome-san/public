@@ -13,6 +13,19 @@
 		"credit-card-description": "Standard",
 		"bank-transfer-description": "Keine Gebühren"
 	},
+	"bank-transfer": {
+		"payment-details": "Zahlungsdetails",
+		"first-name": "Vorname",
+		"last-name": "Nachname",
+		"email": "E-Mail",
+		"generate-qr-bill": "QR-Rechnung generieren",
+		"errors": {
+			"firstNameRequired": "Vorname ist erforderlich",
+			"lastNameRequired": "Nachname ist erforderlich",
+			"emailRequired": "E-Mail ist erforderlich",
+			"emailInvalid": "Ungültige E-Mail-Adresse"
+		}
+	},
 	"donation-impact": {
 		"monthly-contribution": "Dein monatlicher Beitrag:",
 		"direct-payout": "Dein Beitrag wird direkt auf das Mobiltelefon der Social Income Empfänger:innen ausgezahlt.",

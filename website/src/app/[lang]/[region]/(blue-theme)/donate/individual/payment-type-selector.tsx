@@ -2,11 +2,9 @@
 
 import { WebsiteLanguage } from '@/i18n';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormControl, FormField, FormItem, FormMessage, RadioGroup, Typography } from '@socialincome/ui';
+import { FormControl, FormField, FormItem, FormMessage, RadioGroup, Typography } from '@socialincome/ui';
 import classNames from 'classnames';
-import { useForm, useFormContext } from 'react-hook-form';
-import * as z from 'zod';
+import { useFormContext } from 'react-hook-form';
 
 export const PAYMENT_TYPES = ['credit_card', 'bank_transfer'] as const;
 type PaymentType = (typeof PAYMENT_TYPES)[number];
@@ -35,7 +33,7 @@ function PaymentTypeFormItem({
 	description: string;
 	paymentType: PaymentType;
 }) {
-	const { setValue } = useFormContext<{ paymentType: PaymentType }>();
+	const { setValue } = useFormContext();
 
 	return (
 		<FormItem>
@@ -63,52 +61,42 @@ function PaymentTypeFormItem({
 }
 
 export function PaymentTypeSelector({ lang, translations }: PaymentTypeSelectorProps) {
-	const formSchema = z.object({
-		paymentType: z.enum(PAYMENT_TYPES),
-	});
-	type FormSchema = z.infer<typeof formSchema>;
-
-	const form = useForm<FormSchema>({
-		resolver: zodResolver(formSchema),
-		defaultValues: { paymentType: 'credit_card' },
-	});
+	const form = useFormContext();
 
 	return (
-		<Form {...form}>
-			<form className="flex flex-col">
-				<Typography size="lg" weight="medium" className="mb-4">
-					{translations.title}
-				</Typography>
-				<FormField
-					control={form.control}
-					name="paymentType"
-					render={({ field }) => (
-						<FormItem className="space-y-3">
-							<FormControl>
-								<RadioGroup
-									onValueChange={field.onChange}
-									defaultValue={field.value}
-									className="grid grid-cols-1 place-items-stretch gap-4 md:grid-cols-2"
-								>
-									<PaymentTypeFormItem
-										active={field.value === 'credit_card'}
-										paymentType="credit_card"
-										title={translations.creditCard}
-										description={translations.creditCardDescription}
-									/>
-									<PaymentTypeFormItem
-										active={field.value === 'bank_transfer'}
-										paymentType="bank_transfer"
-										title={translations.bankTransfer}
-										description={translations.bankTransferDescription}
-									/>
-								</RadioGroup>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-			</form>
-		</Form>
+		<div className="flex flex-col">
+			<Typography size="lg" weight="medium" className="mb-4">
+				{translations.title}
+			</Typography>
+			<FormField
+				control={form.control}
+				name="paymentType"
+				render={({ field }) => (
+					<FormItem className="space-y-3">
+						<FormControl>
+							<RadioGroup
+								onValueChange={field.onChange}
+								defaultValue={field.value}
+								className="grid grid-cols-1 place-items-stretch gap-4 md:grid-cols-2"
+							>
+								<PaymentTypeFormItem
+									active={field.value === 'credit_card'}
+									paymentType="credit_card"
+									title={translations.creditCard}
+									description={translations.creditCardDescription}
+								/>
+								<PaymentTypeFormItem
+									active={field.value === 'bank_transfer'}
+									paymentType="bank_transfer"
+									title={translations.bankTransfer}
+									description={translations.bankTransferDescription}
+								/>
+							</RadioGroup>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				)}
+			/>
+		</div>
 	);
 }

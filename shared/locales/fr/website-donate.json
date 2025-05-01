@@ -13,6 +13,19 @@
 		"credit-card-description": "Standard",
 		"bank-transfer-description": "Sans frais"
 	},
+	"bank-transfer": {
+		"payment-details": "Détails du paiement",
+		"first-name": "Prénom",
+		"last-name": "Nom",
+		"email": "E-mail",
+		"generate-qr-bill": "Générer la facture QR",
+		"errors": {
+			"firstNameRequired": "Le prénom est requis",
+			"lastNameRequired": "Le nom est requis",
+			"emailRequired": "L'e-mail est requis",
+			"emailInvalid": "Adresse e-mail invalide"
+		}
+	},
 	"donation-impact": {
 		"monthly-contribution": "Ta contribution mensuelle:",
 		"direct-payout": "Ta contribution est versée directement sur le téléphone mobile du ou de la bénéficiaire de Social Income.",
@@ -59,7 +72,6 @@
 			"gender": "Genre",
 			"referral": "Comment as-tu entendu parler de nous?",
 			"accept-terms-and-conditions": "J'accepte <a href='/legal/donations/' target='_blank' class='underline'>les conditions de participation</a> et <a href='/legal/privacy/' target='_blank' class='underline'>la politique de protection des données</a>.",
-
 			"referrals": {
 				"familyfriends": "Famille ou amis",
 				"socialmedia": "Médias sociaux",

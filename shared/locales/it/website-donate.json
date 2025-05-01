@@ -7,7 +7,28 @@
 	"how-to-pay": "Scegli il tuo metodo di pagamento.",
 	"amount": "Importo",
 	"button-text": "Fai la differenza",
+	"button-text-short": "Dona ora",
 	"one-time-donation": "Fai una donazione una tantum",
+	"payment-type": {
+		"title": "Seleziona il metodo di pagamento",
+		"credit-card": "Carta di credito",
+		"bank-transfer": "Bonifico bancario",
+		"credit-card-description": "Standard",
+		"bank-transfer-description": "Nessuna commissione"
+	},
+	"bank-transfer": {
+		"payment-details": "Dettagli del pagamento",
+		"first-name": "Nome",
+		"last-name": "Cognome",
+		"email": "E-mail",
+		"generate-qr-bill": "Genera fattura QR",
+		"errors": {
+			"firstNameRequired": "Il nome è obbligatorio",
+			"lastNameRequired": "Il cognome è obbligatorio",
+			"emailRequired": "L'email è obbligatoria",
+			"emailInvalid": "Indirizzo email non valido"
+		}
+	},
 	"donation-impact": {
 		"monthly-contribution": "Il tuo contributo mensile",
 		"direct-payout": "La tua donazione sarà ricevuta dai beneficiari direttamente nel loro telefono cellulare.",
@@ -15,7 +36,7 @@
 		"0": "{{ amount, currency }} gettano le basi per una grande causa. Aiuta a distribuire una mensilità di Social Income ad una persona bisognosa.",
 		"1": "{{ amount, currency }} corrispondono ad un terzo di una mensilità di Social Income per una persona bisognosa.",
 		"2": "{{ amount, currency }} coprono la metà di una mensilità di Social Income per una persona bisognosa.",
-		"3": "Il tuo contributo mensile di {{ amount, currency }} permetterà ad una persona bisognosa di ricevere l’intero importo di una mensilità di Social Income.",
+		"3": "Il tuo contributo mensile di {{ amount, currency }} permetterà ad una persona bisognosa di ricevere l'intero importo di una mensilità di Social Income.",
 		"4": "{{ amount, currency }} coprono la mensilità di Social Income per più di due persone bisognose.",
 		"5": "Il tuo contributo di {{ amount, currency }} copre la mensilità di Social Income per più di tre persone bisognose.",
 		"6": "Il tuo contributo di {{ amount, currency }} copre la mensilità di Social Income per più di quattro persone bisognose.",

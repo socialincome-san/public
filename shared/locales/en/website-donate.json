@@ -13,6 +13,26 @@
 		"credit-card-description": "Standard",
 		"bank-transfer-description": "No fees"
 	},
+	"bank-transfer": {
+		"payment-details": "Payment details",
+		"first-name": "First Name",
+		"last-name": "Last Name",
+		"email": "E-Mail",
+		"plan": "1% Plan (monthly)",
+		"your-contribution": "Your contribution",
+		"full-social-income": "1 Full Social Income",
+		"partial-social-income": "1 Partial Social Income",
+		"we-match-the-missing": "We match the missing",
+		"generate-qr-bill": "Generate QR Bill",
+		"transfer-fees-note": "All transfer fees are paid from our reserves, currently at € 23,392. Please consider covering the fees with the 1% Plus Plan:",
+		"plus-plan-link": "change",
+		"errors": {
+			"firstNameRequired": "First name is required",
+			"lastNameRequired": "Last name is required",
+			"emailRequired": "Email is required",
+			"emailInvalid": "Invalid email address"
+		}
+	},
 	"donation-impact": {
 		"monthly-contribution": "Your monthly contribution",
 		"direct-payout": "The people in need receive your contribution directly on their mobile phones.",
