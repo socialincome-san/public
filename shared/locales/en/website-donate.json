@@ -18,6 +18,10 @@
 		"first-name": "First Name",
 		"last-name": "Last Name",
 		"email": "E-Mail",
+		"street": "Street",
+		"street-number": "Street Number",
+		"city": "City",
+		"zip": "ZIP Code",
 		"plan": "1% Plan (monthly)",
 		"your-contribution": "Your contribution",
 		"full-social-income": "1 Full Social Income",
@@ -26,13 +30,7 @@
 		"generate-qr-bill": "Generate QR Bill",
 		"confirm-monthly-order": "Confirm Monthly Standing Order",
 		"transfer-fees-note": "All transfer fees are paid from our reserves, currently at € 23,392. Please consider covering the fees with the 1% Plus Plan:",
-		"plus-plan-link": "change",
-		"errors": {
-			"firstNameRequired": "First name is required",
-			"lastNameRequired": "Last name is required",
-			"emailRequired": "Email is required",
-			"emailInvalid": "Invalid email address"
-		}
+		"plus-plan-link": "change"
 	},
 	"donation-impact": {
 		"monthly-contribution": "Your monthly contribution",

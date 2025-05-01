@@ -18,14 +18,12 @@
 		"first-name": "Vorname",
 		"last-name": "Nachname",
 		"email": "E-Mail",
+		"street": "Strasse",
+		"street-number": "Hausnummer",
+		"city": "Ort",
+		"zip": "PLZ",
 		"generate-qr-bill": "QR-Rechnung generieren",
-		"confirm-monthly-order": "Dauerauftrag bestätigen",
-		"errors": {
-			"firstNameRequired": "Vorname ist erforderlich",
-			"lastNameRequired": "Nachname ist erforderlich",
-			"emailRequired": "E-Mail ist erforderlich",
-			"emailInvalid": "Ungültige E-Mail-Adresse"
-		}
+		"confirm-monthly-order": "Dauerauftrag bestätigen"
 	},
 	"donation-impact": {
 		"monthly-contribution": "Dein monatlicher Beitrag:",

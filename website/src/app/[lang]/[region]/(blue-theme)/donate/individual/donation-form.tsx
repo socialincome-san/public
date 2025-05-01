@@ -110,6 +110,10 @@ type DonationFormProps = {
 			firstName: string;
 			lastName: string;
 			email: string;
+			street: string;
+			streetNumber: string;
+			city: string;
+			zip: string;
 			plan: string;
 			yourContribution: string;
 			fullSocialIncome: string;
@@ -124,6 +128,10 @@ type DonationFormProps = {
 				lastNameRequired: string;
 				emailRequired: string;
 				emailInvalid: string;
+				streetRequired: string;
+				streetNumberRequired: string;
+				cityRequired: string;
+				zipRequired: string;
 			};
 		};
 	};
@@ -143,6 +151,9 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 			firstName: z.string().min(1, 'First name is required').optional(),
 			lastName: z.string().min(1, 'Last name is required').optional(),
 			email: z.string().min(1, 'Email is required').email('Invalid email address').optional(),
+			street: z.string().min(1, 'Street is required').optional(),
+			city: z.string().min(1, 'City is required').optional(),
+			zip: z.string().min(1, 'ZIP is required').optional(),
 		})
 		.superRefine((data, ctx) => {
 			if (data.paymentType === 'bank_transfer') {
@@ -167,6 +178,27 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 						path: ['email'],
 					});
 				}
+				if (!data.street) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: 'Street is required',
+						path: ['street'],
+					});
+				}
+				if (!data.city) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: 'City is required',
+						path: ['city'],
+					});
+				}
+				if (!data.zip) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: 'ZIP is required',
+						path: ['zip'],
+					});
+				}
 			}
 		});
 	type FormSchema = z.infer<typeof formSchema>;
@@ -177,6 +209,12 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 			donationInterval: '1',
 			monthlyIncome: amount || ('' as any),
 			paymentType: 'credit_card',
+			firstName: '',
+			lastName: '',
+			email: '',
+			street: '',
+			city: '',
+			zip: '',
 		},
 	});
 
