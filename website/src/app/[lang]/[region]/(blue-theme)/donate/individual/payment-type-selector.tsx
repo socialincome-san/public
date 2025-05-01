@@ -75,7 +75,7 @@ export function PaymentTypeSelector({ lang, translations }: PaymentTypeSelectorP
 
 	return (
 		<Form {...form}>
-			<form className="flex flex-col space-y-8">
+			<form className="flex flex-col">
 				<Typography size="lg" weight="medium" className="mb-4">
 					{translations.title}
 				</Typography>
