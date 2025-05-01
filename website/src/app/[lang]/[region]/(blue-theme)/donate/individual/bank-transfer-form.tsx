@@ -34,10 +34,6 @@ export function BankTransferForm({ amount, translations }: BankTransferFormProps
 	const [isLoading, setIsLoading] = useState(false);
 	const [isSubmitted, setIsSubmitted] = useState(false);
 
-	const monthlyAmount = Number(amount);
-	const fullSocialIncomeAmount = 32;
-	const partialSocialIncomeAmount = monthlyAmount - fullSocialIncomeAmount;
-
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
 		try {
@@ -51,7 +47,7 @@ export function BankTransferForm({ amount, translations }: BankTransferFormProps
 			const streetName = streetParts.join(' ') || street;
 
 			const data: Data = {
-				amount: monthlyAmount,
+				amount: Number(amount),
 				creditor: {
 					account: 'CH44 3199 9123 0008 8901 2',
 					address: 'Musterstrasse',
