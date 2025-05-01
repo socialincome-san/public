@@ -6,7 +6,6 @@ import { useI18n } from '@/components/providers/context-providers';
 import { CurrencySelector } from '@/components/ui/currency-selector';
 import { useTranslator } from '@/hooks/useTranslator';
 import { websiteCurrencies, WebsiteLanguage } from '@/i18n';
-import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	Button,
@@ -21,10 +20,9 @@ import {
 	Input,
 	Typography,
 } from '@socialincome/ui';
-import classNames from 'classnames';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useForm, useFormContext, useWatch } from 'react-hook-form';
+import { useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 import { useUser } from 'reactfire';
 import Stripe from 'stripe';
 import * as z from 'zod';
@@ -86,53 +84,6 @@ function DonationImpact({ lang, translations }: DonationImpactProps) {
 				</Typography>
 			</div>
 		</div>
-	);
-}
-
-type RadioGroupFormItemProps = {
-	active: boolean;
-	donationInterval: DonationInterval;
-	title: string;
-	lang: WebsiteLanguage;
-};
-
-function RadioGroupFormItem({ active, title, donationInterval, lang }: RadioGroupFormItemProps) {
-	const monthlyIncome = useWatch({ name: 'monthlyIncome' });
-	const translator = useTranslator(lang, 'website-donate');
-	const { currency } = useI18n();
-	const [previewAmount, setPreviewAmount] = useState(getDonationAmount(monthlyIncome, donationInterval));
-	const { setValue } = useFormContext<{ donationInterval: DonationInterval }>();
-
-	useEffect(() => {
-		setPreviewAmount(getDonationAmount(monthlyIncome, donationInterval));
-	}, [monthlyIncome, donationInterval]);
-
-	return (
-		<FormItem>
-			<FormControl
-				className={classNames(
-					'flex h-full flex-1 cursor-pointer flex-row rounded-lg border-2 p-4 shadow-sm focus:outline-none',
-					{ 'border-accent bg-card-muted': active },
-				)}
-			>
-				<div onClick={() => setValue('donationInterval', donationInterval)}>
-					<div className="flex flex-1">
-						<div className="flex flex-col space-y-1">
-							<Typography weight="bold">{title}</Typography>
-							<Typography size="sm">
-								{translator?.t(`donation-interval.${donationInterval}.text`, {
-									context: { amount: previewAmount, currency: currency, locale: lang },
-								})}
-							</Typography>
-						</div>
-					</div>
-					<CheckCircleIcon
-						className={classNames(!active ? 'invisible' : '', 'text-accent h-5 w-5')}
-						aria-hidden="true"
-					/>
-				</div>
-			</FormControl>
-		</FormItem>
 	);
 }
 
