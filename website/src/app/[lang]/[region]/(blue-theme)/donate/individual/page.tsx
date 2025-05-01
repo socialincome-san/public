@@ -34,6 +34,26 @@ export default async function Page({ params: { lang, region }, searchParams }: D
 						creditCardDescription: translator.t('payment-type.credit-card-description'),
 						bankTransferDescription: translator.t('payment-type.bank-transfer-description'),
 					},
+					bankTransfer: {
+						paymentDetails: translator.t('bank-transfer.payment-details'),
+						firstName: translator.t('bank-transfer.first-name'),
+						lastName: translator.t('bank-transfer.last-name'),
+						email: translator.t('bank-transfer.email'),
+						plan: translator.t('bank-transfer.plan'),
+						yourContribution: translator.t('bank-transfer.your-contribution'),
+						fullSocialIncome: translator.t('bank-transfer.full-social-income'),
+						partialSocialIncome: translator.t('bank-transfer.partial-social-income'),
+						weMatchTheMissing: translator.t('bank-transfer.we-match-the-missing'),
+						generateQrBill: translator.t('bank-transfer.generate-qr-bill'),
+						transferFeesNote: translator.t('bank-transfer.transfer-fees-note'),
+						plusPlanLink: translator.t('bank-transfer.plus-plan-link'),
+						errors: {
+							firstNameRequired: translator.t('bank-transfer.errors.firstNameRequired'),
+							lastNameRequired: translator.t('bank-transfer.errors.lastNameRequired'),
+							emailRequired: translator.t('bank-transfer.errors.emailRequired'),
+							emailInvalid: translator.t('bank-transfer.errors.emailInvalid'),
+						},
+					},
 				}}
 			/>
 			<div className="mt-4 hover:underline">

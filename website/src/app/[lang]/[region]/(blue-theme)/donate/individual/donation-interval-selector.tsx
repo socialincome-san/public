@@ -2,11 +2,9 @@
 
 import { WebsiteLanguage } from '@/i18n';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormControl, FormField, FormItem, FormMessage, RadioGroup, Typography } from '@socialincome/ui';
+import { FormControl, FormField, FormItem, FormMessage, RadioGroup, Typography } from '@socialincome/ui';
 import classNames from 'classnames';
-import { useForm, useFormContext } from 'react-hook-form';
-import * as z from 'zod';
+import { useFormContext } from 'react-hook-form';
 
 export const DONATION_INTERVALS = ['1', '3', '12'] as const;
 type DonationInterval = (typeof DONATION_INTERVALS)[number];
@@ -73,61 +71,51 @@ function DonationIntervalFormItem({
 }
 
 export function DonationIntervalSelector({ lang, translations, monthlyIncome }: DonationIntervalSelectorProps) {
-	const formSchema = z.object({
-		donationInterval: z.enum(DONATION_INTERVALS),
-	});
-	type FormSchema = z.infer<typeof formSchema>;
-
-	const form = useForm<FormSchema>({
-		resolver: zodResolver(formSchema),
-		defaultValues: { donationInterval: '1' },
-	});
+	const form = useFormContext();
 
 	return (
-		<Form {...form}>
-			<form className="flex flex-col">
-				<Typography size="lg" weight="medium" className="mb-4">
-					{translations.title}
-				</Typography>
-				<FormField
-					control={form.control}
-					name="donationInterval"
-					render={({ field }) => (
-						<FormItem className="space-y-3">
-							<FormControl>
-								<RadioGroup
-									onValueChange={field.onChange}
-									defaultValue={field.value}
-									className="grid grid-cols-1 place-items-stretch gap-4 md:grid-cols-3"
-								>
-									<DonationIntervalFormItem
-										active={field.value === '1'}
-										donationInterval="1"
-										title={translations.monthly}
-										lang={lang}
-										monthlyIncome={monthlyIncome}
-									/>
-									<DonationIntervalFormItem
-										active={field.value === '3'}
-										donationInterval="3"
-										title={translations.quarterly}
-										lang={lang}
-										monthlyIncome={monthlyIncome}
-									/>
-									<DonationIntervalFormItem
-										active={field.value === '12'}
-										donationInterval="12"
-										title={translations.yearly}
-										lang={lang}
-										monthlyIncome={monthlyIncome}
-									/>
-								</RadioGroup>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-			</form>
-		</Form>
+		<div className="flex flex-col">
+			<Typography size="lg" weight="medium" className="mb-4">
+				{translations.title}
+			</Typography>
+			<FormField
+				control={form.control}
+				name="donationInterval"
+				render={({ field }) => (
+					<FormItem className="space-y-3">
+						<FormControl>
+							<RadioGroup
+								onValueChange={field.onChange}
+								defaultValue={field.value}
+								className="grid grid-cols-1 place-items-stretch gap-4 md:grid-cols-3"
+							>
+								<DonationIntervalFormItem
+									active={field.value === '1'}
+									donationInterval="1"
+									title={translations.monthly}
+									lang={lang}
+									monthlyIncome={monthlyIncome}
+								/>
+								<DonationIntervalFormItem
+									active={field.value === '3'}
+									donationInterval="3"
+									title={translations.quarterly}
+									lang={lang}
+									monthlyIncome={monthlyIncome}
+								/>
+								<DonationIntervalFormItem
+									active={field.value === '12'}
+									donationInterval="12"
+									title={translations.yearly}
+									lang={lang}
+									monthlyIncome={monthlyIncome}
+								/>
+							</RadioGroup>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				)}
+			/>
+		</div>
 	);
 }
