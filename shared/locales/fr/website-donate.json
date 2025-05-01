@@ -18,14 +18,12 @@
 		"first-name": "Prénom",
 		"last-name": "Nom",
 		"email": "E-mail",
+		"street": "Rue",
+		"street-number": "Numéro",
+		"city": "Ville",
+		"zip": "Code postal",
 		"generate-qr-bill": "Générer la facture QR",
-		"confirm-monthly-order": "Confirmer l'ordre permanent mensuel",
-		"errors": {
-			"firstNameRequired": "Le prénom est requis",
-			"lastNameRequired": "Le nom est requis",
-			"emailRequired": "L'e-mail est requis",
-			"emailInvalid": "Adresse e-mail invalide"
-		}
+		"confirm-monthly-order": "Confirmer l'ordre permanent mensuel"
 	},
 	"donation-impact": {
 		"monthly-contribution": "Ta contribution mensuelle:",

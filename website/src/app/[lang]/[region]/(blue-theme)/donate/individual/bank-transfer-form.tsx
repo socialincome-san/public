@@ -1,16 +1,10 @@
 'use client';
 
-import { Button, Input, Typography } from '@socialincome/ui';
+import { Button, FormControl, FormField, FormItem, FormLabel, FormMessage, Input, Typography } from '@socialincome/ui';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Data } from 'swissqrbill/lib/cjs/shared/types';
 import { SwissQRBill } from 'swissqrbill/svg';
-import { z } from 'zod';
-const formSchema = z.object({
-	firstName: z.string().min(1, 'First name is required'),
-	lastName: z.string().min(1, 'Last name is required'),
-	email: z.string().min(1, 'Email is required').email('Invalid email address'),
-});
 
 type BankTransferFormProps = {
 	amount: number;
@@ -19,6 +13,9 @@ type BankTransferFormProps = {
 		firstName: string;
 		lastName: string;
 		email: string;
+		street: string;
+		city: string;
+		zip: string;
 		plan: string;
 		yourContribution: string;
 		fullSocialIncome: string;
@@ -28,21 +25,11 @@ type BankTransferFormProps = {
 		confirmMonthlyOrder: string;
 		transferFeesNote: string;
 		plusPlanLink: string;
-		errors: {
-			firstNameRequired: string;
-			lastNameRequired: string;
-			emailRequired: string;
-			emailInvalid: string;
-		};
 	};
 };
 
 export function BankTransferForm({ amount, translations }: BankTransferFormProps) {
 	const form = useFormContext();
-	const {
-		formState: { errors },
-		register,
-	} = form;
 	const [qrBill, setQrBill] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isSubmitted, setIsSubmitted] = useState(false);
@@ -53,9 +40,15 @@ export function BankTransferForm({ amount, translations }: BankTransferFormProps
 
 	const handleSubmit = async (event: React.FormEvent) => {
 		event.preventDefault();
-		form.handleSubmit(async (formData) => {
+		try {
 			setIsLoading(true);
-			const { firstName, lastName, email } = formData;
+			const formData = form.getValues();
+			const { firstName, lastName, email, street, city, zip } = formData;
+
+			// Extract street number from street address
+			const streetParts = street.trim().split(' ');
+			const streetNumber = streetParts.length > 1 ? streetParts.pop() : '';
+			const streetName = streetParts.join(' ') || street;
 
 			const data: Data = {
 				amount: monthlyAmount,
@@ -70,39 +63,41 @@ export function BankTransferForm({ amount, translations }: BankTransferFormProps
 				},
 				currency: 'CHF',
 				debtor: {
-					address: 'Musterstrasse',
-					buildingNumber: 1,
-					city: 'Musterstadt',
+					address: streetName,
+					city,
+					buildingNumber: streetNumber,
 					country: 'CH',
 					name: `${firstName} ${lastName}`,
-					zip: 1234,
+					zip: parseInt(zip),
 				},
 				reference: '21 00000 00003 13947 14300 09017',
 			};
 
-			try {
-				const svg = new SwissQRBill(data);
-				setQrBill(svg.toString());
-				setIsSubmitted(true);
-			} catch (error) {
-				console.error('Error generating QR bill:', error);
-			} finally {
-				setIsLoading(false);
-			}
-		})(event);
+			const svg = new SwissQRBill(data);
+			setQrBill(svg.toString());
+			setIsSubmitted(true);
+		} catch (error) {
+			console.error('Error generating QR bill:', error);
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	if (isSubmitted && qrBill) {
 		return (
-			<div className="mt-8 space-y-4">
-				<Typography size="xl" weight="bold">
+			<div className="rounded-3xl bg-blue-500 p-12">
+				<Typography size="5xl" className="mb-8 text-yellow-400">
 					{translations.paymentDetails}
 				</Typography>
 				<div className="mt-4 flex justify-center">
 					<div dangerouslySetInnerHTML={{ __html: qrBill }} className="max-w-full" />
 				</div>
-				<div className="space-y-4 rounded-lg bg-white p-6">
-					<Button size="lg" type="button" className="w-full">
+				<div className="mt-8">
+					<Button
+						size="lg"
+						type="button"
+						className="text-primary h-14 w-full rounded-full bg-yellow-400 text-lg font-medium hover:bg-yellow-300"
+					>
 						{translations.confirmMonthlyOrder}
 					</Button>
 				</div>
@@ -111,59 +106,124 @@ export function BankTransferForm({ amount, translations }: BankTransferFormProps
 	}
 
 	return (
-		<div className="mt-8 space-y-4">
-			<Typography size="xl" weight="bold">
+		<div className="rounded-3xl bg-blue-500 p-12">
+			<Typography size="5xl" className="mb-8 text-yellow-400">
 				{translations.paymentDetails}
 			</Typography>
 
-			<div className="space-y-4">
-				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-					<div>
-						<Input
-							id="firstName"
-							placeholder={`${translations.firstName} *`}
-							{...register('firstName', {
-								required: translations.errors.firstNameRequired,
-							})}
-							className={errors.firstName ? 'border-destructive' : ''}
+			<div className="mb-12 grid grid-cols-1 gap-x-12 gap-y-8 sm:grid-cols-2">
+				<div className="space-y-8">
+					<Typography size="xl" weight="medium" className="flex items-start text-white">
+						<span className="mr-2">1.</span>
+						<span>Please provide your information for the payment.</span>
+					</Typography>
+					<div className="space-y-4">
+						<FormField
+							control={form.control}
+							name="firstName"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="text-white">{translations.firstName}</FormLabel>
+									<FormControl>
+										<Input type="text" required className="h-14 rounded-xl bg-white px-6" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
 						/>
-						{errors.firstName && <p className="text-destructive mt-1 text-sm">{errors.firstName.message as string}</p>}
-					</div>
-					<div>
-						<Input
-							id="lastName"
-							placeholder={`${translations.lastName} *`}
-							{...register('lastName', {
-								required: translations.errors.lastNameRequired,
-							})}
-							className={errors.lastName ? 'border-destructive' : ''}
+						<FormField
+							control={form.control}
+							name="lastName"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="text-white">{translations.lastName}</FormLabel>
+									<FormControl>
+										<Input type="text" required className="h-14 rounded-xl bg-white px-6" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
 						/>
-						{errors.lastName && <p className="text-destructive mt-1 text-sm">{errors.lastName.message as string}</p>}
-					</div>
-					<div>
-						<Input
-							id="email"
-							type="email"
-							placeholder={`${translations.email} *`}
-							{...register('email', {
-								required: translations.errors.emailRequired,
-								pattern: {
-									value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-									message: translations.errors.emailInvalid,
-								},
-							})}
-							className={errors.email ? 'border-destructive' : ''}
+						<FormField
+							control={form.control}
+							name="street"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="text-white">{translations.street}</FormLabel>
+									<FormControl>
+										<Input
+											type="text"
+											required
+											className="h-14 rounded-xl bg-white px-6"
+											placeholder="Street and number"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
 						/>
-						{errors.email && <p className="text-destructive mt-1 text-sm">{errors.email.message as string}</p>}
+						<div className="grid grid-cols-4 gap-4">
+							<FormField
+								control={form.control}
+								name="zip"
+								render={({ field }) => (
+									<FormItem className="col-span-1">
+										<FormLabel className="text-white">{translations.zip}</FormLabel>
+										<FormControl>
+											<Input type="text" required className="h-14 rounded-xl bg-white px-6" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="city"
+								render={({ field }) => (
+									<FormItem className="col-span-3">
+										<FormLabel className="text-white">{translations.city}</FormLabel>
+										<FormControl>
+											<Input type="text" required className="h-14 rounded-xl bg-white px-6" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
 					</div>
 				</div>
 
-				<div className="space-y-4 rounded-lg bg-white p-6">
-					<Button size="lg" type="submit" className="w-full" onClick={handleSubmit} disabled={isLoading}>
-						{isLoading ? 'Generating...' : translations.generateQrBill}
-					</Button>
+				<div className="space-y-8">
+					<Typography size="xl" weight="medium" className="flex items-start text-white">
+						<span className="mr-2">2.</span>
+						<span>Email for login and email with the payment details</span>
+					</Typography>
+					<FormField
+						control={form.control}
+						name="email"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel className="text-white">{translations.email}</FormLabel>
+								<FormControl>
+									<Input type="email" required className="h-14 rounded-xl bg-white px-6" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 				</div>
 			</div>
+
+			<Button
+				size="lg"
+				type="submit"
+				className="text-primary h-14 w-full rounded-full bg-yellow-400 text-lg font-medium hover:bg-yellow-300 disabled:cursor-not-allowed disabled:opacity-50"
+				onClick={handleSubmit}
+				disabled={isLoading || !form.formState.isValid}
+			>
+				{isLoading ? 'Generating...' : translations.generateQrBill}
+			</Button>
 		</div>
 	);
 }
