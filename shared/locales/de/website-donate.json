@@ -19,6 +19,7 @@
 		"last-name": "Nachname",
 		"email": "E-Mail",
 		"generate-qr-bill": "QR-Rechnung generieren",
+		"confirm-monthly-order": "Dauerauftrag bestätigen",
 		"errors": {
 			"firstNameRequired": "Vorname ist erforderlich",
 			"lastNameRequired": "Nachname ist erforderlich",

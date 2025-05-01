@@ -22,6 +22,7 @@
 		"last-name": "Cognome",
 		"email": "E-mail",
 		"generate-qr-bill": "Genera fattura QR",
+		"confirm-monthly-order": "Conferma ordine permanente mensile",
 		"errors": {
 			"firstNameRequired": "Il nome è obbligatorio",
 			"lastNameRequired": "Il cognome è obbligatorio",

@@ -166,6 +166,7 @@ type DonationFormProps = {
 			weMatchTheMissing: string;
 			generateQrBill: string;
 			transferFeesNote: string;
+			confirmMonthlyOrder: string;
 			plusPlanLink: string;
 			errors: {
 				firstNameRequired: string;
@@ -274,7 +275,6 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 								<DonationImpact lang={lang} translations={translations.donationImpact} />
 							</CardHeader>
 							<CardContent className="mt-8 space-y-8">
-								{region === 'ch' && <PaymentTypeSelector lang={lang} translations={translations.paymentType} />}
 								<DonationIntervalSelector
 									lang={lang}
 									monthlyIncome={form.watch('monthlyIncome')}
@@ -285,8 +285,12 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 										yearly: translations.yearly,
 									}}
 								/>
+								{region === 'ch' && <PaymentTypeSelector lang={lang} translations={translations.paymentType} />}
 								{form.watch('paymentType') === 'bank_transfer' && (
-									<BankTransferForm amount={form.watch('monthlyIncome')} translations={translations.bankTransfer} />
+									<BankTransferForm
+										amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
+										translations={translations.bankTransfer}
+									/>
 								)}
 							</CardContent>
 							<CardFooter>

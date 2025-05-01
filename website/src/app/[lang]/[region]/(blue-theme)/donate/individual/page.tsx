@@ -45,6 +45,7 @@ export default async function Page({ params: { lang, region }, searchParams }: D
 						partialSocialIncome: translator.t('bank-transfer.partial-social-income'),
 						weMatchTheMissing: translator.t('bank-transfer.we-match-the-missing'),
 						generateQrBill: translator.t('bank-transfer.generate-qr-bill'),
+						confirmMonthlyOrder: translator.t('bank-transfer.confirm-monthly-order'),
 						transferFeesNote: translator.t('bank-transfer.transfer-fees-note'),
 						plusPlanLink: translator.t('bank-transfer.plus-plan-link'),
 						errors: {

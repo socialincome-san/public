@@ -19,6 +19,7 @@
 		"last-name": "Nom",
 		"email": "E-mail",
 		"generate-qr-bill": "Générer la facture QR",
+		"confirm-monthly-order": "Confirmer l'ordre permanent mensuel",
 		"errors": {
 			"firstNameRequired": "Le prénom est requis",
 			"lastNameRequired": "Le nom est requis",
