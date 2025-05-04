@@ -6,7 +6,7 @@ import {
 } from '@socialincome/shared/src/storyblok/journal';
 import { getStoryblokApi, ISbStory } from '@storyblok/react';
 import { DateTime } from 'luxon';
-import { draftMode, type UnsafeUnwrappedDraftMode } from 'next/headers';
+import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { ISbStories, ISbStoriesParams, ISbStoryData } from 'storyblok-js-client/src/interfaces';
 
@@ -23,10 +23,10 @@ export function getPublishedDateFormatted(date: string, lang: string) {
 }
 
 // During the development of Storyblok features or writing of new content, it is useful to use the draft version of the content.
-function addVersionParameter(properties: ISbStoriesParams): ISbStoriesParams {
+async function addVersionParameter(properties: ISbStoriesParams): Promise<ISbStoriesParams> {
 	return {
 		...properties,
-		version: (draftMode() as unknown as UnsafeUnwrappedDraftMode).isEnabled ? 'draft' : 'published',
+		version: (await draftMode()).isEnabled ? 'draft' : 'published',
 	};
 }
 
@@ -50,7 +50,7 @@ export async function getAuthors(lang: string): Promise<ISbStories<StoryblokAuth
 			},
 		},
 	};
-	return getStoryblokApi().get(STORIES_PATH, addVersionParameter(params));
+	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
 }
 
 export async function getTags(lang: string): Promise<ISbStories<StoryblokTag>> {
@@ -63,7 +63,7 @@ export async function getTags(lang: string): Promise<ISbStories<StoryblokTag>> {
 			},
 		},
 	};
-	return getStoryblokApi().get(STORIES_PATH, addVersionParameter(params));
+	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
 }
 
 export async function getArticlesByTag(tagId: string, lang: string): Promise<ISbStories<StoryblokArticle>> {
@@ -79,7 +79,7 @@ export async function getArticlesByTag(tagId: string, lang: string): Promise<ISb
 			},
 		},
 	};
-	return getStoryblokApi().get(STORIES_PATH, addVersionParameter(params));
+	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
 }
 
 export async function getArticlesByAuthor(
@@ -100,7 +100,7 @@ export async function getArticlesByAuthor(
 			},
 		},
 	};
-	return getStoryblokApi().get(STORIES_PATH, addVersionParameter(params));
+	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
 }
 
 export async function getOverviewArticles(
@@ -122,7 +122,7 @@ export async function getOverviewArticles(
 		},
 		...(idsToIgnore ? { excluding_ids: idsToIgnore } : {}),
 	};
-	return getStoryblokApi().get(STORIES_PATH, addVersionParameter(params));
+	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
 }
 
 export async function getTag(slug: string, lang: string): Promise<ISbStory<StoryblokTag>> {
@@ -131,7 +131,7 @@ export async function getTag(slug: string, lang: string): Promise<ISbStory<Story
 			const params: ISbStoriesParams = {
 				language: lang,
 			};
-			return getStoryblokApi().get(`cdn/stories/tag/${slug}`, addVersionParameter(params));
+			return getStoryblokApi().get(`cdn/stories/tag/${slug}`, await addVersionParameter(params));
 		},
 		lang,
 		slug,
@@ -144,7 +144,7 @@ export async function getAuthor(slug: string, lang: string): Promise<ISbStory<St
 			const params: ISbStoriesParams = {
 				language: lang,
 			};
-			return getStoryblokApi().get(`cdn/stories/author/${slug}`, addVersionParameter(params));
+			return getStoryblokApi().get(`cdn/stories/author/${slug}`, await addVersionParameter(params));
 		},
 		lang,
 		slug,
@@ -210,7 +210,7 @@ async function getRelativeArticlesByAuthorAndTags(
 		content_type: StoryblokContentType.Article,
 		filter_query: filter,
 	};
-	return getStoryblokApi().get(STORIES_PATH, addVersionParameter(params));
+	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
 }
 
 /*
@@ -249,7 +249,7 @@ export async function getArticle(lang: string, slug: string): Promise<ISbStory<S
 				resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
 				language: lang,
 			};
-			return getStoryblokApi().get(`cdn/stories/journal/${slug}`, addVersionParameter(params));
+			return getStoryblokApi().get(`cdn/stories/journal/${slug}`, await addVersionParameter(params));
 		},
 		lang,
 		slug,

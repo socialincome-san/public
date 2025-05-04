@@ -31,7 +31,7 @@ function badgeWithLink(lang: string, region: string, tag: ISbStoryData<Storyblok
 	return (
 		<Link href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
 			<Badge key={tag.slug} variant={variant} className="mt-6">
-				{tag.content.value}
+				{tag.content?.value}
 			</Badge>
 		</Link>
 	);
