@@ -68,7 +68,10 @@ const redirectMiddleware = (request: NextRequest) => {
 			return NextResponse.redirect('https://socialincome.webdisc.ch/');
 		// For blog posts that were originally standard pages and used in ads
 		case '/world-poverty-statistics-2022':
+			return NextResponse.redirect('https://socialincome.org/journal/world-poverty-statistics-2024');
 		case '/world-poverty-statistics-2023':
+			return NextResponse.redirect('https://socialincome.org/journal/world-poverty-statistics-2024');
+		case '/world-poverty-statistics-2024':
 			return NextResponse.redirect('https://socialincome.org/journal/world-poverty-statistics-2024');
 		case '/how-to-reduce-income-inequality':
 			return NextResponse.redirect('https://socialincome.org/journal/how-to-reduce-income-inequality');
