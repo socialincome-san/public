@@ -6,8 +6,8 @@ import { BaseContainer, Typography } from '@socialincome/ui';
 
 export const revalidate = 900;
 
-export default async function Page(props: { params: { slug: string; lang: LanguageCode; region: string } }) {
-	const { slug, lang, region } = props.params;
+export default async function Page(props: { params: Promise<{ slug: string; lang: LanguageCode; region: string }> }) {
+	const { slug, lang, region } = await props.params;
 	const tag = (await getTag(slug, lang)).data.story;
 	const blogsResponse = await getArticlesByTag(tag.uuid, lang);
 

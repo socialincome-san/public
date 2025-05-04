@@ -5,10 +5,8 @@ import { BaseContainer, linkCn, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
 export default async function Section1({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['website-books'],
-	});
+	const { lang } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-books'] });
 
 	return (
 		<BaseContainer className="mt-12 flex flex-col items-center space-y-4">

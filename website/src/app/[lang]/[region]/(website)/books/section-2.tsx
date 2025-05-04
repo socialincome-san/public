@@ -13,10 +13,8 @@ import book9cover from './(assets)/poor-economics.jpg';
 import book3cover from './(assets)/utopia.jpg';
 
 export default async function Section2({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['website-books'],
-	});
+	const { lang } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-books'] });
 
 	return (
 		<BaseContainer className="mx-auto flex w-full max-w-4xl flex-col space-y-8 py-8">

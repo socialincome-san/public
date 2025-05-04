@@ -5,10 +5,8 @@ import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import { CardTranslation, SectionCard } from './section-card';
 
 export default async function Section2({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['website-evidence'],
-	});
+	const { lang } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-evidence'] });
 	const cards = translator.t<CardTranslation[]>(`section-3.cards`);
 	const takeAction = translator.t('take-action');
 

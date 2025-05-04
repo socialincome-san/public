@@ -6,7 +6,7 @@ import {
 } from '@socialincome/shared/src/storyblok/journal';
 import { getStoryblokApi, ISbStory } from '@storyblok/react';
 import { DateTime } from 'luxon';
-import { draftMode } from 'next/headers';
+import { draftMode, type UnsafeUnwrappedDraftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { ISbStories, ISbStoriesParams, ISbStoryData } from 'storyblok-js-client/src/interfaces';
 
@@ -24,7 +24,10 @@ export function getPublishedDateFormatted(date: string, lang: string) {
 
 // During the development of Storyblok features or writing of new content, it is useful to use the draft version of the content.
 function addVersionParameter(properties: ISbStoriesParams): ISbStoriesParams {
-	return { ...properties, version: draftMode().isEnabled ? 'draft' : 'published' };
+	return {
+		...properties,
+		version: (draftMode() as unknown as UnsafeUnwrappedDraftMode).isEnabled ? 'draft' : 'published',
+	};
 }
 
 // Based on official documentation: https://www.storyblok.com/faq/image-dimensions-assets-js

@@ -5,7 +5,11 @@ import { Hero } from './(sections)/hero';
 import { OpenIssues } from './(sections)/open-issues';
 import { Overview } from './(sections)/overview';
 
-export default async function Page({ params: { lang, region } }: DefaultPageProps) {
+export default async function Page(props: DefaultPageProps) {
+	const params = await props.params;
+
+	const { lang, region } = params;
+
 	return (
 		<BaseContainer className="space-y-12">
 			<Hero lang={lang} region={region} />

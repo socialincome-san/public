@@ -7,8 +7,9 @@ import Image from 'next/image';
 import phonesGif from '../(assets)/phones-1.gif';
 
 export async function OurWork({ params }: DefaultPageProps) {
+	const { lang } = await params;
 	const translator = await Translator.getInstance({
-		language: params.lang,
+		language: lang,
 		namespaces: ['website-our-work', 'website-videos'],
 	});
 

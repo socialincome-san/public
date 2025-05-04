@@ -3,7 +3,8 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';
 import { EmployersList } from './employers-list';
 
-export default async function Page({ params }: DefaultPageProps) {
+export default async function Page(props: DefaultPageProps) {
+	const params = await props.params;
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-me'] });
 	return (
 		<div className="space-y-12">

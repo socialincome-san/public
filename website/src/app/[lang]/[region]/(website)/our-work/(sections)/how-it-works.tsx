@@ -7,10 +7,8 @@ import Image from 'next/image';
 import phonesGif from '../(assets)/phones-2.gif';
 
 export async function HowItWorks({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['website-our-work'],
-	});
+	const { lang } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-our-work'] });
 
 	return (
 		<BaseContainer id="how-it-works" className="flex flex-col justify-center space-y-8">

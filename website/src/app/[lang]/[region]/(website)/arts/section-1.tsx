@@ -4,10 +4,8 @@ import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 
 export default async function Section1({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['website-arts'],
-	});
+	const { lang } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-arts'] });
 
 	return (
 		<BaseContainer className="min-h-screen-navbar flex items-center justify-center">

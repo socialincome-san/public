@@ -1,4 +1,4 @@
-import { DefaultPageProps, DefaultParams } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { PartnerHome } from '@/app/[lang]/[region]/(website)/partners/(components)/PartnerHome';
 import { NgoEntryJSON, NgoHomeProps } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
 import { firestoreAdmin } from '@/firebase-admin';
@@ -40,13 +40,17 @@ async function getNGOTranslationAndStats(
 	return { translation: currentNgo, stats: stats };
 }
 
-type PartnerPageProps = {
-	params: {
-		slug: string;
-	} & DefaultParams;
-} & DefaultPageProps;
+interface PartnerPageParams extends DefaultParams {
+	slug: string;
+}
 
-export default async function Page({ params: { lang, region, slug } }: PartnerPageProps) {
+interface PartnerPageProps {
+	params: Promise<PartnerPageParams>;
+}
+
+export default async function Page({ params }: PartnerPageProps) {
+	const { lang, region, slug } = await params;
+
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-partners', 'website-common', 'countries'],

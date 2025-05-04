@@ -39,8 +39,8 @@ function badgeWithLink(lang: string, region: string, tag: ISbStoryData<Storyblok
 
 const NUMBER_OF_RELATIVE_ARTICLES = 3;
 
-export default async function Page(props: { params: { slug: string; lang: LanguageCode; region: string } }) {
-	const { slug, lang, region } = props.params;
+export default async function Page(props: { params: Promise<{ slug: string; lang: LanguageCode; region: string }> }) {
+	const { slug, lang, region } = await props.params;
 
 	const articleResponse = await getArticle(lang, slug);
 	const articleData = articleResponse.data.story.content;

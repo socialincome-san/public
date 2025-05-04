@@ -14,10 +14,8 @@ import nenehImg from '../(assets)/neneh.jpeg';
 import onikehImg from '../(assets)/onikeh.jpeg';
 
 export async function Recipients({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['countries', 'website-our-work'],
-	});
+	const { lang } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['countries', 'website-our-work'] });
 
 	return (
 		<BaseContainer id="recipients" className="flex scroll-mt-36 flex-col justify-center space-y-8">

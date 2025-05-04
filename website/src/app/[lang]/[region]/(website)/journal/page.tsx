@@ -8,7 +8,11 @@ import Link from 'next/link';
 
 export const revalidate = 900;
 
-export default async function Page({ params: { lang, region } }: DefaultPageProps) {
+export default async function Page(props: DefaultPageProps) {
+	const params = await props.params;
+
+	const { lang, region } = params;
+
 	const [blogsResponse, authorsResponse, tagsResponse] = await Promise.all([
 		getOverviewArticles(lang),
 		getAuthors(lang),

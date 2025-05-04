@@ -5,12 +5,9 @@ import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import { CardTranslation, SectionCard } from './section-card';
 
 export default async function Section3({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['website-evidence'],
-	});
+	const { lang } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-evidence'] });
 	const cards = translator.t<CardTranslation[]>(`section-4.cards`);
-	const takeAction = translator.t('take-action');
 
 	return (
 		<div className="flex flex-col space-y-1 py-16">
@@ -30,7 +27,7 @@ export default async function Section3({ params }: DefaultPageProps) {
 				</Typography>
 				<div className="h-full space-y-10 text-left md:col-span-3 lg:col-span-4">
 					{cards.map((card, key) => (
-						<SectionCard key={key} translations={{ card: card, takeAction: takeAction }} />
+						<SectionCard key={key} translations={{ card: card, takeAction: translator.t('take-action') }} />
 					))}
 				</div>
 			</div>

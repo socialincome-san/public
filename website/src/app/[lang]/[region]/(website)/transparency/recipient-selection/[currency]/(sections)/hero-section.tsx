@@ -7,10 +7,7 @@ import globeRotating from '../(assets)/globe.svg';
 import ScrollToChevron from '../(components)/scroll-to-chevron';
 
 export async function HeroSection({ lang }: DefaultParams) {
-	const translator = await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-selection'],
-	});
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-selection'] });
 
 	return (
 		<div className="theme-blue flex h-[calc(100svh)] min-h-[600px] flex-col">

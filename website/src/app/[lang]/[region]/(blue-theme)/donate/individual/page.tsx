@@ -4,7 +4,12 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, linkCn } from '@socialincome/ui';
 import Link from 'next/link';
 
-export default async function Page({ params: { lang, region }, searchParams }: DefaultPageProps) {
+export default async function Page(props: DefaultPageProps) {
+	const searchParams = await props.searchParams;
+	const params = await props.params;
+
+	const { lang, region } = params;
+
 	const amount = Number(searchParams.amount) || undefined;
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-donate'] });
 

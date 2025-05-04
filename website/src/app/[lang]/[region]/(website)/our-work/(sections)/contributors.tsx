@@ -9,10 +9,8 @@ import rubenImage from '../(assets)/ruben.jpg';
 import vanjaImg from '../(assets)/vanja.jpg';
 
 export async function Contributors({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['countries', 'website-our-work'],
-	});
+	const { lang } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['countries', 'website-our-work'] });
 
 	return (
 		<BaseContainer id="contributors" className="flex scroll-mt-36 flex-col justify-center space-y-24 lg:space-y-36">
