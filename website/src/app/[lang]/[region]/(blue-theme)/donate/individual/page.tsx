@@ -14,7 +14,7 @@ export default async function Page(props: DefaultPageProps) {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-donate'] });
 
 	return (
-		<BaseContainer className="mx-auto max-w-5xl pt-16">
+		<BaseContainer className="mx-auto max-w-5xl">
 			<DonationForm
 				amount={amount}
 				lang={lang}
