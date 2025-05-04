@@ -1,4 +1,4 @@
-import { DefaultPageProps, DefaultParams } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { CurrencyRedirect } from '@/app/[lang]/[region]/(website)/transparency/(components)/currency-redirect';
 import { firestoreAdmin } from '@/firebase-admin';
 import { toLocale, websiteCurrencies, WebsiteCurrency } from '@/i18n';
@@ -22,19 +22,24 @@ import { Section4 } from './section-4';
 export const revalidate = 3600; // update once an hour
 export const generateStaticParams = () => websiteCurrencies.map((currency) => ({ currency: currency.toLowerCase() }));
 
-export type TransparencyPageProps = DefaultPageProps & {
-	params: DefaultParams & { currency: WebsiteCurrency };
-};
+interface TransparencyPageParams extends DefaultParams {
+	currency: Currency;
+}
+
+interface TransparencyPageProps {
+	params: Promise<TransparencyPageParams>;
+}
 
 export type SectionProps = {
 	contributionStats: ContributionStats;
 	expensesStats: ExpenseStats;
-	params: DefaultParams & { currency: WebsiteCurrency };
+	params: TransparencyPageParams;
 	paymentStats: PaymentStats;
 	recipientStats: RecipientStats;
 };
 
-export default async function Page({ params }: TransparencyPageProps) {
+export default async function Page(props: TransparencyPageProps) {
+	const params = await props.params;
 	const getStats = async (currency: Currency) => {
 		const contributionCalculator = await ContributionStatsCalculator.build(firestoreAdmin, currency);
 		const contributionStats = contributionCalculator.allStats();

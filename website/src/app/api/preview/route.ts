@@ -1,4 +1,4 @@
-import { cookies, draftMode } from 'next/headers';
+import { cookies, draftMode, type UnsafeUnwrappedCookies, type UnsafeUnwrappedDraftMode } from 'next/headers';
 import { redirect, RedirectType } from 'next/navigation';
 
 const ALLOWED_SLUGS_PREFIXES = ['journal', 'author', 'tag'];
@@ -30,12 +30,12 @@ function removeLanguagePrefix(slug: string | null, language: string) {
 }
 
 function enableDraftModeAndAdaptCookie() {
-	draftMode().enable();
+	(draftMode() as unknown as UnsafeUnwrappedDraftMode).enable();
 
-	const draft = cookies().get(DRAFT_MODE_COOKIE_NAME);
+	const draft = (cookies() as unknown as UnsafeUnwrappedCookies).get(DRAFT_MODE_COOKIE_NAME);
 	const draftValue = draft?.value;
 	if (draftValue) {
-		cookies().set({
+		(cookies() as unknown as UnsafeUnwrappedCookies).set({
 			name: DRAFT_MODE_COOKIE_NAME,
 			value: draftValue,
 			httpOnly: true,

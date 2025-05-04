@@ -8,7 +8,10 @@ import Link from 'next/link';
 
 export const revalidate = 900;
 
-export default async function Page({ params: { lang, region } }: DefaultPageProps) {
+export default async function Page({ params }: DefaultPageProps) {
+	const { lang, region } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-journal'] });
+
 	const [blogsResponse, authorsResponse, tagsResponse] = await Promise.all([
 		getOverviewArticles(lang),
 		getAuthors(lang),
@@ -17,10 +20,6 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 	const blogs = blogsResponse.data.stories;
 	const authors = authorsResponse.data.stories;
 	const tags = tagsResponse.data.stories;
-	const translator = await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-journal'],
-	});
 
 	return (
 		<BaseContainer>
@@ -53,7 +52,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 				{tags.map((tag) => (
 					<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
 						<Badge size="md" variant="outline" className="mb-2">
-							{tag.content.value}
+							{tag.content?.value}
 						</Badge>
 					</Link>
 				))}

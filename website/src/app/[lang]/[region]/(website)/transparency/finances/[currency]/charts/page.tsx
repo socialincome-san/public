@@ -1,6 +1,5 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { firestoreAdmin } from '@/firebase-admin';
-import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { Currency } from '@socialincome/shared/src/types/currency';
 import { ContributionStatsCalculator } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
@@ -10,15 +9,17 @@ import TransparencyCharts from './transparency-charts';
 export const generateStaticParams = () => ['USD', 'CHF'].map((currency) => ({ currency: currency.toLowerCase() }));
 export const revalidate = 3600; // update once an hour
 
-export type TransparencyPageProps = {
-	params: {
-		region: WebsiteRegion;
-		lang: WebsiteLanguage;
-		currency: WebsiteCurrency;
-	};
-} & DefaultPageProps;
+interface TransparencyPageParams extends DefaultParams {
+	currency: Currency;
+}
 
-export default async function Page(props: TransparencyPageProps) {
+interface TransparencyPageProps {
+	params: Promise<TransparencyPageParams>;
+}
+
+export default async function Page({ params }: TransparencyPageProps) {
+	const { lang, currency } = await params;
+
 	const getStats = async (currency: Currency) => {
 		const contributionCalculator = await ContributionStatsCalculator.build(firestoreAdmin, currency);
 		const contributionStats = contributionCalculator.allStats();
@@ -26,7 +27,8 @@ export default async function Page(props: TransparencyPageProps) {
 		const paymentStats = paymentCalculator.allStats();
 		return { contributionStats, paymentStats };
 	};
-	const { contributionStats, paymentStats } = await getStats(props.params.currency);
+
+	const { contributionStats, paymentStats } = await getStats(currency);
 
 	return (
 		<BaseContainer className="min-h-screen">
@@ -36,8 +38,8 @@ export default async function Page(props: TransparencyPageProps) {
 			<TransparencyCharts
 				contributionStats={contributionStats}
 				paymentStats={paymentStats}
-				lang={props.params.lang}
-				currency={props.params.currency}
+				lang={lang}
+				currency={currency}
 			/>
 		</BaseContainer>
 	);

@@ -4,7 +4,9 @@ import UpdatePasswordForm from '@/app/[lang]/[region]/(website)/me/security/upda
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 
 export default async function Page({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-me'] });
+	const { lang } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-me'] });
+
 	return (
 		<div className="space-y-12">
 			<UpdatePasswordForm

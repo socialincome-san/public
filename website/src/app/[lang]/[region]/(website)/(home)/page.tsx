@@ -10,7 +10,11 @@ import { MobileIllustration } from './(sections)/mobile-illustration';
 import { MonthlyIncome } from './(sections)/monthly-income';
 import { Overview } from './(sections)/overview';
 
-export default async function Page({ params: { lang, region } }: DefaultPageProps) {
+export default async function Page(props: DefaultPageProps) {
+	const params = await props.params;
+
+	const { lang, region } = params;
+
 	return (
 		<div className="hero-video -mb-28 -mt-24 md:-mt-36">
 			<HeroVideo lang={lang} region={region} />

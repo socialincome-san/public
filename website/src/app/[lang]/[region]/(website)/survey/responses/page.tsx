@@ -24,7 +24,11 @@ import { Fragment } from 'react';
 
 export const revalidate = 3600; // update once an hour
 
-export default async function Page({ params: { lang } }: DefaultPageProps) {
+export default async function Page(props: DefaultPageProps) {
+	const params = await props.params;
+
+	const { lang } = params;
+
 	const { aggregatedData: data, oldestDate } = await SurveyStatsCalculator.build(firestoreAdmin);
 	const activeSurveyIndexes: Record<SurveyQuestionnaire, { from: number; to: number }> = {
 		[SurveyQuestionnaire.Onboarding]: { from: 0, to: 0 },

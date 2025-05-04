@@ -1,6 +1,7 @@
 import { COUNTRY_COOKIE, CURRENCY_COOKIE } from '@/app/[lang]/[region]';
 import { WebsiteLanguage, WebsiteRegion, allWebsiteLanguages, findBestLocale, websiteRegions } from '@/i18n';
 import { CountryCode, isValidCountryCode } from '@socialincome/shared/src/types/country';
+import { geolocation } from '@vercel/functions';
 import { NextRequest, NextResponse } from 'next/server';
 import { bestGuessCurrency, isValidCurrency } from '../../shared/src/types/currency';
 
@@ -12,17 +13,17 @@ export const config = {
 };
 
 /**
- * Checks if a valid country is set as a cookie, and sets one based on the request header if available.
+ * Checks if a valid country is set as a cookie and set it based on the request header if available.
  */
 const countryMiddleware = (request: NextRequest, response: NextResponse) => {
 	if (request.cookies.has(COUNTRY_COOKIE) && isValidCountryCode(request.cookies.get(COUNTRY_COOKIE)?.value!))
 		return response;
 
-	const requestCountry = request.geo?.country;
-	if (requestCountry)
+	const { country } = geolocation(request);
+	if (country)
 		response.cookies.set({
 			name: COUNTRY_COOKIE,
-			value: requestCountry as CountryCode,
+			value: country as CountryCode,
 			path: '/',
 			maxAge: 60 * 60 * 24 * 7,
 		}); // 1 week

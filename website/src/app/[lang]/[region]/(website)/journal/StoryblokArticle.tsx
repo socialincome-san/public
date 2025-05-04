@@ -30,7 +30,7 @@ export function StoryblokArticleCard(props: {
 				<div className="mt-2 flex items-center justify-between">
 					<div className="flex items-center space-x-2">
 						<Typography weight="bold" size="sm" className="uppercase">
-							{blog.content.type?.content.value}
+							{blog.content.type?.content?.value}
 						</Typography>
 					</div>
 					<Typography weight="normal" className="text-black">

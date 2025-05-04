@@ -1,4 +1,4 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { ContributorsOrgsCarousel } from '@/app/[lang]/[region]/(website)/our-work/(sections)/contributors-orgs-carousel';
 import { ContributorsPeopleCarousel } from '@/app/[lang]/[region]/(website)/our-work/(sections)/contributors-people-carousel';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -8,11 +8,8 @@ import claudiaImage from '../(assets)/claudia.jpg';
 import rubenImage from '../(assets)/ruben.jpg';
 import vanjaImg from '../(assets)/vanja.jpg';
 
-export async function Contributors({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['countries', 'website-our-work'],
-	});
+export async function Contributors({ lang }: DefaultParams) {
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['countries', 'website-our-work'] });
 
 	return (
 		<BaseContainer id="contributors" className="flex scroll-mt-36 flex-col justify-center space-y-24 lg:space-y-36">

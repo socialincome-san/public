@@ -3,7 +3,13 @@ import Footer from '@/components/footer/footer';
 import Navbar from '@/components/navbar/navbar';
 import { PropsWithChildren } from 'react';
 
-export default function Layout({ children, params: { lang, region } }: PropsWithChildren<DefaultLayoutProps>) {
+export default async function Layout(props: PropsWithChildren<DefaultLayoutProps>) {
+	const params = await props.params;
+
+	const { lang, region } = params;
+
+	const { children } = props;
+
 	return (
 		<div className="theme-default [&:has(.hero-video)_nav]:bg-transparent">
 			<Navbar lang={lang} region={region} />
