@@ -8,7 +8,6 @@
 		"twitter-image": "/assets/metadata/twitter/default.jpg"
 	},
 	"navigation": {
-		"our-promise": "La Nostra Promessa",
 		"about-us": "Chi Siamo",
 		"contact": "Contatti",
 		"contributors": "Donatori",
@@ -17,30 +16,26 @@
 		"faq": "FAQ",
 		"finances": "Finanze",
 		"flow-of-funds": "Flusso dei Fondi",
+		"follow-us": "Seguici",
 		"how-it-works": "Come Funziona",
+		"impact-measurement": "Risposte al Questionario",
+		"journal": "Giornale",
+		"legal": "Informazioni Legali",
 		"my-account": "Il Mio Account",
 		"our-mission": "La Nostra Missione",
+		"our-promise": "La Nostra Promessa",
 		"our-work": "Il Nostro Lavoro",
+		"partners": "Partner Locali",
 		"privacy-policy": "Informativa sulla Privacy",
 		"recipient-selection": "Selezione dei Beneficiari",
 		"recipients": "Beneficiari",
 		"reporting": "Documenti",
+		"resources": "Risorse",
 		"team": "Team",
-		"partners": "Partner Locali",
 		"terms-and-conditions": "Termini e Condizioni",
 		"terms-of-use": "Condizioni di Utilizzo",
 		"transparency": "Transparenza",
-		"impact-measurement": "Risposte al Questionario",
-		"whats-next": "In Arrivo",
-		"journal": "Giornale"
-	},
-	"footer": {
-		"follow-us": "Seguici",
-		"resources": "Risorse",
-		"our-work": "Il Nostro Lavoro",
-		"legal": "Informazioni Legali",
-		"contact": "Contatto",
-		"about-us": "Chi Siamo"
+		"whats-next": "In Arrivo"
 	},
 	"cookie-consent-banner": {
 		"text": "Utilizziamo i <a href='/privacy' class='underline'>cookie</a>.",
@@ -58,71 +53,54 @@
 	},
 	"sdg": {
 		"sdg": "SDG",
-
 		"sdg1-title": "No Povertà",
 		"sdg1-mission-1": "La missione di ",
 		"sdg1-mission-2": "è eliminare la povertà in tutte le sue forme.",
-
 		"sdg2-title": "Fame Zero",
 		"sdg2-mission-1": "La missione di ",
 		"sdg2-mission-2": "è porre fine alla fame e garantire l’accesso a cibo nutriente.",
-
 		"sdg3-title": "Buona Salute",
 		"sdg3-mission-1": "La missione di ",
 		"sdg3-mission-2": "è assicurare una vita sana e promuovere il benessere per tutti.",
-
 		"sdg4-title": "Istruzione di Qualità",
 		"sdg4-mission-1": "La missione di ",
 		"sdg4-mission-2": "è fornire un’istruzione inclusiva e di qualità per tutti.",
-
 		"sdg5-title": "Parità di Genere",
 		"sdg5-mission-1": "La missione di ",
 		"sdg5-mission-2": "è raggiungere la parità di genere e potenziare tutte le donne e le ragazze.",
-
 		"sdg6-title": "Acqua Pulita",
 		"sdg6-mission-1": "La missione di ",
 		"sdg6-mission-2": "è garantire acqua e servizi igienico-sanitari per tutti.",
-
 		"sdg7-title": "Energia Pulita",
 		"sdg7-mission-1": "La missione di ",
 		"sdg7-mission-2": "è garantire l'accesso a energia sostenibile per tutti.",
-
 		"sdg8-title": "Lavoro Dignitoso",
 		"sdg8-mission-1": "La missione di ",
 		"sdg8-mission-2": "è promuovere crescita economica e lavoro dignitoso per tutti.",
-
 		"sdg9-title": "Industria e Innovazione",
 		"sdg9-mission-1": "La missione di ",
 		"sdg9-mission-2": "è costruire infrastrutture resilienti e promuovere l'innovazione.",
-
 		"sdg10-title": "Ridurre le Disuguaglianze",
 		"sdg10-mission-1": "La missione di ",
 		"sdg10-mission-2": "è ridurre le disuguaglianze all’interno e tra i Paesi.",
-
 		"sdg11-title": "Città Sostenibili",
 		"sdg11-mission-1": "La missione di ",
 		"sdg11-mission-2": "è rendere le città inclusive, sicure e sostenibili.",
-
 		"sdg12-title": "Consumo Responsabile",
 		"sdg12-mission-1": "La missione di ",
 		"sdg12-mission-2": "è garantire modelli di consumo e produzione sostenibili.",
-
 		"sdg13-title": "Azione per il Clima",
 		"sdg13-mission-1": "La missione di ",
 		"sdg13-mission-2": "è agire contro il cambiamento climatico con urgenza.",
-
 		"sdg14-title": "Vita Sott’Acqua",
 		"sdg14-mission-1": "La missione di ",
 		"sdg14-mission-2": "è proteggere e utilizzare in modo sostenibile gli oceani e le risorse marine.",
-
 		"sdg15-title": "Vita sulla Terra",
 		"sdg15-mission-1": "La missione di ",
 		"sdg15-mission-2": "è proteggere e ripristinare gli ecosistemi terrestri.",
-
 		"sdg16-title": "Pace e Giustizia",
 		"sdg16-mission-1": "La missione di ",
 		"sdg16-mission-2": "è promuovere società pacifiche e garantire l’accesso alla giustizia per tutti.",
-
 		"sdg17-title": "Partnerships",
 		"sdg17-mission-1": "La missione di ",
 		"sdg17-mission-2": "è rafforzare le partnership per lo sviluppo sostenibile."
