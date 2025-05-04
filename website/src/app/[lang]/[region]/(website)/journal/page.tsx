@@ -4,7 +4,6 @@ import { StoryblokArticleCard } from '@/app/[lang]/[region]/(website)/journal/St
 import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, BaseContainer, Typography } from '@socialincome/ui';
-import _ from 'lodash';
 import Link from 'next/link';
 
 export const revalidate = 900;
@@ -20,7 +19,7 @@ export default async function Page({ params }: DefaultPageProps) {
 	]);
 	const blogs = blogsResponse.data.stories;
 	const authors = authorsResponse.data.stories;
-	const tags = tagsResponse.data.stories.filter((t) => !_.isNil(t.content));
+	const tags = tagsResponse.data.stories;
 
 	return (
 		<BaseContainer>
@@ -53,7 +52,7 @@ export default async function Page({ params }: DefaultPageProps) {
 				{tags.map((tag) => (
 					<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
 						<Badge size="md" variant="outline" className="mb-2">
-							{tag.content.value}
+							{tag.content?.value}
 						</Badge>
 					</Link>
 				))}
