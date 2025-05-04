@@ -4,14 +4,14 @@ import { StoryblokArticleCard } from '@/app/[lang]/[region]/(website)/journal/St
 import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, BaseContainer, Typography } from '@socialincome/ui';
+import _ from 'lodash';
 import Link from 'next/link';
 
 export const revalidate = 900;
 
-export default async function Page(props: DefaultPageProps) {
-	const params = await props.params;
-
-	const { lang, region } = params;
+export default async function Page({ params }: DefaultPageProps) {
+	const { lang, region } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-journal'] });
 
 	const [blogsResponse, authorsResponse, tagsResponse] = await Promise.all([
 		getOverviewArticles(lang),
@@ -20,11 +20,7 @@ export default async function Page(props: DefaultPageProps) {
 	]);
 	const blogs = blogsResponse.data.stories;
 	const authors = authorsResponse.data.stories;
-	const tags = tagsResponse.data.stories;
-	const translator = await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-journal'],
-	});
+	const tags = tagsResponse.data.stories.filter((t) => !_.isNil(t.content));
 
 	return (
 		<BaseContainer>
