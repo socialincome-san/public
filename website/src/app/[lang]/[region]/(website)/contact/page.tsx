@@ -3,13 +3,11 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
 export default async function Page({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['website-contact'],
-	});
+	const { lang } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-contact'] });
 
 	return (
-		<BaseContainer className="items-left flex flex-col space-y-8 pt-16">
+		<BaseContainer className="flex flex-col space-y-8">
 			<Typography size="3xl" weight="bold">
 				{translator.t('title')}
 			</Typography>
@@ -22,7 +20,7 @@ export default async function Page({ params }: DefaultPageProps) {
 					<Typography as="span" size="xl" weight="medium" color="muted-foreground" className="pr-1">
 						{translator.t('emailGeneralTitle')}
 					</Typography>
-					<Typography as="a" href={`mailto:${translator.t('emailGeneral')}`} size="xl">
+					<Typography as="a" href={`mailto:${translator.t('emailGeneral')}`} size="xl" className="underline">
 						{translator.t('emailGeneral')}
 					</Typography>
 				</div>
@@ -30,7 +28,7 @@ export default async function Page({ params }: DefaultPageProps) {
 					<Typography as="span" size="xl" weight="medium" color="muted-foreground" className="pr-1">
 						{translator.t('emailContributorsTitle')}
 					</Typography>
-					<Typography as="a" href={`mailto:${translator.t('emailContributors')}`} size="xl">
+					<Typography as="a" href={`mailto:${translator.t('emailContributors')}`} size="xl" className="underline">
 						{translator.t('emailContributors')}
 					</Typography>
 				</div>
@@ -38,7 +36,7 @@ export default async function Page({ params }: DefaultPageProps) {
 					<Typography as="span" size="xl" weight="medium" color="muted-foreground" className="pr-1">
 						{translator.t('emailLegalTitle')}
 					</Typography>
-					<Typography as="a" href={`mailto:${translator.t('emailLegal')}`} size="xl">
+					<Typography as="a" href={`mailto:${translator.t('emailLegal')}`} size="xl" className="underline">
 						{translator.t('emailLegal')}
 					</Typography>
 				</div>

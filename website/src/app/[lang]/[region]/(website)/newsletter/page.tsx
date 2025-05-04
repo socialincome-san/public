@@ -23,7 +23,7 @@ export default async function Page(props: DefaultPageProps) {
 	});
 
 	return (
-		<BaseContainer className="py-12">
+		<BaseContainer>
 			<div className="grid grid-cols-1 gap-20 lg:grid-cols-2">
 				<div className="flex flex-col justify-center gap-3">
 					<Typography size="5xl" weight="bold" className="mt-2">
