@@ -15,14 +15,17 @@ import { ISbStoryData } from '@storyblok/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { render } from 'storyblok-rich-text-react-renderer';
+import { StoryblokEmbeddedVideoPlayer } from '@/app/[lang]/[region]/(website)/journal/StoryblokEmbeddedVideoPlayer';
 
 export const revalidate = 900;
+
 
 function renderWrapper(articleData: StoryblokArticle) {
 	return render(articleData.content, {
 		blokResolvers: {
 			['quotedText']: (props: any) => <QuotedText {...props} />,
 			['imageWithCaption']: (props: any) => <StoryblokImageWithCaption {...props} />,
+			['embeddedVideo']: (props: any) => <StoryblokEmbeddedVideoPlayer {...props} />,
 		},
 	});
 }
@@ -87,7 +90,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 								{getPublishedDateFormatted(articleResponse.data.story.first_published_at!, lang)}
 							</Typography>
 						</div>
-						<Typography weight="medium" className="mt-8" color="accent" size="5xl">
+						<Typography  weight="medium" className="mt-8 hyphens-auto break-words " color="accent" size="5xl">
 							{articleData.title}
 						</Typography>
 
