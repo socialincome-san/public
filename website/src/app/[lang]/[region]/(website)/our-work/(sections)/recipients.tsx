@@ -1,4 +1,4 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import mapAfrica from '@/app/[lang]/[region]/(website)/our-work/(assets)/map-africa.svg';
 import { RecipientsCarousel } from '@/app/[lang]/[region]/(website)/our-work/(sections)/recipients-carousel';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
@@ -13,8 +13,7 @@ import laminImg from '../(assets)/lamin.jpeg';
 import nenehImg from '../(assets)/neneh.jpeg';
 import onikehImg from '../(assets)/onikeh.jpeg';
 
-export async function Recipients({ params }: DefaultPageProps) {
-	const { lang } = await params;
+export async function Recipients({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['countries', 'website-our-work'] });
 
 	return (

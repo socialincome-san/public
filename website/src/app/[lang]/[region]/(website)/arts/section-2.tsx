@@ -1,11 +1,10 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 import { CardTranslation, SectionCard } from './section-card';
 
-export default async function Section2({ params }: DefaultPageProps) {
-	const { lang } = await params;
+export default async function Section2({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-arts'] });
 	const cards = translator.t<CardTranslation[]>(`section-2.cards`);
 

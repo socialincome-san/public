@@ -12,20 +12,13 @@ export async function generateMetadata(props: DefaultPageProps) {
 }
 
 export default async function Page(props: DefaultPageProps) {
+	const { lang, region } = await props.params;
 	return (
 		<BaseContainer className="space-y-56 pt-40">
-			<OurWork /* @next-codemod-error 'props' is used with spread syntax (...). Any asynchronous properties of 'props' must be awaited when accessed. */
-				{...props}
-			/>
-			<HowItWorks /* @next-codemod-error 'props' is used with spread syntax (...). Any asynchronous properties of 'props' must be awaited when accessed. */
-				{...props}
-			/>
-			<Contributors /* @next-codemod-error 'props' is used with spread syntax (...). Any asynchronous properties of 'props' must be awaited when accessed. */
-				{...props}
-			/>
-			<Recipients /* @next-codemod-error 'props' is used with spread syntax (...). Any asynchronous properties of 'props' must be awaited when accessed. */
-				{...props}
-			/>
+			<OurWork lang={lang} region={region} />
+			<HowItWorks lang={lang} region={region} />
+			<Contributors lang={lang} region={region} />
+			<Recipients lang={lang} region={region} />
 		</BaseContainer>
 	);
 }

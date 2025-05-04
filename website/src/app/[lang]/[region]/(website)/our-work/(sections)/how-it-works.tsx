@@ -1,4 +1,4 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
@@ -6,8 +6,7 @@ import _ from 'lodash';
 import Image from 'next/image';
 import phonesGif from '../(assets)/phones-2.gif';
 
-export async function HowItWorks({ params }: DefaultPageProps) {
-	const { lang } = await params;
+export async function HowItWorks({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-our-work'] });
 
 	return (

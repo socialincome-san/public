@@ -1,4 +1,4 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { VimeoVideo } from '@/components/vimeo-video';
 import { PlayIcon } from '@heroicons/react/24/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -6,8 +6,7 @@ import { Badge, BaseContainer, Dialog, DialogContent, DialogTrigger, Typography 
 import Image from 'next/image';
 import phonesGif from '../(assets)/phones-1.gif';
 
-export async function OurWork({ params }: DefaultPageProps) {
-	const { lang } = await params;
+export async function OurWork({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-our-work', 'website-videos'],

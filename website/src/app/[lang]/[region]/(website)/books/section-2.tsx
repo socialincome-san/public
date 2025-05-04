@@ -1,4 +1,4 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import Book from '@/components/ui/book';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer } from '@socialincome/ui';
@@ -12,8 +12,7 @@ import book8cover from './(assets)/lowrey.jpg';
 import book9cover from './(assets)/poor-economics.jpg';
 import book3cover from './(assets)/utopia.jpg';
 
-export default async function Section2({ params }: DefaultPageProps) {
-	const { lang } = await params;
+export default async function Section2({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-books'] });
 
 	return (
