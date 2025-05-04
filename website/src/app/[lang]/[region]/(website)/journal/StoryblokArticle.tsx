@@ -39,7 +39,7 @@ export function StoryblokArticleCard(props: {
 				</div>
 
 				<div className="mt-2 flex flex-grow flex-col">
-					<Typography size="2xl" className="mb-4 line-clamp-3 h-16 flex-grow" weight="medium">
+					<Typography size="2xl" className="mb-4 line-clamp-3 h-16 flex-grow break-words hyphens-auto" weight="medium">
 						{blog.content.title}
 					</Typography>
 					<div className="flex items-center justify-between">
