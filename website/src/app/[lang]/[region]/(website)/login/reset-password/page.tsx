@@ -5,15 +5,17 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Alert, AlertDescription, AlertTitle, BaseContainer, Typography } from '@socialincome/ui';
 
 export async function generateMetadata({ params }: DefaultLayoutProps) {
-	return getMetadata(params.lang, 'website-login');
+	const { lang } = await params;
+	return getMetadata(lang, 'website-login');
 }
 
-export default async function Page({
-	params,
-	searchParams,
-}: DefaultPageProps & {
-	searchParams: { oobCode?: string };
-}) {
+export default async function Page(
+	props: DefaultPageProps & {
+		searchParams: { oobCode?: string };
+	},
+) {
+	const searchParams = await props.searchParams;
+	const params = await props.params;
 	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-login'] });
 
 	if (!searchParams.oobCode) {

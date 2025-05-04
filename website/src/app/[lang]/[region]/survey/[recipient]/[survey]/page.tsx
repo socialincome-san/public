@@ -5,11 +5,12 @@ import { Button, Input } from '@socialincome/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { User, signInWithEmailAndPassword } from 'firebase/auth';
 import { useSearchParams } from 'next/navigation';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, use, useEffect, useState } from 'react';
 import { useAuth } from 'reactfire';
 import { SurveyPageProps } from './layout';
 
 export default function Page({ params }: SurveyPageProps) {
+	const { recipient, survey, lang } = use(params);
 	const auth = useAuth();
 	const [email, setEmail] = useState<string | null>(null);
 	const [password, setPassword] = useState<string | null>(null);
@@ -51,7 +52,7 @@ export default function Page({ params }: SurveyPageProps) {
 	if (user) {
 		return (
 			<QueryClientProvider client={queryClient}>
-				<Survey surveyId={params.survey} recipientId={params.recipient} lang={params.lang as SurveyLanguage} />
+				<Survey surveyId={survey} recipientId={recipient} lang={lang as SurveyLanguage} />
 			</QueryClientProvider>
 		);
 	} else {

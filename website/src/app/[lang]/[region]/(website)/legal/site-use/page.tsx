@@ -4,14 +4,13 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
 export async function generateMetadata({ params }: DefaultPageProps) {
-	return getMetadata(params.lang, 'website-terms-of-use');
+	const { lang } = await params;
+	return getMetadata(lang, 'website-terms-of-use');
 }
 
 export default async function Page({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['website-terms-of-use'],
-	});
+	const { lang } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-terms-of-use'] });
 
 	return (
 		<BaseContainer className="mx-auto flex max-w-2xl flex-col space-y-12 py-8">

@@ -14,10 +14,8 @@ import {
 } from '@socialincome/ui';
 
 export default async function Page({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['website-videos'],
-	});
+	const { lang } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-videos'] });
 
 	return (
 		<BaseContainer className="items-left flex flex-col space-y-8 pt-16">

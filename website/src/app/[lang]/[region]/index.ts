@@ -11,9 +11,9 @@ export interface DefaultParams {
 }
 
 export interface DefaultLayoutProps {
-	params: DefaultParams;
+	params: Promise<DefaultParams>;
 }
 
 export interface DefaultPageProps extends DefaultLayoutProps {
-	searchParams: Record<string, string>;
+	searchParams: Promise<Record<string, string>>;
 }

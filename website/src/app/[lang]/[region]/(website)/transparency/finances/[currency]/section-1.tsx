@@ -11,8 +11,9 @@ export const roundAmount = (amount: number) => {
 };
 
 export async function Section1({ params, paymentStats, contributionStats, recipientStats }: SectionProps) {
-	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-finances'] });
-	const currencyLocale = toCurrencyLocale(params.lang, params.region, params.currency, { maximumFractionDigits: 0 });
+	const { lang, region, currency } = params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-finances'] });
+	const currencyLocale = toCurrencyLocale(lang, region, currency, { maximumFractionDigits: 0 });
 
 	return (
 		<div>

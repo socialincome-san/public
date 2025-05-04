@@ -8,7 +8,11 @@ export enum DonationInterval {
 	Monthly = 'monthly',
 }
 
-export default async function Page({ params: { lang, region } }: DefaultPageProps) {
+export default async function Page(props: DefaultPageProps) {
+	const params = await props.params;
+
+	const { lang, region } = params;
+
 	const translator = await Translator.getInstance({ language: lang, namespaces: 'website-donate' });
 	return (
 		<BaseContainer className="mx-auto flex max-w-3xl flex-col pt-8 md:pt-16">

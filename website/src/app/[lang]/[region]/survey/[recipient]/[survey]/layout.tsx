@@ -6,14 +6,18 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Button } from '@socialincome/ui';
 import { PropsWithChildren } from 'react';
 
-export interface SurveyPageProps {
-	params: {
-		recipient: string;
-		survey: string;
-	} & DefaultParams;
+interface SurveyPageParams extends DefaultParams {
+	recipient: string;
+	survey: string;
 }
 
-export default async function Layout({ children, params: { lang } }: PropsWithChildren<SurveyPageProps>) {
+export interface SurveyPageProps {
+	params: Promise<SurveyPageParams>;
+}
+
+export default async function Layout({ children, params }: PropsWithChildren<SurveyPageProps>) {
+	const { lang } = await params;
+
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['common', 'website-common', 'website-me'],

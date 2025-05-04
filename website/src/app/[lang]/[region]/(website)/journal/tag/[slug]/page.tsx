@@ -1,21 +1,25 @@
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { getArticlesByTag, getTag } from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
 import { StoryblokArticleCard } from '@/app/[lang]/[region]/(website)/journal/StoryblokArticle';
-import { LanguageCode } from '@socialincome/shared/src/types/language';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
 export const revalidate = 900;
 
-export default async function Page(props: { params: { slug: string; lang: LanguageCode; region: string } }) {
-	const { slug, lang, region } = props.params;
+interface PageParams extends DefaultParams {
+	slug: string;
+}
+
+interface PageProps {
+	params: Promise<PageParams>;
+}
+
+export default async function Page({ params }: PageProps) {
+	const { slug, lang, region } = await params;
+
 	const tag = (await getTag(slug, lang)).data.story;
 	const blogsResponse = await getArticlesByTag(tag.uuid, lang);
-
 	const blogs = blogsResponse.data.stories;
-	await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-journal'],
-	});
+
 	return (
 		<BaseContainer>
 			<div className="mx-auto mb-20 mt-8 flex max-w-6xl justify-center gap-4">

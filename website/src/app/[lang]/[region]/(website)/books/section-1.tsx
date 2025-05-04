@@ -1,14 +1,11 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { ClockIcon } from '@heroicons/react/24/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, linkCn, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
-export default async function Section1({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['website-books'],
-	});
+export default async function Section1({ lang }: DefaultParams) {
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-books'] });
 
 	return (
 		<BaseContainer className="mt-12 flex flex-col items-center space-y-4">

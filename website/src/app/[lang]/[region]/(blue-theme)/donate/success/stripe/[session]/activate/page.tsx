@@ -5,7 +5,9 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Card, Typography } from '@socialincome/ui';
 import { CreateUserForm } from './create-user-form';
 
-export default async function Page({ params: { lang, region, session } }: StripeSuccessPageProps) {
+export default async function Page({ params }: StripeSuccessPageProps) {
+	const { lang, region, session } = await params;
+
 	const translator = await Translator.getInstance({ language: lang, namespaces: 'website-donate' });
 	const stripe = initializeStripe(process.env.STRIPE_SECRET_KEY!);
 	const checkoutSession = await stripe.checkout.sessions.retrieve(session);

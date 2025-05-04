@@ -3,11 +3,16 @@ import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
-export async function generateMetadata({ params }: DefaultPageProps) {
+export async function generateMetadata(props: DefaultPageProps) {
+	const params = await props.params;
 	return getMetadata(params.lang, 'website-survey');
 }
 
-export default async function Page({ params: { lang } }: DefaultPageProps) {
+export default async function Page(props: DefaultPageProps) {
+	const params = await props.params;
+
+	const { lang } = params;
+
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-survey'],

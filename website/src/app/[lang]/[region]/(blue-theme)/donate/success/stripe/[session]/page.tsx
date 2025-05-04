@@ -1,4 +1,4 @@
-import { DefaultPageProps, DefaultParams } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { SuccessForm } from '@/app/[lang]/[region]/(blue-theme)/donate/success/stripe/[session]/success-form';
 import { firestoreAdmin } from '@/firebase-admin';
 import { initializeStripe } from '@socialincome/shared/src/stripe';
@@ -8,13 +8,17 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Card, CardContent, CardHeader, Typography } from '@socialincome/ui';
 import { redirect } from 'next/navigation';
 
-export type StripeSuccessPageProps = {
-	params: {
-		session: string;
-	} & DefaultParams;
-} & DefaultPageProps;
+interface StripeSuccessPageParams extends DefaultParams {
+	session: string;
+}
 
-export default async function Page({ params: { lang, region, session } }: StripeSuccessPageProps) {
+export interface StripeSuccessPageProps {
+	params: Promise<StripeSuccessPageParams>;
+}
+
+export default async function Page({ params }: StripeSuccessPageProps) {
+	const { lang, region, session } = await params;
+
 	const translator = await Translator.getInstance({ language: lang, namespaces: 'website-donate' });
 	const stripe = initializeStripe(process.env.STRIPE_SECRET_KEY!);
 	// The stripeCheckoutSessionId search param is defined in the donation form and passed to the Stripe checkout session.

@@ -7,11 +7,16 @@ import OurMission from './(sections)/our-mission';
 import OurPromise from './(sections)/our-promise';
 import Team from './(sections)/team';
 
-export async function generateMetadata({ params }: DefaultPageProps) {
+export async function generateMetadata(props: DefaultPageProps) {
+	const params = await props.params;
 	return getMetadata(params.lang, 'website-about-us');
 }
 
-export default async function Page({ params: { lang } }: DefaultPageProps) {
+export default async function Page(props: DefaultPageProps) {
+	const params = await props.params;
+
+	const { lang } = params;
+
 	return (
 		<BaseContainer className="space-y-56 pt-40">
 			<LandingPage lang={lang} />

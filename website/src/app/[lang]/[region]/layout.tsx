@@ -9,13 +9,14 @@ import { Toaster } from 'react-hot-toast';
 export const generateStaticParams = () =>
 	websiteRegions.flatMap((region) => mainWebsiteLanguages.map((lang) => ({ lang, region })));
 
-export const generateMetadata = ({ params }: DefaultLayoutProps) => getMetadata(params.lang, 'website-common');
+export const generateMetadata = async (props: DefaultLayoutProps) => {
+	const params = await props.params;
+	return getMetadata(params.lang, 'website-common');
+};
 
 export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['website-common'],
-	});
+	const { lang } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-common'] });
 
 	return (
 		<>

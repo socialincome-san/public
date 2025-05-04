@@ -1,14 +1,11 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { CardTranslation, SectionCard } from '@/app/[lang]/[region]/(website)/transparency/evidence/section-card';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';
 
-export default async function Section1({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['website-evidence'],
-	});
+export default async function Section1({ lang }: DefaultParams) {
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-evidence'] });
 	const cards = translator.t<CardTranslation[]>(`section-2.cards`);
 	const takeAction = translator.t('take-action');
 
