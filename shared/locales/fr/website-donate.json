@@ -14,16 +14,12 @@
 		"bank-transfer-description": "Sans frais"
 	},
 	"bank-transfer": {
-		"payment-details": "Détails du paiement",
 		"first-name": "Prénom",
 		"last-name": "Nom",
 		"email": "E-mail",
-		"street": "Rue",
-		"street-number": "Numéro",
-		"city": "Ville",
-		"zip": "Code postal",
 		"generate-qr-bill": "Générer la facture QR",
-		"confirm-monthly-order": "Confirmer l'ordre permanent mensuel"
+		"confirm-monthly-order": "Confirmer l'ordre permanent mensuel",
+		"subscribe-to-1-percent-plan": "S'abonner au plan 1%"
 	},
 	"donation-impact": {
 		"monthly-contribution": "Ta contribution mensuelle:",
