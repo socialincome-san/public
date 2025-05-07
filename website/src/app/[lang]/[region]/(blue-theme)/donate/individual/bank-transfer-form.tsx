@@ -1,5 +1,6 @@
 'use client';
 
+import { generateQrBillReference } from '@/utils/qr-bill';
 import { Button, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@socialincome/ui';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -8,6 +9,7 @@ import { SwissQRBill } from 'swissqrbill/svg';
 
 type BankTransferFormProps = {
 	amount: number;
+	paymentIntervalMonths: number;
 	translations: {
 		firstName: string;
 		lastName: string;
@@ -29,7 +31,7 @@ type BankTransferFormProps = {
 	};
 };
 
-export function BankTransferForm({ amount, translations }: BankTransferFormProps) {
+export function BankTransferForm({ amount, paymentIntervalMonths, translations }: BankTransferFormProps) {
 	const form = useFormContext();
 	const [qrBill, setQrBill] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +41,8 @@ export function BankTransferForm({ amount, translations }: BankTransferFormProps
 		event.preventDefault();
 		try {
 			setIsLoading(true);
+			const userCreatedAt = Date.now();
+			const reference = generateQrBillReference(paymentIntervalMonths, userCreatedAt);
 			const data: Data = {
 				amount: Number(amount),
 				creditor: {
@@ -51,7 +55,7 @@ export function BankTransferForm({ amount, translations }: BankTransferFormProps
 					zip: 1234,
 				},
 				currency: 'CHF',
-				reference: '21 00000 00003 13947 14300 09017',
+				reference,
 			};
 
 			const svg = new SwissQRBill(data);
