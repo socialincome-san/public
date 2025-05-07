@@ -1,14 +1,12 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { CreateCheckoutSessionData } from '@/app/api/stripe/checkout-session/create/route';
 import { useI18n } from '@/components/providers/context-providers';
 import { CurrencySelector } from '@/components/ui/currency-selector';
 import { useTranslator } from '@/hooks/useTranslator';
 import { websiteCurrencies, WebsiteLanguage } from '@/i18n';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-	Button,
 	Card,
 	CardContent,
 	CardFooter,
@@ -21,14 +19,13 @@ import {
 	Typography,
 } from '@socialincome/ui';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useUser } from 'reactfire';
-import Stripe from 'stripe';
 import * as z from 'zod';
 import { BankTransferForm } from './bank-transfer-form';
 import { DonationIntervalSelector } from './donation-interval-selector';
 import { PAYMENT_TYPES, PaymentTypeSelector } from './payment-type-selector';
+import { StripePaymentButton } from './stripe-payment-button';
 
 const DONATION_INTERVALS = ['1', '3', '12'] as const;
 type DonationInterval = (typeof DONATION_INTERVALS)[number];
@@ -129,7 +126,6 @@ type DonationFormProps = {
 
 export function DonationForm({ amount, translations, lang, region }: DonationFormProps) {
 	const router = useRouter();
-	const [submitting, setSubmitting] = useState(false);
 	const { data: authUser } = useUser();
 	const { currency } = useI18n();
 
@@ -181,32 +177,13 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 		},
 	});
 
-	const onSubmit = async (values: FormSchema) => {
-		setSubmitting(true);
-		const authToken = await authUser?.getIdToken(true);
-		const data: CreateCheckoutSessionData = {
-			amount: getDonationAmount(values.monthlyIncome, values.donationInterval) * 100,
-			intervalCount: Number(values.donationInterval),
-			currency: currency,
-			successUrl: `${window.location.origin}/${lang}/${region}/donate/success/stripe/{CHECKOUT_SESSION_ID}`,
-			recurring: true,
-			firebaseAuthToken: authToken,
-			paymentType: values.paymentType,
-		};
-		// Call the API to create a new Stripe checkout session
-		const response = await fetch('/api/stripe/checkout-session/create', { method: 'POST', body: JSON.stringify(data) });
-		const { url } = (await response.json()) as Stripe.Response<Stripe.Checkout.Session>;
-		// This sends the user to stripe.com where payment is completed
-		if (url) router.push(url);
-	};
-
 	return (
 		<div className="flex flex-col">
 			<Typography weight="bold" size="3xl" className="mb-12 text-center">
 				{translations.title}
 			</Typography>
 			<Form {...form}>
-				<form className="flex flex-col space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
+				<form className="flex flex-col space-y-8">
 					<div className="mb-2 flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0 md:items-center">
 						<FormField
 							control={form.control}
@@ -243,6 +220,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 										translations={translations.paymentType}
 										bankTransferForm={
 											<BankTransferForm
+												paymentIntervalMonths={Number(form.watch('donationInterval'))}
 												amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
 												translations={translations.bankTransfer}
 											/>
@@ -252,9 +230,14 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 							</CardContent>
 							<CardFooter>
 								{form.watch('paymentType') === 'credit_card' && (
-									<Button size="lg" type="submit" className="w-full" showLoadingSpinner={submitting}>
-										{translations.buttonText}
-									</Button>
+									<StripePaymentButton
+										amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
+										intervalCount={Number(form.watch('donationInterval'))}
+										lang={lang}
+										region={region}
+										buttonText={translations.buttonText}
+										paymentType={form.watch('paymentType')}
+									/>
 								)}
 							</CardFooter>
 						</Card>
