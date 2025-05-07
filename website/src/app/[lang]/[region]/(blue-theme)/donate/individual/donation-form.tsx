@@ -106,14 +106,9 @@ type DonationFormProps = {
 			bankTransferDescription: string;
 		};
 		bankTransfer: {
-			paymentDetails: string;
 			firstName: string;
 			lastName: string;
 			email: string;
-			street: string;
-			streetNumber: string;
-			city: string;
-			zip: string;
 			plan: string;
 			yourContribution: string;
 			fullSocialIncome: string;
@@ -123,15 +118,10 @@ type DonationFormProps = {
 			transferFeesNote: string;
 			confirmMonthlyOrder: string;
 			plusPlanLink: string;
+			subscribeTo1PercentPlan: string;
 			errors: {
-				firstNameRequired: string;
-				lastNameRequired: string;
 				emailRequired: string;
 				emailInvalid: string;
-				streetRequired: string;
-				streetNumberRequired: string;
-				cityRequired: string;
-				zipRequired: string;
 			};
 		};
 	};
@@ -148,15 +138,19 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 			monthlyIncome: z.coerce.number(),
 			donationInterval: z.enum(DONATION_INTERVALS),
 			paymentType: region === 'ch' ? z.enum(PAYMENT_TYPES) : z.literal('credit_card'),
+			email: z.string().min(1, 'Email is required').email('Invalid email address').optional(),
 			firstName: z.string().min(1, 'First name is required').optional(),
 			lastName: z.string().min(1, 'Last name is required').optional(),
-			email: z.string().min(1, 'Email is required').email('Invalid email address').optional(),
-			street: z.string().min(1, 'Street is required').optional(),
-			city: z.string().min(1, 'City is required').optional(),
-			zip: z.string().min(1, 'ZIP is required').optional(),
 		})
 		.superRefine((data, ctx) => {
 			if (data.paymentType === 'bank_transfer') {
+				if (!data.email) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: 'Email is required',
+						path: ['email'],
+					});
+				}
 				if (!data.firstName) {
 					ctx.addIssue({
 						code: z.ZodIssueCode.custom,
@@ -171,34 +165,6 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 						path: ['lastName'],
 					});
 				}
-				if (!data.email) {
-					ctx.addIssue({
-						code: z.ZodIssueCode.custom,
-						message: 'Email is required',
-						path: ['email'],
-					});
-				}
-				if (!data.street) {
-					ctx.addIssue({
-						code: z.ZodIssueCode.custom,
-						message: 'Street is required',
-						path: ['street'],
-					});
-				}
-				if (!data.city) {
-					ctx.addIssue({
-						code: z.ZodIssueCode.custom,
-						message: 'City is required',
-						path: ['city'],
-					});
-				}
-				if (!data.zip) {
-					ctx.addIssue({
-						code: z.ZodIssueCode.custom,
-						message: 'ZIP is required',
-						path: ['zip'],
-					});
-				}
 			}
 		});
 	type FormSchema = z.infer<typeof formSchema>;
@@ -209,12 +175,9 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 			donationInterval: '1',
 			monthlyIncome: amount || ('' as any),
 			paymentType: 'credit_card',
+			email: '',
 			firstName: '',
 			lastName: '',
-			email: '',
-			street: '',
-			city: '',
-			zip: '',
 		},
 	});
 
@@ -274,11 +237,16 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 										yearly: translations.yearly,
 									}}
 								/>
-								{region === 'ch' && <PaymentTypeSelector lang={lang} translations={translations.paymentType} />}
-								{form.watch('paymentType') === 'bank_transfer' && (
-									<BankTransferForm
-										amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
-										translations={translations.bankTransfer}
+								{region === 'ch' && (
+									<PaymentTypeSelector
+										lang={lang}
+										translations={translations.paymentType}
+										bankTransferForm={
+											<BankTransferForm
+												amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
+												translations={translations.bankTransfer}
+											/>
+										}
 									/>
 								)}
 							</CardContent>

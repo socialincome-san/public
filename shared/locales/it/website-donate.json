@@ -17,16 +17,12 @@
 		"bank-transfer-description": "Nessuna commissione"
 	},
 	"bank-transfer": {
-		"payment-details": "Dettagli del pagamento",
 		"first-name": "Nome",
 		"last-name": "Cognome",
 		"email": "E-mail",
-		"street": "Via",
-		"street-number": "Numero civico",
-		"city": "Città",
-		"zip": "CAP",
 		"generate-qr-bill": "Genera fattura QR",
-		"confirm-monthly-order": "Conferma ordine permanente mensile"
+		"confirm-monthly-order": "Conferma ordine permanente mensile",
+		"subscribe-to-1-percent-plan": "Abbonati al piano 1%"
 	},
 	"donation-impact": {
 		"monthly-contribution": "Il tuo contributo mensile",
