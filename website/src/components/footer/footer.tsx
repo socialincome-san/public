@@ -37,7 +37,6 @@ export default async function Footer({ lang, region }: DefaultParams) {
 							{translator.t('navigation.follow-us')}
 						</Typography>
 						<FooterLink label="Instagram" url="https://www.instagram.com/so_income" target="_blank" />
-						<FooterLink label="X" url="https://twitter.com/so_income" target="_blank" />
 						<FooterLink label="Facebook" url="https://facebook.com/socialincome.org" target="_blank" />
 						<FooterLink label="Linkedin" url="https://www.linkedin.com/company/socialincome" target="_blank" />
 						<FooterLink label="GitHub" url="https://github.com/socialincome-san/public" target="_blank" />
