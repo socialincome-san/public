@@ -5,56 +5,43 @@ import { Quotes } from '@/app/[lang]/[region]/(website)/(home)/(sections)/quotes
 import { SDGGoals } from '@/app/[lang]/[region]/(website)/(home)/(sections)/sdg-goals';
 import { Testimonials } from '@/app/[lang]/[region]/(website)/(home)/(sections)/testimonials';
 import { firestoreAdmin } from '@/firebase-admin';
-import { CAMPAIGN_FIRESTORE_PATH, Campaign, CampaignStatus } from '@socialincome/shared/src/types/campaign';
-import { CONTRIBUTION_FIRESTORE_PATH, Contribution } from '@socialincome/shared/src/types/contribution';
+import { Campaign } from '@socialincome/shared/src/types/campaign';
 import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRates';
-import { Timestamp } from 'firebase/firestore';
+import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { CampaignStatsCalculator } from '@socialincome/shared/src/utils/stats/CampaignStatsCalculator';
+import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
+import _ from 'lodash';
 import { ActiveFundraisers } from './(sections)/active-fundraisers';
 import { ExplainerVideo } from './(sections)/explainer-video';
 import { HeroVideo } from './(sections)/hero-video';
 import { MobileIllustration } from './(sections)/mobile-illustration';
 import { MonthlyIncome } from './(sections)/monthly-income';
 import { Overview } from './(sections)/overview';
-const NUMBER_OF_CAMPAIGNS_TO_CHOOSE = 3;
-const NUMBER_OF_RETRIES = 10;
 
-const chooseIndicesRandomly = (length: number): number[] => {
-	const randomIndicesSet = new Set<number>();
-	if (!length) {
-		return [];
-	}
-	for (let i = 0; i < NUMBER_OF_RETRIES; ++i) {
-		const randomIndex = Math.floor(Math.random() * length);
-		if (!randomIndicesSet.has(randomIndex)) {
-			randomIndicesSet.add(randomIndex);
-			if (randomIndicesSet.size == NUMBER_OF_CAMPAIGNS_TO_CHOOSE) {
-				break;
-			}
-		}
-	}
-	return [...randomIndicesSet];
+const chooseRandomCampaigns = (
+	campaignStatsEntries: QueryDocumentSnapshot<Campaign>[],
+	amount: number = 3,
+): QueryDocumentSnapshot<Campaign>[] => {
+	if (!campaignStatsEntries.length) return [];
+	return _.sampleSize(campaignStatsEntries, amount);
 };
 
 export default async function Page({ params: { lang, region } }: DefaultPageProps) {
-	const completeCampaignData = await firestoreAdmin.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH).get();
-	const campaignStatsEntries = completeCampaignData.docs.filter(
-		(campaignData) =>
-			campaignData.get('status') == CampaignStatus.Active &&
-			campaignData.get('featured') &&
-			campaignData.get('end_date') > Timestamp.now(),
-	);
-	const randomlyChosenCampaignIndices = chooseIndicesRandomly(campaignStatsEntries.length);
-	const selectedCampaigns = [...randomlyChosenCampaignIndices].map((index) => campaignStatsEntries[index]);
+	const translator = await Translator.getInstance({
+		language: lang,
+		namespaces: ['website-campaign'],
+	});
+	const campaignStatsCalculator = await CampaignStatsCalculator.build(firestoreAdmin);
+	const stats = await campaignStatsCalculator.allStats();
+	const campaignStatsEntries = stats.ongoingFeaturedCampaigns;
+	const selectedCampaigns = chooseRandomCampaigns(campaignStatsEntries);
 	let campaignProps = [];
 	for (const campaignData of selectedCampaigns) {
 		const exchangeRate = campaignData.get('goal_currency')
 			? await getLatestExchangeRate(firestoreAdmin, campaignData.get('goal_currency'))
 			: 1.0;
-		const contributions = await firestoreAdmin
-			.collectionGroup<Contribution>(CONTRIBUTION_FIRESTORE_PATH)
-			.where('campaign_path', '==', firestoreAdmin.firestore.collection(CAMPAIGN_FIRESTORE_PATH).doc(campaignData.id))
-			.get();
-		let amountCollected = contributions.docs.reduce((sum, c) => sum + c?.data().amount_chf, 0);
+		const contributions = (await campaignStatsCalculator.allStats()).getContributionsForCampaign(campaignData.id);
+		let amountCollected = contributions.reduce((sum, c) => sum + c['amount_chf'], 0);
 		amountCollected += campaignData.get('additional_amount_chf') || 0;
 		amountCollected *= exchangeRate;
 
@@ -68,7 +55,7 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 			amountCollected: Math.round(amountCollected),
 			goalCurrency: campaignData.get('goal_currency'),
 			percentageCollected: percentageCollected || undefined,
-			contributorCount: contributions.docs.length,
+			contributorCount: contributions.length,
 		});
 	}
 	return (
@@ -79,6 +66,9 @@ export default async function Page({ params: { lang, region } }: DefaultPageProp
 				region={region}
 				campaignProps={campaignProps}
 				totalCampaignCount={campaignStatsEntries.length}
+				badgesByTranslation={translator.t('badges.by')}
+				badgesLoadingTranslation={translator.t('badges.loading')}
+				badgesContributorTranslation={translator.t('badges.contributors')}
 			/>
 			<Overview lang={lang} region={region} />
 			<MonthlyIncome lang={lang} region={region} />
