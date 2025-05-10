@@ -116,7 +116,7 @@ beforeAll(async () => {
 });
 
 test('filters ongoing featured campaigns correctly', async () => {
-	const stats = await calculator.allStats();
+	const stats = calculator.allStats();
 	const ids = stats.ongoingFeaturedCampaigns.map((doc) => doc.id);
 
 	expect(ids).toContain(campaign1RefId);
@@ -125,7 +125,7 @@ test('filters ongoing featured campaigns correctly', async () => {
 });
 
 test('maps contributions to the correct campaign', async () => {
-	const stats = await calculator.allStats();
+	const stats = calculator.allStats();
 
 	const campaign1Contributions = stats.getContributionsForCampaign(campaign1RefId);
 	const campaign2Contributions = stats.getContributionsForCampaign(campaign2RefId);

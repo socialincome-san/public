@@ -24,8 +24,8 @@ export class CampaignStatsCalculator {
 		for (const doc of contributionDocs.docs) {
 			const data = doc.data();
 			const campaignPath = data.campaign_path;
-			const campaignId = campaignPath?.id || '';
-
+			const campaignId = campaignPath?.id || null;
+			if (!campaignId) continue;
 			if (!calculator.contributionsByCampaignId.has(campaignId)) {
 				calculator.contributionsByCampaignId.set(campaignId, []);
 			}
@@ -55,7 +55,7 @@ export class CampaignStatsCalculator {
 	/**
 	 * Returns filtered campaigns and exposes a method to access contributions.
 	 */
-	async allStats(): Promise<CampaignStats> {
+	allStats(): CampaignStats {
 		return {
 			ongoingFeaturedCampaigns: this.getFilteredCampaigns(),
 			getContributionsForCampaign: this.getContributionsForCampaign,

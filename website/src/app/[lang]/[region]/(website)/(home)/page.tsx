@@ -35,7 +35,7 @@ export default async function Page(props: DefaultPageProps) {
 		namespaces: ['website-campaign'],
 	});
 	const campaignStatsCalculator = await CampaignStatsCalculator.build(firestoreAdmin);
-	const stats = await campaignStatsCalculator.allStats();
+	const stats = campaignStatsCalculator.allStats();
 	const campaignStatsEntries = stats.ongoingFeaturedCampaigns;
 	const selectedCampaigns = chooseRandomCampaigns(campaignStatsEntries);
 	let campaignProps = [];
