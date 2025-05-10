@@ -7,13 +7,11 @@ import Applestore from './(assets)/applestore.svg';
 import Playstore from './(assets)/playstore.svg';
 
 export default async function Page({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['website-app'],
-	});
+	const { lang } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-app'] });
 
 	return (
-		<BaseContainer className="flex flex-col items-start space-y-8 pt-16">
+		<BaseContainer className="flex flex-col items-start space-y-8">
 			<div className="flex flex-col space-y-8">
 				<Typography as="h1" size="5xl" weight="bold" className="mx-auto text-center">
 					{translator.t('title')}

@@ -4,7 +4,9 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Alert, AlertDescription, AlertTitle } from '@socialincome/ui';
 
 export default async function Page({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({ language: params.lang, namespaces: ['website-me'] });
+	const { lang, region } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-me'] });
+
 	return (
 		<div className="space-y-8">
 			<Alert variant="primary">
@@ -12,8 +14,8 @@ export default async function Page({ params }: DefaultPageProps) {
 				<AlertDescription>{translator.t('personal-info.alert-description')}</AlertDescription>
 			</Alert>
 			<PersonalInfoForm
-				lang={params.lang}
-				region={params.region}
+				lang={lang}
+				region={region}
 				translations={{
 					firstname: translator.t('personal-info.firstname'),
 					lastname: translator.t('personal-info.lastname'),

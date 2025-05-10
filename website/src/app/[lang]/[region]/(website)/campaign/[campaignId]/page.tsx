@@ -1,9 +1,8 @@
-import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import GenericDonationForm from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/generic-donation-form';
 import { DonationInterval } from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/page';
 import { VimeoVideo } from '@/components/vimeo-video';
 import { firestoreAdmin } from '@/firebase-admin';
-import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { getMetadata } from '@/metadata';
 import { Campaign, CAMPAIGN_FIRESTORE_PATH, CampaignStatus } from '@socialincome/shared/src/types/campaign';
 import { Contribution, CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/src/types/contribution';
@@ -31,16 +30,17 @@ import Link from 'next/link';
 
 import NewsletterGlowContainer from '@/components/newsletter-glow-container/newsletter-glow-container';
 
+interface CampaignPageParams extends DefaultParams {
+	campaignId: string;
+}
+
 export type CampaignPageProps = {
-	params: {
-		country: WebsiteRegion;
-		lang: WebsiteLanguage;
-		campaign: string;
-	};
-} & DefaultPageProps;
+	params: Promise<CampaignPageParams>;
+};
 
 export async function generateMetadata({ params }: CampaignPageProps) {
-	const campaignDoc = await firestoreAdmin.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH).doc(params.campaign).get();
+	const { campaignId, lang } = await params;
+	const campaignDoc = await firestoreAdmin.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH).doc(campaignId).get();
 	const campaign = campaignDoc.data();
 	const campaignMetadata =
 		campaign?.metadata_description && campaign?.metadata_ogImage && campaign?.metadata_twitterImage
@@ -61,16 +61,16 @@ export async function generateMetadata({ params }: CampaignPageProps) {
 					},
 				}
 			: undefined;
-	return getMetadata(params.lang, 'website-campaign', campaignMetadata);
+	return getMetadata(lang, 'website-campaign', campaignMetadata);
 }
 
 export default async function Page({ params }: CampaignPageProps) {
+	const { lang, campaignId, region } = await params;
 	const translator = await Translator.getInstance({
-		language: params.lang,
+		language: lang,
 		namespaces: ['website-campaign', 'website-donate', 'website-videos', 'website-faq', 'website-newsletter'],
 	});
-
-	const campaignDoc = await firestoreAdmin.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH).doc(params.campaign).get();
+	const campaignDoc = await firestoreAdmin.collection<Campaign>(CAMPAIGN_FIRESTORE_PATH).doc(campaignId).get();
 	const campaign = campaignDoc.data();
 
 	if (!campaign || campaign.status === CampaignStatus.Inactive) {
@@ -91,7 +91,7 @@ export default async function Page({ params }: CampaignPageProps) {
 
 	const contributions = await firestoreAdmin
 		.collectionGroup<Contribution>(CONTRIBUTION_FIRESTORE_PATH)
-		.where('campaign_path', '==', firestoreAdmin.firestore.doc([CAMPAIGN_FIRESTORE_PATH, params.campaign].join('/')))
+		.where('campaign_path', '==', firestoreAdmin.firestore.doc([CAMPAIGN_FIRESTORE_PATH, campaignId].join('/')))
 		.get();
 	let amountCollected = contributions.docs.reduce((sum, c) => sum + c.data().amount_chf, 0);
 	amountCollected += campaign.additional_amount_chf || 0;
@@ -201,15 +201,15 @@ export default async function Page({ params }: CampaignPageProps) {
 										<div className="mt-3">
 											<GenericDonationForm
 												defaultInterval={DonationInterval.Monthly}
-												lang={params.lang}
-												region={params.region}
+												lang={lang}
+												region={region}
 												translations={{
 													oneTime: translator.t('donation-interval.0.title'),
 													monthly: translator.t('donation-interval.1.title'),
 													amount: translator.t('amount'),
 													submit: translator.t('button-text-short'),
 												}}
-												campaignId={params.campaign}
+												campaignId={campaignId}
 											/>
 										</div>
 										{daysLeft >= 0 && (
@@ -274,7 +274,7 @@ export default async function Page({ params }: CampaignPageProps) {
 			)}
 			<NewsletterGlowContainer
 				title={translator.t('campaign.information-label')}
-				lang={params.lang}
+				lang={lang}
 				formTranslations={{
 					informationLabel: translator.t('popup.information-label'),
 					toastSuccess: translator.t('popup.toast-success'),

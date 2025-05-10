@@ -1,0 +1,16 @@
+{
+	"title": "Contact",
+	"contactEmailTitle": "Contacts e-mail :",
+	"emailGeneralTitle": "Demandes générales :",
+	"emailGeneral": "hello@socialincome.org",
+	"emailContributorsTitle": "Concernant les dons :",
+	"emailContributors": "contributors@socialincome.org",
+	"emailLegalTitle": "Questions juridiques :",
+	"emailLegal": "legal@socialincome.org",
+	"contactAddressTitle": "Adresse postale :",
+	"orgName": "Social Income",
+	"addressStreet": "Zweierstrasse 103",
+	"addressZipCode": "8003",
+	"addressCity": "Zurich",
+	"addressCountry": "Suisse"
+}

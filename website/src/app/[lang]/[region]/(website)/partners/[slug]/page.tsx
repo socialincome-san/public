@@ -1,28 +1,56 @@
-import { DefaultPageProps, DefaultParams } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { PartnerHome } from '@/app/[lang]/[region]/(website)/partners/(components)/PartnerHome';
-import { NgoEntryJSON } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
+import { NgoEntryJSON, NgoHomeProps } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
+import { firestoreAdmin } from '@/firebase-admin';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
+import {
+	OrganisationRecipientsByStatus,
+	RecipientStatsCalculator,
+} from '@socialincome/shared/src/utils/stats/RecipientStatsCalculator';
 import { redirect } from 'next/navigation';
 import { ngos } from '../(sections)/ngolist';
 
-function getNGOTranslation(translator: Translator, slug: string): NgoEntryJSON | undefined {
+async function getNGOTranslationAndStats(
+	translator: Translator,
+	slug: string,
+): Promise<{ translation: NgoEntryJSON | undefined; stats: NgoHomeProps['recipientCounts'] }> {
 	let currentNgo: NgoEntryJSON | undefined = undefined;
+	let stats: NgoHomeProps['recipientCounts'] = {
+		totalRecipients: 0,
+		activeRecipients: 0,
+		formerRecipients: 0,
+		suspendedRecipients: 0,
+	};
+	const recipientCalculator = await RecipientStatsCalculator.build(firestoreAdmin);
+	const recipientStats: OrganisationRecipientsByStatus =
+		recipientCalculator.allStats().recipientsCountByOrganisationAndStatus;
 	for (const ngo of ngos) {
 		if ((translator.t(ngo) as NgoEntryJSON)['org-slug'] === slug) {
 			currentNgo = translator.t(ngo);
+			const currentOrgRecipientStats = recipientStats[ngo];
+			stats = {
+				totalRecipients: currentOrgRecipientStats ? currentOrgRecipientStats['total'] : 0,
+				activeRecipients: currentOrgRecipientStats ? currentOrgRecipientStats['active'] : 0,
+				suspendedRecipients: currentOrgRecipientStats ? currentOrgRecipientStats['suspended'] : 0,
+				formerRecipients: currentOrgRecipientStats ? currentOrgRecipientStats['former'] : 0,
+			};
 			break;
 		}
 	}
-	return currentNgo;
+	return { translation: currentNgo, stats: stats };
 }
 
-type PartnerPageProps = {
-	params: {
-		slug: string;
-	} & DefaultParams;
-} & DefaultPageProps;
+interface PartnerPageParams extends DefaultParams {
+	slug: string;
+}
 
-export default async function Page({ params: { lang, region, slug } }: PartnerPageProps) {
+interface PartnerPageProps {
+	params: Promise<PartnerPageParams>;
+}
+
+export default async function Page({ params }: PartnerPageProps) {
+	const { lang, region, slug } = await params;
+
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-partners', 'website-common', 'countries'],
@@ -48,7 +76,10 @@ export default async function Page({ params: { lang, region, slug } }: PartnerPa
 		permalink: translator.t('ngo-generic.permalink'),
 	};
 
-	const currentNgo: NgoEntryJSON | undefined = getNGOTranslation(translator, slug.replaceAll('%26', '&'));
+	const { translation: currentNgo, stats: recipientCounts } = await getNGOTranslationAndStats(
+		translator,
+		slug.replaceAll('%26', '&'),
+	);
 	if (!currentNgo) {
 		redirect('/not-found');
 	}
@@ -61,6 +92,7 @@ export default async function Page({ params: { lang, region, slug } }: PartnerPa
 			currentNgo={currentNgo}
 			currentNgoCountry={currentNgoCountry}
 			translations={translations}
+			recipientCounts={recipientCounts}
 		/>
 	);
 }

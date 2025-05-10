@@ -1,5 +1,6 @@
 import { LANGUAGE_COOKIE, REGION_COOKIE } from '@/app/[lang]/[region]';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
+import { geolocation } from '@vercel/functions';
 import langParser from 'accept-language-parser';
 import { NextRequest } from 'next/server';
 import { Currency } from '../../shared/src/types/currency';
@@ -24,7 +25,7 @@ export const toLocale = (language: WebsiteLanguage, region: WebsiteRegion): stri
 export const toCurrencyLocale = (
 	language: WebsiteLanguage,
 	region: WebsiteRegion,
-	currency: WebsiteCurrency,
+	currency: Currency,
 	options?: Partial<Intl.ResolvedNumberFormatOptions>,
 ): Partial<Intl.ResolvedNumberFormatOptions> => {
 	return {
@@ -58,8 +59,7 @@ export const findBestLocale = (
 	}
 
 	const options = langParser.parse(request.headers.get('Accept-Language') || 'en');
-	const requestCountry = request.geo?.country?.toLowerCase() as WebsiteRegion | undefined;
-	console.info('Country set in request header:', requestCountry);
+	const geo = geolocation(request);
 
 	const bestOption = options.find(
 		(option) =>
@@ -72,7 +72,7 @@ export const findBestLocale = (
 	return {
 		language: (bestOption?.code as WebsiteLanguage) || defaultLanguage,
 		region:
-			(requestCountry && websiteRegions.includes(requestCountry) && requestCountry) ||
+			(geo.country && websiteRegions.includes(geo.country as WebsiteRegion) && (geo.country as WebsiteRegion)) ||
 			(bestOption?.region as WebsiteRegion) ||
 			defaultRegion,
 	};

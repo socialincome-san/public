@@ -8,7 +8,6 @@
 		"twitter-image": "/assets/metadata/twitter/default.jpg"
 	},
 	"navigation": {
-		"our-promise": "Notre promesse",
 		"about-us": "Qui nous sommes",
 		"contact": "Contact",
 		"contributors": "Donateurs et donatrices",
@@ -17,26 +16,27 @@
 		"faq": "FAQ",
 		"finances": "Finances",
 		"flow-of-funds": "Flux de fonds",
+		"follow-us": "Suivez-nous",
 		"how-it-works": "Comment ça marche",
+		"impact-measurement": "Réponses à l'enquête",
+		"journal": "Journal",
+		"legal": "Mentions légales",
 		"my-account": "Mon Compte",
+		"newsletter": "Newsletter",
 		"our-mission": "Notre mission",
+		"our-promise": "Notre promesse",
 		"our-work": "Notre action",
+		"partners": "Partenaires",
 		"privacy-policy": "Protection des données",
 		"recipient-selection": "Sélection des bénéficiaires",
 		"recipients": "Bénéficiaires",
 		"reporting": "Rapports",
+		"resources": "Ressources",
 		"team": "Équipe",
-		"partners": "Partenaires",
+		"terms-and-conditions": "Conditions générales",
+		"terms-of-use": "Conditions d'utilisation",
 		"transparency": "Transparence",
-		"impact-measurement": "Réponses à l’enquête",
-		"whats-next": "Suite",
-		"journal": "Journal"
-	},
-	"footer": {
-		"follow-us": "Suis-nous",
-		"resources": "Informations",
-		"legal": "Mentions légales",
-		"newsletter": "Newsletter"
+		"whats-next": "Suite"
 	},
 	"cookie-consent-banner": {
 		"text": "Nous utilisons des <a href='/legal/privacy' class='underline'>cookies</a>.",
@@ -54,71 +54,54 @@
 	},
 	"sdg": {
 		"sdg": "ODD",
-
 		"sdg1-title": "Pas de Pauvreté",
 		"sdg1-mission-1": "La mission de ",
 		"sdg1-mission-2": "est de mettre fin à la pauvreté sous toutes ses formes.",
-
 		"sdg2-title": "Faim Zéro",
 		"sdg2-mission-1": "La mission de ",
-		"sdg2-mission-2": "est de mettre fin à la faim et de garantir l’accès à une alimentation nutritive.",
-
+		"sdg2-mission-2": "est de mettre fin à la faim et de garantir l'accès à une alimentation nutritive.",
 		"sdg3-title": "Bonne Santé",
 		"sdg3-mission-1": "La mission de ",
 		"sdg3-mission-2": "est de garantir une vie en bonne santé et de promouvoir le bien-être pour tous.",
-
 		"sdg4-title": "Éducation de Qualité",
 		"sdg4-mission-1": "La mission de ",
 		"sdg4-mission-2": "est de fournir une éducation inclusive et équitable de qualité.",
-
 		"sdg5-title": "Égalité des Sexes",
 		"sdg5-mission-1": "La mission de ",
-		"sdg5-mission-2": "est d’atteindre l'égalité des sexes et d’autonomiser toutes les femmes et les filles.",
-
+		"sdg5-mission-2": "est d'atteindre l'égalité des sexes et d'autonomiser toutes les femmes et les filles.",
 		"sdg6-title": "Eau Propre",
 		"sdg6-mission-1": "La mission de ",
-		"sdg6-mission-2": "est d’assurer l’accès à l’eau et à l’assainissement pour tous.",
-
+		"sdg6-mission-2": "est d'assurer l'accès à l'eau et à l'assainissement pour tous.",
 		"sdg7-title": "Énergie Propre",
 		"sdg7-mission-1": "La mission de ",
-		"sdg7-mission-2": "est de garantir l’accès à une énergie abordable et durable pour tous.",
-
+		"sdg7-mission-2": "est de garantir l'accès à une énergie abordable et durable pour tous.",
 		"sdg8-title": "Travail Décent",
 		"sdg8-mission-1": "La mission de ",
 		"sdg8-mission-2": "est de promouvoir la croissance économique et le travail décent pour tous.",
-
 		"sdg9-title": "Industrie & Innovation",
 		"sdg9-mission-1": "La mission de ",
 		"sdg9-mission-2": "est de bâtir des infrastructures résilientes et de favoriser l'innovation.",
-
 		"sdg10-title": "Inégalités Réduites",
 		"sdg10-mission-1": "La mission de ",
 		"sdg10-mission-2": "est de réduire les inégalités dans et entre les pays.",
-
 		"sdg11-title": "Villes Durables",
 		"sdg11-mission-1": "La mission de ",
 		"sdg11-mission-2": "est de rendre les villes inclusives, sûres et durables.",
-
 		"sdg12-title": "Consommation Responsable",
 		"sdg12-mission-1": "La mission de ",
-		"sdg12-mission-2": "est d’assurer des modes de consommation et de production durables.",
-
+		"sdg12-mission-2": "est d'assurer des modes de consommation et de production durables.",
 		"sdg13-title": "Action Climatique",
 		"sdg13-mission-1": "La mission de ",
-		"sdg13-mission-2": "est d’agir d’urgence contre le changement climatique.",
-
+		"sdg13-mission-2": "est d'agir d'urgence contre le changement climatique.",
 		"sdg14-title": "Vie Aquatique",
 		"sdg14-mission-1": "La mission de ",
 		"sdg14-mission-2": "est de protéger et utiliser durablement les océans et ressources marines.",
-
 		"sdg15-title": "Vie Terrestre",
 		"sdg15-mission-1": "La mission de ",
 		"sdg15-mission-2": "est de protéger et restaurer les écosystèmes terrestres.",
-
 		"sdg16-title": "Paix et Justice",
 		"sdg16-mission-1": "La mission de ",
 		"sdg16-mission-2": "est de promouvoir des sociétés pacifiques et inclusives et garantir l'accès à la justice pour tous.",
-
 		"sdg17-title": "Partenariats",
 		"sdg17-mission-1": "La mission de ",
 		"sdg17-mission-2": "est de renforcer les partenariats pour le développement durable."

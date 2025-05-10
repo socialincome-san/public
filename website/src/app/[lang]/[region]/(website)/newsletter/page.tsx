@@ -7,18 +7,23 @@ import { BaseContainer, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export async function generateMetadata({ params }: DefaultPageProps) {
+export async function generateMetadata(props: DefaultPageProps) {
+	const params = await props.params;
 	return getMetadata(params.lang, 'website-newsletter');
 }
 
-export default async function Page({ params: { lang, region } }: DefaultPageProps) {
+export default async function Page(props: DefaultPageProps) {
+	const params = await props.params;
+
+	const { lang, region } = params;
+
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-newsletter'],
 	});
 
 	return (
-		<BaseContainer className="py-12">
+		<BaseContainer>
 			<div className="grid grid-cols-1 gap-20 lg:grid-cols-2">
 				<div className="flex flex-col justify-center gap-3">
 					<Typography size="5xl" weight="bold" className="mt-2">

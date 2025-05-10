@@ -26,7 +26,10 @@ const chooseRandomCampaigns = (
 	return _.sampleSize(campaignStatsEntries, amount);
 };
 
-export default async function Page({ params: { lang, region } }: DefaultPageProps) {
+export default async function Page(props: DefaultPageProps) {
+	const params = await props.params;
+
+	const { lang, region } = params;
 	const translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-campaign'],

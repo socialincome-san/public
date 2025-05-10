@@ -9,6 +9,26 @@
 	"download-pdf": "PDF",
 	"reports": [
 		{
+			"title": "Annual Report 2024",
+			"href": "https://drive.google.com/file/d/1cKwTjdDA11-k3TJEq-X1_mIOsTLLhNMP/view",
+			"language": "English/German"
+		},
+		{
+			"title": "Financial Statement 2024",
+			"href": "https://drive.google.com/file/d/1cSbGJiJ3ACX0U7hW4lSkyplKJv72W8mS/view",
+			"language": "English"
+		},
+		{
+			"title": "Financial Statement 2024",
+			"href": "https://drive.google.com/file/d/1cRlXyk-5QU_mOJosq7ZRuSbGzHvmsu2A/view",
+			"language": "German"
+		},
+		{
+			"title": "Audit Report 2024",
+			"href": "https://drive.google.com/file/d/1cLC6wEKUGibkpWTosKZ0CeO-KcXqlx9-/view",
+			"language": "German"
+		},
+		{
 			"title": "Annual Report 2023",
 			"href": "https://drive.google.com/file/d/13vvBS6Ju6NqpIgis4CrMHrY9s2hbRjYy/view",
 			"language": "English/German"

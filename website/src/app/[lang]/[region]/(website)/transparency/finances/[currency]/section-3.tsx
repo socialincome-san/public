@@ -7,16 +7,14 @@ import { SectionProps } from './page';
 import { CountryCard, CountryCardList } from './section-3-cards';
 
 export async function Section3({ params, contributionStats }: SectionProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['countries', 'website-finances'],
-	});
+	const { lang, region, currency } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['countries', 'website-finances'] });
 	const totalContributionsByCountry = contributionStats.totalContributionsByCountry as {
 		country: CountryCode;
 		amount: number;
 		usersCount: number;
 	}[];
-	const currencyLocale = toCurrencyLocale(params.lang, params.region, params.currency, { maximumFractionDigits: 0 });
+	const currencyLocale = toCurrencyLocale(lang, region, currency, { maximumFractionDigits: 0 });
 
 	return (
 		<div>

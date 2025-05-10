@@ -14,15 +14,14 @@ import {
 } from '@socialincome/ui';
 import Link from 'next/link';
 
-export async function generateMetadata({ params }: DefaultPageProps) {
+export async function generateMetadata(props: DefaultPageProps) {
+	const params = await props.params;
 	return getMetadata(params.lang, 'website-reporting');
 }
 
 export default async function Page({ params }: DefaultPageProps) {
-	const translator = await Translator.getInstance({
-		language: params.lang,
-		namespaces: ['website-reporting'],
-	});
+	const { lang } = await params;
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-reporting'] });
 
 	return (
 		<BaseContainer className="mx-auto flex max-w-3xl flex-col space-y-12">

@@ -1,6 +1,7 @@
-import { DefaultPageProps, DefaultParams } from '@/app/[lang]/[region]';
+import { DefaultParams } from '@/app/[lang]/[region]';
 import { CurrencyRedirect } from '@/app/[lang]/[region]/(website)/transparency/(components)/currency-redirect';
 import { websiteCurrencies, WebsiteCurrency } from '@/i18n';
+import { Currency } from '@socialincome/shared/src/types/currency';
 import { SelectionFaq } from './(sections)/faq';
 import { HeroSection } from './(sections)/hero-section';
 import { PastRounds } from './(sections)/past-rounds';
@@ -10,11 +11,17 @@ import { SelectionProcess } from './(sections)/selection-process';
 export const revalidate = 3600; // update once an hour
 export const generateStaticParams = () => websiteCurrencies.map((currency) => ({ currency: currency.toLowerCase() }));
 
-type RecipientSelectionPageProps = DefaultPageProps & {
-	params: DefaultParams & { currency: string };
-};
+interface TransparencyPageParams extends DefaultParams {
+	currency: Currency;
+}
 
-export default async function Page({ params: { lang, region, currency } }: RecipientSelectionPageProps) {
+interface TransparencyPageProps {
+	params: Promise<TransparencyPageParams>;
+}
+
+export default async function Page({ params }: TransparencyPageProps) {
+	const { lang, region, currency } = await params;
+
 	return (
 		<div className="-mt-24 md:-mt-36">
 			<CurrencyRedirect currency={currency.toUpperCase() as WebsiteCurrency} />

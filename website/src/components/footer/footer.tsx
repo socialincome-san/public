@@ -34,22 +34,22 @@ export default async function Footer({ lang, region }: DefaultParams) {
 				<div className="grid grid-cols-2 gap-8 md:grid-cols-4">
 					<div className="flex flex-col space-y-1">
 						<Typography size="sm" weight="medium" color="muted-foreground">
-							{translator.t('footer.follow-us')}
+							{translator.t('navigation.follow-us')}
 						</Typography>
 						<FooterLink label="Instagram" url="https://www.instagram.com/so_income" target="_blank" />
-						<FooterLink label="X" url="https://twitter.com/so_income" target="_blank" />
 						<FooterLink label="Facebook" url="https://facebook.com/socialincome.org" target="_blank" />
 						<FooterLink label="Linkedin" url="https://www.linkedin.com/company/socialincome" target="_blank" />
 						<FooterLink label="GitHub" url="https://github.com/socialincome-san/public" target="_blank" />
-						<FooterLink label={translator.t('footer.newsletter')} url={`/${lang}/${region}/newsletter`} />
+						<FooterLink label={translator.t('navigation.newsletter')} url={`/${lang}/${region}/newsletter`} />
 					</div>
 					<div className="flex flex-col space-y-1">
 						<Typography size="sm" weight="medium" color="muted-foreground">
-							{translator.t('footer.resources')}
+							{translator.t('navigation.resources')}
 						</Typography>
 						<FooterLink label={translator.t('navigation.faq')} url={`/${lang}/${region}/faq`} />
 						<FooterLink label={translator.t('navigation.my-account')} url={`/${lang}/${region}/login`} />
-						<FooterLink label={translator.t('footer.legal')} url={`/${lang}/${region}/legal`} />
+						<FooterLink label={translator.t('navigation.legal')} url={`/${lang}/${region}/legal`} />
+						<FooterLink label={translator.t('navigation.contact')} url={`/${lang}/${region}/contact`} />
 					</div>
 					<div className="flex flex-col space-y-1">
 						<Typography size="sm" weight="medium" color="muted-foreground">

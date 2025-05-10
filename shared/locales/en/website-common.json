@@ -8,7 +8,6 @@
 		"twitter-image": "/assets/metadata/twitter/default.jpg"
 	},
 	"navigation": {
-		"our-promise": "Our Promise",
 		"about-us": "About Us",
 		"contact": "Contact",
 		"contributors": "Contributors",
@@ -17,26 +16,27 @@
 		"faq": "FAQ",
 		"finances": "Finances",
 		"flow-of-funds": "Flow of Funds",
+		"follow-us": "Follow Us",
 		"how-it-works": "How It Works",
+		"impact-measurement": "Survey Responses",
+		"journal": "Journal",
+		"legal": "Legal",
 		"my-account": "My Account",
+		"newsletter": "Newsletter",
 		"our-mission": "Our Mission",
+		"our-promise": "Our Promise",
 		"our-work": "Our Work",
+		"partners": "Partners",
 		"privacy-policy": "Privacy Policy",
 		"recipient-selection": "Recipient Selection",
 		"recipients": "Recipients",
 		"reporting": "Reporting",
-		"team": "Team",
-		"partners": "Partners",
-		"transparency": "Transparency",
-		"impact-measurement": "Survey Responses",
-		"whats-next": "What's Next",
-		"journal": "Journal"
-	},
-	"footer": {
-		"follow-us": "Follow Us",
 		"resources": "Resources",
-		"legal": "Legal",
-		"newsletter": "Newsletter"
+		"team": "Team",
+		"terms-and-conditions": "Terms and Conditions",
+		"terms-of-use": "Terms of Use",
+		"transparency": "Transparency",
+		"whats-next": "What's Next"
 	},
 	"cookie-consent-banner": {
 		"text": "We use <a href='/legal/privacy' class='underline'>cookies</a>.",
@@ -54,71 +54,54 @@
 	},
 	"sdg": {
 		"sdg": "SDG",
-
 		"sdg1-title": "No Poverty",
 		"sdg1-mission-1": "The mission of ",
 		"sdg1-mission-2": "is to reduce poverty in all its forms.",
-
 		"sdg2-title": "Zero Hunger",
 		"sdg2-mission-1": "The mission of ",
 		"sdg2-mission-2": "is to end hunger and ensure access to nutritious food.",
-
 		"sdg3-title": "Good Health",
 		"sdg3-mission-1": "The mission of ",
 		"sdg3-mission-2": "is to ensure healthy lives and promote well-being for all.",
-
 		"sdg4-title": "Quality Education",
 		"sdg4-mission-1": "The mission of ",
 		"sdg4-mission-2": "is to provide inclusive and equitable quality education.",
-
 		"sdg5-title": "Gender Equality",
 		"sdg5-mission-1": "The mission of ",
 		"sdg5-mission-2": "is to achieve gender equality and empower all women and girls.",
-
 		"sdg6-title": "Clean Water",
 		"sdg6-mission-1": "The mission of ",
 		"sdg6-mission-2": "is to ensure availability and sustainable management of water and sanitation for all.",
-
 		"sdg7-title": "Clean Energy",
 		"sdg7-mission-1": "The mission of ",
 		"sdg7-mission-2": "is to ensure access to affordable, reliable, and sustainable energy for all.",
-
 		"sdg8-title": "Decent Work",
 		"sdg8-mission-1": "The mission of ",
 		"sdg8-mission-2": "is to promote inclusive and sustainable economic growth, employment, and decent work for all.",
-
 		"sdg9-title": "Industry & Innovation",
 		"sdg9-mission-1": "The mission of ",
 		"sdg9-mission-2": "is to build resilient infrastructure and foster innovation.",
-
 		"sdg10-title": "Reduced Inequality",
 		"sdg10-mission-1": "The mission of ",
 		"sdg10-mission-2": "is to reduce inequality within and among countries.",
-
 		"sdg11-title": "Sustainable Cities",
 		"sdg11-mission-1": "The mission of ",
 		"sdg11-mission-2": "is to make cities inclusive, safe, resilient, and sustainable.",
-
 		"sdg12-title": "Responsible Consumption",
 		"sdg12-mission-1": "The mission of ",
 		"sdg12-mission-2": "is to ensure sustainable consumption and production patterns.",
-
 		"sdg13-title": "Climate Action",
 		"sdg13-mission-1": "The mission of ",
 		"sdg13-mission-2": "is to take urgent action to combat climate change and its impacts.",
-
 		"sdg14-title": "Life Below Water",
 		"sdg14-mission-1": "The mission of ",
 		"sdg14-mission-2": "is to conserve and sustainably use the oceans, seas, and marine resources.",
-
 		"sdg15-title": "Life on Land",
 		"sdg15-mission-1": "The mission of ",
 		"sdg15-mission-2": "is to protect, restore, and promote the sustainable use of terrestrial ecosystems.",
-
 		"sdg16-title": "Peace & Justice",
 		"sdg16-mission-1": "The mission of ",
 		"sdg16-mission-2": "is to promote peaceful and inclusive societies and ensure access to justice for all.",
-
 		"sdg17-title": "Partnerships",
 		"sdg17-mission-1": "The mission of ",
 		"sdg17-mission-2": "is to strengthen global partnerships for sustainable development."
