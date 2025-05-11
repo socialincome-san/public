@@ -1,8 +1,8 @@
-import {
-	getDimensionsFromStoryblokImageUrl,
-	getPublishedDateFormatted,
-} from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
 import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
+import {
+	formatStoryblokDate,
+	getDimensionsFromStoryblokImageUrl,
+} from '@/app/[lang]/[region]/(website)/journal/StoryblokUtils';
 import { StoryblokArticle, StoryblokAuthor } from '@socialincome/shared/src/storyblok/journal';
 import { Typography } from '@socialincome/ui';
 import { ISbStoryData } from '@storyblok/react';
@@ -34,12 +34,16 @@ export function StoryblokArticleCard(props: {
 						</Typography>
 					</div>
 					<Typography weight="normal" className="text-black">
-						{getPublishedDateFormatted(blog.first_published_at!, props.lang)}
+						{formatStoryblokDate(blog.first_published_at!, props.lang)}
 					</Typography>
 				</div>
 
 				<div className="mt-2 flex flex-grow flex-col">
-					<Typography size="2xl" className="mb-4 line-clamp-3 h-16 flex-grow" weight="medium">
+					<Typography
+						size="xl"
+						className="md:h-18 mb-4 line-clamp-2 h-14 flex-grow hyphens-auto break-words md:line-clamp-3"
+						weight="medium"
+					>
 						{blog.content.title}
 					</Typography>
 					<div className="flex items-center justify-between">

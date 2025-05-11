@@ -1,4 +1,4 @@
-import { getDimensionsFromStoryblokImageUrl } from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
+import { getDimensionsFromStoryblokImageUrl } from '@/app/[lang]/[region]/(website)/journal/StoryblokUtils';
 import { StoryblokAuthor } from '@socialincome/shared/src/storyblok/journal';
 import { ISbStoryData } from '@storyblok/react';
 import Image from 'next/image';

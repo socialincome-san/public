@@ -1,12 +1,13 @@
-import {
-	getArticle,
-	getDimensionsFromStoryblokImageUrl,
-	getPublishedDateFormatted,
-	getRelativeArticles,
-} from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
+import { getArticle, getRelativeArticles } from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
 import { StoryblokArticleCard } from '@/app/[lang]/[region]/(website)/journal/StoryblokArticle';
 import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
+import { StoryblokEmbeddedVideoPlayer } from '@/app/[lang]/[region]/(website)/journal/StoryblokEmbeddedVideoPlayer';
 import { StoryblokImageWithCaption } from '@/app/[lang]/[region]/(website)/journal/StoryblokImageWithCaption';
+import { StoryblokReferencesGroup } from '@/app/[lang]/[region]/(website)/journal/StoryblokReferencesGroup';
+import {
+	formatStoryblokDate,
+	getDimensionsFromStoryblokImageUrl,
+} from '@/app/[lang]/[region]/(website)/journal/StoryblokUtils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { StoryblokArticle, StoryblokAuthor, StoryblokTag } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
@@ -20,19 +21,21 @@ import { render } from 'storyblok-rich-text-react-renderer';
 export const revalidate = 900;
 storyblokInitializationWorkaround();
 
-function renderWrapper(articleData: StoryblokArticle) {
+function renderWrapper(articleData: StoryblokArticle, translator: Translator, lang: LanguageCode) {
 	return render(articleData.content, {
 		blokResolvers: {
 			['quotedText']: (props: any) => <QuotedText {...props} />,
 			['imageWithCaption']: (props: any) => <StoryblokImageWithCaption {...props} />,
+			['embeddedVideo']: (props: any) => <StoryblokEmbeddedVideoPlayer {...props} />,
+			['referencesGroup']: (props: any) => <StoryblokReferencesGroup translator={translator} {...props} lang={lang} />,
 		},
 	});
 }
 
 function badgeWithLink(lang: string, region: string, tag: ISbStoryData<StoryblokTag>, variant: 'outline' | 'default') {
 	return (
-		<Link href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
-			<Badge key={tag.slug} variant={variant} className="mt-6">
+		<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
+			<Badge variant={variant} className="mt-6">
 				{tag.content?.value}
 			</Badge>
 		</Link>
@@ -86,10 +89,10 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 								{articleData.type?.content.value}
 							</Typography>
 							<Typography size="lg" weight="normal" color="popover" className="ml-4">
-								{getPublishedDateFormatted(articleResponse.data.story.first_published_at!, lang)}
+								{formatStoryblokDate(articleResponse.data.story.first_published_at!, lang)}
 							</Typography>
 						</div>
-						<Typography weight="medium" className="mt-8" color="accent" size="5xl">
+						<Typography weight="medium" className="mt-8 hyphens-auto break-words" color="accent" size="5xl">
 							{articleData.title}
 						</Typography>
 
@@ -113,7 +116,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 						{articleData.leadText}
 					</Typography>
 					<Typography as="div" className="text-black [&_a]:font-normal">
-						{renderWrapper(articleData)}
+						{renderWrapper(articleData, translator, lang)}
 					</Typography>
 					<Separator />
 
