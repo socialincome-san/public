@@ -1,7 +1,7 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { getAuthors, getOverviewArticles, getTags } from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
-import { StoryblokArticleCard } from '@/app/[lang]/[region]/(website)/journal/StoryblokArticle';
-import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
+import { getAuthors, getOverviewArticles, getTags } from '@/components/storyblok/StoryblokApi';
+import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
+import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, BaseContainer, Typography } from '@socialincome/ui';
