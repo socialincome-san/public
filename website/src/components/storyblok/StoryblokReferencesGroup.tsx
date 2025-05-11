@@ -1,7 +1,4 @@
-import {
-	formatStoryblokDate,
-	getDimensionsFromStoryblokImageUrl,
-} from '@/app/[lang]/[region]/(website)/journal/StoryblokUtils';
+import { formatStoryblokDate, getDimensionsFromStoryblokImageUrl } from '@/components/storyblok/StoryblokUtils';
 import { ReferencesGroup, StoryblokImage } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -41,6 +38,11 @@ export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: 
 	const referencesGroup = props;
 	const hasContextInfo = !!referencesGroup.context;
 	const showThumbnails = referencesGroup.references.some((it) => !!it.thumbnail);
+
+	function showSeparator(index: number) {
+		return index > 0 || hasContextInfo;
+	}
+
 	return (
 		<div className="bg-primary w-full rounded-md bg-opacity-10 p-6">
 			{hasContextInfo && (
@@ -50,7 +52,7 @@ export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: 
 			)}
 			{referencesGroup.references.map((reference, index) => (
 				<Fragment key={reference.id}>
-					{(index > 0 || hasContextInfo) && <Separator className="bg-foreground m-0 mb-4 mt-4 opacity-15" />}
+					{showSeparator(index) && <Separator className="bg-foreground m-0 mb-4 mt-4 opacity-15" />}
 					<div className="flex items-start gap-8">
 						{!!reference.thumbnail
 							? thumbnailImage(reference.thumbnail)

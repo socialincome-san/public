@@ -1,8 +1,5 @@
-import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
-import {
-	formatStoryblokDate,
-	getDimensionsFromStoryblokImageUrl,
-} from '@/app/[lang]/[region]/(website)/journal/StoryblokUtils';
+import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
+import { formatStoryblokDate, getDimensionsFromStoryblokImageUrl } from '@/components/storyblok/StoryblokUtils';
 import { StoryblokArticle, StoryblokAuthor } from '@socialincome/shared/src/storyblok/journal';
 import { Typography } from '@socialincome/ui';
 import { ISbStoryData } from '@storyblok/react';

@@ -1,13 +1,10 @@
-import { getArticle, getRelativeArticles } from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
-import { StoryblokArticleCard } from '@/app/[lang]/[region]/(website)/journal/StoryblokArticle';
-import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
-import { StoryblokEmbeddedVideoPlayer } from '@/app/[lang]/[region]/(website)/journal/StoryblokEmbeddedVideoPlayer';
-import { StoryblokImageWithCaption } from '@/app/[lang]/[region]/(website)/journal/StoryblokImageWithCaption';
-import { StoryblokReferencesGroup } from '@/app/[lang]/[region]/(website)/journal/StoryblokReferencesGroup';
-import {
-	formatStoryblokDate,
-	getDimensionsFromStoryblokImageUrl,
-} from '@/app/[lang]/[region]/(website)/journal/StoryblokUtils';
+import { getArticle, getRelativeArticles } from '@/components/storyblok/StoryblokApi';
+import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
+import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
+import { StoryblokEmbeddedVideoPlayer } from '@/components/storyblok/StoryblokEmbeddedVideoPlayer';
+import { StoryblokImageWithCaption } from '@/components/storyblok/StoryblokImageWithCaption';
+import { StoryblokReferencesGroup } from '@/components/storyblok/StoryblokReferencesGroup';
+import { formatStoryblokDate, getDimensionsFromStoryblokImageUrl } from '@/components/storyblok/StoryblokUtils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { StoryblokArticle, StoryblokAuthor, StoryblokTag } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
