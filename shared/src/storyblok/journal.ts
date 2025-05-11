@@ -6,6 +6,28 @@ export enum StoryblokContentType {
 	Tag = 'topic',
 }
 
+export interface StoryblokEmbeddedVideo {
+	id: number;
+	url: string | undefined;
+	caption: string;
+	muxPlaybackId: string | undefined;
+}
+
+export interface ReferencesGroup {
+	context: string;
+	references: ReferenceArticle[];
+}
+
+export interface ReferenceArticle {
+	id: number;
+	publicationDate: string;
+	title: string;
+	author: string;
+	thumbnail: StoryblokImage | undefined;
+	mediaOutlet: string;
+	url: string;
+}
+
 export interface StoryblokImage {
 	alt: string;
 	filename: string;

@@ -7,5 +7,12 @@
 	},
 	"article": {
 		"keep-reading": "Keep reading"
+	},
+	"reference-article":{
+		"written-by" : "{{mediaOutlet}} by {{author}} on {{publicationDate}}",
+		"context": {
+			"original": "Original published as",
+			"related" : "These sources provided background and insights"
+		}
 	}
 }
