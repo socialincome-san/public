@@ -7,6 +7,7 @@ import {
 import { StoryblokArticleCard } from '@/app/[lang]/[region]/(website)/journal/StoryblokArticle';
 import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
 import { StoryblokImageWithCaption } from '@/app/[lang]/[region]/(website)/journal/StoryblokImageWithCaption';
+import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { StoryblokArticle, StoryblokAuthor, StoryblokTag } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -17,6 +18,7 @@ import Link from 'next/link';
 import { render } from 'storyblok-rich-text-react-renderer';
 
 export const revalidate = 900;
+storyblokInitializationWorkaround();
 
 function renderWrapper(articleData: StoryblokArticle) {
 	return render(articleData.content, {
