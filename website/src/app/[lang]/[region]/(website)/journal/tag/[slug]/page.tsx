@@ -1,9 +1,11 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { getArticlesByTag, getTag } from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
 import { StoryblokArticleCard } from '@/app/[lang]/[region]/(website)/journal/StoryblokArticle';
+import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { BaseContainer, Typography } from '@socialincome/ui';
 
 export const revalidate = 900;
+storyblokInitializationWorkaround();
 
 interface PageParams extends DefaultParams {
 	slug: string;
