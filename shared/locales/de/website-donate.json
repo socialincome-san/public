@@ -17,9 +17,19 @@
 		"first-name": "Vorname",
 		"last-name": "Nachname",
 		"email": "E-Mail",
+		"plan": "1% Plan (monatlich)",
+		"your-contribution": "Ihr Beitrag",
+		"full-social-income": "1 Volles Social Income",
+		"partial-social-income": "1 Teil-Social Income",
+		"we-match-the-missing": "Wir ergänzen den fehlenden Betrag",
 		"generate-qr-bill": "QR-Rechnung generieren",
-		"confirm-monthly-order": "Dauerauftrag bestätigen",
-		"subscribe-to-1-percent-plan": "Zum 1% Plan anmelden"
+		"confirm-monthly-order": "Monatlichen Dauerauftrag bestätigen",
+		"transfer-fees-note": "Alle Überweisungsgebühren werden aus unseren Reserven bezahlt, derzeit bei € 23.392. Bitte erwägen Sie, die Gebühren mit dem 1% Plus Plan zu decken:",
+		"plus-plan-link": "ändern",
+		"subscribe-to-1-percent-plan": "Für 1% Plan anmelden",
+		"errors": {
+			"qrBillError": "QR-Rechnung konnte nicht generiert werden. Bitte versuchen Sie es erneut."
+		}
 	},
 	"donation-impact": {
 		"monthly-contribution": "Dein monatlicher Beitrag:",

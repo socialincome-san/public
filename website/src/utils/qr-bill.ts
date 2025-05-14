@@ -7,6 +7,8 @@
  * - 1 digit check digit (modulo 10 recursive)
  */
 
+import { SwissQRBill } from 'swissqrbill/svg';
+
 /**
  * Calculates the modulo 10 recursive check digit for the QR bill reference
  * @param reference The reference number without check digit
@@ -30,7 +32,7 @@ function calculateCheckDigit(reference: string): number {
  * @param userCreatedAt The timestamp when the user was created (in milliseconds)
  * @returns The complete QR bill reference with check digit
  */
-export function generateQrBillReference(paymentIntervalMonths: number, userCreatedAt: number): string {
+function generateQrBillReference(paymentIntervalMonths: number, userCreatedAt: number): string {
 	// Ensure payment interval is 2 digits
 	const formattedInterval = paymentIntervalMonths.toString().padStart(2, '0');
 
@@ -41,4 +43,23 @@ export function generateQrBillReference(paymentIntervalMonths: number, userCreat
 	const checkDigit = calculateCheckDigit(baseReference);
 
 	return `${baseReference}${checkDigit}`;
+}
+
+export function generateQrBillSvg(amount: number, paymentIntervalMonths: number, paymentReferenceId: number): string {
+	const svg = new SwissQRBill({
+		amount: Number(amount),
+		creditor: {
+			account: 'CH44 3199 9123 0008 8901 2',
+			address: 'Musterstrasse',
+			buildingNumber: 7,
+			city: 'Musterstadt',
+			country: 'CH',
+			name: 'SwissQRBill',
+			zip: 1234,
+		},
+		currency: 'CHF',
+		reference: generateQrBillReference(paymentIntervalMonths, paymentReferenceId),
+	});
+
+	return svg.toString();
 }

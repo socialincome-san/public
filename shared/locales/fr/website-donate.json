@@ -16,10 +16,20 @@
 	"bank-transfer": {
 		"first-name": "Prénom",
 		"last-name": "Nom",
-		"email": "E-mail",
-		"generate-qr-bill": "Générer la facture QR",
+		"email": "E-Mail",
+		"plan": "Plan 1% (mensuel)",
+		"your-contribution": "Votre contribution",
+		"full-social-income": "1 Social Income complet",
+		"partial-social-income": "1 Social Income partiel",
+		"we-match-the-missing": "Nous complétons le montant manquant",
+		"generate-qr-bill": "Générer le QR-bill",
 		"confirm-monthly-order": "Confirmer l'ordre permanent mensuel",
-		"subscribe-to-1-percent-plan": "S'abonner au plan 1%"
+		"transfer-fees-note": "Tous les frais de transfert sont payés à partir de nos réserves, actuellement à € 23'392. Veuillez envisager de couvrir les frais avec le Plan 1% Plus :",
+		"plus-plan-link": "modifier",
+		"subscribe-to-1-percent-plan": "S'inscrire au Plan 1%",
+		"errors": {
+			"qrBillError": "Impossible de générer le QR-bill. Veuillez réessayer."
+		}
 	},
 	"donation-impact": {
 		"monthly-contribution": "Ta contribution mensuelle:",

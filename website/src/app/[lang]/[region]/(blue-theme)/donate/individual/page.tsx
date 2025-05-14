@@ -56,6 +56,7 @@ export default async function Page(props: DefaultPageProps) {
 						errors: {
 							emailRequired: translator.t('bank-transfer.errors.emailRequired'),
 							emailInvalid: translator.t('bank-transfer.errors.emailInvalid'),
+							qrBillError: translator.t('bank-transfer.errors.qrBillError'),
 						},
 					},
 				}}

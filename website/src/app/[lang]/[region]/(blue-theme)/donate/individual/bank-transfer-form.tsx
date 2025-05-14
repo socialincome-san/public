@@ -1,11 +1,11 @@
 'use client';
 
-import { generateQrBillReference } from '@/utils/qr-bill';
+import { CreateUserData } from '@/app/api/user/create/route';
+import { generateQrBillSvg } from '@/utils/qr-bill';
 import { Button, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@socialincome/ui';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { Data } from 'swissqrbill/lib/cjs/shared/types';
-import { SwissQRBill } from 'swissqrbill/svg';
+import toast from 'react-hot-toast';
 
 type BankTransferFormProps = {
 	amount: number;
@@ -27,13 +27,14 @@ type BankTransferFormProps = {
 		errors: {
 			emailRequired: string;
 			emailInvalid: string;
+			qrBillError: string;
 		};
 	};
 };
 
 export function BankTransferForm({ amount, paymentIntervalMonths, translations }: BankTransferFormProps) {
 	const form = useFormContext();
-	const [qrBill, setQrBill] = useState<string | null>(null);
+	const [qrBillSvg, setQrBillSvg] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -41,28 +42,30 @@ export function BankTransferForm({ amount, paymentIntervalMonths, translations }
 		event.preventDefault();
 		try {
 			setIsLoading(true);
-			const userCreatedAt = Date.now();
-			const reference = generateQrBillReference(paymentIntervalMonths, userCreatedAt);
-			const data: Data = {
-				amount: Number(amount),
-				creditor: {
-					account: 'CH44 3199 9123 0008 8901 2',
-					address: 'Musterstrasse',
-					buildingNumber: 7,
-					city: 'Musterstadt',
-					country: 'CH',
-					name: 'SwissQRBill',
-					zip: 1234,
-				},
-				currency: 'CHF',
-				reference,
-			};
+			const { email, firstName, lastName } = form.getValues();
+			const response = await fetch('/api/user/create', {
+				method: 'POST',
+				body: JSON.stringify({
+					email,
+					personal: {
+						name: firstName,
+						lastname: lastName,
+					},
+					address: {
+						country: 'CH', // only CH is supported for now
+					},
+					currency: 'CHF', // only CHF is supported for now
+				} as CreateUserData),
+			});
 
-			const svg = new SwissQRBill(data);
-			setQrBill(svg.toString());
+			if (!response.ok) {
+				throw new Error('Failed to create user');
+			}
+
+			setQrBillSvg(generateQrBillSvg(amount, paymentIntervalMonths, (await response.json()).payment_reference_id));
 			setIsSubmitted(true);
 		} catch (error) {
-			console.error('Error generating QR bill:', error);
+			toast.error(translations.errors.qrBillError);
 		} finally {
 			setIsLoading(false);
 		}
@@ -71,10 +74,10 @@ export function BankTransferForm({ amount, paymentIntervalMonths, translations }
 	return (
 		<div className="border-accent bg-card-muted !mt-[-2px] rounded-b-lg border-2 p-4 md:rounded-tl-lg md:p-8">
 			<>
-				{isSubmitted && qrBill ? (
+				{isSubmitted && qrBillSvg ? (
 					<>
 						<div className="my-8 flex justify-center space-y-4">
-							<div dangerouslySetInnerHTML={{ __html: qrBill }} className="max-w-full" />
+							<div dangerouslySetInnerHTML={{ __html: qrBillSvg }} className="max-w-full" />
 						</div>
 						<Button size="lg" type="button" className="w-full" onClick={() => setIsSubmitted(false)}>
 							{translations.subscribeTo1PercentPlan}

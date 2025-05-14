@@ -119,6 +119,7 @@ type DonationFormProps = {
 			errors: {
 				emailRequired: string;
 				emailInvalid: string;
+				qrBillError: string;
 			};
 		};
 	};
