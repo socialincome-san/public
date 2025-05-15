@@ -60,4 +60,7 @@ jobs:
             -var="region=$REGION" \
             -var="image_url=$IMAGE_URL"
           
+          echo "🌍 Deployed Cloud Run URL:"
+          terraform output cloud_run_url
+          
           echo "✅ Deployment complete!"
