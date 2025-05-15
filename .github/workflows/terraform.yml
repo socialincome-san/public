@@ -1,0 +1,63 @@
+name: Build and Deploy to Google Cloud Run via Terraform
+
+on:
+  push:
+    branches:
+      - feat/gcp-poc  # Change to main later when stable
+
+env:
+  PROJECT_ID: social-income-poc
+  REGION: europe-west1
+  REPO_NAME: portal-repo
+  IMAGE_NAME: social-income-portal
+  TERRAFORM_DIR: portal/infra
+
+jobs:
+  deploy:
+    name: Build & Deploy Cloud Run Service
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🔐 Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS_TERRAFORM_DEPLOYER }}
+
+      - name: ⚙️ Configure Docker to use Artifact Registry
+        run: |
+          echo "🛠 Configuring Docker authentication for Artifact Registry"
+          gcloud auth configure-docker $REGION-docker.pkg.dev --quiet
+
+      - name: 🧰 Set up Terraform CLI
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.6
+
+      - name: 🔁 Build Image & Deploy to Cloud Run via Terraform
+        working-directory: ${{ env.TERRAFORM_DIR }}
+        run: |
+          echo "🧠 Generating image tag"
+          TIMESTAMP=$(date -u +"%Y%m%d-%H%M%S")
+          SHORT_SHA=${GITHUB_SHA::7}
+          IMAGE_TAG="${SHORT_SHA}-${TIMESTAMP}"
+          IMAGE_URL="$REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$IMAGE_NAME:$IMAGE_TAG"
+          
+          echo "📤 Building Docker image: $IMAGE_URL"
+          docker buildx build \
+            --platform linux/amd64 \
+            --tag "$IMAGE_URL" \
+            --push ../../portal
+          
+          echo "🧭 Initializing Terraform"
+          terraform init
+          
+          echo "🚀 Applying Terraform deployment"
+          terraform apply -auto-approve \
+            -var="project_id=$PROJECT_ID" \
+            -var="region=$REGION" \
+            -var="image_url=$IMAGE_URL"
+          
+          echo "✅ Deployment complete!"
