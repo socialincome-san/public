@@ -26,7 +26,7 @@
 		"confirm-monthly-order": "Confirmer l'ordre permanent mensuel",
 		"transfer-fees-note": "Tous les frais de transfert sont payés à partir de nos réserves, actuellement à € 23'392. Veuillez envisager de couvrir les frais avec le Plan 1% Plus :",
 		"plus-plan-link": "modifier",
-		"subscribe-to-1-percent-plan": "S'inscrire au Plan 1%",
+		"proceed-as-guest": "Continuer en tant qu'invité",
 		"errors": {
 			"qrBillError": "Impossible de générer le QR-bill. Veuillez réessayer."
 		}

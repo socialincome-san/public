@@ -26,7 +26,7 @@
 		"confirm-monthly-order": "Confirm Monthly Standing Order",
 		"transfer-fees-note": "All transfer fees are paid from our reserves, currently at € 23,392. Please consider covering the fees with the 1% Plus Plan:",
 		"plus-plan-link": "change",
-		"subscribe-to-1-percent-plan": "Subscribe to 1% Plan",
+		"proceed-as-guest": "Proceed as guest",
 		"errors": {
 			"qrBillError": "Failed to generate QR bill. Please try again."
 		}

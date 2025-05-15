@@ -47,7 +47,7 @@ export default function RequestPasswordResetDialog({ translations }: PasswordRes
 	type FormSchema = z.infer<typeof formSchema>;
 
 	const form = useForm<FormSchema>({
-		resolver: zodResolver(formSchema),
+	resolver: zodResolver(formSchema),
 		defaultValues: { email: '' },
 	});
 

@@ -11,7 +11,7 @@ export default async function Page(props: DefaultPageProps) {
 	const { lang, region } = params;
 
 	const amount = Number(searchParams.amount) || undefined;
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-donate'] });
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-donate', 'website-login'] });
 
 	return (
 		<BaseContainer className="mx-auto max-w-5xl">
@@ -52,11 +52,20 @@ export default async function Page(props: DefaultPageProps) {
 						transferFeesNote: translator.t('bank-transfer.transfer-fees-note'),
 						confirmMonthlyOrder: translator.t('bank-transfer.confirm-monthly-order'),
 						plusPlanLink: translator.t('bank-transfer.plus-plan-link'),
-						subscribeTo1PercentPlan: translator.t('bank-transfer.subscribe-to-1-percent-plan'),
+						subscribeTo1PercentPlan: translator.t('bank-transfer.proceed-as-guest'),
 						errors: {
 							emailRequired: translator.t('bank-transfer.errors.emailRequired'),
 							emailInvalid: translator.t('bank-transfer.errors.emailInvalid'),
 							qrBillError: translator.t('bank-transfer.errors.qrBillError'),
+						},
+						loginForm: {
+							title: translator.t('title', { namespace: 'website-login' }),
+							email: translator.t('email', { namespace: 'website-login' }),
+							password: translator.t('password', { namespace: 'website-login' }),
+							forgotPassword: translator.t('forgot-password', { namespace: 'website-login' }),
+							invalidEmail: translator.t('invalid-email', { namespace: 'website-login' }),
+							invalidUserOrPassword: translator.t('invalid-user-or-password', { namespace: 'website-login' }),
+							submitButton: translator.t('submit-button', { namespace: 'website-login' }),
 						},
 					},
 				}}
