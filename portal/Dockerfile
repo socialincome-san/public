@@ -15,7 +15,7 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN DATABASE_URL="postgresql://user:password@localhost:5432/db" npm run build
+RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner

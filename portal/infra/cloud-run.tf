@@ -16,7 +16,7 @@ resource "google_cloud_run_service" "portal" {
 
         env {
           name  = "DATABASE_URL"
-          value = "postgresql://${google_sql_user.postgres_user.name}:${var.db_password}@localhost/${google_sql_database.default.name}?host=/cloudsql/${google_sql_database_instance.postgres_instance.connection_name}"
+          value = "postgresql://${google_sql_user.postgres_user.name}:${var.db_password}@${google_sql_database_instance.postgres_instance.private_ip_address}/${google_sql_database.default.name}"
         }
 
         resources {
@@ -36,4 +36,11 @@ resource "google_cloud_run_service" "portal" {
     percent         = 100
     latest_revision = true
   }
+}
+
+resource "google_cloud_run_service_iam_member" "public" {
+  location = var.region
+  service  = google_cloud_run_service.portal.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
 }
