@@ -58,8 +58,9 @@ jobs:
           terraform apply -auto-approve \
             -var="project_id=$PROJECT_ID" \
             -var="region=$REGION" \
-            -var="image_url=$IMAGE_URL"
-          
+            -var="image_url=$IMAGE_URL" \
+            -var="db_password=${{ secrets.GCP_DB_PASSWORD }}"
+  
           echo "🌍 Deployed Cloud Run URL:"
           terraform output cloud_run_url
           

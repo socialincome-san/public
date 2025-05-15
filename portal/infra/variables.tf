@@ -13,3 +13,9 @@ variable "image_url" {
   description = "URL of the Docker image in Artifact Registry"
   type        = string
 }
+
+variable "db_password" {
+  description = "PostgreSQL DB password"
+  type        = string
+  sensitive   = true
+}

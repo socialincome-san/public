@@ -44,6 +44,7 @@ recipients_app/android/app/google-services.json
 /portal/.next
 /portal/node_modules
 /portal/.env.local
+/portal/.env
 /portal/.env.development.local
 /portal/.env.test.local
 /portal/.env.production.local
@@ -65,4 +66,6 @@ crash.log
 # Local overrides (often used for secret config)
 terraform.tfvars
 terraform.tfvars.json
+
+
 
