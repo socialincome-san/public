@@ -52,7 +52,7 @@ export default async function Page(props: DefaultPageProps) {
 						transferFeesNote: translator.t('bank-transfer.transfer-fees-note'),
 						confirmMonthlyOrder: translator.t('bank-transfer.confirm-monthly-order'),
 						plusPlanLink: translator.t('bank-transfer.plus-plan-link'),
-						subscribeTo1PercentPlan: translator.t('bank-transfer.proceed-as-guest'),
+						proceedAsGuest: translator.t('bank-transfer.proceed-as-guest'),
 						errors: {
 							emailRequired: translator.t('bank-transfer.errors.emailRequired'),
 							emailInvalid: translator.t('bank-transfer.errors.emailInvalid'),
@@ -66,6 +66,16 @@ export default async function Page(props: DefaultPageProps) {
 							invalidEmail: translator.t('invalid-email', { namespace: 'website-login' }),
 							invalidUserOrPassword: translator.t('invalid-user-or-password', { namespace: 'website-login' }),
 							submitButton: translator.t('submit-button', { namespace: 'website-login' }),
+						},
+						guestForm: {
+							firstName: translator.t('success.user-form.firstname'),
+							lastName: translator.t('success.user-form.lastname'),
+							email: translator.t('success.user-form.email'),
+							proceedAsGuest: translator.t('bank-transfer.proceed-as-guest'),
+							generateQrBill: translator.t('bank-transfer.generate-qr-bill'),
+							errors: {
+								guestCouldNotBeCreated: translator.t('bank-transfer.errors.guestCouldNotBeCreated'),
+							},
 						},
 					},
 				}}
