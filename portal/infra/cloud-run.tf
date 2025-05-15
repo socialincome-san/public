@@ -11,7 +11,11 @@ resource "google_cloud_run_service" "portal" {
           name  = "DATABASE_URL"
           value = "postgresql://${google_sql_user.postgres_user.name}:${var.db_password}@${google_sql_database_instance.postgres_instance.private_ip_address}/${google_sql_database.default.name}"
         }
-
+        resources {
+          limits = {
+            memory = "1Gi"
+          }
+        }
         ports {
           container_port = 3000
         }

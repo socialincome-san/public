@@ -51,6 +51,8 @@ jobs:
             --tag "$IMAGE_URL" \
             --push ../../portal
           
+          echo "🚀 Successfully built and pushed Docker image to Artifact Registry."
+          
           echo "🧭 Initializing Terraform"
           terraform init
           
