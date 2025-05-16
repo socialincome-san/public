@@ -7,7 +7,7 @@ enum AuthStatus {
   updatingRecipient,
   updateRecipientSuccess,
   updateRecipientFailure,
-  failure
+  failure,
 }
 
 class AuthState extends Equatable {

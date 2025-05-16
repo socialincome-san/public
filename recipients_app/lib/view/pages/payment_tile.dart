@@ -35,14 +35,8 @@ class PaymentTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  _formatDate(
-                    mappedPayment.payment.paymentAt?.toDate(),
-                    context.l10n,
-                    locale,
-                  ),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.black,
-                      ),
+                  _formatDate(mappedPayment.payment.paymentAt?.toDate(), context.l10n, locale),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.black),
                 ),
                 const SizedBox(height: 8),
                 _buildStatusIcon(mappedPayment),
@@ -57,11 +51,7 @@ class PaymentTile extends StatelessWidget {
     );
   }
 
-  String _formatDate(
-    DateTime? dateTime,
-    AppLocalizations localizations,
-    String locale,
-  ) {
+  String _formatDate(DateTime? dateTime, AppLocalizations localizations, String locale) {
     if (dateTime == null) return "";
 
     String dateFormat;
@@ -82,9 +72,6 @@ class PaymentTile extends StatelessWidget {
   Widget _buildStatusIcon(MappedPayment mappedPayment) {
     final text = "${mappedPayment.payment.currency} ${mappedPayment.payment.amount}";
 
-    return PaymentStatusIconWithText(
-      status: mappedPayment.uiStatus,
-      text: text,
-    );
+    return PaymentStatusIconWithText(status: mappedPayment.uiStatus, text: text);
   }
 }

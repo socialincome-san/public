@@ -61,64 +61,60 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<DemoManager>(
-          create: (context) => demoManager,
+        RepositoryProvider<DemoManager>(create: (context) => demoManager),
+        RepositoryProvider(create: (context) => MessagingRepository(messaging: messaging)),
+        RepositoryProvider(
+          create:
+              (context) => UserRepository(
+                remoteDataSource: userRemoteDataSource,
+                demoDataSource: userDemoDataSource,
+                demoManager: demoManager,
+              ),
+        ),
+        RepositoryProvider(create: (context) => const CrashReportingRepository()),
+        RepositoryProvider(
+          create:
+              (context) => PaymentRepository(
+                remoteDataSource: paymentRemoteDataSource,
+                demoDataSource: paymentDemoDataSource,
+                demoManager: demoManager,
+              ),
         ),
         RepositoryProvider(
-          create: (context) => MessagingRepository(
-            messaging: messaging,
-          ),
+          create:
+              (context) => SurveyRepository(
+                remoteDataSource: surveyRemoteDataSource,
+                demoDataSource: surveyDemoDataSource,
+                demoManager: demoManager,
+              ),
         ),
         RepositoryProvider(
-          create: (context) => UserRepository(
-            remoteDataSource: userRemoteDataSource,
-            demoDataSource: userDemoDataSource,
-            demoManager: demoManager,
-          ),
+          create:
+              (context) => OrganizationRepository(
+                remoteDataSource: organizationRemoteDataSource,
+                demoDataSource: organizationDemoDataSource,
+                demoManager: demoManager,
+              ),
         ),
-        RepositoryProvider(
-          create: (context) => const CrashReportingRepository(),
-        ),
-        RepositoryProvider(
-          create: (context) => PaymentRepository(
-            remoteDataSource: paymentRemoteDataSource,
-            demoDataSource: paymentDemoDataSource,
-            demoManager: demoManager,
-          ),
-        ),
-        RepositoryProvider(
-          create: (context) => SurveyRepository(
-            remoteDataSource: surveyRemoteDataSource,
-            demoDataSource: surveyDemoDataSource,
-            demoManager: demoManager,
-          ),
-        ),
-        RepositoryProvider(
-          create: (context) => OrganizationRepository(
-            remoteDataSource: organizationRemoteDataSource,
-            demoDataSource: organizationDemoDataSource,
-            demoManager: demoManager,
-          ),
-        ),
-        RepositoryProvider(
-          create: (context) => twilioService,
-        ),
+        RepositoryProvider(create: (context) => twilioService),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => AuthCubit(
-              crashReportingRepository: context.read<CrashReportingRepository>(),
-              organizationRepository: context.read<OrganizationRepository>(),
-              userRepository: context.read<UserRepository>(),
-            )..init(),
+            create:
+                (context) => AuthCubit(
+                  crashReportingRepository: context.read<CrashReportingRepository>(),
+                  organizationRepository: context.read<OrganizationRepository>(),
+                  userRepository: context.read<UserRepository>(),
+                )..init(),
           ),
           BlocProvider(
-            create: (context) => SettingsCubit(
-              defaultLocale: const Locale("en", "US"),
-              messagingRepository: context.read<MessagingRepository>(),
-              crashReportingRepository: context.read<CrashReportingRepository>(),
-            )..initMessaging(),
+            create:
+                (context) => SettingsCubit(
+                  defaultLocale: const Locale("en", "US"),
+                  messagingRepository: context.read<MessagingRepository>(),
+                  crashReportingRepository: context.read<CrashReportingRepository>(),
+                )..initMessaging(),
           ),
         ],
         child: const _App(),
@@ -146,10 +142,7 @@ class _App extends StatelessWidget {
         KriMaterialLocalizations.delegate,
         KriCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale("en", "US"),
-        Locale("kri"),
-      ],
+      supportedLocales: const [Locale("en", "US"), Locale("kri")],
       home: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state.status == AuthStatus.authenticated) {

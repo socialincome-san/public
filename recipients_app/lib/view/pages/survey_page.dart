@@ -21,22 +21,23 @@ class SurveyPageState extends State<SurveyPage> {
   @override
   void initState() {
     super.initState();
-    _webViewController = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int progress) {},
-          onPageStarted: (String url) {},
-          onPageFinished: (String url) {
-            setState(() {
-              isLoading = false;
-            });
-          },
-          onWebResourceError: (WebResourceError error) {},
-          onNavigationRequest: (NavigationRequest request) => NavigationDecision.navigate,
-        ),
-      )
-      ..loadRequest(Uri.parse(widget.mappedSurvey.surveyUrl));
+    _webViewController =
+        WebViewController()
+          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+          ..setNavigationDelegate(
+            NavigationDelegate(
+              onProgress: (int progress) {},
+              onPageStarted: (String url) {},
+              onPageFinished: (String url) {
+                setState(() {
+                  isLoading = false;
+                });
+              },
+              onWebResourceError: (WebResourceError error) {},
+              onNavigationRequest: (NavigationRequest request) => NavigationDecision.navigate,
+            ),
+          )
+          ..loadRequest(Uri.parse(widget.mappedSurvey.surveyUrl));
   }
 
   @override
@@ -56,11 +57,7 @@ class SurveyPageState extends State<SurveyPage> {
       body: Stack(
         children: [
           WebViewWidget(controller: _webViewController),
-          if (isLoading) ...[
-            const Center(
-              child: CircularProgressIndicator(),
-            ),
-          ],
+          if (isLoading) ...[const Center(child: CircularProgressIndicator())],
         ],
       ),
     );

@@ -7,11 +7,7 @@ import "package:app/view/widgets/survey/survey_status_chip.dart";
 import "package:flutter/material.dart";
 import "package:intl/intl.dart";
 
-const _kOpenableSurveyStatuses = [
-  SurveyCardStatus.newSurvey,
-  SurveyCardStatus.firstReminder,
-  SurveyCardStatus.overdue,
-];
+const _kOpenableSurveyStatuses = [SurveyCardStatus.newSurvey, SurveyCardStatus.firstReminder, SurveyCardStatus.overdue];
 
 class SurveyListCard extends StatelessWidget {
   final MappedSurvey mappedSurvey;
@@ -39,28 +35,17 @@ class SurveyListCard extends StatelessWidget {
                   children: [
                     Text(
                       mappedSurvey.name,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.black,
-                          ),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.black),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      _formatDate(
-                        mappedSurvey.survey.dueDateAt?.toDate(),
-                        context.l10n,
-                        locale,
-                      ),
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.darkGrey,
-                          ),
+                      _formatDate(mappedSurvey.survey.dueDateAt?.toDate(), context.l10n, locale),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
                     ),
                   ],
                 ),
                 const SizedBox(width: AppSizes.small),
-                SurveyServerStatusChip(
-                  status: mappedSurvey.cardStatus,
-                  serverStatus: mappedSurvey.survey.status,
-                ),
+                SurveyServerStatusChip(status: mappedSurvey.cardStatus, serverStatus: mappedSurvey.survey.status),
               ],
             ),
           ),
@@ -72,11 +57,7 @@ class SurveyListCard extends StatelessWidget {
     );
   }
 
-  String _formatDate(
-    DateTime? dateTime,
-    AppLocalizations localizations,
-    String locale,
-  ) {
+  String _formatDate(DateTime? dateTime, AppLocalizations localizations, String locale) {
     if (dateTime == null) return "";
 
     return DateFormat.yMd(locale).format(dateTime);

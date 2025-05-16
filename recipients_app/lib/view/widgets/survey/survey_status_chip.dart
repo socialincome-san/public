@@ -10,11 +10,7 @@ class SurveyServerStatusChip extends StatelessWidget {
   final SurveyCardStatus status;
   final SurveyServerStatus? serverStatus;
 
-  const SurveyServerStatusChip({
-    super.key,
-    required this.status,
-    required this.serverStatus,
-  });
+  const SurveyServerStatusChip({super.key, required this.status, required this.serverStatus});
 
   @override
   Widget build(BuildContext context) {
@@ -39,24 +35,15 @@ class SurveyServerStatusChip extends StatelessWidget {
     }
 
     return Container(
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-      ),
+      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(AppSizes.radiusMedium)),
       height: statusIconHeight,
       child: Padding(
         padding: AppSpacings.h8v4,
         child: Row(
           children: [
             Text(
-              _getStatusName(
-                status,
-                serverStatus,
-                context.l10n,
-              ),
-              style: AppStyles.iconLabel.copyWith(
-                color: textColor,
-              ),
+              _getStatusName(status, serverStatus, context.l10n),
+              style: AppStyles.iconLabel.copyWith(color: textColor),
             ),
           ],
         ),
@@ -65,11 +52,7 @@ class SurveyServerStatusChip extends StatelessWidget {
   }
 }
 
-String _getStatusName(
-  SurveyCardStatus status,
-  SurveyServerStatus? serverStatus,
-  AppLocalizations localizations,
-) {
+String _getStatusName(SurveyCardStatus status, SurveyServerStatus? serverStatus, AppLocalizations localizations) {
   final String statusName;
   switch (status) {
     case SurveyCardStatus.newSurvey:

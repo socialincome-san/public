@@ -5,19 +5,13 @@ class UnchangeableUserInformation extends StatefulWidget {
   final String section;
   final String placeHolder;
 
-  const UnchangeableUserInformation({
-    required this.section,
-    required this.placeHolder,
-    super.key,
-  });
+  const UnchangeableUserInformation({required this.section, required this.placeHolder, super.key});
 
   @override
-  State<UnchangeableUserInformation> createState() =>
-      _UnchangeableUserInformationState();
+  State<UnchangeableUserInformation> createState() => _UnchangeableUserInformationState();
 }
 
-class _UnchangeableUserInformationState
-    extends State<UnchangeableUserInformation> {
+class _UnchangeableUserInformationState extends State<UnchangeableUserInformation> {
   late final TextEditingController controller;
 
   @override
@@ -40,9 +34,7 @@ class _UnchangeableUserInformationState
           flex: 2,
           child: Text(
             widget.section,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.darkGrey,
-                ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
           ),
         ),
         Expanded(child: Text(widget.placeHolder)),

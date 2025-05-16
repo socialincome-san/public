@@ -13,10 +13,7 @@ import "package:intl/intl.dart";
 class SurveyCardBottomAction extends StatelessWidget {
   final MappedSurvey mappedSurvey;
 
-  const SurveyCardBottomAction({
-    super.key,
-    required this.mappedSurvey,
-  });
+  const SurveyCardBottomAction({super.key, required this.mappedSurvey});
 
   @override
   Widget build(BuildContext context) {
@@ -45,15 +42,9 @@ class SurveyCardBottomAction extends StatelessWidget {
                 fontColor: foregroundColor,
               ),
             ] else if (mappedSurvey.cardStatus == SurveyCardStatus.answered) ...[
-              SurveyStatusIconWithText(
-                status: SurveyCardStatus.answered,
-                text: context.l10n.surveyStatusAnswered,
-              ),
+              SurveyStatusIconWithText(status: SurveyCardStatus.answered, text: context.l10n.surveyStatusAnswered),
             ] else if (mappedSurvey.cardStatus == SurveyCardStatus.missed) ...[
-              SurveyStatusIconWithText(
-                status: SurveyCardStatus.missed,
-                text: context.l10n.surveyStatusMissed,
-              ),
+              SurveyStatusIconWithText(status: SurveyCardStatus.missed, text: context.l10n.surveyStatusMissed),
             ],
           ],
         ),
@@ -67,17 +58,12 @@ class SurveyCardBottomAction extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => BlocProvider.value(
-          value: surveyCubit,
-          child: SurveyPage(mappedSurvey: mappedSurvey),
-        ),
+        builder: (context) => BlocProvider.value(value: surveyCubit, child: SurveyPage(mappedSurvey: mappedSurvey)),
       ),
     );
   }
 
-  bool _shouldShowActionButton(
-    SurveyCardStatus status,
-  ) {
+  bool _shouldShowActionButton(SurveyCardStatus status) {
     return status != SurveyCardStatus.answered && status != SurveyCardStatus.missed;
   }
 
@@ -111,18 +97,12 @@ class SurveyCardBottomAction extends StatelessWidget {
     }
   }
 
-  String _getStatusLabel(
-    MappedSurvey mappedSurvey,
-    AppLocalizations localizations,
-    String locale,
-  ) {
+  String _getStatusLabel(MappedSurvey mappedSurvey, AppLocalizations localizations, String locale) {
     var daysText = localizations.day;
 
     switch (mappedSurvey.cardStatus) {
       case SurveyCardStatus.answered:
-        return DateFormat.yMd(locale).format(
-          mappedSurvey.survey.completedAt?.toDate() ?? DateTime.now(),
-        );
+        return DateFormat.yMd(locale).format(mappedSurvey.survey.completedAt?.toDate() ?? DateTime.now());
       case SurveyCardStatus.overdue:
         final daysAfterOverdue = mappedSurvey.daysAfterOverdue ?? 0;
         if (daysAfterOverdue > 1) {

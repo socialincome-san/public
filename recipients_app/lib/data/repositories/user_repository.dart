@@ -70,6 +70,7 @@ class UserRepository {
       region: "europe-west6",
     ).httpsCallable("webhookTwilioVerify").call({"phoneNumber": phoneNumber, "otp": otp});
 
+    // ignore: avoid_dynamic_calls
     final customToken = result.data["token"] as String;
 
     // Sign in with the custom token

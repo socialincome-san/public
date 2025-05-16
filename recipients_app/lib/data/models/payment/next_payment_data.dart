@@ -5,16 +5,8 @@ class NextPaymentData extends Equatable {
   final String currency;
   final int daysToPayment;
 
-  const NextPaymentData({
-    required this.amount,
-    required this.currency,
-    required this.daysToPayment,
-  });
+  const NextPaymentData({required this.amount, required this.currency, required this.daysToPayment});
 
   @override
-  List<Object?> get props => [
-        amount,
-        currency,
-        daysToPayment,
-      ];
+  List<Object?> get props => [amount, currency, daysToPayment];
 }

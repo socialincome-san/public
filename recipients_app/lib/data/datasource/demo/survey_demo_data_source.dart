@@ -14,24 +14,16 @@ class SurveyDemoDataSource implements SurveyDataSource {
         status: SurveyServerStatus.scheduled,
         dueDateAt: Timestamp.fromDate(now.subtract(const Duration(days: 10))),
       ),
-      Survey(
-        id: "checkin",
-        status: SurveyServerStatus.scheduled,
-        dueDateAt: Timestamp.fromDate(now),
-      ),
+      Survey(id: "checkin", status: SurveyServerStatus.scheduled, dueDateAt: Timestamp.fromDate(now)),
       Survey(
         id: "offboarding",
         status: SurveyServerStatus.scheduled,
-        dueDateAt: Timestamp.fromDate(
-          now.add(const Duration(days: 11)),
-        ),
+        dueDateAt: Timestamp.fromDate(now.add(const Duration(days: 11))),
       ),
       Survey(
         id: "followup",
         status: SurveyServerStatus.scheduled,
-        dueDateAt: Timestamp.fromDate(
-          now.add(const Duration(days: 16)),
-        ),
+        dueDateAt: Timestamp.fromDate(now.add(const Duration(days: 16))),
       ),
     ];
 

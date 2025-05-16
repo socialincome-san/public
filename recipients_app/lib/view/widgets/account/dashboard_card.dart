@@ -7,10 +7,7 @@ import "package:app/view/widgets/dashboard_item.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
-enum DashboardCardType {
-  paymentNumberEqualsContactNumber,
-  contactNumberEqualsPaymentNumber,
-}
+enum DashboardCardType { paymentNumberEqualsContactNumber, contactNumberEqualsPaymentNumber }
 
 class DashboardCard extends DashboardItem {
   final String title;
@@ -39,17 +36,9 @@ class DashboardCard extends DashboardItem {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+                Text(title, style: Theme.of(context).textTheme.bodySmall),
                 const SizedBox(height: 16),
-                Text(
-                  message,
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.normal,
-                      ),
-                ),
+                Text(message, style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.normal)),
               ],
             ),
           ),
@@ -90,14 +79,9 @@ class DashboardCard extends DashboardItem {
 
         final organization = context.read<AuthCubit>().state.organization;
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => AccountPage(
-              recipient: recipient,
-              organization: organization,
-            ),
-          ),
-        );
+        Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (context) => AccountPage(recipient: recipient, organization: organization)));
     }
   }
 

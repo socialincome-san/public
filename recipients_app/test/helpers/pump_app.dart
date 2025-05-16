@@ -10,22 +10,14 @@ import "package:flutter_test/flutter_test.dart";
 class MockPaymentsCubit extends MockCubit<PaymentsState> implements PaymentsCubit {}
 
 extension PumpApp on WidgetTester {
-  Future<void> pumpApp(
-    Widget widget, {
-    PaymentsCubit? paymentsCubit,
-  }) async {
+  Future<void> pumpApp(Widget widget, {PaymentsCubit? paymentsCubit}) {
     final mockPaymentsCubit = paymentsCubit ?? MockPaymentsCubit();
 
     return pumpWidget(
       MultiBlocProvider(
-        providers: [
-          BlocProvider.value(value: mockPaymentsCubit),
-        ],
+        providers: [BlocProvider.value(value: mockPaymentsCubit)],
         child: MaterialApp(
-          supportedLocales: const [
-            Locale("en", ""),
-            Locale("de", ""),
-          ],
+          supportedLocales: const [Locale("en", ""), Locale("de", "")],
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,

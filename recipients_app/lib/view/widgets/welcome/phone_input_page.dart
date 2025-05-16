@@ -70,11 +70,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                   Text(
                     context.l10n.yourMobilePhone,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      color: AppColors.primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: const TextStyle(fontSize: 24, color: AppColors.primaryColor, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
                   Stack(
@@ -103,14 +99,12 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                             selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
                             useBottomSheetSafeArea: true,
                           ),
-                          selectorTextStyle: const TextStyle(
-                            color: AppColors.primaryColor,
-                            fontSize: 18,
-                          ),
+                          selectorTextStyle: const TextStyle(color: AppColors.primaryColor, fontSize: 18),
                           inputDecoration: InputDecoration(
                             labelText: context.l10n.phoneNumber,
-                            labelStyle:
-                                Theme.of(context).textTheme.headlineMedium!.copyWith(color: AppColors.primaryColor),
+                            labelStyle: Theme.of(
+                              context,
+                            ).textTheme.headlineMedium!.copyWith(color: AppColors.primaryColor),
                             enabledBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: AppColors.primaryColor),
                               borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -121,10 +115,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                             ),
                             floatingLabelBehavior: FloatingLabelBehavior.never,
                           ),
-                          textStyle: const TextStyle(
-                            color: AppColors.primaryColor,
-                            fontSize: 20,
-                          ),
+                          textStyle: const TextStyle(color: AppColors.primaryColor, fontSize: 20),
                           onInputChanged: (PhoneNumber value) => number = value,
                         ),
                       ),
@@ -141,9 +132,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                   isLoading: isLoading,
                   onPressed: () {
                     if (number.phoneNumber != null && number.phoneNumber!.isNotEmpty) {
-                      context.read<SignupCubit>().signupWithPhoneNumber(
-                            phoneNumber: number.phoneNumber!,
-                          );
+                      context.read<SignupCubit>().signupWithPhoneNumber(phoneNumber: number.phoneNumber!);
                     }
                   },
                   label: context.l10n.continueText,

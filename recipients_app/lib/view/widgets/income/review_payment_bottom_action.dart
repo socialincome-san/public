@@ -6,11 +6,7 @@ class ReviewPaymentBottomAction extends StatelessWidget {
   final String actionLabel;
   final VoidCallback onAction;
 
-  const ReviewPaymentBottomAction({
-    super.key,
-    required this.actionLabel,
-    required this.onAction,
-  });
+  const ReviewPaymentBottomAction({super.key, required this.actionLabel, required this.onAction});
 
   @override
   Widget build(BuildContext context) {

@@ -114,43 +114,11 @@ const enUsLocaleDataPatterns = {
 // #docregion Date2
 const kriDateSymbols = {
   "NAME": "kri",
-  "ERAS": <dynamic>[
-    "BC",
-    "AD",
-  ],
-// #enddocregion Date2
-  "ERANAMES": <dynamic>[
-    "Before Christ",
-    "Anno Domini",
-  ],
-  "NARROWMONTHS": <dynamic>[
-    "J",
-    "F",
-    "M",
-    "A",
-    "M",
-    "J",
-    "J",
-    "A",
-    "S",
-    "O",
-    "N",
-    "D",
-  ],
-  "STANDALONENARROWMONTHS": <dynamic>[
-    "J",
-    "F",
-    "M",
-    "A",
-    "M",
-    "J",
-    "J",
-    "A",
-    "S",
-    "O",
-    "N",
-    "D",
-  ],
+  "ERAS": <dynamic>["BC", "AD"],
+  // #enddocregion Date2
+  "ERANAMES": <dynamic>["Before Christ", "Anno Domini"],
+  "NARROWMONTHS": <dynamic>["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
+  "STANDALONENARROWMONTHS": <dynamic>["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
   "MONTHS": <dynamic>[
     "Jɛnyuari",
     "Fɛbyuari",
@@ -179,20 +147,7 @@ const kriDateSymbols = {
     "Novɛmba",
     "Disɛmba",
   ],
-  "SHORTMONTHS": <dynamic>[
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ],
+  "SHORTMONTHS": <dynamic>["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
   "STANDALONESHORTMONTHS": <dynamic>[
     "Jan",
     "Feb",
@@ -207,113 +162,26 @@ const kriDateSymbols = {
     "Nov",
     "Dec",
   ],
-  "WEEKDAYS": <dynamic>[
-    "Sɔnde",
-    "Mɔnde",
-    "Tyusde",
-    "Wɛnsde",
-    "Tɔsde",
-    "Frayde",
-    "Satide",
-  ],
-  "STANDALONEWEEKDAYS": <dynamic>[
-    "Sɔnde",
-    "Mɔnde",
-    "Tyusde",
-    "Wɛnsde",
-    "Tɔsde",
-    "Frayde",
-    "Satide",
-  ],
-  "SHORTWEEKDAYS": <dynamic>[
-    "Sun",
-    "Mon",
-    "Tue",
-    "Wed",
-    "Thu",
-    "Fri",
-    "Sat",
-  ],
-  "STANDALONESHORTWEEKDAYS": <dynamic>[
-    "Sun",
-    "Mon",
-    "Tue",
-    "Wed",
-    "Thu",
-    "Fri",
-    "Sat",
-  ],
-  "NARROWWEEKDAYS": <dynamic>[
-    "S",
-    "M",
-    "T",
-    "W",
-    "T",
-    "F",
-    "S",
-  ],
-  "STANDALONENARROWWEEKDAYS": <dynamic>[
-    "S",
-    "M",
-    "T",
-    "W",
-    "T",
-    "F",
-    "S",
-  ],
-  "SHORTQUARTERS": <dynamic>[
-    "Q1",
-    "Q2",
-    "Q3",
-    "Q4",
-  ],
-  "QUARTERS": <dynamic>[
-    "1st quarter",
-    "2nd quarter",
-    "3rd quarter",
-    "4th quarter",
-  ],
-  "AMPMS": <dynamic>[
-    "am",
-    "pm",
-  ],
-  "DATEFORMATS": <dynamic>[
-    "EEEE, d MMMM y",
-    "d MMMM y",
-    "d MMM y",
-    "dd/MM/y",
-  ],
-  "TIMEFORMATS": <dynamic>[
-    "HH:mm:ss zzzz",
-    "HH:mm:ss z",
-    "HH:mm:ss",
-    "HH:mm",
-  ],
+  "WEEKDAYS": <dynamic>["Sɔnde", "Mɔnde", "Tyusde", "Wɛnsde", "Tɔsde", "Frayde", "Satide"],
+  "STANDALONEWEEKDAYS": <dynamic>["Sɔnde", "Mɔnde", "Tyusde", "Wɛnsde", "Tɔsde", "Frayde", "Satide"],
+  "SHORTWEEKDAYS": <dynamic>["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  "STANDALONESHORTWEEKDAYS": <dynamic>["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  "NARROWWEEKDAYS": <dynamic>["S", "M", "T", "W", "T", "F", "S"],
+  "STANDALONENARROWWEEKDAYS": <dynamic>["S", "M", "T", "W", "T", "F", "S"],
+  "SHORTQUARTERS": <dynamic>["Q1", "Q2", "Q3", "Q4"],
+  "QUARTERS": <dynamic>["1st quarter", "2nd quarter", "3rd quarter", "4th quarter"],
+  "AMPMS": <dynamic>["am", "pm"],
+  "DATEFORMATS": <dynamic>["EEEE, d MMMM y", "d MMMM y", "d MMM y", "dd/MM/y"],
+  "TIMEFORMATS": <dynamic>["HH:mm:ss zzzz", "HH:mm:ss z", "HH:mm:ss", "HH:mm"],
   "AVAILABLEFORMATS": null,
   "FIRSTDAYOFWEEK": 0,
-  "WEEKENDRANGE": <dynamic>[
-    5,
-    6,
-  ],
+  "WEEKENDRANGE": <dynamic>[5, 6],
   "FIRSTWEEKCUTOFFDAY": 3,
-  "DATETIMEFORMATS": <dynamic>[
-    "{1}, {0}",
-    "{1}, {0}",
-    "{1}, {0}",
-    "{1}, {0}",
-  ],
+  "DATETIMEFORMATS": <dynamic>["{1}, {0}", "{1}, {0}", "{1}, {0}", "{1}, {0}"],
 };
 
 /// Short version of days of week.
-const List<String> _shortWeekdays = <String>[
-  "Mon",
-  "Tue",
-  "Wed",
-  "Thu",
-  "Fri",
-  "Sat",
-  "Sun",
-];
+const List<String> _shortWeekdays = <String>["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const List<String> _shortMonths = <String>[
   "Jan",
@@ -353,7 +221,7 @@ class _KriCupertinoLocalizationsDelegate extends LocalizationsDelegate<Cupertino
   bool isSupported(Locale locale) => locale.languageCode == "kri";
 
   @override
-  Future<CupertinoLocalizations> load(Locale locale) async {
+  Future<CupertinoLocalizations> load(Locale locale) {
     final String localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
     // The locale (in this case `kri`) needs to be initialized into the custom
@@ -411,7 +279,7 @@ class KriCupertinoLocalizations extends GlobalCupertinoLocalizations {
     required super.singleDigitHourFormat,
     required super.singleDigitMinuteFormat,
     required super.doubleDigitMinuteFormat,
-    required super.singleDigitSecondFormat, 
+    required super.singleDigitSecondFormat,
     required super.weekdayFormat,
   });
 
@@ -598,7 +466,7 @@ class _KriMaterialLocalizationsDelegate extends LocalizationsDelegate<MaterialLo
   bool isSupported(Locale locale) => locale.languageCode == "kri";
 
   @override
-  Future<MaterialLocalizations> load(Locale locale) async {
+  Future<MaterialLocalizations> load(Locale locale) {
     final String localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
     // The locale (in this case `kri`) needs to be initialized into the custom
@@ -676,7 +544,7 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   @override
   String get alertDialogLabel => "Alat";
 
-// #enddocregion Getters
+  // #enddocregion Getters
 
   @override
   String get anteMeridiemAbbreviation => "AM";
@@ -745,13 +613,13 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   // A custom drawer tooltip message.
   String get openAppDrawerTooltip => "Custom Navigation Menu Tooltip";
 
-// #docregion Raw
+  // #docregion Raw
   @override
   String get pageRowsInfoTitleRaw => r"$firstRow–$lastRow of $rowCount";
 
   @override
   String get pageRowsInfoTitleApproximateRaw => r"$firstRow–$lastRow of about $rowCount";
-// #enddocregion Raw
+  // #enddocregion Raw
 
   @override
   String get pasteButtonLabel => "PUT AM YA";

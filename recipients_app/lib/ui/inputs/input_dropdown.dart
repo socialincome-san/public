@@ -36,10 +36,7 @@ class _InputDropdownState<T> extends State<InputDropdown<T>> {
       children: [
         DropdownButtonFormField<T>(
           iconEnabledColor: AppColors.primaryColor,
-          icon: const Icon(
-            Icons.expand_more_rounded,
-            size: 24,
-          ),
+          icon: const Icon(Icons.expand_more_rounded, size: 24),
           decoration: InputDecoration(
             floatingLabelBehavior: FloatingLabelBehavior.never,
             contentPadding: AppSpacings.h12v16,
@@ -48,16 +45,11 @@ class _InputDropdownState<T> extends State<InputDropdown<T>> {
               color: AppColors.darkGrey.withValues(alpha: 0.6),
               fontWeight: FontWeight.bold,
             ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSizes.radiusSmall)),
           ),
           items: widget.items,
           value: value,
-          style: AppStyles.inputHint.copyWith(
-            color: AppColors.primaryColor,
-            fontWeight: FontWeight.bold,
-          ),
+          style: AppStyles.inputHint.copyWith(color: AppColors.primaryColor, fontWeight: FontWeight.bold),
           onChanged: (newValue) {
             setState(() {
               value = newValue;

@@ -14,10 +14,7 @@ abstract class AppSpacings {
   static const EdgeInsets v8 = EdgeInsets.symmetric(vertical: 8);
   static const EdgeInsets v16 = EdgeInsets.symmetric(vertical: 16);
 
-  static const EdgeInsets h8v4 =
-      EdgeInsets.symmetric(horizontal: 8, vertical: 4);
-  static const EdgeInsets h16v8 =
-      EdgeInsets.symmetric(horizontal: 16, vertical: 8);
-  static const EdgeInsets h12v16 =
-      EdgeInsets.symmetric(horizontal: 12, vertical: 16);
+  static const EdgeInsets h8v4 = EdgeInsets.symmetric(horizontal: 8, vertical: 4);
+  static const EdgeInsets h16v8 = EdgeInsets.symmetric(horizontal: 16, vertical: 8);
+  static const EdgeInsets h12v16 = EdgeInsets.symmetric(horizontal: 12, vertical: 16);
 }

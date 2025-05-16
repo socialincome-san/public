@@ -20,12 +20,5 @@ class MappedSurvey extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
-        name,
-        survey,
-        surveyUrl,
-        cardStatus,
-        daysToOverdue,
-        daysAfterOverdue,
-      ];
+  List<Object?> get props => [name, survey, surveyUrl, cardStatus, daysToOverdue, daysAfterOverdue];
 }

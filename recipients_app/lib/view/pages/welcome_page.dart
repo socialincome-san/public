@@ -15,11 +15,12 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SignupCubit(
-        userRepository: context.read<UserRepository>(),
-        crashReportingRepository: context.read<CrashReportingRepository>(),
-        twilioService: context.read<TwilioService>(),
-      ),
+      create:
+          (context) => SignupCubit(
+            userRepository: context.read<UserRepository>(),
+            crashReportingRepository: context.read<CrashReportingRepository>(),
+            twilioService: context.read<TwilioService>(),
+          ),
       child: const _WelcomeView(),
     );
   }

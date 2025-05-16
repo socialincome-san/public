@@ -16,7 +16,7 @@ const twilioClient = new Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
  */
 const verifyOtpFunction = onCall({ maxInstances: 10 }, async (request) => {
     console.log('Function called with request:', request.data);
-    const { phoneNumber, otp } = request.data;
+    let { phoneNumber, otp } = request.data;
 
     // Validate inputs
     if (!phoneNumber || !otp) {
@@ -25,6 +25,18 @@ const verifyOtpFunction = onCall({ maxInstances: 10 }, async (request) => {
     }
 
     try {
+        // Format phone number to E.164 format if not already
+        if (!phoneNumber.startsWith('+')) {
+            phoneNumber = `+${phoneNumber}`;
+        }
+
+        // Basic E.164 validation (should start with + followed by digits only)
+        const phoneRegex = /^\+[1-9]\d{1,14}$/;
+        if (!phoneRegex.test(phoneNumber)) {
+            console.log('Invalid phone number format:', phoneNumber);
+            throw new HttpsError('invalid-argument', 'Phone number must be in valid E.164 format (e.g., +12345678901)');
+        }
+
         console.log(`Attempting to verify OTP for phone: ${phoneNumber}`);
         // Verify OTP with Twilio
         const verification = await twilioClient.verify.v2

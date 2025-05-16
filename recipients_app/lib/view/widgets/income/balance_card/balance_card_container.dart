@@ -11,11 +11,7 @@ import "package:app/view/widgets/income/balance_card/on_hold_bottom_card.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
-const _kShowPaymentCardStatuses = [
-  PaymentUiStatus.contested,
-  PaymentUiStatus.recentToReview,
-  PaymentUiStatus.toReview,
-];
+const _kShowPaymentCardStatuses = [PaymentUiStatus.contested, PaymentUiStatus.recentToReview, PaymentUiStatus.toReview];
 
 class BalanceCardContainer extends DashboardItem {
   const BalanceCardContainer({super.key});
@@ -53,16 +49,10 @@ class BalanceCardContainer extends DashboardItem {
                       const SizedBox(height: 16),
                       Text(
                         context.l10n.myPayments,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 13.0,
-                          fontWeight: FontWeight.w400,
-                        ),
+                        style: const TextStyle(color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
                       ),
                       const SizedBox(height: 8),
-                      BalanceCardGrid(
-                        payments: paymentsUiState?.payments ?? [],
-                      ),
+                      BalanceCardGrid(payments: paymentsUiState?.payments ?? []),
                     ],
                   ),
                 ),
@@ -71,9 +61,7 @@ class BalanceCardContainer extends DashboardItem {
           ),
         ),
         if (paymentsUiState != null && paymentsUiState.status == BalanceCardStatus.onHold) ...[
-          OnHoldBottomCard(
-            reviewAction: () => _navigateToPaymentsList(context),
-          ),
+          OnHoldBottomCard(reviewAction: () => _navigateToPaymentsList(context)),
         ],
         if (lastPaidPayment != null && _kShowPaymentCardStatuses.contains(lastPaidPayment.uiStatus)) ...[
           PaymentTile(mappedPayment: lastPaidPayment),
@@ -87,12 +75,7 @@ class BalanceCardContainer extends DashboardItem {
     final paymentsCubit = context.read<PaymentsCubit>();
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider.value(
-          value: paymentsCubit,
-          child: const PaymentsPage(),
-        ),
-      ),
+      MaterialPageRoute(builder: (context) => BlocProvider.value(value: paymentsCubit, child: const PaymentsPage())),
     );
   }
 }

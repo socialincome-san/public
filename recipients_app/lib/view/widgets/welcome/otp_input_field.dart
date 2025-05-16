@@ -6,12 +6,7 @@ class OtpInputField extends StatelessWidget {
   final Function(String?)? onChanged;
   final bool isFirstField;
 
-  const OtpInputField({
-    super.key,
-    this.controller,
-    this.onChanged,
-    this.isFirstField = false,
-  });
+  const OtpInputField({super.key, this.controller, this.onChanged, this.isFirstField = false});
 
   @override
   Widget build(BuildContext context) {

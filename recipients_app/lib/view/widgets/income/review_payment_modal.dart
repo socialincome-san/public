@@ -43,108 +43,95 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
       child: Center(
         child: Container(
           clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-            color: Colors.white,
-          ),
-          child: _firstContestStep
-              ? Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: AppSpacings.a16,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ReviewPaymentModalHeader(),
-                          Padding(
-                            padding: AppSpacings.v16,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: ContestReason.values.map((ContestReason reason) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: RadioRow(
-                                    title: reason.title,
-                                    groupValue: _selectedReason,
-                                    value: reason,
-                                    onChanged: (value) => setState(() {
-                                      _selectedReason = value;
-                                    }),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (_selectedReason != null && _selectedReason != ContestReason.other) ...[
-                      ReviewPaymentBottomAction(
-                        actionLabel: context.l10n.submit,
-                        onAction: () => _onPressedContest(context, _selectedReason!),
-                      ),
-                    ],
-                    if (_selectedReason != null && _selectedReason == ContestReason.other) ...[
-                      ReviewPaymentBottomAction(
-                        actionLabel: context.l10n.next,
-                        onAction: () => setState(() {
-                          _firstContestStep = false;
-                        }),
-                      ),
-                    ],
-                  ],
-                )
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: AppSpacings.a16,
-                      child: Material(
-                        color: Colors.white,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(AppSizes.radiusMedium), color: Colors.white),
+          child:
+              _firstContestStep
+                  ? Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: AppSpacings.a16,
                         child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ReviewPaymentModalHeader(),
-                            const SizedBox(height: 16),
-                            InputTextArea(
-                              controller: inputController,
-                              hintText: context.l10n.describeWhatHappened,
+                            Padding(
+                              padding: AppSpacings.v16,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children:
+                                    ContestReason.values.map((ContestReason reason) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(top: 8),
+                                        child: RadioRow(
+                                          title: reason.title,
+                                          groupValue: _selectedReason,
+                                          value: reason,
+                                          onChanged:
+                                              (value) => setState(() {
+                                                _selectedReason = value;
+                                              }),
+                                        ),
+                                      );
+                                    }).toList(),
+                              ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                    ReviewPaymentBottomAction(
-                      actionLabel: context.l10n.submit,
-                      onAction: () {
-                        _onPressedContest(
-                          context,
-                          ContestReason.other,
-                          otherReasonComment: inputController.text,
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                      if (_selectedReason != null && _selectedReason != ContestReason.other) ...[
+                        ReviewPaymentBottomAction(
+                          actionLabel: context.l10n.submit,
+                          onAction: () => _onPressedContest(context, _selectedReason!),
+                        ),
+                      ],
+                      if (_selectedReason != null && _selectedReason == ContestReason.other) ...[
+                        ReviewPaymentBottomAction(
+                          actionLabel: context.l10n.next,
+                          onAction:
+                              () => setState(() {
+                                _firstContestStep = false;
+                              }),
+                        ),
+                      ],
+                    ],
+                  )
+                  : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: AppSpacings.a16,
+                        child: Material(
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              ReviewPaymentModalHeader(),
+                              const SizedBox(height: 16),
+                              InputTextArea(controller: inputController, hintText: context.l10n.describeWhatHappened),
+                            ],
+                          ),
+                        ),
+                      ),
+                      ReviewPaymentBottomAction(
+                        actionLabel: context.l10n.submit,
+                        onAction: () {
+                          _onPressedContest(context, ContestReason.other, otherReasonComment: inputController.text);
+                        },
+                      ),
+                    ],
+                  ),
         ),
       ),
     );
   }
 
-  void _onPressedContest(
-    BuildContext context,
-    ContestReason reason, {
-    String? otherReasonComment,
-  }) {
+  void _onPressedContest(BuildContext context, ContestReason reason, {String? otherReasonComment}) {
     String otherReasonCommentFormatted = "";
     if (otherReasonComment != null) {
       otherReasonCommentFormatted = ": $otherReasonComment";
     }
-    context.read<PaymentsCubit>().contestPayment(
-          widget._payment,
-          reason.title + otherReasonCommentFormatted,
-        );
+    context.read<PaymentsCubit>().contestPayment(widget._payment, reason.title + otherReasonCommentFormatted);
     Navigator.pop(context);
   }
 }

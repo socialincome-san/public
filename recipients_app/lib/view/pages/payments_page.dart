@@ -23,14 +23,10 @@ class _PaymentsPageState extends State<PaymentsPage> {
     final paymentsUiState = context.watch<PaymentsCubit>().state.paymentsUiState!;
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(context.l10n.payments),
-        centerTitle: true,
-      ),
+      appBar: AppBar(elevation: 0, title: Text(context.l10n.payments), centerTitle: true),
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
-        onRefresh: () async => context.read<PaymentsCubit>().loadPayments(),
+        onRefresh: () => context.read<PaymentsCubit>().loadPayments(),
         child: ListView(
           padding: AppSpacings.h8,
           children: [
@@ -45,17 +41,13 @@ class _PaymentsPageState extends State<PaymentsPage> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        context.l10n.orangeMoneyNumber,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
+                      Text(context.l10n.orangeMoneyNumber, style: Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(height: 4),
                       Text(
                         "${recipient?.mobileMoneyPhone?.phoneNumber ?? ""}",
-                        style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                              color: AppColors.primaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.headlineLarge?.copyWith(color: AppColors.primaryColor, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
                       Row(
@@ -64,42 +56,33 @@ class _PaymentsPageState extends State<PaymentsPage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                context.l10n.pastPayments,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
+                              Text(context.l10n.pastPayments, style: Theme.of(context).textTheme.bodyMedium),
                               const SizedBox(height: 4),
                               Text(
-                                _calculatePastPayments(
-                                  paymentsUiState.payments,
-                                ),
+                                _calculatePastPayments(paymentsUiState.payments),
                                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                                      color: AppColors.primaryColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  color: AppColors.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ],
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                context.l10n.futurePayments,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
+                              Text(context.l10n.futurePayments, style: Theme.of(context).textTheme.bodyMedium),
                               const SizedBox(height: 4),
                               Text(
                                 paymentsUiState.status != BalanceCardStatus.onHold
-                                    ? _calculateFuturePayments(
-                                        paymentsUiState.payments,
-                                      )
+                                    ? _calculateFuturePayments(paymentsUiState.payments)
                                     : context.l10n.paymentsSuspended,
                                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                                      color: paymentsUiState.status != BalanceCardStatus.onHold
+                                  color:
+                                      paymentsUiState.status != BalanceCardStatus.onHold
                                           ? AppColors.primaryColor
                                           : AppColors.redColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ],
                           ),
@@ -114,12 +97,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
             if (paymentsUiState.payments.isEmpty)
               Padding(
                 padding: AppSpacings.a8,
-                child: Center(
-                  child: Text(
-                    context.l10n.paymentsEmptyList,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+                child: Center(child: Text(context.l10n.paymentsEmptyList, textAlign: TextAlign.center)),
               )
             else
               ListView.builder(
@@ -127,9 +105,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                 itemCount: paymentsUiState.payments.length,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return PaymentTile(
-                    mappedPayment: paymentsUiState.payments[index],
-                  );
+                  return PaymentTile(mappedPayment: paymentsUiState.payments[index]);
                 },
               ),
           ],
@@ -162,12 +138,11 @@ class _PaymentsPageState extends State<PaymentsPage> {
   }
 
   List<MappedPayment> _getAllPaidOrConfirmedPayments(List<MappedPayment> mappedPayments) {
-    final paidOrConfirmedPayments = mappedPayments.where(
-      (payment) {
-        final paymentStatus = payment.payment.status;
-        return paymentStatus == PaymentStatus.paid || paymentStatus == PaymentStatus.confirmed;
-      },
-    ).toList();
+    final paidOrConfirmedPayments =
+        mappedPayments.where((payment) {
+          final paymentStatus = payment.payment.status;
+          return paymentStatus == PaymentStatus.paid || paymentStatus == PaymentStatus.confirmed;
+        }).toList();
     return paidOrConfirmedPayments;
   }
 }

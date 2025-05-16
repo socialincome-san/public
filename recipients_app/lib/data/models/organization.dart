@@ -9,17 +9,12 @@ class Organization extends Equatable {
   final String? contactName;
   final String? contactNumber;
 
-  const Organization({
-    required this.name,
-    this.contactName,
-    this.contactNumber,
-  });
+  const Organization({required this.name, this.contactName, this.contactNumber});
 
   @override
   List<Object?> get props => [name, contactName, contactNumber];
 
-  factory Organization.fromJson(Map<String, dynamic> json) =>
-      _$OrganizationFromJson(json);
+  factory Organization.fromJson(Map<String, dynamic> json) => _$OrganizationFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrganizationToJson(this);
 }

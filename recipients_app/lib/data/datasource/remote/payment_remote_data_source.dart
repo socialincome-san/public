@@ -8,23 +8,17 @@ const String paymentCollection = "payments";
 class PaymentRemoteDataSource implements PaymentDataSource {
   final FirebaseFirestore firestore;
 
-  const PaymentRemoteDataSource({
-    required this.firestore,
-  });
+  const PaymentRemoteDataSource({required this.firestore});
 
   @override
-  Future<List<SocialIncomePayment>> fetchPayments({
-    required String recipientId,
-  }) async {
+  Future<List<SocialIncomePayment>> fetchPayments({required String recipientId}) async {
     final List<SocialIncomePayment> payments = <SocialIncomePayment>[];
 
     final paymentsDocs =
         await firestore.collection(recipientCollection).doc(recipientId).collection(paymentCollection).get();
 
     for (final paymentDoc in paymentsDocs.docs) {
-      final payment = SocialIncomePayment.fromJson(
-        paymentDoc.data(),
-      );
+      final payment = SocialIncomePayment.fromJson(paymentDoc.data());
 
       payments.add(payment.copyWith(id: paymentDoc.id));
     }
@@ -38,14 +32,8 @@ class PaymentRemoteDataSource implements PaymentDataSource {
   /// and also sets lastUpdatedAt and lastUpdatedBy to the
   /// current time and recipient
   @override
-  Future<void> confirmPayment({
-    required Recipient recipient,
-    required SocialIncomePayment payment,
-  }) async {
-    final updatedPayment = payment.copyWith(
-      status: PaymentStatus.confirmed,
-      updatedBy: recipient.userId,
-    );
+  Future<void> confirmPayment({required Recipient recipient, required SocialIncomePayment payment}) async {
+    final updatedPayment = payment.copyWith(status: PaymentStatus.confirmed, updatedBy: recipient.userId);
 
     await firestore
         .collection(recipientCollection)

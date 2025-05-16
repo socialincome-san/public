@@ -10,15 +10,13 @@ import "package:flutter_bloc/flutter_bloc.dart";
 class PaymentTileBottomAction extends StatelessWidget {
   final MappedPayment mappedPayment;
 
-  const PaymentTileBottomAction({
-    super.key,
-    required this.mappedPayment,
-  });
+  const PaymentTileBottomAction({super.key, required this.mappedPayment});
 
   @override
   Widget build(BuildContext context) {
     final foregroundColor = _getForegroundColor(mappedPayment.uiStatus);
-    final isContested = mappedPayment.uiStatus == PaymentUiStatus.contested ||
+    final isContested =
+        mappedPayment.uiStatus == PaymentUiStatus.contested ||
         mappedPayment.uiStatus == PaymentUiStatus.onHoldContested;
 
     return Container(
@@ -65,10 +63,7 @@ class PaymentTileBottomAction extends StatelessWidget {
     final paymentsCubit = context.read<PaymentsCubit>();
     showDialog(
       context: context,
-      builder: (context) => BlocProvider.value(
-        value: paymentsCubit,
-        child: ReviewPaymentModal(mappedPayment.payment),
-      ),
+      builder: (context) => BlocProvider.value(value: paymentsCubit, child: ReviewPaymentModal(mappedPayment.payment)),
     );
   }
 

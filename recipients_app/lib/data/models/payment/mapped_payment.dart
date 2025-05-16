@@ -5,26 +5,14 @@ class MappedPayment extends Equatable {
   final SocialIncomePayment payment;
   final PaymentUiStatus uiStatus;
 
-  const MappedPayment({
-    required this.payment,
-    required this.uiStatus,
-  });
+  const MappedPayment({required this.payment, required this.uiStatus});
 
   @override
   List<Object?> get props {
-    return [
-      payment,
-      uiStatus,
-    ];
+    return [payment, uiStatus];
   }
 
-  MappedPayment copyWith({
-    SocialIncomePayment? payment,
-    PaymentUiStatus? uiStatus,
-  }) {
-    return MappedPayment(
-      uiStatus: uiStatus ?? this.uiStatus,
-      payment: payment ?? this.payment,
-    );
+  MappedPayment copyWith({SocialIncomePayment? payment, PaymentUiStatus? uiStatus}) {
+    return MappedPayment(uiStatus: uiStatus ?? this.uiStatus, payment: payment ?? this.payment);
   }
 }

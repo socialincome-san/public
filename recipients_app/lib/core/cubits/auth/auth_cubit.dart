@@ -35,12 +35,7 @@ class AuthCubit extends Cubit<AuthState> {
           );
         } on Exception catch (ex, stackTrace) {
           crashReportingRepository.logError(ex, stackTrace);
-          emit(
-            AuthState(
-              status: AuthStatus.failure,
-              exception: ex,
-            ),
-          );
+          emit(AuthState(status: AuthStatus.failure, exception: ex));
         }
       } else {
         const AuthState();
@@ -79,20 +74,10 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       await userRepository.updateRecipient(recipient);
 
-      emit(
-        state.copyWith(
-          status: AuthStatus.updateRecipientSuccess,
-          recipient: recipient,
-        ),
-      );
+      emit(state.copyWith(status: AuthStatus.updateRecipientSuccess, recipient: recipient));
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
-      emit(
-        state.copyWith(
-          status: AuthStatus.updateRecipientFailure,
-          exception: ex,
-        ),
-      );
+      emit(state.copyWith(status: AuthStatus.updateRecipientFailure, exception: ex));
     }
   }
 

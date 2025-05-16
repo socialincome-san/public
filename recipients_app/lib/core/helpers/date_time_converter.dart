@@ -4,10 +4,8 @@ class DateTimeConverter implements JsonConverter<DateTime, String> {
   const DateTimeConverter();
 
   @override
-  DateTime fromJson(String json) =>
-      DateTime.fromMillisecondsSinceEpoch(int.parse(json));
+  DateTime fromJson(String json) => DateTime.fromMillisecondsSinceEpoch(int.parse(json));
 
   @override
-  String toJson(DateTime timestamp) =>
-      timestamp.millisecondsSinceEpoch.toString();
+  String toJson(DateTime timestamp) => timestamp.millisecondsSinceEpoch.toString();
 }

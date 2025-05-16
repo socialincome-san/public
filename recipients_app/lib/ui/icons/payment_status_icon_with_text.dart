@@ -9,36 +9,19 @@ class PaymentStatusIconWithText extends StatelessWidget {
   final String text;
   final bool isInverted;
 
-  const PaymentStatusIconWithText({
-    super.key,
-    required this.status,
-    required this.text,
-    this.isInverted = false,
-  });
+  const PaymentStatusIconWithText({super.key, required this.status, required this.text, this.isInverted = false});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: AppSpacings.h8,
-      decoration: BoxDecoration(
-        color: status.color,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-      ),
+      decoration: BoxDecoration(color: status.color, borderRadius: BorderRadius.circular(AppSizes.radiusMedium)),
       height: statusIconHeight,
       child: Row(
         children: [
-          Text(
-            text,
-            style: AppStyles.iconLabel.copyWith(
-              color: status.textColor,
-            ),
-          ),
+          Text(text, style: AppStyles.iconLabel.copyWith(color: status.textColor)),
           const SizedBox(width: 4),
-          Icon(
-            size: 14,
-            status.icon,
-            color: status.iconColor,
-          ),
+          Icon(size: 14, status.icon, color: status.iconColor),
         ],
       ),
     );

@@ -27,9 +27,7 @@ class OnHoldBottomCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     context.l10n.paymentsSuspended,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.black,
-                        ),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.black),
                   ),
                 ),
                 const SizedBox(width: 8),
