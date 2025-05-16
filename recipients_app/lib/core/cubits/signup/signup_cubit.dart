@@ -1,6 +1,6 @@
 import "package:app/data/repositories/repositories.dart";
+import "package:app/data/services/twilio_service.dart";
 import "package:equatable/equatable.dart";
-import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 part "signup_state.dart";
@@ -19,10 +19,12 @@ part "signup_state.dart";
 
 class SignupCubit extends Cubit<SignupState> {
   final UserRepository userRepository;
+  final TwilioService twilioService;
   final CrashReportingRepository crashReportingRepository;
 
   SignupCubit({
     required this.userRepository,
+    required this.twilioService,
     required this.crashReportingRepository,
   }) : super(const SignupState());
 
@@ -32,7 +34,10 @@ class SignupCubit extends Cubit<SignupState> {
     emit(state.copyWith(status: SignupStatus.loadingPhoneNumber));
 
     try {
-      await userRepository.verifyPhoneNumber(
+      await twilioService.sendVerificationCode(phoneNumber);
+
+      // old firebase verifyPhoneNumber method
+      /*await userRepository.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         forceResendingToken: state.forceResendingToken,
         onCodeSend: (verificationId, forceResendingToken) {
@@ -63,6 +68,13 @@ class SignupCubit extends Cubit<SignupState> {
             ),
           );
         },
+      );*/
+
+      emit(
+        state.copyWith(
+          status: SignupStatus.verificationSuccess,
+          phoneNumber: phoneNumber,
+        ),
       );
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
@@ -79,12 +91,23 @@ class SignupCubit extends Cubit<SignupState> {
     emit(state.copyWith(status: SignupStatus.loadingVerificationCode));
 
     try {
-      final credential = PhoneAuthProvider.credential(
+      final phoneNumber = state.phoneNumber;
+
+      if (phoneNumber == null) {
+        emit(state.copyWith(status: SignupStatus.verificationFailure, exception: Exception("Phone number is null")));
+        return;
+      }
+
+      final otp = verificationCode;
+
+      await userRepository.signInWithPhoneNumber(phoneNumber, otp);
+
+      // old
+      /* final credential = PhoneAuthProvider.credential(
         verificationId: state.verificationId!,
         smsCode: verificationCode,
       );
-
-      await userRepository.signInWithCredential(credential);
+      await userRepository.signInWithCredential(credential); */
 
       emit(
         state.copyWith(
@@ -103,8 +126,7 @@ class SignupCubit extends Cubit<SignupState> {
     }
   }
 
-  Future<void> resendVerificationCode() =>
-      signupWithPhoneNumber(phoneNumber: state.phoneNumber!);
+  Future<void> resendVerificationCode() => signupWithPhoneNumber(phoneNumber: state.phoneNumber!);
 
   void changeToPhoneInput() {
     emit(

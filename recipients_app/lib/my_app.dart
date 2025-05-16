@@ -9,6 +9,7 @@ import "package:app/data/datasource/remote/payment_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/repositories/repositories.dart";
+import "package:app/data/services/twilio_service.dart";
 import "package:app/demo_manager.dart";
 import "package:app/kri_intl.dart";
 import "package:app/ui/configs/configs.dart";
@@ -38,6 +39,8 @@ class MyApp extends StatelessWidget {
   final OrganizationRemoteDataSource organizationRemoteDataSource;
   final OrganizationDemoDataSource organizationDemoDataSource;
 
+  final TwilioService twilioService;
+
   const MyApp({
     super.key,
     required this.messaging,
@@ -50,6 +53,7 @@ class MyApp extends StatelessWidget {
     required this.surveyDemoDataSource,
     required this.organizationRemoteDataSource,
     required this.organizationDemoDataSource,
+    required this.twilioService,
   });
 
   // This widget is the root of your application.
@@ -95,6 +99,9 @@ class MyApp extends StatelessWidget {
             demoDataSource: organizationDemoDataSource,
             demoManager: demoManager,
           ),
+        ),
+        RepositoryProvider(
+          create: (context) => twilioService,
         ),
       ],
       child: MultiBlocProvider(

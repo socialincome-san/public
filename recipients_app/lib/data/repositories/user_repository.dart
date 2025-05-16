@@ -3,6 +3,7 @@ import "dart:async";
 import "package:app/data/datasource/user_data_source.dart";
 import "package:app/data/models/models.dart";
 import "package:app/demo_manager.dart";
+import "package:cloud_functions/cloud_functions.dart";
 import "package:firebase_auth/firebase_auth.dart";
 
 class UserRepository {
@@ -11,11 +12,7 @@ class UserRepository {
 
   final DemoManager demoManager;
 
-  const UserRepository({
-    required this.remoteDataSource,
-    required this.demoDataSource,
-    required this.demoManager,
-  });
+  const UserRepository({required this.remoteDataSource, required this.demoDataSource, required this.demoManager});
 
   UserDataSource get _activeDataSource => demoManager.isDemoEnabled ? demoDataSource : remoteDataSource;
 
@@ -53,14 +50,13 @@ class UserRepository {
     required Function(FirebaseAuthException) onVerificationFailed,
     required Function(PhoneAuthCredential) onVerificationCompleted,
     required int? forceResendingToken,
-  }) =>
-      _activeDataSource.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        onCodeSend: onCodeSend,
-        onVerificationFailed: onVerificationFailed,
-        onVerificationCompleted: onVerificationCompleted,
-        forceResendingToken: forceResendingToken,
-      );
+  }) => _activeDataSource.verifyPhoneNumber(
+    phoneNumber: phoneNumber,
+    onCodeSend: onCodeSend,
+    onVerificationFailed: onVerificationFailed,
+    onVerificationCompleted: onVerificationCompleted,
+    forceResendingToken: forceResendingToken,
+  );
 
   Future<void> signOut() {
     return _activeDataSource.signOut().whenComplete(() {
@@ -68,6 +64,20 @@ class UserRepository {
     });
   }
 
+  Future<UserCredential> signInWithPhoneNumber(String phoneNumber, String otp) async {
+    // Call the Cloud Function to verify OTP and get a custom token
+    final result = await FirebaseFunctions.instanceFor(
+      region: "europe-west6",
+    ).httpsCallable("webhookTwilioVerify").call({"phoneNumber": phoneNumber, "otp": otp});
+
+    final customToken = result.data["token"] as String;
+
+    // Sign in with the custom token
+    return await FirebaseAuth.instance.signInWithCustomToken(customToken);
+  }
+
+  /// Old firebase signInWithCredential method.
+  @Deprecated("Use signInWithPhoneNumber instead")
   Future<void> signInWithCredential(PhoneAuthCredential credentials) =>
       _activeDataSource.signInWithCredential(credentials);
 
