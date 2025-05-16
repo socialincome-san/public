@@ -6,6 +6,7 @@ import {
 	batchImportStripeChargesFunction,
 	createAllSurveysFunction,
 } from './admin/scripts';
+import twilioVerifyFunction from './auth/twilio-verify';
 import stripeWebhookFunction from './stripe';
 
 export const webhookPaymentProcessTask = paymentProcessFunction;
@@ -19,3 +20,6 @@ export const webhookCreateAllSurveys = createAllSurveysFunction;
 export const webhookStripeCharge = stripeWebhookFunction;
 
 export const webhookCreateDonationCertificates = createDonationCertificatesFunction;
+
+// Twilio OTP verification function
+export const webhookTwilioVerify = twilioVerifyFunction;
