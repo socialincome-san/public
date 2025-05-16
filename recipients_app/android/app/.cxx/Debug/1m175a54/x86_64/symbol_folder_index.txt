@@ -1,1 +1,0 @@
-/Users/verenazaiser/development/socialincome/public/recipients_app/build/app/intermediates/cxx/Debug/1m175a54/obj/x86_64

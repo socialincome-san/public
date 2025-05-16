@@ -1,2 +1,0 @@
-/Users/verenazaiser/development/socialincome/public/recipients_app/android/app/.cxx/Debug/1m175a54/x86_64/CMakeFiles/edit_cache.dir
-/Users/verenazaiser/development/socialincome/public/recipients_app/android/app/.cxx/Debug/1m175a54/x86_64/CMakeFiles/rebuild_cache.dir

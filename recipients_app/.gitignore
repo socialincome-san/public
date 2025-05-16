@@ -45,6 +45,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/app/.cxx
 
 lib/firebase_options.dart
 
@@ -52,5 +53,3 @@ lib/firebase_options.dart
 /ios/Prod/GoogleService-Info.plist
 /ios/GoogleServicesConfig/GoogleService-Info-Prod.plist
 /android/app/src/prod/google-services.json
-
-/android/app/.cxx
