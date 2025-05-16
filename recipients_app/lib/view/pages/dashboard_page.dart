@@ -22,24 +22,27 @@ class DashboardPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => PaymentsCubit(
-            recipient: authCubit.state.recipient!,
-            paymentRepository: context.read<PaymentRepository>(),
-            crashReportingRepository: context.read<CrashReportingRepository>(),
-          )..loadPayments(),
+          create:
+              (context) => PaymentsCubit(
+                recipient: authCubit.state.recipient!,
+                paymentRepository: context.read<PaymentRepository>(),
+                crashReportingRepository: context.read<CrashReportingRepository>(),
+              )..loadPayments(),
         ),
         BlocProvider(
-          create: (context) => DashboardCardManagerCubit(
-            crashReportingRepository: context.read<CrashReportingRepository>(),
-            authCubit: context.read<AuthCubit>(),
-          )..fetchCards(),
+          create:
+              (context) => DashboardCardManagerCubit(
+                crashReportingRepository: context.read<CrashReportingRepository>(),
+                authCubit: context.read<AuthCubit>(),
+              )..fetchCards(),
         ),
         BlocProvider(
-          create: (context) => SurveyCubit(
-            recipient: authCubit.state.recipient!,
-            surveyRepository: context.read<SurveyRepository>(),
-            crashReportingRepository: context.read<CrashReportingRepository>(),
-          )..getSurveys(),
+          create:
+              (context) => SurveyCubit(
+                recipient: authCubit.state.recipient!,
+                surveyRepository: context.read<SurveyRepository>(),
+                crashReportingRepository: context.read<CrashReportingRepository>(),
+              )..getSurveys(),
         ),
       ],
       child: const _DashboardView(),
@@ -61,28 +64,20 @@ class _DashboardViewState extends State<_DashboardView> {
   Widget build(BuildContext context) {
     final surveys = context.watch<SurveyCubit>().state.mappedSurveys;
 
-    final List<DashboardItem> dashboardCardItems = context
-        .watch<DashboardCardManagerCubit>()
-        .state
-        .cards
-        .map<DashboardItem>((card) => card)
-        .toList();
+    final List<DashboardItem> dashboardCardItems =
+        context.watch<DashboardCardManagerCubit>().state.cards.map<DashboardItem>((card) => card).toList();
 
-    final List<DashboardItem> surveysItems = context
-        .watch<SurveyCubit>()
-        .state
-        .dashboardMappedSurveys
-        .map<DashboardItem>(
-          (survey) => SurveyCardContainer(mappedSurvey: survey),
-        )
-        .toList();
+    final List<DashboardItem> surveysItems =
+        context
+            .watch<SurveyCubit>()
+            .state
+            .dashboardMappedSurveys
+            .map<DashboardItem>((survey) => SurveyCardContainer(mappedSurvey: survey))
+            .toList();
 
     final dynamicItemsCount = dashboardCardItems.length + surveysItems.length;
 
-    final List<DashboardItem> headerItems = [
-      const BalanceCardContainer(),
-      SurveysOverviewCard(mappedSurveys: surveys),
-    ];
+    final List<DashboardItem> headerItems = [const BalanceCardContainer(), SurveysOverviewCard(mappedSurveys: surveys)];
 
     List<DashboardItem> items;
 
@@ -106,8 +101,7 @@ class _DashboardViewState extends State<_DashboardView> {
               children: [
                 Expanded(
                   child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 4),
+                    separatorBuilder: (context, index) => const SizedBox(height: 4),
                     itemCount: items.length,
                     itemBuilder: (context, index) => items[index],
                   ),

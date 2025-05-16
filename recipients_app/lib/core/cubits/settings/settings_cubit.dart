@@ -32,11 +32,6 @@ class SettingsCubit extends Cubit<SettingsState> {
     // if its the same as the new language, do nothing
     if (state.locale == locale) return;
 
-    emit(
-      SettingsState(
-        status: SettingsStatus.success,
-        locale: locale,
-      ),
-    );
+    emit(SettingsState(status: SettingsStatus.success, locale: locale));
   }
 }

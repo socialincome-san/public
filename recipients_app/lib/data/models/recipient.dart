@@ -154,8 +154,7 @@ class Recipient extends Equatable {
   }) {
     return Recipient(
       userId: userId ?? this.userId,
-      communicationMobilePhone:
-          communicationMobilePhone ?? this.communicationMobilePhone,
+      communicationMobilePhone: communicationMobilePhone ?? this.communicationMobilePhone,
       mobileMoneyPhone: mobileMoneyPhone ?? this.mobileMoneyPhone,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
@@ -178,11 +177,9 @@ class Recipient extends Equatable {
     );
   }
 
-  factory Recipient.fromJson(String source) =>
-      Recipient.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Recipient.fromJson(String source) => Recipient.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  factory Recipient.fromMap(Map<String, dynamic> map) =>
-      _$RecipientFromJson(map);
+  factory Recipient.fromMap(Map<String, dynamic> map) => _$RecipientFromJson(map);
 
   Map<String, dynamic> toJson() => _$RecipientToJson(this);
 }

@@ -1,6 +1,6 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 
-// We are using DocumentReference in repository / data source. That's why we need to get 
+// We are using DocumentReference in repository / data source. That's why we need to get
 // no-op implementation for it for demo data source.
 
 // NoOpDocumentReference is a no-op implementation of DocumentReference.
@@ -41,8 +41,10 @@ class NoOpDocumentReference implements DocumentReference<Map<String, dynamic>> {
   }
 
   @override
-  Stream<DocumentSnapshot<Map<String, dynamic>>> snapshots(
-      {bool includeMetadataChanges = false, ListenSource source = ListenSource.defaultSource,}) {
+  Stream<DocumentSnapshot<Map<String, dynamic>>> snapshots({
+    bool includeMetadataChanges = false,
+    ListenSource source = ListenSource.defaultSource,
+  }) {
     throw UnimplementedError();
   }
 
@@ -52,8 +54,10 @@ class NoOpDocumentReference implements DocumentReference<Map<String, dynamic>> {
   }
 
   @override
-  DocumentReference<R> withConverter<R>(
-      {required FromFirestore<R> fromFirestore, required ToFirestore<R> toFirestore,}) {
+  DocumentReference<R> withConverter<R>({
+    required FromFirestore<R> fromFirestore,
+    required ToFirestore<R> toFirestore,
+  }) {
     throw UnimplementedError();
   }
 }

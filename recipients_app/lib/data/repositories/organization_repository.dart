@@ -17,9 +17,7 @@ class OrganizationRepository {
 
   OrganizationDataSource get _activeDataSource => demoManager.isDemoEnabled ? demoDataSource : remoteDataSource;
 
-  Future<Organization?> fetchOrganization(
-    DocumentReference organizationRef,
-  ) async {
+  Future<Organization?> fetchOrganization(DocumentReference organizationRef) {
     return _activeDataSource.fetchOrganization(organizationRef);
   }
 }

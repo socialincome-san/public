@@ -135,7 +135,8 @@ class _OtpInputState extends State<OtpInput> {
 
   void _checkCodeStatus() {
     if (_verifyFullCodeReady()) {
-      final verificationCode = digit1Controller.text +
+      final verificationCode =
+          digit1Controller.text +
           digit2Controller.text +
           digit3Controller.text +
           digit4Controller.text +

@@ -12,18 +12,13 @@ import "package:flutter_bloc/flutter_bloc.dart";
 class BalanceCardBottomAction extends StatelessWidget {
   final PaymentsUiState paymentsUiState;
 
-  const BalanceCardBottomAction({
-    super.key,
-    required this.paymentsUiState,
-  });
+  const BalanceCardBottomAction({super.key, required this.paymentsUiState});
 
   @override
   Widget build(BuildContext context) {
     final foregroundColor = _getForegroundColor(paymentsUiState.status);
 
-    final shouldShowSecondaryActionButton = _shouldShowSecondaryActionButton(
-      paymentsUiState,
-    );
+    final shouldShowSecondaryActionButton = _shouldShowSecondaryActionButton(paymentsUiState);
 
     return Container(
       color: _getBackgroundColor(paymentsUiState.status),
@@ -33,18 +28,12 @@ class BalanceCardBottomAction extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Text(
-                _getStatusLabel(paymentsUiState, context.l10n),
-                style: TextStyle(color: foregroundColor),
-              ),
+              child: Text(_getStatusLabel(paymentsUiState, context.l10n), style: TextStyle(color: foregroundColor)),
             ),
             Row(
               children: [
                 ButtonSmall(
-                  onPressed: () => _onPressedConfirm(
-                    shouldShowSecondaryActionButton,
-                    context,
-                  ),
+                  onPressed: () => _onPressedConfirm(shouldShowSecondaryActionButton, context),
                   label: _getPrimaryActionLabel(paymentsUiState, context.l10n),
                   buttonType: ButtonSmallType.outlined,
                   color: foregroundColor,
@@ -68,10 +57,7 @@ class BalanceCardBottomAction extends StatelessWidget {
     );
   }
 
-  void _onPressedConfirm(
-    bool shouldShowSecondaryActionButton,
-    BuildContext context,
-  ) {
+  void _onPressedConfirm(bool shouldShowSecondaryActionButton, BuildContext context) {
     if (shouldShowSecondaryActionButton) {
       final MappedPayment? mappedPayment = paymentsUiState.payments.firstWhereOrNull(
         (element) => element.uiStatus == PaymentUiStatus.toReview || element.uiStatus == PaymentUiStatus.recentToReview,
@@ -93,10 +79,8 @@ class BalanceCardBottomAction extends StatelessWidget {
       final paymentsCubit = context.read<PaymentsCubit>();
       showDialog(
         context: context,
-        builder: (context) => BlocProvider.value(
-          value: paymentsCubit,
-          child: ReviewPaymentModal(mappedPayment.payment),
-        ),
+        builder:
+            (context) => BlocProvider.value(value: paymentsCubit, child: ReviewPaymentModal(mappedPayment.payment)),
       );
     }
   }
@@ -106,18 +90,11 @@ class BalanceCardBottomAction extends StatelessWidget {
 
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider.value(
-          value: paymentsCubit,
-          child: const PaymentsPage(),
-        ),
-      ),
+      MaterialPageRoute(builder: (context) => BlocProvider.value(value: paymentsCubit, child: const PaymentsPage())),
     );
   }
 
-  bool _shouldShowSecondaryActionButton(
-    PaymentsUiState paymentsUiState,
-  ) {
+  bool _shouldShowSecondaryActionButton(PaymentsUiState paymentsUiState) {
     return (paymentsUiState.status == BalanceCardStatus.recentToReview ||
             paymentsUiState.status == BalanceCardStatus.needsAttention) &&
         paymentsUiState.unconfirmedPaymentsCount == 1;
@@ -149,10 +126,7 @@ class BalanceCardBottomAction extends StatelessWidget {
     }
   }
 
-  String _getStatusLabel(
-    PaymentsUiState paymentsUiState,
-    AppLocalizations localizations,
-  ) {
+  String _getStatusLabel(PaymentsUiState paymentsUiState, AppLocalizations localizations) {
     switch (paymentsUiState.status) {
       case BalanceCardStatus.allConfirmed:
         return "${paymentsUiState.confirmedPaymentsCount} ${localizations.paymentsConfirmedCount}";
@@ -168,10 +142,7 @@ class BalanceCardBottomAction extends StatelessWidget {
     }
   }
 
-  String _getPrimaryActionLabel(
-    PaymentsUiState paymentsUiState,
-    AppLocalizations localizations,
-  ) {
+  String _getPrimaryActionLabel(PaymentsUiState paymentsUiState, AppLocalizations localizations) {
     switch (paymentsUiState.status) {
       case BalanceCardStatus.allConfirmed:
         return localizations.paymentsOverview;

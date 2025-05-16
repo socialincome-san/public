@@ -8,12 +8,7 @@ class ButtonBig extends StatelessWidget {
   final String label;
   final bool isLoading;
 
-  const ButtonBig({
-    super.key,
-    required this.onPressed,
-    required this.label,
-    this.isLoading = false,
-  });
+  const ButtonBig({super.key, required this.onPressed, required this.label, this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
@@ -21,19 +16,17 @@ class ButtonBig extends StatelessWidget {
       height: _buttonHeight,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
-        child: isLoading
-            ? const SizedBox(
-                height: 24,
-                width: 24,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              )
-            : Text(
-                label,
-                style: AppStyles.buttonLabelBig,
-              ),
+        child:
+            isLoading
+                ? const SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                )
+                : Text(label, style: AppStyles.buttonLabelBig),
       ),
     );
   }

@@ -16,26 +16,22 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 class MessagingRepository {
   final FirebaseMessaging messaging;
 
-  MessagingRepository({
-    required this.messaging,
-  }) {
+  MessagingRepository({required this.messaging}) {
     messaging.onTokenRefresh.listen((event) {
       log("PUSHNOTIFICATION: FCM Token refreshed: $event");
     });
   }
 
   Future<void> initNotifications() async {
-    await messaging.requestPermission(
-      criticalAlert: true,
-    );
+    await messaging.requestPermission(criticalAlert: true);
 
     /// This is needed for testing and specific targeting of devices
     final token = await getToken();
     log("PUSHNOTIFICATION: Current FCM token: $token");
-         
+
     /// Get any messages which caused the application to open from a terminated state.
     final initialMessage = await messaging.getInitialMessage();
-    if (initialMessage != null){
+    if (initialMessage != null) {
       _handleInitialMessage(initialMessage);
     }
 
@@ -49,16 +45,12 @@ class MessagingRepository {
     // For showing local notifications another package is needed: flutter_local_notifications => https://pub.dev/packages/flutter_local_notifications#-supported-platforms
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
 
-    /// Notification messages which arrive while the app is in foreground will not display a visible notification by default. 
+    /// Notification messages which arrive while the app is in foreground will not display a visible notification by default.
     /// To override this behavior on iOS, we update the presentation options for the app to change this behaviour.
-    /// To override this behavior on Android, you must create a "High Priority" notification channel which can be done 
+    /// To override this behavior on Android, you must create a "High Priority" notification channel which can be done
     /// with the above mentioned package "flutter_local_notifications".
     /// See also blog article: https://medium.com/@ChanakaDev/android-channels-in-flutter-003907b151e5
-    messaging.setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    messaging.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
   }
 
   void _handleForegroundMessage(RemoteMessage message) {
