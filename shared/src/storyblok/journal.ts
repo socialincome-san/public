@@ -8,9 +8,9 @@ export enum StoryblokContentType {
 
 export interface StoryblokEmbeddedVideo {
 	id: number;
-	url: string | undefined;
+	url?: string;
 	caption: string;
-	muxPlaybackId: string | undefined;
+	muxPlaybackId?: string;
 }
 
 export interface ReferencesGroup {
@@ -24,7 +24,7 @@ export interface ReferenceArticle {
 	publicationDate: string;
 	title: string;
 	author: string;
-	thumbnail: StoryblokImage | undefined;
+	thumbnail?: StoryblokImage;
 	mediaOutlet: string;
 	url: string;
 }
@@ -32,6 +32,7 @@ export interface ReferenceArticle {
 export interface StoryblokImage {
 	alt: string;
 	filename: string;
+	focus?: string;
 	id: number;
 }
 
@@ -47,6 +48,13 @@ export interface StoryblokTag {
 	displayInOverviewPage: boolean;
 }
 
+export interface StoryblokActionButton {
+	text: string;
+	url: string;
+	id: number;
+	_uid: string;
+}
+
 export interface StoryblokAuthor {
 	avatar: StoryblokImage;
 	fullName: string;
@@ -59,6 +67,7 @@ export interface StoryblokAuthor {
 
 export interface StoryblokArticle {
 	id: number;
+	originalLanguage?: string;
 	title: string;
 	content: any;
 	subtitle: string;

@@ -1,4 +1,4 @@
-import { ShowMoreToggle } from '@/components/storyblok/ShowMoreComponent';
+import { ShowMoreToggle } from '@/components/storyblok/ShowMore';
 import { formatStoryblokDate, getDimensionsFromStoryblokImageUrl } from '@/components/storyblok/StoryblokUtils';
 import { ReferencesGroup, StoryblokImage } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';

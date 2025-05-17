@@ -1,3 +1,5 @@
+import { OriginalLanguageLink } from '@/components/storyblok/OriginalLanguage';
+import { StoryblokActionButton } from '@/components/storyblok/StoryblokActionButton';
 import { getArticle, getRelativeArticles } from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
@@ -25,6 +27,7 @@ function renderWrapper(articleData: StoryblokArticle, translator: Translator, la
 			['imageWithCaption']: (props: any) => <StoryblokImageWithCaption {...props} />,
 			['embeddedVideo']: (props: any) => <StoryblokEmbeddedVideoPlayer {...props} />,
 			['referencesGroup']: (props: any) => <StoryblokReferencesGroup translator={translator} {...props} lang={lang} />,
+			['actionButton']: (props: any) => <StoryblokActionButton {...props} />,
 		},
 	});
 }
@@ -58,7 +61,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 
 	let translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-journal'],
+		namespaces: ['website-journal', 'common'],
 	});
 	const dimensionsFromStoryblokImage = getDimensionsFromStoryblokImageUrl(articleData.image.filename);
 	return (
@@ -109,6 +112,14 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 				</div>
 
 				<div className="prose mx-auto my-4 max-w-2xl content-center p-4 sm:p-6">
+					<OriginalLanguageLink
+						originalLanguage={articleData.originalLanguage}
+						slug={slug}
+						lang={lang}
+						region={region}
+						text={translator.t('article.from-original-language')}
+						languageName={translator.t('language-name.' + articleData.originalLanguage)}
+					/>
 					<Typography weight="bold" size="2xl">
 						{articleData.leadText}
 					</Typography>
