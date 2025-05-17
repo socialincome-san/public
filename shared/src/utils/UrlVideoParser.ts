@@ -13,7 +13,6 @@ export class VimeoVideoMatchAndExtract implements VideoMatchAndExtract {
 		}
 		return null;
 	}
-
 }
 
 export class YouTubeVideoMatchAndExtract implements VideoMatchAndExtract {
@@ -28,5 +27,4 @@ export class YouTubeVideoMatchAndExtract implements VideoMatchAndExtract {
 		}
 		return null;
 	}
-
 }
