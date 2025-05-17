@@ -141,11 +141,13 @@ export async function getWithFallback<T>(
 	slug: string,
 ): Promise<T> {
 	try {
-		return loader(lang, slug);
+		return await loader(lang, slug);
 	} catch (error: any) {
+		console.log(JSON.stringify(error, null, 2));
+		console.log('status is ' + error.status);
 		if (error.status === NOT_FOUND) {
 			if (lang === DEFAULT_LANGUAGE) {
-				throw notFound();
+				notFound();
 			}
 			return loader(DEFAULT_LANGUAGE, slug);
 		}

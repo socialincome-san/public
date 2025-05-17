@@ -12,7 +12,10 @@ export function getDimensionsFromStoryblokImageUrl(url: string): { width: number
 
 // Storyblok returns date fields in the following format  "yyyy-MM-dd HH:mm" without timezone
 // But the fields `first_published_at`, 'published_at' are returned in proper ISO8601 format
-export function formatStoryblokDate(date: string, lang: string) {
+export function formatStoryblokDate(date: string | null | undefined, lang: string) {
+	if (!date) {
+		return '';
+	}
 	let dateObject = DateTime.fromISO(date).setLocale(lang);
 
 	if (!dateObject.isValid) {

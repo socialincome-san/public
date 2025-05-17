@@ -86,7 +86,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 								{articleData.type?.content.value}
 							</Typography>
 							<Typography size="lg" weight="normal" color="popover" className="ml-4">
-								{formatStoryblokDate(articleResponse.data.story.first_published_at!, lang)}
+								{formatStoryblokDate(articleResponse.data.story.first_published_at, lang)}
 							</Typography>
 						</div>
 						<Typography weight="medium" className="mt-8 hyphens-auto break-words" color="accent" size="5xl">

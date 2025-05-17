@@ -9,6 +9,8 @@
 		"keep-reading": "Keep reading"
 	},
 	"reference-article":{
+		"show-more": "Show more",
+		"show-less": "Show less",
 		"written-by" : "{{mediaOutlet}} by {{author}} on {{publicationDate}}",
 		"context": {
 			"original": "Original published as",

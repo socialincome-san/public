@@ -31,7 +31,7 @@ export function StoryblokArticleCard(props: {
 						</Typography>
 					</div>
 					<Typography weight="normal" className="text-black">
-						{formatStoryblokDate(blog.first_published_at!, props.lang)}
+						{formatStoryblokDate(blog.first_published_at, props.lang)}
 					</Typography>
 				</div>
 
