@@ -6,7 +6,8 @@
 		"editors": "Contributing Editors"
 	},
 	"article": {
-		"keep-reading": "Keep reading"
+		"keep-reading": "Keep reading",
+		"from-original-language": "Translated from"
 	},
 	"reference-article":{
 		"show-more": "Show more",

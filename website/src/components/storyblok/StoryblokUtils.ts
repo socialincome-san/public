@@ -24,3 +24,7 @@ export function formatStoryblokDate(date: string | null | undefined, lang: strin
 
 	return dateObject.isValid ? dateObject.toFormat('MMMM dd, yyyy') : '';
 }
+
+export function createLinkForArticle(slug: string, lang: string, region: string) {
+	return `/${lang}/${region}/journal/${slug}`;
+}
