@@ -48,9 +48,10 @@ export interface StoryblokTag {
 	displayInOverviewPage: boolean;
 }
 
-export interface StoryblokActionButton {
+export interface ActionButton {
 	text: string;
 	url: string;
+	primaryStyle: boolean;
 	id: number;
 	_uid: string;
 }
