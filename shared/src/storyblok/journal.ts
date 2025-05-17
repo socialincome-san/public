@@ -20,6 +20,7 @@ export interface ReferencesGroup {
 
 export interface ReferenceArticle {
 	id: number;
+	_uid: string;
 	publicationDate: string;
 	title: string;
 	author: string;
