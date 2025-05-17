@@ -38,7 +38,7 @@ describe('YouTube Video ID Extraction', () => {
 	});
 });
 
-const VIMEO_TEST_CASES: { url: string; expectedId: string | undefined }[] = [
+const VIMEO_TEST_CASES: { url: string; expectedId: string | null }[] = [
 	{ url: 'https://vimeo.com/62092214', expectedId: '62092214' },
 	{ url: 'http://vimeo.com/62092214', expectedId: '62092214' },
 	{ url: 'https://www.vimeo.com/62092214', expectedId: '62092214' },
