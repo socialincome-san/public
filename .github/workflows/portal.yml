@@ -53,13 +53,13 @@ jobs:
 
           echo "TF_VAR_docker_image_url=$IMAGE_URL" >> $GITHUB_ENV
 
-          echo "📤 Building Docker image: $IMAGE_URL"
-          docker buildx build \
-            --platform linux/amd64 \
-            --tag "$IMAGE_URL" \
-            --push ../../portal
-
-          echo "🚀 Image built and pushed."
+#          echo "📤 Building Docker image: $IMAGE_URL"
+#          docker buildx build \
+#            --platform linux/amd64 \
+#            --tag "$IMAGE_URL" \
+#            --push ../../portal
+#
+#          echo "🚀 Image built and pushed."
 
           echo "🧭 Initializing Terraform..."
           terraform init
