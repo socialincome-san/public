@@ -4,7 +4,5 @@ provider "google" {
 }
 
 terraform {
-  backend "gcs" {
-    bucket = "${var.env}-${var.app_name}_terraform_state"
-  }
+  backend "gcs" {}
 }
