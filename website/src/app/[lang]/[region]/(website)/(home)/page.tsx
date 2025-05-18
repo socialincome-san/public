@@ -28,22 +28,19 @@ const chooseRandomCampaigns = (
 
 export default async function Page(props: DefaultPageProps) {
 	const params = await props.params;
-
 	const { lang, region } = params;
-	const translator = await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-campaign'],
-	});
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-campaign'] });
+
 	const campaignStatsCalculator = await CampaignStatsCalculator.build(firestoreAdmin);
-	const stats = campaignStatsCalculator.allStats();
-	const campaignStatsEntries = stats.ongoingFeaturedCampaigns;
-	const selectedCampaigns = chooseRandomCampaigns(campaignStatsEntries);
+	const selectedCampaigns = campaignStatsCalculator.getFilteredCampaigns();
+
 	let campaignProps = [];
-	for (const campaignData of selectedCampaigns) {
+
+	for (const campaignData of chooseRandomCampaigns(selectedCampaigns)) {
 		const exchangeRate = campaignData.get('goal_currency')
 			? await getLatestExchangeRate(firestoreAdmin, campaignData.get('goal_currency'))
 			: 1.0;
-		const contributions = (await campaignStatsCalculator.allStats()).getContributionsForCampaign(campaignData.id);
+		const contributions = campaignStatsCalculator.getContributionsForCampaign(campaignData.id);
 		let amountCollected = contributions.reduce((sum, c) => sum + c['amount_chf'], 0);
 		amountCollected += campaignData.get('additional_amount_chf') || 0;
 		amountCollected *= exchangeRate;
@@ -57,10 +54,11 @@ export default async function Page(props: DefaultPageProps) {
 			title: campaignData.get('title'),
 			amountCollected: Math.round(amountCollected),
 			goalCurrency: campaignData.get('goal_currency'),
-			percentageCollected: percentageCollected || undefined,
+			percentageCollected,
 			contributorCount: contributions.length,
 		});
 	}
+
 	return (
 		<div className="hero-video -mb-28 -mt-24 md:-mt-36">
 			<HeroVideo lang={lang} region={region} />
@@ -68,10 +66,7 @@ export default async function Page(props: DefaultPageProps) {
 				lang={lang}
 				region={region}
 				campaignProps={campaignProps}
-				totalCampaignCount={campaignStatsEntries.length}
-				badgesByTranslation={translator.t('badges.by')}
-				badgesLoadingTranslation={translator.t('badges.loading')}
-				badgesContributorTranslation={translator.t('badges.contributors')}
+				translations={translator.t('badges')}
 			/>
 			<Overview lang={lang} region={region} />
 			<MonthlyIncome lang={lang} region={region} />
@@ -80,7 +75,6 @@ export default async function Page(props: DefaultPageProps) {
 			<FAQ lang={lang} region={region} />
 			<Approach lang={lang} region={region} />
 			<Quotes lang={lang} region={region} />
-			{/*<RecipientSelection lang={lang} region={region} />*/}
 			<SDGGoals lang={lang} region={region} />
 			<Testimonials lang={lang} region={region} />
 		</div>

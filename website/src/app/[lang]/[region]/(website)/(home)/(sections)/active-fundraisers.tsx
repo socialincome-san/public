@@ -6,7 +6,8 @@ import classNames from 'classnames';
 import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useIntersectionObserver } from 'usehooks-ts';
 import ismatuImage from '../(assets)/avatar-ismatu.png';
 
 type DefaultPageProps = {
@@ -19,48 +20,29 @@ type DefaultPageProps = {
 		amountCollected: number;
 		percentageCollected?: number;
 	}[];
-	totalCampaignCount: number;
-	badgesLoadingTranslation: string;
-	badgesContributorTranslation: string;
-	badgesByTranslation: string;
+	translations: {
+		by: string;
+		contributors: string;
+		loading: string;
+	};
 } & DefaultParams;
 
-export function ActiveFundraisers({
-	lang,
-	campaignProps,
-	totalCampaignCount,
-	badgesLoadingTranslation,
-	badgesByTranslation,
-	badgesContributorTranslation,
-}: DefaultPageProps) {
+export function ActiveFundraisers({ lang, campaignProps, translations }: DefaultPageProps) {
 	const [showFundraiserCards, setShowFundraiserCards] = useState(false);
-	const containerRef = useRef<HTMLDivElement>(null);
+
+	const { ref, isIntersecting, entry } = useIntersectionObserver({ threshold: 0.2 });
 
 	useEffect(() => {
-		const observer = new IntersectionObserver(
-			(entries) => {
-				if (entries[0].isIntersecting) {
-					setTimeout(() => {
-						setShowFundraiserCards(true);
-					}, 2000);
-				}
-			},
-			{ threshold: 0.1 },
-		);
-
-		if (containerRef.current) {
-			observer.observe(containerRef.current);
+		// Show fundraiser cards with .5-second delay when the element is in view
+		if (isIntersecting) {
+			setTimeout(() => {
+				setShowFundraiserCards(true);
+			}, 500);
 		}
-
-		return () => {
-			if (containerRef.current) {
-				observer.unobserve(containerRef.current);
-			}
-		};
-	}, []);
+	}, [isIntersecting, entry?.boundingClientRect.bottom, entry?.boundingClientRect.top]);
 
 	return (
-		<div ref={containerRef} className="mx-auto mb-8 mt-12 flex flex-col items-center justify-center space-y-4">
+		<div ref={ref} className="mx-auto mb-8 mt-12 flex flex-col items-center justify-center space-y-4">
 			{!showFundraiserCards && (
 				<div className="flex w-full justify-center">
 					<div className="border-text-popover-foreground-muted text-primary relative flex items-center rounded-full border-2 px-6 py-2 transition-all duration-300">
@@ -105,7 +87,7 @@ export function ActiveFundraisers({
 						</svg>
 						<div className="flex flex-col pl-2">
 							<Typography size="lg" className="text-popover-foreground-muted">
-								{badgesLoadingTranslation}
+								{translations.loading}
 							</Typography>
 						</div>
 					</div>
@@ -132,7 +114,7 @@ export function ActiveFundraisers({
 							</div>
 							<div className="flex flex-col pl-2">
 								<div className="text-popover-foreground-muted flex w-[150px] items-center space-x-1 group-hover:hidden">
-									<Typography size="lg">{badgesByTranslation}</Typography>
+									<Typography size="lg">{translations.by}</Typography>
 									<Typography size="lg" className="overflow-hidden truncate whitespace-nowrap">
 										{campaignData.creatorName}
 									</Typography>
@@ -155,7 +137,7 @@ export function ActiveFundraisers({
 										{campaignData.contributorCount}
 									</Typography>
 									<Typography size="lg" weight="medium">
-										{badgesContributorTranslation}
+										{translations.contributors}
 									</Typography>
 								</div>
 							</div>
@@ -166,17 +148,6 @@ export function ActiveFundraisers({
 					))}
 				</div>
 			)}
-
-			{/*
-				// This will be activated later when we have the campaign overview page /fundraisers.
-				{showFundraiserCards && (
-					<div className="mt-6">
-						<Link href={`/${lang}/fundraisers`} className="text-primary hover:underline">
-							See all {totalCampaignCount} fundraisers
-						</Link>
-					</div>
-				)}
-			*/}
 		</div>
 	);
 }

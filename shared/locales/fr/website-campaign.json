@@ -28,7 +28,6 @@
 	"badges": {
 		"by": "Par",
 		"contributors": "contributeurs",
-		"loading": "Recherche des collectes de fonds en cours",
-		"more": "voir tout"
+		"loading": "Recherche des collectes de fonds en cours"
 	}
 }

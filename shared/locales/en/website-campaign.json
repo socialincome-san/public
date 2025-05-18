@@ -28,7 +28,6 @@
 	"badges": {
 		"by": "By",
 		"contributors": "contributors",
-		"loading": "Searching current fundraisers",
-		"more": "see all"
+		"loading": "Searching current fundraisers"
 	}
 }

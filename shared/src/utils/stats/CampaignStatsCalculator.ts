@@ -38,7 +38,7 @@ export class CampaignStatsCalculator {
 	/**
 	 * Filters ongoing & featured campaigns (Active, featured, future end_date).
 	 */
-	private getFilteredCampaigns(): QueryDocumentSnapshot<Campaign>[] {
+	public getFilteredCampaigns() {
 		const now = Timestamp.now();
 		return this.campaigns.filter(
 			(c) => c.get('status') === CampaignStatus.Active && c.get('featured') === true && c.get('end_date') > now,
@@ -48,17 +48,7 @@ export class CampaignStatsCalculator {
 	/**
 	 * Returns contributions for a given campaign ID.
 	 */
-	private getContributionsForCampaign = (campaignId: string): Contribution[] => {
+	public getContributionsForCampaign = (campaignId: string): Contribution[] => {
 		return this.contributionsByCampaignId.get(campaignId) ?? [];
 	};
-
-	/**
-	 * Returns filtered campaigns and exposes a method to access contributions.
-	 */
-	allStats(): CampaignStats {
-		return {
-			ongoingFeaturedCampaigns: this.getFilteredCampaigns(),
-			getContributionsForCampaign: this.getContributionsForCampaign,
-		};
-	}
 }
