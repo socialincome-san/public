@@ -1,6 +1,7 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/repositories/repositories.dart";
+import "package:app/data/services/twilio_service.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/view/error_localization_helper.dart";
 import "package:app/view/widgets/welcome/otp_input_page.dart";
@@ -14,10 +15,12 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SignupCubit(
-        userRepository: context.read<UserRepository>(),
-        crashReportingRepository: context.read<CrashReportingRepository>(),
-      ),
+      create:
+          (context) => SignupCubit(
+            userRepository: context.read<UserRepository>(),
+            crashReportingRepository: context.read<CrashReportingRepository>(),
+            twilioService: context.read<TwilioService>(),
+          ),
       child: const _WelcomeView(),
     );
   }

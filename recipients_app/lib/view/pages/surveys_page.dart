@@ -33,7 +33,7 @@ class _SurveysPageState extends State<SurveysPage> {
       ),
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
-        onRefresh: () async => context.read<SurveyCubit>().getSurveys(),
+        onRefresh: () => context.read<SurveyCubit>().getSurveys(),
         child: Padding(
           padding: AppSpacings.h8,
           child: Column(
@@ -42,12 +42,7 @@ class _SurveysPageState extends State<SurveysPage> {
                 Expanded(
                   child: Padding(
                     padding: AppSpacings.a8,
-                    child: Center(
-                      child: Text(
-                        context.l10n.surveysEmpty,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    child: Center(child: Text(context.l10n.surveysEmpty, textAlign: TextAlign.center)),
                   ),
                 )
               else

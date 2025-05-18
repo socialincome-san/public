@@ -8,11 +8,7 @@ class SurveyStatusIconWithText extends StatelessWidget {
   final SurveyCardStatus status;
   final String text;
 
-  const SurveyStatusIconWithText({
-    super.key,
-    required this.status,
-    required this.text,
-  });
+  const SurveyStatusIconWithText({super.key, required this.status, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -46,28 +42,16 @@ class SurveyStatusIconWithText extends StatelessWidget {
     }
 
     return Container(
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-      ),
+      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(AppSizes.radiusMedium)),
       height: statusIconHeight,
       child: Row(
         children: [
-          Text(
-            text,
-            style: AppStyles.iconLabel.copyWith(
-              color: textColor,
-            ),
-          ),
+          Text(text, style: AppStyles.iconLabel.copyWith(color: textColor)),
           const SizedBox(width: 8),
           CircleAvatar(
             radius: statusIconHeight / 2,
             backgroundColor: iconBackgroundColor,
-            child: Icon(
-              size: 14,
-              icon,
-              color: iconColor,
-            ),
+            child: Icon(size: 14, icon, color: iconColor),
           ),
         ],
       ),

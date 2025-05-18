@@ -31,14 +31,7 @@ class Survey extends Equatable {
 
   @override
   List<Object?> get props {
-    return [
-      id,
-      status,
-      dueDateAt,
-      completedAt,
-      accessEmail,
-      accessPassword,
-    ];
+    return [id, status, dueDateAt, completedAt, accessEmail, accessPassword];
   }
 
   factory Survey.fromJson(Map<String, dynamic> json) => _$SurveyFromJson(json);
@@ -76,5 +69,5 @@ enum SurveyServerStatus {
   @JsonValue("completed")
   completed,
   @JsonValue("missed")
-  missed;
+  missed,
 }

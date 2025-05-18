@@ -12,59 +12,35 @@ class DesignComponentsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Design Components"),
-      ),
+      appBar: AppBar(title: const Text("Design Components")),
       body: SingleChildScrollView(
         padding: AppSpacings.a16,
         child: Column(
           children: [
-            const Text(
-              "Status Icons",
-              style: AppStyles.headlineLarge,
-            ),
+            const Text("Status Icons", style: AppStyles.headlineLarge),
             const SizedBox(height: 16),
             const Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                PaymentStatusIcon(
-                  status: PaymentUiStatus.confirmed,
-                ),
+                PaymentStatusIcon(status: PaymentUiStatus.confirmed),
                 SizedBox(height: 5),
-                PaymentStatusIcon(
-                  status: PaymentUiStatus.contested,
-                ),
+                PaymentStatusIcon(status: PaymentUiStatus.contested),
                 SizedBox(height: 5),
-                PaymentStatusIcon(
-                  status: PaymentUiStatus.onHoldContested,
-                ),
+                PaymentStatusIcon(status: PaymentUiStatus.onHoldContested),
                 SizedBox(height: 5),
-                PaymentStatusIcon(
-                  status: PaymentUiStatus.onHoldToReview,
-                ),
+                PaymentStatusIcon(status: PaymentUiStatus.onHoldToReview),
                 SizedBox(height: 5),
-                PaymentStatusIcon(
-                  status: PaymentUiStatus.recentToReview,
-                ),
+                PaymentStatusIcon(status: PaymentUiStatus.recentToReview),
                 SizedBox(height: 5),
-                PaymentStatusIcon(
-                  status: PaymentUiStatus.toBePaid,
-                ),
+                PaymentStatusIcon(status: PaymentUiStatus.toBePaid),
                 SizedBox(height: 5),
-                PaymentStatusIcon(
-                  status: PaymentUiStatus.empty,
-                ),
+                PaymentStatusIcon(status: PaymentUiStatus.empty),
                 SizedBox(height: 5),
-                PaymentStatusIcon(
-                  status: PaymentUiStatus.toReview,
-                ),
+                PaymentStatusIcon(status: PaymentUiStatus.toReview),
               ],
             ),
             const SizedBox(height: 32),
-            const Text(
-              "Status Icons Inverted",
-              style: AppStyles.headlineLarge,
-            ),
+            const Text("Status Icons Inverted", style: AppStyles.headlineLarge),
             const SizedBox(height: 16),
             const ColoredBox(
               color: AppColors.primaryColor,
@@ -82,88 +58,45 @@ class DesignComponentsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            const Text(
-              "Status Icons with Text",
-              style: AppStyles.headlineLarge,
-            ),
+            const Text("Status Icons with Text", style: AppStyles.headlineLarge),
             const SizedBox(height: 16),
             const Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                PaymentStatusIconWithText(
-                  status: PaymentUiStatus.confirmed,
-                  text: "Confirmed",
-                ),
+                PaymentStatusIconWithText(status: PaymentUiStatus.confirmed, text: "Confirmed"),
                 SizedBox(height: 5),
-                PaymentStatusIconWithText(
-                  status: PaymentUiStatus.contested,
-                  text: "Contested",
-                ),
+                PaymentStatusIconWithText(status: PaymentUiStatus.contested, text: "Contested"),
                 SizedBox(height: 5),
-                PaymentStatusIconWithText(
-                  status: PaymentUiStatus.onHoldContested,
-                  text: "On Hold contested",
-                ),
+                PaymentStatusIconWithText(status: PaymentUiStatus.onHoldContested, text: "On Hold contested"),
                 SizedBox(height: 5),
-                PaymentStatusIconWithText(
-                  status: PaymentUiStatus.onHoldToReview,
-                  text: "On Hold to review",
-                ),
+                PaymentStatusIconWithText(status: PaymentUiStatus.onHoldToReview, text: "On Hold to review"),
                 SizedBox(height: 5),
-                PaymentStatusIconWithText(
-                  status: PaymentUiStatus.recentToReview,
-                  text: "Recent To Review",
-                ),
+                PaymentStatusIconWithText(status: PaymentUiStatus.recentToReview, text: "Recent To Review"),
                 SizedBox(height: 5),
-                PaymentStatusIconWithText(
-                  status: PaymentUiStatus.toBePaid,
-                  text: "To Be Paid",
-                ),
+                PaymentStatusIconWithText(status: PaymentUiStatus.toBePaid, text: "To Be Paid"),
                 SizedBox(height: 5),
-                PaymentStatusIconWithText(
-                  status: PaymentUiStatus.empty,
-                  text: "Empty",
-                ),
+                PaymentStatusIconWithText(status: PaymentUiStatus.empty, text: "Empty"),
                 SizedBox(height: 5),
-                PaymentStatusIconWithText(
-                  status: PaymentUiStatus.toReview,
-                  text: "To Review",
-                ),
+                PaymentStatusIconWithText(status: PaymentUiStatus.toReview, text: "To Review"),
               ],
             ),
             const SizedBox(height: 32),
-            const Text(
-              "Buttons Big",
-              style: AppStyles.headlineLarge,
-            ),
+            const Text("Buttons Big", style: AppStyles.headlineLarge),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ButtonOutlinedBig(
-                  onPressed: () {},
-                  label: "Text",
-                ),
-                ButtonBig(
-                  onPressed: () {},
-                  label: "Text",
-                ),
+                ButtonOutlinedBig(onPressed: () {}, label: "Text"),
+                ButtonBig(onPressed: () {}, label: "Text"),
               ],
             ),
             const SizedBox(height: 32),
-            const Text(
-              "Buttons Small",
-              style: AppStyles.headlineLarge,
-            ),
+            const Text("Buttons Small", style: AppStyles.headlineLarge),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ButtonSmall(
-                  onPressed: () {},
-                  label: "Text",
-                  buttonType: ButtonSmallType.outlined,
-                ),
+                ButtonSmall(onPressed: () {}, label: "Text", buttonType: ButtonSmallType.outlined),
                 ButtonSmall(
                   onPressed: () {},
                   label: "Text",
@@ -186,23 +119,13 @@ class DesignComponentsScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 32),
-            const Text(
-              "Text Input",
-              style: AppStyles.headlineLarge,
-            ),
+            const Text("Text Input", style: AppStyles.headlineLarge),
             const SizedBox(height: 16),
-            const InputText(
-              hintText: "Help",
-            ),
+            const InputText(hintText: "Help"),
             const SizedBox(height: 32),
-            const Text(
-              "Text Input Area",
-              style: AppStyles.headlineLarge,
-            ),
+            const Text("Text Input Area", style: AppStyles.headlineLarge),
             const SizedBox(height: 16),
-            const InputTextArea(
-              hintText: "Help",
-            ),
+            const InputTextArea(hintText: "Help"),
           ],
         ),
       ),

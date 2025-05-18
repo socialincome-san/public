@@ -1,6 +1,1 @@
-enum BalanceCardStatus {
-  allConfirmed,
-  recentToReview,
-  needsAttention,
-  onHold,
-}
+enum BalanceCardStatus { allConfirmed, recentToReview, needsAttention, onHold }

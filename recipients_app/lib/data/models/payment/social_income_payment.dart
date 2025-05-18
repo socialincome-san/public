@@ -31,22 +31,13 @@ class SocialIncomePayment extends Equatable {
     this.updatedBy,
   });
 
-  factory SocialIncomePayment.fromJson(Map<String, dynamic> json) =>
-      _$SocialIncomePaymentFromJson(json);
+  factory SocialIncomePayment.fromJson(Map<String, dynamic> json) => _$SocialIncomePaymentFromJson(json);
 
   Map<String, dynamic> toJson() => _$SocialIncomePaymentToJson(this);
 
   @override
   List<Object?> get props {
-    return [
-      id,
-      amount,
-      paymentAt,
-      currency,
-      status,
-      comments,
-      updatedBy,
-    ];
+    return [id, amount, paymentAt, currency, status, comments, updatedBy];
   }
 
   SocialIncomePayment copyWith({

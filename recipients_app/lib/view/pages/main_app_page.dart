@@ -23,18 +23,13 @@ class _MainAppPageState extends State<MainAppPage> {
     final editButtonRow = Row(
       children: [
         ButtonSmall(
-          onPressed: () async {
+          onPressed: () {
             if (recipient == null) return;
 
             final organization = context.read<AuthCubit>().state.organization;
 
             Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => AccountPage(
-                  recipient: recipient,
-                  organization: organization,
-                ),
-              ),
+              MaterialPageRoute(builder: (context) => AccountPage(recipient: recipient, organization: organization)),
             );
           },
           label: context.l10n.edit,
@@ -63,17 +58,14 @@ class _MainAppPageState extends State<MainAppPage> {
                   children: [
                     Text(
                       _getName(recipient),
-                      style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                            color: AppColors.primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.headlineLarge?.copyWith(color: AppColors.primaryColor, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       "+${recipient?.mobileMoneyPhone?.phoneNumber}",
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            color: AppColors.primaryColor,
-                          ),
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: AppColors.primaryColor),
                     ),
                   ],
                 ),

@@ -8,10 +8,7 @@ import "package:url_launcher/url_launcher_string.dart";
 class OrganizationInfo extends StatelessWidget {
   final Organization organization;
 
-  const OrganizationInfo({
-    super.key,
-    required this.organization,
-  });
+  const OrganizationInfo({super.key, required this.organization});
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +16,7 @@ class OrganizationInfo extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 24),
-        Text(
-          context.l10n.recommendingOrganization,
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        Text(context.l10n.recommendingOrganization, style: Theme.of(context).textTheme.bodyLarge),
         const SizedBox(height: 16),
         Card(
           child: Padding(
@@ -32,10 +26,7 @@ class OrganizationInfo extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(
-                      Icons.lock,
-                      color: Colors.black,
-                    ),
+                    const Icon(Icons.lock, color: Colors.black),
                     const SizedBox(width: 8),
                     Text(
                       organization.name,
@@ -47,23 +38,15 @@ class OrganizationInfo extends StatelessWidget {
                         label: context.l10n.call,
                         buttonType: ButtonSmallType.outlined,
                         color: Colors.black,
-                        onPressed: () => launchUrlString(
-                          "tel:${organization.contactNumber}",
-                        ),
+                        onPressed: () => launchUrlString("tel:${organization.contactNumber}"),
                       ),
                   ],
                 ),
                 const SizedBox(height: 8),
                 if (organization.contactName != null)
-                  Text(
-                    organization.contactName!,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                  Text(organization.contactName!, style: Theme.of(context).textTheme.bodyMedium),
                 if (organization.contactNumber != null)
-                  Text(
-                    organization.contactNumber!,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                  Text(organization.contactNumber!, style: Theme.of(context).textTheme.bodyMedium),
               ],
             ),
           ),

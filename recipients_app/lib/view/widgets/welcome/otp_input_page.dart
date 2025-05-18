@@ -36,10 +36,7 @@ class _OtpInputPageState extends State<OtpInputPage> {
           children: <Widget>[
             Text(
               context.l10n.verificationSent(phoneNumber),
-              style: AppStyles.headlineLarge.copyWith(
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppStyles.headlineLarge.copyWith(color: AppColors.primaryColor, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
@@ -48,13 +45,13 @@ class _OtpInputPageState extends State<OtpInputPage> {
             ),
             const SizedBox(height: 24),
             TextButton(
-              onPressed: () async => context.read<SignupCubit>().resendVerificationCode(),
+              onPressed: () => context.read<SignupCubit>().resendVerificationCode(),
               child: Text(
                 context.l10n.resendVerificationCode,
                 style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                      color: AppColors.primaryColor,
-                      decoration: TextDecoration.underline,
-                    ),
+                  color: AppColors.primaryColor,
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
             const SizedBox(height: 200),

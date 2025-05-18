@@ -9,17 +9,10 @@ class SurveyRepository {
 
   final DemoManager demoManager;
 
-  const SurveyRepository({
-    required this.remoteDataSource,
-    required this.demoDataSource,
-    required this.demoManager,
-  });
+  const SurveyRepository({required this.remoteDataSource, required this.demoDataSource, required this.demoManager});
 
   SurveyDataSource get _activeDataSource => demoManager.isDemoEnabled ? demoDataSource : remoteDataSource;
 
-  Future<List<Survey>> fetchSurveys({
-    required String recipientId,
-  }) async {
-    return _activeDataSource.fetchSurveys(recipientId: recipientId);
-  }
+  Future<List<Survey>> fetchSurveys({required String recipientId}) =>
+      _activeDataSource.fetchSurveys(recipientId: recipientId);
 }

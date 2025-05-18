@@ -8,10 +8,7 @@ import "package:flutter/material.dart";
 class SurveyCardContainer extends DashboardItem {
   final MappedSurvey mappedSurvey;
 
-  const SurveyCardContainer({
-    super.key,
-    required this.mappedSurvey,
-  });
+  const SurveyCardContainer({super.key, required this.mappedSurvey});
 
   @override
   Widget build(BuildContext context) {
@@ -32,31 +29,18 @@ class SurveyCardContainer extends DashboardItem {
               children: [
                 Text(
                   "${mappedSurvey.name} ${context.l10n.surveyCardTitle}",
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 13.0,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: const TextStyle(color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
                 ),
                 const SizedBox(height: 32),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image(
-                      image: AssetImage("assets/survey-widget.gif"),
-                      height: 134,
-                    ),
-                  ],
+                  children: [Image(image: AssetImage("assets/survey-widget.gif"), height: 134)],
                 ),
                 const SizedBox(height: 4),
                 Text(
                   context.l10n.surveyCardInfo,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 13.0,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: const TextStyle(color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
                 ),
                 const SizedBox(height: 16),
               ],
