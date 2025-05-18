@@ -6,12 +6,12 @@ on:
       - feat/gcp-poc  # Change to main later when stable
 
 env:
-  ENVIRONMENT: STAGING
-  APP_NAME: Portal
+  ENVIRONMENT: staging
+  APP_NAME: portal
   GCP_PROJECT_ID: social-income-poc
   GCP_REGION: europe-west6
   DOMAIN_NAME: portal.staging-socialincome.org
-  ARTIFACT_REGISTRY_NAME: STAGING_Portal_google_artifact_registry_repository
+  ARTIFACT_REGISTRY_NAME: staging_portal_google_artifact_registry_repository
   TERRAFORM_DIR: portal/infra
 
 jobs:
