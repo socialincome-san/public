@@ -2,12 +2,10 @@
 // format example: a.storyblok.com/f/51376/664x488/f4f9d1769c/visual-editor-features.jpg
 import { DateTime } from 'luxon';
 
-export function getDimensionsFromStoryblokImageUrl(url: string): { width: number; height: number } {
-	let dimensions = url.split('/')[5].split('x');
-	return {
-		width: Number(dimensions[0]),
-		height: Number(dimensions[1]),
-	};
+export function formatStoryblokUrl(url: string, width: number, height: number, focus?: string) {
+	let imageSource = url + `/m/${width}x${height}`;
+	imageSource += focus ? `/filters:focal(${focus})` : '/smart';
+	return imageSource;
 }
 
 // Storyblok returns date fields in the following format  "yyyy-MM-dd HH:mm" without timezone

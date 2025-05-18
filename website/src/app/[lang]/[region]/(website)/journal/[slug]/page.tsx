@@ -6,7 +6,7 @@ import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
 import { StoryblokEmbeddedVideoPlayer } from '@/components/storyblok/StoryblokEmbeddedVideoPlayer';
 import { StoryblokImageWithCaption } from '@/components/storyblok/StoryblokImageWithCaption';
 import { StoryblokReferencesGroup } from '@/components/storyblok/StoryblokReferencesGroup';
-import { formatStoryblokDate, getDimensionsFromStoryblokImageUrl } from '@/components/storyblok/StoryblokUtils';
+import { formatStoryblokDate, formatStoryblokUrl } from '@/components/storyblok/StoryblokUtils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { StoryblokArticle, StoryblokAuthor, StoryblokTag } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
@@ -43,7 +43,8 @@ function badgeWithLink(lang: string, region: string, tag: ISbStoryData<Storyblok
 }
 
 const NUMBER_OF_RELATIVE_ARTICLES = 3;
-
+const ARICTLE_IMAGE_WIDTH = 960;
+const ARTICLE_IMAGE_HEIGHT = 960;
 export default async function Page(props: { params: Promise<{ slug: string; lang: LanguageCode; region: string }> }) {
 	const { slug, lang, region } = await props.params;
 
@@ -63,21 +64,25 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 		language: lang,
 		namespaces: ['website-journal', 'common'],
 	});
-	const dimensionsFromStoryblokImage = getDimensionsFromStoryblokImageUrl(articleData.image.filename);
 	return (
 		<div>
 			<div className="blog w-full justify-center">
-				<div className="bg-primary flex flex-col md:min-h-screen md:flex-row">
-					<div className="md:order-2 md:w-1/2">
+				<div className="bg-primary flex flex-col lg:min-h-screen lg:flex-row">
+					<div className="lg:order-2 lg:w-1/2">
 						<Image
-							src={articleData.image.filename}
+							src={formatStoryblokUrl(
+								articleData.image.filename,
+								ARICTLE_IMAGE_WIDTH,
+								ARTICLE_IMAGE_HEIGHT,
+								articleData.image.focus,
+							)}
 							alt={articleData.image?.alt}
-							className="w-full object-cover md:h-screen"
-							width={dimensionsFromStoryblokImage.width}
-							height={dimensionsFromStoryblokImage.height}
+							className="w-full object-cover lg:h-screen"
+							width={ARICTLE_IMAGE_WIDTH}
+							height={ARTICLE_IMAGE_HEIGHT}
 						/>
 					</div>
-					<div className="flex flex-col justify-center p-8 text-left md:order-1 md:w-1/2 md:items-start lg:p-16">
+					<div className="flex flex-col justify-center p-8 text-left lg:order-1 lg:w-1/2 lg:items-start lg:p-16">
 						<div className="flex flex-wrap justify-start gap-2">
 							<Typography
 								weight="medium"

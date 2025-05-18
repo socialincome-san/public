@@ -1,10 +1,13 @@
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
-import { formatStoryblokDate, getDimensionsFromStoryblokImageUrl } from '@/components/storyblok/StoryblokUtils';
+import { formatStoryblokDate, formatStoryblokUrl } from '@/components/storyblok/StoryblokUtils';
 import { StoryblokArticle, StoryblokAuthor } from '@socialincome/shared/src/storyblok/journal';
 import { Typography } from '@socialincome/ui';
 import { ISbStoryData } from '@storyblok/react';
 import Image from 'next/image';
 import Link from 'next/link';
+
+const ARTICLE_IMAGE_TARGET_WIDTH = 1920;
+const ARTICLE_IMAGE_TARGET_HEIGHT = 1080;
 
 export function StoryblokArticleCard(props: {
 	lang: string;
@@ -13,15 +16,19 @@ export function StoryblokArticleCard(props: {
 	author: ISbStoryData<StoryblokAuthor>;
 }) {
 	const { region, lang, blog, author } = props;
-	const dimensionsFromStoryblokImage = getDimensionsFromStoryblokImageUrl(blog.content.image.filename);
 	return (
 		<Link href={`/${props.lang}/${props.region}/journal/${blog.slug!}`}>
 			<div className="mb-4 overflow-hidden transition-transform duration-200 hover:scale-[101%]">
 				<Image
-					src={blog.content.image.filename}
+					src={formatStoryblokUrl(
+						blog.content.image.filename,
+						ARTICLE_IMAGE_TARGET_WIDTH,
+						ARTICLE_IMAGE_TARGET_HEIGHT,
+						blog.content.image.focus,
+					)}
 					alt={blog.content.title}
-					width={dimensionsFromStoryblokImage.width}
-					height={dimensionsFromStoryblokImage.height}
+					width={ARTICLE_IMAGE_TARGET_WIDTH}
+					height={ARTICLE_IMAGE_TARGET_HEIGHT}
 					className="h-60 w-full object-cover"
 				/>
 				<div className="mt-2 flex items-center justify-between">
