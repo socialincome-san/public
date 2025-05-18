@@ -47,10 +47,12 @@ export default async function Page({ params }: DefaultPageProps) {
 				))}
 			</div>
 
-			<div className="mt-16 grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:gap-2">
-				<Badge size="md" key="overview" variant="default" className="whitespace-nowrap">
-					{translator.t('overview.all')}
-				</Badge>
+			<div className="mt-16 flex flex-wrap gap-2">
+				<div>
+					<Badge size="md" key="overview" variant="default" className="whitespace-nowrap">
+						{translator.t('overview.all')}
+					</Badge>
+				</div>
 				{tags.map((tag) => (
 					<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
 						<Badge size="md" variant="outline" className="whitespace-nowrap">
