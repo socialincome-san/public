@@ -74,6 +74,7 @@ const verifyOtpFunction = onCall({ maxInstances: 10 }, async (request) => {
 				uid: userRecord.uid,
 			};
 		} catch (error) {
+			console.log('Error: ', error);
 			console.log('User not found, creating new user');
 			// User doesn't exist, create a new one
 			const userRecord = await authAdmin.auth.createUser({
