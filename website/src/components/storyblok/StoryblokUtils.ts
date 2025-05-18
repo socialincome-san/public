@@ -26,3 +26,11 @@ export function formatStoryblokDate(date: string | null | undefined, lang: strin
 export function createLinkForArticle(slug: string, lang: string, region: string) {
 	return `/${lang}/${region}/journal/${slug}`;
 }
+
+export function getDimensionsFromStoryblokImageUrl(url: string): { width: number; height: number } {
+	let dimensions = url.split('/')[5].split('x');
+	return {
+		width: Number(dimensions[0]),
+		height: Number(dimensions[1]),
+	};
+}

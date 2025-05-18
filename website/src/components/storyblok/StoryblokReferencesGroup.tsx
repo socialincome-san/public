@@ -1,5 +1,5 @@
 import { ShowMoreToggle } from '@/components/storyblok/ShowMore';
-import { formatStoryblokDate, formatStoryblokUrl } from '@/components/storyblok/StoryblokUtils';
+import { formatStoryblokDate, getDimensionsFromStoryblokImageUrl } from '@/components/storyblok/StoryblokUtils';
 import { ReferencesGroup, StoryblokImage } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -9,24 +9,16 @@ import Link from 'next/link';
 
 const placeholderImage = '/assets/metadata/placeholder/news-outlet.svg';
 
-const THUMBNAIL_IMAGE_TARGET_WIDTH = 400;
-const THUMBNAIL_IMAGE_TARGET_HEIGHT = 300;
-
 function thumbnailImage(thumbnail: StoryblokImage | undefined) {
 	if (!thumbnail) {
 		return null;
 	}
-
+	let dimensionsFromStoryblokImageUrl = getDimensionsFromStoryblokImageUrl(thumbnail.filename);
 	return articleImageComponent(
 		String(thumbnail.id),
-		THUMBNAIL_IMAGE_TARGET_WIDTH,
-		THUMBNAIL_IMAGE_TARGET_HEIGHT,
-		formatStoryblokUrl(
-			thumbnail.filename,
-			THUMBNAIL_IMAGE_TARGET_WIDTH,
-			THUMBNAIL_IMAGE_TARGET_HEIGHT,
-			thumbnail.focus,
-		),
+		dimensionsFromStoryblokImageUrl.width,
+		dimensionsFromStoryblokImageUrl.height,
+		thumbnail.filename,
 	);
 }
 
