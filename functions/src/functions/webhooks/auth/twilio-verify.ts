@@ -1,14 +1,14 @@
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
-//import { Twilio } from 'twilio';
+import { Twilio } from 'twilio';
 import { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_VERIFY_SERVICE_SID } from '../../../config';
 
 if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_VERIFY_SERVICE_SID) {
 	throw new Error('Missing Twilio environment variables');
 }
 
-//const twilioClient = new Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+const twilioClient = new Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
 /**
  * Cloud function to verify OTP sent by Twilio
@@ -38,19 +38,19 @@ const verifyOtpFunction = onCall({ maxInstances: 10 }, async (request) => {
 		}
 
 		console.log(`Attempting to verify OTP for phone: ${phoneNumber}`);
-		// // Verify OTP with Twilio
-		// const verification = await twilioClient.verify.v2.services(TWILIO_VERIFY_SERVICE_SID).verificationChecks.create({
-		// 	to: phoneNumber,
-		// 	code: otp,
-		// });
+		// Verify OTP with Twilio
+		const verification = await twilioClient.verify.v2.services(TWILIO_VERIFY_SERVICE_SID).verificationChecks.create({
+			to: phoneNumber,
+			code: otp,
+		});
 
-		// console.log('Twilio verification response:', verification);
+		console.log('Twilio verification response:', verification);
 
-		// // Check if verification was successful
-		// if (verification.status !== 'approved') {
-		// 	console.log('OTP verification failed, status:', verification.status);
-		// 	throw new HttpsError('permission-denied', 'Invalid OTP provided');
-		// }
+		// Check if verification was successful
+		if (verification.status !== 'approved') {
+			console.log('OTP verification failed, status:', verification.status);
+			throw new HttpsError('permission-denied', 'Invalid OTP provided');
+		}
 
 		// OTP is valid, create or get Firebase user
 		const auth = getAuth();

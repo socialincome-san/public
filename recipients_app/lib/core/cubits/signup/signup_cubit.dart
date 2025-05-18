@@ -85,11 +85,6 @@ class SignupCubit extends Cubit<SignupState> {
 
       final otp = verificationCode;
 
-      final result = await twilioService.verifyCode(phoneNumber, otp);
-      if (result.responseCode != 200) {
-        emit(state.copyWith(status: SignupStatus.verificationFailure, exception: Exception("OTP code is invalid")));
-      }
-
       await userRepository.signInWithPhoneNumber(phoneNumber, otp);
 
       // old
