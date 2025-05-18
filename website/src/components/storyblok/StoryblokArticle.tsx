@@ -37,8 +37,9 @@ export function StoryblokArticleCard(props: {
 
 				<div className="mt-2 flex flex-grow flex-col">
 					<Typography
+						aria-label={blog.content.title}
 						size="xl"
-						className="md:h-18 mb-4 line-clamp-2 h-14 flex-grow hyphens-auto break-words md:line-clamp-3"
+						className="md:h-18 my-4 line-clamp-2 h-14 w-auto overflow-hidden break-words md:line-clamp-3"
 						weight="medium"
 					>
 						{blog.content.title}
