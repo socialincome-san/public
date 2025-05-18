@@ -2,7 +2,7 @@ import "package:twilio_flutter/twilio_flutter.dart";
 
 class TwilioService {
   late final TwilioFlutter _twilioFlutter;
-  final _verificationServiceId = "VA7912dd3224b9a672c60fae4297dfee64"; // Social Income Staging V2
+  final _verificationServiceId = "VAad485f314fbb23b99ece0dd9585663a7"; // Verify service "Social Income Staging"
 
   TwilioService({required String accountSid, required String authToken, required String twilioNumber}) {
     _twilioFlutter = TwilioFlutter(accountSid: accountSid, authToken: authToken, twilioNumber: twilioNumber);
