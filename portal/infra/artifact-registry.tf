@@ -1,5 +1,5 @@
-resource "google_artifact_registry_repository" "docker_repo" {
-  repository_id = "portal-repo"
+resource "google_artifact_registry_repository" "google_artifact_registry_repository" {
+  repository_id = "${var.env}_${var.app_name}_google_artifact_registry_repository"
   format        = "DOCKER"
-  location      = var.region
+  location      = var.gcp_region
 }

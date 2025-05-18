@@ -1,11 +1,10 @@
 provider "google" {
-  project = var.project_id
-  region  = var.region
+  project = var.gcp_project_id
+  region  = var.gcp_region
 }
 
 terraform {
   backend "gcs" {
-    bucket = "social-income-tf-state"
-    prefix = "portal"
+    bucket = "${var.env}-${var.app_name}_terraform_state"
   }
 }

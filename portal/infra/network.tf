@@ -1,37 +1,36 @@
-resource "google_compute_network" "vpc" {
-  name                    = "portal-vpc"
+resource "google_compute_network" "google_compute_network" {
+  name                    = "${var.env}_${var.app_name}_google_compute_network"
   auto_create_subnetworks = false
 }
 
-resource "google_compute_subnetwork" "subnet" {
-  name          = "portal-subnet"
+resource "google_compute_subnetwork" "google_compute_subnetwork" {
+  name          = "${var.env}_${var.app_name}_google_compute_subnetwork"
   ip_cidr_range = "10.10.0.0/16"
-  region        = var.region
-  network       = google_compute_network.vpc.id
+  region        = var.gcp_region
+  network       = google_compute_network.google_compute_network.id
 }
 
-resource "google_compute_global_address" "private_ip_range" {
-  name          = "private-ip-range"
+resource "google_compute_global_address" "google_compute_global_address" {
+  name          = "${var.env}_${var.app_name}_google_compute_global_address"
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
   prefix_length = 16
-  network       = google_compute_network.vpc.id
+  network       = google_compute_network.google_compute_network.id
 }
 
-resource "google_service_networking_connection" "private_vpc_connection" {
-  network                 = google_compute_network.vpc.id
+resource "google_service_networking_connection" "google_service_networking_connection" {
+  network                 = google_compute_network.google_compute_network.id
   service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.private_ip_range.name]
-  depends_on              = [google_compute_global_address.private_ip_range]
+  reserved_peering_ranges = [google_compute_global_address.google_compute_global_address.name]
+  depends_on              = [google_compute_global_address.google_compute_global_address]
 }
 
-resource "google_vpc_access_connector" "serverless" {
-  name          = "portal-vpc-connector"
-  region        = var.region
-  network       = google_compute_network.vpc.name
-  ip_cidr_range = "10.8.0.0/28"
+resource "google_vpc_access_connector" "google_vpc_access_connector" {
+  name           = "${var.env}_${var.app_name}_google_vpc_access_connector"
+  region         = var.gcp_region
+  network        = google_compute_network.google_compute_network.name
+  ip_cidr_range  = "10.8.0.0/28"
   min_throughput = 200
   max_throughput = 300
-
-  depends_on = [google_service_networking_connection.private_vpc_connection]
+  depends_on     = [google_service_networking_connection.google_service_networking_connection]
 }

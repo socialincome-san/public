@@ -6,10 +6,12 @@ on:
       - feat/gcp-poc  # Change to main later when stable
 
 env:
-  PROJECT_ID: social-income-poc
-  REGION: europe-west1
-  REPO_NAME: portal-repo
-  IMAGE_NAME: social-income-portal
+  ENVIRONMENT: STAGING
+  APP_NAME: Portal
+  GCP_PROJECT_ID: social-income-poc
+  GCP_REGION: europe-west6
+  DOMAIN_NAME: portal.staging-socialincome.org
+  ARTIFACT_REGISTRY_NAME: STAGING_Portal_google_artifact_registry_repository
   TERRAFORM_DIR: portal/infra
 
 jobs:
@@ -29,7 +31,7 @@ jobs:
       - name: ⚙️ Configure Docker to use Artifact Registry
         run: |
           echo "🛠 Configuring Docker authentication for Artifact Registry"
-          gcloud auth configure-docker $REGION-docker.pkg.dev --quiet
+          gcloud auth configure-docker $GCP_REGION-docker.pkg.dev --quiet
 
       - name: 🧰 Set up Terraform CLI
         uses: hashicorp/setup-terraform@v2
@@ -38,32 +40,40 @@ jobs:
 
       - name: 🔁 Build Image & Deploy to Cloud Run via Terraform
         working-directory: ${{ env.TERRAFORM_DIR }}
+        env:
+          TF_VAR_env: ${{ env.ENVIRONMENT }}
+          TF_VAR_app_name: ${{ env.APP_NAME }}
+          TF_VAR_gcp_project_id: ${{ env.GCP_PROJECT_ID }}
+          TF_VAR_gcp_region: ${{ env.GCP_REGION }}
+          TF_VAR_domain_name: ${{ env.DOMAIN_NAME }}
         run: |
-          echo "🧠 Generating image tag"
-          TIMESTAMP=$(date -u +"%Y%m%d-%H%M%S")
+          echo "🧠 Generating image tag from Git SHA..."
           SHORT_SHA=${GITHUB_SHA::7}
-          IMAGE_TAG="${SHORT_SHA}-${TIMESTAMP}"
-          IMAGE_URL="$REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$IMAGE_NAME:$IMAGE_TAG"
-          
+          IMAGE_URL="$GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$ARTIFACT_REGISTRY_NAME/$APP_NAME:$SHORT_SHA"
+
+          echo "TF_VAR_docker_image_url=$IMAGE_URL" >> $GITHUB_ENV
+
           echo "📤 Building Docker image: $IMAGE_URL"
           docker buildx build \
             --platform linux/amd64 \
             --tag "$IMAGE_URL" \
             --push ../../portal
-          
-          echo "🚀 Successfully built and pushed Docker image to Artifact Registry."
-          
-          echo "🧭 Initializing Terraform"
+
+          echo "🚀 Image built and pushed."
+
+          echo "🧭 Initializing Terraform..."
           terraform init
-          
-          echo "🚀 Applying Terraform deployment"
-          terraform apply -auto-approve \
-            -var="project_id=$PROJECT_ID" \
-            -var="region=$REGION" \
-            -var="image_url=$IMAGE_URL" \
-            -var="db_password=${{ secrets.GCP_DB_PASSWORD }}"
-  
-          echo "🌍 Deployed Cloud Run URL:"
+
+          echo "🧪 Running terraform fmt check..."
+          terraform fmt -check
+
+          echo "🧪 Validating Terraform..."
+          terraform validate
+
+          echo "🚀 Applying Terraform..."
+          terraform apply -auto-approve
+
+          echo "🌍 Cloud Run URL:"
           terraform output cloud_run_url
-          
+
           echo "✅ Deployment complete!"

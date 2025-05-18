@@ -1,21 +1,34 @@
-variable "project_id" {
+variable "env" {
+  description = "Environment name (e.g. staging, prod)"
+  type        = string
+}
+
+variable "app_name" {
+  description = "Internal name of the application (e.g. portal)"
+  type        = string
+}
+
+variable "gcp_project_id" {
   description = "GCP project ID"
   type        = string
 }
 
-variable "region" {
+variable "gcp_region" {
   description = "Deployment region"
   type        = string
-  default     = "europe-west1"
 }
 
-variable "image_url" {
+variable "docker_image_url" {
   description = "URL of the Docker image in Artifact Registry"
   type        = string
 }
 
-variable "db_password" {
-  description = "PostgreSQL DB password"
+variable "db_password_secret_name" {
+  description = "Secret Manager name for DB password"
   type        = string
-  sensitive   = true
+}
+
+variable "domain_name" {
+  description = "Custom domain for Cloud Run"
+  type        = string
 }

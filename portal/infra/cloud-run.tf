@@ -1,32 +1,32 @@
-resource "google_cloud_run_service" "portal" {
-  name     = "social-income-portal"
-  location = var.region
+resource "google_cloud_run_service" "google_cloud_run_service" {
+  name     = "${var.env}_${var.app_name}_google_cloud_run_service"
+  location = var.gcp_region
 
   template {
     metadata {
       annotations = {
-        "run.googleapis.com/vpc-access-connector" = google_vpc_access_connector.serverless.name
+        "run.googleapis.com/vpc-access-connector" = google_vpc_access_connector.google_vpc_access_connector.name
         "run.googleapis.com/vpc-access-egress"    = "all-traffic"
       }
     }
 
     spec {
       containers {
-        image = var.image_url
+        image = var.docker_image_url
 
         env {
           name  = "DATABASE_URL"
-          value = "postgresql://${google_sql_user.postgres_user.name}:${var.db_password}@${google_sql_database_instance.postgres_instance.private_ip_address}/${google_sql_database.default.name}"
+          value = "postgresql://${google_sql_user.google_sql_user.name}:${data.google_secret_manager_secret_version.google_secret_manager_secret_version.secret_data}@/${google_sql_database.google_sql_database.name}?host=/cloudsql/${google_sql_database_instance.google_sql_database_instance.connection_name}"
+        }
+
+        ports {
+          container_port = 3000
         }
 
         resources {
           limits = {
             memory = "1Gi"
           }
-        }
-
-        ports {
-          container_port = 3000
         }
       }
     }
@@ -38,9 +38,20 @@ resource "google_cloud_run_service" "portal" {
   }
 }
 
-resource "google_cloud_run_service_iam_member" "public" {
-  location = var.region
-  service  = google_cloud_run_service.portal.name
+resource "google_cloud_run_service_iam_member" "google_cloud_run_service_iam_member" {
+  location = var.gcp_region
+  service  = google_cloud_run_service.google_cloud_run_service.name
   role     = "roles/run.invoker"
   member   = "allUsers"
+}
+
+resource "google_cloud_run_domain_mapping" "google_cloud_run_domain_mapping" {
+  location = var.gcp_region
+  name     = var.domain_name
+  metadata {
+    namespace = var.gcp_project_id
+  }
+  spec {
+    route_name = google_cloud_run_service.google_cloud_run_service.name
+  }
 }
