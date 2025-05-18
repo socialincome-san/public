@@ -61,6 +61,7 @@ Future<void> main() async {
     accountSid: const String.fromEnvironment("TWILIO_ACCOUNT_SID"),
     authToken: const String.fromEnvironment("TWILIO_AUTH_TOKEN"),
     twilioNumber: const String.fromEnvironment("TWILIO_NUMBER"),
+    serviceId: const String.fromEnvironment("TWILIO_SERVICE_SID"),
   );
 
   if (appFlavor == "dev") {

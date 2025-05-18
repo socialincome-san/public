@@ -25,6 +25,8 @@
                 "TWILIO_AUTH_TOKEN=FILL IN TWILIO AUTH TOKEN",
                 "--dart-define",
                 "TWILIO_NUMBER=FILL IN TWILIO NUMBER",
+                "--dart-define",
+                "TWILIO_SERVICE_SID=FILL IN TWILIO SERVICE SID",
             ],
         },
         {
@@ -46,6 +48,8 @@
                 "TWILIO_AUTH_TOKEN=FILL IN TWILIO AUTH TOKEN",
                 "--dart-define",
                 "TWILIO_NUMBER=FILL IN TWILIO NUMBER",
+                "--dart-define",
+                "TWILIO_SERVICE_SID=FILL IN TWILIO SERVICE SID",
             ],
         },
         {
@@ -67,6 +71,8 @@
                 "TWILIO_AUTH_TOKEN=FILL IN TWILIO AUTH TOKEN",
                 "--dart-define",
                 "TWILIO_NUMBER=FILL IN TWILIO NUMBER",
+                "--dart-define",
+                "TWILIO_SERVICE_SID=FILL IN TWILIO SERVICE SID",
             ],
         }
     ]
