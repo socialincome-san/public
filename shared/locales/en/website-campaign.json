@@ -24,5 +24,10 @@
 		"about-si-text-2": "Since 2020, Social Income has been running an open-ended universal basic income program in Sierra Leone.",
 		"more-faq": "<a href='/faq' target=\"_blank\">More questions</a>",
 		"badge-highlight": "Ongoing Campaign"
+	},
+	"badges": {
+		"by": "By",
+		"contributors": "contributors",
+		"loading": "Searching current fundraisers"
 	}
 }
