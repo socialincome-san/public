@@ -1,5 +1,5 @@
 resource "google_sql_database_instance" "google_sql_database_instance" {
-  name             = "${var.env}-${var.app_name}_google_sql_database_instance"
+  name             = "${var.env}-${var.app_name}-google-sql-database-instance"
   database_version = "POSTGRES_15"
   region           = var.gcp_region
 
@@ -18,7 +18,7 @@ resource "google_sql_database_instance" "google_sql_database_instance" {
 }
 
 resource "google_sql_database" "google_sql_database" {
-  name     = "${var.env}-${var.app_name}_google_sql_database"
+  name     = "${var.env}-${var.app_name}-google-sql-database"
   instance = google_sql_database_instance.google_sql_database_instance.name
 }
 

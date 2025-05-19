@@ -1,2 +1,1 @@
-bucket = "prod"
-prefix = "terraform-state"
+bucket = "prod-portal-terraform-state"
