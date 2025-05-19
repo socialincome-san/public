@@ -11,7 +11,7 @@ env:
   GCP_PROJECT_ID: social-income-poc
   GCP_REGION: europe-west6
   DOMAIN_NAME: portal.staging-socialincome.org
-  ARTIFACT_REGISTRY_NAME: staging_portal_google_artifact_registry_repository
+  ARTIFACT_REGISTRY_NAME: staging-portal-google-artifact-registry-repository
   DB_PASSWORD: ${{ secrets.GCP_DB_PASSWORD}}
   TERRAFORM_DIR: portal/infra
 
@@ -38,12 +38,6 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.6.6
-
-      - name: 🧪 Print service account email (from secret JSON)
-        run: |
-          echo "$GOOGLE_CREDENTIALS_TERRAFORM_DEPLOYER" | jq .client_email
-        env:
-          GOOGLE_CREDENTIALS_TERRAFORM_DEPLOYER: ${{ secrets.GOOGLE_CREDENTIALS_TERRAFORM_DEPLOYER }}
 
       - name: 🔁 Build Image & Deploy to Cloud Run via Terraform
         working-directory: ${{ env.TERRAFORM_DIR }}
