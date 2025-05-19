@@ -9,7 +9,8 @@
     "start": "next start",
     "check:unused": "knip",
     "type-check": "tsc --noEmit",
-    "lint": "next lint && npm run type-check && npm run check:unused"
+    "lint": "next lint && npm run type-check && npm run check:unused",
+    "migrate:firestore:recipients": "ts-node --project tsconfig.scripts.json -r tsconfig-paths/register scripts/migrate-firestore/recipients/migrate.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.8.0",
@@ -34,6 +35,8 @@
     "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5"
   }
 }
