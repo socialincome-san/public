@@ -39,6 +39,13 @@ jobs:
         with:
           terraform_version: 1.6.6
 
+      - name: 🧪 Print service account email (from secret JSON)
+        run: |
+          echo "$GOOGLE_CREDENTIALS_TERRAFORM_DEPLOYER" | jq .client_email
+        env:
+          GOOGLE_CREDENTIALS_TERRAFORM_DEPLOYER: ${{ secrets.GOOGLE_CREDENTIALS_TERRAFORM_DEPLOYER }}
+
+
       - name: 🔁 Build Image & Deploy to Cloud Run via Terraform
         working-directory: ${{ env.TERRAFORM_DIR }}
         env:
@@ -52,8 +59,6 @@ jobs:
           SHORT_SHA=${GITHUB_SHA::7}
           IMAGE_URL="$GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$ARTIFACT_REGISTRY_NAME/$APP_NAME:$SHORT_SHA"
 
-          echo "TF_VAR_docker_image_url=$IMAGE_URL" >> $GITHUB_ENV
-
           echo "🧭 Initializing Terraform..."
           terraform init -backend-config="_staging.tfbackend"     
                
@@ -64,7 +69,8 @@ jobs:
           terraform validate
 
           echo "🚀 Applying Terraform..."
-          terraform apply -auto-approve
+          terraform apply -auto-approve \
+            -var="docker_image_url=$IMAGE_URL"
 
           echo "🌍 Cloud Run URL:"
           terraform output cloud_run_url
