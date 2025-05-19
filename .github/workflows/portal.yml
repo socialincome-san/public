@@ -1,4 +1,4 @@
-name: Build and Deploy to Google Cloud Run via Terraform
+name: Build and Deploy Portal to GCP via Terraform
 
 on:
   push:
@@ -10,7 +10,6 @@ env:
   APP_NAME: portal
   GCP_PROJECT_ID: social-income-poc
   GCP_REGION: europe-west6
-  DOMAIN_NAME: portal.staging-socialincome.org
   ARTIFACT_REGISTRY_NAME: staging-portal-google-artifact-registry-repository
   DB_PASSWORD: ${{ secrets.GCP_DB_PASSWORD}}
   TERRAFORM_DIR: portal/infra
@@ -46,7 +45,6 @@ jobs:
           TF_VAR_app_name: ${{ env.APP_NAME }}
           TF_VAR_gcp_project_id: ${{ env.GCP_PROJECT_ID }}
           TF_VAR_gcp_region: ${{ env.GCP_REGION }}
-          TF_VAR_domain_name: ${{ env.DOMAIN_NAME }}
           TF_VAR_db_password: ${{ env.DB_PASSWORD }}
 
         run: |

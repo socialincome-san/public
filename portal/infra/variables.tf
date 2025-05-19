@@ -23,11 +23,6 @@ variable "docker_image_url" {
   type        = string
 }
 
-variable "domain_name" {
-  description = "Custom domain for Cloud Run"
-  type        = string
-}
-
 variable "db_password" {
   description = "Database password"
   type        = string
