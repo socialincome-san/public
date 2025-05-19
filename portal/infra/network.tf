@@ -26,7 +26,7 @@ resource "google_service_networking_connection" "google_service_networking_conne
 }
 
 resource "google_vpc_access_connector" "google_vpc_access_connector" {
-  name           = "${var.env}-${var.app_name}-google-vpc-access-connector"
+  name           = "${var.env}-${var.app_name}-connector"
   region         = var.gcp_region
   network        = google_compute_network.google_compute_network.name
   ip_cidr_range  = "10.8.0.0/28"

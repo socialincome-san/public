@@ -14,7 +14,6 @@ env:
   ARTIFACT_REGISTRY_NAME: staging_portal_google_artifact_registry_repository
   DB_PASSWORD: ${{ secrets.GCP_DB_PASSWORD}}
   TERRAFORM_DIR: portal/infra
-  TF_LOG: DEBUG
 
 jobs:
   deploy:
@@ -46,7 +45,6 @@ jobs:
         env:
           GOOGLE_CREDENTIALS_TERRAFORM_DEPLOYER: ${{ secrets.GOOGLE_CREDENTIALS_TERRAFORM_DEPLOYER }}
 
-
       - name: 🔁 Build Image & Deploy to Cloud Run via Terraform
         working-directory: ${{ env.TERRAFORM_DIR }}
         env:
@@ -61,7 +59,15 @@ jobs:
           echo "🧠 Generating image tag from Git SHA..."
           SHORT_SHA=${GITHUB_SHA::7}
           IMAGE_URL="$GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$ARTIFACT_REGISTRY_NAME/$APP_NAME:$SHORT_SHA"
+               
+          echo "📤 Building Docker image: $IMAGE_URL"
+          docker buildx build \
+            --platform linux/amd64 \
+            --tag "$IMAGE_URL" \
+            --push ../../portal
 
+          echo "🚀 Image built and pushed."
+               
           echo "🧭 Initializing Terraform..."
           terraform init -backend-config="_staging.tfbackend"     
                

@@ -2,9 +2,11 @@ resource "google_sql_database_instance" "google_sql_database_instance" {
   name             = "${var.env}-${var.app_name}-google-sql-database-instance"
   database_version = "POSTGRES_15"
   region           = var.gcp_region
+  deletion_protection = true
 
   settings {
     tier = "db-f1-micro"
+    disk_autoresize = true
 
     ip_configuration {
       ipv4_enabled    = false
