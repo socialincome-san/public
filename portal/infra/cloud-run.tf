@@ -16,7 +16,7 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
 
         env {
           name  = "DATABASE_URL"
-          value = "postgresql://${google_sql_user.google_sql_user.name}:${data.google_secret_manager_secret_version.google_secret_manager_secret_version.secret_data}@/${google_sql_database.google_sql_database.name}?host=/cloudsql/${google_sql_database_instance.google_sql_database_instance.connection_name}"
+          value = "postgresql://${google_sql_user.google_sql_user.name}:${var.db_password}@/${google_sql_database.google_sql_database.name}?host=/cloudsql/${google_sql_database_instance.google_sql_database_instance.connection_name}"
         }
 
         ports {
@@ -48,9 +48,11 @@ resource "google_cloud_run_service_iam_member" "google_cloud_run_service_iam_mem
 resource "google_cloud_run_domain_mapping" "google_cloud_run_domain_mapping" {
   location = var.gcp_region
   name     = var.domain_name
+
   metadata {
     namespace = var.gcp_project_id
   }
+
   spec {
     route_name = google_cloud_run_service.google_cloud_run_service.name
   }

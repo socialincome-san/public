@@ -12,6 +12,7 @@ env:
   GCP_REGION: europe-west6
   DOMAIN_NAME: portal.staging-socialincome.org
   ARTIFACT_REGISTRY_NAME: staging_portal_google_artifact_registry_repository
+  DB_PASSWORD: ${{ secrets.GCP_DB_PASSWORD}}
   TERRAFORM_DIR: portal/infra
   TF_LOG: DEBUG
 
@@ -54,6 +55,8 @@ jobs:
           TF_VAR_gcp_project_id: ${{ env.GCP_PROJECT_ID }}
           TF_VAR_gcp_region: ${{ env.GCP_REGION }}
           TF_VAR_domain_name: ${{ env.DOMAIN_NAME }}
+          TF_VAR_db_password: ${{ env.DB_PASSWORD }}
+
         run: |
           echo "🧠 Generating image tag from Git SHA..."
           SHORT_SHA=${GITHUB_SHA::7}
