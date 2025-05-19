@@ -11,7 +11,7 @@ env:
   GCP_PROJECT_ID: social-income-poc
   GCP_REGION: europe-west6
   ARTIFACT_REGISTRY_NAME: staging-portal-google-artifact-registry-repository
-  DB_PASSWORD: ${{ secrets.GCP_DB_PASSWORD}}
+  DB_PASSWORD: ${{ secrets.GCP_DB_PASSWORD }}
   TERRAFORM_DIR: portal/infra
 
 jobs:
@@ -22,6 +22,19 @@ jobs:
     steps:
       - name: 📦 Checkout repository
         uses: actions/checkout@v3
+
+      - name: 🛠 Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      - name: 📥 Install deps
+        working-directory: portal
+        run: npm ci
+
+      - name: 🧹 Lint
+        working-directory: portal
+        run: npm run lint
 
       - name: 🔐 Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
@@ -51,7 +64,7 @@ jobs:
           echo "🧠 Generating image tag from Git SHA..."
           SHORT_SHA=${GITHUB_SHA::7}
           IMAGE_URL="$GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$ARTIFACT_REGISTRY_NAME/$APP_NAME:$SHORT_SHA"
-               
+          
           echo "📤 Building Docker image: $IMAGE_URL"
           docker buildx build \
             --platform linux/amd64 \
@@ -59,10 +72,10 @@ jobs:
             --push ../../portal
 
           echo "🚀 Image built and pushed."
-               
+          
           echo "🧭 Initializing Terraform..."
           terraform init -backend-config="_staging.tfbackend"     
-               
+          
           echo "🧪 Running terraform fmt check..."
           terraform fmt -check
 

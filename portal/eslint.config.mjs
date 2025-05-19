@@ -1,19 +1,14 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import smartive from '@smartive/eslint-config';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const { config: smartiveConfig } = smartive;
 
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-	{
-		ignores: ["src/generated/**"],
-	},
+/** @type {import('eslint').Linter.Config[]} */
+const config = [
+  ...smartiveConfig('nextjs', {
+    parserOptions: {
+      project: './tsconfig.json',
+    },
+  }),
 ];
 
-export default eslintConfig;
+export default config;
