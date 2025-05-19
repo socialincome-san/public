@@ -13,6 +13,7 @@ env:
   DOMAIN_NAME: portal.staging-socialincome.org
   ARTIFACT_REGISTRY_NAME: staging_portal_google_artifact_registry_repository
   TERRAFORM_DIR: portal/infra
+  TF_LOG: DEBUG
 
 jobs:
   deploy:
@@ -52,8 +53,6 @@ jobs:
           IMAGE_URL="$GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$ARTIFACT_REGISTRY_NAME/$APP_NAME:$SHORT_SHA"
 
           echo "TF_VAR_docker_image_url=$IMAGE_URL" >> $GITHUB_ENV
-
-
 
           echo "🧭 Initializing Terraform..."
           terraform init -backend-config="_staging.tfbackend"     
