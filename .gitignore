@@ -51,7 +51,7 @@ recipients_app/android/app/google-services.json
 /portal/.vercel
 /portal/.idea
 /portal/.vscode
-/portal/src/generated
+/portal/generated
 
 # Terraform state & backups
 *.tfstate

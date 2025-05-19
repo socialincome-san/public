@@ -1,4 +1,5 @@
 import { prisma } from '@/server/prisma';
+import { User } from '@prisma/client';
 
 export const dynamic = 'force-dynamic';
 
@@ -6,12 +7,6 @@ export default async function Home() {
   const users = await prisma.user.findMany({
     take: 5,
     orderBy: { createdAt: 'desc' },
-    select: {
-      id: true,
-      firstName: true,
-      lastName: true,
-      role: true,
-    },
   });
 
   return (
@@ -21,7 +16,7 @@ export default async function Home() {
 
       <ul>
         {users.length === 0 && <li>No users found. Add some in the DB!</li>}
-        {users.map((user) => (
+        {users.map((user: User) => (
           <li key={user.id}>
             👤{' '}
             <strong>

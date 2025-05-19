@@ -5,8 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl"]
 }
 
@@ -108,19 +107,19 @@ model Program {
 }
 
 model Recipient {
-  id                    String       @id @default(cuid())
-  userId                String       @unique
-  organizationId        String
-  programId             String
-  localPartnerId        String
-  user                  User         @relation(fields: [userId], references: [id])
-  organization          Organization @relation(fields: [organizationId], references: [id])
-  program               Program      @relation(fields: [programId], references: [id])
-  localPartner          LocalPartner @relation(fields: [localPartnerId], references: [userId])
-  payout                Payout?
-  survey                Survey?
-  createdAt             DateTime     @default(now()) @db.Timestamptz(3)
-  updatedAt             DateTime?    @updatedAt @db.Timestamptz(3)
+  id             String       @id @default(cuid())
+  userId         String       @unique
+  organizationId String
+  programId      String
+  localPartnerId String
+  user           User         @relation(fields: [userId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  program        Program      @relation(fields: [programId], references: [id])
+  localPartner   LocalPartner @relation(fields: [localPartnerId], references: [userId])
+  payout         Payout?
+  survey         Survey?
+  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime?    @updatedAt @db.Timestamptz(3)
 
   @@map("recipient")
 }
@@ -137,26 +136,25 @@ model LocalPartner {
 }
 
 model Payout {
-  id          String     @id @default(cuid())
+  id          String    @id @default(cuid())
   amount      Float
   currency    String
-  recipientId String     @unique
-  recipient   Recipient  @relation(fields: [recipientId], references: [id])
-  createdAt   DateTime   @default(now()) @db.Timestamptz(3)
-  updatedAt   DateTime?  @updatedAt @db.Timestamptz(3)
+  recipientId String    @unique
+  recipient   Recipient @relation(fields: [recipientId], references: [id])
+  createdAt   DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime? @updatedAt @db.Timestamptz(3)
 
   @@map("payout")
 }
 
 model Survey {
-  id          String     @id @default(cuid())
+  id          String    @id @default(cuid())
   question    String
   answer      String
-  recipientId String     @unique
-  recipient   Recipient  @relation(fields: [recipientId], references: [id])
-  createdAt   DateTime   @default(now()) @db.Timestamptz(3)
-  updatedAt   DateTime?  @updatedAt @db.Timestamptz(3)
+  recipientId String    @unique
+  recipient   Recipient @relation(fields: [recipientId], references: [id])
+  createdAt   DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime? @updatedAt @db.Timestamptz(3)
 
   @@map("survey")
 }
-
