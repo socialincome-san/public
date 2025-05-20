@@ -16,20 +16,20 @@ function thumbnailImage(thumbnail: StoryblokImage | undefined) {
 	let dimensionsFromStoryblokImageUrl = getDimensionsFromStoryblokImageUrl(thumbnail.filename);
 	return articleImageComponent(
 		String(thumbnail.id),
-		dimensionsFromStoryblokImageUrl.width,
 		dimensionsFromStoryblokImageUrl.height,
+		dimensionsFromStoryblokImageUrl.width,
 		thumbnail.filename,
 	);
 }
 
-function articleImageComponent(id: string, width: number, height: number, src: any) {
+function articleImageComponent(id: string, height: number, width: number, src: any) {
 	return (
-		<Image className="my-auto flex h-16 w-20 p-0" src={src} alt={id + '-thumbnail'} width={width} height={height} />
+		<Image className="my-auto flex h-14 w-20 p-0" src={src} alt={id + '-thumbnail'} width={width} height={height} />
 	);
 }
 
 function placeHolderImage(id: string) {
-	return articleImageComponent(id, 20, 25, placeholderImage);
+	return articleImageComponent(id, 16, 24, placeholderImage);
 }
 
 export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: Translator; lang: LanguageCode }) {

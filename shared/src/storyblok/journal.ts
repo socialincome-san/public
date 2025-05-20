@@ -54,6 +54,7 @@ export interface ActionButton {
 	primaryStyle: boolean;
 	id: number;
 	_uid: string;
+	glowEffect: boolean;
 }
 
 export interface StoryblokAuthor {
