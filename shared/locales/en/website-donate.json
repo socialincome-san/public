@@ -74,7 +74,7 @@
 		},
 		"complete": {
 			"title": "Activate your account",
-			"message": "You have received an email with a login link.",
+			"message": "Please check your email and click the link we sent to activate your account.",
 			"redirecting": "You will be redirected shortly..."
 		}
 	}

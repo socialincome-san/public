@@ -75,7 +75,7 @@
 		},
 		"complete": {
 			"title": "Active ton compte",
-			"message": "Tu as reçu un e-mail avec un lien de connexion.",
+			"message": "Veuillez vérifier votre e-mail et cliquer sur le lien que nous vous avons envoyé pour activer votre compte.",
 			"redirecting": "Tu seras redirigé(e) dans quelques instants..."
 		}
 	}
