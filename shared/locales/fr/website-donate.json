@@ -63,16 +63,6 @@
 			},
 			"submit-button": "Confirmer"
 		},
-		"activation-form": {
-			"title": " Définis un mot de passe pour ton compte",
-			"email": "E-Mail",
-			"invalid-email": "E-Mail incorrect",
-			"password": "Mot de passe",
-			"password-confirm": "Confirmer le mot de passe",
-			"password-mismatch": "Non-concordance du mot de passe",
-			"submit-button": "Activer le compte",
-			"google-button": "S'inscrire avec Google"
-		},
 		"complete": {
 			"title": "Active ton compte",
 			"message": "Veuillez vérifier votre e-mail et cliquer sur le lien que nous vous avons envoyé pour activer votre compte.",

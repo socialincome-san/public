@@ -62,16 +62,6 @@
 			},
 			"submit-button": "Bestätigen"
 		},
-		"activation-form": {
-			"title": "Setze ein Passwort für dein Konto",
-			"email": "E-Mail",
-			"invalid-email": "E-Mail ist ungültig",
-			"password": "Passwort",
-			"password-confirm": "Passwort bestätigen",
-			"password-mismatch": "Passwörter stimmen nicht überein",
-			"submit-button": "Account aktivieren",
-			"google-button": "Über Google anmelden"
-		},
 		"complete": {
 			"title": "Aktiviere dein Konto",
 			"message": "Bitte überprüfe deine E-Mails und klicke auf den Link, den wir dir gesendet haben, um dein Konto zu aktivieren.",

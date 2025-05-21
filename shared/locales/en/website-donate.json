@@ -62,16 +62,6 @@
 			},
 			"submit-button": "Confirm"
 		},
-		"activation-form": {
-			"title": "Set a password to activate your account",
-			"email": "Email",
-			"invalid-email": "Email is invalid",
-			"password": "Password",
-			"password-confirm": "Confirm Password",
-			"password-mismatch": "Passwords do not match",
-			"submit-button": "Activate Account",
-			"google-button": "Sign up with Google"
-		},
 		"complete": {
 			"title": "Activate your account",
 			"message": "Please check your email and click the link we sent to activate your account.",
