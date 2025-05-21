@@ -71,7 +71,12 @@
 			"password-confirm": "Confirmer le mot de passe",
 			"password-mismatch": "Non-concordance du mot de passe",
 			"submit-button": "Activer le compte",
-			"google-button": "S’inscrire avec Google"
+			"google-button": "S'inscrire avec Google"
+		},
+		"complete": {
+			"title": "Active ton compte",
+			"message": "Tu as reçu un e-mail avec un lien de connexion.",
+			"redirecting": "Tu seras redirigé(e) dans quelques instants..."
 		}
 	}
 }

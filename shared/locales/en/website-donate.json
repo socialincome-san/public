@@ -71,6 +71,11 @@
 			"password-mismatch": "Passwords do not match",
 			"submit-button": "Activate Account",
 			"google-button": "Sign up with Google"
+		},
+		"complete": {
+			"title": "Activate your account",
+			"message": "You have received an email with a login link.",
+			"redirecting": "You will be redirected shortly..."
 		}
 	}
 }

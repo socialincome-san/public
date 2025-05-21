@@ -71,6 +71,11 @@
 			"password-mismatch": "Passwörter stimmen nicht überein",
 			"submit-button": "Account aktivieren",
 			"google-button": "Über Google anmelden"
+		},
+		"complete": {
+			"title": "Aktiviere dein Konto",
+			"message": "Du hast eine E-Mail mit einem Login-Link erhalten.",
+			"redirecting": "Du wirst gleich weitergeleitet..."
 		}
 	}
 }
