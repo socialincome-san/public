@@ -76,7 +76,7 @@
 		},
 		"complete": {
 			"title": "Attiva il tuo account",
-			"message": "Hai ricevuto un'email con un link di accesso.",
+			"message": "Per favore controlla la tua email e clicca sul link che ti abbiamo inviato per attivare il tuo account.",
 			"redirecting": "Sarai reindirizzato tra pochi istanti..."
 		}
 	}

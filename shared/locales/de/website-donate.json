@@ -74,7 +74,7 @@
 		},
 		"complete": {
 			"title": "Aktiviere dein Konto",
-			"message": "Du hast eine E-Mail mit einem Login-Link erhalten.",
+			"message": "Bitte überprüfe deine E-Mails und klicke auf den Link, den wir dir gesendet haben, um dein Konto zu aktivieren.",
 			"redirecting": "Du wirst gleich weitergeleitet..."
 		}
 	}
