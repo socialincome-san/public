@@ -12,14 +12,15 @@ type SignupProps = {
 	onSuccessURL: string;
 	checkoutSessionId: string;
 	translations: {
+		completeMessage: string;
 		updateUserError: string;
 		redirecting: string;
 	};
 };
 
-export default function SignIn({ lang, onSuccessURL, checkoutSessionId, translations }: SignupProps) {
+export default function PostDonationSignIn({ lang, onSuccessURL, checkoutSessionId, translations }: SignupProps) {
 	const router = useRouter();
-	useEmailLogin({
+	const { signingIn, isSignInRequest } = useEmailLogin({
 		lang,
 		onLoginSuccess: async (userId) => {
 			const data: UpdateUserData = {
@@ -34,5 +35,10 @@ export default function SignIn({ lang, onSuccessURL, checkoutSessionId, translat
 		},
 	});
 
-	return <Typography>{translations.redirecting}</Typography>;
+	return (
+		<>
+			{isSignInRequest && signingIn && <Typography>{translations.redirecting}</Typography>}
+			{!isSignInRequest && <Typography>{translations.completeMessage}</Typography>}
+		</>
+	);
 }
