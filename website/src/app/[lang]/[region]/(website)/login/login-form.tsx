@@ -35,7 +35,7 @@ type LoginFormProps = {
 } & DefaultParams;
 
 export default function LoginForm({ lang, region, translations }: LoginFormProps) {
-	const { signIn, sendLinkEmail, loading, emailSent, isSignIn } = useEmailAuthentication({
+	const { signIn, sendEmailLink, loading, emailSent, isSignIn } = useEmailAuthentication({
 		lang,
 		region,
 		translations,
@@ -75,7 +75,7 @@ export default function LoginForm({ lang, region, translations }: LoginFormProps
 		<Form {...form}>
 			<form
 				className="flex flex-col space-y-2 text-center"
-				onSubmit={form.handleSubmit((values) => (isSignIn ? signIn(values.email) : sendLinkEmail(values.email)))}
+				onSubmit={form.handleSubmit((values) => (isSignIn ? signIn(values.email) : sendEmailLink(values.email)))}
 			>
 				<Typography weight="bold" size="2xl" className="mb-4">
 					{translations.title}

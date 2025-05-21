@@ -22,6 +22,7 @@ export const useEmailAuthentication = ({ lang, region, translations }: UseEmailA
 
 	useEffect(() => {
 		const isSignIn = isSignInWithEmailLink(auth, window.location.href);
+		setIsSignIn(isSignIn);
 		const email = window.localStorage.getItem('emailForSignIn');
 
 		if (isSignIn && email) {
@@ -42,7 +43,7 @@ export const useEmailAuthentication = ({ lang, region, translations }: UseEmailA
 		}
 	};
 
-	const sendLinkEmail = async (email: string) => {
+	const sendEmailLink = async (email: string) => {
 		setLoading(true);
 		const actionCodeSettings = {
 			url: window.location.href,
@@ -62,7 +63,7 @@ export const useEmailAuthentication = ({ lang, region, translations }: UseEmailA
 
 	return {
 		signIn,
-		sendLinkEmail,
+		sendEmailLink,
 		loading,
 		emailSent,
 		isSignIn,
