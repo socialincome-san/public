@@ -12,14 +12,15 @@ type UseEmailAuthenticationProps = {
 
 export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationProps) => {
 	const auth = useAuth();
-	const [loading, setLoading] = useState(false);
+	const [signingIn, setSigningIn] = useState(false);
+	const [sendingEmail, setSendingEmail] = useState(false);
 	const [emailSent, setEmailSent] = useState(false);
-	const [isSignIn, setIsSignIn] = useState(false);
+	const [isSignInRequest, setIsSignInRequest] = useState(false);
 	const translator = useTranslator(lang, 'website-login');
 
 	useEffect(() => {
 		const isSignIn = isSignInWithEmailLink(auth, window.location.href);
-		setIsSignIn(isSignIn);
+		setIsSignInRequest(isSignIn);
 		const email = window.localStorage.getItem('emailForSignIn');
 
 		if (isSignIn && email) {
@@ -29,7 +30,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 	}, [auth]);
 
 	const signIn = async (email: string) => {
-		setLoading(true);
+		setSigningIn(true);
 		try {
 			const { user } = await signInWithEmailLink(auth, email, window.location.href);
 			onLoginSuccess && (await onLoginSuccess(user.uid));
@@ -37,12 +38,12 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 			translator && toast.error(translator.t('invalid-email'));
 		} finally {
 			window.localStorage.removeItem('emailForSignIn');
-			setLoading(false);
+			setSigningIn(false);
 		}
 	};
 
 	const sendEmailLink = async (email: string, targetUrl?: string) => {
-		setLoading(true);
+		setSendingEmail(true);
 		const actionCodeSettings = {
 			url: targetUrl || window.location.href,
 			handleCodeInApp: true,
@@ -55,15 +56,16 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		} catch (error) {
 			translator && toast.error(translator.t('invalid-email'));
 		} finally {
-			setLoading(false);
+			setSendingEmail(false);
 		}
 	};
 
 	return {
 		signIn,
+		signingIn,
 		sendEmailLink,
-		loading,
+		sendingEmail,
 		emailSent,
-		isSignIn,
+		isSignInRequest,
 	};
 };

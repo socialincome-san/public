@@ -1,7 +1,7 @@
 import { StripeSuccessPageProps } from '@/app/[lang]/[region]/(blue-theme)/donate/success/stripe/[session]/page';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Card, Typography } from '@socialincome/ui';
-import SignIn from './signin';
+import PostDonationSignIn from './post-donation-sign-in';
 
 export default async function Page({ params }: StripeSuccessPageProps) {
 	const { lang, region, session } = await params;
@@ -15,13 +15,13 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 				{translator.t('success.complete.title')}
 			</Typography>
 			<Card className="p-4">
-				<Typography>{translator.t('success.complete.message')}</Typography>
-				<SignIn
+				<PostDonationSignIn
 					lang={lang}
 					onSuccessURL={onSuccessURL}
 					checkoutSessionId={session}
 					translations={{
 						updateUserError: translator.t('success.complete.updateUserError'),
+						completeMessage: translator.t('success.complete.message'),
 						redirecting: translator.t('success.complete.redirecting'),
 					}}
 				/>
