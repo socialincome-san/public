@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { useEmailAuthentication } from '@/hooks/useEmailAuthentication';
+import { useEmailLogin } from '@/hooks/useEmailLogin';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from '@mui/material';
 import {
@@ -18,6 +18,7 @@ import {
 	Input,
 	Typography,
 } from '@socialincome/ui';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -35,10 +36,12 @@ type LoginFormProps = {
 } & DefaultParams;
 
 export default function LoginForm({ lang, region, translations }: LoginFormProps) {
-	const { signIn, sendEmailLink, loading, emailSent, isSignIn } = useEmailAuthentication({
+	const router = useRouter();
+	const { signIn, sendEmailLink, loading, emailSent, isSignIn } = useEmailLogin({
 		lang,
-		region,
-		translations,
+		onLoginSuccess: async () => {
+			router.push(`/${lang}/${region}/me`);
+		},
 	});
 
 	const formSchema = z.object({

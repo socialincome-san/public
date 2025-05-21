@@ -1,24 +1,21 @@
+import { WebsiteLanguage } from '@/i18n';
 import { isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useAuth } from 'reactfire';
+import { useTranslator } from './useTranslator';
 
 type UseEmailAuthenticationProps = {
-	lang: string;
-	region: string;
-	translations: {
-		invalidEmail: string;
-		checkEmail: string;
-	};
+	lang: WebsiteLanguage;
+	onLoginSuccess?: (userId: string) => Promise<void>;
 };
 
-export const useEmailAuthentication = ({ lang, region, translations }: UseEmailAuthenticationProps) => {
-	const router = useRouter();
+export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationProps) => {
 	const auth = useAuth();
 	const [loading, setLoading] = useState(false);
 	const [emailSent, setEmailSent] = useState(false);
 	const [isSignIn, setIsSignIn] = useState(false);
+	const translator = useTranslator(lang, 'website-login');
 
 	useEffect(() => {
 		const isSignIn = isSignInWithEmailLink(auth, window.location.href);
@@ -34,19 +31,20 @@ export const useEmailAuthentication = ({ lang, region, translations }: UseEmailA
 	const signIn = async (email: string) => {
 		setLoading(true);
 		try {
-			await signInWithEmailLink(auth, email, window.location.href);
+			const { user } = await signInWithEmailLink(auth, email, window.location.href);
+			onLoginSuccess && (await onLoginSuccess(user.uid));
 		} catch (error) {
-			toast.error(translations.invalidEmail);
+			translator && toast.error(translator.t('invalid-email'));
 		} finally {
 			window.localStorage.removeItem('emailForSignIn');
-			router.push(`/${lang}/${region}/me`);
+			setLoading(false);
 		}
 	};
 
-	const sendEmailLink = async (email: string) => {
+	const sendEmailLink = async (email: string, targetUrl?: string) => {
 		setLoading(true);
 		const actionCodeSettings = {
-			url: window.location.href,
+			url: targetUrl || window.location.href,
 			handleCodeInApp: true,
 		};
 
@@ -55,7 +53,7 @@ export const useEmailAuthentication = ({ lang, region, translations }: UseEmailA
 			window.localStorage.setItem('emailForSignIn', email);
 			setEmailSent(true);
 		} catch (error) {
-			toast.error(translations.invalidEmail);
+			translator && toast.error(translator.t('invalid-email'));
 		} finally {
 			setLoading(false);
 		}

@@ -73,6 +73,11 @@
 			"password-mismatch": "Le password non coincidono",
 			"submit-button": "Attiva il tuo account",
 			"google-button": "Usa Google per la registrazione"
+		},
+		"complete": {
+			"title": "Attiva il tuo account",
+			"message": "Hai ricevuto un'email con un link di accesso.",
+			"redirecting": "Sarai reindirizzato tra pochi istanti..."
 		}
 	}
 }

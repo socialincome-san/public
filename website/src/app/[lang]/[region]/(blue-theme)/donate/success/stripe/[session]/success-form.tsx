@@ -1,6 +1,7 @@
 'use client';
 
 import { UpdateUserData } from '@/app/api/user/update/route';
+import { useEmailLogin } from '@/hooks/useEmailLogin';
 import { useTranslator } from '@/hooks/useTranslator';
 import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -71,6 +72,7 @@ export function SuccessForm({
 	const countryTranslator = useTranslator(lang, 'countries');
 	const [submitting, setSubmitting] = useState(false);
 	const [firstCountry, ...restCountries] = COUNTRY_CODES;
+	const { sendEmailLink } = useEmailLogin({ lang });
 
 	const formSchema = z.object({
 		firstname: z.string().min(1),
@@ -114,7 +116,12 @@ export function SuccessForm({
 		};
 		fetch('/api/user/update', { method: 'POST', body: JSON.stringify(data) }).then((response) => {
 			if (!response.ok) throw new Error('Failed to update user data');
-			router.push(`/${lang}/${region}/donate/success/stripe/${stripeCheckoutSessionId}/activate`);
+			const completeUrl = new URL(
+				`/${lang}/${region}/donate/success/stripe/${stripeCheckoutSessionId}/complete`,
+				window.location.origin,
+			).toString();
+			void sendEmailLink(values.email, completeUrl);
+			router.push(completeUrl);
 		});
 	};
 
