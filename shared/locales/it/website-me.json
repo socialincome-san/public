@@ -75,8 +75,5 @@
 			"title": "Vuoi uscire dal tuo account?",
 			"button": "Effettua il log out"
 		}
-	},
-	"infobox": {
-		"email-login-required": "Effettua il login al sito <a href='https://socialincome.org/login' class='underline'>https://socialincome.org/login</a> per attivare il tuo account."
 	}
 }
