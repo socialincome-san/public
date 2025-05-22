@@ -62,8 +62,7 @@
 			},
 			"submit-button": "Bestätigen",
 			"update-user-error": "Es gab einen Fehler beim Aktualisieren deiner Informationen. Bitte versuche es erneut.",
--			"activate-your-accoount": "Bitte überprüfe deine E-Mails und klicke auf den Link, den wir dir gesendet haben, um dein Konto zu aktivieren."
-+			"activate-your-account":   "Bitte überprüfe deine E-Mails und klicke auf den Link, den wir dir gesendet haben, um dein Konto zu aktivieren."
+			"activate-your-account": "Bitte überprüfe deine E-Mails und klicke auf den Link, den wir dir gesendet haben, um dein Konto zu aktivieren."
 		}
 	}
 }
