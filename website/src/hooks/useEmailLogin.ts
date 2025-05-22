@@ -56,7 +56,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 		return () => unsubscribe();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [auth, authListenerRegistered, translator]);
+	}, [auth, authListenerRegistered, translator, signingIn]);
 
 	const signIn = async (email: string) => {
 		setSigningIn(true);
