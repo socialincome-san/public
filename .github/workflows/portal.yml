@@ -3,7 +3,8 @@ name: Build and Deploy Portal to GCP via Terraform
 on:
   push:
     branches:
-      - feat/gcp-poc  # Change to main later when stable
+      - feat/gcp-poc
+      - feat/gcp-poc-with-website
 
 env:
   ENVIRONMENT: staging
@@ -16,7 +17,7 @@ env:
 
 jobs:
   deploy:
-    name: Build & Deploy Cloud Run Service
+    name: Build and Deploy Portal to GCP via Terraform
     runs-on: ubuntu-latest
 
     steps:
@@ -27,14 +28,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 22
-
-      - name: 📥 Install deps
-        working-directory: portal
-        run: npm ci
-
-      - name: 🧹 Lint
-        working-directory: portal
-        run: npm run lint
+      #      - name: 📥 Install monorepo dependencies
+      #        run: npm ci
+      #
+      #      - name: 🧹 Lint
+      #        run: npm run portal:lint
 
       - name: 🔐 Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
@@ -52,7 +50,6 @@ jobs:
           terraform_version: 1.6.6
 
       - name: 🔁 Build Image & Deploy to Cloud Run via Terraform
-        working-directory: ${{ env.TERRAFORM_DIR }}
         env:
           TF_VAR_env: ${{ env.ENVIRONMENT }}
           TF_VAR_app_name: ${{ env.APP_NAME }}
@@ -64,29 +61,31 @@ jobs:
           echo "🧠 Generating image tag from Git SHA..."
           SHORT_SHA=${GITHUB_SHA::7}
           IMAGE_URL="$GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$ARTIFACT_REGISTRY_NAME/$APP_NAME:$SHORT_SHA"
-          
+
           echo "📤 Building Docker image: $IMAGE_URL"
           docker buildx build \
             --platform linux/amd64 \
             --tag "$IMAGE_URL" \
-            --push ../../portal
+            --push \
+            -f portal/Dockerfile \
+            .
 
           echo "🚀 Image built and pushed."
-          
+
           echo "🧭 Initializing Terraform..."
-          terraform init -backend-config="_staging.tfbackend"     
-          
+          terraform -chdir=${{ env.TERRAFORM_DIR }} init -backend-config="_staging.tfbackend"
+
           echo "🧪 Running terraform fmt check..."
-          terraform fmt -check
+          terraform -chdir=${{ env.TERRAFORM_DIR }} fmt -check
 
           echo "🧪 Validating Terraform..."
-          terraform validate
+          terraform -chdir=${{ env.TERRAFORM_DIR }} validate
 
           echo "🚀 Applying Terraform..."
-          terraform apply -auto-approve \
+          terraform -chdir=${{ env.TERRAFORM_DIR }} apply -auto-approve \
             -var="docker_image_url=$IMAGE_URL"
 
           echo "🌍 Cloud Run URL:"
-          terraform output cloud_run_url
+          terraform -chdir=${{ env.TERRAFORM_DIR }} output cloud_run_url
 
           echo "✅ Deployment complete!"
