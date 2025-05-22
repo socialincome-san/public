@@ -6,7 +6,7 @@ import { WebsiteLanguage } from '@/i18n';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { COUNTRY_CODES, CountryCode } from '@socialincome/shared/src/types/country';
 import { GENDER_OPTIONS, UserReferralSource } from '@socialincome/shared/src/types/user';
-import { generateRandomString } from '@socialincome/shared/src/utils/crypto';
+import { rndString } from '@socialincome/shared/src/utils/crypto';
 import {
 	Button,
 	Checkbox,
@@ -104,7 +104,7 @@ export function SuccessForm({
 		setSubmitting(true);
 
 		try {
-			createUserWithEmailAndPassword(auth, values.email, generateRandomString()).then(({ user }) => {
+			createUserWithEmailAndPassword(auth, values.email, await rndString(16)).then(({ user }) => {
 				const data: UpdateUserData = {
 					stripeCheckoutSessionId: stripeCheckoutSessionId,
 					user: {
@@ -130,7 +130,6 @@ export function SuccessForm({
 				});
 			});
 		} catch (error) {
-			console.error(error);
 			toast.error(translations.updateUserError);
 			setSubmitting(false);
 		}
