@@ -22,6 +22,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 	const auth = useAuth();
 	const [signingIn, setSigningIn] = useState(false);
 	const [sendingEmail, setSendingEmail] = useState(false);
+	const [loginEmail, setLoginEmail] = useState<string | null>(null);
 	const [emailSent, setEmailSent] = useState(false);
 	const translator = useTranslator(lang, 'website-login');
 
@@ -33,9 +34,15 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 				return;
 			}
 
-			const email = window.localStorage.getItem('emailForSignIn') ?? prompt(translator?.t('confirm-email'));
+			const email =
+				window.localStorage.getItem('emailForSignIn') ?? loginEmail ?? prompt(translator?.t('confirm-email'));
 
-			if (email) {
+			if (!email) {
+				translator && toast.error(translator.t('error.invalid-email'));
+			}
+			setLoginEmail(email);
+
+			if (email && !signingIn) {
 				void signIn(email);
 			}
 		});
@@ -66,9 +73,6 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 					case 'auth/user-not-found':
 						translator && toast.error(translator.t('error.user-not-found'));
 						break;
-					case 'auth/expired-action-code':
-						translator && toast.error(translator.t('error.invalid-email'));
-						break;
 					case 'auth/invalid-email':
 						translator && toast.error(translator.t('error.invalid-email'));
 						break;
@@ -96,7 +100,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 			window.localStorage.setItem('emailForSignIn', email);
 			setEmailSent(true);
 		} catch (error) {
-			translator && toast.error(translator.t('error.invalid-email'));
+			translator && toast.error(translator.t('error.unknown'));
 		} finally {
 			setSendingEmail(false);
 		}
