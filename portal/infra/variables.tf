@@ -23,8 +23,8 @@ variable "docker_image_url" {
   type        = string
 }
 
-variable "db_password" {
-  description = "Database password"
+variable "google_sql_db_password" {
+  description = "Password for the Google SQL database user"
   type        = string
   sensitive   = true
 }
@@ -47,6 +47,12 @@ variable "next_public_firebase_messaging_sender_id" {
   sensitive   = true
 }
 
+variable "next_public_firebase_storage_bucket" {
+  description = "Firebase Storage Bucket for the Next.js application"
+  type        = string
+  sensitive   = true
+}
+
 variable "firebase_database_url" {
   description = "Firebase Database URL"
   type        = string
@@ -55,6 +61,12 @@ variable "firebase_database_url" {
 
 variable "firebase_service_account_json" {
   description = "Firebase service account JSON"
+  type        = string
+  sensitive   = true
+}
+
+variable "next_public_firebase_api_key" {
+  description = "Firebase API Key for the Next.js application"
   type        = string
   sensitive   = true
 }

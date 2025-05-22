@@ -17,7 +17,7 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
 
         env {
           name  = "DATABASE_URL"
-          value = "postgresql://${google_sql_user.google_sql_user.name}:${var.db_password}@${google_sql_database_instance.google_sql_database_instance.private_ip_address}/${google_sql_database.google_sql_database.name}"
+          value = "postgresql://${google_sql_user.google_sql_user.name}:${var.google_sql_db_password}@${google_sql_database_instance.google_sql_database_instance.private_ip_address}/${google_sql_database.google_sql_database.name}"
         }
 
         env {
@@ -33,6 +33,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         env {
           name  = "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID"
           value = var.next_public_firebase_messaging_sender_id
+        }
+
+        env {
+          name  = "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET"
+          value = var.next_public_firebase_storage_bucket
         }
 
         env {
@@ -53,6 +58,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         env {
           name  = "FIREBASE_SERVICE_ACCOUNT_JSON"
           value = var.firebase_service_account_json
+        }
+
+        env {
+          name  = "NEXT_PUBLIC_FIREBASE_API_KEY"
+          value = var.next_public_firebase_api_key
         }
 
         ports {
