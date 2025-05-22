@@ -62,7 +62,7 @@
 			},
 			"submit-button": "Confirm",
 			"update-user-error": "There was an error updating your information. Please try again.",
-			"activate-your-accoount": "Please check your email and click the link we sent to activate your account."
+			"activate-your-account": "Please check your email and click the link we sent to activate your account."
 		}
 	}
 }
