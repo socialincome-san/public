@@ -60,12 +60,9 @@
 				"presentation": "Presentation",
 				"other": "Other"
 			},
-			"submit-button": "Confirm"
-		},
-		"complete": {
-			"title": "Activate your account",
-			"message": "Please check your email and click the link we sent to activate your account.",
-			"redirecting": "You will be redirected shortly..."
+			"submit-button": "Confirm",
+			"update-user-error": "There was an error updating your information. Please try again.",
+			"activate-your-accoount": "Please check your email and click the link we sent to activate your account."
 		}
 	}
 }

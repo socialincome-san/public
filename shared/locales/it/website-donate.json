@@ -62,12 +62,9 @@
 				"presentation": "Evento",
 				"other": "Altro"
 			},
-			"submit-button": "Conferma"
-		},
-		"complete": {
-			"title": "Attiva il tuo account",
-			"message": "Per favore controlla la tua email e clicca sul link che ti abbiamo inviato per attivare il tuo account.",
-			"redirecting": "Sarai reindirizzato tra pochi istanti..."
+			"submit-button": "Conferma",
+			"update-user-error": "Si è verificato un errore durante l'aggiornamento delle tue informazioni. Per favore riprova.",
+			"activate-your-accoount": "Per favore controlla la tua email e clicca sul link che ti abbiamo inviato per attivare il tuo account."
 		}
 	}
 }

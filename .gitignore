@@ -33,6 +33,9 @@ ignored/
 # VSCode
 .vscode/
 
+# Cursor
+.cursor
+
 # vim IDE
 *.swp
 tags

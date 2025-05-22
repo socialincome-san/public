@@ -1,5 +1,11 @@
 import { WebsiteLanguage } from '@/i18n';
-import { isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink } from 'firebase/auth';
+import {
+	EmailAuthProvider,
+	isSignInWithEmailLink,
+	linkWithCredential,
+	sendSignInLinkToEmail,
+	signInWithEmailLink,
+} from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useAuth } from 'reactfire';
@@ -19,22 +25,40 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 	const translator = useTranslator(lang, 'website-login');
 
 	useEffect(() => {
-		const isSignIn = isSignInWithEmailLink(auth, window.location.href);
-		setIsSignInRequest(isSignIn);
-		const email = window.localStorage.getItem('emailForSignIn');
+		const unsubscribe = auth.onAuthStateChanged(() => {
+			const isSignIn = isSignInWithEmailLink(auth, window.location.href);
+			setIsSignInRequest(isSignIn);
 
-		if (isSignIn && email) {
-			void signIn(email);
-		}
+			if (!isSignIn) {
+				return;
+			}
+
+			const email = window.localStorage.getItem('emailForSignIn') ?? prompt(translator?.t('confirm-email'));
+
+			if (email) {
+				void signIn(email);
+			}
+		});
+
+		return () => unsubscribe();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [auth]);
 
 	const signIn = async (email: string) => {
 		setSigningIn(true);
+
 		try {
-			const { user } = await signInWithEmailLink(auth, email, window.location.href);
-			onLoginSuccess && (await onLoginSuccess(user.uid));
+			if (auth.currentUser?.isAnonymous) {
+				const credentialWithLink = EmailAuthProvider.credentialWithLink(email, window.location.href);
+				await linkWithCredential(auth.currentUser, credentialWithLink);
+				onLoginSuccess && (await onLoginSuccess(auth.currentUser.uid));
+			} else {
+				const { user } = await signInWithEmailLink(auth, email, window.location.href);
+				console.log('is not anonymous', user.uid);
+				onLoginSuccess && (await onLoginSuccess(user.uid));
+			}
 		} catch (error) {
+			console.log('error', (error as any).message);
 			translator && toast.error(translator.t('invalid-email'));
 		} finally {
 			window.localStorage.removeItem('emailForSignIn');
@@ -42,7 +66,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		}
 	};
 
-	const sendEmailLink = async (email: string, targetUrl?: string) => {
+	const sendSignInEmail = async (email: string, targetUrl?: string) => {
 		setSendingEmail(true);
 		const actionCodeSettings = {
 			url: targetUrl || window.location.href,
@@ -63,7 +87,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 	return {
 		signIn,
 		signingIn,
-		sendEmailLink,
+		sendSignInEmail,
 		sendingEmail,
 		emailSent,
 		isSignInRequest,
