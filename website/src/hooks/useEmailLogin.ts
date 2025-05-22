@@ -65,6 +65,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 					throw new FirebaseError('auth/user-not-found', 'user not found');
 				}
 				const { user } = await signInWithEmailLink(auth, email, window.location.href);
+				window.localStorage.removeItem('emailForSignIn');
 				onLoginSuccess && (await onLoginSuccess(user.uid));
 			}
 		} catch (error: unknown) {
@@ -83,7 +84,6 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 				translator && toast.error(translator.t('error.unknown'));
 			}
 		} finally {
-			window.localStorage.removeItem('emailForSignIn');
 			setSigningIn(false);
 		}
 	};
