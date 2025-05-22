@@ -4,12 +4,16 @@
 	},
 	"title": "Accedi al tuo account",
 	"email": "Email",
-	"invalid-email": "Indirizzo email non valido",
 	"confirm-email": "Per favore conferma il tuo indirizzo email",
 	"back-to-login": "Torna all'accesso",
 	"password": "Password",
 	"required-field": "Questo campo è obbligatorio",
 	"submit-button": "Invia link per accedere",
 	"check-email": "Dovresti aver ricevuto un'email con un link per accedere.",
-	"confirm-email-title": "Conferma il tuo indirizzo email"
+	"confirm-email-title": "Conferma il tuo indirizzo email",
+	"error": {
+		"user-not-found": "Utente non trovato",
+		"invalid-email": "Indirizzo email non valido",
+		"unknown": "Accesso fallito"
+	}
 }

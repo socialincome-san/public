@@ -4,12 +4,16 @@
 	},
 	"title": "Connexion",
 	"email": "E-mail",
-	"invalid-email": "Adresse e-mail incorrecte",
 	"confirm-email": "Veuillez confirmer votre adresse e-mail",
 	"back-to-login": "Retour à la connexion",
 	"password": "Mot de passe",
 	"required-field": "Ce champ est obligatoire ",
 	"submit-button": "Envoyer le lien de connexion",
 	"check-email": "Tu devrais avoir reçu un e-mail avec un lien pour te connecter.",
-	"confirm-email-title": "Confirmez votre adresse e-mail"
+	"confirm-email-title": "Confirmez votre adresse e-mail",
+	"error": {
+		"user-not-found": "Utilisateur non trouvé",
+		"invalid-email": "Adresse e-mail incorrecte",
+		"unknown": "Connexion impossible"
+	}
 }

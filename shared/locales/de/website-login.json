@@ -4,12 +4,16 @@
 	},
 	"title": "Melde dich an",
 	"email": "E-Mail",
-	"invalid-email": "Ungültige E-Mail-Adresse",
 	"confirm-email": "Bitte bestätige deine E-Mail-Adresse",
 	"back-to-login": "Zurück zur Anmeldung",
 	"password": "Passwort",
 	"required-field": "Dieses Feld ist erforderlich",
 	"submit-button": "Anmeldelink senden",
 	"check-email": "Du solltest eine E-Mail mit einem Link zum Anmelden erhalten haben.",
-	"confirm-email-title": "Bestätigen Sie Ihre E-Mail-Adresse"
+	"confirm-email-title": "Bestätigen Sie Ihre E-Mail-Adresse",
+	"error": {
+		"user-not-found": "Benutzer nicht gefunden",
+		"invalid-email": "Ungültige E-Mail-Adresse",
+		"unknown": "Login fehlgeschlagen"
+	}
 }
