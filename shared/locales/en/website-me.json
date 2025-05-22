@@ -90,5 +90,8 @@
 		"delete-employer": "Delete",
 		"past-employers": "Past Employers",
 		"no-longer-work-here": "I no longer work here"
+	},
+	"infobox": {
+		"email-login-required": "Please <a href='/login' class='underline'>confirm your email</a> to activate your account."
 	}
 }

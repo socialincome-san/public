@@ -31,6 +31,7 @@ export default async function Layout({ children, ...props }: PropsWithChildren<D
 						donationCertificatesLong: translator.t('sections.contributions.donation-certificates-long'),
 						employerTitle: translator.t('sections.employer.title'),
 						work: translator.t('sections.employer.work'),
+						emailLoginRequired: translator.t('infobox.email-login-required'),
 					}}
 				>
 					{children}

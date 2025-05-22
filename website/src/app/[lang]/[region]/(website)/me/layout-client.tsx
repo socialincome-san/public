@@ -10,12 +10,13 @@ import {
 	ShieldCheckIcon,
 	UserCircleIcon,
 } from '@heroicons/react/24/outline';
-import { Button, Collapsible, CollapsibleContent, CollapsibleTrigger, Typography } from '@socialincome/ui';
+import { Button, Card, Collapsible, CollapsibleContent, CollapsibleTrigger, Typography } from '@socialincome/ui';
 import { LinkProps } from 'next/dist/client/link';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { PropsWithChildren, useContext, useState } from 'react';
+import { useAuth } from 'reactfire';
 
 type NavigationLinkProps = {
 	href: string;
@@ -54,6 +55,7 @@ type LayoutClientProps = {
 		donationCertificatesLong: string;
 		employerTitle: string;
 		work: string;
+		emailLoginRequired: string;
 	};
 };
 
@@ -61,6 +63,7 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 	const pathname = usePathname();
 	const user = useContext(UserContext);
 	const [isOpen, setIsOpen] = useState(false);
+	const auth = useAuth();
 
 	const navigationMenu = (
 		<ul className="pr-4">
@@ -104,13 +107,15 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 			>
 				{translations.personalInfo}
 			</NavigationLink>
-			<NavigationLink
-				href={`/${params.lang}/${params.region}/me/security`}
-				Icon={ShieldCheckIcon}
-				onClick={() => setIsOpen(false)}
-			>
-				{translations.security}
-			</NavigationLink>
+			{!auth.currentUser?.isAnonymous && (
+				<NavigationLink
+					href={`/${params.lang}/${params.region}/me/security`}
+					Icon={ShieldCheckIcon}
+					onClick={() => setIsOpen(false)}
+				>
+					{translations.security}
+				</NavigationLink>
+			)}
 		</ul>
 	);
 
@@ -149,6 +154,11 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 					</div>
 				</CollapsibleTrigger>
 				<CollapsibleContent className="-mt-10 mb-12 border-b md:hidden">{isOpen && navigationMenu}</CollapsibleContent>
+				{auth.currentUser?.isAnonymous && (
+					<Card className="mb-12">
+						<Typography className="m-4" dangerouslySetInnerHTML={{ __html: translations.emailLoginRequired }} />
+					</Card>
+				)}
 				<Typography size="2xl" weight="medium" className="-mt-10 mb-4 md:mt-0">
 					{title}
 				</Typography>

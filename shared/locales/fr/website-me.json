@@ -90,5 +90,8 @@
 		"delete-employer": "Supprimer",
 		"past-employers": "Employeurs précédents",
 		"no-longer-work-here": "Je ne travaille plus ici"
+	},
+	"infobox": {
+		"email-login-required": "Veuillez vous connecter à <a href='https://socialincome.org/login' class='underline'>https://socialincome.org/login</a> pour activer votre compte."
 	}
 }

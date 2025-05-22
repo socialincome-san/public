@@ -37,7 +37,7 @@ type LoginFormProps = {
 
 export default function LoginForm({ lang, region, translations }: LoginFormProps) {
 	const router = useRouter();
-	const { signIn, sendEmailLink, sendingEmail, emailSent, isSignInRequest } = useEmailLogin({
+	const { signIn, sendSignInEmail, sendingEmail, emailSent, isSignInRequest } = useEmailLogin({
 		lang,
 		onLoginSuccess: async () => {
 			router.push(`/${lang}/${region}/me`);
@@ -78,7 +78,9 @@ export default function LoginForm({ lang, region, translations }: LoginFormProps
 		<Form {...form}>
 			<form
 				className="flex flex-col space-y-2 text-center"
-				onSubmit={form.handleSubmit((values) => (isSignInRequest ? signIn(values.email) : sendEmailLink(values.email)))}
+				onSubmit={form.handleSubmit((values) =>
+					isSignInRequest ? signIn(values.email) : sendSignInEmail(values.email),
+				)}
 			>
 				<Typography weight="bold" size="2xl" className="mb-4">
 					{translations.title}
