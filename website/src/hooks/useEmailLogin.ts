@@ -20,43 +20,51 @@ type UseEmailAuthenticationProps = {
 
 export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationProps) => {
 	const auth = useAuth();
+	const [authListenerRegistered, setAuthListenerRegistered] = useState(false);
 	const [signingIn, setSigningIn] = useState(false);
 	const [sendingEmail, setSendingEmail] = useState(false);
-	const [loginEmail, setLoginEmail] = useState<string | null>(null);
 	const [emailSent, setEmailSent] = useState(false);
 	const translator = useTranslator(lang, 'website-login');
 
 	useEffect(() => {
+		if (authListenerRegistered) {
+			return;
+		}
+
 		const unsubscribe = auth.onAuthStateChanged(() => {
+			setAuthListenerRegistered(true);
+			if (signingIn) {
+				return;
+			}
+
 			const isSignIn = isSignInWithEmailLink(auth, window.location.href);
 
 			if (!isSignIn) {
 				return;
 			}
 
-			const email =
-				window.localStorage.getItem('emailForSignIn') ?? loginEmail ?? prompt(translator?.t('confirm-email'));
+			const email = window.localStorage.getItem('emailForSignIn') ?? prompt(translator?.t('confirm-email'));
 
 			if (!email) {
 				translator && toast.error(translator.t('error.invalid-email'));
 			}
-			setLoginEmail(email);
 
-			if (email && !signingIn) {
+			if (email) {
 				void signIn(email);
 			}
 		});
 
 		return () => unsubscribe();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [auth, translator]);
+	}, [auth, authListenerRegistered, translator]);
 
 	const signIn = async (email: string) => {
 		setSigningIn(true);
+		const url = window.location.href;
 
 		try {
 			if (auth.currentUser?.isAnonymous) {
-				const credentialWithLink = EmailAuthProvider.credentialWithLink(email, window.location.href);
+				const credentialWithLink = EmailAuthProvider.credentialWithLink(email, url);
 				await linkWithCredential(auth.currentUser, credentialWithLink);
 				onLoginSuccess && (await onLoginSuccess(auth.currentUser.uid));
 			} else {
@@ -64,7 +72,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 				if (signInMethods.length === 0) {
 					throw new FirebaseError('auth/user-not-found', 'user not found');
 				}
-				const { user } = await signInWithEmailLink(auth, email, window.location.href);
+				const { user } = await signInWithEmailLink(auth, email, url);
 				window.localStorage.removeItem('emailForSignIn');
 				onLoginSuccess && (await onLoginSuccess(user.uid));
 			}
