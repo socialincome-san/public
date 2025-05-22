@@ -31,24 +31,17 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 		const unsubscribe = auth.onAuthStateChanged(() => {
 			setAuthListenerRegistered(true);
-			if (signingIn) {
-				return;
-			}
 
-			const isSignIn = isSignInWithEmailLink(auth, window.location.href);
-
-			if (!isSignIn) {
+			if (signingIn || !isSignInWithEmailLink(auth, window.location.href)) {
 				return;
 			}
 
 			const email = window.localStorage.getItem('emailForSignIn') ?? prompt(translator?.t('confirm-email'));
 
-			if (!email) {
-				translator && toast.error(translator.t('error.invalid-email'));
-			}
-
 			if (email) {
 				void signIn(email);
+			} else {
+				translator && toast.error(translator.t('error.invalid-email'));
 			}
 		});
 
