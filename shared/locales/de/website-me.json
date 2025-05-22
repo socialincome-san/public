@@ -76,15 +76,6 @@
 		"newsletter-switch": "Ich möchte den Newsletter erhalten"
 	},
 	"security": {
-		"reset-password": {
-			"title": "Passwort ändern",
-			"password": "Passwort",
-			"password-confirmation": "Passwort bestätigen",
-			"submit-button": "Passwort ändern",
-			"passwords-mismatch": "Die Passwörter stimmen nicht überein",
-			"error-toast": "Ein Fehler ist aufgetreten. Bitte versuche es später noch einmal.",
-			"success-toast": "Dein Passwort wurde geändert. Bitte melde dich mit deinem neuen Passwort an."
-		},
 		"sign-out": {
 			"title": "Möchtest du dich abmelden?",
 			"button": "Abmelden"

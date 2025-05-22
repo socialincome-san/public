@@ -43,7 +43,7 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 				<CardContent>
 					<SuccessForm
 						lang={lang}
-						region={region}
+						onSuccessURL={`/${lang}/${region}/me/personal-info`}
 						stripeCheckoutSessionId={checkoutSession.id}
 						firstname={checkoutSession.customer_details?.name?.split(' ')[0] || undefined}
 						lastname={checkoutSession.customer_details?.name?.split(' ')[1] || undefined}
@@ -66,6 +66,7 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 								other: translator.t('success.user-form.referrals.other'),
 							},
 							submitButton: translator.t('success.user-form.submit-button'),
+							updateUserError: translator.t('success.user-form.update-user-error'),
 						}}
 					/>
 				</CardContent>
