@@ -1,6 +1,8 @@
 import { WebsiteLanguage } from '@/i18n';
+import { FirebaseError } from 'firebase/app';
 import {
 	EmailAuthProvider,
+	fetchSignInMethodsForEmail,
 	isSignInWithEmailLink,
 	linkWithCredential,
 	sendSignInLinkToEmail,
@@ -21,13 +23,11 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 	const [signingIn, setSigningIn] = useState(false);
 	const [sendingEmail, setSendingEmail] = useState(false);
 	const [emailSent, setEmailSent] = useState(false);
-	const [isSignInRequest, setIsSignInRequest] = useState(false);
 	const translator = useTranslator(lang, 'website-login');
 
 	useEffect(() => {
 		const unsubscribe = auth.onAuthStateChanged(() => {
 			const isSignIn = isSignInWithEmailLink(auth, window.location.href);
-			setIsSignInRequest(isSignIn);
 
 			if (!isSignIn) {
 				return;
@@ -42,7 +42,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 		return () => unsubscribe();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [auth]);
+	}, [auth, translator]);
 
 	const signIn = async (email: string) => {
 		setSigningIn(true);
@@ -53,13 +53,31 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 				await linkWithCredential(auth.currentUser, credentialWithLink);
 				onLoginSuccess && (await onLoginSuccess(auth.currentUser.uid));
 			} else {
+				const signInMethods = await fetchSignInMethodsForEmail(auth, email); // check if user exists
+				if (signInMethods.length === 0) {
+					throw new FirebaseError('auth/user-not-found', 'user not found');
+				}
 				const { user } = await signInWithEmailLink(auth, email, window.location.href);
-				console.log('is not anonymous', user.uid);
 				onLoginSuccess && (await onLoginSuccess(user.uid));
 			}
-		} catch (error) {
-			console.log('error', (error as any).message);
-			translator && toast.error(translator.t('invalid-email'));
+		} catch (error: unknown) {
+			if (error instanceof FirebaseError) {
+				switch (error.code) {
+					case 'auth/user-not-found':
+						translator && toast.error(translator.t('error.user-not-found'));
+						break;
+					case 'auth/expired-action-code':
+						translator && toast.error(translator.t('error.invalid-email'));
+						break;
+					case 'auth/invalid-email':
+						translator && toast.error(translator.t('error.invalid-email'));
+						break;
+					default:
+						translator && toast.error(translator.t('error.unknown'));
+				}
+			} else {
+				translator && toast.error(translator.t('error.unknown'));
+			}
 		} finally {
 			window.localStorage.removeItem('emailForSignIn');
 			setSigningIn(false);
@@ -78,18 +96,16 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 			window.localStorage.setItem('emailForSignIn', email);
 			setEmailSent(true);
 		} catch (error) {
-			translator && toast.error(translator.t('invalid-email'));
+			translator && toast.error(translator.t('error.invalid-email'));
 		} finally {
 			setSendingEmail(false);
 		}
 	};
 
 	return {
-		signIn,
 		signingIn,
 		sendSignInEmail,
 		sendingEmail,
 		emailSent,
-		isSignInRequest,
 	};
 };
