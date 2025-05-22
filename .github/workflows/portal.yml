@@ -56,6 +56,13 @@ jobs:
           TF_VAR_gcp_project_id: ${{ env.GCP_PROJECT_ID }}
           TF_VAR_gcp_region: ${{ env.GCP_REGION }}
           TF_VAR_db_password: ${{ env.DB_PASSWORD }}
+          TF_VAR_next_public_firebase_app_id: ${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_APP_ID }}
+          TF_VAR_next_public_firebase_measurement_id: ${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }}
+          TF_VAR_next_public_firebase_messaging_sender_id: ${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+          TF_VAR_firebase_database_url: ${{ secrets.TF_STAGING_FIREBASE_DATABASE_URL }}
+          TF_VAR_firebase_service_account_json: ${{ secrets.TF_STAGING_FIREBASE_SERVICE_ACCOUNT_JSON }}
+          TF_VAR_next_public_firebase_auth_domain: ${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+          TF_VAR_next_public_firebase_project_id: ${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
 
         run: |
           echo "🧠 Generating image tag from Git SHA..."
