@@ -6,6 +6,7 @@ import { WebsiteLanguage } from '@/i18n';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { COUNTRY_CODES, CountryCode } from '@socialincome/shared/src/types/country';
 import { GENDER_OPTIONS, UserReferralSource } from '@socialincome/shared/src/types/user';
+import { generateRandomString } from '@socialincome/shared/src/utils/crypto';
 import {
 	Button,
 	Checkbox,
@@ -23,7 +24,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@socialincome/ui';
-import { signInAnonymously } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -101,31 +102,25 @@ export function SuccessForm({
 
 	const onSubmit = async (values: FormSchema) => {
 		setSubmitting(true);
-		const data: UpdateUserData = {
-			stripeCheckoutSessionId: stripeCheckoutSessionId,
-			user: {
-				email: values.email,
-				language: lang,
-				personal: {
-					name: values.firstname,
-					lastname: values.lastname,
-					gender: values.gender,
-					referral: values.referral,
-				},
-				address: {
-					country: values.country,
-				},
-			},
-		};
 
 		try {
-			const response = await fetch('/api/user/update', { method: 'POST', body: JSON.stringify(data) });
-			if (!response.ok) throw new Error('Failed to update user data');
-
-			signInAnonymously(auth).then(({ user }) => {
+			createUserWithEmailAndPassword(auth, values.email, generateRandomString()).then(({ user }) => {
 				const data: UpdateUserData = {
 					stripeCheckoutSessionId: stripeCheckoutSessionId,
-					user: { auth_user_id: user.uid },
+					user: {
+						auth_user_id: user.uid,
+						email: values.email,
+						language: lang,
+						personal: {
+							name: values.firstname,
+							lastname: values.lastname,
+							gender: values.gender,
+							referral: values.referral,
+						},
+						address: {
+							country: values.country,
+						},
+					},
 				};
 				fetch('/api/user/update', { method: 'POST', body: JSON.stringify(data) }).then((response) => {
 					if (!response.ok) {
@@ -135,6 +130,7 @@ export function SuccessForm({
 				});
 			});
 		} catch (error) {
+			console.error(error);
 			toast.error(translations.updateUserError);
 			setSubmitting(false);
 		}

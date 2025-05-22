@@ -1,10 +1,8 @@
 import { WebsiteLanguage } from '@/i18n';
 import { FirebaseError } from 'firebase/app';
 import {
-	EmailAuthProvider,
 	fetchSignInMethodsForEmail,
 	isSignInWithEmailLink,
-	linkWithCredential,
 	sendSignInLinkToEmail,
 	signInWithEmailLink,
 } from 'firebase/auth';
@@ -55,7 +53,6 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		});
 
 		return () => unsubscribe();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [auth, authListenerRegistered, translator, signingIn]);
 
 	const signIn = async (email: string) => {
@@ -63,19 +60,12 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		const url = window.location.href;
 
 		try {
-			if (auth.currentUser?.isAnonymous) {
-				const credentialWithLink = EmailAuthProvider.credentialWithLink(email, url);
-				await linkWithCredential(auth.currentUser, credentialWithLink);
-				onLoginSuccess && (await onLoginSuccess(auth.currentUser.uid));
-			} else {
-				const signInMethods = await fetchSignInMethodsForEmail(auth, email); // check if user exists
-				if (signInMethods.length === 0) {
-					throw new FirebaseError('auth/user-not-found', 'user not found');
-				}
-				const { user } = await signInWithEmailLink(auth, email, url);
-				window.localStorage.removeItem('emailForSignIn');
-				onLoginSuccess && (await onLoginSuccess(user.uid));
+			if (!(await userExists(email))) {
+				throw new FirebaseError('auth/user-not-found', 'user not found');
 			}
+			const { user } = await signInWithEmailLink(auth, email, url);
+			window.localStorage.removeItem('emailForSignIn');
+			onLoginSuccess && (await onLoginSuccess(user.uid));
 		} catch (error: unknown) {
 			if (error instanceof FirebaseError) {
 				switch (error.code) {
@@ -114,10 +104,16 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		}
 	};
 
+	const userExists = async (email: string) => {
+		const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+		return signInMethods.length > 0;
+	};
+
 	return {
 		signingIn,
 		sendSignInEmail,
 		sendingEmail,
 		emailSent,
+		userExists,
 	};
 };
