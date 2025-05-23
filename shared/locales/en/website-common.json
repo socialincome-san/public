@@ -35,8 +35,7 @@
 		"team": "Team",
 		"terms-and-conditions": "Terms and Conditions",
 		"terms-of-use": "Terms of Use",
-		"transparency": "Transparency",
-		"whats-next": "What's Next"
+		"transparency": "Transparency"
 	},
 	"cookie-consent-banner": {
 		"text": "We use <a href='/legal/privacy' class='underline'>cookies</a>.",

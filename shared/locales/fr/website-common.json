@@ -35,8 +35,7 @@
 		"team": "Équipe",
 		"terms-and-conditions": "Conditions générales",
 		"terms-of-use": "Conditions d'utilisation",
-		"transparency": "Transparence",
-		"whats-next": "Suite"
+		"transparency": "Transparence"
 	},
 	"cookie-consent-banner": {
 		"text": "Nous utilisons des <a href='/legal/privacy' class='underline'>cookies</a>.",
