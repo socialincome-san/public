@@ -128,7 +128,10 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 					<Typography weight="bold" size="2xl">
 						{articleData.leadText}
 					</Typography>
-					<Typography as="div" className="text-black [&_a]:font-normal">
+					<Typography
+						as="div"
+						className="[&_th]:bg-primary [&_th]:accent-primary text-black [&_a]:font-normal [&_table]:table-auto [&_table]:border-collapse [&_table]:border-2 [&_td]:border-2 [&_td]:border-solid [&_td]:text-center [&_th]:border-2 [&_th]:border-solid [&_th]:text-center [&_th]:text-white"
+					>
 						{renderWrapper(articleData, translator, lang)}
 					</Typography>
 					<Separator />
