@@ -1,7 +1,7 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { getAuthors, getOverviewArticles, getTags } from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
-import { StoryblokArticleCard } from '@/app/[lang]/[region]/(website)/journal/StoryblokArticle';
-import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
+import { getAuthors, getOverviewArticles, getTags } from '@/components/storyblok/StoryblokApi';
+import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
+import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, BaseContainer, Typography } from '@socialincome/ui';
@@ -47,13 +47,15 @@ export default async function Page({ params }: DefaultPageProps) {
 				))}
 			</div>
 
-			<div className="mt-16 flex grid-cols-3 justify-start gap-1">
-				<Badge size="md" key={'overview'} variant="default" className="mb-2">
-					{translator.t('overview.all')}
-				</Badge>
+			<div className="mt-16 flex flex-wrap gap-2">
+				<div>
+					<Badge size="md" key="overview" variant="default" className="whitespace-nowrap">
+						{translator.t('overview.all')}
+					</Badge>
+				</div>
 				{tags.map((tag) => (
 					<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
-						<Badge size="md" variant="outline" className="mb-2">
+						<Badge size="md" variant="outline" className="whitespace-nowrap">
 							{tag.content?.value}
 						</Badge>
 					</Link>

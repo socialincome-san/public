@@ -1,13 +1,13 @@
-import {
-	getDimensionsFromStoryblokImageUrl,
-	getPublishedDateFormatted,
-} from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
-import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
+import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
+import { formatStoryblokDate, formatStoryblokUrl } from '@/components/storyblok/StoryblokUtils';
 import { StoryblokArticle, StoryblokAuthor } from '@socialincome/shared/src/storyblok/journal';
 import { Typography } from '@socialincome/ui';
 import { ISbStoryData } from '@storyblok/react';
 import Image from 'next/image';
 import Link from 'next/link';
+
+const ARTICLE_IMAGE_TARGET_WIDTH = 1920;
+const ARTICLE_IMAGE_TARGET_HEIGHT = 1080;
 
 export function StoryblokArticleCard(props: {
 	lang: string;
@@ -16,15 +16,19 @@ export function StoryblokArticleCard(props: {
 	author: ISbStoryData<StoryblokAuthor>;
 }) {
 	const { region, lang, blog, author } = props;
-	const dimensionsFromStoryblokImage = getDimensionsFromStoryblokImageUrl(blog.content.image.filename);
 	return (
 		<Link href={`/${props.lang}/${props.region}/journal/${blog.slug!}`}>
 			<div className="mb-4 overflow-hidden transition-transform duration-200 hover:scale-[101%]">
 				<Image
-					src={blog.content.image.filename}
+					src={formatStoryblokUrl(
+						blog.content.image.filename,
+						ARTICLE_IMAGE_TARGET_WIDTH,
+						ARTICLE_IMAGE_TARGET_HEIGHT,
+						blog.content.image.focus,
+					)}
 					alt={blog.content.title}
-					width={dimensionsFromStoryblokImage.width}
-					height={dimensionsFromStoryblokImage.height}
+					width={ARTICLE_IMAGE_TARGET_WIDTH}
+					height={ARTICLE_IMAGE_TARGET_HEIGHT}
 					className="h-60 w-full object-cover"
 				/>
 				<div className="mt-2 flex items-center justify-between">
@@ -34,12 +38,17 @@ export function StoryblokArticleCard(props: {
 						</Typography>
 					</div>
 					<Typography weight="normal" className="text-black">
-						{getPublishedDateFormatted(blog.first_published_at!, props.lang)}
+						{formatStoryblokDate(blog.first_published_at, props.lang)}
 					</Typography>
 				</div>
 
 				<div className="mt-2 flex flex-grow flex-col">
-					<Typography size="2xl" className="mb-4 line-clamp-3 h-16 flex-grow" weight="medium">
+					<Typography
+						aria-label={blog.content.title}
+						size="xl"
+						className="md:h-18 my-4 line-clamp-2 h-14 w-auto overflow-hidden break-words md:line-clamp-3"
+						weight="medium"
+					>
 						{blog.content.title}
 					</Typography>
 					<div className="flex items-center justify-between">
