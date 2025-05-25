@@ -41,7 +41,7 @@ export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: 
 	const lang = props.lang;
 	const referencesGroup = props;
 	const hasContextInfo = !!referencesGroup.context;
-	const showThumbnails = referencesGroup.references.some((it) => !!it.thumbnail);
+	const showThumbnails = referencesGroup.references.some((it) => !!it.thumbnail?.filename);
 
 	function showSeparator(index: number) {
 		return index > 0 || hasContextInfo;
@@ -62,9 +62,10 @@ export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: 
 					<div key={reference._uid}>
 						{showSeparator(index) && <Separator className="bg-foreground m-0 mb-4 mt-4 opacity-15" />}
 						<div className="flex items-start gap-8">
-							{!!reference.thumbnail
-								? thumbnailImage(reference.thumbnail)
-								: showThumbnails && placeHolderImage(reference._uid)}
+							{showThumbnails &&
+								(reference.thumbnail?.filename
+									? thumbnailImage(reference.thumbnail)
+									: showThumbnails && placeHolderImage(reference._uid))}
 							<div className="flex flex-col justify-center">
 								<Link
 									className={linkCn({ arrow: 'external', underline: 'none' })}

@@ -31,6 +31,9 @@ export function createLinkForArticle(slug: string, lang: string, region: string)
 // Based on official documentation: https://www.storyblok.com/faq/image-dimensions-assets-js
 // format example: https://a.storyblok.com/f/51376/664x488/f4f9d1769c/visual-editor-features.jpg
 export function getDimensionsFromStoryblokImageUrl(url: string): { width?: number; height?: number } {
+	if (!url) {
+		return {};
+	}
 	const match = url.match(/\/f\/\d+\/(\d+)x(\d+)\//);
 
 	return match ? { width: Number(match[1]), height: Number(match[2]) } : {};
