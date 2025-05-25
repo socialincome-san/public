@@ -65,7 +65,7 @@ export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: 
 							{showThumbnails &&
 								(reference.thumbnail?.filename
 									? thumbnailImage(reference.thumbnail)
-									: showThumbnails && placeHolderImage(reference._uid))}
+									: placeHolderImage(reference._uid))}
 							<div className="flex flex-col justify-center">
 								<Link
 									className={linkCn({ arrow: 'external', underline: 'none' })}
