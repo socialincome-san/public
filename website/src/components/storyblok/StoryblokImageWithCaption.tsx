@@ -1,9 +1,6 @@
-import { formatStoryblokUrl } from '@/components/storyblok/StoryblokUtils';
+import { getDimensionsFromStoryblokImageUrl } from '@/components/storyblok/StoryblokUtils';
 import { Typography } from '@socialincome/ui';
 import Image from 'next/image';
-
-const IMAGE_TARGET_WIDTH = 1920;
-const IMAGE_TARGET_HEIGHT = 1080;
 
 export function StoryblokImageWithCaption({
 	image,
@@ -13,14 +10,15 @@ export function StoryblokImageWithCaption({
 	caption: string;
 }) {
 	if (!image?.filename) return null;
+	const dimensionsFromStoryblokImage = getDimensionsFromStoryblokImageUrl(image.filename);
 	return (
 		<div className="w-full px-0 py-8">
 			<Image
-				src={formatStoryblokUrl(image.filename, IMAGE_TARGET_WIDTH, IMAGE_TARGET_HEIGHT, image.focus)}
+				src={image.filename}
 				alt={image.alt || ''}
 				className={`m-0 h-auto w-full object-contain p-0`}
-				width={IMAGE_TARGET_WIDTH}
-				height={IMAGE_TARGET_HEIGHT}
+				width={dimensionsFromStoryblokImage.width}
+				height={dimensionsFromStoryblokImage.height}
 			/>
 			{caption && (
 				<Typography size="xs" className="m-0 mt-2 pt-4 text-left">
