@@ -5,6 +5,16 @@
 		"description": "Storie e aggiornamenti sul nostro percorso per creare un impatto."
 	},
 	"article": {
-		"keep-reading": "Articoli correlati"
+		"keep-reading": "Lire la suite",
+		"from-original-language": "Traduit de"
+	},
+	"reference-article": {
+		"show-more": "Afficher plus",
+		"show-less": "Afficher moins",
+		"written-by": "{{mediaOutlet}} par {{author}} le {{publicationDate}}",
+		"context": {
+			"original": "Première publication",
+			"related": "Ces sources offrent du contexte et des informations"
+		}
 	}
 }

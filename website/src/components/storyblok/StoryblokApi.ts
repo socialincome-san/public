@@ -5,7 +5,6 @@ import {
 	StoryblokTag,
 } from '@socialincome/shared/src/storyblok/journal';
 import { getStoryblokApi, ISbStory } from '@storyblok/react';
-import { DateTime } from 'luxon';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { ISbStories, ISbStoriesParams, ISbStoryData } from 'storyblok-js-client/src/interfaces';
@@ -17,26 +16,11 @@ const DEFAULT_LANGUAGE = 'en';
 const CONTENT = 'content';
 const STORIES_PATH = 'cdn/stories';
 
-export function getPublishedDateFormatted(date: string, lang: string) {
-	const dateObject = DateTime.fromISO(date).setLocale(lang);
-	return dateObject.isValid ? dateObject.toFormat('MMMM dd, yyyy') : '';
-}
-
 // During the development of Storyblok features or writing of new content, it is useful to use the draft version of the content.
 async function addVersionParameter(properties: ISbStoriesParams): Promise<ISbStoriesParams> {
 	return {
 		...properties,
 		version: (await draftMode()).isEnabled ? 'draft' : 'published',
-	};
-}
-
-// Based on official documentation: https://www.storyblok.com/faq/image-dimensions-assets-js
-// format example: a.storyblok.com/f/51376/664x488/f4f9d1769c/visual-editor-features.jpg
-export function getDimensionsFromStoryblokImageUrl(url: string): { width: number; height: number } {
-	let dimensions = url.split('/')[5].split('x');
-	return {
-		width: Number(dimensions[0]),
-		height: Number(dimensions[1]),
 	};
 }
 
@@ -157,7 +141,7 @@ export async function getWithFallback<T>(
 	slug: string,
 ): Promise<T> {
 	try {
-		return loader(lang, slug);
+		return await loader(lang, slug);
 	} catch (error: any) {
 		if (error.status === NOT_FOUND) {
 			if (lang === DEFAULT_LANGUAGE) {
