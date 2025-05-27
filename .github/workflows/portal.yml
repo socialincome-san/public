@@ -110,10 +110,9 @@ jobs:
         run: |
           echo "Fetching Cloud Run URL from Terraform output..."
 
-          CLOUD_RUN_URL=$(bash -c "terraform -chdir=${{ env.TERRAFORM_DIR }} output -raw cloud_run_url" 2>/dev/null)
+          CLOUD_RUN_URL=$(terraform -chdir=${{ env.TERRAFORM_DIR }} output -raw cloud_run_url 2>/dev/null)
 
-          echo ""
           echo "✅ Your app is live at:"
           echo "$CLOUD_RUN_URL"
 
-          echo "### 🚀 Cloud Run deployed to: [$CLOUD_RUN_URL]($CLOUD_RUN_URL)" >> $GITHUB_STEP_SUMMARY
+          echo "### 🚀 Cloud Run deployed to: [$CLOUD_RUN_URL]($CLOUD_RUN_URL)" >> "$GITHUB_STEP_SUMMARY"
