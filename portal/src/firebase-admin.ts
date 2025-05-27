@@ -9,6 +9,25 @@ import { credential } from 'firebase-admin';
 const serviceAccountJSON = process.env.FIREBASE_SERVICE_ACCOUNT_JSON?.replaceAll('\n', '\\n');
 const databaseURL = process.env.FIREBASE_DATABASE_URL;
 
+if (!serviceAccountJSON) {
+	console.error('❌ FIREBASE_SERVICE_ACCOUNT_JSON is not set');
+} else {
+	try {
+		const parsed = JSON.parse(serviceAccountJSON);
+		console.log('✅ Firebase service account loaded');
+		console.log(`👤 client_email: ${parsed.client_email}`);
+		console.log(`📁 project_id: ${parsed.project_id}`);
+	} catch (err) {
+		console.error('❌ Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON:', err);
+	}
+}
+
+if (!databaseURL) {
+	console.error('❌ FIREBASE_DATABASE_URL is not set');
+} else {
+	console.log(`✅ Firebase database URL set to: ${databaseURL}`);
+}
+
 export const app = getOrInitializeFirebaseAdmin(
 	serviceAccountJSON && databaseURL
 		? {
