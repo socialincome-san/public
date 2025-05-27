@@ -35,6 +35,7 @@ COPY shared ./shared
 COPY ui ./ui
 COPY functions ./functions
 COPY admin ./admin
+COPY recipients_selection ./recipients_selection
 RUN npm ci
 
 # -------- Build Layer --------
@@ -44,6 +45,7 @@ COPY --from=deps /app/node_modules ../node_modules
 COPY --from=deps /app/portal ./
 COPY --from=deps /app/shared ../shared
 COPY --from=deps /app/ui ../ui
+COPY --from=deps /app/recipients_selection ../recipients_selection
 COPY --from=base /app/.env /app/.env
 
 RUN set -a && . /app/.env && set +a && \
@@ -63,6 +65,7 @@ RUN addgroup --system --gid 1001 nodejs && \
 COPY --from=builder /app/portal/public ./public
 COPY --from=builder /app/portal/prisma ./prisma/
 COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/recipients_selection ./recipients_selection
 COPY --from=builder --chown=nextjs:nodejs /app/portal/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/portal/.next/static ./.next/static
 COPY --from=base /app/.env .env
