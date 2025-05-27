@@ -24,7 +24,7 @@ RUN --mount=type=secret,id=BASE_URL \
     --mount=type=secret,id=STRIPE_PRODUCT_ONETIME \
     --mount=type=secret,id=STRIPE_PRODUCT_RECURRING \
     --mount=type=secret,id=STRIPE_SECRET_KEY \
-    sh -c 'for f in /run/secrets/*; do val=$(cat "$f" | sed -e "s/\"/\\\\\"/g"); echo "$(basename "$f")=\"$val\"" >> /app/.env; done'
+    sh -c 'for f in /run/secrets/*; do echo "$(basename $f)=$(cat $f)" >> /app/.env; done'
 
 # -------- Dependencies Layer --------
 FROM base AS deps
@@ -40,14 +40,13 @@ RUN npm ci
 # -------- Build Layer --------
 FROM base AS builder
 WORKDIR /app/portal
-
 COPY --from=deps /app/node_modules ../node_modules
 COPY --from=deps /app/portal ./
 COPY --from=deps /app/shared ../shared
 COPY --from=deps /app/ui ../ui
 COPY --from=base /app/.env /app/.env
 
-RUN set -a && . /app/.env && set +a && \
+RUN export $(cat /app/.env | xargs) && \
     npx prisma generate && \
     npm run build --loglevel verbose || (cat /root/.npm/_logs/*-debug-0.log && false)
 

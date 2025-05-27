@@ -76,9 +76,7 @@ jobs:
             --tag "$IMAGE_URL" \
             --push \
             -f portal/Dockerfile \
-            --build-arg BUILDKIT_INLINE_CACHE=1 \
             $(for f in secrets/*; do echo "--secret id=$(basename "$f"),src=$f"; done) \
-            --build-arg CREATE_ENV_SCRIPT='for f in /run/secrets/*; do val=$(cat "$f" | sed -e "s/\"/\\\\\\\"/g"); echo "$(basename "$f")=\"$val\"" >> /app/.env; done' \
             .
 
           echo "🚀 Image built and pushed."
