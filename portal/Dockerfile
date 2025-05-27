@@ -25,7 +25,6 @@ RUN --mount=type=secret,id=BASE_URL \
     --mount=type=secret,id=STRIPE_PRODUCT_ONETIME \
     --mount=type=secret,id=STRIPE_PRODUCT_RECURRING \
     --mount=type=secret,id=STRIPE_SECRET_KEY \
-    --mount=type=secret,id=VERCEL_URL \
     sh -c 'for f in /run/secrets/*; do echo "$(basename $f)=$(cat $f)" >> /app/.env; done'
 
 # -------- Dependencies Layer --------

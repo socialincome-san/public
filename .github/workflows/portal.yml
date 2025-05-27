@@ -42,34 +42,29 @@ jobs:
       - name: 📝 Prepare Docker build secrets
         run: |
           mkdir -p secrets
-          keys=(
-            BASE_URL
-            FIREBASE_DATABASE_URL
-            FIREBASE_SERVICE_ACCOUNT_JSON
-            GITHUB_PAT
-            MAILCHIMP_API_KEY
-            MAILCHIMP_LIST_ID
-            MAILCHIMP_SERVER
-            NEXT_PUBLIC_FIREBASE_API_KEY
-            NEXT_PUBLIC_FIREBASE_APP_ID
-            NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-            NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
-            NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
-            NEXT_PUBLIC_FIREBASE_PROJECT_ID
-            NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
-            SENDGRID_API_KEY
-            SENDGRID_LIST_ID
-            SENDGRID_SUPPRESSION_LIST_ID
-            STORYBLOK_PREVIEW_SECRET
-            STORYBLOK_PREVIEW_TOKEN
-            STRIPE_PRODUCT_ONETIME
-            STRIPE_PRODUCT_RECURRING
-            STRIPE_SECRET_KEY
-            VERCEL_URL
-          )
-          for key in "${keys[@]}"; do
-            echo "${{ secrets['TF_STAGING_' + key] }}" > "secrets/$key"
-          done
+
+          echo "${{ secrets.TF_STAGING_BASE_URL }}" > secrets/BASE_URL
+          echo "${{ secrets.TF_STAGING_FIREBASE_DATABASE_URL }}" > secrets/FIREBASE_DATABASE_URL
+          echo "${{ secrets.TF_STAGING_FIREBASE_SERVICE_ACCOUNT_JSON }}" > secrets/FIREBASE_SERVICE_ACCOUNT_JSON
+          echo "${{ secrets.TF_STAGING_GITHUB_PAT }}" > secrets/GITHUB_PAT
+          echo "${{ secrets.TF_STAGING_MAILCHIMP_API_KEY }}" > secrets/MAILCHIMP_API_KEY
+          echo "${{ secrets.TF_STAGING_MAILCHIMP_LIST_ID }}" > secrets/MAILCHIMP_LIST_ID
+          echo "${{ secrets.TF_STAGING_MAILCHIMP_SERVER }}" > secrets/MAILCHIMP_SERVER
+          echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_API_KEY }}" > secrets/NEXT_PUBLIC_FIREBASE_API_KEY
+          echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_APP_ID }}" > secrets/NEXT_PUBLIC_FIREBASE_APP_ID
+          echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}" > secrets/NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+          echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }}" > secrets/NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+          echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}" > secrets/NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+          echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_PROJECT_ID }}" > secrets/NEXT_PUBLIC_FIREBASE_PROJECT_ID
+          echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}" > secrets/NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+          echo "${{ secrets.TF_STAGING_SENDGRID_API_KEY }}" > secrets/SENDGRID_API_KEY
+          echo "${{ secrets.TF_STAGING_SENDGRID_LIST_ID }}" > secrets/SENDGRID_LIST_ID
+          echo "${{ secrets.TF_STAGING_SENDGRID_SUPPRESSION_LIST_ID }}" > secrets/SENDGRID_SUPPRESSION_LIST_ID
+          echo "${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }}" > secrets/STORYBLOK_PREVIEW_SECRET
+          echo "${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}" > secrets/STORYBLOK_PREVIEW_TOKEN
+          echo "${{ secrets.TF_STAGING_STRIPE_PRODUCT_ONETIME }}" > secrets/STRIPE_PRODUCT_ONETIME
+          echo "${{ secrets.TF_STAGING_STRIPE_PRODUCT_RECURRING }}" > secrets/STRIPE_PRODUCT_RECURRING
+          echo "${{ secrets.TF_STAGING_STRIPE_SECRET_KEY }}" > secrets/STRIPE_SECRET_KEY
 
       - name: 📤 Build and Push Docker Image
         env:
