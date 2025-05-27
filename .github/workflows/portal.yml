@@ -39,57 +39,72 @@ jobs:
         with:
           terraform_version: 1.6.6
 
-      - name: 🔁 Build Image & Deploy to Cloud Run via Terraform
+      - name: 📝 Prepare Docker build secrets
+        run: |
+          mkdir -p secrets
+          keys=(
+            BASE_URL
+            FIREBASE_DATABASE_URL
+            FIREBASE_SERVICE_ACCOUNT_JSON
+            GITHUB_PAT
+            MAILCHIMP_API_KEY
+            MAILCHIMP_LIST_ID
+            MAILCHIMP_SERVER
+            NEXT_PUBLIC_FIREBASE_API_KEY
+            NEXT_PUBLIC_FIREBASE_APP_ID
+            NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+            NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+            NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+            NEXT_PUBLIC_FIREBASE_PROJECT_ID
+            NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+            SENDGRID_API_KEY
+            SENDGRID_LIST_ID
+            SENDGRID_SUPPRESSION_LIST_ID
+            STORYBLOK_PREVIEW_SECRET
+            STORYBLOK_PREVIEW_TOKEN
+            STRIPE_PRODUCT_ONETIME
+            STRIPE_PRODUCT_RECURRING
+            STRIPE_SECRET_KEY
+            VERCEL_URL
+          )
+          for key in "${keys[@]}"; do
+            echo "${{ secrets['TF_STAGING_' + key] }}" > "secrets/$key"
+          done
+
+      - name: 📤 Build and Push Docker Image
+        env:
+          IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
+        run: |
+          echo "📤 Building Docker image: $IMAGE_URL"
+          docker buildx build \
+            --platform linux/amd64 \
+            --tag "$IMAGE_URL" \
+            --push \
+            -f portal/Dockerfile \
+            $(for f in secrets/*; do echo "--secret id=$(basename "$f"),src=$f"; done) \
+            .
+
+          echo "🚀 Image built and pushed."
+
+      - name: 🌱 Terraform Init, Validate & Apply
         env:
           TF_VAR_env: ${{ env.ENVIRONMENT }}
           TF_VAR_app_name: ${{ env.APP_NAME }}
           TF_VAR_gcp_project_id: ${{ env.GCP_PROJECT_ID }}
           TF_VAR_gcp_region: ${{ env.GCP_REGION }}
           TF_VAR_google_sql_db_password: ${{ secrets.TF_STAGING_GOOGLE_SQL_DB_PASSWORD }}
-
+          IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
         run: |
-          echo "📤 Building Docker image: $IMAGE_URL"
-          docker buildx build \
-          --platform linux/amd64 \
-          --tag "$IMAGE_URL" \
-          --push \
-          -f portal/Dockerfile \
-          --build-arg BASE_URL=${{ secrets.TF_STAGING_BASE_URL }} \
-          --build-arg FIREBASE_DATABASE_URL=${{ secrets.TF_STAGING_FIREBASE_DATABASE_URL }} \
-          --build-arg FIREBASE_SERVICE_ACCOUNT_JSON=${{ secrets.TF_STAGING_FIREBASE_SERVICE_ACCOUNT_JSON }} \
-          --build-arg GITHUB_PAT=${{ secrets.TF_STAGING_GITHUB_PAT }} \
-          --build-arg MAILCHIMP_API_KEY=${{ secrets.TF_STAGING_MAILCHIMP_API_KEY }} \
-          --build-arg MAILCHIMP_LIST_ID=${{ secrets.TF_STAGING_MAILCHIMP_LIST_ID }} \
-          --build-arg MAILCHIMP_SERVER=${{ secrets.TF_STAGING_MAILCHIMP_SERVER }} \
-          --build-arg NEXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_API_KEY }} \
-          --build-arg NEXT_PUBLIC_FIREBASE_APP_ID=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_APP_ID }} \
-          --build-arg NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }} \
-          --build-arg NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }} \
-          --build-arg NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }} \
-          --build-arg NEXT_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_PROJECT_ID }} \
-          --build-arg NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }} \
-          --build-arg SENDGRID_API_KEY=${{ secrets.TF_STAGING_SENDGRID_API_KEY }} \
-          --build-arg SENDGRID_LIST_ID=${{ secrets.TF_STAGING_SENDGRID_LIST_ID }} \
-          --build-arg SENDGRID_SUPPRESSION_LIST_ID=${{ secrets.TF_STAGING_SENDGRID_SUPPRESSION_LIST_ID }} \
-          --build-arg STORYBLOK_PREVIEW_SECRET=${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }} \
-          --build-arg STORYBLOK_PREVIEW_TOKEN=${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }} \
-          --build-arg STRIPE_PRODUCT_ONETIME=${{ secrets.TF_STAGING_STRIPE_PRODUCT_ONETIME }} \
-          --build-arg STRIPE_PRODUCT_RECURRING=${{ secrets.TF_STAGING_STRIPE_PRODUCT_RECURRING }} \
-          --build-arg STRIPE_SECRET_KEY=${{ secrets.TF_STAGING_STRIPE_SECRET_KEY }} \
-          .
-
-          echo "🚀 Image built and pushed."
-
           echo "🧭 Initializing Terraform..."
           terraform -chdir=${{ env.TERRAFORM_DIR }} init -backend-config="_staging.tfbackend"
 
-          echo "🧪 Running terraform fmt check..."
+          echo "🧪 Checking formatting..."
           terraform -chdir=${{ env.TERRAFORM_DIR }} fmt -check
 
-          echo "🧪 Validating Terraform..."
+          echo "🧪 Validating configuration..."
           terraform -chdir=${{ env.TERRAFORM_DIR }} validate
 
-          echo "🚀 Applying Terraform..."
+          echo "🚀 Applying Terraform changes..."
           terraform -chdir=${{ env.TERRAFORM_DIR }} apply -auto-approve -input=false \
             -var="docker_image_url=$IMAGE_URL"
 
@@ -99,7 +114,7 @@ jobs:
         run: |
           echo "Fetching Cloud Run URL from Terraform output..."
           CLOUD_RUN_URL=$(terraform -chdir=${{ env.TERRAFORM_DIR }} output -raw cloud_run_url)
-          
+
           echo "✅ Your app is live at:"
           echo "$CLOUD_RUN_URL"
 

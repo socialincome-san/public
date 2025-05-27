@@ -1,55 +1,36 @@
 # -------- Base Layer --------
 FROM node:22-alpine AS base
-ARG BASE_URL
-ARG FIREBASE_DATABASE_URL
-ARG FIREBASE_SERVICE_ACCOUNT_JSON
-ARG GITHUB_PAT
-ARG MAILCHIMP_API_KEY
-ARG MAILCHIMP_LIST_ID
-ARG MAILCHIMP_SERVER
-ARG NEXT_PUBLIC_FIREBASE_API_KEY
-ARG NEXT_PUBLIC_FIREBASE_APP_ID
-ARG NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-ARG NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
-ARG NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
-ARG NEXT_PUBLIC_FIREBASE_PROJECT_ID
-ARG NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
-ARG SENDGRID_API_KEY
-ARG SENDGRID_LIST_ID
-ARG SENDGRID_SUPPRESSION_LIST_ID
-ARG STORYBLOK_PREVIEW_SECRET
-ARG STORYBLOK_PREVIEW_TOKEN
-ARG STRIPE_PRODUCT_ONETIME
-ARG STRIPE_PRODUCT_RECURRING
-ARG STRIPE_SECRET_KEY
+WORKDIR /app
 
-ENV BASE_URL=$BASE_URL
-ENV FIREBASE_DATABASE_URL=$FIREBASE_DATABASE_URL
-ENV FIREBASE_SERVICE_ACCOUNT_JSON=$FIREBASE_SERVICE_ACCOUNT_JSON
-ENV GITHUB_PAT=$GITHUB_PAT
-ENV MAILCHIMP_API_KEY=$MAILCHIMP_API_KEY
-ENV MAILCHIMP_LIST_ID=$MAILCHIMP_LIST_ID
-ENV MAILCHIMP_SERVER=$MAILCHIMP_SERVER
-ENV NEXT_PUBLIC_FIREBASE_API_KEY=$NEXT_PUBLIC_FIREBASE_API_KEY
-ENV NEXT_PUBLIC_FIREBASE_APP_ID=$NEXT_PUBLIC_FIREBASE_APP_ID
-ENV NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=$NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-ENV NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=$NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
-ENV NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=$NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
-ENV NEXT_PUBLIC_FIREBASE_PROJECT_ID=$NEXT_PUBLIC_FIREBASE_PROJECT_ID
-ENV NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=$NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
-ENV SENDGRID_API_KEY=$SENDGRID_API_KEY
-ENV SENDGRID_LIST_ID=$SENDGRID_LIST_ID
-ENV SENDGRID_SUPPRESSION_LIST_ID=$SENDGRID_SUPPRESSION_LIST_ID
-ENV STORYBLOK_PREVIEW_SECRET=$STORYBLOK_PREVIEW_SECRET
-ENV STORYBLOK_PREVIEW_TOKEN=$STORYBLOK_PREVIEW_TOKEN
-ENV STRIPE_PRODUCT_ONETIME=$STRIPE_PRODUCT_ONETIME
-ENV STRIPE_PRODUCT_RECURRING=$STRIPE_PRODUCT_RECURRING
-ENV STRIPE_SECRET_KEY=$STRIPE_SECRET_KEY
+# Mount all secrets and write them into a .env file
+RUN --mount=type=secret,id=BASE_URL \
+    --mount=type=secret,id=FIREBASE_DATABASE_URL \
+    --mount=type=secret,id=FIREBASE_SERVICE_ACCOUNT_JSON \
+    --mount=type=secret,id=GITHUB_PAT \
+    --mount=type=secret,id=MAILCHIMP_API_KEY \
+    --mount=type=secret,id=MAILCHIMP_LIST_ID \
+    --mount=type=secret,id=MAILCHIMP_SERVER \
+    --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_API_KEY \
+    --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_APP_ID \
+    --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN \
+    --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID \
+    --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID \
+    --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_PROJECT_ID \
+    --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET \
+    --mount=type=secret,id=SENDGRID_API_KEY \
+    --mount=type=secret,id=SENDGRID_LIST_ID \
+    --mount=type=secret,id=SENDGRID_SUPPRESSION_LIST_ID \
+    --mount=type=secret,id=STORYBLOK_PREVIEW_SECRET \
+    --mount=type=secret,id=STORYBLOK_PREVIEW_TOKEN \
+    --mount=type=secret,id=STRIPE_PRODUCT_ONETIME \
+    --mount=type=secret,id=STRIPE_PRODUCT_RECURRING \
+    --mount=type=secret,id=STRIPE_SECRET_KEY \
+    --mount=type=secret,id=VERCEL_URL \
+    sh -c 'for f in /run/secrets/*; do echo "$(basename $f)=$(cat $f)" >> /app/.env; done'
 
 # -------- Dependencies Layer --------
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
-WORKDIR /app
 COPY package.json package-lock.json ./
 COPY portal ./portal
 COPY shared ./shared
@@ -65,6 +46,7 @@ COPY --from=deps /app/node_modules ../node_modules
 COPY --from=deps /app/portal ./
 COPY --from=deps /app/shared ../shared
 COPY --from=deps /app/ui ../ui
+COPY --from=base /app/.env /app/.env
 
 RUN npx prisma generate
 RUN npm run build --loglevel verbose || (cat /root/.npm/_logs/*-debug-0.log && false)
@@ -84,7 +66,8 @@ COPY --from=builder /app/portal/prisma ./prisma/
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/portal/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/portal/.next/static ./.next/static
+COPY --from=base /app/.env .env
 
 USER nextjs
 
-CMD ["sh", "-c", "npx prisma migrate deploy --schema=./prisma/schema.prisma && node server.js"]
+CMD ["sh", "-c", "set -a && . .env && set +a && npx prisma migrate deploy --schema=./prisma/schema.prisma && node server.js"]
