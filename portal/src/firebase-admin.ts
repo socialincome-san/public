@@ -4,38 +4,42 @@ import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/Firestor
 import { StorageAdmin } from '@socialincome/shared/src/firebase/admin/StorageAdmin';
 import { credential } from 'firebase-admin';
 
-// FIREBASE_SERVICE_ACCOUNT_JSON should only be a single line where the content of private_key contains \n characters.
-// Escape line breaks from the environment variable so that JSON.parse() can parse the string.
-const serviceAccountJSON = process.env.FIREBASE_SERVICE_ACCOUNT_JSON?.replaceAll('\n', '\\n');
+const encodedServiceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
 const databaseURL = process.env.FIREBASE_DATABASE_URL;
 
-if (!serviceAccountJSON) {
-	console.error('❌ FIREBASE_SERVICE_ACCOUNT_JSON is not set');
-} else {
+console.log('🔍 Initializing Firebase Admin...');
+console.log(`📡 FIREBASE_DATABASE_URL set: ${!!databaseURL}`);
+console.log(`🔐 FIREBASE_SERVICE_ACCOUNT_JSON_BASE64 set: ${!!encodedServiceAccount}`);
+
+let credentials;
+
+if (encodedServiceAccount && databaseURL) {
 	try {
-		const parsed = JSON.parse(serviceAccountJSON);
-		console.log('✅ Firebase service account loaded');
-		console.log(`👤 client_email: ${parsed.client_email}`);
-		console.log(`📁 project_id: ${parsed.project_id}`);
-	} catch (err) {
-		console.error('❌ Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON:', err);
+		const jsonString = Buffer.from(encodedServiceAccount, 'base64').toString('utf-8');
+
+		// Optionally log the first few characters (safe for debug, not production)
+		console.log(`✅ Decoded service account JSON (length: ${jsonString.length})`);
+
+		const parsed = JSON.parse(jsonString);
+
+		console.log(`🧾 Service account client_email: ${parsed.client_email}`);
+		console.log(`🔑 Key ID: ${parsed.private_key_id}`);
+
+		credentials = {
+			credential: credential.cert(parsed),
+			databaseURL,
+		};
+	} catch (error) {
+		console.error('❌ Failed to decode or parse FIREBASE_SERVICE_ACCOUNT_JSON_BASE64');
+		console.error(error);
 	}
-}
-
-if (!databaseURL) {
-	console.error('❌ FIREBASE_DATABASE_URL is not set');
 } else {
-	console.log(`✅ Firebase database URL set to: ${databaseURL}`);
+	console.warn(
+		'⚠️ Missing FIREBASE_DATABASE_URL or FIREBASE_SERVICE_ACCOUNT_JSON_BASE64. Firebase Admin not initialized.',
+	);
 }
 
-export const app = getOrInitializeFirebaseAdmin(
-	serviceAccountJSON && databaseURL
-		? {
-				credential: credential.cert(JSON.parse(serviceAccountJSON)),
-				databaseURL: databaseURL,
-			}
-		: undefined,
-);
+export const app = getOrInitializeFirebaseAdmin(credentials);
 export const authAdmin = new AuthAdmin(app);
 export const firestoreAdmin = new FirestoreAdmin(app);
 export const storageAdmin = new StorageAdmin(app);
