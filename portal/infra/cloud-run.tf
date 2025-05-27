@@ -20,51 +20,6 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
           value = "postgresql://${google_sql_user.google_sql_user.name}:${var.google_sql_db_password}@${google_sql_database_instance.google_sql_database_instance.private_ip_address}/${google_sql_database.google_sql_database.name}"
         }
 
-        env {
-          name  = "NEXT_PUBLIC_FIREBASE_APP_ID"
-          value = var.next_public_firebase_app_id
-        }
-
-        env {
-          name  = "NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID"
-          value = var.next_public_firebase_measurement_id
-        }
-
-        env {
-          name  = "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID"
-          value = var.next_public_firebase_messaging_sender_id
-        }
-
-        env {
-          name  = "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET"
-          value = var.next_public_firebase_storage_bucket
-        }
-
-        env {
-          name  = "NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN"
-          value = var.next_public_firebase_auth_domain
-        }
-
-        env {
-          name  = "NEXT_PUBLIC_FIREBASE_PROJECT_ID"
-          value = var.next_public_firebase_project_id
-        }
-
-        env {
-          name  = "FIREBASE_DATABASE_URL"
-          value = var.firebase_database_url
-        }
-
-        env {
-          name  = "FIREBASE_SERVICE_ACCOUNT_JSON"
-          value = var.firebase_service_account_json
-        }
-
-        env {
-          name  = "NEXT_PUBLIC_FIREBASE_API_KEY"
-          value = var.next_public_firebase_api_key
-        }
-
         ports {
           container_port = 3000
         }
@@ -81,6 +36,10 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
   traffic {
     percent         = 100
     latest_revision = true
+  }
+
+  lifecycle {
+    prevent_destroy = true
   }
 }
 
