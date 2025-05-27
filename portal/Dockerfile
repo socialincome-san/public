@@ -24,7 +24,7 @@ RUN --mount=type=secret,id=BASE_URL \
     --mount=type=secret,id=STRIPE_PRODUCT_ONETIME \
     --mount=type=secret,id=STRIPE_PRODUCT_RECURRING \
     --mount=type=secret,id=STRIPE_SECRET_KEY \
-    sh -c 'for f in /run/secrets/*; do echo "$(basename $f)=$(cat $f)" >> /app/.env; done'
+    sh -c 'for f in /run/secrets/*; do val=$(cat "$f" | sed -e "s/\"/\\\\\"/g"); echo "$(basename "$f")=\"$val\"" >> /app/.env; done'
 
 # -------- Dependencies Layer --------
 FROM base AS deps
