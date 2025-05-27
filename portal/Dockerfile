@@ -46,7 +46,7 @@ COPY --from=deps /app/shared ../shared
 COPY --from=deps /app/ui ../ui
 COPY --from=base /app/.env /app/.env
 
-RUN export $(cat /app/.env | xargs) && \
+RUN set -a && . /app/.env && set +a && \
     npx prisma generate && \
     npm run build --loglevel verbose || (cat /root/.npm/_logs/*-debug-0.log && false)
 

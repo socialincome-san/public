@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"serve": "docker compose up -d && next dev -p 3001",
+		"serve": "docker compose up -d && npx prisma generate && npx prisma migrate deploy && next dev -p 3001",
 		"serve:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run serve'",
 		"build": "next build",
 		"build:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run build'",
