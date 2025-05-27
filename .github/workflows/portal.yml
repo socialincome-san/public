@@ -5,6 +5,7 @@ on:
     branches:
       - feat/gcp-poc
       - feat/gcp-poc-with-website
+      - feat/gcp-poc-with-website-refactored
 
 env:
   ENVIRONMENT: staging
@@ -47,26 +48,35 @@ jobs:
           TF_VAR_google_sql_db_password: ${{ secrets.TF_STAGING_GOOGLE_SQL_DB_PASSWORD }}
 
         run: |
-          echo "🧠 Generating image tag from Git SHA..."
-          SHORT_SHA=${GITHUB_SHA::7}
-          IMAGE_URL="$GCP_REGION-docker.pkg.dev/$GCP_PROJECT_ID/$ARTIFACT_REGISTRY_NAME/$APP_NAME:$SHORT_SHA"
-
           echo "📤 Building Docker image: $IMAGE_URL"
           docker buildx build \
-            --platform linux/amd64 \
-            --tag "$IMAGE_URL" \
-            --push \
-            -f portal/Dockerfile \
-            --build-arg NEXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_API_KEY }} \
-            --build-arg NEXT_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_PROJECT_ID }} \
-            --build-arg NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }} \
-            --build-arg NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }} \
-            --build-arg NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }} \
-            --build-arg NEXT_PUBLIC_FIREBASE_APP_ID=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_APP_ID }} \
-            --build-arg NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }} \
-            --build-arg FIREBASE_SERVICE_ACCOUNT_JSON=${{ secrets.TF_STAGING_FIREBASE_SERVICE_ACCOUNT_JSON }} \
-            --build-arg FIREBASE_DATABASE_URL=${{ secrets.TF_STAGING_FIREBASE_DATABASE_URL }} \
-            .
+          --platform linux/amd64 \
+          --tag "$IMAGE_URL" \
+          --push \
+          -f portal/Dockerfile \
+          --build-arg BASE_URL=${{ secrets.TF_STAGING_BASE_URL }} \
+          --build-arg FIREBASE_DATABASE_URL=${{ secrets.TF_STAGING_FIREBASE_DATABASE_URL }} \
+          --build-arg FIREBASE_SERVICE_ACCOUNT_JSON=${{ secrets.TF_STAGING_FIREBASE_SERVICE_ACCOUNT_JSON }} \
+          --build-arg GITHUB_PAT=${{ secrets.TF_STAGING_GITHUB_PAT }} \
+          --build-arg MAILCHIMP_API_KEY=${{ secrets.TF_STAGING_MAILCHIMP_API_KEY }} \
+          --build-arg MAILCHIMP_LIST_ID=${{ secrets.TF_STAGING_MAILCHIMP_LIST_ID }} \
+          --build-arg MAILCHIMP_SERVER=${{ secrets.TF_STAGING_MAILCHIMP_SERVER }} \
+          --build-arg NEXT_PUBLIC_FIREBASE_API_KEY=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_API_KEY }} \
+          --build-arg NEXT_PUBLIC_FIREBASE_APP_ID=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_APP_ID }} \
+          --build-arg NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }} \
+          --build-arg NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }} \
+          --build-arg NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }} \
+          --build-arg NEXT_PUBLIC_FIREBASE_PROJECT_ID=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_PROJECT_ID }} \
+          --build-arg NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }} \
+          --build-arg SENDGRID_API_KEY=${{ secrets.TF_STAGING_SENDGRID_API_KEY }} \
+          --build-arg SENDGRID_LIST_ID=${{ secrets.TF_STAGING_SENDGRID_LIST_ID }} \
+          --build-arg SENDGRID_SUPPRESSION_LIST_ID=${{ secrets.TF_STAGING_SENDGRID_SUPPRESSION_LIST_ID }} \
+          --build-arg STORYBLOK_PREVIEW_SECRET=${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }} \
+          --build-arg STORYBLOK_PREVIEW_TOKEN=${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }} \
+          --build-arg STRIPE_PRODUCT_ONETIME=${{ secrets.TF_STAGING_STRIPE_PRODUCT_ONETIME }} \
+          --build-arg STRIPE_PRODUCT_RECURRING=${{ secrets.TF_STAGING_STRIPE_PRODUCT_RECURRING }} \
+          --build-arg STRIPE_SECRET_KEY=${{ secrets.TF_STAGING_STRIPE_SECRET_KEY }} \
+          .
 
           echo "🚀 Image built and pushed."
 
