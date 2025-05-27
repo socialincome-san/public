@@ -108,7 +108,7 @@ jobs:
       - name: 🌍 Print Cloud Run URL
         run: |
           echo "Fetching Cloud Run URL from Terraform output..."
-          CLOUD_RUN_URL=$(terraform -chdir=${{ env.TERRAFORM_DIR }} output -raw cloud_run_url)
+          CLOUD_RUN_URL=$(terraform -chdir=${{ env.TERRAFORM_DIR }} output -raw cloud_run_url 2>/dev/null || true)
 
           echo "✅ Your app is live at:"
           echo "$CLOUD_RUN_URL"

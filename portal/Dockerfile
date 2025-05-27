@@ -2,7 +2,6 @@
 FROM node:22-alpine AS base
 WORKDIR /app
 
-# Mount all secrets and write them into a .env file
 RUN --mount=type=secret,id=BASE_URL \
     --mount=type=secret,id=FIREBASE_DATABASE_URL \
     --mount=type=secret,id=FIREBASE_SERVICE_ACCOUNT_JSON \
@@ -41,17 +40,19 @@ RUN npm ci
 # -------- Build Layer --------
 FROM base AS builder
 WORKDIR /app/portal
+
 COPY --from=deps /app/node_modules ../node_modules
 COPY --from=deps /app/portal ./
 COPY --from=deps /app/shared ../shared
 COPY --from=deps /app/ui ../ui
 COPY --from=base /app/.env /app/.env
 
-RUN npx prisma generate
-RUN npm run build --loglevel verbose || (cat /root/.npm/_logs/*-debug-0.log && false)
+RUN set -a && . /app/.env && set +a && \
+    npx prisma generate && \
+    npm run build --loglevel verbose || (cat /root/.npm/_logs/*-debug-0.log && false)
 
 # -------- Runtime Layer --------
-FROM base AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
