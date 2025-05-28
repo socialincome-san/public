@@ -20,6 +20,11 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
           value = "postgresql://${google_sql_user.google_sql_user.name}:${var.google_sql_db_password}@${google_sql_database_instance.google_sql_database_instance.private_ip_address}/${google_sql_database.google_sql_database.name}"
         }
 
+        env {
+          name  = "FEATURE_ENABLE_PORTAL"
+          value = var.env == "production" ? "false" : "true"
+        }
+
         ports {
           container_port = 3000
         }

@@ -16,7 +16,6 @@ resource "google_sql_database_instance" "google_sql_database_instance" {
     ip_configuration {
       ipv4_enabled    = false
       private_network = google_compute_network.google_compute_network.self_link
-      require_ssl     = true
     }
 
     backup_configuration {
