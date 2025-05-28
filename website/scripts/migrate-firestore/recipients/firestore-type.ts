@@ -1,3 +1,3 @@
 export type FireStoreRecipient = {
-  firstName: string;
+	firstName: string;
 };

@@ -7,5 +7,5 @@ services:
       POSTGRES_USER: social-income
       POSTGRES_PASSWORD: social-income
       POSTGRES_DB: social-income
-      TZ: 'Europe/Zurich'
-      PGTZ: 'Europe/Zurich'
+      TZ: "Europe/Zurich"
+      PGTZ: "Europe/Zurich"

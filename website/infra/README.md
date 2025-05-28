@@ -1,6 +1,8 @@
 rm First-Time Terraform Setup — GCP Project Bootstrap
 
-This guide walks you through the required setup before running Terraform for the first time in a new GCP environment (e.g., staging or production).
+This guide walks you through the required setup before running Terraform
+for the first time in a new GCP environment (e.g., staging or
+production).
 
 Step 1: Create the Terraform Deployer Service Account and Assign Roles
 
@@ -65,7 +67,8 @@ Step 2: Create state bucket and assign roles
 gsutil mb -p social-income-staging -l europe-west6 -b on gs://staging-website-terraform-state
 ```
 
-Step 3: Allow the Terraform Deployer Service Account to access the state bucket
+Step 3: Allow the Terraform Deployer Service Account to access the state
+bucket
 
 ```
 gsutil iam ch \
