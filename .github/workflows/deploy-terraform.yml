@@ -11,7 +11,7 @@ on:
 env:
   ENVIRONMENT: staging
   APP_NAME: website
-  GCP_PROJECT_ID: social-income-poc
+  GCP_PROJECT_ID: social-income-staging
   GCP_REGION: europe-west6
   ARTIFACT_REGISTRY_NAME: staging-website-google-artifact-registry-repository
   TERRAFORM_DIR: website/infra
