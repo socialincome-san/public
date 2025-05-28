@@ -21,7 +21,7 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
         }
 
         env {
-          name  = "FEATURE_ENABLE_PORTAL"
+          name  = "NEXT_PUBLIC_FEATURE_ENABLE_PORTAL"
           value = var.env == "production" ? "false" : "true"
         }
 

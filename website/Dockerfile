@@ -49,7 +49,7 @@ COPY --from=deps /app/recipients_selection ../recipients_selection
 COPY --from=base /app/.env /app/.env
 
 RUN set -a && . /app/.env && set +a && \
-    npx prisma generate && \
+    npx prisma generate --schema=../shared/src/database/schema.prisma && \
     npm run build --loglevel verbose || (cat /root/.npm/_logs/*-debug-0.log && false)
 
 # -------- Runtime Layer --------

@@ -1,10 +1,13 @@
 import { Result, fail, ok } from '@/lib/result';
-import { User } from '@prisma/client';
+import { User as PrismaUser } from '@prisma/client';
 import { prisma } from '@socialincome/shared/src/database/prisma';
 
-export const getUsers = async (options?: { take?: number; skip?: number }): Promise<Result<User[]>> => {
+export const getUsers = async (options?: { take?: number; skip?: number }): Promise<Result<PrismaUser[]>> => {
 	try {
-		const users = await prisma.user.findMany(options);
+		const users = await prisma.user.findMany({
+			orderBy: { createdAt: 'desc' },
+			...options,
+		});
 		return ok(users);
 	} catch (e) {
 		console.error('[getUsers]', e);
