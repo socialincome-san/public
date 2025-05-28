@@ -63,7 +63,6 @@ RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/website/public ./public
-#COPY --from=builder /app/website/prisma ./prisma/
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/recipients_selection ./recipients_selection
 COPY --from=builder --chown=nextjs:nodejs /app/website/.next/standalone ./
@@ -72,4 +71,4 @@ COPY --from=base /app/.env .env
 
 USER nextjs
 
-CMD ["sh", "-c", "set -a && . .env && set +a && npx prisma migrate deploy --schema=./prisma/schema.prisma && node server.js"]
+CMD ["sh", "-c", "set -a && . .env && set +a && npx prisma migrate deploy --schema=./shared/src/database/schema.prisma && node server.js"]
