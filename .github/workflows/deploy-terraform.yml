@@ -84,6 +84,7 @@ jobs:
 
       - name: 🌱 Terraform Init, Validate & Apply
         env:
+          TF_LOG: INFO
           TF_VAR_env: ${{ env.ENVIRONMENT }}
           TF_VAR_app_name: ${{ env.APP_NAME }}
           TF_VAR_gcp_project_id: ${{ env.GCP_PROJECT_ID }}
