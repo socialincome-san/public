@@ -5,6 +5,8 @@ import type { Viewport } from 'next';
 import { PropsWithChildren } from 'react';
 import './globals.css';
 
+// export const dynamic = 'force-dynamic';
+
 export const generateMetadata = () => getMetadata('en', 'website-common');
 
 export const viewport: Viewport = {

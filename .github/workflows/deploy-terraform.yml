@@ -1,0 +1,107 @@
+name: 🌍 Provision Website Infrastructure with Terraform
+
+on:
+  push:
+    branches:
+      - feat/gcp-poc
+      - feat/gcp-poc-with-website
+      - feat/gcp-poc-with-website-refactored
+      - feat/gcp-poc-website-staging
+
+env:
+  ENVIRONMENT: staging
+  APP_NAME: website
+  GCP_PROJECT_ID: social-income-poc
+  GCP_REGION: europe-west6
+  ARTIFACT_REGISTRY_NAME: staging-website-google-artifact-registry-repository
+  TERRAFORM_DIR: website/infra
+
+jobs:
+  deploy:
+    name: 🚀 Build & Deploy Staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🔐 Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.TF_STAGING_TERRAFORM_DEPLOYER_CREDENTIALS }}
+
+      - name: ⚙️ Configure Docker to use Artifact Registry
+        run: |
+          echo "🛠 Configuring Docker authentication for Artifact Registry"
+          gcloud auth configure-docker $GCP_REGION-docker.pkg.dev --quiet
+
+      - name: 🧰 Set up Terraform CLI
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.6
+
+      - name: 📝 Prepare Docker build secrets
+        run: |
+          mkdir -p secrets
+
+          echo "${{ secrets.TF_STAGING_BASE_URL }}" > secrets/BASE_URL
+          echo "${{ secrets.TF_STAGING_FIREBASE_DATABASE_URL }}" > secrets/FIREBASE_DATABASE_URL
+          echo "${{ secrets.TF_STAGING_FIREBASE_SERVICE_ACCOUNT_JSON }}" > secrets/FIREBASE_SERVICE_ACCOUNT_JSON
+          echo "${{ secrets.TF_STAGING_GITHUB_PAT }}" > secrets/GITHUB_PAT
+          echo "${{ secrets.TF_STAGING_MAILCHIMP_API_KEY }}" > secrets/MAILCHIMP_API_KEY
+          echo "${{ secrets.TF_STAGING_MAILCHIMP_LIST_ID }}" > secrets/MAILCHIMP_LIST_ID
+          echo "${{ secrets.TF_STAGING_MAILCHIMP_SERVER }}" > secrets/MAILCHIMP_SERVER
+          echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_API_KEY }}" > secrets/NEXT_PUBLIC_FIREBASE_API_KEY
+          echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_APP_ID }}" > secrets/NEXT_PUBLIC_FIREBASE_APP_ID
+          echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}" > secrets/NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+          echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID }}" > secrets/NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+          echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}" > secrets/NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+          echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_PROJECT_ID }}" > secrets/NEXT_PUBLIC_FIREBASE_PROJECT_ID
+          echo "${{ secrets.TF_STAGING_NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}" > secrets/NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+          echo "${{ secrets.TF_STAGING_SENDGRID_API_KEY }}" > secrets/SENDGRID_API_KEY
+          echo "${{ secrets.TF_STAGING_SENDGRID_LIST_ID }}" > secrets/SENDGRID_LIST_ID
+          echo "${{ secrets.TF_STAGING_SENDGRID_SUPPRESSION_LIST_ID }}" > secrets/SENDGRID_SUPPRESSION_LIST_ID
+          echo "${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_SECRET }}" > secrets/STORYBLOK_PREVIEW_SECRET
+          echo "${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}" > secrets/STORYBLOK_PREVIEW_TOKEN
+          echo "${{ secrets.TF_STAGING_STRIPE_PRODUCT_ONETIME }}" > secrets/STRIPE_PRODUCT_ONETIME
+          echo "${{ secrets.TF_STAGING_STRIPE_PRODUCT_RECURRING }}" > secrets/STRIPE_PRODUCT_RECURRING
+          echo "${{ secrets.TF_STAGING_STRIPE_SECRET_KEY }}" > secrets/STRIPE_SECRET_KEY
+
+      - name: 📤 Build and Push Docker Image
+        env:
+          IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
+        run: |
+          echo "📤 Building Docker image: $IMAGE_URL"
+          docker buildx build \
+            --platform linux/amd64 \
+            --tag "$IMAGE_URL" \
+            --push \
+            -f website/Dockerfile \
+            $(for f in secrets/*; do echo "--secret id=$(basename "$f"),src=$f"; done) \
+            .
+
+          echo "🚀 Image built and pushed."
+
+      - name: 🌱 Terraform Init, Validate & Apply
+        env:
+          TF_VAR_env: ${{ env.ENVIRONMENT }}
+          TF_VAR_app_name: ${{ env.APP_NAME }}
+          TF_VAR_gcp_project_id: ${{ env.GCP_PROJECT_ID }}
+          TF_VAR_gcp_region: ${{ env.GCP_REGION }}
+          TF_VAR_google_sql_db_password: ${{ secrets.TF_STAGING_GOOGLE_SQL_DB_PASSWORD }}
+          IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
+        run: |
+          echo "🧭 Initializing Terraform..."
+          terraform -chdir=${{ env.TERRAFORM_DIR }} init -backend-config="_staging.tfbackend"
+
+          echo "🧪 Checking formatting..."
+          terraform -chdir=${{ env.TERRAFORM_DIR }} fmt -check
+
+          echo "🧪 Validating configuration..."
+          terraform -chdir=${{ env.TERRAFORM_DIR }} validate
+
+          echo "🚀 Applying Terraform changes..."
+          terraform -chdir=${{ env.TERRAFORM_DIR }} apply -auto-approve -input=false \
+            -var="docker_image_url=$IMAGE_URL"
+
+          echo "✅ Terraform applied successfully."
