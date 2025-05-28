@@ -49,21 +49,3 @@ resource "google_cloud_run_service_iam_member" "google_cloud_run_service_iam_mem
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
-
-# Unfortunately, the domain mapping resource is not supported in the region we are using (europe-west6)
-# So we have to point from cloudflare to the service URL directly
-# Thats a little dangerous, because if the service URL changes, we have to update the DNS record manually
-# But it should only change when we destroy and recreate the service (e.g. when we rename the service)
-# https://cloud.google.com/run/docs/mapping-custom-domains
-# resource "google_cloud_run_domain_mapping" "google_cloud_run_domain_mapping" {
-#   location = var.gcp_region
-#   name     = var.domain_name
-#
-#   metadata {
-#     namespace = var.gcp_project_id
-#   }
-#
-#   spec {
-#     route_name = google_cloud_run_service.google_cloud_run_service.name
-#   }
-# }

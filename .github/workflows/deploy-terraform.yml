@@ -1,4 +1,4 @@
-name: 🌍 Provision Website Infrastructure with Terraform
+name: Website / Deploy to GCP
 
 on:
   push:
@@ -18,7 +18,7 @@ env:
 
 jobs:
   deploy:
-    name: 🚀 Build & Deploy Staging
+    name: Staging
     runs-on: ubuntu-latest
 
     steps:
