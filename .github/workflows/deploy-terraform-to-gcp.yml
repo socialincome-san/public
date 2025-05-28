@@ -1,4 +1,4 @@
-name: Website / Deploy to GCP
+name: Website / Deploy with Terraform to GCP
 
 on:
   push:

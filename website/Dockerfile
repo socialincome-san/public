@@ -50,7 +50,7 @@ COPY --from=base /app/.env /app/.env
 
 RUN set -a && . /app/.env && set +a && \
     npx prisma generate --schema=../shared/src/database/schema.prisma && \
-    npm run build --loglevel verbose || (cat /root/.npm/_logs/*-debug-0.log && false)
+    npm run build --loglevel verbose || (echo "🚨 Build failed. Printing log:" && cat /root/.npm/_logs/*-debug-0.log && false)
 
 # -------- Runtime Layer --------
 FROM node:22-alpine AS runner
@@ -63,7 +63,7 @@ RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/website/public ./public
-COPY --from=builder /app/website/prisma ./prisma/
+#COPY --from=builder /app/website/prisma ./prisma/
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/recipients_selection ./recipients_selection
 COPY --from=builder --chown=nextjs:nodejs /app/website/.next/standalone ./
