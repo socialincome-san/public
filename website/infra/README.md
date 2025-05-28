@@ -53,6 +53,12 @@ gcloud projects add-iam-policy-binding social-income-staging \
   --role="roles/serviceusage.serviceUsageAdmin"
 ```
 
+```
+gcloud projects add-iam-policy-binding social-income-staging \
+  --member="serviceAccount:terraform-deployer@social-income-staging.iam.gserviceaccount.com" \
+  --role="roles/vpcaccess.admin"
+```
+
 Step 2: Create state bucket and assign roles
 
 ```

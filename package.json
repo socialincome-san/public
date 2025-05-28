@@ -10,8 +10,7 @@
 		"functions",
 		"shared",
 		"ui",
-		"website",
-		"portal"
+		"website"
 	],
 	"scripts": {
 		"admin:build": "npm --workspace=@socialincome/admin run build",
