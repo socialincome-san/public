@@ -8,9 +8,15 @@ resource "google_sql_database_instance" "google_sql_database_instance" {
     tier            = "db-f1-micro"
     disk_autoresize = true
 
+    database_flags {
+      name  = "log_statement"
+      value = "all"
+    }
+
     ip_configuration {
       ipv4_enabled    = false
       private_network = google_compute_network.google_compute_network.self_link
+      require_ssl     = true
     }
 
     backup_configuration {

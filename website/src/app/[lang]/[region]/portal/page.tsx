@@ -1,23 +1,13 @@
-import { prisma } from '@/server/prisma';
+import { getUsers } from '@/server/repositories/user.repository';
 
 export const dynamic = 'force-dynamic';
 
 export default async function Portal() {
-	const users = await prisma.user.findMany({
-		take: 5,
-		orderBy: { createdAt: 'desc' },
-		select: {
-			id: true,
-			firstName: true,
-			lastName: true,
-			role: true,
-		},
-	});
+	const users = await getUsers();
 
 	return (
 		<main style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-			<p>Here are the 5 newest users from your database:</p>
-
+			<p>Here are your users from the database:</p>
 			<ul>
 				{users.length === 0 && <li>No users found. Add some in the DB!</li>}
 				{users.map((user) => (
