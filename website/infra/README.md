@@ -52,3 +52,19 @@ Step 2: Create state bucket and assign roles
 ```
 gsutil mb -p social-income-staging -l europe-west6 -b on gs://staging-website-terraform-state
 ```
+
+Step 3: Allow the Terraform Deployer Service Account to access the state bucket
+
+```
+gsutil iam ch \
+  serviceAccount:terraform-deployer@social-income-staging.iam.gserviceaccount.com:roles/storage.admin \
+  gs://staging-website-terraform-state
+```
+
+Step 4: Create the Terraform Deployer Service Account Key
+
+```
+gcloud iam service-accounts keys create terraform-deployer-key.json \
+  --project=social-income-staging \
+  --iam-account=terraform-deployer@social-income-staging.iam.gserviceaccount.com
+```
