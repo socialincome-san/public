@@ -1,5 +1,5 @@
-import { WebsiteRegion } from '@socialincome/portal/src/i18n';
 import { CountryCode } from '@socialincome/shared/src/types/country';
+import { WebsiteRegion } from '@socialincome/website/src/i18n';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
