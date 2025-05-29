@@ -1,6 +1,4 @@
 import { AuthAdmin } from '../../../../../shared/src/firebase/admin/AuthAdmin';
-import { FirestoreAdmin } from '../../../../../shared/src/firebase/admin/FirestoreAdmin';
-
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { Twilio } from 'twilio';
 import { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_VERIFY_SERVICE_SID } from '../../../config';
@@ -43,8 +41,8 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 			throw new HttpsError('invalid-argument', 'Phone number must be in valid E.164 format (e.g., +12345678901)');
 		}
 
-		console.log(`Attempting to verify OTP for phone: ${phoneNumber}`);
 		// Verify OTP with Twilio
+		console.log(`Attempting to verify OTP for phone: ${phoneNumber}`);
 		const verification = await twilioClient.verify.v2.services(TWILIO_VERIFY_SERVICE_SID).verificationChecks.create({
 			to: phoneNumber,
 			code: otp,
@@ -59,11 +57,19 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 		}
 
 		// OTP is valid, create or get Firebase user
-		const authAdmin = new AuthAdmin();
-		const firestoreAdmin = new FirestoreAdmin();
 		console.log('OTP verified successfully, checking if user exists');
 
-		// First check if a user with this phone number already exists
+		// Check if user with given phoneNumber exists
+		const authAdmin = new AuthAdmin();
+		try {
+			const userRecord = await authAdmin.auth.getUserByPhoneNumber(phoneNumber);
+			console.log('Existing user found:', userRecord.uid);
+		} catch  (error) {
+			console.log('User not found', error);
+			throw new HttpsError('not-found', `User with the phone number '${phoneNumber}' not found`);
+		}
+
+		// Check if a user with this phone number already exists
 		try {
 			const userRecord = await authAdmin.auth.getUserByPhoneNumber(phoneNumber);
 			console.log('Existing user found:', userRecord.uid);
@@ -79,32 +85,8 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 				uid: userRecord.uid,
 			};
 		} catch (error) {
-			console.log('Error: ', error);
-			console.log('User not found, creating new user');
-			// User doesn't exist, create a new one
-			const userRecord = await authAdmin.auth.createUser({
-				phoneNumber,
-			});
-
-			console.log('New user created:', userRecord.uid);
-
-			// Store user in Firestore
-			await firestoreAdmin.firestore.collection('users').doc(userRecord.uid).set({
-				phoneNumber,
-				createdAt: new Date(),
-			});
-			console.log('User data stored in Firestore');
-
-			// Generate custom token
-			const customToken = await authAdmin.auth.createCustomToken(userRecord.uid);
-			console.log('Custom token created for new user');
-
-			return {
-				success: true,
-				token: customToken,
-				isNewUser: true,
-				uid: userRecord.uid,
-			};
+			console.log('User not found', error);
+			throw new HttpsError('not-found', `User with the phone number '${phoneNumber}' not found`);
 		}
 	} catch (error) {
 		console.error('Error verifying OTP:', error);
