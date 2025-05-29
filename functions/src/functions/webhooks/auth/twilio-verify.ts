@@ -1,12 +1,12 @@
-import { AuthAdmin } from '../../../../../shared/src/firebase/admin/AuthAdmin';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { Twilio } from 'twilio';
+import { AuthAdmin } from '../../../../../shared/src/firebase/admin/AuthAdmin';
 import { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_VERIFY_SERVICE_SID } from '../../../config';
 
 type VerifyRequest = {
 	phoneNumber: string;
 	otp: string;
-}
+};
 
 if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_VERIFY_SERVICE_SID) {
 	throw new Error('Missing Twilio environment variables');
@@ -64,7 +64,7 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 		try {
 			const userRecord = await authAdmin.auth.getUserByPhoneNumber(phoneNumber);
 			console.log('Existing user found:', userRecord.uid);
-		} catch  (error) {
+		} catch (error) {
 			console.log('User not found', error);
 			throw new HttpsError('not-found', `User with the given phone number not found`);
 		}
