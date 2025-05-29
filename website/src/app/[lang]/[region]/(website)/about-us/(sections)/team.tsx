@@ -42,6 +42,7 @@ import simonImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon.
 import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simone.jpeg';
 import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
 import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
+import jessicaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/jessica-freeman.jpeg';
 import willemijnImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/willemijn-de-gaay-fortman.jpeg';
 
 import { WebsiteLanguage } from '@/i18n';
@@ -88,7 +89,6 @@ const groups: Group[] = [
 			{ name: 'Verena Zaiser', role: 'app-development', image: verenaImage },
 			{ name: 'Pranav Chatur', role: 'software-development', image: pranavImage },
 			{ name: 'Matthew Roberts', role: 'communications', image: matthewImage },
-			{ name: 'Françoise Légeret', role: 'translations', image: francoiseImage },
 			{ name: 'Karin Berg', role: 'app-development', image: karinImage },
 			{ name: 'Marc Werner', role: 'research', image: marcImage },
 			{ name: 'Gavriil Tzortzakis', role: 'software-development', image: gavriilImage },
@@ -98,6 +98,7 @@ const groups: Group[] = [
 			{ name: 'Lea Strohm', role: 'strategy', image: leaImage },
 			{ name: 'Marco Bohler', role: 'software-development', image: marcoImage },
 			{ name: 'Raphael Wirth', role: 'software-development', image: raphaelImage },
+			{ name: 'Jessica Freeman', role: 'fundraising', image: jessicaImage },
 		],
 	},
 	{
@@ -134,6 +135,7 @@ const groups: Group[] = [
 			{ name: 'Mathilde Dumond', role: 'software-development', image: mathildeImage },
 			{ name: 'Inna Abdrakhmanova', role: 'software-development', image: innaImage },
 			{ name: 'Alexey Shestakov', role: 'software-development', image: alexeyImage },
+			{ name: 'Françoise Légeret', role: 'translations', image: francoiseImage },
 		],
 	},
 ];
