@@ -37,22 +37,22 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 		// Basic E.164 validation (should start with + followed by digits only)
 		const phoneRegex = /^\+[1-9]\d{1,14}$/;
 		if (!phoneRegex.test(phoneNumber)) {
-			console.log('Invalid phone number format:', phoneNumber);
+			console.log('Invalid phone number format');
 			throw new HttpsError('invalid-argument', 'Phone number must be in valid E.164 format (e.g., +12345678901)');
 		}
 
 		// Verify OTP with Twilio
-		console.log(`Attempting to verify OTP for phone: ${phoneNumber}`);
+		console.log('Attempting to verify OTP for phone');
 		const verification = await twilioClient.verify.v2.services(TWILIO_VERIFY_SERVICE_SID).verificationChecks.create({
 			to: phoneNumber,
 			code: otp,
 		});
 
-		console.log('Twilio verification response:', verification);
+		console.log(`Twilio verification response has status: '${verification.status}' and sid '${verification.sid}'`);
 
 		// Check if verification was successful
 		if (verification.status !== 'approved') {
-			console.log('OTP verification failed, status:', verification.status);
+			console.log('OTP verification failed, status: ', verification.status);
 			throw new HttpsError('permission-denied', 'Invalid OTP provided');
 		}
 
@@ -66,7 +66,7 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 			console.log('Existing user found:', userRecord.uid);
 		} catch  (error) {
 			console.log('User not found', error);
-			throw new HttpsError('not-found', `User with the phone number '${phoneNumber}' not found`);
+			throw new HttpsError('not-found', `User with the given phone number not found`);
 		}
 
 		// Check if a user with this phone number already exists
@@ -86,11 +86,11 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 			};
 		} catch (error) {
 			console.log('User not found', error);
-			throw new HttpsError('not-found', `User with the phone number '${phoneNumber}' not found`);
+			throw new HttpsError('not-found', 'User with the given phone number not found');
 		}
 	} catch (error) {
 		console.error('Error verifying OTP:', error);
-		throw new HttpsError('internal', 'Failed to verify OTP', error);
+		throw new HttpsError('internal', 'Failed to verify OTP');
 	}
 });
 
