@@ -10,14 +10,14 @@ export function ThumbnailImage({ thumbnail }: { thumbnail?: StoryblokImage }) {
 	if (!thumbnail) {
 		return null;
 	}
-	let dimensionsFromStoryblokImageUrl = getDimensionsFromStoryblokImageUrl(thumbnail.filename);
+	let imageDimensions = getDimensionsFromStoryblokImageUrl(thumbnail.filename);
 	return (
 		<Image
 			className="my-auto flex h-14 w-20 p-0"
 			src={thumbnail.filename}
-			alt={String(thumbnail.id) + '-thumbnail'}
-			width={dimensionsFromStoryblokImageUrl.width ?? DEFAULT_WIDTH}
-			height={dimensionsFromStoryblokImageUrl.height ?? DEFAULT_HEIGHT}
+			alt={thumbnail.alt || `Thumbnail-${thumbnail.id}`}
+			width={imageDimensions.width ?? DEFAULT_WIDTH}
+			height={imageDimensions.height ?? DEFAULT_HEIGHT}
 		/>
 	);
 }
