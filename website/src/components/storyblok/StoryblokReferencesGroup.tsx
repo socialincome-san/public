@@ -1,39 +1,21 @@
 import { ShowMoreToggle } from '@/components/storyblok/ShowMore';
-import { formatStoryblokDate, getDimensionsFromStoryblokImageUrl } from '@/components/storyblok/StoryblokUtils';
-import { ReferencesGroup, StoryblokImage } from '@socialincome/shared/src/storyblok/journal';
+import { formatStoryblokDate } from '@/components/storyblok/StoryblokUtils';
+import { ThumbnailImage } from '@/components/storyblok/ThumbnailImage';
+import { ReferenceArticle, ReferencesGroup, StoryblokImage } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { linkCn, Separator, Typography } from '@socialincome/ui';
-import Image from 'next/image';
 import Link from 'next/link';
 
-const placeholderImage = '/assets/metadata/placeholder/news-outlet.svg';
+const defaultThumbnail = { filename: '/assets/metadata/placeholder/news-outlet.svg', alt: 'news-outlet' };
 
-const DEFAULT_HEIGHT = 15;
-
-const DEFAULT_WIDTH = 25;
-
-function thumbnailImage(thumbnail: StoryblokImage | undefined) {
-	if (!thumbnail) {
-		return null;
-	}
-	let dimensionsFromStoryblokImageUrl = getDimensionsFromStoryblokImageUrl(thumbnail.filename);
-	return articleImageComponent(
-		String(thumbnail.id),
-		dimensionsFromStoryblokImageUrl.height ?? DEFAULT_HEIGHT,
-		dimensionsFromStoryblokImageUrl.width ?? DEFAULT_WIDTH,
-		thumbnail.filename,
-	);
-}
-
-function articleImageComponent(id: string, height: number, width: number, src: any) {
-	return (
-		<Image className="my-auto flex h-14 w-20 p-0" src={src} alt={id + '-thumbnail'} width={width} height={height} />
-	);
-}
-
-function placeHolderImage(id: string) {
-	return articleImageComponent(id, 16, 24, placeholderImage);
+function getThumbnailOrDefault(referenceArticle: ReferenceArticle): StoryblokImage {
+	return referenceArticle.thumbnail?.filename
+		? referenceArticle.thumbnail
+		: {
+				id: referenceArticle.id,
+				...defaultThumbnail,
+			};
 }
 
 export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: Translator; lang: LanguageCode }) {
@@ -62,10 +44,7 @@ export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: 
 					<div key={reference._uid}>
 						{showSeparator(index) && <Separator className="bg-foreground m-0 mb-4 mt-4 opacity-15" />}
 						<div className="flex items-start gap-8">
-							{showThumbnails &&
-								(reference.thumbnail?.filename
-									? thumbnailImage(reference.thumbnail)
-									: placeHolderImage(reference._uid))}
+							{showThumbnails && <ThumbnailImage thumbnail={getThumbnailOrDefault(reference)} />}
 							<div className="flex flex-col justify-center">
 								<Link
 									className={linkCn({ arrow: 'external', underline: 'none' })}
