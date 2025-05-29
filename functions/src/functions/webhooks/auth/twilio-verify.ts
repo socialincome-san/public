@@ -5,6 +5,11 @@ import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { Twilio } from 'twilio';
 import { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_VERIFY_SERVICE_SID } from '../../../config';
 
+type VerifyRequest = {
+	phoneNumber: string;
+	otp: string;
+}
+
 if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_VERIFY_SERVICE_SID) {
 	throw new Error('Missing Twilio environment variables');
 }
@@ -15,7 +20,7 @@ const twilioClient = new Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
  * Cloud function to verify OTP sent by Twilio
  * If valid, it creates/gets a Firebase user and returns a custom token
  */
-const verifyOtpFunction = onCall({ maxInstances: 10 }, async (request) => {
+const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 	console.log('Function called with request:', request.data);
 	let { phoneNumber, otp } = request.data;
 
