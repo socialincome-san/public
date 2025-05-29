@@ -10,6 +10,7 @@ import flavienImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/flav
 import francoiseImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/francoise.jpg';
 import gavriilImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/gavriil-tzortzakis.jpg';
 import innaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/inna-abdrakhmanova.jpeg';
+import jessicaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/jessica-freeman.jpeg';
 import juanImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/juan.jpeg';
 import juliaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/julia.jpeg';
 import kabeloImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kabelo.jpeg';
@@ -42,7 +43,6 @@ import simonImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon.
 import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simone.jpeg';
 import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
 import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
-import jessicaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/jessica-freeman.jpeg';
 import willemijnImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/willemijn-de-gaay-fortman.jpeg';
 
 import { WebsiteLanguage } from '@/i18n';
