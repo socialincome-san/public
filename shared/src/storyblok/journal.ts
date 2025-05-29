@@ -6,9 +6,33 @@ export enum StoryblokContentType {
 	Tag = 'topic',
 }
 
+export interface StoryblokEmbeddedVideo {
+	id: number;
+	url?: string;
+	caption: string;
+	muxPlaybackId?: string;
+}
+
+export interface ReferencesGroup {
+	context: string;
+	references: ReferenceArticle[];
+}
+
+export interface ReferenceArticle {
+	id: number;
+	_uid: string;
+	publicationDate: string;
+	title: string;
+	author: string;
+	thumbnail?: StoryblokImage;
+	mediaOutlet: string;
+	url: string;
+}
+
 export interface StoryblokImage {
 	alt: string;
 	filename: string;
+	focus?: string;
 	id: number;
 }
 
@@ -24,6 +48,15 @@ export interface StoryblokTag {
 	displayInOverviewPage: boolean;
 }
 
+export interface ActionButton {
+	text: string;
+	url: string;
+	primaryStyle: boolean;
+	id: number;
+	_uid: string;
+	glowEffect: boolean;
+}
+
 export interface StoryblokAuthor {
 	avatar: StoryblokImage;
 	fullName: string;
@@ -36,6 +69,7 @@ export interface StoryblokAuthor {
 
 export interface StoryblokArticle {
 	id: number;
+	originalLanguage?: string;
 	title: string;
 	content: any;
 	subtitle: string;
