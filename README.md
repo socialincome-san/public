@@ -11,7 +11,7 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
 ## OSS Tools by Social Income
 
 |                  |                                                Admin Tool                                                 |                                                                                       Website                                                                                        |                                                                                  Mobile App                                                                                   |
-|------------------|:---------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| ---------------- | :-------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 |                  |    ![](https://github.com/socialincome-san/public/assets/6095849/42a8ce3e-4ff3-4d25-a298-1b4bc1570b0a)    |                                         ![](https://github.com/socialincome-san/public/assets/6095849/e4dbf692-d4b9-4253-88ea-2da7970919d8)                                          |                                      ![](https://github.com/socialincome-san/public/assets/6095849/94d0f653-d894-4e9e-ab0d-b1cd8bfe9eab)                                      |
 | **Purpose**      |                      Make it simple to manage payments, contributors and recipients                       |                                                                       Raising donations and inform the public                                                                        |                                                         Make it simple for recipients to manage payments and surveys                                                          |
 | **Instructions** |                                         [Readme](admin/README.md)                                         |                                                                             [Readme](website/README.md)                                                                              |                                              [Readme](recipients_app/README.md) / [Contributing](recipients_app/CONTRIBUTING.md)                                              |
@@ -69,11 +69,12 @@ We are mainly leveraging the following tools:
 
 ### Local development environment
 
-We use [mise-en-place](https://mise.jdx.dev/) to run the local development environment. Please familiarize yourself with
-the
+We use [mise-en-place](https://mise.jdx.dev/) to run the local
+development environment. Please familiarize yourself with the
 documentation to understand how to set up and use it.
 
-If you have mise installed, you can run the following command to set up the local development environment:
+If you have mise installed, you can run the following command to set up
+the local development environment:
 
 ```bash
 mise install
@@ -85,8 +86,9 @@ and then start the local development environment with:
 mise dev
 ```
 
-To run the tools separately either use the scripts in the package.json file or run the mise tasks, e.g. both these
-commands start the admin tool:
+To run the tools separately either use the scripts in the package.json
+file or run the mise tasks, e.g. both these commands start the admin
+tool:
 
 ```bash
 mise run admin
