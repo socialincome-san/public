@@ -11,7 +11,7 @@ https://user-images.githubusercontent.com/6095849/191377786-10cdb4a1-5b25-4512-a
 ## OSS Tools by Social Income
 
 |                  |                                                Admin Tool                                                 |                                                                                       Website                                                                                        |                                                                                  Mobile App                                                                                   |
-| ---------------- | :-------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|------------------|:---------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 |                  |    ![](https://github.com/socialincome-san/public/assets/6095849/42a8ce3e-4ff3-4d25-a298-1b4bc1570b0a)    |                                         ![](https://github.com/socialincome-san/public/assets/6095849/e4dbf692-d4b9-4253-88ea-2da7970919d8)                                          |                                      ![](https://github.com/socialincome-san/public/assets/6095849/94d0f653-d894-4e9e-ab0d-b1cd8bfe9eab)                                      |
 | **Purpose**      |                      Make it simple to manage payments, contributors and recipients                       |                                                                       Raising donations and inform the public                                                                        |                                                         Make it simple for recipients to manage payments and surveys                                                          |
 | **Instructions** |                                         [Readme](admin/README.md)                                         |                                                                             [Readme](website/README.md)                                                                              |                                              [Readme](recipients_app/README.md) / [Contributing](recipients_app/CONTRIBUTING.md)                                              |
@@ -67,87 +67,32 @@ We are mainly leveraging the following tools:
 - [Firebase Emulators](https://firebase.google.com/docs/emulator-suite)
   for the local dev environment
 
-#### 1. Prerequisites
+### Local development environment
 
-**Node.js:** `brew install node@18` (Homebrew). Make sure you are using
-Node.js 18. Follow
-[this](https://ralphjsmit.com/switch-between-nodejs-versions-homebrew)
-guide to switch between different versions of Node.js if need be.
+We use [mise-en-place](https://mise.jdx.dev/) to run the local development environment. Please familiarize yourself with
+the
+documentation to understand how to set up and use it.
 
-**java**: `brew install openjdk` (Homebrew). See also troubleshooting
-below.
+If you have mise installed, you can run the following command to set up the local development environment:
 
-<details>
-  <summary>Troubleshooting</summary>
-
-#### Error Missing Java
-
-````shell
-➜  socialincome-public git:(main) npm run firebase:serve
-
-> @socialincome/monorepo@1.0.0 firebase:serve
-> firebase emulators:start --project social-income-staging --config firebase.json --import ./seed
-
-⚠  emulators: You are not currently authenticated so some features may not work correctly. Please run firebase login to authenticate the CLI.
-i  emulators: Shutting down emulators.
-
-Error: Process `java -version` has exited with code 1. Please make sure Java is installed and on your system PATH.
------Original stdout-----
------Original stderr-----
-The operation couldn’t be completed. Unable to locate a Java Runtime.
-Please visit http://www.java.com for information on installing Java.```
-````
-
-Solution
-
-```shell
-$ brew install openjdk
-$ sudo ln -sfn $HOMEBREW_PREFIX/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
+```bash
+mise install
 ```
 
-</details>
+and then start the local development environment with:
 
-#### 2. Install the dependencies
-
-```shell
-npm install
+```bash
+mise dev
 ```
 
-#### 3. Start environment
+To run the tools separately either use the scripts in the package.json file or run the mise tasks, e.g. both these
+commands start the admin tool:
 
-Initiate development environments for specific tools as needed (see
-[table above](#oss-tools-by-social-income)).
+```bash
+mise run admin
 
-- Always start the Firebase emulator first with `npm run firebase:serve`
-  — console dashboard is available at
-  [localhost:4000](http://localhost:4000).
-- To start the Admin Tool, run `npm run admin:serve` and open
-  [localhost:3000](http://localhost:3000).
-- To start the Website, run `npm run website:serve` and open
-  [localhost:3001](http://localhost:3001).
-- To start the Storybook, run `npm run ui:serve` and open
-  [localhost:6006](http://localhost:6006). (currently broken)
-
-The [package.json](package.json) file gives you a good overview of the
-available commands.
-
-<details>
-  <summary>Troubleshooting</summary>
-
-#### Port taken
-
-```shell
-Error: Could not start Firestore Emulator, port taken.
+npm run admin:serve
 ```
-
-Solution (macOS): In most cases it is due to port 8080 or 8085, which
-can be _killed_ with one command:
-
-```shell
-kill $(lsof -t -i:8080) $(lsof -t -i:8085)
-```
-
-</details>
 
 ### Developing
 
