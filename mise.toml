@@ -1,0 +1,25 @@
+[tools]
+node = "22"
+java = "23"
+
+[tasks.install]
+run = "npm install"
+
+[tasks.firebase]
+run = "npm run firebase:serve"
+depends = ["install"]
+
+[tasks.admin]
+run = "npm run admin:serve"
+depends = ["install"]
+
+[tasks.website]
+run = "npm run website:serve"
+depends = ["install"]
+
+[tasks.functions]
+run = "npm run functions:serve"
+depends = ["install"]
+
+[tasks.dev]
+depends = ["firebase", "admin", "website", "functions"]
