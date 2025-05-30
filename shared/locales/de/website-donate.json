@@ -60,17 +60,9 @@
 				"presentation": "Präsentation",
 				"other": "Von woanders"
 			},
-			"submit-button": "Bestätigen"
-		},
-		"activation-form": {
-			"title": "Setze ein Passwort für dein Konto",
-			"email": "E-Mail",
-			"invalid-email": "E-Mail ist ungültig",
-			"password": "Passwort",
-			"password-confirm": "Passwort bestätigen",
-			"password-mismatch": "Passwörter stimmen nicht überein",
-			"submit-button": "Account aktivieren",
-			"google-button": "Über Google anmelden"
+			"submit-button": "Bestätigen",
+			"update-user-error": "Es gab einen Fehler beim Aktualisieren deiner Informationen. Bitte versuche es erneut.",
+			"activate-your-account": "Bitte überprüfe deine E-Mails und klicke auf den Link, den wir dir gesendet haben, um dein Konto zu aktivieren."
 		}
 	}
 }
