@@ -65,29 +65,5 @@
 			"onikeh": "Social Income has helped me immensely. It serves as an extra source of strength to draw from in our everyday lives. It feels amazing to have people support and believe in your dreams.",
 			"neneh": "I use my monthly Social Income to invest in my small business and pay for lunch for my kids at school. It makes me so happy I could cry!"
 		}
-	},
-	"whats-next": {
-		"header": "What's next?",
-		"title-1": "We take things ",
-		"title-2": "one step at a time.",
-		"subtitle": "Social Income’s long-term goal is to create a global system of wealth redistribution for people in need, with the help of contributors from all around the world. Like any ambitious project, it takes time to scale.",
-		"timeline": {
-			"item-1": {
-				"title": "March 2020",
-				"text": "We started our Pilot Phase and paid out the first installments to a small community in Freetown, Sierra Leone."
-			},
-			"item-2": {
-				"title": "September 2021",
-				"text": "We started our Development Phase and optimized our payment process."
-			},
-			"item-3": {
-				"title": "January 2022",
-				"text": "We reached our Public Phase and have since been continuously rolling out Social Income to more recipients."
-			},
-			"item-4": {
-				"title": "Ongoing: Impact Measurement",
-				"text": "We have established a method and a set of qualitative and quantitative criteria to measure the project’s impact. We are now collecting essential data and refining our method with the help of our recipients."
-			}
-		}
 	}
 }
