@@ -18,11 +18,7 @@ class TermsAndConditionsPage extends StatelessWidget {
     final demoManager = context.read<DemoManager>();
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(context.l10n.account),
-        centerTitle: true,
-      ),
+      appBar: AppBar(elevation: 0, title: Text(context.l10n.account), centerTitle: true),
       body: Padding(
         padding: AppSpacings.a16,
         child: Column(
@@ -40,46 +36,43 @@ class TermsAndConditionsPage extends StatelessWidget {
                         TextSpan(
                           text: context.l10n.createAccountInfo,
                           style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                                color: AppColors.primaryColor,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         TextSpan(
                           text: context.l10n.privacyPolicy,
                           style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                                color: AppColors.primaryColor,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                              ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () async {
-                              const url = "https://socialincome.org/privacy";
-                              if (await canLaunchUrlString(url)) {
-                                await launchUrlString(url);
-                              } else {
-                                Clipboard.setData(
-                                  const ClipboardData(
-                                    text: "https://socialincome.org/privacy",
-                                  ),
-                                ).then((_) {
-                                  // Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check.
-                                  if (context.mounted) {
-                                    FlushbarHelper.showFlushbar(
-                                      context,
-                                      message: context.l10n.privacyPolicyError,
-                                      type: FlushbarType.error,
-                                    );
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer:
+                              TapGestureRecognizer()
+                                ..onTap = () async {
+                                  const url = "https://socialincome.org/privacy";
+                                  if (await canLaunchUrlString(url)) {
+                                    await launchUrlString(url);
+                                  } else {
+                                    Clipboard.setData(
+                                      const ClipboardData(text: "https://socialincome.org/privacy"),
+                                    ).then((_) {
+                                      // Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check.
+                                      if (context.mounted) {
+                                        FlushbarHelper.showFlushbar(
+                                          context,
+                                          message: context.l10n.privacyPolicyError,
+                                          type: FlushbarType.error,
+                                        );
+                                      }
+                                    });
                                   }
-                                });
-                              }
-                            },
+                                },
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 200,
-                  ),
+                  const SizedBox(height: 200),
                 ],
               ),
             ),
@@ -88,9 +81,7 @@ class TermsAndConditionsPage extends StatelessWidget {
               children: [
                 ButtonBig(
                   onPressed: () {
-                    final updated = context.read<AuthCubit>().state.recipient?.copyWith(
-                          termsAccepted: true,
-                        );
+                    final updated = context.read<AuthCubit>().state.recipient?.copyWith(termsAccepted: true);
 
                     if (updated != null) {
                       context.read<AuthCubit>().updateRecipient(updated);

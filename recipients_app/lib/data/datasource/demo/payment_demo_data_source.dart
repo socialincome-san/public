@@ -36,11 +36,7 @@ class PaymentDemoDataSource implements PaymentDataSource {
     }
 
     for (int i = 0; i < notConfirmedPaymentsCount; i++) {
-      final currentDateTime = DateTime(
-        nowDate.year,
-        nowDate.month - notConfirmedPaymentsCount + i,
-        15,
-      );
+      final currentDateTime = DateTime(nowDate.year, nowDate.month - notConfirmedPaymentsCount + i, 15);
       payments.add(
         SocialIncomePayment(
           id: "${currentDateTime.year}-${currentDateTime.month}",
@@ -58,9 +54,7 @@ class PaymentDemoDataSource implements PaymentDataSource {
   }
 
   @override
-  Future<List<SocialIncomePayment>> fetchPayments({
-    required String recipientId,
-  }) async {
+  Future<List<SocialIncomePayment>> fetchPayments({required String recipientId}) async {
     return payments;
   }
 
@@ -68,14 +62,8 @@ class PaymentDemoDataSource implements PaymentDataSource {
   /// and also sets lastUpdatedAt and lastUpdatedBy to the
   /// current time and recipient
   @override
-  Future<void> confirmPayment({
-    required Recipient recipient,
-    required SocialIncomePayment payment,
-  }) async {
-    final updatedPayment = payment.copyWith(
-      status: PaymentStatus.confirmed,
-      updatedBy: recipient.userId,
-    );
+  Future<void> confirmPayment({required Recipient recipient, required SocialIncomePayment payment}) async {
+    final updatedPayment = payment.copyWith(status: PaymentStatus.confirmed, updatedBy: recipient.userId);
 
     final indexWhere = payments.indexWhere((element) => element.id == updatedPayment.id);
     payments[indexWhere] = updatedPayment;

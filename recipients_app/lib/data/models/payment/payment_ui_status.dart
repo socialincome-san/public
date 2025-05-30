@@ -3,12 +3,7 @@ import "package:flutter/material.dart";
 
 enum PaymentUiStatus {
   /// blue label, white font, confirm icon
-  confirmed(
-    color: AppColors.primaryColor,
-    icon: Icons.check_rounded,
-    textColor: Colors.white,
-    iconColor: Colors.white,
-  ),
+  confirmed(color: AppColors.primaryColor, icon: Icons.check_rounded, textColor: Colors.white, iconColor: Colors.white),
 
   /// yellow label, dark font, warning icon
   contested(
@@ -71,10 +66,5 @@ enum PaymentUiStatus {
   final Color textColor;
   final Color iconColor;
 
-  const PaymentUiStatus({
-    required this.color,
-    required this.icon,
-    required this.textColor,
-    required this.iconColor,
-  });
+  const PaymentUiStatus({required this.color, required this.icon, required this.textColor, required this.iconColor});
 }
