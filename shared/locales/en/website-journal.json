@@ -6,6 +6,16 @@
 		"editors": "Contributing Editors"
 	},
 	"article": {
-		"keep-reading": "Keep reading"
+		"keep-reading": "Keep reading",
+		"from-original-language": "Translated from"
+	},
+	"reference-article": {
+		"show-more": "Show more",
+		"show-less": "Show less",
+		"written-by": "{{mediaOutlet}} by {{author}} on {{publicationDate}}",
+		"context": {
+			"original": "Originally published as",
+			"related": "These sources provided background and insights"
+		}
 	}
 }

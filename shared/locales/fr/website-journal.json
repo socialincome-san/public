@@ -5,6 +5,16 @@
 		"description": "Histoires, réflexions et nouvelles de notre parcours pour créer un impact."
 	},
 	"article": {
-		"keep-reading": "À lire aussi"
+		"keep-reading": "Lire la suite",
+		"from-original-language": "Traduit de"
+	},
+	"reference-article": {
+		"show-more": "Afficher plus",
+		"show-less": "Afficher moins",
+		"written-by": "{{mediaOutlet}} par {{author}} le {{publicationDate}}",
+		"context": {
+			"original": "Première publication",
+			"related": "Ces sources offrent du contexte et des informations"
+		}
 	}
 }
