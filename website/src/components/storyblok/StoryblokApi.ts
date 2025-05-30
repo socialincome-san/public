@@ -143,11 +143,11 @@ export async function getWithFallback<T>(
 	try {
 		return await loader(lang, slug);
 	} catch (error: any) {
-		if (error.status === NOT_FOUND) {
+		if (error?.status === NOT_FOUND) {
 			if (lang === DEFAULT_LANGUAGE) {
-				throw notFound();
+				return notFound();
 			}
-			return loader(DEFAULT_LANGUAGE, slug);
+			return await getWithFallback(loader, DEFAULT_LANGUAGE, slug);
 		}
 		throw error;
 	}
