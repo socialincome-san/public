@@ -13,6 +13,7 @@
 		"website"
 	],
 	"scripts": {
+		"db:up": "docker compose up postgres",
 		"admin:build": "npm --workspace=@socialincome/admin run build",
 		"admin:serve": "npm run functions:build && npm --workspace=@socialincome/admin run serve",
 		"admin:test": "npm --workspace=@socialincome/admin run test:emulator",
@@ -31,7 +32,7 @@
 		"website:build": "npm --workspace=@socialincome/website run build",
 		"website:build:emulator": "npm --workspace=@socialincome/website run build:emulator",
 		"website:lint": "npm --workspace=@socialincome/website run lint",
-		"website:serve": "npm --workspace=@socialincome/website run serve",
+		"website:serve": "npm run prisma:generate && npm run prisma:migrate:deploy && npm --workspace=@socialincome/website run serve",
 		"website:serve:emulator": "npm --workspace=@socialincome/website run serve:emulator",
 		"website:start": "npm --workspace=@socialincome/website run start",
 		"website:start:emulator": "npm --workspace=@socialincome/website run start:emulator",
@@ -45,14 +46,21 @@
 		"website:check-translations": "npm --workspace=@socialincome/website run check-translations",
 		"ui:serve": "npm --workspace=@socialincome/ui run storybook",
 		"ui:build": "npm --workspace=@socialincome/ui run build-storybook",
-		"dev:ssl-proxy": "ssl-proxy --source 3000 --target 3001"
+		"dev:ssl-proxy": "ssl-proxy --source 3000 --target 3001",
+		"postinstall": "prisma generate --schema=shared/src/database/schema.prisma",
+		"prisma:generate": "prisma generate --schema=shared/src/database/schema.prisma",
+		"prisma:migrate:deploy": "prisma migrate deploy --schema=shared/src/database/schema.prisma"
 	},
 	"devDependencies": {
 		"firebase-tools": "13.29.3",
 		"prettier": "3.4.2",
 		"prettier-plugin-organize-imports": "4.1.0",
 		"prettier-plugin-tailwindcss": "0.6.9",
-		"typescript": "^5.7.2",
-		"ssl-proxy": "1.0.3"
+		"ssl-proxy": "1.0.3",
+		"typescript": "^5.7.2"
+	},
+	"dependencies": {
+		"@prisma/client": "^6.8.2",
+		"prisma": "^6.8.2"
 	}
 }

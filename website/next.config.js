@@ -13,6 +13,7 @@ let nextConfig = {
 			},
 		],
 	},
+	output: 'standalone',
 };
 
 if (process.env.SENTRY_AUTH_TOKEN) {

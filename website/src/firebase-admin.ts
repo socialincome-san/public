@@ -4,19 +4,18 @@ import { FirestoreAdmin } from '@socialincome/shared/src/firebase/admin/Firestor
 import { StorageAdmin } from '@socialincome/shared/src/firebase/admin/StorageAdmin';
 import { credential } from 'firebase-admin';
 
-// FIREBASE_SERVICE_ACCOUNT_JSON should only be a single line where the content of private_key contains \n characters.
-// Escape line breaks from the environment variable so that JSON.parse() can parse the string.
-const serviceAccountJSON = process.env.FIREBASE_SERVICE_ACCOUNT_JSON?.replaceAll('\n', '\\n');
-const databaseURL = process.env.FIREBASE_DATABASE_URL;
+const { FIREBASE_SERVICE_ACCOUNT_JSON, FIREBASE_DATABASE_URL } = process.env;
 
-export const app = getOrInitializeFirebaseAdmin(
-	serviceAccountJSON && databaseURL
+// Firebase service account JSON is Base64-encoded to avoid multiline GitHub Secrets issues in Docker builds
+const credentials =
+	FIREBASE_SERVICE_ACCOUNT_JSON && FIREBASE_DATABASE_URL
 		? {
-				credential: credential.cert(JSON.parse(serviceAccountJSON)),
-				databaseURL: databaseURL,
+				credential: credential.cert(JSON.parse(Buffer.from(FIREBASE_SERVICE_ACCOUNT_JSON, 'base64').toString('utf-8'))),
+				databaseURL: FIREBASE_DATABASE_URL,
 			}
-		: undefined,
-);
+		: undefined;
+
+export const app = getOrInitializeFirebaseAdmin(credentials);
 export const authAdmin = new AuthAdmin(app);
 export const firestoreAdmin = new FirestoreAdmin(app);
 export const storageAdmin = new StorageAdmin(app);
