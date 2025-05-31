@@ -1,20 +1,20 @@
 {
-  "overview": {
-    "all": "Tutti",
-    "title": "Giornale",
-    "description": "Storie e aggiornamenti sul nostro percorso per creare un impatto."
-  },
-  "article": {
-    "keep-reading": "Continua a leggere",
-    "from-original-language": "Tradotto da"
-  },
-  "reference-article": {
-    "show-more": "Mostrare più",
-    "show-less": "Mostra Tutto",
-    "written-by": "{{mediaOutlet}} di {{author}} il {{publicationDate}}",
-    "context": {
-      "original": "Prima pubblicazione",
-      "related": "Queste fonti offrono contesto e informazioni"
-    }
-  }
+	"overview": {
+		"all": "Tutti",
+		"title": "Giornale",
+		"description": "Storie e aggiornamenti sul nostro percorso per creare un impatto."
+	},
+	"article": {
+		"keep-reading": "Continua a leggere",
+		"from-original-language": "Tradotto da"
+	},
+	"reference-article": {
+		"show-more": "Mostrare più",
+		"show-less": "Mostra Tutto",
+		"written-by": "{{mediaOutlet}} di {{author}} il {{publicationDate}}",
+		"context": {
+			"original": "Prima pubblicazione",
+			"related": "Queste fonti offrono contesto e informazioni"
+		}
+	}
 }
