@@ -20,6 +20,12 @@
 		"it": "IT",
 		"kri": "Krio"
 	},
+	"language-name": {
+		"de": "Tedesco",
+		"en": "Inglese",
+		"fr": "Francese",
+		"it": "Italiano"
+	},
 	"gender": "Genere",
 	"genders": {
 		"male": "Maschio",

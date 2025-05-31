@@ -10,6 +10,7 @@ import flavienImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/flav
 import francoiseImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/francoise.jpg';
 import gavriilImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/gavriil-tzortzakis.jpg';
 import innaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/inna-abdrakhmanova.jpeg';
+import jessicaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/jessica-freeman.jpeg';
 import juanImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/juan.jpeg';
 import juliaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/julia.jpeg';
 import kabeloImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kabelo.jpeg';
@@ -88,7 +89,6 @@ const groups: Group[] = [
 			{ name: 'Verena Zaiser', role: 'app-development', image: verenaImage },
 			{ name: 'Pranav Chatur', role: 'software-development', image: pranavImage },
 			{ name: 'Matthew Roberts', role: 'communications', image: matthewImage },
-			{ name: 'Françoise Légeret', role: 'translations', image: francoiseImage },
 			{ name: 'Karin Berg', role: 'app-development', image: karinImage },
 			{ name: 'Marc Werner', role: 'research', image: marcImage },
 			{ name: 'Gavriil Tzortzakis', role: 'software-development', image: gavriilImage },
@@ -98,6 +98,7 @@ const groups: Group[] = [
 			{ name: 'Lea Strohm', role: 'strategy', image: leaImage },
 			{ name: 'Marco Bohler', role: 'software-development', image: marcoImage },
 			{ name: 'Raphael Wirth', role: 'software-development', image: raphaelImage },
+			{ name: 'Jessica Freeman', role: 'fundraising', image: jessicaImage },
 		],
 	},
 	{
@@ -134,6 +135,7 @@ const groups: Group[] = [
 			{ name: 'Mathilde Dumond', role: 'software-development', image: mathildeImage },
 			{ name: 'Inna Abdrakhmanova', role: 'software-development', image: innaImage },
 			{ name: 'Alexey Shestakov', role: 'software-development', image: alexeyImage },
+			{ name: 'Françoise Légeret', role: 'translations', image: francoiseImage },
 		],
 	},
 ];

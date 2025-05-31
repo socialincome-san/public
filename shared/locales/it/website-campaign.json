@@ -24,5 +24,10 @@
 		"about-si-text-2": "Dal 2020, Social Income gestisce un programma di reddito di base universale aperto in Sierra Leone.",
 		"more-faq": "<a href='/faq' target=\"_blank\">Altre domande</a>",
 		"badge-highlight": "Campagna in corso"
+	},
+	"badges": {
+		"by": "Di",
+		"contributors": "contributori",
+		"loading": "Ricerca delle raccolte fondi in corso"
 	}
 }
