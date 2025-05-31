@@ -73,6 +73,7 @@ export interface StoryblokArticle {
 	title: string;
 	content: any;
 	subtitle: string;
+	useImageOnlyForPreview: boolean;
 	type: ISbStoryData<StoryblokArticleType>;
 	image: StoryblokImage;
 	tags: ISbStoryData<StoryblokTag>[];

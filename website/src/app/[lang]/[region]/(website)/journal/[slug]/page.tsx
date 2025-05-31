@@ -13,6 +13,7 @@ import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, QuotedText, Separator, Typography } from '@socialincome/ui';
 import { ISbStoryData } from '@storyblok/react';
+import classNames from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';
 import { render } from 'storyblok-rich-text-react-renderer';
@@ -32,7 +33,12 @@ function renderWrapper(articleData: StoryblokArticle, translator: Translator, la
 	});
 }
 
-function badgeWithLink(lang: string, region: string, tag: ISbStoryData<StoryblokTag>, variant: 'outline' | 'default') {
+function badgeWithLink(
+	lang: string,
+	region: string,
+	tag: ISbStoryData<StoryblokTag>,
+	variant: 'outline' | 'foreground',
+) {
 	return (
 		<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
 			<Badge variant={variant} className="mt-6">
@@ -59,7 +65,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 		lang,
 		NUMBER_OF_RELATIVE_ARTICLES,
 	);
-
+	const displayImageStyle = !articleData.useImageOnlyForPreview;
 	let translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-journal', 'common'],
@@ -67,56 +73,82 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 	return (
 		<div>
 			<div className="blog w-full justify-center">
-				<div className="bg-primary flex flex-col lg:min-h-screen lg:flex-row">
-					<div className="lg:order-2 lg:w-1/2">
-						<Image
-							src={formatStoryblokUrl(
-								articleData.image.filename,
-								ARTICLE_IMAGE_WIDTH,
-								ARTICLE_IMAGE_HEIGHT,
-								articleData.image.focus,
-							)}
-							alt={articleData.image?.alt}
-							className="w-full object-cover lg:h-screen"
-							width={ARTICLE_IMAGE_WIDTH}
-							height={ARTICLE_IMAGE_HEIGHT}
-						/>
-					</div>
-					<div className="flex flex-col justify-center p-8 text-left lg:order-1 lg:w-1/2 lg:items-start lg:p-16">
+				<div className={classNames({ 'bg-primary flex flex-col lg:min-h-screen lg:flex-row': displayImageStyle })}>
+					{displayImageStyle && (
+						<div className="lg:order-2 lg:w-1/2">
+							<Image
+								src={formatStoryblokUrl(
+									articleData.image.filename,
+									ARTICLE_IMAGE_WIDTH,
+									ARTICLE_IMAGE_HEIGHT,
+									articleData.image.focus,
+								)}
+								alt={articleData.image?.alt}
+								className="w-full object-cover lg:h-screen"
+								width={ARTICLE_IMAGE_WIDTH}
+								height={ARTICLE_IMAGE_HEIGHT}
+							/>
+						</div>
+					)}
+					<div
+						className={classNames({
+							'flex flex-col justify-center p-8 text-left lg:order-1 lg:w-1/2 lg:items-start lg:p-16':
+								displayImageStyle,
+							'mx-auto mt-16 max-w-2xl content-center p-4 sm:p-6': !displayImageStyle,
+						})}
+					>
 						<div className="flex flex-wrap justify-start gap-2">
 							<Typography
 								weight="medium"
-								color="popover"
+								color={displayImageStyle ? 'popover' : 'foreground'}
 								size="lg"
 								key={articleData.type?.content.id}
 								className="uppercase"
 							>
 								{articleData.type?.content.value}
 							</Typography>
-							<Typography size="lg" weight="normal" color="popover" className="ml-5">
+							<Typography
+								size="lg"
+								weight="normal"
+								color={displayImageStyle ? 'popover' : 'foreground'}
+								className="ml-5"
+							>
 								{formatStoryblokDate(articleResponse.data.story.first_published_at, lang)}
 							</Typography>
 						</div>
-						<Typography weight="medium" className="mt-8 hyphens-auto break-words" color="accent" size="5xl">
+						<Typography
+							weight="medium"
+							className="mt-8 hyphens-auto break-words"
+							color={displayImageStyle ? 'accent' : 'foreground'}
+							size="5xl"
+						>
 							{articleData.title}
 						</Typography>
 
 						<Link href={`/${lang}/${region}/journal/author/${author.slug}`}>
 							<div className="mt-8 flex items-center space-x-4">
 								<StoryblokAuthorImage size="large" author={author} lang={lang} region={region} />
-								<Typography size="lg" as="span" color="popover" className="ml-1">
+								<Typography
+									weight="semibold"
+									size="lg"
+									as="span"
+									color={displayImageStyle ? 'popover' : 'foreground'}
+									className="ml-1"
+								>
 									{author.content.fullName}
 								</Typography>
 							</div>
 						</Link>
 
 						<div className="mt-4 flex flex-wrap justify-start gap-2">
-							{articleData.tags?.map((tag) => badgeWithLink(lang, region, tag, 'outline'))}
+							{articleData.tags?.map((tag) =>
+								badgeWithLink(lang, region, tag, displayImageStyle ? 'outline' : 'foreground'),
+							)}
 						</div>
 					</div>
 				</div>
 
-				<div className="prose mx-auto my-4 max-w-2xl content-center p-4 sm:p-6">
+				<div className="prose mx-auto my-2 max-w-2xl content-center p-4 sm:p-6">
 					<OriginalLanguageLink
 						originalLanguage={articleData.originalLanguage}
 						slug={slug}
@@ -134,7 +166,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 					<Separator />
 
 					<div className="mt-4 flex flex-wrap justify-start gap-2">
-						{articleData.tags?.map((tag) => badgeWithLink(lang, region, tag, 'default'))}
+						{articleData.tags?.map((tag) => badgeWithLink(lang, region, tag, 'foreground'))}
 					</div>
 
 					<Link href={`/${lang}/${region}/journal/author/${author.slug}`} className="no-underline">
