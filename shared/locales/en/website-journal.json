@@ -1,4 +1,9 @@
 {
+	"donate": {
+		"text-1": "Choose a donation amount to help make a",
+		"text-2": "big difference",
+		"text-3": "in the fight to eliminate poverty."
+	},
 	"overview": {
 		"all": "All",
 		"title": "Journal",

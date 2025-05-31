@@ -1,3 +1,5 @@
+import GenericDonationForm from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/generic-donation-form';
+import { DonationInterval } from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/page';
 import NewsletterGlowContainer from '@/components/newsletter-glow-container/newsletter-glow-container';
 import { OriginalLanguageLink } from '@/components/storyblok/OriginalLanguage';
 import { StoryblokActionButton } from '@/components/storyblok/StoryblokActionButton';
@@ -8,6 +10,7 @@ import { StoryblokEmbeddedVideoPlayer } from '@/components/storyblok/StoryblokEm
 import { StoryblokImageWithCaption } from '@/components/storyblok/StoryblokImageWithCaption';
 import { StoryblokReferencesGroup } from '@/components/storyblok/StoryblokReferencesGroup';
 import { formatStoryblokDate, formatStoryblokUrl } from '@/components/storyblok/StoryblokUtils';
+import { WebsiteRegion } from '@/i18n';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { StoryblokArticle, StoryblokAuthor, StoryblokTag } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
@@ -22,7 +25,12 @@ import { render } from 'storyblok-rich-text-react-renderer';
 export const revalidate = 900;
 storyblokInitializationWorkaround();
 
-function renderWrapper(articleData: StoryblokArticle, translator: Translator, lang: LanguageCode) {
+export function renderWrapper(
+	articleData: StoryblokArticle,
+	translator: Translator,
+	lang: LanguageCode,
+	region: WebsiteRegion,
+) {
 	return render(articleData.content, {
 		blokResolvers: {
 			['quotedText']: (props: any) => <QuotedText {...props} />,
@@ -42,6 +50,31 @@ function renderWrapper(articleData: StoryblokArticle, translator: Translator, la
 						buttonAddSubscriber: translator.t('popup.button-subscribe'),
 					}}
 				/>
+			),
+			['campaignDonate']: (props: any) => (
+				<div className="bg-primary my-4 rounded-lg p-10">
+					<Typography size="3xl" weight="semibold" color="primary-foreground" className="mb-8 mt-0 align-middle">
+						<Typography as="span">{translator.t('donate.text-1')}</Typography>
+						<Typography className="ml-1" as="span" color="accent">
+							{translator.t('donate.text-2')}
+						</Typography>
+						<Typography className="ml-1" as="span">
+							{translator.t('donate.text-3')}
+						</Typography>
+					</Typography>
+					<GenericDonationForm
+						defaultInterval={DonationInterval.Monthly}
+						lang={lang}
+						region={region}
+						translations={{
+							oneTime: translator.t('donation-interval.0.title'),
+							monthly: translator.t('donation-interval.1.title'),
+							amount: translator.t('amount'),
+							submit: translator.t('button-text-short'),
+						}}
+						campaignId={props.campaignId}
+					/>
+				</div>
 			),
 		},
 	});
@@ -65,7 +98,9 @@ function badgeWithLink(
 const NUMBER_OF_RELATIVE_ARTICLES = 3;
 const ARTICLE_IMAGE_WIDTH = 960;
 const ARTICLE_IMAGE_HEIGHT = 960;
-export default async function Page(props: { params: Promise<{ slug: string; lang: LanguageCode; region: string }> }) {
+export default async function Page(props: {
+	params: Promise<{ slug: string; lang: LanguageCode; region: WebsiteRegion }>;
+}) {
 	const { slug, lang, region } = await props.params;
 
 	const articleResponse = await getArticle(lang, slug);
@@ -82,7 +117,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 	const displayImageStyle = !articleData.useImageOnlyForPreview;
 	let translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-journal', 'common', 'website-newsletter'],
+		namespaces: ['website-journal', 'common', 'website-newsletter', 'website-donate'],
 	});
 	return (
 		<div>
@@ -175,7 +210,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 						{articleData.leadText}
 					</Typography>
 					<Typography as="div" className="text-black [&_a]:font-normal">
-						{renderWrapper(articleData, translator, lang)}
+						{renderWrapper(articleData, translator, lang, region)}
 					</Typography>
 					<Separator />
 
