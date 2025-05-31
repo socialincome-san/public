@@ -8,12 +8,6 @@ type VerifyRequest = {
 	otp: string;
 };
 
-if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_VERIFY_SERVICE_SID) {
-	throw new Error('Missing Twilio environment variables');
-}
-
-const twilioClient = new Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
-
 /**
  * Cloud function to verify OTP sent by Twilio
  * If valid, it creates/gets a Firebase user and returns a custom token
@@ -21,6 +15,11 @@ const twilioClient = new Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 	console.log('Function called with request:', request.data);
 	let { phoneNumber, otp } = request.data;
+
+	if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_VERIFY_SERVICE_SID) {
+		throw new HttpsError('failed-precondition', 'Missing Twilio environment variables');
+	}
+	const twilioClient = new Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
 	// Validate inputs
 	if (!phoneNumber || !otp) {
