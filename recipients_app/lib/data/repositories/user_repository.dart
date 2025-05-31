@@ -68,7 +68,7 @@ class UserRepository {
     // Call the Cloud Function to verify OTP and get a custom token
     final result = await FirebaseFunctions.instanceFor(
       region: "europe-west6",
-    ).httpsCallable("webhookTwilioVerify").call({"phoneNumber": phoneNumber, "otp": otp});
+    ).httpsCallable("webhookTwilioOtpVerification").call({"phoneNumber": phoneNumber, "otp": otp});
 
     // ignore: avoid_dynamic_calls
     final customToken = result.data["token"] as String;
