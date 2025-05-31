@@ -57,18 +57,9 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 
 		// OTP is valid, create or get Firebase user
 		console.log('OTP verified successfully, checking if user exists');
-
-		// Check if user with given phoneNumber exists
+		
+		// Check if user with given phoneNumber exists and create token
 		const authAdmin = new AuthAdmin();
-		try {
-			const userRecord = await authAdmin.auth.getUserByPhoneNumber(phoneNumber);
-			console.log('Existing user found:', userRecord.uid);
-		} catch (error) {
-			console.log('User not found', error);
-			throw new HttpsError('not-found', `User with the given phone number not found`);
-		}
-
-		// Check if a user with this phone number already exists
 		try {
 			const userRecord = await authAdmin.auth.getUserByPhoneNumber(phoneNumber);
 			console.log('Existing user found:', userRecord.uid);
