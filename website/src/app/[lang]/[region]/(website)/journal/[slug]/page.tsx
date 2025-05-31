@@ -1,3 +1,4 @@
+import NewsletterGlowContainer from '@/components/newsletter-glow-container/newsletter-glow-container';
 import { OriginalLanguageLink } from '@/components/storyblok/OriginalLanguage';
 import { StoryblokActionButton } from '@/components/storyblok/StoryblokActionButton';
 import { getArticle, getRelativeArticles } from '@/components/storyblok/StoryblokApi';
@@ -29,6 +30,19 @@ function renderWrapper(articleData: StoryblokArticle, translator: Translator, la
 			['embeddedVideo']: (props: any) => <StoryblokEmbeddedVideoPlayer {...props} />,
 			['referencesGroup']: (props: any) => <StoryblokReferencesGroup translator={translator} {...props} lang={lang} />,
 			['actionButton']: (props: any) => <StoryblokActionButton {...props} />,
+			['newsletterSignup']: (_) => (
+				<NewsletterGlowContainer
+					lang={lang}
+					title={translator.t('popup.information-label')}
+					formTranslations={{
+						informationLabel: translator.t('popup.information-label'),
+						toastSuccess: translator.t('popup.toast-success'),
+						toastFailure: translator.t('popup.toast-failure'),
+						emailPlaceholder: translator.t('popup.email-placeholder'),
+						buttonAddSubscriber: translator.t('popup.button-subscribe'),
+					}}
+				/>
+			),
 		},
 	});
 }
@@ -68,7 +82,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 	const displayImageStyle = !articleData.useImageOnlyForPreview;
 	let translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-journal', 'common'],
+		namespaces: ['website-journal', 'common', 'website-newsletter'],
 	});
 	return (
 		<div>
