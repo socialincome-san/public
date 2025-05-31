@@ -57,7 +57,7 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 
 		// OTP is valid, create or get Firebase user
 		console.log('OTP verified successfully, checking if user exists');
-		
+
 		// Check if user with given phoneNumber exists and create token
 		const authAdmin = new AuthAdmin();
 		try {
