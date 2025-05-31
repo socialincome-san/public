@@ -13,7 +13,7 @@ type VerifyRequest = {
  * If valid, it creates/gets a Firebase user and returns a custom token
  */
 const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
-	console.log('Function called with request:', request.data);
+	console.log('Function called for OTP verification');
 	let { phoneNumber, otp } = request.data;
 
 	if (!TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_VERIFY_SERVICE_SID) {
@@ -88,7 +88,11 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 			throw new HttpsError('not-found', 'User with the given phone number not found');
 		}
 	} catch (error) {
-		console.error('Error verifying OTP:', error);
+		// Re-throw HttpsErrors as-is to preserve specific error messages
+		if (error instanceof HttpsError) {
+			throw error;
+		}
+		console.error('Unexpected error verifying OTP:', error);
 		throw new HttpsError('internal', 'Failed to verify OTP');
 	}
 });
