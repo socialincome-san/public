@@ -1,12 +1,7 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import GenericDonationForm from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/generic-donation-form';
+import { DonationInterval, GenericDonationForm } from '@/components/donation/generic-donation-form';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
-
-export enum DonationInterval {
-	OneTime = 'one-time',
-	Monthly = 'monthly',
-}
 
 export default async function Page(props: DefaultPageProps) {
 	const params = await props.params;

@@ -1,11 +1,10 @@
-import GenericDonationForm from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/generic-donation-form';
-import { DonationInterval } from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/page';
 import NewsletterGlowContainer from '@/components/newsletter-glow-container/newsletter-glow-container';
 import { OriginalLanguageLink } from '@/components/storyblok/OriginalLanguage';
 import { StoryblokActionButton } from '@/components/storyblok/StoryblokActionButton';
 import { getArticle, getRelativeArticles } from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
+import { StoryblokCampaignDonate } from '@/components/storyblok/StoryblokCampaignDonate';
 import { StoryblokEmbeddedVideoPlayer } from '@/components/storyblok/StoryblokEmbeddedVideoPlayer';
 import { StoryblokImageWithCaption } from '@/components/storyblok/StoryblokImageWithCaption';
 import { StoryblokReferencesGroup } from '@/components/storyblok/StoryblokReferencesGroup';
@@ -39,42 +38,22 @@ export function renderWrapper(
 			['referencesGroup']: (props: any) => <StoryblokReferencesGroup translator={translator} {...props} lang={lang} />,
 			['actionButton']: (props: any) => <StoryblokActionButton {...props} />,
 			['newsletterSignup']: (_) => (
-				<NewsletterGlowContainer
-					lang={lang}
-					title={translator.t('popup.information-label')}
-					formTranslations={{
-						informationLabel: translator.t('popup.information-label'),
-						toastSuccess: translator.t('popup.toast-success'),
-						toastFailure: translator.t('popup.toast-failure'),
-						emailPlaceholder: translator.t('popup.email-placeholder'),
-						buttonAddSubscriber: translator.t('popup.button-subscribe'),
-					}}
-				/>
-			),
-			['campaignDonate']: (props: any) => (
-				<div className="bg-primary my-4 rounded-lg p-10">
-					<Typography size="3xl" weight="semibold" color="primary-foreground" className="mb-8 mt-0 align-middle">
-						<Typography as="span">{translator.t('donate.text-1')}</Typography>
-						<Typography className="ml-1" as="span" color="accent">
-							{translator.t('donate.text-2')}
-						</Typography>
-						<Typography className="ml-1" as="span">
-							{translator.t('donate.text-3')}
-						</Typography>
-					</Typography>
-					<GenericDonationForm
-						defaultInterval={DonationInterval.Monthly}
+				<div>
+					<NewsletterGlowContainer
 						lang={lang}
-						region={region}
-						translations={{
-							oneTime: translator.t('donation-interval.0.title'),
-							monthly: translator.t('donation-interval.1.title'),
-							amount: translator.t('amount'),
-							submit: translator.t('button-text-short'),
+						title={translator.t('popup.information-label')}
+						formTranslations={{
+							informationLabel: translator.t('popup.information-label'),
+							toastSuccess: translator.t('popup.toast-success'),
+							toastFailure: translator.t('popup.toast-failure'),
+							emailPlaceholder: translator.t('popup.email-placeholder'),
+							buttonAddSubscriber: translator.t('popup.button-subscribe'),
 						}}
-						campaignId={props.campaignId}
 					/>
 				</div>
+			),
+			['campaignDonate']: (props: any) => (
+				<StoryblokCampaignDonate lang={lang} {...props} translator={translator} region={region} />
 			),
 		},
 	});

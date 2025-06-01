@@ -1,13 +1,12 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { DonationInterval } from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/page';
 import { CreateCheckoutSessionData } from '@/app/api/stripe/checkout-session/create/route';
 import { useI18n } from '@/components/providers/context-providers';
 import { CurrencySelector } from '@/components/ui/currency-selector';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Form, FormControl, FormField, FormItem, Input } from '@socialincome/ui';
-import { ToggleGroup, ToggleGroupItem } from '@socialincome/ui/src/components/toggle-group';
+import { Button, Form, FormControl, FormField, FormItem, Input } from '@socialincome/ui/dist';
+import { ToggleGroup, ToggleGroupItem } from '@socialincome/ui/dist/components/toggle-group';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -26,13 +25,12 @@ type DonationFormProps = {
 	campaignId?: string;
 } & DefaultParams;
 
-export default function GenericDonationForm({
-	defaultInterval,
-	translations,
-	lang,
-	region,
-	campaignId,
-}: DonationFormProps) {
+export enum DonationInterval {
+	OneTime = 'one-time',
+	Monthly = 'monthly',
+}
+
+export function GenericDonationForm({ defaultInterval, translations, lang, region, campaignId }: DonationFormProps) {
 	const router = useRouter();
 	const { data: authUser } = useUser();
 	const { currency } = useI18n();
