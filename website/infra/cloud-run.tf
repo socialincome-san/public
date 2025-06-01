@@ -48,6 +48,7 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
   }
 }
 
+# Public access required for website availability
 resource "google_cloud_run_service_iam_member" "google_cloud_run_service_iam_member" {
   location = var.gcp_region
   service  = google_cloud_run_service.google_cloud_run_service.name

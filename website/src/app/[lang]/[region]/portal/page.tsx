@@ -16,7 +16,7 @@ export default async function Portal() {
 				{result.success &&
 					result.data.map((user) => (
 						<li key={user.id}>
-							👤{' '}
+							💃🏼{' '}
 							<strong>
 								{user.firstName} {user.lastName}
 							</strong>{' '}

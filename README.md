@@ -79,7 +79,7 @@ ORM and database toolkit.
 > installed and running.
 
 You can edit the database schema in:  
-`shared/src/database/schema.prisma`
+[shared/src/database/schema.prisma](shared/src/database/schema.prisma)
 
 After modifying the schema (e.g. to change tables or fields), run a
 migration command to create a new SQL migration file. These files are
