@@ -88,7 +88,7 @@ automatically executed in **staging and production** via
 
 #### Prisma & DB Commands
 
-`````bash
+```bash
 npm run db:up               # Start local PostgreSQL via Docker
 npm run db:down             # Stop and remove Docker container
 npm run db:generate         # Generate Prisma client
@@ -100,7 +100,7 @@ npm run db:migrate:status   # Check migration status
 npm run db:introspect       # Pull schema from existing DB
 npm run db:seed             # Run DB seed script
 npm run db:studio           # Open Prisma Studio (GUI)
-``
+```
 
 Run all commands from the root. They delegate to @socialincome/shared.
 
@@ -138,7 +138,7 @@ Error: Process `java -version` has exited with code 1. Please make sure Java is 
 -----Original stderr-----
 The operation couldn’t be completed. Unable to locate a Java Runtime.
 Please visit http://www.java.com for information on installing Java.```
-`````
+````
 
 Solution
 

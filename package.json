@@ -66,9 +66,5 @@
 		"prettier-plugin-tailwindcss": "0.6.9",
 		"ssl-proxy": "1.0.3",
 		"typescript": "^5.7.2"
-	},
-	"dependencies": {
-		"@prisma/client": "^6.8.2",
-		"prisma": "^6.8.2"
 	}
 }
