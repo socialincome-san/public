@@ -1,6 +1,6 @@
-import { Result, fail, ok } from '@/lib/result';
 import { User as PrismaUser } from '@prisma/client';
 import { prisma } from '@socialincome/shared/src/database/prisma';
+import { ok, Result } from '@socialincome/shared/src/database/utils/result';
 
 export const getUsers = async (options?: { take?: number; skip?: number }): Promise<Result<PrismaUser[]>> => {
 	try {

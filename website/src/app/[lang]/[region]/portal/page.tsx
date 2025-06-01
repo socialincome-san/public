@@ -1,4 +1,4 @@
-import { getUsers } from '@/lib/services/user-service';
+import { getUsers } from '@socialincome/shared/src/database/services/user-service';
 
 export const dynamic = 'force-dynamic';
 
