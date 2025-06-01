@@ -69,17 +69,21 @@ We are mainly leveraging the following tools:
 
 ### Firestore ➜ PostgreSQL Migration
 
-We’re moving from **Firestore** to **PostgreSQL** to improve relational data modeling and consistency.  
+We’re moving from **Firestore** to **PostgreSQL** to improve relational
+data modeling and consistency.  
 We’re using **[Prisma](https://www.prisma.io)** as our type-safe ORM.
 
-> 🐳 **Docker Required:** Install and run [Docker Desktop](https://www.docker.com/products/docker-desktop) to use the local database.
+> 🐳 **Docker Required:** Install and run
+> [Docker Desktop](https://www.docker.com/products/docker-desktop) to
+> use the local database.
 
 #### Local Setup
 
 Edit the schema at:  
 `shared/src/database/schema.prisma`
 
-Run all commands from the **root** – they delegate to `@socialincome/shared`.
+Run all commands from the **root** – they delegate to
+`@socialincome/shared`.
 
 #### 🚀 Common DB Commands
 
