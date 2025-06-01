@@ -13,7 +13,7 @@
 		"website"
 	],
 	"scripts": {
-		"db:up": "docker compose up postgres",
+		"postinstall": "npm run db:generate",
 		"admin:build": "npm --workspace=@socialincome/admin run build",
 		"admin:serve": "npm run functions:build && npm --workspace=@socialincome/admin run serve",
 		"admin:test": "npm --workspace=@socialincome/admin run test:emulator",
@@ -32,7 +32,7 @@
 		"website:build": "npm --workspace=@socialincome/website run build",
 		"website:build:emulator": "npm --workspace=@socialincome/website run build:emulator",
 		"website:lint": "npm --workspace=@socialincome/website run lint",
-		"website:serve": "npm run prisma:generate && npm run prisma:migrate:deploy && npm --workspace=@socialincome/website run serve",
+		"website:serve": "npm run db:generate && npm run db:migrate:deploy && npm --workspace=@socialincome/website run serve",
 		"website:serve:emulator": "npm --workspace=@socialincome/website run serve:emulator",
 		"website:start": "npm --workspace=@socialincome/website run start",
 		"website:start:emulator": "npm --workspace=@socialincome/website run start:emulator",
@@ -47,9 +47,17 @@
 		"ui:serve": "npm --workspace=@socialincome/ui run storybook",
 		"ui:build": "npm --workspace=@socialincome/ui run build-storybook",
 		"dev:ssl-proxy": "ssl-proxy --source 3000 --target 3001",
-		"postinstall": "prisma generate --schema=shared/src/database/schema.prisma",
-		"prisma:generate": "prisma generate --schema=shared/src/database/schema.prisma",
-		"prisma:migrate:deploy": "prisma migrate deploy --schema=shared/src/database/schema.prisma"
+		"db:generate": "npm --workspace=@socialincome/shared run db:generate",
+		"db:migrate:deploy": "npm --workspace=@socialincome/shared run db:migrate:deploy",
+		"db:migrate:dev": "npm --workspace=@socialincome/shared run db:migrate:dev",
+		"db:migrate:reset": "npm --workspace=@socialincome/shared run db:migrate:reset",
+		"db:migrate:status": "npm --workspace=@socialincome/shared run db:migrate:status",
+		"db:migrate:create": "npm --workspace=@socialincome/shared run db:migrate:create",
+		"db:introspect": "npm --workspace=@socialincome/shared run db:introspect",
+		"db:seed": "npm --workspace=@socialincome/shared run db:seed",
+		"db:studio": "npm --workspace=@socialincome/shared run db:studio",
+		"db:up": "npm --workspace=@socialincome/shared run db:up",
+		"db:down": "npm --workspace=@socialincome/shared run db:down"
 	},
 	"devDependencies": {
 		"firebase-tools": "13.29.3",
