@@ -104,10 +104,9 @@ npm run db:studio           # Open Prisma Studio (GUI)
 
 Run all commands from the root. They delegate to @socialincome/shared.
 
-
-> 🧱 **To create a migration**:
-> Run `npm run db:migrate:dev` to create and apply the migration.
-> Or use `npm run db:migrate:create` to **only generate the migration file** without applying it.
+> 🧱 **To create a migration**: Run `npm run db:migrate:dev` to create
+> and apply the migration. Or use `npm run db:migrate:create` to **only
+> generate the migration file** without applying it.
 
 #### 1. Prerequisites
 
