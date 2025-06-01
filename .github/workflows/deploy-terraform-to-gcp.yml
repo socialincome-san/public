@@ -3,10 +3,7 @@ name: Website / Deploy with Terraform to GCP
 on:
   push:
     branches:
-      - feat/gcp-poc
-      - feat/gcp-poc-with-website
-      - feat/gcp-poc-with-website-refactored
-      - feat/gcp-poc-website-staging
+      - feat/move-website-from-vercel-to-gcp
 
 env:
   ENVIRONMENT: staging
