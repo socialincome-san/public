@@ -69,18 +69,26 @@ We are mainly leveraging the following tools:
 
 ### Database Migration Plan: Firestore ➜ PostgreSQL
 
-We are transitioning from **Firestore (NoSQL)** to **PostgreSQL** for improved relational modeling and data consistency. To support this, we’ve introduced **[Prisma](https://www.prisma.io)** as our type-safe ORM and database toolkit.
+We are transitioning from **Firestore (NoSQL)** to **PostgreSQL** for
+improved relational modeling and data consistency. To support this,
+we’ve introduced **[Prisma](https://www.prisma.io)** as our type-safe
+ORM and database toolkit.
 
-> 🐳 **Docker Required:** To run the local PostgreSQL database, make sure you have [Docker](https://www.docker.com/products/docker-desktop) installed and running.
+> 🐳 **Docker Required:** To run the local PostgreSQL database, make
+> sure you have [Docker](https://www.docker.com/products/docker-desktop)
+> installed and running.
 
 You can edit the database schema in:  
 `shared/src/database/schema.prisma`
 
-After modifying the schema (e.g. to change tables or fields), run a migration command to create a new SQL migration file. These files are automatically executed in **staging and production** via `db:migrate:deploy`.
+After modifying the schema (e.g. to change tables or fields), run a
+migration command to create a new SQL migration file. These files are
+automatically executed in **staging and production** via
+`db:migrate:deploy`.
 
 #### Prisma & DB Commands
 
-```bash
+`````bash
 npm run db:up               # Start local PostgreSQL via Docker
 npm run db:down             # Stop and remove Docker container
 npm run db:generate         # Generate Prisma client
@@ -97,8 +105,8 @@ npm run db:studio           # Open Prisma Studio (GUI)
 Run all commands from the root. They delegate to @socialincome/shared.
 
 
-> 🧱 **To create a migration**:  
-> Run `npm run db:migrate:dev` to create and apply the migration.  
+> 🧱 **To create a migration**:
+> Run `npm run db:migrate:dev` to create and apply the migration.
 > Or use `npm run db:migrate:create` to **only generate the migration file** without applying it.
 
 #### 1. Prerequisites
@@ -130,7 +138,7 @@ Error: Process `java -version` has exited with code 1. Please make sure Java is 
 -----Original stderr-----
 The operation couldn’t be completed. Unable to locate a Java Runtime.
 Please visit http://www.java.com for information on installing Java.```
-````
+`````
 
 Solution
 
