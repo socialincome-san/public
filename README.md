@@ -67,46 +67,39 @@ We are mainly leveraging the following tools:
 - [Firebase Emulators](https://firebase.google.com/docs/emulator-suite)
   for the local dev environment
 
-### Database Migration Plan: Firestore ➜ PostgreSQL
+### Firestore ➜ PostgreSQL Migration
 
-We are transitioning from **Firestore (NoSQL)** to **PostgreSQL** for
-improved relational modeling and data consistency. To support this,
-we’ve introduced **[Prisma](https://www.prisma.io)** as our type-safe
-ORM and database toolkit.
+We’re moving from **Firestore** to **PostgreSQL** to improve relational data modeling and consistency.  
+We’re using **[Prisma](https://www.prisma.io)** as our type-safe ORM.
 
-> 🐳 **Docker Required:** To run the local PostgreSQL database, make
-> sure you have [Docker](https://www.docker.com/products/docker-desktop)
-> installed and running.
+> 🐳 **Docker Required:** Install and run [Docker Desktop](https://www.docker.com/products/docker-desktop) to use the local database.
 
-You can edit the database schema in:  
-[shared/src/database/schema.prisma](shared/src/database/schema.prisma)
+#### Local Setup
 
-After modifying the schema (e.g. to change tables or fields), run a
-migration command to create a new SQL migration file. These files are
-automatically executed in **staging and production** via
-`db:migrate:deploy`.
+Edit the schema at:  
+`shared/src/database/schema.prisma`
 
-#### Prisma & DB Commands
+Run all commands from the **root** – they delegate to `@socialincome/shared`.
+
+#### 🚀 Common DB Commands
 
 ```bash
 npm run db:up               # Start local PostgreSQL via Docker
-npm run db:down             # Stop and remove Docker container
+npm run db:down             # Stop and remove DB container
 npm run db:generate         # Generate Prisma client
-npm run db:migrate:dev      # Create & apply new migration in dev
-npm run db:migrate:create   # Create migration file only (no apply)
-npm run db:migrate:deploy   # Apply migrations in production
+npm run db:studio           # Open Prisma Studio (GUI)
+
+npm run db:migrate:dev      # Create & apply new migration (dev)
+npm run db:migrate:create   # Only create migration (no apply)
+npm run db:migrate:deploy   # Deploy migrations (staging/prod)
 npm run db:migrate:reset    # Reset DB (dev only)
 npm run db:migrate:status   # Check migration status
 npm run db:introspect       # Pull schema from existing DB
-npm run db:seed             # Run DB seed script
-npm run db:studio           # Open Prisma Studio (GUI)
+npm run db:seed             # Run seed script
 ```
 
-Run all commands from the root. They delegate to @socialincome/shared.
-
-> 🧱 **To create a migration**: Run `npm run db:migrate:dev` to create
-> and apply the migration. Or use `npm run db:migrate:create` to **only
-> generate the migration file** without applying it.
+> 🧱 **To create a migration**, run `npm run db:migrate:dev`.  
+> To just generate a file, use `npm run db:migrate:create`.
 
 #### 1. Prerequisites
 
