@@ -24,5 +24,10 @@
 		"about-si-text-2": "Depuis 2020, Social Income gère un programme de revenu de base universel non limité dans le temps en Sierra Leone.",
 		"more-faq": "<a href='/faq' target=\"_blank\">Plus de questions</a>",
 		"badge-highlight": "Campagne actuelle"
+	},
+	"badges": {
+		"by": "Par",
+		"contributors": "contributeurs",
+		"loading": "Recherche des collectes de fonds en cours"
 	}
 }

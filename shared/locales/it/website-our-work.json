@@ -66,29 +66,5 @@
 			"onikeh": "Social Income mi ha aiutato immensamente. È come avere un’ulteriore fonte di forza da cui attingere nella nostra vita quotidiana. È fantastico avere persone che ti supportano e credono nei tuoi sogni.",
 			"neneh": "Uso il denaro che ricevo mensilmente da Social Income per investire nella mia piccola impresa e per pagare il pranzo per i miei figli a scuola. Mi rende così felice che potrei piangere!"
 		}
-	},
-	"whats-next": {
-		"header": "Qual è la prossima mossa?",
-		"title-1": "Affrontiamo le cose ",
-		"title-2": "un passo alla volta.",
-		"subtitle": "L’obiettivo a lungo termine di Social Income è di creare un sistema di redistribuzione della ricchezza a favore di persone bisognose, con l’aiuto di donatori volontari provenienti da tutto il mondo. Come ogni progetto ambizioso, ci vuole tempo per crescere.",
-		"timeline": {
-			"item-1": {
-				"title": "Marzo 2020",
-				"text": "Abbiamo iniziato la nostra Fase Pilota e pagato i primi contributi a una piccola comunità a Freetown, in Sierra Leone."
-			},
-			"item-2": {
-				"title": "Settembre 2021",
-				"text": "Abbiamo iniziato la nostra Fase di Sviluppo e ottimizzato il processo di pagamento."
-			},
-			"item-3": {
-				"title": "Gennaio 2022",
-				"text": "Abbiamo raggiunto la nostra Fase Pubblica e da allora abbiamo progressivamente offerto i servizi di Social Income a più destinatari."
-			},
-			"item-4": {
-				"title": "Incorsa: Misurazione dell’impatto",
-				"text": "Abbiamo stabilito un metodo e una serie di criteri qualitativi e quantitativi per misurare l'impatto del progetto. Ora stiamo raccogliendo dati essenziali e perfezionando il nostro metodo con l’aiuto dei nostri beneficiari."
-			}
-		}
 	}
 }

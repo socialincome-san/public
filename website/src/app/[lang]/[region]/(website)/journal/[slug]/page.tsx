@@ -1,12 +1,12 @@
-import {
-	getArticle,
-	getDimensionsFromStoryblokImageUrl,
-	getPublishedDateFormatted,
-	getRelativeArticles,
-} from '@/app/[lang]/[region]/(website)/journal/StoryblokApi';
-import { StoryblokArticleCard } from '@/app/[lang]/[region]/(website)/journal/StoryblokArticle';
-import StoryblokAuthorImage from '@/app/[lang]/[region]/(website)/journal/StoryblokAuthorImage';
-import { StoryblokImageWithCaption } from '@/app/[lang]/[region]/(website)/journal/StoryblokImageWithCaption';
+import { OriginalLanguageLink } from '@/components/storyblok/OriginalLanguage';
+import { StoryblokActionButton } from '@/components/storyblok/StoryblokActionButton';
+import { getArticle, getRelativeArticles } from '@/components/storyblok/StoryblokApi';
+import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
+import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
+import { StoryblokEmbeddedVideoPlayer } from '@/components/storyblok/StoryblokEmbeddedVideoPlayer';
+import { StoryblokImageWithCaption } from '@/components/storyblok/StoryblokImageWithCaption';
+import { StoryblokReferencesGroup } from '@/components/storyblok/StoryblokReferencesGroup';
+import { formatStoryblokDate, formatStoryblokUrl } from '@/components/storyblok/StoryblokUtils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { StoryblokArticle, StoryblokAuthor, StoryblokTag } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
@@ -20,19 +20,22 @@ import { render } from 'storyblok-rich-text-react-renderer';
 export const revalidate = 900;
 storyblokInitializationWorkaround();
 
-function renderWrapper(articleData: StoryblokArticle) {
+function renderWrapper(articleData: StoryblokArticle, translator: Translator, lang: LanguageCode) {
 	return render(articleData.content, {
 		blokResolvers: {
 			['quotedText']: (props: any) => <QuotedText {...props} />,
 			['imageWithCaption']: (props: any) => <StoryblokImageWithCaption {...props} />,
+			['embeddedVideo']: (props: any) => <StoryblokEmbeddedVideoPlayer {...props} />,
+			['referencesGroup']: (props: any) => <StoryblokReferencesGroup translator={translator} {...props} lang={lang} />,
+			['actionButton']: (props: any) => <StoryblokActionButton {...props} />,
 		},
 	});
 }
 
 function badgeWithLink(lang: string, region: string, tag: ISbStoryData<StoryblokTag>, variant: 'outline' | 'default') {
 	return (
-		<Link href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
-			<Badge key={tag.slug} variant={variant} className="mt-6">
+		<Link key={tag.slug} href={`/${lang}/${region}/journal/tag/${tag.slug}`}>
+			<Badge variant={variant} className="mt-6">
 				{tag.content?.value}
 			</Badge>
 		</Link>
@@ -40,7 +43,8 @@ function badgeWithLink(lang: string, region: string, tag: ISbStoryData<Storyblok
 }
 
 const NUMBER_OF_RELATIVE_ARTICLES = 3;
-
+const ARTICLE_IMAGE_WIDTH = 960;
+const ARTICLE_IMAGE_HEIGHT = 960;
 export default async function Page(props: { params: Promise<{ slug: string; lang: LanguageCode; region: string }> }) {
 	const { slug, lang, region } = await props.params;
 
@@ -58,23 +62,27 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 
 	let translator = await Translator.getInstance({
 		language: lang,
-		namespaces: ['website-journal'],
+		namespaces: ['website-journal', 'common'],
 	});
-	const dimensionsFromStoryblokImage = getDimensionsFromStoryblokImageUrl(articleData.image.filename);
 	return (
 		<div>
 			<div className="blog w-full justify-center">
-				<div className="bg-primary flex flex-col md:min-h-screen md:flex-row">
-					<div className="md:order-2 md:w-1/2">
+				<div className="bg-primary flex flex-col lg:min-h-screen lg:flex-row">
+					<div className="lg:order-2 lg:w-1/2">
 						<Image
-							src={articleData.image.filename}
+							src={formatStoryblokUrl(
+								articleData.image.filename,
+								ARTICLE_IMAGE_WIDTH,
+								ARTICLE_IMAGE_HEIGHT,
+								articleData.image.focus,
+							)}
 							alt={articleData.image?.alt}
-							className="w-full object-cover md:h-screen"
-							width={dimensionsFromStoryblokImage.width}
-							height={dimensionsFromStoryblokImage.height}
+							className="w-full object-cover lg:h-screen"
+							width={ARTICLE_IMAGE_WIDTH}
+							height={ARTICLE_IMAGE_HEIGHT}
 						/>
 					</div>
-					<div className="flex flex-col justify-center p-8 text-left md:order-1 md:w-1/2 md:items-start lg:p-16">
+					<div className="flex flex-col justify-center p-8 text-left lg:order-1 lg:w-1/2 lg:items-start lg:p-16">
 						<div className="flex flex-wrap justify-start gap-2">
 							<Typography
 								weight="medium"
@@ -85,11 +93,11 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 							>
 								{articleData.type?.content.value}
 							</Typography>
-							<Typography size="lg" weight="normal" color="popover" className="ml-4">
-								{getPublishedDateFormatted(articleResponse.data.story.first_published_at!, lang)}
+							<Typography size="lg" weight="normal" color="popover" className="ml-5">
+								{formatStoryblokDate(articleResponse.data.story.first_published_at, lang)}
 							</Typography>
 						</div>
-						<Typography weight="medium" className="mt-8" color="accent" size="5xl">
+						<Typography weight="medium" className="mt-8 hyphens-auto break-words" color="accent" size="5xl">
 							{articleData.title}
 						</Typography>
 
@@ -109,11 +117,19 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 				</div>
 
 				<div className="prose mx-auto my-4 max-w-2xl content-center p-4 sm:p-6">
+					<OriginalLanguageLink
+						originalLanguage={articleData.originalLanguage}
+						slug={slug}
+						lang={lang}
+						region={region}
+						text={translator.t('article.from-original-language')}
+						languageName={translator.t('language-name.' + articleData.originalLanguage)}
+					/>
 					<Typography weight="bold" size="2xl">
 						{articleData.leadText}
 					</Typography>
 					<Typography as="div" className="text-black [&_a]:font-normal">
-						{renderWrapper(articleData)}
+						{renderWrapper(articleData, translator, lang)}
 					</Typography>
 					<Separator />
 

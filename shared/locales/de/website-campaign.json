@@ -24,5 +24,10 @@
 		"about-si-text-2": "Seit 2020 führt Social Income ein zeitlich unbegrenztes Programm für ein universelles Grundeinkommen in Sierra Leone durch.",
 		"more-faq": "<a href='/faq' target=\"_blank\">Mehr Fragen</a>",
 		"badge-highlight": "Aktuelle Kampagne"
+	},
+	"badges": {
+		"by": "Von",
+		"contributors": "Spender:innen",
+		"loading": "Suche aktuelle Fundraisers"
 	}
 }
