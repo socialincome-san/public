@@ -7,6 +7,7 @@ import "package:app/data/datasource/remote/organization_remote_data_source.dart"
 import "package:app/data/datasource/remote/payment_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
+import "package:app/data/services/twilio_service.dart";
 import "package:app/demo_manager.dart";
 import "package:app/my_app.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -14,6 +15,7 @@ import "package:firebase_app_check/firebase_app_check.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_core/firebase_core.dart";
 import "package:firebase_messaging/firebase_messaging.dart";
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -35,7 +37,10 @@ Future<void> main() async {
   }
 
   await Firebase.initializeApp();
-  await FirebaseAppCheck.instance.activate();
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
+    appleProvider: kDebugMode ? AppleProvider.debug : AppleProvider.appAttest,
+  );
 
   final firestore = FirebaseFirestore.instance;
   final firebaseAuth = FirebaseAuth.instance;
@@ -53,6 +58,13 @@ Future<void> main() async {
 
   final organizationRemoteDataSource = OrganizationRemoteDataSource(firestore: firestore);
   final organizationDemoDataSource = OrganizationDemoDataSource();
+
+  final twilioService = TwilioService(
+    accountSid: const String.fromEnvironment("TWILIO_ACCOUNT_SID"),
+    authToken: const String.fromEnvironment("TWILIO_AUTH_TOKEN"),
+    twilioNumber: const String.fromEnvironment("TWILIO_NUMBER"),
+    serviceId: const String.fromEnvironment("TWILIO_SERVICE_SID"),
+  );
 
   if (appFlavor == "dev") {
     firestore.useFirestoreEmulator("localhost", 8080);
@@ -81,6 +93,7 @@ Future<void> main() async {
         surveyDemoDataSource: surveyDemoDataSource,
         organizationRemoteDataSource: organizationRemoteDataSource,
         organizationDemoDataSource: organizationDemoDataSource,
+        twilioService: twilioService,
       ),
     ),
   );

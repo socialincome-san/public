@@ -1,6 +1,6 @@
 import "package:app/data/repositories/repositories.dart";
+import "package:app/data/services/twilio_service.dart";
 import "package:equatable/equatable.dart";
-import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 part "signup_state.dart";
@@ -19,10 +19,12 @@ part "signup_state.dart";
 
 class SignupCubit extends Cubit<SignupState> {
   final UserRepository userRepository;
+  final TwilioService twilioService;
   final CrashReportingRepository crashReportingRepository;
 
   SignupCubit({
     required this.userRepository,
+    required this.twilioService,
     required this.crashReportingRepository,
   }) : super(const SignupState());
 
@@ -32,38 +34,40 @@ class SignupCubit extends Cubit<SignupState> {
     emit(state.copyWith(status: SignupStatus.loadingPhoneNumber));
 
     try {
-      await userRepository.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        forceResendingToken: state.forceResendingToken,
-        onCodeSend: (verificationId, forceResendingToken) {
-          emit(
-            state.copyWith(
-              status: SignupStatus.enterVerificationCode,
-              phoneNumber: phoneNumber,
-              forceResendingToken: forceResendingToken,
-              verificationId: verificationId,
-            ),
-          );
-        },
-        onVerificationFailed: (ex) {
-          crashReportingRepository.logError(ex, StackTrace.current);
-          emit(
-            state.copyWith(
-              status: SignupStatus.phoneNumberFailure,
-              exception: ex,
-            ),
-          );
-        },
-        onVerificationCompleted: (credentials) async {
-          await userRepository.signInWithCredential(credentials);
-          emit(
-            state.copyWith(
-              status: SignupStatus.verificationSuccess,
-              phoneNumber: phoneNumber,
-            ),
-          );
-        },
-      );
+      await twilioService.sendVerificationCode(phoneNumber);
+      emit(state.copyWith(status: SignupStatus.verificationSuccess, phoneNumber: phoneNumber));
+    //   await userRepository.verifyPhoneNumber(
+    //     phoneNumber: phoneNumber,
+    //     forceResendingToken: state.forceResendingToken,
+    //     onCodeSend: (verificationId, forceResendingToken) {
+    //       emit(
+    //         state.copyWith(
+    //           status: SignupStatus.enterVerificationCode,
+    //           phoneNumber: phoneNumber,
+    //           forceResendingToken: forceResendingToken,
+    //           verificationId: verificationId,
+    //         ),
+    //       );
+    //     },
+    //     onVerificationFailed: (ex) {
+    //       crashReportingRepository.logError(ex, StackTrace.current);
+    //       emit(
+    //         state.copyWith(
+    //           status: SignupStatus.phoneNumberFailure,
+    //           exception: ex,
+    //         ),
+    //       );
+    //     },
+    //     onVerificationCompleted: (credentials) async {
+    //       await userRepository.signInWithCredential(credentials);
+    //       emit(
+    //         state.copyWith(
+    //           status: SignupStatus.verificationSuccess,
+    //           phoneNumber: phoneNumber,
+    //         ),
+    //       );
+    //     },
+    //   );
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
       emit(
@@ -79,12 +83,23 @@ class SignupCubit extends Cubit<SignupState> {
     emit(state.copyWith(status: SignupStatus.loadingVerificationCode));
 
     try {
-      final credential = PhoneAuthProvider.credential(
-        verificationId: state.verificationId!,
-        smsCode: verificationCode,
-      );
+      final phoneNumber = state.phoneNumber;
 
-      await userRepository.signInWithCredential(credential);
+      if (phoneNumber == null) {
+        emit(state.copyWith(status: SignupStatus.verificationFailure, exception: Exception("Phone number is null")));
+        return;
+      }
+
+      final otp = verificationCode;
+
+      await userRepository.signInWithPhoneNumber(phoneNumber, otp);
+
+      // final credential = PhoneAuthProvider.credential(
+      //   verificationId: state.verificationId!,
+      //   smsCode: verificationCode,
+      // );
+
+      // await userRepository.signInWithCredential(credential);
 
       emit(
         state.copyWith(
