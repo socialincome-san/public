@@ -27,6 +27,7 @@ export default async function Page({ params }: DefaultPageProps) {
 					confirmEmail: translator.t('confirm-email'),
 					confirmEmailTitle: translator.t('confirm-email-title'),
 					backToLogin: translator.t('back-to-login'),
+					signingIn: translator.t('signing-in'),
 				}}
 			/>
 		</BaseContainer>

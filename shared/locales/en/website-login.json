@@ -6,6 +6,7 @@
 	"email": "Email",
 	"confirm-email": "Please confirm your email address",
 	"back-to-login": "Back to login",
+	"signing-in": "Signing in...",
 	"password": "Password",
 	"required-field": "This field is required",
 	"submit-button": "Send login link",

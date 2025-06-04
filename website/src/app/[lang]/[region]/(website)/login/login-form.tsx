@@ -32,6 +32,7 @@ type LoginFormProps = {
 		confirmEmail: string;
 		confirmEmailTitle: string;
 		backToLogin: string;
+		signingIn: string;
 	};
 } & DefaultParams;
 
@@ -53,6 +54,10 @@ export default function LoginForm({ lang, region, translations }: LoginFormProps
 		resolver: zodResolver(formSchema),
 		defaultValues: { email: '' },
 	});
+
+	if (signingIn) {
+		return <div>{translations.signingIn}</div>;
+	}
 
 	if (emailSent) {
 		return (

@@ -1,3 +1,5 @@
+'use client';
+
 import { WebsiteLanguage } from '@/i18n';
 import { FirebaseError } from 'firebase/app';
 import {
@@ -25,15 +27,17 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 	const translator = useTranslator(lang, 'website-login');
 
 	useEffect(() => {
+		const url = new URL(window.location.href);
+		setSigningIn(url.searchParams.get('email') !== null);
+
 		if (authListenerRegistered) {
 			return;
 		}
 
 		const unsubscribe = auth.onAuthStateChanged(() => {
 			setAuthListenerRegistered(true);
-			const url = new URL(window.location.href);
 
-			if (signingIn || !isSignInWithEmailLink(auth, url.toString())) {
+			if (!isSignInWithEmailLink(auth, url.toString())) {
 				return;
 			}
 
@@ -48,10 +52,9 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 		return () => unsubscribe();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [auth, authListenerRegistered, translator, signingIn]);
+	}, [auth, authListenerRegistered, translator]);
 
 	const signIn = async (email: string) => {
-		setSigningIn(true);
 		const url = window.location.href;
 
 		try {
@@ -75,8 +78,6 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 			} else {
 				translator && toast.error(translator.t('error.unknown'));
 			}
-		} finally {
-			setSigningIn(false);
 		}
 	};
 
