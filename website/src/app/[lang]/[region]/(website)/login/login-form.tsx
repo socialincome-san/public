@@ -100,7 +100,7 @@ export default function LoginForm({ lang, region, translations }: LoginFormProps
 						</FormItem>
 					)}
 				/>
-				<Button type="submit" className="mt-8" showLoadingSpinner={sendingEmail || signingIn}>
+				<Button type="submit" className="mt-8" showLoadingSpinner={sendingEmail}>
 					{translations.submitButton}
 				</Button>
 			</form>
