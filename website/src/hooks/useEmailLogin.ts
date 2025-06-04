@@ -31,12 +31,13 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 		const unsubscribe = auth.onAuthStateChanged(() => {
 			setAuthListenerRegistered(true);
+			const url = new URL(window.location.href);
 
-			if (signingIn || !isSignInWithEmailLink(auth, window.location.href)) {
+			if (signingIn || !isSignInWithEmailLink(auth, url.toString())) {
 				return;
 			}
 
-			const email = window.localStorage.getItem('emailForSignIn') ?? prompt(translator?.t('confirm-email'));
+			const email = url.searchParams.get('email');
 
 			if (email) {
 				void signIn(email);
@@ -46,6 +47,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		});
 
 		return () => unsubscribe();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [auth, authListenerRegistered, translator, signingIn]);
 
 	const signIn = async (email: string) => {
@@ -57,7 +59,6 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 				throw new FirebaseError('auth/user-not-found', 'user not found');
 			}
 			const { user } = await signInWithEmailLink(auth, email, url);
-			window.localStorage.removeItem('emailForSignIn');
 			onLoginSuccess && (await onLoginSuccess(user.uid));
 		} catch (error: unknown) {
 			if (error instanceof FirebaseError) {
@@ -81,14 +82,17 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 	const sendSignInEmail = async (email: string, targetUrl?: string) => {
 		setSendingEmail(true);
+
+		const url = new URL(targetUrl || window.location.href);
+		url.searchParams.set('email', email);
+
 		const actionCodeSettings = {
-			url: targetUrl || window.location.href,
+			url: url.toString(),
 			handleCodeInApp: true,
 		};
 
 		try {
 			await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-			window.localStorage.setItem('emailForSignIn', email);
 			setEmailSent(true);
 		} catch (error) {
 			translator && toast.error(translator.t('error.unknown'));
