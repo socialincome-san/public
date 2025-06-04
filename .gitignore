@@ -39,3 +39,4 @@ tags
 
 recipients_app/android/app/src/main/google-services.json
 recipients_app/android/app/google-services.json
+**/.cxx
