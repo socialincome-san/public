@@ -56,11 +56,13 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 	const signIn = async (email: string) => {
 		const url = window.location.href;
+		console.log(`login with email: ${email}`);
 
 		try {
 			if (!(await userExists(email))) {
 				throw new FirebaseError('auth/user-not-found', 'user not found');
 			}
+			console.log('signing in with email link');
 			const { user } = await signInWithEmailLink(auth, email, url);
 			onLoginSuccess && (await onLoginSuccess(user.uid));
 		} catch (error: unknown) {
