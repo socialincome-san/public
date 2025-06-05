@@ -30,7 +30,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		const url = new URL(window.location.href);
 		const continueUrl = url.searchParams.get('continueUrl');
 
-		setSigningIn(continueUrl !== null && url.searchParams.get('email') !== null);
+		setSigningIn(continueUrl !== null || url.searchParams.get('email') !== null);
 
 		if (authListenerRegistered) {
 			return;
@@ -44,7 +44,6 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 			}
 
 			const email = new URL(continueUrl ?? window.location.href).searchParams.get('email');
-			console.log(`debug: email: ${email}`);
 
 			if (email) {
 				void signIn(email);
