@@ -68,6 +68,9 @@ jobs:
     runs-on: ubuntu-latest
     if: inputs.component == 'functions'
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
         with:
@@ -101,6 +104,9 @@ jobs:
     runs-on: ubuntu-latest
     if: inputs.component == 'rules'
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
         with:
