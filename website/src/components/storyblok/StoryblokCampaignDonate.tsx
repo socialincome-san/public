@@ -1,7 +1,7 @@
 import { DonationInterval, GenericDonationForm } from '@/components/donation/generic-donation-form';
 import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Typography } from '@socialincome/ui/dist';
+import { Typography } from '@socialincome/ui';
 
 export function StoryblokCampaignDonate(props: {
 	lang: WebsiteLanguage;

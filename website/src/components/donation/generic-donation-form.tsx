@@ -5,8 +5,7 @@ import { CreateCheckoutSessionData } from '@/app/api/stripe/checkout-session/cre
 import { useI18n } from '@/components/providers/context-providers';
 import { CurrencySelector } from '@/components/ui/currency-selector';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Form, FormControl, FormField, FormItem, Input } from '@socialincome/ui/dist';
-import { ToggleGroup, ToggleGroupItem } from '@socialincome/ui/dist/components/toggle-group';
+import { Button, Form, FormControl, FormField, FormItem, Input, ToggleGroup, ToggleGroupItem } from '@socialincome/ui';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
