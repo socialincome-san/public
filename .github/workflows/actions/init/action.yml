@@ -35,7 +35,7 @@ runs:
         firebase setup:emulators:ui
 
     - name: Install dependencies
-      if: ${{ inputs.installFirebaseTools == 'true' }}
+      if: ${{ inputs.installDependencies == 'true' }}
       shell: bash
       run: npm ci
 
