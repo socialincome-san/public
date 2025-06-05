@@ -14,18 +14,18 @@ jobs:
     if: "!contains(github.event.head_commit.author, 'drawbot')"
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 🛎️
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install nodejs 🔧
-        uses: actions/setup-node@v3
+      - name: Initialize repository
+        uses: ./.github/workflows/actions/init
         with:
-          node-version: latest
+          installDependencies: "false"
 
-      - name: Install dchoose 🔧
+      - name: Install dchoose
         run: npm install -g dchoose
 
-      - name: Make folders if necessary 📁
+      - name: Make folders if necessary
         run: |
           mkdir -p ./recipients_selection/draws
           mkdir -p ./recipients_selection/lists
@@ -34,12 +34,12 @@ jobs:
         working-directory: recipients_selection
         run: ./draw.sh
 
-      - name: Configure some git params 🔧
+      - name: Configure some git params
         run: |
           git config --global user.name $BOT_NAME
           git config --global user.email $BOT_EMAIL
 
-      - name: Commit and raise PR 🔐
+      - name: Commit and raise PR
         uses: peter-evans/create-pull-request@v7
         with:
           add-paths: .

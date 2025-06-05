@@ -4,26 +4,17 @@
 	},
 	"title": "Accedi al tuo account",
 	"email": "Email",
-	"invalid-email": "Indirizzo email non valido",
+	"confirm-email": "Per favore conferma il tuo indirizzo email",
+	"back-to-login": "Torna all'accesso",
+	"signing-in": "Accedendo...",
 	"password": "Password",
 	"required-field": "Questo campo è obbligatorio",
-	"submit-button": "Accedi",
-	"invalid-user-or-password": "Email o password non valida",
-	"reset-password-button": "Password dimenticata?",
-	"reset-password-title": "Reimposta la tua password",
-	"reset-password-text": "Inserisci il tuo indirizzo email e ti invieremo un link per reimpostare la password.",
-	"reset-password-toast-message": "Dovresti aver ricevuto una email con un link per reimpostare la tua password.",
-	"reset-password-submit-button": "Invia link per reimpostare la password",
-	"sign-in-with-google": "Accedi con Google",
-	"reset-password": {
-		"title": "Reimposta la tua password",
-		"password-placeholder": "Nuova password",
-		"confirm-password-placeholder": "Conferma nuova password",
-		"invalid-password": "La password deve contenere almeno 6 caratteri",
-		"passwords-dont-match": "Le password non corrispondono",
-		"submit-button": "Reimposta password",
-		"success": "La tua password è stata reimpostata con successo",
-		"error": "Impossibile reimpostare la password. Riprova",
-		"invalid-code": "Link non valido o scaduto. Richiedi un nuovo link"
+	"submit-button": "Invia link per accedere",
+	"check-email": "Dovresti aver ricevuto un'email con un link per accedere.",
+	"confirm-email-title": "Conferma il tuo indirizzo email",
+	"error": {
+		"user-not-found": "Utente non trovato",
+		"invalid-email": "Indirizzo email non valido",
+		"unknown": "Accesso fallito"
 	}
 }

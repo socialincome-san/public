@@ -62,9 +62,12 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image(
-                    image: const AssetImage("assets/earth_animation.gif"),
-                    height: MediaQuery.sizeOf(context).height * 0.3,
+                  Flexible(
+                    child: Image(
+                      image: const AssetImage("assets/earth_animation.gif"),
+                      height: MediaQuery.sizeOf(context).height * 0.3,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Text(
