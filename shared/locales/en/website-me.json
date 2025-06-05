@@ -76,15 +76,6 @@
 		"newsletter-switch": "I would like to receive the newsletter"
 	},
 	"security": {
-		"reset-password": {
-			"title": "Update Password",
-			"password": "Password",
-			"password-confirmation": "Confirm Password",
-			"submit-button": "Update Password",
-			"passwords-mismatch": "Passwords do not match",
-			"error-toast": "There was an error updating your password",
-			"success-toast": "Your password has been updated. Please sign in again with your new password."
-		},
 		"sign-out": {
 			"title": "Sign out of your account?",
 			"button": "Sign Out"

@@ -15,7 +15,7 @@
 	"functions": {
 		"ignore": ["**/*.log", "scripts/", "src/", "tests/"],
 		"source": "functions",
-		"runtime": "nodejs18"
+		"runtime": "nodejs22"
 	},
 	"storage": {
 		"rules": "storage.rules"
@@ -27,7 +27,8 @@
 		"singleProjectMode": false,
 		"auth": {
 			"port": 9099,
-			"host": "0.0.0.0"
+			"host": "0.0.0.0",
+			"providers": ["emailLink"]
 		},
 		"firestore": {
 			"port": 8080,

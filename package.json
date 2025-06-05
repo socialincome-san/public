@@ -48,7 +48,7 @@
 		"dev:ssl-proxy": "ssl-proxy --source 3000 --target 3001"
 	},
 	"devDependencies": {
-		"firebase-tools": "13.29.3",
+		"firebase-tools": "14.4.0",
 		"prettier": "3.4.2",
 		"prettier-plugin-organize-imports": "4.1.0",
 		"prettier-plugin-tailwindcss": "0.6.9",

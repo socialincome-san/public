@@ -71,15 +71,6 @@
 		"user-updated-toast": "Le tue informazioni personali sono state aggiornate"
 	},
 	"security": {
-		"reset-password": {
-			"title": "Aggiorna la tua password",
-			"password": "Password",
-			"password-confirmation": "Conferma la password",
-			"submit-button": "Aggiorna la password",
-			"passwords-mismatch": "Le password non corrispondono",
-			"error-toast": "Si è verificato un errore nell'aggiornare la tua password",
-			"success-toast": "La tua password è stata aggiornata. Effettua nuovamente l'accesso con la tua nuova password."
-		},
 		"sign-out": {
 			"title": "Vuoi uscire dal tuo account?",
 			"button": "Effettua il log out"

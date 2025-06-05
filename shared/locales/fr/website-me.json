@@ -76,15 +76,6 @@
 		"newsletter-switch": "Je souhaite recevoir la newsletter"
 	},
 	"security": {
-		"reset-password": {
-			"title": "Mise à jour du mot de passe",
-			"password": "Mot de passe",
-			"password-confirmation": "Confirmer le mot de passe",
-			"submit-button": "Mise à jour du mot de passe",
-			"passwords-mismatch": "Non-concordance du mot de passe",
-			"error-toast": "Une erreur s’est produite lors de la mise à jour du mot de passe.",
-			"success-toast": "Ton mot de passe a été mis à jour. Connecte-toi à nouveau avec ton nouveau mot de passe."
-		},
 		"sign-out": {
 			"title": "Se déconnecter du compte?",
 			"button": "Se déconnecter"
