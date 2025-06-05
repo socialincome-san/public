@@ -24,6 +24,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@socialincome/ui';
+import { FirebaseError } from 'firebase/app';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -104,33 +105,41 @@ export function SuccessForm({
 		setSubmitting(true);
 
 		try {
-			createUserWithEmailAndPassword(auth, values.email, await rndString(16)).then(({ user }) => {
-				const data: UpdateUserData = {
-					stripeCheckoutSessionId: stripeCheckoutSessionId,
-					user: {
-						auth_user_id: user.uid,
-						email: values.email,
-						language: lang,
-						personal: {
-							name: values.firstname,
-							lastname: values.lastname,
-							gender: values.gender,
-							referral: values.referral,
-						},
-						address: {
-							country: values.country,
-						},
+			const { user } = await createUserWithEmailAndPassword(auth, values.email, await rndString(16));
+			const data: UpdateUserData = {
+				stripeCheckoutSessionId: stripeCheckoutSessionId,
+				user: {
+					auth_user_id: user.uid,
+					email: values.email,
+					language: lang,
+					personal: {
+						name: values.firstname,
+						lastname: values.lastname,
+						gender: values.gender,
+						referral: values.referral,
 					},
-				};
-				fetch('/api/user/update', { method: 'POST', body: JSON.stringify(data) }).then((response) => {
-					if (!response.ok) {
+					address: {
+						country: values.country,
+					},
+				},
+			};
+			const response = await fetch('/api/user/update', { method: 'POST', body: JSON.stringify(data) });
+			if (!response.ok) {
+				toast.error(translations.updateUserError);
+			}
+			router.push(onSuccessURL);
+		} catch (error: unknown) {
+			if (error instanceof FirebaseError) {
+				switch (error.code) {
+					case 'auth/email-already-in-use':
+						router.push('/login');
+						break;
+					default:
 						toast.error(translations.updateUserError);
-					}
-					router.push(onSuccessURL);
-				});
-			});
-		} catch (error) {
-			toast.error(translations.updateUserError);
+						break;
+				}
+			}
+
 			setSubmitting(false);
 		}
 	};
