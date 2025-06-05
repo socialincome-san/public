@@ -123,12 +123,11 @@ export function SuccessForm({
 					},
 				},
 			};
-			fetch('/api/user/update', { method: 'POST', body: JSON.stringify(data) }).then((response) => {
-				if (!response.ok) {
-					toast.error(translations.updateUserError);
-				}
-				router.push(onSuccessURL);
-			});
+			const response = await fetch('/api/user/update', { method: 'POST', body: JSON.stringify(data) });
+			if (!response.ok) {
+				toast.error(translations.updateUserError);
+			}
+			router.push(onSuccessURL);
 		} catch (error: unknown) {
 			if (error instanceof FirebaseError) {
 				switch (error.code) {
