@@ -26,18 +26,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Read .nvmrc
-        id: nvm
-        run: echo "NVMRC=$(cat '.nvmrc')" >> $GITHUB_OUTPUT
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ steps.nvm.outputs.NVMRC }}
-          cache: "npm"
-
-      - name: Install Dependencies
-        run: npm ci
+      - name: Initialize repository
+        uses: ./.github/workflows/actions/init
 
       - name: Build Storybook
         run: npm run ui:build
