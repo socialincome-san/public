@@ -8,9 +8,6 @@ inputs:
   installDependencies:
     description: If dependencies will be installed or not
     default: "true"
-  project:
-    description: The Firebase project to deploy to (social-income-staging|social-income-prod)
-    default: social-income-staging
   firebaseServiceAccountJSON:
     description: The credentials JSON value of the Firebase service account
     required: "false"
@@ -29,7 +26,7 @@ runs:
       if: ${{ inputs.installFirebaseTools == 'true' }}
       shell: bash
       run: |
-        npm -g install firebase-tools@14.4.0 vercel@39.2.6 && \
+        npm -g install firebase-tools@14.4.0 && \
         firebase setup:emulators:firestore && \
         firebase setup:emulators:storage && \
         firebase setup:emulators:ui

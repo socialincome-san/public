@@ -28,7 +28,6 @@ jobs:
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
         with:
-          project: ${{ inputs.project }}
           firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
       - name: Build admin
@@ -74,7 +73,6 @@ jobs:
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
         with:
-          project: ${{ inputs.project }}
           installFirebaseTools: "true"
           firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
@@ -113,7 +111,6 @@ jobs:
         with:
           installDependencies: "false"
           installFirebaseTools: "true"
-          project: ${{ inputs.project }}
           firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
       - name: Deploy on Firebase (${{ inputs.project }})
