@@ -1,1 +1,1 @@
-bucket = "staging-website-terraform-state"
+bucket = "staging-website-tf-state"
