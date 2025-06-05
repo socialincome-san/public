@@ -18,6 +18,8 @@ jobs:
 
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
+        with:
+          installDependencies: false
 
       - name: Prettify code
         uses: creyD/prettier_action@v4.3

@@ -104,7 +104,8 @@ jobs:
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
         with:
-          installDependencies: "false"
+          installDependencies: false
+          installFirebaseTools: true
           project: ${{ inputs.project }}
           firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 

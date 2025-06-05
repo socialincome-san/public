@@ -2,13 +2,14 @@ name: Initialize Repository
 description: Set up Node.js, plus installs firebase-tools and dependencies
 
 inputs:
+  installFirebaseTools:
+    description: If firebase-tools will be installed or not
+    default: false
   installDependencies:
     description: If dependencies will be installed or not
-    required: false
-    default: "true"
+    default: true
   project:
     description: The Firebase project to deploy to (social-income-staging|social-income-prod)
-    required: true
     default: social-income-staging
   firebaseServiceAccountJSON:
     description: The credentials JSON value of the Firebase service account
@@ -21,10 +22,11 @@ runs:
       uses: jdx/mise-action@v2
       with:
         version: 2025.6.0
-        install: ${{ inputs.installDependencies == 'true' }}
+        install: inputs.installDependencies
         cache: true
 
     - name: Install and set up vercel & firebase-tools
+      if: inputs.installFirebaseTools
       shell: bash
       run: |
         npm -g install firebase-tools@14.4.0 vercel@39.2.6 && \
@@ -33,7 +35,7 @@ runs:
         firebase setup:emulators:ui
 
     - name: Install dependencies
-      if: inputs.installDependencies == 'true'
+      if: inputs.installDependencies
       shell: bash
       run: npm ci
 
