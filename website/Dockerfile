@@ -29,18 +29,26 @@ RUN --mount=type=secret,id=BASE_URL \
 # -------- Dependencies Layer --------
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
+
 COPY package.json package-lock.json ./
-COPY website ./website
+COPY admin/package.json ./admin/
+COPY functions/package.json ./functions/
+COPY shared/package.json ./shared/
+COPY ui/package.json ./ui/
+COPY website/package.json ./website/
+
+RUN npm ci
+
+COPY admin ./admin
+COPY functions ./functions
 COPY shared ./shared
 COPY ui ./ui
-COPY functions ./functions
-COPY admin ./admin
-COPY recipients_selection ./recipients_selection
-RUN npm ci
+COPY website ./website
 
 # -------- Build Layer --------
 FROM base AS builder
 WORKDIR /app/website
+
 COPY --from=deps /app/node_modules ../node_modules
 COPY --from=deps /app/website ./
 COPY --from=deps /app/shared ../shared
