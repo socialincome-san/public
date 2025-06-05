@@ -55,3 +55,18 @@ resource "google_cloud_run_service_iam_member" "google_cloud_run_service_iam_mem
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
+
+resource "google_cloud_run_domain_mapping" "cloudrun_domain_mapping" {
+  name     = var.website_domain
+  location = var.gcp_region
+
+  metadata {
+    namespace = var.gcp_project_id
+  }
+
+  spec {
+    route_name = google_cloud_run_service.google_cloud_run_service.name
+  }
+
+  depends_on = [google_cloud_run_service.google_cloud_run_service]
+}

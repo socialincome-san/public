@@ -28,3 +28,8 @@ variable "google_sql_db_password" {
   type        = string
   sensitive   = true
 }
+
+variable "website_domain" {
+  description = "Domain name for the website"
+  type        = string
+}

@@ -12,6 +12,7 @@ env:
   GCP_REGION: europe-west3
   ARTIFACT_REGISTRY_NAME: staging-website-google-artifact-registry-repository
   TERRAFORM_DIR: website/infra
+  WEBSITE_DOMAIN: staging-google.socialincome.org
 
 jobs:
   deploy:
@@ -64,20 +65,20 @@ jobs:
           echo "${{ secrets.TF_STAGING_STRIPE_PRODUCT_RECURRING }}" > secrets/STRIPE_PRODUCT_RECURRING
           echo "${{ secrets.TF_STAGING_STRIPE_SECRET_KEY }}" > secrets/STRIPE_SECRET_KEY
 
-#      - name: 📤 Build and Push Docker Image
-#        env:
-#          IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
-#        run: |
-#          echo "📤 Building Docker image: $IMAGE_URL"
-#          docker buildx build \
-#            --platform linux/amd64 \
-#            --tag "$IMAGE_URL" \
-#            --push \
-#            -f website/Dockerfile \
-#            $(for f in secrets/*; do echo "--secret id=$(basename "$f"),src=$f"; done) \
-#            .
-#
-#          echo "🚀 Image built and pushed."
+      - name: 📤 Build and Push Docker Image
+        env:
+          IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
+        run: |
+          echo "📤 Building Docker image: $IMAGE_URL"
+          docker buildx build \
+            --platform linux/amd64 \
+            --tag "$IMAGE_URL" \
+            --push \
+            -f website/Dockerfile \
+            $(for f in secrets/*; do echo "--secret id=$(basename "$f"),src=$f"; done) \
+            .
+
+          echo "🚀 Image built and pushed."
 
       - name: 🌱 Terraform Init, Validate & Apply
         env:
@@ -87,6 +88,7 @@ jobs:
           TF_VAR_gcp_project_id: ${{ env.GCP_PROJECT_ID }}
           TF_VAR_gcp_region: ${{ env.GCP_REGION }}
           TF_VAR_google_sql_db_password: ${{ secrets.TF_STAGING_GOOGLE_SQL_DB_PASSWORD }}
+          TF_VAR_website_domain: ${{ env.WEBSITE_DOMAIN }}
           IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
         run: |
           echo "🧭 Initializing Terraform..."
