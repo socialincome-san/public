@@ -64,7 +64,7 @@ gcloud projects add-iam-policy-binding social-income-staging \
 ## Step 2: Create state bucket and assign roles
 
 ```
-gsutil mb -p social-income-staging -l europe-west6 -b on gs://staging-website-terraform-state
+gsutil mb -p social-income-staging -l europe-west3 -b on gs://staging-website-terraform-state
 ```
 
 ## Step 3: Allow the Terraform Deployer Service Account to access the state bucket
