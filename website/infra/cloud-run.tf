@@ -42,10 +42,6 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
     percent         = 100
     latest_revision = true
   }
-
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 # Public access required for website availability
