@@ -1,7 +1,7 @@
 name: execute-draw
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 permissions:
   contents: write
   pull-requests: write
