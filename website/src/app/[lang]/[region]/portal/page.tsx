@@ -1,9 +1,10 @@
-import { getUsers } from '@socialincome/shared/src/database/services/user-service';
+import { UserService } from '@socialincome/shared/src/database/user/user.service';
 
 export const dynamic = 'force-dynamic';
 
 export default async function Portal() {
-	const result = await getUsers();
+	const userService = new UserService();
+	const result = await userService.getUsers();
 
 	return (
 		<main style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
