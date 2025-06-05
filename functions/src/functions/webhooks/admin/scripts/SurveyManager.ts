@@ -89,9 +89,9 @@ export class SurveyManager {
 		);
 		const surveyDocRef = surveysCollection.doc(surveyName);
 		if (!(await surveyDocRef.get()).exists) {
-			const email = rndString(16).toLowerCase() + '@si.org';
-			const password = rndString(16);
-			const token = rndString(3, 'hex');
+			const email = (await rndString(16)).toLowerCase() + '@si.org';
+			const password = await rndString(16);
+			const token = await rndString(3, 'hex');
 			await this.authAdmin.auth.createUser({
 				email,
 				password,

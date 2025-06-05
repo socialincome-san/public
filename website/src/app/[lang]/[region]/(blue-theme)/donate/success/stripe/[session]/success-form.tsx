@@ -2,10 +2,11 @@
 
 import { UpdateUserData } from '@/app/api/user/update/route';
 import { useTranslator } from '@/hooks/useTranslator';
-import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
+import { WebsiteLanguage } from '@/i18n';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { COUNTRY_CODES, CountryCode } from '@socialincome/shared/src/types/country';
 import { GENDER_OPTIONS, UserReferralSource } from '@socialincome/shared/src/types/user';
+import { rndString } from '@socialincome/shared/src/utils/crypto';
 import {
 	Button,
 	Checkbox,
@@ -23,14 +24,18 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@socialincome/ui';
+import { FirebaseError } from 'firebase/app';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { useAuth } from 'reactfire';
 import * as z from 'zod';
 
 type SuccessFormProps = {
 	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	onSuccessURL: string;
 	stripeCheckoutSessionId: string;
 	translations: {
 		acceptTermsAndConditions: string;
@@ -49,6 +54,7 @@ type SuccessFormProps = {
 			other: string;
 		};
 		submitButton: string;
+		updateUserError: string;
 	};
 	firstname?: string;
 	lastname?: string;
@@ -58,17 +64,18 @@ type SuccessFormProps = {
 
 export function SuccessForm({
 	lang,
-	region,
 	stripeCheckoutSessionId,
 	translations,
 	firstname,
 	lastname,
 	email,
 	country,
+	onSuccessURL,
 }: SuccessFormProps) {
 	const router = useRouter();
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
+	const auth = useAuth();
 	const [submitting, setSubmitting] = useState(false);
 	const [firstCountry, ...restCountries] = COUNTRY_CODES;
 
@@ -96,26 +103,45 @@ export function SuccessForm({
 
 	const onSubmit = async (values: FormSchema) => {
 		setSubmitting(true);
-		const data: UpdateUserData = {
-			stripeCheckoutSessionId: stripeCheckoutSessionId,
-			user: {
-				email: values.email,
-				language: lang,
-				personal: {
-					name: values.firstname,
-					lastname: values.lastname,
-					gender: values.gender,
-					referral: values.referral,
+
+		try {
+			const { user } = await createUserWithEmailAndPassword(auth, values.email, await rndString(16));
+			const data: UpdateUserData = {
+				stripeCheckoutSessionId: stripeCheckoutSessionId,
+				user: {
+					auth_user_id: user.uid,
+					email: values.email,
+					language: lang,
+					personal: {
+						name: values.firstname,
+						lastname: values.lastname,
+						gender: values.gender,
+						referral: values.referral,
+					},
+					address: {
+						country: values.country,
+					},
 				},
-				address: {
-					country: values.country,
-				},
-			},
-		};
-		fetch('/api/user/update', { method: 'POST', body: JSON.stringify(data) }).then((response) => {
-			if (!response.ok) throw new Error('Failed to update user data');
-			router.push(`/${lang}/${region}/donate/success/stripe/${stripeCheckoutSessionId}/activate`);
-		});
+			};
+			const response = await fetch('/api/user/update', { method: 'POST', body: JSON.stringify(data) });
+			if (!response.ok) {
+				toast.error(translations.updateUserError);
+			}
+			router.push(onSuccessURL);
+		} catch (error: unknown) {
+			if (error instanceof FirebaseError) {
+				switch (error.code) {
+					case 'auth/email-already-in-use':
+						router.push('/login');
+						break;
+					default:
+						toast.error(translations.updateUserError);
+						break;
+				}
+			}
+
+			setSubmitting(false);
+		}
 	};
 
 	return (

@@ -4,26 +4,17 @@
 	},
 	"title": "Connexion",
 	"email": "E-mail",
-	"invalid-email": "Adresse e-mail incorrecte",
+	"confirm-email": "Veuillez confirmer votre adresse e-mail",
+	"back-to-login": "Retour à la connexion",
+	"signing-in": "Connexion...",
 	"password": "Mot de passe",
 	"required-field": "Ce champ est obligatoire ",
-	"submit-button": "Inscription",
-	"invalid-user-or-password": "Mot de passe incorrect ou adresse e-mail inconnue",
-	"reset-password-button": "Mot de passe oublié?",
-	"reset-password-title": "Réinitialiser le mot de passe",
-	"reset-password-text": "Indique ton adresse e-mail pour recevoir un lien de réinitialisation de ton mot de passe ",
-	"reset-password-toast-message": "Tu devrais avoir reçu un e-mail pour réinitialiser ton mot de passe.",
-	"reset-password-submit-button": "Envoyer le lien",
-	"sign-in-with-google": "S'inscrire avec Google",
-	"reset-password": {
-		"title": "Réinitialiser le mot de passe",
-		"password-placeholder": "Nouveau mot de passe",
-		"confirm-password-placeholder": "Confirmer le nouveau mot de passe",
-		"invalid-password": "Le mot de passe doit contenir au moins 6 caractères",
-		"passwords-dont-match": "Les mots de passe ne correspondent pas",
-		"submit-button": "Réinitialiser le mot de passe",
-		"success": "Ton mot de passe a été réinitialisé avec succès",
-		"error": "Échec de la réinitialisation du mot de passe. Veuillez réessayer",
-		"invalid-code": "Lien de réinitialisation invalide ou expiré. Veuillez en demander un nouveau"
+	"submit-button": "Envoyer le lien de connexion",
+	"check-email": "Tu devrais avoir reçu un e-mail avec un lien pour te connecter.",
+	"confirm-email-title": "Confirmez votre adresse e-mail",
+	"error": {
+		"user-not-found": "Utilisateur non trouvé",
+		"invalid-email": "Adresse e-mail incorrecte",
+		"unknown": "Connexion impossible"
 	}
 }

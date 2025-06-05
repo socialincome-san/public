@@ -15,3 +15,8 @@ export const POSTFINANCE_FTP_PORT = process.env.POSTFINANCE_FTP_PORT!;
 export const POSTFINANCE_FTP_USER = process.env.POSTFINANCE_FTP_USER!;
 
 export const EXCHANGE_RATES_API = process.env.EXCHANGE_RATES_API!;
+
+// Twilio settings
+export const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID!;
+export const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN!;
+export const TWILIO_VERIFY_SERVICE_SID = process.env.TWILIO_VERIFY_SERVICE_SID!;

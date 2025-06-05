@@ -5,6 +5,16 @@
 		"description": "News, Insights und Einblicke in die Arbeit von Social Income."
 	},
 	"article": {
-		"keep-reading": "Weiterlesen"
+		"keep-reading": "Weiterlesen",
+		"from-original-language": "Übersetzt aus dem"
+	},
+	"reference-article": {
+		"show-more": "Mehr anzeigen",
+		"show-less": "Weniger anzeigen",
+		"written-by": "{{mediaOutlet}} von {{author}} am {{publicationDate}}",
+		"context": {
+			"original": "Erstveröffentlichung",
+			"related": "Diese Quellen lieferten Informationen und Kontext"
+		}
 	}
 }
