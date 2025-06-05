@@ -4,10 +4,10 @@ description: Set up Node.js, plus installs firebase-tools and dependencies
 inputs:
   installFirebaseTools:
     description: If firebase-tools will be installed or not
-    default: "false"
+    default: false
   installDependencies:
     description: If dependencies will be installed or not
-    default: "true"
+    default: true
   project:
     description: The Firebase project to deploy to (social-income-staging|social-income-prod)
     default: social-income-staging
