@@ -75,6 +75,7 @@ jobs:
         uses: ./.github/workflows/actions/init
         with:
           project: ${{ inputs.project }}
+          installFirebaseTools: "true"
           firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
       - name: Add secrets to functions/.env file
@@ -110,8 +111,8 @@ jobs:
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
         with:
-          installDependencies: false
-          installFirebaseTools: true
+          installDependencies: "false"
+          installFirebaseTools: "true"
           project: ${{ inputs.project }}
           firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 

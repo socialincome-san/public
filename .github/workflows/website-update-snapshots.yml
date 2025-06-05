@@ -37,7 +37,7 @@ jobs:
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
         with:
-          installDependencies: false
+          installDependencies: "false"
 
       # Get the SHA and branch name of the comment's pull request
       # We must use the GitHub API to retrieve these information because they're
