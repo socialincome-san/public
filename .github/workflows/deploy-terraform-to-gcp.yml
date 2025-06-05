@@ -66,20 +66,20 @@ jobs:
           echo "${{ secrets.TF_STAGING_STRIPE_PRODUCT_RECURRING }}" > secrets/STRIPE_PRODUCT_RECURRING
           echo "${{ secrets.TF_STAGING_STRIPE_SECRET_KEY }}" > secrets/STRIPE_SECRET_KEY
 
-#      - name: 📤 Build and Push Docker Image
-#        env:
-#          IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
-#        run: |
-#          echo "📤 Building Docker image: $IMAGE_URL"
-#          docker buildx build \
-#            --platform linux/amd64 \
-#            --tag "$IMAGE_URL" \
-#            --push \
-#            -f website/Dockerfile \
-#            $(for f in secrets/*; do echo "--secret id=$(basename "$f"),src=$f"; done) \
-#            .
-#
-#          echo "🚀 Image built and pushed."
+      - name: 📤 Build and Push Docker Image
+        env:
+          IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
+        run: |
+          echo "📤 Building Docker image: $IMAGE_URL"
+          docker buildx build \
+            --platform linux/amd64 \
+            --tag "$IMAGE_URL" \
+            --push \
+            -f website/Dockerfile \
+            $(for f in secrets/*; do echo "--secret id=$(basename "$f"),src=$f"; done) \
+            .
+
+          echo "🚀 Image built and pushed."
 
       - name: 🌱 Terraform Init, Validate & Apply
         env:
