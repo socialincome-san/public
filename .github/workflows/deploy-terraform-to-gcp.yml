@@ -12,7 +12,7 @@ env:
   GCP_REGION: europe-west1
   ARTIFACT_REGISTRY_NAME: staging-website-google-artifact-registry-repository
   TERRAFORM_DIR: website/infra
-  WEBSITE_DOMAIN: staging-google.socialincome.org
+  WEBSITE_DOMAIN: staging.socialincome.org
 
 jobs:
   deploy:
