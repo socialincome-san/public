@@ -28,7 +28,9 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 	useEffect(() => {
 		const url = new URL(window.location.href);
-		setSigningIn(url.searchParams.get('email') !== null);
+		const continueUrl = url.searchParams.get('continueUrl');
+
+		setSigningIn(continueUrl !== null || url.searchParams.get('email') !== null);
 
 		if (authListenerRegistered) {
 			return;
@@ -41,7 +43,8 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 				return;
 			}
 
-			const email = url.searchParams.get('email');
+			const email = new URL(decodeURIComponent(continueUrl ?? window.location.href)).searchParams.get('email');
+			console.log(`debug: email: ${email}`);
 
 			if (email) {
 				void signIn(email);
@@ -56,13 +59,11 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 	const signIn = async (email: string) => {
 		const url = window.location.href;
-		console.log(`login with email: ${email}`);
 
 		try {
 			if (!(await userExists(email))) {
 				throw new FirebaseError('auth/user-not-found', 'user not found');
 			}
-			console.log('signing in with email link');
 			const { user } = await signInWithEmailLink(auth, email, url);
 			onLoginSuccess && (await onLoginSuccess(user.uid));
 		} catch (error: unknown) {
