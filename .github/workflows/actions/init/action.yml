@@ -21,7 +21,7 @@ runs:
       uses: jdx/mise-action@v2
       with:
         version: 2025.6.0
-        install: {{ inputs.installDependencies == 'true' }}
+        install: ${{ inputs.installDependencies == 'true' }}
         cache: true
 
     - name: Install and set up vercel & firebase-tools
