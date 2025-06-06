@@ -1,0 +1,17 @@
+{
+  "section-1": {
+    "title": "xDo no harm",
+    "bankIntroText": "xAccount details for bank transfers",
+    "bankInfoTextRecurring": "Recurring contributions",
+    "bankOneTime": "One-time contributions",
+    "bankPrompt": "Bank",
+    "bankPostFinance": "PostFinance, Zurich (Switzerland)",
+    "bankAccountHolderPrompt": "Account Holder",
+    "bankAccountHolder": "Social Income",
+    "bankIBANPrompt": "IBAN",
+    "bankIBAN1": "CH19 0900 0000 1511 2638 6",
+    "bankIBAN2": "CH57 0900 0000 1548 6088 1",
+    "bankBICPrompt": "BIC",
+    "bankBIC": "POFICHBEXXX"
+  }
+}
