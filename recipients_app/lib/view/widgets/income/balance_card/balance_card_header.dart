@@ -8,19 +8,13 @@ class BalanceCardHeader extends StatelessWidget {
   final int amount;
   final BalanceCardStatus balanceCardStatus;
 
-  const BalanceCardHeader({
-    super.key,
-    required this.daysTo,
-    required this.amount,
-    required this.balanceCardStatus,
-  });
+  const BalanceCardHeader({super.key, required this.daysTo, required this.amount, required this.balanceCardStatus});
 
   @override
   Widget build(BuildContext context) {
-    final dynamicTextStyle = Theme.of(context).textTheme.headlineLarge!.copyWith(
-          fontWeight: FontWeight.bold,
-          color: _getTextColor(),
-        );
+    final dynamicTextStyle = Theme.of(
+      context,
+    ).textTheme.headlineLarge!.copyWith(fontWeight: FontWeight.bold, color: _getTextColor());
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -29,15 +23,9 @@ class BalanceCardHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                context.l10n.nextPayment,
-                style: const TextStyle(fontSize: 13),
-              ),
+              Text(context.l10n.nextPayment, style: const TextStyle(fontSize: 13)),
               const SizedBox(height: 4),
-              Text(
-                _getNextDateText(context.l10n),
-                style: dynamicTextStyle,
-              ),
+              Text(_getNextDateText(context.l10n), style: dynamicTextStyle),
             ],
           ),
         ),
@@ -45,15 +33,9 @@ class BalanceCardHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                context.l10n.amount,
-                style: const TextStyle(fontSize: 13),
-              ),
+              Text(context.l10n.amount, style: const TextStyle(fontSize: 13)),
               const SizedBox(height: 4),
-              Text(
-                "SLE $amount",
-                style: dynamicTextStyle,
-              ),
+              Text("SLE $amount", style: dynamicTextStyle),
             ],
           ),
         ),

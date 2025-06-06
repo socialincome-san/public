@@ -27,18 +27,9 @@ class SocialIncomeContactDialog extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    Image(
-                      image: const AssetImage("assets/team.png"),
-                      width: MediaQuery.sizeOf(context).width * 0.6,
-                    ),
-                    Text(
-                      context.l10n.supportTeam,
-                      style: Theme.of(context).textTheme.headlineLarge,
-                    ),
-                    Text(
-                      context.l10n.getInTouch,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
+                    Image(image: const AssetImage("assets/team.png"), width: MediaQuery.sizeOf(context).width * 0.6),
+                    Text(context.l10n.supportTeam, style: Theme.of(context).textTheme.headlineLarge),
+                    Text(context.l10n.getInTouch, style: Theme.of(context).textTheme.bodyLarge),
                   ],
                 ),
                 Column(
@@ -62,10 +53,7 @@ class SocialIncomeContactDialog extends StatelessWidget {
                     ),
                   ],
                 ),
-                ButtonBig(
-                  onPressed: () => Navigator.of(context).pop(),
-                  label: context.l10n.close,
-                ),
+                ButtonBig(onPressed: () => Navigator.of(context).pop(), label: context.l10n.close),
               ],
             ),
           ),
@@ -80,28 +68,18 @@ class SocialIncomeContactDialog extends StatelessWidget {
       await launchUrlString(whatsappURL);
     } else {
       if (context.mounted) {
-        FlushbarHelper.showFlushbar(
-          context,
-          message: context.l10n.whatsappError,
-          type: FlushbarType.error,
-        );
+        FlushbarHelper.showFlushbar(context, message: context.l10n.whatsappError, type: FlushbarType.error);
       }
     }
   }
 
   Future<void> makePhoneCall(String phoneNumber) async {
-    final Uri launchUri = Uri(
-      scheme: "tel",
-      path: phoneNumber,
-    );
+    final Uri launchUri = Uri(scheme: "tel", path: phoneNumber);
     await launchUrlString(launchUri.toString());
   }
 
   Future<void> writeEmail(String emailAdress) async {
-    final Uri launchUri = Uri(
-      scheme: "mailto",
-      path: emailAdress,
-    );
+    final Uri launchUri = Uri(scheme: "mailto", path: emailAdress);
     await launchUrlString(launchUri.toString());
   }
 }
@@ -111,11 +89,7 @@ class _IconAndContact extends StatelessWidget {
   final String contactDetails;
   final Function(String) onOpen;
 
-  const _IconAndContact({
-    required this.contactMethod,
-    required this.contactDetails,
-    required this.onOpen,
-  });
+  const _IconAndContact({required this.contactMethod, required this.contactDetails, required this.onOpen});
 
   @override
   Widget build(BuildContext context) {
@@ -123,11 +97,7 @@ class _IconAndContact extends StatelessWidget {
       children: [
         Padding(
           padding: AppSpacings.h8,
-          child: Icon(
-            Icons.check_circle_rounded,
-            color: Theme.of(context).primaryColor,
-            size: 30,
-          ),
+          child: Icon(Icons.check_circle_rounded, color: Theme.of(context).primaryColor, size: 30),
         ),
         Padding(
           padding: AppSpacings.h8,
@@ -138,20 +108,8 @@ class _IconAndContact extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      contactMethod,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(
-                      contactDetails,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey,
-                      ),
-                    ),
+                    Text(contactMethod, style: const TextStyle(fontSize: 18, color: Colors.black)),
+                    Text(contactDetails, style: const TextStyle(fontSize: 15, color: Colors.grey)),
                   ],
                 ),
               ),

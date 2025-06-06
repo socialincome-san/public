@@ -9,10 +9,7 @@ import "package:app/view/widgets/dashboard_item.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
-const _doneStatuses = [
-  SurveyCardStatus.missed,
-  SurveyCardStatus.answered,
-];
+const _doneStatuses = [SurveyCardStatus.missed, SurveyCardStatus.answered];
 
 class SurveysOverviewCard extends DashboardItem {
   final List<MappedSurvey> mappedSurveys;
@@ -42,19 +39,12 @@ class SurveysOverviewCard extends DashboardItem {
                         children: [
                           Text(
                             context.l10n.mySurveysTitle,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: Colors.black,
-                                ),
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.black),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            context.l10n.completedSurveysCount(
-                              _getDoneSurveysCount(),
-                              mappedSurveys.length,
-                            ),
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  color: AppColors.darkGrey,
-                                ),
+                            context.l10n.completedSurveysCount(_getDoneSurveysCount(), mappedSurveys.length),
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.darkGrey),
                           ),
                         ],
                       ),
@@ -80,26 +70,18 @@ class SurveysOverviewCard extends DashboardItem {
   void _navigateToSurveysPage(BuildContext context) {
     final surveyCubit = context.read<SurveyCubit>();
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => BlocProvider.value(
-          value: surveyCubit,
-          child: const SurveysPage(),
-        ),
-      ),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => BlocProvider.value(value: surveyCubit, child: const SurveysPage())));
   }
 
   int _getDoneSurveysCount() {
-    return mappedSurveys.fold(
-      0,
-      (acc, element) {
-        if (_doneStatuses.contains(element.cardStatus)) {
-          return acc + 1;
-        } else {
-          return acc;
-        }
-      },
-    );
+    return mappedSurveys.fold(0, (acc, element) {
+      if (_doneStatuses.contains(element.cardStatus)) {
+        return acc + 1;
+      } else {
+        return acc;
+      }
+    });
   }
 }

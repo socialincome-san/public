@@ -9,10 +9,7 @@ const kMonthsPerYear = 12;
 class BalanceCardGrid extends StatelessWidget {
   final List<MappedPayment> payments;
 
-  const BalanceCardGrid({
-    super.key,
-    required this.payments,
-  });
+  const BalanceCardGrid({super.key, required this.payments});
 
   @override
   Widget build(BuildContext context) {
@@ -23,28 +20,19 @@ class BalanceCardGrid extends StatelessWidget {
       crossAxisSpacing: 6,
       mainAxisSpacing: 6,
       physics: const NeverScrollableScrollPhysics(),
-      children: List.generate(
-        kProgramDurationMonths,
-        (index) {
-          if (index < paymentsFromOldest.length) {
-            final payment = paymentsFromOldest[index];
-            return PaymentStatusIcon(
-              status: payment.uiStatus,
-            );
-          }
+      children: List.generate(kProgramDurationMonths, (index) {
+        if (index < paymentsFromOldest.length) {
+          final payment = paymentsFromOldest[index];
+          return PaymentStatusIcon(status: payment.uiStatus);
+        }
 
-          if (!paymentsFromOldest.any(
-                (element) => element.uiStatus == PaymentUiStatus.toBePaid,
-              ) &&
-              index == (paymentsFromOldest.length)) {
-            return const PaymentStatusIcon(
-              status: PaymentUiStatus.toBePaid,
-            );
-          }
+        if (!paymentsFromOldest.any((element) => element.uiStatus == PaymentUiStatus.toBePaid) &&
+            index == (paymentsFromOldest.length)) {
+          return const PaymentStatusIcon(status: PaymentUiStatus.toBePaid);
+        }
 
-          return const PaymentStatusIcon(status: PaymentUiStatus.empty);
-        },
-      ),
+        return const PaymentStatusIcon(status: PaymentUiStatus.empty);
+      }),
     );
   }
 }
