@@ -1,4 +1,5 @@
-import { DonationInterval, GenericDonationForm } from '@/components/donation/generic-donation-form';
+import { DonationInterval } from '@/components/donation/donation-interval';
+import { GenericDonationForm } from '@/components/donation/generic-donation-form';
 import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';
@@ -10,6 +11,7 @@ export function StoryblokCampaignDonate(props: {
 	campaignId?: string;
 }) {
 	const { translator, region, lang } = props;
+	const donationInterval = DonationInterval.Monthly;
 	return (
 		<div className="bg-primary my-4 rounded-lg p-10">
 			<Typography size="3xl" weight="semibold" color="primary-foreground" className="mb-8 mt-0 align-middle">
@@ -22,7 +24,7 @@ export function StoryblokCampaignDonate(props: {
 				</Typography>
 			</Typography>
 			<GenericDonationForm
-				defaultInterval={DonationInterval.Monthly}
+				defaultInterval={donationInterval}
 				lang={lang}
 				region={region}
 				translations={{

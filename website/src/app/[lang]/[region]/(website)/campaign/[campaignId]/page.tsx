@@ -26,7 +26,8 @@ import {
 import { Progress } from '@socialincome/ui/src/components/progress';
 import Link from 'next/link';
 
-import { DonationInterval, GenericDonationForm } from '@/components/donation/generic-donation-form';
+import { DonationInterval } from '@/components/donation/donation-interval';
+import { GenericDonationForm } from '@/components/donation/generic-donation-form';
 import NewsletterGlowContainer from '@/components/newsletter-glow-container/newsletter-glow-container';
 
 interface CampaignPageParams extends DefaultParams {
