@@ -89,7 +89,6 @@ workflows:
             --dart-define=TWILIO_AUTH_TOKEN=$TWILIO_AUTH_TOKEN \
             --dart-define=TWILIONUMBER=$TWILIO_NUMBER \
             --dart-define=TWILIO_SERVICE_SID=$TWILIO_SERVICE_SID
-
         working_directory: recipients_app
 
     artifacts:
@@ -181,7 +180,11 @@ workflows:
             --flavor prod \
             -t lib/main.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
-            --dart-define=SENTRY_URL=$SENTRY_URL
+            --dart-define=SENTRY_URL=$SENTRY_URL \
+            --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
+            --dart-define=TWILIO_AUTH_TOKEN=$TWILIO_AUTH_TOKEN \
+            --dart-define=TWILIONUMBER=$TWILIO_NUMBER \
+            --dart-define=TWILIO_SERVICE_SID=$TWILIO_SERVICE_SID
         working_directory: recipients_app
 
     artifacts:
@@ -265,6 +268,10 @@ workflows:
             -t lib/main.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
+            --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
+            --dart-define=TWILIO_AUTH_TOKEN=$TWILIO_AUTH_TOKEN \
+            --dart-define=TWILIONUMBER=$TWILIO_NUMBER \
+            --dart-define=TWILIO_SERVICE_SID=$TWILIO_SERVICE_SID \
             --export-options-plist=$CM_BUILD_DIR/recipients_app/ios/export_options.plist
         working_directory: recipients_app
 
@@ -360,6 +367,10 @@ workflows:
             -t lib/main.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
+            --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
+            --dart-define=TWILIO_AUTH_TOKEN=$TWILIO_AUTH_TOKEN \
+            --dart-define=TWILIONUMBER=$TWILIO_NUMBER \
+            --dart-define=TWILIO_SERVICE_SID=$TWILIO_SERVICE_SID \
             --export-options-plist=$CM_BUILD_DIR/recipients_app/ios/export_options.plist
         working_directory: recipients_app
 
@@ -452,6 +463,10 @@ workflows:
             -t lib/main.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
+            --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
+            --dart-define=TWILIO_AUTH_TOKEN=$TWILIO_AUTH_TOKEN \
+            --dart-define=TWILIONUMBER=$TWILIO_NUMBER \
+            --dart-define=TWILIO_SERVICE_SID=$TWILIO_SERVICE_SID \
             --export-options-plist=$CM_BUILD_DIR/recipients_app/ios/export_options.plist
         working_directory: recipients_app
 
