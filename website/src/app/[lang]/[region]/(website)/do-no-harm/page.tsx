@@ -1,9 +1,6 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography, Card, CardContent, linkCn } from '@socialincome/ui';
-import Link from 'next/link';
-import Image from 'next/image';
-import Playstore from '@/app/[lang]/[region]/(website)/app/(assets)/playstore.svg';
+import { BaseContainer, Typography, Card, linkCn } from '@socialincome/ui';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;
@@ -62,13 +59,15 @@ export default async function Page({ params }: DefaultPageProps) {
 						<div className="mt-2 space-x-3">
 							<a href="#" className={linkCn({
 								arrow: 'external',
-								underline: 'none'
+								underline: 'none',
+								size: 'lg'
 							})}>
 								Local partners
 							</a>
 							<a href="#" className={linkCn({
 								arrow: 'external',
-								underline: 'none'
+								underline: 'none',
+								size: 'lg'
 							})}>
 								Local employees
 							</a>
