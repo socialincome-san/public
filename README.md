@@ -96,7 +96,43 @@ mise run admin
 npm run admin:serve
 ```
 
-### Developing
+### Firestore ➜ PostgreSQL Migration
+
+We’re moving from **Firestore** to **PostgreSQL** to improve relational
+data modeling and consistency.  
+We’re using **[Prisma](https://www.prisma.io)** as our type-safe ORM.
+
+> 🐳 **Docker Required:** Install and run
+> [Docker Desktop](https://www.docker.com/products/docker-desktop) to
+> use the local database.
+
+### Local Setup
+
+Edit the schema at:  
+`shared/src/database/schema.prisma`
+
+Run all commands from the **root** – they delegate to
+`@socialincome/shared`.
+
+### 🚀 Common DB Commands
+
+```bash
+npm run db:up               # Start local PostgreSQL via Docker
+npm run db:down             # Stop and remove DB container
+npm run db:generate         # Generate Prisma client
+npm run db:studio           # Open Prisma Studio (GUI)
+
+npm run db:migrate:dev      # Create & apply new migration (dev)
+npm run db:migrate:create   # Only create migration (no apply)
+npm run db:migrate:deploy   # Deploy migrations (staging/prod)
+npm run db:migrate:reset    # Reset DB (dev only)
+npm run db:migrate:status   # Check migration status
+npm run db:introspect       # Pull schema from existing DB
+npm run db:seed             # Run seed script
+```
+
+> 🧱 **To create a migration**, run `npm run db:migrate:dev`.  
+> To just generate a file, use `npm run db:migrate:create`.
 
 #### Developer Logins
 

@@ -1,6 +1,5 @@
 import { LANGUAGE_COOKIE, REGION_COOKIE } from '@/app/[lang]/[region]';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
-import { geolocation } from '@vercel/functions';
 import langParser from 'accept-language-parser';
 import { NextRequest } from 'next/server';
 import { Currency } from '../../shared/src/types/currency';
@@ -59,21 +58,21 @@ export const findBestLocale = (
 	}
 
 	const options = langParser.parse(request.headers.get('Accept-Language') || 'en');
-	const geo = geolocation(request);
+	const cfCountry = request.headers.get('cf-ipcountry')?.toLowerCase();
 
 	const bestOption = options.find(
 		(option) =>
 			option.code &&
 			option.region &&
 			mainWebsiteLanguages.includes(option.code as WebsiteLanguage) &&
-			websiteRegions.includes(option.region as WebsiteRegion),
+			websiteRegions.includes(option.region.toLowerCase() as WebsiteRegion),
 	);
 
 	return {
 		language: (bestOption?.code as WebsiteLanguage) || defaultLanguage,
 		region:
-			(geo.country && websiteRegions.includes(geo.country as WebsiteRegion) && (geo.country as WebsiteRegion)) ||
-			(bestOption?.region as WebsiteRegion) ||
+			(cfCountry && websiteRegions.includes(cfCountry as WebsiteRegion) && (cfCountry as WebsiteRegion)) ||
+			(bestOption?.region?.toLowerCase() as WebsiteRegion) ||
 			defaultRegion,
 	};
 };
