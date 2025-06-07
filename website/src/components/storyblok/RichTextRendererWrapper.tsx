@@ -11,7 +11,7 @@ import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { QuotedText } from '@socialincome/ui';
 import { render } from 'storyblok-rich-text-react-renderer';
 
-export function renderWrapper(
+export function richTextRenderer(
 	articleData: StoryblokArticle,
 	translator: Translator,
 	lang: LanguageCode,

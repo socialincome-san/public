@@ -16,10 +16,10 @@ export function StoryblokCampaignDonate(props: {
 		<div className="bg-primary my-4 rounded-lg p-10">
 			<Typography size="3xl" weight="semibold" color="primary-foreground" className="mb-8 mt-0 align-middle">
 				<Typography as="span">{translator.t('donate.text-1')}</Typography>
-				<Typography className="ml-1" as="span" color="accent">
+				<Typography className="ml-2" as="span" color="accent">
 					{translator.t('donate.text-2')}
 				</Typography>
-				<Typography className="ml-1" as="span">
+				<Typography className="ml-2" as="span">
 					{translator.t('donate.text-3')}
 				</Typography>
 			</Typography>

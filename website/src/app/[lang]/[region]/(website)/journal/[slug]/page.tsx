@@ -1,5 +1,5 @@
 import { OriginalLanguageLink } from '@/components/storyblok/OriginalLanguage';
-import { renderWrapper } from '@/components/storyblok/RichTextRendererWrapper';
+import { richTextRenderer } from '@/components/storyblok/RichTextRendererWrapper';
 import { getArticle, getRelativeArticles } from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
@@ -148,7 +148,7 @@ export default async function Page(props: {
 						{articleData.leadText}
 					</Typography>
 					<Typography as="div" className="text-black [&_a]:font-normal">
-						{renderWrapper(articleData, translator, lang, region)}
+						{richTextRenderer(articleData, translator, lang, region)}
 					</Typography>
 					<Separator className="my-2" />
 
