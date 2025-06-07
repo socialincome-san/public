@@ -82,7 +82,7 @@ export default async function Page({ params }: DefaultPageProps) {
 			{totalArticlesInDefault > totalArticlesInSelectedLanguage && (
 				<MoreArticlesLink
 					text={translator.t('overview.more-articles')}
-					url={`/${DEFAULT_LANGUAGE}/${region}/journal`}
+					url={`/${DEFAULT_LANGUAGE}/${region}/journal/`}
 				/>
 			)}
 		</BaseContainer>
