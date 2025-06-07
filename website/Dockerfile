@@ -60,4 +60,4 @@ COPY --from=base /app/.env .env
 
 USER nextjs
 
-CMD ["sh", "-c", "set -a && . .env && set +a && npx prisma migrate deploy --schema=./shared/src/database/schema.prisma && node website/.next/standalone/server.js"]
+CMD ["sh", "-c", "ls -laR /app && echo --- && cat /app/.env && echo --- && node website/.next/standalone/server.js"]
