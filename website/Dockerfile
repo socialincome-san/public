@@ -60,4 +60,14 @@ COPY --from=base /app/.env .env
 
 USER nextjs
 
-CMD ["sh", "-c", "ls -laR /app && echo --- && cat /app/.env && echo --- && node website/.next/standalone/server.js"]
+CMD ["sh", "-c", "\
+  echo '📂 Current dir:' && pwd && \
+  echo '📁 Listing root:' && ls -la && \
+  echo '📁 Listing .next/standalone:' && ls -la .next/standalone || echo '❌ .next/standalone not found' && \
+  echo '📁 Listing website/.next:' && ls -la website/.next || echo '❌ website/.next not found' && \
+  echo '📁 Listing website/.next/standalone:' && ls -la website/.next/standalone || echo '❌ website/.next/standalone not found' && \
+  echo '🔍 Checking server.js:' && find . -name server.js && \
+  echo '🚀 Starting app...' && \
+  set -a && . .env && set +a && \
+  npx prisma migrate deploy --schema=./shared/src/database/schema.prisma && \
+  node server.js"]
