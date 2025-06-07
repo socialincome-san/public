@@ -22,7 +22,7 @@ export function OriginalLanguageLink({
 	return (
 		originalLanguage &&
 		originalLanguage !== lang && (
-			<Typography>
+			<Typography size="sm">
 				{text}
 				<Link
 					className={`${linkCn({ arrow: 'external', underline: 'none' })} ml-1`}
