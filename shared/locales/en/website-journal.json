@@ -1,27 +1,27 @@
 {
-  "donate": {
-    "text-1": "Choose a donation amount to help make a",
-    "text-2": "big difference",
-    "text-3": "in the fight to eliminate poverty."
-  },
-  "overview": {
-    "all": "All",
-    "title": "Journal",
-    "description": "Stories, insights and updates on our journey to create impact.",
-    "editors": "Contributing Editors",
-    "more-articles": "There are more articles available in English"
-  },
-  "article": {
-    "keep-reading": "Keep reading",
-    "from-original-language": "Translated from"
-  },
-  "reference-article": {
-    "show-more": "Show more",
-    "show-less": "Show less",
-    "written-by": "{{mediaOutlet}} by {{author}} on {{publicationDate}}",
-    "context": {
-      "original": "Originally published as",
-      "related": "These sources provided background and insights"
-    }
-  }
+	"donate": {
+		"text-1": "Choose a donation amount to help make a",
+		"text-2": "big difference",
+		"text-3": "in the fight to eliminate poverty."
+	},
+	"overview": {
+		"all": "All",
+		"title": "Journal",
+		"description": "Stories, insights and updates on our journey to create impact.",
+		"editors": "Contributing Editors",
+		"more-articles": "There are more articles available in English"
+	},
+	"article": {
+		"keep-reading": "Keep reading",
+		"from-original-language": "Translated from"
+	},
+	"reference-article": {
+		"show-more": "Show more",
+		"show-less": "Show less",
+		"written-by": "{{mediaOutlet}} by {{author}} on {{publicationDate}}",
+		"context": {
+			"original": "Originally published as",
+			"related": "These sources provided background and insights"
+		}
+	}
 }

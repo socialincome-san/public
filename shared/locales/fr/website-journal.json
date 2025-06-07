@@ -1,26 +1,26 @@
 {
-  "donate": {
-    "text-1": "Choisissez un montant de don pour aider à faire",
-    "text-2": "une grande différence",
-    "text-3": "dans la lutte contre la pauvreté."
-  },
-  "overview": {
-    "all": "Tous",
-    "title": "Journal",
-    "description": "Histoires, réflexions et nouvelles de notre parcours pour créer un impact.",
-    "more-articles": "Il y a plus d'articles disponibles en anglais"
-  },
-  "article": {
-    "keep-reading": "Lire la suite",
-    "from-original-language": "Traduit de"
-  },
-  "reference-article": {
-    "show-more": "Afficher plus",
-    "show-less": "Afficher moins",
-    "written-by": "{{mediaOutlet}} par {{author}} le {{publicationDate}}",
-    "context": {
-      "original": "Première publication",
-      "related": "Ces sources offrent du contexte et des informations"
-    }
-  }
+	"donate": {
+		"text-1": "Choisissez un montant de don pour aider à faire",
+		"text-2": "une grande différence",
+		"text-3": "dans la lutte contre la pauvreté."
+	},
+	"overview": {
+		"all": "Tous",
+		"title": "Journal",
+		"description": "Histoires, réflexions et nouvelles de notre parcours pour créer un impact.",
+		"more-articles": "Il y a plus d'articles disponibles en anglais"
+	},
+	"article": {
+		"keep-reading": "Lire la suite",
+		"from-original-language": "Traduit de"
+	},
+	"reference-article": {
+		"show-more": "Afficher plus",
+		"show-less": "Afficher moins",
+		"written-by": "{{mediaOutlet}} par {{author}} le {{publicationDate}}",
+		"context": {
+			"original": "Première publication",
+			"related": "Ces sources offrent du contexte et des informations"
+		}
+	}
 }
