@@ -150,7 +150,7 @@ export default async function Page(props: {
 					<Typography as="div" className="text-black [&_a]:font-normal">
 						{renderWrapper(articleData, translator, lang, region)}
 					</Typography>
-					<Separator />
+					<Separator className="my-2" />
 
 					<div className="mt-4 flex flex-wrap justify-start gap-2">
 						{articleData.tags?.map((tag) => badgeWithLink(lang, region, tag, 'foreground'))}
