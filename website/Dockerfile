@@ -31,17 +31,23 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 
 COPY . .
+
 RUN npm ci
 
 # -------- Build Layer --------
 FROM base AS builder
-WORKDIR /app
+WORKDIR /app/website
 
-COPY --from=deps /app /app
+COPY --from=deps /app/node_modules ../node_modules
+COPY --from=deps /app/website ./
+COPY --from=deps /app/shared ../shared
+COPY --from=deps /app/ui ../ui
+COPY --from=deps /app/recipients_selection ../recipients_selection
+COPY --from=base /app/.env /app/.env
 
 RUN set -a && . /app/.env && set +a && \
-    npx prisma generate --schema=shared/src/database/schema.prisma && \
-    npm --workspace=@socialincome/website run build --loglevel verbose || (echo "🚨 Build failed. Printing log:" && cat /root/.npm/_logs/*-debug-0.log && false)
+    npx prisma generate --schema=../shared/src/database/schema.prisma && \
+    npm run build --loglevel verbose || (echo "🚨 Build failed. Printing log:" && cat /root/.npm/_logs/*-debug-0.log && false)
 
 # -------- Runtime Layer --------
 FROM node:22-alpine AS runner
@@ -55,19 +61,12 @@ RUN addgroup --system --gid 1001 nodejs && \
 
 COPY --from=builder /app/website/public ./public
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app /app
+COPY --from=builder /app/recipients_selection ./recipients_selection
+COPY --from=builder /app/website/.next/standalone ./
+COPY --from=builder /app/website/.next/static ./.next/static
+COPY --from=builder /app/shared ./shared
 COPY --from=base /app/.env .env
 
 USER nextjs
 
-CMD ["sh", "-c", "\
-  echo '📂 Current dir:' && pwd && \
-  echo '📁 Listing root:' && ls -la && \
-  echo '📁 Listing .next/standalone:' && ls -la .next/standalone || echo '❌ .next/standalone not found' && \
-  echo '📁 Listing website/.next:' && ls -la website/.next || echo '❌ website/.next not found' && \
-  echo '📁 Listing website/.next/standalone:' && ls -la website/.next/standalone || echo '❌ website/.next/standalone not found' && \
-  echo '🔍 Checking server.js:' && find . -name server.js && \
-  echo '🚀 Starting app...' && \
-  set -a && . .env && set +a && \
-  npx prisma migrate deploy --schema=./shared/src/database/schema.prisma && \
-  node server.js"]
+CMD ["sh", "-c", "set -a && . .env && set +a && npx prisma migrate deploy --schema=./shared/src/database/schema.prisma && node server.js"]
