@@ -1,6 +1,7 @@
 import "package:app/core/cubits/signup/signup_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/repositories/repositories.dart";
+import "package:app/data/services/auth_service.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/view/error_localization_helper.dart";
 import "package:app/view/widgets/welcome/otp_input_page.dart";
@@ -15,7 +16,7 @@ class WelcomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => SignupCubit(
-        userRepository: context.read<UserRepository>(),
+        authService: context.read<AuthService>(),
         crashReportingRepository: context.read<CrashReportingRepository>(),
       ),
       child: const _WelcomeView(),
