@@ -38,15 +38,10 @@ RUN npm ci
 FROM base AS builder
 WORKDIR /app/website
 
-COPY --from=deps /app/node_modules ../node_modules
-COPY --from=deps /app/website ./
-COPY --from=deps /app/shared ../shared
-COPY --from=deps /app/ui ../ui
-COPY --from=deps /app/recipients_selection ../recipients_selection
-COPY --from=base /app/.env /app/.env
+COPY --from=deps /app /app
 
 RUN set -a && . /app/.env && set +a && \
-    npx prisma generate --schema=../shared/src/database/schema.prisma && \
+    npx prisma generate --schema=/app/shared/src/database/schema.prisma && \
     npm run build --loglevel verbose || (echo "🚨 Build failed. Printing log:" && cat /root/.npm/_logs/*-debug-0.log && false)
 
 # -------- Runtime Layer --------
@@ -59,14 +54,14 @@ ENV PORT=3000
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/website/public ./public
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/recipients_selection ./recipients_selection
-COPY --from=builder /app/website/.next/standalone ./
-COPY --from=builder /app/website/.next/static ./.next/static
-COPY --from=builder /app/shared ./shared
-COPY --from=base /app/.env .env
+COPY --from=builder /app /app
 
 USER nextjs
 
-CMD ["sh", "-c", "set -a && . .env && set +a && npx prisma migrate deploy --schema=./shared/src/database/schema.prisma && node server.js"]
+CMD ["sh", "-c", "\
+  set -a && \
+  . .env && \
+  set +a && \
+  npx prisma migrate deploy --schema=./shared/src/database/schema.prisma && \
+  node server.js \
+"]
