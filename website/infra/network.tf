@@ -34,3 +34,17 @@ resource "google_vpc_access_connector" "google_vpc_access_connector" {
   max_throughput = 300
   depends_on     = [google_service_networking_connection.google_service_networking_connection]
 }
+
+resource "google_compute_router" "google_compute_router" {
+  name    = "${var.env}-${var.app_name}-google-compute-router"
+  network = google_compute_network.google_compute_network.name
+  region  = var.gcp_region
+}
+
+resource "google_compute_router_nat" "google_compute_router_nat" {
+  name                               = "${var.env}-${var.app_name}-google-compute-router-nat"
+  router                             = google_compute_router.google_compute_router.name
+  region                             = var.gcp_region
+  nat_ip_allocate_option             = "AUTO_ONLY"
+  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+}
