@@ -60,8 +60,8 @@ USER nextjs
 
 CMD ["sh", "-c", "\
   set -a && \
-  . .env && \
+  . /app/.env && \
   set +a && \
-  npx prisma migrate deploy --schema=./shared/src/database/schema.prisma && \
-  node server.js \
+  npx prisma migrate deploy --schema=/app/shared/src/database/schema.prisma && \
+  node /app/.next/standalone/server.js \
 "]
