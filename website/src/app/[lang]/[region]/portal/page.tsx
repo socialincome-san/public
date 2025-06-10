@@ -1,5 +1,7 @@
 import { UserService } from '@socialincome/shared/src/database/user/user.service';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Portal() {
 	const userService = new UserService();
 	const result = await userService.getUsers();
