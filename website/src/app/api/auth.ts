@@ -24,7 +24,7 @@ export const authorizeRequest = async (request: Request) => {
 };
 
 export const handleApiError = (error: any) => {
-	console.error('[API Error]', error);
+	console.info('[API Error]', error);
 	if (error instanceof AuthError) {
 		return new Response(null, { status: 401, statusText: error.message });
 	}

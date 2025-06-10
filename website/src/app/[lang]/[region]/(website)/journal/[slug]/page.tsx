@@ -180,7 +180,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 			</div>
 		);
 	} catch (error) {
-		console.error('❌ Error rendering Storyblok blog page:', error);
+		console.info('❌ Error rendering Storyblok blog page:', error);
 		throw error;
 	}
 }
