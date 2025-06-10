@@ -63,5 +63,5 @@ CMD ["sh", "-c", "\
   . /app/.env && \
   set +a && \
   npx prisma migrate deploy --schema=/app/shared/src/database/schema.prisma && \
-  node /app/.next/standalone/server.js \
+  node /app/.next/standalone/website/server.js \
 "]
