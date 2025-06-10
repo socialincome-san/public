@@ -16,9 +16,6 @@ let nextConfig = {
 		],
 	},
 	output: 'standalone',
-	experimental: {
-		incrementalCacheHandlerPath: null,
-	},
 };
 
 if (process.env.SENTRY_AUTH_TOKEN) {

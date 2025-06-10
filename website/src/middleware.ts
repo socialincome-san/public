@@ -39,7 +39,7 @@ const currencyMiddleware = (request: NextRequest, response: NextResponse) => {
 	if (request.cookies.has(CURRENCY_COOKIE) && isValidCurrency(request.cookies.get(CURRENCY_COOKIE)?.value))
 		return response;
 	// We use the country code from the request header if available. If not, we use the region/country from the url path.
-	const country = request.cookies.get(CURRENCY_COOKIE)?.value as CountryCode | undefined;
+	const country = request.cookies.get(COUNTRY_COOKIE)?.value as CountryCode | undefined;
 	const currency = bestGuessCurrency(country);
 
 	response.cookies.set({ name: CURRENCY_COOKIE, value: currency, path: '/', maxAge: 60 * 60 * 24 * 7 }); // 1 week
