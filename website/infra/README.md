@@ -1,8 +1,7 @@
 # First-Time Terraform Setup — GCP Project Bootstrap
 
 This guide walks you through the required setup before running Terraform
-for the first time in a new GCP environment (e.g., prod or
-prod).
+for the first time in a new GCP environment (e.g., prod or prod).
 
 ## Step 1: Create the Terraform Deployer Service Account and Assign Roles
 
