@@ -91,8 +91,10 @@ variables" > "Actions", and add a new secret named
 
 ## Step 6: Cloudflare DNS Setup
 
-Add a DNS record in Cloudflare pointing your domain to ghs.googlehosted.com (used by Google to verify and route custom domains).
-Important: Disable Cloudflare proxy temporarily when creating the DNS record — this allows SSL certificate provisioning via Cloud Run.
+Add a DNS record in Cloudflare pointing your domain to
+ghs.googlehosted.com (used by Google to verify and route custom
+domains). Important: Disable Cloudflare proxy temporarily when creating
+the DNS record — this allows SSL certificate provisioning via Cloud Run.
 Once the certificate is issued, you can re-enable the proxy.
 
 ## Step 7: Deploy one time without the docker build step
