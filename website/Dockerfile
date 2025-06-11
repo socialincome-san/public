@@ -2,7 +2,10 @@
 FROM node:22-alpine AS base
 WORKDIR /app
 
-RUN --mount=type=secret,id=BASE_URL \
+RUN --mount=type=secret,id=APP_VERSION \
+    --mount=type=secret,id=APP_ENVIRONMENT \
+    --mount=type=secret,id=APP_BUILD_TIMESTAMP \
+    --mount=type=secret,id=BASE_URL \
     --mount=type=secret,id=FIREBASE_DATABASE_URL \
     --mount=type=secret,id=FIREBASE_SERVICE_ACCOUNT_JSON \
     --mount=type=secret,id=GITHUB_PAT \
