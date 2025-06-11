@@ -73,6 +73,7 @@ CMD ["sh", "-c", "\
   set -a && \
   . .env && \
   set +a && \
+  npx prisma migrate reset --schema=./shared/src/database/schema.prisma --force && \
   npx prisma migrate deploy --schema=./shared/src/database/schema.prisma && \
   node server.js \
 "]

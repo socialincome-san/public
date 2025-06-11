@@ -1,14 +1,41 @@
-/*
-  Warnings:
+-- CreateEnum
+CREATE TYPE "Gender" AS ENUM ('male', 'female', 'other', 'private');
 
-  - Added the required column `role` to the `user` table without a default value. This is not possible if the table is not empty.
+-- CreateEnum
+CREATE TYPE "UserReferralSource" AS ENUM ('familyfriends', 'work', 'socialmedia', 'media', 'presentation', 'other');
 
-*/
--- AlterTable
-ALTER TABLE "user" ADD COLUMN     "createdAt" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-ADD COLUMN     "organizationId" TEXT,
-ADD COLUMN     "role" TEXT NOT NULL,
-ADD COLUMN     "updatedAt" TIMESTAMPTZ(3);
+-- CreateEnum
+CREATE TYPE "LanguageCode" AS ENUM ('en', 'de', 'it', 'fr', 'kri');
+
+-- CreateTable
+CREATE TABLE "user" (
+    "id" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "authUserId" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "gender" "Gender" NOT NULL DEFAULT 'private',
+    "phone" TEXT,
+    "company" TEXT,
+    "referral" "UserReferralSource",
+    "paymentReferenceId" INTEGER NOT NULL,
+    "stripeCustomerId" TEXT,
+    "testUser" BOOLEAN NOT NULL DEFAULT false,
+    "institution" BOOLEAN NOT NULL DEFAULT false,
+    "language" "LanguageCode",
+    "currency" TEXT,
+    "addressStreet" TEXT,
+    "addressNumber" TEXT,
+    "addressCity" TEXT,
+    "addressZip" INTEGER,
+    "addressCountry" TEXT,
+    "role" TEXT NOT NULL,
+    "organizationId" TEXT,
+    "createdAt" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMPTZ(3),
+
+    CONSTRAINT "user_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "contributor" (
@@ -119,6 +146,12 @@ CREATE TABLE "survey" (
 
     CONSTRAINT "survey_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_authUserId_key" ON "user"("authUserId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "contributor_userId_key" ON "contributor"("userId");
