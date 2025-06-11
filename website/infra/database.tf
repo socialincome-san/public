@@ -8,11 +8,10 @@ resource "google_sql_database_instance" "google_sql_database_instance" {
     tier            = "db-f1-micro"
     disk_autoresize = true
 
-    # Enable to log all SQL statements (debugging purposes only)
-    # database_flags {
-    #   name  = "log_statement"
-    #   value = "all"
-    # }
+    database_flags {
+      name  = "log_statement"
+      value = "all"
+    }
 
     ip_configuration {
       ipv4_enabled    = false

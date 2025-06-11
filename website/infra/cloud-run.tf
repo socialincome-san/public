@@ -17,7 +17,7 @@ resource "google_cloud_run_service" "google_cloud_run_service" {
 
         env {
           name  = "DATABASE_URL"
-          value = "postgresql://${google_sql_user.google_sql_user.name}:${var.google_sql_db_password}@${google_sql_database_instance.google_sql_database_instance.private_ip_address}/${google_sql_database.google_sql_database.name}"
+          value = "postgresql://${google_sql_user.google_sql_user.name}:${var.google_sql_db_password}@${google_sql_database_instance.google_sql_database_instance.private_ip_address}/${google_sql_database.google_sql_database.name}?sslmode=require"
         }
 
         env {
