@@ -1,8 +1,7 @@
 # First-Time Terraform Setup — GCP Project Bootstrap
 
 This guide walks you through the required setup before running Terraform
-for the first time in a new GCP environment (e.g., prod or
-prod).
+for the first time in a new GCP project (e.g., staging or prod).
 
 ## Step 1: Create the Terraform Deployer Service Account and Assign Roles
 
@@ -90,13 +89,19 @@ variables" > "Actions", and add a new secret named
 `TF_STAGING_TERRAFORM_DEPLOYER_CREDENTIALS`. Paste the content of
 `terraform-deployer-key.json` into the secret.
 
-## Step 6: Deploy one time without the docker build step
+## Step 6: Cloudflare DNS Setup
+
+Add a DNS record in Cloudflare pointing your domain to ghs.googlehosted.com (used by Google to verify and route custom domains).
+Important: Disable Cloudflare proxy temporarily when creating the DNS record — this allows SSL certificate provisioning via Cloud Run.
+Once the certificate is issued, you can re-enable the proxy.
+
+## Step 7: Deploy one time without the docker build step
 
 We have a chicken-and-egg problem here: First we need to deploy the
 artifact registry before we can build and push the docker image. So we
 need to run the terraform apply command without the docker build step.
 
-## Step 7: Deploy the infrastructure
+## Step 8: Deploy the infrastructure
 
 It can be that the apply fails the first few times because the
 activation of some required GCP services (APIs) takes some time.
