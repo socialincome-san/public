@@ -86,6 +86,10 @@ and then start the local development environment with:
 mise dev
 ```
 
+> 🐳 **Docker Required:** Install and run
+> [Docker Desktop](https://www.docker.com/products/docker-desktop) to
+> use the local database.
+
 To run the tools separately either use the scripts in the package.json
 file or run the mise tasks, e.g. both these commands start the admin
 tool:
