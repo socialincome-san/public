@@ -9,6 +9,7 @@ RUN --mount=type=secret,id=BASE_URL \
     --mount=type=secret,id=MAILCHIMP_API_KEY \
     --mount=type=secret,id=MAILCHIMP_LIST_ID \
     --mount=type=secret,id=MAILCHIMP_SERVER \
+    --mount=type=secret,id=NEXT_PUBLIC_FACEBOOK_TRACKING_ID \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_API_KEY \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_APP_ID \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN \
@@ -16,9 +17,12 @@ RUN --mount=type=secret,id=BASE_URL \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_PROJECT_ID \
     --mount=type=secret,id=NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET \
+    --mount=type=secret,id=NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID \
+    --mount=type=secret,id=NEXT_PUBLIC_LINKEDIN_TRACKING_ID \
     --mount=type=secret,id=SENDGRID_API_KEY \
     --mount=type=secret,id=SENDGRID_LIST_ID \
     --mount=type=secret,id=SENDGRID_SUPPRESSION_LIST_ID \
+    --mount=type=secret,id=SENTRY_AUTH_TOKEN \
     --mount=type=secret,id=STORYBLOK_PREVIEW_SECRET \
     --mount=type=secret,id=STORYBLOK_PREVIEW_TOKEN \
     --mount=type=secret,id=STRIPE_PRODUCT_ONETIME \

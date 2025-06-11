@@ -1,8 +1,8 @@
 # First-Time Terraform Setup — GCP Project Bootstrap
 
 This guide walks you through the required setup before running Terraform
-for the first time in a new GCP environment (e.g., staging or
-production).
+for the first time in a new GCP environment (e.g., prod or
+prod).
 
 ## Step 1: Create the Terraform Deployer Service Account and Assign Roles
 
@@ -87,7 +87,7 @@ gcloud iam service-accounts keys create terraform-deployer-key.json \
 
 Go to your GitHub repository settings, navigate to "Secrets and
 variables" > "Actions", and add a new secret named
-`TERRAFORM_DEPLOYER_KEY`. Paste the content of
+`TF_STAGING_TERRAFORM_DEPLOYER_CREDENTIALS`. Paste the content of
 `terraform-deployer-key.json` into the secret.
 
 ## Step 6: Deploy one time without the docker build step
