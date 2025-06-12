@@ -1,6 +1,6 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography, Card, Badge, linkCn } from '@socialincome/ui';
+import { BaseContainer, Typography, Card, linkCn } from '@socialincome/ui';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;
