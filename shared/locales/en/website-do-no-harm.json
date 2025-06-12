@@ -1,17 +1,13 @@
 {
-  "section-1": {
-    "title": "xDo no harm",
-    "bankIntroText": "xAccount details for bank transfers",
-    "bankInfoTextRecurring": "Recurring contributions",
-    "bankOneTime": "One-time contributions",
-    "bankPrompt": "Bank",
-    "bankPostFinance": "PostFinance, Zurich (Switzerland)",
-    "bankAccountHolderPrompt": "Account Holder",
-    "bankAccountHolder": "Social Income",
-    "bankIBANPrompt": "IBAN",
-    "bankIBAN1": "CH19 0900 0000 1511 2638 6",
-    "bankIBAN2": "CH57 0900 0000 1548 6088 1",
-    "bankBICPrompt": "BIC",
-    "bankBIC": "POFICHBEXXX"
-  }
+  "title": "No Harm Principles and Implementation",
+  "lead": "The Do No Harm (DNH) approach is a framework designed to minimize the unintended negative consequences of aid programs. By critically reflecting on every aspect of a project, it helps identify risks and mitigate harm, especially when aid is delivered in the form of unconditional cash transfers. Social Income seeks to carefully assess various aspects of the aid process, including recipient selection, distribution methods, and the potential impact of the assistance in order to minimize the risk of misuse and harm. ",
+  "best-practice": "Best Practice Principle",
+  "implementation": "Implementation",
+  "chapter-1": "1. Understanding Social Context, Actors & Stakeholders",
+  "principle-1": "Assess and understand previous conflict lines: what are the dividers and tensions in the larger context and specific community.",
+  "principle-1-si": "Social Income engages in post-conflict settings and is knowledgeable about previous societal fault lines and conflict in the community by engaging in close contact with local partners, staff and recipients.",
+  "principle-2": "Assess and understand previous conflict lines: what are the dividers and tensions in the larger context and specific community.",
+  "principle-2-si": "Social Income engages in post-conflict settings and is knowledgeable about previous societal fault lines and conflict in the community by engaging in close contact with local partners, staff and recipients.",
+  "principle-2-link-1": "link",
+  "principle-2-link-2": "link"
 }

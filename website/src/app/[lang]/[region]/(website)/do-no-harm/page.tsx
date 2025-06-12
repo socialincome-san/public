@@ -1,6 +1,6 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography, Card, linkCn } from '@socialincome/ui';
+import { BaseContainer, Typography, Card, Badge, linkCn } from '@socialincome/ui';
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang } = await params;
@@ -8,66 +8,50 @@ export default async function Page({ params }: DefaultPageProps) {
 
 	return (
 		<BaseContainer className="items-start flex flex-col space-y-8 pt-16">
-			<div className="text-2xl font-bold">1. Understanding Social Context, Actors & Stakeholders</div>
+			<div>
+				<Typography as="h1" size="5xl" weight="bold" className="mx-auto text-center">
+					{translator.t('title')}
+				</Typography>
+			</div>
+			<div>
+				<Typography as="h2" size="3xl" weight="bold">
+					{translator.t('chapter-1')}
+				</Typography>
+			</div>
 
 			<Card className="w-full p-6">
 				<div className="flex flex-col md:flex-row gap-6">
-					{/* Best Practice Principle */}
-					<div className="w-full md:w-1/2 space-y-2">
-						<p className="text-sm ">Best Practice Principle</p>
-						<p className="text-lg ">
-							Identify and understand key actors (recipients, families, friends, community).
-						</p>
-					</div>
-
-					{/* Social Income Application */}
-					<div className="w-full md:w-1/2 space-y-2">
-						<p className="text-sm  ">How Social Income Applies It</p>
-						<p className="text-lg ">
-							Social Income works with local NGOs and local employees to understand the role of money.
-						</p>
-					</div>
-				</div>
-			</Card>
-
-			<Card className="w-full p-6">
-				<div className="flex flex-col md:flex-row gap-6">
-					{/* Best Practice Principle */}
 					<div className="w-full md:w-1/2 space-y-3">
 						<div className="space-y-1">
-							<p className="text-sm muted-foreground">
-								<Typography color="secondary">Best Practice Principle</Typography>
-								</p>
-							<p className="text-lg">
-								Assess and understand previous conflict lines: what are the dividers and tensions in the larger context and specific community.
-							</p>
+							<Typography color="secondary" size="md">
+									{translator.t('best-practice')}
+							</Typography>
+							<Typography size="lg">
+								{translator.t('principle-1')}
+							</Typography>
 						</div>
 					</div>
-
-					{/* Social Income Application */}
 					<div className="w-full md:w-1/2 space-y-3">
 						<div className="space-y-1">
-							<p>
-								<Typography size="sm" color="secondary">How Social Income Applies It</Typography>
-							</p>
-							<p className="text-lg">
-								Social Income engages in post-conflict settings and is knowledgeable about previous societal fault lines and conflict in the community by engaging in close contact with local staff and recipients.
-							</p>
+							<Typography color="secondary" size="md">
+								{translator.t('implementation')}
+							</Typography>
+							<Typography size="lg">
+								{translator.t('principle-1-si')}
+							</Typography>
 						</div>
-
-						{/* Reference Links */}
 						<div className="mt-2 space-x-3">
 							<a href="#" className={linkCn({
 								arrow: 'external',
 								underline: 'none',
-								size: 'lg'
+								size: 'md'
 							})}>
 								Local partners
 							</a>
 							<a href="#" className={linkCn({
 								arrow: 'external',
 								underline: 'none',
-								size: 'lg'
+								size: 'md'
 							})}>
 								Local employees
 							</a>
