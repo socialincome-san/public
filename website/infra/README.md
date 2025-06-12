@@ -95,8 +95,8 @@ Add DNS records in Cloudflare pointing your domain to
 ghs.googlehosted.com (used by Google to verify and route custom
 domains). Important: Disable Cloudflare proxy temporarily when creating
 the DNS record — this allows SSL certificate provisioning via Cloud Run.
-Once the certificate is issued, you can re-enable the proxy.
-Also make a DNS record for www.
+Once the certificate is issued, you can re-enable the proxy. Also make a
+DNS record for www.
 
 ## Step 7: Deploy one time without the docker build step
 
@@ -107,5 +107,5 @@ need to run the terraform apply command without the docker build step.
 ## Step 8: Deploy the infrastructure
 
 It can be that the apply fails the first few times because the
-activation of some required GCP services (APIs) takes some time.
-Also, you will have to give access to the terraform deployer for the domain.
+activation of some required GCP services (APIs) takes some time. Also,
+you will have to give access to the terraform deployer for the domain.
