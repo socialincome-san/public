@@ -26,6 +26,7 @@ function DonationIntervalFormItem({
 	active,
 	title,
 	donationInterval,
+	lang,
 	monthlyIncome,
 }: {
 	active: boolean;

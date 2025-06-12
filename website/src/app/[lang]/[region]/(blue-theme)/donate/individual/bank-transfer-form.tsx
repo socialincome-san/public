@@ -1,46 +1,38 @@
 'use client';
 
 import { CreateUserData } from '@/app/api/user/create/route';
-import LoginForm, { LoginFormTranslations } from '@/components/login-form/login-form';
-import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { generateQrBillSvg } from '@/utils/qr-bill';
-import { Button, FormControl, FormField, FormItem, FormMessage, Input, Typography } from '@socialincome/ui';
-import { cn } from '@socialincome/ui/src/lib/utils';
+import { Button, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@socialincome/ui';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
-export type BankTransferFormTranslations = {
-	firstName: string;
-	lastName: string;
-	email: string;
-	plan: string;
-	yourContribution: string;
-	fullSocialIncome: string;
-	partialSocialIncome: string;
-	weMatchTheMissing: string;
-	generateQrBill: string;
-	confirmMonthlyOrder: string;
-	transferFeesNote: string;
-	plusPlanLink: string;
-	subscribeTo1PercentPlan: string;
-	errors: {
-		emailRequired: string;
-		emailInvalid: string;
-		qrBillError: string;
-	};
-	loginForm: LoginFormTranslations;
-};
-
 type BankTransferFormProps = {
 	amount: number;
 	paymentIntervalMonths: number;
-	translations: BankTransferFormTranslations;
-	lang: WebsiteLanguage;
-	region: WebsiteRegion;
+	translations: {
+		firstName: string;
+		lastName: string;
+		email: string;
+		plan: string;
+		yourContribution: string;
+		fullSocialIncome: string;
+		partialSocialIncome: string;
+		weMatchTheMissing: string;
+		generateQrBill: string;
+		confirmMonthlyOrder: string;
+		transferFeesNote: string;
+		plusPlanLink: string;
+		subscribeTo1PercentPlan: string;
+		errors: {
+			emailRequired: string;
+			emailInvalid: string;
+			qrBillError: string;
+		};
+	};
 };
 
-export function BankTransferForm({ amount, paymentIntervalMonths, translations, lang, region }: BankTransferFormProps) {
+export function BankTransferForm({ amount, paymentIntervalMonths, translations }: BankTransferFormProps) {
 	const form = useFormContext();
 	const [qrBillSvg, setQrBillSvg] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
@@ -92,59 +84,59 @@ export function BankTransferForm({ amount, paymentIntervalMonths, translations, 
 						</Button>
 					</>
 				) : (
-					<div className="flex w-full">
-						<div className="w-2/5">
-							<Typography weight="bold" size="2xl" className="mb-4">
-								{translations.subscribeTo1PercentPlan}
-							</Typography>
-							<form className={cn('flex flex-col space-y-2')} onSubmit={handleSubmit}>
-								<FormField
-									control={form.control}
-									name="firstName"
-									render={({ field }) => (
-										<FormItem>
-											<FormControl>
-												<Input placeholder={translations.firstName} type="text" required {...field} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="lastName"
-									render={({ field }) => (
-										<FormItem>
-											<FormControl>
-												<Input placeholder={translations.lastName} type="text" required {...field} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="email"
-									render={({ field }) => (
-										<FormItem>
-											<FormControl>
-												<Input placeholder={translations.email} type="email" required {...field} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
+					<>
+						<div className="space-y-4 pb-8">
+							<FormField
+								control={form.control}
+								name="firstName"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>{translations.firstName}</FormLabel>
+										<FormControl>
+											<Input type="text" required className="h-14 rounded-xl bg-white px-6" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="lastName"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>{translations.lastName}</FormLabel>
+										<FormControl>
+											<Input type="text" required className="h-14 rounded-xl bg-white px-6" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="email"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>{translations.email}</FormLabel>
+										<FormControl>
+											<Input type="email" required className="h-14 rounded-xl bg-white px-6" {...field} />
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
 
-								<Button type="submit" className="w-full" disabled={isLoading || !form.formState.isValid}>
-									{isLoading ? 'Generating...' : translations.generateQrBill}
-								</Button>
-							</form>
-						</div>
-						<div className="flex w-1/5 items-center justify-center">OR</div>
-						<div className="w-2/5">
-							<LoginForm translations={translations.loginForm} lang={lang} region={region} />
-						</div>
-					</div>
+						<Button
+							size="lg"
+							type="submit"
+							className="w-full"
+							onClick={handleSubmit}
+							disabled={isLoading || !form.formState.isValid}
+						>
+							{isLoading ? 'Generating...' : translations.generateQrBill}
+						</Button>
+					</>
 				)}
 			</>
 		</div>

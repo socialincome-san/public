@@ -29,7 +29,7 @@
 		"confirm-monthly-order": "Conferma ordine permanente mensile",
 		"transfer-fees-note": "Tutte le spese di trasferimento sono pagate dalle nostre riserve, attualmente a € 23.392. Ti preghiamo di considerare di coprire le spese con il Piano 1% Plus:",
 		"plus-plan-link": "modifica",
-		"proceed-as-guest": "Procedi come ospite",
+		"subscribe-to-1-percent-plan": "Iscriviti al Piano 1%",
 		"errors": {
 			"qrBillError": "Impossibile generare il QR-bill. Si prega di riprovare."
 		}

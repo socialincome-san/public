@@ -1,7 +1,7 @@
 import { DefaultLayoutProps, DefaultPageProps } from '@/app/[lang]/[region]';
+import LoginForm from '@/app/[lang]/[region]/(website)/login/login-form';
 import RequestPasswordResetDialog from '@/app/[lang]/[region]/(website)/login/request-password-reset-dialog';
 import { SocialSignInButtons } from '@/app/[lang]/[region]/(website)/login/social-sign-in-buttons';
-import LoginForm from '@/components/login-form/login-form';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer } from '@socialincome/ui';
@@ -18,7 +18,6 @@ export default async function Page({ params }: DefaultPageProps) {
 	return (
 		<BaseContainer className="min-h-screen-navbar mx-auto flex max-w-lg flex-col">
 			<LoginForm
-				centerTitle
 				lang={lang}
 				region={region}
 				translations={{

@@ -3,7 +3,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input, Typography } from '@socialincome/ui';
-import classNames from 'classnames';
 import { FirebaseError } from 'firebase/app';
 import { browserSessionPersistence, signInWithEmailAndPassword } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
@@ -13,24 +12,21 @@ import toast from 'react-hot-toast';
 import { useAuth } from 'reactfire';
 import * as z from 'zod';
 
-export type LoginFormTranslations = {
-	title: string;
-	email: string;
-	password: string;
-	forgotPassword: string;
-	submitButton: string;
-
-	// Errors
-	invalidEmail: string;
-	invalidUserOrPassword: string;
-};
-
 type LoginFormProps = {
-	centerTitle?: boolean;
-	translations: LoginFormTranslations;
+	translations: {
+		title: string;
+		email: string;
+		password: string;
+		forgotPassword: string;
+		submitButton: string;
+
+		// Errors
+		invalidEmail: string;
+		invalidUserOrPassword: string;
+	};
 } & DefaultParams;
 
-export const LoginForm = ({ lang, region, translations, centerTitle }: LoginFormProps) => {
+export default function LoginForm({ lang, region, translations }: LoginFormProps) {
 	const router = useRouter();
 	const auth = useAuth();
 	const [submitting, setSubmitting] = useState(false);
@@ -62,10 +58,7 @@ export const LoginForm = ({ lang, region, translations, centerTitle }: LoginForm
 
 	return (
 		<Form {...form}>
-			<form
-				className={classNames('flex flex-col space-y-2', { 'text-center': centerTitle })}
-				onSubmit={form.handleSubmit(onSubmit)}
-			>
+			<form className="flex flex-col space-y-2 text-center" onSubmit={form.handleSubmit(onSubmit)}>
 				<Typography weight="bold" size="2xl" className="mb-4">
 					{translations.title}
 				</Typography>
@@ -99,6 +92,4 @@ export const LoginForm = ({ lang, region, translations, centerTitle }: LoginForm
 			</form>
 		</Form>
 	);
-};
-
-export default LoginForm;
+}

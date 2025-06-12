@@ -26,7 +26,7 @@
 		"confirm-monthly-order": "Monatlichen Dauerauftrag bestätigen",
 		"transfer-fees-note": "Alle Überweisungsgebühren werden aus unseren Reserven bezahlt, derzeit bei € 23.392. Bitte erwägen Sie, die Gebühren mit dem 1% Plus Plan zu decken:",
 		"plus-plan-link": "ändern",
-		"proceed-as-guest": "Als Gast fortfahren",
+		"subscribe-to-1-percent-plan": "Für 1% Plan anmelden",
 		"errors": {
 			"qrBillError": "QR-Rechnung konnte nicht generiert werden. Bitte versuchen Sie es erneut."
 		}
