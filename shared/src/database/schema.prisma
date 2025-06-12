@@ -23,7 +23,7 @@ model User {
   company             String?
   referral            UserReferralSource?
 
-  paymentReferenceId  Int
+  paymentReferenceId  String?
   stripeCustomerId    String?
   testUser            Boolean       @default(false)
   institution         Boolean       @default(false)
@@ -36,7 +36,7 @@ model User {
   addressZip          Int?
   addressCountry      String?
 
-  role                String
+  role                UserRole       @default(user)
   organizationId      String?
   organization        Organization? @relation(fields: [organizationId], references: [id])
 
@@ -145,12 +145,14 @@ model Recipient {
 }
 
 model LocalPartner {
-  id         String      @id @default(cuid())
-  userId     String      @unique
-  user       User        @relation(fields: [userId], references: [id])
+  id             String   @id @default(cuid())
+  name           String
+  communitySize  Int
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id])
   recipients Recipient[]
-  createdAt  DateTime    @default(now()) @db.Timestamptz(3)
-  updatedAt  DateTime?   @updatedAt @db.Timestamptz(3)
+  createdAt      DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime? @updatedAt @db.Timestamptz(3)
 
   @@map("local_partner")
 }
@@ -177,6 +179,15 @@ model Survey {
   updatedAt   DateTime? @updatedAt @db.Timestamptz(3)
 
   @@map("survey")
+}
+
+enum UserRole {
+  contributor
+  localPartner
+  recipient
+  admin
+  superadmin
+  user
 }
 
 enum Gender {

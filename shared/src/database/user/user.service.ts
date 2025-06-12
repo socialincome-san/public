@@ -18,32 +18,16 @@ export class UserService extends BaseService {
 		}
 	}
 
-	async createUser(input: CreateUserInput): Promise<ServiceResult<PrismaUser>> {
+	async createUsers(inputs: CreateUserInput[]): Promise<ServiceResult<number>> {
 		try {
-			const conflict = await this.checkIfUserExists(input.email, input.authUserId);
-			if (conflict) {
-				return this.resultFail('User with this email or auth ID already exists');
-			}
-
-			const user = await this.db.user.create({
-				data: {
-					...input,
-					role: input.role ?? 'user',
-				},
+			const result = await this.db.user.createMany({
+				data: inputs,
+				skipDuplicates: true,
 			});
-
-			return this.resultOk(user);
+			return this.resultOk(result.count);
 		} catch (e) {
-			console.error('[UserService.createUser]', e);
-			return this.resultFail('Could not create user');
+			console.error('[UserService.createUsers]', e);
+			return this.resultFail('Could not create users');
 		}
-	}
-
-	private async checkIfUserExists(email: string, authUserId: string): Promise<PrismaUser | null> {
-		return await this.db.user.findFirst({
-			where: {
-				OR: [{ email }, { authUserId }],
-			},
-		});
 	}
 }

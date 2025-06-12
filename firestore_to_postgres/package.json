@@ -1,0 +1,12 @@
+{
+  "name": "firestore-to-postgres",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "migrate:all": "npm run migrate:users",
+    "migrate:users": "tsx scripts/migrate-users.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.2"
+  }
+}
