@@ -10,12 +10,8 @@ abstract class AppTheme {
     fontFamilyFallback: const ["sans-serif"],
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: {
-        TargetPlatform.android: SharedAxisPageTransitionsBuilder(
-          transitionType: SharedAxisTransitionType.horizontal,
-        ),
-        TargetPlatform.iOS: SharedAxisPageTransitionsBuilder(
-          transitionType: SharedAxisTransitionType.horizontal,
-        ),
+        TargetPlatform.android: SharedAxisPageTransitionsBuilder(transitionType: SharedAxisTransitionType.horizontal),
+        TargetPlatform.iOS: SharedAxisPageTransitionsBuilder(transitionType: SharedAxisTransitionType.horizontal),
       },
     ),
     colorScheme: const ColorScheme.light(
@@ -29,10 +25,7 @@ abstract class AppTheme {
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.backgroundColor,
       foregroundColor: AppColors.fontColorDark,
-      titleTextStyle: AppStyles.headlineLarge.copyWith(
-        color: AppColors.fontColorDark,
-        fontWeight: FontWeight.bold,
-      ),
+      titleTextStyle: AppStyles.headlineLarge.copyWith(color: AppColors.fontColorDark, fontWeight: FontWeight.bold),
     ),
     iconTheme: const IconThemeData(color: Colors.white),
     outlinedButtonTheme: OutlinedButtonThemeData(
@@ -41,10 +34,7 @@ abstract class AppTheme {
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
-          side: const BorderSide(
-            color: AppColors.primaryColor,
-            width: 3,
-          ),
+          side: const BorderSide(color: AppColors.primaryColor, width: 3),
         ),
         textStyle: AppStyles.buttonLabelBig,
         enableFeedback: true,
@@ -56,9 +46,7 @@ abstract class AppTheme {
         foregroundColor: Colors.white,
         disabledBackgroundColor: AppColors.primaryColor.withValues(alpha: 0.5),
         backgroundColor: AppColors.primaryColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.radiusLarge)),
         textStyle: AppStyles.buttonLabelBig,
         enableFeedback: true,
         elevation: 0,
@@ -78,9 +66,7 @@ abstract class AppTheme {
         borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
       ),
       border: OutlineInputBorder(
-        borderSide: const BorderSide(
-          color: Colors.white,
-        ),
+        borderSide: const BorderSide(color: Colors.white),
         borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
       ),
     ),
@@ -96,9 +82,7 @@ abstract class AppTheme {
     cardTheme: CardTheme(
       color: Colors.white,
       elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSizes.radiusSmall),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSizes.radiusSmall)),
     ),
   );
 }

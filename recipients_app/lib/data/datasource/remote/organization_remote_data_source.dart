@@ -7,14 +7,10 @@ const String surveyCollection = "surveys";
 class OrganizationRemoteDataSource implements OrganizationDataSource {
   final FirebaseFirestore firestore;
 
-  const OrganizationRemoteDataSource({
-    required this.firestore,
-  });
+  const OrganizationRemoteDataSource({required this.firestore});
 
   @override
-  Future<Organization?> fetchOrganization(
-    DocumentReference organizationRef,
-  ) async {
+  Future<Organization?> fetchOrganization(DocumentReference organizationRef) async {
     final organization = organizationRef.withConverter(
       fromFirestore: (snapshot, _) {
         final data = snapshot.data()!;

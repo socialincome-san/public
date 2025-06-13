@@ -20,14 +20,7 @@ class PaymentsUiState extends Equatable {
 
   @override
   List<Object?> get props {
-    return [
-      status,
-      payments,
-      confirmedPaymentsCount,
-      unconfirmedPaymentsCount,
-      nextPayment,
-      lastPaidPayment,
-    ];
+    return [status, payments, confirmedPaymentsCount, unconfirmedPaymentsCount, nextPayment, lastPaidPayment];
   }
 
   PaymentsUiState copyWith({

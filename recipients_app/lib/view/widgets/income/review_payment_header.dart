@@ -18,11 +18,7 @@ class ReviewPaymentModalHeader extends StatelessWidget {
               child: const CircleAvatar(
                 radius: 14,
                 backgroundColor: AppColors.lightGrey,
-                child: Icon(
-                  size: 18,
-                  Icons.close,
-                  color: AppColors.fontColorDark,
-                ),
+                child: Icon(size: 18, Icons.close, color: AppColors.fontColorDark),
               ),
             ),
           ],
@@ -33,10 +29,7 @@ class ReviewPaymentModalHeader extends StatelessWidget {
             child: Text(
               context.l10n.contestPaymentInfo,
               textAlign: TextAlign.center,
-              style: AppStyles.headlineLarge.copyWith(
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppStyles.headlineLarge.copyWith(color: AppColors.primaryColor, fontWeight: FontWeight.bold),
             ),
           ),
         ),

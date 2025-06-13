@@ -31,9 +31,7 @@ class InputTextArea extends StatelessWidget {
         hintText: hintText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSizes.radiusMedium),
-          borderSide: const BorderSide(
-            color: AppColors.primaryLightColor,
-          ),
+          borderSide: const BorderSide(color: AppColors.primaryLightColor),
         ),
       ),
       keyboardType: TextInputType.multiline,
