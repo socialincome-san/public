@@ -43,6 +43,14 @@ export async function getOverviewArticlesCountForDefaultLang(): Promise<number> 
 	return (await getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params))).total;
 }
 
+function articleByTagsFilter(tagId: string) {
+	return {
+		tags: {
+			any_in_array: tagId,
+		},
+	};
+}
+
 // To the best of my knowledge Storyblok doesn't support any aggregation functions API, therefore we are querying all of them
 // with a limit of 1 article per page. Therefore, the response doesn't transfer much not needed data but still contains the count
 export async function getArticleCountByTagForDefaultLang(tagId: string): Promise<number> {
@@ -51,13 +59,17 @@ export async function getArticleCountByTagForDefaultLang(tagId: string): Promise
 		language: DEFAULT_LANGUAGE,
 		excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
 		content_type: StoryblokContentType.Article,
-		filter_query: {
-			tags: {
-				any_in_array: tagId,
-			},
-		},
+		filter_query: articleByTagsFilter(tagId),
 	};
 	return (await getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params))).total;
+}
+
+function articlesByAuthorFilter(authorId: string) {
+	return {
+		author: {
+			in: authorId,
+		},
+	};
 }
 
 // To the best of my knowledge Storyblok doesn't support any aggregation functions API, therefore we are querying all of them
@@ -68,11 +80,7 @@ export async function getArticleCountByAuthorForDefaultLang(authorId: string): P
 		excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
 		language: DEFAULT_LANGUAGE,
 		content_type: StoryblokContentType.Article,
-		filter_query: {
-			author: {
-				in: authorId,
-			},
-		},
+		filter_query: articlesByAuthorFilter(authorId),
 	};
 	return (await getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params))).total;
 }
@@ -115,11 +123,7 @@ export async function getArticlesByTag(
 		excluding_fields: CONTENT,
 		sort_by: 'first_published_at:desc',
 		content_type: StoryblokContentType.Article,
-		filter_query: {
-			tags: {
-				any_in_array: tagId,
-			},
-		},
+		filter_query: articleByTagsFilter(tagId),
 	};
 	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
 }
@@ -136,11 +140,7 @@ export async function getArticlesByAuthor(
 		language: lang,
 		sort_by: 'first_published_at:desc',
 		content_type: StoryblokContentType.Article,
-		filter_query: {
-			author: {
-				in: authorId,
-			},
-		},
+		filter_query: articlesByAuthorFilter(authorId),
 	};
 	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
 }
