@@ -26,6 +26,7 @@ export function richTextRenderer(
 			['actionButton']: (props: any) => <StoryblokActionButton {...props} />,
 			['newsletterSignup']: (_) => (
 				<NewsletterGlowContainer
+					className="rounded-lg"
 					lang={lang}
 					title={translator.t('popup.information-label')}
 					formTranslations={{

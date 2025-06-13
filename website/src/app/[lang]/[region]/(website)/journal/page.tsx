@@ -21,15 +21,15 @@ export default async function Page({ params }: DefaultPageProps) {
 	const { lang, region } = await params;
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-journal', 'common'] });
 
-	const [blogsResponse, authorsResponse, tagsResponse, totalArticlesInDefaultLanguageResponse] = await Promise.all([
+	const [blogsResponse, authorsResponse, tagsResponse] = await Promise.all([
 		getOverviewArticles(lang),
 		getAuthors(lang),
 		getTags(lang),
-		lang == DEFAULT_LANGUAGE ? undefined : getOverviewArticlesCountForDefaultLang(),
 	]);
 	const blogs = blogsResponse.data.stories;
 	const totalArticlesInSelectedLanguage = blogsResponse.total;
-	const totalArticlesInDefault = totalArticlesInDefaultLanguageResponse || totalArticlesInSelectedLanguage;
+	const totalArticlesInDefaultLang =
+		lang == DEFAULT_LANGUAGE ? totalArticlesInSelectedLanguage : await getOverviewArticlesCountForDefaultLang();
 	const authors = authorsResponse.data.stories;
 	const tags = tagsResponse.data.stories;
 
@@ -79,7 +79,7 @@ export default async function Page({ params }: DefaultPageProps) {
 			</div>
 
 			<Separator className="my-8" />
-			{totalArticlesInDefault > totalArticlesInSelectedLanguage && (
+			{totalArticlesInDefaultLang > totalArticlesInSelectedLanguage && (
 				<MoreArticlesLink
 					text={translator.t('overview.more-articles')}
 					url={`/${DEFAULT_LANGUAGE}/${region}/journal`}

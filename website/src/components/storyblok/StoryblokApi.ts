@@ -14,7 +14,9 @@ const DEFAULT_LIMIT = 50;
 const NOT_FOUND = 404;
 export const DEFAULT_LANGUAGE = 'en';
 const CONTENT = 'content';
+const LEAD_TEXT = 'leadText';
 const STORIES_PATH = 'cdn/stories';
+const EXCLUDED_FIELDS_FOR_COUNTING = [CONTENT, LEAD_TEXT].join(',');
 
 // During the development of Storyblok features or writing of new content, it is useful to use the draft version of the content.
 async function addVersionParameter(properties: ISbStoriesParams): Promise<ISbStoriesParams> {
@@ -29,7 +31,7 @@ async function addVersionParameter(properties: ISbStoriesParams): Promise<ISbSto
 export async function getOverviewArticlesCountForDefaultLang(): Promise<number> {
 	const params: ISbStoriesParams = {
 		per_page: 1,
-		excluding_fields: CONTENT,
+		excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
 		language: DEFAULT_LANGUAGE,
 		content_type: StoryblokContentType.Article,
 		filter_query: {
@@ -47,7 +49,7 @@ export async function getArticleCountByTagForDefaultLang(tagId: string): Promise
 	const params: ISbStoriesParams = {
 		per_page: 1,
 		language: DEFAULT_LANGUAGE,
-		excluding_fields: CONTENT,
+		excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
 		content_type: StoryblokContentType.Article,
 		filter_query: {
 			tags: {
@@ -63,7 +65,7 @@ export async function getArticleCountByTagForDefaultLang(tagId: string): Promise
 export async function getArticleCountByAuthorForDefaultLang(authorId: string): Promise<number> {
 	const params: ISbStoriesParams = {
 		per_page: 1,
-		excluding_fields: CONTENT,
+		excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
 		language: DEFAULT_LANGUAGE,
 		content_type: StoryblokContentType.Article,
 		filter_query: {

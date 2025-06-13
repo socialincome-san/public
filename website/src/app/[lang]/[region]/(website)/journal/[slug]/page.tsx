@@ -11,7 +11,6 @@ import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, Separator, Typography } from '@socialincome/ui';
 import { ISbStoryData } from '@storyblok/react';
-import classNames from 'classnames';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -52,7 +51,7 @@ export default async function Page(props: {
 		lang,
 		NUMBER_OF_RELATIVE_ARTICLES,
 	);
-	const displayImageStyle = !articleData.useImageOnlyForPreview;
+	const articleWithImageStyling = !articleData.useImageOnlyForPreview;
 	let translator = await Translator.getInstance({
 		language: lang,
 		namespaces: ['website-journal', 'common', 'website-newsletter', 'website-donate'],
@@ -60,8 +59,8 @@ export default async function Page(props: {
 	return (
 		<div>
 			<div className="blog w-full justify-center">
-				<div className={classNames({ 'bg-primary flex flex-col lg:min-h-screen lg:flex-row': displayImageStyle })}>
-					{displayImageStyle && (
+				<div className={articleWithImageStyling ? 'bg-primary flex flex-col lg:min-h-screen lg:flex-row' : ''}>
+					{articleWithImageStyling && (
 						<div className="lg:order-2 lg:w-1/2">
 							<Image
 								src={formatStoryblokUrl(
@@ -78,16 +77,16 @@ export default async function Page(props: {
 						</div>
 					)}
 					<div
-						className={classNames({
-							'flex flex-col justify-center p-8 text-left lg:order-1 lg:w-1/2 lg:items-start lg:p-16':
-								displayImageStyle,
-							'mx-auto mt-16 max-w-2xl content-center p-4 sm:p-6': !displayImageStyle,
-						})}
+						className={
+							articleWithImageStyling
+								? 'flex flex-col justify-center p-8 text-left lg:order-1 lg:w-1/2 lg:items-start lg:p-16'
+								: 'mx-auto mt-16 max-w-2xl content-center p-4 sm:p-6'
+						}
 					>
 						<div className="flex flex-wrap justify-start gap-2">
 							<Typography
 								weight="medium"
-								color={displayImageStyle ? 'popover' : 'foreground'}
+								color={articleWithImageStyling ? 'popover' : 'foreground'}
 								size="lg"
 								key={articleData.type?.content.id}
 								className="uppercase"
@@ -97,7 +96,7 @@ export default async function Page(props: {
 							<Typography
 								size="lg"
 								weight="normal"
-								color={displayImageStyle ? 'popover' : 'foreground'}
+								color={articleWithImageStyling ? 'popover' : 'foreground'}
 								className="ml-5"
 							>
 								{formatStoryblokDate(articleResponse.data.story.first_published_at, lang)}
@@ -106,7 +105,7 @@ export default async function Page(props: {
 						<Typography
 							weight="medium"
 							className="mt-8 hyphens-auto break-words"
-							color={displayImageStyle ? 'accent' : 'foreground'}
+							color={articleWithImageStyling ? 'accent' : 'foreground'}
 							size="5xl"
 						>
 							{articleData.title}
@@ -119,7 +118,7 @@ export default async function Page(props: {
 									weight="semibold"
 									size="lg"
 									as="span"
-									color={displayImageStyle ? 'popover' : 'foreground'}
+									color={articleWithImageStyling ? 'popover' : 'foreground'}
 									className="ml-1"
 								>
 									{author.content.fullName}
@@ -129,7 +128,7 @@ export default async function Page(props: {
 
 						<div className="mt-4 flex flex-wrap justify-start gap-2">
 							{articleData.tags?.map((tag) =>
-								badgeWithLink(lang, region, tag, displayImageStyle ? 'outline' : 'foreground'),
+								badgeWithLink(lang, region, tag, articleWithImageStyling ? 'outline' : 'foreground'),
 							)}
 						</div>
 					</div>

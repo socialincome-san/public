@@ -15,18 +15,30 @@ import { BaseContainer, Separator, Typography } from '@socialincome/ui';
 export const revalidate = 900;
 storyblokInitializationWorkaround();
 
+async function getTotalArticlesInDefaultLanguage(
+	lang: string,
+	totalArticlesInSelectedLanguage: number,
+	authorId: string,
+) {
+	return lang == DEFAULT_LANGUAGE
+		? totalArticlesInSelectedLanguage
+		: await getArticleCountByAuthorForDefaultLang(authorId);
+}
+
 export default async function Page(props: { params: Promise<{ slug: string; lang: LanguageCode; region: string }> }) {
 	const { slug, lang, region } = await props.params;
 	const author = (await getAuthor(slug, lang)).data.story;
 
-	const blogsResponse = await getArticlesByAuthor(author.uuid, lang);
-
-	const totalArticlesInDefaultLanguageResponse =
-		lang == DEFAULT_LANGUAGE ? undefined : await getArticleCountByAuthorForDefaultLang(author.uuid);
+	const authorId = author.uuid;
+	const blogsResponse = await getArticlesByAuthor(authorId, lang);
 
 	const blogs = blogsResponse.data.stories;
 	const totalArticlesInSelectedLanguage = blogsResponse.total;
-	const totalArticlesInDefault = totalArticlesInDefaultLanguageResponse || totalArticlesInSelectedLanguage;
+	const totalArticlesInDefault = await getTotalArticlesInDefaultLanguage(
+		lang,
+		totalArticlesInSelectedLanguage,
+		authorId,
+	);
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-journal', 'common'] });
 	return (
 		<BaseContainer>

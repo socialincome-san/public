@@ -22,18 +22,19 @@ interface PageProps {
 	params: Promise<PageParams>;
 }
 
+async function getTotalArticlesInDefault(lang: string, tagId: string, totalArticlesInSelectedLanguage: number) {
+	return lang == DEFAULT_LANGUAGE ? totalArticlesInSelectedLanguage : await getArticleCountByTagForDefaultLang(tagId);
+}
+
 export default async function Page({ params }: PageProps) {
 	const { slug, lang, region } = await params;
 
 	const tag = (await getTag(slug, lang)).data.story;
 	const blogsResponse = await getArticlesByTag(tag.uuid, lang);
 	const blogs = blogsResponse.data.stories;
-	const totalArticlesInDefaultLanguageResponse =
-		lang == DEFAULT_LANGUAGE ? undefined : await getArticleCountByTagForDefaultLang(tag.uuid);
-
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-journal', 'common'] });
 	const totalArticlesInSelectedLanguage = blogsResponse.total;
-	const totalArticlesInDefault = totalArticlesInDefaultLanguageResponse || totalArticlesInSelectedLanguage;
+	const totalArticlesInDefault = await getTotalArticlesInDefault(lang, tag.uuid, totalArticlesInSelectedLanguage);
 	return (
 		<BaseContainer>
 			<div className="mx-auto mb-20 mt-8 flex max-w-6xl justify-center gap-4">
