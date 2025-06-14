@@ -10,9 +10,11 @@ let nextConfig = {
 			{
 				protocol: 'https',
 				hostname: 'a.storyblok.com',
+				pathname: '/**',
 			},
 		],
 	},
+	output: 'standalone',
 };
 
 if (process.env.SENTRY_AUTH_TOKEN) {
@@ -46,7 +48,7 @@ if (process.env.SENTRY_AUTH_TOKEN) {
 		// See the following for more information:
 		// https://docs.sentry.io/product/crons/
 		// https://vercel.com/docs/cron-jobs
-		automaticVercelMonitors: true,
+		automaticVercelMonitors: false,
 	});
 } else {
 	console.warn('SENTRY_AUTH_TOKEN not set, not uploading source maps');
