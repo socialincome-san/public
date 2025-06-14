@@ -53,6 +53,7 @@ export function IssueClient({ title, issues, labels, tableHeader, filterText, li
 					<TableHeader>
 						<TableRow className="border-foreground p-5 hover:bg-transparent">
 							<TableCell className="text-xl">{tableHeader}</TableCell>
+							<TableCell className="text-xl"></TableCell>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
