@@ -146,12 +146,12 @@ export default async function Page(props: {
 					<Typography weight="bold" size="2xl">
 						{articleData.leadText}
 					</Typography>
-					<Typography as="div" className="text-black [&_a]:font-normal">
+					<Typography as="div" className="text-black">
 						{richTextRenderer(articleData.content, translator, lang, region)}
 					</Typography>
 					<Separator className="my-2" />
 					{articleData.footnotes && (
-						<Typography as="div" className="mt-5 text-black [&_a]:font-normal" size="sm">
+						<Typography as="div" className="mt-5 text-black" size="sm">
 							{richTextRenderer(articleData.footnotes, translator, lang, region)}
 						</Typography>
 					)}

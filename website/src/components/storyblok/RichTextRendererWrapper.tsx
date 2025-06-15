@@ -8,7 +8,9 @@ import { WebsiteRegion } from '@/i18n';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { QuotedText, Table, TableCell, TableHead, TableRow } from '@socialincome/ui';
+import Link from 'next/link';
 import {
+	MARK_LINK,
 	NODE_TABLE,
 	NODE_TABLE_CELL,
 	NODE_TABLE_HEADER,
@@ -24,13 +26,19 @@ export function richTextRenderer(
 	region: WebsiteRegion,
 ) {
 	return render(richTextDocument, {
+		markResolvers: {
+			[MARK_LINK]: (children: any, props: any) => (
+				<Link className="font-normal" {...props}>
+					{children}
+				</Link>
+			),
+		},
 		nodeResolvers: {
 			// @ts-ignore
 			[NODE_TABLE]: (children: any, props: any) => <Table {...props}>{children}</Table>,
 			[NODE_TABLE_HEADER]: (children: any, props: any) => <TableHead {...props}>{children}</TableHead>,
 			// @ts-ignore
 			[NODE_TABLE_ROW]: (children: any, props: any) => <TableRow {...props}>{children}</TableRow>,
-
 			[NODE_TABLE_CELL]: (children: any, props: any) => <TableCell {...props}>{children} </TableCell>,
 		},
 		blokResolvers: {
