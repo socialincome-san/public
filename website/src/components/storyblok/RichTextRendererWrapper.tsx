@@ -40,7 +40,11 @@ export function richTextRenderer(
 					{children}
 				</Table>
 			),
-			[NODE_TABLE_HEADER]: (children: any, props: any) => <TableHead {...props}>{children}</TableHead>,
+			[NODE_TABLE_HEADER]: (children: any, props: any) => (
+				<TableHead className="font-extrabold" {...props}>
+					{children}
+				</TableHead>
+			),
 			// @ts-ignore
 			[NODE_TABLE_ROW]: (children: any, props: any) => <TableRow {...props}>{children}</TableRow>,
 			[NODE_TABLE_CELL]: (children: any, props: any) => <TableCell {...props}>{children} </TableCell>,
