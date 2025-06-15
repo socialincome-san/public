@@ -7,8 +7,15 @@ import { StoryblokReferencesGroup } from '@/components/storyblok/StoryblokRefere
 import { WebsiteRegion } from '@/i18n';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { QuotedText } from '@socialincome/ui';
-import { render, StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
+import { QuotedText, Table, TableCell, TableHead, TableRow } from '@socialincome/ui';
+import {
+	NODE_TABLE,
+	NODE_TABLE_CELL,
+	NODE_TABLE_HEADER,
+	NODE_TABLE_ROW,
+	render,
+	StoryblokRichtext,
+} from 'storyblok-rich-text-react-renderer';
 
 export function richTextRenderer(
 	richTextDocument: StoryblokRichtext,
@@ -17,6 +24,15 @@ export function richTextRenderer(
 	region: WebsiteRegion,
 ) {
 	return render(richTextDocument, {
+		nodeResolvers: {
+			// @ts-ignore
+			[NODE_TABLE]: (children: any, props: any) => <Table {...props}>{children}</Table>,
+			[NODE_TABLE_HEADER]: (children: any, props: any) => <TableHead {...props}>{children}</TableHead>,
+			// @ts-ignore
+			[NODE_TABLE_ROW]: (children: any, props: any) => <TableRow {...props}>{children}</TableRow>,
+
+			[NODE_TABLE_CELL]: (children: any, props: any) => <TableCell {...props}>{children} </TableCell>,
+		},
 		blokResolvers: {
 			['quotedText']: (props: any) => <QuotedText {...props} />,
 			['imageWithCaption']: (props: any) => <StoryblokImageWithCaption {...props} />,

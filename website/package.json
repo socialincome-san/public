@@ -47,7 +47,7 @@
 		"recharts": "^2.12.7",
 		"server-only": "^0.0.1",
 		"sharp": "^0.33.5",
-		"storyblok-rich-text-react-renderer": "^2.9.2",
+		"storyblok-rich-text-react-renderer": "~3.0.1",
 		"stripe": "^17.1.0",
 		"survey-core": "^1.12.4",
 		"survey-react-ui": "^1.12.4",
