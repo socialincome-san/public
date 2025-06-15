@@ -147,14 +147,17 @@ export default async function Page(props: {
 						{articleData.leadText}
 					</Typography>
 					<Typography as="div" className="text-black [&_a]:font-normal">
-						{richTextRenderer(articleData, translator, lang, region)}
+						{richTextRenderer(articleData.content, translator, lang, region)}
 					</Typography>
 					<Separator className="my-2" />
-
+					{articleData.footnotes && (
+						<Typography as="div" className="mt-5 text-black [&_a]:font-normal" size="sm">
+							{richTextRenderer(articleData.footnotes, translator, lang, region)}
+						</Typography>
+					)}
 					<div className="mt-4 flex flex-wrap justify-start gap-2">
 						{articleData.tags?.map((tag) => badgeWithLink(lang, region, tag, 'foreground'))}
 					</div>
-
 					<Link href={`/${lang}/${region}/journal/author/${author.slug}`} className="no-underline">
 						<div className="mt-5 flex items-center space-x-4">
 							<StoryblokAuthorImage size="large" author={author} lang={lang} region={region} />

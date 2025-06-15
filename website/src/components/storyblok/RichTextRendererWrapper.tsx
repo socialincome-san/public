@@ -5,19 +5,18 @@ import { StoryblokEmbeddedVideoPlayer } from '@/components/storyblok/StoryblokEm
 import { StoryblokImageWithCaption } from '@/components/storyblok/StoryblokImageWithCaption';
 import { StoryblokReferencesGroup } from '@/components/storyblok/StoryblokReferencesGroup';
 import { WebsiteRegion } from '@/i18n';
-import { StoryblokArticle } from '@socialincome/shared/src/storyblok/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { QuotedText } from '@socialincome/ui';
-import { render } from 'storyblok-rich-text-react-renderer';
+import { render, StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
 
 export function richTextRenderer(
-	articleData: StoryblokArticle,
+	richTextDocument: StoryblokRichtext,
 	translator: Translator,
 	lang: LanguageCode,
 	region: WebsiteRegion,
 ) {
-	return render(articleData.content, {
+	return render(richTextDocument, {
 		blokResolvers: {
 			['quotedText']: (props: any) => <QuotedText {...props} />,
 			['imageWithCaption']: (props: any) => <StoryblokImageWithCaption {...props} />,
