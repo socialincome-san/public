@@ -1,3 +1,4 @@
+import { UserRecord } from 'firebase-admin/auth';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 import { Twilio } from 'twilio';
 import { AuthAdmin } from '../../../../../shared/src/firebase/admin/AuthAdmin';
@@ -58,26 +59,29 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 		// OTP is valid, create or get Firebase user
 		console.log('OTP verified successfully, checking if user exists');
 
-		// Check if user with given phoneNumber exists and create token
+		var isNewUser = false;
 		const authAdmin = new AuthAdmin();
-		try {
-			const userRecord = await authAdmin.auth.getUserByPhoneNumber(phoneNumber);
-			console.log('Existing user found:', userRecord.uid);
 
-			// User exists, generate custom token
-			const customToken = await authAdmin.auth.createCustomToken(userRecord.uid);
-			console.log('Custom token created for existing user');
+		// Check if user with given phoneNumber exists
+		var userRecord = await getUserByPhoneNumber(authAdmin, phoneNumber);
 
-			return {
-				success: true,
-				token: customToken,
-				isNewUser: false,
-				uid: userRecord.uid,
-			};
-		} catch (error) {
-			console.log('User not found', error);
-			throw new HttpsError('not-found', 'User with the given phone number not found');
+		// If user does not exist, create a new Firebase Auth user
+		if (userRecord == null) {
+			console.log('User not found, creating new user');
+			isNewUser = true;
+			userRecord = await createUserWithPhoneNumber(authAdmin, phoneNumber);
 		}
+
+		// If user exists, generate custom auth token
+		const customToken = await generateCustomToken(authAdmin, userRecord);
+
+		// Return the custom token and user information
+		return {
+			success: true,
+			token: customToken,
+			isNewUser: isNewUser,
+			uid: userRecord.uid,
+		};
 	} catch (error) {
 		// Re-throw HttpsErrors as-is to preserve specific error messages
 		if (error instanceof HttpsError) {
@@ -85,6 +89,39 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 		}
 		console.error('Unexpected error verifying OTP:', error);
 		throw new HttpsError('internal', 'Failed to verify OTP');
+	}
+
+	async function getUserByPhoneNumber(authAdmin: AuthAdmin, phoneNumber: string): Promise<null | UserRecord> {
+		try {
+			return await authAdmin.auth.getUserByPhoneNumber(phoneNumber);
+		} catch (error) {
+			console.info('User not found with given phone number: ', error);
+			return null;
+		}
+	}
+
+	async function createUserWithPhoneNumber(authAdmin: AuthAdmin, phoneNumber: string): Promise<UserRecord> {
+		try {
+			userRecord = await authAdmin.auth.createUser({
+				phoneNumber: phoneNumber,
+			});
+			console.log('New user created successfully: ', userRecord.uid);
+			return userRecord;
+		} catch (error) {
+			console.error('Error creating new user:', error);
+			throw new HttpsError('internal', 'Could not create user with given phone number: ', error);
+		}
+	}
+
+	async function generateCustomToken(authAdmin: AuthAdmin, userRecord: UserRecord): Promise<string> {
+		try {
+			const customToken = await authAdmin.auth.createCustomToken(userRecord.uid);
+			console.log('Custom token created for user: ', userRecord.uid);
+			return customToken;
+		} catch (error) {
+			console.error('Some auth error occured: ', error);
+			throw new HttpsError('internal', 'Could not create auth token for user with given phone number: ', error);
+		}
 	}
 });
 
