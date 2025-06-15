@@ -1,0 +1,11 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: social-income
+      POSTGRES_PASSWORD: social-income
+      POSTGRES_DB: social-income
+      TZ: "Europe/Zurich"
+      PGTZ: "Europe/Zurich"
