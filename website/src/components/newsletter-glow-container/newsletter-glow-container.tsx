@@ -10,11 +10,12 @@ type NewsletterGlowContainerProps = {
 	title: string;
 	lang: LanguageCode;
 	formTranslations: NewsletterPopupTranslations;
+	className?: string;
 };
 
-const NewsletterGlowContainer = ({ title, lang, formTranslations }: NewsletterGlowContainerProps) => {
+const NewsletterGlowContainer = ({ title, lang, formTranslations, className }: NewsletterGlowContainerProps) => {
 	return (
-		<GlowHoverContainer>
+		<GlowHoverContainer className={className}>
 			<div className="flex flex-col items-center py-12">
 				<div className="align-center flex flex-col">
 					<Typography size="2xl" color="foreground" weight="medium">

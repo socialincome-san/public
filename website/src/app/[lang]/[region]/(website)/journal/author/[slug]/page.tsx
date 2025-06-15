@@ -1,25 +1,45 @@
-import { getArticlesByAuthor, getAuthor } from '@/components/storyblok/StoryblokApi';
+import { MoreArticlesLink } from '@/components/storyblok/MoreArticlesLink';
+import {
+	DEFAULT_LANGUAGE,
+	getArticleCountByAuthorForDefaultLang,
+	getArticlesByAuthor,
+	getAuthor,
+} from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography } from '@socialincome/ui';
+import { BaseContainer, Separator, Typography } from '@socialincome/ui';
 
 export const revalidate = 900;
 storyblokInitializationWorkaround();
+
+async function getTotalArticlesInDefaultLanguage(
+	lang: string,
+	totalArticlesInSelectedLanguage: number,
+	authorId: string,
+) {
+	return lang == DEFAULT_LANGUAGE
+		? totalArticlesInSelectedLanguage
+		: await getArticleCountByAuthorForDefaultLang(authorId);
+}
 
 export default async function Page(props: { params: Promise<{ slug: string; lang: LanguageCode; region: string }> }) {
 	const { slug, lang, region } = await props.params;
 	const author = (await getAuthor(slug, lang)).data.story;
 
-	const blogsResponse = await getArticlesByAuthor(author.uuid, lang);
+	const authorId = author.uuid;
+	const blogsResponse = await getArticlesByAuthor(authorId, lang);
 
 	const blogs = blogsResponse.data.stories;
-	await Translator.getInstance({
-		language: lang,
-		namespaces: ['website-journal'],
-	});
+	const totalArticlesInSelectedLanguage = blogsResponse.total;
+	const totalArticlesInDefault = await getTotalArticlesInDefaultLanguage(
+		lang,
+		totalArticlesInSelectedLanguage,
+		authorId,
+	);
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-journal', 'common'] });
 	return (
 		<BaseContainer>
 			<div className="mx-auto mb-20 mt-8 flex max-w-6xl justify-center gap-4">
@@ -44,6 +64,16 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 					<StoryblokArticleCard key={blog.uuid} lang={lang} region={region} blog={blog} author={author} />
 				))}
 			</div>
+
+			{totalArticlesInDefault > totalArticlesInSelectedLanguage && (
+				<div>
+					<Separator className="my-8" />
+					<MoreArticlesLink
+						text={translator.t('overview.more-articles')}
+						url={`/${DEFAULT_LANGUAGE}/${region}/journal/author/${slug}`}
+					/>
+				</div>
+			)}
 		</BaseContainer>
 	);
 }

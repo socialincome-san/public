@@ -1,5 +1,5 @@
 import { COUNTRY_COOKIE, CURRENCY_COOKIE } from '@/app/[lang]/[region]';
-import { WebsiteLanguage, WebsiteRegion, allWebsiteLanguages, findBestLocale, websiteRegions } from '@/i18n';
+import { allWebsiteLanguages, findBestLocale, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/i18n';
 import { CountryCode, isValidCountryCode } from '@socialincome/shared/src/types/country';
 import { geolocation } from '@vercel/functions';
 import { NextRequest, NextResponse } from 'next/server';
@@ -8,7 +8,7 @@ import { bestGuessCurrency, isValidCurrency } from '../../shared/src/types/curre
 export const config = {
 	matcher: [
 		// Skip internal paths (_next)
-		'/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js).*)',
+		'/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|journal).*)',
 	],
 };
 
