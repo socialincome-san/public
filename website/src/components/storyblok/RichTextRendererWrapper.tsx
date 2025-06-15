@@ -35,7 +35,11 @@ export function richTextRenderer(
 		},
 		nodeResolvers: {
 			// @ts-ignore
-			[NODE_TABLE]: (children: any, props: any) => <Table {...props}>{children}</Table>,
+			[NODE_TABLE]: (children: any, props: any) => (
+				<Table className="text-foreground" {...props}>
+					{children}
+				</Table>
+			),
 			[NODE_TABLE_HEADER]: (children: any, props: any) => <TableHead {...props}>{children}</TableHead>,
 			// @ts-ignore
 			[NODE_TABLE_ROW]: (children: any, props: any) => <TableRow {...props}>{children}</TableRow>,
