@@ -64,12 +64,15 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 					<StoryblokArticleCard key={blog.uuid} lang={lang} region={region} blog={blog} author={author} />
 				))}
 			</div>
-			<Separator className="my-8" />
+
 			{totalArticlesInDefault > totalArticlesInSelectedLanguage && (
-				<MoreArticlesLink
-					text={translator.t('overview.more-articles')}
-					url={`/${DEFAULT_LANGUAGE}/${region}/journal/author/${slug}`}
-				/>
+				<div>
+					<Separator className="my-8" />
+					<MoreArticlesLink
+						text={translator.t('overview.more-articles')}
+						url={`/${DEFAULT_LANGUAGE}/${region}/journal/author/${slug}`}
+					/>
+				</div>
 			)}
 		</BaseContainer>
 	);

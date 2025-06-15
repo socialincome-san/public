@@ -52,12 +52,14 @@ export default async function Page({ params }: PageProps) {
 				))}
 			</div>
 
-			<Separator className="my-8" />
 			{totalArticlesInDefault > totalArticlesInSelectedLanguage && (
-				<MoreArticlesLink
-					text={translator.t('overview.more-articles')}
-					url={`/${DEFAULT_LANGUAGE}/${region}/journal/tag/${slug}`}
-				/>
+				<div>
+					<Separator className="my-8" />
+					<MoreArticlesLink
+						text={translator.t('overview.more-articles')}
+						url={`/${DEFAULT_LANGUAGE}/${region}/journal/tag/${slug}`}
+					/>
+				</div>
 			)}
 		</BaseContainer>
 	);
