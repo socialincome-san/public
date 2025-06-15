@@ -1,7 +1,18 @@
+import "package:cloud_functions/cloud_functions.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 String localizeExceptionMessage(Exception? ex, AppLocalizations localizations) {
+  if (ex is FirebaseFunctionsException) {
+    return switch (ex.code) {
+      "permission-denied" => localizations.invalidVerificationCodeError,
+      "invalid-argument" => localizations.argumentError,
+      "failed-precondition" => localizations.appNotAuthorized,
+      "internal" => localizations.internalError,
+      _ => ex.toString(),
+    };
+  }
+
   if (ex is FirebaseAuthException) {
     return switch (ex.code) {
       "invalid-verification-code" => localizations.invalidVerificationCodeError,
