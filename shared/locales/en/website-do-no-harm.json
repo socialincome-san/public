@@ -1,13 +1,136 @@
 {
-  "title": "No Harm Principles and Implementation",
-  "lead": "The Do No Harm (DNH) approach is a framework designed to minimize the unintended negative consequences of aid programs. By critically reflecting on every aspect of a project, it helps identify risks and mitigate harm, especially when aid is delivered in the form of unconditional cash transfers. Social Income seeks to carefully assess various aspects of the aid process, including recipient selection, distribution methods, and the potential impact of the assistance in order to minimize the risk of misuse and harm. ",
-  "best-practice": "Best Practice Principle",
-  "implementation": "Implementation",
-  "chapter-1": "1. Understanding Social Context, Actors & Stakeholders",
-  "principle-1": "Assess and understand previous conflict lines: what are the dividers and tensions in the larger context and specific community.",
-  "principle-1-si": "Social Income engages in post-conflict settings and is knowledgeable about previous societal fault lines and conflict in the community by engaging in close contact with local partners, staff and recipients.",
-  "principle-2": "Assess and understand previous conflict lines: what are the dividers and tensions in the larger context and specific community.",
-  "principle-2-si": "Social Income engages in post-conflict settings and is knowledgeable about previous societal fault lines and conflict in the community by engaging in close contact with local partners, staff and recipients.",
-  "principle-2-link-1": "link",
-  "principle-2-link-2": "link"
+  "content": {
+    "title": "Do No Harm Principles and Implementation",
+    "lead": "The Do No Harm (DNH) approach is a framework that helps minimize unintended negative consequences of aid programs. It identifies risks and reduces potential harm by carefully reviewing all parts of a project, including recipient selection, distribution methods, and the overall impact of assistance. Social Income applies these principles systematically and shares its approach transparently to show how risks are addressed and how the program remains safe, fair, and beneficial for recipients and their communities.",
+    "subtitle-principle": "Best Practice Principle",
+    "subtitle-implementation": "Implementation",
+    "sections": [
+      {
+        "title": "Understanding Social Context, Actors & Stakeholders",
+        "cards": [
+          {
+            "description": "Identify and understand key actors (recipients, families, friends, community).",
+            "implementation": "Social Income works closely with local NGOs, local staff, recipients and their networks to map and understand the relevant actors and social relationships involved. NGO partners themselves are carefully assessed prior to collaboration.",
+            "links": [
+              { "label": "Local partners", "url": "https://google.com" },
+              { "label": "Local staff", "url": "https://google.com" }
+            ]
+          },
+          {
+            "description": "Assess previous conflict lines and tensions.",
+            "implementation": "Through local partners, staff, and close contact with recipients, Social Income accounts for post-conflict dynamics and societal fault lines, intentionally working with a diverse set of local NGOs that address different causes and communities, and employing local staff from different religious backgrounds.",
+            "links": [
+              { "label": "Local partners", "url": "https://google.com" },
+              { "label": "Local staff", "url": "https://google.com" }
+            ]
+          },
+          {
+            "description": "Assess cultural attitudes toward money and its role in past conflicts.",
+            "implementation": "Social Income focuses on understanding how money is perceived in the local community through personal onboarding interviews, ongoing monthly contact with recipients and their networks, and regular surveys, ensuring that cash transfers align with local cultural attitudes and avoid tensions linked to money’s role in past conflicts.",
+            "links": [
+              { "label": "Local partners", "url": "https://google.com" },
+              { "label": "Local staff", "url": "https://google.com" }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Preventing Social Tensions & Conflict Risks",
+        "cards": [
+          {
+            "description": "Avoid favoritism in selection",
+            "implementation": "Randomized selection promotes fairness and helps prevent favoritism and social tensions. Recipients are distributed across different groups and locations through partnerships with diverse local NGOs. Within each group, we limit the number of individuals from the same subgroup to ensure inclusion and avoid perceptions of exclusion.",
+            "links": [
+              { "label": "Example link 1", "url": "https://example.com" }
+            ]
+          },
+          {
+            "description": "Distribute aid equitably to avoid creating power imbalances",
+            "implementation": "Social Income distributes aid across the entire population of individuals affected by poverty, rather than focusing on specific subgroups such as women, persons with disabilities, or widows. However, through targeted partnerships with local NGOs, specific groups can be reached when there is a defined need.",
+            "links": [
+              { "label": "Example link 1", "url": "https://example.com" }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Fair & Transparent",
+        "cards": [
+          {
+            "description": "Use clear, non-discriminatory selection criteria",
+            "implementation": "Social Income uses clear eligibility criteria, focusing on individuals aged 16 and above who live in poverty. With the help of local partners and their knowledge of the community, we build a pool of eligible recipients. To keep the process transparent, impartial, and free from favoritism, recipients are selected by lottery.",
+            "links": [
+              { "label": "Example link 1", "url": "https://example.com" }
+            ]
+          },
+          {
+            "description": "Avoid clustering recipients in specific communities",
+            "implementation": "Social Income diversifies its beneficiaries through partnerships with different local organizations that work in non-overlapping communities. The lottery-based selection ensures recipients are distributed within these communities. Although there is a small chance that individuals living close to each other or from the same household may be selected, this circumstance needs to be weighed against the complexity, potential tensions, and costs involved in mapping household structures or tracking exact places of residence.",
+            "links": [
+              { "label": "Example link 1", "url": "https://example.com" }
+            ]
+          },
+          {
+            "description": "Prevent bias and corruption in the selection process",
+            "implementation": "Social Income minimizes potential bias from local partner NGOs in the random selection process by including the entire eligible community in the selection pool, preventing partners from narrowing the pool to specific individuals. Before any collaboration, Social Income conducts an assessment of local partners to ensure strong governance standards and maintains direct contact with people from the communities involved.",
+            "links": [
+              { "label": "Example link 1", "url": "https://example.com" }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Encouraging Independence & Sustainability",
+        "cards": [
+          {
+            "description": "Define a time limit for aid",
+            "implementation": "Social Income provides time-bound support with a fixed program duration. Recipients are informed from the beginning that the program runs for a limited period, currently set at three years. Throughout the program, they receive regular reminders about the remaining time.",
+            "links": [
+              { "label": "Example link 1", "url": "https://example.com" }
+            ]
+          },
+          {
+            "description": "Avoid creating reliance on external support",
+            "implementation": "By clearly communicating that the transfers are temporary, Social Income encourages recipients to plan for the period after the program ends and to work towards long-term financial independence.",
+            "links": [
+              { "label": "Example link 1", "url": "https://example.com" }
+            ]
+          },
+          {
+            "description": "Prevent bias and corruption in the selection process",
+            "implementation": "Social Income minimizes potential bias from local partner NGOs in the random selection process by including the entire eligible community in the selection pool, preventing partners from narrowing the pool to specific individuals. Before any collaboration, Social Income conducts an assessment of local partners to ensure strong governance standards and maintains direct contact with people from the communities involved.",
+            "links": [
+              { "label": "Example link 1", "url": "https://example.com" }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Encouraging Independence and Sustainability",
+        "cards": [
+          {
+            "description": "Avoid creating reliance on external support",
+            "implementation": "Social Income provides time-bound support with a fixed program duration. Recipients are informed from the beginning that the program runs for a limited period, currently set at three years. Throughout the program, they receive regular reminders about the remaining time.",
+            "links": [
+              { "label": "Example link 1", "url": "https://example.com" }
+            ]
+          },
+          {
+            "description": "Avoid creating reliance on external support",
+            "implementation": "By clearly communicating that the transfers are temporary, Social Income encourages recipients to plan for the period after the program ends and to work towards long-term financial independence.",
+            "links": [
+              { "label": "Example link 1", "url": "https://example.com" }
+            ]
+          },
+          {
+            "description": "Prevent bias and corruption in the selection process",
+            "implementation": "Social Income minimizes potential bias from local partner NGOs in the random selection process by including the entire eligible community in the selection pool, preventing partners from narrowing the pool to specific individuals. Before any collaboration, Social Income conducts an assessment of local partners to ensure strong governance standards and maintains direct contact with people from the communities involved.",
+            "links": [
+              { "label": "Example link 1", "url": "https://example.com" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }
