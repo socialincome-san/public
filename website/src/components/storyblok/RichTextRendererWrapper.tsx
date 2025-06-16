@@ -7,10 +7,11 @@ import { StoryblokReferencesGroup } from '@/components/storyblok/StoryblokRefere
 import { WebsiteRegion } from '@/i18n';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { QuotedText, Table, TableCell, TableHead, TableRow } from '@socialincome/ui';
+import { QuotedText, Table, TableBody, TableCell, TableHead, TableRow } from '@socialincome/ui';
 import Link from 'next/link';
 import {
 	MARK_LINK,
+	NODE_LI,
 	NODE_TABLE,
 	NODE_TABLE_CELL,
 	NODE_TABLE_HEADER,
@@ -35,9 +36,15 @@ export function richTextRenderer(
 		},
 		nodeResolvers: {
 			// @ts-ignore
+			[NODE_LI]: (children: any, props: any) => (
+				<li className="m-0.5 p-0.5 [&::marker]:text-black [&>*]:m-0 [&>*]:p-0" {...props}>
+					{children}
+				</li>
+			),
+			// @ts-ignore
 			[NODE_TABLE]: (children: any, props: any) => (
 				<Table className="text-foreground" {...props}>
-					{children}
+					<TableBody>{children}</TableBody>
 				</Table>
 			),
 			[NODE_TABLE_HEADER]: (children: any, props: any) => (
