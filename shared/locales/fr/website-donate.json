@@ -6,6 +6,31 @@
 	"button-text": "Fais la différence",
 	"button-text-short": "Faire un don",
 	"one-time-donation": "Don unique",
+	"payment-type": {
+		"title": "Choisir le mode de paiement",
+		"credit-card": "Carte de crédit",
+		"bank-transfer": "Virement bancaire",
+		"credit-card-description": "Standard",
+		"bank-transfer-description": "Sans frais"
+	},
+	"bank-transfer": {
+		"first-name": "Prénom",
+		"last-name": "Nom",
+		"email": "E-Mail",
+		"plan": "Plan 1% (mensuel)",
+		"your-contribution": "Votre contribution",
+		"full-social-income": "1 Social Income complet",
+		"partial-social-income": "1 Social Income partiel",
+		"we-match-the-missing": "Nous complétons le montant manquant",
+		"generate-qr-bill": "Générer le QR-bill",
+		"confirm-monthly-order": "Confirmer l'ordre permanent mensuel",
+		"transfer-fees-note": "Tous les frais de transfert sont payés à partir de nos réserves, actuellement à € 23'392. Veuillez envisager de couvrir les frais avec le Plan 1% Plus :",
+		"plus-plan-link": "modifier",
+		"subscribe-to-1-percent-plan": "S'inscrire au Plan 1%",
+		"errors": {
+			"qrBillError": "Impossible de générer le QR-bill. Veuillez réessayer."
+		}
+	},
 	"donation-impact": {
 		"monthly-contribution": "Ta contribution mensuelle:",
 		"direct-payout": "Ta contribution est versée directement sur le téléphone mobile du ou de la bénéficiaire de Social Income.",
@@ -52,7 +77,6 @@
 			"gender": "Genre",
 			"referral": "Comment as-tu entendu parler de nous?",
 			"accept-terms-and-conditions": "J'accepte <a href='/legal/donations/' target='_blank' class='underline'>les conditions de participation</a> et <a href='/legal/privacy/' target='_blank' class='underline'>la politique de protection des données</a>.",
-
 			"referrals": {
 				"familyfriends": "Famille ou amis",
 				"socialmedia": "Médias sociaux",
@@ -64,6 +88,16 @@
 			"submit-button": "Confirmer",
 			"update-user-error": "Une erreur s'est produite lors de la mise à jour de tes informations. Veuille réessayer.",
 			"activate-your-account": "Veuillez vérifier votre e-mail et cliquer sur le lien que nous vous avons envoyé pour activer votre compte."
+		},
+		"activation-form": {
+			"title": " Définis un mot de passe pour ton compte",
+			"email": "E-Mail",
+			"invalid-email": "E-Mail incorrect",
+			"password": "Mot de passe",
+			"password-confirm": "Confirmer le mot de passe",
+			"password-mismatch": "Non-concordance du mot de passe",
+			"submit-button": "Activer le compte",
+			"google-button": "S'inscrire avec Google"
 		}
 	}
 }

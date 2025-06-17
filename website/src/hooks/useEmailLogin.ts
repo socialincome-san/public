@@ -1,5 +1,6 @@
 'use client';
 
+import { CreateUserData } from '@/app/api/user/create/route';
 import { WebsiteLanguage } from '@/i18n';
 import { FirebaseError } from 'firebase/app';
 import {
@@ -110,7 +111,10 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 			return;
 		}
 
-		const response = await fetch('/api/user/create', { method: 'POST', body: JSON.stringify({ email }) });
+		const response = await fetch('/api/user/create', {
+			method: 'POST',
+			body: JSON.stringify({ email } as CreateUserData),
+		});
 		if (!response.ok) {
 			translator && toast.error(translator.t('error.unknown'));
 		}
