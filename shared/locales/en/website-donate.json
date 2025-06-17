@@ -6,6 +6,31 @@
 	"button-text": "Make a Difference",
 	"button-text-short": "Donate Now",
 	"one-time-donation": "Make a one-time donation",
+	"payment-type": {
+		"title": "Select Payment Method",
+		"credit-card": "Credit Card",
+		"bank-transfer": "Bank Transfer",
+		"credit-card-description": "Standard",
+		"bank-transfer-description": "No fees"
+	},
+	"bank-transfer": {
+		"first-name": "First Name",
+		"last-name": "Last Name",
+		"email": "E-Mail",
+		"plan": "1% Plan (monthly)",
+		"your-contribution": "Your contribution",
+		"full-social-income": "1 Full Social Income",
+		"partial-social-income": "1 Partial Social Income",
+		"we-match-the-missing": "We match the missing",
+		"generate-qr-bill": "Generate QR Bill",
+		"confirm-monthly-order": "Confirm Monthly Standing Order",
+		"transfer-fees-note": "All transfer fees are paid from our reserves, currently at € 23,392. Please consider covering the fees with the 1% Plus Plan:",
+		"plus-plan-link": "change",
+		"subscribe-to-1-percent-plan": "Subscribe to 1% Plan",
+		"errors": {
+			"qrBillError": "Failed to generate QR bill. Please try again."
+		}
+	},
 	"donation-impact": {
 		"monthly-contribution": "Your monthly contribution",
 		"direct-payout": "The people in need receive your contribution directly on their mobile phones.",
