@@ -49,6 +49,7 @@
 		"stripe": "^17.1.0",
 		"survey-core": "^1.12.4",
 		"survey-react-ui": "^1.12.4",
+		"swissqrbill": "^4.1.2",
 		"tailwind-merge": "^2.5.3",
 		"usehooks-ts": "^3.1.0",
 		"zod": "^3.23.8"

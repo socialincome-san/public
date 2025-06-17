@@ -6,6 +6,31 @@
 	"button-text": "Mache einen Unterschied",
 	"button-text-short": "Jetzt spenden",
 	"one-time-donation": "Einmalige Spende",
+	"payment-type": {
+		"title": "Zahlungsmethode auswählen",
+		"credit-card": "Kreditkarte",
+		"bank-transfer": "Banküberweisung",
+		"credit-card-description": "Standard",
+		"bank-transfer-description": "Keine Gebühren"
+	},
+	"bank-transfer": {
+		"first-name": "Vorname",
+		"last-name": "Nachname",
+		"email": "E-Mail",
+		"plan": "1% Plan (monatlich)",
+		"your-contribution": "Ihr Beitrag",
+		"full-social-income": "1 Volles Social Income",
+		"partial-social-income": "1 Teil-Social Income",
+		"we-match-the-missing": "Wir ergänzen den fehlenden Betrag",
+		"generate-qr-bill": "QR-Rechnung generieren",
+		"confirm-monthly-order": "Monatlichen Dauerauftrag bestätigen",
+		"transfer-fees-note": "Alle Überweisungsgebühren werden aus unseren Reserven bezahlt, derzeit bei € 23.392. Bitte erwägen Sie, die Gebühren mit dem 1% Plus Plan zu decken:",
+		"plus-plan-link": "ändern",
+		"subscribe-to-1-percent-plan": "Für 1% Plan anmelden",
+		"errors": {
+			"qrBillError": "QR-Rechnung konnte nicht generiert werden. Bitte versuchen Sie es erneut."
+		}
+	},
 	"donation-impact": {
 		"monthly-contribution": "Dein monatlicher Beitrag:",
 		"direct-payout": "Dein Beitrag wird direkt auf das Mobiltelefon der Social Income Empfänger:innen ausgezahlt.",

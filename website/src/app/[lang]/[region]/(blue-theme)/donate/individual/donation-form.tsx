@@ -1,15 +1,12 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { CreateCheckoutSessionData } from '@/app/api/stripe/checkout-session/create/route';
 import { useI18n } from '@/components/providers/context-providers';
 import { CurrencySelector } from '@/components/ui/currency-selector';
 import { useTranslator } from '@/hooks/useTranslator';
 import { websiteCurrencies, WebsiteLanguage } from '@/i18n';
-import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-	Button,
 	Card,
 	CardContent,
 	CardFooter,
@@ -18,18 +15,17 @@ import {
 	FormControl,
 	FormField,
 	FormItem,
-	FormMessage,
 	Input,
-	RadioGroup,
 	Typography,
 } from '@socialincome/ui';
-import classNames from 'classnames';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useForm, useFormContext, useWatch } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useUser } from 'reactfire';
-import Stripe from 'stripe';
 import * as z from 'zod';
+import { BankTransferForm } from './bank-transfer-form';
+import { DonationIntervalSelector } from './donation-interval-selector';
+import { PAYMENT_TYPES, PaymentTypeSelector } from './payment-type-selector';
+import { StripePaymentButton } from './stripe-payment-button';
 
 const DONATION_INTERVALS = ['1', '3', '12'] as const;
 type DonationInterval = (typeof DONATION_INTERVALS)[number];
@@ -88,53 +84,6 @@ function DonationImpact({ lang, translations }: DonationImpactProps) {
 	);
 }
 
-type RadioGroupFormItemProps = {
-	active: boolean;
-	donationInterval: DonationInterval;
-	title: string;
-	lang: WebsiteLanguage;
-};
-
-function RadioGroupFormItem({ active, title, donationInterval, lang }: RadioGroupFormItemProps) {
-	const monthlyIncome = useWatch({ name: 'monthlyIncome' });
-	const translator = useTranslator(lang, 'website-donate');
-	const { currency } = useI18n();
-	const [previewAmount, setPreviewAmount] = useState(getDonationAmount(monthlyIncome, donationInterval));
-	const { setValue } = useFormContext<{ donationInterval: DonationInterval }>();
-
-	useEffect(() => {
-		setPreviewAmount(getDonationAmount(monthlyIncome, donationInterval));
-	}, [monthlyIncome, donationInterval]);
-
-	return (
-		<FormItem>
-			<FormControl
-				className={classNames(
-					'flex h-full flex-1 cursor-pointer flex-row rounded-lg border-2 p-4 shadow-sm focus:outline-none',
-					{ 'border-accent bg-card-muted': active },
-				)}
-			>
-				<div onClick={() => setValue('donationInterval', donationInterval)}>
-					<div className="flex flex-1">
-						<div className="flex flex-col space-y-1">
-							<Typography weight="bold">{title}</Typography>
-							<Typography size="sm">
-								{translator?.t(`donation-interval.${donationInterval}.text`, {
-									context: { amount: previewAmount, currency: currency, locale: lang },
-								})}
-							</Typography>
-						</div>
-					</div>
-					<CheckCircleIcon
-						className={classNames(!active ? 'invisible' : '', 'text-accent h-5 w-5')}
-						aria-hidden="true"
-					/>
-				</div>
-			</FormControl>
-		</FormItem>
-	);
-}
-
 type DonationFormProps = {
 	amount?: number;
 	translations: {
@@ -146,43 +95,88 @@ type DonationFormProps = {
 		quarterly: string;
 		yearly: string;
 		donationImpact: DonationImpactTranslations;
+		paymentType: {
+			title: string;
+			creditCard: string;
+			bankTransfer: string;
+			creditCardDescription: string;
+			bankTransferDescription: string;
+		};
+		bankTransfer: {
+			firstName: string;
+			lastName: string;
+			email: string;
+			plan: string;
+			yourContribution: string;
+			fullSocialIncome: string;
+			partialSocialIncome: string;
+			weMatchTheMissing: string;
+			generateQrBill: string;
+			transferFeesNote: string;
+			confirmMonthlyOrder: string;
+			plusPlanLink: string;
+			subscribeTo1PercentPlan: string;
+			errors: {
+				emailRequired: string;
+				emailInvalid: string;
+				qrBillError: string;
+			};
+		};
 	};
 } & DefaultParams;
 
 export function DonationForm({ amount, translations, lang, region }: DonationFormProps) {
 	const router = useRouter();
-	const [submitting, setSubmitting] = useState(false);
 	const { data: authUser } = useUser();
 	const { currency } = useI18n();
 
-	const formSchema = z.object({
-		monthlyIncome: z.coerce.number(),
-		donationInterval: z.enum(DONATION_INTERVALS),
-	});
+	const formSchema = z
+		.object({
+			monthlyIncome: z.coerce.number(),
+			donationInterval: z.enum(DONATION_INTERVALS),
+			paymentType: region === 'ch' ? z.enum(PAYMENT_TYPES) : z.literal('credit_card'),
+			email: z.string().min(1, 'Email is required').email('Invalid email address').optional(),
+			firstName: z.string().min(1, 'First name is required').optional(),
+			lastName: z.string().min(1, 'Last name is required').optional(),
+		})
+		.superRefine((data, ctx) => {
+			if (data.paymentType === 'bank_transfer') {
+				if (!data.email) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: 'Email is required',
+						path: ['email'],
+					});
+				}
+				if (!data.firstName) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: 'First name is required',
+						path: ['firstName'],
+					});
+				}
+				if (!data.lastName) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: 'Last name is required',
+						path: ['lastName'],
+					});
+				}
+			}
+		});
 	type FormSchema = z.infer<typeof formSchema>;
 
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
-		defaultValues: { donationInterval: '1', monthlyIncome: amount || ('' as any) },
+		defaultValues: {
+			donationInterval: '1',
+			monthlyIncome: amount || ('' as any),
+			paymentType: 'credit_card',
+			email: '',
+			firstName: '',
+			lastName: '',
+		},
 	});
-
-	const onSubmit = async (values: FormSchema) => {
-		setSubmitting(true);
-		const authToken = await authUser?.getIdToken(true);
-		const data: CreateCheckoutSessionData = {
-			amount: getDonationAmount(values.monthlyIncome, values.donationInterval) * 100, // The amount is in cents, so we need to multiply by 100 to get the correct amount.
-			intervalCount: Number(values.donationInterval),
-			currency: currency,
-			successUrl: `${window.location.origin}/${lang}/${region}/donate/success/stripe/{CHECKOUT_SESSION_ID}`,
-			recurring: true,
-			firebaseAuthToken: authToken,
-		};
-		// Call the API to create a new Stripe checkout session
-		const response = await fetch('/api/stripe/checkout-session/create', { method: 'POST', body: JSON.stringify(data) });
-		const { url } = (await response.json()) as Stripe.Response<Stripe.Checkout.Session>;
-		// This sends the user to stripe.com where payment is completed
-		if (url) router.push(url);
-	};
 
 	return (
 		<div className="flex flex-col">
@@ -190,7 +184,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 				{translations.title}
 			</Typography>
 			<Form {...form}>
-				<form className="flex flex-col space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
+				<form className="flex flex-col space-y-8">
 					<div className="mb-2 flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0 md:items-center">
 						<FormField
 							control={form.control}
@@ -210,50 +204,42 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 							<CardHeader>
 								<DonationImpact lang={lang} translations={translations.donationImpact} />
 							</CardHeader>
-							<CardContent className="mt-8">
-								<Typography size="lg" weight="medium" className="mb-4">
-									{translations.howToPay}
-								</Typography>
-								<FormField
-									control={form.control}
-									name="donationInterval"
-									render={({ field }) => (
-										<FormItem className="space-y-3">
-											<FormControl>
-												<RadioGroup
-													onValueChange={field.onChange}
-													defaultValue={field.value}
-													className="grid grid-cols-1 place-items-stretch gap-4 md:grid-cols-3"
-												>
-													<RadioGroupFormItem
-														active={field.value === '1'}
-														donationInterval="1"
-														title={translations.monthly}
-														lang={lang}
-													/>
-													<RadioGroupFormItem
-														active={field.value === '3'}
-														donationInterval="3"
-														title={translations.quarterly}
-														lang={lang}
-													/>
-													<RadioGroupFormItem
-														active={field.value === '12'}
-														donationInterval="12"
-														title={translations.yearly}
-														lang={lang}
-													/>
-												</RadioGroup>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
+							<CardContent className="mt-8 space-y-8">
+								<DonationIntervalSelector
+									lang={lang}
+									monthlyIncome={form.watch('monthlyIncome')}
+									translations={{
+										title: translations.howToPay,
+										monthly: translations.monthly,
+										quarterly: translations.quarterly,
+										yearly: translations.yearly,
+									}}
 								/>
+								{region === 'ch' && (
+									<PaymentTypeSelector
+										lang={lang}
+										translations={translations.paymentType}
+										bankTransferForm={
+											<BankTransferForm
+												paymentIntervalMonths={Number(form.watch('donationInterval'))}
+												amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
+												translations={translations.bankTransfer}
+											/>
+										}
+									/>
+								)}
 							</CardContent>
 							<CardFooter>
-								<Button size="lg" type="submit" className="w-full" showLoadingSpinner={submitting}>
-									{translations.buttonText}
-								</Button>
+								{form.watch('paymentType') === 'credit_card' && (
+									<StripePaymentButton
+										amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
+										intervalCount={Number(form.watch('donationInterval'))}
+										lang={lang}
+										region={region}
+										buttonText={translations.buttonText}
+										paymentType={form.watch('paymentType')}
+									/>
+								)}
 							</CardFooter>
 						</Card>
 					)}
