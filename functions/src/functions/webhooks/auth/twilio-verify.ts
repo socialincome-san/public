@@ -28,20 +28,20 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 		throw new HttpsError('invalid-argument', 'Phone number and OTP are required');
 	}
 
+	// Format phone number to E.164 format if not already
+	if (!phoneNumber.startsWith('+')) {
+		phoneNumber = `+${phoneNumber}`;
+	}
+
+	// Basic E.164 validation (should start with + followed by digits only)
+	const phoneRegex = /^\+[1-9]\d{1,14}$/;
+	if (!phoneRegex.test(phoneNumber)) {
+		console.log('Invalid phone number format');
+		throw new HttpsError('invalid-argument', 'Phone number must be in valid E.164 format (e.g., +12345678901)');
+	}
+
+	// Verify OTP with Twilio
 	try {
-		// Format phone number to E.164 format if not already
-		if (!phoneNumber.startsWith('+')) {
-			phoneNumber = `+${phoneNumber}`;
-		}
-
-		// Basic E.164 validation (should start with + followed by digits only)
-		const phoneRegex = /^\+[1-9]\d{1,14}$/;
-		if (!phoneRegex.test(phoneNumber)) {
-			console.log('Invalid phone number format');
-			throw new HttpsError('invalid-argument', 'Phone number must be in valid E.164 format (e.g., +12345678901)');
-		}
-
-		// Verify OTP with Twilio
 		console.log('Attempting to verify OTP for phone');
 		const verification = await twilioClient.verify.v2.services(TWILIO_VERIFY_SERVICE_SID).verificationChecks.create({
 			to: phoneNumber,
@@ -55,13 +55,22 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 			console.log('OTP verification failed, status: ', verification.status);
 			throw new HttpsError('permission-denied', 'Invalid OTP provided');
 		}
+	} catch (error: any) {
+		// Check for Twilio's error code directly from the error object
+		if (error?.code === 20404) {
+			// Specific error code for "Verification not found". See https://www.twilio.com/docs/errors/20404
+			throw new HttpsError('not-found', 'Verification resource not found for the provided phone number and OTP');
+		}
+		console.error('Error verifying OTP:', error);
+		throw new HttpsError('internal', 'Failed to verify OTP');
+	}
 
-		// OTP is valid, create or get Firebase user
+	// OTP is valid, create or get Firebase user
+	try {
 		console.log('OTP verified successfully, checking if user exists');
-
 		var isNewUser = false;
 		const authAdmin = new AuthAdmin();
-
+		
 		// Check if user with given phoneNumber exists
 		var userRecord = await getUserByPhoneNumber(authAdmin, phoneNumber);
 
@@ -87,8 +96,8 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 		if (error instanceof HttpsError) {
 			throw error;
 		}
-		console.error('Unexpected error verifying OTP:', error);
-		throw new HttpsError('internal', 'Failed to verify OTP');
+		console.error('Unexpected error getting Firebase custom token:', error);
+		throw new HttpsError('internal', 'Failed to generate custom token');
 	}
 
 	async function getUserByPhoneNumber(authAdmin: AuthAdmin, phoneNumber: string): Promise<null | UserRecord> {
