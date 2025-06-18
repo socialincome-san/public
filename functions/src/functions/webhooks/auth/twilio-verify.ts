@@ -75,8 +75,7 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 		var userRecord: UserRecord | null = null;
 		try {
 			userRecord = await getUserByPhoneNumber(authAdmin, phoneNumber);
-		}
-		catch (error: any) {
+		} catch (error: any) {
 			if (error?.code === 'auth/user-not-found') {
 				console.log('User not found with given phone number');
 			} else {
