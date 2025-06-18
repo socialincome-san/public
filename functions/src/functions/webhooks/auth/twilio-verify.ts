@@ -72,11 +72,21 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 		const authAdmin = new AuthAdmin();
 
 		// Check if user with given phoneNumber exists
-		var userRecord = await getUserByPhoneNumber(authAdmin, phoneNumber);
+		var userRecord: UserRecord | null = null;
+		try {
+			userRecord = await getUserByPhoneNumber(authAdmin, phoneNumber);
+		}
+		catch (error: any) {
+			if (error?.code === 'auth/user-not-found') {
+				console.log('User not found with given phone number');
+			} else {
+				throw error; // Re-throw other errors
+			}
+		}
 
 		// If user does not exist, create a new Firebase Auth user
 		if (userRecord == null) {
-			console.log('User not found, creating new user');
+			console.log('Creating new user with given phone number');
 			isNewUser = true;
 			userRecord = await createUserWithPhoneNumber(authAdmin, phoneNumber);
 		}
