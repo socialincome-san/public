@@ -8,6 +8,7 @@ String localizeExceptionMessage(Exception? ex, AppLocalizations localizations) {
       "permission-denied" => localizations.invalidVerificationCodeError,
       "invalid-argument" => localizations.argumentError,
       "failed-precondition" => localizations.appNotAuthorized,
+      "not-found" => localizations.codeExpired,
       "internal" => localizations.internalError,
       _ => ex.toString(),
     };
