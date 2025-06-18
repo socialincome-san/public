@@ -70,7 +70,7 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 		console.log('OTP verified successfully, checking if user exists');
 		var isNewUser = false;
 		const authAdmin = new AuthAdmin();
-		
+
 		// Check if user with given phoneNumber exists
 		var userRecord = await getUserByPhoneNumber(authAdmin, phoneNumber);
 
