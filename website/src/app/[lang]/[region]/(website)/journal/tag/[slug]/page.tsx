@@ -1,8 +1,15 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { getArticlesByTag, getTag } from '@/components/storyblok/StoryblokApi';
+import { MoreArticlesLink } from '@/components/storyblok/MoreArticlesLink';
+import {
+	DEFAULT_LANGUAGE,
+	getArticleCountByTagForDefaultLang,
+	getArticlesByTag,
+	getTag,
+} from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
-import { BaseContainer, Typography } from '@socialincome/ui';
+import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { BaseContainer, Separator, Typography } from '@socialincome/ui';
 
 export const revalidate = 900;
 storyblokInitializationWorkaround();
@@ -15,13 +22,19 @@ interface PageProps {
 	params: Promise<PageParams>;
 }
 
+async function getTotalArticlesInDefault(lang: string, tagId: string, totalArticlesInSelectedLanguage: number) {
+	return lang == DEFAULT_LANGUAGE ? totalArticlesInSelectedLanguage : await getArticleCountByTagForDefaultLang(tagId);
+}
+
 export default async function Page({ params }: PageProps) {
 	const { slug, lang, region } = await params;
 
 	const tag = (await getTag(slug, lang)).data.story;
 	const blogsResponse = await getArticlesByTag(tag.uuid, lang);
 	const blogs = blogsResponse.data.stories;
-
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-journal', 'common'] });
+	const totalArticlesInSelectedLanguage = blogsResponse.total;
+	const totalArticlesInDefault = await getTotalArticlesInDefault(lang, tag.uuid, totalArticlesInSelectedLanguage);
 	return (
 		<BaseContainer>
 			<div className="mx-auto mb-20 mt-8 flex max-w-6xl justify-center gap-4">
@@ -38,6 +51,16 @@ export default async function Page({ params }: PageProps) {
 					<StoryblokArticleCard key={blog.uuid} lang={lang} region={region} blog={blog} author={blog.content.author} />
 				))}
 			</div>
+
+			{totalArticlesInDefault > totalArticlesInSelectedLanguage && (
+				<div>
+					<Separator className="my-8" />
+					<MoreArticlesLink
+						text={translator.t('overview.more-articles')}
+						url={`/${DEFAULT_LANGUAGE}/${region}/journal/tag/${slug}`}
+					/>
+				</div>
+			)}
 		</BaseContainer>
 	);
 }
