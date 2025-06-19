@@ -12,7 +12,6 @@ import { initializeAnalytics } from '@firebase/analytics';
 import { DEFAULT_REGION } from '@socialincome/shared/src/firebase';
 import { CountryCode } from '@socialincome/shared/src/types/country';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Analytics } from '@vercel/analytics/react';
 import { ConsentSettings, ConsentStatusString, setConsent } from 'firebase/analytics';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
@@ -78,7 +77,6 @@ function AnalyticsProviderWrapper({ children }: PropsWithChildren) {
 
 	return (
 		<>
-			<Analytics />
 			{allowTracking ? (
 				<>
 					<GoogleTagManager />
