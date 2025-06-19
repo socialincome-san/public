@@ -58,6 +58,6 @@ export async function POST(request: CreateCheckoutSessionRequest) {
 		});
 		return NextResponse.json(session);
 	} catch (error: any) {
-		handleApiError(error);
+		return handleApiError(error);
 	}
 }
