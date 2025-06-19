@@ -1,4 +1,3 @@
-import "dart:developer";
 import "package:app/data/datasource/user_data_source.dart";
 import "package:app/data/models/recipient.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -16,11 +15,7 @@ class UserRemoteDataSource implements UserDataSource {
   });
 
   @override
-  Stream<User?> authStateChanges() => firebaseAuth.authStateChanges();
-
-  @override
   User? get currentUser => firebaseAuth.currentUser;
-
 
   /// Fetches the user data by userId from firestore and maps it to a recipient object
   /// Returns null if the user does not exist.
@@ -55,33 +50,6 @@ class UserRemoteDataSource implements UserDataSource {
       return null;
     }
   }
-
-  @override
-  Future<void> verifyPhoneNumber({
-    required String phoneNumber,
-    required Function(String, int?) onCodeSend,
-    required Function(FirebaseAuthException) onVerificationFailed,
-    required Function(PhoneAuthCredential) onVerificationCompleted,
-    required int? forceResendingToken,
-  }) async {
-    await firebaseAuth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      forceResendingToken: forceResendingToken,
-      timeout: const Duration(seconds: 60),
-      verificationCompleted: (credential) => onVerificationCompleted(credential),
-      verificationFailed: (ex) => onVerificationFailed(ex),
-      codeSent: (verificationId, forceResendingToken) => onCodeSend(verificationId, forceResendingToken),
-      codeAutoRetrievalTimeout: (verificationId) {
-        log("auto-retrieval timeout");
-      },
-    );
-  }
-
-  @override
-  Future<void> signOut() => firebaseAuth.signOut();
-
-  @override
-  Future<void> signInWithCredential(PhoneAuthCredential credentials) => firebaseAuth.signInWithCredential(credentials);
 
   @override
   Future<void> updateRecipient(Recipient recipient) async {
