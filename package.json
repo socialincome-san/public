@@ -10,7 +10,8 @@
 		"functions",
 		"shared",
 		"ui",
-		"website"
+		"website",
+		"firestore_to_postgres"
 	],
 	"scripts": {
 		"postinstall": "npm run db:generate",
