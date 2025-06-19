@@ -57,6 +57,7 @@
 		"db:introspect": "npm --workspace=@socialincome/shared run db:introspect",
 		"db:seed": "npm --workspace=@socialincome/shared run db:seed",
 		"db:studio": "npm --workspace=@socialincome/shared run db:studio",
+		"db:pull": "npm --workspace=@socialincome/shared run db:pull",
 		"db:up": "npm --workspace=@socialincome/shared run db:up",
 		"db:down": "npm --workspace=@socialincome/shared run db:down"
 	},

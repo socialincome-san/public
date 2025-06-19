@@ -6,7 +6,7 @@ const main = async (): Promise<void> => {
 		const migrator = new UserMigrator();
 		await migrator.migrate();
 	} catch (err) {
-		console.error('❌ Migration failed:', err);
+		console.error('❌ User migration failed:', err);
 		process.exit(1);
 	}
 };
