@@ -26,9 +26,14 @@
 		"confirm-monthly-order": "Confirmer l'ordre permanent mensuel",
 		"transfer-fees-note": "Tous les frais de transfert sont payés à partir de nos réserves, actuellement à € 23'392. Veuillez envisager de couvrir les frais avec le Plan 1% Plus :",
 		"plus-plan-link": "modifier",
-		"subscribe-to-1-percent-plan": "S'inscrire au Plan 1%",
+		"confirm-payment": "Confirmer le paiement",
+		"payment-success": "Merci pour ton don! Une fois le paiement reçu, il apparaîtra comme payé dans ton profil.",
+		"login-link": "Se connecter à ton profil",
+		"processing": "Traitement du paiement...",
+		"generating": "Génération du QR-bill...",
 		"errors": {
-			"qrBillError": "Impossible de générer le QR-bill. Veuillez réessayer."
+			"qrBillError": "Impossible de générer le QR-bill. Veuillez réessayer.",
+			"paymentFailed": "Le paiement a échoué. Veuillez réessayer et contacter-nous si le problème persiste."
 		}
 	},
 	"donation-impact": {

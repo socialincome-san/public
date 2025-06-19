@@ -18,11 +18,9 @@ import {
 	Input,
 	Typography,
 } from '@socialincome/ui';
-import { useRouter } from 'next/navigation';
 import { useForm, useWatch } from 'react-hook-form';
-import { useUser } from 'reactfire';
 import * as z from 'zod';
-import { BankTransferForm } from './bank-transfer-form';
+import { BankTransferForm, BankTransferFormProps } from './bank-transfer-form';
 import { DonationIntervalSelector } from './donation-interval-selector';
 import { PAYMENT_TYPES, PaymentTypeSelector } from './payment-type-selector';
 import { StripePaymentButton } from './stripe-payment-button';
@@ -102,32 +100,11 @@ type DonationFormProps = {
 			creditCardDescription: string;
 			bankTransferDescription: string;
 		};
-		bankTransfer: {
-			firstName: string;
-			lastName: string;
-			email: string;
-			plan: string;
-			yourContribution: string;
-			fullSocialIncome: string;
-			partialSocialIncome: string;
-			weMatchTheMissing: string;
-			generateQrBill: string;
-			transferFeesNote: string;
-			confirmMonthlyOrder: string;
-			plusPlanLink: string;
-			subscribeTo1PercentPlan: string;
-			errors: {
-				emailRequired: string;
-				emailInvalid: string;
-				qrBillError: string;
-			};
-		};
+		bankTransfer: BankTransferFormProps['translations'];
 	};
 } & DefaultParams;
 
 export function DonationForm({ amount, translations, lang, region }: DonationFormProps) {
-	const router = useRouter();
-	const { data: authUser } = useUser();
 	const { currency } = useI18n();
 
 	const formSchema = z
@@ -215,13 +192,15 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 										yearly: translations.yearly,
 									}}
 								/>
-								{region === 'ch' && (
+								{region === 'ch' && currency && ['CHF', 'EUR'].includes(currency) && (
 									<PaymentTypeSelector
 										lang={lang}
 										translations={translations.paymentType}
 										bankTransferForm={
 											<BankTransferForm
-												paymentIntervalMonths={Number(form.watch('donationInterval'))}
+												lang={lang}
+												region={region}
+												intervalCount={Number(form.watch('donationInterval'))}
 												amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
 												translations={translations.bankTransfer}
 											/>
