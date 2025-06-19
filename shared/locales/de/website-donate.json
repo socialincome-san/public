@@ -26,9 +26,14 @@
 		"confirm-monthly-order": "Monatlichen Dauerauftrag bestätigen",
 		"transfer-fees-note": "Alle Überweisungsgebühren werden aus unseren Reserven bezahlt, derzeit bei € 23.392. Bitte erwägen Sie, die Gebühren mit dem 1% Plus Plan zu decken:",
 		"plus-plan-link": "ändern",
-		"subscribe-to-1-percent-plan": "Für 1% Plan anmelden",
+		"confirm-payment": "Zahlung bestätigen",
+		"payment-success": "Danke für deine Spende! Sobald die Zahlung eingangen ist, erscheint diese als bezahlt in deinem Profil.",
+		"login-link": "Zur Profil-Anmeldung",
+		"processing": "Zahlung wird bestätigt...",
+		"generating": "QR-Rechnung wird generiert...",
 		"errors": {
-			"qrBillError": "QR-Rechnung konnte nicht generiert werden. Bitte versuchen Sie es erneut."
+			"qrBillError": "QR-Rechnung konnte nicht generiert werden. Bitte versuchen Sie es erneut.",
+			"paymentFailed": "Zahlung fehlgeschlagen. Bitte versuchen Sie es erneut und kontaktieren Sie uns, wenn das Problem weiterhin besteht."
 		}
 	},
 	"donation-impact": {

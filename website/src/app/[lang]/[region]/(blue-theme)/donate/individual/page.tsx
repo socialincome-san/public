@@ -52,11 +52,16 @@ export default async function Page(props: DefaultPageProps) {
 						transferFeesNote: translator.t('bank-transfer.transfer-fees-note'),
 						confirmMonthlyOrder: translator.t('bank-transfer.confirm-monthly-order'),
 						plusPlanLink: translator.t('bank-transfer.plus-plan-link'),
-						subscribeTo1PercentPlan: translator.t('bank-transfer.subscribe-to-1-percent-plan'),
+						confirmPayment: translator.t('bank-transfer.confirm-payment'),
+						paymentSuccess: translator.t('bank-transfer.payment-success'),
+						loginLink: translator.t('bank-transfer.login-link'),
+						processing: translator.t('bank-transfer.processing'),
+						generating: translator.t('bank-transfer.generating'),
 						errors: {
 							emailRequired: translator.t('bank-transfer.errors.emailRequired'),
 							emailInvalid: translator.t('bank-transfer.errors.emailInvalid'),
 							qrBillError: translator.t('bank-transfer.errors.qrBillError'),
+							paymentFailed: translator.t('bank-transfer.errors.paymentFailed'),
 						},
 					},
 				}}
