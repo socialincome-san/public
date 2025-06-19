@@ -29,9 +29,14 @@
 		"confirm-monthly-order": "Conferma ordine permanente mensile",
 		"transfer-fees-note": "Tutte le spese di trasferimento sono pagate dalle nostre riserve, attualmente a € 23.392. Ti preghiamo di considerare di coprire le spese con il Piano 1% Plus:",
 		"plus-plan-link": "modifica",
-		"subscribe-to-1-percent-plan": "Iscriviti al Piano 1%",
+		"confirm-payment": "Conferma il pagamento",
+		"payment-success": "Grazie per il tuo contributo! Una volta ricevuto il pagamento, apparirà come pagato nel tuo profilo.",
+		"login-link": "Accedi al tuo profilo",
+		"processing": "Elaborazione del pagamento...",
+		"generating": "Generazione del QR-bill...",
 		"errors": {
-			"qrBillError": "Impossibile generare il QR-bill. Si prega di riprovare."
+			"qrBillError": "Impossibile generare il QR-bill. Si prega di riprovare.",
+			"paymentFailed": "Il pagamento è fallito. Si prega di riprovare e contattare noi se il problema persiste."
 		}
 	},
 	"donation-impact": {

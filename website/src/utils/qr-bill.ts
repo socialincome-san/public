@@ -45,19 +45,31 @@ function generateQrBillReference(paymentIntervalMonths: number, userCreatedAt: n
 	return `${baseReference}${checkDigit}`;
 }
 
-export function generateQrBillSvg(amount: number, paymentIntervalMonths: number, paymentReferenceId: number): string {
+type GenerateQrBillSvgProps = {
+	amount: number;
+	paymentIntervalMonths: number;
+	paymentReferenceId: number;
+	currency: 'CHF' | 'EUR';
+};
+
+export function generateQrBillSvg({
+	amount,
+	paymentIntervalMonths,
+	paymentReferenceId,
+	currency,
+}: GenerateQrBillSvgProps): string {
 	const svg = new SwissQRBill({
 		amount: Number(amount),
+		currency: currency,
 		creditor: {
 			account: 'CH44 3199 9123 0008 8901 2',
-			address: 'Musterstrasse',
-			buildingNumber: 7,
-			city: 'Musterstadt',
+			address: 'Zweierstrasse',
+			buildingNumber: 103,
+			zip: 8003,
+			city: 'Zürich',
 			country: 'CH',
-			name: 'SwissQRBill',
-			zip: 1234,
+			name: 'Social Income',
 		},
-		currency: 'CHF',
 		reference: generateQrBillReference(paymentIntervalMonths, paymentReferenceId),
 	});
 

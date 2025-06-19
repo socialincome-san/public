@@ -1,15 +1,20 @@
 'use client';
 
-import { CreateUserData } from '@/app/api/user/create/route';
+import { SubmitBankTransferRequest } from '@/app/api/bank-transfer/submit/route';
+import { useI18n } from '@/components/providers/context-providers';
+import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { generateQrBillSvg } from '@/utils/qr-bill';
-import { Button, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@socialincome/ui';
-import { useState } from 'react';
+import { Button, FormControl, FormField, FormItem, FormLabel, FormMessage, Input, linkCn } from '@socialincome/ui';
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
-type BankTransferFormProps = {
+export type BankTransferFormProps = {
+	lang: WebsiteLanguage;
+	region: WebsiteRegion;
 	amount: number;
-	paymentIntervalMonths: number;
+	intervalCount: number;
 	translations: {
 		firstName: string;
 		lastName: string;
@@ -23,47 +28,75 @@ type BankTransferFormProps = {
 		confirmMonthlyOrder: string;
 		transferFeesNote: string;
 		plusPlanLink: string;
-		subscribeTo1PercentPlan: string;
+		confirmPayment: string;
+		paymentSuccess: string;
+		loginLink: string;
+		generating: string;
+		processing: string;
 		errors: {
 			emailRequired: string;
 			emailInvalid: string;
 			qrBillError: string;
+			paymentFailed: string;
 		};
 	};
 };
 
-export function BankTransferForm({ amount, paymentIntervalMonths, translations }: BankTransferFormProps) {
+type UserFormData = {
+	email: string;
+	firstName: string;
+	lastName: string;
+	paymentReferenceId: number;
+};
+
+export function BankTransferForm({ amount, intervalCount, translations, lang, region }: BankTransferFormProps) {
 	const form = useFormContext();
+	const { currency } = useI18n();
+	const [userData, setUserData] = useState<UserFormData | null>(null);
 	const [qrBillSvg, setQrBillSvg] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
-	const [isSubmitted, setIsSubmitted] = useState(false);
+	const [paid, setPaid] = useState(false);
+	const qrBillRef = useRef<HTMLDivElement>(null);
 
-	const handleSubmit = async (event: React.FormEvent) => {
+	useEffect(() => {
+		if (qrBillRef.current && qrBillSvg) {
+			qrBillRef.current.innerHTML = qrBillSvg;
+		}
+	}, [qrBillSvg]);
+
+	const generateQRCode = async (event: React.FormEvent) => {
 		event.preventDefault();
+		event.stopPropagation();
+
 		try {
 			setIsLoading(true);
 			const { email, firstName, lastName } = form.getValues();
-			const response = await fetch('/api/user/create', {
-				method: 'POST',
-				body: JSON.stringify({
-					email,
-					personal: {
-						name: firstName,
-						lastname: lastName,
-					},
-					address: {
-						country: 'CH', // only CH is supported for now
-					},
-					currency: 'CHF', // only CHF is supported for now
-				} as CreateUserData),
-			});
 
-			if (!response.ok) {
-				throw new Error('Failed to create user');
+			if (!currency) {
+				throw new Error('Currency is required');
 			}
 
-			setQrBillSvg(generateQrBillSvg(amount, paymentIntervalMonths, (await response.json()).payment_reference_id));
-			setIsSubmitted(true);
+			const response = await fetch(`/api/bank-transfer/payment-reference/create`, {
+				method: 'POST',
+				body: JSON.stringify({ email }),
+			});
+			const { paymentReferenceId } = await response.json();
+
+			setUserData({
+				email,
+				firstName,
+				lastName,
+				paymentReferenceId,
+			});
+
+			setQrBillSvg(
+				generateQrBillSvg({
+					amount,
+					paymentIntervalMonths: intervalCount,
+					paymentReferenceId,
+					currency: currency as 'CHF' | 'EUR',
+				}),
+			);
 		} catch (error) {
 			toast.error(translations.errors.qrBillError);
 		} finally {
@@ -71,74 +104,110 @@ export function BankTransferForm({ amount, paymentIntervalMonths, translations }
 		}
 	};
 
+	const confirmPayment = async (event: React.FormEvent) => {
+		event.preventDefault();
+		event.stopPropagation();
+
+		try {
+			setIsLoading(true);
+
+			const response = await fetch('/api/bank-transfer/submit', {
+				method: 'POST',
+				body: JSON.stringify({
+					user: userData,
+					payment: {
+						amount: amount,
+						intervalCount: intervalCount,
+						currency: currency,
+						recurring: true,
+					},
+				} as SubmitBankTransferRequest),
+			});
+
+			if (!response.ok) {
+				throw new Error('Failed to create user');
+			}
+		} catch (error) {
+			toast.error(translations.errors.paymentFailed);
+		} finally {
+			setIsLoading(false);
+			setPaid(true);
+		}
+	};
+
 	return (
 		<div className="border-accent bg-card-muted !mt-[-2px] rounded-b-lg border-2 p-4 md:rounded-tl-lg md:p-8">
-			<>
-				{isSubmitted && qrBillSvg ? (
-					<>
-						<div className="my-8 flex justify-center space-y-4">
-							<div dangerouslySetInnerHTML={{ __html: qrBillSvg }} className="max-w-full" />
-						</div>
-						<Button size="lg" type="button" className="w-full" onClick={() => setIsSubmitted(false)}>
-							{translations.subscribeTo1PercentPlan}
-						</Button>
-					</>
-				) : (
-					<>
-						<div className="space-y-4 pb-8">
-							<FormField
-								control={form.control}
-								name="firstName"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>{translations.firstName}</FormLabel>
-										<FormControl>
-											<Input type="text" required className="h-14 rounded-xl bg-white px-6" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="lastName"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>{translations.lastName}</FormLabel>
-										<FormControl>
-											<Input type="text" required className="h-14 rounded-xl bg-white px-6" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="email"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>{translations.email}</FormLabel>
-										<FormControl>
-											<Input type="email" required className="h-14 rounded-xl bg-white px-6" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-						</div>
+			{paid ? (
+				<div className="space-y-4 pb-8">
+					<p>{translations.paymentSuccess}</p>
+					<Link className={linkCn({ underline: 'always' })} href={`/${lang}/${region}/me/contributions`}>
+						{translations.loginLink}
+					</Link>
+				</div>
+			) : qrBillSvg ? (
+				<>
+					<div className="my-8 flex justify-center space-y-4">
+						{qrBillSvg && <div className="max-w-full" ref={qrBillRef} />}
+					</div>
+					<Button disabled={isLoading} size="lg" type="submit" className="w-full" onClick={confirmPayment}>
+						{isLoading ? translations.processing : translations.confirmPayment}
+					</Button>
+				</>
+			) : (
+				<>
+					<div className="space-y-4 pb-8">
+						<FormField
+							control={form.control}
+							name="firstName"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>{translations.firstName}</FormLabel>
+									<FormControl>
+										<Input type="text" required className="h-14 rounded-xl bg-white px-6" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="lastName"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>{translations.lastName}</FormLabel>
+									<FormControl>
+										<Input type="text" required className="h-14 rounded-xl bg-white px-6" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="email"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>{translations.email}</FormLabel>
+									<FormControl>
+										<Input type="email" required className="h-14 rounded-xl bg-white px-6" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					</div>
 
-						<Button
-							size="lg"
-							type="submit"
-							className="w-full"
-							onClick={handleSubmit}
-							disabled={isLoading || !form.formState.isValid}
-						>
-							{isLoading ? 'Generating...' : translations.generateQrBill}
-						</Button>
-					</>
-				)}
-			</>
+					<Button
+						size="lg"
+						type="submit"
+						className="w-full"
+						onClick={generateQRCode}
+						disabled={isLoading || !form.formState.isValid}
+					>
+						{isLoading ? translations.generating : translations.generateQrBill}
+					</Button>
+				</>
+			)}
 		</div>
 	);
 }
