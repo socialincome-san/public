@@ -4,7 +4,7 @@ import { PaginationOptions, ServiceResult } from '../core/base.types';
 import { CreateUserInput } from './user.types';
 
 export class UserService extends BaseService {
-	async getUsers(options?: PaginationOptions): Promise<ServiceResult<PrismaUser[]>> {
+	async findMany(options?: PaginationOptions): Promise<ServiceResult<PrismaUser[]>> {
 		try {
 			const users = await this.db.user.findMany({
 				orderBy: { createdAt: 'desc' },
@@ -18,16 +18,35 @@ export class UserService extends BaseService {
 		}
 	}
 
-	async createUsers(inputs: CreateUserInput[]): Promise<ServiceResult<number>> {
+	async create(input: CreateUserInput): Promise<ServiceResult<PrismaUser>> {
 		try {
-			const result = await this.db.user.createMany({
-				data: inputs,
-				skipDuplicates: true,
+			const conflict = await this.checkIfUserExists(input.email, input.authUserId);
+			if (conflict) {
+				return this.resultFail('User with this email or auth ID already exists');
+			}
+
+			const user = await this.db.user.create({
+				data: input,
 			});
-			return this.resultOk(result.count);
+
+			return this.resultOk(user);
 		} catch (e) {
-			console.error('[UserService.createUsers]', e);
-			return this.resultFail('Could not create users');
+			console.error('[UserService.createUser]', e);
+			return this.resultFail('Could not create user');
 		}
+	}
+
+	private async checkIfUserExists(email: string, authUserId: string | null): Promise<PrismaUser | null> {
+		const conditions: Array<{ email: string } | { authUserId: string }> = [{ email }];
+
+		if (authUserId?.trim()) {
+			conditions.push({ authUserId });
+		}
+
+		return this.db.user.findFirst({
+			where: {
+				OR: conditions,
+			},
+		});
 	}
 }

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl"]
@@ -14,7 +11,7 @@ datasource db {
 model User {
   id                  String        @id @default(cuid())
   email               String        @unique
-  authUserId          String        @unique
+  authUserId          String?       @unique
 
   firstName           String
   lastName            String
@@ -43,6 +40,18 @@ model User {
   contributor         Contributor?
   localPartner        LocalPartner?
   recipient           Recipient?
+
+  birthDate           DateTime?     @db.Date
+  communicationPhone  String?
+  mobileMoneyPhone    String?
+  hasWhatsAppComm     Boolean?
+  hasWhatsAppMobile   Boolean?
+  whatsappActivated   Boolean?
+  instaHandle         String?
+  twitterHandle       String?
+  profession          String?
+  callingName         String?
+  omUid               Int?
 
   createdAt           DateTime      @default(now()) @db.Timestamptz(3)
   updatedAt           DateTime?     @updatedAt @db.Timestamptz(3)
@@ -97,7 +106,7 @@ model Campaign {
 
 model Organization {
   id               String         @id @default(cuid())
-  name             String
+  name             String         @unique
   users            User[]
   campaigns        Campaign[]
   ownedPrograms    Program[]      @relation("OwnerPrograms")
@@ -112,7 +121,7 @@ model Organization {
 
 model Program {
   id                     String       @id @default(cuid())
-  title                  String
+  name                   String       @unique
   duration               Int
   ownerOrganizationId    String
   operatorOrganizationId String
@@ -138,19 +147,23 @@ model Recipient {
   localPartner   LocalPartner @relation(fields: [localPartnerId], references: [userId])
   payout         Payout?
   survey         Survey?
-  createdAt      DateTime     @default(now()) @db.Timestamptz(3)
-  updatedAt      DateTime?    @updatedAt @db.Timestamptz(3)
+
+  startDate      DateTime?     @db.Timestamptz(3)
+  status         RecipientStatus
+  testRecipient  Boolean       @default(false)
+
+  createdAt      DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime?     @updatedAt @db.Timestamptz(3)
 
   @@map("recipient")
 }
 
 model LocalPartner {
   id             String   @id @default(cuid())
-  name           String
-  communitySize  Int
+  name           String   @unique
   userId         String   @unique
   user           User     @relation(fields: [userId], references: [id])
-  recipients Recipient[]
+  recipients     Recipient[]
   createdAt      DateTime @default(now()) @db.Timestamptz(3)
   updatedAt      DateTime? @updatedAt @db.Timestamptz(3)
 
@@ -212,4 +225,12 @@ enum LanguageCode {
   it   // Italian
   fr   // French
   kri  // Krio
+}
+
+enum RecipientStatus {
+  active
+  suspended
+  waitlisted
+  designated
+  former
 }

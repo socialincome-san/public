@@ -3,10 +3,15 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"migrate:all": "npm run migrate:users",
-		"migrate:users": "tsx scripts/migrate-users.ts"
+		"migrate:all": "npm run migrate:users && npm run migrate:local-partners && npm run migrate:recipients",
+		"migrate:users": "tsx scripts/migrate-users.ts",
+		"migrate:local-partners": "tsx scripts/migrate-local-partners.ts",
+		"migrate:recipients": "tsx scripts/migrate-recipients.ts",
+		"migrate:reset": "npm --workspace=@socialincome/shared run db:migrate:reset",
+		"typecheck": "tsc --noEmit"
 	},
 	"devDependencies": {
-		"tsx": "^4.20.2"
+		"tsx": "^4.20.2",
+		"typescript": "^5.0.0"
 	}
 }
