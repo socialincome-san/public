@@ -10,7 +10,6 @@ export type SubmitBankTransferRequest = {
 		lastName: string;
 		paymentReferenceId: number;
 	};
-	firebaseAuthToken: string;
 	payment: {
 		amount: number;
 		intervalCount: number;

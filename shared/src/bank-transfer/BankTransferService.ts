@@ -32,9 +32,8 @@ export class BankTransferService {
 	constructor(private readonly firestoreAdmin: FirestoreAdmin) {}
 
 	async storeCharge(payment: BankTransferPayment, userData: BankTransferUser) {
-		const contribution = this.buildContribution(payment);
-
 		const authUser = await this.getOrCreateAuthUser(userData);
+		const contribution = this.buildContribution(payment);
 		const userRef = await this.getOrCreateFirestoreUser(userData, contribution.currency, authUser.uid);
 		const contributionRef = userRef.collection(CONTRIBUTION_FIRESTORE_PATH).doc(contribution.reference_id);
 		await contributionRef.set(contribution, { merge: true });

@@ -216,7 +216,6 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 										lang={lang}
 										region={region}
 										buttonText={translations.buttonText}
-										paymentType={form.watch('paymentType')}
 									/>
 								)}
 							</CardFooter>
