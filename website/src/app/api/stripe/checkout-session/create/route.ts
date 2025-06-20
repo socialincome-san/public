@@ -11,7 +11,6 @@ export type CreateCheckoutSessionData = {
 	intervalCount?: number;
 	firebaseAuthToken?: string;
 	campaignId?: string; // to optionally associate a payment to a fundraising campaign.
-	paymentType?: 'credit_card' | 'bank_transfer';
 };
 
 type CreateCheckoutSessionRequest = { json(): Promise<CreateCheckoutSessionData> } & Request;

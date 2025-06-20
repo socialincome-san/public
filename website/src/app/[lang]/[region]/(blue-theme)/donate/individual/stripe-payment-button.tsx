@@ -12,17 +12,9 @@ type StripePaymentButtonProps = {
 	lang: string;
 	region: string;
 	buttonText: string;
-	paymentType: 'credit_card' | 'bank_transfer';
 };
 
-export function StripePaymentButton({
-	amount,
-	intervalCount,
-	lang,
-	region,
-	buttonText,
-	paymentType,
-}: StripePaymentButtonProps) {
+export function StripePaymentButton({ amount, intervalCount, lang, region, buttonText }: StripePaymentButtonProps) {
 	const router = useRouter();
 	const [submitting, setSubmitting] = useState(false);
 	const { data: authUser } = useUser();
@@ -38,7 +30,6 @@ export function StripePaymentButton({
 			successUrl: `${window.location.origin}/${lang}/${region}/donate/success/stripe/{CHECKOUT_SESSION_ID}`,
 			recurring: true,
 			firebaseAuthToken: authToken,
-			paymentType: paymentType,
 		};
 		// Call the API to create a new Stripe checkout session
 		const response = await fetch('/api/stripe/checkout-session/create', { method: 'POST', body: JSON.stringify(data) });
