@@ -32,6 +32,38 @@ export default async function Page(props: DefaultPageProps) {
 						directPayout: translator.t('donation-impact.direct-payout'),
 						yourImpact: translator.t('donation-impact.your-impact'),
 					},
+					paymentType: {
+						title: translator.t('payment-type.title'),
+						creditCard: translator.t('payment-type.credit-card'),
+						bankTransfer: translator.t('payment-type.bank-transfer'),
+						creditCardDescription: translator.t('payment-type.credit-card-description'),
+						bankTransferDescription: translator.t('payment-type.bank-transfer-description'),
+					},
+					bankTransfer: {
+						firstName: translator.t('success.user-form.firstname'),
+						lastName: translator.t('success.user-form.lastname'),
+						email: translator.t('success.user-form.email'),
+						plan: translator.t('bank-transfer.plan'),
+						yourContribution: translator.t('bank-transfer.your-contribution'),
+						fullSocialIncome: translator.t('bank-transfer.full-social-income'),
+						partialSocialIncome: translator.t('bank-transfer.partial-social-income'),
+						weMatchTheMissing: translator.t('bank-transfer.we-match-the-missing'),
+						generateQrBill: translator.t('bank-transfer.generate-qr-bill'),
+						transferFeesNote: translator.t('bank-transfer.transfer-fees-note'),
+						confirmMonthlyOrder: translator.t('bank-transfer.confirm-monthly-order'),
+						plusPlanLink: translator.t('bank-transfer.plus-plan-link'),
+						confirmPayment: translator.t('bank-transfer.confirm-payment'),
+						paymentSuccess: translator.t('bank-transfer.payment-success'),
+						loginLink: translator.t('bank-transfer.login-link'),
+						processing: translator.t('bank-transfer.processing'),
+						generating: translator.t('bank-transfer.generating'),
+						errors: {
+							emailRequired: translator.t('bank-transfer.errors.emailRequired'),
+							emailInvalid: translator.t('bank-transfer.errors.emailInvalid'),
+							qrBillError: translator.t('bank-transfer.errors.qrBillError'),
+							paymentFailed: translator.t('bank-transfer.errors.paymentFailed'),
+						},
+					},
 				}}
 			/>
 			<div className="mt-4 hover:underline">
