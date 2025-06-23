@@ -2,7 +2,6 @@ import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography, Card, Badge, linkCn } from '@socialincome/ui';
 
-// Types for the content
 type DoNoHarmContent = {
 	"subtitle-principle": string;
 	"subtitle-implementation": string;
