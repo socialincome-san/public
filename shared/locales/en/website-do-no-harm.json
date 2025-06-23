@@ -102,7 +102,7 @@
         ]
       },
       {
-        "title": "5. Security & Risk Management\n",
+        "title": "5. Security & Risk Management",
         "cards": [
           {
             "description": "Ensure money is not misused for criminal activities",
@@ -113,12 +113,6 @@
           },
           {
             "description": "Provide secure transaction methods",
-            "implementation": "By clearly communicating that the transfers are temporary, Social Income encourages recipients to plan for the period after the program ends and to work towards long-term financial independence.",
-            "links": [
-            ]
-          },
-          {
-            "description": "Prevent bias and corruption in the selection process",
             "implementation": "Social Income uses mobile money to reduce the risk of theft by paying recipients directly rather than through intermediary organizations. Each recipient is onboarded individually, and we provide phone safety guidance. If two confirmations are missed, payments are suspended until the issue is resolved, with the local partner NGO informed.",
             "links": [
             ]
