@@ -13,9 +13,18 @@ export const viewport: Viewport = {
 
 storyblokInitializationWorkaround();
 
+const appVersion = process.env.APP_VERSION || 'unknown';
+const appEnv = process.env.APP_ENVIRONMENT || 'unknown';
+const buildTime = process.env.APP_BUILD_TIMESTAMP || 'unknown';
+
 export default function RootLayout({ children }: PropsWithChildren) {
 	return (
 		<html suppressHydrationWarning={true}>
+			<head>
+				<meta name="app-version" content={appVersion} />
+				<meta name="app-environment" content={appEnv} />
+				<meta name="app-build-timestamp" content={buildTime} />
+			</head>
 			<ContextProviders>
 				<body>{children}</body>
 			</ContextProviders>

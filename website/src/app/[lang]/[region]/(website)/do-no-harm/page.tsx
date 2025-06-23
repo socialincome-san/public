@@ -1,10 +1,10 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography, Card, Badge, linkCn } from '@socialincome/ui';
+import { Badge, BaseContainer, Card, linkCn, Typography } from '@socialincome/ui';
 
 type DoNoHarmContent = {
-	"subtitle-principle": string;
-	"subtitle-implementation": string;
+	'subtitle-principle': string;
+	'subtitle-implementation': string;
 	sections: {
 		title: string;
 		cards: {
@@ -22,13 +22,13 @@ export default async function Page({ params }: DefaultPageProps) {
 	const data = translator.t('content') as DoNoHarmContent;
 
 	return (
-		<BaseContainer className="items-start flex flex-col space-y-8 pt-16">
+		<BaseContainer className="flex flex-col items-start space-y-8 pt-16">
 			<div>
 				<Typography as="h1" size="5xl" weight="bold">
 					{translator.t('content.title')}
 				</Typography>
 			</div>
-			<div className="flex flex-col md:flex-row gap-6 w-full">
+			<div className="flex w-full flex-col gap-6 md:flex-row">
 				<div className="w-full md:w-1/2">
 					<Typography size="2xl" weight="medium">
 						{translator.t('content.lead')}
@@ -36,15 +36,11 @@ export default async function Page({ params }: DefaultPageProps) {
 				</div>
 				<div className="w-full md:w-1/2">
 					<div>
-						<Typography size="lg">
-							{translator.t('content.lead-implementation')}
-						</Typography>
+						<Typography size="lg">{translator.t('content.lead-implementation')}</Typography>
 					</div>
 					<div className="flex flex-row flex-wrap items-center gap-4 pt-4">
-						<Badge variant="outline" className="whitespace-nowrap shrink-0">
-							<Typography size="sm">
-								{translator.t('content.version')}
-							</Typography>
+						<Badge variant="outline" className="shrink-0 whitespace-nowrap">
+							<Typography size="sm">{translator.t('content.version')}</Typography>
 						</Badge>
 						<Typography size="md" className="whitespace-nowrap">
 							{translator.t('content.responsible')}{' '}
@@ -73,20 +69,20 @@ export default async function Page({ params }: DefaultPageProps) {
 
 					{section.cards.map((card, cardIndex) => (
 						<Card key={cardIndex} className="w-full p-6">
-							<div className="flex flex-col md:flex-row gap-6">
-								<div className="w-full md:w-1/2 space-y-3">
+							<div className="flex flex-col gap-6 md:flex-row">
+								<div className="w-full space-y-3 md:w-1/2">
 									<div className="space-y-1">
 										<Typography color="secondary" size="md">
-											{data["subtitle-principle"]}
+											{data['subtitle-principle']}
 										</Typography>
 										<Typography size="lg">{card.description}</Typography>
 									</div>
 								</div>
 
-								<div className="w-full md:w-1/2 space-y-3">
+								<div className="w-full space-y-3 md:w-1/2">
 									<div className="space-y-1">
 										<Typography color="secondary" size="md">
-											{data["subtitle-implementation"]}
+											{data['subtitle-implementation']}
 										</Typography>
 										<Typography size="lg">{card.implementation}</Typography>
 									</div>
