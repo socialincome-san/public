@@ -1,17 +1,17 @@
 # See https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
-firebase.json andras@socialincome.org michael@socialincome.org
-firestore.rules andras@socialincome.org michael@socialincome.org
-package.json andras@socialincome.org michael@socialincome.org
-storage.rules andras@socialincome.org michael@socialincome.org
+firebase.json raphael@socialincome.org marco@socialincome.org michael@socialincome.org
+firestore.rules raphael@socialincome.org marco@socialincome.org michael@socialincome.org
+package.json raphael@socialincome.org marco@socialincome.org michael@socialincome.org
+storage.rules raphael@socialincome.org marco@socialincome.org michael@socialincome.org
 
-admin/ andras@socialincome.org michael@socialincome.org sandino@socialincome.org
-functions/ andras@socialincome.org michael@socialincome.org sandino@socialincome.org
-shared/ andras@socialincome.org michael@socialincome.org sandino@socialincome.org dev@socialincome.org
+admin/ raphael@socialincome.org marco@socialincome.org michael@socialincome.org sandino@socialincome.org
+functions/ raphael@socialincome.org marco@socialincome.org michael@socialincome.org sandino@socialincome.org
+shared/ raphael@socialincome.org marco@socialincome.org michael@socialincome.org sandino@socialincome.org dev@socialincome.org
 recipients_app/ verena@socialincome.org mikolaj@socialincome.org sandino@socialincome.org karin@socialincome.org
 codemagic.yaml verena@socialincome.org mikolaj@socialincome.org sandino@socialincome.org karin@socialincome.org
-website/ andras@socialincome.org michael@socialincome.org sandino@socialincome.org dev@socialincome.org
-ui/ andras@socialincome.org michael@socialincome.org sandino@socialincome.org
-.github/workflows/ui.yml andras@socialincome.org michael@socialincome.org sandino@socialincome.org
+website/ raphael@socialincome.org marco@socialincome.org michael@socialincome.org sandino@socialincome.org dev@socialincome.org
+ui/ raphael@socialincome.org marco@socialincome.org michael@socialincome.org sandino@socialincome.org
+.github/workflows/ui.yml raphael@socialincome.org marco@socialincome.org michael@socialincome.org sandino@socialincome.org
 
-*.md sandino@socialincome.org andras@socialincome.org michael@socialincome.org
+*.md sandino@socialincome.org raphael@socialincome.org marco@socialincome.org michael@socialincome.org
