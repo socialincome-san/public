@@ -61,7 +61,8 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 		try {
 			if (!(await userExists(email))) {
-				throw new FirebaseError('auth/user-not-found', 'user not found');
+				console.log('create user');
+				await fetch('/api/user/create', { method: 'POST', body: JSON.stringify({ email }) });
 			}
 			const { user } = await signInWithEmailLink(auth, email, url);
 			onLoginSuccess && (await onLoginSuccess(user.uid));
