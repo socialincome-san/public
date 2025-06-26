@@ -14,13 +14,10 @@ export async function POST(request: CreateUserRequest & Request) {
 	}
 
 	const authUserId = userDoc.docs[0].get('auth_user_id');
-	console.log('auth user id', authUserId);
 
 	if (authUserId) {
 		return new Response(null, { status: 400, statusText: 'User already exists' });
 	}
-
-	console.log('create auth user');
 
 	const userRecord = await authAdmin.auth.createUser({
 		email: email,
