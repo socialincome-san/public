@@ -1,9 +1,11 @@
 import { COUNTRY_COOKIE, CURRENCY_COOKIE } from '@/app/[lang]/[region]';
 import { WebsiteLanguage, WebsiteRegion, allWebsiteLanguages, findBestLocale, websiteRegions } from '@/i18n';
 import { CountryCode, isValidCountryCode } from '@socialincome/shared/src/types/country';
-import { geolocation } from '@vercel/functions';
 import { NextRequest, NextResponse } from 'next/server';
 import { bestGuessCurrency, isValidCurrency } from '../../shared/src/types/currency';
+
+// https://developers.cloudflare.com/fundamentals/reference/http-headers/#cf-ipcountry
+const CLOUDFLARE_IP_COUNTRY_HEADER = 'cf-ipcountry';
 
 export const config = {
 	matcher: [
@@ -19,7 +21,7 @@ const countryMiddleware = (request: NextRequest, response: NextResponse) => {
 	if (request.cookies.has(COUNTRY_COOKIE) && isValidCountryCode(request.cookies.get(COUNTRY_COOKIE)?.value!))
 		return response;
 
-	const { country } = geolocation(request);
+	const country = request.headers.get(CLOUDFLARE_IP_COUNTRY_HEADER)?.toUpperCase();
 	if (country)
 		response.cookies.set({
 			name: COUNTRY_COOKIE,
@@ -37,7 +39,9 @@ const currencyMiddleware = (request: NextRequest, response: NextResponse) => {
 	if (request.cookies.has(CURRENCY_COOKIE) && isValidCurrency(request.cookies.get(CURRENCY_COOKIE)?.value))
 		return response;
 	// We use the country code from the request header if available. If not, we use the region/country from the url path.
-	const country = request.cookies.get(CURRENCY_COOKIE)?.value as CountryCode | undefined;
+	const country =
+		(response.cookies.get(COUNTRY_COOKIE)?.value as CountryCode | undefined) ??
+		(request.cookies.get(COUNTRY_COOKIE)?.value as CountryCode | undefined);
 	const currency = bestGuessCurrency(country);
 
 	response.cookies.set({ name: CURRENCY_COOKIE, value: currency, path: '/', maxAge: 60 * 60 * 24 * 7 }); // 1 week

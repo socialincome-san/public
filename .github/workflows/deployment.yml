@@ -23,12 +23,11 @@ jobs:
       VITE_ADMIN_ALGOLIA_SEARCH_KEY: ${{ secrets.REACT_APP_ADMIN_ALGOLIA_SEARCH_KEY }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
         with:
-          project: ${{ inputs.project }}
           firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
       - name: Build admin
@@ -69,12 +68,12 @@ jobs:
     if: inputs.component == 'functions'
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
         with:
-          project: ${{ inputs.project }}
+          installFirebaseTools: "true"
           firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
       - name: Add secrets to functions/.env file
@@ -105,13 +104,13 @@ jobs:
     if: inputs.component == 'rules'
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Initialize repository
         uses: ./.github/workflows/actions/init
         with:
           installDependencies: "false"
-          project: ${{ inputs.project }}
+          installFirebaseTools: "true"
           firebaseServiceAccountJSON: ${{ (inputs.project == 'social-income-prod' && secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_PROD) || secrets.FIREBASE_SERVICE_ACCOUNT_SOCIAL_INCOME_STAGING }}
 
       - name: Deploy on Firebase (${{ inputs.project }})
