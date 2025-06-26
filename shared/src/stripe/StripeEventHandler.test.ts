@@ -181,6 +181,7 @@ describe('stripeWebhook', () => {
 		fraud_details: {},
 		invoice: {
 			id: 'in_123',
+			total_pretax_credit_amounts: [],
 			object: 'invoice',
 			account_country: 'CH',
 			account_name: 'Social Income',
@@ -242,6 +243,7 @@ describe('stripeWebhook', () => {
 						object: 'line_item',
 						amount: 90000,
 						amount_excluding_tax: 90000,
+						pretax_credit_amounts: [],
 						currency: 'usd',
 						description: '1 × 1%  plan (at $900.00 / every 3 months)',
 						discount_amounts: [],
@@ -368,6 +370,7 @@ describe('stripeWebhook', () => {
 		metadata: {},
 		on_behalf_of: null,
 		outcome: {
+			advice_code: null,
 			network_advice_code: null,
 			network_decline_code: null,
 			network_status: 'approved_by_network',
@@ -381,6 +384,8 @@ describe('stripeWebhook', () => {
 		payment_method: 'pm_123',
 		payment_method_details: {
 			card: {
+				network_transaction_id: null,
+				regulated_status: null,
 				brand: 'mastercard',
 				authorization_code: null,
 				amount_authorized: null,
