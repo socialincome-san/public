@@ -16,7 +16,7 @@ export async function POST(request: CreateUserRequest & Request) {
 	const authUserId = userDoc.docs[0].get('auth_user_id');
 
 	if (authUserId) {
-		return new Response(null, { status: 400, statusText: 'User already exists' });
+		return new Response(null, { status: 400, statusText: 'Auth user already exists' });
 	}
 
 	const userRecord = await authAdmin.auth.createUser({
