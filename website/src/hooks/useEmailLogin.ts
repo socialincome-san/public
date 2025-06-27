@@ -60,9 +60,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		const url = window.location.href;
 
 		try {
-			if (!(await userExists(email))) {
-				await fetch('/api/user/create', { method: 'POST', body: JSON.stringify({ email }) });
-			}
+			await createUserIfNotExists(email);
 			const { user } = await signInWithEmailLink(auth, email, url);
 			onLoginSuccess && (await onLoginSuccess(user.uid));
 		} catch (error: unknown) {
@@ -104,9 +102,18 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		}
 	};
 
-	const userExists = async (email: string) => {
+	const createUserIfNotExists = async (email: string) => {
 		const signInMethods = await fetchSignInMethodsForEmail(auth, email);
-		return signInMethods.length > 0;
+		const userExists = signInMethods.length > 0;
+
+		if (userExists) {
+			return;
+		}
+
+		const response = await fetch('/api/user/create', { method: 'POST', body: JSON.stringify({ email }) });
+		if (!response.ok) {
+			translator && toast.error(translator.t('error.unknown'));
+		}
 	};
 
 	return {
@@ -114,6 +121,5 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		sendSignInEmail,
 		sendingEmail,
 		emailSent,
-		userExists,
 	};
 };
