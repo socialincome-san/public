@@ -3,10 +3,10 @@ import { toFirebaseAdminTimestamp } from '@socialincome/shared/src/firebase/admi
 import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { rndString } from '@socialincome/shared/src/utils/crypto';
 import { DateTime } from 'luxon';
-import { NextApiRequest } from 'next';
+import { NextRequest } from 'next/server';
 
 export type CreateUserData = Pick<User, 'address' | 'personal' | 'email' | 'currency'>;
-type CreateUserRequest = { json(): Promise<CreateUserData> } & NextApiRequest;
+type CreateUserRequest = NextRequest;
 
 export async function POST(request: CreateUserRequest & Request) {
 	const { email } = await request.json();
