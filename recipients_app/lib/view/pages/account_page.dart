@@ -161,8 +161,8 @@ class AccountPageState extends State<AccountPage> {
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
-                            recipient.copyWith(firstName: value),
-                          );
+                        recipient.copyWith(firstName: value),
+                      );
                     }
                   },
                 ),
@@ -179,10 +179,10 @@ class AccountPageState extends State<AccountPage> {
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
-                            recipient.copyWith(
-                              lastName: value,
-                            ),
-                          );
+                        recipient.copyWith(
+                          lastName: value,
+                        ),
+                      );
                     }
                   },
                 ),
@@ -191,8 +191,8 @@ class AccountPageState extends State<AccountPage> {
                   controller: _callingNameController,
                   hintText: context.l10n.callingName,
                   onSubmitted: (value) => context.read<AuthCubit>().updateRecipient(
-                        recipient.copyWith(callingName: value),
-                      ),
+                    recipient.copyWith(callingName: value),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 InputDropdown<String>(
@@ -219,37 +219,38 @@ class AccountPageState extends State<AccountPage> {
                     return null;
                   },
                   onChanged: (value) => context.read<AuthCubit>().updateRecipient(
-                        recipient.copyWith(
-                          gender: value,
-                        ),
-                      ),
+                    recipient.copyWith(
+                      gender: value,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 InputText(
                   hintText: "${context.l10n.dateOfBirth}*",
                   controller: _birthDateController,
                   isReadOnly: true,
-                  onTap: () async => showDatePicker(
-                    firstDate: DateTime(1950),
-                    lastDate: DateTime(DateTime.now().year - 10),
-                    initialDate: recipient.birthDate?.toDate() ?? DateTime(2000),
-                    context: context,
-                  ).then((value) {
-                    if (value != null) {
-                      // Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check.
-                      if (context.mounted) {
-                        final timestamp = Timestamp.fromDate(value);
+                  onTap: () =>
+                      showDatePicker(
+                        firstDate: DateTime(1950),
+                        lastDate: DateTime(DateTime.now().year - 10),
+                        initialDate: recipient.birthDate?.toDate() ?? DateTime(2000),
+                        context: context,
+                      ).then((value) {
+                        if (value != null) {
+                          // Don't use 'BuildContext's across async gaps. Try rewriting the code to not use the 'BuildContext', or guard the use with a 'mounted' check.
+                          if (context.mounted) {
+                            final timestamp = Timestamp.fromDate(value);
 
-                        context.read<AuthCubit>().updateRecipient(
+                            context.read<AuthCubit>().updateRecipient(
                               recipient.copyWith(
                                 birthDate: timestamp,
                               ),
                             );
-                        _birthDateController.text = getFormattedDate(timestamp, locale) ?? "";
-                      }
-                    }
-                    return;
-                  }),
+                            _birthDateController.text = getFormattedDate(timestamp, locale) ?? "";
+                          }
+                        }
+                        return;
+                      }),
                   suffixIcon: const Icon(
                     Icons.calendar_today,
                     color: AppColors.primaryColor,
@@ -284,8 +285,8 @@ class AccountPageState extends State<AccountPage> {
                     // change language accordingly
                     context.read<SettingsCubit>().changeLanguage(value!);
                     context.read<AuthCubit>().updateRecipient(
-                          recipient.copyWith(selectedLanguage: value),
-                        );
+                      recipient.copyWith(selectedLanguage: value),
+                    );
                   },
                   value: recipient.selectedLanguage,
                 ),
@@ -297,8 +298,8 @@ class AccountPageState extends State<AccountPage> {
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
-                            recipient.copyWith(email: value),
-                          );
+                        recipient.copyWith(email: value),
+                      );
                     }
                   },
                   keyboardType: TextInputType.emailAddress,
@@ -329,10 +330,10 @@ class AccountPageState extends State<AccountPage> {
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
-                            recipient.copyWith(
-                              mobileMoneyPhone: Phone(int.parse(value)),
-                            ),
-                          );
+                        recipient.copyWith(
+                          mobileMoneyPhone: Phone(int.parse(value)),
+                        ),
+                      );
                     }
                   },
                   validator: (value) {
@@ -368,8 +369,8 @@ class AccountPageState extends State<AccountPage> {
                     return null;
                   },
                   onChanged: (value) => context.read<AuthCubit>().updateRecipient(
-                        recipient.copyWith(paymentProvider: value),
-                      ),
+                    recipient.copyWith(paymentProvider: value),
+                  ),
                 ),
                 const SizedBox(height: 24),
 
@@ -397,12 +398,12 @@ class AccountPageState extends State<AccountPage> {
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
-                            recipient.copyWith(
-                              communicationMobilePhone: Phone(
-                                int.parse(value),
-                              ),
-                            ),
-                          );
+                        recipient.copyWith(
+                          communicationMobilePhone: Phone(
+                            int.parse(value),
+                          ),
+                        ),
+                      );
                     }
                   },
                 ),
@@ -443,8 +444,8 @@ class AccountPageState extends State<AccountPage> {
                   keyboardType: TextInputType.name,
                   onSubmitted: (value) {
                     context.read<AuthCubit>().updateRecipient(
-                          recipient.copyWith(successorName: value),
-                        );
+                      recipient.copyWith(successorName: value),
+                    );
                   },
                 ),
 

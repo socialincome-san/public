@@ -52,7 +52,7 @@ class UserRemoteDataSource implements UserDataSource {
   }
 
   @override
-  Future<void> updateRecipient(Recipient recipient) async {
+  Future<void> updateRecipient(Recipient recipient) {
     final updatedRecipient = recipient.copyWith(updatedBy: recipient.userId);
 
     return firestore.collection(recipientCollection).doc(recipient.userId).update(updatedRecipient.toJson());

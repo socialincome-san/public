@@ -18,7 +18,7 @@ class PaymentRepository {
 
   Future<List<SocialIncomePayment>> fetchPayments({
     required String recipientId,
-  }) async {
+  }) {
     return _activeDataSource.fetchPayments(recipientId: recipientId);
   }
 

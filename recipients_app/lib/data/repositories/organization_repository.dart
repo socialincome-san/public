@@ -19,7 +19,7 @@ class OrganizationRepository {
 
   Future<Organization?> fetchOrganization(
     DocumentReference organizationRef,
-  ) async {
+  ) {
     return _activeDataSource.fetchOrganization(organizationRef);
   }
 }

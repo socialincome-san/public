@@ -1,5 +1,6 @@
 import "package:app/data/models/survey/survey.dart";
 import "package:app/data/models/survey/survey_card_status.dart";
+import "package:app/l10n/arb/app_localizations.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";

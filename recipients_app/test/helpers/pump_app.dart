@@ -1,5 +1,5 @@
 import "package:app/core/cubits/payment/payments_cubit.dart";
-import "package:app/l10n/l10n.dart";
+import "package:app/l10n/arb/app_localizations.dart";
 import "package:app/ui/configs/app_theme.dart";
 import "package:bloc_test/bloc_test.dart";
 import "package:flutter/material.dart";
@@ -13,7 +13,7 @@ extension PumpApp on WidgetTester {
   Future<void> pumpApp(
     Widget widget, {
     PaymentsCubit? paymentsCubit,
-  }) async {
+  }) {
     final mockPaymentsCubit = paymentsCubit ?? MockPaymentsCubit();
 
     return pumpWidget(
