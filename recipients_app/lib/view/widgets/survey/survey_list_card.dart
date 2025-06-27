@@ -1,4 +1,5 @@
 import "package:app/data/models/models.dart";
+import "package:app/l10n/arb/app_localizations.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/app_colors.dart";
 import "package:app/ui/configs/app_sizes.dart";
@@ -40,8 +41,8 @@ class SurveyListCard extends StatelessWidget {
                     Text(
                       mappedSurvey.name,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.black,
-                          ),
+                        color: Colors.black,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -51,8 +52,8 @@ class SurveyListCard extends StatelessWidget {
                         locale,
                       ),
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.darkGrey,
-                          ),
+                        color: AppColors.darkGrey,
+                      ),
                     ),
                   ],
                 ),
