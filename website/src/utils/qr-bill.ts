@@ -7,7 +7,8 @@
  * - 1 digit check digit (modulo 10 recursive)
  */
 
-import { SwissQRBill } from 'swissqrbill/svg';
+import { Data } from 'swissqrbill/lib/cjs/shared/types';
+import { SwissQRBill, SwissQRCode } from 'swissqrbill/svg';
 
 /**
  * Calculates the modulo 10 recursive check digit for the QR bill reference
@@ -50,6 +51,7 @@ type GenerateQrBillSvgProps = {
 	paymentIntervalMonths: number;
 	paymentReferenceId: number;
 	currency: 'CHF' | 'EUR';
+	type: 'QRCODE' | 'QRBILL';
 };
 
 export function generateQrBillSvg({
@@ -57,8 +59,9 @@ export function generateQrBillSvg({
 	paymentIntervalMonths,
 	paymentReferenceId,
 	currency,
+	type,
 }: GenerateQrBillSvgProps): string {
-	const svg = new SwissQRBill({
+	const data: Data = {
 		amount: Number(amount),
 		currency: currency,
 		creditor: {
@@ -71,7 +74,7 @@ export function generateQrBillSvg({
 			name: 'Social Income',
 		},
 		reference: generateQrBillReference(paymentIntervalMonths, paymentReferenceId),
-	});
+	};
 
-	return svg.toString();
+	return type === 'QRCODE' ? new SwissQRCode(data).toString() : new SwissQRBill(data).toString();
 }
