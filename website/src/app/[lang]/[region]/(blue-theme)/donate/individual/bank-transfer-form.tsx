@@ -95,6 +95,7 @@ export function BankTransferForm({ amount, intervalCount, translations, lang, re
 					paymentIntervalMonths: intervalCount,
 					paymentReferenceId,
 					currency: currency as 'CHF' | 'EUR',
+					type: window.innerWidth < 768 ? 'QRCODE' : 'QRBILL',
 				}),
 			);
 		} catch (error) {
