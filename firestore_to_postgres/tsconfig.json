@@ -1,0 +1,19 @@
+{
+	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"module": "esnext",
+		"lib": ["dom", "es2020"],
+		"moduleResolution": "node",
+		"noImplicitReturns": true,
+		"noUnusedLocals": true,
+		"outDir": "dist",
+		"preserveConstEnums": true,
+		"resolveJsonModule": true,
+		"strict": true,
+		"skipLibCheck": true,
+		"target": "es6",
+		"types": ["jest", "node"]
+	},
+	"include": ["/**/*"]
+}
