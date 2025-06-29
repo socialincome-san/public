@@ -113,7 +113,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 		const response = await fetch('/api/user/create', {
 			method: 'POST',
-			body: JSON.stringify({ email } as CreateUserData),
+			body: JSON.stringify({ email }),
 		});
 		if (!response.ok) {
 			translator && toast.error(translator.t('error.unknown'));
