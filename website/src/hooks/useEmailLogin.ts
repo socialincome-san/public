@@ -1,6 +1,5 @@
 'use client';
 
-import { CreateUserData } from '@/app/api/user/create/route';
 import { WebsiteLanguage } from '@/i18n';
 import { FirebaseError } from 'firebase/app';
 import {
