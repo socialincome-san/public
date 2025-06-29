@@ -6,15 +6,11 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
 	const { email } = await request.json();
 
-	try {
-		const existingUser = await firestoreAdmin.findFirst<User>(USER_FIRESTORE_PATH, (col) =>
-			col.where('email', '==', email),
-		);
+	const existingUser = await firestoreAdmin.findFirst<User>(USER_FIRESTORE_PATH, (col) =>
+		col.where('email', '==', email),
+	);
 
-		return NextResponse.json({
-			paymentReferenceId: existingUser?.get('payment_reference_id') ?? DateTime.now().toMillis(),
-		});
-	} catch (error) {
-		return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-	}
+	return NextResponse.json({
+		paymentReferenceId: existingUser?.get('payment_reference_id') ?? DateTime.now().toMillis(),
+	});
 }

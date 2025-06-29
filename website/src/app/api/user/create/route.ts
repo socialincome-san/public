@@ -1,19 +1,15 @@
 import { authAdmin, firestoreAdmin } from '@/firebase-admin';
-import { toFirebaseAdminTimestamp } from '@socialincome/shared/src/firebase/admin/utils';
 import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { rndString } from '@socialincome/shared/src/utils/crypto';
-import { DateTime } from 'luxon';
-import { NextRequest } from 'next/server';
 
-export type CreateUserData = Pick<User, 'address' | 'personal' | 'email' | 'currency'>;
-type CreateUserRequest = NextRequest;
+export type CreateUserRequest = {
+	email: string;
+};
 
 export async function POST(request: CreateUserRequest & Request) {
 	const { email } = await request.json();
 	const user = await firestoreAdmin.findFirst<User>(USER_FIRESTORE_PATH, (col) => col.where('email', '==', email));
-
 	if (!user) {
-		await createUser(email, request.body);
 		return new Response(null, { status: 400, statusText: 'User not found' });
 	}
 
@@ -39,40 +35,3 @@ export async function POST(request: CreateUserRequest & Request) {
 		return new Response(null, { status: 500, statusText: 'Failed to create user' });
 	}
 }
-
-const createUser = async (email: string, { address, personal, currency }: CreateUserData) => {
-	if (!address.country) {
-		throw new Error('Country not found');
-	}
-
-	const paymentReferenceId = DateTime.now().toMillis();
-
-	return await firestoreAdmin.collection<User>(USER_FIRESTORE_PATH).add({
-		email,
-		personal: {
-			name: personal?.name,
-			lastname: personal?.lastname,
-		},
-		payment_reference_id: paymentReferenceId,
-		currency,
-		test_user: false,
-		created_at: toFirebaseAdminTimestamp(DateTime.now()),
-		address: {
-			country: address.country,
-		},
-	});
-};
-
-const validateUserRequestData = (request: CreateUserRequest) => {
-	if (!request.body.personal) {
-		throw new Error('Personal data not found');
-	}
-
-	if (!request.body.address) {
-		throw new Error('Address not found');
-	}
-
-	if (!request.body.currency) {
-		throw new Error('Currency not found');
-	}
-};
