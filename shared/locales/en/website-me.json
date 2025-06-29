@@ -14,10 +14,6 @@
 			"subscriptions": "Subscriptions",
 			"donation-certificates-short": "Certificates",
 			"donation-certificates-long": "Donation certificates"
-		},
-		"employer": {
-			"title": "My Employer",
-			"work": "Work"
 		}
 	},
 	"contributions": {

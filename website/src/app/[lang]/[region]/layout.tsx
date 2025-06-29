@@ -1,6 +1,6 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[region]/index';
-import { CookieConsentBanner } from '@/components/tracking/cookie-consent-banner';
-import { mainWebsiteLanguages, websiteRegions } from '@/i18n';
+import { CookieConsentBanner } from '@/components/analytics/cookie-consent-banner';
+import { mainWebsiteLanguages, websiteRegions } from '@/lib/i18n/utils';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { PropsWithChildren } from 'react';

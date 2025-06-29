@@ -1,5 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { firestoreAdmin } from '@/firebase-admin';
+import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
 import { Currency } from '@socialincome/shared/src/types/currency';
 import { ContributionStatsCalculator } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';

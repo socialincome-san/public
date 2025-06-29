@@ -2,6 +2,7 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useDonationCertificates } from '@/app/[lang]/[region]/(website)/me/hooks';
+import { useStorage, useStorageDownloadURL } from '@/lib/firebase/hooks/useStorage';
 import {
 	linkCn,
 	SpinnerIcon,
@@ -15,7 +16,6 @@ import {
 } from '@socialincome/ui';
 import { ref } from 'firebase/storage';
 import Link from 'next/link';
-import { useStorage, useStorageDownloadURL } from 'reactfire';
 
 type ContributionsTableProps = {
 	translations: {

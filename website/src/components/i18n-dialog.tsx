@@ -1,8 +1,8 @@
 'use client';
 
-import { useI18n } from '@/components/providers/context-providers';
-import { useIsPage } from '@/hooks/useIsPage';
-import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/i18n';
+import { useIsPage } from '@/lib/hooks/useIsPage';
+import { useI18n } from '@/lib/i18n/useI18n';
+import { WebsiteCurrency, WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import { GlobeEuropeAfricaIcon, LanguageIcon } from '@heroicons/react/24/solid';
 import { LanguageCode } from '@socialincome/shared/src/types/language';

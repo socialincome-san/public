@@ -1,4 +1,4 @@
-import { WebsiteLanguage } from '@/i18n';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
 import { FontColor } from '@socialincome/ui/src/interfaces/color';

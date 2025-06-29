@@ -1,17 +1,18 @@
 'use client';
 
+import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { useFirestore } from '@/lib/firebase/hooks/useFirestore';
 import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { useQuery } from '@tanstack/react-query';
 import { collection, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore';
 import { redirect } from 'next/navigation';
 import { createContext, PropsWithChildren, useEffect } from 'react';
-import { useFirestore, useUser } from 'reactfire';
 
 export const UserContext = createContext<QueryDocumentSnapshot<User> | null | undefined>(undefined!);
 
 export function UserContextProvider({ children }: PropsWithChildren) {
 	const firestore = useFirestore();
-	const { data: authUser, status: authUserStatus } = useUser();
+	const { authUser } = useAuth();
 	const { data: user } = useQuery({
 		queryKey: ['me', authUser?.uid],
 		queryFn: async () => {
@@ -29,12 +30,12 @@ export function UserContextProvider({ children }: PropsWithChildren) {
 	});
 
 	useEffect(() => {
-		if (user === null && authUserStatus === 'success') {
+		if (user === null) {
 			// If the user is null, it couldn't be found in the database, so redirect to the login page.
 			// If the user is undefined, the query is still loading, so no redirect.
 			redirect('../login');
 		}
-	}, [user, authUserStatus]);
+	}, [user]);
 
 	if (user) {
 		return <UserContext.Provider value={user}>{children}</UserContext.Provider>;

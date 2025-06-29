@@ -1,7 +1,6 @@
 import { EntityReference } from 'firecms';
 import { CountryCode } from './country';
 import { Currency } from './currency';
-import { Employer } from './employers';
 import { LanguageCode } from './language';
 import { Timestamp } from './timestamp';
 
@@ -46,7 +45,6 @@ export type User = {
 	language?: LanguageCode;
 	currency?: Currency;
 	contributor_organisations?: EntityReference[];
-	employers?: Employer[];
 	created_at: Timestamp;
 };
 

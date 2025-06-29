@@ -1,4 +1,4 @@
-import { toCurrencyLocale } from '@/i18n';
+import { toCurrencyLocale } from '@/lib/i18n/utils';
 import { RecipientProgramStatus } from '@socialincome/shared/src/types/recipient';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, Card, CardContent, Typography } from '@socialincome/ui';

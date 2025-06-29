@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { firestoreAdmin } from '@/firebase-admin';
-import { WebsiteCurrency } from '@/i18n';
+import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
+import { WebsiteCurrency } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { ContributionStatsCalculator } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { Button, Typography } from '@socialincome/ui';

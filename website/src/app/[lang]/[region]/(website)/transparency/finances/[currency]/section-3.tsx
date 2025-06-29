@@ -1,5 +1,5 @@
 import { roundAmount } from '@/app/[lang]/[region]/(website)/transparency/finances/[currency]/section-1';
-import { toCurrencyLocale } from '@/i18n';
+import { toCurrencyLocale } from '@/lib/i18n/utils';
 import { CountryCode } from '@socialincome/shared/src/types/country';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';

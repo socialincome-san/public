@@ -1,6 +1,6 @@
 'use client';
 
-import { useApi } from '@/hooks/useApi';
+import { useApiClient } from '@/lib/api/useApiClient';
 import { CreditCardIcon } from '@heroicons/react/24/outline';
 import { Button } from '@socialincome/ui';
 import { useQuery } from '@tanstack/react-query';
@@ -15,7 +15,7 @@ type BillingPortalButtonProps = {
 
 export function BillingPortalButton({ translations }: BillingPortalButtonProps) {
 	const router = useRouter();
-	const api = useApi();
+	const api = useApiClient();
 
 	const { data: billingPortalUrl } = useQuery({
 		queryKey: ['me', 'subscriptions', 'billing-portal-button'],

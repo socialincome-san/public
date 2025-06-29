@@ -1,6 +1,6 @@
 'use client';
 
-import { useIsPage } from '@/hooks/useIsPage';
+import { useIsPage } from '@/lib/hooks/useIsPage';
 import { Button, Card, CardContent, Typography } from '@socialincome/ui';
 import { ConsentStatusString } from 'firebase/analytics';
 import { useEffect, useState } from 'react';
