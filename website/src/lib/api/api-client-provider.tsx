@@ -2,10 +2,7 @@
 
 import { ApiClient } from '@/lib/api/api-client';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createContext, PropsWithChildren, useEffect, useState } from 'react';
-
-const queryClient = new QueryClient();
 
 export const ApiClientContext = createContext<ApiClient | undefined>(undefined!);
 
@@ -20,9 +17,5 @@ export function ApiClientProvider({ children }: PropsWithChildren) {
 		}
 	}, [authUser, setIdToken]);
 
-	return (
-		<QueryClientProvider client={queryClient}>
-			<ApiClientContext.Provider value={new ApiClient(idToken)}>{children}</ApiClientContext.Provider>
-		</QueryClientProvider>
-	);
+	return <ApiClientContext.Provider value={new ApiClient(idToken)}>{children}</ApiClientContext.Provider>;
 }

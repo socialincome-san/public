@@ -10,9 +10,8 @@ export function useNavbarBackground() {
 
 	const { data: backgroundColor } = useQuery<string | null>({
 		queryKey: BACKGROUND_COLOR_QUERY_KEY,
-		queryFn: () => null, // Initial state
-		staleTime: Infinity, // Treat this as always fresh local state
-		initialData: null,
+		queryFn: () => null,
+		staleTime: Infinity,
 	});
 
 	const setBackgroundColor = useCallback(

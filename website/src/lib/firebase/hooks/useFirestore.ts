@@ -17,5 +17,6 @@ export function useFirestore(): Firestore {
 		connectFirestoreEmulator(firestore, firestoreEmulatorHost, firestoreEmulatorPort);
 		connectFirestoreEmulatorCalled.current = true;
 	}
+
 	return firestore;
 }
