@@ -4,7 +4,7 @@ import {
 	RecipientsBadgeType,
 	SdgBadgeType,
 } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerBadges';
-import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 
 type NgoHoverCardType = {
 	orgImage: string;

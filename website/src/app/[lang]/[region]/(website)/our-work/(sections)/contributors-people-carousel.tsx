@@ -1,6 +1,6 @@
 'use client';
 
-import { useScreenSize } from '@/hooks/useScreenSize';
+import { useScreenSize } from '@/lib/hooks/useScreenSize';
 import { MapPinIcon } from '@heroicons/react/24/solid';
 import { Card, CardContent, CardFooter, CardHeader, Carousel, CarouselContent, Typography } from '@socialincome/ui';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';

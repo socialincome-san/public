@@ -2,7 +2,7 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import GenericDonationForm from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/generic-donation-form';
 import { DonationInterval } from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/page';
 import { VimeoVideo } from '@/components/vimeo-video';
-import { firestoreAdmin } from '@/firebase-admin';
+import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
 import { getMetadata } from '@/metadata';
 import { Campaign, CAMPAIGN_FIRESTORE_PATH, CampaignStatus } from '@socialincome/shared/src/types/campaign';
 import { Contribution, CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/src/types/contribution';

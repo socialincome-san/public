@@ -1,17 +1,16 @@
-import { UserContext } from '@/components/providers/user-context-provider';
-import { useApi } from '@/hooks/useApi';
+import { UserContext } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
+import { useApiClient } from '@/lib/api/useApiClient';
+import { useFirestore } from '@/lib/firebase/hooks/useFirestore';
 import { orderBy, Query, QuerySnapshot } from '@firebase/firestore';
 import { CONTRIBUTION_FIRESTORE_PATH, StatusKey } from '@socialincome/shared/src/types/contribution';
 import {
 	DONATION_CERTIFICATE_FIRESTORE_PATH,
 	DonationCertificate,
 } from '@socialincome/shared/src/types/donation-certificate';
-import { Employer, EMPLOYERS_FIRESTORE_PATH } from '@socialincome/shared/src/types/employers';
 import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { addDoc, collection, deleteDoc, doc, getDocs, query, Timestamp, updateDoc, where } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { useContext } from 'react';
-import { useFirestore } from 'reactfire';
 import Stripe from 'stripe';
 
 export const useUser = () => {
@@ -44,7 +43,7 @@ export const useContributions = () => {
 };
 
 export const useSubscriptions = () => {
-	const api = useApi();
+	const api = useApiClient();
 	const {
 		data: subscriptions,
 		isLoading,
@@ -85,7 +84,7 @@ export const useDonationCertificates = (): {
 };
 
 export const useNewsletterSubscription = () => {
-	const api = useApi();
+	const api = useApiClient();
 	const {
 		data: status,
 		isLoading,
@@ -106,75 +105,12 @@ export const useNewsletterSubscription = () => {
 };
 
 export const useUpsertNewsletterSubscription = () => {
-	const api = useApi();
+	const api = useApiClient();
 	const queryClient = useQueryClient();
 
 	return async (status: 'subscribed' | 'unsubscribed') => {
 		const response = await api.post('/api/newsletter/subscription', { status });
 		await queryClient.invalidateQueries({ queryKey: ['me', 'newsletter'] });
 		return response;
-	};
-};
-
-export type EmployerWithId = {
-	id: string;
-} & Employer;
-
-export const useEmployers = () => {
-	const firestore = useFirestore();
-	const user = useUser();
-
-	const {
-		data: employers,
-		isLoading,
-		error,
-	} = useQuery({
-		queryKey: ['me', 'employers'],
-		queryFn: async () => {
-			const data = await getDocs(
-				query(collection(firestore, USER_FIRESTORE_PATH, user.id, 'employers'), orderBy('created', 'desc')),
-			);
-			return data.docs.map((e) => ({ id: e.id, ...e.data() }) as EmployerWithId);
-		},
-	});
-	return { employers, isLoading, error };
-};
-
-export const useArchiveEmployer = () => {
-	const firestore = useFirestore();
-	const user = useUser();
-	const queryClient = useQueryClient();
-
-	return async (employer_id: string) => {
-		const employerRef = doc(firestore, USER_FIRESTORE_PATH, user!.id, 'employers', employer_id);
-		await updateDoc(employerRef, { is_current: false });
-		await queryClient.invalidateQueries({ queryKey: ['me', 'employers'] });
-	};
-};
-
-export const useDeleteEmployer = () => {
-	const firestore = useFirestore();
-	const user = useUser();
-	const queryClient = useQueryClient();
-
-	return async (employer_id: string) => {
-		const employerRef = doc(firestore, USER_FIRESTORE_PATH, user!.id, 'employers', employer_id);
-		await deleteDoc(employerRef);
-		await queryClient.invalidateQueries({ queryKey: ['me', 'employers'] });
-	};
-};
-
-export const useAddEmployer = () => {
-	const firestore = useFirestore();
-	const user = useUser();
-	const queryClient = useQueryClient();
-
-	return async (employer_name: string) => {
-		await addDoc(collection(firestore, USER_FIRESTORE_PATH, user.id, EMPLOYERS_FIRESTORE_PATH), {
-			employer_name: employer_name,
-			is_current: true,
-			created: Timestamp.now(),
-		});
-		await queryClient.invalidateQueries({ queryKey: ['me', 'employers'] });
 	};
 };

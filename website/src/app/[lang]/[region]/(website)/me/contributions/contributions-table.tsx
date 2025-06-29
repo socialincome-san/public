@@ -2,7 +2,7 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { useContributions } from '@/app/[lang]/[region]/(website)/me/hooks';
-import { useTranslator } from '@/hooks/useTranslator';
+import { useTranslator } from '@/lib/hooks/useTranslator';
 import { toDateTime } from '@socialincome/shared/src/utils/date';
 import {
 	SpinnerIcon,

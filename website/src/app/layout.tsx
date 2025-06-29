@@ -1,4 +1,8 @@
-import { ContextProviders } from '@/components/providers/context-providers';
+import { AnalyticsInitializer } from '@/components/analytics/analytics-initializer';
+import { GlobalStateProviderProvider } from '@/components/providers/global-state-provider';
+import { ApiClientProvider } from '@/lib/api/api-client-provider';
+import { FirebaseAppProvider } from '@/lib/firebase/firebase-app-provider';
+import { I18nContextProvider } from '@/lib/i18n/i18n-context-provider';
 import { getMetadata } from '@/metadata';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import type { Viewport } from 'next';
@@ -25,9 +29,16 @@ export default function RootLayout({ children }: PropsWithChildren) {
 				<meta name="app-environment" content={appEnv} />
 				<meta name="app-build-timestamp" content={buildTime} />
 			</head>
-			<ContextProviders>
-				<body>{children}</body>
-			</ContextProviders>
+			<FirebaseAppProvider>
+				<ApiClientProvider>
+					<GlobalStateProviderProvider>
+						<I18nContextProvider>
+							<body>{children}</body>
+						</I18nContextProvider>
+					</GlobalStateProviderProvider>
+				</ApiClientProvider>
+				<AnalyticsInitializer />
+			</FirebaseAppProvider>
 		</html>
 	);
 }

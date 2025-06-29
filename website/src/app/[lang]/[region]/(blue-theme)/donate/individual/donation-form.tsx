@@ -2,10 +2,11 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { CreateCheckoutSessionData } from '@/app/api/stripe/checkout-session/create/route';
-import { useI18n } from '@/components/providers/context-providers';
 import { CurrencySelector } from '@/components/ui/currency-selector';
-import { useTranslator } from '@/hooks/useTranslator';
-import { websiteCurrencies, WebsiteLanguage } from '@/i18n';
+import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { useTranslator } from '@/lib/hooks/useTranslator';
+import { useI18n } from '@/lib/i18n/useI18n';
+import { websiteCurrencies, WebsiteLanguage } from '@/lib/i18n/utils';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -27,7 +28,6 @@ import classNames from 'classnames';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm, useFormContext, useWatch } from 'react-hook-form';
-import { useUser } from 'reactfire';
 import Stripe from 'stripe';
 import * as z from 'zod';
 
@@ -152,7 +152,7 @@ type DonationFormProps = {
 export function DonationForm({ amount, translations, lang, region }: DonationFormProps) {
 	const router = useRouter();
 	const [submitting, setSubmitting] = useState(false);
-	const { data: authUser } = useUser();
+	const { auth } = useAuth();
 	const { currency } = useI18n();
 
 	const formSchema = z.object({
@@ -168,7 +168,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 
 	const onSubmit = async (values: FormSchema) => {
 		setSubmitting(true);
-		const authToken = await authUser?.getIdToken(true);
+		const authToken = await auth?.currentUser?.getIdToken(true);
 		const data: CreateCheckoutSessionData = {
 			amount: getDonationAmount(values.monthlyIncome, values.donationInterval) * 100, // The amount is in cents, so we need to multiply by 100 to get the correct amount.
 			intervalCount: Number(values.donationInterval),

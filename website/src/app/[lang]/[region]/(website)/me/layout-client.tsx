@@ -1,10 +1,9 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { UserContext } from '@/components/providers/user-context-provider';
+import { UserContext } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
 import {
 	ArrowPathIcon,
-	BriefcaseIcon,
 	CurrencyDollarIcon,
 	DocumentIcon,
 	ShieldCheckIcon,
@@ -52,8 +51,6 @@ type LayoutClientProps = {
 		subscriptions: string;
 		donationCertificatesShort: string;
 		donationCertificatesLong: string;
-		employerTitle: string;
-		work: string;
 	};
 };
 
@@ -88,14 +85,6 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 					{translations.donationCertificatesShort}
 				</NavigationLink>
 			)}
-			<NavigationSectionTitle>{translations.employerTitle}</NavigationSectionTitle>
-			<NavigationLink
-				href={`/${params.lang}/${params.region}/me/work-info`}
-				Icon={BriefcaseIcon}
-				onClick={() => setIsOpen(false)}
-			>
-				{translations.work}
-			</NavigationLink>
 			<NavigationSectionTitle>{translations.accountTitle}</NavigationSectionTitle>
 			<NavigationLink
 				href={`/${params.lang}/${params.region}/me/personal-info`}
@@ -134,7 +123,7 @@ export function LayoutClient({ params, translations, children }: PropsWithChildr
 
 	return (
 		<Collapsible open={isOpen} onOpenChange={setIsOpen} className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5">
-			<div className="hidden pt-12 md:col-span-1 md:flex lg:col-span-1">{navigationMenu}</div>
+			<div className="hidden md:col-span-1 md:flex lg:col-span-1">{navigationMenu}</div>
 			<div className="md:col-span-3 lg:col-span-4">
 				<CollapsibleTrigger asChild>
 					<div className="flex justify-end md:hidden">
