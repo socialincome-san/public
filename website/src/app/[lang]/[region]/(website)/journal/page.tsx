@@ -1,10 +1,17 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { getAuthors, getOverviewArticles, getTags } from '@/components/storyblok/StoryblokApi';
+import { MoreArticlesLink } from '@/components/storyblok/MoreArticlesLink';
+import {
+	DEFAULT_LANGUAGE,
+	getAuthors,
+	getOverviewArticles,
+	getOverviewArticlesCountForDefaultLang,
+	getTags,
+} from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Badge, BaseContainer, Typography } from '@socialincome/ui';
+import { Badge, BaseContainer, Separator, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
 export const revalidate = 900;
@@ -12,7 +19,7 @@ storyblokInitializationWorkaround();
 
 export default async function Page({ params }: DefaultPageProps) {
 	const { lang, region } = await params;
-	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-journal'] });
+	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-journal', 'common'] });
 
 	const [blogsResponse, authorsResponse, tagsResponse] = await Promise.all([
 		getOverviewArticles(lang),
@@ -20,6 +27,9 @@ export default async function Page({ params }: DefaultPageProps) {
 		getTags(lang),
 	]);
 	const blogs = blogsResponse.data.stories;
+	const totalArticlesInSelectedLanguage = blogsResponse.total;
+	const totalArticlesInDefaultLang =
+		lang == DEFAULT_LANGUAGE ? totalArticlesInSelectedLanguage : await getOverviewArticlesCountForDefaultLang();
 	const authors = authorsResponse.data.stories;
 	const tags = tagsResponse.data.stories;
 
@@ -67,6 +77,16 @@ export default async function Page({ params }: DefaultPageProps) {
 					<StoryblokArticleCard lang={lang} region={region} blog={blog} author={blog.content.author} key={blog.uuid} />
 				))}
 			</div>
+
+			{totalArticlesInDefaultLang > totalArticlesInSelectedLanguage && (
+				<div>
+					<Separator className="my-8" />
+					<MoreArticlesLink
+						text={translator.t('overview.more-articles')}
+						url={`/${DEFAULT_LANGUAGE}/${region}/journal`}
+					/>
+				</div>
+			)}
 		</BaseContainer>
 	);
 }
