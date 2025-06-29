@@ -118,7 +118,7 @@ const kriDateSymbols = {
     "BC",
     "AD",
   ],
-// #enddocregion Date2
+  // #enddocregion Date2
   "ERANAMES": <dynamic>[
     "Before Christ",
     "Anno Domini",
@@ -353,7 +353,7 @@ class _KriCupertinoLocalizationsDelegate extends LocalizationsDelegate<Cupertino
   bool isSupported(Locale locale) => locale.languageCode == "kri";
 
   @override
-  Future<CupertinoLocalizations> load(Locale locale) async {
+  Future<CupertinoLocalizations> load(Locale locale) {
     final String localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
     // The locale (in this case `kri`) needs to be initialized into the custom
@@ -411,7 +411,7 @@ class KriCupertinoLocalizations extends GlobalCupertinoLocalizations {
     required super.singleDigitHourFormat,
     required super.singleDigitMinuteFormat,
     required super.doubleDigitMinuteFormat,
-    required super.singleDigitSecondFormat, 
+    required super.singleDigitSecondFormat,
     required super.weekdayFormat,
   });
 
@@ -588,6 +588,12 @@ class KriCupertinoLocalizations extends GlobalCupertinoLocalizations {
 
   @override
   String get clearButtonLabel => "Clear";
+
+  @override
+  String get backButtonLabel => "Go biyɛn";
+
+  @override
+  String get cancelButtonLabel => "TAP YA";
 }
 
 // #docregion Delegate
@@ -598,7 +604,7 @@ class _KriMaterialLocalizationsDelegate extends LocalizationsDelegate<MaterialLo
   bool isSupported(Locale locale) => locale.languageCode == "kri";
 
   @override
-  Future<MaterialLocalizations> load(Locale locale) async {
+  Future<MaterialLocalizations> load(Locale locale) {
     final String localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
     // The locale (in this case `kri`) needs to be initialized into the custom
@@ -676,7 +682,7 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   @override
   String get alertDialogLabel => "Alat";
 
-// #enddocregion Getters
+  // #enddocregion Getters
 
   @override
   String get anteMeridiemAbbreviation => "AM";
@@ -745,13 +751,13 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   // A custom drawer tooltip message.
   String get openAppDrawerTooltip => "Custom Navigation Menu Tooltip";
 
-// #docregion Raw
+  // #docregion Raw
   @override
   String get pageRowsInfoTitleRaw => r"$firstRow–$lastRow of $rowCount";
 
   @override
   String get pageRowsInfoTitleApproximateRaw => r"$firstRow–$lastRow of about $rowCount";
-// #enddocregion Raw
+  // #enddocregion Raw
 
   @override
   String get pasteButtonLabel => "PUT AM YA";

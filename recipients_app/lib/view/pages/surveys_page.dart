@@ -33,7 +33,7 @@ class _SurveysPageState extends State<SurveysPage> {
       ),
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
-        onRefresh: () async => context.read<SurveyCubit>().getSurveys(),
+        onRefresh: () => context.read<SurveyCubit>().getSurveys(),
         child: Padding(
           padding: AppSpacings.h8,
           child: Column(
