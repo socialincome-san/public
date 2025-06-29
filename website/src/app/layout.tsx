@@ -1,5 +1,4 @@
 import { AnalyticsInitializer } from '@/components/analytics/analytics-initializer';
-import { GlobalStateProviderProvider } from '@/components/providers/global-state-provider';
 import { ApiClientProvider } from '@/lib/api/api-client-provider';
 import { FirebaseAppProvider } from '@/lib/firebase/firebase-app-provider';
 import { I18nContextProvider } from '@/lib/i18n/i18n-context-provider';
@@ -31,11 +30,9 @@ export default function RootLayout({ children }: PropsWithChildren) {
 			</head>
 			<FirebaseAppProvider>
 				<ApiClientProvider>
-					<GlobalStateProviderProvider>
-						<I18nContextProvider>
-							<body>{children}</body>
-						</I18nContextProvider>
-					</GlobalStateProviderProvider>
+					<I18nContextProvider>
+						<body>{children}</body>
+					</I18nContextProvider>
 				</ApiClientProvider>
 				<AnalyticsInitializer />
 			</FirebaseAppProvider>

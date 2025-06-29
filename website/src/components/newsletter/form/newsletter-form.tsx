@@ -1,7 +1,7 @@
 'use client';
 
 import { CreateNewsletterSubscription } from '@/app/api/newsletter/subscription/public/route';
-import { NewsletterPopupTranslations } from '@/components/newsletter-popup/newsletter-popup-client';
+import { NewsletterPopupTranslations } from '@/components/newsletter/popup/newsletter-popup-client';
 import { useApiClient } from '@/lib/api/useApiClient';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LanguageCode } from '@socialincome/shared/src/types/language';

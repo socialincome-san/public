@@ -28,7 +28,7 @@ import {
 import { Progress } from '@socialincome/ui/src/components/progress';
 import Link from 'next/link';
 
-import NewsletterGlowContainer from '@/components/newsletter-glow-container/newsletter-glow-container';
+import NewsletterGlowContainer from '@/components/newsletter/glow-container/newsletter-glow-container';
 
 interface CampaignPageParams extends DefaultParams {
 	campaignId: string;
