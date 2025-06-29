@@ -1,4 +1,4 @@
-import { authAdmin, firestoreAdmin } from '@/firebase-admin';
+import { authAdmin, firestoreAdmin } from '@/lib/firebase/firebase-admin';
 import { User } from '@socialincome/shared/src/types/user';
 import { rndString } from '@socialincome/shared/src/utils/crypto';
 
