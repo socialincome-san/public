@@ -31,6 +31,7 @@
 		"login-link": "Zur Profil-Anmeldung",
 		"processing": "Zahlung wird bestätigt...",
 		"generating": "QR-Rechnung wird generiert...",
+		"standing-order-qr-info": "Bitte richte in deinem Online-Banking einen Dauerauftrag zur Zahlung an Social Income ein.",
 		"errors": {
 			"qrBillError": "QR-Rechnung konnte nicht generiert werden. Bitte versuchen Sie es erneut.",
 			"paymentFailed": "Zahlung fehlgeschlagen. Bitte versuchen Sie es erneut und kontaktieren Sie uns, wenn das Problem weiterhin besteht."
