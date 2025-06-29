@@ -21,6 +21,7 @@ export type BankTransferFormProps = {
 		lastName: string;
 		email: string;
 		generateQrBill: string;
+		standingOrderQrInfo: string;
 		confirmPayment: string;
 		paymentSuccess: string;
 		loginLink: string;
@@ -147,8 +148,9 @@ export function BankTransferForm({
 				</div>
 			) : qrBillSvg ? (
 				<>
-					<div className="my-8 flex justify-center space-y-4">
-						{qrBillSvg && <div className="max-w-full" ref={qrBillRef} />}
+					<div className="my-8 flex flex-col items-center justify-center space-y-4">
+						<div className="max-w-full" ref={qrBillRef} />
+						{intervalCount > 0 && <p>{translations.standingOrderQrInfo}</p>}
 					</div>
 					<Button disabled={isLoading} size="lg" type="submit" className="w-full" onClick={confirmPayment}>
 						{isLoading ? translations.processing : translations.confirmPayment}

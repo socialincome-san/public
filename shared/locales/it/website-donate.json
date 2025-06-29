@@ -34,6 +34,7 @@
 		"login-link": "Accedi al tuo profilo",
 		"processing": "Elaborazione del pagamento...",
 		"generating": "Generazione del QR-bill...",
+		"standing-order-qr-info": "Per favore configura un ordine permanente per pagare Social Income nella tua banca online.",
 		"errors": {
 			"qrBillError": "Impossibile generare il QR-bill. Si prega di riprovare.",
 			"paymentFailed": "Il pagamento è fallito. Si prega di riprovare e contattare noi se il problema persiste."

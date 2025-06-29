@@ -217,6 +217,7 @@ export default async function Page({ params }: CampaignPageProps) {
 														lastName: translator.t('success.user-form.lastname'),
 														email: translator.t('success.user-form.email'),
 														generateQrBill: translator.t('bank-transfer.generate-qr-bill'),
+														standingOrderQrInfo: translator.t('bank-transfer.standing-order-qr-info'),
 														confirmPayment: translator.t('bank-transfer.confirm-payment'),
 														paymentSuccess: translator.t('bank-transfer.payment-success'),
 														loginLink: translator.t('bank-transfer.login-link'),

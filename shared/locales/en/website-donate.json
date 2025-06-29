@@ -31,6 +31,7 @@
 		"login-link": "Login to your profile",
 		"processing": "Processing payment...",
 		"generating": "Generating QR bill...",
+		"standing-order-qr-info": "Please set up a standing order to pay Social Income in your online banking.",
 		"errors": {
 			"qrBillError": "Failed to generate QR bill. Please try again.",
 			"paymentFailed": "Payment failed. Please try again and contact us if the problem persists."
