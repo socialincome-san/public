@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
 const BACKGROUND_COLOR_QUERY_KEY = ['globalBackgroundColor'];
 
@@ -14,9 +15,12 @@ export function useNavbarBackground() {
 		initialData: null,
 	});
 
-	const setBackgroundColor = (color: string | null) => {
-		queryClient.setQueryData(BACKGROUND_COLOR_QUERY_KEY, color);
-	};
+	const setBackgroundColor = useCallback(
+		(color: string | null) => {
+			queryClient.setQueryData(BACKGROUND_COLOR_QUERY_KEY, color);
+		},
+		[queryClient],
+	);
 
 	return { backgroundColor, setBackgroundColor };
 }

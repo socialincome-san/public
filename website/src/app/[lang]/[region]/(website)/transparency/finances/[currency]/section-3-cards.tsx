@@ -13,7 +13,6 @@ type CountryCardProps = {
 	};
 };
 
-/* eslint-disable @next/next/no-img-element */
 export function CountryCard({ country, translations }: CountryCardProps) {
 	return (
 		<li>

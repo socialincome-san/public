@@ -37,7 +37,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 		return () => {
 			setBackgroundColor(null);
 		};
-	}, [entry, isIntersecting]);
+	}, [entry, isIntersecting, setBackgroundColor]);
 
 	useEffect(() => {
 		const video = videoElementRef.current;
@@ -84,6 +84,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 	return (
 		<>
 			<div ref={posterRef} className="absolute inset-0 z-0">
+				{/* eslint-disable @next/next/no-img-element */}
 				<img
 					alt="Video Poster"
 					className="h-full w-full object-cover"
