@@ -23,12 +23,21 @@ export function useStorage() {
 
 export function useStorageDownloadURL(storageRef: StorageReference | undefined) {
 	const [url, setUrl] = useState<string | undefined>(undefined);
-
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<Error | undefined>(undefined);
 	useEffect(() => {
 		if (storageRef) {
-			getDownloadURL(storageRef).then(setUrl);
+			setLoading(true);
+			setError(undefined);
+			getDownloadURL(storageRef)
+				.then(setUrl)
+				.catch(setError)
+				.finally(() => setLoading(false));
+		} else {
+			setLoading(false);
+			setUrl(undefined);
+			setError(undefined);
 		}
 	}, [storageRef]);
-
-	return { data: url, loading: !url };
+	return { data: url, loading, error };
 }

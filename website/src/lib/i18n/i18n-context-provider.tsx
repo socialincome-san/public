@@ -71,7 +71,7 @@ export function I18nContextProvider({ children }: PropsWithChildren) {
 				language: language,
 				setLanguage: (language) => setLanguage(language, { expires: 7 }),
 				region: region,
-				setRegion: (country) => setRegion(country, { expires: 7 }),
+				setRegion: (region) => setRegion(region, { expires: 7 }),
 				currency: currency,
 				setCurrency: (currency) => setCurrency(currency, { expires: 7 }),
 			}}

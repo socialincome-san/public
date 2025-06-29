@@ -5,11 +5,12 @@ import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 
+const queryClient = new QueryClient();
+
 export const ApiClientContext = createContext<ApiClient | undefined>(undefined!);
 
 export function ApiClientProvider({ children }: PropsWithChildren) {
 	const { authUser } = useAuth();
-	const queryClient = new QueryClient();
 
 	const [idToken, setIdToken] = useState<string>('');
 

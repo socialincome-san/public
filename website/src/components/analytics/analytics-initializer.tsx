@@ -45,7 +45,7 @@ export function AnalyticsInitializer() {
 				setConsent(getAnalyticsCookieConsent('denied'));
 			}
 		}
-	}, [app, allowTracking]);
+	}, [app]);
 
 	if (allowTracking) {
 		return (
