@@ -20,9 +20,10 @@ import {
 } from '@socialincome/ui';
 import { useForm, useWatch } from 'react-hook-form';
 import * as z from 'zod';
-import { BankTransferForm, BankTransferFormProps } from './bank-transfer-form';
+import { BankTransferForm, BankTransferFormProps } from '../one-time/bank-transfer-form';
+import { PaymentTypes } from '../one-time/generic-donation-form';
 import { DonationIntervalSelector } from './donation-interval-selector';
-import { PAYMENT_TYPES, PaymentTypeSelector } from './payment-type-selector';
+import { PaymentTypeSelector } from './payment-type-selector';
 import { StripePaymentButton } from './stripe-payment-button';
 
 const DONATION_INTERVALS = ['1', '3', '12'] as const;
@@ -111,31 +112,31 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 		.object({
 			monthlyIncome: z.coerce.number(),
 			donationInterval: z.enum(DONATION_INTERVALS),
-			paymentType: region === 'ch' ? z.enum(PAYMENT_TYPES) : z.literal('credit_card'),
-			email: z.string().min(1, 'Email is required').email('Invalid email address').optional(),
-			firstName: z.string().min(1, 'First name is required').optional(),
-			lastName: z.string().min(1, 'Last name is required').optional(),
+			paymentType:
+				region === 'ch'
+					? z.enum(Object.values(PaymentTypes) as [string, ...string[]])
+					: z.literal(PaymentTypes.CREDIT_CARD),
+			email: z.string().email().optional(),
+			firstName: z.string().optional(),
+			lastName: z.string().optional(),
 		})
 		.superRefine((data, ctx) => {
 			if (data.paymentType === 'bank_transfer') {
 				if (!data.email) {
 					ctx.addIssue({
 						code: z.ZodIssueCode.custom,
-						message: 'Email is required',
 						path: ['email'],
 					});
 				}
 				if (!data.firstName) {
 					ctx.addIssue({
 						code: z.ZodIssueCode.custom,
-						message: 'First name is required',
 						path: ['firstName'],
 					});
 				}
 				if (!data.lastName) {
 					ctx.addIssue({
 						code: z.ZodIssueCode.custom,
-						message: 'Last name is required',
 						path: ['lastName'],
 					});
 				}
@@ -148,7 +149,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 		defaultValues: {
 			donationInterval: '1',
 			monthlyIncome: amount || ('' as any),
-			paymentType: 'credit_card',
+			paymentType: PaymentTypes.CREDIT_CARD,
 			email: '',
 			firstName: '',
 			lastName: '',
@@ -200,6 +201,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 											<BankTransferForm
 												lang={lang}
 												region={region}
+												qrBillType={window.innerWidth < 768 ? 'QRCODE' : 'QRBILL'}
 												intervalCount={Number(form.watch('donationInterval'))}
 												amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
 												translations={translations.bankTransfer}
@@ -209,7 +211,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 								)}
 							</CardContent>
 							<CardFooter>
-								{form.watch('paymentType') === 'credit_card' && (
+								{form.watch('paymentType') === PaymentTypes.CREDIT_CARD && (
 									<StripePaymentButton
 										amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
 										intervalCount={Number(form.watch('donationInterval'))}

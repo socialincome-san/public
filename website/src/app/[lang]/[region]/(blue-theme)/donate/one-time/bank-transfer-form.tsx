@@ -11,6 +11,7 @@ import { useFormContext } from 'react-hook-form';
 import toast from 'react-hot-toast';
 
 export type BankTransferFormProps = {
+	qrBillType: 'QRCODE' | 'QRBILL';
 	lang: WebsiteLanguage;
 	region: WebsiteRegion;
 	amount: number;
@@ -19,15 +20,7 @@ export type BankTransferFormProps = {
 		firstName: string;
 		lastName: string;
 		email: string;
-		plan: string;
-		yourContribution: string;
-		fullSocialIncome: string;
-		partialSocialIncome: string;
-		weMatchTheMissing: string;
 		generateQrBill: string;
-		confirmMonthlyOrder: string;
-		transferFeesNote: string;
-		plusPlanLink: string;
 		confirmPayment: string;
 		paymentSuccess: string;
 		loginLink: string;
@@ -49,7 +42,14 @@ type UserFormData = {
 	paymentReferenceId: number;
 };
 
-export function BankTransferForm({ amount, intervalCount, translations, lang, region }: BankTransferFormProps) {
+export function BankTransferForm({
+	amount,
+	intervalCount,
+	translations,
+	lang,
+	region,
+	qrBillType,
+}: BankTransferFormProps) {
 	const form = useFormContext();
 	const { currency } = useI18n();
 	const [userData, setUserData] = useState<UserFormData | null>(null);
@@ -95,7 +95,7 @@ export function BankTransferForm({ amount, intervalCount, translations, lang, re
 					paymentIntervalMonths: intervalCount,
 					paymentReferenceId,
 					currency: currency as 'CHF' | 'EUR',
-					type: window.innerWidth < 768 ? 'QRCODE' : 'QRBILL',
+					type: qrBillType,
 				}),
 			);
 		} catch (error) {
@@ -137,11 +137,11 @@ export function BankTransferForm({ amount, intervalCount, translations, lang, re
 	};
 
 	return (
-		<div className="border-accent bg-card-muted !mt-[-2px] rounded-b-lg border-2 p-4 md:rounded-tl-lg md:p-8">
+		<div className="!mt-[-2px] rounded-b-lg border-2 bg-blue-100 p-4 md:rounded-tl-lg md:p-8">
 			{paid ? (
 				<div className="space-y-4 pb-8">
 					<p>{translations.paymentSuccess}</p>
-					<Link className={linkCn({ underline: 'always' })} href={`/${lang}/${region}/me/contributions`}>
+					<Link className={linkCn({ variant: 'accent' })} href={`/${lang}/${region}/me/contributions`}>
 						{translations.loginLink}
 					</Link>
 				</div>

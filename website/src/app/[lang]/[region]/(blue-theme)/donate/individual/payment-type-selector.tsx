@@ -6,9 +6,7 @@ import { FormControl, FormField, FormItem, FormMessage, RadioGroup, Typography }
 import classNames from 'classnames';
 import { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
-
-export const PAYMENT_TYPES = ['credit_card', 'bank_transfer'] as const;
-type PaymentType = (typeof PAYMENT_TYPES)[number];
+import { PaymentType, PaymentTypes } from '../one-time/generic-donation-form';
 
 type PaymentTypeTranslations = {
 	title: string;
@@ -46,7 +44,8 @@ function PaymentTypeFormItem({
 				className={classNames(
 					'flex flex-1 cursor-pointer flex-row border-2 p-4 focus:outline-none',
 					{ 'shadow-sm': !active },
-					{ 'border-accent bg-card-muted': active },
+					{ 'bg-blue-100': active && paymentType === PaymentTypes.BANK_TRANSFER },
+					{ 'border-accent bg-card-muted': active && paymentType === PaymentTypes.CREDIT_CARD },
 					{ 'rounded-lg': !hasContent },
 					{ 'rounded-b-none rounded-t-lg border-b-0 pb-8': hasContent },
 				)}
@@ -91,14 +90,14 @@ export function PaymentTypeSelector({ lang, translations, bankTransferForm }: Pa
 									className="grid grid-cols-1 place-items-stretch gap-4 md:grid-cols-2"
 								>
 									<PaymentTypeFormItem
-										active={field.value === 'credit_card'}
-										paymentType="credit_card"
+										active={field.value === PaymentTypes.CREDIT_CARD}
+										paymentType={PaymentTypes.CREDIT_CARD}
 										title={translations.creditCard}
 										description={translations.creditCardDescription}
 									/>
 									<PaymentTypeFormItem
 										active={isActive}
-										paymentType="bank_transfer"
+										paymentType={PaymentTypes.BANK_TRANSFER}
 										title={translations.bankTransfer}
 										description={translations.bankTransferDescription}
 										hasContent={isActive}
