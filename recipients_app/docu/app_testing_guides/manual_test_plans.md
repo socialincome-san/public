@@ -10,17 +10,23 @@ corresponding
   Policy” a webview with the privacy policy is opened.
 - TODO: Click on the button “Create Account” then …
 
-## Login
+## Phone verification and Login, Logout
 
+- Test Phone verification (Happy Path)
+  - with not existing Firebase Auth user
+  - with existing Firebase Auth user
+- Test Resending of OTP code
+- Test OTP Code expired (Expired after 10 Minutes) => Shows user
+  friendly error message
+- User stays logged in after app restart
 - Switch off the internet and try to login. => An error message occurs
-- Can I login with a valid account? => Enter registered phone number,
-  enter verification code, You are logged in.
-
-## Logout
-
 - Logout of the app: Go to “Edit”, scroll down and “Sign Out” => The
   user is signed out and back on the Login page. This also works if
   there is no internet.
+
+## Demo mode
+
+- Switch between normal mode and demo mode
 
 ## Profile
 

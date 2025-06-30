@@ -7,6 +7,8 @@ import "package:app/data/datasource/remote/organization_remote_data_source.dart"
 import "package:app/data/datasource/remote/payment_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
+//import "package:app/data/services/firebase_otp_service.dart";
+import "package:app/data/services/twilio_otp_service.dart";
 import "package:app/demo_manager.dart";
 import "package:app/my_app.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -14,13 +16,14 @@ import "package:firebase_app_check/firebase_app_check.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:firebase_core/firebase_core.dart";
 import "package:firebase_messaging/firebase_messaging.dart";
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_native_splash/flutter_native_splash.dart";
 import "package:sentry_flutter/sentry_flutter.dart";
 
-//Async for Firebase
+// Async for Firebase
 Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -35,14 +38,30 @@ Future<void> main() async {
   }
 
   await Firebase.initializeApp();
-  await FirebaseAppCheck.instance.activate();
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
+    appleProvider: kDebugMode ? AppleProvider.debug : AppleProvider.appAttest,
+  );
 
   final firestore = FirebaseFirestore.instance;
   final firebaseAuth = FirebaseAuth.instance;
   final messaging = FirebaseMessaging.instance;
   final demoManager = DemoManager();
 
-  final userRemoteDataSource = UserRemoteDataSource(firestore: firestore, firebaseAuth: firebaseAuth);
+  //final authService = FirebaseOtpService(firebaseAuth: firebaseAuth, demoManager: demoManager,);
+  final authService = TwilioOtpService(
+    firebaseAuth: firebaseAuth,
+    demoManager: demoManager,
+    accountSid: const String.fromEnvironment("TWILIO_ACCOUNT_SID"),
+    authToken: const String.fromEnvironment("TWILIO_AUTH_TOKEN"),
+    twilioNumber: const String.fromEnvironment("TWILIO_NUMBER"),
+    serviceId: const String.fromEnvironment("TWILIO_SERVICE_SID"),
+  );
+
+  final userRemoteDataSource = UserRemoteDataSource(
+    firestore: firestore,
+    firebaseAuth: firebaseAuth,
+  );
   final userDemoDataSource = UserDemoDataSource();
 
   final paymentRemoteDataSource = PaymentRemoteDataSource(firestore: firestore);
@@ -81,6 +100,7 @@ Future<void> main() async {
         surveyDemoDataSource: surveyDemoDataSource,
         organizationRemoteDataSource: organizationRemoteDataSource,
         organizationDemoDataSource: organizationDemoDataSource,
+        authService: authService,
       ),
     ),
   );
