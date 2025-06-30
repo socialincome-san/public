@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "survey" ALTER COLUMN "data" SET DATA TYPE TEXT;

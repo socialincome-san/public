@@ -234,7 +234,7 @@ model Survey {
   completedAt   DateTime?             @map("completed_at")
   status        SurveyStatus          @map("status")
   comments      String?               @map("comments")
-  data          Json                  @map("data")
+  data          String                @map("data")
   accessEmail   String                @map("access_email")
   accessPw      String                @map("access_pw")
   accessToken   String                @map("access_token")
@@ -279,6 +279,17 @@ model DonationCertificate {
 
   @@unique([userId, year])
   @@map("donation_certificate")
+}
+
+model Expense {
+  id         String      @id @default(cuid()) @map("id")
+  type       ExpenseType @map("type")
+  year       Int         @map("year")
+  amountChf  Float       @map("amount_chf")
+  createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt  DateTime?   @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("expense")
 }
 
 enum UserRole {
@@ -362,6 +373,16 @@ enum SurveyQuestionnaire {
 enum RecipientMainLanguage {
   kri
   en
+}
+
+enum ExpenseType {
+  account_fees
+  administrative
+  delivery_fees
+  donation_fees
+  exchange_rate_loss
+  fundraising_advertising
+  staff
 }
 
 view ContributionStatistics {

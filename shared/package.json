@@ -14,7 +14,6 @@
 		"db:introspect": "prisma db pull --schema=src/database/schema.prisma",
 		"db:seed": "prisma db seed --schema=src/database/schema.prisma",
 		"db:studio": "prisma studio --schema=src/database/schema.prisma",
-		"db:pull": "prisma db pull --schema=src/database/schema.prisma",
 		"db:up": "docker compose up -d postgres",
 		"db:down": "docker compose down"
 	},

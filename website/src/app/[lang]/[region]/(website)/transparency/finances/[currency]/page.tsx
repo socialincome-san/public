@@ -2,7 +2,6 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { CurrencyRedirect } from '@/app/[lang]/[region]/(website)/transparency/(components)/currency-redirect';
 import { firestoreAdmin } from '@/firebase-admin';
 import { toLocale, websiteCurrencies, WebsiteCurrency } from '@/i18n';
-import { ContributionStatisticsService } from '@socialincome/shared/src/database/services/contribution-statistics/contribution-statistics.service';
 import { Currency } from '@socialincome/shared/src/types/currency';
 import {
 	ContributionStats,
@@ -41,7 +40,7 @@ export type SectionProps = {
 
 export default async function Page(props: TransparencyPageProps) {
 	const params = await props.params;
-	const getFirestoreStats = async (currency: Currency) => {
+	const getStats = async (currency: Currency) => {
 		const contributionCalculator = await ContributionStatsCalculator.build(firestoreAdmin, currency);
 		const contributionStats = contributionCalculator.allStats();
 		const paymentCalculator = await PaymentStatsCalculator.build(firestoreAdmin, currency);
@@ -52,19 +51,8 @@ export default async function Page(props: TransparencyPageProps) {
 		const expensesStats = expensesStatsCalculator.allStats();
 		return { contributionStats, expensesStats, paymentStats, recipientStats };
 	};
-
-	const getPostgresStatistics = async (currency: Currency) => {
-		const contributionsStatisticsService = new ContributionStatisticsService();
-		const contributionStatistics = await contributionsStatisticsService.getAll();
-		return { contributionStatistics };
-	};
 	const currency = params.currency.toUpperCase() as WebsiteCurrency;
-	const { contributionStats, expensesStats, paymentStats, recipientStats } = await getFirestoreStats(currency);
-	const { contributionStatistics: postgresContributionStatistics } = await getPostgresStatistics(currency);
-
-	console.log('firestore statistics:', JSON.stringify(contributionStats, null, 2));
-	console.log('postgres statistics: ', JSON.stringify(postgresContributionStatistics, null, 2));
-
+	const { contributionStats, expensesStats, paymentStats, recipientStats } = await getStats(currency);
 	const currencyLocales = {
 		style: 'currency' as keyof Intl.NumberFormatOptionsStyleRegistry,
 		currency: params.currency,
