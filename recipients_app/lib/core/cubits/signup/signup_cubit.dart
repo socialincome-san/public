@@ -1,6 +1,6 @@
 import "package:app/data/repositories/repositories.dart";
+import "package:app/data/services/auth_service.dart";
 import "package:equatable/equatable.dart";
-import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 part "signup_state.dart";
@@ -18,12 +18,12 @@ part "signup_state.dart";
     } */
 
 class SignupCubit extends Cubit<SignupState> {
-  final UserRepository userRepository;
+  final AuthService authService;
   final CrashReportingRepository crashReportingRepository;
 
   SignupCubit({
-    required this.userRepository,
     required this.crashReportingRepository,
+    required this.authService,
   }) : super(const SignupState());
 
   Future<void> signupWithPhoneNumber({
@@ -32,16 +32,13 @@ class SignupCubit extends Cubit<SignupState> {
     emit(state.copyWith(status: SignupStatus.loadingPhoneNumber));
 
     try {
-      await userRepository.verifyPhoneNumber(
+      await authService.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        forceResendingToken: state.forceResendingToken,
-        onCodeSend: (verificationId, forceResendingToken) {
+        onCodeSend: () {
           emit(
             state.copyWith(
               status: SignupStatus.enterVerificationCode,
               phoneNumber: phoneNumber,
-              forceResendingToken: forceResendingToken,
-              verificationId: verificationId,
             ),
           );
         },
@@ -54,14 +51,24 @@ class SignupCubit extends Cubit<SignupState> {
             ),
           );
         },
-        onVerificationCompleted: (credentials) async {
-          await userRepository.signInWithCredential(credentials);
-          emit(
-            state.copyWith(
-              status: SignupStatus.verificationSuccess,
-              phoneNumber: phoneNumber,
-            ),
-          );
+        onVerificationCompleted: () async {
+          try {
+            await authService.signInWithCredential();
+            emit(
+              state.copyWith(
+                status: SignupStatus.verificationSuccess,
+                phoneNumber: phoneNumber,
+              ),
+            );
+          } on Exception catch (ex, stackTrace) {
+            crashReportingRepository.logError(ex, stackTrace);
+            emit(
+              state.copyWith(
+                status: SignupStatus.verificationFailure,
+                exception: ex,
+              ),
+            );
+          }
         },
       );
     } on Exception catch (ex, stackTrace) {
@@ -79,12 +86,8 @@ class SignupCubit extends Cubit<SignupState> {
     emit(state.copyWith(status: SignupStatus.loadingVerificationCode));
 
     try {
-      final credential = PhoneAuthProvider.credential(
-        verificationId: state.verificationId!,
-        smsCode: verificationCode,
-      );
-
-      await userRepository.signInWithCredential(credential);
+      await authService.submitVerificationCode(verificationCode);
+      await authService.signInWithCredential();
 
       emit(
         state.copyWith(

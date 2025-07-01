@@ -101,7 +101,6 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 				gender: values.gender,
 			},
 			language: values.language,
-			email: values.email,
 			address: {
 				street: values.street,
 				number: values.streetNumber,
@@ -146,6 +145,7 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 				/>
 				<FormField
 					control={form.control}
+					disabled={true}
 					name="email"
 					render={({ field }) => (
 						<FormItem>
