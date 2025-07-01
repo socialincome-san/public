@@ -1,9 +1,4 @@
-import {
-	type StoryblokArticle,
-	StoryblokAuthor,
-	StoryblokContentType,
-	StoryblokTag,
-} from '@socialincome/shared/src/storyblok/journal';
+import { type StoryblokArticle, StoryblokAuthor, StoryblokContentType, StoryblokTag } from '@/types/journal';
 import { getStoryblokApi, ISbStory } from '@storyblok/react';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';

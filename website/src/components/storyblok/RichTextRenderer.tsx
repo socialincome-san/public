@@ -20,12 +20,14 @@ import {
 	StoryblokRichtext,
 } from 'storyblok-rich-text-react-renderer';
 
-export function richTextRenderer(
-	richTextDocument: StoryblokRichtext,
-	translator: Translator,
-	lang: LanguageCode,
-	region: WebsiteRegion,
-) {
+type RichTextRendererProps = {
+	richTextDocument: StoryblokRichtext;
+	translator: Translator;
+	lang: LanguageCode;
+	region: WebsiteRegion;
+};
+
+export function RichTextRenderer({ richTextDocument, translator, lang, region }: RichTextRendererProps) {
 	return render(richTextDocument, {
 		markResolvers: {
 			[MARK_LINK]: (children: any, props: any) => (

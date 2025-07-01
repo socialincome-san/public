@@ -9,12 +9,7 @@ type MoreArticlesLinkProps = {
 export function MoreArticlesLink({ text, url }: MoreArticlesLinkProps) {
 	return (
 		<Typography size="sm">
-			<Link
-				className={`${linkCn({ arrow: 'external', underline: 'none' })} ml-1`}
-				href={url}
-				key={'link_to_default'}
-				rel="noopener noreferrer"
-			>
+			<Link className={`${linkCn({ arrow: 'external', underline: 'none' })} ml-1`} href={url} rel="noopener noreferrer">
 				{text}
 			</Link>
 		</Typography>

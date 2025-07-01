@@ -1,7 +1,7 @@
 import { ShowMoreToggle } from '@/components/storyblok/ShowMore';
 import { formatStoryblokDate } from '@/components/storyblok/StoryblokUtils';
 import { ThumbnailImage } from '@/components/storyblok/ThumbnailImage';
-import { ReferenceArticle, ReferencesGroup, StoryblokImage } from '@socialincome/shared/src/storyblok/journal';
+import { ReferenceArticle, ReferencesGroup, StoryblokImage } from '@/types/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { linkCn, Separator, Typography } from '@socialincome/ui';

@@ -1,12 +1,12 @@
 import { OriginalLanguageLink } from '@/components/storyblok/OriginalLanguage';
-import { richTextRenderer } from '@/components/storyblok/RichTextRendererWrapper';
+import { RichTextRenderer } from '@/components/storyblok/RichTextRenderer';
 import { getArticle, getRelativeArticles } from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
 import { formatStoryblokDate, formatStoryblokUrl } from '@/components/storyblok/StoryblokUtils';
 import { WebsiteRegion } from '@/i18n';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
-import { StoryblokAuthor, StoryblokTag } from '@socialincome/shared/src/storyblok/journal';
+import { StoryblokAuthor, StoryblokTag } from '@/types/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, Separator, Typography } from '@socialincome/ui';
@@ -147,12 +147,22 @@ export default async function Page(props: {
 						{articleData.leadText}
 					</Typography>
 					<Typography as="div" className="text-black">
-						{richTextRenderer(articleData.content, translator, lang, region)}
+						<RichTextRenderer
+							richTextDocument={articleData.content}
+							translator={translator}
+							lang={lang}
+							region={region}
+						/>
 					</Typography>
 					<Separator className="my-2" />
 					{articleData.footnotes && (
 						<Typography as="div" className="mt-5 text-black" size="sm">
-							{richTextRenderer(articleData.footnotes, translator, lang, region)}
+							<RichTextRenderer
+								richTextDocument={articleData.footnotes}
+								translator={translator}
+								lang={lang}
+								region={region}
+							/>
 						</Typography>
 					)}
 					<div className="mt-4 flex flex-wrap justify-start gap-2">
@@ -170,7 +180,7 @@ export default async function Page(props: {
 
 				{articleData.showRelativeArticles && (
 					<div>
-						<Typography size="4xl" className="text-center">
+						<Typography size="4xl" className="text-center" weight="semibold">
 							{translator.t('article.keep-reading')}
 						</Typography>
 						<div className="mb-10 mt-3 grid grid-cols-1 content-center justify-center gap-4 p-10 md:pl-20 md:pr-20 lg:grid-cols-3">
