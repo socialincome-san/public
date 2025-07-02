@@ -1,6 +1,9 @@
+import "dart:async";
+
 import "package:app/data/models/organization.dart";
 import "package:app/data/models/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
+import "package:app/data/services/auth_service.dart";
 import "package:equatable/equatable.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -11,15 +14,19 @@ class AuthCubit extends Cubit<AuthState> {
   final UserRepository userRepository;
   final OrganizationRepository organizationRepository;
   final CrashReportingRepository crashReportingRepository;
+  final AuthService authService;
+
+  late final StreamSubscription<User?> _authSubscription;
 
   AuthCubit({
     required this.userRepository,
     required this.organizationRepository,
     required this.crashReportingRepository,
+    required this.authService,
   }) : super(const AuthState()) {
     /// Register a listener which will be triggered if the auth state of the user
     /// changes for whatever reason.
-    userRepository.authStateChanges().listen((user) async {
+    _authSubscription = authService.authStateChanges().listen((user) async {
       if (user != null) {
         try {
           final recipient = await userRepository.fetchRecipient(user);
@@ -98,7 +105,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> logout() async {
     emit(const AuthState(status: AuthStatus.loading));
-    await userRepository.signOut();
+    await authService.signOut();
     emit(const AuthState());
   }
 
@@ -107,5 +114,11 @@ class AuthCubit extends Cubit<AuthState> {
       return await organizationRepository.fetchOrganization(recipient!.organizationRef!);
     }
     return null;
+  }
+
+  @override
+  Future<void> close() {
+    _authSubscription.cancel();
+    return super.close();
   }
 }
