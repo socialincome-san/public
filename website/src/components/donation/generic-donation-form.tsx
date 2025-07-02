@@ -2,18 +2,19 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { CreateCheckoutSessionData } from '@/app/api/stripe/checkout-session/create/route';
+import { BankTransferForm, BankTransferFormProps } from '@/components/donation/bank-transfer-form';
 import { DonationInterval } from '@/components/donation/donation-interval';
 import { useI18n } from '@/components/providers/context-providers';
 import { CurrencySelector } from '@/components/ui/currency-selector';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Form, FormControl, FormField, FormItem, Input, ToggleGroup, ToggleGroupItem } from '@socialincome/ui';
+import { Button, Form, FormControl, FormField, FormItem, Input } from '@socialincome/ui';
+import { ToggleGroup, ToggleGroupItem } from '@socialincome/ui/src/components/toggle-group';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useUser } from 'reactfire';
 import Stripe from 'stripe';
 import * as z from 'zod';
-import { BankTransferForm, BankTransferFormProps } from './bank-transfer-form';
 
 type DonationFormProps = {
 	defaultInterval: DonationInterval;
@@ -38,13 +39,7 @@ export const PaymentTypes = {
 
 export type PaymentType = (typeof PaymentTypes)[keyof typeof PaymentTypes];
 
-export default function GenericDonationForm({
-	defaultInterval,
-	translations,
-	lang,
-	region,
-	campaignId,
-}: DonationFormProps) {
+export function GenericDonationForm({ defaultInterval, translations, lang, region, campaignId }: DonationFormProps) {
 	const router = useRouter();
 	const { data: authUser } = useUser();
 	const { currency } = useI18n();

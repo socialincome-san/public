@@ -20,7 +20,7 @@ import {
 } from '@socialincome/ui';
 import { useForm, useWatch } from 'react-hook-form';
 import * as z from 'zod';
-import { BankTransferForm, BankTransferFormProps } from '../one-time/bank-transfer-form';
+import { BankTransferForm, BankTransferFormProps } from '../../../../../../components/donation/bank-transfer-form';
 import { PaymentTypes } from '../one-time/generic-donation-form';
 import { DonationIntervalSelector } from './donation-interval-selector';
 import { PaymentTypeSelector } from './payment-type-selector';
