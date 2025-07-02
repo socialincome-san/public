@@ -1,7 +1,7 @@
 'use client';
 
-import { useTranslator } from '@/hooks/useTranslator';
-import { WebsiteLanguage } from '@/i18n';
+import { useTranslator } from '@/lib/hooks/useTranslator';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { ContributionStats } from '@socialincome/shared/src/utils/stats/ContributionStatsCalculator';
 import { PaymentStats } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
 import { Typography } from '@socialincome/ui';

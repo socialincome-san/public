@@ -1,6 +1,8 @@
 'use client';
 
-import { WebsiteLanguage } from '@/i18n';
+import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { useTranslator } from '@/lib/hooks/useTranslator';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { FirebaseError } from 'firebase/app';
 import {
 	fetchSignInMethodsForEmail,
@@ -10,8 +12,6 @@ import {
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useAuth } from 'reactfire';
-import { useTranslator } from './useTranslator';
 
 type UseEmailAuthenticationProps = {
 	lang: WebsiteLanguage;
@@ -19,7 +19,7 @@ type UseEmailAuthenticationProps = {
 };
 
 export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationProps) => {
-	const auth = useAuth();
+	const { auth } = useAuth();
 	const [authListenerRegistered, setAuthListenerRegistered] = useState(false);
 	const [signingIn, setSigningIn] = useState(false);
 	const [sendingEmail, setSendingEmail] = useState(false);

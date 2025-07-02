@@ -1,8 +1,9 @@
 'use client';
 
 import { UpdateUserData } from '@/app/api/user/update/route';
-import { useTranslator } from '@/hooks/useTranslator';
-import { WebsiteLanguage } from '@/i18n';
+import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { useTranslator } from '@/lib/hooks/useTranslator';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { COUNTRY_CODES, CountryCode } from '@socialincome/shared/src/types/country';
 import { GENDER_OPTIONS, UserReferralSource } from '@socialincome/shared/src/types/user';
@@ -30,7 +31,6 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { useAuth } from 'reactfire';
 import * as z from 'zod';
 
 type SuccessFormProps = {
@@ -75,7 +75,7 @@ export function SuccessForm({
 	const router = useRouter();
 	const commonTranslator = useTranslator(lang, 'common');
 	const countryTranslator = useTranslator(lang, 'countries');
-	const auth = useAuth();
+	const { auth } = useAuth();
 	const [submitting, setSubmitting] = useState(false);
 	const [firstCountry, ...restCountries] = COUNTRY_CODES;
 

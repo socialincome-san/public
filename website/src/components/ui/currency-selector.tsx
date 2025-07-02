@@ -1,8 +1,8 @@
 'use client';
 
 import { getFlagComponentByCurrency } from '@/components/country-flags';
-import { useI18n } from '@/components/providers/context-providers';
-import { WebsiteCurrency } from '@/i18n';
+import { useI18n } from '@/lib/i18n/useI18n';
+import { WebsiteCurrency } from '@/lib/i18n/utils';
 import { isValidCurrency } from '@socialincome/shared/src/types/currency';
 import {
 	FontSize,

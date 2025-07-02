@@ -1,17 +1,17 @@
 'use client';
 
 import { Survey, SurveyLanguage } from '@/app/[lang]/[region]/survey/[recipient]/[survey]/survey';
+import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { Button, Input } from '@socialincome/ui';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { User, signInWithEmailAndPassword } from 'firebase/auth';
 import { useSearchParams } from 'next/navigation';
 import { FormEvent, use, useEffect, useState } from 'react';
-import { useAuth } from 'reactfire';
 import { SurveyPageProps } from './layout';
 
 export default function Page({ params }: SurveyPageProps) {
 	const { recipient, survey, lang } = use(params);
-	const auth = useAuth();
+	const { auth } = useAuth();
 	const [email, setEmail] = useState<string | null>(null);
 	const [password, setPassword] = useState<string | null>(null);
 	const [user, setUser] = useState<User>();

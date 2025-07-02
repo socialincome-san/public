@@ -1,4 +1,4 @@
-import { firestoreAdmin } from '@/firebase-admin';
+import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
 import { PaymentStatsCalculator } from '@socialincome/shared/src/utils/stats/PaymentStatsCalculator';
 import { Card, Typography } from '@socialincome/ui';
 

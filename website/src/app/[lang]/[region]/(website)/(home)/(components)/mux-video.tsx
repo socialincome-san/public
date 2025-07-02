@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { useGlobalStateProvider } from '@/components/providers/global-state-provider';
+import { useNavbarBackground } from '@/components/navbar/useNavbarBackground';
 import { PauseIcon, PlayIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/24/solid';
 import MuxVideo from '@mux/mux-video-react';
 import { Button } from '@socialincome/ui';
@@ -24,7 +24,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 	const [showCaptions, setShowCaptions] = useState(true);
 	const [showControls, setShowControls] = useState(true);
 	const { entry, isIntersecting, ref } = useIntersectionObserver({ initialIsIntersecting: true, threshold: 0.5 });
-	const { setBackgroundColor } = useGlobalStateProvider();
+	const { setBackgroundColor } = useNavbarBackground();
 	useEffect(() => {
 		if (!entry) return;
 		if (!isIntersecting && entry.boundingClientRect.top < 0) {
@@ -37,7 +37,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 		return () => {
 			setBackgroundColor(null);
 		};
-	}, [entry, isIntersecting]);
+	}, [entry, isIntersecting, setBackgroundColor]);
 
 	useEffect(() => {
 		const video = videoElementRef.current;
@@ -84,6 +84,7 @@ const MuxVideoComponent = ({ lang, translations }: HeroVideoSubtitles) => {
 	return (
 		<>
 			<div ref={posterRef} className="absolute inset-0 z-0">
+				{/* eslint-disable @next/next/no-img-element */}
 				<img
 					alt="Video Poster"
 					className="h-full w-full object-cover"

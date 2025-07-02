@@ -1,4 +1,4 @@
-import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 
 export const LANGUAGE_COOKIE = 'si_lang';
 export const REGION_COOKIE = 'si_region';

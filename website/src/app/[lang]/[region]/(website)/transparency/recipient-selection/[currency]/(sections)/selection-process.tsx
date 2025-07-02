@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { useTranslator } from '@/hooks/useTranslator';
+import { useTranslator } from '@/lib/hooks/useTranslator';
 import { Badge, BaseContainer, Button, Typography } from '@socialincome/ui';
 import classNames from 'classnames';
 import Link from 'next/link';
@@ -74,7 +74,7 @@ export function SelectionProcess({ lang }: DefaultParams) {
 		} else {
 			setActiveBox('preselection');
 		}
-	}, [isIntersecting, entry?.boundingClientRect.bottom, entry?.boundingClientRect.top]);
+	}, [isIntersecting, entry]);
 
 	return (
 		<BaseContainer id="selection-process-section" className="mt-36 scroll-mt-36">

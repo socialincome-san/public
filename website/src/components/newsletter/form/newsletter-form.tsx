@@ -1,8 +1,8 @@
 'use client';
 
 import { CreateNewsletterSubscription } from '@/app/api/newsletter/subscription/public/route';
-import { NewsletterPopupTranslations } from '@/components/newsletter-popup/newsletter-popup-client';
-import { useApi } from '@/hooks/useApi';
+import { NewsletterPopupTranslations } from '@/components/newsletter/popup/newsletter-popup-client';
+import { useApiClient } from '@/lib/api/useApiClient';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Button, Form, FormControl, FormField, FormItem, FormMessage, Input } from '@socialincome/ui';
@@ -17,7 +17,7 @@ type NewsletterFormProps = {
 };
 
 const NewsletterForm = ({ t, lang, translations }: NewsletterFormProps) => {
-	const api = useApi();
+	const api = useApiClient();
 	const formSchema = z.object({ email: z.string().email() });
 	type FormSchema = z.infer<typeof formSchema>;
 	const form = useForm<FormSchema>({

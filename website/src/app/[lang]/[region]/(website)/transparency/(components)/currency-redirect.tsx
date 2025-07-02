@@ -1,7 +1,7 @@
 'use client';
 
-import { useI18n } from '@/components/providers/context-providers';
-import { WebsiteCurrency } from '@/i18n';
+import { useI18n } from '@/lib/i18n/useI18n';
+import { WebsiteCurrency } from '@/lib/i18n/utils';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 

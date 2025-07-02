@@ -1,4 +1,4 @@
-import { authAdmin, firestoreAdmin } from '@/firebase-admin';
+import { authAdmin, firestoreAdmin } from '@/lib/firebase/firebase-admin';
 import { USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types/user';
 
 export const getUserDocFromAuthToken = async (token: string | undefined) => {

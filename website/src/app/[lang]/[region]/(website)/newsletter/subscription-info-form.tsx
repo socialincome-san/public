@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { useApi } from '@/hooks/useApi';
+import { useApiClient } from '@/lib/api/useApiClient';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NewsletterSubscriptionData } from '@socialincome/shared/src/sendgrid/SendgridSubscriptionClient';
 import {
@@ -31,7 +31,7 @@ type PersonalInfoFormProps = {
 } & DefaultParams;
 
 export function SubscriptionInfoForm({ lang, translations }: PersonalInfoFormProps) {
-	const api = useApi();
+	const api = useApiClient();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const formSchema = z.object({

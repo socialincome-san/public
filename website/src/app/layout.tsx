@@ -1,4 +1,8 @@
-import { ContextProviders } from '@/components/providers/context-providers';
+import { QueryClientProvider } from '@/app/query-client-provider';
+import { AnalyticsInitializer } from '@/components/analytics/analytics-initializer';
+import { ApiClientProvider } from '@/lib/api/api-client-provider';
+import { FirebaseAppProvider } from '@/lib/firebase/firebase-app-provider';
+import { I18nContextProvider } from '@/lib/i18n/i18n-context-provider';
 import { getMetadata } from '@/metadata';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import type { Viewport } from 'next';
@@ -21,13 +25,21 @@ export default function RootLayout({ children }: PropsWithChildren) {
 	return (
 		<html suppressHydrationWarning={true}>
 			<head>
+				<title>Social Income</title>
 				<meta name="app-version" content={appVersion} />
 				<meta name="app-environment" content={appEnv} />
 				<meta name="app-build-timestamp" content={buildTime} />
 			</head>
-			<ContextProviders>
-				<body>{children}</body>
-			</ContextProviders>
+			<QueryClientProvider>
+				<FirebaseAppProvider>
+					<ApiClientProvider>
+						<I18nContextProvider>
+							<body>{children}</body>
+						</I18nContextProvider>
+					</ApiClientProvider>
+					<AnalyticsInitializer />
+				</FirebaseAppProvider>
+			</QueryClientProvider>
 		</html>
 	);
 }
