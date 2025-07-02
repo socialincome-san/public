@@ -198,14 +198,16 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 										lang={lang}
 										translations={translations.paymentType}
 										bankTransferForm={
-											<BankTransferForm
-												lang={lang}
-												region={region}
-												qrBillType={window.innerWidth < 768 ? 'QRCODE' : 'QRBILL'}
-												intervalCount={Number(form.watch('donationInterval'))}
-												amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
-												translations={translations.bankTransfer}
-											/>
+											<div className="border-accent bg-card-muted !mt-[-2px] rounded-b-lg border-2 p-4 md:rounded-tl-lg md:p-8">
+												<BankTransferForm
+													lang={lang}
+													region={region}
+													qrBillType={window.innerWidth < 768 ? 'QRCODE' : 'QRBILL'}
+													intervalCount={Number(form.watch('donationInterval'))}
+													amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
+													translations={translations.bankTransfer}
+												/>
+											</div>
 										}
 									/>
 								)}

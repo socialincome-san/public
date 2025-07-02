@@ -1,14 +1,12 @@
 'use client';
 
-import { SubmitBankTransferRequest } from '@/app/api/bank-transfer/submit/route';
 import { useI18n } from '@/components/providers/context-providers';
+import { useBankTransfer } from '@/hooks/useBankTransfer';
 import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
-import { generateQrBillSvg } from '@/utils/qr-bill';
 import { Button, FormControl, FormField, FormItem, FormLabel, FormMessage, Input, linkCn } from '@socialincome/ui';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
-import toast from 'react-hot-toast';
 
 export type BankTransferFormProps = {
 	qrBillType: 'QRCODE' | 'QRBILL';
@@ -36,13 +34,6 @@ export type BankTransferFormProps = {
 	};
 };
 
-type UserFormData = {
-	email: string;
-	firstName: string;
-	lastName: string;
-	paymentReferenceId: number;
-};
-
 export function BankTransferForm({
 	amount,
 	intervalCount,
@@ -53,92 +44,23 @@ export function BankTransferForm({
 }: BankTransferFormProps) {
 	const form = useFormContext();
 	const { currency } = useI18n();
-	const [userData, setUserData] = useState<UserFormData | null>(null);
-	const [qrBillSvg, setQrBillSvg] = useState<string | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
-	const [paid, setPaid] = useState(false);
 	const qrBillRef = useRef<HTMLDivElement>(null);
 
-	useEffect(() => {
-		if (qrBillRef.current && qrBillSvg) {
-			qrBillRef.current.innerHTML = qrBillSvg;
-		}
-	}, [qrBillSvg]);
+	const { qrBillSvg, isLoading, paid, generateQRCode, confirmPayment } = useBankTransfer({
+		amount,
+		intervalCount,
+		currency: currency || '',
+		qrBillType,
+		translations,
+	});
 
-	const generateQRCode = async (event: React.FormEvent) => {
-		event.preventDefault();
-		event.stopPropagation();
-
-		try {
-			setIsLoading(true);
-			const { email, firstName, lastName } = form.getValues();
-
-			if (!currency) {
-				throw new Error('Currency is required');
-			}
-
-			const response = await fetch(`/api/bank-transfer/payment-reference/create`, {
-				method: 'POST',
-				body: JSON.stringify({ email }),
-			});
-			const { paymentReferenceId } = await response.json();
-
-			setUserData({
-				email,
-				firstName,
-				lastName,
-				paymentReferenceId,
-			});
-
-			setQrBillSvg(
-				generateQrBillSvg({
-					amount,
-					paymentIntervalMonths: intervalCount,
-					paymentReferenceId,
-					currency: currency as 'CHF' | 'EUR',
-					type: qrBillType,
-				}),
-			);
-		} catch (error) {
-			toast.error(translations.errors.qrBillError);
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	const confirmPayment = async (event: React.FormEvent) => {
-		event.preventDefault();
-		event.stopPropagation();
-
-		try {
-			setIsLoading(true);
-
-			const response = await fetch('/api/bank-transfer/submit', {
-				method: 'POST',
-				body: JSON.stringify({
-					user: userData,
-					payment: {
-						amount: amount,
-						intervalCount: intervalCount,
-						currency: currency,
-						recurring: true,
-					},
-				} as SubmitBankTransferRequest),
-			});
-
-			if (!response.ok) {
-				throw new Error('Failed to create user');
-			}
-		} catch (error) {
-			toast.error(translations.errors.paymentFailed);
-		} finally {
-			setIsLoading(false);
-			setPaid(true);
-		}
+	const handleGenerateQRCode = async () => {
+		const { email, firstName, lastName } = form.getValues();
+		await generateQRCode(email, firstName, lastName);
 	};
 
 	return (
-		<div className="!mt-[-2px] rounded-b-lg border-2 bg-blue-100 p-4 md:rounded-tl-lg md:p-8">
+		<div>
 			{paid ? (
 				<div className="space-y-4 pb-8">
 					<p>{translations.paymentSuccess}</p>
@@ -149,7 +71,7 @@ export function BankTransferForm({
 			) : qrBillSvg ? (
 				<>
 					<div className="my-8 flex flex-col items-center justify-center space-y-4">
-						<div className="max-w-full" ref={qrBillRef} />
+						<div className="max-w-full" dangerouslySetInnerHTML={{ __html: qrBillSvg }} />
 						{intervalCount > 0 && <p>{translations.standingOrderQrInfo}</p>}
 					</div>
 					<Button disabled={isLoading} size="lg" type="submit" className="w-full" onClick={confirmPayment}>
@@ -204,7 +126,9 @@ export function BankTransferForm({
 						size="lg"
 						type="submit"
 						className="w-full"
-						onClick={generateQRCode}
+						onClick={async (event) => {
+							await handleGenerateQRCode();
+						}}
 						disabled={isLoading || !form.formState.isValid}
 					>
 						{isLoading ? translations.generating : translations.generateQrBill}

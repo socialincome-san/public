@@ -76,7 +76,14 @@ export default function GenericDonationForm({
 	type FormSchema = z.infer<typeof formSchema>;
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
-		defaultValues: { interval: defaultInterval, amount: 100, paymentType: PaymentTypes.CREDIT_CARD },
+		defaultValues: {
+			interval: defaultInterval,
+			amount: 100,
+			paymentType: PaymentTypes.CREDIT_CARD,
+			email: '',
+			firstName: '',
+			lastName: '',
+		},
 	});
 	const interval = form.watch('interval');
 
@@ -198,7 +205,7 @@ export default function GenericDonationForm({
 						</div>
 					)}
 					{form.watch('paymentType') === PaymentTypes.BANK_TRANSFER ? (
-						<div className="flex flex-col space-y-4">
+						<div className="flex flex-col space-y-4 rounded-lg bg-blue-50 p-4 md:p-8">
 							<BankTransferForm
 								amount={form.watch('amount')}
 								intervalCount={form.watch('interval') === DonationInterval.Monthly ? 1 : 0}

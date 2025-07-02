@@ -1,5 +1,7 @@
 'use client';
 
+import { useI18n } from '@/components/providers/context-providers';
+import { useTranslator } from '@/hooks/useTranslator';
 import { WebsiteLanguage } from '@/i18n';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { FormControl, FormField, FormItem, FormMessage, RadioGroup, Typography } from '@socialincome/ui';
@@ -35,6 +37,8 @@ function DonationIntervalFormItem({
 	lang: WebsiteLanguage;
 	monthlyIncome: number;
 }) {
+	const translator = useTranslator(lang, 'website-donate');
+	const { currency } = useI18n();
 	const { setValue } = useFormContext<{ donationInterval: DonationInterval }>();
 
 	const getDonationAmount = (amount: number, donationInterval: DonationInterval) => {
@@ -56,7 +60,9 @@ function DonationIntervalFormItem({
 						<div className="flex flex-col space-y-1">
 							<Typography weight="bold">{title}</Typography>
 							<Typography size="sm">
-								{`${previewAmount} every ${donationInterval === '1' ? 'month' : donationInterval === '3' ? '3 months' : 'year'}`}
+								{translator?.t(`donation-interval.${donationInterval}.text`, {
+									context: { amount: previewAmount, currency: currency, locale: lang },
+								})}
 							</Typography>
 						</div>
 					</div>

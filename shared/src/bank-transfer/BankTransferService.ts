@@ -24,7 +24,7 @@ export type BankTransferUser = {
 export type BankTransferPayment = {
 	amount: number;
 	intervalCount: number;
-	currency: string;
+	currency: Currency;
 	recurring: boolean;
 };
 
@@ -32,13 +32,18 @@ export class BankTransferService {
 	constructor(private readonly firestoreAdmin: FirestoreAdmin) {}
 
 	async storeCharge(payment: BankTransferPayment, userData: BankTransferUser) {
-		const authUser = await this.getOrCreateAuthUser(userData);
-		const contribution = this.buildContribution(payment);
-		const userRef = await this.getOrCreateFirestoreUser(userData, contribution.currency, authUser.uid);
-		const contributionRef = userRef.collection(CONTRIBUTION_FIRESTORE_PATH).doc(contribution.reference_id);
-		await contributionRef.set(contribution, { merge: true });
-		console.info(`Updated contribution document: ${contributionRef.path}`);
-		return contributionRef;
+		try {
+			const authUser = await this.getOrCreateAuthUser(userData);
+			const contribution = this.buildContribution(payment);
+			const userRef = await this.getOrCreateFirestoreUser(userData, contribution.currency, authUser.uid);
+			const contributionRef = userRef.collection(CONTRIBUTION_FIRESTORE_PATH).doc(contribution.reference_id);
+			await contributionRef.set(contribution, { merge: true });
+			console.info(`Updated contribution document: ${contributionRef.path}`);
+			return contributionRef;
+		} catch (error) {
+			console.error('Failed to store charge', error);
+			throw error;
+		}
 	}
 
 	private async getOrCreateAuthUser(user: BankTransferUser): Promise<UserRecord> {

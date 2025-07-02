@@ -44,8 +44,7 @@ function PaymentTypeFormItem({
 				className={classNames(
 					'flex flex-1 cursor-pointer flex-row border-2 p-4 focus:outline-none',
 					{ 'shadow-sm': !active },
-					{ 'bg-blue-100': active && paymentType === PaymentTypes.BANK_TRANSFER },
-					{ 'border-accent bg-card-muted': active && paymentType === PaymentTypes.CREDIT_CARD },
+					{ 'border-accent bg-card-muted': active },
 					{ 'rounded-lg': !hasContent },
 					{ 'rounded-b-none rounded-t-lg border-b-0 pb-8': hasContent },
 				)}
