@@ -11,7 +11,7 @@
 		"credit-card": "Credit Card",
 		"bank-transfer": "Bank Transfer",
 		"credit-card-description": "Standard",
-		"bank-transfer-description": "No fees"
+		"bank-transfer-description": "No fees are charged"
 	},
 	"bank-transfer": {
 		"first-name": "First Name",

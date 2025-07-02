@@ -14,7 +14,7 @@
 		"credit-card": "Carta di credito",
 		"bank-transfer": "Bonifico bancario",
 		"credit-card-description": "Standard",
-		"bank-transfer-description": "Nessuna commissione"
+		"bank-transfer-description": "Nessuna commissione è addebitata"
 	},
 	"bank-transfer": {
 		"first-name": "Nome",

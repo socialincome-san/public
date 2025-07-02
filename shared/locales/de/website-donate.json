@@ -11,7 +11,7 @@
 		"credit-card": "Kreditkarte",
 		"bank-transfer": "Banküberweisung",
 		"credit-card-description": "Standard",
-		"bank-transfer-description": "Keine Gebühren"
+		"bank-transfer-description": "Es fallen keine Gebühren an"
 	},
 	"bank-transfer": {
 		"first-name": "Vorname",

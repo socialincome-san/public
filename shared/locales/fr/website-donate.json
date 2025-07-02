@@ -11,7 +11,7 @@
 		"credit-card": "Carte de crédit",
 		"bank-transfer": "Virement bancaire",
 		"credit-card-description": "Standard",
-		"bank-transfer-description": "Sans frais"
+		"bank-transfer-description": "Aucun frais n'est facturé"
 	},
 	"bank-transfer": {
 		"first-name": "Prénom",

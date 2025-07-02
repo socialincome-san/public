@@ -55,13 +55,15 @@ export default function GenericDonationForm({
 			interval: z.coerce.string(),
 			paymentType: z.enum(Object.values(PaymentTypes) as [string, ...string[]]).default(PaymentTypes.CREDIT_CARD),
 			amount: z.coerce.number().min(1),
-			email: z.string().email().optional(),
+			email: z.string().optional(),
 			firstName: z.string().optional(),
 			lastName: z.string().optional(),
 		})
 		.superRefine((data, ctx) => {
 			if (data.paymentType === PaymentTypes.BANK_TRANSFER) {
 				if (!data.email) {
+					ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['email'] });
+				} else if (!z.string().email().safeParse(data.email).success) {
 					ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['email'] });
 				}
 				if (!data.firstName) {
