@@ -7,7 +7,7 @@ PODS:
     - Firebase/Firestore (= 11.15.0)
     - firebase_core
     - Flutter
-  - cloud_functions (5.5.2):
+  - cloud_functions (5.6.0):
     - Firebase/Functions (= 11.15.0)
     - firebase_core
     - Flutter
@@ -246,7 +246,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   AppCheckCore: cc8fd0a3a230ddd401f326489c99990b013f0c4f
   cloud_firestore: 3f371b6dad2c9ba8bc4bff735c85870b3f527006
-  cloud_functions: 4ca0dcc47480d358a19a0084c49f70072cb8d1b5
+  cloud_functions: 59dd4819eda8ac5e24df1c38c707d80a9d21eb83
   Firebase: d99ac19b909cd2c548339c2241ecd0d1599ab02e
   firebase_app_check: c148ef0666845febf173a8324e1a49e9ead64188
   firebase_auth: 5be3036c1b9a080697788696db398e637d6c8401
