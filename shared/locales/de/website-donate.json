@@ -29,6 +29,7 @@
 		"confirm-payment": "Zahlung bestätigen",
 		"payment-success": "Danke für deine Spende! Sobald die Zahlung eingangen ist, erscheint diese als bezahlt in deinem Profil.",
 		"login-link": "Zur Profil-Anmeldung",
+		"profile-link": "Zum Profil",
 		"processing": "Zahlung wird bestätigt...",
 		"generating": "QR-Rechnung wird generiert...",
 		"standing-order-qr-info": "Bitte richte in deinem Online-Banking einen Dauerauftrag zur Zahlung an Social Income ein.",

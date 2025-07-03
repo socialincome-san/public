@@ -29,6 +29,7 @@
 		"confirm-payment": "Confirm Payment",
 		"payment-success": "Thank you for your donation! Once the payment is received, it will appear as paid in your profile.",
 		"login-link": "Login to your profile",
+		"profile-link": "Go to your profile",
 		"processing": "Processing payment...",
 		"generating": "Generating QR bill...",
 		"standing-order-qr-info": "Please set up a standing order to pay Social Income in your online banking.",

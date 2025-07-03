@@ -29,6 +29,12 @@
 			"raisenow": "Twint",
 			"stripe": "Carta di credito",
 			"wire-transfer": "Wire Transfer"
+		},
+		"status": {
+			"succeeded": "Pagato",
+			"pending": "In attesa",
+			"failed": "Fallito",
+			"unknown": "Sconosciuto"
 		}
 	},
 	"subscriptions": {
