@@ -6,6 +6,37 @@
 	"button-text": "Fais la différence",
 	"button-text-short": "Faire un don",
 	"one-time-donation": "Don unique",
+	"payment-type": {
+		"title": "Choisir le mode de paiement",
+		"credit-card": "Carte de crédit",
+		"bank-transfer": "Virement bancaire",
+		"credit-card-description": "Standard",
+		"bank-transfer-description": "Aucun frais n'est facturé"
+	},
+	"bank-transfer": {
+		"first-name": "Prénom",
+		"last-name": "Nom",
+		"email": "E-Mail",
+		"plan": "Plan 1% (mensuel)",
+		"your-contribution": "Votre contribution",
+		"full-social-income": "1 Social Income complet",
+		"partial-social-income": "1 Social Income partiel",
+		"we-match-the-missing": "Nous complétons le montant manquant",
+		"generate-qr-bill": "Générer le QR-bill",
+		"confirm-monthly-order": "Confirmer l'ordre permanent mensuel",
+		"transfer-fees-note": "Tous les frais de transfert sont payés à partir de nos réserves, actuellement à € 23'392. Veuillez envisager de couvrir les frais avec le Plan 1% Plus :",
+		"plus-plan-link": "modifier",
+		"confirm-payment": "Confirmer le paiement",
+		"payment-success": "Merci pour ton don! Une fois le paiement reçu, il apparaîtra comme payé dans ton profil.",
+		"login-link": "Se connecter à ton profil",
+		"processing": "Traitement du paiement...",
+		"generating": "Génération du QR-bill...",
+		"standing-order-qr-info": "Veuillez configurer un ordre permanent pour payer Social Income dans votre banque en ligne.",
+		"errors": {
+			"qrBillError": "Impossible de générer le QR-bill. Veuillez réessayer.",
+			"paymentFailed": "Le paiement a échoué. Veuillez réessayer et contacter-nous si le problème persiste."
+		}
+	},
 	"donation-impact": {
 		"monthly-contribution": "Ta contribution mensuelle:",
 		"direct-payout": "Ta contribution est versée directement sur le téléphone mobile du ou de la bénéficiaire de Social Income.",
@@ -52,7 +83,6 @@
 			"gender": "Genre",
 			"referral": "Comment as-tu entendu parler de nous?",
 			"accept-terms-and-conditions": "J'accepte <a href='/legal/donations/' target='_blank' class='underline'>les conditions de participation</a> et <a href='/legal/privacy/' target='_blank' class='underline'>la politique de protection des données</a>.",
-
 			"referrals": {
 				"familyfriends": "Famille ou amis",
 				"socialmedia": "Médias sociaux",

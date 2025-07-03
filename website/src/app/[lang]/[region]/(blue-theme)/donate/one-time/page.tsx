@@ -11,7 +11,7 @@ export default async function Page(props: DefaultPageProps) {
 
 	const translator = await Translator.getInstance({ language: lang, namespaces: 'website-donate' });
 	return (
-		<BaseContainer className="mx-auto flex max-w-3xl flex-col pt-8 md:pt-16">
+		<BaseContainer className="mx-auto flex max-w-3xl flex-col py-8 md:py-16">
 			<div className="flex flex-col items-center">
 				<Typography size="5xl" weight="bold" color="accent">
 					{translator.t('one-time.title')}
@@ -29,6 +29,28 @@ export default async function Page(props: DefaultPageProps) {
 							monthly: translator.t('donation-interval.1.title'),
 							amount: translator.t('amount'),
 							submit: translator.t('button-text-short'),
+							paymentType: {
+								creditCard: translator.t('payment-type.credit-card'),
+								bankTransfer: translator.t('payment-type.bank-transfer'),
+							},
+							bankTransfer: {
+								firstName: translator.t('success.user-form.firstname'),
+								lastName: translator.t('success.user-form.lastname'),
+								email: translator.t('success.user-form.email'),
+								generateQrBill: translator.t('bank-transfer.generate-qr-bill'),
+								standingOrderQrInfo: translator.t('bank-transfer.standing-order-qr-info'),
+								confirmPayment: translator.t('bank-transfer.confirm-payment'),
+								paymentSuccess: translator.t('bank-transfer.payment-success'),
+								loginLink: translator.t('bank-transfer.login-link'),
+								processing: translator.t('bank-transfer.processing'),
+								generating: translator.t('bank-transfer.generating'),
+								errors: {
+									emailRequired: translator.t('bank-transfer.errors.emailRequired'),
+									emailInvalid: translator.t('bank-transfer.errors.emailInvalid'),
+									qrBillError: translator.t('bank-transfer.errors.qrBillError'),
+									paymentFailed: translator.t('bank-transfer.errors.paymentFailed'),
+								},
+							},
 						}}
 					/>
 				</div>
