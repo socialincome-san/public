@@ -5,8 +5,9 @@ import { useBankTransfer } from '@/hooks/useBankTransfer';
 import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
 import { Button, FormControl, FormField, FormItem, FormLabel, FormMessage, Input, linkCn } from '@socialincome/ui';
 import Link from 'next/link';
-import { useRef } from 'react';
+import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { useAuth } from 'reactfire';
 
 export type BankTransferFormProps = {
 	qrBillType: 'QRCODE' | 'QRBILL';
@@ -23,6 +24,7 @@ export type BankTransferFormProps = {
 		confirmPayment: string;
 		paymentSuccess: string;
 		loginLink: string;
+		profileLink: string;
 		generating: string;
 		processing: string;
 		errors: {
@@ -44,7 +46,16 @@ export function BankTransferForm({
 }: BankTransferFormProps) {
 	const form = useFormContext();
 	const { currency } = useI18n();
-	const qrBillRef = useRef<HTMLDivElement>(null);
+	const { currentUser } = useAuth();
+
+	useEffect(() => {
+		if (!currentUser) {
+			return;
+		}
+		form.setValue('email', currentUser.email || '');
+		form.setValue('firstName', currentUser.displayName?.split(' ')[0]);
+		form.setValue('lastName', currentUser.displayName?.split(' ')[1]);
+	}, [currentUser]);
 
 	const { qrBillSvg, isLoading, paid, generateQRCode, confirmPayment } = useBankTransfer({
 		amount,
@@ -65,7 +76,7 @@ export function BankTransferForm({
 				<div className="space-y-4 pb-8">
 					<p>{translations.paymentSuccess}</p>
 					<Link className={linkCn({ variant: 'accent' })} href={`/${lang}/${region}/me/contributions`}>
-						{translations.loginLink}
+						{currentUser ? translations.profileLink : translations.loginLink}
 					</Link>
 				</div>
 			) : qrBillSvg ? (
@@ -88,7 +99,13 @@ export function BankTransferForm({
 								<FormItem>
 									<FormLabel>{translations.firstName}</FormLabel>
 									<FormControl>
-										<Input type="text" required className="h-14 rounded-xl bg-white px-6" {...field} />
+										<Input
+											type="text"
+											required
+											className="h-14 rounded-xl bg-white px-6"
+											{...field}
+											disabled={!!currentUser}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -101,7 +118,13 @@ export function BankTransferForm({
 								<FormItem>
 									<FormLabel>{translations.lastName}</FormLabel>
 									<FormControl>
-										<Input type="text" required className="h-14 rounded-xl bg-white px-6" {...field} />
+										<Input
+											type="text"
+											required
+											className="h-14 rounded-xl bg-white px-6"
+											{...field}
+											disabled={!!currentUser}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -114,7 +137,13 @@ export function BankTransferForm({
 								<FormItem>
 									<FormLabel>{translations.email}</FormLabel>
 									<FormControl>
-										<Input type="email" required className="h-14 rounded-xl bg-white px-6" {...field} />
+										<Input
+											type="email"
+											required
+											className="h-14 rounded-xl bg-white px-6"
+											{...field}
+											disabled={!!currentUser}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -129,7 +158,7 @@ export function BankTransferForm({
 						onClick={async (event) => {
 							await handleGenerateQRCode();
 						}}
-						disabled={isLoading || !form.formState.isValid}
+						disabled={isLoading || (!form.formState.isValid && !currentUser)}
 					>
 						{isLoading ? translations.generating : translations.generateQrBill}
 					</Button>

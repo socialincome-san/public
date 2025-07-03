@@ -221,6 +221,7 @@ export default async function Page({ params }: CampaignPageProps) {
 														confirmPayment: translator.t('bank-transfer.confirm-payment'),
 														paymentSuccess: translator.t('bank-transfer.payment-success'),
 														loginLink: translator.t('bank-transfer.login-link'),
+														profileLink: translator.t('bank-transfer.profile-link'),
 														processing: translator.t('bank-transfer.processing'),
 														generating: translator.t('bank-transfer.generating'),
 														errors: {

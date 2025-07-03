@@ -60,6 +60,9 @@ export function ContributionsTable({ lang, translations }: ContributionsTablePro
 									})}
 								</Typography>
 							</TableCell>
+							<TableCell>
+								<Typography>{translator?.t(`contributions.status.${contribution.get('status')}`)}</Typography>
+							</TableCell>
 						</TableRow>
 					);
 				})}

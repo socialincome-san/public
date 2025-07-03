@@ -32,6 +32,7 @@
 		"confirm-payment": "Conferma il pagamento",
 		"payment-success": "Grazie per il tuo contributo! Una volta ricevuto il pagamento, apparirà come pagato nel tuo profilo.",
 		"login-link": "Accedi al tuo profilo",
+		"profile-link": "Vai al tuo profilo",
 		"processing": "Elaborazione del pagamento...",
 		"generating": "Generazione del QR-bill...",
 		"standing-order-qr-info": "Per favore configura un ordine permanente per pagare Social Income nella tua banca online.",
