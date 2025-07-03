@@ -1,0 +1,26 @@
+{
+	"name": "firestore-to-postgres",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"migrate:all": "npm run migrate:users && npm run migrate:local-partners && npm run migrate:recipients && npm run migrate:campaigns && npm run migrate:contributions && npm run migrate:payouts && npm run migrate:exchange-rates && npm run migrate:payout-forecast && npm run migrate:admins && npm run migrate:donation-certificates && npm run migrate:expenses && npm run migrate:surveys",
+		"migrate:users": "tsx scripts/migrate-users.ts",
+		"migrate:local-partners": "tsx scripts/migrate-local-partners.ts",
+		"migrate:recipients": "tsx scripts/migrate-recipients.ts",
+		"migrate:campaigns": "tsx scripts/migrate-campaigns.ts",
+		"migrate:contributions": "tsx scripts/migrate-contributions.ts",
+		"migrate:payouts": "tsx scripts/migrate-payouts.ts",
+		"migrate:exchange-rates": "tsx scripts/migrate-exchange-rates.ts",
+		"migrate:payout-forecast": "tsx scripts/migrate-payout-forecast.ts",
+		"migrate:admins": "tsx scripts/migrate-admins.ts",
+		"migrate:donation-certificates": "tsx scripts/migrate-donation-certificates.ts",
+		"migrate:expenses": "tsx scripts/migrate-expenses.ts",
+		"migrate:surveys": "tsx scripts/migrate-surveys.ts",
+		"migrate:reset": "npm --workspace=@socialincome/shared run db:migrate:reset",
+		"typecheck": "tsc --noEmit"
+	},
+	"devDependencies": {
+		"tsx": "^4.20.2",
+		"typescript": "^5.0.0"
+	}
+}
