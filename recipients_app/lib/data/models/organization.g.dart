@@ -7,10 +7,10 @@ part of 'organization.dart';
 // **************************************************************************
 
 Organization _$OrganizationFromJson(Map<String, dynamic> json) => Organization(
-      name: json['name'] as String,
-      contactName: json['contactName'] as String?,
-      contactNumber: json['contactNumber'] as String?,
-    );
+  name: json['name'] as String,
+  contactName: json['contactName'] as String?,
+  contactNumber: json['contactNumber'] as String?,
+);
 
 Map<String, dynamic> _$OrganizationToJson(Organization instance) =>
     <String, dynamic>{
