@@ -1,6 +1,7 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { PaymentTypes } from '@/components/donation/generic-donation-form';
 import { useI18n } from '@/components/providers/context-providers';
 import { CurrencySelector } from '@/components/ui/currency-selector';
 import { useTranslator } from '@/hooks/useTranslator';
@@ -24,7 +25,6 @@ import { BankTransferForm, BankTransferFormProps } from '../../../../../../compo
 import { DonationIntervalSelector } from './donation-interval-selector';
 import { PaymentTypeSelector } from './payment-type-selector';
 import { StripePaymentButton } from './stripe-payment-button';
-import { PaymentTypes } from '@/components/donation/generic-donation-form';
 
 const DONATION_INTERVALS = ['1', '3', '12'] as const;
 type DonationInterval = (typeof DONATION_INTERVALS)[number];
