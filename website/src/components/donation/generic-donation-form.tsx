@@ -1,13 +1,12 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { DonationInterval } from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/page';
 import { CreateCheckoutSessionData } from '@/app/api/stripe/checkout-session/create/route';
+import { DonationInterval } from '@/components/donation/donation-interval';
 import { useI18n } from '@/components/providers/context-providers';
 import { CurrencySelector } from '@/components/ui/currency-selector';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Form, FormControl, FormField, FormItem, Input } from '@socialincome/ui';
-import { ToggleGroup, ToggleGroupItem } from '@socialincome/ui/src/components/toggle-group';
+import { Button, Form, FormControl, FormField, FormItem, Input, ToggleGroup, ToggleGroupItem } from '@socialincome/ui';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -26,13 +25,7 @@ type DonationFormProps = {
 	campaignId?: string;
 } & DefaultParams;
 
-export default function GenericDonationForm({
-	defaultInterval,
-	translations,
-	lang,
-	region,
-	campaignId,
-}: DonationFormProps) {
+export function GenericDonationForm({ defaultInterval, translations, lang, region, campaignId }: DonationFormProps) {
 	const router = useRouter();
 	const { data: authUser } = useUser();
 	const { currency } = useI18n();
@@ -85,10 +78,18 @@ export default function GenericDonationForm({
 										value={field.value}
 										onValueChange={(v) => form.setValue('interval', v)}
 									>
-										<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={DonationInterval.OneTime}>
+										<ToggleGroupItem
+											key={DonationInterval.OneTime}
+											className="text-md m-1 rounded-full px-6"
+											value={DonationInterval.OneTime}
+										>
 											{translations.oneTime}
 										</ToggleGroupItem>
-										<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={DonationInterval.Monthly}>
+										<ToggleGroupItem
+											key={DonationInterval.Monthly}
+											className="text-md m-1 rounded-full px-6"
+											value={DonationInterval.Monthly}
+										>
 											{translations.monthly}
 										</ToggleGroupItem>
 									</ToggleGroup>
@@ -103,7 +104,7 @@ export default function GenericDonationForm({
 							render={({ field }) => (
 								<FormItem className="flex-1 sm:basis-2/3">
 									<FormControl>
-										<>
+										<div>
 											<ToggleGroup
 												type="single"
 												className={'mb-4'}
@@ -126,7 +127,7 @@ export default function GenericDonationForm({
 													fontSize="md"
 												/>
 											</div>
-										</>
+										</div>
 									</FormControl>
 								</FormItem>
 							)}

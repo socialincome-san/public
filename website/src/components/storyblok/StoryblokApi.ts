@@ -1,9 +1,4 @@
-import {
-	type StoryblokArticle,
-	StoryblokAuthor,
-	StoryblokContentType,
-	StoryblokTag,
-} from '@socialincome/shared/src/storyblok/journal';
+import { type StoryblokArticle, StoryblokAuthor, StoryblokContentType, StoryblokTag } from '@/types/journal';
 import { getStoryblokApi, ISbStory } from '@storyblok/react';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -12,9 +7,11 @@ import { ISbStories, ISbStoriesParams, ISbStoryData } from 'storyblok-js-client/
 const STANDARD_ARTICLE_RELATIONS_TO_RESOLVE = ['article.author', 'article.tags', 'article.type'];
 const DEFAULT_LIMIT = 50;
 const NOT_FOUND = 404;
-const DEFAULT_LANGUAGE = 'en';
+export const DEFAULT_LANGUAGE = 'en';
 const CONTENT = 'content';
+const LEAD_TEXT = 'leadText';
 const STORIES_PATH = 'cdn/stories';
+const EXCLUDED_FIELDS_FOR_COUNTING = [CONTENT, LEAD_TEXT].join(',');
 
 // During the development of Storyblok features or writing of new content, it is useful to use the draft version of the content.
 async function addVersionParameter(properties: ISbStoriesParams): Promise<ISbStoriesParams> {
@@ -22,6 +19,65 @@ async function addVersionParameter(properties: ISbStoriesParams): Promise<ISbSto
 		...properties,
 		version: (await draftMode()).isEnabled ? 'draft' : 'published',
 	};
+}
+
+// To the best of my knowledge Storyblok doesn't support any aggregation functions API, therefore we are querying all of them
+// with a limit of 1 article per page. Therefore, the response doesn't transfer much not needed data but still contains the count
+export async function getOverviewArticlesCountForDefaultLang(): Promise<number> {
+	const params: ISbStoriesParams = {
+		per_page: 1,
+		excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
+		language: DEFAULT_LANGUAGE,
+		content_type: StoryblokContentType.Article,
+		filter_query: {
+			displayInOverviewPage: {
+				is: true,
+			},
+		},
+	};
+	return (await getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params))).total;
+}
+
+function articleByTagsFilter(tagId: string) {
+	return {
+		tags: {
+			any_in_array: tagId,
+		},
+	};
+}
+
+// To the best of my knowledge Storyblok doesn't support any aggregation functions API, therefore we are querying all of them
+// with a limit of 1 article per page. Therefore, the response doesn't transfer much not needed data but still contains the count
+export async function getArticleCountByTagForDefaultLang(tagId: string): Promise<number> {
+	const params: ISbStoriesParams = {
+		per_page: 1,
+		language: DEFAULT_LANGUAGE,
+		excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
+		content_type: StoryblokContentType.Article,
+		filter_query: articleByTagsFilter(tagId),
+	};
+	return (await getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params))).total;
+}
+
+function articlesByAuthorFilter(authorId: string) {
+	return {
+		author: {
+			in: authorId,
+		},
+	};
+}
+
+// To the best of my knowledge Storyblok doesn't support any aggregation functions API, therefore we are querying all of them
+// with a limit of 1 article per page. Therefore, the response doesn't transfer much not needed data but still contains the count
+export async function getArticleCountByAuthorForDefaultLang(authorId: string): Promise<number> {
+	const params: ISbStoriesParams = {
+		per_page: 1,
+		excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
+		language: DEFAULT_LANGUAGE,
+		content_type: StoryblokContentType.Article,
+		filter_query: articlesByAuthorFilter(authorId),
+	};
+	return (await getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params))).total;
 }
 
 export async function getAuthors(lang: string): Promise<ISbStories<StoryblokAuthor>> {
@@ -50,18 +106,19 @@ export async function getTags(lang: string): Promise<ISbStories<StoryblokTag>> {
 	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
 }
 
-export async function getArticlesByTag(tagId: string, lang: string): Promise<ISbStories<StoryblokArticle>> {
+export async function getArticlesByTag(
+	tagId: string,
+	lang: string,
+	limit = DEFAULT_LIMIT,
+): Promise<ISbStories<StoryblokArticle>> {
 	const params: ISbStoriesParams = {
+		per_page: limit,
 		resolve_relations: STANDARD_ARTICLE_RELATIONS_TO_RESOLVE,
 		language: lang,
 		excluding_fields: CONTENT,
 		sort_by: 'first_published_at:desc',
 		content_type: StoryblokContentType.Article,
-		filter_query: {
-			tags: {
-				any_in_array: tagId,
-			},
-		},
+		filter_query: articleByTagsFilter(tagId),
 	};
 	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
 }
@@ -78,11 +135,7 @@ export async function getArticlesByAuthor(
 		language: lang,
 		sort_by: 'first_published_at:desc',
 		content_type: StoryblokContentType.Article,
-		filter_query: {
-			author: {
-				in: authorId,
-			},
-		},
+		filter_query: articlesByAuthorFilter(authorId),
 	};
 	return getStoryblokApi().get(STORIES_PATH, await addVersionParameter(params));
 }
@@ -143,11 +196,11 @@ export async function getWithFallback<T>(
 	try {
 		return await loader(lang, slug);
 	} catch (error: any) {
-		if (error.status === NOT_FOUND) {
+		if (error?.status === NOT_FOUND) {
 			if (lang === DEFAULT_LANGUAGE) {
-				throw notFound();
+				return notFound();
 			}
-			return loader(DEFAULT_LANGUAGE, slug);
+			return await getWithFallback(loader, DEFAULT_LANGUAGE, slug);
 		}
 		throw error;
 	}
