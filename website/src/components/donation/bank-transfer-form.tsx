@@ -55,6 +55,7 @@ export function BankTransferForm({
 		form.setValue('email', currentUser.email || '');
 		form.setValue('firstName', currentUser.displayName?.split(' ')[0]);
 		form.setValue('lastName', currentUser.displayName?.split(' ')[1]);
+		form.trigger();
 	}, [currentUser]);
 
 	const { qrBillSvg, isLoading, paid, generateQRCode, confirmPayment } = useBankTransfer({
@@ -158,7 +159,7 @@ export function BankTransferForm({
 						onClick={async (event) => {
 							await handleGenerateQRCode();
 						}}
-						disabled={isLoading || (!form.formState.isValid && !currentUser)}
+						disabled={isLoading || !form.formState.isValid}
 					>
 						{isLoading ? translations.generating : translations.generateQrBill}
 					</Button>

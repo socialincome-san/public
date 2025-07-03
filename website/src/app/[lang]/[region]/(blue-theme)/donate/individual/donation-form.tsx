@@ -110,7 +110,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 
 	const formSchema = z
 		.object({
-			monthlyIncome: z.coerce.number(),
+			monthlyIncome: z.coerce.number().min(1),
 			donationInterval: z.enum(DONATION_INTERVALS),
 			paymentType:
 				region === 'ch'
@@ -170,7 +170,7 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 							render={({ field }) => (
 								<FormItem className="flex-1">
 									<FormControl>
-										<Input className="h-16 px-6 text-lg" placeholder={translations.amount} {...field} />
+										<Input className="h-16 px-6 text-lg" placeholder={translations.amount} {...field} type="number" />
 									</FormControl>
 								</FormItem>
 							)}
