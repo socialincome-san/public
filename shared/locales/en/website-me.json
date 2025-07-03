@@ -39,7 +39,8 @@
 			"pending": "Pending",
 			"failed": "Failed",
 			"unknown": "Unknown"
-		}
+		},
+		"status-title": "Status"
 	},
 	"subscriptions": {
 		"amount": "Amount",

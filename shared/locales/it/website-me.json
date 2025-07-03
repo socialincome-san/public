@@ -35,7 +35,8 @@
 			"pending": "In attesa",
 			"failed": "Fallito",
 			"unknown": "Sconosciuto"
-		}
+		},
+		"status-title": "Stato"
 	},
 	"subscriptions": {
 		"amount": "Importo",

@@ -21,6 +21,7 @@ export default async function Page(props: DefaultPageProps) {
 					date: translator.t('contributions.date'),
 					amount: translator.t('contributions.amount'),
 					source: translator.t('contributions.source'),
+					status: translator.t('contributions.status-title'),
 				}}
 			/>
 			<Link className={linkCn()} href={`/${lang}/${region}/donate/one-time`}>
