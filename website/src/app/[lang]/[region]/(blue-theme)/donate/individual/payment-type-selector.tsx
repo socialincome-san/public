@@ -1,12 +1,12 @@
 'use client';
 
+import { PaymentType, PaymentTypes } from '@/components/donation/generic-donation-form';
 import { WebsiteLanguage } from '@/i18n';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { FormControl, FormField, FormItem, FormMessage, RadioGroup, Typography } from '@socialincome/ui';
 import classNames from 'classnames';
 import { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { PaymentType, PaymentTypes } from '../one-time/generic-donation-form';
 
 type PaymentTypeTranslations = {
 	title: string;

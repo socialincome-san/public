@@ -65,7 +65,7 @@ export function generateQrBillSvg({
 		amount: Number(amount),
 		currency: currency,
 		creditor: {
-			account: 'CH44 3199 9123 0008 8901 2',
+			account: 'CH6730000001151126386',
 			address: 'Zweierstrasse',
 			buildingNumber: 103,
 			zip: 8003,

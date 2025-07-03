@@ -21,10 +21,10 @@ import {
 import { useForm, useWatch } from 'react-hook-form';
 import * as z from 'zod';
 import { BankTransferForm, BankTransferFormProps } from '../../../../../../components/donation/bank-transfer-form';
-import { PaymentTypes } from '../one-time/generic-donation-form';
 import { DonationIntervalSelector } from './donation-interval-selector';
 import { PaymentTypeSelector } from './payment-type-selector';
 import { StripePaymentButton } from './stripe-payment-button';
+import { PaymentTypes } from '@/components/donation/generic-donation-form';
 
 const DONATION_INTERVALS = ['1', '3', '12'] as const;
 type DonationInterval = (typeof DONATION_INTERVALS)[number];
