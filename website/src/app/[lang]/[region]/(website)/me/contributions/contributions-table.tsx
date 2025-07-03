@@ -21,6 +21,7 @@ type ContributionsTableProps = {
 		date: string;
 		amount: string;
 		source: string;
+		status: string;
 	};
 } & DefaultParams;
 
@@ -39,6 +40,7 @@ export function ContributionsTable({ lang, translations }: ContributionsTablePro
 					<TableHead>{translations.date}</TableHead>
 					<TableHead>{translations.source}</TableHead>
 					<TableHead className="text-right">{translations.amount}</TableHead>
+					<TableHead className="text-right">{translations.status}</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>
@@ -59,6 +61,9 @@ export function ContributionsTable({ lang, translations }: ContributionsTablePro
 										},
 									})}
 								</Typography>
+							</TableCell>
+							<TableCell className="text-right">
+								<Typography>{translator?.t(`contributions.status.${contribution.get('status')}`)}</Typography>
 							</TableCell>
 						</TableRow>
 					);

@@ -1,6 +1,6 @@
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
 import { formatStoryblokDate, formatStoryblokUrl } from '@/components/storyblok/StoryblokUtils';
-import { StoryblokArticle, StoryblokAuthor } from '@socialincome/shared/src/storyblok/journal';
+import { StoryblokArticle, StoryblokAuthor } from '@/types/journal';
 import { Typography } from '@socialincome/ui';
 import { ISbStoryData } from '@storyblok/react';
 import Image from 'next/image';

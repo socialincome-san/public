@@ -31,6 +31,9 @@ CREATE TYPE "SurveyQuestionnaire" AS ENUM ('onboarding', 'checkin', 'offboarding
 -- CreateEnum
 CREATE TYPE "RecipientMainLanguage" AS ENUM ('kri', 'en');
 
+-- CreateEnum
+CREATE TYPE "ExpenseType" AS ENUM ('account_fees', 'administrative', 'delivery_fees', 'donation_fees', 'exchange_rate_loss', 'fundraising_advertising', 'staff');
+
 -- CreateTable
 CREATE TABLE "user" (
     "id" TEXT NOT NULL,
@@ -234,7 +237,7 @@ CREATE TABLE "survey" (
     "completed_at" TIMESTAMP(3),
     "status" "SurveyStatus" NOT NULL,
     "comments" TEXT,
-    "data" JSONB NOT NULL,
+    "data" TEXT NOT NULL,
     "access_email" TEXT NOT NULL,
     "access_pw" TEXT NOT NULL,
     "access_token" TEXT NOT NULL,
@@ -278,6 +281,18 @@ CREATE TABLE "donation_certificate" (
     "updated_at" TIMESTAMPTZ(3) NOT NULL,
 
     CONSTRAINT "donation_certificate_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "expense" (
+    "id" TEXT NOT NULL,
+    "type" "ExpenseType" NOT NULL,
+    "year" INTEGER NOT NULL,
+    "amount_chf" DOUBLE PRECISION NOT NULL,
+    "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ(3),
+
+    CONSTRAINT "expense_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex

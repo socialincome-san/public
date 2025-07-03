@@ -404,12 +404,3 @@ view ContributionStatistics {
 
   @@map("contribution_statistics")
 }
-
-view RecipientStatistics {
-  id             Int     @id @map("id")
-  organizationId String? @map("organization_id")
-  status         String  @map("status")
-  count          Int     @map("count")
-
-  @@map("recipient_statistics")
-}

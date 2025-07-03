@@ -33,7 +33,14 @@
 			"raisenow": "Twint",
 			"stripe": "Credit Card",
 			"wire-transfer": "Wire Transfer"
-		}
+		},
+		"status": {
+			"succeeded": "Succeeded",
+			"pending": "Pending",
+			"failed": "Failed",
+			"unknown": "Unknown"
+		},
+		"status-title": "Status"
 	},
 	"subscriptions": {
 		"amount": "Amount",

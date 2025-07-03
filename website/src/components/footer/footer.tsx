@@ -48,6 +48,7 @@ export default async function Footer({ lang, region }: DefaultParams) {
 						</Typography>
 						<FooterLink label={translator.t('navigation.faq')} url={`/${lang}/${region}/faq`} />
 						<FooterLink label={translator.t('navigation.my-account')} url={`/${lang}/${region}/login`} />
+						<FooterLink label={translator.t('navigation.no-harm')} url={`/${lang}/${region}/do-no-harm`} />
 						<FooterLink label={translator.t('navigation.legal')} url={`/${lang}/${region}/legal`} />
 						<FooterLink label={translator.t('navigation.contact')} url={`/${lang}/${region}/contact`} />
 					</div>

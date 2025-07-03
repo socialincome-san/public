@@ -1,8 +1,15 @@
 {
+	"donate": {
+		"text-1": "Scegli un importo da donare per fare",
+		"text-2": "una grande differenza",
+		"text-3": "nella lotta contro la povertà."
+	},
 	"overview": {
 		"all": "Tutti",
 		"title": "Giornale",
-		"description": "Storie e aggiornamenti sul nostro percorso per creare un impatto."
+		"description": "Storie e aggiornamenti sul nostro percorso per creare un impatto.",
+		"editors": "Redattori collaboratori",
+		"more-articles": "Ci sono altri articoli disponibili in inglese"
 	},
 	"article": {
 		"keep-reading": "Continua a leggere",

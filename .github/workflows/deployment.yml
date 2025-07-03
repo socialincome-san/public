@@ -86,6 +86,7 @@ jobs:
           echo POSTFINANCE_FTP_USER=${{ vars.POSTFINANCE_FTP_USER }} >> .env
           echo POSTFINANCE_PAYMENTS_FILES_BUCKET=${{ (inputs.project == 'social-income-prod' && vars.POSTFINANCE_PAYMENTS_FILES_BUCKET) || vars.POSTFINANCE_PAYMENTS_FILES_BUCKET_STAGING }} >> .env
           echo SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }} >> .env
+          echo SENDGRID_LIST_ID=${{ secrets.SENDGRID_LIST_ID }} >> .env
           echo STRIPE_API_READ_KEY=${{ (inputs.project == 'social-income-prod' && secrets.STRIPE_API_READ_KEY) || secrets.STRIPE_API_READ_KEY_STAGING }} >> .env
           echo STRIPE_WEBHOOK_SECRET=${{ (inputs.project == 'social-income-prod' && secrets.STRIPE_WEBHOOK_SECRET) || secrets.STRIPE_WEBHOOK_SECRET_STAGING }} >> .env
           echo TWILIO_ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }} >> .env

@@ -1,4 +1,5 @@
 import { ISbStoryData } from 'storyblok-js-client/src/interfaces';
+import { StoryblokRichtext } from 'storyblok-rich-text-react-renderer';
 
 export enum StoryblokContentType {
 	Article = 'article',
@@ -71,8 +72,9 @@ export interface StoryblokArticle {
 	id: number;
 	originalLanguage?: string;
 	title: string;
-	content: any;
-	subtitle: string;
+	content: StoryblokRichtext;
+	footnotes?: StoryblokRichtext;
+	useImageOnlyForPreview: boolean;
 	type: ISbStoryData<StoryblokArticleType>;
 	image: StoryblokImage;
 	tags: ISbStoryData<StoryblokTag>[];
