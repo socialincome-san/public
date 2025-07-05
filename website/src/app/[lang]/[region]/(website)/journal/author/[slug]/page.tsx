@@ -68,10 +68,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 			{totalArticlesInDefault > totalArticlesInSelectedLanguage && (
 				<div>
 					<Separator className="my-8" />
-					<MoreArticlesLink
-						text={translator.t('overview.more-articles')}
-						url={`/${DEFAULT_LANGUAGE}/${region}/journal/author/${slug}`}
-					/>
+					<MoreArticlesLink text={translator.t('overview.more-articles')} />
 				</div>
 			)}
 		</BaseContainer>
