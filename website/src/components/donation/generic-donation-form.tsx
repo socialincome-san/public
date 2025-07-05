@@ -1,8 +1,9 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { DonationInterval } from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/page';
 import { CreateCheckoutSessionData } from '@/app/api/stripe/checkout-session/create/route';
+import { BankTransferForm, BankTransferFormProps } from '@/components/donation/bank-transfer-form';
+import { DonationInterval } from '@/components/donation/donation-interval';
 import { CurrencySelector } from '@/components/ui/currency-selector';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { useI18n } from '@/lib/i18n/useI18n';
@@ -22,31 +23,64 @@ type DonationFormProps = {
 		oneTime: string;
 		amount: string;
 		submit: string;
+		paymentType: {
+			bankTransfer: string;
+			creditCard: string;
+		};
+		bankTransfer: BankTransferFormProps['translations'];
 	};
 	campaignId?: string;
 } & DefaultParams;
 
-export default function GenericDonationForm({
-	defaultInterval,
-	translations,
-	lang,
-	region,
-	campaignId,
-}: DonationFormProps) {
+export const PaymentTypes = {
+	CREDIT_CARD: 'credit_card',
+	BANK_TRANSFER: 'bank_transfer',
+} as const;
+
+export type PaymentType = (typeof PaymentTypes)[keyof typeof PaymentTypes];
+
+export function GenericDonationForm({ defaultInterval, translations, lang, region, campaignId }: DonationFormProps) {
 	const router = useRouter();
 	const { authUser } = useAuth();
 	const { currency } = useI18n();
 	const [submitting, setSubmitting] = useState(false);
 
-	const formSchema = z.object({
-		interval: z.coerce.string(),
-		amount: z.coerce.number().min(1),
-	});
+	const formSchema = z
+		.object({
+			interval: z.coerce.string(),
+			paymentType: z.enum(Object.values(PaymentTypes) as [string, ...string[]]).default(PaymentTypes.CREDIT_CARD),
+			amount: z.coerce.number().min(1),
+			email: z.string().optional(),
+			firstName: z.string().optional(),
+			lastName: z.string().optional(),
+		})
+		.superRefine((data, ctx) => {
+			if (data.paymentType === PaymentTypes.BANK_TRANSFER) {
+				if (!data.email) {
+					ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['email'] });
+				} else if (!z.string().email().safeParse(data.email).success) {
+					ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['email'] });
+				}
+				if (!data.firstName) {
+					ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['firstName'] });
+				}
+				if (!data.lastName) {
+					ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['lastName'] });
+				}
+			}
+		});
 
 	type FormSchema = z.infer<typeof formSchema>;
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
-		defaultValues: { interval: defaultInterval, amount: 100 },
+		defaultValues: {
+			interval: defaultInterval,
+			amount: 100,
+			paymentType: PaymentTypes.CREDIT_CARD,
+			email: '',
+			firstName: '',
+			lastName: '',
+		},
 	});
 	const interval = form.watch('interval');
 
@@ -85,10 +119,18 @@ export default function GenericDonationForm({
 										value={field.value}
 										onValueChange={(v) => form.setValue('interval', v)}
 									>
-										<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={DonationInterval.OneTime}>
+										<ToggleGroupItem
+											key={DonationInterval.OneTime}
+											className="text-md m-1 rounded-full px-6"
+											value={DonationInterval.OneTime}
+										>
 											{translations.oneTime}
 										</ToggleGroupItem>
-										<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={DonationInterval.Monthly}>
+										<ToggleGroupItem
+											key={DonationInterval.Monthly}
+											className="text-md m-1 rounded-full px-6"
+											value={DonationInterval.Monthly}
+										>
 											{translations.monthly}
 										</ToggleGroupItem>
 									</ToggleGroup>
@@ -103,7 +145,7 @@ export default function GenericDonationForm({
 							render={({ field }) => (
 								<FormItem className="flex-1 sm:basis-2/3">
 									<FormControl>
-										<>
+										<div>
 											<ToggleGroup
 												type="single"
 												className={'mb-4'}
@@ -126,21 +168,61 @@ export default function GenericDonationForm({
 													fontSize="md"
 												/>
 											</div>
-										</>
+										</div>
 									</FormControl>
 								</FormItem>
 							)}
 						/>
 					</div>
-					<Button
-						size="lg"
-						type="submit"
-						variant="default"
-						showLoadingSpinner={submitting}
-						className="bg-accent text-accent-foreground hover:bg-accent-muted active:bg-accent-muted rounded-full text-lg font-medium"
-					>
-						{translations.submit}
-					</Button>
+					{region === 'ch' && ['CHF', 'EUR'].includes(currency || '') && (
+						<div className="flex flex-col space-y-4">
+							<FormField
+								control={form.control}
+								name="paymentType"
+								render={({ field }) => (
+									<FormItem className="flex-1 sm:basis-2/3">
+										<FormControl>
+											<ToggleGroup
+												type="single"
+												className="bg-popover mb-4 inline-flex rounded-full"
+												value={field.value}
+												onValueChange={(value) => form.setValue('paymentType', value)}
+											>
+												<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={PaymentTypes.CREDIT_CARD}>
+													{translations.paymentType.creditCard}
+												</ToggleGroupItem>
+												<ToggleGroupItem className="text-md m-1 rounded-full px-6" value={PaymentTypes.BANK_TRANSFER}>
+													{translations.paymentType.bankTransfer}
+												</ToggleGroupItem>
+											</ToggleGroup>
+										</FormControl>
+									</FormItem>
+								)}
+							/>
+						</div>
+					)}
+					{form.watch('paymentType') === PaymentTypes.BANK_TRANSFER ? (
+						<div className="flex flex-col space-y-4 rounded-lg bg-blue-50 p-4 md:p-8">
+							<BankTransferForm
+								amount={form.watch('amount')}
+								intervalCount={form.watch('interval') === DonationInterval.Monthly ? 1 : 0}
+								translations={translations.bankTransfer}
+								lang={lang}
+								region={region}
+								qrBillType="QRCODE"
+							/>
+						</div>
+					) : (
+						<Button
+							size="lg"
+							type="submit"
+							variant="default"
+							showLoadingSpinner={submitting}
+							className="bg-accent text-accent-foreground hover:bg-accent-muted active:bg-accent-muted rounded-full text-lg font-medium"
+						>
+							{translations.submit}
+						</Button>
+					)}
 				</form>
 			</Form>
 		</div>

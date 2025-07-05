@@ -9,6 +9,7 @@ import "package:app/data/datasource/remote/payment_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
 import "package:app/data/repositories/repositories.dart";
+import "package:app/data/services/auth_service.dart";
 import "package:app/demo_manager.dart";
 import "package:app/kri_intl.dart";
 import "package:app/ui/configs/configs.dart";
@@ -38,6 +39,8 @@ class MyApp extends StatelessWidget {
   final OrganizationRemoteDataSource organizationRemoteDataSource;
   final OrganizationDemoDataSource organizationDemoDataSource;
 
+  final AuthService authService;
+
   const MyApp({
     super.key,
     required this.messaging,
@@ -50,6 +53,7 @@ class MyApp extends StatelessWidget {
     required this.surveyDemoDataSource,
     required this.organizationRemoteDataSource,
     required this.organizationDemoDataSource,
+    required this.authService,
   });
 
   // This widget is the root of your application.
@@ -96,6 +100,9 @@ class MyApp extends StatelessWidget {
             demoManager: demoManager,
           ),
         ),
+        RepositoryProvider<AuthService>.value(
+          value: authService,
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -104,6 +111,7 @@ class MyApp extends StatelessWidget {
               crashReportingRepository: context.read<CrashReportingRepository>(),
               organizationRepository: context.read<OrganizationRepository>(),
               userRepository: context.read<UserRepository>(),
+              authService: context.read<AuthService>(),
             )..init(),
           ),
           BlocProvider(

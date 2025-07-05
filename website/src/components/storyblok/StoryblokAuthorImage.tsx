@@ -1,5 +1,5 @@
 import { formatStoryblokUrl } from '@/components/storyblok/StoryblokUtils';
-import { StoryblokAuthor } from '@socialincome/shared/src/storyblok/journal';
+import { StoryblokAuthor } from '@/types/journal';
 import { ISbStoryData } from '@storyblok/react';
 import Image from 'next/image';
 

@@ -2,14 +2,14 @@ import { UserContext } from '@/app/[lang]/[region]/(website)/me/user-context-pro
 import { useApiClient } from '@/lib/api/useApiClient';
 import { useFirestore } from '@/lib/firebase/hooks/useFirestore';
 import { orderBy, Query, QuerySnapshot } from '@firebase/firestore';
-import { CONTRIBUTION_FIRESTORE_PATH, StatusKey } from '@socialincome/shared/src/types/contribution';
+import { CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/src/types/contribution';
 import {
 	DONATION_CERTIFICATE_FIRESTORE_PATH,
 	DonationCertificate,
 } from '@socialincome/shared/src/types/donation-certificate';
 import { USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, query } from 'firebase/firestore';
 import { useContext } from 'react';
 import Stripe from 'stripe';
 
@@ -34,7 +34,6 @@ export const useContributions = () => {
 			getDocs(
 				query(
 					collection(firestore, USER_FIRESTORE_PATH, user.id, CONTRIBUTION_FIRESTORE_PATH),
-					where('status', '==', StatusKey.SUCCEEDED),
 					orderBy('created', 'desc'),
 				),
 			),

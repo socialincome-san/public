@@ -1,5 +1,5 @@
 import { authAdmin, firestoreAdmin } from '@/lib/firebase/firebase-admin';
-import { User } from '@socialincome/shared/src/types/user';
+import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { rndString } from '@socialincome/shared/src/utils/crypto';
 
 export type CreateUserRequest = {
@@ -8,12 +8,12 @@ export type CreateUserRequest = {
 
 export async function POST(request: CreateUserRequest & Request) {
 	const { email } = await request.json();
-	const userDoc = await firestoreAdmin.collection<User>('users').where('email', '==', email).get();
-	if (userDoc.empty) {
+	const user = await firestoreAdmin.findFirst<User>(USER_FIRESTORE_PATH, (col) => col.where('email', '==', email));
+	if (!user) {
 		return new Response(null, { status: 400, statusText: 'User not found' });
 	}
 
-	const authUserId = userDoc.docs[0].get('auth_user_id');
+	const authUserId = user.get('auth_user_id');
 
 	if (authUserId) {
 		return new Response(null, { status: 400, statusText: 'Auth user already exists' });
@@ -25,7 +25,7 @@ export async function POST(request: CreateUserRequest & Request) {
 			password: await rndString(16),
 		});
 
-		await userDoc.docs[0].ref.update({
+		await user.ref.update({
 			auth_user_id: userRecord.uid,
 		});
 

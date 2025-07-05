@@ -15,7 +15,9 @@ class OtpInputPage extends StatefulWidget {
 class _OtpInputPageState extends State<OtpInputPage> {
   @override
   Widget build(BuildContext context) {
-    final phoneNumber = context.watch<SignupCubit>().state.phoneNumber ?? "";
+    final signupCubit = context.watch<SignupCubit>();
+    final isLoadingVerificationCode = signupCubit.state.status == SignupStatus.loadingVerificationCode;
+    final phoneNumber = signupCubit.state.phoneNumber ?? "";
 
     return Scaffold(
       appBar: AppBar(
@@ -47,16 +49,20 @@ class _OtpInputPageState extends State<OtpInputPage> {
               onCodeReady: (verificationCode) => context.read<SignupCubit>().submitVerificationCode(verificationCode),
             ),
             const SizedBox(height: 24),
-            TextButton(
-              onPressed: () async => context.read<SignupCubit>().resendVerificationCode(),
-              child: Text(
-                context.l10n.resendVerificationCode,
-                style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                      color: AppColors.primaryColor,
-                      decoration: TextDecoration.underline,
-                    ),
+            if (isLoadingVerificationCode) ...[
+              const Center(child: CircularProgressIndicator()),
+            ] else ...[
+              TextButton(
+                onPressed: () async => context.read<SignupCubit>().resendVerificationCode(),
+                child: Text(
+                  context.l10n.resendVerificationCode,
+                  style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                        color: AppColors.primaryColor,
+                        decoration: TextDecoration.underline,
+                      ),
+                ),
               ),
-            ),
+            ],
             const Spacer(),
           ],
         ),

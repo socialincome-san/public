@@ -1,5 +1,5 @@
 import { getDimensionsFromStoryblokImageUrl } from '@/components/storyblok/StoryblokUtils';
-import { StoryblokImage } from '@socialincome/shared/src/storyblok/journal';
+import { StoryblokImage } from '@/types/journal';
 import Image from 'next/image';
 
 const DEFAULT_HEIGHT = 15;

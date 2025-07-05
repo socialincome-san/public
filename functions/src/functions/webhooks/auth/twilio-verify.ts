@@ -61,6 +61,12 @@ const verifyOtpFunction = onCall<VerifyRequest>(async (request) => {
 			// Specific error code for "Verification not found". See https://www.twilio.com/docs/errors/20404
 			throw new HttpsError('not-found', 'Verification resource not found for the provided phone number and OTP');
 		}
+
+		// Handle Invalid OTP provided
+		if (error?.code === 'permission-denied') {
+			throw error;
+		}
+
 		console.error('Error verifying OTP:', error);
 		throw new HttpsError('internal', 'Failed to verify OTP');
 	}

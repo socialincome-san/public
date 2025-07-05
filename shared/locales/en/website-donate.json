@@ -6,6 +6,38 @@
 	"button-text": "Make a Difference",
 	"button-text-short": "Donate Now",
 	"one-time-donation": "Make a one-time donation",
+	"payment-type": {
+		"title": "Select Payment Method",
+		"credit-card": "Credit Card",
+		"bank-transfer": "Bank Transfer",
+		"credit-card-description": "Standard",
+		"bank-transfer-description": "No fees are charged"
+	},
+	"bank-transfer": {
+		"first-name": "First Name",
+		"last-name": "Last Name",
+		"email": "E-Mail",
+		"plan": "1% Plan (monthly)",
+		"your-contribution": "Your contribution",
+		"full-social-income": "1 Full Social Income",
+		"partial-social-income": "1 Partial Social Income",
+		"we-match-the-missing": "We match the missing",
+		"generate-qr-bill": "Generate QR Bill",
+		"confirm-monthly-order": "Confirm Monthly Standing Order",
+		"transfer-fees-note": "All transfer fees are paid from our reserves, currently at € 23,392. Please consider covering the fees with the 1% Plus Plan:",
+		"plus-plan-link": "change",
+		"confirm-payment": "Confirm Payment",
+		"payment-success": "Thank you for your donation! Once the payment is received, it will appear as paid in your profile.",
+		"login-link": "Login to your profile",
+		"profile-link": "Go to your profile",
+		"processing": "Processing payment...",
+		"generating": "Generating QR bill...",
+		"standing-order-qr-info": "Please set up a standing order to pay Social Income in your online banking.",
+		"errors": {
+			"qrBillError": "Failed to generate QR bill. Please try again.",
+			"paymentFailed": "Payment failed. Please try again and contact us if the problem persists."
+		}
+	},
 	"donation-impact": {
 		"monthly-contribution": "Your monthly contribution",
 		"direct-payout": "The people in need receive your contribution directly on their mobile phones.",

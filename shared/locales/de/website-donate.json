@@ -6,6 +6,38 @@
 	"button-text": "Mache einen Unterschied",
 	"button-text-short": "Jetzt spenden",
 	"one-time-donation": "Einmalige Spende",
+	"payment-type": {
+		"title": "Zahlungsmethode auswählen",
+		"credit-card": "Kreditkarte",
+		"bank-transfer": "Banküberweisung",
+		"credit-card-description": "Standard",
+		"bank-transfer-description": "Es fallen keine Gebühren an"
+	},
+	"bank-transfer": {
+		"first-name": "Vorname",
+		"last-name": "Nachname",
+		"email": "E-Mail",
+		"plan": "1% Plan (monatlich)",
+		"your-contribution": "Ihr Beitrag",
+		"full-social-income": "1 Volles Social Income",
+		"partial-social-income": "1 Teil-Social Income",
+		"we-match-the-missing": "Wir ergänzen den fehlenden Betrag",
+		"generate-qr-bill": "QR-Rechnung generieren",
+		"confirm-monthly-order": "Monatlichen Dauerauftrag bestätigen",
+		"transfer-fees-note": "Alle Überweisungsgebühren werden aus unseren Reserven bezahlt, derzeit bei € 23.392. Bitte erwägen Sie, die Gebühren mit dem 1% Plus Plan zu decken:",
+		"plus-plan-link": "ändern",
+		"confirm-payment": "Zahlung bestätigen",
+		"payment-success": "Danke für deine Spende! Sobald die Zahlung eingangen ist, erscheint diese als bezahlt in deinem Profil.",
+		"login-link": "Zur Profil-Anmeldung",
+		"profile-link": "Zum Profil",
+		"processing": "Zahlung wird bestätigt...",
+		"generating": "QR-Rechnung wird generiert...",
+		"standing-order-qr-info": "Bitte richte in deinem Online-Banking einen Dauerauftrag zur Zahlung an Social Income ein.",
+		"errors": {
+			"qrBillError": "QR-Rechnung konnte nicht generiert werden. Bitte versuchen Sie es erneut.",
+			"paymentFailed": "Zahlung fehlgeschlagen. Bitte versuchen Sie es erneut und kontaktieren Sie uns, wenn das Problem weiterhin besteht."
+		}
+	},
 	"donation-impact": {
 		"monthly-contribution": "Dein monatlicher Beitrag:",
 		"direct-payout": "Dein Beitrag wird direkt auf das Mobiltelefon der Social Income Empfänger:innen ausgezahlt.",

@@ -1,8 +1,15 @@
 {
+	"donate": {
+		"text-1": "Wähle einen Spendenbetrag, um",
+		"text-2": "einen grossen Unterschied",
+		"text-3": "im Kampf gegen Armut zu machen."
+	},
 	"overview": {
 		"all": "Alle",
 		"title": "Journal",
-		"description": "News, Insights und Einblicke in die Arbeit von Social Income."
+		"description": "News, Insights und Einblicke in die Arbeit von Social Income.",
+		"editors": "Mitwirkende Redakteure",
+		"more-articles": "Weitere Artikel sind auf Englisch verfügbar"
 	},
 	"article": {
 		"keep-reading": "Weiterlesen",
