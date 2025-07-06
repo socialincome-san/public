@@ -4,15 +4,15 @@ import { DefaultParams } from '@/app/[lang]/[region]';
 import { CreateCheckoutSessionData } from '@/app/api/stripe/checkout-session/create/route';
 import { BankTransferForm, BankTransferFormProps } from '@/components/donation/bank-transfer-form';
 import { DonationInterval } from '@/components/donation/donation-interval';
-import { useI18n } from '@/components/providers/context-providers';
 import { CurrencySelector } from '@/components/ui/currency-selector';
+import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { useI18n } from '@/lib/i18n/useI18n';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Form, FormControl, FormField, FormItem, Input } from '@socialincome/ui';
 import { ToggleGroup, ToggleGroupItem } from '@socialincome/ui/src/components/toggle-group';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useUser } from 'reactfire';
 import Stripe from 'stripe';
 import * as z from 'zod';
 
@@ -41,7 +41,7 @@ export type PaymentType = (typeof PaymentTypes)[keyof typeof PaymentTypes];
 
 export function GenericDonationForm({ defaultInterval, translations, lang, region, campaignId }: DonationFormProps) {
 	const router = useRouter();
-	const { data: authUser } = useUser();
+	const { authUser } = useAuth();
 	const { currency } = useI18n();
 	const [submitting, setSubmitting] = useState(false);
 

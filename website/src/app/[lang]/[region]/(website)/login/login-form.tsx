@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { useEmailLogin } from '@/hooks/useEmailLogin';
+import { useEmailLogin } from '@/lib/firebase/hooks/useEmailLogin';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from '@mui/material';
 import {

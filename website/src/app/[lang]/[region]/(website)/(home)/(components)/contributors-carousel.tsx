@@ -1,6 +1,6 @@
 'use client';
 
-import { useScreenSize } from '@/hooks/useScreenSize';
+import { useScreenSize } from '@/lib/hooks/useScreenSize';
 import { Carousel, CarouselContent, Typography } from '@socialincome/ui';
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';

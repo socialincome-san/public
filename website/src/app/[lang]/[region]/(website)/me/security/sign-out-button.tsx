@@ -1,9 +1,9 @@
 'use client';
 
+import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { Button, Typography } from '@socialincome/ui';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
-import { useAuth } from 'reactfire';
 
 type SignOutButtonProps = {
 	translations: {
@@ -14,7 +14,7 @@ type SignOutButtonProps = {
 
 export function SignOutButton({ translations }: SignOutButtonProps) {
 	const router = useRouter();
-	const auth = useAuth();
+	const { auth } = useAuth();
 
 	return (
 		<div>

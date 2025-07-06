@@ -1,5 +1,5 @@
 import { roundAmount } from '@/app/[lang]/[region]/(website)/transparency/finances/[currency]/section-1';
-import { toCurrencyLocale } from '@/i18n';
+import { toCurrencyLocale } from '@/lib/i18n/utils';
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, Typography } from '@socialincome/ui';

@@ -1,11 +1,12 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
+import { BankTransferForm, BankTransferFormProps } from '@/components/donation/bank-transfer-form';
 import { PaymentTypes } from '@/components/donation/generic-donation-form';
-import { useI18n } from '@/components/providers/context-providers';
 import { CurrencySelector } from '@/components/ui/currency-selector';
-import { useTranslator } from '@/hooks/useTranslator';
-import { websiteCurrencies, WebsiteLanguage } from '@/i18n';
+import { useTranslator } from '@/lib/hooks/useTranslator';
+import { useI18n } from '@/lib/i18n/useI18n';
+import { websiteCurrencies, WebsiteLanguage } from '@/lib/i18n/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	Card,
@@ -21,7 +22,6 @@ import {
 } from '@socialincome/ui';
 import { useForm, useWatch } from 'react-hook-form';
 import * as z from 'zod';
-import { BankTransferForm, BankTransferFormProps } from '../../../../../../components/donation/bank-transfer-form';
 import { DonationIntervalSelector } from './donation-interval-selector';
 import { PaymentTypeSelector } from './payment-type-selector';
 import { StripePaymentButton } from './stripe-payment-button';

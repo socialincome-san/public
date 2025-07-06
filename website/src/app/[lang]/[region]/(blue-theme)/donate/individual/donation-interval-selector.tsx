@@ -1,8 +1,8 @@
 'use client';
 
-import { useI18n } from '@/components/providers/context-providers';
-import { useTranslator } from '@/hooks/useTranslator';
-import { WebsiteLanguage } from '@/i18n';
+import { useTranslator } from '@/lib/hooks/useTranslator';
+import { useI18n } from '@/lib/i18n/useI18n';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { FormControl, FormField, FormItem, FormMessage, RadioGroup, Typography } from '@socialincome/ui';
 import classNames from 'classnames';

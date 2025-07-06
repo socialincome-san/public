@@ -1,13 +1,13 @@
 'use client';
 
-import { useI18n } from '@/components/providers/context-providers';
-import { useBankTransfer } from '@/hooks/useBankTransfer';
-import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
+import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { useBankTransfer } from '@/lib/hooks/useBankTransfer';
+import { useI18n } from '@/lib/i18n/useI18n';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Button, FormControl, FormField, FormItem, FormLabel, FormMessage, Input, linkCn } from '@socialincome/ui';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useAuth } from 'reactfire';
 
 export type BankTransferFormProps = {
 	qrBillType: 'QRCODE' | 'QRBILL';
@@ -46,17 +46,17 @@ export function BankTransferForm({
 }: BankTransferFormProps) {
 	const form = useFormContext();
 	const { currency } = useI18n();
-	const { currentUser } = useAuth();
+	const { authUser } = useAuth();
 
 	useEffect(() => {
-		if (!currentUser) {
+		if (!authUser) {
 			return;
 		}
-		form.setValue('email', currentUser.email || '');
-		form.setValue('firstName', currentUser.displayName?.split(' ')[0]);
-		form.setValue('lastName', currentUser.displayName?.split(' ')[1]);
+		form.setValue('email', authUser.email || '');
+		form.setValue('firstName', authUser.displayName?.split(' ')[0]);
+		form.setValue('lastName', authUser.displayName?.split(' ')[1]);
 		form.trigger();
-	}, [currentUser]);
+	}, [authUser]);
 
 	const { qrBillSvg, isLoading, paid, generateQRCode, confirmPayment } = useBankTransfer({
 		amount,
@@ -77,7 +77,7 @@ export function BankTransferForm({
 				<div className="space-y-4 pb-8">
 					<p>{translations.paymentSuccess}</p>
 					<Link className={linkCn({ variant: 'accent' })} href={`/${lang}/${region}/me/contributions`}>
-						{currentUser ? translations.profileLink : translations.loginLink}
+						{authUser ? translations.profileLink : translations.loginLink}
 					</Link>
 				</div>
 			) : qrBillSvg ? (
@@ -105,7 +105,7 @@ export function BankTransferForm({
 											required
 											className="h-14 rounded-xl bg-white px-6"
 											{...field}
-											disabled={!!currentUser}
+											disabled={!!authUser}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -124,7 +124,7 @@ export function BankTransferForm({
 											required
 											className="h-14 rounded-xl bg-white px-6"
 											{...field}
-											disabled={!!currentUser}
+											disabled={!!authUser}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -143,7 +143,7 @@ export function BankTransferForm({
 											required
 											className="h-14 rounded-xl bg-white px-6"
 											{...field}
-											disabled={!!currentUser}
+											disabled={!!authUser}
 										/>
 									</FormControl>
 									<FormMessage />

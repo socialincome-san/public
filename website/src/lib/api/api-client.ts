@@ -1,6 +1,3 @@
-import { ApiProviderContext } from '@/components/providers/api-provider';
-import { useContext } from 'react';
-
 export class ApiClient {
 	readonly token: string;
 
@@ -35,11 +32,3 @@ export class ApiClient {
 		});
 	}
 }
-
-export const useApi = () => {
-	const api = useContext(ApiProviderContext);
-	if (!api) {
-		throw new Error('useAPI used outside of ApiProvider');
-	}
-	return api;
-};

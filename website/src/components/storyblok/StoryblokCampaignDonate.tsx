@@ -1,6 +1,6 @@
 import { DonationInterval } from '@/components/donation/donation-interval';
 import { GenericDonationForm } from '@/components/donation/generic-donation-form';
-import { WebsiteLanguage, WebsiteRegion } from '@/i18n';
+import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Typography } from '@socialincome/ui';
 
