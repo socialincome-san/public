@@ -1,6 +1,6 @@
+import "package:app/l10n/arb/app_localizations.dart";
 import "package:cloud_functions/cloud_functions.dart";
 import "package:firebase_auth/firebase_auth.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 String localizeExceptionMessage(Exception? ex, AppLocalizations localizations) {
   if (ex is FirebaseFunctionsException) {
@@ -30,13 +30,10 @@ String localizeExceptionMessage(Exception? ex, AppLocalizations localizations) {
       "cors-unsupported" => localizations.corsUnsupported,
       "credential-already-in-use" => localizations.credentialAlreadyInUse,
       "credential-mismatch" => localizations.credentialMismatch,
-      "credential-too-old-login-again" =>
-        localizations.credentialTooOldLoginAgain,
-      "dependent-sdk-init-before-auth" =>
-        localizations.dependentSdkInitBeforeAuth,
+      "credential-too-old-login-again" => localizations.credentialTooOldLoginAgain,
+      "dependent-sdk-init-before-auth" => localizations.dependentSdkInitBeforeAuth,
       "dynamic-link-not-activated" => localizations.dynamicLinkNotActivated,
-      "email-change-needs-verification" =>
-        localizations.emailChangeNeedsVerification,
+      "email-change-needs-verification" => localizations.emailChangeNeedsVerification,
       "email-exists" => localizations.emailExists,
       "emulator-config-failed" => localizations.emulatorConfigFailed,
       "expired-oob-code" => localizations.expiredOobCode,
@@ -50,8 +47,7 @@ String localizeExceptionMessage(Exception? ex, AppLocalizations localizations) {
       "invalid-cert-hash" => localizations.invalidCertHash,
       "invalid-code" => localizations.invalidCode,
       "invalid-continue-uri" => localizations.invalidContinueUri,
-      "invalid-cordova-configuration" =>
-        localizations.invalidCordovaConfiguration,
+      "invalid-cordova-configuration" => localizations.invalidCordovaConfiguration,
       "invalid-custom-token" => localizations.invalidCustomToken,
       "invalid-dynamic-link-domain" => localizations.invalidDynamicLinkDomain,
       "invalid-email" => localizations.invalidEmail,
@@ -99,8 +95,7 @@ String localizeExceptionMessage(Exception? ex, AppLocalizations localizations) {
       "redirect-cancelled-by-user" => localizations.redirectCancelledByUser,
       "redirect-operation-pending" => localizations.redirectOperationPending,
       "rejected-credential" => localizations.rejectedCredential,
-      "second-factor-already-enrolled" =>
-        localizations.secondFactorAlreadyEnrolled,
+      "second-factor-already-enrolled" => localizations.secondFactorAlreadyEnrolled,
       "second-factor-limit-exceeded" => localizations.secondFactorLimitExceeded,
       "tenant-id-mismatch" => localizations.tenantIdMismatch,
       "timeout" => localizations.timeoutError,
@@ -109,8 +104,7 @@ String localizeExceptionMessage(Exception? ex, AppLocalizations localizations) {
       "unauthorized-domain" => localizations.unauthorizedDomain,
       "unsupported-first-factor" => localizations.unsupportedFirstFactor,
       "unsupported-persistence" => localizations.unsupportedPersistence,
-      "unsupported-tenant-operation" =>
-        localizations.unsupportedTenantOperation,
+      "unsupported-tenant-operation" => localizations.unsupportedTenantOperation,
       "unverified-email" => localizations.unverifiedEmail,
       "user-cancelled" => localizations.userCancelled,
       "user-deleted" => localizations.userDeleted,
