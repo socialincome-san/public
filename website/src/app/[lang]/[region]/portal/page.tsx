@@ -1,8 +1,8 @@
-import { UserService } from '@socialincome/shared/src/database/user/user.service';
+import { UserService } from '@socialincome/shared/src/database/services/user/user.service';
 
 export default async function Portal() {
 	const userService = new UserService();
-	const result = await userService.getUsers();
+	const result = await userService.findMany();
 
 	return (
 		<main style={{ padding: '2rem', fontFamily: 'sans-serif' }}>

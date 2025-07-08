@@ -68,6 +68,17 @@ export class FirestoreAdmin {
 		return snapshot.docs.map((q) => q.data());
 	};
 
+	/**
+	 * Fetches all documents from a given collection path, including their Firestore document IDs.
+	 */
+	async getAllWithIds<T>(collectionPath: string): Promise<{ id: string; data: T }[]> {
+		const snapshot = await this.firestore.collection(collectionPath).get();
+		return snapshot.docs.map((doc) => ({
+			id: doc.id,
+			data: doc.data() as T,
+		}));
+	}
+
 	assertGlobalAdmin = async (email?: string) => {
 		assert(email);
 		const admin = (await this.doc<AdminUser>('admins', email).get()).data();
