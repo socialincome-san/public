@@ -2,10 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://socialincome.org/</loc>
+    <lastmod>2025-07-09</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.00</priority>
   </url>
   <url>
-    <loc>https://socialincome.org/about</loc>
+    <loc>https://socialincome.org/about/</loc>
+    <lastmod>2025-07-09</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
 </urlset>
