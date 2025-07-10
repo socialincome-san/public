@@ -3,7 +3,7 @@
 		"title": "Do No Harm Principle and Implementation",
 		"lead": "The Do No Harm (DNH) approach is a framework that helps minimize unintended negative consequences of aid programs. It identifies risks and reduces potential harm by carefully reviewing all parts of a project, including recipient selection, distribution methods, and the overall impact of assistance.",
 		"lead-implementation": "Social Income applies these principles systematically and shares its approach transparently to show how risks are addressed and how the program remains safe, fair, and beneficial for recipients and their communities.",
-		"version": "Version 1.0",
+		"version": "Version 1.1",
 		"responsible": "Maintained by",
 		"subtitle-principle": "Best Practice Principle",
 		"subtitle-implementation": "Implementation",
@@ -13,7 +13,7 @@
 				"cards": [
 					{
 						"description": "Identify and understand key actors (recipients, families, friends, community).",
-						"implementation": "Social Income works closely with local NGOs, local staff, recipients and their networks to map and understand the relevant actors and social relationships involved. NGO partners themselves are carefully assessed prior to collaboration.",
+						"implementation": "Social Income works closely with local NGOs, local staff, recipients, and their networks to map and understand the relevant actors and social relationships involved. NGO partners themselves are carefully assessed prior to collaboration.",
 						"links": [
 							{ "label": "Local Partners", "url": "https://socialincome.org/partners" },
 							{ "label": "Local Staff", "url": "https://socialincome.org/about-us#team" }
@@ -66,7 +66,7 @@
 					},
 					{
 						"description": "Avoid clustering recipients in specific communities",
-						"implementation": "Social Income diversifies its beneficiaries through partnerships with different local organizations that work in non-overlapping communities. The lottery-based selection ensures recipients are distributed within these communities. Although there is a small chance that individuals living close to each other or from the same household may be selected, this circumstance needs to be weighed against the complexity, potential tensions, and costs involved in mapping household structures or tracking exact places of residence.",
+						"implementation": "Social Income diversifies its beneficiaries through partnerships with different local organizations that work in non-overlapping communities. The lottery-based selection ensures recipients are distributed within these communities. Although there is a small chance that individuals living close to each other or from the same household may be selected, this circumstance needs to be weighed against the complexity, potential tensions, and costs involved in mapping household structures or precisely tracking residences.",
 						"links": [
 							{ "label": "Recipient Selection", "url": "https://socialincome.org/transparency/recipient-selection" },
 							{ "label": "Local Partners", "url": "https://socialincome.org/partners" }
@@ -104,7 +104,7 @@
 				"cards": [
 					{
 						"description": "Ensure money is not misused for criminal activities",
-						"implementation": "Social Income takes misuse of funds seriously. While the risk is low—given that payment amounts are not large enough to attract organized crime—we have a clear policy in place: if illegal activities are suspected or confirmed, transfers to the individual concerned will be immediately suspended.",
+						"implementation": "Social Income takes misuse of funds seriously. Although the risk is low—because payment amounts are not large enough to attract organized crime—we have a clear policy in place: if illegal activities are suspected or confirmed, transfers to the individual concerned will be immediately suspended.",
 						"links": [
 							{
 								"label": "Recipient Policy",
@@ -114,7 +114,7 @@
 					},
 					{
 						"description": "Provide secure transaction methods",
-						"implementation": "Social Income uses mobile money to reduce the risk of theft by paying recipients directly rather than through intermediary organizations. Each recipient is onboarded individually, and we provide phone safety guidance. If two confirmations are missed, payments are suspended until the issue is resolved, with the local partner NGO informed.",
+						"implementation": "Social Income uses mobile money to reduce the risk of theft by paying recipients directly rather than through intermediary organizations. Each recipient is onboarded individually, and we provide guidance on phone security. If two confirmations are missed, payments are suspended until the issue is resolved, with the local partner NGO informed.",
 						"links": []
 					}
 				]
