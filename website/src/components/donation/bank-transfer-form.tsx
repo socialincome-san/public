@@ -53,9 +53,9 @@ export function BankTransferForm({
 			return;
 		}
 		form.setValue('email', authUser.email || '');
-		form.setValue('firstName', authUser.displayName?.split(' ')[0]);
-		form.setValue('lastName', authUser.displayName?.split(' ')[1]);
-		form.trigger();
+		const [firstName, ...lastNameParts] = authUser.displayName?.split(' ') || [];
+		form.setValue('firstName', firstName || '');
+		form.setValue('lastName', lastNameParts.join(' ') || '');
 	}, [authUser]);
 
 	const { qrBillSvg, isLoading, paid, generateQRCode, confirmPayment } = useBankTransfer({
@@ -100,13 +100,7 @@ export function BankTransferForm({
 								<FormItem>
 									<FormLabel>{translations.firstName}</FormLabel>
 									<FormControl>
-										<Input
-											type="text"
-											required
-											className="h-14 rounded-xl bg-white px-6"
-											{...field}
-											disabled={!!authUser}
-										/>
+										<Input type="text" required className="h-14 rounded-xl bg-white px-6" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -119,13 +113,7 @@ export function BankTransferForm({
 								<FormItem>
 									<FormLabel>{translations.lastName}</FormLabel>
 									<FormControl>
-										<Input
-											type="text"
-											required
-											className="h-14 rounded-xl bg-white px-6"
-											{...field}
-											disabled={!!authUser}
-										/>
+										<Input type="text" required className="h-14 rounded-xl bg-white px-6" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -156,7 +144,7 @@ export function BankTransferForm({
 						size="lg"
 						type="submit"
 						className="w-full"
-						onClick={async (event) => {
+						onClick={async () => {
 							await handleGenerateQRCode();
 						}}
 						disabled={isLoading || !form.formState.isValid}
