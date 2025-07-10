@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { useUser } from '@/app/[lang]/[region]/(website)/me/hooks';
 import { useBankTransfer } from '@/lib/hooks/useBankTransfer';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -46,17 +46,17 @@ export function BankTransferForm({
 }: BankTransferFormProps) {
 	const form = useFormContext();
 	const { currency } = useI18n();
-	const { authUser } = useAuth();
+	const user = useUser();
 
 	useEffect(() => {
-		if (!authUser) {
+		if (!user) {
 			return;
 		}
-		form.setValue('email', authUser.email || '');
-		form.setValue('firstName', authUser.displayName?.split(' ')[0]);
-		form.setValue('lastName', authUser.displayName?.split(' ')[1]);
+		form.setValue('email', user.get('email') || '');
+		form.setValue('firstName', user.get('personal.name') || '');
+		form.setValue('lastName', user.get('personal.lastname') || '');
 		form.trigger();
-	}, [authUser]);
+	}, [user]);
 
 	const { qrBillSvg, isLoading, paid, generateQRCode, confirmPayment } = useBankTransfer({
 		amount,
@@ -77,7 +77,7 @@ export function BankTransferForm({
 				<div className="space-y-4 pb-8">
 					<p>{translations.paymentSuccess}</p>
 					<Link className={linkCn({ variant: 'accent' })} href={`/${lang}/${region}/me/contributions`}>
-						{authUser ? translations.profileLink : translations.loginLink}
+						{user ? translations.profileLink : translations.loginLink}
 					</Link>
 				</div>
 			) : qrBillSvg ? (
@@ -105,7 +105,7 @@ export function BankTransferForm({
 											required
 											className="h-14 rounded-xl bg-white px-6"
 											{...field}
-											disabled={!!authUser}
+											disabled={!!user?.get('personal.name')}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -124,7 +124,7 @@ export function BankTransferForm({
 											required
 											className="h-14 rounded-xl bg-white px-6"
 											{...field}
-											disabled={!!authUser}
+											disabled={!!user?.get('personal.lastname')}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -143,7 +143,7 @@ export function BankTransferForm({
 											required
 											className="h-14 rounded-xl bg-white px-6"
 											{...field}
-											disabled={!!authUser}
+											disabled={!!user}
 										/>
 									</FormControl>
 									<FormMessage />
@@ -156,7 +156,7 @@ export function BankTransferForm({
 						size="lg"
 						type="submit"
 						className="w-full"
-						onClick={async (event) => {
+						onClick={async () => {
 							await handleGenerateQRCode();
 						}}
 						disabled={isLoading || !form.formState.isValid}

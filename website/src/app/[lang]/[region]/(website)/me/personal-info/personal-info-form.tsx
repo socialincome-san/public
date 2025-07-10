@@ -80,20 +80,24 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			firstname: user.get('personal.name'),
-			lastname: user.get('personal.lastname'),
-			gender: user.get('personal.gender'),
-			email: user.get('email'),
-			street: user.get('address.street'),
-			streetNumber: user.get('address.number'),
-			city: user.get('address.city'),
-			zip: user.get('address.zip'),
-			country: user.get('address.country'),
-			language: user.get('language'),
+			firstname: user?.get('personal.name'),
+			lastname: user?.get('personal.lastname'),
+			gender: user?.get('personal.gender'),
+			email: user?.get('email'),
+			street: user?.get('address.street'),
+			streetNumber: user?.get('address.number'),
+			city: user?.get('address.city'),
+			zip: user?.get('address.zip'),
+			country: user?.get('address.country'),
+			language: user?.get('language'),
 		},
 	});
 
 	const onSubmit = async (values: FormSchema) => {
+		if (!user) {
+			return;
+		}
+
 		await updateDoc<DocumentData, Partial<User>>(doc(firestore, USER_FIRESTORE_PATH, user.id), {
 			personal: {
 				name: values.firstname,
