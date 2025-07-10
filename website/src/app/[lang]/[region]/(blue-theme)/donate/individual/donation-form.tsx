@@ -22,6 +22,7 @@ import {
 } from '@socialincome/ui';
 import { useForm, useWatch } from 'react-hook-form';
 import * as z from 'zod';
+import { UserContextProvider } from '../../../(website)/me/user-context-provider';
 import { DonationIntervalSelector } from './donation-interval-selector';
 import { PaymentTypeSelector } from './payment-type-selector';
 import { StripePaymentButton } from './stripe-payment-button';
@@ -199,14 +200,16 @@ export function DonationForm({ amount, translations, lang, region }: DonationFor
 										translations={translations.paymentType}
 										bankTransferForm={
 											<div className="border-accent bg-card-muted !mt-[-2px] rounded-b-lg border-2 p-4 md:rounded-tl-lg md:p-8">
-												<BankTransferForm
-													lang={lang}
-													region={region}
-													qrBillType={window.innerWidth < 768 ? 'QRCODE' : 'QRBILL'}
-													intervalCount={Number(form.watch('donationInterval'))}
-													amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
-													translations={translations.bankTransfer}
-												/>
+												<UserContextProvider>
+													<BankTransferForm
+														lang={lang}
+														region={region}
+														qrBillType={window.innerWidth < 768 ? 'QRCODE' : 'QRBILL'}
+														intervalCount={Number(form.watch('donationInterval'))}
+														amount={getDonationAmount(form.watch('monthlyIncome'), form.watch('donationInterval'))}
+														translations={translations.bankTransfer}
+													/>
+												</UserContextProvider>
 											</div>
 										}
 									/>

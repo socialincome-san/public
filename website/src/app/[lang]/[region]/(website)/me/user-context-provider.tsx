@@ -10,7 +10,10 @@ import { createContext, PropsWithChildren, useEffect } from 'react';
 
 export const UserContext = createContext<QueryDocumentSnapshot<User> | null | undefined>(undefined!);
 
-export function UserContextProvider({ children }: PropsWithChildren) {
+export function UserContextProvider({
+	children,
+	redirectToLogin = false,
+}: PropsWithChildren<{ redirectToLogin?: boolean }>) {
 	const firestore = useFirestore();
 	const { authUser } = useAuth();
 	const { data: user } = useQuery({
@@ -30,14 +33,16 @@ export function UserContextProvider({ children }: PropsWithChildren) {
 	});
 
 	useEffect(() => {
-		if (user === null) {
+		if (user === null && redirectToLogin) {
 			// If the user is null, it couldn't be found in the database, so redirect to the login page.
 			// If the user is undefined, the query is still loading, so no redirect.
 			redirect('../login');
 		}
-	}, [user]);
+	}, [user, redirectToLogin]);
 
-	if (user) {
-		return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
+	if (!user) {
+		return redirectToLogin ? null : <>{children}</>;
 	}
+
+	return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 }

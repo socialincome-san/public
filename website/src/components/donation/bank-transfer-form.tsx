@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { useUser } from '@/app/[lang]/[region]/(website)/me/hooks';
 import { useBankTransfer } from '@/lib/hooks/useBankTransfer';
 import { useI18n } from '@/lib/i18n/useI18n';
 import { WebsiteLanguage, WebsiteRegion } from '@/lib/i18n/utils';
@@ -46,17 +46,17 @@ export function BankTransferForm({
 }: BankTransferFormProps) {
 	const form = useFormContext();
 	const { currency } = useI18n();
-	const { authUser } = useAuth();
+	const user = useUser();
 
 	useEffect(() => {
-		if (!authUser) {
+		if (!user) {
 			return;
 		}
-		form.setValue('email', authUser.email || '');
-		const [firstName, ...lastNameParts] = authUser.displayName?.split(' ') || [];
-		form.setValue('firstName', firstName || '');
-		form.setValue('lastName', lastNameParts.join(' ') || '');
-	}, [authUser]);
+		form.setValue('email', user.get('email') || '');
+		form.setValue('firstName', user.get('personal.name') || '');
+		form.setValue('lastName', user.get('personal.lastname') || '');
+		form.trigger();
+	}, [user]);
 
 	const { qrBillSvg, isLoading, paid, generateQRCode, confirmPayment } = useBankTransfer({
 		amount,
@@ -77,7 +77,7 @@ export function BankTransferForm({
 				<div className="space-y-4 pb-8">
 					<p>{translations.paymentSuccess}</p>
 					<Link className={linkCn({ variant: 'accent' })} href={`/${lang}/${region}/me/contributions`}>
-						{authUser ? translations.profileLink : translations.loginLink}
+						{user ? translations.profileLink : translations.loginLink}
 					</Link>
 				</div>
 			) : qrBillSvg ? (
@@ -100,7 +100,13 @@ export function BankTransferForm({
 								<FormItem>
 									<FormLabel>{translations.firstName}</FormLabel>
 									<FormControl>
-										<Input type="text" required className="h-14 rounded-xl bg-white px-6" {...field} />
+										<Input
+											type="text"
+											required
+											className="h-14 rounded-xl bg-white px-6"
+											{...field}
+											disabled={!!user?.get('personal.name')}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -113,7 +119,13 @@ export function BankTransferForm({
 								<FormItem>
 									<FormLabel>{translations.lastName}</FormLabel>
 									<FormControl>
-										<Input type="text" required className="h-14 rounded-xl bg-white px-6" {...field} />
+										<Input
+											type="text"
+											required
+											className="h-14 rounded-xl bg-white px-6"
+											{...field}
+											disabled={!!user?.get('personal.lastname')}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -131,7 +143,7 @@ export function BankTransferForm({
 											required
 											className="h-14 rounded-xl bg-white px-6"
 											{...field}
-											disabled={!!authUser}
+											disabled={!!user}
 										/>
 									</FormControl>
 									<FormMessage />
