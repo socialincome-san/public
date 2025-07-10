@@ -14,10 +14,6 @@
 			"subscriptions": "Subscriptions",
 			"donation-certificates-short": "Certificates",
 			"donation-certificates-long": "Donation certificates"
-		},
-		"employer": {
-			"title": "My Employer",
-			"work": "Work"
 		}
 	},
 	"contributions": {
@@ -33,7 +29,14 @@
 			"raisenow": "Twint",
 			"stripe": "Credit Card",
 			"wire-transfer": "Wire Transfer"
-		}
+		},
+		"status": {
+			"succeeded": "Succeeded",
+			"pending": "Pending",
+			"failed": "Failed",
+			"unknown": "Unknown"
+		},
+		"status-title": "Status"
 	},
 	"subscriptions": {
 		"amount": "Amount",

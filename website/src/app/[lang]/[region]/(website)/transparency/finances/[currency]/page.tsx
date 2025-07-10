@@ -1,7 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { CurrencyRedirect } from '@/app/[lang]/[region]/(website)/transparency/(components)/currency-redirect';
-import { firestoreAdmin } from '@/firebase-admin';
-import { toLocale, websiteCurrencies, WebsiteCurrency } from '@/i18n';
+import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
+import { toLocale, websiteCurrencies, WebsiteCurrency } from '@/lib/i18n/utils';
 import { Currency } from '@socialincome/shared/src/types/currency';
 import {
 	ContributionStats,

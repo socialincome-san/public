@@ -1,8 +1,15 @@
 {
+	"donate": {
+		"text-1": "Choisissez un montant de don pour aider à faire",
+		"text-2": "une grande différence",
+		"text-3": "dans la lutte contre la pauvreté."
+	},
 	"overview": {
 		"all": "Tous",
 		"title": "Journal",
-		"description": "Histoires, réflexions et nouvelles de notre parcours pour créer un impact."
+		"description": "Histoires, réflexions et nouvelles de notre parcours pour créer un impact.",
+		"editors": "Rédacteurs contributeurs",
+		"more-articles": "Il y a plus d'articles disponibles en anglais"
 	},
 	"article": {
 		"keep-reading": "Lire la suite",

@@ -7,7 +7,40 @@
 	"how-to-pay": "Scegli il tuo metodo di pagamento.",
 	"amount": "Importo",
 	"button-text": "Fai la differenza",
+	"button-text-short": "Dona ora",
 	"one-time-donation": "Fai una donazione una tantum",
+	"payment-type": {
+		"title": "Seleziona il metodo di pagamento",
+		"credit-card": "Carta di credito",
+		"bank-transfer": "Bonifico bancario",
+		"credit-card-description": "Standard",
+		"bank-transfer-description": "Nessuna commissione è addebitata"
+	},
+	"bank-transfer": {
+		"first-name": "Nome",
+		"last-name": "Cognome",
+		"email": "E-Mail",
+		"plan": "Piano 1% (mensile)",
+		"your-contribution": "Il tuo contributo",
+		"full-social-income": "1 Social Income completo",
+		"partial-social-income": "1 Social Income parziale",
+		"we-match-the-missing": "Integriamo l'importo mancante",
+		"generate-qr-bill": "Genera QR-bill",
+		"confirm-monthly-order": "Conferma ordine permanente mensile",
+		"transfer-fees-note": "Tutte le spese di trasferimento sono pagate dalle nostre riserve, attualmente a € 23.392. Ti preghiamo di considerare di coprire le spese con il Piano 1% Plus:",
+		"plus-plan-link": "modifica",
+		"confirm-payment": "Conferma il pagamento",
+		"payment-success": "Grazie per il tuo contributo! Una volta ricevuto il pagamento, apparirà come pagato nel tuo profilo.",
+		"login-link": "Accedi al tuo profilo",
+		"profile-link": "Vai al tuo profilo",
+		"processing": "Elaborazione del pagamento...",
+		"generating": "Generazione del QR-bill...",
+		"standing-order-qr-info": "Per favore configura un ordine permanente per pagare Social Income nella tua banca online.",
+		"errors": {
+			"qrBillError": "Impossibile generare il QR-bill. Si prega di riprovare.",
+			"paymentFailed": "Il pagamento è fallito. Si prega di riprovare e contattare noi se il problema persiste."
+		}
+	},
 	"donation-impact": {
 		"monthly-contribution": "Il tuo contributo mensile",
 		"direct-payout": "La tua donazione sarà ricevuta dai beneficiari direttamente nel loro telefono cellulare.",

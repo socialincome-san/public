@@ -1,8 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import GenericDonationForm from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/generic-donation-form';
-import { DonationInterval } from '@/app/[lang]/[region]/(blue-theme)/donate/one-time/page';
 import { VimeoVideo } from '@/components/vimeo-video';
-import { firestoreAdmin } from '@/firebase-admin';
+import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
 import { getMetadata } from '@/metadata';
 import { Campaign, CAMPAIGN_FIRESTORE_PATH, CampaignStatus } from '@socialincome/shared/src/types/campaign';
 import { Contribution, CONTRIBUTION_FIRESTORE_PATH } from '@socialincome/shared/src/types/contribution';
@@ -28,7 +26,9 @@ import {
 import { Progress } from '@socialincome/ui/src/components/progress';
 import Link from 'next/link';
 
-import NewsletterGlowContainer from '@/components/newsletter-glow-container/newsletter-glow-container';
+import { DonationInterval } from '@/components/donation/donation-interval';
+import { GenericDonationForm } from '@/components/donation/generic-donation-form';
+import NewsletterGlowContainer from '@/components/newsletter/glow-container/newsletter-glow-container';
 
 interface CampaignPageParams extends DefaultParams {
 	campaignId: string;
@@ -208,6 +208,29 @@ export default async function Page({ params }: CampaignPageProps) {
 													monthly: translator.t('donation-interval.1.title'),
 													amount: translator.t('amount'),
 													submit: translator.t('button-text-short'),
+													paymentType: {
+														bankTransfer: translator.t('payment-type.bank-transfer'),
+														creditCard: translator.t('payment-type.credit-card'),
+													},
+													bankTransfer: {
+														firstName: translator.t('success.user-form.firstname'),
+														lastName: translator.t('success.user-form.lastname'),
+														email: translator.t('success.user-form.email'),
+														generateQrBill: translator.t('bank-transfer.generate-qr-bill'),
+														standingOrderQrInfo: translator.t('bank-transfer.standing-order-qr-info'),
+														confirmPayment: translator.t('bank-transfer.confirm-payment'),
+														paymentSuccess: translator.t('bank-transfer.payment-success'),
+														loginLink: translator.t('bank-transfer.login-link'),
+														profileLink: translator.t('bank-transfer.profile-link'),
+														processing: translator.t('bank-transfer.processing'),
+														generating: translator.t('bank-transfer.generating'),
+														errors: {
+															emailRequired: translator.t('bank-transfer.errors.emailRequired'),
+															emailInvalid: translator.t('bank-transfer.errors.emailInvalid'),
+															qrBillError: translator.t('bank-transfer.errors.qrBillError'),
+															paymentFailed: translator.t('bank-transfer.errors.paymentFailed'),
+														},
+													},
 												}}
 												campaignId={campaignId}
 											/>

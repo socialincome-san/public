@@ -1,4 +1,4 @@
-import { WebsiteCurrency } from '@/i18n';
+import { WebsiteCurrency } from '@/lib/i18n/utils';
 import { CH, EU } from 'country-flag-icons/react/1x1';
 import { SL, US } from 'country-flag-icons/react/3x2';
 

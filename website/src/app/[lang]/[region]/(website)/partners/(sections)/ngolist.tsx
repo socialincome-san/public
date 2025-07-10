@@ -10,7 +10,7 @@ import {
 	NgoEntryJSON,
 	NgoHoverCardType,
 } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
-import { firestoreAdmin } from '@/firebase-admin';
+import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
 import { RecipientProgramStatus } from '@socialincome/shared/src/types/recipient';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import {

@@ -1,6 +1,6 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[region]';
 import { LayoutClient } from '@/app/[lang]/[region]/(website)/me/layout-client';
-import { UserContextProvider } from '@/components/providers/user-context-provider';
+import { UserContextProvider } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer } from '@socialincome/ui';
@@ -29,8 +29,6 @@ export default async function Layout({ children, ...props }: PropsWithChildren<D
 						subscriptions: translator.t('sections.contributions.subscriptions'),
 						donationCertificatesShort: translator.t('sections.contributions.donation-certificates-short'),
 						donationCertificatesLong: translator.t('sections.contributions.donation-certificates-long'),
-						employerTitle: translator.t('sections.employer.title'),
-						work: translator.t('sections.employer.work'),
 					}}
 				>
 					{children}

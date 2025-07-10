@@ -1,6 +1,6 @@
 'use client';
 
-import { WebsiteLanguage } from '@/i18n';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Card, Collapsible, CollapsibleContent, CollapsibleTrigger, Typography } from '@socialincome/ui';
 import { DateTime } from 'luxon';
 import Link from 'next/link';

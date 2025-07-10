@@ -14,10 +14,6 @@
 			"subscriptions": "Souscriptions",
 			"donation-certificates-short": "Attestations",
 			"donation-certificates-long": "Attestations de don"
-		},
-		"employer": {
-			"title": "Mon Employeur",
-			"work": "Travail"
 		}
 	},
 	"contributions": {
@@ -33,7 +29,14 @@
 			"raisenow": "Twint",
 			"stripe": "Carte de crédit",
 			"wire-transfer": "Virement bancaire"
-		}
+		},
+		"status": {
+			"succeeded": "Payé",
+			"pending": "En attente",
+			"failed": "Échoué",
+			"unknown": "Inconnu"
+		},
+		"status-title": "Statut"
 	},
 	"subscriptions": {
 		"amount": "Montant",
