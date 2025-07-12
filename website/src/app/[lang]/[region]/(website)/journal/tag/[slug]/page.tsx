@@ -1,15 +1,11 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { MoreArticlesLink } from '@/components/storyblok/MoreArticlesLink';
-import {
-	DEFAULT_LANGUAGE,
-	getArticleCountByTagForDefaultLang,
-	getArticlesByTag,
-	getTag,
-} from '@/components/storyblok/StoryblokApi';
+import { getArticleCountByTagForDefaultLang, getArticlesByTag, getTag } from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Separator, Typography } from '@socialincome/ui';
+import { defaultLanguage } from '@/lib/i18n/utils';
 
 export const revalidate = 900;
 storyblokInitializationWorkaround();
@@ -23,7 +19,7 @@ interface PageProps {
 }
 
 async function getTotalArticlesInDefault(lang: string, tagId: string, totalArticlesInSelectedLanguage: number) {
-	return lang == DEFAULT_LANGUAGE ? totalArticlesInSelectedLanguage : await getArticleCountByTagForDefaultLang(tagId);
+	return lang == defaultLanguage ? totalArticlesInSelectedLanguage : await getArticleCountByTagForDefaultLang(tagId);
 }
 
 export default async function Page({ params }: PageProps) {

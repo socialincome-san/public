@@ -1,6 +1,5 @@
 import { MoreArticlesLink } from '@/components/storyblok/MoreArticlesLink';
 import {
-	DEFAULT_LANGUAGE,
 	getArticleCountByAuthorForDefaultLang,
 	getArticlesByAuthor,
 	getAuthor,
@@ -11,6 +10,7 @@ import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Separator, Typography } from '@socialincome/ui';
+import { defaultLanguage } from '@/lib/i18n/utils';
 
 export const revalidate = 900;
 storyblokInitializationWorkaround();
@@ -20,7 +20,7 @@ async function getTotalArticlesInDefaultLanguage(
 	totalArticlesInSelectedLanguage: number,
 	authorId: string,
 ) {
-	return lang == DEFAULT_LANGUAGE
+	return lang == defaultLanguage
 		? totalArticlesInSelectedLanguage
 		: await getArticleCountByAuthorForDefaultLang(authorId);
 }
