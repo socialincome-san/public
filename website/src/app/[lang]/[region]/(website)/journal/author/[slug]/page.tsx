@@ -6,11 +6,11 @@ import {
 } from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
+import { defaultLanguage } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Separator, Typography } from '@socialincome/ui';
-import { defaultLanguage } from '@/lib/i18n/utils';
 
 export const revalidate = 900;
 storyblokInitializationWorkaround();

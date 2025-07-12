@@ -8,11 +8,11 @@ import {
 } from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
+import { defaultLanguage } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, BaseContainer, Separator, Typography } from '@socialincome/ui';
 import Link from 'next/link';
-import { defaultLanguage } from '@/lib/i18n/utils';
 
 export const revalidate = 900;
 storyblokInitializationWorkaround();

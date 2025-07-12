@@ -1,9 +1,9 @@
+import { defaultLanguage } from '@/lib/i18n/utils';
 import { type StoryblokArticle, StoryblokAuthor, StoryblokContentType, StoryblokTag } from '@/types/journal';
 import { getStoryblokApi, ISbStory } from '@storyblok/react';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { ISbStories, ISbStoriesParams, ISbStoryData } from 'storyblok-js-client/src/interfaces';
-import { defaultLanguage } from '@/lib/i18n/utils';
 
 const STANDARD_ARTICLE_RELATIONS_TO_RESOLVE = ['article.author', 'article.tags', 'article.type'];
 const DEFAULT_LIMIT = 50;
