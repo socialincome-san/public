@@ -13,6 +13,7 @@
 		"website"
 	],
 	"scripts": {
+		"generate-sitemap": "node generate-sitemap.js",
 		"postinstall": "npm run db:generate",
 		"admin:build": "npm --workspace=@socialincome/admin run build",
 		"admin:serve": "npm run functions:build && npm --workspace=@socialincome/admin run serve",
@@ -64,6 +65,7 @@
 		"prettier": "3.4.2",
 		"prettier-plugin-organize-imports": "4.1.0",
 		"prettier-plugin-tailwindcss": "0.6.9",
+		"sitemap": "^8.0.0",
 		"ssl-proxy": "1.0.3",
 		"typescript": "^5.7.2"
 	}
