@@ -14,17 +14,15 @@ const outputPath = path.join(__dirname, 'public', 'sitemap.xml');
 
 (async () => {
   try {
-    // Ensure the public folder exists
     const publicDir = path.join(__dirname, 'public');
     if (!fs.existsSync(publicDir)) {
       fs.mkdirSync(publicDir, { recursive: true });
     }
 
-    // Generate and format sitemap
     const xml = await streamToPromise(Readable.from(links).pipe(stream));
-    const formattedXml = xml.toString().replace(/></g, '>\n<'); // Add line breaks for readability
+    const xmlString = xml.toString(); // Removed fragile formatting
 
-    fs.writeFileSync(outputPath, formattedXml);
+    await fs.promises.writeFile(outputPath, xmlString);
     console.log(`✅ Sitemap generated at ${outputPath}`);
   } catch (err) {
     console.error('❌ Error generating sitemap:', err);
