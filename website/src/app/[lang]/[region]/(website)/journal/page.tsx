@@ -1,7 +1,6 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { MoreArticlesLink } from '@/components/storyblok/MoreArticlesLink';
 import {
-	DEFAULT_LANGUAGE,
 	getAuthors,
 	getOverviewArticles,
 	getOverviewArticlesCountForDefaultLang,
@@ -9,6 +8,7 @@ import {
 } from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
+import { defaultLanguage } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Badge, BaseContainer, Separator, Typography } from '@socialincome/ui';
@@ -29,7 +29,7 @@ export default async function Page({ params }: DefaultPageProps) {
 	const blogs = blogsResponse.data.stories;
 	const totalArticlesInSelectedLanguage = blogsResponse.total;
 	const totalArticlesInDefaultLang =
-		lang == DEFAULT_LANGUAGE ? totalArticlesInSelectedLanguage : await getOverviewArticlesCountForDefaultLang();
+		lang == defaultLanguage ? totalArticlesInSelectedLanguage : await getOverviewArticlesCountForDefaultLang();
 	const authors = authorsResponse.data.stories;
 	const tags = tagsResponse.data.stories;
 
@@ -81,10 +81,7 @@ export default async function Page({ params }: DefaultPageProps) {
 			{totalArticlesInDefaultLang > totalArticlesInSelectedLanguage && (
 				<div>
 					<Separator className="my-8" />
-					<MoreArticlesLink
-						text={translator.t('overview.more-articles')}
-						url={`/${DEFAULT_LANGUAGE}/${region}/journal`}
-					/>
+					<MoreArticlesLink text={translator.t('overview.more-articles')} />
 				</div>
 			)}
 		</BaseContainer>

@@ -1,3 +1,4 @@
+import { defaultLanguage } from '@/lib/i18n/utils';
 import { type StoryblokArticle, StoryblokAuthor, StoryblokContentType, StoryblokTag } from '@/types/journal';
 import { getStoryblokApi, ISbStory } from '@storyblok/react';
 import { draftMode } from 'next/headers';
@@ -7,7 +8,6 @@ import { ISbStories, ISbStoriesParams, ISbStoryData } from 'storyblok-js-client/
 const STANDARD_ARTICLE_RELATIONS_TO_RESOLVE = ['article.author', 'article.tags', 'article.type'];
 const DEFAULT_LIMIT = 50;
 const NOT_FOUND = 404;
-export const DEFAULT_LANGUAGE = 'en';
 const CONTENT = 'content';
 const LEAD_TEXT = 'leadText';
 const STORIES_PATH = 'cdn/stories';
@@ -27,7 +27,7 @@ export async function getOverviewArticlesCountForDefaultLang(): Promise<number> 
 	const params: ISbStoriesParams = {
 		per_page: 1,
 		excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
-		language: DEFAULT_LANGUAGE,
+		language: defaultLanguage,
 		content_type: StoryblokContentType.Article,
 		filter_query: {
 			displayInOverviewPage: {
@@ -51,7 +51,7 @@ function articleByTagsFilter(tagId: string) {
 export async function getArticleCountByTagForDefaultLang(tagId: string): Promise<number> {
 	const params: ISbStoriesParams = {
 		per_page: 1,
-		language: DEFAULT_LANGUAGE,
+		language: defaultLanguage,
 		excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
 		content_type: StoryblokContentType.Article,
 		filter_query: articleByTagsFilter(tagId),
@@ -73,7 +73,7 @@ export async function getArticleCountByAuthorForDefaultLang(authorId: string): P
 	const params: ISbStoriesParams = {
 		per_page: 1,
 		excluding_fields: EXCLUDED_FIELDS_FOR_COUNTING,
-		language: DEFAULT_LANGUAGE,
+		language: defaultLanguage,
 		content_type: StoryblokContentType.Article,
 		filter_query: articlesByAuthorFilter(authorId),
 	};
@@ -197,10 +197,10 @@ export async function getWithFallback<T>(
 		return await loader(lang, slug);
 	} catch (error: any) {
 		if (error?.status === NOT_FOUND) {
-			if (lang === DEFAULT_LANGUAGE) {
+			if (lang === defaultLanguage) {
 				return notFound();
 			}
-			return await getWithFallback(loader, DEFAULT_LANGUAGE, slug);
+			return await getWithFallback(loader, defaultLanguage, slug);
 		}
 		throw error;
 	}
