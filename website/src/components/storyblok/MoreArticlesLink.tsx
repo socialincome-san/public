@@ -1,17 +1,20 @@
-import { linkCn, Typography } from '@socialincome/ui';
-import Link from 'next/link';
+'use client';
+import { useI18n } from '@/lib/i18n/useI18n';
+import { defaultLanguage } from '@/lib/i18n/utils';
+import { Button, Typography } from '@socialincome/ui';
 
 type MoreArticlesLinkProps = {
 	text: string;
-	url: string;
 };
 
-export function MoreArticlesLink({ text, url }: MoreArticlesLinkProps) {
+export function MoreArticlesLink({ text }: MoreArticlesLinkProps) {
+	const setLanguage = useI18n().setLanguage;
+
 	return (
 		<Typography size="sm">
-			<Link className={`${linkCn({ arrow: 'external', underline: 'none' })} ml-1`} href={url} rel="noopener noreferrer">
+			<Button variant="link" onClick={() => setLanguage(defaultLanguage)}>
 				{text}
-			</Link>
+			</Button>
 		</Typography>
 	);
 }

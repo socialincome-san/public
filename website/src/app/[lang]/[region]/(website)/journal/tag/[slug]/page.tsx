@@ -1,12 +1,8 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { MoreArticlesLink } from '@/components/storyblok/MoreArticlesLink';
-import {
-	DEFAULT_LANGUAGE,
-	getArticleCountByTagForDefaultLang,
-	getArticlesByTag,
-	getTag,
-} from '@/components/storyblok/StoryblokApi';
+import { getArticleCountByTagForDefaultLang, getArticlesByTag, getTag } from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
+import { defaultLanguage } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Separator, Typography } from '@socialincome/ui';
@@ -23,7 +19,7 @@ interface PageProps {
 }
 
 async function getTotalArticlesInDefault(lang: string, tagId: string, totalArticlesInSelectedLanguage: number) {
-	return lang == DEFAULT_LANGUAGE ? totalArticlesInSelectedLanguage : await getArticleCountByTagForDefaultLang(tagId);
+	return lang == defaultLanguage ? totalArticlesInSelectedLanguage : await getArticleCountByTagForDefaultLang(tagId);
 }
 
 export default async function Page({ params }: PageProps) {
@@ -55,10 +51,7 @@ export default async function Page({ params }: PageProps) {
 			{totalArticlesInDefault > totalArticlesInSelectedLanguage && (
 				<div>
 					<Separator className="my-8" />
-					<MoreArticlesLink
-						text={translator.t('overview.more-articles')}
-						url={`/${DEFAULT_LANGUAGE}/${region}/journal/tag/${slug}`}
-					/>
+					<MoreArticlesLink text={translator.t('overview.more-articles')} />
 				</div>
 			)}
 		</BaseContainer>
