@@ -47,7 +47,6 @@ CREATE TABLE "user" (
     "referral" "UserReferralSource",
     "payment_reference_id" TEXT,
     "stripe_customer_id" TEXT,
-    "test_user" BOOLEAN NOT NULL DEFAULT false,
     "institution" BOOLEAN NOT NULL DEFAULT false,
     "language" "LanguageCode",
     "currency" TEXT,
@@ -175,7 +174,6 @@ CREATE TABLE "recipient" (
     "local_partner_id" TEXT NOT NULL,
     "start_date" TIMESTAMPTZ(3),
     "status" "RecipientStatus" NOT NULL,
-    "test_recipient" BOOLEAN NOT NULL DEFAULT false,
     "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(3),
 
