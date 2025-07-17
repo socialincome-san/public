@@ -1,4 +1,4 @@
-import { firestoreAdmin } from '@/firebase-admin';
+import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
 import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import { DateTime } from 'luxon';
 import { NextResponse } from 'next/server';

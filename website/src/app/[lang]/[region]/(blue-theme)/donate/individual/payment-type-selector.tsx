@@ -1,7 +1,7 @@
 'use client';
 
 import { PaymentType, PaymentTypes } from '@/components/donation/generic-donation-form';
-import { WebsiteLanguage } from '@/i18n';
+import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { FormControl, FormField, FormItem, FormMessage, RadioGroup, Typography } from '@socialincome/ui';
 import classNames from 'classnames';

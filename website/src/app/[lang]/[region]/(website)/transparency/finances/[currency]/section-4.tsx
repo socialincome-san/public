@@ -1,5 +1,5 @@
-import { firestoreAdmin } from '@/firebase-admin';
-import { toCurrencyLocale } from '@/i18n';
+import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
+import { toCurrencyLocale } from '@/lib/i18n/utils';
 import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { BanknotesIcon, BuildingLibraryIcon, DevicePhoneMobileIcon } from '@heroicons/react/24/solid';
 import { PAYMENT_AMOUNT_SLE } from '@socialincome/shared/src/types/payment';

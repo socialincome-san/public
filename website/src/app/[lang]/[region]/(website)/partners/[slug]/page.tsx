@@ -1,7 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { PartnerHome } from '@/app/[lang]/[region]/(website)/partners/(components)/PartnerHome';
 import { NgoEntryJSON, NgoHomeProps } from '@/app/[lang]/[region]/(website)/partners/(types)/PartnerCards';
-import { firestoreAdmin } from '@/firebase-admin';
+import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import {
 	OrganisationRecipientsByStatus,

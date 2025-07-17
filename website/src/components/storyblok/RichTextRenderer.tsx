@@ -1,10 +1,10 @@
-import NewsletterGlowContainer from '@/components/newsletter-glow-container/newsletter-glow-container';
+import NewsletterGlowContainer from '@/components/newsletter/glow-container/newsletter-glow-container';
 import { StoryblokActionButton } from '@/components/storyblok/StoryblokActionButton';
 import { StoryblokCampaignDonate } from '@/components/storyblok/StoryblokCampaignDonate';
 import { StoryblokEmbeddedVideoPlayer } from '@/components/storyblok/StoryblokEmbeddedVideoPlayer';
 import { StoryblokImageWithCaption } from '@/components/storyblok/StoryblokImageWithCaption';
 import { StoryblokReferencesGroup } from '@/components/storyblok/StoryblokReferencesGroup';
-import { WebsiteRegion } from '@/i18n';
+import { WebsiteRegion } from '@/lib/i18n/utils';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { QuotedText, Table, TableBody, TableCell, TableHead, TableRow } from '@socialincome/ui';

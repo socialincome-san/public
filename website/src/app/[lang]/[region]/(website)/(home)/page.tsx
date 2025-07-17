@@ -4,7 +4,7 @@ import { FAQ } from '@/app/[lang]/[region]/(website)/(home)/(sections)/faq';
 import { Quotes } from '@/app/[lang]/[region]/(website)/(home)/(sections)/quotes';
 import { SDGGoals } from '@/app/[lang]/[region]/(website)/(home)/(sections)/sdg-goals';
 import { Testimonials } from '@/app/[lang]/[region]/(website)/(home)/(sections)/testimonials';
-import { firestoreAdmin } from '@/firebase-admin';
+import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
 import { Campaign } from '@socialincome/shared/src/types/campaign';
 import { getLatestExchangeRate } from '@socialincome/shared/src/utils/exchangeRates';
 import { Translator } from '@socialincome/shared/src/utils/i18n';

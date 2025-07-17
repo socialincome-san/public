@@ -1,7 +1,7 @@
 'use client';
 
-import NewsletterForm from '@/components/newsletter-form/newsletter-form';
-import { NewsletterPopupProps } from '@/components/newsletter-popup/newsletter-popup';
+import NewsletterForm from '@/components/newsletter/form/newsletter-form';
+import { NewsletterPopupProps } from '@/components/newsletter/popup/newsletter-popup';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Typography } from '@socialincome/ui';

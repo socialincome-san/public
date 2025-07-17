@@ -1,9 +1,9 @@
 import { CreateCheckoutSessionData } from '@/app/api/stripe/checkout-session/create/route';
-import { useI18n } from '@/components/providers/context-providers';
+import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { useI18n } from '@/lib/i18n/useI18n';
 import { Button } from '@socialincome/ui';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useUser } from 'reactfire';
 import Stripe from 'stripe';
 
 type StripePaymentButtonProps = {
@@ -17,7 +17,7 @@ type StripePaymentButtonProps = {
 export function StripePaymentButton({ amount, intervalCount, lang, region, buttonText }: StripePaymentButtonProps) {
 	const router = useRouter();
 	const [submitting, setSubmitting] = useState(false);
-	const { data: authUser } = useUser();
+	const { authUser } = useAuth();
 	const { currency } = useI18n();
 
 	const handlePayment = async () => {

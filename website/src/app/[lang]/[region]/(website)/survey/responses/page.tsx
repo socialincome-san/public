@@ -2,7 +2,7 @@ import { DefaultPageProps } from '@/app/[lang]/[region]';
 import BarchartSurveyResponseComponent, {
 	ChartData,
 } from '@/app/[lang]/[region]/(website)/survey/responses/barchart-survey-response-component';
-import { firestoreAdmin } from '@/firebase-admin';
+import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
 import { ClockIcon, ViewfinderCircleIcon } from '@heroicons/react/24/outline';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
 import { QuestionInputType } from '@socialincome/shared/src/types/question';

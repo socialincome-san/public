@@ -6,11 +6,12 @@ import {
 	useUpsertNewsletterSubscription,
 	useUser,
 } from '@/app/[lang]/[region]/(website)/me/hooks';
-import { useTranslator } from '@/hooks/useTranslator';
+import { useFirestore } from '@/lib/firebase/hooks/useFirestore';
+import { useTranslator } from '@/lib/hooks/useTranslator';
 import { DocumentData } from '@firebase/firestore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { COUNTRY_CODES } from '@socialincome/shared/src/types/country';
-import { GENDER_OPTIONS, USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types/user';
+import { GENDER_OPTIONS, User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
 import {
 	Button,
 	Form,
@@ -33,7 +34,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { useFirestore } from 'reactfire';
 import * as z from 'zod';
 
 type PersonalInfoFormProps = {
@@ -80,20 +80,24 @@ export function PersonalInfoForm({ lang, translations }: PersonalInfoFormProps) 
 	const form = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			firstname: user.get('personal.name'),
-			lastname: user.get('personal.lastname'),
-			gender: user.get('personal.gender'),
-			email: user.get('email'),
-			street: user.get('address.street'),
-			streetNumber: user.get('address.number'),
-			city: user.get('address.city'),
-			zip: user.get('address.zip'),
-			country: user.get('address.country'),
-			language: user.get('language'),
+			firstname: user?.get('personal.name'),
+			lastname: user?.get('personal.lastname'),
+			gender: user?.get('personal.gender'),
+			email: user?.get('email'),
+			street: user?.get('address.street'),
+			streetNumber: user?.get('address.number'),
+			city: user?.get('address.city'),
+			zip: user?.get('address.zip'),
+			country: user?.get('address.country'),
+			language: user?.get('language'),
 		},
 	});
 
 	const onSubmit = async (values: FormSchema) => {
+		if (!user) {
+			return;
+		}
+
 		await updateDoc<DocumentData, Partial<User>>(doc(firestore, USER_FIRESTORE_PATH, user.id), {
 			personal: {
 				name: values.firstname,
