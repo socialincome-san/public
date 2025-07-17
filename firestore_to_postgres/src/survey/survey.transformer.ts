@@ -1,4 +1,4 @@
-import { SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
+import { RecipientMainLanguage, SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
 import { CreateSurveyInput } from '@socialincome/shared/src/database/services/survey/survey.types';
 import { BaseTransformer } from '../core/base.transformer';
 import { SurveyWithRecipient } from './survey.extractor';

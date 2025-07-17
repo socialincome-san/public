@@ -23,7 +23,6 @@ export class LocalPartnersTransformer extends BaseTransformer<FireStorePartnerOr
 					referral: null,
 					paymentReferenceId: null,
 					stripeCustomerId: null,
-					testUser: false,
 					institution: false,
 					language: 'en',
 					currency: null,

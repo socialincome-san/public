@@ -20,7 +20,6 @@ export class AdminsTransformer extends BaseTransformer<AdminUserWithEmail, Creat
 				referral: null,
 				paymentReferenceId: null,
 				stripeCustomerId: null,
-				testUser: false,
 				institution: false,
 				language: null,
 				currency: null,

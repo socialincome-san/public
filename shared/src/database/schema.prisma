@@ -21,7 +21,6 @@ model User {
   referral             UserReferralSource?   @map("referral")
   paymentReferenceId   String?               @map("payment_reference_id")
   stripeCustomerId     String?               @map("stripe_customer_id")
-  testUser             Boolean               @default(false) @map("test_user")
   institution          Boolean               @default(false) @map("institution")
   language             LanguageCode?         @map("language")
   currency             String?               @map("currency")
@@ -166,7 +165,6 @@ model Recipient {
   localPartnerId String          @map("local_partner_id")
   startDate      DateTime?       @map("start_date") @db.Timestamptz(3)
   status         RecipientStatus @map("status")
-  testRecipient  Boolean         @default(false) @map("test_recipient")
   createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt      DateTime?       @updatedAt @map("updated_at") @db.Timestamptz(3)
   payouts        Payout[]

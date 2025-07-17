@@ -24,73 +24,72 @@ export type CreateRecipientWithUser = {
 
 export class RecipientsTransformer extends BaseTransformer<FirestoreRecipient, CreateRecipientWithUser> {
 	transform = async (input: FirestoreRecipient[]): Promise<CreateRecipientWithUser[]> => {
-		return input.map((raw): CreateRecipientWithUser => {
-			const {
-				birth_date,
-				calling_name,
-				communication_mobile_phone,
-				email,
-				first_name,
-				last_name,
-				gender,
-				insta_handle,
-				main_language,
-				mobile_money_phone,
-				om_uid,
-				profession,
-				progr_status,
-				si_start_date,
-				test_recipient,
-				twitter_handle,
-				organisation,
-			} = raw;
-
-			const id = organisation?.id.split('/').pop() ?? null;
-			const partnerOrgName = id ? (PARTNER_ORG_ID_NAME_MAP[id] ?? null) : null;
-
-			return {
-				user: {
-					authUserId: null,
-					email: email?.trim() ? email.toLowerCase() : this.generateFallbackEmail(first_name, last_name),
-					firstName: first_name,
-					lastName: last_name,
+		return input
+			.filter((raw) => !raw.test_recipient)
+			.map((raw): CreateRecipientWithUser => {
+				const {
+					birth_date,
+					calling_name,
+					communication_mobile_phone,
+					email,
+					first_name,
+					last_name,
 					gender,
-					callingName: calling_name ?? null,
-					birthDate: this.isValidDate(birth_date) ? new Date(birth_date) : null,
-					communicationPhone: communication_mobile_phone?.phone?.toString() ?? null,
-					hasWhatsAppComm: communication_mobile_phone?.has_whatsapp ?? null,
-					whatsappActivated: communication_mobile_phone?.whatsapp_activated ?? null,
-					mobileMoneyPhone: mobile_money_phone?.phone?.toString() ?? null,
-					hasWhatsAppMobile: mobile_money_phone?.has_whatsapp ?? null,
-					instaHandle: insta_handle ?? null,
-					twitterHandle: twitter_handle ?? null,
-					profession: profession ?? null,
-					omUid: om_uid ?? null,
-					role: 'user',
-					language: main_language ?? 'en',
-					currency: null,
-					phone: null,
-					company: null,
-					referral: null,
-					paymentReferenceId: null,
-					stripeCustomerId: null,
-					testUser: test_recipient ?? false,
-					institution: false,
-					addressStreet: null,
-					addressNumber: null,
-					addressCity: null,
-					addressZip: null,
-					addressCountry: null,
-					organizationId: null,
-				},
-				recipient: {
-					status: progr_status,
-					startDate: si_start_date?.toDate() ?? null,
-					testRecipient: false,
-				},
-				partnerOrgName,
-			};
-		});
+					insta_handle,
+					main_language,
+					mobile_money_phone,
+					om_uid,
+					profession,
+					progr_status,
+					si_start_date,
+					twitter_handle,
+					organisation,
+				} = raw;
+
+				const id = organisation?.id.split('/').pop() ?? null;
+				const partnerOrgName = id ? (PARTNER_ORG_ID_NAME_MAP[id] ?? null) : null;
+
+				return {
+					user: {
+						authUserId: null,
+						email: email?.trim() ? email.toLowerCase() : this.generateFallbackEmail(first_name, last_name),
+						firstName: first_name,
+						lastName: last_name,
+						gender,
+						callingName: calling_name ?? null,
+						birthDate: this.isValidDate(birth_date) ? new Date(birth_date) : null,
+						communicationPhone: communication_mobile_phone?.phone?.toString() ?? null,
+						hasWhatsAppComm: communication_mobile_phone?.has_whatsapp ?? null,
+						whatsappActivated: communication_mobile_phone?.whatsapp_activated ?? null,
+						mobileMoneyPhone: mobile_money_phone?.phone?.toString() ?? null,
+						hasWhatsAppMobile: mobile_money_phone?.has_whatsapp ?? null,
+						instaHandle: insta_handle ?? null,
+						twitterHandle: twitter_handle ?? null,
+						profession: profession ?? null,
+						omUid: om_uid ?? null,
+						role: 'user',
+						language: main_language ?? 'en',
+						currency: null,
+						phone: null,
+						company: null,
+						referral: null,
+						paymentReferenceId: null,
+						stripeCustomerId: null,
+						institution: false,
+						addressStreet: null,
+						addressNumber: null,
+						addressCity: null,
+						addressZip: null,
+						addressCountry: null,
+						organizationId: null,
+					},
+					recipient: {
+						status: progr_status,
+						startDate: si_start_date?.toDate() ?? null,
+					},
+					partnerOrgName,
+				};
+			});
 	};
 
 	private isValidDate(date: any): date is string | number | Date {
