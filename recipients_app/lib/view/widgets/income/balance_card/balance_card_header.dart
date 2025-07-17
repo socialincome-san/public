@@ -1,4 +1,5 @@
 import "package:app/data/models/payment/payment.dart";
+import "package:app/l10n/arb/app_localizations.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:flutter/material.dart";
@@ -18,9 +19,9 @@ class BalanceCardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dynamicTextStyle = Theme.of(context).textTheme.headlineLarge!.copyWith(
-          fontWeight: FontWeight.bold,
-          color: _getTextColor(),
-        );
+      fontWeight: FontWeight.bold,
+      color: _getTextColor(),
+    );
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

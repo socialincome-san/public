@@ -11,7 +11,9 @@ SocialIncomePayment _$SocialIncomePaymentFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String? ?? '',
       amount: (json['amount'] as num?)?.toInt(),
       paymentAt: _$JsonConverterFromJson<Object, Timestamp>(
-          json['payment_at'], const TimestampConverter().fromJson),
+        json['payment_at'],
+        const TimestampConverter().fromJson,
+      ),
       currency: json['currency'] as String?,
       status: $enumDecodeNullable(_$PaymentStatusEnumMap, json['status']),
       comments: json['comments'] as String?,
@@ -19,22 +21,23 @@ SocialIncomePayment _$SocialIncomePaymentFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$SocialIncomePaymentToJson(
-        SocialIncomePayment instance) =>
-    <String, dynamic>{
-      'amount': instance.amount,
-      'payment_at': _$JsonConverterToJson<Object, Timestamp>(
-          instance.paymentAt, const TimestampConverter().toJson),
-      'currency': instance.currency,
-      'status': _$PaymentStatusEnumMap[instance.status],
-      'comments': instance.comments,
-      'last_updated_by': instance.updatedBy,
-    };
+  SocialIncomePayment instance,
+) => <String, dynamic>{
+  'amount': instance.amount,
+  'payment_at': _$JsonConverterToJson<Object, Timestamp>(
+    instance.paymentAt,
+    const TimestampConverter().toJson,
+  ),
+  'currency': instance.currency,
+  'status': _$PaymentStatusEnumMap[instance.status],
+  'comments': instance.comments,
+  'last_updated_by': instance.updatedBy,
+};
 
 Value? _$JsonConverterFromJson<Json, Value>(
   Object? json,
   Value? Function(Json json) fromJson,
-) =>
-    json == null ? null : fromJson(json as Json);
+) => json == null ? null : fromJson(json as Json);
 
 const _$PaymentStatusEnumMap = {
   PaymentStatus.created: 'created',
@@ -48,5 +51,4 @@ const _$PaymentStatusEnumMap = {
 Json? _$JsonConverterToJson<Json, Value>(
   Value? value,
   Json? Function(Value value) toJson,
-) =>
-    value == null ? null : toJson(value);
+) => value == null ? null : toJson(value);
