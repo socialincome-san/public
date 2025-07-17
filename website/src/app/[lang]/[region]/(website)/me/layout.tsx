@@ -17,7 +17,7 @@ export default async function Layout({ children, ...props }: PropsWithChildren<D
 
 	return (
 		<BaseContainer>
-			<UserContextProvider>
+			<UserContextProvider redirectToLogin>
 				<LayoutClient
 					params={params}
 					translations={{

@@ -16,7 +16,7 @@ import Stripe from 'stripe';
 export const useUser = () => {
 	const user = useContext(UserContext);
 	if (!user) {
-		throw new Error('useUserContext must be used within a UserContextProvider');
+		return null;
 	}
 	return user;
 };
@@ -24,19 +24,25 @@ export const useUser = () => {
 export const useContributions = () => {
 	const firestore = useFirestore();
 	const user = useUser();
+
 	const {
 		data: contributions,
 		isLoading,
 		error,
 	} = useQuery({
 		queryKey: ['me', 'contributions'],
-		queryFn: () =>
-			getDocs(
+		queryFn: () => {
+			if (!user) {
+				throw new Error('User not authenticated');
+			}
+			return getDocs(
 				query(
 					collection(firestore, USER_FIRESTORE_PATH, user.id, CONTRIBUTION_FIRESTORE_PATH),
 					orderBy('created', 'desc'),
 				),
-			),
+			);
+		},
+		enabled: !!user,
 	});
 	return { contributions, isLoading, error };
 };
@@ -71,13 +77,18 @@ export const useDonationCertificates = (): {
 		error,
 	} = useQuery<QuerySnapshot<DonationCertificate>>({
 		queryKey: ['me', 'donation-certificates'],
-		queryFn: () =>
-			getDocs(
+		queryFn: () => {
+			if (!user) {
+				throw new Error('User not authenticated');
+			}
+			return getDocs(
 				query(
 					collection(firestore, user.ref.path, DONATION_CERTIFICATE_FIRESTORE_PATH),
 					orderBy('year', 'desc'),
 				) as Query<DonationCertificate>,
-			),
+			);
+		},
+		enabled: !!user,
 	});
 	return { donationCertificates, isLoading, error };
 };
