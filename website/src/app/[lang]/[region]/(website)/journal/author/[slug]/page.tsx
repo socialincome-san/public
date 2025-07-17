@@ -1,12 +1,12 @@
 import { MoreArticlesLink } from '@/components/storyblok/MoreArticlesLink';
 import {
-	DEFAULT_LANGUAGE,
 	getArticleCountByAuthorForDefaultLang,
 	getArticlesByAuthor,
 	getAuthor,
 } from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
+import { defaultLanguage } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -20,7 +20,7 @@ async function getTotalArticlesInDefaultLanguage(
 	totalArticlesInSelectedLanguage: number,
 	authorId: string,
 ) {
-	return lang == DEFAULT_LANGUAGE
+	return lang == defaultLanguage
 		? totalArticlesInSelectedLanguage
 		: await getArticleCountByAuthorForDefaultLang(authorId);
 }
@@ -68,10 +68,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 			{totalArticlesInDefault > totalArticlesInSelectedLanguage && (
 				<div>
 					<Separator className="my-8" />
-					<MoreArticlesLink
-						text={translator.t('overview.more-articles')}
-						url={`/${DEFAULT_LANGUAGE}/${region}/journal/author/${slug}`}
-					/>
+					<MoreArticlesLink text={translator.t('overview.more-articles')} />
 				</div>
 			)}
 		</BaseContainer>

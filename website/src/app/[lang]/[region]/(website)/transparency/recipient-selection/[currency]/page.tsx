@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { CurrencyRedirect } from '@/app/[lang]/[region]/(website)/transparency/(components)/currency-redirect';
-import { websiteCurrencies, WebsiteCurrency } from '@/i18n';
+import { websiteCurrencies, WebsiteCurrency } from '@/lib/i18n/utils';
 import { Currency } from '@socialincome/shared/src/types/currency';
 import { SelectionFaq } from './(sections)/faq';
 import { HeroSection } from './(sections)/hero-section';

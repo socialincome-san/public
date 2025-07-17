@@ -1,4 +1,4 @@
-import { firestoreAdmin } from '@/firebase-admin';
+import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
 import { StripeEventHandler } from '@socialincome/shared/src/stripe/StripeEventHandler';
 import { User } from '@socialincome/shared/src/types/user';
 

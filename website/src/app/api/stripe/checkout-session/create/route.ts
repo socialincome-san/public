@@ -1,5 +1,5 @@
 import { getUserDocFromAuthToken, handleApiError } from '@/app/api/auth';
-import { WebsiteCurrency } from '@/i18n';
+import { WebsiteCurrency } from '@/lib/i18n/utils';
 import { initializeStripe } from '@socialincome/shared/src/stripe';
 import { NextResponse } from 'next/server';
 

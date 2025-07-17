@@ -1,7 +1,7 @@
 'use client';
 
-import { useI18n } from '@/components/providers/context-providers';
-import { websiteCurrencies, WebsiteCurrency } from '@/i18n';
+import { useI18n } from '@/lib/i18n/useI18n';
+import { websiteCurrencies, WebsiteCurrency } from '@/lib/i18n/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
 	Button,

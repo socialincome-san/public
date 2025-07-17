@@ -1,4 +1,4 @@
-import { firestoreAdmin } from '@/firebase-admin';
+import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
 import { BankTransferService } from '@socialincome/shared/src/bank-transfer/BankTransferService';
 import { Currency } from '@socialincome/shared/src/types/currency';
 import { NextResponse } from 'next/server';

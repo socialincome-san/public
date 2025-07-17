@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { SuccessForm } from '@/app/[lang]/[region]/(blue-theme)/donate/success/stripe/[session]/success-form';
-import { firestoreAdmin } from '@/firebase-admin';
+import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
 import { initializeStripe } from '@socialincome/shared/src/stripe';
 import { CountryCode } from '@socialincome/shared/src/types/country';
 import { USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types/user';

@@ -4,7 +4,7 @@ import { getArticle, getRelativeArticles } from '@/components/storyblok/Storyblo
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
 import { formatStoryblokDate, formatStoryblokUrl } from '@/components/storyblok/StoryblokUtils';
-import { WebsiteRegion } from '@/i18n';
+import { WebsiteRegion } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { StoryblokAuthor, StoryblokTag } from '@/types/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';

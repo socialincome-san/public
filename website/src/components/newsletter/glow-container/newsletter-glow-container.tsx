@@ -3,8 +3,8 @@
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { GlowHoverContainer, Typography } from '@socialincome/ui';
 
-import NewsletterForm from '@/components/newsletter-form/newsletter-form';
-import { NewsletterPopupTranslations } from '@/components/newsletter-popup/newsletter-popup-client';
+import NewsletterForm from '@/components/newsletter/form/newsletter-form';
+import { NewsletterPopupTranslations } from '@/components/newsletter/popup/newsletter-popup-client';
 
 type NewsletterGlowContainerProps = {
 	title: string;

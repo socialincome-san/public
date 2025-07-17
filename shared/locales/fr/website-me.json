@@ -14,10 +14,6 @@
 			"subscriptions": "Souscriptions",
 			"donation-certificates-short": "Attestations",
 			"donation-certificates-long": "Attestations de don"
-		},
-		"employer": {
-			"title": "Mon Employeur",
-			"work": "Travail"
 		}
 	},
 	"contributions": {
