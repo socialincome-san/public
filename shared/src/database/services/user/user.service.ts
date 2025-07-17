@@ -49,4 +49,21 @@ export class UserService extends BaseService {
 			},
 		});
 	}
+
+	async getCurrentUserByAuthId(authUserId: string): Promise<ServiceResult<PrismaUser>> {
+		try {
+			const user = await this.db.user.findUnique({
+				where: { authUserId },
+			});
+
+			if (!user) {
+				return this.resultFail('User not found');
+			}
+
+			return this.resultOk(user);
+		} catch (e) {
+			console.error('[UserService.getCurrentUserByAuthId]', e);
+			return this.resultFail('Error fetching user');
+		}
+	}
 }

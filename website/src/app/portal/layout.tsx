@@ -1,3 +1,4 @@
+import { UserContextProvider } from '@/app/portal/providers/UserContextProvider';
 import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
 
@@ -10,5 +11,5 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
 		notFound();
 	}
 
-	return <>{children}</>;
+	return <UserContextProvider redirectToLogin>{children}</UserContextProvider>;
 }
