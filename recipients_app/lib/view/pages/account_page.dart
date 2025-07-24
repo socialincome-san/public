@@ -229,7 +229,7 @@ class AccountPageState extends State<AccountPage> {
                   hintText: "${context.l10n.dateOfBirth}*",
                   controller: _birthDateController,
                   isReadOnly: true,
-                  onTap: () async => showDatePicker(
+                  onTap: () => showDatePicker(
                     firstDate: DateTime(1950),
                     lastDate: DateTime(DateTime.now().year - 10),
                     initialDate: recipient.birthDate?.toDate() ?? DateTime(2000),

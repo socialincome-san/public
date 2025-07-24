@@ -12,6 +12,7 @@ import "package:app/data/repositories/repositories.dart";
 import "package:app/data/services/auth_service.dart";
 import "package:app/demo_manager.dart";
 import "package:app/kri_intl.dart";
+import "package:app/l10n/arb/app_localizations.dart";
 import "package:app/ui/configs/configs.dart";
 import "package:app/view/pages/main_app_page.dart";
 import "package:app/view/pages/terms_and_conditions_page.dart";
@@ -19,7 +20,6 @@ import "package:app/view/pages/welcome_page.dart";
 import "package:firebase_messaging/firebase_messaging.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
 import "package:flutter_native_splash/flutter_native_splash.dart";
 

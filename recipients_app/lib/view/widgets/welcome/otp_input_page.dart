@@ -53,7 +53,7 @@ class _OtpInputPageState extends State<OtpInputPage> {
               const Center(child: CircularProgressIndicator()),
             ] else ...[
               TextButton(
-                onPressed: () async => context.read<SignupCubit>().resendVerificationCode(),
+                onPressed: () => context.read<SignupCubit>().resendVerificationCode(),
                 child: Text(
                   context.l10n.resendVerificationCode,
                   style: Theme.of(context).textTheme.headlineMedium!.copyWith(

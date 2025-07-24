@@ -23,7 +23,7 @@ class _MainAppPageState extends State<MainAppPage> {
     final editButtonRow = Row(
       children: [
         ButtonSmall(
-          onPressed: () async {
+          onPressed: () {
             if (recipient == null) return;
 
             final organization = context.read<AuthCubit>().state.organization;

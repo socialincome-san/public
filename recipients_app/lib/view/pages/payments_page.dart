@@ -30,7 +30,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
       ),
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
-        onRefresh: () async => context.read<PaymentsCubit>().loadPayments(),
+        onRefresh: () => context.read<PaymentsCubit>().loadPayments(),
         child: ListView(
           padding: AppSpacings.h8,
           children: [
