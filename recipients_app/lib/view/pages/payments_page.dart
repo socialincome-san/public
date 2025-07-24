@@ -53,9 +53,9 @@ class _PaymentsPageState extends State<PaymentsPage> {
                       Text(
                         "${recipient?.mobileMoneyPhone?.phoneNumber ?? ""}",
                         style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                              color: AppColors.primaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          color: AppColors.primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       Row(
@@ -74,9 +74,9 @@ class _PaymentsPageState extends State<PaymentsPage> {
                                   paymentsUiState.payments,
                                 ),
                                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                                      color: AppColors.primaryColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  color: AppColors.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ],
                           ),
@@ -95,11 +95,11 @@ class _PaymentsPageState extends State<PaymentsPage> {
                                       )
                                     : context.l10n.paymentsSuspended,
                                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                                      color: paymentsUiState.status != BalanceCardStatus.onHold
-                                          ? AppColors.primaryColor
-                                          : AppColors.redColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  color: paymentsUiState.status != BalanceCardStatus.onHold
+                                      ? AppColors.primaryColor
+                                      : AppColors.redColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ],
                           ),

@@ -41,8 +41,8 @@ class SurveyListCard extends StatelessWidget {
                     Text(
                       mappedSurvey.name,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.black,
-                          ),
+                        color: Colors.black,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -52,8 +52,8 @@ class SurveyListCard extends StatelessWidget {
                         locale,
                       ),
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.darkGrey,
-                          ),
+                        color: AppColors.darkGrey,
+                      ),
                     ),
                   ],
                 ),

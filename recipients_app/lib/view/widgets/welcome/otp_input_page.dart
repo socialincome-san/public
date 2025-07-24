@@ -57,9 +57,9 @@ class _OtpInputPageState extends State<OtpInputPage> {
                 child: Text(
                   context.l10n.resendVerificationCode,
                   style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                        color: AppColors.primaryColor,
-                        decoration: TextDecoration.underline,
-                      ),
+                    color: AppColors.primaryColor,
+                    decoration: TextDecoration.underline,
+                  ),
                 ),
               ),
             ],

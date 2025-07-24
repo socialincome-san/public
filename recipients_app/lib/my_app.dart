@@ -61,14 +61,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<DemoManager>(
-          create: (context) => demoManager,
-        ),
-        RepositoryProvider(
-          create: (context) => MessagingRepository(
-            messaging: messaging,
-          ),
-        ),
+        RepositoryProvider<DemoManager>(create: (context) => demoManager),
+        RepositoryProvider(create: (context) => MessagingRepository(messaging: messaging)),
         RepositoryProvider(
           create: (context) => UserRepository(
             remoteDataSource: userRemoteDataSource,
@@ -76,9 +70,7 @@ class MyApp extends StatelessWidget {
             demoManager: demoManager,
           ),
         ),
-        RepositoryProvider(
-          create: (context) => const CrashReportingRepository(),
-        ),
+        RepositoryProvider(create: (context) => const CrashReportingRepository()),
         RepositoryProvider(
           create: (context) => PaymentRepository(
             remoteDataSource: paymentRemoteDataSource,
@@ -100,9 +92,7 @@ class MyApp extends StatelessWidget {
             demoManager: demoManager,
           ),
         ),
-        RepositoryProvider<AuthService>.value(
-          value: authService,
-        ),
+        RepositoryProvider<AuthService>.value(value: authService),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -147,10 +137,7 @@ class _App extends StatelessWidget {
         KriMaterialLocalizations.delegate,
         KriCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale("en", "US"),
-        Locale("kri"),
-      ],
+      supportedLocales: const [Locale("en", "US"), Locale("kri")],
       home: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state.status == AuthStatus.authenticated) {

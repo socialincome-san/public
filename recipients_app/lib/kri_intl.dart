@@ -118,7 +118,7 @@ const kriDateSymbols = {
     "BC",
     "AD",
   ],
-// #enddocregion Date2
+  // #enddocregion Date2
   "ERANAMES": <dynamic>[
     "Before Christ",
     "Anno Domini",
@@ -682,7 +682,7 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   @override
   String get alertDialogLabel => "Alat";
 
-// #enddocregion Getters
+  // #enddocregion Getters
 
   @override
   String get anteMeridiemAbbreviation => "AM";
@@ -751,13 +751,13 @@ class KriMaterialLocalizations extends GlobalMaterialLocalizations {
   // A custom drawer tooltip message.
   String get openAppDrawerTooltip => "Custom Navigation Menu Tooltip";
 
-// #docregion Raw
+  // #docregion Raw
   @override
   String get pageRowsInfoTitleRaw => r"$firstRow–$lastRow of $rowCount";
 
   @override
   String get pageRowsInfoTitleApproximateRaw => r"$firstRow–$lastRow of about $rowCount";
-// #enddocregion Raw
+  // #enddocregion Raw
 
   @override
   String get pasteButtonLabel => "PUT AM YA";

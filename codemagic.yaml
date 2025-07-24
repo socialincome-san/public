@@ -5,7 +5,7 @@ definitions:
 
   env_versions: &env_versions
     flutter: 3.32.7
-    xcode: 16.2
+    xcode: 16.4
     cocoapods: 1.16.2
     java: 21
 

@@ -42,8 +42,8 @@ class PaymentTile extends StatelessWidget {
                     locale,
                   ),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.black,
-                      ),
+                    color: Colors.black,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 _buildStatusIcon(mappedPayment),

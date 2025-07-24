@@ -19,9 +19,9 @@ class BalanceCardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dynamicTextStyle = Theme.of(context).textTheme.headlineLarge!.copyWith(
-          fontWeight: FontWeight.bold,
-          color: _getTextColor(),
-        );
+      fontWeight: FontWeight.bold,
+      color: _getTextColor(),
+    );
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
