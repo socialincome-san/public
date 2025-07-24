@@ -4,7 +4,7 @@ definitions:
     max_build_duration: 30
 
   env_versions: &env_versions
-    flutter: 3.27.3
+    flutter: 3.32.7
     xcode: 16.2
     cocoapods: 1.16.2
     java: 21
