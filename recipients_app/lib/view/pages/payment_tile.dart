@@ -1,4 +1,5 @@
 import "package:app/data/models/models.dart";
+import "package:app/l10n/arb/app_localizations.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/icons/payment_status_icon_with_text.dart";
 import "package:app/view/pages/payment_tile_bottom_action.dart";
@@ -41,8 +42,8 @@ class PaymentTile extends StatelessWidget {
                     locale,
                   ),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.black,
-                      ),
+                    color: Colors.black,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 _buildStatusIcon(mappedPayment),

@@ -19,7 +19,7 @@ class SurveyRepository {
 
   Future<List<Survey>> fetchSurveys({
     required String recipientId,
-  }) async {
+  }) {
     return _activeDataSource.fetchSurveys(recipientId: recipientId);
   }
 }
