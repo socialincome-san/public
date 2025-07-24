@@ -263,10 +263,10 @@ class AppLocalizationsKri extends AppLocalizations {
   }
 
   @override
-  String get day => 'day';
+  String get day => 'de';
 
   @override
-  String get days => 'days';
+  String get days => 'de dɛm';
 
   @override
   String get myPayments => 'Mi Pemɛnt Dɛm';
@@ -313,7 +313,7 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get surveyCardInfo =>
-      'Please take 5 minutes to answer questions and help to improve Social Income';
+      'Duya tek 5 minit fɔ ansa di kwɛstyɔn dɛm ɛn ɛp wi fɔ mek Social Income bɛtɛ';
 
   @override
   String get verification => 'Fɔ sho se na yu';
@@ -340,36 +340,36 @@ class AppLocalizationsKri extends AppLocalizations {
   String get appVersion => 'App version:';
 
   @override
-  String get surveysTitle => 'Surveys';
+  String get surveysTitle => 'Sɔve dɛm';
 
   @override
-  String get surveysEmpty => 'No surveys.';
+  String get surveysEmpty => 'Nɔ sɔve.';
 
   @override
-  String get surveyMissed => 'Missed';
+  String get surveyMissed => 'Yu mis am';
 
   @override
-  String get surveyDue => 'Due';
+  String get surveyDue => 'I dɔn tɛm';
 
   @override
-  String get surveyCompleted => 'Completed';
+  String get surveyCompleted => 'Yu dɔn dɔn';
 
   @override
-  String get surveyUpcoming => 'Upcoming';
+  String get surveyUpcoming => 'I de kam';
 
   @override
-  String get surveyInProgress => 'In Progress';
+  String get surveyInProgress => 'Wi de du am';
 
   @override
-  String get overview => 'Overview';
+  String get overview => 'Ɔltin bɔt';
 
   @override
   String completedSurveysCount(int done, int all) {
-    return '$done/$all completed';
+    return '$done/$all dɔn dɔn';
   }
 
   @override
-  String get mySurveysTitle => 'My surveys';
+  String get mySurveysTitle => 'Mi sɔve dɛm';
 
   @override
   String get invalidPhoneNumberError =>
@@ -389,318 +389,316 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get adminOnlyOperation =>
-      'This operation is only allowed for admin users';
+      'Di pɛmɛnt we yu nɔ gri wit nɔ go insay fɔ yu';
 
   @override
-  String get argumentError => 'Invalid argument provided';
+  String get argumentError => 'Di argument nɔ kɔrɛkt';
 
   @override
-  String get appNotAuthorized => 'App not authorized';
+  String get appNotAuthorized => 'App nɔ go insay';
 
   @override
-  String get appNotInstalled => 'App not installed';
+  String get appNotInstalled => 'App nɔ go insay';
 
   @override
-  String get captchaCheckFailed => 'CAPTCHA check failed';
+  String get captchaCheckFailed => 'Captcha nɔ go insay';
 
   @override
-  String get codeExpired => 'Code expired';
+  String get codeExpired => 'Di kod nɔ go insay';
 
   @override
-  String get cordovaNotReady => 'Cordova is not ready';
+  String get cordovaNotReady => 'Cordova nɔ go insay';
 
   @override
-  String get corsUnsupported => 'CORS is unsupported';
+  String get corsUnsupported => 'CORS nɔ go insay';
 
   @override
-  String get credentialAlreadyInUse => 'Credential already in use';
+  String get credentialAlreadyInUse => 'Di kredɛnsyɔn nɔ go insay';
 
   @override
-  String get credentialMismatch => 'Credential mismatch';
+  String get credentialMismatch => 'Di kredɛnsyɔn nɔ go insay';
 
   @override
   String get credentialTooOldLoginAgain =>
-      'Credential too old, please login again';
+      'Di kredɛnsyɔn dɔn ol pas, duya lɔgin bak';
 
   @override
-  String get dependentSdkInitBeforeAuth =>
-      'Dependent SDK initialized before auth';
+  String get dependentSdkInitBeforeAuth => 'Dependent SDK dɔn bigin bifo auth';
 
   @override
-  String get dynamicLinkNotActivated => 'Dynamic link not activated';
+  String get dynamicLinkNotActivated => 'Dynamic link nɔ go insay';
 
   @override
-  String get emailChangeNeedsVerification => 'Email change needs verification';
+  String get emailChangeNeedsVerification => 'Imel nɔ go insay fɔ verification';
 
   @override
-  String get emailExists => 'Email already exists';
+  String get emailExists => 'Imel nɔ go insay';
 
   @override
-  String get emulatorConfigFailed => 'Emulator configuration failed';
+  String get emulatorConfigFailed => 'Emulator kɔnfigɔreshɔn nɔ go insay';
 
   @override
-  String get expiredOobCode => 'Expired action code';
+  String get expiredOobCode => 'Action kod dɔn pas';
 
   @override
-  String get expiredPopupRequest => 'Expired popup request';
+  String get expiredPopupRequest => 'Popup rɛkwɛst dɔn pas';
 
   @override
   String get internalError => 'Internal error';
 
   @override
-  String get invalidApiKey => 'Invalid API key';
+  String get invalidApiKey => 'API key nɔ kɔrɛkt';
 
   @override
-  String get invalidAppCredential => 'Invalid app credential';
+  String get invalidAppCredential => 'App kredɛnsyɔn nɔ kɔrɛkt';
 
   @override
-  String get invalidAppId => 'Invalid app ID';
+  String get invalidAppId => 'App ID nɔ kɔrɛkt';
 
   @override
-  String get invalidAuth => 'Invalid user token';
+  String get invalidAuth => 'Yuzɛ tokɛn nɔ kɔrɛkt';
 
   @override
-  String get invalidAuthEvent => 'Invalid auth event';
+  String get invalidAuthEvent => 'Auth event nɔ kɔrɛkt';
 
   @override
-  String get invalidCertHash => 'Invalid cert hash';
+  String get invalidCertHash => 'Cert hash nɔ kɔrɛkt';
 
   @override
-  String get invalidCode => 'Invalid verification code';
+  String get invalidCode => 'Verification kod nɔ kɔrɛkt';
 
   @override
-  String get invalidContinueUri => 'Invalid resource';
+  String get invalidContinueUri => 'Resource nɔ kɔrɛkt';
 
   @override
-  String get invalidCordovaConfiguration => 'Invalid Cordova configuration';
+  String get invalidCordovaConfiguration => 'Cordova kɔnfigɔreshɔn nɔ kɔrɛkt';
 
   @override
-  String get invalidCustomToken => 'Invalid custom token';
+  String get invalidCustomToken => 'Kɔstɔm tokɛn nɔ kɔrɛkt';
 
   @override
-  String get invalidDynamicLinkDomain => 'Invalid dynamic link domain';
+  String get invalidDynamicLinkDomain => 'Dynamic link domain nɔ kɔrɛkt';
 
   @override
-  String get invalidEmail => 'Invalid email';
+  String get invalidEmail => 'Imel nɔ kɔrɛkt';
 
   @override
-  String get invalidEmulatorScheme => 'Invalid emulator scheme';
+  String get invalidEmulatorScheme => 'Emulator scheme nɔ kɔrɛkt';
 
   @override
-  String get invalidIdpResponse => 'Invalid credential';
+  String get invalidIdpResponse => 'Kredɛnsyɔn nɔ kɔrɛkt';
 
   @override
-  String get invalidMessagePayload => 'Invalid message payload';
+  String get invalidMessagePayload => 'Message payload nɔ kɔrɛkt';
 
   @override
-  String get invalidMfaSession => 'Invalid multi-factor session';
+  String get invalidMfaSession => 'Multi-factor session nɔ kɔrɛkt';
 
   @override
-  String get invalidOauthClientId => 'Invalid OAuth client ID';
+  String get invalidOauthClientId => 'OAuth client ID nɔ kɔrɛkt';
 
   @override
-  String get invalidOauthProvider => 'Invalid OAuth provider';
+  String get invalidOauthProvider => 'OAuth provider nɔ kɔrɛkt';
 
   @override
-  String get invalidOobCode => 'Invalid action code';
+  String get invalidOobCode => 'Action kod nɔ kɔrɛkt';
 
   @override
-  String get invalidOrigin => 'Unauthorized domain';
+  String get invalidOrigin => 'Domain nɔ ɔke';
 
   @override
-  String get invalidPassword => 'Wrong password';
+  String get invalidPassword => 'Paswɔd nɔ kɔrɛkt';
 
   @override
-  String get invalidPersistence => 'Invalid persistence type';
+  String get invalidPersistence => 'Persistence type nɔ kɔrɛkt';
 
   @override
-  String get invalidProviderId => 'Invalid provider ID';
+  String get invalidProviderId => 'Provider ID nɔ kɔrɛkt';
 
   @override
-  String get invalidRecipientEmail => 'Invalid recipient email';
+  String get invalidRecipientEmail => 'Recipient imel nɔ kɔrɛkt';
 
   @override
-  String get invalidSender => 'Invalid sender';
+  String get invalidSender => 'Sɛnda nɔ kɔrɛkt';
 
   @override
-  String get invalidSessionInfo => 'Invalid verification ID';
+  String get invalidSessionInfo => 'Verification ID nɔ kɔrɛkt';
 
   @override
-  String get invalidTenantId => 'Invalid tenant ID';
+  String get invalidTenantId => 'Tenant ID nɔ kɔrɛkt';
 
   @override
-  String get mfaInfoNotFound => 'Multi-factor info not found';
+  String get mfaInfoNotFound => 'Multi-factor info nɔ de';
 
   @override
-  String get mfaRequired => 'Multi-factor authentication required';
+  String get mfaRequired => 'Multi-factor authentication de nid';
 
   @override
-  String get missingAndroidPackageName => 'Missing Android package name';
+  String get missingAndroidPackageName => 'Android package nem nɔ de';
 
   @override
-  String get missingAppCredential => 'Missing app credential';
+  String get missingAppCredential => 'App kredɛnsyɔn nɔ de';
 
   @override
-  String get missingAuthDomain => 'Auth domain configuration required';
+  String get missingAuthDomain => 'Auth domain kɔnfigɔreshɔn de nid';
 
   @override
-  String get missingCode => 'Missing verification code';
+  String get missingCode => 'Verification kod nɔ de';
 
   @override
-  String get missingContinueUri => 'Missing ressource';
+  String get missingContinueUri => 'Resource nɔ de';
 
   @override
-  String get missingIframeStart => 'Missing iframe start';
+  String get missingIframeStart => 'Iframe start nɔ de';
 
   @override
-  String get missingIosBundleId => 'Missing iOS bundle ID';
+  String get missingIosBundleId => 'iOS bundle ID nɔ de';
 
   @override
-  String get missingOrInvalidNonce => 'Missing or invalid nonce';
+  String get missingOrInvalidNonce => 'Nonce nɔ de ɔ nɔ kɔrɛkt';
 
   @override
-  String get missingMfaInfo => 'Missing multi-factor info';
+  String get missingMfaInfo => 'Multi-factor info nɔ de';
 
   @override
-  String get missingMfaSession => 'Missing multi-factor session';
+  String get missingMfaSession => 'Multi-factor session nɔ de';
 
   @override
-  String get missingPhoneNumber => 'Missing phone number';
+  String get missingPhoneNumber => 'Fon nɔmba nɔ de';
 
   @override
-  String get missingSessionInfo => 'Missing verification ID';
+  String get missingSessionInfo => 'Verification ID nɔ de';
 
   @override
-  String get moduleDestroyed => 'App deleted';
+  String get moduleDestroyed => 'App dɔn dilit';
 
   @override
-  String get needConfirmation => 'Account exists with different credential';
+  String get needConfirmation => 'Akawnt de wit difrɛn kredɛnsyɔn';
 
   @override
-  String get networkRequestFailed => 'Network request failed';
+  String get networkRequestFailed => 'Nɛtwɔk rɛkwɛst nɔ go insay';
 
   @override
-  String get nullUser => 'Null user';
+  String get nullUser => 'Nɔ yuzɛ';
 
   @override
-  String get noAuthEvent => 'No auth event';
+  String get noAuthEvent => 'Nɔ auth event';
 
   @override
-  String get noSuchProvider => 'No such provider';
+  String get noSuchProvider => 'Nɔto provider';
 
   @override
-  String get operationNotAllowed => 'Operation not allowed';
+  String get operationNotAllowed => 'Ɔpɛreshɔn nɔ ɔke';
 
   @override
   String get operationNotSupported =>
-      'Operation not supported in this environment';
+      'Ɔpɛreshɔn nɔ go insay na dis environment';
 
   @override
-  String get popupBlocked => 'Popup blocked';
+  String get popupBlocked => 'Popup dɔn blɔk';
 
   @override
-  String get popupClosedByUser => 'Popup closed by user';
+  String get popupClosedByUser => 'Yuzɛ dɔn lɔk popup';
 
   @override
-  String get providerAlreadyLinked => 'Provider already linked';
+  String get providerAlreadyLinked => 'Provider dɔn link';
 
   @override
-  String get quotaExceeded => 'Quota exceeded';
+  String get quotaExceeded => 'Quota dɔn pas';
 
   @override
-  String get redirectCancelledByUser => 'Redirect cancelled by user';
+  String get redirectCancelledByUser => 'Yuzɛ dɔn kansɛl redirect';
 
   @override
-  String get redirectOperationPending => 'Redirect operation pending';
+  String get redirectOperationPending => 'Redirect ɔpɛreshɔn de wait';
 
   @override
-  String get rejectedCredential => 'Rejected credential';
+  String get rejectedCredential => 'Kredɛnsyɔn dɔn rɛjɛk';
 
   @override
-  String get secondFactorAlreadyEnrolled => 'Second factor already enrolled';
+  String get secondFactorAlreadyEnrolled => 'Sɛkɔn fɛkta dɔn enroll';
 
   @override
-  String get secondFactorLimitExceeded =>
-      'Maximum second factor count exceeded';
+  String get secondFactorLimitExceeded => 'Maksimɔm sɛkɔn fɛkta kawnt dɔn pas';
 
   @override
-  String get tenantIdMismatch => 'Tenant ID mismatch';
+  String get tenantIdMismatch => 'Tenant ID nɔ match';
 
   @override
-  String get timeoutError => 'Timeout';
+  String get timeoutError => 'Tɛm dɔn pas';
 
   @override
-  String get tokenExpired => 'User token expired';
+  String get tokenExpired => 'Yuzɛ tokɛn dɔn pas';
 
   @override
-  String get tooManyAttemptsTryLater => 'Too many requests, try again later';
+  String get tooManyAttemptsTryLater => 'Tɔ mɔni rɛkwɛst, tray bak lɛta';
 
   @override
-  String get unauthorizedDomain => 'Unauthorized domain for resource';
+  String get unauthorizedDomain => 'Domain nɔ ɔke fɔ resource';
 
   @override
-  String get unsupportedFirstFactor => 'Unsupported first factor';
+  String get unsupportedFirstFactor => 'Fɛs fɛkta nɔ go insay';
 
   @override
-  String get unsupportedPersistence => 'Unsupported persistence type';
+  String get unsupportedPersistence => 'Persistence type nɔ go insay';
 
   @override
-  String get unsupportedTenantOperation => 'Unsupported tenant operation';
+  String get unsupportedTenantOperation => 'Tenant ɔpɛreshɔn nɔ go insay';
 
   @override
-  String get unverifiedEmail => 'Unverified email';
+  String get unverifiedEmail => 'Imel nɔ verify';
 
   @override
-  String get userCancelled => 'User cancelled';
+  String get userCancelled => 'Yuzɛ dɔn kansɛl';
 
   @override
-  String get userDeleted => 'User not found';
+  String get userDeleted => 'Yuzɛ nɔ de';
 
   @override
-  String get userMismatch => 'User mismatch';
+  String get userMismatch => 'Yuzɛ nɔ match';
 
   @override
-  String get userSignedOut => 'User signed out';
+  String get userSignedOut => 'Yuzɛ dɔn sign awt';
 
   @override
-  String get weakPassword => 'Weak password';
+  String get weakPassword => 'Paswɔd nɔ strong';
 
   @override
-  String get webStorageUnsupported => 'Web storage unsupported';
+  String get webStorageUnsupported => 'Web storage nɔ go insay';
 
   @override
-  String get alreadyInitialized => 'Already initialized';
+  String get alreadyInitialized => 'Dɔn bigin';
 
   @override
-  String get recaptchaNotEnabled => 'reCAPTCHA not enabled';
+  String get recaptchaNotEnabled => 'reCAPTCHA nɔ enable';
 
   @override
-  String get missingRecaptchaToken => 'Missing reCAPTCHA token';
+  String get missingRecaptchaToken => 'reCAPTCHA tokɛn nɔ de';
 
   @override
-  String get invalidRecaptchaToken => 'Invalid reCAPTCHA token';
+  String get invalidRecaptchaToken => 'reCAPTCHA tokɛn nɔ kɔrɛkt';
 
   @override
-  String get invalidRecaptchaAction => 'Invalid reCAPTCHA action';
+  String get invalidRecaptchaAction => 'reCAPTCHA action nɔ kɔrɛkt';
 
   @override
-  String get missingClientType => 'Missing client type';
+  String get missingClientType => 'Client type nɔ de';
 
   @override
-  String get missingRecaptchaVersion => 'Missing reCAPTCHA version';
+  String get missingRecaptchaVersion => 'reCAPTCHA version nɔ de';
 
   @override
-  String get invalidRecaptchaVersion => 'Invalid reCAPTCHA version';
+  String get invalidRecaptchaVersion => 'reCAPTCHA version nɔ kɔrɛkt';
 
   @override
-  String get invalidReqType => 'Invalid request type';
+  String get invalidReqType => 'Rɛkwɛst type nɔ kɔrɛkt';
 
   @override
-  String get errorEmailInvalid => 'Imel nɔ kɔrɛkt';
+  String get errorEmailInvalid => 'Imel adrɛs nɔ kɔrɛkt';
 
   @override
   String get demoCta => 'Demo';
 
   @override
-  String get createAccountDemo => 'Enta di demo';
+  String get createAccountDemo => 'Go insay demo';
 }
