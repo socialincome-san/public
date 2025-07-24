@@ -1,0 +1,391 @@
+openapi: 3.1.1
+info:
+  title: Social Income – Recipients API
+  version: 1.0.0
+  description: >
+    API that replaces the current Firebase backend used by the Social Income
+    recipients app.  
+    All endpoints return (and accept) JSON encoded UTF-8.
+
+servers:
+  - url: https://
+
+paths:
+  /auth/otp:
+    post:
+      summary: Send an OTP to a phone number
+      operationId: sendOtp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phoneNumber]
+              properties:
+                phoneNumber:
+                  type: string
+                  description: E.164 format phone number
+                  example: "+260971234567"
+      responses:
+        "204":
+          description: OTP sent successfully
+
+  /auth/otp/verify:
+    post:
+      summary: Verify an OTP and obtain an access token
+      operationId: verifyOtp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phoneNumber, otp]
+              properties:
+                phoneNumber:
+                  type: string
+                  description: E.164 format phone number
+                otp:
+                  type: string
+                  description: One-time password code
+      responses:
+        "200":
+          description: Valid code – returns bearer token and matching recipient record
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [token, recipient]
+                properties:
+                  token:
+                    type: string
+                    description: JWT bearer token
+                  recipient:
+                    $ref: "#/components/schemas/Recipient"
+        "401":
+          description: Invalid code or expired
+
+  /recipients/{recipientId}:
+    parameters:
+      - $ref: "#/components/parameters/RecipientId"
+    get:
+      summary: Fetch a recipient profile
+      operationId: getRecipient
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Profile found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recipient"
+        "404":
+          description: Not found
+
+    patch:
+      summary: Update parts of a recipient profile
+      operationId: updateRecipient
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Recipient"
+      responses:
+        "204":
+          description: Updated successfully
+
+  /organizations/{organizationId}:
+    parameters:
+      - $ref: "#/components/parameters/OrganizationId"
+    get:
+      summary: Fetch organization details
+      operationId: getOrganization
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Organization found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+        "404":
+          description: Not found
+
+  /recipients/{recipientId}/payments:
+    parameters:
+      - $ref: "#/components/parameters/RecipientId"
+    get:
+      summary: List payments of a recipient (ordered by id ascending)
+      operationId: listPayments
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Payments found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Payment"
+
+  /recipients/{recipientId}/payments/{paymentId}/confirm:
+    parameters:
+      - $ref: "#/components/parameters/RecipientId"
+      - $ref: "#/components/parameters/PaymentId"
+    post:
+      summary: Mark a payment as confirmed
+      operationId: confirmPayment
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Payment confirmed successfully
+
+  /recipients/{recipientId}/payments/{paymentId}/contest:
+    parameters:
+      - $ref: "#/components/parameters/RecipientId"
+      - $ref: "#/components/parameters/PaymentId"
+    post:
+      summary: Contest a payment
+      operationId: contestPayment
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                reason:
+                  type: string
+                  description: Reason for contesting the payment
+      responses:
+        "204":
+          description: Payment contested successfully
+
+  /recipients/{recipientId}/surveys:
+    parameters:
+      - $ref: "#/components/parameters/RecipientId"
+    get:
+      summary: List surveys assigned to a recipient
+      operationId: listSurveys
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Surveys found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Survey"
+
+components:
+  parameters:
+    RecipientId:
+      in: path
+      name: recipientId
+      required: true
+      schema:
+        type: string
+        format: uuid
+        description: Unique identifier for the recipient
+
+    OrganizationId:
+      in: path
+      name: organizationId
+      required: true
+      schema:
+        type: string
+        format: uuid
+        description: Unique identifier for the organization
+
+    PaymentId:
+      in: path
+      name: paymentId
+      required: true
+      schema:
+        type: string
+        description: Unique identifier for the payment
+
+  schemas:
+    Phone:
+      type: object
+      properties:
+        phoneNumber:
+          type: integer
+          description: Phone number without country code
+          example: 971234567
+
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the organization
+        name:
+          type: string
+          description: Organization name
+        contactName:
+          type: string
+          description: Primary contact person name
+        contactNumber:
+          type: string
+          description: Primary contact phone number
+
+    Recipient:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Unique identifier for the recipient
+        firstName:
+          type: string
+          description: First name
+        lastName:
+          type: string
+          description: Last name
+        preferredName:
+          type: string
+          description: Preferred name
+        callingName:
+          type: string
+          description: Name used for calling
+        gender:
+          type: string
+          description: Gender
+        birthDate:
+          allOf:
+            - $ref: "#/components/schemas/Timestamp"
+          description: Date of birth
+        email:
+          type: string
+          format: email
+          description: Email address
+        country:
+          type: string
+          description: Country of residence
+        communicationMobilePhone:
+          allOf:
+            - $ref: "#/components/schemas/Phone"
+          description: Mobile phone for communication
+        mobileMoneyPhone:
+          allOf:
+            - $ref: "#/components/schemas/Phone"
+          description: Mobile phone for mobile money
+        paymentProvider:
+          type: string
+          description: Payment provider name
+        termsAccepted:
+          type: boolean
+          description: Whether terms have been accepted
+        recipientSince:
+          allOf:
+            - $ref: "#/components/schemas/Timestamp"
+          description: Date when became a recipient
+        imLinkInitial:
+          type: string
+          description: Initial IM link
+        imLinkRegular:
+          type: string
+          description: Regular IM link
+        nextSurvey:
+          allOf:
+            - $ref: "#/components/schemas/Timestamp"
+          description: Next survey date
+        organisationId:
+          type: string
+          format: uuid
+          description: Associated organization ID
+        successorName:
+          type: string
+          description: Successor name
+        updatedBy:
+          type: string
+          description: ID of user who last updated
+
+    Payment:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique payment identifier
+        amount:
+          type: integer
+          description: Payment amount in minor currency units
+          example: 350
+        currency:
+          type: string
+          description: Currency code
+          example: "ZMW"
+        paymentAt:
+          allOf:
+            - $ref: "#/components/schemas/Timestamp"
+          description: Payment date and time
+        status:
+          $ref: "#/components/schemas/PaymentStatus"
+        comments:
+          type: string
+          description: Comments or notes about the payment
+        updatedBy:
+          type: string
+          description: ID of user who last updated
+
+    Survey:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique survey identifier
+        status:
+          $ref: "#/components/schemas/SurveyStatus"
+        dueDateAt:
+          allOf:
+            - $ref: "#/components/schemas/Timestamp"
+          description: Survey due date
+        completedAt:
+          allOf:
+            - $ref: "#/components/schemas/Timestamp"
+          description: Survey completion date
+        accessEmail:
+          type: string
+          description: Access email for the survey
+        accessPw:
+          type: string
+          description: Access password for the survey
+
+    Timestamp:
+      type: string
+      format: date-time
+      description: ISO 8601 date-time string
+      example: "2024-03-24T15:30:00Z"
+
+    PaymentStatus:
+      type: string
+      enum: [created, paid, confirmed, contested, failed, other]
+      description: Status of the payment
+
+    SurveyStatus:
+      type: string
+      enum: [new, sent, scheduled, in-progress, completed, missed]
+      description: Status of the survey
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from OTP verification
