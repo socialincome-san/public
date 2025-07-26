@@ -146,7 +146,7 @@ export default async function Page(props: {
 					<Typography weight="bold" size="2xl">
 						{articleData.leadText}
 					</Typography>
-					<Typography as="div" className="text-black">
+					<Typography as="div" size='lg' className="text-black">
 						<RichTextRenderer
 							richTextDocument={articleData.content}
 							translator={translator}
