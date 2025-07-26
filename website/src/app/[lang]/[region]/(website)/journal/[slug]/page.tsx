@@ -110,6 +110,14 @@ export default async function Page(props: {
 						>
 							{articleData.title}
 						</Typography>
+						<Typography
+							weight="medium"
+							className="hyphens-auto break-words"
+							color={articleWithImageStyling ? 'accent' : 'foreground'}
+							size="4xl"
+						>
+							{articleData.subtitle}
+						</Typography>
 
 						<Link href={`/${lang}/${region}/journal/author/${author.slug}`}>
 							<div className="mt-8 flex items-center space-x-4">

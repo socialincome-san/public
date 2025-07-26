@@ -49,7 +49,7 @@ export function StoryblokArticleCard(props: {
 						className="md:h-18 my-4 line-clamp-2 h-14 w-auto overflow-hidden break-words md:line-clamp-3"
 						weight="medium"
 					>
-						{blog.content.title}
+						{blog.content.title + ' ' + blog.content.subtitle}
 					</Typography>
 					<div className="flex items-center justify-between">
 						<div className="flex items-center space-x-2">
