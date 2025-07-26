@@ -10,7 +10,7 @@ export function PreviewMessage() {
 	if (!visible) return null;
 
 	return (
-		<span className="text-shadow-md bg- bg-accent top-25 fixed left-5 z-[10000] w-[150px] rounded-md p-2 shadow-lg">
+		<span className="text-shadow-md bg- bg-accent top-36 fixed left-5 z-[10000] w-[150px] rounded-md p-2 shadow-lg">
 			<Typography as="span" weight="bold">
 				Preview Mode
 			</Typography>
