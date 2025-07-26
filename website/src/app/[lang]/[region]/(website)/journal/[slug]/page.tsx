@@ -4,7 +4,8 @@ import { getArticle, getRelativeArticles } from '@/components/storyblok/Storyblo
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
 import { formatStoryblokDate, formatStoryblokUrl } from '@/components/storyblok/StoryblokUtils';
-import { WebsiteRegion } from '@/lib/i18n/utils';
+import { defaultLanguage, WebsiteRegion } from '@/lib/i18n/utils';
+import { getMetadata } from '@/metadata';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { StoryblokAuthor, StoryblokTag } from '@/types/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
@@ -13,9 +14,31 @@ import { Badge, Separator, Typography } from '@socialincome/ui';
 import { ISbStoryData } from '@storyblok/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { cache } from 'react';
 
 export const revalidate = 900;
 storyblokInitializationWorkaround();
+
+//Currently NextJS Doesn't provide a way to not repeat API calls for generating metadata.
+//Therefore, I used the cache of react to memoize the response
+//https://github.com/vercel/next.js/discussions/67133
+export async function generateMetadata(props: {
+	params: Promise<{ slug: string; lang: LanguageCode; region: WebsiteRegion }>;
+}) {
+	const { slug, lang } = await props.params;
+	const articleResponse = await getArticleMemoized(lang, slug);
+	const articleData = articleResponse.data.story.content;
+	return getMetadata(lang || defaultLanguage, 'website-journal', {
+		openGraph: {
+			title: `${articleData.title}${articleData.subtitle ? ' ' + articleData.subtitle : ''}`,
+			images: articleData.image.filename,
+		},
+	});
+}
+
+const getArticleMemoized = cache(async (lang: string, slug: string) => {
+	return await getArticle(lang, slug);
+});
 
 function badgeWithLink(
 	lang: string,
@@ -40,7 +63,7 @@ export default async function Page(props: {
 }) {
 	const { slug, lang, region } = await props.params;
 
-	const articleResponse = await getArticle(lang, slug);
+	const articleResponse = await getArticleMemoized(lang, slug);
 	const articleData = articleResponse.data.story.content;
 	const author: ISbStoryData<StoryblokAuthor> = articleData.author;
 
@@ -56,6 +79,7 @@ export default async function Page(props: {
 		language: lang,
 		namespaces: ['website-journal', 'common', 'website-newsletter', 'website-donate'],
 	});
+
 	return (
 		<div>
 			<div className="blog w-full justify-center">
@@ -154,7 +178,7 @@ export default async function Page(props: {
 					<Typography weight="bold" size="2xl">
 						{articleData.leadText}
 					</Typography>
-					<Typography as="div" size='lg' className="text-black">
+					<Typography as="div" size="lg" className="text-black">
 						<RichTextRenderer
 							richTextDocument={articleData.content}
 							translator={translator}
