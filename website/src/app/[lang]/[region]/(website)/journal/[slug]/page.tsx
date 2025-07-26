@@ -128,17 +128,17 @@ export default async function Page(props: {
 						</div>
 						<Typography
 							weight="medium"
-							className="mt-8 hyphens-auto break-words"
+							className="mt-8 mb-3 hyphens-auto break-words"
 							color={articleWithImageStyling ? 'accent' : 'foreground'}
 							size="5xl"
 						>
 							{articleData.title}
 						</Typography>
 						<Typography
-							weight="medium"
+							weight="normal"
 							className="hyphens-auto break-words"
 							color={articleWithImageStyling ? 'accent' : 'foreground'}
-							size="4xl"
+							size="3xl"
 						>
 							{articleData.subtitle}
 						</Typography>
@@ -147,7 +147,7 @@ export default async function Page(props: {
 							<div className="mt-8 flex items-center space-x-4">
 								<StoryblokAuthorImage size="large" author={author} lang={lang} region={region} />
 								<Typography
-									weight="semibold"
+									weight="normal"
 									size="lg"
 									as="span"
 									color={articleWithImageStyling ? 'popover' : 'foreground'}
@@ -188,7 +188,7 @@ export default async function Page(props: {
 					</Typography>
 					<Separator className="my-2" />
 					{articleData.footnotes && (
-						<Typography as="div" className="mt-5 text-black" size="sm">
+						<Typography as="div" className="mt-5 text-black" size="md">
 							<RichTextRenderer
 								richTextDocument={articleData.footnotes}
 								translator={translator}

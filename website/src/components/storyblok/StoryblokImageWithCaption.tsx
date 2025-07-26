@@ -21,7 +21,7 @@ export function StoryblokImageWithCaption({
 				height={dimensionsFromStoryblokImage.height}
 			/>
 			{caption && (
-				<Typography size="xs" className="m-0 mt-2 pt-4 text-left">
+				<Typography size="md" className="m-0 mt-2 pt-4 text-left">
 					{caption}
 				</Typography>
 			)}
