@@ -320,6 +320,8 @@ export function generateMetaDataForBlog(storyblokStory: ISbStoryData<StoryblokAr
 			description: description,
 			images: image,
 			card: 'summary_large_image',
+			site: '@so_income',
+			creator: '@so_income',
 		},
 		other: {
 			'article:published_time': formatStoryblokDateToIso(storyblokStory.first_published_at),

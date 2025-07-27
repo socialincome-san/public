@@ -4,8 +4,7 @@ import { generateMetaDataForBlog, getArticle, getRelativeArticles } from '@/comp
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
 import { formatStoryblokDate, formatStoryblokUrl } from '@/components/storyblok/StoryblokUtils';
-import { defaultLanguage, WebsiteRegion } from '@/lib/i18n/utils';
-import { getMetadata } from '@/metadata';
+import { WebsiteRegion } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { StoryblokAuthor, StoryblokTag } from '@/types/journal';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
@@ -27,9 +26,8 @@ export async function generateMetadata(props: {
 }) {
 	const { slug, lang } = await props.params;
 	const articleResponse = await getArticleMemoized(lang, slug);
-	let language = lang || defaultLanguage;
 	const url = `https://socialincome.org/${lang}/journal/${articleResponse.data.story.slug}`;
-	return getMetadata(language, 'website-journal', generateMetaDataForBlog(articleResponse.data.story, url));
+	return generateMetaDataForBlog(articleResponse.data.story, url);
 }
 
 const getArticleMemoized = cache(async (lang: string, slug: string) => {
