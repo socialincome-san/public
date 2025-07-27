@@ -18,9 +18,6 @@ import { cache } from 'react';
 export const revalidate = 900;
 storyblokInitializationWorkaround();
 
-//Currently NextJS Doesn't provide a way to not repeat API calls for generating metadata.
-//Therefore, I used the cache of react to memoize the response
-//https://github.com/vercel/next.js/discussions/67133
 export async function generateMetadata(props: {
 	params: Promise<{ slug: string; lang: LanguageCode; region: WebsiteRegion }>;
 }) {
