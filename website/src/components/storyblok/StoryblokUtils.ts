@@ -9,7 +9,6 @@ export function formatStoryblokUrl(url: string, width: number, height: number, f
 	imageSource += focus ? `/filters:focal(${focus})` : '/smart';
 	return imageSource;
 }
-
 // Storyblok returns date fields in the following format "yyyy-MM-dd HH:mm" without timezone.
 // Nevertheless, the fields `first_published_at` and 'published_at' are returned in proper ISO8601 format.
 export function formatStoryblokDate(date: string | null | undefined, lang: string) {
@@ -35,7 +34,7 @@ export function formatStoryblokDateToIso(date: string | null | undefined) {
 	}
 	let dateObject = toDateObject(date, defaultLanguage);
 
-	return dateObject.isValid ? dateObject.toISO({ includeOffset: false }) : '';
+	return dateObject.isValid ? dateObject.toISO() : '';
 }
 
 export function createLinkForArticle(slug: string, lang: string, region: string) {

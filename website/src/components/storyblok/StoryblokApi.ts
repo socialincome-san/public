@@ -1,4 +1,8 @@
-import { formatStoryblokDateToIso } from '@/components/storyblok/StoryblokUtils';
+import {
+	formatStoryblokDateToIso,
+	formatStoryblokUrl,
+	getDimensionsFromStoryblokImageUrl,
+} from '@/components/storyblok/StoryblokUtils';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { type StoryblokArticle, StoryblokAuthor, StoryblokContentType, StoryblokTag } from '@/types/journal';
 import { getStoryblokApi, ISbStory } from '@storyblok/react';
@@ -300,25 +304,32 @@ export function generateMetaDataForBlog(storyblokStory: ISbStoryData<StoryblokAr
 	const title = storyblokArticle.title;
 	const description = storyblokArticle.leadText;
 	const author = storyblokArticle.author.content.fullName;
-	const image = storyblokArticle.image.filename;
+	const dimensions = getDimensionsFromStoryblokImageUrl(storyblokArticle.image.filename);
+	const imageUrl = formatStoryblokUrl(url, dimensions.width!, dimensions.height!, storyblokArticle.image.focus);
 
 	let tags = storyblokArticle.tags?.map((it) => it.content.value).join(', ');
+	let imageMetaData = {
+		url: imageUrl,
+		width: dimensions.width,
+		height: dimensions.height,
+	};
+
 	return {
 		title: title,
 		description: description,
 		keywords: tags,
 		authors: { name: author },
 		openGraph: {
-			title,
-			description,
-			images: image,
+			title: title,
+			description: description,
+			images: imageMetaData,
 			url: url,
 			type: 'article',
 		},
 		twitter: {
-			title,
+			title: title,
 			description: description,
-			images: image,
+			images: imageMetaData,
 			card: 'summary_large_image',
 			site: '@so_income',
 			creator: '@so_income',
