@@ -1,6 +1,8 @@
+import { formatStoryblokDateToIso } from '@/components/storyblok/StoryblokUtils';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { type StoryblokArticle, StoryblokAuthor, StoryblokContentType, StoryblokTag } from '@/types/journal';
 import { getStoryblokApi, ISbStory } from '@storyblok/react';
+import { Metadata } from 'next';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { ISbStories, ISbStoriesParams, ISbStoryData } from 'storyblok-js-client/src/interfaces';
@@ -291,4 +293,40 @@ export async function getArticle(lang: string, slug: string): Promise<ISbStory<S
 		lang,
 		slug,
 	);
+}
+
+export function generateMetaDataForBlog(storyblokStory: ISbStoryData<StoryblokArticle>, url: string): Metadata {
+	const storyblokArticle = storyblokStory.content;
+	const title = storyblokArticle.title;
+	const description = storyblokArticle.leadText;
+	const author = storyblokArticle.author.content.fullName;
+	const image = storyblokArticle.image.filename;
+
+	let tags = storyblokArticle.tags?.map((it) => it.content.value).join(', ');
+	return {
+		title: title,
+		description: description,
+		keywords: tags,
+		authors: { name: author },
+		openGraph: {
+			title,
+			description,
+			images: image,
+			url: url,
+			type: 'article',
+		},
+		twitter: {
+			title,
+			description: description,
+			images: image,
+			card: 'summary_large_image',
+		},
+		other: {
+			'article:published_time': formatStoryblokDateToIso(storyblokStory.first_published_at),
+			'article:modified_time': formatStoryblokDateToIso(storyblokStory.updated_at),
+			'article:author': author,
+			'article:section': 'News',
+			'article:tag': tags,
+		},
+	};
 }

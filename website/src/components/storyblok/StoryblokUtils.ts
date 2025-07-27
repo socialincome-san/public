@@ -1,3 +1,4 @@
+import { defaultLanguage } from '@/lib/i18n/utils';
 import { DateTime } from 'luxon';
 
 // Storyblok provides out of the box image resizing/cropping, which can be combined with a custom focal point.
@@ -15,13 +16,26 @@ export function formatStoryblokDate(date: string | null | undefined, lang: strin
 	if (!date) {
 		return '';
 	}
-	let dateObject = DateTime.fromISO(date).setLocale(lang);
+	let dateObject = toDateObject(date, lang);
 
+	return dateObject.isValid ? dateObject.toFormat('MMMM dd, yyyy') : '';
+}
+
+function toDateObject(date: string, lang: string) {
+	let dateObject = DateTime.fromISO(date).setLocale(lang);
 	if (!dateObject.isValid) {
 		dateObject = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm', { zone: 'utc' }).setLocale(lang);
 	}
+	return dateObject;
+}
 
-	return dateObject.isValid ? dateObject.toFormat('MMMM dd, yyyy') : '';
+export function formatStoryblokDateToIso(date: string | null | undefined) {
+	if (!date) {
+		return '';
+	}
+	let dateObject = toDateObject(date, defaultLanguage);
+
+	return dateObject.isValid ? dateObject.toISO({ includeOffset: false }) : '';
 }
 
 export function createLinkForArticle(slug: string, lang: string, region: string) {

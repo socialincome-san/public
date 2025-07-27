@@ -1,6 +1,6 @@
 import { OriginalLanguageLink } from '@/components/storyblok/OriginalLanguage';
 import { RichTextRenderer } from '@/components/storyblok/RichTextRenderer';
-import { getArticle, getRelativeArticles } from '@/components/storyblok/StoryblokApi';
+import { generateMetaDataForBlog, getArticle, getRelativeArticles } from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
 import { formatStoryblokDate, formatStoryblokUrl } from '@/components/storyblok/StoryblokUtils';
@@ -27,13 +27,9 @@ export async function generateMetadata(props: {
 }) {
 	const { slug, lang } = await props.params;
 	const articleResponse = await getArticleMemoized(lang, slug);
-	const articleData = articleResponse.data.story.content;
-	return getMetadata(lang || defaultLanguage, 'website-journal', {
-		openGraph: {
-			title: `${articleData.title}${articleData.subtitle ? ' ' + articleData.subtitle : ''}`,
-			images: articleData.image.filename,
-		},
-	});
+	let language = lang || defaultLanguage;
+	const url = `https://socialincome.org/${lang}/journal/${articleResponse.data.story.slug}`;
+	return getMetadata(language, 'website-journal', generateMetaDataForBlog(articleResponse.data.story, url));
 }
 
 const getArticleMemoized = cache(async (lang: string, slug: string) => {
@@ -128,7 +124,7 @@ export default async function Page(props: {
 						</div>
 						<Typography
 							weight="medium"
-							className="mt-8 mb-3 hyphens-auto break-words"
+							className="mb-3 mt-8 hyphens-auto break-words"
 							color={articleWithImageStyling ? 'accent' : 'foreground'}
 							size="5xl"
 						>
