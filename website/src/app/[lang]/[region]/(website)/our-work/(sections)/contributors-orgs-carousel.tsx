@@ -5,11 +5,11 @@ import { Carousel, CarouselContent } from '@socialincome/ui';
 import Image from 'next/image';
 import Link from 'next/link';
 import epflSVG from '../(assets)/epfl.svg';
+import githubSVG from '../(assets)/github.svg';
 import govSVG from '../(assets)/gov.svg';
 import mckinseySVG from '../(assets)/mckinsey.svg';
 import microsoftSVG from '../(assets)/microsoft.svg';
 import milkSVG from '../(assets)/milk.svg';
-import githubSVG from '../(assets)/github.svg';
 import srgSVG from '../(assets)/srg.svg';
 import unSVG from '../(assets)/un.svg';
 
