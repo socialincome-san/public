@@ -9,7 +9,7 @@ import govSVG from '../(assets)/gov.svg';
 import mckinseySVG from '../(assets)/mckinsey.svg';
 import microsoftSVG from '../(assets)/microsoft.svg';
 import milkSVG from '../(assets)/milk.svg';
-import r17SVG from '../(assets)/r17.svg';
+import githubSVG from '../(assets)/github.svg';
 import srgSVG from '../(assets)/srg.svg';
 import unSVG from '../(assets)/un.svg';
 
@@ -23,7 +23,7 @@ export function ContributorsOrgsCarousel() {
 		{ logo: unSVG, name: 'UN', url: 'https://www.un.org' },
 		{ logo: srgSVG, name: 'SRG', url: 'https://srf.ch' },
 		{ logo: epflSVG, name: 'EPFL', url: 'https://www.epfl.ch' },
-		{ logo: r17SVG, name: 'R17', url: 'https://r17ventures.com' },
+		{ logo: githubSVG, name: 'GITHUB', url: 'https://github.com' },
 		{ logo: milkSVG, name: 'Milk', url: 'https://milkinteractive.ch' },
 	];
 
