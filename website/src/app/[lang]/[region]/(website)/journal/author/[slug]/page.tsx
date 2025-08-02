@@ -10,10 +10,18 @@ import { defaultLanguage } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { LanguageCode } from '@socialincome/shared/src/types/language';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Separator, Typography } from '@socialincome/ui';
+import { BaseContainer, Separator, Typography, linkCn } from '@socialincome/ui';
+import Link from 'next/link';
 
 export const revalidate = 900;
 storyblokInitializationWorkaround();
+
+function getLinkedInUrl(handle: string) {
+	return `https://www.linkedin.com/in/${encodeURIComponent(handle)}`;
+}
+function getGitHubUrl(username: string) {
+	return `https://github.com/${encodeURIComponent(username)}`;
+}
 
 async function getTotalArticlesInDefaultLanguage(
 	lang: string,
@@ -51,11 +59,43 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 					region={region}
 				/>
 
-				<div>
+				<div className="flex flex-col">
 					<Typography weight="bold" size="4xl">
 						{author.content.fullName}
 					</Typography>
 					<Typography className="mt-2 text-black">{author.content.bio}</Typography>
+
+					{(author.content.linkedinName || author.content.githubName) && (
+						<div className="mt-3 flex flex-row gap-4">
+							{author.content.linkedinName && (
+								<Link
+									className={linkCn({
+										arrow: 'external',
+										underline: 'none'
+									})}
+									href={getLinkedInUrl(author.content.linkedinName)}
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									LinkedIn
+								</Link>
+							)}
+
+							{author.content.githubName && (
+								<Link
+									className={linkCn({
+										arrow: 'external',
+										underline: 'none'
+									})}
+									href={getGitHubUrl(author.content.githubName)}
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									GitHub
+								</Link>
+							)}
+						</div>
+					)}
 				</div>
 			</div>
 

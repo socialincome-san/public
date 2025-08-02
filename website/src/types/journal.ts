@@ -66,6 +66,8 @@ export interface StoryblokAuthor {
 	lastName: string;
 	displayInOverviewPage: boolean;
 	bio: string;
+	githubName: string;
+	linkedinName: string;
 }
 
 export interface StoryblokArticle {
