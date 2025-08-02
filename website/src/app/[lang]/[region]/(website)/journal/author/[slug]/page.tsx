@@ -71,7 +71,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 								<Link
 									className={linkCn({
 										arrow: 'external',
-										underline: 'none'
+										underline: 'none',
 									})}
 									href={getLinkedInUrl(author.content.linkedinName)}
 									target="_blank"
@@ -85,7 +85,7 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 								<Link
 									className={linkCn({
 										arrow: 'external',
-										underline: 'none'
+										underline: 'none',
 									})}
 									href={getGitHubUrl(author.content.githubName)}
 									target="_blank"
