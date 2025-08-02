@@ -11,7 +11,7 @@ export function ThumbnailImage({ thumbnail }: { thumbnail?: StoryblokImage }) {
 
 	const imageDimensions = getDimensionsFromStoryblokImageUrl(thumbnail.filename);
 	return (
-		<div className="h-20 w-20 shrink-0 flex items-center justify-center overflow-hidden">
+		<div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden">
 			<Image
 				src={thumbnail.filename}
 				alt={thumbnail.alt || `Thumbnail-${thumbnail.id}`}
