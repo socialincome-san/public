@@ -305,7 +305,12 @@ export function generateMetaDataForBlog(storyblokStory: ISbStoryData<StoryblokAr
 	const description = storyblokArticle.leadText;
 	const author = storyblokArticle.author.content.fullName;
 	const dimensions = getDimensionsFromStoryblokImageUrl(storyblokArticle.image.filename);
-	const imageUrl = formatStoryblokUrl(url, dimensions.width!, dimensions.height!, storyblokArticle.image.focus);
+	const imageUrl = formatStoryblokUrl(
+		storyblokArticle.image.filename,
+		dimensions.width!,
+		dimensions.height!,
+		storyblokArticle.image.focus,
+	);
 
 	let tags = storyblokArticle.tags?.map((it) => it.content.value).join(', ');
 	let imageMetaData = {
