@@ -1,9 +1,13 @@
 name: Functions
 on:
   pull_request:
+    paths-ignore:
+      - 'recipients_app/**'
   push:
     branches:
       - main
+    paths-ignore:
+      - 'recipients_app/**'
 
 jobs:
   check_applicability:
