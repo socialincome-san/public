@@ -72,6 +72,7 @@ export interface StoryblokArticle {
 	id: number;
 	originalLanguage?: string;
 	title: string;
+	subtitle?: string;
 	content: StoryblokRichtext;
 	footnotes?: StoryblokRichtext;
 	useImageOnlyForPreview: boolean;
