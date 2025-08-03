@@ -135,7 +135,7 @@
         }
     },
     "surveyCardTitle": "Sɔve",
-    "surveyCardInfo": "Duya tek 5 minit fɔ ansa di kwɛstyɔn dɛm ɛn ɛp wi fɔ mek Social Income bɛtɛ"
+    "surveyCardInfo": "Duya tek 5 minit fɔ ansa di kwɛstyɔn dɛm ɛn ɛp wi fɔ mek Social Income bɛtɛ",
     "verification": "Fɔ sho se na yu",
     "verificationSent": "Wi dɔn sɛn yu wan spɛshal kod fɔ sho se na yu na yu {phoneNumber}",
     "@verificationSent": {
