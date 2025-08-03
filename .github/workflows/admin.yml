@@ -3,12 +3,12 @@ name: Admin
 on:
   pull_request:
     paths-ignore:
-      - 'recipients_app/**'
+      - "recipients_app/**"
   push:
     branches:
       - main
     paths-ignore:
-      - 'recipients_app/**'
+      - "recipients_app/**"
 
 jobs:
   check_applicability:
