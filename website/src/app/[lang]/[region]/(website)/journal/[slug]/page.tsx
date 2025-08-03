@@ -1,6 +1,6 @@
 import { OriginalLanguageLink } from '@/components/storyblok/OriginalLanguage';
 import { RichTextRenderer } from '@/components/storyblok/RichTextRenderer';
-import { getArticle, getRelativeArticles } from '@/components/storyblok/StoryblokApi';
+import { generateMetaDataForBlog, getArticle, getRelativeArticles } from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
 import { formatStoryblokDate, formatStoryblokUrl } from '@/components/storyblok/StoryblokUtils';
@@ -13,9 +13,23 @@ import { Badge, Separator, Typography } from '@socialincome/ui';
 import { ISbStoryData } from '@storyblok/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { cache } from 'react';
 
 export const revalidate = 900;
 storyblokInitializationWorkaround();
+
+export async function generateMetadata(props: {
+	params: Promise<{ slug: string; lang: LanguageCode; region: WebsiteRegion }>;
+}) {
+	const { slug, lang } = await props.params;
+	const articleResponse = await getArticleMemoized(lang, slug);
+	const url = `https://socialincome.org/${lang}/journal/${articleResponse.data.story.slug}`;
+	return generateMetaDataForBlog(articleResponse.data.story, url);
+}
+
+const getArticleMemoized = cache(async (lang: string, slug: string) => {
+	return await getArticle(lang, slug);
+});
 
 function badgeWithLink(
 	lang: string,
@@ -40,7 +54,7 @@ export default async function Page(props: {
 }) {
 	const { slug, lang, region } = await props.params;
 
-	const articleResponse = await getArticle(lang, slug);
+	const articleResponse = await getArticleMemoized(lang, slug);
 	const articleData = articleResponse.data.story.content;
 	const author: ISbStoryData<StoryblokAuthor> = articleData.author;
 
@@ -56,6 +70,7 @@ export default async function Page(props: {
 		language: lang,
 		namespaces: ['website-journal', 'common', 'website-newsletter', 'website-donate'],
 	});
+
 	return (
 		<div>
 			<div className="blog w-full justify-center">
@@ -104,18 +119,26 @@ export default async function Page(props: {
 						</div>
 						<Typography
 							weight="medium"
-							className="mt-8 hyphens-auto break-words"
+							className="mb-3 mt-8 hyphens-auto break-words"
 							color={articleWithImageStyling ? 'accent' : 'foreground'}
 							size="5xl"
 						>
 							{articleData.title}
+						</Typography>
+						<Typography
+							weight="normal"
+							className="hyphens-auto break-words"
+							color={articleWithImageStyling ? 'accent' : 'foreground'}
+							size="3xl"
+						>
+							{articleData.subtitle}
 						</Typography>
 
 						<Link href={`/${lang}/${region}/journal/author/${author.slug}`}>
 							<div className="mt-8 flex items-center space-x-4">
 								<StoryblokAuthorImage size="large" author={author} lang={lang} region={region} />
 								<Typography
-									weight="semibold"
+									weight="normal"
 									size="lg"
 									as="span"
 									color={articleWithImageStyling ? 'popover' : 'foreground'}
@@ -146,7 +169,7 @@ export default async function Page(props: {
 					<Typography weight="bold" size="2xl">
 						{articleData.leadText}
 					</Typography>
-					<Typography as="div" className="text-black">
+					<Typography as="div" size="lg" className="text-black">
 						<RichTextRenderer
 							richTextDocument={articleData.content}
 							translator={translator}
@@ -156,7 +179,7 @@ export default async function Page(props: {
 					</Typography>
 					<Separator className="my-2" />
 					{articleData.footnotes && (
-						<Typography as="div" className="mt-5 text-black" size="sm">
+						<Typography as="div" className="mt-5 text-black" size="md">
 							<RichTextRenderer
 								richTextDocument={articleData.footnotes}
 								translator={translator}
