@@ -1417,6 +1417,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter demo'**
   String get createAccountDemo;
+
+  /// No description provided for @contestReason_phoneStolen.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone stolen'**
+  String get contestReason_phoneStolen;
+
+  /// No description provided for @contestReason_incorrectAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect amount'**
+  String get contestReason_incorrectAmount;
+
+  /// No description provided for @contestReason_numberChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Changed phone number'**
+  String get contestReason_numberChanged;
+
+  /// No description provided for @contestReason_otherReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Other reason'**
+  String get contestReason_otherReason;
 }
 
 class _AppLocalizationsDelegate

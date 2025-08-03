@@ -701,4 +701,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get createAccountDemo => 'Enter demo';
+
+  @override
+  String get contestReason_phoneStolen => 'Phone stolen';
+
+  @override
+  String get contestReason_incorrectAmount => 'Incorrect amount';
+
+  @override
+  String get contestReason_numberChanged => 'Changed phone number';
+
+  @override
+  String get contestReason_otherReason => 'Other reason';
 }
