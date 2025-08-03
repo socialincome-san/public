@@ -18,7 +18,6 @@
 	"reference-article": {
 		"show-more": "Afficher plus",
 		"show-less": "Afficher moins",
-		"written-by": "{{mediaOutlet}}",
 		"author": "par {{author}}",
 		"publication-date": "le {{publicationDate}}",
 		"context": {
