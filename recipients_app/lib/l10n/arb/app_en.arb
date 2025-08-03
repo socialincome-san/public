@@ -277,5 +277,9 @@
     "invalidReqType": "Invalid request type",
     "errorEmailInvalid": "Invalid email address",
     "demoCta": "Demo",
-    "createAccountDemo": "Enter demo"
+    "createAccountDemo": "Enter demo",
+    "contestReason_phoneStolen": "Phone stolen",
+    "contestReason_incorrectAmount": "Incorrect amount",
+    "contestReason_numberChanged": "Changed phone number",
+    "contestReason_otherReason": "Other reason"
 }

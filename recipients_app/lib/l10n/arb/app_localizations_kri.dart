@@ -701,4 +701,16 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get createAccountDemo => 'Go insay demo';
+
+  @override
+  String get contestReason_phoneStolen => 'Dɛn tif fon';
+
+  @override
+  String get contestReason_incorrectAmount => 'Di mɔni we nɔ kɔrɛkt';
+
+  @override
+  String get contestReason_numberChanged => 'Dɛn chenj di fon nɔmba';
+
+  @override
+  String get contestReason_otherReason => 'Ɔda rizin';
 }

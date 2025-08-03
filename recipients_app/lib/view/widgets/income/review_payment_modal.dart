@@ -66,7 +66,7 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
                                 return Padding(
                                   padding: const EdgeInsets.only(top: 8),
                                   child: RadioRow(
-                                    title: reason.title,
+                                    title: reason.localized(context.l10n),
                                     groupValue: _selectedReason,
                                     value: reason,
                                     onChanged: (value) => setState(() {
@@ -143,7 +143,7 @@ class _ReviewPaymentModalState extends State<ReviewPaymentModal> {
     }
     context.read<PaymentsCubit>().contestPayment(
           widget._payment,
-          reason.title + otherReasonCommentFormatted,
+          reason.localized(context.l10n) + otherReasonCommentFormatted,
         );
     Navigator.pop(context);
   }

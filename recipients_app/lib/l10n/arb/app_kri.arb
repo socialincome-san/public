@@ -283,5 +283,9 @@
     "nullUser": "Nɔ yuzɛ",
     "noAuthEvent": "Nɔ auth event",
     "demoCta": "Demo",
-    "createAccountDemo": "Go insay demo"
+    "createAccountDemo": "Go insay demo",
+    "contestReason_phoneStolen": "Dɛn tif fon",
+    "contestReason_incorrectAmount": "Di mɔni we nɔ kɔrɛkt",
+    "contestReason_numberChanged": "Dɛn chenj di fon nɔmba",
+    "contestReason_otherReason": "Ɔda rizin"
 }
