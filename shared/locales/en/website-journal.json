@@ -18,7 +18,9 @@
 	"reference-article": {
 		"show-more": "Show more",
 		"show-less": "Show less",
-		"written-by": "{{mediaOutlet}} by {{author}} on {{publicationDate}}",
+		"written-by": "{{mediaOutlet}}",
+		"author": "by {{author}}",
+		"publication-date": "on {{publicationDate}}",
 		"context": {
 			"original": "Originally published as",
 			"related": "These sources provided background and insights"
