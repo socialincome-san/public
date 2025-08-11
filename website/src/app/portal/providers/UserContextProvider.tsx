@@ -3,7 +3,7 @@
 import { getCurrentUserByAuthId } from '@/app/portal/actions/user';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { User as PrismaUser } from '@prisma/client';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 
 export const UserContext = createContext<PrismaUser | null | undefined>(undefined);
@@ -12,30 +12,33 @@ export function UserContextProvider({
 	children,
 	redirectToLogin = false,
 }: PropsWithChildren<{ redirectToLogin?: boolean }>) {
-	const { authUser } = useAuth();
-	const [user, setUser] = useState<PrismaUser | null>(null);
+	const { authUser, isLoading } = useAuth();
+	const router = useRouter();
+
+	const [user, setUser] = useState<PrismaUser | null | undefined>(undefined);
 
 	useEffect(() => {
 		const loadUser = async () => {
+			if (isLoading) return;
 			if (!authUser?.uid) {
 				setUser(null);
 				return;
 			}
 
 			const dbUser = await getCurrentUserByAuthId(authUser.uid);
-			setUser(dbUser);
+			setUser(dbUser ?? null);
 		};
 
 		loadUser();
-	}, [authUser?.uid]);
+	}, [authUser?.uid, isLoading]);
 
 	useEffect(() => {
-		if (user === null && redirectToLogin) {
-			redirect('/login');
+		if (!isLoading && user === null && redirectToLogin) {
+			router.replace('/login');
 		}
-	}, [user, redirectToLogin]);
+	}, [isLoading, user, redirectToLogin, router]);
 
-	if (!user && redirectToLogin) return null;
+	if (isLoading || user === undefined) return null;
 
 	return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 }
