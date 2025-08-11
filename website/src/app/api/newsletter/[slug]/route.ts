@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
 import { getNewsletterHTML } from '@/lib/newsletter'; // Adjust the import path to where your file is
+import { NextResponse } from 'next/server';
 
 export async function GET(_req: Request, { params }: { params: { slug: string } }) {
 	const { slug } = params;

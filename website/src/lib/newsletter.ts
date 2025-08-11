@@ -1,6 +1,6 @@
+import * as cheerio from 'cheerio';
 import fs from 'fs';
 import path from 'path';
-import * as cheerio from 'cheerio';
 
 export type NewsletterMeta = {
 	slug: string;
@@ -63,10 +63,7 @@ export function getNewsletterHTML(slug: string): string | null {
 	let html = fs.readFileSync(filePath, 'utf8');
 
 	// Replace placeholders
-	html = html.replace(
-		/{{\s*insert\s+first_name\s+['"“”]default=([^'"“”]+)['"“”]\s*}}/gi,
-		(_m, def) => (def ?? 'Friend')
-	);
+	html = html.replace(/{{\s*insert\s+first_name\s+['"“”]default=([^'"“”]+)['"“”]\s*}}/gi, (_m, def) => def ?? 'Friend');
 	html = html.replace(/{{\s*firstName\s*}}/gi, 'Friend');
 
 	// Load into Cheerio for DOM manipulations

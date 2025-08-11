@@ -2,18 +2,9 @@
 
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { getMetadata } from '@/metadata';
-import { useEffect, useMemo, useState, useCallback } from 'react';
-import {
-	Dialog,
-	DialogTrigger,
-	DialogContent,
-	DialogTitle,
-	Typography,
-	Button,
-	linkCn,
-	Card,
-} from '@socialincome/ui';
+import { Button, Card, Dialog, DialogContent, DialogTitle, DialogTrigger, linkCn, Typography } from '@socialincome/ui';
 import Link from 'next/link';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export async function generateMetadata(props: DefaultPageProps) {
 	const params = await props.params;
@@ -41,7 +32,7 @@ export function NewsletterListClient({ newsletters }: Props) {
 		return { indexBySlug: map, ordered: newsletters };
 	}, [newsletters]);
 
-	const currentIndex = openSlug != null ? indexBySlug.get(openSlug) ?? -1 : -1;
+	const currentIndex = openSlug != null ? (indexBySlug.get(openSlug) ?? -1) : -1;
 	const current = currentIndex >= 0 ? ordered[currentIndex] : null;
 
 	// Chronological nav:
@@ -78,15 +69,11 @@ export function NewsletterListClient({ newsletters }: Props) {
 	return (
 		<div className="space-y-3 md:space-y-4">
 			{ordered.map(({ slug, title, date }) => (
-				<Dialog
-					key={slug}
-					open={openSlug === slug}
-					onOpenChange={(isOpen) => setOpenSlug(isOpen ? slug : null)}
-				>
+				<Dialog key={slug} open={openSlug === slug} onOpenChange={(isOpen) => setOpenSlug(isOpen ? slug : null)}>
 					{/* Make the whole card the trigger */}
 					<DialogTrigger asChild>
 						<Card
-							className="bg-background hover:bg-primary hover:bg-opacity-10 rounded-lg border-2 border-opacity-80 px-2 py-5 shadow-none md:px-5 md:py-5 cursor-pointer transition"
+							className="bg-background hover:bg-primary cursor-pointer rounded-lg border-2 border-opacity-80 px-2 py-5 shadow-none transition hover:bg-opacity-10 md:px-5 md:py-5"
 							role="button"
 							tabIndex={0}
 						>
@@ -104,7 +91,7 @@ export function NewsletterListClient({ newsletters }: Props) {
 					</DialogTrigger>
 
 					{/* Keep these sizing constraints as requested */}
-					<DialogContent className="p-0 m-0 max-w-3xl h-[85vh] overflow-y-auto">
+					<DialogContent className="m-0 h-[85vh] max-w-3xl overflow-y-auto p-0">
 						<DialogTitle className="sr-only">Newsletter Preview</DialogTitle>
 
 						{/* Scroll container: iframe plus sticky footer */}
@@ -119,7 +106,7 @@ export function NewsletterListClient({ newsletters }: Props) {
 							/>
 
 							{/* Sticky footer */}
-							<div className="sticky bottom-0 z-10 h-14 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/75">
+							<div className="bg-background/95 supports-[backdrop-filter]:bg-background/75 sticky bottom-0 z-10 h-14 border-t backdrop-blur">
 								<div className="mx-2 flex h-full items-center justify-between gap-2">
 									<Button
 										variant="outline"
@@ -137,12 +124,7 @@ export function NewsletterListClient({ newsletters }: Props) {
 										{current?.date ?? date}
 									</Link>
 
-									<Button
-										variant="outline"
-										onClick={goNext}
-										disabled={!canGoNext}
-										aria-label="Next newsletter (newer)"
-									>
+									<Button variant="outline" onClick={goNext} disabled={!canGoNext} aria-label="Next newsletter (newer)">
 										Next
 									</Button>
 								</div>

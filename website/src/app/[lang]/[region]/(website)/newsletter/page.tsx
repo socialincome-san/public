@@ -44,13 +44,14 @@ export default async function Page(props: DefaultPageProps) {
 								</li>
 							</ul>
 						</div>
-						<Typography className="mt-4 mb-4">{translator.t('updates.description-2')}</Typography>
+						<Typography className="mb-4 mt-4">{translator.t('updates.description-2')}</Typography>
 						<Link
 							href="/newsletter/archive"
 							className={linkCn({
 								arrow: 'internal',
-								underline: 'none'
-							})}>
+								underline: 'none',
+							})}
+						>
 							{translator.t('updates.visit-archive')}
 						</Link>
 						<hr className="bg-border my-8 h-px border-0" />

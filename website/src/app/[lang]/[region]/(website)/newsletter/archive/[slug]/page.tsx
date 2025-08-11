@@ -1,9 +1,9 @@
-import { notFound } from 'next/navigation';
-import { getNewsletterHTML } from '@/lib/newsletter';
-import Link from 'next/link';
-import { linkCn } from '@socialincome/ui';
-import { Translator } from '@socialincome/shared/src/utils/i18n';
 import type { DefaultParams } from '@/app/[lang]/[region]';
+import { getNewsletterHTML } from '@/lib/newsletter';
+import { Translator } from '@socialincome/shared/src/utils/i18n';
+import { linkCn } from '@socialincome/ui';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 function sanitizeNewsletterHtml(raw: string) {
 	if (!raw) return raw;
@@ -32,7 +32,7 @@ export default async function Page(props: { params: Promise<RouteParams> }) {
 	if (!html) notFound();
 
 	return (
-		<div className="max-w-4xl mx-auto p-4" suppressHydrationWarning>
+		<div className="mx-auto max-w-4xl p-4" suppressHydrationWarning>
 			<Link href="/newsletter/archive" className={linkCn({ underline: 'hover' })}>
 				← {translator.t('archive.title')}
 			</Link>
