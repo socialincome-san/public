@@ -9,6 +9,7 @@
 		"bullet-2": "Neue Forschung zu Direktzahlungen",
 		"bullet-3": "News zum Thema Grundeinkommen",
 		"description-2": "Wird an jedem Monatsende versendet.",
+		"visit-archive": "Besuche unser Newsletter-Archive",
 		"description-3": "Newsletters verfasst von",
 		"author-name": "Aurélie Schmiedlin",
 		"author-city": "Genf",
@@ -28,5 +29,9 @@
 	},
 	"campaign": {
 		"information-label": "Erhalte Updates von diesem Fundraiser und von Social Income."
+	},
+	"archive": {
+		"title": "Newsletter Archive",
+		"signup-link": "Zurück zur Newsletter Anmeldung"
 	}
 }
