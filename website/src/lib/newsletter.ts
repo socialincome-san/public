@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-
-const NEWSLETTER_DIR = path.resolve(process.cwd(), '../shared/emails/newsletter');
+import * as cheerio from 'cheerio';
 
 export type NewsletterMeta = {
 	slug: string;
@@ -9,78 +8,111 @@ export type NewsletterMeta = {
 	date: string;
 };
 
+const NEWSLETTER_DIR = path.resolve(process.cwd(), '../shared/emails/newsletter');
+
+/**
+ * Get all newsletters, newest first
+ */
 export function getAllNewsletters(): NewsletterMeta[] {
-	const files = fs.readdirSync(NEWSLETTER_DIR).filter((file) => file.endsWith('.html'));
+	const files = fs.readdirSync(NEWSLETTER_DIR).filter((f) => f.endsWith('.html'));
 
 	return files
 		.map((filename) => {
-			const slug = filename.replace('.html', '');
+			const slug = filename.replace(/\.html$/i, '');
 			const filePath = path.join(NEWSLETTER_DIR, filename);
 			const content = fs.readFileSync(filePath, 'utf8');
 
-			// Extract first <h1>
-			const h1Match = content.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
-			let title = h1Match?.[1]?.trim() || `Newsletter ${slug}`;
+			const $ = cheerio.load(content);
+			const rawH1 = $('h1').first().text().trim();
 
-			// Remove personalization placeholder
-			title = title.replace(/\.?\s*Hi\s+{{[^}]+}}/, '').trim();
+			// Remove "Hi {{...}}" in titles
+			const cleanTitle = rawH1
+				.replace(/\.\s*Hi\s+{{[^}]+}}\s*\.?$/i, '')
+				.replace(/^\s*Hi\s+{{[^}]+}}\s*\.?\s*/i, '')
+				.trim();
 
-			// Remove trailing span like: <span style="...">.</span>
-			title = title.replace(/<span[^>]*>\.*<\/span>$/i, '').trim();
-
-			// Remove trailing period, if any
-			title = title.replace(/\.*\s*$/, '');
-
-			// Remove personalization placeholder from title
-			title = title.replace(/\.?\s*Hi\s+{{[^}]+}}/, '').trim() || 'Untitled';
-
-			// Format date from slug
+			// Extract date from slug: YYYY-MM-newsletter
 			const [year, month] = slug.split('-');
-			const date = new Date(parseInt(year), parseInt(month) - 1, 1);
-			const formattedDate = date.toLocaleDateString('en-US', {
-				year: 'numeric',
-				month: 'long',
-				day: 'numeric',
-			});
+			const date = new Date(parseInt(year, 10), parseInt(month, 10) - 1, 1);
+			const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-			return { slug, title, date: formattedDate };
+			return {
+				slug,
+				title: cleanTitle || 'Untitled',
+				date: formattedDate,
+			};
 		})
 		.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
+/**
+ * Render HTML for iframe:
+ * - Replace placeholders with defaults
+ * - Remove unsubscribe/preferences sections
+ * - Secure links
+ * - Inject Unica77 font
+ */
 export function getNewsletterHTML(slug: string): string | null {
 	const filePath = path.join(NEWSLETTER_DIR, `${slug}.html`);
 	if (!fs.existsSync(filePath)) return null;
 
 	let html = fs.readFileSync(filePath, 'utf8');
 
-	// Handle {{ insert first_name 'default=there' }}
+	// Replace placeholders
 	html = html.replace(
-		/{{\s*insert\s+first_name\s+['"]default=(.*?)['"]\s*}}/gi,
-		(_, defaultValue) => defaultValue || 'Friend'
+		/{{\s*insert\s+first_name\s+['"“”]default=([^'"“”]+)['"“”]\s*}}/gi,
+		(_m, def) => (def ?? 'Friend')
 	);
+	html = html.replace(/{{\s*firstName\s*}}/gi, 'Friend');
 
-	// Secure links
-	html = html.replace(/<a\s/gi, '<a target="_blank" rel="noopener noreferrer" ');
+	// Load into Cheerio for DOM manipulations
+	const $ = cheerio.load(html);
 
-	// Inject font styling
-	const injectedStyles = `
-		<style>h1Match
-			@font-face {
-				font-family: 'Unica77';
-				src: url('/fonts/Unica77LLWeb-Regular.woff2') format('woff2'),
-					 url('/fonts/Unica77LLWeb-Regular.woff') format('woff');
-				font-weight: normal;
-				font-style: normal;
-				font-display: swap;
-			}
-			body {
-				font-family: 'Unica77', sans-serif;
-			}
-		</style>
-	`;
+	// Make links safe
+	$('a').each((_, a) => {
+		$(a).attr('target', '_blank');
+		$(a).attr('rel', 'noopener noreferrer');
+	});
 
-	html = html.replace(/<head>/i, `<head>${injectedStyles}`);
+	// Remove unsubscribe / preferences blocks
+	const linkMatches = (el: cheerio.Element) => {
+		const href = ($(el).attr('href') || '').toLowerCase();
+		const text = $(el).text().trim().toLowerCase();
+		return (
+			href.includes('unsubscribe') ||
+			href.includes('preferences') ||
+			href.includes('update_profile') ||
+			href.includes('update-profile') ||
+			(/unsubscribe|preferences|update profile|manage preferences/i.test(text))
+		);
+	};
 
-	return html;
+	$('a').each((_, a) => {
+		if (!linkMatches(a)) return;
+		const container = $(a).closest('p, td, tr, table, div');
+		if (container.length) {
+			container.remove();
+		} else {
+			$(a).remove();
+		}
+	});
+
+	// Inject Unica77 font styles
+	$('head').prepend(`
+  <style>
+    @font-face {
+      font-family: 'Unica77';
+      src: url('/fonts/Unica77LLWeb-Regular.woff2') format('woff2'),
+           url('/fonts/Unica77LLWeb-Regular.woff') format('woff');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    body, table, td, th, div, p, span, a {
+      font-family: 'Unica77', system-ui, -apple-system, Segoe UI, Roboto, sans-serif !important;
+    }
+  </style>
+`);
+
+	return $.html();
 }

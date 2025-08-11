@@ -3,11 +3,12 @@ import { NewsletterListClient } from './newsletter-list-client';
 import { getMetadata } from '@/metadata';
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography } from '@socialincome/ui';
+import { BaseContainer, Typography, linkCn } from '@socialincome/ui';
+import Link from 'next/link';
 
 export async function generateMetadata(props: DefaultPageProps) {
 	const params = await props.params;
-	return getMetadata(params.lang, 'website-newsletter-archive');
+	return getMetadata(params.lang, 'website-newsletter');
 }
 
 export default async function Page(props: DefaultPageProps) {
@@ -23,8 +24,15 @@ export default async function Page(props: DefaultPageProps) {
 
 	return (
 		<BaseContainer className="py-10">
-			<Typography size="5xl" weight="bold" className="mt-2 mb-4">
-				Newsletter Archive
+			<Link
+				href="/newsletter"
+				className={linkCn({
+					underline: 'hover'
+				})}>
+				← {translator.t('archive.signup-link')}
+			</Link>
+			<Typography size="5xl" weight="bold" className="mt-8 mb-12">
+				{translator.t('archive.title')}
 			</Typography>
 			<NewsletterListClient newsletters={newsletters} />
 		</BaseContainer>

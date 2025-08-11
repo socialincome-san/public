@@ -3,7 +3,7 @@ import aurelieImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/aure
 import { SubscriptionInfoForm } from '@/app/[lang]/[region]/(website)/newsletter/subscription-info-form';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { BaseContainer, Typography } from '@socialincome/ui';
+import { BaseContainer, linkCn, Typography } from '@socialincome/ui';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -44,7 +44,15 @@ export default async function Page(props: DefaultPageProps) {
 								</li>
 							</ul>
 						</div>
-						<Typography className="mt-4">{translator.t('updates.description-2')}</Typography>
+						<Typography className="mt-4 mb-4">{translator.t('updates.description-2')}</Typography>
+						<Link
+							href="/newsletter/archive"
+							className={linkCn({
+								arrow: 'internal',
+								underline: 'none'
+							})}>
+							{translator.t('updates.visit-archive')}
+						</Link>
 						<hr className="bg-border my-8 h-px border-0" />
 						<Typography>{translator.t('updates.description-3')}</Typography>
 						<Link
