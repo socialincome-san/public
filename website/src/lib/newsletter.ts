@@ -34,7 +34,11 @@ export function getAllNewsletters(): NewsletterMeta[] {
 			// Extract date from slug: YYYY-MM-newsletter
 			const [year, month] = slug.split('-');
 			const date = new Date(parseInt(year, 10), parseInt(month, 10) - 1, 1);
-			const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+			const formattedDate = date.toLocaleDateString('en-US', {
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric',
+			});
 
 			return {
 				slug,
@@ -68,32 +72,31 @@ export function getNewsletterHTML(slug: string): string | null {
 	// Load into Cheerio for DOM manipulations
 	const $ = cheerio.load(html);
 
-	// Make links safe
+	// Make links safe + remove unsubscribe/preferences blocks in one pass
 	$('a').each((_, a) => {
-		$(a).attr('target', '_blank');
-		$(a).attr('rel', 'noopener noreferrer');
-	});
+		const $a = $(a);
 
-	// Remove unsubscribe / preferences blocks
-	const linkMatches = (el: cheerio.Element) => {
-		const href = ($(el).attr('href') || '').toLowerCase();
-		const text = $(el).text().trim().toLowerCase();
-		return (
+		// Always make links safe
+		$a.attr('target', '_blank');
+		$a.attr('rel', 'noopener noreferrer');
+
+		// Identify unsubscribe/preferences links
+		const href = ($a.attr('href') || '').toLowerCase();
+		const text = $a.text().trim().toLowerCase();
+		const isUnsubLink =
 			href.includes('unsubscribe') ||
 			href.includes('preferences') ||
 			href.includes('update_profile') ||
 			href.includes('update-profile') ||
-			(/unsubscribe|preferences|update profile|manage preferences/i.test(text))
-		);
-	};
+			/unsubscribe|preferences|update profile|manage preferences/i.test(text);
 
-	$('a').each((_, a) => {
-		if (!linkMatches(a)) return;
-		const container = $(a).closest('p, td, tr, table, div');
-		if (container.length) {
-			container.remove();
-		} else {
-			$(a).remove();
+		if (isUnsubLink) {
+			const container = $a.closest('p, td, tr, table, div');
+			if (container.length) {
+				container.remove();
+			} else {
+				$a.remove();
+			}
 		}
 	});
 
