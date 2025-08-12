@@ -9,7 +9,7 @@ export async function YourPrograms() {
 	const result = await service.getProgramsByUserId(user.id);
 
 	if (!result.success) {
-		return <div>Fehler beim Laden der Programme</div>;
+		return <div>Error loading programs</div>;
 	}
 
 	const programs = result.data ?? [];
