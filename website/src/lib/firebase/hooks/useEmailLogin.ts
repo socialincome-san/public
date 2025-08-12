@@ -56,13 +56,37 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [auth, authListenerRegistered, translator]);
 
+	const setServerSession = async () => {
+		const user = auth.currentUser;
+		if (!user) return false;
+
+		const idToken = await user.getIdToken(true);
+		const res = await fetch('/api/session', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ idToken }),
+			credentials: 'include',
+		});
+
+		return res.ok;
+	};
+
 	const signIn = async (email: string) => {
 		const url = window.location.href;
 
 		try {
 			await createUserIfNotExists(email);
 			const { user } = await signInWithEmailLink(auth, email, url);
-			onLoginSuccess && (await onLoginSuccess(user.uid));
+
+			const ok = await setServerSession();
+			if (!ok) {
+				translator && toast.error(translator.t('error.unknown'));
+				return;
+			}
+
+			if (onLoginSuccess) {
+				await onLoginSuccess(user.uid);
+			}
 		} catch (error: unknown) {
 			if (error instanceof FirebaseError) {
 				switch (error.code) {
