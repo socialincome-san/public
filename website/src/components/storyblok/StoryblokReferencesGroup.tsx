@@ -60,26 +60,27 @@ export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: 
 								<Typography className="m-0 p-0" color="foreground" as="div">
 									{showThumbnails && <div>{reference.mediaOutlet}</div>}
 									<div>
-										{reference.author?.length ? (
+										{reference.author && reference.author.length ? (
 											<span>
+												{' '}
 												{translator.t('reference-article.author', {
 													context: {
 														author: reference.author,
 													},
 												})}
-										 </span>
+											</span>
 										) : (
 											''
 										)}
-										{formatStoryblokDate(reference.publicationDate, lang).length ? (
+										{reference.publicationDate && formatStoryblokDate(reference.publicationDate, lang).length ? (
 											<span>
-												{' '}
+      									{' '}
 												{translator.t('reference-article.publication-date', {
 													context: {
 														publicationDate: formatStoryblokDate(reference.publicationDate, lang),
 													},
 												})}
-											</span>
+   										</span>
 										) : (
 											''
 										)}
