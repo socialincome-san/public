@@ -17,7 +17,7 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	const result = await service.getProgramByIdAndUserId(programId, user.id);
 
 	if (!result.success) {
-		return <div className="p-4">Fehler beim Laden des Programms</div>;
+		return <div className="p-4">Error loading the program</div>;
 	}
 
 	const program = result.data;
