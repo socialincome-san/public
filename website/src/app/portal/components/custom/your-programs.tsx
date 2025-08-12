@@ -15,7 +15,7 @@ export async function YourPrograms() {
 	const programs = result.data ?? [];
 
 	if (programs.length === 0) {
-		return <div>Keine Programme gefunden</div>;
+		return <div>No programs found</div>;
 	}
 
 	return (
