@@ -74,13 +74,13 @@ export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: 
 										)}
 										{reference.publicationDate && formatStoryblokDate(reference.publicationDate, lang).length ? (
 											<span>
-      									{' '}
+												{' '}
 												{translator.t('reference-article.publication-date', {
 													context: {
 														publicationDate: formatStoryblokDate(reference.publicationDate, lang),
 													},
 												})}
-   										</span>
+											</span>
 										) : (
 											''
 										)}
