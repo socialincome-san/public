@@ -1,7 +1,7 @@
 export default async function TeamMembersPage() {
 	return (
 		<div>
-			<h3 className="font-bold">Team Members</h3>
+			<h2 className="font-bold">Team Members</h2>
 		</div>
 	);
 }

@@ -1,4 +1,3 @@
-// app/portal/programs/[programId]/layout.tsx
 import { TabNavigation } from '@/app/portal/components/custom/tab-navigation';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';

@@ -17,17 +17,19 @@ export function SignOutButton({ translations }: SignOutButtonProps) {
 	const { auth } = useAuth();
 
 	const handleSignOut = async () => {
+		let ok = false;
 		try {
-			await fetch('/api/logout', {
+			const res = await fetch('/api/logout', {
 				method: 'POST',
 				credentials: 'include',
 			});
-
-			await signOut(auth);
-
-			router.push('/');
-		} catch (err) {
-			console.error('Logout error:', err);
+			ok = res.ok;
+			if (!ok) console.error('Logout API failed:', res.status);
+		} catch (e) {
+			console.error('Logout API error:', e);
+		} finally {
+			await signOut(auth).catch(() => {});
+			if (ok) router.push('/');
 		}
 	};
 

@@ -6,6 +6,7 @@ type TabNavigationProps = {
 
 export async function TabNavigation({ programId }: TabNavigationProps) {
 	const sections = [
+		{ slug: 'overview', label: 'Overview' },
 		{ slug: 'recipients', label: 'Recipients' },
 		{ slug: 'finances', label: 'Finances' },
 		{ slug: 'fundraising', label: 'Fundraising' },
