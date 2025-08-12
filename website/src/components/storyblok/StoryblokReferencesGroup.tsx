@@ -60,16 +60,14 @@ export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: 
 								<Typography className="m-0 p-0" color="foreground" as="div">
 									{showThumbnails && <div>{reference.mediaOutlet}</div>}
 									<div>
-										<span>{reference.mediaOutlet.length ? reference.mediaOutlet : ''}</span>
-										{reference.author.length ? (
+										{reference.author?.length ? (
 											<span>
-												{' '}
 												{translator.t('reference-article.author', {
 													context: {
 														author: reference.author,
 													},
 												})}
-											</span>
+										 </span>
 										) : (
 											''
 										)}
