@@ -1,7 +1,7 @@
 import { Recipient } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { PaginationOptions, ServiceResult } from '../core/base.types';
-import { CreateRecipientInput } from './recipient.types';
+import { CreateRecipientInput, RecipientTableRow } from './recipient.types';
 
 export class RecipientService extends BaseService {
 	async create(input: CreateRecipientInput): Promise<ServiceResult<Recipient>> {
@@ -27,5 +27,45 @@ export class RecipientService extends BaseService {
 			console.error('[RecipientService.findMany]', e);
 			return this.resultFail('Could not fetch recipients');
 		}
+	}
+
+	async getRecipientTableRows(programId: string, userId: string) {
+		const recipients = await this.db.recipient.findMany({
+			where: {
+				programId,
+				program: {
+					OR: [
+						{ viewerOrganization: { users: { some: { id: userId } } } },
+						{ operatorOrganization: { users: { some: { id: userId } } } },
+					],
+				},
+			},
+			select: {
+				id: true,
+				user: {
+					select: {
+						firstName: true,
+						lastName: true,
+					},
+				},
+			},
+			orderBy: { createdAt: 'desc' },
+		});
+
+		return {
+			success: true as const,
+			data: recipients.map((r) => this.toRecipientTableRow(r)),
+		};
+	}
+
+	private toRecipientTableRow(r: {
+		id: string;
+		user: { firstName: string | null; lastName: string | null } | null;
+	}): RecipientTableRow {
+		return {
+			id: r.id,
+			firstName: r.user?.firstName ?? '',
+			lastName: r.user?.lastName ?? '',
+		};
 	}
 }

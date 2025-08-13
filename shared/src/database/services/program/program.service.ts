@@ -47,7 +47,7 @@ export class ProgramService extends BaseService {
 		});
 	}
 
-	async getProgramByIdAndUserId(programId: string, userId: string) {
+	async getProgramNameByIdAndUserId(programId: string, userId: string): Promise<ServiceResult<{ name: string }>> {
 		try {
 			const program = await this.db.program.findFirst({
 				where: {
@@ -57,6 +57,7 @@ export class ProgramService extends BaseService {
 						{ operatorOrganization: { users: { some: { id: userId } } } },
 					],
 				},
+				select: { name: true },
 			});
 
 			if (!program) {
@@ -65,8 +66,8 @@ export class ProgramService extends BaseService {
 
 			return this.resultOk(program);
 		} catch (e) {
-			console.error('[ProgramService.getProgramByIdAndUserId]', e);
-			return this.resultFail('Could not fetch program');
+			console.error('[ProgramService.getProgramNameByIdAndUserId]', e);
+			return this.resultFail('Could not fetch program name');
 		}
 	}
 }

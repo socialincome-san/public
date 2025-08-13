@@ -1,19 +1,29 @@
 import { prisma } from '../prisma';
-import { organizationData1, programData1, programData2, userData1 } from './seed.data';
+import { localPartnersData, organizationsData, programsData, recipientsData, usersData } from './seed.data';
 
 async function main() {
 	await prisma.organization.createMany({
-		data: [organizationData1],
+		data: organizationsData,
 		skipDuplicates: true,
 	});
 
 	await prisma.user.createMany({
-		data: [userData1],
+		data: usersData,
 		skipDuplicates: true,
 	});
 
 	await prisma.program.createMany({
-		data: [programData1, programData2],
+		data: programsData,
+		skipDuplicates: true,
+	});
+
+	await prisma.localPartner.createMany({
+		data: localPartnersData,
+		skipDuplicates: true,
+	});
+
+	await prisma.recipient.createMany({
+		data: recipientsData,
 		skipDuplicates: true,
 	});
 }

@@ -10,22 +10,21 @@ type ProgramLayoutProps = {
 
 export default async function ProgramLayout({ children, params }: ProgramLayoutProps) {
 	const { programId } = await params;
-
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ProgramService();
-	const result = await service.getProgramByIdAndUserId(programId, user.id);
+	const result = await service.getProgramNameByIdAndUserId(programId, user.id);
 
 	if (!result.success) {
 		return <div className="p-4">Error loading the program</div>;
 	}
 
-	const program = result.data;
+	const { name } = result.data;
 
 	return (
 		<div className="p-4">
-			<h1 className="mb-4 text-2xl font-bold">{program.name}</h1>
-			<TabNavigation programId={program.id} />
+			<h1 className="mb-4 text-2xl font-bold">{name}</h1>
+			<TabNavigation programId={programId} />
 			<div className="mt-4">{children}</div>
 		</div>
 	);
