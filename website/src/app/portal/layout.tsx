@@ -2,6 +2,7 @@ import { AppShell } from '@/app/portal/components/custom/app-shell';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
+import './globals.css';
 
 export const dynamic = 'force-dynamic';
 
