@@ -17,9 +17,12 @@ export default async function RecipientsPage({ params }: Props) {
 	if (!res.data.length) return <div className="p-4">No recipients found</div>;
 
 	return (
-		<div>
-			<Button variant="default">Add new recipient</Button>
+		<>
+			<div className="mb-4 flex items-center justify-between">
+				<h1 className="text-xl font-semibold">{res.data.length} Recipients</h1>
+				<Button variant="default">Add new recipient</Button>
+			</div>
 			<DataTable columns={recipientColumns} data={res.data} />
-		</div>
+		</>
 	);
 }

@@ -46,7 +46,11 @@ const makeUser = (i: number, orgId?: string): PrismaUser => ({
 	addressCountry: null,
 	role: UserRole.user,
 	organizationId: orgId ?? null,
-	birthDate: null,
+	birthDate: new Date(
+		1980 + (i % 30), // year cycles between 1980–2009
+		i % 12,          // month cycles 0–11
+		(i % 28) + 1     // day cycles 1–28
+	),
 	communicationPhone: null,
 	mobileMoneyPhone: null,
 	hasWhatsAppComm: null,
@@ -89,7 +93,7 @@ const makeRecipient = (
 	id: `recipient-${i}`,
 	userId,
 	programId,
-	status: RecipientStatus.active,
+	status: Object.values(RecipientStatus)[(i - 1) % Object.values(RecipientStatus).length],
 	createdAt: now(),
 	updatedAt: null,
 	organizationId: orgId,

@@ -1,4 +1,4 @@
-import { Recipient } from '@prisma/client';
+import { Recipient, RecipientStatus } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { PaginationOptions, ServiceResult } from '../core/base.types';
 import { CreateRecipientInput, RecipientTableRow } from './recipient.types';
@@ -43,15 +43,19 @@ export class RecipientService extends BaseService {
 				},
 				select: {
 					id: true,
+					status: true,
+					localPartner: { select: { name: true } },
 					user: {
 						select: {
 							firstName: true,
 							lastName: true,
+							birthDate: true,
 						},
 					},
 				},
 				orderBy: { createdAt: 'desc' },
 			});
+
 			const mappedRecipients = recipients.map((r) => this.toRecipientTableRow(r));
 			return this.resultOk(mappedRecipients);
 		} catch (e) {
@@ -60,14 +64,29 @@ export class RecipientService extends BaseService {
 		}
 	}
 
-	private toRecipientTableRow(r: {
+	private toRecipientTableRow(recipient: {
 		id: string;
-		user: { firstName: string | null; lastName: string | null } | null;
+		status: RecipientStatus;
+		localPartner: { name: string } | null;
+		user: { firstName: string | null; lastName: string | null; birthDate: Date | null } | null;
 	}): RecipientTableRow {
 		return {
-			id: r.id,
-			firstName: r.user?.firstName ?? '',
-			lastName: r.user?.lastName ?? '',
+			id: recipient.id,
+			firstName: recipient.user?.firstName ?? '',
+			lastName: recipient.user?.lastName ?? '',
+			age: recipient.user?.birthDate ? this.calculateAge(recipient.user.birthDate) : null,
+			status: recipient.status,
+			localPartnerName: recipient.localPartner?.name ?? '',
 		};
+	}
+
+	private calculateAge(birthDate: Date): number {
+		const today = new Date();
+		let age = today.getFullYear() - birthDate.getFullYear();
+		const monthDiff = today.getMonth() - birthDate.getMonth();
+		if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+			age--;
+		}
+		return age;
 	}
 }
