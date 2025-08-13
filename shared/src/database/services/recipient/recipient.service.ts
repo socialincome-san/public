@@ -29,33 +29,35 @@ export class RecipientService extends BaseService {
 		}
 	}
 
-	async getRecipientTableRows(programId: string, userId: string) {
-		const recipients = await this.db.recipient.findMany({
-			where: {
-				programId,
-				program: {
-					OR: [
-						{ viewerOrganization: { users: { some: { id: userId } } } },
-						{ operatorOrganization: { users: { some: { id: userId } } } },
-					],
-				},
-			},
-			select: {
-				id: true,
-				user: {
-					select: {
-						firstName: true,
-						lastName: true,
+	async getRecipientTableRows(programId: string, userId: string): Promise<ServiceResult<RecipientTableRow[]>> {
+		try {
+			const recipients = await this.db.recipient.findMany({
+				where: {
+					programId,
+					program: {
+						OR: [
+							{ viewerOrganization: { users: { some: { id: userId } } } },
+							{ operatorOrganization: { users: { some: { id: userId } } } },
+						],
 					},
 				},
-			},
-			orderBy: { createdAt: 'desc' },
-		});
-
-		return {
-			success: true as const,
-			data: recipients.map((r) => this.toRecipientTableRow(r)),
-		};
+				select: {
+					id: true,
+					user: {
+						select: {
+							firstName: true,
+							lastName: true,
+						},
+					},
+				},
+				orderBy: { createdAt: 'desc' },
+			});
+			const mappedRecipients = recipients.map((r) => this.toRecipientTableRow(r));
+			return this.resultOk(mappedRecipients);
+		} catch (e) {
+			console.error('[RecipientService.getRecipientTableRows]', e);
+			return this.resultFail('Could not fetch recipient table rows');
+		}
 	}
 
 	private toRecipientTableRow(r: {
