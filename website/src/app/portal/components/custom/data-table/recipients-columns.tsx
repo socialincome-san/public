@@ -10,11 +10,11 @@ import {
 	DropdownMenuTrigger,
 } from '@/app/portal/components/ui/dropdown-menu';
 import { RecipientStatus } from '@prisma/client';
-import { RecipientTableRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
+import { RecipientTableFlatShape } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 
-export const recipientColumns: ColumnDef<RecipientTableRow>[] = [
+export const recipientColumns: ColumnDef<RecipientTableFlatShape>[] = [
 	{
 		accessorKey: 'id',
 		header: 'ID',

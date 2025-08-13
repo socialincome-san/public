@@ -1,13 +1,13 @@
 import { Badge } from '@/app/portal/components/ui/badge';
+import { RecipientStatus } from '@prisma/client';
 import { CheckIcon, CircleOffIcon, HourglassIcon, ReplyIcon } from 'lucide-react';
-
-type Status = 'active' | 'suspended' | 'waitlisted' | 'designated' | 'former';
+import { ComponentType } from 'react';
 
 type StatusBadgeProps = {
-	status?: Status;
+	status?: RecipientStatus;
 };
 
-const STATUS_UI: Record<Status, { className: string; Label: string; Icon: React.ComponentType<any> }> = {
+const STATUS_UI: Record<RecipientStatus, { className: string; Label: string; Icon: ComponentType<any> }> = {
 	active: { className: 'bg-green-500 text-white', Label: 'Active', Icon: CheckIcon },
 	suspended: { className: 'bg-yellow-500 text-white', Label: 'Suspended', Icon: CircleOffIcon },
 	waitlisted: { className: 'bg-blue-500 text-white', Label: 'Waitlisted', Icon: HourglassIcon },
