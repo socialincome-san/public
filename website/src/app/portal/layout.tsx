@@ -1,15 +1,14 @@
-import { UserContextProvider } from '@/app/portal/providers/UserContextProvider';
+import { AppShell } from '@/app/portal/components/custom/app-shell';
+import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { notFound } from 'next/navigation';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 export const dynamic = 'force-dynamic';
 
-export default function PortalLayout({ children }: { children: ReactNode }) {
-	const isEnabled = process.env.NEXT_PUBLIC_FEATURE_ENABLE_PORTAL === 'true';
+const ENABLE_PORTAL = process.env.NEXT_PUBLIC_FEATURE_ENABLE_PORTAL === 'true';
 
-	if (!isEnabled) {
-		notFound();
-	}
-
-	return <UserContextProvider redirectToLogin>{children}</UserContextProvider>;
+export default async function PortalLayout({ children }: { children: ReactNode }) {
+	if (!ENABLE_PORTAL) notFound();
+	await getAuthenticatedUserOrRedirect();
+	return <AppShell>{children}</AppShell>;
 }

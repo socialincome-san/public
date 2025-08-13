@@ -1,11 +1,13 @@
-'use client';
+import { YourPrograms } from '@/app/portal/components/custom/your-programs';
+import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 
-import { useUser } from '@/app/portal/hooks/useUser';
+export default async function PortalPage() {
+	const user = await getAuthenticatedUserOrRedirect();
 
-export default function Dashboard() {
-	const user = useUser();
-
-	if (!user) return null;
-
-	return <div className="text-lg">Welcome back, {user.firstName} 👋</div>;
+	return (
+		<div>
+			<h1 className="text-lg">Welcome back, {user.firstName} 👋</h1>
+			<YourPrograms />
+		</div>
+	);
 }

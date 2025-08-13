@@ -22,9 +22,51 @@ export class ProgramService extends BaseService {
 		}
 	}
 
+	async getProgramsByUserId(userId: string) {
+		try {
+			const programs = await this.db.program.findMany({
+				where: {
+					OR: [
+						{ viewerOrganization: { users: { some: { id: userId } } } },
+						{ operatorOrganization: { users: { some: { id: userId } } } },
+					],
+				},
+				orderBy: { name: 'asc' },
+			});
+
+			return this.resultOk(programs);
+		} catch (e) {
+			console.error('getProgramsByUserId error', e);
+			return this.resultFail('Could not fetch programs for user');
+		}
+	}
+
 	private async checkIfProgramExists(name: string): Promise<PrismaProgram | null> {
 		return this.db.program.findFirst({
 			where: { name },
 		});
+	}
+
+	async getProgramByIdAndUserId(programId: string, userId: string) {
+		try {
+			const program = await this.db.program.findFirst({
+				where: {
+					id: programId,
+					OR: [
+						{ viewerOrganization: { users: { some: { id: userId } } } },
+						{ operatorOrganization: { users: { some: { id: userId } } } },
+					],
+				},
+			});
+
+			if (!program) {
+				return this.resultFail('Program not found or access denied');
+			}
+
+			return this.resultOk(program);
+		} catch (e) {
+			console.error('[ProgramService.getProgramByIdAndUserId]', e);
+			return this.resultFail('Could not fetch program');
+		}
 	}
 }

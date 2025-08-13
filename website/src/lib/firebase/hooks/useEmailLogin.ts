@@ -9,6 +9,7 @@ import {
 	isSignInWithEmailLink,
 	sendSignInLinkToEmail,
 	signInWithEmailLink,
+	signOut,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -32,16 +33,12 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 
 		setSigningIn(continueUrl !== null || url.searchParams.get('email') !== null);
 
-		if (authListenerRegistered) {
-			return;
-		}
+		if (authListenerRegistered) return;
 
 		const unsubscribe = auth.onAuthStateChanged(() => {
 			setAuthListenerRegistered(true);
 
-			if (!isSignInWithEmailLink(auth, url.toString())) {
-				return;
-			}
+			if (!isSignInWithEmailLink(auth, url.toString())) return;
 
 			const email = new URL(continueUrl ?? window.location.href).searchParams.get('email');
 
@@ -56,13 +53,41 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [auth, authListenerRegistered, translator]);
 
+	const setServerSession = async (): Promise<boolean> => {
+		const user = auth.currentUser;
+		if (!user) return false;
+
+		try {
+			const idToken = await user.getIdToken(true);
+			const res = await fetch('/api/session', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ idToken }),
+				credentials: 'include',
+			});
+			return res.ok;
+		} catch {
+			return false;
+		}
+	};
+
 	const signIn = async (email: string) => {
 		const url = window.location.href;
 
 		try {
 			await createUserIfNotExists(email);
 			const { user } = await signInWithEmailLink(auth, email, url);
-			onLoginSuccess && (await onLoginSuccess(user.uid));
+
+			const ok = await setServerSession();
+			if (!ok) {
+				await signOut(auth).catch(() => {});
+				translator && toast.error(translator.t('error.unknown'));
+				return;
+			}
+
+			if (onLoginSuccess) {
+				await onLoginSuccess(user.uid);
+			}
 		} catch (error: unknown) {
 			if (error instanceof FirebaseError) {
 				switch (error.code) {
@@ -95,7 +120,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 		try {
 			await sendSignInLinkToEmail(auth, email, actionCodeSettings);
 			setEmailSent(true);
-		} catch (error) {
+		} catch {
 			translator && toast.error(translator.t('error.unknown'));
 		} finally {
 			setSendingEmail(false);
@@ -105,10 +130,7 @@ export const useEmailLogin = ({ lang, onLoginSuccess }: UseEmailAuthenticationPr
 	const createUserIfNotExists = async (email: string) => {
 		const signInMethods = await fetchSignInMethodsForEmail(auth, email);
 		const userExists = signInMethods.length > 0;
-
-		if (userExists) {
-			return;
-		}
+		if (userExists) return;
 
 		const response = await fetch('/api/user/create', {
 			method: 'POST',
