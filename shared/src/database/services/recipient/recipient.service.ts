@@ -57,12 +57,15 @@ export class RecipientService extends BaseService {
 		}
 	}
 
-	async getRecipientForAuthUser(recipientId: string, authUserId: string): Promise<ServiceResult<Recipient | null>> {
+	async getRecipientForMobileMoneyPhone(
+		recipientId: string,
+		mobileMoneyPhone: string,
+	): Promise<ServiceResult<Recipient | null>> {
 		try {
 			const recipient = await this.db.recipient.findFirst({
 				where: {
 					id: recipientId,
-					user: { authUserId },
+					user: { mobileMoneyPhone },
 				},
 			});
 			return this.resultOk(recipient);

@@ -10,8 +10,14 @@ export async function GET(request: Request, context: { params: Promise<{ recipie
 	if (!decoded) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 
 	const service = new RecipientService();
-	// Todo: use 'decoded.phone_number' to identify the user instead of 'decoded.uid'
-	const result = await service.getRecipientForAuthUser(recipientId, decoded.uid);
+	let phoneNumber = decoded.phone_number;
+	if (!phoneNumber) {
+		return NextResponse.json({ message: 'Phone number not found in token' }, { status: 400 });
+	}
+
+	phoneNumber = phoneNumber.startsWith('+') ? phoneNumber.slice(1) : phoneNumber;
+
+	const result = await service.getRecipientForMobileMoneyPhone(recipientId, phoneNumber);
 
 	if (!result.success) return NextResponse.json({ message: 'Error fetching recipient' }, { status: 500 });
 	if (!result.data) return NextResponse.json({ message: 'Recipient not found' }, { status: 404 });
