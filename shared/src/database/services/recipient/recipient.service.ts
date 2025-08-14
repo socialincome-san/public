@@ -1,7 +1,7 @@
 import { Recipient } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { PaginationOptions, ServiceResult } from '../core/base.types';
-import { CreateRecipientInput } from './recipient.types';
+import { CreateRecipientInput, RecipientTableDbShape } from './recipient.types';
 
 export class RecipientService extends BaseService {
 	async create(input: CreateRecipientInput): Promise<ServiceResult<Recipient>> {
@@ -25,6 +25,34 @@ export class RecipientService extends BaseService {
 			return this.resultOk(recipients);
 		} catch (e) {
 			console.error('[RecipientService.findMany]', e);
+			return this.resultFail('Could not fetch recipients');
+		}
+	}
+
+	async getRecipientsForProgram(programId: string, userId: string): Promise<ServiceResult<RecipientTableDbShape[]>> {
+		try {
+			const recipients = await this.db.recipient.findMany({
+				where: {
+					programId,
+					program: {
+						OR: [
+							{ viewerOrganization: { users: { some: { id: userId } } } },
+							{ operatorOrganization: { users: { some: { id: userId } } } },
+						],
+					},
+				},
+				select: {
+					id: true,
+					status: true,
+					localPartner: { select: { name: true } },
+					user: { select: { firstName: true, lastName: true, birthDate: true } },
+				},
+				orderBy: { createdAt: 'desc' },
+			});
+
+			return this.resultOk(recipients);
+		} catch (e) {
+			console.error('[RecipientService.getRecipientsForProgram]', e);
 			return this.resultFail('Could not fetch recipients');
 		}
 	}

@@ -9,8 +9,11 @@ export class RegistrationCSVTask extends PaymentTask {
 
 		await Promise.all(
 			recipients.map(async (recipient) => {
-				if (!recipient.get('om_uid'))
-					throw new functions.https.HttpsError('internal', 'Orange Money Id missing for designated recipient');
+				if (!recipient.get('om_uid') || !recipient.get('mobile_money_phone')?.phone)
+					throw new functions.https.HttpsError(
+						'internal',
+						'Orange Money Id or phone number missing for recipient:' + recipient.id,
+					);
 				csvRows.push([
 					recipient.get('mobile_money_phone').phone.toString().slice(-8),
 					recipient.get('om_uid').toString(),
