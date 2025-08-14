@@ -6,9 +6,12 @@ export class ProgramUtils {
 	static async getOrCreateSocialIncomeProgramId(orgId: string): Promise<string | null> {
 		const result = await this.programService.create({
 			name: 'Social Income',
-			duration: 36,
 			viewerOrganizationId: orgId,
 			operatorOrganizationId: orgId,
+			totalPayments: 36,
+			payoutAmount: 700,
+			payoutCurrency: 'SLE',
+			payoutInterval: 'monthly',
 		});
 
 		if (result.success) return result.data.id;

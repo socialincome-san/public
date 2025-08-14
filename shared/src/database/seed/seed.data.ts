@@ -4,10 +4,13 @@ import {
 	Organization as PrismaOrganization,
 	Recipient as PrismaRecipient,
 	LocalPartner as PrismaLocalPartner,
+	Payout as PrismaPayout,
+	ExchangeRateCollection as PrismaExchangeRateCollection,
+	ExchangeRateItem as PrismaExchangeRateItem,
 	Gender,
 	UserRole,
-	RecipientStatus,
-} from "@prisma/client";
+	RecipientStatus, PayoutStatus
+} from '@prisma/client';
 
 const now = () => new Date();
 
@@ -68,7 +71,10 @@ const makeUser = (i: number, orgId?: string): PrismaUser => ({
 const makeProgram = (i: number, orgId: string): PrismaProgram => ({
 	id: `program-${i}`,
 	name: `Program ${i}`,
-	duration: 12,
+	totalPayments: 36,
+	payoutAmount: 700,
+	payoutCurrency: 'SLE',
+	payoutInterval: 'monthly',
 	viewerOrganizationId: orgId,
 	operatorOrganizationId: orgId,
 	createdAt: now(),
@@ -89,17 +95,98 @@ const makeRecipient = (
 	orgId: string,
 	programId: string,
 	localPartnerId: string
-): PrismaRecipient => ({
-	id: `recipient-${i}`,
-	userId,
-	programId,
-	status: Object.values(RecipientStatus)[(i - 1) % Object.values(RecipientStatus).length],
-	createdAt: now(),
-	updatedAt: null,
-	organizationId: orgId,
-	localPartnerId,
-	startDate: null,
-});
+): PrismaRecipient => {
+	const now = new Date();
+	let startDate: Date;
+
+	switch (i % 4) {
+		case 0:
+			startDate = new Date(Date.UTC(now.getUTCFullYear() - 1, now.getUTCMonth(), 1)); // 1 year ago
+			break;
+		case 1:
+			startDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1)); // 1 month ago
+			break;
+		case 2:
+			startDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1)); // 1 month ahead
+			break;
+		default:
+			startDate = new Date(Date.UTC(now.getUTCFullYear() + 1, now.getUTCMonth(), 1)); // 1 year ahead
+			break;
+	}
+
+	return {
+		id: `recipient-${i}`,
+		userId,
+		programId,
+		status: Object.values(RecipientStatus)[(i - 1) % Object.values(RecipientStatus).length],
+		createdAt: now,
+		updatedAt: null,
+		organizationId: orgId,
+		localPartnerId,
+		startDate,
+	};
+};
+
+const makePayout = (
+	i: number,
+	recipientId: string,
+	monthsAgo: number
+): PrismaPayout => {
+	const date = new Date();
+	date.setUTCMonth(date.getUTCMonth() - monthsAgo);
+
+	return {
+		id: `payout-${i}-${monthsAgo}`,
+		recipientId,
+		amount: 700,
+		amountChf: null,
+		currency: 'SLE',
+		paymentAt: date,
+		status: PayoutStatus.paid,
+		phoneNumber: null,
+		comments: null,
+		message: null,
+		createdAt: new Date(),
+		updatedAt: null,
+	};
+};
+
+export const exchangeRateCollectionsData: PrismaExchangeRateCollection[] = [
+	{
+		id: "exchange-collection-1",
+		base: "CHF",
+		timestamp: new Date(),
+		createdAt: new Date(),
+		updatedAt: null,
+	},
+];
+
+export const exchangeRateItemsData: PrismaExchangeRateItem[] = [
+	{
+		id: "exchange-item-chf",
+		currency: "CHF",
+		rate: 1,
+		collectionId: "exchange-collection-1",
+		createdAt: new Date(),
+		updatedAt: null,
+	},
+	{
+		id: "exchange-item-usd",
+		currency: "USD",
+		rate: 1.12,
+		collectionId: "exchange-collection-1",
+		createdAt: new Date(),
+		updatedAt: null,
+	},
+	{
+		id: "exchange-item-sle",
+		currency: "SLE",
+		rate: 25000,
+		collectionId: "exchange-collection-1",
+		createdAt: new Date(),
+		updatedAt: null,
+	},
+];
 
 export const organizationsData: PrismaOrganization[] = [];
 for (let i = 1; i <= ORGANIZATION_COUNT; i++) {
@@ -128,4 +215,14 @@ export const recipientsData: PrismaRecipient[] = [];
 for (let i = 1; i <= RECIPIENT_COUNT; i++) {
 	const userId = usersData[i - 1].id;
 	recipientsData.push(makeRecipient(i, userId, ORG1_ID, PROGRAM1_ID, LOCAL_PARTNER1_ID));
+}
+
+export const payoutsData: PrismaPayout[] = [];
+for (let i = 0; i < recipientsData.length; i++) {
+	const recipient = recipientsData[i];
+	const paymentsCount = (i % 36) + 1;
+
+	for (let m = 0; m < paymentsCount; m++) {
+		payoutsData.push(makePayout(i + 1, recipient.id, paymentsCount - m));
+	}
 }

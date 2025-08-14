@@ -1,3 +1,6 @@
-import { PayoutForecast as PrismaPayoutForecast } from '@prisma/client';
-
-export type CreatePayoutForecastInput = Omit<PrismaPayoutForecast, 'id' | 'createdAt' | 'updatedAt'>;
+export type PayoutForecastRow = {
+	period: Date;
+	numberOfRecipients: number;
+	amountInProgramCurrency: number;
+	amountUsd: number;
+};

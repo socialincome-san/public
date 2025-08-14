@@ -1,7 +1,7 @@
 import { Program as PrismaProgram } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { CreateProgramInput } from './program.types';
+import { CreateProgramInput, ProgramForecastShape } from './program.types';
 
 export class ProgramService extends BaseService {
 	async create(input: CreateProgramInput): Promise<ServiceResult<PrismaProgram>> {
@@ -68,6 +68,25 @@ export class ProgramService extends BaseService {
 		} catch (e) {
 			console.error('[ProgramService.getProgramNameByIdAndUserId]', e);
 			return this.resultFail('Could not fetch program name');
+		}
+	}
+
+	async getProgramForForecast(programId: string): Promise<ServiceResult<ProgramForecastShape>> {
+		try {
+			const program = await this.db.program.findUnique({
+				where: { id: programId },
+				select: {
+					totalPayments: true,
+					payoutAmount: true,
+					payoutCurrency: true,
+					payoutInterval: true,
+				},
+			});
+			if (!program) return this.resultFail('Program not found');
+			return this.resultOk(program);
+		} catch (e) {
+			console.error('[ProgramService.getProgramForForecast]', e);
+			return this.resultFail('Could not fetch program');
 		}
 	}
 }

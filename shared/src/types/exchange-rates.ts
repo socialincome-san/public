@@ -1,11 +1,7 @@
-import { Currency } from './currency';
-
 export const EXCHANGE_RATES_PATH = 'exchange-rates';
 
 export type ExchangeRatesEntry = {
 	base: string;
-	timestamp: number; // in seconds
-	rates: ExchangeRates;
+	timestamp: number;
+	rates: Record<string, number>;
 };
-
-export type ExchangeRates = Partial<Record<Currency, number>>;

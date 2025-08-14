@@ -66,6 +66,21 @@ export const recipientColumns: ColumnDef<RecipientTableFlatShape>[] = [
 		},
 	},
 	{
+		accessorKey: 'payoutsProgressPercent',
+		header: 'Progress',
+		cell: ({ row }) => {
+			const { payoutsProgressPercent, payoutsReceived, payoutsTotal } = row.original as RecipientTableFlatShape;
+			return (
+				<div>
+					<progress value={payoutsProgressPercent} max={100}></progress>
+					<div>
+						{payoutsReceived} / {payoutsTotal}
+					</div>
+				</div>
+			);
+		},
+	},
+	{
 		accessorKey: 'localPartnerName',
 		header: ({ column }) => (
 			<Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
