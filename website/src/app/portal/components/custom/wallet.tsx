@@ -1,35 +1,21 @@
 import { Card } from '@socialincome/ui';
-import { cva } from 'class-variance-authority';
-
-const walletVariants = cva('', {
-	variants: {
-		variant: {
-			default: '--testcolor: red',
-			empty: '--testcolor: blue',
-		},
-	},
-	defaultVariants: {
-		variant: 'default',
-	},
-});
 
 type WalletProps = {
 	variant?: 'default' | 'empty';
 	children: React.ReactNode;
 };
 
-// export const Wallet = ({ children }: { children: React.ReactNode }) => {
 export function Wallet({ variant = 'default', children }: WalletProps) {
 	return (
 		<Card
-			className={`${walletVariants({ variant })} flex flex-col overflow-hidden`}
+			className="flex aspect-[1.4] flex-col overflow-hidden"
 			style={{
 				['--slant-shift' as any]: '50px',
 				['--slant-width' as any]: '40px',
 				['--slant-height' as any]: '14px',
 				['--slant-position' as any]: 'calc(var(--slant-shift) + var(--slant-width))',
 				['--gradient' as any]:
-					'linear-gradient(to right, hsl(var(--gradient-button-from)), hsl(var(--gradient-button-to)))',
+					'linear-gradient(to right, hsl(var(--gradient-button-from)), hsl(var(--gradient-button-to)))', // TODO: add correct gradient colors
 				['--shadow-size' as any]: '11px',
 				['--stack-height' as any]: '28px',
 				['--wallet-front-bg' as any]: variant === 'default' ? 'var(--gradient)' : 'hsl(var(--card))', // TODO: set correct background color for white
