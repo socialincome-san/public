@@ -27,7 +27,7 @@ export default async function PortalPage() {
 						</CardFooter>
 					</Card>
 
-					<Wallet>
+					<Wallet variant="empty">
 						<CardContent>
 							<CardTitle>Empty wallet</CardTitle>
 						</CardContent>
