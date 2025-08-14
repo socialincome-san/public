@@ -63,20 +63,20 @@ export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: 
 										{reference.author && (
 											<span>
 												{translator.t('reference-article.author', {
-												context: {
-													author: reference.author,
-												},
-											})}
-										</span>
+													context: {
+														author: reference.author,
+													},
+												})}
+											</span>
 										)}
 										{reference.publicationDate && (
 											<span>
 												{' '}
-													{translator.t('reference-article.publication-date', {
-														context: {
-															publicationDate: formatStoryblokDate(reference.publicationDate, lang),
-														},
-													})}
+												{translator.t('reference-article.publication-date', {
+													context: {
+														publicationDate: formatStoryblokDate(reference.publicationDate, lang),
+													},
+												})}
 											</span>
 										)}
 									</div>
