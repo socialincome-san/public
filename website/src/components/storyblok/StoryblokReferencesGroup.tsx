@@ -58,15 +58,27 @@ export function StoryblokReferencesGroup(props: ReferencesGroup & { translator: 
 									</Typography>
 								</Link>
 								<Typography className="m-0 p-0" color="foreground" as="div">
-									{showThumbnails && <div>{reference.mediaOutlet}</div>}
+									{reference.mediaOutlet && <div>{reference.mediaOutlet}</div>}
 									<div>
-										{translator.t('reference-article.written-by', {
-											context: {
-												author: reference.author,
-												mediaOutlet: !showThumbnails ? reference.mediaOutlet : '',
-												publicationDate: formatStoryblokDate(reference.publicationDate, lang),
-											},
-										})}
+										{reference.author && (
+											<span>
+												{translator.t('reference-article.author', {
+													context: {
+														author: reference.author,
+													},
+												})}
+											</span>
+										)}
+										{reference.publicationDate && (
+											<span>
+												{' '}
+												{translator.t('reference-article.publication-date', {
+													context: {
+														publicationDate: formatStoryblokDate(reference.publicationDate, lang),
+													},
+												})}
+											</span>
+										)}
 									</div>
 								</Typography>
 							</div>
