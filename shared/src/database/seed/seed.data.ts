@@ -183,7 +183,7 @@ export const exchangeRateItemsData: PrismaExchangeRateItem[] = [
 	{
 		id: "exchange-item-sle",
 		currency: "SLE",
-		rate: 25000,
+		rate: 20,
 		collectionId: "exchange-collection-1",
 		createdAt: new Date(),
 		updatedAt: null,
