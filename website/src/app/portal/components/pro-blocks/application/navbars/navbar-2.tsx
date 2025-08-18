@@ -58,7 +58,7 @@ export function Navbar2() {
 		</div>
 	);
 
-	const ProfileChip = () => (
+	const ProfileName = () => (
 		<>
 			<Avatar>
 				<AvatarFallback className="bg-primary text-background">LS</AvatarFallback>
@@ -105,8 +105,11 @@ export function Navbar2() {
 					{/* User menu dropdown */}
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
-							<Button variant="outline" className="flex h-12 items-center gap-2 rounded-full px-3 py-2">
-								<ProfileChip />
+							<Button
+								variant="outline"
+								className="border-input bg-background/5 flex h-12 items-center gap-2 rounded-full border px-3 py-2 pl-2.5"
+							>
+								<ProfileName />
 								<ChevronsUpDown className="text-accent-foreground h-4 w-4 opacity-50" />
 							</Button>
 						</DropdownMenuTrigger>
@@ -142,7 +145,7 @@ export function Navbar2() {
 						<div className="p-2">
 							{/* User info */}
 							<div className="flex items-center space-x-3 p-2">
-								<ProfileChip />
+								<ProfileName />
 							</div>
 							{/* User-related links */}
 							<div>
