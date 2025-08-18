@@ -106,10 +106,7 @@ export function Navbar2() {
 					{/* User menu dropdown */}
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
-							<Button
-								variant="outline"
-								className="border-input bg-background/5 flex h-12 items-center gap-2 rounded-full border px-3 py-2 pl-2.5"
-							>
+							<Button variant="outline" className="flex h-12 items-center gap-2 rounded-full px-3 py-2 pl-2.5">
 								<ProfileName />
 								<ChevronsUpDown className="text-accent-foreground h-4 w-4 opacity-50" />
 							</Button>

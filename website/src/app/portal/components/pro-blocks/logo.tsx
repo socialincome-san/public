@@ -9,7 +9,7 @@ export const Logo: React.FC<LogoProps> = ({ width = 64, height = 38, className =
 		<svg
 			width={width}
 			height={height}
-			viewBox="0 0 64386"
+			viewBox="0 0 64 38"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
 			className={className}
