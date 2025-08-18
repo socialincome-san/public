@@ -72,19 +72,20 @@ export function Navbar2() {
 
 	// Navigation items component
 	const NavItems = ({ isMobile = false }) => {
-		const linkClasses = `font-medium ${isMobile ? 'text-base' : 'text-lg'} ${
-			isMobile ? 'text-primary' : 'text-primary hover:bg-primary/5'
+		const linkClasses = `relative rounded-md font-medium ${isMobile ? 'text-base' : 'text-lg'} ${
+			isMobile ? 'text-primary' : 'text-primary hover:bg-accent'
 		} px-3 py-2`;
 
 		return (
-			<>
+			<nav>
 				{/* Main navigation links */}
 				{navLinks.map((link) => (
-					<Link key={link.label} href={link.href} className={linkClasses}>
+					<Link key={link.label} href={link.href} className={`${linkClasses}`}>
+						{link.active && <span className="bg-primary absolute -top-7 left-0 h-1 w-full rounded-b-lg"></span>}
 						{link.label}
 					</Link>
 				))}
-			</>
+			</nav>
 		);
 	};
 
