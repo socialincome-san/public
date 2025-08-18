@@ -1,5 +1,5 @@
-import { payoutForecastColumns } from '@/app/portal/components/custom/data-table/columns/payout-forecast-columns';
-import { DataTable } from '@/app/portal/components/custom/data-table/data-table';
+import TableWrapper from '@/app/portal/components/custom/data-table/elements/table-wrapper';
+import PayoutForecastTable from '@/app/portal/components/custom/data-table/payout-forecast/payout-forecast-table';
 import { PayoutForecastService } from '@socialincome/shared/src/database/services/payout-forecast/payout-forecast.service';
 
 type Props = { params: Promise<{ programId: string }> };
@@ -10,8 +10,16 @@ export default async function FinancesPage({ params }: Props) {
 	const service = new PayoutForecastService();
 	const result = await service.getPayoutForecast(programId);
 
-	if (!result.success) return <div className="p-4">Error loading payout forecast: {result.error}</div>;
-	if (!result.data.length) return <div className="p-4">No payout forecast data found</div>;
+	const error = result.success ? null : result.error;
+	const data = result.success ? result.data : [];
 
-	return <DataTable columns={payoutForecastColumns} data={result.data} />;
+	return (
+		<TableWrapper error={error} isEmpty={!data.length} emptyMessage="No payout forecast data found">
+			<div className="mb-4 flex items-center justify-between">
+				<h1 className="text-xl font-semibold">Payout forecast</h1>
+			</div>
+
+			<PayoutForecastTable data={data} />
+		</TableWrapper>
+	);
 }

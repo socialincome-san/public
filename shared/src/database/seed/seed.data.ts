@@ -16,7 +16,6 @@ const now = () => new Date();
 
 const ORGANIZATION_COUNT = 3;
 const USER_COUNT = 150;
-const PROGRAM_COUNT = 3;
 const LOCAL_PARTNER_COUNT = 5;
 const RECIPIENT_COUNT = 100;
 
@@ -68,19 +67,22 @@ const makeUser = (i: number, orgId?: string): PrismaUser => ({
 	updatedAt: null,
 });
 
-const makeProgram = (i: number, orgId: string): PrismaProgram => ({
+const makeProgram = (
+	i: number,
+	operatorOrgId: string,
+	viewerOrgId: string
+): PrismaProgram => ({
 	id: `program-${i}`,
 	name: `Program ${i}`,
 	totalPayments: 36,
 	payoutAmount: 700,
 	payoutCurrency: 'SLE',
 	payoutInterval: 'monthly',
-	viewerOrganizationId: orgId,
-	operatorOrganizationId: orgId,
+	operatorOrganizationId: operatorOrgId,
+	viewerOrganizationId: viewerOrgId,
 	createdAt: now(),
 	updatedAt: null,
 });
-
 const makeLocalPartner = (i: number, userId: string): PrismaLocalPartner => ({
 	id: `local-partner-${i}`,
 	name: `Local Partner ${i}`,
@@ -199,11 +201,13 @@ for (let i = 1; i <= USER_COUNT; i++) {
 	usersData.push(makeUser(i, ORG1_ID));
 }
 
-export const programsData: PrismaProgram[] = [];
-for (let i = 1; i <= PROGRAM_COUNT; i++) {
-	programsData.push(makeProgram(i, ORG1_ID));
-}
+export const programsData: PrismaProgram[] = [
+	makeProgram(1, organizationsData[0].id, organizationsData[1].id),
+	makeProgram(2, organizationsData[1].id, organizationsData[0].id),
+	makeProgram(3, organizationsData[2].id, organizationsData[2].id),
+];
 const PROGRAM1_ID = programsData[0].id;
+const PROGRAM2_ID = programsData[1].id;
 
 export const localPartnersData: PrismaLocalPartner[] = [];
 for (let i = 1; i <= LOCAL_PARTNER_COUNT; i++) {
@@ -214,7 +218,12 @@ const LOCAL_PARTNER1_ID = localPartnersData[0].id;
 export const recipientsData: PrismaRecipient[] = [];
 for (let i = 1; i <= RECIPIENT_COUNT; i++) {
 	const userId = usersData[i - 1].id;
-	recipientsData.push(makeRecipient(i, userId, ORG1_ID, PROGRAM1_ID, LOCAL_PARTNER1_ID));
+
+	const programId = i % 2 === 0 ? PROGRAM2_ID : PROGRAM1_ID;
+
+	recipientsData.push(
+		makeRecipient(i, userId, ORG1_ID, programId, LOCAL_PARTNER1_ID)
+	);
 }
 
 export const payoutsData: PrismaPayout[] = [];

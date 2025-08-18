@@ -1,4 +1,4 @@
-import { CellType } from '@/app/portal/components/custom/data-table/columns/helper/types';
+import { CellType } from '@/app/portal/components/custom/data-table/elements/types';
 
 export function ProgressCell<TData, TValue>({ ctx }: CellType<TData, TValue>) {
 	const percent = ctx.getValue() as number;

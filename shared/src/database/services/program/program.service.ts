@@ -89,4 +89,39 @@ export class ProgramService extends BaseService {
 			return this.resultFail('Could not fetch program');
 		}
 	}
+
+	async getUserRoleForProgramId(programId: string, userId: string): Promise<ServiceResult<'operator' | 'viewer'>> {
+		try {
+			const program = await this.db.program.findUnique({
+				where: { id: programId },
+				select: {
+					operatorOrganization: {
+						select: {
+							users: { where: { id: userId }, select: { id: true }, take: 1 },
+						},
+					},
+					viewerOrganization: {
+						select: {
+							users: { where: { id: userId }, select: { id: true }, take: 1 },
+						},
+					},
+				},
+			});
+
+			if (!program) return this.resultFail('Program not found');
+
+			const isOperator = (program.operatorOrganization?.users?.length ?? 0) > 0;
+			const isViewer = (program.viewerOrganization?.users?.length ?? 0) > 0;
+
+			if (!isOperator && !isViewer) {
+				return this.resultFail('Access denied for this program');
+			}
+
+			const role: 'operator' | 'viewer' = isOperator ? 'operator' : 'viewer';
+			return this.resultOk(role);
+		} catch (e) {
+			console.error('[ProgramService.getUserRoleForProgramId]', e);
+			return this.resultFail('Could not determine user role for program');
+		}
+	}
 }

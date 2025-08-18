@@ -27,33 +27,46 @@ export class RecipientService extends BaseService {
 		}
 	}
 
-	async getRecipientsForProgram(programId: string, userId: string): Promise<ServiceResult<RecipientTableDbShape[]>> {
+	async getRecipientsWithProgramPermission(
+		programId: string,
+		userId: string,
+	): Promise<ServiceResult<{ recipients: RecipientTableDbShape[]; programPermission: 'operator' | 'viewer' }>> {
 		try {
-			const rows = await this.db.recipient.findMany({
+			const program = await this.db.program.findFirst({
 				where: {
-					programId,
-					program: {
-						OR: [
-							{ viewerOrganization: { users: { some: { id: userId } } } },
-							{ operatorOrganization: { users: { some: { id: userId } } } },
-						],
-					},
+					id: programId,
+					OR: [
+						{ viewerOrganization: { users: { some: { id: userId } } } },
+						{ operatorOrganization: { users: { some: { id: userId } } } },
+					],
 				},
 				select: {
-					id: true,
-					status: true,
-					localPartner: { select: { name: true } },
-					user: { select: { firstName: true, lastName: true, birthDate: true } },
-					program: { select: { totalPayments: true } },
-					payouts: {
-						where: { status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] } },
-						select: { id: true },
+					operatorOrganization: { select: { users: { where: { id: userId }, select: { id: true }, take: 1 } } },
+					viewerOrganization: { select: { users: { where: { id: userId }, select: { id: true }, take: 1 } } },
+
+					recipients: {
+						orderBy: { createdAt: 'desc' },
+						select: {
+							id: true,
+							status: true,
+							localPartner: { select: { name: true } },
+							user: { select: { firstName: true, lastName: true, birthDate: true } },
+							program: { select: { totalPayments: true } },
+							payouts: {
+								where: { status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] } },
+								select: { id: true },
+							},
+						},
 					},
 				},
-				orderBy: { createdAt: 'desc' },
 			});
 
-			const recipients: RecipientTableDbShape[] = rows.map((row) => ({
+			if (!program) return this.resultFail('Program not found or access denied');
+
+			const programPermission: 'operator' | 'viewer' =
+				(program.operatorOrganization?.users?.length ?? 0) > 0 ? 'operator' : 'viewer';
+
+			const recipients: RecipientTableDbShape[] = program.recipients.map((row) => ({
 				id: row.id,
 				status: row.status,
 				localPartner: row.localPartner,
@@ -62,9 +75,9 @@ export class RecipientService extends BaseService {
 				payoutsPaidCount: row.payouts.length,
 			}));
 
-			return this.resultOk(recipients);
+			return this.resultOk({ recipients, programPermission });
 		} catch (e) {
-			console.error('[RecipientService.getRecipientsForProgram]', e);
+			console.error('[RecipientService.getRecipientsWithRoleForProgram]', e);
 			return this.resultFail('Could not fetch recipients');
 		}
 	}
