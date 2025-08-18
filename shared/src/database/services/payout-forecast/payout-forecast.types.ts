@@ -1,5 +1,5 @@
 export type PayoutForecastRow = {
-	period: Date;
+	period: string;
 	numberOfRecipients: number;
 	amountInProgramCurrency: number;
 	amountUsd: number;

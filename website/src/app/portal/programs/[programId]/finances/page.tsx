@@ -1,5 +1,5 @@
+import { payoutForecastColumns } from '@/app/portal/components/custom/data-table/columns/payout-forecast-columns';
 import { DataTable } from '@/app/portal/components/custom/data-table/data-table';
-import { payoutForecastColumns } from '@/app/portal/components/custom/data-table/payout-forecast-columns';
 import { PayoutForecastService } from '@socialincome/shared/src/database/services/payout-forecast/payout-forecast.service';
 
 type Props = { params: Promise<{ programId: string }> };

@@ -1,5 +1,5 @@
+import { recipientColumns } from '@/app/portal/components/custom/data-table/columns/recipients-columns';
 import { DataTable } from '@/app/portal/components/custom/data-table/data-table';
-import { recipientColumns } from '@/app/portal/components/custom/data-table/recipients-columns';
 import { Button } from '@/app/portal/components/ui/button';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { RecipientTableMapper } from '@socialincome/shared/src/database/services/recipient/recipient.mapper';

@@ -6,9 +6,9 @@ import { RecipientService } from '../recipient/recipient.service';
 import { PayoutForecastRow } from './payout-forecast.types';
 
 export class PayoutForecastService extends BaseService {
-	private recipientService = new RecipientService(this.db);
-	private programService = new ProgramService(this.db);
-	private exchangeRateService = new ExchangeRateCollectionService(this.db);
+	private recipientService = new RecipientService();
+	private programService = new ProgramService();
+	private exchangeRateService = new ExchangeRateCollectionService();
 
 	async getPayoutForecast(programId: string, monthsAhead = 6): Promise<ServiceResult<PayoutForecastRow[]>> {
 		try {
@@ -47,7 +47,7 @@ export class PayoutForecastService extends BaseService {
 			const forecastRows: PayoutForecastRow[] = forecastPeriods.map((periodStartDate, periodIndex) => {
 				const numberOfRecipients = recipientCountByPeriodIndex.get(periodIndex) ?? 0;
 				return {
-					period: periodStartDate,
+					period: this.formatMothYear(periodStartDate),
 					numberOfRecipients,
 					amountInProgramCurrency: this.round2(numberOfRecipients * programData.payoutAmount),
 					amountUsd: this.round2(numberOfRecipients * payoutAmountUsd),
@@ -87,13 +87,20 @@ export class PayoutForecastService extends BaseService {
 	private startOfMonthUTC(date: Date): Date {
 		return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1));
 	}
+
 	private addMonthsUTC(date: Date, months: number): Date {
 		return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + months, 1));
 	}
+
 	private monthDiff(start: Date, end: Date): number {
 		return (end.getUTCFullYear() - start.getUTCFullYear()) * 12 + (end.getUTCMonth() - start.getUTCMonth());
 	}
+
 	private round2(value: number): number {
 		return Math.round(value * 100) / 100;
 	}
+
+	private formatMothYear = (date: Date): string => {
+		return new Intl.DateTimeFormat('en-CH', { month: 'long', year: 'numeric' }).format(date);
+	};
 }
