@@ -1,3 +1,4 @@
+import { Card } from '@/app/portal/components/custom/card';
 import { TabNavigation } from '@/app/portal/components/custom/tab-navigation';
 import { FlagSierraLeone } from '@/app/portal/components/pro-blocks/flag-sierra-leone';
 import { Badge } from '@/app/portal/components/ui/badge';
@@ -44,7 +45,9 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 				</Button>
 			</div>
 			<TabNavigation programId={programId} />
-			<div className="mt-4">{children}</div>
+			<Card>
+				<div className="mt-4">{children}</div>
+			</Card>
 		</>
 	);
 }
