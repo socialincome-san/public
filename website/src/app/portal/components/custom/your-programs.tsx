@@ -22,7 +22,7 @@ export async function YourPrograms() {
 
 	return (
 		<div>
-			<h2>Your programs</h2>
+			<h2 className="py-6 text-3xl font-medium">Your programs</h2>
 			<div className="grid grid-cols-3 gap-8">
 				{programs.map((program) => (
 					<Wallet key={program.id}>
