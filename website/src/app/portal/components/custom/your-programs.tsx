@@ -27,9 +27,9 @@ export async function YourPrograms() {
 				{programs.map((program) => (
 					<Wallet key={program.id}>
 						<CardContent>
-						<Link href={`/portal/programs/${program.id}/overview`}>{program.name}</Link> (
-						{program.programPermission === 'viewer' ? 'read-only' : 'editable'})
-					</CardContent>
+							<Link href={`/portal/programs/${program.id}/overview`}>{program.name}</Link> (
+							{program.programPermission === 'viewer' ? 'read-only' : 'editable'})
+						</CardContent>
 					</Wallet>
 				))}
 				<Wallet variant="empty">
