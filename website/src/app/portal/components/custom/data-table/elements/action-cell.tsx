@@ -9,7 +9,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
 } from '@/app/portal/components/ui/dropdown-menu';
-import { MoreHorizontal } from 'lucide-react';
+import { ChevronRightIcon } from 'lucide-react';
 
 type ActionCellProps<TData, TValue> = CellType<TData, TValue> & {
 	readOnly?: boolean;
@@ -37,7 +37,7 @@ export function ActionCell<TData, TValue>({ ctx, readOnly = false }: ActionCellP
 					title={readOnly ? 'Read-only' : 'Open menu'}
 				>
 					<span className="sr-only">Open menu</span>
-					<MoreHorizontal className="h-4 w-4" focusable="false" />
+					<ChevronRightIcon className="h-10 w-10" focusable="false" />
 				</Button>
 			</DropdownMenuTrigger>
 
