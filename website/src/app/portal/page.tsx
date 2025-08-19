@@ -5,9 +5,12 @@ export default async function PortalPage() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	return (
-		<div>
-			<h1 className="text-lg">Welcome back, {user.firstName} 👋</h1>
+		<>
+			<div className="flex flex-wrap items-center gap-4 md:flex-row md:items-center">
+				<h1 className="py-8 text-5xl">Welcome back, {user.firstName} 👋</h1>
+			</div>
+
 			<YourPrograms />
-		</div>
+		</>
 	);
 }

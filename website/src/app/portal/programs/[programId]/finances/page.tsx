@@ -20,7 +20,7 @@ export default async function FinancesPage({ params }: Props) {
 	return (
 		<TableWrapper error={error} isEmpty={!data.length} emptyMessage="No payout forecast data found">
 			<div className="mb-4 flex items-center justify-between">
-				<h1 className="text-xl font-semibold">Payout forecast</h1>
+				<h2 className="pb-4 text-3xl">Payout Forecast</h2>
 			</div>
 
 			<PayoutForecastTable data={data} />

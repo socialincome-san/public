@@ -1,6 +1,12 @@
+import { Card } from '@/app/portal/components/custom/card';
 import { TabNavigation } from '@/app/portal/components/custom/tab-navigation';
+import { FlagSierraLeone } from '@/app/portal/components/pro-blocks/flag-sierra-leone';
+import { Badge } from '@/app/portal/components/ui/badge';
+import { Button } from '@/app/portal/components/ui/button';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
+
+import { Pen } from 'lucide-react';
 import { ReactNode } from 'react';
 
 type ProgramLayoutProps = {
@@ -22,10 +28,26 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	const { name } = result.data;
 
 	return (
-		<div className="p-4">
-			<h1 className="mb-4 text-2xl font-bold">{name}</h1>
+		<>
+			<div className="flex flex-wrap items-center gap-4 md:flex-row md:items-center">
+				<h1 className="py-8 text-5xl">{name}</h1>
+				<Badge
+					variant="outline"
+					className="bg-background flex items-center gap-1.5 rounded-full border py-1 pl-1 pr-2.5"
+				>
+					<FlagSierraLeone />
+					<span className="text-foreground text-xs font-medium">Sierra Leone</span>
+				</Badge>
+
+				<Button variant="outline" className="ml-auto rounded-full">
+					<Pen className="mr-2 h-4 w-4" />
+					Manage program
+				</Button>
+			</div>
 			<TabNavigation programId={programId} />
-			<div className="mt-4">{children}</div>
-		</div>
+			<Card>
+				<div>{children}</div>
+			</Card>
+		</>
 	);
 }

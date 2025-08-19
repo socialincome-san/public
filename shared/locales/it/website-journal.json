@@ -18,7 +18,8 @@
 	"reference-article": {
 		"show-more": "Mostrare più",
 		"show-less": "Mostra Tutto",
-		"written-by": "{{mediaOutlet}} di {{author}} il {{publicationDate}}",
+		"author": "di {{author}}",
+		"publication-date": "il {{publicationDate}}",
 		"context": {
 			"original": "Prima pubblicazione",
 			"related": "Queste fonti offrono contesto e informazioni"

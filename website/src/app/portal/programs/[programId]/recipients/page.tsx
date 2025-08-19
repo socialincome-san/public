@@ -23,7 +23,7 @@ export default async function RecipientsPage({ params }: Props) {
 	return (
 		<TableWrapper error={error} isEmpty={!tableRows.length} emptyMessage="No recipients found">
 			<div className="mb-4 flex items-center justify-between">
-				<h1 className="text-xl font-semibold">{tableRows.length} Recipients</h1>
+				<h2 className="pb-4 text-3xl">{tableRows.length} Recipients</h2>
 
 				<Button disabled={readOnly}>
 					<Link href={`/portal/programs/${programId}/recipients/new`}>Add new recipient</Link>

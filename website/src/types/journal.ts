@@ -22,11 +22,11 @@ export interface ReferencesGroup {
 export interface ReferenceArticle {
 	id: number;
 	_uid: string;
-	publicationDate: string;
+	publicationDate?: string;
 	title: string;
-	author: string;
+	author?: string;
 	thumbnail?: StoryblokImage;
-	mediaOutlet: string;
+	mediaOutlet?: string;
 	url: string;
 }
 
@@ -66,6 +66,8 @@ export interface StoryblokAuthor {
 	lastName: string;
 	displayInOverviewPage: boolean;
 	bio: string;
+	githubName?: string;
+	linkedinName?: string;
 }
 
 export interface StoryblokArticle {
