@@ -56,4 +56,22 @@ export class RecipientService extends BaseService {
 			return this.resultFail('Could not fetch recipients');
 		}
 	}
+
+	async getRecipientForMobileMoneyPhone(
+		recipientId: string,
+		mobileMoneyPhone: string,
+	): Promise<ServiceResult<Recipient | null>> {
+		try {
+			const recipient = await this.db.recipient.findFirst({
+				where: {
+					id: recipientId,
+					user: { mobileMoneyPhone },
+				},
+			});
+			return this.resultOk(recipient);
+		} catch (e) {
+			console.error('[RecipientService.getRecipientForAuthUser]', e);
+			return this.resultFail('Could not fetch recipient');
+		}
+	}
 }
