@@ -1,5 +1,5 @@
-import { Navbar2 } from '@/app/portal/components/pro-blocks/application/navbars/navbar-2';
-import { PageHeader4 } from '@/app/portal/components/pro-blocks/page-headers/page-header-4';
+import { Navbar2 } from '@/app/portal/components/pro-blocks/navbar';
+import { PageHeader4 } from '@/app/portal/components/pro-blocks/page-header';
 
 import { ReactNode } from 'react';
 

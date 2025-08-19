@@ -1,4 +1,4 @@
-import { AppShell3 } from '@/app/portal/components/pro-blocks/application/app-shells/app-shell-3';
+import { AppShell3 } from '@/app/portal/components/pro-blocks/app-shell';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
