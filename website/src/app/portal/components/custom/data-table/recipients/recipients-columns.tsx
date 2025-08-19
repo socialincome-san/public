@@ -8,8 +8,8 @@ import { TextCell } from '@/app/portal/components/custom/data-table/elements/tex
 import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeRecipientColumns(readOnly: boolean): ColumnDef<RecipientTableViewRow>[] {
-	return [
+export function makeRecipientColumns(showProgramName?: boolean): ColumnDef<RecipientTableViewRow>[] {
+	const columns: ColumnDef<RecipientTableViewRow>[] = [
 		{ accessorKey: 'id', header: 'ID', cell: (ctx) => <TextCell ctx={ctx} /> },
 		{
 			accessorKey: 'firstName',
@@ -41,11 +41,25 @@ export function makeRecipientColumns(readOnly: boolean): ColumnDef<RecipientTabl
 			header: (ctx) => <SortableHeader ctx={ctx}>Local partner</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
-		{
-			id: 'actions',
-			header: 'Actions',
-			enableSorting: false,
-			cell: (ctx) => <ActionCell ctx={ctx} readOnly={readOnly} />,
-		},
 	];
+
+	if (showProgramName) {
+		columns.push({
+			accessorKey: 'programName',
+			header: (ctx) => <SortableHeader ctx={ctx}>Program Name</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		});
+	}
+
+	columns.push({
+		id: 'actions',
+		header: 'Actions',
+		enableSorting: false,
+		cell: (ctx) => {
+			const row = ctx.row.original;
+			return <ActionCell ctx={ctx} readOnly={row.permission !== 'operator'} />;
+		},
+	});
+
+	return columns;
 }

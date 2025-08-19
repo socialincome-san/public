@@ -4,7 +4,6 @@ import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { PayoutForecastService } from '@socialincome/shared/src/database/services/payout-forecast/payout-forecast.service';
 
 type Props = { params: Promise<{ programId: string }> };
-
 const MONTHS_AHEAD = 6;
 
 export default async function FinancesPage({ params }: Props) {
@@ -18,11 +17,12 @@ export default async function FinancesPage({ params }: Props) {
 	const data = result.success ? result.data : [];
 
 	return (
-		<TableWrapper error={error} isEmpty={!data.length} emptyMessage="No payout forecast data found">
-			<div className="mb-4 flex items-center justify-between">
-				<h2 className="pb-4 text-3xl">Payout Forecast</h2>
-			</div>
-
+		<TableWrapper
+			title="Payout Forecast"
+			error={error}
+			isEmpty={!data.length}
+			emptyMessage="No payout forecast data found"
+		>
 			<PayoutForecastTable data={data} />
 		</TableWrapper>
 	);

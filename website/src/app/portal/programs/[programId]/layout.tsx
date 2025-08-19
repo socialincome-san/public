@@ -26,8 +26,16 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	}
 
 	const { name, programPermission } = result.data;
-
 	const isOperator = programPermission === 'operator';
+
+	const sections = [
+		{ href: `/portal/programs/${programId}/overview`, label: 'Overview' },
+		{ href: `/portal/programs/${programId}/recipients`, label: 'Recipients' },
+		{ href: `/portal/programs/${programId}/finances`, label: 'Finances' },
+		{ href: `/portal/programs/${programId}/fundraising`, label: 'Fundraising' },
+		{ href: `/portal/programs/${programId}/surveys`, label: 'Surveys' },
+		{ href: `/portal/programs/${programId}/team-members`, label: 'Team members' },
+	];
 
 	return (
 		<>
@@ -60,7 +68,8 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 				</Button>
 			</div>
 
-			<TabNavigation programId={programId} />
+			<TabNavigation sections={sections} />
+
 			<Card>
 				<div>{children}</div>
 			</Card>

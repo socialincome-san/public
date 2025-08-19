@@ -14,6 +14,8 @@ export type RecipientTableViewRow = {
 	payoutsReceived: number;
 	payoutsTotal: number;
 	payoutsProgressPercent: number;
+	programName: string;
+	permission: ProgramPermission;
 };
 
 export type RecipientTableViewWithPermission = {

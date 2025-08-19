@@ -1,17 +1,32 @@
+'use client';
+
 import { ReactNode } from 'react';
 
-export default function TableWrapper({
-	error,
-	isEmpty,
-	children,
-	emptyMessage = 'No data found',
-}: {
+type Props = {
+	title: ReactNode;
 	error?: string | null;
 	isEmpty: boolean;
+	emptyMessage: string;
+	actions?: ReactNode;
 	children: ReactNode;
-	emptyMessage?: string;
-}) {
-	if (error) return <div className="p-4">Error: {error}</div>;
-	if (isEmpty) return <div className="p-4">{emptyMessage}</div>;
-	return <>{children}</>;
+};
+
+export default function TableWrapper({ title, error, isEmpty, emptyMessage, actions, children }: Props) {
+	return (
+		<div>
+			{error ? (
+				<div className="p-4 text-red-600">Error: {error}</div>
+			) : isEmpty ? (
+				<div className="p-4 text-gray-500">{emptyMessage}</div>
+			) : (
+				<>
+					<div className="mb-4 flex items-center justify-between">
+						<h2 className="pb-4 text-3xl">{title}</h2>
+						{actions ?? null}
+					</div>
+					{children}
+				</>
+			)}
+		</div>
+	);
 }

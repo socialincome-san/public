@@ -40,8 +40,13 @@ export class RecipientService extends BaseService {
 			const program = await this.db.program.findFirst({
 				where: { id: programId, ...this.userAccessibleProgramsWhere(userId) },
 				select: {
-					...this.programPermissionSelect(userId),
-					recipients: this.recipientsSelectForTableView(),
+					operatorOrganization: {
+						select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+					},
+					viewerOrganization: {
+						select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+					},
+					recipients: this.recipientsSelectForTableView(userId),
 				},
 			});
 
@@ -59,6 +64,24 @@ export class RecipientService extends BaseService {
 		}
 	}
 
+	async getRecipientTableViewForUser(userId: string): Promise<ServiceResult<RecipientTableViewWithPermission>> {
+		try {
+			const recipients = await this.db.recipient.findMany({
+				where: {
+					program: this.userAccessibleProgramsWhere(userId),
+				},
+				...this.recipientsSelectForTableView(userId),
+			});
+
+			const tableRows = this.mapRecipientsToTableViewRows(recipients);
+
+			return this.resultOk({ tableRows, programPermission: 'viewer' });
+		} catch (e) {
+			console.error('[RecipientService.getRecipientTableViewForUser]', e);
+			return this.resultFail('Could not fetch recipients');
+		}
+	}
+
 	private userAccessibleProgramsWhere(userId: string) {
 		return {
 			OR: [
@@ -68,18 +91,7 @@ export class RecipientService extends BaseService {
 		};
 	}
 
-	private programPermissionSelect(userId: string) {
-		return {
-			operatorOrganization: {
-				select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-			},
-			viewerOrganization: {
-				select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-			},
-		};
-	}
-
-	private recipientsSelectForTableView() {
+	private recipientsSelectForTableView(userId: string) {
 		return {
 			orderBy: { createdAt: 'desc' as const },
 			select: {
@@ -87,7 +99,18 @@ export class RecipientService extends BaseService {
 				status: true,
 				localPartner: { select: { name: true } },
 				user: { select: { firstName: true, lastName: true, birthDate: true } },
-				program: { select: { totalPayments: true } },
+				program: {
+					select: {
+						name: true,
+						totalPayments: true,
+						operatorOrganization: {
+							select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+						},
+						viewerOrganization: {
+							select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+						},
+					},
+				},
 				payouts: {
 					where: { status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] } },
 					select: { id: true },
@@ -102,7 +125,12 @@ export class RecipientService extends BaseService {
 			status: RecipientStatus;
 			localPartner: { name: string | null } | null;
 			user: { firstName: string | null; lastName: string | null; birthDate: Date | null } | null;
-			program: { totalPayments: number } | null;
+			program: {
+				name: string | null;
+				totalPayments: number | null;
+				operatorOrganization?: { users: Array<{ id: string }> };
+				viewerOrganization?: { users: Array<{ id: string }> };
+			} | null;
 			payouts: Array<{ id: string }>;
 		}>,
 	): RecipientTableViewRow[] {
@@ -112,6 +140,9 @@ export class RecipientService extends BaseService {
 			const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
 
 			const age = recipient.user?.birthDate ? this.calculateAge(recipient.user.birthDate) : null;
+
+			const isOperator = (recipient.program?.operatorOrganization?.users?.length ?? 0) > 0;
+			const permission: ProgramPermission = isOperator ? 'operator' : 'viewer';
 
 			return {
 				id: recipient.id,
@@ -123,6 +154,8 @@ export class RecipientService extends BaseService {
 				payoutsReceived,
 				payoutsTotal,
 				payoutsProgressPercent,
+				programName: recipient.program?.name ?? '',
+				permission,
 			};
 		});
 	}
