@@ -1,11 +1,11 @@
 import { Card } from '@/app/portal/components/custom/card';
 import { TabNavigation } from '@/app/portal/components/custom/tab-navigation';
-import { FlagSierraLeone } from '@/app/portal/components/pro-blocks/flag-sierra-leone';
 import { Badge } from '@/app/portal/components/ui/badge';
 import { Button } from '@/app/portal/components/ui/button';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
 
+import { CountryBadge } from '@/app/portal/components/custom/badges/country-badge';
 import { Pen } from 'lucide-react';
 import { ReactNode } from 'react';
 
@@ -42,13 +42,7 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 			<div className="flex flex-wrap items-center gap-4 md:flex-row md:items-center">
 				<h1 className="py-8 text-5xl">{name}</h1>
 
-				<Badge
-					variant="outline"
-					className="bg-background flex items-center gap-1.5 rounded-full border py-1 pl-1 pr-2.5"
-				>
-					<FlagSierraLeone />
-					<span className="text-foreground text-xs font-medium">Sierra Leone</span>
-				</Badge>
+				<CountryBadge country="sierra_leone" />
 
 				<div className="flex items-center gap-2">
 					<Badge variant={isOperator ? 'default' : 'secondary'} className="text-xs font-medium">

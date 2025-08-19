@@ -1,12 +1,7 @@
 import { PayoutStatus, Recipient, RecipientStatus } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { PaginationOptions, ServiceResult } from '../core/base.types';
-import {
-	CreateRecipientInput,
-	ProgramPermission,
-	RecipientTableViewRow,
-	RecipientTableViewWithPermission,
-} from './recipient.types';
+import { CreateRecipientInput, ProgramPermission, RecipientTableView, RecipientTableViewRow } from './recipient.types';
 
 export class RecipientService extends BaseService {
 	async create(input: CreateRecipientInput): Promise<ServiceResult<Recipient>> {
@@ -35,36 +30,26 @@ export class RecipientService extends BaseService {
 	async getRecipientTableViewForProgramAndUser(
 		programId: string,
 		userId: string,
-	): Promise<ServiceResult<RecipientTableViewWithPermission>> {
+	): Promise<ServiceResult<RecipientTableView>> {
 		try {
 			const program = await this.db.program.findFirst({
 				where: { id: programId, ...this.userAccessibleProgramsWhere(userId) },
 				select: {
-					operatorOrganization: {
-						select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-					},
-					viewerOrganization: {
-						select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-					},
 					recipients: this.recipientsSelectForTableView(userId),
 				},
 			});
 
 			if (!program) return this.resultFail('Program not found or access denied');
 
-			const programPermission: ProgramPermission =
-				(program.operatorOrganization?.users?.length ?? 0) > 0 ? 'operator' : 'viewer';
-
 			const tableRows = this.mapRecipientsToTableViewRows(program.recipients);
-
-			return this.resultOk({ tableRows, programPermission });
+			return this.resultOk({ tableRows });
 		} catch (e) {
 			console.error('[RecipientService.getRecipientTableViewForProgramAndUser]', e);
 			return this.resultFail('Could not fetch recipients');
 		}
 	}
 
-	async getRecipientTableViewForUser(userId: string): Promise<ServiceResult<RecipientTableViewWithPermission>> {
+	async getRecipientTableViewForUser(userId: string): Promise<ServiceResult<RecipientTableView>> {
 		try {
 			const recipients = await this.db.recipient.findMany({
 				where: {
@@ -74,8 +59,7 @@ export class RecipientService extends BaseService {
 			});
 
 			const tableRows = this.mapRecipientsToTableViewRows(recipients);
-
-			return this.resultOk({ tableRows, programPermission: 'viewer' });
+			return this.resultOk({ tableRows });
 		} catch (e) {
 			console.error('[RecipientService.getRecipientTableViewForUser]', e);
 			return this.resultFail('Could not fetch recipients');

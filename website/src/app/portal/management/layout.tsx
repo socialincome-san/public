@@ -10,7 +10,7 @@ type ManagementLayoutProps = {
 export default async function ManagementLayout({ children }: ManagementLayoutProps) {
 	const sections = [
 		{ href: `/portal/management/recipients`, label: 'Recipients' },
-		{ href: `/portal/management/ongoing-payments`, label: 'Ongoing payments' },
+		{ href: `/portal/management/ongoing-payouts`, label: 'Ongoing payouts' },
 		{ href: `/portal/management/contributors`, label: 'Contributors' },
 		{ href: `/portal/management/contributions`, label: 'Contributions' },
 		{ href: `/portal/management/fundraising`, label: 'Fundraising' },

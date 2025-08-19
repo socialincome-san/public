@@ -2,8 +2,8 @@
 
 import { ActionCell } from '@/app/portal/components/custom/data-table/elements/action-cell';
 import { ProgressCell } from '@/app/portal/components/custom/data-table/elements/progress-cell';
+import { RecipientStatusCell } from '@/app/portal/components/custom/data-table/elements/recipient-status-cell';
 import { SortableHeader } from '@/app/portal/components/custom/data-table/elements/sortable-header';
-import { StatusCell } from '@/app/portal/components/custom/data-table/elements/status-cell';
 import { TextCell } from '@/app/portal/components/custom/data-table/elements/text-cell';
 import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -29,7 +29,7 @@ export function makeRecipientColumns(showProgramName?: boolean): ColumnDef<Recip
 		{
 			accessorKey: 'status',
 			header: (ctx) => <SortableHeader ctx={ctx}>Status</SortableHeader>,
-			cell: (ctx) => <StatusCell ctx={ctx} />,
+			cell: (ctx) => <RecipientStatusCell ctx={ctx} />,
 		},
 		{
 			accessorKey: 'payoutsProgressPercent',

@@ -18,7 +18,6 @@ export type RecipientTableViewRow = {
 	permission: ProgramPermission;
 };
 
-export type RecipientTableViewWithPermission = {
+export type RecipientTableView = {
 	tableRows: RecipientTableViewRow[];
-	programPermission: ProgramPermission;
 };
