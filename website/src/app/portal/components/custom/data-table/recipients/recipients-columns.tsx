@@ -5,10 +5,10 @@ import { ProgressCell } from '@/app/portal/components/custom/data-table/elements
 import { SortableHeader } from '@/app/portal/components/custom/data-table/elements/sortable-header';
 import { StatusCell } from '@/app/portal/components/custom/data-table/elements/status-cell';
 import { TextCell } from '@/app/portal/components/custom/data-table/elements/text-cell';
-import type { RecipientTableFlatShape } from '@socialincome/shared/src/database/services/recipient/recipient.types';
+import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeRecipientColumns(readOnly: boolean): ColumnDef<RecipientTableFlatShape>[] {
+export function makeRecipientColumns(readOnly: boolean): ColumnDef<RecipientTableViewRow>[] {
 	return [
 		{ accessorKey: 'id', header: 'ID', cell: (ctx) => <TextCell ctx={ctx} /> },
 		{
