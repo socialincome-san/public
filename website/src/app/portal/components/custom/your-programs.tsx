@@ -1,3 +1,5 @@
+import { Wallet } from '@/app/portal/components/custom/wallet';
+import { CardContent, CardTitle } from '@/app/portal/components/ui/card';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
 import Link from 'next/link';
@@ -20,14 +22,21 @@ export async function YourPrograms() {
 
 	return (
 		<div>
-			<h2>Your programs</h2>
-			<ul style={{ listStyleType: 'disc', paddingLeft: '1.5rem' }}>
+			<h2 className="py-6 text-3xl font-medium">Your programs</h2>
+			<div className="grid grid-cols-3 gap-8">
 				{programs.map((program) => (
-					<li key={program.id}>
-						<Link href={`/portal/programs/${program.id}/overview`}>{program.name}</Link>
-					</li>
+					<Wallet key={program.id}>
+						<CardContent>
+							<Link href={`/portal/programs/${program.id}/overview`}>{program.name}</Link>
+						</CardContent>
+					</Wallet>
 				))}
-			</ul>
+				<Wallet variant="empty">
+					<CardContent>
+						<CardTitle>Create new program</CardTitle>
+					</CardContent>
+				</Wallet>
+			</div>
 		</div>
 	);
 }
