@@ -16,7 +16,7 @@ export class ProgramUtils {
 
 		if (result.success) return result.data.id;
 
-		const existingProgram = await this.programService['checkIfProgramExists']('Social Income');
+		const existingProgram = await this.programService.findProgramByName('Social Income');
 		if (existingProgram) {
 			console.log('ℹ️ Program "Social Income" already exists. Continuing...');
 			return existingProgram.id;

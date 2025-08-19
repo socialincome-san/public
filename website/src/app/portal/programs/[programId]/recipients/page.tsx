@@ -4,7 +4,6 @@ import { Button } from '@/app/portal/components/ui/button';
 import Link from 'next/link';
 
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { RecipientTableMapper } from '@socialincome/shared/src/database/services/recipient/recipient.mapper';
 import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
 
 type Props = { params: Promise<{ programId: string }> };
@@ -15,14 +14,11 @@ export default async function RecipientsPage({ params }: Props) {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new RecipientService();
-	const result = await service.getRecipientsWithProgramPermission(programId, user.id);
+	const result = await service.getRecipientTableViewForProgramAndUser(programId, user.id);
 
 	const error = result.success ? null : result.error;
-	const recipientsDb = result.success ? result.data.recipients : [];
+	const tableRows = result.success ? result.data.tableRows : [];
 	const readOnly = result.success ? result.data.programPermission === 'viewer' : true;
-
-	const mapper = new RecipientTableMapper();
-	const tableRows = mapper.mapList(recipientsDb);
 
 	return (
 		<TableWrapper error={error} isEmpty={!tableRows.length} emptyMessage="No recipients found">

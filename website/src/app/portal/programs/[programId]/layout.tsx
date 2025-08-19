@@ -13,7 +13,7 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ProgramService();
-	const result = await service.getProgramNameByIdAndUserId(programId, user.id);
+	const result = await service.getUserProgramSummary(programId, user.id);
 
 	if (!result.success) {
 		return <div className="p-4">Error loading the program</div>;
