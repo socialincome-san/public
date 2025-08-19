@@ -28,7 +28,7 @@ export function PageHeader4() {
 						return (
 							<>
 								<BreadcrumbSeparator />
-								<BreadcrumbItem key={href}>
+								<BreadcrumbItem key={index}>
 									{isLast ? <span>{segment}</span> : <BreadcrumbLink href={href}>{segment}</BreadcrumbLink>}
 								</BreadcrumbItem>
 							</>

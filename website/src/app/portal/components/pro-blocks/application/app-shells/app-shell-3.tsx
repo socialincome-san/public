@@ -1,5 +1,3 @@
-'use client'; /* TODO: remove this after removing navbars etc*/
-
 import { Navbar2 } from '@/app/portal/components/pro-blocks/application/navbars/navbar-2';
 import { PageHeader4 } from '@/app/portal/components/pro-blocks/page-headers/page-header-4';
 

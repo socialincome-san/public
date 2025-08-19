@@ -1,10 +1,14 @@
-interface FlagSierraLeoneProps {
+import { useId } from 'react';
+
+type FlagSierraLeoneProps = {
 	width?: number;
 	height?: number;
 	className?: string;
-}
+};
 
-export const FlagSierraLeone: React.FC<FlagSierraLeoneProps> = ({ width = 16, height = 16, className = '' }) => {
+export function FlagSierraLeone({ width = 16, height = 16, className = '' }: FlagSierraLeoneProps) {
+	const clipId = useId();
+
 	return (
 		<svg
 			width={width}
@@ -14,7 +18,7 @@ export const FlagSierraLeone: React.FC<FlagSierraLeoneProps> = ({ width = 16, he
 			xmlns="http://www.w3.org/2000/svg"
 			className={className}
 		>
-			<g clip-path="url(#clip0_25104_891)">
+			<g clipPath={`url(#${clipId})`}>
 				<path
 					d="M15.5024 10.7826C15.824 9.91592 16 8.97854 16 7.99998C16 7.02142 15.824 6.08404 15.5024 5.21738L8 4.52173L0.497594 5.21738C0.176 6.08404 0 7.02142 0 7.99998C0 8.97854 0.176 9.91592 0.497594 10.7826L8 11.4782L15.5024 10.7826Z"
 					fill="#F0F0F0"
@@ -29,10 +33,10 @@ export const FlagSierraLeone: React.FC<FlagSierraLeoneProps> = ({ width = 16, he
 				/>
 			</g>
 			<defs>
-				<clipPath id="clip0_25104_891">
+				<clipPath id={clipId}>
 					<rect width="16" height="16" fill="white" />
 				</clipPath>
 			</defs>
 		</svg>
 	);
-};
+}

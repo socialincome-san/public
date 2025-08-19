@@ -1,5 +1,9 @@
 import { ReactNode } from 'react';
 
-export function Card({ children }: { children: ReactNode }) {
+type CardProps = {
+	children: ReactNode;
+};
+
+export function Card({ children }: CardProps) {
 	return <div className="bg-background rounded-3xl p-10 shadow-lg">{children}</div>;
 }

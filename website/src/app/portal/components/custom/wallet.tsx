@@ -1,8 +1,9 @@
 import { Card } from '@socialincome/ui';
+import { ReactNode } from 'react';
 
 type WalletProps = {
 	variant?: 'default' | 'empty';
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
 export function Wallet({ variant = 'default', children }: WalletProps) {
