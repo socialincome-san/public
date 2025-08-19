@@ -25,12 +25,15 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 		return <div className="p-4">Error loading the program</div>;
 	}
 
-	const { name } = result.data;
+	const { name, programPermission } = result.data;
+
+	const isOperator = programPermission === 'operator';
 
 	return (
 		<>
 			<div className="flex flex-wrap items-center gap-4 md:flex-row md:items-center">
 				<h1 className="py-8 text-5xl">{name}</h1>
+
 				<Badge
 					variant="outline"
 					className="bg-background flex items-center gap-1.5 rounded-full border py-1 pl-1 pr-2.5"
@@ -39,11 +42,24 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 					<span className="text-foreground text-xs font-medium">Sierra Leone</span>
 				</Badge>
 
-				<Button variant="outline" className="ml-auto rounded-full">
+				<div className="flex items-center gap-2">
+					<Badge variant={isOperator ? 'default' : 'secondary'} className="text-xs font-medium">
+						{isOperator ? 'Editable' : 'Read-only'}
+					</Badge>
+				</div>
+
+				<Button
+					variant="outline"
+					className="ml-auto rounded-full"
+					disabled={!isOperator}
+					title={isOperator ? 'Manage program' : 'You do not have permission to manage this program'}
+					aria-disabled={!isOperator}
+				>
 					<Pen className="mr-2 h-4 w-4" />
 					Manage program
 				</Button>
 			</div>
+
 			<TabNavigation programId={programId} />
 			<Card>
 				<div>{children}</div>
