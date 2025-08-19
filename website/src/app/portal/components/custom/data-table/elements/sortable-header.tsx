@@ -8,9 +8,13 @@ export function SortableHeader<TData, TValue>({ ctx, children }: HeaderType<TDat
 	const { column } = ctx;
 
 	return (
-		<Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+		<Button
+			variant="ghost"
+			onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+			className="inline-flex h-auto items-center p-0 text-left"
+		>
 			{children}
-			<ChevronsUpDownIcon className="ml-2 h-4 w-4" focusable="false" />
+			<ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0" aria-hidden />
 		</Button>
 	);
 }

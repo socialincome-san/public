@@ -57,7 +57,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 					<TableBody>
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
-								<TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+								<TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="h-16">
 									{row.getVisibleCells().map((cell) => (
 										<TableCell key={cell.id} className="border-b">
 											{flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -66,8 +66,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 								</TableRow>
 							))
 						) : (
-							<TableRow>
-								<TableCell colSpan={columns.length} className="h-24 border-b text-center">
+							<TableRow className="h-16">
+								<TableCell colSpan={columns.length} className="border-b text-center">
 									No results.
 								</TableCell>
 							</TableRow>
