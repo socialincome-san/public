@@ -84,46 +84,7 @@
 
 		--border: 60 9.1% 97.8%;
 	}
-
-	.theme-portal {
-		--background: 0 0% 100%;
-		--foreground: 0 0% 4%;
-		--card: 0 0% 100%;
-		--card-foreground: 0 0% 4%;
-		--popover: 0 0% 100%;
-		--popover-foreground: 0 0% 4%;
-		--primary: 197 79% 15%;
-		--primary-foreground: 0 0% 98%;
-		--secondary: 0 0% 96%;
-		--secondary-foreground: 0 0% 9%;
-		--muted: 0 0% 96%;
-		--muted-foreground: 0 0% 45%;
-		--accent: 0 0% 96%;
-		--accent-foreground: 0 0% 9%;
-		--destructive: 0 72% 51%;
-		--destructive-foreground: 0 86% 97%;
-		--border: 0 0% 90%;
-		--input: 0 0% 90%;
-		--ring: 0 0% 64%;
-		--radius: 0.625rem;
-		--chart-1: 21 90% 48%;
-		--chart-2: 160 16% 66%;
-		--chart-3: 196 64% 24%;
-		--chart-4: 43 96% 56%;
-		--chart-5: 38 92% 50%;
-		--sidebar-foreground: 0 0% 4%;
-		--sidebar-background: 0 0% 98%;
-		--sidebar-primary: 0 0% 9%;
-		--sidebar-primary-foreground: 0 0% 98%;
-		--sidebar-accent: 0 0% 96%;
-		--sidebar-accent-foreground: 0 0% 9%;
-		--sidebar-border: 0 0% 90%;
-		--sidebar-ring: 0 0% 64%;
-		--gradient-button-from: 201 90% 27%;
-		--gradient-button-to: 160 16% 66%;
-		--gradient-background-from: 40 84% 95%;
-		--gradient-background-to: 203 42% 93%;
-	}
+	
 }
 
 @layer base {
