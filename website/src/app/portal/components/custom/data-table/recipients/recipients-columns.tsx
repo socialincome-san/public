@@ -2,8 +2,8 @@
 
 import { ActionCell } from '@/app/portal/components/custom/data-table/elements/action-cell';
 import { ProgressCell } from '@/app/portal/components/custom/data-table/elements/progress-cell';
-import { RecipientStatusCell } from '@/app/portal/components/custom/data-table/elements/recipient-status-cell';
 import { SortableHeader } from '@/app/portal/components/custom/data-table/elements/sortable-header';
+import { RecipientStatusCell } from '@/app/portal/components/custom/data-table/elements/status-cells/recipient-status-cell';
 import { TextCell } from '@/app/portal/components/custom/data-table/elements/text-cell';
 import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import type { ColumnDef } from '@tanstack/react-table';

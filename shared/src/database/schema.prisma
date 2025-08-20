@@ -151,6 +151,7 @@ model Program {
   campaigns              Campaign[]
   recipients             Recipient[]
   contributions          Contribution[]
+  surveys                Survey[]
   createdAt              DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt              DateTime?       @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -223,6 +224,8 @@ model Survey {
   accessEmail   String                @map("access_email")
   accessPw      String                @map("access_pw")
   accessToken   String                @map("access_token")
+  programId     String?               @map("program_id")
+  program       Program?              @relation(fields: [programId], references: [id])
   createdAt     DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt     DateTime?             @updatedAt @map("updated_at") @db.Timestamptz(3)
 

@@ -53,7 +53,7 @@ export class CampaignService extends BaseService {
 					title: c.title,
 					creatorName: c.creatorName ?? '',
 					creatorEmail: c.creatorEmail ?? '',
-					status: c.isActive ? 'Active' : 'Inactive',
+					status: c.isActive,
 					goal: c.goal ?? null,
 					currency: c.currency ?? null,
 					endDate: c.endDate,

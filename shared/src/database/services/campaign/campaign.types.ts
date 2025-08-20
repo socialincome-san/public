@@ -9,7 +9,7 @@ export type CampaignTableViewRow = {
 	title: string;
 	creatorName: string;
 	creatorEmail: string;
-	status: 'Active' | 'Inactive';
+	status: boolean;
 	goal: number | null;
 	currency: string | null;
 	endDate: Date;

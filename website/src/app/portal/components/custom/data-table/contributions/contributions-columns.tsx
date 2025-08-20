@@ -1,8 +1,8 @@
 'use client';
 
 import { ActionCell } from '@/app/portal/components/custom/data-table/elements/action-cell';
-import { ContributionStatusCell } from '@/app/portal/components/custom/data-table/elements/contribution-status-cell';
 import { SortableHeader } from '@/app/portal/components/custom/data-table/elements/sortable-header';
+import { ContributionStatusCell } from '@/app/portal/components/custom/data-table/elements/status-cells/contribution-status-cell';
 import { TextCell } from '@/app/portal/components/custom/data-table/elements/text-cell';
 import type { ContributionTableViewRow } from '@socialincome/shared/src/database/services/contribution/contribution.types';
 import type { ColumnDef } from '@tanstack/react-table';

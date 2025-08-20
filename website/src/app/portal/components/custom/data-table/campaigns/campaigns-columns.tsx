@@ -2,6 +2,7 @@
 
 import { ActionCell } from '@/app/portal/components/custom/data-table/elements/action-cell';
 import { SortableHeader } from '@/app/portal/components/custom/data-table/elements/sortable-header';
+import { CampaignStatusCell } from '@/app/portal/components/custom/data-table/elements/status-cells/campaign-status-cell';
 import { TextCell } from '@/app/portal/components/custom/data-table/elements/text-cell';
 import type { CampaignTableViewRow } from '@socialincome/shared/src/database/services/campaign/campaign.types';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -26,7 +27,7 @@ export function makeCampaignColumns(): ColumnDef<CampaignTableViewRow>[] {
 		{
 			accessorKey: 'status',
 			header: (ctx) => <SortableHeader ctx={ctx}>Status</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
+			cell: (ctx) => <CampaignStatusCell ctx={ctx} />,
 		},
 		{
 			accessorKey: 'goal',

@@ -1,9 +1,9 @@
 'use client';
 
 import { ActionCell } from '@/app/portal/components/custom/data-table/elements/action-cell';
-import { PayoutStatusCell } from '@/app/portal/components/custom/data-table/elements/payout-status-cell';
 import { ProgressCell } from '@/app/portal/components/custom/data-table/elements/progress-cell';
 import { SortableHeader } from '@/app/portal/components/custom/data-table/elements/sortable-header';
+import { PayoutStatusCell } from '@/app/portal/components/custom/data-table/elements/status-cells/payout-status-cell';
 import { TextCell } from '@/app/portal/components/custom/data-table/elements/text-cell';
 import { PayoutTableViewRow } from '@socialincome/shared/src/database/services/payout/payout.types';
 import type { ColumnDef, HeaderContext } from '@tanstack/react-table';
