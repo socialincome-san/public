@@ -1,5 +1,6 @@
+import { Card } from '@/app/portal/components/custom/card';
+import { Wallet } from '@/app/portal/components/custom/wallet';
 import { CardContent, CardTitle } from '@/app/portal/components/ui/card';
-import { Wallet } from '@/app/portal/components/wallet';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
 import Link from 'next/link';
@@ -24,6 +25,29 @@ export async function YourPrograms() {
 		<div>
 			<h2 className="py-6 text-3xl font-medium">Your programs</h2>
 			<div className="grid grid-cols-3 gap-8">
+				<Card>
+					<CardContent>Portal card</CardContent>
+				</Card>
+				<div>
+					<Card>
+						<div className="flex h-full w-full flex-col items-start justify-between pb-6 pl-8 pr-8 pt-20">
+							<div className="flex flex-col items-start">
+								<h2 className="text-4xl font-normal">Old Widows</h2>
+								<p className="text-sm font-medium tracking-wide">Sierra Leone</p>
+							</div>
+							<div className="flex w-full items-start justify-between">
+								<div className="flex flex-col items-start">
+									<p className="text-sm font-medium tracking-wide">Paid out</p>
+									<p className="text-4xl font-normal">USD 7,350</p>
+								</div>
+								<div className="flex flex-col items-end">
+									<p className="text-sm font-medium tracking-wide">Recipients</p>
+									<p className="text-4xl font-normal">132</p>
+								</div>
+							</div>
+						</div>
+					</Card>
+				</div>
 				{programs.map((program) => (
 					<Wallet key={program.id}>
 						<CardContent>

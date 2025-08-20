@@ -1,4 +1,4 @@
-import { Card } from '@socialincome/ui';
+import { Card } from '@/app/portal/components/custom/card';
 import { ReactNode } from 'react';
 
 type WalletProps = {
@@ -9,6 +9,7 @@ type WalletProps = {
 export function Wallet({ variant = 'default', children }: WalletProps) {
 	return (
 		<Card
+			variant="noPadding"
 			className="flex aspect-[1.4] flex-col overflow-hidden"
 			style={{
 				['--slant-shift' as any]: '50px',
