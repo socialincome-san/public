@@ -65,26 +65,26 @@ model Contributor {
 }
 
 model Contribution {
-  id              String             @id @default(cuid()) @map("id")
-  amount          Float              @map("amount")
-  amountChf       Float              @map("amount_chf")
-  feesChf         Float              @map("fees_chf")
-  frequency       String             @map("frequency")
-  monthlyInterval Int                @map("monthly_interval")
-  source          ContributionSource @map("source")
-  status          ContributionStatus @map("status")
-  currency        String             @map("currency")
-  referenceId     String             @map("reference_id")
-  transactionId   String?            @map("transaction_id")
-  rawContent      String?            @map("raw_content")
-  contributorId   String             @map("contributor_id")
-  campaignId      String?            @map("campaign_id")
-  programId       String?            @map("program_id")
-  createdAt       DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt       DateTime?          @updatedAt @map("updated_at") @db.Timestamptz(3)
-  campaign        Campaign?          @relation(fields: [campaignId], references: [id])
-  contributor     Contributor        @relation(fields: [contributorId], references: [id])
-  program         Program?           @relation(fields: [programId], references: [id])
+  id              String                @id @default(cuid()) @map("id")
+  amount          Float                 @map("amount")
+  amountChf       Float                 @map("amount_chf")
+  feesChf         Float                 @map("fees_chf")
+  frequency       String                @map("frequency")
+  interval        ContributionInterval  @default(one_time) @map("contribution_interval")
+  source          ContributionSource    @map("source")
+  status          ContributionStatus    @map("status")
+  currency        String                @map("currency")
+  referenceId     String                @map("reference_id")
+  transactionId   String?               @map("transaction_id")
+  rawContent      String?               @map("raw_content")
+  contributorId   String                @map("contributor_id")
+  campaignId      String?               @map("campaign_id")
+  programId       String?               @map("program_id")
+  createdAt       DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime?             @updatedAt @map("updated_at") @db.Timestamptz(3)
+  campaign        Campaign?             @relation(fields: [campaignId], references: [id])
+  contributor     Contributor           @relation(fields: [contributorId], references: [id])
+  program         Program?              @relation(fields: [programId], references: [id])
 
   @@map("contribution")
 }
@@ -321,6 +321,13 @@ enum ContributionSource {
   raisenow
   stripe
   wire_transfer
+}
+
+enum ContributionInterval {
+  one_time
+  monthly
+  quarterly
+  annually
 }
 
 enum ContributionStatus {

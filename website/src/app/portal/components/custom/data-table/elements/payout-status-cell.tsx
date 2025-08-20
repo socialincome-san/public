@@ -3,6 +3,5 @@ import { CellType } from '@/app/portal/components/custom/data-table/elements/typ
 import { PayoutStatus } from '@prisma/client';
 
 export function PayoutStatusCell<TData, TValue>({ ctx }: CellType<TData, TValue>) {
-	console.log(ctx.getValue());
 	return <PayoutStatusBadge status={ctx.getValue() as PayoutStatus} />;
 }
