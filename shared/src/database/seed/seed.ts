@@ -8,6 +8,7 @@ import { payoutsData } from './data/payouts';
 import { exchangeRateCollectionsData, exchangeRateItemsData } from './data/exchange-rates';
 import { contributorsData } from './data/contributors';
 import { contributionsData } from './data/contributions';
+import { campaignsData } from './data/campaigns';
 
 async function main() {
 	await prisma.$transaction(async (tx) => {
@@ -31,6 +32,7 @@ async function main() {
 
 		await tx.contributor.createMany({ data: contributorsData, skipDuplicates: true });
 		await tx.contribution.createMany({ data: contributionsData, skipDuplicates: true });
+		await tx.campaign.createMany({ data: campaignsData, skipDuplicates: true });
 	});
 }
 
