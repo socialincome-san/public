@@ -26,12 +26,12 @@ export function PageHeader4() {
 						const isLast = index === segments.length - 1;
 
 						return (
-							<>
+							<div key={index}>
 								<BreadcrumbSeparator />
 								<BreadcrumbItem key={index}>
 									{isLast ? <span>{segment}</span> : <BreadcrumbLink href={href}>{segment}</BreadcrumbLink>}
 								</BreadcrumbItem>
-							</>
+							</div>
 						);
 					})}
 				</BreadcrumbList>

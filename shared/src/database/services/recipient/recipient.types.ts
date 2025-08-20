@@ -2,18 +2,23 @@ import { Recipient, RecipientStatus } from '@prisma/client';
 
 export type CreateRecipientInput = Omit<Recipient, 'id' | 'createdAt' | 'updatedAt'>;
 
-export type RecipientTableDbShape = {
-	id: string;
-	status: Recipient['status'];
-	localPartner: { name: string } | null;
-	user: { firstName: string | null; lastName: string | null; birthDate: Date | null } | null;
-};
+export type ProgramPermission = 'operator' | 'viewer';
 
-export type RecipientTableFlatShape = {
+export type RecipientTableViewRow = {
 	id: string;
+	status: RecipientStatus;
+	localPartnerName: string;
 	firstName: string;
 	lastName: string;
 	age: number | null;
-	status: RecipientStatus;
-	localPartnerName: string;
+	payoutsReceived: number;
+	payoutsTotal: number;
+	payoutsProgressPercent: number;
+	programName: string;
+	permission: ProgramPermission;
+};
+
+export type RecipientTableView = {
+	tableRows: RecipientTableViewRow[];
+	programPermission: ProgramPermission | null;
 };

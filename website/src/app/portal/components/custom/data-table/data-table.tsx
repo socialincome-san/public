@@ -13,10 +13,10 @@ import {
 } from '@tanstack/react-table';
 import { useState } from 'react';
 
-interface DataTableProps<TData, TValue> {
+type DataTableProps<TData, TValue> = {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
-}
+};
 
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
 	const [sorting, setSorting] = useState<SortingState>([]);
@@ -28,9 +28,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 		getPaginationRowModel: getPaginationRowModel(),
 		onSortingChange: setSorting,
 		getSortedRowModel: getSortedRowModel(),
-		state: {
-			sorting,
-		},
+		state: { sorting },
 	});
 
 	const pageSize = table.getState().pagination.pageSize;
@@ -42,33 +40,34 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 
 	return (
 		<div>
-			<div className="overflow-hidden rounded-md border">
-				<Table>
+			<div className="overflow-hidden rounded-none">
+				<Table className="w-full border-separate border-spacing-0">
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow key={headerGroup.id}>
-								{headerGroup.headers.map((header) => {
-									return (
-										<TableHead key={header.id}>
-											{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-										</TableHead>
-									);
-								})}
+							<TableRow key={headerGroup.id} className="bg-accent">
+								{headerGroup.headers.map((header) => (
+									<TableHead key={header.id} className="border-b font-medium">
+										{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+									</TableHead>
+								))}
 							</TableRow>
 						))}
 					</TableHeader>
+
 					<TableBody>
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
-								<TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+								<TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="h-16">
 									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+										<TableCell key={cell.id} className="border-b">
+											{flexRender(cell.column.columnDef.cell, cell.getContext())}
+										</TableCell>
 									))}
 								</TableRow>
 							))
 						) : (
-							<TableRow>
-								<TableCell colSpan={columns.length} className="h-24 text-center">
+							<TableRow className="h-16">
+								<TableCell colSpan={columns.length} className="border-b text-center">
 									No results.
 								</TableCell>
 							</TableRow>
@@ -76,6 +75,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 					</TableBody>
 				</Table>
 			</div>
+
 			<div className="flex items-center justify-end space-x-4 py-4">
 				<Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
 					Previous

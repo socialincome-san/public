@@ -142,17 +142,20 @@ model Organization {
 }
 
 model Program {
-  id                     String       @id @default(cuid()) @map("id")
-  name                   String       @unique @map("name")
-  duration               Int          @map("duration")
-  viewerOrganizationId   String       @map("viewer_organization_id")
-  operatorOrganizationId String       @map("operator_organization_id")
-  viewerOrganization     Organization @relation("ProgramViewers", fields: [viewerOrganizationId], references: [id])
-  operatorOrganization   Organization @relation("ProgramOperators", fields: [operatorOrganizationId], references: [id])
+  id                     String          @id @default(cuid()) @map("id")
+  name                   String          @unique @map("name")
+  totalPayments          Int             @map("total_payments") @default(36)
+  payoutAmount           Float           @map("payout_amount") @default(700)
+  payoutCurrency         String          @map("payout_currency") @default("SLE")
+  payoutInterval         PayoutInterval  @map("payout_interval") @default(monthly)
+  viewerOrganizationId   String          @map("viewer_organization_id")
+  operatorOrganizationId String          @map("operator_organization_id")
+  viewerOrganization     Organization    @relation("ProgramViewers", fields: [viewerOrganizationId], references: [id])
+  operatorOrganization   Organization    @relation("ProgramOperators", fields: [operatorOrganizationId], references: [id])
   campaigns              Campaign[]
   recipients             Recipient[]
-  createdAt              DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt              DateTime?    @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt              DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt              DateTime?       @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("program")
 }
@@ -205,19 +208,6 @@ model Payout {
   recipient   Recipient    @relation(fields: [recipientId], references: [id])
 
   @@map("payout")
-}
-
-model PayoutForecast {
-  id                 String   @id @default(cuid()) @map("id")
-  order              Int      @map("order")
-  month              DateTime @map("month") @db.Date
-  numberOfRecipients Int      @map("number_of_recipients")
-  amountUsd          Float    @map("amount_usd")
-  amountSle          Float    @map("amount_sle")
-  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt          DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
-
-  @@map("payout_forecast")
 }
 
 model Survey {
@@ -381,6 +371,10 @@ enum ExpenseType {
   exchange_rate_loss
   fundraising_advertising
   staff
+}
+
+enum PayoutInterval {
+  monthly
 }
 
 view ContributionStatistics {

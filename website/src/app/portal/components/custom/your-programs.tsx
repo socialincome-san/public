@@ -8,7 +8,7 @@ export async function YourPrograms() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ProgramService();
-	const result = await service.getProgramsByUserId(user.id);
+	const result = await service.getUserAccessiblePrograms(user.id);
 
 	if (!result.success) {
 		return <div>Error loading programs</div>;
@@ -27,7 +27,8 @@ export async function YourPrograms() {
 				{programs.map((program) => (
 					<Wallet key={program.id}>
 						<CardContent>
-							<Link href={`/portal/programs/${program.id}/overview`}>{program.name}</Link>
+							<Link href={`/portal/programs/${program.id}/overview`}>{program.name}</Link> (
+							{program.programPermission === 'viewer' ? 'read-only' : 'editable'})
 						</CardContent>
 					</Wallet>
 				))}

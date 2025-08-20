@@ -1,20 +1,21 @@
-import { Program as PrismaProgram } from '@prisma/client';
+import { Program as PrismaProgram, RecipientStatus } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { CreateProgramInput } from './program.types';
+import {
+	CreateProgramInput,
+	ProgramPermission,
+	ProgramWithOrganizations,
+	ProgramWithRecipientsForForecast,
+	UserProgramSummary,
+} from './program.types';
 
 export class ProgramService extends BaseService {
 	async create(input: CreateProgramInput): Promise<ServiceResult<PrismaProgram>> {
 		try {
-			const conflict = await this.checkIfProgramExists(input.name);
-			if (conflict) {
-				return this.resultFail('Program with this title already exists');
-			}
+			const existing = await this.findProgramByName(input.name);
+			if (existing) return this.resultFail('Program with this title already exists');
 
-			const program = await this.db.program.create({
-				data: input,
-			});
-
+			const program = await this.db.program.create({ data: input });
 			return this.resultOk(program);
 		} catch (e) {
 			console.error('[ProgramService.create]', e);
@@ -22,52 +23,117 @@ export class ProgramService extends BaseService {
 		}
 	}
 
-	async getProgramsByUserId(userId: string) {
+	async findProgramByName(name: string): Promise<PrismaProgram | null> {
+		return this.db.program.findFirst({ where: { name } });
+	}
+
+	async getUserAccessiblePrograms(userId: string): Promise<ServiceResult<UserProgramSummary[]>> {
 		try {
 			const programs = await this.db.program.findMany({
-				where: {
-					OR: [
-						{ viewerOrganization: { users: { some: { id: userId } } } },
-						{ operatorOrganization: { users: { some: { id: userId } } } },
-					],
-				},
+				where: this.userAccessibleProgramsWhere(userId),
+				select: this.programSelectForUserSummary(userId),
 				orderBy: { name: 'asc' },
 			});
 
-			return this.resultOk(programs);
+			const summaries = this.mapProgramsToUserSummaries(programs);
+			return this.resultOk(summaries);
 		} catch (e) {
-			console.error('getProgramsByUserId error', e);
+			console.error('[ProgramService.getUserAccessiblePrograms]', e);
 			return this.resultFail('Could not fetch programs for user');
 		}
 	}
 
-	private async checkIfProgramExists(name: string): Promise<PrismaProgram | null> {
-		return this.db.program.findFirst({
-			where: { name },
-		});
-	}
-
-	async getProgramNameByIdAndUserId(programId: string, userId: string): Promise<ServiceResult<{ name: string }>> {
+	async getUserProgramSummary(programId: string, userId: string): Promise<ServiceResult<UserProgramSummary>> {
 		try {
 			const program = await this.db.program.findFirst({
-				where: {
-					id: programId,
-					OR: [
-						{ viewerOrganization: { users: { some: { id: userId } } } },
-						{ operatorOrganization: { users: { some: { id: userId } } } },
-					],
-				},
-				select: { name: true },
+				where: { id: programId, ...this.userAccessibleProgramsWhere(userId) },
+				select: this.programSelectForUserSummary(userId),
 			});
 
-			if (!program) {
-				return this.resultFail('Program not found or access denied');
-			}
+			if (!program) return this.resultFail('Program not found or access denied');
+
+			const summary = this.mapProgramToUserSummary(program);
+			return this.resultOk(summary);
+		} catch (e) {
+			console.error('[ProgramService.getUserProgramSummary]', e);
+			return this.resultFail('Could not fetch program');
+		}
+	}
+
+	async getProgramWithRecipientsForForecast(
+		programId: string,
+		userId: string,
+	): Promise<ServiceResult<ProgramWithRecipientsForForecast>> {
+		try {
+			const program = await this.db.program.findFirst({
+				where: { id: programId, ...this.userAccessibleProgramsWhere(userId) },
+				select: {
+					...this.programForecastSelect(),
+					recipients: {
+						where: { status: { in: [RecipientStatus.active, RecipientStatus.designated] } },
+						select: { startDate: true },
+					},
+				},
+			});
+
+			if (!program) return this.resultFail('Program not found or access denied');
 
 			return this.resultOk(program);
 		} catch (e) {
-			console.error('[ProgramService.getProgramNameByIdAndUserId]', e);
-			return this.resultFail('Could not fetch program name');
+			console.error('[ProgramService.getProgramForecastWithRecipientsForUser]', e);
+			return this.resultFail('Could not fetch program forecast data');
 		}
 	}
+
+	private programForecastSelect() {
+		return {
+			totalPayments: true,
+			payoutAmount: true,
+			payoutCurrency: true,
+			payoutInterval: true,
+		};
+	}
+
+	private userAccessibleProgramsWhere(userId: string) {
+		return {
+			OR: [
+				{ viewerOrganization: { users: { some: { id: userId } } } },
+				{ operatorOrganization: { users: { some: { id: userId } } } },
+			],
+		};
+	}
+
+	private programPermissionSelect(userId: string) {
+		return {
+			operatorOrganization: {
+				select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+			},
+			viewerOrganization: {
+				select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+			},
+		};
+	}
+
+	private programSelectForUserSummary(userId: string) {
+		return {
+			id: true,
+			name: true,
+			...this.programPermissionSelect(userId),
+		};
+	}
+
+	private mapProgramsToUserSummaries(programs: ProgramWithOrganizations[]): UserProgramSummary[] {
+		return programs.map(this.mapProgramToUserSummary);
+	}
+
+	private mapProgramToUserSummary = (program: ProgramWithOrganizations): UserProgramSummary => {
+		const programPermission: ProgramPermission =
+			(program.operatorOrganization?.users?.length ?? 0) > 0 ? 'operator' : 'viewer';
+
+		return {
+			id: program.id,
+			name: program.name,
+			programPermission,
+		};
+	};
 }
