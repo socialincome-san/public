@@ -2,17 +2,17 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateCollectionService } from '../exchange-rate-collection/exchange-rate-collection.service';
 import { ProgramService } from '../program/program.service';
-import { PayoutForecastRow } from './payout-forecast.types';
+import { PayoutForecastTableView, PayoutForecastTableViewRow } from './payout-forecast.types';
 
 export class PayoutForecastService extends BaseService {
 	private programService = new ProgramService();
 	private exchangeRateService = new ExchangeRateCollectionService();
 
-	async getPayoutForecast(
+	async getPayoutForecastTableView(
 		programId: string,
 		userId: string,
 		monthsAhead: number,
-	): Promise<ServiceResult<PayoutForecastRow[]>> {
+	): Promise<ServiceResult<PayoutForecastTableView>> {
 		try {
 			const programResult = await this.programService.getProgramWithRecipientsForForecast(programId, userId);
 			if (!programResult.success) return this.resultFail(programResult.error!);
@@ -40,7 +40,7 @@ export class PayoutForecastService extends BaseService {
 
 			const payoutAmountUsd = this.round2((program.payoutAmount / baseCurrencyRate) * usdCurrencyRate);
 
-			const rows: PayoutForecastRow[] = forecastPeriods.map((periodStartDate, idx) => {
+			const rows: PayoutForecastTableViewRow[] = forecastPeriods.map((periodStartDate, idx) => {
 				const numberOfRecipients = recipientCountByPeriodIndex.get(idx) ?? 0;
 				return {
 					period: this.formatMothYear(periodStartDate),
@@ -50,7 +50,7 @@ export class PayoutForecastService extends BaseService {
 				};
 			});
 
-			return this.resultOk(rows);
+			return this.resultOk({ tableRows: rows });
 		} catch (error) {
 			console.error('[PayoutForecastService.getPayoutForecast]', error);
 			return this.resultFail('Could not generate payout forecast');

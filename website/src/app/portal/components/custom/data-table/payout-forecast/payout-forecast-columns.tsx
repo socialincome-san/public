@@ -2,10 +2,10 @@
 
 import { SortableHeader } from '@/app/portal/components/custom/data-table/elements/sortable-header';
 import { TextCell } from '@/app/portal/components/custom/data-table/elements/text-cell';
-import type { PayoutForecastRow } from '@socialincome/shared/src/database/services/payout-forecast/payout-forecast.types';
+import type { PayoutForecastTableViewRow } from '@socialincome/shared/src/database/services/payout-forecast/payout-forecast.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makePayoutForecastColumns(): ColumnDef<PayoutForecastRow>[] {
+export function makePayoutForecastColumns(): ColumnDef<PayoutForecastTableViewRow>[] {
 	return [
 		{
 			accessorKey: 'period',

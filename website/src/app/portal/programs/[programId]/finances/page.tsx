@@ -11,19 +11,19 @@ export default async function FinancesPage({ params }: Props) {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new PayoutForecastService();
-	const result = await service.getPayoutForecast(programId, user.id, MONTHS_AHEAD);
+	const result = await service.getPayoutForecastTableView(programId, user.id, MONTHS_AHEAD);
 
 	const error = result.success ? null : result.error;
-	const data = result.success ? result.data : [];
+	const rows = result.success ? result.data.tableRows : [];
 
 	return (
 		<TableWrapper
 			title="Payout Forecast"
 			error={error}
-			isEmpty={!data.length}
+			isEmpty={!rows.length}
 			emptyMessage="No payout forecast data found"
 		>
-			<PayoutForecastTable data={data} />
+			<PayoutForecastTable data={rows} />
 		</TableWrapper>
 	);
 }

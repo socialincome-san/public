@@ -79,12 +79,12 @@ model Contribution {
   rawContent      String?            @map("raw_content")
   contributorId   String             @map("contributor_id")
   campaignId      String?            @map("campaign_id")
-  organizationId  String?            @map("organization_id")
+  programId       String?            @map("program_id")
   createdAt       DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt       DateTime?          @updatedAt @map("updated_at") @db.Timestamptz(3)
   campaign        Campaign?          @relation(fields: [campaignId], references: [id])
   contributor     Contributor        @relation(fields: [contributorId], references: [id])
-  organization    Organization?      @relation(fields: [organizationId], references: [id])
+  program         Program?           @relation(fields: [programId], references: [id])
 
   @@map("contribution")
 }
@@ -115,11 +115,9 @@ model Campaign {
   metadataTwitterImage   String?        @map("metadata_twitter_image")
   creatorName            String?        @map("creator_name")
   creatorEmail           String?        @map("creator_email")
-  organizationId         String?        @map("organization_id")
   programId              String?        @map("program_id")
   createdAt              DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt              DateTime?      @updatedAt @map("updated_at") @db.Timestamptz(3)
-  organization           Organization?  @relation(fields: [organizationId], references: [id])
   program                Program?       @relation(fields: [programId], references: [id])
   contributions          Contribution[]
 
@@ -129,8 +127,6 @@ model Campaign {
 model Organization {
   id               String         @id @default(cuid()) @map("id")
   name             String         @unique @map("name")
-  campaigns        Campaign[]
-  contributions    Contribution[]
   operatedPrograms Program[]      @relation("ProgramOperators")
   viewedPrograms   Program[]      @relation("ProgramViewers")
   recipients       Recipient[]
@@ -154,6 +150,7 @@ model Program {
   operatorOrganization   Organization    @relation("ProgramOperators", fields: [operatorOrganizationId], references: [id])
   campaigns              Campaign[]
   recipients             Recipient[]
+  contributions          Contribution[]
   createdAt              DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt              DateTime?       @updatedAt @map("updated_at") @db.Timestamptz(3)
 
