@@ -35,14 +35,24 @@ export class RecipientService extends BaseService {
 			const program = await this.db.program.findFirst({
 				where: { id: programId, ...this.userAccessibleProgramsWhere(userId) },
 				select: {
+					operatorOrganization: {
+						select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+					},
+					viewerOrganization: {
+						select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+					},
 					recipients: this.recipientsSelectForTableView(userId),
 				},
 			});
 
 			if (!program) return this.resultFail('Program not found or access denied');
 
+			const programPermission: ProgramPermission =
+				(program.operatorOrganization?.users?.length ?? 0) > 0 ? 'operator' : 'viewer';
+
 			const tableRows = this.mapRecipientsToTableViewRows(program.recipients);
-			return this.resultOk({ tableRows });
+
+			return this.resultOk({ tableRows, programPermission });
 		} catch (e) {
 			console.error('[RecipientService.getRecipientTableViewForProgramAndUser]', e);
 			return this.resultFail('Could not fetch recipients');
