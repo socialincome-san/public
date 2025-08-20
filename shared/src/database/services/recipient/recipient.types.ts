@@ -20,5 +20,5 @@ export type RecipientTableViewRow = {
 
 export type RecipientTableView = {
 	tableRows: RecipientTableViewRow[];
-	programPermission: ProgramPermission;
+	programPermission: ProgramPermission | null;
 };

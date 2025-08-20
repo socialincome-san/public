@@ -69,7 +69,7 @@ export class RecipientService extends BaseService {
 			});
 
 			const tableRows = this.mapRecipientsToTableViewRows(recipients);
-			return this.resultOk({ tableRows });
+			return this.resultOk({ tableRows, programPermission: null });
 		} catch (e) {
 			console.error('[RecipientService.getRecipientTableViewForUser]', e);
 			return this.resultFail('Could not fetch recipients');
