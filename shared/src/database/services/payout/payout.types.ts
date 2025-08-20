@@ -3,7 +3,7 @@ import { Gender, PayoutStatus } from '@prisma/client';
 export type ProgramPermission = 'operator' | 'viewer';
 
 export type PayoutMonth = {
-	ym: string;
+	monthLabel: string;
 	status: PayoutStatus;
 };
 
