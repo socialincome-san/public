@@ -61,5 +61,7 @@
 		--gradient-background-to: 203 42% 93%;
 		--confirm: 142 76% 36%;
 		--confirm-foreground: 141 84% 93%;
+		--gradient-card-from: 203 40% 53%;
+		--gradient-card-to: 96 10% 81%;
 	}
 }
