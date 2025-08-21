@@ -65,26 +65,26 @@ model Contributor {
 }
 
 model Contribution {
-  id              String                @id @default(cuid()) @map("id")
-  amount          Float                 @map("amount")
-  amountChf       Float                 @map("amount_chf")
-  feesChf         Float                 @map("fees_chf")
-  frequency       String                @map("frequency")
-  interval        ContributionInterval  @default(one_time) @map("contribution_interval")
-  source          ContributionSource    @map("source")
-  status          ContributionStatus    @map("status")
-  currency        String                @map("currency")
-  referenceId     String                @map("reference_id")
-  transactionId   String?               @map("transaction_id")
-  rawContent      String?               @map("raw_content")
-  contributorId   String                @map("contributor_id")
-  campaignId      String?               @map("campaign_id")
-  programId       String?               @map("program_id")
-  createdAt       DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt       DateTime?             @updatedAt @map("updated_at") @db.Timestamptz(3)
-  campaign        Campaign?             @relation(fields: [campaignId], references: [id])
-  contributor     Contributor           @relation(fields: [contributorId], references: [id])
-  program         Program?              @relation(fields: [programId], references: [id])
+  id            String               @id @default(cuid()) @map("id")
+  amount        Float                @map("amount")
+  amountChf     Float                @map("amount_chf")
+  feesChf       Float                @map("fees_chf")
+  frequency     String               @map("frequency")
+  interval      ContributionInterval @default(one_time) @map("contribution_interval")
+  source        ContributionSource   @map("source")
+  status        ContributionStatus   @map("status")
+  currency      String               @map("currency")
+  referenceId   String               @map("reference_id")
+  transactionId String?              @map("transaction_id")
+  rawContent    String?              @map("raw_content")
+  contributorId String               @map("contributor_id")
+  campaignId    String?              @map("campaign_id")
+  programId     String?              @map("program_id")
+  createdAt     DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime?            @updatedAt @map("updated_at") @db.Timestamptz(3)
+  campaign      Campaign?            @relation(fields: [campaignId], references: [id])
+  contributor   Contributor          @relation(fields: [contributorId], references: [id])
+  program       Program?             @relation(fields: [programId], references: [id])
 
   @@map("contribution")
 }
@@ -125,35 +125,36 @@ model Campaign {
 }
 
 model Organization {
-  id               String         @id @default(cuid()) @map("id")
-  name             String         @unique @map("name")
-  operatedPrograms Program[]      @relation("ProgramOperators")
-  viewedPrograms   Program[]      @relation("ProgramViewers")
+  id               String      @id @default(cuid()) @map("id")
+  name             String      @unique @map("name")
+  operatedPrograms Program[]   @relation("ProgramOperators")
+  viewedPrograms   Program[]   @relation("ProgramViewers")
   recipients       Recipient[]
   users            User[]
-  createdAt        DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt        DateTime?      @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt        DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime?   @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("organization")
 }
 
 model Program {
-  id                     String          @id @default(cuid()) @map("id")
-  name                   String          @unique @map("name")
-  totalPayments          Int             @map("total_payments") @default(36)
-  payoutAmount           Float           @map("payout_amount") @default(700)
-  payoutCurrency         String          @map("payout_currency") @default("SLE")
-  payoutInterval         PayoutInterval  @map("payout_interval") @default(monthly)
-  viewerOrganizationId   String          @map("viewer_organization_id")
-  operatorOrganizationId String          @map("operator_organization_id")
-  viewerOrganization     Organization    @relation("ProgramViewers", fields: [viewerOrganizationId], references: [id])
-  operatorOrganization   Organization    @relation("ProgramOperators", fields: [operatorOrganizationId], references: [id])
+  id                     String         @id @default(cuid()) @map("id")
+  name                   String         @unique @map("name")
+  totalPayments          Int            @default(36) @map("total_payments")
+  payoutAmount           Float          @default(700) @map("payout_amount")
+  payoutCurrency         String         @default("SLE") @map("payout_currency")
+  payoutInterval         PayoutInterval @default(monthly) @map("payout_interval")
+  country                String         @default("Sierra Leone") @map("country")
+  viewerOrganizationId   String         @map("viewer_organization_id")
+  operatorOrganizationId String         @map("operator_organization_id")
+  viewerOrganization     Organization   @relation("ProgramViewers", fields: [viewerOrganizationId], references: [id])
+  operatorOrganization   Organization   @relation("ProgramOperators", fields: [operatorOrganizationId], references: [id])
   campaigns              Campaign[]
   recipients             Recipient[]
   contributions          Contribution[]
   surveys                Survey[]
-  createdAt              DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt              DateTime?       @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt              DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt              DateTime?      @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("program")
 }
@@ -270,12 +271,12 @@ model DonationCertificate {
 }
 
 model Expense {
-  id         String      @id @default(cuid()) @map("id")
-  type       ExpenseType @map("type")
-  year       Int         @map("year")
-  amountChf  Float       @map("amount_chf")
-  createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt  DateTime?   @updatedAt @map("updated_at") @db.Timestamptz(3)
+  id        String      @id @default(cuid()) @map("id")
+  type      ExpenseType @map("type")
+  year      Int         @map("year")
+  amountChf Float       @map("amount_chf")
+  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime?   @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("expense")
 }

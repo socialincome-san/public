@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+	font-family: 'Unica77';
+	src: url('../../../shared/assets/fonts/Unica77LLWeb-Regular.woff2') format('woff2');
+	font-weight: normal;
+}
+
+@font-face {
+	font-family: 'Unica77';
+	src: url('../../../shared/assets/fonts/Unica77LLWeb-Medium.woff2') format('woff2');
+	font-weight: 500;
+}
+
+@font-face {
+	font-family: 'Unica77';
+	src: url('../../../shared/assets/fonts/Unica77LLWeb-Bold.woff2') format('woff2');
+	font-weight: 700;
+}
+
 @layer base {
 	.theme-portal {
 		--background: 0 0% 100%;
@@ -18,10 +36,10 @@
 		--muted-foreground: 215 16% 47%;
 		--accent: 210 40% 96%;
 		--accent-foreground: 197 79% 15%;
-		--destructive: 0 72% 51%;
+		--destructive: 0 84% 60%;
 		--destructive-foreground: 0 86% 97%;
 		--border: 214 32% 91%;
-		--input: 214 32% 91%;
+		--input: 213 27% 84%;
 		--ring: 215 20% 65%;
 		--radius: 0.625rem;
 		--chart-1: 21 90% 48%;
@@ -41,32 +59,7 @@
 		--gradient-button-to: 160 16% 66%;
 		--gradient-background-from: 40 84% 95%;
 		--gradient-background-to: 203 42% 93%;
-	}
-}
-
-:root {
-	--h-navbar: 4.5rem;
-	--h-navbar-mobile: 6rem;
-}
-
-.h-navbar {
-	height: var(--h-navbar-mobile);
-
-	@media screen(md) {
-		height: var(--h-navbar);
-	}
-}
-
-.min-h-navbar {
-	min-height: var(--h-navbar-mobile);
-	@media screen(md) {
-		min-height: var(--h-navbar);
-	}
-}
-
-.min-h-screen-navbar {
-	min-height: calc(100dvh - 4rem);
-	@media screen(md) {
-		min-height: calc(100dvh - 5rem);
+		--confirm: 142 76% 36%;
+		--confirm-foreground: 141 84% 93%;
 	}
 }

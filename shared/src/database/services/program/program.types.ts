@@ -7,12 +7,16 @@ export type ProgramPermission = 'operator' | 'viewer';
 export type UserProgramSummary = {
 	id: string;
 	name: string;
+	country: string;
+	payoutCurrency: string;
 	programPermission: ProgramPermission;
 };
 
 export type ProgramWithOrganizations = {
 	id: string;
 	name: string;
+	country: string;
+	payoutCurrency: string;
 	operatorOrganization?: { users: Array<{ id: string }> };
 	viewerOrganization?: { users: Array<{ id: string }> };
 };
