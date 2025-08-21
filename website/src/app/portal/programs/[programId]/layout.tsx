@@ -1,11 +1,11 @@
-import { Card } from '@/app/portal/components/custom/card';
-import { TabNavigation } from '@/app/portal/components/custom/tab-navigation';
-import { Badge } from '@/app/portal/components/ui/badge';
-import { Button } from '@/app/portal/components/ui/button';
+import { Badge } from '@/app/portal/components/badge';
+import { Button } from '@/app/portal/components/button';
+import { Card } from '@/app/portal/components/card';
+import { TabNavigation } from '@/app/portal/components/tab-navigation';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
 
-import { CountryBadge } from '@/app/portal/components/custom/badges/country-badge';
+import { CountryBadge } from '@/app/portal/components/badges/country-badge';
 import { Pen } from 'lucide-react';
 import { ReactNode } from 'react';
 

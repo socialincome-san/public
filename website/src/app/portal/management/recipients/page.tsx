@@ -1,5 +1,5 @@
-import TableWrapper from '@/app/portal/components/custom/data-table/elements/table-wrapper';
-import RecipientsTable from '@/app/portal/components/custom/data-table/recipients/recipients-table';
+import TableWrapper from '@/app/portal/components/data-table/elements/table-wrapper';
+import RecipientsTable from '@/app/portal/components/data-table/recipients/recipients-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
 

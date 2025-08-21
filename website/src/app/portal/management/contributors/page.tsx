@@ -1,5 +1,5 @@
-import ContributorsTable from '@/app/portal/components/custom/data-table/contributors/contributors-table';
-import TableWrapper from '@/app/portal/components/custom/data-table/elements/table-wrapper';
+import ContributorsTable from '@/app/portal/components/data-table/contributors/contributors-table';
+import TableWrapper from '@/app/portal/components/data-table/elements/table-wrapper';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ContributorService } from '@socialincome/shared/src/database/services/contributor/contributor.service';
 

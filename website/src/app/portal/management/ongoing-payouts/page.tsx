@@ -1,5 +1,5 @@
-import TableWrapper from '@/app/portal/components/custom/data-table/elements/table-wrapper';
-import PayoutsTable from '@/app/portal/components/custom/data-table/payouts/payouts-table';
+import TableWrapper from '@/app/portal/components/data-table/elements/table-wrapper';
+import PayoutsTable from '@/app/portal/components/data-table/payouts/payouts-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
 
