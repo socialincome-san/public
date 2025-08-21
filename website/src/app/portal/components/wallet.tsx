@@ -1,4 +1,4 @@
-import { Card } from '@/app/portal/components/custom/card';
+import { Card } from '@/app/portal/components/card';
 import { ReactNode } from 'react';
 
 type WalletProps = {

@@ -1,6 +1,5 @@
-import { Card } from '@/app/portal/components/custom/card';
-import { Wallet } from '@/app/portal/components/custom/wallet';
-import { CardContent, CardTitle } from '@/app/portal/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/app/portal/components/card';
+import { Wallet } from '@/app/portal/components/wallet';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
 import Link from 'next/link';
@@ -24,7 +23,7 @@ export async function YourPrograms() {
 	return (
 		<div>
 			<h2 className="py-6 text-3xl font-medium">Your programs</h2>
-			<div className="grid grid-cols-3 gap-8">
+			<div className="grid gap-8" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(20rem, 1fr))' }}>
 				<Card>
 					<CardContent>Portal card</CardContent>
 				</Card>
