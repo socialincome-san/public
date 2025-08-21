@@ -1,11 +1,10 @@
+import { RecipientStatus } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateCollectionService } from '../exchange-rate-collection/exchange-rate-collection.service';
-import { ProgramService } from '../program/program.service';
 import { PayoutForecastTableViewProgramScoped, PayoutForecastTableViewRow } from './payout-forecast.types';
 
 export class PayoutForecastService extends BaseService {
-	private programService = new ProgramService();
 	private exchangeRateService = new ExchangeRateCollectionService();
 
 	async getPayoutForecastTableViewProgramScoped(
@@ -14,10 +13,26 @@ export class PayoutForecastService extends BaseService {
 		monthsAhead: number,
 	): Promise<ServiceResult<PayoutForecastTableViewProgramScoped>> {
 		try {
-			const programResult = await this.programService.getProgramWithRecipientsForForecast(programId, userId);
-			if (!programResult.success) return this.resultFail(programResult.error!);
+			const program = await this.db.program.findFirst({
+				where: {
+					id: programId,
+					...this.userAccessibleProgramsWhere(userId),
+				},
+				select: {
+					totalPayments: true,
+					payoutAmount: true,
+					payoutCurrency: true,
+					payoutInterval: true,
+					recipients: {
+						where: { status: { in: [RecipientStatus.active, RecipientStatus.designated] } },
+						select: { startDate: true },
+					},
+				},
+			});
 
-			const program = programResult.data;
+			if (!program) {
+				return this.resultFail('Program not found or access denied');
+			}
 
 			const forecastPeriods = this.buildNextMonthlyPeriods(monthsAhead);
 			const recipientCountByPeriodIndex = new Map<number, number>(
@@ -52,7 +67,7 @@ export class PayoutForecastService extends BaseService {
 
 			return this.resultOk({ tableRows: rows });
 		} catch (error) {
-			console.error('[PayoutForecastService.getPayoutForecast]', error);
+			console.error('[PayoutForecastService.getPayoutForecastTableViewProgramScoped]', error);
 			return this.resultFail('Could not generate payout forecast');
 		}
 	}

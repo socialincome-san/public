@@ -127,13 +127,4 @@ export class ContributorService extends BaseService {
 			return this.resultFail('Could not fetch contributors');
 		}
 	}
-
-	private userAccessibleProgramsWhere(userId: string) {
-		return {
-			OR: [
-				{ viewerOrganization: { users: { some: { id: userId } } } },
-				{ operatorOrganization: { users: { some: { id: userId } } } },
-			],
-		};
-	}
 }

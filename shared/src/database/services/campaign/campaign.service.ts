@@ -82,13 +82,4 @@ export class CampaignService extends BaseService {
 		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
 		return this.resultOk({ tableRows: filteredRows });
 	}
-
-	private userAccessibleProgramsWhere(userId: string) {
-		return {
-			OR: [
-				{ viewerOrganization: { users: { some: { id: userId } } } },
-				{ operatorOrganization: { users: { some: { id: userId } } } },
-			],
-		};
-	}
 }

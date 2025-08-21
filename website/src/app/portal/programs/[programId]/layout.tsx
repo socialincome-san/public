@@ -19,14 +19,14 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ProgramService();
-	const result = await service.getUserProgramSummary(programId, user.id);
+	const result = await service.getProgramWalletViewProgramScoped(user.id, programId);
 
 	if (!result.success) {
 		return <div className="p-4">Error loading the program</div>;
 	}
 
-	const { name, programPermission } = result.data;
-	const isOperator = programPermission === 'operator';
+	const { programName, permission } = result.data;
+	const isOperator = permission === 'operator';
 
 	const sections = [
 		{ href: `/portal/programs/${programId}/overview`, label: 'Overview' },
@@ -40,7 +40,7 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	return (
 		<>
 			<div className="flex flex-wrap items-center gap-4 md:flex-row md:items-center">
-				<h1 className="py-8 text-5xl">{name}</h1>
+				<h1 className="py-8 text-5xl">{programName}</h1>
 
 				<CountryBadge country="sierra_leone" />
 
