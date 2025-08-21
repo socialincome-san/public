@@ -6,19 +6,19 @@ export type ProgramPermission = 'operator' | 'viewer';
 
 export type RecipientTableViewRow = {
 	id: string;
-	status: RecipientStatus;
-	localPartnerName: string;
 	firstName: string;
 	lastName: string;
 	age: number | null;
+	status: RecipientStatus;
 	payoutsReceived: number;
 	payoutsTotal: number;
 	payoutsProgressPercent: number;
+	localPartnerName: string;
 	programName: string;
+	programId: string;
 	permission: ProgramPermission;
 };
 
 export type RecipientTableView = {
 	tableRows: RecipientTableViewRow[];
-	programPermission: ProgramPermission | null;
 };

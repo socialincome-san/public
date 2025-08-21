@@ -1,92 +1,47 @@
 'use client';
 
-import { Button } from '@/app/portal/components/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/app/portal/components/table';
-import {
-	ColumnDef,
-	flexRender,
-	getCoreRowModel,
-	getPaginationRowModel,
-	getSortedRowModel,
-	SortingState,
-	useReactTable,
-} from '@tanstack/react-table';
-import { useState } from 'react';
+import { BaseTable } from '@/app/portal/components/data-table/elements/base-table';
+import type { ColumnDef } from '@tanstack/react-table';
+import { ReactNode } from 'react';
 
-type DataTableProps<TData, TValue> = {
-	columns: ColumnDef<TData, TValue>[];
-	data: TData[];
+type DataTableProps<Row> = {
+	title: ReactNode;
+	error?: string | null;
+	emptyMessage: string;
+	actions?: ReactNode;
+	data: Row[];
+	makeColumns: (hideProgramName: boolean) => ColumnDef<Row>[];
+	hideProgramName?: boolean;
 };
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
-	const [sorting, setSorting] = useState<SortingState>([]);
-
-	const table = useReactTable({
-		data,
-		columns,
-		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
-		onSortingChange: setSorting,
-		getSortedRowModel: getSortedRowModel(),
-		state: { sorting },
-	});
-
-	const pageSize = table.getState().pagination.pageSize;
-	const pageIndex = table.getState().pagination.pageIndex;
-	const totalRows = data.length;
-
-	const startRow = pageIndex * pageSize + 1;
-	const endRow = Math.min((pageIndex + 1) * pageSize, totalRows);
+export default function DataTable<Row>({
+	title,
+	error,
+	emptyMessage,
+	actions,
+	data,
+	makeColumns,
+	hideProgramName = false,
+}: DataTableProps<Row>) {
+	const columns = makeColumns(hideProgramName);
+	const isEmpty = data.length === 0;
 
 	return (
 		<div>
-			<div className="overflow-hidden rounded-none">
-				<Table className="w-full border-separate border-spacing-0">
-					<TableHeader>
-						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow key={headerGroup.id} className="bg-accent">
-								{headerGroup.headers.map((header) => (
-									<TableHead key={header.id} className="border-b font-medium">
-										{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-									</TableHead>
-								))}
-							</TableRow>
-						))}
-					</TableHeader>
-
-					<TableBody>
-						{table.getRowModel().rows?.length ? (
-							table.getRowModel().rows.map((row) => (
-								<TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="h-16">
-									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id} className="border-b">
-											{flexRender(cell.column.columnDef.cell, cell.getContext())}
-										</TableCell>
-									))}
-								</TableRow>
-							))
-						) : (
-							<TableRow className="h-16">
-								<TableCell colSpan={columns.length} className="border-b text-center">
-									No results.
-								</TableCell>
-							</TableRow>
-						)}
-					</TableBody>
-				</Table>
+			<div className="mb-4 flex items-center justify-between">
+				<h2 className="pb-4 text-3xl">
+					{title} <span className="text-lg text-gray-500">({data.length})</span>
+				</h2>
+				{actions ?? null}
 			</div>
 
-			<div className="flex items-center justify-end space-x-4 py-4">
-				<Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-					Previous
-				</Button>
-				<span className="text-muted-foreground text-sm">
-					{startRow}-{endRow} of {totalRows}
-				</span>
-				<Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-					Next
-				</Button>
-			</div>
+			{error ? (
+				<div className="p-4 text-red-600">Error: {error}</div>
+			) : isEmpty ? (
+				<div className="p-4 text-gray-500">{emptyMessage}</div>
+			) : (
+				<BaseTable data={data} columns={columns} />
+			)}
 		</div>
 	);
 }

@@ -4,7 +4,7 @@ import { ServiceResult } from '../core/base.types';
 import { PayoutTableView, PayoutTableViewRow, ProgramPermission } from './payout.types';
 
 export class PayoutService extends BaseService {
-	async getPayoutTableViewForUser(userId: string): Promise<ServiceResult<PayoutTableView>> {
+	async getPayoutTableView(userId: string): Promise<ServiceResult<PayoutTableView>> {
 		try {
 			const { fromMonthStart, months } = this.getLastThreeMonths();
 
@@ -80,7 +80,7 @@ export class PayoutService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error('[PayoutService.getPayoutTableViewForUser]', error);
+			console.error('[PayoutService.getPayoutTableView]', error);
 			return this.resultFail('Could not fetch payouts');
 		}
 	}

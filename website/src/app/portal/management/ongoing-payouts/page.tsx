@@ -1,5 +1,5 @@
-import TableWrapper from '@/app/portal/components/data-table/elements/table-wrapper';
-import PayoutsTable from '@/app/portal/components/data-table/payouts/payouts-table';
+import { makePayoutsColumns } from '@/app/portal/components/data-table/columns/payouts';
+import DataTable from '@/app/portal/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
 
@@ -7,19 +7,18 @@ export default async function OngoingPayoutsPage() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new PayoutService();
-	const result = await service.getPayoutTableViewForUser(user.id);
+	const result = await service.getPayoutTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];
 
 	return (
-		<TableWrapper
-			title="Ongoing Payouts (3 months)"
+		<DataTable
+			title="Ongoing Payouts"
 			error={error}
-			isEmpty={!rows.length}
 			emptyMessage="No ongoing payouts found"
-		>
-			<PayoutsTable data={rows} />
-		</TableWrapper>
+			data={rows}
+			makeColumns={makePayoutsColumns}
+		/>
 	);
 }

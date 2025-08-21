@@ -2,13 +2,13 @@
 
 import { ActionCell } from '@/app/portal/components/data-table/elements/action-cell';
 import { SortableHeader } from '@/app/portal/components/data-table/elements/sortable-header';
-import { CampaignStatusCell } from '@/app/portal/components/data-table/elements/status-cells/campaign-status-cell';
+import { StatusCell } from '@/app/portal/components/data-table/elements/status-cell';
 import { TextCell } from '@/app/portal/components/data-table/elements/text-cell';
 import type { CampaignTableViewRow } from '@socialincome/shared/src/database/services/campaign/campaign.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeCampaignColumns(): ColumnDef<CampaignTableViewRow>[] {
-	return [
+export function makeCampaignColumns(hideProgramName?: boolean): ColumnDef<CampaignTableViewRow>[] {
+	const columns: ColumnDef<CampaignTableViewRow>[] = [
 		{
 			accessorKey: 'title',
 			header: (ctx) => <SortableHeader ctx={ctx}>Title</SortableHeader>,
@@ -27,7 +27,7 @@ export function makeCampaignColumns(): ColumnDef<CampaignTableViewRow>[] {
 		{
 			accessorKey: 'status',
 			header: (ctx) => <SortableHeader ctx={ctx}>Status</SortableHeader>,
-			cell: (ctx) => <CampaignStatusCell ctx={ctx} />,
+			cell: (ctx) => <StatusCell ctx={ctx} variant="campaign" />,
 		},
 		{
 			accessorKey: 'goal',
@@ -44,19 +44,25 @@ export function makeCampaignColumns(): ColumnDef<CampaignTableViewRow>[] {
 			header: (ctx) => <SortableHeader ctx={ctx}>End Date</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
-		{
-			accessorKey: 'programName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			id: 'actions',
-			header: 'Actions',
-			enableSorting: false,
-			cell: (ctx) => {
-				const row = ctx.row.original;
-				return <ActionCell ctx={ctx} readOnly={row.permission !== 'operator'} />;
-			},
-		},
 	];
+
+	if (!hideProgramName) {
+		columns.push({
+			accessorKey: 'programName',
+			header: (ctx) => <SortableHeader ctx={ctx}>Program Name</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		});
+	}
+
+	columns.push({
+		id: 'actions',
+		header: 'Actions',
+		enableSorting: false,
+		cell: (ctx) => {
+			const row = ctx.row.original as CampaignTableViewRow & { permission?: string };
+			return <ActionCell ctx={ctx} readOnly={row.permission !== 'operator'} />;
+		},
+	});
+
+	return columns;
 }

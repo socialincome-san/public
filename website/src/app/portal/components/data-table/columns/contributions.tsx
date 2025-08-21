@@ -2,13 +2,13 @@
 
 import { ActionCell } from '@/app/portal/components/data-table/elements/action-cell';
 import { SortableHeader } from '@/app/portal/components/data-table/elements/sortable-header';
-import { ContributionStatusCell } from '@/app/portal/components/data-table/elements/status-cells/contribution-status-cell';
+import { StatusCell } from '@/app/portal/components/data-table/elements/status-cell';
 import { TextCell } from '@/app/portal/components/data-table/elements/text-cell';
 import type { ContributionTableViewRow } from '@socialincome/shared/src/database/services/contribution/contribution.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeContributionsColumns(): ColumnDef<ContributionTableViewRow>[] {
-	return [
+export function makeContributionsColumns(hideProgramName = false): ColumnDef<ContributionTableViewRow>[] {
+	const columns: ColumnDef<ContributionTableViewRow>[] = [
 		{
 			accessorKey: 'source',
 			header: (ctx) => <SortableHeader ctx={ctx}>Source</SortableHeader>,
@@ -27,18 +27,24 @@ export function makeContributionsColumns(): ColumnDef<ContributionTableViewRow>[
 		{
 			accessorKey: 'status',
 			header: (ctx) => <SortableHeader ctx={ctx}>Status</SortableHeader>,
-			cell: (ctx) => <ContributionStatusCell ctx={ctx} />,
+			cell: (ctx) => <StatusCell ctx={ctx} variant="contribution" />,
 		},
 		{
 			accessorKey: 'campaignName',
 			header: (ctx) => <SortableHeader ctx={ctx}>Campaign</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
-		{
+	];
+
+	if (!hideProgramName) {
+		columns.push({
 			accessorKey: 'programName',
 			header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
+		});
+	}
+
+	columns.push(
 		{
 			accessorKey: 'interval',
 			header: (ctx) => <SortableHeader ctx={ctx}>Interval</SortableHeader>,
@@ -58,5 +64,7 @@ export function makeContributionsColumns(): ColumnDef<ContributionTableViewRow>[
 				return <ActionCell ctx={ctx} readOnly={row.permission !== 'operator'} />;
 			},
 		},
-	];
+	);
+
+	return columns;
 }

@@ -14,7 +14,7 @@ export class CampaignService extends BaseService {
 		}
 	}
 
-	async getCampaignTableViewForUser(userId: string): Promise<ServiceResult<CampaignTableView>> {
+	async getCampaignTableView(userId: string): Promise<ServiceResult<CampaignTableView>> {
 		try {
 			const campaigns = await this.db.campaign.findMany({
 				where: { program: this.userAccessibleProgramsWhere(userId) },
@@ -29,6 +29,7 @@ export class CampaignService extends BaseService {
 					endDate: true,
 					program: {
 						select: {
+							id: true,
 							name: true,
 							operatorOrganization: {
 								select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
@@ -59,15 +60,27 @@ export class CampaignService extends BaseService {
 					endDate: c.endDate,
 					endDateFormatted: swissGermanDateFormatter.format(c.endDate),
 					programName: c.program?.name ?? '',
+					programId: c.program?.id ?? '',
 					permission,
 				};
 			});
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error('[CampaignService.getCampaignTableViewForUser]', error);
+			console.error('[CampaignService.getCampaignTableView]', error);
 			return this.resultFail('Could not fetch campaigns');
 		}
+	}
+
+	async getCampaignTableViewProgramScoped(
+		userId: string,
+		programId: string,
+	): Promise<ServiceResult<CampaignTableView>> {
+		const base = await this.getCampaignTableView(userId);
+		if (!base.success) return base;
+
+		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
+		return this.resultOk({ tableRows: filteredRows });
 	}
 
 	private userAccessibleProgramsWhere(userId: string) {

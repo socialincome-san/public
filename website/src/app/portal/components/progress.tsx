@@ -1,8 +1,19 @@
+'use client';
+
 import * as ProgressPrimitive from '@radix-ui/react-progress';
 import { cn } from '@socialincome/ui/src/lib/utils';
 import * as React from 'react';
 
-function Progress({ className, value, ...props }: React.ComponentProps<typeof ProgressPrimitive.Root>) {
+type ProgressVariant = 'default' | 'urgent';
+
+type ProgressProps = React.ComponentProps<typeof ProgressPrimitive.Root> & {
+	value?: number;
+	variant?: ProgressVariant;
+};
+
+function Progress({ className, value, variant = 'default', ...props }: ProgressProps) {
+	const indicatorClass = variant === 'urgent' ? 'bg-rose-400' : 'bg-primary';
+
 	return (
 		<ProgressPrimitive.Root
 			data-slot="progress"
@@ -11,7 +22,7 @@ function Progress({ className, value, ...props }: React.ComponentProps<typeof Pr
 		>
 			<ProgressPrimitive.Indicator
 				data-slot="progress-indicator"
-				className="bg-primary h-full w-full flex-1 transition-all"
+				className={cn('h-full w-full flex-1 transition-all', indicatorClass)}
 				style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
 			/>
 		</ProgressPrimitive.Root>

@@ -3,12 +3,12 @@
 import { ActionCell } from '@/app/portal/components/data-table/elements/action-cell';
 import { ProgressCell } from '@/app/portal/components/data-table/elements/progress-cell';
 import { SortableHeader } from '@/app/portal/components/data-table/elements/sortable-header';
-import { RecipientStatusCell } from '@/app/portal/components/data-table/elements/status-cells/recipient-status-cell';
+import { StatusCell } from '@/app/portal/components/data-table/elements/status-cell';
 import { TextCell } from '@/app/portal/components/data-table/elements/text-cell';
 import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeRecipientColumns(showProgramName?: boolean): ColumnDef<RecipientTableViewRow>[] {
+export function makeRecipientColumns(hideProgramName?: boolean): ColumnDef<RecipientTableViewRow>[] {
 	const columns: ColumnDef<RecipientTableViewRow>[] = [
 		{ accessorKey: 'id', header: 'ID', cell: (ctx) => <TextCell ctx={ctx} /> },
 		{
@@ -29,7 +29,7 @@ export function makeRecipientColumns(showProgramName?: boolean): ColumnDef<Recip
 		{
 			accessorKey: 'status',
 			header: (ctx) => <SortableHeader ctx={ctx}>Status</SortableHeader>,
-			cell: (ctx) => <RecipientStatusCell ctx={ctx} />,
+			cell: (ctx) => <StatusCell ctx={ctx} variant="recipient" />,
 		},
 		{
 			accessorKey: 'payoutsProgressPercent',
@@ -43,7 +43,7 @@ export function makeRecipientColumns(showProgramName?: boolean): ColumnDef<Recip
 		},
 	];
 
-	if (showProgramName) {
+	if (!hideProgramName) {
 		columns.push({
 			accessorKey: 'programName',
 			header: (ctx) => <SortableHeader ctx={ctx}>Program Name</SortableHeader>,

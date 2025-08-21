@@ -6,8 +6,8 @@ import { TextCell } from '@/app/portal/components/data-table/elements/text-cell'
 import type { ContributorTableViewRow } from '@socialincome/shared/src/database/services/contributor/contributor.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeContributorColumns(): ColumnDef<ContributorTableViewRow>[] {
-	return [
+export function makeContributorColumns(hideProgramName = false): ColumnDef<ContributorTableViewRow>[] {
+	const columns: ColumnDef<ContributorTableViewRow>[] = [
 		{
 			accessorKey: 'firstName',
 			header: (ctx) => <SortableHeader ctx={ctx}>First name</SortableHeader>,
@@ -33,11 +33,17 @@ export function makeContributorColumns(): ColumnDef<ContributorTableViewRow>[] {
 			header: (ctx) => <SortableHeader ctx={ctx}>Currency</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
-		{
+	];
+
+	if (!hideProgramName) {
+		columns.push({
 			accessorKey: 'programName',
 			header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
+		});
+	}
+
+	columns.push(
 		{
 			accessorKey: 'createdAtFormatted',
 			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
@@ -52,5 +58,7 @@ export function makeContributorColumns(): ColumnDef<ContributorTableViewRow>[] {
 				return <ActionCell ctx={ctx} readOnly={row.permission !== 'operator'} />;
 			},
 		},
-	];
+	);
+
+	return columns;
 }

@@ -17,7 +17,7 @@ export class SurveyService extends BaseService {
 		}
 	}
 
-	async getSurveyTableViewForUser(userId: string): Promise<ServiceResult<SurveyTableView>> {
+	async getSurveyTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
 		try {
 			const surveys = await this.db.survey.findMany({
 				where: {
@@ -33,6 +33,7 @@ export class SurveyService extends BaseService {
 					sentAt: true,
 					program: {
 						select: {
+							id: true,
 							name: true,
 							operatorOrganization: {
 								select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
@@ -46,6 +47,8 @@ export class SurveyService extends BaseService {
 				orderBy: { dueDateAt: 'desc' },
 			});
 
+			const swissGermanDate = new Intl.DateTimeFormat('de-CH');
+
 			const tableRows: SurveyTableViewRow[] = surveys.map((survey) => {
 				const canOperateOnProgram = (survey.program?.operatorOrganization?.users?.length ?? 0) > 0;
 				const permission: ProgramPermission = canOperateOnProgram ? 'operator' : 'viewer';
@@ -57,19 +60,28 @@ export class SurveyService extends BaseService {
 					recipientName: survey.recipientName,
 					language: survey.language,
 					dueDateAt: survey.dueDateAt,
-					dueDateAtFormatted: new Intl.DateTimeFormat('de-CH').format(survey.dueDateAt),
+					dueDateAtFormatted: swissGermanDate.format(survey.dueDateAt),
 					sentAt: survey.sentAt ?? null,
-					sentAtFormatted: survey.sentAt ? new Intl.DateTimeFormat('de-CH').format(survey.sentAt) : null,
+					sentAtFormatted: survey.sentAt ? swissGermanDate.format(survey.sentAt) : null,
 					programName: survey.program?.name ?? '',
+					programId: survey.program?.id ?? '',
 					permission,
 				};
 			});
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error('[SurveyService.getSurveyTableViewForUser]', error);
+			console.error('[SurveyService.getSurveyTableView]', error);
 			return this.resultFail('Could not fetch surveys');
 		}
+	}
+
+	async getSurveyTableViewProgramScoped(userId: string, programId: string): Promise<ServiceResult<SurveyTableView>> {
+		const base = await this.getSurveyTableView(userId);
+		if (!base.success) return base;
+
+		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
+		return this.resultOk({ tableRows: filteredRows });
 	}
 
 	private userAccessibleProgramsWhere(userId: string) {

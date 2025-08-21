@@ -15,6 +15,7 @@ export type SurveyTableViewRow = {
 	sentAt: Date | null;
 	sentAtFormatted: string | null;
 	programName: string;
+	programId: string;
 	permission: ProgramPermission;
 };
 

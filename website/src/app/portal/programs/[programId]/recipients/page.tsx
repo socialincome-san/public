@@ -1,36 +1,38 @@
 import { Button } from '@/app/portal/components/button';
-import TableWrapper from '@/app/portal/components/data-table/elements/table-wrapper';
-import RecipientsTable from '@/app/portal/components/data-table/recipients/recipients-table';
+import { makeRecipientColumns } from '@/app/portal/components/data-table/columns/recipients';
+import DataTable from '@/app/portal/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
+import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
 import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
-import Link from 'next/link';
+import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 
 type Props = { params: Promise<{ programId: string }> };
 
-export default async function RecipientsPage({ params }: Props) {
+export default async function RecipientsPageProgramScoped({ params }: Props) {
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new RecipientService();
-	const result = await service.getRecipientTableViewForProgramAndUser(programId, user.id);
+	const recipientService = new RecipientService();
+	const programService = new ProgramService();
 
-	const error = result.success ? null : result.error;
-	const rows = result.success ? result.data.tableRows : [];
-	const readOnly = result.success ? result.data.programPermission === 'viewer' : true;
+	const [recipientsResult, programPermissionResult] = await Promise.all([
+		recipientService.getRecipientTableViewProgramScoped(user.id, programId),
+		programService.getProgramPermissionForUser(user.id, programId),
+	]);
+
+	const error = recipientsResult.success ? null : recipientsResult.error;
+	const rows: RecipientTableViewRow[] = recipientsResult.success ? recipientsResult.data.tableRows : [];
+	const userIsOperator = programPermissionResult.success && programPermissionResult.data === 'operator';
 
 	return (
-		<TableWrapper
-			title={`${rows.length} Recipients`}
+		<DataTable
+			title="Recipients"
 			error={error}
-			isEmpty={!rows.length}
 			emptyMessage="No recipients found"
-			actions={
-				<Button disabled={readOnly}>
-					<Link href={`/portal/programs/${programId}/recipients/new`}>Add new recipient</Link>
-				</Button>
-			}
-		>
-			<RecipientsTable data={rows} />
-		</TableWrapper>
+			data={rows}
+			makeColumns={makeRecipientColumns}
+			actions={<Button disabled={!userIsOperator}>Add new recipient</Button>}
+			hideProgramName
+		/>
 	);
 }

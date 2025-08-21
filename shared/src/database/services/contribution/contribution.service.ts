@@ -29,7 +29,7 @@ export class ContributionService extends BaseService {
 		}
 	}
 
-	async getContributionTableViewForUser(userId: string): Promise<ServiceResult<ContributionTableView>> {
+	async getContributionTableView(userId: string): Promise<ServiceResult<ContributionTableView>> {
 		try {
 			const contributions = await this.db.contribution.findMany({
 				where: {
@@ -80,7 +80,7 @@ export class ContributionService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error('[ContributionService.getContributionTableViewForUser]', error);
+			console.error('[ContributionService.getContributionTableView]', error);
 			return this.resultFail('Could not fetch contributions');
 		}
 	}
