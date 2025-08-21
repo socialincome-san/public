@@ -14,21 +14,24 @@ import {
 import { Logo } from '@/app/portal/components/logo';
 import { ChevronsUpDown, Menu, X } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 export function Navbar2() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const pathname = usePathname();
 
 	const navLinks = [
-		{ href: '#', label: 'Programs', hasDropdown: true, active: true },
-		{ href: '#', label: 'Monitoring', hasDropdown: false, active: false },
-		{ href: '#', label: 'Management', hasDropdown: false, active: false },
-		{ href: '#', label: 'Delivery', hasDropdown: false, active: false },
+		{ href: '/portal/programs', label: 'Programs', hasDropdown: true },
+		{ href: '/portal/monitoring', label: 'Monitoring', hasDropdown: false },
+		{ href: '/portal/management', label: 'Management', hasDropdown: false },
+		{ href: '/portal/delivery', label: 'Delivery', hasDropdown: false },
 	];
 
-	const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+	const toggleMenu = () => setIsMenuOpen((v) => !v);
 
-	// Mobile top bar component
+	const isActiveLink = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+
 	const MobileTopBar = () => (
 		<div className={`flex h-14 items-center justify-between px-4 ${!isMenuOpen ? 'border-border border-b' : ''}`}>
 			{/* Mobile menu toggle button */}
@@ -38,16 +41,12 @@ export function Navbar2() {
 				className="relative -ml-2 flex h-9 w-9 items-center justify-center [&_svg]:size-5"
 			>
 				<span
-					className={`absolute transition-all duration-300 ${
-						isMenuOpen ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'
-					}`}
+					className={`absolute transition-all duration-300 ${isMenuOpen ? 'rotate-90 opacity-0' : 'rotate-0 opacity-100'}`}
 				>
 					<Menu />
 				</span>
 				<span
-					className={`absolute transition-all duration-300 ${
-						isMenuOpen ? 'rotate-0 opacity-100' : '-rotate-90 opacity-0'
-					}`}
+					className={`absolute transition-all duration-300 ${isMenuOpen ? 'rotate-0 opacity-100' : '-rotate-90 opacity-0'}`}
 				>
 					<X />
 				</span>
@@ -79,12 +78,15 @@ export function Navbar2() {
 		return (
 			<nav>
 				{/* Main navigation links */}
-				{navLinks.map((link) => (
-					<Link key={link.label} href={link.href} className={`${linkClasses}`}>
-						{link.active && <span className="bg-primary absolute -top-7 left-0 h-1 w-full rounded-b-lg"></span>}
-						{link.label}
-					</Link>
-				))}
+				{navLinks.map((link) => {
+					const active = isActiveLink(link.href);
+					return (
+						<Link key={link.label} href={link.href} className={linkClasses}>
+							{active && <span className="bg-primary absolute -top-7 left-0 h-1 w-full rounded-b-lg" />}
+							{link.label}
+						</Link>
+					);
+				})}
 			</nav>
 		);
 	};
@@ -135,7 +137,7 @@ export function Navbar2() {
 						{/* Mobile menu content */}
 						<div className="flex-grow overflow-y-auto p-2">
 							<div className="flex flex-col">
-								<NavItems isMobile={true} />
+								<NavItems isMobile />
 							</div>
 						</div>
 						<Separator />
