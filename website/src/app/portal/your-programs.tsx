@@ -27,10 +27,10 @@ export async function YourPrograms() {
 						key={program.id}
 						href={`/portal/programs/${program.id}/overview`}
 						title={program.name}
-						subtitle={'Sierra Leone'}
+						subtitle={program.country}
 						footerLeft={{
 							label: 'Paid out',
-							currency: 'USD',
+							currency: program.payoutCurrency,
 							amount: 7350,
 						}}
 						footerRight={{

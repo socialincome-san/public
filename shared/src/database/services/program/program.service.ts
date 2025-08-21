@@ -118,6 +118,8 @@ export class ProgramService extends BaseService {
 		return {
 			id: true,
 			name: true,
+			country: true,
+			payoutCurrency: true,
 			...this.programPermissionSelect(userId),
 		};
 	}
@@ -133,6 +135,8 @@ export class ProgramService extends BaseService {
 		return {
 			id: program.id,
 			name: program.name,
+			country: program.country,
+			payoutCurrency: program.payoutCurrency,
 			programPermission,
 		};
 	};
