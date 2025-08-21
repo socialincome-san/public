@@ -42,30 +42,33 @@ export class PayoutService extends BaseService {
 				orderBy: { createdAt: 'desc' },
 			});
 
-			const tableRows: PayoutTableViewRow[] = recipients.map((r) => {
-				const payoutsTotal = r.program?.totalPayments ?? 0;
-				const payoutsReceived = r.payouts.filter((p) => p.status === 'paid' || p.status === 'confirmed').length;
+			const tableRows: PayoutTableViewRow[] = recipients.map((recipient) => {
+				const payoutsTotal = recipient.program?.totalPayments ?? 0;
+				const payoutsReceived = recipient.payouts.filter(
+					(payout) => payout.status === 'paid' || payout.status === 'confirmed',
+				).length;
 
 				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
 
 				const paymentsLeft = Math.max(payoutsTotal - payoutsReceived, 0);
 
-				const last3Months = months.map(({ ym, start, end }) => {
-					const m = r.payouts.find((p) => p.paymentAt >= start && p.paymentAt < end);
+				const last3Months = months.map(({ monthLabel, start, end }) => {
+					const payout = recipient.payouts.find((p) => p.paymentAt >= start && p.paymentAt < end);
 					return {
-						ym,
-						status: m?.status ?? PayoutStatus.created,
+						monthLabel,
+						status: payout?.status ?? PayoutStatus.created,
 					};
 				});
-				const isOperator = (r.program?.operatorOrganization?.users?.length ?? 0) > 0;
+
+				const isOperator = (recipient.program?.operatorOrganization?.users?.length ?? 0) > 0;
 				const permission: ProgramPermission = isOperator ? 'operator' : 'viewer';
 
 				return {
-					id: r.id,
-					firstName: r.user?.firstName ?? '',
-					lastName: r.user?.lastName ?? '',
-					gender: (r.user?.gender ?? 'private') as any,
-					programName: r.program?.name ?? '',
+					id: recipient.id,
+					firstName: recipient.user?.firstName ?? '',
+					lastName: recipient.user?.lastName ?? '',
+					gender: (recipient.user?.gender ?? 'private') as any,
+					programName: recipient.program?.name ?? '',
 					payoutsReceived,
 					payoutsTotal,
 					payoutsProgressPercent,
@@ -76,8 +79,8 @@ export class PayoutService extends BaseService {
 			});
 
 			return this.resultOk({ tableRows });
-		} catch (e) {
-			console.error('[PayoutService.getPayoutTableViewForUser]', e);
+		} catch (error) {
+			console.error('[PayoutService.getPayoutTableViewForUser]', error);
 			return this.resultFail('Could not fetch payouts');
 		}
 	}
@@ -92,19 +95,30 @@ export class PayoutService extends BaseService {
 	}
 
 	private getLastThreeMonths() {
-		const startOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1);
-		const addMonths = (d: Date, diff: number) => new Date(d.getFullYear(), d.getMonth() + diff, 1);
-		const ym = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+		const startOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1);
+		const addMonths = (date: Date, diff: number) => new Date(date.getFullYear(), date.getMonth() + diff, 1);
+		const formatMonthLabel = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 
-		const now = new Date();
-		const m0 = startOfMonth(now);
-		const m1 = addMonths(m0, -1);
-		const m2 = addMonths(m0, -2);
+		const currentMonth = startOfMonth(new Date());
+		const previousMonth = addMonths(currentMonth, -1);
+		const twoMonthsAgo = addMonths(currentMonth, -2);
 
 		const months = [
-			{ ym: ym(m0), start: m0, end: addMonths(m0, 1) },
-			{ ym: ym(m1), start: m1, end: addMonths(m1, 1) },
-			{ ym: ym(m2), start: m2, end: addMonths(m2, 1) },
+			{
+				monthLabel: formatMonthLabel(currentMonth),
+				start: currentMonth,
+				end: addMonths(currentMonth, 1),
+			},
+			{
+				monthLabel: formatMonthLabel(previousMonth),
+				start: previousMonth,
+				end: addMonths(previousMonth, 1),
+			},
+			{
+				monthLabel: formatMonthLabel(twoMonthsAgo),
+				start: twoMonthsAgo,
+				end: addMonths(twoMonthsAgo, 1),
+			},
 		];
 
 		return { fromMonthStart: months[2].start, months };

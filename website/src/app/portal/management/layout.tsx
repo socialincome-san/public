@@ -13,7 +13,7 @@ export default async function ManagementLayout({ children }: ManagementLayoutPro
 		{ href: `/portal/management/ongoing-payouts`, label: 'Ongoing payouts' },
 		{ href: `/portal/management/contributors`, label: 'Contributors' },
 		{ href: `/portal/management/contributions`, label: 'Contributions' },
-		{ href: `/portal/management/fundraising`, label: 'Fundraising' },
+		{ href: `/portal/management/campaigns`, label: 'Campaigns' },
 		{ href: `/portal/management/surveys`, label: 'Surveys' },
 	];
 

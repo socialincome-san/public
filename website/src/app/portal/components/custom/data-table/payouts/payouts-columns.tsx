@@ -1,18 +1,25 @@
 'use client';
 
 import { ActionCell } from '@/app/portal/components/custom/data-table/elements/action-cell';
-import { PayoutStatusCell } from '@/app/portal/components/custom/data-table/elements/payout-status-cell';
 import { ProgressCell } from '@/app/portal/components/custom/data-table/elements/progress-cell';
 import { SortableHeader } from '@/app/portal/components/custom/data-table/elements/sortable-header';
+import { PayoutStatusCell } from '@/app/portal/components/custom/data-table/elements/status-cells/payout-status-cell';
 import { TextCell } from '@/app/portal/components/custom/data-table/elements/text-cell';
 import { PayoutTableViewRow } from '@socialincome/shared/src/database/services/payout/payout.types';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef, HeaderContext } from '@tanstack/react-table';
 
-export function makePayoutsColumns(monthLabels?: [string, string, string]): ColumnDef<PayoutTableViewRow>[] {
-	const [m0, m1, m2] = monthLabels ?? ['This month', 'Prev month', '2 mo ago'];
+function getMonthLabelFromData(ctx: HeaderContext<PayoutTableViewRow, unknown>, index: number): string {
+	const firstRow = ctx.table.options.data[0] as PayoutTableViewRow | undefined;
+	return firstRow?.last3Months[index]?.monthLabel ?? '–';
+}
 
+export function makePayoutsColumns(): ColumnDef<PayoutTableViewRow>[] {
 	return [
-		{ accessorKey: 'id', header: 'ID', cell: (ctx) => <TextCell ctx={ctx} /> },
+		{
+			accessorKey: 'id',
+			header: 'ID',
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
 		{
 			accessorKey: 'firstName',
 			header: (ctx) => <SortableHeader ctx={ctx}>First name</SortableHeader>,
@@ -35,31 +42,30 @@ export function makePayoutsColumns(monthLabels?: [string, string, string]): Colu
 		},
 		{
 			accessorKey: 'payoutsProgressPercent',
-			header: (ctx) => <SortableHeader ctx={ctx}>% Progress</SortableHeader>,
+			header: (ctx) => <SortableHeader ctx={ctx}>Progress %</SortableHeader>,
 			cell: (ctx) => <ProgressCell ctx={ctx} />,
 		},
 		{
-			id: 'm0',
-			header: (ctx) => <SortableHeader ctx={ctx}>{m0}</SortableHeader>,
+			id: 'currentMonth',
+			header: (ctx) => <SortableHeader ctx={ctx}>{getMonthLabelFromData(ctx, 0)}</SortableHeader>,
 			accessorFn: (row) => row.last3Months[0]?.status ?? null,
 			cell: (ctx) => <PayoutStatusCell ctx={ctx} />,
 			enableSorting: false,
 		},
 		{
-			id: 'm1',
-			header: (ctx) => <SortableHeader ctx={ctx}>{m1}</SortableHeader>,
+			id: 'previousMonth',
+			header: (ctx) => <SortableHeader ctx={ctx}>{getMonthLabelFromData(ctx, 1)}</SortableHeader>,
 			accessorFn: (row) => row.last3Months[1]?.status ?? null,
 			cell: (ctx) => <PayoutStatusCell ctx={ctx} />,
 			enableSorting: false,
 		},
 		{
-			id: 'm2',
-			header: (ctx) => <SortableHeader ctx={ctx}>{m2}</SortableHeader>,
+			id: 'twoMonthsAgo',
+			header: (ctx) => <SortableHeader ctx={ctx}>{getMonthLabelFromData(ctx, 2)}</SortableHeader>,
 			accessorFn: (row) => row.last3Months[2]?.status ?? null,
 			cell: (ctx) => <PayoutStatusCell ctx={ctx} />,
 			enableSorting: false,
 		},
-
 		{
 			id: 'actions',
 			header: 'Actions',
