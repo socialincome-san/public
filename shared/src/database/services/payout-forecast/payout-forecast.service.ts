@@ -2,17 +2,17 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateCollectionService } from '../exchange-rate-collection/exchange-rate-collection.service';
 import { ProgramService } from '../program/program.service';
-import { PayoutForecastTableView, PayoutForecastTableViewRow } from './payout-forecast.types';
+import { PayoutForecastTableViewProgramScoped, PayoutForecastTableViewRow } from './payout-forecast.types';
 
 export class PayoutForecastService extends BaseService {
 	private programService = new ProgramService();
 	private exchangeRateService = new ExchangeRateCollectionService();
 
-	async getPayoutForecastTableView(
-		programId: string,
+	async getPayoutForecastTableViewProgramScoped(
 		userId: string,
+		programId: string,
 		monthsAhead: number,
-	): Promise<ServiceResult<PayoutForecastTableView>> {
+	): Promise<ServiceResult<PayoutForecastTableViewProgramScoped>> {
 		try {
 			const programResult = await this.programService.getProgramWithRecipientsForForecast(programId, userId);
 			if (!programResult.success) return this.resultFail(programResult.error!);

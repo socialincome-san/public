@@ -85,6 +85,32 @@ export class ProgramService extends BaseService {
 		}
 	}
 
+	async getProgramPermissionForUser(userId: string, programId: string): Promise<ServiceResult<ProgramPermission>> {
+		try {
+			const program = await this.db.program.findFirst({
+				where: { id: programId },
+				select: {
+					operatorOrganization: {
+						select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+					},
+					viewerOrganization: {
+						select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+					},
+				},
+			});
+
+			if (!program) return this.resultFail('Program not found');
+
+			const isOperator = (program.operatorOrganization?.users?.length ?? 0) > 0;
+			const permission: ProgramPermission = isOperator ? 'operator' : 'viewer';
+
+			return this.resultOk(permission);
+		} catch (error) {
+			console.error('[RecipientService.getProgramPermissionForUser]', error);
+			return this.resultFail('Could not fetch program permission');
+		}
+	}
+
 	private programForecastSelect() {
 		return {
 			totalPayments: true,

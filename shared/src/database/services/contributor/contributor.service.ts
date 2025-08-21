@@ -41,7 +41,7 @@ export class ContributorService extends BaseService {
 		}
 	}
 
-	async getContributorTableViewForUser(userId: string): Promise<ServiceResult<ContributorTableView>> {
+	async getContributorTableView(userId: string): Promise<ServiceResult<ContributorTableView>> {
 		try {
 			const contributors = await this.db.contributor.findMany({
 				where: {
@@ -123,7 +123,7 @@ export class ContributorService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error('[ContributorService.getContributorTableViewForUser]', error);
+			console.error('[ContributorService.getContributorTableView]', error);
 			return this.resultFail('Could not fetch contributors');
 		}
 	}

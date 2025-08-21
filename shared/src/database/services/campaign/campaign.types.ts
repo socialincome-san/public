@@ -15,6 +15,7 @@ export type CampaignTableViewRow = {
 	endDate: Date;
 	endDateFormatted: string;
 	programName: string;
+	programId: string;
 	permission: ProgramPermission;
 };
 

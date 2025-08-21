@@ -5,6 +5,6 @@ export type PayoutForecastTableViewRow = {
 	amountUsd: number;
 };
 
-export type PayoutForecastTableView = {
+export type PayoutForecastTableViewProgramScoped = {
 	tableRows: PayoutForecastTableViewRow[];
 };

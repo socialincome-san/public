@@ -1,20 +1,25 @@
-import ContributorsTable from '@/app/portal/components/data-table/contributors/contributors-table';
-import TableWrapper from '@/app/portal/components/data-table/elements/table-wrapper';
+import { makeContributorColumns } from '@/app/portal/components/data-table/columns/contributors';
+import DataTable from '@/app/portal/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ContributorService } from '@socialincome/shared/src/database/services/contributor/contributor.service';
+import type { ContributorTableViewRow } from '@socialincome/shared/src/database/services/contributor/contributor.types';
 
 export default async function ContributorsPage() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ContributorService();
-	const result = await service.getContributorTableViewForUser(user.id);
+	const result = await service.getContributorTableView(user.id);
 
 	const error = result.success ? null : result.error;
-	const rows = result.success ? result.data.tableRows : [];
+	const rows: ContributorTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return (
-		<TableWrapper title="Contributors" error={error} isEmpty={!rows.length} emptyMessage="No contributors found">
-			<ContributorsTable data={rows} />
-		</TableWrapper>
+		<DataTable
+			title="Contributors"
+			error={error}
+			emptyMessage="No contributors found"
+			data={rows}
+			makeColumns={makeContributorColumns}
+		/>
 	);
 }

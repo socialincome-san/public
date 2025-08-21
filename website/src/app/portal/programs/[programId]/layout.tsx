@@ -32,7 +32,7 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 		{ href: `/portal/programs/${programId}/overview`, label: 'Overview' },
 		{ href: `/portal/programs/${programId}/recipients`, label: 'Recipients' },
 		{ href: `/portal/programs/${programId}/finances`, label: 'Finances' },
-		{ href: `/portal/programs/${programId}/fundraising`, label: 'Fundraising' },
+		{ href: `/portal/programs/${programId}/campaigns`, label: 'Campaigns' },
 		{ href: `/portal/programs/${programId}/surveys`, label: 'Surveys' },
 		{ href: `/portal/programs/${programId}/team-members`, label: 'Team members' },
 	];

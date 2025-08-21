@@ -1,20 +1,25 @@
-import TableWrapper from '@/app/portal/components/data-table/elements/table-wrapper';
+import { makeContributionsColumns } from '@/app/portal/components/data-table/columns/contributions';
+import DataTable from '@/app/portal/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ContributionService } from '@socialincome/shared/src/database/services/contribution/contribution.service';
-import ContributionsTable from '../../components/data-table/contributions/contributions-table';
+import type { ContributionTableViewRow } from '@socialincome/shared/src/database/services/contribution/contribution.types';
 
 export default async function ContributionsPage() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ContributionService();
-	const result = await service.getContributionTableViewForUser(user.id);
+	const result = await service.getContributionTableView(user.id);
 
 	const error = result.success ? null : result.error;
-	const rows = result.success ? result.data.tableRows : [];
+	const rows: ContributionTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return (
-		<TableWrapper title="Contributions" error={error} isEmpty={!rows.length} emptyMessage="No contributions found">
-			<ContributionsTable data={rows} />
-		</TableWrapper>
+		<DataTable
+			title="Contributions"
+			error={error}
+			emptyMessage="No contributions found"
+			data={rows}
+			makeColumns={makeContributionsColumns}
+		/>
 	);
 }
