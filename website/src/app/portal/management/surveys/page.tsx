@@ -1,5 +1,5 @@
-import TableWrapper from '@/app/portal/components/custom/data-table/elements/table-wrapper';
-import SurveysTable from '@/app/portal/components/custom/data-table/surveys/surveys-table';
+import TableWrapper from '@/app/portal/components/data-table/elements/table-wrapper';
+import SurveysTable from '@/app/portal/components/data-table/surveys/surveys-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { SurveyService } from '@socialincome/shared/src/database/services/survey/survey.service';
 

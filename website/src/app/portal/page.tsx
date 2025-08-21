@@ -1,4 +1,4 @@
-import { YourPrograms } from '@/app/portal/components/custom/your-programs';
+import { YourPrograms } from '@/app/portal/your-programs';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 
 export default async function PortalPage() {

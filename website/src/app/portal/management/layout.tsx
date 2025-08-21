@@ -1,5 +1,5 @@
-import { Card } from '@/app/portal/components/custom/card';
-import { TabNavigation } from '@/app/portal/components/custom/tab-navigation';
+import { Card } from '@/app/portal/components/card';
+import { TabNavigation } from '@/app/portal/components/tab-navigation';
 
 import { ReactNode } from 'react';
 

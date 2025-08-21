@@ -1,5 +1,5 @@
-import CampaignsTable from '@/app/portal/components/custom/data-table/campaigns/campaigns-table';
-import TableWrapper from '@/app/portal/components/custom/data-table/elements/table-wrapper';
+import CampaignsTable from '@/app/portal/components/data-table/campaigns/campaigns-table';
+import TableWrapper from '@/app/portal/components/data-table/elements/table-wrapper';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { CampaignService } from '@socialincome/shared/src/database/services/campaign/campaign.service';
 
