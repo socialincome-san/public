@@ -25,28 +25,52 @@ export async function YourPrograms() {
 			<h2 className="py-6 text-3xl font-medium">Your programs</h2>
 			<div className="grid gap-8" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(20rem, 1fr))' }}>
 				<Card>
-					<CardContent>Portal card</CardContent>
-				</Card>
-				<div>
-					<Card>
-						<div className="flex h-full w-full flex-col items-start justify-between pb-6 pl-8 pr-8 pt-20">
+					<div className="flex h-full w-full flex-col items-start justify-between pb-6 pl-8 pr-8 pt-20">
+						<div className="flex flex-col items-start">
+							<h2 className="text-4xl font-normal">Old Widows</h2>
+							<p className="text-sm font-medium tracking-wide">Sierra Leone</p>
+						</div>
+						<div className="flex w-full items-start justify-between">
 							<div className="flex flex-col items-start">
-								<h2 className="text-4xl font-normal">Old Widows</h2>
-								<p className="text-sm font-medium tracking-wide">Sierra Leone</p>
+								<p className="text-sm font-medium tracking-wide">Paid out</p>
+								<p className="text-4xl font-normal">USD 7,350</p>
 							</div>
-							<div className="flex w-full items-start justify-between">
-								<div className="flex flex-col items-start">
-									<p className="text-sm font-medium tracking-wide">Paid out</p>
-									<p className="text-4xl font-normal">USD 7,350</p>
-								</div>
-								<div className="flex flex-col items-end">
-									<p className="text-sm font-medium tracking-wide">Recipients</p>
-									<p className="text-4xl font-normal">132</p>
-								</div>
+							<div className="flex flex-col items-end">
+								<p className="text-sm font-medium tracking-wide">Recipients</p>
+								<p className="text-4xl font-normal">132</p>
 							</div>
 						</div>
-					</Card>
-				</div>
+					</div>
+				</Card>
+
+				{programs.map((program) => (
+					<Link href={`/portal/programs/${program.id}/overview`} key={program.id}>
+						<Wallet key={program.id}>
+							<CardContent className="h-full p-8 pb-6 pt-0">
+								<div className="flex h-full w-full flex-col items-start justify-between gap-2">
+									<div>
+										<h3 className="text-4xl font-normal leading-[1.3]">
+											{program.name} ({program.programPermission === 'viewer' ? 'read-only' : 'editable'})
+										</h3>
+										<p className="text-sm font-medium tracking-wide">Sierra Leone</p>
+									</div>
+									<div className="flex w-full items-start justify-between">
+										<div className="flex flex-col items-start">
+											<p className="text-sm font-medium tracking-wide">Paid out</p>
+											<p className="text-4xl font-normal">
+												<small className="text-lg">USD</small> 7,350
+											</p>
+										</div>
+										<div className="flex flex-col items-end">
+											<p className="text-sm font-medium tracking-wide">Recipients</p>
+											<p className="text-4xl font-normal">132</p>
+										</div>
+									</div>
+								</div>
+							</CardContent>
+						</Wallet>
+					</Link>
+				))}
 				{programs.map((program) => (
 					<Wallet key={program.id}>
 						<CardContent>

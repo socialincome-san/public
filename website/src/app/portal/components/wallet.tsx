@@ -10,7 +10,7 @@ export function Wallet({ variant = 'default', children }: WalletProps) {
 	return (
 		<Card
 			variant="noPadding"
-			className="flex aspect-[1.4] flex-col overflow-hidden"
+			className="flex aspect-[1.4] min-h-full max-w-full flex-col overflow-hidden transition hover:shadow-sm"
 			style={{
 				['--slant-shift' as any]: '50px',
 				['--slant-width' as any]: '40px',
