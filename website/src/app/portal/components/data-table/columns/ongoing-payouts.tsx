@@ -5,16 +5,16 @@ import { ProgressCell } from '@/app/portal/components/data-table/elements/progre
 import { SortableHeader } from '@/app/portal/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/app/portal/components/data-table/elements/status-cell';
 import { TextCell } from '@/app/portal/components/data-table/elements/text-cell';
-import { PayoutTableViewRow } from '@socialincome/shared/src/database/services/payout/payout.types';
+import { OngoingPayoutTableViewRow } from '@socialincome/shared/src/database/services/payout/payout.types';
 import type { ColumnDef, HeaderContext } from '@tanstack/react-table';
 
-function getMonthLabelFromData(ctx: HeaderContext<PayoutTableViewRow, unknown>, index: number): string {
-	const firstRow = ctx.table.options.data[0] as PayoutTableViewRow | undefined;
+function getMonthLabelFromData(ctx: HeaderContext<OngoingPayoutTableViewRow, unknown>, index: number): string {
+	const firstRow = ctx.table.options.data[0] as OngoingPayoutTableViewRow | undefined;
 	return firstRow?.last3Months[index]?.monthLabel ?? '–';
 }
 
-export function makePayoutsColumns(hideProgramName = false): ColumnDef<PayoutTableViewRow>[] {
-	const columns: ColumnDef<PayoutTableViewRow>[] = [
+export function makeOngoingPayoutsColumns(hideProgramName = false): ColumnDef<OngoingPayoutTableViewRow>[] {
+	const columns: ColumnDef<OngoingPayoutTableViewRow>[] = [
 		{
 			accessorKey: 'id',
 			header: 'ID',

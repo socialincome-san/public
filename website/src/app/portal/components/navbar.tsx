@@ -23,9 +23,9 @@ export function Navbar() {
 
 	const navLinks = [
 		{ href: '/portal/programs', label: 'Programs', hasDropdown: true },
-		{ href: '/portal/monitoring', label: 'Monitoring', hasDropdown: false },
-		{ href: '/portal/management', label: 'Management', hasDropdown: false },
-		{ href: '/portal/delivery', label: 'Delivery', hasDropdown: false },
+		{ href: '/portal/monitoring/payout-confirmation', label: 'Monitoring', hasDropdown: false },
+		{ href: '/portal/management/recipients', label: 'Management', hasDropdown: false },
+		{ href: '/portal/delivery/make-payouts', label: 'Delivery', hasDropdown: false },
 	];
 
 	const toggleMenu = () => setIsMenuOpen((v) => !v);

@@ -1,10 +1,16 @@
 import { PayoutStatus, RecipientStatus } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { PayoutTableView, PayoutTableViewRow, ProgramPermission } from './payout.types';
+import {
+	OngoingPayoutTableView,
+	OngoingPayoutTableViewRow,
+	PayoutConfirmationTableView,
+	PayoutConfirmationTableViewRow,
+	ProgramPermission,
+} from './payout.types';
 
 export class PayoutService extends BaseService {
-	async getPayoutTableView(userId: string): Promise<ServiceResult<PayoutTableView>> {
+	async getOngoingPayoutTableView(userId: string): Promise<ServiceResult<OngoingPayoutTableView>> {
 		try {
 			const { fromMonthStart, months } = this.getLastThreeMonths();
 
@@ -42,7 +48,7 @@ export class PayoutService extends BaseService {
 				orderBy: { createdAt: 'desc' },
 			});
 
-			const tableRows: PayoutTableViewRow[] = recipients.map((recipient) => {
+			const tableRows: OngoingPayoutTableViewRow[] = recipients.map((recipient) => {
 				const payoutsTotal = recipient.program?.totalPayments ?? 0;
 				const payoutsReceived = recipient.payouts.filter(
 					(payout) => payout.status === 'paid' || payout.status === 'confirmed',
@@ -82,6 +88,63 @@ export class PayoutService extends BaseService {
 		} catch (error) {
 			console.error('[PayoutService.getPayoutTableView]', error);
 			return this.resultFail('Could not fetch payouts');
+		}
+	}
+
+	async getPayoutConfirmationTableView(userId: string): Promise<ServiceResult<PayoutConfirmationTableView>> {
+		try {
+			const payouts = await this.db.payout.findMany({
+				where: {
+					recipient: {
+						program: this.userAccessibleProgramsWhere(userId),
+						status: { in: [RecipientStatus.active, RecipientStatus.designated] },
+					},
+				},
+				select: {
+					id: true,
+					paymentAt: true,
+					status: true,
+					recipient: {
+						select: {
+							user: { select: { firstName: true, lastName: true } },
+							program: {
+								select: {
+									name: true,
+									operatorOrganization: {
+										select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+									},
+									viewerOrganization: {
+										select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+									},
+								},
+							},
+						},
+					},
+				},
+				orderBy: { paymentAt: 'desc' },
+			});
+
+			const tableRows: PayoutConfirmationTableViewRow[] = payouts.map((p) => {
+				const program = p.recipient?.program;
+				const isOperator = (program?.operatorOrganization?.users?.length ?? 0) > 0;
+				const permission: ProgramPermission = isOperator ? 'operator' : 'viewer';
+
+				return {
+					id: p.id,
+					firstName: p.recipient?.user?.firstName ?? '',
+					lastName: p.recipient?.user?.lastName ?? '',
+					paymentAt: p.paymentAt,
+					paymentAtFormatted: new Intl.DateTimeFormat('de-CH').format(p.paymentAt),
+					status: p.status,
+					programName: program?.name ?? '',
+					permission,
+				};
+			});
+
+			return this.resultOk({ tableRows });
+		} catch (error) {
+			console.error('[PayoutService.getPayoutConfirmationTableView]', error);
+			return this.resultFail('Could not fetch payout confirmations');
 		}
 	}
 
