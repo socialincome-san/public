@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { prisma } from '../../prisma';
 import { ServiceResult } from './base.types';
 
@@ -15,5 +15,14 @@ export abstract class BaseService {
 
 	protected resultFail<T = never>(error: string): ServiceResult<T> {
 		return { success: false, error };
+	}
+
+	protected userAccessibleProgramsWhere(userId: string): Prisma.ProgramWhereInput {
+		return {
+			OR: [
+				{ viewerOrganization: { users: { some: { id: userId } } } },
+				{ operatorOrganization: { users: { some: { id: userId } } } },
+			],
+		};
 	}
 }

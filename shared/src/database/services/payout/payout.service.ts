@@ -85,15 +85,6 @@ export class PayoutService extends BaseService {
 		}
 	}
 
-	private userAccessibleProgramsWhere(userId: string) {
-		return {
-			OR: [
-				{ viewerOrganization: { users: { some: { id: userId } } } },
-				{ operatorOrganization: { users: { some: { id: userId } } } },
-			],
-		};
-	}
-
 	private getLastThreeMonths() {
 		const startOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1);
 		const addMonths = (date: Date, diff: number) => new Date(date.getFullYear(), date.getMonth() + diff, 1);

@@ -89,13 +89,4 @@ export class RecipientService extends BaseService {
 		}
 		return years;
 	}
-
-	private userAccessibleProgramsWhere(userId: string) {
-		return {
-			OR: [
-				{ viewerOrganization: { users: { some: { id: userId } } } },
-				{ operatorOrganization: { users: { some: { id: userId } } } },
-			],
-		};
-	}
 }
