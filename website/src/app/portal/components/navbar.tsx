@@ -7,12 +7,11 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/app/portal/components/dropdown-menu';
 import { Logo } from '@/app/portal/components/logo';
-import { ChevronsUpDown, Menu, X } from 'lucide-react';
+import { Building2, ChevronsUpDown, LogOut, Menu, Settings, UsersRound, WalletCards, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -28,8 +27,14 @@ export function Navbar() {
 		{ href: '/portal/delivery/make-payouts', label: 'Delivery', hasDropdown: false },
 	];
 
-	const toggleMenu = () => setIsMenuOpen((v) => !v);
+	const adminLinks = [
+		{ href: '/portal/admin/users', label: 'Users', icon: UsersRound },
+		{ href: '/portal/admin/local-partners', label: 'Local partners', icon: Building2 },
+		{ href: '/portal/admin/expenses', label: 'Expenses', icon: WalletCards },
+		{ href: '/portal/account/settings', label: 'Account settings', icon: Settings },
+	];
 
+	const toggleMenu = () => setIsMenuOpen((v) => !v);
 	const isActiveLink = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
 	const MobileTopBar = () => (
@@ -113,13 +118,28 @@ export function Navbar() {
 								<ChevronsUpDown className="text-accent-foreground h-4 w-4 opacity-50" />
 							</Button>
 						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end">
-							<DropdownMenuLabel>My Account</DropdownMenuLabel>
+						<DropdownMenuContent align="end" className="w-64">
+							{adminLinks.map(({ href, label, icon: Icon }) => (
+								<DropdownMenuItem asChild key={href}>
+									<Link href={href} className="flex items-center gap-2">
+										<Icon className="h-4 w-4" />
+										<span>{label}</span>
+									</Link>
+								</DropdownMenuItem>
+							))}
+
 							<DropdownMenuSeparator />
-							<DropdownMenuItem>Profile</DropdownMenuItem>
-							<DropdownMenuItem>Settings</DropdownMenuItem>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem>Logout</DropdownMenuItem>
+
+							<DropdownMenuItem
+								onSelect={(e) => {
+									e.preventDefault();
+									// TODO: sign-out logic
+								}}
+								className="text-destructive focus:text-destructive"
+							>
+								<LogOut className="mr-2 h-4 w-4" />
+								<span>Sign out</span>
+							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
@@ -148,19 +168,20 @@ export function Navbar() {
 								<ProfileName />
 							</div>
 							{/* User-related links */}
-							<div>
-								<Link href="#" className="text-muted-foreground block rounded-md px-2 py-2 font-medium">
-									My profile
-								</Link>
-								<Link href="#" className="text-muted-foreground block rounded-md px-2 py-2 font-medium">
-									Account settings
-								</Link>
-								<Link href="#" className="text-muted-foreground block rounded-md px-2 py-2 font-medium">
-									Billing
-								</Link>
-								<Link href="#" className="text-muted-foreground block rounded-md px-2 py-2 font-medium">
+							<div className="grid gap-1 p-2">
+								{adminLinks.map(({ href, label }) => (
+									<Link key={href} href={href} className="text-muted-foreground rounded-md px-2 py-2 font-medium">
+										{label}
+									</Link>
+								))}
+								<button
+									onClick={() => {
+										// TODO: sign-out logic
+									}}
+									className="text-destructive rounded-md px-2 py-2 text-left font-medium"
+								>
 									Sign out
-								</Link>
+								</button>
 							</div>
 						</div>
 					</div>
