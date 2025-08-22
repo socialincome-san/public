@@ -26,15 +26,15 @@ export function Wallet({ variant = 'default', title, subtitle, footerLeft, foote
 				['--slant-height' as any]: '14px',
 				['--slant-position' as any]: 'calc(var(--slant-shift) + var(--slant-width))',
 				['--gradient' as any]:
-					'linear-gradient(to right, hsl(var(--gradient-button-from)), hsl(var(--gradient-button-to)))', // TODO: add correct gradient colors
+					'linear-gradient(to right, hsl(var(--gradient-card-from)), hsl(var(--gradient-card-to)))',
 				['--shadow-size' as any]: '11px',
 				['--stack-height' as any]: '28px',
-				['--wallet-front-bg' as any]: variant === 'default' ? 'var(--gradient)' : 'hsl(var(--card))', // TODO: set correct background color for white
+				['--wallet-front-bg' as any]: variant === 'default' ? 'var(--gradient)' : 'hsl(var(--card))',
 				['--wallet-front-box-shadow' as any]:
 					variant === 'default'
 						? 'none'
 						: '0 0 0 var(--shadow-size) rgba(255,255,255,0.5), 0 0 0 calc(2* var(--shadow-size)) rgba(255,255,255,0.3)',
-				['--wallet-back-bg' as any]: variant === 'default' ? 'var(--gradient)' : 'hsl(var(--card))',
+				['--wallet-back-bg' as any]: variant === 'default' ? 'var(--gradient)' : 'hsl(var(--secondary))',
 				['--wallet-cards-background' as any]: variant === 'default' ? 'hsl(var(--card))' : 'none',
 				['--wallet-cards-box-shadow' as any]:
 					variant === 'default'

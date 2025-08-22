@@ -11,7 +11,7 @@ import {
 import { usePathname } from 'next/navigation';
 import React from 'react';
 
-export function PageHeader4() {
+export function PageHeader() {
 	const pathname = usePathname();
 	const segments = pathname.split('/').filter(Boolean);
 
