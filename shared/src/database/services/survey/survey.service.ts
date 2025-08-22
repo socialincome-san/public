@@ -1,7 +1,14 @@
 import { Survey as PrismaSurvey } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { CreateSurveyInput, ProgramPermission, SurveyTableView, SurveyTableViewRow } from './survey.types';
+import {
+	CreateSurveyInput,
+	ProgramPermission,
+	SurveyTableView,
+	SurveyTableViewRow,
+	UpcomingSurveyTableView,
+	UpcomingSurveyTableViewRow,
+} from './survey.types';
 
 export class SurveyService extends BaseService {
 	async create(input: CreateSurveyInput): Promise<ServiceResult<PrismaSurvey>> {
@@ -82,5 +89,91 @@ export class SurveyService extends BaseService {
 
 		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
 		return this.resultOk({ tableRows: filteredRows });
+	}
+
+	async getUpcomingSurveysTableView(userId: string): Promise<ServiceResult<UpcomingSurveyTableView>> {
+		try {
+			const activeStatuses = ['new', 'sent', 'scheduled', 'in_progress'];
+			const startOfToday = new Date();
+			startOfToday.setHours(0, 0, 0, 0);
+
+			const surveys = await this.db.survey.findMany({
+				where: {
+					program: this.userAccessibleProgramsWhere(userId),
+					status: { in: activeStatuses as any },
+					dueDateAt: { gte: startOfToday },
+				},
+				select: {
+					id: true,
+					recipientId: true,
+					questionnaire: true,
+					status: true,
+					dueDateAt: true,
+					accessEmail: true,
+					accessPw: true,
+					recipient: { select: { user: { select: { firstName: true, lastName: true } } } },
+					program: {
+						select: {
+							name: true,
+							operatorOrganization: {
+								select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+							},
+							viewerOrganization: {
+								select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+							},
+						},
+					},
+				},
+				orderBy: { dueDateAt: 'asc' },
+			});
+
+			const tableRows: UpcomingSurveyTableViewRow[] = surveys.map((survey) => {
+				const firstName = survey.recipient?.user?.firstName ?? '';
+				const lastName = survey.recipient?.user?.lastName ?? '';
+
+				const isOperator = (survey.program?.operatorOrganization?.users?.length ?? 0) > 0;
+				const permission: ProgramPermission = isOperator ? 'operator' : 'viewer';
+
+				return {
+					id: survey.id,
+					firstName,
+					lastName,
+					questionnaire: survey.questionnaire,
+					status: survey.status,
+					dueDateAt: survey.dueDateAt,
+					dueDateAtFormatted: new Intl.DateTimeFormat('de-CH').format(survey.dueDateAt),
+					url: this.buildSurveyUrl({
+						surveyId: survey.id,
+						recipientId: survey.recipientId,
+						accessEmail: survey.accessEmail,
+						accessPw: survey.accessPw,
+					}),
+					programName: survey.program?.name ?? '',
+					permission,
+				};
+			});
+
+			return this.resultOk({ tableRows });
+		} catch (error) {
+			console.error('[SurveyService.getUpcomingSurveysTableView]', error);
+			return this.resultFail('Could not fetch upcoming surveys');
+		}
+	}
+
+	private buildSurveyUrl({
+		surveyId,
+		recipientId,
+		accessEmail,
+		accessPw,
+	}: {
+		surveyId: string;
+		recipientId: string;
+		accessEmail: string;
+		accessPw: string;
+	}): string {
+		const base = (process.env.BASE_URL ?? '').replace(/\/+$/, '');
+		const url = new URL([base, 'survey', recipientId, surveyId].join('/'));
+		url.search = new URLSearchParams({ email: accessEmail, pw: accessPw }).toString();
+		return url.toString();
 	}
 }
