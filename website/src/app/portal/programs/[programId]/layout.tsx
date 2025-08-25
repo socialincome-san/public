@@ -26,7 +26,7 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 		return <div className="p-4">Error loading the program</div>;
 	}
 
-	const { programName, permission } = result.data;
+	const { programName, permission, country } = result.data;
 	const isOperator = permission === 'operator';
 
 	const sections = [
@@ -49,7 +49,7 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 			<div className="flex flex-wrap items-center gap-4 md:flex-row md:items-center">
 				<h1 className="py-8 text-5xl">{programName}</h1>
 
-				<CountryBadge country="sierra_leone" />
+				<CountryBadge country={country} />
 
 				<div className="flex items-center gap-2">
 					<Badge variant={isOperator ? 'default' : 'secondary'} className="text-xs font-medium">
