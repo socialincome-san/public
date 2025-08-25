@@ -10,7 +10,7 @@ export default async function OrganizationsPage() {
 	await requireGlobalAnalystOrGlobalAdmin(user);
 
 	const service = new OrganizationService();
-	const result = await service.getOrganizationTableView(user);
+	const result = await service.getOrganizationAdminTableView(user);
 
 	const error = result.success ? null : result.error;
 	const rows: OrganizationTableViewRow[] = result.success ? result.data.tableRows : [];

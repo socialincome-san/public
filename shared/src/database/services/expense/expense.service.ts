@@ -1,7 +1,8 @@
-import { Expense as PrismaExpense, User as PrismaUser } from '@prisma/client';
+import { Expense as PrismaExpense } from '@prisma/client';
 
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { UserInformation } from '../user/user.types';
 import { CreateExpenseInput, ExpenseTableView, ExpenseTableViewRow } from './expense.types';
 
 export class ExpenseService extends BaseService {
@@ -18,7 +19,7 @@ export class ExpenseService extends BaseService {
 		}
 	}
 
-	async getExpenseTableView(user: PrismaUser): Promise<ServiceResult<ExpenseTableView>> {
+	async getExpenseAdminTableView(user: UserInformation): Promise<ServiceResult<ExpenseTableView>> {
 		const accessDenied = this.requireGlobalAnalystOrAdmin<ExpenseTableView>(user);
 		if (accessDenied) return accessDenied;
 

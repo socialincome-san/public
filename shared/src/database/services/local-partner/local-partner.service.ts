@@ -1,6 +1,7 @@
-import { LocalPartner, User as PrismaUser } from '@prisma/client';
+import { LocalPartner } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { UserInformation } from '../user/user.types';
 import { CreateLocalPartnerInput, LocalPartnerTableView, LocalPartnerTableViewRow } from './local-partner.types';
 
 export class LocalPartnerService extends BaseService {
@@ -27,7 +28,7 @@ export class LocalPartnerService extends BaseService {
 		}
 	}
 
-	async getLocalPartnerTableView(user: PrismaUser): Promise<ServiceResult<LocalPartnerTableView>> {
+	async getLocalPartnerAdminTableView(user: UserInformation): Promise<ServiceResult<LocalPartnerTableView>> {
 		const accessDenied = this.requireGlobalAnalystOrAdmin<LocalPartnerTableView>(user);
 		if (accessDenied) return accessDenied;
 

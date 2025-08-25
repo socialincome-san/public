@@ -10,7 +10,7 @@ export default async function UsersPage() {
 	await requireGlobalAnalystOrGlobalAdmin(user);
 
 	const service = new UserService();
-	const result = await service.getUserTableView(user);
+	const result = await service.getUserAdminTableView(user);
 
 	const error = result.success ? null : result.error;
 	const rows: UserTableViewRow[] = result.success ? result.data.tableRows : [];

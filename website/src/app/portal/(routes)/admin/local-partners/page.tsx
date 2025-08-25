@@ -10,7 +10,7 @@ export default async function LocalPartnersPage() {
 	await requireGlobalAnalystOrGlobalAdmin(user);
 
 	const service = new LocalPartnerService();
-	const result = await service.getLocalPartnerTableView(user);
+	const result = await service.getLocalPartnerAdminTableView(user);
 
 	const error = result.success ? null : result.error;
 	const rows: LocalPartnerTableViewRow[] = result.success ? result.data.tableRows : [];

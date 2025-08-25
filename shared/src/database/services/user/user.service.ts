@@ -1,7 +1,7 @@
 import { User as PrismaUser } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { PaginationOptions, ServiceResult } from '../core/base.types';
-import { CreateUserInput, UserTableView, UserTableViewRow, UserInformation } from './user.types';
+import { CreateUserInput, UserInformation, UserTableView, UserTableViewRow } from './user.types';
 
 export class UserService extends BaseService {
 	async findMany(options?: PaginationOptions): Promise<ServiceResult<PrismaUser[]>> {
@@ -68,7 +68,7 @@ export class UserService extends BaseService {
 		}
 	}
 
-	async getUserTableView(user: PrismaUser): Promise<ServiceResult<UserTableView>> {
+	async getUserAdminTableView(user: UserInformation): Promise<ServiceResult<UserTableView>> {
 		const accessDenied = this.requireGlobalAnalystOrAdmin<UserTableView>(user);
 		if (accessDenied) return accessDenied;
 

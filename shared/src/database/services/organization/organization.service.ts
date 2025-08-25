@@ -1,6 +1,7 @@
-import { Organization as PrismaOrganization, User as PrismaUser } from '@prisma/client';
+import { Organization as PrismaOrganization } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { UserInformation } from '../user/user.types';
 import { CreateOrganizationInput, OrganizationTableView, OrganizationTableViewRow } from './organization.types';
 
 export class OrganizationService extends BaseService {
@@ -22,7 +23,7 @@ export class OrganizationService extends BaseService {
 		}
 	}
 
-	async getOrganizationTableView(user: PrismaUser): Promise<ServiceResult<OrganizationTableView>> {
+	async getOrganizationAdminTableView(user: UserInformation): Promise<ServiceResult<OrganizationTableView>> {
 		const accessDenied = this.requireGlobalAnalystOrAdmin<OrganizationTableView>(user);
 		if (accessDenied) return accessDenied;
 
