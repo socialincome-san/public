@@ -11,12 +11,17 @@ import {
 	DropdownMenuTrigger,
 } from '@/app/portal/components/dropdown-menu';
 import { Logo } from '@/app/portal/components/logo';
+import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
 import { Building2, ChevronsUpDown, Handshake, LogOut, Menu, Settings, UsersRound, WalletCards, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
-export function Navbar() {
+type NavbarProps = {
+	user: UserInformation;
+};
+
+export function Navbar({ user }: NavbarProps) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const pathname = usePathname();
 
@@ -71,11 +76,16 @@ export function Navbar() {
 	const ProfileName = () => (
 		<>
 			<Avatar>
-				<AvatarFallback className="bg-primary text-background">LS</AvatarFallback>
+				<AvatarFallback className="bg-primary text-background">
+					{user.firstName?.charAt(0)}
+					{user.lastName?.charAt(0)}
+				</AvatarFallback>
 			</Avatar>
 			<div className="text-left">
-				<p className="text-foreground text-sm font-medium md:text-xs">Lea Strohm </p>
-				<p className="text-muted-foreground text-xs">Social Income</p>
+				<p className="text-foreground text-sm font-medium md:text-xs">
+					{user.firstName} {user.lastName}
+				</p>
+				<p className="text-muted-foreground text-xs">{user.organizationName}</p>
 			</div>
 		</>
 	);
@@ -127,8 +137,8 @@ export function Navbar() {
 						<DropdownMenuContent align="end" className="w-64">
 							{adminLinks.map(({ href, label, icon: Icon }) => (
 								<DropdownMenuItem asChild key={href}>
-									<Link href={href} className="flex items-center gap-2">
-										<Icon className="h-4 w-4" />
+									<Link href={href} className="flex cursor-pointer items-center gap-2">
+										<Icon className="text-muted-foreground h-4 w-4" />
 										<span>{label}</span>
 									</Link>
 								</DropdownMenuItem>
@@ -168,18 +178,24 @@ export function Navbar() {
 						</div>
 						<Separator />
 						{/* Mobile user profile section */}
-						<div className="p-2">
+						<div className="bg-popover p-2">
 							{/* User info */}
 							<div className="flex items-center space-x-3 p-2">
 								<ProfileName />
 							</div>
 							{/* User-related links */}
 							<div className="grid gap-1 p-2">
-								{adminLinks.map(({ href, label }) => (
-									<Link key={href} href={href} className="text-muted-foreground rounded-md px-2 py-2 font-medium">
-										{label}
+								{adminLinks.map(({ href, label, icon: Icon }) => (
+									<Link
+										key={href}
+										href={href}
+										className="text-muted-foreground flex cursor-pointer items-center gap-2 rounded-md px-2 py-2 font-medium"
+									>
+										<Icon className="text-muted-foreground h-4 w-4" />
+										<span>{label}</span>
 									</Link>
 								))}
+								<DropdownMenuSeparator />
 								<button
 									onClick={() => {
 										// TODO: sign-out logic
