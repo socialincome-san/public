@@ -8,7 +8,7 @@ import { TextCell } from '@/app/portal/components/data-table/elements/text-cell'
 import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeRecipientColumns(hideProgramName?: boolean): ColumnDef<RecipientTableViewRow>[] {
+export function makeRecipientColumns(hideProgramName: boolean = false): ColumnDef<RecipientTableViewRow>[] {
 	const columns: ColumnDef<RecipientTableViewRow>[] = [
 		{ accessorKey: 'id', header: 'ID', cell: (ctx) => <TextCell ctx={ctx} /> },
 		{
@@ -53,12 +53,9 @@ export function makeRecipientColumns(hideProgramName?: boolean): ColumnDef<Recip
 
 	columns.push({
 		id: 'actions',
-		header: 'Actions',
+		header: '',
 		enableSorting: false,
-		cell: (ctx) => {
-			const row = ctx.row.original;
-			return <ActionCell ctx={ctx} readOnly={row.permission !== 'operator'} />;
-		},
+		cell: (ctx) => <ActionCell ctx={ctx} />,
 	});
 
 	return columns;

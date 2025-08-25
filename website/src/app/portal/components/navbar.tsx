@@ -11,11 +11,20 @@ import {
 	DropdownMenuTrigger,
 } from '@/app/portal/components/dropdown-menu';
 import { Logo } from '@/app/portal/components/logo';
+import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
+import { signOut } from 'firebase/auth';
 import { Building2, ChevronsUpDown, Handshake, LogOut, Menu, Settings, UsersRound, WalletCards, X } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
+
+type NavLink = {
+	href: string;
+	label: string;
+	activeBase?: string;
+	exact?: boolean;
+};
 
 type NavbarProps = {
 	user: UserInformation;
@@ -24,12 +33,17 @@ type NavbarProps = {
 export function Navbar({ user }: NavbarProps) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const pathname = usePathname();
+	const router = useRouter();
+	const { auth } = useAuth();
 
-	const navLinks = [
-		{ href: '/portal', label: 'Home', hasDropdown: true },
-		{ href: '/portal/monitoring/payout-confirmation', label: 'Monitoring', hasDropdown: false },
-		{ href: '/portal/management/recipients', label: 'Management', hasDropdown: false },
-		{ href: '/portal/delivery/make-payouts', label: 'Delivery', hasDropdown: false },
+	const { role } = user;
+	const isGlobalAnalystOrAdmin = role === 'globalAnalyst' || role === 'globalAdmin';
+
+	const navLinks: NavLink[] = [
+		{ href: '/portal', label: 'Home', exact: true },
+		{ href: '/portal/monitoring/payout-confirmation', label: 'Monitoring', activeBase: '/portal/monitoring' },
+		{ href: '/portal/management/recipients', label: 'Management', activeBase: '/portal/management' },
+		{ href: '/portal/delivery/make-payouts', label: 'Delivery', activeBase: '/portal/delivery' },
 	];
 
 	const adminLinks = [
@@ -37,20 +51,34 @@ export function Navbar({ user }: NavbarProps) {
 		{ href: '/portal/admin/users', label: 'Users', icon: UsersRound },
 		{ href: '/portal/admin/local-partners', label: 'Local partners', icon: Handshake },
 		{ href: '/portal/admin/expenses', label: 'Expenses', icon: WalletCards },
-		{ href: '/portal/admin/account-settings', label: 'Account settings', icon: Settings },
 	];
 
+	const accountSettingsLink = { href: '/portal/account-settings', label: 'Account settings', icon: Settings };
+
 	const toggleMenu = () => setIsMenuOpen((v) => !v);
-	const isActiveLink = (href: string) => {
-		if (href === '/portal') {
-			return pathname === href;
+
+	const isActiveLink = (path: string, link: NavLink) => {
+		if (link.exact) return path === link.href;
+		const base = link.activeBase ?? link.href;
+		return path === base || path.startsWith(base + '/');
+	};
+
+	const handleSignOut = async () => {
+		let ok = false;
+		try {
+			const res = await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+			ok = res.ok;
+			if (!ok) console.error('Logout API failed:', res.status);
+		} catch (e) {
+			console.error('Logout API error:', e);
+		} finally {
+			await signOut(auth).catch(() => {});
+			if (ok) router.push('/portal/login');
 		}
-		return pathname === href || pathname.startsWith(href + '/');
 	};
 
 	const MobileTopBar = () => (
 		<div className={`flex h-14 items-center justify-between px-4 ${!isMenuOpen ? 'border-border border-b' : ''}`}>
-			{/* Mobile menu toggle button */}
 			<Button
 				variant="ghost"
 				onClick={toggleMenu}
@@ -67,8 +95,6 @@ export function Navbar({ user }: NavbarProps) {
 					<X />
 				</span>
 			</Button>
-
-			{/* Logo */}
 			<Logo className="absolute left-1/2 -translate-x-1/2 transform" />
 		</div>
 	);
@@ -90,7 +116,6 @@ export function Navbar({ user }: NavbarProps) {
 		</>
 	);
 
-	// Navigation items component
 	const NavItems = ({ isMobile = false }) => {
 		const linkClasses = `relative rounded-md font-medium ${isMobile ? 'text-base' : 'text-lg'} ${
 			isMobile ? 'text-primary' : 'text-primary hover:bg-accent'
@@ -98,9 +123,8 @@ export function Navbar({ user }: NavbarProps) {
 
 		return (
 			<nav>
-				{/* Main navigation links */}
 				{navLinks.map((link) => {
-					const active = isActiveLink(link.href);
+					const active = isActiveLink(pathname, link);
 					return (
 						<Link key={link.label} href={link.href} className={linkClasses}>
 							{active && <span className="bg-primary absolute -top-7 left-0 h-1 w-full rounded-b-lg" />}
@@ -117,16 +141,11 @@ export function Navbar({ user }: NavbarProps) {
 			{/* Desktop Navbar */}
 			<nav className="container hidden h-16 items-center justify-between md:h-24 lg:block">
 				<div className="flex h-full items-center justify-between">
-					{/* Left section: Logo */}
-
 					<Logo />
-
-					{/* Right section: user menu and button */}
 					<div className="flex items-center gap-x-4">
 						<NavItems />
 					</div>
 
-					{/* User menu dropdown */}
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" className="flex h-12 items-center gap-2 rounded-full px-3 py-2 pl-2.5">
@@ -135,21 +154,30 @@ export function Navbar({ user }: NavbarProps) {
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end" className="w-64">
-							{adminLinks.map(({ href, label, icon: Icon }) => (
-								<DropdownMenuItem asChild key={href}>
-									<Link href={href} className="flex cursor-pointer items-center gap-2">
-										<Icon className="text-muted-foreground h-4 w-4" />
-										<span>{label}</span>
-									</Link>
-								</DropdownMenuItem>
-							))}
+							{/* Always show Account settings */}
+							<DropdownMenuItem asChild>
+								<Link href={accountSettingsLink.href} className="flex items-center gap-2">
+									<accountSettingsLink.icon className="h-4 w-4" />
+									<span>{accountSettingsLink.label}</span>
+								</Link>
+							</DropdownMenuItem>
+
+							{isGlobalAnalystOrAdmin && <DropdownMenuSeparator />}
+							{isGlobalAnalystOrAdmin &&
+								adminLinks.map(({ href, label, icon: Icon }) => (
+									<DropdownMenuItem asChild key={href}>
+										<Link href={href} className="flex cursor-pointer items-center gap-2">
+											<Icon className="text-muted-foreground h-4 w-4" />
+											<span>{label}</span>
+										</Link>
+									</DropdownMenuItem>
+								))}
 
 							<DropdownMenuSeparator />
-
 							<DropdownMenuItem
 								onSelect={(e) => {
 									e.preventDefault();
-									// TODO: sign-out logic
+									handleSignOut();
 								}}
 								className="text-destructive focus:text-destructive"
 							>
@@ -170,38 +198,32 @@ export function Navbar({ user }: NavbarProps) {
 			{isMenuOpen && (
 				<div className="border-border border-b lg:hidden">
 					<div className="flex flex-col">
-						{/* Mobile menu content */}
 						<div className="flex-grow overflow-y-auto p-2">
 							<div className="flex flex-col">
 								<NavItems isMobile />
 							</div>
 						</div>
 						<Separator />
-						{/* Mobile user profile section */}
-						<div className="bg-popover p-2">
-							{/* User info */}
+						<div className="p-2">
 							<div className="flex items-center space-x-3 p-2">
 								<ProfileName />
 							</div>
-							{/* User-related links */}
 							<div className="grid gap-1 p-2">
-								{adminLinks.map(({ href, label, icon: Icon }) => (
-									<Link
-										key={href}
-										href={href}
-										className="text-muted-foreground flex cursor-pointer items-center gap-2 rounded-md px-2 py-2 font-medium"
-									>
-										<Icon className="text-muted-foreground h-4 w-4" />
-										<span>{label}</span>
-									</Link>
-								))}
-								<DropdownMenuSeparator />
-								<button
-									onClick={() => {
-										// TODO: sign-out logic
-									}}
-									className="text-destructive rounded-md px-2 py-2 text-left font-medium"
+								<Link
+									href={accountSettingsLink.href}
+									className="text-muted-foreground rounded-md px-2 py-2 font-medium"
 								>
+									{accountSettingsLink.label}
+								</Link>
+								{isGlobalAnalystOrAdmin && <Separator className="my-2" />}
+								{isGlobalAnalystOrAdmin &&
+									adminLinks.map(({ href, label }) => (
+										<Link key={href} href={href} className="text-muted-foreground rounded-md px-2 py-2 font-medium">
+											{label}
+										</Link>
+									))}
+								{isGlobalAnalystOrAdmin && <Separator className="my-2" />}
+								<button onClick={handleSignOut} className="text-destructive rounded-md px-2 py-2 text-left font-medium">
 									Sign out
 								</button>
 							</div>

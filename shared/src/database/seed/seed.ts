@@ -10,6 +10,7 @@ import { contributorsData } from './data/contributors';
 import { contributionsData } from './data/contributions';
 import { campaignsData } from './data/campaigns';
 import { surveysData } from './data/surveys';
+import { expensesData } from './data/expenses';
 
 async function main() {
 	await prisma.$transaction(async (tx) => {
@@ -35,6 +36,7 @@ async function main() {
 		await tx.contribution.createMany({ data: contributionsData, skipDuplicates: true });
 		await tx.campaign.createMany({ data: campaignsData, skipDuplicates: true });
 		await tx.survey.createMany({ data: surveysData, skipDuplicates: true });
+		await tx.expense.createMany({ data: expensesData, skipDuplicates: true });
 	});
 }
 

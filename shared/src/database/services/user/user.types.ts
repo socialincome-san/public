@@ -9,3 +9,16 @@ export type UserInformation = {
 	organizationName: string | null;
 	role: UserRole;
 };
+
+export type UserTableViewRow = {
+	id: string;
+	firstName: string;
+	lastName: string;
+	role: UserRole;
+	organizationName: string;
+	readonly: boolean;
+};
+
+export type UserTableView = {
+	tableRows: UserTableViewRow[];
+};

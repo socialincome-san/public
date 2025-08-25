@@ -1,4 +1,3 @@
-import { Badge } from '@/app/portal/components/badge';
 import { Button } from '@/app/portal/components/button';
 import { Card } from '@/app/portal/components/card';
 import { TabNavigation } from '@/app/portal/components/tab-navigation';
@@ -35,7 +34,6 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 		{ href: `/portal/programs/${programId}/finances`, label: 'Finances' },
 		{ href: `/portal/programs/${programId}/campaigns`, label: 'Campaigns' },
 		{ href: `/portal/programs/${programId}/surveys`, label: 'Surveys' },
-		{ href: `/portal/programs/${programId}/team-members`, label: 'Team members' },
 	];
 
 	const breadcrumbLinks = [
@@ -50,12 +48,6 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 				<h1 className="py-8 text-5xl">{programName}</h1>
 
 				<CountryBadge country={country} />
-
-				<div className="flex items-center gap-2">
-					<Badge variant={isOperator ? 'default' : 'secondary'} className="text-xs font-medium">
-						{isOperator ? 'Editable' : 'Read-only'}
-					</Badge>
-				</div>
 
 				<Button
 					variant="outline"

@@ -12,6 +12,7 @@ type DataTableProps<Row> = {
 	data: Row[];
 	makeColumns: (hideProgramName: boolean) => ColumnDef<Row>[];
 	hideProgramName?: boolean;
+	onRowClick?: (row: Row) => void; // optional for now
 };
 
 export default function DataTable<Row>({
@@ -22,9 +23,18 @@ export default function DataTable<Row>({
 	data,
 	makeColumns,
 	hideProgramName = false,
+	onRowClick,
 }: DataTableProps<Row>) {
 	const columns = makeColumns(hideProgramName);
 	const isEmpty = data.length === 0;
+
+	// Fallback handler if not provided
+	const handleRowClick =
+		onRowClick ??
+		((row: Row) => {
+			// TODO: make onRowClick mandatory
+			console.log('Row clicked (no handler provided):', row);
+		});
 
 	return (
 		<div>
@@ -40,7 +50,7 @@ export default function DataTable<Row>({
 			) : isEmpty ? (
 				<div className="p-4 text-gray-500">{emptyMessage}</div>
 			) : (
-				<BaseTable data={data} columns={columns} />
+				<BaseTable data={data} columns={columns} onRowClick={handleRowClick} />
 			)}
 		</div>
 	);

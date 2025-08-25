@@ -1,5 +1,6 @@
 'use client';
 
+import { ActionCell } from '@/app/portal/components/data-table/elements/action-cell';
 import { SortableHeader } from '@/app/portal/components/data-table/elements/sortable-header';
 import { TextCell } from '@/app/portal/components/data-table/elements/text-cell';
 import type { PayoutForecastTableViewRow } from '@socialincome/shared/src/database/services/payout-forecast/payout-forecast.types';
@@ -26,6 +27,12 @@ export function makePayoutForecastColumns(): ColumnDef<PayoutForecastTableViewRo
 			accessorKey: 'amountUsd',
 			header: (ctx) => <SortableHeader ctx={ctx}>Amount in USD</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
+			id: 'actions',
+			header: '',
+			enableSorting: false,
+			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
 }

@@ -2,6 +2,7 @@ import { Breadcrumb } from '@/app/portal/components/breadcrumb/breadcrumb';
 import { Card } from '@/app/portal/components/card';
 import { TabNavigation } from '@/app/portal/components/tab-navigation';
 
+import { getAuthenticatedUserOrRedirect, requireGlobalAnalystOrGlobalAdmin } from '@/lib/firebase/current-user';
 import { ReactNode } from 'react';
 
 type MonitoringLayoutProps = {
@@ -9,6 +10,9 @@ type MonitoringLayoutProps = {
 };
 
 export default async function DeliveryLayout({ children }: MonitoringLayoutProps) {
+	const user = await getAuthenticatedUserOrRedirect();
+	await requireGlobalAnalystOrGlobalAdmin(user);
+
 	const breadcrumbLinks = [
 		{ href: '/portal', label: 'Home' },
 		{ href: '/portal/admin', label: 'Admin' },
@@ -19,7 +23,6 @@ export default async function DeliveryLayout({ children }: MonitoringLayoutProps
 		{ href: `/portal/admin/users`, label: 'Users' },
 		{ href: `/portal/admin/local-partners`, label: 'Local Partners' },
 		{ href: `/portal/admin/expenses`, label: 'Expenses' },
-		{ href: `/portal/admin/account-settings`, label: 'Account Settings' },
 	];
 
 	return (
