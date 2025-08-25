@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient, User as PrismaUser } from '@prisma/client';
 import { prisma } from '../../prisma';
 import { ServiceResult } from './base.types';
 
@@ -24,5 +24,12 @@ export abstract class BaseService {
 				{ operatorOrganization: { users: { some: { id: userId } } } },
 			],
 		};
+	}
+
+	protected requireGlobalAnalystOrAdmin<T>(user: PrismaUser): ServiceResult<T> | null {
+		if (user.role !== 'globalAnalyst' && user.role !== 'globalAdmin') {
+			return this.resultFail('Access denied');
+		}
+		return null;
 	}
 }

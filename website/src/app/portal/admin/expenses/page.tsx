@@ -1,7 +1,30 @@
-export default async function Page() {
+import { Button } from '@/app/portal/components/button';
+import { makeExpenseColumns } from '@/app/portal/components/data-table/columns/expenses';
+import DataTable from '@/app/portal/components/data-table/data-table';
+import { getAuthenticatedUserOrRedirect, requireGlobalAnalystOrGlobalAdmin } from '@/lib/firebase/current-user';
+import { ExpenseService } from '@socialincome/shared/src/database/services/expense/expense.service';
+import type { ExpenseTableViewRow } from '@socialincome/shared/src/database/services/expense/expense.types';
+
+export default async function ExpensesPage() {
+	const user = await getAuthenticatedUserOrRedirect();
+	await requireGlobalAnalystOrGlobalAdmin(user);
+
+	const service = new ExpenseService();
+	const result = await service.getExpenseTableView(user);
+
+	const error = result.success ? null : result.error;
+	const rows: ExpenseTableViewRow[] = result.success ? result.data.tableRows : [];
+
+	const isGlobalAdmin = user.role === 'globalAdmin';
+
 	return (
-		<p className="text-gradient animate-pulse bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-2xl font-semibold text-transparent">
-			🚀 Coming Soon!
-		</p>
+		<DataTable
+			title="Expenses"
+			error={error}
+			emptyMessage="No expenses found"
+			data={rows}
+			makeColumns={makeExpenseColumns}
+			actions={<Button disabled={!isGlobalAdmin}>Add expense</Button>}
+		/>
 	);
 }

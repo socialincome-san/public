@@ -1,3 +1,4 @@
+// app/portal/components/data-table/data-table.tsx
 'use client';
 
 import { BaseTable } from '@/app/portal/components/data-table/elements/base-table';
@@ -12,6 +13,7 @@ type DataTableProps<Row> = {
 	data: Row[];
 	makeColumns: (hideProgramName: boolean) => ColumnDef<Row>[];
 	hideProgramName?: boolean;
+	onRowClick?: (row: Row) => void;
 };
 
 export default function DataTable<Row>({
@@ -22,6 +24,7 @@ export default function DataTable<Row>({
 	data,
 	makeColumns,
 	hideProgramName = false,
+	onRowClick,
 }: DataTableProps<Row>) {
 	const columns = makeColumns(hideProgramName);
 	const isEmpty = data.length === 0;
@@ -40,7 +43,7 @@ export default function DataTable<Row>({
 			) : isEmpty ? (
 				<div className="p-4 text-gray-500">{emptyMessage}</div>
 			) : (
-				<BaseTable data={data} columns={columns} />
+				<BaseTable data={data} columns={columns} onRowClick={onRowClick} />
 			)}
 		</div>
 	);

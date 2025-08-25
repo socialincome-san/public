@@ -1,7 +1,8 @@
-import { Expense as PrismaExpense } from '@prisma/client';
+import { Expense as PrismaExpense, User as PrismaUser } from '@prisma/client';
+
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { CreateExpenseInput } from './expense.types';
+import { CreateExpenseInput, ExpenseTableView, ExpenseTableViewRow } from './expense.types';
 
 export class ExpenseService extends BaseService {
 	async create(input: CreateExpenseInput): Promise<ServiceResult<PrismaExpense>> {
@@ -14,6 +15,36 @@ export class ExpenseService extends BaseService {
 		} catch (e) {
 			console.error('[ExpenseService.create]', e);
 			return this.resultFail('Could not create expense');
+		}
+	}
+
+	async getExpenseTableView(user: PrismaUser): Promise<ServiceResult<ExpenseTableView>> {
+		const accessDenied = this.requireGlobalAnalystOrAdmin<ExpenseTableView>(user);
+		if (accessDenied) return accessDenied;
+
+		try {
+			const expenses = await this.db.expense.findMany({
+				select: {
+					id: true,
+					type: true,
+					year: true,
+					amountChf: true,
+				},
+				orderBy: [{ year: 'desc' }, { type: 'asc' }],
+			});
+
+			const tableRows: ExpenseTableViewRow[] = expenses.map((expense) => ({
+				id: expense.id,
+				type: expense.type,
+				year: expense.year,
+				amountChf: expense.amountChf,
+				readonly: user.role === 'globalAnalyst',
+			}));
+
+			return this.resultOk({ tableRows });
+		} catch (error) {
+			console.error('[ExpenseService.getExpenseTableView]', error);
+			return this.resultFail('Could not fetch expenses');
 		}
 	}
 }

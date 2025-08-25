@@ -45,12 +45,9 @@ export function makePayoutConfirmationColumns(hideProgramName = false): ColumnDe
 
 	columns.push({
 		id: 'actions',
-		header: 'Actions',
+		header: '',
 		enableSorting: false,
-		cell: (ctx) => {
-			const row = ctx.row.original;
-			return <ActionCell ctx={ctx} readOnly={row.permission !== 'operator'} />;
-		},
+		cell: (ctx) => <ActionCell ctx={ctx} />,
 	});
 
 	return columns;

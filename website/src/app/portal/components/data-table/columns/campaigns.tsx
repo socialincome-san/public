@@ -56,12 +56,9 @@ export function makeCampaignColumns(hideProgramName?: boolean): ColumnDef<Campai
 
 	columns.push({
 		id: 'actions',
-		header: 'Actions',
+		header: '',
 		enableSorting: false,
-		cell: (ctx) => {
-			const row = ctx.row.original as CampaignTableViewRow & { permission?: string };
-			return <ActionCell ctx={ctx} readOnly={row.permission !== 'operator'} />;
-		},
+		cell: (ctx) => <ActionCell ctx={ctx} />,
 	});
 
 	return columns;

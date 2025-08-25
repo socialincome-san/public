@@ -1,7 +1,28 @@
-export default async function Page() {
+import { Button } from '@/app/portal/components/button';
+import { makeLocalPartnerColumns } from '@/app/portal/components/data-table/columns/local-partners';
+import DataTable from '@/app/portal/components/data-table/data-table';
+import { getAuthenticatedUserOrRedirect, requireGlobalAnalystOrGlobalAdmin } from '@/lib/firebase/current-user';
+import { LocalPartnerService } from '@socialincome/shared/src/database/services/local-partner/local-partner.service';
+import type { LocalPartnerTableViewRow } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
+
+export default async function LocalPartnersPage() {
+	const user = await getAuthenticatedUserOrRedirect();
+	await requireGlobalAnalystOrGlobalAdmin(user);
+
+	const service = new LocalPartnerService();
+	const result = await service.getLocalPartnerTableView(user);
+
+	const error = result.success ? null : result.error;
+	const rows: LocalPartnerTableViewRow[] = result.success ? result.data.tableRows : [];
+
 	return (
-		<p className="text-gradient animate-pulse bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-2xl font-semibold text-transparent">
-			🚀 Coming Soon!
-		</p>
+		<DataTable
+			title="Local Partners"
+			error={error}
+			emptyMessage="No local partners found"
+			data={rows}
+			makeColumns={makeLocalPartnerColumns}
+			actions={<Button disabled={user.role !== 'globalAdmin'}>Add new local partner</Button>}
+		/>
 	);
 }

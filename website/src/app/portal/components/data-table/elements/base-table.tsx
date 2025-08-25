@@ -1,3 +1,4 @@
+// app/portal/components/data-table/elements/base-table.tsx
 'use client';
 
 import { Button } from '@/app/portal/components/button';
@@ -16,9 +17,10 @@ import { useState } from 'react';
 type BaseTableProps<TData, TValue> = {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
+	onRowClick?: (row: TData) => void;
 };
 
-export function BaseTable<TData, TValue>({ columns, data }: BaseTableProps<TData, TValue>) {
+export function BaseTable<TData, TValue>({ columns, data, onRowClick }: BaseTableProps<TData, TValue>) {
 	const [sorting, setSorting] = useState<SortingState>([]);
 
 	const table = useReactTable({
@@ -57,7 +59,14 @@ export function BaseTable<TData, TValue>({ columns, data }: BaseTableProps<TData
 					<TableBody>
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
-								<TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="h-16">
+								<TableRow
+									key={row.id}
+									data-state={row.getIsSelected() && 'selected'}
+									className={`group h-16 transition-colors duration-200 ease-out ${
+										onRowClick ? 'hover:bg-accent/60 cursor-pointer' : ''
+									}`}
+									onClick={onRowClick ? () => onRowClick(row.original) : undefined}
+								>
 									{row.getVisibleCells().map((cell) => (
 										<TableCell key={cell.id} className="border-b">
 											{flexRender(cell.column.columnDef.cell, cell.getContext())}

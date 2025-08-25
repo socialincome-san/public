@@ -1,7 +1,7 @@
 import { User as PrismaUser } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { PaginationOptions, ServiceResult } from '../core/base.types';
-import { CreateUserInput } from './user.types';
+import { CreateUserInput, UserTableView, UserTableViewRow } from './user.types';
 
 export class UserService extends BaseService {
 	async findMany(options?: PaginationOptions): Promise<ServiceResult<PrismaUser[]>> {
@@ -36,20 +36,6 @@ export class UserService extends BaseService {
 		}
 	}
 
-	private async checkIfUserExists(email: string, authUserId: string | null): Promise<PrismaUser | null> {
-		const conditions: Array<{ email: string } | { authUserId: string }> = [{ email }];
-
-		if (authUserId?.trim()) {
-			conditions.push({ authUserId });
-		}
-
-		return this.db.user.findFirst({
-			where: {
-				OR: conditions,
-			},
-		});
-	}
-
 	async getCurrentUserByAuthId(authUserId: string): Promise<ServiceResult<PrismaUser>> {
 		try {
 			const user = await this.db.user.findUnique({
@@ -65,5 +51,51 @@ export class UserService extends BaseService {
 			console.error('[UserService.getCurrentUserByAuthId]', e);
 			return this.resultFail('Error fetching user');
 		}
+	}
+
+	async getUserTableView(user: PrismaUser): Promise<ServiceResult<UserTableView>> {
+		const accessDenied = this.requireGlobalAnalystOrAdmin<UserTableView>(user);
+		if (accessDenied) return accessDenied;
+
+		try {
+			const users = await this.db.user.findMany({
+				select: {
+					id: true,
+					firstName: true,
+					lastName: true,
+					role: true,
+					organization: { select: { name: true } },
+				},
+				orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],
+			});
+
+			const tableRows: UserTableViewRow[] = users.map((user) => ({
+				id: user.id,
+				firstName: user.firstName,
+				lastName: user.lastName,
+				role: user.role,
+				organizationName: user.organization?.name ?? '',
+				readonly: user.role === 'globalAnalyst',
+			}));
+
+			return this.resultOk({ tableRows });
+		} catch (error) {
+			console.error('[UserService.getUserTableView]', error);
+			return this.resultFail('Could not fetch users');
+		}
+	}
+
+	private async checkIfUserExists(email: string, authUserId: string | null): Promise<PrismaUser | null> {
+		const conditions: Array<{ email: string } | { authUserId: string }> = [{ email }];
+
+		if (authUserId?.trim()) {
+			conditions.push({ authUserId });
+		}
+
+		return this.db.user.findFirst({
+			where: {
+				OR: conditions,
+			},
+		});
 	}
 }

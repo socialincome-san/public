@@ -23,7 +23,7 @@ const makeUser = (i: number, orgId?: string): PrismaUser => ({
 	addressCity: null,
 	addressZip: null,
 	addressCountry: 'CH',
-	role: UserRole.user,
+	role: UserRole.globalAdmin,
 	organizationId: orgId ?? null,
 	birthDate: new Date(1980 + (i % 30), i % 12, (i % 28) + 1),
 	communicationPhone: null,

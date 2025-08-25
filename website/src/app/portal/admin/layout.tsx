@@ -19,7 +19,6 @@ export default async function DeliveryLayout({ children }: MonitoringLayoutProps
 		{ href: `/portal/admin/users`, label: 'Users' },
 		{ href: `/portal/admin/local-partners`, label: 'Local Partners' },
 		{ href: `/portal/admin/expenses`, label: 'Expenses' },
-		{ href: `/portal/admin/account-settings`, label: 'Account Settings' },
 	];
 
 	return (

@@ -129,7 +129,6 @@ model Organization {
   name             String      @unique @map("name")
   operatedPrograms Program[]   @relation("ProgramOperators")
   viewedPrograms   Program[]   @relation("ProgramViewers")
-  recipients       Recipient[]
   users            User[]
   createdAt        DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt        DateTime?   @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -162,7 +161,6 @@ model Program {
 model Recipient {
   id             String          @id @default(cuid()) @map("id")
   userId         String          @unique @map("user_id")
-  organizationId String          @map("organization_id")
   programId      String          @map("program_id")
   localPartnerId String          @map("local_partner_id")
   startDate      DateTime?       @map("start_date") @db.Timestamptz(3)
@@ -171,7 +169,6 @@ model Recipient {
   updatedAt      DateTime?       @updatedAt @map("updated_at") @db.Timestamptz(3)
   payouts        Payout[]
   localPartner   LocalPartner    @relation(fields: [localPartnerId], references: [id])
-  organization   Organization    @relation(fields: [organizationId], references: [id])
   program        Program         @relation(fields: [programId], references: [id])
   user           User            @relation(fields: [userId], references: [id])
   surveys        Survey[]

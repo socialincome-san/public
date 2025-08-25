@@ -1,7 +1,28 @@
-export default async function Page() {
+import { Button } from '@/app/portal/components/button';
+import { makeUserColumns } from '@/app/portal/components/data-table/columns/users';
+import DataTable from '@/app/portal/components/data-table/data-table';
+import { getAuthenticatedUserOrRedirect, requireGlobalAnalystOrGlobalAdmin } from '@/lib/firebase/current-user';
+import { UserService } from '@socialincome/shared/src/database/services/user/user.service';
+import type { UserTableViewRow } from '@socialincome/shared/src/database/services/user/user.types';
+
+export default async function UsersPage() {
+	const user = await getAuthenticatedUserOrRedirect();
+	await requireGlobalAnalystOrGlobalAdmin(user);
+
+	const service = new UserService();
+	const result = await service.getUserTableView(user);
+
+	const error = result.success ? null : result.error;
+	const rows: UserTableViewRow[] = result.success ? result.data.tableRows : [];
+
 	return (
-		<p className="text-gradient animate-pulse bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-2xl font-semibold text-transparent">
-			🚀 Coming Soon!
-		</p>
+		<DataTable
+			title="Users"
+			error={error}
+			emptyMessage="No users found"
+			data={rows}
+			makeColumns={makeUserColumns}
+			actions={<Button>Invite user</Button>}
+		/>
 	);
 }
