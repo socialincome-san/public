@@ -11,7 +11,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/app/portal/components/dropdown-menu';
 import { Logo } from '@/app/portal/components/logo';
-import { Building2, ChevronsUpDown, LogOut, Menu, Settings, UsersRound, WalletCards, X } from 'lucide-react';
+import { Building2, ChevronsUpDown, Handshake, LogOut, Menu, Settings, UsersRound, WalletCards, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -28,8 +28,9 @@ export function Navbar() {
 	];
 
 	const adminLinks = [
+		{ href: '/portal/admin/organizations', label: 'Organizations', icon: Building2 },
 		{ href: '/portal/admin/users', label: 'Users', icon: UsersRound },
-		{ href: '/portal/admin/local-partners', label: 'Local partners', icon: Building2 },
+		{ href: '/portal/admin/local-partners', label: 'Local partners', icon: Handshake },
 		{ href: '/portal/admin/expenses', label: 'Expenses', icon: WalletCards },
 		{ href: '/portal/account/settings', label: 'Account settings', icon: Settings },
 	];
