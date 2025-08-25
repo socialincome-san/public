@@ -32,7 +32,7 @@ export function Navbar() {
 		{ href: '/portal/admin/users', label: 'Users', icon: UsersRound },
 		{ href: '/portal/admin/local-partners', label: 'Local partners', icon: Handshake },
 		{ href: '/portal/admin/expenses', label: 'Expenses', icon: WalletCards },
-		{ href: '/portal/account/settings', label: 'Account settings', icon: Settings },
+		{ href: '/portal/admin/account-settings', label: 'Account settings', icon: Settings },
 	];
 
 	const toggleMenu = () => setIsMenuOpen((v) => !v);
