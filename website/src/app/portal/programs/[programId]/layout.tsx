@@ -6,6 +6,7 @@ import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
 
 import { CountryBadge } from '@/app/portal/components/badges/country-badge';
+import { Breadcrumb } from '@/app/portal/components/breadcrumb/breadcrumb';
 import { Pen } from 'lucide-react';
 import { ReactNode } from 'react';
 
@@ -37,8 +38,14 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 		{ href: `/portal/programs/${programId}/team-members`, label: 'Team members' },
 	];
 
+	const breadcrumbLinks = [
+		{ href: '/', label: 'Home' },
+		{ href: `/portal/programs/${programId}/overview`, label: programName },
+	];
+
 	return (
 		<>
+			<Breadcrumb links={breadcrumbLinks} />
 			<div className="flex flex-wrap items-center gap-4 md:flex-row md:items-center">
 				<h1 className="py-8 text-5xl">{programName}</h1>
 
