@@ -4,7 +4,7 @@ import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 
 export default async function PortalPage() {
 	const user = await getAuthenticatedUserOrRedirect();
-	const breadcrumbLinks = [{ href: '/', label: 'Home' }];
+	const breadcrumbLinks = [{ href: '/portal', label: 'Home' }];
 
 	return (
 		<>
