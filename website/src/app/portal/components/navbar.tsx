@@ -16,7 +16,15 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
-export function Navbar() {
+type NavbarProps = {
+	user: {
+		firstName: string;
+		lastName: string;
+		organizationId: string;
+	};
+};
+
+export function Navbar({ user }: NavbarProps) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const pathname = usePathname();
 
@@ -71,11 +79,16 @@ export function Navbar() {
 	const ProfileName = () => (
 		<>
 			<Avatar>
-				<AvatarFallback className="bg-primary text-background">LS</AvatarFallback>
+				<AvatarFallback className="bg-primary text-background">
+					{user.firstName.charAt(0)}
+					{user.lastName.charAt(0)}
+				</AvatarFallback>
 			</Avatar>
 			<div className="text-left">
-				<p className="text-foreground text-sm font-medium md:text-xs">Lea Strohm </p>
-				<p className="text-muted-foreground text-xs">Social Income</p>
+				<p className="text-foreground text-sm font-medium md:text-xs">
+					{user.firstName} {user.lastName}
+				</p>
+				<p className="text-muted-foreground text-xs">{user.organizationId}</p>
 			</div>
 		</>
 	);

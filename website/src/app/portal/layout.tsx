@@ -9,6 +9,7 @@ const ENABLE_PORTAL = process.env.NEXT_PUBLIC_FEATURE_ENABLE_PORTAL === 'true';
 
 export default async function PortalLayout({ children }: { children: ReactNode }) {
 	if (!ENABLE_PORTAL) notFound();
-	await getAuthenticatedUserOrRedirect();
-	return <AppShell>{children}</AppShell>;
+	const user = await getAuthenticatedUserOrRedirect();
+
+	return <AppShell user={user}>{children}</AppShell>;
 }
