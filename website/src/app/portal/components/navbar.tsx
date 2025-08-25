@@ -11,17 +11,14 @@ import {
 	DropdownMenuTrigger,
 } from '@/app/portal/components/dropdown-menu';
 import { Logo } from '@/app/portal/components/logo';
+import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
 import { Building2, ChevronsUpDown, Handshake, LogOut, Menu, Settings, UsersRound, WalletCards, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 type NavbarProps = {
-	user: {
-		firstName: string;
-		lastName: string;
-		organizationId: string;
-	};
+	user: UserInformation;
 };
 
 export function Navbar({ user }: NavbarProps) {
@@ -80,15 +77,15 @@ export function Navbar({ user }: NavbarProps) {
 		<>
 			<Avatar>
 				<AvatarFallback className="bg-primary text-background">
-					{user.firstName.charAt(0)}
-					{user.lastName.charAt(0)}
+					{user.firstName?.charAt(0)}
+					{user.lastName?.charAt(0)}
 				</AvatarFallback>
 			</Avatar>
 			<div className="text-left">
 				<p className="text-foreground text-sm font-medium md:text-xs">
 					{user.firstName} {user.lastName}
 				</p>
-				<p className="text-muted-foreground text-xs">{user.organizationId}</p>
+				<p className="text-muted-foreground text-xs">{user.organizationName}</p>
 			</div>
 		</>
 	);

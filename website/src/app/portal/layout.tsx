@@ -11,5 +11,7 @@ export default async function PortalLayout({ children }: { children: ReactNode }
 	if (!ENABLE_PORTAL) notFound();
 	const user = await getAuthenticatedUserOrRedirect();
 
+	console.log(user);
+
 	return <AppShell user={user}>{children}</AppShell>;
 }

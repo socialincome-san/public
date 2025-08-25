@@ -1,9 +1,11 @@
 import { Navbar } from '@/app/portal/components/navbar';
+import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
+
 import { ReactNode } from 'react';
 
 type AppShellProps = {
 	children: ReactNode;
-	user: any;
+	user: UserInformation;
 };
 
 export function AppShell({ children, user }: AppShellProps) {
