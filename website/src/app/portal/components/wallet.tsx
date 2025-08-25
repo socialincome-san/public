@@ -19,7 +19,7 @@ export function Wallet({ variant = 'default', title, subtitle, footerLeft, foote
 	const renderContent = () => (
 		<Card
 			variant="noPadding"
-			className="flex aspect-[1.4] min-h-full max-w-full flex-col overflow-hidden transition hover:shadow-sm"
+			className="flex min-h-full max-w-full flex-col overflow-hidden transition hover:shadow-sm"
 			style={{
 				['--slant-shift' as any]: '50px',
 				['--slant-width' as any]: '40px',
@@ -61,7 +61,7 @@ export function Wallet({ variant = 'default', title, subtitle, footerLeft, foote
 
 			{/* Wallet content */}
 			<div
-				className="flex flex-1"
+				className="flex aspect-[1.9] flex-1"
 				style={{
 					filter: 'drop-shadow(0 4px 20px rgba(0, 0, 0, 0.09))',
 				}}
@@ -80,7 +80,7 @@ export function Wallet({ variant = 'default', title, subtitle, footerLeft, foote
 							<div className="flex h-full w-full flex-col items-start justify-between gap-2">
 								<div>
 									<h3 className="text-4xl font-normal leading-[1.3]">{title}</h3>
-									<p className="text-sm font-medium tracking-wide">{subtitle}</p>
+									<p className="pb-2 text-sm font-medium tracking-wide">{subtitle}</p>
 								</div>
 								<div className="flex w-full items-start justify-between">
 									<div className="flex flex-col items-start">
