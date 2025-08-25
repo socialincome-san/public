@@ -11,10 +11,12 @@ import {
 	DropdownMenuTrigger,
 } from '@/app/portal/components/dropdown-menu';
 import { Logo } from '@/app/portal/components/logo';
+import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
+import { signOut } from 'firebase/auth';
 import { Building2, ChevronsUpDown, Handshake, LogOut, Menu, Settings, UsersRound, WalletCards, X } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 type NavLink = {
@@ -31,28 +33,17 @@ type NavbarProps = {
 export function Navbar({ user }: NavbarProps) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const pathname = usePathname();
+	const router = useRouter();
+	const { auth } = useAuth();
 
 	const { role } = user;
-
 	const isGlobalAnalystOrAdmin = role === 'globalAnalyst' || role === 'globalAdmin';
 
 	const navLinks: NavLink[] = [
 		{ href: '/portal', label: 'Home', exact: true },
-		{
-			href: '/portal/monitoring/payout-confirmation',
-			label: 'Monitoring',
-			activeBase: '/portal/monitoring',
-		},
-		{
-			href: '/portal/management/recipients',
-			label: 'Management',
-			activeBase: '/portal/management',
-		},
-		{
-			href: '/portal/delivery/make-payouts',
-			label: 'Delivery',
-			activeBase: '/portal/delivery',
-		},
+		{ href: '/portal/monitoring/payout-confirmation', label: 'Monitoring', activeBase: '/portal/monitoring' },
+		{ href: '/portal/management/recipients', label: 'Management', activeBase: '/portal/management' },
+		{ href: '/portal/delivery/make-payouts', label: 'Delivery', activeBase: '/portal/delivery' },
 	];
 
 	const adminLinks = [
@@ -70,6 +61,20 @@ export function Navbar({ user }: NavbarProps) {
 		if (link.exact) return path === link.href;
 		const base = link.activeBase ?? link.href;
 		return path === base || path.startsWith(base + '/');
+	};
+
+	const handleSignOut = async () => {
+		let ok = false;
+		try {
+			const res = await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+			ok = res.ok;
+			if (!ok) console.error('Logout API failed:', res.status);
+		} catch (e) {
+			console.error('Logout API error:', e);
+		} finally {
+			await signOut(auth).catch(() => {});
+			if (ok) router.push('/portal/login');
+		}
 	};
 
 	const MobileTopBar = () => (
@@ -90,7 +95,6 @@ export function Navbar({ user }: NavbarProps) {
 					<X />
 				</span>
 			</Button>
-
 			<Logo className="absolute left-1/2 -translate-x-1/2 transform" />
 		</div>
 	);
@@ -142,7 +146,6 @@ export function Navbar({ user }: NavbarProps) {
 						<NavItems />
 					</div>
 
-					{/* User menu dropdown */}
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
 							<Button variant="outline" className="flex h-12 items-center gap-2 rounded-full px-3 py-2 pl-2.5">
@@ -159,7 +162,6 @@ export function Navbar({ user }: NavbarProps) {
 								</Link>
 							</DropdownMenuItem>
 
-							{/* Admin links only for global roles */}
 							{isGlobalAnalystOrAdmin && <DropdownMenuSeparator />}
 							{isGlobalAnalystOrAdmin &&
 								adminLinks.map(({ href, label, icon: Icon }) => (
@@ -171,12 +173,11 @@ export function Navbar({ user }: NavbarProps) {
 									</DropdownMenuItem>
 								))}
 
-							{/* Always show Sign out at the bottom (with separator if we showed admin links) */}
 							<DropdownMenuSeparator />
 							<DropdownMenuItem
 								onSelect={(e) => {
 									e.preventDefault();
-									// TODO: sign-out logic
+									handleSignOut();
 								}}
 								className="text-destructive focus:text-destructive"
 							>
@@ -203,23 +204,17 @@ export function Navbar({ user }: NavbarProps) {
 							</div>
 						</div>
 						<Separator />
-
-						{/* Mobile user profile & links */}
-						<div className="bg-popover p-2">
+						<div className="p-2">
 							<div className="flex items-center space-x-3 p-2">
 								<ProfileName />
 							</div>
-
 							<div className="grid gap-1 p-2">
-								{/* Always show Account settings */}
 								<Link
 									href={accountSettingsLink.href}
 									className="text-muted-foreground rounded-md px-2 py-2 font-medium"
 								>
 									{accountSettingsLink.label}
 								</Link>
-
-								{/* Admin links (only if global role); show separator only if there are admin links */}
 								{isGlobalAnalystOrAdmin && <Separator className="my-2" />}
 								{isGlobalAnalystOrAdmin &&
 									adminLinks.map(({ href, label }) => (
@@ -227,17 +222,8 @@ export function Navbar({ user }: NavbarProps) {
 											{label}
 										</Link>
 									))}
-
-								{/* Bottom separator only if admin links were shown */}
 								{isGlobalAnalystOrAdmin && <Separator className="my-2" />}
-
-								{/* Always show Sign out */}
-								<button
-									onClick={() => {
-										// TODO: sign-out logic
-									}}
-									className="text-destructive rounded-md px-2 py-2 text-left font-medium"
-								>
+								<button onClick={handleSignOut} className="text-destructive rounded-md px-2 py-2 text-left font-medium">
 									Sign out
 								</button>
 							</div>
