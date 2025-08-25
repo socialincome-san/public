@@ -140,8 +140,8 @@ export function Navbar({ user }: NavbarProps) {
 						<DropdownMenuContent align="end" className="w-64">
 							{adminLinks.map(({ href, label, icon: Icon }) => (
 								<DropdownMenuItem asChild key={href}>
-									<Link href={href} className="flex items-center gap-2">
-										<Icon className="h-4 w-4" />
+									<Link href={href} className="flex cursor-pointer items-center gap-2">
+										<Icon className="text-muted-foreground h-4 w-4" />
 										<span>{label}</span>
 									</Link>
 								</DropdownMenuItem>
@@ -181,18 +181,24 @@ export function Navbar({ user }: NavbarProps) {
 						</div>
 						<Separator />
 						{/* Mobile user profile section */}
-						<div className="p-2">
+						<div className="bg-popover p-2">
 							{/* User info */}
 							<div className="flex items-center space-x-3 p-2">
 								<ProfileName />
 							</div>
 							{/* User-related links */}
 							<div className="grid gap-1 p-2">
-								{adminLinks.map(({ href, label }) => (
-									<Link key={href} href={href} className="text-muted-foreground rounded-md px-2 py-2 font-medium">
-										{label}
+								{adminLinks.map(({ href, label, icon: Icon }) => (
+									<Link
+										key={href}
+										href={href}
+										className="text-muted-foreground flex cursor-pointer items-center gap-2 rounded-md px-2 py-2 font-medium"
+									>
+										<Icon className="text-muted-foreground h-4 w-4" />
+										<span>{label}</span>
 									</Link>
 								))}
+								<DropdownMenuSeparator />
 								<button
 									onClick={() => {
 										// TODO: sign-out logic
