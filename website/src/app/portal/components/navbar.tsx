@@ -7,12 +7,11 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/app/portal/components/dropdown-menu';
 import { Logo } from '@/app/portal/components/logo';
-import { ChevronsUpDown, Menu, X } from 'lucide-react';
+import { Building2, ChevronsUpDown, Handshake, LogOut, Menu, Settings, UsersRound, WalletCards, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -22,15 +21,27 @@ export function Navbar() {
 	const pathname = usePathname();
 
 	const navLinks = [
-		{ href: '/portal/programs', label: 'Programs', hasDropdown: true },
-		{ href: '/portal/monitoring', label: 'Monitoring', hasDropdown: false },
-		{ href: '/portal/management', label: 'Management', hasDropdown: false },
-		{ href: '/portal/delivery', label: 'Delivery', hasDropdown: false },
+		{ href: '/portal', label: 'Home', hasDropdown: true },
+		{ href: '/portal/monitoring/payout-confirmation', label: 'Monitoring', hasDropdown: false },
+		{ href: '/portal/management/recipients', label: 'Management', hasDropdown: false },
+		{ href: '/portal/delivery/make-payouts', label: 'Delivery', hasDropdown: false },
+	];
+
+	const adminLinks = [
+		{ href: '/portal/admin/organizations', label: 'Organizations', icon: Building2 },
+		{ href: '/portal/admin/users', label: 'Users', icon: UsersRound },
+		{ href: '/portal/admin/local-partners', label: 'Local partners', icon: Handshake },
+		{ href: '/portal/admin/expenses', label: 'Expenses', icon: WalletCards },
+		{ href: '/portal/admin/account-settings', label: 'Account settings', icon: Settings },
 	];
 
 	const toggleMenu = () => setIsMenuOpen((v) => !v);
-
-	const isActiveLink = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+	const isActiveLink = (href: string) => {
+		if (href === '/portal') {
+			return pathname === href;
+		}
+		return pathname === href || pathname.startsWith(href + '/');
+	};
 
 	const MobileTopBar = () => (
 		<div className={`flex h-14 items-center justify-between px-4 ${!isMenuOpen ? 'border-border border-b' : ''}`}>
@@ -113,13 +124,28 @@ export function Navbar() {
 								<ChevronsUpDown className="text-accent-foreground h-4 w-4 opacity-50" />
 							</Button>
 						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end">
-							<DropdownMenuLabel>My Account</DropdownMenuLabel>
+						<DropdownMenuContent align="end" className="w-64">
+							{adminLinks.map(({ href, label, icon: Icon }) => (
+								<DropdownMenuItem asChild key={href}>
+									<Link href={href} className="flex items-center gap-2">
+										<Icon className="h-4 w-4" />
+										<span>{label}</span>
+									</Link>
+								</DropdownMenuItem>
+							))}
+
 							<DropdownMenuSeparator />
-							<DropdownMenuItem>Profile</DropdownMenuItem>
-							<DropdownMenuItem>Settings</DropdownMenuItem>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem>Logout</DropdownMenuItem>
+
+							<DropdownMenuItem
+								onSelect={(e) => {
+									e.preventDefault();
+									// TODO: sign-out logic
+								}}
+								className="text-destructive focus:text-destructive"
+							>
+								<LogOut className="mr-2 h-4 w-4" />
+								<span>Sign out</span>
+							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
@@ -148,19 +174,20 @@ export function Navbar() {
 								<ProfileName />
 							</div>
 							{/* User-related links */}
-							<div>
-								<Link href="#" className="text-muted-foreground block rounded-md px-2 py-2 font-medium">
-									My profile
-								</Link>
-								<Link href="#" className="text-muted-foreground block rounded-md px-2 py-2 font-medium">
-									Account settings
-								</Link>
-								<Link href="#" className="text-muted-foreground block rounded-md px-2 py-2 font-medium">
-									Billing
-								</Link>
-								<Link href="#" className="text-muted-foreground block rounded-md px-2 py-2 font-medium">
+							<div className="grid gap-1 p-2">
+								{adminLinks.map(({ href, label }) => (
+									<Link key={href} href={href} className="text-muted-foreground rounded-md px-2 py-2 font-medium">
+										{label}
+									</Link>
+								))}
+								<button
+									onClick={() => {
+										// TODO: sign-out logic
+									}}
+									className="text-destructive rounded-md px-2 py-2 text-left font-medium"
+								>
 									Sign out
-								</Link>
+								</button>
 							</div>
 						</div>
 					</div>

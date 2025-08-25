@@ -7,7 +7,7 @@ export type PayoutMonth = {
 	status: PayoutStatus;
 };
 
-export type PayoutTableViewRow = {
+export type OngoingPayoutTableViewRow = {
 	id: string;
 	firstName: string;
 	lastName: string;
@@ -23,6 +23,21 @@ export type PayoutTableViewRow = {
 	permission: ProgramPermission;
 };
 
-export type PayoutTableView = {
-	tableRows: PayoutTableViewRow[];
+export type OngoingPayoutTableView = {
+	tableRows: OngoingPayoutTableViewRow[];
+};
+
+export type PayoutConfirmationTableViewRow = {
+	id: string;
+	firstName: string;
+	lastName: string;
+	paymentAt: Date;
+	paymentAtFormatted: string;
+	status: PayoutStatus;
+	programName: string;
+	permission: ProgramPermission;
+};
+
+export type PayoutConfirmationTableView = {
+	tableRows: PayoutConfirmationTableViewRow[];
 };

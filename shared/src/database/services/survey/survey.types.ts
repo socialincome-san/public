@@ -22,3 +22,20 @@ export type SurveyTableViewRow = {
 export type SurveyTableView = {
 	tableRows: SurveyTableViewRow[];
 };
+
+export type UpcomingSurveyTableViewRow = {
+	id: string;
+	firstName: string;
+	lastName: string;
+	questionnaire: SurveyQuestionnaire;
+	dueDateAt: Date;
+	dueDateAtFormatted: string;
+	status: SurveyStatus;
+	url: string;
+	programName: string;
+	permission: ProgramPermission;
+};
+
+export type UpcomingSurveyTableView = {
+	tableRows: UpcomingSurveyTableViewRow[];
+};
