@@ -55,6 +55,7 @@ export class UserService extends BaseService {
 			const user = await this.db.user.findUnique({
 				where: { authUserId },
 				select: {
+					id: true,
 					firstName: true,
 					lastName: true,
 					organization: { select: { name: true } },
@@ -67,6 +68,7 @@ export class UserService extends BaseService {
 			}
 
 			const userInfo: UserInformation = {
+				id: user.id,
 				firstName: user.firstName,
 				lastName: user.lastName,
 				organizationName: user.organization?.name || null,
