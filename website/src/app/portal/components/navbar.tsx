@@ -21,7 +21,7 @@ export function Navbar() {
 	const pathname = usePathname();
 
 	const navLinks = [
-		{ href: '/portal/programs', label: 'Programs', hasDropdown: true },
+		{ href: '/portal', label: 'Home', hasDropdown: true },
 		{ href: '/portal/monitoring/payout-confirmation', label: 'Monitoring', hasDropdown: false },
 		{ href: '/portal/management/recipients', label: 'Management', hasDropdown: false },
 		{ href: '/portal/delivery/make-payouts', label: 'Delivery', hasDropdown: false },
@@ -36,7 +36,12 @@ export function Navbar() {
 	];
 
 	const toggleMenu = () => setIsMenuOpen((v) => !v);
-	const isActiveLink = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+	const isActiveLink = (href: string) => {
+		if (href === '/portal') {
+			return pathname === href;
+		}
+		return pathname === href || pathname.startsWith(href + '/');
+	};
 
 	const MobileTopBar = () => (
 		<div className={`flex h-14 items-center justify-between px-4 ${!isMenuOpen ? 'border-border border-b' : ''}`}>
