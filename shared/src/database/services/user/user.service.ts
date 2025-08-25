@@ -1,7 +1,7 @@
 import { User as PrismaUser } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { PaginationOptions, ServiceResult } from '../core/base.types';
-import { CreateUserInput, UserTableView, UserTableViewRow } from './user.types';
+import { CreateUserInput, UserTableView, UserTableViewRow, UserInformation } from './user.types';
 
 export class UserService extends BaseService {
 	async findMany(options?: PaginationOptions): Promise<ServiceResult<PrismaUser[]>> {
@@ -36,17 +36,32 @@ export class UserService extends BaseService {
 		}
 	}
 
-	async getCurrentUserByAuthId(authUserId: string): Promise<ServiceResult<PrismaUser>> {
+	async getCurrentUserByAuthId(authUserId: string): Promise<ServiceResult<UserInformation>> {
 		try {
 			const user = await this.db.user.findUnique({
 				where: { authUserId },
+				select: {
+					id: true,
+					firstName: true,
+					lastName: true,
+					organization: { select: { name: true } },
+					role: true,
+				},
 			});
 
 			if (!user) {
 				return this.resultFail('User not found');
 			}
 
-			return this.resultOk(user);
+			const userInfo: UserInformation = {
+				id: user.id,
+				firstName: user.firstName,
+				lastName: user.lastName,
+				organizationName: user.organization?.name || null,
+				role: user.role,
+			};
+
+			return this.resultOk(userInfo);
 		} catch (e) {
 			console.error('[UserService.getCurrentUserByAuthId]', e);
 			return this.resultFail('Error fetching user');

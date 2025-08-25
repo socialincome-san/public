@@ -11,7 +11,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/app/portal/components/dropdown-menu';
 import { Logo } from '@/app/portal/components/logo';
-import type { UserRole } from '@prisma/client';
+import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
 import { Building2, ChevronsUpDown, Handshake, LogOut, Menu, Settings, UsersRound, WalletCards, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -20,20 +20,21 @@ import { useState } from 'react';
 type NavLink = {
 	href: string;
 	label: string;
-	activeBase?: string; // root path under which this link is considered active
-	exact?: boolean; // for strict match (used for Home)
+	activeBase?: string;
+	exact?: boolean;
 };
 
 type NavbarProps = {
-	role?: UserRole | null; // pass from server/layout
+	user: UserInformation;
 };
 
-export function Navbar({ role }: NavbarProps) {
+export function Navbar({ user }: NavbarProps) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const pathname = usePathname();
 
-	const isGlobal = role === 'globalAdmin' || role === 'globalAnalyst';
-	const isGlobalAdmin = role === 'globalAdmin';
+	const { role } = user;
+
+	const isGlobalAnalystOrAdmin = role === 'globalAnalyst' || role === 'globalAdmin';
 
 	const navLinks: NavLink[] = [
 		{ href: '/portal', label: 'Home', exact: true },
@@ -97,11 +98,16 @@ export function Navbar({ role }: NavbarProps) {
 	const ProfileName = () => (
 		<>
 			<Avatar>
-				<AvatarFallback className="bg-primary text-background">LS</AvatarFallback>
+				<AvatarFallback className="bg-primary text-background">
+					{user.firstName?.charAt(0)}
+					{user.lastName?.charAt(0)}
+				</AvatarFallback>
 			</Avatar>
 			<div className="text-left">
-				<p className="text-foreground text-sm font-medium md:text-xs">Lea Strohm</p>
-				<p className="text-muted-foreground text-xs">Social Income</p>
+				<p className="text-foreground text-sm font-medium md:text-xs">
+					{user.firstName} {user.lastName}
+				</p>
+				<p className="text-muted-foreground text-xs">{user.organizationName}</p>
 			</div>
 		</>
 	);
@@ -154,12 +160,12 @@ export function Navbar({ role }: NavbarProps) {
 							</DropdownMenuItem>
 
 							{/* Admin links only for global roles */}
-							{isGlobal && <DropdownMenuSeparator />}
-							{isGlobal &&
+							{isGlobalAnalystOrAdmin && <DropdownMenuSeparator />}
+							{isGlobalAnalystOrAdmin &&
 								adminLinks.map(({ href, label, icon: Icon }) => (
 									<DropdownMenuItem asChild key={href}>
-										<Link href={href} className="flex items-center gap-2">
-											<Icon className="h-4 w-4" />
+										<Link href={href} className="flex cursor-pointer items-center gap-2">
+											<Icon className="text-muted-foreground h-4 w-4" />
 											<span>{label}</span>
 										</Link>
 									</DropdownMenuItem>
@@ -199,7 +205,7 @@ export function Navbar({ role }: NavbarProps) {
 						<Separator />
 
 						{/* Mobile user profile & links */}
-						<div className="p-2">
+						<div className="bg-popover p-2">
 							<div className="flex items-center space-x-3 p-2">
 								<ProfileName />
 							</div>
@@ -214,8 +220,8 @@ export function Navbar({ role }: NavbarProps) {
 								</Link>
 
 								{/* Admin links (only if global role); show separator only if there are admin links */}
-								{isGlobal && <Separator className="my-2" />}
-								{isGlobal &&
+								{isGlobalAnalystOrAdmin && <Separator className="my-2" />}
+								{isGlobalAnalystOrAdmin &&
 									adminLinks.map(({ href, label }) => (
 										<Link key={href} href={href} className="text-muted-foreground rounded-md px-2 py-2 font-medium">
 											{label}
@@ -223,7 +229,7 @@ export function Navbar({ role }: NavbarProps) {
 									))}
 
 								{/* Bottom separator only if admin links were shown */}
-								{isGlobal && <Separator className="my-2" />}
+								{isGlobalAnalystOrAdmin && <Separator className="my-2" />}
 
 								{/* Always show Sign out */}
 								<button
