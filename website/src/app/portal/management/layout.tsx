@@ -1,3 +1,4 @@
+import { Breadcrumb } from '@/app/portal/components/breadcrumb/breadcrumb';
 import { Card } from '@/app/portal/components/card';
 import { TabNavigation } from '@/app/portal/components/tab-navigation';
 
@@ -8,6 +9,11 @@ type ManagementLayoutProps = {
 };
 
 export default async function ManagementLayout({ children }: ManagementLayoutProps) {
+	const breadcrumbLinks = [
+		{ href: '/', label: 'Home' },
+		{ href: '/portal/management', label: 'Management' },
+	];
+
 	const sections = [
 		{ href: `/portal/management/recipients`, label: 'Recipients' },
 		{ href: `/portal/management/ongoing-payouts`, label: 'Ongoing payouts' },
@@ -19,6 +25,7 @@ export default async function ManagementLayout({ children }: ManagementLayoutPro
 
 	return (
 		<>
+			<Breadcrumb links={breadcrumbLinks} />
 			<h1 className="py-8 text-5xl">Management</h1>
 
 			<TabNavigation sections={sections} />

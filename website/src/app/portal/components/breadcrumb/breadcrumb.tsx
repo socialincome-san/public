@@ -14,7 +14,7 @@ export interface BreadcrumbLinkType {
 
 export const Breadcrumb = ({ links }: { links: BreadcrumbLinkType[] }) => {
 	return (
-		<div className="border border-green-500 py-9">
+		<div className="py-9">
 			<BreadcrumbElements>
 				<BreadcrumbList>
 					{links.map((link: BreadcrumbLinkType, index: number) => {
