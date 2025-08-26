@@ -3,8 +3,8 @@
 import { Button } from '@/app/portal/components/button';
 import { makeRecipientColumns } from '@/app/portal/components/data-table/columns/recipients';
 import DataTable from '@/app/portal/components/data-table/data-table';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
 import { RecipientForm } from '@/app/portal/components/forms/recipient-form';
-import { Modal } from '@/app/portal/components/modal';
 import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import { useState } from 'react';
 
@@ -37,9 +37,16 @@ export function RecipientsTableClient({ rows, error }: { rows: RecipientTableVie
 				onRowClick={handleRowClick}
 			/>
 
-			<Modal open={open} onOpenChange={setOpen}>
-				<RecipientForm initialValues={initialValues} readOnly={readOnly} onSuccess={() => setOpen(false)} />
-			</Modal>
+			<Dialog open={open} onOpenChange={setOpen}>
+				<DialogContent className="sm:max-w-[425]">
+					<DialogHeader>
+						<DialogTitle>
+							{readOnly ? 'View Recipient' : initialValues ? 'Edit Recipient' : 'New Recipient'}
+						</DialogTitle>
+					</DialogHeader>
+					<RecipientForm initialValues={initialValues} readOnly={readOnly} onSuccess={() => setOpen(false)} />
+				</DialogContent>
+			</Dialog>
 		</>
 	);
 }
