@@ -1,8 +1,5 @@
-import { AppShell } from '@/app/portal/components/custom/app-shell';
-import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
-import './globals.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,6 +7,6 @@ const ENABLE_PORTAL = process.env.NEXT_PUBLIC_FEATURE_ENABLE_PORTAL === 'true';
 
 export default async function PortalLayout({ children }: { children: ReactNode }) {
 	if (!ENABLE_PORTAL) notFound();
-	await getAuthenticatedUserOrRedirect();
-	return <AppShell>{children}</AppShell>;
+
+	return <>{children}</>;
 }

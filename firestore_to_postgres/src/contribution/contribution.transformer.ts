@@ -1,9 +1,12 @@
-import { ContributionSource, ContributionStatus } from '@prisma/client';
+import { ContributionInterval, ContributionSource, ContributionStatus } from '@prisma/client';
 import { CreateContributionInput } from '@socialincome/shared/src/database/services/contribution/contribution.types';
 import { BaseTransformer } from '../core/base.transformer';
 import { ContributionWithUser } from './contribution.extractor';
 
-export type ContributionWithEmail = Omit<CreateContributionInput, 'contributorId' | 'campaignId' | 'organizationId'> & {
+export type ContributionWithEmail = Omit<
+	CreateContributionInput,
+	'contributorId' | 'campaignId' | 'organizationId' | 'programId'
+> & {
 	contributorEmail: string;
 };
 
@@ -32,20 +35,35 @@ export class ContributionsTransformer extends BaseTransformer<ContributionWithUs
 				amount: contribution.amount,
 				amountChf: contribution.amount_chf,
 				feesChf: contribution.fees_chf,
-				frequency: `${contribution.monthly_interval ?? 1}m`,
-				monthlyInterval: contribution.monthly_interval ?? 1,
+				contributionInterval: this.mapInterval(contribution.monthly_interval),
 				source: this.mapSource(contribution.source),
 				status: this.mapStatus(contribution.status),
 				currency: contribution.currency,
 				referenceId: contribution.reference_id ?? '',
-				transactionId: 'transaction_id' in contribution ? contribution.transaction_id : null,
-				rawContent: 'raw_content' in contribution ? contribution.raw_content : null,
+				transactionId: 'transaction_id' in contribution ? (contribution.transaction_id ?? null) : null,
+				rawContent: 'raw_content' in contribution ? (contribution.raw_content ?? null) : null,
 				contributorEmail: email,
 			});
 		}
 
 		return [{ contributors, contributions }];
 	};
+
+	private mapInterval(value: number): ContributionInterval {
+		switch (value) {
+			case 0:
+				return ContributionInterval.one_time;
+			case 1:
+				return ContributionInterval.monthly;
+			case 3:
+				return ContributionInterval.quarterly;
+			case 12:
+				return ContributionInterval.annually;
+			default:
+				// fallback: treat unknown numeric cadence as monthly
+				return ContributionInterval.monthly;
+		}
+	}
 
 	private mapSource(source: string): ContributionSource {
 		const normalized = source.replace(/-/g, '_').toLowerCase();

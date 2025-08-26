@@ -2,29 +2,66 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-	--h-navbar: 4.5rem;
-	--h-navbar-mobile: 6rem;
+@font-face {
+	font-family: 'Unica77';
+	src: url('../../../shared/assets/fonts/Unica77LLWeb-Regular.woff2') format('woff2');
+	font-weight: normal;
 }
 
-.h-navbar {
-	height: var(--h-navbar-mobile);
-
-	@media screen(md) {
-		height: var(--h-navbar);
-	}
+@font-face {
+	font-family: 'Unica77';
+	src: url('../../../shared/assets/fonts/Unica77LLWeb-Medium.woff2') format('woff2');
+	font-weight: 500;
 }
 
-.min-h-navbar {
-	min-height: var(--h-navbar-mobile);
-	@media screen(md) {
-		min-height: var(--h-navbar);
-	}
+@font-face {
+	font-family: 'Unica77';
+	src: url('../../../shared/assets/fonts/Unica77LLWeb-Bold.woff2') format('woff2');
+	font-weight: 700;
 }
 
-.min-h-screen-navbar {
-	min-height: calc(100dvh - 4rem);
-	@media screen(md) {
-		min-height: calc(100dvh - 5rem);
+@layer base {
+	:root {
+		--background: 0 0% 100%;
+		--foreground: 197 79% 15%;
+		--card: 0 0% 100%;
+		--card-foreground: 197 79% 15%;
+		--popover: 0 0% 100%;
+		--popover-foreground: 197 79% 15%;
+		--primary: 197 79% 15%;
+		--primary-foreground: 210 40% 98%;
+		--secondary: 210 40% 96%;
+		--secondary-foreground: 197 79% 15%;
+		--muted: 210 40% 96%;
+		--muted-foreground: 215 16% 47%;
+		--accent: 210 40% 96%;
+		--accent-foreground: 197 79% 15%;
+		--destructive: 0 84% 60%;
+		--destructive-foreground: 0 86% 97%;
+		--border: 214 32% 91%;
+		--input: 213 27% 84%;
+		--ring: 215 20% 65%;
+		--radius: 0.625rem;
+		--chart-1: 21 90% 48%;
+		--chart-2: 160 16% 66%;
+		--chart-3: 196 64% 24%;
+		--chart-4: 43 96% 56%;
+		--chart-5: 38 92% 50%;
+		--sidebar-foreground: 197 79% 15%;
+		--sidebar-background: 210 40% 98%;
+		--sidebar-primary: 197 79% 15%;
+		--sidebar-primary-foreground: 210 40% 98%;
+		--sidebar-accent: 210 40% 96%;
+		--sidebar-accent-foreground: 197 79% 15%;
+		--sidebar-border: 214 32% 91%;
+		--sidebar-ring: 215 20% 65%;
+		--gradient-button-from: 201 90% 27%;
+		--gradient-button-to: 160 16% 66%;
+		--gradient-background-from: 40 84% 95%;
+		--gradient-background-to: 203 42% 93%;
+		--confirm: 142 76% 36%;
+		--confirm-foreground: 141 84% 93%;
+		--gradient-card-from: 203 40% 53%;
+		--gradient-card-to: 96 10% 81%;
 	}
 }

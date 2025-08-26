@@ -1,19 +1,27 @@
-import { Recipient, RecipientStatus } from '@prisma/client';
+import { Prisma, Recipient, RecipientStatus } from '@prisma/client';
+import RecipientGetPayload = Prisma.RecipientGetPayload;
 
 export type CreateRecipientInput = Omit<Recipient, 'id' | 'createdAt' | 'updatedAt'>;
 
-export type RecipientTableDbShape = {
-	id: string;
-	status: Recipient['status'];
-	localPartner: { name: string } | null;
-	user: { firstName: string | null; lastName: string | null; birthDate: Date | null } | null;
-};
+export type ProgramPermission = 'operator' | 'viewer';
 
-export type RecipientTableFlatShape = {
+export type RecipientTableViewRow = {
 	id: string;
 	firstName: string;
 	lastName: string;
 	age: number | null;
 	status: RecipientStatus;
+	payoutsReceived: number;
+	payoutsTotal: number;
+	payoutsProgressPercent: number;
 	localPartnerName: string;
+	programName: string;
+	programId: string;
+	permission: ProgramPermission;
 };
+
+export type RecipientTableView = {
+	tableRows: RecipientTableViewRow[];
+};
+
+export type RecipientWithPayouts = RecipientGetPayload<{ include: { payouts: true } }>;
