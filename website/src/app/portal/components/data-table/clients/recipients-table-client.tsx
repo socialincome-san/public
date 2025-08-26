@@ -11,6 +11,7 @@ import { useState } from 'react';
 
 export function RecipientsTableClient({ rows, error }: { rows: RecipientTableViewRow[]; error: string | null }) {
 	const [open, setOpen] = useState(false);
+
 	const [initialValues, setInitialValues] = useState<
 		{ firstName?: string; lastName?: string; status?: RecipientStatus } | undefined
 	>(undefined);
@@ -47,7 +48,12 @@ export function RecipientsTableClient({ rows, error }: { rows: RecipientTableVie
 							{readOnly ? 'View Recipient' : initialValues ? 'Edit Recipient' : 'New Recipient'}
 						</DialogTitle>
 					</DialogHeader>
-					<RecipientForm initialValues={initialValues} readOnly={readOnly} onSuccess={() => setOpen(false)} />
+					<RecipientForm
+						initialValues={initialValues}
+						readOnly={readOnly}
+						onCancel={() => setOpen(false)}
+						onSuccess={() => setOpen(false)}
+					/>
 				</DialogContent>
 			</Dialog>
 		</>

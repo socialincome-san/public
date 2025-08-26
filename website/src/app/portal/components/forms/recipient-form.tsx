@@ -16,11 +16,12 @@ type InitialValues = {
 
 export type RecipientFormProps = {
 	initialValues?: InitialValues;
-	onSuccess: () => void;
 	readOnly?: boolean;
+	onSuccess: () => void;
+	onCancel: () => void;
 };
 
-export function RecipientForm({ initialValues, onSuccess, readOnly = false }: RecipientFormProps) {
+export function RecipientForm({ initialValues, onSuccess, readOnly = false, onCancel }: RecipientFormProps) {
 	const formItemClasses = 'flex flex-col gap-2';
 	const firstName = initialValues?.firstName ?? '';
 	const lastName = initialValues?.lastName ?? '';
@@ -36,7 +37,7 @@ export function RecipientForm({ initialValues, onSuccess, readOnly = false }: Re
 		<form action={formAction} className="flex flex-col gap-6">
 			<div className={formItemClasses}>
 				<Label htmlFor="first-name">First name</Label>
-				<Input id="first-name" defaultValue={firstName} disabled={readOnly} gaa />
+				<Input id="first-name" defaultValue={firstName} disabled={readOnly} />
 			</div>
 
 			<div className={formItemClasses}>
@@ -63,9 +64,10 @@ export function RecipientForm({ initialValues, onSuccess, readOnly = false }: Re
 			<div>
 				{readOnly && <span>No permission to edit</span>}
 				<DialogFooter>
-					<Button variant="outline" onClick={() => {}}>
+					<Button variant="outline" onClick={() => onCancel()}>
 						Cancel
 					</Button>
+
 					<Button type="submit" disabled={readOnly}>
 						Save recipient
 					</Button>
