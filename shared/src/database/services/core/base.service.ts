@@ -1,4 +1,3 @@
-// @socialincome/shared/src/database/services/core/base.service.ts
 import { Prisma, PrismaClient } from '@prisma/client';
 import { prisma } from '../../prisma';
 import { UserInformation } from '../user/user.types';
