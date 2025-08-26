@@ -10,13 +10,13 @@ export class CampaignsImporter extends BaseImporter<CreateCampaignWithoutFK> {
 	import = async (campaigns: CreateCampaignWithoutFK[]): Promise<number> => {
 		let createdCount = 0;
 
-		const organizationId = await OrganizationUtils.getOrCreateSocialIncomeOrganizationId();
+		const organizationId = await OrganizationUtils.getOrCreateDefaultOrganizationId();
 		if (!organizationId) {
 			console.error('❌ Could not resolve organization ID. Aborting campaign import.');
 			return 0;
 		}
 
-		const programId = await ProgramUtils.getOrCreateSocialIncomeProgramId(organizationId);
+		const programId = await ProgramUtils.getOrCreateDefaultProgramId(organizationId);
 		if (!programId) {
 			console.error('❌ Could not resolve program ID. Aborting campaign import.');
 			return 0;
@@ -26,7 +26,6 @@ export class CampaignsImporter extends BaseImporter<CreateCampaignWithoutFK> {
 			const result = await this.campaignService.create({
 				...campaign,
 				programId,
-				organizationId: null,
 			});
 
 			if (result.success) {

@@ -3,6 +3,8 @@ import { CreateContributionInput } from '@socialincome/shared/src/database/servi
 import { ContributorService } from '@socialincome/shared/src/database/services/contributor/contributor.service';
 import { UserService } from '@socialincome/shared/src/database/services/user/user.service';
 import { BaseImporter } from '../core/base.importer';
+import { OrganizationUtils } from '../organization/organization.utils';
+import { ProgramUtils } from '../program/program.utils';
 import { TransformedContributions } from './contribution.transformer';
 
 type UserContributorMap = Map<string, { userId: string; contributorId: string | null }>;
@@ -15,12 +17,24 @@ export class ContributionsImporter extends BaseImporter<TransformedContributions
 	private userContributorMap: UserContributorMap = new Map();
 
 	import = async (transformedList: TransformedContributions[]): Promise<number> => {
+		const organizationId = await OrganizationUtils.getOrCreateDefaultOrganizationId();
+		if (!organizationId) {
+			console.error('❌ Failed to resolve organization. Aborting import.');
+			return 0;
+		}
+
+		const programId = await ProgramUtils.getOrCreateDefaultProgramId(organizationId);
+		if (!programId) {
+			console.error('❌ Failed to resolve program. Aborting import.');
+			return 0;
+		}
+
 		await this.buildUserMap();
-		await this.processContributors(transformedList);
-		return this.processContributions(transformedList);
+		await this.ensureContributors(transformedList);
+
+		return this.createContributions(transformedList, programId);
 	};
 
-	// 🔍 Load all users and populate userContributorMap
 	private async buildUserMap() {
 		const result = await this.userService.findMany();
 		if (!result.success || !result.data) {
@@ -35,45 +49,38 @@ export class ContributionsImporter extends BaseImporter<TransformedContributions
 		}
 	}
 
-	// 👥 Create contributors and fill contributorId in map
-	private async processContributors(transformedList: TransformedContributions[]) {
+	private async ensureContributors(transformedList: TransformedContributions[]) {
 		for (const { contributors } of transformedList) {
-			for (const contributor of contributors) {
-				const entry = this.userContributorMap.get(contributor.email.toLowerCase());
+			for (const { email } of contributors) {
+				const key = email.toLowerCase();
+				const entry = this.userContributorMap.get(key);
 				if (!entry) {
-					console.warn(`[ContributionsImporter] Skipped contributor: No user for email "${contributor.email}"`);
+					console.warn(`[ContributionsImporter] Skipped contributor: No user for email "${email}"`);
 					continue;
 				}
-
 				if (entry.contributorId) continue;
 
 				const exists = await this.contributorService.exists(entry.userId);
 				if (!exists) {
-					const result = await this.contributorService.create({ userId: entry.userId });
-					if (!result.success) {
-						console.warn(
-							`[ContributionsImporter] Failed to create contributor for ${contributor.email}: ${result.error}`,
-						);
+					const createRes = await this.contributorService.create({ userId: entry.userId });
+					if (!createRes.success) {
+						console.warn(`[ContributionsImporter] Failed to create contributor for ${email}: ${createRes.error}`);
 						continue;
 					}
 				}
 
 				const contributorRecord = await this.contributorService.getByUserId(entry.userId);
 				if (!contributorRecord) {
-					console.warn(`[ContributionsImporter] Contributor not found after creation for ${contributor.email}`);
+					console.warn(`[ContributionsImporter] Contributor not found after creation for ${email}`);
 					continue;
 				}
 
-				this.userContributorMap.set(contributor.email.toLowerCase(), {
-					...entry,
-					contributorId: contributorRecord.id,
-				});
+				this.userContributorMap.set(key, { ...entry, contributorId: contributorRecord.id });
 			}
 		}
 	}
 
-	// 💸 Create contributions using contributorId from the map
-	private async processContributions(transformedList: TransformedContributions[]): Promise<number> {
+	private async createContributions(transformedList: TransformedContributions[], programId: string): Promise<number> {
 		let createdCount = 0;
 
 		for (const { contributions } of transformedList) {
@@ -86,19 +93,20 @@ export class ContributionsImporter extends BaseImporter<TransformedContributions
 					continue;
 				}
 
-				const { contributorEmail, ...data } = contribution;
+				const { contributorEmail, ...rest } = contribution;
 
-				const result = await this.contributionService.create({
-					...data,
+				const payload: CreateContributionInput = {
+					...rest,
 					contributorId,
-					organizationId: null,
+					programId,
 					campaignId: null,
-				} as CreateContributionInput);
+				};
 
-				if (result.success) {
+				const res = await this.contributionService.create(payload);
+				if (res.success) {
 					createdCount++;
 				} else {
-					console.warn(`[ContributionsImporter] Failed to create contribution for ${contributorEmail}:`, result.error);
+					console.warn(`[ContributionsImporter] Failed to create contribution for ${contributorEmail}: ${res.error}`);
 				}
 			}
 		}
@@ -106,7 +114,6 @@ export class ContributionsImporter extends BaseImporter<TransformedContributions
 		return createdCount;
 	}
 
-	// 🧩 Get contributorId from the map
 	private getContributorId(email: string): string | null {
 		const entry = this.userContributorMap.get(email.toLowerCase());
 		return entry?.contributorId ?? null;

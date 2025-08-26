@@ -46,7 +46,7 @@ export function makeContributionsColumns(hideProgramName = false): ColumnDef<Con
 
 	columns.push(
 		{
-			accessorKey: 'interval',
+			accessorKey: 'contributionInterval',
 			header: (ctx) => <SortableHeader ctx={ctx}>Interval</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},

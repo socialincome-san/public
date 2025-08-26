@@ -14,13 +14,13 @@ export class RecipientsImporter extends BaseImporter<CreateRecipientWithUser> {
 	import = async (records: CreateRecipientWithUser[]): Promise<number> => {
 		let createdCount = 0;
 
-		const organizationId = await OrganizationUtils.getOrCreateSocialIncomeOrganizationId();
+		const organizationId = await OrganizationUtils.getOrCreateDefaultOrganizationId();
 		if (!organizationId) {
 			console.error('❌ Failed to resolve organization. Aborting import.');
 			return 0;
 		}
 
-		const programId = await ProgramUtils.getOrCreateSocialIncomeProgramId(organizationId);
+		const programId = await ProgramUtils.getOrCreateDefaultProgramId(organizationId);
 		if (!programId) {
 			console.error('❌ Failed to resolve program. Aborting import.');
 			return 0;
@@ -58,7 +58,6 @@ export class RecipientsImporter extends BaseImporter<CreateRecipientWithUser> {
 			const recipientResult = await this.recipientService.create({
 				...record.recipient,
 				userId: userResult.data.id,
-				organizationId,
 				programId,
 				localPartnerId,
 			});

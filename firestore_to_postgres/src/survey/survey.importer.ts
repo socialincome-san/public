@@ -3,6 +3,8 @@ import { SurveyService } from '@socialincome/shared/src/database/services/survey
 import { CreateSurveyInput } from '@socialincome/shared/src/database/services/survey/survey.types';
 import { UserService } from '@socialincome/shared/src/database/services/user/user.service';
 import { BaseImporter } from '../core/base.importer';
+import { OrganizationUtils } from '../organization/organization.utils';
+import { ProgramUtils } from '../program/program.utils';
 import { SurveyWithEmail } from './survey.transformer';
 
 type EmailRecipientMap = Map<string, string>;
@@ -17,6 +19,18 @@ export class SurveyImporter extends BaseImporter<SurveyWithEmail[]> {
 	import = async (surveyBatches: SurveyWithEmail[][]): Promise<number> => {
 		await this.buildRecipientMap();
 
+		const organizationId = await OrganizationUtils.getOrCreateDefaultOrganizationId();
+		if (!organizationId) {
+			console.error('❌ Failed to resolve organization. Aborting import.');
+			return 0;
+		}
+
+		const programId = await ProgramUtils.getOrCreateDefaultProgramId(organizationId);
+		if (!programId) {
+			console.error('❌ Failed to resolve program. Aborting import.');
+			return 0;
+		}
+
 		let createdCount = 0;
 
 		for (const surveys of surveyBatches) {
@@ -30,6 +44,7 @@ export class SurveyImporter extends BaseImporter<SurveyWithEmail[]> {
 				const result = await this.surveyService.create({
 					...survey,
 					recipientId,
+					programId,
 				} as CreateSurveyInput);
 
 				if (result.success) {
