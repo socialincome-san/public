@@ -10,12 +10,12 @@ export abstract class BaseService {
 		this.db = db;
 	}
 
-	protected resultOk<T>(data: T): ServiceResult<T> {
-		return { success: true, data };
+	protected resultOk<T>(data: T, status?: number): ServiceResult<T> {
+		return { success: true, data, status };
 	}
 
-	protected resultFail<T = never>(error: string): ServiceResult<T> {
-		return { success: false, error };
+	protected resultFail<T = never>(error: string, status?: number): ServiceResult<T> {
+		return { success: false, error, status };
 	}
 
 	protected userAccessibleProgramsWhere(userId: string): Prisma.ProgramWhereInput {
@@ -29,7 +29,7 @@ export abstract class BaseService {
 
 	protected requireGlobalAnalystOrAdmin<T>(user: UserInformation): ServiceResult<T> | null {
 		if (user.role !== 'globalAnalyst' && user.role !== 'globalAdmin') {
-			return this.resultFail('Access denied');
+			return this.resultFail('Access denied', 403);
 		}
 		return null;
 	}
