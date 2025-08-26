@@ -6,10 +6,12 @@ import { Input } from '@/app/portal/components/input';
 import { Label } from '@/app/portal/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/portal/components/select';
 import { createRecipientAction } from '@/app/portal/server-actions/create-recipient-action';
+import { RecipientStatus } from '@prisma/client';
 
 type InitialValues = {
 	firstName?: string;
 	lastName?: string;
+	status?: RecipientStatus;
 };
 
 export type RecipientFormProps = {
@@ -22,6 +24,7 @@ export function RecipientForm({ initialValues, onSuccess, readOnly = false }: Re
 	const formItemClasses = 'flex flex-col gap-2';
 	const firstName = initialValues?.firstName ?? '';
 	const lastName = initialValues?.lastName ?? '';
+	const status = initialValues?.status ?? '';
 
 	const formAction = async () => {
 		if (readOnly) return;
@@ -43,14 +46,16 @@ export function RecipientForm({ initialValues, onSuccess, readOnly = false }: Re
 
 			<div className={formItemClasses}>
 				<Label htmlFor="status">Status</Label>
-				<Select>
+				<Select value={status}>
 					<SelectTrigger id="status">
 						<SelectValue placeholder="Choose" />
 					</SelectTrigger>
 					<SelectContent>
 						<SelectItem value="active">Active</SelectItem>
-						<SelectItem value="inactive">Inactive</SelectItem>
-						<SelectItem value="pending">Pending</SelectItem>
+						<SelectItem value="suspended">Suspended</SelectItem>
+						<SelectItem value="waitlisted">Waitlisted</SelectItem>
+						<SelectItem value="designated">Designated</SelectItem>
+						<SelectItem value="former">Former</SelectItem>
 					</SelectContent>
 				</Select>
 			</div>
