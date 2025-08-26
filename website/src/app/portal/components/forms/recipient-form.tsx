@@ -36,7 +36,7 @@ export function RecipientForm({ initialValues, onSuccess, readOnly = false }: Re
 		<form action={formAction} className="flex flex-col gap-6">
 			<div className={formItemClasses}>
 				<Label htmlFor="first-name">First name</Label>
-				<Input id="first-name" defaultValue={firstName} disabled={readOnly} className="" />
+				<Input id="first-name" defaultValue={firstName} disabled={readOnly} gaa />
 			</div>
 
 			<div className={formItemClasses}>
