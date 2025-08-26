@@ -1,9 +1,23 @@
 import { PayoutStatus, Recipient as PrismaRecipient, RecipientStatus } from '@prisma/client';
 import { BaseService } from '../core/base.service';
-import { ServiceResult } from '../core/base.types';
+import { PaginationOptions, ServiceResult } from '../core/base.types';
 import { CreateRecipientInput, ProgramPermission, RecipientTableView, RecipientTableViewRow } from './recipient.types';
 
 export class RecipientService extends BaseService {
+	async findMany(options?: PaginationOptions): Promise<ServiceResult<PrismaRecipient[]>> {
+		try {
+			const recipients = await this.db.recipient.findMany({
+				orderBy: { createdAt: 'desc' },
+				...options,
+			});
+
+			return this.resultOk(recipients);
+		} catch (e) {
+			console.error('[RecipientService.findMany]', e);
+			return this.resultFail('Could not fetch recipients');
+		}
+	}
+
 	async create(input: CreateRecipientInput): Promise<ServiceResult<PrismaRecipient>> {
 		try {
 			const recipient = await this.db.recipient.create({ data: input });

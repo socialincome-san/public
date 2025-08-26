@@ -3,7 +3,7 @@ import { CreateSurveyInput } from '@socialincome/shared/src/database/services/su
 import { BaseTransformer } from '../core/base.transformer';
 import { SurveyWithRecipient } from './survey.extractor';
 
-export type SurveyWithEmail = Omit<CreateSurveyInput, 'recipientId'> & {
+export type SurveyWithEmail = Omit<CreateSurveyInput, 'recipientId' | 'programId'> & {
 	recipientEmail: string;
 };
 
@@ -49,7 +49,7 @@ export class SurveyTransformer extends BaseTransformer<SurveyWithRecipient, Surv
 		return `${namePart}@autocreated.socialincome`;
 	}
 
-	private mapQuestionnaire(value: string): SurveyQuestionnaire {
+	private mapQuestionnaire(value: string | null): SurveyQuestionnaire {
 		switch (value) {
 			case 'onboarding':
 				return SurveyQuestionnaire.onboarding;
@@ -60,7 +60,7 @@ export class SurveyTransformer extends BaseTransformer<SurveyWithRecipient, Surv
 			case 'offboarded-checkin':
 				return SurveyQuestionnaire.offboarded_checkin;
 			default:
-				throw new Error(`❌ Unknown questionnaire value: ${value}`);
+				return SurveyQuestionnaire.onboarding;
 		}
 	}
 

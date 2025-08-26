@@ -1,4 +1,4 @@
-import { ContributionInterval, Contribution as PrismaContribution } from '@prisma/client';
+import { Contribution as PrismaContribution } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import {
@@ -7,13 +7,6 @@ import {
 	CreateContributionInput,
 	ProgramPermission,
 } from './contribution.types';
-
-const INTERVAL_LABELS: Record<ContributionInterval, string> = {
-	one_time: 'One Time',
-	monthly: 'Monthly',
-	quarterly: 'Quarterly',
-	annually: 'Annually',
-};
 
 export class ContributionService extends BaseService {
 	async create(input: CreateContributionInput): Promise<ServiceResult<PrismaContribution>> {
@@ -42,7 +35,7 @@ export class ContributionService extends BaseService {
 					amount: true,
 					currency: true,
 					status: true,
-					interval: true,
+					contributionInterval: true,
 					campaign: { select: { title: true } },
 					program: {
 						select: {
@@ -73,7 +66,7 @@ export class ContributionService extends BaseService {
 					status: contribution.status,
 					campaignName: contribution.campaign?.title ?? '',
 					programName: contribution.program?.name ?? '',
-					interval: INTERVAL_LABELS[contribution.interval],
+					contributionInterval: contribution.contributionInterval,
 					permission,
 				};
 			});

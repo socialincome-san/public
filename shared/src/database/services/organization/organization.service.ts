@@ -59,7 +59,7 @@ export class OrganizationService extends BaseService {
 		}
 	}
 
-	private async checkIfOrganizationExists(name: string): Promise<PrismaOrganization | null> {
+	async checkIfOrganizationExists(name: string): Promise<PrismaOrganization | null> {
 		return this.db.organization.findUnique({
 			where: { name },
 		});

@@ -9,7 +9,7 @@ export class UsersImporter extends BaseImporter<CreateUserWithoutOrganization> {
 	import = async (users: CreateUserWithoutOrganization[]): Promise<number> => {
 		let createdCount = 0;
 
-		const organizationId = await OrganizationUtils.getOrCreateSocialIncomeOrganizationId();
+		const organizationId = await OrganizationUtils.getOrCreateDefaultOrganizationId();
 		if (!organizationId) {
 			console.error('❌ Could not determine organization ID.');
 			return 0;

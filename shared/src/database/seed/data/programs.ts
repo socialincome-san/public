@@ -12,6 +12,7 @@ const makeProgram = (
 	payoutAmount: 700,
 	payoutCurrency: 'SLE',
 	payoutInterval: 'monthly',
+	country: 'Sierra Leone',
 	operatorOrganizationId: operatorOrgId,
 	viewerOrganizationId: viewerOrgId,
 	createdAt: new Date(),

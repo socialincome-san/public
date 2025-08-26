@@ -1,4 +1,9 @@
-import { ContributionSource, ContributionStatus, Contribution as PrismaContribution } from '@prisma/client';
+import {
+	ContributionInterval,
+	ContributionSource,
+	ContributionStatus,
+	Contribution as PrismaContribution,
+} from '@prisma/client';
 
 export type CreateContributionInput = Omit<PrismaContribution, 'id' | 'createdAt' | 'updatedAt'>;
 
@@ -14,7 +19,7 @@ export type ContributionTableViewRow = {
 	status: ContributionStatus;
 	campaignName: string;
 	programName: string;
-	interval: string;
+	contributionInterval: ContributionInterval;
 	permission: ProgramPermission;
 };
 

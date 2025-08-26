@@ -1,4 +1,6 @@
-import { Gender, PayoutStatus } from '@prisma/client';
+import { Gender, PayoutStatus, Payout as PrismaPayout } from '@prisma/client';
+
+export type CreatePayoutInput = Omit<PrismaPayout, 'id' | 'createdAt' | 'updatedAt'>;
 
 export type ProgramPermission = 'operator' | 'viewer';
 
