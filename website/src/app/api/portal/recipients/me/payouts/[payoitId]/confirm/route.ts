@@ -1,5 +1,5 @@
-import { PortalApiService } from '@/app/api/portal/portal-api.service';
 import { PayoutStatus } from '@prisma/client';
+import { PortalApiService } from '@socialincome/shared/src/database/services/portal-api/portal-api.service';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request, { params }: { params: { payoutId: string } }) {

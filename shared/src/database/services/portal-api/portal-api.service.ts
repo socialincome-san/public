@@ -1,7 +1,7 @@
-import { requireIdToken } from '@/lib/firebase/require-id-token';
 import { Payout, PayoutStatus, Recipient } from '@prisma/client';
-import { BaseService } from '@socialincome/shared/src/database/services/core/base.service';
-import { ServiceResult } from '@socialincome/shared/src/database/services/core/base.types';
+import { authAdmin } from '@socialincome/website/src/lib/firebase/firebase-admin';
+import { BaseService } from '../core/base.service';
+import { ServiceResult } from '../core/base.types';
 
 export class PortalApiService extends BaseService {
 	private normalizePhone(phone?: string | null) {
@@ -9,7 +9,7 @@ export class PortalApiService extends BaseService {
 	}
 
 	async getRecipientFromRequest(request: Request): Promise<ServiceResult<Recipient>> {
-		const decoded = await requireIdToken(request);
+		const decoded = await this.requireIdToken(request);
 		if (!decoded) return this.resultFail('Unauthorized', 401);
 
 		const phone = this.normalizePhone(decoded.phone_number ?? null);
@@ -61,6 +61,18 @@ export class PortalApiService extends BaseService {
 			return this.resultOk(updated, 200);
 		} catch {
 			return this.resultFail(`Failed to update payout "${payoutId}"`, 500);
+		}
+	}
+
+	private async requireIdToken(request: Request) {
+		const header = request.headers.get('authorization');
+		if (!header?.startsWith('Bearer ')) return null;
+		const token = header.slice('Bearer '.length);
+		try {
+			return await authAdmin.auth.verifyIdToken(token);
+		} catch (e) {
+			console.error('Auth error:', e);
+			return null;
 		}
 	}
 }

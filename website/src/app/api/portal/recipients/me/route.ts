@@ -1,4 +1,4 @@
-import { PortalApiService } from '@/app/api/portal/portal-api.service';
+import { PortalApiService } from '@socialincome/shared/src/database/services/portal-api/portal-api.service';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
