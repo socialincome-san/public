@@ -7,12 +7,19 @@ import { Label } from '@/app/portal/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/portal/components/select';
 import { createRecipientAction } from '@/app/portal/server-actions/create-recipient-action';
 import { RecipientStatus } from '@prisma/client';
+import { TriangleAlert } from 'lucide-react';
 
-type InitialValues = {
-	firstName?: string;
-	lastName?: string;
-	status?: RecipientStatus;
+type FieldType = 'input' | 'select';
+
+type FieldDefinition = {
+	id: string;
+	label: string;
+	type: FieldType;
+	placeholder?: string;
+	options?: { value: string; label: string }[];
 };
+
+type InitialValues = Record<string, string | undefined>;
 
 export type RecipientFormProps = {
 	initialValues?: InitialValues;
@@ -21,11 +28,33 @@ export type RecipientFormProps = {
 	onCancel: () => void;
 };
 
-export function RecipientForm({ initialValues, onSuccess, readOnly = false, onCancel }: RecipientFormProps) {
+const statusLabelMap: Record<keyof typeof RecipientStatus, string> = {
+	active: 'Active',
+	suspended: 'Suspended',
+	waitlisted: 'Waitlisted',
+	designated: 'Designated',
+	former: 'Former',
+};
+
+const statusOptions = Object.entries(RecipientStatus).map(([key, value]) => ({
+	value,
+	label: statusLabelMap[key as keyof typeof RecipientStatus] ?? key,
+}));
+
+const recipientFormSchema: FieldDefinition[] = [
+	{ id: 'firstName', label: 'First name', type: 'input', placeholder: 'Enter first name' },
+	{ id: 'lastName', label: 'Last name', type: 'input', placeholder: 'Enter last name' },
+	{
+		id: 'status',
+		label: 'Status',
+		type: 'select',
+		placeholder: 'Choose status',
+		options: statusOptions,
+	},
+];
+
+export function RecipientForm({ initialValues = {}, onSuccess, readOnly = false, onCancel }: RecipientFormProps) {
 	const formItemClasses = 'flex flex-col gap-2';
-	const firstName = initialValues?.firstName ?? '';
-	const lastName = initialValues?.lastName ?? '';
-	const status = initialValues?.status ?? '';
 
 	const formAction = async () => {
 		if (readOnly) return;
@@ -35,39 +64,48 @@ export function RecipientForm({ initialValues, onSuccess, readOnly = false, onCa
 
 	return (
 		<form action={formAction} className="flex flex-col gap-6">
-			<div className={formItemClasses}>
-				<Label htmlFor="first-name">First name</Label>
-				<Input id="first-name" defaultValue={firstName} disabled={readOnly} />
-			</div>
+			{recipientFormSchema.map((field) => (
+				<div key={field.id} className={formItemClasses}>
+					<Label htmlFor={field.id}>{field.label}</Label>
 
-			<div className={formItemClasses}>
-				<Label htmlFor="last-name">Last name</Label>
-				<Input id="last-name" defaultValue={lastName} disabled={readOnly} />
-			</div>
+					{field.type === 'input' && (
+						<Input
+							id={field.id}
+							name={field.id}
+							defaultValue={initialValues[field.id]}
+							placeholder={field.placeholder}
+							disabled={readOnly}
+						/>
+					)}
 
-			<div className={formItemClasses}>
-				<Label htmlFor="status">Status</Label>
-				<Select value={status}>
-					<SelectTrigger id="status">
-						<SelectValue placeholder="Choose" />
-					</SelectTrigger>
-					<SelectContent>
-						<SelectItem value="active">Active</SelectItem>
-						<SelectItem value="suspended">Suspended</SelectItem>
-						<SelectItem value="waitlisted">Waitlisted</SelectItem>
-						<SelectItem value="designated">Designated</SelectItem>
-						<SelectItem value="former">Former</SelectItem>
-					</SelectContent>
-				</Select>
-			</div>
+					{field.type === 'select' && (
+						<Select defaultValue={initialValues[field.id]}>
+							<SelectTrigger id={field.id}>
+								<SelectValue placeholder={field.placeholder} />
+							</SelectTrigger>
+							<SelectContent>
+								{field.options?.map((opt) => (
+									<SelectItem key={opt.value} value={opt.value}>
+										{opt.label}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					)}
+				</div>
+			))}
 
 			<div>
-				{readOnly && <span>No permission to edit</span>}
+				{readOnly && (
+					<div className="mb-4 flex gap-4 text-red-700">
+						<TriangleAlert className="h-6 w-6" />
+						<span>No permission to edit</span>
+					</div>
+				)}
 				<DialogFooter>
-					<Button variant="outline" onClick={() => onCancel()}>
+					<Button variant="outline" onClick={onCancel}>
 						Cancel
 					</Button>
-
 					<Button type="submit" disabled={readOnly}>
 						Save recipient
 					</Button>
