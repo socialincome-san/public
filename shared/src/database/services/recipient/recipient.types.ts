@@ -11,7 +11,6 @@ export type RecipientTableViewRow = {
 	lastName: string;
 	birthDate: Date | null;
 	gender: Gender;
-	age: number | null;
 	company: string;
 	status: RecipientStatus;
 	payoutsReceived: number;

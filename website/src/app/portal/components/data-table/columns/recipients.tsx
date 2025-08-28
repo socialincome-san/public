@@ -1,6 +1,7 @@
 'use client';
 
 import { ActionCell } from '@/app/portal/components/data-table/elements/action-cell';
+import { AgeCell } from '@/app/portal/components/data-table/elements/age-cell';
 import { ProgressCell } from '@/app/portal/components/data-table/elements/progress-cell';
 import { SortableHeader } from '@/app/portal/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/app/portal/components/data-table/elements/status-cell';
@@ -22,9 +23,9 @@ export function makeRecipientColumns(hideProgramName: boolean = false): ColumnDe
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'age',
+			accessorKey: 'birthDate',
 			header: (ctx) => <SortableHeader ctx={ctx}>Age</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
+			cell: (ctx) => <AgeCell ctx={ctx} />,
 		},
 		{
 			accessorKey: 'status',

@@ -68,9 +68,7 @@ export class RecipientService extends BaseService {
 				const payoutsReceived = recipient.payouts.length;
 				const payoutsTotal = recipient.program?.totalPayments ?? 0;
 				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
-
 				const birthDate = recipient.user?.birthDate ?? null;
-				const age = birthDate ? this.calculateAgeFromBirthDate(birthDate) : null;
 				const gender = recipient.user?.gender ?? '';
 				const userIsOperator = (recipient.program?.operatorOrganization?.users?.length ?? 0) > 0;
 				const permission: ProgramPermission = userIsOperator ? 'operator' : 'viewer';
@@ -80,7 +78,6 @@ export class RecipientService extends BaseService {
 					firstName: recipient.user?.firstName ?? '',
 					lastName: recipient.user?.lastName ?? '',
 					company: recipient.user?.company ?? '',
-					age,
 					birthDate,
 					gender,
 					status: recipient.status as RecipientStatus,
@@ -123,16 +120,5 @@ export class RecipientService extends BaseService {
 			console.error('[RecipientService.getRecipientByMobileMoneyPhone]', { mobileMoneyPhone, error: e });
 			return this.resultFail(`Could not fetch recipient for phone ${mobileMoneyPhone}`);
 		}
-	}
-
-	private calculateAgeFromBirthDate(birthDate: Date): number {
-		const today = new Date();
-		let years = today.getFullYear() - birthDate.getFullYear();
-		const monthDifference = today.getMonth() - birthDate.getMonth();
-		const dayDifference = today.getDate() - birthDate.getDate();
-		if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
-			years -= 1;
-		}
-		return years;
 	}
 }
