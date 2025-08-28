@@ -96,7 +96,7 @@ export function RecipientForm({ initialValues = {}, onSuccess, readOnly = false,
 					)}
 
 					{field.type === 'select' && (
-						<Select defaultValue={initialValues[field.id]}>
+						<Select defaultValue={initialValues[field.id]} disabled={readOnly}>
 							<SelectTrigger id={field.id}>
 								<SelectValue placeholder={field.placeholder} />
 							</SelectTrigger>
@@ -114,6 +114,7 @@ export function RecipientForm({ initialValues = {}, onSuccess, readOnly = false,
 						<DatePicker
 							initialDate={initialValues[field.id] ? new Date(initialValues[field.id] as string) : undefined}
 							fieldId={field.id}
+							readOnly={readOnly}
 						/>
 					)}
 				</div>

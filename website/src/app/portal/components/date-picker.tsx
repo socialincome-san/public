@@ -9,9 +9,10 @@ import * as React from 'react';
 type DatePickerProps = {
 	fieldId?: string;
 	initialDate?: Date;
+	readOnly?: boolean;
 };
 
-export function DatePicker({ fieldId, initialDate }: DatePickerProps) {
+export function DatePicker({ fieldId, initialDate, readOnly }: DatePickerProps) {
 	const [open, setOpen] = React.useState(false);
 	const [selectedDate, setDate] = React.useState<Date | undefined>(initialDate);
 
@@ -21,6 +22,7 @@ export function DatePicker({ fieldId, initialDate }: DatePickerProps) {
 				<Button
 					variant="outline"
 					id={fieldId}
+					disabled={readOnly}
 					className={`justify-between font-normal ${selectedDate ? 'text-primary' : 'text-muted-foreground'}`}
 				>
 					{selectedDate ? selectedDate.toLocaleDateString() : 'Select date'}
