@@ -43,7 +43,7 @@ export class RecipientService extends BaseService {
 					id: true,
 					status: true,
 					localPartner: { select: { name: true } },
-					user: { select: { firstName: true, lastName: true, birthDate: true } },
+					user: { select: { firstName: true, lastName: true, birthDate: true, company: true, gender: true } },
 					program: {
 						select: {
 							id: true,
@@ -71,7 +71,7 @@ export class RecipientService extends BaseService {
 
 				const birthDate = recipient.user?.birthDate ?? null;
 				const age = birthDate ? this.calculateAgeFromBirthDate(birthDate) : null;
-
+				const gender = recipient.user?.gender ?? '';
 				const userIsOperator = (recipient.program?.operatorOrganization?.users?.length ?? 0) > 0;
 				const permission: ProgramPermission = userIsOperator ? 'operator' : 'viewer';
 
@@ -79,7 +79,10 @@ export class RecipientService extends BaseService {
 					id: recipient.id,
 					firstName: recipient.user?.firstName ?? '',
 					lastName: recipient.user?.lastName ?? '',
+					company: recipient.user?.company ?? '',
 					age,
+					birthDate,
+					gender,
 					status: recipient.status as RecipientStatus,
 					payoutsReceived,
 					payoutsTotal,

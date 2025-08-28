@@ -6,7 +6,7 @@ import { Input } from '@/app/portal/components/input';
 import { Label } from '@/app/portal/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/portal/components/select';
 import { createRecipientAction } from '@/app/portal/server-actions/create-recipient-action';
-import { RecipientStatus } from '@prisma/client';
+import { Gender, RecipientStatus } from '@prisma/client';
 import { TriangleAlert } from 'lucide-react';
 
 type FieldType = 'input' | 'select';
@@ -41,9 +41,24 @@ const statusOptions = Object.entries(RecipientStatus).map(([key, value]) => ({
 	label: statusLabelMap[key as keyof typeof RecipientStatus] ?? key,
 }));
 
+const genderLabelMap: Record<keyof typeof Gender, string> = {
+	male: 'Male',
+	female: 'Female',
+	other: 'Other',
+	private: 'Private',
+};
+
+const genderOptions = Object.entries(Gender).map(([key, value]) => ({
+	value,
+	label: genderLabelMap[key as keyof typeof Gender] ?? key,
+}));
+
 const recipientFormSchema: FieldDefinition[] = [
 	{ id: 'firstName', label: 'First name', type: 'input', placeholder: 'Enter first name' },
 	{ id: 'lastName', label: 'Last name', type: 'input', placeholder: 'Enter last name' },
+	{ id: 'birthDate', label: 'Birthdate', type: 'input', placeholder: 'YYYY-MM-DD' },
+	{ id: 'gender', label: 'Gender', type: 'select', placeholder: 'Enter gender', options: genderOptions },
+	{ id: 'company', label: 'Company', type: 'input', placeholder: 'Enter company name' },
 	{
 		id: 'status',
 		label: 'Status',

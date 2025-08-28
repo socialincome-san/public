@@ -5,7 +5,7 @@ import { makeRecipientColumns } from '@/app/portal/components/data-table/columns
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
 import { RecipientForm } from '@/app/portal/components/forms/recipient-form';
-import { RecipientStatus } from '@prisma/client';
+import { Gender, RecipientStatus } from '@prisma/client';
 import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import { useState } from 'react';
 
@@ -13,7 +13,15 @@ export function RecipientsTableClient({ rows, error }: { rows: RecipientTableVie
 	const [open, setOpen] = useState(false);
 
 	const [initialValues, setInitialValues] = useState<
-		{ firstName?: string; lastName?: string; status?: RecipientStatus } | undefined
+		| {
+				firstName?: string;
+				lastName?: string;
+				status?: RecipientStatus;
+				birthDate?: string;
+				gender?: Gender;
+				company?: string;
+		  }
+		| undefined
 	>(undefined);
 	const [readOnly, setReadOnly] = useState(false);
 
@@ -24,7 +32,14 @@ export function RecipientsTableClient({ rows, error }: { rows: RecipientTableVie
 	};
 
 	const handleRowClick = (row: RecipientTableViewRow) => {
-		setInitialValues({ firstName: row.firstName, lastName: row.lastName, status: row.status });
+		setInitialValues({
+			firstName: row.firstName,
+			lastName: row.lastName,
+			status: row.status,
+			birthDate: row.birthDate ? row.birthDate.toISOString().slice(0, 10) : undefined,
+			gender: row.gender,
+			company: row.company,
+		});
 		setReadOnly(row.permission !== 'operator');
 		setOpen(true);
 	};
