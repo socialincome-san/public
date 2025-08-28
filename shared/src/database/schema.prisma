@@ -10,45 +10,44 @@ datasource db {
 }
 
 model User {
-  id                   String                @id @default(cuid()) @map("id")
-  email                String                @unique @map("email")
-  authUserId           String?               @unique @map("auth_user_id")
-  firstName            String                @map("first_name")
-  lastName             String                @map("last_name")
-  gender               Gender                @default(private) @map("gender")
-  phone                String?               @map("phone")
-  company              String?               @map("company")
-  referral             UserReferralSource?   @map("referral")
-  paymentReferenceId   String?               @map("payment_reference_id")
-  stripeCustomerId     String?               @map("stripe_customer_id")
-  institution          Boolean               @default(false) @map("institution")
-  language             LanguageCode?         @map("language")
-  currency             String?               @map("currency")
-  addressStreet        String?               @map("address_street")
-  addressNumber        String?               @map("address_number")
-  addressCity          String?               @map("address_city")
-  addressZip           Int?                  @map("address_zip")
-  addressCountry       String?               @map("address_country")
-  role                 UserRole              @default(user) @map("role")
-  organizationId       String?               @map("organization_id")
-  birthDate            DateTime?             @map("birth_date") @db.Date
-  communicationPhone   String?               @map("communication_phone")
-  mobileMoneyPhone     String?               @map("mobile_money_phone")
-  hasWhatsAppComm      Boolean?              @map("has_whatsapp_comm")
-  hasWhatsAppMobile    Boolean?              @map("has_whatsapp_mobile")
-  whatsappActivated    Boolean?              @map("whatsapp_activated")
-  instaHandle          String?               @map("insta_handle")
-  twitterHandle        String?               @map("twitter_handle")
-  profession           String?               @map("profession")
-  callingName          String?               @map("calling_name")
-  omUid                Int?                  @map("om_uid")
-  createdAt            DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt            DateTime?             @updatedAt @map("updated_at") @db.Timestamptz(3)
-  contributor          Contributor?
-  localPartner         LocalPartner?
-  recipient            Recipient?
-  donationCertificates DonationCertificate[]
-  organization         Organization?         @relation(fields: [organizationId], references: [id])
+  id                                  String                @id @default(cuid()) @map("id")
+  email                               String                @unique @map("email")
+  authUserId                          String?               @unique @map("auth_user_id")
+  firstName                           String                @map("first_name")
+  lastName                            String                @map("last_name")
+  gender                              Gender                @default(private) @map("gender")
+  company                             String?               @map("company")
+  referral                            UserReferralSource?   @map("referral")
+  paymentReferenceId                  String?               @map("payment_reference_id")
+  stripeCustomerId                    String?               @map("stripe_customer_id")
+  institution                         Boolean               @default(false) @map("institution")
+  language                            LanguageCode?         @map("language")
+  currency                            String?               @map("currency")
+  addressStreet                       String?               @map("address_street")
+  addressNumber                       String?               @map("address_number")
+  addressCity                         String?               @map("address_city")
+  addressZip                          Int?                  @map("address_zip")
+  addressCountry                      String?               @map("address_country")
+  role                                UserRole              @default(user) @map("role")
+  organizationId                      String?               @map("organization_id")
+  birthDate                           DateTime?             @map("birth_date") @db.Date
+  communicationPhone                  String?               @map("communication_phone")
+  communicationPhoneHasWhatsApp       Boolean?              @map("communication_phone_has_whatsapp")
+  communicationPhoneWhatsappActivated Boolean?              @map("communication_phone_whatsapp_activated")
+  mobileMoneyPhone                    String?               @map("mobile_money_phone")
+  mobileMoneyPhoneHasWhatsApp         Boolean?              @map("mobile_money_phone_has_whatsapp")
+  instaHandle                         String?               @map("insta_handle")
+  twitterHandle                       String?               @map("twitter_handle")
+  profession                          String?               @map("profession")
+  callingName                         String?               @map("calling_name")
+  omUid                               Int?                  @map("om_uid")
+  createdAt                           DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                           DateTime?             @updatedAt @map("updated_at") @db.Timestamptz(3)
+  contributor                         Contributor?
+  localPartner                        LocalPartner?
+  recipient                           Recipient?
+  donationCertificates                DonationCertificate[]
+  organization                        Organization?         @relation(fields: [organizationId], references: [id])
 
   @@map("user")
 }
@@ -65,25 +64,25 @@ model Contributor {
 }
 
 model Contribution {
-  id                      String               @id @default(cuid()) @map("id")
-  amount                  Float                @map("amount")
-  amountChf               Float                @map("amount_chf")
-  feesChf                 Float                @map("fees_chf")
-  contributionInterval    ContributionInterval @default(one_time) @map("contribution_interval")
-  source                  ContributionSource   @map("source")
-  status                  ContributionStatus   @map("status")
-  currency                String               @map("currency")
-  referenceId             String               @map("reference_id")
-  transactionId           String?              @map("transaction_id")
-  rawContent              String?              @map("raw_content")
-  contributorId           String               @map("contributor_id")
-  campaignId              String?              @map("campaign_id")
-  programId               String?              @map("program_id")
-  createdAt               DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt               DateTime?            @updatedAt @map("updated_at") @db.Timestamptz(3)
-  campaign                Campaign?            @relation(fields: [campaignId], references: [id])
-  contributor             Contributor          @relation(fields: [contributorId], references: [id])
-  program                 Program?             @relation(fields: [programId], references: [id])
+  id                   String               @id @default(cuid()) @map("id")
+  amount               Float                @map("amount")
+  amountChf            Float                @map("amount_chf")
+  feesChf              Float                @map("fees_chf")
+  contributionInterval ContributionInterval @default(one_time) @map("contribution_interval")
+  source               ContributionSource   @map("source")
+  status               ContributionStatus   @map("status")
+  currency             String               @map("currency")
+  referenceId          String               @map("reference_id")
+  transactionId        String?              @map("transaction_id")
+  rawContent           String?              @map("raw_content")
+  contributorId        String               @map("contributor_id")
+  campaignId           String?              @map("campaign_id")
+  programId            String?              @map("program_id")
+  createdAt            DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt            DateTime?            @updatedAt @map("updated_at") @db.Timestamptz(3)
+  campaign             Campaign?            @relation(fields: [campaignId], references: [id])
+  contributor          Contributor          @relation(fields: [contributorId], references: [id])
+  program              Program?             @relation(fields: [programId], references: [id])
 
   @@map("contribution")
 }
@@ -124,13 +123,13 @@ model Campaign {
 }
 
 model Organization {
-  id               String      @id @default(cuid()) @map("id")
-  name             String      @unique @map("name")
-  operatedPrograms Program[]   @relation("ProgramOperators")
-  viewedPrograms   Program[]   @relation("ProgramViewers")
+  id               String    @id @default(cuid()) @map("id")
+  name             String    @unique @map("name")
+  operatedPrograms Program[] @relation("ProgramOperators")
+  viewedPrograms   Program[] @relation("ProgramViewers")
   users            User[]
-  createdAt        DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt        DateTime?   @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("organization")
 }

@@ -7,10 +7,10 @@ import { Input } from '@/app/portal/components/input';
 import { Label } from '@/app/portal/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/portal/components/select';
 import { createRecipientAction } from '@/app/portal/server-actions/create-recipient-action';
-import { Gender, RecipientStatus } from '@prisma/client';
+import { Gender, LanguageCode, RecipientStatus } from '@prisma/client';
 import { TriangleAlert } from 'lucide-react';
 
-type FieldType = 'input' | 'select' | 'date';
+type FieldType = 'input' | 'select' | 'date' | 'switch';
 
 type FieldDefinition = {
 	id: string;
@@ -55,19 +55,68 @@ const genderOptions = Object.entries(Gender).map(([key, value]) => ({
 	label: genderLabelMap[key as keyof typeof Gender] ?? key,
 }));
 
+const languageLabelMap: Record<keyof typeof LanguageCode, string> = {
+	en: 'English',
+	fr: 'French',
+	de: 'German',
+	it: 'Italian',
+	kri: 'Kriol',
+};
+
+const languageOptions = Object.entries(LanguageCode).map(([key, value]) => ({
+	value,
+	label: languageLabelMap[key as keyof typeof LanguageCode] ?? key,
+}));
+
 const recipientFormSchema: FieldDefinition[] = [
-	{ id: 'firstName', label: 'First name', type: 'input', placeholder: 'Enter first name' },
-	{ id: 'lastName', label: 'Last name', type: 'input', placeholder: 'Enter last name' },
-	{ id: 'birthDate', label: 'Date of birth', type: 'date', placeholder: 'YYYY-MM-DD' },
-	{ id: 'gender', label: 'Gender', type: 'select', placeholder: 'Enter gender', options: genderOptions },
-	{ id: 'company', label: 'Company', type: 'input', placeholder: 'Enter company name' },
+	{ id: 'omUid', label: 'OM ID', type: 'input' },
+	{ id: 'firstName', label: 'First name', type: 'input' },
+	{ id: 'lastName', label: 'Last name', type: 'input' },
 	{
 		id: 'status',
 		label: 'Status',
 		type: 'select',
-		placeholder: 'Choose status',
 		options: statusOptions,
 	},
+	// todo: add this as relation
+	{ id: 'organizationId', label: 'Organization ID', type: 'input' },
+	{
+		id: 'mobileMoneyPhone',
+		label: 'Orange Money Phone Number',
+		type: 'input',
+	},
+	// todo: add type for toggle
+	{
+		id: 'mobileMoneyPhoneHasWhatsapp',
+		label: 'WhatsApp (Orange Money Phone Number)',
+		type: 'input',
+	},
+	{ id: 'callingName', label: 'Nickname', type: 'input' },
+	{
+		id: 'communicationPhone',
+		label: 'Communication Phone Number',
+		type: 'input',
+	},
+	// todo: add type for toggle
+	{
+		id: 'communicationPhoneHasWhatsapp',
+		label: 'WhatsApp (Contact Phone)',
+		type: 'input',
+	},
+	// todo: add type for toggle
+	{
+		id: 'communicationPhoneWhatsappActivated',
+		label: 'WhatsApp Activated',
+		type: 'input',
+	},
+	{ id: 'gender', label: 'Gender', type: 'select', options: genderOptions },
+	// todo: add type for LanguageCode
+	{ id: 'language', label: 'Preferred Language', type: 'select', options: languageOptions },
+	{ id: 'profession', label: 'Profession', type: 'input' },
+	{ id: 'email', label: 'Email', type: 'input' },
+	{ id: 'instaHandle', label: 'Instagram', type: 'input' },
+	{ id: 'twitterHandle', label: 'Twitter', type: 'input' },
+	{ id: 'birthDate', label: 'Date of birth', type: 'date' },
 ];
 
 export function RecipientForm({ initialValues = {}, onSuccess, readOnly = false, onCancel }: RecipientFormProps) {

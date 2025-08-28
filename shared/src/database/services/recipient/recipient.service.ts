@@ -43,7 +43,27 @@ export class RecipientService extends BaseService {
 					id: true,
 					status: true,
 					localPartner: { select: { name: true } },
-					user: { select: { firstName: true, lastName: true, birthDate: true, company: true, gender: true } },
+					user: {
+						select: {
+							firstName: true,
+							lastName: true,
+							birthDate: true,
+							gender: true,
+							omUid: true,
+							language: true,
+							organizationId: true,
+							mobileMoneyPhone: true,
+							mobileMoneyPhoneHasWhatsApp: true,
+							communicationPhone: true,
+							communicationPhoneHasWhatsApp: true,
+							communicationPhoneWhatsappActivated: true,
+							profession: true,
+							email: true,
+							instaHandle: true,
+							twitterHandle: true,
+							callingName: true,
+						},
+					},
 					program: {
 						select: {
 							id: true,
@@ -68,8 +88,6 @@ export class RecipientService extends BaseService {
 				const payoutsReceived = recipient.payouts.length;
 				const payoutsTotal = recipient.program?.totalPayments ?? 0;
 				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
-				const birthDate = recipient.user?.birthDate ?? null;
-				const gender = recipient.user?.gender ?? '';
 				const userIsOperator = (recipient.program?.operatorOrganization?.users?.length ?? 0) > 0;
 				const permission: ProgramPermission = userIsOperator ? 'operator' : 'viewer';
 
@@ -77,9 +95,6 @@ export class RecipientService extends BaseService {
 					id: recipient.id,
 					firstName: recipient.user?.firstName ?? '',
 					lastName: recipient.user?.lastName ?? '',
-					company: recipient.user?.company ?? '',
-					birthDate,
-					gender,
 					status: recipient.status as RecipientStatus,
 					payoutsReceived,
 					payoutsTotal,
@@ -88,6 +103,22 @@ export class RecipientService extends BaseService {
 					programName: recipient.program?.name ?? '',
 					programId: recipient.program?.id ?? '',
 					permission,
+
+					omUid: recipient.user?.omUid ? recipient.user.omUid.toString() : '',
+					organizationId: recipient.user?.organizationId ?? '',
+					mobileMoneyPhone: recipient.user?.mobileMoneyPhone ?? '',
+					mobileMoneyPhoneHasWhatsApp: recipient.user?.mobileMoneyPhoneHasWhatsApp ?? false,
+					communicationPhone: recipient.user?.communicationPhone ?? '',
+					communicationPhoneHasWhatsApp: recipient.user?.communicationPhoneHasWhatsApp ?? false,
+					communicationPhoneHasWhatsAppActivated: recipient.user?.communicationPhoneWhatsappActivated ?? false,
+					gender: recipient.user?.gender ?? '',
+					language: recipient.user?.language ?? '',
+					profession: recipient.user?.profession ?? '',
+					email: recipient.user?.email ?? '',
+					instaHandle: recipient.user?.instaHandle ?? '',
+					twitterHandle: recipient.user?.twitterHandle ?? '',
+					birthDate: recipient.user?.birthDate ?? new Date(0),
+					callingName: recipient.user?.callingName ?? '',
 				};
 			});
 

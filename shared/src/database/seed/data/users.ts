@@ -1,7 +1,10 @@
 import { Gender, User as PrismaUser, UserRole } from '@prisma/client';
 import { ORG1_ID } from './organizations';
+import { LanguageCode } from '@prisma/client';
 
 const USER_COUNT = 150;
+
+const LANGUAGES = Object.values(LanguageCode);
 
 const makeUser = (i: number, orgId?: string): PrismaUser => ({
 	id: `user-${i}`,
@@ -10,13 +13,12 @@ const makeUser = (i: number, orgId?: string): PrismaUser => ({
 	firstName: `First${i}`,
 	lastName: `Last${i}`,
 	gender: i % 2 === 0 ? Gender.female : Gender.male,
-	phone: null,
 	company: null,
 	referral: null,
 	paymentReferenceId: null,
 	stripeCustomerId: null,
 	institution: false,
-	language: null,
+	language: LANGUAGES[Math.floor(Math.random() * LANGUAGES.length)],
 	currency: "CHF",
 	addressStreet: null,
 	addressNumber: null,
@@ -26,16 +28,16 @@ const makeUser = (i: number, orgId?: string): PrismaUser => ({
 	role: UserRole.globalAdmin,
 	organizationId: orgId ?? null,
 	birthDate: new Date(1980 + (i % 30), i % 12, (i % 28) + 1),
-	communicationPhone: null,
-	mobileMoneyPhone: null,
-	hasWhatsAppComm: null,
-	hasWhatsAppMobile: null,
-	whatsappActivated: null,
-	instaHandle: null,
-	twitterHandle: null,
-	profession: null,
-	callingName: null,
-	omUid: null,
+	communicationPhone: '012 45 78 98 45',
+	communicationPhoneHasWhatsApp: i % 2 === 0 ? true : false,
+	communicationPhoneWhatsappActivated: i % 3 === 0 ? true : false,
+	mobileMoneyPhone: '123 456 78',
+	mobileMoneyPhoneHasWhatsApp: i % 2 === 0 ? true : false,
+	instaHandle: `my_insta_${i}`,
+	twitterHandle: `My_twitter_${i}`,
+	profession: `Profession ${i}`,
+	callingName: `Nickname ${i}`,
+	omUid: i,
 	createdAt: new Date(),
 	updatedAt: null,
 });

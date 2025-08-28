@@ -14,6 +14,20 @@ import { expensesData } from './data/expenses';
 
 async function main() {
 	await prisma.$transaction(async (tx) => {
+		await tx.expense.deleteMany();
+		await tx.survey.deleteMany();
+		await tx.campaign.deleteMany();
+		await tx.contribution.deleteMany();
+		await tx.contributor.deleteMany();
+		await tx.exchangeRateItem.deleteMany();
+		await tx.exchangeRateCollection.deleteMany();
+		await tx.payout.deleteMany();
+		await tx.recipient.deleteMany();
+		await tx.localPartner.deleteMany();
+		await tx.program.deleteMany();
+		await tx.user.deleteMany();
+		await tx.organization.deleteMany();
+
 		await tx.organization.createMany({ data: organizationsData, skipDuplicates: true });
 		await tx.user.createMany({ data: usersData, skipDuplicates: true });
 		await tx.program.createMany({ data: programsData, skipDuplicates: true });

@@ -7,11 +7,11 @@ export type ProgramPermission = 'operator' | 'viewer';
 
 export type RecipientTableViewRow = {
 	id: string;
+	omUid: string;
 	firstName: string;
 	lastName: string;
 	birthDate: Date;
 	gender: Gender;
-	company: string;
 	status: RecipientStatus;
 	payoutsReceived: number;
 	payoutsTotal: number;
@@ -20,6 +20,18 @@ export type RecipientTableViewRow = {
 	programName: string;
 	programId: string;
 	permission: ProgramPermission;
+	callingName?: string;
+	communicationPhone?: string;
+	communicationPhoneHasWhatsApp?: boolean;
+	communicationPhoneWhatsappActivated?: boolean;
+	organizationId?: string;
+	mobileMoneyPhone?: string;
+	mobileMoneyPhoneHasWhatsApp?: boolean;
+	language?: string;
+	profession?: string;
+	email?: string;
+	instaHandle?: string;
+	twitterHandle?: string;
 };
 
 export type RecipientTableView = {
