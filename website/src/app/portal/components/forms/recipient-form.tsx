@@ -21,7 +21,7 @@ type FieldDefinition = {
 
 type InitialValues = Record<string, string | undefined>;
 
-export type RecipientFormProps = {
+type RecipientFormProps = {
 	initialValues?: InitialValues;
 	readOnly?: boolean;
 	onSuccess: () => void;
