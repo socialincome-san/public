@@ -9,7 +9,7 @@ export type RecipientTableViewRow = {
 	id: string;
 	firstName: string;
 	lastName: string;
-	birthDate: Date | null;
+	birthDate: Date;
 	gender: Gender;
 	company: string;
 	status: RecipientStatus;

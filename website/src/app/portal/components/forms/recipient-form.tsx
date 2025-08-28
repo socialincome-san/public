@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/app/portal/components/button';
+import { DatePicker } from '@/app/portal/components/date-picker';
 import { DialogFooter } from '@/app/portal/components/dialog';
 import { Input } from '@/app/portal/components/input';
 import { Label } from '@/app/portal/components/label';
@@ -9,7 +10,7 @@ import { createRecipientAction } from '@/app/portal/server-actions/create-recipi
 import { Gender, RecipientStatus } from '@prisma/client';
 import { TriangleAlert } from 'lucide-react';
 
-type FieldType = 'input' | 'select';
+type FieldType = 'input' | 'select' | 'date';
 
 type FieldDefinition = {
 	id: string;
@@ -17,6 +18,7 @@ type FieldDefinition = {
 	type: FieldType;
 	placeholder?: string;
 	options?: { value: string; label: string }[];
+	date?: Date;
 };
 
 type InitialValues = Record<string, string | undefined>;
@@ -56,7 +58,7 @@ const genderOptions = Object.entries(Gender).map(([key, value]) => ({
 const recipientFormSchema: FieldDefinition[] = [
 	{ id: 'firstName', label: 'First name', type: 'input', placeholder: 'Enter first name' },
 	{ id: 'lastName', label: 'Last name', type: 'input', placeholder: 'Enter last name' },
-	{ id: 'birthDate', label: 'Birthdate', type: 'input', placeholder: 'YYYY-MM-DD' },
+	{ id: 'birthDate', label: 'Date of birth', type: 'date', placeholder: 'YYYY-MM-DD' },
 	{ id: 'gender', label: 'Gender', type: 'select', placeholder: 'Enter gender', options: genderOptions },
 	{ id: 'company', label: 'Company', type: 'input', placeholder: 'Enter company name' },
 	{
@@ -101,12 +103,14 @@ export function RecipientForm({ initialValues = {}, onSuccess, readOnly = false,
 							<SelectContent>
 								{field.options?.map((opt) => (
 									<SelectItem key={opt.value} value={opt.value}>
-										{opt.label}
+										{opt.label}r
 									</SelectItem>
 								))}
 							</SelectContent>
 						</Select>
 					)}
+
+					{field.type === 'date' && <DatePicker initialDate={initialValues[field.id]} fieldId={field.id} />}
 				</div>
 			))}
 

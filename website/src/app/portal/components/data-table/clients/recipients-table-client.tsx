@@ -17,7 +17,7 @@ export function RecipientsTableClient({ rows, error }: { rows: RecipientTableVie
 				firstName?: string;
 				lastName?: string;
 				status?: RecipientStatus;
-				birthDate?: string;
+				birthDate?: Date;
 				gender?: Gender;
 				company?: string;
 		  }
@@ -36,7 +36,7 @@ export function RecipientsTableClient({ rows, error }: { rows: RecipientTableVie
 			firstName: row.firstName,
 			lastName: row.lastName,
 			status: row.status,
-			birthDate: row.birthDate ? row.birthDate.toISOString().slice(0, 10) : undefined,
+			birthDate: row.birthDate,
 			gender: row.gender,
 			company: row.company,
 		});
