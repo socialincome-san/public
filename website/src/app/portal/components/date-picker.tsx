@@ -11,9 +11,9 @@ type DatePickerProps = {
 	initialDate?: Date;
 };
 
-export function DatePicker({ fieldId, initialDate: date }: DatePickerProps) {
+export function DatePicker({ fieldId, initialDate }: DatePickerProps) {
 	const [open, setOpen] = React.useState(false);
-	const [selectedDate, setDate] = React.useState<Date | undefined>(date);
+	const [selectedDate, setDate] = React.useState<Date | undefined>(initialDate);
 
 	return (
 		<Popover open={open} onOpenChange={setOpen} modal>

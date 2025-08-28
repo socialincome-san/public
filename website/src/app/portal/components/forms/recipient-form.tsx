@@ -103,14 +103,19 @@ export function RecipientForm({ initialValues = {}, onSuccess, readOnly = false,
 							<SelectContent>
 								{field.options?.map((opt) => (
 									<SelectItem key={opt.value} value={opt.value}>
-										{opt.label}r
+										{opt.label}
 									</SelectItem>
 								))}
 							</SelectContent>
 						</Select>
 					)}
 
-					{field.type === 'date' && <DatePicker initialDate={initialValues[field.id]} fieldId={field.id} />}
+					{field.type === 'date' && (
+						<DatePicker
+							initialDate={initialValues[field.id] ? new Date(initialValues[field.id] as string) : undefined}
+							fieldId={field.id}
+						/>
+					)}
 				</div>
 			))}
 
