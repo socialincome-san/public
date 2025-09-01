@@ -11,7 +11,11 @@ import { Gender, LanguageCode, RecipientStatus } from '@prisma/client';
 import { Switch } from '@socialincome/ui/src/components/switch';
 import { TriangleAlert } from 'lucide-react';
 
-type FieldType = 'input' | 'select' | 'date' | 'boolean' | 'number';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+type FieldType = 'input' | 'select' | 'date' | 'boolean' | 'number' | 'email';
 
 type FieldDefinition = {
 	id: string;
@@ -25,7 +29,6 @@ type InitialValues = Record<string, string | boolean | Date | number | undefined
 
 type RecipientFormProps = {
 	initialValues?: InitialValues;
-
 	readOnly?: boolean;
 	onSuccess: () => void;
 	onCancel: () => void;
@@ -73,118 +76,183 @@ const recipientFormSchema: FieldDefinition[] = [
 	{ id: 'omUid', label: 'OM ID', type: 'number' },
 	{ id: 'firstName', label: 'First name', type: 'input' },
 	{ id: 'lastName', label: 'Last name', type: 'input' },
-	{
-		id: 'status',
-		label: 'Status',
-		type: 'select',
-		options: statusOptions,
-	},
+	{ id: 'status', label: 'Status', type: 'select', options: statusOptions },
 	// todo: add this as relation
 	{ id: 'organizationId', label: 'Organization ID', type: 'input' },
-	{
-		id: 'mobileMoneyPhone',
-		label: 'Orange Money Phone Number',
-		type: 'input',
-	},
-	{
-		id: 'mobileMoneyPhoneHasWhatsapp',
-		label: 'Whatsapp (Orange Money Phone Number)',
-		type: 'boolean',
-	},
+	{ id: 'mobileMoneyPhone', label: 'Orange Money Phone Number', type: 'input' },
+	{ id: 'mobileMoneyPhoneHasWhatsapp', label: 'Whatsapp (Orange Money Phone Number)', type: 'boolean' },
 	{ id: 'callingName', label: 'Nickname', type: 'input' },
-	{
-		id: 'communicationPhone',
-		label: 'Communication Phone Number',
-		type: 'input',
-	},
-	{
-		id: 'communicationPhoneHasWhatsapp',
-		label: 'Whatsapp (Contact Phone)',
-		type: 'boolean',
-	},
-	{
-		id: 'communicationPhoneWhatsappActivated',
-		label: 'Whatsapp Activated',
-		type: 'boolean',
-	},
+	{ id: 'communicationPhone', label: 'Communication Phone Number', type: 'input' },
+	{ id: 'communicationPhoneHasWhatsapp', label: 'Whatsapp (Contact Phone)', type: 'boolean' },
+	{ id: 'communicationPhoneWhatsappActivated', label: 'Whatsapp Activated', type: 'boolean' },
 	{ id: 'gender', label: 'Gender', type: 'select', options: genderOptions },
-	// todo: add type for LanguageCode
 	{ id: 'language', label: 'Preferred Language', type: 'select', options: languageOptions },
 	{ id: 'profession', label: 'Profession', type: 'input' },
-	{ id: 'email', label: 'Email', type: 'input' },
+	{ id: 'email', label: 'Email', type: 'email' },
 	{ id: 'instaHandle', label: 'Instagram', type: 'input' },
 	{ id: 'twitterHandle', label: 'Twitter', type: 'input' },
 	{ id: 'birthDate', label: 'Date of birth', type: 'date' },
 ];
 
-export function RecipientForm({ initialValues = {}, onSuccess, readOnly = false, onCancel }: RecipientFormProps) {
-	const formItemClasses = 'flex flex-col gap-2';
+const recipientZodSchema = z.object({
+	omUid: z.number().optional(),
+	firstName: z.string().min(2, 'Required'),
+	lastName: z.string().min(2, 'Required'),
+	status: z.nativeEnum(RecipientStatus).optional(),
+	organizationId: z.string().optional(),
+	mobileMoneyPhone: z.string().optional(),
+	mobileMoneyPhoneHasWhatsapp: z.boolean().default(false),
+	callingName: z.string().optional(),
+	communicationPhone: z.string().optional(),
+	communicationPhoneHasWhatsapp: z.boolean().default(false),
+	communicationPhoneWhatsappActivated: z.boolean().default(false),
+	gender: z.nativeEnum(Gender).optional(),
+	language: z.nativeEnum(LanguageCode).optional(),
+	profession: z.string().optional(),
+	email: z.string().email().optional(),
+	instaHandle: z.string().optional(),
+	twitterHandle: z.string().optional(),
+	birthDate: z.date().optional(),
+});
 
-	const formAction = async () => {
+type RecipientFormValues = z.infer<typeof recipientZodSchema>;
+
+export function RecipientForm({ initialValues = {}, onSuccess, readOnly = false, onCancel }: RecipientFormProps) {
+	const {
+		register,
+		handleSubmit,
+		control,
+		formState: { errors },
+	} = useForm<RecipientFormValues>({
+		resolver: zodResolver(recipientZodSchema),
+		defaultValues: {
+			...initialValues,
+		},
+	});
+
+	const onSubmit = async (data: RecipientFormValues) => {
 		if (readOnly) return;
 		await createRecipientAction();
 		onSuccess();
 	};
 
+	const formItemClasses = 'flex flex-col gap-2';
+
 	return (
-		<form action={formAction} className="flex flex-col gap-6">
-			{recipientFormSchema.map((field) => (
-				<div key={field.id} className={formItemClasses}>
-					<Label htmlFor={field.id}>{field.label}</Label>
+		<form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+			{recipientFormSchema.map((field) => {
+				const zodField = recipientZodSchema.shape[field.id as keyof RecipientFormValues];
+				const isRequired = !('isOptional' in zodField && zodField.isOptional());
 
-					{field.type === 'input' && (
-						<Input
-							id={field.id}
-							name={field.id}
-							defaultValue={initialValues?.[field.id] != null ? (initialValues?.[field.id] as string) : ''}
-							placeholder={field.placeholder}
-							disabled={readOnly}
-						/>
-					)}
+				return (
+					<div key={field.id} className={formItemClasses}>
+						<Label htmlFor={field.id}>
+							{field.label}
+							{isRequired && <span> *</span>}
+						</Label>
 
-					{field.type === 'number' && (
-						<Input
-							id={field.id}
-							name={field.id}
-							defaultValue={initialValues?.[field.id] as string}
-							placeholder={field.placeholder}
-							disabled={readOnly}
-							type="number"
-						/>
-					)}
+						{field.type === 'input' && (
+							<Input
+								id={field.id}
+								disabled={readOnly}
+								placeholder={field.placeholder}
+								{...register(field.id as keyof RecipientFormValues)}
+							/>
+						)}
 
-					{field.type === 'select' && (
-						<Select defaultValue={initialValues?.[field.id] as string} disabled={readOnly}>
-							<SelectTrigger id={field.id}>
-								<SelectValue placeholder={field.placeholder} />
-							</SelectTrigger>
-							<SelectContent>
-								{field.options?.map((opt) => (
-									<SelectItem key={opt.value} value={opt.value}>
-										{opt.label}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-					)}
+						{field.type === 'number' && (
+							<Input
+								id={field.id}
+								type="number"
+								disabled={readOnly}
+								placeholder={field.placeholder}
+								{...register(field.id as keyof RecipientFormValues, {
+									setValueAs: (val) => {
+										if (val === '' || val === null) return undefined;
+										const numberVal = Number(val);
+										return isNaN(numberVal) ? undefined : numberVal;
+									},
+								})}
+							/>
+						)}
 
-					{field.type === 'date' && (
-						<DatePicker
-							initialDate={initialValues?.[field.id] instanceof Date ? (initialValues?.[field.id] as Date) : undefined}
-							fieldId={field.id}
-							readOnly={readOnly}
-						/>
-					)}
-					{field.type === 'boolean' && (
-						<Switch
-							id={field.id}
-							name={field.id}
-							disabled={readOnly}
-							defaultChecked={Boolean(initialValues?.[field.id])}
-						/>
-					)}
-				</div>
-			))}
+						{field.type === 'email' && (
+							<Input
+								id={field.id}
+								type="email"
+								disabled={readOnly}
+								placeholder={field.placeholder}
+								{...register(field.id as keyof RecipientFormValues, {
+									setValueAs: (val) => (val === '' ? undefined : val),
+								})}
+							/>
+						)}
+
+						{/* Select */}
+						{field.type === 'select' && (
+							<Controller
+								name={field.id as keyof RecipientFormValues}
+								control={control}
+								render={({ field: rhfField }) => (
+									<Select
+										disabled={readOnly}
+										value={rhfField.value ? String(rhfField.value) : undefined}
+										onValueChange={rhfField.onChange}
+									>
+										<SelectTrigger id={field.id}>
+											<SelectValue placeholder={field.placeholder} />
+										</SelectTrigger>
+										<SelectContent>
+											{field.options?.map((opt) => (
+												<SelectItem key={opt.value} value={opt.value}>
+													{opt.label}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								)}
+							/>
+						)}
+
+						{field.type === 'date' && (
+							<Controller
+								name={field.id as keyof RecipientFormValues}
+								control={control}
+								render={({ field: rhfField }) => (
+									<DatePicker
+										fieldId={field.id}
+										readOnly={readOnly}
+										value={rhfField.value as Date | undefined}
+										onChange={rhfField.onChange}
+									/>
+								)}
+							/>
+						)}
+
+						{field.type === 'boolean' && (
+							<Controller
+								name={field.id as keyof RecipientFormValues}
+								control={control}
+								render={({ field: rhfField }) => (
+									<Switch
+										id={field.id}
+										disabled={readOnly}
+										checked={!!rhfField.value}
+										onCheckedChange={rhfField.onChange}
+									/>
+								)}
+							/>
+						)}
+
+						{errors[field.id as keyof RecipientFormValues] && (
+							<span className="text-sm text-red-500">
+								{String(errors[field.id as keyof RecipientFormValues]?.message)}
+							</span>
+						)}
+					</div>
+				);
+			})}
+
 			<div>
 				{readOnly && (
 					<div className="mb-4 flex gap-4 text-red-700">
@@ -193,7 +261,7 @@ export function RecipientForm({ initialValues = {}, onSuccess, readOnly = false,
 					</div>
 				)}
 				<DialogFooter>
-					<Button variant="outline" onClick={onCancel}>
+					<Button variant="outline" type="button" onClick={onCancel}>
 						Cancel
 					</Button>
 					<Button type="submit" disabled={readOnly}>
