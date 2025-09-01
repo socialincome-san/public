@@ -1,7 +1,13 @@
 import { PayoutStatus, Recipient as PrismaRecipient, RecipientStatus } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { PaginationOptions, ServiceResult } from '../core/base.types';
-import { CreateRecipientInput, ProgramPermission, RecipientTableView, RecipientTableViewRow } from './recipient.types';
+import {
+	CreateRecipientInput,
+	ProgramPermission,
+	RecipientTableView,
+	RecipientTableViewRow,
+	RecipientWithPayouts,
+} from './recipient.types';
 
 export class RecipientService extends BaseService {
 	async findMany(options?: PaginationOptions): Promise<ServiceResult<PrismaRecipient[]>> {
@@ -101,6 +107,19 @@ export class RecipientService extends BaseService {
 
 		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
 		return this.resultOk({ tableRows: filteredRows });
+	}
+
+	async getRecipientByMobileMoneyPhone(mobileMoneyPhone: string): Promise<ServiceResult<RecipientWithPayouts | null>> {
+		try {
+			const recipient = await this.db.recipient.findFirst({
+				where: { user: { mobileMoneyPhone } },
+				include: { payouts: true },
+			});
+			return this.resultOk(recipient);
+		} catch (e) {
+			console.error('[RecipientService.getRecipientByMobileMoneyPhone]', { mobileMoneyPhone, error: e });
+			return this.resultFail(`Could not fetch recipient for phone ${mobileMoneyPhone}`);
+		}
 	}
 
 	private calculateAgeFromBirthDate(birthDate: Date): number {
