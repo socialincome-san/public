@@ -32,10 +32,10 @@ model User {
   organizationId                      String?               @map("organization_id")
   birthDate                           DateTime?             @map("birth_date") @db.Date
   communicationPhone                  String?               @map("communication_phone")
-  communicationPhoneHasWhatsApp       Boolean?              @map("communication_phone_has_whatsapp")
+  communicationPhoneHasWhatsapp       Boolean?              @map("communication_phone_has_whatsapp")
   communicationPhoneWhatsappActivated Boolean?              @map("communication_phone_whatsapp_activated")
   mobileMoneyPhone                    String?               @map("mobile_money_phone")
-  mobileMoneyPhoneHasWhatsApp         Boolean?              @map("mobile_money_phone_has_whatsapp")
+  mobileMoneyPhoneHasWhatsapp         Boolean?              @map("mobile_money_phone_has_whatsapp")
   instaHandle                         String?               @map("insta_handle")
   twitterHandle                       String?               @map("twitter_handle")
   profession                          String?               @map("profession")

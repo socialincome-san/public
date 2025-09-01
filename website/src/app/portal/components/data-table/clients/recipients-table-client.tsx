@@ -13,33 +13,31 @@ import { useState } from 'react';
 export function RecipientsTableClient({ rows, error }: { rows: RecipientTableViewRow[]; error: string | null }) {
 	const [open, setOpen] = useState(false);
 
-	const [initialValues, setInitialValues] = useState<
-		| {
-				omUid?: string;
-				firstName?: string;
-				lastName?: string;
-				status?: RecipientStatus;
-				organizationId?: string;
-				mobileMoneyPhone?: string;
-				mobileMoneyPhoneHasWhatsApp?: boolean;
-				callingName?: string;
-				communicationPhone?: string;
-				communicationPhoneHasWhatsApp?: boolean;
-				communicationPhoneWhatsappActivated?: boolean;
-				gender?: Gender;
-				language?: string;
-				profession?: string;
-				email?: string;
-				instaHandle?: string;
-				twitterHandle?: string;
-				birthDate?: Date;
-		  }
-		| undefined
-	>(undefined);
+	const [initialValues, setInitialValues] = useState<{
+		omUid?: number;
+		firstName?: string;
+		lastName?: string;
+		status?: RecipientStatus;
+		organizationId?: string;
+		mobileMoneyPhone?: string;
+		mobileMoneyPhoneHasWhatsapp?: boolean;
+		callingName?: string;
+		communicationPhone?: string;
+		communicationPhoneHasWhatsapp?: boolean;
+		communicationPhoneWhatsappActivated?: boolean;
+		gender?: Gender;
+		language?: string;
+		profession?: string;
+		email?: string;
+		instaHandle?: string;
+		twitterHandle?: string;
+		birthDate?: Date;
+	} | null>(null);
+
 	const [readOnly, setReadOnly] = useState(false);
 
 	const openBlank = () => {
-		setInitialValues(undefined);
+		setInitialValues(null);
 		setReadOnly(false);
 		setOpen(true);
 	};
@@ -52,10 +50,10 @@ export function RecipientsTableClient({ rows, error }: { rows: RecipientTableVie
 			status: row.status,
 			organizationId: row.organizationId,
 			mobileMoneyPhone: row.mobileMoneyPhone,
-			mobileMoneyPhoneHasWhatsApp: row.mobileMoneyPhoneHasWhatsApp,
+			mobileMoneyPhoneHasWhatsapp: row.mobileMoneyPhoneHasWhatsapp,
 			callingName: row.callingName,
 			communicationPhone: row.communicationPhone,
-			communicationPhoneHasWhatsApp: row.communicationPhoneHasWhatsApp,
+			communicationPhoneHasWhatsapp: row.communicationPhoneHasWhatsapp,
 			communicationPhoneWhatsappActivated: row.communicationPhoneWhatsappActivated,
 			gender: row.gender,
 			language: row.language,

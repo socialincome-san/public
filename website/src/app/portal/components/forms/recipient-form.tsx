@@ -8,9 +8,10 @@ import { Label } from '@/app/portal/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/portal/components/select';
 import { createRecipientAction } from '@/app/portal/server-actions/create-recipient-action';
 import { Gender, LanguageCode, RecipientStatus } from '@prisma/client';
+import { Switch } from '@socialincome/ui/src/components/switch';
 import { TriangleAlert } from 'lucide-react';
 
-type FieldType = 'input' | 'select' | 'date' | 'switch';
+type FieldType = 'input' | 'select' | 'date' | 'boolean' | 'number';
 
 type FieldDefinition = {
 	id: string;
@@ -18,13 +19,13 @@ type FieldDefinition = {
 	type: FieldType;
 	placeholder?: string;
 	options?: { value: string; label: string }[];
-	date?: Date;
 };
 
-type InitialValues = Record<string, string | undefined>;
+type InitialValues = Record<string, string | boolean | Date | number | undefined> | null; //todo remove undefined
 
 type RecipientFormProps = {
 	initialValues?: InitialValues;
+
 	readOnly?: boolean;
 	onSuccess: () => void;
 	onCancel: () => void;
@@ -69,7 +70,7 @@ const languageOptions = Object.entries(LanguageCode).map(([key, value]) => ({
 }));
 
 const recipientFormSchema: FieldDefinition[] = [
-	{ id: 'omUid', label: 'OM ID', type: 'input' },
+	{ id: 'omUid', label: 'OM ID', type: 'number' },
 	{ id: 'firstName', label: 'First name', type: 'input' },
 	{ id: 'lastName', label: 'Last name', type: 'input' },
 	{
@@ -85,11 +86,10 @@ const recipientFormSchema: FieldDefinition[] = [
 		label: 'Orange Money Phone Number',
 		type: 'input',
 	},
-	// todo: add type for toggle
 	{
 		id: 'mobileMoneyPhoneHasWhatsapp',
-		label: 'WhatsApp (Orange Money Phone Number)',
-		type: 'input',
+		label: 'Whatsapp (Orange Money Phone Number)',
+		type: 'boolean',
 	},
 	{ id: 'callingName', label: 'Nickname', type: 'input' },
 	{
@@ -97,17 +97,15 @@ const recipientFormSchema: FieldDefinition[] = [
 		label: 'Communication Phone Number',
 		type: 'input',
 	},
-	// todo: add type for toggle
 	{
 		id: 'communicationPhoneHasWhatsapp',
-		label: 'WhatsApp (Contact Phone)',
-		type: 'input',
+		label: 'Whatsapp (Contact Phone)',
+		type: 'boolean',
 	},
-	// todo: add type for toggle
 	{
 		id: 'communicationPhoneWhatsappActivated',
-		label: 'WhatsApp Activated',
-		type: 'input',
+		label: 'Whatsapp Activated',
+		type: 'boolean',
 	},
 	{ id: 'gender', label: 'Gender', type: 'select', options: genderOptions },
 	// todo: add type for LanguageCode
@@ -138,14 +136,25 @@ export function RecipientForm({ initialValues = {}, onSuccess, readOnly = false,
 						<Input
 							id={field.id}
 							name={field.id}
-							defaultValue={initialValues[field.id]}
+							defaultValue={initialValues?.[field.id] != null ? (initialValues?.[field.id] as string) : ''}
 							placeholder={field.placeholder}
 							disabled={readOnly}
 						/>
 					)}
 
+					{field.type === 'number' && (
+						<Input
+							id={field.id}
+							name={field.id}
+							defaultValue={initialValues?.[field.id] as string}
+							placeholder={field.placeholder}
+							disabled={readOnly}
+							type="number"
+						/>
+					)}
+
 					{field.type === 'select' && (
-						<Select defaultValue={initialValues[field.id]} disabled={readOnly}>
+						<Select defaultValue={initialValues?.[field.id] as string} disabled={readOnly}>
 							<SelectTrigger id={field.id}>
 								<SelectValue placeholder={field.placeholder} />
 							</SelectTrigger>
@@ -161,14 +170,21 @@ export function RecipientForm({ initialValues = {}, onSuccess, readOnly = false,
 
 					{field.type === 'date' && (
 						<DatePicker
-							initialDate={initialValues[field.id] ? new Date(initialValues[field.id] as string) : undefined}
+							initialDate={initialValues?.[field.id] instanceof Date ? (initialValues?.[field.id] as Date) : undefined}
 							fieldId={field.id}
 							readOnly={readOnly}
 						/>
 					)}
+					{field.type === 'boolean' && (
+						<Switch
+							id={field.id}
+							name={field.id}
+							disabled={readOnly}
+							defaultChecked={Boolean(initialValues?.[field.id])}
+						/>
+					)}
 				</div>
 			))}
-
 			<div>
 				{readOnly && (
 					<div className="mb-4 flex gap-4 text-red-700">

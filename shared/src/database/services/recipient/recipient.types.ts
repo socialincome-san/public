@@ -7,7 +7,7 @@ export type ProgramPermission = 'operator' | 'viewer';
 
 export type RecipientTableViewRow = {
 	id: string;
-	omUid: string;
+	omUid: number;
 	firstName: string;
 	lastName: string;
 	birthDate: Date;
@@ -22,11 +22,11 @@ export type RecipientTableViewRow = {
 	permission: ProgramPermission;
 	callingName?: string;
 	communicationPhone?: string;
-	communicationPhoneHasWhatsApp?: boolean;
+	communicationPhoneHasWhatsapp?: boolean;
 	communicationPhoneWhatsappActivated?: boolean;
 	organizationId?: string;
 	mobileMoneyPhone?: string;
-	mobileMoneyPhoneHasWhatsApp?: boolean;
+	mobileMoneyPhoneHasWhatsapp?: boolean;
 	language?: string;
 	profession?: string;
 	email?: string;
