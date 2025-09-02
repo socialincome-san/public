@@ -1,14 +1,15 @@
-import { Payout, PayoutStatus, Recipient } from '@prisma/client';
+import { Payout, PayoutStatus, Survey } from '@prisma/client';
 import { authAdmin } from '@socialincome/website/src/lib/firebase/firebase-admin';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { RecipientExpanded, RecipientUserUpdateInput } from './portal-api.types';
 
 export class PortalApiService extends BaseService {
 	private normalizePhone(phone?: string | null) {
 		return phone ? phone.replace(/^\+/, '') : null;
 	}
 
-	async getRecipientFromRequest(request: Request): Promise<ServiceResult<Recipient>> {
+	async getRecipientFromRequest(request: Request): Promise<ServiceResult<RecipientExpanded>> {
 		const decoded = await this.requireIdToken(request);
 		if (!decoded) return this.resultFail('Unauthorized', 401);
 
@@ -18,6 +19,13 @@ export class PortalApiService extends BaseService {
 		try {
 			const recipient = await this.db.recipient.findFirst({
 				where: { user: { mobileMoneyPhone: phone } },
+				include: {
+					user: true,
+					program: true,
+					localPartner: {
+						include: { user: true },
+					},
+				},
 			});
 			if (!recipient) return this.resultFail(`No recipient found with mobileMoneyPhone "${phone}"`, 404);
 			return this.resultOk(recipient, 200);
@@ -61,6 +69,47 @@ export class PortalApiService extends BaseService {
 			return this.resultOk(updated, 200);
 		} catch {
 			return this.resultFail(`Failed to update payout "${payoutId}"`, 500);
+		}
+	}
+
+	async getSurveysByRecipientId(recipientId: string): Promise<ServiceResult<Survey[]>> {
+		try {
+			const surveys = await this.db.survey.findMany({
+				where: { recipientId },
+				orderBy: [{ dueDateAt: 'desc' }, { createdAt: 'desc' }],
+			});
+			return this.resultOk(surveys, 200);
+		} catch {
+			return this.resultFail('Could not fetch surveys', 500);
+		}
+	}
+
+	async updateRecipientUserFields(
+		recipientId: string,
+		data: RecipientUserUpdateInput,
+	): Promise<ServiceResult<RecipientExpanded>> {
+		try {
+			const updatedRecipient = await this.db.recipient.update({
+				where: { id: recipientId },
+				data: {
+					user: {
+						update: {
+							firstName: data.firstName,
+							lastName: data.lastName,
+							// TODO: add more fields here in the future
+						},
+					},
+				},
+				include: {
+					user: true,
+					program: true,
+					localPartner: { include: { user: true } },
+				},
+			});
+
+			return this.resultOk(updatedRecipient, 200);
+		} catch {
+			return this.resultFail('Failed to update user', 500);
 		}
 	}
 
