@@ -14,6 +14,7 @@ export function RecipientsTableClient({ rows, error }: { rows: RecipientTableVie
 	const [open, setOpen] = useState(false);
 
 	const [initialValues, setInitialValues] = useState<{
+		id?: string;
 		omUid?: number;
 		firstName?: string;
 		lastName?: string;
@@ -44,6 +45,7 @@ export function RecipientsTableClient({ rows, error }: { rows: RecipientTableVie
 
 	const handleRowClick = (row: RecipientTableViewRow) => {
 		setInitialValues({
+			id: row.id,
 			omUid: row.omUid,
 			firstName: row.firstName,
 			lastName: row.lastName,

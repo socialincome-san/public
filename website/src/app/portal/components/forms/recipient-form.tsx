@@ -72,7 +72,9 @@ const languageOptions = Object.entries(LanguageCode).map(([key, value]) => ({
 	label: languageLabelMap[key as keyof typeof LanguageCode] ?? key,
 }));
 
+//  todo: combine the following two schemas
 const recipientFormSchema: FieldDefinition[] = [
+	{ id: 'id', label: 'ID', type: 'input' },
 	{ id: 'omUid', label: 'OM ID', type: 'number' },
 	{ id: 'firstName', label: 'First name', type: 'input' },
 	{ id: 'lastName', label: 'Last name', type: 'input' },
@@ -95,6 +97,8 @@ const recipientFormSchema: FieldDefinition[] = [
 ];
 
 const recipientZodSchema = z.object({
+	// todo: make the id hidden
+	id: z.string().optional(),
 	omUid: z.number().optional(),
 	firstName: z.string().min(2, 'Required'),
 	lastName: z.string().min(2, 'Required'),
@@ -132,7 +136,7 @@ export function RecipientForm({ initialValues = {}, onSuccess, readOnly = false,
 
 	const onSubmit = async (data: RecipientFormValues) => {
 		if (readOnly) return;
-		await createRecipientAction();
+		await createRecipientAction(data);
 		onSuccess();
 	};
 
