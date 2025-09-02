@@ -10,80 +10,211 @@ datasource db {
 }
 
 model User {
-  id                   String                @id @default(cuid()) @map("id")
-  email                String                @unique @map("email")
-  authUserId           String?               @unique @map("auth_user_id")
-  firstName            String                @map("first_name")
-  lastName             String                @map("last_name")
-  gender               Gender                @default(private) @map("gender")
-  phone                String?               @map("phone")
-  company              String?               @map("company")
-  referral             UserReferralSource?   @map("referral")
-  paymentReferenceId   String?               @map("payment_reference_id")
-  stripeCustomerId     String?               @map("stripe_customer_id")
-  institution          Boolean               @default(false) @map("institution")
-  language             LanguageCode?         @map("language")
-  currency             String?               @map("currency")
-  addressStreet        String?               @map("address_street")
-  addressNumber        String?               @map("address_number")
-  addressCity          String?               @map("address_city")
-  addressZip           Int?                  @map("address_zip")
-  addressCountry       String?               @map("address_country")
-  role                 UserRole              @default(user) @map("role")
-  organizationId       String?               @map("organization_id")
-  birthDate            DateTime?             @map("birth_date") @db.Date
-  communicationPhone   String?               @map("communication_phone")
-  mobileMoneyPhone     String?               @map("mobile_money_phone")
-  hasWhatsAppComm      Boolean?              @map("has_whatsapp_comm")
-  hasWhatsAppMobile    Boolean?              @map("has_whatsapp_mobile")
-  whatsappActivated    Boolean?              @map("whatsapp_activated")
-  instaHandle          String?               @map("insta_handle")
-  twitterHandle        String?               @map("twitter_handle")
-  profession           String?               @map("profession")
-  callingName          String?               @map("calling_name")
-  omUid                Int?                  @map("om_uid")
-  createdAt            DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt            DateTime?             @updatedAt @map("updated_at") @db.Timestamptz(3)
-  contributor          Contributor?
-  localPartner         LocalPartner?
-  recipient            Recipient?
-  donationCertificates DonationCertificate[]
-  organization         Organization?         @relation(fields: [organizationId], references: [id])
+  id          String        @id @default(cuid()) @map("id")
+  email       String        @unique @map("email")
+  authUserId  String?       @unique @map("auth_user_id")
+  firstName   String        @map("first_name")
+  lastName    String        @map("last_name")
+  gender      Gender        @default(private) @map("gender")
+  language    LanguageCode? @map("language")
+  currency    Currency?     @map("currency")
+  dateOfBirth DateTime?     @map("date_of_birth") @db.Date
+  Contributor Contributor?
+  Recipient   Recipient?
+  PortalUser  PortalUser?
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  Address       Address[]
+  LocalPartner  LocalPartner?
+  PhoneNumber   PhoneNumber[]
+  ProgramAccess ProgramAccess[]
 
   @@map("user")
 }
 
+enum PortalAccessLevel {
+  admin
+  editor
+  viewer
+}
+
+model PortalAccess {
+  id             String            @id @default(cuid()) @map("id")
+  portalUserId   String            @unique @map("portal_user_id")
+  organizationId String            @map("organization")
+  accessLevel    PortalAccessLevel @map("access_level")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  portalUser   PortalUser   @relation(fields: [portalUserId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@map("portal_access")
+}
+
+model PortalUser {
+  id     String @id @default(cuid()) @map("id")
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  PortalAccess  PortalAccess[]
+  ProgramAccess ProgramAccess[]
+
+  @@map("portal_user")
+}
+
+enum WhatsAppStatus {
+  disabled
+  pending
+  verified
+}
+
 model Contributor {
-  id            String         @id @default(cuid()) @map("id")
-  userId        String         @unique @map("user_id")
-  createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt     DateTime?      @updatedAt @map("updated_at") @db.Timestamptz(3)
-  contributions Contribution[]
-  user          User           @relation(fields: [userId], references: [id])
+  id                   String                @id @default(cuid()) @map("id")
+  userId               String                @unique @map("user_id")
+  user                 User                  @relation(fields: [userId], references: [id])
+  referral             UserReferralSource?   @map("referral")
+  paymentReferenceId   String?               @map("payment_reference_id")
+  stripeCustomerId     String?               @map("stripe_customer_id")
+  institution          Boolean               @default(false) @map("institution")
+  createdAt            DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt            DateTime?             @updatedAt @map("updated_at") @db.Timestamptz(3)
+  contributions        Contribution[]
+  donationCertificates DonationCertificate[]
+  localPartnerId       String?
+  localPartner         LocalPartner?         @relation(fields: [localPartnerId], references: [id])
 
   @@map("contributor")
 }
 
+model Recipient {
+  id             String          @id @default(cuid()) @map("id")
+  userId         String          @unique @map("user_id")
+  programId      String          @map("program_id")
+  localPartnerId String          @map("local_partner_id")
+  localPartner   LocalPartner    @relation(fields: [localPartnerId], references: [id])
+  startDate      DateTime?       @map("start_date") @db.Timestamptz(3)
+  status         RecipientStatus @map("status")
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime?       @updatedAt @map("updated_at") @db.Timestamptz(3)
+  omUid          Int?            @map("om_uid")
+  profession     String?         @map("profession")
+  callingName    String?         @map("calling_name")
+  program        Program         @relation(fields: [programId], references: [id])
+  user           User            @relation(fields: [userId], references: [id])
+  payouts        Payout[]
+  surveys        Survey[]
+
+  @@map("recipient")
+}
+
+// A user can have multiple phone numbers, but only one primary number (constraint needed at application level)
+model PhoneNumber {
+  id        String         @id @default(cuid()) @map("id")
+  userId    String         @map("user_id")
+  phone     String         @map("phone")
+  type      String         @map("type")
+  verified  Boolean        @default(false) @map("verified")
+  whatsApp  WhatsAppStatus @default(disabled) @map("whats_app")
+  isPrimary Boolean        @default(false) @map("is_primary")
+  createdAt DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime       @updatedAt @map("updated_at") @db.Timestamptz(3)
+  user      User           @relation(fields: [userId], references: [id])
+
+  // Ensure a user cannot have duplicate phone numbers
+  @@unique([userId, phone])
+  @@map("phone_number")
+}
+
+model Address {
+  id        String   @id @default(cuid()) @map("id")
+  street    String   @map("street")
+  number    String   @map("number")
+  city      String   @map("city")
+  zip       Int      @map("zip")
+  country   String   @map("country")
+  userId    String   @unique @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("address")
+}
+
+enum ProgramAccessLevel {
+  admin
+  editor
+  viewer
+}
+
+model ProgramAccess {
+  id           String             @id @default(cuid()) @map("id")
+  portalUserId String             @map("portal_user_id")
+  programId    String             @map("program_id")
+  accessLevel  ProgramAccessLevel @map("access_level")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  program    Program    @relation(fields: [programId], references: [id])
+  PortalUser PortalUser @relation(fields: [portalUserId], references: [id])
+  User       User?      @relation(fields: [userId], references: [id])
+  userId     String?
+
+  @@unique([portalUserId, programId])
+  @@map("program_access")
+}
+
+model StripeContribution {
+  id             String       @id @default(cuid()) @map("id")
+  stripeEventId  String       @unique @map("stripe_event_id")
+  contributionId String       @unique @map("contribution_id")
+  contribution   Contribution @relation(fields: [contributionId], references: [id])
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime?    @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("stripe_contribution")
+}
+
+model BankTransferContribution {
+  id             String       @id @default(cuid()) @map("id")
+  referenceId    String       @unique @map("reference_id")
+  contributionId String       @unique @map("contribution_id")
+  contribution   Contribution @relation(fields: [contributionId], references: [id])
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime?    @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("bank_transfer_contribution")
+}
+
 model Contribution {
-  id                      String               @id @default(cuid()) @map("id")
-  amount                  Float                @map("amount")
-  amountChf               Float                @map("amount_chf")
-  feesChf                 Float                @map("fees_chf")
-  contributionInterval    ContributionInterval @default(one_time) @map("contribution_interval")
-  source                  ContributionSource   @map("source")
-  status                  ContributionStatus   @map("status")
-  currency                String               @map("currency")
-  referenceId             String               @map("reference_id")
-  transactionId           String?              @map("transaction_id")
-  rawContent              String?              @map("raw_content")
-  contributorId           String               @map("contributor_id")
-  campaignId              String?              @map("campaign_id")
-  programId               String?              @map("program_id")
-  createdAt               DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt               DateTime?            @updatedAt @map("updated_at") @db.Timestamptz(3)
-  campaign                Campaign?            @relation(fields: [campaignId], references: [id])
-  contributor             Contributor          @relation(fields: [contributorId], references: [id])
-  program                 Program?             @relation(fields: [programId], references: [id])
+  id                       String                    @id @default(cuid()) @map("id")
+  amount                   Float                     @map("amount")
+  amountChf                Float                     @map("amount_chf")
+  feesChf                  Float                     @map("fees_chf")
+  contributionInterval     ContributionInterval      @default(one_time) @map("contribution_interval")
+  source                   ContributionSource        @map("source")
+  status                   ContributionStatus        @map("status")
+  currency                 Currency                  @map("currency")
+  referenceId              String                    @map("reference_id")
+  transactionId            String?                   @map("transaction_id")
+  rawContent               String?                   @map("raw_content")
+  contributorId            String                    @map("contributor_id")
+  campaignId               String?                   @map("campaign_id")
+  programId                String?                   @map("program_id")
+  createdAt                DateTime                  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                DateTime?                 @updatedAt @map("updated_at") @db.Timestamptz(3)
+  campaign                 Campaign?                 @relation(fields: [campaignId], references: [id])
+  contributor              Contributor               @relation(fields: [contributorId], references: [id])
+  Program                  Program?                  @relation(fields: [programId], references: [id])
+  StripeContribution       StripeContribution?
+  BankTransferContribution BankTransferContribution?
 
   @@map("contribution")
 }
@@ -124,65 +255,49 @@ model Campaign {
 }
 
 model Organization {
-  id               String      @id @default(cuid()) @map("id")
-  name             String      @unique @map("name")
-  operatedPrograms Program[]   @relation("ProgramOperators")
-  viewedPrograms   Program[]   @relation("ProgramViewers")
-  users            User[]
-  createdAt        DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt        DateTime?   @updatedAt @map("updated_at") @db.Timestamptz(3)
+  id               String         @id @default(cuid()) @map("id")
+  name             String         @unique @map("name")
+  operatedPrograms Program[]      @relation("ProgramOperators")
+  viewedPrograms   Program[]      @relation("ProgramViewers")
+  createdAt        DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt        DateTime?      @updatedAt @map("updated_at") @db.Timestamptz(3)
+  PortalAccess     PortalAccess[]
 
   @@map("organization")
 }
 
 model Program {
-  id                     String         @id @default(cuid()) @map("id")
-  name                   String         @unique @map("name")
-  totalPayments          Int            @default(36) @map("total_payments")
-  payoutAmount           Float          @default(700) @map("payout_amount")
-  payoutCurrency         String         @default("SLE") @map("payout_currency")
-  payoutInterval         PayoutInterval @default(monthly) @map("payout_interval")
-  country                String         @default("Sierra Leone") @map("country")
-  viewerOrganizationId   String         @map("viewer_organization_id")
-  operatorOrganizationId String         @map("operator_organization_id")
-  viewerOrganization     Organization   @relation("ProgramViewers", fields: [viewerOrganizationId], references: [id])
-  operatorOrganization   Organization   @relation("ProgramOperators", fields: [operatorOrganizationId], references: [id])
+  id                     String          @id @default(cuid()) @map("id")
+  name                   String          @unique @map("name")
+  totalPayments          Int             @map("total_payments")
+  payoutAmount           Float           @map("payout_amount")
+  payoutCurrency         Currency        @default(SLE) @map("payout_currency")
+  payoutInterval         PayoutInterval  @default(monthly) @map("payout_interval")
+  country                String          @default("Sierra Leone") @map("country")
+  viewerOrganizationId   String          @map("viewer_organization_id")
+  operatorOrganizationId String          @map("operator_organization_id")
+  owner                  Organization    @relation("ProgramViewers", fields: [viewerOrganizationId], references: [id])
+  operator               Organization    @relation("ProgramOperators", fields: [operatorOrganizationId], references: [id])
   campaigns              Campaign[]
   recipients             Recipient[]
   contributions          Contribution[]
   surveys                Survey[]
-  createdAt              DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt              DateTime?      @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt              DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt              DateTime?       @updatedAt @map("updated_at") @db.Timestamptz(3)
+  ProgramAccess          ProgramAccess[]
 
   @@map("program")
 }
 
-model Recipient {
-  id             String          @id @default(cuid()) @map("id")
-  userId         String          @unique @map("user_id")
-  programId      String          @map("program_id")
-  localPartnerId String          @map("local_partner_id")
-  startDate      DateTime?       @map("start_date") @db.Timestamptz(3)
-  status         RecipientStatus @map("status")
-  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt      DateTime?       @updatedAt @map("updated_at") @db.Timestamptz(3)
-  payouts        Payout[]
-  localPartner   LocalPartner    @relation(fields: [localPartnerId], references: [id])
-  program        Program         @relation(fields: [programId], references: [id])
-  user           User            @relation(fields: [userId], references: [id])
-  surveys        Survey[]
-
-  @@map("recipient")
-}
-
 model LocalPartner {
-  id         String      @id @default(cuid()) @map("id")
-  name       String      @unique @map("name")
-  userId     String      @unique @map("user_id")
-  createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt  DateTime?   @updatedAt @map("updated_at") @db.Timestamptz(3)
-  user       User        @relation(fields: [userId], references: [id])
-  recipients Recipient[]
+  id          String        @id @default(cuid()) @map("id")
+  name        String        @unique @map("name")
+  userId      String        @unique @map("user_id")
+  createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime?     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  user        User          @relation(fields: [userId], references: [id])
+  recipients  Recipient[]
+  Contributor Contributor[]
 
   @@map("local_partner")
 }
@@ -253,16 +368,18 @@ model ExchangeRateItem {
 }
 
 model DonationCertificate {
-  id          String   @id @default(cuid()) @map("id")
-  userId      String   @map("user_id")
-  country     String   @map("country")
-  year        Int      @map("year")
-  storagePath String   @map("storage_path")
-  user        User     @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  id            String @id @default(cuid()) @map("id")
+  contributorId String @map("contributor_id")
+  country       String @map("country")
+  year          Int    @map("year")
+  storagePath   String @map("storage_path")
 
-  @@unique([userId, year])
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  contributor Contributor @relation(fields: [contributorId], references: [id])
+
+  @@unique([contributorId, year])
   @@map("donation_certificate")
 }
 
@@ -271,16 +388,11 @@ model Expense {
   type      ExpenseType @map("type")
   year      Int         @map("year")
   amountChf Float       @map("amount_chf")
-  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime?   @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("expense")
-}
-
-enum UserRole {
-  user
-  globalAdmin
-  globalAnalyst
 }
 
 enum Gender {
@@ -305,6 +417,14 @@ enum LanguageCode {
   it
   fr
   kri
+}
+
+enum Currency {
+  SLE
+  CHF
+  EUR
+  USD
+  GBP
 }
 
 enum RecipientStatus {
@@ -379,24 +499,4 @@ enum ExpenseType {
 
 enum PayoutInterval {
   monthly
-}
-
-view ContributionStatistics {
-  id                                    Int    @id @map("id")
-  totalContributionsCount               Int?   @map("total_contributions_count")
-  totalContributionsAmount              Float? @map("total_contributions_amount")
-  totalContributorsCount                Int?   @map("total_contributors_count")
-  totalIndividualContributionsAmount    Float? @map("total_individual_contributions_amount")
-  totalIndividualContributorsCount      Int?   @map("total_individual_contributors_count")
-  totalInstitutionalContributionsAmount Float? @map("total_institutional_contributions_amount")
-  totalInstitutionalContributorsCount   Int?   @map("total_institutional_contributors_count")
-  totalContributionsByCurrency          Json?  @map("total_contributions_by_currency")
-  totalContributionsByIsInstitution     Json?  @map("total_contributions_by_is_institution")
-  totalContributionsByCountry           Json?  @map("total_contributions_by_country")
-  totalContributionsBySource            Json?  @map("total_contributions_by_source")
-  totalContributionsByMonth             Json?  @map("total_contributions_by_month")
-  totalContributionsByMonthAndType      Json?  @map("total_contributions_by_month_and_type")
-  totalPaymentFeesByIsInstitution       Json?  @map("total_payment_fees_by_is_institution")
-
-  @@map("contribution_statistics")
 }
