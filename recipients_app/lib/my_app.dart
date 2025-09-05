@@ -154,7 +154,7 @@ class _App extends StatelessWidget {
               final selectedLanguage = state.recipient?.selectedLanguage;
 
               if (selectedLanguage != null) {
-                context.read<SettingsCubit>().changeLanguage(selectedLanguage.name);
+                context.read<SettingsCubit>().changeLanguage(selectedLanguage);
               }
             }
           },
