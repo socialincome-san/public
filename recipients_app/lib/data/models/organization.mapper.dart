@@ -14,6 +14,7 @@ class OrganizationMapper extends ClassMapperBase<Organization> {
   static OrganizationMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = OrganizationMapper._());
+      ProgramMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -21,33 +22,35 @@ class OrganizationMapper extends ClassMapperBase<Organization> {
   @override
   final String id = 'Organization';
 
+  static String _$id(Organization v) => v.id;
+  static const Field<Organization, String> _f$id = Field('id', _$id);
   static String _$name(Organization v) => v.name;
   static const Field<Organization, String> _f$name = Field('name', _$name);
-  static String? _$contactName(Organization v) => v.contactName;
-  static const Field<Organization, String> _f$contactName = Field(
-    'contactName',
-    _$contactName,
-    opt: true,
+  static List<Program> _$operatedPrograms(Organization v) => v.operatedPrograms;
+  static const Field<Organization, List<Program>> _f$operatedPrograms = Field(
+    'operatedPrograms',
+    _$operatedPrograms,
   );
-  static String? _$contactNumber(Organization v) => v.contactNumber;
-  static const Field<Organization, String> _f$contactNumber = Field(
-    'contactNumber',
-    _$contactNumber,
-    opt: true,
+  static List<Program> _$viewedPrograms(Organization v) => v.viewedPrograms;
+  static const Field<Organization, List<Program>> _f$viewedPrograms = Field(
+    'viewedPrograms',
+    _$viewedPrograms,
   );
 
   @override
   final MappableFields<Organization> fields = const {
+    #id: _f$id,
     #name: _f$name,
-    #contactName: _f$contactName,
-    #contactNumber: _f$contactNumber,
+    #operatedPrograms: _f$operatedPrograms,
+    #viewedPrograms: _f$viewedPrograms,
   };
 
   static Organization _instantiate(DecodingData data) {
     return Organization(
+      id: data.dec(_f$id),
       name: data.dec(_f$name),
-      contactName: data.dec(_f$contactName),
-      contactNumber: data.dec(_f$contactNumber),
+      operatedPrograms: data.dec(_f$operatedPrograms),
+      viewedPrograms: data.dec(_f$viewedPrograms),
     );
   }
 
@@ -113,7 +116,16 @@ extension OrganizationValueCopy<$R, $Out>
 
 abstract class OrganizationCopyWith<$R, $In extends Organization, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call({String? name, String? contactName, String? contactNumber});
+  ListCopyWith<$R, Program, ProgramCopyWith<$R, Program, Program>>
+  get operatedPrograms;
+  ListCopyWith<$R, Program, ProgramCopyWith<$R, Program, Program>>
+  get viewedPrograms;
+  $R call({
+    String? id,
+    String? name,
+    List<Program>? operatedPrograms,
+    List<Program>? viewedPrograms,
+  });
   OrganizationCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -126,22 +138,39 @@ class _OrganizationCopyWithImpl<$R, $Out>
   late final ClassMapperBase<Organization> $mapper =
       OrganizationMapper.ensureInitialized();
   @override
+  ListCopyWith<$R, Program, ProgramCopyWith<$R, Program, Program>>
+  get operatedPrograms => ListCopyWith(
+    $value.operatedPrograms,
+    (v, t) => v.copyWith.$chain(t),
+    (v) => call(operatedPrograms: v),
+  );
+  @override
+  ListCopyWith<$R, Program, ProgramCopyWith<$R, Program, Program>>
+  get viewedPrograms => ListCopyWith(
+    $value.viewedPrograms,
+    (v, t) => v.copyWith.$chain(t),
+    (v) => call(viewedPrograms: v),
+  );
+  @override
   $R call({
+    String? id,
     String? name,
-    Object? contactName = $none,
-    Object? contactNumber = $none,
+    List<Program>? operatedPrograms,
+    List<Program>? viewedPrograms,
   }) => $apply(
     FieldCopyWithData({
+      if (id != null) #id: id,
       if (name != null) #name: name,
-      if (contactName != $none) #contactName: contactName,
-      if (contactNumber != $none) #contactNumber: contactNumber,
+      if (operatedPrograms != null) #operatedPrograms: operatedPrograms,
+      if (viewedPrograms != null) #viewedPrograms: viewedPrograms,
     }),
   );
   @override
   Organization $make(CopyWithData data) => Organization(
+    id: data.get(#id, or: $value.id),
     name: data.get(#name, or: $value.name),
-    contactName: data.get(#contactName, or: $value.contactName),
-    contactNumber: data.get(#contactNumber, or: $value.contactNumber),
+    operatedPrograms: data.get(#operatedPrograms, or: $value.operatedPrograms),
+    viewedPrograms: data.get(#viewedPrograms, or: $value.viewedPrograms),
   );
 
   @override
