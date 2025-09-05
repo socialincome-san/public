@@ -838,15 +838,7 @@ components:
     ExpenseType:
       type: string
       enum:
-        [
-          account_fees,
-          administrative,
-          delivery_fees,
-          donation_fees,
-          exchange_rate_loss,
-          fundraising_advertising,
-          staff,
-        ]
+        [account_fees, administrative, delivery_fees, donation_fees, exchange_rate_loss, fundraising_advertising, staff]
 
     # Main Models
     User:
