@@ -43,7 +43,7 @@ android {
         multiDexEnabled = true
     }
 
-    buildTypes {
+    signingConfigs {
         create("release") {
             storeFile = file(keystoreProperties.getProperty("storeFile"))
             storePassword = keystoreProperties.getProperty("storePassword")
