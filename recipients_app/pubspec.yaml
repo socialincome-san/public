@@ -15,7 +15,7 @@ dependencies:
   cloud_functions: ^6.0.1
   collection: ^1.19.1
   equatable: ^2.0.7
-  firebase_app_check: ^0.4.0
+  firebase_app_check: ^0.4.0+1
   firebase_auth: ^6.0.2
   firebase_core: ^4.1.0
   firebase_messaging: ^16.0.1
