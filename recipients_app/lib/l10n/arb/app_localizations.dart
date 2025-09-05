@@ -1441,6 +1441,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other reason'**
   String get contestReason_otherReason;
+
+  /// No description provided for @appUpdateButtonTitleLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get appUpdateButtonTitleLater;
+
+  /// No description provided for @appUpdateButtonTitleUpdateNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Update now'**
+  String get appUpdateButtonTitleUpdateNow;
+
+  /// No description provided for @appUpdateWidgetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App Update Required'**
+  String get appUpdateWidgetTitle;
+
+  /// No description provided for @appUpdateWidgetMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Please update to continue using the app.'**
+  String get appUpdateWidgetMessage;
 }
 
 class _AppLocalizationsDelegate

@@ -287,5 +287,9 @@
     "contestReason_phoneStolen": "Dɛn tif fon",
     "contestReason_incorrectAmount": "Di mɔni we nɔ kɔrɛkt",
     "contestReason_numberChanged": "Dɛn chenj di fon nɔmba",
-    "contestReason_otherReason": "Ɔda rizin"
+    "contestReason_otherReason": "Ɔda rizin",
+    "appUpdateButtonTitleLater": "Leta",
+    "appUpdateButtonTitleUpdateNow": "Update naw",
+    "appUpdateWidgetTitle": "App Update Rikway",
+    "appUpdateWidgetMessage": "Duya ɔpdet fɔ kɔntinyu fɔ yuz di ap."
 }

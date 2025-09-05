@@ -713,4 +713,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get contestReason_otherReason => 'Other reason';
+
+  @override
+  String get appUpdateButtonTitleLater => 'Later';
+
+  @override
+  String get appUpdateButtonTitleUpdateNow => 'Update now';
+
+  @override
+  String get appUpdateWidgetTitle => 'App Update Required';
+
+  @override
+  String get appUpdateWidgetMessage =>
+      'Please update to continue using the app.';
 }

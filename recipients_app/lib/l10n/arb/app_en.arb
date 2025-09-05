@@ -281,5 +281,9 @@
     "contestReason_phoneStolen": "Phone stolen",
     "contestReason_incorrectAmount": "Incorrect amount",
     "contestReason_numberChanged": "Changed phone number",
-    "contestReason_otherReason": "Other reason"
+    "contestReason_otherReason": "Other reason",
+    "appUpdateButtonTitleLater": "Later",
+    "appUpdateButtonTitleUpdateNow": "Update now",
+    "appUpdateWidgetTitle": "App Update Required",
+    "appUpdateWidgetMessage": "Please update to continue using the app."
 }

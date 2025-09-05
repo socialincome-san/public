@@ -713,4 +713,16 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get contestReason_otherReason => 'Ɔda rizin';
+
+  @override
+  String get appUpdateButtonTitleLater => 'Leta';
+
+  @override
+  String get appUpdateButtonTitleUpdateNow => 'Update naw';
+
+  @override
+  String get appUpdateWidgetTitle => 'App Update Rikway';
+
+  @override
+  String get appUpdateWidgetMessage => 'Duya ɔpdet fɔ kɔntinyu fɔ yuz di ap.';
 }
