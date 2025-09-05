@@ -40,17 +40,17 @@ class TermsAndConditionsPage extends StatelessWidget {
                         TextSpan(
                           text: context.l10n.createAccountInfo,
                           style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                                color: AppColors.primaryColor,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         TextSpan(
                           text: context.l10n.privacyPolicy,
                           style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                                color: AppColors.primaryColor,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                              ),
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                          ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () async {
                               const url = "https://socialincome.org/privacy";
@@ -88,13 +88,7 @@ class TermsAndConditionsPage extends StatelessWidget {
               children: [
                 ButtonBig(
                   onPressed: () {
-                    final updated = context.read<AuthCubit>().state.recipient?.copyWith(
-                          termsAccepted: true,
-                        );
-
-                    if (updated != null) {
-                      context.read<AuthCubit>().updateRecipient(updated);
-                    }
+                    context.read<AuthCubit>().updateRecipient(termsAccepted: true);
                   },
                   label: demoManager.isDemoEnabled ? context.l10n.createAccountDemo : context.l10n.createAccount,
                 ),

@@ -2,7 +2,6 @@ import "dart:async";
 
 import "package:app/data/models/gender.dart";
 import "package:app/data/models/language_code.dart";
-import "package:app/data/models/phone_number.dart";
 import "package:app/data/models/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/data/services/auth_service.dart";
@@ -85,10 +84,19 @@ class AuthCubit extends Cubit<AuthState> {
     Gender? gender,
     LanguageCode? languageCode,
     String? email,
-    PhoneNumber? communicationMobilePhone,
-    PhoneNumber? mobileMoneyPhone,
+    String? communicationMobilePhone,
+    // PhoneNumber? communicationMobilePhone,
+    String? mobileMoneyPhone,
+    // PhoneNumber? mobileMoneyPhone,
+    String? paymentProvider,
+    bool? termsAccepted,
   }) async {
     emit(state.copyWith(status: AuthStatus.updatingRecipient));
+
+    // TODO(Verena):
+    // how to handle paymentProvider?
+    // how to handle communicationMobilePhone and mobileMoneyPhone?
+    // how to handle termsAccepted?
 
     final recipient = state.recipient!;
     final user = recipient.user;
@@ -99,6 +107,8 @@ class AuthCubit extends Cubit<AuthState> {
       dateOfBirth: dateOfBirth,
       gender: gender,
       languageCode: languageCode,
+      // communicationMobilePhone: communicationMobilePhone,
+      // mobileMoneyPhone: mobileMoneyPhone,
     );
 
     final updatedRecipient = recipient.copyWith(

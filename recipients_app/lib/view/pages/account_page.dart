@@ -2,8 +2,8 @@ import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
 import "package:app/core/helpers/flushbar_helper.dart";
 import "package:app/data/models/gender.dart";
+import "package:app/data/models/language_code.dart";
 import "package:app/data/models/models.dart";
-import "package:app/data/models/recipient_main_language.dart";
 import "package:app/l10n/l10n.dart";
 import "package:app/ui/buttons/buttons.dart";
 import "package:app/ui/configs/app_colors.dart";
@@ -256,17 +256,19 @@ class AccountPageState extends State<AccountPage> {
                   },
                 ),
                 const SizedBox(height: 16),
-                InputDropdown<RecipientMainLanguage>(
+                InputDropdown<LanguageCode>(
                   label: "${context.l10n.language}*",
                   items: [
-                    DropdownMenuItem(
-                      value: RecipientMainLanguage.en,
-                      child: Text(context.l10n.english),
-                    ),
-                    DropdownMenuItem(
-                      value: RecipientMainLanguage.kri,
-                      child: Text(context.l10n.krio),
-                    ),
+                    if (recipient.user.languageCode == LanguageCode.en)
+                      DropdownMenuItem(
+                        value: LanguageCode.en,
+                        child: Text(context.l10n.english),
+                      ),
+                    if (recipient.user.languageCode == LanguageCode.kri)
+                      DropdownMenuItem(
+                        value: LanguageCode.kri,
+                        child: Text(context.l10n.krio),
+                      ),
                   ],
                   validator: (value) {
                     if (value == null) {
@@ -281,7 +283,7 @@ class AccountPageState extends State<AccountPage> {
                       languageCode: value,
                     );
                   },
-                  value: recipient.user.languageCode?.name,
+                  value: recipient.user.languageCode,
                 ),
 
                 const SizedBox(height: 16),
@@ -321,9 +323,7 @@ class AccountPageState extends State<AccountPage> {
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
-                        recipient.copyWith(
-                          mobileMoneyPhone: Phone(int.parse(value)),
-                        ),
+                        mobileMoneyPhone: value,
                       );
                     }
                   },
@@ -359,9 +359,7 @@ class AccountPageState extends State<AccountPage> {
                     }
                     return null;
                   },
-                  onChanged: (value) => context.read<AuthCubit>().updateRecipient(
-                    recipient.copyWith(paymentProvider: value),
-                  ),
+                  onChanged: (value) => context.read<AuthCubit>().updateRecipient(paymentProvider: value),
                 ),
                 const SizedBox(height: 24),
 
@@ -389,11 +387,7 @@ class AccountPageState extends State<AccountPage> {
                   onSubmitted: (value) {
                     if (value != null && value.isNotEmpty) {
                       context.read<AuthCubit>().updateRecipient(
-                        recipient.copyWith(
-                          communicationMobilePhone: Phone(
-                            int.parse(value),
-                          ),
-                        ),
+                        communicationMobilePhone: value,
                       );
                     }
                   },
@@ -434,9 +428,7 @@ class AccountPageState extends State<AccountPage> {
                   controller: _successorNameController,
                   keyboardType: TextInputType.name,
                   onSubmitted: (value) {
-                    context.read<AuthCubit>().updateRecipient(
-                      recipient.copyWith(successorName: value),
-                    );
+                    context.read<AuthCubit>().updateRecipient(successorName: value);
                   },
                 ),
 

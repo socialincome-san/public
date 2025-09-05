@@ -25,15 +25,9 @@ class _MainAppPageState extends State<MainAppPage> {
         ButtonSmall(
           onPressed: () {
             if (recipient == null) return;
-
-            final organization = context.read<AuthCubit>().state.organization;
-
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => AccountPage(
-                  recipient: recipient,
-                  organization: organization,
-                ),
+                builder: (context) => AccountPage(recipient: recipient),
               ),
             );
           },
@@ -70,7 +64,7 @@ class _MainAppPageState extends State<MainAppPage> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "+${recipient?.mobileMoneyPhone?.phoneNumber}",
+                      "+${recipient?.mobileMoneyPhone?.phone}",
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         color: AppColors.primaryColor,
                       ),
