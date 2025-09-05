@@ -1,46 +1,142 @@
 {
-	"project_info": {
-		"project_number": "51495651779",
-		"project_id": "social-income-staging",
-		"storage_bucket": "social-income-staging.appspot.com"
-	},
-	"client": [
-		{
-			"client_info": {
-				"mobilesdk_app_id": "1:51495651779:android:08ef862a962bc041185576",
-				"android_client_info": {
-					"package_name": "org.socialincome.app.stage"
-				}
-			},
-			"oauth_client": [
-				{
-					"client_id": "51495651779-q5n3jsuute9ahpo3tbofbv317luf3fct.apps.googleusercontent.com",
-					"client_type": 3
-				}
-			],
-			"api_key": [
-				{
-					"current_key": "AIzaSyCqTdJShArf7g6X5IhOgkl7u544E5zfrAE"
-				}
-			],
-			"services": {
-				"appinvite_service": {
-					"other_platform_oauth_client": [
-						{
-							"client_id": "51495651779-q5n3jsuute9ahpo3tbofbv317luf3fct.apps.googleusercontent.com",
-							"client_type": 3
-						},
-						{
-							"client_id": "51495651779-tge57s75sh38pcd76g03lpfc1prv8rvd.apps.googleusercontent.com",
-							"client_type": 2,
-							"ios_info": {
-								"bundle_id": "org.socialincome.app.stage"
-							}
-						}
-					]
-				}
-			}
-		}
-	],
-	"configuration_version": "1"
+  "project_info": {
+    "project_number": "51495651779",
+    "project_id": "social-income-staging",
+    "storage_bucket": "social-income-staging.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51495651779:android:8e519ab643468cb6185576",
+        "android_client_info": {
+          "package_name": "org.socialincome.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "51495651779-e9dtdbf10579kbvj20emfesol8s7gtml.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqTdJShArf7g6X5IhOgkl7u544E5zfrAE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "51495651779-e9dtdbf10579kbvj20emfesol8s7gtml.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "51495651779-m8sno9cgf85q5u8pb3t0kkoh4crd2p0a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.socialincome.app.dev"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51495651779:android:6abec651627b08d5185576",
+        "android_client_info": {
+          "package_name": "org.socialincome.app.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "51495651779-f77rhnl3gdh6hf8shfn14vfmebjk4etq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.socialincome.app.dev",
+            "certificate_hash": "5eba4d83a8fbabe8c861162a196afbae11a12c9b"
+          }
+        },
+        {
+          "client_id": "51495651779-e9dtdbf10579kbvj20emfesol8s7gtml.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqTdJShArf7g6X5IhOgkl7u544E5zfrAE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "51495651779-e9dtdbf10579kbvj20emfesol8s7gtml.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "51495651779-m8sno9cgf85q5u8pb3t0kkoh4crd2p0a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.socialincome.app.dev"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51495651779:android:08ef862a962bc041185576",
+        "android_client_info": {
+          "package_name": "org.socialincome.app.stage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "51495651779-esk1gdivait81filmepqp52t178pul9f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.socialincome.app.stage",
+            "certificate_hash": "5eba4d83a8fbabe8c861162a196afbae11a12c9b"
+          }
+        },
+        {
+          "client_id": "51495651779-k42sintov8beacivlsg0rt3400c0ugbr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.socialincome.app.stage",
+            "certificate_hash": "70dcd9dd926f810ee20f02ea95e6b3b9f799e412"
+          }
+        },
+        {
+          "client_id": "51495651779-e9dtdbf10579kbvj20emfesol8s7gtml.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqTdJShArf7g6X5IhOgkl7u544E5zfrAE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "51495651779-e9dtdbf10579kbvj20emfesol8s7gtml.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "51495651779-m8sno9cgf85q5u8pb3t0kkoh4crd2p0a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.socialincome.app.dev"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
 }
