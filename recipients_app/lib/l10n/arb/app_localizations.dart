@@ -98,6 +98,12 @@ abstract class AppLocalizations {
     Locale('kri'),
   ];
 
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
   /// No description provided for @profileUpdateSuccess.
   ///
   /// In en, this message translates to:
@@ -1441,6 +1447,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other reason'**
   String get contestReason_otherReason;
+
+  /// No description provided for @appUpdateButtonTitleLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get appUpdateButtonTitleLater;
+
+  /// No description provided for @appUpdateButtonTitleUpdateNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Update now'**
+  String get appUpdateButtonTitleUpdateNow;
+
+  /// No description provided for @appUpdateWidgetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App Update Required'**
+  String get appUpdateWidgetTitle;
+
+  /// No description provided for @appUpdateWidgetMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Please update to continue using the app.'**
+  String get appUpdateWidgetMessage;
+
+  /// No description provided for @appUpdateWidgetErrorLaunchingStore.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not guide you to the Store to update the app. Please open the PlayStore app on Android or App Store app on iOS and update Social Income.'**
+  String get appUpdateWidgetErrorLaunchingStore;
 }
 
 class _AppLocalizationsDelegate
