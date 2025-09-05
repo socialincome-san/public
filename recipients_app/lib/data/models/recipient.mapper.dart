@@ -14,7 +14,12 @@ class RecipientMapper extends ClassMapperBase<Recipient> {
   static RecipientMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = RecipientMapper._());
-      PhoneMapper.ensureInitialized();
+      LocalPartnerMapper.ensureInitialized();
+      RecipientStatusMapper.ensureInitialized();
+      ProgramMapper.ensureInitialized();
+      UserMapper.ensureInitialized();
+      PayoutMapper.ensureInitialized();
+      SurveyMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -22,175 +27,99 @@ class RecipientMapper extends ClassMapperBase<Recipient> {
   @override
   final String id = 'Recipient';
 
+  static String _$id(Recipient v) => v.id;
+  static const Field<Recipient, String> _f$id = Field('id', _$id);
   static String _$userId(Recipient v) => v.userId;
   static const Field<Recipient, String> _f$userId = Field('userId', _$userId);
-  static Phone? _$communicationMobilePhone(Recipient v) =>
-      v.communicationMobilePhone;
-  static const Field<Recipient, Phone> _f$communicationMobilePhone = Field(
-    'communicationMobilePhone',
-    _$communicationMobilePhone,
+  static String _$programId(Recipient v) => v.programId;
+  static const Field<Recipient, String> _f$programId = Field(
+    'programId',
+    _$programId,
   );
-  static Phone? _$mobileMoneyPhone(Recipient v) => v.mobileMoneyPhone;
-  static const Field<Recipient, Phone> _f$mobileMoneyPhone = Field(
-    'mobileMoneyPhone',
-    _$mobileMoneyPhone,
-    opt: true,
+  static String _$localPartnerId(Recipient v) => v.localPartnerId;
+  static const Field<Recipient, String> _f$localPartnerId = Field(
+    'localPartnerId',
+    _$localPartnerId,
   );
-  static String? _$firstName(Recipient v) => v.firstName;
-  static const Field<Recipient, String> _f$firstName = Field(
-    'firstName',
-    _$firstName,
-    opt: true,
+  static LocalPartner _$localPartner(Recipient v) => v.localPartner;
+  static const Field<Recipient, LocalPartner> _f$localPartner = Field(
+    'localPartner',
+    _$localPartner,
   );
-  static String? _$lastName(Recipient v) => v.lastName;
-  static const Field<Recipient, String> _f$lastName = Field(
-    'lastName',
-    _$lastName,
-    opt: true,
+  static DateTime? _$startDate(Recipient v) => v.startDate;
+  static const Field<Recipient, DateTime> _f$startDate = Field(
+    'startDate',
+    _$startDate,
   );
-  static Timestamp? _$birthDate(Recipient v) => v.birthDate;
-  static const Field<Recipient, Timestamp> _f$birthDate = Field(
-    'birthDate',
-    _$birthDate,
-    opt: true,
+  static RecipientStatus _$status(Recipient v) => v.status;
+  static const Field<Recipient, RecipientStatus> _f$status = Field(
+    'status',
+    _$status,
   );
-  static String? _$email(Recipient v) => v.email;
-  static const Field<Recipient, String> _f$email = Field(
-    'email',
-    _$email,
-    opt: true,
-  );
-  static String? _$country(Recipient v) => v.country;
-  static const Field<Recipient, String> _f$country = Field(
-    'country',
-    _$country,
-    opt: true,
-  );
-  static String? _$preferredName(Recipient v) => v.preferredName;
-  static const Field<Recipient, String> _f$preferredName = Field(
-    'preferredName',
-    _$preferredName,
-    opt: true,
+  static int? _$omUid(Recipient v) => v.omUid;
+  static const Field<Recipient, int> _f$omUid = Field('omUid', _$omUid);
+  static String? _$profession(Recipient v) => v.profession;
+  static const Field<Recipient, String> _f$profession = Field(
+    'profession',
+    _$profession,
   );
   static String? _$callingName(Recipient v) => v.callingName;
   static const Field<Recipient, String> _f$callingName = Field(
     'callingName',
     _$callingName,
-    opt: true,
   );
-  static String? _$paymentProvider(Recipient v) => v.paymentProvider;
-  static const Field<Recipient, String> _f$paymentProvider = Field(
-    'paymentProvider',
-    _$paymentProvider,
-    opt: true,
+  static Program _$program(Recipient v) => v.program;
+  static const Field<Recipient, Program> _f$program = Field(
+    'program',
+    _$program,
   );
-  static String? _$gender(Recipient v) => v.gender;
-  static const Field<Recipient, String> _f$gender = Field(
-    'gender',
-    _$gender,
-    opt: true,
+  static User _$user(Recipient v) => v.user;
+  static const Field<Recipient, User> _f$user = Field('user', _$user);
+  static List<Payout> _$payouts(Recipient v) => v.payouts;
+  static const Field<Recipient, List<Payout>> _f$payouts = Field(
+    'payouts',
+    _$payouts,
   );
-  static String? _$selectedLanguage(Recipient v) => v.selectedLanguage;
-  static const Field<Recipient, String> _f$selectedLanguage = Field(
-    'selectedLanguage',
-    _$selectedLanguage,
-    opt: true,
-  );
-  static bool? _$termsAccepted(Recipient v) => v.termsAccepted;
-  static const Field<Recipient, bool> _f$termsAccepted = Field(
-    'termsAccepted',
-    _$termsAccepted,
-    opt: true,
-  );
-  static DateTime? _$recipientSince(Recipient v) => v.recipientSince;
-  static const Field<Recipient, DateTime> _f$recipientSince = Field(
-    'recipientSince',
-    _$recipientSince,
-    opt: true,
-  );
-  static String? _$imLinkInitial(Recipient v) => v.imLinkInitial;
-  static const Field<Recipient, String> _f$imLinkInitial = Field(
-    'imLinkInitial',
-    _$imLinkInitial,
-    opt: true,
-  );
-  static String? _$imLinkRegular(Recipient v) => v.imLinkRegular;
-  static const Field<Recipient, String> _f$imLinkRegular = Field(
-    'imLinkRegular',
-    _$imLinkRegular,
-    opt: true,
-  );
-  static Timestamp? _$nextSurvey(Recipient v) => v.nextSurvey;
-  static const Field<Recipient, Timestamp> _f$nextSurvey = Field(
-    'nextSurvey',
-    _$nextSurvey,
-    opt: true,
-  );
-  static DocumentReference<Object?>? _$organizationRef(Recipient v) =>
-      v.organizationRef;
-  static const Field<Recipient, DocumentReference<Object?>> _f$organizationRef =
-      Field('organizationRef', _$organizationRef, opt: true);
-  static String? _$updatedBy(Recipient v) => v.updatedBy;
-  static const Field<Recipient, String> _f$updatedBy = Field(
-    'updatedBy',
-    _$updatedBy,
-    opt: true,
-  );
-  static String? _$successorName(Recipient v) => v.successorName;
-  static const Field<Recipient, String> _f$successorName = Field(
-    'successorName',
-    _$successorName,
-    opt: true,
+  static List<Survey> _$surveys(Recipient v) => v.surveys;
+  static const Field<Recipient, List<Survey>> _f$surveys = Field(
+    'surveys',
+    _$surveys,
   );
 
   @override
   final MappableFields<Recipient> fields = const {
+    #id: _f$id,
     #userId: _f$userId,
-    #communicationMobilePhone: _f$communicationMobilePhone,
-    #mobileMoneyPhone: _f$mobileMoneyPhone,
-    #firstName: _f$firstName,
-    #lastName: _f$lastName,
-    #birthDate: _f$birthDate,
-    #email: _f$email,
-    #country: _f$country,
-    #preferredName: _f$preferredName,
+    #programId: _f$programId,
+    #localPartnerId: _f$localPartnerId,
+    #localPartner: _f$localPartner,
+    #startDate: _f$startDate,
+    #status: _f$status,
+    #omUid: _f$omUid,
+    #profession: _f$profession,
     #callingName: _f$callingName,
-    #paymentProvider: _f$paymentProvider,
-    #gender: _f$gender,
-    #selectedLanguage: _f$selectedLanguage,
-    #termsAccepted: _f$termsAccepted,
-    #recipientSince: _f$recipientSince,
-    #imLinkInitial: _f$imLinkInitial,
-    #imLinkRegular: _f$imLinkRegular,
-    #nextSurvey: _f$nextSurvey,
-    #organizationRef: _f$organizationRef,
-    #updatedBy: _f$updatedBy,
-    #successorName: _f$successorName,
+    #program: _f$program,
+    #user: _f$user,
+    #payouts: _f$payouts,
+    #surveys: _f$surveys,
   };
 
   static Recipient _instantiate(DecodingData data) {
     return Recipient(
+      id: data.dec(_f$id),
       userId: data.dec(_f$userId),
-      communicationMobilePhone: data.dec(_f$communicationMobilePhone),
-      mobileMoneyPhone: data.dec(_f$mobileMoneyPhone),
-      firstName: data.dec(_f$firstName),
-      lastName: data.dec(_f$lastName),
-      birthDate: data.dec(_f$birthDate),
-      email: data.dec(_f$email),
-      country: data.dec(_f$country),
-      preferredName: data.dec(_f$preferredName),
+      programId: data.dec(_f$programId),
+      localPartnerId: data.dec(_f$localPartnerId),
+      localPartner: data.dec(_f$localPartner),
+      startDate: data.dec(_f$startDate),
+      status: data.dec(_f$status),
+      omUid: data.dec(_f$omUid),
+      profession: data.dec(_f$profession),
       callingName: data.dec(_f$callingName),
-      paymentProvider: data.dec(_f$paymentProvider),
-      gender: data.dec(_f$gender),
-      selectedLanguage: data.dec(_f$selectedLanguage),
-      termsAccepted: data.dec(_f$termsAccepted),
-      recipientSince: data.dec(_f$recipientSince),
-      imLinkInitial: data.dec(_f$imLinkInitial),
-      imLinkRegular: data.dec(_f$imLinkRegular),
-      nextSurvey: data.dec(_f$nextSurvey),
-      organizationRef: data.dec(_f$organizationRef),
-      updatedBy: data.dec(_f$updatedBy),
-      successorName: data.dec(_f$successorName),
+      program: data.dec(_f$program),
+      user: data.dec(_f$user),
+      payouts: data.dec(_f$payouts),
+      surveys: data.dec(_f$surveys),
     );
   }
 
@@ -253,30 +182,26 @@ extension RecipientValueCopy<$R, $Out> on ObjectCopyWith<$R, Recipient, $Out> {
 
 abstract class RecipientCopyWith<$R, $In extends Recipient, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  PhoneCopyWith<$R, Phone, Phone>? get communicationMobilePhone;
-  PhoneCopyWith<$R, Phone, Phone>? get mobileMoneyPhone;
+  LocalPartnerCopyWith<$R, LocalPartner, LocalPartner> get localPartner;
+  ProgramCopyWith<$R, Program, Program> get program;
+  UserCopyWith<$R, User, User> get user;
+  ListCopyWith<$R, Payout, PayoutCopyWith<$R, Payout, Payout>> get payouts;
+  ListCopyWith<$R, Survey, SurveyCopyWith<$R, Survey, Survey>> get surveys;
   $R call({
+    String? id,
     String? userId,
-    Phone? communicationMobilePhone,
-    Phone? mobileMoneyPhone,
-    String? firstName,
-    String? lastName,
-    Timestamp? birthDate,
-    String? email,
-    String? country,
-    String? preferredName,
+    String? programId,
+    String? localPartnerId,
+    LocalPartner? localPartner,
+    DateTime? startDate,
+    RecipientStatus? status,
+    int? omUid,
+    String? profession,
     String? callingName,
-    String? paymentProvider,
-    String? gender,
-    String? selectedLanguage,
-    bool? termsAccepted,
-    DateTime? recipientSince,
-    String? imLinkInitial,
-    String? imLinkRegular,
-    Timestamp? nextSurvey,
-    DocumentReference<Object?>? organizationRef,
-    String? updatedBy,
-    String? successorName,
+    Program? program,
+    User? user,
+    List<Payout>? payouts,
+    List<Survey>? surveys,
   });
   RecipientCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -290,90 +215,78 @@ class _RecipientCopyWithImpl<$R, $Out>
   late final ClassMapperBase<Recipient> $mapper =
       RecipientMapper.ensureInitialized();
   @override
-  PhoneCopyWith<$R, Phone, Phone>? get communicationMobilePhone => $value
-      .communicationMobilePhone
-      ?.copyWith
-      .$chain((v) => call(communicationMobilePhone: v));
+  LocalPartnerCopyWith<$R, LocalPartner, LocalPartner> get localPartner =>
+      $value.localPartner.copyWith.$chain((v) => call(localPartner: v));
   @override
-  PhoneCopyWith<$R, Phone, Phone>? get mobileMoneyPhone => $value
-      .mobileMoneyPhone
-      ?.copyWith
-      .$chain((v) => call(mobileMoneyPhone: v));
+  ProgramCopyWith<$R, Program, Program> get program =>
+      $value.program.copyWith.$chain((v) => call(program: v));
+  @override
+  UserCopyWith<$R, User, User> get user =>
+      $value.user.copyWith.$chain((v) => call(user: v));
+  @override
+  ListCopyWith<$R, Payout, PayoutCopyWith<$R, Payout, Payout>> get payouts =>
+      ListCopyWith(
+        $value.payouts,
+        (v, t) => v.copyWith.$chain(t),
+        (v) => call(payouts: v),
+      );
+  @override
+  ListCopyWith<$R, Survey, SurveyCopyWith<$R, Survey, Survey>> get surveys =>
+      ListCopyWith(
+        $value.surveys,
+        (v, t) => v.copyWith.$chain(t),
+        (v) => call(surveys: v),
+      );
   @override
   $R call({
+    String? id,
     String? userId,
-    Object? communicationMobilePhone = $none,
-    Object? mobileMoneyPhone = $none,
-    Object? firstName = $none,
-    Object? lastName = $none,
-    Object? birthDate = $none,
-    Object? email = $none,
-    Object? country = $none,
-    Object? preferredName = $none,
+    String? programId,
+    String? localPartnerId,
+    LocalPartner? localPartner,
+    Object? startDate = $none,
+    RecipientStatus? status,
+    Object? omUid = $none,
+    Object? profession = $none,
     Object? callingName = $none,
-    Object? paymentProvider = $none,
-    Object? gender = $none,
-    Object? selectedLanguage = $none,
-    Object? termsAccepted = $none,
-    Object? recipientSince = $none,
-    Object? imLinkInitial = $none,
-    Object? imLinkRegular = $none,
-    Object? nextSurvey = $none,
-    Object? organizationRef = $none,
-    Object? updatedBy = $none,
-    Object? successorName = $none,
+    Program? program,
+    User? user,
+    List<Payout>? payouts,
+    List<Survey>? surveys,
   }) => $apply(
     FieldCopyWithData({
+      if (id != null) #id: id,
       if (userId != null) #userId: userId,
-      if (communicationMobilePhone != $none)
-        #communicationMobilePhone: communicationMobilePhone,
-      if (mobileMoneyPhone != $none) #mobileMoneyPhone: mobileMoneyPhone,
-      if (firstName != $none) #firstName: firstName,
-      if (lastName != $none) #lastName: lastName,
-      if (birthDate != $none) #birthDate: birthDate,
-      if (email != $none) #email: email,
-      if (country != $none) #country: country,
-      if (preferredName != $none) #preferredName: preferredName,
+      if (programId != null) #programId: programId,
+      if (localPartnerId != null) #localPartnerId: localPartnerId,
+      if (localPartner != null) #localPartner: localPartner,
+      if (startDate != $none) #startDate: startDate,
+      if (status != null) #status: status,
+      if (omUid != $none) #omUid: omUid,
+      if (profession != $none) #profession: profession,
       if (callingName != $none) #callingName: callingName,
-      if (paymentProvider != $none) #paymentProvider: paymentProvider,
-      if (gender != $none) #gender: gender,
-      if (selectedLanguage != $none) #selectedLanguage: selectedLanguage,
-      if (termsAccepted != $none) #termsAccepted: termsAccepted,
-      if (recipientSince != $none) #recipientSince: recipientSince,
-      if (imLinkInitial != $none) #imLinkInitial: imLinkInitial,
-      if (imLinkRegular != $none) #imLinkRegular: imLinkRegular,
-      if (nextSurvey != $none) #nextSurvey: nextSurvey,
-      if (organizationRef != $none) #organizationRef: organizationRef,
-      if (updatedBy != $none) #updatedBy: updatedBy,
-      if (successorName != $none) #successorName: successorName,
+      if (program != null) #program: program,
+      if (user != null) #user: user,
+      if (payouts != null) #payouts: payouts,
+      if (surveys != null) #surveys: surveys,
     }),
   );
   @override
   Recipient $make(CopyWithData data) => Recipient(
+    id: data.get(#id, or: $value.id),
     userId: data.get(#userId, or: $value.userId),
-    communicationMobilePhone: data.get(
-      #communicationMobilePhone,
-      or: $value.communicationMobilePhone,
-    ),
-    mobileMoneyPhone: data.get(#mobileMoneyPhone, or: $value.mobileMoneyPhone),
-    firstName: data.get(#firstName, or: $value.firstName),
-    lastName: data.get(#lastName, or: $value.lastName),
-    birthDate: data.get(#birthDate, or: $value.birthDate),
-    email: data.get(#email, or: $value.email),
-    country: data.get(#country, or: $value.country),
-    preferredName: data.get(#preferredName, or: $value.preferredName),
+    programId: data.get(#programId, or: $value.programId),
+    localPartnerId: data.get(#localPartnerId, or: $value.localPartnerId),
+    localPartner: data.get(#localPartner, or: $value.localPartner),
+    startDate: data.get(#startDate, or: $value.startDate),
+    status: data.get(#status, or: $value.status),
+    omUid: data.get(#omUid, or: $value.omUid),
+    profession: data.get(#profession, or: $value.profession),
     callingName: data.get(#callingName, or: $value.callingName),
-    paymentProvider: data.get(#paymentProvider, or: $value.paymentProvider),
-    gender: data.get(#gender, or: $value.gender),
-    selectedLanguage: data.get(#selectedLanguage, or: $value.selectedLanguage),
-    termsAccepted: data.get(#termsAccepted, or: $value.termsAccepted),
-    recipientSince: data.get(#recipientSince, or: $value.recipientSince),
-    imLinkInitial: data.get(#imLinkInitial, or: $value.imLinkInitial),
-    imLinkRegular: data.get(#imLinkRegular, or: $value.imLinkRegular),
-    nextSurvey: data.get(#nextSurvey, or: $value.nextSurvey),
-    organizationRef: data.get(#organizationRef, or: $value.organizationRef),
-    updatedBy: data.get(#updatedBy, or: $value.updatedBy),
-    successorName: data.get(#successorName, or: $value.successorName),
+    program: data.get(#program, or: $value.program),
+    user: data.get(#user, or: $value.user),
+    payouts: data.get(#payouts, or: $value.payouts),
+    surveys: data.get(#surveys, or: $value.surveys),
   );
 
   @override
