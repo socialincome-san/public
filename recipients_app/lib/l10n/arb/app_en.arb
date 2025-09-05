@@ -284,8 +284,8 @@
     "contestReason_numberChanged": "Changed phone number",
     "contestReason_otherReason": "Other reason",
     "appUpdateButtonTitleLater": "Later",
-    "appUpdateButtonTitleUpdateNow": "Update now",
+    "appUpdateButtonTitleUpdateNow": "Update Now",
     "appUpdateWidgetTitle": "App Update Required",
     "appUpdateWidgetMessage": "Please update to continue using the app.",
-    "appUpdateWidgetErrorLaunchingStore": "We could not guide you to the Store to update the app. Please open the PlayStore app on Android or App Store app on iOS and update Social Income."
+    "appUpdateWidgetErrorLaunchingStore": "We could not guide you to the Store to update the app. Please open the Play Store app on Android or App Store app on iOS and update Social Income."
 }
