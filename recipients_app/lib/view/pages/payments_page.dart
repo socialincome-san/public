@@ -51,7 +51,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        "${recipient?.mobileMoneyPhone?.phoneNumber ?? ""}",
+                        recipient?.mobileMoneyPhone?.phone ?? "",
                         style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                           color: AppColors.primaryColor,
                           fontWeight: FontWeight.bold,

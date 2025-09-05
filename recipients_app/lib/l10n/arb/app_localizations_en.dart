@@ -49,6 +49,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get other => 'Other';
 
   @override
+  String get private => 'Private';
+
+  @override
   String get genderError => 'Please select a gender';
 
   @override

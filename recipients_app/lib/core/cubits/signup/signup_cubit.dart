@@ -1,8 +1,9 @@
 import "package:app/data/repositories/repositories.dart";
 import "package:app/data/services/auth_service.dart";
-import "package:equatable/equatable.dart";
+import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+part "signup_cubit.mapper.dart";
 part "signup_state.dart";
 
 // TODO add errors while signing up
@@ -106,8 +107,7 @@ class SignupCubit extends Cubit<SignupState> {
     }
   }
 
-  Future<void> resendVerificationCode() =>
-      signupWithPhoneNumber(phoneNumber: state.phoneNumber!);
+  Future<void> resendVerificationCode() => signupWithPhoneNumber(phoneNumber: state.phoneNumber!);
 
   void changeToPhoneInput() {
     emit(

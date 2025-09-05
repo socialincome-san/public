@@ -47,8 +47,8 @@ class DashboardCard extends DashboardItem {
                 Text(
                   message,
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        fontWeight: FontWeight.normal,
-                      ),
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
               ],
             ),
@@ -88,14 +88,9 @@ class DashboardCard extends DashboardItem {
       case DashboardCardType.contactNumberEqualsPaymentNumber:
         final recipient = context.read<AuthCubit>().state.recipient!;
 
-        final organization = context.read<AuthCubit>().state.organization;
-
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => AccountPage(
-              recipient: recipient,
-              organization: organization,
-            ),
+            builder: (context) => AccountPage(recipient: recipient),
           ),
         );
     }
