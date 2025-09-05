@@ -8,7 +8,8 @@ enum PaymentsStatus {
   failure,
 }
 
-class PaymentsState extends Equatable {
+@MappableClass()
+class PaymentsState with PaymentsStateMappable {
   final PaymentsStatus status;
   final PaymentsUiState? paymentsUiState;
   final Exception? exception;
@@ -18,19 +19,4 @@ class PaymentsState extends Equatable {
     this.paymentsUiState,
     this.exception,
   });
-
-  @override
-  List<Object?> get props => [status, paymentsUiState, exception];
-
-  PaymentsState copyWith({
-    PaymentsStatus? status,
-    PaymentsUiState? paymentsUiState,
-    Exception? exception,
-  }) {
-    return PaymentsState(
-      status: status ?? this.status,
-      paymentsUiState: paymentsUiState ?? this.paymentsUiState,
-      exception: exception ?? this.exception,
-    );
-  }
 }

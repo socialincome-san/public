@@ -3,9 +3,10 @@ import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/data/repositories/survey_repository.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:collection/collection.dart";
-import "package:equatable/equatable.dart";
+import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+part "survey_cubit.mapper.dart";
 part "survey_state.dart";
 
 const _kNewSurveyDay = -10;
@@ -32,8 +33,7 @@ class SurveyCubit extends Cubit<SurveyState> {
     try {
       final mappedSurveys = await _getSurveys();
 
-      final dashboardSurveys =
-          mappedSurveys.where((element) => _shouldShowSurveyCard(element.survey)).toList();
+      final dashboardSurveys = mappedSurveys.where((element) => _shouldShowSurveyCard(element.survey)).toList();
 
       emit(
         SurveyState(
@@ -97,8 +97,7 @@ class SurveyCubit extends Cubit<SurveyState> {
   }
 
   SurveyCardStatus _getSurveyCardStatus(Survey survey) {
-    if (survey.status != SurveyServerStatus.completed &&
-        survey.status != SurveyServerStatus.missed) {
+    if (survey.status != SurveyServerStatus.completed && survey.status != SurveyServerStatus.missed) {
       final dateDifferenceInDays = _getSurveyDueDateAndNowDifferenceInDays(survey);
       if (dateDifferenceInDays == null) {
         return SurveyCardStatus.newSurvey;
@@ -106,11 +105,9 @@ class SurveyCubit extends Cubit<SurveyState> {
 
       if (dateDifferenceInDays >= _kNewSurveyDay && dateDifferenceInDays < _kNormalSurveyStartDay) {
         return SurveyCardStatus.newSurvey;
-      } else if (dateDifferenceInDays >= _kNormalSurveyStartDay &&
-          dateDifferenceInDays < _kNormalSurveyEndDay) {
+      } else if (dateDifferenceInDays >= _kNormalSurveyStartDay && dateDifferenceInDays < _kNormalSurveyEndDay) {
         return SurveyCardStatus.firstReminder;
-      } else if (dateDifferenceInDays >= _kNormalSurveyEndDay &&
-          dateDifferenceInDays < _kOverdueEndDay) {
+      } else if (dateDifferenceInDays >= _kNormalSurveyEndDay && dateDifferenceInDays < _kOverdueEndDay) {
         return SurveyCardStatus.overdue;
       } else {
         if ((_getDaysAfterOverdue(survey) ?? 0) > 0) {

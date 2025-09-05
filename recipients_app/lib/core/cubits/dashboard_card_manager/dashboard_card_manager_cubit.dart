@@ -3,9 +3,10 @@ import "dart:async";
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/view/widgets/account/dashboard_card.dart";
-import "package:equatable/equatable.dart";
+import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+part "dashboard_card_manager_cubit.mapper.dart";
 part "dashboard_card_manager_state.dart";
 
 class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
@@ -27,7 +28,7 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
     authSubscription.cancel();
     super.close();
   }
-  
+
   Future<void> fetchCards() async {
     emit(state.copyWith(status: DashboardCardManagerStatus.loading));
     final recipient = authCubit.state.recipient;
@@ -44,8 +45,7 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
       if (paymentPhoneNumber == null && contactPhoneNumber != null) {
         final paymentPhoneCard = DashboardCard(
           title: "My Profile",
-          message:
-              "Is your contact phone number (${contactPhoneNumber.phoneNumber}) also your payment phone number?",
+          message: "Is your contact phone number (${contactPhoneNumber.phoneNumber}) also your payment phone number?",
           primaryButtonText: "Yes",
           secondaryButtonText: "No",
           type: DashboardCardType.paymentNumberEqualsContactNumber,
@@ -57,8 +57,7 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
       if (contactPhoneNumber == null && paymentPhoneNumber != null) {
         final contactPhoneCard = DashboardCard(
           title: "My Profile",
-          message:
-              "Is your payment phone number (${paymentPhoneNumber.phoneNumber}) also your contact phone number?",
+          message: "Is your payment phone number (${paymentPhoneNumber.phoneNumber}) also your contact phone number?",
           primaryButtonText: "Yes",
           secondaryButtonText: "No",
           type: DashboardCardType.contactNumberEqualsPaymentNumber,
