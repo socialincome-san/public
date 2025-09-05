@@ -190,4 +190,3 @@ See [How to test](./docu/app_testing_guides/how_to_test.md)
 ## Releasing
 
 See [How to release the app](./docu/app_release_guides/releasing.md)
-
