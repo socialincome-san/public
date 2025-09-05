@@ -9,6 +9,9 @@ class AppLocalizationsKri extends AppLocalizations {
   AppLocalizationsKri([String locale = 'kri']) : super(locale);
 
   @override
+  String get ok => 'OK';
+
+  @override
   String get profileUpdateSuccess => 'Ɔltin bɔt yu go insay wɛl wɛl';
 
   @override
@@ -725,4 +728,8 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get appUpdateWidgetMessage => 'Duya ɔpdet fɔ kɔntinyu fɔ yuz di ap.';
+
+  @override
+  String get appUpdateWidgetErrorLaunchingStore =>
+      'Wi nɔ bin ebul fɔ gayd yu fɔ go na di Stɔ fɔ ɔpdet di ap. Duya opin di PleStɔ ap na Andrɔyd ɔ Ap Stɔ ap na iOS ɛn ɔpdet Sɔshial Inkam.';
 }

@@ -9,6 +9,9 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get ok => 'OK';
+
+  @override
   String get profileUpdateSuccess => 'Profile updated successfully';
 
   @override
@@ -726,4 +729,8 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get appUpdateWidgetMessage =>
       'Please update to continue using the app.';
+
+  @override
+  String get appUpdateWidgetErrorLaunchingStore =>
+      'We could not guide you to the Store to update the app. Please open the PlayStore app on Android or App Store app on iOS and update Social Income.';
 }

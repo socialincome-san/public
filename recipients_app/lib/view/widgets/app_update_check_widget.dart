@@ -23,7 +23,7 @@ class AppUpdateWidget extends StatelessWidget {
     const iosAppStoreId =
         "6444860109"; // Social Income Prod iOS app ID from App Store Connect, Staging app id is not work because the app is not publihed to the store.
 
-    return FutureBuilder(
+    return FutureBuilder<AppVersion?>(
       future: remoteConfigService.getAppVersion(),
       builder: (context, asyncSnapshot) {
         if (asyncSnapshot.connectionState != ConnectionState.done) {
@@ -50,14 +50,26 @@ class AppUpdateWidget extends StatelessWidget {
           ),
           allowCancel: appVersioninfo.isOptional,
           showStoreListing: (storeUrl) async {
-            if (await canLaunchUrl(storeUrl)) {
-              await launchUrl(
+            try {
+              final success = await launchUrl(
                 storeUrl,
                 // Open app store app directly (or fallback to browser)
                 mode: LaunchMode.externalApplication,
               );
-            } else {
-              log("Cannot launch URL: $storeUrl");
+
+              if (!success) {
+                log("Cannot launch URL: $storeUrl");
+                if (!context.mounted) {
+                  return;
+                }
+                showUserInfo(context);
+              }
+            } catch (e, st) {
+              log("Error launching URL: $storeUrl", error: e, stackTrace: st);
+              if (!context.mounted) {
+                return;
+              }
+              showUserInfo(context);
             }
           },
           onException: (e, stackTrace) {
@@ -70,6 +82,24 @@ class AppUpdateWidget extends StatelessWidget {
             iosAppStoreId: iosAppStoreId,
           ),
           child: child,
+        );
+      },
+    );
+  }
+
+  void showUserInfo(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(context.l10n.appUpdateWidgetTitle),
+          content: Text(context.l10n.appUpdateWidgetErrorLaunchingStore),
+          actions: [
+            TextButton(
+              child: Text(context.l10n.ok),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
         );
       },
     );
