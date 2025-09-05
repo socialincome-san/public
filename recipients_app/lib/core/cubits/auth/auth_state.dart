@@ -7,10 +7,11 @@ enum AuthStatus {
   updatingRecipient,
   updateRecipientSuccess,
   updateRecipientFailure,
-  failure
+  failure,
 }
 
-class AuthState extends Equatable {
+@MappableClass()
+class AuthState with AuthStateMappable {
   final AuthStatus status;
   final User? firebaseUser;
   final Recipient? recipient;
@@ -24,23 +25,4 @@ class AuthState extends Equatable {
     this.organization,
     this.exception,
   });
-
-  @override
-  List<Object?> get props => [status, firebaseUser, recipient, exception, organization];
-
-  AuthState copyWith({
-    AuthStatus? status,
-    User? firebaseUser,
-    Recipient? recipient,
-    Exception? exception,
-    Organization? organization,
-  }) {
-    return AuthState(
-      status: status ?? this.status,
-      firebaseUser: firebaseUser ?? this.firebaseUser,
-      recipient: recipient ?? this.recipient,
-      exception: exception ?? this.exception,
-      organization: organization ?? this.organization,
-    );
-  }
 }
