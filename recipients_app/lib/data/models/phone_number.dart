@@ -1,4 +1,3 @@
-import "package:app/data/models/user.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "phone_number.mapper.dart";
@@ -28,20 +27,21 @@ class PhoneNumber with PhoneNumberMappable {
   final String userId;
   final String phone;
   final String type;
-  final bool verified;
-  // final WhatsAppStatus whatsApp;
+
   final bool isPrimary;
-  final User user;
+  // final bool verified;
+  // final WhatsAppStatus whatsApp;
+  // final User user;
 
   const PhoneNumber({
     required this.id,
     required this.userId,
     required this.phone,
     required this.type,
-    required this.verified,
-    // required this.whatsApp,
     required this.isPrimary,
-    required this.user,
+    // required this.verified,
+    // required this.whatsApp,
+    // required this.user,
   });
 }
 

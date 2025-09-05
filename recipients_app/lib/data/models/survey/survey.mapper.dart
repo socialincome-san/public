@@ -51,22 +51,10 @@ class SurveyMapper extends ClassMapperBase<Survey> {
     'dueDateAt',
     _$dueDateAt,
   );
-  static DateTime? _$sentAt(Survey v) => v.sentAt;
-  static const Field<Survey, DateTime> _f$sentAt = Field('sentAt', _$sentAt);
-  static DateTime? _$completedAt(Survey v) => v.completedAt;
-  static const Field<Survey, DateTime> _f$completedAt = Field(
-    'completedAt',
-    _$completedAt,
-  );
   static SurveyStatus _$status(Survey v) => v.status;
   static const Field<Survey, SurveyStatus> _f$status = Field(
     'status',
     _$status,
-  );
-  static String? _$comments(Survey v) => v.comments;
-  static const Field<Survey, String> _f$comments = Field(
-    'comments',
-    _$comments,
   );
   static String _$data(Survey v) => v.data;
   static const Field<Survey, String> _f$data = Field('data', _$data);
@@ -85,6 +73,24 @@ class SurveyMapper extends ClassMapperBase<Survey> {
     'accessToken',
     _$accessToken,
   );
+  static DateTime? _$sentAt(Survey v) => v.sentAt;
+  static const Field<Survey, DateTime> _f$sentAt = Field(
+    'sentAt',
+    _$sentAt,
+    opt: true,
+  );
+  static DateTime? _$completedAt(Survey v) => v.completedAt;
+  static const Field<Survey, DateTime> _f$completedAt = Field(
+    'completedAt',
+    _$completedAt,
+    opt: true,
+  );
+  static String? _$comments(Survey v) => v.comments;
+  static const Field<Survey, String> _f$comments = Field(
+    'comments',
+    _$comments,
+    opt: true,
+  );
 
   @override
   final MappableFields<Survey> fields = const {
@@ -94,14 +100,14 @@ class SurveyMapper extends ClassMapperBase<Survey> {
     #recipientName: _f$recipientName,
     #language: _f$language,
     #dueDateAt: _f$dueDateAt,
-    #sentAt: _f$sentAt,
-    #completedAt: _f$completedAt,
     #status: _f$status,
-    #comments: _f$comments,
     #data: _f$data,
     #accessEmail: _f$accessEmail,
     #accessPw: _f$accessPw,
     #accessToken: _f$accessToken,
+    #sentAt: _f$sentAt,
+    #completedAt: _f$completedAt,
+    #comments: _f$comments,
   };
 
   static Survey _instantiate(DecodingData data) {
@@ -112,14 +118,14 @@ class SurveyMapper extends ClassMapperBase<Survey> {
       recipientName: data.dec(_f$recipientName),
       language: data.dec(_f$language),
       dueDateAt: data.dec(_f$dueDateAt),
-      sentAt: data.dec(_f$sentAt),
-      completedAt: data.dec(_f$completedAt),
       status: data.dec(_f$status),
-      comments: data.dec(_f$comments),
       data: data.dec(_f$data),
       accessEmail: data.dec(_f$accessEmail),
       accessPw: data.dec(_f$accessPw),
       accessToken: data.dec(_f$accessToken),
+      sentAt: data.dec(_f$sentAt),
+      completedAt: data.dec(_f$completedAt),
+      comments: data.dec(_f$comments),
     );
   }
 
@@ -176,14 +182,14 @@ abstract class SurveyCopyWith<$R, $In extends Survey, $Out>
     String? recipientName,
     RecipientMainLanguage? language,
     DateTime? dueDateAt,
-    DateTime? sentAt,
-    DateTime? completedAt,
     SurveyStatus? status,
-    String? comments,
     String? data,
     String? accessEmail,
     String? accessPw,
     String? accessToken,
+    DateTime? sentAt,
+    DateTime? completedAt,
+    String? comments,
   });
   SurveyCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -202,14 +208,14 @@ class _SurveyCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Survey, $Out>
     String? recipientName,
     RecipientMainLanguage? language,
     DateTime? dueDateAt,
-    Object? sentAt = $none,
-    Object? completedAt = $none,
     SurveyStatus? status,
-    Object? comments = $none,
     String? data,
     String? accessEmail,
     String? accessPw,
     String? accessToken,
+    Object? sentAt = $none,
+    Object? completedAt = $none,
+    Object? comments = $none,
   }) => $apply(
     FieldCopyWithData({
       if (id != null) #id: id,
@@ -218,14 +224,14 @@ class _SurveyCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Survey, $Out>
       if (recipientName != null) #recipientName: recipientName,
       if (language != null) #language: language,
       if (dueDateAt != null) #dueDateAt: dueDateAt,
-      if (sentAt != $none) #sentAt: sentAt,
-      if (completedAt != $none) #completedAt: completedAt,
       if (status != null) #status: status,
-      if (comments != $none) #comments: comments,
       if (data != null) #data: data,
       if (accessEmail != null) #accessEmail: accessEmail,
       if (accessPw != null) #accessPw: accessPw,
       if (accessToken != null) #accessToken: accessToken,
+      if (sentAt != $none) #sentAt: sentAt,
+      if (completedAt != $none) #completedAt: completedAt,
+      if (comments != $none) #comments: comments,
     }),
   );
   @override
@@ -236,14 +242,14 @@ class _SurveyCopyWithImpl<$R, $Out> extends ClassCopyWithBase<$R, Survey, $Out>
     recipientName: data.get(#recipientName, or: $value.recipientName),
     language: data.get(#language, or: $value.language),
     dueDateAt: data.get(#dueDateAt, or: $value.dueDateAt),
-    sentAt: data.get(#sentAt, or: $value.sentAt),
-    completedAt: data.get(#completedAt, or: $value.completedAt),
     status: data.get(#status, or: $value.status),
-    comments: data.get(#comments, or: $value.comments),
     data: data.get(#data, or: $value.data),
     accessEmail: data.get(#accessEmail, or: $value.accessEmail),
     accessPw: data.get(#accessPw, or: $value.accessPw),
     accessToken: data.get(#accessToken, or: $value.accessToken),
+    sentAt: data.get(#sentAt, or: $value.sentAt),
+    completedAt: data.get(#completedAt, or: $value.completedAt),
+    comments: data.get(#comments, or: $value.comments),
   );
 
   @override

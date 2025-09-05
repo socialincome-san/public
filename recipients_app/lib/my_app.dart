@@ -1,10 +1,8 @@
 import "package:app/core/cubits/auth/auth_cubit.dart";
 import "package:app/core/cubits/settings/settings_cubit.dart";
-import "package:app/data/datasource/demo/organization_demo_data_source.dart";
 import "package:app/data/datasource/demo/payment_demo_data_source.dart";
 import "package:app/data/datasource/demo/survey_demo_data_source.dart";
 import "package:app/data/datasource/demo/user_demo_data_source.dart";
-import "package:app/data/datasource/remote/organization_remote_data_source.dart";
 import "package:app/data/datasource/remote/payment_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
@@ -42,9 +40,6 @@ class MyApp extends StatelessWidget {
   final SurveyRemoteDataSource surveyRemoteDataSource;
   final SurveyDemoDataSource surveyDemoDataSource;
 
-  final OrganizationRemoteDataSource organizationRemoteDataSource;
-  final OrganizationDemoDataSource organizationDemoDataSource;
-
   final AuthService authService;
   final FirebaseRemoteConfigService firebaseRemoteConfigService;
 
@@ -60,8 +55,8 @@ class MyApp extends StatelessWidget {
     required this.paymentDemoDataSource,
     required this.surveyRemoteDataSource,
     required this.surveyDemoDataSource,
-    required this.organizationRemoteDataSource,
-    required this.organizationDemoDataSource,
+    // required this.organizationRemoteDataSource,
+    // required this.organizationDemoDataSource,
     required this.authService,
     required this.firebaseRemoteConfigService,
     required this.crashReportingRepository,
@@ -97,13 +92,6 @@ class MyApp extends StatelessWidget {
             demoManager: demoManager,
           ),
         ),
-        RepositoryProvider(
-          create: (context) => OrganizationRepository(
-            remoteDataSource: organizationRemoteDataSource,
-            demoDataSource: organizationDemoDataSource,
-            demoManager: demoManager,
-          ),
-        ),
         RepositoryProvider<AuthService>.value(value: authService),
         RepositoryProvider<FirebaseRemoteConfigService>.value(
           value: firebaseRemoteConfigService,
@@ -114,7 +102,6 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (context) => AuthCubit(
               crashReportingRepository: context.read<CrashReportingRepository>(),
-              organizationRepository: context.read<OrganizationRepository>(),
               userRepository: context.read<UserRepository>(),
               authService: context.read<AuthService>(),
             )..init(),
@@ -167,7 +154,7 @@ class _App extends StatelessWidget {
               final selectedLanguage = state.recipient?.selectedLanguage;
 
               if (selectedLanguage != null) {
-                context.read<SettingsCubit>().changeLanguage(selectedLanguage);
+                context.read<SettingsCubit>().changeLanguage(selectedLanguage.name);
               }
             }
           },

@@ -1,5 +1,6 @@
 import "package:app/data/models/local_partner.dart";
 import "package:app/data/models/payout.dart";
+import "package:app/data/models/phone_number.dart";
 import "package:app/data/models/program.dart";
 import "package:app/data/models/recipient_status.dart";
 import "package:app/data/models/survey/survey.dart";
@@ -141,17 +142,18 @@ model Recipient {
 class Recipient with RecipientMappable {
   final String id;
 
-  final String userId;
-  final String programId;
-  final String localPartnerId;
+  // final String userId;
+  // final String programId;
+  // final String localPartnerId;
+  // final int? omUid;
 
   final User user;
   final LocalPartner localPartner;
   final Program program;
 
-  final DateTime? startDate;
   final RecipientStatus status;
-  final int? omUid;
+
+  final DateTime? startDate;
   final String? profession;
   final String? callingName;
 
@@ -160,20 +162,25 @@ class Recipient with RecipientMappable {
 
   const Recipient({
     required this.id,
-    required this.userId,
-    required this.programId,
-    required this.localPartnerId,
     required this.localPartner,
-    required this.startDate,
     required this.status,
-    required this.omUid,
-    required this.profession,
-    required this.callingName,
     required this.program,
     required this.user,
-    required this.payouts,
-    required this.surveys,
+    this.payouts = const [],
+    this.surveys = const [],
+    this.startDate,
+    this.profession,
+    this.callingName,
+    // required this.userId,
+    // required this.programId,
+    // required this.localPartnerId,
+    // required this.omUid,
   });
+
+  PhoneNumber? get communicationMobilePhone => user.phoneNumber.firstWhere((phoneNumber) => !phoneNumber.isPrimary);
+  PhoneNumber? get mobileMoneyPhone => user.phoneNumber.firstWhere((phoneNumber) => phoneNumber.isPrimary);
+
+  String get userId => user.id;
 }
 
 // OLD
