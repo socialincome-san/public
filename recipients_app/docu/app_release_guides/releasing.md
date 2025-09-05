@@ -43,4 +43,5 @@
    - Send the release to Production App Review
 1. When both app reviews are approved by Apple and Google, release them
    into the stores
-1. On the next day, adjust the remote config in Firebase with the new app version and set if it is an enforced update.
+1. On the next day, adjust the remote config in Firebase with the new
+   app version and set if it is an enforced update.
