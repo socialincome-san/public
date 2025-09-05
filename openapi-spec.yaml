@@ -1,0 +1,1873 @@
+openapi: 3.0.3
+info:
+  title: Social Income API
+  description: API specification based on Prisma schema for Social Income platform
+  version: 1.0.0
+  contact:
+    name: Social Income Team
+    email: tech@socialincome.org
+
+servers:
+  - url: https://api.socialincome.org/v1
+    description: Production server
+  - url: https://staging-api.socialincome.org/v1
+    description: Staging server
+  - url: http://localhost:3000/v1
+    description: Development server
+
+security:
+  - bearerAuth: []
+
+paths:
+  # User endpoints
+  /users:
+    get:
+      tags: [Users]
+      summary: Get all users
+      parameters:
+        - $ref: "#/components/parameters/Skip"
+        - $ref: "#/components/parameters/Take"
+        - $ref: "#/components/parameters/OrderBy"
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+    post:
+      tags: [Users]
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUser"
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /users/{id}:
+    get:
+      tags: [Users]
+      summary: Get user by ID
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        "200":
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags: [Users]
+      summary: Update user
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUser"
+      responses:
+        "200":
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [Users]
+      summary: Delete user
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        "204":
+          description: User deleted successfully
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  # Contributors endpoints
+  /contributors:
+    get:
+      tags: [Contributors]
+      summary: Get all contributors
+      parameters:
+        - $ref: "#/components/parameters/Skip"
+        - $ref: "#/components/parameters/Take"
+      responses:
+        "200":
+          description: List of contributors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contributor"
+    post:
+      tags: [Contributors]
+      summary: Create a new contributor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateContributor"
+      responses:
+        "201":
+          description: Contributor created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contributor"
+
+  /contributors/{id}:
+    get:
+      tags: [Contributors]
+      summary: Get contributor by ID
+      parameters:
+        - $ref: "#/components/parameters/ContributorId"
+      responses:
+        "200":
+          description: Contributor details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contributor"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags: [Contributors]
+      summary: Update contributor
+      parameters:
+        - $ref: "#/components/parameters/ContributorId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateContributor"
+      responses:
+        "200":
+          description: Contributor updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contributor"
+    delete:
+      tags: [Contributors]
+      summary: Delete contributor
+      parameters:
+        - $ref: "#/components/parameters/ContributorId"
+      responses:
+        "204":
+          description: Contributor deleted successfully
+
+  # Contributions endpoints
+  /contributions:
+    get:
+      tags: [Contributions]
+      summary: Get all contributions
+      parameters:
+        - $ref: "#/components/parameters/Skip"
+        - $ref: "#/components/parameters/Take"
+        - name: contributorId
+          in: query
+          schema:
+            type: string
+          description: Filter by contributor ID
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/ContributionStatus"
+          description: Filter by contribution status
+      responses:
+        "200":
+          description: List of contributions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contribution"
+    post:
+      tags: [Contributions]
+      summary: Create a new contribution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateContribution"
+      responses:
+        "201":
+          description: Contribution created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contribution"
+
+  /contributions/{id}:
+    get:
+      tags: [Contributions]
+      summary: Get contribution by ID
+      parameters:
+        - $ref: "#/components/parameters/ContributionId"
+      responses:
+        "200":
+          description: Contribution details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contribution"
+    put:
+      tags: [Contributions]
+      summary: Update contribution
+      parameters:
+        - $ref: "#/components/parameters/ContributionId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateContribution"
+      responses:
+        "200":
+          description: Contribution updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contribution"
+
+  # Recipients endpoints
+  /recipients:
+    get:
+      tags: [Recipients]
+      summary: Get all recipients
+      parameters:
+        - $ref: "#/components/parameters/Skip"
+        - $ref: "#/components/parameters/Take"
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/RecipientStatus"
+          description: Filter by recipient status
+        - name: programId
+          in: query
+          schema:
+            type: string
+          description: Filter by program ID
+      responses:
+        "200":
+          description: List of recipients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Recipient"
+    post:
+      tags: [Recipients]
+      summary: Create a new recipient
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRecipient"
+      responses:
+        "201":
+          description: Recipient created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recipient"
+
+  /recipients/{id}:
+    get:
+      tags: [Recipients]
+      summary: Get recipient by ID
+      parameters:
+        - $ref: "#/components/parameters/RecipientId"
+      responses:
+        "200":
+          description: Recipient details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recipient"
+    put:
+      tags: [Recipients]
+      summary: Update recipient
+      parameters:
+        - $ref: "#/components/parameters/RecipientId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateRecipient"
+      responses:
+        "200":
+          description: Recipient updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recipient"
+
+  # Programs endpoints
+  /programs:
+    get:
+      tags: [Programs]
+      summary: Get all programs
+      responses:
+        "200":
+          description: List of programs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Program"
+    post:
+      tags: [Programs]
+      summary: Create a new program
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProgram"
+      responses:
+        "201":
+          description: Program created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Program"
+
+  /programs/{id}:
+    get:
+      tags: [Programs]
+      summary: Get program by ID
+      parameters:
+        - $ref: "#/components/parameters/ProgramId"
+      responses:
+        "200":
+          description: Program details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Program"
+
+  # Campaigns endpoints
+  /campaigns:
+    get:
+      tags: [Campaigns]
+      summary: Get all campaigns
+      parameters:
+        - name: isActive
+          in: query
+          schema:
+            type: boolean
+          description: Filter by active status
+        - name: public
+          in: query
+          schema:
+            type: boolean
+          description: Filter by public status
+      responses:
+        "200":
+          description: List of campaigns
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Campaign"
+    post:
+      tags: [Campaigns]
+      summary: Create a new campaign
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCampaign"
+      responses:
+        "201":
+          description: Campaign created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+
+  /campaigns/{id}:
+    get:
+      tags: [Campaigns]
+      summary: Get campaign by ID
+      parameters:
+        - $ref: "#/components/parameters/CampaignId"
+      responses:
+        "200":
+          description: Campaign details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+
+  # Payouts endpoints
+  /payouts:
+    get:
+      tags: [Payouts]
+      summary: Get all payouts
+      parameters:
+        - $ref: "#/components/parameters/Skip"
+        - $ref: "#/components/parameters/Take"
+        - name: recipientId
+          in: query
+          schema:
+            type: string
+          description: Filter by recipient ID
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/PayoutStatus"
+          description: Filter by payout status
+      responses:
+        "200":
+          description: List of payouts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Payout"
+    post:
+      tags: [Payouts]
+      summary: Create a new payout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePayout"
+      responses:
+        "201":
+          description: Payout created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payout"
+
+  /payouts/{id}:
+    get:
+      tags: [Payouts]
+      summary: Get payout by ID
+      parameters:
+        - $ref: "#/components/parameters/PayoutId"
+      responses:
+        "200":
+          description: Payout details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payout"
+    put:
+      tags: [Payouts]
+      summary: Update payout
+      parameters:
+        - $ref: "#/components/parameters/PayoutId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePayout"
+      responses:
+        "200":
+          description: Payout updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payout"
+
+  # Surveys endpoints
+  /surveys:
+    get:
+      tags: [Surveys]
+      summary: Get all surveys
+      parameters:
+        - name: recipientId
+          in: query
+          schema:
+            type: string
+          description: Filter by recipient ID
+        - name: status
+          in: query
+          schema:
+            $ref: "#/components/schemas/SurveyStatus"
+          description: Filter by survey status
+      responses:
+        "200":
+          description: List of surveys
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Survey"
+    post:
+      tags: [Surveys]
+      summary: Create a new survey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSurvey"
+      responses:
+        "201":
+          description: Survey created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Survey"
+
+  /surveys/{id}:
+    get:
+      tags: [Surveys]
+      summary: Get survey by ID
+      parameters:
+        - $ref: "#/components/parameters/SurveyId"
+      responses:
+        "200":
+          description: Survey details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Survey"
+    put:
+      tags: [Surveys]
+      summary: Update survey
+      parameters:
+        - $ref: "#/components/parameters/SurveyId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSurvey"
+      responses:
+        "200":
+          description: Survey updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Survey"
+
+  # Organizations endpoints
+  /organizations:
+    get:
+      tags: [Organizations]
+      summary: Get all organizations
+      responses:
+        "200":
+          description: List of organizations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Organization"
+    post:
+      tags: [Organizations]
+      summary: Create a new organization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrganization"
+      responses:
+        "201":
+          description: Organization created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Organization"
+
+  # Local Partners endpoints
+  /local-partners:
+    get:
+      tags: [Local Partners]
+      summary: Get all local partners
+      responses:
+        "200":
+          description: List of local partners
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LocalPartner"
+    post:
+      tags: [Local Partners]
+      summary: Create a new local partner
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateLocalPartner"
+      responses:
+        "201":
+          description: Local partner created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LocalPartner"
+
+  # Exchange Rates endpoints
+  /exchange-rates:
+    get:
+      tags: [Exchange Rates]
+      summary: Get exchange rate collections
+      responses:
+        "200":
+          description: List of exchange rate collections
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ExchangeRateCollection"
+
+  # Statistics endpoints
+  /statistics/contributions:
+    get:
+      tags: [Statistics]
+      summary: Get contribution statistics
+      responses:
+        "200":
+          description: Contribution statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContributionStatistics"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    Skip:
+      name: skip
+      in: query
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+      description: Number of records to skip
+    Take:
+      name: take
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+      description: Number of records to take
+    OrderBy:
+      name: orderBy
+      in: query
+      schema:
+        type: string
+        enum: [createdAt, updatedAt, name, email]
+        default: createdAt
+      description: Field to order by
+    UserId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: User ID
+    ContributorId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Contributor ID
+    ContributionId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Contribution ID
+    RecipientId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Recipient ID
+    ProgramId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Program ID
+    CampaignId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Campaign ID
+    PayoutId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Payout ID
+    SurveyId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Survey ID
+
+  responses:
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Resource not found"
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Invalid request data"
+
+  schemas:
+    # Enums
+    UserRole:
+      type: string
+      enum: [user, globalAdmin, globalAnalyst]
+
+    Gender:
+      type: string
+      enum: [male, female, other, private]
+
+    UserReferralSource:
+      type: string
+      enum: [familyfriends, work, socialmedia, media, presentation, other]
+
+    LanguageCode:
+      type: string
+      enum: [en, de, it, fr, kri]
+
+    RecipientStatus:
+      type: string
+      enum: [active, suspended, waitlisted, designated, former]
+
+    ContributionSource:
+      type: string
+      enum: [benevity, cash, raisenow, stripe, wire_transfer]
+
+    ContributionInterval:
+      type: string
+      enum: [one_time, monthly, quarterly, annually]
+
+    ContributionStatus:
+      type: string
+      enum: [failed, pending, succeeded, unknown]
+
+    PayoutStatus:
+      type: string
+      enum: [created, paid, confirmed, contested, failed, other]
+
+    PayoutInterval:
+      type: string
+      enum: [monthly]
+
+    SurveyStatus:
+      type: string
+      enum: [new, sent, scheduled, in_progress, completed, missed]
+
+    SurveyQuestionnaire:
+      type: string
+      enum: [onboarding, checkin, offboarding, offboarded_checkin]
+
+    RecipientMainLanguage:
+      type: string
+      enum: [kri, en]
+
+    ExpenseType:
+      type: string
+      enum:
+        [
+          account_fees,
+          administrative,
+          delivery_fees,
+          donation_fees,
+          exchange_rate_loss,
+          fundraising_advertising,
+          staff,
+        ]
+
+    # Main Models
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        authUserId:
+          type: string
+          nullable: true
+        firstName:
+          type: string
+        lastName:
+          type: string
+        gender:
+          $ref: "#/components/schemas/Gender"
+        phone:
+          type: string
+          nullable: true
+        company:
+          type: string
+          nullable: true
+        referral:
+          $ref: "#/components/schemas/UserReferralSource"
+          nullable: true
+        paymentReferenceId:
+          type: string
+          nullable: true
+        stripeCustomerId:
+          type: string
+          nullable: true
+        institution:
+          type: boolean
+          default: false
+        language:
+          $ref: "#/components/schemas/LanguageCode"
+          nullable: true
+        currency:
+          type: string
+          nullable: true
+        addressStreet:
+          type: string
+          nullable: true
+        addressNumber:
+          type: string
+          nullable: true
+        addressCity:
+          type: string
+          nullable: true
+        addressZip:
+          type: integer
+          nullable: true
+        addressCountry:
+          type: string
+          nullable: true
+        role:
+          $ref: "#/components/schemas/UserRole"
+          default: user
+        organizationId:
+          type: string
+          nullable: true
+        birthDate:
+          type: string
+          format: date
+          nullable: true
+        communicationPhone:
+          type: string
+          nullable: true
+        mobileMoneyPhone:
+          type: string
+          nullable: true
+        hasWhatsAppComm:
+          type: boolean
+          nullable: true
+        hasWhatsAppMobile:
+          type: boolean
+          nullable: true
+        whatsappActivated:
+          type: boolean
+          nullable: true
+        instaHandle:
+          type: string
+          nullable: true
+        twitterHandle:
+          type: string
+          nullable: true
+        profession:
+          type: string
+          nullable: true
+        callingName:
+          type: string
+          nullable: true
+        omUid:
+          type: integer
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    CreateUser:
+      type: object
+      required:
+        - email
+        - firstName
+        - lastName
+      properties:
+        email:
+          type: string
+          format: email
+        authUserId:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        gender:
+          $ref: "#/components/schemas/Gender"
+        phone:
+          type: string
+        company:
+          type: string
+        referral:
+          $ref: "#/components/schemas/UserReferralSource"
+        institution:
+          type: boolean
+        language:
+          $ref: "#/components/schemas/LanguageCode"
+        currency:
+          type: string
+        addressStreet:
+          type: string
+        addressNumber:
+          type: string
+        addressCity:
+          type: string
+        addressZip:
+          type: integer
+        addressCountry:
+          type: string
+        role:
+          $ref: "#/components/schemas/UserRole"
+        organizationId:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        communicationPhone:
+          type: string
+        mobileMoneyPhone:
+          type: string
+        hasWhatsAppComm:
+          type: boolean
+        hasWhatsAppMobile:
+          type: boolean
+        profession:
+          type: string
+        callingName:
+          type: string
+
+    UpdateUser:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        gender:
+          $ref: "#/components/schemas/Gender"
+        phone:
+          type: string
+        company:
+          type: string
+        referral:
+          $ref: "#/components/schemas/UserReferralSource"
+        institution:
+          type: boolean
+        language:
+          $ref: "#/components/schemas/LanguageCode"
+        currency:
+          type: string
+        addressStreet:
+          type: string
+        addressNumber:
+          type: string
+        addressCity:
+          type: string
+        addressZip:
+          type: integer
+        addressCountry:
+          type: string
+        role:
+          $ref: "#/components/schemas/UserRole"
+        organizationId:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        communicationPhone:
+          type: string
+        mobileMoneyPhone:
+          type: string
+        hasWhatsAppComm:
+          type: boolean
+        hasWhatsAppMobile:
+          type: boolean
+        profession:
+          type: string
+        callingName:
+          type: string
+
+    Contributor:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    CreateContributor:
+      type: object
+      required:
+        - userId
+      properties:
+        userId:
+          type: string
+
+    UpdateContributor:
+      type: object
+      properties:
+        userId:
+          type: string
+
+    Contribution:
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+          format: float
+        amountChf:
+          type: number
+          format: float
+        feesChf:
+          type: number
+          format: float
+        contributionInterval:
+          $ref: "#/components/schemas/ContributionInterval"
+        source:
+          $ref: "#/components/schemas/ContributionSource"
+        status:
+          $ref: "#/components/schemas/ContributionStatus"
+        currency:
+          type: string
+        referenceId:
+          type: string
+        transactionId:
+          type: string
+          nullable: true
+        rawContent:
+          type: string
+          nullable: true
+        contributorId:
+          type: string
+        campaignId:
+          type: string
+          nullable: true
+        programId:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    CreateContribution:
+      type: object
+      required:
+        - amount
+        - amountChf
+        - feesChf
+        - source
+        - status
+        - currency
+        - referenceId
+        - contributorId
+      properties:
+        amount:
+          type: number
+          format: float
+        amountChf:
+          type: number
+          format: float
+        feesChf:
+          type: number
+          format: float
+        contributionInterval:
+          $ref: "#/components/schemas/ContributionInterval"
+        source:
+          $ref: "#/components/schemas/ContributionSource"
+        status:
+          $ref: "#/components/schemas/ContributionStatus"
+        currency:
+          type: string
+        referenceId:
+          type: string
+        transactionId:
+          type: string
+        rawContent:
+          type: string
+        contributorId:
+          type: string
+        campaignId:
+          type: string
+        programId:
+          type: string
+
+    UpdateContribution:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float
+        amountChf:
+          type: number
+          format: float
+        feesChf:
+          type: number
+          format: float
+        contributionInterval:
+          $ref: "#/components/schemas/ContributionInterval"
+        source:
+          $ref: "#/components/schemas/ContributionSource"
+        status:
+          $ref: "#/components/schemas/ContributionStatus"
+        currency:
+          type: string
+        transactionId:
+          type: string
+        rawContent:
+          type: string
+        campaignId:
+          type: string
+        programId:
+          type: string
+
+    Recipient:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        programId:
+          type: string
+        localPartnerId:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          $ref: "#/components/schemas/RecipientStatus"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    CreateRecipient:
+      type: object
+      required:
+        - userId
+        - programId
+        - localPartnerId
+        - status
+      properties:
+        userId:
+          type: string
+        programId:
+          type: string
+        localPartnerId:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        status:
+          $ref: "#/components/schemas/RecipientStatus"
+
+    UpdateRecipient:
+      type: object
+      properties:
+        startDate:
+          type: string
+          format: date-time
+        status:
+          $ref: "#/components/schemas/RecipientStatus"
+
+    Program:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        totalPayments:
+          type: integer
+          default: 36
+        payoutAmount:
+          type: number
+          format: float
+          default: 700
+        payoutCurrency:
+          type: string
+          default: "SLE"
+        payoutInterval:
+          $ref: "#/components/schemas/PayoutInterval"
+        country:
+          type: string
+          default: "Sierra Leone"
+        viewerOrganizationId:
+          type: string
+        operatorOrganizationId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    CreateProgram:
+      type: object
+      required:
+        - name
+        - viewerOrganizationId
+        - operatorOrganizationId
+      properties:
+        name:
+          type: string
+        totalPayments:
+          type: integer
+        payoutAmount:
+          type: number
+          format: float
+        payoutCurrency:
+          type: string
+        payoutInterval:
+          $ref: "#/components/schemas/PayoutInterval"
+        country:
+          type: string
+        viewerOrganizationId:
+          type: string
+        operatorOrganizationId:
+          type: string
+
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        secondDescriptionTitle:
+          type: string
+          nullable: true
+        secondDescription:
+          type: string
+          nullable: true
+        thirdDescriptionTitle:
+          type: string
+          nullable: true
+        thirdDescription:
+          type: string
+          nullable: true
+        linkWebsite:
+          type: string
+          nullable: true
+        linkInstagram:
+          type: string
+          nullable: true
+        linkTiktok:
+          type: string
+          nullable: true
+        linkFacebook:
+          type: string
+          nullable: true
+        linkX:
+          type: string
+          nullable: true
+        goal:
+          type: number
+          format: float
+          nullable: true
+        currency:
+          type: string
+          nullable: true
+        additionalAmountChf:
+          type: number
+          format: float
+          nullable: true
+        endDate:
+          type: string
+          format: date-time
+        isActive:
+          type: boolean
+          default: false
+        public:
+          type: boolean
+          nullable: true
+        featured:
+          type: boolean
+          nullable: true
+        slug:
+          type: string
+          nullable: true
+        metadataDescription:
+          type: string
+          nullable: true
+        metadataOgImage:
+          type: string
+          nullable: true
+        metadataTwitterImage:
+          type: string
+          nullable: true
+        creatorName:
+          type: string
+          nullable: true
+        creatorEmail:
+          type: string
+          nullable: true
+        programId:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    CreateCampaign:
+      type: object
+      required:
+        - title
+        - description
+        - endDate
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        secondDescriptionTitle:
+          type: string
+        secondDescription:
+          type: string
+        thirdDescriptionTitle:
+          type: string
+        thirdDescription:
+          type: string
+        linkWebsite:
+          type: string
+        linkInstagram:
+          type: string
+        linkTiktok:
+          type: string
+        linkFacebook:
+          type: string
+        linkX:
+          type: string
+        goal:
+          type: number
+          format: float
+        currency:
+          type: string
+        additionalAmountChf:
+          type: number
+          format: float
+        endDate:
+          type: string
+          format: date-time
+        isActive:
+          type: boolean
+        public:
+          type: boolean
+        featured:
+          type: boolean
+        slug:
+          type: string
+        metadataDescription:
+          type: string
+        metadataOgImage:
+          type: string
+        metadataTwitterImage:
+          type: string
+        creatorName:
+          type: string
+        creatorEmail:
+          type: string
+        programId:
+          type: string
+
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    CreateOrganization:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+
+    LocalPartner:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        userId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    CreateLocalPartner:
+      type: object
+      required:
+        - name
+        - userId
+      properties:
+        name:
+          type: string
+        userId:
+          type: string
+
+    Payout:
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+          format: float
+        amountChf:
+          type: number
+          format: float
+          nullable: true
+        currency:
+          type: string
+        paymentAt:
+          type: string
+          format: date-time
+        status:
+          $ref: "#/components/schemas/PayoutStatus"
+        phoneNumber:
+          type: string
+          nullable: true
+        comments:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        recipientId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    CreatePayout:
+      type: object
+      required:
+        - amount
+        - currency
+        - paymentAt
+        - status
+        - recipientId
+      properties:
+        amount:
+          type: number
+          format: float
+        amountChf:
+          type: number
+          format: float
+        currency:
+          type: string
+        paymentAt:
+          type: string
+          format: date-time
+        status:
+          $ref: "#/components/schemas/PayoutStatus"
+        phoneNumber:
+          type: string
+        comments:
+          type: string
+        message:
+          type: string
+        recipientId:
+          type: string
+
+    UpdatePayout:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: float
+        amountChf:
+          type: number
+          format: float
+        currency:
+          type: string
+        paymentAt:
+          type: string
+          format: date-time
+        status:
+          $ref: "#/components/schemas/PayoutStatus"
+        phoneNumber:
+          type: string
+        comments:
+          type: string
+        message:
+          type: string
+
+    Survey:
+      type: object
+      properties:
+        id:
+          type: string
+        recipientId:
+          type: string
+        questionnaire:
+          $ref: "#/components/schemas/SurveyQuestionnaire"
+        recipientName:
+          type: string
+        language:
+          $ref: "#/components/schemas/RecipientMainLanguage"
+        dueDateAt:
+          type: string
+          format: date-time
+        sentAt:
+          type: string
+          format: date-time
+          nullable: true
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          $ref: "#/components/schemas/SurveyStatus"
+        comments:
+          type: string
+          nullable: true
+        data:
+          type: string
+        accessEmail:
+          type: string
+        accessPw:
+          type: string
+        accessToken:
+          type: string
+        programId:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    CreateSurvey:
+      type: object
+      required:
+        - recipientId
+        - questionnaire
+        - recipientName
+        - language
+        - dueDateAt
+        - status
+        - data
+        - accessEmail
+        - accessPw
+        - accessToken
+      properties:
+        recipientId:
+          type: string
+        questionnaire:
+          $ref: "#/components/schemas/SurveyQuestionnaire"
+        recipientName:
+          type: string
+        language:
+          $ref: "#/components/schemas/RecipientMainLanguage"
+        dueDateAt:
+          type: string
+          format: date-time
+        status:
+          $ref: "#/components/schemas/SurveyStatus"
+        comments:
+          type: string
+        data:
+          type: string
+        accessEmail:
+          type: string
+        accessPw:
+          type: string
+        accessToken:
+          type: string
+        programId:
+          type: string
+
+    UpdateSurvey:
+      type: object
+      properties:
+        questionnaire:
+          $ref: "#/components/schemas/SurveyQuestionnaire"
+        recipientName:
+          type: string
+        language:
+          $ref: "#/components/schemas/RecipientMainLanguage"
+        dueDateAt:
+          type: string
+          format: date-time
+        sentAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+        status:
+          $ref: "#/components/schemas/SurveyStatus"
+        comments:
+          type: string
+        data:
+          type: string
+        accessEmail:
+          type: string
+        accessPw:
+          type: string
+        accessToken:
+          type: string
+        programId:
+          type: string
+
+    ExchangeRateCollection:
+      type: object
+      properties:
+        id:
+          type: string
+        base:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExchangeRateItem"
+
+    ExchangeRateItem:
+      type: object
+      properties:
+        id:
+          type: string
+        currency:
+          type: string
+        rate:
+          type: number
+          format: float
+        collectionId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    DonationCertificate:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        country:
+          type: string
+        year:
+          type: integer
+        storagePath:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Expense:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          $ref: "#/components/schemas/ExpenseType"
+        year:
+          type: integer
+        amountChf:
+          type: number
+          format: float
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    ContributionStatistics:
+      type: object
+      properties:
+        id:
+          type: integer
+        totalContributionsCount:
+          type: integer
+          nullable: true
+        totalContributionsAmount:
+          type: number
+          format: float
+          nullable: true
+        totalContributorsCount:
+          type: integer
+          nullable: true
+        totalIndividualContributionsAmount:
+          type: number
+          format: float
+          nullable: true
+        totalIndividualContributorsCount:
+          type: integer
+          nullable: true
+        totalInstitutionalContributionsAmount:
+          type: number
+          format: float
+          nullable: true
+        totalInstitutionalContributorsCount:
+          type: integer
+          nullable: true
+        totalContributionsByCurrency:
+          type: object
+          nullable: true
+        totalContributionsByIsInstitution:
+          type: object
+          nullable: true
+        totalContributionsByCountry:
+          type: object
+          nullable: true
+        totalContributionsBySource:
+          type: object
+          nullable: true
+        totalContributionsByMonth:
+          type: object
+          nullable: true
+        totalContributionsByMonthAndType:
+          type: object
+          nullable: true
+        totalPaymentFeesByIsInstitution:
+          type: object
+          nullable: true

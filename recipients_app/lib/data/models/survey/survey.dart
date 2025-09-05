@@ -1,23 +1,22 @@
-import "package:app/core/helpers/timestamp_converter.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
-import "package:equatable/equatable.dart";
-import "package:json_annotation/json_annotation.dart";
+import "package:dart_mappable/dart_mappable.dart";
 
-part "survey.g.dart";
+part "survey.mapper.dart";
 
-@JsonSerializable()
-@TimestampConverter()
-class Survey extends Equatable {
-  @JsonKey(defaultValue: "")
+// @JsonSerializable()
+// @TimestampConverter()
+@MappableClass()
+class Survey with SurveyMappable {
+  // @JsonKey(defaultValue: "")
   final String id;
   final SurveyServerStatus? status;
-  @JsonKey(name: "due_date_at")
+  // @JsonKey(name: "due_date_at")
   final Timestamp? dueDateAt;
-  @JsonKey(name: "completed_at")
+  // @JsonKey(name: "completed_at")
   final Timestamp? completedAt;
-  @JsonKey(name: "access_email")
+  // @JsonKey(name: "access_email")
   final String? accessEmail;
-  @JsonKey(name: "access_pw")
+  // @JsonKey(name: "access_pw")
   final String? accessPassword;
 
   const Survey({
@@ -28,53 +27,20 @@ class Survey extends Equatable {
     this.accessEmail,
     this.accessPassword,
   });
-
-  @override
-  List<Object?> get props {
-    return [
-      id,
-      status,
-      dueDateAt,
-      completedAt,
-      accessEmail,
-      accessPassword,
-    ];
-  }
-
-  factory Survey.fromJson(Map<String, dynamic> json) => _$SurveyFromJson(json);
-
-  Map<String, dynamic> toJson() => _$SurveyToJson(this);
-
-  Survey copyWith({
-    String? id,
-    SurveyServerStatus? status,
-    Timestamp? dueDateAt,
-    Timestamp? completedAt,
-    String? accessEmail,
-    String? accessPassword,
-  }) {
-    return Survey(
-      id: id ?? this.id,
-      status: status ?? this.status,
-      dueDateAt: dueDateAt ?? this.dueDateAt,
-      completedAt: completedAt ?? this.completedAt,
-      accessEmail: accessEmail ?? this.accessEmail,
-      accessPassword: accessPassword ?? this.accessPassword,
-    );
-  }
 }
 
+@MappableEnum()
 enum SurveyServerStatus {
-  @JsonValue("new")
+  @MappableValue("created")
   created,
-  @JsonValue("sent")
+  @MappableValue("sent")
   sent,
-  @JsonValue("scheduled")
+  @MappableValue("scheduled")
   scheduled,
-  @JsonValue("in-progress")
+  @MappableValue("in-progress")
   inProgress,
-  @JsonValue("completed")
+  @MappableValue("completed")
   completed,
-  @JsonValue("missed")
-  missed;
+  @MappableValue("missed")
+  missed,
 }

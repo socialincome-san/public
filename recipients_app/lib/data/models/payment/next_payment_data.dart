@@ -1,6 +1,9 @@
-import "package:equatable/equatable.dart";
+import "package:dart_mappable/dart_mappable.dart";
 
-class NextPaymentData extends Equatable {
+part "next_payment_data.mapper.dart";
+
+@MappableClass()
+class NextPaymentData with NextPaymentDataMappable {
   final int amount;
   final String currency;
   final int daysToPayment;
@@ -10,11 +13,4 @@ class NextPaymentData extends Equatable {
     required this.currency,
     required this.daysToPayment,
   });
-
-  @override
-  List<Object?> get props => [
-        amount,
-        currency,
-        daysToPayment,
-      ];
 }

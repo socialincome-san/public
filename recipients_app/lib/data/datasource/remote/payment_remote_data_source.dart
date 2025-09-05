@@ -18,11 +18,14 @@ class PaymentRemoteDataSource implements PaymentDataSource {
   }) async {
     final List<SocialIncomePayment> payments = <SocialIncomePayment>[];
 
-    final paymentsDocs =
-        await firestore.collection(recipientCollection).doc(recipientId).collection(paymentCollection).get();
+    final paymentsDocs = await firestore
+        .collection(recipientCollection)
+        .doc(recipientId)
+        .collection(paymentCollection)
+        .get();
 
     for (final paymentDoc in paymentsDocs.docs) {
-      final payment = SocialIncomePayment.fromJson(
+      final payment = SocialIncomePaymentMapper.fromMap(
         paymentDoc.data(),
       );
 
@@ -52,7 +55,7 @@ class PaymentRemoteDataSource implements PaymentDataSource {
         .doc(recipient.userId)
         .collection(paymentCollection)
         .doc(payment.id)
-        .update(updatedPayment.toJson());
+        .update(updatedPayment.toMap());
   }
 
   @override
@@ -72,6 +75,6 @@ class PaymentRemoteDataSource implements PaymentDataSource {
         .doc(recipient.userId)
         .collection(paymentCollection)
         .doc(payment.id)
-        .update(updatedPayment.toJson());
+        .update(updatedPayment.toMap());
   }
 }

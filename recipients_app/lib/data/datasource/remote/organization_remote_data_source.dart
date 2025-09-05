@@ -18,9 +18,9 @@ class OrganizationRemoteDataSource implements OrganizationDataSource {
     final organization = organizationRef.withConverter(
       fromFirestore: (snapshot, _) {
         final data = snapshot.data()!;
-        return Organization.fromJson(data);
+        return OrganizationMapper.fromMap(data);
       },
-      toFirestore: (organization, _) => organization.toJson(),
+      toFirestore: (organization, _) => organization.toMap(),
     );
 
     return (await organization.get()).data();

@@ -2,10 +2,11 @@ import "package:app/data/models/payment/payment.dart";
 import "package:app/data/models/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:collection/collection.dart";
-import "package:equatable/equatable.dart";
+import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+part "payments_cubit.mapper.dart";
 part "payments_state.dart";
 
 const int kMaxReviewDays = 10;
@@ -188,8 +189,7 @@ class PaymentsCubit extends Cubit<PaymentsState> {
     BalanceCardStatus balanceCardStatus = BalanceCardStatus.allConfirmed;
     if (mappedPayments.any(
       (element) =>
-          element.uiStatus == PaymentUiStatus.onHoldContested ||
-          element.uiStatus == PaymentUiStatus.onHoldToReview,
+          element.uiStatus == PaymentUiStatus.onHoldContested || element.uiStatus == PaymentUiStatus.onHoldToReview,
     )) {
       balanceCardStatus = BalanceCardStatus.onHold;
     } else if (unconfirmedPaymentsCount == 1 &&
@@ -226,15 +226,14 @@ class PaymentsCubit extends Cubit<PaymentsState> {
         .paymentAt
         ?.toDate();
 
-    final nextPaymentDate = nextPayment?.payment.paymentAt?.toDate() ??
+    final nextPaymentDate =
+        nextPayment?.payment.paymentAt?.toDate() ??
         DateTime(
           previousPaymentDate?.year ?? 2023,
           (previousPaymentDate?.month ?? 1) + 1,
           previousPaymentDate?.day ?? 15,
         );
-    final daysToPayment = DateUtils.dateOnly(nextPaymentDate)
-        .difference(DateUtils.dateOnly(DateTime.now()))
-        .inDays;
+    final daysToPayment = DateUtils.dateOnly(nextPaymentDate).difference(DateUtils.dateOnly(DateTime.now())).inDays;
 
     return NextPaymentData(
       amount: nextPayment?.payment.amount ?? kCurrentPaymentAmount,

@@ -4,10 +4,11 @@ import "package:app/data/models/organization.dart";
 import "package:app/data/models/recipient.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/data/services/auth_service.dart";
-import "package:equatable/equatable.dart";
+import "package:dart_mappable/dart_mappable.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+part "auth_cubit.mapper.dart";
 part "auth_state.dart";
 
 class AuthCubit extends Cubit<AuthState> {

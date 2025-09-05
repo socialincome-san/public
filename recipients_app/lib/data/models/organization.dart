@@ -1,10 +1,9 @@
-import "package:equatable/equatable.dart";
-import "package:json_annotation/json_annotation.dart";
+import "package:dart_mappable/dart_mappable.dart";
 
-part "organization.g.dart";
+part "organization.mapper.dart";
 
-@JsonSerializable()
-class Organization extends Equatable {
+@MappableClass()
+class Organization with OrganizationMappable {
   final String name;
   final String? contactName;
   final String? contactNumber;
@@ -14,12 +13,4 @@ class Organization extends Equatable {
     this.contactName,
     this.contactNumber,
   });
-
-  @override
-  List<Object?> get props => [name, contactName, contactNumber];
-
-  factory Organization.fromJson(Map<String, dynamic> json) =>
-      _$OrganizationFromJson(json);
-
-  Map<String, dynamic> toJson() => _$OrganizationToJson(this);
 }

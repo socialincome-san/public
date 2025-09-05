@@ -1,7 +1,10 @@
 import "package:app/data/models/payment/payment.dart";
-import "package:equatable/equatable.dart";
+import "package:dart_mappable/dart_mappable.dart";
 
-class MappedPayment extends Equatable {
+part "mapped_payment.mapper.dart";
+
+@MappableClass()
+class MappedPayment with MappedPaymentMappable {
   final SocialIncomePayment payment;
   final PaymentUiStatus uiStatus;
 
@@ -9,22 +12,4 @@ class MappedPayment extends Equatable {
     required this.payment,
     required this.uiStatus,
   });
-
-  @override
-  List<Object?> get props {
-    return [
-      payment,
-      uiStatus,
-    ];
-  }
-
-  MappedPayment copyWith({
-    SocialIncomePayment? payment,
-    PaymentUiStatus? uiStatus,
-  }) {
-    return MappedPayment(
-      uiStatus: uiStatus ?? this.uiStatus,
-      payment: payment ?? this.payment,
-    );
-  }
 }

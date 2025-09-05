@@ -25,7 +25,7 @@ class SurveyRemoteDataSource implements SurveyDataSource {
         .get();
 
     for (final surveyDoc in surveysDocs.docs) {
-      final survey = Survey.fromJson(surveyDoc.data());
+      final survey = SurveyMapper.fromMap(surveyDoc.data());
 
       surveys.add(
         survey.copyWith(id: surveyDoc.id),
