@@ -24,7 +24,12 @@ class FirebaseRemoteConfigService {
       );
 
       await firebaseRemoteConfig.setDefaults({
-        appVersionInfoKey: packageInfo.version,
+        appVersionInfoKey: jsonEncode(
+          AppVersion(
+            version: packageInfo.version,
+            isOptional: true, // default = no forced update
+          ).toJson(),
+        ),
       });
 
       await firebaseRemoteConfig.fetchAndActivate();
