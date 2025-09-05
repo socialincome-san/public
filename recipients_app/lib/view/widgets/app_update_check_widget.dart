@@ -42,7 +42,7 @@ class AppUpdateWidget extends StatelessWidget {
 
         return ForceUpdateWidget(
           navigatorKey: _rootNavigatorKey,
-          showForceUpdateAlert: (context, allowCancel) => showAlertDialog(
+          showForceUpdateAlert: (context, allowCancel) => _showAlertDialog(
             context: context,
             title: context.l10n.appUpdateWidgetTitle,
             content: context.l10n.appUpdateWidgetMessage,
@@ -75,7 +75,7 @@ class AppUpdateWidget extends StatelessWidget {
     );
   }
 
-  Future<bool?> showAlertDialog({
+  Future<bool?> _showAlertDialog({
     required BuildContext context,
     required String title,
     required String content,
