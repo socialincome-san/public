@@ -45,7 +45,7 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
       if (paymentPhoneNumber == null && contactPhoneNumber != null) {
         final paymentPhoneCard = DashboardCard(
           title: "My Profile",
-          message: "Is your contact phone number (${contactPhoneNumber.phoneNumber}) also your payment phone number?",
+          message: "Is your contact phone number (${contactPhoneNumber.phone}) also your payment phone number?",
           primaryButtonText: "Yes",
           secondaryButtonText: "No",
           type: DashboardCardType.paymentNumberEqualsContactNumber,
@@ -57,7 +57,7 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
       if (contactPhoneNumber == null && paymentPhoneNumber != null) {
         final contactPhoneCard = DashboardCard(
           title: "My Profile",
-          message: "Is your payment phone number (${paymentPhoneNumber.phoneNumber}) also your contact phone number?",
+          message: "Is your payment phone number (${paymentPhoneNumber.phone}) also your contact phone number?",
           primaryButtonText: "Yes",
           secondaryButtonText: "No",
           type: DashboardCardType.contactNumberEqualsPaymentNumber,
@@ -83,18 +83,14 @@ class DashboardCardManagerCubit extends Cubit<DashboardCardManagerState> {
   Future<void> updatePaymentNumber() async {
     final recipient = authCubit.state.recipient!;
     await authCubit.updateRecipient(
-      recipient.copyWith(
-        mobileMoneyPhone: recipient.communicationMobilePhone,
-      ),
+      mobileMoneyPhone: recipient.communicationMobilePhone,
     );
   }
 
   Future<void> updateContactNumber() async {
     final recipient = authCubit.state.recipient!;
     await authCubit.updateRecipient(
-      recipient.copyWith(
-        communicationMobilePhone: recipient.mobileMoneyPhone,
-      ),
+      communicationMobilePhone: recipient.mobileMoneyPhone,
     );
   }
 }

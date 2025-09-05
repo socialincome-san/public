@@ -1,8 +1,5 @@
 import "package:app/data/models/currency.dart";
-import "package:app/data/models/organization.dart";
 import "package:app/data/models/payout_interval.dart";
-import "package:app/data/models/recipient.dart";
-import "package:app/data/models/survey/survey.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
 part "program.mapper.dart";
@@ -43,14 +40,12 @@ class Program with ProgramMappable {
   final String country;
   final String viewerOrganizationId;
   final String operatorOrganizationId;
-  final Organization owner;
-  final Organization operator;
+  // final Organization owner;
+  // final Organization operator;
   // final List<Campaign> campaigns;
-  final List<Recipient> recipients;
+  // final List<Recipient> recipients;
   // final List<Contribution> contributions;
-  final List<Survey> surveys;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
+  // final List<Survey> surveys;
   // final List<ProgramAccess> programAccess;
 
   const Program({
@@ -63,14 +58,12 @@ class Program with ProgramMappable {
     required this.country,
     required this.viewerOrganizationId,
     required this.operatorOrganizationId,
-    required this.owner,
-    required this.operator,
+    // required this.owner,
+    // required this.operator,
     // required this.campaigns,
-    required this.recipients,
+    // required this.recipients,
     // required this.contributions,
-    required this.surveys,
-    required this.createdAt,
-    required this.updatedAt,
+    // required this.surveys,
     // required this.programAccess,
   });
 }

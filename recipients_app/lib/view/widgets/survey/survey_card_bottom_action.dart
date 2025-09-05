@@ -122,7 +122,7 @@ class SurveyCardBottomAction extends StatelessWidget {
     switch (mappedSurvey.cardStatus) {
       case SurveyCardStatus.answered:
         return DateFormat.yMd(locale).format(
-          mappedSurvey.survey.completedAt?.toDate() ?? DateTime.now(),
+          mappedSurvey.survey.completedAt ?? DateTime.now(),
         );
       case SurveyCardStatus.overdue:
         final daysAfterOverdue = mappedSurvey.daysAfterOverdue ?? 0;

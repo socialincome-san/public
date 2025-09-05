@@ -15,7 +15,6 @@ class AuthStateMapper extends ClassMapperBase<AuthState> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = AuthStateMapper._());
       RecipientMapper.ensureInitialized();
-      OrganizationMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -42,12 +41,6 @@ class AuthStateMapper extends ClassMapperBase<AuthState> {
     _$recipient,
     opt: true,
   );
-  static Organization? _$organization(AuthState v) => v.organization;
-  static const Field<AuthState, Organization> _f$organization = Field(
-    'organization',
-    _$organization,
-    opt: true,
-  );
   static Exception? _$exception(AuthState v) => v.exception;
   static const Field<AuthState, Exception> _f$exception = Field(
     'exception',
@@ -60,7 +53,6 @@ class AuthStateMapper extends ClassMapperBase<AuthState> {
     #status: _f$status,
     #firebaseUser: _f$firebaseUser,
     #recipient: _f$recipient,
-    #organization: _f$organization,
     #exception: _f$exception,
   };
 
@@ -69,7 +61,6 @@ class AuthStateMapper extends ClassMapperBase<AuthState> {
       status: data.dec(_f$status),
       firebaseUser: data.dec(_f$firebaseUser),
       recipient: data.dec(_f$recipient),
-      organization: data.dec(_f$organization),
       exception: data.dec(_f$exception),
     );
   }
@@ -134,12 +125,10 @@ extension AuthStateValueCopy<$R, $Out> on ObjectCopyWith<$R, AuthState, $Out> {
 abstract class AuthStateCopyWith<$R, $In extends AuthState, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   RecipientCopyWith<$R, Recipient, Recipient>? get recipient;
-  OrganizationCopyWith<$R, Organization, Organization>? get organization;
   $R call({
     AuthStatus? status,
     User? firebaseUser,
     Recipient? recipient,
-    Organization? organization,
     Exception? exception,
   });
   AuthStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -157,21 +146,16 @@ class _AuthStateCopyWithImpl<$R, $Out>
   RecipientCopyWith<$R, Recipient, Recipient>? get recipient =>
       $value.recipient?.copyWith.$chain((v) => call(recipient: v));
   @override
-  OrganizationCopyWith<$R, Organization, Organization>? get organization =>
-      $value.organization?.copyWith.$chain((v) => call(organization: v));
-  @override
   $R call({
     AuthStatus? status,
     Object? firebaseUser = $none,
     Object? recipient = $none,
-    Object? organization = $none,
     Object? exception = $none,
   }) => $apply(
     FieldCopyWithData({
       if (status != null) #status: status,
       if (firebaseUser != $none) #firebaseUser: firebaseUser,
       if (recipient != $none) #recipient: recipient,
-      if (organization != $none) #organization: organization,
       if (exception != $none) #exception: exception,
     }),
   );
@@ -180,7 +164,6 @@ class _AuthStateCopyWithImpl<$R, $Out>
     status: data.get(#status, or: $value.status),
     firebaseUser: data.get(#firebaseUser, or: $value.firebaseUser),
     recipient: data.get(#recipient, or: $value.recipient),
-    organization: data.get(#organization, or: $value.organization),
     exception: data.get(#exception, or: $value.exception),
   );
 

@@ -34,18 +34,22 @@ model Survey {
 class Survey with SurveyMappable {
   final String id;
   final String recipientId;
-  final SurveyQuestionnaire questionnaire;
   final String recipientName;
   final RecipientMainLanguage language;
+
+  final SurveyQuestionnaire questionnaire;
   final DateTime dueDateAt;
-  final DateTime? sentAt;
-  final DateTime? completedAt;
   final SurveyStatus status;
-  final String? comments;
+
   final String data;
   final String accessEmail;
   final String accessPw;
   final String accessToken;
+
+  final DateTime? sentAt;
+  final DateTime? completedAt;
+  final String? comments;
+
   // final Program? program;
 
   const Survey({
@@ -55,14 +59,14 @@ class Survey with SurveyMappable {
     required this.recipientName,
     required this.language,
     required this.dueDateAt,
-    required this.sentAt,
-    required this.completedAt,
     required this.status,
-    required this.comments,
     required this.data,
     required this.accessEmail,
     required this.accessPw,
     required this.accessToken,
+    this.sentAt,
+    this.completedAt,
+    this.comments,
     // required this.program,
   });
 }

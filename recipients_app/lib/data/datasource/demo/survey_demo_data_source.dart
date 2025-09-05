@@ -1,7 +1,9 @@
 import "package:app/data/datasource/survey_data_source.dart";
 import "package:app/data/models/models.dart";
+import "package:app/data/models/recipient_main_language.dart";
 import "package:app/data/models/survey/survey.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
+import "package:app/data/models/survey/survey_questionnaire.dart";
+import "package:app/data/models/survey/survey_status.dart";
 
 class SurveyDemoDataSource implements SurveyDataSource {
   final List<Survey> _surveys = _generateDemoSurveys();
@@ -11,27 +13,67 @@ class SurveyDemoDataSource implements SurveyDataSource {
     final surveys = [
       Survey(
         id: "onboarding",
-        status: SurveyServerStatus.scheduled,
-        dueDateAt: Timestamp.fromDate(now.subtract(const Duration(days: 10))),
+        status: SurveyStatus.scheduled,
+        dueDateAt: now.subtract(const Duration(days: 10)),
+        recipientId: "demo",
+        questionnaire: SurveyQuestionnaire.onboarding,
+        recipientName: "Demo Recipient",
+        language: RecipientMainLanguage.en,
+        sentAt: now,
+        completedAt: now,
+        comments: "Demo comments",
+        data: "Demo data",
+        accessEmail: "demo@socialincome.com",
+        accessPw: "demo",
+        accessToken: "demo",
       ),
       Survey(
         id: "checkin",
-        status: SurveyServerStatus.scheduled,
-        dueDateAt: Timestamp.fromDate(now),
+        status: SurveyStatus.scheduled,
+        dueDateAt: now,
+        recipientId: "demo",
+        questionnaire: SurveyQuestionnaire.checkin,
+        recipientName: "Demo Recipient",
+        language: RecipientMainLanguage.en,
+        sentAt: now,
+        completedAt: now,
+        comments: "Demo comments",
+        data: "Demo data",
+        accessEmail: "demo@socialincome.com",
+        accessPw: "demo",
+        accessToken: "demo",
       ),
       Survey(
         id: "offboarding",
-        status: SurveyServerStatus.scheduled,
-        dueDateAt: Timestamp.fromDate(
-          now.add(const Duration(days: 11)),
-        ),
+        status: SurveyStatus.scheduled,
+        dueDateAt: now.add(const Duration(days: 11)),
+        recipientId: "demo",
+        questionnaire: SurveyQuestionnaire.offboarding,
+        recipientName: "Demo Recipient",
+        language: RecipientMainLanguage.en,
+        sentAt: now,
+        completedAt: now,
+        comments: "Demo comments",
+        data: "Demo data",
+        accessEmail: "demo@socialincome.com",
+        accessPw: "demo",
+        accessToken: "demo",
       ),
       Survey(
         id: "followup",
-        status: SurveyServerStatus.scheduled,
-        dueDateAt: Timestamp.fromDate(
-          now.add(const Duration(days: 16)),
-        ),
+        status: SurveyStatus.scheduled,
+        dueDateAt: DateTime.now().add(const Duration(days: 16)),
+        recipientId: "demo",
+        questionnaire: SurveyQuestionnaire.offboardedCheckin,
+        recipientName: "Demo Recipient",
+        language: RecipientMainLanguage.en,
+        sentAt: now,
+        completedAt: now,
+        comments: "Demo comments",
+        data: "Demo data",
+        accessEmail: "demo@socialincome.com",
+        accessPw: "demo",
+        accessToken: "demo",
       ),
     ];
 

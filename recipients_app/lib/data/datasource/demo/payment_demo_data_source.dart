@@ -74,7 +74,7 @@ class PaymentDemoDataSource implements PaymentDataSource {
   }) async {
     final updatedPayment = payment.copyWith(
       status: PaymentStatus.confirmed,
-      updatedBy: recipient.userId,
+      updatedBy: recipient.user.id,
     );
 
     final indexWhere = payments.indexWhere((element) => element.id == updatedPayment.id);
@@ -90,7 +90,7 @@ class PaymentDemoDataSource implements PaymentDataSource {
     final updatedPayment = payment.copyWith(
       status: PaymentStatus.contested,
       comments: contestReason,
-      updatedBy: recipient.userId,
+      updatedBy: recipient.user.id,
     );
 
     final indexWhere = payments.indexWhere((element) => element.id == updatedPayment.id);

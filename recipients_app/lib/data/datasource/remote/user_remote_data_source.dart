@@ -15,7 +15,7 @@ class UserRemoteDataSource implements UserDataSource {
   });
 
   @override
-  User? get currentUser => firebaseAuth.currentUser;
+  User? get currentFirebaseUser => firebaseAuth.currentUser;
 
   /// Fetches the user data by userId from firestore and maps it to a recipient object
   /// Returns null if the user does not exist.

@@ -18,7 +18,7 @@ class UserRepository {
 
   UserDataSource get _activeDataSource => demoManager.isDemoEnabled ? demoDataSource : remoteDataSource;
 
-  User? get currentUser => _activeDataSource.currentUser;
+  User? get currentUser => _activeDataSource.currentFirebaseUser;
 
   Future<Recipient?> fetchRecipient(User firebaseUser) => _activeDataSource.fetchRecipient(firebaseUser);
 

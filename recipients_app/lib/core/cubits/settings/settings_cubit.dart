@@ -1,3 +1,4 @@
+import "package:app/data/models/recipient_main_language.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter/material.dart";
@@ -26,8 +27,8 @@ class SettingsCubit extends Cubit<SettingsState> {
   }
 
   /// Currently english = en and krio = kri are supported
-  void changeLanguage(String languageString) {
-    final locale = languageString == "kri" ? const Locale("kri") : const Locale("en", "US");
+  void changeLanguage(RecipientMainLanguage language) {
+    final locale = language == RecipientMainLanguage.kri ? const Locale("kri") : const Locale("en", "US");
 
     // check whats the current language
     // if its the same as the new language, do nothing

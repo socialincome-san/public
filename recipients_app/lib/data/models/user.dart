@@ -39,35 +39,36 @@ model User {
 class User with UserMappable {
   final String id;
   final String email;
-  final String? authUserId;
-
   final String firstName;
   final String lastName;
   final Gender gender;
+
+  final List<Address> address;
+  final List<PhoneNumber> phoneNumber;
+
+  final String? authUserId;
   final LanguageCode? languageCode;
   final Currency? currency;
   final DateTime? dateOfBirth;
-  // final Contributor? contributor;
   final Recipient? recipient;
-
-  final List<Address> address;
   final LocalPartner? localPartner;
-  final List<PhoneNumber> phoneNumber;
+
+  // final Contributor? contributor;
+  // final List<ProgramAccess> programAccess;
 
   const User({
     required this.id,
     required this.email,
-    required this.authUserId,
     required this.firstName,
     required this.lastName,
     required this.gender,
-    required this.languageCode,
-    required this.currency,
-    required this.dateOfBirth,
-    required this.recipient,
     required this.address,
-    required this.localPartner,
     required this.phoneNumber,
+    this.authUserId,
+    this.languageCode,
+    this.currency,
+    this.dateOfBirth,
+    this.recipient,
+    this.localPartner,
   });
-  // final List<ProgramAccess> programAccess;
 }

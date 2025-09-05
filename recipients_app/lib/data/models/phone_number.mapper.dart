@@ -14,7 +14,6 @@ class PhoneNumberMapper extends ClassMapperBase<PhoneNumber> {
   static PhoneNumberMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PhoneNumberMapper._());
-      UserMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -30,18 +29,11 @@ class PhoneNumberMapper extends ClassMapperBase<PhoneNumber> {
   static const Field<PhoneNumber, String> _f$phone = Field('phone', _$phone);
   static String _$type(PhoneNumber v) => v.type;
   static const Field<PhoneNumber, String> _f$type = Field('type', _$type);
-  static bool _$verified(PhoneNumber v) => v.verified;
-  static const Field<PhoneNumber, bool> _f$verified = Field(
-    'verified',
-    _$verified,
-  );
   static bool _$isPrimary(PhoneNumber v) => v.isPrimary;
   static const Field<PhoneNumber, bool> _f$isPrimary = Field(
     'isPrimary',
     _$isPrimary,
   );
-  static User _$user(PhoneNumber v) => v.user;
-  static const Field<PhoneNumber, User> _f$user = Field('user', _$user);
 
   @override
   final MappableFields<PhoneNumber> fields = const {
@@ -49,9 +41,7 @@ class PhoneNumberMapper extends ClassMapperBase<PhoneNumber> {
     #userId: _f$userId,
     #phone: _f$phone,
     #type: _f$type,
-    #verified: _f$verified,
     #isPrimary: _f$isPrimary,
-    #user: _f$user,
   };
 
   static PhoneNumber _instantiate(DecodingData data) {
@@ -60,9 +50,7 @@ class PhoneNumberMapper extends ClassMapperBase<PhoneNumber> {
       userId: data.dec(_f$userId),
       phone: data.dec(_f$phone),
       type: data.dec(_f$type),
-      verified: data.dec(_f$verified),
       isPrimary: data.dec(_f$isPrimary),
-      user: data.dec(_f$user),
     );
   }
 
@@ -126,15 +114,12 @@ extension PhoneNumberValueCopy<$R, $Out>
 
 abstract class PhoneNumberCopyWith<$R, $In extends PhoneNumber, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  UserCopyWith<$R, User, User> get user;
   $R call({
     String? id,
     String? userId,
     String? phone,
     String? type,
-    bool? verified,
     bool? isPrimary,
-    User? user,
   });
   PhoneNumberCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -148,26 +133,19 @@ class _PhoneNumberCopyWithImpl<$R, $Out>
   late final ClassMapperBase<PhoneNumber> $mapper =
       PhoneNumberMapper.ensureInitialized();
   @override
-  UserCopyWith<$R, User, User> get user =>
-      $value.user.copyWith.$chain((v) => call(user: v));
-  @override
   $R call({
     String? id,
     String? userId,
     String? phone,
     String? type,
-    bool? verified,
     bool? isPrimary,
-    User? user,
   }) => $apply(
     FieldCopyWithData({
       if (id != null) #id: id,
       if (userId != null) #userId: userId,
       if (phone != null) #phone: phone,
       if (type != null) #type: type,
-      if (verified != null) #verified: verified,
       if (isPrimary != null) #isPrimary: isPrimary,
-      if (user != null) #user: user,
     }),
   );
   @override
@@ -176,9 +154,7 @@ class _PhoneNumberCopyWithImpl<$R, $Out>
     userId: data.get(#userId, or: $value.userId),
     phone: data.get(#phone, or: $value.phone),
     type: data.get(#type, or: $value.type),
-    verified: data.get(#verified, or: $value.verified),
     isPrimary: data.get(#isPrimary, or: $value.isPrimary),
-    user: data.get(#user, or: $value.user),
   );
 
   @override

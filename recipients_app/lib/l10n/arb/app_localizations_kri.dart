@@ -51,6 +51,9 @@ class AppLocalizationsKri extends AppLocalizations {
   String get other => 'Nɔto man ɔ uman';
 
   @override
+  String get private => 'Private';
+
+  @override
   String get genderError => 'Duya pik wetin yu bi';
 
   @override
