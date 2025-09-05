@@ -1,4 +1,3 @@
-import "package:app/data/models/recipient.dart";
 import "package:app/data/models/user.dart";
 import "package:dart_mappable/dart_mappable.dart";
 
@@ -22,21 +21,18 @@ model LocalPartner {
 class LocalPartner with LocalPartnerMappable {
   final String id;
   final String name;
-  final String userId;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
   final User user;
-  final List<Recipient> recipients;
+
+  // final List<Recipient> recipients;
+  // final String userId;
   // final List<Contributor> contributors;
 
   const LocalPartner({
     required this.id,
     required this.name,
-    required this.userId,
-    required this.createdAt,
-    required this.updatedAt,
     required this.user,
-    required this.recipients,
+    // required this.recipients,
+    // required this.userId,
     // required this.contributors,
   });
 }

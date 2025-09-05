@@ -1,9 +1,7 @@
 import "package:app/core/helpers/custom_bloc_observer.dart";
-import "package:app/data/datasource/demo/organization_demo_data_source.dart";
 import "package:app/data/datasource/demo/payment_demo_data_source.dart";
 import "package:app/data/datasource/demo/survey_demo_data_source.dart";
 import "package:app/data/datasource/demo/user_demo_data_source.dart";
-import "package:app/data/datasource/remote/organization_remote_data_source.dart";
 import "package:app/data/datasource/remote/payment_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
@@ -70,8 +68,8 @@ Future<void> main() async {
   final surveyRemoteDataSource = SurveyRemoteDataSource(firestore: firestore);
   final surveyDemoDataSource = SurveyDemoDataSource();
 
-  final organizationRemoteDataSource = OrganizationRemoteDataSource(firestore: firestore);
-  final organizationDemoDataSource = OrganizationDemoDataSource();
+  // final organizationRemoteDataSource = OrganizationRemoteDataSource(firestore: firestore);
+  // final organizationDemoDataSource = OrganizationDemoDataSource();
 
   if (appFlavor == "dev") {
     firestore.useFirestoreEmulator("localhost", 8080);
@@ -98,8 +96,8 @@ Future<void> main() async {
         paymentDemoDataSource: paymentDemoDataSource,
         surveyRemoteDataSource: surveyRemoteDataSource,
         surveyDemoDataSource: surveyDemoDataSource,
-        organizationRemoteDataSource: organizationRemoteDataSource,
-        organizationDemoDataSource: organizationDemoDataSource,
+        // organizationRemoteDataSource: organizationRemoteDataSource,
+        // organizationDemoDataSource: organizationDemoDataSource,
         authService: authService,
       ),
     ),

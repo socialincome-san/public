@@ -89,12 +89,12 @@ class _MainAppPageState extends State<MainAppPage> {
   }
 
   String _getName(Recipient? recipient) {
-    final preferredName = recipient?.preferredName;
+    final preferredName = recipient?.callingName;
     var name = "";
     if (preferredName != null && preferredName.isNotEmpty) {
       name = preferredName;
     } else {
-      name = recipient?.firstName ?? "";
+      name = recipient?.user.firstName ?? "";
     }
 
     return name;

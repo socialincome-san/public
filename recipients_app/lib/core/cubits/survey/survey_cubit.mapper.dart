@@ -22,12 +22,12 @@ class SurveyStateMapper extends ClassMapperBase<SurveyState> {
   @override
   final String id = 'SurveyState';
 
-  static SurveyStatus _$status(SurveyState v) => v.status;
-  static const Field<SurveyState, SurveyStatus> _f$status = Field(
+  static Status _$status(SurveyState v) => v.status;
+  static const Field<SurveyState, Status> _f$status = Field(
     'status',
     _$status,
     opt: true,
-    def: SurveyStatus.initial,
+    def: Status.initial,
   );
   static List<MappedSurvey> _$mappedSurveys(SurveyState v) => v.mappedSurveys;
   static const Field<SurveyState, List<MappedSurvey>> _f$mappedSurveys = Field(
@@ -134,7 +134,7 @@ abstract class SurveyStateCopyWith<$R, $In extends SurveyState, $Out>
   >
   get dashboardMappedSurveys;
   $R call({
-    SurveyStatus? status,
+    Status? status,
     List<MappedSurvey>? mappedSurveys,
     List<MappedSurvey>? dashboardMappedSurveys,
   });
@@ -173,7 +173,7 @@ class _SurveyStateCopyWithImpl<$R, $Out>
   );
   @override
   $R call({
-    SurveyStatus? status,
+    Status? status,
     List<MappedSurvey>? mappedSurveys,
     List<MappedSurvey>? dashboardMappedSurveys,
   }) => $apply(

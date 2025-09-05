@@ -29,44 +29,15 @@ class RecipientMapper extends ClassMapperBase<Recipient> {
 
   static String _$id(Recipient v) => v.id;
   static const Field<Recipient, String> _f$id = Field('id', _$id);
-  static String _$userId(Recipient v) => v.userId;
-  static const Field<Recipient, String> _f$userId = Field('userId', _$userId);
-  static String _$programId(Recipient v) => v.programId;
-  static const Field<Recipient, String> _f$programId = Field(
-    'programId',
-    _$programId,
-  );
-  static String _$localPartnerId(Recipient v) => v.localPartnerId;
-  static const Field<Recipient, String> _f$localPartnerId = Field(
-    'localPartnerId',
-    _$localPartnerId,
-  );
   static LocalPartner _$localPartner(Recipient v) => v.localPartner;
   static const Field<Recipient, LocalPartner> _f$localPartner = Field(
     'localPartner',
     _$localPartner,
   );
-  static DateTime? _$startDate(Recipient v) => v.startDate;
-  static const Field<Recipient, DateTime> _f$startDate = Field(
-    'startDate',
-    _$startDate,
-  );
   static RecipientStatus _$status(Recipient v) => v.status;
   static const Field<Recipient, RecipientStatus> _f$status = Field(
     'status',
     _$status,
-  );
-  static int? _$omUid(Recipient v) => v.omUid;
-  static const Field<Recipient, int> _f$omUid = Field('omUid', _$omUid);
-  static String? _$profession(Recipient v) => v.profession;
-  static const Field<Recipient, String> _f$profession = Field(
-    'profession',
-    _$profession,
-  );
-  static String? _$callingName(Recipient v) => v.callingName;
-  static const Field<Recipient, String> _f$callingName = Field(
-    'callingName',
-    _$callingName,
   );
   static Program _$program(Recipient v) => v.program;
   static const Field<Recipient, Program> _f$program = Field(
@@ -79,47 +50,84 @@ class RecipientMapper extends ClassMapperBase<Recipient> {
   static const Field<Recipient, List<Payout>> _f$payouts = Field(
     'payouts',
     _$payouts,
+    opt: true,
+    def: const [],
   );
   static List<Survey> _$surveys(Recipient v) => v.surveys;
   static const Field<Recipient, List<Survey>> _f$surveys = Field(
     'surveys',
     _$surveys,
+    opt: true,
+    def: const [],
+  );
+  static DateTime? _$startDate(Recipient v) => v.startDate;
+  static const Field<Recipient, DateTime> _f$startDate = Field(
+    'startDate',
+    _$startDate,
+    opt: true,
+  );
+  static String? _$profession(Recipient v) => v.profession;
+  static const Field<Recipient, String> _f$profession = Field(
+    'profession',
+    _$profession,
+    opt: true,
+  );
+  static String? _$callingName(Recipient v) => v.callingName;
+  static const Field<Recipient, String> _f$callingName = Field(
+    'callingName',
+    _$callingName,
+    opt: true,
+  );
+  static PhoneNumber? _$communicationMobilePhone(Recipient v) =>
+      v.communicationMobilePhone;
+  static const Field<Recipient, PhoneNumber> _f$communicationMobilePhone =
+      Field(
+        'communicationMobilePhone',
+        _$communicationMobilePhone,
+        mode: FieldMode.member,
+      );
+  static PhoneNumber? _$mobileMoneyPhone(Recipient v) => v.mobileMoneyPhone;
+  static const Field<Recipient, PhoneNumber> _f$mobileMoneyPhone = Field(
+    'mobileMoneyPhone',
+    _$mobileMoneyPhone,
+    mode: FieldMode.member,
+  );
+  static String _$userId(Recipient v) => v.userId;
+  static const Field<Recipient, String> _f$userId = Field(
+    'userId',
+    _$userId,
+    mode: FieldMode.member,
   );
 
   @override
   final MappableFields<Recipient> fields = const {
     #id: _f$id,
-    #userId: _f$userId,
-    #programId: _f$programId,
-    #localPartnerId: _f$localPartnerId,
     #localPartner: _f$localPartner,
-    #startDate: _f$startDate,
     #status: _f$status,
-    #omUid: _f$omUid,
-    #profession: _f$profession,
-    #callingName: _f$callingName,
     #program: _f$program,
     #user: _f$user,
     #payouts: _f$payouts,
     #surveys: _f$surveys,
+    #startDate: _f$startDate,
+    #profession: _f$profession,
+    #callingName: _f$callingName,
+    #communicationMobilePhone: _f$communicationMobilePhone,
+    #mobileMoneyPhone: _f$mobileMoneyPhone,
+    #userId: _f$userId,
   };
 
   static Recipient _instantiate(DecodingData data) {
     return Recipient(
       id: data.dec(_f$id),
-      userId: data.dec(_f$userId),
-      programId: data.dec(_f$programId),
-      localPartnerId: data.dec(_f$localPartnerId),
       localPartner: data.dec(_f$localPartner),
-      startDate: data.dec(_f$startDate),
       status: data.dec(_f$status),
-      omUid: data.dec(_f$omUid),
-      profession: data.dec(_f$profession),
-      callingName: data.dec(_f$callingName),
       program: data.dec(_f$program),
       user: data.dec(_f$user),
       payouts: data.dec(_f$payouts),
       surveys: data.dec(_f$surveys),
+      startDate: data.dec(_f$startDate),
+      profession: data.dec(_f$profession),
+      callingName: data.dec(_f$callingName),
     );
   }
 
@@ -189,19 +197,15 @@ abstract class RecipientCopyWith<$R, $In extends Recipient, $Out>
   ListCopyWith<$R, Survey, SurveyCopyWith<$R, Survey, Survey>> get surveys;
   $R call({
     String? id,
-    String? userId,
-    String? programId,
-    String? localPartnerId,
     LocalPartner? localPartner,
-    DateTime? startDate,
     RecipientStatus? status,
-    int? omUid,
-    String? profession,
-    String? callingName,
     Program? program,
     User? user,
     List<Payout>? payouts,
     List<Survey>? surveys,
+    DateTime? startDate,
+    String? profession,
+    String? callingName,
   });
   RecipientCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -240,53 +244,41 @@ class _RecipientCopyWithImpl<$R, $Out>
   @override
   $R call({
     String? id,
-    String? userId,
-    String? programId,
-    String? localPartnerId,
     LocalPartner? localPartner,
-    Object? startDate = $none,
     RecipientStatus? status,
-    Object? omUid = $none,
-    Object? profession = $none,
-    Object? callingName = $none,
     Program? program,
     User? user,
     List<Payout>? payouts,
     List<Survey>? surveys,
+    Object? startDate = $none,
+    Object? profession = $none,
+    Object? callingName = $none,
   }) => $apply(
     FieldCopyWithData({
       if (id != null) #id: id,
-      if (userId != null) #userId: userId,
-      if (programId != null) #programId: programId,
-      if (localPartnerId != null) #localPartnerId: localPartnerId,
       if (localPartner != null) #localPartner: localPartner,
-      if (startDate != $none) #startDate: startDate,
       if (status != null) #status: status,
-      if (omUid != $none) #omUid: omUid,
-      if (profession != $none) #profession: profession,
-      if (callingName != $none) #callingName: callingName,
       if (program != null) #program: program,
       if (user != null) #user: user,
       if (payouts != null) #payouts: payouts,
       if (surveys != null) #surveys: surveys,
+      if (startDate != $none) #startDate: startDate,
+      if (profession != $none) #profession: profession,
+      if (callingName != $none) #callingName: callingName,
     }),
   );
   @override
   Recipient $make(CopyWithData data) => Recipient(
     id: data.get(#id, or: $value.id),
-    userId: data.get(#userId, or: $value.userId),
-    programId: data.get(#programId, or: $value.programId),
-    localPartnerId: data.get(#localPartnerId, or: $value.localPartnerId),
     localPartner: data.get(#localPartner, or: $value.localPartner),
-    startDate: data.get(#startDate, or: $value.startDate),
     status: data.get(#status, or: $value.status),
-    omUid: data.get(#omUid, or: $value.omUid),
-    profession: data.get(#profession, or: $value.profession),
-    callingName: data.get(#callingName, or: $value.callingName),
     program: data.get(#program, or: $value.program),
     user: data.get(#user, or: $value.user),
     payouts: data.get(#payouts, or: $value.payouts),
     surveys: data.get(#surveys, or: $value.surveys),
+    startDate: data.get(#startDate, or: $value.startDate),
+    profession: data.get(#profession, or: $value.profession),
+    callingName: data.get(#callingName, or: $value.callingName),
   );
 
   @override

@@ -16,13 +16,11 @@ class AuthState with AuthStateMappable {
   final User? firebaseUser;
   final Recipient? recipient;
   final Exception? exception;
-  final Organization? organization;
 
   const AuthState({
     this.status = AuthStatus.unauthenticated,
     this.firebaseUser,
     this.recipient,
-    this.organization,
     this.exception,
   });
 }

@@ -1,7 +1,7 @@
 import "package:app/data/models/models.dart";
+import "package:app/data/models/survey/survey_status.dart";
 import "package:app/data/repositories/crash_reporting_repository.dart";
 import "package:app/data/repositories/survey_repository.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
 import "package:collection/collection.dart";
 import "package:dart_mappable/dart_mappable.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -37,14 +37,14 @@ class SurveyCubit extends Cubit<SurveyState> {
 
       emit(
         SurveyState(
-          status: SurveyStatus.updatedSuccess,
+          status: Status.updatedSuccess,
           mappedSurveys: mappedSurveys,
           dashboardMappedSurveys: dashboardSurveys,
         ),
       );
     } on Exception catch (ex, stackTrace) {
       crashReportingRepository.logError(ex, stackTrace);
-      emit(const SurveyState(status: SurveyStatus.updatedFailure));
+      emit(const SurveyState(status: Status.updatedFailure));
     }
   }
 
@@ -65,7 +65,7 @@ class SurveyCubit extends Cubit<SurveyState> {
             daysAfterOverdue: _getDaysAfterOverdue(survey),
           ),
         )
-        .sortedBy((element) => element.survey.dueDateAt ?? Timestamp.now())
+        .sortedBy((element) => element.survey.dueDateAt)
         .toList();
 
     return mappedSurveys;
@@ -74,7 +74,7 @@ class SurveyCubit extends Cubit<SurveyState> {
   String _getSurveyUrl(Survey survey, String recipientId) {
     final params = {
       "email": survey.accessEmail,
-      "pw": survey.accessPassword,
+      "pw": survey.accessPw,
     };
 
     final uri = Uri.https(
@@ -97,7 +97,7 @@ class SurveyCubit extends Cubit<SurveyState> {
   }
 
   SurveyCardStatus _getSurveyCardStatus(Survey survey) {
-    if (survey.status != SurveyServerStatus.completed && survey.status != SurveyServerStatus.missed) {
+    if (survey.status != SurveyStatus.completed && survey.status != SurveyStatus.missed) {
       final dateDifferenceInDays = _getSurveyDueDateAndNowDifferenceInDays(survey);
       if (dateDifferenceInDays == null) {
         return SurveyCardStatus.newSurvey;
@@ -116,7 +116,7 @@ class SurveyCubit extends Cubit<SurveyState> {
           return SurveyCardStatus.upcoming;
         }
       }
-    } else if (survey.status == SurveyServerStatus.completed) {
+    } else if (survey.status == SurveyStatus.completed) {
       return SurveyCardStatus.answered;
     } else {
       return SurveyCardStatus.missed;
@@ -152,10 +152,7 @@ int? _getDaysAfterOverdue(Survey survey) {
 }
 
 int? _getSurveyDueDateAndNowDifferenceInDays(Survey survey) {
-  final dueDateAt = survey.dueDateAt?.toDate();
-  if (dueDateAt == null) {
-    return null;
-  }
+  final dueDateAt = survey.dueDateAt;
 
   final currentDate = DateTime.now();
   final dateDifference = currentDate.difference(dueDateAt);
