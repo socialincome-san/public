@@ -251,48 +251,125 @@
 		"org-photo": ""
 	},
 	"slaes": {
-		"org-slug": "sierra-leone-association-of-ebola-survivors",
-		"org-short-name": "SLAES",
-		"org-long-name": "Sierra Leone Association of Ebola Survivors",
-		"org-foundation": "2015",
-		"org-image": "slaes.png",
+	"org-slug": "sierra-leone-association-of-ebola-survivors",
+	"org-short-name": "SLAES",
+	"org-long-name": "Sierra Leone Association of Ebola Survivors",
+	"org-foundation": "2015",
+	"org-image": "slaes.png",
+	"org-country": "SL",
+	"org-headquarter": "Kenema",
+	"org-category": "Local NGO",
+	"org-focus-sdg-numbers": [4, 5],
+	"partnership-start": "2024",
+	"org-mission": "The community-based NGO supports individuals who have survived the Ebola virus, focusing on those affected by the devastating 2014 outbreak in Sierra Leone.",
+	"org-description-paragraphs": [
+		[
+			{
+				"text": "The Sierra Leone Association of Ebola Survivors (SLAES) is an organization committed to supporting individuals who have overcome the Ebola virus. SLAES offers comprehensive assistance, including access to medical care, psychological support, and ongoing advocacy to ensure that survivors’ rights and needs are recognized and addressed."
+			}
+		],
+		[
+			{
+				"text": "Through its work, SLAES aims to help survivors rebuild their lives and foster resilience in affected communities."
+			}
+		]
+	],
+	"org-fundraiser-text": [
+		{
+			"text": "SLAES is currently fundraising: "
+		},
+		{
+			"text": "Rebuilding Lives",
+			"href": "https://socialincome.org/campaign/MZmXEVHlDjOOFOMk82jW"
+		}
+	],
+	"org-quote": [
+		{
+			"text": "It’s more than financial support—it’s a step "
+		},
+		{
+			"text": "towards dignity and resilience.",
+			"color": "accent"
+		}
+	],
+	"org-quote-author": "Mohamed Sankoh Yillah",
+	"org-photo": ""
+},
+	"lizardearth": {
+		"org-slug": "lizard-earth",
+		"org-short-name": "Lizard Earth",
+		"org-long-name": "Lizard Earth",
+		"org-foundation": "2018",
+		"org-image": "lizard-earth.jpg",
 		"org-country": "SL",
 		"org-headquarter": "Kenema",
-		"org-category": "Local NGO",
-		"org-focus-sdg-numbers": [4, 5],
-		"partnership-start": "2024",
-		"org-mission": "The community-based NGO supports individuals who have survived the Ebola virus, focusing on those affected by the devastating 2014 outbreak in Sierra Leone.",
+		"org-category": "Limited Liability Company",
+		"org-focus-sdg-numbers": [12, 13],
+		"partnership-start": "2025",
+		"org-mission": "Lizard Earth empowers smallholder cocoa farmers by improving productivity and strengthening climate resilience.",
 		"org-description-paragraphs": [
 			[
 				{
-					"text": "The Sierra Leone Association of Ebola Survivors (SLAES) is an organization committed to supporting individuals who have overcome the Ebola virus. SLAES offers comprehensive assistance, including access to medical care, psychological support, and ongoing advocacy to ensure that survivors’ rights and needs are recognized and addressed."
+					"text": "Lizard Earth, founded in 2018 by Daniel Scholler, works with smallholder cocoa farmers in Sierra Leone to improve productivity, enhance bean quality, and ensure fair incomes. The farmers operate community-level processing centers, and promote climate-smart farming."
 				}
 			],
 			[
 				{
-					"text": "Through its work, SLAES aims to help survivors rebuild their lives and foster resilience in affected communities."
+					"text": "The European Union, OACPS, BMZ, and GIZ provide the funding that makes this partnership and its ambitious goals possible."
 				}
 			]
 		],
-		"org-fundraiser-text": [
+		"org-quote": [
 			{
-				"text": "SLAES is currently fundraising: "
+				"text": "Social Income gives farmers a new choice: "
 			},
 			{
-				"text": "Rebuilding Lives",
-				"href": "https://socialincome.org/campaign/MZmXEVHlDjOOFOMk82jW"
+				"text": "to rejuvenate their fields ",
+				"color": "accent"
+			},
+			{
+				"text": "and secure future income."
 			}
+		],
+		"org-quote-author": "Daniel Scholler",
+		"org-photo": ""
+	},
+	"rainbo": {
+		"org-slug": "rainbo-intitiative",
+		"org-short-name": "Rainbo Initiative",
+		"org-long-name": "Rainbo Initiative",
+		"org-foundation": "2014",
+		"org-image": "rainbo-initiative.jpg",
+		"org-country": "SL",
+		"org-headquarter": "Freetown",
+		"org-category": "Local NGO",
+		"org-focus-sdg-numbers": [4, 5],
+		"partnership-start": "2025",
+		"org-mission": "The NGO supports survivors of gender-based violence and empowered society with social and equal opportunities for all.",		"org-description-paragraphs": [
+			[
+				{
+					"text": "Rainbo Initiative is a Sierra Leonean NGO providing comprehensive support to survivors of sexual and gender-based violence through its network of Rainbo Centres across the country."
+				}
+			],
+			[
+				{
+					"text": "It also raises awareness, advocates for justice, and works to change harmful social norms that perpetuate violence."
+				}
+			]
 		],
 		"org-quote": [
 			{
-				"text": "It’s more than financial support—it’s a step "
+				"text": "Cash solves a critical problem: "
 			},
 			{
-				"text": "towards dignity and resilience.",
+				"text": "it gives survivors options, ",
 				"color": "accent"
+			},
+			{
+				"text": "so they don’t have to return to their abuser. "
 			}
 		],
-		"org-quote-author": "Mohamed Sankoh Yillah",
+		"org-quote-author": "Daniel F. H. Kettor",
 		"org-photo": ""
 	}
 }
