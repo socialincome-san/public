@@ -63,14 +63,6 @@ android {
 
     flavorDimensions += "environment"
     productFlavors {
-        create("dev") {
-            dimension = "environment"
-            applicationId = "org.socialincome.app.dev"
-            resValue(
-                type = "string",
-                name = "app_name",
-                value = "Social Income DEV")
-        }
         create("stage") {
             dimension = "environment"
             applicationId = "org.socialincome.app.stage"

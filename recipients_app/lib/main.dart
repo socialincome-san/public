@@ -73,12 +73,6 @@ Future<void> main() async {
   final organizationRemoteDataSource = OrganizationRemoteDataSource(firestore: firestore);
   final organizationDemoDataSource = OrganizationDemoDataSource();
 
-  if (appFlavor == "dev") {
-    firestore.useFirestoreEmulator("localhost", 8080);
-    firebaseAuth.useAuthEmulator("localhost", 9099);
-    firebaseAuth.setSettings(appVerificationDisabledForTesting: true);
-  }
-
   Bloc.observer = CustomBlocObserver();
 
   await SentryFlutter.init(

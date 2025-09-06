@@ -27,8 +27,11 @@ fontsize-regular:
 fontsize-largest:
 	adb shell settings put system font_scale 1.3
 
-flavor-staging:
-	flutterfire config --project=social-income-staging --out=lib/firebase_options_staging.dart --ios-bundle-id=org.socialincome.app.stage  --ios-out=ios/GoogleServicesConfig/GoogleService-Info-Stage.plist  --android-package-name=org.socialincome.app.stage  --android-out=android/app/src/stage/google-services.json
+flavor-stage:
+	flutterfire config --project=social-income-staging --out=lib/firebase_options_stage.dart --ios-bundle-id=org.socialincome.app.stage  --ios-out=ios/flavors/stage/GoogleService-Info.plist  --android-package-name=org.socialincome.app.stage  --android-out=android/app/src/stage/google-services.json
+
+flavor-prod:
+	flutterfire config --project=social-income-prod --out=lib/firebase_options_prod.dart --ios-bundle-id=org.socialincome.app  --ios-out=ios/flavors/prod/GoogleService-Info.plist  --android-package-name=org.socialincome.app  --android-out=android/app/src/prod/google-services.json
 
 appbundle-dev:
 	fvm flutter build appbundle --flavor dev
