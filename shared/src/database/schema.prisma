@@ -32,24 +32,48 @@ model User {
   @@map("user")
 }
 
-enum OrganizationAccessLevel {
-  admin
-  editor
-  viewer
+model OrganizationAccess {
+  id             String       @id @default(cuid())
+  portalUserId   String
+  portalUser     PortalUser   @relation(fields: [portalUserId], references: [id])
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  permissions OrganizationPermission[]
+
+  grantedBy String?
+  grantedAt DateTime  @default(now())
+  expiresAt DateTime?
+
+  @@unique([portalUserId, organizationId])
+  @@index([portalUserId])
+  @@index([organizationId])
+  @@map("organization_access")
 }
 
-model OrganizationAccess {
-  id             String                  @id @default(cuid()) @map("id")
-  accessLevel    OrganizationAccessLevel @map("access_level")
-  portalUserId   String                  @map("portal_user_id")
-  portalUser     PortalUser              @relation(fields: [portalUserId], references: [id], onDelete: Cascade)
-  organizationId String                  @map("organization")
-  organization   Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+enum OrganizationPermission {
+  admin // full access
+  audit // view only access
+  // more granular permissions can be added later if needed
+}
 
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+model ProgramAccess {
+  id           String     @id @default(cuid())
+  portalUserId String
+  portalUser   PortalUser @relation(fields: [portalUserId], references: [id])
+  programId    String
+  program      Program    @relation(fields: [programId], references: [id])
 
-  @@map("portal_access")
+  permissions ProgramPermission[]
+
+  @@unique([portalUserId, programId])
+  @@map("program_access")
+}
+
+enum ProgramPermission {
+  admin // full access
+  audit // view only access
+  // more granular permissions can be added later if needed
 }
 
 model PortalUser {
@@ -148,27 +172,6 @@ model Address {
   @@map("address")
 }
 
-enum ProgramAccessLevel {
-  admin
-  editor
-  viewer
-}
-
-model ProgramAccess {
-  id           String             @id @default(cuid()) @map("id")
-  accessLevel  ProgramAccessLevel @map("access_level")
-  programId    String             @map("program_id")
-  program      Program            @relation(fields: [programId], references: [id], onDelete: Cascade)
-  portalUserId String             @map("portal_user_id")
-  portalUser   PortalUser         @relation(fields: [portalUserId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
-
-  @@unique([portalUserId, programId])
-  @@map("program_access")
-}
-
 model StripeContribution {
   id             String       @id @default(cuid()) @map("id")
   referenceId    String       @unique @map("reference_id")
@@ -202,17 +205,14 @@ model Contribution {
   feesChf                  Float                     @map("fees_chf")
   contributorId            String                    @map("contributor_id")
   contributor              Contributor               @relation(fields: [contributorId], references: [id], onDelete: Cascade)
-  contributionInterval     Int                       @map("contribution_interval") // in days
   status                   ContributionStatus        @map("status")
-  campaignId               String?                   @map("campaign_id")
-  campaign                 Campaign?                 @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  campaignId               String                    @map("campaign_id")
+  campaign                 Campaign                  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   stripeContribution       StripeContribution?
   bankTransferContribution BankTransferContribution?
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
-  Program   Program?  @relation(fields: [programId], references: [id], onDelete: SetNull)
-  programId String?
 
   @@map("contribution")
 }
@@ -276,7 +276,7 @@ model Program {
   totalPayments          Int             @map("total_payments")
   payoutAmount           Float           @map("payout_amount")
   payoutCurrency         Currency        @default(SLE) @map("payout_currency")
-  payoutInterval         PayoutInterval  @default(monthly) @map("payout_interval")
+  payoutInterval         Int             @map("payout_interval") // In days
   country                String          @default("Sierra Leone") @map("country")
   // Owner organization relation
   ownerOrganizationId    String          @map("owner_organization_id")
@@ -287,7 +287,6 @@ model Program {
   campaigns              Campaign[]
   recipients             Recipient[]
   accesses               ProgramAccess[]
-  contributions          Contribution[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -439,7 +438,6 @@ enum ContributionStatus {
   failed
   pending
   succeeded
-  unknown
 }
 
 enum PayoutStatus {
@@ -480,8 +478,4 @@ enum ExpenseType {
   exchange_rate_loss
   fundraising_advertising
   staff
-}
-
-enum PayoutInterval {
-  monthly
 }
