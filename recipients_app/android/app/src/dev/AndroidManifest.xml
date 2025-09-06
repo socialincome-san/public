@@ -1,8 +1,0 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-    <!-- Flutter needs it for communicate with firebase emulators -->
-    <application
-        android:label="Dev Social Income"
-        android:usesCleartextTraffic="true"
-        tools:replace="android:label"/>
-</manifest>
