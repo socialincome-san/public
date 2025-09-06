@@ -58,7 +58,8 @@
 		"db:seed": "npm --workspace=@socialincome/shared run db:seed",
 		"db:studio": "npm --workspace=@socialincome/shared run db:studio",
 		"db:up": "npm --workspace=@socialincome/shared run db:up",
-		"db:down": "npm --workspace=@socialincome/shared run db:down"
+		"db:down": "npm --workspace=@socialincome/shared run db:down",
+		"copy-newsletters": "cp -R shared/emails/newsletter website/public/newsletters"
 	},
 	"devDependencies": {
 		"firebase-tools": "14.4.0",
