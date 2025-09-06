@@ -42,9 +42,9 @@ model OrganizationAccess {
   id             String                  @id @default(cuid()) @map("id")
   accessLevel    OrganizationAccessLevel @map("access_level")
   portalUserId   String                  @map("portal_user_id")
-  portalUser     PortalUser              @relation(fields: [portalUserId], references: [id])
+  portalUser     PortalUser              @relation(fields: [portalUserId], references: [id], onDelete: Cascade)
   organizationId String                  @map("organization")
-  organization   Organization            @relation(fields: [organizationId], references: [id])
+  organization   Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -53,15 +53,14 @@ model OrganizationAccess {
 }
 
 model PortalUser {
-  id     String @id @default(cuid()) @map("id")
-  userId String @unique @map("user_id")
-  user   User   @relation(fields: [userId], references: [id])
+  id                 String               @id @default(cuid()) @map("id")
+  userId             String               @unique @map("user_id")
+  user               User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationAccess OrganizationAccess[]
+  programAccess      ProgramAccess[]
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
-
-  organizationAccess OrganizationAccess[]
-  programAccess      ProgramAccess[]
 
   @@map("portal_user")
 }
@@ -75,15 +74,16 @@ enum WhatsAppStatus {
 model Contributor {
   id                   String                @id @default(cuid()) @map("id")
   userId               String                @unique @map("user_id")
-  user                 User                  @relation(fields: [userId], references: [id])
+  user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   referral             UserReferralSource?   @map("referral")
   paymentReferenceId   String?               @map("payment_reference_id")
   stripeCustomerId     String?               @map("stripe_customer_id")
   institution          Boolean               @default(false) @map("institution")
-  createdAt            DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt            DateTime?             @updatedAt @map("updated_at") @db.Timestamptz(3)
   contributions        Contribution[]
   donationCertificates DonationCertificate[]
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("contributor")
 }
@@ -91,13 +91,13 @@ model Contributor {
 model Recipient {
   id             String          @id @default(cuid()) @map("id")
   userId         String          @unique @map("user_id")
-  user           User            @relation(fields: [userId], references: [id])
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   startDate      DateTime?       @map("start_date") @db.Timestamptz(3)
   status         RecipientStatus @map("status")
   profession     String?         @map("profession")
   callingName    String?         @map("calling_name")
   programId      String          @map("program_id")
-  program        Program         @relation(fields: [programId], references: [id])
+  program        Program         @relation(fields: [programId], references: [id], onDelete: Cascade)
   localPartnerId String          @map("local_partner_id")
   localPartner   LocalPartner    @relation(fields: [localPartnerId], references: [id])
   payouts        Payout[]
@@ -122,7 +122,7 @@ model PhoneNumber {
   whatsApp  WhatsAppStatus @default(disabled) @map("whats_app")
   isPrimary Boolean        @default(false) @map("is_primary")
   userId    String         @map("user_id")
-  user      User           @relation(fields: [userId], references: [id])
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   updatedAt DateTime    @updatedAt @map("updated_at") @db.Timestamptz(3)
   createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
@@ -141,7 +141,7 @@ model Address {
   zip       String   @map("zip")
   country   String   @map("country")
   userId    String   @map("user_id")
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -158,9 +158,9 @@ model ProgramAccess {
   id           String             @id @default(cuid()) @map("id")
   accessLevel  ProgramAccessLevel @map("access_level")
   programId    String             @map("program_id")
-  program      Program            @relation(fields: [programId], references: [id])
+  program      Program            @relation(fields: [programId], references: [id], onDelete: Cascade)
   portalUserId String             @map("portal_user_id")
-  portalUser   PortalUser         @relation(fields: [portalUserId], references: [id])
+  portalUser   PortalUser         @relation(fields: [portalUserId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -173,7 +173,7 @@ model StripeContribution {
   id             String       @id @default(cuid()) @map("id")
   referenceId    String       @unique @map("reference_id")
   contributionId String       @unique @map("contribution_id")
-  contribution   Contribution @relation(fields: [contributionId], references: [id])
+  contribution   Contribution @relation(fields: [contributionId], references: [id], onDelete: Cascade)
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -185,10 +185,11 @@ model BankTransferContribution {
   id             String       @id @default(cuid()) @map("id")
   transactionId  String?      @map("transaction_id")
   contributionId String       @unique @map("contribution_id")
+  contribution   Contribution @relation(fields: [contributionId], references: [id], onDelete: Cascade)
   metadata       String?      @map("metadata")
-  contribution   Contribution @relation(fields: [contributionId], references: [id])
-  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt      DateTime?    @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("bank_transfer_contribution")
 }
@@ -200,17 +201,17 @@ model Contribution {
   amountChf                Float                     @map("amount_chf")
   feesChf                  Float                     @map("fees_chf")
   contributorId            String                    @map("contributor_id")
-  contributor              Contributor               @relation(fields: [contributorId], references: [id])
+  contributor              Contributor               @relation(fields: [contributorId], references: [id], onDelete: Cascade)
   contributionInterval     Int                       @map("contribution_interval") // in days
   status                   ContributionStatus        @map("status")
   campaignId               String?                   @map("campaign_id")
-  campaign                 Campaign?                 @relation(fields: [campaignId], references: [id])
+  campaign                 Campaign?                 @relation(fields: [campaignId], references: [id], onDelete: SetNull)
   stripeContribution       StripeContribution?
   bankTransferContribution BankTransferContribution?
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
-  Program   Program?  @relation(fields: [programId], references: [id])
+  Program   Program?  @relation(fields: [programId], references: [id], onDelete: SetNull)
   programId String?
 
   @@map("contribution")
@@ -243,12 +244,13 @@ model Campaign {
   creatorName            String?        @map("creator_name")
   creatorEmail           String?        @map("creator_email")
   programId              String?        @map("program_id")
-  program                Program?       @relation(fields: [programId], references: [id])
+  program                Program?       @relation(fields: [programId], references: [id], onDelete: SetNull)
   organizationId         String         @map("organization_id")
-  organization           Organization   @relation(fields: [organizationId], references: [id])
+  organization           Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   contributions          Contribution[]
-  createdAt              DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt              DateTime?      @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("campaign")
 }
@@ -278,16 +280,17 @@ model Program {
   country                String          @default("Sierra Leone") @map("country")
   // Owner organization relation
   ownerOrganizationId    String          @map("owner_organization_id")
-  owner                  Organization    @relation("ProgramOwner", fields: [ownerOrganizationId], references: [id])
+  owner                  Organization    @relation("ProgramOwner", fields: [ownerOrganizationId], references: [id], onDelete: Cascade)
   // Operator organization relation
   operatorOrganizationId String          @map("operator_organization_id")
-  operator               Organization    @relation("ProgramOperator", fields: [operatorOrganizationId], references: [id])
+  operator               Organization    @relation("ProgramOperator", fields: [operatorOrganizationId], references: [id], onDelete: Cascade)
   campaigns              Campaign[]
   recipients             Recipient[]
   accesses               ProgramAccess[]
   contributions          Contribution[]
-  createdAt              DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt              DateTime?       @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("program")
 }
@@ -314,7 +317,7 @@ model Payout {
   comments    String?      @map("comments")
   message     String?      @map("message")
   recipientId String       @map("recipient_id")
-  recipient   Recipient    @relation(fields: [recipientId], references: [id])
+  recipient   Recipient    @relation(fields: [recipientId], references: [id], onDelete: Cascade)
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -325,7 +328,7 @@ model Payout {
 model Survey {
   id            String                @id @default(cuid()) @map("id")
   recipientId   String                @map("recipient_id")
-  recipient     Recipient             @relation(fields: [recipientId], references: [id])
+  recipient     Recipient             @relation(fields: [recipientId], references: [id], onDelete: Cascade)
   questionnaire SurveyQuestionnaire   @map("questionnaire")
   recipientName String                @map("recipient_name")
   language      RecipientMainLanguage @map("language")
@@ -338,8 +341,9 @@ model Survey {
   accessEmail   String                @map("access_email")
   accessPw      String                @map("access_pw")
   accessToken   String                @map("access_token")
-  createdAt     DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt     DateTime?             @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("survey")
 }
@@ -358,7 +362,7 @@ model ExchangeRate {
 model DonationCertificate {
   id            String      @id @default(cuid()) @map("id")
   contributorId String      @map("contributor_id")
-  contributor   Contributor @relation(fields: [contributorId], references: [id])
+  contributor   Contributor @relation(fields: [contributorId], references: [id], onDelete: Cascade)
   country       String      @map("country")
   year          Int         @map("year")
   storagePath   String      @map("storage_path")
@@ -373,7 +377,7 @@ model DonationCertificate {
 model Expense {
   id             String       @id @default(cuid()) @map("id")
   organizationId String       @map("organization_id")
-  organization   Organization @relation(fields: [organizationId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   type           ExpenseType  @map("type")
   year           Int          @map("year")
   amountChf      Float        @map("amount_chf")
