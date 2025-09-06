@@ -49,3 +49,7 @@ recipients_app/firebase.json
 recipients_app/ios/flavors/prod/GoogleService-Info.plist
 
 recipients_app/lib/firebase_options_prod.dart
+
+recipients_app/android/app/src/stage/google-services.json
+
+recipients_app/lib/firebase_options_stage.dart
