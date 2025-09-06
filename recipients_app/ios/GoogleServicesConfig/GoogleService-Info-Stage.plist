@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>CLIENT_ID</key>
-	<string>51495651779-tge57s75sh38pcd76g03lpfc1prv8rvd.apps.googleusercontent.com</string>
-	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.51495651779-tge57s75sh38pcd76g03lpfc1prv8rvd</string>
-	<key>API_KEY</key>
-	<string>AIzaSyAulbY2rmZhf8jjeaZkPSpAwaHNHVZ5lhI</string>
-	<key>GCM_SENDER_ID</key>
-	<string>51495651779</string>
-	<key>PLIST_VERSION</key>
-	<string>1</string>
-	<key>BUNDLE_ID</key>
-	<string>org.socialincome.app.stage</string>
-	<key>PROJECT_ID</key>
-	<string>social-income-staging</string>
-	<key>STORAGE_BUCKET</key>
-	<string>social-income-staging.appspot.com</string>
-	<key>IS_ADS_ENABLED</key>
-	<false></false>
-	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
-	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
-	<key>IS_GCM_ENABLED</key>
-	<true></true>
-	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
-	<key>GOOGLE_APP_ID</key>
-	<string>1:51495651779:ios:d4d28e75065983fb185576</string>
-</dict>
+	<dict>
+		<key>CLIENT_ID</key>
+		<string>51495651779-tge57s75sh38pcd76g03lpfc1prv8rvd.apps.googleusercontent.com</string>
+		<key>REVERSED_CLIENT_ID</key>
+		<string>com.googleusercontent.apps.51495651779-tge57s75sh38pcd76g03lpfc1prv8rvd</string>
+		<key>ANDROID_CLIENT_ID</key>
+		<string>51495651779-esk1gdivait81filmepqp52t178pul9f.apps.googleusercontent.com</string>
+		<key>API_KEY</key>
+		<string>AIzaSyAulbY2rmZhf8jjeaZkPSpAwaHNHVZ5lhI</string>
+		<key>GCM_SENDER_ID</key>
+		<string>51495651779</string>
+		<key>PLIST_VERSION</key>
+		<string>1</string>
+		<key>BUNDLE_ID</key>
+		<string>org.socialincome.app.stage</string>
+		<key>PROJECT_ID</key>
+		<string>social-income-staging</string>
+		<key>STORAGE_BUCKET</key>
+		<string>social-income-staging.appspot.com</string>
+		<key>IS_ADS_ENABLED</key>
+		<false></false>
+		<key>IS_ANALYTICS_ENABLED</key>
+		<false></false>
+		<key>IS_APPINVITE_ENABLED</key>
+		<true></true>
+		<key>IS_GCM_ENABLED</key>
+		<true></true>
+		<key>IS_SIGNIN_ENABLED</key>
+		<true></true>
+		<key>GOOGLE_APP_ID</key>
+		<string>1:51495651779:ios:d4d28e75065983fb185576</string>
+	</dict>
 </plist>
