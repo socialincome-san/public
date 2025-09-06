@@ -332,7 +332,7 @@ model Survey {
   questionnaire SurveyQuestionnaire   @map("questionnaire")
   recipientName String                @map("recipient_name")
   language      RecipientMainLanguage @map("language")
-  dueDateAt     DateTime              @map("due_date_at")
+  dueAt         DateTime              @map("due_at")
   sentAt        DateTime?             @map("sent_at")
   completedAt   DateTime?             @map("completed_at")
   status        SurveyStatus          @map("status")
