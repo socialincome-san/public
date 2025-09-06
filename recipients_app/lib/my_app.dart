@@ -8,9 +8,10 @@ import "package:app/data/datasource/remote/organization_remote_data_source.dart"
 import "package:app/data/datasource/remote/payment_remote_data_source.dart";
 import "package:app/data/datasource/remote/survey_remote_data_source.dart";
 import "package:app/data/datasource/remote/user_remote_data_source.dart";
+import "package:app/data/models/app_version_info.dart";
 import "package:app/data/repositories/repositories.dart";
 import "package:app/data/services/auth_service.dart";
-import "package:app/data/services/firebase_remote_config.dart";
+import "package:app/data/services/firebase_remote_config_service.dart";
 import "package:app/demo_manager.dart";
 import "package:app/kri_intl.dart";
 import "package:app/l10n/arb/app_localizations.dart";
@@ -25,9 +26,13 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
 import "package:flutter_native_splash/flutter_native_splash.dart";
 
+final rootNavigatorKey = GlobalKey<NavigatorState>();
+
 class MyApp extends StatelessWidget {
   final FirebaseMessaging messaging;
   final DemoManager demoManager;
+
+  final CrashReportingRepository crashReportingRepository;
 
   final UserRemoteDataSource userRemoteDataSource;
   final UserDemoDataSource userDemoDataSource;
@@ -42,6 +47,9 @@ class MyApp extends StatelessWidget {
   final OrganizationDemoDataSource organizationDemoDataSource;
 
   final AuthService authService;
+  final FirebaseRemoteConfigService firebaseRemoteConfigService;
+
+  final AppVersionInfo? appVersionInfo;
 
   const MyApp({
     super.key,
@@ -56,6 +64,9 @@ class MyApp extends StatelessWidget {
     required this.organizationRemoteDataSource,
     required this.organizationDemoDataSource,
     required this.authService,
+    required this.firebaseRemoteConfigService,
+    required this.crashReportingRepository,
+    required this.appVersionInfo,
   });
 
   // This widget is the root of your application.
@@ -72,7 +83,7 @@ class MyApp extends StatelessWidget {
             demoManager: demoManager,
           ),
         ),
-        RepositoryProvider(create: (context) => const CrashReportingRepository()),
+        RepositoryProvider.value(value: crashReportingRepository),
         RepositoryProvider(
           create: (context) => PaymentRepository(
             remoteDataSource: paymentRemoteDataSource,
@@ -95,12 +106,8 @@ class MyApp extends StatelessWidget {
           ),
         ),
         RepositoryProvider<AuthService>.value(value: authService),
-        RepositoryProvider(
-          create: (context) {
-            final remoteConfigService = FirebaseRemoteConfigService();
-            remoteConfigService.init();
-            return remoteConfigService;
-          },
+        RepositoryProvider<FirebaseRemoteConfigService>.value(
+          value: firebaseRemoteConfigService,
         ),
       ],
       child: MultiBlocProvider(
@@ -121,14 +128,18 @@ class MyApp extends StatelessWidget {
             )..initMessaging(),
           ),
         ],
-        child: const _App(),
+        child: _App(
+          appVersionInfo: appVersionInfo,
+        ),
       ),
     );
   }
 }
 
 class _App extends StatelessWidget {
-  const _App();
+  final AppVersionInfo? appVersionInfo;
+
+  const _App({required this.appVersionInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -138,6 +149,7 @@ class _App extends StatelessWidget {
       title: "Social Income",
       theme: AppTheme.lightTheme,
       locale: currentLocale,
+      navigatorKey: rootNavigatorKey,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -147,44 +159,44 @@ class _App extends StatelessWidget {
         KriCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale("en", "US"), Locale("kri")],
-      home: BlocConsumer<AuthCubit, AuthState>(
-        listener: (context, state) {
-          if (state.status == AuthStatus.authenticated) {
-            // change language to the user's preferred language
-            final selectedLanguage = state.recipient?.selectedLanguage;
+      home: AppUpdateCheckWidget(
+        appVersionInfo: appVersionInfo,
+        child: BlocConsumer<AuthCubit, AuthState>(
+          listener: (context, state) {
+            if (state.status == AuthStatus.authenticated) {
+              // change language to the user's preferred language
+              final selectedLanguage = state.recipient?.selectedLanguage;
 
-            if (selectedLanguage != null) {
-              context.read<SettingsCubit>().changeLanguage(selectedLanguage);
-            }
-          }
-        },
-        builder: (context, state) {
-          return BlocBuilder<AuthCubit, AuthState>(
-            builder: (context, state) {
-              switch (state.status) {
-                case AuthStatus.loading:
-                  return const SizedBox.shrink();
-                case AuthStatus.unauthenticated:
-                case AuthStatus.failure:
-                  FlutterNativeSplash.remove();
-                  return const WelcomePage();
-                case AuthStatus.authenticated:
-                case AuthStatus.updateRecipientFailure:
-                case AuthStatus.updateRecipientSuccess:
-                case AuthStatus.updatingRecipient:
-                  FlutterNativeSplash.remove();
-                  if (state.recipient?.termsAccepted == true) {
-                    return AppUpdateWidget(
-                      remoteConfigService: context.read<FirebaseRemoteConfigService>(),
-                      child: const MainAppPage(),
-                    );
-                  } else {
-                    return const TermsAndConditionsPage();
-                  }
+              if (selectedLanguage != null) {
+                context.read<SettingsCubit>().changeLanguage(selectedLanguage);
               }
-            },
-          );
-        },
+            }
+          },
+          builder: (context, state) {
+            return BlocBuilder<AuthCubit, AuthState>(
+              builder: (context, state) {
+                switch (state.status) {
+                  case AuthStatus.loading:
+                    return const SizedBox.shrink();
+                  case AuthStatus.unauthenticated:
+                  case AuthStatus.failure:
+                    FlutterNativeSplash.remove();
+                    return const WelcomePage();
+                  case AuthStatus.authenticated:
+                  case AuthStatus.updateRecipientFailure:
+                  case AuthStatus.updateRecipientSuccess:
+                  case AuthStatus.updatingRecipient:
+                    FlutterNativeSplash.remove();
+                    if (state.recipient?.termsAccepted == true) {
+                      return const MainAppPage();
+                    } else {
+                      return const TermsAndConditionsPage();
+                    }
+                }
+              },
+            );
+          },
+        ),
       ),
       debugShowCheckedModeBanner: false,
     );

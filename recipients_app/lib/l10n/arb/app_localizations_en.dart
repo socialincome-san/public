@@ -15,8 +15,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileUpdateSuccess => 'Profile updated successfully';
 
   @override
-  String get profileUpdateError =>
-      'Failed to update profile. Please try again or contact our support';
+  String get profileUpdateError => 'Failed to update profile. Please try again or contact our support';
 
   @override
   String get profile => 'Profile';
@@ -85,8 +84,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentNumberError => 'Please enter your phone number';
 
   @override
-  String get paymentNumberError2 =>
-      'Please enter a valid phone number. Only numbers are allowed';
+  String get paymentNumberError2 => 'Please enter a valid phone number. Only numbers are allowed';
 
   @override
   String get mobilePaymentProvider => 'Mobile Payment Provider';
@@ -104,8 +102,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contactNumberError => 'Please enter your contact phone number';
 
   @override
-  String get contactNumberError2 =>
-      'Please enter a valid phone number. Only numbers are allowed';
+  String get contactNumberError2 => 'Please enter a valid phone number. Only numbers are allowed';
 
   @override
   String get inCaseOfDeathTitle => '⁠In Case of Death';
@@ -121,8 +118,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get support => 'Support';
 
   @override
-  String get supportInfo =>
-      'In case you have any questions or problems, please contact us.';
+  String get supportInfo => 'In case you have any questions or problems, please contact us.';
 
   @override
   String get getInTouch => 'Get in touch with us';
@@ -131,8 +127,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get account => 'Account';
 
   @override
-  String get accountInfo =>
-      'In case you want to delete your account, please contact us.';
+  String get accountInfo => 'In case you want to delete your account, please contact us.';
 
   @override
   String get signOut => 'Sign Out';
@@ -192,8 +187,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get privacyPolicy => 'Privacy Policy';
 
   @override
-  String get privacyPolicyError =>
-      'Can\'t open privacy policy right now. Copied website address to the clipboard.';
+  String get privacyPolicyError => 'Can\'t open privacy policy right now. Copied website address to the clipboard.';
 
   @override
   String get createAccount => 'Create Account';
@@ -223,8 +217,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentsInReview => 'Did you receive the last payment?';
 
   @override
-  String get paymentsInReviewOne =>
-      'You have 1 payment to review. Did you receive it?';
+  String get paymentsInReviewOne => 'You have 1 payment to review. Did you receive it?';
 
   @override
   String get paymentsInReviewTwo => 'You have 2 payments to review in a row';
@@ -238,8 +231,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentsOverview => 'Payments Overview';
 
   @override
-  String get paymentsSuspendedTwoUnreviewed =>
-      '2 unreviewed payments in a row. Suspended payments.';
+  String get paymentsSuspendedTwoUnreviewed => '2 unreviewed payments in a row. Suspended payments.';
 
   @override
   String get amount => 'Amount';
@@ -276,8 +268,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contestPayment => 'Contest Payment';
 
   @override
-  String get contestPaymentInfo =>
-      'A payment has not reached you. What happened?';
+  String get contestPaymentInfo => 'A payment has not reached you. What happened?';
 
   @override
   String get submit => 'Submit';
@@ -314,8 +305,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get surveyCardTitle => 'Survey';
 
   @override
-  String get surveyCardInfo =>
-      'Please take 5 minutes to answer questions and help to improve Social Income';
+  String get surveyCardInfo => 'Please take 5 minutes to answer questions and help to improve Social Income';
 
   @override
   String get verification => 'Verification';
@@ -373,24 +363,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mySurveysTitle => 'My surveys';
 
   @override
-  String get invalidPhoneNumberError =>
-      'Invalid phone number. Please check your phone number and try again.';
+  String get invalidPhoneNumberError => 'Invalid phone number. Please check your phone number and try again.';
 
   @override
-  String get invalidVerificationCodeError =>
-      'Invalid verification code. Please check provided SMS code and try again.';
+  String get invalidVerificationCodeError => 'Invalid verification code. Please check provided SMS code and try again.';
 
   @override
-  String get userDisabledError =>
-      'Your user account was disabled. Contact with us if you need more information.';
+  String get userDisabledError => 'Your user account was disabled. Contact with us if you need more information.';
 
   @override
   String get invalidCredentialError =>
       'Provided phone number or verification code are no longer valid. Please try again.';
 
   @override
-  String get adminOnlyOperation =>
-      'This operation is only allowed for admin users';
+  String get adminOnlyOperation => 'This operation is only allowed for admin users';
 
   @override
   String get argumentError => 'Invalid argument provided';
@@ -420,12 +406,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get credentialMismatch => 'Credential mismatch';
 
   @override
-  String get credentialTooOldLoginAgain =>
-      'Credential too old, please login again';
+  String get credentialTooOldLoginAgain => 'Credential too old, please login again';
 
   @override
-  String get dependentSdkInitBeforeAuth =>
-      'Dependent SDK initialized before auth';
+  String get dependentSdkInitBeforeAuth => 'Dependent SDK initialized before auth';
 
   @override
   String get dynamicLinkNotActivated => 'Dynamic link not activated';
@@ -593,8 +577,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get operationNotAllowed => 'Operation not allowed';
 
   @override
-  String get operationNotSupported =>
-      'Operation not supported in this environment';
+  String get operationNotSupported => 'Operation not supported in this environment';
 
   @override
   String get popupBlocked => 'Popup blocked';
@@ -621,8 +604,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get secondFactorAlreadyEnrolled => 'Second factor already enrolled';
 
   @override
-  String get secondFactorLimitExceeded =>
-      'Maximum second factor count exceeded';
+  String get secondFactorLimitExceeded => 'Maximum second factor count exceeded';
 
   @override
   String get tenantIdMismatch => 'Tenant ID mismatch';
@@ -721,16 +703,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appUpdateButtonTitleLater => 'Later';
 
   @override
-  String get appUpdateButtonTitleUpdateNow => 'Update now';
+  String get appUpdateButtonTitleUpdateNow => 'Update Now';
 
   @override
   String get appUpdateWidgetTitle => 'App Update Required';
 
   @override
-  String get appUpdateWidgetMessage =>
-      'Please update to continue using the app.';
+  String get appUpdateWidgetMessage => 'Please update to continue using the app.';
 
   @override
   String get appUpdateWidgetErrorLaunchingStore =>
-      'We could not guide you to the Store to update the app. Please open the PlayStore app on Android or App Store app on iOS and update Social Income.';
+      'We could not guide you to the Store to update the app. Please open the Play Store app on Android or App Store app on iOS and update Social Income.';
 }
