@@ -90,6 +90,8 @@ Mobile App for Recipients of a Social Income.
 - Add executable permissions to the script clean_build.sh via
   `chmod +x clean_build.sh`
 - Run `./clean_build.sh`
+- Run `dart pub global activate flutterfire_cli`
+- Run `make flavor-stage` -> choose Build Target -> Debug-stage
 - Choose in vsCode the device to deploy on (iOS Simulator, Android
   emulator, real Android or iOS device)
 - Run the launch configuration "stage_recipients_app (debug mode)" to
@@ -101,14 +103,13 @@ Mobile App for Recipients of a Social Income.
 Building flavor should work seamlessly for Android Studio and VS Code
 with predefined build configs.
 
-We have three build flavors:
+We have two build flavors:
 
-- `dev` -> Connecting with Firebase Emulators (Firestore and Auth)
 - `stage` -> Connecting with staging online firebase project
 - `prod` -> Connecting with production online firebase project and need
   real Firebase configuration json / plist file (not in the repo)
 
-For development, use the `dev` or `stage` flavor.
+For development, use the `stage` flavor.
 
 As Firebase emulators work on your local host machine the easiest way to
 run app is on the Android emulator. Real devices need some additional

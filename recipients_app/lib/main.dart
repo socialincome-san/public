@@ -25,7 +25,7 @@ import "package:sentry_flutter/sentry_flutter.dart";
 
 // Async for Firebase
 Future<void> main() async {
-  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = SentryWidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   SystemChrome.setPreferredOrientations(
@@ -72,12 +72,6 @@ Future<void> main() async {
 
   final organizationRemoteDataSource = OrganizationRemoteDataSource(firestore: firestore);
   final organizationDemoDataSource = OrganizationDemoDataSource();
-
-  if (appFlavor == "dev") {
-    firestore.useFirestoreEmulator("localhost", 8080);
-    firebaseAuth.useAuthEmulator("localhost", 9099);
-    firebaseAuth.setSettings(appVerificationDisabledForTesting: true);
-  }
 
   Bloc.observer = CustomBlocObserver();
 
