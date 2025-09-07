@@ -2,7 +2,7 @@ import "dart:developer";
 
 import "package:app/data/models/app_version_info.dart";
 import "package:app/l10n/l10n.dart";
-import "package:app/my_app.dart";
+import "package:app/ui/navigation/app_navigation_keys.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
