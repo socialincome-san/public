@@ -173,7 +173,7 @@ export function PartnerHome({
 											alt={ngoHoverCard.quoteAuthor}
 											width="48"
 											height="48"
-											className="my-3 h-auto w-12"
+											className="my-3 w-12 h-12 rounded-full"
 										/>
 									)}
 									<Typography size="lg">
@@ -217,27 +217,42 @@ export function PartnerHome({
 							</div>
 							<div className="col-span-2">
 								{ngoHoverCard.orgWebsite && (
-									<Link href={ngoHoverCard.orgWebsite} className="ml-auto inline-block pr-2 text-lg underline">
+									<Link href={ngoHoverCard.orgWebsite}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="ml-auto inline-block pr-2 text-lg underline">
 										{translations.website}
 									</Link>
 								)}
 								{ngoHoverCard.orgFacebook && (
-									<Link href={ngoHoverCard.orgFacebook} className="ml-auto inline-block pr-2 text-lg underline">
+									<Link href={ngoHoverCard.orgFacebook}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="ml-auto inline-block pr-2 text-lg underline">
 										{translations.facebook}
 									</Link>
 								)}
 								{ngoHoverCard.orgInstagram && (
-									<Link href={ngoHoverCard.orgInstagram} className="ml-auto inline-block pr-2 text-lg underline">
+									<Link href={ngoHoverCard.orgInstagram}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="ml-auto inline-block pr-2 text-lg underline">
 										{translations.instagram}
 									</Link>
 								)}
 								{ngoHoverCard.orgLinkedIn && (
-									<Link href={ngoHoverCard.orgLinkedIn} className="ml-auto inline-block pr-2 text-lg underline">
+									<Link href={ngoHoverCard.orgLinkedIn}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="ml-auto inline-block pr-2 text-lg underline">
 										{translations.linkedin}
 									</Link>
 								)}
 								{ngoHoverCard.orgYoutube && (
-									<Link href={ngoHoverCard.orgYoutube} className="ml-auto inline-block pr-2 text-lg underline">
+									<Link href={ngoHoverCard.orgYoutube}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="ml-auto inline-block pr-2 text-lg underline">
 										{translations.youtube}
 									</Link>
 								)}

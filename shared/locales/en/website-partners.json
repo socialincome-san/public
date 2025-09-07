@@ -81,8 +81,7 @@
 			}
 		],
 		"org-quote-author": "Regína Bjarnadóttir",
-		"org-photo": "",
-		"org-quote-photo": "logo-aurora.png",
+		"org-quote-photo": "regina-bjarnadottir-aurora.jpg",
 		"org-website": "https://www.aurorafoundation.is/en",
 		"org-instagram": "https://www.instagram.com/aurorafoundation_official/?hl=en",
 		"org-facebook": "https://www.facebook.com/aurorafoundationofficial/"
@@ -124,7 +123,6 @@
 			}
 		],
 		"org-quote-author": "Jamil Jaward",
-		"org-photo": "",
 		"org-website": "https://www.jnjf.org/",
 		"org-instagram": "https://instagram.com/jnjaward?igshid=NGVhN2U2NjQ0Yg",
 		"org-facebook": "https://www.facebook.com/JNJFoundation",
@@ -167,7 +165,6 @@
 			}
 		],
 		"org-quote-author": "Edmond Margai",
-		"org-photo": "",
 		"org-facebook": "https://www.facebook.com/profile.php?id=100070050743284&sk=about_details",
 		"org-youtube": "https://www.youtube.com/@reachoutsalone8395"
 	},
@@ -208,7 +205,6 @@
 			}
 		],
 		"org-quote-author": "Arnold Gibril Kamara",
-		"org-photo": "",
 		"org-facebook": "https://www.facebook.com/groups/693921621002955/"
 	},
 	"united_polio": {
@@ -247,8 +243,7 @@
 				"text": "generating steady income through its dependable monthly support."
 			}
 		],
-		"org-quote-author": "Paul Osman Kabia",
-		"org-photo": ""
+		"org-quote-author": "Paul Osman Kabia"
 	},
 	"slaes": {
 	"org-slug": "sierra-leone-association-of-ebola-survivors",
@@ -292,8 +287,7 @@
 			"color": "accent"
 		}
 	],
-	"org-quote-author": "Mohamed Sankoh Yillah",
-	"org-photo": ""
+	"org-quote-author": "Mohamed Sankoh Yillah"
 },
 	"lizardearth": {
 		"org-slug": "lizard-earth",
@@ -304,35 +298,36 @@
 		"org-country": "SL",
 		"org-headquarter": "Kenema",
 		"org-category": "Limited Liability Company",
-		"org-focus-sdg-numbers": [12, 13],
+		"org-focus-sdg-numbers": [13, 12],
 		"partnership-start": "2025",
 		"org-mission": "Lizard Earth empowers smallholder cocoa farmers by improving productivity and strengthening climate resilience.",
 		"org-description-paragraphs": [
 			[
 				{
-					"text": "Lizard Earth, founded in 2018 by Daniel Scholler, works with smallholder cocoa farmers in Sierra Leone to improve productivity, enhance bean quality, and ensure fair incomes. The farmers operate community-level processing centers, and promote climate-smart farming."
+					"text": "Lizard Earth works with smallholder cocoa farmers in Sierra Leone to improve productivity, enhance bean quality, and ensure fair incomes. The farmers operate community-level processing centers, and promote climate-resilient farming."
 				}
 			],
 			[
 				{
-					"text": "The European Union, OACPS, BMZ, and GIZ provide the funding that makes this partnership and its ambitious goals possible."
+					"text": "The European Union, the Organisation of African, Caribbean and Pacific States (OACPS), the German Federal Ministry for Economic Cooperation and Development (BMZ), and the Deutsche Gesellschaft für Internationale Zusammenarbeit (GIZ) provide the funding that makes this partnership possible."
 				}
 			]
 		],
 		"org-quote": [
 			{
-				"text": "Social Income gives farmers a new choice: "
+				"text": "With Social Income, "
 			},
 			{
-				"text": "to rejuvenate their fields ",
+				"text": "farmers can protect  ",
 				"color": "accent"
 			},
 			{
-				"text": "and secure future income."
+				"text": "their land and livelihoods against the impacts of climate change."
 			}
 		],
 		"org-quote-author": "Daniel Scholler",
-		"org-photo": ""
+		"org-quote-photo": "daniel-scholler-lizard-earth.png",
+		"org-website": "https://lizard-earth.org/"
 	},
 	"rainbo": {
 		"org-slug": "rainbo-intitiative",
@@ -343,26 +338,25 @@
 		"org-country": "SL",
 		"org-headquarter": "Freetown",
 		"org-category": "Local NGO",
-		"org-focus-sdg-numbers": [4, 5],
+		"org-focus-sdg-numbers": [5, 4],
 		"partnership-start": "2025",
-		"org-mission": "The NGO supports survivors of gender-based violence and empowered society with social and equal opportunities for all.",		"org-description-paragraphs": [
+		"org-mission": "The NGO supports survivors of gender-based violence by providing free, comprehensive services and safe spaces.",
+		"org-description-paragraphs": [
 			[
 				{
-					"text": "Rainbo Initiative is a Sierra Leonean NGO providing comprehensive support to survivors of sexual and gender-based violence through its network of Rainbo Centres across the country."
-				}
+					"text": "Rainbo Initiative is a Sierra Leonean NGO providing comprehensive support to survivors of sexual and gender-based violence through its network of support centres across the country."				}
 			],
 			[
 				{
-					"text": "It also raises awareness, advocates for justice, and works to change harmful social norms that perpetuate violence."
-				}
+					"text": "In addition, the NGO promotes awareness, seeks justice, and works to transform harmful social norms that sustain violence. It is also active in Liberia and Guinea."				}
 			]
 		],
 		"org-quote": [
 			{
-				"text": "Cash solves a critical problem: "
+				"text": "Social Income "
 			},
 			{
-				"text": "it gives survivors options, ",
+				"text": "gives survivors financial independence, ",
 				"color": "accent"
 			},
 			{
@@ -370,6 +364,7 @@
 			}
 		],
 		"org-quote-author": "Daniel F. H. Kettor",
-		"org-photo": ""
+		"org-quote-photo": "daniel-kettor-rainbo.png",
+		"org-website": "https://rainboinitiative.org/"
 	}
 }
