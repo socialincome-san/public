@@ -15,13 +15,16 @@ class UserRemoteDataSource implements UserDataSource {
   });
 
   @override
-  User? get currentUser => firebaseAuth.currentUser;
+  User? get currentFirebaseUser => firebaseAuth.currentUser;
 
   /// Fetches the user data by userId from firestore and maps it to a recipient object
   /// Returns null if the user does not exist.
   @override
   Future<Recipient?> fetchRecipient(User firebaseUser) async {
     final phoneNumber = firebaseUser.phoneNumber ?? "";
+
+    // TODO(Verena): remove this, only needed for testing
+    // final token = await FirebaseAuth.instance.currentUser?.getIdToken();
 
     final matchingUsers = await firestore
         .collection(recipientCollection)
@@ -43,7 +46,7 @@ class UserRemoteDataSource implements UserDataSource {
     //     await firestore.collection("/recipients").doc(firebaseUser.uid).get();
 
     if (userSnapshot != null && userSnapshot.exists) {
-      return Recipient.fromMap(userSnapshot.data()).copyWith(
+      return RecipientMapper.fromMap(userSnapshot.data()).copyWith(
         userId: userSnapshot.id,
       );
     } else {
@@ -55,6 +58,6 @@ class UserRemoteDataSource implements UserDataSource {
   Future<void> updateRecipient(Recipient recipient) {
     final updatedRecipient = recipient.copyWith(updatedBy: recipient.userId);
 
-    return firestore.collection(recipientCollection).doc(recipient.userId).update(updatedRecipient.toJson());
+    return firestore.collection(recipientCollection).doc(recipient.userId).update(updatedRecipient.toMap());
   }
 }

@@ -1,7 +1,10 @@
 import "package:app/data/models/payment/payment.dart";
-import "package:equatable/equatable.dart";
+import "package:dart_mappable/dart_mappable.dart";
 
-class PaymentsUiState extends Equatable {
+part "payments_ui_state.mapper.dart";
+
+@MappableClass()
+class PaymentsUiState with PaymentsUiStateMappable {
   final BalanceCardStatus status;
   final List<MappedPayment> payments;
   final int confirmedPaymentsCount;
@@ -17,34 +20,4 @@ class PaymentsUiState extends Equatable {
     required this.nextPayment,
     this.lastPaidPayment,
   });
-
-  @override
-  List<Object?> get props {
-    return [
-      status,
-      payments,
-      confirmedPaymentsCount,
-      unconfirmedPaymentsCount,
-      nextPayment,
-      lastPaidPayment,
-    ];
-  }
-
-  PaymentsUiState copyWith({
-    BalanceCardStatus? status,
-    List<MappedPayment>? payments,
-    int? confirmedPaymentsCount,
-    int? unconfirmedPaymentsCount,
-    NextPaymentData? nextPayment,
-    MappedPayment? lastPaidPayment,
-  }) {
-    return PaymentsUiState(
-      status: status ?? this.status,
-      payments: payments ?? this.payments,
-      confirmedPaymentsCount: confirmedPaymentsCount ?? this.confirmedPaymentsCount,
-      unconfirmedPaymentsCount: unconfirmedPaymentsCount ?? this.unconfirmedPaymentsCount,
-      nextPayment: nextPayment ?? this.nextPayment,
-      lastPaidPayment: lastPaidPayment ?? this.lastPaidPayment,
-    );
-  }
 }
