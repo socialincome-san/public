@@ -42,6 +42,7 @@ workflows:
         - slack
         - app-config-stage
         - firebase
+        - google_credentials
         #- google_play # <-- (Includes GCLOUD_SERVICE_ACCOUNT_CREDENTIALS)
       <<: *env_versions
 
