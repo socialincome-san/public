@@ -70,7 +70,7 @@
 		],
 		"org-quote": [
 			{
-				"text": "Thanks to Social Income, artisans have the  "
+				"text": "Thanks to Social Income, artisans have the "
 			},
 			{
 				"text": "stability to focus on their craft,",
@@ -318,7 +318,7 @@
 				"text": "With Social Income, "
 			},
 			{
-				"text": "farmers can protect  ",
+				"text": "farmers can protect ",
 				"color": "accent"
 			},
 			{
@@ -330,7 +330,7 @@
 		"org-website": "https://lizard-earth.org/"
 	},
 	"rainbo": {
-		"org-slug": "rainbo-intitiative",
+		"org-slug": "rainbo-initiative",
 		"org-short-name": "Rainbo Initiative",
 		"org-long-name": "Rainbo Initiative",
 		"org-foundation": "2014",
