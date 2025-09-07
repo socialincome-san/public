@@ -13,11 +13,13 @@ class FirebaseRemoteConfigService {
   final FirebaseRemoteConfig firebaseRemoteConfig;
   final PackageInfo packageInfo;
   final CrashReportingRepository crashReportingRepository;
+  final Duration minimumFetchInterval;
 
   const FirebaseRemoteConfigService({
     required this.firebaseRemoteConfig,
     required this.packageInfo,
-    required this.crashReportingRepository,
+    required this.crashReportingRepository, 
+    this.minimumFetchInterval = const Duration(hours: 1),
   });
 
   Future<void> init() async {
@@ -26,7 +28,7 @@ class FirebaseRemoteConfigService {
       await firebaseRemoteConfig.setConfigSettings(
         RemoteConfigSettings(
           fetchTimeout: const Duration(seconds: 20),
-          minimumFetchInterval: const Duration(hours: 24),
+          minimumFetchInterval: minimumFetchInterval,
         ),
       );
 

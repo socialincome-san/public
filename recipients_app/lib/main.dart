@@ -91,6 +91,7 @@ Future<void> main() async {
     firebaseRemoteConfig: FirebaseRemoteConfig.instance,
     packageInfo: packageInfo,
     crashReportingRepository: crashReportingRepository,
+    minimumFetchInterval: appFlavor == "prod" ? const Duration(hours: 1) : Duration.zero,
   );
 
   await firebaseRemoteConfigService.init();
