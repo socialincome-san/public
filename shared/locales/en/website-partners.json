@@ -246,49 +246,49 @@
 		"org-quote-author": "Paul Osman Kabia"
 	},
 	"slaes": {
-	"org-slug": "sierra-leone-association-of-ebola-survivors",
-	"org-short-name": "SLAES",
-	"org-long-name": "Sierra Leone Association of Ebola Survivors",
-	"org-foundation": "2015",
-	"org-image": "slaes.png",
-	"org-country": "SL",
-	"org-headquarter": "Kenema",
-	"org-category": "Local NGO",
-	"org-focus-sdg-numbers": [4, 5],
-	"partnership-start": "2024",
-	"org-mission": "The community-based NGO supports individuals who have survived the Ebola virus, focusing on those affected by the devastating 2014 outbreak in Sierra Leone.",
-	"org-description-paragraphs": [
-		[
+		"org-slug": "sierra-leone-association-of-ebola-survivors",
+		"org-short-name": "SLAES",
+		"org-long-name": "Sierra Leone Association of Ebola Survivors",
+		"org-foundation": "2015",
+		"org-image": "slaes.png",
+		"org-country": "SL",
+		"org-headquarter": "Kenema",
+		"org-category": "Local NGO",
+		"org-focus-sdg-numbers": [4, 5],
+		"partnership-start": "2024",
+		"org-mission": "The community-based NGO supports individuals who have survived the Ebola virus, focusing on those affected by the devastating 2014 outbreak in Sierra Leone.",
+		"org-description-paragraphs": [
+			[
+				{
+					"text": "The Sierra Leone Association of Ebola Survivors (SLAES) is an organization committed to supporting individuals who have overcome the Ebola virus. SLAES offers comprehensive assistance, including access to medical care, psychological support, and ongoing advocacy to ensure that survivors’ rights and needs are recognized and addressed."
+				}
+			],
+			[
+				{
+					"text": "Through its work, SLAES aims to help survivors rebuild their lives and foster resilience in affected communities."
+				}
+			]
+		],
+		"org-fundraiser-text": [
 			{
-				"text": "The Sierra Leone Association of Ebola Survivors (SLAES) is an organization committed to supporting individuals who have overcome the Ebola virus. SLAES offers comprehensive assistance, including access to medical care, psychological support, and ongoing advocacy to ensure that survivors’ rights and needs are recognized and addressed."
+				"text": "SLAES is currently fundraising: "
+			},
+			{
+				"text": "Rebuilding Lives",
+				"href": "https://socialincome.org/campaign/MZmXEVHlDjOOFOMk82jW"
 			}
 		],
-		[
+		"org-quote": [
 			{
-				"text": "Through its work, SLAES aims to help survivors rebuild their lives and foster resilience in affected communities."
+				"text": "It’s more than financial support—it’s a step "
+			},
+			{
+				"text": "towards dignity and resilience.",
+				"color": "accent"
 			}
-		]
-	],
-	"org-fundraiser-text": [
-		{
-			"text": "SLAES is currently fundraising: "
-		},
-		{
-			"text": "Rebuilding Lives",
-			"href": "https://socialincome.org/campaign/MZmXEVHlDjOOFOMk82jW"
-		}
-	],
-	"org-quote": [
-		{
-			"text": "It’s more than financial support—it’s a step "
-		},
-		{
-			"text": "towards dignity and resilience.",
-			"color": "accent"
-		}
-	],
-	"org-quote-author": "Mohamed Sankoh Yillah"
-},
+		],
+		"org-quote-author": "Mohamed Sankoh Yillah"
+	},
 	"lizardearth": {
 		"org-slug": "lizard-earth",
 		"org-short-name": "Lizard Earth",
@@ -344,11 +344,13 @@
 		"org-description-paragraphs": [
 			[
 				{
-					"text": "Rainbo Initiative is a Sierra Leonean NGO providing comprehensive support to survivors of sexual and gender-based violence through its network of support centres across the country."				}
+					"text": "Rainbo Initiative is a Sierra Leonean NGO providing comprehensive support to survivors of sexual and gender-based violence through its network of support centres across the country."
+				}
 			],
 			[
 				{
-					"text": "In addition, the NGO promotes awareness, seeks justice, and works to transform harmful social norms that sustain violence. It is also active in Liberia and Guinea."				}
+					"text": "In addition, the NGO promotes awareness, seeks justice, and works to transform harmful social norms that sustain violence. It is also active in Liberia and Guinea."
+				}
 			]
 		],
 		"org-quote": [
