@@ -9,25 +9,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Gender {
+  male
+  female
+  other
+  private
+}
+
 model User {
-  id          String        @id @default(cuid()) @map("id")
-  email       String        @unique @map("email")
-  authUserId  String?       @unique @map("auth_user_id")
-  firstName   String        @map("first_name")
-  lastName    String        @map("last_name")
-  gender      Gender        @default(private) @map("gender")
-  language    LanguageCode? @map("language")
-  currency    Currency?     @map("currency")
-  dateOfBirth DateTime?     @map("date_of_birth") @db.Date
-  Contributor Contributor?
-  Recipient   Recipient?
-  PortalUser  PortalUser?
+  id          String    @id @default(cuid()) @map("id")
+  email       String    @unique @map("email")
+  authUserId  String?   @unique @map("auth_user_id")
+  firstName   String    @map("first_name")
+  lastName    String    @map("last_name")
+  gender      Gender    @default(private) @map("gender")
+  addressId   String?   @unique @map("address_id")
+  address     Address?  @relation(fields: [addressId], references: [id], onDelete: Cascade)
+  phones      Phone[]
+  language    String?   @map("language")
+  dateOfBirth DateTime? @map("date_of_birth") @db.Date
+
+  contributor Contributor?
+  recipient   Recipient?
+  portalUser  PortalUser?
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
-
-  addresses   Address[]
-  phoneNumber PhoneNumber[]
 
   @@map("user")
 }
@@ -35,9 +42,9 @@ model User {
 model OrganizationAccess {
   id             String       @id @default(cuid())
   portalUserId   String
-  portalUser     PortalUser   @relation(fields: [portalUserId], references: [id])
+  portalUser     PortalUser   @relation(fields: [portalUserId], references: [id], onDelete: Cascade)
   organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   permissions OrganizationPermission[]
 
@@ -60,9 +67,9 @@ enum OrganizationPermission {
 model ProgramAccess {
   id           String     @id @default(cuid())
   portalUserId String
-  portalUser   PortalUser @relation(fields: [portalUserId], references: [id])
+  portalUser   PortalUser @relation(fields: [portalUserId], references: [id], onDelete: Cascade)
   programId    String
-  program      Program    @relation(fields: [programId], references: [id])
+  program      Program    @relation(fields: [programId], references: [id], onDelete: Cascade)
 
   permissions ProgramPermission[]
 
@@ -89,10 +96,13 @@ model PortalUser {
   @@map("portal_user")
 }
 
-enum WhatsAppStatus {
-  disabled
-  pending
-  verified
+enum UserReferralSource {
+  family_and_friends
+  work
+  social_media
+  media
+  presentation
+  other
 }
 
 model Contributor {
@@ -112,6 +122,13 @@ model Contributor {
   @@map("contributor")
 }
 
+enum RecipientStatus {
+  active
+  suspended
+  waitlisted
+  former
+}
+
 model Recipient {
   id             String          @id @default(cuid()) @map("id")
   userId         String          @unique @map("user_id")
@@ -120,6 +137,7 @@ model Recipient {
   status         RecipientStatus @map("status")
   profession     String?         @map("profession")
   callingName    String?         @map("calling_name")
+  language       String?         @map("language")
   programId      String          @map("program_id")
   program        Program         @relation(fields: [programId], references: [id], onDelete: Cascade)
   localPartnerId String          @map("local_partner_id")
@@ -129,7 +147,7 @@ model Recipient {
   // Payment details
   omUid          Int?            @map("om_uid")
   paymentPhoneId String          @map("payment_phone_id")
-  paymentPhone   PhoneNumber     @relation(fields: [paymentPhoneId], references: [id])
+  paymentPhone   Phone           @relation(fields: [paymentPhoneId], references: [id])
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -137,79 +155,91 @@ model Recipient {
   @@map("recipient")
 }
 
-// A user can have multiple phone numbers, but only one primary number (constraint needed at application level)
-model PhoneNumber {
-  id        String         @id @default(cuid()) @map("id")
-  phone     String         @map("phone")
-  type      String         @map("type")
-  verified  Boolean        @default(false) @map("verified")
-  whatsApp  WhatsAppStatus @default(disabled) @map("whats_app")
-  isPrimary Boolean        @default(false) @map("is_primary")
-  userId    String         @map("user_id")
-  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+enum PhoneType {
+  mobile
+  home
+  work
+  other
+}
 
-  updatedAt DateTime    @updatedAt @map("updated_at") @db.Timestamptz(3)
-  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
-  Recipient Recipient[]
+enum WhatsAppStatus {
+  disabled
+  pending
+  verified
+}
+
+// A user can have multiple phone numbers, but only one primary number (constraint needed at application level)
+model Phone {
+  id         String         @id @default(cuid()) @map("id")
+  type       PhoneType      @map("type")
+  number     String         @map("number")
+  verified   Boolean        @default(false) @map("verified")
+  whatsApp   WhatsAppStatus @default(disabled) @map("whats_app")
+  isPrimary  Boolean        @default(false) @map("is_primary")
+  userId     String         @map("user_id")
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipients Recipient[]
+
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
 
   // Ensure a user cannot have duplicate phone numbers
-  @@unique([userId, phone])
-  @@map("phone_number")
+  @@unique([userId, number])
+  @@map("phone")
 }
 
 model Address {
-  id        String   @id @default(cuid()) @map("id")
-  street    String   @map("street")
-  number    String   @map("number")
-  city      String   @map("city")
-  zip       String   @map("zip")
-  country   String   @map("country")
-  userId    String   @map("user_id")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id      String @id @default(cuid()) @map("id")
+  street  String @map("street")
+  number  String @map("number")
+  city    String @map("city")
+  zip     String @map("zip")
+  country String @map("country")
+  users   User[]
+
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("address")
 }
 
-model StripeContribution {
-  id             String       @id @default(cuid()) @map("id")
-  referenceId    String       @unique @map("reference_id")
-  contributionId String       @unique @map("contribution_id")
-  contribution   Contribution @relation(fields: [contributionId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
-
-  @@map("stripe_contribution")
+enum PaymentEventType {
+  stripe
+  bank_transfer
 }
 
-model BankTransferContribution {
-  id             String       @id @default(cuid()) @map("id")
-  transactionId  String?      @map("transaction_id")
-  contributionId String       @unique @map("contribution_id")
-  contribution   Contribution @relation(fields: [contributionId], references: [id], onDelete: Cascade)
-  metadata       String?      @map("metadata")
+model PaymentEvent {
+  id             String           @id @default(cuid()) @map("id")
+  contributionId String           @unique @map("contribution_id")
+  contribution   Contribution     @relation(fields: [contributionId], references: [id], onDelete: Cascade)
+  type           PaymentEventType @map("type")
+  transactionId  String?          @map("transaction_id")
+  metadata       Json?            @map("metadata")
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  @@map("bank_transfer_contribution")
+  @@map("payment_event")
+}
+
+enum ContributionStatus {
+  failed
+  pending
+  succeeded
 }
 
 model Contribution {
-  id                       String                    @id @default(cuid()) @map("id")
-  amount                   Float                     @map("amount")
-  currency                 Currency                  @map("currency")
-  amountChf                Float                     @map("amount_chf")
-  feesChf                  Float                     @map("fees_chf")
-  contributorId            String                    @map("contributor_id")
-  contributor              Contributor               @relation(fields: [contributorId], references: [id], onDelete: Cascade)
-  status                   ContributionStatus        @map("status")
-  campaignId               String                    @map("campaign_id")
-  campaign                 Campaign                  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
-  stripeContribution       StripeContribution?
-  bankTransferContribution BankTransferContribution?
+  id            String             @id @default(cuid()) @map("id")
+  amount        Decimal            @map("amount") @db.Decimal(10, 2)
+  currency      String             @map("currency")
+  amountChf     Decimal            @map("amount_chf") @db.Decimal(10, 2)
+  feesChf       Decimal            @map("fees_chf") @db.Decimal(10, 2)
+  contributorId String             @map("contributor_id")
+  contributor   Contributor        @relation(fields: [contributorId], references: [id], onDelete: Cascade)
+  status        ContributionStatus @map("status")
+  campaignId    String             @map("campaign_id")
+  campaign      Campaign           @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  paymentEvent  PaymentEvent?
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -230,9 +260,9 @@ model Campaign {
   linkTiktok             String?        @map("link_tiktok")
   linkFacebook           String?        @map("link_facebook")
   linkX                  String?        @map("link_x")
-  goal                   Float?         @map("goal")
-  currency               String?        @map("currency")
-  additionalAmountChf    Float?         @map("additional_amount_chf")
+  goal                   Decimal?       @map("goal") @db.Decimal(10, 2)
+  currency               String         @map("currency")
+  additionalAmountChf    Decimal?       @map("additional_amount_chf") @db.Decimal(10, 2)
   endDate                DateTime       @map("end_date")
   isActive               Boolean        @default(false) @map("is_active")
   public                 Boolean?       @map("public")
@@ -274,8 +304,8 @@ model Program {
   id                     String          @id @default(cuid()) @map("id")
   name                   String          @unique @map("name")
   totalPayments          Int             @map("total_payments")
-  payoutAmount           Float           @map("payout_amount")
-  payoutCurrency         Currency        @default(SLE) @map("payout_currency")
+  payoutAmount           Decimal         @map("payout_amount") @db.Decimal(10, 2)
+  payoutCurrency         String          @map("payout_currency")
   payoutInterval         Int             @map("payout_interval") // In days
   country                String          @default("Sierra Leone") @map("country")
   // Owner organization relation
@@ -305,10 +335,19 @@ model LocalPartner {
   @@map("local_partner")
 }
 
+enum PayoutStatus {
+  created
+  paid
+  confirmed
+  contested
+  failed
+  other
+}
+
 model Payout {
   id          String       @id @default(cuid()) @map("id")
-  amount      Float        @map("amount")
-  amountChf   Float?       @map("amount_chf")
+  amount      Decimal      @map("amount") @db.Decimal(10, 2)
+  amountChf   Decimal?     @map("amount_chf")
   currency    String       @map("currency")
   paymentAt   DateTime     @map("payment_at") @db.Timestamptz(3)
   status      PayoutStatus @map("status")
@@ -322,131 +361,6 @@ model Payout {
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("payout")
-}
-
-model Survey {
-  id            String                @id @default(cuid()) @map("id")
-  recipientId   String                @map("recipient_id")
-  recipient     Recipient             @relation(fields: [recipientId], references: [id], onDelete: Cascade)
-  questionnaire SurveyQuestionnaire   @map("questionnaire")
-  recipientName String                @map("recipient_name")
-  language      RecipientMainLanguage @map("language")
-  dueAt         DateTime              @map("due_at")
-  sentAt        DateTime?             @map("sent_at")
-  completedAt   DateTime?             @map("completed_at")
-  status        SurveyStatus          @map("status")
-  comments      String?               @map("comments")
-  data          String                @map("data")
-  accessEmail   String                @map("access_email")
-  accessPw      String                @map("access_pw")
-  accessToken   String                @map("access_token")
-
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
-
-  @@map("survey")
-}
-
-model ExchangeRate {
-  id       String @id @default(cuid()) @map("id")
-  currency String @map("currency")
-  rate     Float  @map("rate")
-
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
-
-  @@map("exchange_rate")
-}
-
-model DonationCertificate {
-  id            String      @id @default(cuid()) @map("id")
-  contributorId String      @map("contributor_id")
-  contributor   Contributor @relation(fields: [contributorId], references: [id], onDelete: Cascade)
-  country       String      @map("country")
-  year          Int         @map("year")
-  storagePath   String      @map("storage_path")
-
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
-
-  @@unique([contributorId, year])
-  @@map("donation_certificate")
-}
-
-model Expense {
-  id             String       @id @default(cuid()) @map("id")
-  organizationId String       @map("organization_id")
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  type           ExpenseType  @map("type")
-  year           Int          @map("year")
-  amountChf      Float        @map("amount_chf")
-
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
-
-  @@map("expense")
-}
-
-enum Gender {
-  male
-  female
-  other
-  private
-}
-
-enum UserReferralSource {
-  familyfriends
-  work
-  socialmedia
-  media
-  presentation
-  other
-}
-
-enum LanguageCode {
-  en
-  de
-  it
-  fr
-  kri
-}
-
-enum Currency {
-  SLE
-  CHF
-  EUR
-  USD
-  GBP
-}
-
-enum RecipientStatus {
-  active
-  suspended
-  waitlisted
-  designated
-  former
-}
-
-enum ContributionInterval {
-  one_time
-  monthly
-  quarterly
-  annually
-}
-
-enum ContributionStatus {
-  failed
-  pending
-  succeeded
-}
-
-enum PayoutStatus {
-  created
-  paid
-  confirmed
-  contested
-  failed
-  other
 }
 
 enum SurveyStatus {
@@ -465,9 +379,51 @@ enum SurveyQuestionnaire {
   offboarded_checkin
 }
 
-enum RecipientMainLanguage {
-  kri
-  en
+model Survey {
+  id            String              @id @default(cuid()) @map("id")
+  recipientId   String              @map("recipient_id")
+  recipient     Recipient           @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+  questionnaire SurveyQuestionnaire @map("questionnaire")
+  language      String              @map("language")
+  dueAt         DateTime            @map("due_at")
+  sentAt        DateTime?           @map("sent_at")
+  completedAt   DateTime?           @map("completed_at")
+  status        SurveyStatus        @map("status")
+  comments      String?             @map("comments")
+  data          Json                @map("data")
+  accessEmail   String              @map("access_email")
+  accessPw      String              @map("access_pw")
+  accessToken   String              @map("access_token")
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("survey")
+}
+
+model ExchangeRate {
+  id       String  @id @default(cuid()) @map("id")
+  currency String  @map("currency")
+  rate     Decimal @map("rate") @db.Decimal(10, 2)
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("exchange_rate")
+}
+
+model DonationCertificate {
+  id            String      @id @default(cuid()) @map("id")
+  contributorId String      @map("contributor_id")
+  contributor   Contributor @relation(fields: [contributorId], references: [id], onDelete: Cascade)
+  year          Int         @map("year")
+  storagePath   String      @map("storage_path")
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@unique([contributorId, year])
+  @@map("donation_certificate")
 }
 
 enum ExpenseType {
@@ -478,4 +434,18 @@ enum ExpenseType {
   exchange_rate_loss
   fundraising_advertising
   staff
+}
+
+model Expense {
+  id             String       @id @default(cuid()) @map("id")
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  type           ExpenseType  @map("type")
+  year           Int          @map("year")
+  amountChf      Decimal      @map("amount_chf") @db.Decimal(10, 2)
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("expense")
 }
