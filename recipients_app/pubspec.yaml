@@ -2,7 +2,7 @@ name: app
 description: Social Income App
 
 publish_to: "none"
-version: 1.1.16+42
+version: 1.1.16+44
 
 environment:
   sdk: ">=3.8.0 <4.0.0"
@@ -15,16 +15,19 @@ dependencies:
   cloud_functions: ^5.6.2
   collection: ^1.19.0
   equatable: ^2.0.7
+  firebase_analytics: ^11.6.0 # Is required to use Firebase Remote Config.
   firebase_app_check: ^0.3.2+2
   firebase_auth: ^5.7.0
   firebase_core: ^3.15.2
   firebase_messaging: ^15.2.10
+  firebase_remote_config: ^5.5.0
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
   flutter_localizations:
     sdk: flutter
   flutter_native_splash: ^2.4.6
+  force_update_helper: ^0.2.1
   intl: ^0.20.2
   # v0.8.0 is not publish on pub.dev but it is released on Github. This version fixes the build error on iOS with the message "Cannot find type 'PhoneNumberKit' in scope".
   intl_phone_number_input:
