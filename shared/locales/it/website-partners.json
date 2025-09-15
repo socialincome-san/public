@@ -15,7 +15,7 @@
 				"text": "Siamo lieti di presentare i nostri partner locali."
 			}
 		],
-		"subtitle": "Lavorando insieme a organizzazioni non-profit locali, garantiamo che i nostri progetti siano più efficaci, resilienti e profondamente radicati nelle realtà delle comunità che intendiamo sostenere."
+		"subtitle": "Lavorando insieme a organizzazioni locali, garantiamo che i nostri progetti siano più efficaci, resilienti e profondamente radicati nelle realtà delle comunità che intendiamo sostenere."
 	},
 	"badges": {
 		"active": "attivo",
@@ -43,7 +43,7 @@
 		"org-category": "International NGO",
 		"org-focus-sdg-numbers": [1, 8],
 		"partnership-start": "2020",
-		"org-mission": "L'ONG sostiene la creatività e aiuta le persone a migliorare la propria vita e le comunità attraverso progetti di sviluppo e culturali.",
+		"org-mission": "Sostiene la creatività e aiuta le persone a migliorare la propria vita e le comunità attraverso progetti di sviluppo e culturali.",
 		"org-description-paragraphs": [
 			[
 				{
@@ -81,7 +81,7 @@
 			}
 		],
 		"org-quote-author": "Regína Bjarnadóttir",
-		"org-photo": "",
+		"org-quote-photo": "regina-bjarnadottir-aurora.jpg",
 		"org-website": "https://www.aurorafoundation.is/en",
 		"org-instagram": "https://www.instagram.com/aurorafoundation_official/?hl=en",
 		"org-facebook": "https://www.facebook.com/aurorafoundationofficial/"
@@ -97,7 +97,7 @@
 		"org-category": "Local NGO",
 		"org-focus-sdg-numbers": [1, 5],
 		"partnership-start": "2021",
-		"org-mission": "L'ONG fornisce a vedove e bambini bisognosi istruzione, supporto e opportunità per costruire un futuro migliore.",
+		"org-mission": "Fornisce a vedove e bambini bisognosi istruzione, supporto e opportunità per costruire un futuro migliore.",
 		"org-description-paragraphs": [
 			[
 				{
@@ -123,7 +123,6 @@
 			}
 		],
 		"org-quote-author": "Jamil Jaward",
-		"org-photo": "",
 		"org-website": "https://www.jnjf.org/",
 		"org-instagram": "https://instagram.com/jnjaward?igshid=NGVhN2U2NjQ0Yg",
 		"org-facebook": "https://www.facebook.com/JNJFoundation",
@@ -140,7 +139,7 @@
 		"org-category": "Local NGO",
 		"org-focus-sdg-numbers": [1, 5],
 		"partnership-start": "2021",
-		"org-mission": "L'ONG sostiene le comunità costiere, offrendo ai giovani il supporto e le opportunità necessari per spezzare il ciclo della povertà e costruire un futuro migliore.",
+		"org-mission": "Sostiene le comunità costiere offrendo ai giovani il supporto e le opportunità necessari per spezzare il ciclo della povertà e costruire un futuro migliore.",
 		"org-description-paragraphs": [
 			[
 				{
@@ -166,7 +165,6 @@
 			}
 		],
 		"org-quote-author": "Edmond Margai",
-		"org-photo": "",
 		"org-facebook": "https://www.facebook.com/profile.php?id=100070050743284&sk=about_details",
 		"org-youtube": "https://www.youtube.com/@reachoutsalone8395"
 	},
@@ -181,7 +179,7 @@
 		"org-category": "Local NGO",
 		"org-focus-sdg-numbers": [3, 10],
 		"partnership-start": "2022",
-		"org-mission": "L'ONG promuove i diritti umani sensibilizzando ai diritti uguali, all'inclusione e alla giustizia sociale nelle comunità.",
+		"org-mission": "Promuove i diritti umani sensibilizzando all’uguaglianza, all’inclusione e alla giustizia sociale nelle comunità.",
 		"org-description-paragraphs": [
 			[
 				{
@@ -207,7 +205,6 @@
 			}
 		],
 		"org-quote-author": "Arnold Gibril Kamara",
-		"org-photo": "",
 		"org-facebook": "https://www.facebook.com/groups/693921621002955/"
 	},
 	"united_polio": {
@@ -221,7 +218,7 @@
 		"org-category": "Local NGO",
 		"org-focus-sdg-numbers": [1, 8],
 		"partnership-start": "2022",
-		"org-mission": "L'ONG sostiene persone disabili e vulnerabili, offrendo alloggi, formazione e risorse per migliorare la loro vita e preservare la loro dignità.",
+		"org-mission": "Sostiene persone disabili e vulnerabili offrendo alloggi, formazione e risorse per migliorare la loro vita e preservare la loro dignità.",
 		"org-description-paragraphs": [
 			[
 				{
@@ -246,8 +243,7 @@
 				"text": "generando un reddito stabile grazie al suo affidabile supporto mensile."
 			}
 		],
-		"org-quote-author": "Paul Osman Kabia",
-		"org-photo": ""
+		"org-quote-author": "Paul Osman Kabia"
 	},
 	"slaes": {
 		"org-slug": "sierra-leone-association-of-ebola-survivors",
@@ -260,7 +256,7 @@
 		"org-category": "Local NGO",
 		"org-focus-sdg-numbers": [4, 5],
 		"partnership-start": "2024",
-		"org-mission": "L'ONG comunitaria sostiene le persone sopravvissute al virus Ebola, con un focus su coloro colpiti dalla devastante epidemia del 2014 in Sierra Leone.",
+		"org-mission": "Sostiene le persone sopravvissute al virus Ebola, con particolare attenzione a chi è stato colpito dalla devastante epidemia del 2014 in Sierra Leone.",
 		"org-description-paragraphs": [
 			[
 				{
@@ -291,7 +287,83 @@
 				"color": "accent"
 			}
 		],
-		"org-quote-author": "Mohamed Sankoh Yillah",
-		"org-photo": ""
+		"org-quote-author": "Mohamed Sankoh Yillah"
+	},
+	"lizardearth": {
+		"org-slug": "lizard-earth",
+		"org-short-name": "Lizard Earth",
+		"org-long-name": "Lizard Earth",
+		"org-foundation": "2018",
+		"org-image": "lizard-earth.jpg",
+		"org-country": "SL",
+		"org-headquarter": "Kenema",
+		"org-category": "Società a responsabilità limitata (SRL)",
+		"org-focus-sdg-numbers": [13, 12],
+		"partnership-start": "2025",
+		"org-mission": "Consente ai piccoli produttori di cacao di aumentare la produttività e di adattarsi in modo sostenibile ai cambiamenti climatici.",
+		"org-description-paragraphs": [
+			[
+				{
+					"text": "Lizard Earth collabora con piccoli produttori di cacao in Sierra Leone per aumentare la produttività, migliorare la qualità delle fave e garantire redditi equi. Insieme gestiscono centri locali di trasformazione e puntano su pratiche agricole resilienti al clima."
+				}
+			],
+			[
+				{
+					"text": "L’Unione europea, l’Organizzazione degli Stati dell’Africa, dei Caraibi e del Pacifico (OACPS), il Ministero federale tedesco per la Cooperazione economica e lo Sviluppo (BMZ) e la Deutsche Gesellschaft für Internationale Zusammenarbeit (GIZ) forniscono i finanziamenti che rendono possibile questa partnership."
+				}
+			]
+		],
+		"org-quote": [
+			{
+				"text": "Con Social Income, gli agricoltori possono proteggere le loro terre e i mezzi di sussistenza "
+			},
+			{
+				"text": "dagli effetti dei cambiamenti climatici.",
+				"color": "accent"
+			}
+		],
+		"org-quote-author": "Daniel Scholler",
+		"org-quote-photo": "daniel-scholler-lizard-earth.png",
+		"org-website": "https://lizard-earth.org/"
+	},
+	"rainbo": {
+		"org-slug": "rainbo-initiative",
+		"org-short-name": "Rainbo Initiative",
+		"org-long-name": "Rainbo Initiative",
+		"org-foundation": "2014",
+		"org-image": "rainbo-initiative.jpg",
+		"org-country": "SL",
+		"org-headquarter": "Freetown",
+		"org-category": "ONG locale",
+		"org-focus-sdg-numbers": [5, 4],
+		"partnership-start": "2025",
+		"org-mission": "Sostiene le persone sopravvissute a violenze sessuali e di genere attraverso centri specializzati e servizi di supporto.",
+		"org-description-paragraphs": [
+			[
+				{
+					"text": "Rainbo Initiative è un’ONG con sede in Sierra Leone che offre supporto completo alle persone sopravvissute a violenze sessuali e basate sul genere attraverso una rete di centri di assistenza presenti in tutto il Paese."
+				}
+			],
+			[
+				{
+					"text": "L’organizzazione promuove inoltre la sensibilizzazione, sostiene la giustizia e lavora per cambiare le norme sociali dannose che perpetuano la violenza. È attiva anche in Liberia e Guinea."
+				}
+			]
+		],
+		"org-quote": [
+			{
+				"text": "Social Income "
+			},
+			{
+				"text": "dà ai sopravvissuti indipendenza finanziaria, ",
+				"color": "accent"
+			},
+			{
+				"text": "per liberarsi in modo duraturo da contesti di violenza."
+			}
+		],
+		"org-quote-author": "Daniel F. H. Kettor",
+		"org-quote-photo": "daniel-kettor-rainbo.png",
+		"org-website": "https://rainboinitiative.org/"
 	}
 }
