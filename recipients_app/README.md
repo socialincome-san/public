@@ -102,6 +102,7 @@ Mobile App for Recipients of a Social Income.
 
 Building flavor should work seamlessly for Android Studio and VS Code
 with predefined build configs.
+Info: To let Firebase work with flavors, we followed this guide: https://codewithandrea.com/articles/flutter-firebase-multiple-flavors-flutterfire-cli/
 
 We have two build flavors:
 
