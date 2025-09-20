@@ -20,7 +20,7 @@ export function formatStoryblokDate(date: string | null | undefined, lang: strin
 	return dateObject.isValid ? dateObject.toFormat('MMMM dd, yyyy') : '';
 }
 
-function toDateObject(date: string, lang: string) {
+export function toDateObject(date: string, lang: string) {
 	let dateObject = DateTime.fromISO(date).setLocale(lang);
 	if (!dateObject.isValid) {
 		dateObject = DateTime.fromFormat(date, 'yyyy-MM-dd HH:mm', { zone: 'utc' }).setLocale(lang);
