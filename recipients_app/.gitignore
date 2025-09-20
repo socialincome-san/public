@@ -49,7 +49,15 @@ app.*.map.json
 lib/firebase_options_stage.dart
 lib/firebase_options_prod.dart
 
+# Old firebase files
 /ios/Runner/GoogleService-Info.plist
 /ios/Prod/GoogleService-Info.plist
+
+# New firebase files
+/firebase.json
+/lib/firebase_options_stage.dart
+/lib/firebase_options_prod.dart
+/ios/flavors/stage/GoogleService-Info.plist
+/ios/flavors/prod/GoogleService-Info.plist
 /android/app/src/stage/google-services.json
 /android/app/src/prod/google-services.json
