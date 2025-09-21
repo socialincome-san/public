@@ -5,14 +5,11 @@ import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { type StoryblokArticle, StoryblokAuthor, StoryblokTag } from '@/types/journal';
 import fs from 'fs';
 import type { MetadataRoute } from 'next';
-import path from 'path';
 import { ISbStories } from 'storyblok-js-client/src/interfaces';
 
 export const revalidate = 86400; // per day
 const url = 'https://socialincome.org';
 storyblokInitializationWorkaround();
-
-
 
 const SUPPORTED_LANGUAGES = ['de', 'fr', 'it'];
 

@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-        "build-paths": "ts-node scripts/generate-paths.ts",
+		"build-paths": "ts-node scripts/generate-paths.ts",
 		"serve": "npm run build-paths && next dev -p 3001",
 		"serve:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run serve'",
 		"build": "npm run build-paths && next build",
