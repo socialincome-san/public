@@ -102,34 +102,34 @@ enum ExpenseType {
 }
 
 model UserAccount {
-  id                   String      @id @default(cuid()) @map("id")
-  email                String      @unique @map("email")
-  firebaseAuthUserId   String?     @unique @map("firebase_auth_user_id")
-  firebaseAuthPhoneId  String?     @unique @map("firebase_auth_phone_id")
-  firebaseAuthPhone    Phone?      @relation(fields: [firebaseAuthPhoneId], references: [id])
+  id                  String  @id @default(cuid()) @map("id")
+  email               String  @unique @map("email")
+  firebaseAuthUserId  String? @unique @map("firebase_auth_user_id")
+  firebaseAuthPhoneId String? @unique @map("firebase_auth_phone_id")
+  firebaseAuthPhone   Phone?  @relation(fields: [firebaseAuthPhoneId], references: [id])
 
-  contributor Contributor?
-  recipient   Recipient?
-  LocalPartners LocalPartner[]
+  contributor          Contributor?
+  recipient            Recipient?
+  LocalPartners        LocalPartner[]
   OrganizationAccesses OrganizationAccess[]
 
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt     DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime?       @updatedAt @map("updated_at") @db.Timestamptz(3)
+  ProgramAccess ProgramAccess[]
 
   @@map("user")
-  ProgramAccess ProgramAccess[]
 }
 
 model Contributor {
-  id                   String                     @id @default(cuid()) @map("id")
-  userAccountId        String                     @unique @map("user_account_id")
-  userAccount          UserAccount                @relation(fields: [userAccountId], references: [id])
-  contactProfileId     String                     @unique @map("contact_profile_id")
-  contactProfile       ContactProfile             @relation(fields: [contactProfileId], references: [id])
-  referral             ContributorReferralSource  @map("referral")
-  paymentReferenceId   String?                    @map("payment_reference_id")
-  stripeCustomerId     String?                    @map("stripe_customer_id")
-  institution          Boolean                    @default(false) @map("institution")
+  id                 String                    @id @default(cuid()) @map("id")
+  userAccountId      String                    @unique @map("user_account_id")
+  userAccount        UserAccount               @relation(fields: [userAccountId], references: [id])
+  contactId          String                    @unique @map("contact_profile_id")
+  contact            Contact                   @relation(fields: [contactId], references: [id])
+  referral           ContributorReferralSource @map("referral")
+  paymentReferenceId String?                   @map("payment_reference_id")
+  stripeCustomerId   String?                   @map("stripe_customer_id")
+  institution        Boolean                   @default(false) @map("institution")
 
   contributions        Contribution[]
   donationCertificates DonationCertificate[]
@@ -188,21 +188,21 @@ model DonationCertificate {
 }
 
 model Recipient {
-  id                     String          @id @default(cuid()) @map("id")
-  userAccountId          String          @unique @map("user_account_id")
-  userAccount            UserAccount     @relation(fields: [userAccountId], references: [id])
-  contactProfileId       String          @unique @map("contact_profile_id")
-  contactProfile         ContactProfile  @relation(fields: [contactProfileId], references: [id])
-  startDate              DateTime?       @map("start_date") @db.Timestamptz(3)
-  status                 RecipientStatus @map("status")
-  successorName          String?         @map("successor_name")
-  termsAccepted          Boolean         @default(false) @map("terms_accepted")
-  programId              String          @map("program_id")
-  program                Program         @relation(fields: [programId], references: [id])
-  localPartnerId         String          @map("local_partner_id")
-  localPartner           LocalPartner    @relation(fields: [localPartnerId], references: [id])
-  payouts                Payout[]
-  surveys                Survey[]
+  id             String          @id @default(cuid()) @map("id")
+  userAccountId  String          @unique @map("user_account_id")
+  userAccount    UserAccount     @relation(fields: [userAccountId], references: [id])
+  contactId      String          @unique @map("contact_profile_id")
+  contact        Contact         @relation(fields: [contactId], references: [id])
+  startDate      DateTime?       @map("start_date") @db.Timestamptz(3)
+  status         RecipientStatus @map("status")
+  successorName  String?         @map("successor_name")
+  termsAccepted  Boolean         @default(false) @map("terms_accepted")
+  programId      String          @map("program_id")
+  program        Program         @relation(fields: [programId], references: [id])
+  localPartnerId String          @map("local_partner_id")
+  localPartner   LocalPartner    @relation(fields: [localPartnerId], references: [id])
+  payouts        Payout[]
+  surveys        Survey[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -252,12 +252,12 @@ model Survey {
 }
 
 model LocalPartner {
-  id              String          @id @default(cuid()) @map("id")
-  userAccountId   String          @unique @map("user_account_id")
-  userAccount     UserAccount     @relation(fields: [userAccountId], references: [id])
-  contactProfileId String         @unique @map("contact_profile_id")
-  contactProfile   ContactProfile @relation(fields: [contactProfileId], references: [id])
-  recipients      Recipient[]
+  id            String      @id @default(cuid()) @map("id")
+  userAccountId String      @unique @map("user_account_id")
+  userAccount   UserAccount @relation(fields: [userAccountId], references: [id])
+  contactId     String      @unique @map("contact_profile_id")
+  contact       Contact     @relation(fields: [contactId], references: [id])
+  recipients    Recipient[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -384,13 +384,13 @@ model Expense {
 }
 
 model Address {
-  id      String @id @default(cuid()) @map("id")
-  street  String @map("street")
-  number  String @map("number")
-  city    String @map("city")
-  zip     String @map("zip")
-  country String @map("country")
-  contactProfiles ContactProfile[]
+  id      String    @id @default(cuid()) @map("id")
+  street  String    @map("street")
+  number  String    @map("number")
+  city    String    @map("city")
+  zip     String    @map("zip")
+  country String    @map("country")
+  contact Contact[]
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -399,9 +399,9 @@ model Address {
 }
 
 model PhoneProvider {
-  id    String @id @default(cuid()) @map("id")
-  name  String @map("name")
-  code  String @unique @map("code")
+  id     String  @id @default(cuid()) @map("id")
+  name   String  @map("name")
+  code   String  @unique @map("code")
   phones Phone[]
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
@@ -410,26 +410,26 @@ model PhoneProvider {
   @@map("phone_provider")
 }
 
-model ContactProfile {
-  id          String    @id @default(cuid()) @map("id")
-  firstName   String    @map("first_name")
-  lastName    String    @map("last_name")
-  gender      Gender    @default(private) @map("gender")
-  language    String?   @map("language")
-  dateOfBirth DateTime? @map("date_of_birth") @db.Date
-  profession  String?   @map("profession")
-  callingName String?   @map("calling_name")
-  addressId   String?   @unique @map("address_id")
-  address     Address?  @relation(fields: [addressId], references: [id])
-  contributor Contributor?
-  recipient   Recipient?
+model Contact {
+  id           String        @id @default(cuid()) @map("id")
+  firstName    String        @map("first_name")
+  lastName     String        @map("last_name")
+  callingName  String?       @map("calling_name")
+  gender       Gender?       @map("gender")
+  language     String?       @map("language")
+  dateOfBirth  DateTime?     @map("date_of_birth") @db.Date
+  addressId    String?       @unique @map("address_id")
+  address      Address?      @relation(fields: [addressId], references: [id])
+  profession   String?       @map("profession")
+  contributor  Contributor?
+  recipient    Recipient?
   localPartner LocalPartner?
-  phones      Phone[]
+  phones       Phone[]
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  @@map("contact_profile")
+  @@map("contact")
 }
 
 model Phone {
@@ -439,24 +439,24 @@ model Phone {
   verified        Boolean        @default(false) @map("verified")
   whatsApp        WhatsAppStatus @default(disabled) @map("whats_app")
   isPrimary       Boolean        @default(false) @map("is_primary")
-  contactProfileId String        @map("contact_profile_id")
-  contactProfile   ContactProfile @relation(fields: [contactProfileId], references: [id])
-  phoneProviderId  String?       @map("phone_provider_id")
-  phoneProvider    PhoneProvider? @relation(fields: [phoneProviderId], references: [id])
-  UserAccount UserAccount[]
+  contactId       String         @map("contact_profile_id")
+  contact         Contact        @relation(fields: [contactId], references: [id])
+  phoneProviderId String?        @map("phone_provider_id")
+  phoneProvider   PhoneProvider? @relation(fields: [phoneProviderId], references: [id])
+  UserAccount     UserAccount[]
 
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
 
-  @@unique([contactProfileId, number])
+  @@unique([contactId, number])
   @@map("phone")
 }
 
 model ExchangeRate {
-  id        String  @id @default(cuid()) @map("id")
-  currency  String  @map("currency")
-  rate      Decimal @map("rate") @db.Decimal(10, 2)
-  timeStamp DateTime @map("timestamp") @db.Timestamptz(3)
+  id        String   @id @default(cuid()) @map("id")
+  currency  String   @map("currency")
+  rate      Decimal  @map("rate") @db.Decimal(10, 2)
+  timestamp DateTime @map("timestamp") @db.Timestamptz(3)
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
