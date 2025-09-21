@@ -46,18 +46,12 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-lib/firebase_options_stage.dart
-lib/firebase_options_prod.dart
-
-# Old firebase files
-/ios/Runner/GoogleService-Info.plist
-/ios/Prod/GoogleService-Info.plist
-
-# New firebase files
+# Ignore Firebase configuration files
 /firebase.json
-/lib/firebase_options_stage.dart
-/lib/firebase_options_prod.dart
-/ios/flavors/stage/GoogleService-Info.plist
-/ios/flavors/prod/GoogleService-Info.plist
-/android/app/src/stage/google-services.json
-/android/app/src/prod/google-services.json
+lib/firebase_options*.dart
+ios/Runner/GoogleService-Info.plist
+ios/flavors/*/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
+macos/flavors/*/GoogleService-Info.plist
+android/app/google-services.json
+android/app/src/*/google-services.json
