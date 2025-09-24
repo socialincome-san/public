@@ -1,4 +1,17 @@
 {
+	"hero": {
+		"title-1": [
+			{
+				"text": "Build a Firewall ",
+				"color": "accent"
+			},
+			{
+				"text": "Against Extreme Poverty"
+			}
+		],
+		"subtitle": "Partner with Social Income and demonstrate social responsibility through meaningful, lasting impact in the fight against extreme poverty."
+	},
+
 	"content": {
 		"title": "Build a Firewall Against Extreme Poverty",
 		"lead": "Partner with Social Income and demonstrate social responsibility through meaningful, lasting impact in the fight against extreme poverty.",
@@ -21,8 +34,22 @@
 		"section-3-option-2a": "In-kind Donations:",
 		"section-3-option-2b": "Donate your employees’ time to develop Social Income further.",
 		"section-3-option-3a": "Launch a Direct Cash Program:",
-		"section-3-option-3b": "“Adopt a Community” by sponsoring your own tailored cash-transfer program.",
-		"section-title-4": "How to Partner with Us",
-		"section-4-lead-1": "Reach us at hello@socialincome.org to discuss how your organization can fight poverty with Social Income."
+		"section-3-option-3b": "“Adopt a Community” by sponsoring your own tailored cash-transfer program."
+	},
+	"partnership-models": {
+		"title": "Ways Your Organization Can Make a Difference",
+		"subtitle": "xxx",
+		"card-1-title": "One-Time Donations",
+		"card-1-description": "Make an immediate impact today.",
+		"card-2-title": "In-kind Donations",
+		"card-2-description": "Make an immediate impact today.",
+		"card-3-title": "Launch a Direct Cash Program",
+		"card-3-description": "Make an immediate impact today.",
+		"card-4-title": "Choose Partnership Tiers",
+		"card-4-description": "Make an immediate impact today."
+	},
+	"contact": {
+		"title": "How to Partner with Us",
+		"subtitle": "Reach out to hello@socialincome.org to discuss how your organization can fight poverty with Social Income."
 	}
 }
