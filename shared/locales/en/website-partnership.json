@@ -12,13 +12,8 @@
 		"subtitle": "Partner with Social Income and demonstrate social responsibility through meaningful, lasting impact in the fight against extreme poverty."
 	},
 
-	"content": {
-		"title": "Build a Firewall Against Extreme Poverty",
-		"lead": "Partner with Social Income and demonstrate social responsibility through meaningful, lasting impact in the fight against extreme poverty.",
-		"lead-implementation": "xxxx",
-		"version": "Xmas 2025",
-		"responsible": "New gifts for your employees",
-		"section-title-1": "Why Partner with Social Income?",
+	"usp": {
+		"section-title-1": "Why partner with Social Income?",
 		"reason-title-1": "Immediate Impact",
 		"reason-description-1": "Your donation directly funds innovative, and empowering direct-cash programs for people in extreme poverty. Direct cash transfers are evidence-based, effective poverty relief for the most vulnerable.",
 		"reason-title-2": "Showcase Your Values",
@@ -36,20 +31,34 @@
 		"section-3-option-3a": "Launch a Direct Cash Program:",
 		"section-3-option-3b": "“Adopt a Community” by sponsoring your own tailored cash-transfer program."
 	},
+	"partner-carousel": {
+		"title": "Our partners against poverty",
+		"subtitle": "Every partnership took a different form, but they were united by one purpose: reducing poverty where the need is greatest, through direct action."
+	},
 	"partnership-models": {
-		"title": "Ways Your Organization Can Make a Difference",
-		"subtitle": "xxx",
-		"card-1-title": "One-Time Donations",
-		"card-1-description": "Make an immediate impact today.",
-		"card-2-title": "In-kind Donations",
-		"card-2-description": "Make an immediate impact today.",
-		"card-3-title": "Launch a Direct Cash Program",
-		"card-3-description": "Make an immediate impact today.",
-		"card-4-title": "Choose Partnership Tiers",
-		"card-4-description": "Make an immediate impact today."
+		"title": "Ways your organization can make a difference",
+		"badge": "New",
+		"badge-microsoft": "Microsoft",
+		"badge-google": "Google",
+		"badge-jetbrains": "JetBrains",
+		"badge-github": "GitHub",
+		"badge-microsoft": "Microsoft",
+		"badge-microsoft": "Microsoft",
+		"badge-microsoft": "Microsoft",
+		"card-1-title": "Make a one-time donation",
+		"card-1-description": "Make an immediate impact by giving today, or by matching your employees’ donations.",
+		"card-1-footnote": "Like: Microsoft, Google, Thomson Reuters.",
+		"card-2-title": "Make a in-kind donation",
+		"card-2-description": "Help grow Social Income through in-kind support such as employee time or free access to your software.",
+		"card-3-title": "Launch a direct cash program",
+		"card-3-description": "Select a cause and fund a cash-transfer program that supports a whole community.",
+		"card-3-footnote": "Starting in December 2025",
+		"card-4-title": "Join the Partners’ Circle",
+		"card-4-description": "Become a Bronze, Silver, or Gold Partner to help scale Social Income.",
+		"card-4-footnote": "Click to learn more"
 	},
 	"contact": {
-		"title": "How to Partner with Us",
-		"subtitle": "Reach out to hello@socialincome.org to discuss how your organization can fight poverty with Social Income."
+		"title": "Starting a partnership",
+		"subtitle": "Reach out to explore ways your organization can fight poverty with Social Income: "
 	}
 }
