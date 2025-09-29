@@ -82,7 +82,7 @@ workflows:
           # Build the Flutter APK app
           flutter build apk --release \
             --flavor stage \
-            -t lib/main.dart \
+            -t lib/main_stage.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
             --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
@@ -178,7 +178,7 @@ workflows:
           # Build the Flutter AAB app
           flutter build appbundle --release \
             --flavor prod \
-            -t lib/main.dart \
+            -t lib/main_prod.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
             --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
@@ -265,7 +265,7 @@ workflows:
           # Build the Flutter iOS app
           flutter build ipa --release \
             --flavor stage \
-            -t lib/main.dart \
+            -t lib/main_stage.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
             --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
@@ -364,7 +364,7 @@ workflows:
           # Build the Flutter iOS app
           flutter build ipa --release \
             --flavor stage \
-            -t lib/main.dart \
+            -t lib/main_stage.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
             --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
@@ -460,7 +460,7 @@ workflows:
           # Build the Flutter iOS app
           flutter build ipa --release \
             --flavor prod \
-            -t lib/main.dart \
+            -t lib/main_prod.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
             --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
