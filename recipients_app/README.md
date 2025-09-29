@@ -77,13 +77,13 @@ Mobile App for Recipients of a Social Income.
 - Copy file `./.vscode/launch.json.example` and rename it to
   `./.vscode/launch.json`
   - Replace the value "FILL IN SENTRY URL" after "SENTRY_URL=" with the
-    real Sentry url to be able to use Sentry. If you do not prive a
+    real Sentry url to be able to use Sentry. If you do not have a
     Sentry Url, no issues will be reported to Sentry but you can still
     run the app. To get the real Sentry url see
     [here](https://social-income.sentry.io/settings/projects/si-mobileapp/keys/)
     under "DSN".
   - Decide which flavor and backend environment you want to use and
-    change it if necessary.
+    change it if necessary. (Normally we use "Stage" for development)
 - Open `recipients_app` project folder in vsCode
 - Open a terminal inside of vsCode and check `flutter --version` is
   listing the right flutter version (See above or pubspec.yaml).
@@ -91,6 +91,7 @@ Mobile App for Recipients of a Social Income.
   `chmod +x clean_build.sh`
 - Run `./clean_build.sh`
 - Run `dart pub global activate flutterfire_cli`
+- Copy and rename the file "key.properties.example.debug" into "key.properties" to be able to sign the Android app for debugging.
 - Run `make flavor-stage` -> choose Build Target -> Debug-stage
 - Choose in vsCode the device to deploy on (iOS Simulator, Android
   emulator, real Android or iOS device)
