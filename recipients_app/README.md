@@ -91,7 +91,8 @@ Mobile App for Recipients of a Social Income.
   `chmod +x clean_build.sh`
 - Run `./clean_build.sh`
 - Run `dart pub global activate flutterfire_cli`
-- Copy and rename the file "key.properties.example.debug" into "key.properties" to be able to sign the Android app for debugging.
+- Copy and rename the file "key.properties.example.debug" into
+  "key.properties" to be able to sign the Android app for debugging.
 - Run `make flavor-stage` -> choose Build Target -> Debug-stage
 - Choose in vsCode the device to deploy on (iOS Simulator, Android
   emulator, real Android or iOS device)
@@ -102,8 +103,9 @@ Mobile App for Recipients of a Social Income.
 ## Available app flavors
 
 Building flavor should work seamlessly for Android Studio and VS Code
-with predefined build configs.
-Info: To let Firebase work with flavors, we followed this guide: https://codewithandrea.com/articles/flutter-firebase-multiple-flavors-flutterfire-cli/
+with predefined build configs. Info: To let Firebase work with flavors,
+we followed this guide:
+https://codewithandrea.com/articles/flutter-firebase-multiple-flavors-flutterfire-cli/
 
 We have two build flavors:
 
