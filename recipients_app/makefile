@@ -29,3 +29,8 @@ flavor-stage:
 
 flavor-prod:
 	flutterfire config --project=social-income-prod --out=lib/firebase_options_prod.dart --ios-bundle-id=org.socialincome.app  --ios-out=ios/flavors/prod/GoogleService-Info.plist  --android-package-name=org.socialincome.app  --android-out=android/app/src/prod/google-services.json
+
+# After this initial running of "flutterfire configure", you need to re-run the command any time that you:
+# - Start supporting a new platform in your Flutter app.
+# - Start using a new Firebase service or product in your Flutter app, especially if you start using sign-in with Google, Crashlytics, Performance Monitoring, or Realtime Database.
+# Re-running the command ensures that your Flutter app's Firebase configuration is up-to-date and (for Android) automatically adds any required Gradle plugins to your app.
