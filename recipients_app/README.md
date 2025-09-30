@@ -93,7 +93,7 @@ Mobile App for Recipients of a Social Income.
 - Run `dart pub global activate flutterfire_cli`
 - Copy and rename the file "key.properties.example.debug" into
   "key.properties" to be able to sign the Android app for debugging.
-- Run `make flavor-stage` -> choose Build Target -> Debug-stage
+- Run `make flavor-stage` -> choose "Build Configuration" -> Debug-stage
 - Choose in vsCode the device to deploy on (iOS Simulator, Android
   emulator, real Android or iOS device)
 - Run the launch configuration "stage_recipients_app (debug mode)" to
