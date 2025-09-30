@@ -1,4 +1,4 @@
-.PHONY: generate watch test translations firebase-android talkback fontsize
+.PHONY: generate watch test clean get translations fontsize-smallest fontsize-regular fontsize-largest flavor-stage flavor-prod
 
 generate:
 	dart run build_runner build --delete-conflicting-outputs
@@ -14,6 +14,9 @@ clean:
 
 get: 
 	flutter pub get
+
+translations:
+	flutter gen-l10n
 
 fontsize-smallest:
 	adb shell settings put system font_scale 0.8
