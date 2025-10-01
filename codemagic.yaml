@@ -107,7 +107,7 @@ workflows:
         working_directory: recipients_app
 
     artifacts:
-      - recipients_app/build/**/outputs/apk/stage/**/*.apk
+      - recipients_app/build/**/outputs/bundle/stageRelease/**/*.apk
       - recipients_app/build/**/outputs/bundle/stageRelease/**/*.aab
       - recipients_app/build/**/outputs/**/mapping.txt
 
