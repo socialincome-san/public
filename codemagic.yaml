@@ -38,11 +38,14 @@ workflows:
     environment:
       android_signing:
         - social_income_upload_keystore.jks
+      vars:
+        PACKAGE_NAME: "org.socialincome.app.stage"
+        GOOGLE_PLAY_TRACK: internal
       groups:
         - slack
         - app-config-stage
         - firebase
-        #- google_play # <-- (Includes GCLOUD_SERVICE_ACCOUNT_CREDENTIALS)
+        - google_credentials # <-- (Includes GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS)
       <<: *env_versions
 
     cache:
@@ -51,6 +54,21 @@ workflows:
         - $FLUTTER_ROOT/.pub-cache
 
     scripts:
+      - name: Set build number automatically from Google Play
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          # Get the latest build number from Google Play and increment it by 1
+          NEW_BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
+          if [ -z "$NEW_BUILD_NUMBER" ]; then
+            echo "Missing build number!"
+            exit 1
+          fi
+
+          cd $CM_BUILD_DIR/recipients_app
+          echo "Change the build number in pubspec.yaml"
+          sed -i '' -E "s/(version: [0-9]+\.[0-9]+\.[0-9]+\+)[0-9]+/\1$NEW_BUILD_NUMBER/" "./pubspec.yaml"
       - name: Load Firebase Options file
         script: |
           #!/usr/bin/env sh
@@ -145,10 +163,13 @@ workflows:
     environment:
       android_signing:
         - social_income_upload_keystore.jks
+      vars:
+        PACKAGE_NAME: "org.socialincome.app"
+        GOOGLE_PLAY_TRACK: internal
       groups:
         - slack
         - app-config-prod
-        #- google_play # <-- (Includes GCLOUD_SERVICE_ACCOUNT_CREDENTIALS)
+        - google_credentials # <-- (Includes GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS)
       <<: *env_versions
 
     cache:
@@ -157,6 +178,21 @@ workflows:
         - $FLUTTER_ROOT/.pub-cache
 
     scripts:
+      - name: Set build number automatically from Google Play
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          # Get the latest build number from Google Play and increment it by 1
+          NEW_BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
+          if [ -z "$NEW_BUILD_NUMBER" ]; then
+            echo "Missing build number!"
+            exit 1
+          fi
+
+          cd $CM_BUILD_DIR/recipients_app
+          echo "Change the build number in pubspec.yaml"
+          sed -i '' -E "s/(version: [0-9]+\.[0-9]+\.[0-9]+\+)[0-9]+/\1$NEW_BUILD_NUMBER/" "./pubspec.yaml"
       - name: Load Firebase Options file
         script: |
           #!/usr/bin/env sh
@@ -237,7 +273,7 @@ workflows:
         - slack
         - app-config-stage
       vars:
-        APP_ID: 6464113329 # Apple ID of App "Stage Social Income"
+        APP_STORE_APPLE_ID: 6464113329 # Apple ID of App "Stage Social Income"
       <<: *env_versions
 
     cache:
@@ -246,6 +282,21 @@ workflows:
         - $HOME/Library/Caches/CocoaPods
 
     scripts:
+      - name: Set build number automatically from App Store Connect
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          # Get the latest build number from Google Play and increment it by 1
+          NEW_BUILD_NUMBER=$(($(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID") + 1))
+          if [ -z "$NEW_BUILD_NUMBER" ]; then
+            echo "Missing build number!"
+            exit 1
+          fi
+
+          cd $CM_BUILD_DIR/recipients_app
+          echo "Change the build number in pubspec.yaml"
+          sed -i '' -E "s/(version: [0-9]+\.[0-9]+\.[0-9]+\+)[0-9]+/\1$NEW_BUILD_NUMBER/" "./pubspec.yaml"
       - name: Load Firebase Options file
         script: |
           #!/usr/bin/env sh
@@ -341,7 +392,7 @@ workflows:
         - app-config-stage
         - firebase
       vars:
-        APP_ID: 6464113329 # Apple ID of App "Stage Social Income"
+        APP_STORE_APPLE_ID: 6464113329 # Apple ID of App "Stage Social Income"
       <<: *env_versions
 
     cache:
@@ -359,6 +410,21 @@ workflows:
       #       --create
       # - name: Set up signing certificate
       #   script: keychain add-certificates
+      - name: Set build number automatically from App Store Connect
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          # Get the latest build number from Google Play and increment it by 1
+          NEW_BUILD_NUMBER=$(($(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID") + 1))
+          if [ -z "$NEW_BUILD_NUMBER" ]; then
+            echo "Missing build number!"
+            exit 1
+          fi
+
+          cd $CM_BUILD_DIR/recipients_app
+          echo "Change the build number in pubspec.yaml"
+          sed -i '' -E "s/(version: [0-9]+\.[0-9]+\.[0-9]+\+)[0-9]+/\1$NEW_BUILD_NUMBER/" "./pubspec.yaml"
       - name: Load Firebase Options file
         script: |
           #!/usr/bin/env sh
@@ -453,7 +519,7 @@ workflows:
         - slack
         - app-config-prod
       vars:
-        APP_ID: 6444860109 # Apple ID of Prod App "Social Income"
+        APP_STORE_APPLE_ID: 6444860109 # Apple ID of Prod App "Social Income"
       <<: *env_versions
 
     cache:
@@ -462,6 +528,21 @@ workflows:
         - $HOME/Library/Caches/CocoaPods
 
     scripts:
+      - name: Set build number automatically from App Store Connect
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          # Get the latest build number from Google Play and increment it by 1
+          NEW_BUILD_NUMBER=$(($(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID") + 1))
+          if [ -z "$NEW_BUILD_NUMBER" ]; then
+            echo "Missing build number!"
+            exit 1
+          fi
+
+          cd $CM_BUILD_DIR/recipients_app
+          echo "Change the build number in pubspec.yaml"
+          sed -i '' -E "s/(version: [0-9]+\.[0-9]+\.[0-9]+\+)[0-9]+/\1$NEW_BUILD_NUMBER/" "./pubspec.yaml"
       - name: Load Firebase Options file
         script: |
           #!/usr/bin/env sh
