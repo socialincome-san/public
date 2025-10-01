@@ -99,7 +99,7 @@ workflows:
           set -e # exit on first failed command
 
           android-app-bundle build-universal-apk \
-            --bundle 'recipients_app/build/**/outputs/bundle/stageRelease/**/*.aab' \
+            --bundle 'build/**/outputs/bundle/stageRelease/**/*.aab' \
             --ks $CM_KEYSTORE_PATH \
             --ks-pass $CM_KEYSTORE_PASSWORD \
             --ks-key-alias $CM_KEY_ALIAS \
