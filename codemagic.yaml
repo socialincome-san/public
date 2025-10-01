@@ -62,6 +62,13 @@ workflows:
           keyAlias=$CM_KEY_ALIAS
           storeFile=$CM_KEYSTORE_PATH
           EOF
+      - name: Load Firebase Options file
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app/lib
+          echo $FIREBASE_OPTIONS > firebase_options_stage.dart
       - name: Load Firebase configuration
         script: |
           #!/usr/bin/env sh
@@ -159,6 +166,13 @@ workflows:
           keyAlias=$CM_KEY_ALIAS
           storeFile=$CM_KEYSTORE_PATH
           EOF
+      - name: Load Firebase Options file
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app/lib
+          echo $FIREBASE_OPTIONS > firebase_options_prod.dart
       - name: Load Firebase configuration
         script: |
           #!/usr/bin/env sh
@@ -241,6 +255,13 @@ workflows:
         - $HOME/Library/Caches/CocoaPods
 
     scripts:
+      - name: Load Firebase Options file
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app/lib
+          echo $FIREBASE_OPTIONS > firebase_options_stage.dart
       - name: Load Firebase configuration
         script: |
           #!/usr/bin/env sh
@@ -347,6 +368,13 @@ workflows:
       #       --create
       # - name: Set up signing certificate
       #   script: keychain add-certificates
+      - name: Load Firebase Options file
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app/lib
+          echo $FIREBASE_OPTIONS > firebase_options_stage.dart
       - name: Load Firebase configuration
         script: |
           #!/usr/bin/env sh
@@ -443,6 +471,13 @@ workflows:
         - $HOME/Library/Caches/CocoaPods
 
     scripts:
+      - name: Load Firebase Options file
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app/lib
+          echo $FIREBASE_OPTIONS > firebase_options_prod.dart
       - name: Load Firebase configuration
         script: |
           #!/usr/bin/env sh
