@@ -16,14 +16,7 @@ enum Gender {
   private
 }
 
-enum PhoneType {
-  mobile
-  home
-  work
-  other
-}
-
-enum WhatsAppStatus {
+enum WhatsAppActivationStatus {
   disabled
   pending
   verified
@@ -102,20 +95,17 @@ enum ExpenseType {
 }
 
 model UserAccount {
-  id                  String  @id @default(cuid()) @map("id")
-  email               String  @unique @map("email")
-  firebaseAuthUserId  String? @unique @map("firebase_auth_user_id")
-  firebaseAuthPhoneId String? @unique @map("firebase_auth_phone_id")
-  firebaseAuthPhone   Phone?  @relation(fields: [firebaseAuthPhoneId], references: [id])
+  id                 String @id @default(cuid()) @map("id")
+  email              String @unique @map("email")
+  firebaseAuthUserId String @unique @map("firebase_auth_user_id")
 
   contributor          Contributor?
   recipient            Recipient?
-  LocalPartners        LocalPartner[]
   OrganizationAccesses OrganizationAccess[]
+  ProgramAccess        ProgramAccess[]
 
-  createdAt     DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt     DateTime?       @updatedAt @map("updated_at") @db.Timestamptz(3)
-  ProgramAccess ProgramAccess[]
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("user")
 }
@@ -188,21 +178,23 @@ model DonationCertificate {
 }
 
 model Recipient {
-  id             String          @id @default(cuid()) @map("id")
-  userAccountId  String          @unique @map("user_account_id")
-  userAccount    UserAccount     @relation(fields: [userAccountId], references: [id])
-  contactId      String          @unique @map("contact_profile_id")
-  contact        Contact         @relation(fields: [contactId], references: [id])
-  startDate      DateTime?       @map("start_date") @db.Timestamptz(3)
-  status         RecipientStatus @map("status")
-  successorName  String?         @map("successor_name")
-  termsAccepted  Boolean         @default(false) @map("terms_accepted")
-  programId      String          @map("program_id")
-  program        Program         @relation(fields: [programId], references: [id])
-  localPartnerId String          @map("local_partner_id")
-  localPartner   LocalPartner    @relation(fields: [localPartnerId], references: [id])
-  payouts        Payout[]
-  surveys        Survey[]
+  id                   String              @id @default(cuid()) @map("id")
+  userAccountId        String              @unique @map("user_account_id")
+  userAccount          UserAccount         @relation(fields: [userAccountId], references: [id])
+  contactId            String              @unique @map("contact_profile_id")
+  contact              Contact             @relation(fields: [contactId], references: [id])
+  startDate            DateTime?           @map("start_date") @db.Timestamptz(3)
+  status               RecipientStatus     @map("status")
+  successorName        String?             @map("successor_name")
+  termsAccepted        Boolean             @default(false) @map("terms_accepted")
+  paymentInformationId String?             @map("payment_information_id") // nullable because payment info might not be available yet on creation
+  paymentInformation   PaymentInformation? @relation(fields: [paymentInformationId], references: [id])
+  programId            String              @map("program_id")
+  program              Program             @relation(fields: [programId], references: [id])
+  localPartnerId       String              @map("local_partner_id")
+  localPartner         LocalPartner        @relation(fields: [localPartnerId], references: [id])
+  payouts              Payout[]
+  surveys              Survey[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -252,12 +244,10 @@ model Survey {
 }
 
 model LocalPartner {
-  id            String      @id @default(cuid()) @map("id")
-  userAccountId String      @unique @map("user_account_id")
-  userAccount   UserAccount @relation(fields: [userAccountId], references: [id])
-  contactId     String      @unique @map("contact_profile_id")
-  contact       Contact     @relation(fields: [contactId], references: [id])
-  recipients    Recipient[]
+  id         String      @id @default(cuid()) @map("id")
+  contactId  String      @unique @map("contact_profile_id")
+  contact    Contact     @relation(fields: [contactId], references: [id])
+  recipients Recipient[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -266,13 +256,12 @@ model LocalPartner {
 }
 
 model OrganizationAccess {
-  id             String       @id @default(cuid())
+  id             String                   @id @default(cuid())
   userAccountId  String
-  userAccount    UserAccount  @relation(fields: [userAccountId], references: [id])
+  userAccount    UserAccount              @relation(fields: [userAccountId], references: [id])
   organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-
-  permissions OrganizationPermission[]
+  organization   Organization             @relation(fields: [organizationId], references: [id])
+  permissions    OrganizationPermission[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -398,16 +387,22 @@ model Address {
   @@map("address")
 }
 
-model PhoneProvider {
-  id     String  @id @default(cuid()) @map("id")
-  name   String  @map("name")
-  code   String  @unique @map("code")
-  phones Phone[]
+enum PaymentProvider {
+  orange_money
+}
+
+model PaymentInformation {
+  id        String          @id @default(cuid()) @map("id")
+  provider  PaymentProvider @map("provider")
+  code      String          @unique @map("code") // om_uid in case of Orange Money
+  phoneId   String?         @map("phone_id")
+  phone     Phone?          @relation(fields: [phoneId], references: [id])
+  Recipient Recipient[]
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  @@map("phone_provider")
+  @@map("payment_information")
 }
 
 model Contact {
@@ -433,22 +428,18 @@ model Contact {
 }
 
 model Phone {
-  id              String         @id @default(cuid()) @map("id")
-  type            PhoneType      @map("type")
-  number          String         @map("number")
-  verified        Boolean        @default(false) @map("verified")
-  whatsApp        WhatsAppStatus @default(disabled) @map("whats_app")
-  isPrimary       Boolean        @default(false) @map("is_primary")
-  contactId       String         @map("contact_profile_id")
-  contact         Contact        @relation(fields: [contactId], references: [id])
-  phoneProviderId String?        @map("phone_provider_id")
-  phoneProvider   PhoneProvider? @relation(fields: [phoneProviderId], references: [id])
-  UserAccount     UserAccount[]
+  id                       String                   @id @default(cuid()) @map("id")
+  type                     String                   @default("primary") @map("type") // Instead of isPrimary flag. For recipients, mobile_money_phone could become "priamry", and mobile_money_phone "mobile_money" (which would also be attached to the paymentInformation of the recipient)
+  number                   String                   @map("number") // we should store as strings and not as integers as we did so far
+  verified                 Boolean                  @default(false) @map("verified")
+  whatsAppActivationStatus WhatsAppActivationStatus @default(disabled) @map("whats_app")
+  contactId                String?
+  Contact                  Contact?                 @relation(fields: [contactId], references: [id])
+  PaymentInformation       PaymentInformation[]
 
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
 
-  @@unique([contactId, number])
   @@map("phone")
 }
 
