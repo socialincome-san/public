@@ -51,17 +51,6 @@ workflows:
         - $FLUTTER_ROOT/.pub-cache
 
     scripts:
-      - name: Set up key.properties
-        script: |
-          #!/usr/bin/env sh
-          set -e # exit on first failed command
-
-          cat >> "$CM_BUILD_DIR/recipients_app/android/key.properties" <<EOF
-          storePassword=$CM_KEYSTORE_PASSWORD
-          keyPassword=$CM_KEY_PASSWORD
-          keyAlias=$CM_KEY_ALIAS
-          storeFile=$CM_KEYSTORE_PATH
-          EOF
       - name: Load Firebase Options file
         script: |
           #!/usr/bin/env sh
@@ -155,17 +144,6 @@ workflows:
         - $FLUTTER_ROOT/.pub-cache
 
     scripts:
-      - name: Set up key.properties
-        script: |
-          #!/usr/bin/env sh
-          set -e # exit on first failed command
-
-          cat >> "$CM_BUILD_DIR/recipients_app/android/key.properties" <<EOF
-          storePassword=$CM_KEYSTORE_PASSWORD
-          keyPassword=$CM_KEY_PASSWORD
-          keyAlias=$CM_KEY_ALIAS
-          storeFile=$CM_KEYSTORE_PATH
-          EOF
       - name: Load Firebase Options file
         script: |
           #!/usr/bin/env sh
