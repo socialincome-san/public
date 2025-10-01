@@ -95,8 +95,26 @@ enum ExpenseType {
 }
 
 model UserAccount {
-  id                 String @id @default(cuid()) @map("id")
-  email              String @unique @map("email")
+  id String @id @default(cuid()) @map("id")
+  /*
+    We don't store email or phone here, as we use Firebase Authentication for that.
+
+    Migration considerations:
+    For contributors, this should be easy. We have an auth_user_id field for every contributor, so we can just link a
+    user account to every contributor.
+    For recipients, we won't be able to create UserAccount entries. What we will need is a login endpoint that is very
+    similar to what we already have in functions/src/functions/webhooks/auth/twilio-verify.ts. If a recipient tries to
+    log in, we do the phone verification, create/get the Firebase Auth user, and then we check wheter a UserAccount
+    already exists in this table. If not, we create the UserAccount instance dynamically if there is a recipient with
+    that phone number (recipient.paymentInformation.phone.number). (We currently do something similar already, but in
+    the app. See recipients_app/lib/data/datasource/remote/user_remote_data_source.dart line 26-36).
+    If there is no UserAccount entry and no recipient with that phone number, we throw an error (no such user).
+
+    One thing to consider here, is that we will have to make sure that the phone numbers and email addresses from the
+    Firebase Auth users stay in sync with the phone numbers and email addresses in our Contact table. This is not a big
+    issue, but we need to be aware of it when we implement profile update features.
+  */
+
   firebaseAuthUserId String @unique @map("firebase_auth_user_id")
 
   contributor          Contributor?
@@ -406,20 +424,25 @@ model PaymentInformation {
 }
 
 model Contact {
-  id           String        @id @default(cuid()) @map("id")
-  firstName    String        @map("first_name")
-  lastName     String        @map("last_name")
-  callingName  String?       @map("calling_name")
-  gender       Gender?       @map("gender")
-  language     String?       @map("language")
-  dateOfBirth  DateTime?     @map("date_of_birth") @db.Date
-  addressId    String?       @unique @map("address_id")
-  address      Address?      @relation(fields: [addressId], references: [id])
-  profession   String?       @map("profession")
+  id          String    @id @default(cuid()) @map("id")
+  firstName   String    @map("first_name")
+  lastName    String    @map("last_name")
+  callingName String?   @map("calling_name")
+  addressId   String?   @unique @map("address_id")
+  address     Address?  @relation(fields: [addressId], references: [id])
+  // I don't think we need multiple phones per contact for now, so making it one-to-one
+  // If payment and contact phone are not the same, we can store a different phone in paymentInformation on the recipient
+  phoneId     String?   @map("phone_id")
+  phone       Phone?    @relation(fields: [phoneId], references: [id])
+  email       String?   @map("email")
+  gender      Gender?   @map("gender")
+  language    String?   @map("language")
+  dateOfBirth DateTime? @map("date_of_birth") @db.Date
+  profession  String?   @map("profession")
+
   contributor  Contributor?
   recipient    Recipient?
   localPartner LocalPartner?
-  phones       Phone[]
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -429,13 +452,15 @@ model Contact {
 
 model Phone {
   id                       String                   @id @default(cuid()) @map("id")
-  type                     String                   @default("primary") @map("type") // Instead of isPrimary flag. For recipients, mobile_money_phone could become "priamry", and mobile_money_phone "mobile_money" (which would also be attached to the paymentInformation of the recipient)
-  number                   String                   @map("number") // we should store as strings and not as integers as we did so far
+  // Instead of isPrimary flag. For recipients, mobile_money_phone could become "priamry", and mobile_money_phone "mobile_money" (which would also be attached to the paymentInformation of the recipient)
+  type                     String                   @default("primary") @map("type")
+  // We should store as strings and not as integers as we did so far
+  number                   String                   @map("number")
   verified                 Boolean                  @default(false) @map("verified")
   whatsAppActivationStatus WhatsAppActivationStatus @default(disabled) @map("whats_app")
   contactId                String?
-  Contact                  Contact?                 @relation(fields: [contactId], references: [id])
   PaymentInformation       PaymentInformation[]
+  Contact                  Contact[]
 
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
