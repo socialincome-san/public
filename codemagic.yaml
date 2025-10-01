@@ -104,7 +104,6 @@ workflows:
             --ks-pass $CM_KEYSTORE_PASSWORD \
             --ks-key-alias $CM_KEY_ALIAS \
             --key-pass $CM_KEY_PASSWORD \
-            --output 'recipients_app/build/app/outputs/apk/stage/release/app-stage-release-universal.apk'
         working_directory: recipients_app
 
     artifacts:
