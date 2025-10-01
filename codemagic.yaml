@@ -83,7 +83,7 @@ workflows:
           set -e # exit on first failed command
 
           # Build the Flutter APK app
-          flutter build apk --release \
+          flutter build appbundle --release \
             --flavor stage \
             -t lib/main_stage.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
@@ -96,6 +96,7 @@ workflows:
 
     artifacts:
       - recipients_app/build/**/outputs/apk/stage/**/*.apk
+      - recipients_app/build/**/outputs/bundle/stageRelease/**/*.aab
       - recipients_app/build/**/outputs/**/mapping.txt
 
     publishing:
