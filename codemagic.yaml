@@ -75,7 +75,7 @@ workflows:
           set -e # exit on first failed command
 
           cd $CM_BUILD_DIR/recipients_app/lib
-          echo $FIREBASE_OPTIONS | base64 --decode > firebase_options_stage.dart
+          printf '%s' "$FIREBASE_OPTIONS" > firebase_options_stage.dart
       - name: Load Firebase configuration
         script: |
           #!/usr/bin/env sh
@@ -199,7 +199,7 @@ workflows:
           set -e # exit on first failed command
 
           cd $CM_BUILD_DIR/recipients_app/lib
-          echo $FIREBASE_OPTIONS | base64 --decode > firebase_options_prod.dart
+          printf '%s' "$FIREBASE_OPTIONS" > firebase_options_prod.dart
       - name: Load Firebase configuration
         script: |
           #!/usr/bin/env sh
@@ -302,7 +302,7 @@ workflows:
           set -e # exit on first failed command
 
           cd $CM_BUILD_DIR/recipients_app/lib
-          echo $FIREBASE_OPTIONS | base64 --decode > firebase_options_stage.dart
+          printf '%s' "$FIREBASE_OPTIONS" > firebase_options_stage.dart
       - name: Load Firebase configuration
         script: |
           #!/usr/bin/env sh
@@ -430,7 +430,7 @@ workflows:
           set -e # exit on first failed command
 
           cd $CM_BUILD_DIR/recipients_app/lib
-          echo $FIREBASE_OPTIONS | base64 --decode > firebase_options_stage.dart
+          printf '%s' "$FIREBASE_OPTIONS" > firebase_options_stage.dart
       - name: Load Firebase configuration
         script: |
           #!/usr/bin/env sh
@@ -548,7 +548,7 @@ workflows:
           set -e # exit on first failed command
 
           cd $CM_BUILD_DIR/recipients_app/lib
-          echo $FIREBASE_OPTIONS | base64 --decode > firebase_options_prod.dart
+          printf '%s' "$FIREBASE_OPTIONS" > firebase_options_prod.dart
       - name: Load Firebase configuration
         script: |
           #!/usr/bin/env sh
