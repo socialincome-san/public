@@ -82,7 +82,7 @@ workflows:
           set -e # exit on first failed command
 
           cd $CM_BUILD_DIR/recipients_app/android/app/src/stage
-          echo $ANDROID_FIREBASE_SECRET > google-services.json
+          printf '%s' "$ANDROID_FIREBASE_SECRET" > google-services.json
       # - name: Decode Google credentials
       #   script: |
       #     echo $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT > $GOOGLE_APPLICATION_CREDENTIALS
@@ -206,7 +206,7 @@ workflows:
           set -e # exit on first failed command
 
           cd $CM_BUILD_DIR/recipients_app/android/app/src/prod
-          echo $ANDROID_FIREBASE_SECRET > google-services.json
+          printf '%s' "$ANDROID_FIREBASE_SECRET" > google-services.json
       - *verify_flutter_version
       - name: Get Flutter packages
         script: |
@@ -309,7 +309,7 @@ workflows:
           set -e # exit on first failed command
 
           cd $CM_BUILD_DIR/recipients_app/ios/Runner
-          echo $IOS_FIREBASE_SECRET > GoogleService-Info.plist
+          printf '%s' "$IOS_FIREBASE_SECRET" > GoogleService-Info.plist
       - name: Set up code signing settings on Xcode project
         script: |
           #!/usr/bin/env sh
@@ -437,7 +437,7 @@ workflows:
           set -e # exit on first failed command
 
           cd $CM_BUILD_DIR/recipients_app/ios/Runner
-          echo $IOS_FIREBASE_SECRET > GoogleService-Info.plist
+          printf '%s' "$IOS_FIREBASE_SECRET" > GoogleService-Info.plist
       - name: Set up code signing settings on Xcode project
         script: |
           #!/usr/bin/env sh
@@ -555,7 +555,7 @@ workflows:
           set -e # exit on first failed command
 
           cd $CM_BUILD_DIR/recipients_app/ios/Runner
-          echo $IOS_FIREBASE_SECRET > GoogleService-Info.plist
+          printf '%s' "$IOS_FIREBASE_SECRET" > GoogleService-Info.plist
       - name: Set up code signing settings on Xcode project
         script: |
           #!/usr/bin/env sh
