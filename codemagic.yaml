@@ -45,7 +45,7 @@ workflows:
         - slack
         - app-config-stage
         - firebase
-        - google_credentials # <-- (Includes GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS)
+        - google-play # <-- (Includes GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS)
       <<: *env_versions
 
     cache:
@@ -169,7 +169,7 @@ workflows:
       groups:
         - slack
         - app-config-prod
-        - google_credentials # <-- (Includes GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS)
+        - google-play # <-- (Includes GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS)
       <<: *env_versions
 
     cache:
