@@ -53,7 +53,7 @@ class _InputDropdownState<T> extends State<InputDropdown<T>> {
             ),
           ),
           items: widget.items,
-          value: value,
+          initialValue: value,
           style: AppStyles.inputHint.copyWith(
             color: AppColors.primaryColor,
             fontWeight: FontWeight.bold,
