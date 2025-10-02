@@ -2,7 +2,7 @@ name: app
 description: Social Income App
 
 publish_to: "none"
-version: 1.1.17+0 # The build number is set in Codemagic automatically.
+version: 1.1.17+1 # The build number is set in Codemagic automatically.
 
 environment:
   sdk: ">=3.8.0 <4.0.0"
