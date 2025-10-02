@@ -130,10 +130,10 @@ workflows:
       - recipients_app/build/**/outputs/**/mapping.txt
 
     publishing:
-      #google_play:
-      #  credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-      #  track: internal
-      #  submit_as_draft: true
+      google_play:
+        credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        submit_as_draft: false
       firebase:
         firebase_service_account: $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT
         android:
@@ -237,10 +237,10 @@ workflows:
       - recipients_app/build/**/outputs/**/mapping.txt
 
     publishing:
-      #google_play:
-      #  credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-      #  track: internal
-      #  submit_as_draft: true
+      google_play:
+        credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        submit_as_draft: false
 
       # Notifications
       email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
