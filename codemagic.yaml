@@ -308,8 +308,9 @@ workflows:
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
-          cd $CM_BUILD_DIR/recipients_app/ios/flavors/stage
-          printf '%s' "$IOS_FIREBASE_SECRET" > GoogleService-Info.plist
+          cd $CM_BUILD_DIR/recipients_app/ios
+          mkdir -p flavors/stage
+          printf '%s' "$IOS_FIREBASE_SECRET" > flavors/stage/GoogleService-Info.plist
       - name: Set up code signing settings on Xcode project
         script: |
           #!/usr/bin/env sh
@@ -443,8 +444,9 @@ workflows:
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
-          cd $CM_BUILD_DIR/recipients_app/ios/flavors/stage
-          printf '%s' "$IOS_FIREBASE_SECRET" > GoogleService-Info.plist
+          cd $CM_BUILD_DIR/recipients_app/ios
+          mkdir -p flavors/stage
+          printf '%s' "$IOS_FIREBASE_SECRET" > flavors/stage/GoogleService-Info.plist
       - name: Set up code signing settings on Xcode project
         script: |
           #!/usr/bin/env sh
@@ -568,8 +570,9 @@ workflows:
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
-          cd $CM_BUILD_DIR/recipients_app/ios/flavors/prod
-          printf '%s' "$IOS_FIREBASE_SECRET" > GoogleService-Info.plist
+          cd $CM_BUILD_DIR/recipients_app/ios
+          mkdir -p flavors/prod
+          printf '%s' "$IOS_FIREBASE_SECRET" > flavors/prod/GoogleService-Info.plist
       - name: Set up code signing settings on Xcode project
         script: |
           #!/usr/bin/env sh
