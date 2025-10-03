@@ -322,6 +322,13 @@ workflows:
           # Print the export options plist
           more $CM_BUILD_DIR/recipients_app/ios/export_options.plist
       - *verify_flutter_version
+      - name: Install FlutterFire CLI
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          dart pub global activate flutterfire_cli
+        working_directory: recipients_app
       - name: Get Flutter packages & Install pods
         script: |
           #!/usr/bin/env sh
@@ -450,6 +457,13 @@ workflows:
           # Print the export options plist
           more $CM_BUILD_DIR/recipients_app/ios/export_options.plist
       - *verify_flutter_version
+      - name: Install FlutterFire CLI
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          dart pub global activate flutterfire_cli
+        working_directory: recipients_app
       - name: Get Flutter packages & Install pods
         script: |
           #!/usr/bin/env sh
@@ -568,6 +582,13 @@ workflows:
           # Print the export options plist
           more $CM_BUILD_DIR/recipients_app/ios/export_options.plist
       - *verify_flutter_version
+      - name: Install FlutterFire CLI
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          dart pub global activate flutterfire_cli
+        working_directory: recipients_app
       - name: Get Flutter packages & Install pods
         script: |
           #!/usr/bin/env sh
