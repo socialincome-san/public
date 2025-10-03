@@ -271,6 +271,7 @@ workflows:
       groups:
         - slack
         - app-config-stage
+        - firebase
       vars:
         APP_STORE_APPLE_ID: 6464113329 # Apple ID of App "Stage Social Income"
       <<: *env_versions
@@ -311,6 +312,13 @@ workflows:
           cd $CM_BUILD_DIR/recipients_app/ios
           mkdir -p flavors/stage
           printf '%s' "$IOS_FIREBASE_SECRET" > flavors/stage/GoogleService-Info.plist
+      - name: Load Firebase.json
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app
+          printf '%s' "$firebase_json" > firebase.json
       - name: Set up code signing settings on Xcode project
         script: |
           #!/usr/bin/env sh
@@ -447,6 +455,13 @@ workflows:
           cd $CM_BUILD_DIR/recipients_app/ios
           mkdir -p flavors/stage
           printf '%s' "$IOS_FIREBASE_SECRET" > flavors/stage/GoogleService-Info.plist
+      - name: Load Firebase.json
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app
+          printf '%s' "$firebase_json" > firebase.json
       - name: Set up code signing settings on Xcode project
         script: |
           #!/usr/bin/env sh
@@ -533,6 +548,7 @@ workflows:
       groups:
         - slack
         - app-config-prod
+        - firebase
       vars:
         APP_STORE_APPLE_ID: 6444860109 # Apple ID of Prod App "Social Income"
       <<: *env_versions
@@ -573,6 +589,13 @@ workflows:
           cd $CM_BUILD_DIR/recipients_app/ios
           mkdir -p flavors/prod
           printf '%s' "$IOS_FIREBASE_SECRET" > flavors/prod/GoogleService-Info.plist
+      - name: Load Firebase.json
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app
+          printf '%s' "$firebase_json" > firebase.json
       - name: Set up code signing settings on Xcode project
         script: |
           #!/usr/bin/env sh
