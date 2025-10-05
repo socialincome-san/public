@@ -81,6 +81,7 @@ workflows:
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
+          mkdir -p $CM_BUILD_DIR/recipients_app/android/app/src/stage
           cd $CM_BUILD_DIR/recipients_app/android/app/src/stage
           printf '%s' "$ANDROID_FIREBASE_SECRET" > google-services.json
       # - name: Decode Google credentials
@@ -205,6 +206,7 @@ workflows:
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
+          mkdir -p $CM_BUILD_DIR/recipients_app/android/app/src/prod
           cd $CM_BUILD_DIR/recipients_app/android/app/src/prod
           printf '%s' "$ANDROID_FIREBASE_SECRET" > google-services.json
       - *verify_flutter_version
