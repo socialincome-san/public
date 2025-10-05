@@ -377,7 +377,7 @@ workflows:
         auth: integration
         # Whether or not to submit the uploaded build to TestFlight beta review.
         # Note: This action is performed during post-processing.
-        submit_to_testflight: true
+        submit_to_testflight: false
 
       # Notifications
       email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
@@ -654,7 +654,7 @@ workflows:
         auth: integration
         # Whether or not to submit the uploaded build to TestFlight beta review.
         # Note: This action is performed during post-processing.
-        submit_to_testflight: true
+        submit_to_testflight: false
 
       # Notifications
       email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
