@@ -35,7 +35,6 @@ dependencies:
       url: https://github.com/natintosh/intl_phone_number_input.git
       ref: v0.8.0
   json_annotation: ^4.9.0
-  json_serializable: ^6.11.0
   package_info_plus: ^8.3.1
   # https://github.com/chrisedg87/flutter_rounded_loading_button/pull/74
   rounded_loading_button:
@@ -54,6 +53,7 @@ dev_dependencies:
 
   flutter_test:
     sdk: flutter
+  json_serializable: ^6.11.0
   lint: ^2.8.0
   mocktail: ^1.0.4
 
