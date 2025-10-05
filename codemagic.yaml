@@ -288,7 +288,7 @@ workflows:
           set -e # exit on first failed command
 
           # Get the latest build number from App Store Connect and increment it by 1
-          NEW_BUILD_NUMBER=$(($(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID") + 1))
+          NEW_BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID") + 1))
           if [ -z "$NEW_BUILD_NUMBER" ]; then
             echo "Missing build number!"
             exit 1
@@ -431,7 +431,7 @@ workflows:
           set -e # exit on first failed command
 
           # Get the latest build number from App Store Connect and increment it by 1
-          NEW_BUILD_NUMBER=$(($(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID") + 1))
+          NEW_BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID") + 1))
           if [ -z "$NEW_BUILD_NUMBER" ]; then
             echo "Missing build number!"
             exit 1
@@ -565,7 +565,7 @@ workflows:
           set -e # exit on first failed command
 
           # Get the latest build number from App Store Connect and increment it by 1
-          NEW_BUILD_NUMBER=$(($(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID") + 1))
+          NEW_BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID") + 1))
           if [ -z "$NEW_BUILD_NUMBER" ]; then
             echo "Missing build number!"
             exit 1
