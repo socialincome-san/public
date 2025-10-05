@@ -2,25 +2,25 @@ name: app
 description: Social Income App
 
 publish_to: "none"
-version: 1.1.16+44
+version: 1.1.17+1 # The build number is set in Codemagic automatically.
 
 environment:
   sdk: ">=3.8.0 <4.0.0"
-  flutter: 3.32.7
+  flutter: 3.35.5
 
 dependencies:
   animations: ^2.0.11
-  another_flushbar: ^1.12.30
-  cloud_firestore: ^5.6.12
-  cloud_functions: ^5.6.2
-  collection: ^1.19.0
+  another_flushbar: ^1.12.31
+  cloud_firestore: ^6.0.1
+  cloud_functions: ^6.0.1
+  collection: ^1.19.1
   equatable: ^2.0.7
-  firebase_analytics: ^11.6.0 # Is required to use Firebase Remote Config.
-  firebase_app_check: ^0.3.2+2
-  firebase_auth: ^5.7.0
-  firebase_core: ^3.15.2
-  firebase_messaging: ^15.2.10
-  firebase_remote_config: ^5.5.0
+  firebase_analytics: ^12.0.2 # Is required to use Firebase Remote Config.
+  firebase_app_check: ^0.4.0+1
+  firebase_auth: ^6.0.2
+  firebase_core: ^4.1.0
+  firebase_messaging: ^16.0.1
+  firebase_remote_config: ^6.0.2
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
@@ -35,14 +35,13 @@ dependencies:
       url: https://github.com/natintosh/intl_phone_number_input.git
       ref: v0.8.0
   json_annotation: ^4.9.0
-  json_serializable: ^6.10.0
-  package_info_plus: ^8.3.0
+  package_info_plus: ^8.3.1
   # https://github.com/chrisedg87/flutter_rounded_loading_button/pull/74
   rounded_loading_button:
     git:
       url: https://github.com/ShamilPP/flutter_rounded_loading_button.git
       ref: master
-  sentry_flutter: ^9.5.0
+  sentry_flutter: ^9.6.0
   twilio_flutter: ^0.9.0
   url_launcher: ^6.3.2
   webview_flutter: ^4.13.0
@@ -54,6 +53,7 @@ dev_dependencies:
 
   flutter_test:
     sdk: flutter
+  json_serializable: ^6.11.0
   lint: ^2.8.0
   mocktail: ^1.0.4
 

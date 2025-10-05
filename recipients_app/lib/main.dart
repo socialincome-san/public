@@ -27,9 +27,13 @@ import "package:flutter_native_splash/flutter_native_splash.dart";
 import "package:package_info_plus/package_info_plus.dart";
 import "package:sentry_flutter/sentry_flutter.dart";
 
+// Important: Why we have separate main file per flavor (main_stage.dart, main_prod.dart)?
+// This approach ensures that only the required Firebase configuration file is bundled, making it a secure and efficient solution for managing multiple flavors.
+// For more details see: https://codewithandrea.com/articles/flutter-firebase-multiple-flavors-flutterfire-cli/#option-2-use-multiple-entry-points
+
 // Async for Firebase
-Future<void> main() async {
-  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+Future<void> runMainApp(FirebaseOptions firebaseOptions) async {
+  final widgetsBinding = SentryWidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   SystemChrome.setPreferredOrientations(
@@ -41,7 +45,7 @@ Future<void> main() async {
     throw Exception("Missing app flavor setting");
   }
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: firebaseOptions);
   await FirebaseAppCheck.instance.activate(
     androidProvider: kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
     appleProvider: kDebugMode ? AppleProvider.debug : AppleProvider.appAttest,
@@ -76,12 +80,6 @@ Future<void> main() async {
 
   final organizationRemoteDataSource = OrganizationRemoteDataSource(firestore: firestore);
   final organizationDemoDataSource = OrganizationDemoDataSource();
-
-  if (appFlavor == "dev") {
-    firestore.useFirestoreEmulator("localhost", 8080);
-    firebaseAuth.useAuthEmulator("localhost", 9099);
-    firebaseAuth.setSettings(appVerificationDisabledForTesting: true);
-  }
 
   final packageInfo = await PackageInfo.fromPlatform();
 
