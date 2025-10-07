@@ -94,6 +94,11 @@ enum ExpenseType {
   staff
 }
 
+enum UserAccountRole {
+  admin
+  user
+}
+
 model UserAccount {
   id String @id @default(cuid()) @map("id")
   /*
@@ -115,12 +120,13 @@ model UserAccount {
     issue, but we need to be aware of it when we implement profile update features.
   */
 
-  firebaseAuthUserId String @unique @map("firebase_auth_user_id")
+  firebaseAuthUserId String          @unique @map("firebase_auth_user_id")
+  role               UserAccountRole
 
   contributor          Contributor?
   recipient            Recipient?
-  OrganizationAccesses OrganizationAccess[]
-  ProgramAccess        ProgramAccess[]
+  organizationAccesses OrganizationAccess[]
+  programAccesses      ProgramAccess[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -188,8 +194,8 @@ model DonationCertificate {
   year          Int         @map("year")
   storagePath   String      @map("storage_path")
 
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@unique([contributorId, year])
   @@map("donation_certificate")
@@ -308,7 +314,6 @@ model Organization {
   ownedPrograms    Program[]            @relation("ProgramOwner")
   operatedPrograms Program[]            @relation("ProgramOperator")
   expenses         Expense[]
-  campaigns        Campaign[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -366,8 +371,6 @@ model Campaign {
   creatorEmail           String?        @map("creator_email")
   programId              String?        @map("program_id")
   program                Program?       @relation(fields: [programId], references: [id])
-  organizationId         String         @map("organization_id")
-  organization           Organization   @relation(fields: [organizationId], references: [id])
   contributions          Contribution[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
@@ -399,8 +402,8 @@ model Address {
   country String    @map("country")
   contact Contact[]
 
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("address")
 }
@@ -410,15 +413,15 @@ enum PaymentProvider {
 }
 
 model PaymentInformation {
-  id        String          @id @default(cuid()) @map("id")
-  provider  PaymentProvider @map("provider")
-  code      String          @unique @map("code") // om_uid in case of Orange Money
-  phoneId   String?         @map("phone_id")
-  phone     Phone?          @relation(fields: [phoneId], references: [id])
-  Recipient Recipient[]
+  id         String          @id @default(cuid()) @map("id")
+  provider   PaymentProvider @map("provider")
+  code       String          @unique @map("code") // om_uid in case of Orange Money
+  phoneId    String?         @map("phone_id")
+  phone      Phone?          @relation(fields: [phoneId], references: [id])
+  recipients Recipient[]
 
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("payment_information")
 }
@@ -444,8 +447,8 @@ model Contact {
   recipient    Recipient?
   localPartner LocalPartner?
 
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("contact")
 }
@@ -458,12 +461,11 @@ model Phone {
   number                   String                   @map("number")
   verified                 Boolean                  @default(false) @map("verified")
   whatsAppActivationStatus WhatsAppActivationStatus @default(disabled) @map("whats_app")
-  contactId                String?
   PaymentInformation       PaymentInformation[]
-  Contact                  Contact[]
 
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  Contact   Contact[]
 
   @@map("phone")
 }
