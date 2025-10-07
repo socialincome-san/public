@@ -1,6 +1,6 @@
 import { getAuthors, getOverviewArticles, getTags } from '@/components/storyblok/StoryblokApi';
 import { toDateObject } from '@/components/storyblok/StoryblokUtils';
-import { defaultLanguage } from '@/lib/i18n/utils';
+import { defaultLanguage, defaultRegion, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { type StoryblokArticle, StoryblokAuthor, StoryblokTag } from '@/types/journal';
 import fs from 'fs';
@@ -11,18 +11,18 @@ export const revalidate = 86400; // per day
 const url = 'https://socialincome.org';
 storyblokInitializationWorkaround();
 
-const SUPPORTED_LANGUAGES = ['de', 'fr', 'it'];
+const SUPPORTED_LANGUAGES: WebsiteLanguage[] = ['de', 'fr', 'it'];
 
-function articleUrl(slug: string, lang: string) {
-	return `${url}/${lang}/journal/${slug}`;
+function articleUrl(slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) {
+	return `${url}/${lang}/${region}/journal/${slug}`;
 }
 
-function tagUrl(slug: string, lang: string) {
-	return `${url}/${lang}/journal/tag/${slug}`;
+function tagUrl(slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) {
+	return `${url}/${lang}/${region}/journal/tag/${slug}`;
 }
 
-function authorUrl(slug: string, lang: string) {
-	return `${url}/${lang}/journal/author/${slug}`;
+function authorUrl(slug: string, lang: WebsiteLanguage, region: WebsiteRegion = defaultRegion) {
+	return `${url}/${lang}/${region}/journal/author/${slug}`;
 }
 
 function generateAlternativeLanguages(alternativeArticles: Record<string, string[]>, slug: string) {
@@ -36,7 +36,7 @@ function generateAlternativeLanguages(alternativeArticles: Record<string, string
 
 function generateStoryblokArticlesSitemap(
 	blogsResponse: ISbStories<StoryblokArticle>,
-	blogsAlternativeLanguages: { lang: string; stories: ISbStories<StoryblokArticle> }[],
+	blogsAlternativeLanguages: { lang: WebsiteLanguage; stories: ISbStories<StoryblokArticle> }[],
 ): MetadataRoute.Sitemap {
 	const alternativeArticles = Object.fromEntries(
 		blogsAlternativeLanguages.map(({ lang, stories }) => [lang, stories.data.stories.map((it) => it.slug)]),
@@ -71,19 +71,21 @@ function generateStoryblokTagSitemap(tagsResponse: ISbStories<StoryblokTag>): Me
 	}));
 }
 
-function staticPageUrl(route: string, lang: string) {
-	return `${url}/${lang}/${route}`;
+function staticPageUrl(route: string, lang: WebsiteLanguage, region: WebsiteRegion) {
+	return `${url}/${lang}/${region}/${route}`;
 }
 
 function generateStaticPagesSitemap(): MetadataRoute.Sitemap {
 	const file = fs.readFileSync('src/app/static-pages.json').toString();
 	const staticRoutes: string[] = JSON.parse(file);
-	return staticRoutes.map((route) => ({
-		url: staticPageUrl(route, defaultLanguage),
-		alternates: {
-			languages: Object.fromEntries(SUPPORTED_LANGUAGES.map((lang) => [lang, staticPageUrl(route, lang)])),
-		},
-	}));
+	return staticRoutes.flatMap((route) =>
+		websiteRegions.map((region) => ({
+			url: staticPageUrl(route, defaultLanguage, region),
+			alternates: {
+				languages: Object.fromEntries(SUPPORTED_LANGUAGES.map((lang) => [lang, staticPageUrl(route, lang, region)])),
+			},
+		})),
+	);
 }
 
 function getBlogsInAlternativeLanguagesPromise() {
