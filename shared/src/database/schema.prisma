@@ -141,19 +141,17 @@ model Contributor {
 }
 
 model Contribution {
-  id             String             @id @default(cuid()) @map("id")
-  amount         Decimal            @map("amount") @db.Decimal(10, 2)
-  currency       String             @map("currency")
-  amountChf      Decimal            @map("amount_chf") @db.Decimal(10, 2)
-  feesChf        Decimal            @map("fees_chf") @db.Decimal(10, 2)
-  contributorId  String             @map("contributor_id")
-  contributor    Contributor        @relation(fields: [contributorId], references: [id])
-  status         ContributionStatus @map("status")
-  organizationId String             @map("organization_id")
-  organization   Organization       @relation(fields: [organizationId], references: [id])
-  campaignId     String             @map("campaign_id")
-  campaign       Campaign           @relation(fields: [campaignId], references: [id])
-  paymentEvent   PaymentEvent?
+  id            String             @id @default(cuid()) @map("id")
+  amount        Decimal            @map("amount") @db.Decimal(10, 2)
+  currency      String             @map("currency")
+  amountChf     Decimal            @map("amount_chf") @db.Decimal(10, 2)
+  feesChf       Decimal            @map("fees_chf") @db.Decimal(10, 2)
+  contributorId String             @map("contributor_id")
+  contributor   Contributor        @relation(fields: [contributorId], references: [id])
+  status        ContributionStatus @map("status")
+  campaignId    String             @map("campaign_id")
+  campaign      Campaign           @relation(fields: [campaignId], references: [id])
+  paymentEvent  PaymentEvent?
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -301,7 +299,6 @@ model Organization {
   accesses         OrganizationAccess[]
   ownedPrograms    Program[]            @relation("ProgramOwner")
   operatedPrograms Program[]            @relation("ProgramOperator")
-  contributions    Contribution[]
   expenses         Expense[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
