@@ -300,6 +300,7 @@ model Organization {
   ownedPrograms    Program[]            @relation("ProgramOwner")
   operatedPrograms Program[]            @relation("ProgramOperator")
   expenses         Expense[]
+  campaigns        Campaign[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -355,6 +356,8 @@ model Campaign {
   metadataTwitterImage   String?        @map("metadata_twitter_image")
   creatorName            String?        @map("creator_name")
   creatorEmail           String?        @map("creator_email")
+  organizationId         String         @map("organization_id")
+  organization           Organization   @relation(fields: [organizationId], references: [id])
   programId              String?        @map("program_id")
   program                Program?       @relation(fields: [programId], references: [id])
   contributions          Contribution[]
