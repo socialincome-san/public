@@ -9,11 +9,13 @@ class AppLocalizationsKri extends AppLocalizations {
   AppLocalizationsKri([String locale = 'kri']) : super(locale);
 
   @override
+  String get ok => 'OK';
+
+  @override
   String get profileUpdateSuccess => 'Ɔltin bɔt yu go insay wɛl wɛl';
 
   @override
-  String get profileUpdateError =>
-      'Ɔltin bɔt yu nɔ go insay. Duya tray bak ɔ rich awt to wit';
+  String get profileUpdateError => 'Ɔltin bɔt yu nɔ go insay. Duya tray bak ɔ rich awt to wit';
 
   @override
   String get profile => 'Ɔltin bɔt yu';
@@ -82,8 +84,7 @@ class AppLocalizationsKri extends AppLocalizations {
   String get paymentNumberError => 'Duya put yu fon nɔmba';
 
   @override
-  String get paymentNumberError2 =>
-      'Put di fon nɔmba prɔpa wan ɛn tayp di nɔmba dɛm nɔmɔ.';
+  String get paymentNumberError2 => 'Put di fon nɔmba prɔpa wan ɛn tayp di nɔmba dɛm nɔmɔ.';
 
   @override
   String get mobilePaymentProvider => 'Mɔbayl kɔmpin we fɔ pe yu';
@@ -101,8 +102,7 @@ class AppLocalizationsKri extends AppLocalizations {
   String get contactNumberError => 'Duya put yu fon nɔmba ya';
 
   @override
-  String get contactNumberError2 =>
-      'Put di fon nɔmba prɔpa wan ɛn tayp di nɔmba dɛm nɔmɔ.';
+  String get contactNumberError2 => 'Put di fon nɔmba prɔpa wan ɛn tayp di nɔmba dɛm nɔmɔ.';
 
   @override
   String get inCaseOfDeathTitle => '⁠If yu day';
@@ -118,8 +118,7 @@ class AppLocalizationsKri extends AppLocalizations {
   String get support => 'Yu want ɛp';
 
   @override
-  String get supportInfo =>
-      'If yu get ɛni kwɛstyɔn ɔ di fesin prɔblɛm, duya rich awt to wi.';
+  String get supportInfo => 'If yu get ɛni kwɛstyɔn ɔ di fesin prɔblɛm, duya rich awt to wi.';
 
   @override
   String get getInTouch => 'Mek wi no aw yu fil';
@@ -128,8 +127,7 @@ class AppLocalizationsKri extends AppLocalizations {
   String get account => 'Akawnt';
 
   @override
-  String get accountInfo =>
-      'If yu want fɔ lɛf fɔ yuz yu akawnt, rich awt to wi';
+  String get accountInfo => 'If yu want fɔ lɛf fɔ yuz yu akawnt, rich awt to wi';
 
   @override
   String get signOut => 'Lɛf fɔs';
@@ -141,8 +139,7 @@ class AppLocalizationsKri extends AppLocalizations {
   String get edit => 'Chenj am';
 
   @override
-  String get underInvestigation =>
-      'Wi stil de wach wetin mek yu mɔni nɔ rich yu';
+  String get underInvestigation => 'Wi stil de wach wetin mek yu mɔni nɔ rich yu';
 
   @override
   String get didYouGetSocialIncome => 'Yu bin gɛt yu Social Income?';
@@ -221,12 +218,10 @@ class AppLocalizationsKri extends AppLocalizations {
   String get paymentsInReview => 'Yu bin gɛt di las pemɛnt?';
 
   @override
-  String get paymentsInReviewOne =>
-      'Yu gɛt 1 pemɛnt fɔ luk oba. Yu bin gɛt am?';
+  String get paymentsInReviewOne => 'Yu gɛt 1 pemɛnt fɔ luk oba. Yu bin gɛt am?';
 
   @override
-  String get paymentsInReviewTwo =>
-      'Yu gɛt 2 pemɛnt dɛm fɔ luk oba yu kes fɔ si if yu kwalifay';
+  String get paymentsInReviewTwo => 'Yu gɛt 2 pemɛnt dɛm fɔ luk oba yu kes fɔ si if yu kwalifay';
 
   @override
   String paymentsInReviewMany(int count) {
@@ -237,8 +232,7 @@ class AppLocalizationsKri extends AppLocalizations {
   String get paymentsOverview => 'Ɔltin Bɔt Pemɛnt Dɛm';
 
   @override
-  String get paymentsSuspendedTwoUnreviewed =>
-      '2 pemɛnt dɛm we nɔ ɔke yet. Dɛn ol am.';
+  String get paymentsSuspendedTwoUnreviewed => '2 pemɛnt dɛm we nɔ ɔke yet. Dɛn ol am.';
 
   @override
   String get amount => 'Ɔmɔs';
@@ -312,8 +306,7 @@ class AppLocalizationsKri extends AppLocalizations {
   String get surveyCardTitle => 'Sɔve';
 
   @override
-  String get surveyCardInfo =>
-      'Duya tek 5 minit fɔ ansa di kwɛstyɔn dɛm ɛn ɛp wi fɔ mek Social Income bɛtɛ';
+  String get surveyCardInfo => 'Duya tek 5 minit fɔ ansa di kwɛstyɔn dɛm ɛn ɛp wi fɔ mek Social Income bɛtɛ';
 
   @override
   String get verification => 'Fɔ sho se na yu';
@@ -324,8 +317,7 @@ class AppLocalizationsKri extends AppLocalizations {
   }
 
   @override
-  String get resendVerificationCode =>
-      'Di spɛshal kod we wi sɛn to yu fɔ sho se na yu sɛn am bak';
+  String get resendVerificationCode => 'Di spɛshal kod we wi sɛn to yu fɔ sho se na yu sɛn am bak';
 
   @override
   String get yourMobilePhone => 'Yu mobayl fon';
@@ -372,24 +364,20 @@ class AppLocalizationsKri extends AppLocalizations {
   String get mySurveysTitle => 'Mi sɔve dɛm';
 
   @override
-  String get invalidPhoneNumberError =>
-      'Fon nɔmba nɔ kɔrɛkt. Chɛk yu fon nɔmba ɛn tray bak ya.';
+  String get invalidPhoneNumberError => 'Fon nɔmba nɔ kɔrɛkt. Chɛk yu fon nɔmba ɛn tray bak ya.';
 
   @override
-  String get invalidVerificationCodeError =>
-      'Di spɛshal kod we wi sɛn yu nɔ kɔrɛkt. Duya chɛk di SMS kod ɛn tray bak.';
+  String get invalidVerificationCodeError => 'Di spɛshal kod we wi sɛn yu nɔ kɔrɛkt. Duya chɛk di SMS kod ɛn tray bak.';
 
   @override
-  String get userDisabledError =>
-      'Wi dɔn lɔk yu akawnt. Rich awt to wi if yu want fɔ no mɔ.';
+  String get userDisabledError => 'Wi dɔn lɔk yu akawnt. Rich awt to wi if yu want fɔ no mɔ.';
 
   @override
   String get invalidCredentialError =>
       ' Di fon nɔmba ɔ di spɛshal kod we wi sɛn to yu in tɛm dɔn pas fɔ yuz. Duya tray bak.';
 
   @override
-  String get adminOnlyOperation =>
-      'Di pɛmɛnt we yu nɔ gri wit nɔ go insay fɔ yu';
+  String get adminOnlyOperation => 'Di pɛmɛnt we yu nɔ gri wit nɔ go insay fɔ yu';
 
   @override
   String get argumentError => 'Di argument nɔ kɔrɛkt';
@@ -419,8 +407,7 @@ class AppLocalizationsKri extends AppLocalizations {
   String get credentialMismatch => 'Di kredɛnsyɔn nɔ go insay';
 
   @override
-  String get credentialTooOldLoginAgain =>
-      'Di kredɛnsyɔn dɔn ol pas, duya lɔgin bak';
+  String get credentialTooOldLoginAgain => 'Di kredɛnsyɔn dɔn ol pas, duya lɔgin bak';
 
   @override
   String get dependentSdkInitBeforeAuth => 'Dependent SDK dɔn bigin bifo auth';
@@ -591,8 +578,7 @@ class AppLocalizationsKri extends AppLocalizations {
   String get operationNotAllowed => 'Ɔpɛreshɔn nɔ ɔke';
 
   @override
-  String get operationNotSupported =>
-      'Ɔpɛreshɔn nɔ go insay na dis environment';
+  String get operationNotSupported => 'Ɔpɛreshɔn nɔ go insay na dis environment';
 
   @override
   String get popupBlocked => 'Popup dɔn blɔk';
@@ -713,4 +699,20 @@ class AppLocalizationsKri extends AppLocalizations {
 
   @override
   String get contestReason_otherReason => 'Ɔda rizin';
+
+  @override
+  String get appUpdateButtonTitleLater => 'Leta';
+
+  @override
+  String get appUpdateButtonTitleUpdateNow => 'Update naw';
+
+  @override
+  String get appUpdateWidgetTitle => 'App Update Rikway';
+
+  @override
+  String get appUpdateWidgetMessage => 'Duya ɔpdet fɔ kɔntinyu fɔ yuz di ap.';
+
+  @override
+  String get appUpdateWidgetErrorLaunchingStore =>
+      'Wi nɔ bin ebul fɔ gayd yu fɔ go na di Stɔ fɔ ɔpdet di ap. Duya opin di Ple Stɔ ap na Andrɔyd ɔ Ap Stɔ ap na iOS ɛn ɔpdet Sɔshial Inkam.';
 }

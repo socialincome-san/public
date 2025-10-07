@@ -77,19 +77,23 @@ Mobile App for Recipients of a Social Income.
 - Copy file `./.vscode/launch.json.example` and rename it to
   `./.vscode/launch.json`
   - Replace the value "FILL IN SENTRY URL" after "SENTRY_URL=" with the
-    real Sentry url to be able to use Sentry. If you do not prive a
+    real Sentry url to be able to use Sentry. If you do not have a
     Sentry Url, no issues will be reported to Sentry but you can still
     run the app. To get the real Sentry url see
     [here](https://social-income.sentry.io/settings/projects/si-mobileapp/keys/)
     under "DSN".
   - Decide which flavor and backend environment you want to use and
-    change it if necessary.
+    change it if necessary. (Normally we use "Stage" for development)
 - Open `recipients_app` project folder in vsCode
 - Open a terminal inside of vsCode and check `flutter --version` is
   listing the right flutter version (See above or pubspec.yaml).
 - Add executable permissions to the script clean_build.sh via
   `chmod +x clean_build.sh`
 - Run `./clean_build.sh`
+- Run `dart pub global activate flutterfire_cli`
+- Copy and rename the file "key.properties.example.debug" into
+  "key.properties" to be able to sign the Android app for debugging.
+- Run `make flavor-stage` -> choose "Build Configuration" -> Debug-stage
 - Choose in vsCode the device to deploy on (iOS Simulator, Android
   emulator, real Android or iOS device)
 - Run the launch configuration "stage_recipients_app (debug mode)" to
@@ -99,16 +103,17 @@ Mobile App for Recipients of a Social Income.
 ## Available app flavors
 
 Building flavor should work seamlessly for Android Studio and VS Code
-with predefined build configs.
+with predefined build configs. Info: To let Firebase work with flavors,
+we followed this guide:
+https://codewithandrea.com/articles/flutter-firebase-multiple-flavors-flutterfire-cli/
 
-We have three build flavors:
+We have two build flavors:
 
-- `dev` -> Connecting with Firebase Emulators (Firestore and Auth)
 - `stage` -> Connecting with staging online firebase project
 - `prod` -> Connecting with production online firebase project and need
   real Firebase configuration json / plist file (not in the repo)
 
-For development, use the `dev` or `stage` flavor.
+For development, use the `stage` flavor.
 
 As Firebase emulators work on your local host machine the easiest way to
 run app is on the Android emulator. Real devices need some additional
