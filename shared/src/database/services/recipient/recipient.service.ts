@@ -1,4 +1,4 @@
-import { PayoutStatus, ProgramPermission, Recipient as PrismaRecipient } from '@prisma/client';
+import { PayoutStatus, Recipient as PrismaRecipient, ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { CreateRecipientInput, RecipientTableView, RecipientTableViewRow } from './recipient.types';
