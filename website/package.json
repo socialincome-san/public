@@ -3,9 +3,10 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"serve": "next dev -p 3001",
+		"build-paths": "tsx scripts/generate-paths.ts",
+		"serve": "npm run build-paths && next dev -p 3001",
 		"serve:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run serve'",
-		"build": "next build",
+		"build": "npm run build-paths && next build",
 		"build:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run build'",
 		"start": "next start -p 3001",
 		"start:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run start'",
@@ -76,6 +77,7 @@
 		"eslint-config-next": "15.3.1",
 		"postcss": "^8.4.47",
 		"tailwindcss": "^3.4.13",
+		"tsx": "^4.20.3",
 		"typescript": "^5.6.2"
 	}
 }
