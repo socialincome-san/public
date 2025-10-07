@@ -9,6 +9,7 @@
 		"bullet-2": "Les nouvelles études les transferts monétaires directs",
 		"bullet-3": "Des nouvelles sur le thème du revenu de base",
 		"description-2": "Envoi à la fin de chaque mois.",
+		"visit-archive": "Consulte notre archive des newsletters",
 		"description-3": "Newsletters rédigées par",
 		"author-name": "Aurélie Schmiedlin",
 		"author-city": "Genève",
@@ -28,5 +29,9 @@
 	},
 	"campaign": {
 		"information-label": "Reçois des mises à jour du collecteur de fonds et de Social Income."
+	},
+	"archive": {
+		"title": "Archive des newsletters",
+		"signup-link": "Retour à l’inscription à la newsletter"
 	}
 }

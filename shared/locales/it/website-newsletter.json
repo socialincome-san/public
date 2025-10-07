@@ -9,6 +9,7 @@
 		"bullet-2": "Nuove ricerche sui trasferimenti diretti di denaro",
 		"bullet-3": "Le ultime notizie sul reddito di base universale ",
 		"description-2": "Inviate alla fine di ogni mese.",
+		"visit-archive": "Visita il nostro archivio delle newsletter",
 		"description-3": "Newsletters scritta da",
 		"author-name": "Aurélie Schmiedlin",
 		"author-city": "Ginevra",
@@ -28,5 +29,9 @@
 	},
 	"campaign": {
 		"information-label": "Ricevi aggiornamenti dal fundraiser e da Social Income."
+	},
+	"archive": {
+		"title": "Archivio delle newsletter",
+		"signup-link": "Torna all’iscrizione alla newsletter"
 	}
 }
