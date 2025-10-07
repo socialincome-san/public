@@ -18,5 +18,11 @@ export const organizationsData: Organization[] = [
 		name: 'Swiss Red Cross',
 		createdAt: new Date(),
 		updatedAt: null
+	},
+	{
+		id: 'organization-4',
+		name: 'Caritas',
+		createdAt: new Date(),
+		updatedAt: null
 	}
 ];

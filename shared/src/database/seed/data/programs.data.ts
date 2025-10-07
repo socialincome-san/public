@@ -10,7 +10,7 @@ export const programsData: Program[] = [
 		payoutInterval: 30,
 		country: 'Sierra Leone',
 		ownerOrganizationId: 'organization-1',
-		operatorOrganizationId: 'organization-3',
+		operatorOrganizationId: 'organization-1',
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -23,7 +23,7 @@ export const programsData: Program[] = [
 		payoutInterval: 30,
 		country: 'Sierra Leone',
 		ownerOrganizationId: 'organization-2',
-		operatorOrganizationId: 'organization-3',
+		operatorOrganizationId: 'organization-2',
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -37,6 +37,19 @@ export const programsData: Program[] = [
 		country: 'Sierra Leone',
 		ownerOrganizationId: 'organization-3',
 		operatorOrganizationId: 'organization-3',
+		createdAt: new Date(),
+		updatedAt: null
+	},
+	{
+		id: 'program-4',
+		name: 'Caritas Family Support – Liberia',
+		totalPayments: 10,
+		payoutAmount: new Prisma.Decimal(80),
+		payoutCurrency: 'LRD',
+		payoutInterval: 30,
+		country: 'Liberia',
+		ownerOrganizationId: 'organization-4',
+		operatorOrganizationId: 'organization-4',
 		createdAt: new Date(),
 		updatedAt: null
 	}

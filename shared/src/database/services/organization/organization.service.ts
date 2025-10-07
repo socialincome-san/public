@@ -1,7 +1,7 @@
 import { Organization as PrismaOrganization } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { UserInformation } from '../user/user.types';
+import { UserInformation } from '../user-account/user.types';
 import { CreateOrganizationInput, OrganizationTableView, OrganizationTableViewRow } from './organization.types';
 
 export class OrganizationService extends BaseService {

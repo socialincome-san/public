@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import { prisma } from '../../prisma';
-import { UserInformation } from '../user/user.types';
+import { UserInformation } from '../user-account/user.types';
 import { ServiceResult } from './base.types';
 
 export abstract class BaseService {

@@ -3,19 +3,22 @@ import { LocalPartner } from '@prisma/client';
 export const localPartnersData: LocalPartner[] = [
 	{
 		id: 'local-partner-1',
-		contactId: 'contact-4',
+		name: 'Makeni Development Initiative',
+		contactId: 'contact-13',
 		createdAt: new Date(),
 		updatedAt: null
 	},
 	{
 		id: 'local-partner-2',
-		contactId: 'contact-5',
+		name: 'Bo Women Empowerment Group',
+		contactId: 'contact-14',
 		createdAt: new Date(),
 		updatedAt: null
 	},
 	{
 		id: 'local-partner-3',
-		contactId: 'contact-6',
+		name: 'Kenema Youth Foundation',
+		contactId: 'contact-15',
 		createdAt: new Date(),
 		updatedAt: null
 	}

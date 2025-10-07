@@ -54,5 +54,23 @@ export const phonesData: Phone[] = [
 		whatsAppActivationStatus: WhatsAppActivationStatus.disabled,
 		createdAt: new Date(),
 		updatedAt: null
+	},
+	{
+		id: 'phone-7',
+		type: 'primary',
+		number: '+231770001111',
+		verified: true,
+		whatsAppActivationStatus: WhatsAppActivationStatus.verified,
+		createdAt: new Date(),
+		updatedAt: null
+	},
+	{
+		id: 'phone-8',
+		type: 'primary',
+		number: '+23288999111',
+		verified: true,
+		whatsAppActivationStatus: WhatsAppActivationStatus.verified,
+		createdAt: new Date(),
+		updatedAt: null
 	}
 ];

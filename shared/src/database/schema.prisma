@@ -66,13 +66,13 @@ enum SurveyQuestionnaire {
 }
 
 enum ProgramPermission {
-  admin
-  audit
+  readonly
+  edit
 }
 
 enum OrganizationPermission {
-  admin
-  audit
+  readonly
+  edit
 }
 
 enum ContributorReferralSource {
@@ -117,7 +117,7 @@ model UserAccount {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  @@map("user")
+  @@map("user_account")
 }
 
 model Contributor {
@@ -255,6 +255,7 @@ model Survey {
 
 model LocalPartner {
   id         String      @id @default(cuid()) @map("id")
+  name       String      @map("name")
   contactId  String      @unique @map("contact_profile_id")
   contact    Contact     @relation(fields: [contactId], references: [id])
   recipients Recipient[]

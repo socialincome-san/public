@@ -2,7 +2,7 @@ import { Expense as PrismaExpense } from '@prisma/client';
 
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { UserInformation } from '../user/user.types';
+import { UserInformation } from '../user-account/user.types';
 import { CreateExpenseInput, ExpenseTableView, ExpenseTableViewRow } from './expense.types';
 
 export class ExpenseService extends BaseService {

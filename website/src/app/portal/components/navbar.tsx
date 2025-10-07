@@ -12,7 +12,7 @@ import {
 } from '@/app/portal/components/dropdown-menu';
 import { Logo } from '@/app/portal/components/logo';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
-import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
+import { UserInformation } from '@socialincome/shared/src/database/services/user-account/user.types';
 import { signOut } from 'firebase/auth';
 import { Building2, ChevronsUpDown, Handshake, LogOut, Menu, Settings, UsersRound, WalletCards, X } from 'lucide-react';
 import Link from 'next/link';
@@ -37,7 +37,7 @@ export function Navbar({ user }: NavbarProps) {
 	const { auth } = useAuth();
 
 	const { role } = user;
-	const isGlobalAnalystOrAdmin = role === 'globalAnalyst' || role === 'globalAdmin';
+	const isAdmin = role === 'admin';
 
 	const navLinks: NavLink[] = [
 		{ href: '/portal', label: 'Home', exact: true },
@@ -162,8 +162,8 @@ export function Navbar({ user }: NavbarProps) {
 								</Link>
 							</DropdownMenuItem>
 
-							{isGlobalAnalystOrAdmin && <DropdownMenuSeparator />}
-							{isGlobalAnalystOrAdmin &&
+							{isAdmin && <DropdownMenuSeparator />}
+							{isAdmin &&
 								adminLinks.map(({ href, label, icon: Icon }) => (
 									<DropdownMenuItem asChild key={href}>
 										<Link href={href} className="flex cursor-pointer items-center gap-2">
@@ -215,14 +215,14 @@ export function Navbar({ user }: NavbarProps) {
 								>
 									{accountSettingsLink.label}
 								</Link>
-								{isGlobalAnalystOrAdmin && <Separator className="my-2" />}
-								{isGlobalAnalystOrAdmin &&
+								{isAdmin && <Separator className="my-2" />}
+								{isAdmin &&
 									adminLinks.map(({ href, label }) => (
 										<Link key={href} href={href} className="text-muted-foreground rounded-md px-2 py-2 font-medium">
 											{label}
 										</Link>
 									))}
-								{isGlobalAnalystOrAdmin && <Separator className="my-2" />}
+								{isAdmin && <Separator className="my-2" />}
 								<button onClick={handleSignOut} className="text-destructive rounded-md px-2 py-2 text-left font-medium">
 									Sign out
 								</button>

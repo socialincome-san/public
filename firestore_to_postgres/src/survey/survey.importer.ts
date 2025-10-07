@@ -64,7 +64,7 @@ export class SurveyImporter extends BaseImporter<SurveyWithEmail[]> {
 			throw new Error('❌ Failed to fetch users');
 		}
 
-		const recipientResult = await this.recipientService.findMany();
+		const recipientResult = await this.recipientService.getAll();
 		if (!recipientResult.success || !recipientResult.data) {
 			throw new Error('❌ Failed to fetch recipients');
 		}

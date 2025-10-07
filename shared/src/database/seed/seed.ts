@@ -22,6 +22,27 @@ import { addressesData } from './data/addresses.data';
 
 async function main() {
 	await prisma.$transaction(async (tx) => {
+		await tx.survey.deleteMany();
+		await tx.payout.deleteMany();
+		await tx.recipient.deleteMany();
+		await tx.paymentEvent.deleteMany();
+		await tx.contribution.deleteMany();
+		await tx.donationCertificate.deleteMany();
+		await tx.contributor.deleteMany();
+		await tx.campaign.deleteMany();
+		await tx.paymentInformation.deleteMany();
+		await tx.localPartner.deleteMany();
+		await tx.programAccess.deleteMany();
+		await tx.program.deleteMany();
+		await tx.organizationAccess.deleteMany();
+		await tx.expense.deleteMany();
+		await tx.organization.deleteMany();
+		await tx.exchangeRate.deleteMany();
+		await tx.contact.deleteMany();
+		await tx.phone.deleteMany();
+		await tx.address.deleteMany();
+		await tx.userAccount.deleteMany();
+
 		await tx.userAccount.createMany({ data: userAccountsData, skipDuplicates: true });
 		await tx.address.createMany({ data: addressesData, skipDuplicates: true });
 		await tx.phone.createMany({ data: phonesData, skipDuplicates: true });

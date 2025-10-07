@@ -60,5 +60,95 @@ export const addressesData: Address[] = [
 		country: 'Sierra Leone',
 		createdAt: new Date(),
 		updatedAt: null
+	},
+	{
+		id: 'address-7',
+		street: 'Broad Street',
+		number: '8',
+		city: 'Monrovia',
+		zip: '4004',
+		country: 'Liberia',
+		createdAt: new Date(),
+		updatedAt: null
+	},
+	{
+		id: 'address-8',
+		street: 'Waterloo Street',
+		number: '19',
+		city: 'Makeni',
+		zip: '5005',
+		country: 'Sierra Leone',
+		createdAt: new Date(),
+		updatedAt: null
+	},
+	{
+		id: 'address-9',
+		street: 'Lumley Beach Road',
+		number: '14',
+		city: 'Freetown',
+		zip: '1001',
+		country: 'Sierra Leone',
+		createdAt: new Date(),
+		updatedAt: null
+	},
+	{
+		id: 'address-10',
+		street: 'Goderich Street',
+		number: '33',
+		city: 'Freetown',
+		zip: '1002',
+		country: 'Sierra Leone',
+		createdAt: new Date(),
+		updatedAt: null
+	},
+	{
+		id: 'address-11',
+		street: 'Wilberforce Loop',
+		number: '27',
+		city: 'Freetown',
+		zip: '1003',
+		country: 'Sierra Leone',
+		createdAt: new Date(),
+		updatedAt: null
+	},
+	{
+		id: 'address-12',
+		street: 'Spur Road',
+		number: '5A',
+		city: 'Freetown',
+		zip: '1004',
+		country: 'Sierra Leone',
+		createdAt: new Date(),
+		updatedAt: null
+	},
+	{
+		id: 'address-13',
+		street: 'Hill Station Road',
+		number: '9',
+		city: 'Freetown',
+		zip: '1005',
+		country: 'Sierra Leone',
+		createdAt: new Date(),
+		updatedAt: null
+	},
+	{
+		id: 'address-14',
+		street: 'Ashmun Street',
+		number: '17',
+		city: 'Monrovia',
+		zip: '4005',
+		country: 'Liberia',
+		createdAt: new Date(),
+		updatedAt: null
+	},
+	{
+		id: 'address-15',
+		street: 'Old Railway Line',
+		number: '23',
+		city: 'Kenema',
+		zip: '3004',
+		country: 'Sierra Leone',
+		createdAt: new Date(),
+		updatedAt: null
 	}
 ];
