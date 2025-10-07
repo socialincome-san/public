@@ -1,45 +1,41 @@
-import { PayoutStatus, Program as PrismaProgram, RecipientStatus } from '@prisma/client';
+import { PayoutStatus, Program, ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { CreateProgramInput, ProgramPermission, ProgramWallet, ProgramWalletView } from './program.types';
+import { CreateProgramInput, ProgramWallet, ProgramWalletView } from './program.types';
 
 export class ProgramService extends BaseService {
-	async create(input: CreateProgramInput): Promise<ServiceResult<PrismaProgram>> {
+	async create(input: CreateProgramInput): Promise<ServiceResult<Program>> {
 		try {
 			const existing = await this.findProgramByName(input.name);
 			if (existing) return this.resultFail('Program with this title already exists');
 
 			const program = await this.db.program.create({ data: input });
 			return this.resultOk(program);
-		} catch (e) {
-			console.error('[ProgramService.create]', e);
+		} catch {
 			return this.resultFail('Could not create program');
 		}
 	}
 
-	async findProgramByName(name: string): Promise<PrismaProgram | null> {
+	async findProgramByName(name: string): Promise<Program | null> {
 		return this.db.program.findFirst({ where: { name } });
 	}
 
 	async getProgramWalletView(userId: string): Promise<ServiceResult<ProgramWalletView>> {
 		try {
 			const programs = await this.db.program.findMany({
-				where: this.userAccessibleProgramsWhere(userId),
+				where: {
+					accesses: {
+						some: { userId },
+					},
+				},
 				select: {
 					id: true,
 					name: true,
 					country: true,
 					payoutCurrency: true,
-					operatorOrganization: {
-						select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-					},
-					viewerOrganization: {
-						select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-					},
+					accesses: { where: { userId }, select: { permissions: true } },
 					recipients: {
-						where: { status: { in: [RecipientStatus.active, RecipientStatus.designated] } },
 						select: {
-							id: true,
 							payouts: {
 								where: { status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] } },
 								select: { amount: true },
@@ -50,20 +46,24 @@ export class ProgramService extends BaseService {
 				orderBy: { createdAt: 'desc' },
 			});
 
-			const wallets: ProgramWallet[] = programs.map((program) => {
+			const wallets: ProgramWallet[] = [];
+
+			for (const program of programs) {
 				const recipientsCount = program.recipients.length;
 
 				let totalPayoutsSum = 0;
 				for (const recipient of program.recipients) {
 					for (const payout of recipient.payouts) {
-						totalPayoutsSum += payout.amount ?? 0;
+						totalPayoutsSum += Number(payout.amount ?? 0);
 					}
 				}
 
-				const isOperator = (program.operatorOrganization?.users?.length ?? 0) > 0;
-				const permission: ProgramPermission = isOperator ? 'operator' : 'viewer';
+				const permissions = program.accesses[0]?.permissions ?? [];
+				const permission: ProgramPermission = permissions.includes(ProgramPermission.edit)
+					? ProgramPermission.edit
+					: ProgramPermission.readonly;
 
-				return {
+				wallets.push({
 					id: program.id,
 					programName: program.name,
 					country: program.country,
@@ -71,12 +71,11 @@ export class ProgramService extends BaseService {
 					recipientsCount,
 					totalPayoutsSum,
 					permission,
-				};
-			});
+				});
+			}
 
 			return this.resultOk({ wallets });
-		} catch (error) {
-			console.error('[ProgramService.getProgramWalletView]', error);
+		} catch {
 			return this.resultFail('Could not fetch programs');
 		}
 	}
@@ -93,26 +92,20 @@ export class ProgramService extends BaseService {
 
 	async getProgramPermissionForUser(userId: string, programId: string): Promise<ServiceResult<ProgramPermission>> {
 		try {
-			const program = await this.db.program.findFirst({
-				where: { id: programId },
-				select: {
-					operatorOrganization: {
-						select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-					},
-					viewerOrganization: {
-						select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-					},
-				},
+			const access = await this.db.programAccess.findFirst({
+				where: { userId, programId },
+				select: { permissions: true },
 			});
 
-			if (!program) return this.resultFail('Program not found');
+			if (!access) return this.resultFail('No access found for user');
 
-			const isOperator = (program.operatorOrganization?.users?.length ?? 0) > 0;
-			const permission: ProgramPermission = isOperator ? 'operator' : 'viewer';
+			const permissions = access.permissions ?? [];
+			const permission: ProgramPermission = permissions.includes(ProgramPermission.edit)
+				? ProgramPermission.edit
+				: ProgramPermission.readonly;
 
 			return this.resultOk(permission);
-		} catch (error) {
-			console.error('[RecipientService.getProgramPermissionForUser]', error);
+		} catch {
 			return this.resultFail('Could not fetch program permission');
 		}
 	}

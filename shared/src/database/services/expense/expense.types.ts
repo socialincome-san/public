@@ -1,12 +1,13 @@
-import { Expense as PrismaExpense } from '@prisma/client';
+import { Expense, ExpenseType } from '@prisma/client';
 
-export type CreateExpenseInput = Omit<PrismaExpense, 'id' | 'createdAt' | 'updatedAt'>;
+export type CreateExpenseInput = Omit<Expense, 'id' | 'createdAt' | 'updatedAt'>;
 
 export type ExpenseTableViewRow = {
 	id: string;
-	type: string;
+	type: ExpenseType;
 	year: number;
 	amountChf: number;
+	organizationName: string;
 	readonly: boolean;
 };
 

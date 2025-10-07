@@ -26,7 +26,6 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	}
 
 	const { programName, permission, country } = result.data;
-	const isOperator = permission === 'operator';
 
 	const sections = [
 		{ href: `/portal/programs/${programId}/overview`, label: 'Overview' },
@@ -49,13 +48,7 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 
 				<CountryBadge country={country} />
 
-				<Button
-					variant="outline"
-					className="ml-auto rounded-full"
-					disabled={!isOperator}
-					title={isOperator ? 'Manage program' : 'You do not have permission to manage this program'}
-					aria-disabled={!isOperator}
-				>
+				<Button variant="outline" className="ml-auto rounded-full" title="Manage program">
 					<Pen className="mr-2 h-4 w-4" />
 					Manage program
 				</Button>

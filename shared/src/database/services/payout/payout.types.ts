@@ -1,8 +1,6 @@
-import { Gender, PayoutStatus, Payout as PrismaPayout } from '@prisma/client';
+import { Gender, Payout, PayoutStatus, ProgramPermission } from '@prisma/client';
 
-export type CreatePayoutInput = Omit<PrismaPayout, 'id' | 'createdAt' | 'updatedAt'>;
-
-export type ProgramPermission = 'operator' | 'viewer';
+export type CreatePayoutInput = Omit<Payout, 'id' | 'createdAt' | 'updatedAt'>;
 
 export type PayoutMonth = {
 	monthLabel: string;

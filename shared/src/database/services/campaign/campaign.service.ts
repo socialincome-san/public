@@ -13,13 +13,13 @@ export class CampaignService extends BaseService {
 		}
 	}
 
-	async getTableView(userAccountId: string): Promise<ServiceResult<CampaignTableView>> {
+	async getTableView(userId: string): Promise<ServiceResult<CampaignTableView>> {
 		try {
 			const campaigns = await this.db.campaign.findMany({
 				where: {
 					program: {
 						accesses: {
-							some: { userAccountId },
+							some: { userId },
 						},
 					},
 				},
@@ -37,7 +37,7 @@ export class CampaignService extends BaseService {
 							id: true,
 							name: true,
 							accesses: {
-								where: { userAccountId },
+								where: { userId },
 								select: { permissions: true },
 							},
 						},
@@ -49,9 +49,10 @@ export class CampaignService extends BaseService {
 			const dateFormatter = new Intl.DateTimeFormat('de-CH');
 
 			const tableRows: CampaignTableViewRow[] = campaigns.map((c) => {
-				// each program has at most one access entry for this user
 				const permissions = c.program?.accesses[0]?.permissions ?? [];
-				const permission: ProgramPermission = permissions.includes('edit') ? 'edit' : 'readonly';
+				const permission: ProgramPermission = permissions.includes(ProgramPermission.edit)
+					? ProgramPermission.edit
+					: ProgramPermission.readonly;
 
 				return {
 					id: c.id,
@@ -76,14 +77,13 @@ export class CampaignService extends BaseService {
 	}
 
 	async getCampaignTableViewProgramScoped(
-		userAccountId: string,
+		userId: string,
 		programId: string,
 	): Promise<ServiceResult<CampaignTableView>> {
-		const base = await this.getTableView(userAccountId);
+		const base = await this.getTableView(userId);
 		if (!base.success) return base;
 
 		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
-
 		return this.resultOk({ tableRows: filteredRows });
 	}
 }

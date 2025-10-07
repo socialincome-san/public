@@ -94,7 +94,7 @@ enum ExpenseType {
   staff
 }
 
-enum UserAccountRole {
+enum UserRole {
   admin
   user
 }
@@ -103,27 +103,42 @@ enum PaymentProvider {
   orange_money
 }
 
-model UserAccount {
+model Account {
   id String @id @default(cuid()) @map("id")
 
-  firebaseAuthUserId String          @unique @map("firebase_auth_user_id")
-  role               UserAccountRole
+  firebaseAuthUserId String @unique @map("firebase_auth_user_id")
 
-  contributor          Contributor?
-  recipient            Recipient?
+  contributor Contributor?
+  recipient   Recipient?
+  user        User?
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("account")
+}
+
+model User {
+  id        String   @id @default(cuid()) @map("id")
+  accountId String   @unique @map("account_id")
+  account   Account  @relation(fields: [accountId], references: [id])
+  contactId String   @unique @map("contact_profile_id")
+  contact   Contact  @relation(fields: [contactId], references: [id])
+  role      UserRole @map("role")
+
   organizationAccesses OrganizationAccess[]
   programAccesses      ProgramAccess[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  @@map("user_account")
+  @@map("portal_user")
 }
 
 model Contributor {
   id                 String                    @id @default(cuid()) @map("id")
-  userAccountId      String                    @unique @map("user_account_id")
-  userAccount        UserAccount               @relation(fields: [userAccountId], references: [id])
+  accountId          String                    @unique @map("account_id")
+  account            Account                   @relation(fields: [accountId], references: [id])
   contactId          String                    @unique @map("contact_profile_id")
   contact            Contact                   @relation(fields: [contactId], references: [id])
   referral           ContributorReferralSource @map("referral")
@@ -189,8 +204,8 @@ model DonationCertificate {
 
 model Recipient {
   id                   String              @id @default(cuid()) @map("id")
-  userAccountId        String              @unique @map("user_account_id")
-  userAccount          UserAccount         @relation(fields: [userAccountId], references: [id])
+  accountId            String              @unique @map("account_id")
+  account              Account             @relation(fields: [accountId], references: [id])
   contactId            String              @unique @map("contact_profile_id")
   contact              Contact             @relation(fields: [contactId], references: [id])
   startDate            DateTime?           @map("start_date") @db.Timestamptz(3)
@@ -268,8 +283,8 @@ model LocalPartner {
 
 model OrganizationAccess {
   id             String                   @id @default(cuid())
-  userAccountId  String
-  userAccount    UserAccount              @relation(fields: [userAccountId], references: [id])
+  userId         String                   @map("user_id")
+  user           User                     @relation(fields: [userId], references: [id])
   organizationId String
   organization   Organization             @relation(fields: [organizationId], references: [id])
   permissions    OrganizationPermission[]
@@ -277,20 +292,19 @@ model OrganizationAccess {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  @@unique([userAccountId, organizationId])
+  @@unique([userId, organizationId])
   @@map("organization_access")
 }
 
 model ProgramAccess {
-  id            String      @id @default(cuid())
-  userAccountId String
-  userAccount   UserAccount @relation(fields: [userAccountId], references: [id])
-  programId     String
-  program       Program     @relation(fields: [programId], references: [id])
-
+  id          String              @id @default(cuid())
+  userId      String              @map("user_id")
+  user        User                @relation(fields: [userId], references: [id])
+  programId   String
+  program     Program             @relation(fields: [programId], references: [id])
   permissions ProgramPermission[]
 
-  @@unique([userAccountId, programId])
+  @@unique([userId, programId])
   @@map("program_access")
 }
 
@@ -426,6 +440,7 @@ model Contact {
 
   contributor  Contributor?
   recipient    Recipient?
+  user         User?
   localPartner LocalPartner?
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)

@@ -150,5 +150,35 @@ export const addressesData: Address[] = [
 		country: 'Sierra Leone',
 		createdAt: new Date(),
 		updatedAt: null
+	},
+	{
+		id: 'address-16',
+		street: 'Bahnhofplatz',
+		number: '2',
+		city: 'Zürich',
+		zip: '8001',
+		country: 'Switzerland',
+		createdAt: new Date(),
+		updatedAt: null
+	},
+	{
+		id: 'address-17',
+		street: 'Seefeldstrasse',
+		number: '88',
+		city: 'Zürich',
+		zip: '8008',
+		country: 'Switzerland',
+		createdAt: new Date(),
+		updatedAt: null
+	},
+	{
+		id: 'address-18',
+		street: 'Länggassstrasse',
+		number: '12',
+		city: 'Bern',
+		zip: '3012',
+		country: 'Switzerland',
+		createdAt: new Date(),
+		updatedAt: null
 	}
 ];

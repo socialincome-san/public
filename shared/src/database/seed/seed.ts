@@ -1,5 +1,6 @@
 import { prisma } from '../prisma';
-import { userAccountsData } from './data/user-accounts.data';
+import { accountsData } from './data/accounts.data';
+import { usersData } from './data/users.data';
 import { phonesData } from './data/phones.data';
 import { contactsData } from './data/contacts.data';
 import { organizationsData } from './data/organizations.data';
@@ -17,7 +18,7 @@ import { recipientsData } from './data/recipients.data';
 import { payoutsData } from './data/payouts.data';
 import { surveysData } from './data/surveys.data';
 import { expensesData } from './data/expenses.data';
-import { exchangeRatesData } from './data/exchangerates.data';
+import { exchangeRatesData } from './data/exchange-rates.data';
 import { addressesData } from './data/addresses.data';
 
 async function main() {
@@ -38,15 +39,17 @@ async function main() {
 		await tx.expense.deleteMany();
 		await tx.organization.deleteMany();
 		await tx.exchangeRate.deleteMany();
+		await tx.user.deleteMany();
 		await tx.contact.deleteMany();
 		await tx.phone.deleteMany();
 		await tx.address.deleteMany();
-		await tx.userAccount.deleteMany();
+		await tx.account.deleteMany();
 
-		await tx.userAccount.createMany({ data: userAccountsData, skipDuplicates: true });
+		await tx.account.createMany({ data: accountsData, skipDuplicates: true });
 		await tx.address.createMany({ data: addressesData, skipDuplicates: true });
 		await tx.phone.createMany({ data: phonesData, skipDuplicates: true });
 		await tx.contact.createMany({ data: contactsData, skipDuplicates: true });
+		await tx.user.createMany({ data: usersData, skipDuplicates: true });
 		await tx.organization.createMany({ data: organizationsData, skipDuplicates: true });
 		await tx.organizationAccess.createMany({ data: organizationAccessesData, skipDuplicates: true });
 		await tx.program.createMany({ data: programsData, skipDuplicates: true });

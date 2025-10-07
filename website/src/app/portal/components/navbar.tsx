@@ -12,7 +12,7 @@ import {
 } from '@/app/portal/components/dropdown-menu';
 import { Logo } from '@/app/portal/components/logo';
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
-import { UserInformation } from '@socialincome/shared/src/database/services/user-account/user.types';
+import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
 import { signOut } from 'firebase/auth';
 import { Building2, ChevronsUpDown, Handshake, LogOut, Menu, Settings, UsersRound, WalletCards, X } from 'lucide-react';
 import Link from 'next/link';
@@ -111,7 +111,7 @@ export function Navbar({ user }: NavbarProps) {
 				<p className="text-foreground text-sm font-medium md:text-xs">
 					{user.firstName} {user.lastName}
 				</p>
-				<p className="text-muted-foreground text-xs">{user.organizationName}</p>
+				<p className="text-muted-foreground text-xs">{user.organizationNames.join(', ')}</p>
 			</div>
 		</>
 	);

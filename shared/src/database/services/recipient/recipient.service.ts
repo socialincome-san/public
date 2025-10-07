@@ -25,13 +25,13 @@ export class RecipientService extends BaseService {
 		}
 	}
 
-	async getRecipientTableView(userAccountId: string): Promise<ServiceResult<RecipientTableView>> {
+	async getRecipientTableView(userId: string): Promise<ServiceResult<RecipientTableView>> {
 		try {
 			const recipients = await this.db.recipient.findMany({
 				where: {
 					program: {
 						accesses: {
-							some: { userAccountId },
+							some: { userId },
 						},
 					},
 				},
@@ -45,13 +45,14 @@ export class RecipientService extends BaseService {
 							name: true,
 							totalPayments: true,
 							accesses: {
-								where: { userAccountId },
+								where: { userId },
 								select: { permissions: true },
 							},
 						},
 					},
 					localPartner: {
 						select: {
+							name: true,
 							contact: {
 								select: {
 									firstName: true,
@@ -83,7 +84,13 @@ export class RecipientService extends BaseService {
 				const age = birthDate ? this.calculateAgeFromBirthDate(birthDate) : null;
 
 				const permissions = r.program?.accesses[0]?.permissions ?? [];
-				const permission: ProgramPermission = permissions.includes('edit') ? 'edit' : 'readonly';
+				const permission: ProgramPermission = permissions.includes(ProgramPermission.edit)
+					? ProgramPermission.edit
+					: ProgramPermission.readonly;
+
+				const localPartnerName =
+					r.localPartner?.name ??
+					(r.localPartner?.contact ? `${r.localPartner.contact.firstName} ${r.localPartner.contact.lastName}` : '');
 
 				return {
 					id: r.id,
@@ -94,10 +101,7 @@ export class RecipientService extends BaseService {
 					payoutsReceived,
 					payoutsTotal,
 					payoutsProgressPercent,
-					localPartnerName:
-						r.localPartner?.contact?.firstName && r.localPartner?.contact?.lastName
-							? `${r.localPartner.contact.firstName} ${r.localPartner.contact.lastName}`
-							: '',
+					localPartnerName,
 					programName: r.program?.name ?? '',
 					programId: r.program?.id ?? '',
 					permission,
@@ -111,14 +115,13 @@ export class RecipientService extends BaseService {
 	}
 
 	async getRecipientTableViewProgramScoped(
-		userAccountId: string,
+		userId: string,
 		programId: string,
 	): Promise<ServiceResult<RecipientTableView>> {
-		const base = await this.getRecipientTableView(userAccountId);
+		const base = await this.getRecipientTableView(userId);
 		if (!base.success) return base;
 
 		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
-
 		return this.resultOk({ tableRows: filteredRows });
 	}
 

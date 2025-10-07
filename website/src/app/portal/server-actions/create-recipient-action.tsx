@@ -5,12 +5,17 @@ import { revalidatePath } from 'next/cache';
 
 export async function createRecipientAction() {
 	const recipientService = new RecipientService();
+
 	await recipientService.create({
-		userId: 'user-1',
-		programId: 'program-1',
-		localPartnerId: '',
-		startDate: null,
+		accountId: 'todo',
+		contactId: 'todo',
+		programId: 'todo',
+		localPartnerId: 'todo',
 		status: 'active',
+		startDate: new Date(),
+		successorName: null,
+		termsAccepted: true,
+		paymentInformationId: null,
 	});
 
 	revalidatePath('/portal/management/recipients');

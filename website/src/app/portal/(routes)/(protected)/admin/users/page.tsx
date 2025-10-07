@@ -10,7 +10,7 @@ export default async function UsersPage() {
 	await requireAdmin(user);
 
 	const service = new UserService();
-	const result = await service.getUserAdminTableView(user);
+	const result = await service.getTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows: UserTableViewRow[] = result.success ? result.data.tableRows : [];

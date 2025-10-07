@@ -1,8 +1,7 @@
-import { Expense as PrismaExpense } from '@prisma/client';
-
+import { Expense as PrismaExpense, UserRole } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { UserInformation } from '../user-account/user.types';
+import { UserInformation } from '../user/user.types';
 import { CreateExpenseInput, ExpenseTableView, ExpenseTableViewRow } from './expense.types';
 
 export class ExpenseService extends BaseService {
@@ -13,15 +12,15 @@ export class ExpenseService extends BaseService {
 			});
 
 			return this.resultOk(expense);
-		} catch (e) {
-			console.error('[ExpenseService.create]', e);
+		} catch (error) {
 			return this.resultFail('Could not create expense');
 		}
 	}
 
 	async getExpenseAdminTableView(user: UserInformation): Promise<ServiceResult<ExpenseTableView>> {
-		const accessDenied = this.requireGlobalAnalystOrAdmin<ExpenseTableView>(user);
-		if (accessDenied) return accessDenied;
+		if (user.role !== UserRole.admin) {
+			return this.resultOk({ tableRows: [] });
+		}
 
 		try {
 			const expenses = await this.db.expense.findMany({
@@ -30,6 +29,7 @@ export class ExpenseService extends BaseService {
 					type: true,
 					year: true,
 					amountChf: true,
+					organization: { select: { name: true } },
 				},
 				orderBy: [{ year: 'desc' }, { type: 'asc' }],
 			});
@@ -38,13 +38,13 @@ export class ExpenseService extends BaseService {
 				id: expense.id,
 				type: expense.type,
 				year: expense.year,
-				amountChf: expense.amountChf,
-				readonly: user.role === 'globalAnalyst',
+				amountChf: Number(expense.amountChf),
+				organizationName: expense.organization.name,
+				readonly: user.role !== UserRole.admin,
 			}));
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error('[ExpenseService.getExpenseTableView]', error);
 			return this.resultFail('Could not fetch expenses');
 		}
 	}

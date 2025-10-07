@@ -35,26 +35,37 @@ CREATE TYPE "ContributorReferralSource" AS ENUM ('family_and_friends', 'work', '
 CREATE TYPE "ExpenseType" AS ENUM ('account_fees', 'administrative', 'delivery_fees', 'donation_fees', 'exchange_rate_loss', 'fundraising_advertising', 'staff');
 
 -- CreateEnum
-CREATE TYPE "UserAccountRole" AS ENUM ('admin', 'user');
+CREATE TYPE "UserRole" AS ENUM ('admin', 'user');
 
 -- CreateEnum
 CREATE TYPE "PaymentProvider" AS ENUM ('orange_money');
 
 -- CreateTable
-CREATE TABLE "user_account" (
+CREATE TABLE "account" (
     "id" TEXT NOT NULL,
     "firebase_auth_user_id" TEXT NOT NULL,
-    "role" "UserAccountRole" NOT NULL,
     "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(3),
 
-    CONSTRAINT "user_account_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "account_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "portal_user" (
+    "id" TEXT NOT NULL,
+    "account_id" TEXT NOT NULL,
+    "contact_profile_id" TEXT NOT NULL,
+    "role" "UserRole" NOT NULL,
+    "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ(3),
+
+    CONSTRAINT "portal_user_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "contributor" (
     "id" TEXT NOT NULL,
-    "user_account_id" TEXT NOT NULL,
+    "account_id" TEXT NOT NULL,
     "contact_profile_id" TEXT NOT NULL,
     "referral" "ContributorReferralSource" NOT NULL,
     "payment_reference_id" TEXT,
@@ -110,7 +121,7 @@ CREATE TABLE "donation_certificate" (
 -- CreateTable
 CREATE TABLE "recipient" (
     "id" TEXT NOT NULL,
-    "user_account_id" TEXT NOT NULL,
+    "account_id" TEXT NOT NULL,
     "contact_profile_id" TEXT NOT NULL,
     "start_date" TIMESTAMPTZ(3),
     "status" "RecipientStatus" NOT NULL,
@@ -178,7 +189,7 @@ CREATE TABLE "local_partner" (
 -- CreateTable
 CREATE TABLE "organization_access" (
     "id" TEXT NOT NULL,
-    "userAccountId" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
     "organizationId" TEXT NOT NULL,
     "permissions" "OrganizationPermission"[],
     "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -190,7 +201,7 @@ CREATE TABLE "organization_access" (
 -- CreateTable
 CREATE TABLE "program_access" (
     "id" TEXT NOT NULL,
-    "userAccountId" TEXT NOT NULL,
+    "user_id" TEXT NOT NULL,
     "programId" TEXT NOT NULL,
     "permissions" "ProgramPermission"[],
 
@@ -342,10 +353,16 @@ CREATE TABLE "exchange_rate" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_account_firebase_auth_user_id_key" ON "user_account"("firebase_auth_user_id");
+CREATE UNIQUE INDEX "account_firebase_auth_user_id_key" ON "account"("firebase_auth_user_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "contributor_user_account_id_key" ON "contributor"("user_account_id");
+CREATE UNIQUE INDEX "portal_user_account_id_key" ON "portal_user"("account_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "portal_user_contact_profile_id_key" ON "portal_user"("contact_profile_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "contributor_account_id_key" ON "contributor"("account_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "contributor_contact_profile_id_key" ON "contributor"("contact_profile_id");
@@ -357,7 +374,7 @@ CREATE UNIQUE INDEX "payment_event_contribution_id_key" ON "payment_event"("cont
 CREATE UNIQUE INDEX "donation_certificate_contributor_id_year_key" ON "donation_certificate"("contributor_id", "year");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "recipient_user_account_id_key" ON "recipient"("user_account_id");
+CREATE UNIQUE INDEX "recipient_account_id_key" ON "recipient"("account_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "recipient_contact_profile_id_key" ON "recipient"("contact_profile_id");
@@ -366,10 +383,10 @@ CREATE UNIQUE INDEX "recipient_contact_profile_id_key" ON "recipient"("contact_p
 CREATE UNIQUE INDEX "local_partner_contact_profile_id_key" ON "local_partner"("contact_profile_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "organization_access_userAccountId_organizationId_key" ON "organization_access"("userAccountId", "organizationId");
+CREATE UNIQUE INDEX "organization_access_user_id_organizationId_key" ON "organization_access"("user_id", "organizationId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "program_access_userAccountId_programId_key" ON "program_access"("userAccountId", "programId");
+CREATE UNIQUE INDEX "program_access_user_id_programId_key" ON "program_access"("user_id", "programId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "organization_name_key" ON "organization"("name");
@@ -384,7 +401,13 @@ CREATE UNIQUE INDEX "payment_information_code_key" ON "payment_information"("cod
 CREATE UNIQUE INDEX "contact_address_id_key" ON "contact"("address_id");
 
 -- AddForeignKey
-ALTER TABLE "contributor" ADD CONSTRAINT "contributor_user_account_id_fkey" FOREIGN KEY ("user_account_id") REFERENCES "user_account"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "portal_user" ADD CONSTRAINT "portal_user_account_id_fkey" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "portal_user" ADD CONSTRAINT "portal_user_contact_profile_id_fkey" FOREIGN KEY ("contact_profile_id") REFERENCES "contact"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "contributor" ADD CONSTRAINT "contributor_account_id_fkey" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "contributor" ADD CONSTRAINT "contributor_contact_profile_id_fkey" FOREIGN KEY ("contact_profile_id") REFERENCES "contact"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -402,7 +425,7 @@ ALTER TABLE "payment_event" ADD CONSTRAINT "payment_event_contribution_id_fkey" 
 ALTER TABLE "donation_certificate" ADD CONSTRAINT "donation_certificate_contributor_id_fkey" FOREIGN KEY ("contributor_id") REFERENCES "contributor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "recipient" ADD CONSTRAINT "recipient_user_account_id_fkey" FOREIGN KEY ("user_account_id") REFERENCES "user_account"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "recipient" ADD CONSTRAINT "recipient_account_id_fkey" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "recipient" ADD CONSTRAINT "recipient_contact_profile_id_fkey" FOREIGN KEY ("contact_profile_id") REFERENCES "contact"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -426,13 +449,13 @@ ALTER TABLE "survey" ADD CONSTRAINT "survey_recipient_id_fkey" FOREIGN KEY ("rec
 ALTER TABLE "local_partner" ADD CONSTRAINT "local_partner_contact_profile_id_fkey" FOREIGN KEY ("contact_profile_id") REFERENCES "contact"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "organization_access" ADD CONSTRAINT "organization_access_userAccountId_fkey" FOREIGN KEY ("userAccountId") REFERENCES "user_account"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "organization_access" ADD CONSTRAINT "organization_access_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "portal_user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "organization_access" ADD CONSTRAINT "organization_access_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organization"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "program_access" ADD CONSTRAINT "program_access_userAccountId_fkey" FOREIGN KEY ("userAccountId") REFERENCES "user_account"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "program_access" ADD CONSTRAINT "program_access_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "portal_user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "program_access" ADD CONSTRAINT "program_access_programId_fkey" FOREIGN KEY ("programId") REFERENCES "program"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

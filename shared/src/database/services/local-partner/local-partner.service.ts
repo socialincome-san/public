@@ -1,4 +1,4 @@
-import { LocalPartner } from '@prisma/client';
+import { LocalPartner, UserRole } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { CreateLocalPartnerInput, LocalPartnerTableView, LocalPartnerTableViewRow } from './local-partner.types';
@@ -8,19 +8,19 @@ export class LocalPartnerService extends BaseService {
 		try {
 			const partner = await this.db.localPartner.create({ data: input });
 			return this.resultOk(partner);
-		} catch {
+		} catch (error) {
 			return this.resultFail('Could not create local partner');
 		}
 	}
 
-	async getTableView(userAccountId: string): Promise<ServiceResult<LocalPartnerTableView>> {
+	async getTableView(userId: string): Promise<ServiceResult<LocalPartnerTableView>> {
 		try {
-			const user = await this.db.userAccount.findUnique({
-				where: { id: userAccountId },
+			const user = await this.db.user.findUnique({
+				where: { id: userId },
 				select: { role: true },
 			});
 
-			if (!user || user.role !== 'admin') {
+			if (!user || user.role !== UserRole.admin) {
 				return this.resultOk({ tableRows: [] });
 			}
 
@@ -46,7 +46,6 @@ export class LocalPartnerService extends BaseService {
 				contactPerson: `${p.contact?.firstName ?? ''} ${p.contact?.lastName ?? ''}`.trim(),
 				contactNumber: p.contact?.phone?.number ?? null,
 				recipientsCount: p._count.recipients,
-				readonly: true,
 			}));
 
 			return this.resultOk({ tableRows });

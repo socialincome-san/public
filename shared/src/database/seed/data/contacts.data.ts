@@ -225,5 +225,49 @@ export const contactsData: Contact[] = [
 		profession: 'Operations Manager',
 		createdAt: new Date(),
 		updatedAt: null
+	}, {
+		id: 'contact-16',
+		firstName: 'Nadine',
+		lastName: 'Schmid',
+		callingName: 'Nadine',
+		addressId: 'address-16',
+		phoneId: 'phone-1',
+		email: 'nadine.schmid@portal.org',
+		gender: Gender.female,
+		language: 'de',
+		dateOfBirth: new Date('1989-05-19'),
+		profession: 'Portal Administrator',
+		createdAt: new Date(),
+		updatedAt: null
+	},
+	{
+		id: 'contact-17',
+		firstName: 'Jonas',
+		lastName: 'Baumann',
+		callingName: 'Jonas',
+		addressId: 'address-17',
+		phoneId: 'phone-2',
+		email: 'jonas.baumann@portal.org',
+		gender: Gender.male,
+		language: 'de',
+		dateOfBirth: new Date('1991-08-02'),
+		profession: 'Program Manager',
+		createdAt: new Date(),
+		updatedAt: null
+	},
+	{
+		id: 'contact-18',
+		firstName: 'Céline',
+		lastName: 'Dubois',
+		callingName: 'Céline',
+		addressId: 'address-18',
+		phoneId: 'phone-3',
+		email: 'celine.dubois@portal.org',
+		gender: Gender.female,
+		language: 'fr',
+		dateOfBirth: new Date('1987-11-13'),
+		profession: 'Communications Officer',
+		createdAt: new Date(),
+		updatedAt: null
 	}
 ];
