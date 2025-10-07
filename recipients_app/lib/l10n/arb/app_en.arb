@@ -1,5 +1,6 @@
 {
     "@@locale": "en",
+    "ok": "OK",
     "profileUpdateSuccess": "Profile updated successfully",
     "profileUpdateError": "Failed to update profile. Please try again or contact our support",
     "profile": "Profile",
@@ -281,5 +282,10 @@
     "contestReason_phoneStolen": "Phone stolen",
     "contestReason_incorrectAmount": "Incorrect amount",
     "contestReason_numberChanged": "Changed phone number",
-    "contestReason_otherReason": "Other reason"
+    "contestReason_otherReason": "Other reason",
+    "appUpdateButtonTitleLater": "Later",
+    "appUpdateButtonTitleUpdateNow": "Update Now",
+    "appUpdateWidgetTitle": "App Update Required",
+    "appUpdateWidgetMessage": "Please update to continue using the app.",
+    "appUpdateWidgetErrorLaunchingStore": "We could not guide you to the Store to update the app. Please open the Play Store app on Android or App Store app on iOS and update Social Income."
 }
