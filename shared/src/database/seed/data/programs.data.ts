@@ -3,7 +3,7 @@ import { Prisma, Program } from '@prisma/client';
 export const programsData: Program[] = [
 	{
 		id: 'program-1',
-		name: 'Migros Poverty Relief – Sierra Leone',
+		name: 'Migros Relief SL',
 		totalPayments: 12,
 		payoutAmount: new Prisma.Decimal(50),
 		payoutCurrency: 'SLE',
@@ -16,7 +16,20 @@ export const programsData: Program[] = [
 	},
 	{
 		id: 'program-2',
-		name: 'Coop Cash Assistance – Sierra Leone',
+		name: 'Migros Education SL',
+		totalPayments: 8,
+		payoutAmount: new Prisma.Decimal(40),
+		payoutCurrency: 'SLE',
+		payoutInterval: 30,
+		country: 'Sierra Leone',
+		ownerOrganizationId: 'organization-1',
+		operatorOrganizationId: 'organization-1',
+		createdAt: new Date(),
+		updatedAt: null
+	},
+	{
+		id: 'program-3',
+		name: 'Coop Cash Aid SL',
 		totalPayments: 6,
 		payoutAmount: new Prisma.Decimal(75),
 		payoutCurrency: 'SLE',
@@ -28,8 +41,8 @@ export const programsData: Program[] = [
 		updatedAt: null
 	},
 	{
-		id: 'program-3',
-		name: 'Swiss Red Cross Basic Needs Support',
+		id: 'program-4',
+		name: 'Red Cross Basic Needs',
 		totalPayments: 9,
 		payoutAmount: new Prisma.Decimal(60),
 		payoutCurrency: 'SLE',
@@ -41,8 +54,8 @@ export const programsData: Program[] = [
 		updatedAt: null
 	},
 	{
-		id: 'program-4',
-		name: 'Caritas Family Support – Liberia',
+		id: 'program-5',
+		name: 'Caritas Family Support',
 		totalPayments: 10,
 		payoutAmount: new Prisma.Decimal(80),
 		payoutCurrency: 'LRD',
