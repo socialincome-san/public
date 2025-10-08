@@ -9,6 +9,7 @@ import {
 	getLocalPartnerAction,
 } from '@/app/portal/server-actions/create-local-partner-action';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Gender } from '@prisma/client';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@socialincome/ui/src/components/form';
 import { SpinnerIcon } from '@socialincome/ui/src/icons/spinner';
 import { useEffect, useTransition } from 'react';
@@ -24,8 +25,6 @@ export default function LocalPartnersForm({
 	onError?: () => void;
 	localPartnerId?: string;
 }) {
-	const GENDER = ['male', 'female', 'other', 'private'] as const;
-
 	const formSchema = z.object({
 		name: z.string().min(2, {
 			message: 'Name must be at least 2 characters.',
@@ -36,7 +35,7 @@ export default function LocalPartnersForm({
 		contactLastName: z.string().min(2, {
 			message: 'Name must be at least 2 characters.',
 		}),
-		gender: z.enum(GENDER),
+		gender: z.nativeEnum(Gender),
 	});
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -150,7 +149,7 @@ export default function LocalPartnersForm({
 									</SelectTrigger>
 								</FormControl>
 								<SelectContent {...field}>
-									{GENDER.map((gender) => (
+									{Object.keys(Gender).map((gender) => (
 										<SelectItem value={gender} key={gender}>
 											{gender}
 										</SelectItem>
