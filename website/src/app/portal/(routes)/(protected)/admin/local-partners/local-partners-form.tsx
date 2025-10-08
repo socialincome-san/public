@@ -48,7 +48,6 @@ export default function LocalPartnersForm({
 	});
 
 	const [isLoading, startTransition] = useTransition();
-	// const isLoading = true;
 	let editing = !!localPartnerId;
 
 	useEffect(() => {
@@ -59,7 +58,6 @@ export default function LocalPartnersForm({
 					const partner = await getLocalPartnerAction(localPartnerId);
 					if (partner.success) {
 						form.setValue('name', partner.data.name);
-						// TODO: typing
 						form.setValue('contactFirstName', partner.data.contact.firstName);
 						form.setValue('contactLastName', partner.data.contact.lastName);
 						partner.data.contact.gender && form.setValue('gender', partner.data.contact.gender);
