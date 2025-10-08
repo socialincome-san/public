@@ -1,9 +1,6 @@
-import { Prisma, Recipient, RecipientStatus } from '@prisma/client';
-import RecipientGetPayload = Prisma.RecipientGetPayload;
+import { ProgramPermission, Recipient, RecipientStatus } from '@prisma/client';
 
 export type CreateRecipientInput = Omit<Recipient, 'id' | 'createdAt' | 'updatedAt'>;
-
-export type ProgramPermission = 'operator' | 'viewer';
 
 export type RecipientTableViewRow = {
 	id: string;
@@ -23,5 +20,3 @@ export type RecipientTableViewRow = {
 export type RecipientTableView = {
 	tableRows: RecipientTableViewRow[];
 };
-
-export type RecipientWithPayouts = RecipientGetPayload<{ include: { payouts: true } }>;

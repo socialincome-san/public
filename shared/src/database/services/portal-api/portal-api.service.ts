@@ -2,14 +2,10 @@ import { Payout, PayoutStatus, Survey } from '@prisma/client';
 import { authAdmin } from '@socialincome/website/src/lib/firebase/firebase-admin';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { RecipientExpanded, RecipientUserUpdateInput } from './portal-api.types';
+import { RecipientUpdateInput, RecipientWithRelations } from './portal-api.types';
 
 export class PortalApiService extends BaseService {
-	private normalizePhone(phone?: string | null) {
-		return phone ? phone.replace(/^\+/, '') : null;
-	}
-
-	async getRecipientFromRequest(request: Request): Promise<ServiceResult<RecipientExpanded>> {
+	async getRecipientFromRequest(request: Request): Promise<ServiceResult<RecipientWithRelations>> {
 		const decoded = await this.requireIdToken(request);
 		if (!decoded) return this.resultFail('Unauthorized', 401);
 
@@ -18,16 +14,16 @@ export class PortalApiService extends BaseService {
 
 		try {
 			const recipient = await this.db.recipient.findFirst({
-				where: { user: { mobileMoneyPhone: phone } },
+				where: { paymentInformation: { phone: { number: phone } } },
 				include: {
-					user: true,
+					contact: true,
 					program: true,
-					localPartner: {
-						include: { user: true },
-					},
+					localPartner: { include: { contact: true } },
+					paymentInformation: { include: { phone: true } },
 				},
 			});
-			if (!recipient) return this.resultFail(`No recipient found with mobileMoneyPhone "${phone}"`, 404);
+
+			if (!recipient) return this.resultFail(`No recipient found for phone "${phone}"`, 404);
 			return this.resultOk(recipient, 200);
 		} catch {
 			return this.resultFail(`Could not fetch recipient for phone "${phone}"`, 500);
@@ -48,7 +44,9 @@ export class PortalApiService extends BaseService {
 
 	async getPayoutByRecipientAndId(recipientId: string, payoutId: string): Promise<ServiceResult<Payout>> {
 		try {
-			const payout = await this.db.payout.findFirst({ where: { id: payoutId, recipientId } });
+			const payout = await this.db.payout.findFirst({
+				where: { id: payoutId, recipientId },
+			});
 			if (!payout) return this.resultFail(`Payout "${payoutId}" not found for recipient`, 404);
 			return this.resultOk(payout, 200);
 		} catch {
@@ -62,10 +60,15 @@ export class PortalApiService extends BaseService {
 		status: PayoutStatus,
 	): Promise<ServiceResult<Payout>> {
 		try {
-			const payout = await this.db.payout.findFirst({ where: { id: payoutId, recipientId } });
+			const payout = await this.db.payout.findFirst({
+				where: { id: payoutId, recipientId },
+			});
 			if (!payout) return this.resultFail(`Payout "${payoutId}" not found for recipient`, 404);
 
-			const updated = await this.db.payout.update({ where: { id: payout.id }, data: { status } });
+			const updated = await this.db.payout.update({
+				where: { id: payout.id },
+				data: { status },
+			});
 			return this.resultOk(updated, 200);
 		} catch {
 			return this.resultFail(`Failed to update payout "${payoutId}"`, 500);
@@ -76,7 +79,7 @@ export class PortalApiService extends BaseService {
 		try {
 			const surveys = await this.db.survey.findMany({
 				where: { recipientId },
-				orderBy: [{ dueDateAt: 'desc' }, { createdAt: 'desc' }],
+				orderBy: [{ dueAt: 'desc' }, { createdAt: 'desc' }],
 			});
 			return this.resultOk(surveys, 200);
 		} catch {
@@ -84,33 +87,43 @@ export class PortalApiService extends BaseService {
 		}
 	}
 
-	async updateRecipientUserFields(
+	async updateRecipientFields(
 		recipientId: string,
-		data: RecipientUserUpdateInput,
-	): Promise<ServiceResult<RecipientExpanded>> {
+		data: RecipientUpdateInput,
+	): Promise<ServiceResult<RecipientWithRelations>> {
 		try {
+			const recipient = await this.db.recipient.findUnique({
+				where: { id: recipientId },
+				include: { contact: true },
+			});
+			if (!recipient) return this.resultFail(`Recipient "${recipientId}" not found`, 404);
+
 			const updatedRecipient = await this.db.recipient.update({
 				where: { id: recipientId },
 				data: {
-					user: {
+					contact: {
 						update: {
 							firstName: data.firstName,
 							lastName: data.lastName,
-							// TODO: add more fields here in the future
 						},
 					},
 				},
 				include: {
-					user: true,
+					contact: true,
 					program: true,
-					localPartner: { include: { user: true } },
+					localPartner: { include: { contact: true } },
+					paymentInformation: { include: { phone: true } },
 				},
 			});
 
 			return this.resultOk(updatedRecipient, 200);
 		} catch {
-			return this.resultFail('Failed to update user', 500);
+			return this.resultFail('Failed to update recipient', 500);
 		}
+	}
+
+	private normalizePhone(phone?: string | null) {
+		return phone ? phone.replace(/^\+/, '') : null;
 	}
 
 	private async requireIdToken(request: Request) {
@@ -119,8 +132,7 @@ export class PortalApiService extends BaseService {
 		const token = header.slice('Bearer '.length);
 		try {
 			return await authAdmin.auth.verifyIdToken(token);
-		} catch (e) {
-			console.error('Auth error:', e);
+		} catch {
 			return null;
 		}
 	}

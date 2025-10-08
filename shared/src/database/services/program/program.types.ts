@@ -1,14 +1,12 @@
-import { Program as PrismaProgram } from '@prisma/client';
+import { Program, ProgramPermission } from '@prisma/client';
 
-export type CreateProgramInput = Omit<PrismaProgram, 'id' | 'createdAt' | 'updatedAt'>;
-
-export type ProgramPermission = 'operator' | 'viewer';
+export type CreateProgramInput = Omit<Program, 'id' | 'createdAt' | 'updatedAt'>;
 
 export type ProgramWallet = {
 	id: string;
 	programName: string;
-	country: string;
-	payoutCurrency: string;
+	country: string | null;
+	payoutCurrency: string | null;
 	recipientsCount: number;
 	totalPayoutsSum: number;
 	permission: ProgramPermission;

@@ -1,13 +1,13 @@
 import { Button } from '@/app/portal/components/button';
 import { makeOrganizationColumns } from '@/app/portal/components/data-table/columns/organizations';
 import DataTable from '@/app/portal/components/data-table/data-table';
-import { getAuthenticatedUserOrRedirect, requireGlobalAnalystOrGlobalAdmin } from '@/lib/firebase/current-user';
+import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { OrganizationService } from '@socialincome/shared/src/database/services/organization/organization.service';
 import type { OrganizationTableViewRow } from '@socialincome/shared/src/database/services/organization/organization.types';
 
 export default async function OrganizationsPage() {
 	const user = await getAuthenticatedUserOrRedirect();
-	await requireGlobalAnalystOrGlobalAdmin(user);
+	await requireAdmin(user);
 
 	const service = new OrganizationService();
 	const result = await service.getOrganizationAdminTableView(user);

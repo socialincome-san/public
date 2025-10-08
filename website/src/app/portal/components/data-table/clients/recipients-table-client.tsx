@@ -25,7 +25,7 @@ export function RecipientsTableClient({ rows, error }: { rows: RecipientTableVie
 
 	const handleRowClick = (row: RecipientTableViewRow) => {
 		setInitialValues({ firstName: row.firstName, lastName: row.lastName, status: row.status });
-		setReadOnly(row.permission !== 'operator');
+		setReadOnly(row.permission === 'readonly');
 		setOpen(true);
 	};
 

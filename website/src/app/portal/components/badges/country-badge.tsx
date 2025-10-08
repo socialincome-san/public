@@ -2,7 +2,7 @@ import { Badge } from '@/app/portal/components/badge';
 import { FlagSierraLeone } from '@/app/portal/components/badges/flags/flag-sierra-leone';
 import { ReactNode } from 'react';
 
-export function CountryBadge({ country }: { country: String }) {
+export function CountryBadge({ country }: { country: String | null }) {
 	let flag: ReactNode;
 	switch (country) {
 		case 'Sierra Leone':

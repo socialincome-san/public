@@ -1,13 +1,12 @@
-import { LocalPartner, Program, Recipient, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
-export type RecipientExpanded = Recipient & {
-	user: User | null;
-	program: Program | null;
-	localPartner: (LocalPartner & { user: User | null }) | null;
-};
+export type RecipientWithRelations = Prisma.RecipientGetPayload<{
+	include: {
+		contact: true;
+		program: true;
+		localPartner: { include: { contact: true } };
+		paymentInformation: { include: { phone: true } };
+	};
+}>;
 
-export type RecipientUserUpdateInput = {
-	firstName?: string;
-	lastName?: string;
-	// TODO: add more fields here in the future
-};
+export type RecipientUpdateInput = Pick<Prisma.ContactUpdateInput, 'firstName' | 'lastName'>;

@@ -1,14 +1,13 @@
-import { Organization as PrismaOrganization } from '@prisma/client';
+import { Organization } from '@prisma/client';
 
-export type CreateOrganizationInput = Omit<PrismaOrganization, 'id' | 'createdAt' | 'updatedAt'>;
+export type CreateOrganizationInput = Omit<Organization, 'id' | 'createdAt' | 'updatedAt'>;
 
 export type OrganizationTableViewRow = {
 	id: string;
 	name: string;
+	ownedProgramsCount: number;
 	operatedProgramsCount: number;
-	viewedProgramsCount: number;
 	usersCount: number;
-	readonly: boolean;
 };
 
 export type OrganizationTableView = {

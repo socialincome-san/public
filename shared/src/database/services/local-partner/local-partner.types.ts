@@ -8,7 +8,6 @@ export type LocalPartnerTableViewRow = {
 	contactPerson: string;
 	contactNumber: string | null;
 	recipientsCount: number;
-	readonly: boolean;
 };
 
 export type LocalPartnerTableView = {

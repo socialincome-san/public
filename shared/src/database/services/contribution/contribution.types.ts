@@ -1,25 +1,19 @@
-import {
-	ContributionInterval,
-	ContributionSource,
-	ContributionStatus,
-	Contribution as PrismaContribution,
-} from '@prisma/client';
+import { Contribution, ContributionStatus, Prisma, ProgramPermission } from '@prisma/client';
 
-export type CreateContributionInput = Omit<PrismaContribution, 'id' | 'createdAt' | 'updatedAt'>;
-
-export type ProgramPermission = 'operator' | 'viewer';
+export type CreateContributionInput = Omit<Contribution, 'id' | 'createdAt' | 'updatedAt'> & {
+	amount?: Prisma.Decimal;
+};
 
 export type ContributionTableViewRow = {
 	id: string;
-	source: ContributionSource;
-	createdAt: Date;
-	createdAtFormatted: string;
+	contributorName: string;
 	amount: number;
 	currency: string;
 	status: ContributionStatus;
 	campaignName: string;
 	programName: string;
-	contributionInterval: ContributionInterval;
+	createdAt: Date;
+	createdAtFormatted: string;
 	permission: ProgramPermission;
 };
 

@@ -1,11 +1,11 @@
-import { RecipientStatus } from '@prisma/client';
+import { PayoutStatus } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ExchangeRateCollectionService } from '../exchange-rate-collection/exchange-rate-collection.service';
+import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
 import { PayoutForecastTableViewProgramScoped, PayoutForecastTableViewRow } from './payout-forecast.types';
 
 export class PayoutForecastService extends BaseService {
-	private exchangeRateService = new ExchangeRateCollectionService();
+	private exchangeRateService = new ExchangeRateService();
 
 	async getPayoutForecastTableViewProgramScoped(
 		userId: string,
@@ -16,7 +16,7 @@ export class PayoutForecastService extends BaseService {
 			const program = await this.db.program.findFirst({
 				where: {
 					id: programId,
-					...this.userAccessibleProgramsWhere(userId),
+					accesses: { some: { userId } },
 				},
 				select: {
 					totalPayments: true,
@@ -24,8 +24,13 @@ export class PayoutForecastService extends BaseService {
 					payoutCurrency: true,
 					payoutInterval: true,
 					recipients: {
-						where: { status: { in: [RecipientStatus.active, RecipientStatus.designated] } },
-						select: { startDate: true },
+						select: {
+							startDate: true,
+							payouts: {
+								where: { status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] } },
+								select: { id: true },
+							},
+						},
 					},
 				},
 			});
@@ -40,7 +45,8 @@ export class PayoutForecastService extends BaseService {
 			);
 
 			for (const recipient of program.recipients) {
-				const remainingPayments = this.calculateRemainingMonthlyPayments(recipient.startDate, program.totalPayments);
+				const alreadyPaidCount = recipient.payouts.length;
+				const remainingPayments = Math.max(0, program.totalPayments - alreadyPaidCount);
 				this.incrementNextPeriods(recipientCountByPeriodIndex, remainingPayments, monthsAhead);
 			}
 
@@ -58,7 +64,7 @@ export class PayoutForecastService extends BaseService {
 			const rows: PayoutForecastTableViewRow[] = forecastPeriods.map((periodStartDate, idx) => {
 				const numberOfRecipients = recipientCountByPeriodIndex.get(idx) ?? 0;
 				return {
-					period: this.formatMothYear(periodStartDate),
+					period: this.formatMonthYear(periodStartDate),
 					numberOfRecipients,
 					amountInProgramCurrency: this.round2(numberOfRecipients * program.payoutAmount),
 					amountUsd: this.round2(numberOfRecipients * payoutAmountUsd),
@@ -66,8 +72,7 @@ export class PayoutForecastService extends BaseService {
 			});
 
 			return this.resultOk({ tableRows: rows });
-		} catch (error) {
-			console.error('[PayoutForecastService.getPayoutForecastTableViewProgramScoped]', error);
+		} catch {
 			return this.resultFail('Could not generate payout forecast');
 		}
 	}
@@ -76,15 +81,6 @@ export class PayoutForecastService extends BaseService {
 		const now = new Date();
 		const firstNextMonth = this.startOfMonthUTC(this.addMonthsUTC(this.startOfMonthUTC(now), 1));
 		return Array.from({ length: monthsAhead }, (_, index) => this.addMonthsUTC(firstNextMonth, index));
-	}
-
-	private calculateRemainingMonthlyPayments(startDate: Date | null, totalPayments: number): number {
-		if (!startDate) return 0;
-		const startOfMonth = this.startOfMonthUTC(startDate);
-		const nowStartOfMonth = this.startOfMonthUTC(new Date());
-		if (startOfMonth > nowStartOfMonth) return 0;
-		const monthsElapsedInclusive = this.monthDiff(startOfMonth, nowStartOfMonth) + 1;
-		return Math.max(0, totalPayments - monthsElapsedInclusive);
 	}
 
 	private incrementNextPeriods(periodMap: Map<number, number>, paymentsLeft: number, monthsAhead: number): void {
@@ -103,15 +99,11 @@ export class PayoutForecastService extends BaseService {
 		return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + months, 1));
 	}
 
-	private monthDiff(start: Date, end: Date): number {
-		return (end.getUTCFullYear() - start.getUTCFullYear()) * 12 + (end.getUTCMonth() - start.getUTCMonth());
-	}
-
 	private round2(value: number): number {
 		return Math.round(value * 100) / 100;
 	}
 
-	private formatMothYear = (date: Date): string => {
+	private formatMonthYear(date: Date): string {
 		return new Intl.DateTimeFormat('en-CH', { month: 'long', year: 'numeric' }).format(date);
-	};
+	}
 }

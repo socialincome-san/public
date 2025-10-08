@@ -10,7 +10,7 @@ export async function YourPrograms() {
 	const result = await service.getProgramWalletView(user.id);
 
 	if (!result.success) {
-		return <div>Error loading programs</div>;
+		return <div>{result.error}</div>;
 	}
 
 	const wallets = result.data?.wallets ?? [];
@@ -18,8 +18,8 @@ export async function YourPrograms() {
 		return <div>No programs found</div>;
 	}
 
-	const myPrograms = wallets.filter((program) => program.permission === 'operator');
-	const otherPrograms = wallets.filter((program) => program.permission === 'viewer');
+	const myPrograms = wallets.filter((program) => program.permission === 'edit');
+	const otherPrograms = wallets.filter((program) => program.permission === 'readonly');
 
 	const subgridClasses = 'row-span-2 grid grid-rows-subgrid';
 

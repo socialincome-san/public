@@ -8,8 +8,8 @@ import Link from 'next/link';
 type WalletProps = {
 	variant?: 'default' | 'empty';
 	title: string;
-	subtitle?: string;
-	footerLeft?: { label: string; currency: string; amount: number };
+	subtitle?: string | null;
+	footerLeft?: { label: string; currency: string | null; amount: number };
 	footerRight?: { label: string; amount: number };
 	href?: string;
 	onClick?: () => void;
