@@ -20,11 +20,15 @@ export async function PATCH(request: Request) {
 
 	const body = await request.json();
 
-	if (!body.firstName && !body.lastName) {
+	const { firstName, lastName } = body;
+	if (!firstName && !lastName) {
 		return NextResponse.json({ ok: false, error: 'Provide firstName or lastName' }, { status: 400 });
 	}
 
-	const updateResult = await service.updateRecipientUserFields(recipientResult.data.id, body);
+	const updateResult = await service.updateRecipientFields(recipientResult.data.id, {
+		firstName,
+		lastName,
+	});
 
 	return updateResult.success
 		? NextResponse.json({ ok: true, data: updateResult.data }, { status: updateResult.status ?? 200 })
