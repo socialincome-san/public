@@ -3,9 +3,9 @@ import { toDateObject } from '@/components/storyblok/StoryblokUtils';
 import { defaultLanguage, defaultRegion, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { type StoryblokArticle, StoryblokAuthor, StoryblokTag } from '@/types/journal';
-import fs from 'fs';
 import type { MetadataRoute } from 'next';
 import { ISbStories } from 'storyblok-js-client/src/interfaces';
+import staticRoutes from './static-pages.json';
 
 export const revalidate = 86400; // per day
 const url = 'https://socialincome.org';
@@ -76,8 +76,6 @@ function staticPageUrl(route: string, lang: WebsiteLanguage, region: WebsiteRegi
 }
 
 function generateStaticPagesSitemap(): MetadataRoute.Sitemap {
-	const file = fs.readFileSync('src/app/static-pages.json').toString();
-	const staticRoutes: string[] = JSON.parse(file);
 	return staticRoutes.flatMap((route) =>
 		websiteRegions.map((region) => ({
 			url: staticPageUrl(route, defaultLanguage, region),
