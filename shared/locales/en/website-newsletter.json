@@ -9,6 +9,7 @@
 		"bullet-2": "New research on direct cash transfers",
 		"bullet-3": "Summaries of the latest news around UBI",
 		"description-2": "Sent at the end of each month.",
+		"visit-archive": "Visit our newsletter archive",
 		"description-3": "Newsletters written by",
 		"author-name": "Aurélie Schmiedlin",
 		"author-city": "Geneva",
@@ -28,5 +29,9 @@
 	},
 	"campaign": {
 		"information-label": "Get updates from the fundraiser and Social Income."
+	},
+	"archive": {
+		"title": "Newsletter Archive",
+		"signup-link": "Back to newsletter signup"
 	}
 }
