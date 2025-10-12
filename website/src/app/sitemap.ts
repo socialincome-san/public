@@ -47,7 +47,7 @@ function generateStoryblokArticlesSitemap(
 			languages: generateAlternativeLanguages(alternativeArticles, article.slug),
 		},
 		changeFrequency: 'monthly',
-		lastModified: toDateObject(article.updated_at!, defaultLanguage).toString(),
+		lastModified: toDateObject(article.updated_at || article.created_at, defaultLanguage).toString(),
 	}));
 }
 
