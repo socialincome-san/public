@@ -17,9 +17,5 @@
 		"migrate:surveys": "tsx scripts/migrate-surveys.ts",
 		"migrate:reset": "npm --workspace=@socialincome/shared run db:migrate:reset",
 		"typecheck": "tsc --noEmit"
-	},
-	"devDependencies": {
-		"tsx": "^4.20.2",
-		"typescript": "^5.0.0"
 	}
 }
