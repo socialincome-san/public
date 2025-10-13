@@ -10,7 +10,7 @@ const CLOUDFLARE_IP_COUNTRY_HEADER = 'cf-ipcountry';
 export const config = {
 	matcher: [
 		// Skip internal paths (_next)
-		'/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|portal|openapi.json).*)',
+		'/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|portal|openapi.json|sitemap.xml).*)',
 	],
 };
 
