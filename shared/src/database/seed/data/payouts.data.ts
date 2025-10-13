@@ -3,6 +3,7 @@ import { Payout, PayoutStatus, Prisma } from '@prisma/client';
 export const payoutsData: Payout[] = [
 	{
 		id: 'payout-1',
+		legacyFirestoreId: null,
 		amount: new Prisma.Decimal(50),
 		amountChf: new Prisma.Decimal(25),
 		currency: 'SLE',
@@ -17,6 +18,7 @@ export const payoutsData: Payout[] = [
 	},
 	{
 		id: 'payout-2',
+		legacyFirestoreId: null,
 		amount: new Prisma.Decimal(75),
 		amountChf: new Prisma.Decimal(37.5),
 		currency: 'SLE',
@@ -31,6 +33,7 @@ export const payoutsData: Payout[] = [
 	},
 	{
 		id: 'payout-3',
+		legacyFirestoreId: null,
 		amount: new Prisma.Decimal(60),
 		amountChf: new Prisma.Decimal(30),
 		currency: 'SLE',

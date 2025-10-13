@@ -1,86 +1,93 @@
-import { ContributionInterval, ContributionSource, ContributionStatus } from '@prisma/client';
-import { CreateContributionInput } from '@socialincome/shared/src/database/services/contribution/contribution.types';
+import { ContributionStatus, PaymentEventType, Prisma } from '@prisma/client';
+import {
+	BankWireContribution,
+	Contribution as FirestoreContribution,
+	ContributionSourceKey,
+	StatusKey,
+	StripeContribution,
+} from '@socialincome/shared/src/types/contribution';
 import { BaseTransformer } from '../core/base.transformer';
-import { ContributionWithUser } from './contribution.extractor';
+import { ContributionWithPayment, FirestoreContributionWithUser } from './contribution.types';
 
-export type ContributionWithEmail = Omit<
-	CreateContributionInput,
-	'contributorId' | 'campaignId' | 'organizationId' | 'programId'
-> & {
-	contributorEmail: string;
-};
-
-export type ContributorWithEmail = { email: string };
-
-export type TransformedContributions = {
-	contributors: ContributorWithEmail[];
-	contributions: ContributionWithEmail[];
-};
-
-export class ContributionsTransformer extends BaseTransformer<ContributionWithUser, TransformedContributions> {
-	transform = async (input: ContributionWithUser[]): Promise<TransformedContributions[]> => {
-		const seenEmails = new Set<string>();
-		const contributors: ContributorWithEmail[] = [];
-		const contributions: ContributionWithEmail[] = [];
-
-		for (const { user, contribution } of input) {
-			const email = user.email.toLowerCase();
-
-			if (!seenEmails.has(email)) {
-				contributors.push({ email });
-				seenEmails.add(email);
-			}
-
-			contributions.push({
-				amount: contribution.amount,
-				amountChf: contribution.amount_chf,
-				feesChf: contribution.fees_chf,
-				contributionInterval: this.mapInterval(contribution.monthly_interval),
-				source: this.mapSource(contribution.source),
-				status: this.mapStatus(contribution.status),
-				currency: contribution.currency,
-				referenceId: contribution.reference_id ?? '',
-				transactionId: 'transaction_id' in contribution ? (contribution.transaction_id ?? null) : null,
-				rawContent: 'raw_content' in contribution ? (contribution.raw_content ?? null) : null,
-				contributorEmail: email,
-			});
-		}
-
-		return [{ contributors, contributions }];
+export class ContributionTransformer extends BaseTransformer<FirestoreContributionWithUser, ContributionWithPayment> {
+	transform = async (input: FirestoreContributionWithUser[]): Promise<ContributionWithPayment[]> => {
+		return input
+			.filter(({ user }) => !!user.email)
+			.map(
+				({ contribution, user }): ContributionWithPayment => ({
+					contribution: {
+						legacyFirestoreId: contribution.id,
+						amount: contribution.amount,
+						amountChf: contribution.amount_chf,
+						feesChf: contribution.fees_chf,
+						currency: contribution.currency ?? 'CHF',
+						status: this.mapStatus(contribution.status),
+						contributor: { connect: { legacyFirestoreId: user.id } },
+						campaign: contribution.campaign_path
+							? { connect: { legacyFirestoreId: contribution.campaign_path.id } }
+							: { connect: { title: 'Default Campaign' } },
+						paymentEvent: {
+							create: this.buildPaymentEvent(contribution),
+						},
+					},
+				}),
+			);
 	};
 
-	private mapInterval(value: number): ContributionInterval {
-		switch (value) {
-			case 0:
-				return ContributionInterval.one_time;
-			case 1:
-				return ContributionInterval.monthly;
-			case 3:
-				return ContributionInterval.quarterly;
-			case 12:
-				return ContributionInterval.annually;
+	private buildPaymentEvent(contribution: FirestoreContribution): Prisma.PaymentEventCreateWithoutContributionInput {
+		return {
+			type: this.mapPaymentType(contribution.source),
+			transactionId: this.extractTransactionId(contribution),
+			metadata: this.extractMetadata(contribution),
+		};
+	}
+
+	private extractTransactionId(contribution: FirestoreContribution): string | null {
+		switch (contribution.source) {
+			case ContributionSourceKey.STRIPE:
+				return (contribution as StripeContribution).reference_id ?? null;
+			case ContributionSourceKey.WIRE_TRANSFER:
+				return (
+					(contribution as BankWireContribution).transaction_id ??
+					(contribution as BankWireContribution).reference_id ??
+					null
+				);
 			default:
-				// fallback: treat unknown numeric cadence as monthly
-				return ContributionInterval.monthly;
+				return null;
 		}
 	}
 
-	private mapSource(source: string): ContributionSource {
-		const normalized = source.replace(/-/g, '_').toLowerCase();
-		const validSources = Object.values(ContributionSource);
-		if (validSources.includes(normalized as ContributionSource)) {
-			return normalized as ContributionSource;
+	private extractMetadata(
+		contribution: FirestoreContribution,
+	): Prisma.InputJsonValue | Prisma.JsonNullValueInput | undefined {
+		if (contribution.source === ContributionSourceKey.WIRE_TRANSFER) {
+			const bank = contribution as BankWireContribution;
+			return bank.raw_content ? { raw_content: bank.raw_content } : Prisma.JsonNull;
 		}
-		console.warn(`[Transformer] Unknown contribution source "${source}", defaulting to 'stripe'`);
-		return ContributionSource.stripe;
+		return Prisma.JsonNull;
 	}
 
-	private mapStatus(status: string): ContributionStatus {
-		const validStatuses = Object.values(ContributionStatus);
-		if (validStatuses.includes(status as ContributionStatus)) {
-			return status as ContributionStatus;
+	private mapPaymentType(source: ContributionSourceKey): PaymentEventType {
+		switch (source) {
+			case ContributionSourceKey.STRIPE:
+				return PaymentEventType.stripe;
+			case ContributionSourceKey.WIRE_TRANSFER:
+				return PaymentEventType.bank_transfer;
+			default:
+				return PaymentEventType.stripe;
 		}
-		console.warn(`[Transformer] Unknown contribution status "${status}", defaulting to 'unknown'`);
-		return ContributionStatus.unknown;
+	}
+
+	private mapStatus(status: StatusKey): ContributionStatus {
+		switch (status) {
+			case StatusKey.SUCCEEDED:
+				return ContributionStatus.succeeded;
+			case StatusKey.FAILED:
+				return ContributionStatus.failed;
+			case StatusKey.PENDING:
+				return ContributionStatus.pending;
+			default:
+				return ContributionStatus.succeeded;
+		}
 	}
 }

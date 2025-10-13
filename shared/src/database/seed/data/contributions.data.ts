@@ -3,6 +3,7 @@ import { Contribution, ContributionStatus, Prisma } from '@prisma/client';
 export const contributionsData: Contribution[] = [
 	{
 		id: 'contribution-1',
+		legacyFirestoreId: null,
 		amount: new Prisma.Decimal(100),
 		currency: 'CHF',
 		amountChf: new Prisma.Decimal(100),
@@ -15,6 +16,7 @@ export const contributionsData: Contribution[] = [
 	},
 	{
 		id: 'contribution-2',
+		legacyFirestoreId: null,
 		amount: new Prisma.Decimal(50),
 		currency: 'CHF',
 		amountChf: new Prisma.Decimal(50),
@@ -27,6 +29,7 @@ export const contributionsData: Contribution[] = [
 	},
 	{
 		id: 'contribution-3',
+		legacyFirestoreId: null,
 		amount: new Prisma.Decimal(150),
 		currency: 'CHF',
 		amountChf: new Prisma.Decimal(150),
@@ -39,6 +42,7 @@ export const contributionsData: Contribution[] = [
 	},
 	{
 		id: 'contribution-4',
+		legacyFirestoreId: null,
 		amount: new Prisma.Decimal(200),
 		currency: 'CHF',
 		amountChf: new Prisma.Decimal(200),
@@ -51,6 +55,7 @@ export const contributionsData: Contribution[] = [
 	},
 	{
 		id: 'contribution-5',
+		legacyFirestoreId: null,
 		amount: new Prisma.Decimal(300),
 		currency: 'CHF',
 		amountChf: new Prisma.Decimal(300),
@@ -63,6 +68,7 @@ export const contributionsData: Contribution[] = [
 	},
 	{
 		id: 'contribution-6',
+		legacyFirestoreId: null,
 		amount: new Prisma.Decimal(500),
 		currency: 'CHF',
 		amountChf: new Prisma.Decimal(500),
@@ -75,6 +81,7 @@ export const contributionsData: Contribution[] = [
 	},
 	{
 		id: 'contribution-7',
+		legacyFirestoreId: null,
 		amount: new Prisma.Decimal(120),
 		currency: 'CHF',
 		amountChf: new Prisma.Decimal(120),

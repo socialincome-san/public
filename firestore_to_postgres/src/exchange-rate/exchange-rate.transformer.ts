@@ -1,31 +1,37 @@
-import { CreateExchangeRateCollectionInput } from '@socialincome/shared/src/database/services/exchange-rate-collection/exchange-rate-collection.types';
-import { CreateExchangeRateItemInput } from '@socialincome/shared/src/database/services/exchange-rate-item/exchange-rate-item.types';
-import { ExchangeRatesEntry } from '@socialincome/shared/src/types/exchange-rates';
+import { Prisma } from '@prisma/client';
 import { BaseTransformer } from '../core/base.transformer';
+import { FirestoreExchangeRate } from './exchange-rate.types';
 
-export type CreateExchangeRateItemInputWithoutFK = Omit<CreateExchangeRateItemInput, 'collectionId'>;
+export class ExchangeRateTransformer extends BaseTransformer<FirestoreExchangeRate, Prisma.ExchangeRateCreateInput> {
+	transform = async (input: FirestoreExchangeRate[]): Promise<Prisma.ExchangeRateCreateInput[]> => {
+		const transformed: Prisma.ExchangeRateCreateInput[] = [];
+		const oneYearAgo = new Date();
+		oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
 
-export type ExchangeRateTransformed = {
-	collection: CreateExchangeRateCollectionInput;
-	items: CreateExchangeRateItemInputWithoutFK[];
-};
+		for (const entry of input) {
+			const timestamp = new Date(entry.timestamp * 1000);
+			if (timestamp < oneYearAgo) continue;
 
-export class ExchangeRatesTransformer extends BaseTransformer<ExchangeRatesEntry, ExchangeRateTransformed> {
-	transform = async (input: ExchangeRatesEntry[]): Promise<ExchangeRateTransformed[]> => {
-		return input.map((entry): ExchangeRateTransformed => {
-			const collection: CreateExchangeRateCollectionInput = {
-				base: entry.base,
-				timestamp: new Date(entry.timestamp * 1000),
-			};
+			const baseId = entry.id;
 
-			const items: CreateExchangeRateItemInputWithoutFK[] = Object.entries(entry.rates ?? {}).map(
-				([currency, rate]) => ({
+			for (const [currency, rate] of Object.entries(entry.rates ?? {})) {
+				if (typeof rate !== 'number' || !currency) continue;
+
+				// Skip absurdly large or invalid rates
+				if (!isFinite(rate) || Math.abs(rate) >= 1e8) {
+					console.warn(`[ExchangeRateTransformer] Skipped ${baseId}_${currency} with invalid rate: ${rate}`);
+					continue;
+				}
+
+				transformed.push({
+					legacyFirestoreId: `${baseId}_${currency}`,
 					currency,
-					rate,
-				}),
-			);
+					rate: new Prisma.Decimal(rate),
+					timestamp,
+				});
+			}
+		}
 
-			return { collection, items };
-		});
+		return transformed;
 	};
 }

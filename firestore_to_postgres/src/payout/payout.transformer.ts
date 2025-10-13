@@ -1,41 +1,40 @@
-import { PayoutStatus } from '@prisma/client';
-import { CreatePayoutInput } from '@socialincome/shared/src/database/services/payout/payout.types';
+import { PayoutStatus, Prisma } from '@prisma/client';
+import { PaymentStatus } from '@socialincome/shared/src/types/payment';
 import { BaseTransformer } from '../core/base.transformer';
-import { PayoutWithRecipient } from './payout.extractor';
+import { FirestorePayoutWithRecipient } from './payout.types';
 
-export type PayoutWithEmail = Omit<CreatePayoutInput, 'recipientId'> & {
-	recipientEmail: string;
-};
-
-export class PayoutsTransformer extends BaseTransformer<PayoutWithRecipient, PayoutWithEmail[]> {
-	transform = async (input: PayoutWithRecipient[]): Promise<PayoutWithEmail[][]> => {
-		const payouts: PayoutWithEmail[] = input.map(({ payout, recipient }) => {
-			const email = recipient.email?.trim()
-				? recipient.email.toLowerCase()
-				: this.generateFallbackEmail(recipient.first_name, recipient.last_name);
-
-			return {
-				amount: payout.amount,
-				currency: payout.currency,
-				paymentAt: payout.payment_at.toDate(),
-				status: this.isValidStatus(payout.status) ? payout.status : PayoutStatus.created,
-				message: payout.message ? JSON.stringify(payout.message) : null,
-				recipientEmail: email,
-				amountChf: null,
-				phoneNumber: null,
-				comments: null,
-			};
-		});
-
-		return [payouts];
+export class PayoutTransformer extends BaseTransformer<FirestorePayoutWithRecipient, Prisma.PayoutCreateInput> {
+	transform = async (input: FirestorePayoutWithRecipient[]): Promise<Prisma.PayoutCreateInput[]> => {
+		return input.map(({ payout, recipient }) => ({
+			legacyFirestoreId: `${recipient.id}_${payout.id}`,
+			amount: new Prisma.Decimal(payout.amount ?? 0),
+			amountChf: payout.amount_chf ? new Prisma.Decimal(payout.amount_chf) : undefined,
+			currency: payout.currency ?? 'SLE',
+			paymentAt: payout.payment_at?.toDate() ?? new Date(),
+			status: this.mapStatus(payout.status),
+			phoneNumber: payout.phone_number?.toString() ?? null,
+			comments: payout.comments ?? null,
+			message: payout.message ? JSON.stringify(payout.message) : null,
+			recipient: {
+				connect: { legacyFirestoreId: recipient.id },
+			},
+		}));
 	};
 
-	private isValidStatus(status: string): status is PayoutStatus {
-		return Object.values(PayoutStatus).includes(status as PayoutStatus);
-	}
-
-	private generateFallbackEmail(firstName: string, lastName: string): string {
-		const namePart = `${firstName}.${lastName}`.toLowerCase().replace(/[^a-z0-9]/g, '');
-		return `${namePart}@autocreated.socialincome`;
+	private mapStatus(status: PaymentStatus): PayoutStatus {
+		switch (status) {
+			case PaymentStatus.Created:
+				return PayoutStatus.created;
+			case PaymentStatus.Paid:
+				return PayoutStatus.paid;
+			case PaymentStatus.Confirmed:
+				return PayoutStatus.confirmed;
+			case PaymentStatus.Contested:
+				return PayoutStatus.contested;
+			case PaymentStatus.Failed:
+				return PayoutStatus.failed;
+			default:
+				return PayoutStatus.other;
+		}
 	}
 }

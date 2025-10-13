@@ -1,15 +1,19 @@
-import { CreateExpenseInput } from '@socialincome/shared/src/database/services/expense/expense.types';
-import { Expense } from '@socialincome/shared/src/types/expense';
+import { Prisma } from '@prisma/client';
 import { BaseTransformer } from '../core/base.transformer';
+import { FirestoreExpense } from './expense.types';
 
-export class ExpenseTransformer extends BaseTransformer<Expense, CreateExpenseInput> {
-	transform = async (input: Expense[]): Promise<CreateExpenseInput[]> => {
-		return input.map((entry): CreateExpenseInput => {
-			return {
+export class ExpenseTransformer extends BaseTransformer<FirestoreExpense, Prisma.ExpenseCreateInput> {
+	transform = async (input: FirestoreExpense[]): Promise<Prisma.ExpenseCreateInput[]> => {
+		return input.map(
+			(entry): Prisma.ExpenseCreateInput => ({
+				legacyFirestoreId: entry.id,
 				type: entry.type,
 				year: entry.year,
-				amountChf: entry.amount_chf,
-			};
-		});
+				amountChf: new Prisma.Decimal(entry.amount_chf ?? 0),
+				organization: {
+					connect: { name: 'Default Organization' },
+				},
+			}),
+		);
 	};
 }

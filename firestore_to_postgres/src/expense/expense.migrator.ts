@@ -1,7 +1,7 @@
 import { BaseMigrator } from '../core/base.migrator';
 import { ExpenseExtractor } from './expense.extractor';
-import { ExpenseImporter } from './expense.importer';
 import { ExpenseTransformer } from './expense.transformer';
+import { ExpenseImporter } from './expense.importer';
 
 export class ExpenseMigrator extends BaseMigrator {
 	private readonly extractor = new ExpenseExtractor();

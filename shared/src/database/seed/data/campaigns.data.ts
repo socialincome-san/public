@@ -3,6 +3,7 @@ import { Campaign, Prisma } from '@prisma/client';
 export const campaignsData: Campaign[] = [
 	{
 		id: 'campaign-1',
+		legacyFirestoreId: null,
 		title: 'Migros Relief for Families',
 		description: 'Support Migros in providing essential aid to families in Sierra Leone.',
 		secondDescriptionTitle: null,
@@ -34,6 +35,7 @@ export const campaignsData: Campaign[] = [
 	},
 	{
 		id: 'campaign-2',
+		legacyFirestoreId: null,
 		title: 'Migros Education for Change',
 		description: 'Empower youth through education programs supported by Migros.',
 		secondDescriptionTitle: 'Why Education?',
@@ -65,6 +67,7 @@ export const campaignsData: Campaign[] = [
 	},
 	{
 		id: 'campaign-3',
+		legacyFirestoreId: null,
 		title: 'Coop for Poverty Relief',
 		description: 'Join Coop in fighting poverty through direct cash aid in Sierra Leone.',
 		secondDescriptionTitle: null,
@@ -96,6 +99,7 @@ export const campaignsData: Campaign[] = [
 	},
 	{
 		id: 'campaign-4',
+		legacyFirestoreId: null,
 		title: 'Red Cross Basic Needs',
 		description: 'Support the Swiss Red Cross in providing shelter and basic aid to families.',
 		secondDescriptionTitle: null,
@@ -127,6 +131,7 @@ export const campaignsData: Campaign[] = [
 	},
 	{
 		id: 'campaign-5',
+		legacyFirestoreId: null,
 		title: 'Caritas Women Empowerment',
 		description: 'Support Caritas in empowering women with financial independence projects.',
 		secondDescriptionTitle: 'Empowering Communities',

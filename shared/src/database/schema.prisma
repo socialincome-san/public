@@ -109,7 +109,6 @@ model Account {
   firebaseAuthUserId String @unique @map("firebase_auth_user_id")
 
   contributor Contributor?
-  recipient   Recipient?
   user        User?
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
@@ -132,11 +131,12 @@ model User {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  @@map("portal_user")
+  @@map("user")
 }
 
 model Contributor {
   id                 String                    @id @default(cuid()) @map("id")
+  legacyFirestoreId  String?                   @unique @map("legacy_firestore_id")
   accountId          String                    @unique @map("account_id")
   account            Account                   @relation(fields: [accountId], references: [id])
   contactId          String                    @unique @map("contact_id")
@@ -156,17 +156,18 @@ model Contributor {
 }
 
 model Contribution {
-  id            String             @id @default(cuid()) @map("id")
-  amount        Decimal            @map("amount") @db.Decimal(10, 2)
-  currency      String             @map("currency")
-  amountChf     Decimal            @map("amount_chf") @db.Decimal(10, 2)
-  feesChf       Decimal            @map("fees_chf") @db.Decimal(10, 2)
-  contributorId String             @map("contributor_id")
-  contributor   Contributor        @relation(fields: [contributorId], references: [id])
-  status        ContributionStatus @map("status")
-  campaignId    String             @map("campaign_id")
-  campaign      Campaign           @relation(fields: [campaignId], references: [id])
-  paymentEvent  PaymentEvent?
+  id                String             @id @default(cuid()) @map("id")
+  legacyFirestoreId String?            @unique @map("legacy_firestore_id")
+  amount            Decimal            @map("amount") @db.Decimal(10, 2)
+  currency          String             @map("currency")
+  amountChf         Decimal            @map("amount_chf") @db.Decimal(10, 2)
+  feesChf           Decimal            @map("fees_chf") @db.Decimal(10, 2)
+  contributorId     String             @map("contributor_id")
+  contributor       Contributor        @relation(fields: [contributorId], references: [id])
+  status            ContributionStatus @map("status")
+  campaignId        String             @map("campaign_id")
+  campaign          Campaign           @relation(fields: [campaignId], references: [id])
+  paymentEvent      PaymentEvent?
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -189,11 +190,12 @@ model PaymentEvent {
 }
 
 model DonationCertificate {
-  id            String      @id @default(cuid()) @map("id")
-  contributorId String      @map("contributor_id")
-  contributor   Contributor @relation(fields: [contributorId], references: [id])
-  year          Int         @map("year")
-  storagePath   String      @map("storage_path")
+  id                String      @id @default(cuid()) @map("id")
+  legacyFirestoreId String?     @unique @map("legacy_firestore_id")
+  contributorId     String      @map("contributor_id")
+  contributor       Contributor @relation(fields: [contributorId], references: [id])
+  year              Int         @map("year")
+  storagePath       String      @map("storage_path")
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -204,8 +206,7 @@ model DonationCertificate {
 
 model Recipient {
   id                   String              @id @default(cuid()) @map("id")
-  accountId            String              @unique @map("account_id")
-  account              Account             @relation(fields: [accountId], references: [id])
+  legacyFirestoreId    String?             @unique @map("legacy_firestore_id")
   contactId            String              @unique @map("contact_id")
   contact              Contact             @relation(fields: [contactId], references: [id])
   startDate            DateTime?           @map("start_date") @db.Timestamptz(3)
@@ -229,17 +230,18 @@ model Recipient {
 }
 
 model Payout {
-  id          String       @id @default(cuid()) @map("id")
-  amount      Decimal      @map("amount") @db.Decimal(10, 2)
-  amountChf   Decimal?     @map("amount_chf")
-  currency    String       @map("currency")
-  paymentAt   DateTime     @map("payment_at") @db.Timestamptz(3)
-  status      PayoutStatus @map("status")
-  phoneNumber String?      @map("phone_number")
-  comments    String?      @map("comments")
-  message     String?      @map("message")
-  recipientId String       @map("recipient_id")
-  recipient   Recipient    @relation(fields: [recipientId], references: [id])
+  id                String       @id @default(cuid()) @map("id")
+  legacyFirestoreId String?      @unique @map("legacy_firestore_id")
+  amount            Decimal      @map("amount") @db.Decimal(10, 2)
+  amountChf         Decimal?     @map("amount_chf")
+  currency          String       @map("currency")
+  paymentAt         DateTime     @map("payment_at") @db.Timestamptz(3)
+  status            PayoutStatus @map("status")
+  phoneNumber       String?      @map("phone_number")
+  comments          String?      @map("comments")
+  message           String?      @map("message")
+  recipientId       String       @map("recipient_id")
+  recipient         Recipient    @relation(fields: [recipientId], references: [id])
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -248,20 +250,21 @@ model Payout {
 }
 
 model Survey {
-  id            String              @id @default(cuid()) @map("id")
-  recipientId   String              @map("recipient_id")
-  recipient     Recipient           @relation(fields: [recipientId], references: [id])
-  questionnaire SurveyQuestionnaire @map("questionnaire")
-  language      String              @map("language")
-  dueAt         DateTime            @map("due_at")
-  sentAt        DateTime?           @map("sent_at")
-  completedAt   DateTime?           @map("completed_at")
-  status        SurveyStatus        @map("status")
-  comments      String?             @map("comments")
-  data          Json                @map("data")
-  accessEmail   String              @map("access_email")
-  accessPw      String              @map("access_pw")
-  accessToken   String              @map("access_token")
+  id                String              @id @default(cuid()) @map("id")
+  legacyFirestoreId String?             @unique @map("legacy_firestore_id")
+  recipientId       String              @map("recipient_id")
+  recipient         Recipient           @relation(fields: [recipientId], references: [id])
+  questionnaire     SurveyQuestionnaire @map("questionnaire")
+  language          String              @map("language")
+  dueAt             DateTime            @map("due_at")
+  sentAt            DateTime?           @map("sent_at")
+  completedAt       DateTime?           @map("completed_at")
+  status            SurveyStatus        @map("status")
+  comments          String?             @map("comments")
+  data              Json                @map("data")
+  accessEmail       String              @map("access_email")
+  accessPw          String              @map("access_pw")
+  accessToken       String              @map("access_token")
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -270,10 +273,11 @@ model Survey {
 }
 
 model LocalPartner {
-  id        String  @id @default(cuid()) @map("id")
-  name      String  @map("name")
-  contactId String  @unique @map("contact_id")
-  contact   Contact @relation(fields: [contactId], references: [id])
+  id                String  @id @default(cuid()) @map("id")
+  legacyFirestoreId String? @unique @map("legacy_firestore_id")
+  name              String  @unique @map("name")
+  contactId         String  @unique @map("contact_id")
+  contact           Contact @relation(fields: [contactId], references: [id])
 
   recipients Recipient[]
 
@@ -353,7 +357,8 @@ model Program {
 
 model Campaign {
   id                     String       @id @default(cuid()) @map("id")
-  title                  String       @map("title")
+  legacyFirestoreId      String?      @unique @map("legacy_firestore_id")
+  title                  String       @unique @map("title")
   description            String       @map("description")
   secondDescriptionTitle String?      @map("second_description_title")
   secondDescription      String?      @map("second_description")
@@ -391,12 +396,13 @@ model Campaign {
 }
 
 model Expense {
-  id             String       @id @default(cuid()) @map("id")
-  organizationId String       @map("organization_id")
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  type           ExpenseType  @map("type")
-  year           Int          @map("year")
-  amountChf      Decimal      @map("amount_chf") @db.Decimal(10, 2)
+  id                String       @id @default(cuid()) @map("id")
+  legacyFirestoreId String?      @unique @map("legacy_firestore_id")
+  organizationId    String       @map("organization_id")
+  organization      Organization @relation(fields: [organizationId], references: [id])
+  type              ExpenseType  @map("type")
+  year              Int          @map("year")
+  amountChf         Decimal      @map("amount_chf") @db.Decimal(10, 2)
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -444,7 +450,7 @@ model Contact {
   address      Address?      @relation(fields: [addressId], references: [id])
   phoneId      String?       @map("phone_id")
   phone        Phone?        @relation(fields: [phoneId], references: [id])
-  email        String?       @map("email")
+  email        String        @unique @map("email")
   gender       Gender?       @map("gender")
   language     String?       @map("language")
   dateOfBirth  DateTime?     @map("date_of_birth") @db.Date
@@ -477,10 +483,11 @@ model Phone {
 }
 
 model ExchangeRate {
-  id        String   @id @default(cuid()) @map("id")
-  currency  String   @map("currency")
-  rate      Decimal  @map("rate") @db.Decimal(10, 2)
-  timestamp DateTime @map("timestamp") @db.Timestamptz(3)
+  id                String   @id @default(cuid()) @map("id")
+  legacyFirestoreId String?  @unique @map("legacy_firestore_id")
+  currency          String   @map("currency")
+  rate              Decimal  @map("rate") @db.Decimal(10, 2)
+  timestamp         DateTime @map("timestamp") @db.Timestamptz(3)
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)

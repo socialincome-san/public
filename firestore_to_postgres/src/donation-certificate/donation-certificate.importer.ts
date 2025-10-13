@@ -1,54 +1,35 @@
-import { DonationCertificateService } from '@socialincome/shared/src/database/services/donation-certificate/donation-certificate.service';
-import { UserService } from '@socialincome/shared/src/database/services/user/user.service';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { BaseImporter } from '../core/base.importer';
-import { CreateDonationCertificateInputWithoutFK } from './donation-certificate.transformer';
 
-type EmailUserIdMap = Map<string, string>;
+const prisma = new PrismaClient();
 
-export class DonationCertificatesImporter extends BaseImporter<CreateDonationCertificateInputWithoutFK> {
-	private readonly donationCertificateService = new DonationCertificateService();
-	private readonly userService = new UserService();
-	private emailUserIdMap: EmailUserIdMap = new Map();
-
-	import = async (certificates: CreateDonationCertificateInputWithoutFK[]): Promise<number> => {
-		await this.buildUserMap();
-
+export class DonationCertificateImporter extends BaseImporter<Prisma.DonationCertificateCreateInput> {
+	import = async (certificates: Prisma.DonationCertificateCreateInput[]): Promise<number> => {
 		let createdCount = 0;
 
-		for (const { email, ...certificate } of certificates) {
-			const userId = this.getUserId(email);
-			if (!userId) {
-				console.warn(`[DonationCertificatesImporter] Skipped certificate: No user for email "${email}"`);
-				continue;
-			}
+		for (const certificate of certificates) {
+			try {
+				const contributorLegacyId =
+					'contributor' in certificate
+						? (certificate.contributor as { connect: { legacyFirestoreId: string } }).connect.legacyFirestoreId
+						: undefined;
 
-			const result = await this.donationCertificateService.create({
-				...certificate,
-				userId,
-			});
+				if (contributorLegacyId) {
+					const exists = await prisma.contributor.findUnique({
+						where: { legacyFirestoreId: contributorLegacyId },
+					});
+					if (!exists) continue;
+				}
 
-			if (result.success) {
+				await prisma.donationCertificate.create({ data: certificate });
 				createdCount++;
-			} else {
-				console.warn(`[DonationCertificatesImporter] Failed to create certificate for ${email}: ${result.error}`);
+			} catch (error) {
+				const id = (certificate.legacyFirestoreId as string) ?? 'unknown';
+				const message = error instanceof Error ? error.message : 'Unknown error';
+				console.error(`[DonationCertificateImporter] Failed to import ${id}: ${message}`);
 			}
 		}
 
 		return createdCount;
 	};
-
-	private async buildUserMap() {
-		const userResult = await this.userService.findMany();
-		if (!userResult.success || !userResult.data) {
-			throw new Error('❌ Failed to fetch users');
-		}
-
-		for (const user of userResult.data) {
-			this.emailUserIdMap.set(user.email.toLowerCase(), user.id);
-		}
-	}
-
-	private getUserId(email: string): string | null {
-		return this.emailUserIdMap.get(email.toLowerCase()) ?? null;
-	}
 }

@@ -1,15 +1,15 @@
 import { BaseMigrator } from '../core/base.migrator';
-import { CampaignsExtractor } from './campaign.extractor';
-import { CampaignsImporter } from './campaign.importer';
-import { CampaignsTransformer } from './campaign.transformer';
+import { CampaignExtractor } from './campaign.extractor';
+import { CampaignImporter } from './campaign.importer';
+import { CampaignTransformer } from './campaign.transformer';
 
 export class CampaignMigrator extends BaseMigrator {
-	private readonly extractor = new CampaignsExtractor();
-	private readonly transformer = new CampaignsTransformer();
-	private readonly importer = new CampaignsImporter();
+	private readonly extractor = new CampaignExtractor();
+	private readonly transformer = new CampaignTransformer();
+	private readonly importer = new CampaignImporter();
 
 	async migrate(): Promise<number> {
-		console.log('🚀 Starting campaigns migration...');
+		console.log('🚀 Starting campaign migration...');
 
 		const extracted = await this.extractor.extract();
 		console.log(`📦 Extracted ${extracted.length} campaign records`);
