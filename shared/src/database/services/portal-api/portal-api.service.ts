@@ -7,10 +7,15 @@ import { RecipientUpdateInput, RecipientWithRelations } from './portal-api.types
 export class PortalApiService extends BaseService {
 	async getRecipientFromRequest(request: Request): Promise<ServiceResult<RecipientWithRelations>> {
 		const decoded = await this.requireIdToken(request);
-		if (!decoded) return this.resultFail('Unauthorized', 401);
+		if (!decoded) {
+			return this.resultFail('Unauthorized', 401);
+		}
 
-		const phone = this.normalizePhone(decoded.phone_number ?? null);
-		if (!phone) return this.resultFail('Phone number not present in token', 400);
+		const phone = decoded.phone_number ?? null;
+
+		if (!phone) {
+			return this.resultFail('Phone number not present in token', 400);
+		}
 
 		try {
 			const recipient = await this.db.recipient.findFirst({
@@ -22,11 +27,40 @@ export class PortalApiService extends BaseService {
 					paymentInformation: { include: { phone: true } },
 				},
 			});
-
-			if (!recipient) return this.resultFail(`No recipient found for phone "${phone}"`, 404);
+			if (!recipient) {
+				return this.resultFail(`No recipient found for phone "${phone.slice(0, 2)}****${phone.slice(-2)}"`, 404);
+			}
 			return this.resultOk(recipient, 200);
 		} catch {
 			return this.resultFail(`Could not fetch recipient for phone "${phone}"`, 500);
+		}
+	}
+
+	async updateRecipientFields(
+		recipientId: string,
+		data: RecipientUpdateInput,
+	): Promise<ServiceResult<RecipientWithRelations>> {
+		try {
+			const updatedRecipient = await this.db.recipient.update({
+				where: { id: recipientId },
+				data: {
+					contact: {
+						update: {
+							firstName: data.firstName,
+							lastName: data.lastName,
+						},
+					},
+				},
+				include: {
+					contact: true,
+					program: true,
+					localPartner: { include: { contact: true } },
+					paymentInformation: { include: { phone: true } },
+				},
+			});
+			return this.resultOk(updatedRecipient, 200);
+		} catch {
+			return this.resultFail('Failed to update recipient', 500);
 		}
 	}
 
@@ -43,11 +77,19 @@ export class PortalApiService extends BaseService {
 	}
 
 	async getPayoutByRecipientAndId(recipientId: string, payoutId: string): Promise<ServiceResult<Payout>> {
+		if (!recipientId || !payoutId) {
+			return this.resultFail('Recipient ID and Payout ID are required', 400);
+		}
+
 		try {
 			const payout = await this.db.payout.findFirst({
 				where: { id: payoutId, recipientId },
 			});
-			if (!payout) return this.resultFail(`Payout "${payoutId}" not found for recipient`, 404);
+
+			if (!payout) {
+				return this.resultFail(`Payout "${payoutId}" not found for recipient`, 404);
+			}
+
 			return this.resultOk(payout, 200);
 		} catch {
 			return this.resultFail(`Could not fetch payout "${payoutId}"`, 500);
@@ -60,11 +102,10 @@ export class PortalApiService extends BaseService {
 		status: PayoutStatus,
 	): Promise<ServiceResult<Payout>> {
 		try {
-			const payout = await this.db.payout.findFirst({
-				where: { id: payoutId, recipientId },
-			});
-			if (!payout) return this.resultFail(`Payout "${payoutId}" not found for recipient`, 404);
-
+			const payout = await this.db.payout.findFirst({ where: { id: payoutId, recipientId } });
+			if (!payout) {
+				return this.resultFail(`Payout "${payoutId}" not found for recipient`, 404);
+			}
 			const updated = await this.db.payout.update({
 				where: { id: payout.id },
 				data: { status },
@@ -85,45 +126,6 @@ export class PortalApiService extends BaseService {
 		} catch {
 			return this.resultFail('Could not fetch surveys', 500);
 		}
-	}
-
-	async updateRecipientFields(
-		recipientId: string,
-		data: RecipientUpdateInput,
-	): Promise<ServiceResult<RecipientWithRelations>> {
-		try {
-			const recipient = await this.db.recipient.findUnique({
-				where: { id: recipientId },
-				include: { contact: true },
-			});
-			if (!recipient) return this.resultFail(`Recipient "${recipientId}" not found`, 404);
-
-			const updatedRecipient = await this.db.recipient.update({
-				where: { id: recipientId },
-				data: {
-					contact: {
-						update: {
-							firstName: data.firstName,
-							lastName: data.lastName,
-						},
-					},
-				},
-				include: {
-					contact: true,
-					program: true,
-					localPartner: { include: { contact: true } },
-					paymentInformation: { include: { phone: true } },
-				},
-			});
-
-			return this.resultOk(updatedRecipient, 200);
-		} catch {
-			return this.resultFail('Failed to update recipient', 500);
-		}
-	}
-
-	private normalizePhone(phone?: string | null) {
-		return phone ? phone.replace(/^\+/, '') : null;
 	}
 
 	private async requireIdToken(request: Request) {

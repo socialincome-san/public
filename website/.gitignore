@@ -52,3 +52,5 @@ crash.log
 # Local overrides (often used for secret config)
 terraform.tfvars
 terraform.tfvars.json
+
+/public/openapi.json

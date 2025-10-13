@@ -62,10 +62,12 @@
 	},
 	"devDependencies": {
 		"firebase-tools": "14.4.0",
+		"next-openapi-gen": "^0.7.9",
 		"prettier": "3.4.2",
 		"prettier-plugin-organize-imports": "4.1.0",
 		"prettier-plugin-tailwindcss": "0.6.9",
 		"ssl-proxy": "1.0.3",
-		"typescript": "^5.7.2"
+		"typescript": "^5.7.2",
+		"zod": "^4.1.12"
 	}
 }

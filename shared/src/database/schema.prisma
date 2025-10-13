@@ -463,7 +463,7 @@ model Contact {
 model Phone {
   id                       String                   @id @default(cuid()) @map("id")
   type                     String                   @default("primary") @map("type")
-  number                   String                   @map("number")
+  number                   String                   @unique @map("number")
   verified                 Boolean                  @default(false) @map("verified")
   whatsAppActivationStatus WhatsAppActivationStatus @default(disabled) @map("whats_app")
 

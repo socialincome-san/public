@@ -401,6 +401,9 @@ CREATE UNIQUE INDEX "payment_information_code_key" ON "payment_information"("cod
 -- CreateIndex
 CREATE UNIQUE INDEX "contact_address_id_key" ON "contact"("address_id");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "phone_number_key" ON "phone"("number");
+
 -- AddForeignKey
 ALTER TABLE "portal_user" ADD CONSTRAINT "portal_user_account_id_fkey" FOREIGN KEY ("account_id") REFERENCES "account"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
