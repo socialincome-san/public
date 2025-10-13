@@ -1,6 +1,4 @@
-import { User, UserRole } from '@prisma/client';
-
-export type CreateUserInput = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
+import { UserRole } from '@prisma/client';
 
 export type UserInformation = {
 	id: string;

@@ -1,6 +1,4 @@
-import { Campaign as PrismaCampaign, ProgramPermission } from '@prisma/client';
-
-export type CreateCampaignInput = Omit<PrismaCampaign, 'id' | 'createdAt' | 'updatedAt'>;
+import { ProgramPermission } from '@prisma/client';
 
 export type CampaignTableViewRow = {
 	id: string;

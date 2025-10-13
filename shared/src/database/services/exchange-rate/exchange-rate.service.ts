@@ -1,20 +1,8 @@
-import { ExchangeRate } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { CreateExchangeRateInput, ExchangeRates } from './exchange-rate.types';
+import { ExchangeRates } from './exchange-rate.types';
 
 export class ExchangeRateService extends BaseService {
-	async create(input: CreateExchangeRateInput): Promise<ServiceResult<ExchangeRate>> {
-		try {
-			const rate = await this.db.exchangeRate.create({
-				data: input,
-			});
-			return this.resultOk(rate);
-		} catch {
-			return this.resultFail('Could not create exchange rate');
-		}
-	}
-
 	async getLatestRates(): Promise<ServiceResult<ExchangeRates>> {
 		try {
 			const latestTimestamp = await this.db.exchangeRate.findFirst({

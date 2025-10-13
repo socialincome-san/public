@@ -1,7 +1,3 @@
-import { Organization } from '@prisma/client';
-
-export type CreateOrganizationInput = Omit<Organization, 'id' | 'createdAt' | 'updatedAt'>;
-
 export type OrganizationTableViewRow = {
 	id: string;
 	name: string;

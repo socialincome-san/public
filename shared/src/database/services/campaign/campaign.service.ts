@@ -1,18 +1,9 @@
-import { Campaign, ProgramPermission } from '@prisma/client';
+import { ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { CampaignTableView, CampaignTableViewRow, CreateCampaignInput } from './campaign.types';
+import { CampaignTableView, CampaignTableViewRow } from './campaign.types';
 
 export class CampaignService extends BaseService {
-	async create(input: CreateCampaignInput): Promise<ServiceResult<Campaign>> {
-		try {
-			const campaign = await this.db.campaign.create({ data: input });
-			return this.resultOk(campaign);
-		} catch {
-			return this.resultFail('Could not create campaign');
-		}
-	}
-
 	async getTableView(userId: string): Promise<ServiceResult<CampaignTableView>> {
 		try {
 			const campaigns = await this.db.campaign.findMany({

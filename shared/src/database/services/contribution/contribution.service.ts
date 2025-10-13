@@ -1,18 +1,9 @@
-import { Contribution, ProgramPermission } from '@prisma/client';
+import { ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ContributionTableView, ContributionTableViewRow, CreateContributionInput } from './contribution.types';
+import { ContributionTableView, ContributionTableViewRow } from './contribution.types';
 
 export class ContributionService extends BaseService {
-	async create(input: CreateContributionInput): Promise<ServiceResult<Contribution>> {
-		try {
-			const contribution = await this.db.contribution.create({ data: input });
-			return this.resultOk(contribution);
-		} catch {
-			return this.resultFail('Could not create contribution');
-		}
-	}
-
 	async getContributionTableView(userId: string): Promise<ServiceResult<ContributionTableView>> {
 		try {
 			const contributions = await this.db.contribution.findMany({

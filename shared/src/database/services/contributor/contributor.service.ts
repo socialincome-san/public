@@ -1,38 +1,9 @@
-import { Contributor, ProgramPermission } from '@prisma/client';
+import { ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ContributorTableView, ContributorTableViewRow, CreateContributorInput } from './contributor.types';
+import { ContributorTableView, ContributorTableViewRow } from './contributor.types';
 
 export class ContributorService extends BaseService {
-	async create(input: CreateContributorInput): Promise<ServiceResult<Contributor>> {
-		try {
-			const contributor = await this.db.contributor.create({ data: input });
-			return this.resultOk(contributor);
-		} catch {
-			return this.resultFail('Could not create contributor');
-		}
-	}
-
-	async exists(accountId: string): Promise<boolean> {
-		try {
-			const existing = await this.db.contributor.findUnique({
-				where: { accountId },
-				select: { id: true },
-			});
-			return !!existing;
-		} catch {
-			return false;
-		}
-	}
-
-	async getByAccountId(accountId: string): Promise<Contributor | null> {
-		try {
-			return await this.db.contributor.findUnique({ where: { accountId } });
-		} catch {
-			return null;
-		}
-	}
-
 	async getContributorTableView(userId: string): Promise<ServiceResult<ContributorTableView>> {
 		try {
 			const contributors = await this.db.contributor.findMany({

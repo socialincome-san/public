@@ -1,6 +1,4 @@
-import { Expense, ExpenseType } from '@prisma/client';
-
-export type CreateExpenseInput = Omit<Expense, 'id' | 'createdAt' | 'updatedAt'>;
+import { ExpenseType } from '@prisma/client';
 
 export type ExpenseTableViewRow = {
 	id: string;

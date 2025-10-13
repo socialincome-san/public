@@ -1,8 +1,4 @@
-import { Prisma, ProgramPermission, Survey, SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
-
-export type CreateSurveyInput = Omit<Survey, 'id' | 'createdAt' | 'updatedAt'> & {
-	data?: Prisma.InputJsonValue;
-};
+import { ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
 
 export type SurveyTableViewRow = {
 	id: string;

@@ -1,18 +1,9 @@
-import { LocalPartner, UserRole } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { CreateLocalPartnerInput, LocalPartnerTableView, LocalPartnerTableViewRow } from './local-partner.types';
+import { LocalPartnerTableView, LocalPartnerTableViewRow } from './local-partner.types';
 
 export class LocalPartnerService extends BaseService {
-	async create(input: CreateLocalPartnerInput): Promise<ServiceResult<LocalPartner>> {
-		try {
-			const partner = await this.db.localPartner.create({ data: input });
-			return this.resultOk(partner);
-		} catch (error) {
-			return this.resultFail('Could not create local partner');
-		}
-	}
-
 	async getTableView(userId: string): Promise<ServiceResult<LocalPartnerTableView>> {
 		try {
 			const user = await this.db.user.findUnique({

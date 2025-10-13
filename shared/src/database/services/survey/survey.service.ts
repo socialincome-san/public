@@ -1,8 +1,7 @@
-import { Prisma, ProgramPermission, Survey, SurveyStatus } from '@prisma/client';
+import { ProgramPermission, SurveyStatus } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import {
-	CreateSurveyInput,
 	SurveyTableView,
 	SurveyTableViewRow,
 	UpcomingSurveyTableView,
@@ -10,20 +9,6 @@ import {
 } from './survey.types';
 
 export class SurveyService extends BaseService {
-	async create(input: CreateSurveyInput): Promise<ServiceResult<Survey>> {
-		try {
-			const survey = await this.db.survey.create({
-				data: {
-					...input,
-					data: (input.data ?? {}) as Prisma.InputJsonValue,
-				},
-			});
-			return this.resultOk(survey);
-		} catch {
-			return this.resultFail('Could not create survey');
-		}
-	}
-
 	async getSurveyTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
 		try {
 			const surveys = await this.db.survey.findMany({

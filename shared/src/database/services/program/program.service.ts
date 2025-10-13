@@ -1,25 +1,9 @@
-import { PayoutStatus, Program, ProgramPermission } from '@prisma/client';
+import { PayoutStatus, ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { CreateProgramInput, ProgramWallet, ProgramWalletView } from './program.types';
+import { ProgramWallet, ProgramWalletView } from './program.types';
 
 export class ProgramService extends BaseService {
-	async create(input: CreateProgramInput): Promise<ServiceResult<Program>> {
-		try {
-			const existing = await this.findProgramByName(input.name);
-			if (existing) return this.resultFail('Program with this title already exists');
-
-			const program = await this.db.program.create({ data: input });
-			return this.resultOk(program);
-		} catch {
-			return this.resultFail('Could not create program');
-		}
-	}
-
-	async findProgramByName(name: string): Promise<Program | null> {
-		return this.db.program.findFirst({ where: { name } });
-	}
-
 	async getProgramWalletView(userId: string): Promise<ServiceResult<ProgramWalletView>> {
 		try {
 			const programs = await this.db.program.findMany({
@@ -88,25 +72,5 @@ export class ProgramService extends BaseService {
 		if (!wallet) return this.resultFail('Program not found or not accessible');
 
 		return this.resultOk(wallet);
-	}
-
-	async getProgramPermissionForUser(userId: string, programId: string): Promise<ServiceResult<ProgramPermission>> {
-		try {
-			const access = await this.db.programAccess.findFirst({
-				where: { userId, programId },
-				select: { permissions: true },
-			});
-
-			if (!access) return this.resultFail('No access found for user');
-
-			const permissions = access.permissions ?? [];
-			const permission: ProgramPermission = permissions.includes(ProgramPermission.edit)
-				? ProgramPermission.edit
-				: ProgramPermission.readonly;
-
-			return this.resultOk(permission);
-		} catch {
-			return this.resultFail('Could not fetch program permission');
-		}
 	}
 }
