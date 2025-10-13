@@ -18,7 +18,8 @@
     "test:e2e:update": "npx playwright install --with-deps && playwright test --update-snapshots",
     "test:e2e:update:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run test:e2e:update'",
     "lint": "next lint",
-    "openapi:generate": "next-openapi-gen generate"
+    "openapi:generate": "next-openapi-gen generate",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.5",
