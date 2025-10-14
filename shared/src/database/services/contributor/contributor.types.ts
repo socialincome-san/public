@@ -1,6 +1,4 @@
-import { Contributor, ProgramPermission } from '@prisma/client';
-
-export type CreateContributorInput = Omit<Contributor, 'id' | 'createdAt' | 'updatedAt'>;
+import { ProgramPermission } from '@prisma/client';
 
 export type ContributorTableViewRow = {
 	id: string;

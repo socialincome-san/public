@@ -3,6 +3,7 @@ import { Expense, ExpenseType, Prisma } from '@prisma/client';
 export const expensesData: Expense[] = [
 	{
 		id: 'expense-1',
+		legacyFirestoreId: null,
 		organizationId: 'organization-1',
 		type: ExpenseType.administrative,
 		year: 2024,
@@ -12,6 +13,7 @@ export const expensesData: Expense[] = [
 	},
 	{
 		id: 'expense-2',
+		legacyFirestoreId: null,
 		organizationId: 'organization-2',
 		type: ExpenseType.staff,
 		year: 2024,
@@ -21,6 +23,7 @@ export const expensesData: Expense[] = [
 	},
 	{
 		id: 'expense-3',
+		legacyFirestoreId: null,
 		organizationId: 'organization-3',
 		type: ExpenseType.donation_fees,
 		year: 2024,

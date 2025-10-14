@@ -2,26 +2,9 @@ import { Organization as PrismaOrganization, UserRole } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserInformation } from '../user/user.types';
-import { CreateOrganizationInput, OrganizationTableView, OrganizationTableViewRow } from './organization.types';
+import { OrganizationTableView, OrganizationTableViewRow } from './organization.types';
 
 export class OrganizationService extends BaseService {
-	async create(input: CreateOrganizationInput): Promise<ServiceResult<PrismaOrganization>> {
-		try {
-			const conflict = await this.checkIfOrganizationExists(input.name);
-			if (conflict) {
-				return this.resultFail('Organization with this name already exists');
-			}
-
-			const organization = await this.db.organization.create({
-				data: input,
-			});
-
-			return this.resultOk(organization);
-		} catch (error) {
-			return this.resultFail('Could not create organization');
-		}
-	}
-
 	async getOrganizationAdminTableView(user: UserInformation): Promise<ServiceResult<OrganizationTableView>> {
 		if (user.role !== UserRole.admin) {
 			return this.resultOk({ tableRows: [] });

@@ -3,7 +3,7 @@ import { Recipient, RecipientStatus } from '@prisma/client';
 export const recipientsData: Recipient[] = [
 	{
 		id: 'recipient-1',
-		accountId: 'account-1',
+		legacyFirestoreId: null,
 		contactId: 'contact-4',
 		startDate: new Date('2024-01-01'),
 		status: RecipientStatus.active,
@@ -17,7 +17,7 @@ export const recipientsData: Recipient[] = [
 	},
 	{
 		id: 'recipient-2',
-		accountId: 'account-2',
+		legacyFirestoreId: null,
 		contactId: 'contact-5',
 		startDate: new Date('2024-02-01'),
 		status: RecipientStatus.waitlisted,
@@ -31,7 +31,7 @@ export const recipientsData: Recipient[] = [
 	},
 	{
 		id: 'recipient-3',
-		accountId: 'account-3',
+		legacyFirestoreId: null,
 		contactId: 'contact-6',
 		startDate: new Date('2024-03-01'),
 		status: RecipientStatus.active,
@@ -45,7 +45,7 @@ export const recipientsData: Recipient[] = [
 	},
 	{
 		id: 'recipient-4',
-		accountId: 'account-4',
+		legacyFirestoreId: null,
 		contactId: 'contact-7',
 		startDate: new Date('2024-04-01'),
 		status: RecipientStatus.active,
@@ -59,7 +59,7 @@ export const recipientsData: Recipient[] = [
 	},
 	{
 		id: 'recipient-5',
-		accountId: 'account-5',
+		legacyFirestoreId: null,
 		contactId: 'contact-8',
 		startDate: new Date('2024-05-01'),
 		status: RecipientStatus.active,
@@ -73,7 +73,7 @@ export const recipientsData: Recipient[] = [
 	},
 	{
 		id: 'recipient-6',
-		accountId: 'account-6',
+		legacyFirestoreId: null,
 		contactId: 'contact-9',
 		startDate: new Date('2024-06-01'),
 		status: RecipientStatus.waitlisted,
@@ -87,7 +87,7 @@ export const recipientsData: Recipient[] = [
 	},
 	{
 		id: 'recipient-7',
-		accountId: 'account-7',
+		legacyFirestoreId: null,
 		contactId: 'contact-10',
 		startDate: new Date('2024-07-01'),
 		status: RecipientStatus.active,
@@ -101,7 +101,7 @@ export const recipientsData: Recipient[] = [
 	},
 	{
 		id: 'recipient-8',
-		accountId: 'account-8',
+		legacyFirestoreId: null,
 		contactId: 'contact-11',
 		startDate: new Date('2024-08-01'),
 		status: RecipientStatus.active,
@@ -115,7 +115,7 @@ export const recipientsData: Recipient[] = [
 	},
 	{
 		id: 'recipient-9',
-		accountId: 'account-9',
+		legacyFirestoreId: null,
 		contactId: 'contact-12',
 		startDate: new Date('2024-09-01'),
 		status: RecipientStatus.waitlisted,

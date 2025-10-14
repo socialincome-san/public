@@ -1,28 +1,27 @@
+import { DonationCertificate } from '@socialincome/shared/src/types/donation-certificate';
+import { User } from '@socialincome/shared/src/types/user';
+import { BaseExtractor } from '../core/base.extractor';
 import {
 	DONATION_CERTIFICATE_FIRESTORE_PATH,
-	DonationCertificate,
-} from '@socialincome/shared/src/types/donation-certificate';
-import { USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types/user';
-import { BaseExtractor } from '../core/base.extractor';
+	FirestoreDonationCertificateWithUser,
+	FirestoreUserWithId,
+	USER_FIRESTORE_PATH,
+} from './donation-certificate.types';
 
-export type DonationCertificateWithEmail = DonationCertificate & { email: string };
-
-export class DonationCertificatesExtractor extends BaseExtractor<DonationCertificateWithEmail> {
-	extract = async (): Promise<DonationCertificateWithEmail[]> => {
+export class DonationCertificateExtractor extends BaseExtractor<FirestoreDonationCertificateWithUser> {
+	extract = async (): Promise<FirestoreDonationCertificateWithUser[]> => {
 		const users = await this.loadAllUsers();
-		const docs = await this.loadAllDonationCertificates();
-		return this.mergeCertificatesWithEmails(docs, users);
+		const certificates = await this.loadAllDonationCertificates();
+		return this.mergeCertificatesWithUsers(certificates, users);
 	};
 
-	private async loadAllUsers(): Promise<Map<string, string>> {
+	private async loadAllUsers(): Promise<Map<string, FirestoreUserWithId>> {
 		const snapshot = await this.firestore.collection(USER_FIRESTORE_PATH).get();
-		const userMap = new Map<string, string>();
+		const userMap = new Map<string, FirestoreUserWithId>();
 
 		for (const doc of snapshot.docs) {
 			const data = doc.data() as User;
-			if (data?.email) {
-				userMap.set(doc.id, data.email);
-			}
+			userMap.set(doc.id, { ...data, id: doc.id, legacyFirestoreId: doc.id });
 		}
 
 		return userMap;
@@ -33,20 +32,20 @@ export class DonationCertificatesExtractor extends BaseExtractor<DonationCertifi
 		return snapshot.docs;
 	}
 
-	private mergeCertificatesWithEmails(
+	private mergeCertificatesWithUsers(
 		docs: FirebaseFirestore.QueryDocumentSnapshot[],
-		userMap: Map<string, string>,
-	): DonationCertificateWithEmail[] {
-		const result: DonationCertificateWithEmail[] = [];
+		userMap: Map<string, FirestoreUserWithId>,
+	): FirestoreDonationCertificateWithUser[] {
+		const result: FirestoreDonationCertificateWithUser[] = [];
 
 		for (const doc of docs) {
 			const userId = this.extractUserIdFromPath(doc.ref.path);
-			const email = userMap.get(userId);
-			if (!email) continue;
+			const user = userMap.get(userId);
+			if (!user) continue;
 
 			result.push({
-				...(doc.data() as DonationCertificate),
-				email,
+				certificate: { ...(doc.data() as DonationCertificate), id: doc.id, legacyFirestoreId: doc.id },
+				user,
 			});
 		}
 

@@ -1,18 +1,9 @@
-import { User, UserRole } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { CreateUserInput, UserInformation, UserTableView, UserTableViewRow } from './user.types';
+import { UserInformation, UserTableView, UserTableViewRow } from './user.types';
 
 export class UserService extends BaseService {
-	async create(input: CreateUserInput): Promise<ServiceResult<User>> {
-		try {
-			const user = await this.db.user.create({ data: input });
-			return this.resultOk(user);
-		} catch (error) {
-			return this.resultFail('Could not create user');
-		}
-	}
-
 	async getCurrentUserInformation(firebaseAuthUserId: string): Promise<ServiceResult<UserInformation>> {
 		try {
 			const user = await this.db.user.findFirst({

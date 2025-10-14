@@ -13,7 +13,8 @@
 		"test": "firebase emulators:exec --only firestore,storage,functions --project demo-social-income-local --config ../firebase.json 'npm run test:app'",
 		"test:app": "jest --forceExit --roots src/",
 		"test:playwright": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npx playwright install --with-deps && playwright test'",
-		"test:playwright:update": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npx playwright install --with-deps && playwright test --update-snapshots'"
+		"test:playwright:update": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npx playwright install --with-deps && playwright test --update-snapshots'",
+		"typecheck": "tsc --noEmit"
 	},
 	"devDependencies": {
 		"@jest/globals": "^29.7.0",

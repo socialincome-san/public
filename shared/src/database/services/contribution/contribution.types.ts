@@ -1,8 +1,4 @@
-import { Contribution, ContributionStatus, Prisma, ProgramPermission } from '@prisma/client';
-
-export type CreateContributionInput = Omit<Contribution, 'id' | 'createdAt' | 'updatedAt'> & {
-	amount?: Prisma.Decimal;
-};
+import { ContributionStatus, ProgramPermission } from '@prisma/client';
 
 export type ContributionTableViewRow = {
 	id: string;

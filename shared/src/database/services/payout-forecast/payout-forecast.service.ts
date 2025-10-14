@@ -59,14 +59,14 @@ export class PayoutForecastService extends BaseService {
 				return this.resultFail('Missing exchange rate');
 			}
 
-			const payoutAmountUsd = this.round2((program.payoutAmount / baseCurrencyRate) * usdCurrencyRate);
+			const payoutAmountUsd = this.round2((program.payoutAmount.toNumber() / baseCurrencyRate) * usdCurrencyRate);
 
 			const rows: PayoutForecastTableViewRow[] = forecastPeriods.map((periodStartDate, idx) => {
 				const numberOfRecipients = recipientCountByPeriodIndex.get(idx) ?? 0;
 				return {
 					period: this.formatMonthYear(periodStartDate),
 					numberOfRecipients,
-					amountInProgramCurrency: this.round2(numberOfRecipients * program.payoutAmount),
+					amountInProgramCurrency: this.round2(numberOfRecipients * program.payoutAmount.toNumber()),
 					amountUsd: this.round2(numberOfRecipients * payoutAmountUsd),
 				};
 			});

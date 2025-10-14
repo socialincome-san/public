@@ -1,40 +1,40 @@
-import { Recipient, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types/recipient';
-import { Survey, SURVEY_FIRETORE_PATH } from '@socialincome/shared/src/types/survey';
+import { Recipient } from '@socialincome/shared/src/types/recipient';
+import { Survey } from '@socialincome/shared/src/types/survey';
 import { BaseExtractor } from '../core/base.extractor';
+import {
+	FirestoreRecipientWithId,
+	FirestoreSurveyWithRecipient,
+	RECIPIENT_FIRESTORE_PATH,
+	SURVEY_FIRESTORE_PATH,
+} from './survey.types';
 
-export type RecipientWithId = Recipient & { id: string };
-
-export type SurveyWithRecipient = {
-	survey: Survey;
-	recipient: RecipientWithId;
-};
-
-export class SurveyExtractor extends BaseExtractor<SurveyWithRecipient> {
-	extract = async (): Promise<SurveyWithRecipient[]> => {
-		const recipientMap = await this.loadAllRecipients();
-		const surveyDocs = await this.loadAllSurveyDocs();
-		return this.mergeSurveysWithRecipients(surveyDocs, recipientMap);
+export class SurveyExtractor extends BaseExtractor<FirestoreSurveyWithRecipient> {
+	extract = async (): Promise<FirestoreSurveyWithRecipient[]> => {
+		const recipients = await this.loadAllRecipients();
+		const surveys = await this.loadAllSurveys();
+		return this.mergeSurveysWithRecipients(surveys, recipients);
 	};
 
-	private loadAllRecipients = async (): Promise<Map<string, Recipient>> => {
+	private async loadAllRecipients(): Promise<Map<string, FirestoreRecipientWithId>> {
 		const snapshot = await this.firestore.collection(RECIPIENT_FIRESTORE_PATH).get();
-		const map = new Map<string, Recipient>();
+		const map = new Map<string, FirestoreRecipientWithId>();
 		for (const doc of snapshot.docs) {
-			map.set(doc.id, doc.data() as Recipient);
+			const data = doc.data() as Recipient;
+			map.set(doc.id, { ...data, id: doc.id, legacyFirestoreId: doc.id });
 		}
 		return map;
-	};
+	}
 
-	private loadAllSurveyDocs = async () => {
-		const snapshot = await this.firestore.collectionGroup(SURVEY_FIRETORE_PATH).get();
+	private async loadAllSurveys() {
+		const snapshot = await this.firestore.collectionGroup(SURVEY_FIRESTORE_PATH).get();
 		return snapshot.docs;
-	};
+	}
 
 	private mergeSurveysWithRecipients(
 		docs: FirebaseFirestore.QueryDocumentSnapshot[],
-		recipientMap: Map<string, Recipient>,
-	): SurveyWithRecipient[] {
-		const surveys: SurveyWithRecipient[] = [];
+		recipientMap: Map<string, FirestoreRecipientWithId>,
+	): FirestoreSurveyWithRecipient[] {
+		const surveys: FirestoreSurveyWithRecipient[] = [];
 
 		for (const doc of docs) {
 			const recipientId = this.extractRecipientIdFromPath(doc.ref.path);
@@ -42,8 +42,8 @@ export class SurveyExtractor extends BaseExtractor<SurveyWithRecipient> {
 			if (!recipient) continue;
 
 			surveys.push({
-				survey: doc.data() as Survey,
-				recipient: { ...recipient, id: recipientId },
+				survey: { ...(doc.data() as Survey), id: doc.id, legacyFirestoreId: doc.id },
+				recipient,
 			});
 		}
 

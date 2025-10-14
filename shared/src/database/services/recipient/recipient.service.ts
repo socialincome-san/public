@@ -1,30 +1,9 @@
-import { PayoutStatus, Recipient as PrismaRecipient, ProgramPermission } from '@prisma/client';
+import { PayoutStatus, ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { CreateRecipientInput, RecipientTableView, RecipientTableViewRow } from './recipient.types';
+import { RecipientTableView, RecipientTableViewRow } from './recipient.types';
 
 export class RecipientService extends BaseService {
-	async getAll(): Promise<ServiceResult<PrismaRecipient[]>> {
-		try {
-			const recipients = await this.db.recipient.findMany({
-				orderBy: { createdAt: 'desc' },
-			});
-
-			return this.resultOk(recipients);
-		} catch {
-			return this.resultFail('Could not fetch recipients');
-		}
-	}
-
-	async create(input: CreateRecipientInput): Promise<ServiceResult<PrismaRecipient>> {
-		try {
-			const recipient = await this.db.recipient.create({ data: input });
-			return this.resultOk(recipient);
-		} catch {
-			return this.resultFail('Could not create recipient');
-		}
-	}
-
 	async getRecipientTableView(userId: string): Promise<ServiceResult<RecipientTableView>> {
 		try {
 			const recipients = await this.db.recipient.findMany({

@@ -1,6 +1,4 @@
-import { Program, ProgramPermission } from '@prisma/client';
-
-export type CreateProgramInput = Omit<Program, 'id' | 'createdAt' | 'updatedAt'>;
+import { ProgramPermission } from '@prisma/client';
 
 export type ProgramWallet = {
 	id: string;

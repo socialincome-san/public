@@ -1,71 +1,35 @@
-import { LocalPartnerService } from '@socialincome/shared/src/database/services/local-partner/local-partner.service';
-import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
-import { UserService } from '@socialincome/shared/src/database/services/user/user.service';
+import { PrismaClient } from '@prisma/client';
+import { DEFAULT_ORGANIZATION, DEFAULT_PROGRAM } from '../../scripts/seed-defaults';
 import { BaseImporter } from '../core/base.importer';
-import { OrganizationUtils } from '../organization/organization.utils';
-import { ProgramUtils } from '../program/program.utils';
-import { CreateRecipientWithUser } from './recipient.transformer';
+import { RecipientCreateInput } from './recipient.types';
 
-export class RecipientsImporter extends BaseImporter<CreateRecipientWithUser> {
-	private readonly userService = new UserService();
-	private readonly recipientService = new RecipientService();
-	private readonly localPartnerService = new LocalPartnerService();
+const prisma = new PrismaClient();
 
-	import = async (records: CreateRecipientWithUser[]): Promise<number> => {
+export class RecipientImporter extends BaseImporter<RecipientCreateInput> {
+	import = async (recipients: RecipientCreateInput[]): Promise<number> => {
 		let createdCount = 0;
 
-		const organizationId = await OrganizationUtils.getOrCreateDefaultOrganizationId();
-		if (!organizationId) {
-			console.error('❌ Failed to resolve organization. Aborting import.');
-			return 0;
-		}
+		const organization = await prisma.organization.findUnique({
+			where: { name: DEFAULT_ORGANIZATION.name },
+		});
 
-		const programId = await ProgramUtils.getOrCreateDefaultProgramId(organizationId);
-		if (!programId) {
-			console.error('❌ Failed to resolve program. Aborting import.');
-			return 0;
-		}
+		const program = await prisma.program.findUnique({
+			where: { name: DEFAULT_PROGRAM.name },
+		});
 
-		for (const record of records) {
-			const userResult = await this.userService.create({
-				...record.user,
-				organizationId,
-			});
+		if (!organization || !program) return 0;
 
-			if (!userResult.success) {
-				console.warn(`[RecipientsImporter] Skipped user due to conflict:`, {
-					email: record.user.email,
-					authUserId: record.user.authUserId,
-					reason: userResult.error,
+		for (const data of recipients) {
+			try {
+				await prisma.recipient.create({
+					data: {
+						...data,
+						program: { connect: { id: program.id } },
+					},
 				});
-				continue;
-			}
-
-			let localPartnerId: string | null = null;
-			if (record.partnerOrgName) {
-				const localPartner = await this.localPartnerService.findByName(record.partnerOrgName);
-				localPartnerId = localPartner?.id ?? null;
-			}
-
-			if (!localPartnerId) {
-				console.warn(`[RecipientsImporter] Skipped recipient, could not resolve local partner:`, {
-					email: record.user.email,
-					partnerOrgName: record.partnerOrgName,
-				});
-				continue;
-			}
-
-			const recipientResult = await this.recipientService.create({
-				...record.recipient,
-				userId: userResult.data.id,
-				programId,
-				localPartnerId,
-			});
-
-			if (recipientResult.success) {
 				createdCount++;
-			} else {
-				console.error(`[RecipientsImporter] Failed to create recipient for user ${record.user.email}`);
+			} catch (error) {
+				console.error('[RecipientImporter] Failed to import recipient:', error);
 			}
 		}
 

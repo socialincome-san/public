@@ -1,55 +1,53 @@
-import { RecipientMainLanguage, SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
-import { CreateSurveyInput } from '@socialincome/shared/src/database/services/survey/survey.types';
+import { Prisma, SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
 import { BaseTransformer } from '../core/base.transformer';
-import { SurveyWithRecipient } from './survey.extractor';
+import { FirestoreSurveyWithRecipient } from './survey.types';
 
-export type SurveyWithEmail = Omit<CreateSurveyInput, 'recipientId' | 'programId'> & {
-	recipientEmail: string;
-};
-
-export class SurveyTransformer extends BaseTransformer<SurveyWithRecipient, SurveyWithEmail[]> {
-	transform = async (input: SurveyWithRecipient[]): Promise<SurveyWithEmail[][]> => {
-		const transformed: SurveyWithEmail[] = input.map(({ survey, recipient }) => {
-			const recipientEmail = recipient.email?.trim()
-				? recipient.email.toLowerCase()
-				: this.generateFallbackEmail(recipient.first_name, recipient.last_name);
-
-			return {
-				questionnaire: this.mapQuestionnaire(survey.questionnaire),
-				recipientName: survey.recipient_name,
-				language: this.mapLanguage(survey.language),
-				dueDateAt: this.fromTimestamp(survey.due_date_at),
-				sentAt: survey.sent_at ? this.fromTimestamp(survey.sent_at) : null,
-				completedAt: survey.completed_at ? this.fromTimestamp(survey.completed_at) : null,
-				status: this.isValidStatus(survey.status) ? survey.status : SurveyStatus.new,
-				comments: survey.comments ?? null,
-				data: JSON.stringify(survey.data ?? {}),
-				accessEmail: survey.access_email || recipientEmail,
-				accessPw: survey.access_pw,
-				accessToken: survey.access_token,
-				recipientEmail,
-			};
-		});
-
-		return [transformed];
+export class SurveyTransformer extends BaseTransformer<FirestoreSurveyWithRecipient, Prisma.SurveyCreateInput> {
+	transform = async (input: FirestoreSurveyWithRecipient[]): Promise<Prisma.SurveyCreateInput[]> => {
+		return input.map(({ survey, recipient }) => ({
+			legacyFirestoreId: `${recipient.id}_${survey.id}`,
+			questionnaire: this.mapQuestionnaire(survey.questionnaire),
+			language: survey.language?.toLowerCase() ?? 'en',
+			dueAt: this.fromTimestamp(survey.due_date_at),
+			sentAt: survey.sent_at ? this.fromTimestamp(survey.sent_at) : null,
+			completedAt: survey.completed_at ? this.fromTimestamp(survey.completed_at) : null,
+			status: this.mapStatus(survey.status),
+			comments: survey.comments ?? null,
+			data: survey.data ?? Prisma.JsonNull,
+			accessEmail: survey.access_email ?? '',
+			accessPw: survey.access_pw ?? '',
+			accessToken: survey.access_token ?? '',
+			recipient: {
+				connect: { legacyFirestoreId: recipient.id },
+			},
+		}));
 	};
 
 	private fromTimestamp(timestamp: any): Date {
 		if (timestamp?.toDate) return timestamp.toDate();
 		if (typeof timestamp === 'string') return new Date(timestamp);
-		return new Date(timestamp);
+		if (typeof timestamp === 'number') return new Date(timestamp);
+		return new Date();
 	}
 
-	private isValidStatus(status: string): status is SurveyStatus {
-		return Object.values(SurveyStatus).includes(status as SurveyStatus);
+	private mapStatus(status: string | undefined): SurveyStatus {
+		switch (status) {
+			case 'sent':
+				return SurveyStatus.sent;
+			case 'scheduled':
+				return SurveyStatus.scheduled;
+			case 'in_progress':
+				return SurveyStatus.in_progress;
+			case 'completed':
+				return SurveyStatus.completed;
+			case 'missed':
+				return SurveyStatus.missed;
+			default:
+				return SurveyStatus.new;
+		}
 	}
 
-	private generateFallbackEmail(firstName: string, lastName: string): string {
-		const namePart = `${firstName}.${lastName}`.toLowerCase().replace(/[^a-z0-9]/g, '');
-		return `${namePart}@autocreated.socialincome`;
-	}
-
-	private mapQuestionnaire(value: string | null): SurveyQuestionnaire {
+	private mapQuestionnaire(value: string | undefined): SurveyQuestionnaire {
 		switch (value) {
 			case 'onboarding':
 				return SurveyQuestionnaire.onboarding;
@@ -61,19 +59,6 @@ export class SurveyTransformer extends BaseTransformer<SurveyWithRecipient, Surv
 				return SurveyQuestionnaire.offboarded_checkin;
 			default:
 				return SurveyQuestionnaire.onboarding;
-		}
-	}
-
-	private mapLanguage(value: string): RecipientMainLanguage {
-		switch (value.toLowerCase()) {
-			case 'krio':
-				return 'kri';
-			case 'kri':
-				return 'kri';
-			case 'en':
-				return 'en';
-			default:
-				throw new Error(`❌ Unknown language value: ${value}`);
 		}
 	}
 }

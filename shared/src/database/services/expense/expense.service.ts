@@ -1,22 +1,10 @@
-import { Expense as PrismaExpense, UserRole } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserInformation } from '../user/user.types';
-import { CreateExpenseInput, ExpenseTableView, ExpenseTableViewRow } from './expense.types';
+import { ExpenseTableView, ExpenseTableViewRow } from './expense.types';
 
 export class ExpenseService extends BaseService {
-	async create(input: CreateExpenseInput): Promise<ServiceResult<PrismaExpense>> {
-		try {
-			const expense = await this.db.expense.create({
-				data: input,
-			});
-
-			return this.resultOk(expense);
-		} catch (error) {
-			return this.resultFail('Could not create expense');
-		}
-	}
-
 	async getExpenseAdminTableView(user: UserInformation): Promise<ServiceResult<ExpenseTableView>> {
 		if (user.role !== UserRole.admin) {
 			return this.resultOk({ tableRows: [] });
