@@ -12,7 +12,7 @@ import { paymentInformationsData } from './data/payment-information.data';
 import { campaignsData } from './data/campaigns.data';
 import { contributorsData } from './data/contributors.data';
 import { contributionsData } from './data/contributions.data';
-import { paymentEventsData } from './data/pament-events.data';
+import { paymentEventsData } from './data/payment-events.data';
 import { donationCertificatesData } from './data/donation-certificates.data';
 import { recipientsData } from './data/recipients.data';
 import { payoutsData } from './data/payouts.data';
