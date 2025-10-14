@@ -11,7 +11,7 @@ import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
-import { Badge, BaseContainer, Separator, Typography } from '@socialincome/ui';
+import { Badge, BaseContainer, Carousel, CarouselContent, Separator, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 
 export const revalidate = 900;
@@ -44,18 +44,31 @@ export default async function Page({ params }: DefaultPageProps) {
 			<Typography className="mb-4 mt-12 text-center" size="3xl" weight="medium">
 				{translator.t('overview.editors')}
 			</Typography>
-			<div className="mx-auto mb-10 grid max-w-lg grid-cols-[repeat(auto-fit,minmax(60px,1fr))] place-items-center gap-2">
-				{authors.map((author, index) => (
-					<div key={index} className="flex flex-col justify-center text-center">
+			<Carousel
+				className="mx-auto mb-10 max-w-lg"
+				options={{
+					loop: true,
+					autoPlay: { enabled: true, delay: 5000 }
+				}}
+				showControls
+			>
+				{authors.map((author) => (
+					<CarouselContent key={author.id} className="flex flex-col justify-center text-center mx-1">
 						<Link href={`/${lang}/${region}/journal/author/${author.slug}`}>
-							<StoryblokAuthorImage className="mb-1" author={author} size="extra-large" lang={lang} region={region} />
+							<StoryblokAuthorImage
+								className="mx-auto mb-1"
+								author={author}
+								size="extra-large"
+								lang={lang}
+								region={region}
+							/>
 
 							<Typography>{author.content.firstName}</Typography>
 							<Typography>{author.content.lastName}</Typography>
 						</Link>
-					</div>
+					</CarouselContent>
 				))}
-			</div>
+			</Carousel>
 
 			<div className="mt-16 flex flex-wrap gap-2">
 				<div>
