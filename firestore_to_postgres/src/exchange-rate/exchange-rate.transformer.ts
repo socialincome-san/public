@@ -15,14 +15,6 @@ export class ExchangeRateTransformer extends BaseTransformer<FirestoreExchangeRa
 			const baseId = entry.id;
 
 			for (const [currency, rate] of Object.entries(entry.rates ?? {})) {
-				if (typeof rate !== 'number' || !currency) continue;
-
-				// Skip absurdly large or invalid rates
-				if (!isFinite(rate) || Math.abs(rate) >= 1e8) {
-					console.warn(`[ExchangeRateTransformer] Skipped ${baseId}_${currency} with invalid rate: ${rate}`);
-					continue;
-				}
-
 				transformed.push({
 					legacyFirestoreId: `${baseId}_${currency}`,
 					currency,
