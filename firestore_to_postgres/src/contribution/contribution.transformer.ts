@@ -1,8 +1,8 @@
 import { ContributionStatus, PaymentEventType, Prisma } from '@prisma/client';
 import {
 	BankWireContribution,
-	Contribution as FirestoreContribution,
 	ContributionSourceKey,
+	Contribution as FirestoreContribution,
 	StatusKey,
 	StripeContribution,
 } from '@socialincome/shared/src/types/contribution';
