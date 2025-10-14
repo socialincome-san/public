@@ -1,17 +1,15 @@
-import { CreateCampaignInput } from '@socialincome/shared/src/database/services/campaign/campaign.types';
-import { CampaignStatus, Campaign as FirestoreCampaign } from '@socialincome/shared/src/types/campaign';
+import { CampaignStatus } from '@socialincome/shared/src/types/campaign';
+import { DEFAULT_ORGANIZATION, DEFAULT_PROGRAM } from '../../scripts/seed-defaults';
 import { BaseTransformer } from '../core/base.transformer';
+import { CampaignCreateInput, FirestoreCampaignWithId } from './campaign.types';
 
-export type CreateCampaignWithoutFK = Omit<CreateCampaignInput, 'organizationId' | 'programId'>;
-
-export class CampaignsTransformer extends BaseTransformer<FirestoreCampaign, CreateCampaignWithoutFK> {
-	transform = async (input: FirestoreCampaign[]): Promise<CreateCampaignWithoutFK[]> => {
-		return input.map((raw): CreateCampaignWithoutFK => {
-			return {
+export class CampaignTransformer extends BaseTransformer<FirestoreCampaignWithId, CampaignCreateInput> {
+	transform = async (input: FirestoreCampaignWithId[]): Promise<CampaignCreateInput[]> => {
+		return input.map(
+			(raw): CampaignCreateInput => ({
+				legacyFirestoreId: raw.id,
 				title: raw.title,
 				description: raw.description,
-				creatorEmail: raw.creator_name,
-				creatorName: raw.creator_name,
 				secondDescriptionTitle: raw.second_description_title ?? null,
 				secondDescription: raw.second_description ?? null,
 				thirdDescriptionTitle: raw.third_description_title ?? null,
@@ -22,7 +20,7 @@ export class CampaignsTransformer extends BaseTransformer<FirestoreCampaign, Cre
 				linkFacebook: raw.link_facebook ?? null,
 				linkX: raw.link_x ?? null,
 				goal: raw.goal ?? null,
-				currency: raw.goal_currency ?? null,
+				currency: raw.goal_currency ?? 'CHF',
 				additionalAmountChf: raw.additional_amount_chf ?? null,
 				endDate: raw.end_date.toDate(),
 				isActive: raw.status === CampaignStatus.Active,
@@ -32,7 +30,11 @@ export class CampaignsTransformer extends BaseTransformer<FirestoreCampaign, Cre
 				metadataDescription: raw.metadata_description ?? null,
 				metadataOgImage: raw.metadata_ogImage ?? null,
 				metadataTwitterImage: raw.metadata_twitterImage ?? null,
-			};
-		});
+				creatorName: raw.creator_name ?? null,
+				creatorEmail: raw.email ?? null,
+				organization: { connect: { name: DEFAULT_ORGANIZATION.name } },
+				program: { connect: { name: DEFAULT_PROGRAM.name } },
+			}),
+		);
 	};
 }

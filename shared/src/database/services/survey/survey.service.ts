@@ -1,9 +1,7 @@
-import { Survey as PrismaSurvey } from '@prisma/client';
+import { ProgramPermission, SurveyStatus } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import {
-	CreateSurveyInput,
-	ProgramPermission,
 	SurveyTableView,
 	SurveyTableViewRow,
 	UpcomingSurveyTableView,
@@ -11,74 +9,68 @@ import {
 } from './survey.types';
 
 export class SurveyService extends BaseService {
-	async create(input: CreateSurveyInput): Promise<ServiceResult<PrismaSurvey>> {
-		try {
-			const survey = await this.db.survey.create({
-				data: input,
-			});
-
-			return this.resultOk(survey);
-		} catch (e) {
-			console.error('[SurveyService.create]', e);
-			return this.resultFail('Could not create survey');
-		}
-	}
-
 	async getSurveyTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
 		try {
 			const surveys = await this.db.survey.findMany({
 				where: {
-					program: this.userAccessibleProgramsWhere(userId),
+					recipient: {
+						program: {
+							accesses: { some: { userId } },
+						},
+					},
 				},
 				select: {
 					id: true,
 					questionnaire: true,
 					status: true,
-					recipientName: true,
 					language: true,
-					dueDateAt: true,
+					dueAt: true,
 					sentAt: true,
-					program: {
+					recipient: {
 						select: {
-							id: true,
-							name: true,
-							operatorOrganization: {
-								select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-							},
-							viewerOrganization: {
-								select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+							contact: { select: { firstName: true, lastName: true } },
+							program: {
+								select: {
+									id: true,
+									name: true,
+									accesses: { where: { userId }, select: { permissions: true } },
+								},
 							},
 						},
 					},
 				},
-				orderBy: { dueDateAt: 'desc' },
+				orderBy: { dueAt: 'desc' },
 			});
 
-			const swissGermanDate = new Intl.DateTimeFormat('de-CH');
+			const dateFmt = new Intl.DateTimeFormat('de-CH');
 
-			const tableRows: SurveyTableViewRow[] = surveys.map((survey) => {
-				const canOperateOnProgram = (survey.program?.operatorOrganization?.users?.length ?? 0) > 0;
-				const permission: ProgramPermission = canOperateOnProgram ? 'operator' : 'viewer';
+			const tableRows: SurveyTableViewRow[] = surveys.map((s) => {
+				const firstName = s.recipient?.contact?.firstName ?? '';
+				const lastName = s.recipient?.contact?.lastName ?? '';
+				const program = s.recipient?.program;
+				const permissions = program?.accesses[0]?.permissions ?? [];
+				const permission: ProgramPermission = permissions.includes(ProgramPermission.edit)
+					? ProgramPermission.edit
+					: ProgramPermission.readonly;
 
 				return {
-					id: survey.id,
-					questionnaire: survey.questionnaire,
-					status: survey.status,
-					recipientName: survey.recipientName,
-					language: survey.language,
-					dueDateAt: survey.dueDateAt,
-					dueDateAtFormatted: swissGermanDate.format(survey.dueDateAt),
-					sentAt: survey.sentAt ?? null,
-					sentAtFormatted: survey.sentAt ? swissGermanDate.format(survey.sentAt) : null,
-					programName: survey.program?.name ?? '',
-					programId: survey.program?.id ?? '',
+					id: s.id,
+					questionnaire: s.questionnaire,
+					status: s.status,
+					recipientName: `${firstName} ${lastName}`.trim(),
+					language: s.language,
+					dueDateAt: s.dueAt,
+					dueDateAtFormatted: dateFmt.format(s.dueAt),
+					sentAt: s.sentAt,
+					sentAtFormatted: s.sentAt ? dateFmt.format(s.sentAt) : null,
+					programName: program?.name ?? '',
+					programId: program?.id ?? '',
 					permission,
 				};
 			});
 
 			return this.resultOk({ tableRows });
-		} catch (error) {
-			console.error('[SurveyService.getSurveyTableView]', error);
+		} catch {
 			return this.resultFail('Could not fetch surveys');
 		}
 	}
@@ -93,69 +85,75 @@ export class SurveyService extends BaseService {
 
 	async getUpcomingSurveysTableView(userId: string): Promise<ServiceResult<UpcomingSurveyTableView>> {
 		try {
-			const activeStatuses = ['new', 'sent', 'scheduled', 'in_progress'];
-			const startOfToday = new Date();
-			startOfToday.setHours(0, 0, 0, 0);
+			const activeStatuses: SurveyStatus[] = ['new', 'sent', 'scheduled', 'in_progress'];
+			const today = new Date();
+			today.setHours(0, 0, 0, 0);
 
 			const surveys = await this.db.survey.findMany({
 				where: {
-					program: this.userAccessibleProgramsWhere(userId),
-					status: { in: activeStatuses as any },
-					dueDateAt: { gte: startOfToday },
+					recipient: {
+						program: {
+							accesses: { some: { userId } },
+						},
+					},
+					status: { in: activeStatuses },
+					dueAt: { gte: today },
 				},
 				select: {
 					id: true,
-					recipientId: true,
-					questionnaire: true,
+					dueAt: true,
 					status: true,
-					dueDateAt: true,
+					questionnaire: true,
+					recipientId: true,
 					accessEmail: true,
 					accessPw: true,
-					recipient: { select: { user: { select: { firstName: true, lastName: true } } } },
-					program: {
+					recipient: {
 						select: {
-							name: true,
-							operatorOrganization: {
-								select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-							},
-							viewerOrganization: {
-								select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+							contact: { select: { firstName: true, lastName: true } },
+							program: {
+								select: {
+									name: true,
+									id: true,
+									accesses: { where: { userId }, select: { permissions: true } },
+								},
 							},
 						},
 					},
 				},
-				orderBy: { dueDateAt: 'asc' },
+				orderBy: { dueAt: 'asc' },
 			});
 
-			const tableRows: UpcomingSurveyTableViewRow[] = surveys.map((survey) => {
-				const firstName = survey.recipient?.user?.firstName ?? '';
-				const lastName = survey.recipient?.user?.lastName ?? '';
+			const dateFmt = new Intl.DateTimeFormat('de-CH');
 
-				const isOperator = (survey.program?.operatorOrganization?.users?.length ?? 0) > 0;
-				const permission: ProgramPermission = isOperator ? 'operator' : 'viewer';
+			const tableRows: UpcomingSurveyTableViewRow[] = surveys.map((s) => {
+				const contact = s.recipient?.contact;
+				const program = s.recipient?.program;
+				const permissions = program?.accesses[0]?.permissions ?? [];
+				const permission: ProgramPermission = permissions.includes(ProgramPermission.edit)
+					? ProgramPermission.edit
+					: ProgramPermission.readonly;
 
 				return {
-					id: survey.id,
-					firstName,
-					lastName,
-					questionnaire: survey.questionnaire,
-					status: survey.status,
-					dueDateAt: survey.dueDateAt,
-					dueDateAtFormatted: new Intl.DateTimeFormat('de-CH').format(survey.dueDateAt),
+					id: s.id,
+					firstName: contact?.firstName ?? '',
+					lastName: contact?.lastName ?? '',
+					questionnaire: s.questionnaire,
+					status: s.status,
+					dueDateAt: s.dueAt,
+					dueDateAtFormatted: dateFmt.format(s.dueAt),
 					url: this.buildSurveyUrl({
-						surveyId: survey.id,
-						recipientId: survey.recipientId,
-						accessEmail: survey.accessEmail,
-						accessPw: survey.accessPw,
+						surveyId: s.id,
+						recipientId: s.recipientId,
+						accessEmail: s.accessEmail,
+						accessPw: s.accessPw,
 					}),
-					programName: survey.program?.name ?? '',
+					programName: program?.name ?? '',
 					permission,
 				};
 			});
 
 			return this.resultOk({ tableRows });
-		} catch (error) {
-			console.error('[SurveyService.getUpcomingSurveysTableView]', error);
+		} catch {
 			return this.resultFail('Could not fetch upcoming surveys');
 		}
 	}

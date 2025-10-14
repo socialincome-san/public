@@ -1,0 +1,104 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "Social Income Mobile API",
+		"version": "1.0.0",
+		"description": "The Social Income Mobile API enables authenticated recipients to securely access their personal data and program information. All endpoints require a valid Firebase ID token (Bearer JWT) provided by the mobile app."
+	},
+	"servers": [
+		{
+			"url": "http://localhost:3001/api",
+			"description": "Local development"
+		},
+		{
+			"url": "https://staging.socialincome.org/api",
+			"description": "Staging"
+		},
+		{
+			"url": "https://socialincome.org/api",
+			"description": "Production"
+		}
+	],
+	"components": {
+		"securitySchemes": {
+			"BearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT",
+				"description": "Provide a valid Firebase ID token as a Bearer token in the Authorization header."
+			}
+		}
+	},
+	"defaultResponseSet": "common",
+	"responseSets": {
+		"common": ["401", "403", "404", "500"]
+	},
+	"errorConfig": {
+		"template": {
+			"type": "object",
+			"properties": {
+				"error": {
+					"type": "string",
+					"example": "{{ERROR_MESSAGE}}"
+				},
+				"code": {
+					"type": "string",
+					"example": "{{ERROR_CODE}}"
+				}
+			}
+		},
+		"codes": {
+			"400": {
+				"description": "Bad Request",
+				"variables": {
+					"ERROR_MESSAGE": "Invalid request parameters",
+					"ERROR_CODE": "BAD_REQUEST"
+				}
+			},
+			"401": {
+				"description": "Unauthorized",
+				"variables": {
+					"ERROR_MESSAGE": "Authentication required",
+					"ERROR_CODE": "UNAUTHORIZED"
+				}
+			},
+			"403": {
+				"description": "Forbidden",
+				"variables": {
+					"ERROR_MESSAGE": "Access denied",
+					"ERROR_CODE": "FORBIDDEN"
+				}
+			},
+			"404": {
+				"description": "Not Found",
+				"variables": {
+					"ERROR_MESSAGE": "Resource not found",
+					"ERROR_CODE": "NOT_FOUND"
+				}
+			},
+			"409": {
+				"description": "Conflict",
+				"variables": {
+					"ERROR_MESSAGE": "Resource already exists",
+					"ERROR_CODE": "CONFLICT"
+				}
+			},
+			"500": {
+				"description": "Internal Server Error",
+				"variables": {
+					"ERROR_MESSAGE": "An unexpected error occurred",
+					"ERROR_CODE": "INTERNAL_ERROR"
+				}
+			}
+		}
+	},
+	"apiDir": "./src/app/api/portal",
+	"schemaDir": "./src/app/api/portal/v1",
+	"schemaType": "zod",
+	"docsUrl": "portal/v1/api-docs",
+	"ui": "scalar",
+	"outputFile": "openapi.json",
+	"outputDir": "./public",
+	"includeOpenApiRoutes": false,
+	"debug": false
+}

@@ -1,48 +1,31 @@
-import { PayoutStatus, Payout as PrismaPayout, RecipientStatus } from '@prisma/client';
+import { Gender, PayoutStatus, ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import {
-	CreatePayoutInput,
 	OngoingPayoutTableView,
 	OngoingPayoutTableViewRow,
 	PayoutConfirmationTableView,
 	PayoutConfirmationTableViewRow,
-	ProgramPermission,
+	PayoutMonth,
 } from './payout.types';
 
 export class PayoutService extends BaseService {
-	async create(input: CreatePayoutInput): Promise<ServiceResult<PrismaPayout>> {
-		try {
-			const payout = await this.db.payout.create({ data: input });
-			return this.resultOk(payout);
-		} catch (e) {
-			console.error('[PayoutService.create]', e);
-			return this.resultFail('Could not create payout');
-		}
-	}
-
 	async getOngoingPayoutTableView(userId: string): Promise<ServiceResult<OngoingPayoutTableView>> {
 		try {
 			const { fromMonthStart, months } = this.getLastThreeMonths();
 
 			const recipients = await this.db.recipient.findMany({
 				where: {
-					program: this.userAccessibleProgramsWhere(userId),
-					status: { in: [RecipientStatus.active, RecipientStatus.designated] },
+					program: { accesses: { some: { userId } } },
 				},
 				select: {
 					id: true,
-					user: { select: { firstName: true, lastName: true, gender: true } },
+					contact: { select: { firstName: true, lastName: true, gender: true } },
 					program: {
 						select: {
 							name: true,
 							totalPayments: true,
-							operatorOrganization: {
-								select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-							},
-							viewerOrganization: {
-								select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-							},
+							accesses: { where: { userId }, select: { permissions: true } },
 						},
 					},
 					payouts: {
@@ -61,30 +44,39 @@ export class PayoutService extends BaseService {
 
 			const tableRows: OngoingPayoutTableViewRow[] = recipients.map((recipient) => {
 				const payoutsTotal = recipient.program?.totalPayments ?? 0;
-				const payoutsReceived = recipient.payouts.filter(
-					(payout) => payout.status === 'paid' || payout.status === 'confirmed',
-				).length;
+
+				let payoutsReceived = 0;
+				for (const p of recipient.payouts) {
+					if (p.status === PayoutStatus.paid || p.status === PayoutStatus.confirmed) {
+						payoutsReceived += 1;
+					}
+				}
 
 				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
 
 				const paymentsLeft = Math.max(payoutsTotal - payoutsReceived, 0);
 
-				const last3Months = months.map(({ monthLabel, start, end }) => {
-					const payout = recipient.payouts.find((p) => p.paymentAt >= start && p.paymentAt < end);
-					return {
-						monthLabel,
+				const last3Months: PayoutMonth[] = [];
+				for (const m of months) {
+					const payout = recipient.payouts.find((p) => p.paymentAt >= m.start && p.paymentAt < m.end);
+					last3Months.push({
+						monthLabel: m.monthLabel,
 						status: payout?.status ?? PayoutStatus.created,
-					};
-				});
+					});
+				}
 
-				const isOperator = (recipient.program?.operatorOrganization?.users?.length ?? 0) > 0;
-				const permission: ProgramPermission = isOperator ? 'operator' : 'viewer';
+				const permissions = recipient.program?.accesses[0]?.permissions ?? [];
+				const permission: ProgramPermission = permissions.includes('edit')
+					? ProgramPermission.edit
+					: ProgramPermission.readonly;
+
+				const gender: Gender = (recipient.contact?.gender ?? 'private') as Gender;
 
 				return {
 					id: recipient.id,
-					firstName: recipient.user?.firstName ?? '',
-					lastName: recipient.user?.lastName ?? '',
-					gender: (recipient.user?.gender ?? 'private') as any,
+					firstName: recipient.contact?.firstName ?? '',
+					lastName: recipient.contact?.lastName ?? '',
+					gender,
 					programName: recipient.program?.name ?? '',
 					payoutsReceived,
 					payoutsTotal,
@@ -96,8 +88,7 @@ export class PayoutService extends BaseService {
 			});
 
 			return this.resultOk({ tableRows });
-		} catch (error) {
-			console.error('[PayoutService.getPayoutTableView]', error);
+		} catch {
 			return this.resultFail('Could not fetch payouts');
 		}
 	}
@@ -107,8 +98,7 @@ export class PayoutService extends BaseService {
 			const payouts = await this.db.payout.findMany({
 				where: {
 					recipient: {
-						program: this.userAccessibleProgramsWhere(userId),
-						status: { in: [RecipientStatus.active, RecipientStatus.designated] },
+						program: { accesses: { some: { userId } } },
 					},
 				},
 				select: {
@@ -117,16 +107,11 @@ export class PayoutService extends BaseService {
 					status: true,
 					recipient: {
 						select: {
-							user: { select: { firstName: true, lastName: true } },
+							contact: { select: { firstName: true, lastName: true } },
 							program: {
 								select: {
 									name: true,
-									operatorOrganization: {
-										select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-									},
-									viewerOrganization: {
-										select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-									},
+									accesses: { where: { userId }, select: { permissions: true } },
 								},
 							},
 						},
@@ -137,13 +122,15 @@ export class PayoutService extends BaseService {
 
 			const tableRows: PayoutConfirmationTableViewRow[] = payouts.map((p) => {
 				const program = p.recipient?.program;
-				const isOperator = (program?.operatorOrganization?.users?.length ?? 0) > 0;
-				const permission: ProgramPermission = isOperator ? 'operator' : 'viewer';
+				const permissions = program?.accesses[0]?.permissions ?? [];
+				const permission: ProgramPermission = permissions.includes('edit')
+					? ProgramPermission.edit
+					: ProgramPermission.readonly;
 
 				return {
 					id: p.id,
-					firstName: p.recipient?.user?.firstName ?? '',
-					lastName: p.recipient?.user?.lastName ?? '',
+					firstName: p.recipient?.contact?.firstName ?? '',
+					lastName: p.recipient?.contact?.lastName ?? '',
 					paymentAt: p.paymentAt,
 					paymentAtFormatted: new Intl.DateTimeFormat('de-CH').format(p.paymentAt),
 					status: p.status,
@@ -153,8 +140,7 @@ export class PayoutService extends BaseService {
 			});
 
 			return this.resultOk({ tableRows });
-		} catch (error) {
-			console.error('[PayoutService.getPayoutConfirmationTableView]', error);
+		} catch {
 			return this.resultFail('Could not fetch payout confirmations');
 		}
 	}
@@ -169,21 +155,9 @@ export class PayoutService extends BaseService {
 		const twoMonthsAgo = addMonths(currentMonth, -2);
 
 		const months = [
-			{
-				monthLabel: formatMonthLabel(currentMonth),
-				start: currentMonth,
-				end: addMonths(currentMonth, 1),
-			},
-			{
-				monthLabel: formatMonthLabel(previousMonth),
-				start: previousMonth,
-				end: addMonths(previousMonth, 1),
-			},
-			{
-				monthLabel: formatMonthLabel(twoMonthsAgo),
-				start: twoMonthsAgo,
-				end: addMonths(twoMonthsAgo, 1),
-			},
+			{ monthLabel: formatMonthLabel(currentMonth), start: currentMonth, end: addMonths(currentMonth, 1) },
+			{ monthLabel: formatMonthLabel(previousMonth), start: previousMonth, end: addMonths(previousMonth, 1) },
+			{ monthLabel: formatMonthLabel(twoMonthsAgo), start: twoMonthsAgo, end: addMonths(twoMonthsAgo, 1) },
 		];
 
 		return { fromMonthStart: months[2].start, months };

@@ -37,7 +37,7 @@ export function Navbar({ user }: NavbarProps) {
 	const { auth } = useAuth();
 
 	const { role } = user;
-	const isGlobalAnalystOrAdmin = role === 'globalAnalyst' || role === 'globalAdmin';
+	const isAdmin = role === 'admin';
 
 	const navLinks: NavLink[] = [
 		{ href: '/portal', label: 'Home', exact: true },
@@ -111,7 +111,7 @@ export function Navbar({ user }: NavbarProps) {
 				<p className="text-foreground text-sm font-medium md:text-xs">
 					{user.firstName} {user.lastName}
 				</p>
-				<p className="text-muted-foreground text-xs">{user.organizationName}</p>
+				<p className="text-muted-foreground text-xs">{user.organizationNames.join(', ')}</p>
 			</div>
 		</>
 	);
@@ -162,8 +162,8 @@ export function Navbar({ user }: NavbarProps) {
 								</Link>
 							</DropdownMenuItem>
 
-							{isGlobalAnalystOrAdmin && <DropdownMenuSeparator />}
-							{isGlobalAnalystOrAdmin &&
+							{isAdmin && <DropdownMenuSeparator />}
+							{isAdmin &&
 								adminLinks.map(({ href, label, icon: Icon }) => (
 									<DropdownMenuItem asChild key={href}>
 										<Link href={href} className="flex cursor-pointer items-center gap-2">
@@ -215,14 +215,14 @@ export function Navbar({ user }: NavbarProps) {
 								>
 									{accountSettingsLink.label}
 								</Link>
-								{isGlobalAnalystOrAdmin && <Separator className="my-2" />}
-								{isGlobalAnalystOrAdmin &&
+								{isAdmin && <Separator className="my-2" />}
+								{isAdmin &&
 									adminLinks.map(({ href, label }) => (
 										<Link key={href} href={href} className="text-muted-foreground rounded-md px-2 py-2 font-medium">
 											{label}
 										</Link>
 									))}
-								{isGlobalAnalystOrAdmin && <Separator className="my-2" />}
+								{isAdmin && <Separator className="my-2" />}
 								<button onClick={handleSignOut} className="text-destructive rounded-md px-2 py-2 text-left font-medium">
 									Sign out
 								</button>

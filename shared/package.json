@@ -11,14 +11,15 @@
 		"db:generate": "prisma generate --schema=src/database/schema.prisma",
 		"db:migrate:deploy": "prisma migrate deploy --schema=src/database/schema.prisma",
 		"db:migrate:dev": "prisma migrate dev --schema=src/database/schema.prisma",
-		"db:migrate:reset": "prisma migrate reset --schema=src/database/schema.prisma --force",
+		"db:migrate:reset": "prisma migrate reset --schema=src/database/schema.prisma --force --skip-seed",
 		"db:migrate:status": "prisma migrate status --schema=src/database/schema.prisma",
 		"db:migrate:create": "prisma migrate dev --create-only --schema=src/database/schema.prisma",
 		"db:introspect": "prisma db pull --schema=src/database/schema.prisma",
 		"db:seed": "prisma db seed --schema=src/database/schema.prisma",
 		"db:studio": "prisma studio --schema=src/database/schema.prisma",
 		"db:up": "docker compose up -d postgres",
-		"db:down": "docker compose down"
+		"db:down": "docker compose down",
+		"typecheck": "tsc --noEmit"
 	},
 	"devDependencies": {
 		"@jest/globals": "^29.7.0",

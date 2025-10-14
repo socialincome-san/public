@@ -1,70 +1,31 @@
-import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
-import { CreatePayoutInput } from '@socialincome/shared/src/database/services/payout/payout.types';
-import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
-import { UserService } from '@socialincome/shared/src/database/services/user/user.service';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { BaseImporter } from '../core/base.importer';
-import { PayoutWithEmail } from './payout.transformer';
 
-type EmailRecipientMap = Map<string, string>;
+const prisma = new PrismaClient();
 
-export class PayoutsImporter extends BaseImporter<PayoutWithEmail[]> {
-	private readonly payoutService = new PayoutService();
-	private readonly userService = new UserService();
-	private readonly recipientService = new RecipientService();
-
-	private emailRecipientMap: EmailRecipientMap = new Map();
-
-	import = async (payoutBatches: PayoutWithEmail[][]): Promise<number> => {
-		await this.buildRecipientMap();
-
+export class PayoutImporter extends BaseImporter<Prisma.PayoutCreateInput> {
+	import = async (payouts: Prisma.PayoutCreateInput[]): Promise<number> => {
 		let createdCount = 0;
 
-		for (const payouts of payoutBatches) {
-			for (const { recipientEmail, ...payout } of payouts) {
-				const recipientId = this.getRecipientId(recipientEmail);
-				if (!recipientId) {
-					console.warn(`[PayoutsImporter] Skipped payout: No recipient for email "${recipientEmail}"`);
-					continue;
+		for (const payout of payouts) {
+			try {
+				const recipientLegacyId = payout.recipient?.connect?.legacyFirestoreId;
+
+				if (recipientLegacyId) {
+					const exists = await prisma.recipient.findUnique({
+						where: { legacyFirestoreId: recipientLegacyId },
+					});
+					if (!exists) continue;
 				}
 
-				const result = await this.payoutService.create({
-					...payout,
-					recipientId,
-				} as CreatePayoutInput);
-
-				if (result.success) {
-					createdCount++;
-				} else {
-					console.warn(`[PayoutsImporter] Failed to create payout for ${recipientEmail}: ${result.error}`);
-				}
+				await prisma.payout.create({ data: payout });
+				createdCount++;
+			} catch (error) {
+				const message = error instanceof Error ? error.message : String(error);
+				console.warn(`[PayoutImporter] Failed for ${payout.legacyFirestoreId}: ${message}`);
 			}
 		}
 
 		return createdCount;
 	};
-
-	private async buildRecipientMap() {
-		const userResult = await this.userService.findMany();
-		if (!userResult.success || !userResult.data) {
-			throw new Error('❌ Failed to fetch users');
-		}
-
-		const recipientResult = await this.recipientService.findMany();
-		if (!recipientResult.success || !recipientResult.data) {
-			throw new Error('❌ Failed to fetch recipients');
-		}
-
-		const userIdToEmailMap = new Map(userResult.data.map((user) => [user.id, user.email.toLowerCase()]));
-
-		for (const recipient of recipientResult.data) {
-			const email = userIdToEmailMap.get(recipient.userId);
-			if (email) {
-				this.emailRecipientMap.set(email, recipient.id);
-			}
-		}
-	}
-
-	private getRecipientId(email: string): string | null {
-		return this.emailRecipientMap.get(email.toLowerCase()) ?? null;
-	}
 }

@@ -1,12 +1,10 @@
-import { User as PrismaUser, UserRole } from '@prisma/client';
-
-export type CreateUserInput = Omit<PrismaUser, 'id' | 'createdAt' | 'updatedAt'>;
+import { UserRole } from '@prisma/client';
 
 export type UserInformation = {
 	id: string;
 	firstName: string | null;
 	lastName: string | null;
-	organizationName: string | null;
+	organizationNames: string[];
 	role: UserRole;
 };
 
@@ -16,7 +14,6 @@ export type UserTableViewRow = {
 	lastName: string;
 	role: UserRole;
 	organizationName: string;
-	readonly: boolean;
 };
 
 export type UserTableView = {

@@ -1,15 +1,15 @@
 import { BaseMigrator } from '../core/base.migrator';
-import { LocalPartnersExtractor } from './local-partner.extractor';
-import { LocalPartnersImporter } from './local-partner.importer';
-import { LocalPartnersTransformer } from './local-partner.transformer';
+import { LocalPartnerExtractor } from './local-partner.extractor';
+import { LocalPartnerImporter } from './local-partner.importer';
+import { LocalPartnerTransformer } from './local-partner.transformer';
 
 export class LocalPartnerMigrator extends BaseMigrator {
-	private readonly extractor = new LocalPartnersExtractor();
-	private readonly transformer = new LocalPartnersTransformer();
-	private readonly importer = new LocalPartnersImporter();
+	private readonly extractor = new LocalPartnerExtractor();
+	private readonly transformer = new LocalPartnerTransformer();
+	private readonly importer = new LocalPartnerImporter();
 
 	async migrate(): Promise<number> {
-		console.log('🚀 Starting local partners migration...');
+		console.log('🚀 Starting local partner migration...');
 
 		const extracted = await this.extractor.extract();
 		console.log(`📦 Extracted ${extracted.length} local partner records`);
@@ -20,6 +20,6 @@ export class LocalPartnerMigrator extends BaseMigrator {
 		const insertedCount = await this.importer.import(transformed);
 		console.log(`✅ Imported ${insertedCount} local partner records`);
 
-		return extracted.length;
+		return insertedCount;
 	}
 }

@@ -1,21 +1,21 @@
-import { CreateDonationCertificateInput } from '@socialincome/shared/src/database/services/donation-certificate/donation-certificate.types';
+import { Prisma } from '@prisma/client';
 import { BaseTransformer } from '../core/base.transformer';
-import { DonationCertificateWithEmail } from './donation-certificate.extractor';
+import { FirestoreDonationCertificateWithUser } from './donation-certificate.types';
 
-export type CreateDonationCertificateInputWithoutFK = Omit<CreateDonationCertificateInput, 'userId'> & {
-	email: string;
-};
-
-export class DonationCertificatesTransformer extends BaseTransformer<
-	DonationCertificateWithEmail,
-	CreateDonationCertificateInputWithoutFK
+export class DonationCertificateTransformer extends BaseTransformer<
+	FirestoreDonationCertificateWithUser,
+	Prisma.DonationCertificateCreateInput
 > {
-	transform = async (input: DonationCertificateWithEmail[]): Promise<CreateDonationCertificateInputWithoutFK[]> => {
-		return input.map((item) => ({
-			country: item.country,
-			year: item.year,
-			storagePath: item.storage_path ?? (item as any).url ?? null,
-			email: item.email,
+	transform = async (
+		input: FirestoreDonationCertificateWithUser[],
+	): Promise<Prisma.DonationCertificateCreateInput[]> => {
+		return input.map(({ certificate, user }) => ({
+			legacyFirestoreId: `${user.id}_${certificate.id}`,
+			year: certificate.year,
+			storagePath: certificate.storage_path ?? (certificate as any).url ?? '',
+			contributor: {
+				connect: { legacyFirestoreId: user.id },
+			},
 		}));
 	};
 }

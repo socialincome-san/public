@@ -1,21 +1,21 @@
 import { BaseMigrator } from '../core/base.migrator';
-import { ContributionsExtractor } from './contribution.extractor';
-import { ContributionsImporter } from './contribution.importer';
-import { ContributionsTransformer } from './contribution.transformer';
+import { ContributionExtractor } from './contribution.extractor';
+import { ContributionImporter } from './contribution.importer';
+import { ContributionTransformer } from './contribution.transformer';
 
 export class ContributionMigrator extends BaseMigrator {
-	private readonly extractor = new ContributionsExtractor();
-	private readonly transformer = new ContributionsTransformer();
-	private readonly importer = new ContributionsImporter();
+	private readonly extractor = new ContributionExtractor();
+	private readonly transformer = new ContributionTransformer();
+	private readonly importer = new ContributionImporter();
 
 	async migrate(): Promise<number> {
-		console.log('🚀 Starting contributions migration...');
+		console.log('🚀 Starting contribution migration...');
 
 		const extracted = await this.extractor.extract();
 		console.log(`📦 Extracted ${extracted.length} contribution records`);
 
 		const transformed = await this.transformer.transform(extracted);
-		console.log(`🔁 Transformed ${transformed[0].contributions.length} contribution records`);
+		console.log(`🔁 Transformed ${transformed.length} contribution records`);
 
 		const insertedCount = await this.importer.import(transformed);
 		console.log(`✅ Imported ${insertedCount} contribution records`);
