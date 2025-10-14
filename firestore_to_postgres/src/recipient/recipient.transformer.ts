@@ -1,4 +1,5 @@
 import { Gender, RecipientStatus, WhatsAppActivationStatus } from '@prisma/client';
+import { DEFAULT_LOCAL_PARTNER, DEFAULT_PROGRAM } from '../../scripts/seed-defaults';
 import { BaseTransformer } from '../core/base.transformer';
 import { FirestoreRecipientWithId, RecipientCreateInput } from './recipient.types';
 
@@ -47,10 +48,10 @@ export class RecipientTransformer extends BaseTransformer<FirestoreRecipientWith
 					startDate: raw.si_start_date?.toDate() ?? null,
 					successorName: raw.successor ?? null,
 					termsAccepted: false,
-					program: { connect: { name: 'Default Program' } },
+					program: { connect: { name: DEFAULT_PROGRAM.name } },
 					localPartner: legacyPartnerId
 						? { connect: { legacyFirestoreId: legacyPartnerId } }
-						: { connect: { name: 'Default Local Partner' } },
+						: { connect: { name: DEFAULT_LOCAL_PARTNER.name } },
 					paymentInformation: {
 						create: {
 							provider: 'orange_money',
@@ -77,8 +78,7 @@ export class RecipientTransformer extends BaseTransformer<FirestoreRecipientWith
 
 	private mapWhatsAppStatus(hasWhatsApp: boolean, activated: boolean): WhatsAppActivationStatus {
 		if (!hasWhatsApp) return WhatsAppActivationStatus.disabled;
-		if (activated) return WhatsAppActivationStatus.verified;
-		return WhatsAppActivationStatus.pending;
+		return activated ? WhatsAppActivationStatus.verified : WhatsAppActivationStatus.pending;
 	}
 
 	private mapStatus(status: string): RecipientStatus {

@@ -17,7 +17,7 @@ export type FirestoreContributionWithUser = {
 export type PaymentEventCreateInput = {
 	type: PaymentEventType;
 	transactionId: string | null;
-	metadata?: Prisma.InputJsonValue | null; // ✅ matches Prisma’s expected JSON input
+	metadata?: Prisma.InputJsonValue | Prisma.JsonNullValueInput;
 };
 
 export type TransformedContribution = {

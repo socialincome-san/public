@@ -13,7 +13,7 @@ export class SurveyTransformer extends BaseTransformer<FirestoreSurveyWithRecipi
 			completedAt: survey.completed_at ? this.fromTimestamp(survey.completed_at) : null,
 			status: this.mapStatus(survey.status),
 			comments: survey.comments ?? null,
-			data: survey.data ? JSON.stringify(survey.data) : '{}',
+			data: survey.data ?? Prisma.JsonNull,
 			accessEmail: survey.access_email ?? '',
 			accessPw: survey.access_pw ?? '',
 			accessToken: survey.access_token ?? '',

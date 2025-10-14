@@ -1,37 +1,34 @@
 import { ContributionStatus, PaymentEventType, Prisma } from '@prisma/client';
 import {
 	BankWireContribution,
-	ContributionSourceKey,
 	Contribution as FirestoreContribution,
+	ContributionSourceKey,
 	StatusKey,
 	StripeContribution,
 } from '@socialincome/shared/src/types/contribution';
+import { DEFAULT_CAMPAIGN } from '../../scripts/seed-defaults';
 import { BaseTransformer } from '../core/base.transformer';
 import { ContributionWithPayment, FirestoreContributionWithUser } from './contribution.types';
 
 export class ContributionTransformer extends BaseTransformer<FirestoreContributionWithUser, ContributionWithPayment> {
 	transform = async (input: FirestoreContributionWithUser[]): Promise<ContributionWithPayment[]> => {
-		return input
-			.filter(({ user }) => !!user.email)
-			.map(
-				({ contribution, user }): ContributionWithPayment => ({
-					contribution: {
-						legacyFirestoreId: contribution.id,
-						amount: contribution.amount,
-						amountChf: contribution.amount_chf,
-						feesChf: contribution.fees_chf,
-						currency: contribution.currency ?? 'CHF',
-						status: this.mapStatus(contribution.status),
-						contributor: { connect: { legacyFirestoreId: user.id } },
-						campaign: contribution.campaign_path
-							? { connect: { legacyFirestoreId: contribution.campaign_path.id } }
-							: { connect: { title: 'Default Campaign' } },
-						paymentEvent: {
-							create: this.buildPaymentEvent(contribution),
-						},
-					},
-				}),
-			);
+		return input.map(
+			({ contribution, user }): ContributionWithPayment => ({
+				contribution: {
+					legacyFirestoreId: contribution.id,
+					amount: contribution.amount,
+					amountChf: contribution.amount_chf,
+					feesChf: contribution.fees_chf,
+					currency: contribution.currency ?? 'CHF',
+					status: this.mapStatus(contribution.status),
+					contributor: { connect: { legacyFirestoreId: user.id } },
+					campaign: contribution.campaign_path
+						? { connect: { legacyFirestoreId: contribution.campaign_path.id } }
+						: { connect: { title: DEFAULT_CAMPAIGN.title } },
+					paymentEvent: { create: this.buildPaymentEvent(contribution) },
+				},
+			}),
+		);
 	};
 
 	private buildPaymentEvent(contribution: FirestoreContribution): Prisma.PaymentEventCreateWithoutContributionInput {
@@ -57,9 +54,7 @@ export class ContributionTransformer extends BaseTransformer<FirestoreContributi
 		}
 	}
 
-	private extractMetadata(
-		contribution: FirestoreContribution,
-	): Prisma.InputJsonValue | Prisma.JsonNullValueInput | undefined {
+	private extractMetadata(contribution: FirestoreContribution): Prisma.InputJsonValue | Prisma.JsonNullValueInput {
 		if (contribution.source === ContributionSourceKey.WIRE_TRANSFER) {
 			const bank = contribution as BankWireContribution;
 			return bank.raw_content ? { raw_content: bank.raw_content } : Prisma.JsonNull;

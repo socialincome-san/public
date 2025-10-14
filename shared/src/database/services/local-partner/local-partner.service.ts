@@ -41,7 +41,6 @@ export class LocalPartnerService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error('[LocalPartnerService.getTableView]', error);
 			return this.resultFail('Could not fetch local partners');
 		}
 	}

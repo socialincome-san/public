@@ -1,4 +1,5 @@
 import { CampaignStatus } from '@socialincome/shared/src/types/campaign';
+import { DEFAULT_ORGANIZATION, DEFAULT_PROGRAM } from '../../scripts/seed-defaults';
 import { BaseTransformer } from '../core/base.transformer';
 import { CampaignCreateInput, FirestoreCampaignWithId } from './campaign.types';
 
@@ -31,8 +32,8 @@ export class CampaignTransformer extends BaseTransformer<FirestoreCampaignWithId
 				metadataTwitterImage: raw.metadata_twitterImage ?? null,
 				creatorName: raw.creator_name ?? null,
 				creatorEmail: raw.email ?? null,
-				organization: { connect: { name: 'Default Organization' } },
-				program: { connect: { name: 'Default Program' } },
+				organization: { connect: { name: DEFAULT_ORGANIZATION.name } },
+				program: { connect: { name: DEFAULT_PROGRAM.name } },
 			}),
 		);
 	};

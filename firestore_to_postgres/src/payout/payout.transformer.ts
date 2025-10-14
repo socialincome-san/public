@@ -7,10 +7,10 @@ export class PayoutTransformer extends BaseTransformer<FirestorePayoutWithRecipi
 	transform = async (input: FirestorePayoutWithRecipient[]): Promise<Prisma.PayoutCreateInput[]> => {
 		return input.map(({ payout, recipient }) => ({
 			legacyFirestoreId: `${recipient.id}_${payout.id}`,
-			amount: new Prisma.Decimal(payout.amount ?? 0),
-			amountChf: payout.amount_chf ? new Prisma.Decimal(payout.amount_chf) : undefined,
+			amount: new Prisma.Decimal(payout.amount ?? null),
+			amountChf: payout.amount_chf ? new Prisma.Decimal(payout.amount_chf) : null,
 			currency: payout.currency ?? 'SLE',
-			paymentAt: payout.payment_at?.toDate() ?? new Date(),
+			paymentAt: payout.payment_at?.toDate() ?? null,
 			status: this.mapStatus(payout.status),
 			phoneNumber: payout.phone_number?.toString() ?? null,
 			comments: payout.comments ?? null,

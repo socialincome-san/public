@@ -13,8 +13,6 @@ type Params = Promise<{ payoutId: string }>;
  */
 export async function GET(request: NextRequest, { params }: { params: Params }) {
 	const { payoutId } = await params;
-	console.log(params);
-
 	const service = new PortalApiService();
 
 	const recipientResult = await service.getRecipientFromRequest(request);

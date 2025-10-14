@@ -4,7 +4,7 @@ import { usersData } from './data/users.data';
 import { phonesData } from './data/phones.data';
 import { contactsData } from './data/contacts.data';
 import { organizationsData } from './data/organizations.data';
-import { organizationAccessesData } from './data/organization-acesses.data';
+import { organizationAccessesData } from './data/organization-accesses.data';
 import { programsData } from './data/programs.data';
 import { programAccessesData } from './data/program-accesses.data';
 import { localPartnersData } from './data/local-partners.data';

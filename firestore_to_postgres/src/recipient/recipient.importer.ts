@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { DEFAULT_ORGANIZATION, DEFAULT_PROGRAM } from '../../scripts/seed-defaults';
 import { BaseImporter } from '../core/base.importer';
 import { RecipientCreateInput } from './recipient.types';
 
@@ -9,11 +10,11 @@ export class RecipientImporter extends BaseImporter<RecipientCreateInput> {
 		let createdCount = 0;
 
 		const organization = await prisma.organization.findUnique({
-			where: { name: 'Default Organization' },
+			where: { name: DEFAULT_ORGANIZATION.name },
 		});
 
 		const program = await prisma.program.findUnique({
-			where: { name: 'Default Program' },
+			where: { name: DEFAULT_PROGRAM.name },
 		});
 
 		if (!organization || !program) return 0;

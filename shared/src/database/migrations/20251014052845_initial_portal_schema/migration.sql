@@ -210,6 +210,8 @@ CREATE TABLE "program_access" (
     "user_id" TEXT NOT NULL,
     "programId" TEXT NOT NULL,
     "permissions" "ProgramPermission"[],
+    "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ(3),
 
     CONSTRAINT "program_access_pkey" PRIMARY KEY ("id")
 );
