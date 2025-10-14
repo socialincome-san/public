@@ -1,11 +1,11 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 
 export const DEFAULT_ORGANIZATION: Prisma.OrganizationCreateInput = {
-	name: 'Default Organization',
+	name: 'Default Social Income Organization',
 };
 
 export const DEFAULT_PROGRAM: Omit<Prisma.ProgramCreateInput, 'owner' | 'operator'> = {
-	name: 'Default Program',
+	name: 'Default Social Income Program',
 	totalPayments: 36,
 	payoutAmount: 700,
 	payoutCurrency: 'SLE',
@@ -14,7 +14,7 @@ export const DEFAULT_PROGRAM: Omit<Prisma.ProgramCreateInput, 'owner' | 'operato
 };
 
 export const DEFAULT_CAMPAIGN: Omit<Prisma.CampaignCreateInput, 'organization' | 'program'> = {
-	title: 'Default Campaign',
+	title: 'Default Social Income Campaign',
 	description: 'Automatically created campaign for unmapped contributions.',
 	currency: 'CHF',
 	endDate: new Date('2100-01-01'),
@@ -22,7 +22,7 @@ export const DEFAULT_CAMPAIGN: Omit<Prisma.CampaignCreateInput, 'organization' |
 };
 
 export const DEFAULT_LOCAL_PARTNER: Prisma.LocalPartnerCreateInput = {
-	name: 'Default Local Partner',
+	name: 'Default Social Income Local Partner',
 	contact: {
 		create: {
 			firstName: 'Default',
