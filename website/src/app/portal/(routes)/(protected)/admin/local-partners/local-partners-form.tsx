@@ -1,16 +1,12 @@
 'use client';
 
-import { Button } from '@/app/portal/components/button';
-import { Input } from '@/app/portal/components/input';
-import { Label } from '@/app/portal/components/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/portal/components/select';
-import { getLocalPartnerAction } from '@/app/portal/server-actions/create-local-partner-action';
-import { zodResolver } from '@hookform/resolvers/zod';
+import {
+	createLocalPartnerAction,
+	getLocalPartnerAction,
+} from '@/app/portal/server-actions/create-local-partner-action';
+import DynamicForm, { FormSchema } from '@/components/dynamicForm/dynamicForm';
 import { Gender } from '@prisma/client';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@socialincome/ui/src/components/form';
-import { SpinnerIcon } from '@socialincome/ui/src/icons/spinner';
-import { useEffect, useTransition } from 'react';
-import { useForm } from 'react-hook-form';
+import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 
 export default function LocalPartnersForm({
@@ -22,7 +18,47 @@ export default function LocalPartnersForm({
 	onError?: () => void;
 	localPartnerId?: string;
 }) {
-	const formSchema = z.object({
+	// TODO
+	const initialFormSchema: FormSchema = {
+		name: {
+			placeholder: 'Name',
+			label: 'Name',
+		},
+		contactFirstName: {
+			placeholder: 'First Name',
+			label: 'First Name',
+		},
+		contactLastName: {
+			placeholder: 'Last Name',
+			label: 'Last Name',
+		},
+		contactCallingName: {
+			placeholder: 'Calling Name',
+			label: 'Calling Name',
+		},
+		contactEmail: {
+			placeholder: 'Email',
+			label: 'Email',
+		},
+		contactLanguage: {
+			placeholder: 'Language',
+			label: 'Language',
+		},
+		contactDateOfBirth: {
+			placeholder: 'Date of birth',
+			label: 'Date of birth',
+		},
+		contactProfession: {
+			placeholder: 'Profession',
+			label: 'Profession',
+		},
+		gender: {
+			placeholder: 'Choose Gender',
+			label: 'Gender',
+		},
+	};
+
+	const zodSchema = z.object({
 		name: z.string().min(2, {
 			message: 'Name must be at least 2 characters.',
 		}),
@@ -32,21 +68,19 @@ export default function LocalPartnersForm({
 		contactLastName: z.string().min(2, {
 			message: 'Name must be at least 2 characters.',
 		}),
-		gender: z.nativeEnum(Gender),
+		contactCallingName: z.string().optional(),
+		contactEmail: z.string().email(),
+		contactLanguage: z.string().optional(),
+		contactDateOfBirth: z.date().max(new Date(), { message: 'Too young!' }).optional(),
+		contactProfession: z.string(),
+		gender: z.nativeEnum(Gender).optional(),
 	});
 
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			name: '',
-			contactFirstName: '',
-			contactLastName: '',
-		},
-	});
+	const [formSchema, setFormSchema] = useState<FormSchema>(initialFormSchema);
 
-	const [isLoading, startTransition] = useTransition();
 	let editing = !!localPartnerId;
 
+	// TODO
 	useEffect(() => {
 		if (editing && localPartnerId) {
 			// Load local partner in edit mode
@@ -54,10 +88,13 @@ export default function LocalPartnersForm({
 				try {
 					const partner = await getLocalPartnerAction(localPartnerId);
 					if (partner.success) {
-						form.setValue('name', partner.data.name);
-						form.setValue('contactFirstName', partner.data.contact.firstName);
-						form.setValue('contactLastName', partner.data.contact.lastName);
-						partner.data.contact.gender && form.setValue('gender', partner.data.contact.gender);
+						const newSchema = { ...formSchema };
+						newSchema.name.value = partner.data.name;
+						newSchema.contactFirstName.value = partner.data.contact.firstName;
+						newSchema.contactLastName.value = partner.data.contact.lastName;
+						// TODO
+						newSchema.gender.value = partner.data.contact.gender?.toString();
+						setFormSchema(newSchema);
 					}
 				} catch {
 					onError && onError();
@@ -66,22 +103,24 @@ export default function LocalPartnersForm({
 		}
 	}, [localPartnerId]);
 
-	async function onSubmit(values: z.infer<typeof formSchema>) {
+	const [isLoading, startTransition] = useTransition();
+	async function onSubmit(values: z.infer<typeof zodSchema>) {
 		// TODO update data in edit mode
 		debugger;
 		if (editing) return;
 		startTransition(async () => {
 			try {
-				// await createLocalPartnerAction({
-				// 	name: values.name,
-				// 	contact: {
-				// 		create: {
-				// 			firstName: values.contactFirstName,
-				// 			lastName: values.contactLastName,
-				// 			gender: values.gender,
-				// 		},
-				// 	},
-				// });
+				await createLocalPartnerAction({
+					name: values.name,
+					contact: {
+						create: {
+							firstName: values.contactFirstName,
+							lastName: values.contactLastName,
+							gender: values.gender,
+							email: '',
+						},
+					},
+				});
 				onSuccess && onSuccess();
 			} catch {
 				onError && onError();
@@ -89,81 +128,5 @@ export default function LocalPartnersForm({
 		});
 	}
 
-	return (
-		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-				<FormField
-					control={form.control}
-					name="name"
-					render={({ field }) => (
-						<FormItem>
-							<Label>Name</Label>
-							<FormControl>
-								<Input placeholder="Name" {...field} disabled={isLoading} />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name="contactFirstName"
-					render={({ field }) => (
-						<FormItem>
-							<Label>Contact first name</Label>
-							<FormControl>
-								<Input placeholder="Contact first name" {...field} disabled={isLoading} />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name="contactLastName"
-					render={({ field }) => (
-						<FormItem>
-							<Label>Contact last name</Label>
-							<FormControl>
-								<Input placeholder="Contact last name" {...field} disabled={isLoading} />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<FormField
-					control={form.control}
-					name="gender"
-					render={({ field }) => (
-						<FormItem>
-							<Label>Gender</Label>
-							<Select value={field.value} onValueChange={field.onChange} disabled={isLoading}>
-								<FormControl>
-									<SelectTrigger>
-										<SelectValue placeholder="Choose gender" />
-									</SelectTrigger>
-								</FormControl>
-								<SelectContent {...field}>
-									{Object.keys(Gender).map((gender) => (
-										<SelectItem value={gender} key={gender}>
-											{gender}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-				<Button disabled={isLoading} type="submit">
-					Submit
-				</Button>
-			</form>
-			{isLoading && (
-				<div className="space-0 absolute right-0 top-0 flex h-full w-full items-center justify-center bg-white opacity-80">
-					<SpinnerIcon />
-				</div>
-			)}
-		</Form>
-	);
+	return <DynamicForm formSchema={formSchema} zodSchema={zodSchema} isLoading={isLoading} onSubmit={onSubmit} />;
 }
