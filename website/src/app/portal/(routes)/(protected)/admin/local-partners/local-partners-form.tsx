@@ -4,10 +4,7 @@ import { Button } from '@/app/portal/components/button';
 import { Input } from '@/app/portal/components/input';
 import { Label } from '@/app/portal/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/portal/components/select';
-import {
-	createLocalPartnerAction,
-	getLocalPartnerAction,
-} from '@/app/portal/server-actions/create-local-partner-action';
+import { getLocalPartnerAction } from '@/app/portal/server-actions/create-local-partner-action';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Gender } from '@prisma/client';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@socialincome/ui/src/components/form';
@@ -75,16 +72,16 @@ export default function LocalPartnersForm({
 		if (editing) return;
 		startTransition(async () => {
 			try {
-				await createLocalPartnerAction({
-					name: values.name,
-					contact: {
-						create: {
-							firstName: values.contactFirstName,
-							lastName: values.contactLastName,
-							gender: values.gender,
-						},
-					},
-				});
+				// await createLocalPartnerAction({
+				// 	name: values.name,
+				// 	contact: {
+				// 		create: {
+				// 			firstName: values.contactFirstName,
+				// 			lastName: values.contactLastName,
+				// 			gender: values.gender,
+				// 		},
+				// 	},
+				// });
 				onSuccess && onSuccess();
 			} catch {
 				onError && onError();
