@@ -43,7 +43,7 @@ export default function LocalPartnersTable({
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="sm:max-w-[425]">
+				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425]">
 					<DialogHeader>
 						<DialogTitle>Add local partner</DialogTitle>
 					</DialogHeader>
