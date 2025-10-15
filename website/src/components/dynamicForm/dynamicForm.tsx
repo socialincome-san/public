@@ -1,10 +1,10 @@
 import { Button } from '@/app/portal/components/button';
 import { DatePicker } from '@/app/portal/components/datePicker';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/app/portal/components/form';
 import { Input } from '@/app/portal/components/input';
 import { Label } from '@/app/portal/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/portal/components/select';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@socialincome/ui/src/components/form';
 import { SpinnerIcon } from '@socialincome/ui/src/icons/spinner';
 import { FC, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -140,6 +140,7 @@ const DynamicForm: FC<{
 					Submit
 				</Button>
 			</form>
+			{/* TODO: add proper loading state */}
 			{isLoading && (
 				<div className="space-0 absolute right-0 top-0 flex h-full w-full items-center justify-center bg-white opacity-80">
 					<SpinnerIcon />
