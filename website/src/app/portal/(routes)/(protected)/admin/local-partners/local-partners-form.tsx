@@ -56,6 +56,10 @@ export default function LocalPartnersForm({
 			placeholder: 'Choose Gender',
 			label: 'Gender',
 		},
+		phone: {
+			placeholder: 'Phone Number',
+			label: 'Phone Number',
+		},
 	};
 
 	const zodSchema = z.object({
@@ -74,6 +78,11 @@ export default function LocalPartnersForm({
 		contactDateOfBirth: z.date().max(new Date(), { message: 'Too young!' }).optional(),
 		contactProfession: z.string(),
 		gender: z.nativeEnum(Gender).optional(),
+		phone: z
+			.string()
+			// TODO: chek regex
+			.regex(/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/gm)
+			.optional(),
 	});
 
 	const [formSchema, setFormSchema] = useState<FormSchema>(initialFormSchema);
@@ -117,7 +126,17 @@ export default function LocalPartnersForm({
 							firstName: values.contactFirstName,
 							lastName: values.contactLastName,
 							gender: values.gender,
-							email: '',
+							email: values.contactEmail,
+							profession: values.contactProfession,
+							phone: values.phone
+								? {
+										create: {
+											number: values.phone,
+										},
+									}
+								: undefined,
+							dateOfBirth: values.contactDateOfBirth,
+							callingName: values.contactCallingName,
 						},
 					},
 				});

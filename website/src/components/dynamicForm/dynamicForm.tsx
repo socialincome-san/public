@@ -57,13 +57,6 @@ const DynamicForm: FC<{
 		return getType(key) === 'ZodNativeEnum' && zodSchema.shape[key]?._def.values;
 	};
 
-	console.log('schema: ', zodSchema);
-	console.log('options: ', getOptions());
-	console.log(
-		'type: ',
-		getOptions(),
-		getOptions().map((o) => getType(o)),
-	);
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

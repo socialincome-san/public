@@ -18,7 +18,12 @@ export type LocalPartnerPayload = {
 	contact: {
 		firstName: string;
 		lastName: string;
-		gender: Gender | null;
+		gender?: Gender;
+		profession?: string;
+		phone?: string;
+		dateofBirth?: Date;
+		email: string;
+		callingName?: string;
 	};
 };
 
