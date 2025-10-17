@@ -6,6 +6,7 @@ import {
 	LocalPartnerPayload,
 	LocalPartnerTableView,
 	LocalPartnerTableViewRow,
+	LocalPartnerUpdateInput,
 } from './local-partner.types';
 
 export class LocalPartnerService extends BaseService {
@@ -18,6 +19,20 @@ export class LocalPartnerService extends BaseService {
 		}
 	}
 
+	async update(localPartner: LocalPartnerUpdateInput): Promise<ServiceResult<LocalPartner>> {
+		try {
+			const partner = await this.db.localPartner.update({
+				where: {
+					id: localPartner.id?.toString(),
+				},
+				data: localPartner,
+			});
+			return this.resultOk(partner);
+		} catch (e) {
+			return this.resultFail('Could not update local partner: ' + e);
+		}
+	}
+
 	async get(localPartnerId: string): Promise<ServiceResult<LocalPartnerPayload>> {
 		try {
 			const partner = await this.db.localPartner.findUnique({
@@ -26,9 +41,16 @@ export class LocalPartnerService extends BaseService {
 					name: true,
 					contact: {
 						select: {
+							id: true,
 							firstName: true,
 							lastName: true,
 							gender: true,
+							callingName: true,
+							email: true,
+							language: true,
+							phone: true,
+							profession: true,
+							dateOfBirth: true,
 						},
 					},
 				},

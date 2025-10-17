@@ -3,9 +3,15 @@
 import {
 	createLocalPartnerAction,
 	getLocalPartnerAction,
+	updateLocalPartnerAction,
 } from '@/app/portal/server-actions/create-local-partner-action';
+import {
+	formSchema as contactFormSchema,
+	zodSchema as contactZodSchema,
+} from '@/components/dynamicForm/contactFormSchemas';
 import DynamicForm, { FormSchema } from '@/components/dynamicForm/dynamicForm';
-import { Gender } from '@prisma/client';
+import { LocalPartnerPayload } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
+import { Gender } from '@socialincome/shared/src/types/user';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 
@@ -18,47 +24,13 @@ export default function LocalPartnersForm({
 	onError?: () => void;
 	localPartnerId?: string;
 }) {
-	// TODO
 	const initialFormSchema: FormSchema = {
 		name: {
 			placeholder: 'Name',
 			label: 'Name',
 		},
-		contactFirstName: {
-			placeholder: 'First Name',
-			label: 'First Name',
-		},
-		contactLastName: {
-			placeholder: 'Last Name',
-			label: 'Last Name',
-		},
-		contactCallingName: {
-			placeholder: 'Calling Name',
-			label: 'Calling Name',
-		},
-		contactEmail: {
-			placeholder: 'Email',
-			label: 'Email',
-		},
-		contactLanguage: {
-			placeholder: 'Language',
-			label: 'Language',
-		},
-		contactDateOfBirth: {
-			placeholder: 'Date of birth',
-			label: 'Date of birth',
-		},
-		contactProfession: {
-			placeholder: 'Profession',
-			label: 'Profession',
-		},
-		gender: {
-			placeholder: 'Choose Gender',
-			label: 'Gender',
-		},
-		phone: {
-			placeholder: 'Phone Number',
-			label: 'Phone Number',
+		contact: {
+			...contactFormSchema,
 		},
 	};
 
@@ -66,26 +38,14 @@ export default function LocalPartnersForm({
 		name: z.string().min(2, {
 			message: 'Name must be at least 2 characters.',
 		}),
-		contactFirstName: z.string().min(2, {
-			message: 'Name must be at least 2 characters.',
+		contact: z.object({
+			...contactZodSchema.shape,
 		}),
-		contactLastName: z.string().min(2, {
-			message: 'Name must be at least 2 characters.',
-		}),
-		contactCallingName: z.string().optional(),
-		contactEmail: z.string().email(),
-		contactLanguage: z.string().optional(),
-		contactDateOfBirth: z.date().max(new Date(), { message: 'Too young!' }).optional(),
-		contactProfession: z.string(),
-		gender: z.nativeEnum(Gender).optional(),
-		phone: z
-			.string()
-			// TODO: chek regex
-			.regex(/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/gm)
-			.optional(),
 	});
 
 	const [formSchema, setFormSchema] = useState<FormSchema>(initialFormSchema);
+
+	const [localePartner, setLocalePartner] = useState<LocalPartnerPayload>();
 
 	let editing = !!localPartnerId;
 
@@ -97,12 +57,18 @@ export default function LocalPartnersForm({
 				try {
 					const partner = await getLocalPartnerAction(localPartnerId);
 					if (partner.success) {
+						setLocalePartner(partner.data);
 						const newSchema = { ...formSchema };
 						newSchema.name.value = partner.data.name;
-						newSchema.contactFirstName.value = partner.data.contact.firstName;
-						newSchema.contactLastName.value = partner.data.contact.lastName;
-						// TODO
-						newSchema.gender.value = partner.data.contact.gender?.toString();
+						newSchema.contact.firstName.value = partner.data.contact.firstName;
+						newSchema.contact.lastName.value = partner.data.contact.lastName;
+						newSchema.contact.callingName.value = partner.data.contact.callingName;
+						newSchema.contact.email.value = partner.data.contact.email;
+						newSchema.contact.language.value = partner.data.contact.language;
+						newSchema.contact.profession.value = partner.data.contact.profession;
+						newSchema.contact.phone.value = partner.data.contact.phone.number;
+						newSchema.contact.dateOfBirth.value = partner.data.contact.dateOfBirth;
+						newSchema.contact.gender.value = partner.data.contact.gender?.toString();
 						setFormSchema(newSchema);
 					}
 				} catch {
@@ -115,31 +81,71 @@ export default function LocalPartnersForm({
 	const [isLoading, startTransition] = useTransition();
 	async function onSubmit(values: z.infer<typeof zodSchema>) {
 		// TODO update data in edit mode
-		debugger;
-		if (editing) return;
 		startTransition(async () => {
 			try {
-				await createLocalPartnerAction({
-					name: values.name,
-					contact: {
-						create: {
-							firstName: values.contactFirstName,
-							lastName: values.contactLastName,
-							gender: values.gender,
-							email: values.contactEmail,
-							profession: values.contactProfession,
-							phone: values.phone
-								? {
-										create: {
-											number: values.phone,
-										},
-									}
-								: undefined,
-							dateOfBirth: values.contactDateOfBirth,
-							callingName: values.contactCallingName,
+				if (editing) {
+					// TODO: move to server action
+					const data = {
+						name: values.name,
+						contact: {
+							update: {
+								data: {
+									firstName: values.contact.firstName,
+									lastName: values.contact.lastName,
+									gender: values.contact.gender as Gender,
+									email: values.contact.email,
+									profession: values.contact.profession,
+									phone: values.contact.phone
+										? {
+												update: {
+													data: {
+														number: values.contact.phone,
+													},
+													where: {
+														id: localePartner?.contact.phone?.id,
+													},
+												},
+											}
+										: undefined,
+									dateOfBirth: values.contact.dateOfBirth,
+									callingName: values.contact.callingName,
+									language: values.contact.language,
+									// TODO: add address
+								},
+								where: {
+									id: localePartner?.contact.id,
+								},
+							},
 						},
-					},
-				});
+					};
+					await updateLocalPartnerAction({ id: localPartnerId, ...data });
+				} else {
+					// TODO: move to server action
+					const data = {
+						name: values.name,
+						contact: {
+							create: {
+								firstName: values.contact.firstName,
+								lastName: values.contact.lastName,
+								gender: values.contact.gender as Gender,
+								email: values.contact.email,
+								profession: values.contact.profession,
+								phone: values.contact.phone
+									? {
+											create: {
+												number: values.contact.phone,
+											},
+										}
+									: undefined,
+								dateOfBirth: values.contact.dateOfBirth,
+								callingName: values.contact.callingName,
+								language: values.contact.language,
+								// TODO: add address
+							},
+						},
+					};
+					await createLocalPartnerAction(data);
+				}
 				onSuccess && onSuccess();
 			} catch {
 				onError && onError();
@@ -147,5 +153,9 @@ export default function LocalPartnersForm({
 		});
 	}
 
-	return <DynamicForm formSchema={formSchema} zodSchema={zodSchema} isLoading={isLoading} onSubmit={onSubmit} />;
+	return (
+		<>
+			<DynamicForm formSchema={formSchema} zodSchema={zodSchema} isLoading={isLoading} onSubmit={onSubmit} />
+		</>
+	);
 }

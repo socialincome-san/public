@@ -7,17 +7,31 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SpinnerIcon } from '@socialincome/ui/src/icons/spinner';
 import { FC, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, UseFormReturn } from 'react-hook-form';
 import z from 'zod';
 
 export interface FormSchema {
-	[key: string]: {
-		label: string;
-		placeholder?: string;
-		defaultValue?: string;
-		value?: string;
-	};
+	[key: string]:
+		| {
+				label: string;
+				placeholder?: string;
+				defaultValue?: string;
+				value?: string;
+		  }
+		| FormSchema;
 }
+
+const getDef = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any>, parentKey?: string) => {
+	return parentKey ? zodSchema.shape[parentKey]?._def.shape()[key]?._def : zodSchema.shape[key]?._def;
+};
+
+const getType = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any>, parentKey?: string): string => {
+	const def = getDef(key, zodSchema, parentKey);
+	const type = def.typeName;
+	if (type === 'ZodOptional') return def.innerType._def.typeName;
+	return type;
+};
+
 const DynamicForm: FC<{
 	formSchema: FormSchema;
 	zodSchema: z.ZodObject<any>;
@@ -37,97 +51,50 @@ const DynamicForm: FC<{
 	// set form values if available
 	useEffect(() => {
 		for (const [name, field] of Object.entries(formSchema)) {
+			if (!('label' in formSchema[name])) {
+				//nested
+				for (const [nestedName, nestedField] of Object.entries(formSchema[name])) {
+					console.log(`setting value "${nestedField.value}" for "${name}.${nestedName}"`);
+					if (formSchema[name][nestedName].value) form.setValue(`${name}.${nestedName}`, nestedField.value);
+				}
+			}
 			if (formSchema[name].value) form.setValue(name, field.value);
 		}
 	}, [formSchema]);
 
 	// TODO
-	const getOptions = (): string[] => {
-		return zodSchema.keyof().options;
-	};
-
-	// TODO
-	const getType = (key: keyof z.infer<typeof zodSchema>): string => {
-		const type = zodSchema.shape[key]?._def.typeName;
-		if (type === 'ZodOptional') return zodSchema.shape[key]?._def.innerType._def.typeName;
-		return type;
-	};
-	const getEnumValues = (key: keyof z.infer<typeof zodSchema>) => {
-		if (zodSchema.shape[key]?._def.typeName === 'ZodOptional') return zodSchema.shape[key]?._def.innerType._def.values;
-		return getType(key) === 'ZodNativeEnum' && zodSchema.shape[key]?._def.values;
+	const getOptions = (nestedKey?: string): string[] => {
+		return nestedKey ? zodSchema.shape[nestedKey]?.keyof().options : zodSchema.keyof().options;
 	};
 
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 				{getOptions().map((option) => {
-					switch (getType(option)) {
-						case 'ZodString':
-							return (
-								<FormField
-									control={form.control}
-									name={option}
-									key={option}
-									render={({ field }) => (
-										<FormItem>
-											<Label>{formSchema[option].label}</Label>
-											<FormControl>
-												<Input placeholder={formSchema[option].placeholder} {...field} disabled={isLoading} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
+					return getType(option, zodSchema) === 'ZodObject' ? (
+						<div key={option} className="flex flex-col gap-6 border-2 border-slate-100 p-5">
+							{getOptions(option).map((nestedOption) => (
+								<GenericFormField
+									option={nestedOption}
+									zodSchema={zodSchema}
+									form={form}
+									formSchema={formSchema}
+									isLoading={isLoading}
+									parentOption={option}
+									key={nestedOption}
 								/>
-							);
-						case 'ZodDate':
-							return (
-								<FormField
-									control={form.control}
-									name={option}
-									key={option}
-									render={({ field }) => (
-										<FormItem>
-											<Label>{formSchema[option].label}</Label>
-											<FormControl>
-												{/* TODO: add in/outputs */}
-												<DatePicker onSelect={field.onChange} selected={field.value} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							);
-						case 'ZodNativeEnum':
-							return (
-								<FormField
-									control={form.control}
-									name={option}
-									key={option}
-									render={({ field }) => (
-										<FormItem>
-											<Label>{formSchema[option].label}</Label>
-											<Select value={field.value} onValueChange={field.onChange} disabled={isLoading}>
-												<FormControl>
-													<SelectTrigger>
-														<SelectValue placeholder={formSchema[option].placeholder} />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent {...field}>
-													{Object.keys(getEnumValues(option)).map((key) => (
-														<SelectItem value={key} key={key}>
-															{key}
-														</SelectItem>
-													))}
-												</SelectContent>
-											</Select>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-							);
-						default:
-							break;
-					}
+							))}
+						</div>
+					) : (
+						<GenericFormField
+							option={option}
+							zodSchema={zodSchema}
+							form={form}
+							formSchema={formSchema}
+							isLoading={isLoading}
+							key={option}
+						/>
+					);
 				})}
 				<Button disabled={isLoading} type="submit">
 					Submit
@@ -141,6 +108,109 @@ const DynamicForm: FC<{
 			)}
 		</Form>
 	);
+};
+
+const GenericFormField = ({
+	option,
+	zodSchema,
+	form,
+	formSchema,
+	isLoading,
+	parentOption,
+}: {
+	option: string;
+	zodSchema: z.ZodObject<any>;
+	form: UseFormReturn;
+	formSchema: FormSchema;
+	isLoading: boolean;
+	parentOption?: string;
+}) => {
+	const optionKey = parentOption ? `${parentOption}.${option}` : option;
+
+	const formFieldSchema = parentOption
+		? formSchema[parentOption] && formSchema[parentOption][option]
+		: formSchema[option];
+
+	const getEnumValues = (key: keyof z.infer<typeof zodSchema>, parentOption?: string) => {
+		const def = getDef(key, zodSchema, parentOption);
+		if (def.typeName === 'ZodOptional') return def.innerType._def.values;
+		return getType(key, zodSchema, parentOption) === 'ZodNativeEnum' && def.values;
+	};
+
+	const isOptional = (key: keyof z.infer<typeof zodSchema>, parentOption?: string) => {
+		const def = getDef(key, zodSchema, parentOption);
+		const type = def.typeName;
+		return type === 'ZodOptional';
+	};
+
+	const label = `${formFieldSchema.label} ${!isOptional(option, parentOption) ? '*' : ''}`;
+
+	switch (getType(option, zodSchema, parentOption)) {
+		case 'ZodString':
+			return (
+				<FormField
+					control={form.control}
+					name={optionKey}
+					key={optionKey}
+					render={({ field }) => (
+						<FormItem>
+							<Label>{label}</Label>
+							<FormControl>
+								<Input placeholder={formFieldSchema.placeholder} {...form.register(optionKey)} disabled={isLoading} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+			);
+		case 'ZodDate':
+			return (
+				<FormField
+					control={form.control}
+					name={optionKey}
+					key={optionKey}
+					render={({ field }) => (
+						<FormItem>
+							<Label>{label}</Label>
+							<FormControl>
+								<DatePicker {...form.register(optionKey)} onSelect={field.onChange} selected={field.value} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+			);
+		case 'ZodNativeEnum':
+			return (
+				<FormField
+					control={form.control}
+					name={optionKey}
+					key={optionKey}
+					render={({ field }) => (
+						<FormItem>
+							<Label>{label}</Label>
+							<Select value={field.value} onValueChange={field.onChange} disabled={isLoading}>
+								<FormControl>
+									<SelectTrigger>
+										<SelectValue placeholder={formFieldSchema.placeholder} />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent {...form.register(optionKey)}>
+									{Object.keys(getEnumValues(option, parentOption)).map((key) => (
+										<SelectItem value={key} key={key}>
+											{key}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+			);
+		default:
+			break;
+	}
 };
 
 export default DynamicForm;

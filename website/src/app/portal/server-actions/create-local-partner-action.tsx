@@ -12,6 +12,14 @@ export async function createLocalPartnerAction(localPartner: Prisma.LocalPartner
 	revalidatePath('/portal/admin/local-partners');
 }
 
+export async function updateLocalPartnerAction(localPartner: Prisma.LocalPartnerUpdateInput) {
+	const localPartnerService = new LocalPartnerService();
+
+	await localPartnerService.update(localPartner);
+
+	revalidatePath('/portal/admin/local-partners');
+}
+
 export async function getLocalPartnerAction(localPartnerId: string) {
 	const localPartnerService = new LocalPartnerService();
 
