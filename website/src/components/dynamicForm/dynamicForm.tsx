@@ -8,18 +8,23 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SpinnerIcon } from '@socialincome/ui/src/icons/spinner';
 import { FC, useEffect } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
-import z from 'zod';
+import z, { ZodTypeAny } from 'zod';
 
-export interface FormSchema {
-	[key: string]:
-		| {
-				label: string;
-				placeholder?: string;
-				defaultValue?: string;
-				value?: string;
-		  }
-		| FormSchema;
-}
+type FormField = {
+	label: string;
+	placeholder?: string;
+	zodSchema?: ZodTypeAny;
+	value?: any;
+};
+
+export type FormSchema = {
+	[key: string]: FormField | FormSchema;
+};
+
+// Typeguard
+const isFormField = (obj: any): obj is FormField => {
+	return obj && typeof obj === 'object' && 'label' in obj;
+};
 
 const getDef = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any>, parentKey?: string) => {
 	return parentKey ? zodSchema.shape[parentKey]?._def.shape()[key]?._def : zodSchema.shape[key]?._def;
@@ -41,6 +46,7 @@ const DynamicForm: FC<{
 }> = ({ formSchema, zodSchema, isLoading, onSubmit }) => {
 	const form = useForm<z.infer<typeof zodSchema>>({
 		resolver: zodResolver(zodSchema),
+		// TODO
 		defaultValues: {
 			name: '',
 			contactFirstName: '',
@@ -54,7 +60,6 @@ const DynamicForm: FC<{
 			if (!('label' in formSchema[name])) {
 				//nested
 				for (const [nestedName, nestedField] of Object.entries(formSchema[name])) {
-					console.log(`setting value "${nestedField.value}" for "${name}.${nestedName}"`);
 					if (formSchema[name][nestedName].value) form.setValue(`${name}.${nestedName}`, nestedField.value);
 				}
 			}
@@ -66,10 +71,11 @@ const DynamicForm: FC<{
 	const getOptions = (nestedKey?: string): string[] => {
 		return nestedKey ? zodSchema.shape[nestedKey]?.keyof().options : zodSchema.keyof().options;
 	};
+	const onInvalid = (errors) => console.error(errors);
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+			<form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="space-y-8">
 				{getOptions().map((option) => {
 					return getType(option, zodSchema) === 'ZodObject' ? (
 						<div key={option} className="flex flex-col gap-6 border-2 border-slate-100 p-5">
@@ -127,9 +133,7 @@ const GenericFormField = ({
 }) => {
 	const optionKey = parentOption ? `${parentOption}.${option}` : option;
 
-	const formFieldSchema = parentOption
-		? formSchema[parentOption] && formSchema[parentOption][option]
-		: formSchema[option];
+	const formFieldSchema = parentOption ? (formSchema[parentOption] as FormSchema)?.[option] : formSchema[option];
 
 	const getEnumValues = (key: keyof z.infer<typeof zodSchema>, parentOption?: string) => {
 		const def = getDef(key, zodSchema, parentOption);
@@ -145,71 +149,73 @@ const GenericFormField = ({
 
 	const label = `${formFieldSchema.label} ${!isOptional(option, parentOption) ? '*' : ''}`;
 
-	switch (getType(option, zodSchema, parentOption)) {
-		case 'ZodString':
-			return (
-				<FormField
-					control={form.control}
-					name={optionKey}
-					key={optionKey}
-					render={({ field }) => (
-						<FormItem>
-							<Label>{label}</Label>
-							<FormControl>
-								<Input placeholder={formFieldSchema.placeholder} {...form.register(optionKey)} disabled={isLoading} />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-			);
-		case 'ZodDate':
-			return (
-				<FormField
-					control={form.control}
-					name={optionKey}
-					key={optionKey}
-					render={({ field }) => (
-						<FormItem>
-							<Label>{label}</Label>
-							<FormControl>
-								<DatePicker {...form.register(optionKey)} onSelect={field.onChange} selected={field.value} />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-			);
-		case 'ZodNativeEnum':
-			return (
-				<FormField
-					control={form.control}
-					name={optionKey}
-					key={optionKey}
-					render={({ field }) => (
-						<FormItem>
-							<Label>{label}</Label>
-							<Select value={field.value} onValueChange={field.onChange} disabled={isLoading}>
+	if (isFormField(formFieldSchema)) {
+		switch (getType(option, zodSchema, parentOption)) {
+			case 'ZodString':
+				return (
+					<FormField
+						control={form.control}
+						name={optionKey}
+						key={optionKey}
+						render={({ field }) => (
+							<FormItem>
+								<Label>{label}</Label>
 								<FormControl>
-									<SelectTrigger>
-										<SelectValue placeholder={formFieldSchema.placeholder} />
-									</SelectTrigger>
+									<Input placeholder={formFieldSchema.placeholder} {...form.register(optionKey)} disabled={isLoading} />
 								</FormControl>
-								<SelectContent {...form.register(optionKey)}>
-									{Object.keys(getEnumValues(option, parentOption)).map((key) => (
-										<SelectItem value={key} key={key}>
-											{key}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-			);
-		default:
-			break;
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				);
+			case 'ZodDate':
+				return (
+					<FormField
+						control={form.control}
+						name={optionKey}
+						key={optionKey}
+						render={({ field }) => (
+							<FormItem>
+								<Label>{label}</Label>
+								<FormControl>
+									<DatePicker {...form.register(optionKey)} onSelect={field.onChange} selected={field.value} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				);
+			case 'ZodNativeEnum':
+				return (
+					<FormField
+						control={form.control}
+						name={optionKey}
+						key={optionKey}
+						render={({ field }) => (
+							<FormItem>
+								<Label>{label}</Label>
+								<Select value={field.value} onValueChange={field.onChange} disabled={isLoading}>
+									<FormControl>
+										<SelectTrigger>
+											<SelectValue placeholder={formFieldSchema.placeholder} />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent {...form.register(optionKey)}>
+										{Object.keys(getEnumValues(option, parentOption)).map((key) => (
+											<SelectItem value={key} key={key}>
+												{key}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				);
+			default:
+				break;
+		}
 	}
 };
 

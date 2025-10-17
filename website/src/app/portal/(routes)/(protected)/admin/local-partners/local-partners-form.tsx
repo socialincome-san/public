@@ -5,15 +5,29 @@ import {
 	getLocalPartnerAction,
 	updateLocalPartnerAction,
 } from '@/app/portal/server-actions/create-local-partner-action';
-import {
-	formSchema as contactFormSchema,
-	zodSchema as contactZodSchema,
-} from '@/components/dynamicForm/contactFormSchemas';
+import { formSchema as contactFormSchema } from '@/components/dynamicForm/contactFormSchemas';
 import DynamicForm, { FormSchema } from '@/components/dynamicForm/dynamicForm';
 import { LocalPartnerPayload } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
 import { Gender } from '@socialincome/shared/src/types/user';
 import { useEffect, useState, useTransition } from 'react';
-import z from 'zod';
+import z, { ZodObject, ZodTypeAny } from 'zod';
+
+function buildZodSchema(schemaDef: FormSchema): ZodObject<any> {
+	const result: Record<string, ZodTypeAny> = {};
+
+	for (const key in schemaDef) {
+		const value = schemaDef[key];
+
+		if (value.zodSchema) {
+			result[key] = value.zodSchema as ZodTypeAny;
+		} else {
+			// nested object
+			result[key] = buildZodSchema(value as FormSchema);
+		}
+	}
+
+	return z.object(result);
+}
 
 export default function LocalPartnersForm({
 	onSuccess,
@@ -28,20 +42,14 @@ export default function LocalPartnersForm({
 		name: {
 			placeholder: 'Name',
 			label: 'Name',
+			zodSchema: z.string(),
 		},
 		contact: {
 			...contactFormSchema,
 		},
 	};
 
-	const zodSchema = z.object({
-		name: z.string().min(2, {
-			message: 'Name must be at least 2 characters.',
-		}),
-		contact: z.object({
-			...contactZodSchema.shape,
-		}),
-	});
+	const zodSchema = buildZodSchema(initialFormSchema);
 
 	const [formSchema, setFormSchema] = useState<FormSchema>(initialFormSchema);
 
@@ -60,15 +68,16 @@ export default function LocalPartnersForm({
 						setLocalePartner(partner.data);
 						const newSchema = { ...formSchema };
 						newSchema.name.value = partner.data.name;
-						newSchema.contact.firstName.value = partner.data.contact.firstName;
-						newSchema.contact.lastName.value = partner.data.contact.lastName;
-						newSchema.contact.callingName.value = partner.data.contact.callingName;
-						newSchema.contact.email.value = partner.data.contact.email;
-						newSchema.contact.language.value = partner.data.contact.language;
-						newSchema.contact.profession.value = partner.data.contact.profession;
-						newSchema.contact.phone.value = partner.data.contact.phone.number;
-						newSchema.contact.dateOfBirth.value = partner.data.contact.dateOfBirth;
-						newSchema.contact.gender.value = partner.data.contact.gender?.toString();
+						// TODO
+						(newSchema.contact as FormSchema).firstName.value = partner.data.contact.firstName;
+						(newSchema.contact as FormSchema).lastName.value = partner.data.contact.lastName;
+						(newSchema.contact as FormSchema).callingName.value = partner.data.contact.callingName;
+						(newSchema.contact as FormSchema).email.value = partner.data.contact.email;
+						(newSchema.contact as FormSchema).language.value = partner.data.contact.language;
+						(newSchema.contact as FormSchema).profession.value = partner.data.contact.profession;
+						(newSchema.contact as FormSchema).phone.value = partner.data.contact.phone?.number;
+						(newSchema.contact as FormSchema).dateOfBirth.value = partner.data.contact.dateOfBirth;
+						(newSchema.contact as FormSchema).gender.value = partner.data.contact.gender?.toString();
 						setFormSchema(newSchema);
 					}
 				} catch {
@@ -155,7 +164,7 @@ export default function LocalPartnersForm({
 
 	return (
 		<>
-			<DynamicForm formSchema={formSchema} zodSchema={zodSchema} isLoading={isLoading} onSubmit={onSubmit} />
+			<DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} zodSchema={zodSchema} />
 		</>
 	);
 }
