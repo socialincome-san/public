@@ -1,10 +1,10 @@
-import { getAuthors, getOverviewArticles, getTags } from '@/components/legacy/storyblok/StoryblokApi';
+import { getOverviewArticles, getOverviewAuthors, getOverviewTags } from '@/components/legacy/storyblok/StoryblokApi';
 import { toDateObject } from '@/components/legacy/storyblok/StoryblokUtils';
 import { defaultLanguage, defaultRegion, WebsiteLanguage, WebsiteRegion, websiteRegions } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { type StoryblokArticle, StoryblokAuthor, StoryblokTag } from '@/types/journal';
 import type { MetadataRoute } from 'next';
-import { ISbStories } from 'storyblok-js-client/src/interfaces';
+import { ISbStoryData } from 'storyblok-js-client/src/interfaces';
 import staticRoutes from './static-pages.json';
 
 export const revalidate = 86400; // per day
@@ -35,13 +35,13 @@ function generateAlternativeLanguages(alternativeArticles: Record<string, string
 }
 
 function generateStoryblokArticlesSitemap(
-	blogsResponse: ISbStories<StoryblokArticle>,
-	blogsAlternativeLanguages: { lang: WebsiteLanguage; stories: ISbStories<StoryblokArticle> }[],
+	blogs: ISbStoryData<StoryblokArticle>[],
+	blogsAlternativeLanguages: { lang: WebsiteLanguage; stories: ISbStoryData<StoryblokArticle>[] }[],
 ): MetadataRoute.Sitemap {
 	const alternativeArticles = Object.fromEntries(
-		blogsAlternativeLanguages.map(({ lang, stories }) => [lang, stories.data.stories.map((it) => it.slug)]),
+		blogsAlternativeLanguages.map(({ lang, stories }) => [lang, stories.map((it) => it.slug)]),
 	) as Record<string, string[]>;
-	return blogsResponse.data.stories.map((article) => ({
+	return blogs.map((article) => ({
 		url: articleUrl(article.slug, defaultLanguage),
 		alternates: {
 			languages: generateAlternativeLanguages(alternativeArticles, article.slug),
@@ -51,8 +51,8 @@ function generateStoryblokArticlesSitemap(
 	}));
 }
 
-function generateStoryblokAuthorsSitemap(authorsResponse: ISbStories<StoryblokAuthor>): MetadataRoute.Sitemap {
-	return authorsResponse.data.stories.map((author) => ({
+function generateStoryblokAuthorsSitemap(authors: ISbStoryData<StoryblokAuthor>[]): MetadataRoute.Sitemap {
+	return authors.map((author) => ({
 		url: authorUrl(author.slug, defaultLanguage),
 		alternates: {
 			languages: Object.fromEntries(SUPPORTED_LANGUAGES.map((lang) => [lang, authorUrl(author.slug, lang)])),
@@ -61,8 +61,8 @@ function generateStoryblokAuthorsSitemap(authorsResponse: ISbStories<StoryblokAu
 	}));
 }
 
-function generateStoryblokTagSitemap(tagsResponse: ISbStories<StoryblokTag>): MetadataRoute.Sitemap {
-	return tagsResponse.data.stories.map((tag) => ({
+function generateStoryblokTagSitemap(tags: ISbStoryData<StoryblokTag>[]): MetadataRoute.Sitemap {
+	return tags.map((tag) => ({
 		url: tagUrl(tag.slug, defaultLanguage),
 		alternates: {
 			languages: Object.fromEntries(SUPPORTED_LANGUAGES.map((lang) => [lang, tagUrl(tag.slug, lang)])),
@@ -86,7 +86,7 @@ function generateStaticPagesSitemap(): MetadataRoute.Sitemap {
 	);
 }
 
-function getBlogsInAlternativeLanguagesPromise() {
+function getBlogsInAlternativeLanguages() {
 	return Promise.all(
 		SUPPORTED_LANGUAGES.map(async (lang) => ({
 			lang,
@@ -98,16 +98,16 @@ function getBlogsInAlternativeLanguagesPromise() {
 const STATIC_SITEMAP = generateStaticPagesSitemap();
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	try {
-		const [blogsResponse, blogsAlternativeLanguages, authorsResponse, tagsResponse] = await Promise.all([
+		const [blogs, blogsAlternativeLanguages, authors, tags] = await Promise.all([
 			getOverviewArticles(defaultLanguage),
-			getBlogsInAlternativeLanguagesPromise(),
-			getAuthors(defaultLanguage),
-			getTags(defaultLanguage),
+			getBlogsInAlternativeLanguages(),
+			getOverviewAuthors(defaultLanguage),
+			getOverviewTags(defaultLanguage),
 		]);
 		return STATIC_SITEMAP.concat(
-			generateStoryblokArticlesSitemap(blogsResponse, blogsAlternativeLanguages),
-			generateStoryblokAuthorsSitemap(authorsResponse),
-			generateStoryblokTagSitemap(tagsResponse),
+			generateStoryblokArticlesSitemap(blogs, blogsAlternativeLanguages),
+			generateStoryblokAuthorsSitemap(authors),
+			generateStoryblokTagSitemap(tags),
 		);
 	} catch (error) {
 		console.error('Failed to generate full sitemap', error);
