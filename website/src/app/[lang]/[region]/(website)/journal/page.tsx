@@ -54,7 +54,7 @@ export default async function Page({ params }: DefaultPageProps) {
 			>
 				{authors.map((author) => (
 					<CarouselContent key={author.id} className="flex flex-col justify-center text-center mx-1">
-						<Link href={`/${lang}/${region}/journal/author/${author.slug}`}>
+						<Link href={`/${lang}/${region}/journal/author/${author.slug}`} title={`${author.content.firstName} ${author.content.lastName}`}>
 							<StoryblokAuthorImage
 								className="mx-auto mb-1"
 								author={author}
@@ -62,9 +62,10 @@ export default async function Page({ params }: DefaultPageProps) {
 								lang={lang}
 								region={region}
 							/>
-
+							<div className="overflow-hidden break-words max-w-24 line-clamp-2"  >
 							<Typography>{author.content.firstName}</Typography>
 							<Typography>{author.content.lastName}</Typography>
+							</div>
 						</Link>
 					</CarouselContent>
 				))}
