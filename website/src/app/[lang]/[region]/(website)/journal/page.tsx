@@ -1,10 +1,10 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
 import { MoreArticlesLink } from '@/components/storyblok/MoreArticlesLink';
 import {
-	getAuthors,
 	getOverviewArticles,
 	getOverviewArticlesCountForDefaultLang,
-	getTags,
+	getOverviewAuthors,
+	getOverviewTags
 } from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
@@ -21,17 +21,17 @@ export default async function Page({ params }: DefaultPageProps) {
 	const { lang, region } = await params;
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-journal', 'common'] });
 
-	const [blogsResponse, authorsResponse, tagsResponse] = await Promise.all([
+	const [blogs, authors, tags] = await Promise.all([
 		getOverviewArticles(lang),
-		getAuthors(lang),
-		getTags(lang),
+		getOverviewAuthors(lang),
+		getOverviewTags(lang),
 	]);
-	const blogs = blogsResponse.data.stories;
-	const totalArticlesInSelectedLanguage = blogsResponse.total;
+
+
 	const totalArticlesInDefaultLang =
-		lang == defaultLanguage ? totalArticlesInSelectedLanguage : await getOverviewArticlesCountForDefaultLang();
-	const authors = authorsResponse.data.stories;
-	const tags = tagsResponse.data.stories;
+		lang == defaultLanguage ? blogs.length : await getOverviewArticlesCountForDefaultLang();
+
+
 
 	return (
 		<BaseContainer>
@@ -48,13 +48,16 @@ export default async function Page({ params }: DefaultPageProps) {
 				className="mx-auto mb-10 max-w-lg"
 				options={{
 					loop: true,
-					autoPlay: { enabled: true, delay: 5000 }
+					autoPlay: { enabled: true, delay: 5000 },
 				}}
 				showControls
 			>
 				{authors.map((author) => (
-					<CarouselContent key={author.id} className="flex flex-col justify-center text-center mx-1">
-						<Link href={`/${lang}/${region}/journal/author/${author.slug}`} title={`${author.content.firstName} ${author.content.lastName}`}>
+					<CarouselContent key={author.id} className="mx-1 flex flex-col justify-center text-center">
+						<Link
+							href={`/${lang}/${region}/journal/author/${author.slug}`}
+							title={`${author.content.firstName} ${author.content.lastName}`}
+						>
 							<StoryblokAuthorImage
 								className="mx-auto mb-1"
 								author={author}
@@ -62,9 +65,9 @@ export default async function Page({ params }: DefaultPageProps) {
 								lang={lang}
 								region={region}
 							/>
-							<div className="overflow-hidden break-words max-w-24 line-clamp-2"  >
-							<Typography>{author.content.firstName}</Typography>
-							<Typography>{author.content.lastName}</Typography>
+							<div className="line-clamp-2 max-w-24 overflow-hidden break-words">
+								<Typography>{author.content.firstName}</Typography>
+								<Typography>{author.content.lastName}</Typography>
 							</div>
 						</Link>
 					</CarouselContent>
@@ -92,7 +95,7 @@ export default async function Page({ params }: DefaultPageProps) {
 				))}
 			</div>
 
-			{totalArticlesInDefaultLang > totalArticlesInSelectedLanguage && (
+			{totalArticlesInDefaultLang > blogs.length && (
 				<div>
 					<Separator className="my-8" />
 					<MoreArticlesLink text={translator.t('overview.more-articles')} />

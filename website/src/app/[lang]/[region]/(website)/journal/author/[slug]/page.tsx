@@ -38,10 +38,8 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 	const author = (await getAuthor(slug, lang)).data.story;
 
 	const authorId = author.uuid;
-	const blogsResponse = await getArticlesByAuthor(authorId, lang);
-
-	const blogs = blogsResponse.data.stories;
-	const totalArticlesInSelectedLanguage = blogsResponse.total;
+	const blogs = await getArticlesByAuthor(authorId, lang);
+	const totalArticlesInSelectedLanguage = blogs.length;
 	const totalArticlesInDefault = await getTotalArticlesInDefaultLanguage(
 		lang,
 		totalArticlesInSelectedLanguage,
