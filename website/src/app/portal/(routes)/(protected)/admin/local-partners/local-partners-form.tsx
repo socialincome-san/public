@@ -35,7 +35,7 @@ export default function LocalPartnersForm({
 	};
 
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
-	const [localePartner, setLocalePartner] = useState<LocalPartnerPayload>();
+	const [localPartner, setLocalPartner] = useState<LocalPartnerPayload>();
 	const [isLoading, startTransition] = useTransition();
 	let editing = !!localPartnerId;
 
@@ -46,7 +46,7 @@ export default function LocalPartnersForm({
 				try {
 					const partner = await getLocalPartnerAction(localPartnerId);
 					if (partner.success) {
-						setLocalePartner(partner.data);
+						setLocalPartner(partner.data);
 						const newSchema = { ...formSchema };
 						newSchema.name.value = partner.data.name;
 						newSchema.contact.firstName.value = partner.data.contact.firstName;
@@ -92,7 +92,7 @@ export default function LocalPartnersForm({
 														number: schema.contact.phone.value,
 													},
 													where: {
-														id: localePartner?.contact.phone?.id,
+														id: localPartner?.contact.phone?.id,
 													},
 												},
 											}
@@ -110,13 +110,13 @@ export default function LocalPartnersForm({
 												country: schema.contact.country.value,
 											},
 											where: {
-												id: localePartner?.contact.address?.id,
+												id: localPartner?.contact.address?.id,
 											},
 										},
 									},
 								},
 								where: {
-									id: localePartner?.contact.id,
+									id: localPartner?.contact.id,
 								},
 							},
 						},
