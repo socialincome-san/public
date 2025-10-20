@@ -41,6 +41,12 @@ export class SurveyTransformer extends BaseTransformer<FirestoreSurveyWithRecipi
 		if (timestamp?.toDate) return timestamp.toDate();
 		if (typeof timestamp === 'string') return new Date(timestamp);
 		if (typeof timestamp === 'number') return new Date(timestamp);
+
+		if (process.env.FIREBASE_DATABASE_URL?.includes('staging')) {
+			console.log(`💡 Invalid timestamp format "${timestamp}" — falling back to current date (staging only).`);
+			return new Date();
+		}
+
 		throw new Error(`Invalid timestamp format: ${timestamp}`);
 	}
 
@@ -74,6 +80,11 @@ export class SurveyTransformer extends BaseTransformer<FirestoreSurveyWithRecipi
 			case 'offboarded-checkin':
 				return SurveyQuestionnaire.offboarded_checkin;
 			default:
+				if (process.env.FIREBASE_DATABASE_URL?.includes('staging')) {
+					console.log(`💡 Unknown survey questionnaire "${value}" — falling back to "checkin" (staging only).`);
+					return SurveyQuestionnaire.checkin;
+				}
+
 				throw new Error(`Invalid survey questionnaire: ${value}`);
 		}
 	}

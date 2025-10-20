@@ -103,7 +103,11 @@ export class RecipientTransformer extends BaseTransformer<FirestoreRecipientWith
 			case 'former':
 				return RecipientStatus.former;
 			default:
-				throw new Error(`Unknown status ${status}`);
+				if (process.env.FIREBASE_DATABASE_URL?.includes('staging')) {
+					console.log(`💡 Unknown recipient status "${status}" → falling back to ACTIVE (staging only).`);
+					return RecipientStatus.active;
+				}
+				throw new Error(`Unknown recipient status "${status}" in production environment.`);
 		}
 	}
 

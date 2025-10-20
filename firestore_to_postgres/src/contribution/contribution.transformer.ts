@@ -23,6 +23,18 @@ export class ContributionTransformer extends BaseTransformer<FirestoreContributi
 
 			const legacyId = `${user.id}_${contribution.id}`;
 
+			const isStaging = process.env.FIREBASE_DATABASE_URL?.includes('staging');
+
+			let campaignConnect;
+
+			if (isStaging) {
+				campaignConnect = { connect: { title: DEFAULT_CAMPAIGN.title } };
+			} else {
+				campaignConnect = contribution.campaign_path
+					? { connect: { legacyFirestoreId: contribution.campaign_path.id } }
+					: { connect: { title: DEFAULT_CAMPAIGN.title } };
+			}
+
 			transformed.push({
 				contribution: {
 					legacyFirestoreId: legacyId,
@@ -32,9 +44,7 @@ export class ContributionTransformer extends BaseTransformer<FirestoreContributi
 					currency: contribution.currency ?? '',
 					status: this.mapStatus(contribution.status),
 					contributor: { connect: { legacyFirestoreId: user.id } },
-					campaign: contribution.campaign_path
-						? { connect: { legacyFirestoreId: contribution.campaign_path.id } }
-						: { connect: { title: DEFAULT_CAMPAIGN.title } },
+					campaign: campaignConnect,
 					paymentEvent: { create: this.buildPaymentEvent(contribution) },
 				},
 			});
@@ -91,7 +101,13 @@ export class ContributionTransformer extends BaseTransformer<FirestoreContributi
 			case ContributionSourceKey.RAISENOW:
 				return PaymentEventType.raisenow;
 			default:
-				throw new Error(`Unknown contribution source ${source}`);
+				if (process.env.FIREBASE_DATABASE_URL?.includes('staging')) {
+					console.log(
+						`💡 Unknown contribution source "${source}" → falling back to PaymentEventType.other (staging only).`,
+					);
+					return PaymentEventType.stripe;
+				}
+				throw new Error(`Unknown contribution source "${source}" in production.`);
 		}
 	}
 
