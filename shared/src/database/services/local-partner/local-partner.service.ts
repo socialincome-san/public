@@ -20,6 +20,7 @@ export class LocalPartnerService extends BaseService {
 		}
 	}
 
+	// TODO: check user permissions
 	async update(localPartner: LocalPartnerUpdateInput): Promise<ServiceResult<LocalPartner>> {
 		try {
 			const partner = await this.db.localPartner.update({
