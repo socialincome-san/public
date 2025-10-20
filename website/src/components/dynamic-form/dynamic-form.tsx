@@ -81,7 +81,6 @@ const DynamicForm: FC<{
 					//nested
 					for (const [nestedName, nestedField] of Object.entries(formSchema[name])) {
 						form.setValue(`${name}.${nestedName}`, nestedField.value);
-						console.log(`Setting ${name}.${nestedName} to: `, nestedField.value);
 					}
 				}
 				form.setValue(name, field.value);
