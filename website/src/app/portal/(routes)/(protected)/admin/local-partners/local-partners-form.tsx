@@ -7,7 +7,11 @@ import {
 } from '@/app/portal/server-actions/create-local-partner-action';
 import { formSchema as contactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
-import { LocalPartnerPayload } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
+import {
+	LocalPartnerCreateInput,
+	LocalPartnerPayload,
+	LocalPartnerUpdateInput,
+} from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 
@@ -75,7 +79,7 @@ export default function LocalPartnersForm({
 				let res;
 				if (editing) {
 					// TODO: move mapping to server action
-					const data = {
+					const data: LocalPartnerUpdateInput = {
 						name: schema.name.value,
 						contact: {
 							update: {
@@ -124,7 +128,7 @@ export default function LocalPartnersForm({
 					res = await updateLocalPartnerAction({ id: localPartnerId, ...data });
 				} else {
 					// TODO: move mapping to server action
-					const data = {
+					const data: LocalPartnerCreateInput = {
 						name: schema.name.value,
 						contact: {
 							create: {
