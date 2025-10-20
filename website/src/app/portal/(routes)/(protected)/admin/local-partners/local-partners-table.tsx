@@ -1,5 +1,6 @@
 'use client';
 
+import { Alert, AlertDescription, AlertTitle } from '@/app/portal/components/alert';
 import { Button } from '@/app/portal/components/button';
 import { makeLocalPartnerColumns } from '@/app/portal/components/data-table/columns/local-partners';
 import DataTable from '@/app/portal/components/data-table/data-table';
@@ -16,6 +17,7 @@ export default function LocalPartnersTable({
 	error: string | null;
 }) {
 	const [open, setOpen] = useState(false);
+	const [showError, setShowError] = useState(false);
 	const [partnerId, setPartnerId] = useState<string | undefined>(undefined);
 
 	return (
@@ -47,11 +49,16 @@ export default function LocalPartnersTable({
 					<DialogHeader>
 						<DialogTitle>Add local partner</DialogTitle>
 					</DialogHeader>
-
+					{showError && (
+						<Alert variant="destructive">
+							<AlertTitle>Error</AlertTitle>
+							<AlertDescription>Error saving local partner</AlertDescription>
+						</Alert>
+					)}
 					<LocalPartnersForm
 						localPartnerId={partnerId}
 						onSuccess={() => setOpen(false)}
-						onError={() => alert('error')}
+						onError={() => setShowError(true)}
 					/>
 				</DialogContent>
 			</Dialog>
