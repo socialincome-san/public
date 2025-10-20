@@ -5,8 +5,8 @@ import {
 	getLocalPartnerAction,
 	updateLocalPartnerAction,
 } from '@/app/portal/server-actions/create-local-partner-action';
-import { formSchema as contactFormSchema } from '@/components/dynamicForm/contactFormSchemas';
-import DynamicForm, { FormField, FormSchema } from '@/components/dynamicForm/dynamicForm';
+import { formSchema as contactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
+import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { LocalPartnerPayload } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -164,5 +164,5 @@ export default function LocalPartnersForm({
 		});
 	}
 
-	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} />;
+	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} edit={editing} />;
 }

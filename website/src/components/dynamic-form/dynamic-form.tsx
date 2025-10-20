@@ -1,6 +1,6 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/app/portal/components/accordion';
 import { Button } from '@/app/portal/components/button';
-import { DatePicker } from '@/app/portal/components/datePicker';
+import { DatePicker } from '@/app/portal/components/date-picker';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/app/portal/components/form';
 import { Input } from '@/app/portal/components/input';
 import { Label } from '@/app/portal/components/label';
@@ -73,14 +73,19 @@ const DynamicForm: FC<{
 
 	// set form values if available
 	useEffect(() => {
-		for (const [name, field] of Object.entries(formSchema)) {
-			if (!isFormField(formSchema[name])) {
-				//nested
-				for (const [nestedName, nestedField] of Object.entries(formSchema[name])) {
-					if (formSchema[name][nestedName].value) form.setValue(`${name}.${nestedName}`, nestedField.value);
+		if (!edit) {
+			form.reset();
+		} else {
+			for (const [name, field] of Object.entries(formSchema)) {
+				if (!isFormField(formSchema[name])) {
+					//nested
+					for (const [nestedName, nestedField] of Object.entries(formSchema[name])) {
+						form.setValue(`${name}.${nestedName}`, nestedField.value);
+						console.log(`Setting ${name}.${nestedName} to: `, nestedField.value);
+					}
 				}
+				form.setValue(name, field.value);
 			}
-			if (formSchema[name].value) form.setValue(name, field.value);
 		}
 	}, [formSchema]);
 

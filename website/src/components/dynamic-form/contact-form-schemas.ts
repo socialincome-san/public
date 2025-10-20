@@ -1,6 +1,6 @@
 import { Gender } from '@prisma/client';
 import z from 'zod';
-import { FormSchema } from './dynamicForm';
+import { FormSchema } from './dynamic-form';
 
 export const formSchema: FormSchema = {
 	firstName: {
