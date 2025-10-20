@@ -6,7 +6,7 @@ const main = async (): Promise<void> => {
 		const migrator = new LocalPartnerMigrator();
 		await migrator.migrate();
 	} catch (err) {
-		console.error('❌ Local Partner migration failed:', err);
+		console.log('❌ Local Partner migration failed:', err);
 		process.exit(1);
 	}
 };

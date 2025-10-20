@@ -2,7 +2,7 @@
 
 import { Badge } from '@/app/portal/components/badge';
 import { ContributionStatus } from '@prisma/client';
-import { CheckIcon, CircleOffIcon, HourglassIcon, UserXIcon } from 'lucide-react';
+import { CheckIcon, HourglassIcon, UserXIcon } from 'lucide-react';
 import { ComponentType } from 'react';
 
 type ContributionStatusBadgeProps = {
@@ -16,7 +16,6 @@ const RECIPIENT_STATUS_UI: Record<
 	failed: { variant: 'destructive', label: 'Failed', Icon: UserXIcon },
 	pending: { variant: 'outline', label: 'Pending', Icon: HourglassIcon },
 	succeeded: { variant: 'verified', label: 'Succeeded', Icon: CheckIcon },
-	unknown: { variant: 'secondary', label: 'Unknown', Icon: CircleOffIcon },
 };
 
 export function ContributionStatusBadge({ status }: ContributionStatusBadgeProps) {

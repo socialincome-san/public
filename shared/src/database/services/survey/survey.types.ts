@@ -1,15 +1,11 @@
-import { Survey as PrismaSurvey, RecipientMainLanguage, SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
-
-export type CreateSurveyInput = Omit<PrismaSurvey, 'id' | 'createdAt' | 'updatedAt'>;
-
-export type ProgramPermission = 'operator' | 'viewer';
+import { ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
 
 export type SurveyTableViewRow = {
 	id: string;
 	questionnaire: SurveyQuestionnaire;
 	status: SurveyStatus;
 	recipientName: string;
-	language: RecipientMainLanguage;
+	language: string;
 	dueDateAt: Date;
 	dueDateAtFormatted: string;
 	sentAt: Date | null;

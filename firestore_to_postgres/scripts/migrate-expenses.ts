@@ -6,7 +6,7 @@ const main = async (): Promise<void> => {
 		const migrator = new ExpenseMigrator();
 		await migrator.migrate();
 	} catch (err) {
-		console.error('❌ Expense migration failed:', err);
+		console.log('❌ Expense migration failed:', err);
 		process.exit(1);
 	}
 };

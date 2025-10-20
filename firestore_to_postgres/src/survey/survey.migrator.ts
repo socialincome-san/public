@@ -9,13 +9,13 @@ export class SurveyMigrator extends BaseMigrator {
 	private readonly importer = new SurveyImporter();
 
 	async migrate(): Promise<number> {
-		console.log('🚀 Starting surveys migration...');
+		console.log('🚀 Starting survey migration...');
 
 		const extracted = await this.extractor.extract();
 		console.log(`📦 Extracted ${extracted.length} survey records`);
 
 		const transformed = await this.transformer.transform(extracted);
-		console.log(`🔁 Transformed ${transformed[0].length} survey records`);
+		console.log(`🔁 Transformed ${transformed.length} survey records`);
 
 		const insertedCount = await this.importer.import(transformed);
 		console.log(`✅ Imported ${insertedCount} survey records`);

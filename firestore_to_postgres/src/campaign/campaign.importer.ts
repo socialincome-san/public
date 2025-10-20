@@ -1,41 +1,16 @@
-import { CampaignService } from '@socialincome/shared/src/database/services/campaign/campaign.service';
+import { PrismaClient } from '@prisma/client';
 import { BaseImporter } from '../core/base.importer';
-import { OrganizationUtils } from '../organization/organization.utils';
-import { ProgramUtils } from '../program/program.utils';
-import { CreateCampaignWithoutFK } from './campaign.transformer';
+import { CampaignCreateInput } from './campaign.types';
 
-export class CampaignsImporter extends BaseImporter<CreateCampaignWithoutFK> {
-	private readonly campaignService = new CampaignService();
+const prisma = new PrismaClient();
 
-	import = async (campaigns: CreateCampaignWithoutFK[]): Promise<number> => {
+export class CampaignImporter extends BaseImporter<CampaignCreateInput> {
+	import = async (campaigns: CampaignCreateInput[]): Promise<number> => {
 		let createdCount = 0;
 
-		const organizationId = await OrganizationUtils.getOrCreateDefaultOrganizationId();
-		if (!organizationId) {
-			console.error('❌ Could not resolve organization ID. Aborting campaign import.');
-			return 0;
-		}
-
-		const programId = await ProgramUtils.getOrCreateDefaultProgramId(organizationId);
-		if (!programId) {
-			console.error('❌ Could not resolve program ID. Aborting campaign import.');
-			return 0;
-		}
-
-		for (const campaign of campaigns) {
-			const result = await this.campaignService.create({
-				...campaign,
-				programId,
-			});
-
-			if (result.success) {
-				createdCount++;
-			} else {
-				console.warn(`[CampaignsImporter] Skipped campaign:`, {
-					title: campaign.title,
-					reason: result.error,
-				});
-			}
+		for (const data of campaigns) {
+			await prisma.campaign.create({ data });
+			createdCount++;
 		}
 
 		return createdCount;
