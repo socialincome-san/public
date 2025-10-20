@@ -165,5 +165,5 @@ export default function LocalPartnersForm({
 		});
 	}
 
-	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onError={onError} />;
+	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} />;
 }

@@ -7,7 +7,7 @@ import { Label } from '@/app/portal/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/portal/components/select';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SpinnerIcon } from '@socialincome/ui/src/icons/spinner';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import z, { ZodObject, ZodTypeAny } from 'zod';
 
@@ -63,9 +63,8 @@ const DynamicForm: FC<{
 	formSchema: FormSchema;
 	isLoading: boolean;
 	onSubmit: (values: any) => void;
-	onError?: () => void;
 	edit?: boolean;
-}> = ({ formSchema, isLoading, onSubmit, onError, edit = false }) => {
+}> = ({ formSchema, isLoading, onSubmit, edit = false }) => {
 	const zodSchema = buildZodSchema(formSchema);
 
 	const form = useForm<z.infer<typeof zodSchema>>({
@@ -112,29 +111,49 @@ const DynamicForm: FC<{
 		onSubmit(formSchema);
 	};
 
+	const [isAccorionOpen, setIsAccordionOpen] = useState(false);
+
+	// TODO:
+	const onValidationErrors = () => {
+		setIsAccordionOpen(true);
+	};
+
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(beforeSubmit, onError)} className="space-y-8">
+			<form onSubmit={form.handleSubmit(beforeSubmit, onValidationErrors)} className="space-y-8">
 				{getOptions().map((option) => {
 					return getType(option, zodSchema) === 'ZodObject' ? (
 						// TODO: expand on validation error
-						<Accordion key={option} type="single" collapsible>
-							<AccordionItem value="item-1">
+						<Accordion
+							key={option}
+							type="single"
+							collapsible
+							value={isAccorionOpen ? 'open' : 'closed'}
+							onValueChange={(value) => setIsAccordionOpen(value === 'open')}
+						>
+							<AccordionItem value="open">
 								{/* TODO: use nested group label instead of key */}
 								<AccordionTrigger>{option}</AccordionTrigger>
-								<AccordionContent className="flex flex-col gap-6 p-5">
-									{getOptions(option).map((nestedOption) => (
-										<GenericFormField
-											option={nestedOption}
-											zodSchema={zodSchema}
-											form={form}
-											formSchema={formSchema}
-											isLoading={isLoading}
-											parentOption={option}
-											key={nestedOption}
-										/>
-									))}
-								</AccordionContent>
+								<div className="overflow-hidden">
+									{/* TODO: find better solution to hide collapsed content */}
+									<AccordionContent
+										className="flex flex-col gap-6 p-5"
+										forceMount
+										style={{ display: isAccorionOpen ? 'block' : 'none' }}
+									>
+										{getOptions(option).map((nestedOption) => (
+											<GenericFormField
+												option={nestedOption}
+												zodSchema={zodSchema}
+												form={form}
+												formSchema={formSchema}
+												isLoading={isLoading}
+												parentOption={option}
+												key={nestedOption}
+											/>
+										))}
+									</AccordionContent>
+								</div>
 							</AccordionItem>
 						</Accordion>
 					) : (
