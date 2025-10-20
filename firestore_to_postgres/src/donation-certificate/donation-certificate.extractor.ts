@@ -1,12 +1,10 @@
-import { DonationCertificate } from '@socialincome/shared/src/types/donation-certificate';
-import { User } from '@socialincome/shared/src/types/user';
-import { BaseExtractor } from '../core/base.extractor';
 import {
 	DONATION_CERTIFICATE_FIRESTORE_PATH,
-	FirestoreDonationCertificateWithUser,
-	FirestoreUserWithId,
-	USER_FIRESTORE_PATH,
-} from './donation-certificate.types';
+	DonationCertificate,
+} from '@socialincome/shared/src/types/donation-certificate';
+import { User, USER_FIRESTORE_PATH } from '@socialincome/shared/src/types/user';
+import { BaseExtractor } from '../core/base.extractor';
+import { FirestoreDonationCertificateWithUser, FirestoreUserWithId } from './donation-certificate.types';
 
 export class DonationCertificateExtractor extends BaseExtractor<FirestoreDonationCertificateWithUser> {
 	extract = async (): Promise<FirestoreDonationCertificateWithUser[]> => {
@@ -27,13 +25,13 @@ export class DonationCertificateExtractor extends BaseExtractor<FirestoreDonatio
 		return userMap;
 	}
 
-	private async loadAllDonationCertificates() {
+	private async loadAllDonationCertificates(): Promise<FirebaseFirestore.QueryDocumentSnapshot<DonationCertificate>[]> {
 		const snapshot = await this.firestore.collectionGroup(DONATION_CERTIFICATE_FIRESTORE_PATH).get();
-		return snapshot.docs;
+		return snapshot.docs as FirebaseFirestore.QueryDocumentSnapshot<DonationCertificate>[];
 	}
 
 	private mergeCertificatesWithUsers(
-		docs: FirebaseFirestore.QueryDocumentSnapshot[],
+		docs: FirebaseFirestore.QueryDocumentSnapshot<DonationCertificate>[],
 		userMap: Map<string, FirestoreUserWithId>,
 	): FirestoreDonationCertificateWithUser[] {
 		const result: FirestoreDonationCertificateWithUser[] = [];
@@ -44,7 +42,7 @@ export class DonationCertificateExtractor extends BaseExtractor<FirestoreDonatio
 			if (!user) continue;
 
 			result.push({
-				certificate: { ...(doc.data() as DonationCertificate), id: doc.id, legacyFirestoreId: doc.id },
+				certificate: { ...doc.data(), id: doc.id, legacyFirestoreId: doc.id },
 				user,
 			});
 		}

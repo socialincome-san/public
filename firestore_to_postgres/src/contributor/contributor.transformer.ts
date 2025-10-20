@@ -1,18 +1,31 @@
 import { ContributorReferralSource, Gender } from '@prisma/client';
-import { randomUUID } from 'crypto';
 import { BaseTransformer } from '../core/base.transformer';
 import { ContributorCreateInput, FirestoreContributorWithId } from './contributor.types';
 
 export class ContributorTransformer extends BaseTransformer<FirestoreContributorWithId, ContributorCreateInput> {
+	private manualIdCounter = 1;
+
 	transform = async (input: FirestoreContributorWithId[]): Promise<ContributorCreateInput[]> => {
 		const transformed: ContributorCreateInput[] = [];
+		let skipped = 0;
+		let generatedManualIds = 0;
 
 		for (const doc of input) {
-			if (doc.test_user) continue;
+			if (doc.test_user) {
+				skipped++;
+				continue;
+			}
 
 			const { personal, address } = doc;
 			const email = doc.email.toLowerCase();
-			const authId = doc.auth_user_id || this.generateManualAuthId();
+
+			let authId: string;
+			if (doc.auth_user_id) {
+				authId = doc.auth_user_id;
+			} else {
+				authId = this.generateManualAuthId();
+				generatedManualIds++;
+			}
 
 			transformed.push({
 				firebaseAuthUserId: authId,
@@ -38,7 +51,7 @@ export class ContributorTransformer extends BaseTransformer<FirestoreContributor
 												number: address.number ?? '',
 												city: address.city ?? '',
 												zip: address.zip?.toString() ?? '',
-												country: address.country ?? 'Unknown',
+												country: address.country ?? '',
 											},
 										}
 									: undefined,
@@ -57,11 +70,19 @@ export class ContributorTransformer extends BaseTransformer<FirestoreContributor
 			});
 		}
 
+		if (skipped > 0) {
+			console.log(`⚠️ Skipped ${skipped} test contributors`);
+		}
+
+		if (generatedManualIds > 0) {
+			console.log(`🆔 Generated ${generatedManualIds} manual auth IDs`);
+		}
+
 		return transformed;
 	};
 
 	private generateManualAuthId(): string {
-		return `manual_${randomUUID()}`;
+		return `manual_${this.manualIdCounter++}`;
 	}
 
 	private mapGender(value?: string): Gender {

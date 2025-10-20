@@ -1,8 +1,8 @@
 import { ContributionStatus, PaymentEventType, Prisma } from '@prisma/client';
 import {
 	BankWireContribution,
-	ContributionSourceKey,
 	Contribution as FirestoreContribution,
+	ContributionSourceKey,
 	StatusKey,
 	StripeContribution,
 } from '@socialincome/shared/src/types/contribution';
@@ -12,14 +12,24 @@ import { ContributionWithPayment, FirestoreContributionWithUser } from './contri
 
 export class ContributionTransformer extends BaseTransformer<FirestoreContributionWithUser, ContributionWithPayment> {
 	transform = async (input: FirestoreContributionWithUser[]): Promise<ContributionWithPayment[]> => {
-		return input.map(
-			({ contribution, user }): ContributionWithPayment => ({
+		const transformed: ContributionWithPayment[] = [];
+		let skippedCount = 0;
+
+		for (const { contribution, user } of input) {
+			if (user.test_user) {
+				skippedCount++;
+				continue;
+			}
+
+			const legacyId = `${user.id}_${contribution.id}`;
+
+			transformed.push({
 				contribution: {
-					legacyFirestoreId: contribution.id,
+					legacyFirestoreId: legacyId,
 					amount: contribution.amount,
-					amountChf: contribution.amount_chf,
+					amountChf: contribution.amount_chf ?? 0,
 					feesChf: contribution.fees_chf,
-					currency: contribution.currency ?? 'CHF',
+					currency: contribution.currency ?? '',
 					status: this.mapStatus(contribution.status),
 					contributor: { connect: { legacyFirestoreId: user.id } },
 					campaign: contribution.campaign_path
@@ -27,8 +37,14 @@ export class ContributionTransformer extends BaseTransformer<FirestoreContributi
 						: { connect: { title: DEFAULT_CAMPAIGN.title } },
 					paymentEvent: { create: this.buildPaymentEvent(contribution) },
 				},
-			}),
-		);
+			});
+		}
+
+		if (skippedCount > 0) {
+			console.log(`⚠️ Skipped ${skippedCount} test contributor contributions`);
+		}
+
+		return transformed;
 	};
 
 	private buildPaymentEvent(contribution: FirestoreContribution): Prisma.PaymentEventCreateWithoutContributionInput {
@@ -41,14 +57,14 @@ export class ContributionTransformer extends BaseTransformer<FirestoreContributi
 
 	private extractTransactionId(contribution: FirestoreContribution): string | null {
 		switch (contribution.source) {
-			case ContributionSourceKey.STRIPE:
-				return (contribution as StripeContribution).reference_id ?? null;
-			case ContributionSourceKey.WIRE_TRANSFER:
-				return (
-					(contribution as BankWireContribution).transaction_id ??
-					(contribution as BankWireContribution).reference_id ??
-					null
-				);
+			case ContributionSourceKey.STRIPE: {
+				const stripe = contribution as StripeContribution;
+				return stripe.reference_id ?? null;
+			}
+			case ContributionSourceKey.WIRE_TRANSFER: {
+				const wire = contribution as BankWireContribution;
+				return wire.transaction_id ?? wire.reference_id ?? null;
+			}
 			default:
 				return null;
 		}
@@ -68,8 +84,14 @@ export class ContributionTransformer extends BaseTransformer<FirestoreContributi
 				return PaymentEventType.stripe;
 			case ContributionSourceKey.WIRE_TRANSFER:
 				return PaymentEventType.bank_transfer;
+			case ContributionSourceKey.BENEVITY:
+				return PaymentEventType.benevity;
+			case ContributionSourceKey.CASH:
+				return PaymentEventType.cash;
+			case ContributionSourceKey.RAISENOW:
+				return PaymentEventType.raisenow;
 			default:
-				return PaymentEventType.stripe;
+				throw new Error(`Unknown contribution source ${source}`);
 		}
 	}
 
@@ -82,7 +104,7 @@ export class ContributionTransformer extends BaseTransformer<FirestoreContributi
 			case StatusKey.PENDING:
 				return ContributionStatus.pending;
 			default:
-				return ContributionStatus.succeeded;
+				throw new Error(`Unknown contribution status ${status}`);
 		}
 	}
 }

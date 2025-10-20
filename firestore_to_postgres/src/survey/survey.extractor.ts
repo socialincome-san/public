@@ -25,13 +25,13 @@ export class SurveyExtractor extends BaseExtractor<FirestoreSurveyWithRecipient>
 		return map;
 	}
 
-	private async loadAllSurveys() {
+	private async loadAllSurveys(): Promise<FirebaseFirestore.QueryDocumentSnapshot<Survey>[]> {
 		const snapshot = await this.firestore.collectionGroup(SURVEY_FIRESTORE_PATH).get();
-		return snapshot.docs;
+		return snapshot.docs as FirebaseFirestore.QueryDocumentSnapshot<Survey>[];
 	}
 
 	private mergeSurveysWithRecipients(
-		docs: FirebaseFirestore.QueryDocumentSnapshot[],
+		docs: FirebaseFirestore.QueryDocumentSnapshot<Survey>[],
 		recipientMap: Map<string, FirestoreRecipientWithId>,
 	): FirestoreSurveyWithRecipient[] {
 		const surveys: FirestoreSurveyWithRecipient[] = [];

@@ -8,14 +8,8 @@ export class ExpenseImporter extends BaseImporter<Prisma.ExpenseCreateInput> {
 		let createdCount = 0;
 
 		for (const expense of expenses) {
-			try {
-				await prisma.expense.create({ data: expense });
-				createdCount++;
-			} catch (error) {
-				const id = (expense.legacyFirestoreId as string) ?? 'unknown';
-				const message = error instanceof Error ? error.message : 'Unknown error';
-				console.error(`[ExpenseImporter] Failed to import expense ${id}: ${message}`);
-			}
+			await prisma.expense.create({ data: expense });
+			createdCount++;
 		}
 
 		return createdCount;

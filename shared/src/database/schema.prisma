@@ -25,6 +25,9 @@ enum WhatsAppActivationStatus {
 enum PaymentEventType {
   stripe
   bank_transfer
+  benevity
+  cash
+  raisenow
 }
 
 enum ContributionStatus {
