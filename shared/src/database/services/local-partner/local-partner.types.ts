@@ -1,4 +1,4 @@
-import { Gender, Phone, Prisma } from '@prisma/client';
+import { Address, Gender, Phone, Prisma } from '@prisma/client';
 
 export type LocalPartnerTableViewRow = {
 	id: string;
@@ -26,6 +26,7 @@ export type LocalPartnerPayload = {
 		dateOfBirth: Date | null;
 		profession: string | null;
 		phone: Phone | null;
+		address: Address | null;
 	};
 };
 

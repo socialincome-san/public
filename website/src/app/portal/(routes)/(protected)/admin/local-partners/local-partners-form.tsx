@@ -100,7 +100,20 @@ export default function LocalPartnersForm({
 									dateOfBirth: schema.contact.dateOfBirth.value,
 									callingName: schema.contact.callingName.value,
 									language: schema.contact.language.value,
-									// TODO: add address
+									address: {
+										update: {
+											data: {
+												street: schema.contact.street.value,
+												number: schema.contact.number.value,
+												city: schema.contact.city.value,
+												zip: schema.contact.zip.value,
+												country: schema.contact.country.value,
+											},
+											where: {
+												id: localePartner?.contact.address?.id,
+											},
+										},
+									},
 								},
 								where: {
 									id: localePartner?.contact.id,
@@ -130,7 +143,15 @@ export default function LocalPartnersForm({
 								dateOfBirth: schema.contact.dateOfBirth.value,
 								callingName: schema.contact.callingName.value,
 								language: schema.contact.language.value,
-								// TODO: add address
+								address: {
+									create: {
+										street: schema.contact.street.value,
+										number: schema.contact.number.value,
+										city: schema.contact.city.value,
+										zip: schema.contact.zip.value,
+										country: schema.contact.country.value,
+									},
+								},
 							},
 						},
 					};

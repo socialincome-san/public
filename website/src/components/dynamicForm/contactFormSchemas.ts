@@ -56,11 +56,25 @@ export const formSchema: FormSchema = {
 			.regex(/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/gm)
 			.optional(),
 	},
-	// address: {
-	// 	strees: {},
-	// 	number: {},
-	// 	city: {},
-	// 	zip: {},
-	// 	country: {},
-	// },
+	street: {
+		placeholder: 'Street',
+		label: 'Address Street',
+		zodSchema: z.string().optional(),
+	},
+	number: {
+		placeholder: 'Number',
+		label: 'Address Number',
+		zodSchema: z.string().optional(),
+	},
+	city: {
+		placeholder: 'City',
+		label: 'Address City',
+		zodSchema: z.string().optional(),
+	},
+	zip: {
+		placeholder: 'ZIP',
+		label: 'Address ZIP Code',
+		zodSchema: z.string().optional(),
+	},
+	country: { placeholder: 'Country', label: 'Address Country', zodSchema: z.string().optional() },
 };

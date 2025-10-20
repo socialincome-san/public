@@ -51,6 +51,7 @@ export class LocalPartnerService extends BaseService {
 							phone: true,
 							profession: true,
 							dateOfBirth: true,
+							address: true,
 						},
 					},
 				},
