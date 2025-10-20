@@ -20,7 +20,7 @@ export class LocalPartnerTransformer extends BaseTransformer<FirestoreLocalPartn
 							? {
 									create: {
 										number: org.contactNumber,
-										verified: false,
+										verified: true,
 									},
 								}
 							: undefined,

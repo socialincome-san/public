@@ -9,12 +9,8 @@ export class CampaignImporter extends BaseImporter<CampaignCreateInput> {
 		let createdCount = 0;
 
 		for (const data of campaigns) {
-			try {
-				await prisma.campaign.create({ data });
-				createdCount++;
-			} catch (error) {
-				console.warn(`[CampaignImporter] Skipped campaign "${data.title}": ${(error as Error).message}`);
-			}
+			await prisma.campaign.create({ data });
+			createdCount++;
 		}
 
 		return createdCount;

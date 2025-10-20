@@ -9,13 +9,8 @@ export class LocalPartnerImporter extends BaseImporter<LocalPartnerCreateInput> 
 		let createdCount = 0;
 
 		for (const data of partners) {
-			try {
-				await prisma.localPartner.create({ data });
-				createdCount++;
-			} catch (error) {
-				const email = data.contact.create?.email ?? 'unknown';
-				console.warn(`[LocalPartnerImporter] Skipped local partner ${data.name} (${email}): ${error}`);
-			}
+			await prisma.localPartner.create({ data });
+			createdCount++;
 		}
 
 		return createdCount;

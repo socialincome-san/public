@@ -6,7 +6,7 @@ const main = async (): Promise<void> => {
 		const migrator = new ContributorMigrator();
 		await migrator.migrate();
 	} catch (err) {
-		console.error('❌ Contributor migration failed:', err);
+		console.log('❌ Contributor migration failed:', err);
 		process.exit(1);
 	}
 };

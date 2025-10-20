@@ -20,7 +20,7 @@ export class CampaignTransformer extends BaseTransformer<FirestoreCampaignWithId
 				linkFacebook: raw.link_facebook ?? null,
 				linkX: raw.link_x ?? null,
 				goal: raw.goal ?? null,
-				currency: raw.goal_currency ?? 'CHF',
+				currency: raw.goal_currency ?? '',
 				additionalAmountChf: raw.additional_amount_chf ?? null,
 				endDate: raw.end_date.toDate(),
 				isActive: raw.status === CampaignStatus.Active,

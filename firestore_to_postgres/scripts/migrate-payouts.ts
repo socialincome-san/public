@@ -6,7 +6,7 @@ const main = async (): Promise<void> => {
 		const migrator = new PayoutMigrator();
 		await migrator.migrate();
 	} catch (err) {
-		console.error('❌ Payout migration failed:', err);
+		console.log('❌ Payout migration failed:', err);
 		process.exit(1);
 	}
 };

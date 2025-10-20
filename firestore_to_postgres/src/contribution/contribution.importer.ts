@@ -9,12 +9,8 @@ export class ContributionImporter extends BaseImporter<ContributionWithPayment> 
 		let createdCount = 0;
 
 		for (const data of contributions) {
-			try {
-				await prisma.contribution.create({ data: data.contribution });
-				createdCount++;
-			} catch (error) {
-				console.error('[ContributionImporter] Failed to import contribution:', error);
-			}
+			await prisma.contribution.create({ data: data.contribution });
+			createdCount++;
 		}
 
 		return createdCount;

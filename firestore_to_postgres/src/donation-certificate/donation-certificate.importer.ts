@@ -8,26 +8,8 @@ export class DonationCertificateImporter extends BaseImporter<Prisma.DonationCer
 		let createdCount = 0;
 
 		for (const certificate of certificates) {
-			try {
-				const contributorLegacyId =
-					'contributor' in certificate
-						? (certificate.contributor as { connect: { legacyFirestoreId: string } }).connect.legacyFirestoreId
-						: undefined;
-
-				if (contributorLegacyId) {
-					const exists = await prisma.contributor.findUnique({
-						where: { legacyFirestoreId: contributorLegacyId },
-					});
-					if (!exists) continue;
-				}
-
-				await prisma.donationCertificate.create({ data: certificate });
-				createdCount++;
-			} catch (error) {
-				const id = (certificate.legacyFirestoreId as string) ?? 'unknown';
-				const message = error instanceof Error ? error.message : 'Unknown error';
-				console.error(`[DonationCertificateImporter] Failed to import ${id}: ${message}`);
-			}
+			await prisma.donationCertificate.create({ data: certificate });
+			createdCount++;
 		}
 
 		return createdCount;

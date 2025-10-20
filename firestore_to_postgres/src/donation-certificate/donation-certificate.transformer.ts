@@ -9,13 +9,27 @@ export class DonationCertificateTransformer extends BaseTransformer<
 	transform = async (
 		input: FirestoreDonationCertificateWithUser[],
 	): Promise<Prisma.DonationCertificateCreateInput[]> => {
-		return input.map(({ certificate, user }) => ({
-			legacyFirestoreId: `${user.id}_${certificate.id}`,
-			year: certificate.year,
-			storagePath: certificate.storage_path ?? (certificate as any).url ?? '',
-			contributor: {
-				connect: { legacyFirestoreId: user.id },
-			},
-		}));
+		const transformed: Prisma.DonationCertificateCreateInput[] = [];
+		let skipped = 0;
+
+		for (const { certificate, user } of input) {
+			if (user.test_user) {
+				skipped++;
+				continue;
+			}
+
+			transformed.push({
+				legacyFirestoreId: `${user.id}_${certificate.id}`,
+				year: certificate.year,
+				storagePath: certificate.storage_path ?? (certificate as any).url ?? '',
+				contributor: {
+					connect: { legacyFirestoreId: user.id },
+				},
+			});
+		}
+
+		if (skipped > 0) console.log(`⚠️ Skipped ${skipped} test donation certificates`);
+
+		return transformed;
 	};
 }

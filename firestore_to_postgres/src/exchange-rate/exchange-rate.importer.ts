@@ -8,14 +8,8 @@ export class ExchangeRateImporter extends BaseImporter<Prisma.ExchangeRateCreate
 		let createdCount = 0;
 
 		for (const rate of rates) {
-			try {
-				await prisma.exchangeRate.create({ data: rate });
-				createdCount++;
-			} catch (error) {
-				const legacyId = rate.legacyFirestoreId ?? 'unknown';
-				const message = error instanceof Error ? error.message : String(error);
-				console.error(`[ExchangeRateImporter] Failed to import rate ${legacyId}: ${message}`);
-			}
+			await prisma.exchangeRate.create({ data: rate });
+			createdCount++;
 		}
 
 		return createdCount;
