@@ -34,7 +34,7 @@ export default function LocalPartnersForm({
 		},
 	};
 
-	const [formSchema, setFormSchema] = useState<FormSchema>(initialFormSchema);
+	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
 	const [localePartner, setLocalePartner] = useState<LocalPartnerPayload>();
 	const [isLoading, startTransition] = useTransition();
 	let editing = !!localPartnerId;
@@ -49,15 +49,15 @@ export default function LocalPartnersForm({
 						setLocalePartner(partner.data);
 						const newSchema = { ...formSchema };
 						newSchema.name.value = partner.data.name;
-						newSchema.firstName.value = partner.data.contact.firstName;
-						newSchema.lastName.value = partner.data.contact.lastName;
-						newSchema.callingName.value = partner.data.contact.callingName;
-						newSchema.email.value = partner.data.contact.email;
-						newSchema.language.value = partner.data.contact.language;
-						newSchema.profession.value = partner.data.contact.profession;
-						newSchema.phone.value = partner.data.contact.phone?.number;
-						newSchema.dateOfBirth.value = partner.data.contact.dateOfBirth;
-						newSchema.gender.value = partner.data.contact.gender?.toString();
+						newSchema.contact.firstName.value = partner.data.contact.firstName;
+						newSchema.contact.lastName.value = partner.data.contact.lastName;
+						newSchema.contact.callingName.value = partner.data.contact.callingName;
+						newSchema.contact.email.value = partner.data.contact.email;
+						newSchema.contact.language.value = partner.data.contact.language;
+						newSchema.contact.profession.value = partner.data.contact.profession;
+						newSchema.contact.phone.value = partner.data.contact.phone?.number;
+						newSchema.contact.dateOfBirth.value = partner.data.contact.dateOfBirth;
+						newSchema.contact.gender.value = partner.data.contact.gender?.toString();
 						setFormSchema(newSchema);
 					} else {
 						onError && onError();
