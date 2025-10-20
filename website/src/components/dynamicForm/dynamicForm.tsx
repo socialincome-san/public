@@ -131,29 +131,23 @@ const DynamicForm: FC<{
 							value={isAccorionOpen ? 'open' : 'closed'}
 							onValueChange={(value) => setIsAccordionOpen(value === 'open')}
 						>
-							<AccordionItem value="open">
+							{/* TODO: find better solution to hide collapsed content */}
+							<AccordionItem value="open" className="[&[data-state=closed]>div]:h-0">
 								{/* TODO: use nested group label instead of key */}
 								<AccordionTrigger>{option}</AccordionTrigger>
-								<div className="overflow-hidden">
-									{/* TODO: find better solution to hide collapsed content */}
-									<AccordionContent
-										className="flex flex-col gap-6 p-5"
-										forceMount
-										style={{ display: isAccorionOpen ? 'block' : 'none' }}
-									>
-										{getOptions(option).map((nestedOption) => (
-											<GenericFormField
-												option={nestedOption}
-												zodSchema={zodSchema}
-												form={form}
-												formSchema={formSchema}
-												isLoading={isLoading}
-												parentOption={option}
-												key={nestedOption}
-											/>
-										))}
-									</AccordionContent>
-								</div>
+								<AccordionContent forceMount>
+									{getOptions(option).map((nestedOption) => (
+										<GenericFormField
+											option={nestedOption}
+											zodSchema={zodSchema}
+											form={form}
+											formSchema={formSchema}
+											isLoading={isLoading}
+											parentOption={option}
+											key={nestedOption}
+										/>
+									))}
+								</AccordionContent>
 							</AccordionItem>
 						</Accordion>
 					) : (
