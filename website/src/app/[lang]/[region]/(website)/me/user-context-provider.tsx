@@ -15,7 +15,7 @@ export function UserContextProvider({
 	redirectToLogin = false,
 }: PropsWithChildren<{ redirectToLogin?: boolean }>) {
 	const firestore = useFirestore();
-	const { authUser } = useAuth();
+	const { authUser, isLoading } = useAuth();
 	const { data: user } = useQuery({
 		queryKey: ['me', authUser?.uid],
 		queryFn: async () => {
@@ -33,12 +33,12 @@ export function UserContextProvider({
 	});
 
 	useEffect(() => {
-		if (user === null && redirectToLogin) {
+		if (!isLoading && user === null && redirectToLogin) {
 			// If the user is null, it couldn't be found in the database, so redirect to the login page.
 			// If the user is undefined, the query is still loading, so no redirect.
 			redirect('../login');
 		}
-	}, [user, redirectToLogin]);
+	}, [isLoading, user, redirectToLogin]);
 
 	if (!user) {
 		return redirectToLogin ? null : <>{children}</>;
