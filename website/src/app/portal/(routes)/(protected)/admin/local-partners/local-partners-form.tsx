@@ -157,8 +157,7 @@ export default function LocalPartnersForm({
 					};
 					res = await createLocalPartnerAction(data);
 				}
-				if (res.success) onSuccess && onSuccess();
-				else onError && onError();
+				res.success ? onSuccess?.() : onError?.();
 			} catch {
 				onError && onError();
 			}
