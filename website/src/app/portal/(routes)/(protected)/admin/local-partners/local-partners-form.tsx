@@ -159,7 +159,7 @@ export default function LocalPartnersForm({
 				}
 				res.success ? onSuccess?.() : onError?.();
 			} catch {
-				onError && onError();
+				onError?.();
 			}
 		});
 	}
