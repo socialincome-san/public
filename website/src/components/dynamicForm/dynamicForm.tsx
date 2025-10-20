@@ -1,3 +1,4 @@
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/app/portal/components/accordion';
 import { Button } from '@/app/portal/components/button';
 import { DatePicker } from '@/app/portal/components/datePicker';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/app/portal/components/form';
@@ -8,17 +9,36 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SpinnerIcon } from '@socialincome/ui/src/icons/spinner';
 import { FC, useEffect } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
-import z, { ZodTypeAny } from 'zod';
+import z, { ZodObject, ZodTypeAny } from 'zod';
 
-type FormField = {
+export type FormField = {
 	label: string;
 	placeholder?: string;
 	zodSchema?: ZodTypeAny;
 	value?: any;
 };
 
+// TODO: add nested group label
 export type FormSchema = {
 	[key: string]: FormField | FormSchema;
+};
+
+// recursively build Zod Schema from Form Schema
+const buildZodSchema = (schemaDef: FormSchema): ZodObject<any> => {
+	const result: Record<string, ZodTypeAny> = {};
+
+	for (const key in schemaDef) {
+		const value = schemaDef[key];
+
+		if (value.zodSchema) {
+			result[key] = value.zodSchema as ZodTypeAny;
+		} else {
+			// nested object
+			result[key] = buildZodSchema(value as FormSchema);
+		}
+	}
+
+	return z.object(result);
 };
 
 // Typeguard
@@ -26,10 +46,12 @@ const isFormField = (obj: any): obj is FormField => {
 	return obj && typeof obj === 'object' && 'label' in obj;
 };
 
+// get first level or nested def object from Zod Schema
 const getDef = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any>, parentKey?: string) => {
 	return parentKey ? zodSchema.shape[parentKey]?._def.shape()[key]?._def : zodSchema.shape[key]?._def;
 };
 
+// get Zod Type by Form Schema key
 const getType = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any>, parentKey?: string): string => {
 	const def = getDef(key, zodSchema, parentKey);
 	const type = def.typeName;
@@ -39,25 +61,21 @@ const getType = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<an
 
 const DynamicForm: FC<{
 	formSchema: FormSchema;
-	zodSchema: z.ZodObject<any>;
 	isLoading: boolean;
+	onSubmit: (values: any) => void;
+	onError?: () => void;
+	edit?: boolean;
+}> = ({ formSchema, isLoading, onSubmit, onError, edit = false }) => {
+	const zodSchema = buildZodSchema(formSchema);
 
-	onSubmit: (values: any) => {};
-}> = ({ formSchema, zodSchema, isLoading, onSubmit }) => {
 	const form = useForm<z.infer<typeof zodSchema>>({
 		resolver: zodResolver(zodSchema),
-		// TODO
-		defaultValues: {
-			name: '',
-			contactFirstName: '',
-			contactLastName: '',
-		},
 	});
 
 	// set form values if available
 	useEffect(() => {
 		for (const [name, field] of Object.entries(formSchema)) {
-			if (!('label' in formSchema[name])) {
+			if (!isFormField(formSchema[name])) {
 				//nested
 				for (const [nestedName, nestedField] of Object.entries(formSchema[name])) {
 					if (formSchema[name][nestedName].value) form.setValue(`${name}.${nestedName}`, nestedField.value);
@@ -67,30 +85,58 @@ const DynamicForm: FC<{
 		}
 	}, [formSchema]);
 
-	// TODO
+	// get options from Zod Object
 	const getOptions = (nestedKey?: string): string[] => {
 		return nestedKey ? zodSchema.shape[nestedKey]?.keyof().options : zodSchema.keyof().options;
 	};
-	const onInvalid = (errors) => console.error(errors);
+
+	// TODO: move to recursive function
+	// get values from Zod Schema and map back to form schema
+	const beforeSubmit = (values: z.infer<typeof zodSchema>) => {
+		for (const key in formSchema) {
+			const value = formSchema[key];
+
+			if (value.zodSchema) {
+				value.value = values[key];
+			} else {
+				// nested object
+				for (const k in formSchema[key]) {
+					const value = (formSchema[key] as FormSchema)[k];
+
+					if (value.zodSchema) {
+						value.value = values[key][k];
+					}
+				}
+			}
+		}
+		onSubmit(formSchema);
+	};
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit, onInvalid)} className="space-y-8">
+			<form onSubmit={form.handleSubmit(beforeSubmit, onError)} className="space-y-8">
 				{getOptions().map((option) => {
 					return getType(option, zodSchema) === 'ZodObject' ? (
-						<div key={option} className="flex flex-col gap-6 border-2 border-slate-100 p-5">
-							{getOptions(option).map((nestedOption) => (
-								<GenericFormField
-									option={nestedOption}
-									zodSchema={zodSchema}
-									form={form}
-									formSchema={formSchema}
-									isLoading={isLoading}
-									parentOption={option}
-									key={nestedOption}
-								/>
-							))}
-						</div>
+						// TODO: expand on validation error
+						<Accordion key={option} type="single" collapsible>
+							<AccordionItem value="item-1">
+								{/* TODO: use nested group label instead of key */}
+								<AccordionTrigger>{option}</AccordionTrigger>
+								<AccordionContent className="flex flex-col gap-6 p-5">
+									{getOptions(option).map((nestedOption) => (
+										<GenericFormField
+											option={nestedOption}
+											zodSchema={zodSchema}
+											form={form}
+											formSchema={formSchema}
+											isLoading={isLoading}
+											parentOption={option}
+											key={nestedOption}
+										/>
+									))}
+								</AccordionContent>
+							</AccordionItem>
+						</Accordion>
 					) : (
 						<GenericFormField
 							option={option}
@@ -103,7 +149,7 @@ const DynamicForm: FC<{
 					);
 				})}
 				<Button disabled={isLoading} type="submit">
-					Submit
+					Save
 				</Button>
 			</form>
 			{/* TODO: add proper loading state */}

@@ -6,28 +6,10 @@ import {
 	updateLocalPartnerAction,
 } from '@/app/portal/server-actions/create-local-partner-action';
 import { formSchema as contactFormSchema } from '@/components/dynamicForm/contactFormSchemas';
-import DynamicForm, { FormSchema } from '@/components/dynamicForm/dynamicForm';
+import DynamicForm, { FormField, FormSchema } from '@/components/dynamicForm/dynamicForm';
 import { LocalPartnerPayload } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
-import { Gender } from '@socialincome/shared/src/types/user';
 import { useEffect, useState, useTransition } from 'react';
-import z, { ZodObject, ZodTypeAny } from 'zod';
-
-function buildZodSchema(schemaDef: FormSchema): ZodObject<any> {
-	const result: Record<string, ZodTypeAny> = {};
-
-	for (const key in schemaDef) {
-		const value = schemaDef[key];
-
-		if (value.zodSchema) {
-			result[key] = value.zodSchema as ZodTypeAny;
-		} else {
-			// nested object
-			result[key] = buildZodSchema(value as FormSchema);
-		}
-	}
-
-	return z.object(result);
-}
+import z from 'zod';
 
 export default function LocalPartnersForm({
 	onSuccess,
@@ -38,7 +20,10 @@ export default function LocalPartnersForm({
 	onError?: () => void;
 	localPartnerId?: string;
 }) {
-	const initialFormSchema: FormSchema = {
+	const initialFormSchema: {
+		name: FormField;
+		contact: FormSchema;
+	} = {
 		name: {
 			placeholder: 'Name',
 			label: 'Name',
@@ -49,15 +34,11 @@ export default function LocalPartnersForm({
 		},
 	};
 
-	const zodSchema = buildZodSchema(initialFormSchema);
-
 	const [formSchema, setFormSchema] = useState<FormSchema>(initialFormSchema);
-
 	const [localePartner, setLocalePartner] = useState<LocalPartnerPayload>();
-
+	const [isLoading, startTransition] = useTransition();
 	let editing = !!localPartnerId;
 
-	// TODO
 	useEffect(() => {
 		if (editing && localPartnerId) {
 			// Load local partner in edit mode
@@ -68,17 +49,18 @@ export default function LocalPartnersForm({
 						setLocalePartner(partner.data);
 						const newSchema = { ...formSchema };
 						newSchema.name.value = partner.data.name;
-						// TODO
-						(newSchema.contact as FormSchema).firstName.value = partner.data.contact.firstName;
-						(newSchema.contact as FormSchema).lastName.value = partner.data.contact.lastName;
-						(newSchema.contact as FormSchema).callingName.value = partner.data.contact.callingName;
-						(newSchema.contact as FormSchema).email.value = partner.data.contact.email;
-						(newSchema.contact as FormSchema).language.value = partner.data.contact.language;
-						(newSchema.contact as FormSchema).profession.value = partner.data.contact.profession;
-						(newSchema.contact as FormSchema).phone.value = partner.data.contact.phone?.number;
-						(newSchema.contact as FormSchema).dateOfBirth.value = partner.data.contact.dateOfBirth;
-						(newSchema.contact as FormSchema).gender.value = partner.data.contact.gender?.toString();
+						newSchema.firstName.value = partner.data.contact.firstName;
+						newSchema.lastName.value = partner.data.contact.lastName;
+						newSchema.callingName.value = partner.data.contact.callingName;
+						newSchema.email.value = partner.data.contact.email;
+						newSchema.language.value = partner.data.contact.language;
+						newSchema.profession.value = partner.data.contact.profession;
+						newSchema.phone.value = partner.data.contact.phone?.number;
+						newSchema.dateOfBirth.value = partner.data.contact.dateOfBirth;
+						newSchema.gender.value = partner.data.contact.gender?.toString();
 						setFormSchema(newSchema);
+					} else {
+						onError && onError();
 					}
 				} catch {
 					onError && onError();
@@ -87,28 +69,27 @@ export default function LocalPartnersForm({
 		}
 	}, [localPartnerId]);
 
-	const [isLoading, startTransition] = useTransition();
-	async function onSubmit(values: z.infer<typeof zodSchema>) {
-		// TODO update data in edit mode
+	async function onSubmit(schema: typeof initialFormSchema) {
 		startTransition(async () => {
 			try {
+				let res;
 				if (editing) {
-					// TODO: move to server action
+					// TODO: move mapping to server action
 					const data = {
-						name: values.name,
+						name: schema.name.value,
 						contact: {
 							update: {
 								data: {
-									firstName: values.contact.firstName,
-									lastName: values.contact.lastName,
-									gender: values.contact.gender as Gender,
-									email: values.contact.email,
-									profession: values.contact.profession,
-									phone: values.contact.phone
+									firstName: schema.contact.firstName.value,
+									lastName: schema.contact.lastName.value,
+									gender: schema.contact.gender.value,
+									email: schema.contact.email.value,
+									profession: schema.contact.profession.value,
+									phone: schema.contact.phone.value
 										? {
 												update: {
 													data: {
-														number: values.contact.phone,
+														number: schema.contact.phone.value,
 													},
 													where: {
 														id: localePartner?.contact.phone?.id,
@@ -116,9 +97,9 @@ export default function LocalPartnersForm({
 												},
 											}
 										: undefined,
-									dateOfBirth: values.contact.dateOfBirth,
-									callingName: values.contact.callingName,
-									language: values.contact.language,
+									dateOfBirth: schema.contact.dateOfBirth.value,
+									callingName: schema.contact.callingName.value,
+									language: schema.contact.language.value,
 									// TODO: add address
 								},
 								where: {
@@ -127,44 +108,41 @@ export default function LocalPartnersForm({
 							},
 						},
 					};
-					await updateLocalPartnerAction({ id: localPartnerId, ...data });
+					res = await updateLocalPartnerAction({ id: localPartnerId, ...data });
 				} else {
-					// TODO: move to server action
+					// TODO: move mapping to server action
 					const data = {
-						name: values.name,
+						name: schema.name.value,
 						contact: {
 							create: {
-								firstName: values.contact.firstName,
-								lastName: values.contact.lastName,
-								gender: values.contact.gender as Gender,
-								email: values.contact.email,
-								profession: values.contact.profession,
-								phone: values.contact.phone
+								firstName: schema.contact.firstName.value,
+								lastName: schema.contact.lastName.value,
+								gender: schema.contact.gender.value,
+								email: schema.contact.email.value,
+								profession: schema.contact.profession.value,
+								phone: schema.contact.phone.value
 									? {
 											create: {
-												number: values.contact.phone,
+												number: schema.contact.phone.value,
 											},
 										}
 									: undefined,
-								dateOfBirth: values.contact.dateOfBirth,
-								callingName: values.contact.callingName,
-								language: values.contact.language,
+								dateOfBirth: schema.contact.dateOfBirth.value,
+								callingName: schema.contact.callingName.value,
+								language: schema.contact.language.value,
 								// TODO: add address
 							},
 						},
 					};
-					await createLocalPartnerAction(data);
+					res = await createLocalPartnerAction(data);
 				}
-				onSuccess && onSuccess();
+				if (res.success) onSuccess && onSuccess();
+				else onError && onError();
 			} catch {
 				onError && onError();
 			}
 		});
 	}
 
-	return (
-		<>
-			<DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} zodSchema={zodSchema} />
-		</>
-	);
+	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onError={onError} />;
 }

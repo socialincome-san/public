@@ -64,23 +64,3 @@ export const formSchema: FormSchema = {
 	// 	country: {},
 	// },
 };
-
-// export const zodSchema = z.object({
-// 	firstName: z.string().min(2, {
-// 		message: 'Name must be at least 2 characters.',
-// 	}),
-// 	lastName: z.string().min(2, {
-// 		message: 'Name must be at least 2 characters.',
-// 	}),
-// 	callingName: z.string().optional(),
-// 	email: z.string().email(),
-// 	language: z.string().optional(),
-// 	dateOfBirth: z.date().max(new Date(), { message: 'Too young!' }).optional(),
-// 	profession: z.string().optional(),
-// 	gender: z.nativeEnum(Gender).optional(),
-// 	phone: z
-// 		.string()
-// 		// TODO: chek regex and optional
-// 		.regex(/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/gm)
-// 		.optional(),
-// });

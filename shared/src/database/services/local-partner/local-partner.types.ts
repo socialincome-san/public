@@ -19,13 +19,13 @@ export type LocalPartnerPayload = {
 		id: string;
 		firstName: string;
 		lastName: string;
-		gender?: Gender;
-		profession?: string;
-		phone?: Phone;
-		dateOfBirth?: Date;
+		callingName: string | null;
 		email: string;
-		callingName?: string;
-		language?: string;
+		gender: Gender | null;
+		language: string | null;
+		dateOfBirth: Date | null;
+		profession: string | null;
+		phone: Phone | null;
 	};
 };
 

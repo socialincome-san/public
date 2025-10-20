@@ -7,17 +7,17 @@ import { revalidatePath } from 'next/cache';
 export async function createLocalPartnerAction(localPartner: Prisma.LocalPartnerCreateInput) {
 	const localPartnerService = new LocalPartnerService();
 
-	await localPartnerService.create(localPartner);
-
+	const res = await localPartnerService.create(localPartner);
 	revalidatePath('/portal/admin/local-partners');
+	return res;
 }
 
 export async function updateLocalPartnerAction(localPartner: Prisma.LocalPartnerUpdateInput) {
 	const localPartnerService = new LocalPartnerService();
 
-	await localPartnerService.update(localPartner);
-
+	const res = await localPartnerService.update(localPartner);
 	revalidatePath('/portal/admin/local-partners');
+	return res;
 }
 
 export async function getLocalPartnerAction(localPartnerId: string) {
