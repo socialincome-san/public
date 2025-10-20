@@ -10,6 +10,7 @@ import {
 } from './local-partner.types';
 
 export class LocalPartnerService extends BaseService {
+	// TODO: check user permissions
 	async create(localPartner: LocalPartnerCreateInput): Promise<ServiceResult<LocalPartner>> {
 		try {
 			const partner = await this.db.localPartner.create({ data: localPartner });
