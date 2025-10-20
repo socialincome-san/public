@@ -135,7 +135,7 @@ const DynamicForm: FC<{
 							<AccordionItem value="open" className="[&[data-state=closed]>div]:h-0">
 								{/* TODO: use nested group label instead of key */}
 								<AccordionTrigger>{option}</AccordionTrigger>
-								<AccordionContent forceMount>
+								<AccordionContent className="flex flex-col gap-6 p-5" forceMount>
 									{getOptions(option).map((nestedOption) => (
 										<GenericFormField
 											option={nestedOption}
