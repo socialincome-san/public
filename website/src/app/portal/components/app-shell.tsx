@@ -1,4 +1,4 @@
-import { Navbar } from '@/app/portal/components/navbar';
+import { Navbar } from '@/app/portal/components/navbar/navbar';
 import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
 
 import { ReactNode } from 'react';

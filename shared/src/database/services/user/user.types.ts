@@ -1,11 +1,17 @@
 import { UserRole } from '@prisma/client';
 
+export type UserOrganization = {
+	id: string;
+	name: string;
+	memberCount: number;
+};
+
 export type UserInformation = {
 	id: string;
 	firstName: string | null;
 	lastName: string | null;
-	organizationNames: string[];
 	role: UserRole;
+	organizations: UserOrganization[];
 };
 
 export type UserTableViewRow = {

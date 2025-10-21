@@ -25,10 +25,9 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 		return <div className="p-4">Error loading the program</div>;
 	}
 
-	const { programName, permission, country } = result.data;
+	const { programName, country } = result.data;
 
 	const sections = [
-		{ href: `/portal/programs/${programId}/overview`, label: 'Overview' },
 		{ href: `/portal/programs/${programId}/recipients`, label: 'Recipients' },
 		{ href: `/portal/programs/${programId}/finances`, label: 'Finances' },
 		{ href: `/portal/programs/${programId}/campaigns`, label: 'Campaigns' },
@@ -37,7 +36,7 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 
 	const breadcrumbLinks = [
 		{ href: '/portal', label: 'Home' },
-		{ href: `/portal/programs/${programId}/overview`, label: programName },
+		{ href: `/portal/programs/${programId}/recipients`, label: programName },
 	];
 
 	return (
