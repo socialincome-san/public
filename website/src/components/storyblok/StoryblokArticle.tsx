@@ -55,7 +55,7 @@ export function StoryblokArticleCard(props: {
 						<div className="flex items-center space-x-2">
 							<StoryblokAuthorImage size="large" author={author} region={region} lang={lang} />
 							<Typography className="ml-1" size="lg">
-								{article.content.author.content.fullName}
+								{`${article.content.author.content.firstName} ${article.content.author.content.lastName}`}
 							</Typography>
 						</div>
 					</div>

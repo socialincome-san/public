@@ -299,7 +299,7 @@ export function generateMetaDataForArticle(storyblokStory: ISbStoryData<Storyblo
 	const storyblokArticle = storyblokStory.content;
 	const title = storyblokArticle.title;
 	const description = storyblokArticle.leadText;
-	const author = storyblokArticle.author.content.fullName;
+	const authorsFullName = `${storyblokArticle.author.content.firstName} ${storyblokArticle.author.content.lastName}`
 	const dimensions = getDimensionsFromStoryblokImageUrl(storyblokArticle.image.filename);
 	const imageUrl = formatStoryblokUrl(
 		storyblokArticle.image.filename,
@@ -319,7 +319,7 @@ export function generateMetaDataForArticle(storyblokStory: ISbStoryData<Storyblo
 		title: title,
 		description: description,
 		keywords: tags,
-		authors: { name: author },
+		authors: { name: authorsFullName },
 		openGraph: {
 			title: title,
 			description: description,
@@ -338,7 +338,7 @@ export function generateMetaDataForArticle(storyblokStory: ISbStoryData<Storyblo
 		other: {
 			'article:published_time': formatStoryblokDateToIso(storyblokStory.first_published_at),
 			'article:modified_time': formatStoryblokDateToIso(storyblokStory.updated_at),
-			'article:author': author,
+			'article:author': authorsFullName,
 			'article:section': 'News',
 			'article:tag': tags,
 		},
