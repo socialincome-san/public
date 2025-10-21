@@ -76,5 +76,5 @@ export const formSchema: FormSchema = {
 		label: 'Address ZIP Code',
 		zodSchema: z.string().min(2),
 	},
-	country: { placeholder: 'Country', label: 'Address Country', zodSchema: z.string().optional() },
+	country: { placeholder: 'Country', label: 'Address Country', zodSchema: z.string().min(2) },
 };
