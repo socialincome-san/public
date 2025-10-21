@@ -21,7 +21,7 @@ export default async function Page({ params }: DefaultPageProps) {
 	const { lang, region } = await params;
 	const translator = await Translator.getInstance({ language: lang, namespaces: ['website-journal', 'common'] });
 
-	const [blogs, authors, tags] = await Promise.all([
+	const [articles, authors, tags] = await Promise.all([
 		getOverviewArticles(lang),
 		getOverviewAuthors(lang),
 		getOverviewTags(lang),
@@ -29,7 +29,7 @@ export default async function Page({ params }: DefaultPageProps) {
 
 
 	const totalArticlesInDefaultLang =
-		lang == defaultLanguage ? blogs.length : await getOverviewArticlesCountForDefaultLang();
+		lang == defaultLanguage ? articles.length : await getOverviewArticlesCountForDefaultLang();
 
 
 
@@ -90,12 +90,12 @@ export default async function Page({ params }: DefaultPageProps) {
 			</div>
 
 			<div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-				{blogs.map((blog) => (
-					<StoryblokArticleCard lang={lang} region={region} blog={blog} author={blog.content.author} key={blog.uuid} />
+				{articles.map((article) => (
+					<StoryblokArticleCard lang={lang} region={region} article={article} author={article.content.author} key={article.uuid} />
 				))}
 			</div>
 
-			{totalArticlesInDefaultLang > blogs.length && (
+			{totalArticlesInDefaultLang > articles.length && (
 				<div>
 					<Separator className="my-8" />
 					<MoreArticlesLink text={translator.t('overview.more-articles')} />

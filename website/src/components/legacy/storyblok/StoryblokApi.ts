@@ -295,7 +295,7 @@ export async function getArticle(lang: string, slug: string): Promise<ISbStory<S
 	);
 }
 
-export function generateMetaDataForBlog(storyblokStory: ISbStoryData<StoryblokArticle>, url: string): Metadata {
+export function generateMetaDataForArticle(storyblokStory: ISbStoryData<StoryblokArticle>, url: string): Metadata {
 	const storyblokArticle = storyblokStory.content;
 	const title = storyblokArticle.title;
 	const description = storyblokArticle.leadText;

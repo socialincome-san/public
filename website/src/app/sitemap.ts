@@ -35,13 +35,13 @@ function generateAlternativeLanguages(alternativeArticles: Record<string, string
 }
 
 function generateStoryblokArticlesSitemap(
-	blogs: ISbStoryData<StoryblokArticle>[],
-	blogsAlternativeLanguages: { lang: WebsiteLanguage; stories: ISbStoryData<StoryblokArticle>[] }[],
+	articles: ISbStoryData<StoryblokArticle>[],
+	articlesAlternativeLanguages: { lang: WebsiteLanguage; stories: ISbStoryData<StoryblokArticle>[] }[],
 ): MetadataRoute.Sitemap {
 	const alternativeArticles = Object.fromEntries(
-		blogsAlternativeLanguages.map(({ lang, stories }) => [lang, stories.map((it) => it.slug)]),
+		articlesAlternativeLanguages.map(({ lang, stories }) => [lang, stories.map((it) => it.slug)]),
 	) as Record<string, string[]>;
-	return blogs.map((article) => ({
+	return articles.map((article) => ({
 		url: articleUrl(article.slug, defaultLanguage),
 		alternates: {
 			languages: generateAlternativeLanguages(alternativeArticles, article.slug),
@@ -86,7 +86,7 @@ function generateStaticPagesSitemap(): MetadataRoute.Sitemap {
 	);
 }
 
-function getBlogsInAlternativeLanguages() {
+function getArticlesInAlternativeLanguages() {
 	return Promise.all(
 		SUPPORTED_LANGUAGES.map(async (lang) => ({
 			lang,
@@ -98,14 +98,14 @@ function getBlogsInAlternativeLanguages() {
 const STATIC_SITEMAP = generateStaticPagesSitemap();
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	try {
-		const [blogs, blogsAlternativeLanguages, authors, tags] = await Promise.all([
+		const [articles, articlesAlternativeLanguages, authors, tags] = await Promise.all([
 			getOverviewArticles(defaultLanguage),
-			getBlogsInAlternativeLanguages(),
+			getArticlesInAlternativeLanguages(),
 			getOverviewAuthors(defaultLanguage),
 			getOverviewTags(defaultLanguage),
 		]);
 		return STATIC_SITEMAP.concat(
-			generateStoryblokArticlesSitemap(blogs, blogsAlternativeLanguages),
+			generateStoryblokArticlesSitemap(articles, articlesAlternativeLanguages),
 			generateStoryblokAuthorsSitemap(authors),
 			generateStoryblokTagSitemap(tags),
 		);
