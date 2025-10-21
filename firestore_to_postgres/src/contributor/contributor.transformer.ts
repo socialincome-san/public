@@ -35,15 +35,14 @@ export class ContributorTransformer extends BaseTransformer<FirestoreContributor
 						referral: this.mapReferral(personal?.referral),
 						paymentReferenceId: doc.payment_reference_id?.toString() ?? null,
 						stripeCustomerId: doc.stripe_customer_id ?? null,
-						institution: doc.institution ?? false,
 						contact: {
 							create: {
 								firstName: personal?.name ?? '',
 								lastName: personal?.lastname ?? '',
 								email,
 								gender: this.mapGender(personal?.gender),
-								profession: personal?.company ?? null,
 								language: doc.language ?? null,
+								isInstitution: doc.institution ?? false,
 								address: address
 									? {
 											create: {
@@ -52,14 +51,6 @@ export class ContributorTransformer extends BaseTransformer<FirestoreContributor
 												city: address.city ?? '',
 												zip: address.zip?.toString() ?? '',
 												country: address.country ?? '',
-											},
-										}
-									: undefined,
-								phone: personal?.phone
-									? {
-											create: {
-												number: personal.phone,
-												verified: false,
 											},
 										}
 									: undefined,
