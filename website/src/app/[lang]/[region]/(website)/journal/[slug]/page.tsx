@@ -144,7 +144,7 @@ export default async function Page(props: {
 									color={articleWithImageStyling ? 'popover' : 'foreground'}
 									className="ml-1"
 								>
-									{author.content.fullName}
+									{`${author.content.firstName} ${author.content.lastName}`}
 								</Typography>
 							</div>
 						</Link>
@@ -195,7 +195,7 @@ export default async function Page(props: {
 						<div className="mt-5 flex items-center space-x-4">
 							<StoryblokAuthorImage size="large" author={author} lang={lang} region={region} />
 							<Typography size="lg" as="span" className="ml-1" color="foreground">
-								{author.content.fullName}
+								{`${author.content.firstName} ${author.content.lastName}`}
 							</Typography>
 						</div>
 					</Link>
