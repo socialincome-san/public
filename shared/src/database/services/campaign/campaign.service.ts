@@ -5,6 +5,11 @@ import { CampaignTableView, CampaignTableViewRow } from './campaign.types';
 
 export class CampaignService extends BaseService {
 	async getTableView(userId: string): Promise<ServiceResult<CampaignTableView>> {
+		const authResult = await this.requireUser(userId);
+		if (!authResult.success) {
+			return this.resultFail(authResult.error, authResult.status);
+		}
+
 		try {
 			const campaigns = await this.db.campaign.findMany({
 				where: {

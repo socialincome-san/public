@@ -6,7 +6,12 @@ import { OrganizationTableView, OrganizationTableViewRow } from './organization.
 
 export class OrganizationService extends BaseService {
 	async getOrganizationAdminTableView(user: UserInformation): Promise<ServiceResult<OrganizationTableView>> {
-		if (user.role !== UserRole.admin) {
+		const authResult = await this.requireUser(user.id);
+		if (!authResult.success) {
+			return this.resultFail(authResult.error, authResult.status);
+		}
+
+		if (authResult.data.role !== UserRole.admin) {
 			return this.resultOk({ tableRows: [] });
 		}
 

@@ -6,7 +6,12 @@ import { ExpenseTableView, ExpenseTableViewRow } from './expense.types';
 
 export class ExpenseService extends BaseService {
 	async getExpenseAdminTableView(user: UserInformation): Promise<ServiceResult<ExpenseTableView>> {
-		if (user.role !== UserRole.admin) {
+		const authResult = await this.requireUser(user.id);
+		if (!authResult.success) {
+			return this.resultFail(authResult.error, authResult.status);
+		}
+
+		if (authResult.data.role !== UserRole.admin) {
 			return this.resultOk({ tableRows: [] });
 		}
 

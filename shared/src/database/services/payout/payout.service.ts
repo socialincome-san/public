@@ -11,6 +11,11 @@ import {
 
 export class PayoutService extends BaseService {
 	async getOngoingPayoutTableView(userId: string): Promise<ServiceResult<OngoingPayoutTableView>> {
+		const authResult = await this.requireUser(userId);
+		if (!authResult.success) {
+			return this.resultFail(authResult.error, authResult.status);
+		}
+
 		try {
 			const { fromMonthStart, months } = this.getLastThreeMonths();
 
@@ -94,6 +99,11 @@ export class PayoutService extends BaseService {
 	}
 
 	async getPayoutConfirmationTableView(userId: string): Promise<ServiceResult<PayoutConfirmationTableView>> {
+		const authResult = await this.requireUser(userId);
+		if (!authResult.success) {
+			return this.resultFail(authResult.error, authResult.status);
+		}
+
 		try {
 			const payouts = await this.db.payout.findMany({
 				where: {

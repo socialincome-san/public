@@ -5,6 +5,11 @@ import { ContributionTableView, ContributionTableViewRow } from './contribution.
 
 export class ContributionService extends BaseService {
 	async getContributionTableView(userId: string): Promise<ServiceResult<ContributionTableView>> {
+		const authResult = await this.requireUser(userId);
+		if (!authResult.success) {
+			return this.resultFail(authResult.error, authResult.status);
+		}
+
 		try {
 			const contributions = await this.db.contribution.findMany({
 				where: {

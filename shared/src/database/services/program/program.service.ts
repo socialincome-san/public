@@ -5,6 +5,11 @@ import { ProgramWallet, ProgramWalletView } from './program.types';
 
 export class ProgramService extends BaseService {
 	async getProgramWalletView(userId: string): Promise<ServiceResult<ProgramWalletView>> {
+		const authResult = await this.requireUser(userId);
+		if (!authResult.success) {
+			return this.resultFail(authResult.error, authResult.status);
+		}
+
 		try {
 			const programs = await this.db.program.findMany({
 				where: {

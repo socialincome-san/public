@@ -5,6 +5,10 @@ import { UserInformation, UserTableView, UserTableViewRow } from './user.types';
 
 export class UserService extends BaseService {
 	async getCurrentUserInformation(firebaseAuthUserId: string): Promise<ServiceResult<UserInformation>> {
+		if (!firebaseAuthUserId) {
+			return this.resultFail('Firebase Auth User ID is required', 401);
+		}
+
 		try {
 			const user = await this.db.user.findFirst({
 				where: {
@@ -49,16 +53,16 @@ export class UserService extends BaseService {
 	}
 
 	async getTableView(userId: string): Promise<ServiceResult<UserTableView>> {
+		const authResult = await this.requireUser(userId);
+		if (!authResult.success) {
+			return this.resultFail(authResult.error, authResult.status);
+		}
+
+		if (authResult.data.role !== UserRole.admin) {
+			return this.resultOk({ tableRows: [] });
+		}
+
 		try {
-			const currentUser = await this.db.user.findUnique({
-				where: { id: userId },
-				select: { role: true },
-			});
-
-			if (!currentUser || currentUser.role !== UserRole.admin) {
-				return this.resultOk({ tableRows: [] });
-			}
-
 			const users = await this.db.user.findMany({
 				select: {
 					id: true,

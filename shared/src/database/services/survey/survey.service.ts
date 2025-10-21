@@ -10,6 +10,11 @@ import {
 
 export class SurveyService extends BaseService {
 	async getSurveyTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
+		const authResult = await this.requireUser(userId);
+		if (!authResult.success) {
+			return this.resultFail(authResult.error, authResult.status);
+		}
+
 		try {
 			const surveys = await this.db.survey.findMany({
 				where: {
@@ -81,6 +86,11 @@ export class SurveyService extends BaseService {
 	}
 
 	async getUpcomingSurveysTableView(userId: string): Promise<ServiceResult<UpcomingSurveyTableView>> {
+		const authResult = await this.requireUser(userId);
+		if (!authResult.success) {
+			return this.resultFail(authResult.error, authResult.status);
+		}
+
 		try {
 			const activeStatuses: SurveyStatus[] = ['new', 'sent', 'scheduled', 'in_progress'];
 			const today = new Date();

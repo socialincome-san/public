@@ -5,6 +5,11 @@ import { RecipientTableView, RecipientTableViewRow } from './recipient.types';
 
 export class RecipientService extends BaseService {
 	async getRecipientTableView(userId: string): Promise<ServiceResult<RecipientTableView>> {
+		const authResult = await this.requireUser(userId);
+		if (!authResult.success) {
+			return this.resultFail(authResult.error, authResult.status);
+		}
+
 		try {
 			const recipients = await this.db.recipient.findMany({
 				where: {
