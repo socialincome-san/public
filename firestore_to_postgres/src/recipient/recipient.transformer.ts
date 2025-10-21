@@ -59,7 +59,7 @@ export class RecipientTransformer extends BaseTransformer<FirestoreRecipientWith
 					create: {
 						firstName: raw.first_name,
 						lastName: raw.last_name,
-						email: raw.email && raw.email.trim() !== '' ? raw.email : null,
+						email: raw.email?.trim() || null,
 						gender: this.mapGender(raw.gender),
 						callingName: raw.calling_name ?? null,
 						profession: raw.profession ?? null,
