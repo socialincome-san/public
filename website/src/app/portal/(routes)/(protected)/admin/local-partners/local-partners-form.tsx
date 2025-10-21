@@ -62,6 +62,11 @@ export default function LocalPartnersForm({
 						newSchema.contact.phone.value = partner.data.contact.phone?.number;
 						newSchema.contact.dateOfBirth.value = partner.data.contact.dateOfBirth;
 						newSchema.contact.gender.value = partner.data.contact.gender?.toString();
+						newSchema.contact.city.value = partner.data.contact.address?.city;
+						newSchema.contact.country.value = partner.data.contact.address?.country;
+						newSchema.contact.number.value = partner.data.contact.address?.number;
+						newSchema.contact.street.value = partner.data.contact.address?.street;
+						newSchema.contact.zip.value = partner.data.contact.address?.zip;
 						setFormSchema(newSchema);
 					} else {
 						onError && onError();
