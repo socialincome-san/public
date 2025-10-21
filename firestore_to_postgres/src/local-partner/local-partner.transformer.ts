@@ -4,33 +4,25 @@ import { FirestoreLocalPartnerWithId, LocalPartnerCreateInput } from './local-pa
 
 export class LocalPartnerTransformer extends BaseTransformer<FirestoreLocalPartnerWithId, LocalPartnerCreateInput> {
 	transform = async (input: FirestoreLocalPartnerWithId[]): Promise<LocalPartnerCreateInput[]> => {
-		return input.map((org): LocalPartnerCreateInput => {
-			const email = this.generateEmailFromName(org.name);
-
-			return {
+		return input.map(
+			(org): LocalPartnerCreateInput => ({
 				legacyFirestoreId: org.id,
 				name: org.name,
 				contact: {
 					create: {
 						firstName: org.contactName ?? '',
 						lastName: '',
-						email,
 						gender: Gender.private,
 						phone: org.contactNumber
 							? {
 									create: {
 										number: org.contactNumber,
-										verified: true,
 									},
 								}
 							: undefined,
 					},
 				},
-			};
-		});
+			}),
+		);
 	};
-
-	private generateEmailFromName(name: string): string {
-		return name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '@autocreated.socialincome';
-	}
 }

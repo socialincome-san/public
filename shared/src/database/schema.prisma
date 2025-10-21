@@ -16,12 +16,6 @@ enum Gender {
   private
 }
 
-enum WhatsAppActivationStatus {
-  disabled
-  pending
-  verified
-}
-
 enum PaymentEventType {
   stripe
   bank_transfer
@@ -147,7 +141,6 @@ model Contributor {
   referral           ContributorReferralSource @map("referral")
   paymentReferenceId String?                   @map("payment_reference_id")
   stripeCustomerId   String?                   @map("stripe_customer_id")
-  institution        Boolean                   @default(false) @map("institution")
 
   contributions        Contribution[]
   donationCertificates DonationCertificate[]
@@ -242,7 +235,6 @@ model Payout {
   status            PayoutStatus @map("status")
   phoneNumber       String?      @map("phone_number")
   comments          String?      @map("comments")
-  message           String?      @map("message")
   recipientId       String       @map("recipient_id")
   recipient         Recipient    @relation(fields: [recipientId], references: [id])
 
@@ -260,10 +252,8 @@ model Survey {
   questionnaire     SurveyQuestionnaire @map("questionnaire")
   language          String              @map("language")
   dueAt             DateTime            @map("due_at") @db.Timestamptz(3)
-  sentAt            DateTime?           @map("sent_at") @db.Timestamptz(3)
   completedAt       DateTime?           @map("completed_at") @db.Timestamptz(3)
   status            SurveyStatus        @map("status")
-  comments          String?             @map("comments")
   data              Json                @map("data")
   accessEmail       String              @map("access_email")
   accessPw          String              @map("access_pw")
@@ -448,19 +438,21 @@ model PaymentInformation {
 }
 
 model Contact {
-  id           String        @id @default(cuid()) @map("id")
-  firstName    String        @map("first_name")
-  lastName     String        @map("last_name")
-  callingName  String?       @map("calling_name")
-  addressId    String?       @unique @map("address_id")
-  address      Address?      @relation(fields: [addressId], references: [id])
-  phoneId      String?       @map("phone_id")
-  phone        Phone?        @relation(fields: [phoneId], references: [id])
-  email        String        @unique @map("email")
-  gender       Gender?       @map("gender")
-  language     String?       @map("language")
-  dateOfBirth  DateTime?     @map("date_of_birth") @db.Date
-  profession   String?       @map("profession")
+  id            String    @id @default(cuid()) @map("id")
+  firstName     String    @map("first_name")
+  lastName      String    @map("last_name")
+  callingName   String?   @map("calling_name")
+  addressId     String?   @unique @map("address_id")
+  address       Address?  @relation(fields: [addressId], references: [id])
+  phoneId       String?   @map("phone_id")
+  phone         Phone?    @relation(fields: [phoneId], references: [id])
+  email         String?   @unique @map("email")
+  gender        Gender?   @map("gender")
+  language      String?   @map("language")
+  dateOfBirth   DateTime? @map("date_of_birth") @db.Date
+  profession    String?   @map("profession")
+  isInstitution Boolean   @default(false) @map("is_institution")
+
   contributor  Contributor?
   recipient    Recipient?
   user         User?
@@ -473,11 +465,9 @@ model Contact {
 }
 
 model Phone {
-  id                       String                   @id @default(cuid()) @map("id")
-  type                     String                   @default("primary") @map("type")
-  number                   String                   @unique @map("number")
-  verified                 Boolean                  @default(false) @map("verified")
-  whatsAppActivationStatus WhatsAppActivationStatus @default(disabled) @map("whats_app")
+  id          String  @id @default(cuid()) @map("id")
+  number      String  @unique @map("number")
+  hasWhatsApp Boolean @default(false) @map("has_whatsapp")
 
   contacts            Contact[]
   paymentInformations PaymentInformation[]

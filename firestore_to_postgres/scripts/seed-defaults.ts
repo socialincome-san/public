@@ -46,7 +46,6 @@ export const ADMIN_STAGING_ACCOUNT: Prisma.AccountCreateInput = {
 					phone: {
 						create: {
 							number: '+41791234567',
-							verified: true,
 						},
 					},
 				},
@@ -78,7 +77,6 @@ export const ADMIN_LOCAL_ACCOUNT: Prisma.AccountCreateInput = {
 					phone: {
 						create: {
 							number: '+41790000000',
-							verified: true,
 						},
 					},
 				},
