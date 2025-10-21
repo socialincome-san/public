@@ -20,7 +20,7 @@ export type LocalPartnerPayload = {
 		firstName: string;
 		lastName: string;
 		callingName: string | null;
-		email: string;
+		email: string | null;
 		gender: Gender | null;
 		language: string | null;
 		dateOfBirth: Date | null;

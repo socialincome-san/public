@@ -25,7 +25,6 @@ export class SurveyService extends BaseService {
 					status: true,
 					language: true,
 					dueAt: true,
-					sentAt: true,
 					recipient: {
 						select: {
 							contact: { select: { firstName: true, lastName: true } },
@@ -61,8 +60,6 @@ export class SurveyService extends BaseService {
 					language: s.language,
 					dueDateAt: s.dueAt,
 					dueDateAtFormatted: dateFmt.format(s.dueAt),
-					sentAt: s.sentAt,
-					sentAtFormatted: s.sentAt ? dateFmt.format(s.sentAt) : null,
 					programName: program?.name ?? '',
 					programId: program?.id ?? '',
 					permission,

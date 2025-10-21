@@ -1,4 +1,4 @@
-import { Gender, RecipientStatus, WhatsAppActivationStatus } from '@prisma/client';
+import { Gender, RecipientStatus } from '@prisma/client';
 import { DEFAULT_PROGRAM } from '../../scripts/seed-defaults';
 import { BaseTransformer } from '../core/base.transformer';
 import { FirestoreRecipientWithId, RecipientCreateInput } from './recipient.types';
@@ -16,21 +16,13 @@ export class RecipientTransformer extends BaseTransformer<FirestoreRecipientWith
 
 			const legacyPartnerId = raw.organisation?.id.split('/').pop();
 
-			const email = raw.email?.trim()
-				? raw.email.toLowerCase()
-				: this.generateFallbackEmail(raw.first_name, raw.last_name);
-
 			const communicationPhone = raw.communication_mobile_phone?.phone
 				? {
 						connectOrCreate: {
 							where: { number: raw.communication_mobile_phone.phone.toString() },
 							create: {
 								number: raw.communication_mobile_phone.phone.toString(),
-								verified: true,
-								whatsAppActivationStatus: this.mapWhatsAppStatus(
-									raw.communication_mobile_phone.has_whatsapp,
-									raw.communication_mobile_phone.whatsapp_activated,
-								),
+								hasWhatsApp: raw.communication_mobile_phone.has_whatsapp,
 							},
 						},
 					}
@@ -42,8 +34,7 @@ export class RecipientTransformer extends BaseTransformer<FirestoreRecipientWith
 							where: { number: raw.mobile_money_phone.phone.toString() },
 							create: {
 								number: raw.mobile_money_phone.phone.toString(),
-								verified: true,
-								whatsAppActivationStatus: this.mapWhatsAppStatus(raw.mobile_money_phone.has_whatsapp, false),
+								hasWhatsApp: raw.mobile_money_phone.has_whatsapp,
 							},
 						},
 					}
@@ -68,12 +59,12 @@ export class RecipientTransformer extends BaseTransformer<FirestoreRecipientWith
 					create: {
 						firstName: raw.first_name,
 						lastName: raw.last_name,
-						email,
+						email: raw.email?.trim() || null,
 						gender: this.mapGender(raw.gender),
 						callingName: raw.calling_name ?? null,
 						profession: raw.profession ?? null,
 						language: raw.main_language ?? 'en',
-						dateOfBirth: this.isValidDate(raw.birth_date) ? new Date(raw.birth_date) : null,
+						dateOfBirth: this.parseDate(raw.birth_date),
 						phone: communicationPhone,
 					},
 				},
@@ -86,11 +77,6 @@ export class RecipientTransformer extends BaseTransformer<FirestoreRecipientWith
 
 		return transformed;
 	};
-
-	private mapWhatsAppStatus(hasWhatsApp: boolean, activated: boolean): WhatsAppActivationStatus {
-		if (!hasWhatsApp) return WhatsAppActivationStatus.disabled;
-		return activated ? WhatsAppActivationStatus.verified : WhatsAppActivationStatus.pending;
-	}
 
 	private mapStatus(status: string): RecipientStatus {
 		switch (status) {
@@ -122,12 +108,14 @@ export class RecipientTransformer extends BaseTransformer<FirestoreRecipientWith
 		}
 	}
 
-	private isValidDate(date: any): date is string | number | Date {
-		return date && !isNaN(new Date(date).getTime());
-	}
+	private parseDate(value: any): Date | null {
+		if (!value) return null;
 
-	private generateFallbackEmail(firstName: string, lastName: string): string {
-		const namePart = `${firstName}.${lastName}`.toLowerCase().replace(/[^a-z0-9]/g, '');
-		return `${namePart}@autocreated.socialincome`;
+		if (typeof value.toDate === 'function') {
+			return value.toDate();
+		}
+
+		const date = new Date(value);
+		return isNaN(date.getTime()) ? null : date;
 	}
 }

@@ -34,11 +34,6 @@ export function makeSurveyColumns(hideProgramName = false): ColumnDef<SurveyTabl
 			header: (ctx) => <SortableHeader ctx={ctx}>Due Date</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
-		{
-			accessorKey: 'sentAtFormatted',
-			header: (ctx) => <SortableHeader ctx={ctx}>Sent Date</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
 	];
 
 	if (!hideProgramName) {
