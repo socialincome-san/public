@@ -8,7 +8,15 @@ import { Button } from './button';
 import { Calendar } from './calendar';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
-export function DatePicker({ selected, onSelect }: { selected?: Date; onSelect: (date: Date) => void }) {
+export function DatePicker({
+	selected,
+	onSelect,
+	disabled,
+}: {
+	selected?: Date;
+	onSelect: (date: Date) => void;
+	disabled?: boolean;
+}) {
 	const [open, setOpen] = React.useState(false);
 	const [date, setDate] = React.useState<Date | undefined>(selected);
 
@@ -20,7 +28,7 @@ export function DatePicker({ selected, onSelect }: { selected?: Date; onSelect: 
 		<div className="flex w-full flex-col gap-3">
 			<Popover open={open} onOpenChange={setOpen}>
 				<PopoverTrigger asChild>
-					<Button variant="outline" id="date" className="w-full justify-between font-normal">
+					<Button disabled={disabled} variant="outline" id="date" className="w-full justify-between font-normal">
 						{date ? date.toLocaleDateString() : 'Select date'}
 						<ChevronDownIcon className="h-4 w-4 opacity-50" />
 					</Button>
@@ -31,6 +39,7 @@ export function DatePicker({ selected, onSelect }: { selected?: Date; onSelect: 
 						mode="single"
 						selected={date}
 						captionLayout="dropdown"
+						disabled={disabled}
 						onSelect={(date) => {
 							date && onSelect(date);
 							setDate(date);
