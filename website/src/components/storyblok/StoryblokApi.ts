@@ -299,7 +299,7 @@ export function generateMetaDataForArticle(storyblokStory: ISbStoryData<Storyblo
 	const storyblokArticle = storyblokStory.content;
 	const title = storyblokArticle.title;
 	const description = storyblokArticle.leadText;
-	const authorsFullName = `${storyblokArticle.author.content.firstName} ${storyblokArticle.author.content.lastName}`
+	const authorsFullName = `${storyblokArticle.author.content.firstName} ${storyblokArticle.author.content.lastName}`;
 	const dimensions = getDimensionsFromStoryblokImageUrl(storyblokArticle.image.filename);
 	const imageUrl = formatStoryblokUrl(
 		storyblokArticle.image.filename,

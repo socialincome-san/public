@@ -4,7 +4,7 @@ import {
 	getOverviewArticles,
 	getOverviewArticlesCountForDefaultLang,
 	getOverviewAuthors,
-	getOverviewTags
+	getOverviewTags,
 } from '@/components/storyblok/StoryblokApi';
 import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
 import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
@@ -27,11 +27,8 @@ export default async function Page({ params }: DefaultPageProps) {
 		getOverviewTags(lang),
 	]);
 
-
 	const totalArticlesInDefaultLang =
 		lang == defaultLanguage ? articles.length : await getOverviewArticlesCountForDefaultLang();
-
-
 
 	return (
 		<BaseContainer>
@@ -91,7 +88,13 @@ export default async function Page({ params }: DefaultPageProps) {
 
 			<div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 				{articles.map((article) => (
-					<StoryblokArticleCard lang={lang} region={region} article={article} author={article.content.author} key={article.uuid} />
+					<StoryblokArticleCard
+						lang={lang}
+						region={region}
+						article={article}
+						author={article.content.author}
+						key={article.uuid}
+					/>
 				))}
 			</div>
 
