@@ -63,8 +63,9 @@ const DynamicForm: FC<{
 	formSchema: FormSchema;
 	isLoading: boolean;
 	onSubmit: (values: any) => void;
-	edit?: boolean;
-}> = ({ formSchema, isLoading, onSubmit, edit = false }) => {
+	onCancel?: (values: any) => void;
+	mode: 'add' | 'edit' | 'readonly';
+}> = ({ formSchema, isLoading, onSubmit, onCancel, mode }) => {
 	const zodSchema = buildZodSchema(formSchema);
 
 	const form = useForm<z.infer<typeof zodSchema>>({
@@ -73,7 +74,7 @@ const DynamicForm: FC<{
 
 	// set form values if available
 	useEffect(() => {
-		if (!edit) {
+		if (mode === 'add') {
 			form.reset();
 		} else {
 			for (const [name, field] of Object.entries(formSchema)) {
@@ -148,6 +149,7 @@ const DynamicForm: FC<{
 											formSchema={formSchema}
 											isLoading={isLoading}
 											parentOption={option}
+											readOnly={mode === 'readonly'}
 											key={nestedOption}
 										/>
 									))}
@@ -161,13 +163,23 @@ const DynamicForm: FC<{
 							form={form}
 							formSchema={formSchema}
 							isLoading={isLoading}
+							readOnly={mode === 'readonly'}
 							key={option}
 						/>
 					);
 				})}
-				<Button disabled={isLoading} type="submit">
-					Save
-				</Button>
+				<div className="flex gap-2">
+					{mode !== 'readonly' && (
+						<Button disabled={isLoading} type="submit">
+							Save
+						</Button>
+					)}
+					{onCancel && (
+						<Button variant="outline" onClick={onCancel}>
+							Cancel
+						</Button>
+					)}
+				</div>
 			</form>
 			{/* TODO: add proper loading state */}
 			{isLoading && (
@@ -186,6 +198,7 @@ const GenericFormField = ({
 	formSchema,
 	isLoading,
 	parentOption,
+	readOnly,
 }: {
 	option: string;
 	zodSchema: z.ZodObject<any>;
@@ -193,6 +206,7 @@ const GenericFormField = ({
 	formSchema: FormSchema;
 	isLoading: boolean;
 	parentOption?: string;
+	readOnly: boolean;
 }) => {
 	const optionKey = parentOption ? `${parentOption}.${option}` : option;
 
@@ -224,7 +238,11 @@ const GenericFormField = ({
 							<FormItem>
 								<Label>{label}</Label>
 								<FormControl>
-									<Input placeholder={formFieldSchema.placeholder} {...form.register(optionKey)} disabled={isLoading} />
+									<Input
+										placeholder={formFieldSchema.placeholder}
+										{...form.register(optionKey)}
+										disabled={isLoading || readOnly}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -241,7 +259,12 @@ const GenericFormField = ({
 							<FormItem>
 								<Label>{label}</Label>
 								<FormControl>
-									<DatePicker {...form.register(optionKey)} onSelect={field.onChange} selected={field.value} />
+									<DatePicker
+										disabled={isLoading || readOnly}
+										{...form.register(optionKey)}
+										onSelect={field.onChange}
+										selected={field.value}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -257,7 +280,7 @@ const GenericFormField = ({
 						render={({ field }) => (
 							<FormItem>
 								<Label>{label}</Label>
-								<Select value={field.value} onValueChange={field.onChange} disabled={isLoading}>
+								<Select value={field.value} onValueChange={field.onChange} disabled={isLoading || readOnly}>
 									<FormControl>
 										<SelectTrigger>
 											<SelectValue placeholder={formFieldSchema.placeholder} />
