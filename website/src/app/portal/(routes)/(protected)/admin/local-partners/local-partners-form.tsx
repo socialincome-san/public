@@ -79,6 +79,13 @@ export default function LocalPartnersForm({
 				let res;
 				if (editing) {
 					// TODO: move mapping to server action
+					const address = {
+						street: schema.contact.street.value,
+						number: schema.contact.number.value,
+						city: schema.contact.city.value,
+						zip: schema.contact.zip.value,
+						country: schema.contact.country.value,
+					};
 					const data: LocalPartnerUpdateInput = {
 						name: schema.name.value,
 						contact: {
@@ -106,20 +113,8 @@ export default function LocalPartnersForm({
 									language: schema.contact.language.value,
 									address: {
 										upsert: {
-											update: {
-												street: schema.contact.street.value,
-												number: schema.contact.number.value,
-												city: schema.contact.city.value,
-												zip: schema.contact.zip.value,
-												country: schema.contact.country.value,
-											},
-											create: {
-												street: schema.contact.street.value,
-												number: schema.contact.number.value,
-												city: schema.contact.city.value,
-												zip: schema.contact.zip.value,
-												country: schema.contact.country.value,
-											},
+											update: address,
+											create: address,
 											where: {
 												id: localPartner?.contact.address?.id,
 											},
