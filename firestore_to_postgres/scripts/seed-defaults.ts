@@ -23,17 +23,6 @@ export const DEFAULT_CAMPAIGN: Omit<Prisma.CampaignCreateInput, 'organization' |
 	isActive: false,
 };
 
-export const DEFAULT_LOCAL_PARTNER: Prisma.LocalPartnerCreateInput = {
-	name: 'Default Social Income Local Partner',
-	contact: {
-		create: {
-			firstName: 'Default',
-			lastName: 'Partner',
-			email: 'default.partner@socialincome.org',
-		},
-	},
-};
-
 export const ADMIN_STAGING_ACCOUNT: Prisma.AccountCreateInput = {
 	firebaseAuthUserId: 'V7t5fgxerMgVKiPZZTpsVCKIwW43',
 	user: {
@@ -125,12 +114,6 @@ async function main() {
 		},
 	});
 
-	await prisma.localPartner.upsert({
-		where: { name: DEFAULT_LOCAL_PARTNER.name },
-		update: {},
-		create: DEFAULT_LOCAL_PARTNER,
-	});
-
 	const accounts = [ADMIN_STAGING_ACCOUNT, ADMIN_LOCAL_ACCOUNT];
 
 	for (const accountData of accounts) {
@@ -165,9 +148,11 @@ async function main() {
 		});
 	}
 
-	console.log('✅ Seeding of default data + admin users completed successfully');
+	console.log('✅ Seeding of default data completed successfully');
 }
 
-main()
-	.catch((error) => console.error('❌ Error seeding default data:', error))
-	.finally(async () => prisma.$disconnect());
+if (require.main === module) {
+	main()
+		.catch((error) => console.log('❌ Error seeding default data:', error))
+		.finally(async () => prisma.$disconnect());
+}

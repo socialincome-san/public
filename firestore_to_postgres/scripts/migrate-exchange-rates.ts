@@ -6,7 +6,7 @@ const main = async (): Promise<void> => {
 		const migrator = new ExchangeRateMigrator();
 		await migrator.migrate();
 	} catch (err) {
-		console.error('❌ Exchange rate migration failed:', err);
+		console.log('❌ Exchange rate migration failed:', err);
 		process.exit(1);
 	}
 };

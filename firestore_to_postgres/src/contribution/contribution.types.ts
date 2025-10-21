@@ -1,4 +1,4 @@
-import { ContributionStatus, PaymentEventType, Prisma } from '@prisma/client';
+import { PaymentEventType, Prisma } from '@prisma/client';
 import { Contribution as FirestoreContribution } from '@socialincome/shared/src/types/contribution';
 import { User } from '@socialincome/shared/src/types/user';
 
@@ -18,17 +18,6 @@ export type PaymentEventCreateInput = {
 	type: PaymentEventType;
 	transactionId: string | null;
 	metadata?: Prisma.InputJsonValue | Prisma.JsonNullValueInput;
-};
-
-export type TransformedContribution = {
-	contributorEmail: string;
-	campaignTitle: string | null;
-	amount: number;
-	amountChf: number;
-	feesChf: number;
-	currency: string;
-	status: ContributionStatus;
-	paymentEvent: PaymentEventCreateInput;
 };
 
 export type ContributionCreateInput = Prisma.ContributionCreateInput;

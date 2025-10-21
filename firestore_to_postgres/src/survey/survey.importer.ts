@@ -8,26 +8,8 @@ export class SurveyImporter extends BaseImporter<Prisma.SurveyCreateInput> {
 		let createdCount = 0;
 
 		for (const survey of surveys) {
-			try {
-				const recipientLegacyId =
-					'recipient' in survey
-						? (survey.recipient as { connect: { legacyFirestoreId: string } }).connect.legacyFirestoreId
-						: undefined;
-
-				if (recipientLegacyId) {
-					const exists = await prisma.recipient.findUnique({
-						where: { legacyFirestoreId: recipientLegacyId },
-					});
-					if (!exists) continue;
-				}
-
-				await prisma.survey.create({ data: survey });
-				createdCount++;
-			} catch (error) {
-				const id = (survey.legacyFirestoreId as string) ?? 'unknown';
-				const message = error instanceof Error ? error.message : 'Unknown error';
-				console.error(`[SurveyImporter] Failed to import survey ${id}: ${message}`);
-			}
+			await prisma.survey.create({ data: survey });
+			createdCount++;
 		}
 
 		return createdCount;
