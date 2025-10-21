@@ -105,8 +105,15 @@ export default function LocalPartnersForm({
 									callingName: schema.contact.callingName.value,
 									language: schema.contact.language.value,
 									address: {
-										update: {
-											data: {
+										upsert: {
+											update: {
+												street: schema.contact.street.value,
+												number: schema.contact.number.value,
+												city: schema.contact.city.value,
+												zip: schema.contact.zip.value,
+												country: schema.contact.country.value,
+											},
+											create: {
 												street: schema.contact.street.value,
 												number: schema.contact.number.value,
 												city: schema.contact.city.value,
