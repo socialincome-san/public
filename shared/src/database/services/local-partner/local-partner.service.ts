@@ -67,16 +67,16 @@ export class LocalPartnerService extends BaseService {
 	}
 
 	async getTableView(userId: string): Promise<ServiceResult<LocalPartnerTableView>> {
+		const authResult = await this.requireUser(userId);
+		if (!authResult.success) {
+			return this.resultFail(authResult.error, authResult.status);
+		}
+
+		if (authResult.data.role !== UserRole.admin) {
+			return this.resultOk({ tableRows: [] });
+		}
+
 		try {
-			const user = await this.db.user.findUnique({
-				where: { id: userId },
-				select: { role: true },
-			});
-
-			if (!user || user.role !== UserRole.admin) {
-				return this.resultOk({ tableRows: [] });
-			}
-
 			const partners = await this.db.localPartner.findMany({
 				select: {
 					id: true,

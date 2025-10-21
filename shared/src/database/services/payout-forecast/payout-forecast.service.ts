@@ -12,6 +12,11 @@ export class PayoutForecastService extends BaseService {
 		programId: string,
 		monthsAhead: number,
 	): Promise<ServiceResult<PayoutForecastTableViewProgramScoped>> {
+		const authResult = await this.requireUser(userId);
+		if (!authResult.success) {
+			return this.resultFail(authResult.error, authResult.status);
+		}
+
 		try {
 			const program = await this.db.program.findFirst({
 				where: {

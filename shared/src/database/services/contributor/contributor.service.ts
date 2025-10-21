@@ -5,6 +5,11 @@ import { ContributorTableView, ContributorTableViewRow } from './contributor.typ
 
 export class ContributorService extends BaseService {
 	async getContributorTableView(userId: string): Promise<ServiceResult<ContributorTableView>> {
+		const authResult = await this.requireUser(userId);
+		if (!authResult.success) {
+			return this.resultFail(authResult.error, authResult.status);
+		}
+
 		try {
 			const contributors = await this.db.contributor.findMany({
 				where: {
