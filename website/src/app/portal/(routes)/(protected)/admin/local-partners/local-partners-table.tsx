@@ -34,7 +34,7 @@ export default function LocalPartnersTable({
 
 	const onError = (error: unknown) => {
 		setHasError(true);
-		console.error('Local Parnters Form Error: ', error);
+		console.error('Local Partner Form Error: ', error);
 	};
 
 	return (
