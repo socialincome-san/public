@@ -11,7 +11,6 @@ export const payoutsData: Payout[] = [
 		status: PayoutStatus.paid,
 		phoneNumber: '+23276123456',
 		comments: 'First payout completed successfully.',
-		message: 'Your payout has been received.',
 		recipientId: 'recipient-1',
 		createdAt: new Date(),
 		updatedAt: null
@@ -26,7 +25,6 @@ export const payoutsData: Payout[] = [
 		status: PayoutStatus.paid,
 		phoneNumber: '+23277111222',
 		comments: 'Second payout confirmed.',
-		message: 'Funds delivered via Orange Money.',
 		recipientId: 'recipient-2',
 		createdAt: new Date(),
 		updatedAt: null
@@ -41,7 +39,6 @@ export const payoutsData: Payout[] = [
 		status: PayoutStatus.created,
 		phoneNumber: '+23288765432',
 		comments: 'Pending confirmation from partner.',
-		message: 'Your payout is being processed.',
 		recipientId: 'recipient-3',
 		createdAt: new Date(),
 		updatedAt: null
