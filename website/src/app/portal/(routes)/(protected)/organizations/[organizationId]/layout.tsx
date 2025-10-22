@@ -19,7 +19,7 @@ export default async function OrganizationLayout({ children, params }: Organizat
 	const result = await service.getOrganizationInformation(user.id, organizationId);
 
 	if (!result.success) {
-		return <div className="p-4">Error loading the program</div>;
+		return <div className="p-4">Error loading the organization</div>;
 	}
 
 	const { name: organizationName } = result.data;

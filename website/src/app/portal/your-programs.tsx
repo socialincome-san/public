@@ -17,7 +17,7 @@ export async function YourPrograms({ userId }: Props) {
 
 	return (
 		<section>
-			<h2 className="py-6 text-3xl font-medium">Your Programs</h2>
+			<h2 className="py-6 text-3xl font-medium">Programs you have access to</h2>
 
 			<div className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-8 pb-8">
 				{wallets.map((program) => (

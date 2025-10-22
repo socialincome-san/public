@@ -12,7 +12,7 @@ type Props = {
 
 export const YourOrganizations = ({ organizations }: Props) => (
 	<section>
-		<h2 className="py-6 text-3xl font-medium">Organizations</h2>
+		<h2 className="py-6 text-3xl font-medium">Organizations you belong to</h2>
 
 		<div className="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-8 pb-8">
 			{organizations.map((org) => (
