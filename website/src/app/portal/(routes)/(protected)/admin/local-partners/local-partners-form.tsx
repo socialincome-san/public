@@ -4,9 +4,10 @@ import {
 	createLocalPartnerAction,
 	getLocalPartnerAction,
 	updateLocalPartnerAction,
-} from '@/app/portal/server-actions/create-local-partner-action';
+} from '@/app/portal/server-actions/local-partner-action';
 import { formSchema as contactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
-import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
+import DynamicForm, { FormField, FormSchema, getValueFromFormField } from '@/components/dynamic-form/dynamic-form';
+import { getContactValuesFromPayload } from '@/components/dynamic-form/helper';
 import {
 	LocalPartnerCreateInput,
 	LocalPartnerPayload,
@@ -26,17 +27,24 @@ export default function LocalPartnersForm({
 	onCancel?: () => void;
 	localPartnerId?: string;
 }) {
+	// const initialFormSchema: FormSchema = {
 	const initialFormSchema: {
-		name: FormField;
-		contact: FormSchema;
+		label: string;
+		fields: {
+			name: FormField;
+			contact: FormSchema;
+		};
 	} = {
-		name: {
-			placeholder: 'Name',
-			label: 'Name',
-			zodSchema: z.string(),
-		},
-		contact: {
-			...contactFormSchema,
+		label: 'Local Partner',
+		fields: {
+			name: {
+				placeholder: 'Name',
+				label: 'Name',
+				zodSchema: z.string(),
+			},
+			contact: {
+				...contactFormSchema,
+			},
 		},
 	};
 
@@ -54,21 +62,17 @@ export default function LocalPartnersForm({
 					if (partner.success) {
 						setLocalPartner(partner.data);
 						const newSchema = { ...formSchema };
-						newSchema.name.value = partner.data.name;
-						newSchema.contact.firstName.value = partner.data.contact.firstName;
-						newSchema.contact.lastName.value = partner.data.contact.lastName;
-						newSchema.contact.callingName.value = partner.data.contact.callingName;
-						newSchema.contact.email.value = partner.data.contact.email;
-						newSchema.contact.language.value = partner.data.contact.language;
-						newSchema.contact.profession.value = partner.data.contact.profession;
-						newSchema.contact.phone.value = partner.data.contact.phone?.number;
-						newSchema.contact.dateOfBirth.value = partner.data.contact.dateOfBirth;
-						newSchema.contact.gender.value = partner.data.contact.gender?.toString();
+						newSchema.fields.name.value = partner.data.name;
+						const contactValues = getContactValuesFromPayload(partner.data, newSchema.fields.contact.fields);
+						console.log('contactValues: ', contactValues);
+						newSchema.fields.contact.fields = contactValues;
+						console.log('newSchema: ', newSchema);
 						setFormSchema(newSchema);
 					} else {
 						onError && onError();
 					}
-				} catch {
+				} catch (e) {
+					console.error('ERROR: ', e);
 					onError && onError();
 				}
 			});
@@ -79,23 +83,28 @@ export default function LocalPartnersForm({
 		startTransition(async () => {
 			try {
 				let res;
+				// TODO: remove casting
+				// const contactFields: {
+				// 	[key: string]: FormField;
+				// } = schema.fields.contact.fields;
+				const contactFields = schema.fields.contact.fields;
 				if (editing) {
 					// TODO: move mapping to server action
 					const data: LocalPartnerUpdateInput = {
-						name: schema.name.value,
+						name: schema.fields.name.value,
 						contact: {
 							update: {
 								data: {
-									firstName: schema.contact.firstName.value,
-									lastName: schema.contact.lastName.value,
-									gender: schema.contact.gender.value,
-									email: schema.contact.email.value,
-									profession: schema.contact.profession.value,
-									phone: schema.contact.phone.value
+									firstName: getValueFromFormField(contactFields.firstName),
+									lastName: contactFields.lastName.value,
+									gender: contactFields.gender.value,
+									email: contactFields.email.value,
+									profession: contactFields.profession.value,
+									phone: contactFields.phone.value
 										? {
 												update: {
 													data: {
-														number: schema.contact.phone.value,
+														number: contactFields.phone.value,
 													},
 													where: {
 														id: localPartner?.contact.phone?.id,
@@ -103,17 +112,17 @@ export default function LocalPartnersForm({
 												},
 											}
 										: undefined,
-									dateOfBirth: schema.contact.dateOfBirth.value,
-									callingName: schema.contact.callingName.value,
-									language: schema.contact.language.value,
+									dateOfBirth: contactFields.dateOfBirth.value,
+									callingName: contactFields.callingName.value,
+									language: contactFields.language.value,
 									address: {
 										update: {
 											data: {
-												street: schema.contact.street.value,
-												number: schema.contact.number.value,
-												city: schema.contact.city.value,
-												zip: schema.contact.zip.value,
-												country: schema.contact.country.value,
+												street: contactFields.street.value,
+												number: contactFields.number.value,
+												city: contactFields.city.value,
+												zip: contactFields.zip.value,
+												country: contactFields.country.value,
 											},
 											where: {
 												id: localPartner?.contact.address?.id,
@@ -131,31 +140,31 @@ export default function LocalPartnersForm({
 				} else {
 					// TODO: move mapping to server action
 					const data: LocalPartnerCreateInput = {
-						name: schema.name.value,
+						name: schema.fields.name.value,
 						contact: {
 							create: {
-								firstName: schema.contact.firstName.value,
-								lastName: schema.contact.lastName.value,
-								gender: schema.contact.gender.value,
-								email: schema.contact.email.value,
-								profession: schema.contact.profession.value,
-								phone: schema.contact.phone.value
+								firstName: contactFields.firstName.value,
+								lastName: contactFields.lastName.value,
+								gender: contactFields.gender.value,
+								email: contactFields.email.value,
+								profession: contactFields.profession.value,
+								phone: contactFields.phone.value
 									? {
 											create: {
-												number: schema.contact.phone.value,
+												number: contactFields.phone.value,
 											},
 										}
 									: undefined,
-								dateOfBirth: schema.contact.dateOfBirth.value,
-								callingName: schema.contact.callingName.value,
-								language: schema.contact.language.value,
+								dateOfBirth: contactFields.dateOfBirth.value,
+								callingName: contactFields.callingName.value,
+								language: contactFields.language.value,
 								address: {
 									create: {
-										street: schema.contact.street.value,
-										number: schema.contact.number.value,
-										city: schema.contact.city.value,
-										zip: schema.contact.zip.value,
-										country: schema.contact.country.value,
+										street: contactFields.street.value,
+										number: contactFields.number.value,
+										city: contactFields.city.value,
+										zip: contactFields.zip.value,
+										country: contactFields.country.value,
 									},
 								},
 							},

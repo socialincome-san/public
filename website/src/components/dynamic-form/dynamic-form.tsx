@@ -18,19 +18,25 @@ export type FormField = {
 	value?: any;
 };
 
-// TODO: add nested group label
 export type FormSchema = {
-	[key: string]: FormField | FormSchema;
+	label: string;
+	fields: {
+		[key: string]: FormField | FormSchema;
+	};
+};
+
+export const getValueFromFormField = (formField: FormField) => {
+	return formField.value;
 };
 
 // recursively build Zod Schema from Form Schema
 const buildZodSchema = (schemaDef: FormSchema): ZodObject<any> => {
 	const result: Record<string, ZodTypeAny> = {};
 
-	for (const key in schemaDef) {
-		const value = schemaDef[key];
+	for (const key in schemaDef.fields) {
+		const value = schemaDef.fields[key];
 
-		if (value.zodSchema) {
+		if (isFormField(value) && value.zodSchema) {
 			result[key] = value.zodSchema as ZodTypeAny;
 		} else {
 			// nested object
@@ -77,14 +83,15 @@ const DynamicForm: FC<{
 		if (mode === 'add') {
 			form.reset();
 		} else {
-			for (const [name, field] of Object.entries(formSchema)) {
-				if (!isFormField(formSchema[name])) {
+			for (const [name, field] of Object.entries(formSchema.fields)) {
+				if (!isFormField(field)) {
 					//nested
-					for (const [nestedName, nestedField] of Object.entries(formSchema[name])) {
+					for (const [nestedName, nestedField] of Object.entries(formSchema.fields[name])) {
 						form.setValue(`${name}.${nestedName}`, nestedField.value);
 					}
+				} else {
+					form.setValue(name, field.value);
 				}
-				form.setValue(name, field.value);
 			}
 		}
 	}, [formSchema]);
@@ -97,18 +104,18 @@ const DynamicForm: FC<{
 	// TODO: move to recursive function
 	// get values from Zod Schema and map back to form schema
 	const beforeSubmit = (values: z.infer<typeof zodSchema>) => {
-		for (const key in formSchema) {
-			const value = formSchema[key];
+		for (const key in formSchema.fields) {
+			const fields = formSchema.fields[key];
 
-			if (value.zodSchema) {
-				value.value = values[key];
+			if (isFormField(fields)) {
+				fields.value = values[key];
 			} else {
 				// nested object
-				for (const k in formSchema[key]) {
-					const value = (formSchema[key] as FormSchema)[k];
+				for (const k in fields.fields) {
+					const nestedField = (fields as FormSchema).fields[k];
 
-					if (value.zodSchema) {
-						value.value = values[key][k];
+					if (isFormField(nestedField)) {
+						nestedField.value = values[key][k];
 					}
 				}
 			}
@@ -139,7 +146,7 @@ const DynamicForm: FC<{
 							{/* TODO: find better solution to hide collapsed content */}
 							<AccordionItem value="open" className="[&[data-state=closed]>div]:h-0">
 								{/* TODO: use nested group label instead of key */}
-								<AccordionTrigger>{option}</AccordionTrigger>
+								<AccordionTrigger>{formSchema.fields[option].label}</AccordionTrigger>
 								<AccordionContent className="flex flex-col gap-6 p-5" forceMount>
 									{getOptions(option).map((nestedOption) => (
 										<GenericFormField
@@ -210,7 +217,10 @@ const GenericFormField = ({
 }) => {
 	const optionKey = parentOption ? `${parentOption}.${option}` : option;
 
-	const formFieldSchema = parentOption ? (formSchema[parentOption] as FormSchema)?.[option] : formSchema[option];
+	// const formFieldSchema = parentOption ? (formSchema[parentOption] as FormSchema)?.[option] : formSchema[option];
+	const formFieldSchema = parentOption
+		? (formSchema.fields[parentOption] as FormSchema)?.fields[option]
+		: formSchema.fields[option];
 
 	const getEnumValues = (key: keyof z.infer<typeof zodSchema>, parentOption?: string) => {
 		const def = getDef(key, zodSchema, parentOption);

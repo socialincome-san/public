@@ -1,10 +1,13 @@
 'use server';
 
-import { Prisma } from '.prisma/client';
 import { LocalPartnerService } from '@socialincome/shared/src/database/services/local-partner/local-partner.service';
+import {
+	LocalPartnerCreateInput,
+	LocalPartnerUpdateInput,
+} from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
 import { revalidatePath } from 'next/cache';
 
-export async function createLocalPartnerAction(localPartner: Prisma.LocalPartnerCreateInput) {
+export async function createLocalPartnerAction(localPartner: LocalPartnerCreateInput) {
 	const localPartnerService = new LocalPartnerService();
 
 	const res = await localPartnerService.create(localPartner);
@@ -12,7 +15,7 @@ export async function createLocalPartnerAction(localPartner: Prisma.LocalPartner
 	return res;
 }
 
-export async function updateLocalPartnerAction(localPartner: Prisma.LocalPartnerUpdateInput) {
+export async function updateLocalPartnerAction(localPartner: LocalPartnerUpdateInput) {
 	const localPartnerService = new LocalPartnerService();
 
 	const res = await localPartnerService.update(localPartner);
