@@ -23,7 +23,7 @@ export default function LocalPartnersForm({
 	localPartnerId,
 }: {
 	onSuccess?: () => void;
-	onError?: () => void;
+	onError?: (error?: unknown) => void;
 	onCancel?: () => void;
 	localPartnerId?: string;
 }) {
@@ -66,11 +66,10 @@ export default function LocalPartnersForm({
 						newSchema.fields.contact.fields = contactValues;
 						setFormSchema(newSchema);
 					} else {
-						onError && onError();
+						onError?.(partner.error);
 					}
-				} catch (e) {
-					console.error('ERROR: ', e);
-					onError && onError();
+				} catch (error: unknown) {
+					onError?.(error);
 				}
 			});
 		}
@@ -169,9 +168,9 @@ export default function LocalPartnersForm({
 					};
 					res = await createLocalPartnerAction(data);
 				}
-				res.success ? onSuccess?.() : onError?.();
-			} catch {
-				onError?.();
+				res.success ? onSuccess?.() : onError?.(res.error);
+			} catch (error: unknown) {
+				onError?.(error);
 			}
 		});
 	}
