@@ -22,7 +22,7 @@ export default function LocalPartnersForm({
 	localPartnerId,
 }: {
 	onSuccess?: () => void;
-	onError?: () => void;
+	onError?: (error?: unknown) => void;
 	onCancel?: () => void;
 	localPartnerId?: string;
 }) {
@@ -71,10 +71,10 @@ export default function LocalPartnersForm({
 						newSchema.contact.zip.value = partner.data.contact.address?.zip;
 						setFormSchema(newSchema);
 					} else {
-						onError && onError();
+						onError?.(partner.error);
 					}
-				} catch {
-					onError && onError();
+				} catch (error: unknown) {
+					onError?.(error);
 				}
 			});
 		}
@@ -170,9 +170,9 @@ export default function LocalPartnersForm({
 					};
 					res = await createLocalPartnerAction(data);
 				}
-				res.success ? onSuccess?.() : onError?.();
-			} catch {
-				onError?.();
+				res.success ? onSuccess?.() : onError?.(res.error);
+			} catch (error: unknown) {
+				onError?.(error);
 			}
 		});
 	}
