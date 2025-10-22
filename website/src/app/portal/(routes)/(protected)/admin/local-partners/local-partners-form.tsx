@@ -6,7 +6,7 @@ import {
 	updateLocalPartnerAction,
 } from '@/app/portal/server-actions/local-partner-action';
 import { formSchema as contactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
-import DynamicForm, { FormField, FormSchema, getValueFromFormField } from '@/components/dynamic-form/dynamic-form';
+import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload } from '@/components/dynamic-form/helper';
 import {
 	LocalPartnerCreateInput,
@@ -96,7 +96,7 @@ export default function LocalPartnersForm({
 						contact: {
 							update: {
 								data: {
-									firstName: getValueFromFormField(contactFields.firstName),
+									firstName: contactFields.firstName.value,
 									lastName: contactFields.lastName.value,
 									gender: contactFields.gender.value,
 									email: contactFields.email.value,

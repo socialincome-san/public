@@ -25,10 +25,6 @@ export type FormSchema = {
 	};
 };
 
-export const getValueFromFormField = (formField: FormField) => {
-	return formField.value;
-};
-
 // recursively build Zod Schema from Form Schema
 const buildZodSchema = (schemaDef: FormSchema): ZodObject<any> => {
 	const result: Record<string, ZodTypeAny> = {};
