@@ -25,14 +25,14 @@ export default async function OrganizationLayout({ children, params }: Organizat
 	const { name: organizationName } = result.data;
 
 	const sections = [
-		{ href: `/portal/organizations/${organizationId}/users`, label: 'Users' },
+		{ href: `/portal/organizations/${organizationId}/members`, label: 'Members' },
 		{ href: `/portal/organizations/${organizationId}/campaigns`, label: 'Campaigns' },
 		{ href: `/portal/organizations/${organizationId}/programs`, label: 'Programs' },
 	];
 
 	const breadcrumbLinks = [
 		{ href: '/portal', label: 'Home' },
-		{ href: `/portal/organizations/${organizationId}/users`, label: organizationName },
+		{ href: `/portal/organizations/${organizationId}/members`, label: organizationName },
 	];
 
 	return (

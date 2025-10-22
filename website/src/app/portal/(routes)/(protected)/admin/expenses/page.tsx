@@ -17,7 +17,7 @@ export default async function ExpensesPage() {
 
 	return (
 		<DataTable
-			title="Expenses"
+			title="All Expenses"
 			error={error}
 			emptyMessage="No expenses found"
 			data={rows}
