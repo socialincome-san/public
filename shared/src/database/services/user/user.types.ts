@@ -3,7 +3,6 @@ import { OrganizationPermission, UserRole } from '@prisma/client';
 export type UserOrganization = {
 	id: string;
 	name: string;
-	memberCount: number;
 };
 
 export type UserInformation = {
@@ -11,19 +10,18 @@ export type UserInformation = {
 	firstName: string | null;
 	lastName: string | null;
 	role: UserRole;
-	organizations: UserOrganization[];
-};
-
-export type AllUsersTableViewRow = {
-	id: string;
-	firstName: string;
-	lastName: string;
-	role: UserRole;
-	organizations: string[];
-};
-
-export type AllUsersTableView = {
-	tableRows: AllUsersTableViewRow[];
+	activeOrganization: {
+		id: string;
+		name: string;
+	} | null;
+	organizations: {
+		id: string;
+		name: string;
+	}[];
+	programs: {
+		id: string;
+		name: string;
+	}[];
 };
 
 export type OrganizationMembersTableViewRow = {

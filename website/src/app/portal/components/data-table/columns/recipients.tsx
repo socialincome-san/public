@@ -10,7 +10,6 @@ import type { ColumnDef } from '@tanstack/react-table';
 
 export function makeRecipientColumns(hideProgramName: boolean = false): ColumnDef<RecipientTableViewRow>[] {
 	const columns: ColumnDef<RecipientTableViewRow>[] = [
-		{ accessorKey: 'id', header: 'ID', cell: (ctx) => <TextCell ctx={ctx} /> },
 		{
 			accessorKey: 'firstName',
 			header: (ctx) => <SortableHeader ctx={ctx}>First name</SortableHeader>,

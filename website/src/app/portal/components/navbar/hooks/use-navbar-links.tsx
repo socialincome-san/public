@@ -7,11 +7,17 @@ export type NavLink = {
 	activeBase?: string;
 	exact?: boolean;
 	icon?: LucideIcon;
+	isDropdown?: boolean;
 };
 
 export const useNavbarLinks = (user: UserInformation) => {
 	const mainNavLinks: NavLink[] = [
-		{ href: '/portal', label: 'Home', exact: true },
+		{
+			href: '/portal/programs',
+			label: 'Programs',
+			isDropdown: true,
+			activeBase: '/portal/programs',
+		},
 		{
 			href: '/portal/monitoring/payout-confirmation',
 			label: 'Monitoring',

@@ -16,11 +16,6 @@ function getMonthLabelFromData(ctx: HeaderContext<OngoingPayoutTableViewRow, unk
 export function makeOngoingPayoutsColumns(hideProgramName = false): ColumnDef<OngoingPayoutTableViewRow>[] {
 	const columns: ColumnDef<OngoingPayoutTableViewRow>[] = [
 		{
-			accessorKey: 'id',
-			header: 'ID',
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
 			accessorKey: 'firstName',
 			header: (ctx) => <SortableHeader ctx={ctx}>First name</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,

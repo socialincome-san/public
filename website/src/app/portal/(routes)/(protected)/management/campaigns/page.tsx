@@ -8,18 +8,18 @@ import type { CampaignTableViewRow } from '@socialincome/shared/src/database/ser
 export default async function CampaignsPage() {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new CampaignService();
-	const result = await service.getTableView(user.id);
+	const campaignService = new CampaignService();
+	const campaignsResult = await campaignService.getTableView(user.id, user.activeOrganization?.id ?? '');
 
-	const error = result.success ? null : result.error;
-	const rows: CampaignTableViewRow[] = result.success ? result.data.tableRows : [];
+	const error = campaignsResult.success ? null : campaignsResult.error;
+	const campaignRows: CampaignTableViewRow[] = campaignsResult.success ? campaignsResult.data.tableRows : [];
 
 	return (
 		<DataTable
 			title="Campaigns"
 			error={error}
 			emptyMessage="No campaigns found"
-			data={rows}
+			data={campaignRows}
 			makeColumns={makeCampaignColumns}
 			actions={<Button>Add new campaign</Button>}
 		/>
