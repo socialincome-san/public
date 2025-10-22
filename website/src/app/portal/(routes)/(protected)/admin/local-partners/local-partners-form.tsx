@@ -18,10 +18,12 @@ import z from 'zod';
 export default function LocalPartnersForm({
 	onSuccess,
 	onError,
+	onCancel,
 	localPartnerId,
 }: {
 	onSuccess?: () => void;
 	onError?: () => void;
+	onCancel?: () => void;
 	localPartnerId?: string;
 }) {
 	const initialFormSchema: {
@@ -175,5 +177,13 @@ export default function LocalPartnersForm({
 		});
 	}
 
-	return <DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} edit={editing} />;
+	return (
+		<DynamicForm
+			formSchema={formSchema}
+			isLoading={isLoading}
+			onSubmit={onSubmit}
+			onCancel={onCancel}
+			mode={editing ? 'edit' : 'add'}
+		/>
+	);
 }

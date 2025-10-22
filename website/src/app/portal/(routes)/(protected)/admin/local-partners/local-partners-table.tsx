@@ -20,6 +20,16 @@ export default function LocalPartnersTable({
 	const [showError, setShowError] = useState(false);
 	const [partnerId, setPartnerId] = useState<string | undefined>(undefined);
 
+	const openEmptyForm = () => {
+		setPartnerId(undefined);
+		setOpen(true);
+	};
+
+	const openEditForm = (row: LocalPartnerTableViewRow) => {
+		setPartnerId(row.id);
+		setOpen(true);
+	};
+
 	return (
 		<>
 			<DataTable
@@ -28,20 +38,8 @@ export default function LocalPartnersTable({
 				emptyMessage="No local partners found"
 				data={rows}
 				makeColumns={makeLocalPartnerColumns}
-				actions={
-					<Button
-						onClick={() => {
-							setPartnerId(undefined);
-							setOpen(true);
-						}}
-					>
-						Add new local partner
-					</Button>
-				}
-				onRowClick={(row: LocalPartnerTableViewRow) => {
-					setPartnerId(row.id);
-					setOpen(true);
-				}}
+				actions={<Button onClick={openEmptyForm}>Add new local partner</Button>}
+				onRowClick={openEditForm}
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>
@@ -50,6 +48,7 @@ export default function LocalPartnersTable({
 						<DialogTitle>Add local partner</DialogTitle>
 					</DialogHeader>
 					{showError && (
+						// TODO: add proper error handling
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
 							<AlertDescription>Error saving local partner</AlertDescription>
@@ -59,6 +58,7 @@ export default function LocalPartnersTable({
 						localPartnerId={partnerId}
 						onSuccess={() => setOpen(false)}
 						onError={() => setShowError(true)}
+						onCancel={() => setOpen(false)}
 					/>
 				</DialogContent>
 			</Dialog>

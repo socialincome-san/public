@@ -8,8 +8,6 @@ export type SurveyTableViewRow = {
 	language: string;
 	dueDateAt: Date;
 	dueDateAtFormatted: string;
-	sentAt: Date | null;
-	sentAtFormatted: string | null;
 	programName: string;
 	programId: string;
 	permission: ProgramPermission;
