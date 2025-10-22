@@ -3,17 +3,11 @@
 import { Avatar, AvatarFallback } from '@/app/portal/components/avatar';
 import { Separator } from '@/app/portal/components/breadcrumb/separator';
 import { Button } from '@/app/portal/components/button';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from '@/app/portal/components/dropdown-menu';
 import { Logo } from '@/app/portal/components/logo';
 import { useLogout } from '@/app/portal/components/navbar/hooks/use-logout';
+import { ProgramDropdown } from '@/app/portal/components/navbar/program-dropdown';
 import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
-import { ChevronDown, Menu, Wallet, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -75,69 +69,24 @@ export const NavbarMobile = ({ user }: { user: UserInformation }) => {
 				<div className="border-border border-b">
 					<div className="flex flex-col">
 						<div className="flex-grow space-y-1 overflow-y-auto p-2">
-							{mainNavLinks.map(({ href, label, isDropdown }) => {
-								const active = isActiveLink(pathname, href);
-
-								if (isDropdown) {
-									return (
-										<DropdownMenu key={href}>
-											<DropdownMenuTrigger asChild>
-												<Button
-													variant="ghost"
-													className={`w-full justify-between rounded-md px-3 py-2 text-base font-medium ${
-														active ? 'bg-accent text-primary' : 'text-primary hover:bg-accent hover:text-primary'
-													}`}
-												>
-													{label}
-													<ChevronDown className="ml-1 h-4 w-4 opacity-70" />
-												</Button>
-											</DropdownMenuTrigger>
-
-											<DropdownMenuContent align="start" className="w-56">
-												{user.programs?.length ? (
-													user.programs.map((program) => (
-														<DropdownMenuItem asChild key={program.id}>
-															<Link
-																href={`/portal/programs/${program.id}/recipients`}
-																onClick={() => setIsMenuOpen(false)}
-															>
-																{program.name}
-															</Link>
-														</DropdownMenuItem>
-													))
-												) : (
-													<DropdownMenuItem disabled>No programs</DropdownMenuItem>
-												)}
-
-												<DropdownMenuSeparator />
-												<DropdownMenuItem asChild>
-													<Link
-														href="/portal/programs/create"
-														onClick={() => setIsMenuOpen(false)}
-														className="text-primary flex items-center gap-2 font-medium"
-													>
-														<Wallet className="h-4 w-4" />
-														Create new program
-													</Link>
-												</DropdownMenuItem>
-											</DropdownMenuContent>
-										</DropdownMenu>
-									);
-								}
-
-								return (
+							{mainNavLinks.map(({ href, label, isDropdown }) =>
+								isDropdown ? (
+									<ProgramDropdown key={href} user={user} active={isActiveLink(pathname, href)} />
+								) : (
 									<Link
 										key={href}
 										href={href}
 										onClick={() => setIsMenuOpen(false)}
 										className={`block rounded-md px-3 py-2 text-base font-medium ${
-											active ? 'bg-accent text-primary' : 'text-primary hover:bg-accent hover:text-primary'
+											isActiveLink(pathname, href)
+												? 'bg-accent text-primary'
+												: 'text-primary hover:bg-accent hover:text-primary'
 										}`}
 									>
 										{label}
 									</Link>
-								);
-							})}
+								),
+							)}
 						</div>
 
 						<Separator />
