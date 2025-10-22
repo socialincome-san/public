@@ -123,7 +123,6 @@ const DynamicForm: FC<{
 
 	const [isAccorionOpen, setIsAccordionOpen] = useState(false);
 
-	// TODO:
 	const onValidationErrors = (e: Object) => {
 		console.error('dynamic form validation errors: ', e);
 		setIsAccordionOpen(true);
@@ -134,7 +133,6 @@ const DynamicForm: FC<{
 			<form onSubmit={form.handleSubmit(beforeSubmit, onValidationErrors)} className="space-y-8">
 				{getOptions().map((option) => {
 					return getType(option, zodSchema) === 'ZodObject' ? (
-						// TODO: expand on validation error
 						<Accordion
 							key={option}
 							type="single"
@@ -144,7 +142,6 @@ const DynamicForm: FC<{
 						>
 							{/* TODO: find better solution to hide collapsed content */}
 							<AccordionItem value="open" className="[&[data-state=closed]>div]:h-0">
-								{/* TODO: use nested group label instead of key */}
 								<AccordionTrigger>{formSchema.fields[option].label}</AccordionTrigger>
 								<AccordionContent className="flex flex-col gap-6 p-5" forceMount>
 									{getOptions(option).map((nestedOption) => (
@@ -216,7 +213,6 @@ const GenericFormField = ({
 }) => {
 	const optionKey = parentOption ? `${parentOption}.${option}` : option;
 
-	// const formFieldSchema = parentOption ? (formSchema[parentOption] as FormSchema)?.[option] : formSchema[option];
 	const formFieldSchema = parentOption
 		? (formSchema.fields[parentOption] as FormSchema)?.fields[option]
 		: formSchema.fields[option];
