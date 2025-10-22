@@ -3,10 +3,10 @@
 import { ActionCell } from '@/app/portal/components/data-table/elements/action-cell';
 import { SortableHeader } from '@/app/portal/components/data-table/elements/sortable-header';
 import { TextCell } from '@/app/portal/components/data-table/elements/text-cell';
-import type { UserTableViewRow } from '@socialincome/shared/src/database/services/user/user.types';
+import type { AllUsersTableViewRow } from '@socialincome/shared/src/database/services/user/user.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeUserColumns(): ColumnDef<UserTableViewRow>[] {
+export function makeAllUsersColumns(): ColumnDef<AllUsersTableViewRow>[] {
 	return [
 		{
 			accessorKey: 'firstName',
@@ -24,9 +24,12 @@ export function makeUserColumns(): ColumnDef<UserTableViewRow>[] {
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'organizationName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Organization</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
+			id: 'organizations',
+			header: (ctx) => <SortableHeader ctx={ctx}>Organizations</SortableHeader>,
+			cell: (ctx) => {
+				const orgs = ctx.row.original.organizations;
+				return <span>{orgs.length ? orgs.join(', ') : '-'}</span>;
+			},
 		},
 		{
 			id: 'actions',

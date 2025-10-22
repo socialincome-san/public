@@ -1,4 +1,4 @@
-import { UserRole } from '@prisma/client';
+import { OrganizationPermission, UserRole } from '@prisma/client';
 
 export type UserOrganization = {
 	id: string;
@@ -14,14 +14,26 @@ export type UserInformation = {
 	organizations: UserOrganization[];
 };
 
-export type UserTableViewRow = {
+export type AllUsersTableViewRow = {
 	id: string;
 	firstName: string;
 	lastName: string;
 	role: UserRole;
-	organizationName: string;
+	organizations: string[];
 };
 
-export type UserTableView = {
-	tableRows: UserTableViewRow[];
+export type AllUsersTableView = {
+	tableRows: AllUsersTableViewRow[];
+};
+
+export type OrganizationMembersTableViewRow = {
+	id: string;
+	firstName: string;
+	lastName: string;
+	permission: OrganizationPermission;
+};
+
+export type OrganizationMembersTableView = {
+	tableRows: OrganizationMembersTableViewRow[];
+	userPermission: OrganizationPermission;
 };

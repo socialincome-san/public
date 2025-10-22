@@ -40,7 +40,7 @@ export default function LocalPartnersTable({
 	return (
 		<>
 			<DataTable
-				title="Local Partners"
+				title="All Local Partners"
 				error={error}
 				emptyMessage="No local partners found"
 				data={rows}

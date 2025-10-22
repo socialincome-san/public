@@ -1,7 +1,13 @@
-import { UserRole } from '@prisma/client';
+import { OrganizationPermission, UserRole } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { UserInformation, UserTableView, UserTableViewRow } from './user.types';
+import {
+	AllUsersTableView,
+	AllUsersTableViewRow,
+	OrganizationMembersTableView,
+	OrganizationMembersTableViewRow,
+	UserInformation,
+} from './user.types';
 
 export class UserService extends BaseService {
 	async getCurrentUserInformation(firebaseAuthUserId: string): Promise<ServiceResult<UserInformation>> {
@@ -42,14 +48,11 @@ export class UserService extends BaseService {
 				return this.resultFail('User not found');
 			}
 
-			const organizations = user.organizationAccesses.map((access) => {
-				const org = access.organization;
-				return {
-					id: org.id,
-					name: org.name,
-					memberCount: org._count.accesses,
-				};
-			});
+			const organizations = user.organizationAccesses.map((access) => ({
+				id: access.organization.id,
+				name: access.organization.name,
+				memberCount: access.organization._count.accesses,
+			}));
 
 			const userInfo: UserInformation = {
 				id: user.id,
@@ -60,12 +63,12 @@ export class UserService extends BaseService {
 			};
 
 			return this.resultOk(userInfo);
-		} catch (error) {
+		} catch {
 			return this.resultFail('Error fetching user information');
 		}
 	}
 
-	async getTableView(userId: string): Promise<ServiceResult<UserTableView>> {
+	async getAllUsersTableView(userId: string): Promise<ServiceResult<AllUsersTableView>> {
 		try {
 			const currentUser = await this.db.user.findUnique({
 				where: { id: userId },
@@ -95,17 +98,77 @@ export class UserService extends BaseService {
 				orderBy: [{ role: 'asc' }, { id: 'asc' }],
 			});
 
-			const tableRows: UserTableViewRow[] = users.map((u) => ({
+			const tableRows: AllUsersTableViewRow[] = users.map((u) => ({
 				id: u.id,
 				firstName: u.contact?.firstName ?? '',
 				lastName: u.contact?.lastName ?? '',
 				role: u.role,
-				organizationName: u.organizationAccesses[0]?.organization.name ?? '',
+				organizations: u.organizationAccesses.map((oa) => oa.organization.name),
 			}));
 
 			return this.resultOk({ tableRows });
-		} catch (error) {
-			return this.resultFail('Could not fetch users');
+		} catch {
+			return this.resultFail('Could not fetch all users');
+		}
+	}
+
+	async getOrganizationMembersTableView(
+		userId: string,
+		organizationId: string,
+	): Promise<ServiceResult<OrganizationMembersTableView>> {
+		try {
+			const access = await this.db.organizationAccess.findFirst({
+				where: {
+					userId,
+					organizationId,
+				},
+				select: {
+					permissions: true,
+				},
+			});
+
+			if (!access) {
+				return this.resultFail('User does not have access to this organization');
+			}
+
+			const userPermission = access.permissions.includes(OrganizationPermission.edit)
+				? OrganizationPermission.edit
+				: OrganizationPermission.readonly;
+
+			const organizationUsers = await this.db.organizationAccess.findMany({
+				where: { organizationId },
+				select: {
+					user: {
+						select: {
+							id: true,
+							contact: {
+								select: {
+									firstName: true,
+									lastName: true,
+								},
+							},
+						},
+					},
+					permissions: true,
+				},
+				orderBy: { user: { id: 'asc' } },
+			});
+
+			const tableRows: OrganizationMembersTableViewRow[] = organizationUsers.map((entry) => ({
+				id: entry.user.id,
+				firstName: entry.user.contact?.firstName ?? '',
+				lastName: entry.user.contact?.lastName ?? '',
+				permission: entry.permissions.includes(OrganizationPermission.edit)
+					? OrganizationPermission.edit
+					: OrganizationPermission.readonly,
+			}));
+
+			return this.resultOk({
+				tableRows,
+				userPermission,
+			});
+		} catch {
+			return this.resultFail('Could not fetch organization members');
 		}
 	}
 }

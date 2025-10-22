@@ -1,27 +1,27 @@
 import { Button } from '@/app/portal/components/button';
-import { makeUserColumns } from '@/app/portal/components/data-table/columns/users';
+import { makeAllUsersColumns } from '@/app/portal/components/data-table/columns/all-users';
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { UserService } from '@socialincome/shared/src/database/services/user/user.service';
-import type { UserTableViewRow } from '@socialincome/shared/src/database/services/user/user.types';
+import type { AllUsersTableViewRow } from '@socialincome/shared/src/database/services/user/user.types';
 
 export default async function UsersPage() {
 	const user = await getAuthenticatedUserOrRedirect();
 	await requireAdmin(user);
 
 	const service = new UserService();
-	const result = await service.getTableView(user.id);
+	const result = await service.getAllUsersTableView(user.id);
 
 	const error = result.success ? null : result.error;
-	const rows: UserTableViewRow[] = result.success ? result.data.tableRows : [];
+	const rows: AllUsersTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return (
 		<DataTable
-			title="Users"
+			title="All Users"
 			error={error}
 			emptyMessage="No users found"
 			data={rows}
-			makeColumns={makeUserColumns}
+			makeColumns={makeAllUsersColumns}
 			actions={<Button>Invite user</Button>}
 		/>
 	);

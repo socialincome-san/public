@@ -17,7 +17,7 @@ export default async function OrganizationsPage() {
 
 	return (
 		<DataTable
-			title="Organizations"
+			title="All Organizations"
 			error={error}
 			emptyMessage="No organizations found"
 			data={rows}

@@ -9,7 +9,7 @@ type OrganizationCardProps = {
 };
 
 export const OrganizationCard = ({ id, name, memberCount }: OrganizationCardProps) => (
-	<Link href={`/portal/organizations/${id}/users`} className="block h-full">
+	<Link href={`/portal/organizations/${id}/members`} className="block h-full">
 		<Card className="flex h-full flex-col justify-between p-8 drop-shadow-md transition hover:shadow-sm">
 			<CardHeader className="flex flex-row items-center gap-3 p-0">
 				<Building2 className="text-muted-foreground h-7 w-7" />

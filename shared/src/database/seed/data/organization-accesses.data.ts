@@ -24,5 +24,13 @@ export const organizationAccessesData: OrganizationAccess[] = [
 		permissions: [OrganizationPermission.edit],
 		createdAt: new Date(),
 		updatedAt: null
+	},
+	{
+		id: 'organization-access-4',
+		userId: 'user-1',
+		organizationId: 'organization-5',
+		permissions: [OrganizationPermission.readonly],
+		createdAt: new Date(),
+		updatedAt: null
 	}
 ];
