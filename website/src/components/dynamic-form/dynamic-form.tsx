@@ -74,17 +74,16 @@ const DynamicForm: FC<{
 
 	// set form values if available
 	useEffect(() => {
-		if (mode === 'add') {
-			form.reset();
-		} else {
+		if (mode === 'edit') {
 			for (const [name, field] of Object.entries(formSchema)) {
 				if (!isFormField(formSchema[name])) {
 					//nested
 					for (const [nestedName, nestedField] of Object.entries(formSchema[name])) {
-						form.setValue(`${name}.${nestedName}`, nestedField.value);
+						form.setValue(`${name}.${nestedName}`, nestedField.value ?? undefined);
 					}
+				} else {
+					form.setValue(name, field.value ?? undefined);
 				}
-				form.setValue(name, field.value);
 			}
 		}
 	}, [formSchema]);
@@ -119,7 +118,8 @@ const DynamicForm: FC<{
 	const [isAccorionOpen, setIsAccordionOpen] = useState(false);
 
 	// TODO:
-	const onValidationErrors = () => {
+	const onValidationErrors = (e: Object) => {
+		console.error('dynamic form validation errors: ', e);
 		setIsAccordionOpen(true);
 	};
 
