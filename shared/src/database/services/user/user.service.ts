@@ -8,9 +8,7 @@ export class UserService extends BaseService {
 		try {
 			const user = await this.db.user.findFirst({
 				where: {
-					account: {
-						firebaseAuthUserId,
-					},
+					account: { firebaseAuthUserId },
 				},
 				select: {
 					id: true,
@@ -24,7 +22,17 @@ export class UserService extends BaseService {
 					},
 					organizationAccesses: {
 						select: {
-							organization: { select: { name: true } },
+							organization: {
+								select: {
+									id: true,
+									name: true,
+									_count: {
+										select: {
+											accesses: true,
+										},
+									},
+								},
+							},
 						},
 					},
 				},
@@ -34,12 +42,21 @@ export class UserService extends BaseService {
 				return this.resultFail('User not found');
 			}
 
+			const organizations = user.organizationAccesses.map((access) => {
+				const org = access.organization;
+				return {
+					id: org.id,
+					name: org.name,
+					memberCount: org._count.accesses,
+				};
+			});
+
 			const userInfo: UserInformation = {
 				id: user.id,
 				firstName: user.contact?.firstName ?? null,
 				lastName: user.contact?.lastName ?? null,
-				organizationNames: user.organizationAccesses.map((a) => a.organization.name),
 				role: user.role,
+				organizations,
 			};
 
 			return this.resultOk(userInfo);
