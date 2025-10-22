@@ -19,7 +19,11 @@ export const getContactValuesFromPayload = (
 	contactFields.dateOfBirth.value = contact.dateOfBirth;
 	contactFields.phone.value = contact.phone?.number;
 	contactFields.gender.value = contact.gender?.toString();
-	// TODO: add address
+	contactFields.street.value = contact.address?.street;
+	contactFields.zip.value = contact.address?.zip;
+	contactFields.city.value = contact.address?.city;
+	contactFields.country.value = contact.address?.country;
+	contactFields.number.value = contact.address?.number;
 
 	return contactFields;
 };
