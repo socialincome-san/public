@@ -27,7 +27,6 @@ export default function LocalPartnersForm({
 	onCancel?: () => void;
 	localPartnerId?: string;
 }) {
-	// const initialFormSchema: FormSchema = {
 	const initialFormSchema: {
 		label: string;
 		fields: {
