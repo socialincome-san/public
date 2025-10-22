@@ -62,11 +62,9 @@ export default function LocalPartnersForm({
 					if (partner.success) {
 						setLocalPartner(partner.data);
 						const newSchema = { ...formSchema };
-						newSchema.fields.name.value = partner.data.name;
 						const contactValues = getContactValuesFromPayload(partner.data, newSchema.fields.contact.fields);
-						console.log('contactValues: ', contactValues);
+						newSchema.fields.name.value = partner.data.name;
 						newSchema.fields.contact.fields = contactValues;
-						console.log('newSchema: ', newSchema);
 						setFormSchema(newSchema);
 					} else {
 						onError && onError();
@@ -83,13 +81,18 @@ export default function LocalPartnersForm({
 		startTransition(async () => {
 			try {
 				let res;
-				// TODO: remove casting
-				// const contactFields: {
-				// 	[key: string]: FormField;
-				// } = schema.fields.contact.fields;
-				const contactFields = schema.fields.contact.fields;
+				const contactFields: {
+					[key: string]: FormField;
+				} = schema.fields.contact.fields;
 				if (editing) {
 					// TODO: move mapping to server action
+					const address = {
+						street: contactFields.street.value,
+						number: contactFields.number.value,
+						city: contactFields.city.value,
+						zip: contactFields.zip.value,
+						country: contactFields.country.value,
+					};
 					const data: LocalPartnerUpdateInput = {
 						name: schema.fields.name.value,
 						contact: {
@@ -116,14 +119,9 @@ export default function LocalPartnersForm({
 									callingName: contactFields.callingName.value,
 									language: contactFields.language.value,
 									address: {
-										update: {
-											data: {
-												street: contactFields.street.value,
-												number: contactFields.number.value,
-												city: contactFields.city.value,
-												zip: contactFields.zip.value,
-												country: contactFields.country.value,
-											},
+										upsert: {
+											update: address,
+											create: address,
 											where: {
 												id: localPartner?.contact.address?.id,
 											},

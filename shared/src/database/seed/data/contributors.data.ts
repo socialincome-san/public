@@ -9,7 +9,6 @@ export const contributorsData: Contributor[] = [
 		referral: ContributorReferralSource.family_and_friends,
 		paymentReferenceId: null,
 		stripeCustomerId: 'stripe-cust-001',
-		institution: false,
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -21,7 +20,6 @@ export const contributorsData: Contributor[] = [
 		referral: ContributorReferralSource.work,
 		paymentReferenceId: null,
 		stripeCustomerId: 'stripe-cust-002',
-		institution: false,
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -33,7 +31,6 @@ export const contributorsData: Contributor[] = [
 		referral: ContributorReferralSource.social_media,
 		paymentReferenceId: null,
 		stripeCustomerId: 'stripe-cust-003',
-		institution: false,
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -45,7 +42,6 @@ export const contributorsData: Contributor[] = [
 		referral: ContributorReferralSource.work,
 		paymentReferenceId: null,
 		stripeCustomerId: 'stripe-cust-004',
-		institution: false,
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -57,7 +53,6 @@ export const contributorsData: Contributor[] = [
 		referral: ContributorReferralSource.social_media,
 		paymentReferenceId: null,
 		stripeCustomerId: 'stripe-cust-005',
-		institution: true,
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -69,7 +64,6 @@ export const contributorsData: Contributor[] = [
 		referral: ContributorReferralSource.other,
 		paymentReferenceId: null,
 		stripeCustomerId: 'stripe-cust-006',
-		institution: false,
 		createdAt: new Date(),
 		updatedAt: null
 	}

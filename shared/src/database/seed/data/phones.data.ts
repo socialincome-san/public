@@ -1,75 +1,59 @@
-import { Phone, WhatsAppActivationStatus } from '@prisma/client';
+import { Phone } from '@prisma/client';
 
 export const phonesData: Phone[] = [
 	{
 		id: 'phone-1',
-		type: 'primary',
 		number: '+41791234567',
-		verified: true,
-		whatsAppActivationStatus: WhatsAppActivationStatus.verified,
+		hasWhatsApp: true,
 		createdAt: new Date(),
 		updatedAt: null
 	},
 	{
 		id: 'phone-2',
-		type: 'primary',
 		number: '+41761234567',
-		verified: false,
-		whatsAppActivationStatus: WhatsAppActivationStatus.pending,
+		hasWhatsApp: true,
 		createdAt: new Date(),
 		updatedAt: null
 	},
 	{
 		id: 'phone-3',
-		type: 'primary',
 		number: '+41751234567',
-		verified: true,
-		whatsAppActivationStatus: WhatsAppActivationStatus.disabled,
+		hasWhatsApp: true,
 		createdAt: new Date(),
 		updatedAt: null
 	},
 	{
 		id: 'phone-4',
-		type: 'primary',
 		number: '+23276123456',
-		verified: true,
-		whatsAppActivationStatus: WhatsAppActivationStatus.verified,
+		hasWhatsApp: true,
 		createdAt: new Date(),
 		updatedAt: null
 	},
 	{
 		id: 'phone-5',
-		type: 'primary',
 		number: '+23277111222',
-		verified: false,
-		whatsAppActivationStatus: WhatsAppActivationStatus.pending,
+		hasWhatsApp: true,
 		createdAt: new Date(),
 		updatedAt: null
 	},
 	{
 		id: 'phone-6',
-		type: 'primary',
 		number: '+23288765432',
-		verified: true,
-		whatsAppActivationStatus: WhatsAppActivationStatus.disabled,
+		hasWhatsApp: true,
 		createdAt: new Date(),
 		updatedAt: null
 	},
 	{
 		id: 'phone-7',
-		type: 'primary',
 		number: '+231770001111',
-		verified: true,
-		whatsAppActivationStatus: WhatsAppActivationStatus.verified,
+		hasWhatsApp: true,
 		createdAt: new Date(),
 		updatedAt: null
 	},
 	{
 		id: 'phone-8',
-		type: 'primary',
 		number: '+23288999111',
-		verified: true,
-		whatsAppActivationStatus: WhatsAppActivationStatus.verified,
+		hasWhatsApp: true,
 		createdAt: new Date(),
 		updatedAt: null
 	}

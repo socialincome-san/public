@@ -61,23 +61,23 @@ export const formSchema: FormSchema = {
 		street: {
 			placeholder: 'Street',
 			label: 'Address Street',
-			zodSchema: z.string().optional(),
+			zodSchema: z.string().min(2),
 		},
 		number: {
 			placeholder: 'Number',
 			label: 'Address Number',
-			zodSchema: z.string().optional(),
+			zodSchema: z.string().min(2),
 		},
 		city: {
 			placeholder: 'City',
 			label: 'Address City',
-			zodSchema: z.string().optional(),
+			zodSchema: z.string().min(2),
 		},
 		zip: {
 			placeholder: 'ZIP',
 			label: 'Address ZIP Code',
-			zodSchema: z.string().optional(),
+			zodSchema: z.string().min(2),
 		},
-		country: { placeholder: 'Country', label: 'Address Country', zodSchema: z.string().optional() },
+		country: { placeholder: 'Country', label: 'Address Country', zodSchema: z.string().min(2) },
 	},
 };

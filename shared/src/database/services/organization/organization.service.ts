@@ -1,10 +1,39 @@
-import { Organization as PrismaOrganization, UserRole } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserInformation } from '../user/user.types';
-import { OrganizationTableView, OrganizationTableViewRow } from './organization.types';
+import { OrganizationInformation, OrganizationTableView, OrganizationTableViewRow } from './organization.types';
 
 export class OrganizationService extends BaseService {
+	async getOrganizationInformation(
+		userId: string,
+		organizationId: string,
+	): Promise<ServiceResult<OrganizationInformation>> {
+		try {
+			const access = await this.db.organizationAccess.findUnique({
+				where: {
+					userId_organizationId: { userId, organizationId },
+				},
+				select: {
+					organization: {
+						select: {
+							id: true,
+							name: true,
+						},
+					},
+				},
+			});
+
+			if (!access) {
+				return this.resultFail('User does not have access to this organization');
+			}
+
+			return this.resultOk(access.organization);
+		} catch (error) {
+			return this.resultFail('Could not fetch organization');
+		}
+	}
+
 	async getOrganizationAdminTableView(user: UserInformation): Promise<ServiceResult<OrganizationTableView>> {
 		if (user.role !== UserRole.admin) {
 			return this.resultOk({ tableRows: [] });
@@ -19,7 +48,7 @@ export class OrganizationService extends BaseService {
 						select: {
 							operatedPrograms: true,
 							ownedPrograms: true,
-							accesses: true, // corresponds to users having access
+							accesses: true,
 						},
 					},
 				},
@@ -38,11 +67,5 @@ export class OrganizationService extends BaseService {
 		} catch (error) {
 			return this.resultFail('Could not fetch organizations');
 		}
-	}
-
-	async checkIfOrganizationExists(name: string): Promise<PrismaOrganization | null> {
-		return this.db.organization.findUnique({
-			where: { name },
-		});
 	}
 }

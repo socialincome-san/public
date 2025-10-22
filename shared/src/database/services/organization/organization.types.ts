@@ -1,3 +1,8 @@
+export type OrganizationInformation = {
+	id: string;
+	name: string;
+};
+
 export type OrganizationTableViewRow = {
 	id: string;
 	name: string;

@@ -49,7 +49,7 @@ const buildZodSchema = (schemaDef: FormSchema): ZodObject<any> => {
 
 // Typeguard
 const isFormField = (obj: any): obj is FormField => {
-	return obj && typeof obj === 'object' && 'label' in obj;
+	return obj && typeof obj === 'object' && !('fields' in obj);
 };
 
 // get first level or nested def object from Zod Schema
@@ -80,14 +80,12 @@ const DynamicForm: FC<{
 
 	// set form values if available
 	useEffect(() => {
-		if (mode === 'add') {
-			form.reset();
-		} else {
+		if (mode === 'edit') {
 			for (const [name, field] of Object.entries(formSchema.fields)) {
 				if (!isFormField(field)) {
 					//nested
-					for (const [nestedName, nestedField] of Object.entries(formSchema.fields[name])) {
-						form.setValue(`${name}.${nestedName}`, nestedField.value);
+					for (const [nestedName, nestedField] of Object.entries(field.fields)) {
+						if (isFormField(nestedField)) form.setValue(`${name}.${nestedName}`, nestedField.value);
 					}
 				} else {
 					form.setValue(name, field.value);
@@ -126,7 +124,8 @@ const DynamicForm: FC<{
 	const [isAccorionOpen, setIsAccordionOpen] = useState(false);
 
 	// TODO:
-	const onValidationErrors = () => {
+	const onValidationErrors = (e: Object) => {
+		console.error('dynamic form validation errors: ', e);
 		setIsAccordionOpen(true);
 	};
 
