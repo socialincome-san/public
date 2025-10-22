@@ -5,7 +5,6 @@ export type NavLink = {
 	href: string;
 	label: string;
 	activeBase?: string;
-	exact?: boolean;
 	icon?: LucideIcon;
 	isDropdown?: boolean;
 };
@@ -16,22 +15,18 @@ export const useNavbarLinks = (user: UserInformation) => {
 			href: '/portal/programs',
 			label: 'Programs',
 			isDropdown: true,
-			activeBase: '/portal/programs',
 		},
 		{
 			href: '/portal/monitoring/payout-confirmation',
 			label: 'Monitoring',
-			activeBase: '/portal/monitoring',
 		},
 		{
 			href: '/portal/management/recipients',
 			label: 'Management',
-			activeBase: '/portal/management',
 		},
 		{
 			href: '/portal/delivery/make-payouts',
 			label: 'Delivery',
-			activeBase: '/portal/delivery',
 		},
 	];
 
@@ -45,7 +40,6 @@ export const useNavbarLinks = (user: UserInformation) => {
 					},
 				]
 			: []),
-
 		{
 			href: '/portal/account-settings',
 			label: 'Account settings',
@@ -53,11 +47,7 @@ export const useNavbarLinks = (user: UserInformation) => {
 		},
 	];
 
-	const isActiveLink = (path: string, href: string, exact?: boolean, activeBase?: string) => {
-		if (exact) return path === href;
-		const base = activeBase ?? href;
-		return path === base || path.startsWith(base + '/');
-	};
+	const isActiveLink = (path: string, href: string) => path.startsWith(href);
 
 	return { mainNavLinks, userMenuNavLinks, isActiveLink };
 };

@@ -12,7 +12,7 @@ import {
 import { Logo } from '@/app/portal/components/logo';
 import { useNavbarLinks } from '@/app/portal/components/navbar/hooks/use-navbar-links';
 import type { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
-import { ChevronDown, ChevronsUpDown, LogOut, Wallet } from 'lucide-react';
+import { ChevronsUpDown, LogOut, Wallet } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
@@ -24,7 +24,6 @@ export const NavbarDesktop = ({ user }: { user: UserInformation }) => {
 	const { logout } = useLogout();
 
 	const activeOrganization = user.activeOrganization?.name ?? 'No active organization';
-	const isProgramsActive = pathname.startsWith('/portal/programs');
 
 	return (
 		<nav className="container flex h-20 items-center justify-between">
@@ -34,22 +33,18 @@ export const NavbarDesktop = ({ user }: { user: UserInformation }) => {
 
 			<div className="flex items-center gap-x-4">
 				<nav className="flex items-center gap-4">
-					{mainNavLinks.map(({ href, label, activeBase, exact, isDropdown }) => {
-						if (isDropdown && label === 'Programs') {
+					{mainNavLinks.map(({ href, label, isDropdown }) => {
+						const active = isActiveLink(pathname, href);
+						const baseClasses =
+							'relative rounded-md px-3 py-2 text-lg font-medium text-primary hover:bg-accent transition-colors duration-200';
+
+						if (isDropdown) {
 							return (
-								<DropdownMenu key="programs">
+								<DropdownMenu key={href}>
 									<DropdownMenuTrigger asChild>
-										<Button
-											variant="ghost"
-											className={twMerge(
-												'text-primary hover:bg-accent relative rounded-md px-3 py-2 text-lg font-medium transition-colors duration-200',
-											)}
-										>
-											{isProgramsActive && (
-												<span className="bg-primary absolute -bottom-1 left-0 h-1 w-full rounded-t-lg" />
-											)}
-											<span>Programs</span>
-											<ChevronDown className="ml-1 h-4 w-4 opacity-70" />
+										<Button variant="ghost" className={twMerge(baseClasses)}>
+											{active && <span className="bg-primary absolute -bottom-1 left-0 h-1 w-full rounded-t-lg" />}
+											<span>{label}</span>
 										</Button>
 									</DropdownMenuTrigger>
 
@@ -65,7 +60,6 @@ export const NavbarDesktop = ({ user }: { user: UserInformation }) => {
 										)}
 
 										<DropdownMenuSeparator />
-
 										<DropdownMenuItem asChild>
 											<Link href="/portal/programs/create" className="text-primary flex items-center gap-2 font-medium">
 												<Wallet className="h-4 w-4" />
@@ -77,13 +71,8 @@ export const NavbarDesktop = ({ user }: { user: UserInformation }) => {
 							);
 						}
 
-						const active = isActiveLink(pathname, href, exact, activeBase);
-						const linkClasses = twMerge(
-							'relative rounded-md px-3 py-2 text-lg font-medium text-primary hover:bg-accent transition-colors duration-200',
-						);
-
 						return (
-							<Link key={href} href={href} className={linkClasses}>
+							<Link key={href} href={href} className={twMerge(baseClasses)}>
 								{active && <span className="bg-primary absolute -bottom-1 left-0 h-1 w-full rounded-t-lg" />}
 								{label}
 							</Link>
