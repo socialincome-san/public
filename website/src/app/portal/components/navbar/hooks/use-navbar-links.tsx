@@ -13,19 +13,23 @@ export const useNavbarLinks = (user: UserInformation) => {
 	const mainNavLinks: NavLink[] = [
 		{
 			href: '/portal/programs',
+			activeBase: '/portal/programs',
 			label: 'Programs',
 			isDropdown: true,
 		},
 		{
 			href: '/portal/monitoring/payout-confirmation',
+			activeBase: '/portal/monitoring',
 			label: 'Monitoring',
 		},
 		{
 			href: '/portal/management/recipients',
+			activeBase: '/portal/management',
 			label: 'Management',
 		},
 		{
 			href: '/portal/delivery/make-payouts',
+			activeBase: '/portal/delivery',
 			label: 'Delivery',
 		},
 	];
@@ -35,6 +39,7 @@ export const useNavbarLinks = (user: UserInformation) => {
 			? [
 					{
 						href: '/portal/admin/organizations',
+						activeBase: '/portal/admin',
 						label: 'Admin',
 						icon: Settings2,
 					},
@@ -42,12 +47,13 @@ export const useNavbarLinks = (user: UserInformation) => {
 			: []),
 		{
 			href: '/portal/account-settings',
+			activeBase: '/portal/account-settings',
 			label: 'Account settings',
 			icon: Settings,
 		},
 	];
 
-	const isActiveLink = (path: string, href: string) => path.startsWith(href);
+	const isActiveLink = (path: string, href: string, activeBase?: string) => path.startsWith(activeBase ?? href);
 
 	return { mainNavLinks, userMenuNavLinks, isActiveLink };
 };

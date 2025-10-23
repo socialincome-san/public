@@ -69,16 +69,21 @@ export const NavbarMobile = ({ user }: { user: UserInformation }) => {
 				<div className="border-border border-b">
 					<div className="flex flex-col">
 						<div className="flex-grow space-y-1 overflow-y-auto p-2">
-							{mainNavLinks.map(({ href, label, isDropdown }) =>
+							{mainNavLinks.map(({ href, label, isDropdown, activeBase }) =>
 								isDropdown ? (
-									<ProgramDropdown key={href} user={user} active={isActiveLink(pathname, href)} />
+									<ProgramDropdown
+										key={href}
+										user={user}
+										active={isActiveLink(pathname, href, activeBase)}
+										className="w-full justify-start px-3 py-2 text-base font-medium"
+									/>
 								) : (
 									<Link
 										key={href}
 										href={href}
 										onClick={() => setIsMenuOpen(false)}
 										className={`block rounded-md px-3 py-2 text-base font-medium ${
-											isActiveLink(pathname, href)
+											isActiveLink(pathname, href, activeBase)
 												? 'bg-accent text-primary'
 												: 'text-primary hover:bg-accent hover:text-primary'
 										}`}

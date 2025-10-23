@@ -7,7 +7,7 @@ import {
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
-	DropdownMenuTrigger,
+	DropdownMenuTrigger
 } from '@/app/portal/components/dropdown-menu';
 import { Logo } from '@/app/portal/components/logo';
 import { useNavbarLinks } from '@/app/portal/components/navbar/hooks/use-navbar-links';
@@ -33,12 +33,12 @@ export const NavbarDesktop = ({ user }: { user: UserInformation }) => {
 			{/* MAIN NAV LINKS */}
 			<div className="flex items-center gap-x-4">
 				<nav className="flex items-center gap-4">
-					{mainNavLinks.map(({ href, label, isDropdown }) =>
+					{mainNavLinks.map(({ href, label, isDropdown, activeBase }) =>
 						isDropdown ? (
 							<ProgramDropdown
 								key={href}
 								user={user}
-								active={isActiveLink(pathname, href)}
+								active={isActiveLink(pathname, href, activeBase)}
 								className="relative text-lg"
 							/>
 						) : (
@@ -49,7 +49,7 @@ export const NavbarDesktop = ({ user }: { user: UserInformation }) => {
 									'text-primary hover:bg-accent relative rounded-md px-3 py-2 text-lg font-medium transition-colors duration-200',
 								)}
 							>
-								{isActiveLink(pathname, href) && (
+								{isActiveLink(pathname, href, activeBase) && (
 									<span className="bg-primary absolute -bottom-1 left-0 h-1 w-full rounded-t-lg" />
 								)}
 								{label}
