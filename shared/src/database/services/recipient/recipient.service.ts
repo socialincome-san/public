@@ -1,9 +1,81 @@
-import { PayoutStatus, ProgramPermission } from '@prisma/client';
+import { PayoutStatus, ProgramPermission, Recipient } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { RecipientTableView, RecipientTableViewRow } from './recipient.types';
+import { LocalPartnerUpdateInput } from '../local-partner/local-partner.types';
+import { RecipientCreateInput, RecipientPayload, RecipientTableView, RecipientTableViewRow } from './recipient.types';
 
 export class RecipientService extends BaseService {
+	// TODO: check user permissions
+	async create(recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
+		try {
+			const newRecipient = await this.db.recipient.create({ data: recipient });
+			return this.resultOk(newRecipient);
+		} catch {
+			return this.resultFail('Could not create recipient');
+		}
+	}
+
+	// TODO: check user permissions
+	async update(recipient: LocalPartnerUpdateInput): Promise<ServiceResult<Recipient>> {
+		try {
+			const partner = await this.db.recipient.update({
+				where: {
+					id: recipient.id?.toString(),
+				},
+				data: recipient,
+			});
+			return this.resultOk(partner);
+		} catch (e) {
+			return this.resultFail('Could not update recipient: ' + e);
+		}
+	}
+
+	async get(localPartnerId: string): Promise<ServiceResult<RecipientPayload>> {
+		try {
+			const partner = await this.db.recipient.findUnique({
+				select: {
+					id: true,
+					status: true,
+					startDate: true,
+					successorName: true,
+					termsAccepted: true,
+					localPartner: {
+						select: {
+							id: true,
+							name: true,
+						},
+					},
+					program: {
+						select: {
+							id: true,
+							name: true,
+						},
+					},
+					contact: {
+						select: {
+							id: true,
+							firstName: true,
+							lastName: true,
+							gender: true,
+							callingName: true,
+							email: true,
+							language: true,
+							phone: true,
+							profession: true,
+							dateOfBirth: true,
+							address: true,
+						},
+					},
+				},
+				where: { id: localPartnerId },
+			});
+			if (partner === null) return this.resultFail('Could not get local partner');
+			return this.resultOk(partner);
+		} catch (error) {
+			return this.resultFail('Could not get local partner');
+		}
+	}
+
 	async getRecipientTableView(userId: string): Promise<ServiceResult<RecipientTableView>> {
 		try {
 			const recipients = await this.db.recipient.findMany({

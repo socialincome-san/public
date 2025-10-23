@@ -61,7 +61,7 @@ export default function LocalPartnersForm({
 					if (partner.success) {
 						setLocalPartner(partner.data);
 						const newSchema = { ...formSchema };
-						const contactValues = getContactValuesFromPayload(partner.data, newSchema.fields.contact.fields);
+						const contactValues = getContactValuesFromPayload(partner.data.contact, newSchema.fields.contact.fields);
 						newSchema.fields.name.value = partner.data.name;
 						newSchema.fields.contact.fields = contactValues;
 						setFormSchema(newSchema);

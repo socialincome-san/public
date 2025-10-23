@@ -5,28 +5,42 @@ import { makeRecipientColumns } from '@/app/portal/components/data-table/columns
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
 import { RecipientForm } from '@/app/portal/components/forms/recipient-form';
-import { RecipientStatus } from '@prisma/client';
 import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import { useState } from 'react';
 
-export function RecipientsTableClient({ rows, error }: { rows: RecipientTableViewRow[]; error: string | null }) {
+export function RecipientsTableClient({
+	rows,
+	error,
+	userId,
+}: {
+	rows: RecipientTableViewRow[];
+	error: string | null;
+	userId: string;
+}) {
 	const [open, setOpen] = useState(false);
 
-	const [initialValues, setInitialValues] = useState<
-		{ firstName?: string; lastName?: string; status?: RecipientStatus } | undefined
-	>(undefined);
+	const [recipientId, setRecipientId] = useState<string | undefined>();
+	const [hasError, setHasError] = useState(false);
+
 	const [readOnly, setReadOnly] = useState(false);
 
-	const openBlank = () => {
-		setInitialValues(undefined);
+	const openEmptyForm = () => {
+		setRecipientId(undefined);
 		setReadOnly(false);
+		setHasError(false);
 		setOpen(true);
 	};
 
-	const handleRowClick = (row: RecipientTableViewRow) => {
-		setInitialValues({ firstName: row.firstName, lastName: row.lastName, status: row.status });
+	const openEditForm = (row: RecipientTableViewRow) => {
+		setRecipientId(row.id);
 		setReadOnly(row.permission === 'readonly');
+		setHasError(false);
 		setOpen(true);
+	};
+
+	const onError = (error: unknown) => {
+		setHasError(true);
+		console.error('Local Partner Form Error: ', error);
 	};
 
 	return (
@@ -37,22 +51,22 @@ export function RecipientsTableClient({ rows, error }: { rows: RecipientTableVie
 				emptyMessage="No recipients found"
 				data={rows}
 				makeColumns={makeRecipientColumns}
-				actions={<Button onClick={openBlank}>Add new recipient</Button>}
-				onRowClick={handleRowClick}
+				actions={<Button onClick={openEmptyForm}>Add new recipient</Button>}
+				onRowClick={openEditForm}
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="sm:max-w-[425]">
+				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425]">
 					<DialogHeader>
-						<DialogTitle>
-							{readOnly ? 'View Recipient' : initialValues ? 'Edit Recipient' : 'New Recipient'}
-						</DialogTitle>
+						<DialogTitle>{readOnly ? 'View Recipient' : recipientId ? 'Edit Recipient' : 'New Recipient'}</DialogTitle>
 					</DialogHeader>
 					<RecipientForm
-						initialValues={initialValues}
+						recipientId={recipientId}
+						userId={userId}
 						readOnly={readOnly}
-						onCancel={() => setOpen(false)}
 						onSuccess={() => setOpen(false)}
+						onCancel={() => setOpen(false)}
+						onError={onError}
 					/>
 				</DialogContent>
 			</Dialog>

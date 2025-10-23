@@ -37,7 +37,7 @@ export const formSchema: FormSchema = {
 		dateOfBirth: {
 			placeholder: 'Date of birth',
 			label: 'Date of birth',
-			zodSchema: z.date().max(new Date(), { message: 'Too young!' }).optional(),
+			zodSchema: z.date().max(new Date(), { message: 'Too young!' }).nullable(),
 		},
 		profession: {
 			placeholder: 'Profession',
