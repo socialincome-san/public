@@ -20,6 +20,7 @@ export default async function ManagementLayout({ children }: ManagementLayoutPro
 		{ href: `/portal/management/contributors`, label: 'Contributors' },
 		{ href: `/portal/management/contributions`, label: 'Contributions' },
 		{ href: `/portal/management/surveys`, label: 'Surveys' },
+		{ href: `/portal/management/donation-certificates`, label: 'Donation Certificates' },
 		{ href: `/portal/management/members`, label: 'Organization Members' },
 		{ href: `/portal/management/campaigns`, label: 'Organization Campaigns' },
 	];
