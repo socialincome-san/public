@@ -19,8 +19,9 @@ export default async function ManagementLayout({ children }: ManagementLayoutPro
 		{ href: `/portal/management/ongoing-payouts`, label: 'Ongoing payouts' },
 		{ href: `/portal/management/contributors`, label: 'Contributors' },
 		{ href: `/portal/management/contributions`, label: 'Contributions' },
-		{ href: `/portal/management/campaigns`, label: 'Campaigns' },
 		{ href: `/portal/management/surveys`, label: 'Surveys' },
+		{ href: `/portal/management/members`, label: 'Organization Members' },
+		{ href: `/portal/management/campaigns`, label: 'Organization Campaigns' },
 	];
 
 	return (

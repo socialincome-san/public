@@ -1,5 +1,3 @@
-import { ProgramPermission } from '@prisma/client';
-
 export type CampaignTableViewRow = {
 	id: string;
 	title: string;
@@ -10,9 +8,7 @@ export type CampaignTableViewRow = {
 	currency: string | null;
 	endDate: Date;
 	endDateFormatted: string;
-	programName: string;
-	programId: string;
-	permission: ProgramPermission;
+	programName: string | null;
 };
 
 export type CampaignTableView = {

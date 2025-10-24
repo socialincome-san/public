@@ -125,6 +125,9 @@ model User {
   organizationAccesses OrganizationAccess[]
   programAccesses      ProgramAccess[]
 
+  activeOrganizationId String?       @map("active_organization_id")
+  activeOrganization   Organization? @relation(fields: [activeOrganizationId], references: [id])
+
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -316,11 +319,11 @@ model Organization {
   id   String @id @default(cuid()) @map("id")
   name String @unique @map("name")
 
-  accesses         OrganizationAccess[]
-  campaigns        Campaign[]           @relation("OrganizationCampaigns")
-  ownedPrograms    Program[]            @relation("ProgramOwner")
-  operatedPrograms Program[]            @relation("ProgramOperator")
-  expenses         Expense[]
+  accesses      OrganizationAccess[]
+  campaigns     Campaign[]           @relation("OrganizationCampaigns")
+  ownedPrograms Program[]            @relation("ProgramOwner")
+  expenses      Expense[]
+  activeUsers   User[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -329,17 +332,15 @@ model Organization {
 }
 
 model Program {
-  id                     String       @id @default(cuid()) @map("id")
-  name                   String       @unique @map("name")
-  totalPayments          Int          @map("total_payments")
-  payoutAmount           Decimal      @map("payout_amount") @db.Decimal(12, 4)
-  payoutCurrency         String       @map("payout_currency")
-  payoutInterval         Int          @map("payout_interval")
-  country                String       @default("Sierra Leone") @map("country")
-  ownerOrganizationId    String       @map("owner_organization_id")
-  owner                  Organization @relation("ProgramOwner", fields: [ownerOrganizationId], references: [id])
-  operatorOrganizationId String       @map("operator_organization_id")
-  operator               Organization @relation("ProgramOperator", fields: [operatorOrganizationId], references: [id])
+  id                  String       @id @default(cuid()) @map("id")
+  name                String       @unique @map("name")
+  totalPayments       Int          @map("total_payments")
+  payoutAmount        Decimal      @map("payout_amount") @db.Decimal(12, 4)
+  payoutCurrency      String       @map("payout_currency")
+  payoutInterval      Int          @map("payout_interval")
+  country             String       @default("Sierra Leone") @map("country")
+  ownerOrganizationId String       @map("owner_organization_id")
+  ownerOrganization   Organization @relation("ProgramOwner", fields: [ownerOrganizationId], references: [id])
 
   campaigns  Campaign[]
   recipients Recipient[]

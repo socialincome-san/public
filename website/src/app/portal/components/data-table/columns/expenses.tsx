@@ -9,11 +9,6 @@ import type { ColumnDef } from '@tanstack/react-table';
 export function makeExpenseColumns(): ColumnDef<ExpenseTableViewRow>[] {
 	return [
 		{
-			accessorKey: 'id',
-			header: (ctx) => <SortableHeader ctx={ctx}>ID</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
 			accessorKey: 'type',
 			header: (ctx) => <SortableHeader ctx={ctx}>Type</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,

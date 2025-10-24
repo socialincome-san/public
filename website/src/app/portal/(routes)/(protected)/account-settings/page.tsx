@@ -1,7 +1,16 @@
-export default async function Page() {
+import { OrganizationSwitcher } from '@/app/portal/(routes)/(protected)/account-settings/organization-switcher';
+import { setActiveOrganizationAction } from '@/app/portal/server-actions/set-active-organization-action';
+import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
+
+export default async function AccountSettingsPage() {
+	const user = await getAuthenticatedUserOrRedirect();
+
 	return (
-		<p className="text-gradient animate-pulse bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-2xl font-semibold text-transparent">
-			🚀 Coming Soon!
-		</p>
+		<>
+			<div className="flex flex-wrap items-center gap-4 md:flex-row md:items-center">
+				<h1 className="py-8 text-5xl">Account Settings</h1>
+			</div>
+			<OrganizationSwitcher user={user} setActiveOrganizationAction={setActiveOrganizationAction} />
+		</>
 	);
 }

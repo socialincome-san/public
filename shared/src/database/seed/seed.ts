@@ -49,8 +49,8 @@ async function main() {
 		await tx.address.createMany({ data: addressesData, skipDuplicates: true });
 		await tx.phone.createMany({ data: phonesData, skipDuplicates: true });
 		await tx.contact.createMany({ data: contactsData, skipDuplicates: true });
-		await tx.user.createMany({ data: usersData, skipDuplicates: true });
 		await tx.organization.createMany({ data: organizationsData, skipDuplicates: true });
+		await tx.user.createMany({ data: usersData, skipDuplicates: true });
 		await tx.organizationAccess.createMany({ data: organizationAccessesData, skipDuplicates: true });
 		await tx.program.createMany({ data: programsData, skipDuplicates: true });
 		await tx.programAccess.createMany({ data: programAccessesData, skipDuplicates: true });

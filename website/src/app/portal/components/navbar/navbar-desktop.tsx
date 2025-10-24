@@ -11,7 +11,8 @@ import {
 } from '@/app/portal/components/dropdown-menu';
 import { Logo } from '@/app/portal/components/logo';
 import { useNavbarLinks } from '@/app/portal/components/navbar/hooks/use-navbar-links';
-import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
+import { ProgramDropdown } from '@/app/portal/components/navbar/program-dropdown';
+import type { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
 import { ChevronsUpDown, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -25,27 +26,40 @@ export const NavbarDesktop = ({ user }: { user: UserInformation }) => {
 
 	return (
 		<nav className="container flex h-20 items-center justify-between">
-			<Logo />
+			<Link href="/portal">
+				<Logo />
+			</Link>
 
+			{/* MAIN NAV LINKS */}
 			<div className="flex items-center gap-x-4">
 				<nav className="flex items-center gap-4">
-					{mainNavLinks.map(({ href, label, activeBase, exact }) => {
-						const active = isActiveLink(pathname, href, exact, activeBase);
-
-						const linkClasses = twMerge(
-							'relative rounded-md px-3 py-2 text-lg font-medium text-primary hover:bg-accent transition-colors duration-200',
-						);
-
-						return (
-							<Link key={href} href={href} className={linkClasses}>
-								{active && <span className="bg-primary absolute -bottom-1 left-0 h-1 w-full rounded-t-lg" />}
+					{mainNavLinks.map(({ href, label, isDropdown, activeBase }) =>
+						isDropdown ? (
+							<ProgramDropdown
+								key={href}
+								user={user}
+								active={isActiveLink(pathname, href, activeBase)}
+								className="relative text-lg"
+							/>
+						) : (
+							<Link
+								key={href}
+								href={href}
+								className={twMerge(
+									'text-primary hover:bg-accent relative rounded-md px-3 py-2 text-lg font-medium transition-colors duration-200',
+								)}
+							>
+								{isActiveLink(pathname, href, activeBase) && (
+									<span className="bg-primary absolute -bottom-1 left-0 h-1 w-full rounded-t-lg" />
+								)}
 								{label}
 							</Link>
-						);
-					})}
+						),
+					)}
 				</nav>
 			</div>
 
+			{/* USER MENU */}
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button variant="outline" className="flex h-12 items-center gap-2 rounded-full px-3">
@@ -59,7 +73,9 @@ export const NavbarDesktop = ({ user }: { user: UserInformation }) => {
 							<p className="text-sm font-medium">
 								{user.firstName} {user.lastName}
 							</p>
-							<p className="text-muted-foreground text-xs">{user.organizations.map((o) => o.name).join(', ')}</p>
+							<p className="text-muted-foreground text-xs">
+								{user.activeOrganization?.name ?? 'No active organization'}
+							</p>
 						</div>
 						<ChevronsUpDown className="h-4 w-4 opacity-50" />
 					</Button>
