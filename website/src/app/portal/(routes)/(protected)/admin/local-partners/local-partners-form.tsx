@@ -4,7 +4,7 @@ import {
 	createLocalPartnerAction,
 	getLocalPartnerAction,
 	updateLocalPartnerAction,
-} from '@/app/portal/server-actions/local-partner-action';
+} from '@/app/portal/server-actions/local-partner-actions';
 import { formSchema as contactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload } from '@/components/dynamic-form/helper';

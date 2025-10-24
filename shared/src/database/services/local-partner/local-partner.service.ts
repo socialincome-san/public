@@ -10,8 +10,15 @@ import {
 } from './local-partner.types';
 
 export class LocalPartnerService extends BaseService {
-	// TODO: check user permissions
-	async create(localPartner: LocalPartnerCreateInput): Promise<ServiceResult<LocalPartner>> {
+	async create(userId: string, localPartner: LocalPartnerCreateInput): Promise<ServiceResult<LocalPartner>> {
+		const user = await this.db.user.findUnique({
+			where: { id: userId },
+			select: { role: true },
+		});
+
+		if (!user || user.role !== UserRole.admin) {
+			return this.resultFail('Could not load user');
+		}
 		try {
 			const partner = await this.db.localPartner.create({ data: localPartner });
 			return this.resultOk(partner);
@@ -20,8 +27,15 @@ export class LocalPartnerService extends BaseService {
 		}
 	}
 
-	// TODO: check user permissions
-	async update(localPartner: LocalPartnerUpdateInput): Promise<ServiceResult<LocalPartner>> {
+	async update(userId: string, localPartner: LocalPartnerUpdateInput): Promise<ServiceResult<LocalPartner>> {
+		const user = await this.db.user.findUnique({
+			where: { id: userId },
+			select: { role: true },
+		});
+
+		if (!user || user.role !== UserRole.admin) {
+			return this.resultFail('Could not load user');
+		}
 		try {
 			const partner = await this.db.localPartner.update({
 				where: {
@@ -35,7 +49,15 @@ export class LocalPartnerService extends BaseService {
 		}
 	}
 
-	async get(localPartnerId: string): Promise<ServiceResult<LocalPartnerPayload>> {
+	async get(userId: string, localPartnerId: string): Promise<ServiceResult<LocalPartnerPayload>> {
+		const user = await this.db.user.findUnique({
+			where: { id: userId },
+			select: { role: true },
+		});
+
+		if (!user || user.role !== UserRole.admin) {
+			return this.resultFail('Could not load user');
+		}
 		try {
 			const partner = await this.db.localPartner.findUnique({
 				select: {
