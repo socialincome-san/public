@@ -43,6 +43,7 @@ export type PayoutForecastTableViewRow = {
 	numberOfRecipients: number;
 	amountInProgramCurrency: number;
 	amountUsd: number;
+	programCurrency: string;
 };
 
 export type PayoutForecastTableView = {

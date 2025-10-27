@@ -178,7 +178,9 @@ export class PayoutService extends BaseService {
 			});
 
 			const recipientCountByMonth = new Map<string, number>();
-			for (const m of forecastMonths) recipientCountByMonth.set(m, 0);
+			for (const m of forecastMonths) {
+				recipientCountByMonth.set(m, 0);
+			}
 
 			for (const recipient of program.recipients) {
 				const paid = recipient.payouts.length;
@@ -190,10 +192,13 @@ export class PayoutService extends BaseService {
 			}
 
 			const exchangeRateResult = await this.exchangeRateService.getLatestRates();
-			if (!exchangeRateResult.success) return this.resultFail(exchangeRateResult.error);
+			if (!exchangeRateResult.success) {
+				return this.resultFail(exchangeRateResult.error);
+			}
 
 			const baseRate = exchangeRateResult.data[program.payoutCurrency];
 			const usdRate = exchangeRateResult.data.USD;
+
 			if (!baseRate || !usdRate) {
 				return this.resultFail('Missing exchange rate');
 			}
@@ -202,11 +207,13 @@ export class PayoutService extends BaseService {
 
 			const tableRows: PayoutForecastTableViewRow[] = forecastMonths.map((label) => {
 				const count = recipientCountByMonth.get(label) ?? 0;
+
 				return {
 					period: label,
 					numberOfRecipients: count,
 					amountInProgramCurrency: Number(program.payoutAmount) * count,
 					amountUsd: payoutAmountUsd * count,
+					programCurrency: program.payoutCurrency,
 				};
 			});
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { ActionCell } from '@/app/portal/components/data-table/elements/action-cell';
+import { CurrencyCell } from '@/app/portal/components/data-table/elements/currency-cell';
 import { DateCell } from '@/app/portal/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/app/portal/components/data-table/elements/sortable-header';
 import { TextCell } from '@/app/portal/components/data-table/elements/text-cell';
@@ -20,9 +21,10 @@ export function makeExpenseColumns(): ColumnDef<ExpenseTableViewRow>[] {
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'amountChf',
-			header: (ctx) => <SortableHeader ctx={ctx}>Amount (CHF)</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
+			id: 'amountChf',
+			header: (ctx) => <SortableHeader ctx={ctx}>Amount</SortableHeader>,
+			accessorFn: (row) => row.amountChf,
+			cell: (ctx) => <CurrencyCell ctx={ctx} currency="CHF" />,
 		},
 		{
 			accessorKey: 'organizationName',

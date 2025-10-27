@@ -1,6 +1,7 @@
 'use client';
 
 import { ActionCell } from '@/app/portal/components/data-table/elements/action-cell';
+import { CurrencyCell } from '@/app/portal/components/data-table/elements/currency-cell';
 import { DateCell } from '@/app/portal/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/app/portal/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/app/portal/components/data-table/elements/status-cell';
@@ -26,14 +27,10 @@ export function makePayoutColumns(): ColumnDef<PayoutTableViewRow>[] {
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'amount',
+			id: 'amount',
 			header: (ctx) => <SortableHeader ctx={ctx}>Amount</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'currency',
-			header: (ctx) => <SortableHeader ctx={ctx}>Currency</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
+			accessorFn: (row) => row.amount,
+			cell: (ctx) => <CurrencyCell ctx={ctx} currency={ctx.row.original.currency} />,
 		},
 		{
 			accessorKey: 'status',
