@@ -1,4 +1,4 @@
-import { Address, Gender, Phone, Prisma, ProgramPermission, RecipientStatus } from '@prisma/client';
+import { Address, Gender, PaymentProvider, Phone, Prisma, ProgramPermission, RecipientStatus } from '@prisma/client';
 
 export type RecipientPayload = {
 	id: string;
@@ -27,6 +27,12 @@ export type RecipientPayload = {
 		phone: Phone | null;
 		address: Address | null;
 	};
+	paymentInformation: {
+		id: string;
+		code: string;
+		provider: PaymentProvider;
+		phone: Phone | null;
+	} | null;
 };
 
 export type RecipientTableViewRow = {

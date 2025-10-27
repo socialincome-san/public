@@ -51,6 +51,14 @@ export class RecipientService extends BaseService {
 							name: true,
 						},
 					},
+					paymentInformation: {
+						select: {
+							id: true,
+							code: true,
+							provider: true,
+							phone: true,
+						},
+					},
 					contact: {
 						select: {
 							id: true,

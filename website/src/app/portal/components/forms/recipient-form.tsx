@@ -3,7 +3,7 @@
 import { formSchema as contactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
-import { RecipientStatus } from '@prisma/client';
+import { PaymentProvider, RecipientStatus } from '@prisma/client';
 import { LocalPartnerTableView } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
 import { ProgramWalletView } from '@socialincome/shared/src/database/services/program/program.types';
 import {
@@ -40,7 +40,15 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 			status: FormField;
 			successorName: FormField;
 			termsAccepted: FormField;
-			// paymentInformation: FormField;
+			// TODO: better typing
+			paymentInformation: {
+				label: string;
+				fields: {
+					provider: FormField;
+					code: FormField;
+					phone: FormField;
+				};
+			};
 			program: FormField;
 			localPartner: FormField;
 			contact: FormSchema;
@@ -68,11 +76,6 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 				label: 'Terms Accepted',
 				zodSchema: z.boolean().optional(),
 			},
-			// paymentInformation: {
-			// 	placeholder: 'Name',
-			// 	label: 'Name',
-			// 	zodSchema: z.nativeEnum(),
-			// },
 			program: {
 				placeholder: 'Program',
 				label: 'Program',
@@ -80,6 +83,31 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 			localPartner: {
 				placeholder: 'Local Partner',
 				label: 'Local Partner',
+			},
+			paymentInformation: {
+				label: 'Payment Information',
+				fields: {
+					provider: {
+						placeholder: 'Provider',
+						label: 'Provider',
+						zodSchema: z.nativeEnum(PaymentProvider),
+					},
+					code: {
+						placeholder: 'Code',
+						label: 'Code',
+						zodSchema: z.string().min(2),
+					},
+					phone: {
+						placeholder: 'Phone Number',
+						label: 'Phone Number',
+						zodSchema: z
+							.string()
+							// TODO: chek regex and optional
+							.regex(/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/gm)
+							.or(z.literal(''))
+							.optional(),
+					},
+				},
 			},
 			contact: {
 				...contactFormSchema,
@@ -108,6 +136,9 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 						newSchema.fields.termsAccepted.value = result.data.termsAccepted;
 						newSchema.fields.program.value = result.data.program.id;
 						newSchema.fields.localPartner.value = result.data.localPartner.id;
+						newSchema.fields.paymentInformation.fields.provider.value = result.data.paymentInformation?.provider;
+						newSchema.fields.paymentInformation.fields.code.value = result.data.paymentInformation?.code;
+						newSchema.fields.paymentInformation.fields.phone.value = result.data.paymentInformation?.phone?.number;
 						newSchema.fields.contact.fields = contactValues;
 						setFormSchema(newSchema);
 					} else {
@@ -164,6 +195,25 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 						zip: contactFields.zip.value,
 						country: contactFields.country.value,
 					};
+					const paymenInformation = {
+						provider: schema.fields.paymentInformation.fields.provider.value,
+						code: schema.fields.paymentInformation.fields.code.value,
+						phone: schema.fields.paymentInformation.fields.phone.value
+							? {
+									upsert: {
+										update: {
+											number: schema.fields.paymentInformation.fields.phone.value,
+										},
+										create: {
+											number: schema.fields.paymentInformation.fields.phone.value,
+										},
+										where: {
+											id: recipient?.paymentInformation?.phone?.id,
+										},
+									},
+								}
+							: undefined,
+					};
 					const data: RecipientUpdateInput = {
 						id: recipient?.id,
 						startDate: schema.fields.startDate.value,
@@ -176,6 +226,24 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 						program: {
 							connect: {
 								id: schema.fields.program.value,
+							},
+						},
+						paymentInformation: {
+							upsert: {
+								create: {
+									...paymenInformation,
+									phone: schema.fields.paymentInformation.fields.phone.value
+										? {
+												create: {
+													number: schema.fields.paymentInformation.fields.phone.value,
+												},
+											}
+										: undefined,
+								},
+								update: paymenInformation,
+								where: {
+									id: recipient?.paymentInformation?.id,
+								},
 							},
 						},
 						contact: {
@@ -230,6 +298,19 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 						program: {
 							connect: {
 								id: schema.fields.program.value,
+							},
+						},
+						paymentInformation: {
+							create: {
+								provider: schema.fields.paymentInformation.fields.provider.value,
+								code: schema.fields.paymentInformation.fields.code.value,
+								phone: schema.fields.paymentInformation.fields.phone.value
+									? {
+											create: {
+												number: schema.fields.paymentInformation.fields.phone.value,
+											},
+										}
+									: undefined,
 							},
 						},
 						contact: {
