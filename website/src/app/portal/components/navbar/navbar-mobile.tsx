@@ -5,6 +5,7 @@ import { Separator } from '@/app/portal/components/breadcrumb/separator';
 import { Button } from '@/app/portal/components/button';
 import { Logo } from '@/app/portal/components/logo';
 import { useLogout } from '@/app/portal/components/navbar/hooks/use-logout';
+import { ProgramDropdown } from '@/app/portal/components/navbar/program-dropdown';
 import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
@@ -15,12 +16,10 @@ import { useNavbarLinks } from './hooks/use-navbar-links';
 export const NavbarMobile = ({ user }: { user: UserInformation }) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const pathname = usePathname();
-
 	const { mainNavLinks, userMenuNavLinks, isActiveLink } = useNavbarLinks(user);
+	const { logout } = useLogout();
 
 	const toggleMenu = () => setIsMenuOpen((v) => !v);
-
-	const { logout } = useLogout();
 
 	const ProfileName = () => (
 		<div className="flex items-center space-x-3">
@@ -34,7 +33,7 @@ export const NavbarMobile = ({ user }: { user: UserInformation }) => {
 				<p className="text-foreground text-sm font-medium">
 					{user.firstName} {user.lastName}
 				</p>
-				<p className="text-muted-foreground text-xs">{user.organizations.map((o) => o.name).join(', ')}</p>
+				<p className="text-muted-foreground text-xs">{user.activeOrganization?.name ?? 'No active organization'}</p>
 			</div>
 		</div>
 	);
@@ -69,22 +68,30 @@ export const NavbarMobile = ({ user }: { user: UserInformation }) => {
 			{isMenuOpen && (
 				<div className="border-border border-b">
 					<div className="flex flex-col">
-						<div className="flex-grow overflow-y-auto p-2">
-							{mainNavLinks.map(({ href, label, activeBase, exact }) => {
-								const active = isActiveLink(pathname, href, exact, activeBase);
-								return (
+						<div className="flex-grow space-y-1 overflow-y-auto p-2">
+							{mainNavLinks.map(({ href, label, isDropdown, activeBase }) =>
+								isDropdown ? (
+									<ProgramDropdown
+										key={href}
+										user={user}
+										active={isActiveLink(pathname, href, activeBase)}
+										className="w-full justify-start px-3 py-2 text-base font-medium"
+									/>
+								) : (
 									<Link
 										key={href}
 										href={href}
 										onClick={() => setIsMenuOpen(false)}
 										className={`block rounded-md px-3 py-2 text-base font-medium ${
-											active ? 'bg-accent text-primary' : 'text-primary hover:bg-accent hover:text-primary'
+											isActiveLink(pathname, href, activeBase)
+												? 'bg-accent text-primary'
+												: 'text-primary hover:bg-accent hover:text-primary'
 										}`}
 									>
 										{label}
 									</Link>
-								);
-							})}
+								),
+							)}
 						</div>
 
 						<Separator />

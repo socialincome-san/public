@@ -14,13 +14,8 @@ export function makeOrganizationColumns(): ColumnDef<OrganizationTableViewRow>[]
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'operatedProgramsCount',
-			header: (ctx) => <SortableHeader ctx={ctx}>Operated Programs</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'viewedProgramsCount',
-			header: (ctx) => <SortableHeader ctx={ctx}>Viewed Programs</SortableHeader>,
+			accessorKey: 'ownedProgramsCount',
+			header: (ctx) => <SortableHeader ctx={ctx}>Owned Programs</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{

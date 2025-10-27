@@ -6,6 +6,7 @@ export const usersData: User[] = [
 		accountId: 'account-1',
 		contactId: 'contact-16',
 		role: UserRole.admin,
+		activeOrganizationId: 'organization-1',
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -14,6 +15,7 @@ export const usersData: User[] = [
 		accountId: 'account-2',
 		contactId: 'contact-17',
 		role: UserRole.user,
+		activeOrganizationId: 'organization-2',
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -22,6 +24,7 @@ export const usersData: User[] = [
 		accountId: 'account-3',
 		contactId: 'contact-18',
 		role: UserRole.user,
+		activeOrganizationId: 'organization-3',
 		createdAt: new Date(),
 		updatedAt: null
 	}

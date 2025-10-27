@@ -6,7 +6,7 @@ export const DEFAULT_ORGANIZATION: Prisma.OrganizationCreateInput = {
 	name: 'Default Social Income Organization',
 };
 
-export const DEFAULT_PROGRAM: Omit<Prisma.ProgramCreateInput, 'owner' | 'operator'> = {
+export const DEFAULT_PROGRAM: Omit<Prisma.ProgramCreateInput, 'ownerOrganization'> = {
 	name: 'Default Social Income Program',
 	totalPayments: 36,
 	payoutAmount: 700,
@@ -97,8 +97,7 @@ async function main() {
 		update: {},
 		create: {
 			...DEFAULT_PROGRAM,
-			owner: { connect: { id: organization.id } },
-			operator: { connect: { id: organization.id } },
+			ownerOrganization: { connect: { id: organization.id } },
 		},
 	});
 
@@ -143,6 +142,11 @@ async function main() {
 				program: { connect: { id: program.id } },
 				permissions: [ProgramPermission.edit],
 			},
+		});
+
+		await prisma.user.update({
+			where: { id: user.id },
+			data: { activeOrganizationId: organization.id },
 		});
 	}
 

@@ -1,46 +1,21 @@
-import { OrganizationPermission, UserRole } from '@prisma/client';
+import { OrganizationPermission, ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import {
-	AllUsersTableView,
-	AllUsersTableViewRow,
-	OrganizationMembersTableView,
-	OrganizationMembersTableViewRow,
-	UserInformation,
-} from './user.types';
+import { OrganizationMembersTableView, OrganizationMembersTableViewRow, UserInformation } from './user.types';
 
 export class UserService extends BaseService {
 	async getCurrentUserInformation(firebaseAuthUserId: string): Promise<ServiceResult<UserInformation>> {
 		try {
 			const user = await this.db.user.findFirst({
-				where: {
-					account: { firebaseAuthUserId },
-				},
+				where: { account: { firebaseAuthUserId } },
 				select: {
 					id: true,
 					role: true,
 					accountId: true,
-					contact: {
-						select: {
-							firstName: true,
-							lastName: true,
-						},
-					},
-					organizationAccesses: {
-						select: {
-							organization: {
-								select: {
-									id: true,
-									name: true,
-									_count: {
-										select: {
-											accesses: true,
-										},
-									},
-								},
-							},
-						},
-					},
+					contact: { select: { firstName: true, lastName: true } },
+					activeOrganization: { select: { id: true, name: true } },
+					organizationAccesses: { select: { organization: { select: { id: true, name: true } } } },
+					programAccesses: { select: { program: { select: { id: true, name: true } } } },
 				},
 			});
 
@@ -51,7 +26,18 @@ export class UserService extends BaseService {
 			const organizations = user.organizationAccesses.map((access) => ({
 				id: access.organization.id,
 				name: access.organization.name,
-				memberCount: access.organization._count.accesses,
+			}));
+
+			const activeOrganization = user.activeOrganization
+				? {
+						id: user.activeOrganization.id,
+						name: user.activeOrganization.name,
+					}
+				: null;
+
+			const programs = user.programAccesses.map((access) => ({
+				id: access.program.id,
+				name: access.program.name,
 			}));
 
 			const userInfo: UserInformation = {
@@ -59,56 +45,14 @@ export class UserService extends BaseService {
 				firstName: user.contact?.firstName ?? null,
 				lastName: user.contact?.lastName ?? null,
 				role: user.role,
+				activeOrganization,
 				organizations,
+				programs,
 			};
 
 			return this.resultOk(userInfo);
 		} catch {
 			return this.resultFail('Error fetching user information');
-		}
-	}
-
-	async getAllUsersTableView(userId: string): Promise<ServiceResult<AllUsersTableView>> {
-		try {
-			const currentUser = await this.db.user.findUnique({
-				where: { id: userId },
-				select: { role: true },
-			});
-
-			if (!currentUser || currentUser.role !== UserRole.admin) {
-				return this.resultOk({ tableRows: [] });
-			}
-
-			const users = await this.db.user.findMany({
-				select: {
-					id: true,
-					role: true,
-					contact: {
-						select: {
-							firstName: true,
-							lastName: true,
-						},
-					},
-					organizationAccesses: {
-						select: {
-							organization: { select: { name: true } },
-						},
-					},
-				},
-				orderBy: [{ role: 'asc' }, { id: 'asc' }],
-			});
-
-			const tableRows: AllUsersTableViewRow[] = users.map((u) => ({
-				id: u.id,
-				firstName: u.contact?.firstName ?? '',
-				lastName: u.contact?.lastName ?? '',
-				role: u.role,
-				organizations: u.organizationAccesses.map((oa) => oa.organization.name),
-			}));
-
-			return this.resultOk({ tableRows });
-		} catch {
-			return this.resultFail('Could not fetch all users');
 		}
 	}
 
@@ -118,13 +62,8 @@ export class UserService extends BaseService {
 	): Promise<ServiceResult<OrganizationMembersTableView>> {
 		try {
 			const access = await this.db.organizationAccess.findFirst({
-				where: {
-					userId,
-					organizationId,
-				},
-				select: {
-					permissions: true,
-				},
+				where: { userId, organizationId },
+				select: { permissions: true },
 			});
 
 			if (!access) {
@@ -141,12 +80,7 @@ export class UserService extends BaseService {
 					user: {
 						select: {
 							id: true,
-							contact: {
-								select: {
-									firstName: true,
-									lastName: true,
-								},
-							},
+							contact: { select: { firstName: true, lastName: true } },
 						},
 					},
 					permissions: true,
@@ -163,12 +97,78 @@ export class UserService extends BaseService {
 					: OrganizationPermission.readonly,
 			}));
 
-			return this.resultOk({
-				tableRows,
-				userPermission,
-			});
+			return this.resultOk({ tableRows, userPermission });
 		} catch {
 			return this.resultFail('Could not fetch organization members');
+		}
+	}
+
+	async getProgramMembersTableView(
+		userId: string,
+		programId: string,
+	): Promise<ServiceResult<OrganizationMembersTableView>> {
+		try {
+			const access = await this.db.programAccess.findFirst({
+				where: { userId, programId },
+				select: { permissions: true },
+			});
+
+			if (!access) {
+				return this.resultFail('User does not have access to this program');
+			}
+
+			const userPermission = access.permissions.includes(ProgramPermission.edit)
+				? ProgramPermission.edit
+				: ProgramPermission.readonly;
+
+			const programUsers = await this.db.programAccess.findMany({
+				where: { programId },
+				select: {
+					user: {
+						select: {
+							id: true,
+							contact: { select: { firstName: true, lastName: true } },
+						},
+					},
+					permissions: true,
+				},
+				orderBy: { user: { id: 'asc' } },
+			});
+
+			const tableRows: OrganizationMembersTableViewRow[] = programUsers.map((entry) => ({
+				id: entry.user.id,
+				firstName: entry.user.contact?.firstName ?? '',
+				lastName: entry.user.contact?.lastName ?? '',
+				permission: entry.permissions.includes(ProgramPermission.edit)
+					? ProgramPermission.edit
+					: ProgramPermission.readonly,
+			}));
+
+			return this.resultOk({ tableRows, userPermission });
+		} catch {
+			return this.resultFail('Could not fetch program members');
+		}
+	}
+
+	async setActiveOrganization(userId: string, organizationId: string): Promise<ServiceResult<null>> {
+		try {
+			const hasAccess = await this.db.organizationAccess.findFirst({
+				where: { userId, organizationId },
+				select: { id: true },
+			});
+
+			if (!hasAccess) {
+				return this.resultFail('User does not have access to this organization');
+			}
+
+			await this.db.user.update({
+				where: { id: userId },
+				data: { activeOrganizationId: organizationId },
+			});
+
+			return this.resultOk(null);
+		} catch {
+			return this.resultFail('Could not set active organization');
 		}
 	}
 }

@@ -1,5 +1,4 @@
-import { YourOrganizations } from '@/app/portal/your-organizations';
-import { YourPrograms } from '@/app/portal/your-programs';
+import { UserPrograms } from '@/app/portal/(routes)/(protected)/user-programs';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 
 export default async function PortalPage() {
@@ -12,8 +11,7 @@ export default async function PortalPage() {
 			</div>
 
 			<div className="space-y-16">
-				<YourPrograms userId={user.id} />
-				<YourOrganizations organizations={user.organizations} />
+				<UserPrograms userId={user.id} />
 			</div>
 		</>
 	);

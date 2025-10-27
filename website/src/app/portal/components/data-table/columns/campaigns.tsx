@@ -7,8 +7,8 @@ import { TextCell } from '@/app/portal/components/data-table/elements/text-cell'
 import type { CampaignTableViewRow } from '@socialincome/shared/src/database/services/campaign/campaign.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeCampaignColumns(hideProgramName?: boolean): ColumnDef<CampaignTableViewRow>[] {
-	const columns: ColumnDef<CampaignTableViewRow>[] = [
+export function makeCampaignColumns(): ColumnDef<CampaignTableViewRow>[] {
+	return [
 		{
 			accessorKey: 'title',
 			header: (ctx) => <SortableHeader ctx={ctx}>Title</SortableHeader>,
@@ -22,6 +22,11 @@ export function makeCampaignColumns(hideProgramName?: boolean): ColumnDef<Campai
 		{
 			accessorKey: 'creatorEmail',
 			header: (ctx) => <SortableHeader ctx={ctx}>Creator Email</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'programName',
+			header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
@@ -44,22 +49,11 @@ export function makeCampaignColumns(hideProgramName?: boolean): ColumnDef<Campai
 			header: (ctx) => <SortableHeader ctx={ctx}>End Date</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
+		{
+			id: 'actions',
+			header: '',
+			enableSorting: false,
+			cell: (ctx) => <ActionCell ctx={ctx} />,
+		},
 	];
-
-	if (!hideProgramName) {
-		columns.push({
-			accessorKey: 'programName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Program Name</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		});
-	}
-
-	columns.push({
-		id: 'actions',
-		header: '',
-		enableSorting: false,
-		cell: (ctx) => <ActionCell ctx={ctx} />,
-	});
-
-	return columns;
 }

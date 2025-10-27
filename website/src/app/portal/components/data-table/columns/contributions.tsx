@@ -10,11 +10,6 @@ import type { ColumnDef } from '@tanstack/react-table';
 export function makeContributionsColumns(hideProgramName = false): ColumnDef<ContributionTableViewRow>[] {
 	const columns: ColumnDef<ContributionTableViewRow>[] = [
 		{
-			accessorKey: 'source',
-			header: (ctx) => <SortableHeader ctx={ctx}>Source</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
 			accessorKey: 'amount',
 			header: (ctx) => <SortableHeader ctx={ctx}>Amount</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
@@ -45,11 +40,6 @@ export function makeContributionsColumns(hideProgramName = false): ColumnDef<Con
 	}
 
 	columns.push(
-		{
-			accessorKey: 'contributionInterval',
-			header: (ctx) => <SortableHeader ctx={ctx}>Interval</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
 		{
 			accessorKey: 'createdAtFormatted',
 			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
