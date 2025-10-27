@@ -59,6 +59,7 @@ const getType = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<an
 	const def = getDef(key, zodSchema, parentKey);
 	let type = def.typeName;
 	if (isOptional(key, zodSchema, parentKey)) type = def.innerType._def.typeName;
+	if (type === 'ZodUnion') return def.innerType._def.options[0]._def.typeName;
 	if (type === 'ZodNativeEnum') return 'ZodEnum';
 	return type;
 };

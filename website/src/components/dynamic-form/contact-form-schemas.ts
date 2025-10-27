@@ -56,6 +56,7 @@ export const formSchema: FormSchema = {
 				.string()
 				// TODO: chek regex and optional
 				.regex(/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/gm)
+				.or(z.literal(''))
 				.optional(),
 		},
 		street: {
