@@ -30,5 +30,10 @@ export type LocalPartnerPayload = {
 	};
 };
 
+export type LocalPartnerRecipientOption = {
+	id: string;
+	name: string;
+};
+
 export type LocalPartnerCreateInput = Prisma.LocalPartnerCreateInput;
 export type LocalPartnerUpdateInput = Prisma.LocalPartnerUpdateInput;

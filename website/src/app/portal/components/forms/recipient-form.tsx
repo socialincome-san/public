@@ -4,8 +4,8 @@ import { formSchema as contactFormSchema } from '@/components/dynamic-form/conta
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
 import { PaymentProvider, RecipientStatus } from '@prisma/client';
-import { LocalPartnerTableView } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
-import { ProgramWalletView } from '@socialincome/shared/src/database/services/program/program.types';
+import { LocalPartnerRecipientOption } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
+import { ProgramRecipientOption } from '@socialincome/shared/src/database/services/program/program.types';
 import {
 	RecipientCreateInput,
 	RecipientPayload,
@@ -30,8 +30,8 @@ export type RecipientFormProps = {
 };
 
 export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readOnly, userId }: RecipientFormProps) {
-	const [programs, setPrograms] = useState<ProgramWalletView | undefined>(undefined);
-	const [localPartner, setLocalPartner] = useState<LocalPartnerTableView | undefined>(undefined);
+	const [programs, setPrograms] = useState<ProgramRecipientOption[] | undefined>(undefined);
+	const [localPartner, setLocalPartner] = useState<LocalPartnerRecipientOption[] | undefined>(undefined);
 
 	const initialFormSchema: {
 		label: string;
@@ -59,7 +59,7 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 			startDate: {
 				placeholder: 'Start Date',
 				label: 'Start Date',
-				zodSchema: z.date().nullable(),
+				zodSchema: z.date().optional(),
 			},
 			status: {
 				placeholder: 'Status',
@@ -162,17 +162,17 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 
 	// TODO:
 	useEffect(() => {
-		if (localPartner?.tableRows && programs?.wallets) {
+		if (localPartner && programs) {
 			const partnersObj = getZodEnum(
-				localPartner.tableRows.map((r) => ({
+				localPartner.map((r) => ({
 					id: r.id,
 					label: r.name,
 				})),
 			);
 			const programsObj = getZodEnum(
-				programs.wallets.map((r) => ({
+				programs.map((r) => ({
 					id: r.id,
-					label: r.programName,
+					label: r.name,
 				})),
 			);
 			formSchema.fields.localPartner.zodSchema = z.nativeEnum(partnersObj);

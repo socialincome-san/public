@@ -1,9 +1,33 @@
 import { PayoutStatus, ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ProgramWallet, ProgramWalletView } from './program.types';
+import { ProgramRecipientOption, ProgramWallet, ProgramWalletView } from './program.types';
 
 export class ProgramService extends BaseService {
+	async getRecipientPrograms(userId: string): Promise<ServiceResult<ProgramRecipientOption[]>> {
+		try {
+			const programs = await this.db.program.findMany({
+				where: {
+					accesses: {
+						some: { userId },
+					},
+				},
+				select: {
+					id: true,
+					name: true,
+					accesses: { where: { userId }, select: { permissions: true } },
+				},
+				orderBy: { name: 'asc' },
+			});
+
+			const programsOptions = programs.map(({ id, name }): ProgramRecipientOption => ({ id, name }));
+
+			return this.resultOk(programsOptions);
+		} catch {
+			return this.resultFail('Could not fetch programs');
+		}
+	}
+
 	async getProgramWalletView(userId: string): Promise<ServiceResult<ProgramWalletView>> {
 		try {
 			const programs = await this.db.program.findMany({

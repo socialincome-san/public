@@ -4,6 +4,7 @@ import { ServiceResult } from '../core/base.types';
 import {
 	LocalPartnerCreateInput,
 	LocalPartnerPayload,
+	LocalPartnerRecipientOption,
 	LocalPartnerTableView,
 	LocalPartnerTableViewRow,
 	LocalPartnerUpdateInput,
@@ -63,6 +64,31 @@ export class LocalPartnerService extends BaseService {
 			return this.resultOk(partner);
 		} catch (error) {
 			return this.resultFail('Could not get local partner');
+		}
+	}
+
+	async getRecipientOptions(userId: string): Promise<ServiceResult<LocalPartnerRecipientOption[]>> {
+		try {
+			const user = await this.db.user.findUnique({
+				where: { id: userId },
+				select: { role: true },
+			});
+
+			if (!user) {
+				return this.resultOk([]);
+			}
+
+			const partners = await this.db.localPartner.findMany({
+				select: {
+					id: true,
+					name: true,
+				},
+				orderBy: { name: 'asc' },
+			});
+
+			return this.resultOk(partners);
+		} catch (error) {
+			return this.resultFail('Could not fetch local partners');
 		}
 	}
 
