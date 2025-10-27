@@ -1,45 +1,33 @@
-import { PayoutStatus, ProgramPermission } from '@prisma/client';
+import { ProgramPermission, RecipientStatus } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { ProgramAccessService } from '../program-access/program-access.service';
 import { RecipientTableView, RecipientTableViewRow } from './recipient.types';
 
 export class RecipientService extends BaseService {
-	async getRecipientTableView(userId: string): Promise<ServiceResult<RecipientTableView>> {
+	private programAccessService = new ProgramAccessService();
+
+	async getTableView(userId: string): Promise<ServiceResult<RecipientTableView>> {
 		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const accessiblePrograms = accessResult.data;
+			if (accessiblePrograms.length === 0) {
+				return this.resultOk({ tableRows: [] });
+			}
+
+			const programIds = accessiblePrograms.map((p) => p.programId);
+
 			const recipients = await this.db.recipient.findMany({
 				where: {
-					program: {
-						accesses: {
-							some: { userId },
-						},
-					},
+					programId: { in: programIds },
 				},
-				orderBy: { createdAt: 'desc' },
 				select: {
 					id: true,
 					status: true,
-					program: {
-						select: {
-							id: true,
-							name: true,
-							totalPayments: true,
-							accesses: {
-								where: { userId },
-								select: { permissions: true },
-							},
-						},
-					},
-					localPartner: {
-						select: {
-							name: true,
-							contact: {
-								select: {
-									firstName: true,
-									lastName: true,
-								},
-							},
-						},
-					},
 					contact: {
 						select: {
 							firstName: true,
@@ -47,43 +35,44 @@ export class RecipientService extends BaseService {
 							dateOfBirth: true,
 						},
 					},
+					program: {
+						select: {
+							id: true,
+							name: true,
+							totalPayments: true,
+						},
+					},
+					localPartner: {
+						select: { name: true },
+					},
 					payouts: {
-						where: { status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] } },
 						select: { id: true },
 					},
+					createdAt: true,
 				},
+				orderBy: { createdAt: 'desc' },
 			});
 
-			const tableRows: RecipientTableViewRow[] = recipients.map((r) => {
-				const payoutsReceived = r.payouts.length;
-				const payoutsTotal = r.program?.totalPayments ?? 0;
+			const tableRows: RecipientTableViewRow[] = recipients.map((recipient) => {
+				const access = accessiblePrograms.find((p) => p.programId === recipient.program?.id);
+				const payoutsReceived = recipient.payouts.length;
+				const payoutsTotal = recipient.program?.totalPayments ?? 0;
 				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
 
-				const birthDate = r.contact?.dateOfBirth ?? null;
-				const age = birthDate ? this.calculateAgeFromBirthDate(birthDate) : null;
-
-				const permissions = r.program?.accesses[0]?.permissions ?? [];
-				const permission: ProgramPermission = permissions.includes(ProgramPermission.edit)
-					? ProgramPermission.edit
-					: ProgramPermission.readonly;
-
-				const localPartnerName =
-					r.localPartner?.name ??
-					(r.localPartner?.contact ? `${r.localPartner.contact.firstName} ${r.localPartner.contact.lastName}` : '');
-
 				return {
-					id: r.id,
-					firstName: r.contact?.firstName ?? '',
-					lastName: r.contact?.lastName ?? '',
-					age,
-					status: r.status,
+					id: recipient.id,
+					firstName: recipient.contact?.firstName ?? '',
+					lastName: recipient.contact?.lastName ?? '',
+					dateOfBirth: recipient.contact?.dateOfBirth ?? null,
+					localPartnerName: recipient.localPartner?.name ?? null,
+					status: recipient.status ?? RecipientStatus.active,
+					programId: recipient.program?.id ?? null,
+					programName: recipient.program?.name ?? null,
 					payoutsReceived,
 					payoutsTotal,
 					payoutsProgressPercent,
-					localPartnerName,
-					programName: r.program?.name ?? '',
-					programId: r.program?.id ?? '',
-					permission,
+					createdAt: recipient.createdAt,
+					permission: access?.permission ?? ProgramPermission.readonly,
 				};
 			});
 
@@ -93,23 +82,13 @@ export class RecipientService extends BaseService {
 		}
 	}
 
-	async getRecipientTableViewProgramScoped(
-		userId: string,
-		programId: string,
-	): Promise<ServiceResult<RecipientTableView>> {
-		const base = await this.getRecipientTableView(userId);
-		if (!base.success) return base;
+	async getTableViewProgramScoped(userId: string, programId: string): Promise<ServiceResult<RecipientTableView>> {
+		const base = await this.getTableView(userId);
+		if (!base.success) {
+			return base;
+		}
 
 		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
 		return this.resultOk({ tableRows: filteredRows });
-	}
-
-	private calculateAgeFromBirthDate(birthDate: Date): number {
-		const today = new Date();
-		let years = today.getFullYear() - birthDate.getFullYear();
-		const monthDiff = today.getMonth() - birthDate.getMonth();
-		const dayDiff = today.getDate() - birthDate.getDate();
-		if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) years -= 1;
-		return years;
 	}
 }

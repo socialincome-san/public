@@ -4,14 +4,15 @@ export type RecipientTableViewRow = {
 	id: string;
 	firstName: string;
 	lastName: string;
-	age: number | null;
+	dateOfBirth: Date | null;
+	localPartnerName: string | null;
 	status: RecipientStatus;
+	programId: string | null;
+	programName: string | null;
 	payoutsReceived: number;
 	payoutsTotal: number;
 	payoutsProgressPercent: number;
-	localPartnerName: string;
-	programName: string;
-	programId: string;
+	createdAt: Date;
 	permission: ProgramPermission;
 };
 

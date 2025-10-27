@@ -1,88 +1,68 @@
-import { Gender, PayoutStatus, ProgramPermission } from '@prisma/client';
+import { PayoutStatus, ProgramPermission } from '@prisma/client';
+import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
+import { ProgramAccessService } from '../program-access/program-access.service';
 import {
 	OngoingPayoutTableView,
 	OngoingPayoutTableViewRow,
-	PayoutConfirmationTableView,
-	PayoutConfirmationTableViewRow,
+	PayoutForecastTableView,
+	PayoutForecastTableViewRow,
 	PayoutMonth,
+	PayoutTableView,
+	PayoutTableViewRow,
 } from './payout.types';
 
 export class PayoutService extends BaseService {
-	async getOngoingPayoutTableView(userId: string): Promise<ServiceResult<OngoingPayoutTableView>> {
-		try {
-			const { fromMonthStart, months } = this.getLastThreeMonths();
+	private programAccessService = new ProgramAccessService();
+	private exchangeRateService = new ExchangeRateService();
 
-			const recipients = await this.db.recipient.findMany({
-				where: {
-					program: { accesses: { some: { userId } } },
-				},
+	async getTableView(userId: string): Promise<ServiceResult<PayoutTableView>> {
+		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const accessiblePrograms = accessResult.data;
+			if (accessiblePrograms.length === 0) {
+				return this.resultOk({ tableRows: [] });
+			}
+
+			const programIds = accessiblePrograms.map((p) => p.programId);
+
+			const payouts = await this.db.payout.findMany({
+				where: { recipient: { programId: { in: programIds } } },
 				select: {
 					id: true,
-					contact: { select: { firstName: true, lastName: true, gender: true } },
-					program: {
+					amount: true,
+					currency: true,
+					status: true,
+					paymentAt: true,
+					recipient: {
 						select: {
-							name: true,
-							totalPayments: true,
-							accesses: { where: { userId }, select: { permissions: true } },
+							contact: { select: { firstName: true, lastName: true } },
+							program: { select: { id: true, name: true } },
 						},
-					},
-					payouts: {
-						where: {
-							OR: [
-								{ status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] } },
-								{ paymentAt: { gte: fromMonthStart } },
-							],
-						},
-						select: { status: true, paymentAt: true },
-						orderBy: { paymentAt: 'desc' },
 					},
 				},
-				orderBy: { createdAt: 'desc' },
+				orderBy: { paymentAt: 'desc' },
 			});
 
-			const tableRows: OngoingPayoutTableViewRow[] = recipients.map((recipient) => {
-				const payoutsTotal = recipient.program?.totalPayments ?? 0;
-
-				let payoutsReceived = 0;
-				for (const p of recipient.payouts) {
-					if (p.status === PayoutStatus.paid || p.status === PayoutStatus.confirmed) {
-						payoutsReceived += 1;
-					}
-				}
-
-				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
-
-				const paymentsLeft = Math.max(payoutsTotal - payoutsReceived, 0);
-
-				const last3Months: PayoutMonth[] = [];
-				for (const m of months) {
-					const payout = recipient.payouts.find((p) => p.paymentAt >= m.start && p.paymentAt < m.end);
-					last3Months.push({
-						monthLabel: m.monthLabel,
-						status: payout?.status ?? PayoutStatus.created,
-					});
-				}
-
-				const permissions = recipient.program?.accesses[0]?.permissions ?? [];
-				const permission: ProgramPermission = permissions.includes('edit')
-					? ProgramPermission.edit
-					: ProgramPermission.readonly;
-
-				const gender: Gender = (recipient.contact?.gender ?? 'private') as Gender;
+			const tableRows: PayoutTableViewRow[] = payouts.map((payout) => {
+				const program = accessiblePrograms.find((x) => x.programId === payout.recipient.program.id);
+				const permission = program?.permission ?? ProgramPermission.readonly;
 
 				return {
-					id: recipient.id,
-					firstName: recipient.contact?.firstName ?? '',
-					lastName: recipient.contact?.lastName ?? '',
-					gender,
-					programName: recipient.program?.name ?? '',
-					payoutsReceived,
-					payoutsTotal,
-					payoutsProgressPercent,
-					paymentsLeft,
-					last3Months,
+					id: payout.id,
+					recipientFirstName: payout.recipient.contact.firstName,
+					recipientLastName: payout.recipient.contact.lastName,
+					programName: payout.recipient.program.name,
+					amount: Number(payout.amount),
+					currency: payout.currency,
+					status: payout.status,
+					paymentAt: payout.paymentAt,
 					permission,
 				};
 			});
@@ -93,73 +73,156 @@ export class PayoutService extends BaseService {
 		}
 	}
 
-	async getPayoutConfirmationTableView(userId: string): Promise<ServiceResult<PayoutConfirmationTableView>> {
+	async getOngoingPayoutTableView(userId: string): Promise<ServiceResult<OngoingPayoutTableView>> {
 		try {
-			const payouts = await this.db.payout.findMany({
-				where: {
-					recipient: {
-						program: { accesses: { some: { userId } } },
-					},
-				},
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const accessiblePrograms = accessResult.data;
+			if (accessiblePrograms.length === 0) {
+				return this.resultOk({ tableRows: [] });
+			}
+
+			const programIds = accessiblePrograms.map((p) => p.programId);
+			const months = this.getMonthIntervals();
+
+			const recipients = await this.db.recipient.findMany({
+				where: { programId: { in: programIds } },
 				select: {
 					id: true,
-					paymentAt: true,
-					status: true,
-					recipient: {
-						select: {
-							contact: { select: { firstName: true, lastName: true } },
-							program: {
-								select: {
-									name: true,
-									accesses: { where: { userId }, select: { permissions: true } },
-								},
-							},
-						},
-					},
+					contact: { select: { firstName: true, lastName: true } },
+					program: { select: { id: true, name: true, totalPayments: true } },
+					payouts: { select: { status: true, paymentAt: true } },
+					createdAt: true,
 				},
-				orderBy: { paymentAt: 'desc' },
 			});
 
-			const tableRows: PayoutConfirmationTableViewRow[] = payouts.map((p) => {
-				const program = p.recipient?.program;
-				const permissions = program?.accesses[0]?.permissions ?? [];
-				const permission: ProgramPermission = permissions.includes('edit')
-					? ProgramPermission.edit
-					: ProgramPermission.readonly;
+			const tableRows: OngoingPayoutTableViewRow[] = recipients.map((recipient) => {
+				const access = accessiblePrograms.find((p) => p.programId === recipient.program.id);
+				const permission = access?.permission ?? ProgramPermission.readonly;
+
+				const payoutsReceived = recipient.payouts.length;
+				const payoutsTotal = recipient.program.totalPayments ?? 0;
+				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
+
+				const last3Months: PayoutMonth[] = [months.current, months.last, months.twoAgo].map(({ start, end }) => {
+					const payout = recipient.payouts.find((p) => p.paymentAt >= start && p.paymentAt <= end);
+					return {
+						monthLabel: format(start, 'yyyy-MM'),
+						status: payout?.status ?? null,
+					};
+				});
 
 				return {
-					id: p.id,
-					firstName: p.recipient?.contact?.firstName ?? '',
-					lastName: p.recipient?.contact?.lastName ?? '',
-					paymentAt: p.paymentAt,
-					paymentAtFormatted: new Intl.DateTimeFormat('de-CH').format(p.paymentAt),
-					status: p.status,
-					programName: program?.name ?? '',
+					id: recipient.id,
+					firstName: recipient.contact.firstName,
+					lastName: recipient.contact.lastName,
+					programName: recipient.program.name,
+					payoutsReceived,
+					payoutsTotal,
+					payoutsProgressPercent,
+					last3Months,
+					createdAt: recipient.createdAt,
 					permission,
 				};
 			});
 
 			return this.resultOk({ tableRows });
 		} catch {
-			return this.resultFail('Could not fetch payout confirmations');
+			return this.resultFail('Could not fetch ongoing payouts');
 		}
 	}
 
-	private getLastThreeMonths() {
-		const startOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1);
-		const addMonths = (date: Date, diff: number) => new Date(date.getFullYear(), date.getMonth() + diff, 1);
-		const formatMonthLabel = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+	async getForecastTableView(
+		userId: string,
+		programId: string,
+		monthsAhead: number,
+	): Promise<ServiceResult<PayoutForecastTableView>> {
+		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
 
-		const currentMonth = startOfMonth(new Date());
-		const previousMonth = addMonths(currentMonth, -1);
-		const twoMonthsAgo = addMonths(currentMonth, -2);
+			const hasAccess = accessResult.data.some((p) => p.programId === programId);
+			if (!hasAccess) {
+				return this.resultFail('Access denied for this program');
+			}
 
-		const months = [
-			{ monthLabel: formatMonthLabel(currentMonth), start: currentMonth, end: addMonths(currentMonth, 1) },
-			{ monthLabel: formatMonthLabel(previousMonth), start: previousMonth, end: addMonths(previousMonth, 1) },
-			{ monthLabel: formatMonthLabel(twoMonthsAgo), start: twoMonthsAgo, end: addMonths(twoMonthsAgo, 1) },
-		];
+			const program = await this.db.program.findUnique({
+				where: { id: programId },
+				select: {
+					totalPayments: true,
+					payoutAmount: true,
+					payoutCurrency: true,
+					recipients: {
+						select: {
+							payouts: {
+								where: { status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] } },
+								select: { id: true },
+							},
+						},
+					},
+				},
+			});
 
-		return { fromMonthStart: months[2].start, months };
+			if (!program) {
+				return this.resultFail('Program not found');
+			}
+
+			const forecastMonths = Array.from({ length: monthsAhead }, (_, i) => {
+				const start = startOfMonth(addMonths(new Date(), i + 1));
+				return format(start, 'yyyy-MM');
+			});
+
+			const recipientCountByMonth = new Map<string, number>();
+			for (const m of forecastMonths) recipientCountByMonth.set(m, 0);
+
+			for (const recipient of program.recipients) {
+				const paid = recipient.payouts.length;
+				const remaining = Math.max(0, program.totalPayments - paid);
+				for (let i = 0; i < remaining && i < monthsAhead; i++) {
+					const monthLabel = forecastMonths[i];
+					recipientCountByMonth.set(monthLabel, (recipientCountByMonth.get(monthLabel) ?? 0) + 1);
+				}
+			}
+
+			const exchangeRateResult = await this.exchangeRateService.getLatestRates();
+			if (!exchangeRateResult.success) return this.resultFail(exchangeRateResult.error);
+
+			const baseRate = exchangeRateResult.data[program.payoutCurrency];
+			const usdRate = exchangeRateResult.data.USD;
+			if (!baseRate || !usdRate) {
+				return this.resultFail('Missing exchange rate');
+			}
+
+			const payoutAmountUsd = (Number(program.payoutAmount) / baseRate) * usdRate;
+
+			const tableRows: PayoutForecastTableViewRow[] = forecastMonths.map((label) => {
+				const count = recipientCountByMonth.get(label) ?? 0;
+				return {
+					period: label,
+					numberOfRecipients: count,
+					amountInProgramCurrency: Number(program.payoutAmount) * count,
+					amountUsd: payoutAmountUsd * count,
+				};
+			});
+
+			return this.resultOk({ tableRows });
+		} catch {
+			return this.resultFail('Could not generate payout forecast');
+		}
+	}
+
+	private getMonthIntervals() {
+		const now = new Date();
+
+		return {
+			current: { start: startOfMonth(now), end: endOfMonth(now) },
+			last: { start: startOfMonth(subMonths(now, 1)), end: endOfMonth(subMonths(now, 1)) },
+			twoAgo: { start: startOfMonth(subMonths(now, 2)), end: endOfMonth(subMonths(now, 2)) },
+		};
 	}
 }

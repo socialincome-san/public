@@ -1,4 +1,4 @@
-import { ProgramPermission } from '@prisma/client';
+import { OrganizationPermission } from '@prisma/client';
 
 export type ContributorTableViewRow = {
 	id: string;
@@ -6,11 +6,8 @@ export type ContributorTableViewRow = {
 	lastName: string;
 	email: string;
 	country: string | null;
-	currency: string | null;
-	programName: string;
 	createdAt: Date;
-	createdAtFormatted: string;
-	permission: ProgramPermission;
+	permission: OrganizationPermission;
 };
 
 export type ContributorTableView = {

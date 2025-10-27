@@ -81,6 +81,7 @@ export class LocalPartnerService extends BaseService {
 				select: {
 					id: true,
 					name: true,
+					createdAt: true,
 					contact: {
 						select: {
 							firstName: true,
@@ -93,16 +94,17 @@ export class LocalPartnerService extends BaseService {
 				orderBy: { name: 'asc' },
 			});
 
-			const tableRows: LocalPartnerTableViewRow[] = partners.map((p) => ({
-				id: p.id,
-				name: p.name,
-				contactPerson: `${p.contact?.firstName ?? ''} ${p.contact?.lastName ?? ''}`.trim(),
-				contactNumber: p.contact?.phone?.number ?? null,
-				recipientsCount: p._count.recipients,
+			const tableRows: LocalPartnerTableViewRow[] = partners.map((partner) => ({
+				id: partner.id,
+				name: partner.name,
+				contactPerson: `${partner.contact?.firstName ?? ''} ${partner.contact?.lastName ?? ''}`.trim(),
+				contactNumber: partner.contact?.phone?.number ?? null,
+				recipientsCount: partner._count.recipients,
+				createdAt: partner.createdAt,
 			}));
 
 			return this.resultOk({ tableRows });
-		} catch (error) {
+		} catch {
 			return this.resultFail('Could not fetch local partners');
 		}
 	}

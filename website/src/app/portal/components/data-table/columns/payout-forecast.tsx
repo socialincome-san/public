@@ -15,17 +15,17 @@ export function makePayoutForecastColumns(): ColumnDef<PayoutForecastTableViewRo
 		},
 		{
 			accessorKey: 'numberOfRecipients',
-			header: (ctx) => <SortableHeader ctx={ctx}>Number of Recipients</SortableHeader>,
+			header: (ctx) => <SortableHeader ctx={ctx}>Recipients</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
 			accessorKey: 'amountInProgramCurrency',
-			header: (ctx) => <SortableHeader ctx={ctx}>Amount in Program Currency</SortableHeader>,
+			header: (ctx) => <SortableHeader ctx={ctx}>Amount (Program Currency)</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
 			accessorKey: 'amountUsd',
-			header: (ctx) => <SortableHeader ctx={ctx}>Amount in USD</SortableHeader>,
+			header: (ctx) => <SortableHeader ctx={ctx}>Amount (USD)</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{

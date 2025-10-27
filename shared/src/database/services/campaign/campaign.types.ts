@@ -1,14 +1,15 @@
+import { OrganizationPermission } from '@prisma/client';
+
 export type CampaignTableViewRow = {
 	id: string;
 	title: string;
-	creatorName: string;
-	creatorEmail: string;
-	status: boolean;
-	goal: number | null;
-	currency: string | null;
+	description: string;
+	currency: string;
 	endDate: Date;
-	endDateFormatted: string;
+	isActive: boolean;
 	programName: string | null;
+	createdAt: Date;
+	permission: OrganizationPermission;
 };
 
 export type CampaignTableView = {

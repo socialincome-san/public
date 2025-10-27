@@ -12,7 +12,7 @@ export default async function RecipientsPageProgramScoped({ params }: Props) {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const recipientService = new RecipientService();
-	const recipientsResult = await recipientService.getRecipientTableViewProgramScoped(user.id, programId);
+	const recipientsResult = await recipientService.getTableViewProgramScoped(user.id, programId);
 
 	const error = recipientsResult.success ? null : recipientsResult.error;
 	const rows: RecipientTableViewRow[] = recipientsResult.success ? recipientsResult.data.tableRows : [];

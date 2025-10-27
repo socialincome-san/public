@@ -3,19 +3,29 @@
 import { ActionCell } from '@/app/portal/components/data-table/elements/action-cell';
 import { SortableHeader } from '@/app/portal/components/data-table/elements/sortable-header';
 import { TextCell } from '@/app/portal/components/data-table/elements/text-cell';
-import type { OrganizationMembersTableViewRow } from '@socialincome/shared/src/database/services/user/user.types';
+import type { ProgramMemberTableViewRow } from '@socialincome/shared/src/database/services/program/program.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeProgramMembersColumns(): ColumnDef<OrganizationMembersTableViewRow>[] {
+export function makeProgramMembersColumns(): ColumnDef<ProgramMemberTableViewRow>[] {
 	return [
 		{
 			accessorKey: 'firstName',
-			header: (ctx) => <SortableHeader ctx={ctx}>First Name</SortableHeader>,
+			header: (ctx) => <SortableHeader ctx={ctx}>First name</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
 			accessorKey: 'lastName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Last Name</SortableHeader>,
+			header: (ctx) => <SortableHeader ctx={ctx}>Last name</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'email',
+			header: (ctx) => <SortableHeader ctx={ctx}>Email</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'role',
+			header: (ctx) => <SortableHeader ctx={ctx}>Role</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{

@@ -1,23 +1,33 @@
 import { PayoutStatus, ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ProgramWallet, ProgramWalletView } from './program.types';
+import { ProgramAccessService } from '../program-access/program-access.service';
+import { ProgramMemberTableView, ProgramMemberTableViewRow, ProgramWallet, ProgramWallets } from './program.types';
 
 export class ProgramService extends BaseService {
-	async getProgramWalletView(userId: string): Promise<ServiceResult<ProgramWalletView>> {
+	private programAccessService = new ProgramAccessService();
+
+	async getProgramWallets(userId: string): Promise<ServiceResult<ProgramWallets>> {
 		try {
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+
+			const accessiblePrograms = accessibleProgramsResult.data;
+			if (accessiblePrograms.length === 0) {
+				return this.resultOk({ wallets: [] });
+			}
+
+			const programIds = accessiblePrograms.map((p) => p.programId);
+
 			const programs = await this.db.program.findMany({
-				where: {
-					accesses: {
-						some: { userId },
-					},
-				},
+				where: { id: { in: programIds } },
 				select: {
 					id: true,
 					name: true,
 					country: true,
 					payoutCurrency: true,
-					accesses: { where: { userId }, select: { permissions: true } },
 					recipients: {
 						select: {
 							payouts: {
@@ -30,9 +40,10 @@ export class ProgramService extends BaseService {
 				orderBy: { createdAt: 'desc' },
 			});
 
-			const wallets: ProgramWallet[] = [];
+			const wallets: ProgramWallet[] = programs.map((program) => {
+				const permission =
+					accessiblePrograms.find((a) => a.programId === program.id)?.permission ?? ProgramPermission.readonly;
 
-			for (const program of programs) {
 				const recipientsCount = program.recipients.length;
 
 				let totalPayoutsSum = 0;
@@ -42,12 +53,7 @@ export class ProgramService extends BaseService {
 					}
 				}
 
-				const permissions = program.accesses[0]?.permissions ?? [];
-				const permission: ProgramPermission = permissions.includes(ProgramPermission.edit)
-					? ProgramPermission.edit
-					: ProgramPermission.readonly;
-
-				wallets.push({
+				return {
 					id: program.id,
 					programName: program.name,
 					country: program.country,
@@ -55,8 +61,8 @@ export class ProgramService extends BaseService {
 					recipientsCount,
 					totalPayoutsSum,
 					permission,
-				});
-			}
+				};
+			});
 
 			return this.resultOk({ wallets });
 		} catch {
@@ -64,13 +70,66 @@ export class ProgramService extends BaseService {
 		}
 	}
 
-	async getProgramWalletViewProgramScoped(userId: string, programId: string): Promise<ServiceResult<ProgramWallet>> {
-		const base = await this.getProgramWalletView(userId);
-		if (!base.success) return this.resultFail(base.error);
+	async getProgramWalletsProgramScoped(userId: string, programId: string): Promise<ServiceResult<ProgramWallet>> {
+		const base = await this.getProgramWallets(userId);
+		if (!base.success) {
+			return this.resultFail(base.error);
+		}
 
 		const wallet = base.data.wallets.find((w) => w.id === programId);
-		if (!wallet) return this.resultFail('Program not found or not accessible');
+		if (!wallet) {
+			return this.resultFail('Program not found or not accessible');
+		}
 
 		return this.resultOk(wallet);
+	}
+
+	async getMembersTableView(userId: string, programId: string): Promise<ServiceResult<ProgramMemberTableView>> {
+		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const accessible = accessResult.data.find((a) => a.programId === programId);
+			if (!accessible) {
+				return this.resultFail('User does not have access to this program');
+			}
+
+			const myPermission = accessible.permission;
+
+			const accesses = await this.db.programAccess.findMany({
+				where: { programId },
+				select: {
+					user: {
+						select: {
+							id: true,
+							role: true,
+							contact: {
+								select: {
+									firstName: true,
+									lastName: true,
+									email: true,
+								},
+							},
+						},
+					},
+				},
+				orderBy: { user: { contact: { firstName: 'asc' } } },
+			});
+
+			const tableRows: ProgramMemberTableViewRow[] = accesses.map((entry) => ({
+				id: entry.user.id,
+				firstName: entry.user.contact?.firstName ?? '',
+				lastName: entry.user.contact?.lastName ?? '',
+				email: entry.user.contact?.email ?? '',
+				role: entry.user.role ?? null,
+				permission: myPermission ?? ProgramPermission.readonly,
+			}));
+
+			return this.resultOk({ tableRows });
+		} catch {
+			return this.resultFail('Could not fetch program members');
+		}
 	}
 }

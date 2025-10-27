@@ -2,11 +2,11 @@
 
 import { Badge } from '@/app/portal/components/badge';
 import { PayoutStatus } from '@prisma/client';
-import { AlertTriangleIcon, CheckIcon, ClockIcon, HelpCircleIcon, XCircleIcon } from 'lucide-react';
+import { AlertTriangleIcon, CheckIcon, ClockIcon, HelpCircleIcon, MinusIcon, XCircleIcon } from 'lucide-react';
 import { ComponentType } from 'react';
 
 type PayoutStatusBadgeProps = {
-	status: PayoutStatus;
+	status: PayoutStatus | null;
 };
 
 const PAYOUT_STATUS_UI: Record<
@@ -22,7 +22,17 @@ const PAYOUT_STATUS_UI: Record<
 };
 
 export function PayoutStatusBadge({ status }: PayoutStatusBadgeProps) {
+	if (!status) {
+		return (
+			<Badge variant="outline">
+				<MinusIcon className="mr-1 h-4 w-4" />
+				No payout
+			</Badge>
+		);
+	}
+
 	const { variant, label, Icon } = PAYOUT_STATUS_UI[status];
+
 	return (
 		<Badge variant={variant}>
 			<Icon className="mr-1 h-4 w-4" />

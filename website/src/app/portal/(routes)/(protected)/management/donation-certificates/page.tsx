@@ -9,7 +9,7 @@ export default async function DonationCertificatesPage() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new DonationCertificateService();
-	const certificatesResult = await service.getDonationCertificateTableView(user.id);
+	const certificatesResult = await service.getTableView(user.id);
 
 	const error = certificatesResult.success ? null : certificatesResult.error;
 	const certificateRows: DonationCertificateTableViewRow[] = certificatesResult.success

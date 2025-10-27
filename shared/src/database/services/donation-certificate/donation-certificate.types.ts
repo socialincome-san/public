@@ -1,16 +1,14 @@
-import { ProgramPermission } from '@prisma/client';
+import { OrganizationPermission } from '@prisma/client';
 
 export type DonationCertificateTableViewRow = {
 	id: string;
 	year: number;
 	contributorFirstName: string;
 	contributorLastName: string;
-	email: string | null;
-	programName: string;
-	storagePath: string | null;
+	email: string;
+	storagePath: string;
 	createdAt: Date;
-	createdAtFormatted: string;
-	permission: ProgramPermission;
+	permission: OrganizationPermission;
 };
 
 export type DonationCertificateTableView = {

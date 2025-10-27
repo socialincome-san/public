@@ -8,7 +8,7 @@ type Props = {
 
 export async function UserPrograms({ userId }: Props) {
 	const service = new ProgramService();
-	const result = await service.getProgramWalletView(userId);
+	const result = await service.getProgramWallets(userId);
 
 	if (!result.success) {
 		return <div>{result.error}</div>;

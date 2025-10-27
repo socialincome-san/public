@@ -12,7 +12,7 @@ export default async function SurveysPageProgramScoped({ params }: Props) {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const surveyService = new SurveyService();
-	const surveysResult = await surveyService.getSurveyTableViewProgramScoped(user.id, programId);
+	const surveysResult = await surveyService.getTableViewProgramScoped(user.id, programId);
 
 	const error = surveysResult.success ? null : surveysResult.error;
 	const rows: SurveyTableViewRow[] = surveysResult.success ? surveysResult.data.tableRows : [];

@@ -8,7 +8,7 @@ export default async function ContributionsPage() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ContributionService();
-	const result = await service.getContributionTableView(user.id);
+	const result = await service.getTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows: ContributionTableViewRow[] = result.success ? result.data.tableRows : [];

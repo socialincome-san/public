@@ -1,62 +1,53 @@
+import { OrganizationPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { OrganizationService } from '../organization/organization.service';
 import { CampaignTableView, CampaignTableViewRow } from './campaign.types';
 
 export class CampaignService extends BaseService {
-	async getTableView(userId: string, organizationId: string): Promise<ServiceResult<CampaignTableView>> {
-		try {
-			const access = await this.db.organizationAccess.findFirst({
-				where: {
-					userId,
-					organizationId,
-				},
-				select: { id: true },
-			});
+	private organizationService = new OrganizationService();
 
-			if (!access) {
-				return this.resultFail('User does not have access to this organization');
+	async getTableView(userId: string): Promise<ServiceResult<CampaignTableView>> {
+		try {
+			const activeOrgResult = await this.organizationService.getActiveOrganization(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
 			}
 
+			const { id: organizationId, hasEdit } = activeOrgResult.data;
+
 			const campaigns = await this.db.campaign.findMany({
-				where: {
-					organizationId,
-				},
+				where: { organizationId },
 				select: {
 					id: true,
 					title: true,
-					creatorName: true,
-					creatorEmail: true,
-					isActive: true,
-					goal: true,
+					description: true,
 					currency: true,
 					endDate: true,
-					program: {
-						select: {
-							name: true,
-						},
-					},
+					isActive: true,
+					program: { select: { name: true } },
+					createdAt: true,
 				},
-				orderBy: { endDate: 'desc' },
+				orderBy: { createdAt: 'desc' },
 			});
 
-			const dateFormatter = new Intl.DateTimeFormat('de-CH');
+			const permission = hasEdit ? OrganizationPermission.edit : OrganizationPermission.readonly;
 
-			const tableRows: CampaignTableViewRow[] = campaigns.map((c) => ({
-				id: c.id,
-				title: c.title,
-				creatorName: c.creatorName ?? '',
-				creatorEmail: c.creatorEmail ?? '',
-				status: c.isActive,
-				goal: c.goal ? Number(c.goal) : null,
-				currency: c.currency ?? null,
-				endDate: c.endDate,
-				endDateFormatted: dateFormatter.format(c.endDate),
-				programName: c.program?.name ?? null,
+			const tableRows: CampaignTableViewRow[] = campaigns.map((campaign) => ({
+				id: campaign.id,
+				title: campaign.title,
+				description: campaign.description,
+				currency: campaign.currency,
+				endDate: campaign.endDate,
+				isActive: campaign.isActive,
+				programName: campaign.program?.name ?? null,
+				createdAt: campaign.createdAt,
+				permission,
 			}));
 
 			return this.resultOk({ tableRows });
 		} catch {
-			return this.resultFail('Could not fetch campaigns for organization');
+			return this.resultFail('Could not fetch campaigns');
 		}
 	}
 }

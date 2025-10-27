@@ -1,6 +1,7 @@
 'use client';
 
 import { ActionCell } from '@/app/portal/components/data-table/elements/action-cell';
+import { DateCell } from '@/app/portal/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/app/portal/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/app/portal/components/data-table/elements/status-cell';
 import { TextCell } from '@/app/portal/components/data-table/elements/text-cell';
@@ -15,28 +16,8 @@ export function makeCampaignColumns(): ColumnDef<CampaignTableViewRow>[] {
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'creatorName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Creator Name</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'creatorEmail',
-			header: (ctx) => <SortableHeader ctx={ctx}>Creator Email</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'programName',
-			header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'status',
-			header: (ctx) => <SortableHeader ctx={ctx}>Status</SortableHeader>,
-			cell: (ctx) => <StatusCell ctx={ctx} variant="campaign" />,
-		},
-		{
-			accessorKey: 'goal',
-			header: (ctx) => <SortableHeader ctx={ctx}>Goal</SortableHeader>,
+			accessorKey: 'description',
+			header: (ctx) => <SortableHeader ctx={ctx}>Description</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
@@ -45,9 +26,24 @@ export function makeCampaignColumns(): ColumnDef<CampaignTableViewRow>[] {
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
 		{
-			accessorKey: 'endDateFormatted',
+			accessorKey: 'endDate',
 			header: (ctx) => <SortableHeader ctx={ctx}>End Date</SortableHeader>,
+			cell: (ctx) => <DateCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'isActive',
+			header: (ctx) => <SortableHeader ctx={ctx}>Status</SortableHeader>,
+			cell: (ctx) => <StatusCell ctx={ctx} variant="campaign" />,
+		},
+		{
+			accessorKey: 'programName',
+			header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'createdAt',
+			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
+			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 		{
 			id: 'actions',
