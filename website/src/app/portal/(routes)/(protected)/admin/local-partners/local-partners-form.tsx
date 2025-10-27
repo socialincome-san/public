@@ -106,6 +106,7 @@ export default function LocalPartnersForm({
 												update: {
 													data: {
 														number: contactFields.phone.value,
+														hasWhatsApp: contactFields.hasWhatsApp.value,
 													},
 													where: {
 														id: localPartner?.contact.phone?.id,
@@ -148,6 +149,7 @@ export default function LocalPartnersForm({
 									? {
 											create: {
 												number: contactFields.phone.value,
+												hasWhatsApp: contactFields.hasWhatsApp.value,
 											},
 										}
 									: undefined,

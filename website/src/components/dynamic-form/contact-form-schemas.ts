@@ -37,7 +37,7 @@ export const formSchema: FormSchema = {
 		dateOfBirth: {
 			placeholder: 'Date of birth',
 			label: 'Date of birth',
-			zodSchema: z.date().max(new Date(), { message: 'Too young!' }).nullable(),
+			zodSchema: z.date().max(new Date(), { message: 'Too young!' }).optional(),
 		},
 		profession: {
 			placeholder: 'Profession',
@@ -58,6 +58,10 @@ export const formSchema: FormSchema = {
 				.regex(/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/gm)
 				.or(z.literal(''))
 				.optional(),
+		},
+		hasWhatsApp: {
+			label: 'Has WhatsApp',
+			zodSchema: z.boolean().optional(),
 		},
 		street: {
 			placeholder: 'Street',
