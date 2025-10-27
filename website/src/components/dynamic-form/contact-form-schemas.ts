@@ -22,7 +22,7 @@ export const formSchema: FormSchema = {
 		callingName: {
 			placeholder: 'Calling Name',
 			label: 'Calling Name',
-			zodSchema: z.string().optional(),
+			zodSchema: z.string().nullable(),
 		},
 		email: {
 			placeholder: 'Email',
@@ -32,7 +32,7 @@ export const formSchema: FormSchema = {
 		language: {
 			placeholder: 'Language',
 			label: 'Language',
-			zodSchema: z.string().optional(),
+			zodSchema: z.string().nullable(),
 		},
 		dateOfBirth: {
 			placeholder: 'Date of birth',
@@ -42,7 +42,7 @@ export const formSchema: FormSchema = {
 		profession: {
 			placeholder: 'Profession',
 			label: 'Profession',
-			zodSchema: z.string().optional(),
+			zodSchema: z.string().nullable(),
 		},
 		gender: {
 			placeholder: 'Choose Gender',
