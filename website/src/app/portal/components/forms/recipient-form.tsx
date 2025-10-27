@@ -160,7 +160,6 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 		getOptions();
 	}, [userId]);
 
-	// TODO:
 	useEffect(() => {
 		if (localPartner && programs) {
 			const partnersObj = getZodEnum(
@@ -175,10 +174,22 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 					label: r.name,
 				})),
 			);
-			formSchema.fields.localPartner.zodSchema = z.nativeEnum(partnersObj);
-			formSchema.fields.program.zodSchema = z.nativeEnum(programsObj);
+			setFormSchema((prevSchema) => ({
+				...prevSchema,
+				fields: {
+					...prevSchema.fields,
+					localPartner: {
+						...prevSchema.fields.localPartner,
+						zodSchema: z.nativeEnum(partnersObj),
+					},
+					program: {
+						...prevSchema.fields.program,
+						zodSchema: z.nativeEnum(programsObj),
+					},
+				},
+			}));
 		}
-	}, [localPartner, programs]);
+	}, [localPartner, programs, setFormSchema]);
 
 	const onSubmit = (schema: typeof initialFormSchema) => {
 		startTransition(async () => {
@@ -218,6 +229,8 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 						id: recipient?.id,
 						startDate: schema.fields.startDate.value,
 						status: schema.fields.status.value,
+						successorName: schema.fields.successorName.value,
+						termsAccepted: schema.fields.termsAccepted.value ?? false,
 						localPartner: {
 							connect: {
 								id: schema.fields.localPartner.value,
@@ -290,6 +303,8 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 					const recipient: RecipientCreateInput = {
 						startDate: schema.fields.startDate.value,
 						status: schema.fields.status.value,
+						successorName: schema.fields.successorName.value,
+						termsAccepted: schema.fields.termsAccepted.value ?? false,
 						localPartner: {
 							connect: {
 								id: schema.fields.localPartner.value,

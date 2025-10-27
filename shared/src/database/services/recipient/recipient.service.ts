@@ -1,8 +1,13 @@
 import { PayoutStatus, ProgramPermission, Recipient } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { LocalPartnerUpdateInput } from '../local-partner/local-partner.types';
-import { RecipientCreateInput, RecipientPayload, RecipientTableView, RecipientTableViewRow } from './recipient.types';
+import {
+	RecipientCreateInput,
+	RecipientPayload,
+	RecipientTableView,
+	RecipientTableViewRow,
+	RecipientUpdateInput,
+} from './recipient.types';
 
 export class RecipientService extends BaseService {
 	// TODO: check user permissions
@@ -16,7 +21,7 @@ export class RecipientService extends BaseService {
 	}
 
 	// TODO: check user permissions
-	async update(recipient: LocalPartnerUpdateInput): Promise<ServiceResult<Recipient>> {
+	async update(recipient: RecipientUpdateInput): Promise<ServiceResult<Recipient>> {
 		try {
 			const partner = await this.db.recipient.update({
 				where: {

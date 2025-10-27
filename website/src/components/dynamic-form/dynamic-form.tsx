@@ -293,7 +293,6 @@ const GenericFormField = ({
 									</FormControl>
 									<SelectContent {...form.register(optionKey)}>
 										{Object.entries(getEnumValues(option, parentOption)).map(([label, id]) => (
-											// TODO:
 											<SelectItem value={id} key={id}>
 												{label}
 											</SelectItem>
