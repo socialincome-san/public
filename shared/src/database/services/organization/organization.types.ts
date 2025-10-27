@@ -1,10 +1,5 @@
 import { OrganizationPermission, UserRole } from '@prisma/client';
 
-export type ActiveOrganization = {
-	id: string;
-	hasEdit: boolean;
-};
-
 export type OrganizationMemberTableViewRow = {
 	id: string;
 	firstName: string;

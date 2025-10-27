@@ -1,20 +1,19 @@
-import { OrganizationPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { OrganizationService } from '../organization/organization.service';
+import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import { ContributionTableView, ContributionTableViewRow } from './contribution.types';
 
 export class ContributionService extends BaseService {
-	private organizationService = new OrganizationService();
+	private organizationAccessService = new OrganizationAccessService();
 
 	async getTableView(userId: string): Promise<ServiceResult<ContributionTableView>> {
 		try {
-			const activeOrgResult = await this.organizationService.getActiveOrganization(userId);
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
 			if (!activeOrgResult.success) {
 				return this.resultFail(activeOrgResult.error);
 			}
 
-			const { id: organizationId, hasEdit } = activeOrgResult.data;
+			const { id: organizationId, permission } = activeOrgResult.data;
 
 			const contributions = await this.db.contribution.findMany({
 				where: {
@@ -47,8 +46,6 @@ export class ContributionService extends BaseService {
 				},
 				orderBy: { createdAt: 'desc' },
 			});
-
-			const permission = hasEdit ? OrganizationPermission.edit : OrganizationPermission.readonly;
 
 			const tableRows: ContributionTableViewRow[] = contributions.map((c) => ({
 				id: c.id,

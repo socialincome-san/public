@@ -1,38 +1,38 @@
-// import { OrganizationPermission } from '@prisma/client';
-// import { BaseService } from '../core/base.service';
-// import { ServiceResult } from '../core/base.types';
-//
-// export type UserOrganizationAccess = {
-// 	organizationId: string;
-// 	permissions: OrganizationPermission[];
-// };
-//
-// export class OrganizationAccessService extends BaseService {
-// 	async getUserOrganizationAccesses(userId: string): Promise<ServiceResult<UserOrganizationAccess[]>> {
-// 		try {
-// 			const accesses = await this.db.organizationAccess.findMany({
-// 				where: { userId },
-// 				select: {
-// 					organizationId: true,
-// 					permissions: true,
-// 				},
-// 			});
-// 			return this.resultOk(accesses);
-// 		} catch {
-// 			return this.resultFail('Could not fetch organization accesses');
-// 		}
-// 	}
-//
-// 	getAccessibleOrganizationIds(organizationAccesses: UserOrganizationAccess[]): string[] {
-// 		return organizationAccesses.map((access) => access.organizationId);
-// 	}
-//
-// 	hasEditPermission(organizationAccesses: UserOrganizationAccess[], relatedOrganizationIds: string[]): boolean {
-// 		return organizationAccesses.some((access) => {
-// 			return (
-// 				relatedOrganizationIds.includes(access.organizationId) &&
-// 				access.permissions.includes(OrganizationPermission.edit)
-// 			);
-// 		});
-// 	}
-// }
+import { OrganizationPermission } from '@prisma/client';
+import { BaseService } from '../core/base.service';
+import { ServiceResult } from '../core/base.types';
+import { ActiveOrganizationAccess } from './organization-access.types';
+
+export class OrganizationAccessService extends BaseService {
+	async getActiveOrganizationAccess(userId: string): Promise<ServiceResult<ActiveOrganizationAccess>> {
+		try {
+			const user = await this.db.user.findUnique({
+				where: { id: userId },
+				select: {
+					activeOrganizationId: true,
+					organizationAccesses: {
+						select: {
+							organizationId: true,
+							permission: true,
+						},
+					},
+				},
+			});
+
+			if (!user?.activeOrganizationId) {
+				return this.resultFail('User has no active organization');
+			}
+
+			const access = user.organizationAccesses.find((a) => a.organizationId === user.activeOrganizationId);
+
+			const permission = access?.permission ?? OrganizationPermission.readonly;
+
+			return this.resultOk({
+				id: user.activeOrganizationId,
+				permission,
+			});
+		} catch {
+			return this.resultFail('Could not fetch active organization');
+		}
+	}
+}

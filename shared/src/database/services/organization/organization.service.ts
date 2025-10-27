@@ -1,9 +1,9 @@
 import { OrganizationPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import { UserService } from '../user/user.service';
 import {
-	ActiveOrganization,
 	OrganizationMemberTableView,
 	OrganizationMemberTableViewRow,
 	OrganizationTableView,
@@ -12,47 +12,16 @@ import {
 
 export class OrganizationService extends BaseService {
 	private userService = new UserService();
-
-	async getActiveOrganization(userId: string): Promise<ServiceResult<ActiveOrganization>> {
-		try {
-			const user = await this.db.user.findUnique({
-				where: { id: userId },
-				select: {
-					activeOrganizationId: true,
-					organizationAccesses: {
-						select: {
-							organizationId: true,
-							permissions: true,
-						},
-					},
-				},
-			});
-
-			if (!user?.activeOrganizationId) {
-				return this.resultFail('User has no active organization');
-			}
-
-			const access = user.organizationAccesses.find((access) => access.organizationId === user.activeOrganizationId);
-
-			const hasEdit = access?.permissions.includes(OrganizationPermission.edit) ?? false;
-
-			return this.resultOk({
-				id: user.activeOrganizationId,
-				hasEdit,
-			});
-		} catch {
-			return this.resultFail('Could not fetch active organization');
-		}
-	}
+	private organizationAccessService = new OrganizationAccessService();
 
 	async getOrganizationMembersTableView(userId: string): Promise<ServiceResult<OrganizationMemberTableView>> {
 		try {
-			const activeOrgResult = await this.getActiveOrganization(userId);
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
 			if (!activeOrgResult.success) {
 				return this.resultFail(activeOrgResult.error);
 			}
 
-			const { id: organizationId, hasEdit } = activeOrgResult.data;
+			const { id: organizationId } = activeOrgResult.data;
 
 			const members = await this.db.organizationAccess.findMany({
 				where: { organizationId },
@@ -70,7 +39,7 @@ export class OrganizationService extends BaseService {
 							},
 						},
 					},
-					permissions: true,
+					permission: true,
 				},
 				orderBy: { user: { contact: { firstName: 'asc' } } },
 			});
@@ -81,7 +50,7 @@ export class OrganizationService extends BaseService {
 				lastName: member.user.contact?.lastName ?? '',
 				email: member.user.contact?.email ?? '',
 				role: member.user.role ?? null,
-				permission: hasEdit ? OrganizationPermission.edit : OrganizationPermission.readonly,
+				permission: member.permission ?? OrganizationPermission.readonly,
 			}));
 
 			return this.resultOk({ tableRows });
@@ -97,7 +66,8 @@ export class OrganizationService extends BaseService {
 				return this.resultFail(isAdminResult.error);
 			}
 
-			if (!isAdminResult.data) {
+			const isAdmin = isAdminResult.data.isAdmin;
+			if (!isAdmin) {
 				return this.resultOk({ tableRows: [] });
 			}
 
@@ -105,13 +75,13 @@ export class OrganizationService extends BaseService {
 				select: {
 					id: true,
 					name: true,
-					createdAt: true,
 					_count: {
 						select: {
 							ownedPrograms: true,
 							accesses: true,
 						},
 					},
+					createdAt: true,
 				},
 				orderBy: { name: 'asc' },
 			});
@@ -127,6 +97,28 @@ export class OrganizationService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch {
 			return this.resultFail('Could not fetch organizations');
+		}
+	}
+
+	async setActiveOrganization(userId: string, organizationId: string): Promise<ServiceResult<null>> {
+		try {
+			const hasAccess = await this.db.organizationAccess.findFirst({
+				where: { userId, organizationId },
+				select: { id: true },
+			});
+
+			if (!hasAccess) {
+				return this.resultFail('User does not have access to this organization');
+			}
+
+			await this.db.user.update({
+				where: { id: userId },
+				data: { activeOrganizationId: organizationId },
+			});
+
+			return this.resultOk(null);
+		} catch {
+			return this.resultFail('Could not set active organization');
 		}
 	}
 }

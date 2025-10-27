@@ -55,30 +55,8 @@ export class UserService extends BaseService {
 			return this.resultFail('Error fetching user information');
 		}
 	}
-	
-	async setActiveOrganization(userId: string, organizationId: string): Promise<ServiceResult<null>> {
-		try {
-			const hasAccess = await this.db.organizationAccess.findFirst({
-				where: { userId, organizationId },
-				select: { id: true },
-			});
 
-			if (!hasAccess) {
-				return this.resultFail('User does not have access to this organization');
-			}
-
-			await this.db.user.update({
-				where: { id: userId },
-				data: { activeOrganizationId: organizationId },
-			});
-
-			return this.resultOk(null);
-		} catch {
-			return this.resultFail('Could not set active organization');
-		}
-	}
-
-	async isAdmin(userId: string): Promise<ServiceResult<boolean>> {
+	async isAdmin(userId: string): Promise<ServiceResult<{ isAdmin: boolean }>> {
 		try {
 			const user = await this.db.user.findUnique({
 				where: { id: userId },
@@ -89,7 +67,7 @@ export class UserService extends BaseService {
 				return this.resultFail('User not found');
 			}
 
-			return this.resultOk(user.role === UserRole.admin);
+			return this.resultOk({ isAdmin: user.role === UserRole.admin });
 		} catch {
 			return this.resultFail('Could not check admin status');
 		}

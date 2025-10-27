@@ -1,8 +1,8 @@
 import { ProgramPermission } from '@prisma/client';
 
-export type AccessibleProgram = {
+export type ProgramAccess = {
 	programId: string;
 	permission: ProgramPermission;
 };
 
-export type AccessibleProgramsResult = AccessibleProgram[];
+export type ProgramAccesses = ProgramAccess[];

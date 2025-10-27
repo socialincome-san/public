@@ -13,7 +13,7 @@ export class ExpenseService extends BaseService {
 				return this.resultFail(isAdminResult.error);
 			}
 
-			const isAdmin = isAdminResult.data;
+			const isAdmin = isAdminResult.data.isAdmin;
 			if (!isAdmin) {
 				return this.resultOk({ tableRows: [] });
 			}

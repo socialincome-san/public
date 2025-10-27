@@ -290,7 +290,7 @@ model OrganizationAccess {
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  permissions OrganizationPermission[]
+  permission OrganizationPermission @default(readonly)
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -306,7 +306,7 @@ model ProgramAccess {
   programId String
   program   Program @relation(fields: [programId], references: [id])
 
-  permission ProgramPermission
+  permission ProgramPermission @default(readonly)
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)

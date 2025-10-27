@@ -1,20 +1,19 @@
-import { OrganizationPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { OrganizationService } from '../organization/organization.service';
+import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import { DonationCertificateTableView, DonationCertificateTableViewRow } from './donation-certificate.types';
 
 export class DonationCertificateService extends BaseService {
-	private organizationService = new OrganizationService();
+	private organizationAccessService = new OrganizationAccessService();
 
 	async getTableView(userId: string): Promise<ServiceResult<DonationCertificateTableView>> {
 		try {
-			const activeOrgResult = await this.organizationService.getActiveOrganization(userId);
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
 			if (!activeOrgResult.success) {
 				return this.resultFail(activeOrgResult.error);
 			}
 
-			const { id: organizationId, hasEdit } = activeOrgResult.data;
+			const { id: organizationId, permission } = activeOrgResult.data;
 
 			const certificates = await this.db.donationCertificate.findMany({
 				where: {
@@ -45,8 +44,6 @@ export class DonationCertificateService extends BaseService {
 				},
 				orderBy: { createdAt: 'desc' },
 			});
-
-			const permission = hasEdit ? OrganizationPermission.edit : OrganizationPermission.readonly;
 
 			const tableRows: DonationCertificateTableViewRow[] = certificates.map((c) => ({
 				id: c.id,

@@ -1,6 +1,7 @@
-import { LocalPartner, UserRole } from '@prisma/client';
+import { LocalPartner } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { UserService } from '../user/user.service';
 import {
 	LocalPartnerCreateInput,
 	LocalPartnerPayload,
@@ -10,6 +11,8 @@ import {
 } from './local-partner.types';
 
 export class LocalPartnerService extends BaseService {
+	private userService = new UserService();
+
 	// TODO: check user permissions
 	async create(localPartner: LocalPartnerCreateInput): Promise<ServiceResult<LocalPartner>> {
 		try {
@@ -68,12 +71,13 @@ export class LocalPartnerService extends BaseService {
 
 	async getTableView(userId: string): Promise<ServiceResult<LocalPartnerTableView>> {
 		try {
-			const user = await this.db.user.findUnique({
-				where: { id: userId },
-				select: { role: true },
-			});
+			const isAdminResult = await this.userService.isAdmin(userId);
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
 
-			if (!user || user.role !== UserRole.admin) {
+			const isAdmin = isAdminResult.data.isAdmin;
+			if (!isAdmin) {
 				return this.resultOk({ tableRows: [] });
 			}
 
