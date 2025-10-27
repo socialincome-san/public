@@ -71,11 +71,10 @@ export class LocalPartnerService extends BaseService {
 		try {
 			const user = await this.db.user.findUnique({
 				where: { id: userId },
-				select: { role: true },
 			});
 
 			if (!user) {
-				return this.resultOk([]);
+				return this.resultFail('Could not fetch user');
 			}
 
 			const partners = await this.db.localPartner.findMany({
