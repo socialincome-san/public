@@ -18,7 +18,7 @@ import {
 	getRecipientAction,
 	getRecipientOptions,
 	updateRecipientAction,
-} from '../../server-actions/create-recipient-action';
+} from '../../server-actions/recipient-actions';
 
 export type RecipientFormProps = {
 	onSuccess?: () => void;
