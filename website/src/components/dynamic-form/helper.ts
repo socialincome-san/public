@@ -48,7 +48,7 @@ export type DropdownItem = {
 };
 
 export function getZodEnum(items: DropdownItem[]) {
-	const object = items.reduce((acc, item) => {
+	const object = items.reduce<Record<string, string>>((acc, item) => {
 		acc[item.label] = item.id;
 		return acc;
 	}, {});
@@ -57,9 +57,3 @@ export function getZodEnum(items: DropdownItem[]) {
 }
 
 type ExtractTypeFromObj<T> = T[keyof T];
-
-// const objectToEnum = <T extends object>(obj: T) => {
-// 	type EnumType = ExtractTypeFromObj<typeof obj>;
-
-// 	return Object.values(obj) as [EnumType, ...EnumType[]];
-// };
