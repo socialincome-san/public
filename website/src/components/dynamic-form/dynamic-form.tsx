@@ -126,11 +126,11 @@ const DynamicForm: FC<{
 		onSubmit(formSchema);
 	};
 
-	const [isAccorionOpen, setIsAccordionOpen] = useState(false);
+	const [openAccordion, setOpenAccordion] = useState<undefined | string | 'all'>(undefined);
 
 	const onValidationErrors = (e: Object) => {
 		console.error('dynamic form validation errors: ', e);
-		setIsAccordionOpen(true);
+		setOpenAccordion('all');
 	};
 
 	return (
@@ -142,11 +142,11 @@ const DynamicForm: FC<{
 							key={option}
 							type="single"
 							collapsible
-							value={isAccorionOpen ? 'open' : 'closed'}
-							onValueChange={(value) => setIsAccordionOpen(value === 'open')}
+							value={openAccordion ? (openAccordion === 'all' ? `accordion-${option}` : openAccordion) : 'closed'}
+							onValueChange={(value) => setOpenAccordion(value ? `accordion-${option}` : undefined)}
 						>
 							{/* TODO: find better solution to hide collapsed content */}
-							<AccordionItem value="open" className="[&[data-state=closed]>div]:h-0">
+							<AccordionItem value={`accordion-${option}`} className="[&[data-state=closed]>div]:h-0">
 								<AccordionTrigger>{formSchema.fields[option].label}</AccordionTrigger>
 								<AccordionContent className="flex flex-col gap-6 p-5" forceMount>
 									{getOptions(option).map((nestedOption) => (
