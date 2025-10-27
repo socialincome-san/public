@@ -10,7 +10,7 @@ type DataTableProps<Row> = {
 	emptyMessage: string;
 	actions?: ReactNode;
 	data: Row[];
-	makeColumns: (hideProgramName: boolean) => ColumnDef<Row>[];
+	makeColumns: (hideProgramName?: boolean) => ColumnDef<Row>[];
 	hideProgramName?: boolean;
 	onRowClick?: (row: Row) => void; // optional for now
 };

@@ -9,7 +9,7 @@ export default async function CampaignsPage() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const campaignService = new CampaignService();
-	const campaignsResult = await campaignService.getTableView(user.id, user.activeOrganization?.id ?? '');
+	const campaignsResult = await campaignService.getTableView(user.id);
 
 	const error = campaignsResult.success ? null : campaignsResult.error;
 	const campaignRows: CampaignTableViewRow[] = campaignsResult.success ? campaignsResult.data.tableRows : [];
