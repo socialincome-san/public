@@ -2,8 +2,8 @@ import { Button } from '@/app/portal/components/button';
 import { makeProgramMembersColumns } from '@/app/portal/components/data-table/columns/program-members';
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
 import { OrganizationMemberTableViewRow } from '@socialincome/shared/src/database/services/organization/organization.types';
+import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
 
 type Props = { params: Promise<{ programId: string }> };
 

@@ -1,7 +1,7 @@
+import { makeOngoingPayoutColumns } from '@/app/portal/components/data-table/columns/ongoing-payouts';
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
-import { makeOngoingPayoutColumns } from '@/app/portal/components/data-table/columns/ongoing-payouts';
 
 export default async function OngoingPayoutsPage() {
 	const user = await getAuthenticatedUserOrRedirect();

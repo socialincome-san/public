@@ -7,7 +7,7 @@ import {
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
-	DropdownMenuTrigger
+	DropdownMenuTrigger,
 } from '@/app/portal/components/dropdown-menu';
 import { Logo } from '@/app/portal/components/logo';
 import { useNavbarLinks } from '@/app/portal/components/navbar/hooks/use-navbar-links';

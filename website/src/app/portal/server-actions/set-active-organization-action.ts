@@ -1,8 +1,8 @@
 'use server';
 
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { revalidatePath } from 'next/cache';
 import { OrganizationService } from '@socialincome/shared/src/database/services/organization/organization.service';
+import { revalidatePath } from 'next/cache';
 
 export async function setActiveOrganizationAction(organizationId: string) {
 	const user = await getAuthenticatedUserOrRedirect();

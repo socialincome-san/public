@@ -1,9 +1,9 @@
 import { authAdmin } from '@/lib/firebase/firebase-admin';
+import { UserService } from '@socialincome/shared/src/database/services/user/user.service';
 import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
 import { notFound, redirect } from 'next/navigation';
 import { cache } from 'react';
 import { readSessionCookie } from './session';
-import { UserService } from '@socialincome/shared/src/database/services/user/user.service';
 
 async function verifySessionToken(cookie: string) {
 	return authAdmin.auth.verifySessionCookie(cookie, true);
