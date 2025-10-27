@@ -222,7 +222,7 @@ const GenericFormField = ({
 		? (formSchema.fields[parentOption] as FormSchema)?.fields[option]
 		: formSchema.fields[option];
 
-	const getEnumValues = (key: keyof z.infer<typeof zodSchema>, parentOption?: string) => {
+	const getEnumValues = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): { [key: string]: string } => {
 		const def = getDef(key, zodSchema, parentOption);
 		if (isOptional(key, zodSchema, parentOption)) return def.innerType._def.values;
 		return getType(key, zodSchema, parentOption) === 'ZodEnum' && def.values;
