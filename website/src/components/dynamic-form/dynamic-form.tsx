@@ -278,6 +278,10 @@ const GenericFormField = ({
 				);
 			case 'ZodEnum':
 				const options = Object.entries(getEnumValues(option, parentOption));
+
+				// preselect value if only one available and mandatory
+				const preselectValue =
+					!isOptional(option, zodSchema, parentOption) && options.length === 1 ? options[0][1] : undefined;
 				return (
 					<FormField
 						control={form.control}
@@ -287,8 +291,7 @@ const GenericFormField = ({
 							<FormItem>
 								<Label>{label}</Label>
 								<Select
-									// preselect value if only one exists
-									defaultValue={options.length === 1 ? options[0][1] : undefined}
+									defaultValue={preselectValue}
 									value={field.value}
 									onValueChange={field.onChange}
 									disabled={isLoading || readOnly}
