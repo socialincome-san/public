@@ -8,7 +8,15 @@ import { RecipientForm } from '@/app/portal/components/forms/recipient-form';
 import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import { useState } from 'react';
 
-export function RecipientsTableClient({ rows, error }: { rows: RecipientTableViewRow[]; error: string | null }) {
+export function RecipientsTableClient({
+	rows,
+	error,
+	programId,
+}: {
+	rows: RecipientTableViewRow[];
+	error: string | null;
+	programId?: string;
+}) {
 	const [open, setOpen] = useState(false);
 
 	const [recipientId, setRecipientId] = useState<string | undefined>();
@@ -43,7 +51,11 @@ export function RecipientsTableClient({ rows, error }: { rows: RecipientTableVie
 				emptyMessage="No recipients found"
 				data={rows}
 				makeColumns={makeRecipientColumns}
-				actions={<Button onClick={openEmptyForm}>Add new recipient</Button>}
+				actions={
+					<Button disabled={readOnly} onClick={openEmptyForm}>
+						Add new recipient
+					</Button>
+				}
 				onRowClick={openEditForm}
 			/>
 
@@ -58,6 +70,7 @@ export function RecipientsTableClient({ rows, error }: { rows: RecipientTableVie
 						onSuccess={() => setOpen(false)}
 						onCancel={() => setOpen(false)}
 						onError={onError}
+						programId={programId}
 					/>
 				</DialogContent>
 			</Dialog>

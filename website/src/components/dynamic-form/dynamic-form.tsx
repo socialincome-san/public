@@ -86,7 +86,7 @@ const DynamicForm: FC<{
 
 	// set form values if available
 	useEffect(() => {
-		if (mode === 'edit') {
+		if (mode !== 'add') {
 			for (const [name, field] of Object.entries(formSchema.fields)) {
 				if (!isFormField(field)) {
 					//nested
@@ -230,6 +230,16 @@ const GenericFormField = ({
 	};
 
 	const label = `${formFieldSchema.label} ${!isOptional(option, zodSchema, parentOption) ? '*' : ''}`;
+
+	// set selected value if only one option available
+	useEffect(() => {
+		if (getType(option, zodSchema, parentOption) === 'ZodEnum') {
+			const options = Object.entries(getEnumValues(option, parentOption));
+			if (options.length === 1) {
+				form.setValue(optionKey, options[0][1]);
+			}
+		}
+	});
 
 	if (isFormField(formFieldSchema)) {
 		switch (getType(option, zodSchema, parentOption)) {

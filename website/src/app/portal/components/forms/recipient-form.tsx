@@ -26,9 +26,10 @@ export type RecipientFormProps = {
 	onCancel?: () => void;
 	readOnly?: boolean;
 	recipientId?: string;
+	programId?: string;
 };
 
-export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readOnly }: RecipientFormProps) {
+export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readOnly, programId }: RecipientFormProps) {
 	const [programs, setPrograms] = useState<ProgramOption[] | undefined>(undefined);
 	const [localPartner, setLocalPartner] = useState<LocalPartnerOption[] | undefined>(undefined);
 
@@ -94,7 +95,9 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 					code: {
 						placeholder: 'Code',
 						label: 'Code',
-						zodSchema: z.string().min(2),
+						zodSchema: z.string().min(1, {
+							message: 'Code must be at least one characters.',
+						}),
 					},
 					phone: {
 						placeholder: 'Phone Number',
@@ -129,7 +132,7 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 						setRecipient(result.data);
 						const newSchema = { ...formSchema };
 						const contactValues = getContactValuesFromPayload(result.data.contact, newSchema.fields.contact.fields);
-						newSchema.fields.startDate.value = result.data.startDate;
+						newSchema.fields.startDate.value = result.data.startDate ?? undefined;
 						newSchema.fields.status.value = result.data.status;
 						newSchema.fields.successorName.value = result.data.successorName;
 						newSchema.fields.termsAccepted.value = result.data.termsAccepted;
@@ -169,10 +172,13 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 				})),
 			);
 			const programsObj = getZodEnum(
-				programs.map((r) => ({
-					id: r.id,
-					label: r.name,
-				})),
+				programs
+					.map((r) => ({
+						id: r.id,
+						label: r.name,
+					}))
+					// filter by program id if in program scope
+					.filter((p) => (programId ? p.id === programId : true)),
 			);
 			setFormSchema((prevSchema) => ({
 				...prevSchema,
@@ -359,7 +365,7 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 					};
 					res = await createRecipientAction(recipient);
 				}
-				res.success ? onSuccess?.() : onError?.(res.error);
+				res?.success ? onSuccess?.() : onError?.(res?.error);
 			} catch (error: unknown) {
 				onError?.(error);
 			}

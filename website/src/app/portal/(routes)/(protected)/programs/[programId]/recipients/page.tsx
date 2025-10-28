@@ -1,6 +1,4 @@
-import { Button } from '@/app/portal/components/button';
-import { makeRecipientColumns } from '@/app/portal/components/data-table/columns/recipients';
-import DataTable from '@/app/portal/components/data-table/data-table';
+import { RecipientsTableClient } from '@/app/portal/components/data-table/clients/recipients-table-client';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
 import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
@@ -17,15 +15,5 @@ export default async function RecipientsPageProgramScoped({ params }: Props) {
 	const error = recipientsResult.success ? null : recipientsResult.error;
 	const rows: RecipientTableViewRow[] = recipientsResult.success ? recipientsResult.data.tableRows : [];
 
-	return (
-		<DataTable
-			title="Recipients"
-			error={error}
-			emptyMessage="No recipients found"
-			data={rows}
-			makeColumns={makeRecipientColumns}
-			actions={<Button>Add new recipient</Button>}
-			hideProgramName
-		/>
-	);
+	return <RecipientsTableClient rows={rows} error={error} programId={programId} />;
 }

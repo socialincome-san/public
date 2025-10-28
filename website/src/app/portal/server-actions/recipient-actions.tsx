@@ -16,6 +16,7 @@ export async function createRecipientAction(recipient: RecipientCreateInput) {
 
 	const res = await recipientService.create(user.id, recipient);
 	revalidatePath('/portal/management/recipients');
+	revalidatePath('/portal/programs/[programId]/recipients', 'page');
 	return res;
 }
 
@@ -25,6 +26,7 @@ export async function updateRecipientAction(recipient: RecipientUpdateInput) {
 
 	const res = await recipientService.update(user.id, recipient);
 	revalidatePath('/portal/management/recipients');
+	revalidatePath('/portal/programs/[programId]/recipients', 'page');
 	return res;
 }
 
