@@ -189,8 +189,6 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 					program: {
 						...prevSchema.fields.program,
 						zodSchema: z.nativeEnum(programsObj),
-						// pre-select program id if in program scope
-						value: programId || prevSchema.fields.program.value,
 					},
 				},
 			}));
