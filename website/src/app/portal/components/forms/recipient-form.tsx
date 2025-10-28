@@ -104,7 +104,9 @@ export function RecipientForm({
 					code: {
 						placeholder: 'Code',
 						label: 'Code',
-						zodSchema: z.string().min(1),
+						zodSchema: z.string().min(1, {
+							message: 'Code must be at least one characters.',
+						}),
 					},
 					phone: {
 						placeholder: 'Phone Number',
@@ -139,7 +141,7 @@ export function RecipientForm({
 						setRecipient(result.data);
 						const newSchema = { ...formSchema };
 						const contactValues = getContactValuesFromPayload(result.data.contact, newSchema.fields.contact.fields);
-						newSchema.fields.startDate.value = result.data.startDate;
+						newSchema.fields.startDate.value = result.data.startDate ?? undefined;
 						newSchema.fields.status.value = result.data.status;
 						newSchema.fields.successorName.value = result.data.successorName;
 						newSchema.fields.termsAccepted.value = result.data.termsAccepted;
