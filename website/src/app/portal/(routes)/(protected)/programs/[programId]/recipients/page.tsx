@@ -15,5 +15,5 @@ export default async function RecipientsPageProgramScoped({ params }: Props) {
 	const error = recipientsResult.success ? null : recipientsResult.error;
 	const rows: RecipientTableViewRow[] = recipientsResult.success ? recipientsResult.data.tableRows : [];
 
-	return <RecipientsTableClient rows={rows} error={error} userId={user.id} programId={programId} />;
+	return <RecipientsTableClient rows={rows} error={error} programId={programId} />;
 }

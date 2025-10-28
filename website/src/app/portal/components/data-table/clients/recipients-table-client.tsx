@@ -51,7 +51,11 @@ export function RecipientsTableClient({
 				emptyMessage="No recipients found"
 				data={rows}
 				makeColumns={makeRecipientColumns}
-				actions={<Button onClick={openEmptyForm}>Add new recipient</Button>}
+				actions={
+					<Button disabled={readOnly} onClick={openEmptyForm}>
+						Add new recipient
+					</Button>
+				}
 				onRowClick={openEditForm}
 			/>
 
