@@ -86,7 +86,7 @@ const DynamicForm: FC<{
 
 	// set form values if available
 	useEffect(() => {
-		if (mode === 'edit') {
+		if (mode !== 'add') {
 			for (const [name, field] of Object.entries(formSchema.fields)) {
 				if (!isFormField(field)) {
 					//nested
@@ -282,6 +282,10 @@ const GenericFormField = ({
 				// preselect value if only one available and mandatory
 				const preselectValue =
 					!isOptional(option, zodSchema, parentOption) && options.length === 1 ? options[0][1] : undefined;
+				if (preselectValue) {
+					form.setValue(optionKey, preselectValue);
+				}
+
 				return (
 					<FormField
 						control={form.control}
@@ -290,12 +294,7 @@ const GenericFormField = ({
 						render={({ field }) => (
 							<FormItem>
 								<Label>{label}</Label>
-								<Select
-									defaultValue={preselectValue}
-									value={field.value}
-									onValueChange={field.onChange}
-									disabled={isLoading || readOnly}
-								>
+								<Select value={field.value} onValueChange={field.onChange} disabled={isLoading || readOnly}>
 									<FormControl>
 										<SelectTrigger>
 											<SelectValue placeholder={formFieldSchema.placeholder} />
