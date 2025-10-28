@@ -13,3 +13,8 @@ export type ProgramWallet = {
 export type ProgramWalletView = {
 	wallets: ProgramWallet[];
 };
+
+export type ProgramOption = {
+	id: string;
+	name: string;
+};

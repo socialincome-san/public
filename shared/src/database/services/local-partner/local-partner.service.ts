@@ -3,6 +3,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import {
 	LocalPartnerCreateInput,
+	LocalPartnerOption,
 	LocalPartnerPayload,
 	LocalPartnerTableView,
 	LocalPartnerTableViewRow,
@@ -63,6 +64,30 @@ export class LocalPartnerService extends BaseService {
 			return this.resultOk(partner);
 		} catch (error) {
 			return this.resultFail('Could not get local partner');
+		}
+	}
+
+	async getOptions(userId: string): Promise<ServiceResult<LocalPartnerOption[]>> {
+		try {
+			const user = await this.db.user.findUnique({
+				where: { id: userId },
+			});
+
+			if (!user) {
+				return this.resultFail('Could not fetch user');
+			}
+
+			const partners = await this.db.localPartner.findMany({
+				select: {
+					id: true,
+					name: true,
+				},
+				orderBy: { name: 'asc' },
+			});
+
+			return this.resultOk(partners);
+		} catch (error) {
+			return this.resultFail('Could not fetch local partners');
 		}
 	}
 

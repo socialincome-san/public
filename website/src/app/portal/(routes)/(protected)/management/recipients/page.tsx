@@ -12,5 +12,5 @@ export default async function RecipientsPage() {
 	const error = result.success ? null : result.error;
 	const rows: RecipientTableViewRow[] = result.success ? result.data.tableRows : [];
 
-	return <RecipientsTableClient rows={rows} error={error} />;
+	return <RecipientsTableClient rows={rows} error={error} userId={user.id} />;
 }
