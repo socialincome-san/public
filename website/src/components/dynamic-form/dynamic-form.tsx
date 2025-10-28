@@ -277,6 +277,7 @@ const GenericFormField = ({
 					/>
 				);
 			case 'ZodEnum':
+				const options = Object.entries(getEnumValues(option, parentOption));
 				return (
 					<FormField
 						control={form.control}
@@ -285,14 +286,20 @@ const GenericFormField = ({
 						render={({ field }) => (
 							<FormItem>
 								<Label>{label}</Label>
-								<Select value={field.value} onValueChange={field.onChange} disabled={isLoading || readOnly}>
+								<Select
+									// preselect value if only one exists
+									defaultValue={options.length === 1 ? options[0][1] : undefined}
+									value={field.value}
+									onValueChange={field.onChange}
+									disabled={isLoading || readOnly}
+								>
 									<FormControl>
 										<SelectTrigger>
 											<SelectValue placeholder={formFieldSchema.placeholder} />
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent {...form.register(optionKey)}>
-										{Object.entries(getEnumValues(option, parentOption)).map(([label, id]) => (
+										{options.map(([label, id]) => (
 											<SelectItem value={id} key={id}>
 												{label}
 											</SelectItem>

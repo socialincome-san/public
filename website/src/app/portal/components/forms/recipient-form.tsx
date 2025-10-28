@@ -197,8 +197,6 @@ export function RecipientForm({
 					program: {
 						...prevSchema.fields.program,
 						zodSchema: z.nativeEnum(programsObj),
-						// pre-select program id if in program scope
-						value: programId || prevSchema.fields.program.value,
 					},
 				},
 			}));
