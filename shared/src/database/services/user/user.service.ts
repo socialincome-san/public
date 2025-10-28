@@ -56,7 +56,7 @@ export class UserService extends BaseService {
 		}
 	}
 
-	async isAdmin(userId: string): Promise<ServiceResult<{ isAdmin: boolean }>> {
+	async isAdmin(userId: string): Promise<ServiceResult<true>> {
 		try {
 			const user = await this.db.user.findUnique({
 				where: { id: userId },
@@ -67,7 +67,11 @@ export class UserService extends BaseService {
 				return this.resultFail('User not found');
 			}
 
-			return this.resultOk({ isAdmin: user.role === UserRole.admin });
+			if (user.role !== UserRole.admin) {
+				return this.resultFail('Permission denied');
+			}
+
+			return this.resultOk(true);
 		} catch {
 			return this.resultFail('Could not check admin status');
 		}

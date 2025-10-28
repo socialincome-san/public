@@ -9,13 +9,9 @@ export class ExpenseService extends BaseService {
 	async getTableView(userId: string): Promise<ServiceResult<ExpenseTableView>> {
 		try {
 			const isAdminResult = await this.userService.isAdmin(userId);
+
 			if (!isAdminResult.success) {
 				return this.resultFail(isAdminResult.error);
-			}
-
-			const isAdmin = isAdminResult.data.isAdmin;
-			if (!isAdmin) {
-				return this.resultOk({ tableRows: [] });
 			}
 
 			const expenses = await this.db.expense.findMany({
@@ -37,7 +33,6 @@ export class ExpenseService extends BaseService {
 				amountChf: Number(expense.amountChf),
 				organizationName: expense.organization.name,
 				createdAt: expense.createdAt,
-				readonly: !isAdmin,
 			}));
 
 			return this.resultOk({ tableRows });

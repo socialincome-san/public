@@ -13,8 +13,13 @@ import {
 export class LocalPartnerService extends BaseService {
 	private userService = new UserService();
 
-	// TODO: check user permissions
-	async create(localPartner: LocalPartnerCreateInput): Promise<ServiceResult<LocalPartner>> {
+	async create(userId: string, localPartner: LocalPartnerCreateInput): Promise<ServiceResult<LocalPartner>> {
+		const isAdminResult = await this.userService.isAdmin(userId);
+
+		if (!isAdminResult.success) {
+			return this.resultFail(isAdminResult.error);
+		}
+
 		try {
 			const partner = await this.db.localPartner.create({ data: localPartner });
 			return this.resultOk(partner);
@@ -23,24 +28,35 @@ export class LocalPartnerService extends BaseService {
 		}
 	}
 
-	// TODO: check user permissions
-	async update(localPartner: LocalPartnerUpdateInput): Promise<ServiceResult<LocalPartner>> {
+	async update(userId: string, localPartner: LocalPartnerUpdateInput): Promise<ServiceResult<LocalPartner>> {
+		const isAdminResult = await this.userService.isAdmin(userId);
+
+		if (!isAdminResult.success) {
+			return this.resultFail(isAdminResult.error);
+		}
+
 		try {
 			const partner = await this.db.localPartner.update({
-				where: {
-					id: localPartner.id?.toString(),
-				},
+				where: { id: localPartner.id?.toString() },
 				data: localPartner,
 			});
+
 			return this.resultOk(partner);
-		} catch (e) {
-			return this.resultFail('Could not update local partner: ' + e);
+		} catch {
+			return this.resultFail('Could not update local partner');
 		}
 	}
 
-	async get(localPartnerId: string): Promise<ServiceResult<LocalPartnerPayload>> {
+	async get(userId: string, localPartnerId: string): Promise<ServiceResult<LocalPartnerPayload>> {
+		const isAdminResult = await this.userService.isAdmin(userId);
+
+		if (!isAdminResult.success) {
+			return this.resultFail(isAdminResult.error);
+		}
+
 		try {
 			const partner = await this.db.localPartner.findUnique({
+				where: { id: localPartnerId },
 				select: {
 					id: true,
 					name: true,
@@ -60,27 +76,26 @@ export class LocalPartnerService extends BaseService {
 						},
 					},
 				},
-				where: { id: localPartnerId },
 			});
-			if (partner === null) return this.resultFail('Could not get local partner');
+
+			if (!partner) {
+				return this.resultFail('Could not get local partner');
+			}
+
 			return this.resultOk(partner);
-		} catch (error) {
+		} catch {
 			return this.resultFail('Could not get local partner');
 		}
 	}
 
 	async getTableView(userId: string): Promise<ServiceResult<LocalPartnerTableView>> {
+		const isAdminResult = await this.userService.isAdmin(userId);
+
+		if (!isAdminResult.success) {
+			return this.resultFail(isAdminResult.error);
+		}
+
 		try {
-			const isAdminResult = await this.userService.isAdmin(userId);
-			if (!isAdminResult.success) {
-				return this.resultFail(isAdminResult.error);
-			}
-
-			const isAdmin = isAdminResult.data.isAdmin;
-			if (!isAdmin) {
-				return this.resultOk({ tableRows: [] });
-			}
-
 			const partners = await this.db.localPartner.findMany({
 				select: {
 					id: true,

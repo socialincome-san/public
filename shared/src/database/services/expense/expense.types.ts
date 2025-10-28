@@ -7,7 +7,6 @@ export type ExpenseTableViewRow = {
 	amountChf: number;
 	organizationName: string;
 	createdAt: Date;
-	readonly: boolean;
 };
 
 export type ExpenseTableView = {

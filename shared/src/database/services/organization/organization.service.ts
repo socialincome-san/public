@@ -62,13 +62,9 @@ export class OrganizationService extends BaseService {
 	async getAdminTableView(userId: string): Promise<ServiceResult<OrganizationTableView>> {
 		try {
 			const isAdminResult = await this.userService.isAdmin(userId);
+
 			if (!isAdminResult.success) {
 				return this.resultFail(isAdminResult.error);
-			}
-
-			const isAdmin = isAdminResult.data.isAdmin;
-			if (!isAdmin) {
-				return this.resultOk({ tableRows: [] });
 			}
 
 			const organizations = await this.db.organization.findMany({

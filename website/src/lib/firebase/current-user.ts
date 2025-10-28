@@ -34,6 +34,14 @@ export async function getAuthenticatedUserOrRedirect(): Promise<UserInformation>
 	return user;
 }
 
+export async function getAuthenticatedUserOrThrow(): Promise<UserInformation> {
+	const user = await getCurrentUser();
+	if (!user) {
+		throw new Error('Not authenticated');
+	}
+	return user;
+}
+
 export async function requireAdmin(user: UserInformation): Promise<UserInformation> {
 	if (user.role !== 'admin') {
 		notFound();
