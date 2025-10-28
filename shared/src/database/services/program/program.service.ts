@@ -2,7 +2,13 @@ import { PayoutStatus, ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessService } from '../program-access/program-access.service';
-import { ProgramMemberTableView, ProgramMemberTableViewRow, ProgramWallet, ProgramWallets } from './program.types';
+import {
+	ProgramMemberTableView,
+	ProgramMemberTableViewRow,
+	ProgramOption,
+	ProgramWallet,
+	ProgramWallets,
+} from './program.types';
 
 export class ProgramService extends BaseService {
 	private programAccessService = new ProgramAccessService();
@@ -10,6 +16,7 @@ export class ProgramService extends BaseService {
 	async getProgramWallets(userId: string): Promise<ServiceResult<ProgramWallets>> {
 		try {
 			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+
 			if (!accessibleProgramsResult.success) {
 				return this.resultFail(accessibleProgramsResult.error);
 			}
@@ -72,11 +79,13 @@ export class ProgramService extends BaseService {
 
 	async getProgramWalletsProgramScoped(userId: string, programId: string): Promise<ServiceResult<ProgramWallet>> {
 		const base = await this.getProgramWallets(userId);
+
 		if (!base.success) {
 			return this.resultFail(base.error);
 		}
 
 		const wallet = base.data.wallets.find((w) => w.id === programId);
+
 		if (!wallet) {
 			return this.resultFail('Program not found or not accessible');
 		}
@@ -87,11 +96,13 @@ export class ProgramService extends BaseService {
 	async getMembersTableView(userId: string, programId: string): Promise<ServiceResult<ProgramMemberTableView>> {
 		try {
 			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+
 			if (!accessResult.success) {
 				return this.resultFail(accessResult.error);
 			}
 
 			const accessible = accessResult.data.find((a) => a.programId === programId);
+
 			if (!accessible) {
 				return this.resultFail('User does not have access to this program');
 			}
@@ -130,6 +141,25 @@ export class ProgramService extends BaseService {
 			return this.resultOk({ tableRows });
 		} catch {
 			return this.resultFail('Could not fetch program members');
+		}
+	}
+
+	async getOptions(userId: string): Promise<ServiceResult<ProgramOption[]>> {
+		try {
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+
+			const programs = accessibleProgramsResult.data.map((p) => ({
+				id: p.programId,
+				name: p.programName,
+			}));
+
+			return this.resultOk(programs);
+		} catch {
+			return this.resultFail('Could not fetch program options');
 		}
 	}
 }

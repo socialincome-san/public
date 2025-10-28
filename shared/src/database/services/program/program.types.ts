@@ -26,3 +26,8 @@ export type ProgramMemberTableViewRow = {
 export type ProgramMemberTableView = {
 	tableRows: ProgramMemberTableViewRow[];
 };
+
+export type ProgramOption = {
+	id: string;
+	name: string;
+};

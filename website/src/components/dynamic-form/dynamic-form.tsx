@@ -5,6 +5,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/app/porta
 import { Input } from '@/app/portal/components/input';
 import { Label } from '@/app/portal/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/portal/components/select';
+import { Switch } from '@/app/portal/components/switch';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SpinnerIcon } from '@socialincome/ui/src/icons/spinner';
 import { FC, useEffect, useState } from 'react';
@@ -56,9 +57,18 @@ const getDef = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any
 // get Zod Type by Form Schema key
 const getType = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any>, parentKey?: string): string => {
 	const def = getDef(key, zodSchema, parentKey);
-	const type = def.typeName;
-	if (type === 'ZodOptional') return def.innerType._def.typeName;
+	let type = def.typeName;
+	if (isOptional(key, zodSchema, parentKey)) type = def.innerType._def.typeName;
+	if (type === 'ZodEffects') return def.innerType._def.schema._def.typeName;
+	if (type === 'ZodUnion') return def.innerType._def.options[0]._def.typeName;
+	if (type === 'ZodNativeEnum') return 'ZodEnum';
 	return type;
+};
+
+const isOptional = (key: keyof z.infer<typeof zodSchema>, zodSchema: z.ZodObject<any>, parentOption?: string) => {
+	const def = getDef(key, zodSchema, parentOption);
+	const type = def.typeName;
+	return ['ZodOptional', 'ZodNullable'].includes(type);
 };
 
 const DynamicForm: FC<{
@@ -117,11 +127,11 @@ const DynamicForm: FC<{
 		onSubmit(formSchema);
 	};
 
-	const [isAccorionOpen, setIsAccordionOpen] = useState(false);
+	const [openAccordion, setOpenAccordion] = useState<undefined | string | 'all'>(undefined);
 
 	const onValidationErrors = (e: Object) => {
 		console.error('dynamic form validation errors: ', e);
-		setIsAccordionOpen(true);
+		setOpenAccordion('all');
 	};
 
 	return (
@@ -133,11 +143,11 @@ const DynamicForm: FC<{
 							key={option}
 							type="single"
 							collapsible
-							value={isAccorionOpen ? 'open' : 'closed'}
-							onValueChange={(value) => setIsAccordionOpen(value === 'open')}
+							value={openAccordion ? (openAccordion === 'all' ? `accordion-${option}` : openAccordion) : 'closed'}
+							onValueChange={(value) => setOpenAccordion(value ? `accordion-${option}` : undefined)}
 						>
 							{/* TODO: find better solution to hide collapsed content */}
-							<AccordionItem value="open" className="[&[data-state=closed]>div]:h-0">
+							<AccordionItem value={`accordion-${option}`} className="[&[data-state=closed]>div]:h-0">
 								<AccordionTrigger>{formSchema.fields[option].label}</AccordionTrigger>
 								<AccordionContent className="flex flex-col gap-6 p-5" forceMount>
 									{getOptions(option).map((nestedOption) => (
@@ -213,19 +223,13 @@ const GenericFormField = ({
 		? (formSchema.fields[parentOption] as FormSchema)?.fields[option]
 		: formSchema.fields[option];
 
-	const getEnumValues = (key: keyof z.infer<typeof zodSchema>, parentOption?: string) => {
+	const getEnumValues = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): { [key: string]: string } => {
 		const def = getDef(key, zodSchema, parentOption);
-		if (def.typeName === 'ZodOptional') return def.innerType._def.values;
-		return getType(key, zodSchema, parentOption) === 'ZodNativeEnum' && def.values;
+		if (isOptional(key, zodSchema, parentOption)) return def.innerType._def.values;
+		return getType(key, zodSchema, parentOption) === 'ZodEnum' && def.values;
 	};
 
-	const isOptional = (key: keyof z.infer<typeof zodSchema>, parentOption?: string) => {
-		const def = getDef(key, zodSchema, parentOption);
-		const type = def.typeName;
-		return type === 'ZodOptional';
-	};
-
-	const label = `${formFieldSchema.label} ${!isOptional(option, parentOption) ? '*' : ''}`;
+	const label = `${formFieldSchema.label} ${!isOptional(option, zodSchema, parentOption) ? '*' : ''}`;
 
 	if (isFormField(formFieldSchema)) {
 		switch (getType(option, zodSchema, parentOption)) {
@@ -272,7 +276,7 @@ const GenericFormField = ({
 						)}
 					/>
 				);
-			case 'ZodNativeEnum':
+			case 'ZodEnum':
 				return (
 					<FormField
 						control={form.control}
@@ -288,13 +292,34 @@ const GenericFormField = ({
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent {...form.register(optionKey)}>
-										{Object.keys(getEnumValues(option, parentOption)).map((key) => (
-											<SelectItem value={key} key={key}>
-												{key}
+										{Object.entries(getEnumValues(option, parentOption)).map(([label, id]) => (
+											<SelectItem value={id} key={id}>
+												{label}
 											</SelectItem>
 										))}
 									</SelectContent>
 								</Select>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				);
+
+			case 'ZodBoolean':
+				return (
+					<FormField
+						control={form.control}
+						name={optionKey}
+						key={optionKey}
+						render={({ field }) => (
+							<FormItem className="flex gap-2">
+								<Label htmlFor={optionKey}>{label}</Label>
+								<Switch
+									id={optionKey}
+									disabled={isLoading || readOnly}
+									onCheckedChange={field.onChange}
+									checked={field.value}
+								/>
 								<FormMessage />
 							</FormItem>
 						)}

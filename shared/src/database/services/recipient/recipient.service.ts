@@ -1,11 +1,137 @@
-import { ProgramPermission, RecipientStatus } from '@prisma/client';
+import { ProgramPermission, Recipient, RecipientStatus } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessService } from '../program-access/program-access.service';
-import { RecipientTableView, RecipientTableViewRow } from './recipient.types';
+import {
+	RecipientCreateInput,
+	RecipientPayload,
+	RecipientTableView,
+	RecipientTableViewRow,
+	RecipientUpdateInput,
+} from './recipient.types';
 
 export class RecipientService extends BaseService {
 	private programAccessService = new ProgramAccessService();
+
+	async create(userId: string, recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
+		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+
+		if (!accessResult.success) {
+			return this.resultFail(accessResult.error);
+		}
+
+		const hasAccess = accessResult.data.some((a) => a.programId === recipient.program.connect?.id);
+
+		if (!hasAccess) {
+			return this.resultFail('Permission denied');
+		}
+
+		try {
+			const newRecipient = await this.db.recipient.create({ data: recipient });
+			return this.resultOk(newRecipient);
+		} catch {
+			return this.resultFail('Could not create recipient');
+		}
+	}
+
+	async update(userId: string, recipient: RecipientUpdateInput): Promise<ServiceResult<Recipient>> {
+		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+
+		if (!accessResult.success) {
+			return this.resultFail(accessResult.error);
+		}
+
+		const existing = await this.db.recipient.findUnique({
+			where: { id: recipient.id?.toString() },
+			select: { programId: true },
+		});
+
+		if (!existing) {
+			return this.resultFail('Recipient not found');
+		}
+
+		const hasAccess = accessResult.data.some((a) => a.programId === existing.programId);
+
+		if (!hasAccess) {
+			return this.resultFail('Permission denied');
+		}
+
+		try {
+			const updatedRecipient = await this.db.recipient.update({
+				where: { id: recipient.id?.toString() },
+				data: recipient,
+			});
+			return this.resultOk(updatedRecipient);
+		} catch (e) {
+			return this.resultFail('Could not update recipient: ' + e);
+		}
+	}
+
+	async get(userId: string, recipientId: string): Promise<ServiceResult<RecipientPayload>> {
+		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+
+		if (!accessResult.success) {
+			return this.resultFail(accessResult.error);
+		}
+
+		const recipient = await this.db.recipient.findUnique({
+			where: { id: recipientId },
+			select: {
+				id: true,
+				startDate: true,
+				status: true,
+				successorName: true,
+				termsAccepted: true,
+				localPartner: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
+				program: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
+				contact: {
+					select: {
+						id: true,
+						firstName: true,
+						lastName: true,
+						callingName: true,
+						email: true,
+						gender: true,
+						language: true,
+						dateOfBirth: true,
+						profession: true,
+						phone: true,
+						address: true,
+					},
+				},
+				paymentInformation: {
+					select: {
+						id: true,
+						code: true,
+						provider: true,
+						phone: true,
+					},
+				},
+			},
+		});
+
+		if (!recipient) {
+			return this.resultFail('Recipient not found');
+		}
+
+		const hasAccess = accessResult.data.some((a) => a.programId === recipient.program.id);
+
+		if (!hasAccess) {
+			return this.resultFail('Permission denied');
+		}
+
+		return this.resultOk(recipient);
+	}
 
 	async getTableView(userId: string): Promise<ServiceResult<RecipientTableView>> {
 		try {

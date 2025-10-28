@@ -11,11 +11,17 @@ export class ProgramAccessService extends BaseService {
 				select: {
 					programId: true,
 					permission: true,
+					program: {
+						select: {
+							name: true,
+						},
+					},
 				},
 			});
 
 			const data: ProgramAccesses = accesses.map((access) => ({
 				programId: access.programId,
+				programName: access.program.name,
 				permission: access.permission ?? ProgramPermission.readonly,
 			}));
 
