@@ -1,7 +1,7 @@
 import { makePayoutForecastColumns } from '@/app/portal/components/data-table/columns/payout-forecast';
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { PayoutForecastService } from '@socialincome/shared/src/database/services/payout-forecast/payout-forecast.service';
+import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
 
 type Props = { params: Promise<{ programId: string }> };
 const MONTHS_AHEAD = 6;
@@ -10,9 +10,9 @@ export default async function FinancesPageProgramScoped({ params }: Props) {
 	const { programId } = await params;
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const payoutForecastService = new PayoutForecastService();
+	const payoutService = new PayoutService();
 
-	const result = await payoutForecastService.getPayoutForecastTableViewProgramScoped(user.id, programId, MONTHS_AHEAD);
+	const result = await payoutService.getForecastTableView(user.id, programId, MONTHS_AHEAD);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];

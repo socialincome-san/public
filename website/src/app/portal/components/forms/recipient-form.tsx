@@ -26,10 +26,9 @@ export type RecipientFormProps = {
 	onCancel?: () => void;
 	readOnly?: boolean;
 	recipientId?: string;
-	userId: string;
 };
 
-export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readOnly, userId }: RecipientFormProps) {
+export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readOnly }: RecipientFormProps) {
 	const [programs, setPrograms] = useState<ProgramOption[] | undefined>(undefined);
 	const [localPartner, setLocalPartner] = useState<LocalPartnerOption[] | undefined>(undefined);
 
@@ -153,12 +152,13 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 
 	useEffect(() => {
 		async function getOptions() {
-			const { programs, localPartner } = await getRecipientOptions(userId);
+			const { programs, localPartner } = await getRecipientOptions();
 			if (programs.success) setPrograms(programs.data);
 			if (localPartner.success) setLocalPartner(localPartner.data);
 		}
+
 		getOptions();
-	}, [userId]);
+	}, []);
 
 	useEffect(() => {
 		if (localPartner && programs) {

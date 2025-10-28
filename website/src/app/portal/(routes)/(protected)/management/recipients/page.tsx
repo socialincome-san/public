@@ -7,10 +7,10 @@ export default async function RecipientsPage() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const recipientService = new RecipientService();
-	const result = await recipientService.getRecipientTableView(user.id);
+	const result = await recipientService.getTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows: RecipientTableViewRow[] = result.success ? result.data.tableRows : [];
 
-	return <RecipientsTableClient rows={rows} error={error} userId={user.id} />;
+	return <RecipientsTableClient rows={rows} error={error} />;
 }

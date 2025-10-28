@@ -1,40 +1,44 @@
-import { ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import { ContributionTableView, ContributionTableViewRow } from './contribution.types';
 
 export class ContributionService extends BaseService {
-	async getContributionTableView(userId: string): Promise<ServiceResult<ContributionTableView>> {
+	private organizationAccessService = new OrganizationAccessService();
+
+	async getTableView(userId: string): Promise<ServiceResult<ContributionTableView>> {
 		try {
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+
+			const { id: organizationId, permission } = activeOrgResult.data;
+
 			const contributions = await this.db.contribution.findMany({
 				where: {
 					campaign: {
-						program: {
-							accesses: { some: { userId } },
-						},
+						organizationId,
 					},
 				},
 				select: {
 					id: true,
+					createdAt: true,
 					amount: true,
 					currency: true,
-					status: true,
-					createdAt: true,
-					contributor: {
-						select: {
-							contact: {
-								select: { firstName: true, lastName: true },
-							},
-						},
-					},
 					campaign: {
 						select: {
 							title: true,
-							program: {
+							program: { select: { name: true } },
+						},
+					},
+					contributor: {
+						select: {
+							contact: {
 								select: {
-									id: true,
-									name: true,
-									accesses: { where: { userId }, select: { permissions: true } },
+									firstName: true,
+									lastName: true,
+									email: true,
 								},
 							},
 						},
@@ -43,29 +47,18 @@ export class ContributionService extends BaseService {
 				orderBy: { createdAt: 'desc' },
 			});
 
-			const dateFmt = new Intl.DateTimeFormat('de-CH');
-
-			const tableRows: ContributionTableViewRow[] = contributions.map((c) => {
-				const program = c.campaign?.program;
-				const permissions = program?.accesses[0]?.permissions ?? [];
-				const permission: ProgramPermission = permissions.includes('edit')
-					? ProgramPermission.edit
-					: ProgramPermission.readonly;
-
-				return {
-					id: c.id,
-					contributorName:
-						`${c.contributor?.contact?.firstName ?? ''} ${c.contributor?.contact?.lastName ?? ''}`.trim(),
-					amount: Number(c.amount),
-					currency: c.currency,
-					status: c.status,
-					campaignName: c.campaign?.title ?? '',
-					programName: program?.name ?? '',
-					createdAt: c.createdAt,
-					createdAtFormatted: dateFmt.format(c.createdAt),
-					permission,
-				};
-			});
+			const tableRows: ContributionTableViewRow[] = contributions.map((c) => ({
+				id: c.id,
+				firstName: c.contributor?.contact?.firstName ?? '',
+				lastName: c.contributor?.contact?.lastName ?? '',
+				email: c.contributor?.contact?.email ?? '',
+				amount: c.amount ? Number(c.amount) : 0,
+				currency: c.currency ?? '',
+				campaignTitle: c.campaign?.title ?? '',
+				programName: c.campaign?.program?.name ?? null,
+				createdAt: c.createdAt,
+				permission,
+			}));
 
 			return this.resultOk({ tableRows });
 		} catch {

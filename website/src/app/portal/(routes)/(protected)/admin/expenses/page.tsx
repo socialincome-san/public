@@ -10,7 +10,7 @@ export default async function ExpensesPage() {
 	await requireAdmin(user);
 
 	const service = new ExpenseService();
-	const result = await service.getExpenseAdminTableView(user);
+	const result = await service.getTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows: ExpenseTableViewRow[] = result.success ? result.data.tableRows : [];

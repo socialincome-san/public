@@ -1,18 +1,18 @@
 import { Button } from '@/app/portal/components/button';
-import { makeOrganizationMembersColumns } from '@/app/portal/components/data-table/columns/organization-members';
+import { makeOrganizationMemberColumns } from '@/app/portal/components/data-table/columns/organization-members';
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
-import { UserService } from '@socialincome/shared/src/database/services/user/user.service';
-import type { OrganizationMembersTableViewRow } from '@socialincome/shared/src/database/services/user/user.types';
+import { OrganizationService } from '@socialincome/shared/src/database/services/organization/organization.service';
+import { OrganizationMemberTableViewRow } from '@socialincome/shared/src/database/services/organization/organization.types';
 
 export default async function OrganizationMembersPage() {
 	const user = await getAuthenticatedUserOrRedirect();
 
-	const service = new UserService();
-	const result = await service.getOrganizationMembersTableView(user.id, user.activeOrganization?.id ?? '');
+	const service = new OrganizationService();
+	const result = await service.getOrganizationMembersTableView(user.id);
 
 	const error = result.success ? null : result.error;
-	const rows: OrganizationMembersTableViewRow[] = result.success ? result.data.tableRows : [];
+	const rows: OrganizationMemberTableViewRow[] = result.success ? result.data.tableRows : [];
 
 	return (
 		<DataTable
@@ -20,7 +20,7 @@ export default async function OrganizationMembersPage() {
 			error={error}
 			emptyMessage="No members found"
 			data={rows}
-			makeColumns={makeOrganizationMembersColumns}
+			makeColumns={makeOrganizationMemberColumns}
 			actions={<Button>Add member</Button>}
 		/>
 	);

@@ -1,49 +1,50 @@
 'use client';
 
 import { ActionCell } from '@/app/portal/components/data-table/elements/action-cell';
+import { CurrencyCell } from '@/app/portal/components/data-table/elements/currency-cell';
+import { DateCell } from '@/app/portal/components/data-table/elements/date-cell';
 import { SortableHeader } from '@/app/portal/components/data-table/elements/sortable-header';
-import { StatusCell } from '@/app/portal/components/data-table/elements/status-cell';
 import { TextCell } from '@/app/portal/components/data-table/elements/text-cell';
 import type { ContributionTableViewRow } from '@socialincome/shared/src/database/services/contribution/contribution.types';
 import type { ColumnDef } from '@tanstack/react-table';
 
-export function makeContributionsColumns(hideProgramName = false): ColumnDef<ContributionTableViewRow>[] {
-	const columns: ColumnDef<ContributionTableViewRow>[] = [
+export function makeContributionsColumns(): ColumnDef<ContributionTableViewRow>[] {
+	return [
 		{
-			accessorKey: 'amount',
+			accessorKey: 'firstName',
+			header: (ctx) => <SortableHeader ctx={ctx}>First Name</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'lastName',
+			header: (ctx) => <SortableHeader ctx={ctx}>Last Name</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'email',
+			header: (ctx) => <SortableHeader ctx={ctx}>Email</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
+			id: 'amount',
 			header: (ctx) => <SortableHeader ctx={ctx}>Amount</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
+			accessorFn: (row) => row.amount,
+			cell: (ctx) => <CurrencyCell ctx={ctx} currency={ctx.row.original.currency} />,
 		},
 		{
-			accessorKey: 'currency',
-			header: (ctx) => <SortableHeader ctx={ctx}>Currency</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			accessorKey: 'status',
-			header: (ctx) => <SortableHeader ctx={ctx}>Status</SortableHeader>,
-			cell: (ctx) => <StatusCell ctx={ctx} variant="contribution" />,
-		},
-		{
-			accessorKey: 'campaignName',
+			accessorKey: 'campaignTitle',
 			header: (ctx) => <SortableHeader ctx={ctx}>Campaign</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
 		},
-	];
-
-	if (!hideProgramName) {
-		columns.push({
+		{
 			accessorKey: 'programName',
 			header: (ctx) => <SortableHeader ctx={ctx}>Program</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
-		});
-	}
-
-	columns.push(
+		},
 		{
-			accessorKey: 'createdAtFormatted',
+			accessorKey: 'createdAt',
 			header: (ctx) => <SortableHeader ctx={ctx}>Created</SortableHeader>,
-			cell: (ctx) => <TextCell ctx={ctx} />,
+			cell: (ctx) => <DateCell ctx={ctx} />,
 		},
 		{
 			id: 'actions',
@@ -51,7 +52,5 @@ export function makeContributionsColumns(hideProgramName = false): ColumnDef<Con
 			enableSorting: false,
 			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
-	);
-
-	return columns;
+	];
 }

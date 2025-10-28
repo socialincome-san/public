@@ -1,16 +1,72 @@
-import { UserRole } from '@prisma/client';
+import { OrganizationPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { UserInformation } from '../user/user.types';
-import { OrganizationTableView, OrganizationTableViewRow } from './organization.types';
+import { OrganizationAccessService } from '../organization-access/organization-access.service';
+import { UserService } from '../user/user.service';
+import {
+	OrganizationMemberTableView,
+	OrganizationMemberTableViewRow,
+	OrganizationTableView,
+	OrganizationTableViewRow,
+} from './organization.types';
 
 export class OrganizationService extends BaseService {
-	async getOrganizationAdminTableView(user: UserInformation): Promise<ServiceResult<OrganizationTableView>> {
-		if (user.role !== UserRole.admin) {
-			return this.resultOk({ tableRows: [] });
-		}
+	private userService = new UserService();
+	private organizationAccessService = new OrganizationAccessService();
 
+	async getOrganizationMembersTableView(userId: string): Promise<ServiceResult<OrganizationMemberTableView>> {
 		try {
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+
+			const { id: organizationId } = activeOrgResult.data;
+
+			const members = await this.db.organizationAccess.findMany({
+				where: { organizationId },
+				select: {
+					user: {
+						select: {
+							id: true,
+							role: true,
+							contact: {
+								select: {
+									firstName: true,
+									lastName: true,
+									email: true,
+								},
+							},
+						},
+					},
+					permission: true,
+				},
+				orderBy: { user: { contact: { firstName: 'asc' } } },
+			});
+
+			const tableRows: OrganizationMemberTableViewRow[] = members.map((member) => ({
+				id: member.user.id,
+				firstName: member.user.contact?.firstName ?? '',
+				lastName: member.user.contact?.lastName ?? '',
+				email: member.user.contact?.email ?? '',
+				role: member.user.role ?? null,
+				permission: member.permission ?? OrganizationPermission.readonly,
+			}));
+
+			return this.resultOk({ tableRows });
+		} catch {
+			return this.resultFail('Could not fetch organization members');
+		}
+	}
+
+	async getAdminTableView(userId: string): Promise<ServiceResult<OrganizationTableView>> {
+		try {
+			const isAdminResult = await this.userService.isAdmin(userId);
+
+			if (!isAdminResult.success) {
+				return this.resultFail(isAdminResult.error);
+			}
+
 			const organizations = await this.db.organization.findMany({
 				select: {
 					id: true,
@@ -21,6 +77,7 @@ export class OrganizationService extends BaseService {
 							accesses: true,
 						},
 					},
+					createdAt: true,
 				},
 				orderBy: { name: 'asc' },
 			});
@@ -30,11 +87,34 @@ export class OrganizationService extends BaseService {
 				name: organization.name,
 				ownedProgramsCount: organization._count.ownedPrograms,
 				usersCount: organization._count.accesses,
+				createdAt: organization.createdAt,
 			}));
 
 			return this.resultOk({ tableRows });
 		} catch {
 			return this.resultFail('Could not fetch organizations');
+		}
+	}
+
+	async setActiveOrganization(userId: string, organizationId: string): Promise<ServiceResult<null>> {
+		try {
+			const hasAccess = await this.db.organizationAccess.findFirst({
+				where: { userId, organizationId },
+				select: { id: true },
+			});
+
+			if (!hasAccess) {
+				return this.resultFail('User does not have access to this organization');
+			}
+
+			await this.db.user.update({
+				where: { id: userId },
+				data: { activeOrganizationId: organizationId },
+			});
+
+			return this.resultOk(null);
+		} catch {
+			return this.resultFail('Could not set active organization');
 		}
 	}
 }

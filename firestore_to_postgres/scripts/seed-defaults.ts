@@ -130,7 +130,7 @@ async function main() {
 			create: {
 				user: { connect: { id: user.id } },
 				organization: { connect: { id: organization.id } },
-				permissions: [OrganizationPermission.edit],
+				permission: OrganizationPermission.edit,
 			},
 		});
 
@@ -140,7 +140,7 @@ async function main() {
 			create: {
 				user: { connect: { id: user.id } },
 				program: { connect: { id: program.id } },
-				permissions: [ProgramPermission.edit],
+				permission: ProgramPermission.edit,
 			},
 		});
 

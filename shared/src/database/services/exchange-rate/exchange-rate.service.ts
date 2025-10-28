@@ -32,7 +32,7 @@ export class ExchangeRateService extends BaseService {
 			}
 
 			return this.resultOk(result);
-		} catch (error) {
+		} catch {
 			return this.resultFail('Could not fetch latest exchange rates');
 		}
 	}

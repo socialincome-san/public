@@ -1,16 +1,16 @@
-import { ContributionStatus, ProgramPermission } from '@prisma/client';
+import { OrganizationPermission } from '@prisma/client';
 
 export type ContributionTableViewRow = {
 	id: string;
-	contributorName: string;
+	firstName: string;
+	lastName: string;
+	email: string;
 	amount: number;
 	currency: string;
-	status: ContributionStatus;
-	campaignName: string;
-	programName: string;
+	campaignTitle: string;
+	programName: string | null;
 	createdAt: Date;
-	createdAtFormatted: string;
-	permission: ProgramPermission;
+	permission: OrganizationPermission;
 };
 
 export type ContributionTableView = {

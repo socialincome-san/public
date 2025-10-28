@@ -8,15 +8,7 @@ import { RecipientForm } from '@/app/portal/components/forms/recipient-form';
 import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import { useState } from 'react';
 
-export function RecipientsTableClient({
-	rows,
-	error,
-	userId,
-}: {
-	rows: RecipientTableViewRow[];
-	error: string | null;
-	userId: string;
-}) {
+export function RecipientsTableClient({ rows, error }: { rows: RecipientTableViewRow[]; error: string | null }) {
 	const [open, setOpen] = useState(false);
 
 	const [recipientId, setRecipientId] = useState<string | undefined>();
@@ -62,7 +54,6 @@ export function RecipientsTableClient({
 					</DialogHeader>
 					<RecipientForm
 						recipientId={recipientId}
-						userId={userId}
 						readOnly={readOnly}
 						onSuccess={() => setOpen(false)}
 						onCancel={() => setOpen(false)}

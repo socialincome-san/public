@@ -1,6 +1,7 @@
-import { LocalPartner, UserRole } from '@prisma/client';
+import { LocalPartner } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { UserService } from '../user/user.service';
 import {
 	LocalPartnerCreateInput,
 	LocalPartnerOption,
@@ -11,8 +12,15 @@ import {
 } from './local-partner.types';
 
 export class LocalPartnerService extends BaseService {
-	// TODO: check user permissions
-	async create(localPartner: LocalPartnerCreateInput): Promise<ServiceResult<LocalPartner>> {
+	private userService = new UserService();
+
+	async create(userId: string, localPartner: LocalPartnerCreateInput): Promise<ServiceResult<LocalPartner>> {
+		const isAdminResult = await this.userService.isAdmin(userId);
+
+		if (!isAdminResult.success) {
+			return this.resultFail(isAdminResult.error);
+		}
+
 		try {
 			const partner = await this.db.localPartner.create({ data: localPartner });
 			return this.resultOk(partner);
@@ -21,24 +29,35 @@ export class LocalPartnerService extends BaseService {
 		}
 	}
 
-	// TODO: check user permissions
-	async update(localPartner: LocalPartnerUpdateInput): Promise<ServiceResult<LocalPartner>> {
+	async update(userId: string, localPartner: LocalPartnerUpdateInput): Promise<ServiceResult<LocalPartner>> {
+		const isAdminResult = await this.userService.isAdmin(userId);
+
+		if (!isAdminResult.success) {
+			return this.resultFail(isAdminResult.error);
+		}
+
 		try {
 			const partner = await this.db.localPartner.update({
-				where: {
-					id: localPartner.id?.toString(),
-				},
+				where: { id: localPartner.id?.toString() },
 				data: localPartner,
 			});
+
 			return this.resultOk(partner);
-		} catch (e) {
-			return this.resultFail('Could not update local partner: ' + e);
+		} catch {
+			return this.resultFail('Could not update local partner');
 		}
 	}
 
-	async get(localPartnerId: string): Promise<ServiceResult<LocalPartnerPayload>> {
+	async get(userId: string, localPartnerId: string): Promise<ServiceResult<LocalPartnerPayload>> {
+		const isAdminResult = await this.userService.isAdmin(userId);
+
+		if (!isAdminResult.success) {
+			return this.resultFail(isAdminResult.error);
+		}
+
 		try {
 			const partner = await this.db.localPartner.findUnique({
+				where: { id: localPartnerId },
 				select: {
 					id: true,
 					name: true,
@@ -58,54 +77,31 @@ export class LocalPartnerService extends BaseService {
 						},
 					},
 				},
-				where: { id: localPartnerId },
 			});
-			if (partner === null) return this.resultFail('Could not get local partner');
+
+			if (!partner) {
+				return this.resultFail('Could not get local partner');
+			}
+
 			return this.resultOk(partner);
-		} catch (error) {
+		} catch {
 			return this.resultFail('Could not get local partner');
 		}
 	}
 
-	async getOptions(userId: string): Promise<ServiceResult<LocalPartnerOption[]>> {
-		try {
-			const user = await this.db.user.findUnique({
-				where: { id: userId },
-			});
-
-			if (!user) {
-				return this.resultFail('Could not fetch user');
-			}
-
-			const partners = await this.db.localPartner.findMany({
-				select: {
-					id: true,
-					name: true,
-				},
-				orderBy: { name: 'asc' },
-			});
-
-			return this.resultOk(partners);
-		} catch (error) {
-			return this.resultFail('Could not fetch local partners');
-		}
-	}
-
 	async getTableView(userId: string): Promise<ServiceResult<LocalPartnerTableView>> {
+		const isAdminResult = await this.userService.isAdmin(userId);
+
+		if (!isAdminResult.success) {
+			return this.resultFail(isAdminResult.error);
+		}
+
 		try {
-			const user = await this.db.user.findUnique({
-				where: { id: userId },
-				select: { role: true },
-			});
-
-			if (!user || user.role !== UserRole.admin) {
-				return this.resultOk({ tableRows: [] });
-			}
-
 			const partners = await this.db.localPartner.findMany({
 				select: {
 					id: true,
 					name: true,
+					createdAt: true,
 					contact: {
 						select: {
 							firstName: true,
@@ -118,16 +114,33 @@ export class LocalPartnerService extends BaseService {
 				orderBy: { name: 'asc' },
 			});
 
-			const tableRows: LocalPartnerTableViewRow[] = partners.map((p) => ({
-				id: p.id,
-				name: p.name,
-				contactPerson: `${p.contact?.firstName ?? ''} ${p.contact?.lastName ?? ''}`.trim(),
-				contactNumber: p.contact?.phone?.number ?? null,
-				recipientsCount: p._count.recipients,
+			const tableRows: LocalPartnerTableViewRow[] = partners.map((partner) => ({
+				id: partner.id,
+				name: partner.name,
+				contactPerson: `${partner.contact?.firstName ?? ''} ${partner.contact?.lastName ?? ''}`.trim(),
+				contactNumber: partner.contact?.phone?.number ?? null,
+				recipientsCount: partner._count.recipients,
+				createdAt: partner.createdAt,
 			}));
 
 			return this.resultOk({ tableRows });
-		} catch (error) {
+		} catch {
+			return this.resultFail('Could not fetch local partners');
+		}
+	}
+
+	async getOptions(): Promise<ServiceResult<LocalPartnerOption[]>> {
+		try {
+			const partners = await this.db.localPartner.findMany({
+				select: {
+					id: true,
+					name: true,
+				},
+				orderBy: { name: 'asc' },
+			});
+
+			return this.resultOk(partners);
+		} catch {
 			return this.resultFail('Could not fetch local partners');
 		}
 	}

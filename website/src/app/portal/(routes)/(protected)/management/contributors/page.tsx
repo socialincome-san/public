@@ -8,7 +8,7 @@ export default async function ContributorsPage() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ContributorService();
-	const result = await service.getContributorTableView(user.id);
+	const result = await service.getTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows: ContributorTableViewRow[] = result.success ? result.data.tableRows : [];

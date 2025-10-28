@@ -6,6 +6,7 @@ export type LocalPartnerTableViewRow = {
 	contactPerson: string;
 	contactNumber: string | null;
 	recipientsCount: number;
+	createdAt: Date;
 };
 
 export type LocalPartnerTableView = {

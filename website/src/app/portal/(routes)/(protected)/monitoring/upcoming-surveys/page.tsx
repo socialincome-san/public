@@ -1,4 +1,4 @@
-import { makeUpcomingSurveyColumns } from '@/app/portal/components/data-table/columns/upcoming-surveys';
+import { makeSurveyColumns } from '@/app/portal/components/data-table/columns/surveys';
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { SurveyService } from '@socialincome/shared/src/database/services/survey/survey.service';
@@ -7,7 +7,7 @@ export default async function UpcomingSurveysPage() {
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new SurveyService();
-	const result = await service.getUpcomingSurveysTableView(user.id);
+	const result = await service.getUpcomingSurveyTableView(user.id);
 
 	const error = result.success ? null : result.error;
 	const rows = result.success ? result.data.tableRows : [];
@@ -18,7 +18,7 @@ export default async function UpcomingSurveysPage() {
 			error={error}
 			emptyMessage="No upcoming surveys found"
 			data={rows}
-			makeColumns={makeUpcomingSurveyColumns}
+			makeColumns={makeSurveyColumns}
 		/>
 	);
 }

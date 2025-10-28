@@ -1,6 +1,7 @@
-import { PayoutStatus, ProgramPermission, Recipient } from '@prisma/client';
+import { ProgramPermission, Recipient, RecipientStatus } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { ProgramAccessService } from '../program-access/program-access.service';
 import {
 	RecipientCreateInput,
 	RecipientPayload,
@@ -10,8 +11,21 @@ import {
 } from './recipient.types';
 
 export class RecipientService extends BaseService {
-	// TODO: check user permissions
-	async create(recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
+	private programAccessService = new ProgramAccessService();
+
+	async create(userId: string, recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
+		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+
+		if (!accessResult.success) {
+			return this.resultFail(accessResult.error);
+		}
+
+		const hasAccess = accessResult.data.some((a) => a.programId === recipient.program.connect?.id);
+
+		if (!hasAccess) {
+			return this.resultFail('Permission denied');
+		}
+
 		try {
 			const newRecipient = await this.db.recipient.create({ data: recipient });
 			return this.resultOk(newRecipient);
@@ -20,155 +34,171 @@ export class RecipientService extends BaseService {
 		}
 	}
 
-	// TODO: check user permissions
-	async update(recipient: RecipientUpdateInput): Promise<ServiceResult<Recipient>> {
+	async update(userId: string, recipient: RecipientUpdateInput): Promise<ServiceResult<Recipient>> {
+		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+
+		if (!accessResult.success) {
+			return this.resultFail(accessResult.error);
+		}
+
+		const existing = await this.db.recipient.findUnique({
+			where: { id: recipient.id?.toString() },
+			select: { programId: true },
+		});
+
+		if (!existing) {
+			return this.resultFail('Recipient not found');
+		}
+
+		const hasAccess = accessResult.data.some((a) => a.programId === existing.programId);
+
+		if (!hasAccess) {
+			return this.resultFail('Permission denied');
+		}
+
 		try {
-			const partner = await this.db.recipient.update({
-				where: {
-					id: recipient.id?.toString(),
-				},
+			const updatedRecipient = await this.db.recipient.update({
+				where: { id: recipient.id?.toString() },
 				data: recipient,
 			});
-			return this.resultOk(partner);
+			return this.resultOk(updatedRecipient);
 		} catch (e) {
 			return this.resultFail('Could not update recipient: ' + e);
 		}
 	}
 
-	async get(localPartnerId: string): Promise<ServiceResult<RecipientPayload>> {
-		try {
-			const partner = await this.db.recipient.findUnique({
-				select: {
-					id: true,
-					status: true,
-					startDate: true,
-					successorName: true,
-					termsAccepted: true,
-					localPartner: {
-						select: {
-							id: true,
-							name: true,
-						},
-					},
-					program: {
-						select: {
-							id: true,
-							name: true,
-						},
-					},
-					paymentInformation: {
-						select: {
-							id: true,
-							code: true,
-							provider: true,
-							phone: true,
-						},
-					},
-					contact: {
-						select: {
-							id: true,
-							firstName: true,
-							lastName: true,
-							gender: true,
-							callingName: true,
-							email: true,
-							language: true,
-							phone: true,
-							profession: true,
-							dateOfBirth: true,
-							address: true,
-						},
+	async get(userId: string, recipientId: string): Promise<ServiceResult<RecipientPayload>> {
+		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+
+		if (!accessResult.success) {
+			return this.resultFail(accessResult.error);
+		}
+
+		const recipient = await this.db.recipient.findUnique({
+			where: { id: recipientId },
+			select: {
+				id: true,
+				startDate: true,
+				status: true,
+				successorName: true,
+				termsAccepted: true,
+				localPartner: {
+					select: {
+						id: true,
+						name: true,
 					},
 				},
-				where: { id: localPartnerId },
-			});
-			if (partner === null) return this.resultFail('Could not get local partner');
-			return this.resultOk(partner);
-		} catch (error) {
-			return this.resultFail('Could not get local partner');
+				program: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
+				contact: {
+					select: {
+						id: true,
+						firstName: true,
+						lastName: true,
+						callingName: true,
+						email: true,
+						gender: true,
+						language: true,
+						dateOfBirth: true,
+						profession: true,
+						phone: true,
+						address: true,
+					},
+				},
+				paymentInformation: {
+					select: {
+						id: true,
+						code: true,
+						provider: true,
+						phone: true,
+					},
+				},
+			},
+		});
+
+		if (!recipient) {
+			return this.resultFail('Recipient not found');
 		}
+
+		const hasAccess = accessResult.data.some((a) => a.programId === recipient.program.id);
+
+		if (!hasAccess) {
+			return this.resultFail('Permission denied');
+		}
+
+		return this.resultOk(recipient);
 	}
 
-	async getRecipientTableView(userId: string): Promise<ServiceResult<RecipientTableView>> {
+	async getTableView(userId: string): Promise<ServiceResult<RecipientTableView>> {
 		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const accessiblePrograms = accessResult.data;
+			if (accessiblePrograms.length === 0) {
+				return this.resultOk({ tableRows: [] });
+			}
+
+			const programIds = accessiblePrograms.map((p) => p.programId);
+
 			const recipients = await this.db.recipient.findMany({
 				where: {
-					program: {
-						accesses: {
-							some: { userId },
-						},
-					},
+					programId: { in: programIds },
 				},
-				orderBy: { createdAt: 'desc' },
 				select: {
 					id: true,
 					status: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+							dateOfBirth: true,
+						},
+					},
 					program: {
 						select: {
 							id: true,
 							name: true,
 							totalPayments: true,
-							accesses: {
-								where: { userId },
-								select: { permissions: true },
-							},
 						},
 					},
 					localPartner: {
-						select: {
-							name: true,
-							contact: {
-								select: {
-									firstName: true,
-									lastName: true,
-								},
-							},
-						},
-					},
-					contact: {
-						select: {
-							firstName: true,
-							lastName: true,
-							dateOfBirth: true,
-						},
+						select: { name: true },
 					},
 					payouts: {
-						where: { status: { in: [PayoutStatus.paid, PayoutStatus.confirmed] } },
 						select: { id: true },
 					},
+					createdAt: true,
 				},
+				orderBy: { createdAt: 'desc' },
 			});
 
-			const tableRows: RecipientTableViewRow[] = recipients.map((r) => {
-				const payoutsReceived = r.payouts.length;
-				const payoutsTotal = r.program?.totalPayments ?? 0;
+			const tableRows: RecipientTableViewRow[] = recipients.map((recipient) => {
+				const access = accessiblePrograms.find((p) => p.programId === recipient.program?.id);
+				const payoutsReceived = recipient.payouts.length;
+				const payoutsTotal = recipient.program?.totalPayments ?? 0;
 				const payoutsProgressPercent = payoutsTotal > 0 ? Math.round((payoutsReceived / payoutsTotal) * 100) : 0;
 
-				const birthDate = r.contact?.dateOfBirth ?? null;
-				const age = birthDate ? this.calculateAgeFromBirthDate(birthDate) : null;
-
-				const permissions = r.program?.accesses[0]?.permissions ?? [];
-				const permission: ProgramPermission = permissions.includes(ProgramPermission.edit)
-					? ProgramPermission.edit
-					: ProgramPermission.readonly;
-
-				const localPartnerName =
-					r.localPartner?.name ??
-					(r.localPartner?.contact ? `${r.localPartner.contact.firstName} ${r.localPartner.contact.lastName}` : '');
-
 				return {
-					id: r.id,
-					firstName: r.contact?.firstName ?? '',
-					lastName: r.contact?.lastName ?? '',
-					age,
-					status: r.status,
+					id: recipient.id,
+					firstName: recipient.contact?.firstName ?? '',
+					lastName: recipient.contact?.lastName ?? '',
+					dateOfBirth: recipient.contact?.dateOfBirth ?? null,
+					localPartnerName: recipient.localPartner?.name ?? null,
+					status: recipient.status ?? RecipientStatus.active,
+					programId: recipient.program?.id ?? null,
+					programName: recipient.program?.name ?? null,
 					payoutsReceived,
 					payoutsTotal,
 					payoutsProgressPercent,
-					localPartnerName,
-					programName: r.program?.name ?? '',
-					programId: r.program?.id ?? '',
-					permission,
+					createdAt: recipient.createdAt,
+					permission: access?.permission ?? ProgramPermission.readonly,
 				};
 			});
 
@@ -178,23 +208,13 @@ export class RecipientService extends BaseService {
 		}
 	}
 
-	async getRecipientTableViewProgramScoped(
-		userId: string,
-		programId: string,
-	): Promise<ServiceResult<RecipientTableView>> {
-		const base = await this.getRecipientTableView(userId);
-		if (!base.success) return base;
+	async getTableViewProgramScoped(userId: string, programId: string): Promise<ServiceResult<RecipientTableView>> {
+		const base = await this.getTableView(userId);
+		if (!base.success) {
+			return base;
+		}
 
 		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
 		return this.resultOk({ tableRows: filteredRows });
-	}
-
-	private calculateAgeFromBirthDate(birthDate: Date): number {
-		const today = new Date();
-		let years = today.getFullYear() - birthDate.getFullYear();
-		const monthDiff = today.getMonth() - birthDate.getMonth();
-		const dayDiff = today.getDate() - birthDate.getDate();
-		if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) years -= 1;
-		return years;
 	}
 }
