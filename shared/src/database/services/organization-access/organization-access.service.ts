@@ -31,7 +31,8 @@ export class OrganizationAccessService extends BaseService {
 				id: user.activeOrganizationId,
 				permission,
 			});
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Could not fetch active organization');
 		}
 	}

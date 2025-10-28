@@ -51,7 +51,8 @@ export class UserService extends BaseService {
 			};
 
 			return this.resultOk(userInfo);
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Error fetching user information');
 		}
 	}
@@ -72,7 +73,8 @@ export class UserService extends BaseService {
 			}
 
 			return this.resultOk(true);
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Could not check admin status');
 		}
 	}

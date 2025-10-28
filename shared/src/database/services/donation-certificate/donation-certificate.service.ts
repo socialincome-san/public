@@ -57,7 +57,8 @@ export class DonationCertificateService extends BaseService {
 			}));
 
 			return this.resultOk({ tableRows });
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Could not fetch donation certificates');
 		}
 	}

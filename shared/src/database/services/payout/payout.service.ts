@@ -68,7 +68,8 @@ export class PayoutService extends BaseService {
 			});
 
 			return this.resultOk({ tableRows });
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Could not fetch payouts');
 		}
 	}
@@ -130,7 +131,8 @@ export class PayoutService extends BaseService {
 			});
 
 			return this.resultOk({ tableRows });
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Could not fetch ongoing payouts');
 		}
 	}
@@ -218,7 +220,8 @@ export class PayoutService extends BaseService {
 			});
 
 			return this.resultOk({ tableRows });
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Could not generate payout forecast');
 		}
 	}
