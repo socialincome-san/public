@@ -52,7 +52,7 @@ export function PayoutsTableClient({ rows, error }: { rows: PayoutTableViewRow[]
 	async function handleDownloadRegistrationCSV() {
 		startTransition(() =>
 			handleAction(async () => {
-				const csv = await downloadRegistrationCsvAction(selectedDate);
+				const csv = await downloadRegistrationCsvAction();
 				await handleCsvDownload(csv, `registration-${getMonthFileLabel()}.csv`);
 			}),
 		);
@@ -87,7 +87,7 @@ export function PayoutsTableClient({ rows, error }: { rows: PayoutTableViewRow[]
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="sm:max-w-[400px]">
+				<DialogContent className="sm:max-w-[520px]">
 					<DialogHeader>
 						<DialogTitle>Start payout process</DialogTitle>
 					</DialogHeader>
@@ -105,38 +105,42 @@ export function PayoutsTableClient({ rows, error }: { rows: PayoutTableViewRow[]
 							</Alert>
 						)}
 
-						<DateSelectionSection
-							label="Select payout month"
-							description="The selected month determines which recipients and payouts will be processed."
-							selected={selectedDate}
-							onSelect={(date) => date && setSelectedDate(date)}
-							disabled={isPending}
-						/>
-
 						<DialogActionSection
 							label="Download registration CSV"
-							description="Generates a list of new recipients to register for the selected month."
+							description="Generates a list of all recipients. This does not depend on a specific payout month."
 							onClick={handleDownloadRegistrationCSV}
 							icon={<DownloadIcon className="h-4 w-4" />}
 							isPending={isPending}
 						/>
 
-						<DialogActionSection
-							label="Download payout CSV"
-							description="Prepares the payout file for all active recipients for the selected month."
-							onClick={handleDownloadPayoutCSV}
-							icon={<DownloadIcon className="h-4 w-4" />}
-							isPending={isPending}
-						/>
+						<div className="border-border bg-muted/40 flex flex-col gap-4 rounded-xl border p-4">
+							<DateSelectionSection
+								label="Select payout month"
+								description="The selected month determines which recipients and payouts will be processed below."
+								selected={selectedDate}
+								onSelect={(date) => date && setSelectedDate(date)}
+								disabled={isPending}
+							/>
 
-						<DialogActionSection
-							label="Generate payouts"
-							description="Creates and updates payout entries in the database for this payout cycle."
-							onClick={handleGeneratePayouts}
-							icon={<PlayIcon className="h-4 w-4" />}
-							isPending={isPending}
-							variant="default"
-						/>
+							<div className="grid grid-cols-2 gap-3">
+								<DialogActionSection
+									label="Download payout CSV"
+									description="Prepares the payout file for all active recipients for the selected month."
+									onClick={handleDownloadPayoutCSV}
+									icon={<DownloadIcon className="h-4 w-4" />}
+									isPending={isPending}
+								/>
+
+								<DialogActionSection
+									label="Generate payouts"
+									description="Creates and updates payout entries in the database for this payout cycle."
+									onClick={handleGeneratePayouts}
+									icon={<PlayIcon className="h-4 w-4" />}
+									isPending={isPending}
+									variant="default"
+								/>
+							</div>
+						</div>
 					</div>
 
 					<DialogFooter className="mt-4 flex justify-end">

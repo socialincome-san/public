@@ -1,4 +1,4 @@
-import { PayoutStatus, ProgramPermission } from '@prisma/client';
+import { PayoutStatus, ProgramPermission, RecipientStatus } from '@prisma/client';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -236,11 +236,26 @@ export class PayoutService extends BaseService {
 		};
 	}
 
-	async downloadRegistrationCSV(userId: string, selectedDate: Date): Promise<ServiceResult<string>> {
+	async downloadRegistrationCSV(userId: string): Promise<ServiceResult<string>> {
 		try {
-			// TODO: Implement registration CSV generation logic
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			return this.resultOk(`CSV registration placeholder for ${selectedDate.toISOString()}`);
+			const recipientsResult = await this.getActiveRecipientsWithAccess(userId);
+			if (!recipientsResult.success) {
+				return this.resultFail(recipientsResult.error);
+			}
+
+			const recipients = recipientsResult.data;
+			const csvRows: string[][] = [['Mobile Number*', 'Unique Code*', 'User Type*']];
+
+			for (const recipient of recipients) {
+				const code = recipient.paymentInformation?.code;
+				const phone = recipient.paymentInformation?.phone?.number;
+				if (!code || !phone) {
+					return this.resultFail(`Orange Money Id or phone number missing for recipient: ${recipient.id}`);
+				}
+				csvRows.push([phone.toString().slice(-8), code.toString(), 'subscriber']);
+			}
+
+			return this.resultOk(csvRows.map((row) => row.join(',')).join('\n'));
 		} catch (error) {
 			console.error(error);
 			return this.resultFail('Could not generate registration CSV');
@@ -249,9 +264,41 @@ export class PayoutService extends BaseService {
 
 	async downloadPayoutCSV(userId: string, selectedDate: Date): Promise<ServiceResult<string>> {
 		try {
-			// TODO: Implement payout CSV generation logic
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			return this.resultOk(`CSV payout placeholder for ${selectedDate.toISOString()}`);
+			const recipientsResult = await this.getActiveRecipientsWithAccess(userId);
+			if (!recipientsResult.success) {
+				return this.resultFail(recipientsResult.error);
+			}
+
+			const recipients = recipientsResult.data;
+			const monthLabel = format(selectedDate, 'MMMM yyyy');
+
+			const csvRows: string[][] = [
+				['Mobile Number*', 'Amount*', 'First Name', 'Last Name', 'Id Number', 'Remarks*', 'User Type*'],
+			];
+
+			for (const recipient of recipients) {
+				const code = recipient.paymentInformation?.code;
+				const phone = recipient.paymentInformation?.phone?.number;
+				const firstName = recipient.contact?.firstName ?? '';
+				const lastName = recipient.contact?.lastName ?? '';
+				const amount = Number(recipient.program?.payoutAmount ?? 0);
+
+				if (!code || !phone) {
+					return this.resultFail(`Orange Money Id or phone number missing for recipient: ${recipient.id}`);
+				}
+
+				csvRows.push([
+					phone.toString().slice(-8),
+					amount.toString(),
+					firstName,
+					lastName,
+					code.toString(),
+					`Social Income ${monthLabel}`,
+					'subscriber',
+				]);
+			}
+
+			return this.resultOk(csvRows.map((row) => row.join(',')).join('\n'));
 		} catch (error) {
 			console.error(error);
 			return this.resultFail('Could not generate payout CSV');
@@ -266,6 +313,52 @@ export class PayoutService extends BaseService {
 		} catch (error) {
 			console.error(error);
 			return this.resultFail('Could not generate payouts');
+		}
+	}
+
+	private async getActiveRecipientsWithAccess(userId: string) {
+		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const accessiblePrograms = accessResult.data;
+
+			if (accessiblePrograms.length === 0) {
+				return this.resultFail('No accessible programs found');
+			}
+
+			const programIds = accessiblePrograms.map((p) => p.programId);
+
+			const recipients = await this.db.recipient.findMany({
+				where: {
+					programId: { in: programIds },
+					status: RecipientStatus.active,
+				},
+				select: {
+					id: true,
+					contact: { select: { firstName: true, lastName: true } },
+					paymentInformation: {
+						select: {
+							code: true,
+							phone: { select: { number: true } },
+						},
+					},
+					program: { select: { payoutAmount: true } },
+				},
+				orderBy: {
+					paymentInformation: {
+						code: 'asc',
+					},
+				},
+			});
+
+			return this.resultOk(recipients);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch recipients with access');
 		}
 	}
 }
