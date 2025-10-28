@@ -33,9 +33,9 @@ export async function getRecipientAction(recipientId: string) {
 
 export async function getRecipientOptions(userId: string) {
 	const programService = new ProgramService();
-	const programs = await programService.getRecipientPrograms(userId);
+	const programs = await programService.getOptions(userId);
 	const localPartnerService = new LocalPartnerService();
-	const localPartner = await localPartnerService.getRecipientOptions(userId);
+	const localPartner = await localPartnerService.getOptions(userId);
 	return {
 		programs,
 		localPartner,

@@ -1,10 +1,10 @@
 import { PayoutStatus, ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { ProgramRecipientOption, ProgramWallet, ProgramWalletView } from './program.types';
+import { ProgramOption, ProgramWallet, ProgramWalletView } from './program.types';
 
 export class ProgramService extends BaseService {
-	async getRecipientPrograms(userId: string): Promise<ServiceResult<ProgramRecipientOption[]>> {
+	async getOptions(userId: string): Promise<ServiceResult<ProgramOption[]>> {
 		try {
 			const programs = await this.db.program.findMany({
 				where: {
@@ -20,7 +20,7 @@ export class ProgramService extends BaseService {
 				orderBy: { name: 'asc' },
 			});
 
-			const programsOptions = programs.map(({ id, name }): ProgramRecipientOption => ({ id, name }));
+			const programsOptions = programs.map(({ id, name }): ProgramOption => ({ id, name }));
 
 			return this.resultOk(programsOptions);
 		} catch {

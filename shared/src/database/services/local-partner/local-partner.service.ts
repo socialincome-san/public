@@ -3,8 +3,8 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import {
 	LocalPartnerCreateInput,
+	LocalPartnerOption,
 	LocalPartnerPayload,
-	LocalPartnerRecipientOption,
 	LocalPartnerTableView,
 	LocalPartnerTableViewRow,
 	LocalPartnerUpdateInput,
@@ -67,7 +67,7 @@ export class LocalPartnerService extends BaseService {
 		}
 	}
 
-	async getRecipientOptions(userId: string): Promise<ServiceResult<LocalPartnerRecipientOption[]>> {
+	async getOptions(userId: string): Promise<ServiceResult<LocalPartnerOption[]>> {
 		try {
 			const user = await this.db.user.findUnique({
 				where: { id: userId },

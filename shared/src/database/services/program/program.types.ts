@@ -14,7 +14,7 @@ export type ProgramWalletView = {
 	wallets: ProgramWallet[];
 };
 
-export type ProgramRecipientOption = {
+export type ProgramOption = {
 	id: string;
 	name: string;
 };

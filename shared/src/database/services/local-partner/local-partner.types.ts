@@ -30,7 +30,7 @@ export type LocalPartnerPayload = {
 	};
 };
 
-export type LocalPartnerRecipientOption = {
+export type LocalPartnerOption = {
 	id: string;
 	name: string;
 };

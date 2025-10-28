@@ -4,8 +4,8 @@ import { formSchema as contactFormSchema } from '@/components/dynamic-form/conta
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
 import { PaymentProvider, RecipientStatus } from '@prisma/client';
-import { LocalPartnerRecipientOption } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
-import { ProgramRecipientOption } from '@socialincome/shared/src/database/services/program/program.types';
+import { LocalPartnerOption } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
+import { ProgramOption } from '@socialincome/shared/src/database/services/program/program.types';
 import {
 	RecipientCreateInput,
 	RecipientPayload,
@@ -30,8 +30,8 @@ export type RecipientFormProps = {
 };
 
 export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readOnly, userId }: RecipientFormProps) {
-	const [programs, setPrograms] = useState<ProgramRecipientOption[] | undefined>(undefined);
-	const [localPartner, setLocalPartner] = useState<LocalPartnerRecipientOption[] | undefined>(undefined);
+	const [programs, setPrograms] = useState<ProgramOption[] | undefined>(undefined);
+	const [localPartner, setLocalPartner] = useState<LocalPartnerOption[] | undefined>(undefined);
 
 	const initialFormSchema: {
 		label: string;
