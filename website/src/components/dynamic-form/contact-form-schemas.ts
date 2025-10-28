@@ -27,7 +27,7 @@ export const formSchema: FormSchema = {
 		email: {
 			placeholder: 'Email',
 			label: 'Email',
-			zodSchema: z.string().email(),
+			zodSchema: z.string().email().nullable(),
 		},
 		language: {
 			placeholder: 'Language',

@@ -12,10 +12,12 @@ export function RecipientsTableClient({
 	rows,
 	error,
 	userId,
+	programId,
 }: {
 	rows: RecipientTableViewRow[];
 	error: string | null;
 	userId: string;
+	programId?: string;
 }) {
 	const [open, setOpen] = useState(false);
 
@@ -67,6 +69,7 @@ export function RecipientsTableClient({
 						onSuccess={() => setOpen(false)}
 						onCancel={() => setOpen(false)}
 						onError={onError}
+						programId={programId}
 					/>
 				</DialogContent>
 			</Dialog>
