@@ -231,6 +231,16 @@ const GenericFormField = ({
 
 	const label = `${formFieldSchema.label} ${!isOptional(option, zodSchema, parentOption) ? '*' : ''}`;
 
+	// set selected value if only one option available
+	useEffect(() => {
+		if (getType(option, zodSchema, parentOption) === 'ZodEnum') {
+			const options = Object.entries(getEnumValues(option, parentOption));
+			if (options.length === 1) {
+				form.setValue(optionKey, options[0][1]);
+			}
+		}
+	});
+
 	if (isFormField(formFieldSchema)) {
 		switch (getType(option, zodSchema, parentOption)) {
 			case 'ZodString':
@@ -277,15 +287,6 @@ const GenericFormField = ({
 					/>
 				);
 			case 'ZodEnum':
-				const options = Object.entries(getEnumValues(option, parentOption));
-
-				// preselect value if only one available and mandatory
-				const preselectValue =
-					!isOptional(option, zodSchema, parentOption) && options.length === 1 ? options[0][1] : undefined;
-				if (preselectValue) {
-					form.setValue(optionKey, preselectValue);
-				}
-
 				return (
 					<FormField
 						control={form.control}
@@ -301,7 +302,7 @@ const GenericFormField = ({
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent {...form.register(optionKey)}>
-										{options.map(([label, id]) => (
+										{Object.entries(getEnumValues(option, parentOption)).map(([label, id]) => (
 											<SelectItem value={id} key={id}>
 												{label}
 											</SelectItem>
