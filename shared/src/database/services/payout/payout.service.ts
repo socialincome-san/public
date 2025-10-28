@@ -235,4 +235,37 @@ export class PayoutService extends BaseService {
 			twoAgo: { start: startOfMonth(subMonths(now, 2)), end: endOfMonth(subMonths(now, 2)) },
 		};
 	}
+
+	async downloadRegistrationCSV(userId: string, selectedDate: Date): Promise<ServiceResult<string>> {
+		try {
+			// TODO: Implement registration CSV generation logic
+			await new Promise((resolve) => setTimeout(resolve, 2000));
+			return this.resultOk(`CSV registration placeholder for ${selectedDate.toISOString()}`);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not generate registration CSV');
+		}
+	}
+
+	async downloadPayoutCSV(userId: string, selectedDate: Date): Promise<ServiceResult<string>> {
+		try {
+			// TODO: Implement payout CSV generation logic
+			await new Promise((resolve) => setTimeout(resolve, 2000));
+			return this.resultOk(`CSV payout placeholder for ${selectedDate.toISOString()}`);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not generate payout CSV');
+		}
+	}
+
+	async generatePayouts(userId: string, selectedDate: Date): Promise<ServiceResult<string>> {
+		try {
+			// TODO: Implement payout generation logic
+			await new Promise((resolve) => setTimeout(resolve, 2000));
+			return this.resultOk(`Generated payouts for ${selectedDate.toISOString()}`);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not generate payouts');
+		}
+	}
 }

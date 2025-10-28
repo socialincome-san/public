@@ -1,7 +1,16 @@
-export default async function Page() {
-	return (
-		<p className="text-gradient animate-pulse bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-2xl font-semibold text-transparent">
-			🚀 Coming Soon!
-		</p>
-	);
+import { PayoutsTableClient } from '@/app/portal/(routes)/(protected)/delivery/make-payouts/payouts-table-client';
+import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
+import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
+import type { PayoutTableViewRow } from '@socialincome/shared/src/database/services/payout/payout.types';
+
+export default async function PayoutsPage() {
+	const user = await getAuthenticatedUserOrRedirect();
+
+	const payoutService = new PayoutService();
+	const result = await payoutService.getTableView(user.id);
+
+	const error = result.success ? null : result.error;
+	const rows: PayoutTableViewRow[] = result.success ? result.data.tableRows : [];
+
+	return <PayoutsTableClient rows={rows} error={error} />;
 }
