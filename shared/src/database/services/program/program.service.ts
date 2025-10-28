@@ -72,7 +72,8 @@ export class ProgramService extends BaseService {
 			});
 
 			return this.resultOk({ wallets });
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Could not fetch programs');
 		}
 	}
@@ -139,7 +140,8 @@ export class ProgramService extends BaseService {
 			}));
 
 			return this.resultOk({ tableRows });
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Could not fetch program members');
 		}
 	}
@@ -158,7 +160,8 @@ export class ProgramService extends BaseService {
 			}));
 
 			return this.resultOk(programs);
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Could not fetch program options');
 		}
 	}

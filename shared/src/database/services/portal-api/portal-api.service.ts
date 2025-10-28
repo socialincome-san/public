@@ -31,7 +31,8 @@ export class PortalApiService extends BaseService {
 				return this.resultFail(`No recipient found for phone "${phone.slice(0, 2)}****${phone.slice(-2)}"`, 404);
 			}
 			return this.resultOk(recipient, 200);
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail(`Could not fetch recipient for phone "${phone}"`, 500);
 		}
 	}
@@ -59,7 +60,8 @@ export class PortalApiService extends BaseService {
 				},
 			});
 			return this.resultOk(updatedRecipient, 200);
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Failed to update recipient', 500);
 		}
 	}
@@ -71,7 +73,8 @@ export class PortalApiService extends BaseService {
 				orderBy: { paymentAt: 'desc' },
 			});
 			return this.resultOk(payouts, 200);
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Could not fetch payouts', 500);
 		}
 	}
@@ -91,7 +94,8 @@ export class PortalApiService extends BaseService {
 			}
 
 			return this.resultOk(payout, 200);
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail(`Could not fetch payout "${payoutId}"`, 500);
 		}
 	}
@@ -111,7 +115,8 @@ export class PortalApiService extends BaseService {
 				data: { status },
 			});
 			return this.resultOk(updated, 200);
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail(`Failed to update payout "${payoutId}"`, 500);
 		}
 	}
@@ -123,7 +128,8 @@ export class PortalApiService extends BaseService {
 				orderBy: [{ dueAt: 'desc' }, { createdAt: 'desc' }],
 			});
 			return this.resultOk(surveys, 200);
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Could not fetch surveys', 500);
 		}
 	}
@@ -134,7 +140,8 @@ export class PortalApiService extends BaseService {
 		const token = header.slice('Bearer '.length);
 		try {
 			return await authAdmin.auth.verifyIdToken(token);
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return null;
 		}
 	}

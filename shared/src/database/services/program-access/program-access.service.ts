@@ -26,7 +26,8 @@ export class ProgramAccessService extends BaseService {
 			}));
 
 			return this.resultOk(data);
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Could not fetch program accesses');
 		}
 	}

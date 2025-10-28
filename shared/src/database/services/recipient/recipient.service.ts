@@ -29,7 +29,8 @@ export class RecipientService extends BaseService {
 		try {
 			const newRecipient = await this.db.recipient.create({ data: recipient });
 			return this.resultOk(newRecipient);
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Could not create recipient');
 		}
 	}
@@ -62,8 +63,9 @@ export class RecipientService extends BaseService {
 				data: recipient,
 			});
 			return this.resultOk(updatedRecipient);
-		} catch (e) {
-			return this.resultFail('Could not update recipient: ' + e);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not update recipient: ' + error);
 		}
 	}
 
@@ -203,7 +205,8 @@ export class RecipientService extends BaseService {
 			});
 
 			return this.resultOk({ tableRows });
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Could not fetch recipients');
 		}
 	}

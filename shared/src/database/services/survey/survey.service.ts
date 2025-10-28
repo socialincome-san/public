@@ -72,7 +72,8 @@ export class SurveyService extends BaseService {
 			});
 
 			return this.resultOk({ tableRows });
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Could not fetch surveys');
 		}
 	}
@@ -87,7 +88,8 @@ export class SurveyService extends BaseService {
 			const upcoming = allSurveysResult.data.tableRows.filter((row) => isFuture(row.dueAt));
 
 			return this.resultOk({ tableRows: upcoming });
-		} catch {
+		} catch (error) {
+			console.error(error);
 			return this.resultFail('Could not fetch upcoming surveys');
 		}
 	}
