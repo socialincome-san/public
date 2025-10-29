@@ -27,7 +27,7 @@ export const formSchema: FormSchema = {
 		email: {
 			placeholder: 'Email',
 			label: 'Email',
-			zodSchema: z.string().email().nullable(),
+			zodSchema: z.string().email().or(z.literal('')).optional(),
 		},
 		language: {
 			placeholder: 'Language',
@@ -71,7 +71,7 @@ export const formSchema: FormSchema = {
 		number: {
 			placeholder: 'Number',
 			label: 'Address Number',
-			zodSchema: z.string().min(2),
+			zodSchema: z.string().min(1),
 		},
 		city: {
 			placeholder: 'City',
