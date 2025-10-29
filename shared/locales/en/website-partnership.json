@@ -36,14 +36,12 @@
 		"subtitle": "Every partnership took a different form, but they were united by one purpose: reducing poverty where the need is greatest, through direct action."
 	},
 	"partnership-models": {
-		"title": "Ways your organization can make a difference",
+		"title": "Ways you and your organization can make a difference",
 		"badge": "New",
 		"badge-microsoft": "Microsoft",
 		"badge-google": "Google",
 		"badge-jetbrains": "JetBrains",
 		"badge-github": "GitHub",
-		"badge-microsoft": "Microsoft",
-		"badge-microsoft": "Microsoft",
 		"badge-microsoft": "Microsoft",
 		"card-1-title": "Make a one-time donation",
 		"card-1-description": "Make an immediate impact by giving today, or by matching your employees’ donations.",
@@ -53,6 +51,7 @@
 		"card-3-title": "Launch a direct cash program",
 		"card-3-description": "Select a cause and fund a cash-transfer program that supports a whole community.",
 		"card-3-footnote": "Starting in December 2025",
+		"card-3-dialog-sub": "This option will be launched soon.",
 		"card-4-title": "Join the Partners’ Circle",
 		"card-4-description": "Become a Bronze, Silver, or Gold Partner to help scale Social Income.",
 		"card-4-footnote": "Click to learn more"

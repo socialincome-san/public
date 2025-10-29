@@ -11,7 +11,7 @@ export async function PartnershipModels({ lang }: DefaultParams) {
 	return (
 		<div>
 			<div className="mx-auto mb-8 mt-20 flex w-4/5 flex-col items-center justify-center md:mb-20 lg:w-3/5">
-				<Typography weight="medium" className="mb-12 text-center text-3xl sm:text-4xl md:text-4xl">
+				<Typography weight="medium" className="mb-12 text-center text-3xl sm:text-4xl md:text-4xl leading-loose">
 					{translator.t('partnership-models.title')}
 				</Typography>
 			</div>
@@ -141,10 +141,7 @@ export async function PartnershipModels({ lang }: DefaultParams) {
 						</DialogHeader>
 						<div className="mt-4 space-y-4">
 							<Typography size="lg">
-								Placeholder content for the third dialog body.
-							</Typography>
-							<Typography size="lg">
-								More placeholder text to demonstrate scrolling inside the dialog.
+								{translator.t('partnership-models.card-3-dialog-sub')}
 							</Typography>
 						</div>
 					</DialogContent>
