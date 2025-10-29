@@ -186,20 +186,6 @@ export function RecipientForm({ onSuccess, onError, onCancel, recipientId, readO
 				},
 			},
 		}));
-		setFormSchema((prevSchema) => ({
-			...prevSchema,
-			fields: {
-				...prevSchema.fields,
-				localPartner: {
-					...prevSchema.fields.localPartner,
-					zodSchema: z.nativeEnum(partnersObj),
-				},
-				program: {
-					...prevSchema.fields.program,
-					zodSchema: z.nativeEnum(programsObj),
-				},
-			},
-		}));
 	};
 
 	const onSubmit = (schema: RecipientFormSchema) => {
