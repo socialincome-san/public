@@ -11,6 +11,39 @@ import {
 } from '@socialincome/shared/src/database/services/contributor/contributor.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
+import { buildUpdateContributorsInput } from './contributors-form-helper';
+export type ContributorFormSchema = {
+	label: string;
+	fields: {
+		referral: FormField;
+		paymentReferenceId: FormField;
+		stripeCustomerId: FormField;
+		contact: FormSchema;
+	};
+};
+const initialFormSchema: ContributorFormSchema = {
+	label: 'Contributor',
+	fields: {
+		referral: {
+			placeholder: 'Referral',
+			label: 'Referral',
+			zodSchema: z.nativeEnum(ContributorReferralSource),
+		},
+		paymentReferenceId: {
+			placeholder: 'Payment Reference ID',
+			label: 'Payment Reference ID',
+			zodSchema: z.string().nullable(),
+		},
+		stripeCustomerId: {
+			placeholder: 'Stripe Customer ID',
+			label: 'Stripe Customer ID',
+			zodSchema: z.string().nullable(),
+		},
+		contact: {
+			...contactFormSchema,
+		},
+	},
+};
 
 export default function ContributorsForm({
 	onSuccess,
@@ -23,38 +56,6 @@ export default function ContributorsForm({
 	onCancel?: () => void;
 	contributorId?: string;
 }) {
-	const initialFormSchema: {
-		label: string;
-		fields: {
-			referral: FormField;
-			paymentReferenceId: FormField;
-			stripeCustomerId: FormField;
-			contact: FormSchema;
-		};
-	} = {
-		label: 'Contributor',
-		fields: {
-			referral: {
-				placeholder: 'Referral',
-				label: 'Referral',
-				zodSchema: z.nativeEnum(ContributorReferralSource),
-			},
-			paymentReferenceId: {
-				placeholder: 'Payment Reference ID',
-				label: 'Payment Reference ID',
-				zodSchema: z.string().nullable(),
-			},
-			stripeCustomerId: {
-				placeholder: 'Stripe Customer ID',
-				label: 'Stripe Customer ID',
-				zodSchema: z.string().nullable(),
-			},
-			contact: {
-				...contactFormSchema,
-			},
-		},
-	};
-
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
 	const [contributor, setContributor] = useState<ContributorPayload>();
 	const [isLoading, startTransition] = useTransition();
@@ -93,62 +94,9 @@ export default function ContributorsForm({
 	async function onSubmit(schema: typeof initialFormSchema) {
 		startTransition(async () => {
 			try {
+				if (!contributor || !contributorId) return;
 				let res;
-				const contactFields: {
-					[key: string]: FormField;
-				} = schema.fields.contact.fields;
-				// TODO: move mapping to server action
-				const address = {
-					street: contactFields.street.value,
-					number: contactFields.number.value,
-					city: contactFields.city.value,
-					zip: contactFields.zip.value,
-					country: contactFields.country.value,
-				};
-				const data: ContributorUpdateInput = {
-					referral: schema.fields.referral.value,
-					paymentReferenceId: schema.fields.paymentReferenceId.value,
-					stripeCustomerId: schema.fields.stripeCustomerId.value,
-					contact: {
-						update: {
-							data: {
-								firstName: contactFields.firstName.value,
-								lastName: contactFields.lastName.value,
-								gender: contactFields.gender.value,
-								email: contactFields.email.value,
-								profession: contactFields.profession.value,
-								phone: contactFields.phone.value
-									? {
-											update: {
-												data: {
-													number: contactFields.phone.value,
-													hasWhatsApp: contactFields.hasWhatsApp.value,
-												},
-												where: {
-													id: contributor?.contact.phone?.id,
-												},
-											},
-										}
-									: undefined,
-								dateOfBirth: contactFields.dateOfBirth.value,
-								callingName: contactFields.callingName.value,
-								language: contactFields.language.value,
-								address: {
-									upsert: {
-										update: address,
-										create: address,
-										where: {
-											id: contributor?.contact.address?.id,
-										},
-									},
-								},
-							},
-							where: {
-								id: contributor?.contact.id,
-							},
-						},
-					},
-				};
+				const data: ContributorUpdateInput = buildUpdateContributorsInput(schema, contributor);
 				res = await updateContributorAction({ id: contributorId, ...data });
 				res.success ? onSuccess?.() : onError?.(res.error);
 			} catch (error: unknown) {
