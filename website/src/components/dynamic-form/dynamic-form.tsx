@@ -150,7 +150,7 @@ const DynamicForm: FC<{
 							{/* TODO: find better solution to hide collapsed content */}
 							<AccordionItem value={`accordion-${option}`} className="[&[data-state=closed]>div]:h-0">
 								<AccordionTrigger>{formSchema.fields[option].label}</AccordionTrigger>
-								<AccordionContent className="flex flex-col gap-6 p-5" forceMount>
+								<AccordionContent className="flex flex-col gap-6 p-5 [&_*[aria-hidden='true']]:!h-0" forceMount>
 									{getOptions(option).map((nestedOption) => (
 										<GenericFormField
 											option={nestedOption}
