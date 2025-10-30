@@ -5,11 +5,11 @@ import { ContributorService } from '@socialincome/shared/src/database/services/c
 import { ContributorUpdateInput } from '@socialincome/shared/src/database/services/contributor/contributor.types';
 import { revalidatePath } from 'next/cache';
 
-export async function updateContributorAction(recipient: ContributorUpdateInput) {
+export async function updateContributorAction(contributor: ContributorUpdateInput) {
 	const user = await getAuthenticatedUserOrThrow();
 	const contributorService = new ContributorService();
 
-	const res = await contributorService.update(user.id, recipient);
+	const res = await contributorService.update(user.id, contributor);
 	revalidatePath('/portal/management/contributors');
 	return res;
 }

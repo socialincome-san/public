@@ -21,7 +21,7 @@ export default function ContributorsTable({ rows, error }: { rows: ContributorTa
 
 	const onError = (error: unknown) => {
 		setHasError(true);
-		console.error('Local Partner Form Error: ', error);
+		console.error('Contributor Form Error: ', error);
 	};
 
 	return (
