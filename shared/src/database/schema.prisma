@@ -427,8 +427,8 @@ model PaymentInformation {
   id       String          @id @default(cuid()) @map("id")
   provider PaymentProvider @map("provider")
   code     String          @unique @map("code")
-  phoneId  String?         @map("phone_id")
-  phone    Phone?          @relation(fields: [phoneId], references: [id])
+  phoneId  String          @map("phone_id")
+  phone    Phone           @relation(fields: [phoneId], references: [id])
 
   recipients Recipient[]
 

@@ -38,7 +38,12 @@ export class RecipientTransformer extends BaseTransformer<FirestoreRecipientWith
 							},
 						},
 					}
-				: undefined;
+				: {
+						create: {
+							number: '',
+							hasWhatsApp: false,
+						},
+					};
 
 			transformed.push({
 				legacyFirestoreId: raw.id,

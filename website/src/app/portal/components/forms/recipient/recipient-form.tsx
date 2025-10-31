@@ -100,10 +100,7 @@ const initialFormSchema: RecipientFormSchema = {
 					label: 'Phone Number',
 					zodSchema: z
 						.string()
-						// TODO: chek regex and optional
-						.regex(/^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/gm)
-						.or(z.literal(''))
-						.optional(),
+						.regex(/^\+[1-9]\d{1,14}$/, 'Phone number must be in valid E.164 format (e.g., +12345678901)'),
 				},
 			},
 		},

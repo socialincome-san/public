@@ -40,7 +40,7 @@ export function RecipientsTableClient({
 
 	const onError = (error: unknown) => {
 		setHasError(true);
-		console.error('Local Partner Form Error: ', error);
+		console.error('Recipient Form Error: ', error);
 	};
 
 	return (
