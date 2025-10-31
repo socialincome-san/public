@@ -70,11 +70,11 @@ export class RecipientService extends BaseService {
 				recipient.paymentInformation?.upsert?.update?.phone?.upsert?.update.number?.toString() ||
 				recipient.paymentInformation?.upsert?.create?.phone?.create?.number?.toString();
 
-			if (!phoneNumber) {
-				return this.resultFail('No phone number provided for recipient update');
+			if (!phoneNumber || !existing.paymentInformation?.phone.number) {
+				return this.resultFail('No phone number available for recipient update');
 			}
 
-			await this.firebaseAuthService.updateByPhoneNumber(phoneNumber);
+			await this.firebaseAuthService.updateByPhoneNumber(existing.paymentInformation?.phone.number, phoneNumber);
 			const updatedRecipient = await this.db.recipient.update({
 				where: { id: recipient.id?.toString() },
 				data: recipient,

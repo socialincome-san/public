@@ -32,12 +32,12 @@ export class AuthService {
 		}
 	}
 
-	async updateByPhoneNumber(phoneNumber: string) {
+	async updateByPhoneNumber(oldPhoneNumber: string, newPhoneNumber: string) {
 		try {
-			const existingUser = await this.getByPhoneNumber(phoneNumber);
+			const existingUser = await this.getByPhoneNumber(oldPhoneNumber);
 			if (!existingUser) throw new Error('Auth user not found');
 			return await this.authAdmin.auth.updateUser(existingUser.uid, {
-				phoneNumber,
+				phoneNumber: newPhoneNumber,
 			});
 		} catch (error) {
 			console.error('Error fetching user by phone number:', error);
