@@ -1,5 +1,5 @@
-import { PayoutStatus, ProgramPermission } from '@prisma/client';
-import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
+import { PayoutStatus, ProgramPermission, RecipientStatus } from '@prisma/client';
+import { addMonths, endOfMonth, format, isSameMonth, startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
@@ -13,6 +13,9 @@ import {
 	PayoutMonth,
 	PayoutTableView,
 	PayoutTableViewRow,
+	PreviewPayout,
+	RecipientCompletionPreview,
+	YearMonth,
 } from './payout.types';
 
 export class PayoutService extends BaseService {
@@ -230,7 +233,7 @@ export class PayoutService extends BaseService {
 
 	async downloadRegistrationCSV(userId: string): Promise<ServiceResult<string>> {
 		try {
-			const recipientsResult = await this.recipientService.getActiveRecipients(userId);
+			const recipientsResult = await this.recipientService.getActivePayoutRecipients(userId);
 			if (!recipientsResult.success) {
 				return this.resultFail(recipientsResult.error);
 			}
@@ -254,15 +257,16 @@ export class PayoutService extends BaseService {
 		}
 	}
 
-	async downloadPayoutCSV(userId: string, selectedDate: Date): Promise<ServiceResult<string>> {
+	async downloadPayoutCSV(userId: string, target: YearMonth): Promise<ServiceResult<string>> {
 		try {
-			const recipientsResult = await this.recipientService.getActiveRecipients(userId);
+			const recipientsResult = await this.recipientService.getActivePayoutRecipients(userId);
 			if (!recipientsResult.success) {
 				return this.resultFail(recipientsResult.error);
 			}
 
 			const recipients = recipientsResult.data;
-			const monthLabel = format(selectedDate, 'MMMM yyyy');
+			const targetDate = new Date(target.year, target.month - 1);
+			const monthLabel = format(targetDate, 'MMMM yyyy');
 
 			const csvRows: string[][] = [
 				['Mobile Number*', 'Amount*', 'First Name', 'Last Name', 'Id Number', 'Remarks*', 'User Type*'],
@@ -297,11 +301,73 @@ export class PayoutService extends BaseService {
 		}
 	}
 
-	async generatePayouts(userId: string, selectedDate: Date): Promise<ServiceResult<string>> {
+	async previewCurrentMonthPayouts(userId: string, target: YearMonth): Promise<ServiceResult<PreviewPayout[]>> {
 		try {
-			// TODO: Implement payout generation logic
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			return this.resultOk(`Generated payouts for ${selectedDate.toISOString()}`);
+			const recipientsResult = await this.recipientService.getActivePayoutRecipients(userId);
+			if (!recipientsResult.success) {
+				return this.resultFail(recipientsResult.error);
+			}
+
+			const recipients = recipientsResult.data;
+			if (recipients.length === 0) {
+				return this.resultOk([]);
+			}
+
+			const exchangeRateResult = await this.exchangeRateService.getLatestRates();
+			if (!exchangeRateResult.success) {
+				return this.resultFail(exchangeRateResult.error);
+			}
+
+			const rates = exchangeRateResult.data;
+			const currentMonth = startOfMonth(new Date(target.year, target.month - 1));
+
+			const toCreate: PreviewPayout[] = recipients
+				.filter((r) => !r.payouts.some((p) => isSameMonth(p.paymentAt, currentMonth)))
+				.map((r) => {
+					const payoutAmount = r.program.payoutAmount;
+					const currency = r.program.payoutCurrency;
+					const rateCurrency = rates[currency];
+					const rateChf = rates['CHF'];
+					const amountChf = rateCurrency && rateChf ? (payoutAmount / rateCurrency) * rateChf : null;
+					const phoneNumber = r.paymentInformation?.phone?.number ?? null;
+
+					return {
+						recipientId: r.id,
+						firstName: r.contact.firstName,
+						lastName: r.contact.lastName,
+						phoneNumber,
+						currency,
+						amount: payoutAmount,
+						amountChf,
+						paymentAt: currentMonth,
+						status: PayoutStatus.paid,
+					};
+				});
+
+			return this.resultOk(toCreate);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not preview payouts');
+		}
+	}
+
+	async generateCurrentMonthPayouts(userId: string, target: YearMonth): Promise<ServiceResult<string>> {
+		try {
+			const previewResult = await this.previewCurrentMonthPayouts(userId, target);
+			if (!previewResult.success) {
+				return this.resultFail(previewResult.error);
+			}
+
+			const toCreate = previewResult.data;
+			if (toCreate.length === 0) {
+				return this.resultOk('No payouts to create for this month');
+			}
+
+			await this.db.payout.createMany({ data: toCreate });
+
+			return this.resultOk(
+				`Created ${toCreate.length} payouts for ${target.year}-${String(target.month).padStart(2, '0')}.`,
+			);
 		} catch (error) {
 			console.error(error);
 			return this.resultFail('Could not generate payouts');
@@ -316,5 +382,71 @@ export class PayoutService extends BaseService {
 			last: { start: startOfMonth(subMonths(now, 1)), end: endOfMonth(subMonths(now, 1)) },
 			twoAgo: { start: startOfMonth(subMonths(now, 2)), end: endOfMonth(subMonths(now, 2)) },
 		};
+	}
+
+	async previewCompletedRecipients(userId: string): Promise<ServiceResult<RecipientCompletionPreview[]>> {
+		try {
+			const recipientsResult = await this.recipientService.getActivePayoutRecipients(userId);
+
+			if (!recipientsResult.success) {
+				return this.resultFail(recipientsResult.error);
+			}
+
+			const recipients = recipientsResult.data;
+			if (recipients.length === 0) {
+				return this.resultOk([]);
+			}
+
+			const completed: RecipientCompletionPreview[] = recipients
+				.map((r) => {
+					const paidCount = r.payouts.filter((p) =>
+						([PayoutStatus.paid, PayoutStatus.confirmed] as PayoutStatus[]).includes(p.status),
+					).length;
+					const remaining = r.program.totalPayments - paidCount;
+
+					return {
+						id: r.id,
+						firstName: r.contact.firstName,
+						lastName: r.contact.lastName,
+						paidCount,
+						totalPayments: r.program.totalPayments,
+						remaining,
+						isCompleted: remaining <= 0,
+					};
+				})
+				.filter((r) => r.isCompleted);
+
+			return this.resultOk(completed);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not preview completed recipients');
+		}
+	}
+
+	async markCompletedRecipientsAsFormer(userId: string): Promise<ServiceResult<string>> {
+		try {
+			const previewResult = await this.previewCompletedRecipients(userId);
+
+			if (!previewResult.success) {
+				return this.resultFail(previewResult.error);
+			}
+
+			const completed = previewResult.data;
+			if (completed.length === 0) {
+				return this.resultOk('No recipients to update');
+			}
+
+			const recipientIds = completed.map((r) => r.id);
+
+			await this.db.recipient.updateMany({
+				where: { id: { in: recipientIds } },
+				data: { status: RecipientStatus.former },
+			});
+
+			return this.resultOk(`Updated ${completed.length} recipients to status "former".`);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not update recipients');
+		}
 	}
 }
