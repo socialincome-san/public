@@ -91,9 +91,10 @@ const DynamicForm: FC<{
 				if (!isFormField(field)) {
 					//nested
 					for (const [nestedName, nestedField] of Object.entries(field.fields)) {
-						if (isFormField(nestedField)) form.setValue(`${name}.${nestedName}`, nestedField.value);
+						if (isFormField(nestedField) && nestedField.value != null)
+							form.setValue(`${name}.${nestedName}`, nestedField.value);
 					}
-				} else {
+				} else if (field.value != null) {
 					form.setValue(name, field.value);
 				}
 			}
