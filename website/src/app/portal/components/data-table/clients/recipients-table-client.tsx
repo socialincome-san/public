@@ -4,7 +4,7 @@ import { Button } from '@/app/portal/components/button';
 import { makeRecipientColumns } from '@/app/portal/components/data-table/columns/recipients';
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
-import { RecipientForm } from '@/app/portal/components/forms/recipient-form';
+import { RecipientForm } from '@/app/portal/components/forms/recipient/recipient-form';
 import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import { useState } from 'react';
 
