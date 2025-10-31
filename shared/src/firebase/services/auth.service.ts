@@ -32,7 +32,7 @@ export class AuthService {
 		}
 	}
 
-	async updateUser(phoneNumber: string) {
+	async updateByPhoneNumber(phoneNumber: string) {
 		try {
 			const existingUser = await this.getByPhoneNumber(phoneNumber);
 			if (!existingUser) throw new Error('Auth user not found');

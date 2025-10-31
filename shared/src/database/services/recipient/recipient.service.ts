@@ -29,7 +29,7 @@ export class RecipientService extends BaseService {
 		}
 
 		try {
-			let phoneNumber = recipient.paymentInformation?.create?.phone?.create?.number;
+			const phoneNumber = recipient.paymentInformation?.create?.phone?.create?.number;
 			if (!phoneNumber) {
 				return this.resultFail('No phone number provided for recipient creation');
 			}
@@ -66,7 +66,7 @@ export class RecipientService extends BaseService {
 		}
 
 		try {
-			let phoneNumber =
+			const phoneNumber =
 				recipient.paymentInformation?.upsert?.update?.phone?.upsert?.update.number?.toString() ||
 				recipient.paymentInformation?.upsert?.create?.phone?.create?.number?.toString();
 
