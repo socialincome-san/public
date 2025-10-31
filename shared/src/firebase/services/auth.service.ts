@@ -45,10 +45,13 @@ export class AuthService {
 		}
 	}
 
-	getByPhoneNumber(phoneNumber: string) {
+	async getByPhoneNumber(phoneNumber: string) {
 		try {
-			return this.authAdmin.auth.getUserByPhoneNumber(phoneNumber);
-		} catch (error) {
+			return await this.authAdmin.auth.getUserByPhoneNumber(phoneNumber);
+		} catch (error: any) {
+			if (error?.code === 'auth/user-not-found') {
+				return null;
+			}
 			console.error('Error getting user by phone number:', error);
 			throw new Error('Auth user not found by phone number');
 		}
