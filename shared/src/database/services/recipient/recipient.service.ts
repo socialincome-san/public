@@ -74,7 +74,7 @@ export class RecipientService extends BaseService {
 				return this.resultFail('No phone number provided for recipient update');
 			}
 
-			await this.firebaseAuthService.updateUser(phoneNumber);
+			await this.firebaseAuthService.updateByPhoneNumber(phoneNumber);
 			const updatedRecipient = await this.db.recipient.update({
 				where: { id: recipient.id?.toString() },
 				data: recipient,
