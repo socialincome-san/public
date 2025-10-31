@@ -1,9 +1,10 @@
-import { PayoutStatus, ProgramPermission, RecipientStatus } from '@prisma/client';
+import { PayoutStatus, ProgramPermission } from '@prisma/client';
 import { addMonths, endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
 import { ProgramAccessService } from '../program-access/program-access.service';
+import { RecipientService } from '../recipient/recipient.service';
 import {
 	OngoingPayoutTableView,
 	OngoingPayoutTableViewRow,
@@ -17,6 +18,7 @@ import {
 export class PayoutService extends BaseService {
 	private programAccessService = new ProgramAccessService();
 	private exchangeRateService = new ExchangeRateService();
+	private recipientService = new RecipientService();
 
 	async getTableView(userId: string): Promise<ServiceResult<PayoutTableView>> {
 		try {
@@ -226,19 +228,9 @@ export class PayoutService extends BaseService {
 		}
 	}
 
-	private getMonthIntervals() {
-		const now = new Date();
-
-		return {
-			current: { start: startOfMonth(now), end: endOfMonth(now) },
-			last: { start: startOfMonth(subMonths(now, 1)), end: endOfMonth(subMonths(now, 1)) },
-			twoAgo: { start: startOfMonth(subMonths(now, 2)), end: endOfMonth(subMonths(now, 2)) },
-		};
-	}
-
 	async downloadRegistrationCSV(userId: string): Promise<ServiceResult<string>> {
 		try {
-			const recipientsResult = await this.getActiveRecipientsWithAccess(userId);
+			const recipientsResult = await this.recipientService.getActiveRecipients(userId);
 			if (!recipientsResult.success) {
 				return this.resultFail(recipientsResult.error);
 			}
@@ -264,7 +256,7 @@ export class PayoutService extends BaseService {
 
 	async downloadPayoutCSV(userId: string, selectedDate: Date): Promise<ServiceResult<string>> {
 		try {
-			const recipientsResult = await this.getActiveRecipientsWithAccess(userId);
+			const recipientsResult = await this.recipientService.getActiveRecipients(userId);
 			if (!recipientsResult.success) {
 				return this.resultFail(recipientsResult.error);
 			}
@@ -316,49 +308,13 @@ export class PayoutService extends BaseService {
 		}
 	}
 
-	private async getActiveRecipientsWithAccess(userId: string) {
-		try {
-			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+	private getMonthIntervals() {
+		const now = new Date();
 
-			if (!accessResult.success) {
-				return this.resultFail(accessResult.error);
-			}
-
-			const accessiblePrograms = accessResult.data;
-
-			if (accessiblePrograms.length === 0) {
-				return this.resultFail('No accessible programs found');
-			}
-
-			const programIds = accessiblePrograms.map((p) => p.programId);
-
-			const recipients = await this.db.recipient.findMany({
-				where: {
-					programId: { in: programIds },
-					status: RecipientStatus.active,
-				},
-				select: {
-					id: true,
-					contact: { select: { firstName: true, lastName: true } },
-					paymentInformation: {
-						select: {
-							code: true,
-							phone: { select: { number: true } },
-						},
-					},
-					program: { select: { payoutAmount: true } },
-				},
-				orderBy: {
-					paymentInformation: {
-						code: 'asc',
-					},
-				},
-			});
-
-			return this.resultOk(recipients);
-		} catch (error) {
-			console.error(error);
-			return this.resultFail('Could not fetch recipients with access');
-		}
+		return {
+			current: { start: startOfMonth(now), end: endOfMonth(now) },
+			last: { start: startOfMonth(subMonths(now, 1)), end: endOfMonth(subMonths(now, 1)) },
+			twoAgo: { start: startOfMonth(subMonths(now, 2)), end: endOfMonth(subMonths(now, 2)) },
+		};
 	}
 }

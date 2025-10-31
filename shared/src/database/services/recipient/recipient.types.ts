@@ -60,5 +60,22 @@ export type RecipientOption = {
 	name: string;
 };
 
+export type ActiveRecipient = {
+	id: string;
+	contact: {
+		firstName: string;
+		lastName: string;
+	};
+	paymentInformation: {
+		code: string;
+		phone: {
+			number: string;
+		} | null;
+	} | null;
+	program: {
+		payoutAmount: number;
+	};
+};
+
 export type RecipientCreateInput = Prisma.RecipientCreateInput;
 export type RecipientUpdateInput = Prisma.RecipientUpdateInput;
