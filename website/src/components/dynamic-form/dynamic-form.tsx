@@ -356,6 +356,29 @@ const GenericFormField = ({
 						)}
 					/>
 				);
+
+			case 'ZodNumber':
+				return (
+					<FormField
+						control={form.control}
+						name={optionKey}
+						key={optionKey}
+						render={({ field }) => (
+							<FormItem>
+								<Label>{label}</Label>
+								<FormControl>
+									<Input
+										type="number"
+										placeholder={formFieldSchema.placeholder}
+										{...form.register(optionKey, { valueAsNumber: true })}
+										disabled={isLoading || readOnly}
+									/>
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				);
 			default:
 				break;
 		}
