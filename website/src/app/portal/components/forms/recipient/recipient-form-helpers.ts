@@ -1,35 +1,11 @@
 import { FormField } from '@/components/dynamic-form/dynamic-form';
+import { buildAddressInput, buildCommonContactData } from '@/components/dynamic-form/helper';
 import {
 	RecipientCreateInput,
 	RecipientPayload,
 	RecipientUpdateInput,
 } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import { RecipientFormSchema } from './recipient-form';
-
-// Helper to structure contact address for Prisma upsert/create
-function buildAddressInput(contactFields: { [key: string]: FormField }) {
-	return {
-		street: contactFields.street.value,
-		number: contactFields.number.value,
-		city: contactFields.city.value,
-		zip: contactFields.zip.value,
-		country: contactFields.country.value,
-	};
-}
-
-// Helper to build common contact fields for create/update
-function buildCommonContactData(contactFields: { [key: string]: FormField }) {
-	return {
-		firstName: contactFields.firstName.value,
-		lastName: contactFields.lastName.value,
-		gender: contactFields.gender.value,
-		email: contactFields.email.value || null,
-		profession: contactFields.profession.value || null,
-		dateOfBirth: contactFields.dateOfBirth.value,
-		callingName: contactFields.callingName.value || null,
-		language: contactFields.language.value || null,
-	};
-}
 
 export function buildUpdateRecipientInput(
 	schema: RecipientFormSchema,
@@ -74,7 +50,7 @@ export function buildUpdateRecipientInput(
 			upsert: {
 				create: {
 					...basePaymentInfo,
-					phone: paymentInfoFields.phone.value ? { create: { number: paymentInfoFields.phone.value } } : undefined,
+					phone: { create: { number: paymentInfoFields.phone.value } },
 				},
 				update: { ...basePaymentInfo, phone: paymentPhoneUpdate },
 				where: { id: recipient.paymentInformation?.id },
@@ -115,7 +91,7 @@ export function buildCreateRecipientInput(
 			create: {
 				provider: paymentInfoFields.provider.value,
 				code: paymentInfoFields.code.value,
-				phone: paymentInfoFields.phone.value ? { create: { number: paymentInfoFields.phone.value } } : undefined,
+				phone: { create: { number: paymentInfoFields.phone.value } },
 			},
 		},
 		contact: {

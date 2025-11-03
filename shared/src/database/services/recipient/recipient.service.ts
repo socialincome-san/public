@@ -1,4 +1,5 @@
 import { ProgramPermission, Recipient, RecipientStatus } from '@prisma/client';
+import { FirebaseService } from '@socialincome/shared/src/firebase/services/auth.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessService } from '../program-access/program-access.service';
@@ -13,6 +14,7 @@ import {
 
 export class RecipientService extends BaseService {
 	private programAccessService = new ProgramAccessService();
+	private firebaseAuthService = new FirebaseService();
 
 	async create(userId: string, recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
 		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
@@ -28,6 +30,12 @@ export class RecipientService extends BaseService {
 		}
 
 		try {
+			const phoneNumber = recipient.paymentInformation?.create?.phone?.create?.number;
+			if (!phoneNumber) {
+				return this.resultFail('No phone number provided for recipient creation');
+			}
+
+			await this.firebaseAuthService.createByPhoneNumber(phoneNumber);
 			const newRecipient = await this.db.recipient.create({ data: recipient });
 			return this.resultOk(newRecipient);
 		} catch (error) {
@@ -45,7 +53,7 @@ export class RecipientService extends BaseService {
 
 		const existing = await this.db.recipient.findUnique({
 			where: { id: recipient.id?.toString() },
-			select: { programId: true },
+			select: { programId: true, paymentInformation: { select: { phone: { select: { number: true } } } } },
 		});
 
 		if (!existing) {
@@ -59,6 +67,15 @@ export class RecipientService extends BaseService {
 		}
 
 		try {
+			const phoneNumber =
+				recipient.paymentInformation?.upsert?.update?.phone?.upsert?.update.number?.toString() ||
+				recipient.paymentInformation?.upsert?.create?.phone?.create?.number?.toString();
+
+			if (!phoneNumber || !existing.paymentInformation?.phone?.number) {
+				return this.resultFail('No phone number available for recipient update');
+			}
+
+			await this.firebaseAuthService.updateByPhoneNumber(existing.paymentInformation?.phone.number, phoneNumber);
 			const updatedRecipient = await this.db.recipient.update({
 				where: { id: recipient.id?.toString() },
 				data: recipient,

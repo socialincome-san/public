@@ -1,4 +1,3 @@
-import { Button } from '@/app/portal/components/button';
 import { makeOrganizationAdminColumns } from '@/app/portal/components/data-table/columns/organizations';
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
@@ -22,7 +21,6 @@ export default async function OrganizationsPage() {
 			emptyMessage="No organizations found"
 			data={rows}
 			makeColumns={makeOrganizationAdminColumns}
-			actions={<Button>Create organization</Button>}
 		/>
 	);
 }
