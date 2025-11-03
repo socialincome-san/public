@@ -13,7 +13,7 @@ const credentials =
 			}
 		: undefined;
 
-export class AuthService {
+export class FirebaseService {
 	private authAdmin = new AuthAdmin(getOrInitializeFirebaseAdmin(credentials));
 
 	async createByPhoneNumber(phoneNumber: string) {

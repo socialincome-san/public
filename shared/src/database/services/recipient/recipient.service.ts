@@ -1,5 +1,5 @@
 import { ProgramPermission, Recipient, RecipientStatus } from '@prisma/client';
-import { AuthService } from '@socialincome/shared/src/firebase/services/auth.service';
+import { FirebaseService } from '@socialincome/shared/src/firebase/services/auth.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessService } from '../program-access/program-access.service';
@@ -13,7 +13,7 @@ import {
 
 export class RecipientService extends BaseService {
 	private programAccessService = new ProgramAccessService();
-	private firebaseAuthService = new AuthService();
+	private firebaseAuthService = new FirebaseService();
 
 	async create(userId: string, recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
 		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
@@ -70,7 +70,7 @@ export class RecipientService extends BaseService {
 				recipient.paymentInformation?.upsert?.update?.phone?.upsert?.update.number?.toString() ||
 				recipient.paymentInformation?.upsert?.create?.phone?.create?.number?.toString();
 
-			if (!phoneNumber || !existing.paymentInformation?.phone.number) {
+			if (!phoneNumber || !existing.paymentInformation?.phone?.number) {
 				return this.resultFail('No phone number available for recipient update');
 			}
 
