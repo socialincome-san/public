@@ -1,4 +1,13 @@
-import { Address, Gender, PaymentProvider, Phone, Prisma, ProgramPermission, RecipientStatus } from '@prisma/client';
+import {
+	Address,
+	Gender,
+	PaymentProvider,
+	PayoutStatus,
+	Phone,
+	Prisma,
+	ProgramPermission,
+	RecipientStatus,
+} from '@prisma/client';
 
 export type RecipientPayload = {
 	id: string;
@@ -58,6 +67,24 @@ export type RecipientTableView = {
 export type RecipientOption = {
 	id: string;
 	name: string;
+};
+
+export type PayoutRecipient = {
+	id: string;
+	contact: { firstName: string; lastName: string };
+	paymentInformation: {
+		code: string;
+		phone: { number: string } | null;
+	} | null;
+	program: {
+		payoutAmount: number;
+		payoutCurrency: string;
+		totalPayments: number;
+	};
+	payouts: {
+		paymentAt: Date;
+		status: PayoutStatus;
+	}[];
 };
 
 export type RecipientCreateInput = Prisma.RecipientCreateInput;

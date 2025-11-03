@@ -1,78 +1,108 @@
 'use client';
 
-import { DateSelectionSection } from '@/app/portal/(routes)/(protected)/delivery/make-payouts/date-selection-section';
-import { DialogActionSection } from '@/app/portal/(routes)/(protected)/delivery/make-payouts/dialog-action-section';
-import { Alert, AlertDescription, AlertTitle } from '@/app/portal/components/alert';
 import { Button } from '@/app/portal/components/button';
 import { makePayoutColumns } from '@/app/portal/components/data-table/columns/payouts';
 import DataTable from '@/app/portal/components/data-table/data-table';
+import { DatePicker } from '@/app/portal/components/date-picker';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
+
 import {
 	downloadPayoutCsvAction,
 	downloadRegistrationCsvAction,
-	generatePayoutsAction,
+	generateCurrentMonthPayoutsAction,
+	markCompletedRecipientsAsFormerAction,
+	previewCompletedRecipientsAction,
+	previewCurrentMonthPayoutsAction,
 } from '@/app/portal/server-actions/payout-actions';
+
 import type { PayoutTableViewRow } from '@socialincome/shared/src/database/services/payout/payout.types';
 import { format } from 'date-fns';
-import { CheckCircleIcon, DownloadIcon, PlayIcon, XCircleIcon } from 'lucide-react';
-import { useState, useTransition } from 'react';
+import { CalendarIcon, EyeIcon, PlayIcon, TableIcon, UserCheckIcon } from 'lucide-react';
+import { useState } from 'react';
+import { StepResultBox } from './step-result-box';
+
+type Result = string | object | string[] | null;
 
 export function PayoutsTableClient({ rows, error }: { rows: PayoutTableViewRow[]; error: string | null }) {
 	const [open, setOpen] = useState(false);
 	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-	const [isPending, startTransition] = useTransition();
-	const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+	const [results, setResults] = useState<Record<number, Result>>({});
 
-	const getMonthFileLabel = () => format(selectedDate, 'yyyy-MM');
+	const iconClass = 'h-4 w-4';
+	const monthLabel = () => format(selectedDate, 'yyyy-MM');
 
-	async function handleCsvDownload(csv: string, filename: string) {
-		const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-		const url = URL.createObjectURL(blob);
-		const link = document.createElement('a');
-		link.href = url;
-		link.download = filename;
-		link.click();
-		URL.revokeObjectURL(url);
+	function setResult(step: number, value: Result) {
+		setResults((prev) => ({ ...prev, [step]: value }));
 	}
 
-	const handleAction = async (fn: () => Promise<void>) => {
-		setMessage(null);
+	const steps = [
+		{
+			id: 1,
+			title: 'Generate registration CSV',
+			label: 'Generate registration CSV',
+			description: 'Shows the CSV that would be sent to Orange — no changes yet.',
+			icon: <TableIcon className={iconClass} />,
+			variant: 'outline' as const,
+			action: async () => downloadRegistrationCsvAction(),
+			filename: () => `registration-${monthLabel()}.csv`,
+		},
+		{
+			id: 2,
+			title: 'Generate payout CSV',
+			label: 'Generate payout CSV',
+			description: 'Shows the payout CSV for all active recipients — no changes yet.',
+			icon: <TableIcon className={iconClass} />,
+			variant: 'outline' as const,
+			action: async () => downloadPayoutCsvAction(selectedDate),
+			filename: () => `payouts-${monthLabel()}.csv`,
+		},
+		{
+			id: 3,
+			title: 'Preview payouts',
+			label: 'Preview payouts (no changes)',
+			description: 'Shows which payouts WOULD be created for this month — nothing written yet.',
+			icon: <EyeIcon className={iconClass} />,
+			variant: 'outline' as const,
+			action: async () => previewCurrentMonthPayoutsAction(selectedDate),
+			filename: () => `preview-payouts-${monthLabel()}.json`,
+		},
+		{
+			id: 4,
+			title: 'Generate payouts',
+			label: 'Generate payouts (apply changes)',
+			description: 'Actually writes payouts to the database for the selected month.',
+			icon: <PlayIcon className={iconClass} />,
+			action: async () => generateCurrentMonthPayoutsAction(selectedDate),
+			filename: () => `generated-payouts-${monthLabel()}.json`,
+		},
+		{
+			id: 5,
+			title: 'Preview former recipients',
+			label: 'Preview former recipients (no changes)',
+			description: 'Shows which recipients finished all payments — nothing written yet.',
+			icon: <EyeIcon className={iconClass} />,
+			variant: 'outline' as const,
+			action: async () => previewCompletedRecipientsAction(),
+			filename: () => `preview-former.json`,
+		},
+		{
+			id: 6,
+			title: 'Mark recipients as former',
+			label: 'Mark recipients as former (apply changes)',
+			description: 'Updates all shown in the preview to status "former".',
+			icon: <UserCheckIcon className={iconClass} />,
+			action: async () => markCompletedRecipientsAsFormerAction(),
+			filename: () => `former-updated.json`,
+		},
+	];
+
+	async function run(step: (typeof steps)[number]) {
 		try {
-			await fn();
-			setMessage({ type: 'success', text: 'Action completed successfully.' });
+			const result = await step.action();
+			setResult(step.id, result);
 		} catch (e) {
-			console.error(e);
-			setMessage({
-				type: 'error',
-				text: e instanceof Error ? e.message : 'Something went wrong.',
-			});
+			setResult(step.id, e instanceof Error ? e.message : 'Unknown error');
 		}
-	};
-
-	async function handleDownloadRegistrationCSV() {
-		startTransition(() =>
-			handleAction(async () => {
-				const csv = await downloadRegistrationCsvAction();
-				await handleCsvDownload(csv, `registration-${getMonthFileLabel()}.csv`);
-			}),
-		);
-	}
-
-	async function handleDownloadPayoutCSV() {
-		startTransition(() =>
-			handleAction(async () => {
-				const csv = await downloadPayoutCsvAction(selectedDate);
-				await handleCsvDownload(csv, `payouts-${getMonthFileLabel()}.csv`);
-			}),
-		);
-	}
-
-	async function handleGeneratePayouts() {
-		startTransition(() =>
-			handleAction(async () => {
-				await generatePayoutsAction(selectedDate);
-			}),
-		);
 	}
 
 	return (
@@ -87,65 +117,48 @@ export function PayoutsTableClient({ rows, error }: { rows: PayoutTableViewRow[]
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>
-				<DialogContent className="sm:max-w-[520px]">
+				<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
 					<DialogHeader>
-						<DialogTitle>Start payout process</DialogTitle>
+						<DialogTitle>Payout process</DialogTitle>
 					</DialogHeader>
 
-					<div className="flex flex-col gap-5">
-						{message && (
-							<Alert variant={message.type === 'error' ? 'destructive' : 'default'}>
-								{message.type === 'error' ? (
-									<XCircleIcon className="mt-0.5 h-4 w-4" />
-								) : (
-									<CheckCircleIcon className="mt-0.5 h-4 w-4 text-green-600" />
-								)}
-								<AlertTitle>{message.type === 'error' ? 'Error' : 'Success'}</AlertTitle>
-								<AlertDescription>{message.text}</AlertDescription>
-							</Alert>
-						)}
-
-						<DialogActionSection
-							label="Download registration CSV"
-							description="Generates a list of all recipients. This does not depend on a specific payout month."
-							onClick={handleDownloadRegistrationCSV}
-							icon={<DownloadIcon className="h-4 w-4" />}
-							isPending={isPending}
-						/>
-
-						<div className="border-border bg-muted/40 flex flex-col gap-4 rounded-xl border p-4">
-							<DateSelectionSection
-								label="Select payout month"
-								description="The selected month determines which recipients and payouts will be processed below."
-								selected={selectedDate}
-								onSelect={(date) => date && setSelectedDate(date)}
-								disabled={isPending}
-							/>
-
-							<div className="grid grid-cols-2 gap-3">
-								<DialogActionSection
-									label="Download payout CSV"
-									description="Prepares the payout file for all active recipients for the selected month."
-									onClick={handleDownloadPayoutCSV}
-									icon={<DownloadIcon className="h-4 w-4" />}
-									isPending={isPending}
-								/>
-
-								<DialogActionSection
-									label="Generate payouts"
-									description="Creates and updates payout entries in the database for this payout cycle."
-									onClick={handleGeneratePayouts}
-									icon={<PlayIcon className="h-4 w-4" />}
-									isPending={isPending}
-									variant="default"
-								/>
-							</div>
-						</div>
+					<div className="border-border bg-muted/40 mb-4 flex flex-col gap-3 rounded-xl border p-4">
+						<p className="mb-1 flex items-center gap-2 text-sm font-medium">
+							<CalendarIcon className={iconClass} /> Select payout month
+						</p>
+						<DatePicker selected={selectedDate} onSelect={(date) => date && setSelectedDate(date)} />
+						<p className="text-muted-foreground mt-1 text-xs">All actions below use this selected month.</p>
 					</div>
 
-					<DialogFooter className="mt-4 flex justify-end">
-						<Button variant="outline" onClick={() => setOpen(false)} disabled={isPending}>
-							Cancel
+					<div className="flex flex-col gap-5">
+						{steps.map((step) => (
+							<div key={step.id} className="border-border bg-muted/40 flex flex-col gap-2 rounded-xl border p-3">
+								<p className="font-medium">
+									Step {step.id}: {step.title}
+								</p>
+								<p className="text-muted-foreground mb-1 text-xs">{step.description}</p>
+
+								<Button
+									className="flex w-full items-center justify-center gap-2"
+									variant={step.variant ?? 'default'}
+									onClick={() => run(step)}
+								>
+									{step.icon}
+									{step.label}
+								</Button>
+
+								<StepResultBox
+									value={results[step.id]}
+									filename={step.filename()}
+									onClear={() => setResult(step.id, null)}
+								/>
+							</div>
+						))}
+					</div>
+
+					<DialogFooter className="mt-4">
+						<Button variant="outline" onClick={() => setOpen(false)}>
+							Close
 						</Button>
 					</DialogFooter>
 				</DialogContent>
