@@ -1,4 +1,3 @@
-import { Button } from '@/app/portal/components/button';
 import { Card } from '@/app/portal/components/card';
 import { TabNavigation } from '@/app/portal/components/tab-navigation';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
@@ -6,7 +5,6 @@ import { ProgramService } from '@socialincome/shared/src/database/services/progr
 
 import { CountryBadge } from '@/app/portal/components/badges/country-badge';
 import { Breadcrumb } from '@/app/portal/components/breadcrumb/breadcrumb';
-import { Pen } from 'lucide-react';
 import { ReactNode } from 'react';
 
 type ProgramLayoutProps = {
@@ -46,11 +44,6 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 				<h1 className="py-8 text-5xl">{programName}</h1>
 
 				<CountryBadge country={country} />
-
-				<Button variant="outline" className="ml-auto rounded-full" title="Manage program">
-					<Pen className="mr-2 h-4 w-4" />
-					Manage program
-				</Button>
 			</div>
 
 			<TabNavigation sections={sections} />

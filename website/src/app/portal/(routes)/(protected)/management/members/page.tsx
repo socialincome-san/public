@@ -1,4 +1,3 @@
-import { Button } from '@/app/portal/components/button';
 import { makeOrganizationMemberColumns } from '@/app/portal/components/data-table/columns/organization-members';
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
@@ -21,7 +20,6 @@ export default async function OrganizationMembersPage() {
 			emptyMessage="No members found"
 			data={rows}
 			makeColumns={makeOrganizationMemberColumns}
-			actions={<Button>Add member</Button>}
 		/>
 	);
 }

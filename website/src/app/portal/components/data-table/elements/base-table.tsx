@@ -2,6 +2,7 @@
 
 import { Button } from '@/app/portal/components/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/app/portal/components/table';
+import { cn } from '@socialincome/ui/src/lib/utils';
 import {
 	ColumnDef,
 	flexRender,
@@ -16,7 +17,7 @@ import { useState } from 'react';
 type BaseTableProps<TData, TValue> = {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
-	onRowClick: (row: TData) => void;
+	onRowClick?: (row: TData) => void;
 };
 
 export function BaseTable<TData, TValue>({ columns, data, onRowClick }: BaseTableProps<TData, TValue>) {
@@ -60,9 +61,11 @@ export function BaseTable<TData, TValue>({ columns, data, onRowClick }: BaseTabl
 							table.getRowModel().rows.map((row) => (
 								<TableRow
 									key={row.id}
-									data-state={row.getIsSelected() && 'selected'}
-									className="hover:bg-accent/60 group h-16 cursor-pointer transition-colors duration-200 ease-out"
-									onClick={() => onRowClick(row.original)}
+									className={cn(
+										'group h-16 border-b transition-colors duration-200 ease-out',
+										onRowClick && 'hover:bg-accent/60 cursor-pointer',
+									)}
+									onClick={() => onRowClick?.(row.original)}
 								>
 									{row.getVisibleCells().map((cell) => (
 										<TableCell key={cell.id} className="border-b">
