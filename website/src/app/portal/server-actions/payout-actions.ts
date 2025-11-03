@@ -3,6 +3,7 @@
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
 import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
 import { YearMonth } from '@socialincome/shared/src/database/services/payout/payout.types';
+import { revalidatePath } from 'next/cache';
 
 function toYearMonth(date: Date): YearMonth {
 	return { year: date.getFullYear(), month: date.getMonth() + 1 };
@@ -59,6 +60,8 @@ export async function generateCurrentMonthPayoutsAction(selectedDate: Date) {
 	if (!result.success) {
 		throw new Error(result.error);
 	}
+
+	revalidatePath('/portal/delivery/make-payouts');
 
 	return result.data;
 }
