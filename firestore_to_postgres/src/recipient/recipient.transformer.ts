@@ -19,9 +19,9 @@ export class RecipientTransformer extends BaseTransformer<FirestoreRecipientWith
 			const communicationPhone = raw.communication_mobile_phone?.phone
 				? {
 						connectOrCreate: {
-							where: { number: raw.communication_mobile_phone.phone.toString() },
+							where: { number: this.mapPhoneNumber(raw.communication_mobile_phone.phone) },
 							create: {
-								number: raw.communication_mobile_phone.phone.toString(),
+								number: this.mapPhoneNumber(raw.communication_mobile_phone.phone),
 								hasWhatsApp: raw.communication_mobile_phone.has_whatsapp,
 							},
 						},
@@ -31,9 +31,9 @@ export class RecipientTransformer extends BaseTransformer<FirestoreRecipientWith
 			const paymentPhone = raw.mobile_money_phone?.phone
 				? {
 						connectOrCreate: {
-							where: { number: raw.mobile_money_phone.phone.toString() },
+							where: { number: this.mapPhoneNumber(raw.mobile_money_phone.phone) },
 							create: {
-								number: raw.mobile_money_phone.phone.toString(),
+								number: this.mapPhoneNumber(raw.mobile_money_phone.phone),
 								hasWhatsApp: raw.mobile_money_phone.has_whatsapp,
 							},
 						},
@@ -122,5 +122,10 @@ export class RecipientTransformer extends BaseTransformer<FirestoreRecipientWith
 
 		const date = new Date(value);
 		return isNaN(date.getTime()) ? null : date;
+	}
+
+	private mapPhoneNumber(rawPhone: number | undefined): string | null {
+		// Format phone number to E.164 format
+		return rawPhone ? `+${rawPhone}` : null;
 	}
 }

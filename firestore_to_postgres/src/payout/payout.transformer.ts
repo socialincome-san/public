@@ -21,7 +21,7 @@ export class PayoutTransformer extends BaseTransformer<FirestorePayoutWithRecipi
 				currency: payout.currency ?? '',
 				paymentAt: payout.payment_at?.toDate() ?? null,
 				status: this.mapStatus(payout.status),
-				phoneNumber: payout.phone_number?.toString() ?? null,
+				phoneNumber: payout.phone_number ? `+${payout.phone_number}` : null,
 				comments: payout.comments ?? null,
 				recipient: {
 					connect: { legacyFirestoreId: recipient.id },
