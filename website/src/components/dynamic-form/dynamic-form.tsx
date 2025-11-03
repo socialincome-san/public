@@ -230,6 +230,24 @@ const GenericFormField = ({
 		return getType(key, zodSchema, parentOption) === 'ZodEnum' && def.values;
 	};
 
+	const getDateMinMax = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): { min?: Date; max?: Date } => {
+		let def = getDef(key, zodSchema, parentOption);
+		if (isOptional(key, zodSchema, parentOption)) def = def.innerType._def;
+		const dateConstraints: { min?: Date; max?: Date } = {};
+
+		if (def.checks) {
+			for (const check of def.checks) {
+				if (check.kind === 'min') {
+					dateConstraints.min = new Date(check.value);
+				} else if (check.kind === 'max') {
+					dateConstraints.max = new Date(check.value);
+				}
+			}
+		}
+
+		return dateConstraints;
+	};
+
 	const label = `${formFieldSchema.label} ${!isOptional(option, zodSchema, parentOption) ? '*' : ''}`;
 
 	// set selected value if only one option available
@@ -280,6 +298,8 @@ const GenericFormField = ({
 										{...form.register(optionKey)}
 										onSelect={field.onChange}
 										selected={field.value}
+										startMonth={getDateMinMax(option, parentOption).min}
+										endMonth={getDateMinMax(option, parentOption).max}
 									/>
 								</FormControl>
 								<FormMessage />

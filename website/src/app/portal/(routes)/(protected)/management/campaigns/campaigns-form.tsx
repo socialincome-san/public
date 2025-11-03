@@ -124,7 +124,7 @@ const initialFormSchema: CampaignsFormSchema = {
 		},
 		endDate: {
 			label: 'End Date',
-			zodSchema: z.date(),
+			zodSchema: z.date().min(new Date()).max(new Date('2050-12-31')),
 		},
 		isActive: {
 			label: 'Active',
