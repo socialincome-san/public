@@ -1,4 +1,4 @@
-import { PayoutStatus, ProgramPermission, RecipientStatus } from '@prisma/client';
+import { PayoutStatus, Prisma, ProgramPermission, RecipientStatus } from '@prisma/client';
 import { addMonths, endOfMonth, format, isSameMonth, startOfMonth, subMonths } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
@@ -363,10 +363,21 @@ export class PayoutService extends BaseService {
 				return this.resultOk('No payouts to create for this month');
 			}
 
-			await this.db.payout.createMany({ data: toCreate });
+			const dbPayload: Prisma.PayoutCreateManyInput[] = toCreate.map((p) => ({
+				recipientId: p.recipientId,
+				amount: p.amount,
+				amountChf: p.amountChf ?? null,
+				currency: p.currency,
+				paymentAt: p.paymentAt,
+				status: p.status,
+				phoneNumber: p.phoneNumber ?? null,
+				comments: null,
+			}));
+
+			await this.db.payout.createMany({ data: dbPayload });
 
 			return this.resultOk(
-				`Created ${toCreate.length} payouts for ${target.year}-${String(target.month).padStart(2, '0')}.`,
+				`Created ${dbPayload.length} payouts for ${target.year}-${String(target.month).padStart(2, '0')}.`,
 			);
 		} catch (error) {
 			console.error(error);
