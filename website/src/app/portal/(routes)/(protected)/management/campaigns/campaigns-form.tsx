@@ -127,7 +127,7 @@ const initialFormSchema: CampaignsFormSchema = {
 		},
 		isActive: {
 			label: 'Active',
-			zodSchema: z.boolean().default(false),
+			zodSchema: z.boolean(),
 		},
 		public: {
 			placeholder: 'Is the item publicly visible?',
