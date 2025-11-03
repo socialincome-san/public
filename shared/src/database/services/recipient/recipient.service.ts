@@ -4,6 +4,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessService } from '../program-access/program-access.service';
 import {
+	PayoutRecipient,
 	RecipientCreateInput,
 	RecipientPayload,
 	RecipientTableView,
@@ -236,5 +237,77 @@ export class RecipientService extends BaseService {
 
 		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
 		return this.resultOk({ tableRows: filteredRows });
+	}
+
+	async getActivePayoutRecipients(userId: string): Promise<ServiceResult<PayoutRecipient[]>> {
+		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const accessiblePrograms = accessResult.data;
+			if (accessiblePrograms.length === 0) {
+				return this.resultFail('No accessible programs found');
+			}
+
+			const programIds = accessiblePrograms.map((p) => p.programId);
+
+			const recipients = await this.db.recipient.findMany({
+				where: {
+					programId: { in: programIds },
+					status: RecipientStatus.active,
+				},
+				select: {
+					id: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+						},
+					},
+					paymentInformation: {
+						select: {
+							code: true,
+							phone: { select: { number: true } },
+						},
+					},
+					program: {
+						select: {
+							payoutAmount: true,
+							payoutCurrency: true,
+							totalPayments: true,
+						},
+					},
+					payouts: {
+						select: {
+							paymentAt: true,
+							status: true,
+						},
+					},
+				},
+				orderBy: {
+					paymentInformation: { code: 'asc' },
+				},
+			});
+
+			const mapped: PayoutRecipient[] = recipients.map((r) => ({
+				id: r.id,
+				contact: r.contact,
+				paymentInformation: r.paymentInformation,
+				program: {
+					payoutAmount: Number(r.program.payoutAmount),
+					payoutCurrency: r.program.payoutCurrency,
+					totalPayments: r.program.totalPayments,
+				},
+				payouts: r.payouts,
+			}));
+
+			return this.resultOk(mapped);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch payout recipients');
+		}
 	}
 }
