@@ -50,7 +50,7 @@ export function buildUpdateRecipientInput(
 			upsert: {
 				create: {
 					...basePaymentInfo,
-					phone: paymentInfoFields.phone.value ? { create: { number: paymentInfoFields.phone.value } } : undefined,
+					phone: { create: { number: paymentInfoFields.phone.value } },
 				},
 				update: { ...basePaymentInfo, phone: paymentPhoneUpdate },
 				where: { id: recipient.paymentInformation?.id },
@@ -91,7 +91,7 @@ export function buildCreateRecipientInput(
 			create: {
 				provider: paymentInfoFields.provider.value,
 				code: paymentInfoFields.code.value,
-				phone: paymentInfoFields.phone.value ? { create: { number: paymentInfoFields.phone.value } } : undefined,
+				phone: { create: { number: paymentInfoFields.phone.value } },
 			},
 		},
 		contact: {
