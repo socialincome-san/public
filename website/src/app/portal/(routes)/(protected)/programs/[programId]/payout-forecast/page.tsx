@@ -24,7 +24,6 @@ export default async function FinancesPageProgramScoped({ params }: Props) {
 			emptyMessage="No payout forecast found"
 			data={rows}
 			makeColumns={makePayoutForecastColumns}
-			hideProgramName
 		/>
 	);
 }

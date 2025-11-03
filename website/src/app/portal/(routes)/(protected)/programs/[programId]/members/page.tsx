@@ -1,4 +1,3 @@
-import { Button } from '@/app/portal/components/button';
 import { makeProgramMembersColumns } from '@/app/portal/components/data-table/columns/program-members';
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
@@ -24,7 +23,6 @@ export default async function ProgramMembersPage({ params }: Props) {
 			emptyMessage="No members found"
 			data={rows}
 			makeColumns={makeProgramMembersColumns}
-			actions={<Button>Add member</Button>}
 		/>
 	);
 }
