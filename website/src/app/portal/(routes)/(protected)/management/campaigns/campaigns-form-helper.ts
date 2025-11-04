@@ -132,6 +132,7 @@ export const initialFormSchema: CampaignsFormSchema = {
 			zodSchema: z
 				.string()
 				.regex(/^[a-z0-9]+(?:[_-][a-z0-9]+)*$/, 'Invalid slug format.')
+				.or(z.literal(''))
 				.optional(),
 		},
 		metadataDescription: {
@@ -157,7 +158,7 @@ export const initialFormSchema: CampaignsFormSchema = {
 		creatorEmail: {
 			placeholder: 'Email of the creator',
 			label: 'Creator Email',
-			zodSchema: z.string().email('Must be a valid email address.').optional(),
+			zodSchema: z.string().email('Must be a valid email address.').or(z.literal('')).optional(),
 		},
 		program: {
 			placeholder: 'Program',
