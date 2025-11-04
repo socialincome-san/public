@@ -23,9 +23,9 @@ export class RecipientService extends BaseService {
 			return this.resultFail(accessResult.error);
 		}
 
-		const hasAccess = accessResult.data.some((a) => a.programId === recipient.program.connect?.id);
+		const program = accessResult.data.find((a) => a.programId === recipient.program.connect?.id);
 
-		if (!hasAccess) {
+		if (!program || program.permission !== ProgramPermission.edit) {
 			return this.resultFail('Permission denied');
 		}
 
@@ -49,6 +49,12 @@ export class RecipientService extends BaseService {
 
 		if (!accessResult.success) {
 			return this.resultFail(accessResult.error);
+		}
+
+		const program = accessResult.data.find((a) => a.programId === recipient.program?.connect?.id);
+
+		if (!program || program.permission !== ProgramPermission.edit) {
+			return this.resultFail('Permission denied');
 		}
 
 		const existing = await this.db.recipient.findUnique({

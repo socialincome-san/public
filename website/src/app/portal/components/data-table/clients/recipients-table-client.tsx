@@ -5,6 +5,7 @@ import { makeRecipientColumns } from '@/app/portal/components/data-table/columns
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
 import { RecipientForm } from '@/app/portal/components/forms/recipient/recipient-form';
+import { ProgramPermission } from '@prisma/client';
 import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import { useState } from 'react';
 
@@ -21,19 +22,16 @@ export function RecipientsTableClient({
 
 	const [recipientId, setRecipientId] = useState<string | undefined>();
 	const [hasError, setHasError] = useState(false);
-
-	const [readOnly, setReadOnly] = useState(false);
+	const readOnly = rows.some((row) => row.permission === ProgramPermission.readonly);
 
 	const openEmptyForm = () => {
 		setRecipientId(undefined);
-		setReadOnly(false);
 		setHasError(false);
 		setOpen(true);
 	};
 
 	const openEditForm = (row: RecipientTableViewRow) => {
 		setRecipientId(row.id);
-		setReadOnly(row.permission === 'readonly');
 		setHasError(false);
 		setOpen(true);
 	};
