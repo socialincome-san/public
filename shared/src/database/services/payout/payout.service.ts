@@ -294,7 +294,7 @@ export class PayoutService extends BaseService {
 		}
 	}
 
-	async confirmPayout(userId: string, payoutId: string): Promise<ServiceResult<string>> {
+	async updatePayoutStatus(userId: string, payoutId: string, newStatus: PayoutStatus): Promise<ServiceResult<string>> {
 		try {
 			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 			if (!accessResult.success) {
@@ -314,65 +314,28 @@ export class PayoutService extends BaseService {
 				return this.resultFail('Payout not found');
 			}
 
-			const hasAccess = accessResult.data.some((p) => p.programId === payout.recipient.programId);
-			if (!hasAccess) {
+			const access = accessResult.data.find((p) => p.programId === payout.recipient.programId);
+			if (!access) {
 				return this.resultFail('Access denied for this payout');
 			}
 
+			if (access.permission !== ProgramPermission.edit) {
+				return this.resultFail('You do not have permission to modify payouts for this program');
+			}
+
 			if (payout.status !== PayoutStatus.paid) {
-				return this.resultFail('Only payouts with status "paid" can be confirmed');
+				return this.resultFail('Only payouts with status "paid" can be updated');
 			}
 
 			await this.db.payout.update({
 				where: { id: payoutId },
-				data: { status: PayoutStatus.confirmed },
+				data: { status: newStatus },
 			});
 
-			return this.resultOk('Payout confirmed successfully');
+			return this.resultOk(`Payout updated to "${newStatus}"`);
 		} catch (error) {
 			console.error(error);
-			return this.resultFail('Could not confirm payout');
-		}
-	}
-
-	async contestPayout(userId: string, payoutId: string): Promise<ServiceResult<string>> {
-		try {
-			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
-			if (!accessResult.success) {
-				return this.resultFail(accessResult.error);
-			}
-
-			const payout = await this.db.payout.findUnique({
-				where: { id: payoutId },
-				select: {
-					id: true,
-					status: true,
-					recipient: { select: { programId: true } },
-				},
-			});
-
-			if (!payout) {
-				return this.resultFail('Payout not found');
-			}
-
-			const hasAccess = accessResult.data.some((p) => p.programId === payout.recipient.programId);
-			if (!hasAccess) {
-				return this.resultFail('Access denied for this payout');
-			}
-
-			if (payout.status !== PayoutStatus.paid) {
-				return this.resultFail('Only payouts with status "paid" can be contested');
-			}
-
-			await this.db.payout.update({
-				where: { id: payoutId },
-				data: { status: PayoutStatus.contested },
-			});
-
-			return this.resultOk('Payout marked as contested');
-		} catch (error) {
-			console.error(error);
-			return this.resultFail('Could not contest payout');
+			return this.resultFail('Could not update payout');
 		}
 	}
 

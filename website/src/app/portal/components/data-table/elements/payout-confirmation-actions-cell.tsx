@@ -13,9 +13,16 @@ type Props = {
 export function PayoutConfirmationActionsCell({ payout }: Props) {
 	const [isPending, startTransition] = useTransition();
 
+	const hasEditAccess = payout.permission === 'edit';
+
 	return (
 		<div className="flex gap-2">
-			<Button size="sm" onClick={() => startTransition(() => confirmPayoutAction(payout.id))} disabled={isPending}>
+			<Button
+				size="sm"
+				onClick={() => startTransition(() => confirmPayoutAction(payout.id))}
+				disabled={isPending || !hasEditAccess}
+				variant={hasEditAccess ? 'default' : 'secondary'}
+			>
 				<CheckIcon className="h-4 w-4" />
 				Confirm
 			</Button>
@@ -24,7 +31,7 @@ export function PayoutConfirmationActionsCell({ payout }: Props) {
 				size="sm"
 				variant="destructive"
 				onClick={() => startTransition(() => contestPayoutAction(payout.id))}
-				disabled={isPending}
+				disabled={isPending || !hasEditAccess}
 			>
 				<XIcon className="h-4 w-4" />
 				Contest

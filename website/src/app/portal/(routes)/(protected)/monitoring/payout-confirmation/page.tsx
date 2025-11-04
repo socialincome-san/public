@@ -19,6 +19,7 @@ export default async function ConfirmPayoutsPage() {
 			emptyMessage="No payouts waiting for confirmation"
 			data={rows}
 			makeColumns={makePayoutConfirmationColumns}
+			initialSorting={[{ id: 'paymentAt', desc: false }]}
 		/>
 	);
 }
