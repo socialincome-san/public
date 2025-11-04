@@ -79,6 +79,10 @@ export class CampaignService extends BaseService {
 			return this.resultFail(accessResult.error);
 		}
 
+		if (accessResult.data.permission !== 'edit') {
+			return this.resultFail('No permissions to create campaign');
+		}
+
 		const { id: organizationId } = accessResult.data;
 
 		try {
@@ -101,6 +105,10 @@ export class CampaignService extends BaseService {
 
 		if (!accessResult.success) {
 			return this.resultFail(accessResult.error);
+		}
+
+		if (accessResult.data.permission !== 'edit') {
+			return this.resultFail('No permissions to create campaign');
 		}
 
 		try {
