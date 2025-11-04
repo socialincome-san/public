@@ -16,6 +16,23 @@ export type PayoutTableView = {
 	tableRows: PayoutTableViewRow[];
 };
 
+export type PayoutConfirmationTableViewRow = {
+	id: string;
+	recipientFirstName: string;
+	recipientLastName: string;
+	programName: string;
+	amount: number;
+	currency: string;
+	status: PayoutStatus;
+	paymentAt: Date;
+	phoneNumber: string | null;
+	permission: ProgramPermission;
+};
+
+export type PayoutConfirmationTableView = {
+	tableRows: PayoutConfirmationTableViewRow[];
+};
+
 export type PayoutMonth = {
 	monthLabel: string;
 	status: PayoutStatus | null;
