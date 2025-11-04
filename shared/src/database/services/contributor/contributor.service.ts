@@ -81,16 +81,22 @@ export class ContributorService extends BaseService {
 			});
 
 			if (!existing) {
-				return this.resultFail('Recipient not found');
+				return this.resultFail('Contributor not found');
 			}
 
 			if (!contributor.contact?.update?.data?.email) {
 				return this.resultFail('Contributor email is required');
 			}
 
-			await this.firebaseAuthService.updateByUid(existing.account.firebaseAuthUserId, {
-				email: contributor.contact?.update?.data?.email?.toString() ?? undefined,
-			});
+			try {
+				await this.firebaseAuthService.updateByUid(existing.account.firebaseAuthUserId, {
+					email: contributor.contact?.update?.data?.email?.toString() ?? undefined,
+				});
+			} catch (error) {
+				// for now, dont fail the update if firebase user cannot be updated, because there is no auth user for every contributor
+				console.warn('Could not update Firebase Auth user for contributor:', error);
+			}
+
 			const updatedContributor = await this.db.contributor.update({
 				where: { id: contributor.id?.toString() },
 				data: contributor,
