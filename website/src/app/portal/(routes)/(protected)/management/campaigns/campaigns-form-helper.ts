@@ -51,22 +51,22 @@ export const initialFormSchema: CampaignsFormSchema = {
 		secondDescriptionTitle: {
 			placeholder: 'Second Description Title',
 			label: 'Second Description Title',
-			zodSchema: z.string().optional(), // Optional field
+			zodSchema: z.string().optional(),
 		},
 		secondDescription: {
 			placeholder: 'Additional details...',
 			label: 'Second Description',
-			zodSchema: z.string().optional(), // Optional field
+			zodSchema: z.string().optional(),
 		},
 		thirdDescriptionTitle: {
 			placeholder: 'Third Description Title',
 			label: 'Third Description Title',
-			zodSchema: z.string().optional(), // Optional field
+			zodSchema: z.string().optional(),
 		},
 		thirdDescription: {
 			placeholder: 'Final additional details...',
 			label: 'Third Description',
-			zodSchema: z.string().optional(), // Optional field
+			zodSchema: z.string().optional(),
 		},
 		linkWebsite: {
 			placeholder: 'https://www.yourwebsite.com',
@@ -101,7 +101,7 @@ export const initialFormSchema: CampaignsFormSchema = {
 		currency: {
 			placeholder: 'e.g., USD, EUR, CHF',
 			label: 'Currency Code',
-			zodSchema: z.string().length(3, 'Currency code must be 3 letters.'), // Assuming a 3-letter currency code
+			zodSchema: z.string().length(3, 'Currency code must be 3 letters.'),
 		},
 		additionalAmountChf: {
 			placeholder: 'Additional Amount in CHF',
@@ -132,7 +132,7 @@ export const initialFormSchema: CampaignsFormSchema = {
 			zodSchema: z
 				.string()
 				.regex(/^[a-z0-9]+(?:[_-][a-z0-9]+)*$/, 'Invalid slug format.')
-				.optional(), // Common slug format
+				.optional(),
 		},
 		metadataDescription: {
 			placeholder: 'SEO description for search engines',
