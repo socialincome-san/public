@@ -18,7 +18,7 @@ export const useNavbarLinks = (user: UserInformation) => {
 			isDropdown: true,
 		},
 		{
-			href: '/portal/monitoring/payouts',
+			href: '/portal/monitoring/payout-confirmation',
 			activeBase: '/portal/monitoring',
 			label: 'Monitoring',
 		},

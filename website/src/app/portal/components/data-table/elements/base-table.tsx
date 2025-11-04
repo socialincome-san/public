@@ -1,3 +1,4 @@
+// BaseTable.tsx
 'use client';
 
 import { Button } from '@/app/portal/components/button';
@@ -18,10 +19,16 @@ type BaseTableProps<TData, TValue> = {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
 	onRowClick?: (row: TData) => void;
+	initialSorting?: SortingState;
 };
 
-export function BaseTable<TData, TValue>({ columns, data, onRowClick }: BaseTableProps<TData, TValue>) {
-	const [sorting, setSorting] = useState<SortingState>([]);
+export function BaseTable<TData, TValue>({
+	columns,
+	data,
+	onRowClick,
+	initialSorting = [],
+}: BaseTableProps<TData, TValue>) {
+	const [sorting, setSorting] = useState<SortingState>(initialSorting);
 
 	const table = useReactTable({
 		data,
