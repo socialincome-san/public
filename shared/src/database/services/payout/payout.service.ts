@@ -339,7 +339,7 @@ export class PayoutService extends BaseService {
 		}
 	}
 
-	async downloadRegistrationCSV(userId: string): Promise<ServiceResult<string>> {
+	async generateRegistrationCSV(userId: string): Promise<ServiceResult<string>> {
 		try {
 			const recipientsResult = await this.recipientService.getActivePayoutRecipients(userId);
 			if (!recipientsResult.success) {
@@ -365,7 +365,7 @@ export class PayoutService extends BaseService {
 		}
 	}
 
-	async downloadPayoutCSV(userId: string, target: YearMonth): Promise<ServiceResult<string>> {
+	async generatePayoutCSV(userId: string, target: YearMonth): Promise<ServiceResult<string>> {
 		try {
 			const recipientsResult = await this.recipientService.getActivePayoutRecipients(userId);
 			if (!recipientsResult.success) {

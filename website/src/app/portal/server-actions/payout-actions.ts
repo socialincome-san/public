@@ -9,11 +9,11 @@ function toYearMonth(date: Date): YearMonth {
 	return { year: date.getFullYear(), month: date.getMonth() + 1 };
 }
 
-export async function downloadRegistrationCsvAction() {
+export async function generateRegistrationCsvAction() {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new PayoutService();
 
-	const result = await service.downloadRegistrationCSV(user.id);
+	const result = await service.generateRegistrationCSV(user.id);
 
 	if (!result.success) {
 		throw new Error(result.error);
@@ -22,12 +22,12 @@ export async function downloadRegistrationCsvAction() {
 	return result.data;
 }
 
-export async function downloadPayoutCsvAction(selectedDate: Date) {
+export async function generatePayoutCsvAction(selectedDate: Date) {
 	const user = await getAuthenticatedUserOrThrow();
 	const service = new PayoutService();
 	const target = toYearMonth(selectedDate);
 
-	const result = await service.downloadPayoutCSV(user.id, target);
+	const result = await service.generatePayoutCSV(user.id, target);
 
 	if (!result.success) {
 		throw new Error(result.error);
