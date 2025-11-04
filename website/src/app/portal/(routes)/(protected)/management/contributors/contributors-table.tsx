@@ -12,6 +12,7 @@ export default function ContributorsTable({ rows, error }: { rows: ContributorTa
 	const [open, setOpen] = useState(false);
 	const [hasError, setHasError] = useState(false);
 	const [contributorId, setContributorId] = useState<string | undefined>(undefined);
+	const readOnly = rows.some((r) => r.permission === 'readonly');
 
 	const openEditForm = (row: ContributorTableViewRow) => {
 		setContributorId(row.id);
@@ -38,7 +39,7 @@ export default function ContributorsTable({ rows, error }: { rows: ContributorTa
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425]">
 					<DialogHeader>
-						<DialogTitle>Edit Contributor</DialogTitle>
+						<DialogTitle>{readOnly ? 'Show' : 'Edit'} Contributor</DialogTitle>
 					</DialogHeader>
 					{hasError && (
 						<Alert variant="destructive">
@@ -51,6 +52,7 @@ export default function ContributorsTable({ rows, error }: { rows: ContributorTa
 						onSuccess={() => setOpen(false)}
 						onCancel={() => setOpen(false)}
 						onError={onError}
+						readOnly={readOnly}
 					/>
 				</DialogContent>
 			</Dialog>
