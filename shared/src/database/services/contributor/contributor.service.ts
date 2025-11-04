@@ -84,8 +84,12 @@ export class ContributorService extends BaseService {
 				return this.resultFail('Recipient not found');
 			}
 
+			if (!contributor.contact?.update?.data?.email) {
+				return this.resultFail('Contributor email is required');
+			}
+
 			await this.firebaseAuthService.updateByUid(existing.account.firebaseAuthUserId, {
-				email: contributor?.contact?.update?.email?.toString() ?? undefined,
+				email: contributor.contact?.update?.data?.email?.toString() ?? undefined,
 			});
 			const updatedContributor = await this.db.contributor.update({
 				where: { id: contributor.id?.toString() },

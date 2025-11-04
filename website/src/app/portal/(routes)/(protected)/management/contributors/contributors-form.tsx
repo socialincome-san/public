@@ -1,7 +1,7 @@
 'use client';
 
 import { getContributorAction, updateContributorAction } from '@/app/portal/server-actions/contributor-actions';
-import { formSchema as contactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
+import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload } from '@/components/dynamic-form/helper';
 import { ContributorReferralSource } from '@prisma/client';
@@ -40,7 +40,7 @@ const initialFormSchema: ContributorFormSchema = {
 			zodSchema: z.string().nullable(),
 		},
 		contact: {
-			...contactFormSchema,
+			...getContactFormSchema({ isEmailRequired: true }),
 		},
 	},
 };
