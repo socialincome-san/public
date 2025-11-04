@@ -7,9 +7,9 @@ import { DatePicker } from '@/app/portal/components/date-picker';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
 
 import {
-	downloadPayoutCsvAction,
-	downloadRegistrationCsvAction,
 	generateCurrentMonthPayoutsAction,
+	generatePayoutCsvAction,
+	generateRegistrationCsvAction,
 	markCompletedRecipientsAsFormerAction,
 	previewCompletedRecipientsAction,
 	previewCurrentMonthPayoutsAction,
@@ -43,7 +43,7 @@ export function PayoutsTableClient({ rows, error }: { rows: PayoutTableViewRow[]
 			description: 'Shows the CSV that would be sent to Orange — no changes yet.',
 			icon: <TableIcon className={iconClass} />,
 			variant: 'outline' as const,
-			action: async () => downloadRegistrationCsvAction(),
+			action: async () => generateRegistrationCsvAction(),
 			filename: () => `registration-${monthLabel()}.csv`,
 		},
 		{
@@ -53,7 +53,7 @@ export function PayoutsTableClient({ rows, error }: { rows: PayoutTableViewRow[]
 			description: 'Shows the payout CSV for all active recipients — no changes yet.',
 			icon: <TableIcon className={iconClass} />,
 			variant: 'outline' as const,
-			action: async () => downloadPayoutCsvAction(selectedDate),
+			action: async () => generatePayoutCsvAction(selectedDate),
 			filename: () => `payouts-${monthLabel()}.csv`,
 		},
 		{
