@@ -109,7 +109,7 @@ const initialFormSchema: CampaignsFormSchema = {
 		goal: {
 			placeholder: 'Target amount for goal',
 			label: 'Goal Amount',
-			zodSchema: z.number().positive('Goal must be positive').optional(),
+			zodSchema: z.number().positive('Goal must be positive').nullable(),
 		},
 		currency: {
 			placeholder: 'e.g., USD, EUR, CHF',
@@ -119,11 +119,11 @@ const initialFormSchema: CampaignsFormSchema = {
 		additionalAmountChf: {
 			placeholder: 'Additional Amount in CHF',
 			label: 'Additional CHF Amount',
-			zodSchema: z.number().positive('Amount must be positive').optional(),
+			zodSchema: z.number().positive('Amount must be positive').nullable(),
 		},
 		endDate: {
 			label: 'End Date',
-			zodSchema: z.date().min(new Date()).max(new Date('2050-12-31')),
+			zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')),
 		},
 		isActive: {
 			label: 'Active',
@@ -213,6 +213,7 @@ export default function CampaignsForm({
 				const result = await getCampaignsAction(campaignId);
 				if (result.success) {
 					setCampaign(result.data);
+					console.log('Loaded campaign:', result.data);
 					const newSchema = { ...formSchema };
 					newSchema.fields.title.value = result.data.title;
 					newSchema.fields.description.value = result.data.description;

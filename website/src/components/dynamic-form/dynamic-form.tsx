@@ -370,7 +370,10 @@ const GenericFormField = ({
 									<Input
 										type="number"
 										placeholder={formFieldSchema.placeholder}
-										{...form.register(optionKey, { valueAsNumber: true })}
+										{...form.register(optionKey, {
+											// avoid NaN when input is empty, see https://github.com/orgs/react-hook-form/discussions/6980#discussioncomment-1785009
+											setValueAs: (v) => (v === '' ? null : parseInt(v, 10)),
+										})}
 										disabled={isLoading || readOnly}
 									/>
 								</FormControl>
