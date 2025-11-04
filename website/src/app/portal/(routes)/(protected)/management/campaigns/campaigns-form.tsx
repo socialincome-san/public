@@ -142,7 +142,10 @@ const initialFormSchema: CampaignsFormSchema = {
 		slug: {
 			placeholder: 'unique-readable-id',
 			label: 'Slug (URL Identifier)',
-			zodSchema: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Invalid slug format.'), // Common slug format
+			zodSchema: z
+				.string()
+				.regex(/^[a-z0-9]+(?:[_-][a-z0-9]+)*$/, 'Invalid slug format.')
+				.optional(), // Common slug format
 		},
 		metadataDescription: {
 			placeholder: 'SEO description for search engines',
