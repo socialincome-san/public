@@ -186,7 +186,7 @@ const DynamicForm: FC<{
 					)}
 					{onCancel && (
 						<Button variant="outline" onClick={onCancel}>
-							Cancel
+							{mode === 'readonly' ? 'Close' : 'Cancel'}
 						</Button>
 					)}
 				</div>
@@ -228,6 +228,24 @@ const GenericFormField = ({
 		const def = getDef(key, zodSchema, parentOption);
 		if (isOptional(key, zodSchema, parentOption)) return def.innerType._def.values;
 		return getType(key, zodSchema, parentOption) === 'ZodEnum' && def.values;
+	};
+
+	const getDateMinMax = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): { min?: Date; max?: Date } => {
+		let def = getDef(key, zodSchema, parentOption);
+		if (isOptional(key, zodSchema, parentOption)) def = def.innerType._def;
+		const dateConstraints: { min?: Date; max?: Date } = {};
+
+		if (def.checks) {
+			for (const check of def.checks) {
+				if (check.kind === 'min') {
+					dateConstraints.min = new Date(check.value);
+				} else if (check.kind === 'max') {
+					dateConstraints.max = new Date(check.value);
+				}
+			}
+		}
+
+		return dateConstraints;
 	};
 
 	const label = `${formFieldSchema.label} ${!isOptional(option, zodSchema, parentOption) ? '*' : ''}`;
@@ -280,6 +298,8 @@ const GenericFormField = ({
 										{...form.register(optionKey)}
 										onSelect={field.onChange}
 										selected={field.value}
+										startMonth={getDateMinMax(option, parentOption).min}
+										endMonth={getDateMinMax(option, parentOption).max}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -331,6 +351,32 @@ const GenericFormField = ({
 									onCheckedChange={field.onChange}
 									checked={field.value}
 								/>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				);
+
+			case 'ZodNumber':
+				return (
+					<FormField
+						control={form.control}
+						name={optionKey}
+						key={optionKey}
+						render={({ field }) => (
+							<FormItem>
+								<Label>{label}</Label>
+								<FormControl>
+									<Input
+										type="number"
+										placeholder={formFieldSchema.placeholder}
+										{...form.register(optionKey, {
+											// avoid NaN when input is empty, see https://github.com/orgs/react-hook-form/discussions/6980#discussioncomment-1785009
+											setValueAs: (v) => (v === '' ? null : parseInt(v, 10)),
+										})}
+										disabled={isLoading || readOnly}
+									/>
+								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}

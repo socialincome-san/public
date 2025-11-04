@@ -56,7 +56,7 @@ const initialFormSchema: RecipientFormSchema = {
 	fields: {
 		startDate: {
 			label: 'Start Date',
-			zodSchema: z.date().optional(),
+			zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).optional(),
 		},
 		status: {
 			placeholder: 'Status',

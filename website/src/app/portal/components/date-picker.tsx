@@ -12,8 +12,12 @@ export function DatePicker({
 	selected,
 	onSelect,
 	disabled,
+	startMonth,
+	endMonth,
 }: {
 	selected?: Date;
+	startMonth?: Date;
+	endMonth?: Date;
 	onSelect: (date: Date) => void;
 	disabled?: boolean;
 }) {
@@ -39,6 +43,8 @@ export function DatePicker({
 						mode="single"
 						selected={date}
 						captionLayout="dropdown"
+						startMonth={startMonth}
+						endMonth={endMonth}
 						disabled={disabled}
 						onSelect={(date) => {
 							date && onSelect(date);
