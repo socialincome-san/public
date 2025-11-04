@@ -8,6 +8,8 @@ import { RecipientService } from '../recipient/recipient.service';
 import {
 	OngoingPayoutTableView,
 	OngoingPayoutTableViewRow,
+	PayoutConfirmationTableView,
+	PayoutConfirmationTableViewRow,
 	PayoutForecastTableView,
 	PayoutForecastTableViewRow,
 	PayoutMonth,
@@ -228,6 +230,112 @@ export class PayoutService extends BaseService {
 		} catch (error) {
 			console.error(error);
 			return this.resultFail('Could not generate payout forecast');
+		}
+	}
+
+	async getPayoutConfirmationTableView(userId: string): Promise<ServiceResult<PayoutConfirmationTableView>> {
+		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const accessiblePrograms = accessResult.data;
+			if (accessiblePrograms.length === 0) {
+				return this.resultOk({ tableRows: [] });
+			}
+
+			const programIds = accessiblePrograms.map((p) => p.programId);
+
+			const payouts = await this.db.payout.findMany({
+				where: {
+					status: PayoutStatus.paid,
+					recipient: { programId: { in: programIds } },
+				},
+				select: {
+					id: true,
+					amount: true,
+					currency: true,
+					status: true,
+					paymentAt: true,
+					phoneNumber: true,
+					recipient: {
+						select: {
+							contact: { select: { firstName: true, lastName: true } },
+							program: { select: { id: true, name: true } },
+						},
+					},
+				},
+				orderBy: { paymentAt: 'desc' },
+			});
+
+			const tableRows: PayoutConfirmationTableViewRow[] = payouts.map((payout) => {
+				const access = accessiblePrograms.find((x) => x.programId === payout.recipient.program.id);
+				const permission = access?.permission ?? ProgramPermission.readonly;
+
+				return {
+					id: payout.id,
+					recipientFirstName: payout.recipient.contact.firstName,
+					recipientLastName: payout.recipient.contact.lastName,
+					programName: payout.recipient.program.name,
+					amount: Number(payout.amount),
+					currency: payout.currency,
+					status: payout.status,
+					paymentAt: payout.paymentAt,
+					phoneNumber: payout.phoneNumber,
+					permission,
+				};
+			});
+
+			return this.resultOk({ tableRows });
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch payout confirmation inbox');
+		}
+	}
+
+	async updatePayoutStatus(userId: string, payoutId: string, newStatus: PayoutStatus): Promise<ServiceResult<string>> {
+		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const payout = await this.db.payout.findUnique({
+				where: { id: payoutId },
+				select: {
+					id: true,
+					status: true,
+					recipient: { select: { programId: true } },
+				},
+			});
+
+			if (!payout) {
+				return this.resultFail('Payout not found');
+			}
+
+			const access = accessResult.data.find((p) => p.programId === payout.recipient.programId);
+			if (!access) {
+				return this.resultFail('Access denied for this payout');
+			}
+
+			if (access.permission !== ProgramPermission.edit) {
+				return this.resultFail('You do not have permission to modify payouts for this program');
+			}
+
+			if (payout.status !== PayoutStatus.paid) {
+				return this.resultFail('Only payouts with status "paid" can be updated');
+			}
+
+			await this.db.payout.update({
+				where: { id: payoutId },
+				data: { status: newStatus },
+			});
+
+			return this.resultOk(`Payout updated to "${newStatus}"`);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not update payout');
 		}
 	}
 
