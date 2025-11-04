@@ -1,7 +1,7 @@
 'use client';
 
 import { getContributorAction, updateContributorAction } from '@/app/portal/server-actions/contributor-actions';
-import { formSchema as contactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
+import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload } from '@/components/dynamic-form/helper';
 import { ContributorReferralSource } from '@prisma/client';
@@ -40,7 +40,7 @@ const initialFormSchema: ContributorFormSchema = {
 			zodSchema: z.string().nullable(),
 		},
 		contact: {
-			...contactFormSchema,
+			...getContactFormSchema({ isEmailRequired: true }),
 		},
 	},
 };
@@ -50,11 +50,13 @@ export default function ContributorsForm({
 	onError,
 	onCancel,
 	contributorId,
+	readOnly,
 }: {
 	onSuccess?: () => void;
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;
 	contributorId?: string;
+	readOnly: boolean;
 }) {
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
 	const [contributor, setContributor] = useState<ContributorPayload>();
@@ -106,6 +108,12 @@ export default function ContributorsForm({
 	}
 
 	return (
-		<DynamicForm formSchema={formSchema} isLoading={isLoading} onSubmit={onSubmit} onCancel={onCancel} mode={'edit'} />
+		<DynamicForm
+			formSchema={formSchema}
+			isLoading={isLoading}
+			onSubmit={onSubmit}
+			onCancel={onCancel}
+			mode={readOnly ? 'readonly' : 'edit'}
+		/>
 	);
 }

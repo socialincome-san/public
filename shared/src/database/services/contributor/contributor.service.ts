@@ -1,4 +1,5 @@
 import { Contributor } from '@prisma/client';
+import { FirebaseService } from '../../../firebase/services/auth.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
@@ -11,6 +12,7 @@ import {
 
 export class ContributorService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
+	private firebaseAuthService = new FirebaseService();
 
 	async get(userId: string, contributorId: string): Promise<ServiceResult<ContributorPayload>> {
 		try {
@@ -58,7 +60,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(contributor);
 		} catch (error) {
 			console.error(error);
-			return this.resultFail('Could not fetch contributors');
+			return this.resultFail('Could not get contributor');
 		}
 	}
 
@@ -69,6 +71,26 @@ export class ContributorService extends BaseService {
 				return this.resultFail(activeOrgResult.error);
 			}
 
+			if (activeOrgResult.data.permission !== 'edit') {
+				return this.resultFail('No permissions to update contributor');
+			}
+
+			const existing = await this.db.contributor.findUnique({
+				where: { id: contributor.id?.toString() },
+				select: { account: true },
+			});
+
+			if (!existing) {
+				return this.resultFail('Recipient not found');
+			}
+
+			if (!contributor.contact?.update?.data?.email) {
+				return this.resultFail('Contributor email is required');
+			}
+
+			await this.firebaseAuthService.updateByUid(existing.account.firebaseAuthUserId, {
+				email: contributor.contact?.update?.data?.email?.toString() ?? undefined,
+			});
 			const updatedContributor = await this.db.contributor.update({
 				where: { id: contributor.id?.toString() },
 				data: contributor,
@@ -77,7 +99,7 @@ export class ContributorService extends BaseService {
 			return this.resultOk(updatedContributor);
 		} catch (error) {
 			console.error(error);
-			return this.resultFail('Could not fetch contributors');
+			return this.resultFail('Could not update contributor');
 		}
 	}
 

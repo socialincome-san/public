@@ -5,7 +5,7 @@ import {
 	getLocalPartnerAction,
 	updateLocalPartnerAction,
 } from '@/app/portal/server-actions/local-partner-action';
-import { formSchema as contactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
+import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload } from '@/components/dynamic-form/helper';
 import { LocalPartnerPayload } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
@@ -30,7 +30,7 @@ const initialFormSchema: LocalPartnerFormSchema = {
 			zodSchema: z.string(),
 		},
 		contact: {
-			...contactFormSchema,
+			...getContactFormSchema(),
 		},
 	},
 };

@@ -1,6 +1,6 @@
 'use client';
 
-import { formSchema as contactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
+import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
 import { PaymentProvider, RecipientStatus } from '@prisma/client';
@@ -105,7 +105,7 @@ const initialFormSchema: RecipientFormSchema = {
 			},
 		},
 		contact: {
-			...contactFormSchema,
+			...getContactFormSchema(),
 		},
 	},
 };

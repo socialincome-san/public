@@ -1,6 +1,7 @@
 import { getOrInitializeFirebaseAdmin } from '@socialincome/shared/src/firebase/admin/app';
 import { AuthAdmin } from '@socialincome/shared/src/firebase/admin/AuthAdmin';
 import { credential } from 'firebase-admin';
+import { UpdateRequest } from 'firebase-admin/auth';
 
 const { FIREBASE_SERVICE_ACCOUNT_JSON, FIREBASE_DATABASE_URL } = process.env;
 
@@ -54,6 +55,17 @@ export class FirebaseService {
 			}
 			console.error('Error getting user by phone number:', error);
 			throw new Error('Auth user not found by phone number');
+		}
+	}
+
+	async updateByUid(uid: string, updates: UpdateRequest) {
+		try {
+			const existingUser = await this.authAdmin.auth.getUser(uid);
+			if (!existingUser) throw new Error('Auth user not found');
+			return await this.authAdmin.auth.updateUser(uid, updates);
+		} catch (error) {
+			console.error(`Error updating user by UID ${uid}:`, error);
+			throw new Error('Could not update auth user by UID');
 		}
 	}
 }
