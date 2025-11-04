@@ -13,6 +13,7 @@ export default function CampaignsTable({ rows, error }: { rows: CampaignTableVie
 	const [open, setOpen] = useState(false);
 	const [hasError, setHasError] = useState(false);
 	const [campaignId, setCampaignId] = useState<string | undefined>(undefined);
+	const readOnly = rows.some((row) => row.permission === 'readonly');
 
 	const openEmptyForm = () => {
 		setCampaignId(undefined);
@@ -40,13 +41,17 @@ export default function CampaignsTable({ rows, error }: { rows: CampaignTableVie
 				data={rows}
 				makeColumns={makeCampaignColumns}
 				onRowClick={openEditForm}
-				actions={<Button onClick={openEmptyForm}>Add new campaign</Button>}
+				actions={
+					<Button disabled={readOnly} onClick={openEmptyForm}>
+						Add new campaign
+					</Button>
+				}
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425]">
 					<DialogHeader>
-						<DialogTitle>{campaignId ? 'Edit' : 'Add'} Campaign</DialogTitle>
+						<DialogTitle>{campaignId ? (readOnly ? 'Show' : 'Edit') : 'Add'} Campaign</DialogTitle>
 					</DialogHeader>
 					{hasError && (
 						<Alert variant="destructive">
@@ -59,6 +64,7 @@ export default function CampaignsTable({ rows, error }: { rows: CampaignTableVie
 						onSuccess={() => setOpen(false)}
 						onCancel={() => setOpen(false)}
 						onError={onError}
+						readOnly={readOnly}
 					/>
 				</DialogContent>
 			</Dialog>

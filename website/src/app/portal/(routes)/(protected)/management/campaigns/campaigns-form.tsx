@@ -9,7 +9,6 @@ import {
 import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
 import {
-	CampaignPayload,
 	CampaignsCreateInput,
 	CampaignsUpdateInput,
 } from '@socialincome/shared/src/database/services/campaign/campaign.types';
@@ -184,14 +183,15 @@ export default function CampaignsForm({
 	onError,
 	onCancel,
 	campaignId,
+	readOnly,
 }: {
 	onSuccess?: () => void;
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;
 	campaignId?: string;
+	readOnly?: boolean;
 }) {
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
-	const [campaign, setCampaign] = useState<CampaignPayload>();
 	const [isLoading, startTransition] = useTransition();
 
 	useEffect(() => {
@@ -215,8 +215,6 @@ export default function CampaignsForm({
 			try {
 				const result = await getCampaignsAction(campaignId);
 				if (result.success) {
-					setCampaign(result.data);
-					console.log('Loaded campaign:', result.data);
 					const newSchema = { ...formSchema };
 					newSchema.fields.title.value = result.data.title;
 					newSchema.fields.description.value = result.data.description;
@@ -293,7 +291,7 @@ export default function CampaignsForm({
 			isLoading={isLoading}
 			onSubmit={onSubmit}
 			onCancel={onCancel}
-			mode={campaignId ? 'edit' : 'add'}
+			mode={readOnly ? 'readonly' : campaignId ? 'edit' : 'add'}
 		/>
 	);
 }
