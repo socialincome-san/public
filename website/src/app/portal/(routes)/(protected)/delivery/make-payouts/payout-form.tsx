@@ -10,7 +10,7 @@ import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
 import { PayoutStatus } from '@prisma/client';
 import type { PayoutPayload } from '@socialincome/shared/src/database/services/payout/payout.types';
-import { RecipientOption } from '@socialincome/shared/src/database/services/recipient/recipient.types';
+import type { RecipientOption } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
 import { buildCreatePayoutInput, buildUpdatePayoutInput } from './payout-form-helpers';
@@ -20,6 +20,7 @@ export type PayoutFormProps = {
 	onError?: (error?: unknown) => void;
 	onCancel?: () => void;
 	payoutId?: string;
+	readOnly?: boolean;
 };
 
 export type PayoutFormSchema = {
@@ -67,7 +68,7 @@ const initialFormSchema: PayoutFormSchema = {
 	},
 };
 
-export function PayoutForm({ onSuccess, onError, onCancel, payoutId }: PayoutFormProps) {
+export function PayoutForm({ onSuccess, onError, onCancel, payoutId, readOnly }: PayoutFormProps) {
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
 	const [payout, setPayout] = useState<PayoutPayload>();
 	const [isLoading, startTransition] = useTransition();
@@ -145,7 +146,7 @@ export function PayoutForm({ onSuccess, onError, onCancel, payoutId }: PayoutFor
 			isLoading={isLoading}
 			onSubmit={onSubmit}
 			onCancel={onCancel}
-			mode={payoutId ? 'edit' : 'add'}
+			mode={readOnly ? 'readonly' : payoutId ? 'edit' : 'add'}
 		/>
 	);
 }
