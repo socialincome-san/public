@@ -10,11 +10,14 @@ import {
 	OngoingPayoutTableViewRow,
 	PayoutConfirmationTableView,
 	PayoutConfirmationTableViewRow,
+	PayoutCreateInput,
 	PayoutForecastTableView,
 	PayoutForecastTableViewRow,
 	PayoutMonth,
+	PayoutPayload,
 	PayoutTableView,
 	PayoutTableViewRow,
+	PayoutUpdateInput,
 	PreviewPayout,
 	RecipientCompletionPreview,
 	YearMonth,
@@ -567,5 +570,177 @@ export class PayoutService extends BaseService {
 			console.error(error);
 			return this.resultFail('Could not update recipients');
 		}
+	}
+
+	async create(userId: string, input: PayoutCreateInput): Promise<ServiceResult<PayoutPayload>> {
+		const recipient = await this.db.recipient.findUnique({
+			where: { id: input.recipient.connect.id },
+			select: { programId: true },
+		});
+
+		if (!recipient) {
+			return this.resultFail('Recipient not found');
+		}
+
+		const access = await this.programAccessService.getAccessiblePrograms(userId);
+		if (!access.success) {
+			return this.resultFail(access.error);
+		}
+
+		const allowed = access.data.find(
+			(p) => p.programId === recipient.programId && p.permission === ProgramPermission.edit,
+		);
+		if (!allowed) {
+			return this.resultFail('No edit access for this program');
+		}
+
+		try {
+			const created = await this.db.payout.create({
+				data: input,
+				include: {
+					recipient: {
+						select: {
+							id: true,
+							contact: { select: { firstName: true, lastName: true } },
+							program: { select: { id: true, name: true } },
+						},
+					},
+				},
+			});
+
+			return this.resultOk({
+				id: created.id,
+				amount: Number(created.amount),
+				currency: created.currency,
+				status: created.status,
+				paymentAt: created.paymentAt,
+				phoneNumber: created.phoneNumber,
+				comments: created.comments,
+				recipient: {
+					id: created.recipient.id,
+					firstName: created.recipient.contact.firstName,
+					lastName: created.recipient.contact.lastName,
+					programId: created.recipient.program.id,
+					programName: created.recipient.program.name,
+				},
+			});
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not create payout');
+		}
+	}
+
+	async update(userId: string, input: PayoutUpdateInput): Promise<ServiceResult<PayoutPayload>> {
+		const existing = await this.db.payout.findUnique({
+			where: { id: input.id },
+			select: { recipient: { select: { programId: true } } },
+		});
+
+		if (!existing) {
+			return this.resultFail('Payout not found');
+		}
+
+		const access = await this.programAccessService.getAccessiblePrograms(userId);
+		if (!access.success) {
+			return this.resultFail(access.error);
+		}
+
+		const allowed = access.data.some(
+			(p) => p.programId === existing.recipient.programId && p.permission === ProgramPermission.edit,
+		);
+		if (!allowed) {
+			return this.resultFail('No edit permission for this payout');
+		}
+
+		try {
+			const updated = await this.db.payout.update({
+				where: { id: input.id },
+				data: input,
+				include: {
+					recipient: {
+						select: {
+							id: true,
+							contact: { select: { firstName: true, lastName: true } },
+							program: { select: { id: true, name: true } },
+						},
+					},
+				},
+			});
+
+			return this.resultOk({
+				id: updated.id,
+				amount: Number(updated.amount),
+				currency: updated.currency,
+				status: updated.status,
+				paymentAt: updated.paymentAt,
+				phoneNumber: updated.phoneNumber,
+				comments: updated.comments,
+				recipient: {
+					id: updated.recipient.id,
+					firstName: updated.recipient.contact.firstName,
+					lastName: updated.recipient.contact.lastName,
+					programId: updated.recipient.program.id,
+					programName: updated.recipient.program.name,
+				},
+			});
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not update payout');
+		}
+	}
+
+	async get(userId: string, payoutId: string): Promise<ServiceResult<PayoutPayload>> {
+		const payout = await this.db.payout.findUnique({
+			where: { id: payoutId },
+			select: {
+				id: true,
+				amount: true,
+				currency: true,
+				status: true,
+				paymentAt: true,
+				phoneNumber: true,
+				comments: true,
+				recipient: {
+					select: {
+						id: true,
+						contact: { select: { firstName: true, lastName: true } },
+						program: { select: { id: true, name: true } },
+					},
+				},
+			},
+		});
+
+		if (!payout) {
+			return this.resultFail('Payout not found');
+		}
+
+		const access = await this.programAccessService.getAccessiblePrograms(userId);
+
+		if (!access.success) {
+			return this.resultFail(access.error);
+		}
+
+		const allowed = access.data.some((p) => p.programId === payout.recipient.program.id && p.permission != null);
+
+		if (!allowed) {
+			return this.resultFail('Access denied to this payout');
+		}
+
+		return this.resultOk({
+			id: payout.id,
+			amount: Number(payout.amount),
+			currency: payout.currency,
+			status: payout.status,
+			paymentAt: payout.paymentAt,
+			phoneNumber: payout.phoneNumber,
+			comments: payout.comments,
+			recipient: {
+				id: payout.recipient.id,
+				firstName: payout.recipient.contact.firstName,
+				lastName: payout.recipient.contact.lastName,
+				programId: payout.recipient.program.id,
+				programName: payout.recipient.program.name,
+			},
+		});
 	}
 }
