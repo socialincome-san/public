@@ -24,3 +24,8 @@ export type OrganizationTableViewRow = {
 export type OrganizationTableView = {
 	tableRows: OrganizationTableViewRow[];
 };
+
+export type OrganizationOption = {
+	id: string;
+	name: string;
+};
