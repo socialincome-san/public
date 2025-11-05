@@ -168,7 +168,7 @@ export class RecipientService extends BaseService {
 
 			const accessiblePrograms = accessResult.data;
 			if (accessiblePrograms.length === 0) {
-				return this.resultOk({ tableRows: [] });
+				return this.resultOk({ tableRows: [], permission: ProgramPermission.readonly });
 			}
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
@@ -228,7 +228,11 @@ export class RecipientService extends BaseService {
 				};
 			});
 
-			return this.resultOk({ tableRows });
+			const globalPermission = accessiblePrograms.some((p) => p.permission === ProgramPermission.edit)
+				? ProgramPermission.edit
+				: ProgramPermission.readonly;
+
+			return this.resultOk({ tableRows, permission: globalPermission });
 		} catch (error) {
 			console.error(error);
 			return this.resultFail('Could not fetch recipients');
@@ -236,13 +240,22 @@ export class RecipientService extends BaseService {
 	}
 
 	async getTableViewProgramScoped(userId: string, programId: string): Promise<ServiceResult<RecipientTableView>> {
+		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+		if (!accessResult.success) {
+			return this.resultFail(accessResult.error);
+		}
+		const programAccess = accessResult.data.find((a) => a.programId === programId);
+
 		const base = await this.getTableView(userId);
 		if (!base.success) {
 			return base;
 		}
 
 		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
-		return this.resultOk({ tableRows: filteredRows });
+		return this.resultOk({
+			tableRows: filteredRows,
+			permission: programAccess?.permission ?? ProgramPermission.readonly,
+		});
 	}
 
 	async getActivePayoutRecipients(userId: string): Promise<ServiceResult<PayoutRecipient[]>> {
