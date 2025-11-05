@@ -5,6 +5,7 @@ import { DatePicker } from '@/app/portal/components/date-picker';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/app/portal/components/form';
 import { Input } from '@/app/portal/components/input';
 import { Label } from '@/app/portal/components/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/portal/components/select';
 import { Switch } from '@/app/portal/components/switch';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SpinnerIcon } from '@socialincome/ui/src/icons/spinner';
@@ -17,6 +18,7 @@ export type FormField = {
 	placeholder?: string;
 	zodSchema?: ZodTypeAny;
 	value?: any;
+	useCombobox?: boolean;
 };
 
 export type FormSchema = {
@@ -309,37 +311,61 @@ const GenericFormField = ({
 					/>
 				);
 			case 'ZodEnum': {
-				const enumValues = Object.entries(getEnumValues(option, parentOption)); // [["Alice Doe", "recp_123"], ...]
+				const enumValues = Object.entries(getEnumValues(option, parentOption));
+				const items = enumValues.map(([label, value]) => ({ id: value, label }));
 
-				const items = enumValues.map(([label, value]) => ({
-					id: value,
-					label,
-				}));
+				if (formFieldSchema.useCombobox) {
+					return (
+						<FormField
+							control={form.control}
+							name={optionKey}
+							key={optionKey}
+							render={({ field }) => (
+								<FormItem>
+									<Label>{label}</Label>
+									<FormControl>
+										<Combobox
+											options={items}
+											value={field.value ?? ''}
+											onChange={field.onChange}
+											placeholder={formFieldSchema.placeholder}
+											disabled={isLoading || readOnly}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					);
+				}
 
 				return (
 					<FormField
 						control={form.control}
 						name={optionKey}
-						key={optionKey}
 						render={({ field }) => (
 							<FormItem>
 								<Label>{label}</Label>
-								<FormControl>
-									<Combobox
-										options={items}
-										value={field.value ?? ''}
-										onChange={field.onChange}
-										placeholder={formFieldSchema.placeholder}
-										disabled={isLoading || readOnly}
-									/>
-								</FormControl>
+								<Select value={field.value} onValueChange={field.onChange} disabled={isLoading || readOnly}>
+									<FormControl>
+										<SelectTrigger>
+											<SelectValue placeholder={formFieldSchema.placeholder} />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent {...form.register(optionKey)}>
+										{items.map((item) => (
+											<SelectItem value={item.id} key={item.id}>
+												{item.label}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
 				);
 			}
-
 			case 'ZodBoolean':
 				return (
 					<FormField
