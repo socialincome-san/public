@@ -1,12 +1,12 @@
 import { OrganizationPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { OrganizationOption } from '../expense/expense.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import { UserService } from '../user/user.service';
 import {
 	OrganizationMemberTableView,
 	OrganizationMemberTableViewRow,
+	OrganizationOption,
 	OrganizationTableView,
 	OrganizationTableViewRow,
 } from './organization.types';

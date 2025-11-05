@@ -88,5 +88,4 @@ export type RecipientUpdateInput = Prisma.RecipientUpdateInput;
 export type RecipientOption = {
 	id: string;
 	fullName: string;
-	programName: string;
 };
