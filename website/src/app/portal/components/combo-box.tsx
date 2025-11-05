@@ -36,7 +36,7 @@ export function Combobox({
 	const selected = options.find((o) => o.id === value);
 
 	return (
-		<Popover open={open} onOpenChange={setOpen}>
+		<Popover open={open} onOpenChange={setOpen} modal>
 			<PopoverTrigger asChild>
 				<Button variant="outline" role="combobox" className="w-full justify-between font-normal" disabled={disabled}>
 					{selected ? selected.label : <span className="text-muted-foreground">{placeholder}</span>}
