@@ -14,19 +14,19 @@ export function PayoutsTableClient({ rows, error }: { rows: PayoutTableViewRow[]
 	const [open, setOpen] = useState(false);
 	const [hasError, setHasError] = useState(false);
 	const [payoutId, setPayoutId] = useState<string | undefined>(undefined);
+	const [readOnly, setReadOnly] = useState(false);
 	const [isStartProcessOpen, setIsStartProcessOpen] = useState(false);
 
 	const openEmptyForm = () => {
 		setPayoutId(undefined);
+		setReadOnly(false);
 		setHasError(false);
 		setOpen(true);
 	};
 
 	const openEditForm = (row: PayoutTableViewRow) => {
-		if (row.permission !== 'edit') {
-			return;
-		}
 		setPayoutId(row.id);
+		setReadOnly(row.permission === 'readonly');
 		setHasError(false);
 		setOpen(true);
 	};
@@ -56,7 +56,7 @@ export function PayoutsTableClient({ rows, error }: { rows: PayoutTableViewRow[]
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
 					<DialogHeader>
-						<DialogTitle>{payoutId ? 'Edit' : 'Add'} payout</DialogTitle>
+						<DialogTitle>{readOnly ? 'View payout' : payoutId ? 'Edit payout' : 'Add payout'}</DialogTitle>
 					</DialogHeader>
 
 					{hasError && (
@@ -68,6 +68,7 @@ export function PayoutsTableClient({ rows, error }: { rows: PayoutTableViewRow[]
 
 					<PayoutForm
 						payoutId={payoutId}
+						readOnly={readOnly}
 						onSuccess={() => setOpen(false)}
 						onCancel={() => setOpen(false)}
 						onError={onError}
