@@ -349,15 +349,13 @@ export class RecipientService extends BaseService {
 			select: {
 				id: true,
 				contact: { select: { firstName: true, lastName: true } },
-				program: { select: { name: true } },
 			},
-			orderBy: [{ program: { name: 'asc' } }, { contact: { lastName: 'asc' } }],
+			orderBy: [{ contact: { firstName: 'asc' } }],
 		});
 
 		const options = recipients.map((r) => ({
 			id: r.id,
 			fullName: `${r.contact.firstName} ${r.contact.lastName}`,
-			programName: r.program.name,
 		}));
 
 		return this.resultOk(options);

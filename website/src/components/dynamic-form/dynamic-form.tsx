@@ -1,10 +1,10 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/app/portal/components/accordion';
 import { Button } from '@/app/portal/components/button';
+import { Combobox } from '@/app/portal/components/combo-box';
 import { DatePicker } from '@/app/portal/components/date-picker';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/app/portal/components/form';
 import { Input } from '@/app/portal/components/input';
 import { Label } from '@/app/portal/components/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/portal/components/select';
 import { Switch } from '@/app/portal/components/switch';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SpinnerIcon } from '@socialincome/ui/src/icons/spinner';
@@ -308,7 +308,14 @@ const GenericFormField = ({
 						)}
 					/>
 				);
-			case 'ZodEnum':
+			case 'ZodEnum': {
+				const enumValues = Object.entries(getEnumValues(option, parentOption)); // [["Alice Doe", "recp_123"], ...]
+
+				const items = enumValues.map(([label, value]) => ({
+					id: value,
+					label,
+				}));
+
 				return (
 					<FormField
 						control={form.control}
@@ -317,25 +324,21 @@ const GenericFormField = ({
 						render={({ field }) => (
 							<FormItem>
 								<Label>{label}</Label>
-								<Select value={field.value} onValueChange={field.onChange} disabled={isLoading || readOnly}>
-									<FormControl>
-										<SelectTrigger>
-											<SelectValue placeholder={readOnly ? '-' : formFieldSchema.placeholder} />
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent {...form.register(optionKey)}>
-										{Object.entries(getEnumValues(option, parentOption)).map(([label, id]) => (
-											<SelectItem value={id} key={id}>
-												{label}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
+								<FormControl>
+									<Combobox
+										options={items}
+										value={field.value ?? ''}
+										onChange={field.onChange}
+										placeholder={formFieldSchema.placeholder}
+										disabled={isLoading || readOnly}
+									/>
+								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
 				);
+			}
 
 			case 'ZodBoolean':
 				return (
