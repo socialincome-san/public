@@ -14,12 +14,14 @@ export function DatePicker({
 	disabled,
 	startMonth,
 	endMonth,
+	placeholder = 'Select date',
 }: {
 	selected?: Date;
 	startMonth?: Date;
 	endMonth?: Date;
 	onSelect: (date: Date) => void;
 	disabled?: boolean;
+	placeholder?: string;
 }) {
 	const [open, setOpen] = React.useState(false);
 	const [date, setDate] = React.useState<Date | undefined>(selected);
@@ -33,7 +35,7 @@ export function DatePicker({
 			<Popover open={open} onOpenChange={setOpen}>
 				<PopoverTrigger asChild>
 					<Button disabled={disabled} variant="outline" id="date" className="w-full justify-between font-normal">
-						{date ? date.toLocaleDateString() : 'Select date'}
+						{date ? date.toLocaleDateString() : placeholder}
 						<ChevronDownIcon className="h-4 w-4 opacity-50" />
 					</Button>
 				</PopoverTrigger>
