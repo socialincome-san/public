@@ -27,6 +27,7 @@ export function RecipientsTableClient({
 
 	const openEmptyForm = () => {
 		setRecipientId(undefined);
+		setRowReadOnly(readOnly ?? false);
 		setHasError(false);
 		setOpen(true);
 	};
