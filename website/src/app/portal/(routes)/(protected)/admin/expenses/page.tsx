@@ -1,9 +1,7 @@
-import { Button } from '@/app/portal/components/button';
-import { makeExpenseColumns } from '@/app/portal/components/data-table/columns/expenses';
-import DataTable from '@/app/portal/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { ExpenseService } from '@socialincome/shared/src/database/services/expense/expense.service';
 import type { ExpenseTableViewRow } from '@socialincome/shared/src/database/services/expense/expense.types';
+import ExpensesTable from './expenses-table';
 
 export default async function ExpensesPage() {
 	const user = await getAuthenticatedUserOrRedirect();
@@ -15,14 +13,5 @@ export default async function ExpensesPage() {
 	const error = result.success ? null : result.error;
 	const rows: ExpenseTableViewRow[] = result.success ? result.data.tableRows : [];
 
-	return (
-		<DataTable
-			title="All Expenses"
-			error={error}
-			emptyMessage="No expenses found"
-			data={rows}
-			makeColumns={makeExpenseColumns}
-			actions={<Button>Add expense</Button>}
-		/>
-	);
+	return <ExpensesTable rows={rows} error={error} />;
 }

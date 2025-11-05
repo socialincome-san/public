@@ -1,6 +1,7 @@
 import { OrganizationPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { OrganizationOption } from '../expense/expense.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import { UserService } from '../user/user.service';
 import {
@@ -118,6 +119,25 @@ export class OrganizationService extends BaseService {
 		} catch (error) {
 			console.error(error);
 			return this.resultFail('Could not set active organization');
+		}
+	}
+
+	async getOptions(userId: string): Promise<ServiceResult<OrganizationOption[]>> {
+		const isAdminResult = await this.userService.isAdmin(userId);
+
+		if (!isAdminResult.success) {
+			return this.resultFail(isAdminResult.error);
+		}
+
+		try {
+			const organizations = await this.db.organization.findMany({
+				select: { id: true, name: true },
+				orderBy: { name: 'asc' },
+			});
+			return this.resultOk(organizations);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch organizations');
 		}
 	}
 }
