@@ -41,6 +41,7 @@ const initialFormSchema: PayoutFormSchema = {
 		recipientId: {
 			placeholder: 'Recipient',
 			label: 'Recipient',
+			useCombobox: true,
 		},
 		amount: {
 			placeholder: 'Amount',
