@@ -39,7 +39,7 @@ export default function ContributorsTable({ rows, error }: { rows: ContributorTa
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425]">
 					<DialogHeader>
-						<DialogTitle>{readOnly ? 'Show' : 'Edit'} Contributor</DialogTitle>
+						<DialogTitle>{readOnly ? 'View' : 'Edit'} Contributor</DialogTitle>
 					</DialogHeader>
 					{hasError && (
 						<Alert variant="destructive">

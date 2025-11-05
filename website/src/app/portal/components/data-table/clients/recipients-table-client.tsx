@@ -12,28 +12,29 @@ export function RecipientsTableClient({
 	rows,
 	error,
 	programId,
+	readOnly,
 }: {
 	rows: RecipientTableViewRow[];
 	error: string | null;
 	programId?: string;
+	readOnly?: boolean;
 }) {
 	const [open, setOpen] = useState(false);
 
 	const [recipientId, setRecipientId] = useState<string | undefined>();
 	const [hasError, setHasError] = useState(false);
-
-	const [readOnly, setReadOnly] = useState(false);
+	const [rowReadOnly, setRowReadOnly] = useState(readOnly ?? false);
 
 	const openEmptyForm = () => {
 		setRecipientId(undefined);
-		setReadOnly(false);
+		setRowReadOnly(readOnly ?? false);
 		setHasError(false);
 		setOpen(true);
 	};
 
 	const openEditForm = (row: RecipientTableViewRow) => {
 		setRecipientId(row.id);
-		setReadOnly(row.permission === 'readonly');
+		setRowReadOnly(row.permission === 'readonly' ? true : (readOnly ?? false));
 		setHasError(false);
 		setOpen(true);
 	};
@@ -62,11 +63,13 @@ export function RecipientsTableClient({
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425]">
 					<DialogHeader>
-						<DialogTitle>{readOnly ? 'View Recipient' : recipientId ? 'Edit Recipient' : 'New Recipient'}</DialogTitle>
+						<DialogTitle>
+							{rowReadOnly ? 'View Recipient' : recipientId ? 'Edit Recipient' : 'New Recipient'}
+						</DialogTitle>
 					</DialogHeader>
 					<RecipientForm
 						recipientId={recipientId}
-						readOnly={readOnly}
+						readOnly={rowReadOnly}
 						onSuccess={() => setOpen(false)}
 						onCancel={() => setOpen(false)}
 						onError={onError}

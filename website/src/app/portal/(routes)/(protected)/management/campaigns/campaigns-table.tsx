@@ -51,7 +51,7 @@ export default function CampaignsTable({ rows, error }: { rows: CampaignTableVie
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425]">
 					<DialogHeader>
-						<DialogTitle>{campaignId ? (readOnly ? 'Show' : 'Edit') : 'Add'} Campaign</DialogTitle>
+						<DialogTitle>{campaignId ? (readOnly ? 'View' : 'Edit') : 'Add'} Campaign</DialogTitle>
 					</DialogHeader>
 					{hasError && (
 						<Alert variant="destructive">
