@@ -62,6 +62,7 @@ export type RecipientTableViewRow = {
 
 export type RecipientTableView = {
 	tableRows: RecipientTableViewRow[];
+	permission: ProgramPermission;
 };
 
 export type RecipientOption = {

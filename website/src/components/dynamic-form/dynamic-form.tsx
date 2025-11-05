@@ -273,7 +273,7 @@ const GenericFormField = ({
 								<Label>{label}</Label>
 								<FormControl>
 									<Input
-										placeholder={formFieldSchema.placeholder}
+										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
 										{...form.register(optionKey)}
 										disabled={isLoading || readOnly}
 									/>
@@ -298,6 +298,7 @@ const GenericFormField = ({
 										{...form.register(optionKey)}
 										onSelect={field.onChange}
 										selected={field.value}
+										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
 										startMonth={getDateMinMax(option, parentOption).min}
 										endMonth={getDateMinMax(option, parentOption).max}
 									/>
@@ -319,7 +320,7 @@ const GenericFormField = ({
 								<Select value={field.value} onValueChange={field.onChange} disabled={isLoading || readOnly}>
 									<FormControl>
 										<SelectTrigger>
-											<SelectValue placeholder={formFieldSchema.placeholder} />
+											<SelectValue placeholder={readOnly ? '-' : formFieldSchema.placeholder} />
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent {...form.register(optionKey)}>
@@ -369,7 +370,7 @@ const GenericFormField = ({
 								<FormControl>
 									<Input
 										type="number"
-										placeholder={formFieldSchema.placeholder}
+										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
 										{...form.register(optionKey, {
 											// avoid NaN when input is empty, see https://github.com/orgs/react-hook-form/discussions/6980#discussioncomment-1785009
 											setValueAs: (v) => (v === '' ? null : parseInt(v, 10)),

@@ -36,7 +36,6 @@ export const getFormSchema = (options?: { isEmailRequired: boolean }): FormSchem
 				zodSchema: z.string().nullable(),
 			},
 			dateOfBirth: {
-				placeholder: 'Date of birth',
 				label: 'Date of birth',
 				zodSchema: z.date().max(new Date(), { message: 'Too young!' }).optional(),
 			},
