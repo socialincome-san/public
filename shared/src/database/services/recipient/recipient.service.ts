@@ -6,6 +6,7 @@ import { ProgramAccessService } from '../program-access/program-access.service';
 import {
 	PayoutRecipient,
 	RecipientCreateInput,
+	RecipientOption,
 	RecipientPayload,
 	RecipientTableView,
 	RecipientTableViewRow,
@@ -328,5 +329,37 @@ export class RecipientService extends BaseService {
 			console.error(error);
 			return this.resultFail('Could not fetch payout recipients');
 		}
+	}
+
+	async getEditableRecipientOptions(userId: string): Promise<ServiceResult<RecipientOption[]>> {
+		const access = await this.programAccessService.getAccessiblePrograms(userId);
+
+		if (!access.success) {
+			return this.resultFail(access.error);
+		}
+
+		const editablePrograms = access.data.filter((p) => p.permission === ProgramPermission.edit).map((p) => p.programId);
+
+		if (editablePrograms.length === 0) {
+			return this.resultOk([]);
+		}
+
+		const recipients = await this.db.recipient.findMany({
+			where: { programId: { in: editablePrograms } },
+			select: {
+				id: true,
+				contact: { select: { firstName: true, lastName: true } },
+				program: { select: { name: true } },
+			},
+			orderBy: [{ program: { name: 'asc' } }, { contact: { lastName: 'asc' } }],
+		});
+
+		const options = recipients.map((r) => ({
+			id: r.id,
+			fullName: `${r.contact.firstName} ${r.contact.lastName}`,
+			programName: r.program.name,
+		}));
+
+		return this.resultOk(options);
 	}
 }

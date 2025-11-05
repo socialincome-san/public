@@ -90,3 +90,41 @@ export type RecipientCompletionPreview = {
 	remaining: number;
 	isCompleted: boolean;
 };
+
+export type PayoutPayload = {
+	id: string;
+	recipient: {
+		id: string;
+		firstName: string;
+		lastName: string;
+		programId: string;
+		programName: string;
+	};
+	amount: number;
+	currency: string;
+	status: PayoutStatus;
+	paymentAt: Date;
+	phoneNumber: string | null;
+	comments: string | null;
+};
+
+export type PayoutCreateInput = {
+	recipient: { connect: { id: string } };
+	amount: number;
+	currency: string;
+	status: PayoutStatus;
+	paymentAt: Date;
+	phoneNumber?: string | null;
+	comments?: string | null;
+};
+
+export type PayoutUpdateInput = {
+	id: string;
+	amount?: number;
+	currency?: string;
+	status?: PayoutStatus;
+	paymentAt?: Date;
+	phoneNumber?: string | null;
+	comments?: string | null;
+	recipient?: { connect: { id: string } };
+};

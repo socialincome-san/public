@@ -2,7 +2,12 @@
 
 import { getAuthenticatedUserOrThrow } from '@/lib/firebase/current-user';
 import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
-import { YearMonth } from '@socialincome/shared/src/database/services/payout/payout.types';
+import {
+	type PayoutCreateInput,
+	type PayoutUpdateInput,
+	YearMonth,
+} from '@socialincome/shared/src/database/services/payout/payout.types';
+import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
 import { revalidatePath } from 'next/cache';
 
 function toYearMonth(date: Date): YearMonth {
@@ -90,4 +95,38 @@ export async function markCompletedRecipientsAsFormerAction() {
 	}
 
 	return result.data;
+}
+
+export async function createPayoutAction(input: PayoutCreateInput) {
+	const user = await getAuthenticatedUserOrThrow();
+	const service = new PayoutService();
+
+	const result = await service.create(user.id, input);
+
+	revalidatePath('/portal/delivery/make-payouts');
+	return result;
+}
+
+export async function updatePayoutAction(input: PayoutUpdateInput) {
+	const user = await getAuthenticatedUserOrThrow();
+	const service = new PayoutService();
+
+	const result = await service.update(user.id, input);
+
+	revalidatePath('/portal/delivery/make-payouts');
+	return result;
+}
+
+export async function getPayoutAction(id: string) {
+	const user = await getAuthenticatedUserOrThrow();
+	const service = new PayoutService();
+
+	return service.get(user.id, id);
+}
+
+export async function getPayoutRecipientOptionsAction() {
+	const user = await getAuthenticatedUserOrThrow();
+	const service = new RecipientService();
+
+	return service.getEditableRecipientOptions(user.id);
 }

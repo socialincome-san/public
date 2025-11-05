@@ -65,11 +65,6 @@ export type RecipientTableView = {
 	permission: ProgramPermission;
 };
 
-export type RecipientOption = {
-	id: string;
-	name: string;
-};
-
 export type PayoutRecipient = {
 	id: string;
 	contact: { firstName: string; lastName: string };
@@ -90,3 +85,9 @@ export type PayoutRecipient = {
 
 export type RecipientCreateInput = Prisma.RecipientCreateInput;
 export type RecipientUpdateInput = Prisma.RecipientUpdateInput;
+
+export type RecipientOption = {
+	id: string;
+	fullName: string;
+	programName: string;
+};
