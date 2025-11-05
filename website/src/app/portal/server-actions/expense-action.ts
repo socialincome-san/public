@@ -39,7 +39,7 @@ export async function getExpenseAction(id: string) {
 }
 
 export async function getExpenseOptionsAction() {
-	await getAuthenticatedUserOrRedirect();
+	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new OrganizationService();
 	return service.getOptions(user.id);
