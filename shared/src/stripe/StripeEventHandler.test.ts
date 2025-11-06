@@ -432,6 +432,7 @@ describe('stripeWebhook', () => {
 	const expectedContribution: StripeContribution = {
 		source: ContributionSourceKey.STRIPE,
 		created: toFirebaseAdminTimestamp(new Date('2021-03-05T18:36:21.000Z')),
+		last_updated_at: toFirebaseAdminTimestamp(new Date('2021-04-05T18:36:21.000Z')),
 		amount: 900,
 		currency: 'USD',
 		amount_chf: 818.68,
@@ -455,5 +456,6 @@ describe('stripeWebhook', () => {
 		test_user: false,
 		currency: 'USD',
 		created_at: toFirebaseAdminTimestamp(new Date('2023-01-01')),
+		last_updated_at: toFirebaseAdminTimestamp(new Date('2023-02-01')),
 	};
 });

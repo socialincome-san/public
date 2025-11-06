@@ -30,7 +30,7 @@ type BaseContribution = {
 	source: ContributionSourceKey;
 	status: StatusKey;
 	created: Timestamp;
-	last_updated_at: Timestamp;
+	last_updated_at?: Timestamp;
 	amount: number;
 	amount_chf: number; // Amount donated in CHF, including fees
 	fees_chf: number; // Transaction fees in CHF
