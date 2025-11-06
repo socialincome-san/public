@@ -38,7 +38,7 @@ export class ContributionTransformer extends BaseTransformer<FirestoreContributi
 			transformed.push({
 				contribution: {
 					legacyFirestoreId: legacyId,
-					createdAt: contribution.created?.toDate() ?? undefined,
+					createdAt: contribution.created?.toDate() ?? contribution.last_updated_at?.toDate() ?? undefined,
 					amount: contribution.amount,
 					amountChf: contribution.amount_chf ?? 0,
 					feesChf: contribution.fees_chf,

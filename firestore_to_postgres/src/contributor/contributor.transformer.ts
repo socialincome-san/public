@@ -32,7 +32,7 @@ export class ContributorTransformer extends BaseTransformer<FirestoreContributor
 				contributor: {
 					create: {
 						legacyFirestoreId: doc.id,
-						createdAt: doc.created_at?.toDate() ?? undefined,
+						createdAt: doc.created_at?.toDate() ?? doc.last_updated_at?.toDate() ?? undefined,
 						referral: this.mapReferral(personal?.referral),
 						paymentReferenceId: doc.payment_reference_id?.toString() ?? null,
 						stripeCustomerId: doc.stripe_customer_id ?? null,
