@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { StepResultBox } from '@/app/portal/components/step-result-box';
 import { EyeIcon, PlayIcon } from 'lucide-react';
 import { useState } from 'react';
+import { previewSurveyGenerationAction } from '@/app/portal/server-actions/survey-actions';
 
 type StepResult = string | object | string[] | null;
 
@@ -26,9 +27,11 @@ export function GenerateSurveysDialog({ open, setOpen }: { open: boolean; setOpe
 			icon: <EyeIcon className={iconClass} />,
 			variant: 'outline' as const,
 			action: async () => {
-				console.log('Preview generate surveys clicked');
-				// TODO: Add server action for preview
-				return { message: 'Preview surveys functionality - to be implemented' };
+				const result = await previewSurveyGenerationAction();
+				if (!result.success) {
+					throw new Error(result.error);
+				}
+				return result.data;
 			},
 			filename: () => `preview-surveys.json`,
 		},

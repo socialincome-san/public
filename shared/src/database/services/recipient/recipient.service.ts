@@ -360,4 +360,37 @@ export class RecipientService extends BaseService {
 
 		return this.resultOk(options);
 	}
+
+	async getActiveSurveyRecipients(userId: string, programIds: string[]) {
+		try {
+			const recipients = await this.db.recipient.findMany({
+				where: {
+					programId: { in: programIds },
+					status: { not: RecipientStatus.waitlisted },
+					startDate: { not: null },
+				},
+				select: {
+					id: true,
+					programId: true,
+					startDate: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+						},
+					},
+					program: {
+						select: {
+							name: true,
+						},
+					},
+				},
+			});
+
+			return this.resultOk(recipients);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not get survey recipients');
+		}
+	}
 }

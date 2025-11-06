@@ -62,3 +62,19 @@ export type SurveyPayload = {
 	createdAt: Date;
 	updatedAt: Date | null;
 };
+
+export type SurveyPreview = {
+	questionnaire: SurveyQuestionnaire;
+	language: string;
+	dueAt: Date;
+	status: SurveyStatus;
+	recipientId: string;
+	recipientName: string;
+	surveyScheduleId: string;
+	programId: string;
+	programName: string;
+};
+
+export type SurveyGenerationPreviewResult = {
+	surveys: SurveyPreview[];
+};

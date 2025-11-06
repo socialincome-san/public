@@ -1,11 +1,15 @@
-import { ProgramPermission } from '@prisma/client';
-import { isFuture } from 'date-fns';
+import { ProgramPermission, SurveyStatus } from '@prisma/client';
+import { addMonths, isFuture } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessService } from '../program-access/program-access.service';
+import { RecipientService } from '../recipient/recipient.service';
+import { SurveyScheduleService } from '../survey-schedule/survey-schedule.service';
 import {
 	SurveyCreateInput,
+	SurveyGenerationPreviewResult,
 	SurveyPayload,
+	SurveyPreview,
 	SurveyTableView,
 	SurveyTableViewRow,
 	SurveyUpdateInput,
@@ -13,6 +17,8 @@ import {
 
 export class SurveyService extends BaseService {
 	private programAccessService = new ProgramAccessService();
+	private recipientService = new RecipientService();
+	private surveyScheduleService = new SurveyScheduleService();
 
 	async getTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
 		try {
@@ -276,6 +282,66 @@ export class SurveyService extends BaseService {
 		} catch (error) {
 			console.error(error);
 			return this.resultFail(`Failed to update survey: ${error}`);
+		}
+	}
+
+	async previewSurveyGeneration(userId: string): Promise<ServiceResult<SurveyGenerationPreviewResult>> {
+		try {
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+
+			const accessiblePrograms = accessibleProgramsResult.data;
+			if (accessiblePrograms.length === 0) {
+				return this.resultOk({ surveys: [] });
+			}
+
+			const programIds = accessiblePrograms.map((p) => p.programId);
+
+			const recipientsResult = await this.recipientService.getActiveSurveyRecipients(userId, programIds);
+			if (!recipientsResult.success) {
+				return this.resultFail(recipientsResult.error);
+			}
+
+			const schedulesResult = await this.surveyScheduleService.getByProgramIds(programIds);
+			if (!schedulesResult.success) {
+				return this.resultFail(schedulesResult.error);
+			}
+
+			const recipients = recipientsResult.data;
+			const schedules = schedulesResult.data;
+
+			const surveys: SurveyPreview[] = [];
+
+			for (const recipient of recipients) {
+				if (!recipient.startDate || !recipient.programId) continue;
+
+				const recipientName = `${recipient.contact?.firstName || ''} ${recipient.contact?.lastName || ''}`.trim();
+				const recipientSchedules = schedules.filter((schedule) => schedule.programId === recipient.programId);
+
+				for (const schedule of recipientSchedules) {
+					const dueDate = addMonths(recipient.startDate, schedule.dueInMonthsAfterStart);
+					const surveyStatus = dueDate < new Date() ? SurveyStatus.missed : SurveyStatus.new;
+
+					surveys.push({
+						questionnaire: schedule.questionnaire,
+						language: 'en',
+						dueAt: dueDate,
+						status: surveyStatus,
+						recipientId: recipient.id,
+						recipientName,
+						surveyScheduleId: schedule.id,
+						programId: recipient.programId,
+						programName: recipient.program?.name || '',
+					});
+				}
+			}
+
+			return this.resultOk({ surveys });
+		} catch (error) {
+			console.error(error);
+			return this.resultFail(`Failed to preview survey generation: ${error}`);
 		}
 	}
 }

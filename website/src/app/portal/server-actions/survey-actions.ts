@@ -44,3 +44,10 @@ export async function getSurveyRecipientOptionsAction() {
 
 	return recipientService.getEditableRecipientOptions(user.id);
 }
+
+export async function previewSurveyGenerationAction() {
+	const user = await getAuthenticatedUserOrThrow();
+	const service = new SurveyService();
+
+	return service.previewSurveyGeneration(user.id);
+}
