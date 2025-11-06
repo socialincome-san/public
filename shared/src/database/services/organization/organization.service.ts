@@ -6,6 +6,7 @@ import { UserService } from '../user/user.service';
 import {
 	OrganizationMemberTableView,
 	OrganizationMemberTableViewRow,
+	OrganizationOption,
 	OrganizationTableView,
 	OrganizationTableViewRow,
 } from './organization.types';
@@ -118,6 +119,25 @@ export class OrganizationService extends BaseService {
 		} catch (error) {
 			console.error(error);
 			return this.resultFail('Could not set active organization');
+		}
+	}
+
+	async getOptions(userId: string): Promise<ServiceResult<OrganizationOption[]>> {
+		const isAdminResult = await this.userService.isAdmin(userId);
+
+		if (!isAdminResult.success) {
+			return this.resultFail(isAdminResult.error);
+		}
+
+		try {
+			const organizations = await this.db.organization.findMany({
+				select: { id: true, name: true },
+				orderBy: { name: 'asc' },
+			});
+			return this.resultOk(organizations);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch organizations');
 		}
 	}
 }

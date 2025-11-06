@@ -1,109 +1,40 @@
 'use client';
 
+import { Alert, AlertDescription, AlertTitle } from '@/app/portal/components/alert';
 import { Button } from '@/app/portal/components/button';
 import { makePayoutColumns } from '@/app/portal/components/data-table/columns/payouts';
 import DataTable from '@/app/portal/components/data-table/data-table';
-import { DatePicker } from '@/app/portal/components/date-picker';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
-
-import {
-	generateCurrentMonthPayoutsAction,
-	generatePayoutCsvAction,
-	generateRegistrationCsvAction,
-	markCompletedRecipientsAsFormerAction,
-	previewCompletedRecipientsAction,
-	previewCurrentMonthPayoutsAction,
-} from '@/app/portal/server-actions/payout-actions';
-
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
 import type { PayoutTableViewRow } from '@socialincome/shared/src/database/services/payout/payout.types';
-import { format } from 'date-fns';
-import { CalendarIcon, EyeIcon, PlayIcon, TableIcon, UserCheckIcon } from 'lucide-react';
 import { useState } from 'react';
-import { StepResultBox } from './step-result-box';
-
-type Result = string | object | string[] | null;
+import { PayoutForm } from './payout-form';
+import { StartPayoutProcessDialog } from './start-payout-process-dialog';
 
 export function PayoutsTableClient({ rows, error }: { rows: PayoutTableViewRow[]; error: string | null }) {
 	const [open, setOpen] = useState(false);
-	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-	const [results, setResults] = useState<Record<number, Result>>({});
+	const [hasError, setHasError] = useState(false);
+	const [payoutId, setPayoutId] = useState<string | undefined>(undefined);
+	const [readOnly, setReadOnly] = useState(false);
+	const [isStartProcessOpen, setIsStartProcessOpen] = useState(false);
 
-	const iconClass = 'h-4 w-4';
-	const monthLabel = () => format(selectedDate, 'yyyy-MM');
+	const openEmptyForm = () => {
+		setPayoutId(undefined);
+		setReadOnly(false);
+		setHasError(false);
+		setOpen(true);
+	};
 
-	function setResult(step: number, value: Result) {
-		setResults((prev) => ({ ...prev, [step]: value }));
-	}
+	const openEditForm = (row: PayoutTableViewRow) => {
+		setPayoutId(row.id);
+		setReadOnly(row.permission === 'readonly');
+		setHasError(false);
+		setOpen(true);
+	};
 
-	const steps = [
-		{
-			id: 1,
-			title: 'Generate registration CSV',
-			label: 'Generate registration CSV',
-			description: 'Shows the CSV that would be sent to Orange — no changes yet.',
-			icon: <TableIcon className={iconClass} />,
-			variant: 'outline' as const,
-			action: async () => generateRegistrationCsvAction(),
-			filename: () => `registration-${monthLabel()}.csv`,
-		},
-		{
-			id: 2,
-			title: 'Generate payout CSV',
-			label: 'Generate payout CSV',
-			description: 'Shows the payout CSV for all active recipients — no changes yet.',
-			icon: <TableIcon className={iconClass} />,
-			variant: 'outline' as const,
-			action: async () => generatePayoutCsvAction(selectedDate),
-			filename: () => `payouts-${monthLabel()}.csv`,
-		},
-		{
-			id: 3,
-			title: 'Preview payouts',
-			label: 'Preview payouts (no changes)',
-			description: 'Shows which payouts WOULD be created for this month — nothing written yet.',
-			icon: <EyeIcon className={iconClass} />,
-			variant: 'outline' as const,
-			action: async () => previewCurrentMonthPayoutsAction(selectedDate),
-			filename: () => `preview-payouts-${monthLabel()}.json`,
-		},
-		{
-			id: 4,
-			title: 'Generate payouts',
-			label: 'Generate payouts (apply changes)',
-			description: 'Actually writes payouts to the database for the selected month.',
-			icon: <PlayIcon className={iconClass} />,
-			action: async () => generateCurrentMonthPayoutsAction(selectedDate),
-			filename: () => `generated-payouts-${monthLabel()}.json`,
-		},
-		{
-			id: 5,
-			title: 'Preview former recipients',
-			label: 'Preview former recipients (no changes)',
-			description: 'Shows which recipients finished all payments — nothing written yet.',
-			icon: <EyeIcon className={iconClass} />,
-			variant: 'outline' as const,
-			action: async () => previewCompletedRecipientsAction(),
-			filename: () => `preview-former.json`,
-		},
-		{
-			id: 6,
-			title: 'Mark recipients as former',
-			label: 'Mark recipients as former (apply changes)',
-			description: 'Updates all shown in the preview to status "former".',
-			icon: <UserCheckIcon className={iconClass} />,
-			action: async () => markCompletedRecipientsAsFormerAction(),
-			filename: () => `former-updated.json`,
-		},
-	];
-
-	async function run(step: (typeof steps)[number]) {
-		try {
-			const result = await step.action();
-			setResult(step.id, result);
-		} catch (e) {
-			setResult(step.id, e instanceof Error ? e.message : 'Unknown error');
-		}
-	}
+	const onError = (e?: unknown) => {
+		setHasError(true);
+		console.error('Payout Form Error:', e);
+	};
 
 	return (
 		<>
@@ -113,56 +44,39 @@ export function PayoutsTableClient({ rows, error }: { rows: PayoutTableViewRow[]
 				emptyMessage="No payouts found"
 				data={rows}
 				makeColumns={makePayoutColumns}
-				actions={<Button onClick={() => setOpen(true)}>Start payout process</Button>}
+				actions={
+					<div className="flex gap-2">
+						<Button onClick={openEmptyForm}>Add payout</Button>
+						<Button onClick={() => setIsStartProcessOpen(true)}>Start payout process</Button>
+					</div>
+				}
+				onRowClick={openEditForm}
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
 					<DialogHeader>
-						<DialogTitle>Payout process</DialogTitle>
+						<DialogTitle>{readOnly ? 'View payout' : payoutId ? 'Edit payout' : 'Add payout'}</DialogTitle>
 					</DialogHeader>
 
-					<div className="border-border bg-muted/40 mb-4 flex flex-col gap-3 rounded-xl border p-4">
-						<p className="mb-1 flex items-center gap-2 text-sm font-medium">
-							<CalendarIcon className={iconClass} /> Select payout month
-						</p>
-						<DatePicker selected={selectedDate} onSelect={(date) => date && setSelectedDate(date)} />
-						<p className="text-muted-foreground mt-1 text-xs">All actions below use this selected month.</p>
-					</div>
+					{hasError && (
+						<Alert variant="destructive" className="mb-3">
+							<AlertTitle>Error</AlertTitle>
+							<AlertDescription>Error saving payout</AlertDescription>
+						</Alert>
+					)}
 
-					<div className="flex flex-col gap-5">
-						{steps.map((step) => (
-							<div key={step.id} className="border-border bg-muted/40 flex flex-col gap-2 rounded-xl border p-3">
-								<p className="font-medium">
-									Step {step.id}: {step.title}
-								</p>
-								<p className="text-muted-foreground mb-1 text-xs">{step.description}</p>
-
-								<Button
-									className="flex w-full items-center justify-center gap-2"
-									variant={step.variant ?? 'default'}
-									onClick={() => run(step)}
-								>
-									{step.icon}
-									{step.label}
-								</Button>
-
-								<StepResultBox
-									value={results[step.id]}
-									filename={step.filename()}
-									onClear={() => setResult(step.id, null)}
-								/>
-							</div>
-						))}
-					</div>
-
-					<DialogFooter className="mt-4">
-						<Button variant="outline" onClick={() => setOpen(false)}>
-							Close
-						</Button>
-					</DialogFooter>
+					<PayoutForm
+						payoutId={payoutId}
+						readOnly={readOnly}
+						onSuccess={() => setOpen(false)}
+						onCancel={() => setOpen(false)}
+						onError={onError}
+					/>
 				</DialogContent>
 			</Dialog>
+
+			<StartPayoutProcessDialog open={isStartProcessOpen} setOpen={setIsStartProcessOpen} />
 		</>
 	);
 }

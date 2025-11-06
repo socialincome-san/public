@@ -1,5 +1,6 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/app/portal/components/accordion';
 import { Button } from '@/app/portal/components/button';
+import { Combobox } from '@/app/portal/components/combo-box';
 import { DatePicker } from '@/app/portal/components/date-picker';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/app/portal/components/form';
 import { Input } from '@/app/portal/components/input';
@@ -17,6 +18,7 @@ export type FormField = {
 	placeholder?: string;
 	zodSchema?: ZodTypeAny;
 	value?: any;
+	useCombobox?: boolean;
 };
 
 export type FormSchema = {
@@ -308,7 +310,35 @@ const GenericFormField = ({
 						)}
 					/>
 				);
-			case 'ZodEnum':
+			case 'ZodEnum': {
+				const enumValues = Object.entries(getEnumValues(option, parentOption));
+				const items = enumValues.map(([label, value]) => ({ id: value, label }));
+
+				if (formFieldSchema.useCombobox) {
+					return (
+						<FormField
+							control={form.control}
+							name={optionKey}
+							key={optionKey}
+							render={({ field }) => (
+								<FormItem>
+									<Label>{label}</Label>
+									<FormControl>
+										<Combobox
+											options={items}
+											value={field.value ?? ''}
+											onChange={field.onChange}
+											placeholder={formFieldSchema.placeholder}
+											disabled={isLoading || readOnly}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					);
+				}
+
 				return (
 					<FormField
 						control={form.control}
@@ -324,9 +354,9 @@ const GenericFormField = ({
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent {...form.register(optionKey)}>
-										{Object.entries(getEnumValues(option, parentOption)).map(([label, id]) => (
-											<SelectItem value={id} key={id}>
-												{label}
+										{items.map((item) => (
+											<SelectItem value={item.id} key={item.id}>
+												{item.label}
 											</SelectItem>
 										))}
 									</SelectContent>
@@ -336,7 +366,7 @@ const GenericFormField = ({
 						)}
 					/>
 				);
-
+			}
 			case 'ZodBoolean':
 				return (
 					<FormField

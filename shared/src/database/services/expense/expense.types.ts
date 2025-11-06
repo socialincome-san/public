@@ -12,3 +12,26 @@ export type ExpenseTableViewRow = {
 export type ExpenseTableView = {
 	tableRows: ExpenseTableViewRow[];
 };
+
+export type ExpensePayload = {
+	id: string;
+	type: ExpenseType;
+	year: number;
+	amountChf: number;
+	organization: { id: string; name: string };
+};
+
+export type ExpenseCreateInput = {
+	type: ExpenseType;
+	year: number;
+	amountChf: number;
+	organization: { connect: { id: string } };
+};
+
+export type ExpenseUpdateInput = {
+	id: string;
+	type?: ExpenseType;
+	year?: number;
+	amountChf?: number;
+	organization?: { connect: { id: string } };
+};
