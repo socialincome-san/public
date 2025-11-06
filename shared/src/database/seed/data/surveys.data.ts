@@ -3,6 +3,7 @@ import { Prisma, SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
 export const surveysData: Prisma.SurveyCreateManyInput[] = [
 	{
 		id: 'survey-1',
+		name: 'Onboarding-1',
 		legacyFirestoreId: null,
 		recipientId: 'recipient-1',
 		questionnaire: SurveyQuestionnaire.onboarding,
@@ -20,6 +21,7 @@ export const surveysData: Prisma.SurveyCreateManyInput[] = [
 	},
 	{
 		id: 'survey-2',
+		name: 'Checkin-1',
 		legacyFirestoreId: null,
 		recipientId: 'recipient-2',
 		questionnaire: SurveyQuestionnaire.checkin,
@@ -37,6 +39,7 @@ export const surveysData: Prisma.SurveyCreateManyInput[] = [
 	},
 	{
 		id: 'survey-3',
+		name: 'Offboarding-1',
 		legacyFirestoreId: null,
 		recipientId: 'recipient-3',
 		questionnaire: SurveyQuestionnaire.offboarding,

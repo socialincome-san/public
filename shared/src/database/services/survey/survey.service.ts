@@ -40,6 +40,7 @@ export class SurveyService extends BaseService {
 				where: { recipient: { programId: { in: programIds } } },
 				select: {
 					id: true,
+					name: true,
 					questionnaire: true,
 					status: true,
 					language: true,
@@ -167,6 +168,7 @@ export class SurveyService extends BaseService {
 
 			const payload: SurveyPayload = {
 				id: survey.id,
+				name: survey.name,
 				questionnaire: survey.questionnaire,
 				language: survey.language,
 				dueAt: survey.dueAt,
@@ -181,7 +183,6 @@ export class SurveyService extends BaseService {
 				createdAt: survey.createdAt,
 				updatedAt: survey.updatedAt,
 			};
-
 			return this.resultOk(payload);
 		} catch (error) {
 			console.error(error);
@@ -216,6 +217,7 @@ export class SurveyService extends BaseService {
 
 			const payload: SurveyPayload = {
 				id: survey.id,
+				name: survey.name,
 				questionnaire: survey.questionnaire,
 				language: survey.language,
 				dueAt: survey.dueAt,
@@ -230,7 +232,6 @@ export class SurveyService extends BaseService {
 				createdAt: survey.createdAt,
 				updatedAt: survey.updatedAt,
 			};
-
 			return this.resultOk(payload);
 		} catch (error) {
 			console.error(error);
@@ -266,6 +267,7 @@ export class SurveyService extends BaseService {
 
 			const payload: SurveyPayload = {
 				id: updatedSurvey.id,
+				name: updatedSurvey.name,
 				questionnaire: updatedSurvey.questionnaire,
 				language: updatedSurvey.language,
 				dueAt: updatedSurvey.dueAt,
@@ -280,7 +282,6 @@ export class SurveyService extends BaseService {
 				createdAt: updatedSurvey.createdAt,
 				updatedAt: updatedSurvey.updatedAt,
 			};
-
 			return this.resultOk(payload);
 		} catch (error) {
 			console.error(error);
@@ -321,7 +322,7 @@ export class SurveyService extends BaseService {
 				},
 				select: {
 					recipientId: true,
-					questionnaire: true,
+					name: true,
 				},
 			});
 
@@ -336,7 +337,7 @@ export class SurveyService extends BaseService {
 
 				for (const schedule of recipientSchedules) {
 					const hasExistingSurvey = existingSurveys.some(
-						(existing) => existing.recipientId === recipient.id && existing.questionnaire === schedule.questionnaire,
+						(existing) => existing.recipientId === recipient.id && existing.name === schedule.name,
 					);
 
 					if (hasExistingSurvey) {
@@ -351,6 +352,7 @@ export class SurveyService extends BaseService {
 					const token = await rndString(3, 'hex');
 
 					surveys.push({
+						name: schedule.name,
 						recipient: { connect: { id: recipient.id } },
 						questionnaire: schedule.questionnaire,
 						language: 'en',

@@ -20,6 +20,7 @@ export type SurveyTableView = {
 };
 
 export type SurveyCreateInput = {
+	name: string;
 	recipient: { connect: { id: string } };
 	questionnaire: SurveyQuestionnaire;
 	language: string;
@@ -33,6 +34,7 @@ export type SurveyCreateInput = {
 };
 
 export type SurveyUpdateInput = {
+	name?: string;
 	questionnaire?: SurveyQuestionnaire;
 	language?: string;
 	dueAt?: Date;
@@ -48,6 +50,7 @@ export type SurveyUpdateInput = {
 
 export type SurveyPayload = {
 	id: string;
+	name: string;
 	questionnaire: SurveyQuestionnaire;
 	language: string;
 	dueAt: Date;

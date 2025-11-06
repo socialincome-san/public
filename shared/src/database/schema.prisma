@@ -249,6 +249,7 @@ model Payout {
 
 model Survey {
   id                String              @id @default(cuid()) @map("id")
+  name              String              @map("name")
   legacyFirestoreId String?             @unique @map("legacy_firestore_id")
   questionnaire     SurveyQuestionnaire @map("questionnaire")
   language          String              @map("language")
@@ -268,11 +269,13 @@ model Survey {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
+  @@unique([recipientId, name])
   @@map("survey")
 }
 
 model SurveySchedule {
   id                    String              @id @default(cuid())
+  name                  String              @map("name")
   questionnaire         SurveyQuestionnaire @map("questionnaire")
   dueInMonthsAfterStart Int                 @map("due_in_months_after_start")
   programId             String              @map("program_id")
@@ -281,7 +284,7 @@ model SurveySchedule {
   createdAt             DateTime            @default(now()) @db.Timestamptz(3)
   updatedAt             DateTime?           @updatedAt @db.Timestamptz(3)
 
-  @@unique([questionnaire, dueInMonthsAfterStart, programId])
+  @@unique([name, questionnaire, dueInMonthsAfterStart, programId])
   @@map("survey_schedule")
 }
 
