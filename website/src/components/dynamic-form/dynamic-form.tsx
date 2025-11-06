@@ -343,6 +343,7 @@ const GenericFormField = ({
 					<FormField
 						control={form.control}
 						name={optionKey}
+						key={optionKey}
 						render={({ field }) => (
 							<FormItem>
 								<Label>{label}</Label>
