@@ -2,7 +2,6 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/app/portal/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
-import type { SurveyTableViewRow } from '@socialincome/shared/src/database/services/survey/survey.types';
 import { useState } from 'react';
 import { SurveyForm } from './survey-form';
 
