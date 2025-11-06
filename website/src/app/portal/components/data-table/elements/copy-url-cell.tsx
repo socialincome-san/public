@@ -25,8 +25,13 @@ export function CopyUrlCell<TData, TValue>({ ctx }: CellType<TData, TValue>) {
 
 	if (!url) return null;
 
+	const handleCopy = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		copy(url);
+	};
+
 	return (
-		<Button variant="outline" size="sm" onClick={() => copy(url)} className="h-8">
+		<Button variant="outline" size="sm" onClick={handleCopy} className="h-8">
 			{copied ? (
 				<>
 					<Check className="mr-2 h-4 w-4 text-green-600" />
