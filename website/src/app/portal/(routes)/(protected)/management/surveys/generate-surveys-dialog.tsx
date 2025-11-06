@@ -3,9 +3,9 @@
 import { Button } from '@/app/portal/components/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
 import { StepResultBox } from '@/app/portal/components/step-result-box';
+import { generateSurveysAction, previewSurveyGenerationAction } from '@/app/portal/server-actions/survey-actions';
 import { EyeIcon, PlayIcon } from 'lucide-react';
 import { useState } from 'react';
-import { previewSurveyGenerationAction } from '@/app/portal/server-actions/survey-actions';
 
 type StepResult = string | object | string[] | null;
 
@@ -42,9 +42,11 @@ export function GenerateSurveysDialog({ open, setOpen }: { open: boolean; setOpe
 			description: 'Actually creates surveys in the database for all eligible recipients.',
 			icon: <PlayIcon className={iconClass} />,
 			action: async () => {
-				console.log('Generate surveys clicked');
-				// TODO: Add server action for actual generation
-				return { message: 'Generate surveys functionality - to be implemented' };
+				const result = await generateSurveysAction();
+				if (!result.success) {
+					throw new Error(result.error);
+				}
+				return result.data;
 			},
 			filename: () => `generated-surveys.json`,
 		},

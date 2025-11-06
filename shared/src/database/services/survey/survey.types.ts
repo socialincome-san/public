@@ -76,5 +76,10 @@ export type SurveyPreview = {
 };
 
 export type SurveyGenerationPreviewResult = {
-	surveys: SurveyPreview[];
+	surveys: SurveyCreateInput[];
+};
+
+export type SurveyGenerationResult = {
+	surveysCreated: number;
+	message: string;
 };

@@ -1,5 +1,7 @@
 import { ProgramPermission, SurveyStatus } from '@prisma/client';
+import { FirebaseService } from '@socialincome/shared/src/firebase/services/auth.service';
 import { addMonths, isFuture } from 'date-fns';
+import { rndString } from '../../../utils/crypto';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessService } from '../program-access/program-access.service';
@@ -8,8 +10,8 @@ import { SurveyScheduleService } from '../survey-schedule/survey-schedule.servic
 import {
 	SurveyCreateInput,
 	SurveyGenerationPreviewResult,
+	SurveyGenerationResult,
 	SurveyPayload,
-	SurveyPreview,
 	SurveyTableView,
 	SurveyTableViewRow,
 	SurveyUpdateInput,
@@ -19,6 +21,7 @@ export class SurveyService extends BaseService {
 	private programAccessService = new ProgramAccessService();
 	private recipientService = new RecipientService();
 	private surveyScheduleService = new SurveyScheduleService();
+	private firebaseService = new FirebaseService();
 
 	async getTableView(userId: string): Promise<ServiceResult<SurveyTableView>> {
 		try {
@@ -312,28 +315,32 @@ export class SurveyService extends BaseService {
 			const recipients = recipientsResult.data;
 			const schedules = schedulesResult.data;
 
-			const surveys: SurveyPreview[] = [];
+			const surveys: SurveyCreateInput[] = [];
 
 			for (const recipient of recipients) {
 				if (!recipient.startDate || !recipient.programId) continue;
 
-				const recipientName = `${recipient.contact?.firstName || ''} ${recipient.contact?.lastName || ''}`.trim();
 				const recipientSchedules = schedules.filter((schedule) => schedule.programId === recipient.programId);
 
 				for (const schedule of recipientSchedules) {
 					const dueDate = addMonths(recipient.startDate, schedule.dueInMonthsAfterStart);
 					const surveyStatus = dueDate < new Date() ? SurveyStatus.missed : SurveyStatus.new;
 
+					const email = (await rndString(16)).toLowerCase() + '@si.org';
+					const password = await rndString(16);
+					const token = await rndString(3, 'hex');
+
 					surveys.push({
+						recipient: { connect: { id: recipient.id } },
 						questionnaire: schedule.questionnaire,
 						language: 'en',
 						dueAt: dueDate,
 						status: surveyStatus,
-						recipientId: recipient.id,
-						recipientName,
-						surveyScheduleId: schedule.id,
-						programId: recipient.programId,
-						programName: recipient.program?.name || '',
+						data: {},
+						accessEmail: email,
+						accessPw: password,
+						accessToken: token,
+						surveySchedule: { connect: { id: schedule.id } },
 					});
 				}
 			}
@@ -342,6 +349,39 @@ export class SurveyService extends BaseService {
 		} catch (error) {
 			console.error(error);
 			return this.resultFail(`Failed to preview survey generation: ${error}`);
+		}
+	}
+
+	async generateSurveys(userId: string): Promise<ServiceResult<SurveyGenerationResult>> {
+		try {
+			const previewResult = await this.previewSurveyGeneration(userId);
+			if (!previewResult.success) {
+				return this.resultFail(previewResult.error);
+			}
+
+			const surveysToCreate = previewResult.data.surveys;
+			if (surveysToCreate.length === 0) {
+				return this.resultOk({
+					surveysCreated: 0,
+					message: 'No surveys to create',
+				});
+			}
+
+			let surveysCreated = 0;
+
+			for (const surveyInput of surveysToCreate) {
+				await this.firebaseService.createSurveyUser(surveyInput.accessEmail, surveyInput.accessPw);
+				await this.db.survey.create({ data: surveyInput });
+				surveysCreated++;
+			}
+
+			return this.resultOk({
+				surveysCreated,
+				message: `Successfully created ${surveysCreated} surveys`,
+			});
+		} catch (error) {
+			console.error(error);
+			return this.resultFail(`Failed to generate surveys: ${error}`);
 		}
 	}
 }

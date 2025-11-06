@@ -51,3 +51,13 @@ export async function previewSurveyGenerationAction() {
 
 	return service.previewSurveyGeneration(user.id);
 }
+
+export async function generateSurveysAction() {
+	const user = await getAuthenticatedUserOrThrow();
+	const service = new SurveyService();
+
+	const result = await service.generateSurveys(user.id);
+
+	revalidatePath('/portal/management/surveys');
+	return result;
+}
