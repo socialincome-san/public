@@ -1,4 +1,4 @@
-import { OrganizationPermission } from '@prisma/client';
+import { ContributionStatus, OrganizationPermission, Prisma } from '@prisma/client';
 
 export type ContributionTableViewRow = {
 	id: string;
@@ -10,9 +10,26 @@ export type ContributionTableViewRow = {
 	campaignTitle: string;
 	programName: string | null;
 	createdAt: Date;
-	permission: OrganizationPermission;
 };
 
 export type ContributionTableView = {
 	tableRows: ContributionTableViewRow[];
+	permission: OrganizationPermission;
+};
+
+export type ContributionUpdateInput = Prisma.ContributionUpdateInput;
+
+export type ContributionPayload = {
+	id: string;
+	amount: number;
+	currency: string;
+	amountChf: number;
+	feesChf: number;
+	status: ContributionStatus;
+	contributor: {
+		id: string;
+	};
+	campaign: {
+		id: string;
+	};
 };
