@@ -3,6 +3,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import {
+	CampaignOption,
 	CampaignPayload,
 	CampaignsCreateInput,
 	CampaignsUpdateInput,
@@ -60,7 +61,6 @@ export class CampaignService extends BaseService {
 			}
 
 			// convert decimal fields to number
-			// TODO: find better sotution to handle number fields
 			return this.resultOk({
 				...campaign,
 				goal: campaign.goal ? Number(campaign.goal) : null,
@@ -121,6 +121,31 @@ export class CampaignService extends BaseService {
 		} catch (error) {
 			console.error(error);
 			return this.resultFail('Could not update campaign');
+		}
+	}
+
+	async getOptions(userId: string): Promise<ServiceResult<CampaignOption[]>> {
+		try {
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+
+			const campaigns = await this.db.campaign.findMany({
+				where: { organizationId: activeOrgResult.data.id },
+				select: { id: true, title: true },
+				orderBy: { title: 'asc' },
+			});
+
+			const options = campaigns.map((campaign) => ({
+				id: campaign.id,
+				name: campaign.title,
+			}));
+
+			return this.resultOk(options);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch campaign options');
 		}
 	}
 

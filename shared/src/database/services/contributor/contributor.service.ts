@@ -4,6 +4,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import {
+	ContributorOption,
 	ContributorPayload,
 	ContributorTableView,
 	ContributorTableViewRow,
@@ -106,6 +107,45 @@ export class ContributorService extends BaseService {
 		} catch (error) {
 			console.error(error);
 			return this.resultFail('Could not update contributor');
+		}
+	}
+
+	async getOptions(userId: string): Promise<ServiceResult<ContributorOption[]>> {
+		try {
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+
+			const contributors = await this.db.contributor.findMany({
+				where: {
+					contributions: {
+						some: {
+							campaign: { organizationId: activeOrgResult.data.id },
+						},
+					},
+				},
+				select: {
+					id: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+						},
+					},
+				},
+				orderBy: { contact: { firstName: 'asc' } },
+			});
+
+			const options: ContributorOption[] = contributors.map((contributor) => ({
+				id: contributor.id,
+				name: `${contributor.contact?.firstName ?? ''} ${contributor.contact?.lastName ?? ''}`.trim(),
+			}));
+
+			return this.resultOk(options);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch contributor options');
 		}
 	}
 

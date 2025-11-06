@@ -1,8 +1,7 @@
-import { makeContributionsColumns } from '@/app/portal/components/data-table/columns/contributions';
-import DataTable from '@/app/portal/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ContributionService } from '@socialincome/shared/src/database/services/contribution/contribution.service';
 import type { ContributionTableViewRow } from '@socialincome/shared/src/database/services/contribution/contribution.types';
+import ContributionsTable from './contributions-table';
 
 export default async function ContributionsPage() {
 	const user = await getAuthenticatedUserOrRedirect();
@@ -12,14 +11,7 @@ export default async function ContributionsPage() {
 
 	const error = result.success ? null : result.error;
 	const rows: ContributionTableViewRow[] = result.success ? result.data.tableRows : [];
+	const readOnly = result.success ? result.data.permission !== 'edit' : true;
 
-	return (
-		<DataTable
-			title="Contributions"
-			error={error}
-			emptyMessage="No contributions found"
-			data={rows}
-			makeColumns={makeContributionsColumns}
-		/>
-	);
+	return <ContributionsTable rows={rows} error={error} readOnly={readOnly} />;
 }
