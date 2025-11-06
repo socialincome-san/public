@@ -9,10 +9,7 @@ import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
 import { getZodEnum } from '@/components/dynamic-form/helper';
 import { ContributionStatus } from '@prisma/client';
 import { CampaignOption } from '@socialincome/shared/src/database/services/campaign/campaign.types';
-import {
-	ContributionPayload,
-	ContributionUpdateInput,
-} from '@socialincome/shared/src/database/services/contribution/contribution.types';
+import { ContributionUpdateInput } from '@socialincome/shared/src/database/services/contribution/contribution.types';
 import { ContributorOption } from '@socialincome/shared/src/database/services/contributor/contributor.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';
@@ -83,7 +80,6 @@ export default function ContributionsForm({
 	readOnly: boolean;
 }) {
 	const [formSchema, setFormSchema] = useState<typeof initialFormSchema>(initialFormSchema);
-	const [contribution, setContribution] = useState<ContributionPayload>();
 	const [isLoading, startTransition] = useTransition();
 
 	useEffect(() => {
@@ -94,7 +90,7 @@ export default function ContributionsForm({
 	}, [contributionId]);
 
 	useEffect(() => {
-		// load options for program and local partners
+		// load options for campaigns and contributors
 		startTransition(async () => {
 			const { campaignOptions, contributorOptions } = await getContributionsOptionsAction();
 			if (!campaignOptions.success || !contributorOptions.success) return;
@@ -108,7 +104,6 @@ export default function ContributionsForm({
 				try {
 					const result = await getContributionAction(contributionId);
 					if (result.success) {
-						setContribution(result.data);
 						const newSchema = { ...formSchema };
 						newSchema.fields.amount.value = result.data.amount;
 						newSchema.fields.currency.value = result.data.currency;
@@ -154,7 +149,7 @@ export default function ContributionsForm({
 	async function onSubmit(schema: typeof initialFormSchema) {
 		startTransition(async () => {
 			try {
-				if (!contribution || !contributionId) return;
+				if (!contributionId) return;
 				let res;
 				const data: ContributionUpdateInput = {
 					amount: schema.fields.amount.value as number,
