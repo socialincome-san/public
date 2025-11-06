@@ -14,6 +14,7 @@ export const surveysData: Prisma.SurveyCreateManyInput[] = [
 		accessEmail: 'recipient1@survey.org',
 		accessPw: 'onboard123',
 		accessToken: 'token-1',
+		surveyScheduleId: 'survey-schedule-1',
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -30,6 +31,7 @@ export const surveysData: Prisma.SurveyCreateManyInput[] = [
 		accessEmail: 'recipient2@survey.org',
 		accessPw: 'checkin123',
 		accessToken: 'token-2',
+		surveyScheduleId: 'survey-schedule-2',
 		createdAt: new Date(),
 		updatedAt: null
 	},
@@ -46,6 +48,7 @@ export const surveysData: Prisma.SurveyCreateManyInput[] = [
 		accessEmail: 'recipient3@survey.org',
 		accessPw: 'exit123',
 		accessToken: 'token-3',
+		surveyScheduleId: 'survey-schedule-5',
 		createdAt: new Date(),
 		updatedAt: null
 	}
