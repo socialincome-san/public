@@ -304,7 +304,7 @@ export class SurveyService extends BaseService {
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
 
-			const recipientsResult = await this.recipientService.getSurveyRecipients(userId, programIds);
+			const recipientsResult = await this.recipientService.getSurveyRecipients(programIds);
 			if (!recipientsResult.success) {
 				return this.resultFail(recipientsResult.error);
 			}
