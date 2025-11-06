@@ -46,6 +46,7 @@ export type User = {
 	currency?: Currency;
 	contributor_organisations?: EntityReference[];
 	created_at: Timestamp;
+	last_updated_at?: Timestamp;
 };
 
 export const splitName = (name: string | undefined | null) => {

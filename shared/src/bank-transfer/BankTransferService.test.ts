@@ -144,6 +144,7 @@ describe('BankTransferService', () => {
 			currency: 'CHF' as Currency,
 			payment_reference_id: testUser.paymentReferenceId,
 			created_at: toFirebaseAdminTimestamp(DateTime.now()),
+			last_updated_at: toFirebaseAdminTimestamp(DateTime.now()),
 		});
 
 		const ref = await bankTransferService.storeCharge(testPayment, testUser);
