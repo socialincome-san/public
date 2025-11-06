@@ -361,7 +361,7 @@ export class RecipientService extends BaseService {
 		return this.resultOk(options);
 	}
 
-	async getActiveSurveyRecipients(userId: string, programIds: string[]) {
+	async getSurveyRecipients(userId: string, programIds: string[]) {
 		try {
 			const recipients = await this.db.recipient.findMany({
 				where: {

@@ -302,7 +302,7 @@ export class SurveyService extends BaseService {
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
 
-			const recipientsResult = await this.recipientService.getActiveSurveyRecipients(userId, programIds);
+			const recipientsResult = await this.recipientService.getSurveyRecipients(userId, programIds);
 			if (!recipientsResult.success) {
 				return this.resultFail(recipientsResult.error);
 			}
@@ -315,14 +315,34 @@ export class SurveyService extends BaseService {
 			const recipients = recipientsResult.data;
 			const schedules = schedulesResult.data;
 
+			const existingSurveys = await this.db.survey.findMany({
+				where: {
+					recipient: { id: { in: recipients.map((r) => r.id) } },
+				},
+				select: {
+					recipientId: true,
+					questionnaire: true,
+				},
+			});
+
 			const surveys: SurveyCreateInput[] = [];
 
 			for (const recipient of recipients) {
-				if (!recipient.startDate || !recipient.programId) continue;
+				if (!recipient.startDate) {
+					continue;
+				}
 
 				const recipientSchedules = schedules.filter((schedule) => schedule.programId === recipient.programId);
 
 				for (const schedule of recipientSchedules) {
+					const hasExistingSurvey = existingSurveys.some(
+						(existing) => existing.recipientId === recipient.id && existing.questionnaire === schedule.questionnaire,
+					);
+
+					if (hasExistingSurvey) {
+						continue;
+					}
+
 					const dueDate = addMonths(recipient.startDate, schedule.dueInMonthsAfterStart);
 					const surveyStatus = dueDate < new Date() ? SurveyStatus.missed : SurveyStatus.new;
 
