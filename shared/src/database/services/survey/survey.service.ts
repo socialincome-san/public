@@ -67,6 +67,7 @@ export class SurveyService extends BaseService {
 
 				return {
 					id: survey.id,
+					name: survey.name,
 					recipientName:
 						`${survey.recipient.contact?.firstName ?? ''} ${survey.recipient.contact?.lastName ?? ''}`.trim(),
 					programId,

@@ -7,6 +7,7 @@ import { SurveyFormSchema } from './survey-form';
 
 export function buildCreateSurveyInput(schema: SurveyFormSchema): SurveyCreateInput {
 	return {
+		name: schema.fields.name.value,
 		recipient: { connect: { id: schema.fields.recipientId.value } },
 		questionnaire: schema.fields.questionnaire.value,
 		language: schema.fields.language.value,
@@ -21,6 +22,7 @@ export function buildCreateSurveyInput(schema: SurveyFormSchema): SurveyCreateIn
 
 export function buildUpdateSurveyInput(schema: SurveyFormSchema, existing: SurveyPayload): SurveyUpdateInput {
 	const data: SurveyUpdateInput = {
+		name: schema.fields.name.value,
 		questionnaire: schema.fields.questionnaire.value,
 		language: schema.fields.language.value,
 		dueAt: new Date(schema.fields.dueAt.value),

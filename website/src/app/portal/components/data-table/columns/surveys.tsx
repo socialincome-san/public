@@ -12,6 +12,11 @@ import type { ColumnDef } from '@tanstack/react-table';
 export function makeSurveyColumns(hideProgramName = false): ColumnDef<SurveyTableViewRow>[] {
 	const columns: ColumnDef<SurveyTableViewRow>[] = [
 		{
+			accessorKey: 'name',
+			header: (ctx) => <SortableHeader ctx={ctx}>Name</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
 			accessorKey: 'recipientName',
 			header: (ctx) => <SortableHeader ctx={ctx}>Recipient</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,

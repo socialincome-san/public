@@ -26,6 +26,7 @@ export type SurveyFormProps = {
 export type SurveyFormSchema = {
 	label: string;
 	fields: {
+		name: FormField;
 		recipientId: FormField;
 		questionnaire: FormField;
 		language: FormField;
@@ -40,6 +41,11 @@ export type SurveyFormSchema = {
 const initialFormSchema: SurveyFormSchema = {
 	label: 'Survey',
 	fields: {
+		name: {
+			placeholder: 'Survey name',
+			label: 'Name',
+			zodSchema: z.string().min(1, 'Name is required'),
+		},
 		recipientId: {
 			placeholder: 'Recipient',
 			label: 'Recipient',
@@ -107,6 +113,10 @@ export function SurveyForm({ onSuccess, onError, onCancel, surveyId, readOnly }:
 					...prev,
 					fields: {
 						...prev.fields,
+						name: {
+							...prev.fields.name,
+							value: surveyResult.data.name,
+						},
 						recipientId: {
 							...prev.fields.recipientId,
 							value: surveyResult.data.recipientId,

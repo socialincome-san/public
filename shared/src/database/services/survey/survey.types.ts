@@ -2,6 +2,7 @@ import { Prisma, ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@p
 
 export type SurveyTableViewRow = {
 	id: string;
+	name: string;
 	recipientName: string;
 	programId: string;
 	programName: string;
