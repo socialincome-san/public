@@ -3,7 +3,13 @@ import { isFuture } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessService } from '../program-access/program-access.service';
-import { SurveyTableView, SurveyTableViewRow } from './survey.types';
+import {
+	SurveyCreateInput,
+	SurveyPayload,
+	SurveyTableView,
+	SurveyTableViewRow,
+	SurveyUpdateInput,
+} from './survey.types';
 
 export class SurveyService extends BaseService {
 	private programAccessService = new ProgramAccessService();
@@ -119,5 +125,157 @@ export class SurveyService extends BaseService {
 		const url = new URL([base, 'survey', recipientId, surveyId].join('/'));
 		url.search = new URLSearchParams({ email: accessEmail, pw: accessPw }).toString();
 		return url.toString();
+	}
+
+	async create(userId: string, input: SurveyCreateInput): Promise<ServiceResult<SurveyPayload>> {
+		try {
+			if (!input.recipient?.connect?.id) {
+				return this.resultFail('Recipient is required');
+			}
+
+			const recipient = await this.db.recipient.findUnique({
+				where: { id: input.recipient.connect.id },
+				select: { program: { select: { id: true } } },
+			});
+
+			if (!recipient) {
+				return this.resultFail('Recipient not found');
+			}
+
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+
+			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === recipient.program.id);
+			if (!programAccess || programAccess.permission === ProgramPermission.readonly) {
+				return this.resultFail('Access denied');
+			}
+
+			const survey = await this.db.survey.create({
+				data: input,
+			});
+
+			const payload: SurveyPayload = {
+				id: survey.id,
+				questionnaire: survey.questionnaire,
+				language: survey.language,
+				dueAt: survey.dueAt,
+				completedAt: survey.completedAt,
+				status: survey.status,
+				data: survey.data,
+				accessEmail: survey.accessEmail,
+				accessPw: survey.accessPw,
+				accessToken: survey.accessToken,
+				recipientId: survey.recipientId,
+				surveyScheduleId: survey.surveyScheduleId,
+				createdAt: survey.createdAt,
+				updatedAt: survey.updatedAt,
+			};
+
+			return this.resultOk(payload);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail(`Failed to create survey: ${error}`);
+		}
+	}
+
+	async get(userId: string, surveyId: string): Promise<ServiceResult<SurveyPayload>> {
+		try {
+			const survey = await this.db.survey.findUnique({
+				where: { id: surveyId },
+				include: {
+					recipient: {
+						select: { program: { select: { id: true } } },
+					},
+				},
+			});
+
+			if (!survey) {
+				return this.resultFail('Survey not found');
+			}
+
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+
+			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program.id);
+			if (!programAccess) {
+				return this.resultFail('Access denied');
+			}
+
+			const payload: SurveyPayload = {
+				id: survey.id,
+				questionnaire: survey.questionnaire,
+				language: survey.language,
+				dueAt: survey.dueAt,
+				completedAt: survey.completedAt,
+				status: survey.status,
+				data: survey.data,
+				accessEmail: survey.accessEmail,
+				accessPw: survey.accessPw,
+				accessToken: survey.accessToken,
+				recipientId: survey.recipientId,
+				surveyScheduleId: survey.surveyScheduleId,
+				createdAt: survey.createdAt,
+				updatedAt: survey.updatedAt,
+			};
+
+			return this.resultOk(payload);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail(`Failed to get survey: ${error}`);
+		}
+	}
+
+	async update(userId: string, surveyId: string, input: SurveyUpdateInput): Promise<ServiceResult<SurveyPayload>> {
+		try {
+			const survey = await this.db.survey.findUnique({
+				where: { id: surveyId },
+				select: { recipient: { select: { program: { select: { id: true } } } } },
+			});
+
+			if (!survey) {
+				return this.resultFail('Survey not found');
+			}
+
+			const accessibleProgramsResult = await this.programAccessService.getAccessiblePrograms(userId);
+			if (!accessibleProgramsResult.success) {
+				return this.resultFail(accessibleProgramsResult.error);
+			}
+
+			const programAccess = accessibleProgramsResult.data.find((p) => p.programId === survey.recipient.program.id);
+			if (!programAccess || programAccess.permission === ProgramPermission.readonly) {
+				return this.resultFail('Access denied');
+			}
+
+			const updatedSurvey = await this.db.survey.update({
+				where: { id: surveyId },
+				data: input,
+			});
+
+			const payload: SurveyPayload = {
+				id: updatedSurvey.id,
+				questionnaire: updatedSurvey.questionnaire,
+				language: updatedSurvey.language,
+				dueAt: updatedSurvey.dueAt,
+				completedAt: updatedSurvey.completedAt,
+				status: updatedSurvey.status,
+				data: updatedSurvey.data,
+				accessEmail: updatedSurvey.accessEmail,
+				accessPw: updatedSurvey.accessPw,
+				accessToken: updatedSurvey.accessToken,
+				recipientId: updatedSurvey.recipientId,
+				surveyScheduleId: updatedSurvey.surveyScheduleId,
+				createdAt: updatedSurvey.createdAt,
+				updatedAt: updatedSurvey.updatedAt,
+			};
+
+			return this.resultOk(payload);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail(`Failed to update survey: ${error}`);
+		}
 	}
 }
