@@ -58,7 +58,7 @@ const initialFormSchema: SurveyFormSchema = {
 		dueAt: {
 			placeholder: 'Due date',
 			label: 'Due date',
-			zodSchema: z.string().min(1),
+			zodSchema: z.date().min(new Date('2020-01-01')).max(new Date('2050-12-31')).optional(),
 		},
 		status: {
 			placeholder: 'Status',
@@ -121,7 +121,7 @@ export function SurveyForm({ onSuccess, onError, onCancel, surveyId, readOnly }:
 						},
 						dueAt: {
 							...prev.fields.dueAt,
-							value: surveyResult.data.dueAt.toISOString().slice(0, 16),
+							value: surveyResult.data.dueAt,
 						},
 						status: {
 							...prev.fields.status,
