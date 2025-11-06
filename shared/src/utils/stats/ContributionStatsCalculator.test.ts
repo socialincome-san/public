@@ -119,7 +119,7 @@ const user2: User = {
 	institution: true,
 	currency: 'CHF',
 	created_at: toFirebaseAdminTimestamp(new Date('2023-02-01')),
-	last_updated_at: toFirebaseAdminTimestamp(new Date('2023-02-01')),
+	last_updated_at: toFirebaseAdminTimestamp(new Date('2023-03-01')),
 };
 const contributionsUser2 = ['2023-01-08', '2023-04-09'].map((date) => {
 	return {
@@ -150,7 +150,7 @@ const testUser: User = {
 	test_user: true,
 	currency: 'USD',
 	created_at: toFirebaseAdminTimestamp(new Date('2023-03-01')),
-	last_updated_at: toFirebaseAdminTimestamp(new Date('2023-02-01')),
+	last_updated_at: toFirebaseAdminTimestamp(new Date('2023-04-01')),
 };
 const contributionsTestUser = ['2023-01-05'].map((date) => {
 	return {
