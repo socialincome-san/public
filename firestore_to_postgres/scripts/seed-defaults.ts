@@ -1,4 +1,11 @@
-import { OrganizationPermission, Prisma, PrismaClient, ProgramPermission, UserRole } from '@prisma/client';
+import {
+	OrganizationPermission,
+	Prisma,
+	PrismaClient,
+	ProgramPermission,
+	SurveyQuestionnaire,
+	UserRole,
+} from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -22,6 +29,20 @@ export const DEFAULT_CAMPAIGN: Omit<Prisma.CampaignCreateInput, 'organization' |
 	endDate: new Date('2100-01-01'),
 	isActive: false,
 };
+
+export const recipientSurveys: Omit<Prisma.SurveyScheduleCreateInput, 'program'>[] = [
+	{ questionnaire: SurveyQuestionnaire.onboarding, dueInMonthsAfterStart: 0 },
+	{ questionnaire: SurveyQuestionnaire.checkin, dueInMonthsAfterStart: 6 },
+	{ questionnaire: SurveyQuestionnaire.checkin, dueInMonthsAfterStart: 12 },
+	{ questionnaire: SurveyQuestionnaire.checkin, dueInMonthsAfterStart: 18 },
+	{ questionnaire: SurveyQuestionnaire.checkin, dueInMonthsAfterStart: 24 },
+	{ questionnaire: SurveyQuestionnaire.checkin, dueInMonthsAfterStart: 30 },
+	{ questionnaire: SurveyQuestionnaire.offboarding, dueInMonthsAfterStart: 36 },
+	{ questionnaire: SurveyQuestionnaire.offboarded_checkin, dueInMonthsAfterStart: 42 },
+	{ questionnaire: SurveyQuestionnaire.offboarded_checkin, dueInMonthsAfterStart: 48 },
+	{ questionnaire: SurveyQuestionnaire.offboarded_checkin, dueInMonthsAfterStart: 60 },
+	{ questionnaire: SurveyQuestionnaire.offboarded_checkin, dueInMonthsAfterStart: 72 },
+];
 
 export const ADMIN_STAGING_ACCOUNT: Prisma.AccountCreateInput = {
 	firebaseAuthUserId: 'V7t5fgxerMgVKiPZZTpsVCKIwW43',
@@ -147,6 +168,24 @@ async function main() {
 		await prisma.user.update({
 			where: { id: user.id },
 			data: { activeOrganizationId: organization.id },
+		});
+	}
+
+	for (const surveySchedule of recipientSurveys) {
+		await prisma.surveySchedule.upsert({
+			where: {
+				questionnaire_dueInMonthsAfterStart_programId: {
+					questionnaire: surveySchedule.questionnaire,
+					dueInMonthsAfterStart: surveySchedule.dueInMonthsAfterStart,
+					programId: program.id,
+				},
+			},
+			update: {},
+			create: {
+				questionnaire: surveySchedule.questionnaire,
+				dueInMonthsAfterStart: surveySchedule.dueInMonthsAfterStart,
+				program: { connect: { id: program.id } },
+			},
 		});
 	}
 
