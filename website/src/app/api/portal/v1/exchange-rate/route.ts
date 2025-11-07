@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
  *   type: apiKey
  *   in: header
  *   name: x-api-key
+ * @response 201 - Exchange rates imported successfully
  * @openapi
  */
 export async function POST(request: NextRequest) {
@@ -21,7 +22,7 @@ export async function POST(request: NextRequest) {
 
 	try {
 		await service.import();
-		return NextResponse.json(null, { status: 204 });
+		return NextResponse.json(null, { status: 201 });
 	} catch (error) {
 		console.error('Error during exchange rate import:', error);
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
