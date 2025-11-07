@@ -74,7 +74,10 @@ export class ExchangeRateImportService extends BaseService {
 	private async fetchAndStoreExchangeRates(dt: DateTime): Promise<ServiceResult<ExchangeRateResponse>> {
 		try {
 			const rates = await this.fetchExchangeRates(dt);
-			await this.storeExchangeRates(rates);
+			const storeResult = await this.storeExchangeRates(rates);
+			if (!storeResult.success) {
+				return this.resultFail(storeResult.error, storeResult.status);
+			}
 			console.info('Ingested exchange rates for: ', dt.toISODate());
 			return this.resultOk(rates);
 		} catch (error) {
