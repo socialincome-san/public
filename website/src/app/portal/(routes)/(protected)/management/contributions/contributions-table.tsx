@@ -1,54 +1,61 @@
 'use client';
 
 import { Alert, AlertDescription, AlertTitle } from '@/app/portal/components/alert';
-import { makeContributorColumns } from '@/app/portal/components/data-table/columns/contributors';
+import { makeContributionsColumns } from '@/app/portal/components/data-table/columns/contributions';
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
-import { ContributorTableViewRow } from '@socialincome/shared/src/database/services/contributor/contributor.types';
+import { ContributionTableViewRow } from '@socialincome/shared/src/database/services/contribution/contribution.types';
 import { useState } from 'react';
-import ContributorsForm from './contributors-form';
+import ContributionForm from './contribution-form';
 
-export default function ContributorsTable({ rows, error }: { rows: ContributorTableViewRow[]; error: string | null }) {
+export default function ContributionsTable({
+	rows,
+	error,
+	readOnly,
+}: {
+	rows: ContributionTableViewRow[];
+	error: string | null;
+	readOnly: boolean;
+}) {
 	const [open, setOpen] = useState(false);
 	const [hasError, setHasError] = useState(false);
-	const [contributorId, setContributorId] = useState<string | undefined>(undefined);
-	const readOnly = rows.some((r) => r.permission === 'readonly');
+	const [contributionId, setContributionId] = useState<string | undefined>(undefined);
 
-	const openEditForm = (row: ContributorTableViewRow) => {
-		setContributorId(row.id);
+	const openEditForm = (row: ContributionTableViewRow) => {
+		setContributionId(row.id);
 		setHasError(false);
 		setOpen(true);
 	};
 
 	const onError = (error: unknown) => {
 		setHasError(true);
-		console.error('Contributor Form Error: ', error);
+		console.error('Contribution Form Error: ', error);
 	};
 
 	return (
 		<>
 			<DataTable
-				title="Contributors"
+				title="Contributions"
 				error={error}
-				emptyMessage="No contributors found"
+				emptyMessage="No contribution found"
 				data={rows}
-				makeColumns={makeContributorColumns}
+				makeColumns={makeContributionsColumns}
 				onRowClick={openEditForm}
 			/>
 
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-[425px]">
 					<DialogHeader>
-						<DialogTitle>{readOnly ? 'View' : 'Edit'} Contributor</DialogTitle>
+						<DialogTitle>{readOnly ? 'View' : 'Edit'} Contribution</DialogTitle>
 					</DialogHeader>
 					{hasError && (
 						<Alert variant="destructive">
 							<AlertTitle>Error</AlertTitle>
-							<AlertDescription>Error saving contributor</AlertDescription>
+							<AlertDescription>Error saving contribution</AlertDescription>
 						</Alert>
 					)}
-					<ContributorsForm
-						contributorId={contributorId}
+					<ContributionForm
+						contributionId={contributionId}
 						onSuccess={() => setOpen(false)}
 						onCancel={() => setOpen(false)}
 						onError={onError}

@@ -41,7 +41,7 @@ export default function CampaignsForm({
 	}, [campaignId]);
 
 	useEffect(() => {
-		// load options for program and local partners
+		// load options for program
 		startTransition(async () => {
 			const programs = await getProgramsOptions();
 			if (!programs.success) return;
