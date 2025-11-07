@@ -45,6 +45,8 @@ jobs:
           echo "${{ env.ENVIRONMENT }}" > secrets/APP_ENVIRONMENT
           echo "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" > secrets/APP_BUILD_TIMESTAMP
           echo "${{ secrets.TF_PROD_BASE_URL }}" > secrets/BASE_URL
+          echo "${{ secrets.TF_PROD_EXCHANGE_RATES_API }}" > secrets/EXCHANGE_RATES_API
+          echo "${{ secrets.TF_PROD_EXCHANGE_RATES_IMPORT_API }}" > secrets/EXCHANGE_RATES_IMPORT_API
           echo "${{ secrets.TF_PROD_FIREBASE_DATABASE_URL }}" > secrets/FIREBASE_DATABASE_URL
           echo "${{ secrets.TF_PROD_FIREBASE_SERVICE_ACCOUNT_JSON }}" > secrets/FIREBASE_SERVICE_ACCOUNT_JSON
           echo "${{ secrets.TF_PROD_GITHUB_PAT }}" > secrets/GITHUB_PAT
