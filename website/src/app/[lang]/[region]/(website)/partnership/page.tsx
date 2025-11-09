@@ -1,11 +1,11 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { Hero } from './(sections)/hero';
-import { Contact } from './(sections)/contact';
-import { UspCards } from './(sections)/usp-cards';
-import { OrgsPartnershipTitle } from './(sections)/orgs-partnership-title';
-import { OrgsPartnershipCarousel } from './(sections)/orgs-partnership-carousel';
 import { BaseContainer } from '@socialincome/ui';
+import { Contact } from './(sections)/contact';
+import { Hero } from './(sections)/hero';
+import { OrgsPartnershipCarousel } from './(sections)/orgs-partnership-carousel';
+import { OrgsPartnershipTitle } from './(sections)/orgs-partnership-title';
 import { PartnershipModels } from './(sections)/partnership-models';
+import { UspCards } from './(sections)/usp-cards';
 
 export default async function Page(props: DefaultPageProps) {
 	const params = await props.params;

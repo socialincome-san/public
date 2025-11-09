@@ -9,7 +9,7 @@ export async function OrgsPartnershipTitle({ lang }: DefaultParams) {
 	});
 
 	return (
-		<div className="mx-auto pt-10 flex w-4/5 flex-col items-center justify-center md:mb-20 lg:w-4/5">
+		<div className="mx-auto flex w-4/5 flex-col items-center justify-center pt-10 md:mb-20 lg:w-4/5">
 			<Typography weight="medium" className="mb-12 text-center text-3xl sm:text-4xl md:text-4xl">
 				{translator.t('partner-carousel.title')}
 			</Typography>

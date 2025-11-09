@@ -1,6 +1,21 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { Badge, Card, CardHeader, CardTitle, CardContent, CardFooter, Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, Separator, Typography, Button } from '@socialincome/ui';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
+import {
+	Badge,
+	Button,
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+	Separator,
+	Typography,
+} from '@socialincome/ui';
 
 export async function PartnershipModels({ lang }: DefaultParams) {
 	const translator = await Translator.getInstance({
@@ -15,7 +30,7 @@ export async function PartnershipModels({ lang }: DefaultParams) {
 					{translator.t('partnership-models.title')}
 				</Typography>
 			</div>
-			<div className="w-full max-w-7xl grid grid-cols-1 gap-6 justify-items-center md:grid-cols-3">
+			<div className="grid w-full max-w-7xl grid-cols-1 justify-items-center gap-6 md:grid-cols-3">
 				{/* Card 1 */}
 				<Dialog>
 					<DialogTrigger className="text-left">
@@ -25,14 +40,14 @@ export async function PartnershipModels({ lang }: DefaultParams) {
 									<Typography size="2xl" weight="medium">
 										{translator.t('partnership-models.card-4-title')}
 									</Typography>
-									<Badge size="md" variant="interactive-accent">{translator.t('partnership-models.badge')}</Badge>
+									<Badge size="md" variant="interactive-accent">
+										{translator.t('partnership-models.badge')}
+									</Badge>
 								</CardTitle>
 							</CardHeader>
 							<Separator className="bg-primary mt-4 bg-opacity-30" />
 							<CardContent className="my-4 p-0">
-								<Typography size="lg">
-									{translator.t('partnership-models.card-4-description')}
-								</Typography>
+								<Typography size="lg">{translator.t('partnership-models.card-4-description')}</Typography>
 							</CardContent>
 						</Card>
 					</DialogTrigger>
@@ -47,75 +62,49 @@ export async function PartnershipModels({ lang }: DefaultParams) {
 						</DialogHeader>
 
 						<div className="mt-4 overflow-x-auto">
-							<table className="w-full min-w-[1000px] max-w-none table-auto border-collapse text-left text-md">
+							<table className="text-md w-full min-w-[1000px] max-w-none table-auto border-collapse text-left">
 								<thead>
-								<tr className="border-b">
-									<th className="px-4 py-2 font-semibold">
-										{translator.t('partnership-models.card-4-dialog-header-1')}
-									</th>
-									<th className="px-4 py-2 font-semibold">
-										{translator.t('partnership-models.card-4-dialog-header-2')}
-									</th>
-									<th className="px-4 py-2 font-semibold">
-										{translator.t('partnership-models.card-4-dialog-header-3')}
-									</th>
-									<th className="px-4 py-2 font-semibold">
-										{translator.t('partnership-models.card-4-dialog-header-4')}
-									</th>
-								</tr>
+									<tr className="border-b">
+										<th className="px-4 py-2 font-semibold">
+											{translator.t('partnership-models.card-4-dialog-header-1')}
+										</th>
+										<th className="px-4 py-2 font-semibold">
+											{translator.t('partnership-models.card-4-dialog-header-2')}
+										</th>
+										<th className="px-4 py-2 font-semibold">
+											{translator.t('partnership-models.card-4-dialog-header-3')}
+										</th>
+										<th className="px-4 py-2 font-semibold">
+											{translator.t('partnership-models.card-4-dialog-header-4')}
+										</th>
+									</tr>
 								</thead>
 								<tbody>
-								<tr className="border-b border-muted">
-									<td className="px-4 py-2 font-bold">
-										{translator.t('partnership-models.card-4-dialog-row-1a')}
-									</td>
-									<td className="px-4 py-2">
-										{translator.t('partnership-models.card-4-dialog-row-1b')}
-									</td>
-									<td className="px-4 py-2">
-										{translator.t('partnership-models.card-4-dialog-row-1c')}
-									</td>
-									<td className="px-4 py-2">
-										{translator.t('partnership-models.card-4-dialog-row-1d')}
-									</td>
-								</tr>
-								<tr className="border-b border-muted">
-									<td className="px-4 py-2 font-bold">
-										{translator.t('partnership-models.card-4-dialog-row-2a')}
-									</td>
-									<td className="px-4 py-2">
-										{translator.t('partnership-models.card-4-dialog-row-2b')}
-									</td>
-									<td className="px-4 py-2">
-										{translator.t('partnership-models.card-4-dialog-row-2c')}
-									</td>
-									<td className="px-4 py-2">
-										{translator.t('partnership-models.card-4-dialog-row-2d')}
-									</td>
-								</tr>
-								<tr>
-									<td className="px-4 py-2 font-bold">
-										{translator.t('partnership-models.card-4-dialog-row-3a')}
-									</td>
-									<td className="px-4 py-2">
-										{translator.t('partnership-models.card-4-dialog-row-3b')}
-									</td>
-									<td className="px-4 py-2">
-										{translator.t('partnership-models.card-4-dialog-row-3c')}
-									</td>
-									<td className="px-4 py-2">
-										{translator.t('partnership-models.card-4-dialog-row-3d')}
-									</td>
-								</tr>
+									<tr className="border-muted border-b">
+										<td className="px-4 py-2 font-bold">{translator.t('partnership-models.card-4-dialog-row-1a')}</td>
+										<td className="px-4 py-2">{translator.t('partnership-models.card-4-dialog-row-1b')}</td>
+										<td className="px-4 py-2">{translator.t('partnership-models.card-4-dialog-row-1c')}</td>
+										<td className="px-4 py-2">{translator.t('partnership-models.card-4-dialog-row-1d')}</td>
+									</tr>
+									<tr className="border-muted border-b">
+										<td className="px-4 py-2 font-bold">{translator.t('partnership-models.card-4-dialog-row-2a')}</td>
+										<td className="px-4 py-2">{translator.t('partnership-models.card-4-dialog-row-2b')}</td>
+										<td className="px-4 py-2">{translator.t('partnership-models.card-4-dialog-row-2c')}</td>
+										<td className="px-4 py-2">{translator.t('partnership-models.card-4-dialog-row-2d')}</td>
+									</tr>
+									<tr>
+										<td className="px-4 py-2 font-bold">{translator.t('partnership-models.card-4-dialog-row-3a')}</td>
+										<td className="px-4 py-2">{translator.t('partnership-models.card-4-dialog-row-3b')}</td>
+										<td className="px-4 py-2">{translator.t('partnership-models.card-4-dialog-row-3c')}</td>
+										<td className="px-4 py-2">{translator.t('partnership-models.card-4-dialog-row-3d')}</td>
+									</tr>
 								</tbody>
 							</table>
 						</div>
 
 						<div className="mt-6 flex justify-end">
 							<a href="mailto:hello@socialincome.org?subject=Partner%27s%20Circle">
-								<Button>
-									{translator.t('partnership-models.card-4-dialog-button')}
-								</Button>
+								<Button>{translator.t('partnership-models.card-4-dialog-button')}</Button>
 							</a>
 						</div>
 					</DialogContent>
@@ -134,11 +123,9 @@ export async function PartnershipModels({ lang }: DefaultParams) {
 							</CardHeader>
 							<Separator className="bg-primary mt-4 bg-opacity-30" />
 							<CardContent className="my-4 p-0">
-								<Typography size="lg">
-									{translator.t('partnership-models.card-2-description')}
-								</Typography>
+								<Typography size="lg">{translator.t('partnership-models.card-2-description')}</Typography>
 							</CardContent>
-							<CardFooter className="p-0 pt-2 flex flex-wrap gap-2">
+							<CardFooter className="flex flex-wrap gap-2 p-0 pt-2">
 								<Badge variant="interactive">{translator.t('partnership-models.badge-google')}</Badge>
 								<Badge variant="interactive">{translator.t('partnership-models.badge-github')}</Badge>
 								<Badge variant="interactive">{translator.t('partnership-models.badge-jetbrains')}</Badge>
@@ -147,7 +134,7 @@ export async function PartnershipModels({ lang }: DefaultParams) {
 						</Card>
 					</DialogTrigger>
 
-					<DialogContent className="bg-background h-[40vh] w-11/12 rounded-3xl border-none p-0 sm:min-w-[500px] md:min-w-[650px] flex flex-col">
+					<DialogContent className="bg-background flex h-[40vh] w-11/12 flex-col rounded-3xl border-none p-0 sm:min-w-[500px] md:min-w-[650px]">
 						{/* Scrollable content area */}
 						<div className="flex-1 overflow-y-auto px-6 pt-6">
 							<DialogHeader>
@@ -158,19 +145,15 @@ export async function PartnershipModels({ lang }: DefaultParams) {
 								</DialogTitle>
 							</DialogHeader>
 							<div className="mt-4">
-								<Typography size="xl">
-									{translator.t('partnership-models.card-2-dialog-text')}
-								</Typography>
+								<Typography size="xl">{translator.t('partnership-models.card-2-dialog-text')}</Typography>
 							</div>
 						</div>
 
 						{/* Fixed button footer */}
-						<div className="px-6 py-4 border-t border-muted">
+						<div className="border-muted border-t px-6 py-4">
 							<div className="flex justify-end">
 								<a href="mailto:hello@socialincome.org?subject=In-Kind%20Donation">
-									<Button>
-										{translator.t('partnership-models.card-4-dialog-button')}
-									</Button>
+									<Button>{translator.t('partnership-models.card-4-dialog-button')}</Button>
 								</a>
 							</div>
 						</div>
@@ -190,9 +173,7 @@ export async function PartnershipModels({ lang }: DefaultParams) {
 							</CardHeader>
 							<Separator className="bg-primary mt-4 bg-opacity-30" />
 							<CardContent className="my-4 p-0">
-								<Typography size="lg">
-									{translator.t('partnership-models.card-3-description')}
-								</Typography>
+								<Typography size="lg">{translator.t('partnership-models.card-3-description')}</Typography>
 							</CardContent>
 							<CardFooter className="p-0 pt-2">
 								<Typography size="sm">{translator.t('partnership-models.card-3-footnote')}</Typography>
@@ -200,7 +181,7 @@ export async function PartnershipModels({ lang }: DefaultParams) {
 						</Card>
 					</DialogTrigger>
 
-					<DialogContent className="bg-background h-[40vh] w-11/12 rounded-3xl border-none p-0 sm:min-w-[500px] md:min-w-[650px] flex flex-col">
+					<DialogContent className="bg-background flex h-[40vh] w-11/12 flex-col rounded-3xl border-none p-0 sm:min-w-[500px] md:min-w-[650px]">
 						{/* Scrollable content area */}
 						<div className="flex-1 overflow-y-auto px-6 pt-6">
 							<DialogHeader>
@@ -211,25 +192,20 @@ export async function PartnershipModels({ lang }: DefaultParams) {
 								</DialogTitle>
 							</DialogHeader>
 							<div className="mt-4">
-								<Typography size="xl">
-									{translator.t('partnership-models.card-3-dialog-text')}
-								</Typography>
+								<Typography size="xl">{translator.t('partnership-models.card-3-dialog-text')}</Typography>
 							</div>
 						</div>
 
 						{/* Fixed button footer */}
-						<div className="px-6 py-4 border-t border-muted">
+						<div className="border-muted border-t px-6 py-4">
 							<div className="flex justify-end">
 								<a href="https://socialincome.org/newsletter">
-									<Button>
-										{translator.t('partnership-models.card-3-dialog-button')}
-									</Button>
+									<Button>{translator.t('partnership-models.card-3-dialog-button')}</Button>
 								</a>
 							</div>
 						</div>
 					</DialogContent>
 				</Dialog>
-
 			</div>
 		</div>
 	);

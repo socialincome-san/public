@@ -4,12 +4,12 @@ import { useScreenSize } from '@/lib/hooks/useScreenSize';
 import { Carousel, CarouselContent } from '@socialincome/ui';
 import Image from 'next/image';
 import Link from 'next/link';
-import googlenonprofitSVG from '../(assets)/googlenonprofit.svg';
 import githubSVG from '../(assets)/github.svg';
+import googlenonprofitSVG from '../(assets)/googlenonprofit.svg';
 import govSVG from '../(assets)/gov.svg';
-import smartiveSVG from '../(assets)/smartive.svg';
 import microsoftSVG from '../(assets)/microsoft.svg';
 import milkSVG from '../(assets)/milk.svg';
+import smartiveSVG from '../(assets)/smartive.svg';
 
 export function OrgsPartnershipCarousel() {
 	const screenSize = useScreenSize();
