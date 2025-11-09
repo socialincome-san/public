@@ -23,7 +23,7 @@ export default async function DonationCertificatesPage() {
 			emptyMessage="No donation certificates found"
 			data={certificateRows}
 			makeColumns={makeDonationCertificateColumns}
-			actions={<Button>Upload new certificate</Button>}
+			actions={<Button>Generate Donation Certificates</Button>}
 		/>
 	);
 }

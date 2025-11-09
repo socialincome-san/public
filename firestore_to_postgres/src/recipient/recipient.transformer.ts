@@ -16,29 +16,55 @@ export class RecipientTransformer extends BaseTransformer<FirestoreRecipientWith
 
 			const legacyPartnerId = raw.organisation?.id.split('/').pop();
 
-			const communicationPhone = raw.communication_mobile_phone?.phone
-				? {
-						connectOrCreate: {
-							where: { number: raw.communication_mobile_phone.phone.toString() },
-							create: {
-								number: raw.communication_mobile_phone.phone.toString(),
-								hasWhatsApp: raw.communication_mobile_phone.has_whatsapp,
-							},
-						},
-					}
-				: undefined;
+			const mappedCommunicationPhone = this.mapPhoneNumber(raw.communication_mobile_phone?.phone);
 
-			const paymentPhone = raw.mobile_money_phone?.phone
-				? {
-						connectOrCreate: {
-							where: { number: raw.mobile_money_phone.phone.toString() },
-							create: {
-								number: raw.mobile_money_phone.phone.toString(),
-								hasWhatsApp: raw.mobile_money_phone.has_whatsapp,
+			const communicationPhone =
+				mappedCommunicationPhone !== null
+					? {
+							connectOrCreate: {
+								where: { number: mappedCommunicationPhone },
+								create: {
+									number: mappedCommunicationPhone,
+									hasWhatsApp: raw.communication_mobile_phone?.has_whatsapp ?? false,
+								},
 							},
+						}
+					: undefined;
+
+			const mappedPaymentPhone = this.mapPhoneNumber(raw.mobile_money_phone?.phone);
+			let paymentPhone;
+
+			if (!mappedPaymentPhone) {
+				const isStaging = process.env.FIREBASE_DATABASE_URL?.includes('staging');
+
+				if (!isStaging) {
+					throw new Error(
+						`[RecipientTransformer] Missing mobile_money_phone for recipient ${raw.id} (production only).`,
+					);
+				}
+
+				const placeholder = `+0000000000-PLACEHOLDER-${raw.id}`;
+				console.log(
+					`💡 Missing mobile_money_phone for recipient ${raw.id} → using placeholder ${placeholder} (staging only).`,
+				);
+
+				paymentPhone = {
+					connectOrCreate: {
+						where: { number: placeholder },
+						create: { number: placeholder, hasWhatsApp: false },
+					},
+				};
+			} else {
+				paymentPhone = {
+					connectOrCreate: {
+						where: { number: mappedPaymentPhone },
+						create: {
+							number: mappedPaymentPhone,
+							hasWhatsApp: raw.mobile_money_phone?.has_whatsapp ?? false,
 						},
-					}
-				: undefined;
+					},
+				};
+			}
 
 			transformed.push({
 				legacyFirestoreId: raw.id,
@@ -117,5 +143,9 @@ export class RecipientTransformer extends BaseTransformer<FirestoreRecipientWith
 
 		const date = new Date(value);
 		return isNaN(date.getTime()) ? null : date;
+	}
+
+	private mapPhoneNumber(rawPhone: number | undefined): string | null {
+		return rawPhone ? `+${rawPhone}` : null;
 	}
 }

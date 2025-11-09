@@ -1,9 +1,12 @@
 import { ProgramPermission, Recipient, RecipientStatus } from '@prisma/client';
+import { FirebaseService } from '@socialincome/shared/src/firebase/services/auth.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccessService } from '../program-access/program-access.service';
 import {
+	PayoutRecipient,
 	RecipientCreateInput,
+	RecipientOption,
 	RecipientPayload,
 	RecipientTableView,
 	RecipientTableViewRow,
@@ -12,6 +15,7 @@ import {
 
 export class RecipientService extends BaseService {
 	private programAccessService = new ProgramAccessService();
+	private firebaseAuthService = new FirebaseService();
 
 	async create(userId: string, recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
 		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
@@ -20,13 +24,19 @@ export class RecipientService extends BaseService {
 			return this.resultFail(accessResult.error);
 		}
 
-		const hasAccess = accessResult.data.some((a) => a.programId === recipient.program.connect?.id);
+		const program = accessResult.data.find((a) => a.programId === recipient.program.connect?.id);
 
-		if (!hasAccess) {
+		if (!program || program.permission !== ProgramPermission.edit) {
 			return this.resultFail('Permission denied');
 		}
 
 		try {
+			const phoneNumber = recipient.paymentInformation?.create?.phone?.create?.number;
+			if (!phoneNumber) {
+				return this.resultFail('No phone number provided for recipient creation');
+			}
+
+			await this.firebaseAuthService.createByPhoneNumber(phoneNumber);
 			const newRecipient = await this.db.recipient.create({ data: recipient });
 			return this.resultOk(newRecipient);
 		} catch (error) {
@@ -42,9 +52,15 @@ export class RecipientService extends BaseService {
 			return this.resultFail(accessResult.error);
 		}
 
+		const program = accessResult.data.find((a) => a.programId === recipient.program?.connect?.id);
+
+		if (!program || program.permission !== ProgramPermission.edit) {
+			return this.resultFail('Permission denied');
+		}
+
 		const existing = await this.db.recipient.findUnique({
 			where: { id: recipient.id?.toString() },
-			select: { programId: true },
+			select: { programId: true, paymentInformation: { select: { phone: { select: { number: true } } } } },
 		});
 
 		if (!existing) {
@@ -58,6 +74,15 @@ export class RecipientService extends BaseService {
 		}
 
 		try {
+			const phoneNumber =
+				recipient.paymentInformation?.upsert?.update?.phone?.upsert?.update.number?.toString() ||
+				recipient.paymentInformation?.upsert?.create?.phone?.create?.number?.toString();
+
+			if (!phoneNumber || !existing.paymentInformation?.phone?.number) {
+				return this.resultFail('No phone number available for recipient update');
+			}
+
+			await this.firebaseAuthService.updateByPhoneNumber(existing.paymentInformation?.phone.number, phoneNumber);
 			const updatedRecipient = await this.db.recipient.update({
 				where: { id: recipient.id?.toString() },
 				data: recipient,
@@ -144,7 +169,7 @@ export class RecipientService extends BaseService {
 
 			const accessiblePrograms = accessResult.data;
 			if (accessiblePrograms.length === 0) {
-				return this.resultOk({ tableRows: [] });
+				return this.resultOk({ tableRows: [], permission: ProgramPermission.readonly });
 			}
 
 			const programIds = accessiblePrograms.map((p) => p.programId);
@@ -204,7 +229,11 @@ export class RecipientService extends BaseService {
 				};
 			});
 
-			return this.resultOk({ tableRows });
+			const globalPermission = accessiblePrograms.some((p) => p.permission === ProgramPermission.edit)
+				? ProgramPermission.edit
+				: ProgramPermission.readonly;
+
+			return this.resultOk({ tableRows, permission: globalPermission });
 		} catch (error) {
 			console.error(error);
 			return this.resultFail('Could not fetch recipients');
@@ -212,12 +241,123 @@ export class RecipientService extends BaseService {
 	}
 
 	async getTableViewProgramScoped(userId: string, programId: string): Promise<ServiceResult<RecipientTableView>> {
+		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+		if (!accessResult.success) {
+			return this.resultFail(accessResult.error);
+		}
+		const programAccess = accessResult.data.find((a) => a.programId === programId);
+
 		const base = await this.getTableView(userId);
 		if (!base.success) {
 			return base;
 		}
 
 		const filteredRows = base.data.tableRows.filter((row) => row.programId === programId);
-		return this.resultOk({ tableRows: filteredRows });
+		return this.resultOk({
+			tableRows: filteredRows,
+			permission: programAccess?.permission ?? ProgramPermission.readonly,
+		});
+	}
+
+	async getActivePayoutRecipients(userId: string): Promise<ServiceResult<PayoutRecipient[]>> {
+		try {
+			const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
+
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const accessiblePrograms = accessResult.data;
+			if (accessiblePrograms.length === 0) {
+				return this.resultFail('No accessible programs found');
+			}
+
+			const programIds = accessiblePrograms.map((p) => p.programId);
+
+			const recipients = await this.db.recipient.findMany({
+				where: {
+					programId: { in: programIds },
+					status: RecipientStatus.active,
+				},
+				select: {
+					id: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+						},
+					},
+					paymentInformation: {
+						select: {
+							code: true,
+							phone: { select: { number: true } },
+						},
+					},
+					program: {
+						select: {
+							payoutAmount: true,
+							payoutCurrency: true,
+							totalPayments: true,
+						},
+					},
+					payouts: {
+						select: {
+							paymentAt: true,
+							status: true,
+						},
+					},
+				},
+				orderBy: {
+					paymentInformation: { code: 'asc' },
+				},
+			});
+
+			const mapped: PayoutRecipient[] = recipients.map((r) => ({
+				id: r.id,
+				contact: r.contact,
+				paymentInformation: r.paymentInformation,
+				program: {
+					payoutAmount: Number(r.program.payoutAmount),
+					payoutCurrency: r.program.payoutCurrency,
+					totalPayments: r.program.totalPayments,
+				},
+				payouts: r.payouts,
+			}));
+
+			return this.resultOk(mapped);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch payout recipients');
+		}
+	}
+
+	async getEditableRecipientOptions(userId: string): Promise<ServiceResult<RecipientOption[]>> {
+		const access = await this.programAccessService.getAccessiblePrograms(userId);
+
+		if (!access.success) {
+			return this.resultFail(access.error);
+		}
+
+		const editablePrograms = access.data.filter((p) => p.permission === ProgramPermission.edit).map((p) => p.programId);
+
+		if (editablePrograms.length === 0) {
+			return this.resultOk([]);
+		}
+
+		const recipients = await this.db.recipient.findMany({
+			where: { programId: { in: editablePrograms } },
+			select: {
+				id: true,
+				contact: { select: { firstName: true, lastName: true } },
+			},
+			orderBy: [{ contact: { firstName: 'asc' } }],
+		});
+
+		const options = recipients.map((r) => ({
+			id: r.id,
+			fullName: `${r.contact.firstName} ${r.contact.lastName}`,
+		}));
+
+		return this.resultOk(options);
 	}
 }

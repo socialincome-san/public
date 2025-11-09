@@ -1,6 +1,5 @@
 'use client';
 
-import { ActionCell } from '@/app/portal/components/data-table/elements/action-cell';
 import { SortableHeader } from '@/app/portal/components/data-table/elements/sortable-header';
 import { TextCell } from '@/app/portal/components/data-table/elements/text-cell';
 import type { OrganizationMemberTableViewRow } from '@socialincome/shared/src/database/services/organization/organization.types';
@@ -32,12 +31,6 @@ export function makeOrganizationMemberColumns(): ColumnDef<OrganizationMemberTab
 			accessorKey: 'permission',
 			header: (ctx) => <SortableHeader ctx={ctx}>Permission</SortableHeader>,
 			cell: (ctx) => <TextCell ctx={ctx} />,
-		},
-		{
-			id: 'actions',
-			header: '',
-			enableSorting: false,
-			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
 }

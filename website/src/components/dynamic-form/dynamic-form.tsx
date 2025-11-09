@@ -1,5 +1,6 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/app/portal/components/accordion';
 import { Button } from '@/app/portal/components/button';
+import { Combobox } from '@/app/portal/components/combo-box';
 import { DatePicker } from '@/app/portal/components/date-picker';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/app/portal/components/form';
 import { Input } from '@/app/portal/components/input';
@@ -17,6 +18,7 @@ export type FormField = {
 	placeholder?: string;
 	zodSchema?: ZodTypeAny;
 	value?: any;
+	useCombobox?: boolean;
 };
 
 export type FormSchema = {
@@ -91,9 +93,10 @@ const DynamicForm: FC<{
 				if (!isFormField(field)) {
 					//nested
 					for (const [nestedName, nestedField] of Object.entries(field.fields)) {
-						if (isFormField(nestedField)) form.setValue(`${name}.${nestedName}`, nestedField.value);
+						if (isFormField(nestedField) && nestedField.value != null)
+							form.setValue(`${name}.${nestedName}`, nestedField.value);
 					}
-				} else {
+				} else if (field.value != null) {
 					form.setValue(name, field.value);
 				}
 			}
@@ -185,7 +188,7 @@ const DynamicForm: FC<{
 					)}
 					{onCancel && (
 						<Button variant="outline" onClick={onCancel}>
-							Cancel
+							{mode === 'readonly' ? 'Close' : 'Cancel'}
 						</Button>
 					)}
 				</div>
@@ -229,6 +232,24 @@ const GenericFormField = ({
 		return getType(key, zodSchema, parentOption) === 'ZodEnum' && def.values;
 	};
 
+	const getDateMinMax = (key: keyof z.infer<typeof zodSchema>, parentOption?: string): { min?: Date; max?: Date } => {
+		let def = getDef(key, zodSchema, parentOption);
+		if (isOptional(key, zodSchema, parentOption)) def = def.innerType._def;
+		const dateConstraints: { min?: Date; max?: Date } = {};
+
+		if (def.checks) {
+			for (const check of def.checks) {
+				if (check.kind === 'min') {
+					dateConstraints.min = new Date(check.value);
+				} else if (check.kind === 'max') {
+					dateConstraints.max = new Date(check.value);
+				}
+			}
+		}
+
+		return dateConstraints;
+	};
+
 	const label = `${formFieldSchema.label} ${!isOptional(option, zodSchema, parentOption) ? '*' : ''}`;
 
 	// set selected value if only one option available
@@ -254,7 +275,7 @@ const GenericFormField = ({
 								<Label>{label}</Label>
 								<FormControl>
 									<Input
-										placeholder={formFieldSchema.placeholder}
+										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
 										{...form.register(optionKey)}
 										disabled={isLoading || readOnly}
 									/>
@@ -279,6 +300,9 @@ const GenericFormField = ({
 										{...form.register(optionKey)}
 										onSelect={field.onChange}
 										selected={field.value}
+										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
+										startMonth={getDateMinMax(option, parentOption).min}
+										endMonth={getDateMinMax(option, parentOption).max}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -286,7 +310,35 @@ const GenericFormField = ({
 						)}
 					/>
 				);
-			case 'ZodEnum':
+			case 'ZodEnum': {
+				const enumValues = Object.entries(getEnumValues(option, parentOption));
+				const items = enumValues.map(([label, value]) => ({ id: value, label }));
+
+				if (formFieldSchema.useCombobox) {
+					return (
+						<FormField
+							control={form.control}
+							name={optionKey}
+							key={optionKey}
+							render={({ field }) => (
+								<FormItem>
+									<Label>{label}</Label>
+									<FormControl>
+										<Combobox
+											options={items}
+											value={field.value ?? ''}
+											onChange={field.onChange}
+											placeholder={formFieldSchema.placeholder}
+											disabled={isLoading || readOnly}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					);
+				}
+
 				return (
 					<FormField
 						control={form.control}
@@ -298,13 +350,13 @@ const GenericFormField = ({
 								<Select value={field.value} onValueChange={field.onChange} disabled={isLoading || readOnly}>
 									<FormControl>
 										<SelectTrigger>
-											<SelectValue placeholder={formFieldSchema.placeholder} />
+											<SelectValue placeholder={readOnly ? '-' : formFieldSchema.placeholder} />
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent {...form.register(optionKey)}>
-										{Object.entries(getEnumValues(option, parentOption)).map(([label, id]) => (
-											<SelectItem value={id} key={id}>
-												{label}
+										{items.map((item) => (
+											<SelectItem value={item.id} key={item.id}>
+												{item.label}
 											</SelectItem>
 										))}
 									</SelectContent>
@@ -314,7 +366,7 @@ const GenericFormField = ({
 						)}
 					/>
 				);
-
+			}
 			case 'ZodBoolean':
 				return (
 					<FormField
@@ -330,6 +382,32 @@ const GenericFormField = ({
 									onCheckedChange={field.onChange}
 									checked={field.value}
 								/>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				);
+
+			case 'ZodNumber':
+				return (
+					<FormField
+						control={form.control}
+						name={optionKey}
+						key={optionKey}
+						render={({ field }) => (
+							<FormItem>
+								<Label>{label}</Label>
+								<FormControl>
+									<Input
+										type="number"
+										placeholder={readOnly ? '-' : formFieldSchema.placeholder}
+										{...form.register(optionKey, {
+											// avoid NaN when input is empty, see https://github.com/orgs/react-hook-form/discussions/6980#discussioncomment-1785009
+											setValueAs: (v) => (v === '' ? null : parseInt(v, 10)),
+										})}
+										disabled={isLoading || readOnly}
+									/>
+								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}

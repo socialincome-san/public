@@ -1,10 +1,153 @@
+import { Contributor } from '@prisma/client';
+import { FirebaseService } from '../../../firebase/services/auth.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
-import { ContributorTableView, ContributorTableViewRow } from './contributor.types';
+import {
+	ContributorOption,
+	ContributorPayload,
+	ContributorTableView,
+	ContributorTableViewRow,
+	ContributorUpdateInput,
+} from './contributor.types';
 
 export class ContributorService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
+	private firebaseAuthService = new FirebaseService();
+
+	async get(userId: string, contributorId: string): Promise<ServiceResult<ContributorPayload>> {
+		try {
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+
+			const contributor = await this.db.contributor.findUnique({
+				where: {
+					id: contributorId,
+					contributions: {
+						some: {
+							campaign: { organizationId: activeOrgResult.data.id },
+						},
+					},
+				},
+				select: {
+					id: true,
+					contact: {
+						select: {
+							id: true,
+							firstName: true,
+							lastName: true,
+							gender: true,
+							callingName: true,
+							email: true,
+							language: true,
+							phone: true,
+							profession: true,
+							dateOfBirth: true,
+							address: true,
+						},
+					},
+					referral: true,
+					paymentReferenceId: true,
+					stripeCustomerId: true,
+				},
+			});
+
+			if (!contributor) {
+				return this.resultFail('Contributor not found');
+			}
+
+			return this.resultOk(contributor);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not get contributor');
+		}
+	}
+
+	async update(userId: string, contributor: ContributorUpdateInput): Promise<ServiceResult<Contributor>> {
+		try {
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+
+			if (activeOrgResult.data.permission !== 'edit') {
+				return this.resultFail('No permissions to update contributor');
+			}
+
+			const existing = await this.db.contributor.findUnique({
+				where: { id: contributor.id?.toString() },
+				select: { account: true },
+			});
+
+			if (!existing) {
+				return this.resultFail('Contributor not found');
+			}
+
+			if (!contributor.contact?.update?.data?.email) {
+				return this.resultFail('Contributor email is required');
+			}
+
+			try {
+				await this.firebaseAuthService.updateByUid(existing.account.firebaseAuthUserId, {
+					email: contributor.contact?.update?.data?.email?.toString() ?? undefined,
+				});
+			} catch (error) {
+				// for now, dont fail the update if firebase user cannot be updated, because there is no auth user for every contributor
+				console.warn('Could not update Firebase Auth user for contributor:', error);
+			}
+
+			const updatedContributor = await this.db.contributor.update({
+				where: { id: contributor.id?.toString() },
+				data: contributor,
+			});
+
+			return this.resultOk(updatedContributor);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not update contributor');
+		}
+	}
+
+	async getOptions(userId: string): Promise<ServiceResult<ContributorOption[]>> {
+		try {
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+
+			const contributors = await this.db.contributor.findMany({
+				where: {
+					contributions: {
+						some: {
+							campaign: { organizationId: activeOrgResult.data.id },
+						},
+					},
+				},
+				select: {
+					id: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+						},
+					},
+				},
+				orderBy: { contact: { firstName: 'asc' } },
+			});
+
+			const options: ContributorOption[] = contributors.map((contributor) => ({
+				id: contributor.id,
+				name: `${contributor.contact?.firstName ?? ''} ${contributor.contact?.lastName ?? ''}`.trim(),
+			}));
+
+			return this.resultOk(options);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch contributor options');
+		}
+	}
 
 	async getTableView(userId: string): Promise<ServiceResult<ContributorTableView>> {
 		try {

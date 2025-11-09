@@ -1,6 +1,5 @@
 'use client';
 
-import { ActionCell } from '@/app/portal/components/data-table/elements/action-cell';
 import { ProgressCell } from '@/app/portal/components/data-table/elements/progress-cell';
 import { SortableHeader } from '@/app/portal/components/data-table/elements/sortable-header';
 import { StatusCell } from '@/app/portal/components/data-table/elements/status-cell';
@@ -52,12 +51,6 @@ export function makeOngoingPayoutColumns(): ColumnDef<OngoingPayoutTableViewRow>
 			header: (ctx) => <SortableHeader ctx={ctx}>{getMonthLabelFromData(ctx, 2)}</SortableHeader>,
 			accessorFn: (row) => row.last3Months[2]?.status,
 			cell: (ctx) => <StatusCell ctx={ctx} variant="payout" />,
-		},
-		{
-			id: 'actions',
-			header: '',
-			enableSorting: false,
-			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
 }

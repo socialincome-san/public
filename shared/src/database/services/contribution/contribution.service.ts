@@ -1,10 +1,104 @@
+import { Contribution } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
-import { ContributionTableView, ContributionTableViewRow } from './contribution.types';
+import {
+	ContributionPayload,
+	ContributionTableView,
+	ContributionTableViewRow,
+	ContributionUpdateInput,
+} from './contribution.types';
 
 export class ContributionService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
+
+	async get(userId: string, contributionId: string): Promise<ServiceResult<ContributionPayload>> {
+		try {
+			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const contribution = await this.db.contribution.findUnique({
+				where: {
+					id: contributionId,
+				},
+				select: {
+					id: true,
+					amount: true,
+					currency: true,
+					amountChf: true,
+					feesChf: true,
+					status: true,
+					contributor: {
+						select: {
+							id: true,
+						},
+					},
+					campaign: {
+						select: {
+							id: true,
+							organizationId: true,
+						},
+					},
+				},
+			});
+
+			if (!contribution) {
+				return this.resultFail('Contribution not found');
+			}
+
+			if (contribution.campaign.organizationId !== accessResult.data.id) {
+				return this.resultFail('Permission denied');
+			}
+
+			// convert decimal fields to number
+			return this.resultOk({
+				...contribution,
+				amount: Number(contribution.amount),
+				amountChf: Number(contribution.amount),
+				feesChf: Number(contribution.amount),
+			});
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch contribution');
+		}
+	}
+
+	async update(userId: string, contribution: ContributionUpdateInput): Promise<ServiceResult<Contribution>> {
+		try {
+			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			if (accessResult.data.permission !== 'edit') {
+				return this.resultFail('No permissions to create campaign');
+			}
+
+			const existing = await this.db.contribution.findUnique({
+				where: { id: contribution.id?.toString() },
+				select: {
+					campaign: { select: { organizationId: true } },
+				},
+			});
+
+			if (!existing || existing.campaign.organizationId !== accessResult.data.id) {
+				return this.resultFail('Permission denied');
+			}
+
+			const updatedContribution = await this.db.contribution.update({
+				where: { id: contribution.id?.toString() },
+				data: contribution,
+			});
+
+			return this.resultOk(updatedContribution);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not update contribution');
+		}
+	}
 
 	async getTableView(userId: string): Promise<ServiceResult<ContributionTableView>> {
 		try {
@@ -57,10 +151,9 @@ export class ContributionService extends BaseService {
 				campaignTitle: c.campaign?.title ?? '',
 				programName: c.campaign?.program?.name ?? null,
 				createdAt: c.createdAt,
-				permission,
 			}));
 
-			return this.resultOk({ tableRows });
+			return this.resultOk({ tableRows, permission: permission });
 		} catch (error) {
 			console.error(error);
 			return this.resultFail('Could not fetch contributions');

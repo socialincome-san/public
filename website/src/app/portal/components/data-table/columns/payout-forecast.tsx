@@ -1,6 +1,5 @@
 'use client';
 
-import { ActionCell } from '@/app/portal/components/data-table/elements/action-cell';
 import { CurrencyCell } from '@/app/portal/components/data-table/elements/currency-cell';
 import { SortableHeader } from '@/app/portal/components/data-table/elements/sortable-header';
 import { TextCell } from '@/app/portal/components/data-table/elements/text-cell';
@@ -34,12 +33,6 @@ export function makePayoutForecastColumns(): ColumnDef<PayoutForecastTableViewRo
 			header: (ctx) => <SortableHeader ctx={ctx}>Amount (USD)</SortableHeader>,
 			accessorFn: (row) => row.amountUsd,
 			cell: (ctx) => <CurrencyCell ctx={ctx} currency="USD" />,
-		},
-		{
-			id: 'actions',
-			header: '',
-			enableSorting: false,
-			cell: (ctx) => <ActionCell ctx={ctx} />,
 		},
 	];
 }

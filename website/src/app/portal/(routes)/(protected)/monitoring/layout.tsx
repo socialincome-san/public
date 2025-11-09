@@ -15,7 +15,7 @@ export default async function MonitoringLayout({ children }: MonitoringLayoutPro
 	];
 
 	const sections = [
-		{ href: `/portal/monitoring/payouts`, label: 'Payouts' },
+		{ href: `/portal/monitoring/payout-confirmation`, label: 'Payout Confirmation' },
 		{ href: `/portal/monitoring/upcoming-surveys`, label: 'Upcoming Surveys' },
 	];
 
