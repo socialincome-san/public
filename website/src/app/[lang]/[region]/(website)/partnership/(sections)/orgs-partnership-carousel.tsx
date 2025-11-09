@@ -4,26 +4,22 @@ import { useScreenSize } from '@/lib/hooks/useScreenSize';
 import { Carousel, CarouselContent } from '@socialincome/ui';
 import Image from 'next/image';
 import Link from 'next/link';
-import epflSVG from '../(assets)/epfl.svg';
+import googlenonprofitSVG from '../(assets)/googlenonprofit.svg';
 import githubSVG from '../(assets)/github.svg';
 import govSVG from '../(assets)/gov.svg';
-import mckinseySVG from '../(assets)/mckinsey.svg';
+import smartiveSVG from '../(assets)/smartive.svg';
 import microsoftSVG from '../(assets)/microsoft.svg';
 import milkSVG from '../(assets)/milk.svg';
-import srgSVG from '../(assets)/srg.svg';
-import unSVG from '../(assets)/un.svg';
 
 export function OrgsPartnershipCarousel() {
 	const screenSize = useScreenSize();
 
 	const companyLogos = [
 		{ logo: govSVG, name: 'FDFA', url: 'https://www.fdfa.admin.ch' },
+		{ logo: smartiveSVG, name: 'Smartive', url: 'https://smartive.ch' },
+		{ logo: googlenonprofitSVG, name: 'Google Nonprofit', url: 'https://www.google.com/nonprofits/' },
+		{ logo: githubSVG, name: 'GitHub', url: 'https://github.com' },
 		{ logo: microsoftSVG, name: 'Microsoft', url: 'https://www.microsoft.com' },
-		{ logo: mckinseySVG, name: 'McKinsey', url: 'https://www.mckinsey.com' },
-		{ logo: unSVG, name: 'UN', url: 'https://www.un.org' },
-		{ logo: srgSVG, name: 'SRG', url: 'https://srf.ch' },
-		{ logo: epflSVG, name: 'EPFL', url: 'https://www.epfl.ch' },
-		{ logo: githubSVG, name: 'GITHUB', url: 'https://github.com' },
 		{ logo: milkSVG, name: 'Milk', url: 'https://milkinteractive.ch' },
 	];
 

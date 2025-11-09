@@ -1,0 +1,81 @@
+{
+	"hero": {
+		"title-1": [
+			{
+				"text": "Firewall ",
+				"color": "accent"
+			},
+			{
+				"text": "gegen extreme Armut"
+			}
+		],
+		"subtitle": "Werde Partner:in von Social Income und übernimm gesellschaftliche Verantwortung – mit einem Engagement, das wirkt und langfristig hilft, extreme Armut zu überwinden."
+	},
+
+	"usp": {
+		"section-title-1": "Warum eine Partnerschaft mit Social Income?",
+		"reason-title-1": "Direkte Wirkung",
+		"reason-description-1": "Deine Spende finanziert direkt innovative und wirkungsvolle Direktgeld-Programme für Menschen in extremer Armut. Direkte Geldtransfers sind wissenschaftlich belegt, effizient und stärken die Eigenständigkeit der Empfänger:innen.",
+		"reason-title-2": "Werte sichtbar machen",
+		"reason-description-2": "Zeige Mitarbeitenden, Partnern und Kund:innen, dass soziale Verantwortung für dich mehr als ein Schlagwort ist – und unterstütze konkrete Veränderungen im Kampf gegen Armut und Ungleichheit.",
+		"reason-title-3": "Flexible Zusammenarbeit",
+		"reason-description-3": "Beginne mit einer einfachen Spende oder entwickle dein eigenes Direktgeld-Programm – abgestimmt auf die Mission und Werte deiner Organisation.",
+		"reason-title-4": "Effizient & technologiegestützt",
+		"reason-description-4": "Social Income ist eine vollständig ehrenamtlich getragene Open-Source-Initiative mit minimalen Verwaltungskosten. So gelangen Spenden direkt als monatliche Zahlungen auf die Handys der Empfänger:innen.",
+		"section-title-2": "In guter Gesellschaft",
+		"section-title-3": "So kann deine Organisation etwas bewirken",
+		"section-3-option-1a": "Einmalspenden & Mitarbeiter-Matching:",
+		"section-3-option-1b": "Sorge heute für unmittelbare Wirkung.",
+		"section-3-option-2a": "Sachspenden:",
+		"section-3-option-2b": "Stelle Zeit oder Know-how deiner Mitarbeitenden zur Verfügung, um Social Income weiterzuentwickeln.",
+		"section-3-option-3a": "Eigenes Direktgeld-Programm:",
+		"section-3-option-3b": "«Adoptiere eine Gemeinschaft» und finanziere ein auf deine Organisation zugeschnittenes Cash-Transfer-Programm."
+	},
+
+	"partner-carousel": {
+		"title": "Unsere Partner gegen Armut",
+		"subtitle": "Jede Partnerschaft nimmt ihre eigene Form an – doch alle verfolgen dasselbe Ziel: Armut dort zu bekämpfen, wo sie am härtesten trifft. Einige unterstützen mit finanziellen Mitteln, andere mit Fachwissen oder Software für unsere Open-Source-Plattform."
+	},
+
+	"partnership-models": {
+		"title": "Wie du mit deiner Organisation etwas bewirken kannst",
+		"badge": "Neu",
+		"badge-google": "Google",
+		"badge-jetbrains": "JetBrains",
+		"badge-github": "GitHub",
+		"badge-microsoft": "Microsoft",
+		"card-2-title": "Leiste eine Sachspende",
+		"card-2-description": "Unterstütze Social Income durch Sachleistungen wie Arbeitszeit deiner Mitarbeitenden oder kostenlose Softwarelizenzen.",
+		"card-2-dialog-text": "Wir erhalten Sachspenden von Google, GitHub, Codemagic, Linktree, Twilio, Algolia, JetBrains, Storyblok, 1Password, Mux, Sentry und Lineto.",
+		"card-3-title": "Starte ein Direktgeld-Programm",
+		"card-3-description": "Wähle ein Anliegen und finanziere ein Cash-Transfer-Programm, das eine ganze Gemeinschaft stärkt.",
+		"card-3-footnote": "Ab Dezember 2025",
+		"card-3-dialog-text": "Diese Option wird 2026 lanciert.",
+		"card-3-dialog-button": "Mich auf dem Laufenden halten",
+		"card-4-title": "Tritt dem Partners’ Circle bei",
+		"card-4-description": "Werde Bronze-, Silber- oder Gold-Partner:in und hilf mit, Social Income zu skalieren.",
+		"card-4-footnote": "Mehr erfahren",
+		"card-4-dialog-button": "Kontakt aufnehmen",
+		"card-4-dialog-header-1": "Stufe",
+		"card-4-dialog-header-2": "Beitrag",
+		"card-4-dialog-header-3": "Wirkung",
+		"card-4-dialog-header-4": "Anerkennung",
+		"card-4-dialog-row-1a": "Bronze Partner",
+		"card-4-dialog-row-1b": "Ab CHF 2’000",
+		"card-4-dialog-row-1c": "Über 60 Geldtransfers an Menschen in Armut – durchschnittlich 360 erreichte Personen.",
+		"card-4-dialog-row-1d": "Logo auf unserer Website, Erwähnung in Social Media, Quartals-Updates, Kunstdruck «Scene from Africa» sowie Brown-Bag-Lunch durch das Social-Income-Team für deine Mitarbeitenden.",
+		"card-4-dialog-row-2a": "Silver Partner",
+		"card-4-dialog-row-2b": "Ab CHF 10’000",
+		"card-4-dialog-row-2c": "Über 300 Geldtransfers an Menschen in Armut – durchschnittlich 1’800 erreichte Personen.",
+		"card-4-dialog-row-2d": "Alle Bronze-Vorteile plus massgeschneidertes Programm mit einem Cause, das dir am Herzen liegt, sowie Postkartensets «Scenes from Africa» für deine Mitarbeitenden.",
+		"card-4-dialog-row-3a": "Gold Partner",
+		"card-4-dialog-row-3b": "Ab CHF 35’000",
+		"card-4-dialog-row-3c": "Über 1’000 Geldtransfers an Menschen in Armut – durchschnittlich 6’000 erreichte Personen.",
+		"card-4-dialog-row-3d": "Alle Silver-Vorteile plus eine Feature-Story im Jahresbericht und eine persönliche Feldreise zu einem Land mit aktivem Programm."
+	},
+
+	"contact": {
+		"title": "Eine Partnerschaft starten",
+		"subtitle": "Nimm Kontakt auf, um zu erfahren, wie deine Organisation gemeinsam mit Social Income Armut bekämpfen kann:"
+	}
+}
