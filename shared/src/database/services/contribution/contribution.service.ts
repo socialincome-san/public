@@ -7,6 +7,8 @@ import {
 	ContributionTableView,
 	ContributionTableViewRow,
 	ContributionUpdateInput,
+	PaymentEventCreateData,
+	StripeContributionCreateData,
 } from './contribution.types';
 
 export class ContributionService extends BaseService {
@@ -157,6 +159,30 @@ export class ContributionService extends BaseService {
 		} catch (error) {
 			console.error(error);
 			return this.resultFail('Could not fetch contributions');
+		}
+	}
+
+	async createWithPaymentEvent(
+		contributionData: StripeContributionCreateData,
+		paymentEventData: PaymentEventCreateData,
+	): Promise<ServiceResult<Contribution>> {
+		try {
+			const contribution = await this.db.contribution.create({
+				data: {
+					...contributionData,
+					paymentEvent: {
+						create: {
+							...paymentEventData,
+							metadata: paymentEventData.metadata as object,
+						},
+					},
+				},
+			});
+
+			return this.resultOk(contribution);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not create contribution');
 		}
 	}
 }

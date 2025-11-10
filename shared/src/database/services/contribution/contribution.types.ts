@@ -1,4 +1,4 @@
-import { ContributionStatus, OrganizationPermission, Prisma } from '@prisma/client';
+import { ContributionStatus, OrganizationPermission, PaymentEventType, Prisma } from '@prisma/client';
 
 export type ContributionTableViewRow = {
 	id: string;
@@ -18,6 +18,7 @@ export type ContributionTableView = {
 };
 
 export type ContributionUpdateInput = Prisma.ContributionUpdateInput;
+export type ContributionCreateInput = Prisma.ContributionCreateInput;
 
 export type ContributionPayload = {
 	id: string;
@@ -32,4 +33,26 @@ export type ContributionPayload = {
 	campaign: {
 		id: string;
 	};
+};
+
+export type ContributionWithRelations = Prisma.ContributionGetPayload<{
+	include: { contributor: true; campaign: true };
+}>;
+
+export type StripeContributionCreateData = {
+	contributorId: string;
+	amount: number;
+	currency: string;
+	amountChf: number;
+	feesChf: number;
+	status: ContributionStatus;
+	referenceId: string;
+	campaignId: string;
+	createdAt: Date;
+};
+
+export type PaymentEventCreateData = {
+	type: PaymentEventType;
+	transactionId?: string;
+	metadata?: Record<string, unknown>;
 };

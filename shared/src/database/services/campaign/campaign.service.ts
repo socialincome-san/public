@@ -191,4 +191,27 @@ export class CampaignService extends BaseService {
 			return this.resultFail('Could not fetch campaigns');
 		}
 	}
+
+	/**
+	 * Get the default campaign for Stripe contributions without a specified campaign
+	 * TODO: Implement proper default campaign logic based on business requirements
+	 * For now, returns the first active campaign
+	 */
+	async getDefaultCampaign(): Promise<ServiceResult<Campaign>> {
+		try {
+			const campaign = await this.db.campaign.findFirst({
+				where: { isActive: true },
+				orderBy: { createdAt: 'asc' },
+			});
+
+			if (!campaign) {
+				return this.resultFail('No active campaigns found');
+			}
+
+			return this.resultOk(campaign);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch default campaign');
+		}
+	}
 }

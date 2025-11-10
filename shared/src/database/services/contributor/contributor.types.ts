@@ -35,7 +35,21 @@ export type ContributorPayload = {
 };
 
 export type ContributorUpdateInput = Prisma.ContributorUpdateInput;
+export type ContributorCreateInput = Prisma.ContributorCreateInput;
+
 export type ContributorOption = {
 	id: string;
 	name: string;
+};
+
+export type ContributorWithContact = Prisma.ContributorGetPayload<{
+	include: { contact: true };
+}>;
+
+export type StripeContributorData = {
+	stripeCustomerId: string;
+	email: string;
+	firstName: string;
+	lastName: string;
+	referral: ContributorReferralSource;
 };

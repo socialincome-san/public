@@ -126,3 +126,18 @@ export const VerifyOtpResponse = z.object({
 	isNewUser: z.boolean(),
 	uid: z.string(),
 });
+
+export const StripeWebhookResponse = z.object({
+	received: z.literal(true),
+	data: z
+		.object({
+			contributionId: z.string().optional(),
+			contributorId: z.string().optional(),
+			isNewContributor: z.boolean().optional(),
+		})
+		.optional(),
+});
+
+export const StripeWebhookError = z.object({
+	error: z.string(),
+});

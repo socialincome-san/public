@@ -132,4 +132,17 @@ export class FirebaseService extends BaseService {
 	getPhoneFromToken(decodedToken: DecodedIdToken): string | null {
 		return decodedToken.phone_number ?? null;
 	}
+
+	async createUser(userData: { email: string; displayName: string }): Promise<ServiceResult<UserRecord>> {
+		try {
+			const userRecord = await this.authAdmin.auth.createUser({
+				email: userData.email,
+				displayName: userData.displayName,
+			});
+			return this.resultOk(userRecord);
+		} catch (error) {
+			console.error('Error creating Firebase user:', error);
+			return this.resultFail('Could not create Firebase Auth user');
+		}
+	}
 }
