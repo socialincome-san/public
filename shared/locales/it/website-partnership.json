@@ -1,0 +1,81 @@
+{
+	"hero": {
+		"title-1": [
+			{
+				"text": "Costruisci un firewall ",
+				"color": "accent"
+			},
+			{
+				"text": "contro la povertà estrema"
+			}
+		],
+		"subtitle": "Diventa partner di Social Income e dimostra la tua responsabilità sociale con un impegno concreto e duraturo nella lotta contro la povertà estrema."
+	},
+
+	"usp": {
+		"section-title-1": "Perché diventare partner di Social Income?",
+		"reason-title-1": "Impatto immediato",
+		"reason-description-1": "La tua donazione finanzia direttamente programmi innovativi di trasferimenti monetari destinati a persone che vivono in condizioni di povertà estrema. I trasferimenti diretti di denaro sono un aiuto efficace, comprovato da numerose evidenze scientifiche.",
+		"reason-title-2": "Valorizza i tuoi valori",
+		"reason-description-2": "Mostra a collaboratori, partner e clienti un autentico impegno per il cambiamento sociale, sostenendo concretamente la lotta contro la povertà e le disuguaglianze globali.",
+		"reason-title-3": "Collaborazione flessibile",
+		"reason-description-3": "Inizia con una semplice donazione oppure sviluppa un tuo programma di trasferimenti diretti, adattato alla missione e ai valori della tua organizzazione.",
+		"reason-title-4": "Efficiente e basato sulla tecnologia",
+		"reason-description-4": "Social Income è un’iniziativa open source gestita interamente da volontari, con costi amministrativi minimi. Le donazioni vengono convertite in pagamenti mensili inviati direttamente ai telefoni dei beneficiari.",
+		"section-title-2": "In buona compagnia",
+		"section-title-3": "Come la tua organizzazione può fare la differenza",
+		"section-3-option-1a": "Donazioni una tantum e matching dei dipendenti:",
+		"section-3-option-1b": "Crea un impatto immediato già oggi.",
+		"section-3-option-2a": "Donazioni in natura:",
+		"section-3-option-2b": "Metti a disposizione tempo o competenze del tuo team per sostenere la crescita di Social Income.",
+		"section-3-option-3a": "Avvia un programma di trasferimenti diretti:",
+		"section-3-option-3b": "«Adotta una comunità» finanziando un programma su misura per le sue esigenze."
+	},
+
+	"partner-carousel": {
+		"title": "I nostri partner contro la povertà",
+		"subtitle": "Ogni partnership ha preso una forma diversa, ma tutte condividono lo stesso obiettivo: combattere la povertà dove colpisce più duramente. Alcuni offrono fondi, altri competenze o strumenti che alimentano la nostra piattaforma open source."
+	},
+
+	"partnership-models": {
+		"title": "Come tu e la tua organizzazione potete agire",
+		"badge": "Nuovo",
+		"badge-google": "Google",
+		"badge-jetbrains": "JetBrains",
+		"badge-github": "GitHub",
+		"badge-microsoft": "Microsoft",
+		"card-2-title": "Fai una donazione in natura",
+		"card-2-description": "Sostieni Social Income offrendo tempo del tuo personale o accesso gratuito al tuo software.",
+		"card-2-dialog-text": "Riceviamo donazioni in natura da Google, GitHub, Codemagic, Linktree, Twilio, Algolia, JetBrains, Storyblok, 1Password, Mux, Sentry e Lineto.",
+		"card-3-title": "Avvia un programma di trasferimenti diretti",
+		"card-3-description": "Scegli una causa e finanzia un programma che sostiene un’intera comunità.",
+		"card-3-footnote": "Da dicembre 2025",
+		"card-3-dialog-text": "Questa opzione sarà disponibile nel 2026.",
+		"card-3-dialog-button": "Tienimi aggiornato/a",
+		"card-4-title": "Unisciti al Partners’ Circle",
+		"card-4-description": "Diventa Partner Bronze, Silver o Gold e contribuisci a far crescere Social Income.",
+		"card-4-footnote": "Clicca per saperne di più",
+		"card-4-dialog-button": "Contattaci",
+		"card-4-dialog-header-1": "Livello",
+		"card-4-dialog-header-2": "Contributo",
+		"card-4-dialog-header-3": "Impatto",
+		"card-4-dialog-header-4": "Riconoscimento",
+		"card-4-dialog-row-1a": "Partner Bronze",
+		"card-4-dialog-row-1b": "Da CHF 2’000",
+		"card-4-dialog-row-1c": "Oltre 60 trasferimenti diretti a persone in povertà, raggiungendo in media 360 individui.",
+		"card-4-dialog-row-1d": "Logo sul nostro sito web, menzione sui social media, aggiornamenti trimestrali, poster artistico «Scene from Africa» e pranzo informativo con il team di Social Income per i tuoi collaboratori.",
+		"card-4-dialog-row-2a": "Partner Silver",
+		"card-4-dialog-row-2b": "Da CHF 10’000",
+		"card-4-dialog-row-2c": "Oltre 300 trasferimenti diretti, raggiungendo in media 1’800 persone.",
+		"card-4-dialog-row-2d": "Tutti i vantaggi Bronze, più «Adotta una comunità»: programma personalizzato nella regione che ti sta più a cuore e set di cartoline artistiche «Scenes from Africa» per il tuo team.",
+		"card-4-dialog-row-3a": "Partner Gold",
+		"card-4-dialog-row-3b": "Da CHF 35’000",
+		"card-4-dialog-row-3c": "Oltre 1’000 trasferimenti diretti, raggiungendo in media 6’000 persone.",
+		"card-4-dialog-row-3d": "Tutti i vantaggi Silver, più una storia dedicata nel rapporto annuale e una visita sul campo personalizzata in un Paese con programmi attivi."
+	},
+
+	"contact": {
+		"title": "Avvia una partnership",
+		"subtitle": "Contattaci per scoprire come la tua organizzazione può contribuire a combattere la povertà insieme a Social Income:"
+	}
+}

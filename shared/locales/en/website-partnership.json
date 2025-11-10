@@ -1,0 +1,78 @@
+{
+	"hero": {
+		"title-1": [
+			{
+				"text": "Build a Firewall ",
+				"color": "accent"
+			},
+			{
+				"text": "Against Extreme Poverty"
+			}
+		],
+		"subtitle": "Partner with Social Income and demonstrate social responsibility through meaningful, lasting impact in the fight against extreme poverty."
+	},
+
+	"usp": {
+		"section-title-1": "Why partner with Social Income?",
+		"reason-title-1": "Immediate Impact",
+		"reason-description-1": "Your donation directly funds innovative, and empowering direct-cash programs for people in extreme poverty. Direct cash transfers are evidence-based, effective poverty relief for the most vulnerable.",
+		"reason-title-2": "Showcase Your Values",
+		"reason-description-2": "Clearly demonstrate to your employees, partners, and clients your genuine commitment to social impact, directly supporting systemic change against poverty and global inequality.",
+		"reason-title-3": "Flexible Engagement",
+		"reason-description-3": "Start with a simple donation or seamlessly transition into launching your organization's own direct cash program, customized to your mission, values, and the cause you care about.",
+		"reason-title-4": "Efficient & Technology-Driven",
+		"reason-description-4": "Social Income is a fully volunteer-driven open source initiative, which keeps our administrative costs exceptionally low. This means donations become monthly payments sent straight to recipients’ phones.",
+		"section-title-2": "Join Other Leading Organizations",
+		"section-title-3": "Ways Your Organization Can Make a Difference",
+		"section-3-option-1a": "One-Time Donations & Employee Matching:",
+		"section-3-option-1b": "Make an immediate impact today.",
+		"section-3-option-2a": "In-kind Donations:",
+		"section-3-option-2b": "Donate your employees’ time to develop Social Income further.",
+		"section-3-option-3a": "Launch a Direct Cash Program:",
+		"section-3-option-3b": "“Adopt a Community” by sponsoring your own tailored cash-transfer program."
+	},
+	"partner-carousel": {
+		"title": "Our partners against poverty",
+		"subtitle": "Each partnership took its own shape, yet all were driven by the same purpose: fighting poverty where it hits hardest. Some gave funds, others their know-how, and others the tools behind our open-source platform."
+	},
+	"partnership-models": {
+		"title": "Ways you and your organization can make a difference",
+		"badge": "New",
+		"badge-google": "Google",
+		"badge-jetbrains": "JetBrains",
+		"badge-github": "GitHub",
+		"badge-microsoft": "Microsoft",
+		"card-2-title": "Make a in-kind donation",
+		"card-2-description": "Help grow Social Income through in-kind support such as employee time or free access to your software.",
+		"card-2-dialog-text": "We receive in-kind donations from Google, GitHub, Codemagic, Linktree, Twilio, Algolia, JetBrains, Storyblok, 1Password, Mux, Sentry and Lineto.",
+		"card-3-title": "Launch a direct cash program",
+		"card-3-description": "Select a cause and fund a cash-transfer program that supports a whole community.",
+		"card-3-footnote": "Starting in December 2025",
+		"card-3-dialog-text": "This option will be launched in 2026.",
+		"card-3-dialog-button": "Keep me updated",
+		"card-4-title": "Join the Partners’ Circle",
+		"card-4-description": "Become a Bronze, Silver, or Gold Partner to help scale Social Income.",
+		"card-4-footnote": "Click to learn more",
+		"card-4-dialog-button": "Contact us",
+		"card-4-dialog-header-1": "Tier",
+		"card-4-dialog-header-2": "Contribution",
+		"card-4-dialog-header-3": "Impact",
+		"card-4-dialog-header-4": "Recognition",
+		"card-4-dialog-row-1a": "Bronze Partner",
+		"card-4-dialog-row-1b": "CHF 2000 or more",
+		"card-4-dialog-row-1c": "More than 60 cash transfers to people in poverty, reaching on average 360 people.",
+		"card-4-dialog-row-1d": "Logo on our website, Social media shout out, Quarterly updates, art poster “Scene from Africa”, and brown bag lunch by Social Income team for your employees.",
+		"card-4-dialog-row-2a": "Silver Partner",
+		"card-4-dialog-row-2b": "CHF 10’000 or more",
+		"card-4-dialog-row-2c": "More than 300 cash transfers to people in poverty, reaching on average 1800 people.",
+		"card-4-dialog-row-2d": "All Bronze benefits, plus “Adopt a community:” tailored program in the community you care most about, sets of artistic postcards “Scenes from Africa” for your employees.",
+		"card-4-dialog-row-3a": "Gold Partner",
+		"card-4-dialog-row-3b": "CHF 35’000 or more",
+		"card-4-dialog-row-3c": "More than 1000 cash transfers to people in poverty, reaching on average 6000 people.",
+		"card-4-dialog-row-3d": "All Silver benefits plus feature story in annual report, personalized field visit to country with active programs."
+	},
+	"contact": {
+		"title": "Starting a partnership",
+		"subtitle": "Reach out to explore ways your organization can fight poverty with Social Income: "
+	}
+}
