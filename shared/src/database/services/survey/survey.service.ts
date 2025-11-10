@@ -413,4 +413,17 @@ export class SurveyService extends BaseService {
 			return this.resultFail(`Failed to generate surveys: ${error}`);
 		}
 	}
+
+	async getByRecipientId(recipientId: string): Promise<ServiceResult<SurveyPayload[]>> {
+		try {
+			const surveys = await this.db.survey.findMany({
+				where: { recipientId },
+				orderBy: [{ dueAt: 'desc' }, { createdAt: 'desc' }],
+			});
+			return this.resultOk(surveys);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch surveys');
+		}
+	}
 }

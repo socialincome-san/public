@@ -1,7 +1,7 @@
 import { getOrInitializeFirebaseAdmin } from '@socialincome/shared/src/firebase/admin/app';
 import { AuthAdmin } from '@socialincome/shared/src/firebase/admin/AuthAdmin';
 import { credential } from 'firebase-admin';
-import { UpdateRequest, UserRecord } from 'firebase-admin/auth';
+import { DecodedIdToken, UpdateRequest, UserRecord } from 'firebase-admin/auth';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 
@@ -111,5 +111,25 @@ export class FirebaseService extends BaseService {
 			console.error('Error creating custom token:', error);
 			return this.resultFail('Could not create custom token');
 		}
+	}
+
+	async getDecodedTokenFromRequest(request: Request): Promise<ServiceResult<DecodedIdToken>> {
+		const header = request.headers.get('authorization');
+		if (!header?.startsWith('Bearer ')) {
+			return this.resultFail('Missing or invalid authorization header');
+		}
+
+		const token = header.slice('Bearer '.length);
+		try {
+			const decodedToken = await this.authAdmin.auth.verifyIdToken(token);
+			return this.resultOk(decodedToken);
+		} catch (error) {
+			console.error('Error verifying ID token:', error);
+			return this.resultFail('Invalid or expired token');
+		}
+	}
+
+	getPhoneFromToken(decodedToken: DecodedIdToken): string | null {
+		return decodedToken.phone_number ?? null;
 	}
 }
