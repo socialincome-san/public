@@ -45,6 +45,8 @@ jobs:
           echo "${{ env.ENVIRONMENT }}" > secrets/APP_ENVIRONMENT
           echo "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" > secrets/APP_BUILD_TIMESTAMP
           echo "${{ secrets.TF_STAGING_BASE_URL }}" > secrets/BASE_URL
+          echo "${{ secrets.TF_STAGING_EXCHANGE_RATES_API }}" > secrets/EXCHANGE_RATES_API
+          echo "${{ secrets.TF_STAGING_EXCHANGE_RATES_IMPORT_API }}" > secrets/EXCHANGE_RATES_IMPORT_API
           echo "${{ secrets.TF_STAGING_FIREBASE_DATABASE_URL }}" > secrets/FIREBASE_DATABASE_URL
           echo "${{ secrets.TF_STAGING_FIREBASE_SERVICE_ACCOUNT_JSON }}" > secrets/FIREBASE_SERVICE_ACCOUNT_JSON
           echo "${{ secrets.TF_STAGING_GITHUB_PAT }}" > secrets/GITHUB_PAT
@@ -65,6 +67,7 @@ jobs:
           echo "${{ secrets.TF_STAGING_STORYBLOK_PREVIEW_TOKEN }}" > secrets/STORYBLOK_PREVIEW_TOKEN
           echo "${{ secrets.TF_STAGING_STRIPE_PRODUCT_ONETIME }}" > secrets/STRIPE_PRODUCT_ONETIME
           echo "${{ secrets.TF_STAGING_STRIPE_PRODUCT_RECURRING }}" > secrets/STRIPE_PRODUCT_RECURRING
+          echo "${{ secrets.TF_STAGING_STRIPE_SECRET_KEY }}" > secrets/STRIPE_SECRET_KEY
           echo "${{ secrets.TF_STAGING_STRIPE_SECRET_KEY }}" > secrets/STRIPE_SECRET_KEY
           echo "${{ secrets.TF_STAGING_TWILIO_ACCOUNT_SID }}" > secrets/TWILIO_ACCOUNT_SID
           echo "${{ secrets.TF_STAGING_TWILIO_AUTH_TOKEN }}" > secrets/TWILIO_AUTH_TOKEN
@@ -94,6 +97,7 @@ jobs:
           TF_VAR_gcp_region: ${{ env.GCP_REGION }}
           TF_VAR_google_sql_db_password: ${{ secrets.TF_STAGING_GOOGLE_SQL_DB_PASSWORD }}
           TF_VAR_website_domain: ${{ env.WEBSITE_DOMAIN }}
+          TF_VAR_exchange_rate_import_api_key: ${{ secrets.TF_STAGING_EXCHANGE_RATES_IMPORT_API }}
           IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
         run: |
           echo "🧭 Initializing Terraform..."
