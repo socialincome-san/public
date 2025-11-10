@@ -1,5 +1,5 @@
 import { UserRecord } from 'firebase-admin/auth';
-import Twilio from 'twilio';
+import { Twilio } from 'twilio';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseService } from '../firebase/firebase.service';
@@ -7,8 +7,8 @@ import { VerifyOtpRequest, VerifyOtpResult } from './twilio.types';
 
 export class TwilioService extends BaseService {
 	private readonly firebaseService = new FirebaseService();
-	private readonly twilioClient = Twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_TOKEN!);
-	private readonly TWILIO_VERIFY_SERVICE_SID = process.env.TWILIO_VERIFY_SERVICE_SID!;
+	private readonly twilioClient = new Twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+	private readonly TWILIO_VERIFY_SERVICE_SID = process.env.TWILIO_VERIFY_SERVICE_SID;
 
 	async verifyOtp(request: VerifyOtpRequest): Promise<ServiceResult<VerifyOtpResult>> {
 		let { phoneNumber, otp } = request;
