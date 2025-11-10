@@ -350,7 +350,7 @@ const GenericFormField = ({
 								<Select value={field.value} onValueChange={field.onChange} disabled={isLoading || readOnly}>
 									<FormControl>
 										<SelectTrigger>
-											<SelectValue placeholder={readOnly ? '-' : formFieldSchema.placeholder} />
+											<SelectValue placeholder={formFieldSchema.placeholder} />
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent {...form.register(optionKey)}>

@@ -1,4 +1,5 @@
 import { Prisma, SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
+import { surveySchedules } from '../../scripts/seed-defaults';
 import { BaseTransformer } from '../core/base.transformer';
 import { FirestoreSurveyWithRecipient } from './survey.types';
 
@@ -13,7 +14,15 @@ export class SurveyTransformer extends BaseTransformer<FirestoreSurveyWithRecipi
 				continue;
 			}
 
+			const surveyName = survey.id;
+			const scheduleData = surveySchedules.find((schedule) => schedule.name === surveyName);
+
+			if (!scheduleData) {
+				throw new Error(`No survey schedule found for name "${surveyName}"`);
+			}
+
 			transformed.push({
+				name: surveyName,
 				legacyFirestoreId: `${recipient.id}_${survey.id}`,
 				questionnaire: this.mapQuestionnaire(survey.questionnaire),
 				language: survey.language?.toLowerCase() ?? '',
@@ -25,6 +34,7 @@ export class SurveyTransformer extends BaseTransformer<FirestoreSurveyWithRecipi
 				accessPw: survey.access_pw ?? '',
 				accessToken: survey.access_token ?? '',
 				recipient: { connect: { legacyFirestoreId: recipient.id } },
+				surveySchedule: { connect: { id: scheduleData.id } },
 			});
 		}
 
