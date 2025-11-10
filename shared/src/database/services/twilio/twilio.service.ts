@@ -38,20 +38,24 @@ export class TwilioService extends BaseService {
 
 		// Verify OTP with Twilio
 		try {
-			console.log('Attempting to verify OTP for phone');
-			const verification = await this.twilioClient.verify.v2
-				.services(this.TWILIO_VERIFY_SERVICE_SID)
-				.verificationChecks.create({
-					to: phoneNumber,
-					code: otp,
-				});
+			if (process.env.TWILIO_DEV_MODE === 'true') {
+				console.log('🚧 DEVELOPMENT MODE: Skipping Twilio verification');
+			} else {
+				console.log('Attempting to verify OTP for phone');
+				const verification = await this.twilioClient.verify.v2
+					.services(this.TWILIO_VERIFY_SERVICE_SID)
+					.verificationChecks.create({
+						to: phoneNumber,
+						code: otp,
+					});
 
-			console.log(`Twilio verification response has status: '${verification.status}' and sid '${verification.sid}'`);
+				console.log(`Twilio verification response has status: '${verification.status}' and sid '${verification.sid}'`);
 
-			// Check if verification was successful
-			if (verification.status !== 'approved') {
-				console.log('OTP verification failed, status: ', verification.status);
-				return this.resultFail('Invalid OTP provided');
+				// Check if verification was successful
+				if (verification.status !== 'approved') {
+					console.log('OTP verification failed, status: ', verification.status);
+					return this.resultFail('Invalid OTP provided');
+				}
 			}
 		} catch (error: unknown) {
 			// Check for Twilio's error code directly from the error object
