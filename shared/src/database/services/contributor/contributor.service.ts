@@ -1,7 +1,7 @@
 import { Contributor } from '@prisma/client';
-import { FirebaseService } from '../../../firebase/services/auth.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { FirebaseService } from '../firebase/firebase.service';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import {
 	ContributorOption,
@@ -89,13 +89,12 @@ export class ContributorService extends BaseService {
 				return this.resultFail('Contributor email is required');
 			}
 
-			try {
-				await this.firebaseAuthService.updateByUid(existing.account.firebaseAuthUserId, {
-					email: contributor.contact?.update?.data?.email?.toString() ?? undefined,
-				});
-			} catch (error) {
+			const firebaseResult = await this.firebaseAuthService.updateByUid(existing.account.firebaseAuthUserId, {
+				email: contributor.contact?.update?.data?.email?.toString() ?? undefined,
+			});
+			if (!firebaseResult.success) {
 				// for now, dont fail the update if firebase user cannot be updated, because there is no auth user for every contributor
-				console.warn('Could not update Firebase Auth user for contributor:', error);
+				console.warn('Could not update Firebase Auth user for contributor:', firebaseResult.error);
 			}
 
 			const updatedContributor = await this.db.contributor.update({

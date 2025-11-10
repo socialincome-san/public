@@ -31,6 +31,9 @@ RUN --mount=type=secret,id=APP_VERSION \
     --mount=type=secret,id=STRIPE_PRODUCT_ONETIME \
     --mount=type=secret,id=STRIPE_PRODUCT_RECURRING \
     --mount=type=secret,id=STRIPE_SECRET_KEY \
+    --mount=type=secret,id=TWILIO_ACCOUNT_SID \
+    --mount=type=secret,id=TWILIO_AUTH_TOKEN \
+    --mount=type=secret,id=TWILIO_VERIFY_SERVICE_SID \
     sh -c 'for f in /run/secrets/*; do echo "$(basename $f)=$(cat $f)" >> /app/.env; done'
 
 # -------- Dependencies Layer --------

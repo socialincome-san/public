@@ -1,7 +1,7 @@
 import { ProgramPermission, Recipient, RecipientStatus } from '@prisma/client';
-import { FirebaseService } from '@socialincome/shared/src/firebase/services/auth.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { FirebaseService } from '../firebase/firebase.service';
 import { ProgramAccessService } from '../program-access/program-access.service';
 import {
 	PayoutRecipient,
@@ -15,7 +15,7 @@ import {
 
 export class RecipientService extends BaseService {
 	private programAccessService = new ProgramAccessService();
-	private firebaseAuthService = new FirebaseService();
+	private firebaseService = new FirebaseService();
 
 	async create(userId: string, recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
 		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
@@ -36,7 +36,11 @@ export class RecipientService extends BaseService {
 				return this.resultFail('No phone number provided for recipient creation');
 			}
 
-			await this.firebaseAuthService.createByPhoneNumber(phoneNumber);
+			const firebaseResult = await this.firebaseService.createByPhoneNumber(phoneNumber);
+			if (!firebaseResult.success) {
+				return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+			}
+
 			const newRecipient = await this.db.recipient.create({ data: recipient });
 			return this.resultOk(newRecipient);
 		} catch (error) {
@@ -82,7 +86,14 @@ export class RecipientService extends BaseService {
 				return this.resultFail('No phone number available for recipient update');
 			}
 
-			await this.firebaseAuthService.updateByPhoneNumber(existing.paymentInformation?.phone.number, phoneNumber);
+			const firebaseResult = await this.firebaseService.updateByPhoneNumber(
+				existing.paymentInformation?.phone.number,
+				phoneNumber,
+			);
+			if (!firebaseResult.success) {
+				return this.resultFail(`Failed to update Firebase user: ${firebaseResult.error}`);
+			}
+
 			const updatedRecipient = await this.db.recipient.update({
 				where: { id: recipient.id?.toString() },
 				data: recipient,

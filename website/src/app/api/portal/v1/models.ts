@@ -107,3 +107,15 @@ export const RecipientUpdate = z
 	.refine((d) => d.firstName || d.lastName, {
 		message: 'Provide at least one field: firstName or lastName',
 	});
+
+export const VerifyOtpRequest = z.object({
+	phoneNumber: z.string(),
+	otp: z.string(),
+});
+
+export const VerifyOtpResponse = z.object({
+	success: z.literal(true),
+	token: z.string(),
+	isNewUser: z.boolean(),
+	uid: z.string(),
+});
