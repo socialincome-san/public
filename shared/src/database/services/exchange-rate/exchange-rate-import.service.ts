@@ -67,7 +67,7 @@ export class ExchangeRateImportService extends BaseService {
 			return this.resultOk(data);
 		} catch (error) {
 			console.error('Could not store exchange rates', error);
-			return this.resultFail('Could not store exchange rates');
+			return this.resultFail(`Could not store exchange rates: ${error}`);
 		}
 	}
 
@@ -82,7 +82,7 @@ export class ExchangeRateImportService extends BaseService {
 			return this.resultOk(rates);
 		} catch (error) {
 			console.error(error);
-			return this.resultFail('Could not import exchange rates');
+			return this.resultFail(`Import failed: ${error}`);
 		}
 	}
 
@@ -124,7 +124,7 @@ export class ExchangeRateImportService extends BaseService {
 					const storedRates = await this.fetchAndStoreExchangeRates(DateTime.fromMillis(timestamp));
 					if (!storedRates.success) {
 						console.error('Could not store exchange rates');
-						return this.resultFail('Could not store exchange rates');
+						return this.resultFail(`Could not store exchange rates: ${storedRates.error}`);
 					}
 				} catch (error) {
 					console.error(`Could not ingest exchange rate`, error);
