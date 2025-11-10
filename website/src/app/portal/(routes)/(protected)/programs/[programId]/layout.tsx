@@ -1,4 +1,3 @@
-import { Button } from '@/app/portal/components/button';
 import { Card } from '@/app/portal/components/card';
 import { TabNavigation } from '@/app/portal/components/tab-navigation';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
@@ -6,7 +5,6 @@ import { ProgramService } from '@socialincome/shared/src/database/services/progr
 
 import { CountryBadge } from '@/app/portal/components/badges/country-badge';
 import { Breadcrumb } from '@/app/portal/components/breadcrumb/breadcrumb';
-import { Pen } from 'lucide-react';
 import { ReactNode } from 'react';
 
 type ProgramLayoutProps = {
@@ -19,26 +17,24 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 	const user = await getAuthenticatedUserOrRedirect();
 
 	const service = new ProgramService();
-	const result = await service.getProgramWalletViewProgramScoped(user.id, programId);
+	const result = await service.getProgramWalletsProgramScoped(user.id, programId);
 
 	if (!result.success) {
 		return <div className="p-4">Error loading the program</div>;
 	}
 
-	const { programName, permission, country } = result.data;
-	const isOperator = permission === 'operator';
+	const { programName, country } = result.data;
 
 	const sections = [
-		{ href: `/portal/programs/${programId}/overview`, label: 'Overview' },
 		{ href: `/portal/programs/${programId}/recipients`, label: 'Recipients' },
-		{ href: `/portal/programs/${programId}/finances`, label: 'Finances' },
-		{ href: `/portal/programs/${programId}/campaigns`, label: 'Campaigns' },
+		{ href: `/portal/programs/${programId}/payout-forecast`, label: 'Payout Forecast' },
 		{ href: `/portal/programs/${programId}/surveys`, label: 'Surveys' },
+		{ href: `/portal/programs/${programId}/members`, label: 'Program Members' },
 	];
 
 	const breadcrumbLinks = [
 		{ href: '/portal', label: 'Home' },
-		{ href: `/portal/programs/${programId}/overview`, label: programName },
+		{ href: `/portal/programs/${programId}/recipients`, label: programName },
 	];
 
 	return (
@@ -48,17 +44,6 @@ export default async function ProgramLayout({ children, params }: ProgramLayoutP
 				<h1 className="py-8 text-5xl">{programName}</h1>
 
 				<CountryBadge country={country} />
-
-				<Button
-					variant="outline"
-					className="ml-auto rounded-full"
-					disabled={!isOperator}
-					title={isOperator ? 'Manage program' : 'You do not have permission to manage this program'}
-					aria-disabled={!isOperator}
-				>
-					<Pen className="mr-2 h-4 w-4" />
-					Manage program
-				</Button>
 			</div>
 
 			<TabNavigation sections={sections} />

@@ -1,21 +1,18 @@
-import { Survey as PrismaSurvey, RecipientMainLanguage, SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
-
-export type CreateSurveyInput = Omit<PrismaSurvey, 'id' | 'createdAt' | 'updatedAt'>;
-
-export type ProgramPermission = 'operator' | 'viewer';
+import { Prisma, ProgramPermission, SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
 
 export type SurveyTableViewRow = {
 	id: string;
+	name: string;
+	recipientName: string;
+	programId: string;
+	programName: string;
 	questionnaire: SurveyQuestionnaire;
 	status: SurveyStatus;
-	recipientName: string;
-	language: RecipientMainLanguage;
-	dueDateAt: Date;
-	dueDateAtFormatted: string;
-	sentAt: Date | null;
-	sentAtFormatted: string | null;
-	programName: string;
-	programId: string;
+	language: string;
+	dueAt: Date;
+	completedAt: Date | null;
+	createdAt: Date;
+	surveyUrl: string;
 	permission: ProgramPermission;
 };
 
@@ -23,19 +20,70 @@ export type SurveyTableView = {
 	tableRows: SurveyTableViewRow[];
 };
 
-export type UpcomingSurveyTableViewRow = {
-	id: string;
-	firstName: string;
-	lastName: string;
+export type SurveyCreateInput = {
+	name: string;
+	recipient: { connect: { id: string } };
 	questionnaire: SurveyQuestionnaire;
-	dueDateAt: Date;
-	dueDateAtFormatted: string;
+	language: string;
+	dueAt: Date;
 	status: SurveyStatus;
-	url: string;
-	programName: string;
-	permission: ProgramPermission;
+	data: Prisma.InputJsonValue;
+	accessEmail: string;
+	accessPw: string;
+	accessToken: string;
+	surveySchedule?: { connect: { id: string } };
 };
 
-export type UpcomingSurveyTableView = {
-	tableRows: UpcomingSurveyTableViewRow[];
+export type SurveyUpdateInput = {
+	name?: string;
+	questionnaire?: SurveyQuestionnaire;
+	language?: string;
+	dueAt?: Date;
+	status?: SurveyStatus;
+	data?: Prisma.InputJsonValue;
+	accessEmail?: string;
+	accessPw?: string;
+	accessToken?: string;
+	completedAt?: Date | null;
+	recipient?: { connect: { id: string } };
+	surveySchedule?: { connect: { id: string } };
+};
+
+export type SurveyPayload = {
+	id: string;
+	name: string;
+	questionnaire: SurveyQuestionnaire;
+	language: string;
+	dueAt: Date;
+	completedAt: Date | null;
+	status: SurveyStatus;
+	data: Prisma.JsonValue;
+	accessEmail: string;
+	accessPw: string;
+	accessToken: string;
+	recipientId: string;
+	surveyScheduleId: string | null;
+	createdAt: Date;
+	updatedAt: Date | null;
+};
+
+export type SurveyPreview = {
+	questionnaire: SurveyQuestionnaire;
+	language: string;
+	dueAt: Date;
+	status: SurveyStatus;
+	recipientId: string;
+	recipientName: string;
+	surveyScheduleId: string;
+	programId: string;
+	programName: string;
+};
+
+export type SurveyGenerationPreviewResult = {
+	surveys: SurveyCreateInput[];
+};
+
+export type SurveyGenerationResult = {
+	surveysCreated: number;
+	message: string;
 };

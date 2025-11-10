@@ -15,12 +15,17 @@ export default async function ManagementLayout({ children }: ManagementLayoutPro
 	];
 
 	const sections = [
+		// Program access–based
 		{ href: `/portal/management/recipients`, label: 'Recipients' },
-		{ href: `/portal/management/ongoing-payouts`, label: 'Ongoing payouts' },
+		{ href: `/portal/management/ongoing-payouts`, label: 'Ongoing Payouts' },
+		{ href: `/portal/management/surveys`, label: 'Surveys' },
+
+		// Organization access–based
 		{ href: `/portal/management/contributors`, label: 'Contributors' },
 		{ href: `/portal/management/contributions`, label: 'Contributions' },
+		{ href: `/portal/management/donation-certificates`, label: 'Donation Certificates' },
 		{ href: `/portal/management/campaigns`, label: 'Campaigns' },
-		{ href: `/portal/management/surveys`, label: 'Surveys' },
+		{ href: `/portal/management/members`, label: 'Organization Members' },
 	];
 
 	return (

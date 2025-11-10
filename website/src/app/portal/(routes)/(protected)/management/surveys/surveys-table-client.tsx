@@ -1,0 +1,64 @@
+'use client';
+
+import { Button } from '@/app/portal/components/button';
+import { makeSurveyColumns } from '@/app/portal/components/data-table/columns/surveys';
+import DataTable from '@/app/portal/components/data-table/data-table';
+import type { SurveyTableViewRow } from '@socialincome/shared/src/database/services/survey/survey.types';
+import { useState } from 'react';
+import { GenerateSurveysDialog } from './generate-surveys-dialog';
+import { SurveyFormDialog } from './survey-form-dialog';
+
+export function SurveysTableClient({ rows, error }: { rows: SurveyTableViewRow[]; error: string | null }) {
+	const [isSurveyFormOpen, setIsSurveyFormOpen] = useState(false);
+	const [surveyId, setSurveyId] = useState<string | undefined>(undefined);
+	const [readOnly, setReadOnly] = useState(false);
+	const [isGenerationDialogOpen, setIsGenerationDialogOpen] = useState(false);
+
+	const openEmptyForm = () => {
+		setSurveyId(undefined);
+		setReadOnly(false);
+		setIsSurveyFormOpen(true);
+	};
+
+	const openEditForm = (row: SurveyTableViewRow) => {
+		setSurveyId(row.id);
+		setReadOnly(row.permission === 'readonly');
+		setIsSurveyFormOpen(true);
+	};
+
+	const handleSurveyFormClose = (open: boolean) => {
+		setIsSurveyFormOpen(open);
+		if (!open) {
+			setSurveyId(undefined);
+			setReadOnly(false);
+		}
+	};
+
+	return (
+		<>
+			<DataTable
+				title="Surveys"
+				error={error}
+				emptyMessage="No surveys found"
+				data={rows}
+				makeColumns={makeSurveyColumns}
+				onRowClick={openEditForm}
+				actions={
+					<div className="flex gap-2">
+						<Button onClick={openEmptyForm}>Add survey</Button>
+						<Button onClick={() => setIsGenerationDialogOpen(true)}>Generate surveys</Button>
+					</div>
+				}
+			/>
+
+			<SurveyFormDialog
+				open={isSurveyFormOpen}
+				onOpenChange={handleSurveyFormClose}
+				surveyId={surveyId}
+				readOnly={readOnly}
+			/>
+
+			<GenerateSurveysDialog open={isGenerationDialogOpen} setOpen={setIsGenerationDialogOpen} />
+		</>
+	);
+}

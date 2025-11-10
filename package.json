@@ -30,6 +30,7 @@
 		"functions:test:playwright": "npm --workspace=@socialincome/functions run test:playwright",
 		"functions:test:playwright:update": "npm --workspace=@socialincome/functions run test:playwright:update",
 		"shared:test": "npm --workspace=@socialincome/shared run test",
+		"website:build-paths": "npm --workspace=@socialincome/website run build-paths",
 		"website:build": "npm --workspace=@socialincome/website run build",
 		"website:build:emulator": "npm --workspace=@socialincome/website run build:emulator",
 		"website:lint": "npm --workspace=@socialincome/website run lint",
@@ -58,7 +59,9 @@
 		"db:seed": "npm --workspace=@socialincome/shared run db:seed",
 		"db:studio": "npm --workspace=@socialincome/shared run db:studio",
 		"db:up": "npm --workspace=@socialincome/shared run db:up",
-		"db:down": "npm --workspace=@socialincome/shared run db:down"
+		"db:down": "npm --workspace=@socialincome/shared run db:down",
+		"typecheck": "npm run typecheck:all",
+		"typecheck:all": "npm run typecheck --workspaces --if-present"
 	},
 	"devDependencies": {
 		"firebase-tools": "14.4.0",

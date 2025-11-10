@@ -2,7 +2,7 @@ import { Breadcrumb } from '@/app/portal/components/breadcrumb/breadcrumb';
 import { Card } from '@/app/portal/components/card';
 import { TabNavigation } from '@/app/portal/components/tab-navigation';
 
-import { getAuthenticatedUserOrRedirect, requireGlobalAnalystOrGlobalAdmin } from '@/lib/firebase/current-user';
+import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { ReactNode } from 'react';
 
 type MonitoringLayoutProps = {
@@ -11,7 +11,7 @@ type MonitoringLayoutProps = {
 
 export default async function DeliveryLayout({ children }: MonitoringLayoutProps) {
 	const user = await getAuthenticatedUserOrRedirect();
-	await requireGlobalAnalystOrGlobalAdmin(user);
+	await requireAdmin(user);
 
 	const breadcrumbLinks = [
 		{ href: '/portal', label: 'Home' },
@@ -20,9 +20,9 @@ export default async function DeliveryLayout({ children }: MonitoringLayoutProps
 
 	const sections = [
 		{ href: `/portal/admin/organizations`, label: 'Organizations' },
-		{ href: `/portal/admin/users`, label: 'Users' },
 		{ href: `/portal/admin/local-partners`, label: 'Local Partners' },
 		{ href: `/portal/admin/expenses`, label: 'Expenses' },
+		{ href: `/portal/admin/exchange-rates`, label: 'Exchange Rates' },
 	];
 
 	return (

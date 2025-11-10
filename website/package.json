@@ -3,9 +3,11 @@
 	"version": "1.0.0",
 	"private": true,
 	"scripts": {
-		"serve": "next dev -p 3001",
+		"build-paths": "tsx scripts/generate-paths.ts",
+		"serve": "npm run build-paths && npm run openapi:generate && next dev -p 3001",
 		"serve:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run serve'",
-		"build": "next build",
+		"build": "npm run build-paths && next build",
+		"postbuild": "npm run openapi:generate",
 		"build:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run build'",
 		"start": "next start -p 3001",
 		"start:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run start'",
@@ -15,7 +17,9 @@
 		"test:e2e:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run test:e2e'",
 		"test:e2e:update": "npx playwright install --with-deps && playwright test --update-snapshots",
 		"test:e2e:update:emulator": "firebase emulators:exec --project demo-social-income-local --only firestore --config ../firebase.json --import ../seed  'npm run test:e2e:update'",
-		"lint": "next lint"
+		"lint": "next lint",
+		"openapi:generate": "next-openapi-gen generate",
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
 		"@heroicons/react": "^2.1.5",
@@ -29,6 +33,7 @@
 		"@radix-ui/react-select": "^2.2.6",
 		"@radix-ui/react-separator": "^1.1.7",
 		"@radix-ui/react-slot": "^1.2.3",
+		"@scalar/api-reference-react": "^0.7.55",
 		"@sentry/nextjs": "^8.49.0",
 		"@socialincome/shared": "^1.0.0",
 		"@socialincome/ui": "^1.0.0",
@@ -41,7 +46,9 @@
 		"class-variance-authority": "^0.7.1",
 		"classnames": "^2.5.1",
 		"clsx": "^2.1.1",
+		"cmdk": "^1.1.1",
 		"country-flag-icons": "^1.5.13",
+		"date-fns": "^4.1.0",
 		"firebase": "^11.9.1",
 		"i18next": "^23.15.2",
 		"js-cookie": "^3.0.5",
@@ -50,6 +57,7 @@
 		"luxon": "^3.5.0",
 		"next": "15.3.5",
 		"react": "18.3.1",
+		"react-day-picker": "^9.11.1",
 		"react-dom": "18.3.1",
 		"react-hot-toast": "^2.4.1",
 		"recharts": "^2.12.7",
@@ -74,8 +82,10 @@
 		"autoprefixer": "^10.4.20",
 		"eslint": "^8.57.1",
 		"eslint-config-next": "15.3.1",
+		"next-openapi-gen": "^0.7.11",
 		"postcss": "^8.4.47",
 		"tailwindcss": "^3.4.13",
+		"tsx": "^4.20.3",
 		"typescript": "^5.6.2"
 	}
 }

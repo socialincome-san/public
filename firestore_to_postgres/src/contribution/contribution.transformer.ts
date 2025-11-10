@@ -1,86 +1,127 @@
-import { ContributionInterval, ContributionSource, ContributionStatus } from '@prisma/client';
-import { CreateContributionInput } from '@socialincome/shared/src/database/services/contribution/contribution.types';
+import { ContributionStatus, PaymentEventType, Prisma } from '@prisma/client';
+import {
+	BankWireContribution,
+	ContributionSourceKey,
+	Contribution as FirestoreContribution,
+	StatusKey,
+	StripeContribution,
+} from '@socialincome/shared/src/types/contribution';
+import { DEFAULT_CAMPAIGN } from '../../scripts/seed-defaults';
 import { BaseTransformer } from '../core/base.transformer';
-import { ContributionWithUser } from './contribution.extractor';
+import { ContributionWithPayment, FirestoreContributionWithUser } from './contribution.types';
 
-export type ContributionWithEmail = Omit<
-	CreateContributionInput,
-	'contributorId' | 'campaignId' | 'organizationId' | 'programId'
-> & {
-	contributorEmail: string;
-};
+export class ContributionTransformer extends BaseTransformer<FirestoreContributionWithUser, ContributionWithPayment> {
+	transform = async (input: FirestoreContributionWithUser[]): Promise<ContributionWithPayment[]> => {
+		const transformed: ContributionWithPayment[] = [];
+		let skippedCount = 0;
 
-export type ContributorWithEmail = { email: string };
-
-export type TransformedContributions = {
-	contributors: ContributorWithEmail[];
-	contributions: ContributionWithEmail[];
-};
-
-export class ContributionsTransformer extends BaseTransformer<ContributionWithUser, TransformedContributions> {
-	transform = async (input: ContributionWithUser[]): Promise<TransformedContributions[]> => {
-		const seenEmails = new Set<string>();
-		const contributors: ContributorWithEmail[] = [];
-		const contributions: ContributionWithEmail[] = [];
-
-		for (const { user, contribution } of input) {
-			const email = user.email.toLowerCase();
-
-			if (!seenEmails.has(email)) {
-				contributors.push({ email });
-				seenEmails.add(email);
+		for (const { contribution, user } of input) {
+			if (user.test_user) {
+				skippedCount++;
+				continue;
 			}
 
-			contributions.push({
-				amount: contribution.amount,
-				amountChf: contribution.amount_chf,
-				feesChf: contribution.fees_chf,
-				contributionInterval: this.mapInterval(contribution.monthly_interval),
-				source: this.mapSource(contribution.source),
-				status: this.mapStatus(contribution.status),
-				currency: contribution.currency,
-				referenceId: contribution.reference_id ?? '',
-				transactionId: 'transaction_id' in contribution ? (contribution.transaction_id ?? null) : null,
-				rawContent: 'raw_content' in contribution ? (contribution.raw_content ?? null) : null,
-				contributorEmail: email,
+			const legacyId = `${user.id}_${contribution.id}`;
+
+			const isStaging = process.env.FIREBASE_DATABASE_URL?.includes('staging');
+
+			let campaignConnect;
+
+			if (isStaging) {
+				campaignConnect = { connect: { title: DEFAULT_CAMPAIGN.title } };
+			} else {
+				campaignConnect = contribution.campaign_path
+					? { connect: { legacyFirestoreId: contribution.campaign_path.id } }
+					: { connect: { title: DEFAULT_CAMPAIGN.title } };
+			}
+
+			transformed.push({
+				contribution: {
+					legacyFirestoreId: legacyId,
+					createdAt: contribution.created?.toDate() ?? contribution.last_updated_at?.toDate() ?? undefined,
+					amount: contribution.amount,
+					amountChf: contribution.amount_chf ?? 0,
+					feesChf: contribution.fees_chf,
+					currency: contribution.currency ?? '',
+					status: this.mapStatus(contribution.status),
+					contributor: { connect: { legacyFirestoreId: user.id } },
+					campaign: campaignConnect,
+					paymentEvent: { create: this.buildPaymentEvent(contribution) },
+				},
 			});
 		}
 
-		return [{ contributors, contributions }];
+		if (skippedCount > 0) {
+			console.log(`⚠️ Skipped ${skippedCount} test contributor contributions`);
+		}
+
+		return transformed;
 	};
 
-	private mapInterval(value: number): ContributionInterval {
-		switch (value) {
-			case 0:
-				return ContributionInterval.one_time;
-			case 1:
-				return ContributionInterval.monthly;
-			case 3:
-				return ContributionInterval.quarterly;
-			case 12:
-				return ContributionInterval.annually;
+	private buildPaymentEvent(contribution: FirestoreContribution): Prisma.PaymentEventCreateWithoutContributionInput {
+		return {
+			type: this.mapPaymentType(contribution.source),
+			transactionId: this.extractTransactionId(contribution),
+			metadata: this.extractMetadata(contribution),
+		};
+	}
+
+	private extractTransactionId(contribution: FirestoreContribution): string | null {
+		switch (contribution.source) {
+			case ContributionSourceKey.STRIPE: {
+				const stripe = contribution as StripeContribution;
+				return stripe.reference_id ?? null;
+			}
+			case ContributionSourceKey.WIRE_TRANSFER: {
+				const wire = contribution as BankWireContribution;
+				return wire.transaction_id ?? wire.reference_id ?? null;
+			}
 			default:
-				// fallback: treat unknown numeric cadence as monthly
-				return ContributionInterval.monthly;
+				return null;
 		}
 	}
 
-	private mapSource(source: string): ContributionSource {
-		const normalized = source.replace(/-/g, '_').toLowerCase();
-		const validSources = Object.values(ContributionSource);
-		if (validSources.includes(normalized as ContributionSource)) {
-			return normalized as ContributionSource;
+	private extractMetadata(contribution: FirestoreContribution): Prisma.InputJsonValue | Prisma.JsonNullValueInput {
+		if (contribution.source === ContributionSourceKey.WIRE_TRANSFER) {
+			const bank = contribution as BankWireContribution;
+			return bank.raw_content ? { raw_content: bank.raw_content } : Prisma.JsonNull;
 		}
-		console.warn(`[Transformer] Unknown contribution source "${source}", defaulting to 'stripe'`);
-		return ContributionSource.stripe;
+		return Prisma.JsonNull;
 	}
 
-	private mapStatus(status: string): ContributionStatus {
-		const validStatuses = Object.values(ContributionStatus);
-		if (validStatuses.includes(status as ContributionStatus)) {
-			return status as ContributionStatus;
+	private mapPaymentType(source: ContributionSourceKey): PaymentEventType {
+		switch (source) {
+			case ContributionSourceKey.STRIPE:
+				return PaymentEventType.stripe;
+			case ContributionSourceKey.WIRE_TRANSFER:
+				return PaymentEventType.bank_transfer;
+			case ContributionSourceKey.BENEVITY:
+				return PaymentEventType.benevity;
+			case ContributionSourceKey.CASH:
+				return PaymentEventType.cash;
+			case ContributionSourceKey.RAISENOW:
+				return PaymentEventType.raisenow;
+			default:
+				if (process.env.FIREBASE_DATABASE_URL?.includes('staging')) {
+					console.log(
+						`💡 Unknown contribution source "${source}" → falling back to PaymentEventType.other (staging only).`,
+					);
+					return PaymentEventType.stripe;
+				}
+				throw new Error(`Unknown contribution source "${source}" in production.`);
 		}
-		console.warn(`[Transformer] Unknown contribution status "${status}", defaulting to 'unknown'`);
-		return ContributionStatus.unknown;
+	}
+
+	private mapStatus(status: StatusKey): ContributionStatus {
+		switch (status) {
+			case StatusKey.SUCCEEDED:
+				return ContributionStatus.succeeded;
+			case StatusKey.FAILED:
+				return ContributionStatus.failed;
+			case StatusKey.PENDING:
+				return ContributionStatus.pending;
+			default:
+				throw new Error(`Unknown contribution status ${status}`);
+		}
 	}
 }

@@ -33,3 +33,9 @@ variable "website_domain" {
   description = "Domain name for the website"
   type        = string
 }
+
+variable "exchange_rate_import_api_key" {
+  description = "API key for the exchange rate import API endpoint"
+  type        = string
+  sensitive   = true
+}

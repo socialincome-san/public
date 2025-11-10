@@ -1,7 +1,7 @@
 'use client';
 
 import { BaseTable } from '@/app/portal/components/data-table/elements/base-table';
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef, SortingState } from '@tanstack/react-table';
 import { ReactNode } from 'react';
 
 type DataTableProps<Row> = {
@@ -10,9 +10,10 @@ type DataTableProps<Row> = {
 	emptyMessage: string;
 	actions?: ReactNode;
 	data: Row[];
-	makeColumns: (hideProgramName: boolean) => ColumnDef<Row>[];
+	makeColumns: (hideProgramName?: boolean) => ColumnDef<Row>[];
 	hideProgramName?: boolean;
-	onRowClick?: (row: Row) => void; // optional for now
+	onRowClick?: (row: Row) => void;
+	initialSorting?: SortingState;
 };
 
 export default function DataTable<Row>({
@@ -24,17 +25,10 @@ export default function DataTable<Row>({
 	makeColumns,
 	hideProgramName = false,
 	onRowClick,
+	initialSorting,
 }: DataTableProps<Row>) {
 	const columns = makeColumns(hideProgramName);
 	const isEmpty = data.length === 0;
-
-	// Fallback handler if not provided
-	const handleRowClick =
-		onRowClick ??
-		((row: Row) => {
-			// TODO: make onRowClick mandatory
-			console.log('Row clicked (no handler provided):', row);
-		});
 
 	return (
 		<div>
@@ -50,7 +44,7 @@ export default function DataTable<Row>({
 			) : isEmpty ? (
 				<div className="p-4 text-gray-500">{emptyMessage}</div>
 			) : (
-				<BaseTable data={data} columns={columns} onRowClick={handleRowClick} />
+				<BaseTable data={data} columns={columns} onRowClick={onRowClick} initialSorting={initialSorting} />
 			)}
 		</div>
 	);

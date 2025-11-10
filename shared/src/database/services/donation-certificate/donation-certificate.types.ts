@@ -1,3 +1,16 @@
-import { DonationCertificate as PrismaDonationCertificate } from '@prisma/client';
+import { OrganizationPermission } from '@prisma/client';
 
-export type CreateDonationCertificateInput = Omit<PrismaDonationCertificate, 'id' | 'createdAt' | 'updatedAt'>;
+export type DonationCertificateTableViewRow = {
+	id: string;
+	year: number;
+	contributorFirstName: string;
+	contributorLastName: string;
+	email: string;
+	storagePath: string;
+	createdAt: Date;
+	permission: OrganizationPermission;
+};
+
+export type DonationCertificateTableView = {
+	tableRows: DonationCertificateTableViewRow[];
+};

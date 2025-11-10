@@ -6,7 +6,7 @@ const main = async (): Promise<void> => {
 		const migrator = new CampaignMigrator();
 		await migrator.migrate();
 	} catch (err) {
-		console.error('❌ Campaign migration failed:', err);
+		console.log('❌ Campaign migration failed:', err);
 		process.exit(1);
 	}
 };

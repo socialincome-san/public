@@ -1,16 +1,31 @@
-import { Organization as PrismaOrganization } from '@prisma/client';
+import { OrganizationPermission, UserRole } from '@prisma/client';
 
-export type CreateOrganizationInput = Omit<PrismaOrganization, 'id' | 'createdAt' | 'updatedAt'>;
+export type OrganizationMemberTableViewRow = {
+	id: string;
+	firstName: string;
+	lastName: string;
+	email: string;
+	role: UserRole | null;
+	permission: OrganizationPermission;
+};
+
+export type OrganizationMemberTableView = {
+	tableRows: OrganizationMemberTableViewRow[];
+};
 
 export type OrganizationTableViewRow = {
 	id: string;
 	name: string;
-	operatedProgramsCount: number;
-	viewedProgramsCount: number;
+	ownedProgramsCount: number;
 	usersCount: number;
-	readonly: boolean;
+	createdAt: Date;
 };
 
 export type OrganizationTableView = {
 	tableRows: OrganizationTableViewRow[];
+};
+
+export type OrganizationOption = {
+	id: string;
+	name: string;
 };

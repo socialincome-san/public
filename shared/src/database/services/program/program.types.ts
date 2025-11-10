@@ -1,8 +1,4 @@
-import { Program as PrismaProgram } from '@prisma/client';
-
-export type CreateProgramInput = Omit<PrismaProgram, 'id' | 'createdAt' | 'updatedAt'>;
-
-export type ProgramPermission = 'operator' | 'viewer';
+import { ProgramPermission, UserRole } from '@prisma/client';
 
 export type ProgramWallet = {
 	id: string;
@@ -14,6 +10,24 @@ export type ProgramWallet = {
 	permission: ProgramPermission;
 };
 
-export type ProgramWalletView = {
+export type ProgramWallets = {
 	wallets: ProgramWallet[];
+};
+
+export type ProgramMemberTableViewRow = {
+	id: string;
+	firstName: string;
+	lastName: string;
+	email: string;
+	role: UserRole | null;
+	permission: ProgramPermission;
+};
+
+export type ProgramMemberTableView = {
+	tableRows: ProgramMemberTableViewRow[];
+};
+
+export type ProgramOption = {
+	id: string;
+	name: string;
 };

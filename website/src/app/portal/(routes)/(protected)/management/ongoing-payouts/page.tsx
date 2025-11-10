@@ -1,4 +1,4 @@
-import { makeOngoingPayoutsColumns } from '@/app/portal/components/data-table/columns/ongoing-payouts';
+import { makeOngoingPayoutColumns } from '@/app/portal/components/data-table/columns/ongoing-payouts';
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
@@ -18,7 +18,7 @@ export default async function OngoingPayoutsPage() {
 			error={error}
 			emptyMessage="No ongoing payouts found"
 			data={rows}
-			makeColumns={makeOngoingPayoutsColumns}
+			makeColumns={makeOngoingPayoutColumns}
 		/>
 	);
 }

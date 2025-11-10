@@ -1,24 +1,54 @@
-import { Campaign as PrismaCampaign } from '@prisma/client';
-
-export type CreateCampaignInput = Omit<PrismaCampaign, 'id' | 'createdAt' | 'updatedAt'>;
-
-export type ProgramPermission = 'operator' | 'viewer';
+import { OrganizationPermission, Prisma } from '@prisma/client';
 
 export type CampaignTableViewRow = {
 	id: string;
 	title: string;
-	creatorName: string;
-	creatorEmail: string;
-	status: boolean;
-	goal: number | null;
-	currency: string | null;
+	description: string;
+	currency: string;
 	endDate: Date;
-	endDateFormatted: string;
-	programName: string;
-	programId: string;
-	permission: ProgramPermission;
+	isActive: boolean;
+	programName: string | null;
+	createdAt: Date;
+	permission: OrganizationPermission;
 };
 
 export type CampaignTableView = {
 	tableRows: CampaignTableViewRow[];
 };
+
+export type CampaignPayload = {
+	id: string;
+	title: string;
+	description: string;
+	secondDescriptionTitle?: string | null;
+	secondDescription?: string | null;
+	thirdDescriptionTitle?: string | null;
+	thirdDescription?: string | null;
+	linkWebsite?: string | null;
+	linkInstagram?: string | null;
+	linkTiktok?: string | null;
+	linkFacebook?: string | null;
+	linkX?: string | null;
+	goal?: number | null;
+	currency: string;
+	additionalAmountChf?: number | null;
+	endDate: Date;
+	isActive: boolean;
+	public?: boolean | null;
+	featured?: boolean | null;
+	slug?: string | null;
+	metadataDescription?: string | null;
+	metadataOgImage?: string | null;
+	metadataTwitterImage?: string | null;
+	creatorName: string | null;
+	creatorEmail: string | null;
+	program: {
+		id: string;
+		name: string;
+	} | null;
+};
+
+// campaign will be created using current users organization ID
+export type CampaignsCreateInput = Omit<Prisma.CampaignCreateInput, 'organization'>;
+export type CampaignsUpdateInput = Prisma.CampaignUpdateInput;
+export type CampaignOption = { id: string; name: string };

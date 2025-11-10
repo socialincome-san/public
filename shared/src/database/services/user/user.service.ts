@@ -1,51 +1,21 @@
-import { User as PrismaUser } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 import { BaseService } from '../core/base.service';
-import { PaginationOptions, ServiceResult } from '../core/base.types';
-import { CreateUserInput, UserInformation, UserTableView, UserTableViewRow } from './user.types';
+import { ServiceResult } from '../core/base.types';
+import { UserInformation } from './user.types';
 
 export class UserService extends BaseService {
-	async findMany(options?: PaginationOptions): Promise<ServiceResult<PrismaUser[]>> {
+	async getCurrentUserInformation(firebaseAuthUserId: string): Promise<ServiceResult<UserInformation>> {
 		try {
-			const users = await this.db.user.findMany({
-				orderBy: { createdAt: 'desc' },
-				...options,
-			});
-
-			return this.resultOk(users);
-		} catch (e) {
-			console.error('[UserService.getUsers]', e);
-			return this.resultFail('Could not fetch users');
-		}
-	}
-
-	async create(input: CreateUserInput): Promise<ServiceResult<PrismaUser>> {
-		try {
-			const conflict = await this.checkIfUserExists(input.email, input.authUserId);
-			if (conflict) {
-				return this.resultFail('User with this email or auth ID already exists');
-			}
-
-			const user = await this.db.user.create({
-				data: input,
-			});
-
-			return this.resultOk(user);
-		} catch (e) {
-			console.error('[UserService.createUser]', e);
-			return this.resultFail('Could not create user');
-		}
-	}
-
-	async getCurrentUserByAuthId(authUserId: string): Promise<ServiceResult<UserInformation>> {
-		try {
-			const user = await this.db.user.findUnique({
-				where: { authUserId },
+			const user = await this.db.user.findFirst({
+				where: { account: { firebaseAuthUserId } },
 				select: {
 					id: true,
-					firstName: true,
-					lastName: true,
-					organization: { select: { name: true } },
 					role: true,
+					accountId: true,
+					contact: { select: { firstName: true, lastName: true } },
+					activeOrganization: { select: { id: true, name: true } },
+					organizationAccesses: { select: { organization: { select: { id: true, name: true } } } },
+					programAccesses: { select: { program: { select: { id: true, name: true } } } },
 				},
 			});
 
@@ -53,64 +23,59 @@ export class UserService extends BaseService {
 				return this.resultFail('User not found');
 			}
 
+			const organizations = user.organizationAccesses.map((access) => ({
+				id: access.organization.id,
+				name: access.organization.name,
+			}));
+
+			const activeOrganization = user.activeOrganization
+				? {
+						id: user.activeOrganization.id,
+						name: user.activeOrganization.name,
+					}
+				: null;
+
+			const programs = user.programAccesses.map((access) => ({
+				id: access.program.id,
+				name: access.program.name,
+			}));
+
 			const userInfo: UserInformation = {
 				id: user.id,
-				firstName: user.firstName,
-				lastName: user.lastName,
-				organizationName: user.organization?.name || null,
+				firstName: user.contact?.firstName ?? null,
+				lastName: user.contact?.lastName ?? null,
 				role: user.role,
+				activeOrganization,
+				organizations,
+				programs,
 			};
 
 			return this.resultOk(userInfo);
-		} catch (e) {
-			console.error('[UserService.getCurrentUserByAuthId]', e);
-			return this.resultFail('Error fetching user');
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Error fetching user information');
 		}
 	}
 
-	async getUserAdminTableView(user: UserInformation): Promise<ServiceResult<UserTableView>> {
-		const accessDenied = this.requireGlobalAnalystOrAdmin<UserTableView>(user);
-		if (accessDenied) return accessDenied;
-
+	async isAdmin(userId: string): Promise<ServiceResult<true>> {
 		try {
-			const users = await this.db.user.findMany({
-				select: {
-					id: true,
-					firstName: true,
-					lastName: true,
-					role: true,
-					organization: { select: { name: true } },
-				},
-				orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],
+			const user = await this.db.user.findUnique({
+				where: { id: userId },
+				select: { role: true },
 			});
 
-			const tableRows: UserTableViewRow[] = users.map((user) => ({
-				id: user.id,
-				firstName: user.firstName,
-				lastName: user.lastName,
-				role: user.role,
-				organizationName: user.organization?.name ?? '',
-				readonly: user.role === 'globalAnalyst',
-			}));
+			if (!user) {
+				return this.resultFail('User not found');
+			}
 
-			return this.resultOk({ tableRows });
+			if (user.role !== UserRole.admin) {
+				return this.resultFail('Permission denied');
+			}
+
+			return this.resultOk(true);
 		} catch (error) {
-			console.error('[UserService.getUserTableView]', error);
-			return this.resultFail('Could not fetch users');
+			console.error(error);
+			return this.resultFail('Could not check admin status');
 		}
-	}
-
-	private async checkIfUserExists(email: string, authUserId: string | null): Promise<PrismaUser | null> {
-		const conditions: Array<{ email: string } | { authUserId: string }> = [{ email }];
-
-		if (authUserId?.trim()) {
-			conditions.push({ authUserId });
-		}
-
-		return this.db.user.findFirst({
-			where: {
-				OR: conditions,
-			},
-		});
 	}
 }

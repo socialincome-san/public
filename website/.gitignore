@@ -1,5 +1,4 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 /.pnp
@@ -18,6 +17,7 @@
 # misc
 .DS_Store
 *.pem
+**/static-pages.json
 
 # debug
 npm-debug.log*
@@ -52,3 +52,5 @@ crash.log
 # Local overrides (often used for secret config)
 terraform.tfvars
 terraform.tfvars.json
+
+/public/openapi.json

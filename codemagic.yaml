@@ -4,7 +4,7 @@ definitions:
     max_build_duration: 30
 
   env_versions: &env_versions
-    flutter: 3.32.7
+    flutter: 3.35.5
     xcode: 16.4
     cocoapods: 1.16.2
     java: 21
@@ -38,30 +38,52 @@ workflows:
     environment:
       android_signing:
         - social_income_upload_keystore.jks
+      vars:
+        PACKAGE_NAME: "org.socialincome.app.stage"
+        GOOGLE_PLAY_TRACK: internal
       groups:
         - slack
         - app-config-stage
         - firebase
-        #- google_play # <-- (Includes GCLOUD_SERVICE_ACCOUNT_CREDENTIALS)
+        - google-play # <-- (Includes GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS)
       <<: *env_versions
 
     cache:
       cache_paths:
         - $HOME/.gradle/caches
-        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/.pub-cache
 
     scripts:
-      - name: Set up key.properties
+      - name: Set build number automatically from Google Play
         script: |
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
-          cat >> "$CM_BUILD_DIR/recipients_app/android/key.properties" <<EOF
-          storePassword=$CM_KEYSTORE_PASSWORD
-          keyPassword=$CM_KEY_PASSWORD
-          keyAlias=$CM_KEY_ALIAS
-          storeFile=$CM_KEYSTORE_PATH
-          EOF
+          # Get the latest build number from Google Play and increment it by 1
+          NEW_BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
+          if [ -z "$NEW_BUILD_NUMBER" ]; then
+            echo "Missing build number!"
+            exit 1
+          fi
+
+          cd $CM_BUILD_DIR/recipients_app
+          echo "Change the build number in pubspec.yaml"
+          sed -i '' -E "s/(version: [0-9]+\.[0-9]+\.[0-9]+\+)[0-9]+/\1$NEW_BUILD_NUMBER/" "./pubspec.yaml"
+      - name: Load Firebase Options file
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app/lib
+          printf '%s' "$FIREBASE_OPTIONS" > firebase_options_stage.dart
+      - name: Load Firebase configuration
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          mkdir -p $CM_BUILD_DIR/recipients_app/android/app/src/stage
+          cd $CM_BUILD_DIR/recipients_app/android/app/src/stage
+          printf '%s' "$ANDROID_FIREBASE_SECRET" > google-services.json
       # - name: Decode Google credentials
       #   script: |
       #     echo $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT > $GOOGLE_APPLICATION_CREDENTIALS
@@ -79,10 +101,10 @@ workflows:
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
-          # Build the Flutter APK app
-          flutter build apk --release \
+          # Build the Flutter app
+          flutter build appbundle --release \
             --flavor stage \
-            -t lib/main.dart \
+            -t lib/main_stage.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
             --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
@@ -90,16 +112,29 @@ workflows:
             --dart-define=TWILIO_NUMBER=$TWILIO_NUMBER \
             --dart-define=TWILIO_SERVICE_SID=$TWILIO_SERVICE_SID \
         working_directory: recipients_app
+      - name: Generate universal APK from AAB
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          android-app-bundle build-universal-apk \
+            --bundle 'build/**/outputs/bundle/stageRelease/**/*.aab' \
+            --ks $CM_KEYSTORE_PATH \
+            --ks-pass $CM_KEYSTORE_PASSWORD \
+            --ks-key-alias $CM_KEY_ALIAS \
+            --key-pass $CM_KEY_PASSWORD \
+        working_directory: recipients_app
 
     artifacts:
-      - recipients_app/build/**/outputs/apk/stage/**/*.apk
+      - recipients_app/build/**/outputs/bundle/stageRelease/**/*.apk
+      - recipients_app/build/**/outputs/bundle/stageRelease/**/*.aab
       - recipients_app/build/**/outputs/**/mapping.txt
 
     publishing:
-      #google_play:
-      #  credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-      #  track: internal
-      #  submit_as_draft: true
+      google_play:
+        credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        submit_as_draft: false
       firebase:
         firebase_service_account: $FIREBASE_APP_DISTRIBUTION_SERVICE_ACCOUNT
         android:
@@ -129,39 +164,51 @@ workflows:
     environment:
       android_signing:
         - social_income_upload_keystore.jks
+      vars:
+        PACKAGE_NAME: "org.socialincome.app"
+        GOOGLE_PLAY_TRACK: internal
       groups:
         - slack
         - app-config-prod
-        #- google_play # <-- (Includes GCLOUD_SERVICE_ACCOUNT_CREDENTIALS)
+        - google-play # <-- (Includes GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS)
       <<: *env_versions
 
     cache:
       cache_paths:
         - $HOME/.gradle/caches
-        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/.pub-cache
 
     scripts:
-      - name: Set up key.properties
+      - name: Set build number automatically from Google Play
         script: |
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
-          cat >> "$CM_BUILD_DIR/recipients_app/android/key.properties" <<EOF
-          storePassword=$CM_KEYSTORE_PASSWORD
-          keyPassword=$CM_KEY_PASSWORD
-          keyAlias=$CM_KEY_ALIAS
-          storeFile=$CM_KEYSTORE_PATH
-          EOF
+          # Get the latest build number from Google Play and increment it by 1
+          NEW_BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks="$GOOGLE_PLAY_TRACK") + 1))
+          if [ -z "$NEW_BUILD_NUMBER" ]; then
+            echo "Missing build number!"
+            exit 1
+          fi
+
+          cd $CM_BUILD_DIR/recipients_app
+          echo "Change the build number in pubspec.yaml"
+          sed -i '' -E "s/(version: [0-9]+\.[0-9]+\.[0-9]+\+)[0-9]+/\1$NEW_BUILD_NUMBER/" "./pubspec.yaml"
+      - name: Load Firebase Options file
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app/lib
+          printf '%s' "$FIREBASE_OPTIONS" > firebase_options_prod.dart
       - name: Load Firebase configuration
         script: |
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
-          cd $CM_BUILD_DIR/recipients_app/android/app/src
-          mkdir prod
-          cd prod
-
-          echo $ANDROID_FIREBASE_SECRET > google-services.json
+          mkdir -p $CM_BUILD_DIR/recipients_app/android/app/src/prod
+          cd $CM_BUILD_DIR/recipients_app/android/app/src/prod
+          printf '%s' "$ANDROID_FIREBASE_SECRET" > google-services.json
       - *verify_flutter_version
       - name: Get Flutter packages
         script: |
@@ -178,7 +225,7 @@ workflows:
           # Build the Flutter AAB app
           flutter build appbundle --release \
             --flavor prod \
-            -t lib/main.dart \
+            -t lib/main_prod.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
             --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
@@ -188,15 +235,14 @@ workflows:
         working_directory: recipients_app
 
     artifacts:
-      - recipients_app/build/**/outputs/apk/prodRelease/**/*.apk
       - recipients_app/build/**/outputs/bundle/prodRelease/**/*.aab
       - recipients_app/build/**/outputs/**/mapping.txt
 
     publishing:
-      #google_play:
-      #  credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-      #  track: internal
-      #  submit_as_draft: true
+      google_play:
+        credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        submit_as_draft: false
 
       # Notifications
       email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
@@ -227,16 +273,54 @@ workflows:
       groups:
         - slack
         - app-config-stage
+        - firebase
       vars:
-        APP_ID: 6464113329 # Apple ID of App "Stage Social Income"
+        APP_STORE_APPLE_ID: 6464113329 # Apple ID of App "Stage Social Income"
       <<: *env_versions
 
     cache:
       cache_paths:
-        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/.pub-cache
         - $HOME/Library/Caches/CocoaPods
 
     scripts:
+      - name: Set build number automatically from App Store Connect
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          # Get the latest build number from App Store Connect and increment it by 1
+          NEW_BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number --not-expired "$APP_STORE_APPLE_ID") + 1))
+          if [ -z "$NEW_BUILD_NUMBER" ]; then
+            echo "Missing build number!"
+            exit 1
+          fi
+
+          cd $CM_BUILD_DIR/recipients_app
+          echo "Change the build number in pubspec.yaml"
+          sed -i '' -E "s/(version: [0-9]+\.[0-9]+\.[0-9]+\+)[0-9]+/\1$NEW_BUILD_NUMBER/" "./pubspec.yaml"
+      - name: Load Firebase Options file
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app/lib
+          printf '%s' "$FIREBASE_OPTIONS" > firebase_options_stage.dart
+      - name: Load Firebase configuration
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app/ios
+          mkdir -p flavors/stage
+          printf '%s' "$IOS_FIREBASE_SECRET" > flavors/stage/GoogleService-Info.plist
+      - name: Load Firebase.json
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app
+          printf '%s' "$firebase_json" > firebase.json
       - name: Set up code signing settings on Xcode project
         script: |
           #!/usr/bin/env sh
@@ -249,6 +333,13 @@ workflows:
           # Print the export options plist
           more $CM_BUILD_DIR/recipients_app/ios/export_options.plist
       - *verify_flutter_version
+      - name: Install FlutterFire CLI
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          dart pub global activate flutterfire_cli
+        working_directory: recipients_app
       - name: Get Flutter packages & Install pods
         script: |
           #!/usr/bin/env sh
@@ -265,7 +356,7 @@ workflows:
           # Build the Flutter iOS app
           flutter build ipa --release \
             --flavor stage \
-            -t lib/main.dart \
+            -t lib/main_stage.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
             --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
@@ -286,7 +377,7 @@ workflows:
         auth: integration
         # Whether or not to submit the uploaded build to TestFlight beta review.
         # Note: This action is performed during post-processing.
-        submit_to_testflight: true
+        submit_to_testflight: false
 
       # Notifications
       email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email
@@ -318,12 +409,12 @@ workflows:
         - app-config-stage
         - firebase
       vars:
-        APP_ID: 6464113329 # Apple ID of App "Stage Social Income"
+        APP_STORE_APPLE_ID: 6464113329 # Apple ID of App "Stage Social Income"
       <<: *env_versions
 
     cache:
       cache_paths:
-        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/.pub-cache
         - $HOME/Library/Caches/CocoaPods
 
     scripts:
@@ -336,6 +427,43 @@ workflows:
       #       --create
       # - name: Set up signing certificate
       #   script: keychain add-certificates
+      - name: Set build number automatically from App Store Connect
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          # Get the latest build number from App Store Connect and increment it by 1
+          NEW_BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number --not-expired "$APP_STORE_APPLE_ID") + 1))
+          if [ -z "$NEW_BUILD_NUMBER" ]; then
+            echo "Missing build number!"
+            exit 1
+          fi
+
+          cd $CM_BUILD_DIR/recipients_app
+          echo "Change the build number in pubspec.yaml"
+          sed -i '' -E "s/(version: [0-9]+\.[0-9]+\.[0-9]+\+)[0-9]+/\1$NEW_BUILD_NUMBER/" "./pubspec.yaml"
+      - name: Load Firebase Options file
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app/lib
+          printf '%s' "$FIREBASE_OPTIONS" > firebase_options_stage.dart
+      - name: Load Firebase configuration
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app/ios
+          mkdir -p flavors/stage
+          printf '%s' "$IOS_FIREBASE_SECRET" > flavors/stage/GoogleService-Info.plist
+      - name: Load Firebase.json
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app
+          printf '%s' "$firebase_json" > firebase.json
       - name: Set up code signing settings on Xcode project
         script: |
           #!/usr/bin/env sh
@@ -348,6 +476,13 @@ workflows:
           # Print the export options plist
           more $CM_BUILD_DIR/recipients_app/ios/export_options.plist
       - *verify_flutter_version
+      - name: Install FlutterFire CLI
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          dart pub global activate flutterfire_cli
+        working_directory: recipients_app
       - name: Get Flutter packages & Install pods
         script: |
           #!/usr/bin/env sh
@@ -364,7 +499,7 @@ workflows:
           # Build the Flutter iOS app
           flutter build ipa --release \
             --flavor stage \
-            -t lib/main.dart \
+            -t lib/main_stage.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
             --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
@@ -415,23 +550,54 @@ workflows:
       groups:
         - slack
         - app-config-prod
+        - firebase
       vars:
-        APP_ID: 6444860109 # Apple ID of Prod App "Social Income"
+        APP_STORE_APPLE_ID: 6444860109 # Apple ID of Prod App "Social Income"
       <<: *env_versions
 
     cache:
       cache_paths:
-        - $FLUTTER_ROOT/.pub-cache
+        - $HOME/.pub-cache
         - $HOME/Library/Caches/CocoaPods
 
     scripts:
-      - name: Load Prod Firebase configuration
+      - name: Set build number automatically from App Store Connect
         script: |
           #!/usr/bin/env sh
           set -e # exit on first failed command
 
-          cd $CM_BUILD_DIR/recipients_app/ios/GoogleServicesConfig
-          echo $IOS_FIREBASE_SECRET > GoogleService-Info-Prod.plist
+          # Get the latest build number from App Store Connect and increment it by 1
+          NEW_BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID") + 1))
+          if [ -z "$NEW_BUILD_NUMBER" ]; then
+            echo "Missing build number!"
+            exit 1
+          fi
+
+          cd $CM_BUILD_DIR/recipients_app
+          echo "Change the build number in pubspec.yaml"
+          sed -i '' -E "s/(version: [0-9]+\.[0-9]+\.[0-9]+\+)[0-9]+/\1$NEW_BUILD_NUMBER/" "./pubspec.yaml"
+      - name: Load Firebase Options file
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app/lib
+          printf '%s' "$FIREBASE_OPTIONS" > firebase_options_prod.dart
+      - name: Load Firebase configuration
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app/ios
+          mkdir -p flavors/prod
+          printf '%s' "$IOS_FIREBASE_SECRET" > flavors/prod/GoogleService-Info.plist
+      - name: Load Firebase.json
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          cd $CM_BUILD_DIR/recipients_app
+          printf '%s' "$firebase_json" > firebase.json
       - name: Set up code signing settings on Xcode project
         script: |
           #!/usr/bin/env sh
@@ -444,6 +610,13 @@ workflows:
           # Print the export options plist
           more $CM_BUILD_DIR/recipients_app/ios/export_options.plist
       - *verify_flutter_version
+      - name: Install FlutterFire CLI
+        script: |
+          #!/usr/bin/env sh
+          set -e # exit on first failed command
+
+          dart pub global activate flutterfire_cli
+        working_directory: recipients_app
       - name: Get Flutter packages & Install pods
         script: |
           #!/usr/bin/env sh
@@ -460,7 +633,7 @@ workflows:
           # Build the Flutter iOS app
           flutter build ipa --release \
             --flavor prod \
-            -t lib/main.dart \
+            -t lib/main_prod.dart \
             --dart-define=SURVEY_BASE_URL=$SURVEY_BASE_URL \
             --dart-define=SENTRY_URL=$SENTRY_URL \
             --dart-define=TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID \
@@ -481,7 +654,7 @@ workflows:
         auth: integration
         # Whether or not to submit the uploaded build to TestFlight beta review.
         # Note: This action is performed during post-processing.
-        submit_to_testflight: true
+        submit_to_testflight: false
 
       # Notifications
       email: # See the following link for details about email publishing - https://docs.codemagic.io/publishing-yaml/distribution/#email

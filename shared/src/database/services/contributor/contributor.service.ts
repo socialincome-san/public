@@ -1,129 +1,199 @@
-import { Contributor as PrismaContributor } from '@prisma/client';
+import { Contributor } from '@prisma/client';
+import { FirebaseService } from '../../../firebase/services/auth.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import {
+	ContributorOption,
+	ContributorPayload,
 	ContributorTableView,
 	ContributorTableViewRow,
-	CreateContributorInput,
-	ProgramPermission,
+	ContributorUpdateInput,
 } from './contributor.types';
 
 export class ContributorService extends BaseService {
-	async create(input: CreateContributorInput): Promise<ServiceResult<PrismaContributor>> {
+	private organizationAccessService = new OrganizationAccessService();
+	private firebaseAuthService = new FirebaseService();
+
+	async get(userId: string, contributorId: string): Promise<ServiceResult<ContributorPayload>> {
 		try {
-			const contributor = await this.db.contributor.create({ data: input });
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+
+			const contributor = await this.db.contributor.findUnique({
+				where: {
+					id: contributorId,
+					contributions: {
+						some: {
+							campaign: { organizationId: activeOrgResult.data.id },
+						},
+					},
+				},
+				select: {
+					id: true,
+					contact: {
+						select: {
+							id: true,
+							firstName: true,
+							lastName: true,
+							gender: true,
+							callingName: true,
+							email: true,
+							language: true,
+							phone: true,
+							profession: true,
+							dateOfBirth: true,
+							address: true,
+						},
+					},
+					referral: true,
+					paymentReferenceId: true,
+					stripeCustomerId: true,
+				},
+			});
+
+			if (!contributor) {
+				return this.resultFail('Contributor not found');
+			}
+
 			return this.resultOk(contributor);
 		} catch (error) {
-			console.error('[ContributorService.create]', error);
-			return this.resultFail('Could not create contributor');
+			console.error(error);
+			return this.resultFail('Could not get contributor');
 		}
 	}
 
-	async exists(userId: string): Promise<boolean> {
+	async update(userId: string, contributor: ContributorUpdateInput): Promise<ServiceResult<Contributor>> {
 		try {
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+
+			if (activeOrgResult.data.permission !== 'edit') {
+				return this.resultFail('No permissions to update contributor');
+			}
+
 			const existing = await this.db.contributor.findUnique({
-				where: { userId },
-				select: { id: true },
+				where: { id: contributor.id?.toString() },
+				select: { account: true },
 			});
-			return !!existing;
+
+			if (!existing) {
+				return this.resultFail('Contributor not found');
+			}
+
+			if (!contributor.contact?.update?.data?.email) {
+				return this.resultFail('Contributor email is required');
+			}
+
+			try {
+				await this.firebaseAuthService.updateByUid(existing.account.firebaseAuthUserId, {
+					email: contributor.contact?.update?.data?.email?.toString() ?? undefined,
+				});
+			} catch (error) {
+				// for now, dont fail the update if firebase user cannot be updated, because there is no auth user for every contributor
+				console.warn('Could not update Firebase Auth user for contributor:', error);
+			}
+
+			const updatedContributor = await this.db.contributor.update({
+				where: { id: contributor.id?.toString() },
+				data: contributor,
+			});
+
+			return this.resultOk(updatedContributor);
 		} catch (error) {
-			console.error('[ContributorService.exists]', error);
-			return false;
+			console.error(error);
+			return this.resultFail('Could not update contributor');
 		}
 	}
 
-	async getByUserId(userId: string): Promise<PrismaContributor | null> {
+	async getOptions(userId: string): Promise<ServiceResult<ContributorOption[]>> {
 		try {
-			return await this.db.contributor.findUnique({ where: { userId } });
-		} catch (error) {
-			console.error('[ContributorService.getByUserId]', error);
-			return null;
-		}
-	}
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
 
-	async getContributorTableView(userId: string): Promise<ServiceResult<ContributorTableView>> {
-		try {
 			const contributors = await this.db.contributor.findMany({
 				where: {
-					contributions: { some: { program: this.userAccessibleProgramsWhere(userId) } },
+					contributions: {
+						some: {
+							campaign: { organizationId: activeOrgResult.data.id },
+						},
+					},
+				},
+				select: {
+					id: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+						},
+					},
+				},
+				orderBy: { contact: { firstName: 'asc' } },
+			});
+
+			const options: ContributorOption[] = contributors.map((contributor) => ({
+				id: contributor.id,
+				name: `${contributor.contact?.firstName ?? ''} ${contributor.contact?.lastName ?? ''}`.trim(),
+			}));
+
+			return this.resultOk(options);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch contributor options');
+		}
+	}
+
+	async getTableView(userId: string): Promise<ServiceResult<ContributorTableView>> {
+		try {
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+
+			const { id: organizationId, permission } = activeOrgResult.data;
+
+			const contributors = await this.db.contributor.findMany({
+				where: {
+					contributions: {
+						some: {
+							campaign: { organizationId },
+						},
+					},
 				},
 				select: {
 					id: true,
 					createdAt: true,
-					user: {
+					contact: {
 						select: {
 							firstName: true,
 							lastName: true,
 							email: true,
-							addressCountry: true,
-							currency: true,
-						},
-					},
-					contributions: {
-						select: {
-							program: {
-								select: {
-									name: true,
-									operatorOrganization: {
-										select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-									},
-									viewerOrganization: {
-										select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-									},
-								},
-							},
+							address: { select: { country: true } },
 						},
 					},
 				},
 				orderBy: { createdAt: 'desc' },
 			});
 
-			const hiddenProgramLabel = '🔒 Restricted Program';
-
-			const tableRows: ContributorTableViewRow[] = contributors.map((contributor) => {
-				const renderedProgramNames = contributor.contributions
-					.map((contribution) => {
-						const program = contribution.program;
-						if (!program) return null;
-						const canViewProgram =
-							(program.operatorOrganization?.users?.length ?? 0) > 0 ||
-							(program.viewerOrganization?.users?.length ?? 0) > 0;
-						return canViewProgram ? (program.name ?? '') : hiddenProgramLabel;
-					})
-					.filter((label): label is string => Boolean(label));
-
-				const uniqueProgramNamesInOrder: string[] = [];
-				const seenLabels = new Set<string>();
-				for (const label of renderedProgramNames) {
-					if (!seenLabels.has(label)) {
-						uniqueProgramNamesInOrder.push(label);
-						seenLabels.add(label);
-					}
-				}
-				const programName = uniqueProgramNamesInOrder.join(', ');
-
-				const isOperatorOnAnyAccessibleProgram = contributor.contributions.some(
-					(contribution) => (contribution.program?.operatorOrganization?.users?.length ?? 0) > 0,
-				);
-				const permission: ProgramPermission = isOperatorOnAnyAccessibleProgram ? 'operator' : 'viewer';
-
-				return {
-					id: contributor.id,
-					firstName: contributor.user?.firstName ?? '',
-					lastName: contributor.user?.lastName ?? '',
-					email: contributor.user?.email ?? '',
-					country: contributor.user?.addressCountry ?? null,
-					currency: contributor.user?.currency ?? null,
-					programName,
-					createdAt: contributor.createdAt,
-					createdAtFormatted: new Intl.DateTimeFormat('de-CH').format(contributor.createdAt),
-					permission,
-				};
-			});
+			const tableRows: ContributorTableViewRow[] = contributors.map((c) => ({
+				id: c.id,
+				firstName: c.contact?.firstName ?? '',
+				lastName: c.contact?.lastName ?? '',
+				email: c.contact?.email ?? '',
+				country: c.contact?.address?.country ?? null,
+				createdAt: c.createdAt,
+				permission,
+			}));
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error('[ContributorService.getContributorTableView]', error);
+			console.error(error);
 			return this.resultFail('Could not fetch contributors');
 		}
 	}

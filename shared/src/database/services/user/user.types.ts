@@ -1,24 +1,20 @@
-import { User as PrismaUser, UserRole } from '@prisma/client';
-
-export type CreateUserInput = Omit<PrismaUser, 'id' | 'createdAt' | 'updatedAt'>;
+import { UserRole } from '@prisma/client';
 
 export type UserInformation = {
 	id: string;
 	firstName: string | null;
 	lastName: string | null;
-	organizationName: string | null;
 	role: UserRole;
-};
-
-export type UserTableViewRow = {
-	id: string;
-	firstName: string;
-	lastName: string;
-	role: UserRole;
-	organizationName: string;
-	readonly: boolean;
-};
-
-export type UserTableView = {
-	tableRows: UserTableViewRow[];
+	activeOrganization: {
+		id: string;
+		name: string;
+	} | null;
+	organizations: {
+		id: string;
+		name: string;
+	}[];
+	programs: {
+		id: string;
+		name: string;
+	}[];
 };

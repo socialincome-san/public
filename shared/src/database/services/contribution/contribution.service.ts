@@ -1,50 +1,139 @@
-import { Contribution as PrismaContribution } from '@prisma/client';
+import { Contribution } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import {
+	ContributionPayload,
 	ContributionTableView,
 	ContributionTableViewRow,
-	CreateContributionInput,
-	ProgramPermission,
+	ContributionUpdateInput,
 } from './contribution.types';
 
 export class ContributionService extends BaseService {
-	async create(input: CreateContributionInput): Promise<ServiceResult<PrismaContribution>> {
-		try {
-			const contribution = await this.db.contribution.create({
-				data: input,
-			});
+	private organizationAccessService = new OrganizationAccessService();
 
-			return this.resultOk(contribution);
-		} catch (e) {
-			console.error('[ContributionService.create]', e);
-			return this.resultFail('Could not create contribution');
-		}
-	}
-
-	async getContributionTableView(userId: string): Promise<ServiceResult<ContributionTableView>> {
+	async get(userId: string, contributionId: string): Promise<ServiceResult<ContributionPayload>> {
 		try {
-			const contributions = await this.db.contribution.findMany({
+			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			const contribution = await this.db.contribution.findUnique({
 				where: {
-					program: this.userAccessibleProgramsWhere(userId),
+					id: contributionId,
 				},
 				select: {
 					id: true,
-					source: true,
+					amount: true,
+					currency: true,
+					amountChf: true,
+					feesChf: true,
+					status: true,
+					contributor: {
+						select: {
+							id: true,
+						},
+					},
+					campaign: {
+						select: {
+							id: true,
+							organizationId: true,
+						},
+					},
+				},
+			});
+
+			if (!contribution) {
+				return this.resultFail('Contribution not found');
+			}
+
+			if (contribution.campaign.organizationId !== accessResult.data.id) {
+				return this.resultFail('Permission denied');
+			}
+
+			// convert decimal fields to number
+			return this.resultOk({
+				...contribution,
+				amount: Number(contribution.amount),
+				amountChf: Number(contribution.amount),
+				feesChf: Number(contribution.amount),
+			});
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch contribution');
+		}
+	}
+
+	async update(userId: string, contribution: ContributionUpdateInput): Promise<ServiceResult<Contribution>> {
+		try {
+			const accessResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+
+			if (!accessResult.success) {
+				return this.resultFail(accessResult.error);
+			}
+
+			if (accessResult.data.permission !== 'edit') {
+				return this.resultFail('No permissions to create campaign');
+			}
+
+			const existing = await this.db.contribution.findUnique({
+				where: { id: contribution.id?.toString() },
+				select: {
+					campaign: { select: { organizationId: true } },
+				},
+			});
+
+			if (!existing || existing.campaign.organizationId !== accessResult.data.id) {
+				return this.resultFail('Permission denied');
+			}
+
+			const updatedContribution = await this.db.contribution.update({
+				where: { id: contribution.id?.toString() },
+				data: contribution,
+			});
+
+			return this.resultOk(updatedContribution);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not update contribution');
+		}
+	}
+
+	async getTableView(userId: string): Promise<ServiceResult<ContributionTableView>> {
+		try {
+			const activeOrgResult = await this.organizationAccessService.getActiveOrganizationAccess(userId);
+			if (!activeOrgResult.success) {
+				return this.resultFail(activeOrgResult.error);
+			}
+
+			const { id: organizationId, permission } = activeOrgResult.data;
+
+			const contributions = await this.db.contribution.findMany({
+				where: {
+					campaign: {
+						organizationId,
+					},
+				},
+				select: {
+					id: true,
 					createdAt: true,
 					amount: true,
 					currency: true,
-					status: true,
-					contributionInterval: true,
-					campaign: { select: { title: true } },
-					program: {
+					campaign: {
 						select: {
-							name: true,
-							operatorOrganization: {
-								select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
-							},
-							viewerOrganization: {
-								select: { users: { where: { id: userId }, select: { id: true }, take: 1 } },
+							title: true,
+							program: { select: { name: true } },
+						},
+					},
+					contributor: {
+						select: {
+							contact: {
+								select: {
+									firstName: true,
+									lastName: true,
+									email: true,
+								},
 							},
 						},
 					},
@@ -52,28 +141,21 @@ export class ContributionService extends BaseService {
 				orderBy: { createdAt: 'desc' },
 			});
 
-			const tableRows: ContributionTableViewRow[] = contributions.map((contribution) => {
-				const canOperateOnProgram = (contribution.program?.operatorOrganization?.users?.length ?? 0) > 0;
-				const permission: ProgramPermission = canOperateOnProgram ? 'operator' : 'viewer';
+			const tableRows: ContributionTableViewRow[] = contributions.map((c) => ({
+				id: c.id,
+				firstName: c.contributor?.contact?.firstName ?? '',
+				lastName: c.contributor?.contact?.lastName ?? '',
+				email: c.contributor?.contact?.email ?? '',
+				amount: c.amount ? Number(c.amount) : 0,
+				currency: c.currency ?? '',
+				campaignTitle: c.campaign?.title ?? '',
+				programName: c.campaign?.program?.name ?? null,
+				createdAt: c.createdAt,
+			}));
 
-				return {
-					id: contribution.id,
-					source: contribution.source,
-					createdAt: contribution.createdAt,
-					createdAtFormatted: new Intl.DateTimeFormat('de-CH').format(contribution.createdAt),
-					amount: contribution.amount,
-					currency: contribution.currency,
-					status: contribution.status,
-					campaignName: contribution.campaign?.title ?? '',
-					programName: contribution.program?.name ?? '',
-					contributionInterval: contribution.contributionInterval,
-					permission,
-				};
-			});
-
-			return this.resultOk({ tableRows });
+			return this.resultOk({ tableRows, permission: permission });
 		} catch (error) {
-			console.error('[ContributionService.getContributionTableView]', error);
+			console.error(error);
 			return this.resultFail('Could not fetch contributions');
 		}
 	}

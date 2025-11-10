@@ -1,8 +1,14 @@
-import { Recipient as FirestoreRecipient, RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types/recipient';
+import { RECIPIENT_FIRESTORE_PATH } from '@socialincome/shared/src/types/recipient';
 import { BaseExtractor } from '../core/base.extractor';
+import { FirestoreRecipientWithId } from './recipient.types';
 
-export class RecipientsExtractor extends BaseExtractor<FirestoreRecipient> {
-	extract = async (): Promise<FirestoreRecipient[]> => {
-		return await this.firestore.getAll<FirestoreRecipient>(RECIPIENT_FIRESTORE_PATH);
+export class RecipientExtractor extends BaseExtractor<FirestoreRecipientWithId> {
+	extract = async (): Promise<FirestoreRecipientWithId[]> => {
+		const docs = await this.firestore.getAllWithIds(RECIPIENT_FIRESTORE_PATH);
+
+		return docs.map(({ id, data }) => ({
+			...(data as Omit<FirestoreRecipientWithId, 'id'>),
+			id,
+		}));
 	};
 }
