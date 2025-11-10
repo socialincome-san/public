@@ -20,10 +20,12 @@ import { surveysData } from './data/surveys.data';
 import { expensesData } from './data/expenses.data';
 import { exchangeRatesData } from './data/exchange-rates.data';
 import { addressesData } from './data/addresses.data';
+import { surveySchedulesData } from './data/survey-schedules.data';
 
 async function main() {
 	await prisma.$transaction(async (tx) => {
 		await tx.survey.deleteMany();
+		await tx.surveySchedule.deleteMany();
 		await tx.payout.deleteMany();
 		await tx.recipient.deleteMany();
 		await tx.paymentEvent.deleteMany();
@@ -63,6 +65,7 @@ async function main() {
 		await tx.donationCertificate.createMany({ data: donationCertificatesData, skipDuplicates: true });
 		await tx.recipient.createMany({ data: recipientsData, skipDuplicates: true });
 		await tx.payout.createMany({ data: payoutsData, skipDuplicates: true });
+		await tx.surveySchedule.createMany({ data: surveySchedulesData, skipDuplicates: true });
 		await tx.survey.createMany({ data: surveysData, skipDuplicates: true });
 		await tx.expense.createMany({ data: expensesData, skipDuplicates: true });
 		await tx.exchangeRate.createMany({ data: exchangeRatesData, skipDuplicates: true });

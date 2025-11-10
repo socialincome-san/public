@@ -3,6 +3,7 @@
 import { Button } from '@/app/portal/components/button';
 import { DatePicker } from '@/app/portal/components/date-picker';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
+import { StepResultBox } from '@/app/portal/components/step-result-box';
 import {
 	generateCurrentMonthPayoutsAction,
 	generatePayoutCsvAction,
@@ -14,7 +15,6 @@ import {
 import { format } from 'date-fns';
 import { CalendarIcon, EyeIcon, PlayIcon, TableIcon, UserCheckIcon } from 'lucide-react';
 import { useState } from 'react';
-import { StepResultBox } from './step-result-box';
 
 type StepResult = string | object | string[] | null;
 
