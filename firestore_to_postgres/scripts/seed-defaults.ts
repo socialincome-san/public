@@ -1,4 +1,11 @@
-import { OrganizationPermission, Prisma, PrismaClient, ProgramPermission, UserRole } from '@prisma/client';
+import {
+	OrganizationPermission,
+	Prisma,
+	PrismaClient,
+	ProgramPermission,
+	SurveyQuestionnaire,
+	UserRole,
+} from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -22,6 +29,75 @@ export const DEFAULT_CAMPAIGN: Omit<Prisma.CampaignCreateInput, 'organization' |
 	endDate: new Date('2100-01-01'),
 	isActive: false,
 };
+
+export const surveySchedules: (Omit<Prisma.SurveyScheduleCreateInput, 'program'> & { id: string })[] = [
+	{
+		id: 'cmhssz9ih000hyjqcer26j2j9',
+		name: 'onboarding',
+		questionnaire: SurveyQuestionnaire.onboarding,
+		dueInMonthsAfterStart: 0,
+	},
+	{
+		id: 'cmhssz9ih000iyjqclzup2kmn',
+		name: 'checkin-1',
+		questionnaire: SurveyQuestionnaire.checkin,
+		dueInMonthsAfterStart: 6,
+	},
+	{
+		id: 'cmhssz9ih000jyjqc30lkdxt6',
+		name: 'checkin-2',
+		questionnaire: SurveyQuestionnaire.checkin,
+		dueInMonthsAfterStart: 12,
+	},
+	{
+		id: 'cmhssz9ih000kyjqcgmvvbs0n',
+		name: 'checkin-3',
+		questionnaire: SurveyQuestionnaire.checkin,
+		dueInMonthsAfterStart: 18,
+	},
+	{
+		id: 'cmhssz9ih000lyjqcpd6k7sg8',
+		name: 'checkin-4',
+		questionnaire: SurveyQuestionnaire.checkin,
+		dueInMonthsAfterStart: 24,
+	},
+	{
+		id: 'cmhssz9ih000myjqcubrwla2d',
+		name: 'checkin-5',
+		questionnaire: SurveyQuestionnaire.checkin,
+		dueInMonthsAfterStart: 30,
+	},
+	{
+		id: 'cmhssz9ih000nyjqcw06qws6d',
+		name: 'offboarding',
+		questionnaire: SurveyQuestionnaire.offboarding,
+		dueInMonthsAfterStart: 36,
+	},
+	{
+		id: 'cmhssz9ih000oyjqcip0wv0z4',
+		name: 'offboarded-checkin-1',
+		questionnaire: SurveyQuestionnaire.offboarded_checkin,
+		dueInMonthsAfterStart: 42,
+	},
+	{
+		id: 'cmhssz9ih000pyjqcyrxxg0fd',
+		name: 'offboarded-checkin-2',
+		questionnaire: SurveyQuestionnaire.offboarded_checkin,
+		dueInMonthsAfterStart: 48,
+	},
+	{
+		id: 'cmhssz9ih000qyjqc8drjcxyb',
+		name: 'offboarded-checkin-3',
+		questionnaire: SurveyQuestionnaire.offboarded_checkin,
+		dueInMonthsAfterStart: 60,
+	},
+	{
+		id: 'cmhssz9ih000ryjqcmi3270fa',
+		name: 'offboarded-checkin-4',
+		questionnaire: SurveyQuestionnaire.offboarded_checkin,
+		dueInMonthsAfterStart: 72,
+	},
+];
 
 export const ADMIN_STAGING_ACCOUNT: Prisma.AccountCreateInput = {
 	firebaseAuthUserId: 'V7t5fgxerMgVKiPZZTpsVCKIwW43',
@@ -149,6 +225,17 @@ async function main() {
 			data: { activeOrganizationId: organization.id },
 		});
 	}
+
+	await prisma.surveySchedule.createMany({
+		data: surveySchedules.map((surveySchedule) => ({
+			id: surveySchedule.id,
+			name: surveySchedule.name,
+			questionnaire: surveySchedule.questionnaire,
+			dueInMonthsAfterStart: surveySchedule.dueInMonthsAfterStart,
+			programId: program.id,
+		})),
+		skipDuplicates: true,
+	});
 
 	console.log('✅ Seeding of default data completed successfully');
 }

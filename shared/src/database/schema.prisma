@@ -249,9 +249,8 @@ model Payout {
 
 model Survey {
   id                String              @id @default(cuid()) @map("id")
+  name              String              @map("name")
   legacyFirestoreId String?             @unique @map("legacy_firestore_id")
-  recipientId       String              @map("recipient_id")
-  recipient         Recipient           @relation(fields: [recipientId], references: [id])
   questionnaire     SurveyQuestionnaire @map("questionnaire")
   language          String              @map("language")
   dueAt             DateTime            @map("due_at") @db.Timestamptz(3)
@@ -262,10 +261,31 @@ model Survey {
   accessPw          String              @map("access_pw")
   accessToken       String              @map("access_token")
 
+  recipientId      String          @map("recipient_id")
+  recipient        Recipient       @relation(fields: [recipientId], references: [id])
+  surveyScheduleId String?         @map("survey_schedule_id")
+  surveySchedule   SurveySchedule? @relation(fields: [surveyScheduleId], references: [id])
+
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
+  @@unique([recipientId, name])
   @@map("survey")
+}
+
+model SurveySchedule {
+  id                    String              @id @default(cuid())
+  name                  String              @map("name")
+  questionnaire         SurveyQuestionnaire @map("questionnaire")
+  dueInMonthsAfterStart Int                 @map("due_in_months_after_start")
+  programId             String              @map("program_id")
+  program               Program             @relation(fields: [programId], references: [id])
+  surveys               Survey[]
+  createdAt             DateTime            @default(now()) @db.Timestamptz(3)
+  updatedAt             DateTime?           @updatedAt @db.Timestamptz(3)
+
+  @@unique([name, questionnaire, dueInMonthsAfterStart, programId])
+  @@map("survey_schedule")
 }
 
 model LocalPartner {
@@ -342,9 +362,10 @@ model Program {
   ownerOrganizationId String       @map("owner_organization_id")
   ownerOrganization   Organization @relation("ProgramOwner", fields: [ownerOrganizationId], references: [id])
 
-  campaigns  Campaign[]
-  recipients Recipient[]
-  accesses   ProgramAccess[]
+  campaigns       Campaign[]
+  recipients      Recipient[]
+  accesses        ProgramAccess[]
+  surveySchedules SurveySchedule[]
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)

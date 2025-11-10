@@ -68,4 +68,17 @@ export class FirebaseService {
 			throw new Error('Could not update auth user by UID');
 		}
 	}
+
+	async createSurveyUser(email: string, password: string) {
+		try {
+			return await this.authAdmin.auth.createUser({
+				email,
+				password,
+				emailVerified: true,
+			});
+		} catch (error) {
+			console.error('Error creating survey user:', error);
+			throw new Error('Could not create survey auth user');
+		}
+	}
 }
