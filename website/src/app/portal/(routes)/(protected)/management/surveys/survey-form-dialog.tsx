@@ -44,7 +44,6 @@ export function SurveyFormDialog({ open, onOpenChange, surveyId, readOnly = fals
 					readOnly={readOnly}
 					onSuccess={() => {
 						onOpenChange(false);
-						window.location.reload();
 					}}
 					onError={onError}
 					onCancel={() => onOpenChange(false)}

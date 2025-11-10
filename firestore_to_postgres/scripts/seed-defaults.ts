@@ -30,35 +30,69 @@ export const DEFAULT_CAMPAIGN: Omit<Prisma.CampaignCreateInput, 'organization' |
 	isActive: false,
 };
 
-// Survey schedules with UUIDs
-export const recipientSurveys: (Omit<Prisma.SurveyScheduleCreateInput, 'program'> & { id: string })[] = [
-	{ id: '1', name: 'onboarding', questionnaire: SurveyQuestionnaire.onboarding, dueInMonthsAfterStart: 0 },
-	{ id: '2', name: 'checkin-1', questionnaire: SurveyQuestionnaire.checkin, dueInMonthsAfterStart: 6 },
-	{ id: '3', name: 'checkin-2', questionnaire: SurveyQuestionnaire.checkin, dueInMonthsAfterStart: 12 },
-	{ id: '4', name: 'checkin-3', questionnaire: SurveyQuestionnaire.checkin, dueInMonthsAfterStart: 18 },
-	{ id: '5', name: 'checkin-4', questionnaire: SurveyQuestionnaire.checkin, dueInMonthsAfterStart: 24 },
-	{ id: '6', name: 'checkin-5', questionnaire: SurveyQuestionnaire.checkin, dueInMonthsAfterStart: 30 },
-	{ id: '7', name: 'offboarding', questionnaire: SurveyQuestionnaire.offboarding, dueInMonthsAfterStart: 36 },
+export const surveySchedules: (Omit<Prisma.SurveyScheduleCreateInput, 'program'> & { id: string })[] = [
 	{
-		id: '8',
+		id: 'cmhssz9ih000hyjqcer26j2j9',
+		name: 'onboarding',
+		questionnaire: SurveyQuestionnaire.onboarding,
+		dueInMonthsAfterStart: 0,
+	},
+	{
+		id: 'cmhssz9ih000iyjqclzup2kmn',
+		name: 'checkin-1',
+		questionnaire: SurveyQuestionnaire.checkin,
+		dueInMonthsAfterStart: 6,
+	},
+	{
+		id: 'cmhssz9ih000jyjqc30lkdxt6',
+		name: 'checkin-2',
+		questionnaire: SurveyQuestionnaire.checkin,
+		dueInMonthsAfterStart: 12,
+	},
+	{
+		id: 'cmhssz9ih000kyjqcgmvvbs0n',
+		name: 'checkin-3',
+		questionnaire: SurveyQuestionnaire.checkin,
+		dueInMonthsAfterStart: 18,
+	},
+	{
+		id: 'cmhssz9ih000lyjqcpd6k7sg8',
+		name: 'checkin-4',
+		questionnaire: SurveyQuestionnaire.checkin,
+		dueInMonthsAfterStart: 24,
+	},
+	{
+		id: 'cmhssz9ih000myjqcubrwla2d',
+		name: 'checkin-5',
+		questionnaire: SurveyQuestionnaire.checkin,
+		dueInMonthsAfterStart: 30,
+	},
+	{
+		id: 'cmhssz9ih000nyjqcw06qws6d',
+		name: 'offboarding',
+		questionnaire: SurveyQuestionnaire.offboarding,
+		dueInMonthsAfterStart: 36,
+	},
+	{
+		id: 'cmhssz9ih000oyjqcip0wv0z4',
 		name: 'offboarded-checkin-1',
 		questionnaire: SurveyQuestionnaire.offboarded_checkin,
 		dueInMonthsAfterStart: 42,
 	},
 	{
-		id: '9',
+		id: 'cmhssz9ih000pyjqcyrxxg0fd',
 		name: 'offboarded-checkin-2',
 		questionnaire: SurveyQuestionnaire.offboarded_checkin,
 		dueInMonthsAfterStart: 48,
 	},
 	{
-		id: '10',
+		id: 'cmhssz9ih000qyjqc8drjcxyb',
 		name: 'offboarded-checkin-3',
 		questionnaire: SurveyQuestionnaire.offboarded_checkin,
 		dueInMonthsAfterStart: 60,
 	},
 	{
-		id: '11',
+		id: 'cmhssz9ih000ryjqcmi3270fa',
 		name: 'offboarded-checkin-4',
 		questionnaire: SurveyQuestionnaire.offboarded_checkin,
 		dueInMonthsAfterStart: 72,
@@ -193,7 +227,7 @@ async function main() {
 	}
 
 	await prisma.surveySchedule.createMany({
-		data: recipientSurveys.map((surveySchedule) => ({
+		data: surveySchedules.map((surveySchedule) => ({
 			id: surveySchedule.id,
 			name: surveySchedule.name,
 			questionnaire: surveySchedule.questionnaire,
