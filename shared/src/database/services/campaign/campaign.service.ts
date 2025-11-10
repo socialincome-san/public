@@ -192,20 +192,17 @@ export class CampaignService extends BaseService {
 		}
 	}
 
-	/**
-	 * Get the default campaign for Stripe contributions without a specified campaign
-	 * TODO: Implement proper default campaign logic based on business requirements
-	 * For now, returns the first active campaign
-	 */
-	async getDefaultCampaign(): Promise<ServiceResult<Campaign>> {
+	async getFallbackCampaign(): Promise<ServiceResult<Campaign>> {
 		try {
 			const campaign = await this.db.campaign.findFirst({
-				where: { isActive: true },
-				orderBy: { createdAt: 'asc' },
+				where: {
+					isFallback: true,
+					isActive: true,
+				},
 			});
 
 			if (!campaign) {
-				return this.resultFail('No active campaigns found');
+				return this.resultFail('No fallback campaign found');
 			}
 
 			return this.resultOk(campaign);

@@ -59,11 +59,11 @@ export class StripeService extends BaseService {
 
 			let campaignId = checkoutMetadata?.campaignId;
 			if (!campaignId) {
-				const defaultCampaignResult = await this.campaignService.getDefaultCampaign();
-				if (!defaultCampaignResult.success) {
-					return this.resultFail(defaultCampaignResult.error);
+				const fallbackCampaignResult = await this.campaignService.getFallbackCampaign();
+				if (!fallbackCampaignResult.success) {
+					return this.resultFail(fallbackCampaignResult.error);
 				}
-				campaignId = defaultCampaignResult.data.id;
+				campaignId = fallbackCampaignResult.data.id;
 			}
 
 			const contributionData: StripeContributionCreateData = {

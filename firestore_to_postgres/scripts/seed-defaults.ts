@@ -27,7 +27,8 @@ export const DEFAULT_CAMPAIGN: Omit<Prisma.CampaignCreateInput, 'organization' |
 	description: 'Automatically created campaign for unmapped contributions.',
 	currency: 'CHF',
 	endDate: new Date('2100-01-01'),
-	isActive: false,
+	isActive: true,
+	isFallback: true,
 };
 
 export const surveySchedules: (Omit<Prisma.SurveyScheduleCreateInput, 'program'> & { id: string })[] = [

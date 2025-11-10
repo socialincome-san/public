@@ -394,6 +394,7 @@ model Campaign {
   isActive               Boolean      @default(false) @map("is_active")
   public                 Boolean?     @map("public")
   featured               Boolean?     @map("featured")
+  isFallback             Boolean      @default(false) @map("is_fallback")
   slug                   String?      @map("slug")
   metadataDescription    String?      @map("metadata_description")
   metadataOgImage        String?      @map("metadata_og_image")
