@@ -1,0 +1,32 @@
+'use client';
+
+import { DateCell } from '@/app/portal/components/data-table/elements/date-cell';
+import { SortableHeader } from '@/app/portal/components/data-table/elements/sortable-header';
+import { TextCell } from '@/app/portal/components/data-table/elements/text-cell';
+import { ExchangeRatesTableViewRow } from '@socialincome/shared/src/database/services/exchange-rate/exchange-rate.types';
+import type { ColumnDef } from '@tanstack/react-table';
+
+export function makeExchangeRatesColumns(): ColumnDef<ExchangeRatesTableViewRow>[] {
+	return [
+		{
+			accessorKey: 'currency',
+			header: (ctx) => <SortableHeader ctx={ctx}>Currency</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'rate',
+			header: (ctx) => <SortableHeader ctx={ctx}>Rate</SortableHeader>,
+			cell: (ctx) => <TextCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'timestamp',
+			header: (ctx) => <SortableHeader ctx={ctx}>Timestamp</SortableHeader>,
+			cell: (ctx) => <DateCell ctx={ctx} />,
+		},
+		{
+			accessorKey: 'createdAt',
+			header: (ctx) => <SortableHeader ctx={ctx}>Imported</SortableHeader>,
+			cell: (ctx) => <DateCell ctx={ctx} />,
+		},
+	];
+}
