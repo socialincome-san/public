@@ -21,8 +21,11 @@ export async function POST(request: NextRequest) {
 	const service = new ExchangeRateImportService();
 
 	try {
-		await service.import();
-		return NextResponse.json(null, { status: 201 });
+		const result = await service.import();
+		if (!result.success) {
+			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
+		}
+		return NextResponse.json({}, { status: 201 });
 	} catch (error) {
 		console.error('Error during exchange rate import:', error);
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });

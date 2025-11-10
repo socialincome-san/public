@@ -97,7 +97,7 @@ jobs:
           TF_VAR_gcp_region: ${{ env.GCP_REGION }}
           TF_VAR_google_sql_db_password: ${{ secrets.TF_PROD_GOOGLE_SQL_DB_PASSWORD }}
           TF_VAR_website_domain: ${{ env.WEBSITE_DOMAIN }}
-          TF_VAR_exchange_rate_import_api_key: ${{ secrets.TF_STAGING_EXCHANGE_RATES_IMPORT_API }}
+          TF_VAR_exchange_rate_import_api_key: ${{ secrets.TF_PROD_EXCHANGE_RATES_IMPORT_API }}
           IMAGE_URL: "${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.ARTIFACT_REGISTRY_NAME }}/${{ env.APP_NAME }}:${{ github.sha }}"
         run: |
           echo "🧭 Initializing Terraform..."

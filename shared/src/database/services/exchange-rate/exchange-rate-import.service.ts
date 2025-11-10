@@ -86,7 +86,7 @@ export class ExchangeRateImportService extends BaseService {
 		}
 	}
 
-	async import(): Promise<void> {
+	async import(): Promise<ServiceResult<void>> {
 		const oneMonthAgo = new Date();
 		oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
@@ -94,7 +94,7 @@ export class ExchangeRateImportService extends BaseService {
 
 		if (!existingExchangeRates.success) {
 			console.error('Could not fetch existing exchange rates');
-			throw new Error('Could not fetch existing exchange rates');
+			return this.resultFail('Could not fetch existing exchange rates');
 		}
 
 		console.info('Starting exchange rate import from', oneMonthAgo.toISOString(), 'to', new Date().toISOString());
@@ -124,13 +124,14 @@ export class ExchangeRateImportService extends BaseService {
 					const storedRates = await this.fetchAndStoreExchangeRates(DateTime.fromMillis(timestamp));
 					if (!storedRates.success) {
 						console.error('Could not store exchange rates');
-						throw new Error('Could not store exchange rates');
+						return this.resultFail('Could not store exchange rates');
 					}
 				} catch (error) {
 					console.error(`Could not ingest exchange rate`, error);
-					throw new Error(`Could not ingest exchange rate: ${error}`);
+					return this.resultFail(`Could not ingest exchange rate: ${error}`);
 				}
 			}
 		}
+		return this.resultOk(undefined);
 	}
 }
