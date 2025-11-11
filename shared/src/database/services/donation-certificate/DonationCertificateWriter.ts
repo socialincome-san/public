@@ -8,7 +8,7 @@ import { Translator } from '../../../utils/i18n';
 import { ContributionDonationEntry } from '../contribution/contribution.types';
 import { ContributorDonationCertificate } from '../contributor/contributor.types';
 
-export const ASSET_DIR = path.join(__dirname, '..', '..', '..', '..', 'assets');
+export const ASSET_DIR = path.join(process.cwd(), 'assets');
 
 export class DonationCertificateWriter {
 	public readonly year: number;

@@ -1,0 +1,51 @@
+––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+Font: Unica77
+Cuts: Thin, Thin Italic, Light, Light Italic, Regular, Italic, Medium, Medium Italic, Bold, Bold Italic, Black, Black Italic, ExtraBlack, ExtraBlack Italic
+Format: woff, woff2, eot
+
+Purchase Date: 16 September 2022
+––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+Legal Disclaimer for Web licence
+
+Licence to use self-hosted webfonts for displaying dynamic text on specified website domains. Our package includes WOFF and WOFF2 font formats.
+
+Should the license page views limit be exceeded the license holder will be required to contact Lineto.com for an upgrade.
+
+It is strictly prohibited to rename the font and to download or use these fonts in any other media. 
+
+These Web fonts are licensed exclusively for the use on the following domain(s) and their subdomains:
+
+socialincome.org (monthly pageviews: <50K)
+
+––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+INSTRUCTIONS
+
+The Web Font delivery folder contains all purchased Web Fonts, example CSS
+file containing @font-face feature statements, and HTML Sample Pages.
+You are only allowed to use the cuts listed above for the licensed
+application.
+
+We recommend using the @font-face statements from the example CSS file.
+Depending on your application structure, you may need to adjust the
+paths to the fonts. It is prohibited to change font/file names.
+
+Please see the HTML Sample Page in the font delivery package for further
+information about Character Groups, Language Support and
+OpenType features etc.
+
+––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+Manufacturer  Lineto GmbH
+
+Vendor URL    https://lineto.com
+
+Copyright     Copyright © 2022 by Lineto GmbH.
+              https://lineto.com
+              All rights reserved
+
+Designer      
+              https://lineto.com/designers
+
+EULA          https://lineto.com/api/front/documents/eula
