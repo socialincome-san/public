@@ -7,7 +7,7 @@ RUN --mount=type=secret,id=APP_VERSION \
     --mount=type=secret,id=APP_BUILD_TIMESTAMP \
     --mount=type=secret,id=BASE_URL \
     --mount=type=secret,id=EXCHANGE_RATES_API \
-    --mount=type=secret,id=EXCHANGE_RATES_IMPORT_API \
+    --mount=type=secret,id=SCHEDULER_API_KEY \
     --mount=type=secret,id=FIREBASE_DATABASE_URL \
     --mount=type=secret,id=FIREBASE_SERVICE_ACCOUNT_JSON \
     --mount=type=secret,id=GITHUB_PAT \

@@ -22,7 +22,6 @@ export class DonationCertificateWriter {
 		this.contributions = contributions;
 	}
 
-	// TODO:
 	private getContributionsByCurrency = async (contributions: ContributionDonationEntry[], year: number) => {
 		return _(contributions)
 			.filter((contribution) => contribution.createdAt.getFullYear() === year)
@@ -115,7 +114,6 @@ export class DonationCertificateWriter {
 					pdfDocument.text(
 						'– ' +
 							translator.t('contribution', {
-								// TODO: use correct locale
 								context: { currency, amount: contributionsByCurrency.get(currency), locale: 'de-CH' },
 							}),
 					);
