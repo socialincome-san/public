@@ -38,10 +38,8 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 	const author = (await getAuthor(slug, lang)).data.story;
 
 	const authorId = author.uuid;
-	const blogsResponse = await getArticlesByAuthor(authorId, lang);
-
-	const blogs = blogsResponse.data.stories;
-	const totalArticlesInSelectedLanguage = blogsResponse.total;
+	const articles = await getArticlesByAuthor(authorId, lang);
+	const totalArticlesInSelectedLanguage = articles.length;
 	const totalArticlesInDefault = await getTotalArticlesInDefaultLanguage(
 		lang,
 		totalArticlesInSelectedLanguage,
@@ -100,8 +98,8 @@ export default async function Page(props: { params: Promise<{ slug: string; lang
 			</div>
 
 			<div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-				{blogs.map((blog) => (
-					<StoryblokArticleCard key={blog.uuid} lang={lang} region={region} blog={blog} author={author} />
+				{articles.map((article) => (
+					<StoryblokArticleCard key={article.uuid} lang={lang} region={region} article={article} author={author} />
 				))}
 			</div>
 
