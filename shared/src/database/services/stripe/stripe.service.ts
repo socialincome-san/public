@@ -21,29 +21,26 @@ export class StripeService extends BaseService {
 		webhookSecret: string,
 	): Promise<ServiceResult<WebhookResult>> {
 		try {
-			console.log('🔄 Processing Stripe webhook event...');
 			const event = this.stripe.webhooks.constructEvent(body, signature, webhookSecret);
-			console.log(`📨 Received Stripe event: ${event.type} (${event.id})`);
 
 			if (event.type !== 'charge.succeeded') {
-				console.log(`⏭️  Skipping event type: ${event.type}`);
 				return this.resultOk({});
 			}
 
 			const charge = event.data.object as Stripe.Charge;
-			console.log(`💳 Processing charge: ${charge.id} for ${charge.amount / 100} ${charge.currency.toUpperCase()}`);
+			console.log(`Processing charge: ${charge.id}`);
 
 			const result = await this.processChargeSucceeded(charge);
 
 			if (!result.success) {
-				console.error(`❌ Failed to process charge ${charge.id}:`, result.error);
+				console.error(`Failed to process charge ${charge.id}:`, result.error);
 				return this.resultFail(result.error);
 			}
 
-			console.log(`✅ Successfully processed charge ${charge.id}:`, result.data);
+			console.log(`Successfully processed charge: ${charge.id}`);
 			return this.resultOk(result.data);
 		} catch (error) {
-			console.error('❌ Error handling webhook event:', error);
+			console.error('Error handling webhook event:', error);
 			return this.resultFail('Failed to handle webhook event');
 		}
 	}
@@ -55,32 +52,24 @@ export class StripeService extends BaseService {
 			});
 
 			const stripeCustomer = await this.retrieveStripeCustomer(fullCharge.customer as string);
-			console.log(`👤 Retrieved customer: ${stripeCustomer.email} (${stripeCustomer.id})`);
-
 			const checkoutMetadata = await this.getCheckoutMetadata(fullCharge);
-			console.log('📋 Checkout metadata:', checkoutMetadata);
 
 			const contributorResult = await this.getOrCreateContributor(stripeCustomer);
 			if (!contributorResult.success) {
-				console.error('❌ Failed to get/create contributor:', contributorResult.error);
+				console.error('Failed to get/create contributor:', contributorResult.error);
 				return this.resultFail(contributorResult.error);
 			}
 
 			const { contributor, isNewContributor } = contributorResult.data;
-			console.log(`👥 ${isNewContributor ? 'Created new' : 'Found existing'} contributor: ${contributor.id}`);
 
 			let campaignId = checkoutMetadata?.campaignId;
 			if (!campaignId) {
-				console.log('🔄 No campaign ID in metadata, using fallback campaign...');
 				const fallbackCampaignResult = await this.campaignService.getFallbackCampaign();
 				if (!fallbackCampaignResult.success) {
-					console.error('❌ Failed to get fallback campaign:', fallbackCampaignResult.error);
+					console.error('Failed to get fallback campaign:', fallbackCampaignResult.error);
 					return this.resultFail(fallbackCampaignResult.error);
 				}
 				campaignId = fallbackCampaignResult.data.id;
-				console.log(`📊 Using fallback campaign: ${campaignId}`);
-			} else {
-				console.log(`📊 Using campaign from metadata: ${campaignId}`);
 			}
 
 			const contributionData: StripeContributionCreateData = {
@@ -105,18 +94,17 @@ export class StripeService extends BaseService {
 				},
 			};
 
-			console.log('💾 Creating contribution with payment event...');
 			const contributionResult = await this.contributionService.createWithPaymentEvent(
 				contributionData,
 				paymentEventData,
 			);
 
 			if (!contributionResult.success) {
-				console.error('❌ Failed to create contribution:', contributionResult.error);
+				console.error('Failed to create contribution:', contributionResult.error);
 				return this.resultFail(contributionResult.error);
 			}
 
-			console.log(`✅ Created contribution: ${contributionResult.data.id}`);
+			console.log(`Created contribution: ${contributionResult.data.id}`);
 			return this.resultOk({
 				contributionId: contributionResult.data.id,
 				contributorId: contributor.id,
@@ -142,16 +130,13 @@ export class StripeService extends BaseService {
 			}
 
 			if (existingResult.data) {
-				console.log(`👤 Found existing contributor: ${existingResult.data.id}`);
 				if (!existingResult.data.stripeCustomerId) {
-					console.log('🔄 Updating contributor with Stripe customer ID...');
 					await this.contributorService.updateStripeCustomerId(existingResult.data.id, stripeCustomer.id);
 				}
 				return this.resultOk({ contributor: existingResult.data, isNewContributor: false });
 			}
 
 			const { firstName, lastName } = this.splitName(stripeCustomer.name);
-			console.log(`👤 Creating new contributor: ${firstName} ${lastName} (${stripeCustomer.email})`);
 
 			const contributorData: StripeContributorData = {
 				stripeCustomerId: stripeCustomer.id,
@@ -163,11 +148,11 @@ export class StripeService extends BaseService {
 
 			const createResult = await this.contributorService.createFromStripeCustomer(contributorData);
 			if (!createResult.success) {
-				console.error('❌ Failed to create contributor:', createResult.error);
+				console.error('Failed to create contributor:', createResult.error);
 				return this.resultFail(createResult.error);
 			}
 
-			console.log(`✅ Created new contributor: ${createResult.data.id}`);
+			console.log(`Created new contributor: ${createResult.data.id}`);
 			return this.resultOk({ contributor: createResult.data, isNewContributor: true });
 		} catch (error) {
 			console.error('Error getting or creating contributor:', error);
