@@ -1,3 +1,14 @@
+/**
+ * TESTING GUIDE:
+ * 1. Install Stripe CLI: `brew install stripe/stripe-cli/stripe`
+ * 2. Login to Stripe: `stripe login`
+ * 3. Forward webhooks to local endpoint:
+ *    `stripe listen --forward-to localhost:3001/api/portal/v1/stripe/webhook`
+ * 4. Copy the webhook signing secret from CLI output and set in your env.local:
+ *    STRIPE_WEBHOOK_SECRET_PORTAL=whsec_xxx...
+ * 5. Make a test contribution - webhooks will be forwarded to your local server.
+ */
+
 import { ContributionStatus, ContributorReferralSource, PaymentEventType } from '@prisma/client';
 import Stripe from 'stripe';
 import { CampaignService } from '../campaign/campaign.service';

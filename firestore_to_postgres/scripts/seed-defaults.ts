@@ -162,6 +162,37 @@ export const ADMIN_LOCAL_ACCOUNT: Prisma.AccountCreateInput = {
 	},
 };
 
+export const TEST_CONTRIBUTOR_ACCOUNT: Prisma.AccountCreateInput = {
+	firebaseAuthUserId: 'w43IydQbr8lgeGeevbSBoP9ui3WQ',
+	contributor: {
+		create: {
+			referral: 'other',
+			contact: {
+				create: {
+					firstName: 'Test',
+					lastName: 'Contributor',
+					email: 'test@test.org',
+					language: 'en',
+					address: {
+						create: {
+							street: 'Contributor Street',
+							number: '42',
+							city: 'Test City',
+							zip: '1234',
+							country: 'Switzerland',
+						},
+					},
+					phone: {
+						create: {
+							number: '+41791111111',
+						},
+					},
+				},
+			},
+		},
+	},
+};
+
 async function main() {
 	const organization = await prisma.organization.upsert({
 		where: { name: DEFAULT_ORGANIZATION.name },
@@ -189,6 +220,10 @@ async function main() {
 	});
 
 	const accounts = [ADMIN_STAGING_ACCOUNT, ADMIN_LOCAL_ACCOUNT];
+
+	await prisma.account.create({
+		data: TEST_CONTRIBUTOR_ACCOUNT,
+	});
 
 	for (const accountData of accounts) {
 		const account = await prisma.account.upsert({
