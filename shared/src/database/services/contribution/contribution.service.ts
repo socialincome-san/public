@@ -162,27 +162,36 @@ export class ContributionService extends BaseService {
 		}
 	}
 
-	async createWithPaymentEvent(
+	async upsertFromStripeEvent(
 		contributionData: StripeContributionCreateData,
 		paymentEventData: PaymentEventCreateData,
 	): Promise<ServiceResult<Contribution>> {
 		try {
-			const contribution = await this.db.contribution.create({
-				data: {
-					...contributionData,
-					paymentEvent: {
-						create: {
-							...paymentEventData,
-							metadata: paymentEventData.metadata as object,
-						},
+			const paymentEvent = await this.db.paymentEvent.upsert({
+				where: { transactionId: paymentEventData.transactionId },
+				create: {
+					...paymentEventData,
+					metadata: paymentEventData.metadata as object,
+					contribution: {
+						create: contributionData,
 					},
+				},
+				update: {
+					...paymentEventData,
+					metadata: paymentEventData.metadata as object,
+					contribution: {
+						update: contributionData,
+					},
+				},
+				include: {
+					contribution: true,
 				},
 			});
 
-			return this.resultOk(contribution);
+			return this.resultOk(paymentEvent.contribution);
 		} catch (error) {
 			console.error(error);
-			return this.resultFail('Could not create contribution');
+			return this.resultFail('Could not create or update contribution from Stripe event');
 		}
 	}
 }

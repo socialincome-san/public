@@ -11,7 +11,14 @@ type DateCellProps<TData, TValue> = {
 export function DateCell<TData, TValue extends Date | string | null>({
 	ctx,
 	locale = 'de-CH',
-	options = {},
+	options = {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+		hour: '2-digit',
+		minute: '2-digit',
+		second: '2-digit',
+	},
 }: DateCellProps<TData, TValue>) {
 	const value = ctx.getValue();
 

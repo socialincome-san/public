@@ -179,7 +179,7 @@ model PaymentEvent {
   contributionId String           @unique @map("contribution_id")
   contribution   Contribution     @relation(fields: [contributionId], references: [id])
   type           PaymentEventType @map("type")
-  transactionId  String?          @map("transaction_id")
+  transactionId  String           @unique @map("transaction_id")
   metadata       Json?            @map("metadata")
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)

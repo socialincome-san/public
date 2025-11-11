@@ -137,8 +137,8 @@ export class StripeService extends BaseService {
 				},
 			};
 
-			// Create contribution with associated payment event
-			const contributionResult = await this.contributionService.createWithPaymentEvent(
+			// Create or update contribution with associated payment event (upsert based on transactionId)
+			const contributionResult = await this.contributionService.upsertFromStripeEvent(
 				contributionData,
 				paymentEventData,
 			);

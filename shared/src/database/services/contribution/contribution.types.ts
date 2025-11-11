@@ -52,6 +52,6 @@ export type StripeContributionCreateData = {
 
 export type PaymentEventCreateData = {
 	type: PaymentEventType;
-	transactionId?: string;
+	transactionId: string;
 	metadata?: Record<string, unknown>;
 };
