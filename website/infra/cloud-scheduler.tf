@@ -6,7 +6,7 @@ resource "google_cloud_scheduler_job" "google_cloud_scheduler_job" {
 
   http_target {
     http_method = "POST"
-    uri         = "https://www.${var.website_domain}/api/portal/v1/exchange-rate"
+    uri         = "https://${var.website_domain}/api/portal/v1/exchange-rate"
     headers = {
       "x-api-key" = var.exchange_rate_import_api_key
     }
