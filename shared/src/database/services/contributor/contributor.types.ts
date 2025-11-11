@@ -39,3 +39,12 @@ export type ContributorOption = {
 	id: string;
 	name: string;
 };
+
+export type ContributorDonationCertificate = {
+	id: string;
+	firstName: string;
+	lastName: string;
+	language: string | null;
+	address: Address | null;
+	authId: string;
+};

@@ -33,3 +33,12 @@ export type ContributionPayload = {
 		id: string;
 	};
 };
+
+export type ContributionDonationEntry = {
+	amount: number;
+	currency: string;
+	amountChf: number;
+	feesChf: number;
+	status: ContributionStatus;
+	createdAt: Date;
+};

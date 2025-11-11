@@ -4,6 +4,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import {
+	ContributorDonationCertificate,
 	ContributorOption,
 	ContributorPayload,
 	ContributorTableView,
@@ -195,6 +196,51 @@ export class ContributorService extends BaseService {
 		} catch (error) {
 			console.error(error);
 			return this.resultFail('Could not fetch contributors');
+		}
+	}
+
+	async getForDonationCertificate(contributorIds?: string[]): Promise<ServiceResult<ContributorDonationCertificate[]>> {
+		try {
+			const result = await this.db.contributor.findMany({
+				where: {
+					id: contributorIds?.length ? { in: contributorIds } : undefined,
+					contact: !contributorIds?.length
+						? {
+								address: {
+									country: {
+										equals: 'CH',
+									},
+								},
+							}
+						: undefined,
+				},
+				select: {
+					id: true,
+					account: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+							language: true,
+							address: true,
+						},
+					},
+				},
+			});
+
+			const contributors = result.map((c) => ({
+				id: c.id,
+				firstName: c.contact.firstName,
+				lastName: c.contact.lastName,
+				language: c.contact.language,
+				address: c.contact.address,
+				authId: c.account.firebaseAuthUserId,
+			}));
+
+			return this.resultOk(contributors);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch contributor IDs for certificates');
 		}
 	}
 }

@@ -3,6 +3,7 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import {
+	ContributionDonationEntry,
 	ContributionPayload,
 	ContributionTableView,
 	ContributionTableViewRow,
@@ -157,6 +158,38 @@ export class ContributionService extends BaseService {
 		} catch (error) {
 			console.error(error);
 			return this.resultFail('Could not fetch contributions');
+		}
+	}
+
+	async getForContributor(contributorId: string): Promise<ServiceResult<ContributionDonationEntry[]>> {
+		try {
+			const result = await this.db.contribution.findMany({
+				where: {
+					contributorId: contributorId,
+				},
+				select: {
+					amount: true,
+					currency: true,
+					amountChf: true,
+					feesChf: true,
+					status: true,
+					createdAt: true,
+				},
+			});
+
+			const contributions = result.map((r) => ({
+				amount: Number(r.amount),
+				currency: r.currency,
+				amountChf: Number(r.amountChf),
+				feesChf: Number(r.feesChf),
+				status: r.status,
+				createdAt: r.createdAt,
+			}));
+
+			return this.resultOk(contributions);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail(`Could not fetch contributions for contributor ${contributorId}`);
 		}
 	}
 }
