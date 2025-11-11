@@ -15,7 +15,7 @@ import { CampaignService } from '../campaign/campaign.service';
 import { ContributionService } from '../contribution/contribution.service';
 import { PaymentEventCreateData, StripeContributionCreateData } from '../contribution/contribution.types';
 import { ContributorService } from '../contributor/contributor.service';
-import { ContributorWithContact, StripeContributorData } from '../contributor/contributor.types';
+import { StripeContributorData } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { CheckoutMetadata, StripeCustomerData, WebhookResult } from './stripe.types';
@@ -28,7 +28,7 @@ export class StripeService extends BaseService {
 
 	async handleWebhookEvent(
 		body: Buffer,
-		signature: string | string[],
+		signature: string,
 		webhookSecret: string,
 	): Promise<ServiceResult<WebhookResult>> {
 		try {
@@ -72,35 +72,55 @@ export class StripeService extends BaseService {
 
 			const stripeCustomer = await this.retrieveStripeCustomer(fullCharge.customer as string);
 
-			// Business rule: only store failed/pending charges if contributor already exists
-			// This prevents creating database entries for users who never successfully contributed
-			const existingContributorResult = await this.contributorService.findByStripeCustomerOrEmail(
-				stripeCustomer.id,
-				stripeCustomer.email || undefined,
-			);
-
-			if (!existingContributorResult.success) {
-				console.error('Failed to check existing contributor:', existingContributorResult.error);
-				return this.resultFail(existingContributorResult.error);
-			}
-
-			const existingContributor = existingContributorResult.data;
-
-			// Skip non-successful charges for new users
-			if (fullCharge.status !== 'succeeded' && !existingContributor) {
-				return this.resultOk({ skipReason: 'Non-successful charge with no existing contributor' });
-			}
-
 			// Extract campaign ID from checkout session metadata
 			const checkoutMetadata = await this.getCheckoutMetadata(fullCharge);
 
-			const contributorResult = await this.getOrCreateContributor(stripeCustomer);
-			if (!contributorResult.success) {
-				console.error('Failed to get/create contributor:', contributorResult.error);
-				return this.resultFail(contributorResult.error);
-			}
+			let contributor;
+			let isNewContributor = false;
 
-			const { contributor, isNewContributor } = contributorResult.data;
+			if (fullCharge.status === 'succeeded') {
+				// For successful payments: get or create contributor
+				const { firstName, lastName } = this.splitName(stripeCustomer.name);
+				const contributorData: StripeContributorData = {
+					stripeCustomerId: stripeCustomer.id,
+					email: stripeCustomer.email,
+					firstName,
+					lastName,
+					referral: ContributorReferralSource.other,
+				};
+
+				const contributorResult = await this.contributorService.getOrCreateContributorWithFirebaseAuth(contributorData);
+				if (!contributorResult.success) {
+					console.error('Failed to get/create contributor:', contributorResult.error);
+					return this.resultFail(contributorResult.error);
+				}
+
+				contributor = contributorResult.data.contributor;
+				isNewContributor = contributorResult.data.isNewContributor;
+
+				if (isNewContributor) {
+					console.log(`Created new contributor: ${contributor.id}`);
+				}
+			} else {
+				// For failed/pending payments: only process if contributor already exists
+				const existingContributorResult = await this.contributorService.findByStripeCustomerOrEmail(
+					stripeCustomer.id,
+					stripeCustomer.email || undefined,
+				);
+
+				if (!existingContributorResult.success) {
+					console.error('Failed to check existing contributor:', existingContributorResult.error);
+					return this.resultFail(existingContributorResult.error);
+				}
+
+				if (!existingContributorResult.data) {
+					console.log(`Skipping non-successful charge for non-existent contributor`);
+					return this.resultOk({ skipReason: 'Non-successful charge with no existing contributor' });
+				}
+
+				contributor = existingContributorResult.data;
+				isNewContributor = false;
+			}
 
 			// Use fallback campaign if no specific campaign was selected
 			let campaignId = checkoutMetadata?.campaignId;
@@ -157,53 +177,6 @@ export class StripeService extends BaseService {
 		} catch (error) {
 			console.error('Error processing charge:', error);
 			return this.resultFail('Failed to process charge');
-		}
-	}
-
-	private async getOrCreateContributor(
-		stripeCustomer: StripeCustomerData,
-	): Promise<ServiceResult<{ contributor: ContributorWithContact; isNewContributor: boolean }>> {
-		try {
-			// Try to find existing contributor by Stripe ID or email
-			const existingResult = await this.contributorService.findByStripeCustomerOrEmail(
-				stripeCustomer.id,
-				stripeCustomer.email || undefined,
-			);
-
-			if (!existingResult.success) {
-				return this.resultFail(existingResult.error);
-			}
-
-			if (existingResult.data) {
-				// Link Stripe customer ID if missing (for existing email-matched users)
-				if (!existingResult.data.stripeCustomerId) {
-					await this.contributorService.updateStripeCustomerId(existingResult.data.id, stripeCustomer.id);
-				}
-				return this.resultOk({ contributor: existingResult.data, isNewContributor: false });
-			}
-
-			// Create new contributor with parsed name
-			const { firstName, lastName } = this.splitName(stripeCustomer.name);
-
-			const contributorData: StripeContributorData = {
-				stripeCustomerId: stripeCustomer.id,
-				email: stripeCustomer.email || '',
-				firstName,
-				lastName,
-				referral: ContributorReferralSource.other,
-			};
-
-			const createResult = await this.contributorService.createFromStripeCustomer(contributorData);
-			if (!createResult.success) {
-				console.error('Failed to create contributor:', createResult.error);
-				return this.resultFail(createResult.error);
-			}
-
-			console.log(`Created new contributor: ${createResult.data.id}`);
-			return this.resultOk({ contributor: createResult.data, isNewContributor: true });
-		} catch (error) {
-			console.error('Error getting or creating contributor:', error);
-			return this.resultFail('Failed to get or create contributor');
 		}
 	}
 
