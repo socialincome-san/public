@@ -1,4 +1,5 @@
 import { DonationCertificateService } from '@socialincome/shared/src/database/services/donation-certificate/donation-certificate.service';
+import { DateTime } from 'luxon';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
@@ -31,10 +32,10 @@ export async function POST(request: NextRequest) {
 		return new NextResponse('Invalid request, contributorIds missing', { status: 400 });
 
 	const service = new DonationCertificateService();
-	// TODO: set year
-	const year = 2024;
 
 	try {
+		const now = DateTime.now();
+		const year = now.year - 1;
 		const result = await service.createDonationCertificates(year, body.contributorIds);
 		if (!result.success) {
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
