@@ -129,7 +129,40 @@ export class FirebaseService extends BaseService {
 		}
 	}
 
+	async getByEmail(email: string): Promise<ServiceResult<UserRecord | null>> {
+		try {
+			const userRecord = await this.authAdmin.auth.getUserByEmail(email);
+			return this.resultOk(userRecord);
+		} catch (error: any) {
+			if (error?.code === 'auth/user-not-found') {
+				return this.resultOk(null);
+			}
+			return this.resultFail('Could not check existing Firebase Auth user');
+		}
+	}
+
 	getPhoneFromToken(decodedToken: DecodedIdToken): string | null {
 		return decodedToken.phone_number ?? null;
+	}
+
+	async getOrCreateUser(userData: { email: string; displayName: string }): Promise<ServiceResult<UserRecord>> {
+		try {
+			const existingUserResult = await this.getByEmail(userData.email);
+			if (!existingUserResult.success) {
+				return this.resultFail(existingUserResult.error);
+			}
+
+			if (existingUserResult.data) {
+				return this.resultOk(existingUserResult.data);
+			}
+
+			const userRecord = await this.authAdmin.auth.createUser({
+				email: userData.email,
+				displayName: userData.displayName,
+			});
+			return this.resultOk(userRecord);
+		} catch (error) {
+			return this.resultFail('Could not get or create Firebase Auth user');
+		}
 	}
 }

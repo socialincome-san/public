@@ -1,5 +1,5 @@
 import { Prisma, SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
-import { surveySchedules } from '../../scripts/seed-defaults';
+import { SURVEY_SCHEDULES } from '../../scripts/seed-defaults';
 import { BaseTransformer } from '../core/base.transformer';
 import { FirestoreSurveyWithRecipient } from './survey.types';
 
@@ -15,7 +15,7 @@ export class SurveyTransformer extends BaseTransformer<FirestoreSurveyWithRecipi
 			}
 
 			const surveyName = survey.id;
-			const scheduleData = surveySchedules.find((schedule) => schedule.name === surveyName);
+			const scheduleData = SURVEY_SCHEDULES.find((schedule) => schedule.name === surveyName);
 
 			if (!scheduleData) {
 				throw new Error(`No survey schedule found for name "${surveyName}"`);

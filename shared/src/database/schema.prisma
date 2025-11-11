@@ -179,7 +179,7 @@ model PaymentEvent {
   contributionId String           @unique @map("contribution_id")
   contribution   Contribution     @relation(fields: [contributionId], references: [id])
   type           PaymentEventType @map("type")
-  transactionId  String?          @map("transaction_id")
+  transactionId  String           @unique @map("transaction_id")
   metadata       Json?            @map("metadata")
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
@@ -394,6 +394,7 @@ model Campaign {
   isActive               Boolean      @default(false) @map("is_active")
   public                 Boolean?     @map("public")
   featured               Boolean?     @map("featured")
+  isFallback             Boolean      @default(false) @map("is_fallback")
   slug                   String?      @map("slug")
   metadataDescription    String?      @map("metadata_description")
   metadataOgImage        String?      @map("metadata_og_image")

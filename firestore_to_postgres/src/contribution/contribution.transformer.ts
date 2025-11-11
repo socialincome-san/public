@@ -46,7 +46,7 @@ export class ContributionTransformer extends BaseTransformer<FirestoreContributi
 					status: this.mapStatus(contribution.status),
 					contributor: { connect: { legacyFirestoreId: user.id } },
 					campaign: campaignConnect,
-					paymentEvent: { create: this.buildPaymentEvent(contribution) },
+					paymentEvent: { create: this.buildPaymentEvent(contribution, user.id, contribution.id) },
 				},
 			});
 		}
@@ -58,29 +58,43 @@ export class ContributionTransformer extends BaseTransformer<FirestoreContributi
 		return transformed;
 	};
 
-	private buildPaymentEvent(contribution: FirestoreContribution): Prisma.PaymentEventCreateWithoutContributionInput {
+	private buildPaymentEvent(
+		contribution: FirestoreContribution,
+		userId: string,
+		contributionId: string,
+	): Prisma.PaymentEventCreateWithoutContributionInput {
 		return {
 			type: this.mapPaymentType(contribution.source),
-			transactionId: this.extractTransactionId(contribution),
+			transactionId: this.extractTransactionId(contribution, userId, contributionId),
 			metadata: this.extractMetadata(contribution),
 		};
 	}
 
-	private extractTransactionId(contribution: FirestoreContribution): string | null {
+	private extractTransactionId(contribution: FirestoreContribution, userId: string, contributionId: string): string {
+		let transactionId: string | null = null;
+
 		switch (contribution.source) {
 			case ContributionSourceKey.STRIPE: {
 				const stripe = contribution as StripeContribution;
-				return stripe.reference_id ?? null;
+				transactionId = stripe.reference_id ?? null;
+				break;
 			}
 			case ContributionSourceKey.WIRE_TRANSFER: {
 				const wire = contribution as BankWireContribution;
-				return wire.transaction_id ?? wire.reference_id ?? null;
+				transactionId = wire.transaction_id ?? wire.reference_id ?? null;
+				break;
 			}
 			default:
-				return null;
+				transactionId = null;
 		}
-	}
 
+		// Generate unique fallback if no transaction ID found
+		if (!transactionId) {
+			transactionId = `legacy_${contribution.source}_${userId}_${contributionId}`;
+		}
+
+		return transactionId;
+	}
 	private extractMetadata(contribution: FirestoreContribution): Prisma.InputJsonValue | Prisma.JsonNullValueInput {
 		if (contribution.source === ContributionSourceKey.WIRE_TRANSFER) {
 			const bank = contribution as BankWireContribution;

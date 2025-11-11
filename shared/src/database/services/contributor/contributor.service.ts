@@ -9,11 +9,13 @@ import {
 	ContributorTableView,
 	ContributorTableViewRow,
 	ContributorUpdateInput,
+	ContributorWithContact,
+	StripeContributorData,
 } from './contributor.types';
 
 export class ContributorService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
-	private firebaseAuthService = new FirebaseService();
+	private firebaseService = new FirebaseService();
 
 	async get(userId: string, contributorId: string): Promise<ServiceResult<ContributorPayload>> {
 		try {
@@ -89,7 +91,7 @@ export class ContributorService extends BaseService {
 				return this.resultFail('Contributor email is required');
 			}
 
-			const firebaseResult = await this.firebaseAuthService.updateByUid(existing.account.firebaseAuthUserId, {
+			const firebaseResult = await this.firebaseService.updateByUid(existing.account.firebaseAuthUserId, {
 				email: contributor.contact?.update?.data?.email?.toString() ?? undefined,
 			});
 			if (!firebaseResult.success) {
@@ -194,6 +196,180 @@ export class ContributorService extends BaseService {
 		} catch (error) {
 			console.error(error);
 			return this.resultFail('Could not fetch contributors');
+		}
+	}
+
+	async findByStripeCustomerId(stripeCustomerId: string): Promise<ServiceResult<ContributorWithContact>> {
+		try {
+			const contributor = await this.db.contributor.findFirst({
+				where: { stripeCustomerId },
+				include: { contact: true },
+			});
+
+			if (!contributor) {
+				return this.resultFail('Contributor not found');
+			}
+
+			return this.resultOk(contributor);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not find contributor by Stripe customer ID');
+		}
+	}
+
+	async findByEmail(email: string): Promise<ServiceResult<ContributorWithContact>> {
+		try {
+			const contributor = await this.db.contributor.findFirst({
+				where: {
+					contact: { email },
+				},
+				include: { contact: true },
+			});
+
+			if (!contributor) {
+				return this.resultFail('Contributor not found');
+			}
+
+			return this.resultOk(contributor);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not find contributor by email');
+		}
+	}
+
+	async findByStripeCustomerOrEmail(
+		stripeCustomerId: string,
+		email?: string,
+	): Promise<ServiceResult<ContributorWithContact | null>> {
+		try {
+			let contributor = await this.db.contributor.findFirst({
+				where: { stripeCustomerId },
+				include: { contact: true },
+			});
+
+			if (!contributor && email) {
+				contributor = await this.db.contributor.findFirst({
+					where: { contact: { email } },
+					include: { contact: true },
+				});
+			}
+
+			return this.resultOk(contributor);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not find contributor');
+		}
+	}
+
+	async getOrCreateContributorWithFirebaseAuth(
+		contributorData: StripeContributorData,
+	): Promise<ServiceResult<{ contributor: ContributorWithContact; isNewContributor: boolean }>> {
+		try {
+			const existingResult = await this.findExistingContributor(
+				contributorData.stripeCustomerId,
+				contributorData.email || undefined,
+			);
+
+			if (!existingResult.success) {
+				return this.resultFail(existingResult.error);
+			}
+
+			if (existingResult.data) {
+				// Link Stripe customer ID if missing (for existing email-matched users)
+				if (!existingResult.data.stripeCustomerId) {
+					await this.updateStripeCustomerId(existingResult.data.id, contributorData.stripeCustomerId);
+				}
+				return this.resultOk({ contributor: existingResult.data, isNewContributor: false });
+			}
+
+			// Create new contributor with Firebase Auth user
+			const createResult = await this.createContributorWithFirebaseAuth(contributorData);
+			if (!createResult.success) {
+				return this.resultFail(createResult.error);
+			}
+
+			return this.resultOk({ contributor: createResult.data, isNewContributor: true });
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not get or create contributor from Stripe customer');
+		}
+	}
+
+	private async createContributorWithFirebaseAuth(
+		contributorData: StripeContributorData,
+	): Promise<ServiceResult<ContributorWithContact>> {
+		try {
+			const firebaseResult = await this.firebaseService.getOrCreateUser({
+				email: contributorData.email,
+				displayName: `${contributorData.firstName} ${contributorData.lastName}`,
+			});
+
+			if (!firebaseResult.success) {
+				return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+			}
+
+			const contributor = await this.db.contributor.create({
+				data: {
+					stripeCustomerId: contributorData.stripeCustomerId,
+					referral: contributorData.referral,
+					account: {
+						create: {
+							firebaseAuthUserId: firebaseResult.data.uid,
+						},
+					},
+					contact: {
+						create: {
+							firstName: contributorData.firstName,
+							lastName: contributorData.lastName,
+							email: contributorData.email,
+						},
+					},
+				},
+				include: { contact: true },
+			});
+
+			return this.resultOk(contributor);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not create contributor with Firebase Auth user');
+		}
+	}
+
+	private async findExistingContributor(
+		stripeCustomerId: string,
+		email?: string,
+	): Promise<ServiceResult<ContributorWithContact | null>> {
+		try {
+			let contributor = await this.db.contributor.findFirst({
+				where: { stripeCustomerId },
+				include: { contact: true },
+			});
+
+			if (!contributor && email) {
+				contributor = await this.db.contributor.findFirst({
+					where: { contact: { email } },
+					include: { contact: true },
+				});
+			}
+
+			return this.resultOk(contributor);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not find contributor');
+		}
+	}
+
+	private async updateStripeCustomerId(contributorId: string, stripeCustomerId: string): Promise<ServiceResult<void>> {
+		try {
+			await this.db.contributor.update({
+				where: { id: contributorId },
+				data: { stripeCustomerId },
+			});
+
+			return this.resultOk(undefined);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not update contributor Stripe customer ID');
 		}
 	}
 }
