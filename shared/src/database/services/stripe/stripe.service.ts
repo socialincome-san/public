@@ -21,39 +21,68 @@ export class StripeService extends BaseService {
 		webhookSecret: string,
 	): Promise<ServiceResult<WebhookResult>> {
 		try {
+			// Verify webhook signature and parse event
 			const event = this.stripe.webhooks.constructEvent(body, signature, webhookSecret);
 
-			if (event.type !== 'charge.succeeded') {
-				return this.resultOk({});
+			switch (event.type) {
+				case 'charge.succeeded':
+				case 'charge.updated': // For final balance_transaction updates
+				case 'charge.failed': {
+					const charge = event.data.object as Stripe.Charge;
+					console.log(`Processing charge event ${event.type}: ${charge.id}`);
+
+					const result = await this.processChargeEvent(charge);
+
+					if (!result.success) {
+						console.error(`Failed to process charge ${charge.id}:`, result.error);
+						return this.resultFail(result.error);
+					}
+
+					if (result.data.contributionId) {
+						console.log(`Successfully processed charge: ${charge.id}`);
+					}
+					return this.resultOk(result.data);
+				}
+				default:
+					return this.resultOk({ skipReason: `Unhandled event type: ${event.type}` });
 			}
-
-			const charge = event.data.object as Stripe.Charge;
-			console.log(`Processing charge: ${charge.id}`);
-
-			const result = await this.processChargeSucceeded(charge);
-
-			if (!result.success) {
-				console.error(`Failed to process charge ${charge.id}:`, result.error);
-				return this.resultFail(result.error);
-			}
-
-			console.log(`Successfully processed charge: ${charge.id}`);
-			return this.resultOk(result.data);
 		} catch (error) {
 			console.error('Error handling webhook event:', error);
 			return this.resultFail('Failed to handle webhook event');
 		}
 	}
 
-	private async processChargeSucceeded(charge: Stripe.Charge): Promise<ServiceResult<WebhookResult>> {
+	private async processChargeEvent(charge: Stripe.Charge): Promise<ServiceResult<WebhookResult>> {
 		try {
+			// Get full charge details with expanded balance_transaction for fees
 			const fullCharge = await this.stripe.charges.retrieve(charge.id, {
 				expand: ['balance_transaction', 'invoice'],
 			});
 
 			const stripeCustomer = await this.retrieveStripeCustomer(fullCharge.customer as string);
-			const checkoutMetadata = await this.getCheckoutMetadata(fullCharge);
+			
+			// Business rule: only store failed/pending charges if contributor already exists
+			// This prevents creating database entries for users who never successfully contributed
+			const existingContributorResult = await this.contributorService.findByStripeCustomerOrEmail(
+				stripeCustomer.id,
+				stripeCustomer.email || undefined,
+			);
 
+			if (!existingContributorResult.success) {
+				console.error('Failed to check existing contributor:', existingContributorResult.error);
+				return this.resultFail(existingContributorResult.error);
+			}
+
+			const existingContributor = existingContributorResult.data;
+			
+			// Skip non-successful charges for new users
+			if (fullCharge.status !== 'succeeded' && !existingContributor) {
+				return this.resultOk({ skipReason: 'Non-successful charge with no existing contributor' });
+			}
+
+			// Extract campaign ID from checkout session metadata
+			const checkoutMetadata = await this.getCheckoutMetadata(fullCharge);
+			
 			const contributorResult = await this.getOrCreateContributor(stripeCustomer);
 			if (!contributorResult.success) {
 				console.error('Failed to get/create contributor:', contributorResult.error);
@@ -62,6 +91,7 @@ export class StripeService extends BaseService {
 
 			const { contributor, isNewContributor } = contributorResult.data;
 
+			// Use fallback campaign if no specific campaign was selected
 			let campaignId = checkoutMetadata?.campaignId;
 			if (!campaignId) {
 				const fallbackCampaignResult = await this.campaignService.getFallbackCampaign();
@@ -72,17 +102,19 @@ export class StripeService extends BaseService {
 				campaignId = fallbackCampaignResult.data.id;
 			}
 
+			// Prepare contribution data with CHF amounts from balance_transaction
 			const contributionData: StripeContributionCreateData = {
 				contributorId: contributor.id,
-				amount: fullCharge.amount / 100,
+				amount: fullCharge.amount / 100, // Original charge amount
 				currency: fullCharge.currency.toUpperCase(),
-				amountChf: this.extractAmountChf(fullCharge),
-				feesChf: this.extractFeesChf(fullCharge),
+				amountChf: this.extractAmountChf(fullCharge), // Final settled amount in CHF
+				feesChf: this.extractFeesChf(fullCharge), // Stripe processing fees
 				status: this.constructStatus(fullCharge.status),
 				campaignId,
 				createdAt: new Date(fullCharge.created * 1000),
 			};
 
+			// Store payment metadata for audit trail
 			const paymentEventData: PaymentEventCreateData = {
 				type: PaymentEventType.stripe,
 				transactionId: fullCharge.id,
@@ -94,6 +126,7 @@ export class StripeService extends BaseService {
 				},
 			};
 
+			// Create contribution with associated payment event
 			const contributionResult = await this.contributionService.createWithPaymentEvent(
 				contributionData,
 				paymentEventData,
@@ -120,6 +153,7 @@ export class StripeService extends BaseService {
 		stripeCustomer: StripeCustomerData,
 	): Promise<ServiceResult<{ contributor: ContributorWithContact; isNewContributor: boolean }>> {
 		try {
+			// Try to find existing contributor by Stripe ID or email
 			const existingResult = await this.contributorService.findByStripeCustomerOrEmail(
 				stripeCustomer.id,
 				stripeCustomer.email || undefined,
@@ -130,12 +164,14 @@ export class StripeService extends BaseService {
 			}
 
 			if (existingResult.data) {
+				// Link Stripe customer ID if missing (for existing email-matched users)
 				if (!existingResult.data.stripeCustomerId) {
 					await this.contributorService.updateStripeCustomerId(existingResult.data.id, stripeCustomer.id);
 				}
 				return this.resultOk({ contributor: existingResult.data, isNewContributor: false });
 			}
 
+			// Create new contributor with parsed name
 			const { firstName, lastName } = this.splitName(stripeCustomer.name);
 
 			const contributorData: StripeContributorData = {
@@ -161,11 +197,13 @@ export class StripeService extends BaseService {
 	}
 
 	private extractAmountChf(charge: Stripe.Charge): number {
+		// Extract final settled amount in CHF from balance_transaction
 		const balanceTransaction = charge.balance_transaction as Stripe.BalanceTransaction;
 		return balanceTransaction?.amount ? balanceTransaction.amount / 100 : 0;
 	}
 
 	private extractFeesChf(charge: Stripe.Charge): number {
+		// Extract Stripe processing fees in CHF from balance_transaction
 		const balanceTransaction = charge.balance_transaction as Stripe.BalanceTransaction;
 		return balanceTransaction?.fee ? balanceTransaction.fee / 100 : 0;
 	}
@@ -179,6 +217,7 @@ export class StripeService extends BaseService {
 	}
 
 	private async getCheckoutMetadata(charge: Stripe.Charge): Promise<CheckoutMetadata | null> {
+		// Retrieve campaign ID and other metadata from the original checkout session
 		const paymentIntentId = charge.payment_intent;
 		if (!paymentIntentId) {
 			return null;
@@ -206,6 +245,7 @@ export class StripeService extends BaseService {
 	}
 
 	private splitName(fullName?: string | null): { firstName: string; lastName: string } {
+		// Parse Stripe customer name into first and last name components
 		if (!fullName) {
 			return { firstName: 'Unknown', lastName: '' };
 		}
@@ -216,7 +256,7 @@ export class StripeService extends BaseService {
 		}
 
 		const firstName = parts[0];
-		const lastName = parts.slice(1).join(' ');
+		const lastName = parts.slice(1).join(' '); // Handle multiple middle/last names
 		return { firstName, lastName };
 	}
 }

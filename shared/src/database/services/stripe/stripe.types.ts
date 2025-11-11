@@ -32,4 +32,5 @@ export type WebhookResult = {
 	contributionId?: string;
 	contributorId?: string;
 	isNewContributor?: boolean;
+	skipReason?: string;
 };
