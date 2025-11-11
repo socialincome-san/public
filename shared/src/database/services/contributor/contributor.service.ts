@@ -299,7 +299,7 @@ export class ContributorService extends BaseService {
 		contributorData: StripeContributorData,
 	): Promise<ServiceResult<ContributorWithContact>> {
 		try {
-			const firebaseResult = await this.firebaseService.createUser({
+			const firebaseResult = await this.firebaseService.getOrCreateUser({
 				email: contributorData.email,
 				displayName: `${contributorData.firstName} ${contributorData.lastName}`,
 			});

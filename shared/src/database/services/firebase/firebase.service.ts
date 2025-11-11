@@ -133,16 +133,18 @@ export class FirebaseService extends BaseService {
 		return decodedToken.phone_number ?? null;
 	}
 
-	async createUser(userData: { email: string; displayName: string }): Promise<ServiceResult<UserRecord>> {
+	async getOrCreateUser(userData: { email: string; displayName: string }): Promise<ServiceResult<UserRecord>> {
 		try {
-			const userRecord = await this.authAdmin.auth.createUser({
-				email: userData.email,
-				displayName: userData.displayName,
-			});
-			return this.resultOk(userRecord);
+			try {
+				return this.resultOk(await this.authAdmin.auth.getUserByEmail(userData.email));
+			} catch (error: any) {
+				if (error.code !== 'auth/user-not-found') {
+					return this.resultFail('Could not check existing Firebase Auth user');
+				}
+			}
+			return this.resultOk(await this.authAdmin.auth.createUser(userData));
 		} catch (error) {
-			console.error('Error creating Firebase user:', error);
-			return this.resultFail('Could not create Firebase Auth user');
+			return this.resultFail('Could not get or create Firebase Auth user');
 		}
 	}
 }
