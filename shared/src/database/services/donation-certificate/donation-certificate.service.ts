@@ -13,6 +13,7 @@ export class DonationCertificateService extends BaseService {
 	private contributorService = new ContributorService();
 	private contributionService = new ContributionService();
 	private storageAdmin = new StorageAdmin();
+	private bucketName = process.env.FIREBASE_STORAGE_BUCKET;
 
 	async getTableView(userId: string): Promise<ServiceResult<DonationCertificateTableView>> {
 		try {
@@ -86,6 +87,20 @@ export class DonationCertificateService extends BaseService {
 						return;
 					}
 
+					const existingCertificate = await this.db.donationCertificate.findMany({
+						where: {
+							year: year,
+							contributorId: contributor.id,
+						},
+					});
+
+					if (existingCertificate.length) {
+						console.info(
+							`User ${contributor.id} already has a certificate for year ${year}, skipping donation certificate creation`,
+						);
+						return;
+					}
+
 					let contributions = await this.contributionService.getForContributor(contributor.id);
 					if (!contributions.success) {
 						console.info(`User ${contributor.id} has no contributions, skipping donation certificate creation`);
@@ -98,7 +113,8 @@ export class DonationCertificateService extends BaseService {
 
 					await withFile(async ({ path }) => {
 						await writer.writeDonationCertificatePDF(path);
-						await this.storageAdmin.uploadFile({ sourceFilePath: path, destinationFilePath });
+						const bucket = this.storageAdmin.storage.bucket(this.bucketName);
+						await this.storageAdmin.uploadFile({ bucket, sourceFilePath: path, destinationFilePath });
 
 						await this.db.donationCertificate.create({
 							data: {
