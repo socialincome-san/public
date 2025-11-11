@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 /**
  * Process Stripe webhook events
- * @description Handles Stripe webhook events, specifically charge.succeeded events to create contributions and contributors.
+ * @description Handles multiple Stripe webhook events including charge.succeeded, charge.updated, and charge.failed to create/update contributions and contributors.
  * @response StripeWebhookResponse | StripeWebhookError
  * @openapi
  */

@@ -219,11 +219,7 @@ async function main() {
 		},
 	});
 
-	const accounts = [ADMIN_STAGING_ACCOUNT, ADMIN_LOCAL_ACCOUNT];
-
-	await prisma.account.create({
-		data: TEST_CONTRIBUTOR_ACCOUNT,
-	});
+	const accounts = [ADMIN_STAGING_ACCOUNT, ADMIN_LOCAL_ACCOUNT, TEST_CONTRIBUTOR_ACCOUNT];
 
 	for (const accountData of accounts) {
 		const account = await prisma.account.upsert({

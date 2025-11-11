@@ -5,7 +5,7 @@
  * 3. Forward webhooks to local endpoint:
  *    `stripe listen --forward-to localhost:3001/api/portal/v1/stripe/webhook`
  * 4. Copy the webhook signing secret from CLI output and set in your env.local:
- *    STRIPE_WEBHOOK_SECRET_PORTAL=whsec_xxx...
+ *    STRIPE_WEBHOOK_SECRET=whsec_xxx...
  * 5. Make a test contribution - webhooks will be forwarded to your local server.
  */
 
