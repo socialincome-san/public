@@ -11,6 +11,7 @@ import {
 	PayoutConfirmationTableView,
 	PayoutConfirmationTableViewRow,
 	PayoutCreateInput,
+	PayoutEntity,
 	PayoutForecastTableView,
 	PayoutForecastTableViewRow,
 	PayoutMonth,
@@ -742,5 +743,56 @@ export class PayoutService extends BaseService {
 				programName: payout.recipient.program.name,
 			},
 		});
+	}
+
+	async getByRecipientId(recipientId: string): Promise<ServiceResult<PayoutEntity[]>> {
+		try {
+			const payouts = await this.db.payout.findMany({
+				where: { recipientId },
+				orderBy: { paymentAt: 'desc' },
+			});
+			return this.resultOk(payouts);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch payouts');
+		}
+	}
+
+	async getByRecipientAndId(recipientId: string, payoutId: string): Promise<ServiceResult<PayoutEntity | null>> {
+		if (!recipientId || !payoutId) {
+			return this.resultFail('Recipient ID and Payout ID are required');
+		}
+
+		try {
+			const payout = await this.db.payout.findFirst({
+				where: { id: payoutId, recipientId },
+			});
+
+			return this.resultOk(payout);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail(`Could not fetch payout "${payoutId}"`);
+		}
+	}
+
+	async updateStatusByRecipient(
+		recipientId: string,
+		payoutId: string,
+		status: PayoutStatus,
+	): Promise<ServiceResult<PayoutEntity>> {
+		try {
+			const payout = await this.db.payout.findFirst({ where: { id: payoutId, recipientId } });
+			if (!payout) {
+				return this.resultFail(`Payout "${payoutId}" not found for recipient`);
+			}
+			const updated = await this.db.payout.update({
+				where: { id: payout.id },
+				data: { status },
+			});
+			return this.resultOk(updated);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail(`Failed to update payout "${payoutId}"`);
+		}
 	}
 }

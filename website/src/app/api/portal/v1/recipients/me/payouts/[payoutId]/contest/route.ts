@@ -1,4 +1,5 @@
-import { PortalApiService } from '@socialincome/shared/src/database/services/portal-api/portal-api.service';
+import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
+import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
 import { NextRequest, NextResponse } from 'next/server';
 
 type Params = Promise<{ payoutId: string }>;
@@ -14,16 +15,18 @@ type Params = Promise<{ payoutId: string }>;
 export async function POST(request: NextRequest, { params }: { params: Params }) {
 	const { payoutId } = await params;
 
-	const service = new PortalApiService();
+	const recipientService = new RecipientService();
+	const recipientResult = await recipientService.getRecipientFromRequest(request);
 
-	const recipientResult = await service.getRecipientFromRequest(request);
 	if (!recipientResult.success) {
 		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
 	}
 
-	const contestResult = await service.updatePayoutStatus(recipientResult.data.id, payoutId, 'contested');
+	const payoutService = new PayoutService();
+	const contestResult = await payoutService.updateStatusByRecipient(recipientResult.data.id, payoutId, 'contested');
+
 	if (!contestResult.success) {
-		return new Response(contestResult.error, { status: contestResult.status ?? 500 });
+		return new Response(contestResult.error, { status: 500 });
 	}
 
 	return NextResponse.json(contestResult.data, { status: 200 });

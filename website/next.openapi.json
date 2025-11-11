@@ -1,9 +1,9 @@
 {
 	"openapi": "3.0.0",
 	"info": {
-		"title": "Social Income Mobile API",
+		"title": "Social Income Portal API",
 		"version": "1.0.0",
-		"description": "The Social Income Mobile API enables authenticated recipients to securely access their personal data and program information. All endpoints require a valid Firebase ID token (Bearer JWT) provided by the mobile app."
+		"description": "The Social Income Portal API enables recipients to authenticate and securely access their personal data and program information. Most endpoints require a valid Firebase ID token (Bearer JWT), except authentication endpoints which are used to obtain the token."
 	},
 	"servers": [
 		{

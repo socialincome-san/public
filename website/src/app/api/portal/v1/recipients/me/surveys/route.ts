@@ -1,4 +1,5 @@
-import { PortalApiService } from '@socialincome/shared/src/database/services/portal-api/portal-api.service';
+import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
+import { SurveyService } from '@socialincome/shared/src/database/services/survey/survey.service';
 import { NextResponse } from 'next/server';
 
 /**
@@ -9,17 +10,18 @@ import { NextResponse } from 'next/server';
  * @openapi
  */
 export async function GET(request: Request) {
-	const service = new PortalApiService();
-	const recipientResult = await service.getRecipientFromRequest(request);
+	const recipientService = new RecipientService();
+	const recipientResult = await recipientService.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
 	}
 
-	const surveysResult = await service.getSurveysByRecipientId(recipientResult.data.id);
+	const surveyService = new SurveyService();
+	const surveysResult = await surveyService.getByRecipientId(recipientResult.data.id);
 
 	if (!surveysResult.success) {
-		return new Response(surveysResult.error, { status: surveysResult.status ?? 500 });
+		return new Response(surveysResult.error, { status: 500 });
 	}
 
 	return NextResponse.json(surveysResult.data, { status: 200 });
