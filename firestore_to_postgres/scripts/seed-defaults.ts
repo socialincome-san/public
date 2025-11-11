@@ -31,7 +31,7 @@ export const DEFAULT_CAMPAIGN: Omit<Prisma.CampaignCreateInput, 'organization' |
 	isFallback: true,
 };
 
-export const surveySchedules: (Omit<Prisma.SurveyScheduleCreateInput, 'program'> & { id: string })[] = [
+export const SURVEY_SCHEDULES: (Omit<Prisma.SurveyScheduleCreateInput, 'program'> & { id: string })[] = [
 	{
 		id: 'cmhssz9ih000hyjqcer26j2j9',
 		name: 'onboarding',
@@ -132,7 +132,7 @@ export const ADMIN_STAGING_ACCOUNT: Prisma.AccountCreateInput = {
 };
 
 export const ADMIN_LOCAL_ACCOUNT: Prisma.AccountCreateInput = {
-	firebaseAuthUserId: 'w43IydQbr8lgeGeevbSBoP9ui3WQ',
+	firebaseAuthUserId: 'u43IydQbr8lgeGeevbSBoP9ui3WP',
 	user: {
 		create: {
 			role: UserRole.admin,
@@ -140,7 +140,7 @@ export const ADMIN_LOCAL_ACCOUNT: Prisma.AccountCreateInput = {
 				create: {
 					firstName: 'Admin',
 					lastName: 'Local',
-					email: 'test@test.org',
+					email: 'test@portal.org',
 					language: 'en',
 					address: {
 						create: {
@@ -228,7 +228,7 @@ async function main() {
 	}
 
 	await prisma.surveySchedule.createMany({
-		data: surveySchedules.map((surveySchedule) => ({
+		data: SURVEY_SCHEDULES.map((surveySchedule) => ({
 			id: surveySchedule.id,
 			name: surveySchedule.name,
 			questionnaire: surveySchedule.questionnaire,

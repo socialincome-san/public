@@ -46,7 +46,6 @@ export type StripeContributionCreateData = {
 	amountChf: number;
 	feesChf: number;
 	status: ContributionStatus;
-	referenceId: string;
 	campaignId: string;
 	createdAt: Date;
 };

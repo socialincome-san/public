@@ -168,7 +168,9 @@ Only selected people from the SI team have access.
 #### Localhost Website Login ([Link](http://localhost:3000/login))
 
 1. Go to the [Login page](http://localhost:3000/login) and select
-2. Sign in with username test@test.org and password test@test.org.
+2. Sign in with:
+   - **For a contributor**: email `test@test.org`
+   - **For a portal user**: email `test@portal.org`
 
 #### Staging Website Login ([Link](https://staging.socialincome.org/login))
 
