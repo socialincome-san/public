@@ -61,12 +61,28 @@ export class StripeService extends BaseService {
 
 			const stripeCustomer = await this.retrieveStripeCustomer(fullCharge.customer as string);
 			
+
 			// Business rule: only store failed/pending charges if contributor already exists
 			// This prevents creating database entries for users who never successfully contributed
 			const existingContributorResult = await this.contributorService.findByStripeCustomerOrEmail(
 				stripeCustomer.id,
 				stripeCustomer.email || undefined,
 			);
+
+			if (!existingContributorResult.success) {
+				console.error('Failed to check existing contributor:', existingContributorResult.error);
+				return this.resultFail(existingContributorResult.error);
+			}
+
+			const existingContributor = existingContributorResult.data;
+
+			// Skip non-successful charges for new users
+			if (fullCharge.status !== 'succeeded' && !existingContributor) {
+				return this.resultOk({ skipReason: 'Non-successful charge with no existing contributor' });
+			}
+
+			// Extract campaign ID from checkout session metadata
+			const checkoutMetadata = await this.getCheckoutMetadata(fullCharge);
 
 			if (!existingContributorResult.success) {
 				console.error('Failed to check existing contributor:', existingContributorResult.error);
