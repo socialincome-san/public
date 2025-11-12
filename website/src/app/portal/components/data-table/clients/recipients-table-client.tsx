@@ -6,6 +6,7 @@ import DataTable from '@/app/portal/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
 import { RecipientForm } from '@/app/portal/components/forms/recipient/recipient-form';
 import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';
+import { logger } from '@socialincome/shared/src/utils/logger';
 import { useState } from 'react';
 
 export function RecipientsTableClient({
@@ -41,7 +42,7 @@ export function RecipientsTableClient({
 
 	const onError = (error: unknown) => {
 		setHasError(true);
-		console.error('Recipient Form Error: ', error);
+		logger.error('Recipient Form Error', { error });
 	};
 
 	return (

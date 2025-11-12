@@ -2,6 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/app/portal/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
+import { logger } from '@socialincome/shared/src/utils/logger';
 import { useState } from 'react';
 import { SurveyForm } from './survey-form';
 
@@ -17,7 +18,7 @@ export function SurveyFormDialog({ open, onOpenChange, surveyId, readOnly = fals
 
 	const onError = (e?: unknown) => {
 		setHasError(true);
-		console.error('Survey Form Error:', e);
+		logger.error('Survey Form Error', { error: e });
 	};
 
 	const handleOpenChange = (newOpen: boolean) => {
