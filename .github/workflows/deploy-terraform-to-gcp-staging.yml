@@ -41,8 +41,8 @@ jobs:
       - name: 📝 Prepare Docker build secrets
         run: |
           mkdir -p secrets
-          echo "${{ github.sha }}" > secrets/APP_VERSION
-          echo "${{ env.ENVIRONMENT }}" > secrets/APP_ENVIRONMENT
+          echo "${{ github.sha }}" > secrets/NEXT_PUBLIC_APP_VERSION
+          echo "${{ env.ENVIRONMENT }}" > secrets/NEXT_PUBLIC_APP_ENVIRONMENT
           echo "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" > secrets/APP_BUILD_TIMESTAMP
           echo "${{ secrets.TF_STAGING_BASE_URL }}" > secrets/BASE_URL
           echo "${{ secrets.TF_STAGING_EXCHANGE_RATES_API }}" > secrets/EXCHANGE_RATES_API
