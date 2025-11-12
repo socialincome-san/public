@@ -163,7 +163,7 @@ export class ContributionService extends BaseService {
 		}
 	}
 
-	async getForDonationCertificates(contributorId: string): Promise<ServiceResult<ContributionDonationEntry[]>> {
+	async getForContributor(contributorId: string): Promise<ServiceResult<ContributionDonationEntry[]>> {
 		try {
 			const result = await this.db.contribution.findMany({
 				where: {
