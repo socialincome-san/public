@@ -11,7 +11,7 @@ Sentry.init({
 
 	// Setting this option to true will print useful information to the console while you're setting up Sentry.
 	debug: false,
-	sendDefaultPii: true,
+	sendDefaultPii: false,
 	release: process.env.NEXT_PUBLIC_APP_VERSION || undefined,
 	environment: process.env.NEXT_PUBLIC_APP_ENVIRONMENT, // 'prod' or 'staging'
 	integrations: [Sentry.consoleLoggingIntegration({ levels: ['log', 'warn', 'error'] })],
