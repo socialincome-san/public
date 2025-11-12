@@ -15,8 +15,6 @@ Sentry.init({
 	sendDefaultPii: true,
 	release: process.env.NEXT_PUBLIC_APP_VERSION || undefined,
 	environment: process.env.NEXT_PUBLIC_APP_ENVIRONMENT, // 'prod' or 'staging'
-	integrations: [
-		Sentry.consoleLoggingIntegration({ levels: ['log', 'warn', 'error'] }),
-	],
+	integrations: [Sentry.consoleLoggingIntegration({ levels: ['log', 'warn', 'error'] })],
 	enableLogs: true,
 });
