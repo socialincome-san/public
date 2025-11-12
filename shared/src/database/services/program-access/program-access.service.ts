@@ -2,7 +2,6 @@ import { ProgramPermission } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ProgramAccesses } from './program-access.types';
-
 export class ProgramAccessService extends BaseService {
 	async getAccessiblePrograms(userId: string): Promise<ServiceResult<ProgramAccesses>> {
 		try {
@@ -27,7 +26,7 @@ export class ProgramAccessService extends BaseService {
 
 			return this.resultOk(data);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch program accesses');
 		}
 	}

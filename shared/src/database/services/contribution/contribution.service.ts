@@ -62,7 +62,7 @@ export class ContributionService extends BaseService {
 				feesChf: Number(contribution.amount),
 			});
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch contribution');
 		}
 	}
@@ -97,7 +97,7 @@ export class ContributionService extends BaseService {
 
 			return this.resultOk(updatedContribution);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not update contribution');
 		}
 	}
@@ -157,7 +157,7 @@ export class ContributionService extends BaseService {
 
 			return this.resultOk({ tableRows, permission: permission });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch contributions');
 		}
 	}
@@ -190,7 +190,7 @@ export class ContributionService extends BaseService {
 
 			return this.resultOk(paymentEvent.contribution);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not create or update contribution from Stripe event');
 		}
 	}

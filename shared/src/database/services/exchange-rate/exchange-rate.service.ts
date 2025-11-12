@@ -3,7 +3,6 @@ import { ServiceResult } from '../core/base.types';
 import { UserService } from '../user/user.service';
 import { ExchangeRateImportService } from './exchange-rate-import.service';
 import { ExchangeRates, ExchangeRatesTableView, ExchangeRatesTableViewRow } from './exchange-rate.types';
-
 export class ExchangeRateService extends BaseService {
 	private userService = new UserService();
 	private importService = new ExchangeRateImportService();
@@ -38,7 +37,7 @@ export class ExchangeRateService extends BaseService {
 
 			return this.resultOk(result);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch latest exchange rates');
 		}
 	}
@@ -76,7 +75,7 @@ export class ExchangeRateService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch exchange rates');
 		}
 	}

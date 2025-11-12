@@ -2,6 +2,7 @@
 
 import { Alert, AlertDescription, AlertTitle } from '@/app/portal/components/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
+import { logger } from '@socialincome/shared/src/utils/logger';
 import { useState } from 'react';
 import { PayoutForm } from './payout-form';
 
@@ -17,7 +18,7 @@ export function PayoutFormDialog({ open, onOpenChange, payoutId, readOnly = fals
 
 	const onError = (e?: unknown) => {
 		setHasError(true);
-		console.error('Payout Form Error:', e);
+		logger.error('Payout Form Error', { error: e });
 	};
 
 	const handleOpenChange = (newOpen: boolean) => {

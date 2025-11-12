@@ -5,6 +5,7 @@ import { makeContributionsColumns } from '@/app/portal/components/data-table/col
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
 import { ContributionTableViewRow } from '@socialincome/shared/src/database/services/contribution/contribution.types';
+import { logger } from '@socialincome/shared/src/utils/logger';
 import { useState } from 'react';
 import ContributionForm from './contribution-form';
 
@@ -29,7 +30,7 @@ export default function ContributionsTable({
 
 	const onError = (error: unknown) => {
 		setHasError(true);
-		console.error('Contribution Form Error: ', error);
+		logger.error('Contribution Form Error', { error });
 	};
 
 	return (

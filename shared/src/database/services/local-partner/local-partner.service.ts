@@ -25,7 +25,7 @@ export class LocalPartnerService extends BaseService {
 			const partner = await this.db.localPartner.create({ data: localPartner });
 			return this.resultOk(partner);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not create local partner');
 		}
 	}
@@ -45,7 +45,7 @@ export class LocalPartnerService extends BaseService {
 
 			return this.resultOk(partner);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not update local partner');
 		}
 	}
@@ -87,7 +87,7 @@ export class LocalPartnerService extends BaseService {
 
 			return this.resultOk(partner);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not get local partner');
 		}
 	}
@@ -128,7 +128,7 @@ export class LocalPartnerService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch local partners');
 		}
 	}
@@ -145,7 +145,7 @@ export class LocalPartnerService extends BaseService {
 
 			return this.resultOk(partners);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch local partners');
 		}
 	}

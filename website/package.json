@@ -34,7 +34,7 @@
 		"@radix-ui/react-separator": "^1.1.7",
 		"@radix-ui/react-slot": "^1.2.3",
 		"@scalar/api-reference-react": "^0.7.55",
-		"@sentry/nextjs": "^8.49.0",
+		"@sentry/nextjs": "^10.25.0",
 		"@socialincome/shared": "^1.0.0",
 		"@socialincome/ui": "^1.0.0",
 		"@storyblok/react": "^4.3.4",

@@ -1,4 +1,5 @@
 import { useAuth } from '@/lib/firebase/hooks/useAuth';
+import { logger } from '@socialincome/shared/src/utils/logger';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 
@@ -14,16 +15,16 @@ export const useLogout = () => {
 			});
 
 			if (!res.ok) {
-				console.error('Logout API failed with status:', res.status);
+				logger.error('Logout API failed', { status: res.status });
 			}
 
 			await signOut(auth).catch((err) => {
-				console.error('Firebase sign-out error:', err);
+				logger.error('Firebase sign-out error', { error: err });
 			});
 
 			router.push('/portal/login');
 		} catch (error) {
-			console.error('Logout error:', error);
+			logger.error('Logout error', { error });
 		}
 	};
 

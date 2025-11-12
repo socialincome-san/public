@@ -80,7 +80,7 @@ export class PayoutService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch payouts');
 		}
 	}
@@ -143,7 +143,7 @@ export class PayoutService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch ongoing payouts');
 		}
 	}
@@ -232,7 +232,7 @@ export class PayoutService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not generate payout forecast');
 		}
 	}
@@ -293,7 +293,7 @@ export class PayoutService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch payout confirmation inbox');
 		}
 	}
@@ -338,7 +338,7 @@ export class PayoutService extends BaseService {
 
 			return this.resultOk(`Payout updated to "${newStatus}"`);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not update payout');
 		}
 	}
@@ -364,7 +364,7 @@ export class PayoutService extends BaseService {
 
 			return this.resultOk(csvRows.map((row) => row.join(',')).join('\n'));
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not generate registration CSV');
 		}
 	}
@@ -408,7 +408,7 @@ export class PayoutService extends BaseService {
 
 			return this.resultOk(csvRows.map((row) => row.join(',')).join('\n'));
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not generate payout CSV');
 		}
 	}
@@ -458,7 +458,7 @@ export class PayoutService extends BaseService {
 
 			return this.resultOk(toCreate);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not preview payouts');
 		}
 	}
@@ -492,7 +492,7 @@ export class PayoutService extends BaseService {
 				`Created ${dbPayload.length} payouts for ${target.year}-${String(target.month).padStart(2, '0')}.`,
 			);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not generate payouts');
 		}
 	}
@@ -541,7 +541,7 @@ export class PayoutService extends BaseService {
 
 			return this.resultOk(completed);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not preview completed recipients');
 		}
 	}
@@ -568,7 +568,7 @@ export class PayoutService extends BaseService {
 
 			return this.resultOk(`Updated ${completed.length} recipients to status "former".`);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not update recipients');
 		}
 	}
@@ -626,7 +626,7 @@ export class PayoutService extends BaseService {
 				},
 			});
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not create payout');
 		}
 	}
@@ -685,7 +685,7 @@ export class PayoutService extends BaseService {
 				},
 			});
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not update payout');
 		}
 	}
@@ -753,7 +753,7 @@ export class PayoutService extends BaseService {
 			});
 			return this.resultOk(payouts);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch payouts');
 		}
 	}
@@ -770,7 +770,7 @@ export class PayoutService extends BaseService {
 
 			return this.resultOk(payout);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail(`Could not fetch payout "${payoutId}"`);
 		}
 	}
@@ -791,7 +791,7 @@ export class PayoutService extends BaseService {
 			});
 			return this.resultOk(updated);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail(`Failed to update payout "${payoutId}"`);
 		}
 	}
