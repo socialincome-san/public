@@ -73,7 +73,7 @@ export class DonationCertificateService extends BaseService {
 	}
 
 	async createDonationCertificates(year: number, contributorsIds?: string[]): Promise<ServiceResult<string>> {
-		let [successCount, usersWithFailures] = [0, [] as string[]];
+		let [successCount, usersWithFailures, usersSkipped] = [0, [] as string[], [] as string[]];
 
 		const result = await this.contributorService.getForDonationCertificate(contributorsIds);
 		if (!result.success) return this.resultFail('Could not get contributors');
@@ -84,6 +84,7 @@ export class DonationCertificateService extends BaseService {
 				try {
 					if (contributor.authId === undefined) {
 						console.info(`User ${contributor.id} has no auth_user_id, skipping donation certificate creation`);
+						usersSkipped.push(contributor.id);
 						return;
 					}
 
@@ -98,12 +99,14 @@ export class DonationCertificateService extends BaseService {
 						console.info(
 							`User ${contributor.id} already has a certificate for year ${year}, skipping donation certificate creation`,
 						);
+						usersSkipped.push(contributor.id);
 						return;
 					}
 
 					let contributions = await this.contributionService.getForContributor(contributor.id);
 					if (!contributions.success) {
 						console.info(`User ${contributor.id} has no contributions, skipping donation certificate creation`);
+						usersSkipped.push(contributor.id);
 						return;
 					}
 					const writer = new DonationCertificateWriter(contributor, contributions.data, year);
@@ -137,12 +140,14 @@ export class DonationCertificateService extends BaseService {
 				}
 			}),
 		);
-		if (successCount === 0) {
-			return this.resultFail(`No donation certificates created for ${year} 
-	Users with errors (${usersWithFailures.length}): ${usersWithFailures.join(',')}`);
+		if (usersWithFailures.length !== 0) {
+			return this.resultFail(`No donation certificates created for ${year}. 
+	Users skipped (${usersSkipped.length}): ${usersSkipped.join(', ')}.
+	Users with errors (${usersWithFailures.length}): ${usersWithFailures.join(', ')}`);
 		} else {
-			return this.resultOk(`Successfully created ${successCount} donation certificates for ${year} 
-	Users with errors (${usersWithFailures.length}): ${usersWithFailures.join(',')}`);
+			return this.resultOk(`Successfully created ${successCount} donation certificates for ${year}. 
+	Users skipped (${usersSkipped.length}): ${usersSkipped.join(', ')}.
+	Users with errors (${usersWithFailures.length}): ${usersWithFailures.join(', ')}`);
 		}
 	}
 }

@@ -27,8 +27,8 @@ export async function POST(request: NextRequest) {
 		return new NextResponse('Invalid JSON body: ' + e, { status: 400 });
 	}
 
-	if (!body.contributorIds || !Array.isArray(body.contributorIds))
-		return new NextResponse('Invalid request, contributorIds missing', { status: 400 });
+	if (body.contributorIds && !Array.isArray(body.contributorIds))
+		return new NextResponse('Invalid request, contributorIds must be an array', { status: 400 });
 
 	const service = new DonationCertificateService();
 

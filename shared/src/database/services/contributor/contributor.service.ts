@@ -226,6 +226,7 @@ export class ContributorService extends BaseService {
 						},
 					},
 				},
+				orderBy: { contact: { firstName: 'asc' } },
 			});
 
 			const contributors = result.map((c) => ({

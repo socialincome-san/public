@@ -8,7 +8,7 @@ import { Translator } from '../../../utils/i18n';
 import { ContributionDonationEntry } from '../contribution/contribution.types';
 import { ContributorDonationCertificate } from '../contributor/contributor.types';
 
-export const ASSET_DIR = path.join(__dirname, '..', '..', '..', '..', '..', '..', '..', 'assets');
+const ASSET_DIR = path.join(process.cwd(), 'public', 'assets');
 
 export class DonationCertificateWriter {
 	public readonly year: number;
@@ -86,7 +86,7 @@ export class DonationCertificateWriter {
 			pdfDocument.registerFont('unica77', path.join(ASSET_DIR, 'fonts', '/Unica77LLTT-Regular.ttf'));
 			pdfDocument.registerFont('unica77-bold', path.join(ASSET_DIR, 'fonts', 'Unica77LLTT-Bold.ttf'));
 			pdfDocument.font('unica77');
-			pdfDocument.image(path.join(ASSET_DIR, 'logos', 'logo_color@2x.png'), 45, 20, { width: 180 });
+			pdfDocument.image(path.join(ASSET_DIR, 'logos_si', 'logo_color@2x.png'), 45, 20, { width: 180 });
 			pdfDocument.fontSize(10).text(header, 45, 20, { align: 'right' });
 			pdfDocument.moveDown(6);
 			pdfDocument.fontSize(12);
