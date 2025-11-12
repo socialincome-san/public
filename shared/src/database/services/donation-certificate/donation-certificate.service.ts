@@ -75,6 +75,11 @@ export class DonationCertificateService extends BaseService {
 	async createDonationCertificates(year: number, contributorsIds?: string[]): Promise<ServiceResult<string>> {
 		let [successCount, usersWithFailures, usersSkipped] = [0, [] as string[], [] as string[]];
 
+		if (!this.bucketName) {
+			console.error('Firebase Storage bucket name missing');
+			return this.resultFail('Firebase Storage bucket name missing');
+		}
+
 		const result = await this.contributorService.getForDonationCertificate(contributorsIds);
 		if (!result.success) return this.resultFail('Could not get contributors');
 		const contributors = result.data;
