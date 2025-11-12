@@ -1,8 +1,14 @@
 import type { Log, ParameterizedString, Scope } from '@sentry/core';
-import { logger as sentryLogger } from '@sentry/core';
+import { captureException, logger as sentryLogger } from '@sentry/core';
 
 type CaptureLogMetadata = {
 	scope?: Scope;
+};
+
+type AlertOptions = {
+	tags?: Record<string, string>;
+	extra?: Record<string, any>;
+	component?: string;
 };
 
 const formatMessage = (message: ParameterizedString | unknown): ParameterizedString =>
@@ -17,4 +23,22 @@ export const logger = {
 		sentryLogger.warn(formatMessage(message), attributes, metadata),
 	error: (error: ParameterizedString | unknown, attributes?: Log['attributes'], metadata?: CaptureLogMetadata) =>
 		sentryLogger.error(formatMessage(error), attributes, metadata),
+
+	alert: (error: ParameterizedString | unknown, attributes?: Log['attributes'], alertOptions?: AlertOptions) => {
+		sentryLogger.error(formatMessage(error), attributes);
+
+		const exception = error instanceof Error ? error : new Error(String(error));
+
+		captureException(exception, {
+			tags: {
+				alert: 'true',
+				component: alertOptions?.component || 'unknown',
+				...alertOptions?.tags,
+			},
+			extra: {
+				...attributes,
+				...alertOptions?.extra,
+			},
+		});
+	},
 };
