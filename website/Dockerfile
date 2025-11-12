@@ -33,6 +33,7 @@ RUN --mount=type=secret,id=NEXT_PUBLIC_APP_VERSION \
     --mount=type=secret,id=STRIPE_PRODUCT_ONETIME \
     --mount=type=secret,id=STRIPE_PRODUCT_RECURRING \
     --mount=type=secret,id=STRIPE_SECRET_KEY \
+    --mount=type=secret,id=STRIPE_WEBHOOK_SECRET \
     --mount=type=secret,id=TWILIO_ACCOUNT_SID \
     --mount=type=secret,id=TWILIO_AUTH_TOKEN \
     --mount=type=secret,id=TWILIO_VERIFY_SERVICE_SID \
