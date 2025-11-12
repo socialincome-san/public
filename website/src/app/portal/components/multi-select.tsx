@@ -1,3 +1,5 @@
+// Source: https://github.com/sersavan/shadcn-multi-select-component
+
 import { cva, type VariantProps } from 'class-variance-authority';
 import { CheckIcon, ChevronDown, WandSparkles, XCircle, XIcon } from 'lucide-react';
 import * as React from 'react';
