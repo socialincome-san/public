@@ -1,7 +1,6 @@
 import { SurveySchedule } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-
 export class SurveyScheduleService extends BaseService {
 	async getByProgramIds(programIds: string[]): Promise<ServiceResult<SurveySchedule[]>> {
 		try {
@@ -12,7 +11,7 @@ export class SurveyScheduleService extends BaseService {
 
 			return this.resultOk(schedules);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail(`Failed to get survey schedules for programs: ${error}`);
 		}
 	}

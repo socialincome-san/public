@@ -3,7 +3,6 @@ import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { ExchangeRateCreateInput, ExchangeRates } from './exchange-rate.types';
-
 export type ExchangeRateResponse = {
 	base: string;
 	date: string;
@@ -28,7 +27,7 @@ export class ExchangeRateImportService extends BaseService {
 
 			return this.resultOk(result);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch latest exchange rates');
 		}
 	}
@@ -39,7 +38,7 @@ export class ExchangeRateImportService extends BaseService {
 		}
 
 		const day = dt.toFormat('yyyy-MM-dd');
-		console.info('Fetching exchange rates for day:', day);
+		this.logger.info('Fetching exchange rates for day', { day });
 		const response = await fetch(`https://api.apilayer.com/exchangerates_data/${day}?base=chf`, {
 			method: 'GET',
 			headers: {
@@ -66,7 +65,7 @@ export class ExchangeRateImportService extends BaseService {
 			await this.db.exchangeRate.createMany({ data });
 			return this.resultOk(data);
 		} catch (error) {
-			console.error('Could not store exchange rates', error);
+			this.logger.error(error);
 			return this.resultFail(`Could not store exchange rates: ${error}`);
 		}
 	}
@@ -78,10 +77,10 @@ export class ExchangeRateImportService extends BaseService {
 			if (!storeResult.success) {
 				return this.resultFail(storeResult.error, storeResult.status);
 			}
-			console.info('Ingested exchange rates for: ', dt.toISODate());
+			this.logger.info('Ingested exchange rates for date', { date: dt.toISODate() });
 			return this.resultOk(rates);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail(`Import failed: ${error}`);
 		}
 	}
@@ -93,11 +92,14 @@ export class ExchangeRateImportService extends BaseService {
 		const existingExchangeRates = await this.getAllRatesSince(oneMonthAgo);
 
 		if (!existingExchangeRates.success) {
-			console.error('Could not fetch existing exchange rates');
+			this.logger.error('Could not fetch existing exchange rates');
 			return this.resultFail('Could not fetch existing exchange rates');
 		}
 
-		console.info('Starting exchange rate import from', oneMonthAgo.toISOString(), 'to', new Date().toISOString());
+		this.logger.info('Starting exchange rate import', {
+			fromDate: oneMonthAgo.toISOString(),
+			toDate: new Date().toISOString(),
+		});
 
 		for (
 			let timestamp = oneMonthAgo.getTime();
@@ -112,22 +114,20 @@ export class ExchangeRateImportService extends BaseService {
 				);
 			});
 
-			console.info(
-				'Checking exchange rates for timestamp:',
-				DateTime.fromMillis(timestamp).toISODate(),
-				'found:',
-				ratesForTimestamp.length,
-			);
+			this.logger.info('Checking exchange rates for timestamp', {
+				date: DateTime.fromMillis(timestamp).toISODate(),
+				found: ratesForTimestamp.length,
+			});
 
 			if (!ratesForTimestamp?.length) {
 				try {
 					const storedRates = await this.fetchAndStoreExchangeRates(DateTime.fromMillis(timestamp));
 					if (!storedRates.success) {
-						console.error('Could not store exchange rates');
+						this.logger.error('Could not store exchange rates');
 						return this.resultFail(`Could not store exchange rates: ${storedRates.error}`);
 					}
 				} catch (error) {
-					console.error(`Could not ingest exchange rate`, error);
+					this.logger.error(error);
 					return this.resultFail(`Could not ingest exchange rate: ${error}`);
 				}
 			}

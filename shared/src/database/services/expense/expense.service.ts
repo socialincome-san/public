@@ -33,7 +33,7 @@ export class ExpenseService extends BaseService {
 				organization: created.organization,
 			});
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not create expense');
 		}
 	}
@@ -60,7 +60,7 @@ export class ExpenseService extends BaseService {
 				organization: updated.organization,
 			});
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not update expense');
 		}
 	}
@@ -90,7 +90,7 @@ export class ExpenseService extends BaseService {
 				organization: expense.organization,
 			});
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not get expense');
 		}
 	}
@@ -126,7 +126,7 @@ export class ExpenseService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch expenses');
 		}
 	}

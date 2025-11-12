@@ -2,7 +2,6 @@ import { UserRole } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { UserInformation } from './user.types';
-
 export class UserService extends BaseService {
 	async getCurrentUserInformation(firebaseAuthUserId: string): Promise<ServiceResult<UserInformation>> {
 		try {
@@ -52,7 +51,7 @@ export class UserService extends BaseService {
 
 			return this.resultOk(userInfo);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Error fetching user information');
 		}
 	}
@@ -74,7 +73,7 @@ export class UserService extends BaseService {
 
 			return this.resultOk(true);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not check admin status');
 		}
 	}

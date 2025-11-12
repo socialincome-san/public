@@ -90,7 +90,7 @@ export class SurveyService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch surveys');
 		}
 	}
@@ -106,7 +106,7 @@ export class SurveyService extends BaseService {
 
 			return this.resultOk({ tableRows: upcoming });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch upcoming surveys');
 		}
 	}
@@ -186,7 +186,7 @@ export class SurveyService extends BaseService {
 			};
 			return this.resultOk(payload);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail(`Failed to create survey: ${error}`);
 		}
 	}
@@ -235,7 +235,7 @@ export class SurveyService extends BaseService {
 			};
 			return this.resultOk(payload);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail(`Failed to get survey: ${error}`);
 		}
 	}
@@ -285,7 +285,7 @@ export class SurveyService extends BaseService {
 			};
 			return this.resultOk(payload);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail(`Failed to update survey: ${error}`);
 		}
 	}
@@ -370,7 +370,7 @@ export class SurveyService extends BaseService {
 
 			return this.resultOk({ surveys });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail(`Failed to preview survey generation: ${error}`);
 		}
 	}
@@ -409,7 +409,7 @@ export class SurveyService extends BaseService {
 				message: `Successfully created ${surveysCreated} surveys`,
 			});
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail(`Failed to generate surveys: ${error}`);
 		}
 	}
@@ -422,7 +422,7 @@ export class SurveyService extends BaseService {
 			});
 			return this.resultOk(surveys);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch surveys');
 		}
 	}

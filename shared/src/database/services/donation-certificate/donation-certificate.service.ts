@@ -2,7 +2,6 @@ import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import { DonationCertificateTableView, DonationCertificateTableViewRow } from './donation-certificate.types';
-
 export class DonationCertificateService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
 
@@ -58,7 +57,7 @@ export class DonationCertificateService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch donation certificates');
 		}
 	}
