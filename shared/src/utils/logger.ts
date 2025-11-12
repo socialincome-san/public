@@ -14,31 +14,38 @@ type AlertOptions = {
 const formatMessage = (message: ParameterizedString | unknown): ParameterizedString =>
 	(message instanceof Error ? message.message : String(message)) as ParameterizedString;
 
-export const logger = {
-	debug: (message: ParameterizedString | unknown, attributes?: Log['attributes'], metadata?: CaptureLogMetadata) =>
-		sentryLogger.debug(formatMessage(message), attributes, metadata),
-	info: (message: ParameterizedString | unknown, attributes?: Log['attributes'], metadata?: CaptureLogMetadata) =>
-		sentryLogger.info(formatMessage(message), attributes, metadata),
-	warn: (message: ParameterizedString | unknown, attributes?: Log['attributes'], metadata?: CaptureLogMetadata) =>
-		sentryLogger.warn(formatMessage(message), attributes, metadata),
-	error: (error: ParameterizedString | unknown, attributes?: Log['attributes'], metadata?: CaptureLogMetadata) =>
-		sentryLogger.error(formatMessage(error), attributes, metadata),
+const isDev = process.env.NODE_ENV === 'development';
 
+export const logger = {
+	debug: (message: ParameterizedString | unknown, attributes?: Log['attributes'], metadata?: CaptureLogMetadata) => {
+		const msg = formatMessage(message);
+		if (isDev) console.debug(msg, attributes);
+		return sentryLogger.debug(msg, attributes, metadata);
+	},
+	info: (message: ParameterizedString | unknown, attributes?: Log['attributes'], metadata?: CaptureLogMetadata) => {
+		const msg = formatMessage(message);
+		if (isDev) console.info(msg, attributes);
+		return sentryLogger.info(msg, attributes, metadata);
+	},
+	warn: (message: ParameterizedString | unknown, attributes?: Log['attributes'], metadata?: CaptureLogMetadata) => {
+		const msg = formatMessage(message);
+		if (isDev) console.warn(msg, attributes);
+		return sentryLogger.warn(msg, attributes, metadata);
+	},
+	error: (error: ParameterizedString | unknown, attributes?: Log['attributes'], metadata?: CaptureLogMetadata) => {
+		const msg = formatMessage(error);
+		if (isDev) console.error(msg, attributes);
+		return sentryLogger.error(msg, attributes, metadata);
+	},
 	alert: (error: ParameterizedString | unknown, attributes?: Log['attributes'], alertOptions?: AlertOptions) => {
-		sentryLogger.error(formatMessage(error), attributes);
+		const msg = formatMessage(error);
+		if (isDev) console.error('🚨', msg, attributes);
+		sentryLogger.error(msg, attributes);
 
 		const exception = error instanceof Error ? error : new Error(String(error));
-
 		captureException(exception, {
-			tags: {
-				alert: 'true',
-				component: alertOptions?.component || 'unknown',
-				...alertOptions?.tags,
-			},
-			extra: {
-				...attributes,
-				...alertOptions?.extra,
-			},
+			tags: { alert: 'true', component: alertOptions?.component || 'unknown', ...alertOptions?.tags },
+			extra: { ...attributes, ...alertOptions?.extra },
 		});
 	},
 };
