@@ -1,5 +1,5 @@
 import { RecipientUpdate } from '@/app/api/portal/v1/models';
-import { PortalApiService } from '@socialincome/shared/src/database/services/portal-api/portal-api.service';
+import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
 import { NextResponse } from 'next/server';
 
 /**
@@ -9,8 +9,8 @@ import { NextResponse } from 'next/server';
  * @openapi
  */
 export async function GET(request: Request) {
-	const service = new PortalApiService();
-	const recipientResult = await service.getRecipientFromRequest(request);
+	const recipientService = new RecipientService();
+	const recipientResult = await recipientService.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
@@ -28,8 +28,8 @@ export async function GET(request: Request) {
  * @openapi
  */
 export async function PATCH(request: Request) {
-	const service = new PortalApiService();
-	const recipientResult = await service.getRecipientFromRequest(request);
+	const recipientService = new RecipientService();
+	const recipientResult = await recipientService.getRecipientFromRequest(request);
 
 	if (!recipientResult.success) {
 		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
@@ -49,10 +49,19 @@ export async function PATCH(request: Request) {
 		return new Response(parsed.error.errors[0]?.message ?? 'Invalid input', { status: 400 });
 	}
 
-	const updateResult = await service.updateRecipientFields(recipientResult.data.id, parsed.data);
+	// Use the existing update method with contact update structure
+	const updateResult = await recipientService.update('', {
+		id: recipientResult.data.id,
+		contact: {
+			update: {
+				firstName: parsed.data.firstName,
+				lastName: parsed.data.lastName,
+			},
+		},
+	});
 
 	if (!updateResult.success) {
-		return new Response(updateResult.error, { status: updateResult.status ?? 500 });
+		return new Response(updateResult.error, { status: 500 });
 	}
 
 	return NextResponse.json(updateResult.data, { status: 200 });

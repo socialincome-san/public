@@ -1,21 +1,22 @@
 import { ProgramPermission, Recipient, RecipientStatus } from '@prisma/client';
-import { FirebaseService } from '@socialincome/shared/src/firebase/services/auth.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { FirebaseService } from '../firebase/firebase.service';
 import { ProgramAccessService } from '../program-access/program-access.service';
 import {
 	PayoutRecipient,
 	RecipientCreateInput,
 	RecipientOption,
 	RecipientPayload,
+	RecipientPrismaUpdateInput,
 	RecipientTableView,
 	RecipientTableViewRow,
-	RecipientUpdateInput,
+	RecipientWithPaymentInfo,
 } from './recipient.types';
 
 export class RecipientService extends BaseService {
 	private programAccessService = new ProgramAccessService();
-	private firebaseAuthService = new FirebaseService();
+	private firebaseService = new FirebaseService();
 
 	async create(userId: string, recipient: RecipientCreateInput): Promise<ServiceResult<Recipient>> {
 		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
@@ -36,7 +37,11 @@ export class RecipientService extends BaseService {
 				return this.resultFail('No phone number provided for recipient creation');
 			}
 
-			await this.firebaseAuthService.createByPhoneNumber(phoneNumber);
+			const firebaseResult = await this.firebaseService.createByPhoneNumber(phoneNumber);
+			if (!firebaseResult.success) {
+				return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+			}
+
 			const newRecipient = await this.db.recipient.create({ data: recipient });
 			return this.resultOk(newRecipient);
 		} catch (error) {
@@ -45,7 +50,7 @@ export class RecipientService extends BaseService {
 		}
 	}
 
-	async update(userId: string, recipient: RecipientUpdateInput): Promise<ServiceResult<Recipient>> {
+	async update(userId: string, recipient: RecipientPrismaUpdateInput): Promise<ServiceResult<Recipient>> {
 		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 
 		if (!accessResult.success) {
@@ -82,7 +87,14 @@ export class RecipientService extends BaseService {
 				return this.resultFail('No phone number available for recipient update');
 			}
 
-			await this.firebaseAuthService.updateByPhoneNumber(existing.paymentInformation?.phone.number, phoneNumber);
+			const firebaseResult = await this.firebaseService.updateByPhoneNumber(
+				existing.paymentInformation?.phone.number,
+				phoneNumber,
+			);
+			if (!firebaseResult.success) {
+				return this.resultFail(`Failed to update Firebase user: ${firebaseResult.error}`);
+			}
+
 			const updatedRecipient = await this.db.recipient.update({
 				where: { id: recipient.id?.toString() },
 				data: recipient,
@@ -392,5 +404,57 @@ export class RecipientService extends BaseService {
 			console.error(error);
 			return this.resultFail('Could not get survey recipients');
 		}
+	}
+
+	async getByPaymentPhoneNumber(phoneNumber: string): Promise<ServiceResult<RecipientWithPaymentInfo | null>> {
+		try {
+			const recipient = await this.db.recipient.findFirst({
+				where: {
+					paymentInformation: {
+						phone: {
+							number: phoneNumber,
+						},
+					},
+				},
+				include: {
+					contact: true,
+					paymentInformation: {
+						include: {
+							phone: true,
+						},
+					},
+					program: true,
+					localPartner: true,
+				},
+			});
+
+			return this.resultOk(recipient);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not find recipient by phone number');
+		}
+	}
+
+	async getRecipientFromRequest(request: Request): Promise<ServiceResult<RecipientWithPaymentInfo>> {
+		const tokenResult = await this.firebaseService.getDecodedTokenFromRequest(request);
+		if (!tokenResult.success) {
+			return this.resultFail(tokenResult.error, 401);
+		}
+
+		const phone = this.firebaseService.getPhoneFromToken(tokenResult.data);
+		if (!phone) {
+			return this.resultFail('Phone number not present in token', 400);
+		}
+
+		const recipientResult = await this.getByPaymentPhoneNumber(phone);
+		if (!recipientResult.success) {
+			return this.resultFail(recipientResult.error, 500);
+		}
+
+		if (!recipientResult.data) {
+			return this.resultFail(`No recipient found for phone "${phone.slice(0, 2)}****${phone.slice(-2)}"`, 404);
+		}
+
+		return this.resultOk(recipientResult.data);
 	}
 }

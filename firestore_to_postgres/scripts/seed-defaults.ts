@@ -27,10 +27,11 @@ export const DEFAULT_CAMPAIGN: Omit<Prisma.CampaignCreateInput, 'organization' |
 	description: 'Automatically created campaign for unmapped contributions.',
 	currency: 'CHF',
 	endDate: new Date('2100-01-01'),
-	isActive: false,
+	isActive: true,
+	isFallback: true,
 };
 
-export const surveySchedules: (Omit<Prisma.SurveyScheduleCreateInput, 'program'> & { id: string })[] = [
+export const SURVEY_SCHEDULES: (Omit<Prisma.SurveyScheduleCreateInput, 'program'> & { id: string })[] = [
 	{
 		id: 'cmhssz9ih000hyjqcer26j2j9',
 		name: 'onboarding',
@@ -131,7 +132,7 @@ export const ADMIN_STAGING_ACCOUNT: Prisma.AccountCreateInput = {
 };
 
 export const ADMIN_LOCAL_ACCOUNT: Prisma.AccountCreateInput = {
-	firebaseAuthUserId: 'w43IydQbr8lgeGeevbSBoP9ui3WQ',
+	firebaseAuthUserId: 'u43IydQbr8lgeGeevbSBoP9ui3WP',
 	user: {
 		create: {
 			role: UserRole.admin,
@@ -139,7 +140,7 @@ export const ADMIN_LOCAL_ACCOUNT: Prisma.AccountCreateInput = {
 				create: {
 					firstName: 'Admin',
 					lastName: 'Local',
-					email: 'test@test.org',
+					email: 'test@portal.org',
 					language: 'en',
 					address: {
 						create: {
@@ -153,6 +154,37 @@ export const ADMIN_LOCAL_ACCOUNT: Prisma.AccountCreateInput = {
 					phone: {
 						create: {
 							number: '+41790000000',
+						},
+					},
+				},
+			},
+		},
+	},
+};
+
+export const TEST_CONTRIBUTOR_ACCOUNT: Prisma.AccountCreateInput = {
+	firebaseAuthUserId: 'w43IydQbr8lgeGeevbSBoP9ui3WQ',
+	contributor: {
+		create: {
+			referral: 'other',
+			contact: {
+				create: {
+					firstName: 'Test',
+					lastName: 'Contributor',
+					email: 'test@test.org',
+					language: 'en',
+					address: {
+						create: {
+							street: 'Contributor Street',
+							number: '42',
+							city: 'Test City',
+							zip: '1234',
+							country: 'Switzerland',
+						},
+					},
+					phone: {
+						create: {
+							number: '+41791111111',
 						},
 					},
 				},
@@ -187,7 +219,7 @@ async function main() {
 		},
 	});
 
-	const accounts = [ADMIN_STAGING_ACCOUNT, ADMIN_LOCAL_ACCOUNT];
+	const accounts = [ADMIN_STAGING_ACCOUNT, ADMIN_LOCAL_ACCOUNT, TEST_CONTRIBUTOR_ACCOUNT];
 
 	for (const accountData of accounts) {
 		const account = await prisma.account.upsert({
@@ -227,7 +259,7 @@ async function main() {
 	}
 
 	await prisma.surveySchedule.createMany({
-		data: surveySchedules.map((surveySchedule) => ({
+		data: SURVEY_SCHEDULES.map((surveySchedule) => ({
 			id: surveySchedule.id,
 			name: surveySchedule.name,
 			questionnaire: surveySchedule.questionnaire,

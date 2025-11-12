@@ -1,9 +1,9 @@
 import { ProgramPermission, SurveyStatus } from '@prisma/client';
-import { FirebaseService } from '@socialincome/shared/src/firebase/services/auth.service';
 import { addMonths, isFuture } from 'date-fns';
 import { rndString } from '../../../utils/crypto';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { FirebaseService } from '../firebase/firebase.service';
 import { ProgramAccessService } from '../program-access/program-access.service';
 import { RecipientService } from '../recipient/recipient.service';
 import { SurveyScheduleService } from '../survey-schedule/survey-schedule.service';
@@ -393,7 +393,13 @@ export class SurveyService extends BaseService {
 			let surveysCreated = 0;
 
 			for (const surveyInput of surveysToCreate) {
-				await this.firebaseService.createSurveyUser(surveyInput.accessEmail, surveyInput.accessPw);
+				const firebaseResult = await this.firebaseService.createSurveyUser(
+					surveyInput.accessEmail,
+					surveyInput.accessPw,
+				);
+				if (!firebaseResult.success) {
+					return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+				}
 				await this.db.survey.create({ data: surveyInput });
 				surveysCreated++;
 			}
@@ -405,6 +411,19 @@ export class SurveyService extends BaseService {
 		} catch (error) {
 			console.error(error);
 			return this.resultFail(`Failed to generate surveys: ${error}`);
+		}
+	}
+
+	async getByRecipientId(recipientId: string): Promise<ServiceResult<SurveyPayload[]>> {
+		try {
+			const surveys = await this.db.survey.findMany({
+				where: { recipientId },
+				orderBy: [{ dueAt: 'desc' }, { createdAt: 'desc' }],
+			});
+			return this.resultOk(surveys);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch surveys');
 		}
 	}
 }

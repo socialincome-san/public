@@ -72,6 +72,9 @@ jobs:
           echo "${{ secrets.TF_PROD_STRIPE_PRODUCT_ONETIME }}" > secrets/STRIPE_PRODUCT_ONETIME
           echo "${{ secrets.TF_PROD_STRIPE_PRODUCT_RECURRING }}" > secrets/STRIPE_PRODUCT_RECURRING
           echo "${{ secrets.TF_PROD_STRIPE_SECRET_KEY }}" > secrets/STRIPE_SECRET_KEY
+          echo "${{ secrets.TF_PROD_TWILIO_ACCOUNT_SID }}" > secrets/TWILIO_ACCOUNT_SID
+          echo "${{ secrets.TF_PROD_TWILIO_AUTH_TOKEN }}" > secrets/TWILIO_AUTH_TOKEN
+          echo "${{ secrets.TF_PROD_TWILIO_VERIFY_SERVICE_SID }}" > secrets/TWILIO_VERIFY_SERVICE_SID
 
       - name: 📤 Build and Push Docker Image
         env:

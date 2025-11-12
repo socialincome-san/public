@@ -9,6 +9,19 @@ import {
 	RecipientStatus,
 } from '@prisma/client';
 
+export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
+	include: {
+		contact: true;
+		paymentInformation: {
+			include: {
+				phone: true;
+			};
+		};
+		program: true;
+		localPartner: true;
+	};
+}>;
+
 export type RecipientPayload = {
 	id: string;
 	startDate: Date | null;
@@ -85,6 +98,7 @@ export type PayoutRecipient = {
 
 export type RecipientCreateInput = Prisma.RecipientCreateInput;
 export type RecipientUpdateInput = Prisma.RecipientUpdateInput;
+export type RecipientPrismaUpdateInput = Prisma.RecipientUpdateInput;
 
 export type RecipientOption = {
 	id: string;

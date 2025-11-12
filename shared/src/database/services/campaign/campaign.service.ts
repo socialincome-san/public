@@ -191,4 +191,24 @@ export class CampaignService extends BaseService {
 			return this.resultFail('Could not fetch campaigns');
 		}
 	}
+
+	async getFallbackCampaign(): Promise<ServiceResult<Campaign>> {
+		try {
+			const campaign = await this.db.campaign.findFirst({
+				where: {
+					isFallback: true,
+					isActive: true,
+				},
+			});
+
+			if (!campaign) {
+				return this.resultFail('No fallback campaign found');
+			}
+
+			return this.resultOk(campaign);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch default campaign');
+		}
+	}
 }

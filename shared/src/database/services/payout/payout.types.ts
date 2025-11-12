@@ -1,4 +1,6 @@
-import { PayoutStatus, ProgramPermission } from '@prisma/client';
+import { PayoutStatus, Prisma, ProgramPermission } from '@prisma/client';
+
+export type PayoutEntity = Prisma.PayoutGetPayload<{}>;
 
 export type PayoutTableViewRow = {
 	id: string;

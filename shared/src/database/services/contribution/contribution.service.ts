@@ -8,6 +8,8 @@ import {
 	ContributionTableView,
 	ContributionTableViewRow,
 	ContributionUpdateInput,
+	PaymentEventCreateData,
+	StripeContributionCreateData,
 } from './contribution.types';
 
 export class ContributionService extends BaseService {
@@ -161,7 +163,7 @@ export class ContributionService extends BaseService {
 		}
 	}
 
-	async getForContributor(contributorId: string): Promise<ServiceResult<ContributionDonationEntry[]>> {
+	async getForDonationCertificates(contributorId: string): Promise<ServiceResult<ContributionDonationEntry[]>> {
 		try {
 			const result = await this.db.contribution.findMany({
 				where: {
@@ -190,6 +192,39 @@ export class ContributionService extends BaseService {
 		} catch (error) {
 			console.error(error);
 			return this.resultFail(`Could not fetch contributions for contributor ${contributorId}`);
+		}
+	}
+
+	async upsertFromStripeEvent(
+		contributionData: StripeContributionCreateData,
+		paymentEventData: PaymentEventCreateData,
+	): Promise<ServiceResult<Contribution>> {
+		try {
+			const paymentEvent = await this.db.paymentEvent.upsert({
+				where: { transactionId: paymentEventData.transactionId },
+				create: {
+					...paymentEventData,
+					metadata: paymentEventData.metadata as object,
+					contribution: {
+						create: contributionData,
+					},
+				},
+				update: {
+					...paymentEventData,
+					metadata: paymentEventData.metadata as object,
+					contribution: {
+						update: contributionData,
+					},
+				},
+				include: {
+					contribution: true,
+				},
+			});
+
+			return this.resultOk(paymentEvent.contribution);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not create or update contribution from Stripe event');
 		}
 	}
 }

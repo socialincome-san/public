@@ -1,4 +1,5 @@
-import { PortalApiService } from '@socialincome/shared/src/database/services/portal-api/portal-api.service';
+import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
+import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
 import { NextResponse } from 'next/server';
 
 /**
@@ -9,16 +10,18 @@ import { NextResponse } from 'next/server';
  * @openapi
  */
 export async function GET(request: Request) {
-	const service = new PortalApiService();
+	const recipientService = new RecipientService();
+	const recipientResult = await recipientService.getRecipientFromRequest(request);
 
-	const recipientResult = await service.getRecipientFromRequest(request);
 	if (!recipientResult.success) {
 		return new Response(recipientResult.error, { status: recipientResult.status ?? 500 });
 	}
 
-	const payoutsResult = await service.getPayoutsByRecipientId(recipientResult.data.id);
+	const payoutService = new PayoutService();
+	const payoutsResult = await payoutService.getByRecipientId(recipientResult.data.id);
+
 	if (!payoutsResult.success) {
-		return new Response(payoutsResult.error, { status: payoutsResult.status ?? 500 });
+		return new Response(payoutsResult.error, { status: 500 });
 	}
 
 	return NextResponse.json(payoutsResult.data, { status: 200 });
