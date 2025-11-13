@@ -23,7 +23,7 @@ export default function GenerateDonationCertificatesDialog({
 	const [options, setOptions] = useState<MultiSelectOption[]>([]);
 	const [selectedContributors, setSelectedContributors] = useState<string[]>([]);
 	const [year, setYear] = useState<number>(CURRENT_YEAR - 1);
-	const [generateAll, setGenerateAll] = useState<boolean>(false);
+	const [generateAll, setGenerateAll] = useState<boolean>(true);
 	const [isLoading, startTransition] = useTransition();
 	const [success, setSuccess] = useState<string | undefined>();
 	const [error, setError] = useState<string | undefined>();

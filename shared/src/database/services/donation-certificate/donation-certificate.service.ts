@@ -1,3 +1,4 @@
+import { DonationCertificate } from '@prisma/client';
 import { withFile } from 'tmp-promise';
 import { StorageAdmin } from '../../../firebase/admin/StorageAdmin';
 import { ContributionService } from '../contribution/contribution.service';
@@ -5,7 +6,11 @@ import { ContributorService } from '../contributor/contributor.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
-import { DonationCertificateTableView, DonationCertificateTableViewRow } from './donation-certificate.types';
+import {
+	DonationCertificateCreateManyInput,
+	DonationCertificateTableView,
+	DonationCertificateTableViewRow,
+} from './donation-certificate.types';
 import { DonationCertificateWriter } from './DonationCertificateWriter';
 
 export class DonationCertificateService extends BaseService {
@@ -72,6 +77,22 @@ export class DonationCertificateService extends BaseService {
 		}
 	}
 
+	async getByContributorIds(year: number, contributorsIds: string[]): Promise<ServiceResult<DonationCertificate[]>> {
+		try {
+			const existingCertificates = await this.db.donationCertificate.findMany({
+				where: {
+					year: year,
+					contributorId: { in: contributorsIds },
+				},
+			});
+
+			return this.resultOk(existingCertificates);
+		} catch (error) {
+			console.error(error);
+			return this.resultFail('Could not fetch existing donation certificates');
+		}
+	}
+
 	async createDonationCertificates(year: number, contributorsIds?: string[]): Promise<ServiceResult<string>> {
 		let [successCount, usersWithFailures, usersSkipped] = [0, [] as string[], [] as string[]];
 
@@ -84,6 +105,17 @@ export class DonationCertificateService extends BaseService {
 		if (!result.success) return this.resultFail('Could not get contributors');
 		const contributors = result.data;
 
+		const existingCertificates = await this.getByContributorIds(
+			year,
+			contributors.map((c) => c.id),
+		);
+		if (!existingCertificates.success) return this.resultFail('Could not get existing certificates for contributors');
+
+		let contributions = await this.contributionService.getForContributors(contributors.map((c) => c.id));
+		if (!contributions.success) return this.resultFail('Could not get contributions for contributors');
+
+		const donationCertificatesToCreate: DonationCertificateCreateManyInput[] = [];
+
 		await Promise.all(
 			contributors.map(async (contributor) => {
 				try {
@@ -93,14 +125,7 @@ export class DonationCertificateService extends BaseService {
 						return;
 					}
 
-					const existingCertificate = await this.db.donationCertificate.findMany({
-						where: {
-							year: year,
-							contributorId: contributor.id,
-						},
-					});
-
-					if (existingCertificate.length) {
+					if (existingCertificates.data.filter((c) => c.contributorId === contributor.id)?.length) {
 						console.info(
 							`User ${contributor.id} already has a certificate for year ${year}, skipping donation certificate creation`,
 						);
@@ -108,8 +133,8 @@ export class DonationCertificateService extends BaseService {
 						return;
 					}
 
-					let contributions = await this.contributionService.getForContributor(contributor.id);
-					if (!contributions.success) {
+					// let contributions = await this.contributionService.getForContributor(contributor.id);
+					if (!contributions.data?.length) {
 						console.info(`User ${contributor.id} has no contributions, skipping donation certificate creation`);
 						usersSkipped.push(contributor.id);
 						return;
@@ -123,21 +148,13 @@ export class DonationCertificateService extends BaseService {
 						await writer.writeDonationCertificatePDF(path);
 						const bucket = this.storageAdmin.storage.bucket(this.bucketName);
 						await this.storageAdmin.uploadFile({ bucket, sourceFilePath: path, destinationFilePath });
-
-						await this.db.donationCertificate.create({
-							data: {
-								year: year,
-								storagePath: destinationFilePath,
-								contributor: {
-									connect: {
-										id: contributor.id,
-									},
-								},
-							},
+						donationCertificatesToCreate.push({
+							year: year,
+							storagePath: destinationFilePath,
+							contributorId: contributor.id,
 						});
 
 						console.info(`Donation certificate document written for user ${contributor.id}`);
-						successCount += 1;
 					});
 				} catch (e) {
 					usersWithFailures.push(contributor.id);
@@ -145,6 +162,15 @@ export class DonationCertificateService extends BaseService {
 				}
 			}),
 		);
+		try {
+			await this.db.donationCertificate.createMany({
+				data: donationCertificatesToCreate,
+			});
+			successCount = donationCertificatesToCreate.length;
+		} catch (error) {
+			usersWithFailures.concat(donationCertificatesToCreate.map((d) => d.contributorId));
+		}
+
 		if (usersWithFailures.length !== 0) {
 			return this.resultFail(`No donation certificates created for ${year}. 
 	Users skipped (${usersSkipped.length}): ${usersSkipped.join(', ')}.

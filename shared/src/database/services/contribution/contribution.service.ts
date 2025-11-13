@@ -163,11 +163,11 @@ export class ContributionService extends BaseService {
 		}
 	}
 
-	async getForContributor(contributorId: string): Promise<ServiceResult<ContributionDonationEntry[]>> {
+	async getForContributors(contributorsIds: string[]): Promise<ServiceResult<ContributionDonationEntry[]>> {
 		try {
 			const result = await this.db.contribution.findMany({
 				where: {
-					contributorId: contributorId,
+					contributorId: { in: contributorsIds },
 				},
 				select: {
 					amount: true,
@@ -191,7 +191,7 @@ export class ContributionService extends BaseService {
 			return this.resultOk(contributions);
 		} catch (error) {
 			console.error(error);
-			return this.resultFail(`Could not fetch contributions for contributor ${contributorId}`);
+			return this.resultFail(`Could not fetch contributions for contributors ${contributorsIds.join(', ')}`);
 		}
 	}
 
