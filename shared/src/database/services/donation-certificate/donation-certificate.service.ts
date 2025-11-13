@@ -6,12 +6,12 @@ import { ContributorService } from '../contributor/contributor.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
+import { DonationCertificateWriter } from './donation-certificate-writer';
 import {
 	DonationCertificateCreateManyInput,
 	DonationCertificateTableView,
 	DonationCertificateTableViewRow,
 } from './donation-certificate.types';
-import { DonationCertificateWriter } from './DonationCertificateWriter';
 
 export class DonationCertificateService extends BaseService {
 	private organizationAccessService = new OrganizationAccessService();
