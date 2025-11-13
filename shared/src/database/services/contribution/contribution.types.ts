@@ -36,6 +36,7 @@ export type ContributionPayload = {
 };
 
 export type ContributionDonationEntry = {
+	contributorId: string;
 	amount: number;
 	currency: string;
 	amountChf: number;

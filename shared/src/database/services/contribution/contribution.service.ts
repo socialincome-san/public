@@ -170,6 +170,7 @@ export class ContributionService extends BaseService {
 					contributorId: { in: contributorsIds },
 				},
 				select: {
+					contributorId: true,
 					amount: true,
 					currency: true,
 					amountChf: true,
@@ -180,6 +181,7 @@ export class ContributionService extends BaseService {
 			});
 
 			const contributions = result.map((r) => ({
+				contributorId: r.contributorId,
 				amount: Number(r.amount),
 				currency: r.currency,
 				amountChf: Number(r.amountChf),

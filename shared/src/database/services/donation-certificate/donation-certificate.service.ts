@@ -137,12 +137,14 @@ export class DonationCertificateService extends BaseService {
 						return;
 					}
 
-					if (!contributions.data?.length) {
+					const contributionsForContributor = contributions.data?.filter((c) => c.contributorId === contributor.id);
+
+					if (!contributionsForContributor?.length) {
 						this.logger.info(`User ${contributor.id} has no contributions, skipping donation certificate creation`);
 						usersSkipped.push(contributor.id);
 						return;
 					}
-					const writer = new DonationCertificateWriter(contributor, contributions.data, year);
+					const writer = new DonationCertificateWriter(contributor, contributionsForContributor, year);
 
 					// The Firebase auth user ID is used in the storage path to check the user's permissions in the storage rules.
 					const destinationFilePath = `users/${contributor.authId}/donation-certificates/${year}.pdf`;
