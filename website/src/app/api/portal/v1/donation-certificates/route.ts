@@ -38,12 +38,20 @@ export async function POST(request: NextRequest) {
 		const year = now.year - 1;
 		const result = await service.createDonationCertificates(year, body.contributorIds);
 		if (!result.success) {
-			logger.alert('Error during donation certificate generation import:', result.error);
+			logger.alert(
+				`Error during donation certificate generation import: ${result.error}`,
+				{ error: result.error },
+				{ component: 'donation-certificate-generation' },
+			);
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
 		return NextResponse.json({}, { status: 201 });
 	} catch (error) {
-		logger.alert('Error during donation certificate generation import:', error);
+		logger.alert(
+			`Error during donation certificate generation import: ${error}`,
+			{ error },
+			{ component: 'donation-certificate-generation' },
+		);
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
 }
