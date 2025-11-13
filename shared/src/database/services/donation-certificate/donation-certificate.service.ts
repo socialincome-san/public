@@ -18,7 +18,7 @@ export class DonationCertificateService extends BaseService {
 	private contributorService = new ContributorService();
 	private contributionService = new ContributionService();
 	private storageAdmin = new StorageAdmin();
-	private bucketName = process.env.FIREBASE_STORAGE_BUCKET;
+	private bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
 
 	async getTableView(userId: string): Promise<ServiceResult<DonationCertificateTableView>> {
 		try {
