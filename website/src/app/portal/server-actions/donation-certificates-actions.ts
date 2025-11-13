@@ -9,7 +9,7 @@ export async function getContributorOptions() {
 	await getAuthenticatedUserOrThrow();
 	const contributorService = new ContributorService();
 
-	return await contributorService.getForDonationCertificate();
+	return await contributorService.getByIds();
 }
 
 export async function generateDonationCertificates(year: number, contributorIds: string[]) {

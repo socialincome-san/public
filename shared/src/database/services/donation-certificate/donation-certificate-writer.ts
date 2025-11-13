@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { createWriteStream } from 'fs';
 import _ from 'lodash';
 import * as path from 'path';
@@ -16,7 +15,6 @@ export class DonationCertificateWriter {
 	public readonly contributions: ContributionDonationEntry[];
 
 	constructor(donator: ContributorDonationCertificate, contributions: ContributionDonationEntry[], year: number) {
-		assert(donator.address?.country === 'CH', 'Donation Certificates are supported for Swiss residents');
 		this.donator = donator;
 		this.year = year;
 		this.contributions = contributions;

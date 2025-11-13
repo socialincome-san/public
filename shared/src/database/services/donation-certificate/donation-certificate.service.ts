@@ -104,7 +104,7 @@ export class DonationCertificateService extends BaseService {
 			return this.resultFail('Firebase Storage bucket name missing');
 		}
 
-		const result = await this.contributorService.getForDonationCertificate(contributorsIds);
+		const result = await this.contributorService.getByIds(contributorsIds);
 		if (!result.success || !result.data?.length) return this.resultFail('Could not get contributors');
 		const contributors = result.data;
 
@@ -113,6 +113,7 @@ export class DonationCertificateService extends BaseService {
 			contributors.map((c) => c.id),
 		);
 		if (!existingCertificates.success) return this.resultFail('Could not get existing certificates for contributors');
+		const existingCertificateContributorIds = new Set(existingCertificates.data.map((c) => c.contributorId));
 
 		let contributions = await this.contributionService.getForContributors(contributors.map((c) => c.id));
 		if (!contributions.success) return this.resultFail('Could not get contributions for contributors');
@@ -128,7 +129,7 @@ export class DonationCertificateService extends BaseService {
 						return;
 					}
 
-					if (existingCertificates.data.filter((c) => c.contributorId === contributor.id)?.length) {
+					if (existingCertificateContributorIds.has(contributor.id)) {
 						this.logger.info(
 							`User ${contributor.id} already has a certificate for year ${year}, skipping donation certificate creation`,
 						);
