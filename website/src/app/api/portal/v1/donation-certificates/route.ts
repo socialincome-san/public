@@ -1,4 +1,5 @@
 import { DonationCertificateService } from '@socialincome/shared/src/database/services/donation-certificate/donation-certificate.service';
+import { logger } from '@socialincome/shared/src/utils/logger';
 import { DateTime } from 'luxon';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -37,11 +38,12 @@ export async function POST(request: NextRequest) {
 		const year = now.year - 1;
 		const result = await service.createDonationCertificates(year, body.contributorIds);
 		if (!result.success) {
+			logger.alert('Error during donation certificate generation import:', result.error);
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
 		return NextResponse.json({}, { status: 201 });
 	} catch (error) {
-		console.error('Error during exchange rate import:', error);
+		logger.alert('Error during donation certificate generation import:', error);
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
 }
