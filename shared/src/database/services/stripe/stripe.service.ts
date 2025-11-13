@@ -26,7 +26,7 @@ export class StripeService extends BaseService {
 	private readonly campaignService = new CampaignService();
 
 	async handleWebhookEvent(
-		body: Buffer,
+		body: string,
 		signature: string,
 		webhookSecret: string,
 	): Promise<ServiceResult<WebhookResult>> {

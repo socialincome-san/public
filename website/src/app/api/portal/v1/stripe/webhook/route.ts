@@ -20,9 +20,8 @@ export async function POST(request: NextRequest) {
 			return NextResponse.json({ error: 'Missing webhook secret configuration' }, { status: 500 });
 		}
 
-		const body = Buffer.from(await request.arrayBuffer());
+		const body = await request.text();
 		const stripeService = new StripeService();
-
 		const result = await stripeService.handleWebhookEvent(body, signature, webhookSecret);
 
 		if (!result.success) {
