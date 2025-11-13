@@ -35,7 +35,7 @@ variable "website_domain" {
 }
 
 variable "scheduler_api_key" {
-  description = "API key for the exchange rate import API endpoint"
+  description = "API key for the scheduler API endpoints"
   type        = string
   sensitive   = true
 }
