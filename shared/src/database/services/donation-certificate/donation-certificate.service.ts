@@ -77,7 +77,10 @@ export class DonationCertificateService extends BaseService {
 		}
 	}
 
-	async getByContributorIds(year: number, contributorsIds: string[]): Promise<ServiceResult<DonationCertificate[]>> {
+	async findByYearAndContributor(
+		year: number,
+		contributorsIds: string[],
+	): Promise<ServiceResult<DonationCertificate[]>> {
 		try {
 			const existingCertificates = await this.db.donationCertificate.findMany({
 				where: {
@@ -105,7 +108,7 @@ export class DonationCertificateService extends BaseService {
 		if (!result.success) return this.resultFail('Could not get contributors');
 		const contributors = result.data;
 
-		const existingCertificates = await this.getByContributorIds(
+		const existingCertificates = await this.findByYearAndContributor(
 			year,
 			contributors.map((c) => c.id),
 		);
