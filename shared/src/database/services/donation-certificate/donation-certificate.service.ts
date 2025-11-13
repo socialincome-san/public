@@ -105,7 +105,7 @@ export class DonationCertificateService extends BaseService {
 		}
 
 		const result = await this.contributorService.getForDonationCertificate(contributorsIds);
-		if (!result.success) return this.resultFail('Could not get contributors');
+		if (!result.success || !result.data?.length) return this.resultFail('Could not get contributors');
 		const contributors = result.data;
 
 		const existingCertificates = await this.findByYearAndContributor(
@@ -136,7 +136,6 @@ export class DonationCertificateService extends BaseService {
 						return;
 					}
 
-					// let contributions = await this.contributionService.getForContributor(contributor.id);
 					if (!contributions.data?.length) {
 						this.logger.info(`User ${contributor.id} has no contributions, skipping donation certificate creation`);
 						usersSkipped.push(contributor.id);
@@ -172,6 +171,7 @@ export class DonationCertificateService extends BaseService {
 			successCount = donationCertificatesToCreate.length;
 		} catch (error) {
 			usersWithFailures.concat(donationCertificatesToCreate.map((d) => d.contributorId));
+			this.logger.error(error);
 		}
 
 		if (usersWithFailures.length !== 0) {
@@ -179,9 +179,11 @@ export class DonationCertificateService extends BaseService {
 	Users skipped (${usersSkipped.length}): ${usersSkipped.join(', ')}.
 	Users with errors (${usersWithFailures.length}): ${usersWithFailures.join(', ')}`);
 		} else {
-			return this.resultOk(`Successfully created ${successCount} donation certificates for ${year}. 
+			const success = `Successfully created ${successCount} donation certificates for ${year}. 
 	Users skipped (${usersSkipped.length}): ${usersSkipped.join(', ')}.
-	Users with errors (${usersWithFailures.length}): ${usersWithFailures.join(', ')}`);
+	Users with errors (${usersWithFailures.length}): ${usersWithFailures.join(', ')}`;
+			this.logger.info(success);
+			return this.resultOk(success);
 		}
 	}
 }
