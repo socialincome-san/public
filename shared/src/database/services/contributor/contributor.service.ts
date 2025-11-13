@@ -241,7 +241,7 @@ export class ContributorService extends BaseService {
 
 			return this.resultOk(contributors);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch contributor IDs for certificates');
 		}
 	}

@@ -190,7 +190,7 @@ export class ContributionService extends BaseService {
 
 			return this.resultOk(contributions);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail(`Could not fetch contributions for contributors ${contributorsIds.join(', ')}`);
 		}
 	}
