@@ -1,4 +1,5 @@
 import { StripeService } from '@socialincome/shared/src/database/services/stripe/stripe.service';
+import { logger } from '@socialincome/shared/src/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
@@ -19,19 +20,22 @@ export async function POST(request: NextRequest) {
 			return NextResponse.json({ error: 'Missing webhook secret configuration' }, { status: 500 });
 		}
 
-		const body = Buffer.from(await request.arrayBuffer());
+		const body = await request.text();
 		const stripeService = new StripeService();
-
 		const result = await stripeService.handleWebhookEvent(body, signature, webhookSecret);
 
 		if (!result.success) {
-			console.error('Stripe webhook error:', result.error);
+			logger.alert(
+				`Stripe webhook processing failed: ${result.error}`,
+				{ error: result.error, signature: signature?.slice(0, 20) + '...' },
+				{ component: 'stripe-webhook' },
+			);
 			return NextResponse.json({ error: result.error }, { status: 400 });
 		}
 
 		return NextResponse.json({ received: true, data: result.data });
 	} catch (error) {
-		console.error('Stripe webhook error:', error);
+		logger.alert('Stripe webhook error', { error }, { component: 'stripe-webhook' });
 		return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 });
 	}
 }

@@ -41,8 +41,8 @@ jobs:
       - name: 📝 Prepare Docker build secrets
         run: |
           mkdir -p secrets
-          echo "${GITHUB_REF_NAME}" > secrets/APP_VERSION
-          echo "${{ env.ENVIRONMENT }}" > secrets/APP_ENVIRONMENT
+          echo "${GITHUB_REF_NAME}" > secrets/NEXT_PUBLIC_APP_VERSION
+          echo "${{ env.ENVIRONMENT }}" > secrets/NEXT_PUBLIC_APP_ENVIRONMENT
           echo "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" > secrets/APP_BUILD_TIMESTAMP
           echo "${{ secrets.TF_PROD_BASE_URL }}" > secrets/BASE_URL
           echo "${{ secrets.TF_PROD_EXCHANGE_RATES_API }}" > secrets/EXCHANGE_RATES_API
@@ -72,6 +72,7 @@ jobs:
           echo "${{ secrets.TF_PROD_STRIPE_PRODUCT_ONETIME }}" > secrets/STRIPE_PRODUCT_ONETIME
           echo "${{ secrets.TF_PROD_STRIPE_PRODUCT_RECURRING }}" > secrets/STRIPE_PRODUCT_RECURRING
           echo "${{ secrets.TF_PROD_STRIPE_SECRET_KEY }}" > secrets/STRIPE_SECRET_KEY
+          echo "${{ secrets.TF_PROD_STRIPE_WEBHOOK_SECRET }}" > secrets/STRIPE_WEBHOOK_SECRET
           echo "${{ secrets.TF_PROD_TWILIO_ACCOUNT_SID }}" > secrets/TWILIO_ACCOUNT_SID
           echo "${{ secrets.TF_PROD_TWILIO_AUTH_TOKEN }}" > secrets/TWILIO_AUTH_TOKEN
           echo "${{ secrets.TF_PROD_TWILIO_VERIFY_SERVICE_SID }}" > secrets/TWILIO_VERIFY_SERVICE_SID

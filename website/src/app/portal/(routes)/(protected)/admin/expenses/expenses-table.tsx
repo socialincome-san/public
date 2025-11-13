@@ -6,6 +6,7 @@ import { makeExpenseColumns } from '@/app/portal/components/data-table/columns/e
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
 import type { ExpenseTableViewRow } from '@socialincome/shared/src/database/services/expense/expense.types';
+import { logger } from '@socialincome/shared/src/utils/logger';
 import { useState } from 'react';
 import ExpensesForm from './expenses-form';
 
@@ -28,7 +29,7 @@ export default function ExpensesTable({ rows, error }: { rows: ExpenseTableViewR
 
 	const onError = (e?: unknown) => {
 		setHasError(true);
-		console.error('Expense Form Error:', e);
+		logger.error('Expense Form Error', { error: e });
 	};
 
 	return (

@@ -6,6 +6,7 @@ import { makeLocalPartnerColumns } from '@/app/portal/components/data-table/colu
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
 import type { LocalPartnerTableViewRow } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
+import { logger } from '@socialincome/shared/src/utils/logger';
 import { useState } from 'react';
 import LocalPartnersForm from './local-partners-form';
 
@@ -19,7 +20,6 @@ export default function LocalPartnersTable({
 	const [open, setOpen] = useState(false);
 	const [hasError, setHasError] = useState(false);
 	const [partnerId, setPartnerId] = useState<string | undefined>(undefined);
-
 	const openEmptyForm = () => {
 		setPartnerId(undefined);
 		setHasError(false);
@@ -34,7 +34,7 @@ export default function LocalPartnersTable({
 
 	const onError = (error: unknown) => {
 		setHasError(true);
-		console.error('Local Partner Form Error: ', error);
+		logger.error('Local Partner Form Error', { error });
 	};
 
 	return (

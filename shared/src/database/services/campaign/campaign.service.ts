@@ -67,7 +67,7 @@ export class CampaignService extends BaseService {
 				additionalAmountChf: campaign.additionalAmountChf ? Number(campaign.additionalAmountChf) : null,
 			});
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch campaign');
 		}
 	}
@@ -95,7 +95,7 @@ export class CampaignService extends BaseService {
 			});
 			return this.resultOk(newCampaign);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not create campaign');
 		}
 	}
@@ -119,7 +119,7 @@ export class CampaignService extends BaseService {
 
 			return this.resultOk(updatedCampaign);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not update campaign');
 		}
 	}
@@ -144,7 +144,7 @@ export class CampaignService extends BaseService {
 
 			return this.resultOk(options);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch campaign options');
 		}
 	}
@@ -187,7 +187,7 @@ export class CampaignService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch campaigns');
 		}
 	}
@@ -207,7 +207,7 @@ export class CampaignService extends BaseService {
 
 			return this.resultOk(campaign);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch default campaign');
 		}
 	}

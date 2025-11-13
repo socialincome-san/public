@@ -63,7 +63,7 @@ export class ContributorService extends BaseService {
 
 			return this.resultOk(contributor);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not get contributor');
 		}
 	}
@@ -97,7 +97,7 @@ export class ContributorService extends BaseService {
 			});
 			if (!firebaseResult.success) {
 				// for now, dont fail the update if firebase user cannot be updated, because there is no auth user for every contributor
-				console.warn('Could not update Firebase Auth user for contributor:', firebaseResult.error);
+				this.logger.warn('Could not update Firebase Auth user', { error: firebaseResult.error });
 			}
 
 			const updatedContributor = await this.db.contributor.update({
@@ -107,7 +107,7 @@ export class ContributorService extends BaseService {
 
 			return this.resultOk(updatedContributor);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not update contributor');
 		}
 	}
@@ -146,7 +146,7 @@ export class ContributorService extends BaseService {
 
 			return this.resultOk(options);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch contributor options');
 		}
 	}
@@ -195,7 +195,7 @@ export class ContributorService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch contributors');
 		}
 	}
@@ -259,7 +259,7 @@ export class ContributorService extends BaseService {
 
 			return this.resultOk(contributor);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not find contributor by Stripe customer ID');
 		}
 	}
@@ -279,7 +279,7 @@ export class ContributorService extends BaseService {
 
 			return this.resultOk(contributor);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not find contributor by email');
 		}
 	}
@@ -303,7 +303,7 @@ export class ContributorService extends BaseService {
 
 			return this.resultOk(contributor);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not find contributor');
 		}
 	}
@@ -337,7 +337,7 @@ export class ContributorService extends BaseService {
 
 			return this.resultOk({ contributor: createResult.data, isNewContributor: true });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not get or create contributor from Stripe customer');
 		}
 	}
@@ -377,7 +377,7 @@ export class ContributorService extends BaseService {
 
 			return this.resultOk(contributor);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not create contributor with Firebase Auth user');
 		}
 	}
@@ -401,7 +401,7 @@ export class ContributorService extends BaseService {
 
 			return this.resultOk(contributor);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not find contributor');
 		}
 	}
@@ -415,7 +415,7 @@ export class ContributorService extends BaseService {
 
 			return this.resultOk(undefined);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not update contributor Stripe customer ID');
 		}
 	}

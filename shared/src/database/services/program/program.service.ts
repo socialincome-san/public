@@ -73,7 +73,7 @@ export class ProgramService extends BaseService {
 
 			return this.resultOk({ wallets });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch programs');
 		}
 	}
@@ -141,7 +141,7 @@ export class ProgramService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch program members');
 		}
 	}
@@ -161,7 +161,7 @@ export class ProgramService extends BaseService {
 
 			return this.resultOk(programs);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch program options');
 		}
 	}

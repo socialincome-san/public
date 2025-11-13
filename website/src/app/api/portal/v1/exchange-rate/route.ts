@@ -1,4 +1,5 @@
 import { ExchangeRateImportService } from '@socialincome/shared/src/database/services/exchange-rate/exchange-rate-import.service';
+import { logger } from '@socialincome/shared/src/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
@@ -23,11 +24,12 @@ export async function POST(request: NextRequest) {
 	try {
 		const result = await service.import();
 		if (!result.success) {
+			logger.alert(`Exchange rate import failed: ${result.error}`, { result }, { component: 'exchange-rate-import' });
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
 		return NextResponse.json({}, { status: 201 });
 	} catch (error) {
-		console.error('Error during exchange rate import:', error);
+		logger.alert(`Exchange rate import failed: ${error}`, { error }, { component: 'exchange-rate-import' });
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 	}
 }

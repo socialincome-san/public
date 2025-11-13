@@ -6,6 +6,7 @@ import { makeCampaignColumns } from '@/app/portal/components/data-table/columns/
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
 import { CampaignTableViewRow } from '@socialincome/shared/src/database/services/campaign/campaign.types';
+import { logger } from '@socialincome/shared/src/utils/logger';
 import { useState } from 'react';
 import CampaignsForm from './campaigns-form';
 
@@ -29,7 +30,7 @@ export default function CampaignsTable({ rows, error }: { rows: CampaignTableVie
 
 	const onError = (error: unknown) => {
 		setHasError(true);
-		console.error('Campaigns Form Error: ', error);
+		logger.error('Campaigns Form Error', { error });
 	};
 
 	return (

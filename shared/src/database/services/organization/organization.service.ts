@@ -56,7 +56,7 @@ export class OrganizationService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch organization members');
 		}
 	}
@@ -94,7 +94,7 @@ export class OrganizationService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch organizations');
 		}
 	}
@@ -117,7 +117,7 @@ export class OrganizationService extends BaseService {
 
 			return this.resultOk(null);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not set active organization');
 		}
 	}
@@ -136,7 +136,7 @@ export class OrganizationService extends BaseService {
 			});
 			return this.resultOk(organizations);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch organizations');
 		}
 	}

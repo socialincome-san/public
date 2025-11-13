@@ -5,6 +5,7 @@ import { makeContributorColumns } from '@/app/portal/components/data-table/colum
 import DataTable from '@/app/portal/components/data-table/data-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
 import { ContributorTableViewRow } from '@socialincome/shared/src/database/services/contributor/contributor.types';
+import { logger } from '@socialincome/shared/src/utils/logger';
 import { useState } from 'react';
 import ContributorsForm from './contributors-form';
 
@@ -22,7 +23,7 @@ export default function ContributorsTable({ rows, error }: { rows: ContributorTa
 
 	const onError = (error: unknown) => {
 		setHasError(true);
-		console.error('Contributor Form Error: ', error);
+		logger.error('Contributor Form Error', { error });
 	};
 
 	return (

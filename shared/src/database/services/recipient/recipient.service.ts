@@ -45,7 +45,7 @@ export class RecipientService extends BaseService {
 			const newRecipient = await this.db.recipient.create({ data: recipient });
 			return this.resultOk(newRecipient);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not create recipient');
 		}
 	}
@@ -101,7 +101,7 @@ export class RecipientService extends BaseService {
 			});
 			return this.resultOk(updatedRecipient);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not update recipient: ' + error);
 		}
 	}
@@ -247,7 +247,7 @@ export class RecipientService extends BaseService {
 
 			return this.resultOk({ tableRows, permission: globalPermission });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch recipients');
 		}
 	}
@@ -338,7 +338,7 @@ export class RecipientService extends BaseService {
 
 			return this.resultOk(mapped);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch payout recipients');
 		}
 	}
@@ -401,7 +401,7 @@ export class RecipientService extends BaseService {
 
 			return this.resultOk(recipients);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not get survey recipients');
 		}
 	}
@@ -430,7 +430,7 @@ export class RecipientService extends BaseService {
 
 			return this.resultOk(recipient);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not find recipient by phone number');
 		}
 	}

@@ -72,7 +72,7 @@ export class DonationCertificateService extends BaseService {
 
 			return this.resultOk({ tableRows });
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch donation certificates');
 		}
 	}
@@ -91,7 +91,7 @@ export class DonationCertificateService extends BaseService {
 
 			return this.resultOk(existingCertificates);
 		} catch (error) {
-			console.error(error);
+			this.logger.error(error);
 			return this.resultFail('Could not fetch existing donation certificates');
 		}
 	}
@@ -100,7 +100,7 @@ export class DonationCertificateService extends BaseService {
 		let [successCount, usersWithFailures, usersSkipped] = [0, [] as string[], [] as string[]];
 
 		if (!this.bucketName) {
-			console.error('Firebase Storage bucket name missing');
+			this.logger.error('Firebase Storage bucket name missing');
 			return this.resultFail('Firebase Storage bucket name missing');
 		}
 
@@ -123,13 +123,13 @@ export class DonationCertificateService extends BaseService {
 			contributors.map(async (contributor) => {
 				try {
 					if (contributor.authId === undefined) {
-						console.info(`User ${contributor.id} has no auth_user_id, skipping donation certificate creation`);
+						this.logger.info(`User ${contributor.id} has no auth_user_id, skipping donation certificate creation`);
 						usersSkipped.push(contributor.id);
 						return;
 					}
 
 					if (existingCertificates.data.filter((c) => c.contributorId === contributor.id)?.length) {
-						console.info(
+						this.logger.info(
 							`User ${contributor.id} already has a certificate for year ${year}, skipping donation certificate creation`,
 						);
 						usersSkipped.push(contributor.id);
@@ -138,7 +138,7 @@ export class DonationCertificateService extends BaseService {
 
 					// let contributions = await this.contributionService.getForContributor(contributor.id);
 					if (!contributions.data?.length) {
-						console.info(`User ${contributor.id} has no contributions, skipping donation certificate creation`);
+						this.logger.info(`User ${contributor.id} has no contributions, skipping donation certificate creation`);
 						usersSkipped.push(contributor.id);
 						return;
 					}
@@ -157,11 +157,11 @@ export class DonationCertificateService extends BaseService {
 							contributorId: contributor.id,
 						});
 
-						console.info(`Donation certificate document written for user ${contributor.id}`);
+						this.logger.info(`Donation certificate document written for user ${contributor.id}`);
 					});
 				} catch (e) {
 					usersWithFailures.push(contributor.id);
-					console.error(e);
+					this.logger.error(e);
 				}
 			}),
 		);

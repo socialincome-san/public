@@ -19,7 +19,6 @@ import { StripeContributorData } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { CheckoutMetadata, StripeCustomerData, WebhookResult } from './stripe.types';
-
 export class StripeService extends BaseService {
 	private readonly stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { typescript: true });
 	private readonly contributorService = new ContributorService();
@@ -27,7 +26,7 @@ export class StripeService extends BaseService {
 	private readonly campaignService = new CampaignService();
 
 	async handleWebhookEvent(
-		body: Buffer,
+		body: string,
 		signature: string,
 		webhookSecret: string,
 	): Promise<ServiceResult<WebhookResult>> {
@@ -40,17 +39,17 @@ export class StripeService extends BaseService {
 				case 'charge.updated': // For final balance_transaction updates
 				case 'charge.failed': {
 					const charge = event.data.object as Stripe.Charge;
-					console.log(`Processing charge event ${event.type}: ${charge.id}`);
+					this.logger.info('Processing charge event', { eventType: event.type, chargeId: charge.id });
 
 					const result = await this.processChargeEvent(charge);
 
 					if (!result.success) {
-						console.error(`Failed to process charge ${charge.id}:`, result.error);
+						this.logger.error(result.error);
 						return this.resultFail(result.error);
 					}
 
 					if (result.data.contributionId) {
-						console.log(`Successfully processed charge: ${charge.id}`);
+						this.logger.info('Successfully processed charge', { chargeId: charge.id });
 					}
 					return this.resultOk(result.data);
 				}
@@ -58,7 +57,7 @@ export class StripeService extends BaseService {
 					return this.resultOk({ skipReason: `Unhandled event type: ${event.type}` });
 			}
 		} catch (error) {
-			console.error('Error handling webhook event:', error);
+			this.logger.error(error);
 			return this.resultFail('Failed to handle webhook event');
 		}
 	}
@@ -91,7 +90,7 @@ export class StripeService extends BaseService {
 
 				const contributorResult = await this.contributorService.getOrCreateContributorWithFirebaseAuth(contributorData);
 				if (!contributorResult.success) {
-					console.error('Failed to get/create contributor:', contributorResult.error);
+					this.logger.error(contributorResult.error);
 					return this.resultFail(contributorResult.error);
 				}
 
@@ -99,7 +98,7 @@ export class StripeService extends BaseService {
 				isNewContributor = contributorResult.data.isNewContributor;
 
 				if (isNewContributor) {
-					console.log(`Created new contributor: ${contributor.id}`);
+					this.logger.info('Created new contributor', { contributorId: contributor.id });
 				}
 			} else {
 				// For failed/pending payments: only process if contributor already exists
@@ -109,12 +108,12 @@ export class StripeService extends BaseService {
 				);
 
 				if (!existingContributorResult.success) {
-					console.error('Failed to check existing contributor:', existingContributorResult.error);
+					this.logger.error(existingContributorResult.error);
 					return this.resultFail(existingContributorResult.error);
 				}
 
 				if (!existingContributorResult.data) {
-					console.log(`Skipping non-successful charge for non-existent contributor`);
+					this.logger.info(`Skipping non-successful charge for non-existent contributor`);
 					return this.resultOk({ skipReason: 'Non-successful charge with no existing contributor' });
 				}
 
@@ -127,7 +126,7 @@ export class StripeService extends BaseService {
 			if (!campaignId) {
 				const fallbackCampaignResult = await this.campaignService.getFallbackCampaign();
 				if (!fallbackCampaignResult.success) {
-					console.error('Failed to get fallback campaign:', fallbackCampaignResult.error);
+					this.logger.error(fallbackCampaignResult.error);
 					return this.resultFail(fallbackCampaignResult.error);
 				}
 				campaignId = fallbackCampaignResult.data.id;
@@ -164,18 +163,18 @@ export class StripeService extends BaseService {
 			);
 
 			if (!contributionResult.success) {
-				console.error('Failed to create contribution:', contributionResult.error);
+				this.logger.error(contributionResult.error);
 				return this.resultFail(contributionResult.error);
 			}
 
-			console.log(`Created contribution: ${contributionResult.data.id}`);
+			this.logger.info('Created contribution', { contributionId: contributionResult.data.id });
 			return this.resultOk({
 				contributionId: contributionResult.data.id,
 				contributorId: contributor.id,
 				isNewContributor,
 			});
 		} catch (error) {
-			console.error('Error processing charge:', error);
+			this.logger.error(error);
 			return this.resultFail('Failed to process charge');
 		}
 	}
