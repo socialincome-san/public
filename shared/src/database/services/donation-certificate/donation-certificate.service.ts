@@ -173,7 +173,7 @@ export class DonationCertificateService extends BaseService {
 			});
 			successCount = donationCertificatesToCreate.length;
 		} catch (error) {
-			usersWithFailures.concat(donationCertificatesToCreate.map((d) => d.contributorId));
+			usersWithFailures.push(...donationCertificatesToCreate.map((d) => d.contributorId));
 			this.logger.error(error);
 		}
 
