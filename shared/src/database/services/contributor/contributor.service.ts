@@ -261,6 +261,24 @@ export class ContributorService extends BaseService {
 		}
 	}
 
+	async findByPaymentReferenceIds(paymentReferenceIds: string[]): Promise<ServiceResult<Contributor[]>> {
+		try {
+			const contributors = await this.db.contributor.findMany({
+				where: { paymentReferenceId: { in: paymentReferenceIds } },
+				include: { contact: true },
+			});
+
+			if (!contributors) {
+				return this.resultFail('Contributor not found');
+			}
+
+			return this.resultOk(contributors);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not find contributor by Stripe customer ID');
+		}
+	}
+
 	async getOrCreateContributorWithFirebaseAuth(
 		contributorData: StripeContributorData,
 	): Promise<ServiceResult<{ contributor: ContributorWithContact; isNewContributor: boolean }>> {
