@@ -1,4 +1,4 @@
-import { Contribution } from '@prisma/client';
+import { Contribution, PaymentEvent } from '@prisma/client';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
@@ -8,6 +8,7 @@ import {
 	ContributionTableViewRow,
 	ContributionUpdateInput,
 	PaymentEventCreateData,
+	PaymentEventCreateInput,
 	StripeContributionCreateData,
 } from './contribution.types';
 
@@ -192,6 +193,21 @@ export class ContributionService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not create or update contribution from Stripe event');
+		}
+	}
+
+	async createContributionWithPaymentEvent(
+		paymentEvents: PaymentEventCreateInput,
+	): Promise<ServiceResult<PaymentEvent>> {
+		try {
+			const result = await this.db.paymentEvent.create({
+				data: paymentEvents,
+			});
+
+			return this.resultOk(result);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not create payment events with contributions');
 		}
 	}
 }

@@ -55,3 +55,5 @@ export type PaymentEventCreateData = {
 	transactionId: string;
 	metadata?: Record<string, unknown>;
 };
+
+export type PaymentEventCreateInput = Prisma.PaymentEventCreateInput;
