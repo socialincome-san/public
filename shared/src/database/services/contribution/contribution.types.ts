@@ -35,6 +35,16 @@ export type ContributionPayload = {
 	};
 };
 
+export type ContributionDonationEntry = {
+	contributorId: string;
+	amount: number;
+	currency: string;
+	amountChf: number;
+	feesChf: number;
+	status: ContributionStatus;
+	createdAt: Date;
+};
+
 export type ContributionWithRelations = Prisma.ContributionGetPayload<{
 	include: { contributor: true; campaign: true };
 }>;
