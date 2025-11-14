@@ -18,11 +18,11 @@ let nextConfig = {
 	webpack: (config, context) => {
 		// needed for ssh2-sftp-client in payment-file-import
 		config.module.rules.push({
-		test: /\.node$/,
-		loader: "node-loader",
+			test: /\.node$/,
+			loader: 'node-loader',
 		});
 		return config;
-  	},
+	},
 };
 
 if (process.env.SENTRY_AUTH_TOKEN) {
