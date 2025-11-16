@@ -1,0 +1,826 @@
+openapi: 3.1.0
+info:
+  title: Social Income API
+  version: 1.0.0
+  description: Secure API with Firebase-based authentication; most endpoints
+    require an ID token, except authentication and public webhook routes
+servers:
+  - url: http://localhost:3001/api
+    description: Local development
+  - url: https://staging.socialincome.org/api
+    description: Staging
+  - url: https://socialincome.org/api
+    description: Production
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+  schemas:
+    VerifyOtpRequest:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+        otp:
+          type: string
+      required:
+        - phoneNumber
+        - otp
+    VerifyOtpResponse:
+      type: object
+      properties:
+        customToken:
+          type: string
+        isNewUser:
+          type: boolean
+        uid:
+          type: string
+      required:
+        - customToken
+        - isNewUser
+        - uid
+    ExchangeRatesImportSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+          enum:
+            - true
+      required:
+        - success
+    PaymentFilesImportResult:
+      type: object
+      properties:
+        id:
+          type: string
+        contributionId:
+          type: string
+        type:
+          type: string
+        transactionId:
+          type: string
+        metadata:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - contributionId
+        - type
+        - transactionId
+        - createdAt
+    PayoutParams:
+      type: object
+      properties:
+        payoutId:
+          type: string
+          description: Payout ID
+      required:
+        - payoutId
+    Payout:
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+        amountChf:
+          type: number
+          nullable: true
+        currency:
+          type: string
+        paymentAt:
+          type: string
+        status:
+          type: string
+        phoneNumber:
+          type: string
+          nullable: true
+        comments:
+          type: string
+          nullable: true
+        recipientId:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+          nullable: true
+      required:
+        - id
+        - amount
+        - currency
+        - paymentAt
+        - status
+        - recipientId
+        - createdAt
+    Recipient:
+      type: object
+      properties:
+        id:
+          type: string
+        contactId:
+          type: string
+        status:
+          type: string
+        startDate:
+          type: string
+          nullable: true
+        successorName:
+          type: string
+          nullable: true
+        termsAccepted:
+          type: boolean
+        paymentInformationId:
+          type: string
+          nullable: true
+        programId:
+          type: string
+        localPartnerId:
+          type: string
+        contact:
+          type: object
+        program:
+          type: object
+        localPartner:
+          type: object
+        paymentInformation:
+          allOf:
+            - $ref: "#/components/schemas/PaymentInformation"
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+          nullable: true
+      required:
+        - id
+        - contactId
+        - status
+        - termsAccepted
+        - programId
+        - localPartnerId
+        - contact
+        - contact
+        - program
+        - program
+        - localPartner
+        - localPartner
+        - createdAt
+    RecipientSelfUpdate:
+      type: object
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+          nullable: true
+        lastName:
+          type: string
+          minLength: 1
+          nullable: true
+        callingName:
+          type: string
+          nullable: true
+        gender:
+          type: string
+          enum:
+            - male
+            - female
+            - other
+            - private
+          nullable: true
+        dateOfBirth:
+          type: string
+          nullable: true
+        language:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        contactPhone:
+          type: string
+          nullable: true
+        paymentPhone:
+          type: string
+          nullable: true
+        paymentProvider:
+          type: string
+          enum:
+            - orange_money
+          nullable: true
+        successorName:
+          type: string
+          nullable: true
+    Survey:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        recipientId:
+          type: string
+        questionnaire:
+          type: string
+        language:
+          type: string
+        dueAt:
+          type: string
+        completedAt:
+          type: string
+          nullable: true
+        status:
+          type: string
+        data: {}
+        accessEmail:
+          type: string
+        accessPw:
+          type: string
+        accessToken:
+          type: string
+        surveyScheduleId:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+          nullable: true
+      required:
+        - id
+        - name
+        - recipientId
+        - questionnaire
+        - language
+        - dueAt
+        - status
+        - data
+        - accessEmail
+        - accessPw
+        - accessToken
+        - createdAt
+    StripeWebhookResponse:
+      type: object
+      properties:
+        received:
+          type: boolean
+          enum:
+            - true
+        data:
+          type: object
+          properties:
+            contributionId:
+              type: string
+              nullable: true
+            contributorId:
+              type: string
+              nullable: true
+            isNewContributor:
+              type: boolean
+              nullable: true
+          nullable: true
+      required:
+        - received
+    Phone:
+      type: object
+      properties:
+        id:
+          type: string
+        number:
+          type: string
+        hasWhatsApp:
+          type: boolean
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+          nullable: true
+      required:
+        - id
+        - number
+        - hasWhatsApp
+        - createdAt
+    PaymentInformation:
+      type: object
+      properties:
+        id:
+          type: string
+        provider:
+          type: string
+        code:
+          type: string
+        phoneId:
+          type: string
+        phone:
+          type: object
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+          nullable: true
+      required:
+        - id
+        - provider
+        - code
+        - phoneId
+        - phone
+        - phone
+        - createdAt
+    Contact:
+      type: object
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        callingName:
+          type: string
+          nullable: true
+        addressId:
+          type: string
+          nullable: true
+        phoneId:
+          type: string
+          nullable: true
+        phone:
+          allOf:
+            - $ref: "#/components/schemas/Phone"
+        email:
+          type: string
+          nullable: true
+        gender:
+          type: string
+          nullable: true
+        language:
+          type: string
+          nullable: true
+        dateOfBirth:
+          type: string
+          nullable: true
+        profession:
+          type: string
+          nullable: true
+        isInstitution:
+          type: boolean
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+          nullable: true
+      required:
+        - id
+        - firstName
+        - lastName
+        - isInstitution
+        - createdAt
+    LocalPartner:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        contact:
+          type: object
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+          nullable: true
+      required:
+        - id
+        - name
+        - contact
+        - contact
+        - createdAt
+    Program:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        country:
+          type: string
+        payoutAmount:
+          type: number
+        payoutCurrency:
+          type: string
+        payoutInterval:
+          type: number
+        totalPayments:
+          type: number
+        ownerOrganizationId:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+          nullable: true
+      required:
+        - id
+        - name
+        - country
+        - payoutAmount
+        - payoutCurrency
+        - payoutInterval
+        - totalPayments
+        - ownerOrganizationId
+        - createdAt
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+  responses:
+    "400":
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid request parameters
+              code:
+                type: string
+                example: "400"
+    "401":
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Authentication required
+              code:
+                type: string
+                example: "401"
+    "403":
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Access denied
+              code:
+                type: string
+                example: "403"
+    "404":
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found
+              code:
+                type: string
+                example: "404"
+    "409":
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource already exists
+              code:
+                type: string
+                example: "409"
+    "500":
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: An unexpected error occurred
+              code:
+                type: string
+                example: "500"
+#outputDir: ./public
+paths:
+  /v1/exchange-rate:
+    post:
+      operationId: post-v1-exchange-rate
+      summary: Import exchange rates
+      description: Imports exchange rates from external API into the database.
+      tags:
+        - V1
+      parameters: []
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "201":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExchangeRatesImportSuccess"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  /v1/payment-files-import:
+    post:
+      operationId: post-v1-payment-files-import
+      summary: Import payment files
+      description: Imports payment files from post finance.
+      tags:
+        - V1
+      parameters: []
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "201":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentFilesImportResult"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  /v1/auth/verify-otp:
+    post:
+      operationId: post-v1-auth-verify-otp
+      summary: Verify OTP
+      description: Verifies an OTP sent via Twilio and returns a Firebase custom token
+        for authentication.
+      tags:
+        - V1
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyOtpRequest"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerifyOtpResponse"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  /v1/recipients/me:
+    get:
+      operationId: get-v1-recipients-me
+      summary: Get recipient
+      description: Returns the authenticated recipient with all related data.
+      tags:
+        - V1
+      parameters: []
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recipient"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+    patch:
+      operationId: patch-v1-recipients-me
+      summary: Update recipient
+      description: Updates the authenticated recipient’s personal information, contact
+        details, and mobile money payment information.
+      tags:
+        - V1
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecipientSelfUpdate"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recipient"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  /v1/stripe/webhook:
+    post:
+      operationId: post-v1-stripe-webhook
+      summary: Process Stripe webhook events
+      description: Handles multiple Stripe webhook events including charge.succeeded,
+        charge.updated, and charge.failed to create/update contributions and
+        contributors.
+      tags:
+        - V1
+      parameters: []
+      responses:
+        "201":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StripeWebhookResponse"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  /v1/recipients/me/payouts:
+    get:
+      operationId: get-v1-recipients-me-payouts
+      summary: List payouts
+      description: Returns all payouts belonging to the authenticated recipient.
+      tags:
+        - V1
+      parameters: []
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payout"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  /v1/recipients/me/surveys:
+    get:
+      operationId: get-v1-recipients-me-surveys
+      summary: Get surveys
+      description: Returns all surveys belonging to the authenticated recipient.
+      tags:
+        - V1
+      parameters: []
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Survey"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  /v1/recipients/me/payouts/{payoutId}:
+    get:
+      operationId: get-v1-recipients-me-payouts-{payoutId}
+      summary: Get payout by ID
+      description: Returns a specific payout belonging to the authenticated recipient.
+      tags:
+        - V1
+      parameters:
+        - in: path
+          name: payoutId
+          schema:
+            type: string
+            description: Payout ID
+          required: true
+          description: Payout ID
+          example: "123"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payout"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  /v1/recipients/me/payouts/{payoutId}/confirm:
+    post:
+      operationId: post-v1-recipients-me-payouts-{payoutId}-confirm
+      summary: Confirm payout
+      description: Marks a specific payout as confirmed by the authenticated recipient.
+      tags:
+        - V1
+      parameters:
+        - in: path
+          name: payoutId
+          schema:
+            type: string
+            description: Payout ID
+          required: true
+          description: Payout ID
+          example: "123"
+      responses:
+        "201":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payout"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  /v1/recipients/me/payouts/{payoutId}/contest:
+    post:
+      operationId: post-v1-recipients-me-payouts-{payoutId}-contest
+      summary: Contest payout
+      description: Marks a specific payout as contested by the authenticated recipient.
+      tags:
+        - V1
+      parameters:
+        - in: path
+          name: payoutId
+          schema:
+            type: string
+            description: Payout ID
+          required: true
+          description: Payout ID
+          example: "123"
+      responses:
+        "201":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payout"
+        "401":
+          $ref: "#/components/responses/401"
+        "403":
+          $ref: "#/components/responses/403"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
