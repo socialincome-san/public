@@ -63,7 +63,7 @@ class FirebaseRemoteConfigService {
         jsonDecode(appVersionJson) as Map<String, dynamic>,
       );
 
-      return AppVersionInfo.fromJson(jsonMap);
+      return AppVersionInfoMapper.fromMap(jsonMap);
     } catch (ex, stack) {
       log(
         "Error parsing app_version_info from Remote Config: $appVersionJson",
