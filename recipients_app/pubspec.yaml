@@ -42,6 +42,8 @@ dependencies:
       url: https://github.com/ShamilPP/flutter_rounded_loading_button.git
       ref: master
   sentry_flutter: ^9.6.0
+  si_api_client:
+    path: ./packages/si_api_client
   twilio_flutter: ^0.9.0
   url_launcher: ^6.3.2
   webview_flutter: ^4.13.0
