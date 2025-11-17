@@ -11,7 +11,11 @@ import {
 
 export type RecipientWithPaymentInfo = Prisma.RecipientGetPayload<{
 	include: {
-		contact: true;
+		contact: {
+			include: {
+				phone: true;
+			};
+		};
 		paymentInformation: {
 			include: {
 				phone: true;

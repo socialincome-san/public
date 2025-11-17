@@ -106,6 +106,29 @@ export class RecipientService extends BaseService {
 		}
 	}
 
+	async updateSelf(
+		recipientId: string,
+		data: RecipientPrismaUpdateInput,
+	): Promise<ServiceResult<RecipientWithPaymentInfo>> {
+		try {
+			const updatedRecipient = await this.db.recipient.update({
+				where: { id: recipientId },
+				data,
+				include: {
+					contact: { include: { phone: true } },
+					paymentInformation: { include: { phone: true } },
+					program: true,
+					localPartner: true,
+				},
+			});
+
+			return this.resultOk(updatedRecipient);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Failed to update recipient');
+		}
+	}
+
 	async get(userId: string, recipientId: string): Promise<ServiceResult<RecipientPayload>> {
 		const accessResult = await this.programAccessService.getAccessiblePrograms(userId);
 
@@ -417,7 +440,11 @@ export class RecipientService extends BaseService {
 					},
 				},
 				include: {
-					contact: true,
+					contact: {
+						include: {
+							phone: true,
+						},
+					},
 					paymentInformation: {
 						include: {
 							phone: true,
