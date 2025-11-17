@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
  *   type: apiKey
  *   in: header
  *   name: x-api-key
- * @response 201 - Exchange rates imported successfully
+ * @response ExchangeRatesImportSuccess
  * @openapi
  */
 export async function POST(request: NextRequest) {

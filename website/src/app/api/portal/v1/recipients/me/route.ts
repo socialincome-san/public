@@ -1,6 +1,7 @@
-import { RecipientUpdate } from '@/app/api/portal/v1/models';
 import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
+import { RecipientPrismaUpdateInput } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import { NextResponse } from 'next/server';
+import { RecipientSelfUpdate } from '../../models';
 
 /**
  * Get recipient
@@ -21,9 +22,9 @@ export async function GET(request: Request) {
 
 /**
  * Update recipient
- * @description Updates the recipient’s first and/or last name.
+ * @description Updates the authenticated recipient’s personal information, contact details, and mobile money payment information.
  * @auth BearerAuth
- * @body RecipientUpdate
+ * @body RecipientSelfUpdate
  * @response Recipient
  * @openapi
  */
@@ -43,22 +44,66 @@ export async function PATCH(request: Request) {
 		return new Response('Invalid JSON body', { status: 400 });
 	}
 
-	const parsed = RecipientUpdate.safeParse(body);
+	const parsed = RecipientSelfUpdate.safeParse(body);
 
 	if (!parsed.success) {
 		return new Response(parsed.error.errors[0]?.message ?? 'Invalid input', { status: 400 });
 	}
 
-	// Use the existing update method with contact update structure
-	const updateResult = await recipientService.update('', {
-		id: recipientResult.data.id,
+	const recipient = recipientResult.data;
+	const data = parsed.data;
+
+	const updateData: RecipientPrismaUpdateInput = {
 		contact: {
 			update: {
-				firstName: parsed.data.firstName,
-				lastName: parsed.data.lastName,
+				firstName: data.firstName,
+				lastName: data.lastName,
+				callingName: data.callingName,
+				gender: data.gender,
+				dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : undefined,
+				language: data.language,
+				email: data.email,
+				phone: data.contactPhone
+					? {
+							upsert: {
+								update: { number: data.contactPhone },
+								create: { number: data.contactPhone },
+							},
+						}
+					: undefined,
 			},
 		},
-	});
+
+		successorName: data.successorName,
+
+		paymentInformation:
+			data.paymentPhone || data.paymentProvider
+				? {
+						upsert: {
+							update: {
+								provider: data.paymentProvider,
+								phone: data.paymentPhone
+									? {
+											upsert: {
+												update: { number: data.paymentPhone },
+												create: { number: data.paymentPhone },
+											},
+										}
+									: undefined,
+							},
+							create: {
+								provider: data.paymentProvider!,
+								code: recipient.paymentInformation?.code ?? '',
+								phone: {
+									create: { number: data.paymentPhone! },
+								},
+							},
+						},
+					}
+				: undefined,
+	};
+
+	const updateResult = await recipientService.updateSelf(recipient.id, updateData);
 
 	if (!updateResult.success) {
 		return new Response(updateResult.error, { status: 500 });
