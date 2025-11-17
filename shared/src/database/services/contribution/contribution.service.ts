@@ -163,11 +163,18 @@ export class ContributionService extends BaseService {
 		}
 	}
 
-	async getForContributors(contributorsIds: string[]): Promise<ServiceResult<ContributionDonationEntry[]>> {
+	async getForContributorsAndYear(
+		contributorsIds: string[],
+		year: number,
+	): Promise<ServiceResult<ContributionDonationEntry[]>> {
 		try {
 			const result = await this.db.contribution.findMany({
 				where: {
 					contributorId: { in: contributorsIds },
+					AND: [
+						{ createdAt: { gte: new Date(`${year}-01-01 00:00:00`) } },
+						{ createdAt: { lte: new Date(`${year}-12-31 23:59:59`) } },
+					],
 				},
 				select: {
 					contributorId: true,

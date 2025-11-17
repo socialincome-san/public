@@ -2,7 +2,7 @@ import { createWriteStream } from 'fs';
 import _ from 'lodash';
 import * as path from 'path';
 import PDFDocument from 'pdfkit';
-import { LANGUAGE_CODES } from '../../../types/language';
+import { LANGUAGE_CODES, LanguageCode } from '../../../types/language';
 import { Translator } from '../../../utils/i18n';
 import { ContributionDonationEntry } from '../contribution/contribution.types';
 import { ContributorDonationCertificate } from '../contributor/contributor.types';
@@ -31,11 +31,11 @@ export class DonationCertificateWriter {
 	 * This function creates a donation certificate.
 	 * The function terminates when the PDF file has been written to the file at the given path.
 	 */
-	writeDonationCertificatePDF = async (filePath: string) => {
+	writeDonationCertificatePDF = async (filePath: string, language: LanguageCode) => {
 		const contributionsByCurrency = await this.getContributionsByCurrency(this.contributions, this.year);
 
 		const translator = await Translator.getInstance({
-			language: LANGUAGE_CODES.find((l) => l === this.donator.language) || 'de',
+			language: LANGUAGE_CODES.find((l) => l === language) || 'en',
 			namespaces: ['donation-certificate', 'countries'],
 		});
 
