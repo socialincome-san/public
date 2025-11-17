@@ -216,6 +216,7 @@ export class ContributorService extends BaseService {
 							firstName: true,
 							lastName: true,
 							language: true,
+							email: true,
 							address: true,
 						},
 					},
@@ -228,6 +229,7 @@ export class ContributorService extends BaseService {
 				firstName: c.contact.firstName,
 				lastName: c.contact.lastName,
 				language: c.contact.language,
+				email: c.contact.email,
 				address: c.contact.address,
 				authId: c.account.firebaseAuthUserId,
 			}));
