@@ -1,6 +1,6 @@
 resource "google_sql_database_instance" "google_sql_database_instance" {
   name                = "${var.env}-${var.app_name}-google-sql-database-instance"
-  database_version    = "POSTGRES_15"
+  database_version    = "POSTGRES_18"
   region              = var.gcp_region
   deletion_protection = true
 
