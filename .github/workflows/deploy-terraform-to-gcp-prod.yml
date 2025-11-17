@@ -50,9 +50,6 @@ jobs:
           echo "${{ secrets.TF_PROD_FIREBASE_DATABASE_URL }}" > secrets/FIREBASE_DATABASE_URL
           echo "${{ secrets.TF_PROD_FIREBASE_SERVICE_ACCOUNT_JSON }}" > secrets/FIREBASE_SERVICE_ACCOUNT_JSON
           echo "${{ secrets.TF_PROD_GITHUB_PAT }}" > secrets/GITHUB_PAT
-          echo "${{ secrets.TF_PROD_MAILCHIMP_API_KEY }}" > secrets/MAILCHIMP_API_KEY
-          echo "${{ secrets.TF_PROD_MAILCHIMP_LIST_ID }}" > secrets/MAILCHIMP_LIST_ID
-          echo "${{ secrets.TF_PROD_MAILCHIMP_SERVER }}" > secrets/MAILCHIMP_SERVER
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_FACEBOOK_TRACKING_ID}}" > secrets/NEXT_PUBLIC_FACEBOOK_TRACKING_ID
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_FIREBASE_API_KEY }}" > secrets/NEXT_PUBLIC_FIREBASE_API_KEY
           echo "${{ secrets.TF_PROD_NEXT_PUBLIC_FIREBASE_APP_ID }}" > secrets/NEXT_PUBLIC_FIREBASE_APP_ID
