@@ -1,10 +1,4 @@
-import { ContributionStatus, PaymentEventType } from '@prisma/client';
-import {
-	POSTFINANCE_FTP_HOST,
-	POSTFINANCE_FTP_PORT,
-	POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64,
-	POSTFINANCE_FTP_USER,
-} from '@socialincome/functions/src/config';
+import { ContributionStatus, PaymentEvent, PaymentEventType } from '@prisma/client';
 import { StorageAdmin } from '@socialincome/shared/src/firebase/admin/StorageAdmin';
 import { toFirebaseAdminTimestamp } from '@socialincome/shared/src/firebase/admin/utils';
 import { BankWireContribution, ContributionSourceKey, StatusKey } from '@socialincome/shared/src/types/contribution';
@@ -22,7 +16,12 @@ import { ContributorService } from '../contributor/contributor.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 
-export class PaymenFileImportSertvice extends BaseService {
+const POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64 = process.env.POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64!;
+const POSTFINANCE_FTP_HOST = process.env.POSTFINANCE_FTP_HOST!;
+const POSTFINANCE_FTP_PORT = process.env.POSTFINANCE_FTP_PORT!;
+const POSTFINANCE_FTP_USER = process.env.POSTFINANCE_FTP_USER!;
+
+export class PaymentFileImportService extends BaseService {
 	private storageAdmin = new StorageAdmin();
 	private contributorService = new ContributorService();
 	private contributionService = new ContributionService();
@@ -38,43 +37,52 @@ export class PaymenFileImportSertvice extends BaseService {
 	/**
 	 * Imports payment files from the Postfinance SFTP server to the payments files storage bucket
 	 */
-	async importPaymentFiles(): Promise<ServiceResult<string>> {
+	async importPaymentFiles(): Promise<ServiceResult<PaymentEvent[]>> {
 		const sftp = new SFTPClient();
 		const bucket = this.storageAdmin.storage.bucket(this.bucketName);
-		const files = (await bucket.getFiles())[0].map((file) => file.name);
-		await sftp.connect({
-			host: POSTFINANCE_FTP_HOST,
-			port: Number(POSTFINANCE_FTP_PORT),
-			username: POSTFINANCE_FTP_USER,
-			privateKey: atob(POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64),
-		});
-		const sftpFiles = await sftp.list('/yellow-net-reports');
-
+		const bucketFiles = (await bucket.getFiles())[0].map((file) => file.name);
 		const allContributions: BankWireContribution[] = [];
-		for (let file of sftpFiles) {
-			if (files.includes(file.name)) {
-				this.logger.info(`Skipped copying file ${file.name} because it already exists in ${this.bucketName} bucket`);
-				continue;
-			}
-
-			if (!file.name.startsWith('camt.054_P_')) {
-				this.logger.info(`Skipped processing ${file.name} because it does not contain relevant payment data`);
-				continue;
-			}
-
-			await withFile(async ({ path: tmpPath }) => {
-				await sftp.get(`/yellow-net-reports/${file.name}`, tmpPath);
-				const contributions = this.getContributionsFromPaymentFile(tmpPath);
-				allContributions.push(...contributions);
-				await this.storageAdmin.uploadFile({ bucket, sourceFilePath: tmpPath, destinationFilePath: file.name });
+		try {
+			await sftp.connect({
+				host: POSTFINANCE_FTP_HOST,
+				port: Number(POSTFINANCE_FTP_PORT),
+				username: POSTFINANCE_FTP_USER,
+				privateKey: atob(POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64),
 			});
-		}
-		const result = await this.createContributions(allContributions);
+			const sftpFiles = await sftp.list('/yellow-net-reports');
 
-		if (!result.success) {
-			return this.resultFail(`Error importing payment files: ${result.error}`);
+			for (let file of sftpFiles) {
+				if (bucketFiles.includes(file.name)) {
+					this.logger.info(`Skipped copying file ${file.name} because it already exists in ${this.bucketName} bucket`);
+					continue;
+				}
+
+				if (!file.name.startsWith('camt.054_P_')) {
+					this.logger.info(`Skipped processing ${file.name} because it does not contain relevant payment data`);
+					continue;
+				}
+
+				await withFile(async ({ path: tmpPath }) => {
+					await sftp.get(`/yellow-net-reports/${file.name}`, tmpPath);
+					const contributions = this.getContributionsFromPaymentFile(tmpPath);
+					allContributions.push(...contributions);
+					await this.storageAdmin.uploadFile({ bucket, sourceFilePath: tmpPath, destinationFilePath: file.name });
+				});
+			}
+			const result = await this.createContributions(allContributions);
+			sftp.end();
+
+			if (!result.success) {
+				this.logger.error(`Error importing payment files: ${result.error}`);
+				return this.resultFail(`Error importing payment files: ${result.error}`);
+			}
+			return this.resultOk(result.data);
+		} catch (error) {
+			this.logger.error(`Error importing payment files: ${error}`);
+			return this.resultFail(`Error importing payment files: ${error}`);
+		} finally {
+			sftp.end();
 		}
-		return this.resultOk('Payment files successfully imported');
 	}
 
 	/**
@@ -114,9 +122,8 @@ export class PaymenFileImportSertvice extends BaseService {
 	 * creates payment events and contributions in DB
 	 * @param bankContributions contributions from payment files
 	 */
-	private async createContributions(bankContributions: BankWireContribution[]): Promise<ServiceResult<string>> {
+	private async createContributions(bankContributions: BankWireContribution[]): Promise<ServiceResult<PaymentEvent[]>> {
 		try {
-			// TODO: check if campagin ID exists
 			const fallbackCampaignResult = await this.campaignService.getFallbackCampaign();
 			if (!fallbackCampaignResult.success) {
 				return this.resultFail(fallbackCampaignResult.error);
@@ -131,6 +138,8 @@ export class PaymenFileImportSertvice extends BaseService {
 			}
 
 			const failedPaymentEvents = [];
+
+			const created = [];
 
 			for (let c of bankContributions) {
 				const contributor = contributors.data.find(
@@ -168,6 +177,7 @@ export class PaymenFileImportSertvice extends BaseService {
 				try {
 					const result = await this.contributionService.createContributionWithPaymentEvent(paymentEvent);
 					if (!result.success) failedPaymentEvents.push(c.transaction_id);
+					else created.push(result.data);
 				} catch (error) {
 					failedPaymentEvents.push(c.transaction_id);
 				}
@@ -182,9 +192,7 @@ export class PaymenFileImportSertvice extends BaseService {
 				);
 			}
 
-			return this.resultOk(
-				`Successfully created payment events and contributions for transaction IDs: ${bankContributions.map((c) => c.transaction_id).join(', ')}`,
-			);
+			return this.resultOk(created);
 		} catch (error) {
 			this.logger.error(`Error creating contributions from payment file: ${error}`);
 			return this.resultFail(`Error creating contributions from payment file: ${error}`);

@@ -141,3 +141,17 @@ export const StripeWebhookResponse = z.object({
 export const StripeWebhookError = z.object({
 	error: z.string(),
 });
+
+export const PaymentFilesImportResult = z.object({
+	id: z.string(),
+	contributionId: z.string(),
+	type: z.string(),
+	transactionId: z.string(),
+	metadata: z.string().nullable(),
+	createdAt: z.date(),
+	updatedAt: z.date().nullable(),
+});
+
+export const PaymentFilesImportError = z.object({
+	error: z.string(),
+});

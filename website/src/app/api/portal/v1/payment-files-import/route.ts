@@ -1,4 +1,4 @@
-import { PaymenFileImportSertvice } from '@socialincome/shared/src/database/services/payment-file-import/payment-file-import.service';
+import { PaymentFileImportService } from '@socialincome/shared/src/database/services/payment-file-import/payment-file-import.service';
 import { logger } from '@socialincome/shared/src/utils/logger';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
  *   type: apiKey
  *   in: header
  *   name: x-api-key
- * @response 201 - Payment files imported successfully
+ * @response PaymentFilesImportResult | PaymentFilesImportError
  * @openapi
  */
 export async function POST(request: NextRequest) {
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 		return NextResponse.json({ ok: false, error: 'Internal server errororized' }, { status: 500 });
 	}
 
-	const service = new PaymenFileImportSertvice(process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET);
+	const service = new PaymentFileImportService(process.env.POSTFINANCE_PAYMENTS_FILES_BUCKET);
 
 	try {
 		const result = await service.importPaymentFiles();
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 			logger.alert(`Payment files import failed: ${result.error}`, { result }, { component: 'payment-files-import' });
 			return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
 		}
-		return NextResponse.json({}, { status: 201 });
+		return NextResponse.json(result.data, { status: 201 });
 	} catch (error) {
 		logger.alert(`Payment files import failed: ${error}`, { error }, { component: 'payment-files-import' });
 		return NextResponse.json({ ok: false, error: 'Internal server error' }, { status: 500 });
