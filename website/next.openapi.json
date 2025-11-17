@@ -25,7 +25,6 @@
 				"type": "http",
 				"scheme": "bearer",
 				"bearerFormat": "JWT"
-				
 			},
 			"ApiKeyAuth": {
 				"type": "apiKey",
