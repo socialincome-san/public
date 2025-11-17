@@ -131,7 +131,6 @@ export const VerifyOtpRequest = z.object({
 });
 
 export const VerifyOtpResponse = z.object({
-	success: z.literal(true),
 	customToken: z.string(),
 	isNewUser: z.boolean(),
 	uid: z.string(),
@@ -148,7 +147,7 @@ export const StripeWebhookResponse = z.object({
 		.optional(),
 });
 
-export const StripeWebhookError = z.object({
+export const ErrorResponse = z.object({
 	error: z.string(),
 });
 

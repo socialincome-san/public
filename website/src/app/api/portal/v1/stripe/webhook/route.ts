@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server';
  * Process Stripe webhook events
  * @description Handles multiple Stripe webhook events including charge.succeeded, charge.updated, and charge.failed to create/update contributions and contributors.
  * @response StripeWebhookResponse
- * @response StripeWebhookError
+ * @response ErrorResponse
  * @openapi
  */
 export async function POST(request: NextRequest) {

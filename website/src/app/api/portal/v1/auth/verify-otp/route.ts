@@ -6,7 +6,8 @@ import { NextResponse } from 'next/server';
  * Verify OTP
  * @description Verifies an OTP sent via Twilio and returns a Firebase custom token for authentication.
  * @body VerifyOtpRequest
- * @response VerifyOtpResponse
+ * @response 200:VerifyOtpResponse
+ * @response 400:ErrorResponse
  * @openapi
  */
 export async function POST(request: Request) {

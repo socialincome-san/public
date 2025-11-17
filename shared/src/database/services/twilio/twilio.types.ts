@@ -4,7 +4,6 @@ export type VerifyOtpRequest = {
 };
 
 export type VerifyOtpResult = {
-	success: true;
 	customToken: string;
 	isNewUser: boolean;
 	uid: string;
