@@ -8,7 +8,7 @@ type Params = Promise<{ payoutId: string }>;
  * Contest payout
  * @description Marks a specific payout as contested by the authenticated recipient.
  * @auth BearerAuth
- * @param {string} payoutId - The ID of the payout to retrieve (path parameter)
+ * @pathParams PayoutParams
  * @response Payout
  * @openapi
  */

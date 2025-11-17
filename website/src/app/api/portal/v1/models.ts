@@ -25,6 +25,7 @@ export const Contact = z.object({
 	callingName: z.string().nullable(),
 	addressId: z.string().nullable(),
 	phoneId: z.string().nullable(),
+	phone: Phone.nullable(),
 	email: z.string().nullable(),
 	gender: z.string().nullable(),
 	language: z.string().nullable(),
@@ -106,14 +107,23 @@ export const Survey = z.object({
 	updatedAt: z.string().nullable(),
 });
 
-export const RecipientUpdate = z
-	.object({
-		firstName: z.string().min(1).optional(),
-		lastName: z.string().min(1).optional(),
-	})
-	.refine((d) => d.firstName || d.lastName, {
-		message: 'Provide at least one field: firstName or lastName',
-	});
+export const RecipientSelfUpdate = z.object({
+	firstName: z.string().min(1).optional(),
+	lastName: z.string().min(1).optional(),
+	callingName: z.string().optional(),
+	gender: z.enum(['male', 'female', 'other', 'private']).optional(),
+	dateOfBirth: z.string().optional(),
+	language: z.string().optional(),
+	email: z.string().email().optional(),
+	contactPhone: z.string().optional(),
+	paymentPhone: z.string().optional(),
+	paymentProvider: z.enum(['orange_money']).optional(),
+	successorName: z.string().optional(),
+});
+
+export const PayoutParams = z.object({
+	payoutId: z.string().describe('Payout ID'),
+});
 
 export const VerifyOtpRequest = z.object({
 	phoneNumber: z.string(),
@@ -122,7 +132,7 @@ export const VerifyOtpRequest = z.object({
 
 export const VerifyOtpResponse = z.object({
 	success: z.literal(true),
-	token: z.string(),
+	customToken: z.string(),
 	isNewUser: z.boolean(),
 	uid: z.string(),
 });
@@ -140,4 +150,8 @@ export const StripeWebhookResponse = z.object({
 
 export const StripeWebhookError = z.object({
 	error: z.string(),
+});
+
+export const ExchangeRatesImportSuccess = z.object({
+	success: z.literal(true),
 });
