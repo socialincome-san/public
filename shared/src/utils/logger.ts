@@ -1,49 +1,71 @@
-import type { Log, ParameterizedString, Scope } from '@sentry/core';
-import { captureException, logger as sentryLogger } from '@sentry/core';
+import * as Sentry from '@sentry/nextjs';
 
-type CaptureLogMetadata = {
-	scope?: Scope;
-};
+type LogAttributes = Record<string, unknown>;
 
 type AlertOptions = {
 	tags?: Record<string, string>;
-	extra?: Record<string, any>;
+	extra?: Record<string, unknown>;
 	component?: string;
 };
 
-const formatMessage = (message: ParameterizedString | unknown): ParameterizedString =>
-	(message instanceof Error ? message.message : String(message)) as ParameterizedString;
+const formatMessage = (msg: unknown): string => {
+	if (msg instanceof Error) {
+		return msg.message;
+	}
+	return typeof msg === 'string' ? msg : JSON.stringify(msg);
+};
+
+const sendToSentry = (level: 'debug' | 'info' | 'warning' | 'error', message: string, attributes?: LogAttributes) => {
+	Sentry.captureMessage(message, {
+		level,
+		extra: attributes ?? {},
+	});
+};
+
+const sendExceptionToSentry = (err: unknown, extra?: Record<string, unknown>) => {
+	const exception = err instanceof Error ? err : new Error(String(err));
+	Sentry.captureException(exception, { extra });
+};
 
 export const logger = {
-	debug: (message: ParameterizedString | unknown, attributes?: Log['attributes'], metadata?: CaptureLogMetadata) => {
+	debug(message: unknown, attributes?: LogAttributes) {
 		const msg = formatMessage(message);
 		console.debug(msg, attributes);
-		return sentryLogger.debug(msg, attributes, metadata);
+		sendToSentry('debug', msg, attributes);
 	},
-	info: (message: ParameterizedString | unknown, attributes?: Log['attributes'], metadata?: CaptureLogMetadata) => {
+
+	info(message: unknown, attributes?: LogAttributes) {
 		const msg = formatMessage(message);
 		console.info(msg, attributes);
-		return sentryLogger.info(msg, attributes, metadata);
+		sendToSentry('info', msg, attributes);
 	},
-	warn: (message: ParameterizedString | unknown, attributes?: Log['attributes'], metadata?: CaptureLogMetadata) => {
+
+	warn(message: unknown, attributes?: LogAttributes) {
 		const msg = formatMessage(message);
 		console.warn(msg, attributes);
-		return sentryLogger.warn(msg, attributes, metadata);
+		sendToSentry('warning', msg, attributes);
 	},
-	error: (error: ParameterizedString | unknown, attributes?: Log['attributes'], metadata?: CaptureLogMetadata) => {
+
+	error(error: unknown, attributes?: LogAttributes) {
 		const msg = formatMessage(error);
 		console.error(msg, attributes);
-		return sentryLogger.error(msg, attributes, metadata);
+		sendExceptionToSentry(error, attributes);
 	},
-	alert: (error: ParameterizedString | unknown, attributes?: Log['attributes'], alertOptions?: AlertOptions) => {
-		const msg = formatMessage(error);
-		console.error('🚨', msg, attributes);
-		sentryLogger.error(msg, attributes);
 
+	alert(error: unknown, attributes?: LogAttributes, alertOptions?: AlertOptions) {
 		const exception = error instanceof Error ? error : new Error(String(error));
-		captureException(exception, {
-			tags: { alert: 'true', component: alertOptions?.component || 'unknown', ...alertOptions?.tags },
-			extra: { ...attributes, ...alertOptions?.extra },
+		console.error('🚨 ALERT:', exception, attributes);
+
+		Sentry.captureException(exception, {
+			tags: {
+				alert: 'true',
+				component: alertOptions?.component ?? 'unknown',
+				...alertOptions?.tags,
+			},
+			extra: {
+				...attributes,
+				...alertOptions?.extra,
+			},
 		});
 	},
 };
