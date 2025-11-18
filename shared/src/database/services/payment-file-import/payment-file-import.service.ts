@@ -1,10 +1,7 @@
 import { ContributionStatus, PaymentEvent, PaymentEventType } from '@prisma/client';
 import { StorageAdmin } from '@socialincome/shared/src/firebase/admin/StorageAdmin';
-import { toFirebaseAdminTimestamp } from '@socialincome/shared/src/firebase/admin/utils';
-import { BankWireContribution, ContributionSourceKey, StatusKey } from '@socialincome/shared/src/types/contribution';
 import { Currency } from '@socialincome/shared/src/types/currency';
 import xmldom from '@xmldom/xmldom';
-import { DateTime } from 'luxon';
 import fs from 'node:fs';
 import SFTPClient from 'ssh2-sftp-client';
 import { withFile } from 'tmp-promise';
@@ -20,6 +17,14 @@ const POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64 = process.env.POSTFINANCE_FTP_RSA_P
 const POSTFINANCE_FTP_HOST = process.env.POSTFINANCE_FTP_HOST!;
 const POSTFINANCE_FTP_PORT = process.env.POSTFINANCE_FTP_PORT!;
 const POSTFINANCE_FTP_USER = process.env.POSTFINANCE_FTP_USER!;
+
+type BankContribution = {
+	amount: number;
+	currency: string;
+	referenceId: string;
+	transactionId: string;
+	rawContent: string;
+};
 
 export class PaymentFileImportService extends BaseService {
 	private storageAdmin = new StorageAdmin();
@@ -41,7 +46,7 @@ export class PaymentFileImportService extends BaseService {
 		const sftp = new SFTPClient();
 		const bucket = this.storageAdmin.storage.bucket(this.bucketName);
 		const bucketFiles = (await bucket.getFiles())[0].map((file) => file.name);
-		const allContributions: BankWireContribution[] = [];
+		const allContributions: BankContribution[] = [];
 		try {
 			await sftp.connect({
 				host: POSTFINANCE_FTP_HOST,
@@ -57,15 +62,16 @@ export class PaymentFileImportService extends BaseService {
 					continue;
 				}
 
-				if (!file.name.startsWith('camt.054_P_')) {
-					this.logger.info(`Skipped processing ${file.name} because it does not contain relevant payment data`);
-					continue;
-				}
-
 				await withFile(async ({ path: tmpPath }) => {
 					await sftp.get(`/yellow-net-reports/${file.name}`, tmpPath);
-					const contributions = this.getContributionsFromPaymentFile(tmpPath);
-					allContributions.push(...contributions);
+					if (!file.name.startsWith('camt.054_P_')) {
+						this.logger.info(
+							`Skipped processing ${file.name} because it does not contain relevant payment data. Storing anyway.`,
+						);
+					} else {
+						const contributions = this.getContributionsFromPaymentFile(tmpPath);
+						allContributions.push(...contributions);
+					}
 					await this.storageAdmin.uploadFile({ bucket, sourceFilePath: tmpPath, destinationFilePath: file.name });
 				});
 			}
@@ -86,33 +92,27 @@ export class PaymentFileImportService extends BaseService {
 	}
 
 	/**
-	 * gets the contributions information from the paayment file
+	 * gets the contributions information from the payment file
 	 * @param file The path of the file to process
 	 */
-	private getContributionsFromPaymentFile(file: string): BankWireContribution[] {
+	private getContributionsFromPaymentFile(file: string): BankContribution[] {
 		const xml = fs.readFileSync(file, 'utf8');
 		const xmlDoc = new xmldom.DOMParser().parseFromString(xml, 'text/xml');
 		const select = xpath.useNamespaces({ ns: 'urn:iso:std:iso:20022:tech:xsd:camt.054.001.08' });
 		const nodes = select(this.xmlSelectExpression, xmlDoc) as Node[];
 
-		const contributions: BankWireContribution[] = [];
+		const contributions: BankContribution[] = [];
 
 		for (let node of nodes) {
 			const transactionId = select('string(//ns:Refs/ns:EndToEndId)', node) as string;
 			const referenceId = select('string(//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
 
 			contributions.push({
-				reference_id: referenceId,
-				transaction_id: transactionId,
-				monthly_interval: parseInt(referenceId.slice(20, 22)),
-				currency: (select('string(//ns:Amt/@Ccy)', node) as string).toUpperCase() as Currency,
+				referenceId,
+				transactionId,
 				amount: parseFloat(select('string(//ns:Amt)', node) as string),
-				amount_chf: parseFloat(select('string(//ns:Amt)', node) as string),
-				fees_chf: 0,
-				status: StatusKey.SUCCEEDED,
-				created: toFirebaseAdminTimestamp(DateTime.now()),
-				source: ContributionSourceKey.WIRE_TRANSFER,
-				raw_content: node.toString(),
+				currency: (select('string(//ns:Amt/@Ccy)', node) as string).toUpperCase() as Currency,
+				rawContent: node.toString(),
 			});
 		}
 		return contributions;
@@ -122,7 +122,7 @@ export class PaymentFileImportService extends BaseService {
 	 * creates payment events and contributions in DB
 	 * @param bankContributions contributions from payment files
 	 */
-	private async createContributions(bankContributions: BankWireContribution[]): Promise<ServiceResult<PaymentEvent[]>> {
+	private async createContributions(bankContributions: BankContribution[]): Promise<ServiceResult<PaymentEvent[]>> {
 		try {
 			const fallbackCampaignResult = await this.campaignService.getFallbackCampaign();
 			if (!fallbackCampaignResult.success) {
@@ -131,7 +131,7 @@ export class PaymentFileImportService extends BaseService {
 			const campaignId = fallbackCampaignResult.data.id;
 
 			const contributors = await this.contributorService.findByPaymentReferenceIds(
-				bankContributions.map((c) => this.getContributorPaymentReferenceId(c.reference_id)),
+				bankContributions.map((c) => this.getContributorPaymentReferenceId(c.referenceId)),
 			);
 			if (!contributors.success) {
 				return this.resultFail(`Error creating contributions from payment file`);
@@ -143,25 +143,25 @@ export class PaymentFileImportService extends BaseService {
 
 			for (let c of bankContributions) {
 				const contributor = contributors.data.find(
-					(contributor) => contributor.paymentReferenceId === this.getContributorPaymentReferenceId(c.reference_id),
+					(contributor) => contributor.paymentReferenceId === this.getContributorPaymentReferenceId(c.referenceId),
 				);
 				if (!contributor) {
-					this.logger.alert(`Contributor for reference ID ${c.reference_id} does not exist`);
+					this.logger.alert(`Contributor for reference ID ${c.referenceId} does not exist`);
 					continue;
 				}
 
 				const paymentEvent: PaymentEventCreateInput = {
 					type: PaymentEventType.bank_transfer,
-					transactionId: c.transaction_id,
+					transactionId: c.transactionId || '',
 					metadata: {
-						raw_content: c.raw_content,
+						raw_content: c.rawContent,
 					},
 					contribution: {
 						create: {
 							amount: c.amount,
-							amountChf: c.amount_chf,
+							amountChf: c.amount,
 							currency: c.currency,
-							feesChf: c.fees_chf,
+							feesChf: 0,
 							status: ContributionStatus.succeeded,
 							campaign: {
 								connect: {
@@ -176,10 +176,10 @@ export class PaymentFileImportService extends BaseService {
 				};
 				try {
 					const result = await this.contributionService.createContributionWithPaymentEvent(paymentEvent);
-					if (!result.success) failedPaymentEvents.push(c.transaction_id);
+					if (!result.success) failedPaymentEvents.push(c.transactionId);
 					else created.push(result.data);
 				} catch (error) {
-					failedPaymentEvents.push(c.transaction_id);
+					failedPaymentEvents.push(c.transactionId);
 				}
 			}
 
