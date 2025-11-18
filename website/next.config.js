@@ -15,6 +15,9 @@ let nextConfig = {
 		],
 	},
 	output: 'standalone',
+	experimental: {
+		serverComponentsExternalPackages: ['pdfkit'],
+	},
 };
 
 if (process.env.SENTRY_AUTH_TOKEN) {

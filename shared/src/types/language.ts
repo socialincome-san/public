@@ -2,3 +2,4 @@
 
 export const LANGUAGE_CODES = ['en', 'de', 'it', 'fr', 'kri'] as const;
 export type LanguageCode = (typeof LANGUAGE_CODES)[number];
+export const DEFAULT_DONATION_CERTIFICATE_LANGUAGE: LanguageCode = 'en';

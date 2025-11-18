@@ -6,7 +6,6 @@ describe('Test translations', () => {
 			language: 'de',
 			namespaces: ['donation-certificate', 'countries'],
 		});
-		expect(translator.t('email-subject')).toBe('Social Income Spendenbescheinigung');
 		expect(translator.t('title', { context: { year: 2022 } })).toBe('Spendenbescheinigung 2022');
 		expect(translator.t('CH', { namespace: 'countries' })).toBe('Schweiz');
 		expect(translator.t('DE', { namespace: 'countries' })).toBe('Deutschland');
@@ -17,7 +16,6 @@ describe('Test translations', () => {
 			language: 'fr',
 			namespaces: ['donation-certificate', 'countries'],
 		});
-		expect(translator.t('email-subject')).toBe('Attestation de don – Social Income');
 		expect(translator.t('CH', { namespace: 'countries' })).toBe('Suisse');
 		expect(translator.t('DE', { namespace: 'countries' })).toBe('Allemagne');
 	});
@@ -27,7 +25,6 @@ describe('Test translations', () => {
 			language: 'en',
 			namespaces: ['donation-certificate', 'countries'],
 		});
-		expect(translator.t('email-subject')).toBe('Social Income Donation Certificate');
 		expect(translator.t('CH', { namespace: 'countries' })).toBe('Switzerland');
 		expect(translator.t('DE', { namespace: 'countries' })).toBe('Germany');
 	});

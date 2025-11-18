@@ -1,4 +1,4 @@
-resource "google_cloud_scheduler_job" "google_cloud_scheduler_job" {
+resource "google_cloud_scheduler_job" "google_cloud_scheduler_job_exchange_rate" {
   name        = "exchange-rate-import-job"
   description = "Imports exchange rates into DB every day at midnight"
   schedule    = "0 0 * * *" # Cron expression for daily execution
@@ -8,7 +8,7 @@ resource "google_cloud_scheduler_job" "google_cloud_scheduler_job" {
     http_method = "POST"
     uri         = "https://${var.website_domain}/api/portal/v1/exchange-rate"
     headers = {
-      "x-api-key" = var.exchange_rate_import_api_key
+      "x-api-key" = var.scheduler_api_key
     }
   }
 }
