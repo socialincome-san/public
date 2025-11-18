@@ -1,11 +1,15 @@
 import ajlaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/ajla.jpg';
+import alexandraImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/alexandra-andrist.jpg';
 import alexandreImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/alexandre.jpeg';
 import alexeyImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/alexey-shestakov.jpeg';
 import andersImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/anders.jpeg';
 import andrasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/andras.jpeg';
 import annalinaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/anna-lina.jpeg';
+import arieaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/ariea-burke.jpg';
 import aurelieImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/aurelie.jpeg';
 import carlosImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/carlos.jpeg';
+import fabioImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/fabio-hurni.jpg';
+import fabriceImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/fabrice-michaud.jpg';
 import flavienImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/flavien.jpeg';
 import francoiseImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/francoise.jpg';
 import gavriilImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/gavriil-tzortzakis.jpg';
@@ -44,10 +48,6 @@ import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon
 import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
 import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
 import willemijnImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/willemijn-de-gaay-fortman.jpeg';
-import alexandraImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/alexandra-andrist.jpg';
-import arieaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/ariea-burke.jpg';
-import fabioImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/fabio-hurni.jpg';
-import fabriceImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/fabrice-michaud.jpg';
 
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
