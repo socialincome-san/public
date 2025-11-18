@@ -1,4 +1,4 @@
-resource "google_cloud_scheduler_job" "google_cloud_scheduler_job" {
+resource "google_cloud_scheduler_job" "google_cloud_scheduler_job_exchange_rate_import" {
   name        = "exchange-rate-import-job"
   description = "Imports exchange rates into DB every day at midnight"
   schedule    = "0 0 * * *" # Cron expression for daily execution
@@ -13,7 +13,7 @@ resource "google_cloud_scheduler_job" "google_cloud_scheduler_job" {
   }
 }
 
-resource "google_cloud_scheduler_job" "google_cloud_scheduler_job_post-finance-import" {
+resource "google_cloud_scheduler_job" "google_cloud_scheduler_job_post_finance_import" {
   name        = "post-finance-import-job"
   description = "Imports payment files into Firebase Storage and extracts payment events and contributions into DB every hour"
   schedule    = "0 * * * *" # Cron expression for hourly execution
