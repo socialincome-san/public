@@ -2,7 +2,7 @@ import { createWriteStream } from 'fs';
 import _ from 'lodash';
 import * as path from 'path';
 import PDFDocument from 'pdfkit';
-import { LANGUAGE_CODES, LanguageCode } from '../../../types/language';
+import { LanguageCode } from '../../../types/language';
 import { Translator } from '../../../utils/i18n';
 import { ContributionDonationEntry } from '../contribution/contribution.types';
 import { ContributorDonationCertificate } from '../contributor/contributor.types';
@@ -35,7 +35,7 @@ export class DonationCertificateWriter {
 		const contributionsByCurrency = await this.getContributionsByCurrency(this.contributions, this.year);
 
 		const translator = await Translator.getInstance({
-			language: LANGUAGE_CODES.find((l) => l === language) || 'en',
+			language,
 			namespaces: ['donation-certificate', 'countries'],
 		});
 

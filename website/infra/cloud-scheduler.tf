@@ -12,20 +12,3 @@ resource "google_cloud_scheduler_job" "google_cloud_scheduler_job_exchange_rate"
     }
   }
 }
-
-resource "google_cloud_scheduler_job" "google_cloud_scheduler_job_donation_certificate" {
-  name        = "donation-certificate-job"
-  description = "Creates donation certificates for last year"
-  schedule    = "0 0 2 1 *" # Cron expression for yearly execution on January 2nd
-  time_zone   = "UTC"
-
-  http_target {
-    http_method = "POST"
-    uri         = "https://${var.website_domain}/api/portal/v1/donation-certificates"
-    body        = "{}"
-
-    headers = {
-      "x-api-key" = var.scheduler_api_key
-    }
-  }
-}

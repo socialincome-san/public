@@ -9,10 +9,15 @@ import {
 	generateDonationCertificates,
 	getContributorOptions,
 } from '@/app/portal/server-actions/donation-certificates-actions';
+import {
+	DEFAULT_DONATION_CERTIFICATE_LANGUAGE as DEFAULT_LANGUAGE,
+	LanguageCode,
+} from '@socialincome/shared/src/types/language';
 import _ from 'lodash';
 import { useEffect, useState, useTransition } from 'react';
 
 const CURRENT_YEAR = new Date().getFullYear();
+const LANGUAGES: LanguageCode[] = ['en', 'de', 'fr', 'it'];
 export default function GenerateDonationCertificatesDialog({
 	open,
 	setOpen,
@@ -23,7 +28,7 @@ export default function GenerateDonationCertificatesDialog({
 	const [options, setOptions] = useState<MultiSelectOption[]>([]);
 	const [selectedContributors, setSelectedContributors] = useState<string[]>([]);
 	const [year, setYear] = useState<number>(CURRENT_YEAR - 1);
-	const [generateAll, setGenerateAll] = useState<boolean>(true);
+	const [language, setLanguage] = useState<LanguageCode | undefined>(DEFAULT_LANGUAGE);
 	const [isLoading, startTransition] = useTransition();
 	const [success, setSuccess] = useState<string | undefined>();
 	const [error, setError] = useState<string | undefined>();
@@ -33,7 +38,7 @@ export default function GenerateDonationCertificatesDialog({
 		if (contributors.success) {
 			setOptions(
 				contributors.data.map((c) => ({
-					label: `${c.firstName} ${c.lastName}`,
+					label: `${c.firstName} ${c.lastName} (${c.email})`,
 					value: c.id,
 				})),
 			);
@@ -44,7 +49,7 @@ export default function GenerateDonationCertificatesDialog({
 		setSuccess(undefined);
 		setError(undefined);
 		startTransition(async () => {
-			const result = await generateDonationCertificates(year, generateAll ? [] : selectedContributors);
+			const result = await generateDonationCertificates(year, selectedContributors, language);
 			if (!result.success) setError(result.error);
 			else setSuccess(result.data);
 		});
@@ -72,7 +77,7 @@ export default function GenerateDonationCertificatesDialog({
 								<SelectValue placeholder={'Select Year'} />
 							</SelectTrigger>
 							<SelectContent>
-								{_.range(CURRENT_YEAR - 5, CURRENT_YEAR + 6).map((year) => (
+								{_.range(CURRENT_YEAR - 5, CURRENT_YEAR + 1).map((year) => (
 									<SelectItem value={year.toString()} key={year}>
 										{year}
 									</SelectItem>
@@ -81,12 +86,35 @@ export default function GenerateDonationCertificatesDialog({
 						</Select>
 					</div>
 					<div className="flex flex-col gap-2">
+						<p className="font-medium">Language</p>
+						<p className="text-muted-foreground mb-1 text-xs">
+							Specify for which language the certificate(s) should be generated in:
+						</p>
+						<Select value={language} disabled={!language} onValueChange={(l) => setLanguage(l as LanguageCode)}>
+							<SelectTrigger>
+								<SelectValue placeholder={'Select language'} />
+							</SelectTrigger>
+							<SelectContent>
+								{LANGUAGES.map((language) => (
+									<SelectItem value={language} key={language}>
+										{language}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+						<div className="flex flex-row gap-4">
+							<Switch onCheckedChange={(checked) => setLanguage(checked ? undefined : DEFAULT_LANGUAGE)} />
+							<p className="text-muted-foreground mb-1 text-sm">
+								Create certificate in contributor language if available (&quot;{DEFAULT_LANGUAGE}&quot; as fallback)
+							</p>
+						</div>
+					</div>
+					<div className="flex flex-col gap-2">
 						<p className="font-medium">Contributors</p>
 						<p className="text-muted-foreground mb-1 text-xs">
 							Select Contributors certificates should be generated for
 						</p>
 						<MultiSelect
-							disabled={generateAll}
 							modalPopover
 							hideSelectAll
 							variant={'default'}
@@ -94,13 +122,9 @@ export default function GenerateDonationCertificatesDialog({
 							onValueChange={setSelectedContributors}
 							placeholder="Select contributors"
 						/>
-						<div className="flex flex-row gap-4">
-							<Switch onCheckedChange={setGenerateAll} checked={generateAll} />
-							<p className="text-muted-foreground mb-1 text-sm">Create certificate for all contributor in CH</p>
-						</div>
 					</div>
 					<Button
-						disabled={isLoading}
+						disabled={isLoading || !selectedContributors.length}
 						className="flex w-full items-center justify-center gap-2"
 						onClick={() => generateCertificates()}
 					>
