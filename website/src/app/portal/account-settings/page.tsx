@@ -1,4 +1,4 @@
-import { OrganizationSwitcher } from '@/app/portal/(routes)/(protected)/account-settings/organization-switcher';
+import { OrganizationSwitcher } from '@/app/portal/account-settings/organization-switcher';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { setActiveOrganizationAction } from '@/lib/server-actions/set-active-organization-action';
 

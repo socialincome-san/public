@@ -1,4 +1,4 @@
-import { PayoutsTableClient } from '@/app/portal/(routes)/(protected)/delivery/make-payouts/payouts-table-client';
+import { PayoutsTableClient } from '@/app/portal/delivery/make-payouts/payouts-table-client';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
 import type { PayoutTableViewRow } from '@socialincome/shared/src/database/services/payout/payout.types';

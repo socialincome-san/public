@@ -1,10 +1,10 @@
-'use client';
-
-import { redirect } from 'next/navigation';
-import { useEffect } from 'react';
+import { Suspense } from 'react';
+import { AccountRedirect } from './account-redirect';
 
 export default function Page() {
-	useEffect(() => {
-		redirect('./me/contributions');
-	}, []);
+	return (
+		<Suspense fallback={<div>Detecting account type...</div>}>
+			<AccountRedirect />
+		</Suspense>
+	);
 }
