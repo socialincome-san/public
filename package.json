@@ -72,6 +72,6 @@
 		"typescript": "^5.7.2"
 	},
 	"dependencies": {
-		"glob": "^11.0.3"
+		"glob": "^11.1.0"
 	}
 }
