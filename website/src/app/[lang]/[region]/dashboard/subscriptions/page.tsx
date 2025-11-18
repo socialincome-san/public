@@ -1,9 +1,8 @@
-// app/[lang]/[region]/(website)/subscriptions/page.tsx
-import { DefaultLayoutProps } from '@/app/[lang]/[region]/index';
 import { Suspense } from 'react';
+import { DefaultPageProps } from '../..';
 import { SubscriptionsTable } from './subscriptions-table';
 
-export default async function SubscriptionsPage({ params }: DefaultLayoutProps) {
+export default async function Page({ params }: DefaultPageProps) {
 	return (
 		<Suspense fallback={<>Loading subscriptions...</>}>
 			<SubscriptionsTable />

@@ -9,7 +9,7 @@ import { DefaultLayoutProps } from '..';
 
 const ENABLE_PORTAL = process.env.NEXT_PUBLIC_FEATURE_ENABLE_PORTAL === 'true';
 
-export default async function DashboardLayout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
+export default async function Layout({ children, params }: PropsWithChildren<DefaultLayoutProps>) {
 	if (!ENABLE_PORTAL) notFound();
 
 	const { lang, region } = await params;
