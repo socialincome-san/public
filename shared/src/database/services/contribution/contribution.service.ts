@@ -1,4 +1,5 @@
 import { Contribution } from '@prisma/client';
+import { endOfYear, startOfYear } from 'date-fns';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
@@ -168,13 +169,13 @@ export class ContributionService extends BaseService {
 		year: number,
 	): Promise<ServiceResult<ContributionDonationEntry[]>> {
 		try {
+			const start = startOfYear(new Date(year, 0, 1));
+			const end = endOfYear(new Date(year, 0, 1));
+
 			const result = await this.db.contribution.findMany({
 				where: {
 					contributorId: { in: contributorsIds },
-					AND: [
-						{ createdAt: { gte: new Date(`${year}-01-01 00:00:00`) } },
-						{ createdAt: { lte: new Date(`${year}-12-31 23:59:59`) } },
-					],
+					AND: [{ createdAt: { gte: start } }, { createdAt: { lte: end } }],
 				},
 				select: {
 					contributorId: true,

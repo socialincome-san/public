@@ -203,11 +203,7 @@ export class ContributorService extends BaseService {
 	async getByIds(contributorIds?: string[]): Promise<ServiceResult<ContributorDonationCertificate[]>> {
 		try {
 			const result = await this.db.contributor.findMany({
-				where: contributorIds
-					? {
-							id: { in: contributorIds },
-						}
-					: undefined,
+				where: contributorIds && contributorIds.length > 0 ? { id: { in: contributorIds } } : {},
 				select: {
 					id: true,
 					account: true,

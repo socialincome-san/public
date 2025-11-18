@@ -20,7 +20,7 @@ export class DonationCertificateWriter {
 		this.contributions = contributions;
 	}
 
-	private getContributionsByCurrency = async (contributions: ContributionDonationEntry[], year: number) => {
+	private groupContributionsByCurrency = async (contributions: ContributionDonationEntry[], year: number) => {
 		return _(contributions)
 			.filter((contribution) => contribution.createdAt.getFullYear() === year)
 			.groupBy((contribution) => contribution.currency)
@@ -32,7 +32,7 @@ export class DonationCertificateWriter {
 	 * The function terminates when the PDF file has been written to the file at the given path.
 	 */
 	writeDonationCertificatePDF = async (filePath: string, language: LanguageCode) => {
-		const contributionsByCurrency = await this.getContributionsByCurrency(this.contributions, this.year);
+		const contributionsByCurrency = await this.groupContributionsByCurrency(this.contributions, this.year);
 
 		const translator = await Translator.getInstance({
 			language,
