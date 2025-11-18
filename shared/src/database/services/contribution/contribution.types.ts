@@ -65,3 +65,14 @@ export type PaymentEventCreateData = {
 	transactionId: string;
 	metadata?: Record<string, unknown>;
 };
+
+export type YourContributionsTableViewRow = {
+	createdAt: Date;
+	amount: number;
+	currency: string;
+	campaignTitle: string;
+};
+
+export type YourContributionsTableView = {
+	tableRows: YourContributionsTableViewRow[];
+};

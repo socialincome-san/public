@@ -1,5 +1,5 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[region]';
-import Navbar from '@/components/navbar/navbar';
+import Navbar from '@/components/legacy/navbar/navbar';
 import { getMetadata } from '@/metadata';
 import { PropsWithChildren } from 'react';
 

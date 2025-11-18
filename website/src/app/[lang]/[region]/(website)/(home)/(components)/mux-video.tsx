@@ -1,7 +1,7 @@
 'use client';
 
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { useNavbarBackground } from '@/components/navbar/useNavbarBackground';
+import { useNavbarBackground } from '@/components/legacy/navbar/useNavbarBackground';
 import { PauseIcon, PlayIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/24/solid';
 import MuxVideo from '@mux/mux-video-react';
 import { Button } from '@socialincome/ui';

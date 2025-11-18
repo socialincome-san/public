@@ -1,5 +1,5 @@
 import { QueryClientProvider } from '@/app/query-client-provider';
-import { AnalyticsInitializer } from '@/components/analytics/analytics-initializer';
+import { AnalyticsInitializer } from '@/components/legacy/analytics/analytics-initializer';
 import { ApiClientProvider } from '@/lib/api/api-client-provider';
 import { FirebaseAppProvider } from '@/lib/firebase/firebase-app-provider';
 import { I18nContextProvider } from '@/lib/i18n/i18n-context-provider';

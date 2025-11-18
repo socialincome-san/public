@@ -63,3 +63,10 @@ export type StripeContributorData = {
 	lastName: string;
 	referral: ContributorReferralSource;
 };
+
+export type ContributorSession = {
+	id: string;
+	firstName: string | null;
+	lastName: string | null;
+	stripeCustomerId: string | null;
+};

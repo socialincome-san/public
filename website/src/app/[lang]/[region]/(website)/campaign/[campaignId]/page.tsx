@@ -1,5 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { VimeoVideo } from '@/components/vimeo-video';
+import { VimeoVideo } from '@/components/legacy/vimeo-video';
 import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
 import { getMetadata } from '@/metadata';
 import { Campaign, CAMPAIGN_FIRESTORE_PATH, CampaignStatus } from '@socialincome/shared/src/types/campaign';
@@ -26,9 +26,9 @@ import {
 import { Progress } from '@socialincome/ui/src/components/progress';
 import Link from 'next/link';
 
-import { DonationInterval } from '@/components/donation/donation-interval';
-import { GenericDonationForm } from '@/components/donation/generic-donation-form';
-import NewsletterGlowContainer from '@/components/newsletter/glow-container/newsletter-glow-container';
+import { DonationInterval } from '@/components/legacy/donation/donation-interval';
+import { GenericDonationForm } from '@/components/legacy/donation/generic-donation-form';
+import NewsletterGlowContainer from '@/components/legacy/newsletter/glow-container/newsletter-glow-container';
 
 interface CampaignPageParams extends DefaultParams {
 	campaignId: string;

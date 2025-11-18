@@ -1,5 +1,5 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import Book from '@/components/ui/book';
+import Book from '@/components/legacy/ui/book';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer } from '@socialincome/ui';
 import book6cover from './(assets)/better.jpg';

@@ -1,6 +1,6 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
-import { I18nDialog } from '@/components/i18n-dialog';
-import { SILogo } from '@/components/logos/si-logo';
+import { I18nDialog } from '@/components/legacy/i18n-dialog';
+import { SILogo } from '@/components/legacy/logos/si-logo';
 import { GlobeEuropeAfricaIcon, LanguageIcon } from '@heroicons/react/24/solid';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Button } from '@socialincome/ui';

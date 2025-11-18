@@ -1,4 +1,4 @@
-import { PreviewIndicator } from '@/components/storyblok/PreviewIndicator';
+import { PreviewIndicator } from '@/components/legacy/storyblok/PreviewIndicator';
 import { ReactNode } from 'react';
 
 export default async function RootLayout({ children }: { children: ReactNode }) {

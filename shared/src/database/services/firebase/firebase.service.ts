@@ -36,7 +36,7 @@ export class FirebaseService extends BaseService {
 			});
 			return this.resultOk(userRecord);
 		} catch (error) {
-			console.error('Error creating user by phone number:', error);
+			this.logger.error('Error creating user by phone number:', { error });
 			return this.resultFail('Could not create auth user by phone number');
 		}
 	}
@@ -57,7 +57,7 @@ export class FirebaseService extends BaseService {
 			});
 			return this.resultOk(updatedUser);
 		} catch (error) {
-			console.error('Error fetching user by phone number:', error);
+			this.logger.error('Error updating user by phone number:', { oldPhoneNumber, newPhoneNumber, error });
 			return this.resultFail('Could not update auth user by phone number');
 		}
 	}
@@ -70,7 +70,7 @@ export class FirebaseService extends BaseService {
 			if (error?.code === 'auth/user-not-found') {
 				return this.resultOk(null);
 			}
-			console.error('Error getting user by phone number:', error);
+			this.logger.error('Error getting user by phone number:', { phoneNumber, error });
 			return this.resultFail('Auth user not found by phone number');
 		}
 	}
@@ -84,7 +84,7 @@ export class FirebaseService extends BaseService {
 			const updatedUser = await this.authAdmin.auth.updateUser(uid, updates);
 			return this.resultOk(updatedUser);
 		} catch (error) {
-			console.error(`Error updating user by UID ${uid}:`, error);
+			this.logger.error(`Error updating user by UID ${uid}:`, { uid, updates, error });
 			return this.resultFail('Could not update auth user by UID');
 		}
 	}
@@ -98,7 +98,7 @@ export class FirebaseService extends BaseService {
 			});
 			return this.resultOk(userRecord);
 		} catch (error) {
-			console.error('Error creating survey user:', error);
+			this.logger.error('Error creating survey user:', { email, error });
 			return this.resultFail('Could not create survey auth user');
 		}
 	}
@@ -108,7 +108,7 @@ export class FirebaseService extends BaseService {
 			const token = await this.authAdmin.auth.createCustomToken(uid);
 			return this.resultOk(token);
 		} catch (error) {
-			console.error('Error creating custom token:', error);
+			this.logger.error('Error creating custom token:', { uid, error });
 			return this.resultFail('Could not create custom token');
 		}
 	}
@@ -124,7 +124,7 @@ export class FirebaseService extends BaseService {
 			const decodedToken = await this.authAdmin.auth.verifyIdToken(token);
 			return this.resultOk(decodedToken);
 		} catch (error) {
-			console.error('Error verifying ID token:', error);
+			this.logger.error('Error verifying ID token:', { error });
 			return this.resultFail('Invalid or expired token');
 		}
 	}
@@ -164,5 +164,30 @@ export class FirebaseService extends BaseService {
 		} catch (error) {
 			return this.resultFail('Could not get or create Firebase Auth user');
 		}
+	}
+
+	async verifySessionCookie(cookie: string): Promise<ServiceResult<DecodedIdToken>> {
+		try {
+			const decoded = await this.authAdmin.auth.verifySessionCookie(cookie, true);
+			return this.resultOk(decoded);
+		} catch (error) {
+			this.logger.error('Error verifying session cookie:', { error });
+			return this.resultFail('Invalid or expired session cookie');
+		}
+	}
+
+	async getDecodedSessionFromRequest(request: Request): Promise<ServiceResult<DecodedIdToken>> {
+		const cookieHeader = request.headers.get('cookie');
+		if (!cookieHeader) {
+			return this.resultFail('Missing session cookie');
+		}
+
+		const match = cookieHeader.match(/session=([^;]+)/);
+		if (!match) {
+			return this.resultFail('Missing session cookie');
+		}
+
+		const cookie = match[1];
+		return this.verifySessionCookie(cookie);
 	}
 }

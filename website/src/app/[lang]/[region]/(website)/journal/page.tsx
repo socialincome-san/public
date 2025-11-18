@@ -1,13 +1,13 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
-import { MoreArticlesLink } from '@/components/storyblok/MoreArticlesLink';
+import { MoreArticlesLink } from '@/components/legacy/storyblok/MoreArticlesLink';
 import {
 	getAuthors,
 	getOverviewArticles,
 	getOverviewArticlesCountForDefaultLang,
 	getTags,
-} from '@/components/storyblok/StoryblokApi';
-import { StoryblokArticleCard } from '@/components/storyblok/StoryblokArticle';
-import StoryblokAuthorImage from '@/components/storyblok/StoryblokAuthorImage';
+} from '@/components/legacy/storyblok/StoryblokApi';
+import { StoryblokArticleCard } from '@/components/legacy/storyblok/StoryblokArticle';
+import StoryblokAuthorImage from '@/components/legacy/storyblok/StoryblokAuthorImage';
 import { defaultLanguage } from '@/lib/i18n/utils';
 import { storyblokInitializationWorkaround } from '@/storyblok-init';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
