@@ -100,7 +100,9 @@
 			"strategy": "Strategia",
 			"translations": "Traduzioni",
 			"research": "Ricerca",
-			"design": "Design"
+			"design": "Design",
+			"editorial": "Editoriale e Contenuti",
+			"socialmedia": "Social Media"
 		},
 		"groups": {
 			"staff": {

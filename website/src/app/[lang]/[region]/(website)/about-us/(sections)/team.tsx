@@ -10,7 +10,7 @@ import flavienImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/flav
 import francoiseImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/francoise.jpg';
 import gavriilImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/gavriil-tzortzakis.jpg';
 import innaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/inna-abdrakhmanova.jpeg';
-import jessicaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/jessica-freeman.jpeg';
+import jessicaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/jessica-freeman.jpg';
 import juanImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/juan.jpeg';
 import juliaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/julia.jpeg';
 import kabeloImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/kabelo.jpeg';
@@ -44,6 +44,10 @@ import simoneImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/simon
 import thomasImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/thomas.jpeg';
 import verenaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/verena.jpeg';
 import willemijnImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/willemijn-de-gaay-fortman.jpeg';
+import alexandraImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/alexandra-andrist.jpg';
+import arieaImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/ariea-burke.jpg';
+import fabioImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/fabio-hurni.jpg';
+import fabriceImage from '@/app/[lang]/[region]/(website)/about-us/(assets)/fabrice-michaud.jpg';
 
 import { WebsiteLanguage } from '@/lib/i18n/utils';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
@@ -82,23 +86,23 @@ const groups: Group[] = [
 			{ name: 'Sandino Scheidegger', role: 'founder', image: sandinoImage },
 			{ name: 'Kerrin Dieckmann', role: 'finance', image: kerrinImage },
 			{ name: 'Aurélie Schmiedlin', role: 'communications', image: aurelieImage },
-			{ name: 'Julia Bachmann', role: 'communications', image: juliaImage },
+			{ name: 'Julia Bachmann', role: 'socialmedia', image: juliaImage },
 			{ name: 'Riccardo Tamburini', role: 'communications', image: riccardoImage },
 			{ name: 'Michael Kündig', role: 'software-development', image: michaelImage },
 			{ name: 'Mikołaj Demkow', role: 'app-development', image: mikolajImage },
 			{ name: 'Verena Zaiser', role: 'app-development', image: verenaImage },
-			{ name: 'Pranav Chatur', role: 'software-development', image: pranavImage },
 			{ name: 'Matthew Roberts', role: 'communications', image: matthewImage },
 			{ name: 'Karin Berg', role: 'app-development', image: karinImage },
 			{ name: 'Marc Werner', role: 'research', image: marcImage },
 			{ name: 'Gavriil Tzortzakis', role: 'software-development', image: gavriilImage },
 			{ name: 'Patrick McClurg', role: 'software-development', image: patrickImage },
-			{ name: 'Katalin Holanyi', role: 'design', image: katalinImage },
 			{ name: 'Willemijn de Gaay Fortman', role: 'strategy', image: willemijnImage },
 			{ name: 'Lea Strohm', role: 'strategy', image: leaImage },
-			{ name: 'Marco Bohler', role: 'software-development', image: marcoImage },
 			{ name: 'Raphael Wirth', role: 'software-development', image: raphaelImage },
 			{ name: 'Jessica Freeman', role: 'fundraising', image: jessicaImage },
+			{ name: 'Alexandra Andrist', role: 'editorial', image: alexandraImage },
+			{ name: 'Ariea Burke', role: 'editorial', image: arieaImage },
+			{ name: 'Fabrice Michaud', role: 'software-development', image: fabriceImage },
 		],
 	},
 	{
@@ -107,7 +111,7 @@ const groups: Group[] = [
 		people: [
 			{ name: 'Kabelo Ruffo', role: 'co-president', image: kabeloImage },
 			{ name: 'Flavien Meyer', role: 'co-president', image: flavienImage },
-			{ name: 'Simone Huser', role: 'board-member', image: simoneImage },
+			{ name: 'Fabio Hurni', role: 'board-member', image: fabioImage },
 			{ name: 'Nina Limacher', role: 'board-member', image: ninaImage },
 			{ name: 'Marion Quartier', role: 'board-member', image: marionImage },
 		],
@@ -136,6 +140,10 @@ const groups: Group[] = [
 			{ name: 'Inna Abdrakhmanova', role: 'software-development', image: innaImage },
 			{ name: 'Alexey Shestakov', role: 'software-development', image: alexeyImage },
 			{ name: 'Françoise Légeret', role: 'translations', image: francoiseImage },
+			{ name: 'Marco Bohler', role: 'software-development', image: marcoImage },
+			{ name: 'Katalin Holanyi', role: 'design', image: katalinImage },
+			{ name: 'Pranav Chatur', role: 'software-development', image: pranavImage },
+			{ name: 'Simone Huser', role: 'board-member', image: simoneImage },
 		],
 	},
 ];
