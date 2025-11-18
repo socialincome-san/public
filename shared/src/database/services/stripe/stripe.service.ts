@@ -18,7 +18,13 @@ import { ContributorService } from '../contributor/contributor.service';
 import { StripeContributorData } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
-import { CheckoutMetadata, StripeCustomerData, WebhookResult } from './stripe.types';
+import {
+	CheckoutMetadata,
+	StripeCustomerData,
+	StripeSubscriptionRow,
+	StripeSubscriptionTableView,
+	WebhookResult,
+} from './stripe.types';
 export class StripeService extends BaseService {
 	private readonly stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { typescript: true });
 	private readonly contributorService = new ContributorService();
@@ -241,5 +247,65 @@ export class StripeService extends BaseService {
 		const firstName = parts[0];
 		const lastName = parts.slice(1).join(' '); // Handle multiple middle/last names
 		return { firstName, lastName };
+	}
+
+	async getSubscriptionsTableView(customerId: string | null): Promise<ServiceResult<StripeSubscriptionTableView>> {
+		try {
+			if (!customerId) {
+				return this.resultOk({ rows: [] });
+			}
+
+			const subscriptions = await this.stripe.subscriptions.list({
+				customer: customerId,
+				status: 'all',
+			});
+
+			const rows: StripeSubscriptionRow[] = subscriptions.data.map((sub) => {
+				const item = sub.items.data[0];
+				const price = item?.price;
+
+				const amount = price?.unit_amount ? price.unit_amount / 100 : 0;
+				const currency = price?.currency?.toUpperCase() ?? '';
+				const interval = price?.recurring?.interval_count?.toString() ?? '';
+
+				return {
+					id: sub.id,
+					from: new Date(sub.start_date * 1000),
+					until: sub.ended_at ? new Date(sub.ended_at * 1000) : new Date(sub.current_period_end * 1000),
+					status: sub.status,
+					amount,
+					interval,
+					currency,
+				};
+			});
+
+			return this.resultOk({ rows });
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not fetch subscriptions');
+		}
+	}
+
+	async createBillingPortalSession(stripeCustomerId: string | null): Promise<ServiceResult<string>> {
+		try {
+			if (!stripeCustomerId) {
+				return this.resultFail('Missing Stripe customer ID');
+			}
+
+			const session = await this.stripe.billingPortal.sessions.create({
+				customer: stripeCustomerId,
+				return_url: `${process.env.BASE_URL}/dashboard/subscriptions`,
+				locale: 'en',
+			});
+
+			if (!session.url) {
+				return this.resultFail('No billing portal URL returned');
+			}
+
+			return this.resultOk(session.url);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not create billing portal session');
+		}
 	}
 }

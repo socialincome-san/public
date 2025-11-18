@@ -8,14 +8,14 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/app/portal/components/dropdown-menu';
-import type { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
+import type { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
 import { ChevronDown, Wallet } from 'lucide-react';
 import Link from 'next/link';
 import { FC } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 type ProgramDropdownProps = {
-	user: UserInformation;
+	user: UserSession;
 	active?: boolean;
 	className?: string;
 };

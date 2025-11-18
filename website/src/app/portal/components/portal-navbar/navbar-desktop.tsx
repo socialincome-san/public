@@ -9,17 +9,17 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/app/portal/components/dropdown-menu';
-import { Logo } from '@/app/portal/components/logo';
-import { useNavbarLinks } from '@/app/portal/components/navbar/hooks/use-navbar-links';
-import { ProgramDropdown } from '@/app/portal/components/navbar/program-dropdown';
-import type { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
+import { useNavbarLinks } from '@/app/portal/components/portal-navbar/hooks/use-navbar-links';
+import { Logo } from '@/app/portal/components/portal-navbar/logo';
+import { ProgramDropdown } from '@/app/portal/components/portal-navbar/program-dropdown';
+import type { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
 import { ChevronsUpDown, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
 import { useLogout } from './hooks/use-logout';
 
-export const NavbarDesktop = ({ user }: { user: UserInformation }) => {
+export const NavbarDesktop = ({ user }: { user: UserSession }) => {
 	const pathname = usePathname();
 	const { mainNavLinks, userMenuNavLinks, isActiveLink } = useNavbarLinks(user);
 	const { logout } = useLogout();

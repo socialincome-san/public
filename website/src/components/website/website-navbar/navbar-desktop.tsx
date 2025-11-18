@@ -1,0 +1,85 @@
+'use client';
+
+import { Avatar, AvatarFallback } from '@/app/portal/components/avatar';
+import { Button } from '@/app/portal/components/button';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@/app/portal/components/dropdown-menu';
+import type { ContributorSession } from '@socialincome/shared/src/database/services/contributor/contributor.types';
+import Link from 'next/link';
+import { twMerge } from 'tailwind-merge';
+import { useLogout } from './hooks/use-logout';
+import { Logo } from './logo';
+
+export const NavbarDesktop = ({ contributor }: { contributor?: ContributorSession }) => {
+	const { logout } = useLogout();
+
+	const mainLinks = [{ href: '/', label: 'Back to Website' }];
+
+	return (
+		<nav className="container mt-6 flex h-20 items-center justify-between rounded-full bg-white">
+			<Link href="/">
+				<Logo />
+			</Link>
+
+			{/* MAIN NAV LINKS */}
+			<div className="flex items-center gap-x-4">
+				<nav className="flex items-center gap-4">
+					{mainLinks.map(({ href, label }) => (
+						<Link
+							key={href}
+							href={href}
+							className={twMerge(
+								'text-primary hover:bg-accent relative rounded-md px-3 py-2 text-lg font-medium transition-colors duration-200',
+							)}
+						>
+							{label}
+						</Link>
+					))}
+				</nav>
+			</div>
+
+			{/* USER MENU */}
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<Button variant="outline" className="flex h-12 items-center gap-2 rounded-full px-3">
+						<Avatar>
+							<AvatarFallback className="bg-primary text-background">
+								{contributor?.firstName?.[0]}
+								{contributor?.lastName?.[0]}
+							</AvatarFallback>
+						</Avatar>
+						<div className="text-left">
+							<p className="text-sm font-medium">
+								{contributor?.firstName} {contributor?.lastName}
+							</p>
+							<p className="text-muted-foreground text-xs">Contributor</p>
+						</div>
+					</Button>
+				</DropdownMenuTrigger>
+
+				<DropdownMenuContent align="end" className="w-64">
+					<DropdownMenuItem asChild>
+						<Link href="/contributor/profile">Profil</Link>
+					</DropdownMenuItem>
+
+					<DropdownMenuSeparator />
+
+					<DropdownMenuItem
+						onSelect={(e) => {
+							e.preventDefault();
+							logout();
+						}}
+						className="text-destructive focus:text-destructive"
+					>
+						<span>Logout</span>
+					</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenu>
+		</nav>
+	);
+};

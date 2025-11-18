@@ -34,3 +34,17 @@ export type WebhookResult = {
 	isNewContributor?: boolean;
 	skipReason?: string;
 };
+
+export type StripeSubscriptionRow = {
+	id: string;
+	from: Date;
+	until: Date;
+	status: string;
+	amount: number;
+	interval: string;
+	currency: string;
+};
+
+export type StripeSubscriptionTableView = {
+	rows: StripeSubscriptionRow[];
+};

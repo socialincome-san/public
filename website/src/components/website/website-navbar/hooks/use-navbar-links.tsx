@@ -1,4 +1,4 @@
-import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
+import { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
 import { LucideIcon, Settings, Settings2 } from 'lucide-react';
 
 export type NavLink = {
@@ -9,7 +9,7 @@ export type NavLink = {
 	isDropdown?: boolean;
 };
 
-export const useNavbarLinks = (user: UserInformation) => {
+export const useNavbarLinks = (user: UserSession) => {
 	const mainNavLinks: NavLink[] = [
 		{
 			href: '/portal/programs',

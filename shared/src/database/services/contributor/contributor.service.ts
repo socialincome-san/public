@@ -6,6 +6,7 @@ import { OrganizationAccessService } from '../organization-access/organization-a
 import {
 	ContributorOption,
 	ContributorPayload,
+	ContributorSession,
 	ContributorTableView,
 	ContributorTableViewRow,
 	ContributorUpdateInput,
@@ -370,6 +371,40 @@ export class ContributorService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not update contributor Stripe customer ID');
+		}
+	}
+
+	async getCurrentContributorSession(firebaseAuthUserId: string): Promise<ServiceResult<ContributorSession>> {
+		try {
+			const contributor = await this.db.contributor.findFirst({
+				where: { account: { firebaseAuthUserId } },
+				select: {
+					id: true,
+					stripeCustomerId: true,
+					contact: {
+						select: {
+							firstName: true,
+							lastName: true,
+						},
+					},
+				},
+			});
+
+			if (!contributor) {
+				return this.resultFail('Contributor not found');
+			}
+
+			const session: ContributorSession = {
+				id: contributor.id,
+				firstName: contributor.contact?.firstName ?? null,
+				lastName: contributor.contact?.lastName ?? null,
+				stripeCustomerId: contributor.stripeCustomerId ?? null,
+			};
+
+			return this.resultOk(session);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not fetch contributor session');
 		}
 	}
 }

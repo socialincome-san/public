@@ -3,11 +3,11 @@
 import { Button } from '@/app/portal/components/button';
 import { Label } from '@/app/portal/components/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/portal/components/select';
-import type { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
+import type { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
 import { FC, useState, useTransition } from 'react';
 
 type OrganizationSwitcherProps = {
-	user: UserInformation;
+	user: UserSession;
 	setActiveOrganizationAction: (orgId: string) => Promise<void>;
 };
 

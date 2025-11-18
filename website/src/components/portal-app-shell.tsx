@@ -1,14 +1,14 @@
-import { Navbar } from '@/app/portal/components/navbar/navbar';
-import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
+import { Navbar } from '@/app/portal/components/portal-navbar/navbar';
+import { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
 
 import { ReactNode } from 'react';
 
-type AppShellProps = {
+type PortalAppShellProps = {
 	children: ReactNode;
-	user?: UserInformation;
+	user?: UserSession;
 };
 
-export function AppShell({ children, user }: AppShellProps) {
+export function PortalAppShell({ children, user }: PortalAppShellProps) {
 	return (
 		<div className="text-primary flex min-h-screen w-full flex-col bg-gradient-to-br from-[hsl(var(--gradient-background-from))] to-[hsl(var(--gradient-background-to))] bg-fixed">
 			{user && <Navbar user={user} />}

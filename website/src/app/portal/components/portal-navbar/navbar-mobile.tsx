@@ -3,17 +3,17 @@
 import { Avatar, AvatarFallback } from '@/app/portal/components/avatar';
 import { Separator } from '@/app/portal/components/breadcrumb/separator';
 import { Button } from '@/app/portal/components/button';
-import { Logo } from '@/app/portal/components/logo';
-import { useLogout } from '@/app/portal/components/navbar/hooks/use-logout';
-import { ProgramDropdown } from '@/app/portal/components/navbar/program-dropdown';
-import { UserInformation } from '@socialincome/shared/src/database/services/user/user.types';
+import { useLogout } from '@/app/portal/components/portal-navbar/hooks/use-logout';
+import { Logo } from '@/app/portal/components/portal-navbar/logo';
+import { ProgramDropdown } from '@/app/portal/components/portal-navbar/program-dropdown';
+import { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useNavbarLinks } from './hooks/use-navbar-links';
 
-export const NavbarMobile = ({ user }: { user: UserInformation }) => {
+export const NavbarMobile = ({ user }: { user: UserSession }) => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const pathname = usePathname();
 	const { mainNavLinks, userMenuNavLinks, isActiveLink } = useNavbarLinks(user);
