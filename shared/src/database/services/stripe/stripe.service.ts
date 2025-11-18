@@ -286,7 +286,7 @@ export class StripeService extends BaseService {
 		}
 	}
 
-	async createBillingPortalSession(stripeCustomerId: string | null): Promise<ServiceResult<string>> {
+	async createManageSubscriptionsSession(stripeCustomerId: string | null): Promise<ServiceResult<string>> {
 		try {
 			if (!stripeCustomerId) {
 				return this.resultFail('Missing Stripe customer ID');
@@ -306,6 +306,58 @@ export class StripeService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not create billing portal session');
+		}
+	}
+
+	async createCheckoutSession(data: {
+		amount: number;
+		successUrl: string;
+		recurring?: boolean;
+		currency?: string;
+		intervalCount?: number;
+		stripeCustomerId?: string | null;
+		campaignId?: string;
+	}): Promise<ServiceResult<string>> {
+		try {
+			const {
+				amount,
+				currency = 'USD',
+				intervalCount = 1,
+				successUrl,
+				recurring = false,
+				stripeCustomerId,
+				campaignId,
+			} = data;
+
+			const price = await this.stripe.prices.create({
+				active: true,
+				unit_amount: amount,
+				currency: currency.toLowerCase(),
+				product: recurring ? process.env.STRIPE_PRODUCT_RECURRING : process.env.STRIPE_PRODUCT_ONETIME,
+				recurring: recurring ? { interval: 'month', interval_count: intervalCount } : undefined,
+			});
+
+			const metadata = campaignId ? { campaignId } : undefined;
+
+			const session = await this.stripe.checkout.sessions.create({
+				mode: recurring ? 'subscription' : 'payment',
+				customer: stripeCustomerId || undefined,
+				customer_creation: stripeCustomerId ? undefined : recurring ? undefined : 'always',
+				line_items: [
+					{
+						price: price.id,
+						quantity: 1,
+					},
+				],
+				success_url: successUrl,
+				locale: 'auto',
+				metadata,
+			});
+
+			return this.resultOk(session.url ?? '');
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not create Stripe checkout session');
 		}
 	}
 }
