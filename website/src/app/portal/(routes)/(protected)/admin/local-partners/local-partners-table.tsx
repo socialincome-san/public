@@ -1,10 +1,10 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/app/portal/components/alert';
-import { Button } from '@/app/portal/components/button';
-import { makeLocalPartnerColumns } from '@/app/portal/components/data-table/columns/local-partners';
-import DataTable from '@/app/portal/components/data-table/data-table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
+import { Button } from '@/components/button';
+import { makeLocalPartnerColumns } from '@/components/data-table/columns/local-partners';
+import DataTable from '@/components/data-table/data-table';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import type { LocalPartnerTableViewRow } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
 import { logger } from '@socialincome/shared/src/utils/logger';
 import { useState } from 'react';

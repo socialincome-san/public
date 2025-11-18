@@ -1,5 +1,5 @@
-import { makeProgramMembersColumns } from '@/app/portal/components/data-table/columns/program-members';
-import DataTable from '@/app/portal/components/data-table/data-table';
+import { makeProgramMembersColumns } from '@/components/data-table/columns/program-members';
+import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { OrganizationMemberTableViewRow } from '@socialincome/shared/src/database/services/organization/organization.types';
 import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';

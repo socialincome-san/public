@@ -1,9 +1,9 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/app/portal/components/alert';
-import { makeContributionsColumns } from '@/app/portal/components/data-table/columns/contributions';
-import DataTable from '@/app/portal/components/data-table/data-table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
+import { makeContributionsColumns } from '@/components/data-table/columns/contributions';
+import DataTable from '@/components/data-table/data-table';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { ContributionTableViewRow } from '@socialincome/shared/src/database/services/contribution/contribution.types';
 import { logger } from '@socialincome/shared/src/utils/logger';
 import { useState } from 'react';

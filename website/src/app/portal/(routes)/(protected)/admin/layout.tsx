@@ -1,6 +1,6 @@
-import { Breadcrumb } from '@/app/portal/components/breadcrumb/breadcrumb';
-import { Card } from '@/app/portal/components/card';
-import { TabNavigation } from '@/app/portal/components/tab-navigation';
+import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
+import { Card } from '@/components/card';
+import { TabNavigation } from '@/components/tab-navigation';
 
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { ReactNode } from 'react';

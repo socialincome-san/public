@@ -1,8 +1,8 @@
-import { Button } from '@/app/portal/components/button';
-import DataTable from '@/app/portal/components/data-table/data-table';
+import { Button } from '@/components/button';
+import DataTable from '@/components/data-table/data-table';
 import Link from 'next/link';
 
-import { makeYourStripeSubscriptionsColumns } from '@/app/portal/components/data-table/columns/your-stripe-subscriptions';
+import { makeYourStripeSubscriptionsColumns } from '@/components/data-table/columns/your-stripe-subscriptions';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { StripeService } from '@socialincome/shared/src/database/services/stripe/stripe.service';
 import { StripeSubscriptionRow } from '@socialincome/shared/src/database/services/stripe/stripe.types';

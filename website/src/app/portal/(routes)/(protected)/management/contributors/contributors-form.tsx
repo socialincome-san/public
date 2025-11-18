@@ -1,9 +1,9 @@
 'use client';
 
-import { getContributorAction, updateContributorAction } from '@/app/portal/server-actions/contributor-actions';
 import { getFormSchema as getContactFormSchema } from '@/components/legacy/dynamic-form/contact-form-schemas';
 import DynamicForm, { FormField, FormSchema } from '@/components/legacy/dynamic-form/dynamic-form';
 import { getContactValuesFromPayload } from '@/components/legacy/dynamic-form/helper';
+import { getContributorAction, updateContributorAction } from '@/lib/server-actions/contributor-actions';
 import { ContributorReferralSource } from '@prisma/client';
 import {
 	ContributorPayload,

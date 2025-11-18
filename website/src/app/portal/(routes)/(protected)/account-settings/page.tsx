@@ -1,6 +1,6 @@
 import { OrganizationSwitcher } from '@/app/portal/(routes)/(protected)/account-settings/organization-switcher';
-import { setActiveOrganizationAction } from '@/app/portal/server-actions/set-active-organization-action';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
+import { setActiveOrganizationAction } from '@/lib/server-actions/set-active-organization-action';
 
 export default async function AccountSettingsPage() {
 	const user = await getAuthenticatedUserOrRedirect();

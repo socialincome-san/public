@@ -1,13 +1,13 @@
 'use client';
 
+import DynamicForm, { FormField } from '@/components/legacy/dynamic-form/dynamic-form';
+import { getZodEnum } from '@/components/legacy/dynamic-form/helper';
 import {
 	createSurveyAction,
 	getSurveyAction,
 	getSurveyRecipientOptionsAction,
 	updateSurveyAction,
-} from '@/app/portal/server-actions/survey-actions';
-import DynamicForm, { FormField } from '@/components/legacy/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/legacy/dynamic-form/helper';
+} from '@/lib/server-actions/survey-actions';
 import { SurveyQuestionnaire, SurveyStatus } from '@prisma/client';
 import type { RecipientOption } from '@socialincome/shared/src/database/services/recipient/recipient.types';
 import type { SurveyPayload } from '@socialincome/shared/src/database/services/survey/survey.types';

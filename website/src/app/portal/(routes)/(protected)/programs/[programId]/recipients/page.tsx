@@ -1,4 +1,4 @@
-import { RecipientsTableClient } from '@/app/portal/components/data-table/clients/recipients-table-client';
+import { RecipientsTableClient } from '@/components/data-table/clients/recipients-table-client';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { RecipientService } from '@socialincome/shared/src/database/services/recipient/recipient.service';
 import type { RecipientTableViewRow } from '@socialincome/shared/src/database/services/recipient/recipient.types';

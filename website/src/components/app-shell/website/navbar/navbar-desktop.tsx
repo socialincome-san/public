@@ -1,14 +1,14 @@
 'use client';
 
-import { Avatar, AvatarFallback } from '@/app/portal/components/avatar';
-import { Button } from '@/app/portal/components/button';
+import { Avatar, AvatarFallback } from '@/components/avatar';
+import { Button } from '@/components/button';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@/app/portal/components/dropdown-menu';
+} from '@/components/dropdown-menu';
 import type { ContributorSession } from '@socialincome/shared/src/database/services/contributor/contributor.types';
 import Link from 'next/link';
 import { twMerge } from 'tailwind-merge';

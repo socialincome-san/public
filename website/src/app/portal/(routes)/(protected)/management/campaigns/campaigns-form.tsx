@@ -1,13 +1,13 @@
 'use client';
 
+import DynamicForm from '@/components/legacy/dynamic-form/dynamic-form';
+import { getZodEnum } from '@/components/legacy/dynamic-form/helper';
 import {
 	createCampaignsAction,
 	getCampaignsAction,
 	getProgramsOptions,
 	updateCampaignsAction,
-} from '@/app/portal/server-actions/campaigns-actions';
-import DynamicForm from '@/components/legacy/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/legacy/dynamic-form/helper';
+} from '@/lib/server-actions/campaigns-actions';
 import {
 	CampaignsCreateInput,
 	CampaignsUpdateInput,

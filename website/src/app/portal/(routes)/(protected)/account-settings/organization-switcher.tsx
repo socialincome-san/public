@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from '@/app/portal/components/button';
-import { Label } from '@/app/portal/components/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/portal/components/select';
+import { Button } from '@/components/button';
+import { Label } from '@/components/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select';
 import type { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
 import { FC, useState, useTransition } from 'react';
 

@@ -1,5 +1,5 @@
-import { makePayoutForecastColumns } from '@/app/portal/components/data-table/columns/payout-forecast';
-import DataTable from '@/app/portal/components/data-table/data-table';
+import { makePayoutForecastColumns } from '@/components/data-table/columns/payout-forecast';
+import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { PayoutService } from '@socialincome/shared/src/database/services/payout/payout.service';
 

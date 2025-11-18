@@ -1,10 +1,10 @@
 'use client';
 
-import { Alert, AlertDescription, AlertTitle } from '@/app/portal/components/alert';
-import { Button } from '@/app/portal/components/button';
-import { makeCampaignColumns } from '@/app/portal/components/data-table/columns/campaigns';
-import DataTable from '@/app/portal/components/data-table/data-table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert';
+import { Button } from '@/components/button';
+import { makeCampaignColumns } from '@/components/data-table/columns/campaigns';
+import DataTable from '@/components/data-table/data-table';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/dialog';
 import { CampaignTableViewRow } from '@socialincome/shared/src/database/services/campaign/campaign.types';
 import { logger } from '@socialincome/shared/src/utils/logger';
 import { useState } from 'react';

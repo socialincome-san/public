@@ -1,6 +1,6 @@
-import { Button } from '@/app/portal/components/button';
-import { makeYourContributionsColumns } from '@/app/portal/components/data-table/columns/your-contributions';
-import DataTable from '@/app/portal/components/data-table/data-table';
+import { Button } from '@/components/button';
+import { makeYourContributionsColumns } from '@/components/data-table/columns/your-contributions';
+import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { ContributionService } from '@socialincome/shared/src/database/services/contribution/contribution.service';
 import { YourContributionsTableViewRow } from '@socialincome/shared/src/database/services/contribution/contribution.types';

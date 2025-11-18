@@ -1,5 +1,5 @@
-import { makeOrganizationAdminColumns } from '@/app/portal/components/data-table/columns/organizations';
-import DataTable from '@/app/portal/components/data-table/data-table';
+import { makeOrganizationAdminColumns } from '@/components/data-table/columns/organizations';
+import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect, requireAdmin } from '@/lib/firebase/current-user';
 import { OrganizationService } from '@socialincome/shared/src/database/services/organization/organization.service';
 import type { OrganizationTableViewRow } from '@socialincome/shared/src/database/services/organization/organization.types';

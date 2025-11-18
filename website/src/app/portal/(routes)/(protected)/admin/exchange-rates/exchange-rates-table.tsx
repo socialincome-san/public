@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@/app/portal/components/button';
-import { makeExchangeRatesColumns } from '@/app/portal/components/data-table/columns/exchange-rates';
-import DataTable from '@/app/portal/components/data-table/data-table';
-import { importExchangeRatesAction } from '@/app/portal/server-actions/exchange-rates-actions';
+import { Button } from '@/components/button';
+import { makeExchangeRatesColumns } from '@/components/data-table/columns/exchange-rates';
+import DataTable from '@/components/data-table/data-table';
+import { importExchangeRatesAction } from '@/lib/server-actions/exchange-rates-actions';
 import { ExchangeRatesTableViewRow } from '@socialincome/shared/src/database/services/exchange-rate/exchange-rate.types';
 import { useState, useTransition } from 'react';
 

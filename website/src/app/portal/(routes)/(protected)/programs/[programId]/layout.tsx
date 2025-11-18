@@ -1,10 +1,10 @@
-import { Card } from '@/app/portal/components/card';
-import { TabNavigation } from '@/app/portal/components/tab-navigation';
+import { Card } from '@/components/card';
+import { TabNavigation } from '@/components/tab-navigation';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
 
-import { CountryBadge } from '@/app/portal/components/badges/country-badge';
-import { Breadcrumb } from '@/app/portal/components/breadcrumb/breadcrumb';
+import { CountryBadge } from '@/components/badges/country-badge';
+import { Breadcrumb } from '@/components/breadcrumb/breadcrumb';
 import { ReactNode } from 'react';
 
 type ProgramLayoutProps = {

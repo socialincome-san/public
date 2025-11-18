@@ -1,5 +1,5 @@
-import { makeSurveyColumns } from '@/app/portal/components/data-table/columns/surveys';
-import DataTable from '@/app/portal/components/data-table/data-table';
+import { makeSurveyColumns } from '@/components/data-table/columns/surveys';
+import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { SurveyService } from '@socialincome/shared/src/database/services/survey/survey.service';
 

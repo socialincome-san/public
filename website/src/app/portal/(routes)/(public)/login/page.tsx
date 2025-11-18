@@ -1,4 +1,4 @@
-import { Button } from '@/app/portal/components/button';
+import { Button } from '@/components/button';
 import Link from 'next/link';
 
 export default async function Page() {

@@ -1,4 +1,4 @@
-import { Wallet } from '@/app/portal/components/wallet';
+import { Wallet } from '@/components/wallet';
 import { ProgramPermission } from '@prisma/client';
 import { ProgramService } from '@socialincome/shared/src/database/services/program/program.service';
 

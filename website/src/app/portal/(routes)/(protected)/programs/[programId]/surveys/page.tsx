@@ -1,6 +1,6 @@
-import { Button } from '@/app/portal/components/button';
-import { makeSurveyColumns } from '@/app/portal/components/data-table/columns/surveys';
-import DataTable from '@/app/portal/components/data-table/data-table';
+import { Button } from '@/components/button';
+import { makeSurveyColumns } from '@/components/data-table/columns/surveys';
+import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { SurveyService } from '@socialincome/shared/src/database/services/survey/survey.service';
 import type { SurveyTableViewRow } from '@socialincome/shared/src/database/services/survey/survey.types';

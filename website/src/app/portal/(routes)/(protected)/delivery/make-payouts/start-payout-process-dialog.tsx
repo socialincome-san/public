@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@/app/portal/components/button';
-import { DatePicker } from '@/app/portal/components/date-picker';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
-import { StepResultBox } from '@/app/portal/components/step-result-box';
+import { Button } from '@/components/button';
+import { DatePicker } from '@/components/date-picker';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
+import { StepResultBox } from '@/components/step-result-box';
 import {
 	generateCurrentMonthPayoutsAction,
 	generatePayoutCsvAction,
@@ -11,7 +11,7 @@ import {
 	markCompletedRecipientsAsFormerAction,
 	previewCompletedRecipientsAction,
 	previewCurrentMonthPayoutsAction,
-} from '@/app/portal/server-actions/payout-actions';
+} from '@/lib/server-actions/payout-actions';
 import { format } from 'date-fns';
 import { CalendarIcon, EyeIcon, PlayIcon, TableIcon, UserCheckIcon } from 'lucide-react';
 import { useState } from 'react';

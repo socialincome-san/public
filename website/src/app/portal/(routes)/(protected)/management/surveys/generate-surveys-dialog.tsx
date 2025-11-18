@@ -1,9 +1,9 @@
 'use client';
 
-import { Button } from '@/app/portal/components/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/app/portal/components/dialog';
-import { StepResultBox } from '@/app/portal/components/step-result-box';
-import { generateSurveysAction, previewSurveyGenerationAction } from '@/app/portal/server-actions/survey-actions';
+import { Button } from '@/components/button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog';
+import { StepResultBox } from '@/components/step-result-box';
+import { generateSurveysAction, previewSurveyGenerationAction } from '@/lib/server-actions/survey-actions';
 import { EyeIcon, PlayIcon } from 'lucide-react';
 import { useState } from 'react';
 

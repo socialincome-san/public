@@ -1,13 +1,13 @@
 'use client';
 
+import { getFormSchema as getContactFormSchema } from '@/components/legacy/dynamic-form/contact-form-schemas';
+import DynamicForm, { FormField, FormSchema } from '@/components/legacy/dynamic-form/dynamic-form';
+import { getContactValuesFromPayload } from '@/components/legacy/dynamic-form/helper';
 import {
 	createLocalPartnerAction,
 	getLocalPartnerAction,
 	updateLocalPartnerAction,
-} from '@/app/portal/server-actions/local-partner-action';
-import { getFormSchema as getContactFormSchema } from '@/components/legacy/dynamic-form/contact-form-schemas';
-import DynamicForm, { FormField, FormSchema } from '@/components/legacy/dynamic-form/dynamic-form';
-import { getContactValuesFromPayload } from '@/components/legacy/dynamic-form/helper';
+} from '@/lib/server-actions/local-partner-action';
 import { LocalPartnerPayload } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';

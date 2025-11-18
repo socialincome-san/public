@@ -1,6 +1,6 @@
-import { Button } from '@/app/portal/components/button';
-import { makeDonationCertificateColumns } from '@/app/portal/components/data-table/columns/donation-certificates';
-import DataTable from '@/app/portal/components/data-table/data-table';
+import { Button } from '@/components/button';
+import { makeDonationCertificateColumns } from '@/components/data-table/columns/donation-certificates';
+import DataTable from '@/components/data-table/data-table';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import { DonationCertificateService } from '@socialincome/shared/src/database/services/donation-certificate/donation-certificate.service';
 import type { DonationCertificateTableViewRow } from '@socialincome/shared/src/database/services/donation-certificate/donation-certificate.types';

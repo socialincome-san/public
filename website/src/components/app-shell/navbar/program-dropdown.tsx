@@ -1,13 +1,13 @@
 'use client';
 
-import { Button } from '@/app/portal/components/button';
+import { Button } from '@/components/button';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@/app/portal/components/dropdown-menu';
+} from '@/components/dropdown-menu';
 import type { UserSession } from '@socialincome/shared/src/database/services/user/user.types';
 import { ChevronDown, Wallet } from 'lucide-react';
 import Link from 'next/link';
