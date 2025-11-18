@@ -30,7 +30,7 @@ const getCurrentUser = cache(loadCurrentUser);
 export async function getAuthenticatedUserOrRedirect(): Promise<UserSession> {
 	const user = await getCurrentUser();
 	if (!user) {
-		redirect('/portal/login');
+		redirect('/login');
 	}
 	return user;
 }

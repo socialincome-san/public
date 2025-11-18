@@ -22,7 +22,7 @@ export const useLogout = () => {
 				logger.error('Firebase sign-out error', { error: err });
 			});
 
-			router.push('/portal/login');
+			router.push('/login');
 		} catch (error) {
 			logger.error('Logout error', { error });
 		}
