@@ -8,7 +8,7 @@ type Params = Promise<{ payoutId: string }>;
  * Confirm payout
  * @description Marks a specific payout as confirmed by the authenticated recipient.
  * @auth BearerAuth
- * @param {string} payoutId - The ID of the payout to retrieve (path parameter)
+ * @pathParams PayoutParams
  * @response Payout
  * @openapi
  */

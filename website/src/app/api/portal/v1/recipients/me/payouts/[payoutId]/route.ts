@@ -8,7 +8,7 @@ type Params = Promise<{ payoutId: string }>;
  * Get payout by ID
  * @description Returns a specific payout belonging to the authenticated recipient.
  * @auth BearerAuth
- * @param {string} payoutId - The ID of the payout to retrieve (path parameter)
+ * @pathParams PayoutParams
  * @response Payout
  * @openapi
  */
