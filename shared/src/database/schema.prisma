@@ -194,12 +194,12 @@ model DonationCertificate {
   contributorId     String      @map("contributor_id")
   contributor       Contributor @relation(fields: [contributorId], references: [id])
   year              Int         @map("year")
+  language          String?     @map("language")
   storagePath       String      @map("storage_path")
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  @@unique([contributorId, year])
   @@map("donation_certificate")
 }
 
