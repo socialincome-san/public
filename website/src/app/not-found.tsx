@@ -1,4 +1,4 @@
-import Navbar from '@/components/navbar/navbar';
+import Navbar from '@/components/legacy/navbar/navbar';
 import { linkCn, Typography } from '@socialincome/ui';
 import Link from 'next/link';
 

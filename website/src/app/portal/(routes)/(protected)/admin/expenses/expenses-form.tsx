@@ -6,8 +6,8 @@ import {
 	getExpenseOptionsAction,
 	updateExpenseAction,
 } from '@/app/portal/server-actions/expense-action';
-import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import DynamicForm, { FormField } from '@/components/legacy/dynamic-form/dynamic-form';
+import { getZodEnum } from '@/components/legacy/dynamic-form/helper';
 import { ExpenseType } from '@prisma/client';
 import { ExpensePayload } from '@socialincome/shared/src/database/services/expense/expense.types';
 import { useEffect, useState, useTransition } from 'react';

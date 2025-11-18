@@ -1,6 +1,6 @@
 import { Card } from '@/app/portal/components/card';
 import { TabNavigation } from '@/app/portal/components/tab-navigation';
-import { WebsiteAppShell } from '@/components/website/website-app-shell';
+import { WebsiteAppShell } from '@/components/app-shell/website/app-shell';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import type { PropsWithChildren } from 'react';

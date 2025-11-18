@@ -1,8 +1,8 @@
 import { DefaultPageProps } from '@/app/[lang]/[region]';
+import { FAQSection } from '@/components/legacy/faq/faq-section';
 import { getMetadata } from '@/metadata';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { BaseContainer, Typography } from '@socialincome/ui';
-import { FAQSection } from '../../../../../components/faq/faq-section';
 
 export async function generateMetadata(props: DefaultPageProps) {
 	const params = await props.params;

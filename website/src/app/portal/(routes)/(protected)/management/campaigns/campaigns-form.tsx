@@ -6,8 +6,8 @@ import {
 	getProgramsOptions,
 	updateCampaignsAction,
 } from '@/app/portal/server-actions/campaigns-actions';
-import DynamicForm from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import DynamicForm from '@/components/legacy/dynamic-form/dynamic-form';
+import { getZodEnum } from '@/components/legacy/dynamic-form/helper';
 import {
 	CampaignsCreateInput,
 	CampaignsUpdateInput,

@@ -1,8 +1,8 @@
 'use client';
 
-import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
-import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
-import { getContactValuesFromPayload, getZodEnum } from '@/components/dynamic-form/helper';
+import { getFormSchema as getContactFormSchema } from '@/components/legacy/dynamic-form/contact-form-schemas';
+import DynamicForm, { FormField, FormSchema } from '@/components/legacy/dynamic-form/dynamic-form';
+import { getContactValuesFromPayload, getZodEnum } from '@/components/legacy/dynamic-form/helper';
 import { PaymentProvider, RecipientStatus } from '@prisma/client';
 import { LocalPartnerOption } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
 import { ProgramOption } from '@socialincome/shared/src/database/services/program/program.types';

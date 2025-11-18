@@ -5,9 +5,9 @@ import {
 	getLocalPartnerAction,
 	updateLocalPartnerAction,
 } from '@/app/portal/server-actions/local-partner-action';
-import { getFormSchema as getContactFormSchema } from '@/components/dynamic-form/contact-form-schemas';
-import DynamicForm, { FormField, FormSchema } from '@/components/dynamic-form/dynamic-form';
-import { getContactValuesFromPayload } from '@/components/dynamic-form/helper';
+import { getFormSchema as getContactFormSchema } from '@/components/legacy/dynamic-form/contact-form-schemas';
+import DynamicForm, { FormField, FormSchema } from '@/components/legacy/dynamic-form/dynamic-form';
+import { getContactValuesFromPayload } from '@/components/legacy/dynamic-form/helper';
 import { LocalPartnerPayload } from '@socialincome/shared/src/database/services/local-partner/local-partner.types';
 import { useEffect, useState, useTransition } from 'react';
 import z from 'zod';

@@ -1,6 +1,6 @@
 import { DefaultLayoutProps } from '@/app/[lang]/[region]';
-import Footer from '@/components/footer/footer';
-import Navbar from '@/components/navbar/navbar';
+import Footer from '@/components/legacy/footer/footer';
+import Navbar from '@/components/legacy/navbar/navbar';
 import { PropsWithChildren } from 'react';
 
 export default async function Layout(props: PropsWithChildren<DefaultLayoutProps>) {

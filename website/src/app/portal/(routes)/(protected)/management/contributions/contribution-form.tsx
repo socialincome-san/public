@@ -5,8 +5,8 @@ import {
 	getContributionsOptionsAction,
 	updateContributionAction,
 } from '@/app/portal/server-actions/contributions-actions';
-import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import DynamicForm, { FormField } from '@/components/legacy/dynamic-form/dynamic-form';
+import { getZodEnum } from '@/components/legacy/dynamic-form/helper';
 import { ContributionStatus } from '@prisma/client';
 import { CampaignOption } from '@socialincome/shared/src/database/services/campaign/campaign.types';
 import { ContributionUpdateInput } from '@socialincome/shared/src/database/services/contribution/contribution.types';

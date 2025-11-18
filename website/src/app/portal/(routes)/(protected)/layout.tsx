@@ -1,4 +1,4 @@
-import { PortalAppShell } from '@/app/portal/components/portal-app-shell';
+import { PortalAppShell } from '@/components/app-shell/portal/app-shell';
 import { getAuthenticatedUserOrRedirect } from '@/lib/firebase/current-user';
 import type { ReactNode } from 'react';
 

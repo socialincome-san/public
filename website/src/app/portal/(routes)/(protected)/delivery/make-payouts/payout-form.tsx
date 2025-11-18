@@ -6,8 +6,8 @@ import {
 	getPayoutRecipientOptionsAction,
 	updatePayoutAction,
 } from '@/app/portal/server-actions/payout-actions';
-import DynamicForm, { FormField } from '@/components/dynamic-form/dynamic-form';
-import { getZodEnum } from '@/components/dynamic-form/helper';
+import DynamicForm, { FormField } from '@/components/legacy/dynamic-form/dynamic-form';
+import { getZodEnum } from '@/components/legacy/dynamic-form/helper';
 import { PayoutStatus } from '@prisma/client';
 import type { PayoutPayload } from '@socialincome/shared/src/database/services/payout/payout.types';
 import type { RecipientOption } from '@socialincome/shared/src/database/services/recipient/recipient.types';
