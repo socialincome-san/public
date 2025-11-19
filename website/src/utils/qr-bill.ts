@@ -1,9 +1,8 @@
 /**
  * Generates a QR bill reference according to the following format:
- * - 7 digits trailing zeros
- * - 13 digits payment reference ID (unix timestamp in milliseconds)
- * - 4 digits reserved for future use (zeros for now)
- * - 2 digits payment interval in months
+ * - 3 digits trailing zeros
+ * - 13 digits payment reference ID for contributor (unix timestamp in milliseconds)
+ * - 10 digits payment reference ID for contribution (unix timestamp in seconds)
  * - 1 digit check digit (modulo 10 recursive)
  */
 

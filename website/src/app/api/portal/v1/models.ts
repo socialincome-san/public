@@ -161,9 +161,6 @@ export const PaymentFilesImportResult = z.object({
 	updatedAt: z.date().nullable(),
 });
 
-export const PaymentFilesImportError = z.object({
-	error: z.string(),
-});
 export const ExchangeRatesImportSuccess = z.object({
 	success: z.literal(true),
 });

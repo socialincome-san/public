@@ -16,18 +16,12 @@ import { PaymentEventCreateInput } from '../contribution/contribution.types';
 import { ContributorService } from '../contributor/contributor.service';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
+import { BankContribution } from './payment-file-import.types';
 
 const POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64 = process.env.POSTFINANCE_FTP_RSA_PRIVATE_KEY_BASE64!;
 const POSTFINANCE_FTP_HOST = process.env.POSTFINANCE_FTP_HOST!;
 const POSTFINANCE_FTP_PORT = process.env.POSTFINANCE_FTP_PORT!;
 const POSTFINANCE_FTP_USER = process.env.POSTFINANCE_FTP_USER!;
-
-type BankContribution = {
-	amount: number;
-	currency: string;
-	referenceId: string;
-	rawContent: string;
-};
 
 export class PaymentFileImportService extends BaseService {
 	private storageAdmin = new StorageAdmin();

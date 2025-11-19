@@ -9,7 +9,8 @@ import { NextRequest, NextResponse } from 'next/server';
  *   type: apiKey
  *   in: header
  *   name: x-api-key
- * @response PaymentFilesImportResult | PaymentFilesImportError
+ * @response PaymentFilesImportResult
+ * @response ErrorResponse
  * @openapi
  */
 export async function POST(request: NextRequest) {

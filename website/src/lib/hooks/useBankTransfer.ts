@@ -1,5 +1,5 @@
 import { generateQrBillSvg } from '@/utils/qr-bill';
-import { BankTransferPayment } from '@socialincome/shared/src/database/services/bank-transfer/bank-transfer-service';
+import { BankTransferPayment } from '@socialincome/shared/src/database/services/bank-transfer/bank-transfer.types';
 import { BankContributorData } from '@socialincome/shared/src/database/services/contributor/contributor.types';
 import { useState, useTransition } from 'react';
 import toast from 'react-hot-toast';
