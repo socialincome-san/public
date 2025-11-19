@@ -2,19 +2,17 @@
 
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { UserContextProvider } from '@/app/[lang]/[region]/(website)/me/user-context-provider';
-import { CreateCheckoutSessionData } from '@/app/api/stripe/checkout-session/create/route';
 import { BankTransferForm, BankTransferFormProps } from '@/components/legacy/donation/bank-transfer-form';
 import { DonationInterval } from '@/components/legacy/donation/donation-interval';
 import { CurrencySelector } from '@/components/legacy/ui/currency-selector';
-import { useAuth } from '@/lib/firebase/hooks/useAuth';
 import { useI18n } from '@/lib/i18n/useI18n';
+import { createStripeCheckoutAction } from '@/lib/server-actions/stripe-actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Form, FormControl, FormField, FormItem, Input } from '@socialincome/ui';
 import { ToggleGroup, ToggleGroupItem } from '@socialincome/ui/src/components/toggle-group';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Stripe from 'stripe';
 import * as z from 'zod';
 
 type DonationFormProps = {
@@ -42,7 +40,6 @@ export type PaymentType = (typeof PaymentTypes)[keyof typeof PaymentTypes];
 
 export function GenericDonationForm({ defaultInterval, translations, lang, region, campaignId }: DonationFormProps) {
 	const router = useRouter();
-	const { authUser } = useAuth();
 	const { currency } = useI18n();
 	const [submitting, setSubmitting] = useState(false);
 
@@ -87,21 +84,23 @@ export function GenericDonationForm({ defaultInterval, translations, lang, regio
 
 	const onSubmit = async (values: FormSchema) => {
 		setSubmitting(true);
-		const authToken = await authUser?.getIdToken(true);
-		const data: CreateCheckoutSessionData = {
-			amount: values.amount * 100, // The amount is in cents, so we need to multiply by 100 to get the correct amount.
-			currency: currency,
+		const result = await createStripeCheckoutAction({
+			amount: values.amount * 100,
+			currency,
 			successUrl: `${window.location.origin}/${lang}/${region}/donate/success/stripe/{CHECKOUT_SESSION_ID}`,
 			recurring: values.interval === DonationInterval.Monthly,
 			intervalCount: values.interval === DonationInterval.Monthly ? 1 : undefined,
-			firebaseAuthToken: authToken,
-			campaignId: campaignId,
-		};
+			campaignId,
+		});
 
-		const response = await fetch('/api/stripe/checkout-session/create', { method: 'POST', body: JSON.stringify(data) });
-		const { url } = (await response.json()) as Stripe.Response<Stripe.Checkout.Session>;
-		// This sends the user to stripe.com where payment is completed
-		if (url) router.push(url);
+		setSubmitting(false);
+
+		if (!result.success) {
+			console.error(result.error);
+			return;
+		}
+
+		router.push(result.data);
 	};
 
 	return (

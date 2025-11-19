@@ -16,7 +16,7 @@ export async function SubscriptionsTable() {
 
 	const rows: StripeSubscriptionRow[] = subscriptionsResult.success ? subscriptionsResult.data.rows : [];
 
-	const billingPortal = await stripeService.createBillingPortalSession(contributor.stripeCustomerId);
+	const billingPortal = await stripeService.createManageSubscriptionsSession(contributor.stripeCustomerId);
 
 	const billingPortalUrl = billingPortal.success ? billingPortal.data : null;
 
