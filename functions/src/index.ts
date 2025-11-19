@@ -5,5 +5,4 @@ setGlobalOptions({ maxInstances: 5, region: DEFAULT_REGION });
 
 export * from './functions/cron/index';
 export * from './functions/firestore/index';
-export * from './functions/storage/index';
 export * from './functions/webhooks/index';
