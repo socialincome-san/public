@@ -29,16 +29,17 @@ function calculateCheckDigit(reference: string): number {
 
 /**
  * Generates a QR bill reference
- * @param paymentIntervalMonths The payment interval in months
- * @param userCreatedAt The timestamp when the user was created (in milliseconds)
+ * @param contributorCreatedAt The timestamp when the user was created (in milliseconds)
+ * @param contributionCreatedAt The timestamp when the contribution was created (in seconds)
  * @returns The complete QR bill reference with check digit
  */
-function generateQrBillReference(paymentIntervalMonths: number, userCreatedAt: number): string {
-	// Ensure payment interval is 2 digits
-	const formattedInterval = paymentIntervalMonths.toString().padStart(2, '0');
+function generateQrBillReference(contributorCreatedAt: string, contributionCreatedAt: string): string {
+	if (contributorCreatedAt.length > 13) throw new Error('contributorCreatedAt too long');
+	if (contributionCreatedAt.length > 10)
+		throw new Error('contributionCreatedAt too long, should be timestamp in seconds');
 
 	// Create the base reference without check digit
-	const baseReference = `0000000${userCreatedAt}0000${formattedInterval}`;
+	const baseReference = `000${contributorCreatedAt}${contributionCreatedAt}`;
 
 	// Calculate and append check digit
 	const checkDigit = calculateCheckDigit(baseReference);
@@ -48,16 +49,16 @@ function generateQrBillReference(paymentIntervalMonths: number, userCreatedAt: n
 
 type GenerateQrBillSvgProps = {
 	amount: number;
-	paymentIntervalMonths: number;
-	paymentReferenceId: number;
+	contributorReferenceId: string;
+	contributionReferenceId: string;
 	currency: 'CHF' | 'EUR';
 	type: 'QRCODE' | 'QRBILL';
 };
 
 export function generateQrBillSvg({
 	amount,
-	paymentIntervalMonths,
-	paymentReferenceId,
+	contributorReferenceId,
+	contributionReferenceId,
 	currency,
 	type,
 }: GenerateQrBillSvgProps): string {
@@ -73,7 +74,7 @@ export function generateQrBillSvg({
 			country: 'CH',
 			name: 'Social Income',
 		},
-		reference: generateQrBillReference(paymentIntervalMonths, paymentReferenceId),
+		reference: generateQrBillReference(contributorReferenceId, contributionReferenceId),
 	};
 
 	return type === 'QRCODE' ? new SwissQRCode(data).toString() : new SwissQRBill(data).toString();

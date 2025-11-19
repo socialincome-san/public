@@ -69,7 +69,6 @@ export type BankContributorData = {
 	email: string;
 	firstName: string;
 	lastName: string;
-	referral: ContributorReferralSource;
 };
 
 export type ContributorSession = {

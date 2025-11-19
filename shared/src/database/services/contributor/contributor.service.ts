@@ -352,13 +352,10 @@ export class ContributorService extends BaseService {
 		}
 	}
 
-	async getOrCreateByReferenceId(
-		referenceId: string,
-		contributorData: BankContributorData,
-	): Promise<ServiceResult<Contributor>> {
+	async getOrCreateByReferenceId(contributorData: BankContributorData): Promise<ServiceResult<Contributor>> {
 		try {
 			const existingContributor = await this.db.contributor.findFirst({
-				where: { paymentReferenceId: referenceId },
+				where: { paymentReferenceId: contributorData.paymentReferenceId },
 			});
 			if (existingContributor) return this.resultOk(existingContributor);
 
