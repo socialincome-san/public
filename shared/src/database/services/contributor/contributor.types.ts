@@ -53,3 +53,11 @@ export type StripeContributorData = {
 	lastName: string;
 	referral: ContributorReferralSource;
 };
+
+export type BankContributorData = {
+	paymentReferenceId: string;
+	email: string;
+	firstName: string;
+	lastName: string;
+	referral: ContributorReferralSource;
+};

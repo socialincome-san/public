@@ -107,6 +107,8 @@ export class PaymentFileImportService extends BaseService {
 			const transactionId = select('string(//ns:Refs/ns:EndToEndId)', node) as string;
 			const referenceId = select('string(//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
 
+			// TODO: check reference ID in contributor
+
 			contributions.push({
 				referenceId,
 				transactionId,
@@ -122,6 +124,7 @@ export class PaymentFileImportService extends BaseService {
 	 * creates payment events and contributions in DB
 	 * @param bankContributions contributions from payment files
 	 */
+	// TODO: create or update
 	private async createContributions(bankContributions: BankContribution[]): Promise<ServiceResult<PaymentEvent[]>> {
 		try {
 			const fallbackCampaignResult = await this.campaignService.getFallbackCampaign();

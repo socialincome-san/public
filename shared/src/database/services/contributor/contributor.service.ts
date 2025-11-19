@@ -1,9 +1,11 @@
-import { Contributor } from '@prisma/client';
+import { Contributor, ContributorReferralSource } from '@prisma/client';
+import { DateTime } from 'luxon';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import { FirebaseService } from '../firebase/firebase.service';
 import { OrganizationAccessService } from '../organization-access/organization-access.service';
 import {
+	BankContributorData,
 	ContributorOption,
 	ContributorPayload,
 	ContributorTableView,
@@ -199,44 +201,6 @@ export class ContributorService extends BaseService {
 		}
 	}
 
-	async findByStripeCustomerId(stripeCustomerId: string): Promise<ServiceResult<ContributorWithContact>> {
-		try {
-			const contributor = await this.db.contributor.findFirst({
-				where: { stripeCustomerId },
-				include: { contact: true },
-			});
-
-			if (!contributor) {
-				return this.resultFail('Contributor not found');
-			}
-
-			return this.resultOk(contributor);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail('Could not find contributor by Stripe customer ID');
-		}
-	}
-
-	async findByEmail(email: string): Promise<ServiceResult<ContributorWithContact>> {
-		try {
-			const contributor = await this.db.contributor.findFirst({
-				where: {
-					contact: { email },
-				},
-				include: { contact: true },
-			});
-
-			if (!contributor) {
-				return this.resultFail('Contributor not found');
-			}
-
-			return this.resultOk(contributor);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail('Could not find contributor by email');
-		}
-	}
-
 	async findByStripeCustomerOrEmail(
 		stripeCustomerId: string,
 		email?: string,
@@ -261,29 +225,11 @@ export class ContributorService extends BaseService {
 		}
 	}
 
-	async findByPaymentReferenceIds(paymentReferenceIds: string[]): Promise<ServiceResult<Contributor[]>> {
-		try {
-			const contributors = await this.db.contributor.findMany({
-				where: { paymentReferenceId: { in: paymentReferenceIds } },
-				include: { contact: true },
-			});
-
-			if (!contributors) {
-				return this.resultFail('Contributor not found');
-			}
-
-			return this.resultOk(contributors);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail('Could not find contributor by Payment Reference ID');
-		}
-	}
-
 	async getOrCreateContributorWithFirebaseAuth(
 		contributorData: StripeContributorData,
 	): Promise<ServiceResult<{ contributor: ContributorWithContact; isNewContributor: boolean }>> {
 		try {
-			const existingResult = await this.findExistingContributor(
+			const existingResult = await this.findByStripeCustomerOrEmail(
 				contributorData.stripeCustomerId,
 				contributorData.email || undefined,
 			);
@@ -310,6 +256,85 @@ export class ContributorService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not get or create contributor from Stripe customer');
+		}
+	}
+
+	async getOrCreateReferenceIdByEmail(email: string): Promise<ServiceResult<string>> {
+		try {
+			let referenceId: string;
+			const existingContributor = await this.db.contributor.findFirst({
+				where: { contact: { email: email } },
+				select: { paymentReferenceId: true },
+			});
+			referenceId = existingContributor?.paymentReferenceId || DateTime.now().toMillis().toString();
+
+			return this.resultOk(referenceId);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not get or generate contributor reference ID');
+		}
+	}
+
+	async getOrCreateByReferenceId(
+		referenceId: string,
+		contributorData: BankContributorData,
+	): Promise<ServiceResult<Contributor>> {
+		try {
+			const existingContributor = await this.db.contributor.findFirst({
+				where: { paymentReferenceId: referenceId },
+			});
+			if (existingContributor) return this.resultOk(existingContributor);
+
+			const firebaseResult = await this.firebaseService.getOrCreateUser({
+				email: contributorData.email,
+				displayName: `${contributorData.firstName} ${contributorData.lastName}`,
+			});
+
+			if (!firebaseResult.success) {
+				return this.resultFail(`Failed to create Firebase user: ${firebaseResult.error}`);
+			}
+
+			const newContributor = await this.db.contributor.create({
+				data: {
+					paymentReferenceId: contributorData.paymentReferenceId,
+					referral: ContributorReferralSource.other,
+					account: {
+						create: {
+							firebaseAuthUserId: firebaseResult.data.uid,
+						},
+					},
+					contact: {
+						create: {
+							firstName: contributorData.firstName,
+							lastName: contributorData.lastName,
+							email: contributorData.email,
+						},
+					},
+				},
+				include: { contact: true },
+			});
+			return this.resultOk(newContributor);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not get or create contributor by reference ID');
+		}
+	}
+
+	async findByPaymentReferenceIds(paymentReferenceIds: string[]): Promise<ServiceResult<Contributor[]>> {
+		try {
+			const contributors = await this.db.contributor.findMany({
+				where: { paymentReferenceId: { in: paymentReferenceIds } },
+				include: { contact: true },
+			});
+
+			if (!contributors) {
+				return this.resultFail('Contributor not found');
+			}
+
+			return this.resultOk(contributors);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not find contributor by Payment Reference ID');
 		}
 	}
 
@@ -350,30 +375,6 @@ export class ContributorService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not create contributor with Firebase Auth user');
-		}
-	}
-
-	private async findExistingContributor(
-		stripeCustomerId: string,
-		email?: string,
-	): Promise<ServiceResult<ContributorWithContact | null>> {
-		try {
-			let contributor = await this.db.contributor.findFirst({
-				where: { stripeCustomerId },
-				include: { contact: true },
-			});
-
-			if (!contributor && email) {
-				contributor = await this.db.contributor.findFirst({
-					where: { contact: { email } },
-					include: { contact: true },
-				});
-			}
-
-			return this.resultOk(contributor);
-		} catch (error) {
-			this.logger.error(error);
-			return this.resultFail('Could not find contributor');
 		}
 	}
 
