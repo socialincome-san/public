@@ -1,3 +1,4 @@
+import { ContributorReferralSource, Gender } from '@prisma/client';
 import Stripe from 'stripe';
 
 export type StripeWebhookEvent = Stripe.Event;
@@ -47,4 +48,22 @@ export type StripeSubscriptionRow = {
 
 export type StripeSubscriptionTableView = {
 	rows: StripeSubscriptionRow[];
+};
+
+export type UpdateContributorAfterCheckoutInput = {
+	stripeCheckoutSessionId: string;
+	user: {
+		auth_user_id: string;
+		email: string;
+		language: string;
+		personal: {
+			name: string;
+			lastname: string;
+			gender?: Gender;
+			referral?: ContributorReferralSource;
+		};
+		address: {
+			country: string;
+		};
+	};
 };

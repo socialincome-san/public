@@ -15,7 +15,7 @@ import { CampaignService } from '../campaign/campaign.service';
 import { ContributionService } from '../contribution/contribution.service';
 import { PaymentEventCreateData, StripeContributionCreateData } from '../contribution/contribution.types';
 import { ContributorService } from '../contributor/contributor.service';
-import { StripeContributorData } from '../contributor/contributor.types';
+import { ContributorUpdateInput, StripeContributorData } from '../contributor/contributor.types';
 import { BaseService } from '../core/base.service';
 import { ServiceResult } from '../core/base.types';
 import {
@@ -23,6 +23,7 @@ import {
 	StripeCustomerData,
 	StripeSubscriptionRow,
 	StripeSubscriptionTableView,
+	UpdateContributorAfterCheckoutInput,
 	WebhookResult,
 } from './stripe.types';
 export class StripeService extends BaseService {
@@ -358,6 +359,109 @@ export class StripeService extends BaseService {
 		} catch (error) {
 			this.logger.error(error);
 			return this.resultFail('Could not create Stripe checkout session');
+		}
+	}
+
+	async getSuccessPageSessionData(sessionId: string) {
+		try {
+			const checkoutSession = await this.stripe.checkout.sessions.retrieve(sessionId);
+
+			if (!checkoutSession.customer) {
+				return this.resultFail('Checkout session has no Stripe customer');
+			}
+
+			const contributorResult = await this.contributorService.findByStripeCustomerId(
+				checkoutSession.customer.toString(),
+			);
+
+			if (!contributorResult.success && contributorResult.error !== 'Contributor not found') {
+				return contributorResult;
+			}
+
+			const contributor = contributorResult.success ? contributorResult.data : null;
+
+			return this.resultOk({
+				checkoutSession,
+				contributorExists: Boolean(contributor?.id),
+			});
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not load Stripe success page data');
+		}
+	}
+
+	async updateContributorAfterCheckout(input: UpdateContributorAfterCheckoutInput) {
+		try {
+			const { stripeCheckoutSessionId, user } = input;
+
+			const session = await this.stripe.checkout.sessions.retrieve(stripeCheckoutSessionId);
+			if (!session.customer) {
+				return this.resultFail('Checkout session has no Stripe customer');
+			}
+
+			const stripeCustomer = await this.stripe.customers.retrieve(session.customer as string);
+			if (stripeCustomer.deleted) {
+				return this.resultFail(`Stripe customer ${stripeCustomer.id} was deleted`);
+			}
+
+			const contributorEmail = user.email || stripeCustomer.email || null;
+
+			if (!contributorEmail) {
+				return this.resultFail('A contributor email is required');
+			}
+
+			const existingResult = await this.contributorService.findByStripeCustomerOrEmail(
+				stripeCustomer.id,
+				contributorEmail,
+			);
+
+			if (!existingResult.success) {
+				return existingResult;
+			}
+
+			let contributor = existingResult.data;
+
+			if (!contributor) {
+				const createResult = await this.contributorService.getOrCreateContributorWithFirebaseAuth({
+					stripeCustomerId: stripeCustomer.id,
+					email: contributorEmail,
+					firstName: user.personal.name,
+					lastName: user.personal.lastname,
+					referral: user.personal.referral ?? ContributorReferralSource.other,
+				});
+
+				if (!createResult.success) {
+					return createResult;
+				}
+
+				contributor = createResult.data.contributor;
+			}
+
+			const updateInput: ContributorUpdateInput = {
+				id: contributor.id,
+				referral: user.personal.referral ?? ContributorReferralSource.other,
+				contact: {
+					update: {
+						data: {
+							firstName: user.personal.name,
+							lastName: user.personal.lastname,
+							email: user.email,
+							gender: user.personal.gender ?? null,
+							language: user.language,
+							address: {
+								update: {
+									country: user.address.country,
+								},
+							},
+						},
+					},
+				},
+			};
+
+			return this.contributorService.updateSelf(contributor.id, updateInput);
+		} catch (error) {
+			this.logger.error(error);
+			return this.resultFail('Could not update contributor after checkout');
 		}
 	}
 }

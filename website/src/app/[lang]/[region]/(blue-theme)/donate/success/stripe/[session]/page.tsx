@@ -1,9 +1,7 @@
 import { DefaultParams } from '@/app/[lang]/[region]';
 import { SuccessForm } from '@/app/[lang]/[region]/(blue-theme)/donate/success/stripe/[session]/success-form';
-import { firestoreAdmin } from '@/lib/firebase/firebase-admin';
-import { initializeStripe } from '@socialincome/shared/src/stripe';
+import { StripeService } from '@socialincome/shared/src/database/services/stripe/stripe.service';
 import { CountryCode } from '@socialincome/shared/src/types/country';
-import { USER_FIRESTORE_PATH, User } from '@socialincome/shared/src/types/user';
 import { Translator } from '@socialincome/shared/src/utils/i18n';
 import { Card, CardContent, CardHeader, Typography } from '@socialincome/ui';
 import { redirect } from 'next/navigation';
@@ -20,14 +18,19 @@ export default async function Page({ params }: StripeSuccessPageProps) {
 	const { lang, region, session } = await params;
 
 	const translator = await Translator.getInstance({ language: lang, namespaces: 'website-donate' });
-	const stripe = initializeStripe(process.env.STRIPE_SECRET_KEY!);
-	// The stripeCheckoutSessionId search param is defined in the donation form and passed to the Stripe checkout session.
-	const checkoutSession = await stripe.checkout.sessions.retrieve(session);
 
-	const userDoc = await firestoreAdmin.findFirst<User>(USER_FIRESTORE_PATH, (q) =>
-		q.where('stripe_customer_id', '==', checkoutSession.customer),
-	);
-	if (userDoc?.exists && userDoc.get('auth_user_id')) redirect(`/${lang}/${region}/me/contributions`);
+	const stripeService = new StripeService();
+	const result = await stripeService.getSuccessPageSessionData(session);
+
+	if (!result.success) {
+		throw new Error(result.error);
+	}
+
+	const { checkoutSession, contributorExists } = result.data;
+
+	if (contributorExists) {
+		redirect(`/${lang}/${region}/me/contributions`);
+	}
 
 	return (
 		<div className="mx-auto flex max-w-3xl flex-col space-y-8">

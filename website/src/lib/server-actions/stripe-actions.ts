@@ -1,6 +1,7 @@
 'use server';
 
 import { StripeService } from '@socialincome/shared/src/database/services/stripe/stripe.service';
+import { UpdateContributorAfterCheckoutInput } from '@socialincome/shared/src/database/services/stripe/stripe.types';
 import { getOptionalContributor } from '../firebase/current-contributor';
 
 export async function createStripeCheckoutAction(input: {
@@ -18,4 +19,9 @@ export async function createStripeCheckoutAction(input: {
 		...input,
 		stripeCustomerId: contributor?.stripeCustomerId ?? null,
 	});
+}
+
+export async function updateContributorAfterCheckoutAction(input: UpdateContributorAfterCheckoutInput) {
+	const stripeService = new StripeService();
+	return stripeService.updateContributorAfterCheckout(input);
 }
