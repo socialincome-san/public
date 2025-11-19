@@ -12,6 +12,7 @@ export type BankTransferPayment = {
 	amount: number;
 	currency: Currency;
 	referenceId: string;
+	interval: number;
 };
 
 export class BankTransferService extends BaseService {
@@ -34,9 +35,7 @@ export class BankTransferService extends BaseService {
 			if (!newContribution.success) {
 				return this.resultFail(`Could not build new contribution for reference Id ${payment.referenceId}`);
 			}
-			const createdContribution = await this.contributionService.createContributionWithPaymentEvent(
-				newContribution.data,
-			);
+			const createdContribution = await this.contributionService.upsertFromBankTransfer(newContribution.data);
 			if (!createdContribution.success) {
 				return this.resultFail(`Could not generate pending contribution for reference id ${payment.referenceId}`);
 			}
@@ -68,6 +67,7 @@ export class BankTransferService extends BaseService {
 					currency: payment.currency as Currency,
 					amountChf: payment.amount,
 					feesChf: 0,
+					monthlyInterval: payment.interval,
 					status: ContributionStatus.pending,
 					campaign: {
 						connect: {

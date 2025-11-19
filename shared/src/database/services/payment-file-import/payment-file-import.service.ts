@@ -6,6 +6,10 @@ import fs from 'node:fs';
 import SFTPClient from 'ssh2-sftp-client';
 import { withFile } from 'tmp-promise';
 import xpath from 'xpath';
+import {
+	CONTRIBUTION_REFERENCE_ID_LENGTH,
+	CONTRIBUTOR_REFERENCE_ID_LENGTH,
+} from '../bank-transfer/bank-transfer-config';
 import { CampaignService } from '../campaign/campaign.service';
 import { ContributionService } from '../contribution/contribution.service';
 import { PaymentEventCreateInput } from '../contribution/contribution.types';
@@ -22,7 +26,6 @@ type BankContribution = {
 	amount: number;
 	currency: string;
 	referenceId: string;
-	transactionId: string;
 	rawContent: string;
 };
 
@@ -107,11 +110,8 @@ export class PaymentFileImportService extends BaseService {
 			const transactionId = select('string(//ns:Refs/ns:EndToEndId)', node) as string;
 			const referenceId = select('string(//ns:RmtInf/ns:Strd/ns:CdtrRefInf/ns:Ref)', node) as string;
 
-			// TODO: check reference ID in contributor
-
 			contributions.push({
 				referenceId,
-				transactionId,
 				amount: parseFloat(select('string(//ns:Amt)', node) as string),
 				currency: (select('string(//ns:Amt/@Ccy)', node) as string).toUpperCase() as Currency,
 				rawContent: node.toString(),
@@ -134,7 +134,7 @@ export class PaymentFileImportService extends BaseService {
 			const campaignId = fallbackCampaignResult.data.id;
 
 			const contributors = await this.contributorService.findByPaymentReferenceIds(
-				bankContributions.map((c) => this.getContributorPaymentReferenceId(c.referenceId)),
+				bankContributions.map((c) => this.getReferenceIds(c.referenceId).contributorReferenceId),
 			);
 			if (!contributors.success) {
 				return this.resultFail(`Error creating contributions from payment file`);
@@ -146,16 +146,19 @@ export class PaymentFileImportService extends BaseService {
 
 			for (let c of bankContributions) {
 				const contributor = contributors.data.find(
-					(contributor) => contributor.paymentReferenceId === this.getContributorPaymentReferenceId(c.referenceId),
+					(contributor) =>
+						contributor.paymentReferenceId === this.getReferenceIds(c.referenceId).contributorReferenceId,
 				);
 				if (!contributor) {
 					this.logger.alert(`Contributor for reference ID ${c.referenceId} does not exist`);
 					continue;
 				}
 
+				const contributionReferenceId = this.getReferenceIds(c.referenceId).contributionReferenceId;
+
 				const paymentEvent: PaymentEventCreateInput = {
 					type: PaymentEventType.bank_transfer,
-					transactionId: c.transactionId || '',
+					transactionId: contributionReferenceId || '',
 					metadata: {
 						raw_content: c.rawContent,
 					},
@@ -178,11 +181,11 @@ export class PaymentFileImportService extends BaseService {
 					},
 				};
 				try {
-					const result = await this.contributionService.createContributionWithPaymentEvent(paymentEvent);
-					if (!result.success) failedPaymentEvents.push(c.transactionId);
+					const result = await this.contributionService.upsertFromBankTransfer(paymentEvent);
+					if (!result.success) failedPaymentEvents.push(contributionReferenceId);
 					else created.push(result.data);
 				} catch (error) {
-					failedPaymentEvents.push(c.transactionId);
+					failedPaymentEvents.push(contributionReferenceId);
 				}
 			}
 
@@ -201,5 +204,24 @@ export class PaymentFileImportService extends BaseService {
 			return this.resultFail(`Error creating contributions from payment file: ${error}`);
 		}
 	}
-	private getContributorPaymentReferenceId = (referenceId: string) => referenceId.slice(7, 20);
+	private getReferenceIds = (
+		referenceId: string,
+	): { contributorReferenceId: string; contributionReferenceId: string | undefined } => {
+		// Old reference IDs without contribution reference ID
+		const isLegacyReferenceId = referenceId.startsWith('0000000');
+
+		if (isLegacyReferenceId) {
+			return { contributorReferenceId: referenceId.slice(7, 20), contributionReferenceId: undefined };
+		}
+
+		const startIndex = 3;
+
+		return {
+			contributorReferenceId: referenceId.slice(startIndex, startIndex + CONTRIBUTOR_REFERENCE_ID_LENGTH),
+			contributionReferenceId: referenceId.slice(
+				startIndex + CONTRIBUTOR_REFERENCE_ID_LENGTH,
+				startIndex + CONTRIBUTOR_REFERENCE_ID_LENGTH + CONTRIBUTION_REFERENCE_ID_LENGTH,
+			),
+		};
+	};
 }

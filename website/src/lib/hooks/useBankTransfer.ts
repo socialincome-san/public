@@ -70,6 +70,7 @@ export function useBankTransfer({ amount, intervalCount, currency, qrBillType, t
 			amount: amount,
 			currency: currency as 'CHF' | 'EUR',
 			referenceId: contributionReference,
+			interval: intervalCount,
 		};
 
 		startTransition(async () => {

@@ -7,6 +7,10 @@
  * - 1 digit check digit (modulo 10 recursive)
  */
 
+import {
+	CONTRIBUTION_REFERENCE_ID_LENGTH,
+	CONTRIBUTOR_REFERENCE_ID_LENGTH,
+} from '@socialincome/shared/src/database/services/bank-transfer/bank-transfer-config';
 import { Data } from 'swissqrbill/lib/cjs/shared/types';
 import { SwissQRBill, SwissQRCode } from 'swissqrbill/svg';
 
@@ -34,8 +38,8 @@ function calculateCheckDigit(reference: string): number {
  * @returns The complete QR bill reference with check digit
  */
 function generateQrBillReference(contributorCreatedAt: string, contributionCreatedAt: string): string {
-	if (contributorCreatedAt.length > 13) throw new Error('contributorCreatedAt too long');
-	if (contributionCreatedAt.length > 10)
+	if (contributorCreatedAt.length > CONTRIBUTOR_REFERENCE_ID_LENGTH) throw new Error('contributorCreatedAt too long');
+	if (contributionCreatedAt.length > CONTRIBUTION_REFERENCE_ID_LENGTH)
 		throw new Error('contributionCreatedAt too long, should be timestamp in seconds');
 
 	// Create the base reference without check digit

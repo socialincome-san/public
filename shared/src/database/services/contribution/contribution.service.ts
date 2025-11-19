@@ -240,12 +240,19 @@ export class ContributionService extends BaseService {
 		}
 	}
 
-	async createContributionWithPaymentEvent(
-		paymentEvents: PaymentEventCreateInput,
-	): Promise<ServiceResult<PaymentEvent>> {
+	async upsertFromBankTransfer(paymentEvent: PaymentEventCreateInput): Promise<ServiceResult<PaymentEvent>> {
 		try {
-			const result = await this.db.paymentEvent.create({
-				data: paymentEvents,
+			const result = await this.db.paymentEvent.upsert({
+				where: { transactionId: paymentEvent.transactionId },
+				create: paymentEvent,
+				update: {
+					...paymentEvent,
+					contribution: {
+						update: {
+							...paymentEvent.contribution.create,
+						},
+					},
+				},
 			});
 
 			return this.resultOk(result);
