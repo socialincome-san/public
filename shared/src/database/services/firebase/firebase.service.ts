@@ -171,7 +171,6 @@ export class FirebaseService extends BaseService {
 			const decoded = await this.authAdmin.auth.verifySessionCookie(cookie, true);
 			return this.resultOk(decoded);
 		} catch (error) {
-			this.logger.error('Error verifying session cookie:', { error });
 			return this.resultFail('Invalid or expired session cookie');
 		}
 	}

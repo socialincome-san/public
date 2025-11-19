@@ -76,7 +76,7 @@ export function BankTransferForm({
 			{paid ? (
 				<div className="space-y-4 pb-8">
 					<p>{translations.paymentSuccess}</p>
-					<Link className={linkCn({ variant: 'accent' })} href={`/${lang}/${region}/me/contributions`}>
+					<Link className={linkCn({ variant: 'accent' })} href={`/${lang}/${region}/dashboard/contributions`}>
 						{user ? translations.profileLink : translations.loginLink}
 					</Link>
 				</div>

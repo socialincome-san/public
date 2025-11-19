@@ -1,4 +1,4 @@
-import { WebsiteAppShell } from '@/components/app-shell/website/app-shell';
+import { WebsiteAppShell } from '@/components/app-shells/website/app-shell';
 import { Card } from '@/components/card';
 import { TabNavigation } from '@/components/tab-navigation';
 import { getAuthenticatedContributorOrRedirect } from '@/lib/firebase/current-contributor';
